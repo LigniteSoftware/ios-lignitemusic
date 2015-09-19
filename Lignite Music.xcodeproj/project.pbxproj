@@ -1,0 +1,561 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		6AEB9CFD1BACF60E00AD19FA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AEB9CFC1BACF60E00AD19FA /* main.m */; };
+		6AEB9D001BACF60E00AD19FA /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AEB9CFF1BACF60E00AD19FA /* AppDelegate.m */; };
+		6AEB9D031BACF60E00AD19FA /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AEB9D021BACF60E00AD19FA /* ViewController.m */; };
+		6AEB9D061BACF60E00AD19FA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6AEB9D041BACF60E00AD19FA /* Main.storyboard */; };
+		6AEB9D081BACF60E00AD19FA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6AEB9D071BACF60E00AD19FA /* Assets.xcassets */; };
+		6AEB9D0B1BACF60E00AD19FA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6AEB9D091BACF60E00AD19FA /* LaunchScreen.storyboard */; };
+		6AEB9D161BACF60F00AD19FA /* Lignite_MusicTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AEB9D151BACF60F00AD19FA /* Lignite_MusicTests.m */; };
+		6AEB9D211BACF60F00AD19FA /* Lignite_MusicUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AEB9D201BACF60F00AD19FA /* Lignite_MusicUITests.m */; };
+		6AEB9D351BAD812700AD19FA /* pause_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AEB9D311BAD812700AD19FA /* pause_white.png */; settings = {ASSET_TAGS = (); }; };
+		6AEB9D361BAD812700AD19FA /* play_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AEB9D321BAD812700AD19FA /* play_white.png */; settings = {ASSET_TAGS = (); }; };
+		6AEB9D371BAD812700AD19FA /* repeat_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AEB9D331BAD812700AD19FA /* repeat_white.png */; settings = {ASSET_TAGS = (); }; };
+		6AEB9D381BAD812700AD19FA /* shuffle_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AEB9D341BAD812700AD19FA /* shuffle_white.png */; settings = {ASSET_TAGS = (); }; };
+		6AEB9D3A1BAD824E00AD19FA /* lignite_background.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6AEB9D391BAD824E00AD19FA /* lignite_background.jpg */; settings = {ASSET_TAGS = (); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		6AEB9D121BACF60F00AD19FA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6AEB9CF01BACF60E00AD19FA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6AEB9CF71BACF60E00AD19FA;
+			remoteInfo = "Lignite Music";
+		};
+		6AEB9D1D1BACF60F00AD19FA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6AEB9CF01BACF60E00AD19FA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6AEB9CF71BACF60E00AD19FA;
+			remoteInfo = "Lignite Music";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		6AEB9CF81BACF60E00AD19FA /* Lignite Music.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Lignite Music.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6AEB9CFC1BACF60E00AD19FA /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		6AEB9CFE1BACF60E00AD19FA /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		6AEB9CFF1BACF60E00AD19FA /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		6AEB9D011BACF60E00AD19FA /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		6AEB9D021BACF60E00AD19FA /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		6AEB9D051BACF60E00AD19FA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		6AEB9D071BACF60E00AD19FA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		6AEB9D0A1BACF60E00AD19FA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		6AEB9D0C1BACF60E00AD19FA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6AEB9D111BACF60F00AD19FA /* Lignite MusicTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Lignite MusicTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6AEB9D151BACF60F00AD19FA /* Lignite_MusicTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Lignite_MusicTests.m; sourceTree = "<group>"; };
+		6AEB9D171BACF60F00AD19FA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6AEB9D1C1BACF60F00AD19FA /* Lignite MusicUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Lignite MusicUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6AEB9D201BACF60F00AD19FA /* Lignite_MusicUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Lignite_MusicUITests.m; sourceTree = "<group>"; };
+		6AEB9D221BACF60F00AD19FA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6AEB9D311BAD812700AD19FA /* pause_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pause_white.png; sourceTree = "<group>"; };
+		6AEB9D321BAD812700AD19FA /* play_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = play_white.png; sourceTree = "<group>"; };
+		6AEB9D331BAD812700AD19FA /* repeat_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = repeat_white.png; sourceTree = "<group>"; };
+		6AEB9D341BAD812700AD19FA /* shuffle_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = shuffle_white.png; sourceTree = "<group>"; };
+		6AEB9D391BAD824E00AD19FA /* lignite_background.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = lignite_background.jpg; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		6AEB9CF51BACF60E00AD19FA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6AEB9D0E1BACF60F00AD19FA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6AEB9D191BACF60F00AD19FA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		6AEB9CEF1BACF60E00AD19FA = {
+			isa = PBXGroup;
+			children = (
+				6AEB9CFA1BACF60E00AD19FA /* Lignite Music */,
+				6AEB9D141BACF60F00AD19FA /* Lignite MusicTests */,
+				6AEB9D1F1BACF60F00AD19FA /* Lignite MusicUITests */,
+				6AEB9CF91BACF60E00AD19FA /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		6AEB9CF91BACF60E00AD19FA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6AEB9CF81BACF60E00AD19FA /* Lignite Music.app */,
+				6AEB9D111BACF60F00AD19FA /* Lignite MusicTests.xctest */,
+				6AEB9D1C1BACF60F00AD19FA /* Lignite MusicUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		6AEB9CFA1BACF60E00AD19FA /* Lignite Music */ = {
+			isa = PBXGroup;
+			children = (
+				6AEB9D2E1BAD679F00AD19FA /* Images */,
+				6AEB9CFE1BACF60E00AD19FA /* AppDelegate.h */,
+				6AEB9CFF1BACF60E00AD19FA /* AppDelegate.m */,
+				6AEB9D011BACF60E00AD19FA /* ViewController.h */,
+				6AEB9D021BACF60E00AD19FA /* ViewController.m */,
+				6AEB9D041BACF60E00AD19FA /* Main.storyboard */,
+				6AEB9D071BACF60E00AD19FA /* Assets.xcassets */,
+				6AEB9D091BACF60E00AD19FA /* LaunchScreen.storyboard */,
+				6AEB9D0C1BACF60E00AD19FA /* Info.plist */,
+				6AEB9CFB1BACF60E00AD19FA /* Supporting Files */,
+			);
+			path = "Lignite Music";
+			sourceTree = "<group>";
+		};
+		6AEB9CFB1BACF60E00AD19FA /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				6AEB9CFC1BACF60E00AD19FA /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		6AEB9D141BACF60F00AD19FA /* Lignite MusicTests */ = {
+			isa = PBXGroup;
+			children = (
+				6AEB9D151BACF60F00AD19FA /* Lignite_MusicTests.m */,
+				6AEB9D171BACF60F00AD19FA /* Info.plist */,
+			);
+			path = "Lignite MusicTests";
+			sourceTree = "<group>";
+		};
+		6AEB9D1F1BACF60F00AD19FA /* Lignite MusicUITests */ = {
+			isa = PBXGroup;
+			children = (
+				6AEB9D201BACF60F00AD19FA /* Lignite_MusicUITests.m */,
+				6AEB9D221BACF60F00AD19FA /* Info.plist */,
+			);
+			path = "Lignite MusicUITests";
+			sourceTree = "<group>";
+		};
+		6AEB9D2E1BAD679F00AD19FA /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				6AEB9D391BAD824E00AD19FA /* lignite_background.jpg */,
+				6AEB9D311BAD812700AD19FA /* pause_white.png */,
+				6AEB9D321BAD812700AD19FA /* play_white.png */,
+				6AEB9D331BAD812700AD19FA /* repeat_white.png */,
+				6AEB9D341BAD812700AD19FA /* shuffle_white.png */,
+			);
+			name = Images;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		6AEB9CF71BACF60E00AD19FA /* Lignite Music */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6AEB9D251BACF60F00AD19FA /* Build configuration list for PBXNativeTarget "Lignite Music" */;
+			buildPhases = (
+				6AEB9CF41BACF60E00AD19FA /* Sources */,
+				6AEB9CF51BACF60E00AD19FA /* Frameworks */,
+				6AEB9CF61BACF60E00AD19FA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Lignite Music";
+			productName = "Lignite Music";
+			productReference = 6AEB9CF81BACF60E00AD19FA /* Lignite Music.app */;
+			productType = "com.apple.product-type.application";
+		};
+		6AEB9D101BACF60F00AD19FA /* Lignite MusicTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6AEB9D281BACF60F00AD19FA /* Build configuration list for PBXNativeTarget "Lignite MusicTests" */;
+			buildPhases = (
+				6AEB9D0D1BACF60F00AD19FA /* Sources */,
+				6AEB9D0E1BACF60F00AD19FA /* Frameworks */,
+				6AEB9D0F1BACF60F00AD19FA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				6AEB9D131BACF60F00AD19FA /* PBXTargetDependency */,
+			);
+			name = "Lignite MusicTests";
+			productName = "Lignite MusicTests";
+			productReference = 6AEB9D111BACF60F00AD19FA /* Lignite MusicTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		6AEB9D1B1BACF60F00AD19FA /* Lignite MusicUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6AEB9D2B1BACF60F00AD19FA /* Build configuration list for PBXNativeTarget "Lignite MusicUITests" */;
+			buildPhases = (
+				6AEB9D181BACF60F00AD19FA /* Sources */,
+				6AEB9D191BACF60F00AD19FA /* Frameworks */,
+				6AEB9D1A1BACF60F00AD19FA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				6AEB9D1E1BACF60F00AD19FA /* PBXTargetDependency */,
+			);
+			name = "Lignite MusicUITests";
+			productName = "Lignite MusicUITests";
+			productReference = 6AEB9D1C1BACF60F00AD19FA /* Lignite MusicUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		6AEB9CF01BACF60E00AD19FA /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0700;
+				ORGANIZATIONNAME = Lignite;
+				TargetAttributes = {
+					6AEB9CF71BACF60E00AD19FA = {
+						CreatedOnToolsVersion = 7.0;
+						DevelopmentTeam = FC8DY8T6N2;
+						SystemCapabilities = {
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
+					};
+					6AEB9D101BACF60F00AD19FA = {
+						CreatedOnToolsVersion = 7.0;
+						TestTargetID = 6AEB9CF71BACF60E00AD19FA;
+					};
+					6AEB9D1B1BACF60F00AD19FA = {
+						CreatedOnToolsVersion = 7.0;
+						TestTargetID = 6AEB9CF71BACF60E00AD19FA;
+					};
+				};
+			};
+			buildConfigurationList = 6AEB9CF31BACF60E00AD19FA /* Build configuration list for PBXProject "Lignite Music" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 6AEB9CEF1BACF60E00AD19FA;
+			productRefGroup = 6AEB9CF91BACF60E00AD19FA /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				6AEB9CF71BACF60E00AD19FA /* Lignite Music */,
+				6AEB9D101BACF60F00AD19FA /* Lignite MusicTests */,
+				6AEB9D1B1BACF60F00AD19FA /* Lignite MusicUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		6AEB9CF61BACF60E00AD19FA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6AEB9D0B1BACF60E00AD19FA /* LaunchScreen.storyboard in Resources */,
+				6AEB9D3A1BAD824E00AD19FA /* lignite_background.jpg in Resources */,
+				6AEB9D381BAD812700AD19FA /* shuffle_white.png in Resources */,
+				6AEB9D361BAD812700AD19FA /* play_white.png in Resources */,
+				6AEB9D081BACF60E00AD19FA /* Assets.xcassets in Resources */,
+				6AEB9D061BACF60E00AD19FA /* Main.storyboard in Resources */,
+				6AEB9D351BAD812700AD19FA /* pause_white.png in Resources */,
+				6AEB9D371BAD812700AD19FA /* repeat_white.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6AEB9D0F1BACF60F00AD19FA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6AEB9D1A1BACF60F00AD19FA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		6AEB9CF41BACF60E00AD19FA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6AEB9D031BACF60E00AD19FA /* ViewController.m in Sources */,
+				6AEB9D001BACF60E00AD19FA /* AppDelegate.m in Sources */,
+				6AEB9CFD1BACF60E00AD19FA /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6AEB9D0D1BACF60F00AD19FA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6AEB9D161BACF60F00AD19FA /* Lignite_MusicTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6AEB9D181BACF60F00AD19FA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6AEB9D211BACF60F00AD19FA /* Lignite_MusicUITests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		6AEB9D131BACF60F00AD19FA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 6AEB9CF71BACF60E00AD19FA /* Lignite Music */;
+			targetProxy = 6AEB9D121BACF60F00AD19FA /* PBXContainerItemProxy */;
+		};
+		6AEB9D1E1BACF60F00AD19FA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 6AEB9CF71BACF60E00AD19FA /* Lignite Music */;
+			targetProxy = 6AEB9D1D1BACF60F00AD19FA /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		6AEB9D041BACF60E00AD19FA /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6AEB9D051BACF60E00AD19FA /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		6AEB9D091BACF60E00AD19FA /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6AEB9D0A1BACF60E00AD19FA /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		6AEB9D231BACF60F00AD19FA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		6AEB9D241BACF60F00AD19FA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		6AEB9D261BACF60F00AD19FA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				INFOPLIST_FILE = "Lignite Music/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = lignite.io.music;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+			};
+			name = Debug;
+		};
+		6AEB9D271BACF60F00AD19FA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				INFOPLIST_FILE = "Lignite Music/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = lignite.io.music;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+			};
+			name = Release;
+		};
+		6AEB9D291BACF60F00AD19FA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = "Lignite MusicTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "lignite.io.Lignite-MusicTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Lignite Music.app/Lignite Music";
+			};
+			name = Debug;
+		};
+		6AEB9D2A1BACF60F00AD19FA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = "Lignite MusicTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "lignite.io.Lignite-MusicTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Lignite Music.app/Lignite Music";
+			};
+			name = Release;
+		};
+		6AEB9D2C1BACF60F00AD19FA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = "Lignite MusicUITests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "lignite.io.Lignite-MusicUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = "Lignite Music";
+				USES_XCTRUNNER = YES;
+			};
+			name = Debug;
+		};
+		6AEB9D2D1BACF60F00AD19FA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = "Lignite MusicUITests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "lignite.io.Lignite-MusicUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = "Lignite Music";
+				USES_XCTRUNNER = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		6AEB9CF31BACF60E00AD19FA /* Build configuration list for PBXProject "Lignite Music" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6AEB9D231BACF60F00AD19FA /* Debug */,
+				6AEB9D241BACF60F00AD19FA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6AEB9D251BACF60F00AD19FA /* Build configuration list for PBXNativeTarget "Lignite Music" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6AEB9D261BACF60F00AD19FA /* Debug */,
+				6AEB9D271BACF60F00AD19FA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		6AEB9D281BACF60F00AD19FA /* Build configuration list for PBXNativeTarget "Lignite MusicTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6AEB9D291BACF60F00AD19FA /* Debug */,
+				6AEB9D2A1BACF60F00AD19FA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		6AEB9D2B1BACF60F00AD19FA /* Build configuration list for PBXNativeTarget "Lignite MusicUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6AEB9D2C1BACF60F00AD19FA /* Debug */,
+				6AEB9D2D1BACF60F00AD19FA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 6AEB9CF01BACF60E00AD19FA /* Project object */;
+}
