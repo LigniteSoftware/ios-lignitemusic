@@ -8,9 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import <MediaPlayer/MediaPlayer.h>
+#import "XYPieChart.h"
 
-@interface ViewController : UIViewController
+@interface LMNowPlayingView : UIView
 
+- (void)viewDidLoad;
 
 @end
 
