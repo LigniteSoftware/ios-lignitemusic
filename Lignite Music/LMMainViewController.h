@@ -7,7 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MediaPlayer/MediaPlayer.h>
 
 @interface LMMainViewController : UIViewController
+
+@property MPMusicPlayerController *musicPlayer;
+
+typedef enum {
+    SWITCHER_TYPE_ALBUM
+} SwitcherType;
 
 @end

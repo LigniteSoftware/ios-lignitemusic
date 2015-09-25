@@ -11,6 +11,9 @@
 		6A2C3CAD1BAED34500EE7677 /* LMMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A2C3CAC1BAED34500EE7677 /* LMMainViewController.m */; settings = {ASSET_TAGS = (); }; };
 		6A2C3CB01BAEE7ED00EE7677 /* PieChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A2C3CAF1BAEE7ED00EE7677 /* PieChartView.m */; settings = {ASSET_TAGS = (); }; };
 		6A2C3CB31BAF1B3700EE7677 /* LMAlbumView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A2C3CB21BAF1B3700EE7677 /* LMAlbumView.m */; settings = {ASSET_TAGS = (); }; };
+		6A313C0C1BB448A8002BBC33 /* NPTextInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A313C0B1BB448A8002BBC33 /* NPTextInfoView.m */; settings = {ASSET_TAGS = (); }; };
+		6A313C0F1BB448E5002BBC33 /* NPControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A313C0E1BB448E5002BBC33 /* NPControlView.m */; settings = {ASSET_TAGS = (); }; };
+		6A313C121BB44959002BBC33 /* NPAlbumArtView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A313C111BB44959002BBC33 /* NPAlbumArtView.m */; settings = {ASSET_TAGS = (); }; };
 		6AEB9CFD1BACF60E00AD19FA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AEB9CFC1BACF60E00AD19FA /* main.m */; };
 		6AEB9D001BACF60E00AD19FA /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AEB9CFF1BACF60E00AD19FA /* AppDelegate.m */; };
 		6AEB9D031BACF60E00AD19FA /* LMNowPlayingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AEB9D021BACF60E00AD19FA /* LMNowPlayingView.m */; };
@@ -53,6 +56,13 @@
 		6A2C3CAF1BAEE7ED00EE7677 /* PieChartView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PieChartView.m; sourceTree = "<group>"; };
 		6A2C3CB11BAF1B3700EE7677 /* LMAlbumView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMAlbumView.h; sourceTree = "<group>"; };
 		6A2C3CB21BAF1B3700EE7677 /* LMAlbumView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMAlbumView.m; sourceTree = "<group>"; };
+		6A313C0A1BB448A8002BBC33 /* NPTextInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NPTextInfoView.h; sourceTree = "<group>"; };
+		6A313C0B1BB448A8002BBC33 /* NPTextInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NPTextInfoView.m; sourceTree = "<group>"; };
+		6A313C0D1BB448E5002BBC33 /* NPControlView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NPControlView.h; sourceTree = "<group>"; };
+		6A313C0E1BB448E5002BBC33 /* NPControlView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NPControlView.m; sourceTree = "<group>"; };
+		6A313C101BB44959002BBC33 /* NPAlbumArtView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NPAlbumArtView.h; sourceTree = "<group>"; };
+		6A313C111BB44959002BBC33 /* NPAlbumArtView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NPAlbumArtView.m; sourceTree = "<group>"; };
+		6A313C131BB44A8F002BBC33 /* LMExtras.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMExtras.h; sourceTree = "<group>"; };
 		6AEB9CF81BACF60E00AD19FA /* Lignite Music.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Lignite Music.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6AEB9CFC1BACF60E00AD19FA /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		6AEB9CFE1BACF60E00AD19FA /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -102,6 +112,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6A313C091BB4485A002BBC33 /* NowPlayingView */ = {
+			isa = PBXGroup;
+			children = (
+				6A313C101BB44959002BBC33 /* NPAlbumArtView.h */,
+				6A313C111BB44959002BBC33 /* NPAlbumArtView.m */,
+				6A313C0D1BB448E5002BBC33 /* NPControlView.h */,
+				6A313C0E1BB448E5002BBC33 /* NPControlView.m */,
+				6A313C0A1BB448A8002BBC33 /* NPTextInfoView.h */,
+				6A313C0B1BB448A8002BBC33 /* NPTextInfoView.m */,
+			);
+			name = NowPlayingView;
+			sourceTree = "<group>";
+		};
 		6AEB9CEF1BACF60E00AD19FA = {
 			isa = PBXGroup;
 			children = (
@@ -125,11 +148,13 @@
 		6AEB9CFA1BACF60E00AD19FA /* Lignite Music */ = {
 			isa = PBXGroup;
 			children = (
+				6A313C091BB4485A002BBC33 /* NowPlayingView */,
 				6AEB9D2E1BAD679F00AD19FA /* Images */,
 				6AEB9CFE1BACF60E00AD19FA /* AppDelegate.h */,
 				6AEB9CFF1BACF60E00AD19FA /* AppDelegate.m */,
 				6A2C3CB11BAF1B3700EE7677 /* LMAlbumView.h */,
 				6A2C3CB21BAF1B3700EE7677 /* LMAlbumView.m */,
+				6A313C131BB44A8F002BBC33 /* LMExtras.h */,
 				6A2C3CAB1BAED34500EE7677 /* LMMainViewController.h */,
 				6A2C3CAC1BAED34500EE7677 /* LMMainViewController.m */,
 				6AEB9D011BACF60E00AD19FA /* LMNowPlayingView.h */,
@@ -329,9 +354,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				6AEB9D031BACF60E00AD19FA /* LMNowPlayingView.m in Sources */,
+				6A313C0F1BB448E5002BBC33 /* NPControlView.m in Sources */,
 				6AEB9D001BACF60E00AD19FA /* AppDelegate.m in Sources */,
 				6A2C3CB01BAEE7ED00EE7677 /* PieChartView.m in Sources */,
 				6A2C3CAD1BAED34500EE7677 /* LMMainViewController.m in Sources */,
+				6A313C0C1BB448A8002BBC33 /* NPTextInfoView.m in Sources */,
+				6A313C121BB44959002BBC33 /* NPAlbumArtView.m in Sources */,
 				6A2C3CAA1BAE539E00EE7677 /* XYPieChart.m in Sources */,
 				6AEB9CFD1BACF60E00AD19FA /* main.m in Sources */,
 				6A2C3CB31BAF1B3700EE7677 /* LMAlbumView.m in Sources */,

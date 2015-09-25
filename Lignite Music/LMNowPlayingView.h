@@ -12,7 +12,16 @@
 
 @interface LMNowPlayingView : UIView
 
-- (void)viewDidLoad;
+@property MPMusicPlayerController *musicPlayer;
+
+typedef enum {
+    NOW_PLAYING_VIEW_MODE_FULLSCREEN = 0,
+    NOW_PLAYING_VIDE_MODE_COMPRESSED,
+    NOW_PLAYING_VIEW_MODE_HIDDEN
+} NowPlayingViewMode;
+
+- (void)setupView;
+- (void)updateNowPlayingItem:(MPMediaItem*)nowPlaying;
 
 @end
 
