@@ -10,4 +10,7 @@
 
 @interface NPTextInfoView : UIView
 
+- (void)updateContentWithMediaItem:(MPMediaItem*)newItem;
+- (void)updateContentWithFrame:(CGRect)newFrame isPortrait:(BOOL)isPortrait;
+
 @end

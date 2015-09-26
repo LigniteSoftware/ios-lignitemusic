@@ -14,6 +14,7 @@
 - (id)initWithMusicPlayer:(MPMusicPlayerController*)musicPlayer;
 
 - (void)updateWithMediaItem:(MPMediaItem*)newItem;
-- (void)updateWithOrientation:(UIDeviceOrientation)newOrientation;
+- (void)updateWithOrientation:(UIDeviceOrientation)newOrientation  withRootFrame:(CGRect)newRootFrame;
+- (void)updateWithRootFrame:(CGRect)newRootFrame withViewMode:(BOOL)newViewMode;
 
 @end

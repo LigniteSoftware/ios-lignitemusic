@@ -10,4 +10,10 @@
 
 @interface NPAlbumArtView : UIView
 
+@property MPMusicPlayerController *musicPlayer;
+
+- (id)init;
+- (void)updateContentWithMediaItem:(MPMediaItem*)nowPlaying;
+- (void)updateContentWithFrame:(CGRect)newFrame;
+
 @end
