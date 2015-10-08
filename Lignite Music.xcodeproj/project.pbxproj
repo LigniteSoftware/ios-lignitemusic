@@ -29,6 +29,8 @@
 		6AEB9D351BAD812700AD19FA /* pause_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AEB9D311BAD812700AD19FA /* pause_white.png */; settings = {ASSET_TAGS = (); }; };
 		6AEB9D361BAD812700AD19FA /* play_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AEB9D321BAD812700AD19FA /* play_white.png */; settings = {ASSET_TAGS = (); }; };
 		6AEB9D3A1BAD824E00AD19FA /* lignite_background.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6AEB9D391BAD824E00AD19FA /* lignite_background.jpg */; settings = {ASSET_TAGS = (); }; };
+		6AFD2EDD1BC41ECD0083FE9E /* LMAlbumViewItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AFD2EDC1BC41ECC0083FE9E /* LMAlbumViewItem.m */; settings = {ASSET_TAGS = (); }; };
+		6AFD2EDF1BC423850083FE9E /* no_album.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AFD2EDE1BC423850083FE9E /* no_album.png */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -88,6 +90,9 @@
 		6AEB9D311BAD812700AD19FA /* pause_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pause_white.png; sourceTree = "<group>"; };
 		6AEB9D321BAD812700AD19FA /* play_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = play_white.png; sourceTree = "<group>"; };
 		6AEB9D391BAD824E00AD19FA /* lignite_background.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = lignite_background.jpg; sourceTree = "<group>"; };
+		6AFD2EDB1BC41ECC0083FE9E /* LMAlbumViewItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMAlbumViewItem.h; sourceTree = "<group>"; };
+		6AFD2EDC1BC41ECC0083FE9E /* LMAlbumViewItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMAlbumViewItem.m; sourceTree = "<group>"; };
+		6AFD2EDE1BC423850083FE9E /* no_album.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = no_album.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,6 +129,12 @@
 				6A313C0E1BB448E5002BBC33 /* NPControlView.m */,
 				6A313C0A1BB448A8002BBC33 /* NPTextInfoView.h */,
 				6A313C0B1BB448A8002BBC33 /* NPTextInfoView.m */,
+				6AEB9D011BACF60E00AD19FA /* LMNowPlayingView.h */,
+				6AEB9D021BACF60E00AD19FA /* LMNowPlayingView.m */,
+				6A2C3CAE1BAEE7ED00EE7677 /* PieChartView.h */,
+				6A2C3CAF1BAEE7ED00EE7677 /* PieChartView.m */,
+				6A2C3CA81BAE539E00EE7677 /* XYPieChart.h */,
+				6A2C3CA91BAE539E00EE7677 /* XYPieChart.m */,
 			);
 			name = NowPlayingView;
 			sourceTree = "<group>";
@@ -151,23 +162,16 @@
 		6AEB9CFA1BACF60E00AD19FA /* Lignite Music */ = {
 			isa = PBXGroup;
 			children = (
+				6AFD2EDA1BC41EAC0083FE9E /* AlbumView */,
 				6A313C091BB4485A002BBC33 /* NowPlayingView */,
 				6AEB9D2E1BAD679F00AD19FA /* Images */,
 				6AEB9CFE1BACF60E00AD19FA /* AppDelegate.h */,
 				6AEB9CFF1BACF60E00AD19FA /* AppDelegate.m */,
-				6A2C3CB11BAF1B3700EE7677 /* LMAlbumView.h */,
-				6A2C3CB21BAF1B3700EE7677 /* LMAlbumView.m */,
 				6A313C161BB59AE8002BBC33 /* LMButton.h */,
 				6A313C171BB59AE8002BBC33 /* LMButton.m */,
 				6A313C131BB44A8F002BBC33 /* LMExtras.h */,
 				6A2C3CAB1BAED34500EE7677 /* LMMainViewController.h */,
 				6A2C3CAC1BAED34500EE7677 /* LMMainViewController.m */,
-				6AEB9D011BACF60E00AD19FA /* LMNowPlayingView.h */,
-				6AEB9D021BACF60E00AD19FA /* LMNowPlayingView.m */,
-				6A2C3CAE1BAEE7ED00EE7677 /* PieChartView.h */,
-				6A2C3CAF1BAEE7ED00EE7677 /* PieChartView.m */,
-				6A2C3CA81BAE539E00EE7677 /* XYPieChart.h */,
-				6A2C3CA91BAE539E00EE7677 /* XYPieChart.m */,
 				6AEB9D041BACF60E00AD19FA /* Main.storyboard */,
 				6AEB9D071BACF60E00AD19FA /* Assets.xcassets */,
 				6AEB9D091BACF60E00AD19FA /* LaunchScreen.storyboard */,
@@ -212,8 +216,20 @@
 				6AEB9D391BAD824E00AD19FA /* lignite_background.jpg */,
 				6AEB9D311BAD812700AD19FA /* pause_white.png */,
 				6AEB9D321BAD812700AD19FA /* play_white.png */,
+				6AFD2EDE1BC423850083FE9E /* no_album.png */,
 			);
 			name = Images;
+			sourceTree = "<group>";
+		};
+		6AFD2EDA1BC41EAC0083FE9E /* AlbumView */ = {
+			isa = PBXGroup;
+			children = (
+				6A2C3CB11BAF1B3700EE7677 /* LMAlbumView.h */,
+				6A2C3CB21BAF1B3700EE7677 /* LMAlbumView.m */,
+				6AFD2EDB1BC41ECC0083FE9E /* LMAlbumViewItem.h */,
+				6AFD2EDC1BC41ECC0083FE9E /* LMAlbumViewItem.m */,
+			);
+			name = AlbumView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -334,6 +350,7 @@
 				6AEB9D081BACF60E00AD19FA /* Assets.xcassets in Resources */,
 				6AEB9D061BACF60E00AD19FA /* Main.storyboard in Resources */,
 				6AEB9D351BAD812700AD19FA /* pause_white.png in Resources */,
+				6AFD2EDF1BC423850083FE9E /* no_album.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -358,6 +375,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6AFD2EDD1BC41ECD0083FE9E /* LMAlbumViewItem.m in Sources */,
 				6AEB9D031BACF60E00AD19FA /* LMNowPlayingView.m in Sources */,
 				6A313C0F1BB448E5002BBC33 /* NPControlView.m in Sources */,
 				6AEB9D001BACF60E00AD19FA /* AppDelegate.m in Sources */,

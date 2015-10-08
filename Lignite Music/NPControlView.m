@@ -251,12 +251,12 @@
     CGSize controlButtonSize = CGSizeMake(self.frame.size.width/6, self.frame.size.width/4 - 40);
     CGPoint controlButtonOrigin = CGPointMake(self.frame.size.width/2 - controlButtonSize.width - 20, self.frame.size.height-controlButtonSize.height-20);
     
-    self.shuffleButton = [[LMButton alloc]initWithTitle:@"Shuffle" withImage:[UIImage imageNamed:@"shuffle_black.png"] withFrame:CGRectMake(controlButtonOrigin.x, controlButtonOrigin.y, controlButtonSize.width, controlButtonSize.height)];
+    self.shuffleButton = [[LMButton alloc]initWithTitle:@"Default" withImage:[UIImage imageNamed:@"shuffle_black.png"] withFrame:CGRectMake(controlButtonOrigin.x, controlButtonOrigin.y, controlButtonSize.width, controlButtonSize.height)];
     self.shuffleButton.backgroundColor = [UIColor whiteColor];
     self.shuffleButton.delegate = self;
     [self addSubview:self.shuffleButton];
     
-    self.repeatButton = [[LMButton alloc]initWithTitle:@"Repeat" withImage:[UIImage imageNamed:@"repeat_black.png"] withFrame:CGRectMake(controlButtonOrigin.x + 40 + controlButtonSize.width, controlButtonOrigin.y, controlButtonSize.width, controlButtonSize.height)];
+    self.repeatButton = [[LMButton alloc]initWithTitle:@"Default" withImage:[UIImage imageNamed:@"repeat_black.png"] withFrame:CGRectMake(controlButtonOrigin.x + 40 + controlButtonSize.width, controlButtonOrigin.y, controlButtonSize.width, controlButtonSize.height)];
     self.repeatButton.backgroundColor = [UIColor whiteColor];
     self.repeatButton.delegate = self;
     [self addSubview:self.repeatButton];

@@ -35,11 +35,13 @@
 #define BATTERY_SAVER NO
 
 - (IBAction)nextSong:(id)sender {
-    [self.musicPlayer setNowPlayingItem:[[[MPMediaQuery songsQuery] items] objectAtIndex:[self.musicPlayer indexOfNowPlayingItem]+1]];
+    //[self.musicPlayer setNowPlayingItem:[[[MPMediaQuery songsQuery] items] objectAtIndex:[self.musicPlayer indexOfNowPlayingItem]+1]];
+    [self.musicPlayer skipToNextItem];
 }
 
 - (IBAction)previousSong:(id)sender {
-    [self.musicPlayer setNowPlayingItem:[[[MPMediaQuery songsQuery] items] objectAtIndex:[self.musicPlayer indexOfNowPlayingItem]-1]];
+    //[self.musicPlayer setNowPlayingItem:[[[MPMediaQuery songsQuery] items] objectAtIndex:[self.musicPlayer indexOfNowPlayingItem]-1]];
+    [self.musicPlayer skipToPreviousItem];
 }
 
 - (void)updateNowPlayingItem:(MPMediaItem*)nowPlaying {

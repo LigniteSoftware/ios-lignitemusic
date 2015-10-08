@@ -10,6 +10,6 @@
 
 @interface LMAlbumView : UIView
 
-- (id)initWithContentItem:(MPContentItem*)item;
+- (id)initWithFrame:(CGRect)frame;
 
 @end
