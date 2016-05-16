@@ -12,6 +12,7 @@
 
 @property MPMusicPlayerController *musicPlayer;
 
+- (void)setupWithAlbumImage:(UIImage*)albumImage;
 - (void)updateContentWithMediaItem:(MPMediaItem*)nowPlaying;
 
 @end

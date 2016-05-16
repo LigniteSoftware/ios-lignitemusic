@@ -9,12 +9,14 @@
 #import <UIKit/UIKit.h>
 #import <MediaPlayer/MediaPlayer.h>
 #import "LMButton.h"
+#import "NPAlbumArtView.h"
 
 @interface LMNowPlayingViewController : UIViewController
 
 @property MPMusicPlayerController *musicPlayer;
 
 @property IBOutlet UIImageView *backgroundImageView;
+@property IBOutlet NPAlbumArtView *albumArtView;
 @property IBOutlet UISlider *songDurationSlider;
 @property IBOutlet UILabel *songNumberLabel, *songDurationLabel;
 @property IBOutlet UILabel *songTitleLabel, *songArtistLabel, *songAlbumLabel;

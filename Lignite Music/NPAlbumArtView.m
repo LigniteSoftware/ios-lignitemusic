@@ -26,6 +26,53 @@
 
 //#define BATTERY_SAVER
 
+- (void)setupWithAlbumImage:(UIImage*)albumImage {
+    self.backgroundColor = [UIColor clearColor];
+    
+    self.albumArt = [[UIImageView alloc]init];
+    self.albumArt.translatesAutoresizingMaskIntoConstraints = NO;
+    [self addSubview:self.albumArt];
+    
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.albumArt
+                                                               attribute:NSLayoutAttributeCenterX
+                                                               relatedBy:NSLayoutRelationEqual
+                                                                  toItem:self
+                                                               attribute:NSLayoutAttributeCenterX
+                                                              multiplier:1.0
+                                                                constant:0]];
+    
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.albumArt
+                                                     attribute:NSLayoutAttributeCenterY
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:self
+                                                     attribute:NSLayoutAttributeCenterY
+                                                    multiplier:1.0
+                                                      constant:0]];
+    
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.albumArt
+                                                     attribute:NSLayoutAttributeWidth
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:self
+                                                     attribute:NSLayoutAttributeWidth
+                                                    multiplier:0.75
+                                                      constant:0]];
+    
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.albumArt
+                                                     attribute:NSLayoutAttributeHeight
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:self
+                                                     attribute:NSLayoutAttributeWidth
+                                                    multiplier:0.75
+                                                      constant:0]];
+}
+
+- (void)updateContentWithMediaItem:(MPMediaItem*)nowPlaying {
+    self.albumArt.image = [[nowPlaying artwork]imageWithSize:self.albumArt.frame.size];
+    self.albumArt.layer.cornerRadius = self.albumArt.frame.size.width/2;
+
+    NSLog(@"Album frame of %@, actual frame of %@", NSStringFromCGRect(self.albumArt.frame), NSStringFromCGRect(self.frame));
+}
+
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
         
@@ -59,10 +106,6 @@
      */
 
     return self;
-}
-
-- (void)updateContentWithMediaItem:(MPMediaItem*)nowPlaying {
-    self.albumArt.image = [[nowPlaying artwork]imageWithSize:[[nowPlaying artwork] imageCropRect].size];
 }
 
 - (void)updateContentWithFrame:(CGRect)newFrame {

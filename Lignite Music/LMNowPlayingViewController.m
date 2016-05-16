@@ -16,6 +16,7 @@
 
 @implementation LMNowPlayingViewController
 
+
 - (void)nowPlayingItemChanged:(id) sender {
     //[self.playingView updateNowPlayingItem:self.musicPlayer.nowPlayingItem];
     [self.songTitleLabel setText:self.musicPlayer.nowPlayingItem.title];
@@ -24,20 +25,20 @@
     [self.songNumberLabel setText:[NSString stringWithFormat:@"Song %lu of %lu", self.musicPlayer.nowPlayingItem.albumTrackNumber, self.musicPlayer.nowPlayingItem.albumTrackCount]];
     
     self.songDurationSlider.maximumValue = [self.musicPlayer.nowPlayingItem playbackDuration];
+    [self.albumArtView updateContentWithMediaItem:self.musicPlayer.nowPlayingItem];
     
+    UIImage *albumImage;
     CGSize size = self.backgroundImageView.frame.size;
     if(![self.musicPlayer.nowPlayingItem artwork]){
-        self.backgroundImageView.image = [UIImage imageNamed:@"lignite_background.jpg"];
+        albumImage = [UIImage imageNamed:@"lignite_background.jpg"];
     }
     else{
-        self.backgroundImageView.image = [[self.musicPlayer.nowPlayingItem artwork]imageWithSize:CGSizeMake(size.width, size.height)];
+        albumImage = [[self.musicPlayer.nowPlayingItem artwork]imageWithSize:CGSizeMake(size.width, size.height)];
     }
-    
-    NSLog(@"Got image of %@ compared to %@, %@", self.backgroundImageView.image, [self.musicPlayer.nowPlayingItem artwork], NSStringFromCGSize(size));
     
     CIFilter *gaussianBlurFilter = [CIFilter filterWithName:@"CIGaussianBlur"];
     [gaussianBlurFilter setDefaults];
-    CIImage *inputImage = [CIImage imageWithCGImage:[self.backgroundImageView.image CGImage]];
+    CIImage *inputImage = [CIImage imageWithCGImage:[albumImage CGImage]];
     [gaussianBlurFilter setValue:inputImage forKey:kCIInputImageKey];
     [gaussianBlurFilter setValue:@10 forKey:kCIInputRadiusKey];
     
@@ -47,7 +48,8 @@
     UIImage *image       = [UIImage imageWithCGImage:cgimg];
     
     self.backgroundImageView.image = image;
-    
+    //[self.view insertSubview:self.backgroundImageView atIndex:0];
+    //self.backgroundImageView.hidden = YES;
     [self.view sendSubviewToBack:self.backgroundImageView];
 }
 
@@ -103,6 +105,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    [self.albumArtView setupWithAlbumImage:[UIImage imageNamed:@"no_album.png"]];
     
     [self.shuffleButton setupWithTitle:@"Shuffle" withImage:[UIImage imageNamed:@"shuffle_black.png"]];
     [self.repeatButton setupWithTitle:@"Repeat" withImage:[UIImage imageNamed:@"repeat_black.png"]];
