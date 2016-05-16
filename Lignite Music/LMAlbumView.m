@@ -10,7 +10,7 @@
 #import "LMAlbumView.h"
 #import "LMAlbumViewItem.h"
 
-@interface LMAlbumView()
+@interface LMAlbumView() <UIScrollViewDelegate>
 
 @property UIScrollView *rootScrollView;
 @property UILabel *titleLabel, *subtitleLabel;
@@ -20,8 +20,34 @@
 
 @implementation LMAlbumView
 
-void initWithFrame(CGRect frame){
+- (void)reloadAlbumItems {
+    CGRect visibleRect = CGRectMake(self.rootScrollView.contentOffset.x, self.rootScrollView.contentOffset.y, self.rootScrollView.contentOffset.x + self.rootScrollView.bounds.size.width, self.rootScrollView.contentOffset.y + self.rootScrollView.bounds.size.height);
     
+    //NSLog(@"rect %@", NSStringFromCGRect(visibleRect));
+    
+    NSArray *albums = [[MPMediaQuery albumsQuery] collections];
+    for(int i = 0; i < [albums count]; i++){
+        LMAlbumViewItem *item = [self.albumsItemArray objectAtIndex:i];
+        CGRect itemFrame = item.frame;
+        int newRectStart = visibleRect.origin.y;
+        int newFrameEnd = visibleRect.origin.y+self.frame.size.height;
+        int itemFrameStart = itemFrame.origin.y+itemFrame.size.height;
+        if(itemFrameStart >= newRectStart && itemFrameStart <= newFrameEnd+itemFrame.size.height){
+            //NSLog(@"%d is under, with value %d (compared %d, %d)", i, itemFrameStart, newRectStart, newFrameEnd);
+            [item loadImage];
+            [self.rootScrollView addSubview:item];
+        }
+        else{
+            //NSLog(@"%d is OVER, with value %d (compared %d, %d)", i, itemFrameStart, newRectStart, newFrameEnd);
+            [item unloadImage];
+            [item removeFromSuperview];
+        }
+    }
+
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    [self reloadAlbumItems];
 }
 
 - (id)initWithFrame:(CGRect)frame {
@@ -37,7 +63,37 @@ void initWithFrame(CGRect frame){
         [self addSubview:self.rootScrollView];
         
         NSTimeInterval startingTime = [[NSDate date] timeIntervalSince1970];
+        
+        MPMediaQuery *everything = [MPMediaQuery albumsQuery];
+        [everything setGroupingType: MPMediaGroupingAlbum];
+        
+        NSLog(@"Logging items from a generic query...");
+        
+        NSArray *albums = [[MPMediaQuery albumsQuery] collections];
+        int statusBarAdjust = [UIApplication sharedApplication].statusBarFrame.size.height*1.5;
+        BOOL isOddNumber = [albums count] % 2 != 0;
+        for(int i = 0; i < [[everything collections] count]; i++){
+            MPMediaItemCollection *collection = [[everything collections] objectAtIndex:i];
+            //NSString *songTitle = [song valueForProperty: MPMediaItemPropertyTitle];
+            //NSLog (@"%lu for %@", (unsigned long)[section count], [[section representativeItem] title]);
+            uint8_t rowIsLeft = i % 2;
+            int itemWidth = self.frame.size.width/2;
+            CGRect itemFrame = CGRectMake(10+(itemWidth * rowIsLeft), (i/2)*(itemWidth) + statusBarAdjust, itemWidth - 20, itemWidth);
+            LMAlbumViewItem *newItem = [[LMAlbumViewItem alloc]initWithMediaItem:[collection representativeItem] onFrame:itemFrame withAlbumCount:[collection count]];
+            [self.albumsItemArray addObject:newItem];
+            [newItem loadImage];
+        }
+        /*
+        NSLog(@"Logging items from a generic query...");
+        for (MPMediaItemCollection *section in [everything collections]) {
+            
+            //NSString *songTitle = [song valueForProperty: MPMediaItemPropertyTitle];
+            NSLog (@"%lu for %@", (unsigned long)[section count], [[section representativeItem] title]);
+            
+        }
+         */
 
+        /*
         NSArray *albums = [[MPMediaQuery albumsQuery] collections];
         int statusBarAdjust = [UIApplication sharedApplication].statusBarFrame.size.height*1.5;
         BOOL isOddNumber = [albums count] % 2 != 0;
@@ -48,13 +104,19 @@ void initWithFrame(CGRect frame){
             int halfWidth = self.frame.size.width/2;
             CGRect itemFrame = CGRectMake(10+(halfWidth * rowIsLeft), (i/2)*(halfWidth)*1.2 + statusBarAdjust, halfWidth - 20, (halfWidth)*1.2);
             LMAlbumViewItem *newItem = [[LMAlbumViewItem alloc]initWithMediaItem:[[collection items] objectAtIndex:0] onFrame:itemFrame];
-            [self.rootScrollView addSubview:newItem];
+            [self.albumsItemArray addObject:newItem];
+            [newItem loadImage];
+            //[self.rootScrollView addSubview:newItem];
         }
-        [self.rootScrollView setContentSize:CGSizeMake(self.frame.size.width, ([albums count]/2)*(self.frame.size.width/2 * 1.2) + statusBarAdjust + (isOddNumber ? self.frame.size.width/2 : 0))];
+         */
+        self.rootScrollView.delegate = self;
+        [self.rootScrollView setContentSize:CGSizeMake(self.frame.size.width, ([albums count]/2)*(self.frame.size.width/2) + statusBarAdjust + (isOddNumber ? self.frame.size.width/2 : 0))];
         
         NSTimeInterval endingTime = [[NSDate date] timeIntervalSince1970];
         
         NSLog(@"Took %f seconds to complete.", endingTime-startingTime);
+        
+        [self reloadAlbumItems];
     }
     else{
         NSLog(@"Self (new instance of LMAlbumView) is nil!");

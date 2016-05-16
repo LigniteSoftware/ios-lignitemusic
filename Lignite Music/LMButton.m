@@ -17,20 +17,30 @@
 
 @implementation LMButton
 
+- (void)logFrame{
+    NSLog(@"The current frame for %@ is %@.", self, NSStringFromCGRect(self.frame));
+}
+
+- (void)willMoveToSuperview:(UIView *)newSuperview {
+    NSLog(@"Moving to superview %@, with a current frame of %@.", newSuperview, NSStringFromCGRect(self.frame));
+}
+
 /*
- Initializes the view with the title and image as well as root frame.
+ Sets the view up with the title and image as well as root frame.
  */
-- (id)initWithTitle:(NSString*)title withImage:(UIImage*)image withFrame:(CGRect)frame {
-    self = [super init];
-    self.frame = frame;
+- (void)setupWithTitle:(NSString*)title withImage:(UIImage*)image {
+    self.backgroundColor = [UIColor greenColor];
     
+    /*
     self.titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, self.frame.size.height/3 * 2, self.frame.size.width, self.frame.size.width/3)];
     self.titleLabel.text = title;
     self.titleLabel.textAlignment = NSTextAlignmentCenter;
     self.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Thin" size:14.0f];
     [self addSubview:self.titleLabel];
     
-    self.imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height/3 * 2)];
+    uint8_t padding = 14;
+    uint16_t diameter = self.frame.size.width-(padding*2);
+    self.imageView = [[UIImageView alloc]initWithFrame:CGRectMake(padding, padding, diameter, diameter)];
     self.imageView.image = image;
     self.imageView.contentMode = UIViewContentModeScaleAspectFit;
     [self addSubview:self.imageView];
@@ -38,11 +48,69 @@
     self.layer.masksToBounds = NO;
     self.layer.cornerRadius = 7.0;
     self.layer.borderWidth = 0.0;
+     */
     
+    self.imageView = [[UIImageView alloc]initWithImage:image];
+    self.imageView.backgroundColor = [UIColor blueColor];
+    self.imageView.contentMode = UIViewContentModeScaleAspectFit;
+    self.imageView.translatesAutoresizingMaskIntoConstraints = NO;
+    self.imageView.clipsToBounds = YES;
+    [self addSubview:self.imageView];
+    
+    NSLayoutConstraint *centerXConstraint = [NSLayoutConstraint constraintWithItem:self.imageView
+                                                                         attribute:NSLayoutAttributeCenterX
+                                                                         relatedBy:NSLayoutRelationEqual
+                                                                            toItem:self
+                                                                         attribute:NSLayoutAttributeCenterX
+                                                                        multiplier:1.0
+                                                                          constant:0];
+    
+    //Add constraint to image view that aligns it to the X center of the button's total area
+    [self addConstraint:centerXConstraint];
+    
+    //Add constraint to image view that aligns it to the Y center of the button's total area
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.imageView
+                                                     attribute:NSLayoutAttributeCenterY
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:self
+                                                     attribute:NSLayoutAttributeCenterY
+                                                    multiplier:1.0
+                                                      constant:0]];
+    
+    //Add constraint to the image view that fits it within the view's width, the padding being standard
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-[imageView]-|"
+                                                                 options:NSLayoutFormatAlignAllCenterY
+                                                                 metrics:nil
+                                                                   views:@{@"imageView":self.imageView}]];
+    
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.imageView
+                                                     attribute:NSLayoutAttributeHeight
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:self
+                                                     attribute:NSLayoutAttributeHeight
+                                                    multiplier:0.5
+                                                      constant:0]];
+    
+    self.titleLabel = [UILabel new];
+    self.titleLabel.text = title;
+    self.titleLabel.backgroundColor = [UIColor purpleColor];
+    self.titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    [self addSubview:self.titleLabel];
+    
+    //Add centering X constraint
+    [self addConstraint:centerXConstraint];
+    
+    //Add constraint that aligns the titleview to come after the imageview
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[imageView]-[titleView]"
+                                                                 options:NSLayoutFormatAlignAllCenterX
+                                                                 metrics:nil
+                                                                   views:@{@"imageView":self.imageView, @"titleView":self.titleLabel}]];
+    
+    //Add the click recognizer for actions
     UITapGestureRecognizer *clickedRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(buttonClicked)];
     [self addGestureRecognizer:clickedRecognizer];
     
-    return self;
+    NSLog(@"Setup complete.");
 }
 
 /*
@@ -79,6 +147,21 @@
         self.titleLabel.frame = CGRectMake(0, self.frame.size.height/3 * 2, self.frame.size.width, self.frame.size.width/3);
         self.imageView.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height/3 * 2);
     }];
+}
+
+- (void)drawRect:(CGRect)rect {
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    
+    NSLog(@"Drawing context...");
+    
+    CGContextSetRGBFillColor(ctx, 1, 1, 1, 1.0);
+    uint8_t thickness = 1;
+    CGContextSetLineWidth(ctx, thickness);
+    int centerY = self.frame.size.height/2;
+    uint16_t diameter = self.frame.size.width;
+    int padding = thickness*2;
+    CGRect circleRect = CGRectMake(padding, centerY-(diameter/2), diameter-padding*2, diameter-padding*2);
+    CGContextFillEllipseInRect(ctx, circleRect);
 }
 
 

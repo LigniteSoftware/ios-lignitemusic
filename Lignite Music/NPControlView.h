@@ -11,10 +11,10 @@
 
 @interface NPControlView : UIView
 
-- (id)initWithMusicPlayer:(MPMusicPlayerController*)musicPlayer;
+- (id)initWithMusicPlayer:(MPMusicPlayerController*)musicPlayer withViewMode:(uint8_t)viewMode onFrame:(CGRect)frame;
 
+- (IBAction)setPlaying:(id)sender;
 - (void)updateWithMediaItem:(MPMediaItem*)newItem;
-- (void)updateWithOrientation:(UIDeviceOrientation)newOrientation  withRootFrame:(CGRect)newRootFrame;
 - (void)updateWithRootFrame:(CGRect)newRootFrame withViewMode:(BOOL)newViewMode;
 
 @end

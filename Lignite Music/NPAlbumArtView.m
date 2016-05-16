@@ -24,15 +24,17 @@
 
 @implementation NPAlbumArtView
 
-#define BATTERY_SAVER NO
+//#define BATTERY_SAVER
 
-- (id)init {
-    self = [super init];
-    
+- (id)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+        
+#ifdef BATTERY_SAVER
     self.batteryEfficientMusicProgress = [[PieChartView alloc]init];
     self.batteryEfficientMusicProgress.delegate = self;
     self.batteryEfficientMusicProgress.datasource = self;
-    
+    [self addSubview:self.batteryEfficientMusicProgress];
+#else
     self.animatedMusicProgress = [[XYPieChart alloc]init];
     [self.animatedMusicProgress setDataSource:self];
     [self.animatedMusicProgress setDelegate:self];
@@ -42,12 +44,14 @@
     [self.animatedMusicProgress setUserInteractionEnabled:YES];
     [self.animatedMusicProgress setLabelShadowColor:[UIColor clearColor]];
     [self addSubview:self.animatedMusicProgress];
-    
+#endif
     self.albumArt = [[UIImageView alloc]init];
     self.albumArt.layer.masksToBounds = YES;
     [self addSubview:self.albumArt];
     
-    self.currentTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(onTimer:) userInfo:nil repeats:YES];
+    [self updateContentWithFrame:self.frame];
+    
+    self.currentTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(onTimer:) userInfo:nil repeats:YES];
     
     /*
     self.albumArt.backgroundColor = [UIColor yellowColor];
@@ -63,8 +67,6 @@
 
 - (void)updateContentWithFrame:(CGRect)newFrame {
     [UIView animateWithDuration:0.3 animations:^{
-        self.frame = newFrame;
-        
         CGSize newAlbumArtSize = CGSizeMake(self.frame.size.width/1.5, self.frame.size.width/1.5);
         CGPoint newStart = CGPointMake((self.frame.size.width-newAlbumArtSize.width)/2, (self.frame.size.height-newAlbumArtSize.height)/2);
         
@@ -72,27 +74,22 @@
         self.albumArt.frame = newAlbumArtFrame;
         self.albumArt.layer.cornerRadius = newAlbumArtSize.width/2;
         
+#ifdef BATTERY_SAVER
         self.batteryEfficientMusicProgress.frame = CGRectMake(self.frame.size.width/2, self.frame.size.height/2, self.frame.size.width, self.frame.size.width);
+#else
         self.animatedMusicProgress.frame = CGRectMake(self.frame.size.width/2, self.frame.size.height/2, self.frame.size.width, self.frame.size.width);
-        
         [self.animatedMusicProgress setPieRadius:newAlbumArtSize.width/2 + 10];
+#endif
     }];
 }
 
 - (void)onTimer:(NSTimer *)timer {
     if(timer != nil){
-        [self.animatedMusicProgress removeFromSuperview];
-        [self.batteryEfficientMusicProgress removeFromSuperview];
-        
-        if(!BATTERY_SAVER){
-            [self addSubview:self.animatedMusicProgress];
-            [self.animatedMusicProgress reloadData];
-        }
-        else{
-            [self addSubview:self.batteryEfficientMusicProgress];
-            [self.batteryEfficientMusicProgress reloadData];
-        }
-        [self addSubview:self.albumArt];
+#ifdef BATTERY_SAVER
+        [self.batteryEfficientMusicProgress reloadData];
+#else
+        [self.animatedMusicProgress reloadData];
+#endif
     }
 }
 

@@ -8,8 +8,8 @@
 
 #import <MediaPlayer/MediaPlayer.h>
 #import "NPControlView.h"
-#import "LMNowPlayingView.h"
 #import "LMButton.h"
+#import "LMNowPlayingView.h"
 
 #define durationSize 16.0f
 
@@ -17,6 +17,7 @@
 
 @property UIDeviceOrientation currentOrientation;
 @property BOOL isLandscape;
+@property NowPlayingViewMode viewMode;
 
 @property UILabel *songDurationLabel;
 @property UIButton *playSongButton;
@@ -88,12 +89,15 @@
  Sets whether or not the music is playing, and updates the UI accordingly.
  */
 - (IBAction)setPlaying:(id)sender {
-    if(self.musicPlayer.playbackState == MPMusicPlaybackStatePaused){
-        [self.musicPlayer play];
+    NSLog(@"Got an actual playback state of %d sender is nil %d", (int)self.musicPlayer.playbackState, (sender == nil));
+    if(sender != nil){
+        self.musicPlayer.playbackState == MPMusicPlaybackStatePaused ? [self.musicPlayer play] : [self.musicPlayer pause];
+    }
+    
+    if(self.musicPlayer.playbackState != MPMusicPlaybackStatePaused){
         [self.playSongButton setImage:[UIImage imageNamed:@"pause_white.png"] forState:UIControlStateNormal];
     }
     else{
-        [self.musicPlayer pause];
         [self.playSongButton setImage:[UIImage imageNamed:@"play_white.png"] forState:UIControlStateNormal];
     }
 }
@@ -134,23 +138,6 @@
  */
 - (void)updateWithMediaItem:(MPMediaItem*)newItem {
     self.songPlacementSlider.maximumValue = [newItem playbackDuration];
-}
-
-/*
- Update the rotation: this sets the frames of every item accordingly.
- */
-- (void)updateWithOrientation:(UIDeviceOrientation)newOrientation withRootFrame:(CGRect)newRootFrame{
-    self.frame = WINDOW_FRAME;
-    self.isLandscape = self.frame.size.height < self.frame.size.width;
-    
-    NSLog(@"isLandscape %d", self.isLandscape);
-    
-    [self updateWithRootFrame:newRootFrame withViewMode:self.currentViewMode];
-   /*
-    switch(newOrientation){
-            case UIDe
-    }
-    */
 }
 
 /*
@@ -221,32 +208,49 @@
      */
 }
 
+- (bool)isMiniPlayer {
+    return (self.viewMode == NowPlayingViewModeMiniPortrait) || (self.viewMode == NowPlayingViewModeMiniLandscape);
+}
+
 /*
  Initializes the control view with all standard elements: duration, song placement slider, play button,
  shuffle button, repeat button, and the music player.
  */
-- (id)initWithMusicPlayer:(MPMusicPlayerController*)musicPlayer{
-    self = [super init];
+
+- (id)initWithMusicPlayer:(MPMusicPlayerController*)musicPlayer withViewMode:(uint8_t)viewMode onFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
     
     self.musicPlayer = musicPlayer;
+    self.viewMode = (NowPlayingViewMode)viewMode;
     
     //self.backgroundColor = [UIColor orangeColor];
     
     self.playSongButton = [[UIButton alloc]init];
     [self.playSongButton setImage:[UIImage imageNamed:@"play_white.png"] forState:UIControlStateNormal];
     [self.playSongButton addTarget:self action:@selector(setPlaying:) forControlEvents:UIControlEventTouchUpInside];
-    [self addSubview:self.playSongButton];
+    //[self addSubview:self.playSongButton];
     
     self.songDurationLabel = [[UILabel alloc]init];
     self.songDurationLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:durationSize];
     self.songDurationLabel.textColor = [UIColor whiteColor];
     self.songDurationLabel.text = @"Hello there";
-    [self addSubview:self.songDurationLabel];
+    if(![self isMiniPlayer]){
+        [self addSubview:self.songDurationLabel];
+    }
     
-    self.songPlacementSlider = [[UISlider alloc]init];
+    CGRect songPlacementSliderFrame;
+    if([self isMiniPlayer]){
+        songPlacementSliderFrame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
+    }
+    else{
+        songPlacementSliderFrame = CGRectMake(0, 0, 0, 0);
+    }
+    self.songPlacementSlider = [[UISlider alloc]initWithFrame:songPlacementSliderFrame];
     self.songPlacementSlider.tintColor = LIGNITE_COLOUR;
     [self.songPlacementSlider addTarget:self action:@selector(setTimelinePosition:) forControlEvents:UIControlEventValueChanged];
     [self addSubview:self.songPlacementSlider];
+    
+    /*
     
     CGSize controlButtonSize = CGSizeMake(self.frame.size.width/6, self.frame.size.width/4 - 40);
     CGPoint controlButtonOrigin = CGPointMake(self.frame.size.width/2 - controlButtonSize.width - 20, self.frame.size.height-controlButtonSize.height-20);
@@ -254,12 +258,18 @@
     self.shuffleButton = [[LMButton alloc]initWithTitle:@"Default" withImage:[UIImage imageNamed:@"shuffle_black.png"] withFrame:CGRectMake(controlButtonOrigin.x, controlButtonOrigin.y, controlButtonSize.width, controlButtonSize.height)];
     self.shuffleButton.backgroundColor = [UIColor whiteColor];
     self.shuffleButton.delegate = self;
-    [self addSubview:self.shuffleButton];
+    if(![self isMiniPlayer]){
+        [self addSubview:self.shuffleButton];
+    }
     
     self.repeatButton = [[LMButton alloc]initWithTitle:@"Default" withImage:[UIImage imageNamed:@"repeat_black.png"] withFrame:CGRectMake(controlButtonOrigin.x + 40 + controlButtonSize.width, controlButtonOrigin.y, controlButtonSize.width, controlButtonSize.height)];
     self.repeatButton.backgroundColor = [UIColor whiteColor];
     self.repeatButton.delegate = self;
-    [self addSubview:self.repeatButton];
+    if(![self isMiniPlayer]){
+        [self addSubview:self.repeatButton];
+    }
+     
+     */
     
     self.currentTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(onTimer:) userInfo:nil repeats:YES];
     

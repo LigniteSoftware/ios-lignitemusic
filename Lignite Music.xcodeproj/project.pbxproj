@@ -7,50 +7,40 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		6A2C3CAA1BAE539E00EE7677 /* XYPieChart.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A2C3CA91BAE539E00EE7677 /* XYPieChart.m */; settings = {ASSET_TAGS = (); }; };
-		6A2C3CAD1BAED34500EE7677 /* LMMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A2C3CAC1BAED34500EE7677 /* LMMainViewController.m */; settings = {ASSET_TAGS = (); }; };
-		6A2C3CB01BAEE7ED00EE7677 /* PieChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A2C3CAF1BAEE7ED00EE7677 /* PieChartView.m */; settings = {ASSET_TAGS = (); }; };
-		6A2C3CB31BAF1B3700EE7677 /* LMAlbumView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A2C3CB21BAF1B3700EE7677 /* LMAlbumView.m */; settings = {ASSET_TAGS = (); }; };
-		6A313C0C1BB448A8002BBC33 /* NPTextInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A313C0B1BB448A8002BBC33 /* NPTextInfoView.m */; settings = {ASSET_TAGS = (); }; };
-		6A313C0F1BB448E5002BBC33 /* NPControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A313C0E1BB448E5002BBC33 /* NPControlView.m */; settings = {ASSET_TAGS = (); }; };
-		6A313C121BB44959002BBC33 /* NPAlbumArtView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A313C111BB44959002BBC33 /* NPAlbumArtView.m */; settings = {ASSET_TAGS = (); }; };
-		6A313C151BB4D3D7002BBC33 /* splash.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A313C141BB4D3D7002BBC33 /* splash.png */; settings = {ASSET_TAGS = (); }; };
-		6A313C181BB59AE8002BBC33 /* LMButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A313C171BB59AE8002BBC33 /* LMButton.m */; settings = {ASSET_TAGS = (); }; };
-		6A313C1B1BB59D91002BBC33 /* repeat_black.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A313C191BB59D91002BBC33 /* repeat_black.png */; settings = {ASSET_TAGS = (); }; };
-		6A313C1C1BB59D91002BBC33 /* shuffle_black.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A313C1A1BB59D91002BBC33 /* shuffle_black.png */; settings = {ASSET_TAGS = (); }; };
+		6A2C3CAA1BAE539E00EE7677 /* XYPieChart.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A2C3CA91BAE539E00EE7677 /* XYPieChart.m */; };
+		6A2C3CAD1BAED34500EE7677 /* LMMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A2C3CAC1BAED34500EE7677 /* LMMainViewController.m */; };
+		6A2C3CB01BAEE7ED00EE7677 /* PieChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A2C3CAF1BAEE7ED00EE7677 /* PieChartView.m */; };
+		6A2C3CB31BAF1B3700EE7677 /* LMAlbumView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A2C3CB21BAF1B3700EE7677 /* LMAlbumView.m */; };
+		6A313C0C1BB448A8002BBC33 /* NPTextInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A313C0B1BB448A8002BBC33 /* NPTextInfoView.m */; };
+		6A313C0F1BB448E5002BBC33 /* NPControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A313C0E1BB448E5002BBC33 /* NPControlView.m */; };
+		6A313C121BB44959002BBC33 /* NPAlbumArtView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A313C111BB44959002BBC33 /* NPAlbumArtView.m */; };
+		6A313C181BB59AE8002BBC33 /* LMButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A313C171BB59AE8002BBC33 /* LMButton.m */; };
+		6A313C1B1BB59D91002BBC33 /* repeat_black.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A313C191BB59D91002BBC33 /* repeat_black.png */; };
+		6A313C1C1BB59D91002BBC33 /* shuffle_black.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A313C1A1BB59D91002BBC33 /* shuffle_black.png */; };
+		6A514E121CE904F100AFB351 /* LMNowPlayingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A514E111CE904F000AFB351 /* LMNowPlayingViewController.m */; };
+		6A514E141CE9621B00AFB351 /* dynamic_playlist.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A514E131CE9621B00AFB351 /* dynamic_playlist.png */; };
+		6A66C7671CDA09AA009019CF /* splash_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A66C7661CDA09AA009019CF /* splash_logo.png */; };
+		6A66C76B1CDA10C2009019CF /* LMMiniPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A66C76A1CDA10C2009019CF /* LMMiniPlayerView.m */; };
+		6A66C76F1CDA1BB1009019CF /* back_arrow_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A66C76E1CDA1BB1009019CF /* back_arrow_white.png */; };
+		6AA4735F1BC70FBA0066D47E /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AA4735E1BC70FBA0066D47E /* ExternalAccessory.framework */; };
+		6AA473611BC710320066D47E /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AA473601BC710320066D47E /* CoreBluetooth.framework */; };
+		6AA473631BC7103B0066D47E /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AA473621BC7103B0066D47E /* CoreMotion.framework */; };
+		6AA473651BC710460066D47E /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AA473641BC710460066D47E /* MessageUI.framework */; };
 		6AEB9CFD1BACF60E00AD19FA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AEB9CFC1BACF60E00AD19FA /* main.m */; };
 		6AEB9D001BACF60E00AD19FA /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AEB9CFF1BACF60E00AD19FA /* AppDelegate.m */; };
 		6AEB9D031BACF60E00AD19FA /* LMNowPlayingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AEB9D021BACF60E00AD19FA /* LMNowPlayingView.m */; };
 		6AEB9D061BACF60E00AD19FA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6AEB9D041BACF60E00AD19FA /* Main.storyboard */; };
 		6AEB9D081BACF60E00AD19FA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6AEB9D071BACF60E00AD19FA /* Assets.xcassets */; };
 		6AEB9D0B1BACF60E00AD19FA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6AEB9D091BACF60E00AD19FA /* LaunchScreen.storyboard */; };
-		6AEB9D161BACF60F00AD19FA /* Lignite_MusicTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AEB9D151BACF60F00AD19FA /* Lignite_MusicTests.m */; };
-		6AEB9D211BACF60F00AD19FA /* Lignite_MusicUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AEB9D201BACF60F00AD19FA /* Lignite_MusicUITests.m */; };
-		6AEB9D351BAD812700AD19FA /* pause_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AEB9D311BAD812700AD19FA /* pause_white.png */; settings = {ASSET_TAGS = (); }; };
-		6AEB9D361BAD812700AD19FA /* play_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AEB9D321BAD812700AD19FA /* play_white.png */; settings = {ASSET_TAGS = (); }; };
-		6AEB9D3A1BAD824E00AD19FA /* lignite_background.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6AEB9D391BAD824E00AD19FA /* lignite_background.jpg */; settings = {ASSET_TAGS = (); }; };
-		6AFD2EDD1BC41ECD0083FE9E /* LMAlbumViewItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AFD2EDC1BC41ECC0083FE9E /* LMAlbumViewItem.m */; settings = {ASSET_TAGS = (); }; };
-		6AFD2EDF1BC423850083FE9E /* no_album.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AFD2EDE1BC423850083FE9E /* no_album.png */; settings = {ASSET_TAGS = (); }; };
+		6AEB9D351BAD812700AD19FA /* pause_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AEB9D311BAD812700AD19FA /* pause_white.png */; };
+		6AEB9D361BAD812700AD19FA /* play_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AEB9D321BAD812700AD19FA /* play_white.png */; };
+		6AEB9D3A1BAD824E00AD19FA /* lignite_background.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6AEB9D391BAD824E00AD19FA /* lignite_background.jpg */; };
+		6AFD2EDD1BC41ECD0083FE9E /* LMAlbumViewItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AFD2EDC1BC41ECC0083FE9E /* LMAlbumViewItem.m */; };
+		6AFD2EDF1BC423850083FE9E /* no_album.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AFD2EDE1BC423850083FE9E /* no_album.png */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		6AEB9D121BACF60F00AD19FA /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 6AEB9CF01BACF60E00AD19FA /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 6AEB9CF71BACF60E00AD19FA;
-			remoteInfo = "Lignite Music";
-		};
-		6AEB9D1D1BACF60F00AD19FA /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 6AEB9CF01BACF60E00AD19FA /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 6AEB9CF71BACF60E00AD19FA;
-			remoteInfo = "Lignite Music";
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
+		6A106B121BC710D4003AE55A /* Lignite Music.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Lignite Music.entitlements"; sourceTree = "<group>"; };
 		6A2C3CA81BAE539E00EE7677 /* XYPieChart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XYPieChart.h; sourceTree = "<group>"; };
 		6A2C3CA91BAE539E00EE7677 /* XYPieChart.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XYPieChart.m; sourceTree = "<group>"; };
 		6A2C3CAB1BAED34500EE7677 /* LMMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMMainViewController.h; sourceTree = "<group>"; };
@@ -66,11 +56,21 @@
 		6A313C101BB44959002BBC33 /* NPAlbumArtView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NPAlbumArtView.h; sourceTree = "<group>"; };
 		6A313C111BB44959002BBC33 /* NPAlbumArtView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NPAlbumArtView.m; sourceTree = "<group>"; };
 		6A313C131BB44A8F002BBC33 /* LMExtras.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMExtras.h; sourceTree = "<group>"; };
-		6A313C141BB4D3D7002BBC33 /* splash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = splash.png; sourceTree = "<group>"; };
 		6A313C161BB59AE8002BBC33 /* LMButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMButton.h; sourceTree = "<group>"; };
 		6A313C171BB59AE8002BBC33 /* LMButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMButton.m; sourceTree = "<group>"; };
 		6A313C191BB59D91002BBC33 /* repeat_black.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = repeat_black.png; sourceTree = "<group>"; };
 		6A313C1A1BB59D91002BBC33 /* shuffle_black.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = shuffle_black.png; sourceTree = "<group>"; };
+		6A514E101CE904F000AFB351 /* LMNowPlayingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMNowPlayingViewController.h; sourceTree = "<group>"; };
+		6A514E111CE904F000AFB351 /* LMNowPlayingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMNowPlayingViewController.m; sourceTree = "<group>"; };
+		6A514E131CE9621B00AFB351 /* dynamic_playlist.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dynamic_playlist.png; sourceTree = "<group>"; };
+		6A66C7661CDA09AA009019CF /* splash_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = splash_logo.png; sourceTree = "<group>"; };
+		6A66C7691CDA10C2009019CF /* LMMiniPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMMiniPlayerView.h; sourceTree = "<group>"; };
+		6A66C76A1CDA10C2009019CF /* LMMiniPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMMiniPlayerView.m; sourceTree = "<group>"; };
+		6A66C76E1CDA1BB1009019CF /* back_arrow_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = back_arrow_white.png; sourceTree = "<group>"; };
+		6AA4735E1BC70FBA0066D47E /* ExternalAccessory.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExternalAccessory.framework; path = System/Library/Frameworks/ExternalAccessory.framework; sourceTree = SDKROOT; };
+		6AA473601BC710320066D47E /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
+		6AA473621BC7103B0066D47E /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
+		6AA473641BC710460066D47E /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		6AEB9CF81BACF60E00AD19FA /* Lignite Music.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Lignite Music.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6AEB9CFC1BACF60E00AD19FA /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		6AEB9CFE1BACF60E00AD19FA /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -81,15 +81,14 @@
 		6AEB9D071BACF60E00AD19FA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6AEB9D0A1BACF60E00AD19FA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		6AEB9D0C1BACF60E00AD19FA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		6AEB9D111BACF60F00AD19FA /* Lignite MusicTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Lignite MusicTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6AEB9D151BACF60F00AD19FA /* Lignite_MusicTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Lignite_MusicTests.m; sourceTree = "<group>"; };
 		6AEB9D171BACF60F00AD19FA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		6AEB9D1C1BACF60F00AD19FA /* Lignite MusicUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Lignite MusicUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6AEB9D201BACF60F00AD19FA /* Lignite_MusicUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Lignite_MusicUITests.m; sourceTree = "<group>"; };
 		6AEB9D221BACF60F00AD19FA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6AEB9D311BAD812700AD19FA /* pause_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pause_white.png; sourceTree = "<group>"; };
 		6AEB9D321BAD812700AD19FA /* play_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = play_white.png; sourceTree = "<group>"; };
 		6AEB9D391BAD824E00AD19FA /* lignite_background.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = lignite_background.jpg; sourceTree = "<group>"; };
+		6AF571FE1BC714DF009993E0 /* PebbleKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = PebbleKit.framework; sourceTree = "<group>"; };
 		6AFD2EDB1BC41ECC0083FE9E /* LMAlbumViewItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMAlbumViewItem.h; sourceTree = "<group>"; };
 		6AFD2EDC1BC41ECC0083FE9E /* LMAlbumViewItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMAlbumViewItem.m; sourceTree = "<group>"; };
 		6AFD2EDE1BC423850083FE9E /* no_album.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = no_album.png; sourceTree = "<group>"; };
@@ -100,20 +99,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		6AEB9D0E1BACF60F00AD19FA /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		6AEB9D191BACF60F00AD19FA /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
+				6AA473651BC710460066D47E /* MessageUI.framework in Frameworks */,
+				6AA473631BC7103B0066D47E /* CoreMotion.framework in Frameworks */,
+				6AA473611BC710320066D47E /* CoreBluetooth.framework in Frameworks */,
+				6AA4735F1BC70FBA0066D47E /* ExternalAccessory.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -123,6 +112,8 @@
 		6A313C091BB4485A002BBC33 /* NowPlayingView */ = {
 			isa = PBXGroup;
 			children = (
+				6A514E101CE904F000AFB351 /* LMNowPlayingViewController.h */,
+				6A514E111CE904F000AFB351 /* LMNowPlayingViewController.m */,
 				6A313C101BB44959002BBC33 /* NPAlbumArtView.h */,
 				6A313C111BB44959002BBC33 /* NPAlbumArtView.m */,
 				6A313C0D1BB448E5002BBC33 /* NPControlView.h */,
@@ -139,6 +130,38 @@
 			name = NowPlayingView;
 			sourceTree = "<group>";
 		};
+		6A66C7681CDA1086009019CF /* MiniPlayerView */ = {
+			isa = PBXGroup;
+			children = (
+				6A66C7691CDA10C2009019CF /* LMMiniPlayerView.h */,
+				6A66C76A1CDA10C2009019CF /* LMMiniPlayerView.m */,
+			);
+			name = MiniPlayerView;
+			sourceTree = "<group>";
+		};
+		6A66C76C1CDA1B4E009019CF /* Icons */ = {
+			isa = PBXGroup;
+			children = (
+				6A514E131CE9621B00AFB351 /* dynamic_playlist.png */,
+				6A66C76E1CDA1BB1009019CF /* back_arrow_white.png */,
+				6A313C191BB59D91002BBC33 /* repeat_black.png */,
+				6A313C1A1BB59D91002BBC33 /* shuffle_black.png */,
+				6AEB9D311BAD812700AD19FA /* pause_white.png */,
+				6AEB9D321BAD812700AD19FA /* play_white.png */,
+			);
+			name = Icons;
+			sourceTree = "<group>";
+		};
+		6A66C76D1CDA1B5F009019CF /* Other */ = {
+			isa = PBXGroup;
+			children = (
+				6A66C7661CDA09AA009019CF /* splash_logo.png */,
+				6AEB9D391BAD824E00AD19FA /* lignite_background.jpg */,
+				6AFD2EDE1BC423850083FE9E /* no_album.png */,
+			);
+			name = Other;
+			sourceTree = "<group>";
+		};
 		6AEB9CEF1BACF60E00AD19FA = {
 			isa = PBXGroup;
 			children = (
@@ -146,6 +169,7 @@
 				6AEB9D141BACF60F00AD19FA /* Lignite MusicTests */,
 				6AEB9D1F1BACF60F00AD19FA /* Lignite MusicUITests */,
 				6AEB9CF91BACF60E00AD19FA /* Products */,
+				EEE9F5AA536DDB5B28CE09F9 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -153,8 +177,6 @@
 			isa = PBXGroup;
 			children = (
 				6AEB9CF81BACF60E00AD19FA /* Lignite Music.app */,
-				6AEB9D111BACF60F00AD19FA /* Lignite MusicTests.xctest */,
-				6AEB9D1C1BACF60F00AD19FA /* Lignite MusicUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -162,6 +184,7 @@
 		6AEB9CFA1BACF60E00AD19FA /* Lignite Music */ = {
 			isa = PBXGroup;
 			children = (
+				6A66C7681CDA1086009019CF /* MiniPlayerView */,
 				6AFD2EDA1BC41EAC0083FE9E /* AlbumView */,
 				6A313C091BB4485A002BBC33 /* NowPlayingView */,
 				6AEB9D2E1BAD679F00AD19FA /* Images */,
@@ -176,6 +199,7 @@
 				6AEB9D071BACF60E00AD19FA /* Assets.xcassets */,
 				6AEB9D091BACF60E00AD19FA /* LaunchScreen.storyboard */,
 				6AEB9D0C1BACF60E00AD19FA /* Info.plist */,
+				6A106B121BC710D4003AE55A /* Lignite Music.entitlements */,
 				6AEB9CFB1BACF60E00AD19FA /* Supporting Files */,
 			);
 			path = "Lignite Music";
@@ -210,13 +234,8 @@
 		6AEB9D2E1BAD679F00AD19FA /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				6A313C191BB59D91002BBC33 /* repeat_black.png */,
-				6A313C1A1BB59D91002BBC33 /* shuffle_black.png */,
-				6A313C141BB4D3D7002BBC33 /* splash.png */,
-				6AEB9D391BAD824E00AD19FA /* lignite_background.jpg */,
-				6AEB9D311BAD812700AD19FA /* pause_white.png */,
-				6AEB9D321BAD812700AD19FA /* play_white.png */,
-				6AFD2EDE1BC423850083FE9E /* no_album.png */,
+				6A66C76D1CDA1B5F009019CF /* Other */,
+				6A66C76C1CDA1B4E009019CF /* Icons */,
 			);
 			name = Images;
 			sourceTree = "<group>";
@@ -230,6 +249,18 @@
 				6AFD2EDC1BC41ECC0083FE9E /* LMAlbumViewItem.m */,
 			);
 			name = AlbumView;
+			sourceTree = "<group>";
+		};
+		EEE9F5AA536DDB5B28CE09F9 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				6AF571FE1BC714DF009993E0 /* PebbleKit.framework */,
+				6AA473641BC710460066D47E /* MessageUI.framework */,
+				6AA473621BC7103B0066D47E /* CoreMotion.framework */,
+				6AA473601BC710320066D47E /* CoreBluetooth.framework */,
+				6AA4735E1BC70FBA0066D47E /* ExternalAccessory.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -252,42 +283,6 @@
 			productReference = 6AEB9CF81BACF60E00AD19FA /* Lignite Music.app */;
 			productType = "com.apple.product-type.application";
 		};
-		6AEB9D101BACF60F00AD19FA /* Lignite MusicTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 6AEB9D281BACF60F00AD19FA /* Build configuration list for PBXNativeTarget "Lignite MusicTests" */;
-			buildPhases = (
-				6AEB9D0D1BACF60F00AD19FA /* Sources */,
-				6AEB9D0E1BACF60F00AD19FA /* Frameworks */,
-				6AEB9D0F1BACF60F00AD19FA /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				6AEB9D131BACF60F00AD19FA /* PBXTargetDependency */,
-			);
-			name = "Lignite MusicTests";
-			productName = "Lignite MusicTests";
-			productReference = 6AEB9D111BACF60F00AD19FA /* Lignite MusicTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		6AEB9D1B1BACF60F00AD19FA /* Lignite MusicUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 6AEB9D2B1BACF60F00AD19FA /* Build configuration list for PBXNativeTarget "Lignite MusicUITests" */;
-			buildPhases = (
-				6AEB9D181BACF60F00AD19FA /* Sources */,
-				6AEB9D191BACF60F00AD19FA /* Frameworks */,
-				6AEB9D1A1BACF60F00AD19FA /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				6AEB9D1E1BACF60F00AD19FA /* PBXTargetDependency */,
-			);
-			name = "Lignite MusicUITests";
-			productName = "Lignite MusicUITests";
-			productReference = 6AEB9D1C1BACF60F00AD19FA /* Lignite MusicUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -306,14 +301,6 @@
 							};
 						};
 					};
-					6AEB9D101BACF60F00AD19FA = {
-						CreatedOnToolsVersion = 7.0;
-						TestTargetID = 6AEB9CF71BACF60E00AD19FA;
-					};
-					6AEB9D1B1BACF60F00AD19FA = {
-						CreatedOnToolsVersion = 7.0;
-						TestTargetID = 6AEB9CF71BACF60E00AD19FA;
-					};
 				};
 			};
 			buildConfigurationList = 6AEB9CF31BACF60E00AD19FA /* Build configuration list for PBXProject "Lignite Music" */;
@@ -330,8 +317,6 @@
 			projectRoot = "";
 			targets = (
 				6AEB9CF71BACF60E00AD19FA /* Lignite Music */,
-				6AEB9D101BACF60F00AD19FA /* Lignite MusicTests */,
-				6AEB9D1B1BACF60F00AD19FA /* Lignite MusicUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -341,30 +326,18 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6A66C76F1CDA1BB1009019CF /* back_arrow_white.png in Resources */,
+				6A66C7671CDA09AA009019CF /* splash_logo.png in Resources */,
 				6A313C1B1BB59D91002BBC33 /* repeat_black.png in Resources */,
 				6AEB9D0B1BACF60E00AD19FA /* LaunchScreen.storyboard in Resources */,
 				6AEB9D3A1BAD824E00AD19FA /* lignite_background.jpg in Resources */,
-				6A313C151BB4D3D7002BBC33 /* splash.png in Resources */,
 				6AEB9D361BAD812700AD19FA /* play_white.png in Resources */,
 				6A313C1C1BB59D91002BBC33 /* shuffle_black.png in Resources */,
 				6AEB9D081BACF60E00AD19FA /* Assets.xcassets in Resources */,
 				6AEB9D061BACF60E00AD19FA /* Main.storyboard in Resources */,
+				6A514E141CE9621B00AFB351 /* dynamic_playlist.png in Resources */,
 				6AEB9D351BAD812700AD19FA /* pause_white.png in Resources */,
 				6AFD2EDF1BC423850083FE9E /* no_album.png in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		6AEB9D0F1BACF60F00AD19FA /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		6AEB9D1A1BACF60F00AD19FA /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -377,7 +350,9 @@
 			files = (
 				6AFD2EDD1BC41ECD0083FE9E /* LMAlbumViewItem.m in Sources */,
 				6AEB9D031BACF60E00AD19FA /* LMNowPlayingView.m in Sources */,
+				6A514E121CE904F100AFB351 /* LMNowPlayingViewController.m in Sources */,
 				6A313C0F1BB448E5002BBC33 /* NPControlView.m in Sources */,
+				6A66C76B1CDA10C2009019CF /* LMMiniPlayerView.m in Sources */,
 				6AEB9D001BACF60E00AD19FA /* AppDelegate.m in Sources */,
 				6A2C3CB01BAEE7ED00EE7677 /* PieChartView.m in Sources */,
 				6A2C3CAD1BAED34500EE7677 /* LMMainViewController.m in Sources */,
@@ -390,36 +365,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		6AEB9D0D1BACF60F00AD19FA /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				6AEB9D161BACF60F00AD19FA /* Lignite_MusicTests.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		6AEB9D181BACF60F00AD19FA /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				6AEB9D211BACF60F00AD19FA /* Lignite_MusicUITests.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		6AEB9D131BACF60F00AD19FA /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 6AEB9CF71BACF60E00AD19FA /* Lignite Music */;
-			targetProxy = 6AEB9D121BACF60F00AD19FA /* PBXContainerItemProxy */;
-		};
-		6AEB9D1E1BACF60F00AD19FA /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 6AEB9CF71BACF60E00AD19FA /* Lignite Music */;
-			targetProxy = 6AEB9D1D1BACF60F00AD19FA /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		6AEB9D041BACF60E00AD19FA /* Main.storyboard */ = {
@@ -525,11 +471,19 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Lignite Music/Lignite Music.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Lignite",
+					Music,
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = "Lignite Music/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				New_Setting = "";
 				PRODUCT_BUNDLE_IDENTIFIER = lignite.io.music;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -540,62 +494,22 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Lignite Music/Lignite Music.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Lignite",
+					Music,
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = "Lignite Music/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				New_Setting = "";
 				PRODUCT_BUNDLE_IDENTIFIER = lignite.io.music;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-			};
-			name = Release;
-		};
-		6AEB9D291BACF60F00AD19FA /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				INFOPLIST_FILE = "Lignite MusicTests/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "lignite.io.Lignite-MusicTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Lignite Music.app/Lignite Music";
-			};
-			name = Debug;
-		};
-		6AEB9D2A1BACF60F00AD19FA /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				INFOPLIST_FILE = "Lignite MusicTests/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "lignite.io.Lignite-MusicTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Lignite Music.app/Lignite Music";
-			};
-			name = Release;
-		};
-		6AEB9D2C1BACF60F00AD19FA /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				INFOPLIST_FILE = "Lignite MusicUITests/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "lignite.io.Lignite-MusicUITests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_TARGET_NAME = "Lignite Music";
-				USES_XCTRUNNER = YES;
-			};
-			name = Debug;
-		};
-		6AEB9D2D1BACF60F00AD19FA /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				INFOPLIST_FILE = "Lignite MusicUITests/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "lignite.io.Lignite-MusicUITests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_TARGET_NAME = "Lignite Music";
-				USES_XCTRUNNER = YES;
 			};
 			name = Release;
 		};
@@ -616,24 +530,6 @@
 			buildConfigurations = (
 				6AEB9D261BACF60F00AD19FA /* Debug */,
 				6AEB9D271BACF60F00AD19FA /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		6AEB9D281BACF60F00AD19FA /* Build configuration list for PBXNativeTarget "Lignite MusicTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				6AEB9D291BACF60F00AD19FA /* Debug */,
-				6AEB9D2A1BACF60F00AD19FA /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		6AEB9D2B1BACF60F00AD19FA /* Build configuration list for PBXNativeTarget "Lignite MusicUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				6AEB9D2C1BACF60F00AD19FA /* Debug */,
-				6AEB9D2D1BACF60F00AD19FA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

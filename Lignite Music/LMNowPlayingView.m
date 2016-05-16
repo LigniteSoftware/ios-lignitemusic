@@ -7,9 +7,6 @@
 //
 
 #import "LMNowPlayingView.h"
-#import "NPControlView.h"
-#import "NPTextInfoView.h"
-#import "NPAlbumArtView.h"
 
 @interface LMNowPlayingView ()
 
@@ -19,13 +16,9 @@
 @property UIImageView *backgroundImageArt;
 @property NSTimer *currentTimer;
 
-@property NowPlayingViewMode currentViewMode;
+@property (nonatomic) NowPlayingViewMode viewMode;
 @property BOOL dragged;
 @property BOOL doNotContinueTouch;
-
-@property NPAlbumArtView *albumArtView;
-@property NPControlView *controlView;
-@property NPTextInfoView *songInfoView;
 
 @end
 
@@ -44,22 +37,12 @@
     [self.musicPlayer skipToPreviousItem];
 }
 
+- (NowPlayingViewMode)getviewMode {
+    return self.viewMode;
+}
+
 - (void)updateNowPlayingItem:(MPMediaItem*)nowPlaying {
     /*
-     Update content
-     */
-    
-    CGRect newAlbumArtRect;
-    if(IS_PORTRAIT){
-        newAlbumArtRect = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height/2);
-    }
-    else{
-        int albumSize = self.frame.size.width/3;
-        newAlbumArtRect = CGRectMake(0, self.frame.size.height/2 - albumSize/2, albumSize, albumSize);
-    }
-    [self.albumArtView updateContentWithFrame:newAlbumArtRect];
-    [self.albumArtView updateContentWithMediaItem:nowPlaying];
-    
     CGRect newInfoRect;
     if(IS_PORTRAIT){
         newInfoRect = CGRectMake(0, self.frame.size.height/4 * 2, self.frame.size.width, self.frame.size.height/3);
@@ -69,8 +52,7 @@
         newInfoRect = CGRectMake(infoOrigin.x, newAlbumArtRect.origin.y, self.frame.size.width-infoOrigin.x, 100);
     }
     [self.songInfoView updateContentWithFrame:newInfoRect isPortrait:IS_PORTRAIT];
-    [self.songInfoView updateContentWithMediaItem:nowPlaying];
-    
+        
     CGRect newControlRect;
     if(IS_PORTRAIT){
         newControlRect = CGRectMake(20, self.frame.size.height/4 * 2.7 + 20, self.frame.size.width - 40, self.frame.size.height/4 * 1.3 - 40);
@@ -80,11 +62,9 @@
         int startingControlY = newInfoRect.origin.y+newInfoRect.size.height;
         newControlRect = CGRectMake(albumX, startingControlY, self.frame.size.width-albumX-20, self.frame.size.height-startingControlY-20);
     }
-    [self.controlView updateWithRootFrame:newControlRect withViewMode:self.currentViewMode];
-        
-    /*
-     End updating content
+    [self.controlView updateWithRootFrame:newControlRect withViewMode:self.viewMode];
      */
+     
     
     CGSize size = self.frame.size;
     if(![nowPlaying artwork]){
@@ -107,10 +87,18 @@
     self.backgroundImageArt.image = image;
     
     [self.controlView updateWithMediaItem:nowPlaying];
+    [self.songInfoView updateContentWithMediaItem:nowPlaying];
+    [self.albumArtView updateContentWithMediaItem:nowPlaying];
 
 }
 
+- (bool)isMiniPlayer {
+    return (self.viewMode == NowPlayingViewModeMiniPortrait) || (self.viewMode == NowPlayingViewModeMiniLandscape);
+}
+
 - (void) orientationChanged:(NSNotification*)note{
+    return;
+    
     UIDevice *device = note.object;
     self.currentOrientation = device.orientation;
     switch(self.currentOrientation){
@@ -134,44 +122,64 @@
     //[self.controlView updateWithOrientation:device.orientation];
 }
 
+- (id)initWithFrame:(CGRect)frame withViewMode:(NowPlayingViewMode)newViewMode {
+    self = [super initWithFrame:frame];
+    if(self){
+        self.viewMode = newViewMode;
+        [self setupView];
+    }
+    else{
+        NSLog(@"Failed to initialize LMNowPLayingView with a frame, sadly.");
+    }
+    return self;
+}
+
 - (void)setupView {
-    [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
-    
+    /*
     [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
     [[NSNotificationCenter defaultCenter]
      addObserver:self selector:@selector(orientationChanged:)
      name:UIDeviceOrientationDidChangeNotification
      object:[UIDevice currentDevice]];
+     */
     
-    // Do any additional setup after loading the view, typically from a nib.
+    self.musicPlayer = [MPMusicPlayerController systemMusicPlayer];
+    
     self.backgroundImageArt = [[UIImageView alloc]initWithFrame:CGRectMake(-20, -20, self.frame.size.width+40, self.frame.size.height+40)];
     self.backgroundImageArt.contentMode = UIViewContentModeScaleAspectFill;
     [self.backgroundImageArt setClipsToBounds:YES];
-    [self addSubview:self.backgroundImageArt];
+    if(![self isMiniPlayer]){
+        [self addSubview:self.backgroundImageArt];
+    }
     
     self.backgroundView = [[UIView alloc]initWithFrame:self.backgroundImageArt.frame];
     self.backgroundView.backgroundColor = [UIColor clearColor];
     [self addSubview:self.backgroundView];
-    
-    self.albumArtView = [[NPAlbumArtView alloc]init];
+
+    self.albumArtView = [[NPAlbumArtView alloc]initWithFrame:CGRectMake(0, 0, self.frame.size.width/3, self.frame.size.width/3)];
     self.albumArtView.musicPlayer = self.musicPlayer;
+    //self.albumArtView.backgroundColor = [UIColor redColor];
     [self addSubview:self.albumArtView];
     
-    self.songInfoView = [[NPTextInfoView alloc]init];
+    self.songInfoView = [[NPTextInfoView alloc]initWithFrame:CGRectMake(self.frame.size.width/3, 0, self.frame.size.width/3 * 2 - 10, self.frame.size.height * 0.6) withMiniPlayerStatus:[self isMiniPlayer]];
+    //self.songInfoView.backgroundColor = [UIColor blueColor];
     [self addSubview:self.songInfoView];
     
-    self.controlView = [[NPControlView alloc] initWithMusicPlayer:self.musicPlayer];
+    self.controlView = [[NPControlView alloc] initWithMusicPlayer:self.musicPlayer withViewMode:self.viewMode onFrame:CGRectMake(self.frame.size.width/3, self.songInfoView.frame.origin.y + self.songInfoView.frame.size.height, self.frame.size.width/3 * 2 - 10, 50)];
     [self addSubview:self.controlView];
     
     if([self.musicPlayer nowPlayingItem]){
+        NSLog(@"now playing");
         [self updateNowPlayingItem:[self.musicPlayer nowPlayingItem]];
     }
     else{
+        NSLog(@"not playing");
         [self.musicPlayer setQueueWithQuery:[MPMediaQuery songsQuery]];
         [self.musicPlayer play];
-        [self updateNowPlayingItem:nil];
+        NSLog(@"Got a now plaing item current of %@", self.musicPlayer);
+        [self updateNowPlayingItem:[self.musicPlayer nowPlayingItem]];
     }
-    
+        
     UISwipeGestureRecognizer *nextRecognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(nextSong:)];
     [nextRecognizer setDirection:UISwipeGestureRecognizerDirectionLeft];
     [self addGestureRecognizer:nextRecognizer];
@@ -204,7 +212,7 @@
  - (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent *)event{
  UITouch *touch = [touches anyObject];
  CGPoint location = [touch locationInView:self];
- switch(self.currentViewMode){
+ switch(self.viewMode){
  case NOW_PLAYING_VIDE_MODE_COMPRESSED:
  case NOW_PLAYING_VIEW_MODE_HIDDEN:
  if(location.y <= self.frame.origin.y){
@@ -251,7 +259,7 @@
  CGRect newFrame = CGRectMake(self.frame.origin.x, isOverEdge ? self.frame.size.height/4 * 3 : 0, self.frame.size.width, self.frame.size.height);
  self.frame = newFrame;
  
- self.currentViewMode = isOverEdge ? NOW_PLAYING_VIDE_MODE_COMPRESSED : NOW_PLAYING_VIEW_MODE_FULLSCREEN;
+ self.viewMode = isOverEdge ? NOW_PLAYING_VIDE_MODE_COMPRESSED : NOW_PLAYING_VIEW_MODE_FULLSCREEN;
  
  self.backgroundView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha: isOverEdge ? 1 : 0];
  }];

@@ -10,6 +10,7 @@
 
 @interface NPTextInfoView : UIView
 
+- (id)initWithFrame:(CGRect)frame withMiniPlayerStatus:(BOOL)isMiniPlayer;
 - (void)updateContentWithMediaItem:(MPMediaItem*)newItem;
 - (void)updateContentWithFrame:(CGRect)newFrame isPortrait:(BOOL)isPortrait;
 

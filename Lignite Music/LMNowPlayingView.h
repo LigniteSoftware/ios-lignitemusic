@@ -9,21 +9,29 @@
 #import <UIKit/UIKit.h>
 #import <MediaPlayer/MediaPlayer.h>
 #import "XYPieChart.h"
+#import "NPControlView.h"
+#import "NPTextInfoView.h"
+#import "NPAlbumArtView.h"
 
 @interface LMNowPlayingView : UIView
 
 @property MPMusicPlayerController *musicPlayer;
 
+@property NPAlbumArtView *albumArtView;
+@property NPControlView *controlView;
+@property NPTextInfoView *songInfoView;
+
 typedef enum {
-    NOW_PLAYING_VIEW_MODE_LANDSCAPE = 0,
-    NOW_PLAYING_VIEW_MODE_PORTRAIT,
-    NOW_PLAYING_VIDE_MODE_COMPRESSED_LANDSCAPE,
-    NOW_PLAYING_VIDE_MODE_COMPRESSED_PORTRAIT,
-    NOW_PLAYING_VIEW_MODE_HIDDEN
+    NowPlayingViewModeLandscape = 0,
+    NowPlayingViewModePortrait,
+    NowPlayingViewModeMiniLandscape,
+    NowPlayingViewModeMiniPortrait,
+    NowPlayingViewModeHidden
 } NowPlayingViewMode;
 
-- (void)setupView;
+- (id)initWithFrame:(CGRect)frame withViewMode:(NowPlayingViewMode)newViewMode;
 - (void)updateNowPlayingItem:(MPMediaItem*)nowPlaying;
+
 
 @end
 
