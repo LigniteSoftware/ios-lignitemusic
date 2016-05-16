@@ -10,6 +10,7 @@
 #import <MediaPlayer/MediaPlayer.h>
 #import "LMButton.h"
 #import "NPAlbumArtView.h"
+#import "LMSlider.h"
 
 @interface LMNowPlayingViewController : UIViewController
 
@@ -17,7 +18,7 @@
 
 @property IBOutlet UIImageView *backgroundImageView;
 @property IBOutlet NPAlbumArtView *albumArtView;
-@property IBOutlet UISlider *songDurationSlider;
+@property IBOutlet LMSlider *songDurationSlider;
 @property IBOutlet UILabel *songNumberLabel, *songDurationLabel;
 @property IBOutlet UILabel *songTitleLabel, *songArtistLabel, *songAlbumLabel;
 

@@ -147,12 +147,8 @@
     NSLog(@"Drawing context...");
     
     CGContextSetRGBFillColor(ctx, 1, 1, 1, 1.0);
-    uint8_t thickness = 1;
-    CGContextSetLineWidth(ctx, thickness);
-    int centerY = self.frame.size.height/2;
-    uint16_t diameter = self.frame.size.width;
-    int padding = thickness*2;
-    CGRect circleRect = CGRectMake(padding, centerY-(diameter/2), diameter-padding*2, diameter-padding*2);
+    int padding = 6;
+    CGRect circleRect = CGRectMake(self.imageView.frame.origin.x-padding, self.imageView.frame.origin.y-padding, self.imageView.frame.size.width+(padding*2), self.imageView.frame.size.height+(padding*2));
     CGContextFillEllipseInRect(ctx, circleRect);
 }
 
