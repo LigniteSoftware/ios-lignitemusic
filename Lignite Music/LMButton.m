@@ -10,7 +10,6 @@
 
 @interface LMButton()
 
-@property UILabel *titleLabel;
 @property UIImageView *imageView;
 
 @end

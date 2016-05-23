@@ -7,12 +7,18 @@
 //
 
 #import "LMNowPlayingViewController.h"
+#import "UIImage+AverageColour.h"
+#import "UIColor+isLight.h"
 
-@interface LMNowPlayingViewController ()
+@interface LMNowPlayingViewController () <LMButtonDelegate>
 
 @property NSTimer *refreshTimer;
 @property UIView *shadingView;
 @property BOOL finishedUserAdjustment;
+@property BOOL loadedSubviews;
+
+@property MPMusicShuffleMode shuffleMode;
+@property MPMusicRepeatMode repeatMode;
 
 @end
 
@@ -39,6 +45,20 @@
     else{
         self.backgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
         albumImage = [[self.musicPlayer.nowPlayingItem artwork]imageWithSize:CGSizeMake(size.width, size.height)];
+        
+        UIColor *averageColour = [albumImage averageColour];
+        BOOL isLight = [averageColour isLight];
+        NSLog(@"is light: %@", isLight ? @"yeah" : @"nah");
+        self.shadingView.backgroundColor = isLight ? [UIColor colorWithRed:1 green:1 blue:1 alpha:0.25] : [UIColor colorWithRed:0 green:0 blue:0 alpha:0.25];
+        UIColor *newTextColour = isLight ? [UIColor blackColor] : [UIColor whiteColor];
+        self.songTitleLabel.textColor = newTextColour;
+        self.songArtistLabel.textColor = newTextColour;
+        self.songAlbumLabel.textColor = newTextColour;
+        self.songDurationLabel.textColor = newTextColour;
+        self.songNumberLabel.textColor = newTextColour;
+        self.shuffleButton.titleLabel.textColor = newTextColour;
+        self.repeatButton.titleLabel.textColor = newTextColour;
+        self.dynamicPlaylistButton.titleLabel.textColor = newTextColour;
         
         CIFilter *gaussianBlurFilter = [CIFilter filterWithName:@"CIGaussianBlur"];
         [gaussianBlurFilter setDefaults];
@@ -136,6 +156,40 @@
     [self.musicPlayer skipToPreviousItem];
 }
 
+- (void)reloadButtonTitles {
+    NSString *shuffleArray[] = {
+        @"Default", @"Off", @"Songs", @"Albums"
+    };
+    NSString *repeatArray[] = {
+        @"Default", @"Off", @"This", @"All"
+    };
+    [self.shuffleButton setTitle:shuffleArray[self.musicPlayer.shuffleMode]];
+    [self.repeatButton setTitle:repeatArray[self.musicPlayer.repeatMode]];
+}
+
+/*
+ Sets the shuffle or repeat status of the music. See MPMusicShuffleMode and MPMusicRepeatMode.
+ */
+- (void)clickedButton:(LMButton *)button {
+    if(button == self.shuffleButton){
+        self.shuffleMode++;
+        if(self.shuffleMode > MPMusicShuffleModeAlbums){
+            self.shuffleMode = 0;
+        }
+        [self.musicPlayer setShuffleMode:self.shuffleMode];
+    }
+    else{
+        self.repeatMode++;
+        if(self.repeatMode > MPMusicRepeatModeAll){
+            self.repeatMode = 0;
+        }
+        [self.musicPlayer setRepeatMode:self.repeatMode];
+    }
+    [self reloadButtonTitles];
+    
+    NSLog(@"Shuffle mode is %d, repeat mode is %d", (int)self.musicPlayer.shuffleMode, (int)self.musicPlayer.repeatMode);
+}
+
 - (IBAction)setTimelinePosition:(id)sender {
     UISlider *slider = sender;
     if(self.refreshTimer){
@@ -171,7 +225,7 @@
     while (tempMin <= tempMax) {
         mid = tempMin + (tempMax - tempMin) / 2;
         tempFont = [UIFont fontWithName:fontName size:mid];
-        difference = labelSize.height - [testString sizeWithFont:tempFont].height;
+        difference = labelSize.height - [testString sizeWithAttributes:@{NSFontAttributeName: tempFont}].height;
         
         if (mid == tempMin || mid == tempMax) {
             if (difference < 0) {
@@ -194,46 +248,26 @@
 }
 
 - (void)viewDidLayoutSubviews {
-    // Do any additional setup after loading the view.
+    self.songTitleLabel.font = [LMNowPlayingViewController findAdaptiveFontWithName:@"HelveticaNeue-Light" forUILabelSize:self.songTitleLabel.frame.size withMinimumSize:20];
     
-    self.songTitleLabel.font = [LMNowPlayingViewController findAdaptiveFontWithName:@"HelveticaNeue-Light" forUILabelSize:self.songTitleLabel.frame.size withMinimumSize:1];
-//    self.songTitleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:self.songTitleLabel.frame.size.height];
-//    self.songTitleLabel.backgroundColor = [UIColor redColor];
-    NSLog(@"Got a songTitleLabel font size %f with frame %@", [self.songTitleLabel.font pointSize], NSStringFromCGRect(self.songTitleLabel.frame));
+    self.songArtistLabel.font = [LMNowPlayingViewController findAdaptiveFontWithName:@"HelveticaNeue-Light" forUILabelSize:self.songArtistLabel.frame.size withMinimumSize:16];
     
-    self.songArtistLabel.font = [LMNowPlayingViewController findAdaptiveFontWithName:@"HelveticaNeue-Light" forUILabelSize:self.songArtistLabel.frame.size withMinimumSize:1];
-//    self.songArtistLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:self.songArtistLabel.frame.size.height];
-//    self.songArtistLabel.backgroundColor = [UIColor blueColor];
-    NSLog(@"Got a songArtistLabel font size %f with frame %@", [self.songArtistLabel.font pointSize], NSStringFromCGRect(self.songArtistLabel.frame));
+    self.songAlbumLabel.font = [LMNowPlayingViewController findAdaptiveFontWithName:@"HelveticaNeue-Light" forUILabelSize:self.songAlbumLabel.frame.size withMinimumSize:14];
     
-    self.songAlbumLabel.font = [LMNowPlayingViewController findAdaptiveFontWithName:@"HelveticaNeue-Light" forUILabelSize:self.songAlbumLabel.frame.size withMinimumSize:1];
-//    self.songAlbumLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:self.songAlbumLabel.frame.size.height];
-//    self.songAlbumLabel.backgroundColor = [UIColor yellowColor];
-    NSLog(@"Got a songAlbumLabel font size %f with frame %@", [self.songAlbumLabel.font pointSize], NSStringFromCGRect(self.songAlbumLabel.frame));
-    
-    NSLog(@"container view frame %@ and superview frame %@", NSStringFromCGRect([self.songTitleLabel.superview frame]), NSStringFromCGRect(self.view.frame));
-    /*
-     self.songTitleLabel.minimumScaleFactor = 18/[self.songTitleLabel.font pointSize];
-     self.songTitleLabel.adjustsFontSizeToFitWidth = YES;
-     
-     self.songArtistLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:20.0f];
-     self.songArtistLabel.minimumScaleFactor = 14/[self.songArtistLabel.font pointSize];
-     self.songArtistLabel.adjustsFontSizeToFitWidth = YES;
-     
-     self.songAlbumLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18.0f];
-     self.songAlbumLabel.minimumScaleFactor = 12/[self.songAlbumLabel.font pointSize];
-     self.songAlbumLabel.adjustsFontSizeToFitWidth = YES;
-     */
+    if(self.loadedSubviews){
+        return;
+    }
     
     self.songDurationSlider.tintColor = [UIColor redColor];
-    //[self.songDurationSlider addTarget:self action:@selector(setTimelinePosition:) forControlEvents:UIControlEventValueChanged];
     [self.songDurationSlider addTarget:self action:@selector(setTimelinePosition:) forControlEvents:UIControlEventValueChanged];
     [self.songDurationSlider addTarget:self action:@selector(fireRefreshTimer) forControlEvents:UIControlEventTouchDragExit];
     
     [self.albumArtView setupWithAlbumImage:[UIImage imageNamed:@"no_album.png"]];
     
     [self.shuffleButton setupWithTitle:@"Shuffle" withImage:[UIImage imageNamed:@"shuffle_black.png"]];
+    self.shuffleButton.delegate = self;
     [self.repeatButton setupWithTitle:@"Repeat" withImage:[UIImage imageNamed:@"repeat_black.png"]];
+    self.repeatButton.delegate = self;
     [self.dynamicPlaylistButton setupWithTitle:@"Playlist" withImage:[UIImage imageNamed:@"dynamic_playlist.png"]];
     
     self.shadingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.backgroundImageView.frame.size.width, self.backgroundImageView.frame.size.height)];
@@ -283,6 +317,12 @@
         [self nowPlayingTimeChanged:nil];
     }
     
+    self.shuffleMode = self.musicPlayer.shuffleMode;
+    self.repeatMode = self.musicPlayer.repeatMode;
+    [self reloadButtonTitles];
+    
+    NSLog(@"shuffle %d, repeat %d", (int)self.shuffleMode, (int)self.repeatMode);
+    
     UITapGestureRecognizer *screenTapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(playPauseMusic)];
     [self.view addGestureRecognizer:screenTapRecognizer];
     
@@ -293,6 +333,8 @@
     UISwipeGestureRecognizer *previousRecognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(previousSong:)];
     [previousRecognizer setDirection:UISwipeGestureRecognizerDirectionRight];
     [self.view addGestureRecognizer:previousRecognizer];
+    
+    self.loadedSubviews = YES;
 }
 
 - (void)viewDidLoad {

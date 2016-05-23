@@ -60,6 +60,14 @@
     CGContextSetBlendMode(context, kCGBlendModeNormal);
     CGContextSetRGBFillColor(context, 1.0, 1.0, 1.0, 0.25);
     CGContextFillEllipseInRect(context, circleRect);
+    
+    
+//    CGRect albumCircle = CGRectMake(centerX-self.albumRadius, centerY-self.albumRadius, self.albumRadius*2, self.albumRadius*2);
+//    //CGRect albumCircle = CGRectMake(35, 35, 222, 222);
+//    CGContextSetBlendMode(context, kCGBlendModeClear);
+//    //CGContextSetRGBFillColor(context, 1.0, 0.0, 0.0, 1.0);
+////    NSLog(@"drawing radius %@", NSStringFromCGRect(albumCircle));
+//    CGContextFillEllipseInRect(context, albumCircle);
 }
 
 @end

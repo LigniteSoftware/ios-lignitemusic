@@ -30,7 +30,7 @@
     
     self.progressCircle = [[LMProgressCircleView alloc]init];
     self.progressCircle.translatesAutoresizingMaskIntoConstraints = NO;
-    self.progressCircle.thickness = 10;
+    self.progressCircle.thickness = 8;
     [self addSubview:self.progressCircle];
     [self.progressCircle reload];
     
@@ -68,15 +68,16 @@
     
     self.albumArt = [[UIImageView alloc]init];
     self.albumArt.translatesAutoresizingMaskIntoConstraints = NO;
+    //self.albumArt.backgroundColor = [UIColor redColor];
     [self addSubview:self.albumArt];
     
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.albumArt
-                                                               attribute:NSLayoutAttributeCenterX
-                                                               relatedBy:NSLayoutRelationEqual
-                                                                  toItem:self
-                                                               attribute:NSLayoutAttributeCenterX
-                                                              multiplier:1.0
-                                                                constant:0]];
+                                                     attribute:NSLayoutAttributeCenterX
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:self
+                                                     attribute:NSLayoutAttributeCenterX
+                                                    multiplier:1.0
+                                                      constant:0]];
     
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.albumArt
                                                      attribute:NSLayoutAttributeCenterY
@@ -91,7 +92,7 @@
                                                      relatedBy:NSLayoutRelationEqual
                                                         toItem:self
                                                      attribute:NSLayoutAttributeWidth
-                                                    multiplier:0.65
+                                                    multiplier:0.70
                                                       constant:0]];
     
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.albumArt
@@ -99,14 +100,15 @@
                                                      relatedBy:NSLayoutRelationEqual
                                                         toItem:self
                                                      attribute:NSLayoutAttributeWidth
-                                                    multiplier:0.65
+                                                    multiplier:0.70
                                                       constant:0]];
 }
 
 - (void)updateContentWithMusicPlayer:(MPMusicPlayerController*)musicPlayer {
-    NSLog(@"Reloading %@", NSStringFromCGRect(self.albumArt.frame));
+//    NSLog(@"Reloading %@", NSStringFromCGRect(self.albumArt.frame));
     if(musicPlayer.nowPlayingItem != self.currentMediaItem && self.albumArt.frame.size.width != 0){
         self.albumArt.image = [[musicPlayer.nowPlayingItem artwork]imageWithSize:self.albumArt.frame.size];
+        
         self.albumArt.layer.cornerRadius = self.albumArt.frame.size.width/2;
         self.albumArt.clipsToBounds = YES;
         NSLog(@"%f", self.albumArt.layer.cornerRadius);
@@ -114,6 +116,7 @@
     }
     self.progressCircle.maxValue = musicPlayer.nowPlayingItem.playbackDuration;
     self.progressCircle.currentValue = musicPlayer.currentPlaybackTime;
+    self.progressCircle.albumRadius = self.albumArt.frame.size.width/2;
     [self.progressCircle reload];
 }
 

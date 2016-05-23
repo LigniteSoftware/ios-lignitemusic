@@ -11,6 +11,7 @@
 @interface LMProgressCircleView : UIView
 
 @property int thickness;
+@property int albumRadius;
 @property float maxValue;
 @property float currentValue;
 

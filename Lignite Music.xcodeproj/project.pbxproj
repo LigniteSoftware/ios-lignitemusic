@@ -27,6 +27,8 @@
 		6AA473611BC710320066D47E /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AA473601BC710320066D47E /* CoreBluetooth.framework */; };
 		6AA473631BC7103B0066D47E /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AA473621BC7103B0066D47E /* CoreMotion.framework */; };
 		6AA473651BC710460066D47E /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AA473641BC710460066D47E /* MessageUI.framework */; };
+		6ABF6A821CF374F7003E4EFA /* UIImage+AverageColour.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ABF6A811CF374F7003E4EFA /* UIImage+AverageColour.m */; };
+		6ABF6A851CF3768A003E4EFA /* UIColor+isLight.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ABF6A841CF3768A003E4EFA /* UIColor+isLight.m */; };
 		6AEB9CFD1BACF60E00AD19FA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AEB9CFC1BACF60E00AD19FA /* main.m */; };
 		6AEB9D001BACF60E00AD19FA /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AEB9CFF1BACF60E00AD19FA /* AppDelegate.m */; };
 		6AEB9D031BACF60E00AD19FA /* LMNowPlayingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AEB9D021BACF60E00AD19FA /* LMNowPlayingView.m */; };
@@ -73,6 +75,10 @@
 		6AA473601BC710320066D47E /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
 		6AA473621BC7103B0066D47E /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		6AA473641BC710460066D47E /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
+		6ABF6A801CF374F7003E4EFA /* UIImage+AverageColour.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+AverageColour.h"; sourceTree = "<group>"; };
+		6ABF6A811CF374F7003E4EFA /* UIImage+AverageColour.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+AverageColour.m"; sourceTree = "<group>"; };
+		6ABF6A831CF3768A003E4EFA /* UIColor+isLight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+isLight.h"; sourceTree = "<group>"; };
+		6ABF6A841CF3768A003E4EFA /* UIColor+isLight.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+isLight.m"; sourceTree = "<group>"; };
 		6AEB9CF81BACF60E00AD19FA /* Lignite Music.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Lignite Music.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6AEB9CFC1BACF60E00AD19FA /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		6AEB9CFE1BACF60E00AD19FA /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -198,6 +204,10 @@
 				6A313C131BB44A8F002BBC33 /* LMExtras.h */,
 				6A2C3CAB1BAED34500EE7677 /* LMMainViewController.h */,
 				6A2C3CAC1BAED34500EE7677 /* LMMainViewController.m */,
+				6ABF6A831CF3768A003E4EFA /* UIColor+isLight.h */,
+				6ABF6A841CF3768A003E4EFA /* UIColor+isLight.m */,
+				6ABF6A801CF374F7003E4EFA /* UIImage+AverageColour.h */,
+				6ABF6A811CF374F7003E4EFA /* UIImage+AverageColour.m */,
 				6AEB9D041BACF60E00AD19FA /* Main.storyboard */,
 				6AEB9D071BACF60E00AD19FA /* Assets.xcassets */,
 				6AEB9D091BACF60E00AD19FA /* LaunchScreen.storyboard */,
@@ -360,8 +370,10 @@
 				6AEB9D001BACF60E00AD19FA /* AppDelegate.m in Sources */,
 				6A2C3CAD1BAED34500EE7677 /* LMMainViewController.m in Sources */,
 				6A313C0C1BB448A8002BBC33 /* NPTextInfoView.m in Sources */,
+				6ABF6A851CF3768A003E4EFA /* UIColor+isLight.m in Sources */,
 				6A313C121BB44959002BBC33 /* NPAlbumArtView.m in Sources */,
 				6AEB9CFD1BACF60E00AD19FA /* main.m in Sources */,
+				6ABF6A821CF374F7003E4EFA /* UIImage+AverageColour.m in Sources */,
 				6A313C181BB59AE8002BBC33 /* LMButton.m in Sources */,
 				6A9496FA1CF1F2F900B0AECF /* LMProgressCircleView.m in Sources */,
 				6A2C3CB31BAF1B3700EE7677 /* LMAlbumView.m in Sources */,
