@@ -9,8 +9,6 @@
 /* Begin PBXBuildFile section */
 		6A2C3CAD1BAED34500EE7677 /* LMMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A2C3CAC1BAED34500EE7677 /* LMMainViewController.m */; };
 		6A2C3CB31BAF1B3700EE7677 /* LMAlbumView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A2C3CB21BAF1B3700EE7677 /* LMAlbumView.m */; };
-		6A313C0C1BB448A8002BBC33 /* NPTextInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A313C0B1BB448A8002BBC33 /* NPTextInfoView.m */; };
-		6A313C0F1BB448E5002BBC33 /* NPControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A313C0E1BB448E5002BBC33 /* NPControlView.m */; };
 		6A313C121BB44959002BBC33 /* NPAlbumArtView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A313C111BB44959002BBC33 /* NPAlbumArtView.m */; };
 		6A313C181BB59AE8002BBC33 /* LMButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A313C171BB59AE8002BBC33 /* LMButton.m */; };
 		6A313C1B1BB59D91002BBC33 /* repeat_black.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A313C191BB59D91002BBC33 /* repeat_black.png */; };
@@ -31,7 +29,6 @@
 		6ABF6A851CF3768A003E4EFA /* UIColor+isLight.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ABF6A841CF3768A003E4EFA /* UIColor+isLight.m */; };
 		6AEB9CFD1BACF60E00AD19FA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AEB9CFC1BACF60E00AD19FA /* main.m */; };
 		6AEB9D001BACF60E00AD19FA /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AEB9CFF1BACF60E00AD19FA /* AppDelegate.m */; };
-		6AEB9D031BACF60E00AD19FA /* LMNowPlayingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AEB9D021BACF60E00AD19FA /* LMNowPlayingView.m */; };
 		6AEB9D061BACF60E00AD19FA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6AEB9D041BACF60E00AD19FA /* Main.storyboard */; };
 		6AEB9D081BACF60E00AD19FA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6AEB9D071BACF60E00AD19FA /* Assets.xcassets */; };
 		6AEB9D0B1BACF60E00AD19FA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6AEB9D091BACF60E00AD19FA /* LaunchScreen.storyboard */; };
@@ -40,18 +37,17 @@
 		6AEB9D3A1BAD824E00AD19FA /* lignite_background.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6AEB9D391BAD824E00AD19FA /* lignite_background.jpg */; };
 		6AFD2EDD1BC41ECD0083FE9E /* LMAlbumViewItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AFD2EDC1BC41ECC0083FE9E /* LMAlbumViewItem.m */; };
 		6AFD2EDF1BC423850083FE9E /* no_album.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AFD2EDE1BC423850083FE9E /* no_album.png */; };
+		D1767CD140CC008C5C9FA446 /* Pods_Lignite_Music.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6425E08F3C08A769E9AFCA12 /* Pods_Lignite_Music.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		06D689BF9FFCC886FEA8A594 /* Pods-Lignite Music.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lignite Music.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Lignite Music/Pods-Lignite Music.debug.xcconfig"; sourceTree = "<group>"; };
+		6425E08F3C08A769E9AFCA12 /* Pods_Lignite_Music.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Lignite_Music.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6A106B121BC710D4003AE55A /* Lignite Music.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Lignite Music.entitlements"; sourceTree = "<group>"; };
 		6A2C3CAB1BAED34500EE7677 /* LMMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMMainViewController.h; sourceTree = "<group>"; };
 		6A2C3CAC1BAED34500EE7677 /* LMMainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMMainViewController.m; sourceTree = "<group>"; };
 		6A2C3CB11BAF1B3700EE7677 /* LMAlbumView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMAlbumView.h; sourceTree = "<group>"; };
 		6A2C3CB21BAF1B3700EE7677 /* LMAlbumView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMAlbumView.m; sourceTree = "<group>"; };
-		6A313C0A1BB448A8002BBC33 /* NPTextInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NPTextInfoView.h; sourceTree = "<group>"; };
-		6A313C0B1BB448A8002BBC33 /* NPTextInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NPTextInfoView.m; sourceTree = "<group>"; };
-		6A313C0D1BB448E5002BBC33 /* NPControlView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NPControlView.h; sourceTree = "<group>"; };
-		6A313C0E1BB448E5002BBC33 /* NPControlView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NPControlView.m; sourceTree = "<group>"; };
 		6A313C101BB44959002BBC33 /* NPAlbumArtView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NPAlbumArtView.h; sourceTree = "<group>"; };
 		6A313C111BB44959002BBC33 /* NPAlbumArtView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NPAlbumArtView.m; sourceTree = "<group>"; };
 		6A313C131BB44A8F002BBC33 /* LMExtras.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMExtras.h; sourceTree = "<group>"; };
@@ -83,8 +79,6 @@
 		6AEB9CFC1BACF60E00AD19FA /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		6AEB9CFE1BACF60E00AD19FA /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		6AEB9CFF1BACF60E00AD19FA /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		6AEB9D011BACF60E00AD19FA /* LMNowPlayingView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMNowPlayingView.h; sourceTree = "<group>"; };
-		6AEB9D021BACF60E00AD19FA /* LMNowPlayingView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMNowPlayingView.m; sourceTree = "<group>"; };
 		6AEB9D051BACF60E00AD19FA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		6AEB9D071BACF60E00AD19FA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6AEB9D0A1BACF60E00AD19FA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -100,6 +94,7 @@
 		6AFD2EDB1BC41ECC0083FE9E /* LMAlbumViewItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMAlbumViewItem.h; sourceTree = "<group>"; };
 		6AFD2EDC1BC41ECC0083FE9E /* LMAlbumViewItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMAlbumViewItem.m; sourceTree = "<group>"; };
 		6AFD2EDE1BC423850083FE9E /* no_album.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = no_album.png; sourceTree = "<group>"; };
+		E827E504098D23C078EED92F /* Pods-Lignite Music.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lignite Music.release.xcconfig"; path = "Pods/Target Support Files/Pods-Lignite Music/Pods-Lignite Music.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,12 +106,22 @@
 				6AA473631BC7103B0066D47E /* CoreMotion.framework in Frameworks */,
 				6AA473611BC710320066D47E /* CoreBluetooth.framework in Frameworks */,
 				6AA4735F1BC70FBA0066D47E /* ExternalAccessory.framework in Frameworks */,
+				D1767CD140CC008C5C9FA446 /* Pods_Lignite_Music.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5956AA9D6F2198F874B6207A /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				06D689BF9FFCC886FEA8A594 /* Pods-Lignite Music.debug.xcconfig */,
+				E827E504098D23C078EED92F /* Pods-Lignite Music.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		6A313C091BB4485A002BBC33 /* NowPlayingView */ = {
 			isa = PBXGroup;
 			children = (
@@ -124,12 +129,6 @@
 				6A514E111CE904F000AFB351 /* LMNowPlayingViewController.m */,
 				6A313C101BB44959002BBC33 /* NPAlbumArtView.h */,
 				6A313C111BB44959002BBC33 /* NPAlbumArtView.m */,
-				6A313C0D1BB448E5002BBC33 /* NPControlView.h */,
-				6A313C0E1BB448E5002BBC33 /* NPControlView.m */,
-				6A313C0A1BB448A8002BBC33 /* NPTextInfoView.h */,
-				6A313C0B1BB448A8002BBC33 /* NPTextInfoView.m */,
-				6AEB9D011BACF60E00AD19FA /* LMNowPlayingView.h */,
-				6AEB9D021BACF60E00AD19FA /* LMNowPlayingView.m */,
 			);
 			name = NowPlayingView;
 			sourceTree = "<group>";
@@ -167,6 +166,17 @@
 			name = Other;
 			sourceTree = "<group>";
 		};
+		6ABF6A861CF37A19003E4EFA /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				6ABF6A831CF3768A003E4EFA /* UIColor+isLight.h */,
+				6ABF6A841CF3768A003E4EFA /* UIColor+isLight.m */,
+				6ABF6A801CF374F7003E4EFA /* UIImage+AverageColour.h */,
+				6ABF6A811CF374F7003E4EFA /* UIImage+AverageColour.m */,
+			);
+			name = Utilities;
+			sourceTree = "<group>";
+		};
 		6AEB9CEF1BACF60E00AD19FA = {
 			isa = PBXGroup;
 			children = (
@@ -175,6 +185,7 @@
 				6AEB9D1F1BACF60F00AD19FA /* Lignite MusicUITests */,
 				6AEB9CF91BACF60E00AD19FA /* Products */,
 				EEE9F5AA536DDB5B28CE09F9 /* Frameworks */,
+				5956AA9D6F2198F874B6207A /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -189,6 +200,7 @@
 		6AEB9CFA1BACF60E00AD19FA /* Lignite Music */ = {
 			isa = PBXGroup;
 			children = (
+				6ABF6A861CF37A19003E4EFA /* Utilities */,
 				6A66C7681CDA1086009019CF /* MiniPlayerView */,
 				6AFD2EDA1BC41EAC0083FE9E /* AlbumView */,
 				6A313C091BB4485A002BBC33 /* NowPlayingView */,
@@ -204,10 +216,6 @@
 				6A313C131BB44A8F002BBC33 /* LMExtras.h */,
 				6A2C3CAB1BAED34500EE7677 /* LMMainViewController.h */,
 				6A2C3CAC1BAED34500EE7677 /* LMMainViewController.m */,
-				6ABF6A831CF3768A003E4EFA /* UIColor+isLight.h */,
-				6ABF6A841CF3768A003E4EFA /* UIColor+isLight.m */,
-				6ABF6A801CF374F7003E4EFA /* UIImage+AverageColour.h */,
-				6ABF6A811CF374F7003E4EFA /* UIImage+AverageColour.m */,
 				6AEB9D041BACF60E00AD19FA /* Main.storyboard */,
 				6AEB9D071BACF60E00AD19FA /* Assets.xcassets */,
 				6AEB9D091BACF60E00AD19FA /* LaunchScreen.storyboard */,
@@ -272,6 +280,7 @@
 				6AA473621BC7103B0066D47E /* CoreMotion.framework */,
 				6AA473601BC710320066D47E /* CoreBluetooth.framework */,
 				6AA4735E1BC70FBA0066D47E /* ExternalAccessory.framework */,
+				6425E08F3C08A769E9AFCA12 /* Pods_Lignite_Music.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -283,9 +292,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 6AEB9D251BACF60F00AD19FA /* Build configuration list for PBXNativeTarget "Lignite Music" */;
 			buildPhases = (
+				6924BAF99EF036E177605654 /* Check Pods Manifest.lock */,
 				6AEB9CF41BACF60E00AD19FA /* Sources */,
 				6AEB9CF51BACF60E00AD19FA /* Frameworks */,
 				6AEB9CF61BACF60E00AD19FA /* Resources */,
+				B99B588A171F94D665F7BFC6 /* Copy Pods Resources */,
+				428DC5F14BF450B9C7A68C47 /* Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -357,19 +369,64 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		428DC5F14BF450B9C7A68C47 /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Lignite Music/Pods-Lignite Music-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		6924BAF99EF036E177605654 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		B99B588A171F94D665F7BFC6 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Lignite Music/Pods-Lignite Music-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		6AEB9CF41BACF60E00AD19FA /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				6AFD2EDD1BC41ECD0083FE9E /* LMAlbumViewItem.m in Sources */,
-				6AEB9D031BACF60E00AD19FA /* LMNowPlayingView.m in Sources */,
 				6A514E121CE904F100AFB351 /* LMNowPlayingViewController.m in Sources */,
-				6A313C0F1BB448E5002BBC33 /* NPControlView.m in Sources */,
 				6A66C76B1CDA10C2009019CF /* LMMiniPlayerView.m in Sources */,
 				6AEB9D001BACF60E00AD19FA /* AppDelegate.m in Sources */,
 				6A2C3CAD1BAED34500EE7677 /* LMMainViewController.m in Sources */,
-				6A313C0C1BB448A8002BBC33 /* NPTextInfoView.m in Sources */,
 				6ABF6A851CF3768A003E4EFA /* UIColor+isLight.m in Sources */,
 				6A313C121BB44959002BBC33 /* NPAlbumArtView.m in Sources */,
 				6AEB9CFD1BACF60E00AD19FA /* main.m in Sources */,
@@ -485,6 +542,7 @@
 		};
 		6AEB9D261BACF60F00AD19FA /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 06D689BF9FFCC886FEA8A594 /* Pods-Lignite Music.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Lignite Music/Lignite Music.entitlements";
@@ -492,8 +550,6 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/Lignite",
-					Music,
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = "Lignite Music/Info.plist";
@@ -508,6 +564,7 @@
 		};
 		6AEB9D271BACF60F00AD19FA /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E827E504098D23C078EED92F /* Pods-Lignite Music.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Lignite Music/Lignite Music.entitlements";
@@ -515,8 +572,6 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/Lignite",
-					Music,
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = "Lignite Music/Info.plist";

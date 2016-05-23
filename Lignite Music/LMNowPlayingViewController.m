@@ -32,7 +32,9 @@
     [self.songAlbumLabel setText:self.musicPlayer.nowPlayingItem.albumTitle];
     [self.songNumberLabel setText:[NSString stringWithFormat:@"Song %lu of %lu", self.musicPlayer.nowPlayingItem.albumTrackNumber, self.musicPlayer.nowPlayingItem.albumTrackCount]];
     
-    self.songDurationSlider.maximumValue = [self.musicPlayer.nowPlayingItem playbackDuration];
+    self.songDurationSlider.maximumValue = self.musicPlayer.nowPlayingItem.playbackDuration;
+    //self.songDurationSlider.value = self.musicPlayer.currentPlaybackTime;
+    [self updateSongDurationLabelWithPlaybackTime:self.musicPlayer.currentPlaybackTime];
     [self.albumArtView updateContentWithMusicPlayer:self.musicPlayer];
     
     UIImage *albumImage;
@@ -48,7 +50,6 @@
         
         UIColor *averageColour = [albumImage averageColour];
         BOOL isLight = [averageColour isLight];
-        NSLog(@"is light: %@", isLight ? @"yeah" : @"nah");
         self.shadingView.backgroundColor = isLight ? [UIColor colorWithRed:1 green:1 blue:1 alpha:0.25] : [UIColor colorWithRed:0 green:0 blue:0 alpha:0.25];
         UIColor *newTextColour = isLight ? [UIColor blackColor] : [UIColor whiteColor];
         self.songTitleLabel.textColor = newTextColour;
@@ -258,6 +259,13 @@
         return;
     }
     
+    self.songTitleLabel.fadeLength = 10;
+    self.songTitleLabel.leadingBuffer = 6;
+    self.songArtistLabel.fadeLength = 10;
+    self.songArtistLabel.leadingBuffer = 6;
+    self.songAlbumLabel.fadeLength = 10;
+    self.songAlbumLabel.leadingBuffer = 6;
+    
     self.songDurationSlider.tintColor = [UIColor redColor];
     [self.songDurationSlider addTarget:self action:@selector(setTimelinePosition:) forControlEvents:UIControlEventValueChanged];
     [self.songDurationSlider addTarget:self action:@selector(fireRefreshTimer) forControlEvents:UIControlEventTouchDragExit];
@@ -320,9 +328,7 @@
     self.shuffleMode = self.musicPlayer.shuffleMode;
     self.repeatMode = self.musicPlayer.repeatMode;
     [self reloadButtonTitles];
-    
-    NSLog(@"shuffle %d, repeat %d", (int)self.shuffleMode, (int)self.repeatMode);
-    
+        
     UITapGestureRecognizer *screenTapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(playPauseMusic)];
     [self.view addGestureRecognizer:screenTapRecognizer];
     

@@ -8,13 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import "LMButton.h"
-#import "LMNowPlayingView.h"
 
 #define MINI_PLAYER_CONTROL_BUTTON_RADIUS 30
 #define MINI_PLAYER_CONTROL_BUTTON_PADDING 6
 
 @interface LMMiniPlayerView : UIView
-
-@property LMNowPlayingView *musicPlayerView;
 
 @end

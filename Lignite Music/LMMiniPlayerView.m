@@ -30,12 +30,6 @@
             [self addSubview:button];
              */
         }
-        CGRect playerRect = CGRectMake(0, self.frame.size.height/2, self.frame.size.width, self.frame.size.height/2);
-        NSLog(@"%@", NSStringFromCGRect(playerRect));
-        
-        self.musicPlayerView = [[LMNowPlayingView alloc]initWithFrame:playerRect withViewMode:NowPlayingViewModeMiniPortrait];
-        self.musicPlayerView.userInteractionEnabled = YES;
-        [self addSubview:self.musicPlayerView];
          
     }
     else{

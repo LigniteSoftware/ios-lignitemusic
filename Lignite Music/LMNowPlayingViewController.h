@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <MediaPlayer/MediaPlayer.h>
+#import "MarqueeLabel.h"
 #import "LMButton.h"
 #import "NPAlbumArtView.h"
 #import "LMSlider.h"
@@ -20,7 +21,7 @@
 @property IBOutlet NPAlbumArtView *albumArtView;
 @property IBOutlet LMSlider *songDurationSlider;
 @property IBOutlet UILabel *songNumberLabel, *songDurationLabel;
-@property IBOutlet UILabel *songTitleLabel, *songArtistLabel, *songAlbumLabel;
+@property IBOutlet MarqueeLabel *songTitleLabel, *songArtistLabel, *songAlbumLabel;
 
 @property IBOutlet LMButton *shuffleButton, *repeatButton, *dynamicPlaylistButton;
 

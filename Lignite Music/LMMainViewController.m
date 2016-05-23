@@ -7,37 +7,18 @@
 //
 
 #import "LMMainViewController.h"
-#import "LMNowPlayingView.h"
 #import "LMAlbumView.h"
 #import "LMMiniPlayerView.h"
 
 @interface LMMainViewController ()
 
 @property SwitcherType viewMode;
-@property LMNowPlayingView *playingView;
 @property LMAlbumView *albumView;
 @property LMMiniPlayerView *miniPlayerView;
 
 @end
 
 @implementation LMMainViewController
-
-- (void)handle_NowPlayingItemChanged:(id) sender {
-    [self.playingView updateNowPlayingItem:self.musicPlayer.nowPlayingItem];
-}
-
-- (void)handle_PlaybackStateChanged:(id) sender {
-    MPMusicPlaybackState playbackState = [self.musicPlayer playbackState];
-    
-    NSLog(@"playback state is %d", (int)playbackState);
-    
-    if (playbackState == MPMusicPlaybackStatePaused || playbackState == MPMusicPlaybackStatePlaying) {
-        [self.playingView.controlView setPlaying:nil];
-    }
-    else if (playbackState == MPMusicPlaybackStateStopped) {
-        [self.musicPlayer stop];
-    }
-}
 
 - (BOOL)prefersStatusBarHidden{
     return YES;
@@ -65,22 +46,6 @@
     self.playingView.userInteractionEnabled = YES;
     [self.view addSubview:self.playingView];
     */
-    
-    NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
-    
-    [notificationCenter
-     addObserver: self
-     selector:    @selector(handle_NowPlayingItemChanged:)
-     name:        MPMusicPlayerControllerNowPlayingItemDidChangeNotification
-     object:      self.musicPlayer];
-    
-    [notificationCenter
-     addObserver: self
-     selector:    @selector(handle_PlaybackStateChanged:)
-     name:        MPMusicPlayerControllerPlaybackStateDidChangeNotification
-     object:      self.musicPlayer];
-    
-    [self.musicPlayer beginGeneratingPlaybackNotifications];
 }
 
 - (void)didReceiveMemoryWarning {
