@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import <MediaPlayer/MediaPlayer.h>
-#import "XYPieChart.h"
 #import "NPControlView.h"
 #import "NPTextInfoView.h"
 #import "NPAlbumArtView.h"

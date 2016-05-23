@@ -27,7 +27,7 @@
     [self.songNumberLabel setText:[NSString stringWithFormat:@"Song %lu of %lu", self.musicPlayer.nowPlayingItem.albumTrackNumber, self.musicPlayer.nowPlayingItem.albumTrackCount]];
     
     self.songDurationSlider.maximumValue = [self.musicPlayer.nowPlayingItem playbackDuration];
-    [self.albumArtView updateContentWithMediaItem:self.musicPlayer.nowPlayingItem];
+    [self.albumArtView updateContentWithMusicPlayer:self.musicPlayer];
     
     UIImage *albumImage;
     CGSize size = self.backgroundImageView.frame.size;
@@ -44,7 +44,7 @@
         [gaussianBlurFilter setDefaults];
         CIImage *inputImage = [CIImage imageWithCGImage:[albumImage CGImage]];
         [gaussianBlurFilter setValue:inputImage forKey:kCIInputImageKey];
-        [gaussianBlurFilter setValue:@10 forKey:kCIInputRadiusKey];
+        [gaussianBlurFilter setValue:@5 forKey:kCIInputRadiusKey];
         
         CIImage *outputImage = [gaussianBlurFilter outputImage];
         CIContext *context   = [CIContext contextWithOptions:nil];
@@ -63,7 +63,7 @@
 - (void)nowPlayingStateChanged:(id) sender {
     MPMusicPlaybackState playbackState = [self.musicPlayer playbackState];
     
-    NSLog(@"Playback state is %d", (int)playbackState);
+    //NSLog(@"Playback state is %d", (int)playbackState);
     
     if (playbackState == MPMusicPlaybackStatePaused || playbackState == MPMusicPlaybackStatePlaying) {
         //[self.playingView.controlView setPlaying:nil];
@@ -97,16 +97,15 @@
         }
     }];
     
-    if([self.refreshTimer isValid]){
-        [UIView animateWithDuration:0.3 animations:^{
-            NSLog(@"Setting song duration slider value to %ld", currentPlaybackTime);
-            self.songDurationSlider.value = currentPlaybackTime;
-        }];
-    }
+    [UIView animateWithDuration:0.3 animations:^{
+        self.songDurationSlider.maximumValue = [self.musicPlayer.nowPlayingItem playbackDuration];
+        self.songDurationSlider.value = currentPlaybackTime;
+        [self.albumArtView updateContentWithMusicPlayer:self.musicPlayer];
+    }];
 }
 
 - (void)nowPlayingTimeChanged:(NSTimer*)timer {
-    NSLog(@"Now playing time changed... %f", self.musicPlayer.currentPlaybackTime);
+    //NSLog(@"Now playing time changed... %f", self.musicPlayer.currentPlaybackTime);
     if((self.musicPlayer.currentPlaybackTime != self.songDurationSlider.value) && self.finishedUserAdjustment){
         self.finishedUserAdjustment = NO;
         self.musicPlayer.currentPlaybackTime = self.songDurationSlider.value;
@@ -138,7 +137,6 @@
 }
 
 - (IBAction)setTimelinePosition:(id)sender {
-    NSLog(@"Setting timeline position");
     UISlider *slider = sender;
     if(self.refreshTimer){
         [self.refreshTimer invalidate];
@@ -154,7 +152,6 @@
 }
 
 - (void)fireRefreshTimer {
-    NSLog(@"Firing refresh timer");
     self.refreshTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(nowPlayingTimeChanged:) userInfo:nil repeats:YES];
 }
 
@@ -162,9 +159,71 @@
     return true;
 }
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
++ (UIFont *)findAdaptiveFontWithName:(NSString *)fontName forUILabelSize:(CGSize)labelSize withMinimumSize:(NSInteger)minSize {
+    UIFont *tempFont = nil;
+    NSString *testString = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    
+    NSInteger tempMin = minSize;
+    NSInteger tempMax = 256;
+    NSInteger mid = 0;
+    NSInteger difference = 0;
+    
+    while (tempMin <= tempMax) {
+        mid = tempMin + (tempMax - tempMin) / 2;
+        tempFont = [UIFont fontWithName:fontName size:mid];
+        difference = labelSize.height - [testString sizeWithFont:tempFont].height;
+        
+        if (mid == tempMin || mid == tempMax) {
+            if (difference < 0) {
+                return [UIFont fontWithName:fontName size:(mid - 1)];
+            }
+            
+            return [UIFont fontWithName:fontName size:mid];
+        }
+        
+        if (difference < 0) {
+            tempMax = mid - 1;
+        } else if (difference > 0) {
+            tempMin = mid + 1;
+        } else {
+            return [UIFont fontWithName:fontName size:mid];
+        }
+    }
+    
+    return [UIFont fontWithName:fontName size:mid];
+}
+
+- (void)viewDidLayoutSubviews {
     // Do any additional setup after loading the view.
+    
+    self.songTitleLabel.font = [LMNowPlayingViewController findAdaptiveFontWithName:@"HelveticaNeue-Light" forUILabelSize:self.songTitleLabel.frame.size withMinimumSize:1];
+//    self.songTitleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:self.songTitleLabel.frame.size.height];
+//    self.songTitleLabel.backgroundColor = [UIColor redColor];
+    NSLog(@"Got a songTitleLabel font size %f with frame %@", [self.songTitleLabel.font pointSize], NSStringFromCGRect(self.songTitleLabel.frame));
+    
+    self.songArtistLabel.font = [LMNowPlayingViewController findAdaptiveFontWithName:@"HelveticaNeue-Light" forUILabelSize:self.songArtistLabel.frame.size withMinimumSize:1];
+//    self.songArtistLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:self.songArtistLabel.frame.size.height];
+//    self.songArtistLabel.backgroundColor = [UIColor blueColor];
+    NSLog(@"Got a songArtistLabel font size %f with frame %@", [self.songArtistLabel.font pointSize], NSStringFromCGRect(self.songArtistLabel.frame));
+    
+    self.songAlbumLabel.font = [LMNowPlayingViewController findAdaptiveFontWithName:@"HelveticaNeue-Light" forUILabelSize:self.songAlbumLabel.frame.size withMinimumSize:1];
+//    self.songAlbumLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:self.songAlbumLabel.frame.size.height];
+//    self.songAlbumLabel.backgroundColor = [UIColor yellowColor];
+    NSLog(@"Got a songAlbumLabel font size %f with frame %@", [self.songAlbumLabel.font pointSize], NSStringFromCGRect(self.songAlbumLabel.frame));
+    
+    NSLog(@"container view frame %@ and superview frame %@", NSStringFromCGRect([self.songTitleLabel.superview frame]), NSStringFromCGRect(self.view.frame));
+    /*
+     self.songTitleLabel.minimumScaleFactor = 18/[self.songTitleLabel.font pointSize];
+     self.songTitleLabel.adjustsFontSizeToFitWidth = YES;
+     
+     self.songArtistLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:20.0f];
+     self.songArtistLabel.minimumScaleFactor = 14/[self.songArtistLabel.font pointSize];
+     self.songArtistLabel.adjustsFontSizeToFitWidth = YES;
+     
+     self.songAlbumLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18.0f];
+     self.songAlbumLabel.minimumScaleFactor = 12/[self.songAlbumLabel.font pointSize];
+     self.songAlbumLabel.adjustsFontSizeToFitWidth = YES;
+     */
     
     self.songDurationSlider.tintColor = [UIColor redColor];
     //[self.songDurationSlider addTarget:self action:@selector(setTimelinePosition:) forControlEvents:UIControlEventValueChanged];
@@ -213,10 +272,16 @@
      selector:    @selector(nowPlayingStateChanged:)
      name:        MPMusicPlayerControllerPlaybackStateDidChangeNotification
      object:      self.musicPlayer];
-        
+    
     [self.musicPlayer beginGeneratingPlaybackNotifications];
     
-    [self fireRefreshTimer];
+    if(self.musicPlayer.playbackState == MPMusicPlaybackStatePlaying){
+        [self fireRefreshTimer];
+    }
+    else{
+        //Update the contents of the slider/timing elements if the music is paused
+        [self nowPlayingTimeChanged:nil];
+    }
     
     UITapGestureRecognizer *screenTapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(playPauseMusic)];
     [self.view addGestureRecognizer:screenTapRecognizer];
@@ -230,9 +295,11 @@
     [self.view addGestureRecognizer:previousRecognizer];
 }
 
+- (void)viewDidLoad {
+    [super viewDidLoad];
+}
+
 - (void)viewDidUnload:(BOOL)animated {
-    NSLog(@"Unloading view");
-    
     [[NSNotificationCenter defaultCenter]
      removeObserver: self
      name:           MPMusicPlayerControllerNowPlayingItemDidChangeNotification

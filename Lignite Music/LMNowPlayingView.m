@@ -88,8 +88,7 @@
     
     [self.controlView updateWithMediaItem:nowPlaying];
     [self.songInfoView updateContentWithMediaItem:nowPlaying];
-    [self.albumArtView updateContentWithMediaItem:nowPlaying];
-
+    [self.albumArtView updateContentWithMusicPlayer:self.musicPlayer];
 }
 
 - (bool)isMiniPlayer {

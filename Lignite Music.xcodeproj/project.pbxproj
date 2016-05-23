@@ -7,9 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		6A2C3CAA1BAE539E00EE7677 /* XYPieChart.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A2C3CA91BAE539E00EE7677 /* XYPieChart.m */; };
 		6A2C3CAD1BAED34500EE7677 /* LMMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A2C3CAC1BAED34500EE7677 /* LMMainViewController.m */; };
-		6A2C3CB01BAEE7ED00EE7677 /* PieChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A2C3CAF1BAEE7ED00EE7677 /* PieChartView.m */; };
 		6A2C3CB31BAF1B3700EE7677 /* LMAlbumView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A2C3CB21BAF1B3700EE7677 /* LMAlbumView.m */; };
 		6A313C0C1BB448A8002BBC33 /* NPTextInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A313C0B1BB448A8002BBC33 /* NPTextInfoView.m */; };
 		6A313C0F1BB448E5002BBC33 /* NPControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A313C0E1BB448E5002BBC33 /* NPControlView.m */; };
@@ -24,6 +22,7 @@
 		6A514E1F1CEA3FCE00AFB351 /* splash_portrait.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A514E1E1CEA3FCE00AFB351 /* splash_portrait.png */; };
 		6A66C76B1CDA10C2009019CF /* LMMiniPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A66C76A1CDA10C2009019CF /* LMMiniPlayerView.m */; };
 		6A66C76F1CDA1BB1009019CF /* back_arrow_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A66C76E1CDA1BB1009019CF /* back_arrow_white.png */; };
+		6A9496FA1CF1F2F900B0AECF /* LMProgressCircleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A9496F91CF1F2F900B0AECF /* LMProgressCircleView.m */; };
 		6AA4735F1BC70FBA0066D47E /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AA4735E1BC70FBA0066D47E /* ExternalAccessory.framework */; };
 		6AA473611BC710320066D47E /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AA473601BC710320066D47E /* CoreBluetooth.framework */; };
 		6AA473631BC7103B0066D47E /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AA473621BC7103B0066D47E /* CoreMotion.framework */; };
@@ -43,12 +42,8 @@
 
 /* Begin PBXFileReference section */
 		6A106B121BC710D4003AE55A /* Lignite Music.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Lignite Music.entitlements"; sourceTree = "<group>"; };
-		6A2C3CA81BAE539E00EE7677 /* XYPieChart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XYPieChart.h; sourceTree = "<group>"; };
-		6A2C3CA91BAE539E00EE7677 /* XYPieChart.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XYPieChart.m; sourceTree = "<group>"; };
 		6A2C3CAB1BAED34500EE7677 /* LMMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMMainViewController.h; sourceTree = "<group>"; };
 		6A2C3CAC1BAED34500EE7677 /* LMMainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMMainViewController.m; sourceTree = "<group>"; };
-		6A2C3CAE1BAEE7ED00EE7677 /* PieChartView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PieChartView.h; sourceTree = "<group>"; };
-		6A2C3CAF1BAEE7ED00EE7677 /* PieChartView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PieChartView.m; sourceTree = "<group>"; };
 		6A2C3CB11BAF1B3700EE7677 /* LMAlbumView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMAlbumView.h; sourceTree = "<group>"; };
 		6A2C3CB21BAF1B3700EE7677 /* LMAlbumView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMAlbumView.m; sourceTree = "<group>"; };
 		6A313C0A1BB448A8002BBC33 /* NPTextInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NPTextInfoView.h; sourceTree = "<group>"; };
@@ -72,6 +67,8 @@
 		6A66C7691CDA10C2009019CF /* LMMiniPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMMiniPlayerView.h; sourceTree = "<group>"; };
 		6A66C76A1CDA10C2009019CF /* LMMiniPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMMiniPlayerView.m; sourceTree = "<group>"; };
 		6A66C76E1CDA1BB1009019CF /* back_arrow_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = back_arrow_white.png; sourceTree = "<group>"; };
+		6A9496F81CF1F2F900B0AECF /* LMProgressCircleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMProgressCircleView.h; sourceTree = "<group>"; };
+		6A9496F91CF1F2F900B0AECF /* LMProgressCircleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMProgressCircleView.m; sourceTree = "<group>"; };
 		6AA4735E1BC70FBA0066D47E /* ExternalAccessory.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExternalAccessory.framework; path = System/Library/Frameworks/ExternalAccessory.framework; sourceTree = SDKROOT; };
 		6AA473601BC710320066D47E /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
 		6AA473621BC7103B0066D47E /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
@@ -127,10 +124,6 @@
 				6A313C0B1BB448A8002BBC33 /* NPTextInfoView.m */,
 				6AEB9D011BACF60E00AD19FA /* LMNowPlayingView.h */,
 				6AEB9D021BACF60E00AD19FA /* LMNowPlayingView.m */,
-				6A2C3CAE1BAEE7ED00EE7677 /* PieChartView.h */,
-				6A2C3CAF1BAEE7ED00EE7677 /* PieChartView.m */,
-				6A2C3CA81BAE539E00EE7677 /* XYPieChart.h */,
-				6A2C3CA91BAE539E00EE7677 /* XYPieChart.m */,
 			);
 			name = NowPlayingView;
 			sourceTree = "<group>";
@@ -198,6 +191,8 @@
 				6AEB9CFF1BACF60E00AD19FA /* AppDelegate.m */,
 				6A313C161BB59AE8002BBC33 /* LMButton.h */,
 				6A313C171BB59AE8002BBC33 /* LMButton.m */,
+				6A9496F81CF1F2F900B0AECF /* LMProgressCircleView.h */,
+				6A9496F91CF1F2F900B0AECF /* LMProgressCircleView.m */,
 				6A514E171CEA15D900AFB351 /* LMSlider.h */,
 				6A514E181CEA15D900AFB351 /* LMSlider.m */,
 				6A313C131BB44A8F002BBC33 /* LMExtras.h */,
@@ -363,13 +358,12 @@
 				6A313C0F1BB448E5002BBC33 /* NPControlView.m in Sources */,
 				6A66C76B1CDA10C2009019CF /* LMMiniPlayerView.m in Sources */,
 				6AEB9D001BACF60E00AD19FA /* AppDelegate.m in Sources */,
-				6A2C3CB01BAEE7ED00EE7677 /* PieChartView.m in Sources */,
 				6A2C3CAD1BAED34500EE7677 /* LMMainViewController.m in Sources */,
 				6A313C0C1BB448A8002BBC33 /* NPTextInfoView.m in Sources */,
 				6A313C121BB44959002BBC33 /* NPAlbumArtView.m in Sources */,
-				6A2C3CAA1BAE539E00EE7677 /* XYPieChart.m in Sources */,
 				6AEB9CFD1BACF60E00AD19FA /* main.m in Sources */,
 				6A313C181BB59AE8002BBC33 /* LMButton.m in Sources */,
+				6A9496FA1CF1F2F900B0AECF /* LMProgressCircleView.m in Sources */,
 				6A2C3CB31BAF1B3700EE7677 /* LMAlbumView.m in Sources */,
 				6A514E191CEA15D900AFB351 /* LMSlider.m in Sources */,
 			);

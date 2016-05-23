@@ -8,15 +8,14 @@
 
 #import <MediaPlayer/MediaPlayer.h>
 #import "NPAlbumArtView.h"
-#import "XYPieChart.h"
-#import "PieChartView.h"
+#import "LMProgressCircleView.h"
 #import "LMExtras.h"
 
-@interface NPAlbumArtView() <XYPieChartDataSource, XYPieChartDelegate, PieChartViewDataSource, PieChartViewDelegate>
+@interface NPAlbumArtView()
 
+@property MPMediaItem *currentMediaItem;
 @property UIImageView *albumArt;
-@property XYPieChart *animatedMusicProgress;
-@property PieChartView *batteryEfficientMusicProgress;
+@property LMProgressCircleView *progressCircle;
 
 @property NSTimer *currentTimer;
 
@@ -28,6 +27,44 @@
 
 - (void)setupWithAlbumImage:(UIImage*)albumImage {
     self.backgroundColor = [UIColor clearColor];
+    
+    self.progressCircle = [[LMProgressCircleView alloc]init];
+    self.progressCircle.translatesAutoresizingMaskIntoConstraints = NO;
+    self.progressCircle.thickness = 10;
+    [self addSubview:self.progressCircle];
+    [self.progressCircle reload];
+    
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.progressCircle
+                                                     attribute:NSLayoutAttributeCenterX
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:self
+                                                     attribute:NSLayoutAttributeCenterX
+                                                    multiplier:1.0
+                                                      constant:0]];
+    
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.progressCircle
+                                                     attribute:NSLayoutAttributeCenterY
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:self
+                                                     attribute:NSLayoutAttributeCenterY
+                                                    multiplier:1.0
+                                                      constant:0]];
+    
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.progressCircle
+                                                     attribute:NSLayoutAttributeWidth
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:self
+                                                     attribute:NSLayoutAttributeWidth
+                                                    multiplier:0.85
+                                                      constant:0]];
+    
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.progressCircle
+                                                     attribute:NSLayoutAttributeHeight
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:self
+                                                     attribute:NSLayoutAttributeWidth
+                                                    multiplier:0.85
+                                                      constant:0]];
     
     self.albumArt = [[UIImageView alloc]init];
     self.albumArt.translatesAutoresizingMaskIntoConstraints = NO;
@@ -54,7 +91,7 @@
                                                      relatedBy:NSLayoutRelationEqual
                                                         toItem:self
                                                      attribute:NSLayoutAttributeWidth
-                                                    multiplier:0.75
+                                                    multiplier:0.65
                                                       constant:0]];
     
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.albumArt
@@ -62,78 +99,22 @@
                                                      relatedBy:NSLayoutRelationEqual
                                                         toItem:self
                                                      attribute:NSLayoutAttributeWidth
-                                                    multiplier:0.75
+                                                    multiplier:0.65
                                                       constant:0]];
 }
 
-- (void)updateContentWithMediaItem:(MPMediaItem*)nowPlaying {
-    self.albumArt.image = [[nowPlaying artwork]imageWithSize:self.albumArt.frame.size];
-    self.albumArt.layer.cornerRadius = self.albumArt.frame.size.width/2;
-
-    NSLog(@"Album frame of %@, actual frame of %@", NSStringFromCGRect(self.albumArt.frame), NSStringFromCGRect(self.frame));
-}
-
-- (id)initWithFrame:(CGRect)frame {
-    self = [super initWithFrame:frame];
-        
-#ifdef BATTERY_SAVER
-    self.batteryEfficientMusicProgress = [[PieChartView alloc]init];
-    self.batteryEfficientMusicProgress.delegate = self;
-    self.batteryEfficientMusicProgress.datasource = self;
-    [self addSubview:self.batteryEfficientMusicProgress];
-#else
-    self.animatedMusicProgress = [[XYPieChart alloc]init];
-    [self.animatedMusicProgress setDataSource:self];
-    [self.animatedMusicProgress setDelegate:self];
-    [self.animatedMusicProgress setAnimationSpeed:1.0];
-    [self.animatedMusicProgress setPieBackgroundColor:[UIColor clearColor]];
-    [self.animatedMusicProgress setPieRadius:75];
-    [self.animatedMusicProgress setUserInteractionEnabled:YES];
-    [self.animatedMusicProgress setLabelShadowColor:[UIColor clearColor]];
-    [self addSubview:self.animatedMusicProgress];
-#endif
-    self.albumArt = [[UIImageView alloc]init];
-    self.albumArt.layer.masksToBounds = YES;
-    [self addSubview:self.albumArt];
-    
-    [self updateContentWithFrame:self.frame];
-    
-    self.currentTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(onTimer:) userInfo:nil repeats:YES];
-    
-    /*
-    self.albumArt.backgroundColor = [UIColor yellowColor];
-    self.backgroundColor = [UIColor redColor];
-     */
-
-    return self;
-}
-
-- (void)updateContentWithFrame:(CGRect)newFrame {
-    [UIView animateWithDuration:0.3 animations:^{
-        CGSize newAlbumArtSize = CGSizeMake(self.frame.size.width/1.5, self.frame.size.width/1.5);
-        CGPoint newStart = CGPointMake((self.frame.size.width-newAlbumArtSize.width)/2, (self.frame.size.height-newAlbumArtSize.height)/2);
-        
-        CGRect newAlbumArtFrame = CGRectMake(newStart.x, newStart.y, newAlbumArtSize.width, newAlbumArtSize.height);
-        self.albumArt.frame = newAlbumArtFrame;
-        self.albumArt.layer.cornerRadius = newAlbumArtSize.width/2;
-        
-#ifdef BATTERY_SAVER
-        self.batteryEfficientMusicProgress.frame = CGRectMake(self.frame.size.width/2, self.frame.size.height/2, self.frame.size.width, self.frame.size.width);
-#else
-        self.animatedMusicProgress.frame = CGRectMake(self.frame.size.width/2, self.frame.size.height/2, self.frame.size.width, self.frame.size.width);
-        [self.animatedMusicProgress setPieRadius:newAlbumArtSize.width/2 + 10];
-#endif
-    }];
-}
-
-- (void)onTimer:(NSTimer *)timer {
-    if(timer != nil){
-#ifdef BATTERY_SAVER
-        [self.batteryEfficientMusicProgress reloadData];
-#else
-        [self.animatedMusicProgress reloadData];
-#endif
+- (void)updateContentWithMusicPlayer:(MPMusicPlayerController*)musicPlayer {
+    NSLog(@"Reloading %@", NSStringFromCGRect(self.albumArt.frame));
+    if(musicPlayer.nowPlayingItem != self.currentMediaItem && self.albumArt.frame.size.width != 0){
+        self.albumArt.image = [[musicPlayer.nowPlayingItem artwork]imageWithSize:self.albumArt.frame.size];
+        self.albumArt.layer.cornerRadius = self.albumArt.frame.size.width/2;
+        self.albumArt.clipsToBounds = YES;
+        NSLog(@"%f", self.albumArt.layer.cornerRadius);
+        self.currentMediaItem = musicPlayer.nowPlayingItem;
     }
+    self.progressCircle.maxValue = musicPlayer.nowPlayingItem.playbackDuration;
+    self.progressCircle.currentValue = musicPlayer.currentPlaybackTime;
+    [self.progressCircle reload];
 }
 
 - (UIColor*)GetRandomUIColor:(int)index {
@@ -146,51 +127,35 @@
     }
     return colour;
 }
-
 /*
- * Beautiful pie chart
+- (void)drawRect:(CGRect)rect {
+    int smallerFactor = MIN(rect.size.width, rect.size.height);
+    int progressBarThickness = 5;
+    
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGFloat theHalf = rect.size.width/2;
+    CGFloat lineWidth = smallerFactor/2;
+    CGFloat radius = smallerFactor/4;
+    CGFloat centerX = theHalf;
+    CGFloat centerY = rect.size.height/2;
+    
+    float startAngle = - M_PI_2;
+    float endAngle = 0.0f;
+    
+    endAngle = startAngle + M_PI*2;
+    CGContextAddArc(context, centerX, centerY, radius, startAngle, endAngle, false);
+    
+    CGContextSetStrokeColorWithColor(context, [UIColor blackColor].CGColor);
+    CGContextSetLineWidth(context, lineWidth);
+    CGContextStrokePath(context);
+    
+    [[UIColor clearColor] setFill];
+
+    CGContextSetBlendMode(context, kCGBlendModeClear);
+    CGContextSetRGBFillColor(context, 1.0, 1.0, 1.0, 0.0);
+    CGRect circleRect = CGRectMake(centerX-(radius*2)+progressBarThickness, centerY-(radius*2)+progressBarThickness, radius*4-(progressBarThickness*2), radius*4-(progressBarThickness*2));
+    CGContextFillEllipseInRect(context, circleRect);
+}
  */
-#pragma mark - XYPieChart Data Source
-
-- (NSUInteger)numberOfSlicesInPieChart:(XYPieChart *)pieChart{
-    return [[self.musicPlayer nowPlayingItem] playbackDuration];
-}
-
-- (CGFloat)pieChart:(XYPieChart *)pieChart valueForSliceAtIndex:(NSUInteger)index{
-    return 1;
-}
-
-- (UIColor*)pieChart:(XYPieChart *)pieChart colorForSliceAtIndex:(NSUInteger)index{
-    return [self GetRandomUIColor:(int)index];
-}
-
-
-/*
- * Battery efficient pie chart
- */
-#pragma mark - PieChartViewDelegate
-
--(CGFloat)centerCircleRadius{
-    return 1;
-}
-
-#pragma mark - PieChartViewDataSource
-
-- (int)numberOfSlicesInPieChartView:(PieChartView *)pieChartView{
-    return [[self.musicPlayer nowPlayingItem] playbackDuration];
-}
-
-- (UIColor *)pieChartView:(PieChartView*)pieChartView colorForSliceAtIndex:(NSUInteger)index{
-    return [self GetRandomUIColor:(int)index];
-}
-
-- (double)pieChartView:(PieChartView*)pieChartView valueForSliceAtIndex:(NSUInteger)index{
-    return 1;
-}
-
-- (void)pieChart:(XYPieChart *)pieChart didSelectSliceAtIndex:(NSUInteger)index{
-    [self.musicPlayer setCurrentPlaybackTime:index];
-}
-
 
 @end

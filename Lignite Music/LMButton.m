@@ -21,9 +21,11 @@
     NSLog(@"The current frame for %@ is %@.", self, NSStringFromCGRect(self.frame));
 }
 
+/*
 - (void)willMoveToSuperview:(UIView *)newSuperview {
     NSLog(@"Moving to superview %@, with a current frame of %@.", newSuperview, NSStringFromCGRect(self.frame));
 }
+ */
 
 /*
  Sets the view up with the title and image as well as root frame.
@@ -99,8 +101,6 @@
     //Add the click recognizer for actions
     UITapGestureRecognizer *clickedRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(buttonClicked)];
     [self addGestureRecognizer:clickedRecognizer];
-    
-    NSLog(@"Setup complete.");
 }
 
 /*
@@ -143,8 +143,6 @@
 
 - (void)drawRect:(CGRect)rect {
     CGContextRef ctx = UIGraphicsGetCurrentContext();
-    
-    NSLog(@"Drawing context...");
     
     CGContextSetRGBFillColor(ctx, 1, 1, 1, 1.0);
     int padding = 6;
