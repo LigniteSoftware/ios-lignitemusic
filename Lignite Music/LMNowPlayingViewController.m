@@ -10,7 +10,7 @@
 #import "UIImage+AverageColour.h"
 #import "UIColor+isLight.h"
 
-@interface LMNowPlayingViewController () <LMButtonDelegate>
+@interface LMNowPlayingViewController () <LMButtonDelegate, UIGestureRecognizerDelegate>
 
 @property NSTimer *refreshTimer;
 @property UIView *shadingView;
@@ -20,9 +20,81 @@
 @property MPMusicShuffleMode shuffleMode;
 @property MPMusicRepeatMode repeatMode;
 
+@property int firstX, firstY;
+
 @end
 
 @implementation LMNowPlayingViewController
+
+- (void)move:(id)sender {
+    UIView *viewToMove = (UIView*)self.contentContainerView;
+    int sizeOfFavouritesSpace = self.view.frame.size.height/6;
+    int halfHeight = self.view.frame.size.height/2;
+    
+    [self.view bringSubviewToFront:viewToMove];
+    CGPoint translatedPoint = [sender translationInView:viewToMove];
+    
+    if ([sender state] == UIGestureRecognizerStateBegan) {
+        self.firstX = [viewToMove center].x;
+        self.firstY = [viewToMove center].y;
+    }
+    
+    translatedPoint = CGPointMake(self.firstX, self.firstY+translatedPoint.y);
+    
+    if(translatedPoint.y > self.view.frame.size.height/2){
+        [viewToMove setCenter:translatedPoint];
+    }
+    NSLog(@"translated %@", NSStringFromCGPoint(translatedPoint));
+    
+    if ([(UIPanGestureRecognizer*)sender state] == UIGestureRecognizerStateEnded) {
+        CGFloat velocityY = (0.1*[sender velocityInView:viewToMove].y);
+        
+        CGFloat finalX = self.firstX;
+        CGFloat finalY = translatedPoint.y + velocityY;
+        
+        NSLog(@"final %f", finalY);
+       // if (UIDeviceOrientationIsPortrait([[UIDevice currentDevice] orientation])) {
+        if (finalY >= halfHeight && finalY < (halfHeight + sizeOfFavouritesSpace/2)) {
+            finalY = halfHeight;
+        } else if (finalY >= (halfHeight + sizeOfFavouritesSpace/2) && finalY <= (halfHeight + sizeOfFavouritesSpace)) {
+            finalY = halfHeight + sizeOfFavouritesSpace;
+        }
+        else if(finalY < halfHeight){
+            return;
+        }
+        else{
+            if(finalY > halfHeight + sizeOfFavouritesSpace*3){
+                NSLog(@"FIRE!");
+                finalY = halfHeight;
+            }
+            else{
+                finalY = halfHeight + sizeOfFavouritesSpace;
+            }
+        }
+        NSLog(@"now final %f", finalY);
+        
+        CGFloat animationDuration = (ABS(velocityY)*.0002)+.2;
+        
+        NSLog(@"the duration is: %f", animationDuration);
+        
+        [UIView beginAnimations:nil context:NULL];
+        [UIView setAnimationDuration:animationDuration];
+        [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
+        [UIView setAnimationDelegate:self];
+        //[UIView setAnimationDidStopSelector:@selector(animationDidFinish)];
+        [viewToMove setCenter:CGPointMake(finalX, finalY)];
+        [UIView commitAnimations];
+    }
+}
+
+- (BOOL)gestureRecognizerShouldBegin:(UIPanGestureRecognizer *)panGestureRecognizer {
+    CGPoint velocity = [panGestureRecognizer velocityInView:self.view];
+    return fabs(velocity.y) > fabs(velocity.x);
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    return YES;
+}
 
 
 - (void)nowPlayingItemChanged:(id) sender {
@@ -259,6 +331,8 @@
         return;
     }
     
+    self.view.backgroundColor = [UIColor redColor];
+    
     self.songTitleLabel.fadeLength = 10;
     self.songTitleLabel.leadingBuffer = 6;
     self.songArtistLabel.fadeLength = 10;
@@ -278,7 +352,7 @@
     self.repeatButton.delegate = self;
     [self.dynamicPlaylistButton setupWithTitle:@"Playlist" withImage:[UIImage imageNamed:@"dynamic_playlist.png"]];
     
-    self.shadingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.backgroundImageView.frame.size.width, self.backgroundImageView.frame.size.height)];
+    self.shadingView = [[UIView alloc]init];
     self.shadingView.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.25];
     self.shadingView.translatesAutoresizingMaskIntoConstraints = NO;
     [self.backgroundImageView addSubview:self.shadingView];
@@ -296,6 +370,22 @@
                                                                          relatedBy:NSLayoutRelationEqual
                                                                             toItem:self.backgroundImageView
                                                                          attribute:NSLayoutAttributeHeight
+                                                                        multiplier:1.0
+                                                                          constant:0]];
+    
+    [self.backgroundImageView addConstraint:[NSLayoutConstraint constraintWithItem:self.shadingView
+                                                                         attribute:NSLayoutAttributeTop
+                                                                         relatedBy:NSLayoutRelationEqual
+                                                                            toItem:self.backgroundImageView
+                                                                         attribute:NSLayoutAttributeTop
+                                                                        multiplier:1.0
+                                                                          constant:0]];
+    
+    [self.backgroundImageView addConstraint:[NSLayoutConstraint constraintWithItem:self.shadingView
+                                                                         attribute:NSLayoutAttributeBottom
+                                                                         relatedBy:NSLayoutRelationEqual
+                                                                            toItem:self.backgroundImageView
+                                                                         attribute:NSLayoutAttributeBottom
                                                                         multiplier:1.0
                                                                           constant:0]];
     
@@ -330,15 +420,20 @@
     [self reloadButtonTitles];
         
     UITapGestureRecognizer *screenTapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(playPauseMusic)];
-    [self.view addGestureRecognizer:screenTapRecognizer];
+    [self.contentContainerView addGestureRecognizer:screenTapRecognizer];
     
     UISwipeGestureRecognizer *nextRecognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(nextSong:)];
     [nextRecognizer setDirection:UISwipeGestureRecognizerDirectionLeft];
-    [self.view addGestureRecognizer:nextRecognizer];
+    [self.contentContainerView addGestureRecognizer:nextRecognizer];
     
     UISwipeGestureRecognizer *previousRecognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(previousSong:)];
     [previousRecognizer setDirection:UISwipeGestureRecognizerDirectionRight];
-    [self.view addGestureRecognizer:previousRecognizer];
+    [self.contentContainerView addGestureRecognizer:previousRecognizer];
+    
+    UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(move:)];
+    [panRecognizer setMinimumNumberOfTouches:1];
+    [panRecognizer setMaximumNumberOfTouches:1];    panRecognizer.delegate = self;
+    [self.contentContainerView addGestureRecognizer:panRecognizer];
     
     self.loadedSubviews = YES;
 }

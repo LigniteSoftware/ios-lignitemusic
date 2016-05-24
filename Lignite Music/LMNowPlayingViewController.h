@@ -17,6 +17,8 @@
 
 @property MPMusicPlayerController *musicPlayer;
 
+@property IBOutlet UIView *contentContainerView;
+
 @property IBOutlet UIImageView *backgroundImageView;
 @property IBOutlet NPAlbumArtView *albumArtView;
 @property IBOutlet LMSlider *songDurationSlider;
