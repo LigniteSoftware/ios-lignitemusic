@@ -6,11 +6,46 @@
 //  Copyright © 2016 Lignite. All rights reserved.
 //
 
+#import <AVFoundation/AVAudioSession.h>
+#import <PebbleKit/PebbleKit.h>
 #import "LMNowPlayingViewController.h"
 #import "UIImage+AverageColour.h"
 #import "UIColor+isLight.h"
 
-@interface LMNowPlayingViewController () <LMButtonDelegate, UIGestureRecognizerDelegate>
+@interface LMNowPlayingViewController () <LMButtonDelegate, UIGestureRecognizerDelegate, PBPebbleCentralDelegate>
+
+#define IPOD_RECONNECT_KEY @(0xFEFF)
+#define IPOD_REQUEST_LIBRARY_KEY @(0xFEFE)
+#define IPOD_REQUEST_OFFSET_KEY @(0xFEFB)
+#define IPOD_LIBRARY_RESPONSE_KEY @(0xFEFD)
+#define IPOD_NOW_PLAYING_KEY @(0xFEFA)
+#define IPOD_REQUEST_PARENT_KEY @(0xFEF9)
+#define IPOD_PLAY_TRACK_KEY @(0xFEF8)
+#define IPOD_NOW_PLAYING_RESPONSE_TYPE_KEY @(0xFEF7)
+#define IPOD_ALBUM_ART_KEY @(0xFEF6)
+#define IPOD_CHANGE_STATE_KEY @(0xFEF5)
+#define IPOD_CURRENT_STATE_KEY @(0xFEF4)
+#define IPOD_SEQUENCE_NUMBER_KEY @(0xFEF3)
+
+#define MAX_LABEL_LENGTH 20
+#define MAX_RESPONSE_COUNT 15
+#define MAX_OUTGOING_SIZE 105 // This allows some overhead.
+
+typedef enum {
+    NowPlayingTitle,
+    NowPlayingArtist,
+    NowPlayingAlbum,
+    NowPlayingTitleArtist,
+    NowPlayingNumbers,
+} NowPlayingType;
+
+typedef enum {
+    NowPlayingStatePlayPause = 1,
+    NowPlayingStateSkipNext,
+    NowPlayingStateSkipPrevious,
+    NowPlayingStateVolumeUp,
+    NowPlayingStateVolumeDown
+} NowPlayingState;
 
 @property NSTimer *refreshTimer;
 @property UIView *shadingView;
@@ -21,6 +56,9 @@
 @property MPMusicRepeatMode repeatMode;
 
 @property int firstX, firstY;
+
+@property (weak, nonatomic) PBWatch *watch;
+@property (weak, nonatomic) PBPebbleCentral *central;
 
 @end
 
@@ -145,7 +183,6 @@
         UIImage *image       = [UIImage imageWithCGImage:cgimg];
         
         self.backgroundImageView.image = image;
-
     }
     
     //[self.view insertSubview:self.backgroundImageView atIndex:0];
@@ -202,6 +239,7 @@
     if((self.musicPlayer.currentPlaybackTime != self.songDurationSlider.value) && self.finishedUserAdjustment){
         self.finishedUserAdjustment = NO;
         self.musicPlayer.currentPlaybackTime = self.songDurationSlider.value;
+        NSLog(@"Music player current playback set to %f", self.musicPlayer.currentPlaybackTime);
     }
     [self updateSongDurationLabelWithPlaybackTime:self.musicPlayer.currentPlaybackTime];
 }
@@ -276,6 +314,9 @@
     if(self.musicPlayer.playbackState == MPMusicPlaybackStatePlaying){
         [self fireRefreshTimer];
     }
+    else{
+        self.musicPlayer.currentPlaybackTime = slider.value;
+    }
 }
 
 - (void)fireRefreshTimer {
@@ -318,6 +359,188 @@
     }
     
     return [UIFont fontWithName:fontName size:mid];
+}
+
+- (void)sendMessageToPebble:(NSDictionary*)toSend {
+    [self.watch appMessagesPushUpdate:toSend onSent:^(PBWatch *watch, NSDictionary *update, NSError *error) {
+        if(error) {
+            NSLog(@"Error sending update: %@", error);
+        }
+    }];
+}
+
+- (void)pushNowPlayingItemToWatch:(BOOL)detailed {
+    MPMediaItem *item = [self.musicPlayer nowPlayingItem];
+    NSString *title = [item valueForProperty:MPMediaItemPropertyTitle];
+    NSString *artist = [item valueForProperty:MPMediaItemPropertyArtist];
+    NSString *album = [item valueForProperty:MPMediaItemPropertyAlbumTitle];
+    if(!title) title = @"";
+    if(!artist) artist = @"";
+    if(!album) album = @"";
+    if(!detailed) {
+        NSString *value;
+        if(!item) {
+            value = @"Nothing playing.";
+        } else {
+            value = [NSString stringWithFormat:@"%@ - %@", title, artist, nil];
+        }
+        if([value length] > MAX_OUTGOING_SIZE) {
+            value = [value substringToIndex:MAX_OUTGOING_SIZE];
+        }
+        [self sendMessageToPebble:@{IPOD_NOW_PLAYING_KEY: value, IPOD_NOW_PLAYING_RESPONSE_TYPE_KEY: @(NowPlayingTitleArtist)}];
+        NSLog(@"Now playing: %@", value);
+    } else {
+        NSLog(@"Pushing everything.");
+        //[self pushCurrentStateToWatch:watch];
+        [self sendMessageToPebble:@{IPOD_NOW_PLAYING_KEY: title, IPOD_NOW_PLAYING_RESPONSE_TYPE_KEY: @(NowPlayingTitle)}];
+        [self sendMessageToPebble:@{IPOD_NOW_PLAYING_KEY: artist, IPOD_NOW_PLAYING_RESPONSE_TYPE_KEY:@(NowPlayingArtist)}];
+        [self sendMessageToPebble:@{IPOD_NOW_PLAYING_KEY: album, IPOD_NOW_PLAYING_RESPONSE_TYPE_KEY: @(NowPlayingAlbum)}];
+        
+        // Get and send the artwork.
+        MPMediaItemArtwork *artwork = [item valueForProperty:MPMediaItemPropertyArtwork];
+        if(artwork) {
+            UIImage* image = [artwork imageWithSize:CGSizeMake(64, 64)];
+            if(!image) {
+                [self sendMessageToPebble:@{IPOD_ALBUM_ART_KEY: [NSNumber numberWithUint8:255]}];
+            }
+            /*
+            else {
+                NSData *bitmap = [KBPebbleImage ditheredBitmapFromImage:image withHeight:64 width:64];
+                size_t length = [bitmap length];
+                uint8_t j = 0;
+                for(size_t i = 0; i < length; i += MAX_OUTGOING_SIZE-1) {
+                    NSMutableData *outgoing = [[NSMutableData alloc] initWithCapacity:MAX_OUTGOING_SIZE];
+                    [outgoing appendBytes:&j length:1];
+                    [outgoing appendData:[bitmap subdataWithRange:NSMakeRange(i, MIN(MAX_OUTGOING_SIZE-1, length - i))]];
+                    [self sendMessageToPebble:@{IPOD_ALBUM_ART_KEY: outgoing}];
+                    ++j;
+                }
+            }
+             */
+        }
+    }
+}
+
+- (void)pushCurrentStateToWatch:(PBWatch *)watch {
+    uint16_t current_time = (uint16_t)[self.musicPlayer currentPlaybackTime];
+    uint16_t total_time = (uint16_t)[[[self.musicPlayer nowPlayingItem] valueForProperty:MPMediaItemPropertyPlaybackDuration] doubleValue];
+    uint8_t metadata[] = {
+        [self.musicPlayer playbackState],
+        [self.musicPlayer shuffleMode],
+        [self.musicPlayer repeatMode],
+        total_time >> 8, total_time & 0xFF,
+        current_time >> 8, current_time & 0xFF
+    };
+    NSLog(@"Current state: %@", [NSData dataWithBytes:metadata length:7]);
+    [self sendMessageToPebble:@{IPOD_CURRENT_STATE_KEY: [NSData dataWithBytes:metadata length:7]}];
+}
+
+- (void)test {
+    MPVolumeView* volumeView = [[MPVolumeView alloc] init];
+    
+    // Get the Volume Slider
+    UISlider* volumeViewSlider = nil;
+    
+    for (UIView *view in [volumeView subviews]){
+        if ([view.class.description isEqualToString:@"MPVolumeSlider"]){
+            volumeViewSlider = (UISlider*)view;
+            break;
+        }
+    }
+    
+    // Fake the volume setting
+    [volumeViewSlider value];
+    [volumeViewSlider setValue:1.0f animated:YES];
+    [volumeViewSlider sendActionsForControlEvents:UIControlEventTouchUpInside];
+}
+
+-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
+    // Do whatever you need to do here
+}
+
+- (void)changeState:(NowPlayingState)state {
+    MPVolumeView* volumeView = [[MPVolumeView alloc] init];
+    volumeView.showsRouteButton = NO;
+    volumeView.showsVolumeSlider = NO;
+    [self.view addSubview:volumeView];
+    
+    // Get the Volume Slider
+    UISlider* volumeViewSlider = nil;
+    
+    for (UIView *view in [volumeView subviews]){
+        if ([view.class.description isEqualToString:@"MPVolumeSlider"]){
+            volumeViewSlider = (UISlider*)view;
+            break;
+        }
+    }
+
+    switch(state) {
+        case NowPlayingStatePlayPause:
+            if([self.musicPlayer playbackState] == MPMusicPlaybackStatePlaying) [self.musicPlayer pause];
+            else [self.musicPlayer play];
+            break;
+        case NowPlayingStateSkipNext:
+            [self.musicPlayer skipToNextItem];
+            [self pushNowPlayingItemToWatch:YES];
+            break;
+        case NowPlayingStateSkipPrevious:
+            if([self.musicPlayer currentPlaybackTime] < 3) {
+                [self.musicPlayer skipToPreviousItem];
+                [self pushNowPlayingItemToWatch:YES];
+            } else {
+                [self.musicPlayer skipToBeginning];
+            }
+            break;
+        case NowPlayingStateVolumeUp:
+            [volumeViewSlider setValue:self.musicPlayer.volume + 0.0625 animated:YES];
+            [volumeViewSlider sendActionsForControlEvents:UIControlEventTouchUpInside];
+            //[self.musicPlayer setVolume:[self.musicPlayer volume] + 0.0625];
+            break;
+        case NowPlayingStateVolumeDown:
+            [volumeViewSlider setValue:self.musicPlayer.volume - 0.0625 animated:YES];
+            [volumeViewSlider sendActionsForControlEvents:UIControlEventTouchUpInside];
+            //[self.musicPlayer setVolume:[self.musicPlayer volume] - 0.0625];
+            break;
+    }
+    [self performSelector:@selector(pushCurrentStateToWatch:) withObject:self.watch afterDelay:0.1];
+}
+
+- (void)pebbleCentral:(PBPebbleCentral *)central watchDidConnect:(PBWatch *)watch isNew:(BOOL)isNew {
+    if (self.watch) {
+        return;
+    }
+    self.watch = watch;
+    
+    
+    NSLog(@"Got watch %@", self.watch);
+    
+    NSMutableDictionary *outgoing = [NSMutableDictionary new];
+    [self.watch appMessagesPushUpdate:outgoing onSent:^(PBWatch *watch, NSDictionary *update, NSError *error) {
+        if (error) {
+            NSLog(@"Error sending update: %@", error);
+        }
+    }];
+    
+    // Sign up for AppMessage
+    [self.watch appMessagesAddReceiveUpdateHandler:^BOOL(PBWatch *watch, NSDictionary *update) {
+        NSLog(@"Got a message %@", update);
+        if(update[IPOD_NOW_PLAYING_KEY]) {
+            NSLog(@"Now playing key sent");
+            [self pushNowPlayingItemToWatch:YES];
+        }
+        else if(update[IPOD_CHANGE_STATE_KEY]) {
+            [self changeState:(NowPlayingState)[update[IPOD_CHANGE_STATE_KEY] integerValue]];
+        }
+        return YES;
+    } withUUID:[[NSUUID alloc] initWithUUIDString:@"4e601687-8739-49e0-a280-1a633ee46eef"]];
+}
+
+- (void)pebbleCentral:(PBPebbleCentral *)central watchDidDisconnect:(PBWatch *)watch {
+    // Only remove reference if it was the current active watch
+    NSLog(@"Lost watch %@", self.watch);
+    if (self.watch == watch) {
+        self.watch = nil;
+    }
 }
 
 - (void)viewDidLayoutSubviews {
@@ -440,6 +663,24 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    NSLog(@"set");
+    
+    // Set the delegate to receive PebbleKit events
+    self.central = [PBPebbleCentral defaultCentral];
+    self.central.delegate = self;
+    
+    [self.central setAppUUID:[[NSUUID alloc] initWithUUIDString:@"4e601687-8739-49e0-a280-1a633ee46eef"]];
+    
+    // Begin connection
+    [self.central run];
+    
+    /*
+    //Make sure that we can actually read the volume
+    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
+    [[AVAudioSession sharedInstance] setActive:YES error:nil];
+    [[AVAudioSession sharedInstance] addObserver:self forKeyPath:@"outputVolume" options:NSKeyValueObservingOptionNew context:nil];
+     */
 }
 
 - (void)viewDidUnload:(BOOL)animated {
