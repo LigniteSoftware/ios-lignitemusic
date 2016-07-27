@@ -545,25 +545,34 @@ typedef enum {
 }
 
 - (void)sendTestImage {
-    UIImage* image = [UIImage imageNamed:@"robot_ios.png"];
+    
+    UIImage *image = [KBPebbleImage ditherImageForPebble:nil withColourPalette:YES];
+    UIImageView *testView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 144, 168)];
+    testView.image = image;
+    testView.userInteractionEnabled = YES;
+    [testView setImage:image];
+    UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(sendTestImage)];
+    [testView addGestureRecognizer:recognizer];
+    [self.view addSubview:testView];
+    
+    if([self.musicPlayer.nowPlayingItem artwork]){
+        image = [[self.musicPlayer.nowPlayingItem artwork]imageWithSize:CGSizeMake(64, 64)];
+    }
+    else{
+        image = [UIImage imageNamed:@"robot_ios.png"];
+    }
     if(!image) {
         NSLog(@"No image!");
         [self sendMessageToPebble:@{IPOD_ALBUM_ART_KEY: [NSNumber numberWithUint8:255]}];
     }
     else {
-        NSLog(@"Sending test image...");
+        NSLog(@"Generating test image...");
         
         YYImageEncoder *pngEncoder = [[YYImageEncoder alloc] initWithType:YYImageTypePNG];
         [pngEncoder addImage:image duration:0];
-        NSData *bitmap = [pngEncoder encode];
-
-        UIImage *image = [UIImage imageWithData:bitmap];
-        UIImageView *view = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 150, 150)];
-        view.userInteractionEnabled = YES;
-        [view setImage:image];
-        UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(sendTestImage)];
-        [view addGestureRecognizer:recognizer];
-        [self.view addSubview:view];
+        NSData *iosBitmap = [pngEncoder encode];
+        
+        
         NSLog(@"Got length %lu", (unsigned long)bitmap.length);
         
         size_t length = [bitmap length];
@@ -582,7 +591,6 @@ typedef enum {
             j++;
         }
     }
-
 }
 
 - (void)pebbleCentral:(PBPebbleCentral *)central watchDidConnect:(PBWatch *)watch isNew:(BOOL)isNew {
@@ -755,8 +763,8 @@ typedef enum {
     
     self.loadedSubviews = YES;
     
-   // NSLog(@"Sending test image...");
-   // [self sendTestImage];
+    NSLog(@"Starting test image...");
+    [self sendTestImage];
 }
 
 - (void)viewDidLoad {

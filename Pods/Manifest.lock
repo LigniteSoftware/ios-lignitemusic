@@ -1,4 +1,13 @@
 PODS:
+  - ImageMagick (6.8.8-9):
+    - ImageMagick/jpeg (= 6.8.8-9)
+    - ImageMagick/png (= 6.8.8-9)
+    - ImageMagick/tiff (= 6.8.8-9)
+    - ImageMagick/wand (= 6.8.8-9)
+  - ImageMagick/jpeg (6.8.8-9)
+  - ImageMagick/png (6.8.8-9)
+  - ImageMagick/tiff (6.8.8-9)
+  - ImageMagick/wand (6.8.8-9)
   - MarqueeLabel (2.7.5):
     - MarqueeLabel/ObjC (= 2.7.5)
   - MarqueeLabel/ObjC (2.7.5)
@@ -8,15 +17,17 @@ PODS:
   - YYImage/Core (1.0.2)
 
 DEPENDENCIES:
+  - ImageMagick (= 6.8.8-9)
   - MarqueeLabel
   - PebbleKit
   - YYImage
 
 SPEC CHECKSUMS:
+  ImageMagick: e8c089d133679d505c98dc97f3dc5be0e706e1df
   MarqueeLabel: bd476f1a91e4414a6aec4ea4096a9979e8c8c2ad
   PebbleKit: 390181163256815738e467f183e7c65e16b56d25
   YYImage: 2cc79ed49b9549b71c6715cefe7b0f5ab3d33abf
 
-PODFILE CHECKSUM: e0984528a22858b3c2b14987083cd8b4b56eba98
+PODFILE CHECKSUM: b3799ca68a181f7fb725ebfc3946116291417f2b
 
 COCOAPODS: 1.0.1
