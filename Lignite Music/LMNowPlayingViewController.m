@@ -545,7 +545,6 @@ typedef enum {
 }
 
 - (void)sendTestImage {
-    
     UIImage *image = [KBPebbleImage ditherImageForPebble:nil withColourPalette:YES];
     UIImageView *testView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 144, 168)];
     testView.image = image;
@@ -554,13 +553,14 @@ typedef enum {
     UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(sendTestImage)];
     [testView addGestureRecognizer:recognizer];
     [self.view addSubview:testView];
-    
+    /*
     if([self.musicPlayer.nowPlayingItem artwork]){
         image = [[self.musicPlayer.nowPlayingItem artwork]imageWithSize:CGSizeMake(64, 64)];
     }
     else{
         image = [UIImage imageNamed:@"robot_ios.png"];
     }
+     */
     if(!image) {
         NSLog(@"No image!");
         [self sendMessageToPebble:@{IPOD_ALBUM_ART_KEY: [NSNumber numberWithUint8:255]}];
@@ -570,9 +570,8 @@ typedef enum {
         
         YYImageEncoder *pngEncoder = [[YYImageEncoder alloc] initWithType:YYImageTypePNG];
         [pngEncoder addImage:image duration:0];
-        NSData *iosBitmap = [pngEncoder encode];
-        
-        
+        NSData *bitmap = [pngEncoder encode];
+    
         NSLog(@"Got length %lu", (unsigned long)bitmap.length);
         
         size_t length = [bitmap length];
@@ -763,8 +762,8 @@ typedef enum {
     
     self.loadedSubviews = YES;
     
-    NSLog(@"Starting test image...");
-    [self sendTestImage];
+    //NSLog(@"Starting test image...");
+    //[self sendTestImage];
 }
 
 - (void)viewDidLoad {
