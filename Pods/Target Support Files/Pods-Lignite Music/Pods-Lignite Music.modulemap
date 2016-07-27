@@ -1,0 +1,6 @@
+framework module Pods_Lignite_Music {
+  umbrella header "Pods-Lignite Music-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -1,0 +1,784 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		16CF630F281F4E5E88B3B99B5F2A2984 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA554A7246A28F6C0539E894B36B6641 /* Foundation.framework */; };
+		1C0632FCA113079EB93E4D3D0D12A3EB /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAB279639C395EA80202C3C1BE3E72B /* AssetsLibrary.framework */; };
+		1DB66C56384DE0A3C4D62884B3E9D69A /* YYImageCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9D447AD94160BFF7BA9CB5B4810AE5 /* YYImageCoder.m */; };
+		25BCBED6A5CD76568058C218758C6DB3 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D35B0B1D75BF71452DD6BD999D399A8 /* QuartzCore.framework */; };
+		2BBF4F351EEE0C59D58727F56EB2F643 /* MarqueeLabel-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 8891191069A67DC3133769BC2555E0AB /* MarqueeLabel-dummy.m */; };
+		30D97FA3B6A4600D20D564F9A5B7343D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA554A7246A28F6C0539E894B36B6641 /* Foundation.framework */; };
+		3C8F977C8740C80F9C6CDD2F5A88BA6D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79791C78B944957A6468031FB010D124 /* UIKit.framework */; };
+		52A1F3702BF2E83AA0A2457313BBE12C /* Pods-Lignite Music-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B0E95C0CB6CECE7BCBB94851F2CE73D /* Pods-Lignite Music-dummy.m */; };
+		5745B03EE36196C0464BBDC9CB6A6DAD /* YYImageCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 7EE56194B8F3A691B14520879FB177AE /* YYImageCoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6CA6C9E183444A6A7D052CC193814FDF /* YYFrameImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 51C11D05E3082EC2A470D53D50E231F9 /* YYFrameImage.m */; };
+		728214D210DAE4793DC85FFE6276EAE5 /* MarqueeLabel.h in Headers */ = {isa = PBXBuildFile; fileRef = 95D0E7ACDCB187B1EE38EA7582E940D5 /* MarqueeLabel.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		772FCC711E0612D23E1BC40021AB8AAE /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6984341729604D79D2C7FBB30D151E45 /* ImageIO.framework */; };
+		85873BD7639917F5DC160F61438EF3B1 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D35B0B1D75BF71452DD6BD999D399A8 /* QuartzCore.framework */; };
+		8BF169920A229C2C74549E7FDCD68974 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79791C78B944957A6468031FB010D124 /* UIKit.framework */; };
+		8C19D0656B3D6F2901193D3043C5DD4C /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A43B45FF48EE3C27B12FE97EA6878765 /* CoreFoundation.framework */; };
+		911EF28FEE03B738AABFCB5A40C856EC /* YYAnimatedImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = BAC5D108AA96A1E2500AFB67BE99E826 /* YYAnimatedImageView.m */; };
+		99329B93BDB9CBD4CDB9F4DA9896A4A1 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21E8E5B664410B0CD618933D14A812CA /* Accelerate.framework */; };
+		9F1D5C8A932D5581828DA166BF8FAF12 /* YYImage-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = C984915D205B4188844DE90E0AA910E2 /* YYImage-dummy.m */; };
+		A7668717B432017397EFC17EC23276AD /* Pods-Lignite Music-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E65CEC5D520CF8765A93379B619C230 /* Pods-Lignite Music-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B076B4AE4553718CBC590AD4627DEC17 /* YYImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 06CEF42B1CC9D236CD814D1AB50BF0B6 /* YYImage.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B49877349A7A46BB4E01173D8541A561 /* YYImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AC79F3906311FB0B883EBA11D89B18C /* YYImage.m */; };
+		B75375A06C218223630FAB610EE6300F /* YYSpriteSheetImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 0FD2903CEC6C50451CD13BCC1268C734 /* YYSpriteSheetImage.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C04E354581E3D05C53559C4F2853407A /* YYSpriteSheetImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FDF15024CF65F3E30EA6A383DCBBF5D /* YYSpriteSheetImage.m */; };
+		C3AFC50EEFB36732C599D052CD25E824 /* MarqueeLabel-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 28B80AD0C510A0F82AB39A9FF82A5886 /* MarqueeLabel-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D61470D0320CDDC1098279CFF93386C1 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45D0E4382750AD6C2699708F97B73D3A /* MobileCoreServices.framework */; };
+		D842C585DF47438DF5A764F5EBA4AA72 /* YYFrameImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B1FAAFAA25376CDB5DCC205918D9285 /* YYFrameImage.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DD0D59A862606C3EF10FC7FFA9970F3C /* YYImage-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 8921C0755AA1E5BF038F11FA4B55CF3D /* YYImage-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E220035EE591BE5C09C9B75733E46167 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA554A7246A28F6C0539E894B36B6641 /* Foundation.framework */; };
+		E3376D85FE199A506FC74063D46F48CA /* YYAnimatedImageView.h in Headers */ = {isa = PBXBuildFile; fileRef = 73C515695798B67AA1DC2C0747DA404B /* YYAnimatedImageView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E43B7731C9C57A262F2B5AE87977EF88 /* MarqueeLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = A4BCD7C6892EE12F4204E9001CFECC70 /* MarqueeLabel.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		05F75CD6B2070D4E2D49F3E45ABC0DB3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A7F56A69BE1373742F9A495EEB52F4D6;
+			remoteInfo = MarqueeLabel;
+		};
+		3DCA995FD65413DDD5B7220D74786035 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 35CA48B678BCBC96EF36368E5968E3A0;
+			remoteInfo = YYImage;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		02EC4629845A3A40CE4D991F17BA8BF5 /* Pods-Lignite Music-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Lignite Music-frameworks.sh"; sourceTree = "<group>"; };
+		06CEF42B1CC9D236CD814D1AB50BF0B6 /* YYImage.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = YYImage.h; path = YYImage/YYImage.h; sourceTree = "<group>"; };
+		0B1FAAFAA25376CDB5DCC205918D9285 /* YYFrameImage.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = YYFrameImage.h; path = YYImage/YYFrameImage.h; sourceTree = "<group>"; };
+		0FD2903CEC6C50451CD13BCC1268C734 /* YYSpriteSheetImage.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = YYSpriteSheetImage.h; path = YYImage/YYSpriteSheetImage.h; sourceTree = "<group>"; };
+		15C90CBE693CA78CB15EA968EE84525C /* Pods-Lignite Music.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Lignite Music.release.xcconfig"; sourceTree = "<group>"; };
+		21E8E5B664410B0CD618933D14A812CA /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/Accelerate.framework; sourceTree = DEVELOPER_DIR; };
+		28B80AD0C510A0F82AB39A9FF82A5886 /* MarqueeLabel-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "MarqueeLabel-umbrella.h"; sourceTree = "<group>"; };
+		2C47374E5C697BBDB71A857A9923692E /* MarqueeLabel.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MarqueeLabel.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2E65CEC5D520CF8765A93379B619C230 /* Pods-Lignite Music-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-Lignite Music-umbrella.h"; sourceTree = "<group>"; };
+		3A4ED936686ADDB9238DE15341393CCF /* Pods-Lignite Music-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-Lignite Music-acknowledgements.markdown"; sourceTree = "<group>"; };
+		3DAB279639C395EA80202C3C1BE3E72B /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/AssetsLibrary.framework; sourceTree = DEVELOPER_DIR; };
+		4225ACACEB082C9FCCD0CCBE06B3A7F4 /* MarqueeLabel.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = MarqueeLabel.modulemap; sourceTree = "<group>"; };
+		45D0E4382750AD6C2699708F97B73D3A /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/MobileCoreServices.framework; sourceTree = DEVELOPER_DIR; };
+		4819023DD4C422E3F09A918ED4AAF4B4 /* YYImage.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = YYImage.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		51C11D05E3082EC2A470D53D50E231F9 /* YYFrameImage.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = YYFrameImage.m; path = YYImage/YYFrameImage.m; sourceTree = "<group>"; };
+		59E41F2C18C90AAD63779E9FF47A613B /* YYImage-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "YYImage-prefix.pch"; sourceTree = "<group>"; };
+		5AC79F3906311FB0B883EBA11D89B18C /* YYImage.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = YYImage.m; path = YYImage/YYImage.m; sourceTree = "<group>"; };
+		5B0E95C0CB6CECE7BCBB94851F2CE73D /* Pods-Lignite Music-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-Lignite Music-dummy.m"; sourceTree = "<group>"; };
+		6984341729604D79D2C7FBB30D151E45 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/ImageIO.framework; sourceTree = DEVELOPER_DIR; };
+		698B091211566AA5054C1DA21B9DA27A /* Pods-Lignite Music.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = "Pods-Lignite Music.modulemap"; sourceTree = "<group>"; };
+		6FDF15024CF65F3E30EA6A383DCBBF5D /* YYSpriteSheetImage.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = YYSpriteSheetImage.m; path = YYImage/YYSpriteSheetImage.m; sourceTree = "<group>"; };
+		73C515695798B67AA1DC2C0747DA404B /* YYAnimatedImageView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = YYAnimatedImageView.h; path = YYImage/YYAnimatedImageView.h; sourceTree = "<group>"; };
+		79791C78B944957A6468031FB010D124 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
+		7D35B0B1D75BF71452DD6BD999D399A8 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/QuartzCore.framework; sourceTree = DEVELOPER_DIR; };
+		7EE56194B8F3A691B14520879FB177AE /* YYImageCoder.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = YYImageCoder.h; path = YYImage/YYImageCoder.h; sourceTree = "<group>"; };
+		8891191069A67DC3133769BC2555E0AB /* MarqueeLabel-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "MarqueeLabel-dummy.m"; sourceTree = "<group>"; };
+		8921C0755AA1E5BF038F11FA4B55CF3D /* YYImage-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "YYImage-umbrella.h"; sourceTree = "<group>"; };
+		92615B868D4F81D4E2DECD2369ECCCF6 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		9569C3CAC89A31E70E9A59E3E03C72EC /* YYImage.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = YYImage.xcconfig; sourceTree = "<group>"; };
+		95D0E7ACDCB187B1EE38EA7582E940D5 /* MarqueeLabel.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MarqueeLabel.h; path = Sources/ObjC/MarqueeLabel.h; sourceTree = "<group>"; };
+		9B05F03A54F1DDAB5D3B8FC7E1EE29DD /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A2F35C72976D0980714221F03BC0A13D /* Pods_Lignite_Music.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Lignite_Music.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A43B45FF48EE3C27B12FE97EA6878765 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/CoreFoundation.framework; sourceTree = DEVELOPER_DIR; };
+		A4BCD7C6892EE12F4204E9001CFECC70 /* MarqueeLabel.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MarqueeLabel.m; path = Sources/ObjC/MarqueeLabel.m; sourceTree = "<group>"; };
+		B809A4C7DA385E7A4297FF5F2518A19E /* YYImage.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = YYImage.modulemap; sourceTree = "<group>"; };
+		BAC5D108AA96A1E2500AFB67BE99E826 /* YYAnimatedImageView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = YYAnimatedImageView.m; path = YYImage/YYAnimatedImageView.m; sourceTree = "<group>"; };
+		C7500E4E5F329BFF634495F6AD83DD44 /* Pods-Lignite Music-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Lignite Music-acknowledgements.plist"; sourceTree = "<group>"; };
+		C984915D205B4188844DE90E0AA910E2 /* YYImage-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "YYImage-dummy.m"; sourceTree = "<group>"; };
+		D2D53C560B286900AAAF1A83122FA217 /* MarqueeLabel-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "MarqueeLabel-prefix.pch"; sourceTree = "<group>"; };
+		DCA9116065E8A0C7B11B6EA32359D07F /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DE9D447AD94160BFF7BA9CB5B4810AE5 /* YYImageCoder.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = YYImageCoder.m; path = YYImage/YYImageCoder.m; sourceTree = "<group>"; };
+		EAD649509CE6A0C2932A7D4B824F90D9 /* MarqueeLabel.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = MarqueeLabel.xcconfig; sourceTree = "<group>"; };
+		F1AFF983EE1459B1EAE33FBCE40E1D24 /* Pods-Lignite Music-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Lignite Music-resources.sh"; sourceTree = "<group>"; };
+		F846E4E777AA43313B34142BA3BEEDEF /* PebbleKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = PebbleKit.framework; sourceTree = "<group>"; };
+		FA554A7246A28F6C0539E894B36B6641 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		FC41DDB5AE202698D242B2F475980250 /* Pods-Lignite Music.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Lignite Music.debug.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		265C4791346348551B0F9D8D451EEB53 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				30D97FA3B6A4600D20D564F9A5B7343D /* Foundation.framework in Frameworks */,
+				85873BD7639917F5DC160F61438EF3B1 /* QuartzCore.framework in Frameworks */,
+				3C8F977C8740C80F9C6CDD2F5A88BA6D /* UIKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DD682EBC6D9D3C113726D20B0E0B7A0D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E220035EE591BE5C09C9B75733E46167 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F84182FCC86E1C734B8733D55368A381 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				99329B93BDB9CBD4CDB9F4DA9896A4A1 /* Accelerate.framework in Frameworks */,
+				1C0632FCA113079EB93E4D3D0D12A3EB /* AssetsLibrary.framework in Frameworks */,
+				8C19D0656B3D6F2901193D3043C5DD4C /* CoreFoundation.framework in Frameworks */,
+				16CF630F281F4E5E88B3B99B5F2A2984 /* Foundation.framework in Frameworks */,
+				772FCC711E0612D23E1BC40021AB8AAE /* ImageIO.framework in Frameworks */,
+				D61470D0320CDDC1098279CFF93386C1 /* MobileCoreServices.framework in Frameworks */,
+				25BCBED6A5CD76568058C218758C6DB3 /* QuartzCore.framework in Frameworks */,
+				8BF169920A229C2C74549E7FDCD68974 /* UIKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0AFE270DFBB2F32AC6CE6F5CD5124D11 /* Pods-Lignite Music */ = {
+			isa = PBXGroup;
+			children = (
+				9B05F03A54F1DDAB5D3B8FC7E1EE29DD /* Info.plist */,
+				698B091211566AA5054C1DA21B9DA27A /* Pods-Lignite Music.modulemap */,
+				3A4ED936686ADDB9238DE15341393CCF /* Pods-Lignite Music-acknowledgements.markdown */,
+				C7500E4E5F329BFF634495F6AD83DD44 /* Pods-Lignite Music-acknowledgements.plist */,
+				5B0E95C0CB6CECE7BCBB94851F2CE73D /* Pods-Lignite Music-dummy.m */,
+				02EC4629845A3A40CE4D991F17BA8BF5 /* Pods-Lignite Music-frameworks.sh */,
+				F1AFF983EE1459B1EAE33FBCE40E1D24 /* Pods-Lignite Music-resources.sh */,
+				2E65CEC5D520CF8765A93379B619C230 /* Pods-Lignite Music-umbrella.h */,
+				FC41DDB5AE202698D242B2F475980250 /* Pods-Lignite Music.debug.xcconfig */,
+				15C90CBE693CA78CB15EA968EE84525C /* Pods-Lignite Music.release.xcconfig */,
+			);
+			name = "Pods-Lignite Music";
+			path = "Target Support Files/Pods-Lignite Music";
+			sourceTree = "<group>";
+		};
+		2B6618EA7D37005C826BF7ADC3EBF6DD /* YYImage */ = {
+			isa = PBXGroup;
+			children = (
+				457C2F3316FA228A145EA253EE89746B /* Core */,
+				5FAE14DFFEB42580C186A91ACE37F280 /* Support Files */,
+			);
+			path = YYImage;
+			sourceTree = "<group>";
+		};
+		457C2F3316FA228A145EA253EE89746B /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				73C515695798B67AA1DC2C0747DA404B /* YYAnimatedImageView.h */,
+				BAC5D108AA96A1E2500AFB67BE99E826 /* YYAnimatedImageView.m */,
+				0B1FAAFAA25376CDB5DCC205918D9285 /* YYFrameImage.h */,
+				51C11D05E3082EC2A470D53D50E231F9 /* YYFrameImage.m */,
+				06CEF42B1CC9D236CD814D1AB50BF0B6 /* YYImage.h */,
+				5AC79F3906311FB0B883EBA11D89B18C /* YYImage.m */,
+				7EE56194B8F3A691B14520879FB177AE /* YYImageCoder.h */,
+				DE9D447AD94160BFF7BA9CB5B4810AE5 /* YYImageCoder.m */,
+				0FD2903CEC6C50451CD13BCC1268C734 /* YYSpriteSheetImage.h */,
+				6FDF15024CF65F3E30EA6A383DCBBF5D /* YYSpriteSheetImage.m */,
+			);
+			name = Core;
+			sourceTree = "<group>";
+		};
+		4585A880D618D05A191A604918A1EB3F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F846E4E777AA43313B34142BA3BEEDEF /* PebbleKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		4AB025FC66A8FE0B3AD4D220F674B702 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				9DB0CD3D9B4BC38B3B98608795325AE8 /* MarqueeLabel */,
+				60D44380B743155D8F2840F1190939E6 /* PebbleKit */,
+				2B6618EA7D37005C826BF7ADC3EBF6DD /* YYImage */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		505EC18AE85F6DDE1A7D6B53EF6123CA /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				92615B868D4F81D4E2DECD2369ECCCF6 /* Info.plist */,
+				4225ACACEB082C9FCCD0CCBE06B3A7F4 /* MarqueeLabel.modulemap */,
+				EAD649509CE6A0C2932A7D4B824F90D9 /* MarqueeLabel.xcconfig */,
+				8891191069A67DC3133769BC2555E0AB /* MarqueeLabel-dummy.m */,
+				D2D53C560B286900AAAF1A83122FA217 /* MarqueeLabel-prefix.pch */,
+				28B80AD0C510A0F82AB39A9FF82A5886 /* MarqueeLabel-umbrella.h */,
+			);
+			name = "Support Files";
+			path = "../Target Support Files/MarqueeLabel";
+			sourceTree = "<group>";
+		};
+		5FAE14DFFEB42580C186A91ACE37F280 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				DCA9116065E8A0C7B11B6EA32359D07F /* Info.plist */,
+				B809A4C7DA385E7A4297FF5F2518A19E /* YYImage.modulemap */,
+				9569C3CAC89A31E70E9A59E3E03C72EC /* YYImage.xcconfig */,
+				C984915D205B4188844DE90E0AA910E2 /* YYImage-dummy.m */,
+				59E41F2C18C90AAD63779E9FF47A613B /* YYImage-prefix.pch */,
+				8921C0755AA1E5BF038F11FA4B55CF3D /* YYImage-umbrella.h */,
+			);
+			name = "Support Files";
+			path = "../Target Support Files/YYImage";
+			sourceTree = "<group>";
+		};
+		60D44380B743155D8F2840F1190939E6 /* PebbleKit */ = {
+			isa = PBXGroup;
+			children = (
+				4585A880D618D05A191A604918A1EB3F /* Frameworks */,
+			);
+			path = PebbleKit;
+			sourceTree = "<group>";
+		};
+		785553737B06AFC3DA711DDEB7D56194 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				9CC8DD3BCDA41D7854D303A8972A81AD /* iOS */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		7DB346D0F39D3F0E887471402A8071AB = {
+			isa = PBXGroup;
+			children = (
+				93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */,
+				785553737B06AFC3DA711DDEB7D56194 /* Frameworks */,
+				4AB025FC66A8FE0B3AD4D220F674B702 /* Pods */,
+				946A90926D33D5F1E586FBBA3C3DEC1E /* Products */,
+				D82EBF65F6A496C38B988EAB7A4D2865 /* Targets Support Files */,
+			);
+			sourceTree = "<group>";
+		};
+		946A90926D33D5F1E586FBBA3C3DEC1E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2C47374E5C697BBDB71A857A9923692E /* MarqueeLabel.framework */,
+				A2F35C72976D0980714221F03BC0A13D /* Pods_Lignite_Music.framework */,
+				4819023DD4C422E3F09A918ED4AAF4B4 /* YYImage.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		9CC8DD3BCDA41D7854D303A8972A81AD /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				21E8E5B664410B0CD618933D14A812CA /* Accelerate.framework */,
+				3DAB279639C395EA80202C3C1BE3E72B /* AssetsLibrary.framework */,
+				A43B45FF48EE3C27B12FE97EA6878765 /* CoreFoundation.framework */,
+				FA554A7246A28F6C0539E894B36B6641 /* Foundation.framework */,
+				6984341729604D79D2C7FBB30D151E45 /* ImageIO.framework */,
+				45D0E4382750AD6C2699708F97B73D3A /* MobileCoreServices.framework */,
+				7D35B0B1D75BF71452DD6BD999D399A8 /* QuartzCore.framework */,
+				79791C78B944957A6468031FB010D124 /* UIKit.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+		9DB0CD3D9B4BC38B3B98608795325AE8 /* MarqueeLabel */ = {
+			isa = PBXGroup;
+			children = (
+				A737FFE77E6528CF154906C0B282DE19 /* ObjC */,
+				505EC18AE85F6DDE1A7D6B53EF6123CA /* Support Files */,
+			);
+			path = MarqueeLabel;
+			sourceTree = "<group>";
+		};
+		A737FFE77E6528CF154906C0B282DE19 /* ObjC */ = {
+			isa = PBXGroup;
+			children = (
+				95D0E7ACDCB187B1EE38EA7582E940D5 /* MarqueeLabel.h */,
+				A4BCD7C6892EE12F4204E9001CFECC70 /* MarqueeLabel.m */,
+			);
+			name = ObjC;
+			sourceTree = "<group>";
+		};
+		D82EBF65F6A496C38B988EAB7A4D2865 /* Targets Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				0AFE270DFBB2F32AC6CE6F5CD5124D11 /* Pods-Lignite Music */,
+			);
+			name = "Targets Support Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		02D7D82FAA04FB623344D7CEA9093692 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E3376D85FE199A506FC74063D46F48CA /* YYAnimatedImageView.h in Headers */,
+				D842C585DF47438DF5A764F5EBA4AA72 /* YYFrameImage.h in Headers */,
+				DD0D59A862606C3EF10FC7FFA9970F3C /* YYImage-umbrella.h in Headers */,
+				B076B4AE4553718CBC590AD4627DEC17 /* YYImage.h in Headers */,
+				5745B03EE36196C0464BBDC9CB6A6DAD /* YYImageCoder.h in Headers */,
+				B75375A06C218223630FAB610EE6300F /* YYSpriteSheetImage.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3AB84F801F028F62DDE1A64FD65FAE8E /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C3AFC50EEFB36732C599D052CD25E824 /* MarqueeLabel-umbrella.h in Headers */,
+				728214D210DAE4793DC85FFE6276EAE5 /* MarqueeLabel.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D0646E130A608CF1F4875584F1E142D0 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A7668717B432017397EFC17EC23276AD /* Pods-Lignite Music-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		35CA48B678BCBC96EF36368E5968E3A0 /* YYImage */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D6B4D66EC99E89211508E75D4B0366B3 /* Build configuration list for PBXNativeTarget "YYImage" */;
+			buildPhases = (
+				C8083A49E8F963CB0140C8096BEECF6E /* Sources */,
+				F84182FCC86E1C734B8733D55368A381 /* Frameworks */,
+				02D7D82FAA04FB623344D7CEA9093692 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = YYImage;
+			productName = YYImage;
+			productReference = 4819023DD4C422E3F09A918ED4AAF4B4 /* YYImage.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		9C7F4B4BDF37C3BD3A706C11F451E004 /* Pods-Lignite Music */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0121DEDB41974AD3AFA176495DEDB089 /* Build configuration list for PBXNativeTarget "Pods-Lignite Music" */;
+			buildPhases = (
+				BA7D8A054B79EA4CC606369E709E0C48 /* Sources */,
+				DD682EBC6D9D3C113726D20B0E0B7A0D /* Frameworks */,
+				D0646E130A608CF1F4875584F1E142D0 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				183AEAB94224C1973A437F2264355D68 /* PBXTargetDependency */,
+				81C106E951EFD3090CAD77ADAA3C4745 /* PBXTargetDependency */,
+			);
+			name = "Pods-Lignite Music";
+			productName = "Pods-Lignite Music";
+			productReference = A2F35C72976D0980714221F03BC0A13D /* Pods_Lignite_Music.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		A7F56A69BE1373742F9A495EEB52F4D6 /* MarqueeLabel */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FC573E17B9E82AEECF44665A3394E642 /* Build configuration list for PBXNativeTarget "MarqueeLabel" */;
+			buildPhases = (
+				E2AD079AB7FE8AA560EFCC0CEB59D59A /* Sources */,
+				265C4791346348551B0F9D8D451EEB53 /* Frameworks */,
+				3AB84F801F028F62DDE1A64FD65FAE8E /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MarqueeLabel;
+			productName = MarqueeLabel;
+			productReference = 2C47374E5C697BBDB71A857A9923692E /* MarqueeLabel.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D41D8CD98F00B204E9800998ECF8427E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0730;
+				LastUpgradeCheck = 0700;
+			};
+			buildConfigurationList = 2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 7DB346D0F39D3F0E887471402A8071AB;
+			productRefGroup = 946A90926D33D5F1E586FBBA3C3DEC1E /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A7F56A69BE1373742F9A495EEB52F4D6 /* MarqueeLabel */,
+				9C7F4B4BDF37C3BD3A706C11F451E004 /* Pods-Lignite Music */,
+				35CA48B678BCBC96EF36368E5968E3A0 /* YYImage */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		BA7D8A054B79EA4CC606369E709E0C48 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				52A1F3702BF2E83AA0A2457313BBE12C /* Pods-Lignite Music-dummy.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C8083A49E8F963CB0140C8096BEECF6E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				911EF28FEE03B738AABFCB5A40C856EC /* YYAnimatedImageView.m in Sources */,
+				6CA6C9E183444A6A7D052CC193814FDF /* YYFrameImage.m in Sources */,
+				9F1D5C8A932D5581828DA166BF8FAF12 /* YYImage-dummy.m in Sources */,
+				B49877349A7A46BB4E01173D8541A561 /* YYImage.m in Sources */,
+				1DB66C56384DE0A3C4D62884B3E9D69A /* YYImageCoder.m in Sources */,
+				C04E354581E3D05C53559C4F2853407A /* YYSpriteSheetImage.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E2AD079AB7FE8AA560EFCC0CEB59D59A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2BBF4F351EEE0C59D58727F56EB2F643 /* MarqueeLabel-dummy.m in Sources */,
+				E43B7731C9C57A262F2B5AE87977EF88 /* MarqueeLabel.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		183AEAB94224C1973A437F2264355D68 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = MarqueeLabel;
+			target = A7F56A69BE1373742F9A495EEB52F4D6 /* MarqueeLabel */;
+			targetProxy = 05F75CD6B2070D4E2D49F3E45ABC0DB3 /* PBXContainerItemProxy */;
+		};
+		81C106E951EFD3090CAD77ADAA3C4745 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = YYImage;
+			target = 35CA48B678BCBC96EF36368E5968E3A0 /* YYImage */;
+			targetProxy = 3DCA995FD65413DDD5B7220D74786035 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		3FA451D268613890FA8A5A03801E11D5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_RELEASE=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				STRIP_INSTALLED_PRODUCT = NO;
+				SYMROOT = "${SRCROOT}/../build";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		5E62115DE8C09934BF8D2FE5D15FED1E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_DEBUG=1",
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				ONLY_ACTIVE_ARCH = YES;
+				STRIP_INSTALLED_PRODUCT = NO;
+				SYMROOT = "${SRCROOT}/../build";
+			};
+			name = Debug;
+		};
+		60B3BBC0F48B20FE0FA751679BF0FBEE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9569C3CAC89A31E70E9A59E3E03C72EC /* YYImage.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREFIX_HEADER = "Target Support Files/YYImage/YYImage-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/YYImage/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/YYImage/YYImage.modulemap";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_NAME = YYImage;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		A0F070B5C9BA06837F4A3F83EA1B10AE /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = EAD649509CE6A0C2932A7D4B824F90D9 /* MarqueeLabel.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREFIX_HEADER = "Target Support Files/MarqueeLabel/MarqueeLabel-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/MarqueeLabel/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/MarqueeLabel/MarqueeLabel.modulemap";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = MarqueeLabel;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		BE95AB95F75A3524D69EB796557946BC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = EAD649509CE6A0C2932A7D4B824F90D9 /* MarqueeLabel.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREFIX_HEADER = "Target Support Files/MarqueeLabel/MarqueeLabel-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/MarqueeLabel/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/MarqueeLabel/MarqueeLabel.modulemap";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_NAME = MarqueeLabel;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		C901F452315E4248C46D641D2210D90A /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 15C90CBE693CA78CB15EA968EE84525C /* Pods-Lignite Music.release.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				INFOPLIST_FILE = "Target Support Files/Pods-Lignite Music/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-Lignite Music/Pods-Lignite Music.modulemap";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = Pods_Lignite_Music;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		DF1EADE2B6780629EB27C9828D7594E4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = FC41DDB5AE202698D242B2F475980250 /* Pods-Lignite Music.debug.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				INFOPLIST_FILE = "Target Support Files/Pods-Lignite Music/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-Lignite Music/Pods-Lignite Music.modulemap";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = Pods_Lignite_Music;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		F918060F7EBE87DCBFFEA81F5F3BC86F /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9569C3CAC89A31E70E9A59E3E03C72EC /* YYImage.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREFIX_HEADER = "Target Support Files/YYImage/YYImage-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/YYImage/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/YYImage/YYImage.modulemap";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = YYImage;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0121DEDB41974AD3AFA176495DEDB089 /* Build configuration list for PBXNativeTarget "Pods-Lignite Music" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DF1EADE2B6780629EB27C9828D7594E4 /* Debug */,
+				C901F452315E4248C46D641D2210D90A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5E62115DE8C09934BF8D2FE5D15FED1E /* Debug */,
+				3FA451D268613890FA8A5A03801E11D5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D6B4D66EC99E89211508E75D4B0366B3 /* Build configuration list for PBXNativeTarget "YYImage" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				60B3BBC0F48B20FE0FA751679BF0FBEE /* Debug */,
+				F918060F7EBE87DCBFFEA81F5F3BC86F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FC573E17B9E82AEECF44665A3394E642 /* Build configuration list for PBXNativeTarget "MarqueeLabel" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BE95AB95F75A3524D69EB796557946BC /* Debug */,
+				A0F070B5C9BA06837F4A3F83EA1B10AE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
+}

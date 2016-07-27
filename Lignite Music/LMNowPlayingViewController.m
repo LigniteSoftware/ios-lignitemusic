@@ -8,9 +8,12 @@
 
 #import <AVFoundation/AVAudioSession.h>
 #import <PebbleKit/PebbleKit.h>
+#import <YYImage/YYImage.h>
 #import "LMNowPlayingViewController.h"
 #import "UIImage+AverageColour.h"
 #import "UIColor+isLight.h"
+#import "KBPebbleImage.h"
+#import "KBPebbleMessageQueue.h"
 
 @interface LMNowPlayingViewController () <LMButtonDelegate, UIGestureRecognizerDelegate, PBPebbleCentralDelegate>
 
@@ -23,13 +26,15 @@
 #define IPOD_PLAY_TRACK_KEY @(0xFEF8)
 #define IPOD_NOW_PLAYING_RESPONSE_TYPE_KEY @(0xFEF7)
 #define IPOD_ALBUM_ART_KEY @(0xFEF6)
-#define IPOD_CHANGE_STATE_KEY @(0xFEF5)
-#define IPOD_CURRENT_STATE_KEY @(0xFEF4)
-#define IPOD_SEQUENCE_NUMBER_KEY @(0xFEF3)
+#define IPOD_ALBUM_ART_LENGTH_KEY @(0xFEF5)
+#define IPOD_ALBUM_ART_INDEX_KEY @(0xFEF4)
+#define IPOD_CHANGE_STATE_KEY @(0xFEF3)
+#define IPOD_CURRENT_STATE_KEY @(0xFEF2)
+#define IPOD_SEQUENCE_NUMBER_KEY @(0xFEF1)
 
 #define MAX_LABEL_LENGTH 20
 #define MAX_RESPONSE_COUNT 15
-#define MAX_OUTGOING_SIZE 105 // This allows some overhead.
+#define MAX_OUTGOING_SIZE 500 // This allows some overhead.
 
 typedef enum {
     NowPlayingTitle,
@@ -59,6 +64,8 @@ typedef enum {
 
 @property (weak, nonatomic) PBWatch *watch;
 @property (weak, nonatomic) PBPebbleCentral *central;
+
+@property KBPebbleMessageQueue *messageQueue;
 
 @end
 
@@ -362,11 +369,59 @@ typedef enum {
 }
 
 - (void)sendMessageToPebble:(NSDictionary*)toSend {
+    /*
     [self.watch appMessagesPushUpdate:toSend onSent:^(PBWatch *watch, NSDictionary *update, NSError *error) {
         if(error) {
             NSLog(@"Error sending update: %@", error);
         }
     }];
+     */
+    [self.messageQueue enqueue:toSend];
+}
+
++ (UIImage*)imageWithImage:(UIImage*)image scaledToSize:(CGSize)newSize {
+    //UIGraphicsBeginImageContext(newSize);
+    UIGraphicsBeginImageContextWithOptions(newSize, NO, 0.0);
+    [image drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return newImage;
+}
+
+-(void)sendImageToPebble:(UIImage*)image {
+    /*
+    PBBitmap* pbBitmap = [PBBitmap pebbleBitmapWithUIImage:image];
+    
+    size_t length = [pbBitmap.pixelData length];
+    uint8_t j = 0;
+    
+    for(size_t i = 0; i < length; i += MAX_OUTGOING_SIZE-1) {
+        NSMutableData *outgoing = [[NSMutableData alloc] initWithCapacity:MAX_OUTGOING_SIZE];
+        [outgoing appendData:[pbBitmap.pixelData subdataWithRange:NSMakeRange(i, MIN(MAX_OUTGOING_SIZE-1, length - i))]];
+        
+        NSDictionary *dict = @{IPOD_ALBUM_ART_KEY: outgoing, IPOD_ALBUM_ART_INDEX_KEY:[NSNumber numberWithUint16:j]};
+        NSLog(@"Sending image dict %@", dict);
+        [self sendMessageToPebble:dict];
+
+        j++;
+    }
+     */
+    
+    NSData *bitmap = [KBPebbleImage ditheredBitmapFromImage:image withHeight:64 width:64];
+    
+    size_t length = [bitmap length];
+    NSDictionary *sizeDict = @{IPOD_ALBUM_ART_LENGTH_KEY: [NSNumber numberWithUint16:[bitmap length]]};
+    NSLog(@"sizedict %@", sizeDict);
+    [self sendMessageToPebble:sizeDict];
+    uint8_t j = 0;
+    for(size_t i = 0; i < length; i += MAX_OUTGOING_SIZE-1) {
+        NSMutableData *outgoing = [[NSMutableData alloc] initWithCapacity:MAX_OUTGOING_SIZE];
+        [outgoing appendData:[bitmap subdataWithRange:NSMakeRange(i, MIN(MAX_OUTGOING_SIZE-1, length - i))]];
+        NSDictionary *dict = @{IPOD_ALBUM_ART_KEY: outgoing, IPOD_ALBUM_ART_INDEX_KEY:[NSNumber numberWithUint16:j]};
+        NSLog(@"Sending image dict %@", dict);
+        [self sendMessageToPebble:dict];
+        j++;
+    }
 }
 
 - (void)pushNowPlayingItemToWatch:(BOOL)detailed {
@@ -403,20 +458,27 @@ typedef enum {
             if(!image) {
                 [self sendMessageToPebble:@{IPOD_ALBUM_ART_KEY: [NSNumber numberWithUint8:255]}];
             }
-            /*
             else {
+                NSLog(@"Sending image...");
+                /*
                 NSData *bitmap = [KBPebbleImage ditheredBitmapFromImage:image withHeight:64 width:64];
+                
                 size_t length = [bitmap length];
+                NSDictionary *sizeDict = @{IPOD_ALBUM_ART_LENGTH_KEY: [NSNumber numberWithUint16:[bitmap length]]};
+                NSLog(@"sizedict %@", sizeDict);
+                [self sendMessageToPebble:sizeDict];
                 uint8_t j = 0;
                 for(size_t i = 0; i < length; i += MAX_OUTGOING_SIZE-1) {
                     NSMutableData *outgoing = [[NSMutableData alloc] initWithCapacity:MAX_OUTGOING_SIZE];
-                    [outgoing appendBytes:&j length:1];
                     [outgoing appendData:[bitmap subdataWithRange:NSMakeRange(i, MIN(MAX_OUTGOING_SIZE-1, length - i))]];
-                    [self sendMessageToPebble:@{IPOD_ALBUM_ART_KEY: outgoing}];
+                    NSDictionary *dict = @{IPOD_ALBUM_ART_KEY: outgoing, IPOD_ALBUM_ART_INDEX_KEY:[NSNumber numberWithUint16:j]};
+                    NSLog(@"Sending image dict %@", dict);
+                    [self sendMessageToPebble:dict];
                     ++j;
                 }
+                 */
+                [self sendImageToPebble:image];
             }
-             */
         }
     }
 }
@@ -433,29 +495,6 @@ typedef enum {
     };
     NSLog(@"Current state: %@", [NSData dataWithBytes:metadata length:7]);
     [self sendMessageToPebble:@{IPOD_CURRENT_STATE_KEY: [NSData dataWithBytes:metadata length:7]}];
-}
-
-- (void)test {
-    MPVolumeView* volumeView = [[MPVolumeView alloc] init];
-    
-    // Get the Volume Slider
-    UISlider* volumeViewSlider = nil;
-    
-    for (UIView *view in [volumeView subviews]){
-        if ([view.class.description isEqualToString:@"MPVolumeSlider"]){
-            volumeViewSlider = (UISlider*)view;
-            break;
-        }
-    }
-    
-    // Fake the volume setting
-    [volumeViewSlider value];
-    [volumeViewSlider setValue:1.0f animated:YES];
-    [volumeViewSlider sendActionsForControlEvents:UIControlEventTouchUpInside];
-}
-
--(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
-    // Do whatever you need to do here
 }
 
 - (void)changeState:(NowPlayingState)state {
@@ -505,25 +544,81 @@ typedef enum {
     [self performSelector:@selector(pushCurrentStateToWatch:) withObject:self.watch afterDelay:0.1];
 }
 
+- (void)sendTestImage {
+    UIImage* image = [UIImage imageNamed:@"robot_ios.png"];
+    if(!image) {
+        NSLog(@"No image!");
+        [self sendMessageToPebble:@{IPOD_ALBUM_ART_KEY: [NSNumber numberWithUint8:255]}];
+    }
+    else {
+        NSLog(@"Sending test image...");
+        
+        YYImageEncoder *pngEncoder = [[YYImageEncoder alloc] initWithType:YYImageTypePNG];
+        [pngEncoder addImage:image duration:0];
+        NSData *bitmap = [pngEncoder encode];
+
+        UIImage *image = [UIImage imageWithData:bitmap];
+        UIImageView *view = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 150, 150)];
+        view.userInteractionEnabled = YES;
+        [view setImage:image];
+        UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(sendTestImage)];
+        [view addGestureRecognizer:recognizer];
+        [self.view addSubview:view];
+        NSLog(@"Got length %lu", (unsigned long)bitmap.length);
+        
+        size_t length = [bitmap length];
+        NSDictionary *sizeDict = @{IPOD_ALBUM_ART_LENGTH_KEY: [NSNumber numberWithUint16:[bitmap length]]};
+        NSLog(@"sizedict %@", sizeDict);
+        [self sendMessageToPebble:sizeDict];
+        
+        uint8_t j = 0;
+        for(size_t i = 0; i < length; i += MAX_OUTGOING_SIZE-1) {
+            NSMutableData *outgoing = [[NSMutableData alloc] initWithCapacity:MAX_OUTGOING_SIZE];
+            NSRange rangeOfBytes = NSMakeRange(i, MIN(MAX_OUTGOING_SIZE-1, length - i));
+            [outgoing appendBytes:[[bitmap subdataWithRange:rangeOfBytes] bytes] length:rangeOfBytes.length];
+            NSDictionary *dict = @{IPOD_ALBUM_ART_KEY: outgoing, IPOD_ALBUM_ART_INDEX_KEY:[NSNumber numberWithUint16:j]};
+            NSLog(@"Sending image dict %@", dict);
+            [self sendMessageToPebble:dict];
+            j++;
+        }
+    }
+
+}
+
 - (void)pebbleCentral:(PBPebbleCentral *)central watchDidConnect:(PBWatch *)watch isNew:(BOOL)isNew {
     if (self.watch) {
         return;
     }
     self.watch = watch;
     
+    self.messageQueue = [[KBPebbleMessageQueue alloc]init];
+    self.messageQueue.watch = self.watch;
     
     NSLog(@"Got watch %@", self.watch);
     
+    /*
     NSMutableDictionary *outgoing = [NSMutableDictionary new];
     [self.watch appMessagesPushUpdate:outgoing onSent:^(PBWatch *watch, NSDictionary *update, NSError *error) {
         if (error) {
             NSLog(@"Error sending update: %@", error);
         }
     }];
+     */
+    
+    [self sendTestImage];
+    
     
     // Sign up for AppMessage
+    __weak typeof(self) welf = self;
+
+    // Register for AppMessage delivery
     [self.watch appMessagesAddReceiveUpdateHandler:^BOOL(PBWatch *watch, NSDictionary *update) {
-        NSLog(@"Got a message %@", update);
+        __strong typeof(welf) sself = welf;
+        if (!sself) {
+            // self has been destroyed
+            NSLog(@"self is destroyed!");
+            return NO;
+        }
         if(update[IPOD_NOW_PLAYING_KEY]) {
             NSLog(@"Now playing key sent");
             [self pushNowPlayingItemToWatch:YES];
@@ -532,7 +627,7 @@ typedef enum {
             [self changeState:(NowPlayingState)[update[IPOD_CHANGE_STATE_KEY] integerValue]];
         }
         return YES;
-    } withUUID:[[NSUUID alloc] initWithUUIDString:@"4e601687-8739-49e0-a280-1a633ee46eef"]];
+    }];
 }
 
 - (void)pebbleCentral:(PBPebbleCentral *)central watchDidDisconnect:(PBWatch *)watch {
@@ -659,6 +754,9 @@ typedef enum {
     [self.contentContainerView addGestureRecognizer:panRecognizer];
     
     self.loadedSubviews = YES;
+    
+   // NSLog(@"Sending test image...");
+   // [self sendTestImage];
 }
 
 - (void)viewDidLoad {
