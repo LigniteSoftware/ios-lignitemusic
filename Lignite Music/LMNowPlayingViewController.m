@@ -415,35 +415,7 @@ typedef enum {
         [self sendMessageToPebble:@{IPOD_NOW_PLAYING_KEY: artist, IPOD_NOW_PLAYING_RESPONSE_TYPE_KEY:@(NowPlayingArtist)}];
         [self sendMessageToPebble:@{IPOD_NOW_PLAYING_KEY: album, IPOD_NOW_PLAYING_RESPONSE_TYPE_KEY: @(NowPlayingAlbum)}];
         
-        // Get and send the artwork.
-        MPMediaItemArtwork *artwork = [item valueForProperty:MPMediaItemPropertyArtwork];
-        if(artwork) {
-            UIImage* image = [artwork imageWithSize:CGSizeMake(64, 64)];
-            if(!image) {
-                [self sendMessageToPebble:@{IPOD_ALBUM_ART_KEY: [NSNumber numberWithUint8:255]}];
-            }
-            else {
-                NSLog(@"Sending image...");
-                /*
-                NSData *bitmap = [KBPebbleImage ditheredBitmapFromImage:image withHeight:64 width:64];
-                
-                size_t length = [bitmap length];
-                NSDictionary *sizeDict = @{IPOD_ALBUM_ART_LENGTH_KEY: [NSNumber numberWithUint16:[bitmap length]]};
-                NSLog(@"sizedict %@", sizeDict);
-                [self sendMessageToPebble:sizeDict];
-                uint8_t j = 0;
-                for(size_t i = 0; i < length; i += MAX_OUTGOING_SIZE-1) {
-                    NSMutableData *outgoing = [[NSMutableData alloc] initWithCapacity:MAX_OUTGOING_SIZE];
-                    [outgoing appendData:[bitmap subdataWithRange:NSMakeRange(i, MIN(MAX_OUTGOING_SIZE-1, length - i))]];
-                    NSDictionary *dict = @{IPOD_ALBUM_ART_KEY: outgoing, IPOD_ALBUM_ART_INDEX_KEY:[NSNumber numberWithUint16:j]};
-                    NSLog(@"Sending image dict %@", dict);
-                    [self sendMessageToPebble:dict];
-                    ++j;
-                }
-                 */
-                //[self sendImageToPebble:image];
-            }
-        }
+        [self sendAlbumArtImage];
     }
 }
 
@@ -508,14 +480,14 @@ typedef enum {
     [self performSelector:@selector(pushCurrentStateToWatch:) withObject:self.watch afterDelay:0.1];
 }
 
-- (void)sendTestImage {
+- (void)sendAlbumArtImage {
     UIImage *image = [KBPebbleImage ditherImageForPebble:[[self.musicPlayer.nowPlayingItem artwork]imageWithSize:CGSizeMake(64, 64)] withColourPalette:YES];
     
     UIImageView *testView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 64, 64)];
     testView.image = image;
     testView.userInteractionEnabled = YES;
     [testView setImage:image];
-    UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(sendTestImage)];
+    UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(sendAlbumArtImage)];
     [testView addGestureRecognizer:recognizer];
     [self.view addSubview:testView];
     /*
@@ -528,7 +500,7 @@ typedef enum {
      */
     if(!image) {
         NSLog(@"No image!");
-        [self sendMessageToPebble:@{IPOD_ALBUM_ART_KEY: [NSNumber numberWithUint8:255]}];
+        [self sendMessageToPebble:@{IPOD_ALBUM_ART_LENGTH_KEY:[NSNumber numberWithUint8:1]}];
     }
     else {
         NSLog(@"Generating test image with size %f %f and scale %f", image.size.width, image.size.height, image.scale);
@@ -568,17 +540,9 @@ typedef enum {
     
     NSLog(@"Got watch %@", self.watch);
     
-    /*
-    NSMutableDictionary *outgoing = [NSMutableDictionary new];
-    [self.watch appMessagesPushUpdate:outgoing onSent:^(PBWatch *watch, NSDictionary *update, NSError *error) {
-        if (error) {
-            NSLog(@"Error sending update: %@", error);
-        }
+    [self.watch appMessagesPushUpdate:@{IPOD_ALBUM_ART_LENGTH_KEY:[NSNumber numberWithInt:1]} onSent:^(PBWatch * _Nonnull watch, NSDictionary * _Nonnull update, NSError * _Nullable error) {
+        NSLog(@"Error %@", error);
     }];
-     */
-    
-    [self sendTestImage];
-    
     
     // Sign up for AppMessage
     __weak typeof(self) welf = self;
@@ -599,6 +563,7 @@ typedef enum {
             [self changeState:(NowPlayingState)[update[IPOD_CHANGE_STATE_KEY] integerValue]];
         }
         return YES;
+    //} withUUID:[[NSUUID alloc] initWithUUIDString:@"4e601687-8739-49e0-a280-1a633ee46eef"]];
     }];
 }
 
