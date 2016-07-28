@@ -411,12 +411,24 @@ typedef enum {
     } else {
         NSLog(@"Pushing everything.");
         //[self pushCurrentStateToWatch:watch];
-        [self sendMessageToPebble:@{IPOD_NOW_PLAYING_KEY: title, IPOD_NOW_PLAYING_RESPONSE_TYPE_KEY: @(NowPlayingTitle)}];
-        [self sendMessageToPebble:@{IPOD_NOW_PLAYING_KEY: artist, IPOD_NOW_PLAYING_RESPONSE_TYPE_KEY:@(NowPlayingArtist)}];
-        [self sendMessageToPebble:@{IPOD_NOW_PLAYING_KEY: album, IPOD_NOW_PLAYING_RESPONSE_TYPE_KEY: @(NowPlayingAlbum)}];
+        NSDictionary *titleDict = @{IPOD_NOW_PLAYING_KEY: title, IPOD_NOW_PLAYING_RESPONSE_TYPE_KEY:[NSNumber numberWithUint8:NowPlayingTitle]};
+        NSLog(@"Sending title %@", titleDict);
+        [self sendMessageToPebble:titleDict];
         
-        [self sendAlbumArtImage];
-    }
+        NSDictionary *artistDict = @{IPOD_NOW_PLAYING_KEY: artist, IPOD_NOW_PLAYING_RESPONSE_TYPE_KEY:[NSNumber numberWithUint8:NowPlayingArtist]};
+        NSLog(@"Sending artist %@", artistDict);
+        [self sendMessageToPebble:artistDict];
+        
+        NSDictionary *albumDict = @{IPOD_NOW_PLAYING_KEY: album, IPOD_NOW_PLAYING_RESPONSE_TYPE_KEY:[NSNumber numberWithUint8:NowPlayingAlbum]};
+        NSLog(@"Sending album %@", albumDict);
+        [self sendMessageToPebble:albumDict];
+        
+        [NSTimer scheduledTimerWithTimeInterval:2.0
+                                         target:self
+                                       selector:@selector(sendAlbumArtImage)
+                                       userInfo:nil
+                                        repeats:NO];
+        }
 }
 
 - (void)pushCurrentStateToWatch:(PBWatch *)watch {
@@ -535,14 +547,15 @@ typedef enum {
     }
     self.watch = watch;
     
-    self.messageQueue = [[KBPebbleMessageQueue alloc]init];
-    self.messageQueue.watch = self.watch;
-    
     NSLog(@"Got watch %@", self.watch);
     
-    [self.watch appMessagesPushUpdate:@{IPOD_ALBUM_ART_LENGTH_KEY:[NSNumber numberWithInt:1]} onSent:^(PBWatch * _Nonnull watch, NSDictionary * _Nonnull update, NSError * _Nullable error) {
+    self.messageQueue.watch = self.watch;
+    
+    
+    [self.watch appMessagesPushUpdate:@{IPOD_ALBUM_ART_LENGTH_KEY:[NSNumber numberWithUint8:1]} onSent:^(PBWatch * _Nonnull watch, NSDictionary * _Nonnull update, NSError * _Nullable error) {
         NSLog(@"Error %@", error);
     }];
+     
     
     // Sign up for AppMessage
     __weak typeof(self) welf = self;
@@ -701,6 +714,18 @@ typedef enum {
     
     NSLog(@"set");
     
+    self.central = [PBPebbleCentral defaultCentral];
+    self.central.delegate = self;
+    
+    // UUID of watchapp starter project: af17efe7-2141-4eb2-b62a-19fc1b595595
+    self.central.appUUID = [[NSUUID alloc] initWithUUIDString:@"4e601687-8739-49e0-a280-1a633ee46eef"];
+    
+    // Begin connection
+    [self.central run];
+    
+    self.messageQueue = [[KBPebbleMessageQueue alloc]init];
+    
+    /*
     // Set the delegate to receive PebbleKit events
     self.central = [PBPebbleCentral defaultCentral];
     self.central.delegate = self;
@@ -709,6 +734,7 @@ typedef enum {
     
     // Begin connection
     [self.central run];
+     */
     
     /*
     //Make sure that we can actually read the volume

@@ -37,6 +37,7 @@
         if(has_active_request) { NSLog(@"Request in-flight; stalling."); return; }
         if([queue count] == 0) { NSLog(@"Nothing in queue."); return; }
         if(![self.watch isConnected]) {
+            NSLog(@"Watch isn't connected.");
             has_active_request = false;
             return;
         }
