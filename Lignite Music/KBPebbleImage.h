@@ -12,6 +12,5 @@
 @interface KBPebbleImage : NSObject
 
 + (UIImage*)ditherImageForPebble:(UIImage*)image withColourPalette:(BOOL)colourPalette;
-+ (NSData*)ditheredBitmapFromImage:(NSData *)image withHeight:(NSUInteger)height width:(NSUInteger)width;
 
 @end

@@ -388,42 +388,6 @@ typedef enum {
     return newImage;
 }
 
--(void)sendImageToPebble:(UIImage*)image {
-    /*
-    PBBitmap* pbBitmap = [PBBitmap pebbleBitmapWithUIImage:image];
-    
-    size_t length = [pbBitmap.pixelData length];
-    uint8_t j = 0;
-    
-    for(size_t i = 0; i < length; i += MAX_OUTGOING_SIZE-1) {
-        NSMutableData *outgoing = [[NSMutableData alloc] initWithCapacity:MAX_OUTGOING_SIZE];
-        [outgoing appendData:[pbBitmap.pixelData subdataWithRange:NSMakeRange(i, MIN(MAX_OUTGOING_SIZE-1, length - i))]];
-        
-        NSDictionary *dict = @{IPOD_ALBUM_ART_KEY: outgoing, IPOD_ALBUM_ART_INDEX_KEY:[NSNumber numberWithUint16:j]};
-        NSLog(@"Sending image dict %@", dict);
-        [self sendMessageToPebble:dict];
-
-        j++;
-    }
-     */
-    
-    NSData *bitmap = [KBPebbleImage ditheredBitmapFromImage:image withHeight:64 width:64];
-    
-    size_t length = [bitmap length];
-    NSDictionary *sizeDict = @{IPOD_ALBUM_ART_LENGTH_KEY: [NSNumber numberWithUint16:[bitmap length]]};
-    NSLog(@"sizedict %@", sizeDict);
-    [self sendMessageToPebble:sizeDict];
-    uint8_t j = 0;
-    for(size_t i = 0; i < length; i += MAX_OUTGOING_SIZE-1) {
-        NSMutableData *outgoing = [[NSMutableData alloc] initWithCapacity:MAX_OUTGOING_SIZE];
-        [outgoing appendData:[bitmap subdataWithRange:NSMakeRange(i, MIN(MAX_OUTGOING_SIZE-1, length - i))]];
-        NSDictionary *dict = @{IPOD_ALBUM_ART_KEY: outgoing, IPOD_ALBUM_ART_INDEX_KEY:[NSNumber numberWithUint16:j]};
-        NSLog(@"Sending image dict %@", dict);
-        [self sendMessageToPebble:dict];
-        j++;
-    }
-}
-
 - (void)pushNowPlayingItemToWatch:(BOOL)detailed {
     MPMediaItem *item = [self.musicPlayer nowPlayingItem];
     NSString *title = [item valueForProperty:MPMediaItemPropertyTitle];
@@ -477,7 +441,7 @@ typedef enum {
                     ++j;
                 }
                  */
-                [self sendImageToPebble:image];
+                //[self sendImageToPebble:image];
             }
         }
     }
@@ -545,8 +509,9 @@ typedef enum {
 }
 
 - (void)sendTestImage {
-    UIImage *image = [KBPebbleImage ditherImageForPebble:nil withColourPalette:YES];
-    UIImageView *testView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 144, 168)];
+    UIImage *image = [KBPebbleImage ditherImageForPebble:[[self.musicPlayer.nowPlayingItem artwork]imageWithSize:CGSizeMake(64, 64)] withColourPalette:YES];
+    
+    UIImageView *testView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 64, 64)];
     testView.image = image;
     testView.userInteractionEnabled = YES;
     [testView setImage:image];
@@ -566,7 +531,7 @@ typedef enum {
         [self sendMessageToPebble:@{IPOD_ALBUM_ART_KEY: [NSNumber numberWithUint8:255]}];
     }
     else {
-        NSLog(@"Generating test image...");
+        NSLog(@"Generating test image with size %f %f and scale %f", image.size.width, image.size.height, image.scale);
         
         YYImageEncoder *pngEncoder = [[YYImageEncoder alloc] initWithType:YYImageTypePNG];
         [pngEncoder addImage:image duration:0];
@@ -585,7 +550,7 @@ typedef enum {
             NSRange rangeOfBytes = NSMakeRange(i, MIN(MAX_OUTGOING_SIZE-1, length - i));
             [outgoing appendBytes:[[bitmap subdataWithRange:rangeOfBytes] bytes] length:rangeOfBytes.length];
             NSDictionary *dict = @{IPOD_ALBUM_ART_KEY: outgoing, IPOD_ALBUM_ART_INDEX_KEY:[NSNumber numberWithUint16:j]};
-            NSLog(@"Sending image dict %@", dict);
+            //NSLog(@"Sending image dict %@", dict);
             [self sendMessageToPebble:dict];
             j++;
         }
