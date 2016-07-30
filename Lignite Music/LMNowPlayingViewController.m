@@ -12,7 +12,7 @@
 #import "LMNowPlayingViewController.h"
 #import "UIImage+AverageColour.h"
 #import "UIColor+isLight.h"
-#import "KBPebbleImage.h"
+#import "LMPebbleImage.h"
 #import "KBPebbleMessageQueue.h"
 
 @interface LMNowPlayingViewController () <LMButtonDelegate, UIGestureRecognizerDelegate, PBPebbleCentralDelegate>
@@ -64,6 +64,8 @@ typedef enum {
 
 @property (weak, nonatomic) PBWatch *watch;
 @property (weak, nonatomic) PBPebbleCentral *central;
+
+@property UIImage *lastAlbumArtImage;
 
 @property KBPebbleMessageQueue *messageQueue;
 
@@ -208,6 +210,7 @@ typedef enum {
     else if (playbackState == MPMusicPlaybackStateStopped) {
         //[self.musicPlayer stop];
     }
+    [self pushCurrentStateToWatch];
 }
 
 - (void)updateSongDurationLabelWithPlaybackTime:(long)currentPlaybackTime {
@@ -247,6 +250,7 @@ typedef enum {
         self.finishedUserAdjustment = NO;
         self.musicPlayer.currentPlaybackTime = self.songDurationSlider.value;
         NSLog(@"Music player current playback set to %f", self.musicPlayer.currentPlaybackTime);
+        [self pushCurrentStateToWatch];
     }
     [self updateSongDurationLabelWithPlaybackTime:self.musicPlayer.currentPlaybackTime];
 }
@@ -264,14 +268,17 @@ typedef enum {
             [self.refreshTimer invalidate];
         }
     }
+    [self pushCurrentStateToWatch];
 }
 
 - (IBAction)nextSong:(id)sender {
     [self.musicPlayer skipToNextItem];
+    [self pushNowPlayingItemToWatch:YES];
 }
 
 - (IBAction)previousSong:(id)sender {
     [self.musicPlayer skipToPreviousItem];
+    [self pushNowPlayingItemToWatch:YES];
 }
 
 - (void)reloadButtonTitles {
@@ -327,6 +334,7 @@ typedef enum {
 }
 
 - (void)fireRefreshTimer {
+    NSLog(@"Fire");
     self.refreshTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(nowPlayingTimeChanged:) userInfo:nil repeats:YES];
 }
 
@@ -369,13 +377,6 @@ typedef enum {
 }
 
 - (void)sendMessageToPebble:(NSDictionary*)toSend {
-    /*
-    [self.watch appMessagesPushUpdate:toSend onSent:^(PBWatch *watch, NSDictionary *update, NSError *error) {
-        if(error) {
-            NSLog(@"Error sending update: %@", error);
-        }
-    }];
-     */
     [self.messageQueue enqueue:toSend];
 }
 
@@ -408,19 +409,17 @@ typedef enum {
         }
         [self sendMessageToPebble:@{IPOD_NOW_PLAYING_KEY: value, IPOD_NOW_PLAYING_RESPONSE_TYPE_KEY: @(NowPlayingTitleArtist)}];
         NSLog(@"Now playing: %@", value);
-    } else {
+    }
+    else {
         NSLog(@"Pushing everything.");
         //[self pushCurrentStateToWatch:watch];
         NSDictionary *titleDict = @{IPOD_NOW_PLAYING_KEY: title, IPOD_NOW_PLAYING_RESPONSE_TYPE_KEY:[NSNumber numberWithUint8:NowPlayingTitle]};
-        NSLog(@"Sending title %@", titleDict);
         [self sendMessageToPebble:titleDict];
         
         NSDictionary *artistDict = @{IPOD_NOW_PLAYING_KEY: artist, IPOD_NOW_PLAYING_RESPONSE_TYPE_KEY:[NSNumber numberWithUint8:NowPlayingArtist]};
-        NSLog(@"Sending artist %@", artistDict);
         [self sendMessageToPebble:artistDict];
         
         NSDictionary *albumDict = @{IPOD_NOW_PLAYING_KEY: album, IPOD_NOW_PLAYING_RESPONSE_TYPE_KEY:[NSNumber numberWithUint8:NowPlayingAlbum]};
-        NSLog(@"Sending album %@", albumDict);
         [self sendMessageToPebble:albumDict];
         
         [NSTimer scheduledTimerWithTimeInterval:2.0
@@ -428,10 +427,13 @@ typedef enum {
                                        selector:@selector(sendAlbumArtImage)
                                        userInfo:nil
                                         repeats:NO];
-        }
+        
+        [self pushCurrentStateToWatch];
+    }
 }
 
-- (void)pushCurrentStateToWatch:(PBWatch *)watch {
+- (void)sendCurrentStateToWatch {
+    NSLog(@"Hi");
     uint16_t current_time = (uint16_t)[self.musicPlayer currentPlaybackTime];
     uint16_t total_time = (uint16_t)[[[self.musicPlayer nowPlayingItem] valueForProperty:MPMediaItemPropertyPlaybackDuration] doubleValue];
     uint8_t metadata[] = {
@@ -443,6 +445,11 @@ typedef enum {
     };
     NSLog(@"Current state: %@", [NSData dataWithBytes:metadata length:7]);
     [self sendMessageToPebble:@{IPOD_CURRENT_STATE_KEY: [NSData dataWithBytes:metadata length:7]}];
+
+}
+
+- (void)pushCurrentStateToWatch {
+    [self performSelector:@selector(sendCurrentStateToWatch) withObject:nil afterDelay:0.1];
 }
 
 - (void)changeState:(NowPlayingState)state {
@@ -463,8 +470,7 @@ typedef enum {
 
     switch(state) {
         case NowPlayingStatePlayPause:
-            if([self.musicPlayer playbackState] == MPMusicPlaybackStatePlaying) [self.musicPlayer pause];
-            else [self.musicPlayer play];
+            [self playPauseMusic];
             break;
         case NowPlayingStateSkipNext:
             [self.musicPlayer skipToNextItem];
@@ -489,27 +495,30 @@ typedef enum {
             //[self.musicPlayer setVolume:[self.musicPlayer volume] - 0.0625];
             break;
     }
-    [self performSelector:@selector(pushCurrentStateToWatch:) withObject:self.watch afterDelay:0.1];
+    [self pushCurrentStateToWatch];
 }
 
 - (void)sendAlbumArtImage {
-    UIImage *image = [KBPebbleImage ditherImageForPebble:[[self.musicPlayer.nowPlayingItem artwork]imageWithSize:CGSizeMake(64, 64)] withColourPalette:YES];
+    CGSize imageSize = CGSizeMake(144, 144);
+    UIImage *albumArtImage = [[self.musicPlayer.nowPlayingItem artwork]imageWithSize:imageSize];
+    UIImage *image = [LMPebbleImage ditherImageForPebble:albumArtImage withColourPalette:YES withSize:imageSize];
     
-    UIImageView *testView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 64, 64)];
+    if([albumArtImage isEqual:self.lastAlbumArtImage]){
+        NSLog(@"The album art is literally samezies...");
+        //return;
+    }
+    self.lastAlbumArtImage = albumArtImage;
+    
+    /*
+    UIImageView *testView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, imageSize.width, imageSize.height)];
     testView.image = image;
     testView.userInteractionEnabled = YES;
     [testView setImage:image];
     UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(sendAlbumArtImage)];
     [testView addGestureRecognizer:recognizer];
     [self.view addSubview:testView];
-    /*
-    if([self.musicPlayer.nowPlayingItem artwork]){
-        image = [[self.musicPlayer.nowPlayingItem artwork]imageWithSize:CGSizeMake(64, 64)];
-    }
-    else{
-        image = [UIImage imageNamed:@"robot_ios.png"];
-    }
      */
+
     if(!image) {
         NSLog(@"No image!");
         [self sendMessageToPebble:@{IPOD_ALBUM_ART_LENGTH_KEY:[NSNumber numberWithUint8:1]}];
@@ -553,7 +562,7 @@ typedef enum {
     
     
     [self.watch appMessagesPushUpdate:@{IPOD_ALBUM_ART_LENGTH_KEY:[NSNumber numberWithUint8:1]} onSent:^(PBWatch * _Nonnull watch, NSDictionary * _Nonnull update, NSError * _Nullable error) {
-        NSLog(@"Error %@", error);
+
     }];
      
     

@@ -34,14 +34,20 @@
 
 - (void)sendRequest {
     @synchronized(queue) {
-        if(has_active_request) { NSLog(@"Request in-flight; stalling."); return; }
-        if([queue count] == 0) { NSLog(@"Nothing in queue."); return; }
+        if(has_active_request) {
+            NSLog(@"Request in flight, stalling.");
+            return;
+        }
+        if([queue count] == 0) {
+            NSLog(@"Nothing in queue.");
+            return;
+        }
         if(![self.watch isConnected]) {
             NSLog(@"Watch isn't connected.");
             has_active_request = false;
             return;
         }
-        NSLog(@"Sending message.");
+        //NSLog(@"Sending message.");
         has_active_request = YES;
         NSDictionary* message = [queue objectAtIndex:0];
         [self.watch appMessagesPushUpdate:message onSent:^(PBWatch *watch, NSDictionary *update, NSError *error) {
@@ -59,7 +65,7 @@
                 }
             }
             has_active_request = NO;
-            NSLog(@"Next message.");
+            //NSLog(@"Next message.");
             [self sendRequest];
         }];
     }

@@ -9,8 +9,8 @@
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
 
-@interface KBPebbleImage : NSObject
+@interface LMPebbleImage : NSObject
 
-+ (UIImage*)ditherImageForPebble:(UIImage*)image withColourPalette:(BOOL)colourPalette;
++ (UIImage*)ditherImageForPebble:(UIImage*)image withColourPalette:(BOOL)colourPalette withSize:(CGSize)size;
 
 @end

@@ -7,10 +7,9 @@
 //
 
 #import <wand/MagickWand.h>
-#import "KBPebbleImage.h"
+#import "LMPebbleImage.h"
 
-@implementation KBPebbleImage
-
+@implementation LMPebbleImage
 
 + (UIImage*)imageWithImage:(UIImage*)image scaledToSize:(CGSize)newSize {
     //UIGraphicsBeginImageContext(newSize);
@@ -21,13 +20,13 @@
     return newImage;
 }
 
-+ (UIImage*)ditherImageForPebble:(UIImage*)originalImage withColourPalette:(BOOL)colourPalette {
++ (UIImage*)ditherImageForPebble:(UIImage*)originalImage withColourPalette:(BOOL)colourPalette withSize:(CGSize)size {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     
-    NSLog(@"Old size %lu size %f, %f, scale %f", [UIImagePNGRepresentation(originalImage) length], originalImage.size.width, originalImage.size.height, originalImage.scale);
+    //NSLog(@"Old size %lu size %f, %f, scale %f", [UIImagePNGRepresentation(originalImage) length], originalImage.size.width, originalImage.size.height, originalImage.scale);
     
-    UIImage *image = [KBPebbleImage imageWithImage:originalImage scaledToSize:CGSizeMake(64, 64)];
-    NSLog(@"New size %lu size %f, %f, scale %f", [UIImagePNGRepresentation(image) length], image.size.width, image.size.height, image.scale);
+    UIImage *image = [LMPebbleImage imageWithImage:originalImage scaledToSize:size];
+    //NSLog(@"New size %lu size %f, %f, scale %f", [UIImagePNGRepresentation(image) length], image.size.width, image.size.height, image.scale);
     
     NSString *sourceImagePath =  [[paths objectAtIndex:0] stringByAppendingPathComponent:@"current_album_artwork.png"];
     [UIImagePNGRepresentation(image) writeToFile:sourceImagePath atomically:YES];
@@ -89,11 +88,7 @@
     }
     
     UIImage *convertedImage = [UIImage imageWithContentsOfFile:outputString];
-    
     return convertedImage;
-    return [KBPebbleImage imageWithImage:convertedImage scaledToSize:CGSizeMake(64, 64)];
-    
-    //return nil;
 }
 
 @end

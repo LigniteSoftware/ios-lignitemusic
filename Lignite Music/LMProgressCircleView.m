@@ -20,7 +20,7 @@
 }
 
 - (void)reload {
-    NSLog(@"Reloading circle display %f", self.currentValue);
+    //NSLog(@"Reloading circle display %f", self.currentValue);
     [self setNeedsDisplay];
 }
 
