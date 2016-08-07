@@ -52,8 +52,8 @@ typedef enum {
 #define MessageKeySequenceNumber @(13)
 
 #define MAX_LABEL_LENGTH 20
-#define MAX_RESPONSE_COUNT 15
-#define MAX_OUTGOING_SIZE 500 // This allows some overhead.
+#define MAX_RESPONSE_COUNT 90
+#define MAX_OUTGOING_SIZE 1500 // This allows some overhead.
 
 typedef enum {
     NowPlayingTitle,
@@ -430,15 +430,14 @@ typedef enum {
     NSDictionary *albumDict = @{MessageKeyNowPlaying: album, MessageKeyNowPlayingResponseType:[NSNumber numberWithUint8:NowPlayingAlbum]};
     [self sendMessageToPebble:albumDict];
     
-    /*
-    [NSTimer scheduledTimerWithTimeInterval:2.0
+    [self pushCurrentStateToWatch];
+    
+    [NSTimer scheduledTimerWithTimeInterval:1.0
                                      target:self
                                    selector:@selector(sendAlbumArtImage)
                                    userInfo:nil
                                     repeats:NO];
-     */
     
-    [self pushCurrentStateToWatch];
 }
 
 - (void)sendCurrentStateToWatch {
@@ -621,10 +620,21 @@ typedef enum {
 - (void)playTrackFromMessage:(NSDictionary *)message {
     MPMediaItemCollection *queue = [self getCollectionFromMessage:message][0];
     MPMediaItem *track = [queue items][[message[MessageKeyPlayTrack] int16Value]];
+    NSLog(@"Got index %d", [message[MessageKeyPlayTrack] int16Value]);
+    for(int i = 0; i < [[queue items] count]; i++){
+        NSLog(@"Got item %@: %d", [[[queue items] objectAtIndex:i]valueForProperty:MPMediaItemPropertyTitle], i);
+    }
+    NSLog(@"track %@", [track valueForProperty:MPMediaItemPropertyTitle]);
+    [self.musicPlayer stop];
     [self.musicPlayer setQueueWithItemCollection:queue];
     [self.musicPlayer setNowPlayingItem:track];
     [self.musicPlayer play];
+    //[self.musicPlayer setCurrentPlaybackTime:0];
+    NSLog(@"Now playing %@", [self.musicPlayer.nowPlayingItem valueForProperty:MPMediaItemPropertyTitle]);
+    //NSLog(@"Index in queue %ld", [self.musicPlayer indexOfNowPlayingItem]);
+    //[self.musicPlayer play];
     //[self pushNowPlayingItemToWatch:watch detailed:YES];
+    
 }
 
 - (void)libraryDataRequest:(NSDictionary *)request {
@@ -634,6 +644,16 @@ typedef enum {
     [query setGroupingType:request_type];
     [query addFilterPredicate:[MPMediaPropertyPredicate predicateWithValue:@(MPMediaTypeMusic) forProperty:MPMediaItemPropertyMediaType]];
     NSArray* results = [query collections];
+    [self pushLibraryResults:results withOffset:offset type:request_type];
+}
+
+- (void)sublistRequest:(NSDictionary*)request {
+    NSArray *results = [self getCollectionFromMessage:request];
+    MPMediaGrouping request_type = [request[MessageKeyRequestLibrary] integerValue];
+    uint16_t offset = [request[MessageKeyRequestOffset] uint16Value];
+    if(request_type == MPMediaGroupingTitle) {
+        results = [results[0] items];
+    }
     [self pushLibraryResults:results withOffset:offset type:request_type];
 }
 
@@ -681,16 +701,6 @@ typedef enum {
     }
 }
 
-- (void)sublistRequest:(NSDictionary*)request {
-    NSArray *results = [self getCollectionFromMessage:request];
-    MPMediaGrouping request_type = [request[MessageKeyRequestLibrary] integerValue];
-    uint16_t offset = [request[MessageKeyRequestOffset] uint16Value];
-    if(request_type == MPMediaGroupingTitle) {
-        results = [results[0] items];
-    }
-    [self pushLibraryResults:results withOffset:offset type:request_type];
-}
-
 - (void)pushLibraryResults:(NSArray *)results withOffset:(NSInteger)offset type:(MPMediaGrouping)type {
     NSArray* subset;
     if(offset < [results count]) {
@@ -722,7 +732,10 @@ typedef enum {
         }
         NSData *value_data = [value dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
         uint8_t length = [value_data length];
-        if([result length] + length > MAX_OUTGOING_SIZE) break;
+        if(([result length] + length) > MAX_OUTGOING_SIZE){
+            NSLog(@"Cutting off length at %ld", [result length]);
+            break;
+        }
         [result appendBytes:&length length:1];
         [result appendData:value_data];
         NSLog(@"Value: %@", value);
@@ -736,7 +749,7 @@ typedef enum {
         }
     }];
      */
-    NSLog(@"Sent message: %@", result);
+    NSLog(@"Sent message: %@ with length %d", result, [result length]);
 }
 
 
