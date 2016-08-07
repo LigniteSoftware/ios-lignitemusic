@@ -36,7 +36,7 @@
     
     NSString *outputString = [[paths objectAtIndex:0] stringByAppendingPathComponent:@"outputimage.png"];
     
-    NSLog(@"Got paths %@ and %@", sourceImagePath, outputString);
+    //NSLog(@"Got paths %@ and %@", sourceImagePath, outputString);
     
     // Get image from bundle.
     char *inputPath = strdup([sourceImagePath UTF8String]);
@@ -44,7 +44,6 @@
 
     char *argv[] = {"convert", inputPath,
         //"-adaptive-resize", "'144x168>'",
-        "-fill", "'#FFFFFF00'",
         "-opaque", "none",
         "-dither", "FloydSteinberg",
         "-remap", coloursFilePath,

@@ -21,7 +21,7 @@
 
 - (void)reload {
     //NSLog(@"Reloading circle display %f", self.currentValue);
-    [self setNeedsDisplay];
+    //[self setNeedsDisplay];
 }
 
 // Only override drawRect: if you perform custom drawing.
@@ -30,15 +30,15 @@
     CGContextRef context = UIGraphicsGetCurrentContext();
     
     int smallerFactor = MIN(rect.size.width, rect.size.height);
-    int progressBarThickness = self.thickness;
+    //int progressBarThickness = self.thickness;
 
     CGFloat theHalf = rect.size.width/2;
-    CGFloat lineWidth = smallerFactor/2;
-    CGFloat radius = smallerFactor/4 - progressBarThickness;
+    //CGFloat lineWidth = smallerFactor/2;
+    //CGFloat radius = smallerFactor/4 - progressBarThickness;
     CGFloat centerX = theHalf;
     CGFloat centerY = rect.size.height/2;
     
-    CGRect circleRect = CGRectMake(centerX-(radius*2), centerY-(radius*2), radius*4, radius*4);
+    //CGRect circleRect = CGRectMake(centerX-(radius*2), centerY-(radius*2), radius*4, radius*4);
     CGRect fadedRect = CGRectMake(centerX-(smallerFactor/2), centerY-(smallerFactor/2), smallerFactor, smallerFactor);
     
     float startAngle = - M_PI_2;
@@ -46,9 +46,10 @@
     float percent = self.currentValue/self.maxValue;
     endAngle = startAngle + (M_PI * 2)*percent;
 
-    CGContextSetRGBFillColor(context, 1.0, 1.0, 1.0, 0.05);
+    CGContextSetRGBFillColor(context, 1.0, 1.0, 1.0, 0.25);
     CGContextFillEllipseInRect(context, fadedRect);
     
+    /*
     CGContextAddArc(context, centerX, centerY, radius, startAngle, endAngle, false);
     
     CGContextSetStrokeColorWithColor(context, [UIColor redColor].CGColor);
@@ -61,7 +62,8 @@
     CGContextSetBlendMode(context, kCGBlendModeNormal);
     CGContextSetRGBFillColor(context, 1.0, 1.0, 1.0, 0.05);
     CGContextFillEllipseInRect(context, circleRect);
-    
+    */
+     
     
 //    CGRect albumCircle = CGRectMake(centerX-self.albumRadius, centerY-self.albumRadius, self.albumRadius*2, self.albumRadius*2);
 //    //CGRect albumCircle = CGRectMake(35, 35, 222, 222);

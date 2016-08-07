@@ -15,7 +15,7 @@
 
 @interface LMNowPlayingViewController : UIViewController
 
-@property MPMusicPlayerController *musicPlayer;
+@property (weak) MPMusicPlayerController *musicPlayer;
 
 @property IBOutlet UIView *contentContainerView;
 

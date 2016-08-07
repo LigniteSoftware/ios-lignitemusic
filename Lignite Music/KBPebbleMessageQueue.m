@@ -21,7 +21,7 @@
 
 - (void)enqueue:(NSDictionary *)message {
     if(!self.watch) {
-        NSLog(@"No watch; discarding message.");
+        //NSLog(@"No watch; discarding message.");
         return;
     }
     if(!message) return;
@@ -35,11 +35,11 @@
 - (void)sendRequest {
     @synchronized(queue) {
         if(has_active_request) {
-            NSLog(@"Request in flight, stalling.");
+            //NSLog(@"Request in flight, stalling.");
             return;
         }
         if([queue count] == 0) {
-            NSLog(@"Nothing in queue.");
+            //NSLog(@"Nothing in queue.");
             return;
         }
         if(![self.watch isConnected]) {

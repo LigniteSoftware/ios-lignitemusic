@@ -17,20 +17,39 @@
 
 @interface LMNowPlayingViewController () <LMButtonDelegate, UIGestureRecognizerDelegate, PBPebbleCentralDelegate>
 
-#define IPOD_RECONNECT_KEY @(0xFEFF)
-#define IPOD_REQUEST_LIBRARY_KEY @(0xFEFE)
-#define IPOD_REQUEST_OFFSET_KEY @(0xFEFB)
-#define IPOD_LIBRARY_RESPONSE_KEY @(0xFEFD)
-#define IPOD_NOW_PLAYING_KEY @(0xFEFA)
-#define IPOD_REQUEST_PARENT_KEY @(0xFEF9)
-#define IPOD_PLAY_TRACK_KEY @(0xFEF8)
-#define IPOD_NOW_PLAYING_RESPONSE_TYPE_KEY @(0xFEF7)
-#define IPOD_ALBUM_ART_KEY @(0xFEF6)
-#define IPOD_ALBUM_ART_LENGTH_KEY @(0xFEF5)
-#define IPOD_ALBUM_ART_INDEX_KEY @(0xFEF4)
-#define IPOD_CHANGE_STATE_KEY @(0xFEF3)
-#define IPOD_CURRENT_STATE_KEY @(0xFEF2)
-#define IPOD_SEQUENCE_NUMBER_KEY @(0xFEF1)
+/*
+typedef enum {
+    MessageKeyReconnect = 0,
+    MessageKeyRequestLibrary,
+    MessageKeyRequestOffset,
+    MessageKeyLibraryResponse,
+    MessageKeyNowPlaying,
+    MessageKeyRequestParent,
+    MessageKeyPlayTrack,
+    MessageKeyNowPlayingResponseType,
+    MessageKeyAlbumArt,
+    MessageKeyAlbumArtLength,
+    MessageKeyAlbumArtIndex,
+    MessageKeyChangeState,
+    MessageKeyCurrentState,
+    MessageKeySequenceNumber
+} MessageKey;
+ */
+
+#define MessageKeyReconnect @(0)
+#define MessageKeyRequestLibrary @(1)
+#define MessageKeyRequestOffset @(2)
+#define MessageKeyLibraryResponse @(3)
+#define MessageKeyNowPlaying @(4)
+#define MessageKeyRequestParent @(5)
+#define MessageKeyPlayTrack @(6)
+#define MessageKeyNowPlayingResponseType @(7)
+#define MessageKeyAlbumArt @(8)
+#define MessageKeyAlbumArtLength @(9)
+#define MessageKeyAlbumArtIndex @(10)
+#define MessageKeyChangeState @(11)
+#define MessageKeyCurrentState @(12)
+#define MessageKeySequenceNumber @(13)
 
 #define MAX_LABEL_LENGTH 20
 #define MAX_RESPONSE_COUNT 15
@@ -91,7 +110,7 @@ typedef enum {
     if(translatedPoint.y > self.view.frame.size.height/2){
         [viewToMove setCenter:translatedPoint];
     }
-    NSLog(@"translated %@", NSStringFromCGPoint(translatedPoint));
+    //NSLog(@"translated %@", NSStringFromCGPoint(translatedPoint));
     
     if ([(UIPanGestureRecognizer*)sender state] == UIGestureRecognizerStateEnded) {
         CGFloat velocityY = (0.1*[sender velocityInView:viewToMove].y);
@@ -146,6 +165,11 @@ typedef enum {
 
 - (void)nowPlayingItemChanged:(id) sender {
     //[self.playingView updateNowPlayingItem:self.musicPlayer.nowPlayingItem];
+    
+    NSLog(@"Now playing item has changed");
+    
+    [self pushNowPlayingItemToWatch];
+
     [self.songTitleLabel setText:self.musicPlayer.nowPlayingItem.title];
     [self.songArtistLabel setText:self.musicPlayer.nowPlayingItem.artist];
     [self.songAlbumLabel setText:self.musicPlayer.nowPlayingItem.albumTitle];
@@ -202,7 +226,7 @@ typedef enum {
 - (void)nowPlayingStateChanged:(id) sender {
     MPMusicPlaybackState playbackState = [self.musicPlayer playbackState];
     
-    //NSLog(@"Playback state is %d", (int)playbackState);
+    NSLog(@"Playback state is %d", (int)playbackState);
     
     if (playbackState == MPMusicPlaybackStatePaused || playbackState == MPMusicPlaybackStatePlaying) {
         //[self.playingView.controlView setPlaying:nil];
@@ -273,12 +297,10 @@ typedef enum {
 
 - (IBAction)nextSong:(id)sender {
     [self.musicPlayer skipToNextItem];
-    [self pushNowPlayingItemToWatch:YES];
 }
 
 - (IBAction)previousSong:(id)sender {
     [self.musicPlayer skipToPreviousItem];
-    [self pushNowPlayingItemToWatch:YES];
 }
 
 - (void)reloadButtonTitles {
@@ -389,7 +411,7 @@ typedef enum {
     return newImage;
 }
 
-- (void)pushNowPlayingItemToWatch:(BOOL)detailed {
+- (void)pushNowPlayingItemToWatch {
     MPMediaItem *item = [self.musicPlayer nowPlayingItem];
     NSString *title = [item valueForProperty:MPMediaItemPropertyTitle];
     NSString *artist = [item valueForProperty:MPMediaItemPropertyArtist];
@@ -397,43 +419,30 @@ typedef enum {
     if(!title) title = @"";
     if(!artist) artist = @"";
     if(!album) album = @"";
-    if(!detailed) {
-        NSString *value;
-        if(!item) {
-            value = @"Nothing playing.";
-        } else {
-            value = [NSString stringWithFormat:@"%@ - %@", title, artist, nil];
-        }
-        if([value length] > MAX_OUTGOING_SIZE) {
-            value = [value substringToIndex:MAX_OUTGOING_SIZE];
-        }
-        [self sendMessageToPebble:@{IPOD_NOW_PLAYING_KEY: value, IPOD_NOW_PLAYING_RESPONSE_TYPE_KEY: @(NowPlayingTitleArtist)}];
-        NSLog(@"Now playing: %@", value);
-    }
-    else {
-        NSLog(@"Pushing everything.");
-        //[self pushCurrentStateToWatch:watch];
-        NSDictionary *titleDict = @{IPOD_NOW_PLAYING_KEY: title, IPOD_NOW_PLAYING_RESPONSE_TYPE_KEY:[NSNumber numberWithUint8:NowPlayingTitle]};
-        [self sendMessageToPebble:titleDict];
-        
-        NSDictionary *artistDict = @{IPOD_NOW_PLAYING_KEY: artist, IPOD_NOW_PLAYING_RESPONSE_TYPE_KEY:[NSNumber numberWithUint8:NowPlayingArtist]};
-        [self sendMessageToPebble:artistDict];
-        
-        NSDictionary *albumDict = @{IPOD_NOW_PLAYING_KEY: album, IPOD_NOW_PLAYING_RESPONSE_TYPE_KEY:[NSNumber numberWithUint8:NowPlayingAlbum]};
-        [self sendMessageToPebble:albumDict];
-        
-        [NSTimer scheduledTimerWithTimeInterval:2.0
-                                         target:self
-                                       selector:@selector(sendAlbumArtImage)
-                                       userInfo:nil
-                                        repeats:NO];
-        
-        [self pushCurrentStateToWatch];
-    }
+    
+    NSLog(@"Pushing now playing details to watch.");
+    NSDictionary *titleDict = @{MessageKeyNowPlaying: title, MessageKeyNowPlayingResponseType:[NSNumber numberWithUint8:NowPlayingTitle]};
+    [self sendMessageToPebble:titleDict];
+    
+    NSDictionary *artistDict = @{MessageKeyNowPlaying: artist, MessageKeyNowPlayingResponseType:[NSNumber numberWithUint8:NowPlayingArtist]};
+    [self sendMessageToPebble:artistDict];
+    
+    NSDictionary *albumDict = @{MessageKeyNowPlaying: album, MessageKeyNowPlayingResponseType:[NSNumber numberWithUint8:NowPlayingAlbum]};
+    [self sendMessageToPebble:albumDict];
+    
+    /*
+    [NSTimer scheduledTimerWithTimeInterval:2.0
+                                     target:self
+                                   selector:@selector(sendAlbumArtImage)
+                                   userInfo:nil
+                                    repeats:NO];
+     */
+    
+    [self pushCurrentStateToWatch];
 }
 
 - (void)sendCurrentStateToWatch {
-    NSLog(@"Hi");
+    //NSLog(@"Hi");
     uint16_t current_time = (uint16_t)[self.musicPlayer currentPlaybackTime];
     uint16_t total_time = (uint16_t)[[[self.musicPlayer nowPlayingItem] valueForProperty:MPMediaItemPropertyPlaybackDuration] doubleValue];
     uint8_t metadata[] = {
@@ -443,8 +452,8 @@ typedef enum {
         total_time >> 8, total_time & 0xFF,
         current_time >> 8, current_time & 0xFF
     };
-    NSLog(@"Current state: %@", [NSData dataWithBytes:metadata length:7]);
-    [self sendMessageToPebble:@{IPOD_CURRENT_STATE_KEY: [NSData dataWithBytes:metadata length:7]}];
+    //NSLog(@"Current state: %@", [NSData dataWithBytes:metadata length:7]);
+    [self sendMessageToPebble:@{MessageKeyCurrentState: [NSData dataWithBytes:metadata length:7]}];
 
 }
 
@@ -474,12 +483,10 @@ typedef enum {
             break;
         case NowPlayingStateSkipNext:
             [self.musicPlayer skipToNextItem];
-            [self pushNowPlayingItemToWatch:YES];
             break;
         case NowPlayingStateSkipPrevious:
             if([self.musicPlayer currentPlaybackTime] < 3) {
                 [self.musicPlayer skipToPreviousItem];
-                [self pushNowPlayingItemToWatch:YES];
             } else {
                 [self.musicPlayer skipToBeginning];
             }
@@ -521,7 +528,7 @@ typedef enum {
 
     if(!image) {
         NSLog(@"No image!");
-        [self sendMessageToPebble:@{IPOD_ALBUM_ART_LENGTH_KEY:[NSNumber numberWithUint8:1]}];
+        [self sendMessageToPebble:@{MessageKeyAlbumArtLength:[NSNumber numberWithUint8:1]}];
     }
     else {
         NSLog(@"Generating test image with size %f %f and scale %f", image.size.width, image.size.height, image.scale);
@@ -533,7 +540,7 @@ typedef enum {
         NSLog(@"Got length %lu", (unsigned long)bitmap.length);
         
         size_t length = [bitmap length];
-        NSDictionary *sizeDict = @{IPOD_ALBUM_ART_LENGTH_KEY: [NSNumber numberWithUint16:[bitmap length]]};
+        NSDictionary *sizeDict = @{MessageKeyAlbumArtLength: [NSNumber numberWithUint16:[bitmap length]]};
         NSLog(@"sizedict %@", sizeDict);
         [self sendMessageToPebble:sizeDict];
         
@@ -542,7 +549,7 @@ typedef enum {
             NSMutableData *outgoing = [[NSMutableData alloc] initWithCapacity:MAX_OUTGOING_SIZE];
             NSRange rangeOfBytes = NSMakeRange(i, MIN(MAX_OUTGOING_SIZE-1, length - i));
             [outgoing appendBytes:[[bitmap subdataWithRange:rangeOfBytes] bytes] length:rangeOfBytes.length];
-            NSDictionary *dict = @{IPOD_ALBUM_ART_KEY: outgoing, IPOD_ALBUM_ART_INDEX_KEY:[NSNumber numberWithUint16:j]};
+            NSDictionary *dict = @{MessageKeyAlbumArt: outgoing, MessageKeyAlbumArtIndex:[NSNumber numberWithUint16:j]};
             //NSLog(@"Sending image dict %@", dict);
             [self sendMessageToPebble:dict];
             j++;
@@ -560,11 +567,14 @@ typedef enum {
     
     self.messageQueue.watch = self.watch;
     
-    
-    [self.watch appMessagesPushUpdate:@{IPOD_ALBUM_ART_LENGTH_KEY:[NSNumber numberWithUint8:1]} onSent:^(PBWatch * _Nonnull watch, NSDictionary * _Nonnull update, NSError * _Nullable error) {
-
+    [self.watch appMessagesPushUpdate:@{MessageKeyAlbumArtLength:[NSNumber numberWithUint8:1]} onSent:^(PBWatch * _Nonnull watch, NSDictionary * _Nonnull update, NSError * _Nullable error) {
+        if(error){
+            NSLog(@"Error sending to watch %@", error);
+        }
+        else{
+            NSLog(@"Communications with watch opened.");
+        }
     }];
-     
     
     // Sign up for AppMessage
     __weak typeof(self) welf = self;
@@ -577,12 +587,23 @@ typedef enum {
             NSLog(@"self is destroyed!");
             return NO;
         }
-        if(update[IPOD_NOW_PLAYING_KEY]) {
-            NSLog(@"Now playing key sent");
-            [self pushNowPlayingItemToWatch:YES];
+        if(update[MessageKeyPlayTrack]) {
+            NSLog(@"Will play track from message %@", update);
+            [self playTrackFromMessage:update];
         }
-        else if(update[IPOD_CHANGE_STATE_KEY]) {
-            [self changeState:(NowPlayingState)[update[IPOD_CHANGE_STATE_KEY] integerValue]];
+        else if(update[MessageKeyRequestLibrary]) {
+            if(update[MessageKeyRequestParent]) {
+                [self sublistRequest:update];
+            } else {
+                [self libraryDataRequest:update];
+            }
+        }
+        else if(update[MessageKeyNowPlaying]) {
+            NSLog(@"Now playing key sent");
+            [self pushNowPlayingItemToWatch];
+        }
+        else if(update[MessageKeyChangeState]) {
+            [self changeState:(NowPlayingState)[update[MessageKeyChangeState] integerValue]];
         }
         return YES;
     //} withUUID:[[NSUUID alloc] initWithUUIDString:@"4e601687-8739-49e0-a280-1a633ee46eef"]];
@@ -596,6 +617,128 @@ typedef enum {
         self.watch = nil;
     }
 }
+
+- (void)playTrackFromMessage:(NSDictionary *)message {
+    MPMediaItemCollection *queue = [self getCollectionFromMessage:message][0];
+    MPMediaItem *track = [queue items][[message[MessageKeyPlayTrack] int16Value]];
+    [self.musicPlayer setQueueWithItemCollection:queue];
+    [self.musicPlayer setNowPlayingItem:track];
+    [self.musicPlayer play];
+    //[self pushNowPlayingItemToWatch:watch detailed:YES];
+}
+
+- (void)libraryDataRequest:(NSDictionary *)request {
+    NSUInteger request_type = [request[MessageKeyRequestLibrary] unsignedIntegerValue];
+    NSUInteger offset = [request[MessageKeyRequestOffset] integerValue];
+    MPMediaQuery *query = [[MPMediaQuery alloc] init];
+    [query setGroupingType:request_type];
+    [query addFilterPredicate:[MPMediaPropertyPredicate predicateWithValue:@(MPMediaTypeMusic) forProperty:MPMediaItemPropertyMediaType]];
+    NSArray* results = [query collections];
+    [self pushLibraryResults:results withOffset:offset type:request_type];
+}
+
+- (NSArray*)getCollectionFromMessage:(NSDictionary*)request {
+    // Find what we're subsetting by iteratively grabbing the sets.
+    MPMediaItemCollection *collection = nil;
+    MPMediaGrouping parent_type;
+    uint16_t parent_index;
+    NSString *persistent_id;
+    NSString *id_prop;
+    NSData *data = request[MessageKeyRequestParent];
+    uint8_t *bytes = (uint8_t*)[data bytes];
+    for(uint8_t i = 0; i < bytes[0]; ++i) {
+        parent_type = bytes[i*3+1];
+        parent_index = *(uint16_t*)&bytes[i*3+2];
+        NSLog(@"Parent type: %ld", (long)parent_type);
+        NSLog(@"Parent index: %d", parent_index);
+        NSLog(@"i: %d", i);
+        MPMediaQuery *query = [[MPMediaQuery alloc] init];
+        [query setGroupingType:parent_type];
+        [query addFilterPredicate:[MPMediaPropertyPredicate predicateWithValue:@(MPMediaTypeMusic) forProperty:MPMediaItemPropertyMediaType]];
+        if(collection) {
+            [query addFilterPredicate:[MPMediaPropertyPredicate predicateWithValue:persistent_id forProperty:id_prop]];
+        }
+        if(parent_index >= [[query collections] count]) {
+            NSLog(@"Out of bounds: %d", parent_index);
+            return nil;
+        }
+        collection = [query collections][parent_index];
+        id_prop = [MPMediaItem persistentIDPropertyForGroupingType:parent_type];
+        persistent_id = [[collection representativeItem] valueForProperty:id_prop];
+    }
+    
+    // Complete the lookup
+    NSUInteger request_type = [request[MessageKeyRequestLibrary] unsignedIntegerValue];
+    if(request_type == MPMediaGroupingTitle) {
+        return @[collection];
+    } else {
+        NSLog(@"Got persistent ID: %@", persistent_id);
+        MPMediaQuery *query = [[MPMediaQuery alloc] init];
+        [query setGroupingType:request_type];
+        [query addFilterPredicate:[MPMediaPropertyPredicate predicateWithValue:persistent_id forProperty:id_prop]];
+        [query addFilterPredicate:[MPMediaPropertyPredicate predicateWithValue:@(MPMediaTypeMusic) forProperty:MPMediaItemPropertyMediaType]];
+        return [query collections];
+    }
+}
+
+- (void)sublistRequest:(NSDictionary*)request {
+    NSArray *results = [self getCollectionFromMessage:request];
+    MPMediaGrouping request_type = [request[MessageKeyRequestLibrary] integerValue];
+    uint16_t offset = [request[MessageKeyRequestOffset] uint16Value];
+    if(request_type == MPMediaGroupingTitle) {
+        results = [results[0] items];
+    }
+    [self pushLibraryResults:results withOffset:offset type:request_type];
+}
+
+- (void)pushLibraryResults:(NSArray *)results withOffset:(NSInteger)offset type:(MPMediaGrouping)type {
+    NSArray* subset;
+    if(offset < [results count]) {
+        NSInteger count = MAX_RESPONSE_COUNT;
+        if([results count] <= offset + MAX_RESPONSE_COUNT) {
+            count = [results count] - offset;
+        }
+        subset = [results subarrayWithRange:NSMakeRange(offset, count)];
+    }
+    NSMutableData *result = [[NSMutableData alloc] init];
+    // Response format: header of one byte containing library data type, two bytes containing
+    // the total number of results, and two bytes containing our current offset. Little endian.
+    // This is followed by a sequence of entries, which consist of one length byte followed by UTF-8 data
+    // (pascal style)
+    uint8_t type_byte = (uint8_t)type;
+    uint16_t metabytes[] = {[results count], offset};
+    // Include the type of library
+    [result appendBytes:&type_byte length:1];
+    [result appendBytes:metabytes length:4];
+    for (MPMediaItemCollection* item in subset) {
+        NSString *value;
+        if([item isKindOfClass:[MPMediaPlaylist class]]) {
+            value = [item valueForProperty:MPMediaPlaylistPropertyName];
+        } else {
+            value = [[item representativeItem] valueForProperty:[MPMediaItem titlePropertyForGroupingType:type]];
+        }
+        if([value length] > MAX_LABEL_LENGTH) {
+            value = [value substringToIndex:MAX_LABEL_LENGTH];
+        }
+        NSData *value_data = [value dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
+        uint8_t length = [value_data length];
+        if([result length] + length > MAX_OUTGOING_SIZE) break;
+        [result appendBytes:&length length:1];
+        [result appendData:value_data];
+        NSLog(@"Value: %@", value);
+    }
+    [self.messageQueue enqueue:@{MessageKeyLibraryResponse: result}];
+    /*
+    // Send it!
+    [watch appMessagesPushUpdate:@{IPOD_LIBRARY_RESPONSE_KEY: result} onSent:^(PBWatch *watch, NSDictionary *update, NSError *error) {
+        if(error) {
+            NSLog(@"Error sending library response: %@", error);
+        }
+    }];
+     */
+    NSLog(@"Sent message: %@", result);
+}
+
 
 - (void)viewDidLayoutSubviews {
     self.songTitleLabel.font = [LMNowPlayingViewController findAdaptiveFontWithName:@"HelveticaNeue-Light" forUILabelSize:self.songTitleLabel.frame.size withMinimumSize:20];
@@ -627,7 +770,7 @@ typedef enum {
     self.shuffleButton.delegate = self;
     [self.repeatButton setupWithTitle:@"Repeat" withImage:[UIImage imageNamed:@"repeat_black.png"]];
     self.repeatButton.delegate = self;
-    [self.dynamicPlaylistButton setupWithTitle:@"Playlist" withImage:[UIImage imageNamed:@"dynamic_playlist.png"]];
+    [self.dynamicPlaylistButton setupWithTitle:@"Settings" withImage:[UIImage imageNamed:@"settings.png"]];
     
     self.shadingView = [[UIView alloc]init];
     self.shadingView.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.25];
@@ -666,23 +809,9 @@ typedef enum {
                                                                         multiplier:1.0
                                                                           constant:0]];
     
-    self.musicPlayer = [MPMusicPlayerController systemMusicPlayer];
-    
-    NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
-    
-    [notificationCenter
-     addObserver: self
-     selector:    @selector(nowPlayingItemChanged:)
-     name:        MPMusicPlayerControllerNowPlayingItemDidChangeNotification
-     object:      self.musicPlayer];
-    
-    [notificationCenter
-     addObserver: self
-     selector:    @selector(nowPlayingStateChanged:)
-     name:        MPMusicPlayerControllerPlaybackStateDidChangeNotification
-     object:      self.musicPlayer];
-    
-    [self.musicPlayer beginGeneratingPlaybackNotifications];
+    if(!self.musicPlayer){
+        self.musicPlayer = [MPMusicPlayerController systemMusicPlayer];
+    }
     
     if(self.musicPlayer.playbackState == MPMusicPlaybackStatePlaying){
         [self fireRefreshTimer];
@@ -721,8 +850,6 @@ typedef enum {
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    NSLog(@"set");
-    
     self.central = [PBPebbleCentral defaultCentral];
     self.central.delegate = self;
     
@@ -733,6 +860,28 @@ typedef enum {
     [self.central run];
     
     self.messageQueue = [[KBPebbleMessageQueue alloc]init];
+    
+    self.musicPlayer = [MPMusicPlayerController systemMusicPlayer];
+    
+    [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
+    
+    NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
+    
+    [notificationCenter
+     addObserver: self
+     selector:    @selector(nowPlayingItemChanged:)
+     name:        MPMusicPlayerControllerNowPlayingItemDidChangeNotification
+     object:      self.musicPlayer];
+    
+    [notificationCenter
+     addObserver: self
+     selector:    @selector(nowPlayingStateChanged:)
+     name:        MPMusicPlayerControllerPlaybackStateDidChangeNotification
+     object:      self.musicPlayer];
+    
+    [self.musicPlayer beginGeneratingPlaybackNotifications];
+    
+    NSLog(@"View did load");
     
     /*
     // Set the delegate to receive PebbleKit events
@@ -754,6 +903,9 @@ typedef enum {
 }
 
 - (void)viewDidUnload:(BOOL)animated {
+    NSLog(@"View did unload");
+    
+    /*
     [[NSNotificationCenter defaultCenter]
      removeObserver: self
      name:           MPMusicPlayerControllerNowPlayingItemDidChangeNotification
@@ -765,6 +917,7 @@ typedef enum {
      object:         self.musicPlayer];
     
     [self.musicPlayer endGeneratingPlaybackNotifications];
+     */
 }
 
 - (void)didReceiveMemoryWarning {
