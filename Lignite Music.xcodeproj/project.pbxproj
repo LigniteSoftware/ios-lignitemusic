@@ -23,7 +23,7 @@
 		6A66C76F1CDA1BB1009019CF /* back_arrow_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A66C76E1CDA1BB1009019CF /* back_arrow_white.png */; };
 		6A73CF5C1D4127C70097A400 /* LMPebbleImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A73CF5B1D4127C70097A400 /* LMPebbleImage.m */; };
 		6A73CF5E1D4519130097A400 /* robot_ios.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A73CF5D1D4519130097A400 /* robot_ios.png */; };
-		6A73CF611D451BFA0097A400 /* KBPebbleMessageQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A73CF601D451BFA0097A400 /* KBPebbleMessageQueue.m */; };
+		6A73CF611D451BFA0097A400 /* LMPebbleMessageQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A73CF601D451BFA0097A400 /* LMPebbleMessageQueue.m */; };
 		6A9496FA1CF1F2F900B0AECF /* LMProgressCircleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A9496F91CF1F2F900B0AECF /* LMProgressCircleView.m */; };
 		6AA4735F1BC70FBA0066D47E /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AA4735E1BC70FBA0066D47E /* ExternalAccessory.framework */; };
 		6AA473611BC710320066D47E /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AA473601BC710320066D47E /* CoreBluetooth.framework */; };
@@ -76,8 +76,8 @@
 		6A73CF5A1D4127C70097A400 /* LMPebbleImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMPebbleImage.h; sourceTree = "<group>"; };
 		6A73CF5B1D4127C70097A400 /* LMPebbleImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMPebbleImage.m; sourceTree = "<group>"; };
 		6A73CF5D1D4519130097A400 /* robot_ios.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = robot_ios.png; sourceTree = "<group>"; };
-		6A73CF5F1D451BFA0097A400 /* KBPebbleMessageQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KBPebbleMessageQueue.h; sourceTree = "<group>"; };
-		6A73CF601D451BFA0097A400 /* KBPebbleMessageQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KBPebbleMessageQueue.m; sourceTree = "<group>"; };
+		6A73CF5F1D451BFA0097A400 /* LMPebbleMessageQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMPebbleMessageQueue.h; sourceTree = "<group>"; };
+		6A73CF601D451BFA0097A400 /* LMPebbleMessageQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMPebbleMessageQueue.m; sourceTree = "<group>"; };
 		6A9496F81CF1F2F900B0AECF /* LMProgressCircleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMProgressCircleView.h; sourceTree = "<group>"; };
 		6A9496F91CF1F2F900B0AECF /* LMProgressCircleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMProgressCircleView.m; sourceTree = "<group>"; };
 		6AA4735E1BC70FBA0066D47E /* ExternalAccessory.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExternalAccessory.framework; path = System/Library/Frameworks/ExternalAccessory.framework; sourceTree = SDKROOT; };
@@ -238,8 +238,8 @@
 				6A2C3CAC1BAED34500EE7677 /* LMMainViewController.m */,
 				6A73CF5A1D4127C70097A400 /* LMPebbleImage.h */,
 				6A73CF5B1D4127C70097A400 /* LMPebbleImage.m */,
-				6A73CF5F1D451BFA0097A400 /* KBPebbleMessageQueue.h */,
-				6A73CF601D451BFA0097A400 /* KBPebbleMessageQueue.m */,
+				6A73CF5F1D451BFA0097A400 /* LMPebbleMessageQueue.h */,
+				6A73CF601D451BFA0097A400 /* LMPebbleMessageQueue.m */,
 				6AEB9D041BACF60E00AD19FA /* Main.storyboard */,
 				6AEB9D071BACF60E00AD19FA /* Assets.xcassets */,
 				6AEB9D091BACF60E00AD19FA /* LaunchScreen.storyboard */,
@@ -456,7 +456,7 @@
 				6A514E121CE904F100AFB351 /* LMNowPlayingViewController.m in Sources */,
 				6A66C76B1CDA10C2009019CF /* LMMiniPlayerView.m in Sources */,
 				6AEB9D001BACF60E00AD19FA /* AppDelegate.m in Sources */,
-				6A73CF611D451BFA0097A400 /* KBPebbleMessageQueue.m in Sources */,
+				6A73CF611D451BFA0097A400 /* LMPebbleMessageQueue.m in Sources */,
 				6A2C3CAD1BAED34500EE7677 /* LMMainViewController.m in Sources */,
 				6ABF6A851CF3768A003E4EFA /* UIColor+isLight.m in Sources */,
 				6A313C121BB44959002BBC33 /* NPAlbumArtView.m in Sources */,

@@ -1,13 +1,13 @@
 #import <PebbleKit/PebbleKit.h>
-#import "KBPebbleMessageQueue.h"
+#import "LMPebbleMessageQueue.h"
 
-@interface KBPebbleMessageQueue () {
+@interface LMPebbleMessageQueue () {
     NSInteger failureCount;
 }
 - (void)sendRequest;
 @end
 
-@implementation KBPebbleMessageQueue
+@implementation LMPebbleMessageQueue
 
 - (id)init
 {

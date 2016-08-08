@@ -10,7 +10,7 @@
 
 @class PBWatch;
 
-@interface KBPebbleMessageQueue : NSObject {
+@interface LMPebbleMessageQueue : NSObject {
     NSMutableArray *queue;
     BOOL has_active_request;
 }

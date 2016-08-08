@@ -13,7 +13,7 @@
 #import "UIImage+AverageColour.h"
 #import "UIColor+isLight.h"
 #import "LMPebbleImage.h"
-#import "KBPebbleMessageQueue.h"
+#import "LMPebbleMessageQueue.h"
 
 @interface LMNowPlayingViewController () <LMButtonDelegate, UIGestureRecognizerDelegate, PBPebbleCentralDelegate>
 
@@ -86,7 +86,7 @@ typedef enum {
 
 @property UIImage *lastAlbumArtImage;
 
-@property KBPebbleMessageQueue *messageQueue;
+@property LMPebbleMessageQueue *messageQueue;
 
 @end
 
@@ -432,12 +432,12 @@ typedef enum {
     
     [self pushCurrentStateToWatch];
     
+    return;
     [NSTimer scheduledTimerWithTimeInterval:1.0
                                      target:self
                                    selector:@selector(sendAlbumArtImage)
                                    userInfo:nil
                                     repeats:NO];
-    
 }
 
 - (void)sendCurrentStateToWatch {
@@ -720,12 +720,14 @@ typedef enum {
     // Include the type of library
     [result appendBytes:&type_byte length:1];
     [result appendBytes:metabytes length:4];
+    int i = 0;
     for (MPMediaItemCollection* item in subset) {
         NSString *value;
         if([item isKindOfClass:[MPMediaPlaylist class]]) {
             value = [item valueForProperty:MPMediaPlaylistPropertyName];
         } else {
             value = [[item representativeItem] valueForProperty:[MPMediaItem titlePropertyForGroupingType:type]];
+            //NSLog(@"Artist %@", [[item representativeItem] valueForProperty:MPMediaItemPropertyArtist]);
         }
         if([value length] > MAX_LABEL_LENGTH) {
             value = [value substringToIndex:MAX_LABEL_LENGTH];
@@ -738,18 +740,16 @@ typedef enum {
         }
         [result appendBytes:&length length:1];
         [result appendData:value_data];
-        NSLog(@"Value: %@", value);
+        NSLog(@"Value for %d: %@", i, value);
+        i++;
     }
     [self.messageQueue enqueue:@{MessageKeyLibraryResponse: result}];
-    /*
-    // Send it!
-    [watch appMessagesPushUpdate:@{IPOD_LIBRARY_RESPONSE_KEY: result} onSent:^(PBWatch *watch, NSDictionary *update, NSError *error) {
-        if(error) {
-            NSLog(@"Error sending library response: %@", error);
-        }
-    }];
-     */
-    NSLog(@"Sent message: %@ with length %d", result, [result length]);
+
+    if(type == MPMediaGroupingAlbum){
+        [self pushLibraryResults:results withOffset:offset type:MPMediaGroupingAlbumArtist];
+    }
+    
+    NSLog(@"Sent message: %@ with length %lu", result, (unsigned long)[result length]);
 }
 
 
@@ -851,7 +851,8 @@ typedef enum {
     
     UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(move:)];
     [panRecognizer setMinimumNumberOfTouches:1];
-    [panRecognizer setMaximumNumberOfTouches:1];    panRecognizer.delegate = self;
+    [panRecognizer setMaximumNumberOfTouches:1];
+    panRecognizer.delegate = self;
     [self.contentContainerView addGestureRecognizer:panRecognizer];
     
     self.loadedSubviews = YES;
@@ -872,7 +873,7 @@ typedef enum {
     // Begin connection
     [self.central run];
     
-    self.messageQueue = [[KBPebbleMessageQueue alloc]init];
+    self.messageQueue = [[LMPebbleMessageQueue alloc]init];
     
     self.musicPlayer = [MPMusicPlayerController systemMusicPlayer];
     
