@@ -88,6 +88,8 @@ typedef enum {
 
 @property LMPebbleMessageQueue *messageQueue;
 
+@property BOOL overrideImageLogic;
+
 @end
 
 @implementation LMNowPlayingViewController
@@ -356,7 +358,6 @@ typedef enum {
 }
 
 - (void)fireRefreshTimer {
-    NSLog(@"Fire");
     self.refreshTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(nowPlayingTimeChanged:) userInfo:nil repeats:YES];
 }
 
@@ -432,8 +433,7 @@ typedef enum {
     
     [self pushCurrentStateToWatch];
     
-    return;
-    [NSTimer scheduledTimerWithTimeInterval:1.0
+    [NSTimer scheduledTimerWithTimeInterval:0.5
                                      target:self
                                    selector:@selector(sendAlbumArtImage)
                                    userInfo:nil
@@ -509,47 +509,35 @@ typedef enum {
     UIImage *albumArtImage = [[self.musicPlayer.nowPlayingItem artwork]imageWithSize:imageSize];
     UIImage *image = [LMPebbleImage ditherImageForPebble:albumArtImage withColourPalette:YES withSize:imageSize];
     
-    if([albumArtImage isEqual:self.lastAlbumArtImage]){
+    if([albumArtImage isEqual:self.lastAlbumArtImage] && !self.overrideImageLogic){
         NSLog(@"The album art is literally samezies...");
-        //return;
+        return;
     }
     self.lastAlbumArtImage = albumArtImage;
-    
-    /*
-    UIImageView *testView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, imageSize.width, imageSize.height)];
-    testView.image = image;
-    testView.userInteractionEnabled = YES;
-    [testView setImage:image];
-    UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(sendAlbumArtImage)];
-    [testView addGestureRecognizer:recognizer];
-    [self.view addSubview:testView];
-     */
+    self.overrideImageLogic = NO;
 
     if(!image) {
         NSLog(@"No image!");
         [self sendMessageToPebble:@{MessageKeyAlbumArtLength:[NSNumber numberWithUint8:1]}];
     }
     else {
-        NSLog(@"Generating test image with size %f %f and scale %f", image.size.width, image.size.height, image.scale);
-        
         YYImageEncoder *pngEncoder = [[YYImageEncoder alloc] initWithType:YYImageTypePNG];
         [pngEncoder addImage:image duration:0];
         NSData *bitmap = [pngEncoder encode];
-    
-        NSLog(@"Got length %lu", (unsigned long)bitmap.length);
         
         size_t length = [bitmap length];
         NSDictionary *sizeDict = @{MessageKeyAlbumArtLength: [NSNumber numberWithUint16:[bitmap length]]};
-        NSLog(@"sizedict %@", sizeDict);
+        NSLog(@"Album art size message: %@", sizeDict);
         [self sendMessageToPebble:sizeDict];
         
         uint8_t j = 0;
         for(size_t i = 0; i < length; i += MAX_OUTGOING_SIZE-1) {
             NSMutableData *outgoing = [[NSMutableData alloc] initWithCapacity:MAX_OUTGOING_SIZE];
+            
             NSRange rangeOfBytes = NSMakeRange(i, MIN(MAX_OUTGOING_SIZE-1, length - i));
             [outgoing appendBytes:[[bitmap subdataWithRange:rangeOfBytes] bytes] length:rangeOfBytes.length];
+            
             NSDictionary *dict = @{MessageKeyAlbumArt: outgoing, MessageKeyAlbumArtIndex:[NSNumber numberWithUint16:j]};
-            //NSLog(@"Sending image dict %@", dict);
             [self sendMessageToPebble:dict];
             j++;
         }
@@ -599,6 +587,8 @@ typedef enum {
         }
         else if(update[MessageKeyNowPlaying]) {
             NSLog(@"Now playing key sent");
+            self.overrideImageLogic = [update[MessageKeyNowPlaying] isEqual:@(100)];
+            NSLog(@"Override: %d to %@", self.overrideImageLogic, update[MessageKeyNowPlaying]);
             [self pushNowPlayingItemToWatch];
         }
         else if(update[MessageKeyChangeState]) {
@@ -725,7 +715,11 @@ typedef enum {
         NSString *value;
         if([item isKindOfClass:[MPMediaPlaylist class]]) {
             value = [item valueForProperty:MPMediaPlaylistPropertyName];
-        } else {
+        }
+        else if(type == MPMediaGroupingAlbumArtist){
+            value = [[item representativeItem] valueForProperty:MPMediaItemPropertyArtist];
+        }
+        else {
             value = [[item representativeItem] valueForProperty:[MPMediaItem titlePropertyForGroupingType:type]];
             //NSLog(@"Artist %@", [[item representativeItem] valueForProperty:MPMediaItemPropertyArtist]);
         }
