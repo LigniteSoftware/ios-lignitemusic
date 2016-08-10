@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <PebbleKit/PebbleKit.h>
 
 @interface LMProgressCircleView : UIView
 
@@ -16,5 +17,7 @@
 @property float currentValue;
 
 - (void)reload;
+
+@property PBWatch *watch;
 
 @end

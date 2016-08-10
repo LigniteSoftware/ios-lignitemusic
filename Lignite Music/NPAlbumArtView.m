@@ -55,7 +55,7 @@
                                                      relatedBy:NSLayoutRelationEqual
                                                         toItem:self
                                                      attribute:NSLayoutAttributeWidth
-                                                    multiplier:0.85
+                                                    multiplier:0.95
                                                       constant:0]];
     
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.progressCircle
@@ -63,7 +63,7 @@
                                                      relatedBy:NSLayoutRelationEqual
                                                         toItem:self
                                                      attribute:NSLayoutAttributeWidth
-                                                    multiplier:0.85
+                                                    multiplier:0.95
                                                       constant:0]];
     
     self.albumArt = [[UIImageView alloc]init];
@@ -92,7 +92,7 @@
                                                      relatedBy:NSLayoutRelationEqual
                                                         toItem:self
                                                      attribute:NSLayoutAttributeWidth
-                                                    multiplier:0.70
+                                                    multiplier:0.90
                                                       constant:0]];
     
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.albumArt
@@ -100,7 +100,7 @@
                                                      relatedBy:NSLayoutRelationEqual
                                                         toItem:self
                                                      attribute:NSLayoutAttributeWidth
-                                                    multiplier:0.70
+                                                    multiplier:0.90
                                                       constant:0]];
 }
 

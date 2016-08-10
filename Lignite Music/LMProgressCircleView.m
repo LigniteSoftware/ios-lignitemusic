@@ -46,7 +46,7 @@
     float percent = self.currentValue/self.maxValue;
     endAngle = startAngle + (M_PI * 2)*percent;
 
-    CGContextSetRGBFillColor(context, 1.0, 1.0, 1.0, 0.25);
+    CGContextSetRGBFillColor(context, 1.0, 1.0, 1.0, 0.35);
     CGContextFillEllipseInRect(context, fadedRect);
     
     /*
