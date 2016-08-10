@@ -13,6 +13,7 @@
 @interface LMPebbleSettingsView ()
 
 @property NSDictionary *settingsMapping;
+@property NSDictionary *defaultsMapping;
 
 @end
 
@@ -30,6 +31,7 @@
     [super viewDidLoad];
     
     self.settingsMapping = [[NSDictionary alloc]initWithObjectsAndKeys:@(100), @"pebble_battery_saver", @(101), @"pebble_artist_label", @(102), @"pebble_style_controls", nil];
+    self.defaultsMapping = [[NSDictionary alloc]initWithObjectsAndKeys:@(0), @"pebble_battery_saver", @(1), @"pebble_artist_label", @(0), @"pebble_style_controls", nil];
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(closeSettings)];
 }
@@ -88,7 +90,12 @@
     [cell addSubview:toggle];
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    toggle.on = [defaults boolForKey:toggle.switchID];
+    if([defaults objectForKey:toggle.switchID]){
+        toggle.on = [defaults boolForKey:toggle.switchID];
+    }
+    else{
+        toggle.on = [[self.defaultsMapping objectForKey:toggle.switchID] isEqualToValue:@(1)];
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {

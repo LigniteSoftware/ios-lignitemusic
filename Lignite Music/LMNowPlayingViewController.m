@@ -174,7 +174,23 @@ typedef enum {
     NSLog(@"Now playing item has changed");
     
     [self pushNowPlayingItemToWatch];
-
+    
+    if(!self.musicPlayer.nowPlayingItem){
+        [self.songTitleLabel setText:@"No Music"];
+        [self.songArtistLabel setText:@"Start music on your watch or phone"];
+        [self.songAlbumLabel setText:@""];
+        [self.songDurationLabel setText:@"--:--"];
+        [self.songNumberLabel setText:@"No music"];
+        
+        UIImage *albumImage;
+        albumImage = [UIImage imageNamed:@"lignite_background_portrait.png"];
+        self.backgroundImageView.contentMode = UIViewContentModeScaleAspectFit;
+        self.backgroundImageView.image = albumImage;
+        
+        [self.albumArtView updateContentWithMusicPlayer:self.musicPlayer];
+        return;
+    }
+    
     [self.songTitleLabel setText:self.musicPlayer.nowPlayingItem.title];
     [self.songArtistLabel setText:self.musicPlayer.nowPlayingItem.artist];
     [self.songAlbumLabel setText:self.musicPlayer.nowPlayingItem.albumTitle];
@@ -338,11 +354,38 @@ typedef enum {
     }
     else if(button == self.dynamicPlaylistButton){
         //LMPebbleSettingsView *settingsView = [[LMPebbleSettingsView alloc]initWithStyle:UITableViewStyleGrouped];
-        UINavigationController *settingsController = [self.storyboard instantiateViewControllerWithIdentifier:@"AllahuAkbar"];
-        LMPebbleSettingsView *rootSettingsViewController = [settingsController.viewControllers firstObject];
-        NSLog(@"count %ld", [settingsController.viewControllers count]);
-        rootSettingsViewController.messageQueue = self.messageQueue;
-        [self showDetailViewController:settingsController sender:self];
+        if(self.watch){
+            UINavigationController *settingsController = [self.storyboard instantiateViewControllerWithIdentifier:@"AllahuAkbar"];
+            LMPebbleSettingsView *rootSettingsViewController = [settingsController.viewControllers firstObject];
+            NSLog(@"count %ld", [settingsController.viewControllers count]);
+            rootSettingsViewController.messageQueue = self.messageQueue;
+            [self showDetailViewController:settingsController sender:self];
+        }
+        else{
+            UIAlertController * alert = [UIAlertController
+                                         alertControllerWithTitle:@"No Pebble Connected"
+                                         message:@"Settings are currently only for Pebble. Please connect a Pebble and try again."
+                                         preferredStyle:UIAlertControllerStyleAlert];
+            
+            UIAlertAction* yesButton = [UIAlertAction
+                                        actionWithTitle:@"Retry"
+                                        style:UIAlertActionStyleDefault
+                                        handler:^(UIAlertAction * action) {
+                                            [self clickedButton:self.dynamicPlaylistButton];
+                                        }];
+            
+            UIAlertAction* noButton = [UIAlertAction
+                                       actionWithTitle:@"Close"
+                                       style:UIAlertActionStyleCancel
+                                       handler:^(UIAlertAction * action) {
+                                           
+                                       }];
+            
+            [alert addAction:yesButton];
+            [alert addAction:noButton];
+            
+            [self presentViewController:alert animated:YES completion:nil];
+        }
     }
     else{
         self.repeatMode++;
@@ -866,7 +909,7 @@ typedef enum {
     [panRecognizer setMinimumNumberOfTouches:1];
     [panRecognizer setMaximumNumberOfTouches:1];
     panRecognizer.delegate = self;
-    [self.contentContainerView addGestureRecognizer:panRecognizer];
+    //[self.contentContainerView addGestureRecognizer:panRecognizer];
     
     self.loadedSubviews = YES;
     
@@ -907,6 +950,8 @@ typedef enum {
      object:      self.musicPlayer];
     
     [self.musicPlayer beginGeneratingPlaybackNotifications];
+    
+    [self nowPlayingItemChanged:self];
     
     NSLog(@"View did load");
     
