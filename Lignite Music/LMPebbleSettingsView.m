@@ -7,8 +7,12 @@
 //
 
 #import "LMPebbleSettingsView.h"
+#import "LMSettingsSwitch.h"
+#import "LMSettingsLabel.h"
 
 @interface LMPebbleSettingsView ()
+
+@property NSDictionary *settingsMapping;
 
 @end
 
@@ -24,6 +28,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.settingsMapping = [[NSDictionary alloc]initWithObjectsAndKeys:@(100), @"pebble_battery_saver", @(101), @"pebble_artist_label", nil];
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(closeSettings)];
 }
@@ -42,28 +48,41 @@
 }
 
 - (void)changeSwitch:(id)theSwitch {
-    UISwitch *changedSwitch = (UISwitch*)theSwitch;
-    NSLog(@"value %d", changedSwitch.on);
+    LMSettingsSwitch *changedSwitch = (LMSettingsSwitch*)theSwitch;
+    NSLog(@"value %@", changedSwitch.switchID);
+    
+    if(self.messageQueue){
+        NSNumber *key = [self.settingsMapping objectForKey:changedSwitch.switchID];
+        [self.messageQueue enqueue:@{key:@(changedSwitch.on)}];
+        
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        [defaults setBool:changedSwitch.on forKey:changedSwitch.switchID];
+    }
 }
 
-- (void)addLabelToCell:(UITableViewCell*)cell withText:(NSString*)text {
+- (void)addLabelToCell:(UITableViewCell*)cell withID:(NSString*)labelID {
     CGRect screenRect = [[UIScreen mainScreen] bounds];
     
     CGRect label_rect = CGRectMake(screenRect.origin.x+14, 7, screenRect.size.width-35.0f, 30.0f);
-    UILabel *label = [[UILabel alloc]initWithFrame:label_rect];
-    label.text = text;
+    LMSettingsLabel *label = [[LMSettingsLabel alloc]initWithFrame:label_rect];
+    label.text = NSLocalizedString(labelID, nil);
+    label.labelID = labelID;
     [cell addSubview:label];
 }
 
-- (void)addToggleToCell:(UITableViewCell*)cell {
+- (void)addToggleToCell:(UITableViewCell*)cell withID:(NSString*)switchID{
     CGRect screenRect = [[UIScreen mainScreen] bounds];
     
     CGRect toggle_rect = CGRectMake(screenRect.size.width-60, 5.0f, 30.0f, 15.0f);
     
-    UISwitch *toggle = [[UISwitch alloc]initWithFrame:toggle_rect];
+    LMSettingsSwitch *toggle = [[LMSettingsSwitch alloc]initWithFrame:toggle_rect];
     [toggle addTarget:self action:@selector(changeSwitch:) forControlEvents:UIControlEventValueChanged];
     toggle.on = true;
+    toggle.switchID = switchID;
     [cell addSubview:toggle];
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    toggle.on = [defaults boolForKey:toggle.switchID];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -74,16 +93,16 @@
         case 0:
             switch(indexPath.row){
                 case 0:
-                    [self addLabelToCell:cell withText:@"Battery saver"];
-                    [self addToggleToCell:cell];
+                    [self addLabelToCell:cell withID:@"Battery saver"];
+                    [self addToggleToCell:cell withID:@"pebble_battery_saver"];
                     break;
             }
             break;
         case 1:
             switch(indexPath.row){
                 case 0:
-                    [self addLabelToCell:cell withText:@"Artist label"];
-                    [self addToggleToCell:cell];
+                    [self addLabelToCell:cell withID:@"Artist label"];
+                    [self addToggleToCell:cell withID:@"pebble_artist_label"];
                     break;
             }
             break;

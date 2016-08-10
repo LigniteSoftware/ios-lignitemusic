@@ -338,8 +338,11 @@ typedef enum {
     }
     else if(button == self.dynamicPlaylistButton){
         //LMPebbleSettingsView *settingsView = [[LMPebbleSettingsView alloc]initWithStyle:UITableViewStyleGrouped];
-        LMPebbleSettingsView *settingsView = [self.storyboard instantiateViewControllerWithIdentifier:@"AllahuAkbar"];
-        [self showDetailViewController:settingsView sender:self];
+        UINavigationController *settingsController = [self.storyboard instantiateViewControllerWithIdentifier:@"AllahuAkbar"];
+        LMPebbleSettingsView *rootSettingsViewController = [settingsController.viewControllers firstObject];
+        NSLog(@"count %ld", [settingsController.viewControllers count]);
+        rootSettingsViewController.messageQueue = self.messageQueue;
+        [self showDetailViewController:settingsController sender:self];
     }
     else{
         self.repeatMode++;

@@ -26,6 +26,8 @@
 		6A73CF611D451BFA0097A400 /* LMPebbleMessageQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A73CF601D451BFA0097A400 /* LMPebbleMessageQueue.m */; };
 		6A9496FA1CF1F2F900B0AECF /* LMProgressCircleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A9496F91CF1F2F900B0AECF /* LMProgressCircleView.m */; };
 		6AA4459C1D5AB264004C6739 /* LMPebbleSettingsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AA4459B1D5AB264004C6739 /* LMPebbleSettingsView.m */; };
+		6AA445A01D5AD6AB004C6739 /* LMSettingsSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AA4459F1D5AD6AB004C6739 /* LMSettingsSwitch.m */; };
+		6AA445A31D5AD7B0004C6739 /* LMSettingsLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AA445A21D5AD7B0004C6739 /* LMSettingsLabel.m */; };
 		6AA4735F1BC70FBA0066D47E /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AA4735E1BC70FBA0066D47E /* ExternalAccessory.framework */; };
 		6AA473611BC710320066D47E /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AA473601BC710320066D47E /* CoreBluetooth.framework */; };
 		6AA473631BC7103B0066D47E /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AA473621BC7103B0066D47E /* CoreMotion.framework */; };
@@ -83,6 +85,10 @@
 		6A9496F91CF1F2F900B0AECF /* LMProgressCircleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMProgressCircleView.m; sourceTree = "<group>"; };
 		6AA4459A1D5AB264004C6739 /* LMPebbleSettingsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMPebbleSettingsView.h; sourceTree = "<group>"; };
 		6AA4459B1D5AB264004C6739 /* LMPebbleSettingsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMPebbleSettingsView.m; sourceTree = "<group>"; };
+		6AA4459E1D5AD6AB004C6739 /* LMSettingsSwitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMSettingsSwitch.h; sourceTree = "<group>"; };
+		6AA4459F1D5AD6AB004C6739 /* LMSettingsSwitch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMSettingsSwitch.m; sourceTree = "<group>"; };
+		6AA445A11D5AD7B0004C6739 /* LMSettingsLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMSettingsLabel.h; sourceTree = "<group>"; };
+		6AA445A21D5AD7B0004C6739 /* LMSettingsLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMSettingsLabel.m; sourceTree = "<group>"; };
 		6AA4735E1BC70FBA0066D47E /* ExternalAccessory.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExternalAccessory.framework; path = System/Library/Frameworks/ExternalAccessory.framework; sourceTree = SDKROOT; };
 		6AA473601BC710320066D47E /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
 		6AA473621BC7103B0066D47E /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
@@ -189,6 +195,17 @@
 			name = Other;
 			sourceTree = "<group>";
 		};
+		6AA4459D1D5AD676004C6739 /* SettingsControls */ = {
+			isa = PBXGroup;
+			children = (
+				6AA4459E1D5AD6AB004C6739 /* LMSettingsSwitch.h */,
+				6AA4459F1D5AD6AB004C6739 /* LMSettingsSwitch.m */,
+				6AA445A11D5AD7B0004C6739 /* LMSettingsLabel.h */,
+				6AA445A21D5AD7B0004C6739 /* LMSettingsLabel.m */,
+			);
+			name = SettingsControls;
+			sourceTree = "<group>";
+		};
 		6ABF6A861CF37A19003E4EFA /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
@@ -223,6 +240,7 @@
 		6AEB9CFA1BACF60E00AD19FA /* Lignite Music */ = {
 			isa = PBXGroup;
 			children = (
+				6AA4459D1D5AD676004C6739 /* SettingsControls */,
 				6ABF6A861CF37A19003E4EFA /* Utilities */,
 				6A66C7681CDA1086009019CF /* MiniPlayerView */,
 				6AFD2EDA1BC41EAC0083FE9E /* AlbumView */,
@@ -457,10 +475,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6AA445A31D5AD7B0004C6739 /* LMSettingsLabel.m in Sources */,
 				6AA4459C1D5AB264004C6739 /* LMPebbleSettingsView.m in Sources */,
 				6AFD2EDD1BC41ECD0083FE9E /* LMAlbumViewItem.m in Sources */,
 				6A514E121CE904F100AFB351 /* LMNowPlayingViewController.m in Sources */,
 				6A66C76B1CDA10C2009019CF /* LMMiniPlayerView.m in Sources */,
+				6AA445A01D5AD6AB004C6739 /* LMSettingsSwitch.m in Sources */,
 				6AEB9D001BACF60E00AD19FA /* AppDelegate.m in Sources */,
 				6A73CF611D451BFA0097A400 /* LMPebbleMessageQueue.m in Sources */,
 				6A2C3CAD1BAED34500EE7677 /* LMMainViewController.m in Sources */,
