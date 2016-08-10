@@ -9,6 +9,7 @@
 #import <AVFoundation/AVAudioSession.h>
 #import <PebbleKit/PebbleKit.h>
 #import <YYImage/YYImage.h>
+#import "LMPebbleSettingsView.h"
 #import "LMNowPlayingViewController.h"
 #import "UIImage+AverageColour.h"
 #import "UIColor+isLight.h"
@@ -87,6 +88,8 @@ typedef enum {
 @property UIImage *lastAlbumArtImage;
 
 @property LMPebbleMessageQueue *messageQueue;
+
+@property MPMediaItemCollection *currentlyPlayingQueue;
 
 @property BOOL overrideImageLogic;
 
@@ -175,7 +178,13 @@ typedef enum {
     [self.songTitleLabel setText:self.musicPlayer.nowPlayingItem.title];
     [self.songArtistLabel setText:self.musicPlayer.nowPlayingItem.artist];
     [self.songAlbumLabel setText:self.musicPlayer.nowPlayingItem.albumTitle];
-    [self.songNumberLabel setText:[NSString stringWithFormat:@"Song %lu of %lu", self.musicPlayer.nowPlayingItem.albumTrackNumber, self.musicPlayer.nowPlayingItem.albumTrackCount]];
+    
+    if(self.currentlyPlayingQueue){
+        [self.songNumberLabel setText:[NSString stringWithFormat:@"Song %lu of %lu", self.musicPlayer.indexOfNowPlayingItem+1, self.currentlyPlayingQueue.items.count]];
+    }
+    else{
+        [self.songNumberLabel setText:[NSString stringWithFormat:@"Song %lu", self.musicPlayer.indexOfNowPlayingItem+1]];
+    }
     
     self.songDurationSlider.maximumValue = self.musicPlayer.nowPlayingItem.playbackDuration;
     //self.songDurationSlider.value = self.musicPlayer.currentPlaybackTime;
@@ -326,6 +335,11 @@ typedef enum {
             self.shuffleMode = 0;
         }
         [self.musicPlayer setShuffleMode:self.shuffleMode];
+    }
+    else if(button == self.dynamicPlaylistButton){
+        //LMPebbleSettingsView *settingsView = [[LMPebbleSettingsView alloc]initWithStyle:UITableViewStyleGrouped];
+        LMPebbleSettingsView *settingsView = [self.storyboard instantiateViewControllerWithIdentifier:@"AllahuAkbar"];
+        [self showDetailViewController:settingsView sender:self];
     }
     else{
         self.repeatMode++;
@@ -516,7 +530,7 @@ typedef enum {
     self.lastAlbumArtImage = albumArtImage;
     self.overrideImageLogic = NO;
 
-    if(!image) {
+    if(!albumArtImage) {
         NSLog(@"No image!");
         [self sendMessageToPebble:@{MessageKeyAlbumArtLength:[NSNumber numberWithUint8:1]}];
     }
@@ -616,6 +630,7 @@ typedef enum {
     }
     NSLog(@"track %@", [track valueForProperty:MPMediaItemPropertyTitle]);
     [self.musicPlayer stop];
+    self.currentlyPlayingQueue = queue;
     [self.musicPlayer setQueueWithItemCollection:queue];
     [self.musicPlayer setNowPlayingItem:track];
     [self.musicPlayer play];
@@ -778,6 +793,7 @@ typedef enum {
     [self.repeatButton setupWithTitle:@"Repeat" withImage:[UIImage imageNamed:@"repeat_black.png"]];
     self.repeatButton.delegate = self;
     [self.dynamicPlaylistButton setupWithTitle:@"Settings" withImage:[UIImage imageNamed:@"settings.png"]];
+    self.dynamicPlaylistButton.delegate = self;
     
     self.shadingView = [[UIView alloc]init];
     self.shadingView.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.25];

@@ -25,6 +25,7 @@
 		6A73CF5E1D4519130097A400 /* robot_ios.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A73CF5D1D4519130097A400 /* robot_ios.png */; };
 		6A73CF611D451BFA0097A400 /* LMPebbleMessageQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A73CF601D451BFA0097A400 /* LMPebbleMessageQueue.m */; };
 		6A9496FA1CF1F2F900B0AECF /* LMProgressCircleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A9496F91CF1F2F900B0AECF /* LMProgressCircleView.m */; };
+		6AA4459C1D5AB264004C6739 /* LMPebbleSettingsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AA4459B1D5AB264004C6739 /* LMPebbleSettingsView.m */; };
 		6AA4735F1BC70FBA0066D47E /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AA4735E1BC70FBA0066D47E /* ExternalAccessory.framework */; };
 		6AA473611BC710320066D47E /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AA473601BC710320066D47E /* CoreBluetooth.framework */; };
 		6AA473631BC7103B0066D47E /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AA473621BC7103B0066D47E /* CoreMotion.framework */; };
@@ -80,6 +81,8 @@
 		6A73CF601D451BFA0097A400 /* LMPebbleMessageQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMPebbleMessageQueue.m; sourceTree = "<group>"; };
 		6A9496F81CF1F2F900B0AECF /* LMProgressCircleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMProgressCircleView.h; sourceTree = "<group>"; };
 		6A9496F91CF1F2F900B0AECF /* LMProgressCircleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMProgressCircleView.m; sourceTree = "<group>"; };
+		6AA4459A1D5AB264004C6739 /* LMPebbleSettingsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMPebbleSettingsView.h; sourceTree = "<group>"; };
+		6AA4459B1D5AB264004C6739 /* LMPebbleSettingsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMPebbleSettingsView.m; sourceTree = "<group>"; };
 		6AA4735E1BC70FBA0066D47E /* ExternalAccessory.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExternalAccessory.framework; path = System/Library/Frameworks/ExternalAccessory.framework; sourceTree = SDKROOT; };
 		6AA473601BC710320066D47E /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
 		6AA473621BC7103B0066D47E /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
@@ -240,6 +243,8 @@
 				6A73CF5B1D4127C70097A400 /* LMPebbleImage.m */,
 				6A73CF5F1D451BFA0097A400 /* LMPebbleMessageQueue.h */,
 				6A73CF601D451BFA0097A400 /* LMPebbleMessageQueue.m */,
+				6AA4459A1D5AB264004C6739 /* LMPebbleSettingsView.h */,
+				6AA4459B1D5AB264004C6739 /* LMPebbleSettingsView.m */,
 				6AEB9D041BACF60E00AD19FA /* Main.storyboard */,
 				6AEB9D071BACF60E00AD19FA /* Assets.xcassets */,
 				6AEB9D091BACF60E00AD19FA /* LaunchScreen.storyboard */,
@@ -452,6 +457,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6AA4459C1D5AB264004C6739 /* LMPebbleSettingsView.m in Sources */,
 				6AFD2EDD1BC41ECD0083FE9E /* LMAlbumViewItem.m in Sources */,
 				6A514E121CE904F100AFB351 /* LMNowPlayingViewController.m in Sources */,
 				6A66C76B1CDA10C2009019CF /* LMMiniPlayerView.m in Sources */,
