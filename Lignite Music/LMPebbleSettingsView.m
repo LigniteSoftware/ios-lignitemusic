@@ -29,7 +29,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.settingsMapping = [[NSDictionary alloc]initWithObjectsAndKeys:@(100), @"pebble_battery_saver", @(101), @"pebble_artist_label", nil];
+    self.settingsMapping = [[NSDictionary alloc]initWithObjectsAndKeys:@(100), @"pebble_battery_saver", @(101), @"pebble_artist_label", @(102), @"pebble_style_controls", nil];
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(closeSettings)];
 }
@@ -44,7 +44,13 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 1;
+    switch(section){
+        case 0:
+            return 2;
+        case 1:
+            return 1;
+    }
+    return 0;
 }
 
 - (void)changeSwitch:(id)theSwitch {
@@ -95,6 +101,10 @@
                 case 0:
                     [self addLabelToCell:cell withID:@"Battery saver"];
                     [self addToggleToCell:cell withID:@"pebble_battery_saver"];
+                    break;
+                case 1:
+                    [self addLabelToCell:cell withID:@"Pebble-style controls"];
+                    [self addToggleToCell:cell withID:@"pebble_style_controls"];
                     break;
             }
             break;
