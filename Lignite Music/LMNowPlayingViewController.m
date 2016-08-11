@@ -51,6 +51,9 @@ typedef enum {
 #define MessageKeyChangeState @(11)
 #define MessageKeyCurrentState @(12)
 #define MessageKeySequenceNumber @(13)
+#define MessageKeyHeaderIcon @(14)
+#define MessageKeyHeaderIconLength @(15)
+#define MessageKeyHeaderIconIndex @(16)
 
 #define MAX_LABEL_LENGTH 20
 #define MAX_RESPONSE_COUNT 90
@@ -614,6 +617,39 @@ typedef enum {
     }
 }
 
+- (void)sendHeaderIconImage:(UIImage*)albumArtImage {
+    NSLog(@"sending image %@", albumArtImage);
+    CGSize imageSize = CGSizeMake(28, 28);
+    UIImage *image = [LMPebbleImage ditherImageForPebble:albumArtImage withColourPalette:YES withSize:imageSize];
+    
+    if(!albumArtImage) {
+        NSLog(@"No image!");
+        [self sendMessageToPebble:@{MessageKeyHeaderIconLength:[NSNumber numberWithUint8:1]}];
+    }
+    else {
+        YYImageEncoder *pngEncoder = [[YYImageEncoder alloc] initWithType:YYImageTypePNG];
+        [pngEncoder addImage:image duration:0];
+        NSData *bitmap = [pngEncoder encode];
+        
+        size_t length = [bitmap length];
+        NSDictionary *sizeDict = @{MessageKeyHeaderIconLength: [NSNumber numberWithUint16:[bitmap length]]};
+        NSLog(@"Album art size message: %@", sizeDict);
+        [self sendMessageToPebble:sizeDict];
+        
+        uint8_t j = 0;
+        for(size_t i = 0; i < length; i += MAX_OUTGOING_SIZE-1) {
+            NSMutableData *outgoing = [[NSMutableData alloc] initWithCapacity:MAX_OUTGOING_SIZE];
+            
+            NSRange rangeOfBytes = NSMakeRange(i, MIN(MAX_OUTGOING_SIZE-1, length - i));
+            [outgoing appendBytes:[[bitmap subdataWithRange:rangeOfBytes] bytes] length:rangeOfBytes.length];
+            
+            NSDictionary *dict = @{MessageKeyHeaderIcon: outgoing, MessageKeyHeaderIconIndex:[NSNumber numberWithUint16:j]};
+            [self sendMessageToPebble:dict];
+            j++;
+        }
+    }
+}
+
 - (void)pebbleCentral:(PBPebbleCentral *)central watchDidConnect:(PBWatch *)watch isNew:(BOOL)isNew {
     if (self.watch) {
         return;
@@ -786,6 +822,7 @@ typedef enum {
     // Include the type of library
     [result appendBytes:&type_byte length:1];
     [result appendBytes:metabytes length:4];
+    MPMediaItem *representativeItem;
     int i = 0;
     for (MPMediaItemCollection* item in subset) {
         NSString *value;
@@ -814,6 +851,7 @@ typedef enum {
             value = [[item representativeItem] valueForProperty:MPMediaItemPropertyArtist];
         }
         else {
+            representativeItem = [item representativeItem];
             value = [[item representativeItem] valueForProperty:[MPMediaItem titlePropertyForGroupingType:type]];
         }
         if([value length] > MAX_LABEL_LENGTH) {
@@ -837,6 +875,7 @@ typedef enum {
     }
     else if(type == MPMediaGroupingTitle){
         [self pushLibraryResults:results withOffset:offset type:MPMediaGroupingPodcastTitle isSubtitle:2];
+        [self sendHeaderIconImage:[[representativeItem artwork] imageWithSize:CGSizeMake(28, 28)]];
     }
     else if(type == MPMediaGroupingPlaylist){
         NSLog(@"Pushing playlist subtitles");
