@@ -264,6 +264,18 @@ typedef enum {
     [self pushCurrentStateToWatch];
 }
 
+- (NSString*)durationStringTotalPlaybackTime:(long)totalPlaybackTime {
+    long totalHours = (totalPlaybackTime / 3600);
+    int totalMinutes = (int)((totalPlaybackTime / 60) - totalHours*60);
+    int totalSeconds = (totalPlaybackTime % 60);
+    
+    if(totalHours > 0){
+        return [NSString stringWithFormat:@"%02i:%02d:%02d", (int)totalHours, totalMinutes, totalSeconds];
+    }
+    
+    return [NSString stringWithFormat:@"%02d:%02d", totalMinutes, totalSeconds];
+}
+
 - (void)updateSongDurationLabelWithPlaybackTime:(long)currentPlaybackTime {
     long totalPlaybackTime = [[self.musicPlayer nowPlayingItem] playbackDuration];
     
@@ -272,19 +284,17 @@ typedef enum {
     int currentSeconds = (currentPlaybackTime % 60);
     
     long totalHours = (totalPlaybackTime / 3600);
-    long totalMinutes = ((totalPlaybackTime / 60) - totalHours*60);
-    int totalSeconds = (totalPlaybackTime % 60);
     
     [UIView animateWithDuration:0.3 animations:^{
         if(totalHours > 0){
-            self.songDurationLabel.text = [NSString stringWithFormat:@"%02i:%02d:%02d of %02i:%02d:%02d",
+            self.songDurationLabel.text = [NSString stringWithFormat:@"%02i:%02d:%02d of %@",
                                            (int)currentHours, (int)currentMinutes, currentSeconds,
-                                           (int)totalHours, (int)totalMinutes, totalSeconds];
+                                           [self durationStringTotalPlaybackTime:totalPlaybackTime]];
         }
         else{
-            self.songDurationLabel.text = [NSString stringWithFormat:@"%02d:%02d of %02d:%02d",
+            self.songDurationLabel.text = [NSString stringWithFormat:@"%02d:%02d of %@",
                                            (int)currentMinutes, currentSeconds,
-                                           (int)totalMinutes, totalSeconds];
+                                           [self durationStringTotalPlaybackTime:totalPlaybackTime]];
         }
     }];
     
@@ -623,14 +633,11 @@ typedef enum {
         }
     }];
     
-    // Sign up for AppMessage
     __weak typeof(self) welf = self;
 
-    // Register for AppMessage delivery
     [self.watch appMessagesAddReceiveUpdateHandler:^BOOL(PBWatch *watch, NSDictionary *update) {
         __strong typeof(welf) sself = welf;
         if (!sself) {
-            // self has been destroyed
             NSLog(@"self is destroyed!");
             return NO;
         }
@@ -655,7 +662,6 @@ typedef enum {
             [self changeState:(NowPlayingState)[update[MessageKeyChangeState] integerValue]];
         }
         return YES;
-    //} withUUID:[[NSUUID alloc] initWithUUIDString:@"4e601687-8739-49e0-a280-1a633ee46eef"]];
     }];
 }
 
@@ -695,7 +701,7 @@ typedef enum {
     [query setGroupingType:request_type];
     [query addFilterPredicate:[MPMediaPropertyPredicate predicateWithValue:@(MPMediaTypeMusic) forProperty:MPMediaItemPropertyMediaType]];
     NSArray* results = [query collections];
-    [self pushLibraryResults:results withOffset:offset type:request_type];
+    [self pushLibraryResults:results withOffset:offset type:request_type isSubtitle:0];
 }
 
 - (void)sublistRequest:(NSDictionary*)request {
@@ -705,7 +711,7 @@ typedef enum {
     if(request_type == MPMediaGroupingTitle) {
         results = [results[0] items];
     }
-    [self pushLibraryResults:results withOffset:offset type:request_type];
+    [self pushLibraryResults:results withOffset:offset type:request_type isSubtitle:0];
 }
 
 - (NSArray*)getCollectionFromMessage:(NSDictionary*)request {
@@ -752,7 +758,9 @@ typedef enum {
     }
 }
 
-- (void)pushLibraryResults:(NSArray *)results withOffset:(NSInteger)offset type:(MPMediaGrouping)type {
+- (void)pushTrackSubtitleWithResults:(NSArray*)results withOffset:(NSInteger)offset {
+    MPMediaGrouping type = MPMediaGroupingArtist;
+    
     NSArray* subset;
     if(offset < [results count]) {
         NSInteger count = MAX_RESPONSE_COUNT;
@@ -774,15 +782,84 @@ typedef enum {
     int i = 0;
     for (MPMediaItemCollection* item in subset) {
         NSString *value;
-        if([item isKindOfClass:[MPMediaPlaylist class]]) {
+        NSNumber *trackLength = [item valueForProperty:MPMediaItemPropertyPlaybackDuration];
+        NSString *artistName = [item valueForProperty:MPMediaItemPropertyArtist];
+        
+        value = [NSString stringWithFormat:@"%@ | %@",
+                 [self durationStringTotalPlaybackTime:[trackLength longValue]],
+                 artistName];
+        
+        if([value length] > MAX_LABEL_LENGTH) {
+            value = [value substringToIndex:MAX_LABEL_LENGTH];
+        }
+        NSData *value_data = [value dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
+        uint8_t length = [value_data length];
+        if(([result length] + length) > MAX_OUTGOING_SIZE){
+            NSLog(@"Cutting off length at %ld", [result length]);
+            break;
+        }
+        [result appendBytes:&length length:1];
+        [result appendData:value_data];
+        NSLog(@"Value for %d: %@", i, value);
+        i++;
+    }
+    [self.messageQueue enqueue:@{MessageKeyLibraryResponse: result}];
+    
+    NSLog(@"Sent message: %@ with length %lu", result, (unsigned long)[result length]);
+
+}
+
+- (void)pushLibraryResults:(NSArray *)results withOffset:(NSInteger)offset type:(MPMediaGrouping)type isSubtitle:(uint8_t)subtitleType {
+    switch(subtitleType){
+        case 1: //Album artist
+            break;
+        case 2: //Track subtitle
+        case 3: //Playlist subtitle
+            type = MPMediaGroupingPodcastTitle;
+            break;
+    }
+    
+    NSArray* subset;
+    if(offset < [results count]) {
+        NSInteger count = MAX_RESPONSE_COUNT;
+        if([results count] <= offset + MAX_RESPONSE_COUNT) {
+            count = [results count] - offset;
+        }
+        subset = [results subarrayWithRange:NSMakeRange(offset, count)];
+    }
+    NSMutableData *result = [[NSMutableData alloc] init];
+    // Response format: header of one byte containing library data type, two bytes containing
+    // the total number of results, and two bytes containing our current offset. Little endian.
+    // This is followed by a sequence of entries, which consist of one length byte followed by UTF-8 data
+    // (pascal style)
+    uint8_t type_byte = (uint8_t)type;
+    uint16_t metabytes[] = {[results count], offset};
+    // Include the type of library
+    [result appendBytes:&type_byte length:1];
+    [result appendBytes:metabytes length:4];
+    int i = 0;
+    for (MPMediaItemCollection* item in subset) {
+        NSString *value;
+        if(type == MPMediaGroupingPodcastTitle && subtitleType == 3){
+            value = [NSString stringWithFormat:@"%lu songs", (unsigned long)item.count];
+        }
+        else if([item isKindOfClass:[MPMediaPlaylist class]]) {
             value = [item valueForProperty:MPMediaPlaylistPropertyName];
+        }
+        //If this happens, it's tracks asking for its artist and duration.
+        else if(type == MPMediaGroupingPodcastTitle && subtitleType == 2){
+            NSNumber *trackLength = [item valueForProperty:MPMediaItemPropertyPlaybackDuration];
+            NSString *artistName = [item valueForProperty:MPMediaItemPropertyArtist];
+            
+            value = [NSString stringWithFormat:@"%@ | %@",
+                     [self durationStringTotalPlaybackTime:[trackLength longValue]],
+                     artistName];
         }
         else if(type == MPMediaGroupingAlbumArtist){
             value = [[item representativeItem] valueForProperty:MPMediaItemPropertyArtist];
         }
         else {
             value = [[item representativeItem] valueForProperty:[MPMediaItem titlePropertyForGroupingType:type]];
-            //NSLog(@"Artist %@", [[item representativeItem] valueForProperty:MPMediaItemPropertyArtist]);
         }
         if([value length] > MAX_LABEL_LENGTH) {
             value = [value substringToIndex:MAX_LABEL_LENGTH];
@@ -801,7 +878,14 @@ typedef enum {
     [self.messageQueue enqueue:@{MessageKeyLibraryResponse: result}];
 
     if(type == MPMediaGroupingAlbum){
-        [self pushLibraryResults:results withOffset:offset type:MPMediaGroupingAlbumArtist];
+        [self pushLibraryResults:results withOffset:offset type:MPMediaGroupingAlbumArtist isSubtitle:1];
+    }
+    else if(type == MPMediaGroupingTitle){
+        [self pushLibraryResults:results withOffset:offset type:MPMediaGroupingPodcastTitle isSubtitle:2];
+    }
+    else if(type == MPMediaGroupingPlaylist){
+        NSLog(@"Pushing playlist subtitles");
+        [self pushLibraryResults:results withOffset:offset type:MPMediaGroupingPodcastTitle isSubtitle:3];
     }
     
     NSLog(@"Sent message: %@ with length %lu", result, (unsigned long)[result length]);
@@ -915,6 +999,30 @@ typedef enum {
     
     //NSLog(@"Starting test image...");
     //[self sendTestImage];
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    if([defaults objectForKey:@"pebble_coldstart"]){
+        [self.central run];
+    }
+    else{
+        UIAlertController * alert = [UIAlertController
+                                     alertControllerWithTitle:@"Pebble Connection"
+                                     message:@"iOS is about to ask for your permission to use Bluetooth devices. Please allow the permission as we use it to communicate with Lignite Music watchapps."
+                                     preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction* yesButton = [UIAlertAction
+                                    actionWithTitle:@"Okay"
+                                    style:UIAlertActionStyleDefault
+                                    handler:^(UIAlertAction * action) {
+                                        [self.central run];
+                                        [defaults setBool:YES forKey:@"pebble_coldstart"];
+                                    }];
+        
+        [alert addAction:yesButton];
+        
+        [self presentViewController:alert animated:YES completion:nil];
+        
+    }
 }
 
 - (void)viewDidLoad {
@@ -924,10 +1032,9 @@ typedef enum {
     self.central.delegate = self;
     
     // UUID of watchapp starter project: af17efe7-2141-4eb2-b62a-19fc1b595595
-    self.central.appUUID = [[NSUUID alloc] initWithUUIDString:@"4e601687-8739-49e0-a280-1a633ee46eef"];
+    self.central.appUUID = [[NSUUID alloc] initWithUUIDString:@"edf76057-f3ef-4de6-b841-cb9532a81a5a"];
+    //[self.central run];
     
-    // Begin connection
-    [self.central run];
     
     self.messageQueue = [[LMPebbleMessageQueue alloc]init];
     
@@ -954,30 +1061,11 @@ typedef enum {
     [self nowPlayingItemChanged:self];
     
     NSLog(@"View did load");
-    
-    /*
-    // Set the delegate to receive PebbleKit events
-    self.central = [PBPebbleCentral defaultCentral];
-    self.central.delegate = self;
-    
-    [self.central setAppUUID:[[NSUUID alloc] initWithUUIDString:@"4e601687-8739-49e0-a280-1a633ee46eef"]];
-    
-    // Begin connection
-    [self.central run];
-     */
-    
-    /*
-    //Make sure that we can actually read the volume
-    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
-    [[AVAudioSession sharedInstance] setActive:YES error:nil];
-    [[AVAudioSession sharedInstance] addObserver:self forKeyPath:@"outputVolume" options:NSKeyValueObservingOptionNew context:nil];
-     */
 }
 
 - (void)viewDidUnload:(BOOL)animated {
     NSLog(@"View did unload");
     
-    /*
     [[NSNotificationCenter defaultCenter]
      removeObserver: self
      name:           MPMusicPlayerControllerNowPlayingItemDidChangeNotification
@@ -989,7 +1077,6 @@ typedef enum {
      object:         self.musicPlayer];
     
     [self.musicPlayer endGeneratingPlaybackNotifications];
-     */
 }
 
 - (void)didReceiveMemoryWarning {
