@@ -758,57 +758,6 @@ typedef enum {
     }
 }
 
-- (void)pushTrackSubtitleWithResults:(NSArray*)results withOffset:(NSInteger)offset {
-    MPMediaGrouping type = MPMediaGroupingArtist;
-    
-    NSArray* subset;
-    if(offset < [results count]) {
-        NSInteger count = MAX_RESPONSE_COUNT;
-        if([results count] <= offset + MAX_RESPONSE_COUNT) {
-            count = [results count] - offset;
-        }
-        subset = [results subarrayWithRange:NSMakeRange(offset, count)];
-    }
-    NSMutableData *result = [[NSMutableData alloc] init];
-    // Response format: header of one byte containing library data type, two bytes containing
-    // the total number of results, and two bytes containing our current offset. Little endian.
-    // This is followed by a sequence of entries, which consist of one length byte followed by UTF-8 data
-    // (pascal style)
-    uint8_t type_byte = (uint8_t)type;
-    uint16_t metabytes[] = {[results count], offset};
-    // Include the type of library
-    [result appendBytes:&type_byte length:1];
-    [result appendBytes:metabytes length:4];
-    int i = 0;
-    for (MPMediaItemCollection* item in subset) {
-        NSString *value;
-        NSNumber *trackLength = [item valueForProperty:MPMediaItemPropertyPlaybackDuration];
-        NSString *artistName = [item valueForProperty:MPMediaItemPropertyArtist];
-        
-        value = [NSString stringWithFormat:@"%@ | %@",
-                 [self durationStringTotalPlaybackTime:[trackLength longValue]],
-                 artistName];
-        
-        if([value length] > MAX_LABEL_LENGTH) {
-            value = [value substringToIndex:MAX_LABEL_LENGTH];
-        }
-        NSData *value_data = [value dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
-        uint8_t length = [value_data length];
-        if(([result length] + length) > MAX_OUTGOING_SIZE){
-            NSLog(@"Cutting off length at %ld", [result length]);
-            break;
-        }
-        [result appendBytes:&length length:1];
-        [result appendData:value_data];
-        NSLog(@"Value for %d: %@", i, value);
-        i++;
-    }
-    [self.messageQueue enqueue:@{MessageKeyLibraryResponse: result}];
-    
-    NSLog(@"Sent message: %@ with length %lu", result, (unsigned long)[result length]);
-
-}
-
 - (void)pushLibraryResults:(NSArray *)results withOffset:(NSInteger)offset type:(MPMediaGrouping)type isSubtitle:(uint8_t)subtitleType {
     switch(subtitleType){
         case 1: //Album artist
@@ -851,9 +800,15 @@ typedef enum {
             NSNumber *trackLength = [item valueForProperty:MPMediaItemPropertyPlaybackDuration];
             NSString *artistName = [item valueForProperty:MPMediaItemPropertyArtist];
             
-            value = [NSString stringWithFormat:@"%@ | %@",
-                     [self durationStringTotalPlaybackTime:[trackLength longValue]],
-                     artistName];
+            if(artistName){
+                value = [NSString stringWithFormat:@"%@ | %@",
+                         [self durationStringTotalPlaybackTime:[trackLength longValue]],
+                         artistName];
+            }
+            else{
+                value = [NSString stringWithFormat:@"%@",
+                         [self durationStringTotalPlaybackTime:[trackLength longValue]]];
+            }
         }
         else if(type == MPMediaGroupingAlbumArtist){
             value = [[item representativeItem] valueForProperty:MPMediaItemPropertyArtist];
