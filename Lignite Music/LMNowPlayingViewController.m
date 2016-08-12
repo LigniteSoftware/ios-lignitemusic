@@ -65,6 +65,7 @@ typedef enum {
 #define MessageKeyHeaderIconLength @(15)
 #define MessageKeyHeaderIconIndex @(16)
 #define MessageKeyWatchModel @(17)
+#define MessageKeyImagePart @(18)
 
 #define MAX_LABEL_LENGTH 20
 #define MAX_RESPONSE_COUNT 90
@@ -108,6 +109,8 @@ typedef enum {
 @property BOOL overrideImageLogic;
 
 @property WatchInfoModel watchModel;
+
+@property uint8_t imageParts;
 
 @end
 
@@ -618,13 +621,10 @@ typedef enum {
 }
 
 - (void)sendAlbumArtImage {
+    self.imageParts = 2;
+    
     CGSize imageSize = [self albumArtSize];
     UIImage *albumArtImage = [[self.musicPlayer.nowPlayingItem artwork]imageWithSize:imageSize];
-    UIImage *image = [LMPebbleImage ditherImageForPebble:albumArtImage withColourPalette:YES withSize:imageSize withBlackAndWhite:NO];
-    
-    UIImageView *view = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, imageSize.width, imageSize.height-45)];
-    view.image = image;
-    //[self.view addSubview:view];
     
     if([albumArtImage isEqual:self.lastAlbumArtImage] && !self.overrideImageLogic){
         NSLog(@"The album art is literally samezies...");
@@ -632,7 +632,25 @@ typedef enum {
     }
     self.lastAlbumArtImage = albumArtImage;
     self.overrideImageLogic = NO;
+    
+    //UIImage *image = [LMPebbleImage ditherImageForPebble:albumArtImage withColourPalette:YES withSize:imageSize withBlackAndWhite:NO];
+    for(uint8_t index = 0; index < self.imageParts; index++){
+        UIImage *image = [LMPebbleImage ditherImage:albumArtImage
+                                           withSize:imageSize
+                                      forTotalParts:self.imageParts
+                                    withCurrentPart:index
+                                    isBlackAndWhite:NO
+                                       isRoundWatch:[self watchIsRoundScreen]];
+        
+        int width = imageSize.width/self.imageParts;
+        UIImageView *view = [[UIImageView alloc]initWithFrame:CGRectMake(width*index, 0, width, imageSize.height-45)];
+        view.image = image;
+        [self.view addSubview:view];
 
+    }
+/*
+    return;
+    
     if(!albumArtImage) {
         NSLog(@"No image!");
         [self sendMessageToPebble:@{MessageKeyAlbumArtLength:[NSNumber numberWithUint8:1]}];
@@ -643,7 +661,7 @@ typedef enum {
         NSData *bitmap = [pngEncoder encode];
         
         size_t length = [bitmap length];
-        NSDictionary *sizeDict = @{MessageKeyAlbumArtLength: [NSNumber numberWithUint16:[bitmap length]]};
+        NSDictionary *sizeDict = @{MessageKeyAlbumArtLength: [NSNumber numberWithUint16:length]};
         NSLog(@"Album art size message: %@", sizeDict);
 
         [self sendMessageToPebble:sizeDict];
@@ -660,11 +678,13 @@ typedef enum {
             j++;
         }
     }
+ */
 }
 
 - (void)sendHeaderIconImage:(UIImage*)albumArtImage {
     NSLog(@"sending image %@", albumArtImage);
     CGSize imageSize = CGSizeMake(28, 28);
+    /*
     UIImage *image = [LMPebbleImage ditherImageForPebble:albumArtImage withColourPalette:YES withSize:imageSize withBlackAndWhite:[self watchIsRoundScreen]];
     
     if(!albumArtImage) {
@@ -693,6 +713,7 @@ typedef enum {
             j++;
         }
     }
+     */
 }
 
 - (void)pebbleCentral:(PBPebbleCentral *)central watchDidConnect:(PBWatch *)watch isNew:(BOOL)isNew {
@@ -736,11 +757,10 @@ typedef enum {
         else if(update[MessageKeyNowPlaying]) {
             NSLog(@"Now playing key sent");
             self.overrideImageLogic = [update[MessageKeyNowPlaying] isEqual:@(100)];
-            
             self.watchModel = [update[MessageKeyWatchModel] uint8Value];
-            NSLog(@"Got watch model %d", self.watchModel);
+            self.imageParts = [update[MessageKeyImagePart] uint8Value];
+            NSLog(@"Got override %d, watch model %d and image parts: %d", self.overrideImageLogic, self.watchModel, self.imageParts);
             
-            NSLog(@"Override: %d to %@", self.overrideImageLogic, update[MessageKeyNowPlaying]);
             [self pushNowPlayingItemToWatch];
         }
         else if(update[MessageKeyChangeState]) {
