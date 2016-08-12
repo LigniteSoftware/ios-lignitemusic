@@ -602,8 +602,6 @@ typedef enum {
 }
 
 - (BOOL)watchIsRoundScreen {
-    return true;
-    
     switch(self.watchModel){
         case WATCH_INFO_MODEL_PEBBLE_TIME_ROUND_14:
         case WATCH_INFO_MODEL_PEBBLE_TIME_ROUND_20:
@@ -615,13 +613,15 @@ typedef enum {
 
 - (CGSize)albumArtSize {
     if([self watchIsRoundScreen]){
-        return CGSizeMake(176, 176);
+        return CGSizeMake(180, 180);
     }
     return CGSizeMake(144, 144);
 }
 
 - (void)sendAlbumArtImage {
-    self.imageParts = 2;
+    if(self.imageParts == 0){
+        return;
+    }
     
     CGSize imageSize = [self albumArtSize];
     UIImage *albumArtImage = [[self.musicPlayer.nowPlayingItem artwork]imageWithSize:imageSize];
@@ -643,10 +643,39 @@ typedef enum {
                                        isRoundWatch:[self watchIsRoundScreen]];
         
         int width = imageSize.width/self.imageParts;
-        UIImageView *view = [[UIImageView alloc]initWithFrame:CGRectMake(width*index, 0, width, imageSize.height-45)];
+        UIImageView *view = [[UIImageView alloc]initWithFrame:CGRectMake(width*index, 0, width, imageSize.height)];
         view.image = image;
         [self.view addSubview:view];
-
+        
+        if(self.watch){
+            if(!albumArtImage) {
+                NSLog(@"No image!");
+                [self sendMessageToPebble:@{MessageKeyAlbumArtLength:[NSNumber numberWithUint8:1], MessageKeyImagePart:[NSNumber numberWithUint8:index]}];
+            }
+            else {
+                YYImageEncoder *pngEncoder = [[YYImageEncoder alloc] initWithType:YYImageTypePNG];
+                [pngEncoder addImage:image duration:0];
+                NSData *bitmap = [pngEncoder encode];
+                
+                size_t length = [bitmap length];
+                NSDictionary *sizeDict = @{MessageKeyAlbumArtLength: [NSNumber numberWithUint16:length], MessageKeyImagePart:[NSNumber numberWithUint8:index]};
+                NSLog(@"Album art size message: %@", sizeDict);
+                
+                [self sendMessageToPebble:sizeDict];
+                
+                uint8_t j = 0;
+                for(size_t i = 0; i < length; i += MAX_OUTGOING_SIZE-1) {
+                    NSMutableData *outgoing = [[NSMutableData alloc] initWithCapacity:MAX_OUTGOING_SIZE];
+                    
+                    NSRange rangeOfBytes = NSMakeRange(i, MIN(MAX_OUTGOING_SIZE-1, length - i));
+                    [outgoing appendBytes:[[bitmap subdataWithRange:rangeOfBytes] bytes] length:rangeOfBytes.length];
+                    
+                    NSDictionary *dict = @{MessageKeyAlbumArt: outgoing, MessageKeyAlbumArtIndex:[NSNumber numberWithUint16:j], MessageKeyImagePart:[NSNumber numberWithUint8:index]};
+                    [self sendMessageToPebble:dict];
+                    j++;
+                }
+            }
+        }
     }
 /*
     return;

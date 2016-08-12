@@ -11,32 +11,6 @@
 
 @implementation LMPebbleImage
 
-+ (UIImage*)imageWithImage:(UIImage*)image
-              scaledToSize:(CGSize)newSize
-             forTotalParts:(uint8_t)totalParts
-           withCurrentPart:(uint8_t)currentPart
-              isRoundWatch:(BOOL)isRoundWatch {
-    UIGraphicsBeginImageContextWithOptions(newSize, NO, 1.0);
-
-    if(newSize.width != 144){
-        [[UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, newSize.width, newSize.height) cornerRadius:newSize.width/2] addClip];
-        [[UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, newSize.width, newSize.height-45) cornerRadius:0] addClip];
-    }
-    
-    [image drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
-    
-    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    if(newSize.width != 144){
-        CGImageRef imageRef = CGImageCreateWithImageInRect([newImage CGImage], CGRectMake(0, 0, newSize.width, newSize.height-45));
-        newImage = [UIImage imageWithCGImage:imageRef];
-        CGImageRelease(imageRef);
-    }
-    
-    return newImage;
-}
-
 + (UIImage*)ditherImage:(UIImage*)originalImage
                withSize:(CGSize)size
           forTotalParts:(uint8_t)totalParts
