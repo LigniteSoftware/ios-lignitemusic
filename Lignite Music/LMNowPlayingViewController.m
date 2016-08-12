@@ -37,6 +37,16 @@ typedef enum {
 } MessageKey;
  */
 
+typedef enum {
+    WATCH_INFO_MODEL_UNKNOWN = 0,          //Unknown model.
+    WATCH_INFO_MODEL_PEBBLE_ORIGINAL,      //Original Pebble.
+    WATCH_INFO_MODEL_PEBBLE_STEEL,         //Pebble Steel.
+    WATCH_INFO_MODEL_PEBBLE_TIME,          //Pebble Time.
+    WATCH_INFO_MODEL_PEBBLE_TIME_STEEL,    //Pebble Time Steel.
+    WATCH_INFO_MODEL_PEBBLE_TIME_ROUND_14, //Pebble Time Round, 14mm lug size.
+    WATCH_INFO_MODEL_PEBBLE_TIME_ROUND_20  //Pebble Time Round, 20mm lug size.
+} WatchInfoModel;
+
 #define MessageKeyReconnect @(0)
 #define MessageKeyRequestLibrary @(1)
 #define MessageKeyRequestOffset @(2)
@@ -54,10 +64,11 @@ typedef enum {
 #define MessageKeyHeaderIcon @(14)
 #define MessageKeyHeaderIconLength @(15)
 #define MessageKeyHeaderIconIndex @(16)
+#define MessageKeyWatchModel @(17)
 
 #define MAX_LABEL_LENGTH 20
 #define MAX_RESPONSE_COUNT 90
-#define MAX_OUTGOING_SIZE 1500 // This allows some overhead.
+#define MAX_OUTGOING_SIZE 1500
 
 typedef enum {
     NowPlayingTitle,
@@ -95,6 +106,8 @@ typedef enum {
 @property MPMediaItemCollection *currentlyPlayingQueue;
 
 @property BOOL overrideImageLogic;
+
+@property WatchInfoModel watchModel;
 
 @end
 
@@ -486,6 +499,14 @@ typedef enum {
 }
 
 - (void)pushNowPlayingItemToWatch {
+    if(!self.watch){
+        return;
+    }
+    
+    if(self.watchModel == WATCH_INFO_MODEL_UNKNOWN){
+        NSLog(@"Warning: unknown watch model! Defaulting to Pebble original.");
+        self.watchModel = WATCH_INFO_MODEL_PEBBLE_ORIGINAL;
+    }
     MPMediaItem *item = [self.musicPlayer nowPlayingItem];
     NSString *title = [item valueForProperty:MPMediaItemPropertyTitle];
     NSString *artist = [item valueForProperty:MPMediaItemPropertyArtist];
@@ -577,10 +598,33 @@ typedef enum {
     [self pushCurrentStateToWatch];
 }
 
+- (BOOL)watchIsRoundScreen {
+    return true;
+    
+    switch(self.watchModel){
+        case WATCH_INFO_MODEL_PEBBLE_TIME_ROUND_14:
+        case WATCH_INFO_MODEL_PEBBLE_TIME_ROUND_20:
+            return true;
+        default:
+            return false;
+    }
+}
+
+- (CGSize)albumArtSize {
+    if([self watchIsRoundScreen]){
+        return CGSizeMake(176, 176);
+    }
+    return CGSizeMake(144, 144);
+}
+
 - (void)sendAlbumArtImage {
-    CGSize imageSize = CGSizeMake(144, 144);
+    CGSize imageSize = [self albumArtSize];
     UIImage *albumArtImage = [[self.musicPlayer.nowPlayingItem artwork]imageWithSize:imageSize];
-    UIImage *image = [LMPebbleImage ditherImageForPebble:albumArtImage withColourPalette:YES withSize:imageSize];
+    UIImage *image = [LMPebbleImage ditherImageForPebble:albumArtImage withColourPalette:YES withSize:imageSize withBlackAndWhite:NO];
+    
+    UIImageView *view = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, imageSize.width, imageSize.height-45)];
+    view.image = image;
+    //[self.view addSubview:view];
     
     if([albumArtImage isEqual:self.lastAlbumArtImage] && !self.overrideImageLogic){
         NSLog(@"The album art is literally samezies...");
@@ -601,6 +645,7 @@ typedef enum {
         size_t length = [bitmap length];
         NSDictionary *sizeDict = @{MessageKeyAlbumArtLength: [NSNumber numberWithUint16:[bitmap length]]};
         NSLog(@"Album art size message: %@", sizeDict);
+
         [self sendMessageToPebble:sizeDict];
         
         uint8_t j = 0;
@@ -620,7 +665,7 @@ typedef enum {
 - (void)sendHeaderIconImage:(UIImage*)albumArtImage {
     NSLog(@"sending image %@", albumArtImage);
     CGSize imageSize = CGSizeMake(28, 28);
-    UIImage *image = [LMPebbleImage ditherImageForPebble:albumArtImage withColourPalette:YES withSize:imageSize];
+    UIImage *image = [LMPebbleImage ditherImageForPebble:albumArtImage withColourPalette:YES withSize:imageSize withBlackAndWhite:[self watchIsRoundScreen]];
     
     if(!albumArtImage) {
         NSLog(@"No image!");
@@ -691,6 +736,10 @@ typedef enum {
         else if(update[MessageKeyNowPlaying]) {
             NSLog(@"Now playing key sent");
             self.overrideImageLogic = [update[MessageKeyNowPlaying] isEqual:@(100)];
+            
+            self.watchModel = [update[MessageKeyWatchModel] uint8Value];
+            NSLog(@"Got watch model %d", self.watchModel);
+            
             NSLog(@"Override: %d to %@", self.overrideImageLogic, update[MessageKeyNowPlaying]);
             [self pushNowPlayingItemToWatch];
         }
@@ -1017,6 +1066,8 @@ typedef enum {
         [self presentViewController:alert animated:YES completion:nil];
         
     }
+    
+    [self sendAlbumArtImage];
 }
 
 - (void)viewDidLoad {

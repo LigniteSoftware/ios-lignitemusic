@@ -11,6 +11,6 @@
 
 @interface LMPebbleImage : NSObject
 
-+ (UIImage*)ditherImageForPebble:(UIImage*)image withColourPalette:(BOOL)colourPalette withSize:(CGSize)size;
++ (UIImage*)ditherImageForPebble:(UIImage*)image withColourPalette:(BOOL)colourPalette withSize:(CGSize)size withBlackAndWhite:(BOOL)blackAndWhite;
 
 @end

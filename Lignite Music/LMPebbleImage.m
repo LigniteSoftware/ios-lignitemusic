@@ -12,15 +12,24 @@
 @implementation LMPebbleImage
 
 + (UIImage*)imageWithImage:(UIImage*)image scaledToSize:(CGSize)newSize {
-    //UIGraphicsBeginImageContext(newSize);
     UIGraphicsBeginImageContextWithOptions(newSize, NO, 1.0);
+
+    [[UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, newSize.width, newSize.height) cornerRadius:newSize.width/2] addClip];
+    [[UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, newSize.width, newSize.height-45) cornerRadius:0] addClip];
+    
     [image drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
+    
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
+    
+    CGImageRef imageRef = CGImageCreateWithImageInRect([newImage CGImage], CGRectMake(0, 0, newSize.width, newSize.height-45));
+    newImage = [UIImage imageWithCGImage:imageRef];
+    CGImageRelease(imageRef);
+    
     return newImage;
 }
 
-+ (UIImage*)ditherImageForPebble:(UIImage*)originalImage withColourPalette:(BOOL)colourPalette withSize:(CGSize)size {
++ (UIImage*)ditherImageForPebble:(UIImage*)originalImage withColourPalette:(BOOL)colourPalette withSize:(CGSize)size withBlackAndWhite:(BOOL)blackAndWhite {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     
     //NSLog(@"Old size %lu size %f, %f, scale %f", [UIImagePNGRepresentation(originalImage) length], originalImage.size.width, originalImage.size.height, originalImage.scale);
@@ -42,16 +51,52 @@
     char *inputPath = strdup([sourceImagePath UTF8String]);
     char *outputPath = strdup([outputString UTF8String]);
 
-    char *argv[] = {"convert", inputPath,
-        //"-adaptive-resize", "'144x168>'",
+    char *argv[] = { "convert", inputPath,
         "-opaque", "none",
         "-dither", "FloydSteinberg",
-        "-remap", coloursFilePath,
+         "-remap", coloursFilePath,
         "-define", "png:compression-level=9",
         "-define", "png:compression-strategy=0",
         "-define", "png:exclude-chunk=all",
         outputPath,
-        NULL};
+        NULL };
+    
+    /*
+    char *argv[] = {
+        "convert", inputPath,
+        "-opaque", "none",
+        "-type", "Grayscale",
+        "-colorspace", "Gray",
+        "-black-threshold", "50%",
+        "-white-threshold", "50%",
+        "-ordered-dither", "2x1",
+        "-colors", "2",
+        "-depth", "1",
+        "-define", "png:compression-level=9",
+        "-define", "png:compression-strategy=0",
+        "-define", "png:exclude-chunk=all",
+        outputPath,
+        NULL
+    };
+     */
+    
+    /*
+     * Black and white support
+     *
+    char *argv[] = {
+        "convert", inputPath,
+        "-opaque", "none",
+        "-type", "Grayscale",
+        "-colorspace", "Gray",
+        "-colors", "2",
+        "-depth", "1",
+        "-define", "png:compression-level=9",
+        "-define", "png:compression-strategy=0",
+        "-define", "png:exclude-chunk=all",
+        outputPath,
+        NULL
+    };
+     */
     
     MagickCoreGenesis(*argv, MagickFalse);
     MagickWand *magick_wand = NewMagickWand();
