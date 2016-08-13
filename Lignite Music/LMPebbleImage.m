@@ -72,55 +72,6 @@
         "-define", "png:exclude-chunk=all",
         outputPath,
         NULL };
-    
-    
-/*
- convert $1 \
- -adaptive-resize '144x168>' \
- -fill '#FFFFFF00' -opaque none \
- -type Grayscale -colorspace Gray \
- -colors 2 -depth 1 \
- -define png:compression-level=9 -define png:compression-strategy=0 \
- -define png:exclude-chunk=all \
- ${1%.png}.mod.png
- */
-    /*
-    char *bw_argv[] = {
-        "convert", inputPath,
-        "-fill '#FFFFFF00'", "-opaque none",
-        "-type", "Grayscale",
-        "-colorspace", "Gray",
-        "-black-threshold", "30%",
-        "-white-threshold", "70%",
-        "-ordered-dither", "2x1",
-        "-colors", "2",
-        "-depth", "1",
-        "-define", "png:compression-level=9",
-        "-define", "png:compression-strategy=0",
-        "-define", "png:exclude-chunk=all",
-        outputPath,
-        NULL
-    };
-    */
-     
-    /*
-     * Black and white support
-     */
-    /*
-    char *bw_argv[] = {
-        "convert", inputPath,
-        "-opaque", "none",
-        "-type", "Grayscale",
-        "-colorspace", "Gray",
-        "-colors", "2",
-        "-depth", "1",
-        "-define", "png:compression-level=9",
-        "-define", "png:compression-strategy=0",
-        "-define", "png:exclude-chunk=all",
-        outputPath,
-        NULL
-    };
-     */
      
     MagickCoreGenesis(blackAndWhite ? *bw_argv : *argv, MagickFalse);
     MagickWand *magick_wand = NewMagickWand();

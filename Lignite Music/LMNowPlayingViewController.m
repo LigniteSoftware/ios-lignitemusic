@@ -66,10 +66,10 @@ typedef enum {
 #define MessageKeyHeaderIconIndex @(16)
 #define MessageKeyWatchModel @(17)
 #define MessageKeyImagePart @(18)
+#define MessageKeyAppMessageSize @(19)
 
 #define MAX_LABEL_LENGTH 20
 #define MAX_RESPONSE_COUNT 90
-#define MAX_OUTGOING_SIZE 1500
 
 typedef enum {
     NowPlayingTitle,
@@ -111,6 +111,8 @@ typedef enum {
 @property WatchInfoModel watchModel;
 
 @property uint8_t imageParts;
+
+@property int appMessageSize;
 
 @end
 
@@ -676,14 +678,14 @@ typedef enum {
                 [self sendMessageToPebble:sizeDict];
                 
                 uint8_t j = 0;
-                for(size_t i = 0; i < length; i += MAX_OUTGOING_SIZE-1) {
-                    NSMutableData *outgoing = [[NSMutableData alloc] initWithCapacity:MAX_OUTGOING_SIZE];
+                for(size_t i = 0; i < length; i += self.appMessageSize-1) {
+                    NSMutableData *outgoing = [[NSMutableData alloc] initWithCapacity:self.appMessageSize];
                     
-                    NSRange rangeOfBytes = NSMakeRange(i, MIN(MAX_OUTGOING_SIZE-1, length - i));
+                    NSRange rangeOfBytes = NSMakeRange(i, MIN(self.appMessageSize-1, length - i));
                     [outgoing appendBytes:[[bitmap subdataWithRange:rangeOfBytes] bytes] length:rangeOfBytes.length];
                     
                     NSDictionary *dict = @{MessageKeyAlbumArt: outgoing, MessageKeyAlbumArtIndex:[NSNumber numberWithUint16:j], MessageKeyImagePart:[NSNumber numberWithUint8:index]};
-                    NSLog(@"Sending %@", dict);
+                    NSLog(@"Sending index %d", j);
                     [self sendMessageToPebble:dict];
                     j++;
                 }
@@ -801,7 +803,8 @@ typedef enum {
             self.overrideImageLogic = [update[MessageKeyNowPlaying] isEqual:@(100)];
             self.watchModel = [update[MessageKeyWatchModel] uint8Value];
             self.imageParts = [update[MessageKeyImagePart] uint8Value];
-            NSLog(@"Got override %d, watch model %d and image parts: %d", self.overrideImageLogic, self.watchModel, self.imageParts);
+            self.appMessageSize = [update[MessageKeyAppMessageSize] uint16Value];
+            NSLog(@"Got override %d, watch model %d, message size %d and image parts: %d", self.overrideImageLogic, self.watchModel, self.appMessageSize, self.imageParts);
             
             [self pushNowPlayingItemToWatch];
         }
@@ -970,7 +973,7 @@ typedef enum {
         }
         NSData *value_data = [value dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
         uint8_t length = [value_data length];
-        if(([result length] + length) > MAX_OUTGOING_SIZE){
+        if(([result length] + length) > self.appMessageSize){
             NSLog(@"Cutting off length at %ld", [result length]);
             break;
         }
