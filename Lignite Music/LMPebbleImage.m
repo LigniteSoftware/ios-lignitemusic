@@ -7,11 +7,12 @@
 //
 
 #import <wand/MagickWand.h>
+#import <YYImage/YYImage.h>
 #import "LMPebbleImage.h"
 
 @implementation LMPebbleImage
 
-+ (UIImage*)ditherImage:(UIImage*)originalImage
++ (NSString*)ditherImage:(UIImage*)originalImage
                withSize:(CGSize)size
           forTotalParts:(uint8_t)totalParts
         withCurrentPart:(uint8_t)currentPart
@@ -40,9 +41,10 @@
     CGImageRelease(imageRef);
     
     NSString *sourceImagePath =  [[paths objectAtIndex:0] stringByAppendingPathComponent:@"current_album_artwork.png"];
-    [UIImagePNGRepresentation(image) writeToFile:sourceImagePath atomically:YES];
+    NSData *imageData = [YYImageEncoder encodeImage:image type:YYImageTypePNG quality:1];
+    [imageData writeToFile:sourceImagePath atomically:YES];
     
-    NSString *coloursGif = [[NSBundle mainBundle] pathForResource:@"pebble_colours_64" ofType:@"gif"];
+    NSString *coloursGif = [[NSBundle mainBundle] pathForResource:blackAndWhite ? @"aplite_colours" : @"pebble_colours_64" ofType:@"gif"];
     char *coloursFilePath = strdup([coloursGif UTF8String]);
     
     NSString *outputString = [[paths objectAtIndex:0] stringByAppendingPathComponent:[NSString stringWithFormat:@"output_image_part_%d.png", currentPart]];
@@ -61,14 +63,35 @@
         outputPath,
         NULL };
     
-    /*
-    char *argv[] = {
-        "convert", inputPath,
+    char *bw_argv[] = { "convert", inputPath,
         "-opaque", "none",
+        "-dither", "FloydSteinberg",
+        "-remap", coloursFilePath,
+        "-define", "png:compression-level=9",
+        "-define", "png:compression-strategy=0",
+        "-define", "png:exclude-chunk=all",
+        outputPath,
+        NULL };
+    
+    
+/*
+ convert $1 \
+ -adaptive-resize '144x168>' \
+ -fill '#FFFFFF00' -opaque none \
+ -type Grayscale -colorspace Gray \
+ -colors 2 -depth 1 \
+ -define png:compression-level=9 -define png:compression-strategy=0 \
+ -define png:exclude-chunk=all \
+ ${1%.png}.mod.png
+ */
+    /*
+    char *bw_argv[] = {
+        "convert", inputPath,
+        "-fill '#FFFFFF00'", "-opaque none",
         "-type", "Grayscale",
         "-colorspace", "Gray",
-        "-black-threshold", "50%",
-        "-white-threshold", "50%",
+        "-black-threshold", "30%",
+        "-white-threshold", "70%",
         "-ordered-dither", "2x1",
         "-colors", "2",
         "-depth", "1",
@@ -78,12 +101,13 @@
         outputPath,
         NULL
     };
-     */
-    
+    */
+     
     /*
      * Black and white support
-     *
-    char *argv[] = {
+     */
+    /*
+    char *bw_argv[] = {
         "convert", inputPath,
         "-opaque", "none",
         "-type", "Grayscale",
@@ -97,10 +121,10 @@
         NULL
     };
      */
-    
-    MagickCoreGenesis(*argv, MagickFalse);
+     
+    MagickCoreGenesis(blackAndWhite ? *bw_argv : *argv, MagickFalse);
     MagickWand *magick_wand = NewMagickWand();
-    NSData * dataObject = UIImagePNGRepresentation([UIImage imageWithContentsOfFile:sourceImagePath]);
+    NSData * dataObject = imageData;
     MagickBooleanType status;
     status = MagickReadImageBlob(magick_wand, [dataObject bytes], [dataObject length]);
     if (status == MagickFalse) {
@@ -112,13 +136,13 @@
     ExceptionInfo *exceptionInfo = AcquireExceptionInfo();
     
     int elements = 0;
-    while (argv[elements] != NULL)
+    while ((blackAndWhite ? bw_argv[elements] : argv[elements]) != NULL)
     {
         elements++;
     }
     
     // ConvertImageCommand(ImageInfo *, int, char **, char **, MagickExceptionInfo *);
-    status = ConvertImageCommand(imageInfo, elements, argv, NULL, exceptionInfo);
+    status = ConvertImageCommand(imageInfo, elements, blackAndWhite ? bw_argv : argv, NULL, exceptionInfo);
     
     if (exceptionInfo->severity != UndefinedException)
     {
@@ -131,8 +155,7 @@
         //ThrowWandException(magick_wand); // Always throws an exception here...
     }
     
-    UIImage *convertedImage = [UIImage imageWithContentsOfFile:outputString];
-    return convertedImage;
+    return outputString;
 }
 
 @end

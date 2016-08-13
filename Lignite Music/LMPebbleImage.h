@@ -11,7 +11,7 @@
 
 @interface LMPebbleImage : NSObject
 
-+ (UIImage*)ditherImage:(UIImage*)originalImage
++ (NSString*)ditherImage:(UIImage*)originalImage
                withSize:(CGSize)size
           forTotalParts:(uint8_t)totalParts
         withCurrentPart:(uint8_t)currentPart

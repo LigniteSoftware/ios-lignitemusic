@@ -620,8 +620,11 @@ typedef enum {
 
 - (void)sendAlbumArtImage {
     if(self.imageParts == 0){
-        return;
+        NSLog(@"Setting to 1");
+        self.imageParts = 1;
     }
+    
+    NSLog(@"image parts var is %d", self.imageParts);
     
     CGSize imageSize = [self albumArtSize];
     UIImage *albumArtImage = [[self.musicPlayer.nowPlayingItem artwork]imageWithSize:imageSize];
@@ -635,12 +638,17 @@ typedef enum {
     
     //UIImage *image = [LMPebbleImage ditherImageForPebble:albumArtImage withColourPalette:YES withSize:imageSize withBlackAndWhite:NO];
     for(uint8_t index = 0; index < self.imageParts; index++){
-        UIImage *image = [LMPebbleImage ditherImage:albumArtImage
+        
+        NSString *imageString = [LMPebbleImage ditherImage:albumArtImage
                                            withSize:imageSize
                                       forTotalParts:self.imageParts
                                     withCurrentPart:index
-                                    isBlackAndWhite:NO
+                                    isBlackAndWhite:YES
                                        isRoundWatch:[self watchIsRoundScreen]];
+        
+        UIImage *image = [UIImage imageWithContentsOfFile:imageString];
+
+        //UIImage *image = [UIImage imageNamed:@"robot_ios.png"];
         
         int width = imageSize.width/self.imageParts;
         UIImageView *view = [[UIImageView alloc]initWithFrame:CGRectMake(width*index, 0, width, imageSize.height)];
@@ -650,12 +658,16 @@ typedef enum {
         if(self.watch){
             if(!albumArtImage) {
                 NSLog(@"No image!");
-                [self sendMessageToPebble:@{MessageKeyAlbumArtLength:[NSNumber numberWithUint8:1], MessageKeyImagePart:[NSNumber numberWithUint8:index]}];
+                [self sendMessageToPebble:@{MessageKeyAlbumArtLength:[NSNumber numberWithUint16:1], MessageKeyImagePart:[NSNumber numberWithUint8:index]}];
             }
             else {
-                YYImageEncoder *pngEncoder = [[YYImageEncoder alloc] initWithType:YYImageTypePNG];
-                [pngEncoder addImage:image duration:0];
-                NSData *bitmap = [pngEncoder encode];
+                //NSData *bitmap = [YYImageEncoder encodeImage:image type:YYImageTypePNG quality:1];
+                //NSString *dataFile = [[NSBundle mainBundle] pathForResource:@"bw_robot" ofType:@"png"];
+                NSData *bitmap = [NSData dataWithContentsOfFile:imageString];
+                NSLog(@"Got data file %@ with bitmap length %lu", imageString, (unsigned long)[bitmap length]);
+                //return;
+                //NSData *bitmap = nil;
+                //NSData *bitmap = UIImagePNGRepresentation(image);
                 
                 size_t length = [bitmap length];
                 NSDictionary *sizeDict = @{MessageKeyAlbumArtLength: [NSNumber numberWithUint16:length], MessageKeyImagePart:[NSNumber numberWithUint8:index]};
@@ -671,6 +683,7 @@ typedef enum {
                     [outgoing appendBytes:[[bitmap subdataWithRange:rangeOfBytes] bytes] length:rangeOfBytes.length];
                     
                     NSDictionary *dict = @{MessageKeyAlbumArt: outgoing, MessageKeyAlbumArtIndex:[NSNumber numberWithUint16:j], MessageKeyImagePart:[NSNumber numberWithUint8:index]};
+                    NSLog(@"Sending %@", dict);
                     [self sendMessageToPebble:dict];
                     j++;
                 }
