@@ -636,8 +636,6 @@ typedef enum {
         self.imageParts = 1;
     }
     
-    NSLog(@"image parts var is %d", self.imageParts);
-    
     CGSize imageSize = [self albumArtSize];
     UIImage *albumArtImage = [[self.musicPlayer.nowPlayingItem artwork]imageWithSize:imageSize];
     
@@ -648,7 +646,6 @@ typedef enum {
     self.lastAlbumArtImage = albumArtImage;
     self.overrideImageLogic = NO;
     
-    //UIImage *image = [LMPebbleImage ditherImageForPebble:albumArtImage withColourPalette:YES withSize:imageSize withBlackAndWhite:NO];
     for(uint8_t index = 0; index < self.imageParts; index++){
         
         NSString *imageString = [LMPebbleImage ditherImage:albumArtImage
@@ -658,28 +655,14 @@ typedef enum {
                                     isBlackAndWhite:[self watchIsBlackAndWhite]
                                        isRoundWatch:[self watchIsRoundScreen]];
         
-        UIImage *image = [UIImage imageWithContentsOfFile:imageString];
-        
-        /*
-        int width = imageSize.width/self.imageParts;
-        UIImageView *view = [[UIImageView alloc]initWithFrame:CGRectMake(width*index, 0, width, imageSize.height)];
-        view.image = image;
-        [self.view addSubview:view];
-         */
-        
         if(self.watch){
             if(!albumArtImage) {
                 NSLog(@"No image!");
                 [self sendMessageToPebble:@{MessageKeyAlbumArtLength:[NSNumber numberWithUint16:1], MessageKeyImagePart:[NSNumber numberWithUint8:index]}];
             }
             else {
-                //NSData *bitmap = [YYImageEncoder encodeImage:image type:YYImageTypePNG quality:1];
-                //NSString *dataFile = [[NSBundle mainBundle] pathForResource:@"bw_robot" ofType:@"png"];
                 NSData *bitmap = [NSData dataWithContentsOfFile:imageString];
                 NSLog(@"Got data file %@ with bitmap length %lu", imageString, (unsigned long)[bitmap length]);
-                //return;
-                //NSData *bitmap = nil;
-                //NSData *bitmap = UIImagePNGRepresentation(image);
                 
                 size_t length = [bitmap length];
                 
@@ -703,53 +686,25 @@ typedef enum {
             }
         }
     }
-/*
-    return;
-    
-    if(!albumArtImage) {
-        NSLog(@"No image!");
-        [self sendMessageToPebble:@{MessageKeyAlbumArtLength:[NSNumber numberWithUint8:1]}];
-    }
-    else {
-        YYImageEncoder *pngEncoder = [[YYImageEncoder alloc] initWithType:YYImageTypePNG];
-        [pngEncoder addImage:image duration:0];
-        NSData *bitmap = [pngEncoder encode];
-        
-        size_t length = [bitmap length];
-        NSDictionary *sizeDict = @{MessageKeyAlbumArtLength: [NSNumber numberWithUint16:length]};
-        NSLog(@"Album art size message: %@", sizeDict);
-
-        [self sendMessageToPebble:sizeDict];
-        
-        uint8_t j = 0;
-        for(size_t i = 0; i < length; i += MAX_OUTGOING_SIZE-1) {
-            NSMutableData *outgoing = [[NSMutableData alloc] initWithCapacity:MAX_OUTGOING_SIZE];
-            
-            NSRange rangeOfBytes = NSMakeRange(i, MIN(MAX_OUTGOING_SIZE-1, length - i));
-            [outgoing appendBytes:[[bitmap subdataWithRange:rangeOfBytes] bytes] length:rangeOfBytes.length];
-            
-            NSDictionary *dict = @{MessageKeyAlbumArt: outgoing, MessageKeyAlbumArtIndex:[NSNumber numberWithUint16:j]};
-            [self sendMessageToPebble:dict];
-            j++;
-        }
-    }
- */
 }
 
 - (void)sendHeaderIconImage:(UIImage*)albumArtImage {
     NSLog(@"sending image %@", albumArtImage);
     CGSize imageSize = CGSizeMake(28, 28);
-    /*
-    UIImage *image = [LMPebbleImage ditherImageForPebble:albumArtImage withColourPalette:YES withSize:imageSize withBlackAndWhite:[self watchIsRoundScreen]];
+
+    NSString *imageString = [LMPebbleImage ditherImage:albumArtImage
+                                              withSize:imageSize
+                                         forTotalParts:1
+                                       withCurrentPart:0
+                                       isBlackAndWhite:[self watchIsBlackAndWhite]
+                                          isRoundWatch:NO];
     
     if(!albumArtImage) {
         NSLog(@"No image!");
         [self sendMessageToPebble:@{MessageKeyHeaderIconLength:[NSNumber numberWithUint8:1]}];
     }
     else {
-        YYImageEncoder *pngEncoder = [[YYImageEncoder alloc] initWithType:YYImageTypePNG];
-        [pngEncoder addImage:image duration:0];
-        NSData *bitmap = [pngEncoder encode];
+        NSData *bitmap = [NSData dataWithContentsOfFile:imageString];
         
         size_t length = [bitmap length];
         NSDictionary *sizeDict = @{MessageKeyHeaderIconLength: [NSNumber numberWithUint16:[bitmap length]]};
@@ -757,10 +712,10 @@ typedef enum {
         [self sendMessageToPebble:sizeDict];
         
         uint8_t j = 0;
-        for(size_t i = 0; i < length; i += MAX_OUTGOING_SIZE-1) {
-            NSMutableData *outgoing = [[NSMutableData alloc] initWithCapacity:MAX_OUTGOING_SIZE];
+        for(size_t i = 0; i < length; i += self.appMessageSize-1) {
+            NSMutableData *outgoing = [[NSMutableData alloc] initWithCapacity:self.appMessageSize];
             
-            NSRange rangeOfBytes = NSMakeRange(i, MIN(MAX_OUTGOING_SIZE-1, length - i));
+            NSRange rangeOfBytes = NSMakeRange(i, MIN(self.appMessageSize-1, length - i));
             [outgoing appendBytes:[[bitmap subdataWithRange:rangeOfBytes] bytes] length:rangeOfBytes.length];
             
             NSDictionary *dict = @{MessageKeyHeaderIcon: outgoing, MessageKeyHeaderIconIndex:[NSNumber numberWithUint16:j]};
@@ -768,7 +723,6 @@ typedef enum {
             j++;
         }
     }
-     */
 }
 
 - (void)pebbleCentral:(PBPebbleCentral *)central watchDidConnect:(PBWatch *)watch isNew:(BOOL)isNew {
@@ -1142,8 +1096,17 @@ typedef enum {
         [self presentViewController:alert animated:YES completion:nil];
         
     }
-    
-    [self sendAlbumArtImage];
+    /*
+    UIImage *image = [UIImage imageWithContentsOfFile:[LMPebbleImage ditherImage:[self.musicPlayer.nowPlayingItem.artwork imageWithSize:CGSizeMake(28, 28)]
+                                                                        withSize:CGSizeMake(36, 36)
+                                                                   forTotalParts:1
+                                                                 withCurrentPart:0
+                                                                 isBlackAndWhite:NO
+                                                                    isRoundWatch:NO]];
+    UIImageView *view = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 100, 100)];
+    view.image = image;
+    [self.view addSubview:view];
+     */
 }
 
 - (void)viewDidLoad {
@@ -1151,11 +1114,7 @@ typedef enum {
     
     self.central = [PBPebbleCentral defaultCentral];
     self.central.delegate = self;
-    
-    // UUID of watchapp starter project: af17efe7-2141-4eb2-b62a-19fc1b595595
     self.central.appUUID = [[NSUUID alloc] initWithUUIDString:@"edf76057-f3ef-4de6-b841-cb9532a81a5a"];
-    //[self.central run];
-    
     
     self.messageQueue = [[LMPebbleMessageQueue alloc]init];
     

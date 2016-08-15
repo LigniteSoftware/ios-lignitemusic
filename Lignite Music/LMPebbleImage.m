@@ -27,6 +27,16 @@
         [[UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, size.width, size.height) cornerRadius:size.width/2] addClip];
         [[UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, size.width, size.height-45) cornerRadius:0] addClip];
     }
+
+    
+    
+    //Must be header icon
+    if(size.width < 50){
+        UIBezierPath *path =[UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, size.width, size.height) cornerRadius:8];
+        blackAndWhite ? [[UIColor blackColor] setFill] : [[UIColor redColor] setFill];
+        [[UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, size.width, size.height) cornerRadius:0] fill];
+        [path addClip];
+    }
     
     [originalImage drawInRect:CGRectMake(0, 0, size.width, size.height)];
     
