@@ -338,7 +338,7 @@ typedef enum {
 }
 
 - (void)playPauseMusic {
-    if(self.musicPlayer.playbackState == MPMusicPlaybackStatePaused){
+    if(self.musicPlayer.playbackState != MPMusicPlaybackStatePlaying){
         [self.musicPlayer play];
         if(![self.refreshTimer isValid]){
             [self fireRefreshTimer];
@@ -613,6 +613,16 @@ typedef enum {
     }
 }
 
+- (BOOL)watchIsBlackAndWhite {
+    switch(self.watchModel){
+        case WATCH_INFO_MODEL_PEBBLE_ORIGINAL:
+        case WATCH_INFO_MODEL_PEBBLE_STEEL:
+            return true;
+        default:
+            return false;
+    }
+}
+
 - (CGSize)albumArtSize {
     if([self watchIsRoundScreen]){
         return CGSizeMake(180, 180);
@@ -645,17 +655,17 @@ typedef enum {
                                            withSize:imageSize
                                       forTotalParts:self.imageParts
                                     withCurrentPart:index
-                                    isBlackAndWhite:YES
+                                    isBlackAndWhite:[self watchIsBlackAndWhite]
                                        isRoundWatch:[self watchIsRoundScreen]];
         
         UIImage *image = [UIImage imageWithContentsOfFile:imageString];
-
-        //UIImage *image = [UIImage imageNamed:@"robot_ios.png"];
         
+        /*
         int width = imageSize.width/self.imageParts;
         UIImageView *view = [[UIImageView alloc]initWithFrame:CGRectMake(width*index, 0, width, imageSize.height)];
         view.image = image;
         [self.view addSubview:view];
+         */
         
         if(self.watch){
             if(!albumArtImage) {
@@ -672,6 +682,7 @@ typedef enum {
                 //NSData *bitmap = UIImagePNGRepresentation(image);
                 
                 size_t length = [bitmap length];
+                
                 NSDictionary *sizeDict = @{MessageKeyAlbumArtLength: [NSNumber numberWithUint16:length], MessageKeyImagePart:[NSNumber numberWithUint8:index]};
                 NSLog(@"Album art size message: %@", sizeDict);
                 
