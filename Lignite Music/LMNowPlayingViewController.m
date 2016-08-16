@@ -67,6 +67,7 @@ typedef enum {
 #define MessageKeyWatchModel @(17)
 #define MessageKeyImagePart @(18)
 #define MessageKeyAppMessageSize @(19)
+#define MessageKeyShuffle @(20)
 
 #define MAX_LABEL_LENGTH 20
 #define MAX_RESPONSE_COUNT 90
@@ -690,7 +691,7 @@ typedef enum {
 
 - (void)sendHeaderIconImage:(UIImage*)albumArtImage {
     NSLog(@"sending image %@", albumArtImage);
-    CGSize imageSize = CGSizeMake(28, 28);
+    CGSize imageSize = CGSizeMake(36, 36);
 
     NSString *imageString = [LMPebbleImage ditherImage:albumArtImage
                                               withSize:imageSize
@@ -754,7 +755,7 @@ typedef enum {
         }
         if(update[MessageKeyPlayTrack]) {
             NSLog(@"Will play track from message %@", update);
-            [self playTrackFromMessage:update];
+            [self playTrackFromMessage:update shuffle:[update[MessageKeyShuffle] isEqual:@(1)]];
         }
         else if(update[MessageKeyRequestLibrary]) {
             if(update[MessageKeyRequestParent]) {
@@ -788,7 +789,7 @@ typedef enum {
     }
 }
 
-- (void)playTrackFromMessage:(NSDictionary *)message {
+- (void)playTrackFromMessage:(NSDictionary *)message shuffle:(BOOL)shuffle {
     MPMediaItemCollection *queue = [self getCollectionFromMessage:message][0];
     MPMediaItem *track = [queue items][[message[MessageKeyPlayTrack] int16Value]];
     NSLog(@"Got index %d", [message[MessageKeyPlayTrack] int16Value]);
@@ -799,7 +800,13 @@ typedef enum {
     [self.musicPlayer stop];
     self.currentlyPlayingQueue = queue;
     [self.musicPlayer setQueueWithItemCollection:queue];
-    [self.musicPlayer setNowPlayingItem:track];
+    if(shuffle){
+        self.musicPlayer.shuffleMode = MPMusicShuffleModeSongs;
+    }
+    else{
+        self.musicPlayer.shuffleMode = MPMusicShuffleModeOff;
+        [self.musicPlayer setNowPlayingItem:track];
+    }
     [self.musicPlayer play];
     //[self.musicPlayer setCurrentPlaybackTime:0];
     NSLog(@"Now playing %@", [self.musicPlayer.nowPlayingItem valueForProperty:MPMediaItemPropertyTitle]);
@@ -954,7 +961,9 @@ typedef enum {
     }
     else if(type == MPMediaGroupingTitle){
         [self pushLibraryResults:results withOffset:offset type:MPMediaGroupingPodcastTitle isSubtitle:2];
-        [self sendHeaderIconImage:[[representativeItem artwork] imageWithSize:CGSizeMake(28, 28)]];
+        if(![self watchIsBlackAndWhite]){
+            [self sendHeaderIconImage:[[representativeItem artwork] imageWithSize:CGSizeMake(36, 36)]];
+        }
     }
     else if(type == MPMediaGroupingPlaylist){
         NSLog(@"Pushing playlist subtitles");
