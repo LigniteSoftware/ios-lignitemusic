@@ -18,76 +18,6 @@
 
 @interface LMNowPlayingViewController () <LMButtonDelegate, UIGestureRecognizerDelegate, PBPebbleCentralDelegate>
 
-/*
-typedef enum {
-    MessageKeyReconnect = 0,
-    MessageKeyRequestLibrary,
-    MessageKeyRequestOffset,
-    MessageKeyLibraryResponse,
-    MessageKeyNowPlaying,
-    MessageKeyRequestParent,
-    MessageKeyPlayTrack,
-    MessageKeyNowPlayingResponseType,
-    MessageKeyAlbumArt,
-    MessageKeyAlbumArtLength,
-    MessageKeyAlbumArtIndex,
-    MessageKeyChangeState,
-    MessageKeyCurrentState,
-    MessageKeySequenceNumber
-} MessageKey;
- */
-
-typedef enum {
-    WATCH_INFO_MODEL_UNKNOWN = 0,          //Unknown model.
-    WATCH_INFO_MODEL_PEBBLE_ORIGINAL,      //Original Pebble.
-    WATCH_INFO_MODEL_PEBBLE_STEEL,         //Pebble Steel.
-    WATCH_INFO_MODEL_PEBBLE_TIME,          //Pebble Time.
-    WATCH_INFO_MODEL_PEBBLE_TIME_STEEL,    //Pebble Time Steel.
-    WATCH_INFO_MODEL_PEBBLE_TIME_ROUND_14, //Pebble Time Round, 14mm lug size.
-    WATCH_INFO_MODEL_PEBBLE_TIME_ROUND_20  //Pebble Time Round, 20mm lug size.
-} WatchInfoModel;
-
-#define MessageKeyReconnect @(0)
-#define MessageKeyRequestLibrary @(1)
-#define MessageKeyRequestOffset @(2)
-#define MessageKeyLibraryResponse @(3)
-#define MessageKeyNowPlaying @(4)
-#define MessageKeyRequestParent @(5)
-#define MessageKeyPlayTrack @(6)
-#define MessageKeyNowPlayingResponseType @(7)
-#define MessageKeyAlbumArt @(8)
-#define MessageKeyAlbumArtLength @(9)
-#define MessageKeyAlbumArtIndex @(10)
-#define MessageKeyChangeState @(11)
-#define MessageKeyCurrentState @(12)
-#define MessageKeySequenceNumber @(13)
-#define MessageKeyHeaderIcon @(14)
-#define MessageKeyHeaderIconLength @(15)
-#define MessageKeyHeaderIconIndex @(16)
-#define MessageKeyWatchModel @(17)
-#define MessageKeyImagePart @(18)
-#define MessageKeyAppMessageSize @(19)
-#define MessageKeyShuffle @(20)
-
-#define MAX_LABEL_LENGTH 20
-#define MAX_RESPONSE_COUNT 90
-
-typedef enum {
-    NowPlayingTitle,
-    NowPlayingArtist,
-    NowPlayingAlbum,
-    NowPlayingTitleArtist,
-    NowPlayingNumbers,
-} NowPlayingType;
-
-typedef enum {
-    NowPlayingStatePlayPause = 1,
-    NowPlayingStateSkipNext,
-    NowPlayingStateSkipPrevious,
-    NowPlayingStateVolumeUp,
-    NowPlayingStateVolumeDown
-} NowPlayingState;
-
 @property NSTimer *refreshTimer;
 @property UIView *shadingView;
 @property BOOL finishedUserAdjustment;
@@ -107,13 +37,15 @@ typedef enum {
 
 @property MPMediaItemCollection *currentlyPlayingQueue;
 
-@property BOOL overrideImageLogic;
-
 @property WatchInfoModel watchModel;
+
+@property NowPlayingRequestType requestType;
 
 @property uint8_t imageParts;
 
 @property int appMessageSize;
+
+@property BOOL firstPebbleAppOpen;
 
 @end
 
@@ -194,7 +126,8 @@ typedef enum {
     //[self.playingView updateNowPlayingItem:self.musicPlayer.nowPlayingItem];
     
     NSLog(@"Now playing item has changed");
-    
+	
+	self.requestType = NowPlayingRequestTypeAllData;
     [self pushNowPlayingItemToWatch];
     
     if(!self.musicPlayer.nowPlayingItem){
@@ -639,13 +572,17 @@ typedef enum {
     
     CGSize imageSize = [self albumArtSize];
     UIImage *albumArtImage = [[self.musicPlayer.nowPlayingItem artwork]imageWithSize:imageSize];
-    
-    if([albumArtImage isEqual:self.lastAlbumArtImage] && !self.overrideImageLogic){
+	if([albumArtImage isEqual:self.lastAlbumArtImage] && self.requestType != NowPlayingRequestTypeOnlyTrackInfo && !self.firstPebbleAppOpen){
         NSLog(@"The album art is literally samezies...");
         return;
     }
+	else if(self.requestType == NowPlayingRequestTypeOnlyTrackInfo){
+		NSLog(@"Only track info, rejecting");
+		return;
+	}
     self.lastAlbumArtImage = albumArtImage;
-    self.overrideImageLogic = NO;
+    self.requestType = NowPlayingRequestTypeOnlyTrackInfo;
+	self.firstPebbleAppOpen = NO;
     
     for(uint8_t index = 0; index < self.imageParts; index++){
         
@@ -755,7 +692,7 @@ typedef enum {
         }
         if(update[MessageKeyPlayTrack]) {
             NSLog(@"Will play track from message %@", update);
-            [self playTrackFromMessage:update shuffle:[update[MessageKeyShuffle] isEqual:@(1)]];
+            [self playTrackFromMessage:update withTrackPlayMode:[update[MessageKeyTrackPlayMode] uint8Value]];
         }
         else if(update[MessageKeyRequestLibrary]) {
             if(update[MessageKeyRequestParent]) {
@@ -766,11 +703,15 @@ typedef enum {
         }
         else if(update[MessageKeyNowPlaying]) {
             NSLog(@"Now playing key sent");
-            self.overrideImageLogic = [update[MessageKeyNowPlaying] isEqual:@(100)];
+            self.requestType = [update[MessageKeyNowPlaying] uint8Value];
             self.watchModel = [update[MessageKeyWatchModel] uint8Value];
             self.imageParts = [update[MessageKeyImagePart] uint8Value];
             self.appMessageSize = [update[MessageKeyAppMessageSize] uint16Value];
-            NSLog(@"Got override %d, watch model %d, message size %d and image parts: %d", self.overrideImageLogic, self.watchModel, self.appMessageSize, self.imageParts);
+			if(update[MessageKeyFirstOpen]){
+				NSLog(@"\nIs first app open!\n");
+				self.firstPebbleAppOpen = YES;
+			}
+            NSLog(@"Got request type %d, watch model %d, message size %d and image parts: %d", self.requestType, self.watchModel, self.appMessageSize, self.imageParts);
             
             [self pushNowPlayingItemToWatch];
         }
@@ -789,9 +730,9 @@ typedef enum {
     }
 }
 
-- (void)playTrackFromMessage:(NSDictionary *)message shuffle:(BOOL)shuffle {
+- (void)playTrackFromMessage:(NSDictionary *)message withTrackPlayMode:(TrackPlayMode)trackPlayMode {
     MPMediaItemCollection *queue = [self getCollectionFromMessage:message][0];
-    MPMediaItem *track = [queue items][[message[MessageKeyPlayTrack] int16Value]];
+	MPMediaItem *track = [queue items][[[message[MessageKeyPlayTrack] int16Value] < 0 ? 0 : message[MessageKeyPlayTrack] int16Value]];
     NSLog(@"Got index %d", [message[MessageKeyPlayTrack] int16Value]);
     for(int i = 0; i < [[queue items] count]; i++){
         NSLog(@"Got item %@: %d", [[[queue items] objectAtIndex:i]valueForProperty:MPMediaItemPropertyTitle], i);
@@ -800,20 +741,19 @@ typedef enum {
     [self.musicPlayer stop];
     self.currentlyPlayingQueue = queue;
     [self.musicPlayer setQueueWithItemCollection:queue];
-    if(shuffle){
+    if(trackPlayMode == TrackPlayModeShuffleAll){
         self.musicPlayer.shuffleMode = MPMusicShuffleModeSongs;
     }
     else{
-        self.musicPlayer.shuffleMode = MPMusicShuffleModeOff;
         [self.musicPlayer setNowPlayingItem:track];
+        
+        self.musicPlayer.shuffleMode = MPMusicShuffleModeOff;
+        self.musicPlayer.repeatMode = (trackPlayMode-TrackPlayModeRepeatModeNone)+1;
+        NSLog(@"Setting repeat mdoe as %ld", (long)self.musicPlayer.repeatMode);
     }
     [self.musicPlayer play];
     //[self.musicPlayer setCurrentPlaybackTime:0];
     NSLog(@"Now playing %@", [self.musicPlayer.nowPlayingItem valueForProperty:MPMediaItemPropertyTitle]);
-    //NSLog(@"Index in queue %ld", [self.musicPlayer indexOfNowPlayingItem]);
-    //[self.musicPlayer play];
-    //[self pushNowPlayingItemToWatch:watch detailed:YES];
-    
 }
 
 - (void)libraryDataRequest:(NSDictionary *)request {
