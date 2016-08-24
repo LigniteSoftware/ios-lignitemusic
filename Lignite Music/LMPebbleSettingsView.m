@@ -42,7 +42,7 @@
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 2;
+    return 3;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -51,6 +51,8 @@
             return 2;
         case 1:
             return 1;
+		case 2:
+			return 3;
     }
     return 0;
 }
@@ -68,7 +70,7 @@
     }
 }
 
-- (void)addLabelToCell:(UITableViewCell*)cell withID:(NSString*)labelID {
+- (LMSettingsLabel*)addLabelToCell:(UITableViewCell*)cell withID:(NSString*)labelID {
     CGRect screenRect = [[UIScreen mainScreen] bounds];
     
     CGRect label_rect = CGRectMake(screenRect.origin.x+14, 7, screenRect.size.width-35.0f, 30.0f);
@@ -76,6 +78,12 @@
     label.text = NSLocalizedString(labelID, nil);
     label.labelID = labelID;
     [cell addSubview:label];
+	
+	if(!self.messageQueue || !self.messageQueue.watch){
+		label.enabled = NO;
+	}
+	
+	return label;
 }
 
 - (void)addToggleToCell:(UITableViewCell*)cell withID:(NSString*)switchID{
@@ -96,12 +104,50 @@
     else{
         toggle.on = [[self.defaultsMapping objectForKey:toggle.switchID] isEqualToValue:@(1)];
     }
+	
+	if(!self.messageQueue || !self.messageQueue.watch){
+		toggle.enabled = NO;
+	}
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+	[tableView deselectRowAtIndexPath:indexPath animated:YES];
+	if(indexPath.section == 2){
+		switch(indexPath.row){
+			case 0:
+				[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"pebble://appstore/579c3ee922f599cf7e0001ea"]];
+				break;
+			case 1:
+				[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://www.lignite.io/feedback/"]];
+				break;
+			case 2:;
+				UIAlertController * alert = [UIAlertController
+											 alertControllerWithTitle:@"How to Use"
+											 message:@"Hey! Welcome to the first Lignite Music beta. We're going to having a better tutorial soon, don't worry.\n\nTo play/pause the song, tap anywhere on the screen.\nTo skip/go to previous song, swipe left or right anywhere on the screen.\nDrag the slider to control the playing time.\nInstall the Pebble app within the settings page.\n\nYou can replay this tutorial any time in settings."
+											 preferredStyle:UIAlertControllerStyleAlert];
+				
+				UIAlertAction* yesButton = [UIAlertAction
+											actionWithTitle:@"Ok, thanks"
+											style:UIAlertActionStyleDefault
+											handler:^(UIAlertAction * action) {
+												//[defaults setBool:YES forKey:@"shitty_tutorial"];
+											}];
+				
+				[alert addAction:yesButton];
+				
+				NSArray *viewArray = [[[[[[[[[[[[alert view] subviews] firstObject] subviews] firstObject] subviews] firstObject] subviews] firstObject] subviews] firstObject] subviews];
+				UILabel *alertMessage = viewArray[1];
+				alertMessage.textAlignment = NSTextAlignmentLeft;
+				
+				[self presentViewController:alert animated:YES completion:nil];
+				break;
+		}
+	}
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [[UITableViewCell alloc]init];
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    
+	
     switch(indexPath.section){
         case 0:
             switch(indexPath.row){
@@ -123,8 +169,22 @@
                     break;
             }
             break;
+		case 2:
+			switch(indexPath.row){
+				case 0:
+					[self addLabelToCell:cell withID:@"Install Pebble App"].enabled = YES;
+					break;
+				case 1:
+					[self addLabelToCell:cell withID:@"Send Feedback/Report Bug"].enabled = YES;
+					break;
+				case 2:
+					[self addLabelToCell:cell withID:@"Replay Tutorial"].enabled = YES;
+					break;
+			}
+			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+			break;
     }
-    
+	
     return cell;
 }
 
@@ -134,6 +194,8 @@
             return @"Functionality";
         case 1:
             return @"Look and Feel";
+		case 2:
+			return @"Other";
     }
     return @"Unknown Section";
 }

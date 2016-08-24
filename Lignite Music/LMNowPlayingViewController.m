@@ -47,6 +47,8 @@
 
 @property BOOL firstPebbleAppOpen;
 
+@property LMPebbleSettingsView *rootSettingsViewController;
+
 @end
 
 @implementation LMNowPlayingViewController
@@ -313,49 +315,21 @@
     if(button == self.shuffleButton){
         self.shuffleMode++;
         if(self.shuffleMode > MPMusicShuffleModeAlbums){
-            self.shuffleMode = 0;
+            self.shuffleMode = 1;
         }
         [self.musicPlayer setShuffleMode:self.shuffleMode];
     }
     else if(button == self.dynamicPlaylistButton){
         //LMPebbleSettingsView *settingsView = [[LMPebbleSettingsView alloc]initWithStyle:UITableViewStyleGrouped];
-        if(self.watch){
-            UINavigationController *settingsController = [self.storyboard instantiateViewControllerWithIdentifier:@"AllahuAkbar"];
-            LMPebbleSettingsView *rootSettingsViewController = [settingsController.viewControllers firstObject];
-            NSLog(@"count %ld", [settingsController.viewControllers count]);
-            rootSettingsViewController.messageQueue = self.messageQueue;
-            [self showDetailViewController:settingsController sender:self];
-        }
-        else{
-            UIAlertController * alert = [UIAlertController
-                                         alertControllerWithTitle:@"No Pebble Connected"
-                                         message:@"Settings are currently only for Pebble. Please connect a Pebble and try again."
-                                         preferredStyle:UIAlertControllerStyleAlert];
-            
-            UIAlertAction* yesButton = [UIAlertAction
-                                        actionWithTitle:@"Retry"
-                                        style:UIAlertActionStyleDefault
-                                        handler:^(UIAlertAction * action) {
-                                            [self clickedButton:self.dynamicPlaylistButton];
-                                        }];
-            
-            UIAlertAction* noButton = [UIAlertAction
-                                       actionWithTitle:@"Close"
-                                       style:UIAlertActionStyleCancel
-                                       handler:^(UIAlertAction * action) {
-                                           
-                                       }];
-            
-            [alert addAction:yesButton];
-            [alert addAction:noButton];
-            
-            [self presentViewController:alert animated:YES completion:nil];
-        }
-    }
+		UINavigationController *settingsController = [self.storyboard instantiateViewControllerWithIdentifier:@"AllahuAkbar"];
+		self.rootSettingsViewController = [settingsController.viewControllers firstObject];
+		self.rootSettingsViewController.messageQueue = self.messageQueue;
+		[self showDetailViewController:settingsController sender:self];
+	}
     else{
         self.repeatMode++;
         if(self.repeatMode > MPMusicRepeatModeAll){
-            self.repeatMode = 0;
+            self.repeatMode = 1;
         }
         [self.musicPlayer setRepeatMode:self.repeatMode];
     }
@@ -718,8 +692,16 @@
         else if(update[MessageKeyChangeState]) {
             [self changeState:(NowPlayingState)[update[MessageKeyChangeState] integerValue]];
         }
+		else if(update[MessageKeyConnectionTest]){
+			[self.messageQueue enqueue:@{ MessageKeyConnectionTest:[NSNumber numberWithInt8:1] }];
+		}
         return YES;
     }];
+	
+	if(self.rootSettingsViewController){
+		self.rootSettingsViewController.messageQueue = self.messageQueue;
+		[self.rootSettingsViewController.tableView reloadData];
+	}
 }
 
 - (void)pebbleCentral:(PBPebbleCentral *)central watchDidDisconnect:(PBWatch *)watch {
@@ -728,6 +710,11 @@
     if (self.watch == watch) {
         self.watch = nil;
     }
+	
+	if(self.rootSettingsViewController){
+		self.rootSettingsViewController.messageQueue = nil;
+		[self.rootSettingsViewController.tableView reloadData];
+	}
 }
 
 - (void)playTrackFromMessage:(NSDictionary *)message withTrackPlayMode:(TrackPlayMode)trackPlayMode {
@@ -995,9 +982,19 @@
         //Update the contents of the slider/timing elements if the music is paused
         [self nowPlayingTimeChanged:nil];
     }
-    
-    self.shuffleMode = self.musicPlayer.shuffleMode;
-    self.repeatMode = self.musicPlayer.repeatMode;
+	
+	if(self.musicPlayer.shuffleMode == MPMusicShuffleModeDefault){
+		self.shuffleMode = MPMusicShuffleModeSongs;
+	}
+	else{
+		self.shuffleMode = self.musicPlayer.shuffleMode;
+	}
+	if(self.musicPlayer.repeatMode == MPMusicRepeatModeDefault){
+		self.repeatMode = MPMusicRepeatModeNone;
+	}
+	else{
+		self.repeatMode = self.musicPlayer.repeatMode;
+	}
     [self reloadButtonTitles];
         
     UITapGestureRecognizer *screenTapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(playPauseMusic)];
@@ -1021,8 +1018,33 @@
     
     //NSLog(@"Starting test image...");
     //[self sendTestImage];
+	
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	
+	if(![defaults objectForKey:@"shitty_tutorial"]){
+		UIAlertController * alert = [UIAlertController
+									 alertControllerWithTitle:@"How to Use"
+									 message:@"Hey! Welcome to the first Lignite Music beta. We're going to having a better tutorial soon, don't worry.\n\nTo play/pause the song, tap anywhere on the screen.\nTo skip/go to previous song, swipe left or right anywhere on the screen.\nDrag the slider to control the playing time.\nInstall the Pebble app within the settings page.\n\nYou can replay this tutorial any time in settings."
+									 preferredStyle:UIAlertControllerStyleAlert];
+		
+		UIAlertAction* yesButton = [UIAlertAction
+									actionWithTitle:@"Ok, thanks"
+									style:UIAlertActionStyleDefault
+									handler:^(UIAlertAction * action) {
+										[defaults setBool:YES forKey:@"shitty_tutorial"];
+									}];
+		
+		[alert addAction:yesButton];
+		
+		NSArray *viewArray = [[[[[[[[[[[[alert view] subviews] firstObject] subviews] firstObject] subviews] firstObject] subviews] firstObject] subviews] firstObject] subviews];
+		UILabel *alertMessage = viewArray[1];
+		alertMessage.textAlignment = NSTextAlignmentLeft;
+		
+		[self presentViewController:alert animated:YES completion:nil];
+		
+	}
+	
     if([defaults objectForKey:@"pebble_coldstart"]){
         [self.central run];
     }
@@ -1045,6 +1067,7 @@
         [self presentViewController:alert animated:YES completion:nil];
         
     }
+
     /*
     UIImage *image = [UIImage imageWithContentsOfFile:[LMPebbleImage ditherImage:[self.musicPlayer.nowPlayingItem.artwork imageWithSize:CGSizeMake(28, 28)]
                                                                         withSize:CGSizeMake(36, 36)

@@ -76,6 +76,7 @@ typedef enum {
 #define MessageKeyAppMessageSize @(19)
 #define MessageKeyTrackPlayMode @(20)
 #define MessageKeyFirstOpen @(21)
+#define MessageKeyConnectionTest @(22)
 
 #define MAX_LABEL_LENGTH 20
 #define MAX_RESPONSE_COUNT 90
