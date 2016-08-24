@@ -31,7 +31,7 @@
 @property (weak, nonatomic) PBWatch *watch;
 @property (weak, nonatomic) PBPebbleCentral *central;
 
-@property UIImage *lastAlbumArtImage;
+@property MPMediaEntityPersistentID lastAlbumArtImage;
 
 @property LMPebbleMessageQueue *messageQueue;
 
@@ -545,8 +545,12 @@
     }
     
     CGSize imageSize = [self albumArtSize];
-    UIImage *albumArtImage = [[self.musicPlayer.nowPlayingItem artwork]imageWithSize:imageSize];
-	if([albumArtImage isEqual:self.lastAlbumArtImage] && self.requestType != NowPlayingRequestTypeOnlyTrackInfo && !self.firstPebbleAppOpen){
+	MPMediaItemArtwork *currentArtwork = [self.musicPlayer.nowPlayingItem artwork];
+    UIImage *albumArtImage = [currentArtwork imageWithSize:imageSize];
+	
+	//NSLog(@"%d, %d, %d", self.musicPlayer.nowPlayingItem.albumPersistentID == self.lastAlbumArtImage, self.requestType, self.firstPebbleAppOpen);
+	
+	if(self.musicPlayer.nowPlayingItem.albumPersistentID == self.lastAlbumArtImage && self.requestType != NowPlayingRequestTypeOnlyTrackInfo && !self.firstPebbleAppOpen){
         NSLog(@"The album art is literally samezies...");
         return;
     }
@@ -554,7 +558,7 @@
 		NSLog(@"Only track info, rejecting");
 		return;
 	}
-    self.lastAlbumArtImage = albumArtImage;
+    self.lastAlbumArtImage = self.musicPlayer.nowPlayingItem.albumPersistentID;
     self.requestType = NowPlayingRequestTypeOnlyTrackInfo;
 	self.firstPebbleAppOpen = NO;
     
