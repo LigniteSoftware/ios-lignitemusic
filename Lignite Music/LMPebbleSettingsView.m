@@ -123,7 +123,7 @@
 			case 2:;
 				UIAlertController * alert = [UIAlertController
 											 alertControllerWithTitle:@"How to Use"
-											 message:@"Hey! Welcome to the first Lignite Music beta. We're going to having a better tutorial soon, don't worry.\n\nTo play/pause the song, tap anywhere on the screen.\nTo skip/go to previous song, swipe left or right anywhere on the screen.\nDrag the slider to control the playing time.\nInstall the Pebble app within the settings page.\n\nYou can replay this tutorial any time in settings."
+											 message:@"Hey! Welcome to the first Lignite Music beta. We're going to having a better tutorial soon, don't worry.\n\nTo play/pause the song, tap anywhere on the screen.\n\nTo skip/go to previous song, swipe left or right anywhere on the screen.\n\nDrag the slider to control the playing time.\n\nInstall the Pebble app within the settings page.\n\nYou can replay this tutorial any time in settings."
 											 preferredStyle:UIAlertControllerStyleAlert];
 				
 				UIAlertAction* yesButton = [UIAlertAction

@@ -196,20 +196,20 @@
                                         <rect key="frame" x="-15" y="-21" width="631" height="641"/>
                                     </imageView>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1dC-ZS-Nua" userLabel="AlbumArtView" customClass="NPAlbumArtView">
-                                        <rect key="frame" x="35" y="19" width="530" height="250"/>
+                                        <rect key="frame" x="22" y="25" width="556" height="255"/>
                                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                     </view>
                                     <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="Sy4-rR-XTJ" customClass="LMSlider">
-                                        <rect key="frame" x="33" y="285" width="534" height="31"/>
+                                        <rect key="frame" x="20" y="305" width="560" height="31"/>
                                     </slider>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Song 1 of 14" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="64C-Nh-Wkx">
-                                        <rect key="frame" x="35" y="323" width="91" height="21"/>
+                                        <rect key="frame" x="22" y="343" width="91" height="21"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="02:14 of 03:23" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pcn-sy-6cy">
-                                        <rect key="frame" x="474" y="323" width="91" height="21"/>
+                                        <rect key="frame" x="487" y="343" width="91" height="21"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="21" id="Ibb-vW-zQc"/>
                                         </constraints>
@@ -218,30 +218,37 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bml-mE-pKx" userLabel="DynamicPlaylistButton" customClass="LMButton">
-                                        <rect key="frame" x="465" y="479" width="100" height="100"/>
+                                        <rect key="frame" x="478" y="490" width="100" height="100"/>
                                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lLT-pc-f2B" userLabel="RepeatButton" customClass="LMButton">
-                                        <rect key="frame" x="250" y="479" width="100" height="100"/>
+                                        <rect key="frame" x="250" y="490" width="100" height="100"/>
                                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                     </view>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Z6O-YI-Gc7" userLabel="ShuffleButton" customClass="LMButton">
+                                        <rect key="frame" x="22" y="490" width="100" height="100"/>
+                                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="100" id="4RY-CP-qdn"/>
+                                        </constraints>
+                                    </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Seq-Jp-k4G" userLabel="SongInfoView">
-                                        <rect key="frame" x="35" y="347" width="530" height="124"/>
+                                        <rect key="frame" x="22" y="358" width="556" height="124"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7cB-vX-w28" customClass="MarqueeLabel">
-                                                <rect key="frame" x="0.0" y="8" width="530" height="31"/>
+                                                <rect key="frame" x="0.0" y="15" width="556" height="31"/>
                                                 <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="26"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Album Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6ry-Hw-uOm" customClass="MarqueeLabel">
-                                                <rect key="frame" x="0.0" y="74" width="530" height="21"/>
+                                                <rect key="frame" x="0.0" y="81" width="556" height="21"/>
                                                 <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="14"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Artist Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5tL-fL-wwa" customClass="MarqueeLabel">
-                                                <rect key="frame" x="0.0" y="45" width="530" height="25"/>
+                                                <rect key="frame" x="0.0" y="52" width="556" height="25"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
@@ -258,23 +265,16 @@
                                             <constraint firstItem="7cB-vX-w28" firstAttribute="width" secondItem="Seq-Jp-k4G" secondAttribute="width" id="MTr-I9-mwX"/>
                                             <constraint firstItem="5tL-fL-wwa" firstAttribute="width" secondItem="7cB-vX-w28" secondAttribute="width" id="QK1-L9-kPz"/>
                                             <constraint firstItem="7cB-vX-w28" firstAttribute="leading" secondItem="Seq-Jp-k4G" secondAttribute="leading" id="dXj-1N-dCW"/>
-                                            <constraint firstItem="7cB-vX-w28" firstAttribute="top" secondItem="Seq-Jp-k4G" secondAttribute="top" constant="8" id="gzj-4B-aoE"/>
+                                            <constraint firstItem="7cB-vX-w28" firstAttribute="top" secondItem="Seq-Jp-k4G" secondAttribute="top" constant="15" id="gzj-4B-aoE"/>
                                             <constraint firstItem="6ry-Hw-uOm" firstAttribute="height" secondItem="Seq-Jp-k4G" secondAttribute="height" multiplier="1/6" id="njH-RV-sy6"/>
                                             <constraint firstItem="5tL-fL-wwa" firstAttribute="leading" secondItem="7cB-vX-w28" secondAttribute="leading" id="pLp-pH-vi4"/>
-                                        </constraints>
-                                    </view>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Z6O-YI-Gc7" userLabel="ShuffleButton" customClass="LMButton">
-                                        <rect key="frame" x="35" y="479" width="100" height="100"/>
-                                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="100" id="4RY-CP-qdn"/>
                                         </constraints>
                                     </view>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="Z6O-YI-Gc7" firstAttribute="width" secondItem="UTH-8A-gbT" secondAttribute="width" multiplier="1/6" id="4sQ-zk-xcA"/>
-                                    <constraint firstAttribute="bottom" secondItem="Z6O-YI-Gc7" secondAttribute="bottom" constant="21" id="5JF-RL-KDH"/>
+                                    <constraint firstAttribute="bottom" secondItem="Z6O-YI-Gc7" secondAttribute="bottom" constant="10" id="5JF-RL-KDH"/>
                                     <constraint firstItem="Pcn-sy-6cy" firstAttribute="trailing" secondItem="Sy4-rR-XTJ" secondAttribute="trailing" id="5hP-1U-4OC"/>
                                     <constraint firstItem="Sy4-rR-XTJ" firstAttribute="trailing" secondItem="1dC-ZS-Nua" secondAttribute="trailing" id="6Au-CC-Uti"/>
                                     <constraint firstItem="64C-Nh-Wkx" firstAttribute="leading" secondItem="Sy4-rR-XTJ" secondAttribute="leading" id="8Iw-8o-YQq"/>
@@ -282,7 +282,7 @@
                                     <constraint firstItem="K58-jP-DZG" firstAttribute="leading" secondItem="UTH-8A-gbT" secondAttribute="leadingMargin" constant="-23" id="AzT-OE-yRb"/>
                                     <constraint firstItem="Z6O-YI-Gc7" firstAttribute="leading" secondItem="1dC-ZS-Nua" secondAttribute="leading" id="FAx-1f-XVm"/>
                                     <constraint firstItem="lLT-pc-f2B" firstAttribute="centerX" secondItem="Seq-Jp-k4G" secondAttribute="centerX" id="FbO-0T-kSJ"/>
-                                    <constraint firstItem="1dC-ZS-Nua" firstAttribute="top" secondItem="UTH-8A-gbT" secondAttribute="top" constant="19" id="Fd3-Ip-SVt"/>
+                                    <constraint firstItem="1dC-ZS-Nua" firstAttribute="top" secondItem="UTH-8A-gbT" secondAttribute="top" constant="25" id="Fd3-Ip-SVt"/>
                                     <constraint firstItem="K58-jP-DZG" firstAttribute="height" secondItem="UTH-8A-gbT" secondAttribute="height" constant="41" id="J2f-fu-R09"/>
                                     <constraint firstItem="Pcn-sy-6cy" firstAttribute="firstBaseline" secondItem="64C-Nh-Wkx" secondAttribute="firstBaseline" id="KRR-Hn-ikF"/>
                                     <constraint firstItem="lLT-pc-f2B" firstAttribute="height" secondItem="Z6O-YI-Gc7" secondAttribute="height" id="Ltg-cm-9MH"/>
@@ -297,13 +297,13 @@
                                     <constraint firstItem="bml-mE-pKx" firstAttribute="baseline" secondItem="Z6O-YI-Gc7" secondAttribute="baseline" id="WPJ-1O-fN4"/>
                                     <constraint firstItem="1dC-ZS-Nua" firstAttribute="height" secondItem="UTH-8A-gbT" secondAttribute="height" multiplier="0.5" priority="750" constant="-20" id="aHn-tD-pY8"/>
                                     <constraint firstItem="bml-mE-pKx" firstAttribute="width" secondItem="Z6O-YI-Gc7" secondAttribute="width" id="fEE-Gh-WdU"/>
-                                    <constraint firstItem="Sy4-rR-XTJ" firstAttribute="top" secondItem="1dC-ZS-Nua" secondAttribute="bottom" constant="16" id="iSB-z6-GIr"/>
+                                    <constraint firstItem="Sy4-rR-XTJ" firstAttribute="top" secondItem="1dC-ZS-Nua" secondAttribute="bottom" constant="25" id="iSB-z6-GIr"/>
                                     <constraint firstItem="K58-jP-DZG" firstAttribute="top" secondItem="UTH-8A-gbT" secondAttribute="top" constant="-21" id="je3-Ti-SLV"/>
-                                    <constraint firstAttribute="trailingMargin" secondItem="1dC-ZS-Nua" secondAttribute="trailing" constant="27" id="qx4-CA-aoP"/>
+                                    <constraint firstAttribute="trailingMargin" secondItem="1dC-ZS-Nua" secondAttribute="trailing" constant="14" id="qx4-CA-aoP"/>
                                     <constraint firstItem="Pcn-sy-6cy" firstAttribute="width" secondItem="64C-Nh-Wkx" secondAttribute="width" id="s8S-ze-SOe"/>
                                     <constraint firstItem="bml-mE-pKx" firstAttribute="trailing" secondItem="1dC-ZS-Nua" secondAttribute="trailing" id="sHf-vG-W3V"/>
                                     <constraint firstItem="lLT-pc-f2B" firstAttribute="width" secondItem="Z6O-YI-Gc7" secondAttribute="width" id="wi1-VU-PS0"/>
-                                    <constraint firstAttribute="leadingMargin" secondItem="1dC-ZS-Nua" secondAttribute="leading" constant="-27" id="xuj-m6-fyn"/>
+                                    <constraint firstAttribute="leadingMargin" secondItem="1dC-ZS-Nua" secondAttribute="leading" constant="-14" id="xuj-m6-fyn"/>
                                     <constraint firstItem="Seq-Jp-k4G" firstAttribute="trailing" secondItem="Pcn-sy-6cy" secondAttribute="trailing" id="zP8-gg-KGn"/>
                                 </constraints>
                             </view>

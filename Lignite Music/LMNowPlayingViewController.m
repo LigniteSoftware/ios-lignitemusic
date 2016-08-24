@@ -732,10 +732,19 @@
         self.musicPlayer.shuffleMode = MPMusicShuffleModeSongs;
     }
     else{
-        [self.musicPlayer setNowPlayingItem:track];
-        
-        self.musicPlayer.shuffleMode = MPMusicShuffleModeOff;
-        self.musicPlayer.repeatMode = (trackPlayMode-TrackPlayModeRepeatModeNone)+1;
+		self.musicPlayer.shuffleMode = MPMusicShuffleModeOff;
+		
+		MPMusicRepeatMode newRepeatMode = (trackPlayMode-TrackPlayModeRepeatModeNone)+1;
+		if(newRepeatMode == MPMusicRepeatModeNone){
+			self.musicPlayer.repeatMode = MPMusicRepeatModeNone;
+			[self.musicPlayer setNowPlayingItem:track];
+		}
+		else{
+			[self.musicPlayer setNowPlayingItem:track];
+			self.musicPlayer.repeatMode = newRepeatMode;
+		}
+		self.repeatMode = self.musicPlayer.repeatMode;
+		
         NSLog(@"Setting repeat mdoe as %ld", (long)self.musicPlayer.repeatMode);
     }
     [self.musicPlayer play];
@@ -1025,7 +1034,7 @@
 	if(![defaults objectForKey:@"shitty_tutorial"]){
 		UIAlertController * alert = [UIAlertController
 									 alertControllerWithTitle:@"How to Use"
-									 message:@"Hey! Welcome to the first Lignite Music beta. We're going to having a better tutorial soon, don't worry.\n\nTo play/pause the song, tap anywhere on the screen.\nTo skip/go to previous song, swipe left or right anywhere on the screen.\nDrag the slider to control the playing time.\nInstall the Pebble app within the settings page.\n\nYou can replay this tutorial any time in settings."
+									 message:@"Hey! Welcome to the first Lignite Music beta. We're going to having a better tutorial soon, don't worry.\n\nTo play/pause the song, tap anywhere on the screen.\n\nTo skip/go to previous song, swipe left or right anywhere on the screen.\n\nDrag the slider to control the playing time.\n\nInstall the Pebble app within the settings page.\n\nYou can replay this tutorial any time in settings."
 									 preferredStyle:UIAlertControllerStyleAlert];
 		
 		UIAlertAction* yesButton = [UIAlertAction
