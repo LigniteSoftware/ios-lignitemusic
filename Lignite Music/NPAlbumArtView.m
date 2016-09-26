@@ -8,14 +8,12 @@
 
 #import <MediaPlayer/MediaPlayer.h>
 #import "NPAlbumArtView.h"
-#import "LMProgressCircleView.h"
 #import "LMExtras.h"
 
 @interface NPAlbumArtView()
 
 @property MPMediaItem *currentMediaItem;
 @property UIImageView *albumArt;
-@property LMProgressCircleView *progressCircle;
 
 @property NSTimer *currentTimer;
 
@@ -27,45 +25,7 @@
 
 - (void)setupWithAlbumImage:(UIImage*)albumImage {
     self.backgroundColor = [UIColor clearColor];
-    
-    self.progressCircle = [[LMProgressCircleView alloc]init];
-    self.progressCircle.translatesAutoresizingMaskIntoConstraints = NO;
-    self.progressCircle.thickness = 8;
-    [self addSubview:self.progressCircle];
-    [self.progressCircle reload];
-    
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.progressCircle
-                                                     attribute:NSLayoutAttributeCenterX
-                                                     relatedBy:NSLayoutRelationEqual
-                                                        toItem:self
-                                                     attribute:NSLayoutAttributeCenterX
-                                                    multiplier:1.0
-                                                      constant:0]];
-    
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.progressCircle
-                                                     attribute:NSLayoutAttributeCenterY
-                                                     relatedBy:NSLayoutRelationEqual
-                                                        toItem:self
-                                                     attribute:NSLayoutAttributeCenterY
-                                                    multiplier:1.0
-                                                      constant:0]];
-    
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.progressCircle
-                                                     attribute:NSLayoutAttributeWidth
-                                                     relatedBy:NSLayoutRelationEqual
-                                                        toItem:self
-                                                     attribute:NSLayoutAttributeWidth
-                                                    multiplier:1.0
-                                                      constant:0]];
-    
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.progressCircle
-                                                     attribute:NSLayoutAttributeHeight
-                                                     relatedBy:NSLayoutRelationEqual
-                                                        toItem:self
-                                                     attribute:NSLayoutAttributeWidth
-                                                    multiplier:1.0
-                                                      constant:0]];
-    
+	
     self.albumArt = [[UIImageView alloc]init];
     self.albumArt.translatesAutoresizingMaskIntoConstraints = NO;
     //self.albumArt.backgroundColor = [UIColor redColor];
@@ -114,10 +74,6 @@
         NSLog(@"%f", self.albumArt.layer.cornerRadius);
         self.currentMediaItem = musicPlayer.nowPlayingItem;
     }
-    self.progressCircle.maxValue = musicPlayer.nowPlayingItem.playbackDuration;
-    self.progressCircle.currentValue = musicPlayer.currentPlaybackTime;
-    self.progressCircle.albumRadius = self.albumArt.frame.size.width/2;
-    [self.progressCircle reload];
 }
 
 - (UIColor*)GetRandomUIColor:(int)index {
