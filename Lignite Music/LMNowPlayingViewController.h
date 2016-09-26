@@ -44,7 +44,8 @@ typedef enum {
 	WATCH_INFO_MODEL_PEBBLE_TIME,          //Pebble Time.
 	WATCH_INFO_MODEL_PEBBLE_TIME_STEEL,    //Pebble Time Steel.
 	WATCH_INFO_MODEL_PEBBLE_TIME_ROUND_14, //Pebble Time Round, 14mm lug size.
-	WATCH_INFO_MODEL_PEBBLE_TIME_ROUND_20  //Pebble Time Round, 20mm lug size.
+	WATCH_INFO_MODEL_PEBBLE_TIME_ROUND_20, //Pebble Time Round, 20mm lug size.
+	WATCH_INFO_MODEL_MAX				   //Probably the Pebble 2.
 } WatchInfoModel;
 
 typedef enum {

@@ -416,8 +416,7 @@
         return;
     }
     
-    if(self.watchModel == WATCH_INFO_MODEL_UNKNOWN){
-        NSLog(@"Warning: unknown watch model! Defaulting to Pebble original.");
+    if(self.watchModel == WATCH_INFO_MODEL_UNKNOWN || self.watchModel == WATCH_INFO_MODEL_MAX){
         self.watchModel = WATCH_INFO_MODEL_PEBBLE_ORIGINAL;
     }
     MPMediaItem *item = [self.musicPlayer nowPlayingItem];
@@ -439,8 +438,8 @@
     [self sendMessageToPebble:albumDict];
     
     [self pushCurrentStateToWatch];
-    
-    [NSTimer scheduledTimerWithTimeInterval:0.5
+	
+    [NSTimer scheduledTimerWithTimeInterval:0.25
                                      target:self
                                    selector:@selector(sendAlbumArtImage)
                                    userInfo:nil
@@ -752,6 +751,9 @@
         NSLog(@"Setting repeat mdoe as %ld", (long)self.musicPlayer.repeatMode);
     }
     [self.musicPlayer play];
+	if(![self.refreshTimer isValid]){
+		[self fireRefreshTimer];
+	}
     //[self.musicPlayer setCurrentPlaybackTime:0];
     NSLog(@"Now playing %@", [self.musicPlayer.nowPlayingItem valueForProperty:MPMediaItemPropertyTitle]);
 }

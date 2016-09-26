@@ -6,11 +6,12 @@
 //  Copyright © 2016 Lignite. All rights reserved.
 //
 
+#import <MessageUI/MFMailComposeViewController.h>
 #import "LMPebbleSettingsView.h"
 #import "LMSettingsSwitch.h"
 #import "LMSettingsLabel.h"
 
-@interface LMPebbleSettingsView ()
+@interface LMPebbleSettingsView () <MFMailComposeViewControllerDelegate>
 
 @property NSDictionary *settingsMapping;
 @property NSDictionary *defaultsMapping;
@@ -30,8 +31,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.settingsMapping = [[NSDictionary alloc]initWithObjectsAndKeys:@(100), @"pebble_battery_saver", @(101), @"pebble_artist_label", @(102), @"pebble_style_controls", nil];
-    self.defaultsMapping = [[NSDictionary alloc]initWithObjectsAndKeys:@(0), @"pebble_battery_saver", @(1), @"pebble_artist_label", @(0), @"pebble_style_controls", nil];
+    self.settingsMapping = [[NSDictionary alloc]initWithObjectsAndKeys:@(100), @"pebble_battery_saver", @(101), @"pebble_artist_label", @(102), @"pebble_style_controls", @(103), @"pebble_show_time", nil];
+    self.defaultsMapping = [[NSDictionary alloc]initWithObjectsAndKeys:@(0), @"pebble_battery_saver", @(1), @"pebble_artist_label", @(1), @"pebble_style_controls", @(0), @"pebble_show_time", nil];
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(closeSettings)];
 }
@@ -50,7 +51,7 @@
         case 0:
             return 2;
         case 1:
-            return 1;
+            return 2;
 		case 2:
 			return 3;
     }
@@ -110,6 +111,16 @@
 	}
 }
 
+- (void)mailComposeController:(MFMailComposeViewController*)controller
+		  didFinishWithResult:(MFMailComposeResult)result
+						error:(NSError*)error;
+{
+	if (result == MFMailComposeResultSent) {
+		NSLog(@"It's away!");
+	}
+	[self dismissViewControllerAnimated:YES completion:nil];
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
 	[tableView deselectRowAtIndexPath:indexPath animated:YES];
 	if(indexPath.section == 2){
@@ -120,7 +131,7 @@
 			case 1:
 				[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://www.lignite.io/feedback/"]];
 				break;
-			case 2:;
+			case 2:{
 				UIAlertController * alert = [UIAlertController
 											 alertControllerWithTitle:@"How to Use"
 											 message:@"Hey! Welcome to the first Lignite Music beta. We're going to having a better tutorial soon, don't worry.\n\nTo play/pause the song, tap anywhere on the screen.\n\nTo skip/go to previous song, swipe left or right anywhere on the screen.\n\nDrag the slider to control the playing time.\n\nInstall the Pebble app within the settings page.\n\nYou can replay this tutorial any time in settings."
@@ -141,6 +152,19 @@
 				
 				[self presentViewController:alert animated:YES completion:nil];
 				break;
+			}
+			case 3:{
+				MFMailComposeViewController* controller = [[MFMailComposeViewController alloc] init];
+				controller.mailComposeDelegate = self;
+				[controller setToRecipients:[[NSArray alloc] initWithObjects:@"jonb@pebble.com", nil]];
+				[controller setSubject:@"APP_MSG_BUSY Locking Up Watchapp"];
+				[controller setMessageBody:@"Hi there,\n\nI am having an issue with one of my watchapps which causes it to lock up when it gets the APP_MSG_BUSY error. I have to completely restart the watchapp to fix this, it's very frustrating.\n\nThis exact issue is on this forum thread: https://forums.pebble.com/t/how-to-recover-from-app-msg-busy-after-bluetooth-reconnects/22948\n\nHoping this issue is fixed soon.\n\nThanks!" isHTML:NO];
+				if (controller){
+					//[self presentModalViewController:controller animated:YES];
+					[self showViewController:controller sender:self];
+				}
+				break;
+			}
 		}
 	}
 }
@@ -167,6 +191,10 @@
                     [self addLabelToCell:cell withID:@"Artist label"];
                     [self addToggleToCell:cell withID:@"pebble_artist_label"];
                     break;
+				case 1:
+					[self addLabelToCell:cell withID:@"Display time"];
+					[self addToggleToCell:cell withID:@"pebble_show_time"];
+					break;
             }
             break;
 		case 2:
@@ -179,6 +207,9 @@
 					break;
 				case 2:
 					[self addLabelToCell:cell withID:@"Replay Tutorial"].enabled = YES;
+					break;
+				case 3:
+					[self addLabelToCell:cell withID:@"Report 'Pebble Internal Error' Bug"].enabled = YES;
 					break;
 			}
 			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
