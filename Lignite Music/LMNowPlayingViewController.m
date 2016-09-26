@@ -6,7 +6,6 @@
 //  Copyright © 2016 Lignite. All rights reserved.
 //
 
-#import <AVFoundation/AVAudioSession.h>
 #import <PebbleKit/PebbleKit.h>
 #import <YYImage/YYImage.h>
 #import "LMPebbleSettingsView.h"
@@ -48,6 +47,9 @@
 @property BOOL firstPebbleAppOpen;
 
 @property LMPebbleSettingsView *rootSettingsViewController;
+
+@property MPVolumeView *volumeView;
+@property UISlider *volumeViewSlider;
 
 @end
 
@@ -466,22 +468,11 @@
     [self performSelector:@selector(sendCurrentStateToWatch) withObject:nil afterDelay:0.1];
 }
 
-- (void)changeState:(NowPlayingState)state {
-    MPVolumeView* volumeView = [[MPVolumeView alloc] init];
-    volumeView.showsRouteButton = NO;
-    volumeView.showsVolumeSlider = NO;
-    [self.view addSubview:volumeView];
-    
-    // Get the Volume Slider
-    UISlider* volumeViewSlider = nil;
-    
-    for (UIView *view in [volumeView subviews]){
-        if ([view.class.description isEqualToString:@"MPVolumeSlider"]){
-            volumeViewSlider = (UISlider*)view;
-            break;
-        }
-    }
+- (void)handleVolumeChanged:(id)sender{
+	NSLog(@"%s - %f", __PRETTY_FUNCTION__, self.volumeViewSlider.value);
+}
 
+- (void)changeState:(NowPlayingState)state {
     switch(state) {
         case NowPlayingStatePlayPause:
             [self playPauseMusic];
@@ -497,13 +488,21 @@
             }
             break;
         case NowPlayingStateVolumeUp:
+			/*
             [volumeViewSlider setValue:self.musicPlayer.volume + 0.0625 animated:YES];
             [volumeViewSlider sendActionsForControlEvents:UIControlEventTouchUpInside];
+			 */
+			[self.volumeViewSlider setValue:self.volumeViewSlider.value + 0.0625 animated:YES];
+			[self.volumeViewSlider sendActionsForControlEvents:UIControlEventTouchUpInside];
             //[self.musicPlayer setVolume:[self.musicPlayer volume] + 0.0625];
             break;
         case NowPlayingStateVolumeDown:
+			[self.volumeViewSlider setValue:self.volumeViewSlider.value - 0.0625 animated:YES];
+			[self.volumeViewSlider sendActionsForControlEvents:UIControlEventTouchUpInside];
+			/*
             [volumeViewSlider setValue:self.musicPlayer.volume - 0.0625 animated:YES];
             [volumeViewSlider sendActionsForControlEvents:UIControlEventTouchUpInside];
+			 */
             //[self.musicPlayer setVolume:[self.musicPlayer volume] - 0.0625];
             break;
     }
@@ -1094,6 +1093,22 @@
     view.image = image;
     [self.view addSubview:view];
      */
+	
+	self.volumeView = [[MPVolumeView alloc] init];
+	self.volumeView.showsRouteButton = NO;
+	self.volumeView.showsVolumeSlider = NO;
+	[self.view addSubview:self.volumeView];
+	
+	//find the volumeSlider
+	self.volumeViewSlider = nil;
+	for (UIView *view in [self.volumeView subviews]){
+		if ([view.class.description isEqualToString:@"MPVolumeSlider"]){
+			self.volumeViewSlider = (UISlider*)view;
+			break;
+		}
+	}
+	
+	[self.volumeViewSlider addTarget:self action:@selector(handleVolumeChanged:) forControlEvents:UIControlEventValueChanged];
 }
 
 - (void)viewDidLoad {
