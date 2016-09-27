@@ -25,7 +25,12 @@
 	return true;
 }
 
+bool loaded = false;
 - (void)load {
+	if(loaded){
+		return;
+	}
+	loaded = true;
 	self.albumsItemArray = [[NSMutableArray alloc]init];
 	
 	CGRect currentFrame = self.view.frame;
@@ -48,6 +53,7 @@
 		//NSString *songTitle = [song valueForProperty: MPMediaItemPropertyTitle];
 		//NSLog (@"%lu for %@", (unsigned long)[section count], [[section representativeItem] title]);
 		LMAlbumViewItem *newItem = [[LMAlbumViewItem alloc]initWithMediaItem:collection.representativeItem withAlbumCount:collection.count];
+		newItem.userInteractionEnabled = YES;
 		[self.albumsItemArray addObject:newItem];
 		
 		[self.rootScrollView addSubview:newItem];

@@ -944,14 +944,17 @@
 	[self.shuffleButton setupWithImageMultiplier:0.5];
 	[self.shuffleButton setTitle:@"Shuffle"];
 	[self.shuffleButton setImage:[UIImage imageNamed:@"shuffle_black.png"]];
+	[self.shuffleButton setColour:[UIColor whiteColor]];
     self.shuffleButton.delegate = self;
 	[self.repeatButton setupWithImageMultiplier:0.5];
 	[self.repeatButton setTitle:@"Repeat"];
 	[self.repeatButton setImage:[UIImage imageNamed:@"repeat_black.png"]];
+	[self.repeatButton setColour:[UIColor whiteColor]];
     self.repeatButton.delegate = self;
 	[self.dynamicPlaylistButton setupWithImageMultiplier:0.5];
 	[self.dynamicPlaylistButton setTitle:@"Settings"];
 	[self.dynamicPlaylistButton setImage:[UIImage imageNamed:@"settings.png"]];
+	[self.dynamicPlaylistButton setColour:[UIColor whiteColor]];
     self.dynamicPlaylistButton.delegate = self;
     
     self.shadingView = [[UIView alloc]init];

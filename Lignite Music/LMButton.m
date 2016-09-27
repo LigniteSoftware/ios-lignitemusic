@@ -12,6 +12,8 @@
 @interface LMButton()
 
 @property UIImageView *imageView;
+@property UIView *imageBackgroundView, *textBackgroundView;
+@property UIColor *buttonColour;
 
 @end
 
@@ -26,6 +28,47 @@
  */
 - (void)setupWithImageMultiplier:(float)imageMultiplier {
     self.backgroundColor = [UIColor clearColor];
+	
+	self.imageBackgroundView = [UIView new];
+	self.imageBackgroundView.translatesAutoresizingMaskIntoConstraints = NO;
+	//self.imageBackgroundView.backgroundColor = [UIColor greenColor];
+	[self addSubview:self.imageBackgroundView];
+	
+	//Align image view to center of frame's X coordinate
+	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.imageBackgroundView
+													 attribute:NSLayoutAttributeCenterX
+													 relatedBy:NSLayoutRelationEqual
+														toItem:self
+													 attribute:NSLayoutAttributeCenterX
+													multiplier:1.0
+													  constant:0]];
+	
+	//Set the width equal to half the image view's width
+	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.imageBackgroundView
+													 attribute:NSLayoutAttributeWidth
+													 relatedBy:NSLayoutRelationEqual
+														toItem:self
+													 attribute:NSLayoutAttributeWidth
+													multiplier:1.0
+													  constant:0]];
+	
+	//Set the height equal to half the width
+	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.imageBackgroundView
+													 attribute:NSLayoutAttributeHeight
+													 relatedBy:NSLayoutRelationEqual
+														toItem:self
+													 attribute:NSLayoutAttributeWidth
+													multiplier:1.0
+													  constant:0]];
+	
+	//Set the height equal to half the width
+	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.imageBackgroundView
+													 attribute:NSLayoutAttributeTop
+													 relatedBy:NSLayoutRelationEqual
+														toItem:self
+													 attribute:NSLayoutAttributeTop
+													multiplier:1.0
+													  constant:0]];
     
     self.imageView = [[UIImageView alloc]init];
     self.imageView.contentMode = UIViewContentModeScaleAspectFit;
@@ -35,9 +78,18 @@
 	
 	//Align image view to center of frame's X coordinate
 	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.imageView
+													 attribute:NSLayoutAttributeCenterX
+													 relatedBy:NSLayoutRelationEqual
+														toItem:self.imageBackgroundView
+													 attribute:NSLayoutAttributeCenterX
+													multiplier:1.0
+													  constant:0]];
+	
+	//Align image view to center of frame's X coordinate
+	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.imageView
 													 attribute:NSLayoutAttributeCenterY
 													 relatedBy:NSLayoutRelationEqual
-														toItem:self
+														toItem:self.imageBackgroundView
 													 attribute:NSLayoutAttributeCenterY
 													multiplier:1.0
 													  constant:0]];
@@ -46,7 +98,7 @@
 	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.imageView
 													 attribute:NSLayoutAttributeWidth
 													 relatedBy:NSLayoutRelationEqual
-														toItem:self
+														toItem:self.imageBackgroundView
 													 attribute:NSLayoutAttributeWidth
 													multiplier:imageMultiplier
 													  constant:0]];
@@ -55,14 +107,45 @@
 	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.imageView
 													 attribute:NSLayoutAttributeHeight
 													 relatedBy:NSLayoutRelationEqual
-														toItem:self
+														toItem:self.imageBackgroundView
 													 attribute:NSLayoutAttributeWidth
 													multiplier:imageMultiplier
 													  constant:0]];
 	
+	self.textBackgroundView = [UIView new];
+	self.textBackgroundView.backgroundColor = [UIColor redColor];
+	self.textBackgroundView.translatesAutoresizingMaskIntoConstraints = NO;
+	[self addSubview:self.textBackgroundView];
+
+	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.textBackgroundView
+													 attribute:NSLayoutAttributeTop
+													 relatedBy:NSLayoutRelationEqual
+														toItem:self.imageBackgroundView
+													 attribute:NSLayoutAttributeBottom
+													multiplier:1.0
+													  constant:0]];
+	
+	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.textBackgroundView
+													 attribute:NSLayoutAttributeBottom
+													 relatedBy:NSLayoutRelationEqual
+														toItem:self
+													 attribute:NSLayoutAttributeBottom
+													multiplier:1.0
+													  constant:0]];
+	
+	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.textBackgroundView
+													 attribute:NSLayoutAttributeCenterX
+													 relatedBy:NSLayoutRelationEqual
+														toItem:self
+													 attribute:NSLayoutAttributeCenterX
+													multiplier:1.0
+													  constant:0]];
 	
     self.titleLabel = [UILabel new];
     self.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14.0f];
+	self.titleLabel.numberOfLines = 0;
+	self.titleLabel.adjustsFontSizeToFitWidth = YES;
+	self.titleLabel.minimumScaleFactor = 0;
     self.titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
     [self addSubview:self.titleLabel];
     
@@ -70,17 +153,20 @@
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.titleLabel
                                                      attribute:NSLayoutAttributeCenterX
                                                      relatedBy:NSLayoutRelationEqual
-                                                        toItem:self
+                                                        toItem:self.textBackgroundView
                                                      attribute:NSLayoutAttributeCenterX
                                                     multiplier:1.0
                                                       constant:0]];
-    
-    //Add constraint that aligns the titleview to come after the imageview
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[imageView]-12-[titleView]"
-                                                                 options:NSLayoutFormatAlignAllCenterX
-                                                                 metrics:nil
-                                                                   views:@{@"imageView":self.imageView, @"titleView":self.titleLabel}]];
-    
+	
+	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.titleLabel
+													 attribute:NSLayoutAttributeCenterY
+													 relatedBy:NSLayoutRelationEqual
+														toItem:self.textBackgroundView
+													 attribute:NSLayoutAttributeCenterY
+													multiplier:1.0
+													  constant:0]];
+	
+	
     //Add the click recognizer for actions
     UITapGestureRecognizer *clickedRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(buttonClicked)];
     [self addGestureRecognizer:clickedRecognizer];
@@ -97,6 +183,11 @@
 	self.imageView.image = newImage;
 }
 
+- (void)setColour:(UIColor*)newColour{
+	self.buttonColour = newColour;
+	[self setNeedsDisplay];
+}
+
 /*
  Reacts when button is clicked
  */
@@ -104,17 +195,16 @@
     if(self.delegate){
         [self.delegate clickedButton:self];
     }
-    /*
-    [UIView animateWithDuration:0.05 animations:^{
-        //Fade to black
-        self.backgroundColor = [UIColor colorWithRed:0.4 green:0.4 blue:0.4 alpha:1];
-    } completion:^(BOOL finished) {
-        //Fade in
-        [UIView animateWithDuration:0.05 animations:^{
-            self.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:1];
-        }];
-    }];
-     */
+	
+//    [UIView animateWithDuration:0.05 animations:^{
+//        //Fade to black
+//        self.backgroundColor = [UIColor colorWithRed:0.4 green:0.4 blue:0.4 alpha:1];
+//    } completion:^(BOOL finished) {
+//        //Fade in
+//        [UIView animateWithDuration:0.05 animations:^{
+//            self.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:1];
+//        }];
+//    }];
 }
 
 /*
@@ -131,7 +221,7 @@
 - (void)drawRect:(CGRect)rect {
     CGContextRef ctx = UIGraphicsGetCurrentContext();
 	
-	UIColor *color = LIGNITE_RED;
+	UIColor *color = self.buttonColour ? self.buttonColour : LIGNITE_RED;
     CGContextSetFillColorWithColor(ctx, color.CGColor);
 
 	CGRect circleRect = CGRectMake(0, 0, self.frame.size.width, self.frame.size.width);

@@ -9,6 +9,7 @@
 #import <MediaPlayer/MediaPlayer.h>
 #import "LMAlbumViewItem.h"
 #import "LMButton.h"
+#import "LMLabel.h"
 
 @interface LMAlbumViewItem()
 
@@ -99,6 +100,7 @@
 	
 	self.playButton = [[LMButton alloc]init];
 	self.playButton.translatesAutoresizingMaskIntoConstraints = NO;
+	self.playButton.userInteractionEnabled = YES;
 	[self.textBackgroundView addSubview:self.playButton];
 	[self.playButton setupWithImageMultiplier:0.5];
 	[self.playButton setImage:[UIImage imageNamed:@"play_white.png"]];
@@ -108,7 +110,7 @@
 													 attribute:NSLayoutAttributeCenterY
 													 relatedBy:NSLayoutRelationEqual
 														toItem:self.textBackgroundView
-													 attribute:NSLayoutAttributeCenterY
+													 attribute:NSLayoutAttributeCenterY
 													multiplier:1.0
 													  constant:0]];
 	
@@ -136,56 +138,68 @@
 																	   multiplier:1.0
 																		 constant:0]];
 	
-	self.albumTitleView = [[UILabel alloc]init];
+	self.albumTitleView = [[LMLabel alloc]init];
 	self.albumTitleView.text = self.item.albumTitle;
 	self.albumTitleView.translatesAutoresizingMaskIntoConstraints = NO;
 	self.albumTitleView.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:50.0f];
-	self.albumTitleView.minimumScaleFactor = 10/self.albumTitleView.font.pointSize;
 	self.albumTitleView.textAlignment = NSTextAlignmentLeft;
-	self.albumTitleView.numberOfLines = 0;
-	self.albumTitleView.adjustsFontSizeToFitWidth = YES;
+	self.albumTitleView.lineBreakMode = NSLineBreakByTruncatingTail;
+	self.albumTitleView.numberOfLines = 1;
+	self.albumTitleView.adjustsFontSizeToFitWidth = NO;
 	[self.textBackgroundView addSubview:self.albumTitleView];
 	
-	[self.textBackgroundView addConstraint:[NSLayoutConstraint constraintWithItem:self.albumTitleView
-													 attribute:NSLayoutAttributeLeading
-													 relatedBy:NSLayoutRelationEqual
-														toItem:self.playButton
-													 attribute:NSLayoutAttributeTrailing
-													multiplier:1.0
-													  constant:10]];
+	NSLayoutConstraint *leadingConstraint = [NSLayoutConstraint constraintWithItem:self.albumTitleView
+																		 attribute:NSLayoutAttributeLeading
+																		 relatedBy:NSLayoutRelationEqual
+																			toItem:self.playButton
+																		 attribute:NSLayoutAttributeTrailing
+																		multiplier:1.0
+																		  constant:10];
+	[leadingConstraint setPriority:UILayoutPriorityRequired];
+	[self.textBackgroundView addConstraint:leadingConstraint];
 	
-	[self.textBackgroundView addConstraint:[NSLayoutConstraint constraintWithItem:self.albumTitleView
+	NSLayoutConstraint *topConstraint = [NSLayoutConstraint constraintWithItem:self.albumTitleView
 																		attribute:NSLayoutAttributeTop
 																		relatedBy:NSLayoutRelationEqual
-																		   toItem:self.textBackgroundView
+																		toItem:self.textBackgroundView
 																		attribute:NSLayoutAttributeTop
-																	   multiplier:1.0
-																		 constant:10]];
+																	multiplier:1.0
+																		 constant:10];
+	[topConstraint setPriority:UILayoutPriorityRequired];
+	[self.textBackgroundView addConstraint:topConstraint];
 	
-	[self.textBackgroundView addConstraint:[NSLayoutConstraint constraintWithItem:self.albumTitleView
+	NSLayoutConstraint *heightConstraint = [NSLayoutConstraint constraintWithItem:self.albumTitleView
 																		attribute:NSLayoutAttributeHeight
 																		relatedBy:NSLayoutRelationEqual
 																		   toItem:self.textBackgroundView
 																		attribute:NSLayoutAttributeHeight
 																	   multiplier:0.4
-																		 constant:0]];
+																		 constant:0];
+	[heightConstraint setPriority:UILayoutPriorityRequired];
+	[self.textBackgroundView addConstraint:heightConstraint];
 	
-	[self.textBackgroundView addConstraint:[NSLayoutConstraint constraintWithItem:self.albumTitleView
-																		attribute:NSLayoutAttributeWidth
-																		relatedBy:NSLayoutRelationEqual
-																		   toItem:self.textBackgroundView
-																		attribute:NSLayoutAttributeWidth
-																	   multiplier:1.0
-																		 constant:0]];
+	NSLayoutConstraint *trailingConstraint = [NSLayoutConstraint constraintWithItem:self.albumTitleView
+																		  attribute:NSLayoutAttributeTrailing
+																		  relatedBy:NSLayoutRelationEqual
+																			 toItem:self.textBackgroundView
+																		  attribute:NSLayoutAttributeTrailing
+																		 multiplier:1.0
+																		   constant:0];
+	[trailingConstraint setPriority:UILayoutPriorityRequired];
+	[self.textBackgroundView addConstraint:trailingConstraint];
 	
-	self.albumArtistView = [[UILabel alloc]init];
+//	dispatch_async(dispatch_get_main_queue(), ^{
+//		self.albumTitleView.text = @"Gooj goOOD";
+//		self.albumTitleView.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:self.albumTitleView.frame.size.height];
+//	});
+	
+	self.albumArtistView = [[LMLabel alloc]init];
 	self.albumArtistView.text = self.item.artist;
 	self.albumArtistView.translatesAutoresizingMaskIntoConstraints = NO;
 	self.albumArtistView.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:40.0f];
-	self.albumArtistView.minimumScaleFactor = 6/self.albumArtistView.font.pointSize;
 	self.albumArtistView.textAlignment = NSTextAlignmentLeft;
+	self.albumArtistView.lineBreakMode = NSLineBreakByTruncatingTail;
 	self.albumArtistView.numberOfLines = 0;
-	self.albumArtistView.adjustsFontSizeToFitWidth = YES;
 	[self.textBackgroundView addSubview:self.albumArtistView];
 	
 	[self.textBackgroundView addConstraint:[NSLayoutConstraint constraintWithItem:self.albumArtistView
@@ -213,10 +227,10 @@
 																		 constant:0]];
 	
 	[self.textBackgroundView addConstraint:[NSLayoutConstraint constraintWithItem:self.albumArtistView
-																		attribute:NSLayoutAttributeWidth
+																		attribute:NSLayoutAttributeTrailing
 																		relatedBy:NSLayoutRelationEqual
 																		   toItem:self.textBackgroundView
-																		attribute:NSLayoutAttributeWidth
+																		attribute:NSLayoutAttributeTrailing
 																	   multiplier:1.0
 																		 constant:0]];
 	
