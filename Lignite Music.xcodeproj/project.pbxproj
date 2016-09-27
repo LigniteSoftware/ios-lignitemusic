@@ -11,6 +11,7 @@
 		6A0750741D5EC0C000BCBC9C /* bw_robot.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A0750731D5EC0C000BCBC9C /* bw_robot.png */; };
 		6A1FB9C71D99EB0A00890BF3 /* LMAlbumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A1FB9C61D99EB0A00890BF3 /* LMAlbumViewController.m */; };
 		6A1FB9CC1D9AE76A00890BF3 /* LMLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A1FB9CB1D9AE76A00890BF3 /* LMLabel.m */; };
+		6A1FB9CF1D9B001000890BF3 /* LMAlbumCountLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A1FB9CE1D9B001000890BF3 /* LMAlbumCountLabel.m */; };
 		6A2566F31D4089E8004EDE41 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A2566F21D4089E8004EDE41 /* MediaPlayer.framework */; };
 		6A313C121BB44959002BBC33 /* NPAlbumArtView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A313C111BB44959002BBC33 /* NPAlbumArtView.m */; };
 		6A313C181BB59AE8002BBC33 /* LMButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A313C171BB59AE8002BBC33 /* LMButton.m */; };
@@ -60,6 +61,8 @@
 		6A1FB9C61D99EB0A00890BF3 /* LMAlbumViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMAlbumViewController.m; sourceTree = "<group>"; };
 		6A1FB9CA1D9AE76A00890BF3 /* LMLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMLabel.h; sourceTree = "<group>"; };
 		6A1FB9CB1D9AE76A00890BF3 /* LMLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMLabel.m; sourceTree = "<group>"; };
+		6A1FB9CD1D9B001000890BF3 /* LMAlbumCountLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMAlbumCountLabel.h; sourceTree = "<group>"; };
+		6A1FB9CE1D9B001000890BF3 /* LMAlbumCountLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMAlbumCountLabel.m; sourceTree = "<group>"; };
 		6A2566F21D4089E8004EDE41 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		6A313C101BB44959002BBC33 /* NPAlbumArtView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NPAlbumArtView.h; sourceTree = "<group>"; };
 		6A313C111BB44959002BBC33 /* NPAlbumArtView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NPAlbumArtView.m; sourceTree = "<group>"; };
@@ -354,6 +357,8 @@
 				6A1FB9C61D99EB0A00890BF3 /* LMAlbumViewController.m */,
 				6AFD2EDB1BC41ECC0083FE9E /* LMAlbumViewItem.h */,
 				6AFD2EDC1BC41ECC0083FE9E /* LMAlbumViewItem.m */,
+				6A1FB9CD1D9B001000890BF3 /* LMAlbumCountLabel.h */,
+				6A1FB9CE1D9B001000890BF3 /* LMAlbumCountLabel.m */,
 			);
 			name = AlbumView;
 			sourceTree = "<group>";
@@ -532,6 +537,7 @@
 				6A73CF5C1D4127C70097A400 /* LMPebbleImage.m in Sources */,
 				6A1FB9C71D99EB0A00890BF3 /* LMAlbumViewController.m in Sources */,
 				6A514E191CEA15D900AFB351 /* LMSlider.m in Sources */,
+				6A1FB9CF1D9B001000890BF3 /* LMAlbumCountLabel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

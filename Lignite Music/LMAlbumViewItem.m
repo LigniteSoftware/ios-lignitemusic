@@ -10,12 +10,13 @@
 #import "LMAlbumViewItem.h"
 #import "LMButton.h"
 #import "LMLabel.h"
+#import "LMAlbumCountLabel.h"
 
 @interface LMAlbumViewItem()
 
 @property UIImageView *albumImageView;
-@property UIView *textBackgroundView;
-@property UILabel *albumTitleView, *albumArtistView;
+@property UIView *shadingBackgroundView, *textBackgroundView;
+@property UILabel *albumTitleView, *albumArtistView, *albumCountView;
 @property LMButton *playButton;
 @property MPMediaItem *item;
 @property CAShapeLayer *circleLayer;
@@ -24,9 +25,56 @@
 
 @implementation LMAlbumViewItem
 
-- (void)load {
+- (void)setupWithAlbumCount:(NSUInteger)numberOfItems {
+	self.shadingBackgroundView = [UIView new];
+	self.shadingBackgroundView.translatesAutoresizingMaskIntoConstraints = NO;
+	self.shadingBackgroundView.backgroundColor = [UIColor whiteColor];
+	self.shadingBackgroundView.layer.shadowColor = [UIColor blackColor].CGColor;
+	self.shadingBackgroundView.layer.shadowOpacity = 0.75f;
+	self.shadingBackgroundView.layer.shadowRadius = self.frame.size.width/2 + 20;
+	self.shadingBackgroundView.layer.shadowOffset = CGSizeMake(0, 0);
+	self.shadingBackgroundView.layer.masksToBounds = NO;
+	[self addSubview:self.shadingBackgroundView];
+	
+	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.shadingBackgroundView
+													 attribute:NSLayoutAttributeCenterX
+													 relatedBy:NSLayoutRelationEqual
+														toItem:self
+													 attribute:NSLayoutAttributeCenterX
+													multiplier:1.0
+													  constant:0]];
+	
+	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.shadingBackgroundView
+													 attribute:NSLayoutAttributeCenterY
+													 relatedBy:NSLayoutRelationEqual
+														toItem:self
+													 attribute:NSLayoutAttributeCenterY
+													multiplier:1.0
+													  constant:0]];
+	
+	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.shadingBackgroundView
+													 attribute:NSLayoutAttributeWidth
+													 relatedBy:NSLayoutRelationEqual
+														toItem:self
+													 attribute:NSLayoutAttributeWidth
+													multiplier:0.7
+													  constant:0]];
+	
+	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.shadingBackgroundView
+													 attribute:NSLayoutAttributeHeight
+													 relatedBy:NSLayoutRelationEqual
+														toItem:self
+													 attribute:NSLayoutAttributeWidth
+													multiplier:0.7
+													  constant:0]];
+	
 	self.albumImageView = [[UIImageView alloc]initWithImage:[self.item.artwork imageWithSize:CGSizeMake(500, 500)]];
 	self.albumImageView.translatesAutoresizingMaskIntoConstraints = NO;
+	self.albumImageView.layer.cornerRadius = 30;
+	self.albumImageView.layer.masksToBounds = YES;
+	self.albumImageView.layer.opaque = NO;
+	self.albumImageView.clipsToBounds = YES;
+	self.albumImageView.backgroundColor = [UIColor blueColor];
 	[self addSubview:self.albumImageView];
 	
 	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.albumImageView
@@ -188,11 +236,6 @@
 	[trailingConstraint setPriority:UILayoutPriorityRequired];
 	[self.textBackgroundView addConstraint:trailingConstraint];
 	
-//	dispatch_async(dispatch_get_main_queue(), ^{
-//		self.albumTitleView.text = @"Gooj goOOD";
-//		self.albumTitleView.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:self.albumTitleView.frame.size.height];
-//	});
-	
 	self.albumArtistView = [[LMLabel alloc]init];
 	self.albumArtistView.text = self.item.artist;
 	self.albumArtistView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -234,11 +277,44 @@
 																	   multiplier:1.0
 																		 constant:0]];
 	
-	self.albumImageView.layer.shadowColor = [UIColor blackColor].CGColor;
-	self.albumImageView.layer.shadowOpacity = 0.25f;
-	self.albumImageView.layer.shadowRadius = self.frame.size.width/2 + 10;
-	self.albumImageView.layer.shadowOffset = CGSizeMake(0, 0);
-	self.albumImageView.layer.masksToBounds = 0;
+	self.albumCountView = [LMAlbumCountLabel new];
+	self.albumCountView.translatesAutoresizingMaskIntoConstraints = NO;
+	self.albumCountView.text = [NSString stringWithFormat:@"%lu", numberOfItems];
+	self.albumCountView.textColor = [UIColor whiteColor];
+	self.albumCountView.textAlignment = NSTextAlignmentCenter;
+	[self addSubview:self.albumCountView];
+	
+	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.albumCountView
+													 attribute:NSLayoutAttributeHeight
+													 relatedBy:NSLayoutRelationEqual
+														toItem:self.textBackgroundView
+													 attribute:NSLayoutAttributeHeight
+													multiplier:0.5
+													  constant:0]];
+	
+	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.albumCountView
+													 attribute:NSLayoutAttributeWidth
+													 relatedBy:NSLayoutRelationEqual
+														toItem:self.textBackgroundView
+													 attribute:NSLayoutAttributeHeight
+													multiplier:0.5
+													  constant:0]];
+	
+	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.albumCountView
+													 attribute:NSLayoutAttributeTrailing
+													 relatedBy:NSLayoutRelationEqual
+														toItem:self.textBackgroundView
+													 attribute:NSLayoutAttributeTrailing
+													multiplier:1.0
+													  constant:0]];
+	
+	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.albumCountView
+													 attribute:NSLayoutAttributeCenterY
+													 relatedBy:NSLayoutRelationEqual
+														toItem:self.textBackgroundView
+													 attribute:NSLayoutAttributeTop
+													multiplier:1.0
+													  constant:0]];
 }
 
 /*

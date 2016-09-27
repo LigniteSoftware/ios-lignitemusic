@@ -93,7 +93,7 @@ bool loaded = false;
 														multiplier:heightFactorialOfAlbumItem
 														  constant:0]];
 		
-		[newItem load];
+		[newItem setupWithAlbumCount:[collection count]];
 		
 		if(i == everything.collections.count-1){
 			[self.rootScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.rootScrollView.frame.size.height*(heightFactorialOfAlbumItem+0.1)*(i+1)+50)];
