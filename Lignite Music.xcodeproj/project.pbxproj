@@ -9,8 +9,8 @@
 /* Begin PBXBuildFile section */
 		6A0750721D5EAB8000BCBC9C /* aplite_colours.gif in Resources */ = {isa = PBXBuildFile; fileRef = 6A0750711D5EAB8000BCBC9C /* aplite_colours.gif */; };
 		6A0750741D5EC0C000BCBC9C /* bw_robot.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A0750731D5EC0C000BCBC9C /* bw_robot.png */; };
+		6A1FB9C71D99EB0A00890BF3 /* LMAlbumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A1FB9C61D99EB0A00890BF3 /* LMAlbumViewController.m */; };
 		6A2566F31D4089E8004EDE41 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A2566F21D4089E8004EDE41 /* MediaPlayer.framework */; };
-		6A2C3CB31BAF1B3700EE7677 /* LMAlbumView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A2C3CB21BAF1B3700EE7677 /* LMAlbumView.m */; };
 		6A313C121BB44959002BBC33 /* NPAlbumArtView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A313C111BB44959002BBC33 /* NPAlbumArtView.m */; };
 		6A313C181BB59AE8002BBC33 /* LMButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A313C171BB59AE8002BBC33 /* LMButton.m */; };
 		6A313C1B1BB59D91002BBC33 /* repeat_black.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A313C191BB59D91002BBC33 /* repeat_black.png */; };
@@ -55,9 +55,9 @@
 		6A0750711D5EAB8000BCBC9C /* aplite_colours.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = aplite_colours.gif; sourceTree = "<group>"; };
 		6A0750731D5EC0C000BCBC9C /* bw_robot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bw_robot.png; sourceTree = "<group>"; };
 		6A106B121BC710D4003AE55A /* Lignite Music.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Lignite Music.entitlements"; sourceTree = "<group>"; };
+		6A1FB9C51D99EB0A00890BF3 /* LMAlbumViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMAlbumViewController.h; sourceTree = "<group>"; };
+		6A1FB9C61D99EB0A00890BF3 /* LMAlbumViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMAlbumViewController.m; sourceTree = "<group>"; };
 		6A2566F21D4089E8004EDE41 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
-		6A2C3CB11BAF1B3700EE7677 /* LMAlbumView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMAlbumView.h; sourceTree = "<group>"; };
-		6A2C3CB21BAF1B3700EE7677 /* LMAlbumView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMAlbumView.m; sourceTree = "<group>"; };
 		6A313C101BB44959002BBC33 /* NPAlbumArtView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NPAlbumArtView.h; sourceTree = "<group>"; };
 		6A313C111BB44959002BBC33 /* NPAlbumArtView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NPAlbumArtView.m; sourceTree = "<group>"; };
 		6A313C131BB44A8F002BBC33 /* LMExtras.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMExtras.h; sourceTree = "<group>"; };
@@ -345,8 +345,8 @@
 		6AFD2EDA1BC41EAC0083FE9E /* AlbumView */ = {
 			isa = PBXGroup;
 			children = (
-				6A2C3CB11BAF1B3700EE7677 /* LMAlbumView.h */,
-				6A2C3CB21BAF1B3700EE7677 /* LMAlbumView.m */,
+				6A1FB9C51D99EB0A00890BF3 /* LMAlbumViewController.h */,
+				6A1FB9C61D99EB0A00890BF3 /* LMAlbumViewController.m */,
 				6AFD2EDB1BC41ECC0083FE9E /* LMAlbumViewItem.h */,
 				6AFD2EDC1BC41ECC0083FE9E /* LMAlbumViewItem.m */,
 			);
@@ -523,7 +523,7 @@
 				6ABF6A821CF374F7003E4EFA /* UIImage+AverageColour.m in Sources */,
 				6A313C181BB59AE8002BBC33 /* LMButton.m in Sources */,
 				6A73CF5C1D4127C70097A400 /* LMPebbleImage.m in Sources */,
-				6A2C3CB31BAF1B3700EE7677 /* LMAlbumView.m in Sources */,
+				6A1FB9C71D99EB0A00890BF3 /* LMAlbumViewController.m in Sources */,
 				6A514E191CEA15D900AFB351 /* LMSlider.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

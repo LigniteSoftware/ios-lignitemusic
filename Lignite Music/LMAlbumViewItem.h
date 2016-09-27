@@ -10,8 +10,7 @@
 
 @interface LMAlbumViewItem : UIView
 
-- (id)initWithMediaItem:(MPMediaItem*)item onFrame:(CGRect)frame withAlbumCount:(NSInteger)count;
-- (void)loadImage;
-- (void)unloadImage;
+- (void)load;
+- (id)initWithMediaItem:(MPMediaItem*)item withAlbumCount:(NSInteger)count;
 
 @end

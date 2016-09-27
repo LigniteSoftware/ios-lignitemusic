@@ -7,6 +7,7 @@
 //
 
 #import "LMButton.h"
+#import "LMExtras.h"
 
 @interface LMButton()
 
@@ -142,8 +143,9 @@
 
 - (void)drawRect:(CGRect)rect {
     CGContextRef ctx = UIGraphicsGetCurrentContext();
-    
-    CGContextSetRGBFillColor(ctx, 1, 1, 1, 1.0);
+	
+	UIColor *color = LIGNITE_RED;
+    CGContextSetFillColorWithColor(ctx, color.CGColor);
     int padding = 6;
     CGRect circleRect = CGRectMake(self.imageView.frame.origin.x-padding, self.imageView.frame.origin.y-padding, self.imageView.frame.size.width+(padding*2), self.imageView.frame.size.height+(padding*2));
     CGContextFillEllipseInRect(ctx, circleRect);
