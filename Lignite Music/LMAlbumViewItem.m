@@ -100,14 +100,15 @@
 	self.playButton = [[LMButton alloc]init];
 	self.playButton.translatesAutoresizingMaskIntoConstraints = NO;
 	[self.textBackgroundView addSubview:self.playButton];
-	[self.playButton setupWithTitle:nil withImage:[UIImage imageNamed:@"play_white.png"]];
-	self.playButton.backgroundColor = [UIColor blueColor];
+	[self.playButton setupWithImageMultiplier:0.5];
+	[self.playButton setImage:[UIImage imageNamed:@"play_white.png"]];
+	//self.playButton.backgroundColor = [UIColor blueColor];
 	
 	[self.textBackgroundView addConstraint:[NSLayoutConstraint constraintWithItem:self.playButton
 													 attribute:NSLayoutAttributeCenterY
 													 relatedBy:NSLayoutRelationEqual
 														toItem:self.textBackgroundView
-													 attribute:NSLayoutAttributeCenterY
+													 attribute:NSLayoutAttributeCenterY
 													multiplier:1.0
 													  constant:0]];
 	

@@ -22,6 +22,7 @@
 
 - (void)updateWithFrame:(CGRect)newFrame;
 - (void)setTitle:(NSString*)newTitle;
-- (void)setupWithTitle:(NSString*)title withImage:(UIImage*)image;
+- (void)setImage:(UIImage*)newImage;
+- (void)setupWithImageMultiplier:(float)imageMultiplier;
 
 @end

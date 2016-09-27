@@ -940,12 +940,18 @@
     [self.songDurationSlider addTarget:self action:@selector(fireRefreshTimer) forControlEvents:UIControlEventTouchDragExit];
     
     [self.albumArtView setupWithAlbumImage:[UIImage imageNamed:@"no_album.png"]];
-    
-    [self.shuffleButton setupWithTitle:@"Shuffle" withImage:[UIImage imageNamed:@"shuffle_black.png"]];
+	
+	[self.shuffleButton setupWithImageMultiplier:0.5];
+	[self.shuffleButton setTitle:@"Shuffle"];
+	[self.shuffleButton setImage:[UIImage imageNamed:@"shuffle_black.png"]];
     self.shuffleButton.delegate = self;
-    [self.repeatButton setupWithTitle:@"Repeat" withImage:[UIImage imageNamed:@"repeat_black.png"]];
+	[self.repeatButton setupWithImageMultiplier:0.5];
+	[self.repeatButton setTitle:@"Repeat"];
+	[self.repeatButton setImage:[UIImage imageNamed:@"repeat_black.png"]];
     self.repeatButton.delegate = self;
-    [self.dynamicPlaylistButton setupWithTitle:@"Settings" withImage:[UIImage imageNamed:@"settings.png"]];
+	[self.dynamicPlaylistButton setupWithImageMultiplier:0.5];
+	[self.dynamicPlaylistButton setTitle:@"Settings"];
+	[self.dynamicPlaylistButton setImage:[UIImage imageNamed:@"settings.png"]];
     self.dynamicPlaylistButton.delegate = self;
     
     self.shadingView = [[UIView alloc]init];

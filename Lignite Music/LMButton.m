@@ -22,64 +22,47 @@
 }
 
 /*
-- (void)willMoveToSuperview:(UIView *)newSuperview {
-    NSLog(@"Moving to superview %@, with a current frame of %@.", newSuperview, NSStringFromCGRect(self.frame));
-}
+ Sets the view up with all required constraints.
  */
-
-/*
- Sets the view up with the title and image as well as root frame.
- */
-- (void)setupWithTitle:(NSString*)title withImage:(UIImage*)image {
+- (void)setupWithImageMultiplier:(float)imageMultiplier {
     self.backgroundColor = [UIColor clearColor];
     
-    self.imageView = [[UIImageView alloc]initWithImage:image];
-    //self.imageView.backgroundColor = [UIColor blueColor];
+    self.imageView = [[UIImageView alloc]init];
     self.imageView.contentMode = UIViewContentModeScaleAspectFit;
     self.imageView.translatesAutoresizingMaskIntoConstraints = NO;
     self.imageView.clipsToBounds = YES;
     [self addSubview:self.imageView];
-    
-    
-    //Add constraint to image view that aligns it to the X center of the button's total area
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.imageView
-                                                                      attribute:NSLayoutAttributeCenterX
-                                                                      relatedBy:NSLayoutRelationEqual
-                                                                         toItem:self
-                                                                      attribute:NSLayoutAttributeCenterX
-                                                                     multiplier:1.0
-                                                                       constant:0]];
-    
-    //Add constraint to image view that aligns it to the Y center of the button's total area
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.imageView
-                                                     attribute:NSLayoutAttributeCenterY
-                                                     relatedBy:NSLayoutRelationEqual
-                                                        toItem:self
-                                                     attribute:NSLayoutAttributeCenterY
-                                                    multiplier:1.0
-                                                      constant:0]];
-    
-    //Add constraint to the image view that fits it within the view's width, the padding being standard
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-14-[imageView]-14-|"
-                                                                 options:NSLayoutFormatAlignAllCenterY
-                                                                 metrics:nil
-                                                                   views:@{@"imageView":self.imageView}]];
-    
-    //Add constraint that makes sure the height of the view is the same as the width, restricting the image
-    //from overflowing too much. This was a problem before
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.imageView
-                                                     attribute:NSLayoutAttributeHeight
-                                                     relatedBy:NSLayoutRelationEqual
-                                                        toItem:self.imageView
-                                                     attribute:NSLayoutAttributeWidth
-                                                    multiplier:1.0
-                                                      constant:0]];
-    
-    
+	
+	//Align image view to center of frame's X coordinate
+	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.imageView
+													 attribute:NSLayoutAttributeCenterY
+													 relatedBy:NSLayoutRelationEqual
+														toItem:self
+													 attribute:NSLayoutAttributeCenterY
+													multiplier:1.0
+													  constant:0]];
+	
+	//Set the width equal to half the image view's width
+	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.imageView
+													 attribute:NSLayoutAttributeWidth
+													 relatedBy:NSLayoutRelationEqual
+														toItem:self
+													 attribute:NSLayoutAttributeWidth
+													multiplier:imageMultiplier
+													  constant:0]];
+	
+	//Set the height equal to half the width
+	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.imageView
+													 attribute:NSLayoutAttributeHeight
+													 relatedBy:NSLayoutRelationEqual
+														toItem:self
+													 attribute:NSLayoutAttributeWidth
+													multiplier:imageMultiplier
+													  constant:0]];
+	
+	
     self.titleLabel = [UILabel new];
-    self.titleLabel.text = title;
     self.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14.0f];
-    //self.titleLabel.backgroundColor = [UIColor purpleColor];
     self.titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
     [self addSubview:self.titleLabel];
     
@@ -108,6 +91,10 @@
  */
 - (void)setTitle:(NSString*)newTitle {
     self.titleLabel.text = newTitle;
+}
+
+- (void)setImage:(UIImage*)newImage{
+	self.imageView.image = newImage;
 }
 
 /*
@@ -146,8 +133,8 @@
 	
 	UIColor *color = LIGNITE_RED;
     CGContextSetFillColorWithColor(ctx, color.CGColor);
-    int padding = 6;
-    CGRect circleRect = CGRectMake(self.imageView.frame.origin.x-padding, self.imageView.frame.origin.y-padding, self.imageView.frame.size.width+(padding*2), self.imageView.frame.size.height+(padding*2));
+
+	CGRect circleRect = CGRectMake(0, 0, self.frame.size.width, self.frame.size.width);
     CGContextFillEllipseInRect(ctx, circleRect);
 }
 
