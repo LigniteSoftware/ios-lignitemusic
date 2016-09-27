@@ -16,6 +16,9 @@
 @property UIScrollView *rootScrollView;
 @property UILabel *titleLabel, *subtitleLabel;
 @property NSMutableArray *albumsItemArray;
+@property NSUInteger albumsCount;
+@property MPMediaQuery *everything;
+@property CGRect exampleAlbumItemFrame;
 
 @end
 
@@ -26,6 +29,132 @@
 }
 
 bool loaded = false;
+
+- (void)prepareAlbumViewItemWithConstraints:(LMAlbumViewItem*)item atIndex:(NSUInteger)index {
+	if(!self.everything){
+		NSLog(@"self.everything doesn't exist!");
+		return;
+	}
+	
+	[self.rootScrollView addSubview:item];
+	item.translatesAutoresizingMaskIntoConstraints = NO;
+	
+	float heightFactorialOfAlbumItem = 0.4;
+	
+	[self.rootScrollView addConstraint:[NSLayoutConstraint constraintWithItem:item
+																	attribute:NSLayoutAttributeCenterX
+																	relatedBy:NSLayoutRelationEqual
+																	   toItem:self.rootScrollView
+																	attribute:NSLayoutAttributeCenterX
+																   multiplier:1.0
+																	 constant:0]];
+	
+	[self.rootScrollView addConstraint:[NSLayoutConstraint constraintWithItem:item
+																	attribute:NSLayoutAttributeTop
+																	relatedBy:NSLayoutRelationEqual
+																	   toItem:self.rootScrollView
+																	attribute:NSLayoutAttributeTop
+																   multiplier:1.0
+																	 constant:self.rootScrollView.frame.size.height*(heightFactorialOfAlbumItem+0.1)*index+50]];
+	
+	[self.rootScrollView addConstraint:[NSLayoutConstraint constraintWithItem:item
+																	attribute:NSLayoutAttributeWidth
+																	relatedBy:NSLayoutRelationEqual
+																	   toItem:self.rootScrollView
+																	attribute:NSLayoutAttributeWidth
+																   multiplier:0.8
+																	 constant:0]];
+	
+	[self.rootScrollView addConstraint:[NSLayoutConstraint constraintWithItem:item
+																	attribute:NSLayoutAttributeHeight
+																	relatedBy:NSLayoutRelationEqual
+																	   toItem:self.rootScrollView
+																	attribute:NSLayoutAttributeHeight
+																   multiplier:heightFactorialOfAlbumItem
+																	 constant:0]];
+	
+	MPMediaItemCollection *collection = [self.everything.collections objectAtIndex:index];
+	
+	if(!item.hasLoaded){
+		[item setupWithAlbumCount:[collection count]];
+		item.hasLoaded = YES;
+	}
+	
+	if(index >= 3 && self.exampleAlbumItemFrame.size.height == 0){
+		[item removeFromSuperview];
+	}
+	
+	if(index == self.albumsCount-1){
+		self.rootScrollView.delegate = self;
+		[self.rootScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.rootScrollView.frame.size.height*(heightFactorialOfAlbumItem+0.1)*(index+1)+50)];
+	}
+
+}
+
+- (void)reloadAlbumItems {
+	if(self.exampleAlbumItemFrame.size.width == 0){
+		LMAlbumViewItem *item = [self.albumsItemArray objectAtIndex:0];
+		self.exampleAlbumItemFrame = item.frame;
+//		NSLog(@"Got item frame of %@", NSStringFromCGRect(item.frame));
+	}
+	
+	CGRect visibleFrame = CGRectMake(self.rootScrollView.contentOffset.x, self.rootScrollView.contentOffset.y, self.rootScrollView.contentOffset.x + self.rootScrollView.bounds.size.width, self.rootScrollView.bounds.size.height);
+	
+	//NSLog(@"Visible frame %@", NSStringFromCGRect(visibleFrame));
+	
+	int amountOfItems = (visibleFrame.origin.y + visibleFrame.size.height)/self.exampleAlbumItemFrame.size.height;
+	//NSLog(@"Have seen %d", amountOfItems);
+	
+	int8_t itemsDrawn = 0;
+	while(itemsDrawn < 4 && amountOfItems > 0){
+		int itemToDraw = (amountOfItems-itemsDrawn);
+		if(itemToDraw < 0 || itemToDraw >= self.albumsItemArray.count){
+			itemsDrawn = 4;
+			break;
+		}
+		LMAlbumViewItem *item = [self.albumsItemArray objectAtIndex:itemToDraw];
+		//NSLog(@"Draw item %d (current size %f)", itemToDraw, item.frame.size.height);
+		if(![item isDescendantOfView:self.rootScrollView]){
+			//NSLog(@"Adding");
+			[self prepareAlbumViewItemWithConstraints:item atIndex:itemToDraw];
+		}
+		itemsDrawn++;
+	}
+	//NSLog(@"Removing %d", itemsDrawn);
+	int amountOfItemsAbove = (int)self.albumsItemArray.count-amountOfItems;
+	int amountOfItemsBelow = amountOfItems-itemsDrawn;
+	NSLog(@"Above %d below %d", amountOfItemsAbove, amountOfItemsBelow);
+	while(amountOfItemsAbove > -1){
+		int itemToRemove = (int)self.albumsItemArray.count-1-amountOfItemsAbove;
+		NSLog(@"Removing %d", itemToRemove);
+		LMAlbumViewItem *item = [self.albumsItemArray objectAtIndex:itemToRemove];
+		if([item isDescendantOfView:self.rootScrollView]){
+			[item removeFromSuperview];
+		}
+		amountOfItemsAbove--;
+	}
+	while(amountOfItemsBelow > 0){
+		int itemToRemove = (int)amountOfItemsBelow-1;
+		NSLog(@"Below removing %d", itemToRemove);
+		LMAlbumViewItem *item = [self.albumsItemArray objectAtIndex:itemToRemove];
+		if([item isDescendantOfView:self.rootScrollView]){
+			[item removeFromSuperview];
+		}
+		amountOfItemsBelow--;
+	}
+	/*
+	while(amountOfItems > -1){
+		NSLog(@"Amount of items %d", amountOfItems);
+		LMAlbumViewItem *item = [self.albumsItemArray objectAtIndex:amountOfItems];
+		[item removeFromSuperview];
+		amountOfItems--;
+	}
+	 */
+}
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+	[self reloadAlbumItems];
+}
+
 - (void)load {
 	if(loaded){
 		return;
@@ -42,62 +171,23 @@ bool loaded = false;
 	
 	NSTimeInterval startingTime = [[NSDate date] timeIntervalSince1970];
 	
-	MPMediaQuery *everything = [MPMediaQuery albumsQuery];
-	[everything setGroupingType: MPMediaGroupingAlbum];
+	self.everything = [MPMediaQuery albumsQuery];
+	[self.everything setGroupingType: MPMediaGroupingAlbum];
+	//self.albumsCount = everything.collections.count;
+	self.albumsCount = 10;
 	
 	NSLog(@"Logging items from a generic query...");
 	
-	for(int i = 0; i < everything.collections.count; i++){
+	for(int i = 0; i < self.albumsCount; i++){
 	//for(int i = 0; i < 5; i++){
-		MPMediaItemCollection *collection = [everything.collections objectAtIndex:i];
+		MPMediaItemCollection *collection = [self.everything.collections objectAtIndex:i];
 		//NSString *songTitle = [song valueForProperty: MPMediaItemPropertyTitle];
 		//NSLog (@"%lu for %@", (unsigned long)[section count], [[section representativeItem] title]);
 		LMAlbumViewItem *newItem = [[LMAlbumViewItem alloc]initWithMediaItem:collection.representativeItem withAlbumCount:collection.count];
 		newItem.userInteractionEnabled = YES;
 		[self.albumsItemArray addObject:newItem];
 		
-		[self.rootScrollView addSubview:newItem];
-		newItem.translatesAutoresizingMaskIntoConstraints = NO;
-		
-		float heightFactorialOfAlbumItem = 0.4;
-		
-		[self.rootScrollView addConstraint:[NSLayoutConstraint constraintWithItem:newItem
-														 attribute:NSLayoutAttributeCenterX
-														 relatedBy:NSLayoutRelationEqual
-															toItem:self.rootScrollView
-														 attribute:NSLayoutAttributeCenterX
-														multiplier:1.0
-														  constant:0]];
-		
-		[self.rootScrollView addConstraint:[NSLayoutConstraint constraintWithItem:newItem
-																		attribute:NSLayoutAttributeTop
-																		relatedBy:NSLayoutRelationEqual
-																		   toItem:self.rootScrollView
-																		attribute:NSLayoutAttributeTop
-																	   multiplier:1.0
-																		 constant:self.rootScrollView.frame.size.height*(heightFactorialOfAlbumItem+0.1)*i+50]];
-		
-		[self.rootScrollView addConstraint:[NSLayoutConstraint constraintWithItem:newItem
-														 attribute:NSLayoutAttributeWidth
-														 relatedBy:NSLayoutRelationEqual
-															toItem:self.rootScrollView
-														 attribute:NSLayoutAttributeWidth
-														multiplier:0.8
-														  constant:0]];
-		
-		[self.rootScrollView addConstraint:[NSLayoutConstraint constraintWithItem:newItem
-														 attribute:NSLayoutAttributeHeight
-														 relatedBy:NSLayoutRelationEqual
-															toItem:self.rootScrollView
-														 attribute:NSLayoutAttributeHeight
-														multiplier:heightFactorialOfAlbumItem
-														  constant:0]];
-		
-		[newItem setupWithAlbumCount:[collection count]];
-		
-		if(i == everything.collections.count-1){
-			[self.rootScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.rootScrollView.frame.size.height*(heightFactorialOfAlbumItem+0.1)*(i+1)+50)];
-		}
+		[self prepareAlbumViewItemWithConstraints:newItem atIndex:i];
 	}
 	
 	self.rootScrollView.delegate = self;

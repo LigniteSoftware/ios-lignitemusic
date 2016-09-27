@@ -70,7 +70,7 @@
 	
 	self.albumImageView = [[UIImageView alloc]initWithImage:[self.item.artwork imageWithSize:CGSizeMake(500, 500)]];
 	self.albumImageView.translatesAutoresizingMaskIntoConstraints = NO;
-	self.albumImageView.layer.cornerRadius = 30;
+	self.albumImageView.layer.cornerRadius = 10;
 	self.albumImageView.layer.masksToBounds = YES;
 	self.albumImageView.layer.opaque = NO;
 	self.albumImageView.clipsToBounds = YES;

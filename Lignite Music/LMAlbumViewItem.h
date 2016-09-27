@@ -10,6 +10,8 @@
 
 @interface LMAlbumViewItem : UIView
 
+@property BOOL hasLoaded;
+
 - (void)setupWithAlbumCount:(NSUInteger)numberOfItems;
 - (id)initWithMediaItem:(MPMediaItem*)item withAlbumCount:(NSInteger)count;
 
