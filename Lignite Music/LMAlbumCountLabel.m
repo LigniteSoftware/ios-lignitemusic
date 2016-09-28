@@ -17,6 +17,7 @@
 -(void)layoutSubviews {
 	[super layoutSubviews];
 	
+	//Give it a corner radius of half its width to make it a circle.
 	self.layer.cornerRadius = self.bounds.size.width/2;
 	self.backgroundColor = [UIColor blackColor];
 	self.layer.masksToBounds = YES;

@@ -12,6 +12,8 @@
 #import "LMButton.h"
 
 #define CONTENT_OFFSET_FOR_REFRESH 50.0f
+#define ALBUM_ITEM_HEIGHT_FACTORIAL 0.4
+#define ALBUM_ITEM_SPACING 50
 
 @interface LMAlbumViewController () <UIScrollViewDelegate>
 
@@ -22,6 +24,7 @@
 @property MPMediaQuery *everything;
 @property CGRect exampleAlbumItemFrame;
 @property float lastUpdatedContentOffset;
+@property BOOL loaded;
 
 @end
 
@@ -31,9 +34,14 @@
 	return true;
 }
 
-bool loaded = false;
-float heightFactorialOfAlbumItem = 0.4;
 
+/**
+ Prepares an album view item for layouting by setting up its constraints. Also automatically adjusts the size of the
+ scroll layer associated with this album view.
+
+ @param item  The item to prepare.
+ @param index The index of that item.
+ */
 - (void)prepareAlbumViewItemWithConstraints:(LMAlbumViewItem*)item atIndex:(NSUInteger)index {
 	if(!self.everything){
 		NSLog(@"self.everything doesn't exist!");
@@ -57,7 +65,7 @@ float heightFactorialOfAlbumItem = 0.4;
 																	   toItem:self.rootScrollView
 																	attribute:NSLayoutAttributeTop
 																   multiplier:1.0
-																	 constant:self.rootScrollView.frame.size.height*(heightFactorialOfAlbumItem+0.1)*index+50]];
+																	 constant:self.rootScrollView.frame.size.height*(ALBUM_ITEM_HEIGHT_FACTORIAL+0.1)*index+ALBUM_ITEM_SPACING]];
 	
 	[self.rootScrollView addConstraint:[NSLayoutConstraint constraintWithItem:item
 																	attribute:NSLayoutAttributeWidth
@@ -72,7 +80,7 @@ float heightFactorialOfAlbumItem = 0.4;
 																	relatedBy:NSLayoutRelationEqual
 																	   toItem:self.rootScrollView
 																	attribute:NSLayoutAttributeHeight
-																   multiplier:heightFactorialOfAlbumItem
+																   multiplier:ALBUM_ITEM_HEIGHT_FACTORIAL
 																	 constant:0]];
 	
 	MPMediaItemCollection *collection = [self.everything.collections objectAtIndex:index];
@@ -88,98 +96,98 @@ float heightFactorialOfAlbumItem = 0.4;
 	
 	if(index == self.albumsCount-1){
 		self.rootScrollView.delegate = self;
-		[self.rootScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.rootScrollView.frame.size.height*(heightFactorialOfAlbumItem+0.1)*(index+1)+50)];
+		[self.rootScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.rootScrollView.frame.size.height*(ALBUM_ITEM_HEIGHT_FACTORIAL+0.1)*(index+1)+ALBUM_ITEM_SPACING)];
 	}
 
 }
 
+
+/**
+ Reloads album items on the screen.
+ 
+ Up to 4 album items are actually on the UIScrollLayer at once, the rest are removed from their superview until needed.
+ */
 - (void)reloadAlbumItems {
+	//If the album item frame which dictates the general size album items should be scaled by doesn't exist, set it up.
 	if(self.exampleAlbumItemFrame.size.width == 0){
 		LMAlbumViewItem *item = [self.albumsItemArray objectAtIndex:0];
 		self.exampleAlbumItemFrame = item.frame;
-//		NSLog(@"Got item frame of %@", NSStringFromCGRect(item.frame));
 	}
 	
+	//The visible frame is what's visible on the screen of the UIScrollView. Its height is the same as the total height for the UIScrollView.
 	CGRect visibleFrame = CGRectMake(self.rootScrollView.contentOffset.x, self.rootScrollView.contentOffset.y, self.rootScrollView.contentOffset.x + self.rootScrollView.bounds.size.width, self.rootScrollView.bounds.size.height);
 	
-	if(fabs(self.lastUpdatedContentOffset-visibleFrame.origin.y) < CONTENT_OFFSET_FOR_REFRESH){
-		//return;
-	}
-	
-	self.lastUpdatedContentOffset = visibleFrame.origin.y;
-	
-//	NSLog(@"Updating.");
-	
-//	NSLog(@"example frame %@", NSStringFromCGRect(self.exampleAlbumItemFrame));
-	
 	int amountOfItems = 0;
+	//Calculate the total amount of space that has been viewed and is being viewed.
 	float totalSpace = (visibleFrame.origin.y + visibleFrame.size.height);
+	//Calculate the amount of items that are in frame and above it (scrolled past) by subtracting each from the total space.
 	while(totalSpace > 0){
-		totalSpace -= (self.view.frame.size.height*(heightFactorialOfAlbumItem+0.1));
+		totalSpace -= (self.view.frame.size.height*(ALBUM_ITEM_HEIGHT_FACTORIAL+0.1));
 		amountOfItems++;
 	}
-	//amountOfItems += 2;
-//	NSLog(@"Have seen %d with total space ending at %f", amountOfItems, totalSpace);
 	
 	uint8_t totalAmountOfItemsToDraw = 4;
 	
 	int8_t itemsDrawn = 0;
+	//Determines whether or not an item is in view, and if it is, adds it to the root UIScrollView if it is not already there.
 	while(itemsDrawn < totalAmountOfItemsToDraw && amountOfItems > 0){
 		int itemToDraw = (amountOfItems-itemsDrawn)-1;
 		if(itemToDraw < 0 || itemToDraw >= self.albumsItemArray.count){
 			itemsDrawn = totalAmountOfItemsToDraw;
-			NSLog(@"Breaking %d %ld.", itemToDraw, self.albumsItemArray.count);
 			break;
 		}
 		LMAlbumViewItem *item = [self.albumsItemArray objectAtIndex:itemToDraw];
-		//NSLog(@"Draw item %d (current size %f)", itemToDraw, item.frame.size.height);
 		if(![item isDescendantOfView:self.rootScrollView]){
-//			NSLog(@"Showing item %d", itemToDraw);
 			[self prepareAlbumViewItemWithConstraints:item atIndex:itemToDraw];
 		}
 		itemsDrawn++;
 	}
 	
-	//NSLog(@"The amount of items being drawn is %d", itemsDrawn);
-	
 	int amountOfItemsAbove = (amountOfItems-itemsDrawn)+1;
-	//NSLog(@"The amount of items being hidden above is %d", amountOfItemsAbove);
-	
-	int amountOfItemsBelow = ((int)self.albumsItemArray.count-amountOfItems);
-	//NSLog(@"The amount of items being hidden below is %d", amountOfItemsBelow);
-	
+	//Based on the amount of items above the current frame (scrolled past), remove all of those items from their superviews.
 	while(amountOfItemsAbove > 0){
 		LMAlbumViewItem *item = [self.albumsItemArray objectAtIndex:amountOfItemsAbove-1];
 		if([item isDescendantOfView:self.rootScrollView]){
-//			NSLog(@"Hiding above item %d", amountOfItemsAbove);
 			[item removeFromSuperview];
 		}
 		amountOfItemsAbove--;
 	}
 	
+	int amountOfItemsBelow = ((int)self.albumsItemArray.count-amountOfItems);
+	//Based on the amount of items below the current frame (not yet scrolled past), remove all of those items from their superviews.
 	while(amountOfItemsBelow > 0){
 		LMAlbumViewItem *item = [self.albumsItemArray objectAtIndex:amountOfItems+amountOfItemsBelow-1];
 		if([item isDescendantOfView:self.rootScrollView]){
-//			NSLog(@"Hiding below item %d", amountOfItemsBelow);
 			[item removeFromSuperview];
 		}
 		amountOfItemsBelow--;
 	}
-	
 }
+
+
+/**
+ When the UIScrollView updates, this is called.
+
+ @param scrollView The UIScrollView which updated.
+ */
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
 	[self reloadAlbumItems];
 }
 
-- (void)load {
-	if(loaded){
+
+/**
+ Called when the view did layout its subviews and redrawing needs to occur for any other views.
+ */
+- (void)viewDidLayoutSubviews {
+	if(self.loaded){
 		return;
 	}
-	loaded = true;
+	self.loaded = YES;
+	
 	self.albumsItemArray = [[NSMutableArray alloc]init];
 	
 	CGRect currentFrame = self.view.frame;
-	CGRect rootFrame = currentFrame; //CGRectMake(currentFrame.origin.x, currentFrame.origin.y, currentFrame.size.width, currentFrame.size.height);
+	CGRect rootFrame = currentFrame;
 	self.rootScrollView = [[UIScrollView alloc]initWithFrame:rootFrame];
 	self.rootScrollView.backgroundColor = [UIColor whiteColor];
 	[self.rootScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height*2)];
@@ -190,15 +198,11 @@ float heightFactorialOfAlbumItem = 0.4;
 	self.everything = [MPMediaQuery albumsQuery];
 	[self.everything setGroupingType: MPMediaGroupingAlbum];
 	self.albumsCount = self.everything.collections.count;
-	//self.albumsCount = 10;
 	
 	NSLog(@"Logging items from a generic query...");
 	
 	for(int i = 0; i < self.albumsCount; i++){
-	//for(int i = 0; i < 5; i++){
 		MPMediaItemCollection *collection = [self.everything.collections objectAtIndex:i];
-		//NSString *songTitle = [song valueForProperty: MPMediaItemPropertyTitle];
-		//NSLog (@"%lu for %@", (unsigned long)[section count], [[section representativeItem] title]);
 		LMAlbumViewItem *newItem = [[LMAlbumViewItem alloc]initWithMediaItem:collection.representativeItem withAlbumCount:collection.count];
 		newItem.userInteractionEnabled = YES;
 		[self.albumsItemArray addObject:newItem];
@@ -213,11 +217,6 @@ float heightFactorialOfAlbumItem = 0.4;
 	NSLog(@"Took %f seconds to complete.", endingTime-startingTime);
 }
 
-
-- (void)viewDidLayoutSubviews {
-	[self load];
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -227,6 +226,8 @@ float heightFactorialOfAlbumItem = 0.4;
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
+	
+	NSLog(@"Album view got a memory warning.");
     // Dispose of any resources that can be recreated.
 }
 

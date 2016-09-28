@@ -25,7 +25,14 @@
 
 @implementation LMAlbumViewItem
 
+
+/**
+ Sets up the LMAlbumViewItem with a number of items that's available in that album.
+
+ @param numberOfItems The number of items in the album associated with this item.
+ */
 - (void)setupWithAlbumCount:(NSUInteger)numberOfItems {
+	//The shading background view gives a shadow effect to the item.
 	self.shadingBackgroundView = [UIView new];
 	self.shadingBackgroundView.translatesAutoresizingMaskIntoConstraints = NO;
 	self.shadingBackgroundView.backgroundColor = [UIColor whiteColor];
@@ -68,6 +75,7 @@
 													multiplier:0.7
 													  constant:0]];
 	
+	//The album image view displays the album image.
 	self.albumImageView = [[UIImageView alloc]initWithImage:[self.item.artwork imageWithSize:CGSizeMake(500, 500)]];
 	self.albumImageView.translatesAutoresizingMaskIntoConstraints = NO;
 	self.albumImageView.layer.cornerRadius = 10;
@@ -109,6 +117,8 @@
 																   multiplier:0.9
 																	 constant:0]];
 	
+	//The text background view is a view which contains the play button and album/artist text associated with this item.
+	//It has a white background color.
 	self.textBackgroundView = [[UIView alloc]init];
 	self.textBackgroundView.backgroundColor = [UIColor whiteColor];
 	self.textBackgroundView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -146,6 +156,7 @@
 													multiplier:0.2
 													  constant:0]];
 	
+	//The play button allows for easy access to playing the album.
 	self.playButton = [[LMButton alloc]init];
 	self.playButton.translatesAutoresizingMaskIntoConstraints = NO;
 	self.playButton.userInteractionEnabled = YES;
@@ -186,6 +197,7 @@
 																	   multiplier:1.0
 																		 constant:0]];
 	
+	//The album's title.
 	self.albumTitleView = [[LMLabel alloc]init];
 	self.albumTitleView.text = self.item.albumTitle;
 	self.albumTitleView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -236,6 +248,7 @@
 	[trailingConstraint setPriority:UILayoutPriorityRequired];
 	[self.textBackgroundView addConstraint:trailingConstraint];
 	
+	//The artist.
 	self.albumArtistView = [[LMLabel alloc]init];
 	self.albumArtistView.text = self.item.artist;
 	self.albumArtistView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -277,6 +290,7 @@
 																	   multiplier:1.0
 																		 constant:0]];
 	
+	//The amount of songs in this album.
 	self.albumCountView = [LMAlbumCountLabel new];
 	self.albumCountView.translatesAutoresizingMaskIntoConstraints = NO;
 	self.albumCountView.text = [NSString stringWithFormat:@"%lu", numberOfItems];
