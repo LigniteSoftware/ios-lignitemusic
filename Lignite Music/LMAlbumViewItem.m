@@ -293,7 +293,7 @@
 	//The amount of songs in this album.
 	self.albumCountView = [LMAlbumCountLabel new];
 	self.albumCountView.translatesAutoresizingMaskIntoConstraints = NO;
-	self.albumCountView.text = [NSString stringWithFormat:@"%lu", numberOfItems];
+	self.albumCountView.text = [NSString stringWithFormat:@"%lu", (unsigned long)numberOfItems];
 	self.albumCountView.textColor = [UIColor whiteColor];
 	self.albumCountView.textAlignment = NSTextAlignmentCenter;
 	[self addSubview:self.albumCountView];

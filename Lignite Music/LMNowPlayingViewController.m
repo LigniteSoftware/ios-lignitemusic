@@ -156,10 +156,10 @@
     [self.songAlbumLabel setText:self.musicPlayer.nowPlayingItem.albumTitle];
     
     if(self.currentlyPlayingQueue){
-        [self.songNumberLabel setText:[NSString stringWithFormat:@"Song %lu of %lu", self.musicPlayer.indexOfNowPlayingItem+1, self.currentlyPlayingQueue.items.count]];
+        [self.songNumberLabel setText:[NSString stringWithFormat:@"Song %d of %d", (int)self.musicPlayer.indexOfNowPlayingItem+1, (int)self.currentlyPlayingQueue.items.count]];
     }
     else{
-        [self.songNumberLabel setText:[NSString stringWithFormat:@"Song %lu", self.musicPlayer.indexOfNowPlayingItem+1]];
+        [self.songNumberLabel setText:[NSString stringWithFormat:@"Song %d", (int)self.musicPlayer.indexOfNowPlayingItem+1]];
     }
     
     self.songDurationSlider.maximumValue = self.musicPlayer.nowPlayingItem.playbackDuration;
@@ -888,7 +888,7 @@
         NSData *value_data = [value dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
         uint8_t length = [value_data length];
         if(([result length] + length) > self.appMessageSize){
-            NSLog(@"Cutting off length at %ld", [result length]);
+            NSLog(@"Cutting off length at %lu", (unsigned long)[result length]);
             break;
         }
         [result appendBytes:&length length:1];
