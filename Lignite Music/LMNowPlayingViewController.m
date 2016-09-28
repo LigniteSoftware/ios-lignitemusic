@@ -95,6 +95,7 @@
             if(finalY > halfHeight + sizeOfFavouritesSpace*3){
                 NSLog(@"FIRE!");
                 finalY = halfHeight;
+				[self dismissViewControllerAnimated:YES completion:nil];
             }
             else{
                 finalY = halfHeight + sizeOfFavouritesSpace;
@@ -926,7 +927,7 @@
         return;
     }
     
-    self.view.backgroundColor = [UIColor redColor];
+    self.view.backgroundColor = [UIColor whiteColor];
     
     self.songTitleLabel.fadeLength = 10;
     self.songTitleLabel.leadingBuffer = 6;
@@ -1035,7 +1036,7 @@
     [panRecognizer setMinimumNumberOfTouches:1];
     [panRecognizer setMaximumNumberOfTouches:1];
     panRecognizer.delegate = self;
-    //[self.contentContainerView addGestureRecognizer:panRecognizer];
+    [self.contentContainerView addGestureRecognizer:panRecognizer];
     
     self.loadedSubviews = YES;
     

@@ -7,6 +7,7 @@
 //
 
 #import <MediaPlayer/MediaPlayer.h>
+#import "LMNowPlayingViewController.h"
 #import "LMAlbumViewItem.h"
 #import "LMAlbumViewController.h"
 #import "LMButton.h"
@@ -15,7 +16,7 @@
 #define ALBUM_ITEM_HEIGHT_FACTORIAL 0.4
 #define ALBUM_ITEM_SPACING 50
 
-@interface LMAlbumViewController () <UIScrollViewDelegate>
+@interface LMAlbumViewController () <LMButtonDelegate, UIScrollViewDelegate>
 
 @property UIScrollView *rootScrollView;
 @property UILabel *titleLabel, *subtitleLabel;
@@ -30,10 +31,22 @@
 
 @implementation LMAlbumViewController
 
-- (BOOL)prefersStatusBarHidden {
-	return true;
+/**
+ When a play button is clicked, this is called.
+ 
+ @param button The button which was clicked.
+ */
+- (void)clickedButton:(LMButton *)button{
+	LMAlbumViewItem *itemAssociated = (LMAlbumViewItem*)button.superview.superview; //The button is attached to the text background layer which is attached to the item.
+		
+	MPMediaItemCollection *collection = [self.everything.collections objectAtIndex:itemAssociated.collectionIndex];
+	MPMusicPlayerController *controller = [MPMusicPlayerController systemMusicPlayer];
+	[controller setQueueWithItemCollection:collection];
+	[controller play];
+	
+	LMNowPlayingViewController *nowPlayingController = [self.storyboard instantiateViewControllerWithIdentifier:@"nowPlayingController"];
+	[self showViewController:nowPlayingController sender:self];
 }
-
 
 /**
  Prepares an album view item for layouting by setting up its constraints. Also automatically adjusts the size of the
@@ -47,6 +60,8 @@
 		NSLog(@"self.everything doesn't exist!");
 		return;
 	}
+	
+	item.collectionIndex = index;
 	
 	[self.rootScrollView addSubview:item];
 	item.translatesAutoresizingMaskIntoConstraints = NO;
@@ -86,7 +101,7 @@
 	MPMediaItemCollection *collection = [self.everything.collections objectAtIndex:index];
 	
 	if(!item.hasLoaded){
-		[item setupWithAlbumCount:[collection count]];
+		[item setupWithAlbumCount:[collection count] andDelegate:self];
 		item.hasLoaded = YES;
 	}
 	
@@ -215,6 +230,10 @@
 	NSTimeInterval endingTime = [[NSDate date] timeIntervalSince1970];
 	
 	NSLog(@"Took %f seconds to complete.", endingTime-startingTime);
+}
+
+- (BOOL)prefersStatusBarHidden {
+	return true;
 }
 
 - (void)viewDidLoad {

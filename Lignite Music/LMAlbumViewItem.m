@@ -18,7 +18,6 @@
 @property UIView *shadingBackgroundView, *textBackgroundView;
 @property UILabel *albumTitleView, *albumArtistView, *albumCountView;
 @property LMButton *playButton;
-@property MPMediaItem *item;
 @property CAShapeLayer *circleLayer;
 
 @end
@@ -31,7 +30,7 @@
 
  @param numberOfItems The number of items in the album associated with this item.
  */
-- (void)setupWithAlbumCount:(NSUInteger)numberOfItems {
+- (void)setupWithAlbumCount:(NSUInteger)numberOfItems andDelegate:(id)delegate {
 	//The shading background view gives a shadow effect to the item.
 	self.shadingBackgroundView = [UIView new];
 	self.shadingBackgroundView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -160,6 +159,7 @@
 	self.playButton = [[LMButton alloc]init];
 	self.playButton.translatesAutoresizingMaskIntoConstraints = NO;
 	self.playButton.userInteractionEnabled = YES;
+	self.playButton.delegate = delegate;
 	[self.textBackgroundView addSubview:self.playButton];
 	[self.playButton setupWithImageMultiplier:0.5];
 	[self.playButton setImage:[UIImage imageNamed:@"play_white.png"]];

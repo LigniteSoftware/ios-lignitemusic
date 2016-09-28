@@ -221,7 +221,7 @@
         <!--Now Playing View Controller-->
         <scene sceneID="yzr-f2-nBi">
             <objects>
-                <viewController id="KVn-G2-Yo0" customClass="LMNowPlayingViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="nowPlayingController" id="KVn-G2-Yo0" customClass="LMNowPlayingViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="ob1-Bz-aSa"/>
                         <viewControllerLayoutGuide type="bottom" id="KbD-Ti-uRc"/>
