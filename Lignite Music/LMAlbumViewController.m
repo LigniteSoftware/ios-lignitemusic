@@ -7,6 +7,7 @@
 //
 
 #import <MediaPlayer/MediaPlayer.h>
+#import "LMAlbumDetailView.h"
 #import "LMNowPlayingViewController.h"
 #import "LMAdaptiveScrollView.h"
 #import "LMAlbumViewItem.h"
@@ -39,6 +40,37 @@
  */
 - (void)clickedAlbumViewItem:(LMAlbumViewItem*)item {
 	NSLog(@"I see you have tapped item with index %lu", item.collectionIndex);
+	
+	LMAlbumDetailView *detailView = [[LMAlbumDetailView alloc]initWithMediaItemCollection:[self.everything.collections objectAtIndex:item.collectionIndex]];
+	detailView.frame = self.view.frame;
+	[self.view addSubview:detailView];
+	
+	/*
+	[self.view addConstraint:[NSLayoutConstraint constraintWithItem:detailView
+													 attribute:NSLayoutAttributeTop
+													 relatedBy:NSLayoutRelationEqual
+														toItem:self.view
+													 attribute:NSLayoutAttributeTop
+													multiplier:1.0
+													  constant:0]];
+	
+	[self.view addConstraint:[NSLayoutConstraint constraintWithItem:detailView
+													 attribute:NSLayoutAttributeWidth
+													 relatedBy:NSLayoutRelationEqual
+														toItem:self.view
+													 attribute:NSLayoutAttributeWidth
+													multiplier:1.0
+													  constant:0]];
+	
+	[self.view addConstraint:[NSLayoutConstraint constraintWithItem:detailView
+													 attribute:NSLayoutAttributeHeight
+													 relatedBy:NSLayoutRelationEqual
+														toItem:self.view
+													 attribute:NSLayoutAttributeHeight
+													multiplier:1.0
+													  constant:0]];
+	 */
+	[detailView setup];
 }
 
 

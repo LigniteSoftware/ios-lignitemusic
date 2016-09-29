@@ -24,6 +24,7 @@
 		6A514E1F1CEA3FCE00AFB351 /* splash_portrait.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A514E1E1CEA3FCE00AFB351 /* splash_portrait.png */; };
 		6A66C76B1CDA10C2009019CF /* LMMiniPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A66C76A1CDA10C2009019CF /* LMMiniPlayerView.m */; };
 		6A66C76F1CDA1BB1009019CF /* back_arrow_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A66C76E1CDA1BB1009019CF /* back_arrow_white.png */; };
+		6A67E62F1D9CC7B800763DD0 /* LMAlbumDetailView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A67E62E1D9CC7B800763DD0 /* LMAlbumDetailView.m */; };
 		6A73CF5C1D4127C70097A400 /* LMPebbleImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A73CF5B1D4127C70097A400 /* LMPebbleImage.m */; };
 		6A73CF611D451BFA0097A400 /* LMPebbleMessageQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A73CF601D451BFA0097A400 /* LMPebbleMessageQueue.m */; };
 		6A7FDBB61D9C35FB00CA6DBF /* LMAdaptiveScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A7FDBB51D9C35FB00CA6DBF /* LMAdaptiveScrollView.m */; };
@@ -82,6 +83,8 @@
 		6A66C7691CDA10C2009019CF /* LMMiniPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMMiniPlayerView.h; sourceTree = "<group>"; };
 		6A66C76A1CDA10C2009019CF /* LMMiniPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMMiniPlayerView.m; sourceTree = "<group>"; };
 		6A66C76E1CDA1BB1009019CF /* back_arrow_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = back_arrow_white.png; sourceTree = "<group>"; };
+		6A67E62D1D9CC7B800763DD0 /* LMAlbumDetailView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMAlbumDetailView.h; sourceTree = "<group>"; };
+		6A67E62E1D9CC7B800763DD0 /* LMAlbumDetailView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMAlbumDetailView.m; sourceTree = "<group>"; };
 		6A73CF5A1D4127C70097A400 /* LMPebbleImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMPebbleImage.h; sourceTree = "<group>"; };
 		6A73CF5B1D4127C70097A400 /* LMPebbleImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMPebbleImage.m; sourceTree = "<group>"; };
 		6A73CF5F1D451BFA0097A400 /* LMPebbleMessageQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMPebbleMessageQueue.h; sourceTree = "<group>"; };
@@ -358,6 +361,8 @@
 		6AFD2EDA1BC41EAC0083FE9E /* AlbumView */ = {
 			isa = PBXGroup;
 			children = (
+				6A67E62D1D9CC7B800763DD0 /* LMAlbumDetailView.h */,
+				6A67E62E1D9CC7B800763DD0 /* LMAlbumDetailView.m */,
 				6A1FB9C51D99EB0A00890BF3 /* LMAlbumViewController.h */,
 				6A1FB9C61D99EB0A00890BF3 /* LMAlbumViewController.m */,
 				6AFD2EDB1BC41ECC0083FE9E /* LMAlbumViewItem.h */,
@@ -535,6 +540,7 @@
 				6A1FB9CC1D9AE76A00890BF3 /* LMLabel.m in Sources */,
 				6AEB9D001BACF60E00AD19FA /* AppDelegate.m in Sources */,
 				6A73CF611D451BFA0097A400 /* LMPebbleMessageQueue.m in Sources */,
+				6A67E62F1D9CC7B800763DD0 /* LMAlbumDetailView.m in Sources */,
 				6ABF6A851CF3768A003E4EFA /* UIColor+isLight.m in Sources */,
 				6A313C121BB44959002BBC33 /* NPAlbumArtView.m in Sources */,
 				6AEB9CFD1BACF60E00AD19FA /* main.m in Sources */,
