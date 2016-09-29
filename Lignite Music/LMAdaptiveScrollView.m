@@ -18,9 +18,9 @@
 @implementation LMAdaptiveScrollView
 
 /**
- Reloads album items on the screen.
+ Reloads the subviews which are displayed on the screen.
  
- Up to 4 album items are actually on the UIScrollLayer at once, the rest are removed from their superview until needed.
+ The amount of items that will be displayed are the amount of items which will fit within the visible frame plus a couple extra to ensure the user does not see the views being hidden.
  */
 - (void)reloadSubviews {
 	//If the album item frame which dictates the general size album items should be scaled by doesn't exist, set it up.

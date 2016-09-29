@@ -17,7 +17,7 @@
 #define ALBUM_ITEM_HEIGHT_FACTORIAL 0.4
 #define ALBUM_ITEM_SPACING 50
 
-@interface LMAlbumViewController () <LMButtonDelegate, LMAdaptiveScrollViewDelegate>
+@interface LMAlbumViewController () <LMAdaptiveScrollViewDelegate, LMAlbumViewItemDelegate>
 
 @property LMAdaptiveScrollView *rootScrollView;
 @property UILabel *titleLabel, *subtitleLabel;
@@ -31,29 +31,40 @@
 
 @implementation LMAlbumViewController
 
+
 /**
- When a play button is clicked, this is called.
- 
- @param button The button which was clicked.
+ When an album view item is clicked, this is called. The system should then enter into detail view for the album view.
+
+ @param item The item which was tapped.
  */
-- (void)clickedButton:(LMButton *)button{
-	LMAlbumViewItem *itemAssociated = (LMAlbumViewItem*)button.superview.superview; //The button is attached to the text background layer which is attached to the item.
-		
-	MPMediaItemCollection *collection = [self.everything.collections objectAtIndex:itemAssociated.collectionIndex];
+- (void)clickedAlbumViewItem:(LMAlbumViewItem*)item {
+	NSLog(@"I see you have tapped item with index %lu", item.collectionIndex);
+}
+
+
+/**
+ When an album view item's play button is tapped, this is called. The system should then start playing the album and display
+ the now playing view.
+
+ @param item The item which had its play button clicked.
+ */
+- (void)clickedPlayButtonOnAlbumViewItem:(LMAlbumViewItem*)item {
+	MPMediaItemCollection *collection = [self.everything.collections objectAtIndex:item.collectionIndex];
 	MPMusicPlayerController *controller = [MPMusicPlayerController systemMusicPlayer];
 	[controller setQueueWithItemCollection:collection];
 	[controller play];
 	
 	LMNowPlayingViewController *nowPlayingController = [self.storyboard instantiateViewControllerWithIdentifier:@"nowPlayingController"];
-	[self showViewController:nowPlayingController sender:self];
+	//[self showViewController:nowPlayingController sender:self];
+	[self presentViewController:nowPlayingController animated:YES completion:nil];
 }
 
 /**
  Prepares an album view item for layouting by setting up its constraints. Also automatically adjusts the size of the
  scroll layer associated with this album view.
 
- @param item  The item to prepare.
- @param index The index of that item.
+ @param subview The item to prepare.
+ @param index   The index of that item.
  */
 - (void)prepareSubview:(id)subview forIndex:(NSUInteger)index {
 	LMAlbumViewItem *item = (LMAlbumViewItem*)subview;
@@ -115,7 +126,6 @@
 		[self.rootScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.rootScrollView.frame.size.height*(ALBUM_ITEM_HEIGHT_FACTORIAL+0.1)*(index+1)+ALBUM_ITEM_SPACING)];
 		self.hasLoadedInitialItems = YES;
 	}
-
 }
 
 /**
@@ -139,7 +149,7 @@
 	
 	for(int i = 0; i < self.albumsCount; i++){
 		MPMediaItemCollection *collection = [self.everything.collections objectAtIndex:i];
-		LMAlbumViewItem *newItem = [[LMAlbumViewItem alloc]initWithMediaItem:collection.representativeItem withAlbumCount:collection.count];
+		LMAlbumViewItem *newItem = [[LMAlbumViewItem alloc]initWithMediaItem:collection.representativeItem];
 		newItem.userInteractionEnabled = YES;
 		[self.albumsItemArray addObject:newItem];
 	}

@@ -8,6 +8,15 @@
 
 #import <UIKit/UIKit.h>
 
+@class LMAlbumViewItem;
+
+@protocol LMAlbumViewItemDelegate <NSObject>
+
+- (void)clickedAlbumViewItem:(LMAlbumViewItem*)item;
+- (void)clickedPlayButtonOnAlbumViewItem:(LMAlbumViewItem*)item;
+
+@end
+
 @interface LMAlbumViewItem : UIView
 
 @property BOOL hasLoaded;
@@ -15,6 +24,6 @@
 @property NSUInteger collectionIndex;
 
 - (void)setupWithAlbumCount:(NSUInteger)numberOfItems andDelegate:(id)delegate;
-- (id)initWithMediaItem:(MPMediaItem*)item withAlbumCount:(NSInteger)count;
+- (id)initWithMediaItem:(MPMediaItem*)item;
 
 @end

@@ -12,18 +12,32 @@
 #import "LMLabel.h"
 #import "LMAlbumCountLabel.h"
 
-@interface LMAlbumViewItem()
+@interface LMAlbumViewItem() <LMButtonDelegate>
 
 @property UIImageView *albumImageView;
 @property UIView *shadingBackgroundView, *textBackgroundView;
 @property UILabel *albumTitleView, *albumArtistView, *albumCountView;
 @property LMButton *playButton;
 @property CAShapeLayer *circleLayer;
+@property id itemDelegate;
 
 @end
 
 @implementation LMAlbumViewItem
 
+- (void)clickedButton:(LMButton *)button {
+	NSLog(@"Hey");
+	if(self.itemDelegate){
+		[self.itemDelegate clickedPlayButtonOnAlbumViewItem:self];
+	}
+}
+
+- (void)tappedOnView {
+	NSLog(@"Fuck");
+	if(self.itemDelegate){
+		[self.itemDelegate clickedAlbumViewItem:self];
+	}
+}
 
 /**
  Sets up the LMAlbumViewItem with a number of items that's available in that album.
@@ -159,7 +173,7 @@
 	self.playButton = [[LMButton alloc]init];
 	self.playButton.translatesAutoresizingMaskIntoConstraints = NO;
 	self.playButton.userInteractionEnabled = YES;
-	self.playButton.delegate = delegate;
+	self.playButton.delegate = self;
 	[self.textBackgroundView addSubview:self.playButton];
 	[self.playButton setupWithImageMultiplier:0.5];
 	[self.playButton setImage:[UIImage imageNamed:@"play_white.png"]];
@@ -329,13 +343,20 @@
 													 attribute:NSLayoutAttributeTop
 													multiplier:1.0
 													  constant:0]];
+	
+	UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tappedOnView)];
+	[self addGestureRecognizer:tapGestureRecognizer];
+	
+	self.userInteractionEnabled = YES;
+	
+	self.itemDelegate = delegate;
 }
 
 /*
  Initializes an LMAlbumViewItem with a media item (which contains information for the
  album, artist, etc.)
  */
-- (id)initWithMediaItem:(MPMediaItem*)item withAlbumCount:(NSInteger)count {
+- (id)initWithMediaItem:(MPMediaItem*)item {
     self = [super init];
     //self.layer.backgroundColor = [UIColor blueColor].CGColor;
     if(self){

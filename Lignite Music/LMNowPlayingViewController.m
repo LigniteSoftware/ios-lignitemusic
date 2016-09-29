@@ -1123,6 +1123,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+	
+	NSLog(@"Loaded view");
     
     self.central = [PBPebbleCentral defaultCentral];
     self.central.delegate = self;
@@ -1155,20 +1157,24 @@
     NSLog(@"View did load");
 }
 
+- (void)viewDidDisappear:(BOOL)animated {
+	NSLog(@"View disappeared");
+	
+	[[NSNotificationCenter defaultCenter]
+	 removeObserver: self
+	 name:           MPMusicPlayerControllerNowPlayingItemDidChangeNotification
+	 object:         self.musicPlayer];
+	
+	[[NSNotificationCenter defaultCenter]
+	 removeObserver: self
+	 name:           MPMusicPlayerControllerPlaybackStateDidChangeNotification
+	 object:         self.musicPlayer];
+	
+	[self.musicPlayer endGeneratingPlaybackNotifications];
+}
+
 - (void)viewDidUnload:(BOOL)animated {
     NSLog(@"View did unload");
-    
-    [[NSNotificationCenter defaultCenter]
-     removeObserver: self
-     name:           MPMusicPlayerControllerNowPlayingItemDidChangeNotification
-     object:         self.musicPlayer];
-    
-    [[NSNotificationCenter defaultCenter]
-     removeObserver: self
-     name:           MPMusicPlayerControllerPlaybackStateDidChangeNotification
-     object:         self.musicPlayer];
-    
-    [self.musicPlayer endGeneratingPlaybackNotifications];
 }
 
 - (void)didReceiveMemoryWarning {
