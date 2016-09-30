@@ -28,6 +28,18 @@
 
 @implementation LMAlbumDetailView
 
+- (int)indexOfListEntry:(LMListEntry*)entry {
+	int indexOfEntry = -1;
+	for(int i = 0; i < self.songListView.subviewArray.count; i++){
+		LMListEntry *subviewEntry = (LMListEntry*)[self.songListView.subviewArray objectAtIndex:i];
+		if([entry isEqual:subviewEntry]){
+			indexOfEntry = i;
+			break;
+		}
+	}
+	return indexOfEntry;
+}
+
 - (float)sizingFactorialRelativeToWindowForAdaptiveScrollView:(LMAdaptiveScrollView*)scrollView height:(BOOL)height {
 	if(height){
 		return (1.0f/8.0f);
@@ -52,23 +64,24 @@
 }
 
 - (void)tappedListEntry:(LMListEntry*)entry {
-	NSLog(@"Tapped list entry");
+	int index = [self indexOfListEntry:entry];
+	MPMediaItem *item = [self.albumCollection.items objectAtIndex:index];
+	
+	NSLog(@"%@", self.albumCollection.representativeItem.artist);
+	
+	for(int i = 0; i < self.albumCollection.count; i++){
+		[(LMListEntry*)[self.songListView.subviewArray objectAtIndex:i] changeHighlightStatus:(index == i)];
+	}
+	
+	MPMusicPlayerController *controller = [MPMusicPlayerController systemMusicPlayer];
+	[controller stop];
+	[controller setNowPlayingItem:item];
+	[controller setQueueWithItemCollection:self.albumCollection];
+	[controller play];
 }
 
 - (UIColor*)tapColourForListEntry:(LMListEntry*)entry {
 	return LIGNITE_RED;
-}
-
-- (int)indexOfListEntry:(LMListEntry*)entry {
-	int indexOfEntry = -1;
-	for(int i = 0; i < self.songListView.subviewArray.count; i++){
-		LMListEntry *subviewEntry = (LMListEntry*)[self.songListView.subviewArray objectAtIndex:i];
-		if([entry isEqual:subviewEntry]){
-			indexOfEntry = i;
-			break;
-		}
-	}
-	return indexOfEntry;
 }
 
 - (NSString*)titleForListEntry:(LMListEntry*)entry {
@@ -95,6 +108,11 @@
 
 - (void)clickedButton:(LMButton *)button {
 	NSLog(@"Clicked button");
+}
+
+- (void)pinchedView {
+	self.userInteractionEnabled = NO;
+	self.hidden = YES;
 }
 
 - (void)setup {
@@ -355,6 +373,11 @@
 	self.textBackgroundView.layer.shadowRadius = 7;
 	self.textBackgroundView.layer.shadowOffset = CGSizeMake(0, 0);
 	self.textBackgroundView.layer.masksToBounds = NO;
+	
+	[self insertSubview:self.textBackgroundView aboveSubview:self.songListView];
+	
+	UIPinchGestureRecognizer *pinchGesture = [[UIPinchGestureRecognizer alloc]initWithTarget:self action:@selector(pinchedView)];
+	[self addGestureRecognizer:pinchGesture];
 }
 
 /*

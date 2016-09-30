@@ -22,6 +22,8 @@
 
 @interface LMListEntry : UIView
 
+- (void)changeHighlightStatus:(BOOL)highlighted;
+
 - (void)setup;
 
 - (id)initWithDelegate:(id)delegate;

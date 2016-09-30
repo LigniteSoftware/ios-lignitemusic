@@ -111,11 +111,11 @@
 	
 	if([self.subviewDelegate dividerForAdaptiveScrollView:self] && (index != self.subviewArray.count-1)){
 		UIView *dividerView = [UIView new];
-		dividerView.backgroundColor = [UIColor lightGrayColor];
+		dividerView.backgroundColor = [UIColor colorWithRed:0.82 green:0.82 blue:0.82 alpha:1.0];
 		dividerView.translatesAutoresizingMaskIntoConstraints = NO;
 		[self addSubview:dividerView];
 		
-		uint8_t dividerHeight = 2;
+		uint8_t dividerHeight = 1;
 		
 		[self addConstraint:[NSLayoutConstraint constraintWithItem:dividerView
 														 attribute:NSLayoutAttributeTop

@@ -14,10 +14,6 @@
 #import "LMAlbumViewController.h"
 #import "LMButton.h"
 
-#define CONTENT_OFFSET_FOR_REFRESH 50.0f
-#define ALBUM_ITEM_HEIGHT_FACTORIAL 0.4
-#define ALBUM_ITEM_SPACING 50
-
 @interface LMAlbumViewController () <LMAdaptiveScrollViewDelegate, LMAlbumViewItemDelegate>
 
 @property LMAdaptiveScrollView *rootScrollView;
@@ -40,6 +36,9 @@
  */
 - (void)clickedAlbumViewItem:(LMAlbumViewItem*)item {
 	NSLog(@"I see you have tapped item with index %lu", item.collectionIndex);
+	
+	MPMediaItemCollection *collection = [self.everything.collections objectAtIndex:item.collectionIndex];
+	NSLog(@"Collection %@", collection.representativeItem.artist);
 	
 	LMAlbumDetailView *detailView = [[LMAlbumDetailView alloc]initWithMediaItemCollection:[self.everything.collections objectAtIndex:item.collectionIndex]];
 	detailView.frame = self.view.frame;

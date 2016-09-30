@@ -20,6 +20,25 @@
 
 @implementation LMListEntry
 
+- (void)changeHighlightStatus:(BOOL)highlighted {
+	[UIView animateWithDuration:0.2 animations:^{
+		if(highlighted){
+			self.backgroundColor = [self.delegate tapColourForListEntry:self];
+			self.titleLabel.textColor = [UIColor whiteColor];
+			self.subtitleLabel.textColor = [UIColor whiteColor];
+		}
+		else{
+			self.backgroundColor = [UIColor clearColor];
+			self.titleLabel.textColor = [UIColor blackColor];
+			self.subtitleLabel.textColor = [UIColor blackColor];
+		}
+	}];
+}
+
+- (void)tappedView {
+	[self.delegate tappedListEntry:self];
+}
+
 - (void)setup {
 	UIImage *icon = [self.delegate iconForListEntry:self];
 	NSString *title = [self.delegate titleForListEntry:self];
@@ -66,6 +85,7 @@
 	NSMutableArray *titleConstraints = [[NSMutableArray alloc]init];
 	
 	self.titleLabel = [[LMLabel alloc]init];
+	self.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:50.0f];
 	self.titleLabel.text = title;
 	self.titleLabel.textColor = [UIColor blackColor];
 	self.titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
@@ -89,7 +109,7 @@
 																				toItem:icon ? self.iconView : self
 																			 attribute:NSLayoutAttributeLeading
 																			multiplier:1.0
-																			  constant:0];
+																			  constant:10];
 		[titleConstraints addObject:leadingConstraint];
 		
 		[self addConstraint:leadingConstraint];
@@ -118,6 +138,7 @@
 	}
 	
 	self.subtitleLabel = [[LMLabel alloc]init];
+	self.subtitleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:40.0f];
 	self.subtitleLabel.text = subtitle;
 	self.subtitleLabel.textColor = [UIColor blackColor];
 	self.subtitleLabel.translatesAutoresizingMaskIntoConstraints = NO;
@@ -182,6 +203,10 @@
 	self.clipsToBounds = NO;
 	self.layer.masksToBounds = NO;
 	self.layer.cornerRadius = 8;
+	self.userInteractionEnabled = YES;
+	
+	UITapGestureRecognizer *tappedViewRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tappedView)];
+	[self addGestureRecognizer:tappedViewRecognizer];
 }
 
 - (id)initWithDelegate:(id)delegate {
