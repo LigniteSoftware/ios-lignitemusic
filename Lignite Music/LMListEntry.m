@@ -67,6 +67,7 @@
 	
 	self.titleLabel = [[LMLabel alloc]init];
 	self.titleLabel.text = title;
+	self.titleLabel.textColor = [UIColor blackColor];
 	self.titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
 	if(title){
 		[self addSubview:self.titleLabel];
@@ -76,7 +77,7 @@
 																			relatedBy:NSLayoutRelationEqual
 																			   toItem:self
 																			attribute:NSLayoutAttributeHeight
-																		   multiplier:(1/3)
+																		   multiplier:(1.0f/3.0f)
 																			 constant:0];
 		[titleConstraints addObject:heightConstraint];
 		
@@ -118,6 +119,7 @@
 	
 	self.subtitleLabel = [[LMLabel alloc]init];
 	self.subtitleLabel.text = subtitle;
+	self.subtitleLabel.textColor = [UIColor blackColor];
 	self.subtitleLabel.translatesAutoresizingMaskIntoConstraints = NO;
 	if(subtitle){
 		[self addSubview:self.subtitleLabel];
@@ -127,7 +129,7 @@
 																			relatedBy:NSLayoutRelationEqual
 																			   toItem:self
 																			attribute:NSLayoutAttributeHeight
-																		   multiplier:(1/4)
+																		   multiplier:(1.0f/4.0f)
 																			 constant:0];
 		[self addConstraint:heightConstraint];
 		
@@ -168,19 +170,23 @@
 		}
 		
 		NSLayoutConstraint *titleTopConstraint = [NSLayoutConstraint constraintWithItem:self.titleLabel
-																			  attribute:NSLayoutAttributeTop
+																			  attribute:NSLayoutAttributeBottom
 																			  relatedBy:NSLayoutRelationEqual
 																				 toItem:self
-																			  attribute:NSLayoutAttributeTop
+																			  attribute:NSLayoutAttributeCenterY
 																			 multiplier:1.0
 																			   constant:0];
 		[self addConstraint:titleTopConstraint];
 	}
+	
+	self.clipsToBounds = NO;
+	self.layer.masksToBounds = NO;
+	self.layer.cornerRadius = 8;
 }
 
 - (id)initWithDelegate:(id)delegate {
 	self = [super init];
-	self.backgroundColor = [UIColor redColor];
+	//self.backgroundColor = [UIColor redColor];
 	if(self){
 		self.delegate = delegate;
 	}

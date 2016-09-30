@@ -31,7 +31,7 @@
 
  @return The factorial.
  */
-- (float)sizingFactorialRelativeToWindowForAdaptiveScrollView:(LMAdaptiveScrollView*)scrollView;
+- (float)sizingFactorialRelativeToWindowForAdaptiveScrollView:(LMAdaptiveScrollView*)scrollView height:(BOOL)height;
 
 
 /**
@@ -42,6 +42,16 @@
  @return The padding.
  */
 - (float)topSpacingForAdaptiveScrollView:(LMAdaptiveScrollView*)scrollView;
+
+
+/**
+ Whether or not the system should add a divider at the bottom of the scroll view.
+
+ @param scrollView The scroll view in question.
+
+ @return Whether or not a divider should be added.
+ */
+- (BOOL)dividerForAdaptiveScrollView:(LMAdaptiveScrollView*)scrollView;
 
 @end
 

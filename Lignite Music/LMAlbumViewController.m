@@ -94,8 +94,11 @@
 /**
  See LMAdaptiveScrollViewDelegate for documentation on this function.
  */
-- (float)sizingFactorialRelativeToWindowForAdaptiveScrollView:(LMAdaptiveScrollView*)scrollView {
-	return 0.4;
+- (float)sizingFactorialRelativeToWindowForAdaptiveScrollView:(LMAdaptiveScrollView*)scrollView height:(BOOL)height {
+	if(height){
+		return 0.4;
+	}
+	return 0.8;
 }
 
 /**
@@ -103,6 +106,13 @@
  */
 - (float)topSpacingForAdaptiveScrollView:(LMAdaptiveScrollView*)scrollView {
 	return 50;
+}
+
+/**
+ See LMAdaptiveScrollViewDelegate for documentation on this function.
+ */
+- (BOOL)dividerForAdaptiveScrollView:(LMAdaptiveScrollView*)scrollView {
+	return false;
 }
 
 /**

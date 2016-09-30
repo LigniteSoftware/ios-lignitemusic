@@ -13,6 +13,7 @@
 #import "LMLabel.h"
 #import "LMAlbumDetailView.h"
 #import "LMExtras.h"
+#import "LMNowPlayingViewController.h"
 
 @interface LMAlbumDetailView() <LMButtonDelegate, LMListEntryDelegate, LMAdaptiveScrollViewDelegate>
 
@@ -27,50 +28,26 @@
 
 @implementation LMAlbumDetailView
 
-- (void)prepareSubview:(id)subview forIndex:(NSUInteger)index {
-	NSLog(@"Ayy %lu", (unsigned long)index);
-	LMListEntry *entry = (LMListEntry*)subview;
+- (float)sizingFactorialRelativeToWindowForAdaptiveScrollView:(LMAdaptiveScrollView*)scrollView height:(BOOL)height {
+	if(height){
+		return (1.0f/8.0f);
+	}
+	return 0.9;
+}
 
-	[self.songListView addSubview:entry];
-	entry.translatesAutoresizingMaskIntoConstraints = NO;
+- (float)topSpacingForAdaptiveScrollView:(LMAdaptiveScrollView*)scrollView {
+	return 15.0f;
+}
+
+- (BOOL)dividerForAdaptiveScrollView:(LMAdaptiveScrollView*)scrollView {
+	return true;
+}
+
+- (void)prepareSubview:(id)subview forIndex:(NSUInteger)index subviewPreviouslyLoaded:(BOOL)hasLoaded {
+	LMListEntry *entry = (LMListEntry*)subview;
 	
-	[self.songListView addConstraint:[NSLayoutConstraint constraintWithItem:entry
-																	attribute:NSLayoutAttributeCenterX
-																	relatedBy:NSLayoutRelationEqual
-																	   toItem:self.songListView
-																	attribute:NSLayoutAttributeCenterX
-																   multiplier:1.0
-																	 constant:0]];
-	
-	[self.songListView addConstraint:[NSLayoutConstraint constraintWithItem:entry
-																	attribute:NSLayoutAttributeTop
-																	relatedBy:NSLayoutRelationEqual
-																	   toItem:self.songListView
-																	attribute:NSLayoutAttributeTop
-																   multiplier:1.0
-																	 constant:self.songListView.frame.size.height*(0.4+0.1)*index+5]];
-	
-	[self.songListView addConstraint:[NSLayoutConstraint constraintWithItem:entry
-																	attribute:NSLayoutAttributeWidth
-																	relatedBy:NSLayoutRelationEqual
-																	   toItem:self.songListView
-																	attribute:NSLayoutAttributeWidth
-																   multiplier:0.8
-																	 constant:0]];
-	
-	[self.songListView addConstraint:[NSLayoutConstraint constraintWithItem:entry
-																	attribute:NSLayoutAttributeHeight
-																	relatedBy:NSLayoutRelationEqual
-																	   toItem:self.songListView
-																	attribute:NSLayoutAttributeHeight
-																   multiplier:0.4
-																	 constant:0]];
-	
-	[entry setup];
-	
-	if(index == self.albumCollection.count-1){
-		NSLog(@"Setting to %f", self.songListView.frame.size.height*(0.4+0.1)*(index+1)+5);
-		[self.songListView setContentSize:CGSizeMake(self.frame.size.width, self.frame.size.height*(0.4+0.1)*(index+1)+5)];
+	if(!hasLoaded){
+		[entry setup];
 	}
 }
 
@@ -82,12 +59,34 @@
 	return LIGNITE_RED;
 }
 
+- (int)indexOfListEntry:(LMListEntry*)entry {
+	int indexOfEntry = -1;
+	for(int i = 0; i < self.songListView.subviewArray.count; i++){
+		LMListEntry *subviewEntry = (LMListEntry*)[self.songListView.subviewArray objectAtIndex:i];
+		if([entry isEqual:subviewEntry]){
+			indexOfEntry = i;
+			break;
+		}
+	}
+	return indexOfEntry;
+}
+
 - (NSString*)titleForListEntry:(LMListEntry*)entry {
-	return @"Test title";
+	int indexOfEntry = [self indexOfListEntry:entry];
+	if(indexOfEntry < 0){
+		return @"Error!";
+	}
+	MPMediaItem *item = [self.albumCollection.items objectAtIndex:indexOfEntry];
+	return item.title;
 }
 
 - (NSString*)subtitleForListEntry:(LMListEntry*)entry {
-	return @"Subtitle test";
+	int indexOfEntry = [self indexOfListEntry:entry];
+	if(indexOfEntry < 0){
+		return @"Error!";
+	}
+	MPMediaItem *item = [self.albumCollection.items objectAtIndex:indexOfEntry];
+	return [NSString stringWithFormat:@"Length: %@", [LMNowPlayingViewController durationStringTotalPlaybackTime:item.playbackDuration]];
 }
 
 - (UIImage*)iconForListEntry:(LMListEntry*)entry {
@@ -312,14 +311,12 @@
 	
 	self.songListView.subviewArray = itemArray;
 	self.songListView.subviewDelegate = self;
-	self.songListView.backgroundColor = [UIColor blueColor];
-	[self.songListView setContentSize:CGSizeMake(self.frame.size.width, self.frame.size.height/3)];
 	[self addSubview:self.songListView];
 	
-	for(int i = 0; i < self.albumCollection.count; i++){
-		LMListEntry *listEntry = (LMListEntry*)[itemArray objectAtIndex:i];
-		[self prepareSubview:listEntry forIndex:i];
-	}
+//	for(int i = 0; i < self.albumCollection.count; i++){
+//		LMListEntry *listEntry = (LMListEntry*)[itemArray objectAtIndex:i];
+//		[self prepareSubview:listEntry forIndex:i];
+//	}
 	
 	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.songListView
 													 attribute:NSLayoutAttributeTop

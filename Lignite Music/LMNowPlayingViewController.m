@@ -224,7 +224,7 @@
     [self pushCurrentStateToWatch];
 }
 
-- (NSString*)durationStringTotalPlaybackTime:(long)totalPlaybackTime {
++ (NSString*)durationStringTotalPlaybackTime:(long)totalPlaybackTime {
     long totalHours = (totalPlaybackTime / 3600);
     int totalMinutes = (int)((totalPlaybackTime / 60) - totalHours*60);
     int totalSeconds = (totalPlaybackTime % 60);
@@ -249,12 +249,12 @@
         if(totalHours > 0){
             self.songDurationLabel.text = [NSString stringWithFormat:@"%02i:%02d:%02d of %@",
                                            (int)currentHours, (int)currentMinutes, currentSeconds,
-                                           [self durationStringTotalPlaybackTime:totalPlaybackTime]];
+                                           [LMNowPlayingViewController durationStringTotalPlaybackTime:totalPlaybackTime]];
         }
         else{
             self.songDurationLabel.text = [NSString stringWithFormat:@"%02d:%02d of %@",
                                            (int)currentMinutes, currentSeconds,
-                                           [self durationStringTotalPlaybackTime:totalPlaybackTime]];
+                                           [LMNowPlayingViewController durationStringTotalPlaybackTime:totalPlaybackTime]];
         }
     }];
     
@@ -867,12 +867,12 @@
             
             if(artistName){
                 value = [NSString stringWithFormat:@"%@ | %@",
-                         [self durationStringTotalPlaybackTime:[trackLength longValue]],
+                         [LMNowPlayingViewController durationStringTotalPlaybackTime:[trackLength longValue]],
                          artistName];
             }
             else{
                 value = [NSString stringWithFormat:@"%@",
-                         [self durationStringTotalPlaybackTime:[trackLength longValue]]];
+                         [LMNowPlayingViewController durationStringTotalPlaybackTime:[trackLength longValue]]];
             }
         }
         else if(type == MPMediaGroupingAlbumArtist){

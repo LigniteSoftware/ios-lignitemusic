@@ -25,7 +25,7 @@
  @return The height factorial.
  */
 - (float)heightFactorialRelativeToWindow {
-	float window_height_factorial = [self.subviewDelegate sizingFactorialRelativeToWindowForAdaptiveScrollView:self];
+	float window_height_factorial = [self.subviewDelegate sizingFactorialRelativeToWindowForAdaptiveScrollView:self height:YES];
 	float height_factorial = ((WINDOW_FRAME.size.height/self.frame.size.height)*window_height_factorial);
 	
 	return height_factorial;
@@ -44,7 +44,6 @@
 	CGSize newContentSize = CGSizeMake(self.frame.size.width,
 									   self.frame.size.height
 									   *(height_factorial+(height_factorial/4))*(index+1)+top_spacing);
-	NSLog(@"Setting new size to %@", NSStringFromCGSize(newContentSize));
 	[self setContentSize:newContentSize];
 }
 
@@ -99,7 +98,7 @@
 													relatedBy:NSLayoutRelationEqual
 													   toItem:self
 													attribute:NSLayoutAttributeWidth
-												   multiplier:0.8
+													multiplier:[self.subviewDelegate sizingFactorialRelativeToWindowForAdaptiveScrollView:self height:NO]
 													 constant:0]];
 	
 	[self addConstraint:[NSLayoutConstraint constraintWithItem:subview
@@ -109,6 +108,47 @@
 													attribute:NSLayoutAttributeHeight
 												   multiplier:height_factorial
 													 constant:0]];
+	
+	if([self.subviewDelegate dividerForAdaptiveScrollView:self] && (index != self.subviewArray.count-1)){
+		UIView *dividerView = [UIView new];
+		dividerView.backgroundColor = [UIColor lightGrayColor];
+		dividerView.translatesAutoresizingMaskIntoConstraints = NO;
+		[self addSubview:dividerView];
+		
+		uint8_t dividerHeight = 2;
+		
+		[self addConstraint:[NSLayoutConstraint constraintWithItem:dividerView
+														 attribute:NSLayoutAttributeTop
+														 relatedBy:NSLayoutRelationEqual
+															toItem:subview
+														 attribute:NSLayoutAttributeBottom
+														multiplier:1.0
+														  constant:((self.frame.size.height*(height_factorial/4))/2)-(dividerHeight/2)]];
+		
+		[self addConstraint:[NSLayoutConstraint constraintWithItem:dividerView
+														 attribute:NSLayoutAttributeHeight
+														 relatedBy:NSLayoutRelationEqual
+															toItem:subview
+														 attribute:NSLayoutAttributeHeight
+														multiplier:0.0
+														  constant:dividerHeight]];
+		
+		[self addConstraint:[NSLayoutConstraint constraintWithItem:dividerView
+														 attribute:NSLayoutAttributeWidth
+														 relatedBy:NSLayoutRelationEqual
+															toItem:subview
+														 attribute:NSLayoutAttributeWidth
+														multiplier:1.0
+														  constant:0]];
+		
+		[self addConstraint:[NSLayoutConstraint constraintWithItem:dividerView
+														 attribute:NSLayoutAttributeCenterX
+														 relatedBy:NSLayoutRelationEqual
+															toItem:subview
+														 attribute:NSLayoutAttributeCenterX
+														multiplier:1.0
+														  constant:0]];
+	}
 	
 	//Let the delegate know that internally the subview is prepared and let it handle the rest of the process.
 	[self.subviewDelegate prepareSubview:rawSubview forIndex:index subviewPreviouslyLoaded:alreadyLoadedSubview];
@@ -126,14 +166,15 @@
 	int amountOfItems = 0;
 	//Calculate the total amount of space that has been viewed and is being viewed.
 	float totalSpace = (visibleFrame.origin.y + visibleFrame.size.height);
+	float heightFactorial = [self heightFactorialRelativeToWindow];
 	//Calculate the amount of items that are in frame and above it (scrolled past) by subtracting each from the total space.
 	while(totalSpace > 0){
-		totalSpace -= (self.frame.size.height*(0.4+0.1));
+		totalSpace -= (self.frame.size.height*(heightFactorial+(heightFactorial/4)));
 		amountOfItems++;
 	}
 	
 	//The amount of items that are drawn should be equal to the amount that are available to be seen on the screen plus two to ensure that the user does not see the items being hidden.
-	uint8_t totalAmountOfItemsToDraw = (self.bounds.size.height/(self.frame.size.height*[self heightFactorialRelativeToWindow]))+2;
+	uint8_t totalAmountOfItemsToDraw = (self.bounds.size.height/(self.frame.size.height*heightFactorial))+2;
 	
 	int8_t itemsDrawn = 0;
 	//Determines whether or not an item is in view, and if it is, adds it to the root UIScrollView if it is not already there.
@@ -185,16 +226,18 @@
 //}
 
 - (void)layoutSubviews {
+	if(self.frame.size.height > 0){
+		[self reloadContentSizeWithIndex:self.subviewArray.count-1];
+	}
 	[super layoutSubviews];
 	[self reloadSubviews];
 }
 
-/*
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
-}
-*/
+//- (void)drawRect:(CGRect)rect {
+//    // Drawing code
+//	[super drawRect:rect];
+//}
 
 @end

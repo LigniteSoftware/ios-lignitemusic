@@ -94,4 +94,6 @@ typedef enum {
 
 @property IBOutlet LMButton *shuffleButton, *repeatButton, *dynamicPlaylistButton;
 
++ (NSString*)durationStringTotalPlaybackTime:(long)totalPlaybackTime;
+
 @end
