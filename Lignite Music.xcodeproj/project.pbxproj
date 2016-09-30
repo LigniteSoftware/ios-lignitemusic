@@ -22,6 +22,7 @@
 		6A514E161CEA125B00AFB351 /* lignite_background_portrait.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A514E151CEA125B00AFB351 /* lignite_background_portrait.png */; };
 		6A514E191CEA15D900AFB351 /* LMSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A514E181CEA15D900AFB351 /* LMSlider.m */; };
 		6A514E1F1CEA3FCE00AFB351 /* splash_portrait.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A514E1E1CEA3FCE00AFB351 /* splash_portrait.png */; };
+		6A6351921D9D71D300498582 /* LMListEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A6351911D9D71D300498582 /* LMListEntry.m */; };
 		6A66C76B1CDA10C2009019CF /* LMMiniPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A66C76A1CDA10C2009019CF /* LMMiniPlayerView.m */; };
 		6A66C76F1CDA1BB1009019CF /* back_arrow_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A66C76E1CDA1BB1009019CF /* back_arrow_white.png */; };
 		6A67E62F1D9CC7B800763DD0 /* LMAlbumDetailView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A67E62E1D9CC7B800763DD0 /* LMAlbumDetailView.m */; };
@@ -80,6 +81,8 @@
 		6A514E171CEA15D900AFB351 /* LMSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMSlider.h; sourceTree = "<group>"; };
 		6A514E181CEA15D900AFB351 /* LMSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMSlider.m; sourceTree = "<group>"; };
 		6A514E1E1CEA3FCE00AFB351 /* splash_portrait.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = splash_portrait.png; sourceTree = "<group>"; };
+		6A6351901D9D71D300498582 /* LMListEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMListEntry.h; sourceTree = "<group>"; };
+		6A6351911D9D71D300498582 /* LMListEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMListEntry.m; sourceTree = "<group>"; };
 		6A66C7691CDA10C2009019CF /* LMMiniPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMMiniPlayerView.h; sourceTree = "<group>"; };
 		6A66C76A1CDA10C2009019CF /* LMMiniPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMMiniPlayerView.m; sourceTree = "<group>"; };
 		6A66C76E1CDA1BB1009019CF /* back_arrow_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = back_arrow_white.png; sourceTree = "<group>"; };
@@ -180,6 +183,8 @@
 				6A514E181CEA15D900AFB351 /* LMSlider.m */,
 				6A7FDBB41D9C35FB00CA6DBF /* LMAdaptiveScrollView.h */,
 				6A7FDBB51D9C35FB00CA6DBF /* LMAdaptiveScrollView.m */,
+				6A6351901D9D71D300498582 /* LMListEntry.h */,
+				6A6351911D9D71D300498582 /* LMListEntry.m */,
 			);
 			name = OtherControls;
 			sourceTree = "<group>";
@@ -531,6 +536,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6AA445A31D5AD7B0004C6739 /* LMSettingsLabel.m in Sources */,
+				6A6351921D9D71D300498582 /* LMListEntry.m in Sources */,
 				6AA4459C1D5AB264004C6739 /* LMPebbleSettingsView.m in Sources */,
 				6AFD2EDD1BC41ECD0083FE9E /* LMAlbumViewItem.m in Sources */,
 				6A7FDBB61D9C35FB00CA6DBF /* LMAdaptiveScrollView.m in Sources */,

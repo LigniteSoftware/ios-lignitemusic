@@ -7,15 +7,112 @@
 //
 
 #import "LMAdaptiveScrollView.h"
+#import "LMExtras.h"
 
 @interface LMAdaptiveScrollView () <UIScrollViewDelegate>
 
-@property CGRect representativeFrame;
+@property NSMutableArray *loadedSubviewArray;
 
 @end
 
 
 @implementation LMAdaptiveScrollView
+
+
+/**
+ Gets the height factorial relative to the window for the scroll view.
+
+ @return The height factorial.
+ */
+- (float)heightFactorialRelativeToWindow {
+	float window_height_factorial = [self.subviewDelegate sizingFactorialRelativeToWindowForAdaptiveScrollView:self];
+	float height_factorial = ((WINDOW_FRAME.size.height/self.frame.size.height)*window_height_factorial);
+	
+	return height_factorial;
+}
+
+
+/**
+ Reloads the content size based on the index provided to it, usually being the highest index.
+
+ @param index The index to base its content size off of.
+ */
+- (void)reloadContentSizeWithIndex:(NSUInteger)index {
+	float height_factorial = [self heightFactorialRelativeToWindow];
+	float top_spacing = [self.subviewDelegate topSpacingForAdaptiveScrollView:self];
+	
+	CGSize newContentSize = CGSizeMake(self.frame.size.width,
+									   self.frame.size.height
+									   *(height_factorial+(height_factorial/4))*(index+1)+top_spacing);
+	NSLog(@"Setting new size to %@", NSStringFromCGSize(newContentSize));
+	[self setContentSize:newContentSize];
+}
+
+
+/**
+ Prepares a subview internally with its required constraints to fit inside of the adaptive scroll view.
+
+ @param rawSubview The subview to prepare.
+ @param index      The index of that subview within the scroll view.
+ */
+- (void)prepareSubview:(id)rawSubview forIndex:(NSUInteger)index {
+	//We need to tell the delegate whether or not this subview has been loaded before so it can determine
+	//whether or not to load its constraints since they are never retracted.
+	if(!self.loadedSubviewArray){
+		self.loadedSubviewArray = [NSMutableArray new];
+		for(int i = 0; i < self.subviewArray.count; i++){
+			[self.loadedSubviewArray addObject:@(0)];
+		}
+	}
+	BOOL alreadyLoadedSubview = [[self.loadedSubviewArray objectAtIndex:index] isEqual:@(1)];
+	
+	if(!alreadyLoadedSubview){
+		[self.loadedSubviewArray setObject:@(1) atIndexedSubscript:index];
+	}
+	
+	float height_factorial = [self heightFactorialRelativeToWindow];
+	float top_spacing = [self.subviewDelegate topSpacingForAdaptiveScrollView:self];
+	
+	UIView *subview = (UIView*)rawSubview;
+	subview.translatesAutoresizingMaskIntoConstraints = NO;
+	
+	[self addSubview:subview];
+	
+	[self addConstraint:[NSLayoutConstraint constraintWithItem:subview
+													attribute:NSLayoutAttributeCenterX
+													relatedBy:NSLayoutRelationEqual
+													   toItem:self
+													attribute:NSLayoutAttributeCenterX
+												   multiplier:1.0
+													 constant:0]];
+	
+	[self addConstraint:[NSLayoutConstraint constraintWithItem:subview
+													attribute:NSLayoutAttributeTop
+													relatedBy:NSLayoutRelationEqual
+													   toItem:self
+													attribute:NSLayoutAttributeTop
+												   multiplier:1.0
+													 constant:self.frame.size.height*(height_factorial+(height_factorial/4))*index+top_spacing]];
+	
+	[self addConstraint:[NSLayoutConstraint constraintWithItem:subview
+													attribute:NSLayoutAttributeWidth
+													relatedBy:NSLayoutRelationEqual
+													   toItem:self
+													attribute:NSLayoutAttributeWidth
+												   multiplier:0.8
+													 constant:0]];
+	
+	[self addConstraint:[NSLayoutConstraint constraintWithItem:subview
+													attribute:NSLayoutAttributeHeight
+													relatedBy:NSLayoutRelationEqual
+													   toItem:self
+													attribute:NSLayoutAttributeHeight
+												   multiplier:height_factorial
+													 constant:0]];
+	
+	//Let the delegate know that internally the subview is prepared and let it handle the rest of the process.
+	[self.subviewDelegate prepareSubview:rawSubview forIndex:index subviewPreviouslyLoaded:alreadyLoadedSubview];
+}
 
 /**
  Reloads the subviews which are displayed on the screen.
@@ -23,12 +120,6 @@
  The amount of items that will be displayed are the amount of items which will fit within the visible frame plus a couple extra to ensure the user does not see the views being hidden.
  */
 - (void)reloadSubviews {
-	//If the album item frame which dictates the general size album items should be scaled by doesn't exist, set it up.
-	if(self.representativeFrame.size.width == 0){
-		UIView *item = [self.subviewArray objectAtIndex:0];
-		self.representativeFrame = item.frame;
-	}
-	
 	//The visible frame is what's visible on the screen of the UIScrollView. Its height is the same as the total height for the UIScrollView.
 	CGRect visibleFrame = CGRectMake(self.contentOffset.x, self.contentOffset.y, self.contentOffset.x + self.bounds.size.width, self.bounds.size.height);
 	
@@ -42,7 +133,7 @@
 	}
 	
 	//The amount of items that are drawn should be equal to the amount that are available to be seen on the screen plus two to ensure that the user does not see the items being hidden.
-	uint8_t totalAmountOfItemsToDraw = (self.bounds.size.height/self.representativeFrame.size.height)+2;
+	uint8_t totalAmountOfItemsToDraw = (self.bounds.size.height/(self.frame.size.height*[self heightFactorialRelativeToWindow]))+2;
 	
 	int8_t itemsDrawn = 0;
 	//Determines whether or not an item is in view, and if it is, adds it to the root UIScrollView if it is not already there.
@@ -55,7 +146,7 @@
 		UIView *item = [self.subviewArray objectAtIndex:itemToDraw];
 		if(![item isDescendantOfView:self]){
 			if(self.subviewDelegate){
-				[self.subviewDelegate prepareSubview:item forIndex:itemToDraw];
+				[self prepareSubview:item forIndex:itemToDraw];
 			}
 		}
 		itemsDrawn++;

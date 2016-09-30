@@ -92,13 +92,23 @@
 }
 
 /**
- Prepares an album view item for layouting by setting up its constraints. Also automatically adjusts the size of the
- scroll layer associated with this album view.
-
- @param subview The item to prepare.
- @param index   The index of that item.
+ See LMAdaptiveScrollViewDelegate for documentation on this function.
  */
-- (void)prepareSubview:(id)subview forIndex:(NSUInteger)index {
+- (float)sizingFactorialRelativeToWindowForAdaptiveScrollView:(LMAdaptiveScrollView*)scrollView {
+	return 0.4;
+}
+
+/**
+ See LMAdaptiveScrollViewDelegate for documentation on this function.
+ */
+- (float)topSpacingForAdaptiveScrollView:(LMAdaptiveScrollView*)scrollView {
+	return 50;
+}
+
+/**
+ See LMAdaptiveScrollViewDelegate for documentation on this function.
+ */
+- (void)prepareSubview:(id)subview forIndex:(NSUInteger)index subviewPreviouslyLoaded:(BOOL)hasLoaded {
 	LMAlbumViewItem *item = (LMAlbumViewItem*)subview;
 	
 	if(!self.everything){
@@ -108,55 +118,11 @@
 	
 	item.collectionIndex = index;
 	
-	[self.rootScrollView addSubview:item];
-	item.translatesAutoresizingMaskIntoConstraints = NO;
-	
-	[self.rootScrollView addConstraint:[NSLayoutConstraint constraintWithItem:item
-																	attribute:NSLayoutAttributeCenterX
-																	relatedBy:NSLayoutRelationEqual
-																	   toItem:self.rootScrollView
-																	attribute:NSLayoutAttributeCenterX
-																   multiplier:1.0
-																	 constant:0]];
-	
-	[self.rootScrollView addConstraint:[NSLayoutConstraint constraintWithItem:item
-																	attribute:NSLayoutAttributeTop
-																	relatedBy:NSLayoutRelationEqual
-																	   toItem:self.rootScrollView
-																	attribute:NSLayoutAttributeTop
-																   multiplier:1.0
-																	 constant:self.rootScrollView.frame.size.height*(ALBUM_ITEM_HEIGHT_FACTORIAL+0.1)*index+ALBUM_ITEM_SPACING]];
-	
-	[self.rootScrollView addConstraint:[NSLayoutConstraint constraintWithItem:item
-																	attribute:NSLayoutAttributeWidth
-																	relatedBy:NSLayoutRelationEqual
-																	   toItem:self.rootScrollView
-																	attribute:NSLayoutAttributeWidth
-																   multiplier:0.8
-																	 constant:0]];
-	
-	[self.rootScrollView addConstraint:[NSLayoutConstraint constraintWithItem:item
-																	attribute:NSLayoutAttributeHeight
-																	relatedBy:NSLayoutRelationEqual
-																	   toItem:self.rootScrollView
-																	attribute:NSLayoutAttributeHeight
-																   multiplier:ALBUM_ITEM_HEIGHT_FACTORIAL
-																	 constant:0]];
-	
 	MPMediaItemCollection *collection = [self.everything.collections objectAtIndex:index];
 	
-	if(!item.hasLoaded){
+	if(!hasLoaded){
+		NSLog(@"Setting up.");
 		[item setupWithAlbumCount:[collection count] andDelegate:self];
-		item.hasLoaded = YES;
-	}
-	
-	if(index >= 3 && !self.hasLoadedInitialItems){
-		[item removeFromSuperview];
-	}
-	
-	if(index == self.albumsCount-1){
-		[self.rootScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.rootScrollView.frame.size.height*(ALBUM_ITEM_HEIGHT_FACTORIAL+0.1)*(index+1)+ALBUM_ITEM_SPACING)];
-		self.hasLoadedInitialItems = YES;
 	}
 }
 
@@ -192,13 +158,17 @@
 	self.rootScrollView.subviewArray = self.albumsItemArray;
 	self.rootScrollView.subviewDelegate = self;
 	self.rootScrollView.backgroundColor = [UIColor whiteColor];
-	[self.rootScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height*2)];
+	//[self.rootScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height*2)];
 	[self.view addSubview:self.rootScrollView];
 	
-	for(int i = 0; i < self.albumsCount; i++){
-		LMAlbumViewItem *item = [self.albumsItemArray objectAtIndex:i];
-		[self prepareSubview:item forIndex:i];
-	}
+//	for(int i = 0; i < self.albumsCount; i++){
+//		LMAlbumViewItem *item = [self.albumsItemArray objectAtIndex:i];
+//		//Reload scroll view items...
+//		//[self prepareSubview:item forIndex:i];
+//	}
+	
+	[self.rootScrollView reloadContentSizeWithIndex:self.albumsCount-1];
+	[self.rootScrollView layoutSubviews];
 	
 	NSTimeInterval endingTime = [[NSDate date] timeIntervalSince1970];
 	

@@ -19,7 +19,6 @@
 
 @interface LMAlbumViewItem : UIView
 
-@property BOOL hasLoaded;
 @property MPMediaItem *item;
 @property NSUInteger collectionIndex;
 

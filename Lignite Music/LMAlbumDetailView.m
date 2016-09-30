@@ -8,11 +8,13 @@
 
 #import <MediaPlayer/MediaPlayer.h>
 #import "LMAdaptiveScrollView.h"
+#import "LMListEntry.h"
 #import "LMButton.h"
 #import "LMLabel.h"
 #import "LMAlbumDetailView.h"
+#import "LMExtras.h"
 
-@interface LMAlbumDetailView()<LMButtonDelegate>
+@interface LMAlbumDetailView() <LMButtonDelegate, LMListEntryDelegate, LMAdaptiveScrollViewDelegate>
 
 @property MPMediaItemCollection *albumCollection;
 @property UIImageView *albumArtView;
@@ -25,8 +27,75 @@
 
 @implementation LMAlbumDetailView
 
-- (void)clickedButton:(LMButton *)button {
+- (void)prepareSubview:(id)subview forIndex:(NSUInteger)index {
+	NSLog(@"Ayy %lu", (unsigned long)index);
+	LMListEntry *entry = (LMListEntry*)subview;
+
+	[self.songListView addSubview:entry];
+	entry.translatesAutoresizingMaskIntoConstraints = NO;
 	
+	[self.songListView addConstraint:[NSLayoutConstraint constraintWithItem:entry
+																	attribute:NSLayoutAttributeCenterX
+																	relatedBy:NSLayoutRelationEqual
+																	   toItem:self.songListView
+																	attribute:NSLayoutAttributeCenterX
+																   multiplier:1.0
+																	 constant:0]];
+	
+	[self.songListView addConstraint:[NSLayoutConstraint constraintWithItem:entry
+																	attribute:NSLayoutAttributeTop
+																	relatedBy:NSLayoutRelationEqual
+																	   toItem:self.songListView
+																	attribute:NSLayoutAttributeTop
+																   multiplier:1.0
+																	 constant:self.songListView.frame.size.height*(0.4+0.1)*index+5]];
+	
+	[self.songListView addConstraint:[NSLayoutConstraint constraintWithItem:entry
+																	attribute:NSLayoutAttributeWidth
+																	relatedBy:NSLayoutRelationEqual
+																	   toItem:self.songListView
+																	attribute:NSLayoutAttributeWidth
+																   multiplier:0.8
+																	 constant:0]];
+	
+	[self.songListView addConstraint:[NSLayoutConstraint constraintWithItem:entry
+																	attribute:NSLayoutAttributeHeight
+																	relatedBy:NSLayoutRelationEqual
+																	   toItem:self.songListView
+																	attribute:NSLayoutAttributeHeight
+																   multiplier:0.4
+																	 constant:0]];
+	
+	[entry setup];
+	
+	if(index == self.albumCollection.count-1){
+		NSLog(@"Setting to %f", self.songListView.frame.size.height*(0.4+0.1)*(index+1)+5);
+		[self.songListView setContentSize:CGSizeMake(self.frame.size.width, self.frame.size.height*(0.4+0.1)*(index+1)+5)];
+	}
+}
+
+- (void)tappedListEntry:(LMListEntry*)entry {
+	NSLog(@"Tapped list entry");
+}
+
+- (UIColor*)tapColourForListEntry:(LMListEntry*)entry {
+	return LIGNITE_RED;
+}
+
+- (NSString*)titleForListEntry:(LMListEntry*)entry {
+	return @"Test title";
+}
+
+- (NSString*)subtitleForListEntry:(LMListEntry*)entry {
+	return @"Subtitle test";
+}
+
+- (UIImage*)iconForListEntry:(LMListEntry*)entry {
+	return nil;
+}
+
+- (void)clickedButton:(LMButton *)button {
+	NSLog(@"Clicked button");
 }
 
 - (void)setup {
@@ -234,11 +303,59 @@
 																		 constant:0]];
 	
 	self.songListView = [[LMAdaptiveScrollView alloc]init];
+	self.songListView.translatesAutoresizingMaskIntoConstraints = NO;
+	NSMutableArray *itemArray = [NSMutableArray new];
+	for(int i = 0; i < self.albumCollection.count; i++){
+		LMListEntry *listEntry = [[LMListEntry alloc]initWithDelegate:self];
+		[itemArray addObject:listEntry];
+	}
 	
+	self.songListView.subviewArray = itemArray;
+	self.songListView.subviewDelegate = self;
+	self.songListView.backgroundColor = [UIColor blueColor];
+	[self.songListView setContentSize:CGSizeMake(self.frame.size.width, self.frame.size.height/3)];
+	[self addSubview:self.songListView];
+	
+	for(int i = 0; i < self.albumCollection.count; i++){
+		LMListEntry *listEntry = (LMListEntry*)[itemArray objectAtIndex:i];
+		[self prepareSubview:listEntry forIndex:i];
+	}
+	
+	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.songListView
+													 attribute:NSLayoutAttributeTop
+													 relatedBy:NSLayoutRelationEqual
+														toItem:self.textBackgroundView
+													 attribute:NSLayoutAttributeBottom
+													multiplier:1.0
+													  constant:0]];
+	
+	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.songListView
+													 attribute:NSLayoutAttributeBottom
+													 relatedBy:NSLayoutRelationEqual
+														toItem:self
+													 attribute:NSLayoutAttributeBottom
+													multiplier:1.0
+													  constant:0]];
+	
+	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.songListView
+													 attribute:NSLayoutAttributeLeading
+													 relatedBy:NSLayoutRelationEqual
+														toItem:self
+													 attribute:NSLayoutAttributeLeading
+													multiplier:1.0
+													  constant:0]];
+	
+	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.songListView
+													 attribute:NSLayoutAttributeTrailing
+													 relatedBy:NSLayoutRelationEqual
+														toItem:self
+													 attribute:NSLayoutAttributeTrailing
+													multiplier:1.0
+													  constant:0]];
 	
 	self.textBackgroundView.layer.shadowColor = [UIColor blackColor].CGColor;
-	self.textBackgroundView.layer.shadowOpacity = 0.75f;
-	self.textBackgroundView.layer.shadowRadius = 10;
+	self.textBackgroundView.layer.shadowOpacity = 0.5f;
+	self.textBackgroundView.layer.shadowRadius = 7;
 	self.textBackgroundView.layer.shadowOffset = CGSizeMake(0, 0);
 	self.textBackgroundView.layer.masksToBounds = NO;
 }
