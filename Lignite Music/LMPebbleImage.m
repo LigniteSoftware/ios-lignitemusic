@@ -27,8 +27,6 @@
         [[UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, size.width, size.height) cornerRadius:size.width/2] addClip];
         [[UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, size.width, size.height-45) cornerRadius:0] addClip];
     }
-
-    
     
     //Must be header icon
     if(size.width < 50){

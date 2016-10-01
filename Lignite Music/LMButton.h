@@ -20,7 +20,6 @@
 @property (nonatomic, assign) id <LMButtonDelegate> delegate;
 @property UILabel *titleLabel;
 
-- (void)updateWithFrame:(CGRect)newFrame;
 - (void)setTitle:(NSString*)newTitle;
 - (void)setImage:(UIImage*)newImage;
 - (void)setColour:(UIColor*)newColour;

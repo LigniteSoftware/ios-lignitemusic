@@ -6,6 +6,7 @@
 //  Copyright © 2016 Lignite. All rights reserved.
 //
 
+#import <PureLayout/PureLayout.h>
 #import "LMAdaptiveScrollView.h"
 #import "LMExtras.h"
 
@@ -78,37 +79,18 @@
 		
 		[self addSubview:subview];
 		
-		[self addConstraint:[NSLayoutConstraint constraintWithItem:subview
-														attribute:NSLayoutAttributeCenterX
-														relatedBy:NSLayoutRelationEqual
-														   toItem:self
-														attribute:NSLayoutAttributeCenterX
-													   multiplier:1.0
-														 constant:0]];
+		[subview autoAlignAxis:ALAxisVertical toSameAxisOfView:self];
 		
-		[self addConstraint:[NSLayoutConstraint constraintWithItem:subview
-														attribute:NSLayoutAttributeTop
-														relatedBy:NSLayoutRelationEqual
-														   toItem:self
-														attribute:NSLayoutAttributeTop
-													   multiplier:1.0
-														 constant:self.frame.size.height*(height_factorial+(height_factorial/4))*index+top_spacing]];
+		[subview autoPinEdge:ALEdgeTop toEdge:ALEdgeTop
+					  ofView:self
+				  withOffset:self.frame.size.height*(height_factorial+(height_factorial/4))*index+top_spacing];
 		
-		[self addConstraint:[NSLayoutConstraint constraintWithItem:subview
-														attribute:NSLayoutAttributeWidth
-														relatedBy:NSLayoutRelationEqual
-														   toItem:self
-														attribute:NSLayoutAttributeWidth
-														multiplier:[self.subviewDelegate sizingFactorialRelativeToWindowForAdaptiveScrollView:self height:NO]
-														 constant:0]];
+		[subview autoMatchDimension:ALDimensionWidth
+						toDimension:ALDimensionWidth
+							 ofView:self
+					 withMultiplier:[self.subviewDelegate sizingFactorialRelativeToWindowForAdaptiveScrollView:self height:NO]];
 		
-		[self addConstraint:[NSLayoutConstraint constraintWithItem:subview
-														attribute:NSLayoutAttributeHeight
-														relatedBy:NSLayoutRelationEqual
-														   toItem:self
-														attribute:NSLayoutAttributeHeight
-													   multiplier:height_factorial
-														 constant:0]];
+		[subview autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:height_factorial];
 		
 		if([self.subviewDelegate dividerForAdaptiveScrollView:self] && (index != self.subviewArray.count-1)){
 			UIView *dividerView = [UIView new];
@@ -118,14 +100,11 @@
 			
 			uint8_t dividerHeight = 1;
 			
-			[self addConstraint:[NSLayoutConstraint constraintWithItem:dividerView
-															 attribute:NSLayoutAttributeTop
-															 relatedBy:NSLayoutRelationEqual
-																toItem:subview
-															 attribute:NSLayoutAttributeBottom
-															multiplier:1.0
-															  constant:((self.frame.size.height*(height_factorial/4))/2)-(dividerHeight/2)]];
+			[dividerView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom
+							  ofView:subview
+						  withOffset:((self.frame.size.height*(height_factorial/4))/2)-(dividerHeight/2)];
 			
+			[dividerView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:subview];
 			[self addConstraint:[NSLayoutConstraint constraintWithItem:dividerView
 															 attribute:NSLayoutAttributeHeight
 															 relatedBy:NSLayoutRelationEqual
@@ -133,22 +112,7 @@
 															 attribute:NSLayoutAttributeHeight
 															multiplier:0.0
 															  constant:dividerHeight]];
-			
-			[self addConstraint:[NSLayoutConstraint constraintWithItem:dividerView
-															 attribute:NSLayoutAttributeWidth
-															 relatedBy:NSLayoutRelationEqual
-																toItem:subview
-															 attribute:NSLayoutAttributeWidth
-															multiplier:1.0
-															  constant:0]];
-			
-			[self addConstraint:[NSLayoutConstraint constraintWithItem:dividerView
-															 attribute:NSLayoutAttributeCenterX
-															 relatedBy:NSLayoutRelationEqual
-																toItem:subview
-															 attribute:NSLayoutAttributeCenterX
-															multiplier:1.0
-															  constant:0]];
+			[dividerView autoAlignAxis:ALAxisVertical toSameAxisOfView:subview];
 		}
 	}
 	

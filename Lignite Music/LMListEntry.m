@@ -6,6 +6,7 @@
 //  Copyright © 2016 Lignite. All rights reserved.
 //
 
+#import <PureLayout/PureLayout.h>
 #import "LMListEntry.h"
 #import "LMLabel.h"
 
@@ -49,37 +50,10 @@
 	if(icon){
 		[self addSubview:self.iconView];
 		
-		[self addConstraint:[NSLayoutConstraint constraintWithItem:self.iconView
-														 attribute:NSLayoutAttributeCenterY
-														 relatedBy:NSLayoutRelationEqual
-															toItem:self
-														 attribute:NSLayoutAttributeCenterY
-														multiplier:1.0
-														  constant:0]];
-		
-		[self addConstraint:[NSLayoutConstraint constraintWithItem:self.iconView
-														 attribute:NSLayoutAttributeLeading
-														 relatedBy:NSLayoutRelationEqual
-															toItem:self
-														 attribute:NSLayoutAttributeLeading
-														multiplier:1.0
-														  constant:0]];
-		
-		[self addConstraint:[NSLayoutConstraint constraintWithItem:self.iconView
-														 attribute:NSLayoutAttributeWidth
-														 relatedBy:NSLayoutRelationEqual
-															toItem:self
-														 attribute:NSLayoutAttributeHeight
-														multiplier:0.8
-														  constant:0]];
-		
-		[self addConstraint:[NSLayoutConstraint constraintWithItem:self.iconView
-														 attribute:NSLayoutAttributeHeight
-														 relatedBy:NSLayoutRelationEqual
-															toItem:self
-														 attribute:NSLayoutAttributeHeight
-														multiplier:0.8
-														  constant:0]];
+		[self.iconView autoAlignAxis:ALAxisHorizontal toSameAxisOfView:self];
+		[self.iconView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
+		[self.iconView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self withMultiplier:0.8];
+		[self.iconView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.8];
 	}
 	
 	NSMutableArray *titleConstraints = [[NSMutableArray alloc]init];
@@ -92,49 +66,15 @@
 	if(title){
 		[self addSubview:self.titleLabel];
 		
-		NSLayoutConstraint *heightConstraint = [NSLayoutConstraint constraintWithItem:self.titleLabel
-																			attribute:NSLayoutAttributeHeight
-																			relatedBy:NSLayoutRelationEqual
-																			   toItem:self
-																			attribute:NSLayoutAttributeHeight
-																		   multiplier:(1.0f/3.0f)
-																			 constant:0];
+		NSLayoutConstraint *heightConstraint = [self.titleLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(1.0f/3.0f)];
+		NSLayoutConstraint *leadingConstraint = [self.titleLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:icon ? self.iconView : self withOffset:10];
+		NSLayoutConstraint *trailingConstraint = [self.titleLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self];
+		NSLayoutConstraint *centerConstraint = [self.titleLabel autoAlignAxis:ALAxisHorizontal toSameAxisOfView:self];
+		
 		[titleConstraints addObject:heightConstraint];
-		
-		[self addConstraint:heightConstraint];
-		
-		NSLayoutConstraint *leadingConstraint = [NSLayoutConstraint constraintWithItem:self.titleLabel
-																			 attribute:NSLayoutAttributeLeading
-																			 relatedBy:NSLayoutRelationEqual
-																				toItem:icon ? self.iconView : self
-																			 attribute:NSLayoutAttributeLeading
-																			multiplier:1.0
-																			  constant:10];
 		[titleConstraints addObject:leadingConstraint];
-		
-		[self addConstraint:leadingConstraint];
-		
-		NSLayoutConstraint *trailingConstraint = [NSLayoutConstraint constraintWithItem:self.titleLabel
-																			 attribute:NSLayoutAttributeTrailing
-																			 relatedBy:NSLayoutRelationEqual
-																				toItem:self
-																			 attribute:NSLayoutAttributeTrailing
-																			multiplier:1.0
-																			  constant:0];
 		[titleConstraints addObject:trailingConstraint];
-		
-		[self addConstraint:trailingConstraint];
-		
-		NSLayoutConstraint *centerConstraint = [NSLayoutConstraint constraintWithItem:self.titleLabel
-																			attribute:NSLayoutAttributeCenterY
-																			relatedBy:NSLayoutRelationEqual
-																			   toItem:self
-																			attribute:NSLayoutAttributeCenterY
-																		   multiplier:1.0
-																			 constant:0];
 		[titleConstraints addObject:centerConstraint];
-
-		[self addConstraint:centerConstraint];
 	}
 	
 	self.subtitleLabel = [[LMLabel alloc]init];
@@ -145,41 +85,10 @@
 	if(subtitle){
 		[self addSubview:self.subtitleLabel];
 		
-		NSLayoutConstraint *heightConstraint = [NSLayoutConstraint constraintWithItem:self.subtitleLabel
-																			attribute:NSLayoutAttributeHeight
-																			relatedBy:NSLayoutRelationEqual
-																			   toItem:self
-																			attribute:NSLayoutAttributeHeight
-																		   multiplier:(1.0f/4.0f)
-																			 constant:0];
-		[self addConstraint:heightConstraint];
-		
-		NSLayoutConstraint *leadingConstraint = [NSLayoutConstraint constraintWithItem:self.subtitleLabel
-																			 attribute:NSLayoutAttributeLeading
-																			 relatedBy:NSLayoutRelationEqual
-																				toItem:self.titleLabel
-																			 attribute:NSLayoutAttributeLeading
-																			multiplier:1.0
-																			  constant:0];
-		[self addConstraint:leadingConstraint];
-		
-		NSLayoutConstraint *trailingConstraint = [NSLayoutConstraint constraintWithItem:self.subtitleLabel
-																			  attribute:NSLayoutAttributeTrailing
-																			  relatedBy:NSLayoutRelationEqual
-																				 toItem:self.titleLabel
-																			  attribute:NSLayoutAttributeTrailing
-																			 multiplier:1.0
-																			   constant:0];
-		[self addConstraint:trailingConstraint];
-		
-		NSLayoutConstraint *topConstraint = [NSLayoutConstraint constraintWithItem:self.subtitleLabel
-																			attribute:NSLayoutAttributeTop
-																			relatedBy:NSLayoutRelationEqual
-																			   toItem:self.titleLabel
-																			attribute:NSLayoutAttributeBottom
-																		   multiplier:1.0
-																			 constant:0];
-		[self addConstraint:topConstraint];
+		[self.subtitleLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(1.0f/4.0f)];
+		[self.subtitleLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.titleLabel];
+		[self.subtitleLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.titleLabel];
+		[self.subtitleLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.titleLabel];
 		
 		for(int i = 0; i < titleConstraints.count; i++){
 			NSLayoutConstraint *constraint = [titleConstraints objectAtIndex:i];
@@ -189,7 +98,7 @@
 				break;
 			}
 		}
-		
+				
 		NSLayoutConstraint *titleTopConstraint = [NSLayoutConstraint constraintWithItem:self.titleLabel
 																			  attribute:NSLayoutAttributeBottom
 																			  relatedBy:NSLayoutRelationEqual

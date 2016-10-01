@@ -6,6 +6,7 @@
 //  Copyright © 2015 Lignite. All rights reserved.
 //
 
+#import <PureLayout/PureLayout.h>
 #import "LMButton.h"
 #import "LMExtras.h"
 
@@ -34,112 +35,29 @@
 	//self.imageBackgroundView.backgroundColor = [UIColor greenColor];
 	[self addSubview:self.imageBackgroundView];
 	
-	//Align image view to center of frame's X coordinate
-	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.imageBackgroundView
-													 attribute:NSLayoutAttributeCenterX
-													 relatedBy:NSLayoutRelationEqual
-														toItem:self
-													 attribute:NSLayoutAttributeCenterX
-													multiplier:1.0
-													  constant:0]];
-	
-	//Set the width equal to half the image view's width
-	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.imageBackgroundView
-													 attribute:NSLayoutAttributeWidth
-													 relatedBy:NSLayoutRelationEqual
-														toItem:self
-													 attribute:NSLayoutAttributeWidth
-													multiplier:1.0
-													  constant:0]];
-	
-	//Set the height equal to half the width
-	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.imageBackgroundView
-													 attribute:NSLayoutAttributeHeight
-													 relatedBy:NSLayoutRelationEqual
-														toItem:self
-													 attribute:NSLayoutAttributeWidth
-													multiplier:1.0
-													  constant:0]];
-	
-	//Set the height equal to half the width
-	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.imageBackgroundView
-													 attribute:NSLayoutAttributeTop
-													 relatedBy:NSLayoutRelationEqual
-														toItem:self
-													 attribute:NSLayoutAttributeTop
-													multiplier:1.0
-													  constant:0]];
+	[self.imageBackgroundView autoAlignAxisToSuperviewAxis:ALAxisVertical];
+	[self.imageBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
+	[self.imageBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self];
+	[self.imageBackgroundView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self];
     
     self.imageView = [[UIImageView alloc]init];
     self.imageView.contentMode = UIViewContentModeScaleAspectFit;
     self.imageView.translatesAutoresizingMaskIntoConstraints = NO;
     self.imageView.clipsToBounds = YES;
-    [self addSubview:self.imageView];
+    [self.imageBackgroundView addSubview:self.imageView];
 	
-	//Align image view to center of frame's X coordinate
-	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.imageView
-													 attribute:NSLayoutAttributeCenterX
-													 relatedBy:NSLayoutRelationEqual
-														toItem:self.imageBackgroundView
-													 attribute:NSLayoutAttributeCenterX
-													multiplier:1.0
-													  constant:0]];
-	
-	//Align image view to center of frame's X coordinate
-	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.imageView
-													 attribute:NSLayoutAttributeCenterY
-													 relatedBy:NSLayoutRelationEqual
-														toItem:self.imageBackgroundView
-													 attribute:NSLayoutAttributeCenterY
-													multiplier:1.0
-													  constant:0]];
-	
-	//Set the width equal to half the image view's width
-	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.imageView
-													 attribute:NSLayoutAttributeWidth
-													 relatedBy:NSLayoutRelationEqual
-														toItem:self.imageBackgroundView
-													 attribute:NSLayoutAttributeWidth
-													multiplier:imageMultiplier
-													  constant:0]];
-	
-	//Set the height equal to half the width
-	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.imageView
-													 attribute:NSLayoutAttributeHeight
-													 relatedBy:NSLayoutRelationEqual
-														toItem:self.imageBackgroundView
-													 attribute:NSLayoutAttributeWidth
-													multiplier:imageMultiplier
-													  constant:0]];
+	[self.imageView autoCenterInSuperview];
+	[self.imageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.imageBackgroundView withMultiplier:imageMultiplier];
+	[self.imageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.imageBackgroundView withMultiplier:imageMultiplier];
 	
 	self.textBackgroundView = [UIView new];
 	self.textBackgroundView.backgroundColor = [UIColor redColor];
 	self.textBackgroundView.translatesAutoresizingMaskIntoConstraints = NO;
 	[self addSubview:self.textBackgroundView];
-
-	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.textBackgroundView
-													 attribute:NSLayoutAttributeTop
-													 relatedBy:NSLayoutRelationEqual
-														toItem:self.imageBackgroundView
-													 attribute:NSLayoutAttributeBottom
-													multiplier:1.0
-													  constant:0]];
 	
-	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.textBackgroundView
-													 attribute:NSLayoutAttributeBottom
-													 relatedBy:NSLayoutRelationEqual
-														toItem:self
-													 attribute:NSLayoutAttributeBottom
-													multiplier:1.0
-													  constant:0]];
-	
-	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.textBackgroundView
-													 attribute:NSLayoutAttributeCenterX
-													 relatedBy:NSLayoutRelationEqual
-														toItem:self
-													 attribute:NSLayoutAttributeCenterX
-													multiplier:1.0
-													  constant:0]];
+	[self.textBackgroundView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.imageBackgroundView];
+	[self.textBackgroundView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
+	[self.textBackgroundView autoAlignAxis:ALAxisVertical toSameAxisOfView:self];
 	
     self.titleLabel = [UILabel new];
     self.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14.0f];
@@ -147,25 +65,9 @@
 	self.titleLabel.adjustsFontSizeToFitWidth = YES;
 	self.titleLabel.minimumScaleFactor = 0;
     self.titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
-    [self addSubview:self.titleLabel];
-    
-    //Add centering X constraint
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.titleLabel
-                                                     attribute:NSLayoutAttributeCenterX
-                                                     relatedBy:NSLayoutRelationEqual
-                                                        toItem:self.textBackgroundView
-                                                     attribute:NSLayoutAttributeCenterX
-                                                    multiplier:1.0
-                                                      constant:0]];
+    [self.textBackgroundView addSubview:self.titleLabel];
 	
-	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.titleLabel
-													 attribute:NSLayoutAttributeCenterY
-													 relatedBy:NSLayoutRelationEqual
-														toItem:self.textBackgroundView
-													 attribute:NSLayoutAttributeCenterY
-													multiplier:1.0
-													  constant:0]];
-	
+	[self.titleLabel autoCenterInSuperview];
 	
     //Add the click recognizer for actions
     UITapGestureRecognizer *clickedRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(buttonClicked)];
@@ -205,17 +107,6 @@
 //            self.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:1];
 //        }];
 //    }];
-}
-
-/*
- Update all views with the new root frame
- */
-- (void)updateWithFrame:(CGRect)newFrame {
-    self.frame = newFrame;
-    [UIView animateWithDuration:0.3 animations:^{
-        self.titleLabel.frame = CGRectMake(0, self.frame.size.height/3 * 2, self.frame.size.width, self.frame.size.width/3);
-        self.imageView.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height/3 * 2);
-    }];
 }
 
 - (void)drawRect:(CGRect)rect {
