@@ -6,6 +6,7 @@
 //  Copyright © 2016 Lignite. All rights reserved.
 //
 
+#import <PureLayout/PureLayout.h>
 #import <MediaPlayer/MediaPlayer.h>
 #import "LMAdaptiveScrollView.h"
 #import "LMListEntry.h"
@@ -22,7 +23,7 @@
 @property UIView *textBackgroundView, *controlView;
 @property LMAdaptiveScrollView *songListView;
 @property LMButton *playButton;
-@property LMLabel *albumTitleView, *albumArtistView;
+@property LMLabel *albumTitleView, *albumArtistView, *albumInfoView;
 
 @end
 
@@ -113,6 +114,7 @@
 - (void)pinchedView {
 	self.userInteractionEnabled = NO;
 	self.hidden = YES;
+	[self removeFromSuperview];
 }
 
 - (void)setup {
@@ -121,29 +123,9 @@
 	self.albumArtView.translatesAutoresizingMaskIntoConstraints = NO;
 	[self addSubview:self.albumArtView];
 	
-	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.albumArtView
-													 attribute:NSLayoutAttributeTop
-													 relatedBy:NSLayoutRelationEqual
-														toItem:self
-													 attribute:NSLayoutAttributeTop
-													multiplier:1.0
-													  constant:0]];
-	
-	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.albumArtView
-													 attribute:NSLayoutAttributeWidth
-													 relatedBy:NSLayoutRelationEqual
-														toItem:self
-													 attribute:NSLayoutAttributeWidth
-													multiplier:1.0
-													  constant:0]];
-	
-	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.albumArtView
-													 attribute:NSLayoutAttributeHeight
-													 relatedBy:NSLayoutRelationEqual
-														toItem:self
-													 attribute:NSLayoutAttributeWidth
-													multiplier:1.0
-													  constant:0]];
+	[self.albumArtView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self];
+	[self.albumArtView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
+	[self.albumArtView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self];
 	
 	//The text background view is a view which contains the play button and album/artist text associated with this item.
 	//It has a white background color.
@@ -152,38 +134,17 @@
 	self.textBackgroundView.translatesAutoresizingMaskIntoConstraints = NO;
 	[self addSubview:self.textBackgroundView];
 	
-	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.textBackgroundView
-													 attribute:NSLayoutAttributeCenterX
-													 relatedBy:NSLayoutRelationEqual
-														toItem:self
-													 attribute:NSLayoutAttributeCenterX
-													multiplier:1.0
-													  constant:0]];
-	
+	[self.textBackgroundView autoAlignAxis:ALAxisVertical toSameAxisOfView:self];
 	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.textBackgroundView
 													 attribute:NSLayoutAttributeTop
 													 relatedBy:NSLayoutRelationEqual
-														toItem:self.albumArtView
-													 attribute:NSLayoutAttributeBottom
+														toItem:self
+													 attribute:NSLayoutAttributeCenterY
 													multiplier:1.0
 													  constant:0]];
-	
-	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.textBackgroundView
-													 attribute:NSLayoutAttributeWidth
-													 relatedBy:NSLayoutRelationEqual
-														toItem:self
-													 attribute:NSLayoutAttributeWidth
-													multiplier:1.0
-													  constant:0]];
-	
-	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.textBackgroundView
-													 attribute:NSLayoutAttributeHeight
-													 relatedBy:NSLayoutRelationEqual
-														toItem:self
-													 attribute:NSLayoutAttributeHeight
-													multiplier:0.125
-													  constant:0]];
-	
+	[self.textBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
+	[self.textBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.125];
+
 	//The play button allows for easy access to playing the album.
 	self.playButton = [[LMButton alloc]init];
 	self.playButton.translatesAutoresizingMaskIntoConstraints = NO;
@@ -194,37 +155,10 @@
 	[self.playButton setImage:[UIImage imageNamed:@"play_white.png"]];
 	//self.playButton.backgroundColor = [UIColor blueColor];
 	
-	[self.textBackgroundView addConstraint:[NSLayoutConstraint constraintWithItem:self.playButton
-																		attribute:NSLayoutAttributeCenterY
-																		relatedBy:NSLayoutRelationEqual
-																		   toItem:self.textBackgroundView
-																		attribute:NSLayoutAttributeCenterY
-																	   multiplier:1.0
-																		 constant:0]];
-	
-	[self.textBackgroundView addConstraint:[NSLayoutConstraint constraintWithItem:self.playButton
-																		attribute:NSLayoutAttributeWidth
-																		relatedBy:NSLayoutRelationEqual
-																		   toItem:self.textBackgroundView
-																		attribute:NSLayoutAttributeHeight
-																	   multiplier:0.6
-																		 constant:0]];
-	
-	[self.textBackgroundView addConstraint:[NSLayoutConstraint constraintWithItem:self.playButton
-																		attribute:NSLayoutAttributeHeight
-																		relatedBy:NSLayoutRelationEqual
-																		   toItem:self.textBackgroundView
-																		attribute:NSLayoutAttributeHeight
-																	   multiplier:0.6
-																		 constant:0]];
-	
-	[self.textBackgroundView addConstraint:[NSLayoutConstraint constraintWithItem:self.playButton
-																		attribute:NSLayoutAttributeLeading
-																		relatedBy:NSLayoutRelationEqual
-																		   toItem:self.textBackgroundView
-																		attribute:NSLayoutAttributeLeading
-																	   multiplier:1.0
-																		 constant:10]];
+	[self.playButton autoAlignAxis:ALAxisHorizontal toSameAxisOfView:self.textBackgroundView];
+	[self.playButton autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.textBackgroundView withMultiplier:0.6];
+	[self.playButton autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.textBackgroundView withMultiplier:0.6];
+	[self.playButton autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.textBackgroundView withOffset:10];
 	
 	//The album's title.
 	self.albumTitleView = [[LMLabel alloc]init];
@@ -237,45 +171,10 @@
 	self.albumTitleView.adjustsFontSizeToFitWidth = NO;
 	[self.textBackgroundView addSubview:self.albumTitleView];
 	
-	NSLayoutConstraint *leadingConstraint = [NSLayoutConstraint constraintWithItem:self.albumTitleView
-																		 attribute:NSLayoutAttributeLeading
-																		 relatedBy:NSLayoutRelationEqual
-																			toItem:self.playButton
-																		 attribute:NSLayoutAttributeTrailing
-																		multiplier:1.0
-																		  constant:10];
-	[leadingConstraint setPriority:UILayoutPriorityRequired];
-	[self.textBackgroundView addConstraint:leadingConstraint];
-	
-	NSLayoutConstraint *topConstraint = [NSLayoutConstraint constraintWithItem:self.albumTitleView
-																		attribute:NSLayoutAttributeTop
-																		relatedBy:NSLayoutRelationEqual
-																		toItem:self.textBackgroundView
-																		attribute:NSLayoutAttributeTop
-																	multiplier:1.0
-																		 constant:10];
-	[topConstraint setPriority:UILayoutPriorityRequired];
-	[self.textBackgroundView addConstraint:topConstraint];
-	
-	NSLayoutConstraint *heightConstraint = [NSLayoutConstraint constraintWithItem:self.albumTitleView
-																		attribute:NSLayoutAttributeHeight
-																		relatedBy:NSLayoutRelationEqual
-																		   toItem:self.textBackgroundView
-																		attribute:NSLayoutAttributeHeight
-																	   multiplier:0.4
-																		 constant:0];
-	[heightConstraint setPriority:UILayoutPriorityRequired];
-	[self.textBackgroundView addConstraint:heightConstraint];
-	
-	NSLayoutConstraint *trailingConstraint = [NSLayoutConstraint constraintWithItem:self.albumTitleView
-																		  attribute:NSLayoutAttributeTrailing
-																		  relatedBy:NSLayoutRelationEqual
-																			 toItem:self.textBackgroundView
-																		  attribute:NSLayoutAttributeTrailing
-																		 multiplier:1.0
-																		   constant:0];
-	[trailingConstraint setPriority:UILayoutPriorityRequired];
-	[self.textBackgroundView addConstraint:trailingConstraint];
+	[self.albumTitleView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.playButton withOffset:10];
+	[self.albumTitleView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.textBackgroundView withOffset:6];
+	[self.albumTitleView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.textBackgroundView withMultiplier:0.4];
+	[self.albumTitleView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.textBackgroundView];
 	
 	//The artist.
 	self.albumArtistView = [[LMLabel alloc]init];
@@ -284,40 +183,29 @@
 	self.albumArtistView.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:40.0f];
 	self.albumArtistView.textAlignment = NSTextAlignmentLeft;
 	self.albumArtistView.lineBreakMode = NSLineBreakByTruncatingTail;
-	self.albumArtistView.numberOfLines = 0;
+	self.albumArtistView.numberOfLines = 1;
 	[self.textBackgroundView addSubview:self.albumArtistView];
 	
-	[self.textBackgroundView addConstraint:[NSLayoutConstraint constraintWithItem:self.albumArtistView
-																		attribute:NSLayoutAttributeLeading
-																		relatedBy:NSLayoutRelationEqual
-																		   toItem:self.playButton
-																		attribute:NSLayoutAttributeTrailing
-																	   multiplier:1.0
-																		 constant:10]];
+	[self.albumArtistView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.albumTitleView];
+	[self.albumArtistView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.albumTitleView];
+	[self.albumArtistView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.textBackgroundView];
+	[self.albumArtistView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.textBackgroundView withMultiplier:0.25];
 	
-	[self.textBackgroundView addConstraint:[NSLayoutConstraint constraintWithItem:self.albumArtistView
-																		attribute:NSLayoutAttributeTop
-																		relatedBy:NSLayoutRelationEqual
-																		   toItem:self.albumTitleView
-																		attribute:NSLayoutAttributeBottom
-																	   multiplier:1.0
-																		 constant:0]];
+	//The details about the song.
+	self.albumInfoView = [[LMLabel alloc]init];
+	MPMediaItem *representativeItem = self.albumCollection.representativeItem;
+	self.albumInfoView.text = [NSString stringWithFormat:@"%@ | %lu songs", representativeItem.genre, self.albumCollection.count];
+	self.albumInfoView.translatesAutoresizingMaskIntoConstraints = NO;
+	self.albumInfoView.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:30.0f];
+	self.albumInfoView.textAlignment = NSTextAlignmentLeft;
+	self.albumInfoView.lineBreakMode = NSLineBreakByTruncatingTail;
+	self.albumInfoView.numberOfLines = 1;
+	[self.textBackgroundView addSubview:self.albumInfoView];
 	
-	[self.textBackgroundView addConstraint:[NSLayoutConstraint constraintWithItem:self.albumArtistView
-																		attribute:NSLayoutAttributeHeight
-																		relatedBy:NSLayoutRelationEqual
-																		   toItem:self.textBackgroundView
-																		attribute:NSLayoutAttributeHeight
-																	   multiplier:0.25
-																		 constant:0]];
-	
-	[self.textBackgroundView addConstraint:[NSLayoutConstraint constraintWithItem:self.albumArtistView
-																		attribute:NSLayoutAttributeTrailing
-																		relatedBy:NSLayoutRelationEqual
-																		   toItem:self.textBackgroundView
-																		attribute:NSLayoutAttributeTrailing
-																	   multiplier:1.0
-																		 constant:0]];
+	[self.albumInfoView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.albumTitleView];
+	[self.albumInfoView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.albumArtistView];
+	[self.albumInfoView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.albumTitleView];
+	[self.albumInfoView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.textBackgroundView withMultiplier:0.20];
 	
 	self.songListView = [[LMAdaptiveScrollView alloc]init];
 	self.songListView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -331,42 +219,10 @@
 	self.songListView.subviewDelegate = self;
 	[self addSubview:self.songListView];
 	
-//	for(int i = 0; i < self.albumCollection.count; i++){
-//		LMListEntry *listEntry = (LMListEntry*)[itemArray objectAtIndex:i];
-//		[self prepareSubview:listEntry forIndex:i];
-//	}
-	
-	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.songListView
-													 attribute:NSLayoutAttributeTop
-													 relatedBy:NSLayoutRelationEqual
-														toItem:self.textBackgroundView
-													 attribute:NSLayoutAttributeBottom
-													multiplier:1.0
-													  constant:0]];
-	
-	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.songListView
-													 attribute:NSLayoutAttributeBottom
-													 relatedBy:NSLayoutRelationEqual
-														toItem:self
-													 attribute:NSLayoutAttributeBottom
-													multiplier:1.0
-													  constant:0]];
-	
-	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.songListView
-													 attribute:NSLayoutAttributeLeading
-													 relatedBy:NSLayoutRelationEqual
-														toItem:self
-													 attribute:NSLayoutAttributeLeading
-													multiplier:1.0
-													  constant:0]];
-	
-	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.songListView
-													 attribute:NSLayoutAttributeTrailing
-													 relatedBy:NSLayoutRelationEqual
-														toItem:self
-													 attribute:NSLayoutAttributeTrailing
-													multiplier:1.0
-													  constant:0]];
+	[self.songListView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.textBackgroundView];
+	[self.songListView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
+	[self.songListView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
+	[self.songListView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self];
 	
 	self.textBackgroundView.layer.shadowColor = [UIColor blackColor].CGColor;
 	self.textBackgroundView.layer.shadowOpacity = 0.5f;

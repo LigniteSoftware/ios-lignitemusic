@@ -9,6 +9,7 @@ pod 'MarqueeLabel'
 pod 'PebbleKit'
 pod 'YYImage'
 pod 'ImageMagick', '6.8.8-9'
+pod 'PureLayout'
 
 end
 

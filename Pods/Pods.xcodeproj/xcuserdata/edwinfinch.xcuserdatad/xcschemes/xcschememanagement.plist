@@ -14,6 +14,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>PureLayout.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>YYImage.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -22,12 +27,17 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>35CA48B678BCBC96EF36368E5968E3A0</key>
+		<key>519D0F1AB885451A624FCC1E487F288B</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>9C7F4B4BDF37C3BD3A706C11F451E004</key>
+		<key>779620945AFFA03478E0964F5FAA8715</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>793B3D2CD7E42CC0B84BBCBC6FAC7626</key>
 		<dict>
 			<key>primary</key>
 			<true/>

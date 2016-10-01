@@ -6,6 +6,7 @@
 //  Copyright © 2016 Lignite. All rights reserved.
 //
 
+#import <PureLayout/PureLayout.h>
 #import <PebbleKit/PebbleKit.h>
 #import <YYImage/YYImage.h>
 #import "LMPebbleSettingsView.h"
@@ -962,38 +963,11 @@
     self.shadingView.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.25];
     self.shadingView.translatesAutoresizingMaskIntoConstraints = NO;
     [self.backgroundImageView addSubview:self.shadingView];
-    
-    [self.backgroundImageView addConstraint:[NSLayoutConstraint constraintWithItem:self.shadingView
-                                                                         attribute:NSLayoutAttributeWidth
-                                                                         relatedBy:NSLayoutRelationEqual
-                                                                            toItem:self.backgroundImageView
-                                                                         attribute:NSLayoutAttributeWidth
-                                                                        multiplier:1.0
-                                                                          constant:0]];
-    
-    [self.backgroundImageView addConstraint:[NSLayoutConstraint constraintWithItem:self.shadingView
-                                                                         attribute:NSLayoutAttributeHeight
-                                                                         relatedBy:NSLayoutRelationEqual
-                                                                            toItem:self.backgroundImageView
-                                                                         attribute:NSLayoutAttributeHeight
-                                                                        multiplier:1.0
-                                                                          constant:0]];
-    
-    [self.backgroundImageView addConstraint:[NSLayoutConstraint constraintWithItem:self.shadingView
-                                                                         attribute:NSLayoutAttributeTop
-                                                                         relatedBy:NSLayoutRelationEqual
-                                                                            toItem:self.backgroundImageView
-                                                                         attribute:NSLayoutAttributeTop
-                                                                        multiplier:1.0
-                                                                          constant:0]];
-    
-    [self.backgroundImageView addConstraint:[NSLayoutConstraint constraintWithItem:self.shadingView
-                                                                         attribute:NSLayoutAttributeBottom
-                                                                         relatedBy:NSLayoutRelationEqual
-                                                                            toItem:self.backgroundImageView
-                                                                         attribute:NSLayoutAttributeBottom
-                                                                        multiplier:1.0
-                                                                          constant:0]];
+	
+	[self.shadingView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.backgroundImageView];
+	[self.shadingView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.backgroundImageView];
+	[self.shadingView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+	[self.shadingView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
     
     if(!self.musicPlayer){
         self.musicPlayer = [MPMusicPlayerController systemMusicPlayer];

@@ -6,6 +6,7 @@
 //  Copyright © 2016 Lignite. All rights reserved.
 //
 
+#import <PureLayout/PureLayout.h>
 #import <MediaPlayer/MediaPlayer.h>
 #import "LMAlbumDetailView.h"
 #import "LMNowPlayingViewController.h"
@@ -44,32 +45,12 @@
 	detailView.frame = self.view.frame;
 	[self.view addSubview:detailView];
 	
-	/*
-	[self.view addConstraint:[NSLayoutConstraint constraintWithItem:detailView
-													 attribute:NSLayoutAttributeTop
-													 relatedBy:NSLayoutRelationEqual
-														toItem:self.view
-													 attribute:NSLayoutAttributeTop
-													multiplier:1.0
-													  constant:0]];
-	
-	[self.view addConstraint:[NSLayoutConstraint constraintWithItem:detailView
-													 attribute:NSLayoutAttributeWidth
-													 relatedBy:NSLayoutRelationEqual
-														toItem:self.view
-													 attribute:NSLayoutAttributeWidth
-													multiplier:1.0
-													  constant:0]];
-	
-	[self.view addConstraint:[NSLayoutConstraint constraintWithItem:detailView
-													 attribute:NSLayoutAttributeHeight
-													 relatedBy:NSLayoutRelationEqual
-														toItem:self.view
-													 attribute:NSLayoutAttributeHeight
-													multiplier:1.0
-													  constant:0]];
-	 */
 	[detailView setup];
+}
+
+- (void)openNowPlayingView {
+	LMNowPlayingViewController *nowPlayingController = [self.storyboard instantiateViewControllerWithIdentifier:@"nowPlayingController"];
+	[self presentViewController:nowPlayingController animated:YES completion:nil];
 }
 
 
@@ -85,9 +66,7 @@
 	[controller setQueueWithItemCollection:collection];
 	[controller play];
 	
-	LMNowPlayingViewController *nowPlayingController = [self.storyboard instantiateViewControllerWithIdentifier:@"nowPlayingController"];
-	//[self showViewController:nowPlayingController sender:self];
-	[self presentViewController:nowPlayingController animated:YES completion:nil];
+	[self openNowPlayingView];
 }
 
 /**
@@ -119,18 +98,14 @@
  */
 - (void)prepareSubview:(id)subview forIndex:(NSUInteger)index subviewPreviouslyLoaded:(BOOL)hasLoaded {
 	LMAlbumViewItem *item = (LMAlbumViewItem*)subview;
-	
-	if(!self.everything){
-		NSLog(@"self.everything doesn't exist!");
-		return;
-	}
-	
 	item.collectionIndex = index;
 	
-	MPMediaItemCollection *collection = [self.everything.collections objectAtIndex:index];
-	
 	if(!hasLoaded){
-		NSLog(@"Setting up.");
+		if(!self.everything){
+			NSLog(@"self.everything doesn't exist!");
+			return;
+		}
+		MPMediaItemCollection *collection = [self.everything.collections objectAtIndex:index];
 		[item setupWithAlbumCount:[collection count] andDelegate:self];
 	}
 }
@@ -182,6 +157,9 @@
 	NSTimeInterval endingTime = [[NSDate date] timeIntervalSince1970];
 	
 	NSLog(@"Took %f seconds to complete.", endingTime-startingTime);
+	
+	UIPinchGestureRecognizer *pinchGesture = [[UIPinchGestureRecognizer alloc]initWithTarget:self action:@selector(openNowPlayingView)];
+	[self.view addGestureRecognizer:pinchGesture];
 }
 
 - (BOOL)prefersStatusBarHidden {
