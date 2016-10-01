@@ -88,7 +88,7 @@
 - (NSString*)titleForListEntry:(LMListEntry*)entry {
 	int indexOfEntry = [self indexOfListEntry:entry];
 	if(indexOfEntry < 0){
-		return @"Error!";
+		return NSLocalizedString(@"GeneralError", nil);
 	}
 	MPMediaItem *item = [self.albumCollection.items objectAtIndex:indexOfEntry];
 	return item.title;
@@ -97,10 +97,10 @@
 - (NSString*)subtitleForListEntry:(LMListEntry*)entry {
 	int indexOfEntry = [self indexOfListEntry:entry];
 	if(indexOfEntry < 0){
-		return @"Error!";
+		return NSLocalizedString(@"GeneralError", nil);
 	}
 	MPMediaItem *item = [self.albumCollection.items objectAtIndex:indexOfEntry];
-	return [NSString stringWithFormat:@"Length: %@", [LMNowPlayingViewController durationStringTotalPlaybackTime:item.playbackDuration]];
+	return [NSString stringWithFormat:NSLocalizedString(@"LengthOfSong", nil), [LMNowPlayingViewController durationStringTotalPlaybackTime:item.playbackDuration]];
 }
 
 - (UIImage*)iconForListEntry:(LMListEntry*)entry {
@@ -194,7 +194,7 @@
 	//The details about the song.
 	self.albumInfoView = [[LMLabel alloc]init];
 	MPMediaItem *representativeItem = self.albumCollection.representativeItem;
-	self.albumInfoView.text = [NSString stringWithFormat:@"%@ | %lu songs", representativeItem.genre, self.albumCollection.count];
+	self.albumInfoView.text = [NSString stringWithFormat:NSLocalizedString(@"AlbumDetailInfoWithGenre", nil), representativeItem.genre, self.albumCollection.count];
 	self.albumInfoView.translatesAutoresizingMaskIntoConstraints = NO;
 	self.albumInfoView.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:30.0f];
 	self.albumInfoView.textAlignment = NSTextAlignmentLeft;

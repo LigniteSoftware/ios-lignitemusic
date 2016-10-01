@@ -30,7 +30,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+	
+	self.title = NSLocalizedString(@"Settings", nil);
+	
     self.settingsMapping = [[NSDictionary alloc]initWithObjectsAndKeys:@(100), @"pebble_battery_saver", @(101), @"pebble_artist_label", @(102), @"pebble_style_controls", @(103), @"pebble_show_time", nil];
     self.defaultsMapping = [[NSDictionary alloc]initWithObjectsAndKeys:@(0), @"pebble_battery_saver", @(1), @"pebble_artist_label", @(1), @"pebble_style_controls", @(0), @"pebble_show_time", nil];
     
@@ -133,12 +135,12 @@
 				break;
 			case 2:{
 				UIAlertController * alert = [UIAlertController
-											 alertControllerWithTitle:@"How to Use"
-											 message:@"Hey! Welcome to the first Lignite Music beta. We're going to having a better tutorial soon, don't worry.\n\nTo play/pause the song, tap anywhere on the screen.\n\nTo skip/go to previous song, swipe left or right anywhere on the screen.\n\nDrag the slider to control the playing time.\n\nInstall the Pebble app within the settings page.\n\nYou can replay this tutorial any time in settings."
+											 alertControllerWithTitle:NSLocalizedString(@"HowToUse", nil)
+											 message:NSLocalizedString(@"HowToUseDescription", nil)
 											 preferredStyle:UIAlertControllerStyleAlert];
 				
 				UIAlertAction* yesButton = [UIAlertAction
-											actionWithTitle:@"Ok, thanks"
+											actionWithTitle:NSLocalizedString(@"OkThanks", nil)
 											style:UIAlertActionStyleDefault
 											handler:^(UIAlertAction * action) {
 												//[defaults setBool:YES forKey:@"shitty_tutorial"];
@@ -176,11 +178,11 @@
         case 0:
             switch(indexPath.row){
                 case 0:
-                    [self addLabelToCell:cell withID:@"Battery saver"];
+                    [self addLabelToCell:cell withID:NSLocalizedString(@"BatterySaver", nil)];
                     [self addToggleToCell:cell withID:@"pebble_battery_saver"];
                     break;
                 case 1:
-                    [self addLabelToCell:cell withID:@"Pebble-style controls"];
+					[self addLabelToCell:cell withID:NSLocalizedString(@"PebbleStyleControls", nil)];
                     [self addToggleToCell:cell withID:@"pebble_style_controls"];
                     break;
             }
@@ -188,11 +190,11 @@
         case 1:
             switch(indexPath.row){
                 case 0:
-                    [self addLabelToCell:cell withID:@"Artist label"];
+					[self addLabelToCell:cell withID:NSLocalizedString(@"ArtistLabel", nil)];
                     [self addToggleToCell:cell withID:@"pebble_artist_label"];
                     break;
 				case 1:
-					[self addLabelToCell:cell withID:@"Display time"];
+					[self addLabelToCell:cell withID:NSLocalizedString(@"DisplayTime", nil)];
 					[self addToggleToCell:cell withID:@"pebble_show_time"];
 					break;
             }
@@ -200,13 +202,13 @@
 		case 2:
 			switch(indexPath.row){
 				case 0:
-					[self addLabelToCell:cell withID:@"Install Pebble App"].enabled = YES;
+					[self addLabelToCell:cell withID:NSLocalizedString(@"InstallPebbleApp", nil)].enabled = YES;
 					break;
 				case 1:
-					[self addLabelToCell:cell withID:@"Send Feedback/Report Bug"].enabled = YES;
+					[self addLabelToCell:cell withID:NSLocalizedString(@"SendFeedback", nil)].enabled = YES;
 					break;
 				case 2:
-					[self addLabelToCell:cell withID:@"Replay Tutorial"].enabled = YES;
+					[self addLabelToCell:cell withID:NSLocalizedString(@"ReplayTutorial", nil)].enabled = YES;
 					break;
 				case 3:
 					[self addLabelToCell:cell withID:@"Report 'Pebble Internal Error' Bug"].enabled = YES;
@@ -222,13 +224,13 @@
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
     switch(section){
         case 0:
-            return @"Functionality";
+            return NSLocalizedString(@"Functionality", nil);
         case 1:
-            return @"Look and Feel";
+			return NSLocalizedString(@"LookAndFeel", nil);
 		case 2:
-			return @"Other";
+			return NSLocalizedString(@"Other", nil);
     }
-    return @"Unknown Section";
+	return NSLocalizedString(@"UnknownSection", nil);
 }
 
 /*

@@ -1,0 +1,98 @@
+/* 
+  Localizable.strings
+  Lignite Music
+
+  Created by Edwin Finch on 10/1/16.
+  Copyright © 2016 Lignite. All rights reserved.
+*/
+
+/*
+ Hello, and thanks for translating Lignite Music!
+ 
+ Please read the following notes thoroughly.
+ 
+ 1. The following characters in between quotes must be left in exact format and must not be deleted, changed or 
+ modified in any other way:
+	"\n", "%02i", "%d", "%lu", "%@"
+ Any string in the above list *with a percentage (%) symbol* I will now reference as "formatters".
+ 
+ 2. Any character mentioned in point 1 that is in a string will have data injected into it. If there are more than
+ one formatter, that means that data is inserted in that order. When you change strings with formatters, please do not
+ change the order of the formatters or remove formatters. The order of which the data is inserted into these strings is 
+ static. If your language *absolutely requires* a different order, please contact us directly.
+ 
+ 3. If you are confused about a string, look at its key first. It may help clarify. 
+ If still you have any questions about translating Lignite Music please let us know. You should not feel uncertain 
+ what a strinhg is doing, and if you are, just let us know and we'll clarify. Now that you've read this far, 
+ please send us a picture of a walrus so we know you did. Yes, seriously.
+ 
+ Thanks, and have fun!
+ */
+
+"SongXofX" = "Song %d of %d";
+"SongX" = "Song %d";
+
+/* 
+ Durations are formatted like this:
+ 
+ hours:minutes:seconds
+ 
+ the %@ after the DurationOfDuration strings is the total duration of the song playing. Time formats are automatically 0 padded.
+*/
+"LongSongDurationOfDuration" = "%02i:%02d:%02d of %@";
+"ShortSongDurationOfDuration" = "%02d:%02d of %@";
+"LongSongDuration" = "%02i:%02d:%02d";
+"ShortSongDuration" = "%02d:%02d";
+"BlankDuration" = "--:--";
+"LengthOfSong" = "Length: %@";
+
+/* Album view */
+"AlbumDetailInfoWithGenre" = "%@ | %lu songs";
+"AlbumDetailInfoWithoutGenre" = "%lu songs";
+
+/* System shuffle modes */
+"Shuffle" = "Shuffle";
+"DefaultShuffleMode" = "Default";
+"OffShuffleMode" = "Off";
+"SongsShuffleMode" = "Songs";
+"AlbumsShuffleMode" = "Albums";
+
+/* System repeat modes */
+"Repeat" = "Repeat";
+"DefaultRepeatMode" = "Default";
+"OffRepeatMode" = "Off";
+"ThisRepeatMode" = "This";
+"AllRepeatMode" = "All";
+
+/* Settings */
+"Settings" = "Settings";
+"BatterySaver" = "Battery saver"; /* For Pebble. Stops scrolling text, reduces redraw interval. */
+"ArtistLabel" = "Artist label"; /* For Pebble. Shows the text that displays the artist on the now playing screen. */
+"PebbleStyleControls" = "Pebble-style controls"; /* For Pebble, can you tell? This one makes the controls (ie. play/pause) emulate the stock Pebble music app controls instead of Lignite-style. */
+"DisplayTime" = "Show the time"; /* For Pebble. Shows the time on the now playing screen. */
+"InstallPebbleApp" = "Install Pebble App"; /* Sends the user to the Pebble appstore. */
+"SendFeedback" = "Send Feedback/Report Bug";
+"ReplayTutorial" = "Replay tutorial";
+"Functionality" = "Functionality"; /* Functionality related settings like battery saver mode. */
+"LookAndFeel" = "Look and Feel";
+
+/* General/uncategorized */
+"Okay" = "Okay";
+"GeneralError" = "Error!";
+"Other" = "Other";
+"UnknownSection" = "Unknown Section";
+
+/* When no music is playing */
+"NoMusic" = "No Music";
+"NoMusicDescription" = "Start music on your watch or phone";
+
+/* This pops up when the user first opens the app and warns the user about the incoming iOS system warning.
+ After confirming, the user then will get a popup from iOS (which we have no control over) asking them if Lignite Music
+ has permission to use Bluetooth. */
+"PebbleConnectionRequestTitle" = "Pebble Connection";
+"PebbleConnectionRequestDescription" = "iOS is about to ask for your permission to use Bluetooth devices. Please allow the permission as we use it to communicate with Lignite Music watchapps.";
+
+/* Temporary strings that will be removed in a non-beta release */
+"HowToUse" = "How to Use";
+"HowToUseDescription" = "Hey! Welcome to the Lignite Music beta. We're going to having a better tutorial later, don't worry.\n\nTo play/pause the song, tap anywhere on the screen.\n\nTo skip/go to previous song, swipe left or right anywhere on the screen.\n\nDrag the slider to control the playing time.\n\nInstall the Pebble app within the settings page.\n\nYou can replay this tutorial any time in settings.";
+"OkThanks" = "Ok, thanks";

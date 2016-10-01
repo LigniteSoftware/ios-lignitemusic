@@ -137,11 +137,11 @@
     [self pushNowPlayingItemToWatch];
     
     if(!self.musicPlayer.nowPlayingItem){
-        [self.songTitleLabel setText:@"No Music"];
-        [self.songArtistLabel setText:@"Start music on your watch or phone"];
+        [self.songTitleLabel setText:NSLocalizedString(@"NoMusic", nil)];
+        [self.songArtistLabel setText:NSLocalizedString(@"NoMusicDescription", nil)];
         [self.songAlbumLabel setText:@""];
-        [self.songDurationLabel setText:@"--:--"];
-        [self.songNumberLabel setText:@"No music"];
+		[self.songDurationLabel setText:NSLocalizedString(@"BlankDuration", nil)];
+        [self.songNumberLabel setText:NSLocalizedString(@"NoMusic", nil)];
         
         UIImage *albumImage;
         albumImage = [UIImage imageNamed:@"lignite_background_portrait.png"];
@@ -157,10 +157,10 @@
     [self.songAlbumLabel setText:self.musicPlayer.nowPlayingItem.albumTitle];
     
     if(self.currentlyPlayingQueue){
-        [self.songNumberLabel setText:[NSString stringWithFormat:@"Song %d of %d", (int)self.musicPlayer.indexOfNowPlayingItem+1, (int)self.currentlyPlayingQueue.items.count]];
+        [self.songNumberLabel setText:[NSString stringWithFormat:NSLocalizedString(@"SongXofX", nil), (int)self.musicPlayer.indexOfNowPlayingItem+1, (int)self.currentlyPlayingQueue.items.count]];
     }
     else{
-        [self.songNumberLabel setText:[NSString stringWithFormat:@"Song %d", (int)self.musicPlayer.indexOfNowPlayingItem+1]];
+        [self.songNumberLabel setText:[NSString stringWithFormat:NSLocalizedString(@"SongX", <#comment#>), (int)self.musicPlayer.indexOfNowPlayingItem+1]];
     }
     
     self.songDurationSlider.maximumValue = self.musicPlayer.nowPlayingItem.playbackDuration;
@@ -231,10 +231,10 @@
     int totalSeconds = (totalPlaybackTime % 60);
     
     if(totalHours > 0){
-        return [NSString stringWithFormat:@"%02i:%02d:%02d", (int)totalHours, totalMinutes, totalSeconds];
+        return [NSString stringWithFormat:NSLocalizedString(@"LongSongDuration", nil), (int)totalHours, totalMinutes, totalSeconds];
     }
     
-    return [NSString stringWithFormat:@"%02d:%02d", totalMinutes, totalSeconds];
+    return [NSString stringWithFormat:NSLocalizedString(@"ShortSongDuration", nil), totalMinutes, totalSeconds];
 }
 
 - (void)updateSongDurationLabelWithPlaybackTime:(long)currentPlaybackTime {
@@ -248,12 +248,12 @@
     
     [UIView animateWithDuration:0.3 animations:^{
         if(totalHours > 0){
-            self.songDurationLabel.text = [NSString stringWithFormat:@"%02i:%02d:%02d of %@",
+            self.songDurationLabel.text = [NSString stringWithFormat:NSLocalizedString(@"LongSongDurationOfDuration", nil),
                                            (int)currentHours, (int)currentMinutes, currentSeconds,
                                            [LMNowPlayingViewController durationStringTotalPlaybackTime:totalPlaybackTime]];
         }
         else{
-            self.songDurationLabel.text = [NSString stringWithFormat:@"%02d:%02d of %@",
+            self.songDurationLabel.text = [NSString stringWithFormat:NSLocalizedString(@"ShortSongDurationOfDuration", nil),
                                            (int)currentMinutes, currentSeconds,
                                            [LMNowPlayingViewController durationStringTotalPlaybackTime:totalPlaybackTime]];
         }
@@ -303,13 +303,13 @@
 
 - (void)reloadButtonTitles {
     NSString *shuffleArray[] = {
-        @"Default", @"Off", @"Songs", @"Albums"
+        @"DefaultShuffleMode", @"OffShuffleMode", @"SongsShuffleMode", @"AlbumsShuffleMode"
     };
     NSString *repeatArray[] = {
-        @"Default", @"Off", @"This", @"All"
+        @"DefaultRepeatMode", @"OffRepeatMode", @"ThisRepeatMode", @"AllRepeatMode"
     };
-    [self.shuffleButton setTitle:shuffleArray[self.musicPlayer.shuffleMode]];
-    [self.repeatButton setTitle:repeatArray[self.musicPlayer.repeatMode]];
+    [self.shuffleButton setTitle:NSLocalizedString(shuffleArray[self.musicPlayer.shuffleMode], nil)];
+    [self.repeatButton setTitle:NSLocalizedString(repeatArray[self.musicPlayer.repeatMode], nil)];
 }
 
 /*
@@ -944,17 +944,17 @@
     [self.albumArtView setupWithAlbumImage:[UIImage imageNamed:@"no_album.png"]];
 	
 	[self.shuffleButton setupWithImageMultiplier:0.5];
-	[self.shuffleButton setTitle:@"Shuffle"];
+	[self.shuffleButton setTitle:NSLocalizedString(@"Shuffle", nil)];
 	[self.shuffleButton setImage:[UIImage imageNamed:@"shuffle_black.png"]];
 	[self.shuffleButton setColour:[UIColor whiteColor]];
     self.shuffleButton.delegate = self;
 	[self.repeatButton setupWithImageMultiplier:0.5];
-	[self.repeatButton setTitle:@"Repeat"];
+	[self.repeatButton setTitle:NSLocalizedString(@"Repeat", nil)];
 	[self.repeatButton setImage:[UIImage imageNamed:@"repeat_black.png"]];
 	[self.repeatButton setColour:[UIColor whiteColor]];
     self.repeatButton.delegate = self;
 	[self.dynamicPlaylistButton setupWithImageMultiplier:0.5];
-	[self.dynamicPlaylistButton setTitle:@"Settings"];
+	[self.dynamicPlaylistButton setTitle:NSLocalizedString(@"Settings", nil)];
 	[self.dynamicPlaylistButton setImage:[UIImage imageNamed:@"settings.png"]];
 	[self.dynamicPlaylistButton setColour:[UIColor whiteColor]];
     self.dynamicPlaylistButton.delegate = self;
@@ -1022,12 +1022,12 @@
 	
 	if(![defaults objectForKey:@"shitty_tutorial"]){
 		UIAlertController * alert = [UIAlertController
-									 alertControllerWithTitle:@"How to Use"
-									 message:@"Hey! Welcome to the first Lignite Music beta. We're going to having a better tutorial soon, don't worry.\n\nTo play/pause the song, tap anywhere on the screen.\n\nTo skip/go to previous song, swipe left or right anywhere on the screen.\n\nDrag the slider to control the playing time.\n\nInstall the Pebble app within the settings page.\n\nYou can replay this tutorial any time in settings."
+									 alertControllerWithTitle:NSLocalizedString(@"HowToUse", nil)
+									 message:NSLocalizedString(@"HowToUseDescription", nil)
 									 preferredStyle:UIAlertControllerStyleAlert];
 		
 		UIAlertAction* yesButton = [UIAlertAction
-									actionWithTitle:@"Ok, thanks"
+									actionWithTitle:NSLocalizedString(@"OkThanks", nil)
 									style:UIAlertActionStyleDefault
 									handler:^(UIAlertAction * action) {
 										[defaults setBool:YES forKey:@"shitty_tutorial"];
@@ -1048,12 +1048,12 @@
     }
     else{
         UIAlertController * alert = [UIAlertController
-                                     alertControllerWithTitle:@"Pebble Connection"
-                                     message:@"iOS is about to ask for your permission to use Bluetooth devices. Please allow the permission as we use it to communicate with Lignite Music watchapps."
+									 alertControllerWithTitle:NSLocalizedString(@"PebbleConnectionRequestTitle", nil)
+                                     message:NSLocalizedString(@"PebbleConnectionRequestDescription", nil)
                                      preferredStyle:UIAlertControllerStyleAlert];
         
         UIAlertAction* yesButton = [UIAlertAction
-                                    actionWithTitle:@"Okay"
+									actionWithTitle:NSLocalizedString(@"Okay", nil)
                                     style:UIAlertActionStyleDefault
                                     handler:^(UIAlertAction * action) {
                                         [self.central run];

@@ -36,6 +36,7 @@
 		6AA473611BC710320066D47E /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AA473601BC710320066D47E /* CoreBluetooth.framework */; };
 		6AA473631BC7103B0066D47E /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AA473621BC7103B0066D47E /* CoreMotion.framework */; };
 		6AA473651BC710460066D47E /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AA473641BC710460066D47E /* MessageUI.framework */; };
+		6AAF610C1DA0197500971875 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6AAF610B1DA0197500971875 /* Localizable.strings */; };
 		6AB12E9C1D57AD9800280383 /* settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AB12E9B1D57AD9800280383 /* settings.png */; };
 		6ABF6A821CF374F7003E4EFA /* UIImage+AverageColour.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ABF6A811CF374F7003E4EFA /* UIImage+AverageColour.m */; };
 		6ABF6A851CF3768A003E4EFA /* UIColor+isLight.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ABF6A841CF3768A003E4EFA /* UIColor+isLight.m */; };
@@ -104,6 +105,7 @@
 		6AA473601BC710320066D47E /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
 		6AA473621BC7103B0066D47E /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		6AA473641BC710460066D47E /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
+		6AAF610B1DA0197500971875 /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		6AB12E9B1D57AD9800280383 /* settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = settings.png; sourceTree = "<group>"; };
 		6ABF6A801CF374F7003E4EFA /* UIImage+AverageColour.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+AverageColour.h"; sourceTree = "<group>"; };
 		6ABF6A811CF374F7003E4EFA /* UIImage+AverageColour.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+AverageColour.m"; sourceTree = "<group>"; };
@@ -278,6 +280,14 @@
 			name = SettingsControls;
 			sourceTree = "<group>";
 		};
+		6AAF610A1DA0195900971875 /* Strings */ = {
+			isa = PBXGroup;
+			children = (
+				6AAF610B1DA0197500971875 /* Localizable.strings */,
+			);
+			name = Strings;
+			sourceTree = "<group>";
+		};
 		6ABF6A861CF37A19003E4EFA /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
@@ -323,6 +333,7 @@
 				6A1FB9C11D99C88500890BF3 /* OtherControls */,
 				6A1FB9C01D99C72200890BF3 /* Pebble */,
 				6AA4459D1D5AD676004C6739 /* SettingsControls */,
+				6AAF610A1DA0195900971875 /* Strings */,
 				6ABF6A861CF37A19003E4EFA /* Utilities */,
 			);
 			path = "Lignite Music";
@@ -475,6 +486,7 @@
 				6A514E141CE9621B00AFB351 /* dynamic_playlist.png in Resources */,
 				6AEB9D351BAD812700AD19FA /* pause_white.png in Resources */,
 				6AFD2EDF1BC423850083FE9E /* no_album.png in Resources */,
+				6AAF610C1DA0197500971875 /* Localizable.strings in Resources */,
 				6A514E161CEA125B00AFB351 /* lignite_background_portrait.png in Resources */,
 				6AE4A7FA1D493C0F002B67CD /* robot.png in Resources */,
 			);
