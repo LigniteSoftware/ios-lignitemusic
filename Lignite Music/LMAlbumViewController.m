@@ -109,7 +109,6 @@
 		[newItem setupWithAlbumCount:collection.count andDelegate:self];
 		newItem.userInteractionEnabled = YES;
 		[self.albumsItemArray addObject:newItem];
-		NSLog(@"Loaded item %d", i);
 	}
 	self.hasLoadedInitialItems = YES;
 }
@@ -130,12 +129,10 @@
 //		[item setupWithAlbumCount:[collection count] andDelegate:self];
 //	}
 	
-	NSLog(@"%lu and %lu", self.albumsItemArray.count, index % self.albumsItemArray.count);
-	
 	LMAlbumViewItem *albumViewItem = [self.albumsItemArray objectAtIndex:index % self.albumsItemArray.count];
 	MPMediaItemCollection *collection = [self.everything.collections objectAtIndex:index];
 	[albumViewItem updateContentsWithMediaItem:[collection representativeItem] andNumberOfItems:collection.count];
-	
+		
 	return albumViewItem;
 }
 

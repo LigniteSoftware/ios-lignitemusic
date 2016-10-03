@@ -194,8 +194,7 @@
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-	NSLog(@"Done");
-	
+	//NSLog(@"Done");
 }
 
 - (void)layoutSubviews {

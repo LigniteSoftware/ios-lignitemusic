@@ -13,11 +13,13 @@
 #import "LMLabel.h"
 #import "LMAlbumCountLabel.h"
 #import "LMOperationQueue.h"
+#import "LMShadowView.h"
 
 @interface LMAlbumViewItem() <LMButtonDelegate>
 
 @property UIImageView *albumImageView;
-@property UIView *shadingBackgroundView, *textBackgroundView;
+@property UIView *contentView, *textBackgroundView;
+@property LMShadowView *shadingBackgroundView;
 @property UILabel *albumTitleView, *albumArtistView, *albumCountView;
 @property LMButton *playButton;
 @property CAShapeLayer *circleLayer;
@@ -55,17 +57,18 @@
 				return;
 			}
 			self.albumImageView.image = image;
-			NSLog(@"Done.");
+			
+			self.albumTitleView.text = item.albumTitle;
+			self.albumArtistView.text = item.artist;
+			self.albumCountView.text = [NSString stringWithFormat:@"%lu", (unsigned long)numberOfItems];
+			
+			self.item = item;
 		});
 	}];
 
 	[self.queue addOperation:operation];
 	
-	self.albumTitleView.text = item.albumTitle;
-	self.albumArtistView.text = item.artist;
-	self.albumCountView.text = [NSString stringWithFormat:@"%lu", (unsigned long)numberOfItems];
-	
-	self.item = item;
+	//[self.shadingBackgroundView updateConstraints];
 }
 
 /**
@@ -74,20 +77,20 @@
  @param numberOfItems The number of items in the album associated with this item.
  */
 - (void)setupWithAlbumCount:(NSUInteger)numberOfItems andDelegate:(id)delegate {
+	self.contentView = [UIView new];
+	[self addSubview:self.contentView];
+	
+	[self.contentView autoCenterInSuperview];
+	[self.contentView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:0.8];
+	[self.contentView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self];
+	
 	//The shading background view gives a shadow effect to the item.
-	self.shadingBackgroundView = [UIView new];
-	self.shadingBackgroundView.translatesAutoresizingMaskIntoConstraints = NO;
-	self.shadingBackgroundView.backgroundColor = [UIColor whiteColor];
-	self.shadingBackgroundView.layer.shadowColor = [UIColor blackColor].CGColor;
-	self.shadingBackgroundView.layer.shadowOpacity = 0.75f;
-	self.shadingBackgroundView.layer.shadowRadius = self.frame.size.width/2 + 20;
-	self.shadingBackgroundView.layer.shadowOffset = CGSizeMake(0, 0);
-	self.shadingBackgroundView.layer.masksToBounds = NO;
-	[self addSubview:self.shadingBackgroundView];
+	self.shadingBackgroundView = [[LMShadowView alloc] init];
+	[self.contentView addSubview:self.shadingBackgroundView];
 	
 	[self.shadingBackgroundView autoCenterInSuperview];
-	[self.shadingBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:0.7];
-	[self.shadingBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self withMultiplier:0.7];
+	[self.shadingBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.contentView withMultiplier:0.7];
+	[self.shadingBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.contentView withMultiplier:0.7];
 	
 	//The album image view displays the album image.
 	self.albumImageView = [[UIImageView alloc]initWithImage:[self.item.artwork imageWithSize:CGSizeMake(500, 500)]];
@@ -97,23 +100,23 @@
 	self.albumImageView.layer.opaque = NO;
 	self.albumImageView.clipsToBounds = YES;
 	self.albumImageView.backgroundColor = [UIColor blueColor];
-	[self addSubview:self.albumImageView];
+	[self.contentView addSubview:self.albumImageView];
 	
 	[self.albumImageView autoCenterInSuperview];
-	[self.albumImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:0.9];
-	[self.albumImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self withMultiplier:0.9];
+	[self.albumImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.contentView withMultiplier:0.9];
+	[self.albumImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.contentView withMultiplier:0.9];
 	
 	//The text background view is a view which contains the play button and album/artist text associated with this item.
 	//It has a white background color.
 	self.textBackgroundView = [[UIView alloc]init];
 	self.textBackgroundView.backgroundColor = [UIColor whiteColor];
 	self.textBackgroundView.translatesAutoresizingMaskIntoConstraints = NO;
-	[self addSubview:self.textBackgroundView];
+	[self.contentView addSubview:self.textBackgroundView];
 	
-	[self.textBackgroundView autoAlignAxis:ALAxisVertical toSameAxisOfView:self];
+	[self.textBackgroundView autoAlignAxis:ALAxisVertical toSameAxisOfView:self.contentView];
 	[self.textBackgroundView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.albumImageView];
 	[self.textBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:1.0];
-	[self.textBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self withMultiplier:0.2];
+	[self.textBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.contentView withMultiplier:0.2];
 	
 	//The play button allows for easy access to playing the album.
 	self.playButton = [[LMButton alloc]init];
@@ -128,7 +131,14 @@
 	[self.playButton autoAlignAxis:ALAxisHorizontal toSameAxisOfView:self.textBackgroundView];
 	[self.playButton autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.textBackgroundView withMultiplier:0.8];
 	[self.playButton autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.textBackgroundView withMultiplier:0.8];
-	[self.playButton autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.textBackgroundView];
+	//[self.playButton autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.textBackgroundView];
+	[self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.playButton
+																attribute:NSLayoutAttributeCenterX
+																 relatedBy:NSLayoutRelationEqual
+																	toItem:self.albumImageView
+																 attribute:NSLayoutAttributeLeading
+																multiplier:1.0
+																  constant:0]];
 	
 	//The album's title.
 	self.albumTitleView = [[LMLabel alloc]init];
@@ -173,12 +183,19 @@
 	self.albumCountView.text = [NSString stringWithFormat:@"%lu", (unsigned long)numberOfItems];
 	self.albumCountView.textColor = [UIColor whiteColor];
 	self.albumCountView.textAlignment = NSTextAlignmentCenter;
-	[self addSubview:self.albumCountView];
+	[self.contentView addSubview:self.albumCountView];
 	
 	[self.albumCountView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.textBackgroundView withMultiplier:0.5];
 	[self.albumCountView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.textBackgroundView withMultiplier:0.5];
-	[self.albumCountView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.textBackgroundView];
-	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.albumCountView
+	//[self.albumCountView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.textBackgroundView];
+	[self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.albumCountView
+																 attribute:NSLayoutAttributeCenterX
+																 relatedBy:NSLayoutRelationEqual
+																	toItem:self.albumImageView
+																 attribute:NSLayoutAttributeTrailing
+																multiplier:1.0
+																  constant:0]];
+	[self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.albumCountView
 													 attribute:NSLayoutAttributeCenterY
 													 relatedBy:NSLayoutRelationEqual
 														toItem:self.textBackgroundView
@@ -187,7 +204,7 @@
 													  constant:0]];
 	
 	UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tappedOnView)];
-	[self addGestureRecognizer:tapGestureRecognizer];
+	[self.contentView addGestureRecognizer:tapGestureRecognizer];
 	
 	self.userInteractionEnabled = YES;
 	

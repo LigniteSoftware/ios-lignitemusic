@@ -19,7 +19,6 @@
 @implementation LMTableViewCell
 
 - (void)updateConstraints {
-	NSLog(@"Sup dude %d", self.didSetupConstraints);
 	if (!self.didSetupConstraints && self.subview) {
 		UIView *cellSubview = self.subview;
 		
@@ -31,8 +30,8 @@
 
 		[cellSubview autoPinEdgeToSuperviewEdge:ALEdgeTop];
 		[cellSubview autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		[cellSubview autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:20];
-		[cellSubview autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:20];
+		[cellSubview autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:0];
+		[cellSubview autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:0];
 		
 //		self.mediaItem = [(MPMediaItemCollection*)[self.everything.collections objectAtIndex:(rand() % 50)] representativeItem];
 //		
@@ -56,7 +55,7 @@
 		
 		self.didSetupConstraints = YES;
 		
-		NSLog(@"Loaded");
+//		NSLog(@"Loaded");
 	}
 	
 	[super updateConstraints];

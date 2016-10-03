@@ -24,6 +24,17 @@
 
 @implementation LMTableView
 
+- (id)init {
+	self = [super initWithFrame:CGRectMake(0, 0, 0, 0) style:UITableViewStyleGrouped];
+	if(self){
+		
+	}
+	else{
+		NSLog(@"Error creating LMTableView");
+	}
+	return self;
+}
+
 - (void)configureCell:(LMTableViewCell*)cell forRowAtIndexPath:(NSIndexPath*)indexPath {
 //	if(!cell.queue){
 //		cell.queue = [[LMOperationQueue alloc] init];
@@ -46,7 +57,6 @@
 //	[cell.queue addOperation:operation];
 
 	cell.subview = [self.subviewDelegate prepareSubviewAtIndex:indexPath.section];
-	NSLog(@"Configuring");
 	[cell setNeedsUpdateConstraints];
 	[cell updateConstraintsIfNeeded];
 }
@@ -57,8 +67,11 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	NSLog(@"Loading %ld", (indexPath.section % self.amountOfItemsRequired));
+//	NSLog(@"Loading %ld", (indexPath.section % self.amountOfItemsRequired));
 	LMTableViewCell *cell = (LMTableViewCell*)[tableView dequeueReusableCellWithIdentifier:[NSString stringWithFormat:@"ShitPost%ld", (indexPath.section % self.amountOfItemsRequired)]];
+	
+	NSLog(@"Cell frame %@", NSStringFromCGRect(cell.contentView.frame));
+	
 	//[self configureCell:cell forRowAtIndexPath:indexPath];
 	return cell;
 }
@@ -98,7 +111,7 @@
 	if(!self.loaded){
 		self.delegate = self;
 		self.dataSource = self;
-		self.backgroundColor = [UIColor blueColor];
+		self.backgroundColor = [UIColor whiteColor];
 		self.separatorColor = [UIColor clearColor];
 		
 		float delegateHeight = [self.subviewDelegate sizingFactorialRelativeToWindowForTableView:self height:YES];
