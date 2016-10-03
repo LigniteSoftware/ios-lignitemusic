@@ -29,16 +29,19 @@
  Thanks, and have fun!
  */
 
+/* General */
 "SongXofX" = "Song %d of %d";
 "SongX" = "Song %d";
+"Song" = "song";
+"Songs" = "songs";
 
-/* 
+/*
  Durations are formatted like this:
  
  hours:minutes:seconds
  
  the %@ after the DurationOfDuration strings is the total duration of the song playing. Time formats are automatically 0 padded.
-*/
+ */
 "LongSongDurationOfDuration" = "%02i:%02d:%02d of %@";
 "ShortSongDurationOfDuration" = "%02d:%02d of %@";
 "LongSongDuration" = "%02i:%02d:%02d";
@@ -47,8 +50,8 @@
 "LengthOfSong" = "Length: %@";
 
 /* Album view */
-"AlbumDetailInfoWithGenre" = "%@ | %lu songs";
-"AlbumDetailInfoWithoutGenre" = "%lu songs";
+"AlbumDetailInfoWithGenre" = "%@ | %lu %@"; /* ie. "Hiphop | 8 songs" */
+"AlbumDetailInfoWithoutGenre" = "%lu %@"; /* ie. "8 songs" */
 
 /* System shuffle modes */
 "Shuffle" = "Shuffle";

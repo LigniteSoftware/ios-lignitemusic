@@ -14,6 +14,7 @@
 
 @property id delegate;
 
+@property UIView *contentView;
 @property UIImageView *iconView;
 @property LMLabel *titleLabel, *subtitleLabel;
 
@@ -30,19 +31,33 @@
 	self.iconView.image = icon;
 }
 
-- (void)changeHighlightStatus:(BOOL)highlighted {
-	[UIView animateWithDuration:0.2 animations:^{
+- (void)changeHighlightStatus:(BOOL)highlighted animated:(BOOL)animated {
+	if(animated){
+		[UIView animateWithDuration:0.2 animations:^{
+			if(highlighted){
+				self.contentView.backgroundColor = [self.delegate tapColourForListEntry:self];
+				self.titleLabel.textColor = [UIColor whiteColor];
+				self.subtitleLabel.textColor = [UIColor whiteColor];
+			}
+			else{
+				self.contentView.backgroundColor = [UIColor clearColor];
+				self.titleLabel.textColor = [UIColor blackColor];
+				self.subtitleLabel.textColor = [UIColor blackColor];
+			}
+		}];
+	}
+	else{
 		if(highlighted){
-			self.backgroundColor = [self.delegate tapColourForListEntry:self];
+			self.contentView.backgroundColor = [self.delegate tapColourForListEntry:self];
 			self.titleLabel.textColor = [UIColor whiteColor];
 			self.subtitleLabel.textColor = [UIColor whiteColor];
 		}
 		else{
-			self.backgroundColor = [UIColor clearColor];
+			self.contentView.backgroundColor = [UIColor clearColor];
 			self.titleLabel.textColor = [UIColor blackColor];
 			self.subtitleLabel.textColor = [UIColor blackColor];
 		}
-	}];
+	}
 }
 
 - (void)tappedView {
@@ -50,6 +65,16 @@
 }
 
 - (void)setup {
+	self.contentView = [UIView newAutoLayoutView];
+	self.contentView.clipsToBounds = NO;
+	self.contentView.layer.masksToBounds = NO;
+	self.contentView.layer.cornerRadius = 8;
+	[self addSubview:self.contentView];
+	
+	[self.contentView autoCenterInSuperview];
+	[self.contentView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self];
+	[self.contentView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:0.9];
+	
 	UIImage *icon = [self.delegate iconForListEntry:self];
 	NSString *title = [self.delegate titleForListEntry:self];
 	NSString *subtitle = [self.delegate subtitleForListEntry:self];
@@ -57,12 +82,12 @@
 	self.iconView = [[UIImageView alloc]initWithImage:icon];
 	self.iconView.translatesAutoresizingMaskIntoConstraints = NO;
 	if(icon){
-		[self addSubview:self.iconView];
+		[self.contentView addSubview:self.iconView];
 		
-		[self.iconView autoAlignAxis:ALAxisHorizontal toSameAxisOfView:self];
-		[self.iconView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
-		[self.iconView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self withMultiplier:0.8];
-		[self.iconView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.8];
+		[self.iconView autoAlignAxis:ALAxisHorizontal toSameAxisOfView:self.contentView];
+		[self.iconView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.contentView];
+		[self.iconView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.contentView withMultiplier:0.8];
+		[self.iconView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.contentView withMultiplier:0.8];
 	}
 	
 	NSMutableArray *titleConstraints = [[NSMutableArray alloc]init];
@@ -73,12 +98,12 @@
 	self.titleLabel.textColor = [UIColor blackColor];
 	self.titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
 	if(title){
-		[self addSubview:self.titleLabel];
+		[self.contentView addSubview:self.titleLabel];
 		
-		NSLayoutConstraint *heightConstraint = [self.titleLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(1.0f/3.0f)];
-		NSLayoutConstraint *leadingConstraint = [self.titleLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:icon ? self.iconView : self withOffset:10];
-		NSLayoutConstraint *trailingConstraint = [self.titleLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self];
-		NSLayoutConstraint *centerConstraint = [self.titleLabel autoAlignAxis:ALAxisHorizontal toSameAxisOfView:self];
+		NSLayoutConstraint *heightConstraint = [self.titleLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.contentView withMultiplier:(1.0f/3.0f)];
+		NSLayoutConstraint *leadingConstraint = [self.titleLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:icon ? self.iconView : self.contentView withOffset:10];
+		NSLayoutConstraint *trailingConstraint = [self.titleLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.contentView];
+		NSLayoutConstraint *centerConstraint = [self.titleLabel autoAlignAxis:ALAxisHorizontal toSameAxisOfView:self.contentView];
 		
 		[titleConstraints addObject:heightConstraint];
 		[titleConstraints addObject:leadingConstraint];
@@ -92,9 +117,9 @@
 	self.subtitleLabel.textColor = [UIColor blackColor];
 	self.subtitleLabel.translatesAutoresizingMaskIntoConstraints = NO;
 	if(subtitle){
-		[self addSubview:self.subtitleLabel];
+		[self.contentView addSubview:self.subtitleLabel];
 		
-		[self.subtitleLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(1.0f/4.0f)];
+		[self.subtitleLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.contentView withMultiplier:(1.0f/4.0f)];
 		[self.subtitleLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.titleLabel];
 		[self.subtitleLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.titleLabel];
 		[self.subtitleLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.titleLabel];
@@ -103,7 +128,7 @@
 			NSLayoutConstraint *constraint = [titleConstraints objectAtIndex:i];
 			if(constraint.firstAttribute == NSLayoutAttributeCenterY){
 				[titleConstraints removeObject:constraint];
-				[self removeConstraint:constraint];
+				[self.contentView removeConstraint:constraint];
 				break;
 			}
 		}
@@ -111,20 +136,15 @@
 		NSLayoutConstraint *titleTopConstraint = [NSLayoutConstraint constraintWithItem:self.titleLabel
 																			  attribute:NSLayoutAttributeBottom
 																			  relatedBy:NSLayoutRelationEqual
-																				 toItem:self
+																				 toItem:self.contentView
 																			  attribute:NSLayoutAttributeCenterY
 																			 multiplier:1.0
 																			   constant:0];
-		[self addConstraint:titleTopConstraint];
+		[self.contentView addConstraint:titleTopConstraint];
 	}
 	
-	self.clipsToBounds = NO;
-	self.layer.masksToBounds = NO;
-	self.layer.cornerRadius = 8;
-	self.userInteractionEnabled = YES;
-	
 	UITapGestureRecognizer *tappedViewRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tappedView)];
-	[self addGestureRecognizer:tappedViewRecognizer];
+	[self.contentView addGestureRecognizer:tappedViewRecognizer];
 }
 
 - (id)initWithDelegate:(id)delegate {

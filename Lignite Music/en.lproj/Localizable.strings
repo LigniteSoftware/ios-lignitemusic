@@ -29,8 +29,11 @@
  Thanks, and have fun!
  */
 
+/* General */
 "SongXofX" = "Song %d of %d";
 "SongX" = "Song %d";
+"Song" = "song";
+"Songs" = "songs";
 
 /* 
  Durations are formatted like this:
@@ -47,8 +50,8 @@
 "LengthOfSong" = "Length: %@";
 
 /* Album view */
-"AlbumDetailInfoWithGenre" = "%@ | %lu songs";
-"AlbumDetailInfoWithoutGenre" = "%lu songs";
+"AlbumDetailInfoWithGenre" = "%@ | %lu %@"; /* ie. "Hiphop | 8 songs" */
+"AlbumDetailInfoWithoutGenre" = "%lu %@"; /* ie. "8 songs" */
 
 /* System shuffle modes */
 "Shuffle" = "Shuffle";

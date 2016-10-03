@@ -25,9 +25,9 @@
 @implementation LMTableView
 
 - (id)init {
-	self = [super initWithFrame:CGRectMake(0, 0, 0, 0) style:UITableViewStyleGrouped];
+	self = [super initWithFrame:CGRectMake(0, 0, 0, 0) style:UITableViewStylePlain];
 	if(self){
-		
+	
 	}
 	else{
 		NSLog(@"Error creating LMTableView");
@@ -74,12 +74,34 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
 //	NSLog(@"Asked for spacing");
+	if(section == 0){
+		return self.calculatedSpacing + [self.subviewDelegate topSpacingForTableView:self];
+	}
 	return self.calculatedSpacing;
 }
 
 - (NSString*)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
 //	NSLog(@"Asked for header title");
 	return nil;
+}
+
+- (UIView*)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+	CGRect frame = CGRectMake(0, 0, self.frame.size.width, [self tableView:self heightForHeaderInSection:section]);
+	NSLog(@"%lu frame %@", section, NSStringFromCGRect(frame));
+	UIView *view = [[UIView alloc] initWithFrame:frame];
+	view.backgroundColor = [UIColor whiteColor];
+	
+	if([self.subviewDelegate dividerForTableView:self] && section != 0){
+		uint8_t dividerHeight = 1;
+		float frameWidth = (frame.size.width * 0.9);
+		float frameX = (frame.size.width-frameWidth)/2;
+		float frameY = frame.size.height/2 - dividerHeight/2;
+		UIView *dividerView = [[UIView alloc]initWithFrame:CGRectMake(frameX, frameY, frameWidth, dividerHeight)];
+		dividerView.backgroundColor = [UIColor colorWithRed:0.82 green:0.82 blue:0.82 alpha:1.0];
+		[view addSubview:dividerView];
+	}
+	
+	return view;
 }
 
 - (void)prepareForUse {
@@ -89,8 +111,6 @@
 		return;
 	}
 	
-	NSLog(@"Sup");
-	
 	if(self.loadedStatus == 0){
 		self.delegate = self;
 		self.dataSource = self;
@@ -99,7 +119,7 @@
 		
 		float delegateHeight = [self.subviewDelegate sizingFactorialRelativeToWindowForTableView:self height:YES];
 		self.calculatedHeight = ceilf(delegateHeight*WINDOW_FRAME.size.height);
-		self.calculatedSpacing = ceilf(WINDOW_FRAME.size.height*(delegateHeight/4.0));
+		self.calculatedSpacing = ceilf(self.calculatedHeight*(delegateHeight/2.0));
 		
 		self.loadedStatus = 1;
 	}
@@ -118,6 +138,12 @@
 		for(int i = 0; i < self.amountOfItemsRequired; i++){
 			[self registerClass:[LMTableViewCell class] forCellReuseIdentifier:[NSString stringWithFormat:@"ShitPost%d", i]];
 		}
+		
+		//http://stackoverflow.com/questions/1074006/is-it-possible-to-disable-floating-headers-in-uitableview-with-uitableviewstylep
+		CGFloat dummyViewHeight = 100;
+		UIView *dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, dummyViewHeight)];
+		self.tableHeaderView = dummyView;
+		self.contentInset = UIEdgeInsetsMake(-dummyViewHeight, 0, 0, 0);
 		
 		self.loadedStatus = 2;
 	}

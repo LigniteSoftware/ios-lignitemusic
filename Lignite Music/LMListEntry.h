@@ -24,7 +24,7 @@
 
 - (void)reloadContents;
 
-- (void)changeHighlightStatus:(BOOL)highlighted;
+- (void)changeHighlightStatus:(BOOL)highlighted animated:(BOOL)animated;
 
 - (void)setup;
 

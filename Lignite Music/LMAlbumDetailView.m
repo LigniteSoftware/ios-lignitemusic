@@ -25,6 +25,7 @@
 @property LMButton *playButton;
 @property LMLabel *albumTitleView, *albumArtistView, *albumInfoView;
 @property NSMutableArray *itemArray;
+@property NSInteger currentlyHighlighted;
 
 @end
 
@@ -33,7 +34,29 @@
 - (id)prepareSubviewAtIndex:(NSUInteger)index {
 	LMListEntry *entry = [self.itemArray objectAtIndex:index % self.itemArray.count];
 	entry.collectionIndex = index;
+	
+	[entry changeHighlightStatus:self.currentlyHighlighted == entry.collectionIndex animated:NO];
+	
 	[entry reloadContents];
+	return entry;
+}
+
+- (float)sizingFactorialRelativeToWindowForTableView:(LMTableView *)tableView height:(BOOL)height {
+	if(height){
+		return (1.0f/8.0f);
+	}
+	return 0.9;
+}
+
+- (LMListEntry*)listEntryForIndex:(NSInteger)index {
+	LMListEntry *entry = nil;
+	for(int i = 0; i < self.itemArray.count; i++){
+		LMListEntry *indexEntry = [self.itemArray objectAtIndex:i];
+		if(indexEntry.collectionIndex == index){
+			entry = indexEntry;
+			break;
+		}
+	}
 	return entry;
 }
 
@@ -49,13 +72,6 @@
 	return indexOfEntry;
 }
 
-- (float)sizingFactorialRelativeToWindowForTableView:(LMTableView *)tableView height:(BOOL)height {
-	if(height){
-		return (1.0f/8.0f);
-	}
-	return 0.9;
-}
-
 - (float)topSpacingForTableView:(LMTableView *)tableView {
 	return 15.0f;
 }
@@ -69,14 +85,18 @@
 	
 	NSLog(@"%@", self.albumCollection.representativeItem.artist);
 	
-	for(int i = 0; i < self.albumCollection.count; i++){
-		//[(LMListEntry*)[self.itemArray objectAtIndex:i] changeHighlightStatus:(entry.collectionIndex == i)];
+	LMListEntry *previousHighlightedEntry = [self listEntryForIndex:self.currentlyHighlighted];
+	if(previousHighlightedEntry){
+		[previousHighlightedEntry changeHighlightStatus:NO animated:YES];
 	}
+	
+	[entry changeHighlightStatus:YES animated:YES];
+	self.currentlyHighlighted = entry.collectionIndex;
 	
 	MPMusicPlayerController *controller = [MPMusicPlayerController systemMusicPlayer];
 	[controller stop];
-	[controller setNowPlayingItem:item];
 	[controller setQueueWithItemCollection:self.albumCollection];
+	[controller setNowPlayingItem:item];
 	[controller play];
 }
 
@@ -121,6 +141,8 @@
 }
 
 - (void)setup {
+	self.currentlyHighlighted = -1;
+	
 	UIImage *albumArtImage = [[self.albumCollection.representativeItem artwork] imageWithSize:CGSizeMake(500, 500)];
 	self.albumArtView = [[UIImageView alloc] initWithImage:albumArtImage];
 	self.albumArtView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -197,7 +219,12 @@
 	//The details about the song.
 	self.albumInfoView = [[LMLabel alloc]init];
 	MPMediaItem *representativeItem = self.albumCollection.representativeItem;
-	self.albumInfoView.text = [NSString stringWithFormat:NSLocalizedString(@"AlbumDetailInfoWithGenre", nil), representativeItem.genre, self.albumCollection.count];
+	if(representativeItem.genre){
+		self.albumInfoView.text = [NSString stringWithFormat:NSLocalizedString(@"AlbumDetailInfoWithGenre", nil), representativeItem.genre, self.albumCollection.count, NSLocalizedString(self.albumCollection.count == 1 ? @"Song" : @"Songs", nil)];
+	}
+	else{
+		self.albumInfoView.text = [NSString stringWithFormat:NSLocalizedString(@"AlbumDetailInfoWithoutGenre", nil), self.albumCollection.count, NSLocalizedString(self.albumCollection.count == 1 ? @"Song" : @"Songs", nil)];
+	}
 	self.albumInfoView.translatesAutoresizingMaskIntoConstraints = NO;
 	self.albumInfoView.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:30.0f];
 	self.albumInfoView.textAlignment = NSTextAlignmentLeft;
