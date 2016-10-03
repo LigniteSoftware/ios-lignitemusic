@@ -10,15 +10,15 @@
 #import <MediaPlayer/MediaPlayer.h>
 #import "LMAlbumDetailView.h"
 #import "LMNowPlayingViewController.h"
-#import "LMAdaptiveScrollView.h"
 #import "LMAlbumViewItem.h"
 #import "LMAlbumViewController.h"
 #import "LMButton.h"
+#import "LMTableView.h"
+#import "LMTableViewCell.h"
 
-@interface LMAlbumViewController () <LMAdaptiveScrollViewDelegate, LMAlbumViewItemDelegate>
+@interface LMAlbumViewController () <LMAlbumViewItemDelegate, LMTableViewSubviewDelegate>
 
-@property LMAdaptiveScrollView *rootScrollView;
-@property UILabel *titleLabel, *subtitleLabel;
+@property LMTableView *rootTableView;
 @property NSMutableArray *albumsItemArray;
 @property NSUInteger albumsCount;
 @property MPMediaQuery *everything;
@@ -70,9 +70,9 @@
 }
 
 /**
- See LMAdaptiveScrollViewDelegate for documentation on this function.
+ See LMTableView for documentation on this function.
  */
-- (float)sizingFactorialRelativeToWindowForAdaptiveScrollView:(LMAdaptiveScrollView*)scrollView height:(BOOL)height {
+- (float)sizingFactorialRelativeToWindowForTableView:(LMTableView *)tableView height:(BOOL)height {
 	if(height){
 		return 0.4;
 	}
@@ -80,34 +80,63 @@
 }
 
 /**
- See LMAdaptiveScrollViewDelegate for documentation on this function.
+ See LMTableView for documentation on this function.
  */
-- (float)topSpacingForAdaptiveScrollView:(LMAdaptiveScrollView*)scrollView {
+- (float)topSpacingForTableView:(LMTableView *)tableView {
 	return 50;
 }
 
 /**
- See LMAdaptiveScrollViewDelegate for documentation on this function.
+ See LMTableView for documentation on this function.
  */
-- (BOOL)dividerForAdaptiveScrollView:(LMAdaptiveScrollView*)scrollView {
+- (BOOL)dividerForTableView:(LMTableView *)tableView {
 	return false;
 }
 
 /**
- See LMAdaptiveScrollViewDelegate for documentation on this function.
+ See LMTableView for documentation on this function.
  */
-- (void)prepareSubview:(id)subview forIndex:(NSUInteger)index subviewPreviouslyLoaded:(BOOL)hasLoaded {
-	LMAlbumViewItem *item = (LMAlbumViewItem*)subview;
-	item.collectionIndex = index;
-	
-	if(!hasLoaded){
-		if(!self.everything){
-			NSLog(@"self.everything doesn't exist!");
-			return;
-		}
-		MPMediaItemCollection *collection = [self.everything.collections objectAtIndex:index];
-		[item setupWithAlbumCount:[collection count] andDelegate:self];
+- (void)totalAmountOfSubviewsRequired:(NSUInteger)amount forTableView:(LMTableView *)tableView {
+	if(self.hasLoadedInitialItems){
+		return;
 	}
+	
+	NSLog(@"Everything exists %d", (self.everything != nil) ? 1 : 0);
+	
+	for(int i = 0; i < amount; i++){
+		MPMediaItemCollection *collection = [self.everything.collections objectAtIndex:i];
+		LMAlbumViewItem *newItem = [[LMAlbumViewItem alloc]initWithMediaItem:collection.representativeItem];
+		[newItem setupWithAlbumCount:collection.count andDelegate:self];
+		newItem.userInteractionEnabled = YES;
+		[self.albumsItemArray addObject:newItem];
+		NSLog(@"Loaded item %d", i);
+	}
+	self.hasLoadedInitialItems = YES;
+}
+
+/**
+ See LMTableView for documentation on this function.
+ */
+- (id)prepareSubviewAtIndex:(NSUInteger)index {
+//	LMAlbumViewItem *item = (LMAlbumViewItem*)subview;
+//	item.collectionIndex = index;
+//	
+//	if(!hasLoaded){
+//		if(!self.everything){
+//			NSLog(@"self.everything doesn't exist!");
+//			return;
+//		}
+//		MPMediaItemCollection *collection = [self.everything.collections objectAtIndex:index];
+//		[item setupWithAlbumCount:[collection count] andDelegate:self];
+//	}
+	
+	NSLog(@"%lu and %lu", self.albumsItemArray.count, index % self.albumsItemArray.count);
+	
+	LMAlbumViewItem *albumViewItem = [self.albumsItemArray objectAtIndex:index % self.albumsItemArray.count];
+	MPMediaItemCollection *collection = [self.everything.collections objectAtIndex:index];
+	[albumViewItem updateContentsWithMediaItem:[collection representativeItem] andNumberOfItems:collection.count];
+	
+	return albumViewItem;
 }
 
 /**
@@ -129,30 +158,29 @@
 	
 	NSLog(@"Logging items from a generic query...");
 	
-	for(int i = 0; i < self.albumsCount; i++){
-		MPMediaItemCollection *collection = [self.everything.collections objectAtIndex:i];
-		LMAlbumViewItem *newItem = [[LMAlbumViewItem alloc]initWithMediaItem:collection.representativeItem];
-		newItem.userInteractionEnabled = YES;
-		[self.albumsItemArray addObject:newItem];
-	}
+	self.rootTableView = [[LMTableView alloc]init];
+	self.rootTableView.amountOfItemsTotal = self.albumsCount;
+	self.rootTableView.subviewDelegate = self;
+	[self.rootTableView prepareForUse];
+	[self.view addSubview:self.rootTableView];
 	
-	CGRect currentFrame = self.view.frame;
-	CGRect rootFrame = currentFrame;
-	self.rootScrollView = [[LMAdaptiveScrollView alloc]initWithFrame:rootFrame];
-	self.rootScrollView.subviewArray = self.albumsItemArray;
-	self.rootScrollView.subviewDelegate = self;
-	self.rootScrollView.backgroundColor = [UIColor whiteColor];
-	//[self.rootScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height*2)];
-	[self.view addSubview:self.rootScrollView];
+	[self.rootTableView autoCenterInSuperview];
+	[self.rootTableView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+	[self.rootTableView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:0];
+	[self.rootTableView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+	[self.rootTableView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 	
-//	for(int i = 0; i < self.albumsCount; i++){
-//		LMAlbumViewItem *item = [self.albumsItemArray objectAtIndex:i];
-//		//Reload scroll view items...
-//		//[self prepareSubview:item forIndex:i];
-//	}
-	
-	[self.rootScrollView reloadContentSizeWithIndex:self.albumsCount-1];
-	[self.rootScrollView layoutSubviews];
+//	CGRect currentFrame = self.view.frame;
+//	CGRect rootFrame = currentFrame;
+//	self.rootScrollView = [[LMAdaptiveScrollView alloc]initWithFrame:rootFrame];
+//	self.rootScrollView.subviewArray = self.albumsItemArray;
+//	self.rootScrollView.subviewDelegate = self;
+//	self.rootScrollView.backgroundColor = [UIColor whiteColor];
+//	//[self.rootScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height*2)];
+//	[self.view addSubview:self.rootScrollView];
+//	
+//	[self.rootScrollView reloadContentSizeWithIndex:self.albumsCount-1];
+//	[self.rootScrollView layoutSubviews];
 	
 	NSTimeInterval endingTime = [[NSDate date] timeIntervalSince1970];
 	

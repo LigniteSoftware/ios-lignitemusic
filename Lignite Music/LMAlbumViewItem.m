@@ -12,6 +12,7 @@
 #import "LMButton.h"
 #import "LMLabel.h"
 #import "LMAlbumCountLabel.h"
+#import "LMOperationQueue.h"
 
 @interface LMAlbumViewItem() <LMButtonDelegate>
 
@@ -21,6 +22,7 @@
 @property LMButton *playButton;
 @property CAShapeLayer *circleLayer;
 @property id itemDelegate;
+@property LMOperationQueue *queue;
 
 @end
 
@@ -36,6 +38,34 @@
 	if(self.itemDelegate){
 		[self.itemDelegate clickedAlbumViewItem:self];
 	}
+}
+
+- (void)updateContentsWithMediaItem:(MPMediaItem*)item andNumberOfItems:(NSInteger)numberOfItems {
+	if(!self.queue){
+		self.queue = [[LMOperationQueue alloc] init];
+	}
+		
+	[self.queue cancelAllOperations];
+	
+	NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
+		UIImage *image = [item.artwork imageWithSize:CGSizeMake(500, 500)];
+		dispatch_sync(dispatch_get_main_queue(), ^{
+			if(operation.cancelled){
+				NSLog(@"Rejecting.");
+				return;
+			}
+			self.albumImageView.image = image;
+			NSLog(@"Done.");
+		});
+	}];
+
+	[self.queue addOperation:operation];
+	
+	self.albumTitleView.text = item.albumTitle;
+	self.albumArtistView.text = item.artist;
+	self.albumCountView.text = [NSString stringWithFormat:@"%lu", (unsigned long)numberOfItems];
+	
+	self.item = item;
 }
 
 /**
@@ -170,7 +200,7 @@
  */
 - (id)initWithMediaItem:(MPMediaItem*)item {
     self = [super init];
-    //self.layer.backgroundColor = [UIColor blueColor].CGColor;
+//    self.layer.backgroundColor = [UIColor greenColor].CGColor;
     if(self){
         self.item = item;
 	}

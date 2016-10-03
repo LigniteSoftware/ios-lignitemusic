@@ -22,6 +22,7 @@
 @property MPMediaItem *item;
 @property NSUInteger collectionIndex;
 
+- (void)updateContentsWithMediaItem:(MPMediaItem*)item andNumberOfItems:(NSInteger)numberOfItems;
 - (void)setupWithAlbumCount:(NSUInteger)numberOfItems andDelegate:(id)delegate;
 - (id)initWithMediaItem:(MPMediaItem*)item;
 
