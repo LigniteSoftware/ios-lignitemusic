@@ -20,5 +20,6 @@
 
 @property LMOperationQueue* queue;
 @property id subview;
+@property BOOL didSetupConstraints;
 
 @end

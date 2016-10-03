@@ -22,10 +22,14 @@
 
 @interface LMListEntry : UIView
 
+- (void)reloadContents;
+
 - (void)changeHighlightStatus:(BOOL)highlighted;
 
 - (void)setup;
 
 - (id)initWithDelegate:(id)delegate;
+
+@property NSInteger collectionIndex;
 
 @end

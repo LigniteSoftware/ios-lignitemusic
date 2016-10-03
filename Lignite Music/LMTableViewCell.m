@@ -12,8 +12,6 @@
 
 @interface LMTableViewCell()
 
-@property BOOL didSetupConstraints;
-
 @end
 
 @implementation LMTableViewCell

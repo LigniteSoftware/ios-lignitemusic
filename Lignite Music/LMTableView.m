@@ -15,7 +15,7 @@
 
 @property MPMediaQuery *everything;
 @property NSUInteger amountOfItemsRequired;
-@property BOOL loaded;
+@property uint8_t loadedStatus;
 
 @property float calculatedHeight;
 @property float calculatedSpacing;
@@ -36,29 +36,12 @@
 }
 
 - (void)configureCell:(LMTableViewCell*)cell forRowAtIndexPath:(NSIndexPath*)indexPath {
-//	if(!cell.queue){
-//		cell.queue = [[LMOperationQueue alloc] init];
-//	}
-//	
-//	[cell.queue cancelAllOperations];
-//		
-//	NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
-//		dispatch_sync(dispatch_get_main_queue(), ^{
-//			if(operation.cancelled){
-//				NSLog(@"Rejecting.");
-//				return;
-//			}
-//			cell.everything = self.everything;
-//			[cell setNeedsUpdateConstraints];
-//			[cell updateConstraintsIfNeeded];
-//		});
-//	}];
-//	
-//	[cell.queue addOperation:operation];
-
 	cell.subview = [self.subviewDelegate prepareSubviewAtIndex:indexPath.section];
-	[cell setNeedsUpdateConstraints];
-	[cell updateConstraintsIfNeeded];
+	if(!cell.didSetupConstraints){
+		cell.selectionStyle = UITableViewCellSelectionStyleNone;
+		[cell setNeedsUpdateConstraints];
+		[cell updateConstraintsIfNeeded];
+	}
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -69,9 +52,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 //	NSLog(@"Loading %ld", (indexPath.section % self.amountOfItemsRequired));
 	LMTableViewCell *cell = (LMTableViewCell*)[tableView dequeueReusableCellWithIdentifier:[NSString stringWithFormat:@"ShitPost%ld", (indexPath.section % self.amountOfItemsRequired)]];
-	
-	NSLog(@"Cell frame %@", NSStringFromCGRect(cell.contentView.frame));
-	
+		
 	//[self configureCell:cell forRowAtIndexPath:indexPath];
 	return cell;
 }
@@ -108,7 +89,9 @@
 		return;
 	}
 	
-	if(!self.loaded){
+	NSLog(@"Sup");
+	
+	if(self.loadedStatus == 0){
 		self.delegate = self;
 		self.dataSource = self;
 		self.backgroundColor = [UIColor whiteColor];
@@ -117,7 +100,17 @@
 		float delegateHeight = [self.subviewDelegate sizingFactorialRelativeToWindowForTableView:self height:YES];
 		self.calculatedHeight = ceilf(delegateHeight*WINDOW_FRAME.size.height);
 		self.calculatedSpacing = ceilf(WINDOW_FRAME.size.height*(delegateHeight/4.0));
-		self.amountOfItemsRequired = (WINDOW_FRAME.size.height/self.calculatedHeight)+2;
+		
+		self.loadedStatus = 1;
+	}
+}
+
+- (void)layoutSubviews {	
+	if(self.loadedStatus == 1){
+		self.amountOfItemsRequired = (self.frame.size.height/self.calculatedHeight)+2;
+		if(self.amountOfItemsRequired > self.amountOfItemsTotal){
+			self.amountOfItemsRequired = self.amountOfItemsTotal;
+		}
 		[self.subviewDelegate totalAmountOfSubviewsRequired:self.amountOfItemsRequired forTableView:self];
 		
 		NSLog(@"\n--- LMTableView ---\nCalculated height: %f\nCalculated spacing: %f\nAmount of items total: %lu\nAmount of items required: %lu\n--- End ---", self.calculatedHeight, self.calculatedSpacing, self.amountOfItemsTotal, self.amountOfItemsRequired);
@@ -126,8 +119,10 @@
 			[self registerClass:[LMTableViewCell class] forCellReuseIdentifier:[NSString stringWithFormat:@"ShitPost%d", i]];
 		}
 		
-		self.loaded = YES;
+		self.loadedStatus = 2;
 	}
+	
+	[super layoutSubviews];
 }
 
 /*

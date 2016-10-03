@@ -131,8 +131,9 @@
 	
 	LMAlbumViewItem *albumViewItem = [self.albumsItemArray objectAtIndex:index % self.albumsItemArray.count];
 	MPMediaItemCollection *collection = [self.everything.collections objectAtIndex:index];
-	[albumViewItem updateContentsWithMediaItem:[collection representativeItem] andNumberOfItems:collection.count];
-		
+	[albumViewItem updateContentsWithMediaItem:collection.representativeItem andNumberOfItems:collection.count];
+	albumViewItem.collectionIndex = index;
+	
 	return albumViewItem;
 }
 

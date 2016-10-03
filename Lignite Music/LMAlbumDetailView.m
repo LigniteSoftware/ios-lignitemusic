@@ -8,7 +8,7 @@
 
 #import <PureLayout/PureLayout.h>
 #import <MediaPlayer/MediaPlayer.h>
-#import "LMAdaptiveScrollView.h"
+#import "LMTableView.h"
 #import "LMListEntry.h"
 #import "LMButton.h"
 #import "LMLabel.h"
@@ -16,23 +16,31 @@
 #import "LMExtras.h"
 #import "LMNowPlayingViewController.h"
 
-@interface LMAlbumDetailView() <LMButtonDelegate, LMListEntryDelegate, LMAdaptiveScrollViewDelegate>
+@interface LMAlbumDetailView() <LMButtonDelegate, LMListEntryDelegate, LMTableViewSubviewDelegate>
 
 @property MPMediaItemCollection *albumCollection;
 @property UIImageView *albumArtView;
 @property UIView *textBackgroundView, *controlView;
-@property LMAdaptiveScrollView *songListView;
+@property LMTableView *songListTableView;
 @property LMButton *playButton;
 @property LMLabel *albumTitleView, *albumArtistView, *albumInfoView;
+@property NSMutableArray *itemArray;
 
 @end
 
 @implementation LMAlbumDetailView
 
+- (id)prepareSubviewAtIndex:(NSUInteger)index {
+	LMListEntry *entry = [self.itemArray objectAtIndex:index % self.itemArray.count];
+	entry.collectionIndex = index;
+	[entry reloadContents];
+	return entry;
+}
+
 - (int)indexOfListEntry:(LMListEntry*)entry {
 	int indexOfEntry = -1;
-	for(int i = 0; i < self.songListView.subviewArray.count; i++){
-		LMListEntry *subviewEntry = (LMListEntry*)[self.songListView.subviewArray objectAtIndex:i];
+	for(int i = 0; i < self.itemArray.count; i++){
+		LMListEntry *subviewEntry = (LMListEntry*)[self.itemArray objectAtIndex:i];
 		if([entry isEqual:subviewEntry]){
 			indexOfEntry = i;
 			break;
@@ -41,37 +49,28 @@
 	return indexOfEntry;
 }
 
-- (float)sizingFactorialRelativeToWindowForAdaptiveScrollView:(LMAdaptiveScrollView*)scrollView height:(BOOL)height {
+- (float)sizingFactorialRelativeToWindowForTableView:(LMTableView *)tableView height:(BOOL)height {
 	if(height){
 		return (1.0f/8.0f);
 	}
 	return 0.9;
 }
 
-- (float)topSpacingForAdaptiveScrollView:(LMAdaptiveScrollView*)scrollView {
+- (float)topSpacingForTableView:(LMTableView *)tableView {
 	return 15.0f;
 }
 
-- (BOOL)dividerForAdaptiveScrollView:(LMAdaptiveScrollView*)scrollView {
+- (BOOL)dividerForTableView:(LMTableView *)tableView {
 	return true;
 }
 
-- (void)prepareSubview:(id)subview forIndex:(NSUInteger)index subviewPreviouslyLoaded:(BOOL)hasLoaded {
-	LMListEntry *entry = (LMListEntry*)subview;
-	
-	if(!hasLoaded){
-		[entry setup];
-	}
-}
-
 - (void)tappedListEntry:(LMListEntry*)entry {
-	int index = [self indexOfListEntry:entry];
-	MPMediaItem *item = [self.albumCollection.items objectAtIndex:index];
+	MPMediaItem *item = [self.albumCollection.items objectAtIndex:entry.collectionIndex];
 	
 	NSLog(@"%@", self.albumCollection.representativeItem.artist);
 	
 	for(int i = 0; i < self.albumCollection.count; i++){
-		[(LMListEntry*)[self.songListView.subviewArray objectAtIndex:i] changeHighlightStatus:(index == i)];
+		//[(LMListEntry*)[self.itemArray objectAtIndex:i] changeHighlightStatus:(entry.collectionIndex == i)];
 	}
 	
 	MPMusicPlayerController *controller = [MPMusicPlayerController systemMusicPlayer];
@@ -86,20 +85,12 @@
 }
 
 - (NSString*)titleForListEntry:(LMListEntry*)entry {
-	int indexOfEntry = [self indexOfListEntry:entry];
-	if(indexOfEntry < 0){
-		return NSLocalizedString(@"GeneralError", nil);
-	}
-	MPMediaItem *item = [self.albumCollection.items objectAtIndex:indexOfEntry];
+	MPMediaItem *item = [self.albumCollection.items objectAtIndex:entry.collectionIndex];
 	return item.title;
 }
 
 - (NSString*)subtitleForListEntry:(LMListEntry*)entry {
-	int indexOfEntry = [self indexOfListEntry:entry];
-	if(indexOfEntry < 0){
-		return NSLocalizedString(@"GeneralError", nil);
-	}
-	MPMediaItem *item = [self.albumCollection.items objectAtIndex:indexOfEntry];
+	MPMediaItem *item = [self.albumCollection.items objectAtIndex:entry.collectionIndex];
 	return [NSString stringWithFormat:NSLocalizedString(@"LengthOfSong", nil), [LMNowPlayingViewController durationStringTotalPlaybackTime:item.playbackDuration]];
 }
 
@@ -115,6 +106,18 @@
 	self.userInteractionEnabled = NO;
 	self.hidden = YES;
 	[self removeFromSuperview];
+}
+
+- (void)totalAmountOfSubviewsRequired:(NSUInteger)amount forTableView:(LMTableView *)tableView {
+	if(!self.itemArray){
+		self.itemArray = [NSMutableArray new];
+		for(int i = 0; i < amount; i++){
+			LMListEntry *listEntry = [[LMListEntry alloc]initWithDelegate:self];
+			listEntry.collectionIndex = i;
+			[listEntry setup];
+			[self.itemArray addObject:listEntry];
+		}
+	}
 }
 
 - (void)setup {
@@ -207,22 +210,17 @@
 	[self.albumInfoView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.albumTitleView];
 	[self.albumInfoView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.textBackgroundView withMultiplier:0.20];
 	
-	self.songListView = [[LMAdaptiveScrollView alloc]init];
-	self.songListView.translatesAutoresizingMaskIntoConstraints = NO;
-	NSMutableArray *itemArray = [NSMutableArray new];
-	for(int i = 0; i < self.albumCollection.count; i++){
-		LMListEntry *listEntry = [[LMListEntry alloc]initWithDelegate:self];
-		[itemArray addObject:listEntry];
-	}
+	self.songListTableView = [[LMTableView alloc]init];
+	self.songListTableView.translatesAutoresizingMaskIntoConstraints = NO;
+	self.songListTableView.amountOfItemsTotal = self.albumCollection.count;
+	self.songListTableView.subviewDelegate = self;
+	[self.songListTableView prepareForUse];
+	[self addSubview:self.songListTableView];
 	
-	self.songListView.subviewArray = itemArray;
-	self.songListView.subviewDelegate = self;
-	[self addSubview:self.songListView];
-	
-	[self.songListView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.textBackgroundView];
-	[self.songListView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
-	[self.songListView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
-	[self.songListView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self];
+	[self.songListTableView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.textBackgroundView];
+	[self.songListTableView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
+	[self.songListTableView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
+	[self.songListTableView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self];
 	
 	self.textBackgroundView.layer.shadowColor = [UIColor blackColor].CGColor;
 	self.textBackgroundView.layer.shadowOpacity = 0.5f;
@@ -230,7 +228,7 @@
 	self.textBackgroundView.layer.shadowOffset = CGSizeMake(0, 0);
 	self.textBackgroundView.layer.masksToBounds = NO;
 	
-	[self insertSubview:self.textBackgroundView aboveSubview:self.songListView];
+	[self insertSubview:self.textBackgroundView aboveSubview:self.songListTableView];
 	
 	UIPinchGestureRecognizer *pinchGesture = [[UIPinchGestureRecognizer alloc]initWithTarget:self action:@selector(pinchedView)];
 	[self addGestureRecognizer:pinchGesture];

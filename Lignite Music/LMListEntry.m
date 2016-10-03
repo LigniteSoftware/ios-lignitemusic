@@ -21,6 +21,15 @@
 
 @implementation LMListEntry
 
+- (void)reloadContents {
+	UIImage *icon = [self.delegate iconForListEntry:self];
+	NSString *title = [self.delegate titleForListEntry:self];
+	NSString *subtitle = [self.delegate subtitleForListEntry:self];
+	self.titleLabel.text = title;
+	self.subtitleLabel.text = subtitle;
+	self.iconView.image = icon;
+}
+
 - (void)changeHighlightStatus:(BOOL)highlighted {
 	[UIView animateWithDuration:0.2 animations:^{
 		if(highlighted){
