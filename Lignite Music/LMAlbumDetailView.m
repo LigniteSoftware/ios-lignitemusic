@@ -187,8 +187,8 @@
 			self.textBackgroundConstraint.constant = self.albumArtView.frame.size.height-2-self.textBackgroundView.frame.origin.y;
 		}
 	}
-	else if(totalTranslation+sqrt(-totalTranslation) < -self.frame.size.height/4){
-		self.textBackgroundConstraint.constant = (-self.frame.size.height/4)-sqrt(-totalTranslation);
+	else if(totalTranslation < -self.frame.size.height/4){
+		self.textBackgroundConstraint.constant = (-self.frame.size.height/4)-sqrt(-((self.frame.size.height/4)+totalTranslation));
 	}
 	else{
 		self.textBackgroundConstraint.constant = totalTranslation;

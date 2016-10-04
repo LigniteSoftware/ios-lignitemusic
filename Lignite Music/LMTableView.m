@@ -50,7 +50,7 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-//	NSLog(@"Loading %ld", (indexPath.section % self.amountOfItemsRequired));
+	NSLog(@"Loading %ld", (indexPath.section % self.amountOfItemsRequired));
 	LMTableViewCell *cell = (LMTableViewCell*)[tableView dequeueReusableCellWithIdentifier:[NSString stringWithFormat:@"ShitPost%ld", (indexPath.section % self.amountOfItemsRequired)]];
 		
 	//[self configureCell:cell forRowAtIndexPath:indexPath];
@@ -124,9 +124,16 @@
 	}
 }
 
-- (void)layoutSubviews {	
+- (void)updateConstraints {
+	NSLog(@"%@ compared to contents %@", NSStringFromCGSize(self.frame.size), NSStringFromCGSize(self.contentSize));
+	
+	[super updateConstraints];
+}
+
+- (void)layoutSubviews {
+	NSLog(@"%@ compared to contents %@", NSStringFromCGSize(self.frame.size), NSStringFromCGSize(self.contentSize));
 	if(self.loadedStatus == 1){
-		self.amountOfItemsRequired = (self.frame.size.height/self.calculatedHeight)+2;
+		self.amountOfItemsRequired = (self.frame.size.height/self.calculatedHeight)*(WINDOW_FRAME.size.height/self.frame.size.height) + 1;
 		if(self.amountOfItemsRequired > self.amountOfItemsTotal){
 			self.amountOfItemsRequired = self.amountOfItemsTotal;
 		}
