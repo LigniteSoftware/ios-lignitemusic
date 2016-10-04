@@ -21,7 +21,7 @@
 
 @property MPMediaItemCollection *albumCollection;
 @property UIImageView *albumArtView;
-@property UIView *textBackgroundView, *controlView;
+@property UIView *textBackgroundView, *controlView, *gestureRecognizerView;
 @property LMSongDetailControlView *controlBackgroundView;
 @property LMTableView *songListTableView;
 @property LMButton *playButton;
@@ -146,27 +146,68 @@
 	}
 }
 
+- (void)moveContentsUp {
+	[self.textBackgroundView layoutIfNeeded];
+	self.textBackgroundConstraint.constant = -self.frame.size.height/4;
+	self.currentPoint = CGPointMake(self.originalPoint.x, self.originalPoint.y-(self.frame.size.height/4));
+	[UIView animateWithDuration:0.5 delay:0
+		 usingSpringWithDamping:0.4 initialSpringVelocity:0.0f
+						options:0 animations:^{
+							[self layoutIfNeeded];
+						} completion:nil];
+}
+
+- (void)moveContentsDown {
+	[self.textBackgroundView layoutIfNeeded];
+	self.textBackgroundConstraint.constant = 0;
+	self.currentPoint = self.originalPoint;
+	[UIView animateWithDuration:0.5 delay:0
+		 usingSpringWithDamping:0.4 initialSpringVelocity:0.0f
+						options:0 animations:^{
+							[self layoutIfNeeded];
+						} completion:nil];
+}
+
 - (IBAction)handlePan:(UIPanGestureRecognizer *)recognizer {
 	CGPoint translation = [recognizer translationInView:self];
 	
-	NSLog(@"Translation %@", NSStringFromCGPoint(translation));
+	if(self.originalPoint.y == 0){
+		self.originalPoint = self.textBackgroundView.frame.origin;
+		self.currentPoint = self.textBackgroundView.frame.origin;
+//		NSLog(@"Set original point to %@", NSStringFromCGPoint(self.originalPoint));
+	}
 	
-//	if(self.textBackgroundConstraint.constant < 30){
-//		self.textBackgroundConstraint.constant = self.currentPoint.y + translation.y;
-//	}
-//	[self.textBackgroundView layoutIfNeeded];
+	float totalTranslation = translation.y + (self.currentPoint.y-self.originalPoint.y);
+	
+//	NSLog(@"%f", totalTranslation);
+	
+	if(totalTranslation > 0){
+		self.textBackgroundConstraint.constant = sqrt(totalTranslation);
+		if(self.textBackgroundView.frame.origin.y + self.textBackgroundConstraint.constant >= self.albumArtView.frame.size.height-2){
+			self.textBackgroundConstraint.constant = self.albumArtView.frame.size.height-2-self.textBackgroundView.frame.origin.y;
+		}
+	}
+	else if(totalTranslation+sqrt(-totalTranslation) < -self.frame.size.height/4){
+		self.textBackgroundConstraint.constant = (-self.frame.size.height/4)-sqrt(-totalTranslation);
+	}
+	else{
+		self.textBackgroundConstraint.constant = totalTranslation;
+	}
+	
+	[self.textBackgroundView layoutIfNeeded];
 	
 	if(recognizer.state == UIGestureRecognizerStateEnded){
-		NSLog(@"Dick is not a bone %@", NSStringFromCGPoint(self.currentPoint));
-		self.currentPoint = CGPointMake(self.currentPoint.x, self.currentPoint.y + translation.y);
+		//NSLog(@"Dick is not a bone %@", NSStringFromCGPoint(self.currentPoint));
+		self.currentPoint = CGPointMake(self.currentPoint.x, self.originalPoint.y + totalTranslation);
 		
-		[self.textBackgroundView layoutIfNeeded];
-		self.textBackgroundConstraint.constant = translation.y;
-		[UIView animateWithDuration:0.5 delay:0
-			 usingSpringWithDamping:0.5 initialSpringVelocity:0.0f
-							options:0 animations:^{
-			[self layoutIfNeeded];
-		} completion:nil];
+		NSLog(@"Dick is not a bone %@", NSStringFromCGPoint(self.currentPoint));
+		
+		if(((self.originalPoint.y-self.currentPoint.y) < 0) || (translation.y >= 0)){
+			[self moveContentsDown];
+		}
+		else if(((self.originalPoint.y-self.currentPoint.y) > self.frame.size.height/4) || (translation.y < 0)){
+			[self moveContentsUp];
+		}
 	}
 	
 	/*
@@ -178,11 +219,6 @@
 }
 
 - (void)layoutSubviews {
-	NSLog(@"Hey %@", NSStringFromCGRect(self.textBackgroundView.frame));
-	if(!self.setupGesture){
-		self.currentPoint = self.textBackgroundView.frame.origin;
-		self.setupGesture = YES;
-	}
 	
 	[super layoutSubviews];
 }
@@ -198,6 +234,7 @@
 	[self.albumArtView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self];
 	[self.albumArtView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
 	[self.albumArtView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self];
+	[self.albumArtView autoAlignAxisToSuperviewAxis:ALAxisVertical];
 	
 	//The text background view is a view which contains the play button and album/artist text associated with this item.
 	//It has a white background color.
@@ -217,9 +254,6 @@
 	[self addConstraint:self.textBackgroundConstraint];
 	[self.textBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
 	[self.textBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.125];
-	
-	UIPanGestureRecognizer *recognizer = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(handlePan:)];
-	[self.textBackgroundView addGestureRecognizer:recognizer];
 
 	//The play button allows for easy access to playing the album.
 	self.playButton = [[LMButton alloc]init];
@@ -295,8 +329,24 @@
 	[self.controlBackgroundView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.textBackgroundView];
 	[self.controlBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.textBackgroundView];
 	[self.controlBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.textBackgroundView];
+	[self.controlBackgroundView autoAlignAxisToSuperviewAxis:ALAxisVertical];
 	
 	[self.controlBackgroundView updateConstraints];
+	
+//	self.gestureRecognizerView = [UIView newAutoLayoutView];
+//	self.gestureRecognizerView.backgroundColor = [UIColor yellowColor];
+//	[self addSubview:self.gestureRecognizerView];
+//	
+//	[self.gestureRecognizerView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
+//	[self.gestureRecognizerView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self withOffset:-20];
+//	[self.gestureRecognizerView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.textBackgroundView withOffset:-10];
+//	[self.gestureRecognizerView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.controlBackgroundView withOffset:10];
+	
+	UIPanGestureRecognizer *moveRecognizer = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(handlePan:)];
+	[self.textBackgroundView addGestureRecognizer:moveRecognizer];
+	
+	UIPanGestureRecognizer *moveRecognizer1 = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(handlePan:)];
+	[self.controlBackgroundView addGestureRecognizer:moveRecognizer1];
 	
 	self.songListTableView = [[LMTableView alloc]init];
 	self.songListTableView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -310,13 +360,13 @@
 	[self.songListTableView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
 	[self.songListTableView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self];
 	
+	[self insertSubview:self.textBackgroundView aboveSubview:self.controlBackgroundView];
+	
 	self.textBackgroundView.layer.shadowColor = [UIColor blackColor].CGColor;
 	self.textBackgroundView.layer.shadowOpacity = 0.10f;
 	self.textBackgroundView.layer.shadowRadius = 5;
 	self.textBackgroundView.layer.shadowOffset = CGSizeMake(0, 10);
 	self.textBackgroundView.layer.masksToBounds = NO;
-	
-	[self insertSubview:self.textBackgroundView aboveSubview:self.songListTableView];
 	
 	UIPinchGestureRecognizer *pinchGesture = [[UIPinchGestureRecognizer alloc]initWithTarget:self action:@selector(pinchedView)];
 	[self addGestureRecognizer:pinchGesture];

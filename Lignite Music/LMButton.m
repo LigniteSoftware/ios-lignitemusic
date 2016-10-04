@@ -72,6 +72,7 @@
 	self.titleLabel.adjustsFontSizeToFitWidth = YES;
 	self.titleLabel.minimumScaleFactor = 0;
     self.titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
+	self.textBackgroundView.hidden = YES;
     [self.textBackgroundView addSubview:self.titleLabel];
 	
 	[self.titleLabel autoCenterInSuperview];
@@ -86,6 +87,7 @@
  */
 - (void)setTitle:(NSString*)newTitle {
     self.titleLabel.text = newTitle;
+	self.textBackgroundView.hidden = newTitle == nil;
 }
 
 - (void)setImage:(UIImage*)newImage{
