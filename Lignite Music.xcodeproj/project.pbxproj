@@ -43,6 +43,8 @@
 		6AB12E9C1D57AD9800280383 /* settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AB12E9B1D57AD9800280383 /* settings.png */; };
 		6ABF6A821CF374F7003E4EFA /* UIImage+AverageColour.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ABF6A811CF374F7003E4EFA /* UIImage+AverageColour.m */; };
 		6ABF6A851CF3768A003E4EFA /* UIColor+isLight.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ABF6A841CF3768A003E4EFA /* UIColor+isLight.m */; };
+		6AC1B7391DA308F80029E08B /* LMSongDetailControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AC1B7381DA308F80029E08B /* LMSongDetailControlView.m */; };
+		6AC1B73B1DA3E31F0029E08B /* favourite_heart.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AC1B73A1DA3E31F0029E08B /* favourite_heart.png */; };
 		6ADDBD3D1DA29D3E00DB99EF /* LMShadowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ADDBD3C1DA29D3E00DB99EF /* LMShadowView.m */; };
 		6AE4A7FA1D493C0F002B67CD /* robot.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AE4A7F91D493C0F002B67CD /* robot.png */; };
 		6AE4A7FC1D49461C002B67CD /* pebble_colours_64.gif in Resources */ = {isa = PBXBuildFile; fileRef = 6AE4A7FB1D49461C002B67CD /* pebble_colours_64.gif */; };
@@ -123,6 +125,9 @@
 		6ABF6A811CF374F7003E4EFA /* UIImage+AverageColour.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+AverageColour.m"; sourceTree = "<group>"; };
 		6ABF6A831CF3768A003E4EFA /* UIColor+isLight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+isLight.h"; sourceTree = "<group>"; };
 		6ABF6A841CF3768A003E4EFA /* UIColor+isLight.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+isLight.m"; sourceTree = "<group>"; };
+		6AC1B7371DA308F80029E08B /* LMSongDetailControlView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMSongDetailControlView.h; sourceTree = "<group>"; };
+		6AC1B7381DA308F80029E08B /* LMSongDetailControlView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMSongDetailControlView.m; sourceTree = "<group>"; };
+		6AC1B73A1DA3E31F0029E08B /* favourite_heart.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = favourite_heart.png; sourceTree = "<group>"; };
 		6ADDBD3B1DA29D3E00DB99EF /* LMShadowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMShadowView.h; sourceTree = "<group>"; };
 		6ADDBD3C1DA29D3E00DB99EF /* LMShadowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMShadowView.m; sourceTree = "<group>"; };
 		6AE4A7F91D493C0F002B67CD /* robot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = robot.png; sourceTree = "<group>"; };
@@ -270,6 +275,7 @@
 				6A0750731D5EC0C000BCBC9C /* bw_robot.png */,
 				6AE4A7F91D493C0F002B67CD /* robot.png */,
 				6AE4A7FB1D49461C002B67CD /* pebble_colours_64.gif */,
+				6AC1B73A1DA3E31F0029E08B /* favourite_heart.png */,
 			);
 			name = Icons;
 			sourceTree = "<group>";
@@ -415,6 +421,8 @@
 				6AFD2EDC1BC41ECC0083FE9E /* LMAlbumViewItem.m */,
 				6A1FB9CD1D9B001000890BF3 /* LMAlbumCountLabel.h */,
 				6A1FB9CE1D9B001000890BF3 /* LMAlbumCountLabel.m */,
+				6AC1B7371DA308F80029E08B /* LMSongDetailControlView.h */,
+				6AC1B7381DA308F80029E08B /* LMSongDetailControlView.m */,
 			);
 			name = AlbumView;
 			sourceTree = "<group>";
@@ -511,6 +519,7 @@
 				6AEB9D3A1BAD824E00AD19FA /* lignite_background.jpg in Resources */,
 				6A0750741D5EC0C000BCBC9C /* bw_robot.png in Resources */,
 				6AEB9D361BAD812700AD19FA /* play_white.png in Resources */,
+				6AC1B73B1DA3E31F0029E08B /* favourite_heart.png in Resources */,
 				6A313C1C1BB59D91002BBC33 /* shuffle_black.png in Resources */,
 				6AEB9D081BACF60E00AD19FA /* Assets.xcassets in Resources */,
 				6AEB9D061BACF60E00AD19FA /* Main.storyboard in Resources */,
@@ -579,6 +588,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6AA445A31D5AD7B0004C6739 /* LMSettingsLabel.m in Sources */,
+				6AC1B7391DA308F80029E08B /* LMSongDetailControlView.m in Sources */,
 				6A6351921D9D71D300498582 /* LMListEntry.m in Sources */,
 				6AA4459C1D5AB264004C6739 /* LMPebbleSettingsView.m in Sources */,
 				6AFD2EDD1BC41ECD0083FE9E /* LMAlbumViewItem.m in Sources */,

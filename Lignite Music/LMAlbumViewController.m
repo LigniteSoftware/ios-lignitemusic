@@ -83,7 +83,7 @@
  See LMTableView for documentation on this function.
  */
 - (float)topSpacingForTableView:(LMTableView *)tableView {
-	return 50;
+	return -10;
 }
 
 /**

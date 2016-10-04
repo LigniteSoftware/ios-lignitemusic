@@ -19,9 +19,11 @@
 
 @property (nonatomic, assign) id <LMButtonDelegate> delegate;
 @property UILabel *titleLabel;
+@property BOOL heightIsSmaller;
 
 - (void)setTitle:(NSString*)newTitle;
 - (void)setImage:(UIImage*)newImage;
+- (UIColor*)getColor:(LMButton*)button;
 - (void)setColour:(UIColor*)newColour;
 - (void)setupWithImageMultiplier:(float)imageMultiplier;
 

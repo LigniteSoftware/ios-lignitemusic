@@ -15,17 +15,23 @@
 #import "LMAlbumDetailView.h"
 #import "LMExtras.h"
 #import "LMNowPlayingViewController.h"
+#import "LMSongDetailControlView.h"
 
 @interface LMAlbumDetailView() <LMButtonDelegate, LMListEntryDelegate, LMTableViewSubviewDelegate>
 
 @property MPMediaItemCollection *albumCollection;
 @property UIImageView *albumArtView;
 @property UIView *textBackgroundView, *controlView;
+@property LMSongDetailControlView *controlBackgroundView;
 @property LMTableView *songListTableView;
 @property LMButton *playButton;
 @property LMLabel *albumTitleView, *albumArtistView, *albumInfoView;
 @property NSMutableArray *itemArray;
 @property NSInteger currentlyHighlighted;
+
+@property NSLayoutConstraint *textBackgroundConstraint;
+@property CGPoint originalPoint, currentPoint;
+@property BOOL setupGesture;
 
 @end
 
@@ -73,7 +79,7 @@
 }
 
 - (float)topSpacingForTableView:(LMTableView *)tableView {
-	return 15.0f;
+	return 0.0f;
 }
 
 - (BOOL)dividerForTableView:(LMTableView *)tableView {
@@ -140,6 +146,47 @@
 	}
 }
 
+- (IBAction)handlePan:(UIPanGestureRecognizer *)recognizer {
+	CGPoint translation = [recognizer translationInView:self];
+	
+	NSLog(@"Translation %@", NSStringFromCGPoint(translation));
+	
+//	if(self.textBackgroundConstraint.constant < 30){
+//		self.textBackgroundConstraint.constant = self.currentPoint.y + translation.y;
+//	}
+//	[self.textBackgroundView layoutIfNeeded];
+	
+	if(recognizer.state == UIGestureRecognizerStateEnded){
+		NSLog(@"Dick is not a bone %@", NSStringFromCGPoint(self.currentPoint));
+		self.currentPoint = CGPointMake(self.currentPoint.x, self.currentPoint.y + translation.y);
+		
+		[self.textBackgroundView layoutIfNeeded];
+		self.textBackgroundConstraint.constant = translation.y;
+		[UIView animateWithDuration:0.5 delay:0
+			 usingSpringWithDamping:0.5 initialSpringVelocity:0.0f
+							options:0 animations:^{
+			[self layoutIfNeeded];
+		} completion:nil];
+	}
+	
+	/*
+	recognizer.view.center = CGPointMake(recognizer.view.center.x + translation.x,
+										 recognizer.view.center.y + translation.y);
+	[recognizer setTranslation:CGPointMake(0, 0) inView:self.textBackgroundView];
+	 */
+ 
+}
+
+- (void)layoutSubviews {
+	NSLog(@"Hey %@", NSStringFromCGRect(self.textBackgroundView.frame));
+	if(!self.setupGesture){
+		self.currentPoint = self.textBackgroundView.frame.origin;
+		self.setupGesture = YES;
+	}
+	
+	[super layoutSubviews];
+}
+
 - (void)setup {
 	self.currentlyHighlighted = -1;
 	
@@ -160,15 +207,19 @@
 	[self addSubview:self.textBackgroundView];
 	
 	[self.textBackgroundView autoAlignAxis:ALAxisVertical toSameAxisOfView:self];
-	[self addConstraint:[NSLayoutConstraint constraintWithItem:self.textBackgroundView
-													 attribute:NSLayoutAttributeTop
-													 relatedBy:NSLayoutRelationEqual
-														toItem:self
-													 attribute:NSLayoutAttributeCenterY
-													multiplier:1.0
-													  constant:0]];
+	self.textBackgroundConstraint = [NSLayoutConstraint constraintWithItem:self.textBackgroundView
+																 attribute:NSLayoutAttributeTop
+																 relatedBy:NSLayoutRelationEqual
+																	toItem:self
+																 attribute:NSLayoutAttributeCenterY
+																multiplier:1.0
+																  constant:0];
+	[self addConstraint:self.textBackgroundConstraint];
 	[self.textBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
 	[self.textBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.125];
+	
+	UIPanGestureRecognizer *recognizer = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(handlePan:)];
+	[self.textBackgroundView addGestureRecognizer:recognizer];
 
 	//The play button allows for easy access to playing the album.
 	self.playButton = [[LMButton alloc]init];
@@ -237,6 +288,16 @@
 	[self.albumInfoView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.albumTitleView];
 	[self.albumInfoView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.textBackgroundView withMultiplier:0.20];
 	
+	self.controlBackgroundView = [[LMSongDetailControlView alloc]init];
+	self.controlBackgroundView.translatesAutoresizingMaskIntoConstraints = NO;
+	[self addSubview:self.controlBackgroundView];
+	
+	[self.controlBackgroundView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.textBackgroundView];
+	[self.controlBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.textBackgroundView];
+	[self.controlBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.textBackgroundView];
+	
+	[self.controlBackgroundView updateConstraints];
+	
 	self.songListTableView = [[LMTableView alloc]init];
 	self.songListTableView.translatesAutoresizingMaskIntoConstraints = NO;
 	self.songListTableView.amountOfItemsTotal = self.albumCollection.count;
@@ -244,15 +305,15 @@
 	[self.songListTableView prepareForUse];
 	[self addSubview:self.songListTableView];
 	
-	[self.songListTableView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.textBackgroundView];
+	[self.songListTableView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.controlBackgroundView];
 	[self.songListTableView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
 	[self.songListTableView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
 	[self.songListTableView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self];
 	
 	self.textBackgroundView.layer.shadowColor = [UIColor blackColor].CGColor;
-	self.textBackgroundView.layer.shadowOpacity = 0.5f;
-	self.textBackgroundView.layer.shadowRadius = 7;
-	self.textBackgroundView.layer.shadowOffset = CGSizeMake(0, 0);
+	self.textBackgroundView.layer.shadowOpacity = 0.10f;
+	self.textBackgroundView.layer.shadowRadius = 5;
+	self.textBackgroundView.layer.shadowOffset = CGSizeMake(0, 10);
 	self.textBackgroundView.layer.masksToBounds = NO;
 	
 	[self insertSubview:self.textBackgroundView aboveSubview:self.songListTableView];

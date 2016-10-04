@@ -14,7 +14,6 @@
 
 @property UIImageView *imageView;
 @property UIView *imageBackgroundView, *textBackgroundView;
-@property UIColor *buttonColour;
 
 @end
 
@@ -22,6 +21,14 @@
 
 - (void)logFrame{
     NSLog(@"The current frame for %@ is %@.", self, NSStringFromCGRect(self.frame));
+}
+
+- (void)layoutSubviews {
+	self.imageBackgroundView.layer.cornerRadius = self.frame.size.width/2;
+	self.imageBackgroundView.layer.masksToBounds = YES;
+	self.imageBackgroundView.clipsToBounds = YES;
+		
+	[super layoutSubviews];
 }
 
 /*
@@ -32,7 +39,7 @@
 	
 	self.imageBackgroundView = [UIView new];
 	self.imageBackgroundView.translatesAutoresizingMaskIntoConstraints = NO;
-	//self.imageBackgroundView.backgroundColor = [UIColor greenColor];
+	self.imageBackgroundView.backgroundColor = LIGNITE_RED;
 	[self addSubview:self.imageBackgroundView];
 	
 	[self.imageBackgroundView autoAlignAxisToSuperviewAxis:ALAxisVertical];
@@ -85,9 +92,15 @@
 	self.imageView.image = newImage;
 }
 
+- (UIColor*)getColor:(LMButton*)button {
+	return self.imageBackgroundView.backgroundColor;
+}
+
 - (void)setColour:(UIColor*)newColour{
-	self.buttonColour = newColour;
-	[self setNeedsDisplay];
+	self.imageBackgroundView.backgroundColor = newColour;
+	
+	//self.imageBackgroundView.backgroundColor = newColour;
+	//[self setNeedsDisplay];
 }
 
 /*
@@ -109,15 +122,15 @@
 //    }];
 }
 
-- (void)drawRect:(CGRect)rect {
-    CGContextRef ctx = UIGraphicsGetCurrentContext();
-	
-	UIColor *color = self.buttonColour ? self.buttonColour : LIGNITE_RED;
-    CGContextSetFillColorWithColor(ctx, color.CGColor);
-
-	CGRect circleRect = CGRectMake(0, 0, self.frame.size.width, self.frame.size.width);
-    CGContextFillEllipseInRect(ctx, circleRect);
-}
+//- (void)drawRect:(CGRect)rect {
+//    CGContextRef ctx = UIGraphicsGetCurrentContext();
+//	
+//	UIColor *color = self.buttonColour ? self.buttonColour : LIGNITE_RED;
+//    CGContextSetFillColorWithColor(ctx, color.CGColor);
+//
+//	CGRect circleRect = CGRectMake(0, 0, self.frame.size.width, self.frame.size.width);
+//    CGContextFillEllipseInRect(ctx, circleRect);
+//}
 
 
 @end

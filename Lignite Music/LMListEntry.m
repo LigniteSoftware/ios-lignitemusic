@@ -72,7 +72,7 @@
 	[self addSubview:self.contentView];
 	
 	[self.contentView autoCenterInSuperview];
-	[self.contentView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self];
+	[self.contentView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.95];
 	[self.contentView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:0.9];
 	
 	UIImage *icon = [self.delegate iconForListEntry:self];
