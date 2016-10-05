@@ -129,9 +129,7 @@
 }
 
 - (void)pinchedView {
-	self.userInteractionEnabled = NO;
-	self.hidden = YES;
-	[self removeFromSuperview];
+	[self.rootViewController dismissViewOnTop];
 }
 
 - (void)totalAmountOfSubviewsRequired:(NSUInteger)amount forTableView:(LMTableView *)tableView {

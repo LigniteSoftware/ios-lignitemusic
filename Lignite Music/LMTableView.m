@@ -124,14 +124,7 @@
 	}
 }
 
-- (void)updateConstraints {
-	NSLog(@"%@ compared to contents %@", NSStringFromCGSize(self.frame.size), NSStringFromCGSize(self.contentSize));
-	
-	[super updateConstraints];
-}
-
 - (void)layoutSubviews {
-	NSLog(@"%@ compared to contents %@", NSStringFromCGSize(self.frame.size), NSStringFromCGSize(self.contentSize));
 	if(self.loadedStatus == 1){
 		self.amountOfItemsRequired = (self.frame.size.height/self.calculatedHeight)*(WINDOW_FRAME.size.height/self.frame.size.height) + 1;
 		if(self.amountOfItemsRequired > self.amountOfItemsTotal){

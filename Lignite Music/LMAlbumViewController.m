@@ -25,10 +25,21 @@
 @property float lastUpdatedContentOffset;
 @property BOOL loaded, hasLoadedInitialItems;
 
+@property NSLayoutConstraint *topConstraint;
+
 @end
 
 @implementation LMAlbumViewController
 
+- (void)dismissViewOnTop {
+	[self.view layoutIfNeeded];
+	self.topConstraint.constant = -self.view.frame.size.height;
+	[UIView animateWithDuration:0.5 delay:0.05
+		 usingSpringWithDamping:0.75 initialSpringVelocity:0.0f
+						options:0 animations:^{
+							[self.view layoutIfNeeded];
+						} completion:nil];
+}
 
 /**
  When an album view item is clicked, this is called. The system should then enter into detail view for the album view.
@@ -42,10 +53,24 @@
 	NSLog(@"Collection %@", collection.representativeItem.artist);
 	
 	LMAlbumDetailView *detailView = [[LMAlbumDetailView alloc]initWithMediaItemCollection:[self.everything.collections objectAtIndex:item.collectionIndex]];
-	detailView.frame = self.view.frame;
+	detailView.rootViewController = self;
+	detailView.translatesAutoresizingMaskIntoConstraints = NO;
 	[self.view addSubview:detailView];
 	
+	self.topConstraint = [detailView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.view withOffset:-self.view.frame.size.height];
+	[detailView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.view];
+	[detailView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.view];
+	[detailView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
+	
 	[detailView setup];
+	
+	[self.view layoutIfNeeded];
+	self.topConstraint.constant = 0;
+	[UIView animateWithDuration:0.5 delay:0.1
+		 usingSpringWithDamping:0.75 initialSpringVelocity:0.0f
+						options:0 animations:^{
+							[self.view layoutIfNeeded];
+						} completion:nil];
 }
 
 - (void)openNowPlayingView {

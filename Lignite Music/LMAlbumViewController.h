@@ -10,4 +10,6 @@
 
 @interface LMAlbumViewController : UIViewController
 
+- (void)dismissViewOnTop;
+
 @end
