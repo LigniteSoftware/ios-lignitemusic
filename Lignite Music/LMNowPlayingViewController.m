@@ -1039,7 +1039,7 @@
 		UILabel *alertMessage = viewArray[1];
 		alertMessage.textAlignment = NSTextAlignmentLeft;
 		
-		[self presentViewController:alert animated:YES completion:nil];
+		//[self presentViewController:alert animated:YES completion:nil];
 		
 	}
 	
@@ -1062,7 +1062,7 @@
         
         [alert addAction:yesButton];
         
-        [self presentViewController:alert animated:YES completion:nil];
+        // [self presentViewController:alert animated:YES completion:nil];
         
     }
 
@@ -1093,6 +1093,9 @@
 	}
 	
 	[self.volumeViewSlider addTarget:self action:@selector(handleVolumeChanged:) forControlEvents:UIControlEventValueChanged];
+	
+	NSLog(@"Hey");
+	[self nowPlayingItemChanged:self];
 }
 
 - (void)viewDidLoad {
@@ -1125,8 +1128,8 @@
      object:      self.musicPlayer];
     
     [self.musicPlayer beginGeneratingPlaybackNotifications];
-    
-    [self nowPlayingItemChanged:self];
+	
+	//[self nowPlayingItemChanged:self];
     
     NSLog(@"View did load");
 }

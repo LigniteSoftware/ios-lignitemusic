@@ -46,6 +46,8 @@
 		6AC1B7391DA308F80029E08B /* LMSongDetailControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AC1B7381DA308F80029E08B /* LMSongDetailControlView.m */; };
 		6AC1B73B1DA3E31F0029E08B /* favourite_heart.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AC1B73A1DA3E31F0029E08B /* favourite_heart.png */; };
 		6AD226F91DA49C720056695A /* LMProgressCircleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AD226F81DA49C720056695A /* LMProgressCircleView.m */; };
+		6AD226FC1DA4B7770056695A /* LMNowPlayingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AD226FB1DA4B7770056695A /* LMNowPlayingView.m */; };
+		6AD226FF1DA4B8000056695A /* LMCoreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AD226FE1DA4B8000056695A /* LMCoreViewController.m */; };
 		6ADDBD3D1DA29D3E00DB99EF /* LMShadowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ADDBD3C1DA29D3E00DB99EF /* LMShadowView.m */; };
 		6AE4A7FA1D493C0F002B67CD /* robot.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AE4A7F91D493C0F002B67CD /* robot.png */; };
 		6AE4A7FC1D49461C002B67CD /* pebble_colours_64.gif in Resources */ = {isa = PBXBuildFile; fileRef = 6AE4A7FB1D49461C002B67CD /* pebble_colours_64.gif */; };
@@ -131,6 +133,10 @@
 		6AC1B73A1DA3E31F0029E08B /* favourite_heart.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = favourite_heart.png; sourceTree = "<group>"; };
 		6AD226F71DA49C720056695A /* LMProgressCircleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMProgressCircleView.h; sourceTree = "<group>"; };
 		6AD226F81DA49C720056695A /* LMProgressCircleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMProgressCircleView.m; sourceTree = "<group>"; };
+		6AD226FA1DA4B7770056695A /* LMNowPlayingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMNowPlayingView.h; sourceTree = "<group>"; };
+		6AD226FB1DA4B7770056695A /* LMNowPlayingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMNowPlayingView.m; sourceTree = "<group>"; };
+		6AD226FD1DA4B8000056695A /* LMCoreViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMCoreViewController.h; sourceTree = "<group>"; };
+		6AD226FE1DA4B8000056695A /* LMCoreViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMCoreViewController.m; sourceTree = "<group>"; };
 		6ADDBD3B1DA29D3E00DB99EF /* LMShadowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMShadowView.h; sourceTree = "<group>"; };
 		6ADDBD3C1DA29D3E00DB99EF /* LMShadowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMShadowView.m; sourceTree = "<group>"; };
 		6AE4A7F91D493C0F002B67CD /* robot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = robot.png; sourceTree = "<group>"; };
@@ -247,6 +253,10 @@
 		6A313C091BB4485A002BBC33 /* NowPlayingView */ = {
 			isa = PBXGroup;
 			children = (
+				6AD226FD1DA4B8000056695A /* LMCoreViewController.h */,
+				6AD226FE1DA4B8000056695A /* LMCoreViewController.m */,
+				6AD226FA1DA4B7770056695A /* LMNowPlayingView.h */,
+				6AD226FB1DA4B7770056695A /* LMNowPlayingView.m */,
 				6A514E101CE904F000AFB351 /* LMNowPlayingViewController.h */,
 				6A514E111CE904F000AFB351 /* LMNowPlayingViewController.m */,
 				6AD226F71DA49C720056695A /* LMProgressCircleView.h */,
@@ -614,9 +624,11 @@
 				6AAF61151DA0758400971875 /* LMTableView.m in Sources */,
 				6ABF6A821CF374F7003E4EFA /* UIImage+AverageColour.m in Sources */,
 				6A313C181BB59AE8002BBC33 /* LMButton.m in Sources */,
+				6AD226FF1DA4B8000056695A /* LMCoreViewController.m in Sources */,
 				6A73CF5C1D4127C70097A400 /* LMPebbleImage.m in Sources */,
 				6A555BB01DA168860078C9FC /* LMOperationQueue.m in Sources */,
 				6A1FB9C71D99EB0A00890BF3 /* LMAlbumViewController.m in Sources */,
+				6AD226FC1DA4B7770056695A /* LMNowPlayingView.m in Sources */,
 				6A514E191CEA15D900AFB351 /* LMSlider.m in Sources */,
 				6A1FB9CF1D9B001000890BF3 /* LMAlbumCountLabel.m in Sources */,
 			);
@@ -791,6 +803,12 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+					"MAGICKCORE_QUANTUM_DEPTH=16",
+					"MAGICKCORE_HDRI_ENABLE=YES",
 				);
 				INFOPLIST_FILE = "Lignite Music/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;

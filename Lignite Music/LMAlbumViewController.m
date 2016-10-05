@@ -33,7 +33,7 @@
 
 - (void)dismissViewOnTop {
 	[self.view layoutIfNeeded];
-	self.topConstraint.constant = -self.view.frame.size.height;
+	self.topConstraint.constant = self.view.frame.size.height;
 	[UIView animateWithDuration:0.5 delay:0.05
 		 usingSpringWithDamping:0.75 initialSpringVelocity:0.0f
 						options:0 animations:^{
@@ -47,7 +47,7 @@
  @param item The item which was tapped.
  */
 - (void)clickedAlbumViewItem:(LMAlbumViewItem*)item {
-	NSLog(@"I see you have tapped item with index %lu", item.collectionIndex);
+	NSLog(@"I see you have tapped item with index %lu", (unsigned long)item.collectionIndex);
 	
 	MPMediaItemCollection *collection = [self.everything.collections objectAtIndex:item.collectionIndex];
 	NSLog(@"Collection %@", collection.representativeItem.artist);
@@ -57,7 +57,7 @@
 	detailView.translatesAutoresizingMaskIntoConstraints = NO;
 	[self.view addSubview:detailView];
 	
-	self.topConstraint = [detailView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.view withOffset:-self.view.frame.size.height];
+	self.topConstraint = [detailView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.view withOffset:self.view.frame.size.height];
 	[detailView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.view];
 	[detailView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.view];
 	[detailView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];

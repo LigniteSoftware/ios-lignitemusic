@@ -50,8 +50,8 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	NSLog(@"Loading %ld", (indexPath.section % self.amountOfItemsRequired));
-	LMTableViewCell *cell = (LMTableViewCell*)[tableView dequeueReusableCellWithIdentifier:[NSString stringWithFormat:@"ShitPost%ld", (indexPath.section % self.amountOfItemsRequired)]];
+//	NSLog(@"Loading %ld", (long)(indexPath.section % self.amountOfItemsRequired));
+	LMTableViewCell *cell = (LMTableViewCell*)[tableView dequeueReusableCellWithIdentifier:[NSString stringWithFormat:@"ShitPost%ld", (long)(indexPath.section % self.amountOfItemsRequired)]];
 		
 	//[self configureCell:cell forRowAtIndexPath:indexPath];
 	return cell;
@@ -132,7 +132,7 @@
 		}
 		[self.subviewDelegate totalAmountOfSubviewsRequired:self.amountOfItemsRequired forTableView:self];
 		
-		NSLog(@"\n--- LMTableView ---\nCalculated height: %f\nCalculated spacing: %f\nAmount of items total: %lu\nAmount of items required: %lu\n--- End ---", self.calculatedHeight, self.calculatedSpacing, self.amountOfItemsTotal, self.amountOfItemsRequired);
+		NSLog(@"\n--- LMTableView ---\nCalculated height: %f\nCalculated spacing: %f\nAmount of items total: %lu\nAmount of items required: %lu\n--- End ---", self.calculatedHeight, self.calculatedSpacing, self.amountOfItemsTotal, (unsigned long)self.amountOfItemsRequired);
 		
 		for(int i = 0; i < self.amountOfItemsRequired; i++){
 			[self registerClass:[LMTableViewCell class] forCellReuseIdentifier:[NSString stringWithFormat:@"ShitPost%d", i]];
