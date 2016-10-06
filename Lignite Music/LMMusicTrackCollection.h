@@ -40,13 +40,19 @@
 @property BOOL variousGenres;
 
 /**
+ The source collection which the LMMusicTrackCollection is based off of.
+ */
+@property id sourceCollection;
+
+/**
  Creates an LMMusicTrackCollection based on the provided array of items. Determination
  of various artists and genres occurs within this function as well.
 
- @param items The items to instantiate this LMMusicTrackCollection with.
+ @param items            The items to instantiate this LMMusicTrackCollection with.
+ @param sourceCollection The source collection which this collection is based off of.
 
  @return The created LMMusicTrackCollection.
  */
-- (instancetype)initWithItems:(NSArray<LMMusicTrack *> *)items;
+- (instancetype)initWithItems:(NSArray<LMMusicTrack *> *)items basedOnSourceCollection:(id)sourceCollection;
 
 @end

@@ -10,11 +10,13 @@
 
 @implementation LMMusicTrackCollection
 
-- (instancetype)initWithItems:(NSArray<LMMusicTrack *> *)items {
+- (instancetype)initWithItems:(NSArray<LMMusicTrack *> *)items basedOnSourceCollection:(id)sourceCollection {
 	self = [super init];
 	if(self) {
 		self.items = items;
 		self.count = items.count;
+		self.sourceCollection = sourceCollection;
+		
 		if(self.items.count > 0){
 			self.representativeItem = [items objectAtIndex:0];
 			

@@ -9,6 +9,7 @@
 #import <MediaPlayer/MediaPlayer.h>
 #import <Foundation/Foundation.h>
 #import "LMMusicTrack.h"
+#import "LMMusicTrackCollection.h"
 
 @interface LMMusicPlayer : NSObject
 
@@ -20,6 +21,14 @@ typedef enum {
 	LMMusicPlayerTypeAppleMusic
 } LMMusicPlayerType;
 
+typedef enum {
+	LMMusicTypeArtists = 0,
+	LMMusicTypeAlbums,
+	LMMusicTypeTitles,
+	LMMusicTypePlaylists,
+	LMMusicTypeComposers
+} LMMusicType;
+
 /**
  The music player's current type.
  */
@@ -29,6 +38,11 @@ typedef enum {
  The currently playing track of the music player.
  */
 @property LMMusicTrack *nowPlayingTrack;
+
+/**
+ The currently playing collection. Can be nil if the user was playing music outside of Lignite Music before entering.
+ */
+@property LMMusicTrackCollection *nowPlayingCollection;
 
 /**
  The index of the currently playing track in the current playback queue.
@@ -50,6 +64,14 @@ typedef enum {
  */
 @property MPMusicShuffleMode shuffleMode;
 
+/**
+ Finds collections of music based off of the type provided.
+
+ @param musicType The type of music to find.
+
+ @return The collections from the query's results.
+ */
+- (NSArray<LMMusicTrackCollection*>*)queryCollectionsForMusicType:(LMMusicType)musicType;
 
 /**
  Starts playback of the next media item in the playback queue; or, the music player is not playing, 
@@ -67,5 +89,16 @@ typedef enum {
  designates the previous media item as the next to be played.
  */
 - (void)skipToPreviousItem;
+
+/**
+ Play the music.
+ */
+- (void)play;
+
+/**
+ Pause the music.
+ */
+- (void)pause;
+
 
 @end

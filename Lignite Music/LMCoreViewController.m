@@ -7,8 +7,11 @@
 //
 
 #import "LMCoreViewController.h"
+#import "LMMusicPlayer.h"
 
 @interface LMCoreViewController ()
+
+@property LMMusicPlayer *musicPlayer;
 
 @end
 
@@ -18,9 +21,38 @@
 	return YES;
 }
 
+- (void)pause {
+	NSLog(@"Dude!");
+	[self.musicPlayer pause];
+}
+
+- (void)play {
+	NSLog(@"Dude");
+	
+	[NSTimer scheduledTimerWithTimeInterval:5.0
+									 target:self
+								   selector:@selector(pause)
+								   userInfo:nil
+									repeats:NO];
+	
+	NSArray *items = [self.musicPlayer queryCollectionsForMusicType:LMMusicTypePlaylists];
+	NSLog(@"Got %lu items.", items.count);
+	
+	int random = rand() % items.count;
+	NSLog(@"%d", random);
+	LMMusicTrackCollection *collection = [items objectAtIndex:random];
+	[self.musicPlayer setNowPlayingCollection:collection];
+	[self.musicPlayer setNowPlayingTrack:collection.representativeItem];
+	[self.musicPlayer play];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+	self.musicPlayer = [[LMMusicPlayer alloc]init];
+	
+	UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(play)];
+	[self.view addGestureRecognizer:gesture];
 }
 
 - (void)didReceiveMemoryWarning {
