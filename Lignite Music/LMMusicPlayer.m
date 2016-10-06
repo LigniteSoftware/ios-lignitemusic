@@ -11,6 +11,7 @@
 @interface LMMusicPlayer()
 
 @property MPMusicPlayerController *systemMusicPlayer;
+@property NSMutableArray *delegates;
 
 @end
 
@@ -24,11 +25,73 @@
 		self.systemMusicPlayer = [MPMusicPlayerController systemMusicPlayer];
 		self.nowPlayingTrack = [[LMMusicTrack alloc]initWithMPMediaItem:self.systemMusicPlayer.nowPlayingItem];
 		self.playerType = LMMusicPlayerTypeSystemMusicPlayer;
+		self.delegates = [[NSMutableArray alloc]init];
+		
+		[[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
+		
+		NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
+		
+		[notificationCenter
+		 addObserver: self
+		 selector:    @selector(systemMusicPlayerTrackChanged:)
+		 name:        MPMusicPlayerControllerNowPlayingItemDidChangeNotification
+		 object:      self.systemMusicPlayer];
+		
+		[notificationCenter
+		 addObserver: self
+		 selector:    @selector(systemMusicPlayerStateChanged:)
+		 name:        MPMusicPlayerControllerPlaybackStateDidChangeNotification
+		 object:      self.systemMusicPlayer];
+		
+		[self.systemMusicPlayer beginGeneratingPlaybackNotifications];
 	}
 	else{
 		NSLog(@"Fatal error! Failed to create instance of LMMusicPlayer.");
 	}
 	return self;
+}
+
+- (void)deinit {
+	NSLog(@"Deinit on LMMusicPlayer called. Warning: Releasing notification center hooks to track playing change!");
+	
+	[[NSNotificationCenter defaultCenter]
+	 removeObserver: self
+	 name:           MPMusicPlayerControllerNowPlayingItemDidChangeNotification
+	 object:         self.systemMusicPlayer];
+	
+	[[NSNotificationCenter defaultCenter]
+	 removeObserver: self
+	 name:           MPMusicPlayerControllerPlaybackStateDidChangeNotification
+	 object:         self.systemMusicPlayer];
+	
+	[self.systemMusicPlayer endGeneratingPlaybackNotifications];
+}
+
+- (void)systemMusicPlayerTrackChanged:(id)sender {
+	LMMusicTrack *newTrack = [[LMMusicTrack alloc]initWithMPMediaItem:self.systemMusicPlayer.nowPlayingItem];
+	self.nowPlayingTrack = newTrack;
+	
+	for(int i = 0; i < self.delegates.count; i++){
+		id delegate = [self.delegates objectAtIndex:i];
+		[delegate musicTrackDidChange:self.nowPlayingTrack];
+	}
+}
+
+- (void)systemMusicPlayerStateChanged:(id)sender {
+	self.playbackState = (LMMusicPlaybackState)self.systemMusicPlayer.playbackState;
+	
+	for(int i = 0; i < self.delegates.count; i++){
+		id delegate = [self.delegates objectAtIndex:i];
+		[delegate musicPlaybackStateDidChange:self.playbackState];
+	}
+}
+
+- (void)addMusicDelegate:(id)newDelegate {
+	[self.delegates addObject:newDelegate];
+}
+
+- (void)removeMusicDelegate:(id)delegateToRemove {
+	[self.delegates removeObject:delegateToRemove];
 }
 
 - (NSArray<LMMusicTrackCollection*>*)queryCollectionsForMusicType:(LMMusicType)musicType {

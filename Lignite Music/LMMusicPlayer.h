@@ -11,8 +11,6 @@
 #import "LMMusicTrack.h"
 #import "LMMusicTrackCollection.h"
 
-@interface LMMusicPlayer : NSObject
-
 /**
  LMMusicPlayerType is the type of music player, such as the system music player or Spotify.
  */
@@ -21,6 +19,9 @@ typedef enum {
 	LMMusicPlayerTypeAppleMusic
 } LMMusicPlayerType;
 
+/**
+ LMMusicType is the type of music, for example, albums. This type is usually used within queries for music.
+ */
 typedef enum {
 	LMMusicTypeArtists = 0,
 	LMMusicTypeAlbums,
@@ -28,6 +29,40 @@ typedef enum {
 	LMMusicTypePlaylists,
 	LMMusicTypeComposers
 } LMMusicType;
+
+/**
+ LMMusicPlaybackState is the playback state of the music, usually the now playing track.
+ */
+typedef enum {
+	LMMusicPlaybackStateStopped = 0,
+	LMMusicPlaybackStatePlaying,
+	LMMusicPlaybackStatePaused,
+	LMMusicPlaybackStateInterrupted,
+	LMMusicPlaybackStateSeekingForward,
+	LMMusicPlaybackStateSeekingBackward
+} LMMusicPlaybackState;
+
+@class LMMusicPlayer;
+
+@protocol LMMusicPlayerDelegate <NSObject>
+
+/**
+ Is called when the music track of the app changes.
+
+ @param newTrack The new track that is playing.
+ */
+- (void)musicTrackDidChange:(LMMusicTrack*)newTrack;
+
+/**
+ Is called when the music playback state of the app changes.
+
+ @param newState The new state.
+ */
+- (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState;
+
+@end
+
+@interface LMMusicPlayer : NSObject
 
 /**
  The music player's current type.
@@ -52,7 +87,7 @@ typedef enum {
 /**
  The current playback state of the music player.
  */
-@property MPMusicPlaybackState playbackState;
+@property LMMusicPlaybackState playbackState;
 
 /**
  The current repeat mode of the music player.
@@ -63,6 +98,25 @@ typedef enum {
  The current shuffle mode of the music player.
  */
 @property MPMusicShuffleMode shuffleMode;
+
+/**
+ Prepare for release through ARC. Unhooks observers tied to state and track change notifications.
+ */
+- (void)deinit;
+
+/**
+ Adds an LMMusicPlayerDelegate to the list of delegates.
+
+ @param newDelegate The new delegate to add.
+ */
+- (void)addMusicDelegate:(id)newDelegate;
+
+/**
+ Removes an LMMusicPlayerDelegate from the list of delegates.
+
+ @param delegateToRemove The delegate to remove.
+ */
+- (void)removeMusicDelegate:(id)delegateToRemove;
 
 /**
  Finds collections of music based off of the type provided.

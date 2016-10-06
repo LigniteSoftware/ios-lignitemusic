@@ -9,13 +9,21 @@
 #import "LMCoreViewController.h"
 #import "LMMusicPlayer.h"
 
-@interface LMCoreViewController ()
+@interface LMCoreViewController () <LMMusicPlayerDelegate>
 
 @property LMMusicPlayer *musicPlayer;
 
 @end
 
 @implementation LMCoreViewController
+
+- (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState {
+	NSLog(@"Got new playback state %d", newState);
+}
+
+- (void)musicTrackDidChange:(LMMusicTrack *)newTrack {
+	NSLog(@"Got new track, title %@", newTrack.title);
+}
 
 - (BOOL)prefersStatusBarHidden {
 	return YES;
@@ -50,6 +58,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
 	self.musicPlayer = [[LMMusicPlayer alloc]init];
+	[self.musicPlayer addMusicDelegate:self];
 	
 	UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(play)];
 	[self.view addGestureRecognizer:gesture];

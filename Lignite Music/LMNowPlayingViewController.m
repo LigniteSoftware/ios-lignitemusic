@@ -128,7 +128,7 @@
 }
 
 
-- (void)nowPlayingItemChanged:(id) sender {
+- (void)nowPlayingItemChanged:(id)sender {
     //[self.playingView updateNowPlayingItem:self.musicPlayer.nowPlayingItem];
     
     NSLog(@"Now playing item has changed");
