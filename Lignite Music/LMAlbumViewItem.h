@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LMMusicTrack.h"
 
 @class LMAlbumViewItem;
 
@@ -19,11 +20,11 @@
 
 @interface LMAlbumViewItem : UIView
 
-@property MPMediaItem *item;
+@property LMMusicTrack *track;
 @property NSUInteger collectionIndex;
 
-- (void)updateContentsWithMediaItem:(MPMediaItem*)item andNumberOfItems:(NSInteger)numberOfItems;
+- (void)updateContentsWithMusicTrack:(LMMusicTrack*)track andNumberOfItems:(NSInteger)numberOfItems;
 - (void)setupWithAlbumCount:(NSUInteger)numberOfItems andDelegate:(id)delegate;
-- (id)initWithMediaItem:(MPMediaItem*)item;
+- (id)initWithMusicTrack:(LMMusicTrack*)track;
 
 @end

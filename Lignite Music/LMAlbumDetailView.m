@@ -129,7 +129,8 @@
 }
 
 - (void)pinchedView {
-	[self.rootViewController dismissViewOnTop];
+	//[self.rootViewController dismissViewOnTop];
+	NSLog(@"Pinched");
 }
 
 - (void)totalAmountOfSubviewsRequired:(NSUInteger)amount forTableView:(LMTableView *)tableView {

@@ -7,11 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "LMAlbumViewController.h"
+#import "LMAlbumView.h"
 
 @interface LMAlbumDetailView : UIView
-
-@property LMAlbumViewController *rootViewController;
 
 - (void)setup;
 - (id)initWithMediaItemCollection:(MPMediaItemCollection*)collection;

@@ -6,12 +6,15 @@
 //  Copyright © 2016 Lignite. All rights reserved.
 //
 
+#import <PureLayout/PureLayout.h>
 #import "LMCoreViewController.h"
 #import "LMMusicPlayer.h"
+#import "LMAlbumView.h"
 
 @interface LMCoreViewController () <LMMusicPlayerDelegate>
 
 @property LMMusicPlayer *musicPlayer;
+@property LMAlbumView *albumView;
 
 @end
 
@@ -59,9 +62,18 @@
     // Do any additional setup after loading the view.
 	self.musicPlayer = [[LMMusicPlayer alloc]init];
 	[self.musicPlayer addMusicDelegate:self];
+
+	self.albumView = [[LMAlbumView alloc]init];
+	self.albumView.translatesAutoresizingMaskIntoConstraints = NO;
+	self.albumView.musicPlayer = self.musicPlayer;
+	[self.view addSubview:self.albumView];
 	
-	UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(play)];
-	[self.view addGestureRecognizer:gesture];
+	[self.albumView autoCenterInSuperview];
+	[self.albumView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
+	[self.albumView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
+	
+//	UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(play)];
+//	[self.view addGestureRecognizer:gesture];
 }
 
 - (void)didReceiveMemoryWarning {

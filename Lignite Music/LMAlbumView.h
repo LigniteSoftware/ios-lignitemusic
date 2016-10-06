@@ -7,8 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LMMusicPlayer.h"
 
-@interface LMAlbumViewController : UIViewController
+@interface LMAlbumView : UIView
+
+@property LMMusicPlayer *musicPlayer;
 
 - (void)dismissViewOnTop;
 

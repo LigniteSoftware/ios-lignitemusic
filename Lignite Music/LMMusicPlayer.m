@@ -70,6 +70,7 @@
 - (void)systemMusicPlayerTrackChanged:(id)sender {
 	LMMusicTrack *newTrack = [[LMMusicTrack alloc]initWithMPMediaItem:self.systemMusicPlayer.nowPlayingItem];
 	self.nowPlayingTrack = newTrack;
+	self.indexOfNowPlayingTrack = self.systemMusicPlayer.indexOfNowPlayingItem;
 	
 	for(int i = 0; i < self.delegates.count; i++){
 		id delegate = [self.delegates objectAtIndex:i];
@@ -155,15 +156,21 @@
 }
 
 - (void)skipToNextTrack {
-	
+	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer){
+		[self.systemMusicPlayer skipToNextItem];
+	}
 }
 
 - (void)skipToBeginning {
-	
+	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer){
+		[self.systemMusicPlayer skipToBeginning];
+	}
 }
 
 - (void)skipToPreviousItem {
-	
+	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer){
+		[self.systemMusicPlayer skipToPreviousItem];
+	}
 }
 
 - (void)play {
@@ -179,6 +186,14 @@
 }
 
 - (void)setNowPlayingTrack:(LMMusicTrack*)nowPlayingTrack {
+	for(int i = 0; i < self.nowPlayingCollection.count; i++){
+		LMMusicTrack *track = [self.nowPlayingCollection.items objectAtIndex:i];
+		if([nowPlayingTrack isEqual:track]){
+			self.indexOfNowPlayingTrack = i;
+			break;
+		}
+	}
+	
 	NSLog(@"Setting to %@.", nowPlayingTrack.title);
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer){
 		MPMediaItem *associatedMediaItem = nowPlayingTrack.sourceTrack;

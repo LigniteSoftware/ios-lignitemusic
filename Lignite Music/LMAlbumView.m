@@ -7,21 +7,20 @@
 //
 
 #import <PureLayout/PureLayout.h>
-#import <MediaPlayer/MediaPlayer.h>
 #import "LMAlbumDetailView.h"
 #import "LMNowPlayingViewController.h"
 #import "LMAlbumViewItem.h"
-#import "LMAlbumViewController.h"
+#import "LMAlbumView.h"
 #import "LMButton.h"
 #import "LMTableView.h"
 #import "LMTableViewCell.h"
 
-@interface LMAlbumViewController () <LMAlbumViewItemDelegate, LMTableViewSubviewDelegate>
+@interface LMAlbumView () <LMAlbumViewItemDelegate, LMTableViewSubviewDelegate>
 
 @property LMTableView *rootTableView;
 @property NSMutableArray *albumsItemArray;
 @property NSUInteger albumsCount;
-@property MPMediaQuery *everything;
+@property NSArray<LMMusicTrackCollection*>* albumCollections;
 @property float lastUpdatedContentOffset;
 @property BOOL loaded, hasLoadedInitialItems;
 
@@ -29,15 +28,15 @@
 
 @end
 
-@implementation LMAlbumViewController
+@implementation LMAlbumView
 
 - (void)dismissViewOnTop {
-	[self.view layoutIfNeeded];
-	self.topConstraint.constant = self.view.frame.size.height;
+	[self layoutIfNeeded];
+	self.topConstraint.constant = self.frame.size.height;
 	[UIView animateWithDuration:0.5 delay:0.05
 		 usingSpringWithDamping:0.75 initialSpringVelocity:0.0f
 						options:0 animations:^{
-							[self.view layoutIfNeeded];
+							[self layoutIfNeeded];
 						} completion:nil];
 }
 
@@ -49,33 +48,34 @@
 - (void)clickedAlbumViewItem:(LMAlbumViewItem*)item {
 	NSLog(@"I see you have tapped item with index %lu", (unsigned long)item.collectionIndex);
 	
-	MPMediaItemCollection *collection = [self.everything.collections objectAtIndex:item.collectionIndex];
+	LMMusicTrackCollection *collection = [self.albumCollections objectAtIndex:item.collectionIndex];
 	NSLog(@"Collection %@", collection.representativeItem.artist);
-	
-	LMAlbumDetailView *detailView = [[LMAlbumDetailView alloc]initWithMediaItemCollection:[self.everything.collections objectAtIndex:item.collectionIndex]];
-	detailView.rootViewController = self;
-	detailView.translatesAutoresizingMaskIntoConstraints = NO;
-	[self.view addSubview:detailView];
-	
-	self.topConstraint = [detailView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.view withOffset:self.view.frame.size.height];
-	[detailView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.view];
-	[detailView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.view];
-	[detailView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
-	
-	[detailView setup];
-	
-	[self.view layoutIfNeeded];
-	self.topConstraint.constant = 0;
-	[UIView animateWithDuration:0.5 delay:0.1
-		 usingSpringWithDamping:0.75 initialSpringVelocity:0.0f
-						options:0 animations:^{
-							[self.view layoutIfNeeded];
-						} completion:nil];
+//	
+//	LMAlbumDetailView *detailView = [[LMAlbumDetailView alloc]initWithMediaItemCollection:[self.everything.collections objectAtIndex:item.collectionIndex]];
+//	//detailView.rootViewController = self;
+//	detailView.translatesAutoresizingMaskIntoConstraints = NO;
+//	[self addSubview:detailView];
+//	
+//	self.topConstraint = [detailView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self withOffset:self.frame.size.height];
+//	[detailView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self];
+//	[detailView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
+//	[detailView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self];
+//	
+//	[detailView setup];
+//	
+//	[self layoutIfNeeded];
+//	self.topConstraint.constant = 0;
+//	[UIView animateWithDuration:0.5 delay:0.1
+//		 usingSpringWithDamping:0.75 initialSpringVelocity:0.0f
+//						options:0 animations:^{
+//							[self layoutIfNeeded];
+//						} completion:nil];
 }
 
 - (void)openNowPlayingView {
-	LMNowPlayingViewController *nowPlayingController = [self.storyboard instantiateViewControllerWithIdentifier:@"nowPlayingController"];
-	[self presentViewController:nowPlayingController animated:YES completion:nil];
+//	LMNowPlayingViewController *nowPlayingController = [self.storyboard instantiateViewControllerWithIdentifier:@"nowPlayingController"];
+	//[self presentViewController:nowPlayingController animated:YES completion:nil];
+	NSLog(@"Open now playing");
 }
 
 
@@ -86,10 +86,10 @@
  @param item The item which had its play button clicked.
  */
 - (void)clickedPlayButtonOnAlbumViewItem:(LMAlbumViewItem*)item {
-	MPMediaItemCollection *collection = [self.everything.collections objectAtIndex:item.collectionIndex];
-	MPMusicPlayerController *controller = [MPMusicPlayerController systemMusicPlayer];
-	[controller setQueueWithItemCollection:collection];
-	[controller play];
+	LMMusicTrackCollection *collection = [self.albumCollections objectAtIndex:item.collectionIndex];
+	
+	[self.musicPlayer setNowPlayingCollection:collection];
+	[self.musicPlayer play];
 	
 	[self openNowPlayingView];
 }
@@ -126,11 +126,9 @@
 		return;
 	}
 	
-	NSLog(@"Everything exists %d", (self.everything != nil) ? 1 : 0);
-	
 	for(int i = 0; i < amount; i++){
-		MPMediaItemCollection *collection = [self.everything.collections objectAtIndex:i];
-		LMAlbumViewItem *newItem = [[LMAlbumViewItem alloc]initWithMediaItem:collection.representativeItem];
+		LMMusicTrackCollection *collection = [self.albumCollections objectAtIndex:i];
+		LMAlbumViewItem *newItem = [[LMAlbumViewItem alloc]initWithMusicTrack:collection.representativeItem];
 		[newItem setupWithAlbumCount:collection.count andDelegate:self];
 		newItem.userInteractionEnabled = YES;
 		[self.albumsItemArray addObject:newItem];
@@ -155,8 +153,8 @@
 //	}
 	
 	LMAlbumViewItem *albumViewItem = [self.albumsItemArray objectAtIndex:index % self.albumsItemArray.count];
-	MPMediaItemCollection *collection = [self.everything.collections objectAtIndex:index];
-	[albumViewItem updateContentsWithMediaItem:collection.representativeItem andNumberOfItems:collection.count];
+	LMMusicTrackCollection *collection = [self.albumCollections objectAtIndex:index];
+	[albumViewItem updateContentsWithMusicTrack:collection.representativeItem andNumberOfItems:collection.count];
 	albumViewItem.collectionIndex = index;
 	
 	return albumViewItem;
@@ -165,7 +163,7 @@
 /**
  Called when the view did layout its subviews and redrawing needs to occur for any other views.
  */
-- (void)viewDidLayoutSubviews {
+- (void)layoutSubviews {
 	if(self.loaded){
 		return;
 	}
@@ -175,9 +173,8 @@
 	
 	NSTimeInterval startingTime = [[NSDate date] timeIntervalSince1970];
 	
-	self.everything = [MPMediaQuery albumsQuery];
-	[self.everything setGroupingType: MPMediaGroupingAlbum];
-	self.albumsCount = self.everything.collections.count;
+	self.albumCollections = [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeAlbums];
+	self.albumsCount = self.albumCollections.count;
 	
 	NSLog(@"Logging items from a generic query...");
 	
@@ -185,7 +182,7 @@
 	self.rootTableView.amountOfItemsTotal = self.albumsCount;
 	self.rootTableView.subviewDelegate = self;
 	[self.rootTableView prepareForUse];
-	[self.view addSubview:self.rootTableView];
+	[self addSubview:self.rootTableView];
 	
 	[self.rootTableView autoCenterInSuperview];
 	[self.rootTableView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
@@ -193,14 +190,14 @@
 	[self.rootTableView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 	[self.rootTableView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 	
-//	CGRect currentFrame = self.view.frame;
+//	CGRect currentFrame = self.frame;
 //	CGRect rootFrame = currentFrame;
 //	self.rootScrollView = [[LMAdaptiveScrollView alloc]initWithFrame:rootFrame];
 //	self.rootScrollView.subviewArray = self.albumsItemArray;
 //	self.rootScrollView.subviewDelegate = self;
 //	self.rootScrollView.backgroundColor = [UIColor whiteColor];
-//	//[self.rootScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height*2)];
-//	[self.view addSubview:self.rootScrollView];
+//	//[self.rootScrollView setContentSize:CGSizeMake(self.frame.size.width, self.frame.size.height*2)];
+//	[self addSubview:self.rootScrollView];
 //	
 //	[self.rootScrollView reloadContentSizeWithIndex:self.albumsCount-1];
 //	[self.rootScrollView layoutSubviews];
@@ -210,26 +207,15 @@
 	NSLog(@"Took %f seconds to complete.", endingTime-startingTime);
 	
 	UIPinchGestureRecognizer *pinchGesture = [[UIPinchGestureRecognizer alloc]initWithTarget:self action:@selector(openNowPlayingView)];
-	[self.view addGestureRecognizer:pinchGesture];
+	[self addGestureRecognizer:pinchGesture];
 }
 
-- (BOOL)prefersStatusBarHidden {
-	return true;
-}
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    // Do any additional setup after loading the view.
-	
-	self.view.backgroundColor = [UIColor redColor];
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-	
-	NSLog(@"Album view got a memory warning.");
-    // Dispose of any resources that can be recreated.
-}
+//- (void)didReceiveMemoryWarning {
+//    [super didReceiveMemoryWarning];
+//	
+//	NSLog(@"Album view got a memory warning.");
+//    // Dispose of any resources that can be recreated.
+//}
 
 /*
 #pragma mark - Navigation

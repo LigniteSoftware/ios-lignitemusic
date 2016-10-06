@@ -23,7 +23,7 @@
 @property UILabel *albumTitleView, *albumArtistView, *albumCountView;
 @property LMButton *playButton;
 @property CAShapeLayer *circleLayer;
-@property id itemDelegate;
+@property id trackDelegate;
 @property LMOperationQueue *queue;
 
 @end
@@ -31,18 +31,18 @@
 @implementation LMAlbumViewItem
 
 - (void)clickedButton:(LMButton *)button {
-	if(self.itemDelegate){
-		[self.itemDelegate clickedPlayButtonOnAlbumViewItem:self];
+	if(self.trackDelegate){
+		[self.trackDelegate clickedPlayButtonOnAlbumViewItem:self];
 	}
 }
 
 - (void)tappedOnView {
-	if(self.itemDelegate){
-		[self.itemDelegate clickedAlbumViewItem:self];
+	if(self.trackDelegate){
+		[self.trackDelegate clickedAlbumViewItem:self];
 	}
 }
 
-- (void)updateContentsWithMediaItem:(MPMediaItem*)item andNumberOfItems:(NSInteger)numberOfItems {
+- (void)updateContentsWithMusicTrack:(LMMusicTrack*)track andNumberOfItems:(NSInteger)numberOfItems {
 	if(!self.queue){
 		self.queue = [[LMOperationQueue alloc] init];
 	}
@@ -50,19 +50,19 @@
 	[self.queue cancelAllOperations];
 	
 	NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
-		UIImage *image = [item.artwork imageWithSize:CGSizeMake(500, 500)];
+		//UIImage *image = [item.artwork imageWithSize:CGSizeMake(500, 500)];
 		dispatch_sync(dispatch_get_main_queue(), ^{
 			if(operation.cancelled){
 				NSLog(@"Rejecting.");
 				return;
 			}
-			self.albumImageView.image = image;
+			//self.albumImageView.image = image;
 			
-			self.albumTitleView.text = item.albumTitle;
-			self.albumArtistView.text = item.artist;
+			self.albumTitleView.text = track.albumTitle;
+			self.albumArtistView.text = track.artist;
 			self.albumCountView.text = [NSString stringWithFormat:@"%lu", (unsigned long)numberOfItems];
 			
-			self.item = item;
+			self.track = track;
 		});
 	}];
 
@@ -93,7 +93,7 @@
 	[self.shadingBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.contentView withMultiplier:0.7];
 	
 	//The album image view displays the album image.
-	self.albumImageView = [[UIImageView alloc]initWithImage:[self.item.artwork imageWithSize:CGSizeMake(500, 500)]];
+	self.albumImageView = [[UIImageView alloc]initWithImage:nil];
 	self.albumImageView.translatesAutoresizingMaskIntoConstraints = NO;
 	self.albumImageView.layer.cornerRadius = 10;
 	self.albumImageView.layer.masksToBounds = YES;
@@ -142,7 +142,7 @@
 	
 	//The album's title.
 	self.albumTitleView = [[LMLabel alloc]init];
-	self.albumTitleView.text = self.item.albumTitle;
+	self.albumTitleView.text = self.track.albumTitle;
 	self.albumTitleView.translatesAutoresizingMaskIntoConstraints = NO;
 	self.albumTitleView.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:50.0f];
 	self.albumTitleView.textAlignment = NSTextAlignmentLeft;
@@ -164,7 +164,7 @@
 	
 	//The artist.
 	self.albumArtistView = [[LMLabel alloc]init];
-	self.albumArtistView.text = self.item.artist;
+	self.albumArtistView.text = self.track.artist;
 	self.albumArtistView.translatesAutoresizingMaskIntoConstraints = NO;
 	self.albumArtistView.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:40.0f];
 	self.albumArtistView.textAlignment = NSTextAlignmentLeft;
@@ -208,18 +208,18 @@
 	
 	self.userInteractionEnabled = YES;
 	
-	self.itemDelegate = delegate;
+	self.trackDelegate = delegate;
 }
 
 /*
  Initializes an LMAlbumViewItem with a media item (which contains information for the
  album, artist, etc.)
  */
-- (id)initWithMediaItem:(MPMediaItem*)item {
+- (id)initWithMusicTrack:(LMMusicTrack*)track {
     self = [super init];
 //    self.layer.backgroundColor = [UIColor greenColor].CGColor;
     if(self){
-        self.item = item;
+        self.track = track;
 	}
     else{
         NSLog(@"LMAlbumViewItem is nil!");

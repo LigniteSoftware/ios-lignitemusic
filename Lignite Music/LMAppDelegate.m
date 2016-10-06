@@ -6,13 +6,13 @@
 //  Copyright © 2015 Lignite. All rights reserved.
 //
 
-#import "AppDelegate.h"
+#import "LMAppDelegate.h"
 
-@interface AppDelegate ()
+@interface LMAppDelegate ()
 
 @end
 
-@implementation AppDelegate
+@implementation LMAppDelegate
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
