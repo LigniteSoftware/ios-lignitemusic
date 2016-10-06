@@ -15,7 +15,7 @@
 #import "LMTableView.h"
 #import "LMTableViewCell.h"
 
-@interface LMAlbumView () <LMAlbumViewItemDelegate, LMTableViewSubviewDelegate>
+@interface LMAlbumView () <LMAlbumViewItemDelegate, LMTableViewSubviewDelegate, LMMusicPlayerDelegate>
 
 @property LMTableView *rootTableView;
 @property NSMutableArray *albumsItemArray;
@@ -25,6 +25,8 @@
 @property BOOL loaded, hasLoadedInitialItems;
 
 @property NSLayoutConstraint *topConstraint;
+
+@property NSInteger currentlyPlaying;
 
 @end
 
@@ -38,6 +40,56 @@
 						options:0 animations:^{
 							[self layoutIfNeeded];
 						} completion:nil];
+}
+
+- (LMAlbumViewItem*)albumViewItemForAlbumIndex:(NSInteger)index {
+	if(index == -1){
+		return nil;
+	}
+	
+	LMAlbumViewItem *item = nil;
+	for(int i = 0; i < self.albumsItemArray.count; i++){
+		LMAlbumViewItem *indexItem = [self.albumsItemArray objectAtIndex:i];
+		if(indexItem.collectionIndex == index){
+			item = indexItem;
+			break;
+		}
+	}
+	return item;
+}
+
+- (void)musicTrackDidChange:(LMMusicTrack *)newTrack {
+	int newHighlightedIndex = -1;
+	for(int i = 0; i < self.albumCollections.count; i++){
+		LMMusicTrackCollection *collection = [self.albumCollections objectAtIndex:i];
+		LMMusicTrack *representativeItem = collection.representativeItem;
+		
+		if(representativeItem.albumPersistentID == newTrack.albumPersistentID){
+			newHighlightedIndex = i;
+		}
+	}
+	
+	LMAlbumViewItem *playingItem = [self albumViewItemForAlbumIndex:newHighlightedIndex];
+	if(playingItem && self.musicPlayer.playbackState == LMMusicPlaybackStatePlaying){
+		[playingItem.playButton setImage:[UIImage imageNamed:@"pause_white.png"]];
+	}
+	
+	LMAlbumViewItem *lastEntry = [self albumViewItemForAlbumIndex:self.currentlyPlaying];
+	if(lastEntry && ![lastEntry isEqual:playingItem]){
+		[lastEntry.playButton setImage:[UIImage imageNamed:@"play_white.png"]];
+	}
+	
+	self.currentlyPlaying = newHighlightedIndex;
+	
+	NSLog(@"The new highlighted index is %d", newHighlightedIndex);
+}
+
+- (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState {
+	NSLog(@"Current %lu", self.currentlyPlaying);
+	LMAlbumViewItem *playingEntry = [self albumViewItemForAlbumIndex:self.currentlyPlaying];
+	if(playingEntry){
+		[playingEntry.playButton setImage:newState == LMMusicPlaybackStatePlaying ? [UIImage imageNamed:@"pause_white.png"] :[UIImage imageNamed:@"play_white.png"]];
+	}
 }
 
 /**
@@ -89,10 +141,15 @@
 - (void)clickedPlayButtonOnAlbumViewItem:(LMAlbumViewItem*)item {
 	LMMusicTrackCollection *collection = [self.albumCollections objectAtIndex:item.collectionIndex];
 	
-	[self.musicPlayer setNowPlayingCollection:collection];
-	[self.musicPlayer play];
+	if(self.musicPlayer.nowPlayingCollection != collection || (!self.musicPlayer.nowPlayingCollection && self.currentlyPlaying != -1)){
+		[self.musicPlayer setNowPlayingCollection:collection];
+		[self.musicPlayer play];
+	}
+	else{
+		[self musicPlaybackStateDidChange:[self.musicPlayer invertPlaybackState]];
+	}
 	
-	[self openNowPlayingView];
+	//[self openNowPlayingView];
 }
 
 /**
@@ -154,6 +211,7 @@
 //	}
 	
 	LMAlbumViewItem *albumViewItem = [self.albumsItemArray objectAtIndex:index % self.albumsItemArray.count];
+	[albumViewItem.playButton setImage:(index == self.currentlyPlaying && self.musicPlayer.playbackState == LMMusicPlaybackStatePlaying) ? [UIImage imageNamed:@"pause_white.png"] : [UIImage imageNamed:@"play_white.png"]];
 	LMMusicTrackCollection *collection = [self.albumCollections objectAtIndex:index];
 	[albumViewItem updateContentsWithMusicTrack:collection.representativeItem andNumberOfItems:collection.count];
 	albumViewItem.collectionIndex = index;
@@ -169,6 +227,8 @@
 		return;
 	}
 	self.loaded = YES;
+	
+	self.currentlyPlaying = -1;
 	
 	self.albumsItemArray = [[NSMutableArray alloc]init];
 	
@@ -197,6 +257,8 @@
 	
 	UIPinchGestureRecognizer *pinchGesture = [[UIPinchGestureRecognizer alloc]initWithTarget:self action:@selector(openNowPlayingView)];
 	[self addGestureRecognizer:pinchGesture];
+	
+	[self.musicPlayer addMusicDelegate:self];
 }
 
 @end

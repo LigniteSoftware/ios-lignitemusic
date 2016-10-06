@@ -9,7 +9,6 @@
 #import <PureLayout/PureLayout.h>
 #import <MediaPlayer/MediaPlayer.h>
 #import "LMAlbumViewItem.h"
-#import "LMButton.h"
 #import "LMLabel.h"
 #import "LMAlbumCountLabel.h"
 #import "LMOperationQueue.h"
@@ -21,7 +20,6 @@
 @property UIView *contentView, *textBackgroundView;
 @property LMShadowView *shadingBackgroundView;
 @property UILabel *albumTitleView, *albumArtistView, *albumCountView;
-@property LMButton *playButton;
 @property CAShapeLayer *circleLayer;
 @property id trackDelegate;
 @property LMOperationQueue *queue;

@@ -27,6 +27,11 @@
 		self.genre = item.genre;
 		
 		self.persistentID = item.persistentID;
+		self.albumArtistPersistentID = item.albumArtistPersistentID;
+		self.albumPersistentID = item.albumPersistentID;
+		self.artistPersistentID = item.artistPersistentID;
+		self.composerPersistentID = item.composerPersistentID;
+		self.genrePersistentID = item.genrePersistentID;
 		
 		self.playbackDuration = item.playbackDuration;
 		

@@ -47,9 +47,14 @@ typedef uint64_t LMMusicTrackPersistentID;
 @property NSTimeInterval playbackDuration;
 
 /**
- The persistent ID of the track.
+ The persistent IDs of the track.
  */
 @property LMMusicTrackPersistentID persistentID;
+@property LMMusicTrackPersistentID albumArtistPersistentID;
+@property LMMusicTrackPersistentID albumPersistentID;
+@property LMMusicTrackPersistentID artistPersistentID;
+@property LMMusicTrackPersistentID composerPersistentID;
+@property LMMusicTrackPersistentID genrePersistentID;
 
 /**
  A reference to the source track which provided the LMMusicTrack with its data. 

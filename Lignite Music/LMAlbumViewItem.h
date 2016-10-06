@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "LMMusicTrack.h"
+#import "LMButton.h"
 
 @class LMAlbumViewItem;
 
@@ -22,6 +23,7 @@
 
 @property LMMusicTrack *track;
 @property NSUInteger collectionIndex;
+@property LMButton *playButton;
 
 - (void)updateContentsWithMusicTrack:(LMMusicTrack*)track andNumberOfItems:(NSInteger)numberOfItems;
 - (void)setupWithAlbumCount:(NSUInteger)numberOfItems andDelegate:(id)delegate;
