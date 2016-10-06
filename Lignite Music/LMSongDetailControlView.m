@@ -21,20 +21,25 @@
 
 @implementation LMSongDetailControlView
 
-- (void)clickedButton:(LMButton *)button {
-	NSLog(@"Sup dog");
-	[UIView animateWithDuration:0.25 animations:^{
-		[button setColour:[[button getColor:button] isEqual:[UIColor whiteColor]] ? [UIColor clearColor] : [UIColor whiteColor]];
+- (void)updateContents:(BOOL)animated {
+	[UIView animateWithDuration:animated ? 0.25 : 0.01 animations:^{
+		[self.shuffleButton setColour:self.musicPlayer.shuffleMode == LMMusicShuffleModeSongs ? [UIColor whiteColor] : [UIColor clearColor]];
+		[self.repeatButton setColour:self.musicPlayer.repeatMode == LMMusicRepeatModeAll ? [UIColor whiteColor] : [UIColor clearColor]];
 	}];
+}
+
+- (void)clickedButton:(LMButton *)button {
 	if(button == self.shuffleButton){
-		
+		[self.musicPlayer setShuffleMode:(self.musicPlayer.shuffleMode == LMMusicShuffleModeOff) ? LMMusicShuffleModeSongs : LMMusicShuffleModeOff];
 	}
 	else if(button == self.favouriteButton){
-		
+
 	}
 	else{
-		
+		[self.musicPlayer setRepeatMode:(self.musicPlayer.repeatMode == LMMusicRepeatModeNone) ? LMMusicRepeatModeAll : LMMusicRepeatModeNone];
 	}
+	
+	[self updateContents:YES];
 }
 
 - (void)updateConstraints {
@@ -49,9 +54,9 @@
 		self.favouriteBackgroundView = [UIView newAutoLayoutView];
 		self.repeatBackgroundView = [UIView newAutoLayoutView];
 		
-		NSArray *images = @[@"shuffle_black.png", @"favourite_heart.png", @"repeat_black.png"];
-		NSArray *buttons = @[self.shuffleButton, self.favouriteButton, self.repeatButton];
-		NSArray *backgrounds = @[self.shuffleBackgroundView, self.favouriteBackgroundView, self.repeatBackgroundView];
+		NSArray *images = @[@"shuffle_black.png", @"repeat_black.png"];
+		NSArray *buttons = @[self.shuffleButton, self.repeatButton];
+		NSArray *backgrounds = @[self.shuffleBackgroundView, self.repeatBackgroundView];
 		
 		for(uint8_t i = 0; i < images.count; i++){
 			NSString *currentImage = [images objectAtIndex:i];
@@ -62,7 +67,7 @@
 			currentBackground.backgroundColor = [UIColor clearColor];
 			[self addSubview:currentBackground];
 			
-			[currentBackground autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(1.0f/3.0f)];
+			[currentBackground autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(1.0f/(float)images.count)];
 			[currentBackground autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self];
 			[currentBackground autoPinEdge:ALEdgeLeading toEdge:((i == 0) ? ALEdgeLeading : ALEdgeTrailing) ofView:previousBackground];
 			[currentBackground autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self];
@@ -79,6 +84,8 @@
 			[currentButton setColour:[UIColor clearColor]];
 			[currentButton setImage:[UIImage imageNamed:currentImage]];
 		}
+		
+		[self updateContents:NO];
 		
 		self.loadedConstraints = YES;
 	}

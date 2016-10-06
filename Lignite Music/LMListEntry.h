@@ -32,4 +32,9 @@
 
 @property NSInteger collectionIndex;
 
+/**
+ Optional. Associated data with this LMListEntry.
+ */
+@property id associatedData;
+
 @end

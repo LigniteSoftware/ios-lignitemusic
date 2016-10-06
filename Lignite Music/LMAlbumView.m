@@ -50,26 +50,27 @@
 	
 	LMMusicTrackCollection *collection = [self.albumCollections objectAtIndex:item.collectionIndex];
 	NSLog(@"Collection %@", collection.representativeItem.artist);
-//	
-//	LMAlbumDetailView *detailView = [[LMAlbumDetailView alloc]initWithMediaItemCollection:[self.everything.collections objectAtIndex:item.collectionIndex]];
-//	//detailView.rootViewController = self;
-//	detailView.translatesAutoresizingMaskIntoConstraints = NO;
-//	[self addSubview:detailView];
-//	
-//	self.topConstraint = [detailView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self withOffset:self.frame.size.height];
-//	[detailView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self];
-//	[detailView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
-//	[detailView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self];
-//	
-//	[detailView setup];
-//	
-//	[self layoutIfNeeded];
-//	self.topConstraint.constant = 0;
-//	[UIView animateWithDuration:0.5 delay:0.1
-//		 usingSpringWithDamping:0.75 initialSpringVelocity:0.0f
-//						options:0 animations:^{
-//							[self layoutIfNeeded];
-//						} completion:nil];
+	
+	LMAlbumDetailView *detailView = [[LMAlbumDetailView alloc]initWithMusicTrackCollection:[self.albumCollections objectAtIndex:item.collectionIndex]];
+	detailView.rootView = self;
+	detailView.musicPlayer = self.musicPlayer;
+	detailView.translatesAutoresizingMaskIntoConstraints = NO;
+	[self addSubview:detailView];
+	
+	self.topConstraint = [detailView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self withOffset:self.frame.size.height];
+	[detailView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self];
+	[detailView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
+	[detailView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self];
+	
+	[detailView setup];
+	
+	[self layoutIfNeeded];
+	self.topConstraint.constant = 0;
+	[UIView animateWithDuration:0.5 delay:0.1
+		 usingSpringWithDamping:0.75 initialSpringVelocity:0.0f
+						options:0 animations:^{
+							[self layoutIfNeeded];
+						} completion:nil];
 }
 
 - (void)openNowPlayingView {
@@ -190,18 +191,6 @@
 	[self.rootTableView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 	[self.rootTableView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 	
-//	CGRect currentFrame = self.frame;
-//	CGRect rootFrame = currentFrame;
-//	self.rootScrollView = [[LMAdaptiveScrollView alloc]initWithFrame:rootFrame];
-//	self.rootScrollView.subviewArray = self.albumsItemArray;
-//	self.rootScrollView.subviewDelegate = self;
-//	self.rootScrollView.backgroundColor = [UIColor whiteColor];
-//	//[self.rootScrollView setContentSize:CGSizeMake(self.frame.size.width, self.frame.size.height*2)];
-//	[self addSubview:self.rootScrollView];
-//	
-//	[self.rootScrollView reloadContentSizeWithIndex:self.albumsCount-1];
-//	[self.rootScrollView layoutSubviews];
-	
 	NSTimeInterval endingTime = [[NSDate date] timeIntervalSince1970];
 	
 	NSLog(@"Took %f seconds to complete.", endingTime-startingTime);
@@ -209,22 +198,5 @@
 	UIPinchGestureRecognizer *pinchGesture = [[UIPinchGestureRecognizer alloc]initWithTarget:self action:@selector(openNowPlayingView)];
 	[self addGestureRecognizer:pinchGesture];
 }
-
-//- (void)didReceiveMemoryWarning {
-//    [super didReceiveMemoryWarning];
-//	
-//	NSLog(@"Album view got a memory warning.");
-//    // Dispose of any resources that can be recreated.
-//}
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

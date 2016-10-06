@@ -19,6 +19,8 @@
 
 @interface LMMusicTrack : NSObject
 
+typedef uint64_t LMMusicTrackPersistentID;
+
 /**
  The song's name/title.
  */
@@ -45,6 +47,11 @@
 @property NSTimeInterval playbackDuration;
 
 /**
+ The persistent ID of the track.
+ */
+@property LMMusicTrackPersistentID persistentID;
+
+/**
  A reference to the source track which provided the LMMusicTrack with its data. 
  This changes depending on the type of instance that LMMusicPlayer is (ie. Spotify).
  */
@@ -59,5 +66,12 @@
  @return The created LMMusicTrack.
  */
 - (instancetype)initWithMPMediaItem:(MPMediaItem*)item;
+
+/**
+ Gets the album art associated with with LMMusicTrack. If the album art has not yet been created for this track, it will create it. It is recommended that this not be called in the main thread.
+
+ @return The album art.
+ */
+- (UIImage*)albumArt;
 
 @end

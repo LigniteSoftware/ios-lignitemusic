@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LMMusicPlayer.h"
 
 @interface LMSongDetailControlView : UIView
+
+@property LMMusicPlayer *musicPlayer;
 
 @end

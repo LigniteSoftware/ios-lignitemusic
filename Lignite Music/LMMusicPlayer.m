@@ -16,8 +16,12 @@
 @end
 
 @implementation LMMusicPlayer
+
 @synthesize nowPlayingTrack = _nowPlayingTrack;
 @synthesize nowPlayingCollection = _nowPlayingCollection;
+@synthesize playerType = _playerType;
+@synthesize shuffleMode = _shuffleMode;
+@synthesize repeatMode = _repeatMode;
 
 - (instancetype)init {
 	self = [super init];
@@ -26,6 +30,8 @@
 		self.nowPlayingTrack = [[LMMusicTrack alloc]initWithMPMediaItem:self.systemMusicPlayer.nowPlayingItem];
 		self.playerType = LMMusicPlayerTypeSystemMusicPlayer;
 		self.delegates = [[NSMutableArray alloc]init];
+		self.shuffleMode = LMMusicShuffleModeOff;
+		self.repeatMode = LMMusicRepeatModeNone;
 		
 		[[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
 		
@@ -185,6 +191,23 @@
 	}
 }
 
+- (void)stop {
+	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer){
+		[self.systemMusicPlayer stop];
+	}
+}
+
+- (LMMusicPlaybackState)invertPlaybackState {
+	switch(self.playbackState){
+		case LMMusicPlaybackStatePlaying:
+			[self pause];
+			return LMMusicPlaybackStatePaused;
+		default:
+			[self play];
+			return LMMusicPlaybackStatePlaying;
+	}
+}
+
 - (void)setNowPlayingTrack:(LMMusicTrack*)nowPlayingTrack {
 	for(int i = 0; i < self.nowPlayingCollection.count; i++){
 		LMMusicTrack *track = [self.nowPlayingCollection.items objectAtIndex:i];
@@ -213,8 +236,61 @@
 	_nowPlayingCollection = nowPlayingCollection;
 }
 
+- (void)setPlayerType:(LMMusicPlayerType)playerType {
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	[defaults setInteger:playerType forKey:DEFAULTS_KEY_PLAYER_TYPE];
+	[defaults synchronize];
+	
+	_playerType = playerType;
+}
+
+- (LMMusicPlayerType)playerType {
+	return _playerType;
+}
+
++ (LMMusicPlayerType)savedPlayerType {
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	LMMusicPlayerType type = LMMusicPlayerTypeSystemMusicPlayer;
+	if([defaults objectForKey:DEFAULTS_KEY_PLAYER_TYPE]){
+		type = (LMMusicPlayerType)[defaults integerForKey:DEFAULTS_KEY_PLAYER_TYPE];
+	}
+	return type;
+}
+
 - (LMMusicTrackCollection*)nowPlayingCollection {
 	return _nowPlayingCollection;
+}
+
+- (void)setShuffleMode:(LMMusicShuffleMode)shuffleMode {
+	_shuffleMode = shuffleMode;
+	
+	NSLog(@"New shuffle is %d", _shuffleMode);
+	
+	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer){
+		MPMusicShuffleMode associatedShuffleModes[] = {
+			MPMusicShuffleModeDefault,
+			MPMusicShuffleModeOff,
+			MPMusicShuffleModeSongs,
+			MPMusicShuffleModeAlbums
+		};
+		self.systemMusicPlayer.shuffleMode = associatedShuffleModes[shuffleMode];
+	}
+}
+
+- (LMMusicShuffleMode)shuffleMode {
+	return _shuffleMode;
+}
+
+- (void)setRepeatMode:(LMMusicRepeatMode)repeatMode {
+	_repeatMode = repeatMode;
+	
+	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer){
+		self.systemMusicPlayer.repeatMode = (MPMusicRepeatMode)repeatMode;
+	}
+}
+
+- (LMMusicRepeatMode)repeatMode {
+	return _repeatMode;
 }
 
 @end

@@ -17,9 +17,10 @@
 #import "LMNowPlayingViewController.h"
 #import "LMSongDetailControlView.h"
 
-@interface LMAlbumDetailView() <LMButtonDelegate, LMListEntryDelegate, LMTableViewSubviewDelegate>
+@interface LMAlbumDetailView() <LMButtonDelegate, LMListEntryDelegate, LMTableViewSubviewDelegate, LMMusicPlayerDelegate>
 
-@property MPMediaItemCollection *albumCollection;
+@property LMMusicTrackCollection *albumCollection;
+
 @property UIImageView *albumArtView;
 @property UIView *textBackgroundView, *controlView, *gestureRecognizerView;
 @property LMSongDetailControlView *controlBackgroundView;
@@ -40,6 +41,7 @@
 - (id)prepareSubviewAtIndex:(NSUInteger)index {
 	LMListEntry *entry = [self.itemArray objectAtIndex:index % self.itemArray.count];
 	entry.collectionIndex = index;
+	entry.associatedData = [self.albumCollection.items objectAtIndex:index];
 	
 	[entry changeHighlightStatus:self.currentlyHighlighted == entry.collectionIndex animated:NO];
 	
@@ -55,6 +57,10 @@
 }
 
 - (LMListEntry*)listEntryForIndex:(NSInteger)index {
+	if(index == -1){
+		return nil;
+	}
+	
 	LMListEntry *entry = nil;
 	for(int i = 0; i < self.itemArray.count; i++){
 		LMListEntry *indexEntry = [self.itemArray objectAtIndex:i];
@@ -83,13 +89,61 @@
 }
 
 - (BOOL)dividerForTableView:(LMTableView *)tableView {
-	return true;
+	return YES;
+}
+
+- (void)musicTrackDidChange:(LMMusicTrack *)newTrack {
+	LMListEntry *highlightedEntry = nil;
+	int newHighlightedIndex = -1;
+	for(int i = 0; i < self.albumCollection.count; i++){
+		LMMusicTrack *track = [self.albumCollection.items objectAtIndex:i];
+		LMListEntry *entry = [self listEntryForIndex:i];
+		LMMusicTrack *entryTrack = entry.associatedData;
+		
+		if(entryTrack.persistentID == newTrack.persistentID){
+			highlightedEntry = entry;
+		}
+		
+		if(track.persistentID == newTrack.persistentID){
+			newHighlightedIndex = i;
+		}
+	}
+	
+	LMListEntry *previousHighlightedEntry = [self listEntryForIndex:self.currentlyHighlighted];
+	if(![previousHighlightedEntry isEqual:highlightedEntry] || highlightedEntry == nil){
+		[previousHighlightedEntry changeHighlightStatus:NO animated:YES];
+		BOOL updateNowPlayingStatus = self.currentlyHighlighted == -1;
+		self.currentlyHighlighted = newHighlightedIndex;
+		if(updateNowPlayingStatus){
+			[self musicPlaybackStateDidChange:self.musicPlayer.playbackState];
+		}
+	}
+	
+	if(highlightedEntry){
+		[highlightedEntry changeHighlightStatus:YES animated:YES];
+	}
+}
+
+- (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState {
+	if(self.currentlyHighlighted != -1){ //The music playing is this album.
+		switch(newState){
+			case LMMusicPlaybackStatePaused:
+			case LMMusicPlaybackStateStopped:
+			case LMMusicPlaybackStateInterrupted:
+			default:
+				[self.playButton setImage:[UIImage imageNamed:@"play_white.png"]];
+				break;
+			case LMMusicPlaybackStatePlaying:
+				[self.playButton setImage:[UIImage imageNamed:@"pause_white.png"]];
+				break;
+		}
+	}
 }
 
 - (void)tappedListEntry:(LMListEntry*)entry {
-	MPMediaItem *item = [self.albumCollection.items objectAtIndex:entry.collectionIndex];
+	LMMusicTrack *track = [self.albumCollection.items objectAtIndex:entry.collectionIndex];
 	
-	NSLog(@"%@", self.albumCollection.representativeItem.artist);
+//	NSLog(@"Tapped list entry with artist %@", self.albumCollection.representativeItem.artist);
 	
 	LMListEntry *previousHighlightedEntry = [self listEntryForIndex:self.currentlyHighlighted];
 	if(previousHighlightedEntry){
@@ -99,11 +153,12 @@
 	[entry changeHighlightStatus:YES animated:YES];
 	self.currentlyHighlighted = entry.collectionIndex;
 	
-	MPMusicPlayerController *controller = [MPMusicPlayerController systemMusicPlayer];
-	[controller stop];
-	[controller setQueueWithItemCollection:self.albumCollection];
-	[controller setNowPlayingItem:item];
-	[controller play];
+	if(self.musicPlayer.nowPlayingCollection != self.albumCollection){
+		[self.musicPlayer stop];
+		[self.musicPlayer setNowPlayingCollection:self.albumCollection];
+	}
+	[self.musicPlayer setNowPlayingTrack:track];
+	[self.musicPlayer play];
 }
 
 - (UIColor*)tapColourForListEntry:(LMListEntry*)entry {
@@ -111,13 +166,13 @@
 }
 
 - (NSString*)titleForListEntry:(LMListEntry*)entry {
-	MPMediaItem *item = [self.albumCollection.items objectAtIndex:entry.collectionIndex];
-	return item.title;
+	LMMusicTrack *track = [self.albumCollection.items objectAtIndex:entry.collectionIndex];
+	return track.title;
 }
 
 - (NSString*)subtitleForListEntry:(LMListEntry*)entry {
-	MPMediaItem *item = [self.albumCollection.items objectAtIndex:entry.collectionIndex];
-	return [NSString stringWithFormat:NSLocalizedString(@"LengthOfSong", nil), [LMNowPlayingViewController durationStringTotalPlaybackTime:item.playbackDuration]];
+	LMMusicTrack *track = [self.albumCollection.items objectAtIndex:entry.collectionIndex];
+	return [NSString stringWithFormat:NSLocalizedString(@"LengthOfSong", nil), [LMNowPlayingViewController durationStringTotalPlaybackTime:track.playbackDuration]];
 }
 
 - (UIImage*)iconForListEntry:(LMListEntry*)entry {
@@ -125,11 +180,20 @@
 }
 
 - (void)clickedButton:(LMButton *)button {
-	NSLog(@"Clicked button");
+	if(self.currentlyHighlighted != -1){
+		LMMusicPlaybackState newState = [self.musicPlayer invertPlaybackState];
+		[self musicPlaybackStateDidChange:newState];
+	}
+	else{
+		[self.musicPlayer stop];
+		[self.musicPlayer setNowPlayingCollection:self.albumCollection];
+		[self.musicPlayer play];
+	}
 }
 
 - (void)pinchedView {
-	//[self.rootViewController dismissViewOnTop];
+	[self.rootView dismissViewOnTop];
+	[self.musicPlayer removeMusicDelegate:self];
 	NSLog(@"Pinched");
 }
 
@@ -223,9 +287,11 @@
 }
 
 - (void)setup {
+	[self.musicPlayer addMusicDelegate:self];
+	
 	self.currentlyHighlighted = -1;
 	
-	UIImage *albumArtImage = [[self.albumCollection.representativeItem artwork] imageWithSize:CGSizeMake(500, 500)];
+	UIImage *albumArtImage = [self.albumCollection.representativeItem albumArt];
 	self.albumArtView = [[UIImageView alloc] initWithImage:albumArtImage];
 	self.albumArtView.translatesAutoresizingMaskIntoConstraints = NO;
 	[self addSubview:self.albumArtView];
@@ -302,9 +368,9 @@
 	
 	//The details about the song.
 	self.albumInfoView = [[LMLabel alloc]init];
-	MPMediaItem *representativeItem = self.albumCollection.representativeItem;
-	if(representativeItem.genre){
-		self.albumInfoView.text = [NSString stringWithFormat:NSLocalizedString(@"AlbumDetailInfoWithGenre", nil), representativeItem.genre, self.albumCollection.count, NSLocalizedString(self.albumCollection.count == 1 ? @"Song" : @"Songs", nil)];
+	LMMusicTrack *representativeTrack = self.albumCollection.representativeItem;
+	if(representativeTrack.genre){
+		self.albumInfoView.text = [NSString stringWithFormat:NSLocalizedString(@"AlbumDetailInfoWithGenre", nil), representativeTrack.genre, self.albumCollection.count, NSLocalizedString(self.albumCollection.count == 1 ? @"Song" : @"Songs", nil)];
 	}
 	else{
 		self.albumInfoView.text = [NSString stringWithFormat:NSLocalizedString(@"AlbumDetailInfoWithoutGenre", nil), self.albumCollection.count, NSLocalizedString(self.albumCollection.count == 1 ? @"Song" : @"Songs", nil)];
@@ -323,6 +389,7 @@
 	
 	self.controlBackgroundView = [[LMSongDetailControlView alloc]init];
 	self.controlBackgroundView.translatesAutoresizingMaskIntoConstraints = NO;
+	self.controlBackgroundView.musicPlayer = self.musicPlayer;
 	[self addSubview:self.controlBackgroundView];
 	
 	[self.controlBackgroundView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.textBackgroundView];
@@ -369,13 +436,12 @@
 	
 	UIPinchGestureRecognizer *pinchGesture = [[UIPinchGestureRecognizer alloc]initWithTarget:self action:@selector(pinchedView)];
 	[self addGestureRecognizer:pinchGesture];
+	
+	[self musicTrackDidChange:self.musicPlayer.nowPlayingTrack];
+	[self musicPlaybackStateDidChange:self.musicPlayer.playbackState];
 }
 
-/*
- Initializes an LMAlbumDetailView with a media collection (which contains information for the
- album and all of its tracks)
- */
-- (id)initWithMediaItemCollection:(MPMediaItemCollection*)collection {
+- (instancetype)initWithMusicTrackCollection:(LMMusicTrackCollection*)collection {
 	self = [super init];
 	self.backgroundColor = [UIColor whiteColor];
 	if(self){

@@ -12,6 +12,11 @@
 #import "LMMusicTrackCollection.h"
 
 /**
+ Storage key for the user set player type. Correlates to LMMusicPlayerType.
+ */
+#define DEFAULTS_KEY_PLAYER_TYPE @"setPlayerType"
+
+/**
  LMMusicPlayerType is the type of music player, such as the system music player or Spotify.
  */
 typedef enum {
@@ -41,6 +46,26 @@ typedef enum {
 	LMMusicPlaybackStateSeekingForward,
 	LMMusicPlaybackStateSeekingBackward
 } LMMusicPlaybackState;
+
+/**
+ LMMusicRepeatMode is the repeat mode of the music.
+ */
+typedef enum {
+	LMMusicRepeatModeDefault = 0, //The user's default setting. Bullshit value, never use this.
+	LMMusicRepeatModeNone, //Do not repeat.
+	LMMusicRepeatModeOne, //Repeat this one track.
+	LMMusicRepeatModeAll //Repeat all of the tracks in the current queue.
+} LMMusicRepeatMode;
+
+/**
+ LMMusicRepeatMode is the repeat mode of the music.
+ */
+typedef enum {
+	LMMusicShuffleModeDefault = 0, //The user's default setting. Bullshit value, never use this.
+	LMMusicShuffleModeOff, //Do not shuffle.
+	LMMusicShuffleModeSongs, //Shuffle by songs.
+	LMMusicShuffleModeAlbums //Shuffle by albums.
+} LMMusicShuffleMode;
 
 @class LMMusicPlayer;
 
@@ -92,12 +117,12 @@ typedef enum {
 /**
  The current repeat mode of the music player.
  */
-@property MPMusicRepeatMode repeatMode;
+@property LMMusicRepeatMode repeatMode;
 
 /**
  The current shuffle mode of the music player.
  */
-@property MPMusicShuffleMode shuffleMode;
+@property LMMusicShuffleMode shuffleMode;
 
 /**
  Prepare for release through ARC. Unhooks observers tied to state and track change notifications.
@@ -128,8 +153,7 @@ typedef enum {
 - (NSArray<LMMusicTrackCollection*>*)queryCollectionsForMusicType:(LMMusicType)musicType;
 
 /**
- Starts playback of the next media item in the playback queue; or, the music player is not playing, 
- designates the next media item as the next to be played.
+ Starts playback of the next media item in the playback queue; or, the music player is not playing, designates the next media item as the next to be played.
  */
 - (void)skipToNextTrack;
 
@@ -139,8 +163,7 @@ typedef enum {
 - (void)skipToBeginning;
 
 /**
- Starts playback of the previous media item in the playback queue; or, the music player is not playing, 
- designates the previous media item as the next to be played.
+ Starts playback of the previous media item in the playback queue; or, the music player is not playing, designates the previous media item as the next to be played.
  */
 - (void)skipToPreviousItem;
 
@@ -154,5 +177,21 @@ typedef enum {
  */
 - (void)pause;
 
+/**
+ Stop the music completely.
+ */
+- (void)stop;
+
+/**
+ Invert the current playback state. If the music is paused/stopped, it will play the music, otherwise it will pause the music.
+ */
+- (LMMusicPlaybackState)invertPlaybackState;
+
+/**
+ Gets the currently saved LMMusicPlayerType through NSUserDefaults. Returns LMMusicPlayerTypeSystemMusicPlayer if the entry doesn't exist in NSUserDefaults.
+
+ @return The saved LMMusicPlayerType.
+ */
++ (LMMusicPlayerType)savedPlayerType;
 
 @end

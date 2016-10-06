@@ -18,6 +18,8 @@
 @property UIImageView *iconView;
 @property LMLabel *titleLabel, *subtitleLabel;
 
+@property BOOL highlighted;
+
 @end
 
 @implementation LMListEntry
@@ -32,6 +34,12 @@
 }
 
 - (void)changeHighlightStatus:(BOOL)highlighted animated:(BOOL)animated {
+	if(self.highlighted && highlighted){
+		return;
+	}
+	
+	self.highlighted = highlighted;
+	
 	if(animated){
 		[UIView animateWithDuration:0.2 animations:^{
 			if(highlighted){

@@ -50,13 +50,13 @@
 	[self.queue cancelAllOperations];
 	
 	NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
-		//UIImage *image = [item.artwork imageWithSize:CGSizeMake(500, 500)];
+		UIImage *image = [track albumArt];
 		dispatch_sync(dispatch_get_main_queue(), ^{
 			if(operation.cancelled){
 				NSLog(@"Rejecting.");
 				return;
 			}
-			//self.albumImageView.image = image;
+			self.albumImageView.image = image;
 			
 			self.albumTitleView.text = track.albumTitle;
 			self.albumArtistView.text = track.artist;

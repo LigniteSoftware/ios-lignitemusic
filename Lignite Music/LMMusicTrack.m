@@ -8,6 +8,13 @@
 
 #import <MediaPlayer/MediaPlayer.h>
 #import "LMMusicTrack.h"
+#import "LMMusicPlayer.h"
+
+@interface LMMusicTrack()
+
+@property UIImage *loadedAlbumArt;
+
+@end
 
 @implementation LMMusicTrack
 
@@ -19,6 +26,8 @@
 		self.albumTitle = item.albumTitle;
 		self.genre = item.genre;
 		
+		self.persistentID = item.persistentID;
+		
 		self.playbackDuration = item.playbackDuration;
 		
 		self.sourceTrack = item;
@@ -27,6 +36,26 @@
 		NSLog(@"Error creating LMMusicTrack with MPMediaItem %@!", item);
 	}
 	return self;
+}
+
+- (UIImage*)albumArt {
+	if(self.loadedAlbumArt){
+		return self.loadedAlbumArt;
+	}
+	
+	LMMusicPlayerType currentPlayerType = [LMMusicPlayer savedPlayerType];
+	if(currentPlayerType == LMMusicPlayerTypeSystemMusicPlayer){
+		MPMediaItem *mediaItem = self.sourceTrack;
+		
+		UIImage *image = [mediaItem.artwork imageWithSize:CGSizeMake(500, 500)];
+		self.loadedAlbumArt = image;
+		
+		return image;
+	}
+	
+	NSLog(@"Warning: Album art image not found for track %@.", self.title);
+	
+	return nil;
 }
 
 @end
