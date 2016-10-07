@@ -51,7 +51,7 @@
 									repeats:NO];
 	
 	NSArray *items = [self.musicPlayer queryCollectionsForMusicType:LMMusicTypePlaylists];
-	NSLog(@"Got %lu items.", items.count);
+	NSLog(@"Got %lu items.", (unsigned long)items.count);
 	
 	int random = rand() % items.count;
 	NSLog(@"%d", random);
@@ -117,8 +117,12 @@
 	[self.albumView autoCenterInSuperview];
 	[self.albumView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
 	[self.albumView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
-
-	NSLog(@"Setting up!");
+	
+	[NSTimer scheduledTimerWithTimeInterval:0.75
+									 target:self
+								   selector:@selector(openNowPlayingView)
+								   userInfo:nil
+									repeats:NO];
 	
 //	self.nowPlayingView = [[LMNowPlayingView alloc]init];
 //	self.nowPlayingView.translatesAutoresizingMaskIntoConstraints = NO;

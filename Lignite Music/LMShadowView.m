@@ -27,11 +27,12 @@
 }
 
 - (void)updateConstraints {
-	NSLog(@"Updated %@", NSStringFromCGRect(self.frame));
 	self.layer.shadowRadius = 30;
 	
 	[super updateConstraints];
 }
+
+//TODO: Fix shadow shit
 
 /*
 // Only override drawRect: if you perform custom drawing.

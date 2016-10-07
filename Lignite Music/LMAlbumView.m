@@ -80,12 +80,10 @@
 	}
 	
 	self.currentlyPlaying = newHighlightedIndex;
-	
-	NSLog(@"The new highlighted index is %d", newHighlightedIndex);
 }
 
 - (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState {
-	NSLog(@"Current %lu", self.currentlyPlaying);
+	NSLog(@"Current state %ld", (long)self.currentlyPlaying);
 	LMAlbumViewItem *playingEntry = [self albumViewItemForAlbumIndex:self.currentlyPlaying];
 	if(playingEntry){
 		[playingEntry.playButton setImage:newState == LMMusicPlaybackStatePlaying ? [UIImage imageNamed:@"pause_white.png"] :[UIImage imageNamed:@"play_white.png"]];

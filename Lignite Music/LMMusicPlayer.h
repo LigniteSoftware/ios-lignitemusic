@@ -115,6 +115,11 @@ typedef enum {
 @property LMMusicPlaybackState playbackState;
 
 /**
+ The current point in time which the now playing track is at in seconds.
+ */
+@property NSTimeInterval currentPlaybackTime;
+
+/**
  The current repeat mode of the music player.
  */
 @property LMMusicRepeatMode repeatMode;

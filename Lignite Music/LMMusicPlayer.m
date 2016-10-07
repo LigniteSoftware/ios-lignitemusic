@@ -20,8 +20,9 @@
 @synthesize nowPlayingTrack = _nowPlayingTrack;
 @synthesize nowPlayingCollection = _nowPlayingCollection;
 @synthesize playerType = _playerType;
-@synthesize shuffleMode = _shuffleMode;
+@synthesize currentPlaybackTime = _currentPlaybackTime;
 @synthesize repeatMode = _repeatMode;
+@synthesize shuffleMode = _shuffleMode;
 
 - (instancetype)init {
 	self = [super init];
@@ -260,6 +261,30 @@
 	return _nowPlayingCollection;
 }
 
+- (void)setCurrentPlaybackTime:(NSTimeInterval)currentPlaybackTime {
+	_currentPlaybackTime = currentPlaybackTime;
+}
+
+- (NSTimeInterval)currentPlaybackTime {
+	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer){
+		return self.systemMusicPlayer.currentPlaybackTime;
+	}
+	
+	return _currentPlaybackTime;
+}
+
+- (void)setRepeatMode:(LMMusicRepeatMode)repeatMode {
+	_repeatMode = repeatMode;
+	
+	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer){
+		self.systemMusicPlayer.repeatMode = (MPMusicRepeatMode)repeatMode;
+	}
+}
+
+- (LMMusicRepeatMode)repeatMode {
+	return _repeatMode;
+}
+
 - (void)setShuffleMode:(LMMusicShuffleMode)shuffleMode {
 	_shuffleMode = shuffleMode;
 	
@@ -278,18 +303,6 @@
 
 - (LMMusicShuffleMode)shuffleMode {
 	return _shuffleMode;
-}
-
-- (void)setRepeatMode:(LMMusicRepeatMode)repeatMode {
-	_repeatMode = repeatMode;
-	
-	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer){
-		self.systemMusicPlayer.repeatMode = (MPMusicRepeatMode)repeatMode;
-	}
-}
-
-- (LMMusicRepeatMode)repeatMode {
-	return _repeatMode;
 }
 
 @end

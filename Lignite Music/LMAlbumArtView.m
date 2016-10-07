@@ -29,9 +29,7 @@
 
 //#define BATTERY_SAVER
 
-- (void)layoutSubviews {
-	NSLog(@"%@ Got %@!", self, NSStringFromCGRect(self.frame));
-	
+- (void)layoutSubviews {	
 	if(!self.adjustedHeight && self.frame.size.height > 0){
 		ALDimension dimensionToMatch = (self.frame.size.width > self.frame.size.height) ? ALDimensionHeight : ALDimensionWidth;
 		
@@ -50,9 +48,7 @@
 	[super layoutSubviews];
 }
 
-- (void)setupWithAlbumImage:(UIImage*)albumImage {
-	NSLog(@"Setting up %@", self);
-	
+- (void)setupWithAlbumImage:(UIImage*)albumImage {	
     self.backgroundColor = [UIColor clearColor];
 	
 	self.progressCircle = [[LMProgressCircleView alloc]init];
@@ -92,7 +88,6 @@
 	}
 	MPMediaItem *nowPlayingItem = track.sourceTrack;
 	
-	NSLog(@"%@ compared to %@", NSStringFromCGRect(self.albumArtImageView.frame), NSStringFromCGSize(nowPlayingItem.artwork.bounds.size));
 	if(track != self.currentTrack && self.albumArtImageView.frame.size.width != 0){
 		self.albumArtImageView.image = nil;
 		self.albumArtImageView.image = [track albumArt];
@@ -102,8 +97,6 @@
 		self.albumArtImageView.clipsToBounds = YES;
 		
 		[self.albumArtImageView reloadInputViews];
-		
-		NSLog(@"%f %d", self.albumArtImageView.layer.cornerRadius, self.albumArtImageView ? YES : NO);
 		
 		self.currentMediaItem = nowPlayingItem;
 		self.currentTrack = track;

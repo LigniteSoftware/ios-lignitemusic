@@ -145,9 +145,28 @@
 	self.repeatTitleLabel.text = NSLocalizedString(repeatArray[self.musicPlayer.repeatMode], nil);
 }
 
-- (void)pinched {
+- (void)pinchedNowPlaying {
 	[self.musicPlayer removeMusicDelegate:self];
 	[self.rootViewController closeNowPlayingView];
+}
+
+- (void)tappedNowPlaying {
+	[self.musicPlayer invertPlaybackState];
+}
+
+- (void)swipedRightNowPlaying {
+	[self.musicPlayer skipToNextTrack];
+}
+
+- (void)swipedLeftNowPlaying {
+	if(self.musicPlayer.currentPlaybackTime > 5){
+		NSLog(@"Skipping to beginning");
+		[self.musicPlayer skipToBeginning];
+	}
+	else{
+		NSLog(@"Skipping to previous");
+		[self.musicPlayer skipToPreviousItem];
+	}
 }
 
 - (void)setup {
@@ -295,9 +314,19 @@
 	[self musicTrackDidChange:self.musicPlayer.nowPlayingTrack];
 	[self musicPlaybackStateDidChange:self.musicPlayer.playbackState];
 	
-	UIPinchGestureRecognizer *pinchGesture = [[UIPinchGestureRecognizer alloc]initWithTarget:self action:@selector(pinched)];
-	self.userInteractionEnabled = YES;
+	UIPinchGestureRecognizer *pinchGesture = [[UIPinchGestureRecognizer alloc]initWithTarget:self action:@selector(pinchedNowPlaying)];
 	[self addGestureRecognizer:pinchGesture];
+	
+	UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tappedNowPlaying)];
+	[self addGestureRecognizer:tapGesture];
+	
+	UISwipeGestureRecognizer *swipeToRightGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipedRightNowPlaying)];
+	swipeToRightGesture.direction = UISwipeGestureRecognizerDirectionLeft;
+	[self addGestureRecognizer:swipeToRightGesture];
+	
+	UISwipeGestureRecognizer *swipeToLeftGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipedLeftNowPlaying)];
+	swipeToLeftGesture.direction = UISwipeGestureRecognizerDirectionRight;
+	[self addGestureRecognizer:swipeToLeftGesture];
 }
 
 //// Only override drawRect: if you perform custom drawing.
