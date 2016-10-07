@@ -24,7 +24,7 @@
 - (void)setup {
 	self.seekSlider = [[LMSlider alloc]init];
 	self.seekSlider.translatesAutoresizingMaskIntoConstraints = NO;
-	self.seekSlider.backgroundColor = [UIColor blueColor];
+//	self.seekSlider.backgroundColor = [UIColor blueColor];
 	self.seekSlider.tintColor = LIGNITE_RED;
 	[self addSubview:self.seekSlider];
 	
@@ -35,7 +35,7 @@
 	
 	self.songCountLabel = [[LMLabel alloc]init];
 	self.songCountLabel.translatesAutoresizingMaskIntoConstraints = NO;
-	self.songCountLabel.backgroundColor = [UIColor orangeColor];
+//	self.songCountLabel.backgroundColor = [UIColor orangeColor];
 	self.songCountLabel.textAlignment = NSTextAlignmentLeft;
 	self.songCountLabel.textColor = [UIColor blackColor];
 	self.songCountLabel.text = @"Count";
@@ -49,7 +49,7 @@
 	
 	self.songDurationLabel = [[LMLabel alloc]init];
 	self.songDurationLabel.translatesAutoresizingMaskIntoConstraints = NO;
-	self.songDurationLabel.backgroundColor = [UIColor redColor];
+//	self.songDurationLabel.backgroundColor = [UIColor redColor];
 	self.songDurationLabel.textAlignment = NSTextAlignmentRight;
 	self.songDurationLabel.textColor = [UIColor blackColor];
 	self.songDurationLabel.text = @"Duration";

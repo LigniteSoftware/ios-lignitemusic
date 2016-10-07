@@ -11,8 +11,10 @@
 #import "LMAlbumArtView.h"
 #import "LMOperationQueue.h"
 #import "LMTrackDurationView.h"
+#import "LMTrackInfoView.h"
+#import "LMButton.h"
 
-@interface LMNowPlayingView() <LMMusicPlayerDelegate>
+@interface LMNowPlayingView() <LMMusicPlayerDelegate, LMButtonDelegate>
 
 @property UIImageView *backgroundImageView;
 @property UIView *shadingView;
@@ -24,7 +26,12 @@
 
 @property LMTrackDurationView *trackDurationView;
 
+@property LMTrackInfoView *trackInfoView;
+
 @property BOOL loaded;
+
+@property UIView *shuffleModeBackgroundView, *repeatModeBackgroundView, *playlistBackgroundView;
+@property LMButton *shuffleModeButton, *repeatModeButton, *playlistButton;
 
 @end
 
@@ -76,6 +83,10 @@
 	
 }
 
+- (void)clickedButton:(LMButton *)button {
+	NSLog(@"Hey button %@", button);
+}
+
 - (void)setup {
 	self.backgroundImageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"lignite_background_portrait.png"]];
 	self.backgroundImageView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -99,11 +110,10 @@
 	self.albumArtRootView.backgroundColor = [UIColor clearColor];
 	[self addSubview:self.albumArtRootView];
 	
-	int tenthOfWidth = self.frame.size.width/10;
 	[self.albumArtRootView autoAlignAxis:ALAxisVertical toSameAxisOfView:self];
-	[self.albumArtRootView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self withOffset:tenthOfWidth];
-	[self.albumArtRootView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self withOffset:-tenthOfWidth];
-	[self.albumArtRootView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self withOffset:tenthOfWidth];
+	[self.albumArtRootView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
+	[self.albumArtRootView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self];
+	[self.albumArtRootView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self];
 	NSLayoutConstraint *heightConstraint = [NSLayoutConstraint constraintWithItem:self.albumArtRootView
 																		attribute:NSLayoutAttributeHeight
 																		relatedBy:NSLayoutRelationEqual
@@ -127,15 +137,85 @@
 	
 	self.trackDurationView = [[LMTrackDurationView alloc]init];
 	self.trackDurationView.translatesAutoresizingMaskIntoConstraints = NO;
-	self.trackDurationView.backgroundColor = [UIColor yellowColor];
+//	self.trackDurationView.backgroundColor = [UIColor yellowColor];
 	[self addSubview:self.trackDurationView];
 	[self.trackDurationView setup];
 	
-	[self.trackDurationView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.albumArtRootView];
-	[self.trackDurationView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.albumArtRootView];
-	[self.trackDurationView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.albumArtRootView];
+	[self.trackDurationView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.albumArtImageView withOffset:10];
+	[self.trackDurationView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.albumArtImageView withOffset:-10];
+	[self.trackDurationView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.albumArtImageView];
 	NSLayoutConstraint *constraint = [self.trackDurationView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(1.0/10.0)];
 	constraint.priority = UILayoutPriorityRequired;
+	
+	self.trackInfoView = [[LMTrackInfoView alloc]init];
+	self.trackInfoView.translatesAutoresizingMaskIntoConstraints = NO;
+	[self addSubview:self.trackInfoView];
+	[self.trackInfoView setupWithTextAlignment:NSTextAlignmentCenter];
+	
+	[self.trackInfoView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.trackDurationView];
+	[self.trackInfoView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.trackDurationView];
+	[self.trackInfoView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.trackDurationView];
+	[self.trackInfoView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(1.0/5.0)];
+	
+	self.shuffleModeBackgroundView = [UIView newAutoLayoutView];
+	self.repeatModeBackgroundView = [UIView newAutoLayoutView];
+	self.playlistBackgroundView = [UIView newAutoLayoutView];
+	
+	self.shuffleModeButton = [[LMButton alloc]initForAutoLayout];
+	self.repeatModeButton = [[LMButton alloc]initForAutoLayout];
+	self.playlistButton = [[LMButton alloc]initForAutoLayout];
+	
+	NSArray *backgrounds = @[
+		self.shuffleModeBackgroundView, self.repeatModeBackgroundView, self.playlistBackgroundView
+	];
+	NSArray *buttons = @[
+		self.shuffleModeButton, self.repeatModeButton, self.playlistButton
+	];
+	NSArray *titles = @[
+		@"Shuffle", @"Repeat", @"Settings"
+	];
+	NSArray *images = @[
+		@"shuffle_black.png", @"repeat_black.png", @"settings.png"
+	];
+	
+	for(int i = 0; i < buttons.count; i++){
+		BOOL isFirst = (i == 0);
+		
+		UIView *background = [backgrounds objectAtIndex:i];
+		UIView *previousBackground = isFirst ? self.trackInfoView : [backgrounds objectAtIndex:i-1];
+		
+		//background.backgroundColor = [UIColor colorWithRed:(0.2*i)+0.3 green:0 blue:0 alpha:1.0];
+		[self addSubview:background];
+		
+		[background autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.trackInfoView withOffset:10];
+		[background autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
+		[background autoPinEdge:ALEdgeLeading toEdge:isFirst ? ALEdgeLeading : ALEdgeTrailing ofView:previousBackground];
+		[background autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.trackInfoView withMultiplier:(1.0/3.0)];
+		
+		UILabel *titleLabel = [[UILabel alloc]initForAutoLayout];
+		titleLabel.text = [titles objectAtIndex:i];
+		titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14.0f];
+		//titleLabel.backgroundColor = [UIColor colorWithRed:(0.2*i)+0.3 green:0 blue:0 alpha:1.0];
+		titleLabel.textAlignment = NSTextAlignmentCenter;
+		[background addSubview:titleLabel];
+		
+		[titleLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:background withOffset:-10];
+		[titleLabel autoSetDimension:ALDimensionHeight toSize:20];
+		[titleLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:background];
+		[titleLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:background];
+		
+		LMButton *button = [buttons objectAtIndex:i];
+		[button setDelegate:self];
+		[button setupWithImageMultiplier:0.5];
+		[button setImage:[UIImage imageNamed:[images objectAtIndex:i]]];
+		[button setColour:[UIColor whiteColor]];
+		[background addSubview:button];
+
+		[button autoAlignAxisToSuperviewAxis:ALAxisVertical];
+		[button autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:titleLabel];
+		[button autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:background withMultiplier:0.50];
+		[button autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:background];
+	}
 	
 	[self.musicPlayer addMusicDelegate:self];
 	

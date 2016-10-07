@@ -1,21 +1,17 @@
 //
-//  LMLabel.m
+//  LMMarqueeLabel.m
 //  Lignite Music
 //
-//  Created by Edwin Finch on 9/27/16.
+//  Created by Edwin Finch on 10/6/16.
 //  Copyright © 2016 Lignite. All rights reserved.
 //
 
-#import "LMLabel.h"
+#import "LMMarqueeLabel.h"
 
 #define DISPLAY_FONT_MINIMUM 6
 #define DISPLAY_FONT_MAXIMUM 50
 
-@interface LMLabel ()
-
-@end
-
-@implementation LMLabel
+@implementation LMMarqueeLabel
 
 - (UIFont*)fontToFitHeight {
 	float minimumFontSize = DISPLAY_FONT_MINIMUM;
@@ -28,8 +24,8 @@
 		if(self.text){
 			float labelHeight = self.frame.size.height;
 			float testStringHeight = [self.text sizeWithAttributes:@{
-																NSFontAttributeName: [self.font fontWithSize:fontSizeAverage]
-																}].height;
+																	 NSFontAttributeName: [self.font fontWithSize:fontSizeAverage]
+																	 }].height;
 			
 			textAndLabelHeightDifference = labelHeight - testStringHeight;
 			

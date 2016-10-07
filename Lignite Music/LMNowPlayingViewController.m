@@ -188,10 +188,10 @@
         self.songAlbumLabel.textColor = newTextColour;
         self.songDurationLabel.textColor = newTextColour;
         self.songNumberLabel.textColor = newTextColour;
-        self.shuffleButton.titleLabel.textColor = newTextColour;
-        self.repeatButton.titleLabel.textColor = newTextColour;
-        self.dynamicPlaylistButton.titleLabel.textColor = newTextColour;
-        
+//        self.shuffleButton.titleLabel.textColor = newTextColour;
+//        self.repeatButton.titleLabel.textColor = newTextColour;
+//        self.dynamicPlaylistButton.titleLabel.textColor = newTextColour;
+		
         CIFilter *gaussianBlurFilter = [CIFilter filterWithName:@"CIGaussianBlur"];
         [gaussianBlurFilter setDefaults];
         CIImage *inputImage = [CIImage imageWithCGImage:[albumImage CGImage]];
@@ -308,8 +308,8 @@
     NSString *repeatArray[] = {
         @"DefaultRepeatMode", @"OffRepeatMode", @"ThisRepeatMode", @"AllRepeatMode"
     };
-    [self.shuffleButton setTitle:NSLocalizedString(shuffleArray[self.musicPlayer.shuffleMode], nil)];
-    [self.repeatButton setTitle:NSLocalizedString(repeatArray[self.musicPlayer.repeatMode], nil)];
+//    [self.shuffleButton setTitle:NSLocalizedString(shuffleArray[self.musicPlayer.shuffleMode], nil)];
+//    [self.repeatButton setTitle:NSLocalizedString(repeatArray[self.musicPlayer.repeatMode], nil)];
 }
 
 /*
@@ -944,22 +944,22 @@
 	NSLog(@"Cluck");
     [self.albumArtView setupWithAlbumImage:[UIImage imageNamed:@"no_album.png"]];
 	
-	[self.shuffleButton setupWithImageMultiplier:0.5];
-	[self.shuffleButton setTitle:NSLocalizedString(@"Shuffle", nil)];
-	[self.shuffleButton setImage:[UIImage imageNamed:@"shuffle_black.png"]];
-	[self.shuffleButton setColour:[UIColor whiteColor]];
-    self.shuffleButton.delegate = self;
-	[self.repeatButton setupWithImageMultiplier:0.5];
-	[self.repeatButton setTitle:NSLocalizedString(@"Repeat", nil)];
-	[self.repeatButton setImage:[UIImage imageNamed:@"repeat_black.png"]];
-	[self.repeatButton setColour:[UIColor whiteColor]];
-    self.repeatButton.delegate = self;
-	[self.dynamicPlaylistButton setupWithImageMultiplier:0.5];
-	[self.dynamicPlaylistButton setTitle:NSLocalizedString(@"Settings", nil)];
-	[self.dynamicPlaylistButton setImage:[UIImage imageNamed:@"settings.png"]];
-	[self.dynamicPlaylistButton setColour:[UIColor whiteColor]];
-    self.dynamicPlaylistButton.delegate = self;
-    
+//	[self.shuffleButton setupWithImageMultiplier:0.5];
+//	[self.shuffleButton setTitle:NSLocalizedString(@"Shuffle", nil)];
+//	[self.shuffleButton setImage:[UIImage imageNamed:@"shuffle_black.png"]];
+//	[self.shuffleButton setColour:[UIColor whiteColor]];
+//    self.shuffleButton.delegate = self;
+//	[self.repeatButton setupWithImageMultiplier:0.5];
+//	[self.repeatButton setTitle:NSLocalizedString(@"Repeat", nil)];
+//	[self.repeatButton setImage:[UIImage imageNamed:@"repeat_black.png"]];
+//	[self.repeatButton setColour:[UIColor whiteColor]];
+//    self.repeatButton.delegate = self;
+//	[self.dynamicPlaylistButton setupWithImageMultiplier:0.5];
+//	[self.dynamicPlaylistButton setTitle:NSLocalizedString(@"Settings", nil)];
+//	[self.dynamicPlaylistButton setImage:[UIImage imageNamed:@"settings.png"]];
+//	[self.dynamicPlaylistButton setColour:[UIColor whiteColor]];
+//    self.dynamicPlaylistButton.delegate = self;
+	
     self.shadingView = [[UIView alloc]init];
     self.shadingView.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.25];
     self.shadingView.translatesAutoresizingMaskIntoConstraints = NO;

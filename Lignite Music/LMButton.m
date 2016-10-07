@@ -27,7 +27,7 @@
 	self.imageBackgroundView.layer.cornerRadius = self.frame.size.width/2;
 	self.imageBackgroundView.layer.masksToBounds = YES;
 	self.imageBackgroundView.clipsToBounds = YES;
-		
+	
 	[super layoutSubviews];
 }
 
@@ -35,7 +35,7 @@
  Sets the view up with all required constraints.
  */
 - (void)setupWithImageMultiplier:(float)imageMultiplier {
-    self.backgroundColor = [UIColor clearColor];
+//    self.backgroundColor = [UIColor blueColor];
 	
 	self.imageBackgroundView = [UIView new];
 	self.imageBackgroundView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -44,50 +44,24 @@
 	
 	[self.imageBackgroundView autoAlignAxisToSuperviewAxis:ALAxisVertical];
 	[self.imageBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
+	//[self.imageBackgroundView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.titleLabel];
 	[self.imageBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self];
-	[self.imageBackgroundView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self];
-    
-    self.imageView = [[UIImageView alloc]init];
-    self.imageView.contentMode = UIViewContentModeScaleAspectFit;
-    self.imageView.translatesAutoresizingMaskIntoConstraints = NO;
-    self.imageView.clipsToBounds = YES;
-    [self.imageBackgroundView addSubview:self.imageView];
+	[self.imageBackgroundView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
+	
+	self.imageView = [[UIImageView alloc]init];
+	self.imageView.contentMode = UIViewContentModeScaleAspectFit;
+	self.imageView.translatesAutoresizingMaskIntoConstraints = NO;
+	self.imageView.clipsToBounds = YES;
+//	self.imageView.backgroundColor = [UIColor orangeColor];
+	[self.imageBackgroundView addSubview:self.imageView];
 	
 	[self.imageView autoCenterInSuperview];
 	[self.imageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.imageBackgroundView withMultiplier:imageMultiplier];
 	[self.imageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.imageBackgroundView withMultiplier:imageMultiplier];
 	
-	self.textBackgroundView = [UIView new];
-	self.textBackgroundView.backgroundColor = [UIColor redColor];
-	self.textBackgroundView.translatesAutoresizingMaskIntoConstraints = NO;
-	[self addSubview:self.textBackgroundView];
-	
-	[self.textBackgroundView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.imageBackgroundView];
-	[self.textBackgroundView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
-	[self.textBackgroundView autoAlignAxis:ALAxisVertical toSameAxisOfView:self];
-	
-    self.titleLabel = [UILabel new];
-    self.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14.0f];
-	self.titleLabel.numberOfLines = 0;
-	self.titleLabel.adjustsFontSizeToFitWidth = YES;
-	self.titleLabel.minimumScaleFactor = 0;
-    self.titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
-	self.textBackgroundView.hidden = YES;
-    [self.textBackgroundView addSubview:self.titleLabel];
-	
-	[self.titleLabel autoCenterInSuperview];
-	
     //Add the click recognizer for actions
     UITapGestureRecognizer *clickedRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(buttonClicked)];
     [self addGestureRecognizer:clickedRecognizer];
-}
-
-/*
- Set title
- */
-- (void)setTitle:(NSString*)newTitle {
-    self.titleLabel.text = newTitle;
-	self.textBackgroundView.hidden = newTitle == nil;
 }
 
 - (void)setImage:(UIImage*)newImage{
