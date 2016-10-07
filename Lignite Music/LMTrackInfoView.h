@@ -7,8 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LMMarqueeLabel.h"
 
 @interface LMTrackInfoView : UIView
+
+@property LMMarqueeLabel *titleLabel, *artistLabel, *albumLabel;
 
 - (void)setupWithTextAlignment:(NSTextAlignment)textAlignment;
 

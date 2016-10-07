@@ -129,6 +129,8 @@
 //	LMNowPlayingViewController *nowPlayingController = [self.storyboard instantiateViewControllerWithIdentifier:@"nowPlayingController"];
 	//[self presentViewController:nowPlayingController animated:YES completion:nil];
 	NSLog(@"Open now playing");
+	
+	[self.rootViewController openNowPlayingView];
 }
 
 
@@ -149,7 +151,7 @@
 		[self musicPlaybackStateDidChange:[self.musicPlayer invertPlaybackState]];
 	}
 	
-	//[self openNowPlayingView];
+	[self openNowPlayingView];
 }
 
 /**

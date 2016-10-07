@@ -8,10 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import "LMMusicPlayer.h"
+#import "LMCoreViewController.h"
 
 @interface LMNowPlayingView : UIView
 
 @property LMMusicPlayer *musicPlayer;
+
+@property LMCoreViewController *rootViewController;
 
 - (void)setup;
 

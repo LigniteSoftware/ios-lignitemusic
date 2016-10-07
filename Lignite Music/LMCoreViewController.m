@@ -18,6 +18,8 @@
 @property LMNowPlayingView *nowPlayingView;
 @property LMAlbumView *albumView;
 
+@property NSLayoutConstraint *topConstraint;
+
 @end
 
 @implementation LMCoreViewController
@@ -59,34 +61,76 @@
 	[self.musicPlayer play];
 }
 
+- (void)openNowPlayingView {
+	if(self.nowPlayingView){
+		return;
+	}
+	
+	self.nowPlayingView = [[LMNowPlayingView alloc]init];
+	self.nowPlayingView.translatesAutoresizingMaskIntoConstraints = NO;
+	self.nowPlayingView.backgroundColor = [UIColor blueColor];
+	self.nowPlayingView.musicPlayer = self.musicPlayer;
+	self.nowPlayingView.rootViewController = self;
+	[self.view addSubview:self.nowPlayingView];
+	
+	[self.nowPlayingView autoAlignAxisToSuperviewAxis:ALAxisVertical];
+	self.topConstraint = [self.nowPlayingView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.view withOffset:self.view.frame.size.height];
+	[self.nowPlayingView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
+	[self.nowPlayingView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
+	
+	[self.nowPlayingView setup];
+	
+	[self.view layoutIfNeeded];
+	self.topConstraint.constant = 0;
+	[UIView animateWithDuration:0.5 delay:0.1
+		 usingSpringWithDamping:0.75 initialSpringVelocity:0.0f
+						options:0 animations:^{
+							[self.view layoutIfNeeded];
+						} completion:nil];
+}
+
+- (void)closeNowPlayingView {
+	NSLog(@"Close");
+	[self.view layoutIfNeeded];
+	self.topConstraint.constant = self.view.frame.size.height*1.5;
+	[UIView animateWithDuration:0.5 delay:0.05
+		 usingSpringWithDamping:0.75 initialSpringVelocity:0.0f
+						options:0 animations:^{
+							[self.view layoutIfNeeded];
+						} completion:^(BOOL finished) {
+							self.nowPlayingView = nil;
+						}];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
 	self.musicPlayer = [[LMMusicPlayer alloc]init];
 	[self.musicPlayer addMusicDelegate:self];
 
-//	self.albumView = [[LMAlbumView alloc]init];
-//	self.albumView.translatesAutoresizingMaskIntoConstraints = NO;
-//	self.albumView.musicPlayer = self.musicPlayer;
-//	[self.view addSubview:self.albumView];
-//	
-//	[self.albumView autoCenterInSuperview];
-//	[self.albumView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
-//	[self.albumView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
+	self.albumView = [[LMAlbumView alloc]init];
+	self.albumView.translatesAutoresizingMaskIntoConstraints = NO;
+	self.albumView.musicPlayer = self.musicPlayer;
+	self.albumView.rootViewController = self;
+	[self.view addSubview:self.albumView];
+	
+	[self.albumView autoCenterInSuperview];
+	[self.albumView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
+	[self.albumView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
 
 	NSLog(@"Setting up!");
 	
-	self.nowPlayingView = [[LMNowPlayingView alloc]init];
-	self.nowPlayingView.translatesAutoresizingMaskIntoConstraints = NO;
-	self.nowPlayingView.backgroundColor = [UIColor blueColor];
-	self.nowPlayingView.musicPlayer = self.musicPlayer;
-	[self.view addSubview:self.nowPlayingView];
-	
-	[self.nowPlayingView autoCenterInSuperview];
-	[self.nowPlayingView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
-	[self.nowPlayingView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
-	
-	[self.nowPlayingView setup];
+//	self.nowPlayingView = [[LMNowPlayingView alloc]init];
+//	self.nowPlayingView.translatesAutoresizingMaskIntoConstraints = NO;
+//	self.nowPlayingView.backgroundColor = [UIColor blueColor];
+//	self.nowPlayingView.musicPlayer = self.musicPlayer;
+//	[self.view addSubview:self.nowPlayingView];
+//	
+//	[self.nowPlayingView autoCenterInSuperview];
+//	[self.nowPlayingView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
+//	[self.nowPlayingView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
+//	
+//	[self.nowPlayingView setup];
 	
 //	UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(play)];
 //	[self.view addGestureRecognizer:gesture];

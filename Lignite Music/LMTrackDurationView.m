@@ -8,14 +8,8 @@
 
 #import <PureLayout/PureLayout.h>
 #import "LMTrackDurationView.h"
-#import "LMSlider.h"
-#import "LMLabel.h"
-#import "LMExtras.h"
 
 @interface LMTrackDurationView()
-
-@property LMSlider *seekSlider;
-@property LMLabel *songCountLabel, *songDurationLabel;
 
 @end
 

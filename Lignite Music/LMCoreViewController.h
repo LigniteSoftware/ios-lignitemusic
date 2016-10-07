@@ -10,4 +10,7 @@
 
 @interface LMCoreViewController : UIViewController
 
+- (void)openNowPlayingView;
+- (void)closeNowPlayingView;
+
 @end

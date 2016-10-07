@@ -32,10 +32,23 @@
 
 @property UIView *shuffleModeBackgroundView, *repeatModeBackgroundView, *playlistBackgroundView;
 @property LMButton *shuffleModeButton, *repeatModeButton, *playlistButton;
+@property UILabel *shuffleTitleLabel, *repeatTitleLabel, *playlistTitleLabel;
 
 @end
 
 @implementation LMNowPlayingView
+
++ (NSString*)durationStringTotalPlaybackTime:(long)totalPlaybackTime {
+	long totalHours = (totalPlaybackTime / 3600);
+	int totalMinutes = (int)((totalPlaybackTime / 60) - totalHours*60);
+	int totalSeconds = (totalPlaybackTime % 60);
+	
+	if(totalHours > 0){
+		return [NSString stringWithFormat:NSLocalizedString(@"LongSongDuration", nil), (int)totalHours, totalMinutes, totalSeconds];
+	}
+	
+	return [NSString stringWithFormat:NSLocalizedString(@"ShortSongDuration", nil), totalMinutes, totalSeconds];
+}
 
 - (void)musicTrackDidChange:(LMMusicTrack *)newTrack {
 	if(!self.queue){
@@ -77,6 +90,40 @@
 	}];
 	
 	[self.queue addOperation:operation];
+	
+	if(!self.musicPlayer.nowPlayingTrack){
+		[self.trackInfoView.titleLabel setText:NSLocalizedString(@"NoMusic", nil)];
+		[self.trackInfoView.artistLabel setText:NSLocalizedString(@"NoMusicDescription", nil)];
+		[self.trackInfoView.albumLabel setText:@""];
+		[self.trackDurationView.songDurationLabel setText:NSLocalizedString(@"BlankDuration", nil)];
+		[self.trackDurationView.songCountLabel setText:NSLocalizedString(@"NoMusic", nil)];
+		
+		UIImage *albumImage;
+		albumImage = [UIImage imageNamed:@"lignite_background_portrait.png"];
+		self.backgroundImageView.contentMode = UIViewContentModeScaleAspectFit;
+		self.backgroundImageView.image = albumImage;
+		
+		[self.albumArtImageView updateContentWithMusicTrack:nil];
+		return;
+	}
+	
+	self.trackInfoView.titleLabel.text = newTrack.title;
+	self.trackInfoView.artistLabel.text = newTrack.artist;
+	self.trackInfoView.albumLabel.text = newTrack.albumTitle;
+	
+	if(self.musicPlayer.nowPlayingCollection){
+		self.trackDurationView.songCountLabel.text =
+			[NSString stringWithFormat:NSLocalizedString(@"SongXofX", nil),
+			 (int)self.musicPlayer.indexOfNowPlayingTrack+1,
+			 (int)self.musicPlayer.nowPlayingCollection.count];
+	}
+	else{
+		self.trackDurationView.songCountLabel.text =
+			[NSString stringWithFormat:NSLocalizedString(@"SongX", nil),
+			 (int)self.musicPlayer.indexOfNowPlayingTrack+1];
+	}
+	
+	self.trackDurationView.songDurationLabel.text = [LMNowPlayingView durationStringTotalPlaybackTime:newTrack.playbackDuration];
 }
 
 - (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState {
@@ -85,6 +132,22 @@
 
 - (void)clickedButton:(LMButton *)button {
 	NSLog(@"Hey button %@", button);
+}
+
+- (void)reloadButtonTitles {
+	NSString *shuffleArray[] = {
+		@"DefaultShuffleMode", @"OffShuffleMode", @"SongsShuffleMode", @"AlbumsShuffleMode"
+	};
+	NSString *repeatArray[] = {
+		@"DefaultRepeatMode", @"OffRepeatMode", @"ThisRepeatMode", @"AllRepeatMode"
+	};
+	self.shuffleTitleLabel.text = NSLocalizedString(shuffleArray[self.musicPlayer.shuffleMode], nil);
+	self.repeatTitleLabel.text = NSLocalizedString(repeatArray[self.musicPlayer.repeatMode], nil);
+}
+
+- (void)pinched {
+	[self.musicPlayer removeMusicDelegate:self];
+	[self.rootViewController closeNowPlayingView];
 }
 
 - (void)setup {
@@ -165,11 +228,18 @@
 	self.repeatModeButton = [[LMButton alloc]initForAutoLayout];
 	self.playlistButton = [[LMButton alloc]initForAutoLayout];
 	
+	self.shuffleTitleLabel = [[UILabel alloc]initForAutoLayout];
+	self.repeatTitleLabel = [[UILabel alloc]initForAutoLayout];
+	self.playlistTitleLabel = [[UILabel alloc]initForAutoLayout];
+	
 	NSArray *backgrounds = @[
 		self.shuffleModeBackgroundView, self.repeatModeBackgroundView, self.playlistBackgroundView
 	];
 	NSArray *buttons = @[
 		self.shuffleModeButton, self.repeatModeButton, self.playlistButton
+	];
+	NSArray *titleLabels = @[
+		self.shuffleTitleLabel, self.repeatTitleLabel, self.playlistTitleLabel
 	];
 	NSArray *titles = @[
 		@"Shuffle", @"Repeat", @"Settings"
@@ -192,7 +262,8 @@
 		[background autoPinEdge:ALEdgeLeading toEdge:isFirst ? ALEdgeLeading : ALEdgeTrailing ofView:previousBackground];
 		[background autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.trackInfoView withMultiplier:(1.0/3.0)];
 		
-		UILabel *titleLabel = [[UILabel alloc]initForAutoLayout];
+		UILabel *titleLabel = [titleLabels objectAtIndex:i];
+		
 		titleLabel.text = [titles objectAtIndex:i];
 		titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14.0f];
 		//titleLabel.backgroundColor = [UIColor colorWithRed:(0.2*i)+0.3 green:0 blue:0 alpha:1.0];
@@ -219,8 +290,14 @@
 	
 	[self.musicPlayer addMusicDelegate:self];
 	
+	[self reloadButtonTitles];
+	
 	[self musicTrackDidChange:self.musicPlayer.nowPlayingTrack];
 	[self musicPlaybackStateDidChange:self.musicPlayer.playbackState];
+	
+	UIPinchGestureRecognizer *pinchGesture = [[UIPinchGestureRecognizer alloc]initWithTarget:self action:@selector(pinched)];
+	self.userInteractionEnabled = YES;
+	[self addGestureRecognizer:pinchGesture];
 }
 
 //// Only override drawRect: if you perform custom drawing.

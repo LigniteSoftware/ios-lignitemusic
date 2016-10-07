@@ -7,12 +7,9 @@
 //
 
 #import <PureLayout/PureLayout.h>
-#import "LMMarqueeLabel.h"
 #import "LMTrackInfoView.h"
 
 @interface LMTrackInfoView()
-
-@property MarqueeLabel *titleLabel, *artistLabel, *albumLabel;
 
 @end
 

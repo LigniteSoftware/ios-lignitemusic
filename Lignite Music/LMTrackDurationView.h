@@ -7,8 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LMSlider.h"
+#import "LMLabel.h"
+#import "LMExtras.h"
 
 @interface LMTrackDurationView : UIView
+
+@property LMSlider *seekSlider;
+@property LMLabel *songCountLabel, *songDurationLabel;
 
 - (void)setup;
 
