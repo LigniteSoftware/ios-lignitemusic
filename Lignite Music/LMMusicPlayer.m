@@ -217,7 +217,6 @@
 		}
 	}
 	
-	NSLog(@"Setting to %@.", nowPlayingTrack.title);
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer){
 		MPMediaItem *associatedMediaItem = nowPlayingTrack.sourceTrack;
 		self.systemMusicPlayer.nowPlayingItem = associatedMediaItem;

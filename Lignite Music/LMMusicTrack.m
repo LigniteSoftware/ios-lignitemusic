@@ -45,6 +45,7 @@
 
 - (UIImage*)albumArt {
 	if(self.loadedAlbumArt){
+		NSLog(@"Returning already loaded.");
 		return self.loadedAlbumArt;
 	}
 	
@@ -52,7 +53,7 @@
 	if(currentPlayerType == LMMusicPlayerTypeSystemMusicPlayer){
 		MPMediaItem *mediaItem = self.sourceTrack;
 		
-		UIImage *image = [mediaItem.artwork imageWithSize:CGSizeMake(500, 500)];
+		UIImage *image = [mediaItem.artwork imageWithSize:CGSizeMake(480, 480)];
 		self.loadedAlbumArt = image;
 		
 		return image;

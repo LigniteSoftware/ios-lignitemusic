@@ -10,10 +10,12 @@
 #import "LMCoreViewController.h"
 #import "LMMusicPlayer.h"
 #import "LMAlbumView.h"
+#import "LMNowPlayingView.h"
 
 @interface LMCoreViewController () <LMMusicPlayerDelegate>
 
 @property LMMusicPlayer *musicPlayer;
+@property LMNowPlayingView *nowPlayingView;
 @property LMAlbumView *albumView;
 
 @end
@@ -63,14 +65,28 @@
 	self.musicPlayer = [[LMMusicPlayer alloc]init];
 	[self.musicPlayer addMusicDelegate:self];
 
-	self.albumView = [[LMAlbumView alloc]init];
-	self.albumView.translatesAutoresizingMaskIntoConstraints = NO;
-	self.albumView.musicPlayer = self.musicPlayer;
-	[self.view addSubview:self.albumView];
+//	self.albumView = [[LMAlbumView alloc]init];
+//	self.albumView.translatesAutoresizingMaskIntoConstraints = NO;
+//	self.albumView.musicPlayer = self.musicPlayer;
+//	[self.view addSubview:self.albumView];
+//	
+//	[self.albumView autoCenterInSuperview];
+//	[self.albumView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
+//	[self.albumView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
+
+	NSLog(@"Setting up!");
 	
-	[self.albumView autoCenterInSuperview];
-	[self.albumView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
-	[self.albumView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
+	self.nowPlayingView = [[LMNowPlayingView alloc]init];
+	self.nowPlayingView.translatesAutoresizingMaskIntoConstraints = NO;
+	self.nowPlayingView.backgroundColor = [UIColor blueColor];
+	self.nowPlayingView.musicPlayer = self.musicPlayer;
+	[self.view addSubview:self.nowPlayingView];
+	
+	[self.nowPlayingView autoCenterInSuperview];
+	[self.nowPlayingView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
+	[self.nowPlayingView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
+	
+	[self.nowPlayingView setup];
 	
 //	UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(play)];
 //	[self.view addGestureRecognizer:gesture];

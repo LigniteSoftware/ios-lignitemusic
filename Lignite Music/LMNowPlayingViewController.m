@@ -160,7 +160,7 @@
         [self.songNumberLabel setText:[NSString stringWithFormat:NSLocalizedString(@"SongXofX", nil), (int)self.musicPlayer.indexOfNowPlayingItem+1, (int)self.currentlyPlayingQueue.items.count]];
     }
     else{
-        [self.songNumberLabel setText:[NSString stringWithFormat:NSLocalizedString(@"SongX", <#comment#>), (int)self.musicPlayer.indexOfNowPlayingItem+1]];
+        [self.songNumberLabel setText:[NSString stringWithFormat:NSLocalizedString(@"SongX", nil), (int)self.musicPlayer.indexOfNowPlayingItem+1]];
     }
     
     self.songDurationSlider.maximumValue = self.musicPlayer.nowPlayingItem.playbackDuration;
@@ -940,7 +940,8 @@
     self.songDurationSlider.tintColor = [UIColor redColor];
     [self.songDurationSlider addTarget:self action:@selector(setTimelinePosition:) forControlEvents:UIControlEventValueChanged];
     [self.songDurationSlider addTarget:self action:@selector(fireRefreshTimer) forControlEvents:UIControlEventTouchDragExit];
-    
+	
+	NSLog(@"Cluck");
     [self.albumArtView setupWithAlbumImage:[UIImage imageNamed:@"no_album.png"]];
 	
 	[self.shuffleButton setupWithImageMultiplier:0.5];

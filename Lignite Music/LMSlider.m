@@ -11,7 +11,8 @@
 @implementation LMSlider
 
 - (CGRect)trackRectForBounds:(CGRect)bounds {
-    int barHeight = bounds.size.height/6;
+    int barHeight = bounds.size.height/8;
+	
     CGRect trackRect = CGRectMake(0, bounds.size.height/2 - barHeight/2, bounds.size.width, barHeight);
     
     return trackRect;

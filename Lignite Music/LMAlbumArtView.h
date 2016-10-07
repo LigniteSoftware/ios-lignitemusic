@@ -7,12 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LMMusicTrack.h"
 
-@interface NPAlbumArtView : UIView
+@interface LMAlbumArtView : UIView
 
 @property MPMusicPlayerController *musicPlayer;
 
+@property UIImageView *albumArtImageView;
+
 - (void)setupWithAlbumImage:(UIImage*)albumImage;
 - (void)updateContentWithMusicPlayer:(MPMusicPlayerController*)musicPlayer;
+- (void)updateContentWithMusicTrack:(LMMusicTrack*)track;
 
 @end

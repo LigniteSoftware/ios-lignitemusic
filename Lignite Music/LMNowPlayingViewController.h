@@ -10,7 +10,7 @@
 #import <MediaPlayer/MediaPlayer.h>
 #import "MarqueeLabel.h"
 #import "LMButton.h"
-#import "NPAlbumArtView.h"
+#import "LMAlbumArtView.h"
 #import "LMSlider.h"
 
 @interface LMNowPlayingViewController : UIViewController
@@ -87,7 +87,7 @@ typedef enum {
 @property IBOutlet UIView *contentContainerView;
 
 @property IBOutlet UIImageView *backgroundImageView;
-@property IBOutlet NPAlbumArtView *albumArtView;
+@property IBOutlet LMAlbumArtView *albumArtView;
 @property IBOutlet LMSlider *songDurationSlider;
 @property IBOutlet UILabel *songNumberLabel, *songDurationLabel;
 @property IBOutlet MarqueeLabel *songTitleLabel, *songArtistLabel, *songAlbumLabel;
