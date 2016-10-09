@@ -79,7 +79,6 @@
 }
 
 - (void)musicCurrentPlaybackTimeDidChange:(NSTimeInterval)newPlaybackTime {
-	NSLog(@"Spook");
 	[self updateSongDurationLabelWithPlaybackTime:newPlaybackTime];
 }
 

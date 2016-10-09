@@ -105,7 +105,7 @@
 
 - (UIColor*)GetRandomUIColor:(int)index {
     UIColor *colour;
-	NSLog(@"Spooked");
+	NSLog(@"\n\nSpooked if this is called\n\n");
     if(index <= self.musicPlayer.currentPlaybackTime){
         colour = [LMColour ligniteRedColour];
     }

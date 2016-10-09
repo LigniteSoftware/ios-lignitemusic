@@ -29,11 +29,13 @@
  The timer for detecting changes in the current playback time.
  */
 @property NSTimer *currentPlaybackTimeChangeTimer;
+@property BOOL runTimer;
 
 /**
  The previous playback time.
  */
 @property NSTimeInterval previousPlaybackTime;
+@property NSTimeInterval delayThroughThread;
 
 @end
 
@@ -53,7 +55,7 @@
 		self.nowPlayingTrack = [[LMMusicTrack alloc]initWithMPMediaItem:self.systemMusicPlayer.nowPlayingItem];
 		self.playerType = LMMusicPlayerTypeSystemMusicPlayer;
 		self.delegates = [[NSMutableArray alloc]init];
-		self.delegatesSubscribedToCurrentPlaybackTimeChange = [[NSMutableArray alloc]init];x
+		self.delegatesSubscribedToCurrentPlaybackTimeChange = [[NSMutableArray alloc]init];
 		self.shuffleMode = LMMusicShuffleModeOff;
 		self.repeatMode = LMMusicRepeatModeNone;
 		self.previousPlaybackTime = self.systemMusicPlayer.currentPlaybackTime;
@@ -100,7 +102,7 @@
 
 - (void)currentPlaybackTimeChangeTimerCallback {
 	NSTimeInterval currentPlaybackTime = self.currentPlaybackTime;
-	NSLog(@"Hey %f", currentPlaybackTime);
+	NSLog(@"Time %f", currentPlaybackTime);
 	if(currentPlaybackTime != self.previousPlaybackTime){
 		for(int i = 0; i < self.delegatesSubscribedToCurrentPlaybackTimeChange.count; i++){
 			id<LMMusicPlayerDelegate> delegate = [self.delegatesSubscribedToCurrentPlaybackTimeChange objectAtIndex:i];
@@ -109,6 +111,57 @@
 		
 		self.previousPlaybackTime = currentPlaybackTime;
 	}
+	
+//	if(![self.currentPlaybackTimeChangeTimer isValid] || !self.currentPlaybackTimeChangeTimer){
+//		NSLog(@"Registering for repeat.");
+//		self.currentPlaybackTimeChangeTimer = [NSTimer scheduledTimerWithTimeInterval:0.5
+//																			   target:self
+//																			 selector:@selector(currentPlaybackTimeChangeTimerCallback)
+//																			 userInfo:nil
+//																			  repeats:YES];
+//	}
+}
+
+- (void)currentPlaybackTimeChangeFireTimer:(BOOL)adjustForDifference {
+	__weak id weakSelf = self;
+	
+	float difference = ceilf(self.systemMusicPlayer.currentPlaybackTime)-self.systemMusicPlayer.currentPlaybackTime;
+	
+	//NSLog(@"Difference %f", difference);
+	
+	double delayInSeconds = adjustForDifference ? difference : (1.0-self.delayThroughThread);
+	//NSLog(@"Delaying %f", delayInSeconds);
+	if(delayInSeconds < 0){
+		delayInSeconds = 0.05;
+	}
+	
+//	NSLog(@"%f!", delayInSeconds * NSEC_PER_SEC);
+	NSTimeInterval theoreticalFiringTime = [[NSDate date] timeIntervalSince1970]+(delayInSeconds * 1);
+	NSLog(@"Should fire at %f", theoreticalFiringTime);
+	
+	dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+	dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+		id strongSelf = weakSelf;
+		
+		if (!strongSelf) {
+			return;
+		}
+		
+		NSTimeInterval timeFired =  [[NSDate date]timeIntervalSince1970];
+		NSLog(@"Firing at %f, that's %f different from expected", timeFired, timeFired-theoreticalFiringTime);
+		[strongSelf currentPlaybackTimeChangeTimerCallback];
+		
+		LMMusicPlayer *player = strongSelf;
+		player.delayThroughThread = (timeFired-theoreticalFiringTime);
+		
+		// Schedule the timer again
+		if([strongSelf runTimer]){
+			[strongSelf currentPlaybackTimeChangeFireTimer:NO];
+		}
+		else{
+			NSLog(@"Not rescheduling, sorry");
+		}
+	});
 }
 
 - (void)systemMusicPlayerTrackChanged:(id)sender {
@@ -127,19 +180,14 @@
 	
 	if(self.playbackState == LMMusicPlaybackStatePlaying){
 		NSLog(@"Yeah");
-		if(!self.currentPlaybackTimeChangeTimer || ![self.currentPlaybackTimeChangeTimer isValid]){
-			NSLog(@"Register");
-			self.currentPlaybackTimeChangeTimer = [NSTimer scheduledTimerWithTimeInterval:0.5
-																				   target:self
-																				 selector:@selector(currentPlaybackTimeChangeTimerCallback)
-																				 userInfo:nil
-																				  repeats:YES];
+		if(!self.runTimer){
+			self.runTimer = YES;
+			[self currentPlaybackTimeChangeFireTimer:YES];
 		}
 	}
 	else {
 		NSLog(@"Invalidate");
-		[self.currentPlaybackTimeChangeTimer invalidate];
-		self.currentPlaybackTimeChangeTimer = nil;
+		self.runTimer = NO;
 	}
 	
 	for(int i = 0; i < self.delegates.count; i++){
