@@ -23,14 +23,14 @@
 
 - (void)updateContents:(BOOL)animated {
 	[UIView animateWithDuration:animated ? 0.25 : 0.01 animations:^{
-		[self.shuffleButton setColour:self.musicPlayer.shuffleMode == LMMusicShuffleModeSongs ? [UIColor whiteColor] : [UIColor clearColor]];
+		[self.shuffleButton setColour:self.musicPlayer.shuffleMode == LMMusicShuffleModeOn ? [UIColor whiteColor] : [UIColor clearColor]];
 		[self.repeatButton setColour:self.musicPlayer.repeatMode == LMMusicRepeatModeAll ? [UIColor whiteColor] : [UIColor clearColor]];
 	}];
 }
 
 - (void)clickedButton:(LMButton *)button {
 	if(button == self.shuffleButton){
-		[self.musicPlayer setShuffleMode:(self.musicPlayer.shuffleMode == LMMusicShuffleModeOff) ? LMMusicShuffleModeSongs : LMMusicShuffleModeOff];
+		[self.musicPlayer setShuffleMode:(self.musicPlayer.shuffleMode == LMMusicShuffleModeOff) ? LMMusicShuffleModeOn : LMMusicShuffleModeOff];
 	}
 	else if(button == self.favouriteButton){
 

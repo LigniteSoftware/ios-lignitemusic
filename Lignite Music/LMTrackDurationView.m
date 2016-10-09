@@ -8,6 +8,7 @@
 
 #import <PureLayout/PureLayout.h>
 #import "LMTrackDurationView.h"
+#import "LMColour.h"
 
 @interface LMTrackDurationView()
 
@@ -19,7 +20,7 @@
 	self.seekSlider = [[LMSlider alloc]init];
 	self.seekSlider.translatesAutoresizingMaskIntoConstraints = NO;
 //	self.seekSlider.backgroundColor = [UIColor blueColor];
-	self.seekSlider.tintColor = LIGNITE_RED;
+	self.seekSlider.tintColor = [LMColour ligniteRedColour];
 	[self addSubview:self.seekSlider];
 	
 	[self.seekSlider autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self];

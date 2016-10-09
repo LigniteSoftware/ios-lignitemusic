@@ -13,6 +13,7 @@
 #import "LMTrackDurationView.h"
 #import "LMTrackInfoView.h"
 #import "LMButton.h"
+#import "LMColour.h"
 
 @interface LMNowPlayingView() <LMMusicPlayerDelegate, LMButtonDelegate>
 
@@ -48,6 +49,38 @@
 	}
 	
 	return [NSString stringWithFormat:NSLocalizedString(@"ShortSongDuration", nil), totalMinutes, totalSeconds];
+}
+
+- (void)updateSongDurationLabelWithPlaybackTime:(long)currentPlaybackTime {
+	long totalPlaybackTime = self.musicPlayer.nowPlayingTrack.playbackDuration;
+	
+	long currentHours = (currentPlaybackTime / 3600);
+	long currentMinutes = ((currentPlaybackTime / 60) - currentHours*60);
+	int currentSeconds = (currentPlaybackTime % 60);
+	
+	long totalHours = (totalPlaybackTime / 3600);
+	
+	if(totalHours > 0){
+		self.trackDurationView.songDurationLabel.text = [NSString stringWithFormat:NSLocalizedString(@"LongSongDurationOfDuration", nil),
+									   (int)currentHours, (int)currentMinutes, currentSeconds,
+									   [LMNowPlayingView durationStringTotalPlaybackTime:totalPlaybackTime]];
+	}
+	else{
+		self.trackDurationView.songDurationLabel.text = [NSString stringWithFormat:NSLocalizedString(@"ShortSongDurationOfDuration", nil),
+									   (int)currentMinutes, currentSeconds,
+									   [LMNowPlayingView durationStringTotalPlaybackTime:totalPlaybackTime]];
+	}
+	
+//	[UIView animateWithDuration:0.3 animations:^{
+//		self.songDurationSlider.maximumValue = [self.musicPlayer.nowPlayingItem playbackDuration];
+//		self.songDurationSlider.value = currentPlaybackTime;
+//		[self.albumArtView updateContentWithMusicPlayer:self.musicPlayer];
+//	}];
+}
+
+- (void)musicCurrentPlaybackTimeDidChange:(NSTimeInterval)newPlaybackTime {
+	NSLog(@"Spook");
+	[self updateSongDurationLabelWithPlaybackTime:newPlaybackTime];
 }
 
 - (void)musicTrackDidChange:(LMMusicTrack *)newTrack {
@@ -124,6 +157,7 @@
 	}
 	
 	self.trackDurationView.songDurationLabel.text = [LMNowPlayingView durationStringTotalPlaybackTime:newTrack.playbackDuration];
+	[self updateSongDurationLabelWithPlaybackTime:self.musicPlayer.currentPlaybackTime];
 }
 
 - (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState {
@@ -132,6 +166,9 @@
 
 - (void)clickedButton:(LMButton *)button {
 	NSLog(@"Hey button %@", button);
+	if(button == self.shuffleModeButton){
+		
+	}
 }
 
 - (void)reloadButtonTitles {
@@ -257,12 +294,12 @@
 	NSArray *buttons = @[
 		self.shuffleModeButton, self.repeatModeButton, self.playlistButton
 	];
-	NSArray *titleLabels = @[
-		self.shuffleTitleLabel, self.repeatTitleLabel, self.playlistTitleLabel
-	];
-	NSArray *titles = @[
-		@"Shuffle", @"Repeat", @"Settings"
-	];
+//	NSArray *titleLabels = @[
+//		self.shuffleTitleLabel, self.repeatTitleLabel, self.playlistTitleLabel
+//	];
+//	NSArray *titles = @[
+//		@"Shuffle", @"Repeat", @"Settings"
+//	];
 	NSArray *images = @[
 		@"shuffle_black.png", @"repeat_black.png", @"settings.png"
 	];
@@ -281,28 +318,28 @@
 		[background autoPinEdge:ALEdgeLeading toEdge:isFirst ? ALEdgeLeading : ALEdgeTrailing ofView:previousBackground];
 		[background autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.trackInfoView withMultiplier:(1.0/3.0)];
 		
-		UILabel *titleLabel = [titleLabels objectAtIndex:i];
-		
-		titleLabel.text = [titles objectAtIndex:i];
-		titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14.0f];
-		//titleLabel.backgroundColor = [UIColor colorWithRed:(0.2*i)+0.3 green:0 blue:0 alpha:1.0];
-		titleLabel.textAlignment = NSTextAlignmentCenter;
-		[background addSubview:titleLabel];
-		
-		[titleLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:background withOffset:-10];
-		[titleLabel autoSetDimension:ALDimensionHeight toSize:20];
-		[titleLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:background];
-		[titleLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:background];
+//		UILabel *titleLabel = [titleLabels objectAtIndex:i];
+//		
+//		titleLabel.text = [titles objectAtIndex:i];
+//		titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14.0f];
+//		//titleLabel.backgroundColor = [UIColor colorWithRed:(0.2*i)+0.3 green:0 blue:0 alpha:1.0];
+//		titleLabel.textAlignment = NSTextAlignmentCenter;
+//		[background addSubview:titleLabel];
+//		
+//		[titleLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:background withOffset:-10];
+//		[titleLabel autoSetDimension:ALDimensionHeight toSize:20];
+//		[titleLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:background];
+//		[titleLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:background];
 		
 		LMButton *button = [buttons objectAtIndex:i];
 		[button setDelegate:self];
 		[button setupWithImageMultiplier:0.5];
 		[button setImage:[UIImage imageNamed:[images objectAtIndex:i]]];
-		[button setColour:[UIColor whiteColor]];
+		[button setColour:[LMColour fadedColour]];
 		[background addSubview:button];
 
 		[button autoAlignAxisToSuperviewAxis:ALAxisVertical];
-		[button autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:titleLabel];
+		[button autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self withOffset:-20];
 		[button autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:background withMultiplier:0.50];
 		[button autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:background];
 	}

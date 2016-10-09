@@ -10,8 +10,30 @@
 
 @interface LMMusicPlayer()
 
+/**
+ The system music player.
+ */
 @property MPMusicPlayerController *systemMusicPlayer;
+
+/**
+ The delegates associated with the music player. As described in LMMusicPlayerDelegate.
+ */
 @property NSMutableArray *delegates;
+
+/**
+ What a long variable name, I get it. This array contains all of the delegates which is a fan of knowing when the playback time changes. Tbh, I find it easier and cleaner to do this than to create a structure or enum or associated data type, etc.
+ */
+@property NSMutableArray *delegatesSubscribedToCurrentPlaybackTimeChange;
+
+/**
+ The timer for detecting changes in the current playback time.
+ */
+@property NSTimer *currentPlaybackTimeChangeTimer;
+
+/**
+ The previous playback time.
+ */
+@property NSTimeInterval previousPlaybackTime;
 
 @end
 
@@ -31,8 +53,10 @@
 		self.nowPlayingTrack = [[LMMusicTrack alloc]initWithMPMediaItem:self.systemMusicPlayer.nowPlayingItem];
 		self.playerType = LMMusicPlayerTypeSystemMusicPlayer;
 		self.delegates = [[NSMutableArray alloc]init];
+		self.delegatesSubscribedToCurrentPlaybackTimeChange = [[NSMutableArray alloc]init];x
 		self.shuffleMode = LMMusicShuffleModeOff;
 		self.repeatMode = LMMusicRepeatModeNone;
+		self.previousPlaybackTime = self.systemMusicPlayer.currentPlaybackTime;
 		
 		[[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
 		
@@ -74,6 +98,19 @@
 	[self.systemMusicPlayer endGeneratingPlaybackNotifications];
 }
 
+- (void)currentPlaybackTimeChangeTimerCallback {
+	NSTimeInterval currentPlaybackTime = self.currentPlaybackTime;
+	NSLog(@"Hey %f", currentPlaybackTime);
+	if(currentPlaybackTime != self.previousPlaybackTime){
+		for(int i = 0; i < self.delegatesSubscribedToCurrentPlaybackTimeChange.count; i++){
+			id<LMMusicPlayerDelegate> delegate = [self.delegatesSubscribedToCurrentPlaybackTimeChange objectAtIndex:i];
+			[delegate musicCurrentPlaybackTimeDidChange:currentPlaybackTime];
+		}
+		
+		self.previousPlaybackTime = currentPlaybackTime;
+	}
+}
+
 - (void)systemMusicPlayerTrackChanged:(id)sender {
 	LMMusicTrack *newTrack = [[LMMusicTrack alloc]initWithMPMediaItem:self.systemMusicPlayer.nowPlayingItem];
 	self.nowPlayingTrack = newTrack;
@@ -88,18 +125,42 @@
 - (void)systemMusicPlayerStateChanged:(id)sender {
 	self.playbackState = (LMMusicPlaybackState)self.systemMusicPlayer.playbackState;
 	
+	if(self.playbackState == LMMusicPlaybackStatePlaying){
+		NSLog(@"Yeah");
+		if(!self.currentPlaybackTimeChangeTimer || ![self.currentPlaybackTimeChangeTimer isValid]){
+			NSLog(@"Register");
+			self.currentPlaybackTimeChangeTimer = [NSTimer scheduledTimerWithTimeInterval:0.5
+																				   target:self
+																				 selector:@selector(currentPlaybackTimeChangeTimerCallback)
+																				 userInfo:nil
+																				  repeats:YES];
+		}
+	}
+	else {
+		NSLog(@"Invalidate");
+		[self.currentPlaybackTimeChangeTimer invalidate];
+		self.currentPlaybackTimeChangeTimer = nil;
+	}
+	
 	for(int i = 0; i < self.delegates.count; i++){
 		id delegate = [self.delegates objectAtIndex:i];
 		[delegate musicPlaybackStateDidChange:self.playbackState];
 	}
 }
 
-- (void)addMusicDelegate:(id)newDelegate {
+- (void)addMusicDelegate:(id<LMMusicPlayerDelegate>)newDelegate {
 	[self.delegates addObject:newDelegate];
+	if([newDelegate respondsToSelector:@selector(musicCurrentPlaybackTimeDidChange:)]){
+		NSLog(@"Yeah BOIIIIIIIIII");
+		[self.delegatesSubscribedToCurrentPlaybackTimeChange addObject:newDelegate];
+	}
 }
 
-- (void)removeMusicDelegate:(id)delegateToRemove {
+- (void)removeMusicDelegate:(id<LMMusicPlayerDelegate>)delegateToRemove {
 	[self.delegates removeObject:delegateToRemove];
+	if([delegateToRemove respondsToSelector:@selector(musicCurrentPlaybackTimeDidChange:)]){
+		[self.delegatesSubscribedToCurrentPlaybackTimeChange addObject:delegateToRemove];
+	}
 }
 
 - (NSArray<LMMusicTrackCollection*>*)queryCollectionsForMusicType:(LMMusicType)musicType {
@@ -292,10 +353,8 @@
 	
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer){
 		MPMusicShuffleMode associatedShuffleModes[] = {
-			MPMusicShuffleModeDefault,
 			MPMusicShuffleModeOff,
-			MPMusicShuffleModeSongs,
-			MPMusicShuffleModeAlbums
+			MPMusicShuffleModeSongs
 		};
 		self.systemMusicPlayer.shuffleMode = associatedShuffleModes[shuffleMode];
 	}

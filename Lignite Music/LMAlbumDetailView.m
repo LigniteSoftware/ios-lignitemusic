@@ -13,9 +13,9 @@
 #import "LMButton.h"
 #import "LMLabel.h"
 #import "LMAlbumDetailView.h"
-#import "LMExtras.h"
 #import "LMNowPlayingViewController.h"
 #import "LMSongDetailControlView.h"
+#import "LMColour.h"
 
 @interface LMAlbumDetailView() <LMButtonDelegate, LMListEntryDelegate, LMTableViewSubviewDelegate, LMMusicPlayerDelegate>
 
@@ -162,7 +162,7 @@
 }
 
 - (UIColor*)tapColourForListEntry:(LMListEntry*)entry {
-	return LIGNITE_RED;
+	return [LMColour ligniteRedColour];
 }
 
 - (NSString*)titleForListEntry:(LMListEntry*)entry {

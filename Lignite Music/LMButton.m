@@ -8,7 +8,7 @@
 
 #import <PureLayout/PureLayout.h>
 #import "LMButton.h"
-#import "LMExtras.h"
+#import "LMColour.h"
 
 @interface LMButton()
 
@@ -39,7 +39,7 @@
 	
 	self.imageBackgroundView = [UIView new];
 	self.imageBackgroundView.translatesAutoresizingMaskIntoConstraints = NO;
-	self.imageBackgroundView.backgroundColor = LIGNITE_RED;
+	self.imageBackgroundView.backgroundColor = [LMColour ligniteRedColour];
 	[self addSubview:self.imageBackgroundView];
 	
 	[self.imageBackgroundView autoAlignAxisToSuperviewAxis:ALAxisVertical];

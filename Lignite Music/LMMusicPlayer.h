@@ -61,16 +61,14 @@ typedef enum {
  LMMusicRepeatMode is the repeat mode of the music.
  */
 typedef enum {
-	LMMusicShuffleModeDefault = 0, //The user's default setting. Bullshit value, never use this.
-	LMMusicShuffleModeOff, //Do not shuffle.
-	LMMusicShuffleModeSongs, //Shuffle by songs.
-	LMMusicShuffleModeAlbums //Shuffle by albums.
+	LMMusicShuffleModeOff = 0, //Do not shuffle.
+	LMMusicShuffleModeOn, //Shuffle.
 } LMMusicShuffleMode;
 
 @class LMMusicPlayer;
 
 @protocol LMMusicPlayerDelegate <NSObject>
-
+@required
 /**
  Is called when the music track of the app changes.
 
@@ -84,7 +82,13 @@ typedef enum {
  @param newState The new state.
  */
 - (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState;
+@optional
+/**
+ Is called when the current playback time of the song changes.
 
+ @param newPlaybackTime The new playback time.
+ */
+- (void)musicCurrentPlaybackTimeDidChange:(NSTimeInterval)newPlaybackTime;
 @end
 
 @interface LMMusicPlayer : NSObject
@@ -139,14 +143,14 @@ typedef enum {
 
  @param newDelegate The new delegate to add.
  */
-- (void)addMusicDelegate:(id)newDelegate;
+- (void)addMusicDelegate:(id<LMMusicPlayerDelegate>)newDelegate;
 
 /**
  Removes an LMMusicPlayerDelegate from the list of delegates.
 
  @param delegateToRemove The delegate to remove.
  */
-- (void)removeMusicDelegate:(id)delegateToRemove;
+- (void)removeMusicDelegate:(id<LMMusicPlayerDelegate>)delegateToRemove;
 
 /**
  Finds collections of music based off of the type provided.

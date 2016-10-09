@@ -9,8 +9,8 @@
 #import <PureLayout/PureLayout.h>
 #import <MediaPlayer/MediaPlayer.h>
 #import "LMAlbumArtView.h"
-#import "LMExtras.h"
 #import "LMProgressCircleView.h"
+#import "LMColour.h"
 
 @interface LMAlbumArtView()
 
@@ -107,7 +107,7 @@
     UIColor *colour;
 	NSLog(@"Spooked");
     if(index <= self.musicPlayer.currentPlaybackTime){
-        colour = LIGNITE_RED;//[UIColor colorWithRed:index*0.009 green:0.16 blue:0.17 alpha:1.0f];
+        colour = [LMColour ligniteRedColour];
     }
     else{
         colour = [UIColor clearColor];
