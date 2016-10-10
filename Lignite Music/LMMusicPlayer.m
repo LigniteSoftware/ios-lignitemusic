@@ -100,7 +100,7 @@
 	[self.systemMusicPlayer endGeneratingPlaybackNotifications];
 }
 
-- (void)currentPlaybackTimeChangeTimerCallback {
+- (void)currentPlaybackTimeChangeTimerCallback:(NSTimer*)timer {
 	NSTimeInterval currentPlaybackTime = self.currentPlaybackTime;
 	NSLog(@"Time %f", currentPlaybackTime);
 	if(currentPlaybackTime != self.previousPlaybackTime){
@@ -112,28 +112,34 @@
 		self.previousPlaybackTime = currentPlaybackTime;
 	}
 	
-//	if(![self.currentPlaybackTimeChangeTimer isValid] || !self.currentPlaybackTimeChangeTimer){
-//		NSLog(@"Registering for repeat.");
-//		self.currentPlaybackTimeChangeTimer = [NSTimer scheduledTimerWithTimeInterval:0.5
-//																			   target:self
-//																			 selector:@selector(currentPlaybackTimeChangeTimerCallback)
-//																			 userInfo:nil
-//																			  repeats:YES];
-//	}
+	if(![self.currentPlaybackTimeChangeTimer isValid] || !self.currentPlaybackTimeChangeTimer){
+		NSLog(@"Registering for repeat.");
+		self.currentPlaybackTimeChangeTimer = [NSTimer scheduledTimerWithTimeInterval:0.5
+																			   target:self
+																			 selector:@selector(currentPlaybackTimeChangeTimerCallback:)
+																			 userInfo:nil
+																			  repeats:YES];
+	}
+	
+	if(timer){
+		self.runTimer = NO;
+	}
 }
 
 - (void)currentPlaybackTimeChangeFireTimer:(BOOL)adjustForDifference {
 	__weak id weakSelf = self;
 	
-	float difference = ceilf(self.systemMusicPlayer.currentPlaybackTime)-self.systemMusicPlayer.currentPlaybackTime;
-	
-	//NSLog(@"Difference %f", difference);
-	
-	double delayInSeconds = adjustForDifference ? difference : (1.0-self.delayThroughThread);
-	//NSLog(@"Delaying %f", delayInSeconds);
-	if(delayInSeconds < 0){
-		delayInSeconds = 0.05;
-	}
+//	float difference = ceilf(self.systemMusicPlayer.currentPlaybackTime)-self.systemMusicPlayer.currentPlaybackTime;
+//	
+//	//NSLog(@"Difference %f", difference);
+//	
+//	double delayInSeconds = adjustForDifference ? difference : (1.0-self.delayThroughThread);
+//	//NSLog(@"Delaying %f", delayInSeconds);
+//	if(delayInSeconds < 0){
+//		delayInSeconds = 0.05;
+//	}
+
+	double delayInSeconds = 0.1;
 	
 //	NSLog(@"%f!", delayInSeconds * NSEC_PER_SEC);
 	NSTimeInterval theoreticalFiringTime = [[NSDate date] timeIntervalSince1970]+(delayInSeconds * 1);
@@ -147,20 +153,19 @@
 			return;
 		}
 		
+		if(![strongSelf runTimer]){
+			NSLog(@"Not rescheduling non-main timer, sorry");
+			return;
+		}
+		
 		NSTimeInterval timeFired =  [[NSDate date]timeIntervalSince1970];
-		NSLog(@"Firing at %f, that's %f different from expected", timeFired, timeFired-theoreticalFiringTime);
-		[strongSelf currentPlaybackTimeChangeTimerCallback];
+		NSLog(@"Fired at %f, that's %f milliseconds different from expected", timeFired, 1000.0*(timeFired-theoreticalFiringTime));
+		[strongSelf currentPlaybackTimeChangeTimerCallback:nil];
 		
 		LMMusicPlayer *player = strongSelf;
 		player.delayThroughThread = (timeFired-theoreticalFiringTime);
 		
-		// Schedule the timer again
-		if([strongSelf runTimer]){
-			[strongSelf currentPlaybackTimeChangeFireTimer:NO];
-		}
-		else{
-			NSLog(@"Not rescheduling, sorry");
-		}
+		[strongSelf currentPlaybackTimeChangeFireTimer:NO];
 	});
 }
 
@@ -188,6 +193,9 @@
 	else {
 		NSLog(@"Invalidate");
 		self.runTimer = NO;
+		
+		[self.currentPlaybackTimeChangeTimer invalidate];
+		self.currentPlaybackTimeChangeTimer = nil;
 	}
 	
 	for(int i = 0; i < self.delegates.count; i++){
