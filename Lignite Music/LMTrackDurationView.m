@@ -16,12 +16,28 @@
 
 @implementation LMTrackDurationView
 
+- (void)touchIn {
+	NSLog(@"Touch in");
+}
+
+- (void)changed {
+	NSLog(@"Changed");
+}
+
+- (void)touchOut {
+	NSLog(@"Touch out");
+}
+
 - (void)setup {
 	self.seekSlider = [[LMSlider alloc]init];
 	self.seekSlider.translatesAutoresizingMaskIntoConstraints = NO;
 //	self.seekSlider.backgroundColor = [UIColor blueColor];
 	self.seekSlider.tintColor = [LMColour ligniteRedColour];
 	[self addSubview:self.seekSlider];
+	
+	[self.seekSlider addTarget:self action:@selector(touchIn) forControlEvents:UIControlEventTouchDown];
+	[self.seekSlider addTarget:self action:@selector(changed) forControlEvents:UIControlEventValueChanged];
+	[self.seekSlider addTarget:self action:@selector(touchOut) forControlEvents:UIControlEventTouchUpInside];
 	
 	[self.seekSlider autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self];
 	[self.seekSlider autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];

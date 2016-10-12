@@ -221,6 +221,7 @@
     }
     else if (playbackState == MPMusicPlaybackStateStopped) {
         //[self.musicPlayer stop];
+
     }
     [self pushCurrentStateToWatch];
 }

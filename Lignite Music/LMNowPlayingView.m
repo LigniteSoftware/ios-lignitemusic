@@ -70,16 +70,16 @@
 									   (int)currentMinutes, currentSeconds,
 									   [LMNowPlayingView durationStringTotalPlaybackTime:totalPlaybackTime]];
 	}
-	
-//	[UIView animateWithDuration:0.3 animations:^{
-//		self.songDurationSlider.maximumValue = [self.musicPlayer.nowPlayingItem playbackDuration];
-//		self.songDurationSlider.value = currentPlaybackTime;
-//		[self.albumArtView updateContentWithMusicPlayer:self.musicPlayer];
-//	}];
 }
 
 - (void)musicCurrentPlaybackTimeDidChange:(NSTimeInterval)newPlaybackTime {
 	[self updateSongDurationLabelWithPlaybackTime:newPlaybackTime];
+	
+	self.trackDurationView.seekSlider.maximumValue = self.musicPlayer.nowPlayingTrack.playbackDuration;
+	[UIView animateWithDuration:1.0 animations:^{
+		[self.trackDurationView.seekSlider setValue:newPlaybackTime animated:YES];
+	}];
+	self.trackDurationView.seekSlider.minimumValue = 0;
 }
 
 - (void)musicTrackDidChange:(LMMusicTrack *)newTrack {
@@ -195,14 +195,7 @@
 }
 
 - (void)swipedLeftNowPlaying {
-	if(self.musicPlayer.currentPlaybackTime > 5){
-		NSLog(@"Skipping to beginning");
-		[self.musicPlayer skipToBeginning];
-	}
-	else{
-		NSLog(@"Skipping to previous");
-		[self.musicPlayer skipToPreviousItem];
-	}
+	[self.musicPlayer autoBackThrough];
 }
 
 - (void)setup {

@@ -11,9 +11,14 @@
 @interface LMMusicPlayer()
 
 /**
- The system music player.
+ The system music player. Simply provides info related to the music and does not control playback.
  */
 @property MPMusicPlayerController *systemMusicPlayer;
+
+/**
+ The audio player. Is the actual controller of the system music player contents.
+ */
+@property AVAudioPlayer *audioPlayer;
 
 /**
  The delegates associated with the music player. As described in LMMusicPlayerDelegate.
@@ -29,13 +34,16 @@
  The timer for detecting changes in the current playback time.
  */
 @property NSTimer *currentPlaybackTimeChangeTimer;
-@property BOOL runTimer;
+
+/**
+ Whether or not the background timer for catching the current playback time should run. Set to NO when the NSTimer kicks in.
+ */
+@property BOOL runBackgroundTimer;
 
 /**
  The previous playback time.
  */
 @property NSTimeInterval previousPlaybackTime;
-@property NSTimeInterval delayThroughThread;
 
 @end
 
@@ -77,6 +85,29 @@
 		 object:      self.systemMusicPlayer];
 		
 		[self.systemMusicPlayer beginGeneratingPlaybackNotifications];
+		
+		[[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
+		[[AVAudioSession sharedInstance] setActive: YES error: nil];
+		
+		MPRemoteCommandCenter *commandCenter = [MPRemoteCommandCenter sharedCommandCenter];
+		[commandCenter.pauseCommand addTargetWithHandler:^MPRemoteCommandHandlerStatus(MPRemoteCommandEvent *event) {
+			[self pause];
+			return MPRemoteCommandHandlerStatusSuccess;
+		}];
+		[commandCenter.playCommand addTargetWithHandler:^MPRemoteCommandHandlerStatus(MPRemoteCommandEvent *event) {
+			[self play];
+			return MPRemoteCommandHandlerStatusSuccess;
+		}];
+		[commandCenter.nextTrackCommand addTargetWithHandler:^MPRemoteCommandHandlerStatus(MPRemoteCommandEvent *event) {
+			[self skipToNextTrack];
+			return MPRemoteCommandHandlerStatusSuccess;
+		}];
+		[commandCenter.previousTrackCommand addTargetWithHandler:^MPRemoteCommandHandlerStatus(MPRemoteCommandEvent *event) {
+			[self autoBackThrough];
+			return MPRemoteCommandHandlerStatusSuccess;
+		}];
+	
+		[commandCenter.changePlaybackPositionCommand addTarget:self action:@selector(handlePlaybackPositionChange:)];
 	}
 	else{
 		NSLog(@"Fatal error! Failed to create instance of LMMusicPlayer.");
@@ -85,7 +116,7 @@
 }
 
 - (void)deinit {
-	NSLog(@"Deinit on LMMusicPlayer called. Warning: Releasing notification center hooks to track playing change!");
+	NSLog(@"Deinit on LMMusicPlayer called. Warning: Releasing notification center hooks to track playing changes!");
 	
 	[[NSNotificationCenter defaultCenter]
 	 removeObserver: self
@@ -102,18 +133,15 @@
 
 - (void)currentPlaybackTimeChangeTimerCallback:(NSTimer*)timer {
 	NSTimeInterval currentPlaybackTime = self.currentPlaybackTime;
-	NSLog(@"Time %f", currentPlaybackTime);
-	if(currentPlaybackTime != self.previousPlaybackTime){
+
+	if(floorf(currentPlaybackTime) != floorf(self.previousPlaybackTime)){
 		for(int i = 0; i < self.delegatesSubscribedToCurrentPlaybackTimeChange.count; i++){
 			id<LMMusicPlayerDelegate> delegate = [self.delegatesSubscribedToCurrentPlaybackTimeChange objectAtIndex:i];
 			[delegate musicCurrentPlaybackTimeDidChange:currentPlaybackTime];
 		}
-		
-		self.previousPlaybackTime = currentPlaybackTime;
 	}
 	
 	if(![self.currentPlaybackTimeChangeTimer isValid] || !self.currentPlaybackTimeChangeTimer){
-		NSLog(@"Registering for repeat.");
 		self.currentPlaybackTimeChangeTimer = [NSTimer scheduledTimerWithTimeInterval:0.5
 																			   target:self
 																			 selector:@selector(currentPlaybackTimeChangeTimerCallback:)
@@ -122,28 +150,23 @@
 	}
 	
 	if(timer){
-		self.runTimer = NO;
+		self.runBackgroundTimer = NO;
 	}
+	
+	self.previousPlaybackTime = currentPlaybackTime;
+}
+
+- (MPRemoteCommandHandlerStatus)handlePlaybackPositionChange:(MPChangePlaybackPositionCommandEvent*)positionEvent {
+	NSLog(@"New time %f", positionEvent.positionTime);
+	self.audioPlayer.currentTime = positionEvent.positionTime;
+	[self reloadInfoCenter:self.audioPlayer.isPlaying];
+	return MPRemoteCommandHandlerStatusSuccess;
 }
 
 - (void)currentPlaybackTimeChangeFireTimer:(BOOL)adjustForDifference {
 	__weak id weakSelf = self;
-	
-//	float difference = ceilf(self.systemMusicPlayer.currentPlaybackTime)-self.systemMusicPlayer.currentPlaybackTime;
-//	
-//	//NSLog(@"Difference %f", difference);
-//	
-//	double delayInSeconds = adjustForDifference ? difference : (1.0-self.delayThroughThread);
-//	//NSLog(@"Delaying %f", delayInSeconds);
-//	if(delayInSeconds < 0){
-//		delayInSeconds = 0.05;
-//	}
 
 	double delayInSeconds = 0.1;
-	
-//	NSLog(@"%f!", delayInSeconds * NSEC_PER_SEC);
-	NSTimeInterval theoreticalFiringTime = [[NSDate date] timeIntervalSince1970]+(delayInSeconds * 1);
-	NSLog(@"Should fire at %f", theoreticalFiringTime);
 	
 	dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
 	dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
@@ -153,23 +176,58 @@
 			return;
 		}
 		
-		if(![strongSelf runTimer]){
-			NSLog(@"Not rescheduling non-main timer, sorry");
+		if(![strongSelf runBackgroundTimer]){
 			return;
 		}
 		
-		NSTimeInterval timeFired =  [[NSDate date]timeIntervalSince1970];
-		NSLog(@"Fired at %f, that's %f milliseconds different from expected", timeFired, 1000.0*(timeFired-theoreticalFiringTime));
 		[strongSelf currentPlaybackTimeChangeTimerCallback:nil];
-		
-		LMMusicPlayer *player = strongSelf;
-		player.delayThroughThread = (timeFired-theoreticalFiringTime);
 		
 		[strongSelf currentPlaybackTimeChangeFireTimer:NO];
 	});
 }
 
+- (void)reloadAudioPlayerWithNowPlayingItem {
+	NSError *error = nil;
+	
+	NSURL *url = [self.systemMusicPlayer.nowPlayingItem valueForProperty:MPMediaItemPropertyAssetURL];
+	
+	self.audioPlayer = nil;
+	self.audioPlayer = [[AVAudioPlayer alloc]initWithContentsOfURL:url error:&error];
+	
+	if(error){
+		NSLog(@"Error loading audio player with url %@: %@", url, error);
+	}
+	else{
+		[self.audioPlayer prepareToPlay];
+	}
+}
+
+- (void)reloadInfoCenter:(BOOL)isPlaying {
+	MPNowPlayingInfoCenter *infoCenter = [MPNowPlayingInfoCenter defaultCenter];
+	
+	NSMutableDictionary *newInfo = [[NSMutableDictionary alloc]init];
+	[newInfo setObject:self.nowPlayingTrack.title forKey:MPMediaItemPropertyTitle];
+	[newInfo setObject:self.nowPlayingTrack.artist forKey:MPMediaItemPropertyArtist];
+	[newInfo setObject:self.nowPlayingTrack.albumTitle forKey:MPMediaItemPropertyAlbumTitle];
+	[newInfo setObject:@(self.nowPlayingTrack.playbackDuration) forKey:MPMediaItemPropertyPlaybackDuration];
+	[newInfo setObject:@(self.audioPlayer.currentTime) forKey:MPNowPlayingInfoPropertyElapsedPlaybackTime];
+	[newInfo setObject:[self.nowPlayingTrack.sourceTrack artwork] forKey:MPMediaItemPropertyArtwork];
+	[newInfo setObject:@(isPlaying) forKey:MPNowPlayingInfoPropertyPlaybackRate];
+	
+//	NSLog(@"Allahu %d: %@", self.audioPlayer.isPlaying, newInfo);
+	
+	infoCenter.nowPlayingInfo = newInfo;
+}
+
 - (void)systemMusicPlayerTrackChanged:(id)sender {
+	BOOL autoPlay = self.audioPlayer.isPlaying;
+	
+	[self reloadAudioPlayerWithNowPlayingItem];
+	
+	if(autoPlay){
+		[self play];
+	}
+	
 	LMMusicTrack *newTrack = [[LMMusicTrack alloc]initWithMPMediaItem:self.systemMusicPlayer.nowPlayingItem];
 	self.nowPlayingTrack = newTrack;
 	self.indexOfNowPlayingTrack = self.systemMusicPlayer.indexOfNowPlayingItem;
@@ -178,24 +236,46 @@
 		id delegate = [self.delegates objectAtIndex:i];
 		[delegate musicTrackDidChange:self.nowPlayingTrack];
 	}
+	
+	[self reloadInfoCenter:autoPlay];
+}
+
+- (void)changeMusicPlayerState:(LMMusicPlaybackState)newState {
+	self.playbackState = newState;
+	
+	if(self.playbackState == LMMusicPlaybackStatePlaying){
+		if(!self.runBackgroundTimer){
+			self.runBackgroundTimer = YES;
+			[self currentPlaybackTimeChangeFireTimer:YES];
+		}
+	}
+	else {
+		self.runBackgroundTimer = NO;
+		
+		//[self.currentPlaybackTimeChangeTimer invalidate];
+		//self.currentPlaybackTimeChangeTimer = nil;
+	}
+	
+	for(int i = 0; i < self.delegates.count; i++){
+		id delegate = [self.delegates objectAtIndex:i];
+		[delegate musicPlaybackStateDidChange:self.playbackState];
+	}
 }
 
 - (void)systemMusicPlayerStateChanged:(id)sender {
 	self.playbackState = (LMMusicPlaybackState)self.systemMusicPlayer.playbackState;
 	
 	if(self.playbackState == LMMusicPlaybackStatePlaying){
-		NSLog(@"Yeah");
-		if(!self.runTimer){
-			self.runTimer = YES;
+		if(!self.runBackgroundTimer){
+			self.runBackgroundTimer = YES;
 			[self currentPlaybackTimeChangeFireTimer:YES];
 		}
 	}
 	else {
-		NSLog(@"Invalidate");
-		self.runTimer = NO;
+		self.runBackgroundTimer = NO;
 		
-		[self.currentPlaybackTimeChangeTimer invalidate];
-		self.currentPlaybackTimeChangeTimer = nil;
+		//[self.currentPlaybackTimeChangeTimer invalidate];
+		//self.currentPlaybackTimeChangeTimer = nil;
 	}
 	
 	for(int i = 0; i < self.delegates.count; i++){
@@ -207,7 +287,6 @@
 - (void)addMusicDelegate:(id<LMMusicPlayerDelegate>)newDelegate {
 	[self.delegates addObject:newDelegate];
 	if([newDelegate respondsToSelector:@selector(musicCurrentPlaybackTimeDidChange:)]){
-		NSLog(@"Yeah BOIIIIIIIIII");
 		[self.delegatesSubscribedToCurrentPlaybackTimeChange addObject:newDelegate];
 	}
 }
@@ -285,9 +364,39 @@
 	}
 }
 
+- (void)autoSkipAudioPlayer {
+	__weak id weakSelf = self;
+	
+	float delayInSeconds = 0.50;
+	dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+	dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+		id strongSelf = weakSelf;
+		
+		if (!strongSelf) {
+			return;
+		}
+		
+		LMMusicPlayer *player = strongSelf;
+		
+		[player play];
+	});
+}
+
+- (void)autoBackThrough {
+	if(self.currentPlaybackTime > 5){
+		NSLog(@"Skipping to beginning");
+		[self skipToBeginning];
+	}
+	else{
+		NSLog(@"Skipping to previous");
+		[self skipToPreviousItem];
+	}
+}
+
 - (void)skipToBeginning {
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer){
-		[self.systemMusicPlayer skipToBeginning];
+		[self pause];
+		[self autoSkipAudioPlayer];
 	}
 }
 
@@ -297,26 +406,54 @@
 	}
 }
 
+- (void)autoPauseAudioPlayer {
+	__weak id weakSelf = self;
+	
+	float delayInSeconds = 0.25;
+	dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+	dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+		id strongSelf = weakSelf;
+		
+		if (!strongSelf) {
+			return;
+		}
+		
+		LMMusicPlayer *player = strongSelf;
+		
+		[player.audioPlayer pause];
+		
+		[self reloadInfoCenter:NO];
+	});
+}
+
 - (void)play {
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer){
-		[self.systemMusicPlayer play];
+		[self changeMusicPlayerState:LMMusicPlaybackStatePlaying];
+		
+		//[self.systemMusicPlayer play];
+		[self.audioPlayer setVolume:1 fadeDuration:0.25];
+		[self.audioPlayer play];
+		[self reloadInfoCenter:YES];
 	}
 }
 
 - (void)pause {
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer){
-		[self.systemMusicPlayer pause];
+		[self changeMusicPlayerState:LMMusicPlaybackStatePaused];
+		//[self.systemMusicPlayer pause];
+		[self.audioPlayer setVolume:0 fadeDuration:0.25];
+		[self autoPauseAudioPlayer];
 	}
 }
 
 - (void)stop {
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer){
-		[self.systemMusicPlayer stop];
+		[self.audioPlayer stop];
 	}
 }
 
 - (LMMusicPlaybackState)invertPlaybackState {
-	switch(self.playbackState){
+	switch(self.audioPlayer.isPlaying){
 		case LMMusicPlaybackStatePlaying:
 			[self pause];
 			return LMMusicPlaybackStatePaused;
@@ -384,7 +521,7 @@
 
 - (NSTimeInterval)currentPlaybackTime {
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer){
-		return self.systemMusicPlayer.currentPlaybackTime;
+		return self.audioPlayer.currentTime;
 	}
 	
 	return _currentPlaybackTime;

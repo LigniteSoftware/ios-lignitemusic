@@ -6,6 +6,7 @@
 //  Copyright © 2016 Lignite. All rights reserved.
 //
 
+#import <AVFoundation/AVFoundation.h>
 #import <MediaPlayer/MediaPlayer.h>
 #import <Foundation/Foundation.h>
 #import "LMMusicTrack.h"
@@ -160,6 +161,11 @@ typedef enum {
  @return The collections from the query's results.
  */
 - (NSArray<LMMusicTrackCollection*>*)queryCollectionsForMusicType:(LMMusicType)musicType;
+
+/**
+ Automatically restarts the song if only been playing for less than 5 seconds, otherwise goes back.
+ */
+- (void)autoBackThrough;
 
 /**
  Starts playback of the next media item in the playback queue; or, the music player is not playing, designates the next media item as the next to be played.
