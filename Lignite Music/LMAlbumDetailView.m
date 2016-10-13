@@ -157,8 +157,9 @@
 		[self.musicPlayer stop];
 		[self.musicPlayer setNowPlayingCollection:self.albumCollection];
 	}
+	self.musicPlayer.autoPlay = YES;
+	
 	[self.musicPlayer setNowPlayingTrack:track];
-	[self.musicPlayer play];
 }
 
 - (UIColor*)tapColourForListEntry:(LMListEntry*)entry {
@@ -186,6 +187,7 @@
 	}
 	else{
 		[self.musicPlayer stop];
+		self.musicPlayer.autoPlay = YES;
 		[self.musicPlayer setNowPlayingCollection:self.albumCollection];
 		[self.musicPlayer play];
 	}

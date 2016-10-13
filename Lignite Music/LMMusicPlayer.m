@@ -229,7 +229,6 @@
 		[strongSelf currentPlaybackTimeChangeTimerCallback:nil];
 		
 		[strongSelf currentPlaybackTimeChangeFireTimer:NO];
-		NSLog(@"Dick is not a bone?");
 	});
 }
 
@@ -253,6 +252,10 @@
 }
 
 - (void)reloadInfoCenter:(BOOL)isPlaying {
+	if(![self hasTrackLoaded]){
+		return;
+	}
+	
 	MPNowPlayingInfoCenter *infoCenter = [MPNowPlayingInfoCenter defaultCenter];
 	
 	NSMutableDictionary *newInfo = [[NSMutableDictionary alloc]init];
