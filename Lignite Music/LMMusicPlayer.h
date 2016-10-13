@@ -218,6 +218,13 @@ typedef enum {
 - (LMMusicPlaybackState)invertPlaybackState;
 
 /**
+ Whether or not the music player has a track loaded.
+
+ @return If a track is loaded. NO if track contains nil title, YES if there is a track.
+ */
+- (BOOL)hasTrackLoaded;
+
+/**
  Gets the currently saved LMMusicPlayerType through NSUserDefaults. Returns LMMusicPlayerTypeSystemMusicPlayer if the entry doesn't exist in NSUserDefaults.
 
  @return The saved LMMusicPlayerType.

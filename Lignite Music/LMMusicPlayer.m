@@ -536,6 +536,10 @@
 	}
 }
 
+- (BOOL)hasTrackLoaded {
+	return (self.nowPlayingTrack.title != nil);
+}
+
 - (void)setNowPlayingTrack:(LMMusicTrack*)nowPlayingTrack {
 	for(int i = 0; i < self.nowPlayingCollection.count; i++){
 		LMMusicTrack *track = [self.nowPlayingCollection.items objectAtIndex:i];

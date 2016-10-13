@@ -76,6 +76,10 @@
 
 - (void)seekSliderValueChanged:(float)newValue isFinal:(BOOL)isFinal {
 	//NSLog(@"New value %f", newValue);
+	if(![self.musicPlayer hasTrackLoaded]){
+		return;
+	}
+	
 	if(isFinal){
 		[self.musicPlayer setCurrentPlaybackTime:newValue];
 	}
@@ -103,7 +107,7 @@
 	
 	[self.queue cancelAllOperations];
 	
-	BOOL noTrackPlaying = !newTrack.title;
+	BOOL noTrackPlaying = ![self.musicPlayer hasTrackLoaded];
 	
 	NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
 		//UIImage *image = [track albumArt];
@@ -221,6 +225,9 @@
 }
 
 - (void)tappedNowPlaying {
+	if(![self.musicPlayer hasTrackLoaded]){
+		return;
+	}
 	if([self.trackDurationView didJustFinishEditing]){
 		return;
 	}
@@ -228,10 +235,16 @@
 }
 
 - (void)swipedRightNowPlaying {
+	if(![self.musicPlayer hasTrackLoaded]){
+		return;
+	}
 	[self.musicPlayer skipToNextTrack];
 }
 
 - (void)swipedLeftNowPlaying {
+	if(![self.musicPlayer hasTrackLoaded]){
+		return;
+	}
 	[self.musicPlayer autoBackThrough];
 }
 
