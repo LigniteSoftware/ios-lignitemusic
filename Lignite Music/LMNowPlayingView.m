@@ -15,7 +15,7 @@
 #import "LMButton.h"
 #import "LMColour.h"
 
-@interface LMNowPlayingView() <LMMusicPlayerDelegate, LMButtonDelegate>
+@interface LMNowPlayingView() <LMMusicPlayerDelegate, LMButtonDelegate, LMTrackDurationDelegate>
 
 @property UIImageView *backgroundImageView;
 @property UIView *shadingView;
@@ -72,14 +72,26 @@
 	}
 }
 
+- (void)seekSliderValueChanged:(float)newValue isFinal:(BOOL)isFinal {
+	//NSLog(@"New value %f", newValue);
+	if(isFinal){
+		[self.musicPlayer setCurrentPlaybackTime:newValue];
+	}
+	else{
+		[self updateSongDurationLabelWithPlaybackTime:newValue];
+	}
+}
+
 - (void)musicCurrentPlaybackTimeDidChange:(NSTimeInterval)newPlaybackTime {
-	[self updateSongDurationLabelWithPlaybackTime:newPlaybackTime];
-	
-	self.trackDurationView.seekSlider.maximumValue = self.musicPlayer.nowPlayingTrack.playbackDuration;
-	[UIView animateWithDuration:1.0 animations:^{
-		[self.trackDurationView.seekSlider setValue:newPlaybackTime animated:YES];
-	}];
-	self.trackDurationView.seekSlider.minimumValue = 0;
+	if(self.trackDurationView.shouldUpdateValue){
+		[self updateSongDurationLabelWithPlaybackTime:newPlaybackTime];
+		
+		self.trackDurationView.seekSlider.minimumValue = 0;
+		self.trackDurationView.seekSlider.maximumValue = self.musicPlayer.nowPlayingTrack.playbackDuration;
+		[UIView animateWithDuration:1.0 animations:^{
+			[self.trackDurationView.seekSlider setValue:newPlaybackTime animated:YES];
+		}];
+	}
 }
 
 - (void)musicTrackDidChange:(LMMusicTrack *)newTrack {
@@ -187,6 +199,9 @@
 }
 
 - (void)tappedNowPlaying {
+	if([self.trackDurationView didJustFinishEditing]){
+		return;
+	}
 	[self.musicPlayer invertPlaybackState];
 }
 
@@ -248,6 +263,7 @@
 	
 	self.trackDurationView = [[LMTrackDurationView alloc]init];
 	self.trackDurationView.translatesAutoresizingMaskIntoConstraints = NO;
+	self.trackDurationView.delegate = self;
 //	self.trackDurationView.backgroundColor = [UIColor yellowColor];
 	[self addSubview:self.trackDurationView];
 	[self.trackDurationView setup];

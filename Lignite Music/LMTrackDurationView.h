@@ -11,11 +11,24 @@
 #import "LMLabel.h"
 #import "LMExtras.h"
 
+@class LMTrackDurationView;
+
+@protocol LMTrackDurationDelegate <NSObject>
+
+- (void)seekSliderValueChanged:(float)newValue isFinal:(BOOL)isFinal;
+
+@end
+
 @interface LMTrackDurationView : UIView
 
 @property LMSlider *seekSlider;
 @property LMLabel *songCountLabel, *songDurationLabel;
 
+@property id<LMTrackDurationDelegate> delegate;
+
+@property BOOL shouldUpdateValue;
+
+- (BOOL)didJustFinishEditing;
 - (void)setup;
 
 @end

@@ -516,6 +516,8 @@
 }
 
 - (void)setCurrentPlaybackTime:(NSTimeInterval)currentPlaybackTime {
+	self.audioPlayer.currentTime = currentPlaybackTime;
+	
 	_currentPlaybackTime = currentPlaybackTime;
 }
 

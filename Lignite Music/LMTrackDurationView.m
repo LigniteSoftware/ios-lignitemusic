@@ -12,32 +12,58 @@
 
 @interface LMTrackDurationView()
 
+@property NSTimeInterval lastEditedInterval;
+
 @end
 
 @implementation LMTrackDurationView
 
+- (void)setAsShouldUpdate {
+	self.shouldUpdateValue = YES;
+}
+
 - (void)touchIn {
-	NSLog(@"Touch in");
+	self.shouldUpdateValue = NO;
 }
 
 - (void)changed {
-	NSLog(@"Changed");
+	if(self.delegate){
+		[self.delegate seekSliderValueChanged:self.seekSlider.value isFinal:NO];
+	}
+	
+	self.lastEditedInterval = [[NSDate date] timeIntervalSince1970];
 }
 
-- (void)touchOut {
-	NSLog(@"Touch out");
+- (void)touchFinished {
+	[self setAsShouldUpdate];
+	
+	if(self.delegate){
+		[self.delegate seekSliderValueChanged:self.seekSlider.value isFinal:YES];
+	}
+}
+
+- (BOOL)didJustFinishEditing {
+	if([[NSDate date] timeIntervalSince1970]-self.lastEditedInterval < 0.1){
+		return YES;
+	}
+	return NO;
 }
 
 - (void)setup {
+	self.shouldUpdateValue = YES;
+	
 	self.seekSlider = [[LMSlider alloc]init];
 	self.seekSlider.translatesAutoresizingMaskIntoConstraints = NO;
+	self.seekSlider.continuous = YES;
 //	self.seekSlider.backgroundColor = [UIColor blueColor];
 	self.seekSlider.tintColor = [LMColour ligniteRedColour];
 	[self addSubview:self.seekSlider];
 	
 	[self.seekSlider addTarget:self action:@selector(touchIn) forControlEvents:UIControlEventTouchDown];
 	[self.seekSlider addTarget:self action:@selector(changed) forControlEvents:UIControlEventValueChanged];
-	[self.seekSlider addTarget:self action:@selector(touchOut) forControlEvents:UIControlEventTouchUpInside];
+	[self.seekSlider addTarget:self action:@selector(touchFinished) forControlEvents:UIControlEventTouchUpOutside];
+	[self.seekSlider addTarget:self action:@selector(touchFinished) forControlEvents:UIControlEventTouchUpInside];
+	[self.seekSlider addTarget:self action:@selector(touchFinished) forControlEvents:UIControlEventTouchCancel];
 	
 	[self.seekSlider autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self];
 	[self.seekSlider autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
