@@ -85,7 +85,6 @@
 }
 
 - (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState {
-	NSLog(@"Current state %ld", (long)self.currentlyPlaying);
 	LMAlbumViewItem *playingEntry = [self albumViewItemForAlbumIndex:self.currentlyPlaying];
 	if(playingEntry){
 		NSLog(@"Playing now: %d", newState);

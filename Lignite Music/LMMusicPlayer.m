@@ -64,6 +64,8 @@
 - (instancetype)init {
 	self = [super init];
 	if(self){
+		NSLog(@"\nDick?\n");
+		
 		self.systemMusicPlayer = [MPMusicPlayerController systemMusicPlayer];
 		self.nowPlayingTrack = [[LMMusicTrack alloc]initWithMPMediaItem:self.systemMusicPlayer.nowPlayingItem];
 		self.playerType = LMMusicPlayerTypeSystemMusicPlayer;
@@ -149,10 +151,20 @@
 		if(self.audioPlayer.isPlaying){
 			[self.audioPlayer stop];
 			[self.systemMusicPlayer play];
+			NSLog(@"Switching to system music player for track %@.", self.systemMusicPlayer.nowPlayingItem.title);
 		}
 	}
 	
 	[self deinit];
+}
+
+- (void)prepareForActivation {
+	NSLog(@"Preparing for activation, state %d", (int)self.systemMusicPlayer.playbackState);
+	if(self.systemMusicPlayer.playbackState == MPMusicPlaybackStatePlaying || self.systemMusicPlayer.playbackState == MPMusicPlaybackStateInterrupted){
+		[self.systemMusicPlayer pause];
+		[self play];
+		NSLog(@"Playing...");
+	}
 }
 
 - (void)updateNowPlayingTimeDelegates {
@@ -215,6 +227,7 @@
 		[strongSelf currentPlaybackTimeChangeTimerCallback:nil];
 		
 		[strongSelf currentPlaybackTimeChangeFireTimer:NO];
+		NSLog(@"Dick is not a bone?");
 	});
 }
 
@@ -234,7 +247,6 @@
 		[self.audioPlayer prepareToPlay];
 		
 		[self updateNowPlayingTimeDelegates];
-		NSLog(@"Suck");
 	}
 }
 
@@ -256,7 +268,7 @@
 }
 
 - (void)systemMusicPlayerTrackChanged:(id)sender {
-	NSLog(@"Changed");
+	NSLog(@"Changed to %@", self.systemMusicPlayer.nowPlayingItem.title);
 	
 	BOOL autoPlay = self.audioPlayer.isPlaying;
 	
@@ -265,8 +277,10 @@
 	LMMusicTrack *newTrack = [[LMMusicTrack alloc]initWithMPMediaItem:self.systemMusicPlayer.nowPlayingItem];
 	self.nowPlayingTrack = newTrack;
 	self.indexOfNowPlayingTrack = self.systemMusicPlayer.indexOfNowPlayingItem;
-	self.currentPlaybackTime = self.systemMusicPlayer.currentPlaybackTime;
-	
+	if(self.systemMusicPlayer.currentPlaybackTime != 0){
+		self.currentPlaybackTime = self.systemMusicPlayer.currentPlaybackTime;
+	}
+
 	for(int i = 0; i < self.delegates.count; i++){
 		id delegate = [self.delegates objectAtIndex:i];
 		[delegate musicTrackDidChange:self.nowPlayingTrack];
@@ -280,6 +294,7 @@
 	if(autoPlay || self.autoPlay){
 		[self play];
 		self.autoPlay = NO;
+		NSLog(@"Autoplaying");
 	}
 	
 	[self reloadInfoCenter:autoPlay];
@@ -308,8 +323,11 @@
 }
 
 - (void)systemMusicPlayerStateChanged:(id)sender {
+	NSLog(@"State changed to %d", (int)self.systemMusicPlayer.playbackState);
+	
 	if(self.systemMusicPlayer.playbackState == MPMusicPlaybackStateInterrupted){
 		self.playbackState = LMMusicPlaybackStatePlaying;
+		self.autoPlay = YES;
 	}
 	else{
 		self.playbackState = (LMMusicPlaybackState)self.systemMusicPlayer.playbackState;
@@ -409,12 +427,14 @@
 }
 
 - (void)skipToNextTrack {
+	NSLog(@"Skip to next");
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer){
 		[self.systemMusicPlayer skipToNextItem];
 	}
 }
 
 - (void)autoSkipAudioPlayer {
+	NSLog(@"Autoskip");
 	__weak id weakSelf = self;
 	
 	float delayInSeconds = 0.50;
@@ -525,7 +545,10 @@
 	
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer){
 		MPMediaItem *associatedMediaItem = nowPlayingTrack.sourceTrack;
-		self.systemMusicPlayer.nowPlayingItem = associatedMediaItem;
+		NSLog(@"Now playing track has an index of %lu. The associated media item has title %@, the track has title %@", (unsigned long)self.indexOfNowPlayingTrack, associatedMediaItem.title, nowPlayingTrack.title);
+		if(self.systemMusicPlayer.nowPlayingItem.persistentID != associatedMediaItem.persistentID){
+			self.systemMusicPlayer.nowPlayingItem = associatedMediaItem;
+		}
 	}
 	_nowPlayingTrack = nowPlayingTrack;
 }
@@ -568,6 +591,8 @@
 }
 
 - (void)setCurrentPlaybackTime:(NSTimeInterval)currentPlaybackTime {
+	NSLog(@"Setting current playback time to %f", currentPlaybackTime);
+	
 	self.audioPlayer.currentTime = currentPlaybackTime;
 		
 	_currentPlaybackTime = currentPlaybackTime;

@@ -111,11 +111,6 @@
 		BOOL isLight = [averageColour isLight];
 		self.shadingView.backgroundColor = isLight ? [UIColor colorWithRed:1 green:1 blue:1 alpha:0.25] : [UIColor colorWithRed:0 green:0 blue:0 alpha:0.25];
 		UIColor *newTextColour = isLight ? [UIColor blackColor] : [UIColor whiteColor];
-		self.trackInfoView.titleLabel.textColor = newTextColour;
-		self.trackInfoView.artistLabel.textColor = newTextColour;
-		self.trackInfoView.albumLabel.textColor = newTextColour;
-		self.trackDurationView.songDurationLabel.textColor = newTextColour;
-		self.trackDurationView.songCountLabel.textColor = newTextColour;
 		
 		CIFilter *gaussianBlurFilter = [CIFilter filterWithName:@"CIGaussianBlur"];
 		[gaussianBlurFilter setDefaults];
@@ -135,6 +130,12 @@
 			}
 			
 			self.backgroundImageView.image = image;
+			
+			self.trackInfoView.titleLabel.textColor = newTextColour;
+			self.trackInfoView.artistLabel.textColor = newTextColour;
+			self.trackInfoView.albumLabel.textColor = newTextColour;
+			self.trackDurationView.songDurationLabel.textColor = newTextColour;
+			self.trackDurationView.songCountLabel.textColor = newTextColour;
 			
 			if(albumImage.size.height > 0){
 				[self.albumArtImageView updateContentWithMusicTrack:newTrack];

@@ -45,7 +45,6 @@
 
 - (UIImage*)albumArt {
 	if(self.loadedAlbumArt){
-		NSLog(@"Returning already loaded.");
 		return self.loadedAlbumArt;
 	}
 	

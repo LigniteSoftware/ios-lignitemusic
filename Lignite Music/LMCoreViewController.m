@@ -119,11 +119,11 @@
 	[self.albumView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
 	[self.albumView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
 	
-//	[NSTimer scheduledTimerWithTimeInterval:0.75
-//									 target:self
-//								   selector:@selector(openNowPlayingView)
-//								   userInfo:nil
-//									repeats:NO];
+	[NSTimer scheduledTimerWithTimeInterval:0.75
+									 target:self
+								   selector:@selector(openNowPlayingView)
+								   userInfo:nil
+									repeats:NO];
 	
 //	self.nowPlayingView = [[LMNowPlayingView alloc]init];
 //	self.nowPlayingView.translatesAutoresizingMaskIntoConstraints = NO;
