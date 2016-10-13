@@ -268,6 +268,10 @@
 	[self addSubview:self.trackDurationView];
 	[self.trackDurationView setup];
 	
+	self.trackDurationView.seekSlider.minimumValue = 0;
+	self.trackDurationView.seekSlider.maximumValue = self.musicPlayer.nowPlayingTrack.playbackDuration;
+	self.trackDurationView.seekSlider.value = self.musicPlayer.currentPlaybackTime;
+	
 	[self.trackDurationView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.albumArtImageView withOffset:10];
 	[self.trackDurationView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.albumArtImageView withOffset:-10];
 	[self.trackDurationView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.albumArtImageView];

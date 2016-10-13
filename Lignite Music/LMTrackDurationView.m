@@ -26,7 +26,7 @@
 	self.shouldUpdateValue = NO;
 }
 
-- (void)changed {
+- (void)changed {	
 	if(self.delegate){
 		[self.delegate seekSliderValueChanged:self.seekSlider.value isFinal:NO];
 	}

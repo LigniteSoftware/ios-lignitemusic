@@ -8,7 +8,7 @@
 
 #import "LMMusicPlayer.h"
 
-@interface LMMusicPlayer()
+@interface LMMusicPlayer() <AVAudioPlayerDelegate>
 
 /**
  The system music player. Simply provides info related to the music and does not control playback.
@@ -44,6 +44,11 @@
  The previous playback time.
  */
 @property NSTimeInterval previousPlaybackTime;
+
+/**
+ Whether or not the music should continue to play when the audioPlayer switches tracks.
+ */
+@property BOOL autoPlay;
 
 @end
 
@@ -131,14 +136,16 @@
 	[self.systemMusicPlayer endGeneratingPlaybackNotifications];
 }
 
-- (void)currentPlaybackTimeChangeTimerCallback:(NSTimer*)timer {
-	NSTimeInterval currentPlaybackTime = self.currentPlaybackTime;
+- (void)updateNowPlayingTimeDelegates {
+	for(int i = 0; i < self.delegatesSubscribedToCurrentPlaybackTimeChange.count; i++){
+		id<LMMusicPlayerDelegate> delegate = [self.delegatesSubscribedToCurrentPlaybackTimeChange objectAtIndex:i];
+		[delegate musicCurrentPlaybackTimeDidChange:self.currentPlaybackTime];
+	}
+}
 
-	if(floorf(currentPlaybackTime) != floorf(self.previousPlaybackTime)){
-		for(int i = 0; i < self.delegatesSubscribedToCurrentPlaybackTimeChange.count; i++){
-			id<LMMusicPlayerDelegate> delegate = [self.delegatesSubscribedToCurrentPlaybackTimeChange objectAtIndex:i];
-			[delegate musicCurrentPlaybackTimeDidChange:currentPlaybackTime];
-		}
+- (void)currentPlaybackTimeChangeTimerCallback:(NSTimer*)timer {
+	if(floorf(self.currentPlaybackTime) != floorf(self.previousPlaybackTime)){
+		[self updateNowPlayingTimeDelegates];
 	}
 	
 	if(![self.currentPlaybackTimeChangeTimer isValid] || !self.currentPlaybackTimeChangeTimer){
@@ -153,7 +160,13 @@
 		self.runBackgroundTimer = NO;
 	}
 	
-	self.previousPlaybackTime = currentPlaybackTime;
+	self.previousPlaybackTime = self.currentPlaybackTime;
+}
+
+- (void)audioPlayerDidFinishPlaying:(AVAudioPlayer*)player successfully:(BOOL)flag {
+	NSLog(@"Finished");
+	self.autoPlay = YES;
+	[self skipToNextTrack];
 }
 
 - (MPRemoteCommandHandlerStatus)handlePlaybackPositionChange:(MPChangePlaybackPositionCommandEvent*)positionEvent {
@@ -193,12 +206,16 @@
 	
 	self.audioPlayer = nil;
 	self.audioPlayer = [[AVAudioPlayer alloc]initWithContentsOfURL:url error:&error];
+	self.audioPlayer.delegate = self;
 	
 	if(error){
 		NSLog(@"Error loading audio player with url %@: %@", url, error);
 	}
 	else{
 		[self.audioPlayer prepareToPlay];
+		
+		[self updateNowPlayingTimeDelegates];
+		NSLog(@"Suck");
 	}
 }
 
@@ -224,10 +241,6 @@
 	
 	[self reloadAudioPlayerWithNowPlayingItem];
 	
-	if(autoPlay){
-		[self play];
-	}
-	
 	LMMusicTrack *newTrack = [[LMMusicTrack alloc]initWithMPMediaItem:self.systemMusicPlayer.nowPlayingItem];
 	self.nowPlayingTrack = newTrack;
 	self.indexOfNowPlayingTrack = self.systemMusicPlayer.indexOfNowPlayingItem;
@@ -235,6 +248,11 @@
 	for(int i = 0; i < self.delegates.count; i++){
 		id delegate = [self.delegates objectAtIndex:i];
 		[delegate musicTrackDidChange:self.nowPlayingTrack];
+	}
+	
+	if(self.indexOfNowPlayingTrack != 0 && (autoPlay || self.autoPlay)){
+		[self play];
+		self.autoPlay = NO;
 	}
 	
 	[self reloadInfoCenter:autoPlay];
@@ -377,7 +395,7 @@
 		}
 		
 		LMMusicPlayer *player = strongSelf;
-		
+		player.currentPlaybackTime = 0;
 		[player play];
 	});
 }
@@ -517,8 +535,10 @@
 
 - (void)setCurrentPlaybackTime:(NSTimeInterval)currentPlaybackTime {
 	self.audioPlayer.currentTime = currentPlaybackTime;
-	
+		
 	_currentPlaybackTime = currentPlaybackTime;
+	
+	[self reloadInfoCenter:self.audioPlayer.isPlaying];
 }
 
 - (NSTimeInterval)currentPlaybackTime {
