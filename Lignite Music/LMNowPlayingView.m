@@ -9,6 +9,8 @@
 #import <PureLayout/PureLayout.h>
 #import "LMNowPlayingView.h"
 #import "LMAlbumArtView.h"
+#import "UIImage+AverageColour.h"
+#import "UIColor+isLight.h"
 #import "LMOperationQueue.h"
 #import "LMTrackDurationView.h"
 #import "LMTrackInfoView.h"
@@ -105,6 +107,16 @@
 		//UIImage *image = [track albumArt];
 		UIImage *albumImage = [newTrack albumArt];
 		
+		UIColor *averageColour = [albumImage averageColour];
+		BOOL isLight = [averageColour isLight];
+		self.shadingView.backgroundColor = isLight ? [UIColor colorWithRed:1 green:1 blue:1 alpha:0.25] : [UIColor colorWithRed:0 green:0 blue:0 alpha:0.25];
+		UIColor *newTextColour = isLight ? [UIColor blackColor] : [UIColor whiteColor];
+		self.trackInfoView.titleLabel.textColor = newTextColour;
+		self.trackInfoView.artistLabel.textColor = newTextColour;
+		self.trackInfoView.albumLabel.textColor = newTextColour;
+		self.trackDurationView.songDurationLabel.textColor = newTextColour;
+		self.trackDurationView.songCountLabel.textColor = newTextColour;
+		
 		CIFilter *gaussianBlurFilter = [CIFilter filterWithName:@"CIGaussianBlur"];
 		[gaussianBlurFilter setDefaults];
 		CIImage *inputImage = [CIImage imageWithCGImage:[albumImage CGImage]];
@@ -178,7 +190,11 @@
 - (void)clickedButton:(LMButton *)button {
 	NSLog(@"Hey button %@", button);
 	if(button == self.shuffleModeButton){
+		self.musicPlayer.shuffleMode = !self.musicPlayer.shuffleMode;
 		
+		[UIView animateWithDuration:0.25 animations:^{
+			[button setColour:self.musicPlayer.shuffleMode ? [UIColor whiteColor] : [LMColour fadedColour]];
+		}];
 	}
 }
 
@@ -344,6 +360,7 @@
 //		[titleLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:background];
 		
 		LMButton *button = [buttons objectAtIndex:i];
+		button.userInteractionEnabled = YES;
 		[button setDelegate:self];
 		[button setupWithImageMultiplier:0.5];
 		[button setImage:[UIImage imageNamed:[images objectAtIndex:i]]];
@@ -355,6 +372,8 @@
 		[button autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:background withMultiplier:0.50];
 		[button autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:background];
 	}
+	
+	[self.shuffleModeButton setColour:self.musicPlayer.shuffleMode ? [UIColor whiteColor] : [LMColour fadedColour]];
 	
 	[self.musicPlayer addMusicDelegate:self];
 	

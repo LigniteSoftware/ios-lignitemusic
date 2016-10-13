@@ -6,6 +6,7 @@
 //  Copyright © 2016 Lignite. All rights reserved.
 //
 
+#import "LMAppDelegate.h"
 #import <PureLayout/PureLayout.h>
 #import "LMCoreViewController.h"
 #import "LMMusicPlayer.h"
@@ -90,7 +91,6 @@
 }
 
 - (void)closeNowPlayingView {
-	NSLog(@"Close");
 	[self.view layoutIfNeeded];
 	self.topConstraint.constant = self.view.frame.size.height*1.5;
 	[UIView animateWithDuration:0.5 delay:0.05
@@ -104,8 +104,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+	NSLog(@"Loaded");
     // Do any additional setup after loading the view.
-	self.musicPlayer = [[LMMusicPlayer alloc]init];
+	self.musicPlayer = [(LMAppDelegate*)[[UIApplication sharedApplication] delegate] musicPlayer];
 	[self.musicPlayer addMusicDelegate:self];
 
 	self.albumView = [[LMAlbumView alloc]init];
@@ -118,11 +119,11 @@
 	[self.albumView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
 	[self.albumView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
 	
-	[NSTimer scheduledTimerWithTimeInterval:0.75
-									 target:self
-								   selector:@selector(openNowPlayingView)
-								   userInfo:nil
-									repeats:NO];
+//	[NSTimer scheduledTimerWithTimeInterval:0.75
+//									 target:self
+//								   selector:@selector(openNowPlayingView)
+//								   userInfo:nil
+//									repeats:NO];
 	
 //	self.nowPlayingView = [[LMNowPlayingView alloc]init];
 //	self.nowPlayingView.translatesAutoresizingMaskIntoConstraints = NO;

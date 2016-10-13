@@ -80,12 +80,15 @@
 	}
 	
 	self.currentlyPlaying = newHighlightedIndex;
+	
+	NSLog(@"The currently playing is %ld", self.currentlyPlaying);
 }
 
 - (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState {
 	NSLog(@"Current state %ld", (long)self.currentlyPlaying);
 	LMAlbumViewItem *playingEntry = [self albumViewItemForAlbumIndex:self.currentlyPlaying];
 	if(playingEntry){
+		NSLog(@"Playing now: %d", newState);
 		[playingEntry.playButton setImage:newState == LMMusicPlaybackStatePlaying ? [UIImage imageNamed:@"pause_white.png"] :[UIImage imageNamed:@"play_white.png"]];
 	}
 }
@@ -141,15 +144,15 @@
 - (void)clickedPlayButtonOnAlbumViewItem:(LMAlbumViewItem*)item {
 	LMMusicTrackCollection *collection = [self.albumCollections objectAtIndex:item.collectionIndex];
 	
-	if(self.musicPlayer.nowPlayingCollection != collection || (!self.musicPlayer.nowPlayingCollection && self.currentlyPlaying != -1)){
+	if((self.musicPlayer.nowPlayingCollection && self.musicPlayer.nowPlayingCollection != collection) || (!self.musicPlayer.nowPlayingCollection && self.currentlyPlaying != item.collectionIndex)){
+		self.musicPlayer.autoPlay = YES;
 		[self.musicPlayer setNowPlayingCollection:collection];
-		[self.musicPlayer play];
+		
+		[self openNowPlayingView];
 	}
 	else{
 		[self musicPlaybackStateDidChange:[self.musicPlayer invertPlaybackState]];
 	}
-	
-	[self openNowPlayingView];
 }
 
 /**

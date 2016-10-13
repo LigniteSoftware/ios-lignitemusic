@@ -46,9 +46,9 @@
 @property NSTimeInterval previousPlaybackTime;
 
 /**
- Whether or not the music should continue to play when the audioPlayer switches tracks.
+ When the track is finished automatically, this is set to YES as a flag to let the system know to autoplay the next track.
  */
-@property BOOL autoPlay;
+@property BOOL didJustFinishTrack;
 
 @end
 
@@ -72,6 +72,8 @@
 		self.shuffleMode = LMMusicShuffleModeOff;
 		self.repeatMode = LMMusicRepeatModeNone;
 		self.previousPlaybackTime = self.systemMusicPlayer.currentPlaybackTime;
+		
+		self.autoPlay = (self.systemMusicPlayer.playbackState == MPMusicPlaybackStatePlaying);
 		
 		[[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
 		
@@ -136,6 +138,23 @@
 	[self.systemMusicPlayer endGeneratingPlaybackNotifications];
 }
 
+- (void)prepareForTermination {
+	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer){
+		if(self.nowPlayingCollection){
+			[self.systemMusicPlayer setQueueWithItemCollection:self.nowPlayingCollection.sourceCollection];
+		}
+		self.systemMusicPlayer.nowPlayingItem = self.nowPlayingTrack.sourceTrack;
+		self.systemMusicPlayer.currentPlaybackTime = self.currentPlaybackTime;
+		
+		if(self.audioPlayer.isPlaying){
+			[self.audioPlayer stop];
+			[self.systemMusicPlayer play];
+		}
+	}
+	
+	[self deinit];
+}
+
 - (void)updateNowPlayingTimeDelegates {
 	for(int i = 0; i < self.delegatesSubscribedToCurrentPlaybackTimeChange.count; i++){
 		id<LMMusicPlayerDelegate> delegate = [self.delegatesSubscribedToCurrentPlaybackTimeChange objectAtIndex:i];
@@ -165,7 +184,7 @@
 
 - (void)audioPlayerDidFinishPlaying:(AVAudioPlayer*)player successfully:(BOOL)flag {
 	NSLog(@"Finished");
-	self.autoPlay = YES;
+	self.didJustFinishTrack = YES;
 	[self skipToNextTrack];
 }
 
@@ -237,6 +256,8 @@
 }
 
 - (void)systemMusicPlayerTrackChanged:(id)sender {
+	NSLog(@"Changed");
+	
 	BOOL autoPlay = self.audioPlayer.isPlaying;
 	
 	[self reloadAudioPlayerWithNowPlayingItem];
@@ -244,13 +265,19 @@
 	LMMusicTrack *newTrack = [[LMMusicTrack alloc]initWithMPMediaItem:self.systemMusicPlayer.nowPlayingItem];
 	self.nowPlayingTrack = newTrack;
 	self.indexOfNowPlayingTrack = self.systemMusicPlayer.indexOfNowPlayingItem;
+	self.currentPlaybackTime = self.systemMusicPlayer.currentPlaybackTime;
 	
 	for(int i = 0; i < self.delegates.count; i++){
 		id delegate = [self.delegates objectAtIndex:i];
 		[delegate musicTrackDidChange:self.nowPlayingTrack];
 	}
 	
-	if(self.indexOfNowPlayingTrack != 0 && (autoPlay || self.autoPlay)){
+	if(self.didJustFinishTrack && self.indexOfNowPlayingTrack != 0){
+		self.autoPlay = YES;
+		self.didJustFinishTrack = NO;
+	}
+	
+	if(autoPlay || self.autoPlay){
 		[self play];
 		self.autoPlay = NO;
 	}
@@ -281,7 +308,12 @@
 }
 
 - (void)systemMusicPlayerStateChanged:(id)sender {
-	self.playbackState = (LMMusicPlaybackState)self.systemMusicPlayer.playbackState;
+	if(self.systemMusicPlayer.playbackState == MPMusicPlaybackStateInterrupted){
+		self.playbackState = LMMusicPlaybackStatePlaying;
+	}
+	else{
+		self.playbackState = (LMMusicPlaybackState)self.systemMusicPlayer.playbackState;
+	}
 	
 	if(self.playbackState == LMMusicPlaybackStatePlaying){
 		if(!self.runBackgroundTimer){
@@ -445,6 +477,7 @@
 }
 
 - (void)play {
+	NSLog(@"Play");
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer){
 		[self changeMusicPlayerState:LMMusicPlaybackStatePlaying];
 		
@@ -504,6 +537,7 @@
 - (void)setNowPlayingCollection:(LMMusicTrackCollection*)nowPlayingCollection {
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer){
 		[self.systemMusicPlayer setQueueWithItemCollection:nowPlayingCollection.sourceCollection];
+		[self.systemMusicPlayer setNowPlayingItem:[[nowPlayingCollection.sourceCollection items] objectAtIndex:0]];
 	}
 	_nowPlayingCollection = nowPlayingCollection;
 }

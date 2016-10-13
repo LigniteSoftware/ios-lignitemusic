@@ -7,11 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LMMusicPlayer.h"
 
 @interface LMAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
-
+@property LMMusicPlayer *musicPlayer;
 
 @end
 

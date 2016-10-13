@@ -135,9 +135,19 @@ typedef enum {
 @property LMMusicShuffleMode shuffleMode;
 
 /**
+ Whether or not the music should continue to play when the audioPlayer switches tracks.
+ */
+@property BOOL autoPlay;
+
+/**
  Prepare for release through ARC. Unhooks observers tied to state and track change notifications.
  */
 - (void)deinit;
+
+/**
+ Prepare for app termination. The music player will transfer the contents of the now playing item to the system music player should it be using the system music player.
+ */
+- (void)prepareForTermination;
 
 /**
  Adds an LMMusicPlayerDelegate to the list of delegates.
