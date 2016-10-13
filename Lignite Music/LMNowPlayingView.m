@@ -103,9 +103,11 @@
 	
 	[self.queue cancelAllOperations];
 	
+	BOOL noTrackPlaying = !newTrack.title;
+	
 	NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
 		//UIImage *image = [track albumArt];
-		UIImage *albumImage = [newTrack albumArt];
+		UIImage *albumImage = noTrackPlaying ? [UIImage imageNamed:@"lignite_background_portrait.png"] : [newTrack albumArt];
 		
 		UIColor *averageColour = [albumImage averageColour];
 		BOOL isLight = [averageColour isLight];
@@ -130,6 +132,9 @@
 			}
 			
 			self.backgroundImageView.image = image;
+			self.backgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
+			
+			self.albumArtImageView.albumArtImageView.image = nil;
 			
 			self.trackInfoView.titleLabel.textColor = newTextColour;
 			self.trackInfoView.artistLabel.textColor = newTextColour;
@@ -148,7 +153,7 @@
 	
 	[self.queue addOperation:operation];
 	
-	if(!self.musicPlayer.nowPlayingTrack){
+	if(noTrackPlaying){
 		[self.trackInfoView.titleLabel setText:NSLocalizedString(@"NoMusic", nil)];
 		[self.trackInfoView.artistLabel setText:NSLocalizedString(@"NoMusicDescription", nil)];
 		[self.trackInfoView.albumLabel setText:@""];

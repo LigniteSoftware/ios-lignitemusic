@@ -159,11 +159,13 @@
 }
 
 - (void)prepareForActivation {
-	NSLog(@"Preparing for activation, state %d", (int)self.systemMusicPlayer.playbackState);
-	if(self.systemMusicPlayer.playbackState == MPMusicPlaybackStatePlaying || self.systemMusicPlayer.playbackState == MPMusicPlaybackStateInterrupted){
-		[self.systemMusicPlayer pause];
-		[self play];
-		NSLog(@"Playing...");
+	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer){
+		NSLog(@"Preparing for activation, state %d", (int)self.systemMusicPlayer.playbackState);
+		if(self.systemMusicPlayer.playbackState == MPMusicPlaybackStatePlaying || self.systemMusicPlayer.playbackState == MPMusicPlaybackStateInterrupted){
+			[self.systemMusicPlayer pause];
+			[self play];
+			NSLog(@"Playing...");
+		}
 	}
 }
 

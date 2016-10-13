@@ -61,7 +61,7 @@
 	
     self.albumArtImageView = [[UIImageView alloc]initWithImage:albumImage];
     self.albumArtImageView.translatesAutoresizingMaskIntoConstraints = NO;
-    self.albumArtImageView.backgroundColor = [UIColor orangeColor];
+    self.albumArtImageView.backgroundColor = [UIColor clearColor];
 	self.albumArtImageView.contentMode = UIViewContentModeScaleAspectFit;
     [self addSubview:self.albumArtImageView];
 	
@@ -92,7 +92,7 @@
 		self.albumArtImageView.image = nil;
 		self.albumArtImageView.image = [track albumArt];
 		
-		self.albumArtImageView.backgroundColor = [UIColor greenColor];
+		self.albumArtImageView.backgroundColor = [UIColor clearColor];
 		self.albumArtImageView.layer.cornerRadius = MIN(self.albumArtImageView.frame.size.width, self.albumArtImageView.frame.size.height)/2;
 		self.albumArtImageView.clipsToBounds = YES;
 		
