@@ -36,6 +36,10 @@
 		self.playbackDuration = item.playbackDuration;
 		
 		self.sourceTrack = item;
+		
+		//NSLog(@"Creating image");
+		//[item.artwork imageWithSize:item.artwork.bounds.size];
+		//NSLog(@"Created image with size %@", NSStringFromCGRect(item.artwork.bounds));
 	}
 	else{
 		NSLog(@"Error creating LMMusicTrack with MPMediaItem %@!", item);
@@ -52,10 +56,10 @@
 	if(currentPlayerType == LMMusicPlayerTypeSystemMusicPlayer){
 		MPMediaItem *mediaItem = self.sourceTrack;
 		
-		UIImage *image = [mediaItem.artwork imageWithSize:CGSizeMake(480, 480)];
-		self.loadedAlbumArt = image;
+		//__weak UIImage *image = [mediaItem.artwork imageWithSize:CGSizeMake(480, 480)];
+		//self.loadedAlbumArt = image;
 		
-		return image;
+		return [mediaItem.artwork imageWithSize:CGSizeMake(480, 480)];
 	}
 	
 	NSLog(@"Warning: Album art image not found for track %@.", self.title);

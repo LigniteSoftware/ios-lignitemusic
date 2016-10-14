@@ -16,6 +16,15 @@
 
 @property LMCoreViewController *rootViewController;
 
+/**
+ Gets a duration string for a total playback time.
+
+ @param totalPlaybackTime The total playback time of the track.
+
+ @return The formatted string. 0 padded.
+ */
++ (NSString*)durationStringTotalPlaybackTime:(long)totalPlaybackTime;
+
 - (void)setup;
 
 @end

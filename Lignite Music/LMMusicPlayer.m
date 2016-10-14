@@ -371,6 +371,20 @@
 	}
 }
 
+BOOL shuffleForDebug = YES;
+
+- (void)shuffleArray:(NSMutableArray*)array {
+	NSUInteger count = [array count];
+	if(count < 1){
+		return;
+	}
+	for(NSUInteger i = 0; i < count - 1; ++i) {
+		NSInteger remainingCount = count - i;
+		NSInteger exchangeIndex = i + arc4random_uniform((u_int32_t)remainingCount);
+		[array exchangeObjectAtIndex:i withObjectAtIndex:exchangeIndex];
+	}
+}
+
 - (NSArray<LMMusicTrackCollection*>*)queryCollectionsForMusicType:(LMMusicType)musicType {
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer){
 		NSTimeInterval startingTime = [[NSDate date] timeIntervalSince1970];
@@ -423,6 +437,11 @@
 		}
 		
 		NSTimeInterval endingTime = [[NSDate date] timeIntervalSince1970];
+		
+		if(shuffleForDebug){
+			NSLog(@"--- Warning: Query is being automatically shuffled. ---");
+			[self shuffleArray:musicTracks];
+		}
 		
 		NSLog(@"Took %f seconds to complete query.", endingTime-startingTime);
 		

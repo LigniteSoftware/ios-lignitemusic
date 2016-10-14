@@ -12,12 +12,14 @@
 #import "LMMusicPlayer.h"
 #import "LMAlbumView.h"
 #import "LMNowPlayingView.h"
+#import "LMBrowsingAssistantView.h"
 
 @interface LMCoreViewController () <LMMusicPlayerDelegate>
 
 @property LMMusicPlayer *musicPlayer;
 @property LMNowPlayingView *nowPlayingView;
 @property LMAlbumView *albumView;
+@property LMBrowsingAssistantView *browsingAssistant;
 
 @property NSLayoutConstraint *topConstraint;
 
@@ -109,8 +111,7 @@
 	self.musicPlayer = [(LMAppDelegate*)[[UIApplication sharedApplication] delegate] musicPlayer];
 	[self.musicPlayer addMusicDelegate:self];
 
-	self.albumView = [[LMAlbumView alloc]init];
-	self.albumView.translatesAutoresizingMaskIntoConstraints = NO;
+	self.albumView = [[LMAlbumView alloc]initForAutoLayout];
 	self.albumView.musicPlayer = self.musicPlayer;
 	self.albumView.rootViewController = self;
 	[self.view addSubview:self.albumView];
@@ -119,11 +120,22 @@
 	[self.albumView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
 	[self.albumView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
 	
-	[NSTimer scheduledTimerWithTimeInterval:0.75
-									 target:self
-								   selector:@selector(openNowPlayingView)
-								   userInfo:nil
-									repeats:NO];
+	self.browsingAssistant = [[LMBrowsingAssistantView alloc]initForAutoLayout];
+	self.browsingAssistant.musicPlayer = self.musicPlayer;
+	self.browsingAssistant.backgroundColor = [UIColor orangeColor];
+	[self.view addSubview:self.browsingAssistant];
+	[self.browsingAssistant setup];
+	
+ 	self.browsingAssistant.textBackgroundConstraint = [self.browsingAssistant autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.view];
+	[self.browsingAssistant autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.view];
+	[self.browsingAssistant autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.view];
+	[self.browsingAssistant autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:0.225];
+	
+//	[NSTimer scheduledTimerWithTimeInterval:0.75
+//									 target:self
+//								   selector:@selector(openNowPlayingView)
+//								   userInfo:nil
+//									repeats:NO];
 	
 //	self.nowPlayingView = [[LMNowPlayingView alloc]init];
 //	self.nowPlayingView.translatesAutoresizingMaskIntoConstraints = NO;

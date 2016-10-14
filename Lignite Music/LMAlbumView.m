@@ -127,7 +127,7 @@
 
 - (void)openNowPlayingView {
 //	LMNowPlayingViewController *nowPlayingController = [self.storyboard instantiateViewControllerWithIdentifier:@"nowPlayingController"];
-	//[self presentViewController:nowPlayingController animated:YES completion:nil];
+	//[self presentViewController:nowPlayingController animated:YES completion:nil];	
 	[self.rootViewController openNowPlayingView];
 }
 
