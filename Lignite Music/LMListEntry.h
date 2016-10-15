@@ -30,6 +30,14 @@
 
 - (id)initWithDelegate:(id)delegate;
 
+/**
+ The multiplier of how much to inset the icon within its background view. For example, 0.5 would inset the icon half way into the background view, centered.
+ */
+@property float iconInsetMultiplier;
+
+/**
+ The index of this LMListEntry in the collection its associated with.
+ */
 @property NSInteger collectionIndex;
 
 /**

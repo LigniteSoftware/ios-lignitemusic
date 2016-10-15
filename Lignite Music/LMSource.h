@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
+#import "LMAppIcon.h"
 
 @class LMSource;
 
@@ -20,17 +21,17 @@
 @interface LMSource : NSObject
 
 /**
- Creates an LMSource based on a title, icon name (filename) and selector to be called back to.
+ Creates an LMSource object with the specificed title, subtitle, and icon. Subtitle and icon may be nil.
 
- @param title    The title of the source, ie. "Albums".
- @param iconName The file name of the icon applied to this source, ie. "albums_icon.png"
- @param selector The selector that should be called when this source is selected.
+ @param title    The title of the source, ie. "Titles"
+ @param subtitle The subtitle of the source, ie. "Only for Pebble"
+ @param icon     The LMIcon identifier of the icon associated with this source.
 
- @return The created LMSource.
+ @return The created source.
  */
 + (LMSource*)sourceWithTitle:(NSString*)title
 				 andSubtitle:(NSString*)subtitle
-				andIconNamed:(NSString*)iconName;
+					 andIcon:(LMIcon)icon;
 
 @property NSString *title;
 @property NSString *subtitle;

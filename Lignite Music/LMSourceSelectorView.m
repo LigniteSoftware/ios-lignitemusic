@@ -54,6 +54,7 @@
 		for(int i = 0; i < amount; i++){
 			LMListEntry *listEntry = [[LMListEntry alloc]initWithDelegate:self];
 			listEntry.collectionIndex = i;
+			listEntry.iconInsetMultiplier = 0.5;
 			[listEntry setup];
 			[self.itemArray addObject:listEntry];
 		}
@@ -125,10 +126,8 @@
 }
 
 - (UIImage*)iconForListEntry:(LMListEntry*)entry {
-	return nil;
-	
-//	LMSource *source = [self.sources objectAtIndex:entry.collectionIndex];
-//	return source.icon;
+	LMSource *source = [self.sources objectAtIndex:entry.collectionIndex];
+	return source.icon;
 }
 
 - (void)clickedButton:(LMButton *)button {

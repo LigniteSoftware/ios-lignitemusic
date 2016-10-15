@@ -16,6 +16,7 @@
 #import "LMTrackInfoView.h"
 #import "LMButton.h"
 #import "LMColour.h"
+#import "LMAppIcon.h"
 
 @interface LMNowPlayingView() <LMMusicPlayerDelegate, LMButtonDelegate, LMTrackDurationDelegate>
 
@@ -347,9 +348,9 @@
 //	NSArray *titles = @[
 //		@"Shuffle", @"Repeat", @"Settings"
 //	];
-	NSArray *images = @[
-		@"shuffle_black.png", @"repeat_black.png", @"settings.png"
-	];
+	LMIcon icons[] = {
+		LMIconShuffle, LMIconRepeat, LMIconSettings
+	};
 	
 	for(int i = 0; i < buttons.count; i++){
 		BOOL isFirst = (i == 0);
@@ -382,7 +383,7 @@
 		button.userInteractionEnabled = YES;
 		[button setDelegate:self];
 		[button setupWithImageMultiplier:0.5];
-		[button setImage:[UIImage imageNamed:[images objectAtIndex:i]]];
+		[button setImage:[LMAppIcon imageForIcon:icons[i]]];
 		[button setColour:[LMColour fadedColour]];
 		[background addSubview:button];
 

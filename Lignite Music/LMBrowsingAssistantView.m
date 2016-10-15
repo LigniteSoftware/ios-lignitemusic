@@ -10,6 +10,7 @@
 #import "LMBrowsingAssistantView.h"
 #import "LMMiniPlayerView.h"
 #import "LMColour.h"
+#import "LMAppIcon.h"
 
 @interface LMBrowsingAssistantView()
 
@@ -140,7 +141,7 @@
 	[self.grabberView addGestureRecognizer:moveRecognizer];
 	
 	self.grabberImageView = [UIImageView newAutoLayoutView];
-	self.grabberImageView.image = [UIImage imageNamed:@"triple_dots.png"];
+	self.grabberImageView.image = [LMAppIcon imageForIcon:LMIconTripleHorizontalDots];
 	self.grabberImageView.contentMode = UIViewContentModeScaleAspectFit;
 	[self addSubview:self.grabberImageView];
 	

@@ -1,0 +1,35 @@
+//
+//  LMIcon.h
+//  Lignite Music
+//
+//  Created by Edwin Finch on 10/15/16.
+//  Copyright © 2016 Lignite. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+
+@interface LMAppIcon : NSObject
+
+typedef enum {
+	LMIconPlay = 0,
+	LMIconPause,
+	LMIconRepeat,
+	LMIconRepeatOne,
+	LMIconShuffle,
+	LMIconTripleHorizontalDots,
+	LMIconSettings,
+	LMIconTitles,
+	LMIconAlbums,
+} LMIcon;
+
+/**
+ Returns a UIImage which is associated with the LMIcon asked for. The UIImage is not modified in any way.
+
+ @param icon The icon requested.
+
+ @return The UIImage of the icon requested. nil if the icon has not yet been set within the codebase.
+ */
++ (UIImage*)imageForIcon:(LMIcon)icon;
+
+@end

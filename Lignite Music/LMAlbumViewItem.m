@@ -13,6 +13,7 @@
 #import "LMAlbumCountLabel.h"
 #import "LMOperationQueue.h"
 #import "LMShadowView.h"
+#import "LMAppIcon.h"
 
 @interface LMAlbumViewItem() <LMButtonDelegate>
 
@@ -131,7 +132,7 @@
 	self.playButton.delegate = self;
 	[self.textBackgroundView addSubview:self.playButton];
 	[self.playButton setupWithImageMultiplier:0.5];
-	[self.playButton setImage:[UIImage imageNamed:@"play_white.png"]];
+	[self.playButton setImage:[LMAppIcon imageForIcon:LMIconPlay]];
 	//self.playButton.backgroundColor = [UIColor blueColor];
 	
 	[self.playButton autoAlignAxis:ALAxisHorizontal toSameAxisOfView:self.textBackgroundView];

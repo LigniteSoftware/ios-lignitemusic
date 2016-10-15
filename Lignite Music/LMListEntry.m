@@ -75,6 +75,10 @@
 }
 
 - (void)setup {
+	if(self.iconInsetMultiplier == 0){
+		self.iconInsetMultiplier = 0.8;
+	}
+	
 	self.contentView = [UIView newAutoLayoutView];
 	self.contentView.clipsToBounds = NO;
 	self.contentView.layer.masksToBounds = NO;
@@ -105,8 +109,8 @@
 		[self.iconBackgroundView addSubview:self.iconView];
 		
 		[self.iconView autoCenterInSuperview];
-		[self.iconView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.iconBackgroundView withMultiplier:0.8];
-		[self.iconView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.iconBackgroundView withMultiplier:0.8];
+		[self.iconView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.iconBackgroundView withMultiplier:self.iconInsetMultiplier];
+		[self.iconView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.iconBackgroundView withMultiplier:self.iconInsetMultiplier];
 	}
 	
 	NSMutableArray *titleConstraints = [[NSMutableArray alloc]init];

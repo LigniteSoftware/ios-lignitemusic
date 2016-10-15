@@ -16,6 +16,7 @@
 #import "LMNowPlayingViewController.h"
 #import "LMSongDetailControlView.h"
 #import "LMColour.h"
+#import "LMAppIcon.h"
 
 @interface LMAlbumDetailView() <LMButtonDelegate, LMListEntryDelegate, LMTableViewSubviewDelegate, LMMusicPlayerDelegate>
 
@@ -131,10 +132,10 @@
 			case LMMusicPlaybackStateStopped:
 			case LMMusicPlaybackStateInterrupted:
 			default:
-				[self.playButton setImage:[UIImage imageNamed:@"play_white.png"]];
+				[self.playButton setImage:[LMAppIcon imageForIcon:LMIconPlay]];
 				break;
 			case LMMusicPlaybackStatePlaying:
-				[self.playButton setImage:[UIImage imageNamed:@"pause_white.png"]];
+				[self.playButton setImage:[LMAppIcon imageForIcon:LMIconPause]];
 				break;
 		}
 	}
@@ -327,7 +328,7 @@
 	self.playButton.delegate = self;
 	[self.textBackgroundView addSubview:self.playButton];
 	[self.playButton setupWithImageMultiplier:0.5];
-	[self.playButton setImage:[UIImage imageNamed:@"play_white.png"]];
+	[self.playButton setImage:[LMAppIcon imageForIcon:LMIconPlay]];
 	//self.playButton.backgroundColor = [UIColor blueColor];
 	
 	[self.playButton autoAlignAxis:ALAxisHorizontal toSameAxisOfView:self.textBackgroundView];

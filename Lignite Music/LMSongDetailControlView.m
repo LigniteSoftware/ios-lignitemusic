@@ -9,6 +9,7 @@
 #import <PureLayout/PureLayout.h>
 #import "LMSongDetailControlView.h"
 #import "LMButton.h"
+#import "LMAppIcon.h"
 
 @interface LMSongDetailControlView() <LMButtonDelegate>
 
@@ -54,12 +55,13 @@
 		self.favouriteBackgroundView = [UIView newAutoLayoutView];
 		self.repeatBackgroundView = [UIView newAutoLayoutView];
 		
-		NSArray *images = @[@"shuffle_black.png", @"repeat_black.png"];
+		LMIcon icons[] = {
+			LMIconShuffle, LMIconRepeat
+		};
 		NSArray *buttons = @[self.shuffleButton, self.repeatButton];
 		NSArray *backgrounds = @[self.shuffleBackgroundView, self.repeatBackgroundView];
 		
-		for(uint8_t i = 0; i < images.count; i++){
-			NSString *currentImage = [images objectAtIndex:i];
+		for(uint8_t i = 0; i < buttons.count; i++){
 			LMButton *currentButton = [buttons objectAtIndex:i];
 			UIView *currentBackground = [backgrounds objectAtIndex:i];
 			UIView *previousBackground = (i == 0) ? self : [backgrounds objectAtIndex:i-1];
@@ -67,7 +69,7 @@
 			currentBackground.backgroundColor = [UIColor clearColor];
 			[self addSubview:currentBackground];
 			
-			[currentBackground autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(1.0f/(float)images.count)];
+			[currentBackground autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(1.0f/(float)buttons.count)];
 			[currentBackground autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self];
 			[currentBackground autoPinEdge:ALEdgeLeading toEdge:((i == 0) ? ALEdgeLeading : ALEdgeTrailing) ofView:previousBackground];
 			[currentBackground autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self];
@@ -82,7 +84,7 @@
 			[currentButton setupWithImageMultiplier:0.6];
 			
 			[currentButton setColour:[UIColor clearColor]];
-			[currentButton setImage:[UIImage imageNamed:currentImage]];
+			[currentButton setImage:[LMAppIcon imageForIcon:icons[i]]];
 		}
 		
 		[self updateContents:NO];

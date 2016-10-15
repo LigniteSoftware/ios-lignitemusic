@@ -14,6 +14,7 @@
 #import "LMButton.h"
 #import "LMTableView.h"
 #import "LMTableViewCell.h"
+#import "LMAppIcon.h"
 
 @interface LMAlbumView () <LMAlbumViewItemDelegate, LMTableViewSubviewDelegate, LMMusicPlayerDelegate>
 
@@ -71,12 +72,12 @@
 	
 	LMAlbumViewItem *playingItem = [self albumViewItemForAlbumIndex:newHighlightedIndex];
 	if(playingItem && self.musicPlayer.playbackState == LMMusicPlaybackStatePlaying){
-		[playingItem.playButton setImage:[UIImage imageNamed:@"pause_white.png"]];
+		[playingItem.playButton setImage:[LMAppIcon imageForIcon:LMIconPause]];
 	}
 	
 	LMAlbumViewItem *lastEntry = [self albumViewItemForAlbumIndex:self.currentlyPlaying];
 	if(lastEntry && ![lastEntry isEqual:playingItem]){
-		[lastEntry.playButton setImage:[UIImage imageNamed:@"play_white.png"]];
+		[lastEntry.playButton setImage:[LMAppIcon imageForIcon:LMIconPlay]];
 	}
 	
 	self.currentlyPlaying = newHighlightedIndex;
@@ -88,7 +89,7 @@
 	LMAlbumViewItem *playingEntry = [self albumViewItemForAlbumIndex:self.currentlyPlaying];
 	if(playingEntry){
 		NSLog(@"Playing now: %d", newState);
-		[playingEntry.playButton setImage:newState == LMMusicPlaybackStatePlaying ? [UIImage imageNamed:@"pause_white.png"] :[UIImage imageNamed:@"play_white.png"]];
+		[playingEntry.playButton setImage:newState == LMMusicPlaybackStatePlaying ? [LMAppIcon imageForIcon:LMIconPause] : [LMAppIcon imageForIcon:LMIconPlay]];
 	}
 }
 
@@ -211,7 +212,7 @@
 //	}
 	
 	LMAlbumViewItem *albumViewItem = [self.albumsItemArray objectAtIndex:index % self.albumsItemArray.count];
-	[albumViewItem.playButton setImage:(index == self.currentlyPlaying && self.musicPlayer.playbackState == LMMusicPlaybackStatePlaying) ? [UIImage imageNamed:@"pause_white.png"] : [UIImage imageNamed:@"play_white.png"]];
+	[albumViewItem.playButton setImage:(index == self.currentlyPlaying && self.musicPlayer.playbackState == LMMusicPlaybackStatePlaying) ? [LMAppIcon imageForIcon:LMIconPause] : [LMAppIcon imageForIcon:LMIconPlay]];
 	LMMusicTrackCollection *collection = [self.albumCollections objectAtIndex:index];
 	[albumViewItem updateContentsWithMusicTrack:collection.representativeItem andNumberOfItems:collection.count];
 	albumViewItem.collectionIndex = index;
