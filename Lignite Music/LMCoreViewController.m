@@ -15,8 +15,9 @@
 #import "LMBrowsingAssistantView.h"
 #import "LMTitleView.h"
 #import "LMSourceSelectorView.h"
+#import "LMSource.h"
 
-@interface LMCoreViewController () <LMMusicPlayerDelegate>
+@interface LMCoreViewController () <LMMusicPlayerDelegate, LMSourceDelegate>
 
 @property LMMusicPlayer *musicPlayer;
 
@@ -27,6 +28,8 @@
 
 @property LMBrowsingAssistantView *browsingAssistant;
 @property LMSourceSelectorView *sourceSelector;
+
+@property NSArray<LMSource*> *sourcesForSourceSelector;
 
 @property NSLayoutConstraint *topConstraint;
 
@@ -109,6 +112,10 @@
 						} completion:^(BOOL finished) {
 							self.nowPlayingView = nil;
 						}];
+}
+
+- (void)sourceSelected:(LMSource *)source {
+	NSLog(@"Selected source with title %@", source.title);
 }
 
 - (void)viewDidLoad {
@@ -200,8 +207,27 @@
 	[anotherEasterEgg autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:easterEgg];
 	[anotherEasterEgg autoSetDimension:ALDimensionHeight toSize:70];
 	
+	NSArray *sourceTitles = @[
+		@"Albums", @"Titles", @"Settings"
+	];
+	NSArray *sourceIconNames = @[
+		@"repeat_black.png", @"repeat_black.png", @"repeat_black.png"
+	];
+	
+	NSMutableArray *sources = [NSMutableArray new];
+	
+	for(int i = 0; i < sourceTitles.count; i++){
+		LMSource *source = [LMSource sourceWithTitle:NSLocalizedString([sourceTitles objectAtIndex:i], nil)
+										andIconNamed:[sourceIconNames objectAtIndex:i]];
+		source.delegate = self;
+		[sources addObject:source];
+	}
+	
+	self.sourcesForSourceSelector = [NSArray arrayWithArray:sources];
+	
 	self.sourceSelector = [LMSourceSelectorView newAutoLayoutView];
 	self.sourceSelector.backgroundColor = [UIColor redColor];
+	self.sourceSelector.sources = self.sourcesForSourceSelector;
 	[self.view addSubview:self.sourceSelector];
 	
 	[self.sourceSelector autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.view];

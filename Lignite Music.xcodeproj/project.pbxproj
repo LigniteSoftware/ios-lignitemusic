@@ -15,6 +15,7 @@
 		6A2566F31D4089E8004EDE41 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A2566F21D4089E8004EDE41 /* MediaPlayer.framework */; };
 		6A2A29C51DB1D89C008E7792 /* LMSourceSelectorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A2A29C41DB1D89C008E7792 /* LMSourceSelectorView.m */; };
 		6A2A29C81DB1EAB6008E7792 /* LMCircleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A2A29C71DB1EAB6008E7792 /* LMCircleView.m */; };
+		6A2A29CB1DB1F1C3008E7792 /* LMSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A2A29CA1DB1F1C3008E7792 /* LMSource.m */; };
 		6A313C121BB44959002BBC33 /* LMAlbumArtView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A313C111BB44959002BBC33 /* LMAlbumArtView.m */; };
 		6A313C181BB59AE8002BBC33 /* LMButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A313C171BB59AE8002BBC33 /* LMButton.m */; };
 		6A313C1B1BB59D91002BBC33 /* repeat_black.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A313C191BB59D91002BBC33 /* repeat_black.png */; };
@@ -94,6 +95,8 @@
 		6A2A29C41DB1D89C008E7792 /* LMSourceSelectorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMSourceSelectorView.m; sourceTree = "<group>"; };
 		6A2A29C61DB1EAB6008E7792 /* LMCircleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMCircleView.h; sourceTree = "<group>"; };
 		6A2A29C71DB1EAB6008E7792 /* LMCircleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMCircleView.m; sourceTree = "<group>"; };
+		6A2A29C91DB1F1C3008E7792 /* LMSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMSource.h; sourceTree = "<group>"; };
+		6A2A29CA1DB1F1C3008E7792 /* LMSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMSource.m; sourceTree = "<group>"; };
 		6A313C101BB44959002BBC33 /* LMAlbumArtView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMAlbumArtView.h; sourceTree = "<group>"; };
 		6A313C111BB44959002BBC33 /* LMAlbumArtView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMAlbumArtView.m; sourceTree = "<group>"; };
 		6A313C131BB44A8F002BBC33 /* LMExtras.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMExtras.h; sourceTree = "<group>"; };
@@ -355,6 +358,8 @@
 				6A7DF1161DB10D510077B979 /* LMBrowsingAssistantView.m */,
 				6A7DF1181DB112140077B979 /* LMMiniPlayerView.h */,
 				6A7DF1191DB112140077B979 /* LMMiniPlayerView.m */,
+				6A2A29C91DB1F1C3008E7792 /* LMSource.h */,
+				6A2A29CA1DB1F1C3008E7792 /* LMSource.m */,
 				6A2A29C31DB1D89C008E7792 /* LMSourceSelectorView.h */,
 				6A2A29C41DB1D89C008E7792 /* LMSourceSelectorView.m */,
 			);
@@ -711,6 +716,7 @@
 				6A514E191CEA15D900AFB351 /* LMSlider.m in Sources */,
 				6A7DF1171DB10D510077B979 /* LMBrowsingAssistantView.m in Sources */,
 				6A1FB9CF1D9B001000890BF3 /* LMAlbumCountLabel.m in Sources */,
+				6A2A29CB1DB1F1C3008E7792 /* LMSource.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

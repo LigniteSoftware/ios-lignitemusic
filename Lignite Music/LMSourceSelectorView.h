@@ -7,8 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LMSource.h"
 
 @interface LMSourceSelectorView : UIView
+
+/**
+ The array of sources to expose to the user.
+ */
+@property NSArray<LMSource*> *sources;
 
 - (void)setup;
 
