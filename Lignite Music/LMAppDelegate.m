@@ -14,11 +14,26 @@
 
 @implementation LMAppDelegate
 
+//- (void)application:(UIApplication *)application performActionForShortcutItem:(UIApplicationShortcutItem *)shortcutItem completionHandler:(void (^)(BOOL))completionHandler {
+//	
+//	NSLog(@"Got shortcut item %@", shortcutItem);
+//	
+//	completionHandler(YES);
+//}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
 	NSLog(@"Suck?");
 	
 	self.musicPlayer = [[LMMusicPlayer alloc]init];
+	
+	NSLog(@"Got options %@", launchOptions);
+	
+//	UIApplicationShortcutIcon * photoIcon = [UIApplicationShortcutIcon iconWithTemplateImageName: @"selfie-100.png"]; // your customize icon
+//	UIApplicationShortcutItem * photoItem = [[UIApplicationShortcutItem alloc]initWithType: @"Test" localizedTitle: @"Testing this" localizedSubtitle:@"Shitpost" icon: [UIApplicationShortcutIcon iconWithType:UIApplicationShortcutIconTypeAudio] userInfo: nil];
+//	UIApplicationShortcutItem * videoItem = [[UIApplicationShortcutItem alloc]initWithType: @"Post" localizedTitle: @"What is this meme" localizedSubtitle:@"Average" icon: [UIApplicationShortcutIcon iconWithType: UIApplicationShortcutIconTypeCaptureVideo] userInfo: nil];
+//	
+//	[UIApplication sharedApplication].shortcutItems = @[photoItem,videoItem];
 	
     return YES;
 }

@@ -288,8 +288,6 @@
 }
 
 - (void)systemMusicPlayerTrackChanged:(id)sender {
-	NSLog(@"Changed to %@", self.systemMusicPlayer.nowPlayingItem.title);
-	
 	BOOL autoPlay = self.audioPlayer.isPlaying;
 	
 	[self reloadAudioPlayerWithNowPlayingItem];
@@ -314,7 +312,6 @@
 	if(autoPlay || self.autoPlay){
 		[self play];
 		self.autoPlay = NO;
-		NSLog(@"Autoplaying");
 	}
 	
 	[self reloadInfoCenter:autoPlay];
@@ -342,9 +339,7 @@
 	}
 }
 
-- (void)systemMusicPlayerStateChanged:(id)sender {
-	NSLog(@"State changed to %d", (int)self.systemMusicPlayer.playbackState);
-	
+- (void)systemMusicPlayerStateChanged:(id)sender {	
 	if(self.systemMusicPlayer.playbackState == MPMusicPlaybackStateInterrupted){
 		self.playbackState = LMMusicPlaybackStatePlaying;
 		self.autoPlay = YES;
@@ -536,7 +531,6 @@ BOOL shuffleForDebug = NO;
 }
 
 - (void)play {
-	NSLog(@"Play");
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer){
 		[self changeMusicPlayerState:LMMusicPlaybackStatePlaying];
 		
@@ -588,10 +582,8 @@ BOOL shuffleForDebug = NO;
 	
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer){
 		MPMediaItem *associatedMediaItem = nowPlayingTrack.sourceTrack;
-		NSLog(@"Now playing track has an index of %lu. The associated media item has title %@, the track has title %@", (unsigned long)self.indexOfNowPlayingTrack, associatedMediaItem.title, nowPlayingTrack.title);
 		if(self.systemMusicPlayer.nowPlayingItem.persistentID != associatedMediaItem.persistentID){
 			[self.systemMusicPlayer setNowPlayingItem:associatedMediaItem];
-			NSLog(@"Set. Now playing item is %@", self.systemMusicPlayer.nowPlayingItem.title);
 		}
 	}
 	_nowPlayingTrack = nowPlayingTrack;
@@ -608,13 +600,9 @@ BOOL shuffleForDebug = NO;
 
 - (void)setNowPlayingCollection:(LMMusicTrackCollection*)nowPlayingCollection {
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer){
-		NSLog(@"music player %@ Set now playing collection source collection %ld", self.systemMusicPlayer, [nowPlayingCollection.sourceCollection count]);
-		
 		if(!self.nowPlayingCollection){
-			NSLog(@"Clearing.");
 			[self clearNowPlayingCollection];
 		}
-		
 		[self.systemMusicPlayer setQueueWithItemCollection:nowPlayingCollection.sourceCollection];
 		[self.systemMusicPlayer setNowPlayingItem:[[nowPlayingCollection.sourceCollection items] objectAtIndex:0]];
 	}

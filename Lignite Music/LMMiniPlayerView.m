@@ -179,8 +179,10 @@
 	[self.albumArtImageBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self];
 	
 	self.albumArtImageView = [UIImageView newAutoLayoutView];
-	self.albumArtImageView.layer.masksToBounds = YES;
-	self.albumArtImageView.layer.cornerRadius = 5.0;
+//	self.albumArtImageView.layer.masksToBounds = YES;
+//	self.albumArtImageView.layer.cornerRadius = 5.0;
+//  Rest in peace ;(
+	
 	[self.albumArtImageBackgroundView addSubview:self.albumArtImageView];
 	
 	[self.albumArtImageView autoCenterInSuperview];
@@ -200,7 +202,7 @@
 	
 	[self.trackInfoView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.trackInfoAndDurationBackgroundView];
 	[self.trackInfoView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.trackInfoAndDurationBackgroundView];
-	[self.trackInfoView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.trackInfoAndDurationBackgroundView];
+	[self.trackInfoView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.trackInfoAndDurationBackgroundView withOffset:-10];
 	[self.trackInfoView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.trackInfoAndDurationBackgroundView withMultiplier:(6.0/10.0)];
 	
 	[self.trackInfoView setupWithTextAlignment:NSTextAlignmentLeft];

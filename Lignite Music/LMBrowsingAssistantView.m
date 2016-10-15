@@ -83,6 +83,10 @@
 	}
 }
 
+- (void)swipedUp {
+	[self.coreViewController openNowPlayingView];
+}
+
 - (void)setup {
 	self.backgroundColor = [UIColor clearColor];
 	
@@ -146,6 +150,11 @@
 	[self.grabberImageView autoAlignAxisToSuperviewAxis:ALAxisVertical];
 	
 	[self insertSubview:self.currentElementBackgroundView aboveSubview:self.grabberView];
+	
+	UISwipeGestureRecognizer *swipeGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipedUp)];
+	swipeGesture.numberOfTouchesRequired = 2;
+	swipeGesture.direction = UISwipeGestureRecognizerDirectionUp;
+	[self addGestureRecognizer:swipeGesture];
 	
 	NSLog(@"Setup.");
 }

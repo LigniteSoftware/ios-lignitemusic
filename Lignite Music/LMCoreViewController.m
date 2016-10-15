@@ -137,7 +137,6 @@
 	NSMutableArray *musicCollection = [[NSMutableArray alloc]init];
 	for(int itemIndex = 0; itemIndex < mediaCollection.items.count; itemIndex++){
 		MPMediaItem *musicItem = [mediaCollection.items objectAtIndex:itemIndex];
-		NSLog(@"%d Music item %@", itemIndex, musicItem.title);
 		LMMusicTrack *musicTrack = [[LMMusicTrack alloc]initWithMPMediaItem:musicItem];
 		[musicCollection addObject:musicTrack];
 	}
@@ -155,6 +154,7 @@
 	
 	self.browsingAssistant = [[LMBrowsingAssistantView alloc]initForAutoLayout];
 	self.browsingAssistant.musicPlayer = self.musicPlayer;
+	self.browsingAssistant.coreViewController = self;
 	self.browsingAssistant.backgroundColor = [UIColor orangeColor];
 	[self.view addSubview:self.browsingAssistant];
 	[self.browsingAssistant setup];

@@ -12,7 +12,7 @@
 #import "LMListEntry.h"
 #import "LMColour.h"
 
-@interface LMTitleView() <LMListEntryDelegate, LMTableViewSubviewDelegate>
+@interface LMTitleView() <LMListEntryDelegate, LMTableViewSubviewDelegate, LMMusicPlayerDelegate>
 
 @property LMTableView *songListTableView;
 @property NSMutableArray *itemArray;
@@ -22,6 +22,42 @@
 @end
 
 @implementation LMTitleView
+
+- (void)musicTrackDidChange:(LMMusicTrack *)newTrack {
+	LMListEntry *highlightedEntry = nil;
+	int newHighlightedIndex = -1;
+	for(int i = 0; i < self.musicTitles.count; i++){
+		LMMusicTrack *track = [self.musicTitles.items objectAtIndex:i];
+		LMListEntry *entry = [self listEntryForIndex:i];
+		LMMusicTrack *entryTrack = entry.associatedData;
+		
+		if(entryTrack.persistentID == newTrack.persistentID){
+			highlightedEntry = entry;
+		}
+		
+		if(track.persistentID == newTrack.persistentID){
+			newHighlightedIndex = i;
+		}
+	}
+	
+	LMListEntry *previousHighlightedEntry = [self listEntryForIndex:self.currentlyHighlighted];
+	if(![previousHighlightedEntry isEqual:highlightedEntry] || highlightedEntry == nil){
+		[previousHighlightedEntry changeHighlightStatus:NO animated:YES];
+		//BOOL updateNowPlayingStatus = self.currentlyHighlighted == -1;
+		self.currentlyHighlighted = newHighlightedIndex;
+//		if(updateNowPlayingStatus){
+//			[self musicPlaybackStateDidChange:self.musicPlayer.playbackState];
+//		}
+	}
+	
+	if(highlightedEntry){
+		[highlightedEntry changeHighlightStatus:YES animated:YES];
+	}
+}
+
+- (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState {
+
+}
 
 - (id)prepareSubviewAtIndex:(NSUInteger)index {
 	LMListEntry *entry = [self.itemArray objectAtIndex:index % self.itemArray.count];
@@ -91,9 +127,7 @@
 
 - (void)tappedListEntry:(LMListEntry*)entry{
 	LMMusicTrack *track = [self.musicTitles.items objectAtIndex:entry.collectionIndex];
-	
-	NSLog(@"Setting to track %@ for index %ld", track.title, entry.collectionIndex);
-	
+		
 	//	NSLog(@"Tapped list entry with artist %@", self.albumCollection.representativeItem.artist);
 	
 	LMListEntry *previousHighlightedEntry = [self listEntryForIndex:self.currentlyHighlighted];
@@ -104,10 +138,10 @@
 	[entry changeHighlightStatus:YES animated:YES];
 	self.currentlyHighlighted = entry.collectionIndex;
 	
-	//if(self.musicPlayer.nowPlayingCollection != self.musicTitles){
+	if(self.musicPlayer.nowPlayingCollection != self.musicTitles){
 		[self.musicPlayer stop];
 		[self.musicPlayer setNowPlayingCollection:self.musicTitles];
-	//}
+	}
 	self.musicPlayer.autoPlay = YES;
 	
 	[self.musicPlayer setNowPlayingTrack:track];
@@ -149,7 +183,9 @@
 	[self.songListTableView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
 	[self.songListTableView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self];
 	
-//	[self.musicPlayer addMusicDelegate:self];
+	[self.musicPlayer addMusicDelegate:self];
+	[self musicTrackDidChange:self.musicPlayer.nowPlayingTrack];
+	[self musicPlaybackStateDidChange:self.musicPlayer.playbackState];
 }
 
 /*
