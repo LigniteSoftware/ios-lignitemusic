@@ -14,6 +14,7 @@
 #import "LMNowPlayingView.h"
 #import "LMBrowsingAssistantView.h"
 #import "LMTitleView.h"
+#import "LMSourceSelectorView.h"
 
 @interface LMCoreViewController () <LMMusicPlayerDelegate>
 
@@ -25,6 +26,7 @@
 @property LMTitleView *titleView;
 
 @property LMBrowsingAssistantView *browsingAssistant;
+@property LMSourceSelectorView *sourceSelector;
 
 @property NSLayoutConstraint *topConstraint;
 
@@ -197,6 +199,17 @@
 	[anotherEasterEgg autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 	[anotherEasterEgg autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:easterEgg];
 	[anotherEasterEgg autoSetDimension:ALDimensionHeight toSize:70];
+	
+	self.sourceSelector = [LMSourceSelectorView newAutoLayoutView];
+	self.sourceSelector.backgroundColor = [UIColor redColor];
+	[self.view addSubview:self.sourceSelector];
+	
+	[self.sourceSelector autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.view];
+	[self.sourceSelector autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.view];
+	[self.sourceSelector autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.view];
+	[self.sourceSelector autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
+	
+	[self.sourceSelector setup];
 	
 //	[NSTimer scheduledTimerWithTimeInterval:0.75
 //									 target:self
