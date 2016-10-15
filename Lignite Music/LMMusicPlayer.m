@@ -50,6 +50,13 @@
  */
 @property BOOL didJustFinishTrack;
 
+/**
+ For some weird reason, if the app opens with a queue which is not exposed (currently 100% of the time) and you try to play a song within the same queue from the app, it will not work. So, we have to clear the queue with a query which will most likely never be existant. Then we set the nowPlayingItem to nil and we're good to do what we want to do. 
+ 
+	 Sometimes software is really fucking weird.
+ */
+@property MPMediaQuery *bullshitQuery;
+
 @end
 
 @implementation LMMusicPlayer
@@ -68,6 +75,14 @@
 		
 		self.systemMusicPlayer = [MPMusicPlayerController systemMusicPlayer];
 		[self.systemMusicPlayer beginGeneratingPlaybackNotifications];
+		
+		//http://stackoverflow.com/questions/3059255/how-do-i-clear-the-queue-of-a-mpmusicplayercontroller
+		MPMediaPropertyPredicate *predicate = [MPMediaPropertyPredicate predicateWithValue:@"MotherFuckingShitpost"
+																			   forProperty:MPMediaItemPropertyTitle];
+		MPMediaQuery *q = [[MPMediaQuery alloc] init];
+		[q addFilterPredicate: predicate];
+		
+		self.bullshitQuery = q;
 		
 		self.nowPlayingTrack = [[LMMusicTrack alloc]initWithMPMediaItem:self.systemMusicPlayer.nowPlayingItem];
 		self.playerType = LMMusicPlayerTypeSystemMusicPlayer;
@@ -586,9 +601,20 @@ BOOL shuffleForDebug = NO;
 	return _nowPlayingTrack;
 }
 
+- (void)clearNowPlayingCollection {
+	[self.systemMusicPlayer setQueueWithQuery:self.bullshitQuery];
+	[self.systemMusicPlayer setNowPlayingItem:nil];
+}
+
 - (void)setNowPlayingCollection:(LMMusicTrackCollection*)nowPlayingCollection {
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer){
 		NSLog(@"music player %@ Set now playing collection source collection %ld", self.systemMusicPlayer, [nowPlayingCollection.sourceCollection count]);
+		
+		if(!self.nowPlayingCollection){
+			NSLog(@"Clearing.");
+			[self clearNowPlayingCollection];
+		}
+		
 		[self.systemMusicPlayer setQueueWithItemCollection:nowPlayingCollection.sourceCollection];
 		[self.systemMusicPlayer setNowPlayingItem:[[nowPlayingCollection.sourceCollection items] objectAtIndex:0]];
 	}
