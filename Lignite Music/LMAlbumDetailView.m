@@ -143,7 +143,7 @@
 - (void)tappedListEntry:(LMListEntry*)entry {
 	LMMusicTrack *track = [self.albumCollection.items objectAtIndex:entry.collectionIndex];
 	
-//	NSLog(@"Tapped list entry with artist %@", self.albumCollection.representativeItem.artist);
+	NSLog(@"Tapped list entry with artist %@", self.albumCollection.representativeItem.artist);
 	
 	LMListEntry *previousHighlightedEntry = [self listEntryForIndex:self.currentlyHighlighted];
 	if(previousHighlightedEntry){
@@ -289,8 +289,6 @@
 }
 
 - (void)setup {
-	[self.musicPlayer addMusicDelegate:self];
-	
 	self.currentlyHighlighted = -1;
 	
 	UIImage *albumArtImage = [self.albumCollection.representativeItem albumArt];
@@ -439,6 +437,7 @@
 	UIPinchGestureRecognizer *pinchGesture = [[UIPinchGestureRecognizer alloc]initWithTarget:self action:@selector(pinchedView)];
 	[self addGestureRecognizer:pinchGesture];
 	
+	[self.musicPlayer addMusicDelegate:self];
 	[self musicTrackDidChange:self.musicPlayer.nowPlayingTrack];
 	[self musicPlaybackStateDidChange:self.musicPlayer.playbackState];
 }

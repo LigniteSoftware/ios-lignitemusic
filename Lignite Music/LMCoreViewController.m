@@ -6,19 +6,24 @@
 //  Copyright © 2016 Lignite. All rights reserved.
 //
 
-#import "LMAppDelegate.h"
 #import <PureLayout/PureLayout.h>
+#import "LMAppDelegate.h"
 #import "LMCoreViewController.h"
 #import "LMMusicPlayer.h"
 #import "LMAlbumView.h"
 #import "LMNowPlayingView.h"
 #import "LMBrowsingAssistantView.h"
+#import "LMTitleView.h"
 
 @interface LMCoreViewController () <LMMusicPlayerDelegate>
 
 @property LMMusicPlayer *musicPlayer;
+
 @property LMNowPlayingView *nowPlayingView;
+
 @property LMAlbumView *albumView;
+@property LMTitleView *titleView;
+
 @property LMBrowsingAssistantView *browsingAssistant;
 
 @property NSLayoutConstraint *topConstraint;
@@ -111,14 +116,42 @@
 	self.musicPlayer = [(LMAppDelegate*)[[UIApplication sharedApplication] delegate] musicPlayer];
 	[self.musicPlayer addMusicDelegate:self];
 
-	self.albumView = [[LMAlbumView alloc]initForAutoLayout];
-	self.albumView.musicPlayer = self.musicPlayer;
-	self.albumView.rootViewController = self;
-	[self.view addSubview:self.albumView];
+//	self.albumView = [[LMAlbumView alloc]initForAutoLayout];
+//	self.albumView.musicPlayer = self.musicPlayer;
+//	self.albumView.rootViewController = self;
+//	[self.view addSubview:self.albumView];
+//	
+//	[self.albumView autoCenterInSuperview];
+//	[self.albumView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
+//	[self.albumView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
 	
-	[self.albumView autoCenterInSuperview];
-	[self.albumView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
-	[self.albumView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
+	self.titleView = [LMTitleView newAutoLayoutView];
+	self.titleView.backgroundColor = [UIColor redColor];
+	self.titleView.musicPlayer = self.musicPlayer;
+	//http://stackoverflow.com/questions/8424972/mpmediaitemcollection-whole-library
+	MPMediaQuery *everything = [[MPMediaQuery alloc] init];
+	NSArray *songs = [everything items];
+	MPMediaItemCollection *mediaCollection = [MPMediaItemCollection collectionWithItems:songs];
+	NSMutableArray* musicTracks = [[NSMutableArray alloc]init];
+	
+	NSMutableArray *musicCollection = [[NSMutableArray alloc]init];
+	for(int itemIndex = 0; itemIndex < mediaCollection.items.count; itemIndex++){
+		MPMediaItem *musicItem = [mediaCollection.items objectAtIndex:itemIndex];
+		NSLog(@"%d Music item %@", itemIndex, musicItem.title);
+		LMMusicTrack *musicTrack = [[LMMusicTrack alloc]initWithMPMediaItem:musicItem];
+		[musicCollection addObject:musicTrack];
+	}
+	LMMusicTrackCollection *trackCollection = [[LMMusicTrackCollection alloc]initWithItems:musicCollection basedOnSourceCollection:mediaCollection];
+	[musicTracks addObject:trackCollection];
+
+	self.titleView.musicTitles = [[LMMusicTrackCollection alloc]initWithItems:musicCollection basedOnSourceCollection:mediaCollection];
+	[self.view addSubview:self.titleView];
+	
+	[self.titleView autoCenterInSuperview];
+	[self.titleView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
+	[self.titleView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
+	
+	[self.titleView setup];
 	
 	self.browsingAssistant = [[LMBrowsingAssistantView alloc]initForAutoLayout];
 	self.browsingAssistant.musicPlayer = self.musicPlayer;
@@ -130,6 +163,40 @@
 	[self.browsingAssistant autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.view];
 	[self.browsingAssistant autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.view];
 	[self.browsingAssistant autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:0.225];
+	
+	UIView *temporaryWhiteView = [UIView newAutoLayoutView];
+	temporaryWhiteView.backgroundColor = [UIColor whiteColor];
+	[self.view addSubview:temporaryWhiteView];
+	
+	[temporaryWhiteView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.browsingAssistant];
+	[temporaryWhiteView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.browsingAssistant];
+	[temporaryWhiteView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.browsingAssistant];
+	[temporaryWhiteView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.browsingAssistant];
+	
+	UILabel *easterEgg = [UILabel newAutoLayoutView];
+	easterEgg.text = @"🎶 So baby pull me closer on the front screen of your iPhone ;) 🎶";
+	easterEgg.textColor = [UIColor lightGrayColor];
+	easterEgg.textAlignment = NSTextAlignmentCenter;
+	easterEgg.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:10.0f];
+	[temporaryWhiteView addSubview:easterEgg];
+
+	[easterEgg autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+	[easterEgg autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+	[easterEgg autoPinEdgeToSuperviewEdge:ALEdgeTop];
+	[easterEgg autoSetDimension:ALDimensionHeight toSize:16];
+	
+	UILabel *anotherEasterEgg = [UILabel newAutoLayoutView];
+	anotherEasterEgg.text = @"Technically, you could pull this all the way up to the top of your screen if you tried hard enough. And on this view specifically, I set no limit on how high you could go. And in addition to that, this bottom white spacer matches the height of the mini player, so you could see the bottom of this view easier than seeing it hit the top. Papa bless, 祝你好運!";
+	anotherEasterEgg.textColor = [UIColor lightGrayColor];
+	anotherEasterEgg.textAlignment = NSTextAlignmentCenter;
+	anotherEasterEgg.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:10.0f];
+	anotherEasterEgg.numberOfLines = 0;
+	[temporaryWhiteView addSubview:anotherEasterEgg];
+	
+	[anotherEasterEgg autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+	[anotherEasterEgg autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+	[anotherEasterEgg autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:easterEgg];
+	[anotherEasterEgg autoSetDimension:ALDimensionHeight toSize:70];
 	
 //	[NSTimer scheduledTimerWithTimeInterval:0.75
 //									 target:self

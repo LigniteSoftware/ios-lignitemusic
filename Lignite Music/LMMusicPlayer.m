@@ -67,6 +67,8 @@
 		NSLog(@"\nDick?\n");
 		
 		self.systemMusicPlayer = [MPMusicPlayerController systemMusicPlayer];
+		[self.systemMusicPlayer beginGeneratingPlaybackNotifications];
+		
 		self.nowPlayingTrack = [[LMMusicTrack alloc]initWithMPMediaItem:self.systemMusicPlayer.nowPlayingItem];
 		self.playerType = LMMusicPlayerTypeSystemMusicPlayer;
 		self.delegates = [[NSMutableArray alloc]init];
@@ -76,6 +78,9 @@
 		self.previousPlaybackTime = self.systemMusicPlayer.currentPlaybackTime;
 		
 		self.autoPlay = (self.systemMusicPlayer.playbackState == MPMusicPlaybackStatePlaying);
+		
+		[[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
+		[[AVAudioSession sharedInstance] setActive:YES error:nil];
 		
 		[[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
 		
@@ -92,11 +97,6 @@
 		 selector:    @selector(systemMusicPlayerStateChanged:)
 		 name:        MPMusicPlayerControllerPlaybackStateDidChangeNotification
 		 object:      self.systemMusicPlayer];
-		
-		[self.systemMusicPlayer beginGeneratingPlaybackNotifications];
-		
-		[[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
-		[[AVAudioSession sharedInstance] setActive: YES error: nil];
 		
 		MPRemoteCommandCenter *commandCenter = [MPRemoteCommandCenter sharedCommandCenter];
 		[commandCenter.pauseCommand addTargetWithHandler:^MPRemoteCommandHandlerStatus(MPRemoteCommandEvent *event) {
@@ -371,7 +371,7 @@
 	}
 }
 
-BOOL shuffleForDebug = YES;
+BOOL shuffleForDebug = NO;
 
 - (void)shuffleArray:(NSMutableArray*)array {
 	NSUInteger count = [array count];
@@ -575,7 +575,8 @@ BOOL shuffleForDebug = YES;
 		MPMediaItem *associatedMediaItem = nowPlayingTrack.sourceTrack;
 		NSLog(@"Now playing track has an index of %lu. The associated media item has title %@, the track has title %@", (unsigned long)self.indexOfNowPlayingTrack, associatedMediaItem.title, nowPlayingTrack.title);
 		if(self.systemMusicPlayer.nowPlayingItem.persistentID != associatedMediaItem.persistentID){
-			self.systemMusicPlayer.nowPlayingItem = associatedMediaItem;
+			[self.systemMusicPlayer setNowPlayingItem:associatedMediaItem];
+			NSLog(@"Set. Now playing item is %@", self.systemMusicPlayer.nowPlayingItem.title);
 		}
 	}
 	_nowPlayingTrack = nowPlayingTrack;
@@ -587,6 +588,7 @@ BOOL shuffleForDebug = YES;
 
 - (void)setNowPlayingCollection:(LMMusicTrackCollection*)nowPlayingCollection {
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer){
+		NSLog(@"music player %@ Set now playing collection source collection %ld", self.systemMusicPlayer, [nowPlayingCollection.sourceCollection count]);
 		[self.systemMusicPlayer setQueueWithItemCollection:nowPlayingCollection.sourceCollection];
 		[self.systemMusicPlayer setNowPlayingItem:[[nowPlayingCollection.sourceCollection items] objectAtIndex:0]];
 	}

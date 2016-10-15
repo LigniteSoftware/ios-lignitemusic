@@ -15,6 +15,8 @@
 @property id delegate;
 
 @property UIView *contentView;
+
+@property UIView *iconBackgroundView;
 @property UIImageView *iconView;
 @property LMLabel *titleLabel, *subtitleLabel;
 
@@ -87,15 +89,24 @@
 	NSString *title = [self.delegate titleForListEntry:self];
 	NSString *subtitle = [self.delegate subtitleForListEntry:self];
 	
-	self.iconView = [[UIImageView alloc]initWithImage:icon];
-	self.iconView.translatesAutoresizingMaskIntoConstraints = NO;
 	if(icon){
-		[self.contentView addSubview:self.iconView];
+		self.iconBackgroundView = [UIView newAutoLayoutView];
+		self.iconBackgroundView.backgroundColor = [UIColor clearColor];
+		[self.contentView addSubview:self.iconBackgroundView];
 		
-		[self.iconView autoAlignAxis:ALAxisHorizontal toSameAxisOfView:self.contentView];
-		[self.iconView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.contentView];
-		[self.iconView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.contentView withMultiplier:0.8];
-		[self.iconView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.contentView withMultiplier:0.8];
+		[self.iconBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.iconBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+		[self.iconBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[self.iconBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.contentView];
+		[self.iconBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.contentView];
+		
+		self.iconView = [[UIImageView alloc]initWithImage:icon];
+		self.iconView.translatesAutoresizingMaskIntoConstraints = NO;
+		[self.iconBackgroundView addSubview:self.iconView];
+		
+		[self.iconView autoCenterInSuperview];
+		[self.iconView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.iconBackgroundView withMultiplier:0.8];
+		[self.iconView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.iconBackgroundView withMultiplier:0.8];
 	}
 	
 	NSMutableArray *titleConstraints = [[NSMutableArray alloc]init];
@@ -109,8 +120,8 @@
 		[self.contentView addSubview:self.titleLabel];
 		
 		NSLayoutConstraint *heightConstraint = [self.titleLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.contentView withMultiplier:(1.0f/3.0f)];
-		NSLayoutConstraint *leadingConstraint = [self.titleLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:icon ? self.iconView : self.contentView withOffset:10];
-		NSLayoutConstraint *trailingConstraint = [self.titleLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.contentView];
+		NSLayoutConstraint *leadingConstraint = [self.titleLabel autoPinEdge:ALEdgeLeading toEdge:icon ? ALEdgeTrailing : ALEdgeLeading ofView:icon ? self.iconBackgroundView : self.contentView withOffset:icon ? 0 : 10];
+		NSLayoutConstraint *trailingConstraint = [self.titleLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.contentView withOffset:-10.0];
 		NSLayoutConstraint *centerConstraint = [self.titleLabel autoAlignAxis:ALAxisHorizontal toSameAxisOfView:self.contentView];
 		
 		[titleConstraints addObject:heightConstraint];

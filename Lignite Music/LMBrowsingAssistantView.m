@@ -31,7 +31,7 @@
 	self.textBackgroundConstraint.constant = 0;
 	self.currentPoint = CGPointMake(self.originalPoint.x, self.originalPoint.y);
 	[UIView animateWithDuration:0.5 delay:0
-		 usingSpringWithDamping:0.4 initialSpringVelocity:0.0f
+		 usingSpringWithDamping:0.6 initialSpringVelocity:0.0f
 						options:0 animations:^{
 							[[self superview] layoutIfNeeded];
 						} completion:nil];
@@ -42,7 +42,7 @@
 	self.textBackgroundConstraint.constant = self.currentElementBackgroundView.frame.size.height-10;
 	self.currentPoint = CGPointMake(self.originalPoint.x, self.originalPoint.y + self.textBackgroundConstraint.constant);
 	[UIView animateWithDuration:0.5 delay:0
-		 usingSpringWithDamping:0.4 initialSpringVelocity:0.0f
+		 usingSpringWithDamping:0.6 initialSpringVelocity:0.0f
 						options:0 animations:^{
 							[[self superview] layoutIfNeeded];
 						} completion:nil];
@@ -54,17 +54,13 @@
 	if(self.originalPoint.y == 0){
 		self.originalPoint = self.frame.origin;
 		self.currentPoint = self.frame.origin;
-				NSLog(@"Set original point to %@", NSStringFromCGPoint(self.originalPoint));
 	}
 	float totalTranslation = translation.y + (self.currentPoint.y-self.originalPoint.y);
 	
-	NSLog(@"%f", totalTranslation);
+//	NSLog(@"%f", totalTranslation);
 	
 	if(totalTranslation < 0){
 		self.textBackgroundConstraint.constant = -sqrt(-totalTranslation);
-//		if(self.grabberView.frame.origin.y + self.textBackgroundConstraint.constant >= self.albumArtView.frame.size.height-2){
-//			self.textBackgroundConstraint.constant = self.albumArtView.frame.size.height-2-self.textBackgroundView.frame.origin.y;
-//		}
 	}
 	else{
 		self.textBackgroundConstraint.constant = totalTranslation;
@@ -76,7 +72,7 @@
 		//NSLog(@"Dick is not a bone %@", NSStringFromCGPoint(self.currentPoint));
 		self.currentPoint = CGPointMake(self.currentPoint.x, self.originalPoint.y + totalTranslation);
 		
-		NSLog(@"Dick is not a bone %@", NSStringFromCGPoint(self.currentPoint));
+//		NSLog(@"Dick is not a bone %@", NSStringFromCGPoint(self.currentPoint));
 		
 		if((translation.y >= 0)){
 			[self moveContentsDown];
@@ -85,13 +81,6 @@
 			[self moveContentsUp];
 		}
 	}
-	
-	/*
-	 recognizer.view.center = CGPointMake(recognizer.view.center.x + translation.x,
-	 recognizer.view.center.y + translation.y);
-	 [recognizer setTranslation:CGPointMake(0, 0) inView:self.textBackgroundView];
-	 */
- 
 }
 
 - (void)setup {

@@ -37,6 +37,7 @@
 		6A7DF1171DB10D510077B979 /* LMBrowsingAssistantView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A7DF1161DB10D510077B979 /* LMBrowsingAssistantView.m */; };
 		6A7DF11A1DB112140077B979 /* LMMiniPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A7DF1191DB112140077B979 /* LMMiniPlayerView.m */; };
 		6A7DF1201DB124030077B979 /* triple_dots.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A7DF11F1DB124030077B979 /* triple_dots.png */; };
+		6A7DF1241DB12C860077B979 /* LMTitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A7DF1231DB12C860077B979 /* LMTitleView.m */; };
 		6AA4459C1D5AB264004C6739 /* LMPebbleSettingsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AA4459B1D5AB264004C6739 /* LMPebbleSettingsView.m */; };
 		6AA445A01D5AD6AB004C6739 /* LMSettingsSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AA4459F1D5AD6AB004C6739 /* LMSettingsSwitch.m */; };
 		6AA445A31D5AD7B0004C6739 /* LMSettingsLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AA445A21D5AD7B0004C6739 /* LMSettingsLabel.m */; };
@@ -127,6 +128,8 @@
 		6A7DF1181DB112140077B979 /* LMMiniPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMMiniPlayerView.h; sourceTree = "<group>"; };
 		6A7DF1191DB112140077B979 /* LMMiniPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMMiniPlayerView.m; sourceTree = "<group>"; };
 		6A7DF11F1DB124030077B979 /* triple_dots.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = triple_dots.png; sourceTree = "<group>"; };
+		6A7DF1221DB12C860077B979 /* LMTitleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMTitleView.h; sourceTree = "<group>"; };
+		6A7DF1231DB12C860077B979 /* LMTitleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMTitleView.m; sourceTree = "<group>"; };
 		6AA4459A1D5AB264004C6739 /* LMPebbleSettingsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMPebbleSettingsView.h; sourceTree = "<group>"; };
 		6AA4459B1D5AB264004C6739 /* LMPebbleSettingsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMPebbleSettingsView.m; sourceTree = "<group>"; };
 		6AA4459E1D5AD6AB004C6739 /* LMSettingsSwitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMSettingsSwitch.h; sourceTree = "<group>"; };
@@ -348,6 +351,15 @@
 			name = Layovers;
 			sourceTree = "<group>";
 		};
+		6A7DF1211DB12C360077B979 /* TitleView */ = {
+			isa = PBXGroup;
+			children = (
+				6A7DF1221DB12C860077B979 /* LMTitleView.h */,
+				6A7DF1231DB12C860077B979 /* LMTitleView.m */,
+			);
+			name = TitleView;
+			sourceTree = "<group>";
+		};
 		6AA4459D1D5AD676004C6739 /* SettingsControls */ = {
 			isa = PBXGroup;
 			children = (
@@ -421,14 +433,15 @@
 				6A1FB9C21D99C8B900890BF3 /* Core */,
 				6AEB9D2E1BAD679F00AD19FA /* Images */,
 				6A7DF1141DB10CC60077B979 /* Layovers */,
-				6AD227001DA598DD0056695A /* Music */,
 				6A313C091BB4485A002BBC33 /* NowPlayingView */,
+				6AD227001DA598DD0056695A /* Music */,
 				6A1FB9C41D99C8FC00890BF3 /* Other */,
 				6A1FB9C11D99C88500890BF3 /* OtherViews */,
 				6A1FB9C01D99C72200890BF3 /* Pebble */,
 				6AA4459D1D5AD676004C6739 /* SettingsControls */,
 				6A1FB9C31D99C8C900890BF3 /* Storyboards */,
 				6AAF610A1DA0195900971875 /* Strings */,
+				6A7DF1211DB12C360077B979 /* TitleView */,
 				6ABF6A861CF37A19003E4EFA /* Utilities */,
 			);
 			path = "Lignite Music";
@@ -659,6 +672,7 @@
 				6A514E121CE904F100AFB351 /* LMNowPlayingViewController.m in Sources */,
 				6AD227031DA5990B0056695A /* LMMusicPlayer.m in Sources */,
 				6AA445A01D5AD6AB004C6739 /* LMSettingsSwitch.m in Sources */,
+				6A7DF1241DB12C860077B979 /* LMTitleView.m in Sources */,
 				6A1FB9CC1D9AE76A00890BF3 /* LMLabel.m in Sources */,
 				6AEB9D001BACF60E00AD19FA /* LMAppDelegate.m in Sources */,
 				6A32113E1DA727960060DD07 /* LMTrackDurationView.m in Sources */,

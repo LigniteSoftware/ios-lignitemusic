@@ -1113,23 +1113,23 @@
     
     self.musicPlayer = [MPMusicPlayerController systemMusicPlayer];
     
-    [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
-    
-    NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
-    
-    [notificationCenter
-     addObserver: self
-     selector:    @selector(nowPlayingItemChanged:)
-     name:        MPMusicPlayerControllerNowPlayingItemDidChangeNotification
-     object:      self.musicPlayer];
-    
-    [notificationCenter
-     addObserver: self
-     selector:    @selector(nowPlayingStateChanged:)
-     name:        MPMusicPlayerControllerPlaybackStateDidChangeNotification
-     object:      self.musicPlayer];
-    
-    [self.musicPlayer beginGeneratingPlaybackNotifications];
+//    [[UIApplication sharedApplication] begin Receiving Remote Control Events];
+//    
+//    NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
+//    
+//    [notificationCenter
+//     addObserver: self
+//     selector:    @selector(nowPlayingItemChanged:)
+//     name:        MPMusicPlayerControllerNowPlayingItemDidChangeNotification
+//     object:      self.musicPlayer];
+//    
+//    [notificationCenter
+//     addObserver: self
+//     selector:    @selector(nowPlayingStateChanged:)
+//     name:        MPMusicPlayerControllerPlaybackStateDidChangeNotification
+//     object:      self.musicPlayer];
+//    
+//    [self.musicPlayer beginGeneratingPlaybackNotifications];
 	
 	//[self nowPlayingItemChanged:self];
     

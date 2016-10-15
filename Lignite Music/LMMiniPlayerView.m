@@ -52,6 +52,8 @@
 }
 
 - (void)musicTrackDidChange:(LMMusicTrack *)newTrack {
+	NSLog(@"Got a new track called %@ for the miniplayer", newTrack.title);
+	
 	if(!self.queue){
 		self.queue = [[LMOperationQueue alloc] init];
 	}
