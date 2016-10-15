@@ -120,7 +120,8 @@
 }
 
 - (NSString*)subtitleForListEntry:(LMListEntry*)entry {
-	return nil;
+	LMSource *source = [self.sources objectAtIndex:entry.collectionIndex];
+	return source.subtitle;
 }
 
 - (UIImage*)iconForListEntry:(LMListEntry*)entry {

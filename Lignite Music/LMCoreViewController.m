@@ -116,6 +116,30 @@
 
 - (void)sourceSelected:(LMSource *)source {
 	NSLog(@"Selected source with title %@", source.title);
+	
+	int indexOfSource = -1;
+	for(int i = 0; i < self.sourcesForSourceSelector.count; i++){
+		LMSource *indexSource = [self.sourcesForSourceSelector objectAtIndex:i];
+		if([source isEqual:indexSource]){
+			indexOfSource = i;
+			break;
+		}
+	}
+	NSLog(@"The index is %d", indexOfSource);
+	switch(indexOfSource){
+		case 0:
+			
+			break;
+		case 1:
+			
+			break;
+		case 2:
+			
+			break;
+		default:
+			NSLog(@"Unknown index of source %@.", source);
+			break;
+	}
 }
 
 - (void)viewDidLoad {
@@ -210,6 +234,9 @@
 	NSArray *sourceTitles = @[
 		@"Albums", @"Titles", @"Settings"
 	];
+	NSArray *sourceSubtitles = @[
+		@"", @"", @"Only for Pebble"
+	];
 	NSArray *sourceIconNames = @[
 		@"repeat_black.png", @"repeat_black.png", @"repeat_black.png"
 	];
@@ -217,7 +244,9 @@
 	NSMutableArray *sources = [NSMutableArray new];
 	
 	for(int i = 0; i < sourceTitles.count; i++){
+		NSString *subtitle = [sourceSubtitles objectAtIndex:i];
 		LMSource *source = [LMSource sourceWithTitle:NSLocalizedString([sourceTitles objectAtIndex:i], nil)
+										 andSubtitle:[subtitle isEqualToString:@""]  ? nil : NSLocalizedString(subtitle, nil)
 										andIconNamed:[sourceIconNames objectAtIndex:i]];
 		source.delegate = self;
 		[sources addObject:source];

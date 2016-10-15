@@ -29,9 +29,11 @@
  @return The created LMSource.
  */
 + (LMSource*)sourceWithTitle:(NSString*)title
+				 andSubtitle:(NSString*)subtitle
 				andIconNamed:(NSString*)iconName;
 
 @property NSString *title;
+@property NSString *subtitle;
 @property NSString *iconName;
 @property UIImage *icon;
 @property id<LMSourceDelegate> delegate;
