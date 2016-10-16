@@ -26,6 +26,7 @@
 
 - (id)init {
 	self = [super initWithFrame:CGRectMake(0, 0, 0, 0) style:UITableViewStylePlain];
+	self.alwaysBounceVertical = NO;
 	if(self){
 	
 	}

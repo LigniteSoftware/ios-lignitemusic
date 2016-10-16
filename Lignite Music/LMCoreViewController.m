@@ -236,10 +236,10 @@
 		@"Albums", @"Titles", @"Settings"
 	];
 	NSArray *sourceSubtitles = @[
-		@"", @"", @"Only for Pebble"
+		@"", @"", @"Currently disabled"
 	];
 	LMIcon sourceIcons[] = {
-		LMIconRepeat, LMIconRepeat, LMIconRepeat
+		LMIconAlbums, LMIconTitles, LMIconSettings
 	};
 	
 	NSMutableArray *sources = [NSMutableArray new];
