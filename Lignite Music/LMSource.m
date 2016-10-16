@@ -10,13 +10,12 @@
 
 @implementation LMSource
 
-+ (LMSource*)sourceWithTitle:(NSString*)title andSubtitle:(NSString*)subtitle andIconNamed:(NSString*)iconName {
++ (LMSource*)sourceWithTitle:(NSString*)title andSubtitle:(NSString*)subtitle andIcon:(LMIcon)icon {
 	LMSource *newSource = [LMSource new];
 	
 	newSource.title = title;
 	newSource.subtitle = subtitle;
-	newSource.icon = [UIImage imageNamed:iconName];
-	newSource.iconName = iconName;
+	newSource.icon = [LMAppIcon imageForIcon:icon];
 	
 	return newSource;
 	

@@ -35,6 +35,15 @@
 "Song" = "song";
 "Songs" = "songs";
 
+/* Music Collection Types */
+"Albums" = "Albums";
+"Titles" = "Titles"; //Individual songs
+"Artists" = "Artists";
+"Playlists" = "Playlists";
+"Composers" = "Composers";
+"Genres" = "Genres";
+"Compilations" = "Compilations";
+
 /* 
  Durations are formatted like this:
  

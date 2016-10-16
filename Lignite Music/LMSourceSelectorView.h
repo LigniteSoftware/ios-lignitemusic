@@ -16,6 +16,11 @@
  */
 @property NSArray<LMSource*> *sources;
 
+/**
+ The constraint which associates this view with the bottom of the screen. Used for animating.
+ */
+@property NSLayoutConstraint *bottomConstraint;
+
 - (void)setup;
 
 @end

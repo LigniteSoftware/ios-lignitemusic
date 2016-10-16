@@ -16,6 +16,7 @@
 #import "LMTitleView.h"
 #import "LMSourceSelectorView.h"
 #import "LMSource.h"
+#import "LMExtras.h"
 
 @interface LMCoreViewController () <LMMusicPlayerDelegate, LMSourceDelegate>
 
@@ -237,9 +238,9 @@
 	NSArray *sourceSubtitles = @[
 		@"", @"", @"Only for Pebble"
 	];
-	NSArray *sourceIconNames = @[
-		@"repeat_black.png", @"repeat_black.png", @"repeat_black.png"
-	];
+	LMIcon sourceIcons[] = {
+		LMIconRepeat, LMIconRepeat, LMIconRepeat
+	};
 	
 	NSMutableArray *sources = [NSMutableArray new];
 	
@@ -247,7 +248,7 @@
 		NSString *subtitle = [sourceSubtitles objectAtIndex:i];
 		LMSource *source = [LMSource sourceWithTitle:NSLocalizedString([sourceTitles objectAtIndex:i], nil)
 										 andSubtitle:[subtitle isEqualToString:@""]  ? nil : NSLocalizedString(subtitle, nil)
-										andIconNamed:[sourceIconNames objectAtIndex:i]];
+											 andIcon:sourceIcons[i]];
 		source.delegate = self;
 		[sources addObject:source];
 	}
@@ -261,7 +262,7 @@
 	
 	[self.sourceSelector autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.view];
 	[self.sourceSelector autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.view];
-	[self.sourceSelector autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.view];
+	self.sourceSelector.bottomConstraint = [self.sourceSelector autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.view withOffset:-WINDOW_FRAME.size.height*(0.9)];
 	[self.sourceSelector autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
 	
 	[self.sourceSelector setup];

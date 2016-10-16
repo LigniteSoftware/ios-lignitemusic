@@ -35,7 +35,6 @@
 
 @property NSString *title;
 @property NSString *subtitle;
-@property NSString *iconName;
 @property UIImage *icon;
 @property id<LMSourceDelegate> delegate;
 

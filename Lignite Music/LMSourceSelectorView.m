@@ -33,6 +33,11 @@
 
 @property NSInteger currentlyHighlighted;
 
+@property CGPoint originalPoint, currentPoint;
+@property BOOL setupGesture;
+
+@property NSLayoutConstraint *blurConstraint;
+
 @end
 
 @implementation LMSourceSelectorView
@@ -130,8 +135,87 @@
 	return source.icon;
 }
 
+- (void)moveContentsUp {
+	[[self superview] layoutIfNeeded];
+	self.bottomConstraint.constant = -(self.frame.size.height*0.9);
+	self.blurConstraint.constant = self.bottomConstraint.constant;
+	self.currentPoint = CGPointMake(self.originalPoint.x, self.originalPoint.y-(self.frame.size.height*0.9));
+	[UIView animateWithDuration:0.5 delay:0
+		 usingSpringWithDamping:0.6 initialSpringVelocity:0.0f
+						options:0 animations:^{
+							[[self superview] layoutIfNeeded];
+						} completion:nil];
+}
+
+- (void)moveContentsDown {
+	[[self superview] layoutIfNeeded];
+	self.bottomConstraint.constant = 0;
+	self.blurConstraint.constant = 0;
+	self.currentPoint = self.originalPoint;
+	[UIView animateWithDuration:0.5 delay:0
+		 usingSpringWithDamping:0.6 initialSpringVelocity:0.0f
+						options:0 animations:^{
+							[[self superview] layoutIfNeeded];
+						} completion:nil];
+}
+
+- (IBAction)handlePan:(UIPanGestureRecognizer *)recognizer {
+	CGPoint translation = [recognizer translationInView:self];
+	
+	if(self.originalPoint.y == 0){
+		self.originalPoint = self.sourceSelectorButton.frame.origin;
+		self.currentPoint = self.sourceSelectorButton.frame.origin;
+		//		NSLog(@"Set original point to %@", NSStringFromCGPoint(self.originalPoint));
+	}
+	
+	float totalTranslation = translation.y + (self.currentPoint.y-self.originalPoint.y);
+	
+	NSLog(@"%f", totalTranslation);
+	
+	if(totalTranslation > 0){
+		self.bottomConstraint.constant = sqrt(totalTranslation);
+//		if(self.sourceSelectorButton.frame.origin.y + self.bottomConstraint.constant >= self.albumArtView.frame.size.height-2){
+//			self.bottomConstraint.constant = self.albumArtView.frame.size.height-2-self.sourceSelectorButton.frame.origin.y;
+//		}
+	}
+	else if(totalTranslation < -(self.frame.size.height*0.9)){
+		self.bottomConstraint.constant = (-(self.frame.size.height*0.9))-sqrt(-(((self.frame.size.height*0.9))+totalTranslation));
+	}
+	else{
+		self.bottomConstraint.constant = totalTranslation;
+	}
+	
+	[[self superview] layoutIfNeeded];
+	
+	if(recognizer.state == UIGestureRecognizerStateEnded){
+		//NSLog(@"Dick is not a bone %@", NSStringFromCGPoint(self.currentPoint));
+		self.currentPoint = CGPointMake(self.currentPoint.x, self.originalPoint.y + totalTranslation);
+		
+		NSLog(@"Dick is not a bone %@", NSStringFromCGPoint(self.currentPoint));
+		
+		if(((self.originalPoint.y-self.currentPoint.y) < 0) || (translation.y >= 0)){
+			[self moveContentsDown];
+		}
+		else if(((self.originalPoint.y-self.currentPoint.y) > (self.frame.size.height*0.9)) || (translation.y < 0)){
+			[self moveContentsUp];
+		}
+	}
+	
+	/*
+	 recognizer.view.center = CGPointMake(recognizer.view.center.x + translation.x,
+	 recognizer.view.center.y + translation.y);
+	 [recognizer setTranslation:CGPointMake(0, 0) inView:self.textBackgroundView];
+	 */
+ 
+}
+
 - (void)clickedButton:(LMButton *)button {
-	NSLog(@"Hey there buddy boi");
+	if(self.bottomConstraint.constant == 0){
+		[self moveContentsUp];
+	}
+	else{
+		[self moveContentsDown];
+	}
 }
 
 - (void)setup {
@@ -145,7 +229,11 @@
 	[self addSubview:self.blurredBackgroundView];
 	
 	[self.blurredBackgroundView autoCenterInSuperview];
-	[self.blurredBackgroundView autoPinEdgesToSuperviewEdges];
+	[self.blurredBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+	self.blurConstraint = [self.blurredBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+	[self.blurredBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+	[self.blurredBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+	
 	
 	self.contentBackgroundView = [UIView newAutoLayoutView];
 	self.contentBackgroundView.backgroundColor = [UIColor whiteColor];
@@ -197,7 +285,10 @@
 	[self.sourceSelectorButton autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.sourceSelectorButtonBackgroundView withMultiplier:0.85];
 	
 	[self.sourceSelectorButton setupWithImageMultiplier:0.5];
-	[self.sourceSelectorButton setImage:[UIImage imageNamed:@"play_white.png"]];
+	[self.sourceSelectorButton setImage:[LMAppIcon imageForIcon:LMIconPlay]];
+	
+	UIPanGestureRecognizer *moveRecognizer = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(handlePan:)];
+	[self.sourceSelectorButton addGestureRecognizer:moveRecognizer];
 	
 	self.currentSourceLabelBackgroundView = [UIView newAutoLayoutView];
 	[self.contentBackgroundView addSubview:self.currentSourceLabelBackgroundView];

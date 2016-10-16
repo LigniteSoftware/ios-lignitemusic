@@ -284,11 +284,6 @@
  
 }
 
-- (void)layoutSubviews {
-	
-	[super layoutSubviews];
-}
-
 - (void)setup {
 	self.currentlyHighlighted = -1;
 	
