@@ -28,6 +28,11 @@
 
 @property BOOL shouldUpdateValue;
 
+/**
+ Whether or not the info on the duration view (the two texts) should be inset closer towards the inside of the screen.
+ */
+@property BOOL shouldInsetInfo;
+
 - (BOOL)didJustFinishEditing;
 - (void)setup;
 

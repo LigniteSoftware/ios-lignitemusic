@@ -25,6 +25,7 @@
 
 @property UIView *albumArtRootView;
 @property LMAlbumArtView *albumArtImageView;
+@property UIImageView *brandNewAlbumArtImageView;
 
 @property LMOperationQueue *queue;
 
@@ -149,6 +150,7 @@
 			
 			if(albumImage.size.height > 0){
 				[self.albumArtImageView updateContentWithMusicTrack:newTrack];
+				self.brandNewAlbumArtImageView.image = albumArt;
 			}
 						
 			//[self.albumArtImageView setupWithAlbumImage:albumImage];
@@ -171,6 +173,7 @@
 		self.backgroundImageView.image = albumImage;
 		
 		[self.albumArtImageView updateContentWithMusicTrack:nil];
+		self.brandNewAlbumArtImageView.image = nil;
 		return;
 	}
 	
@@ -304,9 +307,17 @@
 	[self.albumArtImageView setupWithAlbumImage:nil];
 	self.albumArtImageView.backgroundColor = [UIColor clearColor];
 	
-	self.trackDurationView = [[LMTrackDurationView alloc]init];
-	self.trackDurationView.translatesAutoresizingMaskIntoConstraints = NO;
+	self.brandNewAlbumArtImageView = [UIImageView newAutoLayoutView];
+	self.brandNewAlbumArtImageView.backgroundColor = [UIColor orangeColor];
+	[self.albumArtRootView addSubview:self.brandNewAlbumArtImageView];
+	
+	[self.brandNewAlbumArtImageView autoCenterInSuperview];
+	[self.brandNewAlbumArtImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.albumArtRootView];
+	[self.brandNewAlbumArtImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.albumArtRootView];
+	
+	self.trackDurationView = [LMTrackDurationView newAutoLayoutView];
 	self.trackDurationView.delegate = self;
+	self.trackDurationView.shouldInsetInfo = YES;
 //	self.trackDurationView.backgroundColor = [UIColor yellowColor];
 	[self addSubview:self.trackDurationView];
 	[self.trackDurationView setup];
@@ -315,14 +326,13 @@
 	self.trackDurationView.seekSlider.maximumValue = self.musicPlayer.nowPlayingTrack.playbackDuration;
 	self.trackDurationView.seekSlider.value = self.musicPlayer.currentPlaybackTime;
 	
-	[self.trackDurationView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.albumArtImageView withOffset:10];
-	[self.trackDurationView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.albumArtImageView withOffset:-10];
-	[self.trackDurationView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.albumArtImageView];
+	[self.trackDurationView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.albumArtRootView];
+	[self.trackDurationView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.albumArtRootView];
+	[self.trackDurationView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.albumArtImageView withOffset:-2];
 	NSLayoutConstraint *constraint = [self.trackDurationView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(1.0/10.0)];
 	constraint.priority = UILayoutPriorityRequired;
 	
-	self.trackInfoView = [[LMTrackInfoView alloc]init];
-	self.trackInfoView.translatesAutoresizingMaskIntoConstraints = NO;
+	self.trackInfoView = [LMTrackInfoView newAutoLayoutView];
 	[self addSubview:self.trackInfoView];
 	[self.trackInfoView setupWithTextAlignment:NSTextAlignmentCenter];
 	
@@ -347,7 +357,7 @@
 		self.shuffleModeBackgroundView, self.repeatModeBackgroundView, self.playlistBackgroundView
 	];
 	NSArray *buttons = @[
-		self.shuffleModeButton, self.repeatModeButton, self.playlistButton
+		self.shuffleModeButton, self.repeatModeButton
 	];
 //	NSArray *titleLabels = @[
 //		self.shuffleTitleLabel, self.repeatTitleLabel, self.playlistTitleLabel
@@ -371,7 +381,7 @@
 		[background autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.trackInfoView withOffset:10];
 		[background autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
 		[background autoPinEdge:ALEdgeLeading toEdge:isFirst ? ALEdgeLeading : ALEdgeTrailing ofView:previousBackground];
-		[background autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.trackInfoView withMultiplier:(1.0/3.0)];
+		[background autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.trackInfoView withMultiplier:(1.0/(float)buttons.count)];
 		
 //		UILabel *titleLabel = [titleLabels objectAtIndex:i];
 //		
@@ -396,7 +406,7 @@
 
 		[button autoAlignAxisToSuperviewAxis:ALAxisVertical];
 		[button autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self withOffset:-20];
-		[button autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:background withMultiplier:0.50];
+		[button autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:background withMultiplier:0.35];
 		[button autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:background];
 	}
 	

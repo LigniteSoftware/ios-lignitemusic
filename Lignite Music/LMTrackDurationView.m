@@ -79,7 +79,7 @@
 	self.songCountLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:50.0f];
 	[self addSubview:self.songCountLabel];
 	
-	[self.songCountLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
+	[self.songCountLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self withOffset:self.shouldInsetInfo ? 15 : 0];
 	[self.songCountLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.seekSlider];
 	[self.songCountLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
 	[self.songCountLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.seekSlider withMultiplier:0.5];
@@ -96,7 +96,7 @@
 	[self.songDurationLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.songCountLabel];
 	[self.songDurationLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.songCountLabel];
 	[self.songDurationLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.songCountLabel];
-	[self.songDurationLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.songCountLabel];
+	[self.songDurationLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.songCountLabel withOffset:self.shouldInsetInfo ? -30 : 0];
 }
 
 /*
