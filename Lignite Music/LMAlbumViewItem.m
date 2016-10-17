@@ -103,7 +103,7 @@
 	self.albumImageView.translatesAutoresizingMaskIntoConstraints = NO;
 	self.albumImageView.layer.opaque = NO;
 	self.albumImageView.clipsToBounds = YES;
-	self.albumImageView.backgroundColor = [UIColor blueColor];
+	self.albumImageView.backgroundColor = [UIColor whiteColor];
 	[self.contentView addSubview:self.albumImageView];
 	
 	[self.albumImageView autoCenterInSuperview];

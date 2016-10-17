@@ -40,6 +40,7 @@
 		6A7DF11A1DB112140077B979 /* LMMiniPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A7DF1191DB112140077B979 /* LMMiniPlayerView.m */; };
 		6A7DF1201DB124030077B979 /* icon_triple_horizontal_dots.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A7DF11F1DB124030077B979 /* icon_triple_horizontal_dots.png */; };
 		6A7DF1241DB12C860077B979 /* LMTitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A7DF1231DB12C860077B979 /* LMTitleView.m */; };
+		6A8CF2B91DB4952A00777525 /* LMSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A8CF2B81DB4952A00777525 /* LMSettings.m */; };
 		6A9C053B1DB4441200713D1C /* icon_albums.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A9C05371DB4441200713D1C /* icon_albums.png */; };
 		6A9C053C1DB4441200713D1C /* icon_compilations.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A9C05381DB4441200713D1C /* icon_compilations.png */; };
 		6A9C053D1DB4441200713D1C /* icon_genres.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A9C05391DB4441200713D1C /* icon_genres.png */; };
@@ -138,6 +139,8 @@
 		6A7DF11F1DB124030077B979 /* icon_triple_horizontal_dots.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_triple_horizontal_dots.png; sourceTree = "<group>"; };
 		6A7DF1221DB12C860077B979 /* LMTitleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMTitleView.h; sourceTree = "<group>"; };
 		6A7DF1231DB12C860077B979 /* LMTitleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMTitleView.m; sourceTree = "<group>"; };
+		6A8CF2B71DB4952A00777525 /* LMSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMSettings.h; sourceTree = "<group>"; };
+		6A8CF2B81DB4952A00777525 /* LMSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMSettings.m; sourceTree = "<group>"; };
 		6A9C05371DB4441200713D1C /* icon_albums.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_albums.png; sourceTree = "<group>"; };
 		6A9C05381DB4441200713D1C /* icon_compilations.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_compilations.png; sourceTree = "<group>"; };
 		6A9C05391DB4441200713D1C /* icon_genres.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_genres.png; sourceTree = "<group>"; };
@@ -408,6 +411,8 @@
 				6A7C62F41DA93F6100B025BA /* LMColour.m */,
 				6A6CCD591DB290FA006035C1 /* LMAppIcon.h */,
 				6A6CCD5A1DB290FA006035C1 /* LMAppIcon.m */,
+				6A8CF2B71DB4952A00777525 /* LMSettings.h */,
+				6A8CF2B81DB4952A00777525 /* LMSettings.m */,
 				6ABF6A831CF3768A003E4EFA /* UIColor+isLight.h */,
 				6ABF6A841CF3768A003E4EFA /* UIColor+isLight.m */,
 				6ABF6A801CF374F7003E4EFA /* UIImage+AverageColour.h */,
@@ -703,6 +708,7 @@
 				6AD227091DA59AA00056695A /* LMMusicTrackCollection.m in Sources */,
 				6A7DF11A1DB112140077B979 /* LMMiniPlayerView.m in Sources */,
 				6A73CF611D451BFA0097A400 /* LMPebbleMessageQueue.m in Sources */,
+				6A8CF2B91DB4952A00777525 /* LMSettings.m in Sources */,
 				6A67E62F1D9CC7B800763DD0 /* LMAlbumDetailView.m in Sources */,
 				6ABF6A851CF3768A003E4EFA /* UIColor+isLight.m in Sources */,
 				6A313C121BB44959002BBC33 /* LMAlbumArtView.m in Sources */,

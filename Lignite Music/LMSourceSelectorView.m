@@ -15,6 +15,7 @@
 #import "LMListEntry.h"
 #import "LMColour.h"
 #import "LMExtras.h"
+#import "LMSettings.h"
 
 @interface LMSourceSelectorView() <LMButtonDelegate, LMTableViewSubviewDelegate, LMListEntryDelegate>
 
@@ -79,6 +80,14 @@
 			[listEntry setup];
 			[self.itemArray addObject:listEntry];
 		}
+		
+		NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
+		NSInteger lastSourceOpened = 0;
+		if([settings objectForKey:LMSettingsKeyLastOpenedSource]){
+			lastSourceOpened = [settings integerForKey:LMSettingsKeyLastOpenedSource];
+		}
+		
+		[self tappedListEntry:[self.itemArray objectAtIndex:lastSourceOpened]];
 	}
 }
 
@@ -142,6 +151,9 @@
 	self.currentlyHighlighted = entry.collectionIndex;
 	
 	[self moveContentsUp];
+	
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	[defaults setInteger:entry.collectionIndex forKey:LMSettingsKeyLastOpenedSource];
 }
 
 - (UIColor*)tapColourForListEntry:(LMListEntry*)entry {
@@ -329,7 +341,7 @@
 	[self.sourceSelectorButton autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.sourceSelectorButtonBackgroundView withMultiplier:0.85];
 	
 	[self.sourceSelectorButton setupWithImageMultiplier:0.5];
-	[self.sourceSelectorButton setImage:[LMAppIcon invertImage:[LMAppIcon imageForIcon:LMIconTitles]]];
+	//[self.sourceSelectorButton setImage:[LMAppIcon invertImage:[LMAppIcon imageForIcon:LMIconAlbums]]];
 	
 	UIPanGestureRecognizer *moveRecognizer = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(handlePan:)];
 	[self.sourceSelectorButton addGestureRecognizer:moveRecognizer];
