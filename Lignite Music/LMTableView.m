@@ -97,7 +97,7 @@
 		float frameX = (frame.size.width-frameWidth)/2;
 		float frameY = frame.size.height/2 - dividerHeight/2;
 		UIView *dividerView = [[UIView alloc]initWithFrame:CGRectMake(frameX, frameY, frameWidth, dividerHeight)];
-		dividerView.backgroundColor = [UIColor colorWithRed:0.82 green:0.82 blue:0.82 alpha:1.0];
+		dividerView.backgroundColor = self.dividerColour ? self.dividerColour : [UIColor colorWithRed:0.82 green:0.82 blue:0.82 alpha:1.0];
 		[view addSubview:dividerView];
 	}
 	

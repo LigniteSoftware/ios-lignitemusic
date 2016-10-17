@@ -39,6 +39,13 @@
 
 @implementation LMAlbumDetailView
 
+- (void)reloadSourceSelectorInfo {
+	NSString *collectionString = NSLocalizedString(@"Albums", nil);
+	
+	[self.musicPlayer setSourceTitle:collectionString];
+	[self.musicPlayer setSourceSubtitle:[NSString stringWithFormat:@"%ld %@", self.albumCollections.count, collectionString]];
+}
+
 - (id)prepareSubviewAtIndex:(NSUInteger)index {
 	LMListEntry *entry = [self.itemArray objectAtIndex:index % self.itemArray.count];
 	entry.collectionIndex = index;

@@ -23,6 +23,13 @@
 
 @implementation LMTitleView
 
+- (void)reloadSourceSelectorInfo {
+	NSString *collectionString = NSLocalizedString(@"Titles", nil);
+	
+	[self.musicPlayer setSourceTitle:collectionString];
+	[self.musicPlayer setSourceSubtitle:[NSString stringWithFormat:@"%ld %@", self.musicTitles.count, collectionString]];
+}
+
 - (void)musicTrackDidChange:(LMMusicTrack *)newTrack {
 	LMListEntry *highlightedEntry = nil;
 	int newHighlightedIndex = -1;
@@ -118,7 +125,7 @@
 }
 
 - (float)topSpacingForTableView:(LMTableView *)tableView {
-	return 0.0f;
+	return (self.frame.size.height*0.1);
 }
 
 - (BOOL)dividerForTableView:(LMTableView *)tableView {

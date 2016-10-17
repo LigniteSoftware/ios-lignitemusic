@@ -33,6 +33,13 @@
 
 @implementation LMAlbumView
 
+- (void)reloadSourceSelectorInfo {
+	NSString *collectionString = NSLocalizedString(@"Albums", nil);
+	
+	[self.musicPlayer setSourceTitle:collectionString];
+	[self.musicPlayer setSourceSubtitle:[NSString stringWithFormat:@"%ld %@", self.albumCollections.count, collectionString]];
+}
+
 - (void)dismissViewOnTop {
 	[self layoutIfNeeded];
 	self.topConstraint.constant = self.frame.size.height;
@@ -167,7 +174,8 @@
  See LMTableView for documentation on this function.
  */
 - (float)topSpacingForTableView:(LMTableView *)tableView {
-	return -10;
+	return 20;
+	//TODO fix this
 }
 
 /**
@@ -260,6 +268,8 @@
 	[self addGestureRecognizer:pinchGesture];
 	
 	[self.musicPlayer addMusicDelegate:self];
+	
+	[self reloadSourceSelectorInfo];
 }
 
 @end

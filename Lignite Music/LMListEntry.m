@@ -9,6 +9,7 @@
 #import <PureLayout/PureLayout.h>
 #import "LMListEntry.h"
 #import "LMLabel.h"
+#import "LMAppIcon.h"
 
 @interface LMListEntry()
 
@@ -21,6 +22,7 @@
 @property LMLabel *titleLabel, *subtitleLabel;
 
 @property BOOL highlighted;
+@property BOOL imageIsInverted;
 
 @end
 
@@ -42,32 +44,22 @@
 	
 	self.highlighted = highlighted;
 	
-	if(animated){
-		[UIView animateWithDuration:0.2 animations:^{
-			if(highlighted){
-				self.contentView.backgroundColor = [self.delegate tapColourForListEntry:self];
-				self.titleLabel.textColor = [UIColor whiteColor];
-				self.subtitleLabel.textColor = [UIColor whiteColor];
+
+	[UIView animateWithDuration:animated ? 0.2 : 0.0 animations:^{
+		self.contentView.backgroundColor = highlighted ? [self.delegate tapColourForListEntry:self] : [UIColor clearColor];
+		self.titleLabel.textColor = highlighted ? [UIColor whiteColor] : [UIColor blackColor];
+		self.subtitleLabel.textColor = highlighted ? [UIColor whiteColor] : [UIColor blackColor];
+		if(self.iconView.image && self.invertIconOnHighlight){
+			if(!self.imageIsInverted && self.highlighted){
+				self.iconView.image = [LMAppIcon invertImage:self.iconView.image];
+				self.imageIsInverted = YES;
 			}
-			else{
-				self.contentView.backgroundColor = [UIColor clearColor];
-				self.titleLabel.textColor = [UIColor blackColor];
-				self.subtitleLabel.textColor = [UIColor blackColor];
+			if(self.imageIsInverted && !self.highlighted){
+				self.iconView.image = [LMAppIcon invertImage:self.iconView.image];
+				self.imageIsInverted = NO;
 			}
-		}];
-	}
-	else{
-		if(highlighted){
-			self.contentView.backgroundColor = [self.delegate tapColourForListEntry:self];
-			self.titleLabel.textColor = [UIColor whiteColor];
-			self.subtitleLabel.textColor = [UIColor whiteColor];
 		}
-		else{
-			self.contentView.backgroundColor = [UIColor clearColor];
-			self.titleLabel.textColor = [UIColor blackColor];
-			self.subtitleLabel.textColor = [UIColor blackColor];
-		}
-	}
+	}];
 }
 
 - (void)tappedView {
@@ -77,6 +69,9 @@
 - (void)setup {
 	if(self.iconInsetMultiplier == 0){
 		self.iconInsetMultiplier = 0.8;
+	}
+	if(self.iconPaddingMultiplier == 0){
+		self.iconPaddingMultiplier = 1.0;
 	}
 	
 	self.contentView = [UIView newAutoLayoutView];
@@ -102,7 +97,7 @@
 		[self.iconBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 		[self.iconBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 		[self.iconBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.contentView];
-		[self.iconBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.contentView];
+		[self.iconBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.contentView withMultiplier:self.iconPaddingMultiplier];
 		
 		self.iconView = [[UIImageView alloc]initWithImage:icon];
 		self.iconView.translatesAutoresizingMaskIntoConstraints = NO;

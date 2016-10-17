@@ -44,6 +44,18 @@
 
 @implementation LMSourceSelectorView
 
+- (void)setSourceTitle:(NSString*)title {
+	if(self.currentSourceLabel){
+		self.currentSourceLabel.text = title;
+	}
+}
+
+- (void)setSourceSubtitle:(NSString*)subtitle {
+	if(self.detailInfoLabel){
+		self.detailInfoLabel.text = subtitle;
+	}
+}
+
 - (id)prepareSubviewAtIndex:(NSUInteger)index {
 	LMListEntry *entry = [self.itemArray objectAtIndex:index % self.itemArray.count];
 	entry.collectionIndex = index;
@@ -61,7 +73,9 @@
 		for(int i = 0; i < amount; i++){
 			LMListEntry *listEntry = [[LMListEntry alloc]initWithDelegate:self];
 			listEntry.collectionIndex = i;
-			listEntry.iconInsetMultiplier = 0.5;
+			listEntry.iconInsetMultiplier = (1.0/3.0);
+			listEntry.iconPaddingMultiplier = (3.0/4.0);
+			listEntry.invertIconOnHighlight = YES;
 			[listEntry setup];
 			[self.itemArray addObject:listEntry];
 		}
@@ -115,7 +129,19 @@
 	NSLog(@"Tapped list entry %ld", entry.collectionIndex);
 	LMSource *source = [self.sources objectAtIndex:entry.collectionIndex];
 	
+	[self.sourceSelectorButton setImage:[LMAppIcon invertImage:source.icon]];
+	
 	[source.delegate sourceSelected:source];
+	
+	LMListEntry *previousHighlightedEntry = [self listEntryForIndex:self.currentlyHighlighted];
+	if(previousHighlightedEntry){
+		[previousHighlightedEntry changeHighlightStatus:NO animated:YES];
+	}
+	
+	[entry changeHighlightStatus:YES animated:YES];
+	self.currentlyHighlighted = entry.collectionIndex;
+	
+	[self moveContentsUp];
 }
 
 - (UIColor*)tapColourForListEntry:(LMListEntry*)entry {
@@ -303,7 +329,7 @@
 	[self.sourceSelectorButton autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.sourceSelectorButtonBackgroundView withMultiplier:0.85];
 	
 	[self.sourceSelectorButton setupWithImageMultiplier:0.5];
-	[self.sourceSelectorButton setImage:[LMAppIcon imageForIcon:LMIconPlay]];
+	[self.sourceSelectorButton setImage:[LMAppIcon invertImage:[LMAppIcon imageForIcon:LMIconTitles]]];
 	
 	UIPanGestureRecognizer *moveRecognizer = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(handlePan:)];
 	[self.sourceSelectorButton addGestureRecognizer:moveRecognizer];
@@ -325,7 +351,7 @@
 	[self.detailInfoLabelBackgroundView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.sourceSelectorButtonBackgroundView];
 	
 	self.currentSourceLabel = [LMLabel newAutoLayoutView];
-	self.currentSourceLabel.text = @"Albums";
+	self.currentSourceLabel.text = @"No Source";
 	self.currentSourceLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:50.0f];
 	[self.currentSourceLabelBackgroundView addSubview:self.currentSourceLabel];
 	
@@ -338,7 +364,7 @@
 	
 	self.detailInfoLabel = [LMLabel newAutoLayoutView];
 	self.detailInfoLabel.textAlignment = NSTextAlignmentRight;
-	self.detailInfoLabel.text = @"69 Albums";
+	self.detailInfoLabel.text = @"Waiting...";
 	self.detailInfoLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:50.0f];
 	[self.detailInfoLabelBackgroundView addSubview:self.detailInfoLabel];
 	
@@ -350,6 +376,7 @@
 	self.viewsTableView.translatesAutoresizingMaskIntoConstraints = NO;
 	self.viewsTableView.amountOfItemsTotal = self.sources.count;
 	self.viewsTableView.subviewDelegate = self;
+	self.viewsTableView.dividerColour = [UIColor blackColor];
 	[self.viewsTableView prepareForUse];
 	[self addSubview:self.viewsTableView];
 	

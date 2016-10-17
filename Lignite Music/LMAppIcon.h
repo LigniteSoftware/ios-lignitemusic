@@ -32,4 +32,13 @@ typedef enum {
  */
 + (UIImage*)imageForIcon:(LMIcon)icon;
 
+/**
+ Invert an image.
+
+ @param image The image to invert.
+
+ @return The inverted image.
+ */
++ (UIImage*)invertImage:(UIImage*)image;
+
 @end

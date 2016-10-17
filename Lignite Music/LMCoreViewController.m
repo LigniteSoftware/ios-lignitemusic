@@ -34,6 +34,8 @@
 
 @property NSLayoutConstraint *topConstraint;
 
+@property id currentSource;
+
 @end
 
 @implementation LMCoreViewController
@@ -127,12 +129,19 @@
 		}
 	}
 	NSLog(@"The index is %d", indexOfSource);
+	
+	[self.currentSource setHidden:YES];
+	
 	switch(indexOfSource){
 		case 0:
-			
+			self.albumView.hidden = NO;
+			[self.albumView reloadSourceSelectorInfo];
+			self.currentSource = self.albumView;
 			break;
 		case 1:
-			
+			self.titleView.hidden = NO;
+			[self.titleView reloadSourceSelectorInfo];
+			self.currentSource = self.titleView;
 			break;
 		case 2:
 			
@@ -149,15 +158,52 @@
     // Do any additional setup after loading the view.
 	self.musicPlayer = [(LMAppDelegate*)[[UIApplication sharedApplication] delegate] musicPlayer];
 	[self.musicPlayer addMusicDelegate:self];
+	
+	NSArray *sourceTitles = @[
+							  @"Albums", @"Titles", @"Settings"
+							  ];
+	NSArray *sourceSubtitles = @[
+								 @"", @"", @""
+								 ];
+	LMIcon sourceIcons[] = {
+		LMIconAlbums, LMIconTitles, LMIconSettings
+	};
+	
+	NSMutableArray *sources = [NSMutableArray new];
+	
+	for(int i = 0; i < sourceTitles.count; i++){
+		NSString *subtitle = [sourceSubtitles objectAtIndex:i];
+		LMSource *source = [LMSource sourceWithTitle:NSLocalizedString([sourceTitles objectAtIndex:i], nil)
+										 andSubtitle:[subtitle isEqualToString:@""]  ? nil : NSLocalizedString(subtitle, nil)
+											 andIcon:sourceIcons[i]];
+		source.delegate = self;
+		[sources addObject:source];
+	}
+	
+	self.sourcesForSourceSelector = [NSArray arrayWithArray:sources];
+	
+	self.sourceSelector = [LMSourceSelectorView newAutoLayoutView];
+	self.sourceSelector.backgroundColor = [UIColor redColor];
+	self.sourceSelector.sources = self.sourcesForSourceSelector;
+	[self.view addSubview:self.sourceSelector];
+	
+	[self.sourceSelector autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.view];
+	[self.sourceSelector autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.view];
+	self.sourceSelector.bottomConstraint = [self.sourceSelector autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.view withOffset:-WINDOW_FRAME.size.height*(0.9)];
+	[self.sourceSelector autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
+	
+	[self.sourceSelector setup];
+	
+	self.musicPlayer.sourceSelector = self.sourceSelector;
 
-//	self.albumView = [[LMAlbumView alloc]initForAutoLayout];
-//	self.albumView.musicPlayer = self.musicPlayer;
-//	self.albumView.rootViewController = self;
-//	[self.view addSubview:self.albumView];
-//	
-//	[self.albumView autoCenterInSuperview];
-//	[self.albumView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
-//	[self.albumView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
+	self.albumView = [[LMAlbumView alloc]initForAutoLayout];
+	self.albumView.musicPlayer = self.musicPlayer;
+	self.albumView.rootViewController = self;
+	[self.view addSubview:self.albumView];
+	
+	[self.albumView autoCenterInSuperview];
+	[self.albumView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
+	[self.albumView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
 	
 	self.titleView = [LMTitleView newAutoLayoutView];
 	self.titleView.backgroundColor = [UIColor redColor];
@@ -185,6 +231,7 @@
 	[self.titleView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
 	
 	[self.titleView setup];
+	self.titleView.hidden = YES;
 	
 	self.browsingAssistant = [[LMBrowsingAssistantView alloc]initForAutoLayout];
 	self.browsingAssistant.musicPlayer = self.musicPlayer;
@@ -232,40 +279,7 @@
 	[anotherEasterEgg autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:easterEgg];
 	[anotherEasterEgg autoSetDimension:ALDimensionHeight toSize:70];
 	
-	NSArray *sourceTitles = @[
-		@"Albums", @"Titles", @"Settings"
-	];
-	NSArray *sourceSubtitles = @[
-		@"", @"", @"Currently disabled"
-	];
-	LMIcon sourceIcons[] = {
-		LMIconAlbums, LMIconTitles, LMIconSettings
-	};
-	
-	NSMutableArray *sources = [NSMutableArray new];
-	
-	for(int i = 0; i < sourceTitles.count; i++){
-		NSString *subtitle = [sourceSubtitles objectAtIndex:i];
-		LMSource *source = [LMSource sourceWithTitle:NSLocalizedString([sourceTitles objectAtIndex:i], nil)
-										 andSubtitle:[subtitle isEqualToString:@""]  ? nil : NSLocalizedString(subtitle, nil)
-											 andIcon:sourceIcons[i]];
-		source.delegate = self;
-		[sources addObject:source];
-	}
-	
-	self.sourcesForSourceSelector = [NSArray arrayWithArray:sources];
-	
-	self.sourceSelector = [LMSourceSelectorView newAutoLayoutView];
-	self.sourceSelector.backgroundColor = [UIColor redColor];
-	self.sourceSelector.sources = self.sourcesForSourceSelector;
-	[self.view addSubview:self.sourceSelector];
-	
-	[self.sourceSelector autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.view];
-	[self.sourceSelector autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.view];
-	self.sourceSelector.bottomConstraint = [self.sourceSelector autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.view withOffset:-WINDOW_FRAME.size.height*(0.9)];
-	[self.sourceSelector autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
-	
-	[self.sourceSelector setup];
+	[self.view bringSubviewToFront:self.sourceSelector];
 	
 //	[NSTimer scheduledTimerWithTimeInterval:0.75
 //									 target:self

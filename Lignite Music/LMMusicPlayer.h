@@ -11,6 +11,7 @@
 #import <Foundation/Foundation.h>
 #import "LMMusicTrack.h"
 #import "LMMusicTrackCollection.h"
+#import "LMSourceSelectorView.h"
 
 /**
  Storage key for the user set player type. Correlates to LMMusicPlayerType.
@@ -140,6 +141,11 @@ typedef enum {
 @property BOOL autoPlay;
 
 /**
+ The source selector for the music app. This is the top part which is never destroyed, and should be set on init. The music player uses this to set the source title and source subtitle.
+ */
+@property LMSourceSelectorView *sourceSelector;
+
+/**
  Prepare for release through ARC. Unhooks observers tied to state and track change notifications.
  */
 - (void)deinit;
@@ -153,6 +159,20 @@ typedef enum {
  Prepare for when the app is coming back into the foreground (being activated again).
  */
 - (void)prepareForActivation;
+
+/**
+ Set the source selector's title, which is the bottom left (bolder) text.
+ 
+ @param title The new title to set.
+ */
+- (void)setSourceTitle:(NSString*)title;
+
+/**
+ Set the source selector's subtitle, which is the bottom right (less-bold) text.
+ 
+ @param subtitle The new subtitle to set.
+ */
+- (void)setSourceSubtitle:(NSString*)subtitle;
 
 /**
  Adds an LMMusicPlayerDelegate to the list of delegates.

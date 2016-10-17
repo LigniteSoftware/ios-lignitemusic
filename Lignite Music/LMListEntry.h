@@ -31,9 +31,14 @@
 - (id)initWithDelegate:(id)delegate;
 
 /**
- The multiplier of how much to inset the icon within its background view. For example, 0.5 would inset the icon half way into the background view, centered.
+ The multiplier of how much to inset the icon within its background view. For example, 0.5 would inset the icon half way into the background view, centered. Default after setup: 0.8
  */
 @property float iconInsetMultiplier;
+
+/**
+ The multiplier which affects how much padding width-wise is allocated to the container of the icon. 1.0 is full width, meaning width equal to height, 0.0 is no width. Default after setup: 1.0
+ */
+@property float iconPaddingMultiplier;
 
 /**
  The index of this LMListEntry in the collection its associated with.
@@ -44,5 +49,10 @@
  Optional. Associated data with this LMListEntry.
  */
 @property id associatedData;
+
+/**
+ Whether or not the list entry should invert its associated icon when it is highlighted. Default: NO
+ */
+@property BOOL invertIconOnHighlight;
 
 @end

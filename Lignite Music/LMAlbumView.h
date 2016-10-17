@@ -17,5 +17,6 @@
 @property LMCoreViewController *rootViewController;
 
 - (void)dismissViewOnTop;
+- (void)reloadSourceSelectorInfo;
 
 @end

@@ -66,6 +66,7 @@
 
 @property NSInteger amountOfItemsTotal;
 @property id subviewDelegate;
+@property UIColor *dividerColour;
 
 - (void)prepareForUse;
 

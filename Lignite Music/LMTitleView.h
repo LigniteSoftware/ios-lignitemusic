@@ -15,5 +15,6 @@
 @property LMMusicTrackCollection *musicTitles;
 
 - (void)setup;
+- (void)reloadSourceSelectorInfo;
 
 @end
