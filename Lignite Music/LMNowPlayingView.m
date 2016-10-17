@@ -111,8 +111,8 @@
 	BOOL noTrackPlaying = ![self.musicPlayer hasTrackLoaded];
 	
 	NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
-		//UIImage *image = [track albumArt];
-		UIImage *albumImage = noTrackPlaying ? [UIImage imageNamed:@"lignite_background_portrait.png"] : [newTrack albumArt];
+		UIImage *albumArt = [newTrack albumArt];
+		UIImage *albumImage = (noTrackPlaying || !albumArt) ? [UIImage imageNamed:@"lignite_background_portrait.png"] : albumArt;
 		
 		UIColor *averageColour = [albumImage averageColour];
 		BOOL isLight = [averageColour isLight];

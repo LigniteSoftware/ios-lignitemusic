@@ -10,7 +10,6 @@
 #import <MediaPlayer/MediaPlayer.h>
 #import "LMAlbumViewItem.h"
 #import "LMLabel.h"
-#import "LMAlbumCountLabel.h"
 #import "LMOperationQueue.h"
 #import "LMShadowView.h"
 #import "LMAppIcon.h"
@@ -20,7 +19,7 @@
 @property UIImageView *albumImageView;
 @property UIView *contentView, *textBackgroundView;
 @property LMShadowView *shadingBackgroundView;
-@property UILabel *albumTitleView, *albumArtistView, *albumCountView;
+@property UILabel *albumTitleView, *albumArtistView;
 @property CAShapeLayer *circleLayer;
 @property id trackDelegate;
 @property LMOperationQueue *queue;
@@ -64,8 +63,8 @@
 					self.albumImageView.image = image;
 					
 					self.albumTitleView.text = track.albumTitle;
-					self.albumArtistView.text = track.artist;
-					self.albumCountView.text = [NSString stringWithFormat:@"%lu", (unsigned long)numberOfItems];
+					self.albumArtistView.text = [NSString stringWithFormat:@"%@ | %ld %@", track.artist, numberOfItems, NSLocalizedString(numberOfItems == 1 ? @"Song" : @"Songs", nil)];
+					//self.albumCountView.text = [NSString stringWithFormat:@"%lu", (unsigned long)numberOfItems];
 					
 					self.track = track;
 				});
@@ -102,8 +101,6 @@
 	//The album image view displays the album image.
 	self.albumImageView = [[UIImageView alloc]initWithImage:nil];
 	self.albumImageView.translatesAutoresizingMaskIntoConstraints = NO;
-	self.albumImageView.layer.cornerRadius = 10;
-	self.albumImageView.layer.masksToBounds = YES;
 	self.albumImageView.layer.opaque = NO;
 	self.albumImageView.clipsToBounds = YES;
 	self.albumImageView.backgroundColor = [UIColor blueColor];
@@ -149,6 +146,7 @@
 	
 	//The album's title.
 	self.albumTitleView = [[LMLabel alloc]init];
+//	self.albumTitleView.backgroundColor = [UIColor orangeColor];
 	self.albumTitleView.text = self.track.albumTitle;
 	self.albumTitleView.translatesAutoresizingMaskIntoConstraints = NO;
 	self.albumTitleView.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:50.0f];
@@ -166,11 +164,12 @@
 																		attribute:NSLayoutAttributeCenterY
 																	   multiplier:1.0
 																		 constant:0]];
-	[self.albumTitleView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.textBackgroundView withMultiplier:0.4];
+	[self.albumTitleView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.textBackgroundView withMultiplier:0.45];
 	[self.albumTitleView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.albumImageView];
 	
 	//The artist.
 	self.albumArtistView = [[LMLabel alloc]init];
+//	self.albumArtistView.backgroundColor = [UIColor redColor];
 	self.albumArtistView.text = self.track.artist;
 	self.albumArtistView.translatesAutoresizingMaskIntoConstraints = NO;
 	self.albumArtistView.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:40.0f];
@@ -181,34 +180,8 @@
 	
 	[self.albumArtistView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.albumTitleView];
 	[self.albumArtistView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.albumTitleView];
-	[self.albumArtistView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.textBackgroundView withMultiplier:0.25];
+	[self.albumArtistView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.textBackgroundView withMultiplier:0.30];
 	[self.albumArtistView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.albumTitleView];
-	
-	//The amount of songs in this album.
-	self.albumCountView = [LMAlbumCountLabel new];
-	self.albumCountView.translatesAutoresizingMaskIntoConstraints = NO;
-	self.albumCountView.text = [NSString stringWithFormat:@"%lu", (unsigned long)numberOfItems];
-	self.albumCountView.textColor = [UIColor whiteColor];
-	self.albumCountView.textAlignment = NSTextAlignmentCenter;
-	[self.contentView addSubview:self.albumCountView];
-	
-	[self.albumCountView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.textBackgroundView withMultiplier:0.5];
-	[self.albumCountView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.textBackgroundView withMultiplier:0.5];
-	//[self.albumCountView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.textBackgroundView];
-	[self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.albumCountView
-																 attribute:NSLayoutAttributeCenterX
-																 relatedBy:NSLayoutRelationEqual
-																	toItem:self.albumImageView
-																 attribute:NSLayoutAttributeTrailing
-																multiplier:1.0
-																  constant:0]];
-	[self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.albumCountView
-													 attribute:NSLayoutAttributeCenterY
-													 relatedBy:NSLayoutRelationEqual
-														toItem:self.textBackgroundView
-													 attribute:NSLayoutAttributeTop
-													multiplier:1.0
-													  constant:0]];
 	
 	UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tappedOnView)];
 	[self.contentView addGestureRecognizer:tapGestureRecognizer];

@@ -27,7 +27,11 @@
 
 @implementation LMBrowsingAssistantView
 
-- (void)open {
+- (BOOL)open {
+	if(self.textBackgroundConstraint.constant == 0){
+		return NO;
+	}
+	
 	[[self superview] layoutIfNeeded];
 	self.textBackgroundConstraint.constant = 0;
 	self.currentPoint = CGPointMake(self.originalPoint.x, self.originalPoint.y);
@@ -36,17 +40,26 @@
 						options:0 animations:^{
 							[[self superview] layoutIfNeeded];
 						} completion:nil];
+	
+	return YES;
 }
 
-- (void)close {
+- (BOOL)close {
+	int squadGoals = self.currentElementBackgroundView.frame.size.height-10;
+	if(self.textBackgroundConstraint.constant == squadGoals){
+		return NO;
+	}
+	
 	[[self superview] layoutIfNeeded];
-	self.textBackgroundConstraint.constant = self.currentElementBackgroundView.frame.size.height-10;
+	self.textBackgroundConstraint.constant = squadGoals;
 	self.currentPoint = CGPointMake(self.originalPoint.x, self.originalPoint.y + self.textBackgroundConstraint.constant);
 	[UIView animateWithDuration:0.5 delay:0
 		 usingSpringWithDamping:0.6 initialSpringVelocity:0.0f
 						options:0 animations:^{
 							[[self superview] layoutIfNeeded];
 						} completion:nil];
+	
+	return YES;
 }
 
 - (void)handlePan:(UIPanGestureRecognizer *)recognizer {

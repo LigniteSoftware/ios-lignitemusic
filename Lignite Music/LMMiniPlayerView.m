@@ -63,7 +63,11 @@
 	BOOL noTrackPlaying = ![self.musicPlayer hasTrackLoaded];
 	
 	NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
-		UIImage *albumImage = noTrackPlaying ? [UIImage imageNamed:@"lignite_background_portrait.png"] : [newTrack albumArt];
+		UIImage *titlesIcon = [LMAppIcon imageForIcon:LMIconTitles];
+		UIImage *albumImage = noTrackPlaying ? titlesIcon : [newTrack albumArt];
+		if(!albumImage){
+			albumImage = titlesIcon;
+		}
 		
 		dispatch_sync(dispatch_get_main_queue(), ^{
 			if(operation.cancelled){

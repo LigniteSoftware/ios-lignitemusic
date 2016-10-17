@@ -20,12 +20,16 @@
 
 /**
  Close the browsing assistant.
+ 
+ @return If it was automatically closed. NO if it was already closed.
  */
-- (void)close;
+- (BOOL)close;
 
 /**
  Open the browsing assistant.
+ 
+ @return If it was automatically opened. NO if it was already open.
  */
-- (void)open;
+- (BOOL)open;
 
 @end

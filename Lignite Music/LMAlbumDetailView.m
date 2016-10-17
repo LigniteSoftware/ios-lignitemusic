@@ -146,6 +146,9 @@
 				break;
 		}
 	}
+	else{ //Not playing.
+		[self.playButton setImage:[LMAppIcon imageForIcon:LMIconPlay]];
+	}
 }
 
 - (void)tappedListEntry:(LMListEntry*)entry {

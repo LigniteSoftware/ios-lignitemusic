@@ -11,6 +11,7 @@
 #import "LMAlbumArtView.h"
 #import "LMProgressCircleView.h"
 #import "LMColour.h"
+#import "LMAppIcon.h"
 
 @interface LMAlbumArtView()
 
@@ -91,6 +92,9 @@
 	if(track != self.currentTrack && self.albumArtImageView.frame.size.width != 0){
 		self.albumArtImageView.image = nil;
 		self.albumArtImageView.image = [track albumArt];
+//		if(!self.albumArtImageView.image){
+//			self.albumArtImageView.image = [LMAppIcon imageForIcon:LMIconTitles];
+//		}
 		
 		self.albumArtImageView.backgroundColor = [UIColor clearColor];
 		self.albumArtImageView.layer.cornerRadius = MIN(self.albumArtImageView.frame.size.width, self.albumArtImageView.frame.size.height)/2;

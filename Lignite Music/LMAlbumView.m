@@ -50,6 +50,8 @@
 						} completion:nil];
 	
 	self.showingDetailView = NO;
+	
+	[self.rootViewController openBrowsingAssistant];
 }
 
 - (LMAlbumViewItem*)albumViewItemForAlbumIndex:(NSInteger)index {
@@ -135,6 +137,7 @@
 						} completion:nil];
 	
 	self.showingDetailView = YES;
+	
 	[self.rootViewController closeBrowsingAssistant];
 }
 

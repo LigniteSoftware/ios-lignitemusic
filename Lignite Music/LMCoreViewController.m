@@ -117,12 +117,17 @@
 						}];
 }
 
+BOOL didAutomaticallyClose = NO;
+
 - (void)openBrowsingAssistant {
-	[self.browsingAssistant open];
+	if(didAutomaticallyClose){
+		[self.browsingAssistant open];
+		didAutomaticallyClose = NO;
+	}
 }
 
 - (void)closeBrowsingAssistant {
-	[self.browsingAssistant close];
+	didAutomaticallyClose = [self.browsingAssistant close];
 }
 
 - (void)sourceSelected:(LMSource *)source {
