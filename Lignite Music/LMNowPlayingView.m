@@ -21,7 +21,8 @@
 @interface LMNowPlayingView() <LMMusicPlayerDelegate, LMButtonDelegate, LMTrackDurationDelegate>
 
 @property UIImageView *backgroundImageView;
-@property UIView *shadingView;
+//@property UIView *shadingView;
+@property UIVisualEffectView *blurredBackgroundView;
 
 @property UIView *albumArtRootView;
 @property LMAlbumArtView *albumArtImageView;
@@ -117,19 +118,19 @@
 		
 		UIColor *averageColour = [albumImage averageColour];
 		BOOL isLight = [averageColour isLight];
-		self.shadingView.backgroundColor = isLight ? [UIColor colorWithRed:1 green:1 blue:1 alpha:0.25] : [UIColor colorWithRed:0 green:0 blue:0 alpha:0.25];
-		UIColor *newTextColour = isLight ? [UIColor blackColor] : [UIColor whiteColor];
-		
-		CIFilter *gaussianBlurFilter = [CIFilter filterWithName:@"CIGaussianBlur"];
-		[gaussianBlurFilter setDefaults];
-		CIImage *inputImage = [CIImage imageWithCGImage:[albumImage CGImage]];
-		[gaussianBlurFilter setValue:inputImage forKey:kCIInputImageKey];
-		[gaussianBlurFilter setValue:@5 forKey:kCIInputRadiusKey];
-		
-		CIImage *outputImage = [gaussianBlurFilter outputImage];
-		CIContext *context   = [CIContext contextWithOptions:nil];
-		CGImageRef cgimg     = [context createCGImage:outputImage fromRect:[inputImage extent]];
-		UIImage *image       = [UIImage imageWithCGImage:cgimg];
+		//self.shadingView.backgroundColor = isLight ? [UIColor colorWithRed:1 green:1 blue:1 alpha:0.25] : [UIColor colorWithRed:0 green:0 blue:0 alpha:0.25];
+		UIColor *newTextColour = [UIColor blackColor];
+//
+//		CIFilter *gaussianBlurFilter = [CIFilter filterWithName:@"CIGaussianBlur"];
+//		[gaussianBlurFilter setDefaults];
+//		CIImage *inputImage = [CIImage imageWithCGImage:[albumImage CGImage]];
+//		[gaussianBlurFilter setValue:inputImage forKey:kCIInputImageKey];
+//		[gaussianBlurFilter setValue:@5 forKey:kCIInputRadiusKey];
+//		
+//		CIImage *outputImage = [gaussianBlurFilter outputImage];
+//		CIContext *context   = [CIContext contextWithOptions:nil];
+//		CGImageRef cgimg     = [context createCGImage:outputImage fromRect:[inputImage extent]];
+//		UIImage *image       = [UIImage imageWithCGImage:cgimg];
 		
 		dispatch_sync(dispatch_get_main_queue(), ^{
 			if(operation.cancelled){
@@ -137,7 +138,7 @@
 				return;
 			}
 			
-			self.backgroundImageView.image = image;
+			self.backgroundImageView.image = albumImage;
 			self.backgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
 			
 			self.albumArtImageView.albumArtImageView.image = nil;
@@ -201,6 +202,21 @@
 	
 }
 
+- (void)fuckMe {
+	LMIcon icons[] = {
+		LMIconRepeat, LMIconRepeat, LMIconRepeat, LMIconRepeatOne
+	};
+	if(self.musicPlayer.repeatMode < LMMusicRepeatModeOne){
+		self.musicPlayer.repeatMode++;
+	}
+	else if(self.musicPlayer.repeatMode == LMMusicRepeatModeOne){
+		self.musicPlayer.repeatMode = LMMusicRepeatModeNone;
+	}
+	NSLog(@"Repeat mode %d", self.musicPlayer.repeatMode);
+	UIImage *icon = [LMAppIcon imageForIcon:icons[self.musicPlayer.repeatMode]];
+	[self.repeatModeButton setImage:icon];
+}
+
 - (void)clickedButton:(LMButton *)button {
 	NSLog(@"Hey button %@", button);
 	if(button == self.shuffleModeButton){
@@ -211,7 +227,7 @@
 		}];
 	}
 	else if(button == self.repeatModeButton){
-		self.musicPlayer.repeatMode = (self.musicPlayer.repeatMode == LMMusicRepeatModeNone) ? LMMusicRepeatModeAll : LMMusicRepeatModeNone;
+		[self fuckMe];
 		
 		[UIView animateWithDuration:0.25 animations:^{
 			[button setColour:(self.musicPlayer.repeatMode != LMMusicRepeatModeNone) ? [UIColor whiteColor] : [LMColour fadedColour]];
@@ -269,14 +285,25 @@
 	[self.backgroundImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:1.1];
 	[self.backgroundImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:1.1];
 	
-	self.shadingView = [UIView newAutoLayoutView];
-	self.shadingView.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.25];
-	[self.backgroundImageView addSubview:self.shadingView];
+//	self.shadingView = [UIView newAutoLayoutView];
+//	self.shadingView.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.25];
+//	[self.backgroundImageView addSubview:self.shadingView];
+//	
+//	[self.shadingView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.backgroundImageView];
+//	[self.shadingView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.backgroundImageView];
+//	[self.shadingView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+//	[self.shadingView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 	
-	[self.shadingView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.backgroundImageView];
-	[self.shadingView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.backgroundImageView];
-	[self.shadingView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-	[self.shadingView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+	UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
+	self.blurredBackgroundView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+	self.blurredBackgroundView.translatesAutoresizingMaskIntoConstraints = NO;
+	
+	[self addSubview:self.blurredBackgroundView];
+	
+	[self.blurredBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.backgroundImageView];
+	[self.blurredBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.backgroundImageView];
+	[self.blurredBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+	[self.blurredBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 	
 	self.albumArtRootView = [UIView newAutoLayoutView];
 	self.albumArtRootView.backgroundColor = [UIColor clearColor];

@@ -211,7 +211,12 @@
 - (void)audioPlayerDidFinishPlaying:(AVAudioPlayer*)player successfully:(BOOL)flag {
 	NSLog(@"Finished");
 	self.didJustFinishTrack = YES;
-	[self skipToNextTrack];
+	if(self.repeatMode == LMMusicRepeatModeOne){
+		[self skipToBeginning];
+	}
+	else{
+		[self skipToNextTrack];
+	}
 }
 
 - (MPRemoteCommandHandlerStatus)handlePlaybackPositionChange:(MPChangePlaybackPositionCommandEvent*)positionEvent {

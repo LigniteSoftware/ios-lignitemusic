@@ -55,8 +55,8 @@ typedef enum {
 typedef enum {
 	LMMusicRepeatModeDefault = 0, //The user's default setting. Bullshit value, never use this.
 	LMMusicRepeatModeNone, //Do not repeat.
-	LMMusicRepeatModeOne, //Repeat this one track.
-	LMMusicRepeatModeAll //Repeat all of the tracks in the current queue.
+	LMMusicRepeatModeAll, //Repeat all of the tracks in the current queue.
+	LMMusicRepeatModeOne //Repeat this one track.
 } LMMusicRepeatMode;
 
 /**
