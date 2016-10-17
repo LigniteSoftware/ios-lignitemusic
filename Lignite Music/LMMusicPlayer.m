@@ -71,8 +71,6 @@
 - (instancetype)init {
 	self = [super init];
 	if(self){
-		NSLog(@"\nDick?\n");
-		
 		self.systemMusicPlayer = [MPMusicPlayerController systemMusicPlayer];
 		[self.systemMusicPlayer beginGeneratingPlaybackNotifications];
 		
@@ -166,7 +164,6 @@
 		if(self.audioPlayer.isPlaying){
 			[self.audioPlayer stop];
 			[self.systemMusicPlayer play];
-			NSLog(@"Switching to system music player for track %@.", self.systemMusicPlayer.nowPlayingItem.title);
 		}
 	}
 	
@@ -306,7 +303,7 @@
 		[delegate musicTrackDidChange:self.nowPlayingTrack];
 	}
 	
-	if(self.didJustFinishTrack && self.indexOfNowPlayingTrack != 0){
+	if(self.didJustFinishTrack && (self.indexOfNowPlayingTrack != 0 || self.repeatMode != LMMusicRepeatModeNone)){
 		self.autoPlay = YES;
 		self.didJustFinishTrack = NO;
 	}
@@ -478,6 +475,9 @@ BOOL shuffleForDebug = NO;
 	NSLog(@"Skip to next");
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer){
 		[self.systemMusicPlayer skipToNextItem];
+		if(self.repeatMode != LMMusicRepeatModeNone){
+			[self systemMusicPlayerTrackChanged:self];
+		}
 	}
 }
 

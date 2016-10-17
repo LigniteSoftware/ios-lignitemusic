@@ -207,6 +207,13 @@
 			[button setColour:self.musicPlayer.shuffleMode ? [UIColor whiteColor] : [LMColour fadedColour]];
 		}];
 	}
+	else if(button == self.repeatModeButton){
+		self.musicPlayer.repeatMode = (self.musicPlayer.repeatMode == LMMusicRepeatModeNone) ? LMMusicRepeatModeAll : LMMusicRepeatModeNone;
+		
+		[UIView animateWithDuration:0.25 animations:^{
+			[button setColour:(self.musicPlayer.repeatMode != LMMusicRepeatModeNone) ? [UIColor whiteColor] : [LMColour fadedColour]];
+		}];
+	}
 }
 
 - (void)reloadButtonTitles {
@@ -394,6 +401,7 @@
 	}
 	
 	[self.shuffleModeButton setColour:self.musicPlayer.shuffleMode ? [UIColor whiteColor] : [LMColour fadedColour]];
+	[self.repeatModeButton setColour:(self.musicPlayer.repeatMode != LMMusicRepeatModeNone) ? [UIColor whiteColor] : [LMColour fadedColour]];
 	
 	[self.musicPlayer addMusicDelegate:self];
 	
