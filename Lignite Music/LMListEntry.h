@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LMOperationQueue.h"
 
 @class LMListEntry;
 
@@ -54,5 +55,15 @@
  Whether or not the list entry should invert its associated icon when it is highlighted. Default: NO
  */
 @property BOOL invertIconOnHighlight;
+
+/**
+ The operation queue for this entry.
+ */
+@property LMOperationQueue *queue;
+
+/**
+ Set to YES if you know you will give the entry an icon. Otherwise, it will setup an imageview which will be very lonely.
+ */
+@property BOOL iPromiseIWillHaveAnIconForYouSoon;
 
 @end

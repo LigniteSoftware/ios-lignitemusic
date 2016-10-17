@@ -48,6 +48,8 @@
 						options:0 animations:^{
 							[self layoutIfNeeded];
 						} completion:nil];
+	
+	self.showingDetailView = NO;
 }
 
 - (LMAlbumViewItem*)albumViewItemForAlbumIndex:(NSInteger)index {
@@ -131,6 +133,9 @@
 						options:0 animations:^{
 							[self layoutIfNeeded];
 						} completion:nil];
+	
+	self.showingDetailView = YES;
+	[self.rootViewController closeBrowsingAssistant];
 }
 
 - (void)openNowPlayingView {

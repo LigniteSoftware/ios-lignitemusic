@@ -290,7 +290,7 @@
 	self.chooseYourViewLabel.textAlignment = NSTextAlignmentCenter;
 	self.chooseYourViewLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:20.0f];
 	self.chooseYourViewLabel.textColor = [UIColor blackColor];
-	self.chooseYourViewLabel.text = @"Please choose your view";
+	self.chooseYourViewLabel.text = NSLocalizedString(@"ChooseYourView", nil);
 	[self.contentBackgroundView addSubview:self.chooseYourViewLabel];
 	
 	[self.chooseYourViewLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading];

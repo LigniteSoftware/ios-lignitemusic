@@ -18,4 +18,14 @@
 
 - (void)setup;
 
+/**
+ Close the browsing assistant.
+ */
+- (void)close;
+
+/**
+ Open the browsing assistant.
+ */
+- (void)open;
+
 @end

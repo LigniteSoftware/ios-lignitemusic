@@ -11,13 +11,17 @@
 #import "LMTableView.h"
 #import "LMListEntry.h"
 #import "LMColour.h"
+#import "LMOperationQueue.h"
 
 @interface LMTitleView() <LMListEntryDelegate, LMTableViewSubviewDelegate, LMMusicPlayerDelegate>
 
 @property LMTableView *songListTableView;
 @property NSMutableArray *itemArray;
+@property NSMutableArray *itemIconArray;
 
 @property NSInteger currentlyHighlighted;
+
+@property LMOperationQueue *queue;
 
 @end
 
@@ -66,10 +70,45 @@
 
 }
 
-- (id)prepareSubviewAtIndex:(NSUInteger)index {
+- (id)prepareSubviewAtIndex:(NSUInteger)index {	
 	LMListEntry *entry = [self.itemArray objectAtIndex:index % self.itemArray.count];
 	entry.collectionIndex = index;
 	entry.associatedData = [self.musicTitles.items objectAtIndex:index];
+	
+	if(!entry.queue){
+		entry.queue = [[LMOperationQueue alloc] init];
+	}
+	
+	[entry.queue cancelAllOperations];
+	
+	NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
+		LMMusicTrack *track = [self.musicTitles.items objectAtIndex:entry.collectionIndex];
+		UIImage *albumArt = [track albumArt];
+		
+		NSInteger indexToInsert = (index % self.itemArray.count);
+		
+		[self.itemIconArray removeObjectAtIndex:indexToInsert];
+		[self.itemIconArray insertObject:albumArt ? albumArt : [LMAppIcon imageForIcon:LMIconAlbums] atIndex:indexToInsert];
+		
+		entry.invertIconOnHighlight = albumArt == nil;
+		
+		//[self.itemIconArray object]
+//		NSLog(@"%@ %ld %ld", albumArt, self.itemIconArray.count, indexToInsert);
+		
+		dispatch_sync(dispatch_get_main_queue(), ^{
+			if(operation.cancelled){
+				NSLog(@"Rejecting.");
+				return;
+			}
+			
+			[entry reloadContents];
+			
+			//	LMMusicTrack *track = [self.musicTitles.items objectAtIndex:entry.collectionIndex];
+			//	return [track albumArt];
+		});
+	}];
+	
+	[entry.queue addOperation:operation];
 	
 	[entry changeHighlightStatus:self.currentlyHighlighted == entry.collectionIndex animated:NO];
 	
@@ -80,11 +119,16 @@
 - (void)totalAmountOfSubviewsRequired:(NSUInteger)amount forTableView:(LMTableView *)tableView {
 	if(!self.itemArray){
 		self.itemArray = [NSMutableArray new];
+		self.itemIconArray = [NSMutableArray new];
 		for(int i = 0; i < amount; i++){
 			LMListEntry *listEntry = [[LMListEntry alloc]initWithDelegate:self];
 			listEntry.collectionIndex = i;
+			listEntry.iPromiseIWillHaveAnIconForYouSoon = YES;
 			[listEntry setup];
 			[self.itemArray addObject:listEntry];
+			
+			//Quick hack to make sure that the items in the array are non nil
+			[self.itemIconArray addObject:@""];
 		}
 	}
 }
@@ -173,8 +217,16 @@
 }
 
 - (UIImage*)iconForListEntry:(LMListEntry*)entry {
-	LMMusicTrack *track = [self.musicTitles.items objectAtIndex:entry.collectionIndex];
-	return [track albumArt];
+	NSInteger actualIndex = entry.collectionIndex % self.itemArray.count;
+	
+	if(self.itemIconArray.count < 9){
+		return nil;
+	}
+	if([[self.itemIconArray objectAtIndex:actualIndex] isEqual:@""]){
+		return nil;
+	}
+	UIImage *image = [self.itemIconArray objectAtIndex:actualIndex];
+	return image;
 }
 
 - (void)setup {

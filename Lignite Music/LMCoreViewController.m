@@ -117,6 +117,14 @@
 						}];
 }
 
+- (void)openBrowsingAssistant {
+	[self.browsingAssistant open];
+}
+
+- (void)closeBrowsingAssistant {
+	[self.browsingAssistant close];
+}
+
 - (void)sourceSelected:(LMSource *)source {
 	NSLog(@"Selected source with title %@", source.title);
 	
@@ -137,6 +145,9 @@
 			self.albumView.hidden = NO;
 			[self.albumView reloadSourceSelectorInfo];
 			self.currentSource = self.albumView;
+			if(self.albumView.showingDetailView){
+				[self.browsingAssistant close];
+			}
 			break;
 		case 1:
 			self.titleView.hidden = NO;

@@ -16,6 +16,8 @@
 
 @property LMCoreViewController *rootViewController;
 
+@property BOOL showingDetailView;
+
 - (void)dismissViewOnTop;
 - (void)reloadSourceSelectorInfo;
 

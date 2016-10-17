@@ -12,5 +12,7 @@
 
 - (void)openNowPlayingView;
 - (void)closeNowPlayingView;
+- (void)openBrowsingAssistant;
+- (void)closeBrowsingAssistant;
 
 @end

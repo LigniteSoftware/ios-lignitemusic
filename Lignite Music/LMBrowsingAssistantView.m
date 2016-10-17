@@ -27,7 +27,7 @@
 
 @implementation LMBrowsingAssistantView
 
-- (void)moveContentsUp {
+- (void)open {
 	[[self superview] layoutIfNeeded];
 	self.textBackgroundConstraint.constant = 0;
 	self.currentPoint = CGPointMake(self.originalPoint.x, self.originalPoint.y);
@@ -38,7 +38,7 @@
 						} completion:nil];
 }
 
-- (void)moveContentsDown {
+- (void)close {
 	[[self superview] layoutIfNeeded];
 	self.textBackgroundConstraint.constant = self.currentElementBackgroundView.frame.size.height-10;
 	self.currentPoint = CGPointMake(self.originalPoint.x, self.originalPoint.y + self.textBackgroundConstraint.constant);
@@ -76,10 +76,10 @@
 //		NSLog(@"Dick is not a bone %@", NSStringFromCGPoint(self.currentPoint));
 		
 		if((translation.y >= 0)){
-			[self moveContentsDown];
+			[self close];
 		}
 		else if((translation.y < 0)){
-			[self moveContentsUp];
+			[self open];
 		}
 	}
 }

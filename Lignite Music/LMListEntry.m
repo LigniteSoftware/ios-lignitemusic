@@ -44,7 +44,6 @@
 	
 	self.highlighted = highlighted;
 	
-
 	[UIView animateWithDuration:animated ? 0.2 : 0.0 animations:^{
 		self.contentView.backgroundColor = highlighted ? [self.delegate tapColourForListEntry:self] : [UIColor clearColor];
 		self.titleLabel.textColor = highlighted ? [UIColor whiteColor] : [UIColor blackColor];
@@ -88,7 +87,9 @@
 	NSString *title = [self.delegate titleForListEntry:self];
 	NSString *subtitle = [self.delegate subtitleForListEntry:self];
 	
-	if(icon){
+	BOOL willHaveAnIcon = (icon != nil) || self.iPromiseIWillHaveAnIconForYouSoon;
+	
+	if(willHaveAnIcon){
 		self.iconBackgroundView = [UIView newAutoLayoutView];
 		self.iconBackgroundView.backgroundColor = [UIColor clearColor];
 		[self.contentView addSubview:self.iconBackgroundView];
@@ -119,7 +120,7 @@
 		[self.contentView addSubview:self.titleLabel];
 		
 		NSLayoutConstraint *heightConstraint = [self.titleLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.contentView withMultiplier:(1.0f/3.0f)];
-		NSLayoutConstraint *leadingConstraint = [self.titleLabel autoPinEdge:ALEdgeLeading toEdge:icon ? ALEdgeTrailing : ALEdgeLeading ofView:icon ? self.iconBackgroundView : self.contentView withOffset:icon ? 0 : 10];
+		NSLayoutConstraint *leadingConstraint = [self.titleLabel autoPinEdge:ALEdgeLeading toEdge:willHaveAnIcon ? ALEdgeTrailing : ALEdgeLeading ofView:willHaveAnIcon ? self.iconBackgroundView : self.contentView withOffset:willHaveAnIcon ? 0 : 10];
 		NSLayoutConstraint *trailingConstraint = [self.titleLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.contentView withOffset:-10.0];
 		NSLayoutConstraint *centerConstraint = [self.titleLabel autoAlignAxis:ALAxisHorizontal toSameAxisOfView:self.contentView];
 		

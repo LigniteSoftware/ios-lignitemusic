@@ -279,7 +279,9 @@
 	[newInfo setObject:self.nowPlayingTrack.albumTitle forKey:MPMediaItemPropertyAlbumTitle];
 	[newInfo setObject:@(self.nowPlayingTrack.playbackDuration) forKey:MPMediaItemPropertyPlaybackDuration];
 	[newInfo setObject:@(self.audioPlayer.currentTime) forKey:MPNowPlayingInfoPropertyElapsedPlaybackTime];
-	[newInfo setObject:[self.nowPlayingTrack.sourceTrack artwork] forKey:MPMediaItemPropertyArtwork];
+	if([self.nowPlayingTrack.sourceTrack artwork]){
+		[newInfo setObject:[self.nowPlayingTrack.sourceTrack artwork] forKey:MPMediaItemPropertyArtwork];
+	}
 	[newInfo setObject:@(isPlaying) forKey:MPNowPlayingInfoPropertyPlaybackRate];
 	
 //	NSLog(@"Allahu %d: %@", self.audioPlayer.isPlaying, newInfo);
