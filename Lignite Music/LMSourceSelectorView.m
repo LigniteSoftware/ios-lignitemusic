@@ -138,6 +138,8 @@
 	NSLog(@"Tapped list entry %ld", entry.collectionIndex);
 	LMSource *source = [self.sources objectAtIndex:entry.collectionIndex];
 	
+	NSLog(@"Source image %@", source.icon);
+	
 	[self.sourceSelectorButton setImage:[LMAppIcon invertImage:source.icon]];
 	
 	[source.delegate sourceSelected:source];
@@ -396,6 +398,8 @@
 	[self.viewsTableView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.sourceSelectorButtonBackgroundView];
 	[self.viewsTableView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.contentBackgroundView];
 	[self.viewsTableView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.contentBackgroundView];
+	
+	NSLog(@"Setup!!!");
 }
 
 /*

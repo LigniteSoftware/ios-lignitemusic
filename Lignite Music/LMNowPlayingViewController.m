@@ -11,22 +11,12 @@
 #import <YYImage/YYImage.h>
 #import "LMPebbleSettingsView.h"
 #import "LMNowPlayingViewController.h"
-#import "UIImage+AverageColour.h"
-#import "UIColor+isLight.h"
 #import "LMPebbleImage.h"
 #import "LMPebbleMessageQueue.h"
 
-@interface LMNowPlayingViewController () <LMButtonDelegate, UIGestureRecognizerDelegate, PBPebbleCentralDelegate>
+@interface LMNowPlayingViewController () <UIGestureRecognizerDelegate, PBPebbleCentralDelegate>
 
-@property NSTimer *refreshTimer;
-@property UIView *shadingView;
-@property BOOL finishedUserAdjustment;
 @property BOOL loadedSubviews;
-
-@property MPMusicShuffleMode shuffleMode;
-@property MPMusicRepeatMode repeatMode;
-
-@property int firstX, firstY;
 
 @property (weak, nonatomic) PBWatch *watch;
 @property (weak, nonatomic) PBPebbleCentral *central;
@@ -56,351 +46,13 @@
 
 @implementation LMNowPlayingViewController
 
-- (void)move:(id)sender {
-    UIView *viewToMove = (UIView*)self.contentContainerView;
-    int sizeOfFavouritesSpace = self.view.frame.size.height/6;
-    int halfHeight = self.view.frame.size.height/2;
-    
-    [self.view bringSubviewToFront:viewToMove];
-    CGPoint translatedPoint = [sender translationInView:viewToMove];
-    
-    if ([sender state] == UIGestureRecognizerStateBegan) {
-        self.firstX = [viewToMove center].x;
-        self.firstY = [viewToMove center].y;
-    }
-    
-    translatedPoint = CGPointMake(self.firstX, self.firstY+translatedPoint.y);
-    
-    if(translatedPoint.y > self.view.frame.size.height/2){
-        [viewToMove setCenter:translatedPoint];
-    }
-    //NSLog(@"translated %@", NSStringFromCGPoint(translatedPoint));
-    
-    if ([(UIPanGestureRecognizer*)sender state] == UIGestureRecognizerStateEnded) {
-        CGFloat velocityY = (0.1*[sender velocityInView:viewToMove].y);
-        
-        CGFloat finalX = self.firstX;
-        CGFloat finalY = translatedPoint.y + velocityY;
-        
-        NSLog(@"final %f", finalY);
-       // if (UIDeviceOrientationIsPortrait([[UIDevice currentDevice] orientation])) {
-        if (finalY >= halfHeight && finalY < (halfHeight + sizeOfFavouritesSpace/2)) {
-            finalY = halfHeight;
-        } else if (finalY >= (halfHeight + sizeOfFavouritesSpace/2) && finalY <= (halfHeight + sizeOfFavouritesSpace)) {
-            finalY = halfHeight + sizeOfFavouritesSpace;
-        }
-        else if(finalY < halfHeight){
-            return;
-        }
-        else{
-            if(finalY > halfHeight + sizeOfFavouritesSpace*3){
-                NSLog(@"FIRE!");
-                finalY = halfHeight;
-				[self dismissViewControllerAnimated:YES completion:nil];
-            }
-            else{
-                finalY = halfHeight + sizeOfFavouritesSpace;
-            }
-        }
-        NSLog(@"now final %f", finalY);
-        
-        CGFloat animationDuration = (ABS(velocityY)*.0002)+.2;
-        
-        NSLog(@"the duration is: %f", animationDuration);
-        
-        [UIView beginAnimations:nil context:NULL];
-        [UIView setAnimationDuration:animationDuration];
-        [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
-        [UIView setAnimationDelegate:self];
-        //[UIView setAnimationDidStopSelector:@selector(animationDidFinish)];
-        [viewToMove setCenter:CGPointMake(finalX, finalY)];
-        [UIView commitAnimations];
-    }
-}
-
-- (BOOL)gestureRecognizerShouldBegin:(UIPanGestureRecognizer *)panGestureRecognizer {
-    CGPoint velocity = [panGestureRecognizer velocityInView:self.view];
-    return fabs(velocity.y) > fabs(velocity.x);
-}
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
-    return YES;
-}
-
-
 - (void)nowPlayingItemChanged:(id)sender {
-    //[self.playingView updateNowPlayingItem:self.musicPlayer.nowPlayingItem];
-    
-    NSLog(@"Now playing item has changed");
-	
 	self.requestType = NowPlayingRequestTypeAllData;
     [self pushNowPlayingItemToWatch];
-    
-    if(!self.musicPlayer.nowPlayingItem){
-        [self.songTitleLabel setText:NSLocalizedString(@"NoMusic", nil)];
-        [self.songArtistLabel setText:NSLocalizedString(@"NoMusicDescription", nil)];
-        [self.songAlbumLabel setText:@""];
-		[self.songDurationLabel setText:NSLocalizedString(@"BlankDuration", nil)];
-        [self.songNumberLabel setText:NSLocalizedString(@"NoMusic", nil)];
-        
-        UIImage *albumImage;
-        albumImage = [UIImage imageNamed:@"lignite_background_portrait.png"];
-        self.backgroundImageView.contentMode = UIViewContentModeScaleAspectFit;
-        self.backgroundImageView.image = albumImage;
-        
-        [self.albumArtView updateContentWithMusicPlayer:self.musicPlayer];
-        return;
-    }
-    
-    [self.songTitleLabel setText:self.musicPlayer.nowPlayingItem.title];
-    [self.songArtistLabel setText:self.musicPlayer.nowPlayingItem.artist];
-    [self.songAlbumLabel setText:self.musicPlayer.nowPlayingItem.albumTitle];
-    
-    if(self.currentlyPlayingQueue){
-        [self.songNumberLabel setText:[NSString stringWithFormat:NSLocalizedString(@"SongXofX", nil), (int)self.musicPlayer.indexOfNowPlayingItem+1, (int)self.currentlyPlayingQueue.items.count]];
-    }
-    else{
-        [self.songNumberLabel setText:[NSString stringWithFormat:NSLocalizedString(@"SongX", nil), (int)self.musicPlayer.indexOfNowPlayingItem+1]];
-    }
-    
-    self.songDurationSlider.maximumValue = self.musicPlayer.nowPlayingItem.playbackDuration;
-    //self.songDurationSlider.value = self.musicPlayer.currentPlaybackTime;
-    [self updateSongDurationLabelWithPlaybackTime:self.musicPlayer.currentPlaybackTime];
-    [self.albumArtView updateContentWithMusicPlayer:self.musicPlayer];
-    
-    UIImage *albumImage;
-    CGSize size = self.backgroundImageView.frame.size;
-    if(![self.musicPlayer.nowPlayingItem artwork]){
-        albumImage = [UIImage imageNamed:@"lignite_background_portrait.png"];
-        self.backgroundImageView.contentMode = UIViewContentModeScaleAspectFit;
-        self.backgroundImageView.image = albumImage;
-    }
-    else{
-        self.backgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
-        albumImage = [[self.musicPlayer.nowPlayingItem artwork]imageWithSize:CGSizeMake(size.width, size.height)];
-        
-        UIColor *averageColour = [albumImage averageColour];
-        BOOL isLight = [averageColour isLight];
-        self.shadingView.backgroundColor = isLight ? [UIColor colorWithRed:1 green:1 blue:1 alpha:0.25] : [UIColor colorWithRed:0 green:0 blue:0 alpha:0.25];
-        UIColor *newTextColour = isLight ? [UIColor blackColor] : [UIColor whiteColor];
-        self.songTitleLabel.textColor = newTextColour;
-        self.songArtistLabel.textColor = newTextColour;
-        self.songAlbumLabel.textColor = newTextColour;
-        self.songDurationLabel.textColor = newTextColour;
-        self.songNumberLabel.textColor = newTextColour;
-//        self.shuffleButton.titleLabel.textColor = newTextColour;
-//        self.repeatButton.titleLabel.textColor = newTextColour;
-//        self.dynamicPlaylistButton.titleLabel.textColor = newTextColour;
-		
-        CIFilter *gaussianBlurFilter = [CIFilter filterWithName:@"CIGaussianBlur"];
-        [gaussianBlurFilter setDefaults];
-        CIImage *inputImage = [CIImage imageWithCGImage:[albumImage CGImage]];
-        [gaussianBlurFilter setValue:inputImage forKey:kCIInputImageKey];
-        [gaussianBlurFilter setValue:@5 forKey:kCIInputRadiusKey];
-        
-        CIImage *outputImage = [gaussianBlurFilter outputImage];
-        CIContext *context   = [CIContext contextWithOptions:nil];
-        CGImageRef cgimg     = [context createCGImage:outputImage fromRect:[inputImage extent]];
-        UIImage *image       = [UIImage imageWithCGImage:cgimg];
-        
-        self.backgroundImageView.image = image;
-    }
-    
-    //[self.view insertSubview:self.backgroundImageView atIndex:0];
-    //self.backgroundImageView.hidden = YES;
-    [self.view sendSubviewToBack:self.backgroundImageView];
 }
 
 - (void)nowPlayingStateChanged:(id) sender {
-    MPMusicPlaybackState playbackState = [self.musicPlayer playbackState];
-    
-    NSLog(@"Playback state is %d", (int)playbackState);
-    
-    if (playbackState == MPMusicPlaybackStatePaused || playbackState == MPMusicPlaybackStatePlaying) {
-        //[self.playingView.controlView setPlaying:nil];
-    }
-    else if (playbackState == MPMusicPlaybackStateStopped) {
-        //[self.musicPlayer stop];
-
-    }
     [self pushCurrentStateToWatch];
-}
-
-+ (NSString*)durationStringTotalPlaybackTime:(long)totalPlaybackTime {
-    long totalHours = (totalPlaybackTime / 3600);
-    int totalMinutes = (int)((totalPlaybackTime / 60) - totalHours*60);
-    int totalSeconds = (totalPlaybackTime % 60);
-    
-    if(totalHours > 0){
-        return [NSString stringWithFormat:NSLocalizedString(@"LongSongDuration", nil), (int)totalHours, totalMinutes, totalSeconds];
-    }
-    
-    return [NSString stringWithFormat:NSLocalizedString(@"ShortSongDuration", nil), totalMinutes, totalSeconds];
-}
-
-- (void)updateSongDurationLabelWithPlaybackTime:(long)currentPlaybackTime {
-    long totalPlaybackTime = [[self.musicPlayer nowPlayingItem] playbackDuration];
-    
-    long currentHours = (currentPlaybackTime / 3600);
-    long currentMinutes = ((currentPlaybackTime / 60) - currentHours*60);
-    int currentSeconds = (currentPlaybackTime % 60);
-    
-    long totalHours = (totalPlaybackTime / 3600);
-    
-    [UIView animateWithDuration:0.3 animations:^{
-        if(totalHours > 0){
-            self.songDurationLabel.text = [NSString stringWithFormat:NSLocalizedString(@"LongSongDurationOfDuration", nil),
-                                           (int)currentHours, (int)currentMinutes, currentSeconds,
-                                           [LMNowPlayingViewController durationStringTotalPlaybackTime:totalPlaybackTime]];
-        }
-        else{
-            self.songDurationLabel.text = [NSString stringWithFormat:NSLocalizedString(@"ShortSongDurationOfDuration", nil),
-                                           (int)currentMinutes, currentSeconds,
-                                           [LMNowPlayingViewController durationStringTotalPlaybackTime:totalPlaybackTime]];
-        }
-    }];
-    
-    [UIView animateWithDuration:0.3 animations:^{
-        self.songDurationSlider.maximumValue = [self.musicPlayer.nowPlayingItem playbackDuration];
-        self.songDurationSlider.value = currentPlaybackTime;
-        [self.albumArtView updateContentWithMusicPlayer:self.musicPlayer];
-    }];
-}
-
-- (void)nowPlayingTimeChanged:(NSTimer*)timer {
-    //NSLog(@"Now playing time changed... %f", self.musicPlayer.currentPlaybackTime);
-    if((self.musicPlayer.currentPlaybackTime != self.songDurationSlider.value) && self.finishedUserAdjustment){
-        self.finishedUserAdjustment = NO;
-        self.musicPlayer.currentPlaybackTime = self.songDurationSlider.value;
-        NSLog(@"Music player current playback set to %f", self.musicPlayer.currentPlaybackTime);
-        [self pushCurrentStateToWatch];
-    }
-    [self updateSongDurationLabelWithPlaybackTime:self.musicPlayer.currentPlaybackTime];
-}
-
-- (void)playPauseMusic {
-    if(self.musicPlayer.playbackState != MPMusicPlaybackStatePlaying){
-        [self.musicPlayer play];
-        if(![self.refreshTimer isValid]){
-            [self fireRefreshTimer];
-        }
-    }
-    else{
-        [self.musicPlayer pause];
-        if(self.refreshTimer){
-            [self.refreshTimer invalidate];
-        }
-    }
-    [self pushCurrentStateToWatch];
-}
-
-- (IBAction)nextSong:(id)sender {
-    [self.musicPlayer skipToNextItem];
-}
-
-- (IBAction)previousSong:(id)sender {
-    [self.musicPlayer skipToPreviousItem];
-}
-
-- (void)reloadButtonTitles {
-    NSString *shuffleArray[] = {
-        @"DefaultShuffleMode", @"OffShuffleMode", @"SongsShuffleMode", @"AlbumsShuffleMode"
-    };
-    NSString *repeatArray[] = {
-        @"DefaultRepeatMode", @"OffRepeatMode", @"ThisRepeatMode", @"AllRepeatMode"
-    };
-//    [self.shuffleButton setTitle:NSLocalizedString(shuffleArray[self.musicPlayer.shuffleMode], nil)];
-//    [self.repeatButton setTitle:NSLocalizedString(repeatArray[self.musicPlayer.repeatMode], nil)];
-}
-
-/*
- Sets the shuffle or repeat status of the music. See MPMusicShuffleMode and MPMusicRepeatMode.
- */
-- (void)clickedButton:(LMButton *)button {
-    if(button == self.shuffleButton){
-        self.shuffleMode++;
-        if(self.shuffleMode > MPMusicShuffleModeAlbums){
-            self.shuffleMode = 1;
-        }
-        [self.musicPlayer setShuffleMode:self.shuffleMode];
-    }
-    else if(button == self.dynamicPlaylistButton){
-        //LMPebbleSettingsView *settingsView = [[LMPebbleSettingsView alloc]initWithStyle:UITableViewStyleGrouped];
-		UINavigationController *settingsController = [self.storyboard instantiateViewControllerWithIdentifier:@"AllahuAkbar"];
-		self.rootSettingsViewController = [settingsController.viewControllers firstObject];
-		self.rootSettingsViewController.messageQueue = self.messageQueue;
-		[self showDetailViewController:settingsController sender:self];
-	}
-    else{
-        self.repeatMode++;
-        if(self.repeatMode > MPMusicRepeatModeAll){
-            self.repeatMode = 1;
-        }
-        [self.musicPlayer setRepeatMode:self.repeatMode];
-    }
-    [self reloadButtonTitles];
-    
-    NSLog(@"Shuffle mode is %d, repeat mode is %d", (int)self.musicPlayer.shuffleMode, (int)self.musicPlayer.repeatMode);
-}
-
-- (IBAction)setTimelinePosition:(id)sender {
-    UISlider *slider = sender;
-    if(self.refreshTimer){
-        [self.refreshTimer invalidate];
-    }
-    //self.musicPlayer.currentPlaybackTime = slider.value;
-    [self updateSongDurationLabelWithPlaybackTime:slider.value];
-    
-    self.finishedUserAdjustment = YES;
-    
-    if(self.musicPlayer.playbackState == MPMusicPlaybackStatePlaying){
-        [self fireRefreshTimer];
-    }
-    else{
-        self.musicPlayer.currentPlaybackTime = slider.value;
-    }
-}
-
-- (void)fireRefreshTimer {
-    self.refreshTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(nowPlayingTimeChanged:) userInfo:nil repeats:YES];
-}
-
-- (BOOL)prefersStatusBarHidden {
-    return true;
-}
-
-+ (UIFont *)findAdaptiveFontWithName:(NSString *)fontName forUILabelSize:(CGSize)labelSize withMinimumSize:(NSInteger)minSize {
-    UIFont *tempFont = nil;
-    NSString *testString = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    
-    NSInteger tempMin = minSize;
-    NSInteger tempMax = 256;
-    NSInteger mid = 0;
-    NSInteger difference = 0;
-    
-    while (tempMin <= tempMax) {
-        mid = tempMin + (tempMax - tempMin) / 2;
-        tempFont = [UIFont fontWithName:fontName size:mid];
-        difference = labelSize.height - [testString sizeWithAttributes:@{NSFontAttributeName: tempFont}].height;
-        
-        if (mid == tempMin || mid == tempMax) {
-            if (difference < 0) {
-                return [UIFont fontWithName:fontName size:(mid - 1)];
-            }
-            
-            return [UIFont fontWithName:fontName size:mid];
-        }
-        
-        if (difference < 0) {
-            tempMax = mid - 1;
-        } else if (difference > 0) {
-            tempMin = mid + 1;
-        } else {
-            return [UIFont fontWithName:fontName size:mid];
-        }
-    }
-    
-    return [UIFont fontWithName:fontName size:mid];
 }
 
 - (void)sendMessageToPebble:(NSDictionary*)toSend {
@@ -478,7 +130,7 @@
 - (void)changeState:(NowPlayingState)state {
     switch(state) {
         case NowPlayingStatePlayPause:
-            [self playPauseMusic];
+            //[self playPauseMusic];
             break;
         case NowPlayingStateSkipNext:
             [self.musicPlayer skipToNextItem];
@@ -748,14 +400,11 @@
 			[self.musicPlayer setNowPlayingItem:track];
 			self.musicPlayer.repeatMode = newRepeatMode;
 		}
-		self.repeatMode = self.musicPlayer.repeatMode;
+//		self.repeatMode = self.musicPlayer.repeatMode;
 		
         NSLog(@"Setting repeat mdoe as %ld", (long)self.musicPlayer.repeatMode);
     }
     [self.musicPlayer play];
-	if(![self.refreshTimer isValid]){
-		[self fireRefreshTimer];
-	}
     //[self.musicPlayer setCurrentPlaybackTime:0];
     NSLog(@"Now playing %@", [self.musicPlayer.nowPlayingItem valueForProperty:MPMediaItemPropertyTitle]);
 }
@@ -792,9 +441,6 @@
     for(uint8_t i = 0; i < bytes[0]; ++i) {
         parent_type = bytes[i*3+1];
         parent_index = *(uint16_t*)&bytes[i*3+2];
-        NSLog(@"Parent type: %ld", (long)parent_type);
-        NSLog(@"Parent index: %d", parent_index);
-        NSLog(@"i: %d", i);
         MPMediaQuery *query = [[MPMediaQuery alloc] init];
         [query setGroupingType:parent_type];
         [query addFilterPredicate:[MPMediaPropertyPredicate predicateWithValue:@(MPMediaTypeMusic) forProperty:MPMediaItemPropertyMediaType]];
@@ -867,15 +513,15 @@
             NSNumber *trackLength = [item valueForProperty:MPMediaItemPropertyPlaybackDuration];
             NSString *artistName = [item valueForProperty:MPMediaItemPropertyArtist];
             
-            if(artistName){
-                value = [NSString stringWithFormat:@"%@ | %@",
-                         [LMNowPlayingViewController durationStringTotalPlaybackTime:[trackLength longValue]],
-                         artistName];
-            }
-            else{
-                value = [NSString stringWithFormat:@"%@",
-                         [LMNowPlayingViewController durationStringTotalPlaybackTime:[trackLength longValue]]];
-            }
+//            if(artistName){
+//                value = [NSString stringWithFormat:@"%@ | %@",
+//                         [LMNowPlayingViewController durationStringTotalPlaybackTime:[trackLength longValue]],
+//                         artistName];
+//            }
+//            else{
+//                value = [NSString stringWithFormat:@"%@",
+//                         [LMNowPlayingViewController durationStringTotalPlaybackTime:[trackLength longValue]]];
+//            }
         }
         else if(type == MPMediaGroupingAlbumArtist){
             value = [[item representativeItem] valueForProperty:MPMediaItemPropertyArtist];
@@ -919,176 +565,52 @@
 
 
 - (void)viewDidLayoutSubviews {
-    self.songTitleLabel.font = [LMNowPlayingViewController findAdaptiveFontWithName:@"HelveticaNeue-Light" forUILabelSize:self.songTitleLabel.frame.size withMinimumSize:20];
-    
-    self.songArtistLabel.font = [LMNowPlayingViewController findAdaptiveFontWithName:@"HelveticaNeue-Light" forUILabelSize:self.songArtistLabel.frame.size withMinimumSize:16];
-    
-    self.songAlbumLabel.font = [LMNowPlayingViewController findAdaptiveFontWithName:@"HelveticaNeue-Light" forUILabelSize:self.songAlbumLabel.frame.size withMinimumSize:14];
-    
-    if(self.loadedSubviews){
-        return;
-    }
-    
-    self.view.backgroundColor = [UIColor whiteColor];
-    
-    self.songTitleLabel.fadeLength = 10;
-    self.songTitleLabel.leadingBuffer = 6;
-    self.songArtistLabel.fadeLength = 10;
-    self.songArtistLabel.leadingBuffer = 6;
-    self.songAlbumLabel.fadeLength = 10;
-    self.songAlbumLabel.leadingBuffer = 6;
-    
-    self.songDurationSlider.tintColor = [UIColor redColor];
-    [self.songDurationSlider addTarget:self action:@selector(setTimelinePosition:) forControlEvents:UIControlEventValueChanged];
-    [self.songDurationSlider addTarget:self action:@selector(fireRefreshTimer) forControlEvents:UIControlEventTouchDragExit];
+//    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+//    if([defaults objectForKey:@"pebble_coldstart"]){
+//        [self.central run];
+//    }
+//    else{
+//        UIAlertController * alert = [UIAlertController
+//									 alertControllerWithTitle:NSLocalizedString(@"PebbleConnectionRequestTitle", nil)
+//                                     message:NSLocalizedString(@"PebbleConnectionRequestDescription", nil)
+//                                     preferredStyle:UIAlertControllerStyleAlert];
+//        
+//        UIAlertAction* yesButton = [UIAlertAction
+//									actionWithTitle:NSLocalizedString(@"Okay", nil)
+//                                    style:UIAlertActionStyleDefault
+//                                    handler:^(UIAlertAction * action) {
+//                                        [self.central run];
+//                                        [defaults setBool:YES forKey:@"pebble_coldstart"];
+//                                    }];
+//        
+//        [alert addAction:yesButton];
+//        
+//        // [self presentViewController:alert animated:YES completion:nil];
+//        
+//    }
 	
-	NSLog(@"Cluck");
-    [self.albumArtView setupWithAlbumImage:[UIImage imageNamed:@"no_album.png"]];
+//	self.volumeView = [[MPVolumeView alloc] init];
+//	self.volumeView.showsRouteButton = NO;
+//	self.volumeView.showsVolumeSlider = NO;
+//	[self.view addSubview:self.volumeView];
+//	
+//	//find the volumeSlider
+//	self.volumeViewSlider = nil;
+//	for (UIView *view in [self.volumeView subviews]){
+//		if ([view.class.description isEqualToString:@"MPVolumeSlider"]){
+//			self.volumeViewSlider = (UISlider*)view;
+//			break;
+//		}
+//	}
+//	
+//	[self.volumeViewSlider addTarget:self action:@selector(handleVolumeChanged:) forControlEvents:UIControlEventValueChanged];
 	
-    self.shadingView = [[UIView alloc]init];
-    self.shadingView.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.25];
-    self.shadingView.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.backgroundImageView addSubview:self.shadingView];
-	
-	[self.shadingView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.backgroundImageView];
-	[self.shadingView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.backgroundImageView];
-	[self.shadingView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-	[self.shadingView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-    
-    if(!self.musicPlayer){
-        self.musicPlayer = [MPMusicPlayerController systemMusicPlayer];
-    }
-    
-    if(self.musicPlayer.playbackState == MPMusicPlaybackStatePlaying){
-        [self fireRefreshTimer];
-    }
-    else{
-        //Update the contents of the slider/timing elements if the music is paused
-        [self nowPlayingTimeChanged:nil];
-    }
-	
-	if(self.musicPlayer.shuffleMode == MPMusicShuffleModeDefault){
-		self.shuffleMode = MPMusicShuffleModeSongs;
-	}
-	else{
-		self.shuffleMode = self.musicPlayer.shuffleMode;
-	}
-	if(self.musicPlayer.repeatMode == MPMusicRepeatModeDefault){
-		self.repeatMode = MPMusicRepeatModeNone;
-	}
-	else{
-		self.repeatMode = self.musicPlayer.repeatMode;
-	}
-    [self reloadButtonTitles];
-        
-    UITapGestureRecognizer *screenTapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(playPauseMusic)];
-    [self.contentContainerView addGestureRecognizer:screenTapRecognizer];
-    
-    UISwipeGestureRecognizer *nextRecognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(nextSong:)];
-    [nextRecognizer setDirection:UISwipeGestureRecognizerDirectionLeft];
-    [self.contentContainerView addGestureRecognizer:nextRecognizer];
-    
-    UISwipeGestureRecognizer *previousRecognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(previousSong:)];
-    [previousRecognizer setDirection:UISwipeGestureRecognizerDirectionRight];
-    [self.contentContainerView addGestureRecognizer:previousRecognizer];
-    
-    UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(move:)];
-    [panRecognizer setMinimumNumberOfTouches:1];
-    [panRecognizer setMaximumNumberOfTouches:1];
-    panRecognizer.delegate = self;
-    [self.contentContainerView addGestureRecognizer:panRecognizer];
-    
-    self.loadedSubviews = YES;
-    
-    //NSLog(@"Starting test image...");
-    //[self sendTestImage];
-	
-    
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	
-	if(![defaults objectForKey:@"shitty_tutorial"]){
-		UIAlertController * alert = [UIAlertController
-									 alertControllerWithTitle:NSLocalizedString(@"HowToUse", nil)
-									 message:NSLocalizedString(@"HowToUseDescription", nil)
-									 preferredStyle:UIAlertControllerStyleAlert];
-		
-		UIAlertAction* yesButton = [UIAlertAction
-									actionWithTitle:NSLocalizedString(@"OkThanks", nil)
-									style:UIAlertActionStyleDefault
-									handler:^(UIAlertAction * action) {
-										[defaults setBool:YES forKey:@"shitty_tutorial"];
-									}];
-		
-		[alert addAction:yesButton];
-		
-		NSArray *viewArray = [[[[[[[[[[[[alert view] subviews] firstObject] subviews] firstObject] subviews] firstObject] subviews] firstObject] subviews] firstObject] subviews];
-		UILabel *alertMessage = viewArray[1];
-		alertMessage.textAlignment = NSTextAlignmentLeft;
-		
-		//[self presentViewController:alert animated:YES completion:nil];
-		
-	}
-	
-    if([defaults objectForKey:@"pebble_coldstart"]){
-        [self.central run];
-    }
-    else{
-        UIAlertController * alert = [UIAlertController
-									 alertControllerWithTitle:NSLocalizedString(@"PebbleConnectionRequestTitle", nil)
-                                     message:NSLocalizedString(@"PebbleConnectionRequestDescription", nil)
-                                     preferredStyle:UIAlertControllerStyleAlert];
-        
-        UIAlertAction* yesButton = [UIAlertAction
-									actionWithTitle:NSLocalizedString(@"Okay", nil)
-                                    style:UIAlertActionStyleDefault
-                                    handler:^(UIAlertAction * action) {
-                                        [self.central run];
-                                        [defaults setBool:YES forKey:@"pebble_coldstart"];
-                                    }];
-        
-        [alert addAction:yesButton];
-        
-        // [self presentViewController:alert animated:YES completion:nil];
-        
-    }
-
-    /*
-    UIImage *image = [UIImage imageWithContentsOfFile:[LMPebbleImage ditherImage:[self.musicPlayer.nowPlayingItem.artwork imageWithSize:CGSizeMake(28, 28)]
-                                                                        withSize:CGSizeMake(36, 36)
-                                                                   forTotalParts:1
-                                                                 withCurrentPart:0
-                                                                 isBlackAndWhite:NO
-                                                                    isRoundWatch:NO]];
-    UIImageView *view = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 100, 100)];
-    view.image = image;
-    [self.view addSubview:view];
-     */
-	
-	self.volumeView = [[MPVolumeView alloc] init];
-	self.volumeView.showsRouteButton = NO;
-	self.volumeView.showsVolumeSlider = NO;
-	[self.view addSubview:self.volumeView];
-	
-	//find the volumeSlider
-	self.volumeViewSlider = nil;
-	for (UIView *view in [self.volumeView subviews]){
-		if ([view.class.description isEqualToString:@"MPVolumeSlider"]){
-			self.volumeViewSlider = (UISlider*)view;
-			break;
-		}
-	}
-	
-	[self.volumeViewSlider addTarget:self action:@selector(handleVolumeChanged:) forControlEvents:UIControlEventValueChanged];
-	
-	NSLog(@"Hey");
 	[self nowPlayingItemChanged:self];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
 	
-	NSLog(@"Loaded view");
-    
     self.central = [PBPebbleCentral defaultCentral];
     self.central.delegate = self;
     self.central.appUUID = [[NSUUID alloc] initWithUUIDString:@"edf76057-f3ef-4de6-b841-cb9532a81a5a"];
@@ -1096,63 +618,7 @@
     self.messageQueue = [[LMPebbleMessageQueue alloc]init];
     
     self.musicPlayer = [MPMusicPlayerController systemMusicPlayer];
-    
-//    [[UIApplication sharedApplication] begin Receiving Remote Control Events];
-//    
-//    NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
-//    
-//    [notificationCenter
-//     addObserver: self
-//     selector:    @selector(nowPlayingItemChanged:)
-//     name:        MPMusicPlayerControllerNowPlayingItemDidChangeNotification
-//     object:      self.musicPlayer];
-//    
-//    [notificationCenter
-//     addObserver: self
-//     selector:    @selector(nowPlayingStateChanged:)
-//     name:        MPMusicPlayerControllerPlaybackStateDidChangeNotification
-//     object:      self.musicPlayer];
-//    
-//    [self.musicPlayer beginGeneratingPlaybackNotifications];
-	
-	//[self nowPlayingItemChanged:self];
-    
-    NSLog(@"View did load");
-}
 
-- (void)viewDidDisappear:(BOOL)animated {
-	NSLog(@"View disappeared");
-	
-	[[NSNotificationCenter defaultCenter]
-	 removeObserver: self
-	 name:           MPMusicPlayerControllerNowPlayingItemDidChangeNotification
-	 object:         self.musicPlayer];
-	
-	[[NSNotificationCenter defaultCenter]
-	 removeObserver: self
-	 name:           MPMusicPlayerControllerPlaybackStateDidChangeNotification
-	 object:         self.musicPlayer];
-	
-	[self.musicPlayer endGeneratingPlaybackNotifications];
 }
-
-- (void)viewDidUnload:(BOOL)animated {
-    NSLog(@"View did unload");
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

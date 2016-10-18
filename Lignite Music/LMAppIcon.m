@@ -30,6 +30,8 @@
 			return @"icon_titles.png";
 		case LMIconAlbums:
 			return @"icon_albums.png";
+		case LMIconBug:
+			return @"icon_bug.png";
 	}
 }
 

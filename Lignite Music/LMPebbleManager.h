@@ -1,15 +1,15 @@
 //
-//  TestViewController.h
+//  LMPebbleManager.h
 //  Lignite Music
 //
-//  Created by Edwin Finch on 5/15/16.
+//  Created by Edwin Finch on 10/18/16.
 //  Copyright © 2016 Lignite. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-#import <MediaPlayer/MediaPlayer.h>
+#import <Foundation/Foundation.h>
+#import "LMMusicPlayer.h"
 
-@interface LMNowPlayingViewController : UIViewController
+@interface LMPebbleManager : NSObject
 
 typedef enum {
 	NowPlayingTitle,
@@ -78,6 +78,18 @@ typedef enum {
 #define MAX_LABEL_LENGTH 20
 #define MAX_RESPONSE_COUNT 90
 
-@property (weak) MPMusicPlayerController *musicPlayer;
+/**
+ Initialize the Pebble manager with a music player which will control its data and will be used to gather information on the music that should be sent to the watch.
+
+ @param musicPlayer The music player to associate.
+
+ @return The new Pebble manager.
+ */
+- (instancetype)initWithMusicPlayer:(LMMusicPlayer*)musicPlayer;
+
+/**
+ The music player for this Pebble manager.
+ */
+@property LMMusicPlayer *musicPlayer;
 
 @end

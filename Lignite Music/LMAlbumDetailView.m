@@ -13,7 +13,7 @@
 #import "LMButton.h"
 #import "LMLabel.h"
 #import "LMAlbumDetailView.h"
-#import "LMNowPlayingViewController.h"
+#import "LMNowPlayingView.h"
 #import "LMSongDetailControlView.h"
 #import "LMColour.h"
 #import "LMAppIcon.h"
@@ -184,7 +184,7 @@
 
 - (NSString*)subtitleForListEntry:(LMListEntry*)entry {
 	LMMusicTrack *track = [self.albumCollection.items objectAtIndex:entry.collectionIndex];
-	return [NSString stringWithFormat:NSLocalizedString(@"LengthOfSong", nil), [LMNowPlayingViewController durationStringTotalPlaybackTime:track.playbackDuration]];
+	return [NSString stringWithFormat:NSLocalizedString(@"LengthOfSong", nil), [LMNowPlayingView durationStringTotalPlaybackTime:track.playbackDuration]];
 }
 
 - (UIImage*)iconForListEntry:(LMListEntry*)entry {

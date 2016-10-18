@@ -21,6 +21,7 @@ typedef enum {
 	LMIconSettings,
 	LMIconTitles,
 	LMIconAlbums,
+	LMIconBug
 } LMIcon;
 
 /**

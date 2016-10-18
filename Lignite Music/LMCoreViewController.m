@@ -176,13 +176,13 @@ BOOL didAutomaticallyClose = NO;
 	[self.musicPlayer addMusicDelegate:self];
 	
 	NSArray *sourceTitles = @[
-							  @"Albums", @"Titles", @"Settings"
+							  @"Albums", @"Titles", @"Settings", @"Report Bug"
 							  ];
 	NSArray *sourceSubtitles = @[
-								 @"", @"", @""
+								 @"", @"", @"Only for Pebble", @"Or send feedback"
 								 ];
 	LMIcon sourceIcons[] = {
-		LMIconAlbums, LMIconTitles, LMIconSettings
+		LMIconAlbums, LMIconTitles, LMIconSettings, LMIconBug
 	};
 	
 	NSMutableArray *sources = [NSMutableArray new];
