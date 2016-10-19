@@ -97,7 +97,7 @@
 	
 	[self.view layoutIfNeeded];
 	self.topConstraint.constant = 0;
-	[UIView animateWithDuration:0.5 delay:0.1
+	[UIView animateWithDuration:1.0 delay:0.1
 		 usingSpringWithDamping:0.75 initialSpringVelocity:0.0f
 						options:0 animations:^{
 							[self.view layoutIfNeeded];
@@ -107,7 +107,7 @@
 - (void)closeNowPlayingView {
 	[self.view layoutIfNeeded];
 	self.topConstraint.constant = self.view.frame.size.height*1.5;
-	[UIView animateWithDuration:0.5 delay:0.05
+	[UIView animateWithDuration:1.0 delay:0.05
 		 usingSpringWithDamping:0.75 initialSpringVelocity:0.0f
 						options:0 animations:^{
 							[self.view layoutIfNeeded];

@@ -186,7 +186,7 @@
 	self.bottomConstraint.constant = -(self.frame.size.height*0.9);
 	self.blurConstraint.constant = -self.frame.size.height;
 	self.currentPoint = CGPointMake(self.originalPoint.x, self.originalPoint.y-(self.frame.size.height*0.9));
-	[UIView animateWithDuration:0.5 delay:0
+	[UIView animateWithDuration:1.0 delay:0
 		 usingSpringWithDamping:0.6 initialSpringVelocity:0.0f
 						options:0 animations:^{
 							[self layoutIfNeeded];
@@ -199,7 +199,7 @@
 	self.bottomConstraint.constant = 0;
 	self.blurConstraint.constant = 0;
 	self.currentPoint = self.originalPoint;
-	[UIView animateWithDuration:0.5 delay:0
+	[UIView animateWithDuration:1.0 delay:0
 		 usingSpringWithDamping:0.6 initialSpringVelocity:0.0f
 						options:0 animations:^{
 							[self layoutIfNeeded];
