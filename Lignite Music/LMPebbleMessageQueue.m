@@ -59,7 +59,7 @@
                 NSLog(@"Send failed; will retransmit.");
                 NSLog(@"Error: %@", error);
                 sleep(1);
-                if(++failureCount > 5) {
+                if(++failureCount > 3) {
                     [queue removeAllObjects];
                     NSLog(@"Aborting.");
                 }

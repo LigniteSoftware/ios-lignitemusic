@@ -33,9 +33,29 @@
 				 andSubtitle:(NSString*)subtitle
 					 andIcon:(LMIcon)icon;
 
+/**
+ The title of the source.
+ */
 @property NSString *title;
+
+/**
+ The subtitle of the source.
+ */
 @property NSString *subtitle;
+
+/**
+ The icon of the source.
+ */
 @property UIImage *icon;
+
+/**
+ The delegate which should be called upon when this source is acted upon.
+ */
 @property id<LMSourceDelegate> delegate;
+
+/**
+ Whether or not this source is selectable. If YES, the source will not be selected and will not be saved to defaults for the next user's load of the app. Default: NO
+ */
+@property BOOL shouldNotSelect;
 
 @end

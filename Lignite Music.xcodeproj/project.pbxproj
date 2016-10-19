@@ -62,6 +62,7 @@
 		6AC32B781DB53EB20007C67E /* icon_repeat_one.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AC32B761DB53EB20007C67E /* icon_repeat_one.png */; };
 		6AC32B7B1DB6B57B0007C67E /* LMPebbleManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AC32B7A1DB6B57B0007C67E /* LMPebbleManager.m */; };
 		6AC32B7D1DB6CD950007C67E /* icon_bug.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AC32B7C1DB6CD950007C67E /* icon_bug.png */; };
+		6AC32B7F1DB73AFB0007C67E /* icon_no_cover_art.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AC32B7E1DB73AFB0007C67E /* icon_no_cover_art.png */; };
 		6AD226F91DA49C720056695A /* LMProgressCircleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AD226F81DA49C720056695A /* LMProgressCircleView.m */; };
 		6AD226FC1DA4B7770056695A /* LMNowPlayingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AD226FB1DA4B7770056695A /* LMNowPlayingView.m */; };
 		6AD226FF1DA4B8000056695A /* LMCoreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AD226FE1DA4B8000056695A /* LMCoreViewController.m */; };
@@ -176,6 +177,7 @@
 		6AC32B791DB6B57B0007C67E /* LMPebbleManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMPebbleManager.h; sourceTree = "<group>"; };
 		6AC32B7A1DB6B57B0007C67E /* LMPebbleManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMPebbleManager.m; sourceTree = "<group>"; };
 		6AC32B7C1DB6CD950007C67E /* icon_bug.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_bug.png; sourceTree = "<group>"; };
+		6AC32B7E1DB73AFB0007C67E /* icon_no_cover_art.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_no_cover_art.png; sourceTree = "<group>"; };
 		6AD226F71DA49C720056695A /* LMProgressCircleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMProgressCircleView.h; sourceTree = "<group>"; };
 		6AD226F81DA49C720056695A /* LMProgressCircleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMProgressCircleView.m; sourceTree = "<group>"; };
 		6AD226FA1DA4B7770056695A /* LMNowPlayingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMNowPlayingView.h; sourceTree = "<group>"; };
@@ -335,6 +337,7 @@
 		6A66C76C1CDA1B4E009019CF /* Icons */ = {
 			isa = PBXGroup;
 			children = (
+				6AC32B7E1DB73AFB0007C67E /* icon_no_cover_art.png */,
 				6AC32B7C1DB6CD950007C67E /* icon_bug.png */,
 				6AC32B751DB53EB20007C67E /* icon_repeat_general.png */,
 				6AC32B761DB53EB20007C67E /* icon_repeat_one.png */,
@@ -639,6 +642,7 @@
 				6A514E141CE9621B00AFB351 /* icon_dynamic_playlist.png in Resources */,
 				6A9C053E1DB4441200713D1C /* icon_titles.png in Resources */,
 				6AEB9D351BAD812700AD19FA /* icon_pause.png in Resources */,
+				6AC32B7F1DB73AFB0007C67E /* icon_no_cover_art.png in Resources */,
 				6A9C053D1DB4441200713D1C /* icon_genres.png in Resources */,
 				6A9C053C1DB4441200713D1C /* icon_compilations.png in Resources */,
 				6A7DF1201DB124030077B979 /* icon_triple_horizontal_dots.png in Resources */,

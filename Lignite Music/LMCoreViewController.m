@@ -142,10 +142,12 @@ BOOL didAutomaticallyClose = NO;
 	}
 	NSLog(@"The index is %d", indexOfSource);
 	
-	[self.currentSource setHidden:YES];
+	if(!source.shouldNotSelect){
+		[self.currentSource setHidden:YES];
+	}
 	
 	switch(indexOfSource){
-		case 0:
+		case 0:{
 			self.albumView.hidden = NO;
 			[self.albumView reloadSourceSelectorInfo];
 			self.currentSource = self.albumView;
@@ -153,14 +155,22 @@ BOOL didAutomaticallyClose = NO;
 				[self.browsingAssistant close];
 			}
 			break;
-		case 1:
+		}
+		case 1:{
 			self.titleView.hidden = NO;
 			[self.titleView reloadSourceSelectorInfo];
 			self.currentSource = self.titleView;
 			break;
-		case 2:
-			
+		}
+		case 2:{
+			LMPebbleManager *pebbleManager = [LMPebbleManager sharedPebbleManager];
+			[pebbleManager showSettings];
 			break;
+		}
+		case 3:{
+			NSLog(@"Debug menu");
+			break;
+		}
 		default:
 			NSLog(@"Unknown index of source %@.", source);
 			break;
@@ -175,7 +185,7 @@ BOOL didAutomaticallyClose = NO;
 	[self.musicPlayer addMusicDelegate:self];
 	
 	LMPebbleManager *pebbleManager = [LMPebbleManager sharedPebbleManager];
-	[pebbleManager attachVolumeControlsToView:self.view];
+	[pebbleManager attachToViewController:self];
 	
 	NSArray *sourceTitles = @[
 							  @"Albums", @"Titles", @"Settings", @"Report Bug"
@@ -186,6 +196,9 @@ BOOL didAutomaticallyClose = NO;
 	LMIcon sourceIcons[] = {
 		LMIconAlbums, LMIconTitles, LMIconSettings, LMIconBug
 	};
+	BOOL notSelect[] = {
+		NO, NO, YES, YES
+	};
 	
 	NSMutableArray *sources = [NSMutableArray new];
 	
@@ -194,6 +207,7 @@ BOOL didAutomaticallyClose = NO;
 		LMSource *source = [LMSource sourceWithTitle:NSLocalizedString([sourceTitles objectAtIndex:i], nil)
 										 andSubtitle:[subtitle isEqualToString:@""]  ? nil : NSLocalizedString(subtitle, nil)
 											 andIcon:sourceIcons[i]];
+		source.shouldNotSelect = notSelect[i];
 		source.delegate = self;
 		[sources addObject:source];
 	}

@@ -682,6 +682,8 @@ BOOL shuffleForDebug = NO;
 		
 	_currentPlaybackTime = currentPlaybackTime;
 	
+	[self updateNowPlayingTimeDelegates];
+	
 	[self reloadInfoCenter:self.audioPlayer.isPlaying];
 }
 

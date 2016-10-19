@@ -97,10 +97,15 @@ typedef enum {
 - (void)setManagerMusicPlayer:(LMMusicPlayer*)musicPlayer;
 
 /**
- Attach the volume controls to the view as provided. This is required for controlling volume through Pebble.
-
- @param view The view to attach to.
+ Attaches the Pebble manager to a view controller. When called with a non-nil view controller, a volume control is added to that view controller's view to allow volume control on Pebble. It also uses the associated UIStoryBoard to get the settings view controller.
+ 
+ @param viewControllerToAttachTo The view controller to attach to.
  */
-- (void)attachVolumeControlsToView:(UIView*)view;
+- (void)attachToViewController:(UIViewController*)viewControllerToAttachTo;
+
+/**
+ Show a settings window for the Pebble app.
+ */
+- (void)showSettings;
 
 @end

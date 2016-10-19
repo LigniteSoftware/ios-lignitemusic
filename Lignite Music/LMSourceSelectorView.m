@@ -138,11 +138,15 @@
 	NSLog(@"Tapped list entry %ld", entry.collectionIndex);
 	LMSource *source = [self.sources objectAtIndex:entry.collectionIndex];
 	
+	[source.delegate sourceSelected:source];
+	
+	if(source.shouldNotSelect){
+		return;
+	}
+	
 	NSLog(@"Source image %@", source.icon);
 	
 	[self.sourceSelectorButton setImage:[LMAppIcon invertImage:source.icon]];
-	
-	[source.delegate sourceSelected:source];
 	
 	LMListEntry *previousHighlightedEntry = [self listEntryForIndex:self.currentlyHighlighted];
 	if(previousHighlightedEntry){

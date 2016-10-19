@@ -32,6 +32,8 @@
 			return @"icon_albums.png";
 		case LMIconBug:
 			return @"icon_bug.png";
+		case LMIconNoAlbumArt:
+			return @"icon_no_cover_art.png";
 	}
 }
 

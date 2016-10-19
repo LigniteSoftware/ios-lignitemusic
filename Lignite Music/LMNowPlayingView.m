@@ -121,8 +121,8 @@
 		
 		UIColor *averageColour = [albumImage averageColour];
 		BOOL isLight = [averageColour isLight];
-		//self.shadingView.backgroundColor = isLight ? [UIColor colorWithRed:1 green:1 blue:1 alpha:0.25] : [UIColor colorWithRed:0 green:0 blue:0 alpha:0.25];
-		UIColor *newTextColour = [UIColor blackColor];
+		self.blurredBackgroundView.effect = [UIBlurEffect effectWithStyle:isLight ? UIBlurEffectStyleLight : UIBlurEffectStyleDark];
+		UIColor *newTextColour = isLight ? [UIColor blackColor] : [UIColor whiteColor];
 //
 //		CIFilter *gaussianBlurFilter = [CIFilter filterWithName:@"CIGaussianBlur"];
 //		[gaussianBlurFilter setDefaults];
@@ -154,8 +154,9 @@
 			
 			if(albumImage.size.height > 0){
 				[self.albumArtImageView updateContentWithMusicTrack:newTrack];
-				self.brandNewAlbumArtImageView.image = albumArt;
 			}
+			
+			self.brandNewAlbumArtImageView.image = albumArt ? albumArt : [LMAppIcon imageForIcon:LMIconNoAlbumArt];
 						
 			//[self.albumArtImageView setupWithAlbumImage:albumImage];
 			//[self.albumArtImageView setImage:[item.artwork imageWithSize:CGSizeMake(self.frame.size.width, self.frame.size.width)]];
@@ -288,15 +289,6 @@
 	[self.backgroundImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:1.1];
 	[self.backgroundImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:1.1];
 	
-//	self.shadingView = [UIView newAutoLayoutView];
-//	self.shadingView.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.25];
-//	[self.backgroundImageView addSubview:self.shadingView];
-//	
-//	[self.shadingView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.backgroundImageView];
-//	[self.shadingView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.backgroundImageView];
-//	[self.shadingView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-//	[self.shadingView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-	
 	UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
 	self.blurredBackgroundView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
 	self.blurredBackgroundView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -334,11 +326,13 @@
 	[self.albumArtImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.albumArtRootView withMultiplier:0.9];
 	[self.albumArtImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.albumArtRootView withMultiplier:0.9];
 	
+	self.albumArtImageView.hidden = YES;
+	
 	[self.albumArtImageView setupWithAlbumImage:nil];
 	self.albumArtImageView.backgroundColor = [UIColor clearColor];
 	
 	self.brandNewAlbumArtImageView = [UIImageView newAutoLayoutView];
-	self.brandNewAlbumArtImageView.backgroundColor = [UIColor orangeColor];
+//	self.brandNewAlbumArtImageView.backgroundColor = [UIColor orangeColor];
 	[self.albumArtRootView addSubview:self.brandNewAlbumArtImageView];
 	
 	[self.brandNewAlbumArtImageView autoCenterInSuperview];

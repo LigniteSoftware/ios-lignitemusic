@@ -33,12 +33,17 @@
 //The last album art image ID which was sent
 @property MPMediaEntityPersistentID lastAlbumArtImage;
 
+//For settings
+@property LMPebbleSettingsView *rootSettingsViewController;
+
 //The music player
 @property LMMusicPlayer *musicPlayer;
 
 //For volume control
 @property MPVolumeView *volumeView;
 @property UISlider *volumeViewSlider;
+
+@property UIViewController *rootViewController;
 
 @end
 
@@ -504,12 +509,20 @@
 		}
 		return YES;
 	}];
+	
+	if(self.rootSettingsViewController){
+		[self.rootSettingsViewController.tableView reloadData];
+	}
 }
 
 - (void)pebbleCentral:(PBPebbleCentral *)central watchDidDisconnect:(PBWatch *)watch {
 	NSLog(@"Lost watch %@", self.pebbleWatch);
 	if (self.pebbleWatch == watch) {
 		self.pebbleWatch = nil;
+	}
+	
+	if(self.rootSettingsViewController){
+		[self.rootSettingsViewController.tableView reloadData];
 	}
 }
 
@@ -522,6 +535,10 @@
 	[self pushCurrentStateToWatch];
 }
 
+- (void)musicCurrentPlaybackTimeDidChange:(NSTimeInterval)newPlaybackTime {
+	[self pushCurrentStateToWatch];
+}
+
 - (void)setManagerMusicPlayer:(LMMusicPlayer*)musicPlayer {
 	self.musicPlayer = musicPlayer;
 	[self.musicPlayer addMusicDelegate:self];
@@ -531,11 +548,11 @@
 //	NSLog(@"%s - %f", __PRETTY_FUNCTION__, self.volumeViewSlider.value);
 }
 
-- (void)attachVolumeControlsToView:(UIView*)viewToAttachTo {
+- (void)attachToViewController:(UIViewController*)viewControllerToAttachTo {
 	self.volumeView = [[MPVolumeView alloc] init];
 	self.volumeView.showsRouteButton = NO;
 	self.volumeView.showsVolumeSlider = NO;
-	[viewToAttachTo addSubview:self.volumeView];
+	[viewControllerToAttachTo.view addSubview:self.volumeView];
 
 	//find the volumeSlider
 	self.volumeViewSlider = nil;
@@ -547,6 +564,26 @@
 	}
 
 	[self.volumeViewSlider addTarget:self action:@selector(handleVolumeChanged:) forControlEvents:UIControlEventValueChanged];
+	
+	UINavigationController *settingsController = [viewControllerToAttachTo.storyboard instantiateViewControllerWithIdentifier:@"PebbleSettingsController"];
+	self.rootSettingsViewController = [settingsController.viewControllers firstObject];
+	self.rootSettingsViewController.messageQueue = self.messageQueue;
+//	self.rootSettingsViewController.navigationController.navigationBarHidden = NO;
+	
+	self.rootViewController = viewControllerToAttachTo;
+}
+
+- (void)showSettings {
+	if(self.rootViewController){
+//		[self.rootViewController showDetailViewController:self.rootSettingsViewController sender:self.rootViewController];
+		UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:self.rootSettingsViewController];
+		[self.rootViewController presentViewController:navController animated:YES completion:^{
+			NSLog(@"Done");
+		}];
+	}
+	else{
+		NSLog(@"The root view controller no longer exists! Can't show Pebble settings.");
+	}
 }
 
 - (instancetype)init {
