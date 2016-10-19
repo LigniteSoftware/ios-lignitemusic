@@ -271,6 +271,7 @@
 	
 	if(error){
 		NSLog(@"Error loading audio player with url %@: %@", url, error);
+		[self skipToNextTrack];
 	}
 	else{
 		[self.audioPlayer prepareToPlay];
@@ -501,7 +502,12 @@ BOOL shuffleForDebug = NO;
 - (void)skipToNextTrack {
 	NSLog(@"Skip to next");
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer){
-		[self.systemMusicPlayer skipToNextItem];
+		if(self.repeatMode == LMMusicRepeatModeOne){
+			[self.systemMusicPlayer skipToBeginning];
+		}
+		else{
+			[self.systemMusicPlayer skipToNextItem];
+		}
 		if(self.repeatMode != LMMusicRepeatModeNone){
 			[self systemMusicPlayerTrackChanged:self];
 		}
@@ -699,7 +705,13 @@ BOOL shuffleForDebug = NO;
 	_repeatMode = repeatMode;
 	
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer){
-		self.systemMusicPlayer.repeatMode = (MPMusicRepeatMode)repeatMode;
+		MPMusicRepeatMode systemRepeatModes[4] = {
+			MPMusicRepeatModeNone,
+			MPMusicRepeatModeNone,
+			MPMusicRepeatModeAll,
+			MPMusicRepeatModeOne
+		};
+		self.systemMusicPlayer.repeatMode = systemRepeatModes[repeatMode];
 	}
 }
 

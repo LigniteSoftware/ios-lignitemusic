@@ -41,7 +41,6 @@
 
 @property UIView *shuffleModeBackgroundView, *repeatModeBackgroundView, *playlistBackgroundView;
 @property LMButton *shuffleModeButton, *repeatModeButton, *playlistButton;
-@property UILabel *shuffleTitleLabel, *repeatTitleLabel, *playlistTitleLabel;
 
 @end
 
@@ -206,16 +205,10 @@
 	
 }
 
-- (void)fuckMe {
+- (void)updateRepeatButtonImage {
 	LMIcon icons[] = {
 		LMIconRepeat, LMIconRepeat, LMIconRepeat, LMIconRepeatOne
 	};
-	if(self.musicPlayer.repeatMode < LMMusicRepeatModeOne){
-		self.musicPlayer.repeatMode++;
-	}
-	else if(self.musicPlayer.repeatMode == LMMusicRepeatModeOne){
-		self.musicPlayer.repeatMode = LMMusicRepeatModeNone;
-	}
 	NSLog(@"Repeat mode %d", self.musicPlayer.repeatMode);
 	UIImage *icon = [LMAppIcon imageForIcon:icons[self.musicPlayer.repeatMode]];
 	[self.repeatModeButton setImage:icon];
@@ -231,23 +224,19 @@
 		}];
 	}
 	else if(button == self.repeatModeButton){
-		[self fuckMe];
+		if(self.musicPlayer.repeatMode < LMMusicRepeatModeOne){
+			self.musicPlayer.repeatMode++;
+		}
+		else if(self.musicPlayer.repeatMode == LMMusicRepeatModeOne){
+			self.musicPlayer.repeatMode = LMMusicRepeatModeNone;
+		}
+		
+		[self updateRepeatButtonImage];
 		
 		[UIView animateWithDuration:0.25 animations:^{
 			[button setColour:(self.musicPlayer.repeatMode != LMMusicRepeatModeNone) ? [UIColor whiteColor] : [LMColour fadedColour]];
 		}];
 	}
-}
-
-- (void)reloadButtonTitles {
-	NSString *shuffleArray[] = {
-		@"DefaultShuffleMode", @"OffShuffleMode", @"SongsShuffleMode", @"AlbumsShuffleMode"
-	};
-	NSString *repeatArray[] = {
-		@"DefaultRepeatMode", @"OffRepeatMode", @"ThisRepeatMode", @"AllRepeatMode"
-	};
-	self.shuffleTitleLabel.text = NSLocalizedString(shuffleArray[self.musicPlayer.shuffleMode], nil);
-	self.repeatTitleLabel.text = NSLocalizedString(repeatArray[self.musicPlayer.repeatMode], nil);
 }
 
 - (void)pinchedNowPlaying {
@@ -373,22 +362,12 @@
 	self.repeatModeButton = [[LMButton alloc]initForAutoLayout];
 	self.playlistButton = [[LMButton alloc]initForAutoLayout];
 	
-	self.shuffleTitleLabel = [[UILabel alloc]initForAutoLayout];
-	self.repeatTitleLabel = [[UILabel alloc]initForAutoLayout];
-	self.playlistTitleLabel = [[UILabel alloc]initForAutoLayout];
-	
 	NSArray *backgrounds = @[
 		self.shuffleModeBackgroundView, self.repeatModeBackgroundView, self.playlistBackgroundView
 	];
 	NSArray *buttons = @[
 		self.shuffleModeButton, self.repeatModeButton
 	];
-//	NSArray *titleLabels = @[
-//		self.shuffleTitleLabel, self.repeatTitleLabel, self.playlistTitleLabel
-//	];
-//	NSArray *titles = @[
-//		@"Shuffle", @"Repeat", @"Settings"
-//	];
 	LMIcon icons[] = {
 		LMIconShuffle, LMIconRepeat, LMIconSettings
 	};
@@ -406,19 +385,6 @@
 		[background autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
 		[background autoPinEdge:ALEdgeLeading toEdge:isFirst ? ALEdgeLeading : ALEdgeTrailing ofView:previousBackground];
 		[background autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.trackInfoView withMultiplier:(1.0/(float)buttons.count)];
-		
-//		UILabel *titleLabel = [titleLabels objectAtIndex:i];
-//		
-//		titleLabel.text = [titles objectAtIndex:i];
-//		titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14.0f];
-//		//titleLabel.backgroundColor = [UIColor colorWithRed:(0.2*i)+0.3 green:0 blue:0 alpha:1.0];
-//		titleLabel.textAlignment = NSTextAlignmentCenter;
-//		[background addSubview:titleLabel];
-//		
-//		[titleLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:background withOffset:-10];
-//		[titleLabel autoSetDimension:ALDimensionHeight toSize:20];
-//		[titleLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:background];
-//		[titleLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:background];
 		
 		LMButton *button = [buttons objectAtIndex:i];
 		button.userInteractionEnabled = YES;
@@ -439,7 +405,7 @@
 	
 	[self.musicPlayer addMusicDelegate:self];
 	
-	[self reloadButtonTitles];
+	[self updateRepeatButtonImage];
 	
 	[self musicTrackDidChange:self.musicPlayer.nowPlayingTrack];
 	[self musicPlaybackStateDidChange:self.musicPlayer.playbackState];

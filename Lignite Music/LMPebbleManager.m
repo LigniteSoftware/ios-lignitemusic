@@ -120,15 +120,23 @@
 
 	[self.musicPlayer setNowPlayingCollection:trackCollection];
 	if(trackPlayMode == TrackPlayModeShuffleAll){
-		self.musicPlayer.shuffleMode = MPMusicShuffleModeSongs;
+		self.musicPlayer.shuffleMode = LMMusicShuffleModeOn;
 	}
 	else{
-		self.musicPlayer.shuffleMode = MPMusicShuffleModeOff;
+		self.musicPlayer.shuffleMode = LMMusicShuffleModeOff;
 		
-		LMMusicRepeatMode newRepeatMode = (trackPlayMode-TrackPlayModeRepeatModeNone)+1;
+		NSLog(@"Track play mode %d", trackPlayMode);
+		
+		LMMusicRepeatMode newRepeatMode = LMMusicRepeatModeNone;
+		if(trackPlayMode == TrackPlayModeRepeatModeOne){
+			newRepeatMode = LMMusicRepeatModeOne;
+		}
+		else if(trackPlayMode == TrackPlayModeRepeatModeAll){
+			newRepeatMode = LMMusicRepeatModeAll;
+		}
 		//YES, the order of calling setNowPlayingTrack does matter here!
 		if(newRepeatMode == MPMusicRepeatModeNone){
-			self.musicPlayer.repeatMode = MPMusicRepeatModeNone;
+			self.musicPlayer.repeatMode = LMMusicRepeatModeNone;
 			[self.musicPlayer setNowPlayingTrack:track];
 		}
 		else{
