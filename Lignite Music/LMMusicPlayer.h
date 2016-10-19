@@ -12,6 +12,7 @@
 #import "LMMusicTrack.h"
 #import "LMMusicTrackCollection.h"
 #import "LMSourceSelectorView.h"
+#import "LMPebbleManager.h"
 
 /**
  Storage key for the user set player type. Correlates to LMMusicPlayerType.
@@ -257,5 +258,10 @@ typedef enum {
  @return The saved LMMusicPlayerType.
  */
 + (LMMusicPlayerType)savedPlayerType;
+
+/**
+ The pebbleManager manages the connection between the phone and the Pebble. It is directly linked to the music player to ensure that new data is pushed directly to the watch without a view or view controller required.
+ */
+@property LMPebbleManager *pebbleManager;
 
 @end

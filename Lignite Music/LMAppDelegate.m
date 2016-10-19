@@ -7,8 +7,11 @@
 //
 
 #import "LMAppDelegate.h"
+#import "LMMusicPlayer.h"
 
 @interface LMAppDelegate ()
+
+@property LMMusicPlayer *musicPlayer;
 
 @end
 

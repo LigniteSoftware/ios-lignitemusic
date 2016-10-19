@@ -7,7 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "LMMusicPlayer.h"
+
+@class LMMusicPlayer;
 
 @interface LMPebbleManager : NSObject
 
@@ -87,5 +88,19 @@ typedef enum {
  @return The shared Pebble manager.
  */
 + (id)sharedPebbleManager;
+
+/**
+ Set the manager's music player. Only needs to be set once, and should be called from within LMMusicPlayer's Singleton creation dispatch.
+
+ @param musicPlayer The music player to set.
+ */
+- (void)setManagerMusicPlayer:(LMMusicPlayer*)musicPlayer;
+
+/**
+ Attach the volume controls to the view as provided. This is required for controlling volume through Pebble.
+
+ @param view The view to attach to.
+ */
+- (void)attachVolumeControlsToView:(UIView*)view;
 
 @end

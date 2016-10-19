@@ -7,7 +7,6 @@
 //
 
 #import "LMMusicPlayer.h"
-#import "LMPebbleManager.h"
 
 @interface LMMusicPlayer() <AVAudioPlayerDelegate>
 
@@ -58,11 +57,6 @@
  */
 @property MPMediaQuery *bullshitQuery;
 
-/**
- The pebbleManager manages the connection between the phone and the Pebble. It is directly linked to the music player to ensure that new data is pushed directly to the watch without a view or view controller required.
- */
-@property LMPebbleManager *pebbleManager;
-
 @end
 
 @implementation LMMusicPlayer
@@ -77,8 +71,6 @@
 - (instancetype)init {
 	self = [super init];
 	if(self){
-		self.pebbleManager = [LMPebbleManager sharedPebbleManager];
-		
 		self.systemMusicPlayer = [MPMusicPlayerController systemMusicPlayer];
 		[self.systemMusicPlayer beginGeneratingPlaybackNotifications];
 		
@@ -166,6 +158,8 @@
 	static dispatch_once_t token;
 	dispatch_once(&token, ^{
 		sharedPlayer = [[self alloc] init];
+		sharedPlayer.pebbleManager = [LMPebbleManager sharedPebbleManager];
+		[sharedPlayer.pebbleManager setManagerMusicPlayer:sharedPlayer];
 	});
 	return sharedPlayer;
 }

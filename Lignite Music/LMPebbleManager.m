@@ -13,8 +13,9 @@
 #import "LMPebbleImage.h"
 #import "LMPebbleManager.h"
 #import "LMPebbleMessageQueue.h"
+#import "LMMusicPlayer.h"
 
-@interface LMPebbleManager()<PBPebbleCentralDelegate>
+@interface LMPebbleManager()<PBPebbleCentralDelegate, LMMusicPlayerDelegate>
 
 @property (weak, nonatomic) PBWatch *pebbleWatch;
 @property (weak, nonatomic) PBPebbleCentral *central;
@@ -31,7 +32,12 @@
 //The last album art image ID which was sent
 @property MPMediaEntityPersistentID lastAlbumArtImage;
 
+//The music player
 @property LMMusicPlayer *musicPlayer;
+
+//For volume control
+@property MPVolumeView *volumeView;
+@property UISlider *volumeViewSlider;
 
 @end
 
@@ -199,12 +205,12 @@
 			[self.musicPlayer autoBackThrough];
 			break;
 		case NowPlayingStateVolumeUp:
-//			[self.volumeViewSlider setValue:self.volumeViewSlider.value + 0.0625 animated:YES];
-//			[self.volumeViewSlider sendActionsForControlEvents:UIControlEventTouchUpInside];
+			[self.volumeViewSlider setValue:self.volumeViewSlider.value + 0.0625 animated:YES];
+			[self.volumeViewSlider sendActionsForControlEvents:UIControlEventTouchUpInside];
 			break;
 		case NowPlayingStateVolumeDown:
-//			[self.volumeViewSlider setValue:self.volumeViewSlider.value - 0.0625 animated:YES];
-//			[self.volumeViewSlider sendActionsForControlEvents:UIControlEventTouchUpInside];
+			[self.volumeViewSlider setValue:self.volumeViewSlider.value - 0.0625 animated:YES];
+			[self.volumeViewSlider sendActionsForControlEvents:UIControlEventTouchUpInside];
 			break;
 	}
 	[self pushCurrentStateToWatch];
@@ -277,6 +283,42 @@
 	if (self.pebbleWatch == watch) {
 		self.pebbleWatch = nil;
 	}
+}
+
+- (void)musicTrackDidChange:(LMMusicTrack *)newTrack {
+	self.requestType = NowPlayingRequestTypeAllData;
+	[self pushNowPlayingItemToWatch];
+}
+
+- (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState {
+	[self pushCurrentStateToWatch];
+}
+
+- (void)setManagerMusicPlayer:(LMMusicPlayer*)musicPlayer {
+	self.musicPlayer = musicPlayer;
+	[self.musicPlayer addMusicDelegate:self];
+}
+
+- (void)handleVolumeChanged:(id)sender{
+	NSLog(@"%s - %f", __PRETTY_FUNCTION__, self.volumeViewSlider.value);
+}
+
+- (void)attachVolumeControlsToView:(UIView*)viewToAttachTo {
+	self.volumeView = [[MPVolumeView alloc] init];
+	self.volumeView.showsRouteButton = NO;
+	self.volumeView.showsVolumeSlider = NO;
+	[viewToAttachTo addSubview:self.volumeView];
+
+	//find the volumeSlider
+	self.volumeViewSlider = nil;
+	for (UIView *view in [self.volumeView subviews]){
+		if ([view.class.description isEqualToString:@"MPVolumeSlider"]){
+			self.volumeViewSlider = (UISlider*)view;
+			break;
+		}
+	}
+
+	[self.volumeViewSlider addTarget:self action:@selector(handleVolumeChanged:) forControlEvents:UIControlEventValueChanged];
 }
 
 - (instancetype)init {

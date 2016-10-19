@@ -210,24 +210,6 @@
             </objects>
             <point key="canvasLocation" x="1079" y="866"/>
         </scene>
-        <!--Album View Controller-->
-        <scene sceneID="1ZZ-BI-sf3">
-            <objects>
-                <viewController id="OHy-L2-aeV" customClass="LMAlbumViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="teF-CJ-jRp"/>
-                        <viewControllerLayoutGuide type="bottom" id="bcd-i1-4aR"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="ruW-c8-wWZ">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="2CI-3F-AYO" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1794" y="179"/>
-        </scene>
         <!--Core View Controller-->
         <scene sceneID="d6d-d0-agb">
             <objects>

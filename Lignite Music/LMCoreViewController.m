@@ -171,8 +171,11 @@ BOOL didAutomaticallyClose = NO;
     [super viewDidLoad];
 	NSLog(@"Loaded");
     // Do any additional setup after loading the view.
-	self.musicPlayer = [(LMAppDelegate*)[[UIApplication sharedApplication] delegate] musicPlayer];
+	self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 	[self.musicPlayer addMusicDelegate:self];
+	
+	LMPebbleManager *pebbleManager = [LMPebbleManager sharedPebbleManager];
+	[pebbleManager attachVolumeControlsToView:self.view];
 	
 	NSArray *sourceTitles = @[
 							  @"Albums", @"Titles", @"Settings", @"Report Bug"
