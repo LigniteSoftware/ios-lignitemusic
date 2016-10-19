@@ -168,6 +168,7 @@ BOOL didAutomaticallyClose = NO;
 			break;
 		}
 		case 3:{
+			[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://www.lignite.io/feedback/"]];
 			NSLog(@"Debug menu");
 			break;
 		}
@@ -284,16 +285,16 @@ BOOL didAutomaticallyClose = NO;
 	[temporaryWhiteView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.browsingAssistant];
 	
 	UILabel *easterEgg = [UILabel newAutoLayoutView];
-	easterEgg.text = @"🎶 So baby pull me closer on the front screen of your iPhone ;) 🎶";
+	easterEgg.text = @"Pull me a bit higher to open now playing!";
 	easterEgg.textColor = [UIColor lightGrayColor];
 	easterEgg.textAlignment = NSTextAlignmentCenter;
-	easterEgg.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:10.0f];
+	easterEgg.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:12.0f];
 	[temporaryWhiteView addSubview:easterEgg];
 
 	[easterEgg autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 	[easterEgg autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 	[easterEgg autoPinEdgeToSuperviewEdge:ALEdgeTop];
-	[easterEgg autoSetDimension:ALDimensionHeight toSize:16];
+	[easterEgg autoSetDimension:ALDimensionHeight toSize:14];
 	
 	UILabel *anotherEasterEgg = [UILabel newAutoLayoutView];
 	anotherEasterEgg.text = @"Technically, you could pull this all the way up to the top of your screen if you tried hard enough. And on this view specifically, I set no limit on how high you could go. And in addition to that, this bottom white spacer matches the height of the mini player, so you could see the bottom of this view easier than seeing it hit the top. Papa bless, 祝你好運!";

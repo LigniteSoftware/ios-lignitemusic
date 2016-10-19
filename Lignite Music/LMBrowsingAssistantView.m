@@ -78,6 +78,10 @@
 	
 	if(totalTranslation < 0){
 		self.textBackgroundConstraint.constant = -sqrt(-totalTranslation);
+		NSLog(@"%f", self.textBackgroundConstraint.constant);
+		if(-totalTranslation > self.frame.size.height){
+			[self.coreViewController openNowPlayingView];
+		}
 	}
 	else{
 		self.textBackgroundConstraint.constant = totalTranslation;
@@ -98,10 +102,6 @@
 			[self open];
 		}
 	}
-}
-
-- (void)swipedUp {
-	[self.coreViewController openNowPlayingView];
 }
 
 - (void)setup {
@@ -166,11 +166,6 @@
 	[self.grabberImageView autoAlignAxisToSuperviewAxis:ALAxisVertical];
 	
 	[self insertSubview:self.currentElementBackgroundView aboveSubview:self.grabberView];
-	
-	UISwipeGestureRecognizer *swipeGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipedUp)];
-	swipeGesture.numberOfTouchesRequired = 2;
-	swipeGesture.direction = UISwipeGestureRecognizerDirectionUp;
-	[self addGestureRecognizer:swipeGesture];
 	
 	NSLog(@"Setup.");
 }

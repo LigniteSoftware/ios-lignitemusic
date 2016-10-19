@@ -270,6 +270,7 @@
 	self.audioPlayer.delegate = self;
 	
 	if(error){
+		//TODO: make sure this doesn't happen again, apply better fix
 		NSLog(@"Error loading audio player with url %@: %@", url, error);
 		[self skipToNextTrack];
 	}

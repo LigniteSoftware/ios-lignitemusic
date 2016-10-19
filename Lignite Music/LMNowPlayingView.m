@@ -349,9 +349,10 @@
 	[self addSubview:self.trackInfoView];
 	[self.trackInfoView setupWithTextAlignment:NSTextAlignmentCenter];
 	
+	//TODO: Fix this being manually set value
 	[self.trackInfoView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.trackDurationView];
-	[self.trackInfoView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.trackDurationView];
-	[self.trackInfoView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.trackDurationView];
+	[self.trackInfoView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.trackDurationView withOffset:20];
+	[self.trackInfoView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.trackDurationView withOffset:-20];
 	[self.trackInfoView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(1.0/5.0)];
 	
 	self.shuffleModeBackgroundView = [UIView newAutoLayoutView];
