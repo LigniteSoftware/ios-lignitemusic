@@ -18,6 +18,8 @@
 
 @property BOOL loadedConstraints;
 
+@property LMMusicPlayer *musicPlayer;
+
 @end
 
 @implementation LMSongDetailControlView
@@ -93,6 +95,14 @@
 	}
 	
 	[super updateConstraints];
+}
+
+- (instancetype)init {
+	self = [super init];
+	if(self) {
+		self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
+	}
+	return self;
 }
 
 /*

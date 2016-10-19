@@ -12,6 +12,7 @@
 #import "LMTrackDurationView.h"
 #import "LMOperationQueue.h"
 #import "LMNowPlayingView.h"
+#import "LMMusicPlayer.h"
 
 @interface  LMMiniPlayerView()<LMMusicPlayerDelegate, LMTrackDurationDelegate>
 
@@ -25,6 +26,8 @@
 @property UIImageView *albumArtImageView;
 
 @property LMOperationQueue *queue;
+
+@property LMMusicPlayer *musicPlayer;
 
 @end
 
@@ -236,6 +239,17 @@
 	[self.musicPlayer addMusicDelegate:self];
 	[self musicTrackDidChange:self.musicPlayer.nowPlayingTrack];
 	[self musicCurrentPlaybackTimeDidChange:self.musicPlayer.currentPlaybackTime];
+}
+
+- (instancetype)init {
+	self = [super init];
+	if(self) {
+		self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
+	}
+	else{
+		NSLog(@"Error creating mini player view!");
+	}
+	return self;
 }
 
 /*

@@ -35,6 +35,8 @@
 @property CGPoint originalPoint, currentPoint;
 @property BOOL setupGesture;
 
+@property LMMusicPlayer *musicPlayer;
+
 @end
 
 @implementation LMAlbumDetailView
@@ -296,6 +298,7 @@
 
 - (void)setup {
 	self.currentlyHighlighted = -1;
+	self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 	
 	UIImage *albumArtImage = [self.albumCollection.representativeItem albumArt];
 	self.albumArtView = [[UIImageView alloc] initWithImage:albumArtImage];
@@ -395,7 +398,6 @@
 	
 	self.controlBackgroundView = [[LMSongDetailControlView alloc]init];
 	self.controlBackgroundView.translatesAutoresizingMaskIntoConstraints = NO;
-	self.controlBackgroundView.musicPlayer = self.musicPlayer;
 	[self addSubview:self.controlBackgroundView];
 	
 	[self.controlBackgroundView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.textBackgroundView];

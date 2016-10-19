@@ -12,7 +12,7 @@
 @interface LMPebbleManager : NSObject
 
 typedef enum {
-	NowPlayingTitle,
+	NowPlayingTitle = 0,
 	NowPlayingArtist,
 	NowPlayingAlbum,
 	NowPlayingTitleArtist,
@@ -39,9 +39,12 @@ typedef enum {
 	WATCH_INFO_MODEL_PEBBLE_STEEL,         //Pebble Steel.
 	WATCH_INFO_MODEL_PEBBLE_TIME,          //Pebble Time.
 	WATCH_INFO_MODEL_PEBBLE_TIME_STEEL,    //Pebble Time Steel.
-	WATCH_INFO_MODEL_PEBBLE_TIME_ROUND_14, //Pebble Time Round, 14mm lug size.
-	WATCH_INFO_MODEL_PEBBLE_TIME_ROUND_20, //Pebble Time Round, 20mm lug size.
-	WATCH_INFO_MODEL_MAX				   //Probably the Pebble 2.
+	WATCH_INFO_MODEL_PEBBLE_TIME_ROUND_14, //Pebble Time Round, 14mm luggy duggy size.
+	WATCH_INFO_MODEL_PEBBLE_TIME_ROUND_20, //Pebble Time Round, 20mm luggy duggy size.
+	WATCH_INFO_MODEL_PEBBLE_2_HR,		   //Pebble 2 with heart rate.
+	WATCH_INFO_MODEL_PEBBLE_2_SE,		   //Pebble 2 without heart rate.
+	WATCH_INFO_MODEL_PEBBLE_TIME_2,		   //Pebble Time 2
+	WATCH_INFO_MODEL_MAX				   //An unknown Pebble maybe? Future people, can you tell us what Pebbles are next?
 } WatchInfoModel;
 
 typedef enum {
@@ -79,17 +82,10 @@ typedef enum {
 #define MAX_RESPONSE_COUNT 90
 
 /**
- Initialize the Pebble manager with a music player which will control its data and will be used to gather information on the music that should be sent to the watch.
+ The shared Pebble manager.
 
- @param musicPlayer The music player to associate.
-
- @return The new Pebble manager.
+ @return The shared Pebble manager.
  */
-- (instancetype)initWithMusicPlayer:(LMMusicPlayer*)musicPlayer;
-
-/**
- The music player for this Pebble manager.
- */
-@property LMMusicPlayer *musicPlayer;
++ (id)sharedPebbleManager;
 
 @end

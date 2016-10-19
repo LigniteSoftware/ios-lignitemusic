@@ -11,7 +11,6 @@
 
 @interface LMTitleView : UIView
 
-@property LMMusicPlayer *musicPlayer;
 @property LMMusicTrackCollection *musicTitles;
 
 - (void)setup;

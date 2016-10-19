@@ -28,6 +28,11 @@
 @property int appMessageSize;
 @property BOOL firstPebbleAppOpen;
 
+//The last album art image ID which was sent
+@property MPMediaEntityPersistentID lastAlbumArtImage;
+
+@property LMMusicPlayer *musicPlayer;
+
 @end
 
 @implementation LMPebbleManager
@@ -61,11 +66,40 @@
 	
 	//[self pushCurrentStateToWatch];
 	
-//	[NSTimer scheduledTimerWithTimeInterval:0.25
-//									 target:self
-//								   selector:@selector(sendAlbumArtImage)
-//								   userInfo:nil
-//									repeats:NO];
+	[NSTimer scheduledTimerWithTimeInterval:0.25
+									 target:self
+								   selector:@selector(sendAlbumArtImage)
+								   userInfo:nil
+									repeats:NO];
+}
+
+- (BOOL)watchIsRoundScreen {
+	switch(self.watchModel){
+		case WATCH_INFO_MODEL_PEBBLE_TIME_ROUND_14:
+		case WATCH_INFO_MODEL_PEBBLE_TIME_ROUND_20:
+			return true;
+		default:
+			return false;
+	}
+}
+
+- (BOOL)watchIsBlackAndWhite {
+	switch(self.watchModel){
+		case WATCH_INFO_MODEL_PEBBLE_ORIGINAL:
+		case WATCH_INFO_MODEL_PEBBLE_STEEL:
+		case WATCH_INFO_MODEL_PEBBLE_2_HR:
+		case WATCH_INFO_MODEL_PEBBLE_2_SE:
+			return true;
+		default:
+			return false;
+	}
+}
+
+- (CGSize)albumArtSize {
+	if([self watchIsRoundScreen]){
+		return CGSizeMake(180, 180);
+	}
+	return CGSizeMake(144, 144);
 }
 
 - (void)sendAlbumArtImage {
@@ -74,13 +108,12 @@
 		self.imageParts = 1;
 	}
 	
-	CGSize imageSize = [self albumArtSize];
-	MPMediaItemArtwork *currentArtwork = [self.musicPlayer.nowPlayingItem artwork];
-	UIImage *albumArtImage = [currentArtwork imageWithSize:imageSize];
+	//TODO: Do not call this on the main thread maybe?
+	UIImage *albumArtImage = [self.musicPlayer.nowPlayingTrack albumArt];
 	
 	//NSLog(@"%d, %d, %d", self.musicPlayer.nowPlayingItem.albumPersistentID == self.lastAlbumArtImage, self.requestType, self.firstPebbleAppOpen);
 	
-	if(self.musicPlayer.nowPlayingItem.albumPersistentID == self.lastAlbumArtImage && self.requestType != NowPlayingRequestTypeOnlyTrackInfo && !self.firstPebbleAppOpen){
+	if(self.musicPlayer.nowPlayingTrack.albumPersistentID == self.lastAlbumArtImage && self.requestType != NowPlayingRequestTypeOnlyTrackInfo && !self.firstPebbleAppOpen){
 		NSLog(@"The album art is literally samezies...");
 		return;
 	}
@@ -88,20 +121,20 @@
 		NSLog(@"Only track info, rejecting");
 		return;
 	}
-	self.lastAlbumArtImage = self.musicPlayer.nowPlayingItem.albumPersistentID;
+	self.lastAlbumArtImage = self.musicPlayer.nowPlayingTrack.albumPersistentID;
 	self.requestType = NowPlayingRequestTypeOnlyTrackInfo;
 	self.firstPebbleAppOpen = NO;
 	
 	for(uint8_t index = 0; index < self.imageParts; index++){
 		
 		NSString *imageString = [LMPebbleImage ditherImage:albumArtImage
-												  withSize:imageSize
+												  withSize:[self albumArtSize]
 											 forTotalParts:self.imageParts
 										   withCurrentPart:index
 										   isBlackAndWhite:[self watchIsBlackAndWhite]
 											  isRoundWatch:[self watchIsRoundScreen]];
 		
-		if(self.watch){
+		if(self.pebbleWatch){
 			if(!albumArtImage) {
 				NSLog(@"No image!");
 				[self sendMessageToPebble:@{MessageKeyAlbumArtLength:[NSNumber numberWithUint16:1], MessageKeyImagePart:[NSNumber numberWithUint8:index]}];
@@ -134,23 +167,47 @@
 	}
 }
 
-- (instancetype)initWithMusicPlayer:(LMMusicPlayer*)musicPlayer {
-	self = [super init];
-	if(self){
-		self.musicPlayer = musicPlayer;
-		
-		self.central = [PBPebbleCentral defaultCentral];
-		self.central.delegate = self;
-		self.central.appUUID = [[NSUUID alloc] initWithUUIDString:@"edf76057-f3ef-4de6-b841-cb9532a81a5a"];
-		
-		[self.central run];
-		
-		self.messageQueue = [LMPebbleMessageQueue new];
+- (void)sendCurrentStateToWatch {
+	//NSLog(@"Hi");
+	uint16_t current_time = (uint16_t)self.musicPlayer.currentPlaybackTime;
+	uint16_t total_time = (uint16_t)self.musicPlayer.nowPlayingTrack.playbackDuration;
+	uint8_t metadata[] = {
+		[self.musicPlayer playbackState],
+		[self.musicPlayer shuffleMode],
+		[self.musicPlayer repeatMode],
+		total_time >> 8, total_time & 0xFF,
+		current_time >> 8, current_time & 0xFF
+	};
+	//NSLog(@"Current state: %@", [NSData dataWithBytes:metadata length:7]);
+	[self sendMessageToPebble:@{MessageKeyCurrentState: [NSData dataWithBytes:metadata length:7]}];
+	
+}
+
+- (void)pushCurrentStateToWatch {
+	[self performSelector:@selector(sendCurrentStateToWatch) withObject:nil afterDelay:0.1];
+}
+
+- (void)changeState:(NowPlayingState)state {
+	switch(state) {
+		case NowPlayingStatePlayPause:
+			[self.musicPlayer invertPlaybackState];
+			break;
+		case NowPlayingStateSkipNext:
+			[self.musicPlayer skipToNextTrack];
+			break;
+		case NowPlayingStateSkipPrevious:
+			[self.musicPlayer autoBackThrough];
+			break;
+		case NowPlayingStateVolumeUp:
+//			[self.volumeViewSlider setValue:self.volumeViewSlider.value + 0.0625 animated:YES];
+//			[self.volumeViewSlider sendActionsForControlEvents:UIControlEventTouchUpInside];
+			break;
+		case NowPlayingStateVolumeDown:
+//			[self.volumeViewSlider setValue:self.volumeViewSlider.value - 0.0625 animated:YES];
+//			[self.volumeViewSlider sendActionsForControlEvents:UIControlEventTouchUpInside];
+			break;
 	}
-	else{
-		NSLog(@"Error creating Pebble manager!");
-	}
-	return self;
+	[self pushCurrentStateToWatch];
 }
 
 - (void)pebbleCentral:(PBPebbleCentral *)central watchDidConnect:(PBWatch *)watch isNew:(BOOL)isNew {
@@ -206,7 +263,7 @@
 			[self pushNowPlayingItemToWatch];
 		}
 		else if(update[MessageKeyChangeState]) {
-//			[self changeState:(NowPlayingState)[update[MessageKeyChangeState] integerValue]];
+			[self changeState:(NowPlayingState)[update[MessageKeyChangeState] integerValue]];
 		}
 		else if(update[MessageKeyConnectionTest]){
 			[self.messageQueue enqueue:@{ MessageKeyConnectionTest:[NSNumber numberWithInt8:1] }];
@@ -220,6 +277,32 @@
 	if (self.pebbleWatch == watch) {
 		self.pebbleWatch = nil;
 	}
+}
+
+- (instancetype)init {
+	self = [super init];
+	if(self){
+		self.central = [PBPebbleCentral defaultCentral];
+		self.central.delegate = self;
+		self.central.appUUID = [[NSUUID alloc] initWithUUIDString:@"edf76057-f3ef-4de6-b841-cb9532a81a5a"];
+		
+		[self.central run];
+		
+		self.messageQueue = [LMPebbleMessageQueue new];
+	}
+	else{
+		NSLog(@"Error creating Pebble manager!");
+	}
+	return self;
+}
+
++ (id)sharedPebbleManager {
+	static LMPebbleManager *sharedPebbleManager = nil;
+	static dispatch_once_t token;
+	dispatch_once(&token, ^{
+		sharedPebbleManager = [[self alloc] init];
+	});
+	return sharedPebbleManager;
 }
 
 @end

@@ -11,6 +11,4 @@
 
 @interface LMSongDetailControlView : UIView
 
-@property LMMusicPlayer *musicPlayer;
-
 @end

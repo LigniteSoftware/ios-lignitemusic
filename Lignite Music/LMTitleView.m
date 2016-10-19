@@ -12,8 +12,11 @@
 #import "LMListEntry.h"
 #import "LMColour.h"
 #import "LMOperationQueue.h"
+#import "LMMusicPlayer.h"
 
 @interface LMTitleView() <LMListEntryDelegate, LMTableViewSubviewDelegate, LMMusicPlayerDelegate>
+
+@property LMMusicPlayer *musicPlayer;
 
 @property LMTableView *songListTableView;
 @property NSMutableArray *itemArray;
@@ -245,6 +248,17 @@
 	[self.musicPlayer addMusicDelegate:self];
 	[self musicTrackDidChange:self.musicPlayer.nowPlayingTrack];
 	[self musicPlaybackStateDidChange:self.musicPlayer.playbackState];
+}
+
+- (instancetype)init {
+	self = [super init];
+	if(self) {
+		self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
+	}
+	else{
+		NSLog(@"Error creating LMTitleView");
+	}
+	return self;
 }
 
 /*

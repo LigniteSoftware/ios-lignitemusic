@@ -11,8 +11,11 @@
 #import "LMMiniPlayerView.h"
 #import "LMColour.h"
 #import "LMAppIcon.h"
+#import "LMMusicPlayer.h"
 
 @interface LMBrowsingAssistantView()
+
+@property LMMusicPlayer *musicPlayer;
 
 @property UIView *currentElementBackgroundView, *selectorBackgroundView;
 
@@ -123,7 +126,6 @@
 	[self.currentElementBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:/*(2.0/3.0)**/(5.25/6.0)];
 	
 	self.miniPlayerView = [LMMiniPlayerView newAutoLayoutView];
-	self.miniPlayerView.musicPlayer = self.musicPlayer;
 	[self.currentElementBackgroundView addSubview:self.miniPlayerView];
 	
 	[self.miniPlayerView autoPinEdgesToSuperviewEdges];
@@ -171,6 +173,17 @@
 	[self addGestureRecognizer:swipeGesture];
 	
 	NSLog(@"Setup.");
+}
+
+- (instancetype)init {
+	self = [super init];
+	if(self) {
+		self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
+	}
+	else{
+		NSLog(@"Error creating browsing assistant");
+	}
+	return self;
 }
 
 /*

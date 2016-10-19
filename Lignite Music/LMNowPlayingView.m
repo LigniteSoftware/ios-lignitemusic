@@ -17,8 +17,11 @@
 #import "LMButton.h"
 #import "LMColour.h"
 #import "LMAppIcon.h"
+#import "LMMusicPlayer.h"
 
 @interface LMNowPlayingView() <LMMusicPlayerDelegate, LMButtonDelegate, LMTrackDurationDelegate>
+
+@property LMMusicPlayer *musicPlayer;
 
 @property UIImageView *backgroundImageView;
 //@property UIView *shadingView;
@@ -460,6 +463,17 @@
 	UISwipeGestureRecognizer *swipeToLeftGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipedLeftNowPlaying)];
 	swipeToLeftGesture.direction = UISwipeGestureRecognizerDirectionRight;
 	[self addGestureRecognizer:swipeToLeftGesture];
+}
+
+- (instancetype)init {
+	self = [super init];
+	if(self) {
+		self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
+	}
+	else{
+		NSLog(@"Windows error creating music player!");
+	}
+	return self;
 }
 
 //// Only override drawRect: if you perform custom drawing.

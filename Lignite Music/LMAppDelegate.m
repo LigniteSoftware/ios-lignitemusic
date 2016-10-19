@@ -25,7 +25,7 @@
     // Override point for customization after application launch.
 	NSLog(@"Suck?");
 	
-	self.musicPlayer = [[LMMusicPlayer alloc]init];
+	self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 	
 	NSLog(@"Got options %@", launchOptions);
 	

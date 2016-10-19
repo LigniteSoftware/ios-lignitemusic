@@ -146,6 +146,13 @@ typedef enum {
 @property LMSourceSelectorView *sourceSelector;
 
 /**
+ The shared music player.
+
+ @return The shared music player.
+ */
++ (id)sharedMusicPlayer;
+
+/**
  Prepare for release through ARC. Unhooks observers tied to state and track change notifications.
  */
 - (void)deinit;

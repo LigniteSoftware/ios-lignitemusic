@@ -7,13 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "LMMusicPlayer.h"
 #import "LMCoreViewController.h"
 
 @interface LMBrowsingAssistantView : UIView
 
 @property LMCoreViewController *coreViewController;
-@property LMMusicPlayer *musicPlayer;
 @property NSLayoutConstraint *textBackgroundConstraint;
 
 - (void)setup;

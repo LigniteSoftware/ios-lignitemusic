@@ -77,13 +77,13 @@
 - (instancetype)init {
 	self = [super init];
 	if(self){
-		self.pebbleManager = [[LMPebbleManager alloc] initWithMusicPlayer:self];
+		self.pebbleManager = [LMPebbleManager sharedPebbleManager];
 		
 		self.systemMusicPlayer = [MPMusicPlayerController systemMusicPlayer];
 		[self.systemMusicPlayer beginGeneratingPlaybackNotifications];
 		
 		//http://stackoverflow.com/questions/3059255/how-do-i-clear-the-queue-of-a-mpmusicplayercontroller
-		MPMediaPropertyPredicate *predicate = [MPMediaPropertyPredicate predicateWithValue:@"MotherFuckingShitpost"
+		MPMediaPropertyPredicate *predicate = [MPMediaPropertyPredicate predicateWithValue:@"MotherFuckingShitpost69"
 																			   forProperty:MPMediaItemPropertyTitle];
 		MPMediaQuery *q = [[MPMediaQuery alloc] init];
 		[q addFilterPredicate: predicate];
@@ -159,6 +159,15 @@
 	 object:         self.systemMusicPlayer];
 	
 	[self.systemMusicPlayer endGeneratingPlaybackNotifications];
+}
+
++ (id)sharedMusicPlayer {
+	static LMMusicPlayer *sharedPlayer;
+	static dispatch_once_t token;
+	dispatch_once(&token, ^{
+		sharedPlayer = [[self alloc] init];
+	});
+	return sharedPlayer;
 }
 
 - (void)prepareForTermination {

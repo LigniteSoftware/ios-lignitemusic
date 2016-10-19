@@ -7,12 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "LMMusicPlayer.h"
 #import "LMCoreViewController.h"
 
 @interface LMAlbumView : UIView
-
-@property LMMusicPlayer *musicPlayer;
 
 @property LMCoreViewController *rootViewController;
 

@@ -7,11 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "LMMusicPlayer.h"
 
 @interface LMMiniPlayerView : UIView
-
-@property LMMusicPlayer *musicPlayer;
 
 - (void)setup;
 

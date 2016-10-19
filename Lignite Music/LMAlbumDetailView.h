@@ -13,7 +13,6 @@
 @interface LMAlbumDetailView : UIView
 
 @property LMAlbumView *rootView;
-@property LMMusicPlayer *musicPlayer;
 
 /**
  Setup the detail view's contents.

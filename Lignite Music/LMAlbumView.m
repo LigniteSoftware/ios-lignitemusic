@@ -15,8 +15,11 @@
 #import "LMTableView.h"
 #import "LMTableViewCell.h"
 #import "LMAppIcon.h"
+#import "LMMusicPlayer.h"
 
 @interface LMAlbumView () <LMAlbumViewItemDelegate, LMTableViewSubviewDelegate, LMMusicPlayerDelegate>
+
+@property LMMusicPlayer *musicPlayer;
 
 @property LMTableView *rootTableView;
 @property NSMutableArray *albumsItemArray;
@@ -117,7 +120,6 @@
 	
 	LMAlbumDetailView *detailView = [[LMAlbumDetailView alloc]initWithMusicTrackCollection:[self.albumCollections objectAtIndex:item.collectionIndex]];
 	detailView.rootView = self;
-	detailView.musicPlayer = self.musicPlayer;
 	detailView.translatesAutoresizingMaskIntoConstraints = NO;
 	[self addSubview:detailView];
 	
@@ -278,6 +280,17 @@
 	[self.musicPlayer addMusicDelegate:self];
 	
 	[self reloadSourceSelectorInfo];
+}
+
+- (instancetype)init {
+	self = [super init];
+	if(self) {
+		self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
+	}
+	else{
+		NSLog(@"Error creating LMAlbumView!");
+	}
+	return self;
 }
 
 @end

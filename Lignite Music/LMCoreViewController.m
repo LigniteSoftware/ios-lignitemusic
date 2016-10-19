@@ -82,10 +82,9 @@
 		return;
 	}
 	
-	self.nowPlayingView = [[LMNowPlayingView alloc]init];
+	self.nowPlayingView = [LMNowPlayingView new];
 	self.nowPlayingView.translatesAutoresizingMaskIntoConstraints = NO;
 	self.nowPlayingView.backgroundColor = [UIColor blueColor];
-	self.nowPlayingView.musicPlayer = self.musicPlayer;
 	self.nowPlayingView.rootViewController = self;
 	[self.view addSubview:self.nowPlayingView];
 	
@@ -212,8 +211,7 @@ BOOL didAutomaticallyClose = NO;
 	
 	self.musicPlayer.sourceSelector = self.sourceSelector;
 
-	self.albumView = [[LMAlbumView alloc]initForAutoLayout];
-	self.albumView.musicPlayer = self.musicPlayer;
+	self.albumView = [LMAlbumView newAutoLayoutView];
 	self.albumView.rootViewController = self;
 	[self.view addSubview:self.albumView];
 	
@@ -223,7 +221,6 @@ BOOL didAutomaticallyClose = NO;
 	
 	self.titleView = [LMTitleView newAutoLayoutView];
 	self.titleView.backgroundColor = [UIColor redColor];
-	self.titleView.musicPlayer = self.musicPlayer;
 	//http://stackoverflow.com/questions/8424972/mpmediaitemcollection-whole-library
 	MPMediaQuery *everything = [[MPMediaQuery alloc] init];
 	NSArray *songs = [everything items];
@@ -250,7 +247,6 @@ BOOL didAutomaticallyClose = NO;
 	self.titleView.hidden = YES;
 	
 	self.browsingAssistant = [[LMBrowsingAssistantView alloc]initForAutoLayout];
-	self.browsingAssistant.musicPlayer = self.musicPlayer;
 	self.browsingAssistant.coreViewController = self;
 	self.browsingAssistant.backgroundColor = [UIColor orangeColor];
 	[self.view addSubview:self.browsingAssistant];
@@ -302,18 +298,6 @@ BOOL didAutomaticallyClose = NO;
 //								   selector:@selector(openNowPlayingView)
 //								   userInfo:nil
 //									repeats:NO];
-	
-//	self.nowPlayingView = [[LMNowPlayingView alloc]init];
-//	self.nowPlayingView.translatesAutoresizingMaskIntoConstraints = NO;
-//	self.nowPlayingView.backgroundColor = [UIColor blueColor];
-//	self.nowPlayingView.musicPlayer = self.musicPlayer;
-//	[self.view addSubview:self.nowPlayingView];
-//	
-//	[self.nowPlayingView autoCenterInSuperview];
-//	[self.nowPlayingView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
-//	[self.nowPlayingView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
-//	
-//	[self.nowPlayingView setup];
 	
 //	UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(play)];
 //	[self.view addGestureRecognizer:gesture];
