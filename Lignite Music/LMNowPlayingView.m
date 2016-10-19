@@ -239,7 +239,7 @@
 	}
 }
 
-- (void)pinchedNowPlaying {
+- (void)closeNowPlaying {
 	[self.musicPlayer removeMusicDelegate:self];
 	[self.rootViewController closeNowPlayingView];
 }
@@ -411,9 +411,6 @@
 	[self musicTrackDidChange:self.musicPlayer.nowPlayingTrack];
 	[self musicPlaybackStateDidChange:self.musicPlayer.playbackState];
 	
-	UIPinchGestureRecognizer *pinchGesture = [[UIPinchGestureRecognizer alloc]initWithTarget:self action:@selector(pinchedNowPlaying)];
-	[self addGestureRecognizer:pinchGesture];
-	
 	UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tappedNowPlaying)];
 	[self addGestureRecognizer:tapGesture];
 	
@@ -424,6 +421,10 @@
 	UISwipeGestureRecognizer *swipeToLeftGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipedLeftNowPlaying)];
 	swipeToLeftGesture.direction = UISwipeGestureRecognizerDirectionRight;
 	[self addGestureRecognizer:swipeToLeftGesture];
+	
+	UISwipeGestureRecognizer *swipeDownGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(closeNowPlaying)];
+	swipeDownGesture.direction = UISwipeGestureRecognizerDirectionDown;
+	[self addGestureRecognizer:swipeDownGesture];
 }
 
 - (instancetype)init {

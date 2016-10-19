@@ -1,41 +1,59 @@
 /*
-  Localizable.strings
-  Lignite Music
-
-  Created by Edwin Finch on 10/1/16.
-  Copyright © 2016 Lignite. All rights reserved.
-*/
+ Localizable.strings
+ Lignite Music
+ 
+ Created by Edwin Finch on 10/1/16.
+ Copyright © 2016 Lignite. All rights reserved.
+ */
 
 /*
  Hello, and thanks for translating Lignite Music!
  
  Please read the following notes thoroughly.
  
- 1. The following characters in between quotes must be left in exact format and must not be deleted, changed or 
+ 1. The following characters in between quotes must be left in exact format and must not be deleted, changed or
  modified in any other way:
 	"\n", "%02i", "%d", "%lu", "%@"
- Any string in the above list *with a percentage (%) symbol* I will now reference as "formatters".
+ Any string in the above list with a percentage (%) symbol I will now reference as "formatters".
  
  2. Any character mentioned in point 1 that is in a string will have data injected into it. If there are more than
  one formatter, that means that data is inserted in that order. When you change strings with formatters, please do not
- change the order of the formatters or remove formatters. The order of which the data is inserted into these strings is 
+ change the order of the formatters or remove formatters. The order of which the data is inserted into these strings is
  static. If your language *absolutely requires* a different order, please contact us directly.
  
- 3. If you are confused about a string, look at its key first. It may help clarify. 
- If still you have any questions about translating Lignite Music please let us know. You should not feel uncertain 
- what a strinhg is doing, and if you are, just let us know and we'll clarify. Now that you've read this far, 
+ 3. If you are confused about a string, look at its key first. It may help clarify.
+ If still you have any questions about translating Lignite Music please let us know. You should not feel uncertain
+ what a strinhg is doing, and if you are, just let us know and we'll clarify. Now that you've read this far,
  please send us a picture of a walrus so we know you did. Yes, seriously.
  
  Thanks, and have fun!
  */
 
 /* General */
-"SongXofX" = "Song %d of %d";
+"SongXofX" = "Song %d von %d";
 "SongX" = "Song %d";
-"Song" = "song";
-"Songs" = "songs";
+"Song" = "Song";
+"Songs" = "Songs";
 
 /*
+ Music Collection Types
+ ----------------------
+ Music collection types are what shows for sources, for example, a list of sources (Albums, Titles, Composers, etc.)
+ 
+ These strings are also used in-code to generate counts for sources. For example, the "Albums" string will be used to compose a string saying "69 Albums". If your language requires a different structure or format in this scenario, please reach out to us.
+ */
+"ChooseYourView" = "Wähle deine Ansicht"; //Choose your collection type view, basically what is below this.
+"Albums" = "Alben";
+"Titles" = "Titel"; //Individual songs
+"Artists" = "Künstler";
+"Playlists" = "Wiedergabelisten";
+"Composers" = "Komponisten";
+"Genres" = "Genres";
+"Compilations" = "Compilations";
+
+/*
+ Song Durations
+ --------------
  Durations are formatted like this:
  
  hours:minutes:seconds
@@ -47,7 +65,7 @@
 "LongSongDuration" = "%02i:%02d:%02d";
 "ShortSongDuration" = "%02d:%02d";
 "BlankDuration" = "--:--";
-"LengthOfSong" = "Length: %@";
+"LengthOfSong" = "Dauer: %@";
 
 /* Album view */
 "AlbumDetailInfoWithGenre" = "%@ | %lu %@"; /* ie. "Hiphop | 8 songs" */
@@ -55,47 +73,50 @@
 
 /* System shuffle modes */
 "Shuffle" = "Shuffle";
-"DefaultShuffleMode" = "Default";
-"OffShuffleMode" = "Off";
+"DefaultShuffleMode" = "Normal";
+"OffShuffleMode" = "Aus";
 "SongsShuffleMode" = "Songs";
-"AlbumsShuffleMode" = "Albums";
+"AlbumsShuffleMode" = "Alben";
 
 /* System repeat modes */
-"Repeat" = "Repeat";
-"DefaultRepeatMode" = "Default";
-"OffRepeatMode" = "Off";
-"ThisRepeatMode" = "This";
-"AllRepeatMode" = "All";
+"Repeat" = "Wiederholen";
+"DefaultRepeatMode" = "Normal";
+"OffRepeatMode" = "Aus";
+"ThisRepeatMode" = "1";
+"AllRepeatMode" = "Alles";
 
 /* Settings */
-"Settings" = "Settings";
-"BatterySaver" = "Battery saver"; /* For Pebble. Stops scrolling text, reduces redraw interval. */
-"ArtistLabel" = "Artist label"; /* For Pebble. Shows the text that displays the artist on the now playing screen. */
-"PebbleStyleControls" = "Pebble-style controls"; /* For Pebble, can you tell? This one makes the controls (ie. play/pause) emulate the stock Pebble music app controls instead of Lignite-style. */
-"DisplayTime" = "Show the time"; /* For Pebble. Shows the time on the now playing screen. */
-"InstallPebbleApp" = "Install Pebble App"; /* Sends the user to the Pebble appstore. */
-"SendFeedback" = "Send Feedback/Report Bug";
-"ReplayTutorial" = "Replay tutorial";
-"Functionality" = "Functionality"; /* Functionality related settings like battery saver mode. */
-"LookAndFeel" = "Look and Feel";
+"Settings" = "Einstellungen";
+"BatterySaver" = "Akku-Sparmodus"; /* For Pebble. Stops scrolling text, reduces redraw interval. */
+"ArtistLabel" = "Künstlernamen"; /* For Pebble. Shows the text that displays the artist on the now playing screen. */
+"PebbleStyleControls" = "Steuerung wie Pebble Musik App"; /* For Pebble, can you tell? This one makes the controls (ie. play/pause) emulate the stock Pebble music app controls instead of Lignite-style. */
+"DisplayTime" = "Zeit anzeigen"; /* For Pebble. Shows the time on the now playing screen. */
+"InstallPebbleApp" = "Pebble App installieren"; /* Sends the user to the Pebble appstore. */
+"SendFeedback" = "Feedback / Fehler melden";
+"ReplayTutorial" = "Einführung erneut abspielen";
+"Functionality" = "Funktionalität"; /* Functionality related settings like battery saver mode. */
+"LookAndFeel" = "Look & Feel";
 
 /* General/uncategorized */
-"Okay" = "Okay";
-"GeneralError" = "Error!";
-"Other" = "Other";
-"UnknownSection" = "Unknown Section";
+"Okay" = "Ok";
+"GeneralError" = "Fehler!";
+"Other" = "Anderes";
+"UnknownSection" = "Unbekannter Abschnitt";
 
 /* When no music is playing */
-"NoMusic" = "No Music";
-"NoMusicDescription" = "Start music on your watch or phone";
+"NoMusic" = "Keine Musik";
+"NoMusicDescription" = "Starte die Musikwiedergabe auf deinem Smartphone oder deiner Uhr";
 
-/* This pops up when the user first opens the app and warns the user about the incoming iOS system warning.
+/*
+ Some Pebble Stuff
+ -----------------
+ This pops up when the user first opens the app and warns the user about the incoming iOS system warning.
  After confirming, the user then will get a popup from iOS (which we have no control over) asking them if Lignite Music
  has permission to use Bluetooth. */
-"PebbleConnectionRequestTitle" = "Pebble Connection";
-"PebbleConnectionRequestDescription" = "iOS is about to ask for your permission to use Bluetooth devices. Please allow the permission as we use it to communicate with Lignite Music watchapps.";
+"PebbleConnectionRequestTitle" = "Pebble Verbindung";
+"PebbleConnectionRequestDescription" = "iOS wird dich um Erlaubnis fragen, um Bluetooth-Geräte nutzen zu dürfen. Akzeptiere die Anfrage bitte, damit wir mit der Lignite Music App kommunizieren können.";
 
 /* Temporary strings that will be removed in a non-beta release */
-"HowToUse" = "How to Use";
-"HowToUseDescription" = "Hey! Welcome to the Lignite Music beta. We're going to having a better tutorial later, don't worry.\n\nTo play/pause the song, tap anywhere on the screen.\n\nTo skip/go to previous song, swipe left or right anywhere on the screen.\n\nDrag the slider to control the playing time.\n\nInstall the Pebble app within the settings page.\n\nYou can replay this tutorial any time in settings.";
-"OkThanks" = "Ok, thanks";
+"HowToUse" = "Anleitung";
+"HowToUseDescription" = "Hey! Willkommen zur Lignite Music Beta. Wir werden in der finalen Version ein schönes Tutorial haben, keine Sorge.\n\nUm die Wiedergabe zu starten oder zu pausieren, tippe irgendwo auf dem Display.\n\nUm zum vorherigen oder nächsten Lied zu gelangen, streiche von links oder rechts über das Display.\n\nAuf der Verlaufsanzeige kannst du vor- und zurückspulen..\n\nDu kannst die Pebble app innerhalb der Einstellungen installieren.\n\nDu kannst diese Einführung jederzeit wieder aus den Einstellungen starten.";
+"OkThanks" = "Ok, danke";

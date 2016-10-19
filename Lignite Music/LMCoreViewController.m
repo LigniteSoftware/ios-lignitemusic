@@ -285,7 +285,7 @@ BOOL didAutomaticallyClose = NO;
 	[temporaryWhiteView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.browsingAssistant];
 	
 	UILabel *easterEgg = [UILabel newAutoLayoutView];
-	easterEgg.text = @"Pull me a bit higher to open now playing!";
+	easterEgg.text = @"🎶 So baby pull me closer on the front screen of your iPhone 🎶";
 	easterEgg.textColor = [UIColor lightGrayColor];
 	easterEgg.textAlignment = NSTextAlignmentCenter;
 	easterEgg.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:12.0f];

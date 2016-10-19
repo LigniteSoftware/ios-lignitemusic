@@ -1,29 +1,29 @@
-/* 
-  Localizable.strings
-  Lignite Music
-
-  Created by Edwin Finch on 10/1/16.
-  Copyright © 2016 Lignite. All rights reserved.
-*/
+/*
+ Localizable.strings
+ Lignite Music
+ 
+ Created by Edwin Finch on 10/1/16.
+ Copyright © 2016 Lignite. All rights reserved.
+ */
 
 /*
  Hello, and thanks for translating Lignite Music!
  
  Please read the following notes thoroughly.
  
- 1. The following characters in between quotes must be left in exact format and must not be deleted, changed or 
+ 1. The following characters in between quotes must be left in exact format and must not be deleted, changed or
  modified in any other way:
 	"\n", "%02i", "%d", "%lu", "%@"
- Any string in the above list *with a percentage (%) symbol* I will now reference as "formatters".
+ Any string in the above list with a percentage (%) symbol I will now reference as "formatters".
  
  2. Any character mentioned in point 1 that is in a string will have data injected into it. If there are more than
  one formatter, that means that data is inserted in that order. When you change strings with formatters, please do not
- change the order of the formatters or remove formatters. The order of which the data is inserted into these strings is 
+ change the order of the formatters or remove formatters. The order of which the data is inserted into these strings is
  static. If your language *absolutely requires* a different order, please contact us directly.
  
- 3. If you are confused about a string, look at its key first. It may help clarify. 
- If still you have any questions about translating Lignite Music please let us know. You should not feel uncertain 
- what a strinhg is doing, and if you are, just let us know and we'll clarify. Now that you've read this far, 
+ 3. If you are confused about a string, look at its key first. It may help clarify.
+ If still you have any questions about translating Lignite Music please let us know. You should not feel uncertain
+ what a strinhg is doing, and if you are, just let us know and we'll clarify. Now that you've read this far,
  please send us a picture of a walrus so we know you did. Yes, seriously.
  
  Thanks, and have fun!
@@ -36,6 +36,24 @@
 "Songs" = "songs";
 
 /*
+ Music Collection Types
+ ----------------------
+ Music collection types are what shows for sources, for example, a list of sources (Albums, Titles, Composers, etc.)
+ 
+ These strings are also used in-code to generate counts for sources. For example, the "Albums" string will be used to compose a string saying "69 Albums". If your language requires a different structure or format in this scenario, please reach out to us.
+ */
+"ChooseYourView" = "Please choose your view"; //Choose your collection type view, basically what is below this.
+"Albums" = "Albums";
+"Titles" = "Titles"; //Individual songs
+"Artists" = "Artists";
+"Playlists" = "Playlists";
+"Composers" = "Composers";
+"Genres" = "Genres";
+"Compilations" = "Compilations";
+
+/*
+ Song Durations
+ --------------
  Durations are formatted like this:
  
  hours:minutes:seconds
@@ -89,7 +107,10 @@
 "NoMusic" = "No Music";
 "NoMusicDescription" = "Start music on your watch or phone";
 
-/* This pops up when the user first opens the app and warns the user about the incoming iOS system warning.
+/*
+ Some Pebble Stuff
+ -----------------
+ This pops up when the user first opens the app and warns the user about the incoming iOS system warning.
  After confirming, the user then will get a popup from iOS (which we have no control over) asking them if Lignite Music
  has permission to use Bluetooth. */
 "PebbleConnectionRequestTitle" = "Pebble Connection";
