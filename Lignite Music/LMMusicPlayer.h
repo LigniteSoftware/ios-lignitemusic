@@ -197,6 +197,15 @@ typedef enum {
 - (void)removeMusicDelegate:(id<LMMusicPlayerDelegate>)delegateToRemove;
 
 /**
+ Creates an LMMusicTrackCollection based off a MPMediaItemCollection. Sets source collection automatically.
+
+ @param itemCollection The item collection to base this track collection off of.
+
+ @return The track collection.
+ */
++ (LMMusicTrackCollection*)musicTrackCollectionFromMediaItemCollection:(MPMediaItemCollection*)itemCollection;
+
+/**
  Finds collections of music based off of the type provided.
 
  @param musicType The type of music to find.

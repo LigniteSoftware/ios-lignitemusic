@@ -422,6 +422,17 @@ BOOL shuffleForDebug = NO;
 	}
 }
 
++ (LMMusicTrackCollection*)musicTrackCollectionFromMediaItemCollection:(MPMediaItemCollection*)itemCollection {
+	NSMutableArray *musicCollection = [[NSMutableArray alloc]init];
+	for(int itemIndex = 0; itemIndex < itemCollection.count; itemIndex++){
+		MPMediaItem *musicItem = [itemCollection.items objectAtIndex:itemIndex];
+		LMMusicTrack *musicTrack = [[LMMusicTrack alloc]initWithMPMediaItem:musicItem];
+		[musicCollection addObject:musicTrack];
+	}
+	LMMusicTrackCollection *trackCollection = [[LMMusicTrackCollection alloc]initWithItems:musicCollection basedOnSourceCollection:itemCollection];
+	return trackCollection;
+}
+
 - (NSArray<LMMusicTrackCollection*>*)queryCollectionsForMusicType:(LMMusicType)musicType {
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer){
 		NSTimeInterval startingTime = [[NSDate date] timeIntervalSince1970];

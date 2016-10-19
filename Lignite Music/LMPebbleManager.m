@@ -14,6 +14,7 @@
 #import "LMPebbleManager.h"
 #import "LMPebbleMessageQueue.h"
 #import "LMMusicPlayer.h"
+#import "LMNowPlayingView.h"
 
 @interface LMPebbleManager()<PBPebbleCentralDelegate, LMMusicPlayerDelegate>
 
@@ -101,6 +102,196 @@
 	}
 }
 
+- (void)playTrackFromMessage:(NSDictionary *)message withTrackPlayMode:(TrackPlayMode)trackPlayMode {
+	MPMediaItemCollection *queue = [self getCollectionFromMessage:message][0];
+	LMMusicTrackCollection *trackCollection = [LMMusicPlayer musicTrackCollectionFromMediaItemCollection:queue];
+	LMMusicTrack *track = [trackCollection items][[[message[MessageKeyPlayTrack] int16Value] < 0 ? 0 : message[MessageKeyPlayTrack] int16Value]];
+	NSLog(@"Got index %d", [message[MessageKeyPlayTrack] int16Value]);
+//	for(int i = 0; i < [[queue items] count]; i++){
+//		NSLog(@"Got item %@: %d", [[[queue items] objectAtIndex:i]valueForProperty:MPMediaItemPropertyTitle], i);
+//	}
+	NSLog(@"track %@", track.title);
+	[self.musicPlayer stop];
+
+	[self.musicPlayer setNowPlayingCollection:trackCollection];
+	if(trackPlayMode == TrackPlayModeShuffleAll){
+		self.musicPlayer.shuffleMode = MPMusicShuffleModeSongs;
+	}
+	else{
+		self.musicPlayer.shuffleMode = MPMusicShuffleModeOff;
+		
+		LMMusicRepeatMode newRepeatMode = (trackPlayMode-TrackPlayModeRepeatModeNone)+1;
+		//YES, the order of calling setNowPlayingTrack does matter here!
+		if(newRepeatMode == MPMusicRepeatModeNone){
+			self.musicPlayer.repeatMode = MPMusicRepeatModeNone;
+			[self.musicPlayer setNowPlayingTrack:track];
+		}
+		else{
+			[self.musicPlayer setNowPlayingTrack:track];
+			self.musicPlayer.repeatMode = newRepeatMode;
+		}
+		//		self.repeatMode = self.musicPlayer.repeatMode;
+		
+		NSLog(@"Setting repeat mdoe as %ld", (long)self.musicPlayer.repeatMode);
+	}
+	[self.musicPlayer play];
+	//[self.musicPlayer setCurrentPlaybackTime:0];
+}
+
+- (void)libraryDataRequest:(NSDictionary *)request {
+	NSUInteger request_type = [request[MessageKeyRequestLibrary] unsignedIntegerValue];
+	NSUInteger offset = [request[MessageKeyRequestOffset] integerValue];
+	MPMediaQuery *query = [[MPMediaQuery alloc] init];
+	[query setGroupingType:request_type];
+	[query addFilterPredicate:[MPMediaPropertyPredicate predicateWithValue:@(MPMediaTypeMusic) forProperty:MPMediaItemPropertyMediaType]];
+	NSArray* results = [query collections];
+	[self pushLibraryResults:results withOffset:offset type:request_type isSubtitle:0];
+}
+
+- (void)sublistRequest:(NSDictionary*)request {
+	NSArray *results = [self getCollectionFromMessage:request];
+	MPMediaGrouping request_type = [request[MessageKeyRequestLibrary] integerValue];
+	uint16_t offset = [request[MessageKeyRequestOffset] uint16Value];
+	if(request_type == MPMediaGroupingTitle) {
+		results = [results[0] items];
+	}
+	[self pushLibraryResults:results withOffset:offset type:request_type isSubtitle:0];
+}
+
+- (NSArray*)getCollectionFromMessage:(NSDictionary*)request {
+	// Find what we're subsetting by iteratively grabbing the sets.
+	MPMediaItemCollection *collection = nil;
+	MPMediaGrouping parent_type;
+	uint16_t parent_index;
+	NSString *persistent_id;
+	NSString *id_prop;
+	NSData *data = request[MessageKeyRequestParent];
+	uint8_t *bytes = (uint8_t*)[data bytes];
+	for(uint8_t i = 0; i < bytes[0]; ++i) {
+		parent_type = bytes[i*3+1];
+		parent_index = *(uint16_t*)&bytes[i*3+2];
+		MPMediaQuery *query = [[MPMediaQuery alloc] init];
+		[query setGroupingType:parent_type];
+		[query addFilterPredicate:[MPMediaPropertyPredicate predicateWithValue:@(MPMediaTypeMusic) forProperty:MPMediaItemPropertyMediaType]];
+		if(collection) {
+			[query addFilterPredicate:[MPMediaPropertyPredicate predicateWithValue:persistent_id forProperty:id_prop]];
+		}
+		if(parent_index >= [[query collections] count]) {
+			NSLog(@"Out of bounds: %d", parent_index);
+			return nil;
+		}
+		collection = [query collections][parent_index];
+		id_prop = [MPMediaItem persistentIDPropertyForGroupingType:parent_type];
+		persistent_id = [[collection representativeItem] valueForProperty:id_prop];
+	}
+	
+	// Complete the lookup
+	NSUInteger request_type = [request[MessageKeyRequestLibrary] unsignedIntegerValue];
+	if(request_type == MPMediaGroupingTitle) {
+		return @[collection];
+	} else {
+		NSLog(@"Got persistent ID: %@", persistent_id);
+		MPMediaQuery *query = [[MPMediaQuery alloc] init];
+		[query setGroupingType:request_type];
+		[query addFilterPredicate:[MPMediaPropertyPredicate predicateWithValue:persistent_id forProperty:id_prop]];
+		[query addFilterPredicate:[MPMediaPropertyPredicate predicateWithValue:@(MPMediaTypeMusic) forProperty:MPMediaItemPropertyMediaType]];
+		return [query collections];
+	}
+}
+
+- (void)pushLibraryResults:(NSArray *)results withOffset:(NSInteger)offset type:(MPMediaGrouping)type isSubtitle:(uint8_t)subtitleType {
+	switch(subtitleType){
+		case 1: //Album artist
+			break;
+		case 2: //Track subtitle
+		case 3: //Playlist subtitle
+			type = MPMediaGroupingPodcastTitle;
+			break;
+	}
+	
+	NSArray* subset;
+	if(offset < [results count]) {
+		NSInteger count = MAX_RESPONSE_COUNT;
+		if([results count] <= offset + MAX_RESPONSE_COUNT) {
+			count = [results count] - offset;
+		}
+		subset = [results subarrayWithRange:NSMakeRange(offset, count)];
+	}
+	NSMutableData *result = [[NSMutableData alloc] init];
+	// Response format: header of one byte containing library data type, two bytes containing
+	// the total number of results, and two bytes containing our current offset. Little endian.
+	// This is followed by a sequence of entries, which consist of one length byte followed by UTF-8 data
+	// (pascal style)
+	uint8_t type_byte = (uint8_t)type;
+	uint16_t metabytes[] = {[results count], offset};
+	// Include the type of library
+	[result appendBytes:&type_byte length:1];
+	[result appendBytes:metabytes length:4];
+	MPMediaItem *representativeItem;
+	int i = 0;
+	for (MPMediaItemCollection* item in subset) {
+		NSString *value;
+		if(type == MPMediaGroupingPodcastTitle && subtitleType == 3){
+			value = [NSString stringWithFormat:@"%lu songs", (unsigned long)item.count];
+		}
+		else if([item isKindOfClass:[MPMediaPlaylist class]]) {
+			value = [item valueForProperty:MPMediaPlaylistPropertyName];
+		}
+		//If this happens, it's tracks asking for its artist and duration.
+		else if(type == MPMediaGroupingPodcastTitle && subtitleType == 2){
+			NSNumber *trackLength = [item valueForProperty:MPMediaItemPropertyPlaybackDuration];
+			NSString *artistName = [item valueForProperty:MPMediaItemPropertyArtist];
+			
+			if(artistName){
+				value = [NSString stringWithFormat:@"%@ | %@",
+						 [LMNowPlayingView durationStringTotalPlaybackTime:[trackLength longValue]],
+						 artistName];
+			}
+			else{
+				value = [NSString stringWithFormat:@"%@",
+						 [LMNowPlayingView durationStringTotalPlaybackTime:[trackLength longValue]]];
+			}
+		}
+		else if(type == MPMediaGroupingAlbumArtist){
+			value = [[item representativeItem] valueForProperty:MPMediaItemPropertyArtist];
+		}
+		else {
+			representativeItem = [item representativeItem];
+			value = [[item representativeItem] valueForProperty:[MPMediaItem titlePropertyForGroupingType:type]];
+		}
+		if([value length] > MAX_LABEL_LENGTH) {
+			value = [value substringToIndex:MAX_LABEL_LENGTH];
+		}
+		NSData *value_data = [value dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
+		uint8_t length = [value_data length];
+		if(([result length] + length) > self.appMessageSize){
+			NSLog(@"Cutting off length at %lu", (unsigned long)[result length]);
+			break;
+		}
+		[result appendBytes:&length length:1];
+		[result appendData:value_data];
+		NSLog(@"Value for %d: %@", i, value);
+		i++;
+	}
+	[self.messageQueue enqueue:@{MessageKeyLibraryResponse: result}];
+	
+	if(type == MPMediaGroupingAlbum){
+		[self pushLibraryResults:results withOffset:offset type:MPMediaGroupingAlbumArtist isSubtitle:1];
+	}
+	else if(type == MPMediaGroupingTitle){
+		[self pushLibraryResults:results withOffset:offset type:MPMediaGroupingPodcastTitle isSubtitle:2];
+		if(![self watchIsBlackAndWhite]){
+			[self sendHeaderIconImage:[[representativeItem artwork] imageWithSize:CGSizeMake(36, 36)]];
+		}
+	}
+	else if(type == MPMediaGroupingPlaylist){
+		NSLog(@"Pushing playlist subtitles");
+		[self pushLibraryResults:results withOffset:offset type:MPMediaGroupingPodcastTitle isSubtitle:3];
+	}
+	
+	NSLog(@"Sent message: %@ with length %lu", result, (unsigned long)[result length]);
+}
+
 - (CGSize)albumArtSize {
 	if([self watchIsRoundScreen]){
 		return CGSizeMake(180, 180);
@@ -169,6 +360,43 @@
 					j++;
 				}
 			}
+		}
+	}
+}
+
+- (void)sendHeaderIconImage:(UIImage*)albumArtImage {
+	NSLog(@"sending image %@", albumArtImage);
+	CGSize imageSize = CGSizeMake(36, 36);
+	
+	NSString *imageString = [LMPebbleImage ditherImage:albumArtImage
+											  withSize:imageSize
+										 forTotalParts:1
+									   withCurrentPart:0
+									   isBlackAndWhite:[self watchIsBlackAndWhite]
+										  isRoundWatch:NO];
+	
+	if(!albumArtImage) {
+		NSLog(@"No image!");
+		[self sendMessageToPebble:@{MessageKeyHeaderIconLength:[NSNumber numberWithUint8:1]}];
+	}
+	else {
+		NSData *bitmap = [NSData dataWithContentsOfFile:imageString];
+		
+		size_t length = [bitmap length];
+		NSDictionary *sizeDict = @{MessageKeyHeaderIconLength: [NSNumber numberWithUint16:[bitmap length]]};
+		NSLog(@"Album art size message: %@", sizeDict);
+		[self sendMessageToPebble:sizeDict];
+		
+		uint8_t j = 0;
+		for(size_t i = 0; i < length; i += self.appMessageSize-1) {
+			NSMutableData *outgoing = [[NSMutableData alloc] initWithCapacity:self.appMessageSize];
+			
+			NSRange rangeOfBytes = NSMakeRange(i, MIN(self.appMessageSize-1, length - i));
+			[outgoing appendBytes:[[bitmap subdataWithRange:rangeOfBytes] bytes] length:rangeOfBytes.length];
+			
+			NSDictionary *dict = @{MessageKeyHeaderIcon: outgoing, MessageKeyHeaderIconIndex:[NSNumber numberWithUint16:j]};
+			[self sendMessageToPebble:dict];
+			j++;
 		}
 	}
 }
@@ -245,14 +473,14 @@
 		}
 		if(update[MessageKeyPlayTrack]) {
 			NSLog(@"Will play track from message %@", update);
-//			[self playTrackFromMessage:update withTrackPlayMode:[update[MessageKeyTrackPlayMode] uint8Value]];
+			[self playTrackFromMessage:update withTrackPlayMode:[update[MessageKeyTrackPlayMode] uint8Value]];
 		}
 		else if(update[MessageKeyRequestLibrary]) {
-//			if(update[MessageKeyRequestParent]) {
-//				[self sublistRequest:update];
-//			} else {
-//				[self libraryDataRequest:update];
-//			}
+			if(update[MessageKeyRequestParent]) {
+				[self sublistRequest:update];
+			} else {
+				[self libraryDataRequest:update];
+			}
 		}
 		else if(update[MessageKeyNowPlaying]) {
 			NSLog(@"Now playing key sent");
@@ -300,7 +528,7 @@
 }
 
 - (void)handleVolumeChanged:(id)sender{
-	NSLog(@"%s - %f", __PRETTY_FUNCTION__, self.volumeViewSlider.value);
+//	NSLog(@"%s - %f", __PRETTY_FUNCTION__, self.volumeViewSlider.value);
 }
 
 - (void)attachVolumeControlsToView:(UIView*)viewToAttachTo {
