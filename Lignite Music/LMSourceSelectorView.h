@@ -40,4 +40,11 @@
  */
 - (void)setSourceSubtitle:(NSString*)subtitle;
 
+/**
+ Set the currently selected source at a selected index.
+
+ @param index The index to set.
+ */
+- (void)setCurrentSourceWithIndex:(NSInteger)index;
+
 @end

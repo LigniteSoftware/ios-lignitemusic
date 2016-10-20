@@ -8,6 +8,8 @@
 
 #import "LMAppDelegate.h"
 #import "LMMusicPlayer.h"
+#import "LMAppIcon.h"
+#import "LMSettings.h"
 
 @interface LMAppDelegate ()
 
@@ -17,12 +19,30 @@
 
 @implementation LMAppDelegate
 
-//- (void)application:(UIApplication *)application performActionForShortcutItem:(UIApplicationShortcutItem *)shortcutItem completionHandler:(void (^)(BOOL))completionHandler {
-//	
-//	NSLog(@"Got shortcut item %@", shortcutItem);
-//	
-//	completionHandler(YES);
-//}
+- (void)application:(UIApplication *)application performActionForShortcutItem:(UIApplicationShortcutItem *)shortcutItem completionHandler:(void (^)(BOOL))completionHandler {
+		
+	int indexOfItem = -1;
+	NSArray<UIApplicationShortcutItem*>*shortcutItems = [UIApplication sharedApplication].shortcutItems;
+	for(int i = 0; i < shortcutItems.count; i++){
+		UIApplicationShortcutItem *item = [shortcutItems objectAtIndex:i];
+		if([item.type isEqualToString:shortcutItem.type]){
+			indexOfItem = i;
+		}
+	}
+	
+	if(indexOfItem > -1){
+		LMMusicPlayer *currentMusicPlayer = [LMMusicPlayer sharedMusicPlayer];
+		if(currentMusicPlayer.sourceSelector){
+			[currentMusicPlayer.sourceSelector setCurrentSourceWithIndex:indexOfItem];
+		}
+		else{
+			NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+			[defaults setInteger:indexOfItem forKey:LMSettingsKeyLastOpenedSource];
+		}
+	}
+	
+	completionHandler(YES);
+}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
@@ -32,11 +52,21 @@
 	
 	NSLog(@"Got options %@", launchOptions);
 	
-//	UIApplicationShortcutIcon * photoIcon = [UIApplicationShortcutIcon iconWithTemplateImageName: @"selfie-100.png"]; // your customize icon
-//	UIApplicationShortcutItem * photoItem = [[UIApplicationShortcutItem alloc]initWithType: @"Test" localizedTitle: @"Testing this" localizedSubtitle:@"Shitpost" icon: [UIApplicationShortcutIcon iconWithType:UIApplicationShortcutIconTypeAudio] userInfo: nil];
-//	UIApplicationShortcutItem * videoItem = [[UIApplicationShortcutItem alloc]initWithType: @"Post" localizedTitle: @"What is this meme" localizedSubtitle:@"Average" icon: [UIApplicationShortcutIcon iconWithType: UIApplicationShortcutIconTypeCaptureVideo] userInfo: nil];
-//	
-//	[UIApplication sharedApplication].shortcutItems = @[photoItem,videoItem];
+	const int amountOfItems = 2;
+	LMIcon icons[] = {
+		LMIconAlbums, LMIconTitles
+	};
+	NSString *titles[] = {
+		@"Albums", @"Titles"
+	};
+	NSMutableArray *shortcutItems = [NSMutableArray new];
+	for(int i = 0; i < amountOfItems; i++){
+		UIApplicationShortcutIcon *icon = [UIApplicationShortcutIcon iconWithTemplateImageName: [LMAppIcon filenameForIcon:icons[i]]]; // your customize icon
+		UIApplicationShortcutItem *item = [[UIApplicationShortcutItem alloc]initWithType:titles[i] localizedTitle:NSLocalizedString(titles[i], nil) localizedSubtitle:nil icon:icon userInfo: nil];
+		[shortcutItems addObject:item];
+	}
+	
+	[UIApplication sharedApplication].shortcutItems = shortcutItems;
 	
     return YES;
 }

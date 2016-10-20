@@ -26,6 +26,15 @@ typedef enum {
 } LMIcon;
 
 /**
+ The filename for an icon. Should be used for system-required icon loading.
+
+ @param icon The icon to get the filename for.
+
+ @return The filename for the icon.
+ */
++ (NSString*)filenameForIcon:(LMIcon)icon;
+
+/**
  Returns a UIImage which is associated with the LMIcon asked for. The UIImage is not modified in any way.
 
  @param icon The icon requested.

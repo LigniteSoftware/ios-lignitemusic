@@ -134,9 +134,10 @@
 	return YES;
 }
 
-- (void)tappedListEntry:(LMListEntry*)entry{
-	NSLog(@"Tapped list entry %ld", entry.collectionIndex);
-	LMSource *source = [self.sources objectAtIndex:entry.collectionIndex];
+- (void)setCurrentSourceWithIndex:(NSInteger)index {
+	LMListEntry *entry = [self listEntryForIndex:index];
+	
+	LMSource *source = [self.sources objectAtIndex:index];
 	
 	[source.delegate sourceSelected:source];
 	
@@ -154,12 +155,16 @@
 	}
 	
 	[entry changeHighlightStatus:YES animated:YES];
-	self.currentlyHighlighted = entry.collectionIndex;
+	self.currentlyHighlighted = index;
 	
 	[self moveContentsUp];
 	
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	[defaults setInteger:entry.collectionIndex forKey:LMSettingsKeyLastOpenedSource];
+	[defaults setInteger:index forKey:LMSettingsKeyLastOpenedSource];
+}
+
+- (void)tappedListEntry:(LMListEntry*)entry{
+	[self setCurrentSourceWithIndex:entry.collectionIndex];
 }
 
 - (UIColor*)tapColourForListEntry:(LMListEntry*)entry {
