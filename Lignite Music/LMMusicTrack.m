@@ -21,7 +21,6 @@
 - (instancetype)initWithMPMediaItem:(MPMediaItem*)item {
 	self = [super init];
 	if(self) {
-		NSLog(@"init with (%@)", item.albumTitle);
 		self.title = item.title;
 		self.artist = item.artist;
 		self.albumTitle = [item.albumTitle isEqualToString:@""] ? nil : item.albumTitle;

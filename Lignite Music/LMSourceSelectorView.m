@@ -400,7 +400,7 @@
 	self.viewsTableView.amountOfItemsTotal = self.sources.count;
 	self.viewsTableView.subviewDelegate = self;
 	self.viewsTableView.dividerColour = [UIColor blackColor];
-	[self.viewsTableView prepareForUse];
+	[self.viewsTableView regenerate:NO];
 	[self addSubview:self.viewsTableView];
 	
 	[self.viewsTableView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.chooseYourViewLabel];

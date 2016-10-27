@@ -251,22 +251,6 @@ BOOL didAutomaticallyClose = NO;
 	
 	self.titleView = [LMTitleView newAutoLayoutView];
 	self.titleView.backgroundColor = [UIColor redColor];
-	//http://stackoverflow.com/questions/8424972/mpmediaitemcollection-whole-library
-	MPMediaQuery *everything = [[MPMediaQuery alloc] init];
-	NSArray *songs = [everything items];
-	MPMediaItemCollection *mediaCollection = [MPMediaItemCollection collectionWithItems:songs];
-	NSMutableArray* musicTracks = [[NSMutableArray alloc]init];
-	
-	NSMutableArray *musicCollection = [[NSMutableArray alloc]init];
-	for(int itemIndex = 0; itemIndex < mediaCollection.items.count; itemIndex++){
-		MPMediaItem *musicItem = [mediaCollection.items objectAtIndex:itemIndex];
-		LMMusicTrack *musicTrack = [[LMMusicTrack alloc]initWithMPMediaItem:musicItem];
-		[musicCollection addObject:musicTrack];
-	}
-	LMMusicTrackCollection *trackCollection = [[LMMusicTrackCollection alloc]initWithItems:musicCollection basedOnSourceCollection:mediaCollection];
-	[musicTracks addObject:trackCollection];
-
-	self.titleView.musicTitles = [[LMMusicTrackCollection alloc]initWithItems:musicCollection basedOnSourceCollection:mediaCollection];
 	[self.view addSubview:self.titleView];
 	
 	[self.titleView autoCenterInSuperview];

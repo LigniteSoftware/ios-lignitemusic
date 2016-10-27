@@ -68,6 +68,9 @@
 @property id subviewDelegate;
 @property UIColor *dividerColour;
 
-- (void)prepareForUse;
+/**
+ Regenerate the table view. Calls prepareForUse, which calculates all dimensions for layouts and then redraws the whole table if setNeedsLayout is set to YES. Should NOT be used often and is not thread safe.
+ */
+- (void)regenerate:(BOOL)setNeedsLayout;
 
 @end

@@ -29,6 +29,7 @@
  What a long variable name, I get it. This array contains all of the delegates which is a fan of knowing when the playback time changes. Tbh, I find it easier and cleaner to do this than to create a structure or enum or associated data type, etc.
  */
 @property NSMutableArray *delegatesSubscribedToCurrentPlaybackTimeChange;
+@property NSMutableArray *delegatesSubscribedToLibraryDidChange;
 
 /**
  The timer for detecting changes in the current playback time.
@@ -56,6 +57,11 @@
 	 Sometimes software is really fucking weird.
  */
 @property MPMediaQuery *bullshitQuery;
+
+/**
+ It seems that sometimes even though the library change notification fires, the library is not updated. This will be called 1 second after the final library change to fire all delegates to ensure that data is properly synced.
+ */
+@property NSTimer *libraryChangeTimer;
 
 @end
 
@@ -86,6 +92,7 @@
 		self.playerType = LMMusicPlayerTypeSystemMusicPlayer;
 		self.delegates = [[NSMutableArray alloc]init];
 		self.delegatesSubscribedToCurrentPlaybackTimeChange = [[NSMutableArray alloc]init];
+		self.delegatesSubscribedToLibraryDidChange = [[NSMutableArray alloc]init];
 		self.shuffleMode = LMMusicShuffleModeOff;
 		self.repeatMode = LMMusicRepeatModeNone;
 		self.previousPlaybackTime = self.systemMusicPlayer.currentPlaybackTime;
@@ -100,21 +107,25 @@
 		NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 		
 		[notificationCenter
-		 addObserver: self
-		 selector:    @selector(systemMusicPlayerTrackChanged:)
-		 name:        MPMusicPlayerControllerNowPlayingItemDidChangeNotification
-		 object:      self.systemMusicPlayer];
+		 addObserver:self
+			selector:@selector(systemMusicPlayerTrackChanged:)
+				name:MPMusicPlayerControllerNowPlayingItemDidChangeNotification
+			  object:self.systemMusicPlayer];
 		
 		[notificationCenter
-		 addObserver: self
-		 selector:    @selector(systemMusicPlayerStateChanged:)
-		 name:        MPMusicPlayerControllerPlaybackStateDidChangeNotification
-		 object:      self.systemMusicPlayer];
+		 addObserver:self
+			selector:@selector(systemMusicPlayerStateChanged:)
+				name:MPMusicPlayerControllerPlaybackStateDidChangeNotification
+			  object:self.systemMusicPlayer];
 		
-		[notificationCenter addObserver:self
-							   selector:@selector(audioRouteChanged:)
-								   name:AVAudioSessionRouteChangeNotification
-								 object:nil];
+		[notificationCenter
+		 addObserver:self
+			selector:@selector(mediaLibraryContentsChanged:)
+				name:MPMediaLibraryDidChangeNotification
+			  object:nil];
+		
+		MPMediaLibrary *mediaLibrary = [MPMediaLibrary defaultMediaLibrary];
+		[mediaLibrary beginGeneratingLibraryChangeNotifications];
 		
 		MPRemoteCommandCenter *commandCenter = [MPRemoteCommandCenter sharedCommandCenter];
 		[commandCenter.pauseCommand addTargetWithHandler:^MPRemoteCommandHandlerStatus(MPRemoteCommandEvent *event) {
@@ -304,7 +315,7 @@
 	}
 	[newInfo setObject:@(isPlaying) forKey:MPNowPlayingInfoPropertyPlaybackRate];
 	
-	NSLog(@"Allahu is playing %d: %@", self.audioPlayer.isPlaying, newInfo);
+//	NSLog(@"Allahu is playing %d: %@", self.audioPlayer.isPlaying, newInfo);
 	
 	infoCenter.nowPlayingInfo = newInfo;
 }
@@ -390,14 +401,28 @@
 }
 
 - (void)audioRouteChanged:(id)notification {
-	NSLog(@"Route changed %@", [notification userInfo]);
 	NSDictionary *info = [notification userInfo];
 	
 	AVAudioSessionRouteChangeReason changeReason = [[info objectForKey:AVAudioSessionRouteChangeReasonKey] integerValue];
-	NSLog(@"Change reason is %d", changeReason);
 	if(changeReason == 2){ //Audio jack removed or BT headset removed
 		[self pause];
 	}
+}
+
+- (void)mediaLibraryContentsChanged:(id)notification {
+	NSLog(@"Library changed!!!");
+	for(int i = 0; i < self.delegatesSubscribedToLibraryDidChange.count; i++){
+		[[self.delegatesSubscribedToLibraryDidChange objectAtIndex:i] musicLibraryDidChange];
+	}
+	
+	if([self.libraryChangeTimer isValid]){
+		[self.libraryChangeTimer invalidate];
+	}
+	self.libraryChangeTimer = [NSTimer scheduledTimerWithTimeInterval:1.0
+															   target:self
+															 selector:@selector(mediaLibraryContentsChanged:)
+															 userInfo:notification
+															  repeats:NO];
 }
 
 - (void)setSourceTitle:(NSString*)title {
@@ -417,12 +442,18 @@
 	if([newDelegate respondsToSelector:@selector(musicCurrentPlaybackTimeDidChange:)]){
 		[self.delegatesSubscribedToCurrentPlaybackTimeChange addObject:newDelegate];
 	}
+	if([newDelegate respondsToSelector:@selector(musicLibraryDidChange)]){
+		[self.delegatesSubscribedToLibraryDidChange addObject:newDelegate];
+	}
 }
 
 - (void)removeMusicDelegate:(id<LMMusicPlayerDelegate>)delegateToRemove {
 	[self.delegates removeObject:delegateToRemove];
 	if([delegateToRemove respondsToSelector:@selector(musicCurrentPlaybackTimeDidChange:)]){
-		[self.delegatesSubscribedToCurrentPlaybackTimeChange addObject:delegateToRemove];
+		[self.delegatesSubscribedToCurrentPlaybackTimeChange removeObject:delegateToRemove];
+	}
+	if([delegateToRemove respondsToSelector:@selector(musicLibraryDidChange)]){
+		[self.delegatesSubscribedToLibraryDidChange removeObject:delegateToRemove];
 	}
 }
 

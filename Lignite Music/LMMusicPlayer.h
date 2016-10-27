@@ -92,6 +92,11 @@ typedef enum {
  @param newPlaybackTime The new playback time.
  */
 - (void)musicCurrentPlaybackTimeDidChange:(NSTimeInterval)newPlaybackTime;
+
+/**
+ The music library did change. When this is called, the object subscribed to this method should reload any media collections or queries it has and redraw any according layers.
+ */
+- (void)musicLibraryDidChange;
 @end
 
 @interface LMMusicPlayer : NSObject

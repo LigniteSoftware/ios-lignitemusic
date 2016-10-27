@@ -265,7 +265,7 @@
 	self.rootTableView = [[LMTableView alloc]init];
 	self.rootTableView.amountOfItemsTotal = self.albumsCount;
 	self.rootTableView.subviewDelegate = self;
-	[self.rootTableView prepareForUse];
+	[self.rootTableView regenerate:NO];
 	[self addSubview:self.rootTableView];
 	
 	[self.rootTableView autoCenterInSuperview];

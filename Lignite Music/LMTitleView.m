@@ -54,6 +54,8 @@
 		}
 	}
 	
+	NSLog(@"New highlighted %d previous %ld", newHighlightedIndex, (long)self.currentlyHighlighted);
+	
 	LMListEntry *previousHighlightedEntry = [self listEntryForIndex:self.currentlyHighlighted];
 	if(![previousHighlightedEntry isEqual:highlightedEntry] || highlightedEntry == nil){
 		[previousHighlightedEntry changeHighlightStatus:NO animated:YES];
@@ -62,15 +64,46 @@
 //		if(updateNowPlayingStatus){
 //			[self musicPlaybackStateDidChange:self.musicPlayer.playbackState];
 //		}
+		NSLog(@"Set prev highlight");
 	}
 	
 	if(highlightedEntry){
+		NSLog(@"Highlighting entry %ld", (long)highlightedEntry.collectionIndex);
 		[highlightedEntry changeHighlightStatus:YES animated:YES];
 	}
 }
 
 - (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState {
 
+}
+
+- (void)rebuildTrackCollection {
+	MPMediaQuery *everything = [[MPMediaQuery alloc] init];
+	NSArray *songs = [everything items];
+	MPMediaItemCollection *mediaCollection = [MPMediaItemCollection collectionWithItems:songs];
+	NSMutableArray* musicTracks = [[NSMutableArray alloc]init];
+	
+	NSMutableArray *musicCollection = [[NSMutableArray alloc]init];
+	for(int itemIndex = 0; itemIndex < mediaCollection.items.count; itemIndex++){
+		MPMediaItem *musicItem = [mediaCollection.items objectAtIndex:itemIndex];
+		LMMusicTrack *musicTrack = [[LMMusicTrack alloc]initWithMPMediaItem:musicItem];
+		[musicCollection addObject:musicTrack];
+	}
+	LMMusicTrackCollection *trackCollection = [[LMMusicTrackCollection alloc]initWithItems:musicCollection basedOnSourceCollection:mediaCollection];
+	[musicTracks addObject:trackCollection];
+	
+	self.musicTitles = [[LMMusicTrackCollection alloc]initWithItems:musicCollection basedOnSourceCollection:mediaCollection];
+	self.songListTableView.amountOfItemsTotal = self.musicTitles.count;
+}
+
+- (void)musicLibraryDidChange {
+	NSLog(@"Rebuilding track view.");
+	[self rebuildTrackCollection];
+	[self.songListTableView regenerate:YES];
+	NSLog(@"Rebuilt.");
+	[self.songListTableView reloadData];
+	
+	[self musicTrackDidChange:self.musicPlayer.nowPlayingTrack];
 }
 
 - (id)prepareSubviewAtIndex:(NSUInteger)index {	
@@ -116,6 +149,7 @@
 	[entry changeHighlightStatus:self.currentlyHighlighted == entry.collectionIndex animated:NO];
 	
 	[entry reloadContents];
+	
 	return entry;
 }
 
@@ -236,11 +270,13 @@
 }
 
 - (void)setup {
+	[self rebuildTrackCollection];
+	
 	self.songListTableView = [[LMTableView alloc]init];
 	self.songListTableView.translatesAutoresizingMaskIntoConstraints = NO;
 	self.songListTableView.amountOfItemsTotal = self.musicTitles.count;
 	self.songListTableView.subviewDelegate = self;
-	[self.songListTableView prepareForUse];
+	[self.songListTableView regenerate:NO];
 	[self addSubview:self.songListTableView];
 	
 	[self.songListTableView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self];

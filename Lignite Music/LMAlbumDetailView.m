@@ -426,7 +426,7 @@
 	self.songListTableView.translatesAutoresizingMaskIntoConstraints = NO;
 	self.songListTableView.amountOfItemsTotal = self.albumCollection.count;
 	self.songListTableView.subviewDelegate = self;
-	[self.songListTableView prepareForUse];
+	[self.songListTableView regenerate:NO];
 	[self addSubview:self.songListTableView];
 	
 	[self.songListTableView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.controlBackgroundView];
