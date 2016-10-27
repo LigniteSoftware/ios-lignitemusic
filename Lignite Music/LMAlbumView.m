@@ -37,6 +37,10 @@
 @implementation LMAlbumView
 
 - (void)reloadSourceSelectorInfo {
+	if(self.hidden){
+		return;
+	}
+	
 	NSString *collectionString = NSLocalizedString(self.albumCollections.count == 1 ? @"Album" : @"Albums", nil);
 	
 	NSLog(@"Setting source selector info.");

@@ -31,6 +31,10 @@
 @implementation LMTitleView
 
 - (void)reloadSourceSelectorInfo {
+	if(self.hidden){
+		return;
+	}
+	
 	NSString *collectionString = NSLocalizedString(self.musicTitles.count == 1 ? @"Title" : @"Titles", nil);
 	
 	[self.musicPlayer setSourceTitle:collectionString];
@@ -94,6 +98,7 @@
 	
 	self.musicTitles = [[LMMusicTrackCollection alloc]initWithItems:musicCollection basedOnSourceCollection:mediaCollection];
 	self.songListTableView.amountOfItemsTotal = self.musicTitles.count;
+	[self reloadSourceSelectorInfo];
 }
 
 - (void)musicLibraryDidChange {

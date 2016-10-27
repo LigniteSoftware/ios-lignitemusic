@@ -59,7 +59,7 @@
 @property MPMediaQuery *bullshitQuery;
 
 /**
- It seems that sometimes even though the library change notification fires, the library is not updated. This will be called 1 second after the final library change to fire all delegates to ensure that data is properly synced.
+ It seems that sometimes even though the library change notification fires, the library is not updated. This will be called half a second after the final library change (or if a track is slow to sync that) to fire all delegates to ensure that data is properly synced.
  */
 @property NSTimer *libraryChangeTimer;
 
@@ -418,11 +418,13 @@
 	if([self.libraryChangeTimer isValid]){
 		[self.libraryChangeTimer invalidate];
 	}
-	self.libraryChangeTimer = [NSTimer scheduledTimerWithTimeInterval:1.0
-															   target:self
-															 selector:@selector(mediaLibraryContentsChanged:)
-															 userInfo:notification
-															  repeats:NO];
+	if(notification){
+		self.libraryChangeTimer = [NSTimer scheduledTimerWithTimeInterval:0.5
+																   target:self
+																 selector:@selector(mediaLibraryContentsChanged:)
+																 userInfo:nil
+																  repeats:NO];
+	}
 }
 
 - (void)setSourceTitle:(NSString*)title {

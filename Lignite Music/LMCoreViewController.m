@@ -243,6 +243,7 @@ BOOL didAutomaticallyClose = NO;
 
 	self.albumView = [LMAlbumView newAutoLayoutView];
 	self.albumView.rootViewController = self;
+	self.albumView.hidden = YES;
 	[self.view addSubview:self.albumView];
 
 	[self.albumView autoCenterInSuperview];
