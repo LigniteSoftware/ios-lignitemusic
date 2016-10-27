@@ -29,6 +29,33 @@
  Thanks, and have fun!
  */
 
+
+
+/* 
+ 
+ NEW STRINGS
+ 
+ */
+
+"UnknownTitle" = "Unnamed Track";
+"UnknownArtist" = "Unknown Artist";
+"UnknownAlbumTitle" = "Unknown Album";
+"Album" = "Album";
+"Title" = "Title";
+"Artist" = "Artist";
+"Playlist" = "Playlist";
+"Composer" = "Composer";
+"Genre" = "Genre";
+"Compilation" = "Compilation";
+
+/*
+ 
+ END NEW STRINGS
+ 
+ */
+
+
+
 /* General */
 "SongXofX" = "Song %d of %d";
 "SongX" = "Song %d";

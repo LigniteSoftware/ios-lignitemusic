@@ -37,10 +37,12 @@
 @implementation LMAlbumView
 
 - (void)reloadSourceSelectorInfo {
-	NSString *collectionString = NSLocalizedString(@"Albums", nil);
+	NSString *collectionString = NSLocalizedString(self.albumCollections.count == 1 ? @"Album" : @"Albums", nil);
+	
+	NSLog(@"Setting source selector info.");
 	
 	[self.musicPlayer setSourceTitle:collectionString];
-	[self.musicPlayer setSourceSubtitle:[NSString stringWithFormat:@"%ld %@", self.albumCollections.count, collectionString]];
+	[self.musicPlayer setSourceSubtitle:[NSString stringWithFormat:@"%ld %@", (long)self.albumCollections.count, collectionString]];
 }
 
 - (void)dismissViewOnTop {

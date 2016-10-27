@@ -31,10 +31,10 @@
 @implementation LMTitleView
 
 - (void)reloadSourceSelectorInfo {
-	NSString *collectionString = NSLocalizedString(@"Titles", nil);
+	NSString *collectionString = NSLocalizedString(self.musicTitles.count == 1 ? @"Title" : @"Titles", nil);
 	
 	[self.musicPlayer setSourceTitle:collectionString];
-	[self.musicPlayer setSourceSubtitle:[NSString stringWithFormat:@"%ld %@", self.musicTitles.count, collectionString]];
+	[self.musicPlayer setSourceSubtitle:[NSString stringWithFormat:@"%ld %@", (long)self.musicTitles.count, collectionString]];
 }
 
 - (void)musicTrackDidChange:(LMMusicTrack *)newTrack {
@@ -214,7 +214,10 @@
 - (NSString*)subtitleForListEntry:(LMListEntry*)entry {
 	LMMusicTrack *track = [self.musicTitles.items objectAtIndex:entry.collectionIndex];
 	
-	NSString *subtitle = [NSString stringWithFormat:@"%@ - %@", track.artist, track.albumTitle];
+	NSString *subtitle = [NSString stringWithFormat:@"%@", track.artist ? track.artist : NSLocalizedString(@"UnknownArtist", nil)];
+	if(track.albumTitle){
+		subtitle = [subtitle stringByAppendingString:[NSString stringWithFormat:@" - %@", track.albumTitle]];
+	}
 	
 	return subtitle;
 }

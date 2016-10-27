@@ -79,8 +79,11 @@
 
 - (void)openNowPlayingView {
 	if(self.nowPlayingView){
+		NSLog(@"Now playing view already exists, rejecting");
 		return;
 	}
+	
+	NSLog(@"Opening now playing view");
 	
 	self.nowPlayingView = [LMNowPlayingView new];
 	self.nowPlayingView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -93,14 +96,22 @@
 	[self.nowPlayingView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
 	[self.nowPlayingView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
 	
+	NSLog(@"Setting up now playing");
+	
 	[self.nowPlayingView setup];
 	
+	NSLog(@"Setup");
+	
 	[self.view layoutIfNeeded];
+	
+	NSLog(@"Laying out done");
+	
 	self.topConstraint.constant = 0;
 	[UIView animateWithDuration:1.0 delay:0.1
 		 usingSpringWithDamping:0.75 initialSpringVelocity:0.0f
 						options:0 animations:^{
 							[self.view layoutIfNeeded];
+							NSLog(@"Spook");
 						} completion:nil];
 }
 

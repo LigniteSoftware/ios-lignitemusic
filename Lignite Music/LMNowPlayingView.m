@@ -181,9 +181,9 @@
 		return;
 	}
 	
-	self.trackInfoView.titleLabel.text = newTrack.title;
-	self.trackInfoView.artistLabel.text = newTrack.artist;
-	self.trackInfoView.albumLabel.text = newTrack.albumTitle;
+	self.trackInfoView.titleLabel.text = newTrack.title ? newTrack.title : NSLocalizedString(@"UnknownTitle", nil);
+	self.trackInfoView.artistLabel.text = newTrack.artist ? newTrack.artist : NSLocalizedString(@"UnknownArtist", nil);
+	self.trackInfoView.albumLabel.text = newTrack.albumTitle ? newTrack.albumTitle : NSLocalizedString(@"UnknownAlbumTitle", nil);
 	
 	if(self.musicPlayer.nowPlayingCollection){
 		self.trackDurationView.songCountLabel.text =

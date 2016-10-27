@@ -20,7 +20,7 @@
 @implementation LMAppDelegate
 
 - (void)application:(UIApplication *)application performActionForShortcutItem:(UIApplicationShortcutItem *)shortcutItem completionHandler:(void (^)(BOOL))completionHandler {
-		
+	
 	int indexOfItem = -1;
 	NSArray<UIApplicationShortcutItem*>*shortcutItems = [UIApplication sharedApplication].shortcutItems;
 	for(int i = 0; i < shortcutItems.count; i++){

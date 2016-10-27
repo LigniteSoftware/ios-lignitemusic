@@ -289,9 +289,9 @@
 	MPNowPlayingInfoCenter *infoCenter = [MPNowPlayingInfoCenter defaultCenter];
 	
 	NSMutableDictionary *newInfo = [[NSMutableDictionary alloc]init];
-	[newInfo setObject:self.nowPlayingTrack.title forKey:MPMediaItemPropertyTitle];
-	[newInfo setObject:self.nowPlayingTrack.artist forKey:MPMediaItemPropertyArtist];
-	[newInfo setObject:self.nowPlayingTrack.albumTitle forKey:MPMediaItemPropertyAlbumTitle];
+	[newInfo setObject:self.nowPlayingTrack.title ? self.nowPlayingTrack.title : NSLocalizedString(@"UnknownTitle", nil) forKey:MPMediaItemPropertyTitle];
+	[newInfo setObject:self.nowPlayingTrack.artist ? self.nowPlayingTrack.artist : NSLocalizedString(@"UnknownArtist", nil) forKey:MPMediaItemPropertyArtist];
+	[newInfo setObject:self.nowPlayingTrack.albumTitle ? self.nowPlayingTrack.albumTitle : NSLocalizedString(@"UnknownAlbumTitle", nil) forKey:MPMediaItemPropertyAlbumTitle];
 	[newInfo setObject:@(self.nowPlayingTrack.playbackDuration) forKey:MPMediaItemPropertyPlaybackDuration];
 	[newInfo setObject:@(self.audioPlayer.currentTime) forKey:MPNowPlayingInfoPropertyElapsedPlaybackTime];
 	if([self.nowPlayingTrack.sourceTrack artwork]){
@@ -299,7 +299,7 @@
 	}
 	[newInfo setObject:@(isPlaying) forKey:MPNowPlayingInfoPropertyPlaybackRate];
 	
-//	NSLog(@"Allahu %d: %@", self.audioPlayer.isPlaying, newInfo);
+	NSLog(@"Allahu is playing %d: %@", self.audioPlayer.isPlaying, newInfo);
 	
 	infoCenter.nowPlayingInfo = newInfo;
 }
@@ -583,9 +583,12 @@ BOOL shuffleForDebug = NO;
 		[self changeMusicPlayerState:LMMusicPlaybackStatePlaying];
 		
 		//[self.systemMusicPlayer play];
+		NSLog(@"Playing");
 		[self.audioPlayer setVolume:1 fadeDuration:0.25];
 		[self.audioPlayer play];
 		[self reloadInfoCenter:YES];
+		
+		NSLog(@"Done");
 	}
 }
 
