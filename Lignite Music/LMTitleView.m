@@ -102,10 +102,9 @@
 }
 
 - (void)musicLibraryDidChange {
-	NSLog(@"Rebuilding track view.");
 	[self rebuildTrackCollection];
+	
 	[self.songListTableView regenerate:YES];
-	NSLog(@"Rebuilt.");
 	[self.songListTableView reloadData];
 	
 	[self musicTrackDidChange:self.musicPlayer.nowPlayingTrack];

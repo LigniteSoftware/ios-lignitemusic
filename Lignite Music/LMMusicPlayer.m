@@ -418,7 +418,7 @@
 	if([self.libraryChangeTimer isValid]){
 		[self.libraryChangeTimer invalidate];
 	}
-	if(notification){
+	if([[[notification class] description] isEqualToString:@"NSDictionary"]){
 		self.libraryChangeTimer = [NSTimer scheduledTimerWithTimeInterval:0.5
 																   target:self
 																 selector:@selector(mediaLibraryContentsChanged:)

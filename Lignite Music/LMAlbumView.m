@@ -115,6 +115,22 @@
 	}
 }
 
+- (void)musicLibraryDidChange {
+	[self rebuildTrackCollection];
+	
+	[self.rootTableView regenerate:YES];
+	[self.rootTableView reloadData];
+	
+	[self musicTrackDidChange:self.musicPlayer.nowPlayingTrack];
+}
+
+- (void)rebuildTrackCollection {
+	self.albumCollections = [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeAlbums];
+	self.albumsCount = self.albumCollections.count;
+	self.rootTableView.amountOfItemsTotal = self.albumsCount;
+	[self reloadSourceSelectorInfo];
+}
+
 /**
  When an album view item is clicked, this is called. The system should then enter into detail view for the album view.
 
@@ -200,16 +216,27 @@
  See LMTableView for documentation on this function.
  */
 - (BOOL)dividerForTableView:(LMTableView *)tableView {
-	return false;
+	return NO;
 }
 
 /**
  See LMTableView for documentation on this function.
  */
 - (void)totalAmountOfSubviewsRequired:(NSUInteger)amount forTableView:(LMTableView *)tableView {
-	if(self.hasLoadedInitialItems){
+	if(self.albumsItemArray){
+		NSLog(@"New amount %lu", (unsigned long)amount);
+		//Quick patch to fix the following bug: when syncing and less than 3 albums are in place already and more are added the array gets all jumbled
+		if(amount > self.albumsItemArray.count){
+			LMMusicTrackCollection *collection = [self.albumCollections objectAtIndex:amount-1];
+			LMAlbumViewItem *newItem = [[LMAlbumViewItem alloc]initWithMusicTrack:collection.representativeItem];
+			[newItem setupWithAlbumCount:collection.count andDelegate:self];
+			newItem.userInteractionEnabled = YES;
+			[self.albumsItemArray addObject:newItem];
+		}
 		return;
 	}
+	
+	self.albumsItemArray = [[NSMutableArray alloc]init];
 	
 	for(int i = 0; i < amount; i++){
 		LMMusicTrackCollection *collection = [self.albumCollections objectAtIndex:i];
@@ -218,7 +245,8 @@
 		newItem.userInteractionEnabled = YES;
 		[self.albumsItemArray addObject:newItem];
 	}
-	self.hasLoadedInitialItems = YES;
+	
+	NSLog(@"New size %lu", (unsigned long)self.albumsItemArray.count);
 }
 
 /**
@@ -236,6 +264,8 @@
 //		MPMediaItemCollection *collection = [self.everything.collections objectAtIndex:index];
 //		[item setupWithAlbumCount:[collection count] andDelegate:self];
 //	}
+	
+	NSLog(@"Reloading index %d", (int)index);
 	
 	LMAlbumViewItem *albumViewItem = [self.albumsItemArray objectAtIndex:index % self.albumsItemArray.count];
 	[albumViewItem.playButton setImage:(index == self.currentlyPlaying && self.musicPlayer.playbackState == LMMusicPlaybackStatePlaying) ? [LMAppIcon imageForIcon:LMIconPause] : [LMAppIcon imageForIcon:LMIconPlay]];
@@ -257,19 +287,8 @@
 	
 	self.currentlyPlaying = -1;
 	
-	self.albumsItemArray = [[NSMutableArray alloc]init];
-	
-	NSTimeInterval startingTime = [[NSDate date] timeIntervalSince1970];
-	
-	self.albumCollections = [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeAlbums];
-	self.albumsCount = self.albumCollections.count;
-	
-	NSLog(@"Logging items from a generic query...");
-	
 	self.rootTableView = [[LMTableView alloc]init];
-	self.rootTableView.amountOfItemsTotal = self.albumsCount;
 	self.rootTableView.subviewDelegate = self;
-	[self.rootTableView regenerate:NO];
 	[self addSubview:self.rootTableView];
 	
 	[self.rootTableView autoCenterInSuperview];
@@ -278,9 +297,8 @@
 	[self.rootTableView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 	[self.rootTableView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 	
-	NSTimeInterval endingTime = [[NSDate date] timeIntervalSince1970];
-	
-	NSLog(@"Took %f seconds to complete.", endingTime-startingTime);
+	[self rebuildTrackCollection];
+	[self.rootTableView regenerate:NO];
 	
 	UIPinchGestureRecognizer *pinchGesture = [[UIPinchGestureRecognizer alloc]initWithTarget:self action:@selector(openNowPlayingView)];
 	[self addGestureRecognizer:pinchGesture];

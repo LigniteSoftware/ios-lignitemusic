@@ -41,6 +41,7 @@
 }
 
 - (void)updateContentsWithMusicTrack:(LMMusicTrack*)track andNumberOfItems:(NSInteger)numberOfItems {
+	NSLog(@"Updating contents with track %@", track.albumTitle);
 	if(!self.queue){
 		self.queue = [[LMOperationQueue alloc] init];
 	}
@@ -63,7 +64,7 @@
 					self.albumImageView.image = image;
 					
 					self.albumTitleView.text = track.albumTitle ? track.albumTitle : NSLocalizedString(@"UnknownAlbum", nil);
-					self.albumArtistView.text = [NSString stringWithFormat:@"%@ | %ld %@", track.artist, numberOfItems, NSLocalizedString(numberOfItems == 1 ? @"Song" : @"Songs", nil)];
+					self.albumArtistView.text = [NSString stringWithFormat:@"%@ | %ld %@", track.artist, (long)numberOfItems, NSLocalizedString(numberOfItems == 1 ? @"Song" : @"Songs", nil)];
 					//self.albumCountView.text = [NSString stringWithFormat:@"%lu", (unsigned long)numberOfItems];
 					
 					self.track = track;
