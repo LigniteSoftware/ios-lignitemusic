@@ -111,6 +111,11 @@
 		 name:        MPMusicPlayerControllerPlaybackStateDidChangeNotification
 		 object:      self.systemMusicPlayer];
 		
+		[notificationCenter addObserver:self
+							   selector:@selector(audioRouteChanged:)
+								   name:AVAudioSessionRouteChangeNotification
+								 object:nil];
+		
 		MPRemoteCommandCenter *commandCenter = [MPRemoteCommandCenter sharedCommandCenter];
 		[commandCenter.pauseCommand addTargetWithHandler:^MPRemoteCommandHandlerStatus(MPRemoteCommandEvent *event) {
 			[self pause];
@@ -381,6 +386,17 @@
 	for(int i = 0; i < self.delegates.count; i++){
 		id delegate = [self.delegates objectAtIndex:i];
 		[delegate musicPlaybackStateDidChange:self.playbackState];
+	}
+}
+
+- (void)audioRouteChanged:(id)notification {
+	NSLog(@"Route changed %@", [notification userInfo]);
+	NSDictionary *info = [notification userInfo];
+	
+	AVAudioSessionRouteChangeReason changeReason = [[info objectForKey:AVAudioSessionRouteChangeReasonKey] integerValue];
+	NSLog(@"Change reason is %d", changeReason);
+	if(changeReason == 2){ //Audio jack removed or BT headset removed
+		[self pause];
 	}
 }
 
