@@ -128,7 +128,7 @@
 	[self.currentElementBackgroundView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
 	[self.currentElementBackgroundView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self];
 	[self.currentElementBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:/*(2.0/3.0)**/(5.25/6.0)];
-	
+
 	self.miniPlayerView = [LMMiniPlayerView newAutoLayoutView];
 	[self.currentElementBackgroundView addSubview:self.miniPlayerView];
 	

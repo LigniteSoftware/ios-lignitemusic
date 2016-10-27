@@ -192,7 +192,8 @@ BOOL didAutomaticallyClose = NO;
 - (void)viewDidLoad {
     [super viewDidLoad];
 	NSLog(@"Loaded");
-    // Do any additional setup after loading the view.
+    // Do any additional setup after loading the view
+	
 	self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 	[self.musicPlayer addMusicDelegate:self];
 	
@@ -237,13 +238,13 @@ BOOL didAutomaticallyClose = NO;
 	[self.sourceSelector autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
 	
 	[self.sourceSelector setup];
-	
+
 	self.musicPlayer.sourceSelector = self.sourceSelector;
 
 	self.albumView = [LMAlbumView newAutoLayoutView];
 	self.albumView.rootViewController = self;
 	[self.view addSubview:self.albumView];
-	
+
 	[self.albumView autoCenterInSuperview];
 	[self.albumView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
 	[self.albumView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
@@ -274,7 +275,7 @@ BOOL didAutomaticallyClose = NO;
 	
 	[self.titleView setup];
 	self.titleView.hidden = YES;
-	
+
 	self.browsingAssistant = [[LMBrowsingAssistantView alloc]initForAutoLayout];
 	self.browsingAssistant.coreViewController = self;
 	self.browsingAssistant.backgroundColor = [UIColor orangeColor];
@@ -285,7 +286,7 @@ BOOL didAutomaticallyClose = NO;
 	[self.browsingAssistant autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.view];
 	[self.browsingAssistant autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.view];
 	[self.browsingAssistant autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:0.225];
-	
+
 	UIView *temporaryWhiteView = [UIView newAutoLayoutView];
 	temporaryWhiteView.backgroundColor = [UIColor whiteColor];
 	[self.view addSubview:temporaryWhiteView];
@@ -321,6 +322,9 @@ BOOL didAutomaticallyClose = NO;
 	[anotherEasterEgg autoSetDimension:ALDimensionHeight toSize:70];
 	
 	[self.view bringSubviewToFront:self.sourceSelector];
+	
+	self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
+	[self.musicPlayer addMusicDelegate:self];
 	
 //	[NSTimer scheduledTimerWithTimeInterval:0.75
 //									 target:self

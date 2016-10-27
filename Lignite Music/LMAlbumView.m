@@ -43,6 +43,8 @@
 	
 	[self.musicPlayer setSourceTitle:collectionString];
 	[self.musicPlayer setSourceSubtitle:[NSString stringWithFormat:@"%ld %@", (long)self.albumCollections.count, collectionString]];
+	
+	NSLog(@"Set!");
 }
 
 - (void)dismissViewOnTop {

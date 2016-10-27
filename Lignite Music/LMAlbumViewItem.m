@@ -62,7 +62,7 @@
 					}
 					self.albumImageView.image = image;
 					
-					self.albumTitleView.text = track.albumTitle;
+					self.albumTitleView.text = track.albumTitle ? track.albumTitle : NSLocalizedString(@"UnknownAlbum", nil);
 					self.albumArtistView.text = [NSString stringWithFormat:@"%@ | %ld %@", track.artist, numberOfItems, NSLocalizedString(numberOfItems == 1 ? @"Song" : @"Songs", nil)];
 					//self.albumCountView.text = [NSString stringWithFormat:@"%lu", (unsigned long)numberOfItems];
 					
