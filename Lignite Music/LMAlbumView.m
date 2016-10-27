@@ -122,6 +122,8 @@
 	[self.rootTableView reloadData];
 	
 	[self musicTrackDidChange:self.musicPlayer.nowPlayingTrack];
+	
+	[self dismissViewOnTop];
 }
 
 - (void)rebuildTrackCollection {
