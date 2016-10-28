@@ -13,9 +13,10 @@
 
 @interface LMTableView () <UITableViewDelegate, UITableViewDataSource>
 
-@property MPMediaQuery *everything;
 @property NSUInteger amountOfItemsRequired;
 @property uint8_t loadedStatus;
+
+@property UILabel *debugLabel;
 
 @property float calculatedHeight;
 @property float calculatedSpacing;
@@ -99,6 +100,11 @@
 		UIView *dividerView = [[UIView alloc]initWithFrame:CGRectMake(frameX, frameY, frameWidth, dividerHeight)];
 		dividerView.backgroundColor = self.dividerColour ? self.dividerColour : [UIColor colorWithRed:0.82 green:0.82 blue:0.82 alpha:1.0];
 		[view addSubview:dividerView];
+		
+//		UILabel *infoView = [[UILabel alloc]initWithFrame:frame];
+//		infoView.text = [NSString stringWithFormat:@"header %ld", section];
+//		infoView.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:10];
+//		[view addSubview:infoView];
 	}
 	
 	return view;
@@ -138,10 +144,13 @@
 
 - (void)layoutSubviews {
 	if(self.loadedStatus == 1){
-		self.amountOfItemsRequired = (self.frame.size.height/self.calculatedHeight)*(WINDOW_FRAME.size.height/self.frame.size.height) + 1;
+		self.amountOfItemsRequired = (self.frame.size.height/self.calculatedHeight)*(WINDOW_FRAME.size.height/self.frame.size.height) + 3;
 		if(self.amountOfItemsRequired > self.amountOfItemsTotal){
 			self.amountOfItemsRequired = self.amountOfItemsTotal;
 		}
+//		if([[[self.subviewDelegate class] description] isEqualToString:@"LMAlbumView"]){
+//			self.amountOfItemsRequired = 2;
+//		}
 		[self.subviewDelegate totalAmountOfSubviewsRequired:self.amountOfItemsRequired forTableView:self];
 		
 		NSLog(@"\n--- LMTableView ---\nFrame:%@\nCalculated height: %f\nCalculated spacing: %f\nAmount of items total: %lu\nAmount of items required: %lu\n--- End ---", NSStringFromCGRect(self.frame), self.calculatedHeight, self.calculatedSpacing, (unsigned long)self.amountOfItemsTotal, (unsigned long)self.amountOfItemsRequired);
@@ -155,6 +164,17 @@
 		UIView *dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, dummyViewHeight)];
 		self.tableHeaderView = dummyView;
 		self.contentInset = UIEdgeInsetsMake(-dummyViewHeight, 0, 0, 0);
+		
+//		self.debugLabel = [[UILabel alloc]init];
+//		self.debugLabel.text = [NSString stringWithFormat:@"View %@\nFrame:%@\nWindow frame: %@\nCalculated height: %f\nCalculated spacing: %f\nAmount of items total: %lu\nAmount of items required: %lu\nSubview delegate:%@\nLoaded status: %d", self, NSStringFromCGRect(self.frame), NSStringFromCGRect(WINDOW_FRAME), self.calculatedHeight, self.calculatedSpacing, (unsigned long)self.amountOfItemsTotal, (unsigned long)self.amountOfItemsRequired, self.subviewDelegate, self.loadedStatus];
+//		self.debugLabel.numberOfLines = 0;
+//		self.debugLabel.backgroundColor = [UIColor whiteColor];
+//		[self addSubview:self.debugLabel];
+//		
+//		[self.debugLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self withOffset:300];
+//		[self.debugLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+//		[self.debugLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+//		[self.debugLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self withOffset:20];
 		
 		self.loadedStatus = 2;
 	}
