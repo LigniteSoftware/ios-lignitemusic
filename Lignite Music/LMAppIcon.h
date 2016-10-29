@@ -21,6 +21,7 @@ typedef enum {
 	LMIconSettings,
 	LMIconTitles,
 	LMIconAlbums,
+	LMIconPlaylists,
 	LMIconBug,
 	LMIconNoAlbumArt
 } LMIcon;

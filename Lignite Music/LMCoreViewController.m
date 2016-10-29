@@ -17,6 +17,7 @@
 #import "LMSourceSelectorView.h"
 #import "LMSource.h"
 #import "LMExtras.h"
+#import "LMPlaylistView.h"
 
 @interface LMCoreViewController () <LMMusicPlayerDelegate, LMSourceDelegate>
 
@@ -26,6 +27,7 @@
 
 @property LMAlbumView *albumView;
 @property LMTitleView *titleView;
+@property LMPlaylistView *playlistView;
 
 @property LMBrowsingAssistantView *browsingAssistant;
 @property LMSourceSelectorView *sourceSelector;
@@ -174,11 +176,16 @@ BOOL didAutomaticallyClose = NO;
 			break;
 		}
 		case 2:{
+			self.playlistView.hidden = NO;
+			self.currentSource = self.playlistView;
+			break;
+		}
+		case 3:{
 			LMPebbleManager *pebbleManager = [LMPebbleManager sharedPebbleManager];
 			[pebbleManager showSettings];
 			break;
 		}
-		case 3:{
+		case 4:{
 			[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://www.lignite.io/feedback/"]];
 			NSLog(@"Debug menu");
 			break;
@@ -201,16 +208,16 @@ BOOL didAutomaticallyClose = NO;
 	[pebbleManager attachToViewController:self];
 	
 	NSArray *sourceTitles = @[
-							  @"Albums", @"Titles", @"Settings", @"Report Bug"
+							  @"Albums", @"Titles", @"Playlists", @"Settings", @"Report Bug"
 							  ];
 	NSArray *sourceSubtitles = @[
-								 @"", @"", @"Only for Pebble", @"Or send feedback"
+								 @"", @"", @"", @"Only for Pebble", @"Or send feedback"
 								 ];
 	LMIcon sourceIcons[] = {
-		LMIconAlbums, LMIconTitles, LMIconSettings, LMIconBug
+		LMIconAlbums, LMIconTitles, LMIconPlaylists, LMIconSettings, LMIconBug
 	};
 	BOOL notSelect[] = {
-		NO, NO, YES, YES
+		NO, NO, NO, YES, YES
 	};
 	
 	NSMutableArray *sources = [NSMutableArray new];
@@ -260,6 +267,17 @@ BOOL didAutomaticallyClose = NO;
 	
 	[self.titleView setup];
 	self.titleView.hidden = YES;
+	
+	self.playlistView = [LMPlaylistView newAutoLayoutView];
+	self.playlistView.backgroundColor = [UIColor redColor];
+	[self.view addSubview:self.playlistView];
+	
+	[self.playlistView autoCenterInSuperview];
+	[self.playlistView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
+	[self.playlistView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
+	
+//	[self.playlistView setup];
+	self.playlistView.hidden = YES;
 
 	self.browsingAssistant = [[LMBrowsingAssistantView alloc]initForAutoLayout];
 	self.browsingAssistant.coreViewController = self;

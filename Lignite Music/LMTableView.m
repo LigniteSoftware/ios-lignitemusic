@@ -123,8 +123,7 @@
 
 - (void)prepareForUse {
 	if(!self.subviewDelegate){
-		NSLog(@"No subview delegate has been assigned to this LMTableView, and a subview delegate is required. The app will now exit.");
-		exit(0);
+		[NSException raise:@"LMTableViewNoSubviewDelegateException" format:@"No subview delegate has been assigned to this LMTableView (%@), and a subview delegate is required.", self];
 		return;
 	}
 	
