@@ -9,11 +9,13 @@
 #import <PureLayout/PureLayout.h>
 #import "LMControlBarView.h"
 #import "LMExtras.h"
+#import "LMColour.h"
 
 @interface LMControlBarView()
 
 @property NSLayoutConstraint *heightConstraint;
 
+@property UIView *backgroundView;
 @property UIView *buttonBackgroundView;
 
 @property NSMutableArray *controlButtonViews;
@@ -46,15 +48,26 @@
 }
 
 - (void)setup {
+	self.backgroundColor = [UIColor clearColor];
+	
+	self.backgroundView = [UIView newAutoLayoutView];
+	self.backgroundView.backgroundColor = [UIColor colorWithRed:0.82 green:0.82 blue:0.82 alpha:1.0];
+	self.backgroundView.layer.masksToBounds = YES;
+	self.backgroundView.layer.cornerRadius = 10.0;
+	[self addSubview:self.backgroundView];
+	
+	[self.backgroundView autoCenterInSuperview];
+	[self.backgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
+	[self.backgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self];
+	
 	self.controlButtonViews = [NSMutableArray new];
 	
 	self.buttonBackgroundView = [UIView newAutoLayoutView];
-	self.buttonBackgroundView.backgroundColor = [UIColor orangeColor];
 	[self addSubview:self.buttonBackgroundView];
 	
 	[self.buttonBackgroundView autoCenterInSuperview];
 	[self.buttonBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(8.0/10.0)];
-	[self.buttonBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(9.5/10.0)];
+	[self.buttonBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
 	
 	uint8_t amountOfItemsForControlBar = [self.delegate amountOfButtonsForControlBarView:self];
 	for(int i = 0; i < amountOfItemsForControlBar; i++){
@@ -63,18 +76,36 @@
 			lastBackgroundView = [self.controlButtonViews objectAtIndex:i-1];
 		}
 		
-		UIView *buttonBackgroundView = [UIView newAutoLayoutView];
-		buttonBackgroundView.backgroundColor = [UIColor colorWithRed:0.0 green:0.2*(i+1) blue:0.1 alpha:1.0];
-		[self.buttonBackgroundView addSubview:buttonBackgroundView];
+		UIView *buttonAreaView = [UIView newAutoLayoutView];
+		[self.buttonBackgroundView addSubview:buttonAreaView];
 		
 		BOOL isFirstBackground = (self.controlButtonViews.count == 0);
 		
-		[buttonBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-		[buttonBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		[buttonBackgroundView autoPinEdge:ALEdgeLeading toEdge:isFirstBackground ? ALEdgeLeading : ALEdgeTrailing ofView:isFirstBackground ? self.buttonBackgroundView : lastBackgroundView];
-		[buttonBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.buttonBackgroundView withMultiplier:(1.0/(float)amountOfItemsForControlBar)];
+		[buttonAreaView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+		[buttonAreaView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[buttonAreaView autoPinEdge:ALEdgeLeading toEdge:isFirstBackground ? ALEdgeLeading : ALEdgeTrailing ofView:isFirstBackground ? self.buttonBackgroundView : lastBackgroundView];
+		[buttonAreaView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.buttonBackgroundView withMultiplier:(1.0/(float)amountOfItemsForControlBar)];
 		
-		[self.controlButtonViews addObject:buttonBackgroundView];
+		UIView *buttonBackgroundView = [UIImageView newAutoLayoutView];
+		buttonBackgroundView.backgroundColor = [UIColor whiteColor];
+		buttonBackgroundView.layer.masksToBounds = YES;
+		buttonBackgroundView.layer.cornerRadius = 10.0;
+		[buttonAreaView addSubview:buttonBackgroundView];
+		
+		[buttonBackgroundView autoCenterInSuperview];
+		[buttonBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:buttonAreaView withMultiplier:0.8];
+		[buttonBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:buttonAreaView withMultiplier:0.8];
+		
+		UIImageView *buttonImageView = [UIImageView newAutoLayoutView];
+		buttonImageView.contentMode = UIViewContentModeScaleAspectFit;
+		buttonImageView.image = [self.delegate imageWithIndex:i forControlBarView:self];
+		[buttonBackgroundView addSubview:buttonImageView];
+		
+		[buttonImageView autoCenterInSuperview];
+		[buttonImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:buttonBackgroundView withMultiplier:0.5];
+		[buttonImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:buttonBackgroundView withMultiplier:0.5];
+		
+		[self.controlButtonViews addObject:buttonAreaView];
 	}
 	
 	self.heightConstraint = [self autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height/8];

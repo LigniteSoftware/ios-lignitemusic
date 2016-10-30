@@ -20,7 +20,7 @@
 @implementation LMPlaylistView
 
 - (UIImage*)imageWithIndex:(uint8_t)index forControlBarView:(LMControlBarView *)controlBar {
-	return [LMAppIcon imageForIcon:LMIconPlay];
+	return [LMAppIcon invertImage:[LMAppIcon imageForIcon:LMIconPlay]];
 }
 
 - (uint8_t)amountOfButtonsForControlBarView:(LMControlBarView *)controlBar {
