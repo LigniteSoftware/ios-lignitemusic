@@ -10,6 +10,6 @@
 
 @interface LMPlaylistView : UIView
 
-
+- (void)setup;
 
 @end

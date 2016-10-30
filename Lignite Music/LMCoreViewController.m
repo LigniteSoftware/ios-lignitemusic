@@ -276,6 +276,8 @@ BOOL didAutomaticallyClose = NO;
 	[self.playlistView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
 	[self.playlistView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
 	
+	[self.playlistView setup];
+	
 //	[self.playlistView setup];
 	self.playlistView.hidden = YES;
 
