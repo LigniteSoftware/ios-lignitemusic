@@ -34,8 +34,9 @@
 
  @param index The index of the button which was tapped, relative to the control bar.
  @param controlBar The control bar which had its button tapped.
+ @return Whether or not the button that was tapped should mark itself as highlighted.
  */
-- (void)buttonTappedWithIndex:(uint8_t)index forControlBarView:(LMControlBarView*)controlBar;
+- (BOOL)buttonTappedWithIndex:(uint8_t)index forControlBarView:(LMControlBarView*)controlBar;
 
 @end
 

@@ -27,8 +27,9 @@
 	return 4;
 }
 
-- (void)buttonTappedWithIndex:(uint8_t)index forControlBarView:(LMControlBarView *)controlBar {
+- (BOOL)buttonTappedWithIndex:(uint8_t)index forControlBarView:(LMControlBarView *)controlBar {
 	NSLog(@"Tapped index %d", index);
+	return YES;
 }
 
 - (void)invertControlBar {
