@@ -152,7 +152,6 @@
 	[innerShadowView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 	
 	self.triangleView = [LMTriangleView newAutoLayoutView];
-	self.triangleView.backgroundColor = [UIColor whiteColor];
 	[self.backgroundView addSubview:self.triangleView];
 	
 	[self.triangleView autoAlignAxisToSuperviewAxis:ALAxisVertical];
