@@ -58,7 +58,7 @@
 		}
 	}
 	
-	NSLog(@"New highlighted %d previous %ld", newHighlightedIndex, (long)self.currentlyHighlighted);
+//	NSLog(@"New highlighted %d previous %ld", newHighlightedIndex, (long)self.currentlyHighlighted);
 	
 	LMListEntry *previousHighlightedEntry = [self listEntryForIndex:self.currentlyHighlighted];
 	if(![previousHighlightedEntry isEqual:highlightedEntry] || highlightedEntry == nil){

@@ -12,15 +12,19 @@
 #import "LMColour.h"
 #import "YIInnerShadowView.h"
 #import "LMTriangleView.h"
+#import "LMAppIcon.h"
 
 @interface LMControlBarView()
 
-@property NSLayoutConstraint *heightConstraint;
+@property NSLayoutConstraint *viewHeightConstraint;
+@property NSLayoutConstraint *controlBarHeightConstraint;
 @property NSLayoutConstraint *triangleConstraint;
 
 @property UIView *backgroundView;
 @property UIView *buttonBackgroundView;
 @property LMTriangleView *triangleView;
+
+@property UIImageView *threeDotIconImageView;
 
 @property NSMutableArray *controlButtonViews;
 
@@ -32,7 +36,8 @@
 	[self.superview layoutIfNeeded];
 	[self.backgroundView layoutIfNeeded];
 	
-	self.heightConstraint.constant = height;
+	self.controlBarHeightConstraint.constant = height;
+	self.viewHeightConstraint.constant = WINDOW_FRAME.size.height/(height == 0 ? 50 : 8);
 	self.triangleConstraint.constant = height == 0 ? -50 : 0;
 	
 	[UIView animateWithDuration:0.5 animations:^{
@@ -51,11 +56,10 @@
 }
 
 - (void)invert {
-	self.heightConstraint.constant == 0 ? [self open] : [self close];
+	self.controlBarHeightConstraint.constant == 0 ? [self open] : [self close];
 }
 
 - (void)tappedButtonBackgroundView:(UITapGestureRecognizer*)gestureRecognizer {
-	NSLog(@"Tapped %@", gestureRecognizer.view);
 	UIView *viewTapped = gestureRecognizer.view;
 	uint8_t viewTappedIndex = 0;
 	for(int i = 0; i < self.controlButtonViews.count; i++){
@@ -76,6 +80,15 @@
 	self.backgroundColor = [UIColor clearColor];
 	self.userInteractionEnabled = YES;
 	
+	self.threeDotIconImageView = [UIImageView newAutoLayoutView];
+	self.threeDotIconImageView.image = [LMAppIcon invertImage:[LMAppIcon imageForIcon:LMIconTripleHorizontalDots]];
+	self.threeDotIconImageView.contentMode = UIViewContentModeScaleAspectFit;
+	[self addSubview:self.threeDotIconImageView];
+	
+	[self.threeDotIconImageView autoCenterInSuperview];
+	[self.threeDotIconImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
+	[self.threeDotIconImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self];
+	
 	self.backgroundView = [UIView newAutoLayoutView];
 	self.backgroundView.backgroundColor = [LMColour lightGrayBackgroundColour];
 	self.backgroundView.layer.masksToBounds = YES;
@@ -85,7 +98,7 @@
 	
 	[self.backgroundView autoCenterInSuperview];
 	[self.backgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
-	[self.backgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self];
+	self.controlBarHeightConstraint = [self.backgroundView autoSetDimension:ALDimensionHeight toSize:(WINDOW_FRAME.size.height/8)];
 	
 	self.controlButtonViews = [NSMutableArray new];
 	
@@ -93,11 +106,10 @@
 	[self addSubview:self.buttonBackgroundView];
 	
 	[self.buttonBackgroundView autoCenterInSuperview];
-	[self.buttonBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(8.0/10.0)];
-	[self.buttonBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
+	[self.buttonBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.backgroundView withMultiplier:(8.0/10.0)];
+	[self.buttonBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.backgroundView];
 	
 	uint8_t amountOfItemsForControlBar = [self.delegate amountOfButtonsForControlBarView:self];
-	NSLog(@"%d items for control bar", amountOfItemsForControlBar);
 	for(int i = 0; i < amountOfItemsForControlBar; i++){
 		UIView *lastBackgroundView = nil;
 		if(self.controlButtonViews.count > 0){
@@ -105,6 +117,7 @@
 		}
 		
 		UIView *buttonAreaView = [UIView newAutoLayoutView];
+		buttonAreaView.backgroundColor = [UIColor colorWithRed:0.2*(i+1) green:0 blue:0.1 alpha:0];
 		[self.buttonBackgroundView addSubview:buttonAreaView];
 		
 		BOOL isFirstBackground = (self.controlButtonViews.count == 0);
@@ -118,6 +131,7 @@
 		buttonBackgroundView.layer.masksToBounds = YES;
 		buttonBackgroundView.layer.cornerRadius = 10.0;
 		buttonBackgroundView.userInteractionEnabled = YES;
+		buttonBackgroundView.backgroundColor = [UIColor colorWithRed:0.2*(i+1) green:0 blue:0.1 alpha:1];
 		[buttonAreaView addSubview:buttonBackgroundView];
 		
 		[buttonBackgroundView autoCenterInSuperview];
@@ -159,7 +173,7 @@
 	[self.triangleView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.backgroundView withMultiplier:(1.0/10.0)];
 	[self.triangleView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.backgroundView withMultiplier:(1.0/6.0)];
 	
-	self.heightConstraint = [self autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height/8];
+	self.viewHeightConstraint = [self autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height/8];
 }
 
 /*

@@ -269,7 +269,7 @@ BOOL didAutomaticallyClose = NO;
 	self.titleView.hidden = YES;
 	
 	self.playlistView = [LMPlaylistView newAutoLayoutView];
-	self.playlistView.backgroundColor = [UIColor redColor];
+	self.playlistView.backgroundColor = [UIColor whiteColor];
 	[self.view addSubview:self.playlistView];
 	
 	[self.playlistView autoCenterInSuperview];

@@ -296,21 +296,13 @@
 				6A6351911D9D71D300498582 /* LMListEntry.m */,
 				6A3211421DA73EC90060DD07 /* LMMarqueeLabel.h */,
 				6A3211431DA73EC90060DD07 /* LMMarqueeLabel.m */,
-				6A555BAE1DA168860078C9FC /* LMOperationQueue.h */,
-				6A555BAF1DA168860078C9FC /* LMOperationQueue.m */,
 				6ADDBD3B1DA29D3E00DB99EF /* LMShadowView.h */,
 				6ADDBD3C1DA29D3E00DB99EF /* LMShadowView.m */,
 				6A514E171CEA15D900AFB351 /* LMSlider.h */,
 				6A514E181CEA15D900AFB351 /* LMSlider.m */,
-				6AAF61131DA0758400971875 /* LMTableView.h */,
-				6AAF61141DA0758400971875 /* LMTableView.m */,
-				6AAF61161DA0B9C700971875 /* LMTableViewCell.h */,
-				6AAF61171DA0B9C700971875 /* LMTableViewCell.m */,
+				6A32A9F11DC69BB50056CC60 /* ShadowView */,
+				6A32A9F21DC69BC60056CC60 /* TableView */,
 				6A32A9E91DC68F150056CC60 /* TriangleView */,
-				6A6F4B5F1DC5D4EB00BD01C2 /* YIInnerShadowLayer.h */,
-				6A6F4B601DC5D4EB00BD01C2 /* YIInnerShadowLayer.m */,
-				6A6F4B611DC5D4EB00BD01C2 /* YIInnerShadowView.h */,
-				6A6F4B621DC5D4EB00BD01C2 /* YIInnerShadowView.m */,
 			);
 			name = OtherViews;
 			sourceTree = "<group>";
@@ -338,6 +330,8 @@
 		6A1FB9C41D99C8FC00890BF3 /* Other */ = {
 			isa = PBXGroup;
 			children = (
+				6A555BAE1DA168860078C9FC /* LMOperationQueue.h */,
+				6A555BAF1DA168860078C9FC /* LMOperationQueue.m */,
 				6AEB9D071BACF60E00AD19FA /* Assets.xcassets */,
 				6AEB9D0C1BACF60E00AD19FA /* Info.plist */,
 				6A106B121BC710D4003AE55A /* Lignite Music.entitlements */,
@@ -376,6 +370,28 @@
 				6A32A9E71DC654500056CC60 /* LMTriangleView.m */,
 			);
 			name = TriangleView;
+			sourceTree = "<group>";
+		};
+		6A32A9F11DC69BB50056CC60 /* ShadowView */ = {
+			isa = PBXGroup;
+			children = (
+				6A6F4B5F1DC5D4EB00BD01C2 /* YIInnerShadowLayer.h */,
+				6A6F4B601DC5D4EB00BD01C2 /* YIInnerShadowLayer.m */,
+				6A6F4B611DC5D4EB00BD01C2 /* YIInnerShadowView.h */,
+				6A6F4B621DC5D4EB00BD01C2 /* YIInnerShadowView.m */,
+			);
+			name = ShadowView;
+			sourceTree = "<group>";
+		};
+		6A32A9F21DC69BC60056CC60 /* TableView */ = {
+			isa = PBXGroup;
+			children = (
+				6AAF61131DA0758400971875 /* LMTableView.h */,
+				6AAF61141DA0758400971875 /* LMTableView.m */,
+				6AAF61161DA0B9C700971875 /* LMTableViewCell.h */,
+				6AAF61171DA0B9C700971875 /* LMTableViewCell.m */,
+			);
+			name = TableView;
 			sourceTree = "<group>";
 		};
 		6A66C76C1CDA1B4E009019CF /* Icons */ = {

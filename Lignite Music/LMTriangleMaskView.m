@@ -18,8 +18,6 @@
 @implementation LMTriangleMaskView
 
 - (UIBezierPath*)path {
-	NSLog(@"Path bounds %@", NSStringFromCGRect(self.frame));
-	
 	UIBezierPath *path = [UIBezierPath new];
 	[path moveToPoint:(CGPoint){0, 0}];
 	[path addLineToPoint:(CGPoint){self.frame.size.width/2, self.frame.size.height}];
