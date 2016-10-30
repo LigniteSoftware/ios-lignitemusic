@@ -10,6 +10,7 @@
 #import "LMControlBarView.h"
 #import "LMExtras.h"
 #import "LMColour.h"
+#import "YIInnerShadowView.h"
 
 @interface LMControlBarView()
 
@@ -107,6 +108,18 @@
 		
 		[self.controlButtonViews addObject:buttonAreaView];
 	}
+	
+	YIInnerShadowView* innerShadowView = [YIInnerShadowView newAutoLayoutView];
+	innerShadowView.shadowRadius = 4;
+	innerShadowView.shadowMask = YIInnerShadowMaskAll;
+	innerShadowView.cornerRadius = 8.0;
+	[self.backgroundView addSubview:innerShadowView];
+	
+	[innerShadowView autoCenterInSuperview];
+	[innerShadowView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+	[innerShadowView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+	[innerShadowView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+	[innerShadowView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 	
 	self.heightConstraint = [self autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height/8];
 }
