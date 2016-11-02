@@ -29,7 +29,7 @@
 		self.viewsArray = [NSMutableArray new];
 		
 		int amountOfItemsInCollection = 100;
-		float amountOfTiles = 8*(arc4random_uniform(2)+1);
+		float amountOfTiles = 4*(arc4random_uniform(8)+1);
 		
 		float areaTotal = self.frame.size.width * self.frame.size.height;
 		float areaPerTile = areaTotal/amountOfTiles;
@@ -61,7 +61,7 @@
 				
 				int tileIndex = (y*amountOfTilesX)+x;
 				
-				NSLog(@"Tile index %d", tileIndex);
+				NSLog(@"Index of tile %d Column %d Row %d", tileIndex, x, y);
 				
 				UIView *testView = [UIView newAutoLayoutView];
 				testView.backgroundColor = [UIColor colorWithRed:0.2*((float)(arc4random_uniform(5))+1.0) green:0.2*((float)(arc4random_uniform(5))+1.0) blue:0.2*((float)(arc4random_uniform(5))+1.0) alpha:1.0];
@@ -80,12 +80,16 @@
 		
 		if(self.viewsArray.count > 4){
 			int amountOfBigCovers = floor(sqrt(self.viewsArray.count)/2);
+			NSLog(@"Will generate %d big covers", amountOfBigCovers);
 			if(amountOfTilesX > 1 && amountOfTilesY > 1){
 				for(int i = 0; i < amountOfBigCovers; i++){
 					int finalIndex = -1;
 					BOOL validIndex = NO;
+					int attempts = 0;
 					while(!validIndex){
 						BOOL bigRedFlagPleaseWaveIfTrouble = NO;
+						
+						attempts++;
 						
 						int indexOfBigTile = arc4random_uniform(actualAmountOfTiles);
 						int columnOfBigTile = indexOfBigTile % amountOfTilesY;
@@ -106,11 +110,12 @@
 								
 								int indexesToCheck[4] = {
 									indexOfBigTile, indexOfBigTile+1,
-									indexOfBigTile+amountOfTilesY, indexOfBigTile+amountOfTilesY+1
+									indexOfBigTile+amountOfTilesX, indexOfBigTile+amountOfTilesX+1
 								};
 								for(int otherViewIndex = 0; otherViewIndex < 4; otherViewIndex++){
 									UIView *otherView = [self.viewsArray objectAtIndex:indexesToCheck[otherViewIndex]];
 									if([otherView isEqual:otherBigTile]){
+										NSLog(@"Loop %d: Index is taken by another big tile at index %d, rejecting", otherViewIndex, indexesToCheck[otherViewIndex]);
 										bigRedFlagPleaseWaveIfTrouble = YES;
 									}
 								}
@@ -121,12 +126,16 @@
 							finalIndex = indexOfBigTile;
 							NSLog(@"Valid index @ %d", indexOfBigTile);
 						}
+						if(attempts > 20){
+							validIndex = YES;
+							NSLog(@"Giving up hope.");
+						}
 					}
 					if(finalIndex > -1){
 						UIView *topLeftCornerView = [self.viewsArray objectAtIndex:finalIndex];
 						
 						UIView *bigTileView = [UIView newAutoLayoutView];
-						bigTileView.backgroundColor = [UIColor colorWithRed:0.2*((float)(arc4random_uniform(5))+1.0) green:0.2*((float)(arc4random_uniform(5))+1.0) blue:0.2*((float)(arc4random_uniform(5))+1.0) alpha:1.0];
+						bigTileView.backgroundColor = [UIColor greenColor];//[UIColor colorWithRed:0.2*((float)(arc4random_uniform(5))+1.0) green:0.2*((float)(arc4random_uniform(5))+1.0) blue:0.2*((float)(arc4random_uniform(5))+1.0) alpha:1.0];
 						[self.rootView addSubview:bigTileView];
 						
 						[bigTileView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:topLeftCornerView];
@@ -138,9 +147,10 @@
 						
 						int indexesToReplace[4] = {
 							finalIndex, finalIndex+1,
-							finalIndex+amountOfTilesY, finalIndex+amountOfTilesY+1
+							finalIndex+amountOfTilesX, finalIndex+amountOfTilesX+1
 						};
 						for(int viewToReplaceIndex = 0; viewToReplaceIndex < 4; viewToReplaceIndex++){
+							NSLog(@"Replacing object at index %d with new tile", indexesToReplace[viewToReplaceIndex]);
 							[self.viewsArray replaceObjectAtIndex:indexesToReplace[viewToReplaceIndex] withObject:bigTileView];
 						}
 					}

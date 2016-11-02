@@ -97,13 +97,16 @@
 	[self.tiledAlbumCoverView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:100];
 	[self.tiledAlbumCoverView autoAlignAxisToSuperviewAxis:ALAxisVertical];
 	[self.tiledAlbumCoverView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withOffset:-20];
-	[self.tiledAlbumCoverView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self withOffset:-20];
+	[self.tiledAlbumCoverView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self withOffset:-200];
 }
 
 - (void)setup {
 	[self changeShit];
 	
-	[NSTimer scheduledTimerWithTimeInterval:2.0 target:self selector:@selector(changeShit) userInfo:nil repeats:YES];
+	UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(changeShit)];
+	[self addGestureRecognizer:gesture];
+	
+	//[NSTimer scheduledTimerWithTimeInterval:20.0 target:self selector:@selector(changeShit) userInfo:nil repeats:YES];
 	
 //	self.controlBarView = [LMControlBarView newAutoLayoutView];
 //	self.controlBarView.backgroundColor = [UIColor whiteColor];
