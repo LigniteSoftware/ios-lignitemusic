@@ -14,7 +14,8 @@
 
 @property UIView *rootView;
 
-@property NSMutableArray *viewsArray;
+@property NSMutableArray *tilesArray;
+@property NSMutableArray *bigTileArray;
 
 @property LMMusicTrackCollection *musicCollection;
 
@@ -22,11 +23,40 @@
 
 @implementation LMTiledAlbumCoverView
 
+- (int)amountOfUniqueAlbumsInCollection {
+	NSMutableDictionary *albumIdsCountDictionary = [NSMutableDictionary new];
+	
+	for(int i = 0; i < self.musicCollection.count; i++){
+		LMMusicTrack *track = [self.musicCollection.items objectAtIndex:i];
+		NSString *formattedPersistentString = [NSString stringWithFormat:@"%llu", track.albumPersistentID];
+		NSNumber *count = [NSNumber numberWithInt:0];
+		
+		NSNumber *numberObject = [albumIdsCountDictionary objectForKey:formattedPersistentString];
+		if(numberObject){
+			count = numberObject;
+		}
+		int value = [count intValue];
+		value++;
+		count = [NSNumber numberWithInt:value];
+		
+		[albumIdsCountDictionary setObject:count forKey:formattedPersistentString];
+	}
+	
+	NSLog(@"fuck you %lu", (unsigned long)[albumIdsCountDictionary allKeys].count);
+	
+	return (int)[albumIdsCountDictionary allKeys].count;
+}
+
 - (void)layoutSubviews {
 	[super layoutSubviews];
 	
-	if(!self.viewsArray){
-		self.viewsArray = [NSMutableArray new];
+	if(!self.tilesArray){
+		LMMusicPlayer *musicPlayer = [LMMusicPlayer sharedMusicPlayer];
+		self.musicCollection = [[musicPlayer queryCollectionsForMusicType:LMMusicTypePlaylists] objectAtIndex:1];
+		
+		[self amountOfUniqueAlbumsInCollection];
+		
+		self.tilesArray = [NSMutableArray new];
 		
 		int amountOfItemsInCollection = 100;
 		float amountOfTiles = 4*(arc4random_uniform(8)+1);
@@ -37,6 +67,10 @@
 		
 		int amountOfTilesX = (int)floorf(self.frame.size.width/rawArea);
 		int amountOfTilesY = (int)floorf(self.frame.size.height/rawArea);
+		
+		while((amountOfTilesX*(rawArea+1) < self.frame.size.width) && (amountOfTilesY*(rawArea+1) < self.frame.size.height)){
+			rawArea++;
+		}
 		
 		int actualAmountOfTiles = (amountOfTilesX * amountOfTilesY);
 		
@@ -54,16 +88,16 @@
 		
 		for(int y = 0; y < amountOfTilesY; y++){
 			BOOL firstRow = (y == 0);
-			UIView *topElement = firstRow ? self.rootView : [self.viewsArray objectAtIndex:(y*amountOfTilesY)-1];
+			UIImageView *topElement = firstRow ? self.rootView : [self.tilesArray objectAtIndex:(y*amountOfTilesX)-1];
 			for(int x = 0; x < amountOfTilesX; x++){
 				BOOL firstColumn = (x == 0);
-				UIView *sideElement = firstColumn ? self.rootView : [self.viewsArray objectAtIndex:x-1];
+				UIImageView *sideElement = firstColumn ? self.rootView : [self.tilesArray objectAtIndex:x-1];
 				
 				int tileIndex = (y*amountOfTilesX)+x;
 				
-				NSLog(@"Index of tile %d Column %d Row %d", tileIndex, x, y);
+//				NSLog(@"Index of tile %d Column %d Row %d", tileIndex, x, y);
 				
-				UIView *testView = [UIView newAutoLayoutView];
+				UIImageView *testView = [UIImageView newAutoLayoutView];
 				testView.backgroundColor = [UIColor colorWithRed:0.2*((float)(arc4random_uniform(5))+1.0) green:0.2*((float)(arc4random_uniform(5))+1.0) blue:0.2*((float)(arc4random_uniform(5))+1.0) alpha:1.0];
 				[self.rootView addSubview:testView];
 				
@@ -72,15 +106,15 @@
 				[testView autoSetDimension:ALDimensionHeight toSize:rawArea];
 				[testView autoSetDimension:ALDimensionWidth toSize:rawArea];
 				
-				[self.viewsArray addObject:testView];
+				[self.tilesArray addObject:testView];
 			}
 		}
 		
-		NSMutableArray *bigTileArray = [NSMutableArray new];
+		self.bigTileArray = [NSMutableArray new];
 		
-		if(self.viewsArray.count > 4){
-			int amountOfBigCovers = floor(sqrt(self.viewsArray.count)/2);
-			NSLog(@"Will generate %d big covers", amountOfBigCovers);
+		if(self.tilesArray.count > 4){
+			int amountOfBigCovers = floor(sqrt(self.tilesArray.count)/2);
+//			NSLog(@"Will generate %d big covers", amountOfBigCovers);
 			if(amountOfTilesX > 1 && amountOfTilesY > 1){
 				for(int i = 0; i < amountOfBigCovers; i++){
 					int finalIndex = -1;
@@ -92,30 +126,30 @@
 						attempts++;
 						
 						int indexOfBigTile = arc4random_uniform(actualAmountOfTiles);
-						int columnOfBigTile = indexOfBigTile % amountOfTilesY;
+						int columnOfBigTile = indexOfBigTile % amountOfTilesX;
 						int rowOfBigTile = (indexOfBigTile-columnOfBigTile)/amountOfTilesY;
-						NSLog(@"\nIndex of big tile %d\nColumn %d\nRow %d", indexOfBigTile, columnOfBigTile, rowOfBigTile);
+//						NSLog(@"\nIndex of big tile %d\nColumn %d\nRow %d", indexOfBigTile, columnOfBigTile, rowOfBigTile);
 						
 						if((columnOfBigTile+1) > (amountOfTilesX-1) || (rowOfBigTile+1) > (amountOfTilesY-1)){
 							bigRedFlagPleaseWaveIfTrouble = YES;
-							NSLog(@"Index is on the edge, rejecting");
+//							NSLog(@"Index is on the edge, rejecting");
 						}
 						if(actualAmountOfTiles == 16 && indexOfBigTile == 5){ //Prevents centering of big album art in 16 tile square view
 							bigRedFlagPleaseWaveIfTrouble = YES;
-							NSLog(@"Index is cockblock, rejecting");
+//							NSLog(@"Index is cockblock, rejecting");
 						}
 						if(!bigRedFlagPleaseWaveIfTrouble){
-							for(int otherBigTileIndex = 0; otherBigTileIndex < bigTileArray.count; otherBigTileIndex++){
-								UIView *otherBigTile = [bigTileArray objectAtIndex:otherBigTileIndex];
+							for(int otherBigTileIndex = 0; otherBigTileIndex < self.bigTileArray.count; otherBigTileIndex++){
+								UIImageView *otherBigTile = [self.bigTileArray objectAtIndex:otherBigTileIndex];
 								
 								int indexesToCheck[4] = {
 									indexOfBigTile, indexOfBigTile+1,
 									indexOfBigTile+amountOfTilesX, indexOfBigTile+amountOfTilesX+1
 								};
 								for(int otherViewIndex = 0; otherViewIndex < 4; otherViewIndex++){
-									UIView *otherView = [self.viewsArray objectAtIndex:indexesToCheck[otherViewIndex]];
+									UIImageView *otherView = [self.tilesArray objectAtIndex:indexesToCheck[otherViewIndex]];
 									if([otherView isEqual:otherBigTile]){
-										NSLog(@"Loop %d: Index is taken by another big tile at index %d, rejecting", otherViewIndex, indexesToCheck[otherViewIndex]);
+//										NSLog(@"Loop %d: Index is taken by another big tile at index %d, rejecting", otherViewIndex, indexesToCheck[otherViewIndex]);
 										bigRedFlagPleaseWaveIfTrouble = YES;
 									}
 								}
@@ -124,18 +158,18 @@
 						if(!bigRedFlagPleaseWaveIfTrouble){
 							validIndex = YES;
 							finalIndex = indexOfBigTile;
-							NSLog(@"Valid index @ %d", indexOfBigTile);
+//							NSLog(@"Valid index @ %d", indexOfBigTile);
 						}
-						if(attempts > 20){
+						if(attempts > 50){
 							validIndex = YES;
-							NSLog(@"Giving up hope.");
+//							NSLog(@"Giving up hope.");
 						}
 					}
 					if(finalIndex > -1){
-						UIView *topLeftCornerView = [self.viewsArray objectAtIndex:finalIndex];
+						UIImageView *topLeftCornerView = [self.tilesArray objectAtIndex:finalIndex];
 						
-						UIView *bigTileView = [UIView newAutoLayoutView];
-						bigTileView.backgroundColor = [UIColor greenColor];//[UIColor colorWithRed:0.2*((float)(arc4random_uniform(5))+1.0) green:0.2*((float)(arc4random_uniform(5))+1.0) blue:0.2*((float)(arc4random_uniform(5))+1.0) alpha:1.0];
+						UIImageView *bigTileView = [UIImageView newAutoLayoutView];
+						bigTileView.backgroundColor = [UIColor colorWithRed:0.2*((float)(arc4random_uniform(5))+1.0) green:0.2*((float)(arc4random_uniform(5))+1.0) blue:0.2*((float)(arc4random_uniform(5))+1.0) alpha:1.0];
 						[self.rootView addSubview:bigTileView];
 						
 						[bigTileView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:topLeftCornerView];
@@ -143,15 +177,14 @@
 						[bigTileView autoSetDimension:ALDimensionHeight toSize:tileSize.height*2];
 						[bigTileView autoSetDimension:ALDimensionWidth toSize:tileSize.width*2];
 						
-						[bigTileArray addObject:bigTileView];
+						[self.bigTileArray addObject:bigTileView];
 						
 						int indexesToReplace[4] = {
 							finalIndex, finalIndex+1,
 							finalIndex+amountOfTilesX, finalIndex+amountOfTilesX+1
 						};
 						for(int viewToReplaceIndex = 0; viewToReplaceIndex < 4; viewToReplaceIndex++){
-							NSLog(@"Replacing object at index %d with new tile", indexesToReplace[viewToReplaceIndex]);
-							[self.viewsArray replaceObjectAtIndex:indexesToReplace[viewToReplaceIndex] withObject:bigTileView];
+							[self.tilesArray replaceObjectAtIndex:indexesToReplace[viewToReplaceIndex] withObject:bigTileView];
 						}
 					}
 				}
