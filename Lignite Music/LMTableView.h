@@ -64,13 +64,34 @@
 
 @interface LMTableView : UITableView
 
+/**
+ The total amount of items for this table view.
+ */
 @property NSInteger amountOfItemsTotal;
+
+/**
+ The subview delegate.
+ */
 @property id subviewDelegate;
+
+/**
+ The colour for dividers.
+ */
 @property UIColor *dividerColour;
+
+/**
+ Whether or not this table view will have cells that can change in size.
+ */
+@property BOOL dynamicCellSize;
 
 /**
  Regenerate the table view. Calls prepareForUse, which calculates all dimensions for layouts and then redraws the whole table if setNeedsLayout is set to YES. Should NOT be used often and is not thread safe.
  */
 - (void)regenerate:(BOOL)setNeedsLayout;
+
+/**
+ Reload the size of the table view cells after a change.
+ */
+- (void)reloadSize;
 
 @end

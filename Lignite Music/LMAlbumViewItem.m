@@ -78,13 +78,17 @@
 	//[self.shadingBackgroundView updateConstraints];
 }
 
+- (void)layoutSubviews {
+	[super layoutSubviews];
+}
+
 /**
  Sets up the LMAlbumViewItem with a number of items that's available in that album.
 
  @param numberOfItems The number of items in the album associated with this item.
  */
 - (void)setupWithAlbumCount:(NSUInteger)numberOfItems andDelegate:(id)delegate {
-	self.contentView = [UIView new];
+	self.contentView = [UIView newAutoLayoutView];
 	[self addSubview:self.contentView];
 	
 	[self.contentView autoCenterInSuperview];

@@ -12,12 +12,52 @@
 
 @interface LMTableViewCell()
 
+@property NSLayoutConstraint *heightGuideConstraint;
+
 @end
 
 @implementation LMTableViewCell
 
 - (void)updateConstraints {
 	if (!self.didSetupConstraints && self.subview) {
+//		UILabel *label = [UILabel newAutoLayoutView];
+//		label.backgroundColor = [UIColor blueColor];
+//		label.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:100 + (int)(rand() % 100)];
+//		label.text = @"Hey there!";
+//		
+//		UIView *cellSubview = label;
+		//http://stackoverflow.com/questions/39104846/uitableviewcell-animate-height-issue-in-ios-10
+		
+//		self.contentView.backgroundColor = [UIColor colorWithRed:0 green:0.5 blue:0 alpha:0.25];
+		
+		UIView *heightGuide = [[UIView alloc] init];
+		heightGuide.translatesAutoresizingMaskIntoConstraints = NO;
+		[self.contentView addSubview:heightGuide];
+		[heightGuide addConstraint:({
+			self.heightGuideConstraint = [NSLayoutConstraint constraintWithItem:heightGuide attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0f constant:0.0f];
+		})];
+		[self.contentView addConstraint:({
+			[NSLayoutConstraint constraintWithItem:heightGuide attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeTop multiplier:1.0f constant:0.0f];
+		})];
+		
+		UIView *anotherView = [[UIView alloc] init];
+		anotherView.translatesAutoresizingMaskIntoConstraints = NO;
+		anotherView.backgroundColor = [UIColor clearColor];
+		[self.contentView addSubview:anotherView];
+		[anotherView addConstraint:({
+			[NSLayoutConstraint constraintWithItem:anotherView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0f constant:20.0f];
+		})];
+		[self.contentView addConstraint:({
+			[NSLayoutConstraint constraintWithItem:anotherView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeLeft multiplier:1.0f constant:0.0f];
+		})];
+		[self.contentView addConstraint:({
+			// This is our constraint that used to be attached to self.contentView
+			[NSLayoutConstraint constraintWithItem:anotherView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:heightGuide attribute:NSLayoutAttributeBottom multiplier:1.0f constant:0.0f];
+		})];
+		[self.contentView addConstraint:({
+			[NSLayoutConstraint constraintWithItem:anotherView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeRight multiplier:1.0f constant:0.0f];
+		})];
+		
 		UIView *cellSubview = self.subview;
 		
 		[self.contentView addSubview:cellSubview];
@@ -27,36 +67,34 @@
 		}];
 
 		[cellSubview autoPinEdgeToSuperviewEdge:ALEdgeTop];
-		[cellSubview autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		[cellSubview autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:0];
-		[cellSubview autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:0];
-		
-//		self.mediaItem = [(MPMediaItemCollection*)[self.everything.collections objectAtIndex:(rand() % 50)] representativeItem];
-//		
-//		self.item = [[LMAlbumViewItem alloc]initWithMediaItem:self.mediaItem];
-//		[self.contentView addSubview:self.item];
-//		
-//		self.reallyBigUIView = [UIView newAutoLayoutView];
-//		self.reallyBigUIView.backgroundColor = [UIColor blueColor];
-//		[self.contentView addSubview:self.reallyBigUIView];
-//
-//		[NSLayoutConstraint autoSetPriority:UILayoutPriorityRequired forConstraints:^{
-//			[self.item autoSetContentCompressionResistancePriorityForAxis:ALAxisVertical];
-//		}];
-//		
-//		[self.item autoPinEdgeToSuperviewEdge:ALEdgeTop];
-//		[self.item autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-//		[self.item autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:20];
-//		[self.item autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:20];
-//		
-//		[self.item setupWithAlbumCount:10 andDelegate:self];
+		if(!self.shouldNotPinContentsToBottom) {
+			[cellSubview autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		}
+		[cellSubview autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[cellSubview autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 		
 		self.didSetupConstraints = YES;
 		
-//		NSLog(@"Loaded");
+//		NSLog(@"Setup!");
 	}
 	
 	[super updateConstraints];
+}
+
+- (void)setFrame:(CGRect)frame {
+	[super setFrame:frame];
+	
+	NSLog(@"Setting frame to %@", NSStringFromCGRect(frame));
+	
+	if (self.window) {
+		[UIView animateWithDuration:0.3 animations:^{
+			self.heightGuideConstraint.constant = frame.size.height;
+			[self.contentView layoutIfNeeded];
+		}];
+		
+	} else {
+		self.heightGuideConstraint.constant = frame.size.height;
+	}
 }
 
 - (void)awakeFromNib {

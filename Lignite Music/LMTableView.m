@@ -21,15 +21,16 @@
 @property float calculatedHeight;
 @property float calculatedSpacing;
 
+@property float amountToAdd;
+
 @end
 
 @implementation LMTableView
 
 - (id)init {
 	self = [super initWithFrame:CGRectMake(0, 0, 0, 0) style:UITableViewStylePlain];
-	self.alwaysBounceVertical = NO;
 	if(self){
-	
+		self.alwaysBounceVertical = NO;
 	}
 	else{
 		NSLog(@"Error creating LMTableView");
@@ -39,6 +40,7 @@
 
 - (void)configureCell:(LMTableViewCell*)cell forRowAtIndexPath:(NSIndexPath*)indexPath {
 	cell.subview = [self.subviewDelegate prepareSubviewAtIndex:indexPath.section];
+	cell.shouldNotPinContentsToBottom = self.dynamicCellSize;
 	if(!cell.didSetupConstraints){
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
 		[cell setNeedsUpdateConstraints];
@@ -54,13 +56,13 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 //	NSLog(@"Loading %ld", (long)(indexPath.section % self.amountOfItemsRequired));
 	LMTableViewCell *cell = (LMTableViewCell*)[tableView dequeueReusableCellWithIdentifier:[NSString stringWithFormat:@"ShitPost%ld", (long)(indexPath.section % self.amountOfItemsRequired)]];
-		
+	
 	//[self configureCell:cell forRowAtIndexPath:indexPath];
 	return cell;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-//	NSLog(@"Asked for height");
+//	NSLog(@"Asked for height %f", UITableViewAutomaticDimension);
 	return self.calculatedHeight;
 }
 
@@ -90,7 +92,7 @@
 - (UIView*)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
 	CGRect frame = CGRectMake(0, 0, self.frame.size.width, [self tableView:self heightForHeaderInSection:section]);
 	UIView *view = [[UIView alloc] initWithFrame:frame];
-	view.backgroundColor = [UIColor clearColor];
+	view.backgroundColor = [UIColor orangeColor];
 	
 	if([self.subviewDelegate dividerForTableView:self] && section != 0){
 		uint8_t dividerHeight = 1;
@@ -100,11 +102,6 @@
 		UIView *dividerView = [[UIView alloc]initWithFrame:CGRectMake(frameX, frameY, frameWidth, dividerHeight)];
 		dividerView.backgroundColor = self.dividerColour ? self.dividerColour : [UIColor colorWithRed:0.82 green:0.82 blue:0.82 alpha:1.0];
 		[view addSubview:dividerView];
-		
-//		UILabel *infoView = [[UILabel alloc]initWithFrame:frame];
-//		infoView.text = [NSString stringWithFormat:@"header %ld", section];
-//		infoView.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:10];
-//		[view addSubview:infoView];
 	}
 	
 	return view;
@@ -134,25 +131,42 @@
 		self.separatorColor = [UIColor clearColor];
 		
 		float delegateHeight = [self.subviewDelegate sizingFactorialRelativeToWindowForTableView:self height:YES];
+		
 		self.calculatedHeight = ceilf(delegateHeight*WINDOW_FRAME.size.height);
 		self.calculatedSpacing = ceilf(self.calculatedHeight*(delegateHeight/2.0));
-		
+	
 		self.loadedStatus = 1;
 	}
+}
+
+- (void)reloadSize {
+	[UIView animateWithDuration:0.3 animations:^{
+		float delegateHeight = [self.subviewDelegate sizingFactorialRelativeToWindowForTableView:self height:YES];
+		
+		self.calculatedHeight = ceilf(delegateHeight*WINDOW_FRAME.size.height);
+		
+		[self beginUpdates];
+		[self endUpdates];
+	}];
 }
 
 - (void)layoutSubviews {
 	if(self.loadedStatus == 1){
 		self.amountOfItemsRequired = (self.frame.size.height/self.calculatedHeight)*(WINDOW_FRAME.size.height/self.frame.size.height) + 3;
+
 		if(self.amountOfItemsRequired > self.amountOfItemsTotal){
 			self.amountOfItemsRequired = self.amountOfItemsTotal;
 		}
-//		if([[[self.subviewDelegate class] description] isEqualToString:@"LMAlbumView"]){
-//			self.amountOfItemsRequired = 2;
-//		}
+		
+		NSLog(@"Class %@", [[self.subviewDelegate class] description]);
+		if([[[self.subviewDelegate class] description] isEqualToString:@"LMPlaylistView"]){
+			NSLog(@"HEyyyy");
+//			[NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(changeHeightTest) userInfo:nil repeats:NO];
+		}
+		
 		[self.subviewDelegate totalAmountOfSubviewsRequired:self.amountOfItemsRequired forTableView:self];
 		
-//		NSLog(@"\n--- LMTableView ---\nFrame:%@\nCalculated height: %f\nCalculated spacing: %f\nAmount of items total: %lu\nAmount of items required: %lu\n--- End ---", NSStringFromCGRect(self.frame), self.calculatedHeight, self.calculatedSpacing, (unsigned long)self.amountOfItemsTotal, (unsigned long)self.amountOfItemsRequired);
+		//NSLog(@"\n--- LMTableView ---\nFrame:%@\nCalculated height: %f\nCalculated spacing: %f\nAmount of items total: %lu\nAmount of items required: %lu\n--- End ---", NSStringFromCGRect(self.frame), self.calculatedHeight, self.calculatedSpacing, (unsigned long)self.amountOfItemsTotal, (unsigned long)self.amountOfItemsRequired);
 		
 		for(int i = 0; i < self.amountOfItemsRequired; i++){
 			[self registerClass:[LMTableViewCell class] forCellReuseIdentifier:[NSString stringWithFormat:@"ShitPost%d", i]];
@@ -164,31 +178,10 @@
 		self.tableHeaderView = dummyView;
 		self.contentInset = UIEdgeInsetsMake(-dummyViewHeight, 0, 0, 0);
 		
-//		self.debugLabel = [[UILabel alloc]init];
-//		self.debugLabel.text = [NSString stringWithFormat:@"View %@\nFrame:%@\nWindow frame: %@\nCalculated height: %f\nCalculated spacing: %f\nAmount of items total: %lu\nAmount of items required: %lu\nSubview delegate:%@\nLoaded status: %d", self, NSStringFromCGRect(self.frame), NSStringFromCGRect(WINDOW_FRAME), self.calculatedHeight, self.calculatedSpacing, (unsigned long)self.amountOfItemsTotal, (unsigned long)self.amountOfItemsRequired, self.subviewDelegate, self.loadedStatus];
-//		self.debugLabel.numberOfLines = 0;
-//		self.debugLabel.backgroundColor = [UIColor whiteColor];
-//		[self addSubview:self.debugLabel];
-//		
-//		[self.debugLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self withOffset:300];
-//		[self.debugLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-//		[self.debugLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-//		[self.debugLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self withOffset:20];
-		
 		self.loadedStatus = 2;
 	}
 	
 	[super layoutSubviews];
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

@@ -289,7 +289,7 @@
 	
 	self.currentlyPlaying = -1;
 	
-	self.rootTableView = [[LMTableView alloc]init];
+	self.rootTableView = [LMTableView newAutoLayoutView];
 	self.rootTableView.subviewDelegate = self;
 	[self addSubview:self.rootTableView];
 	

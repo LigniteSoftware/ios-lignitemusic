@@ -38,6 +38,14 @@
  */
 - (BOOL)buttonTappedWithIndex:(uint8_t)index forControlBarView:(LMControlBarView*)controlBar;
 
+/**
+ The size of the control bar view changed. This means it either expanded or shrunk.
+
+ @param newSize The new size of the control bar in pixels.
+ @param controlBar The control bar which changed.
+ */
+- (void)sizeChangedTo:(CGSize)newSize forControlBarView:(LMControlBarView*)controlBar;
+
 @end
 
 @interface LMControlBarView : UIView
