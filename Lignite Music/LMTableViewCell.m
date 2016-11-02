@@ -83,9 +83,7 @@
 
 - (void)setFrame:(CGRect)frame {
 	[super setFrame:frame];
-	
-	NSLog(@"Setting frame to %@", NSStringFromCGRect(frame));
-	
+		
 	if (self.window) {
 		[UIView animateWithDuration:0.3 animations:^{
 			self.heightGuideConstraint.constant = frame.size.height;

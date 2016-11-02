@@ -92,7 +92,7 @@
 - (UIView*)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
 	CGRect frame = CGRectMake(0, 0, self.frame.size.width, [self tableView:self heightForHeaderInSection:section]);
 	UIView *view = [[UIView alloc] initWithFrame:frame];
-	view.backgroundColor = [UIColor orangeColor];
+	view.backgroundColor = [UIColor clearColor];
 	
 	if([self.subviewDelegate dividerForTableView:self] && section != 0){
 		uint8_t dividerHeight = 1;

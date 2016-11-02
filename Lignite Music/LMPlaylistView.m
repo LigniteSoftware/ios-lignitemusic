@@ -11,6 +11,7 @@
 #import "LMControlBarView.h"
 #import "LMAppIcon.h"
 #import "LMTableView.h"
+#import "LMTiledAlbumCoverView.h"
 
 @interface LMPlaylistView()<LMControlBarViewDelegate, LMTableViewSubviewDelegate>
 
@@ -19,6 +20,8 @@
 @property LMControlBarView *controlBarView;
 
 @property float windowPercentage;
+
+@property LMTiledAlbumCoverView *tiledAlbumCoverView;
 
 @end
 
@@ -33,10 +36,7 @@
 }
 
 - (void)sizeChangedTo:(CGSize)newSize forControlBarView:(LMControlBarView *)controlBar {
-	NSLog(@"New size is %@", NSStringFromCGSize(newSize));
-	
 	float windowPercentage = newSize.height/self.frame.size.height;
-	NSLog(@"Window percent %f", windowPercentage);
 	
 	self.windowPercentage = windowPercentage;
 	
@@ -78,34 +78,57 @@
 	if(index == 0){
 		return self.controlBarView;
 	}
-	return nil;
+	UIView *shitpostView = [UIView newAutoLayoutView];
+	shitpostView.backgroundColor = [UIColor yellowColor];
+	return shitpostView;
+}
+
+- (void)changeShit {
+	if(self.tiledAlbumCoverView){
+		self.tiledAlbumCoverView.hidden = YES;
+		[self.tiledAlbumCoverView removeFromSuperview];
+		self.tiledAlbumCoverView = nil;
+	}
+	
+	self.tiledAlbumCoverView = [LMTiledAlbumCoverView newAutoLayoutView];
+	self.tiledAlbumCoverView.backgroundColor = [UIColor orangeColor];
+	[self addSubview:self.tiledAlbumCoverView];
+	
+	[self.tiledAlbumCoverView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:100];
+	[self.tiledAlbumCoverView autoAlignAxisToSuperviewAxis:ALAxisVertical];
+	[self.tiledAlbumCoverView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withOffset:-20];
+	[self.tiledAlbumCoverView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self withOffset:-20];
 }
 
 - (void)setup {
-	self.controlBarView = [LMControlBarView newAutoLayoutView];
-	self.controlBarView.backgroundColor = [UIColor whiteColor];
-	self.controlBarView.delegate = self;
+	[self changeShit];
+	
+	[NSTimer scheduledTimerWithTimeInterval:2.0 target:self selector:@selector(changeShit) userInfo:nil repeats:YES];
+	
+//	self.controlBarView = [LMControlBarView newAutoLayoutView];
+//	self.controlBarView.backgroundColor = [UIColor whiteColor];
+//	self.controlBarView.delegate = self;
 //	[self addSubview:self.controlBarView];
 //	
 //	[self.controlBarView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 //	[self.controlBarView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 //	[self.controlBarView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:100];
 	
-	[self.controlBarView setup];
-	
-	self.rootTableView = [LMTableView newAutoLayoutView];
-	self.rootTableView.subviewDelegate = self;
-	self.rootTableView.amountOfItemsTotal = 1;
-	self.rootTableView.dynamicCellSize = YES;
-	[self addSubview:self.rootTableView];
-	
-	[self.rootTableView autoCenterInSuperview];
-	[self.rootTableView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-	[self.rootTableView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:0];
-	[self.rootTableView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-	[self.rootTableView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	
-	[self.rootTableView regenerate:NO];
+//	[self.controlBarView setup];
+//	
+//	self.rootTableView = [LMTableView newAutoLayoutView];
+//	self.rootTableView.subviewDelegate = self;
+//	self.rootTableView.amountOfItemsTotal = 1;
+//	self.rootTableView.dynamicCellSize = YES;
+//	[self addSubview:self.rootTableView];
+//	
+//	[self.rootTableView autoCenterInSuperview];
+//	[self.rootTableView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+//	[self.rootTableView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:0];
+//	[self.rootTableView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+//	[self.rootTableView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+//	
+//	[self.rootTableView regenerate:NO];
 //
 //	UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(invertControlBar)];
 //	[self addGestureRecognizer:gesture];
