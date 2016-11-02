@@ -97,7 +97,7 @@
 	[self.tiledAlbumCoverView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:100];
 	[self.tiledAlbumCoverView autoAlignAxisToSuperviewAxis:ALAxisVertical];
 	[self.tiledAlbumCoverView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withOffset:-20];
-	[self.tiledAlbumCoverView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self withOffset:-20];
+	[self.tiledAlbumCoverView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self withOffset:-200];
 }
 
 - (void)setup {

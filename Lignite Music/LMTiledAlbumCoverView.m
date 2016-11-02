@@ -48,7 +48,7 @@
 			NSString *key = [self.uniqueAlbumCoversDictionary.allKeys objectAtIndex:keyIndex];
 			NSNumber *value = [self.uniqueAlbumCoversDictionary objectForKey:key];
 			
-			if([value intValue] > highestIdValue && ![highestIds containsObject:highestIdKey]){
+			if([value intValue] > highestIdValue && ![highestIds containsObject:key]){
 				highestIdKey = key;
 				highestIdValue = [value intValue];
 			}
@@ -87,7 +87,9 @@
 	for(int i = 0; i < self.tilesArray.count; i++){
 		NSLog(@"Spook %d", i);
 		UIImageView *tile = [self.tilesArray objectAtIndex:i];
-		tile.image = [[self musicTrackForPersistentIdString:[regularIds objectAtIndex:i]] albumArt];
+		if(![self.bigTileArray containsObject:tile]){
+			tile.image = [[self musicTrackForPersistentIdString:[regularIds objectAtIndex:i]] albumArt];
+		}
 	}
 	
 	NSLog(@"Highest IDs %@\nRegular IDs %@", highestIds, regularIds);
