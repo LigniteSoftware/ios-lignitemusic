@@ -18,18 +18,90 @@
 @property NSMutableArray *bigTileArray;
 
 @property LMMusicTrackCollection *musicCollection;
+@property NSMutableDictionary *uniqueAlbumCoversDictionary;
+
+@property int amountOfAlbumsShowing;
 
 @end
 
 @implementation LMTiledAlbumCoverView
 
-- (int)amountOfUniqueAlbumsInCollection {
+- (LMMusicTrack*)musicTrackForPersistentIdString:(NSString*)persistentId {
+	for(int i = 0; i < self.musicCollection.count; i++){
+		LMMusicTrack *track = [self.musicCollection.items objectAtIndex:i];
+		
+		if([persistentId isEqualToString:[NSString stringWithFormat:@"%llu", track.albumPersistentID]]){
+			return track;
+		}
+	}
+	return nil;
+}
+
+- (void)insertAlbumCovers {
+	NSMutableArray *highestIds = [NSMutableArray new];
+	NSMutableArray *regularIds = [NSMutableArray new];
+	
+	for(int i = 0; i < self.bigTileArray.count; i++){
+		NSString *highestIdKey = @"";
+		int highestIdValue = -1;
+		for(int keyIndex = 0; keyIndex < self.uniqueAlbumCoversDictionary.allKeys.count; keyIndex++){
+			NSString *key = [self.uniqueAlbumCoversDictionary.allKeys objectAtIndex:keyIndex];
+			NSNumber *value = [self.uniqueAlbumCoversDictionary objectForKey:key];
+			
+			if([value intValue] > highestIdValue && ![highestIds containsObject:highestIdKey]){
+				highestIdKey = key;
+				highestIdValue = [value intValue];
+			}
+		}
+		[highestIds addObject:highestIdKey];
+	}
+	
+	while(self.uniqueAlbumCoversDictionary.count > self.amountOfAlbumsShowing){
+		NSString *lowestIdKey = @"";
+		int lowestIdValue = INT_MAX;
+		for(int i = 0; i < self.uniqueAlbumCoversDictionary.count; i++){
+			NSString *key = [self.uniqueAlbumCoversDictionary.allKeys objectAtIndex:i];
+			NSNumber *value = [self.uniqueAlbumCoversDictionary objectForKey:key];
+			
+			if([value intValue] < lowestIdValue){
+				lowestIdKey = key;
+				lowestIdValue = [value intValue];
+			}
+		}
+		[self.uniqueAlbumCoversDictionary removeObjectForKey:lowestIdKey];
+	}
+	
+	for(int i = 0; i < self.uniqueAlbumCoversDictionary.count; i++){
+		NSString *key = [self.uniqueAlbumCoversDictionary.allKeys objectAtIndex:i];
+		
+		if(![highestIds containsObject:key]){
+			[regularIds addObject:key];
+		}
+	}
+	
+	for(int i = 0; i < self.bigTileArray.count; i++){
+		UIImageView *bigTile = [self.bigTileArray objectAtIndex:i];
+		bigTile.image = [[self musicTrackForPersistentIdString:[highestIds objectAtIndex:i]] albumArt];
+	}
+	
+	for(int i = 0; i < self.tilesArray.count; i++){
+		NSLog(@"Spook %d", i);
+		UIImageView *tile = [self.tilesArray objectAtIndex:i];
+		tile.image = [[self musicTrackForPersistentIdString:[regularIds objectAtIndex:i]] albumArt];
+	}
+	
+	NSLog(@"Highest IDs %@\nRegular IDs %@", highestIds, regularIds);
+}
+
+- (NSMutableDictionary*)uniqueAlbumsInCollection {
 	NSMutableDictionary *albumIdsCountDictionary = [NSMutableDictionary new];
 	
 	for(int i = 0; i < self.musicCollection.count; i++){
 		LMMusicTrack *track = [self.musicCollection.items objectAtIndex:i];
 		NSString *formattedPersistentString = [NSString stringWithFormat:@"%llu", track.albumPersistentID];
 		NSNumber *count = [NSNumber numberWithInt:0];
+		
+		NSLog(@"Album %@ has id %@", track.albumTitle, formattedPersistentString);
 		
 		NSNumber *numberObject = [albumIdsCountDictionary objectForKey:formattedPersistentString];
 		if(numberObject){
@@ -44,7 +116,7 @@
 	
 	NSLog(@"fuck you %lu", (unsigned long)[albumIdsCountDictionary allKeys].count);
 	
-	return (int)[albumIdsCountDictionary allKeys].count;
+	return albumIdsCountDictionary;
 }
 
 - (void)layoutSubviews {
@@ -52,14 +124,19 @@
 	
 	if(!self.tilesArray){
 		LMMusicPlayer *musicPlayer = [LMMusicPlayer sharedMusicPlayer];
-		self.musicCollection = [[musicPlayer queryCollectionsForMusicType:LMMusicTypePlaylists] objectAtIndex:1];
+		self.musicCollection = [[musicPlayer queryCollectionsForMusicType:LMMusicTypePlaylists] objectAtIndex:5];
 		
-		[self amountOfUniqueAlbumsInCollection];
+		self.uniqueAlbumCoversDictionary = [self uniqueAlbumsInCollection];
 		
 		self.tilesArray = [NSMutableArray new];
 		
 		int amountOfItemsInCollection = 100;
-		float amountOfTiles = 4*(arc4random_uniform(8)+1);
+		float amountOfTiles = self.uniqueAlbumCoversDictionary.count - (self.uniqueAlbumCoversDictionary.count % 4); //Round the number off to a multiple of four
+		if(amountOfTiles < 4){
+			amountOfTiles = 4;
+		}
+		
+		self.amountOfAlbumsShowing = amountOfTiles;
 		
 		float areaTotal = self.frame.size.width * self.frame.size.height;
 		float areaPerTile = areaTotal/amountOfTiles;
@@ -190,6 +267,8 @@
 				}
 			}
 		}
+		
+		[self insertAlbumCovers];
 	}
 	
 	NSLog(@"New frame %@!", NSStringFromCGRect(self.frame));
