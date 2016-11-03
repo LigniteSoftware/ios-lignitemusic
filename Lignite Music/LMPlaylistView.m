@@ -14,7 +14,7 @@
 #import "LMTiledAlbumCoverView.h"
 #import "LMCollectionInfoView.h"
 
-@interface LMPlaylistView()<LMControlBarViewDelegate, LMTableViewSubviewDelegate>
+@interface LMPlaylistView()<LMControlBarViewDelegate, LMTableViewSubviewDelegate, LMCollectionInfoViewDelegate>
 
 @property LMTableView *rootTableView;
 
@@ -29,6 +29,24 @@
 @end
 
 @implementation LMPlaylistView
+
+- (NSString*)titleForInfoView:(LMCollectionInfoView *)infoView {
+	return @"Title!";
+}
+
+- (NSString*)leftTextForInfoView:(LMCollectionInfoView *)infoView {
+	return @"Left text!";
+}
+
+- (NSString*)rightTextForInfoView:(LMCollectionInfoView *)infoView {
+	return nil;
+	return @"Right text!";
+}
+
+- (UIImage*)centerImageForInfoView:(LMCollectionInfoView *)infoView {
+	return nil;
+	return [UIImage imageNamed:@"icon_bug.png"];
+}
 
 - (UIImage*)imageWithIndex:(uint8_t)index forControlBarView:(LMControlBarView *)controlBar {
 	return [LMAppIcon invertImage:[LMAppIcon imageForIcon:LMIconPlay]];
@@ -105,13 +123,16 @@
 
 - (void)setup {
 	self.infoView = [LMCollectionInfoView newAutoLayoutView];
-	self.infoView.backgroundColor = [UIColor blueColor];
+//	self.infoView.backgroundColor = [UIColor blueColor];
+	self.infoView.delegate = self;
 	[self addSubview:self.infoView];
 	
 	[self.infoView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:20];
 	[self.infoView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:20];
-	[self.infoView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:100];
-	[self.infoView autoSetDimension:ALDimensionHeight toSize:100];
+	[self.infoView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:300];
+	[self.infoView autoSetDimension:ALDimensionHeight toSize:75];
+	
+	[self.infoView reloadData];
 	
 //	[self changeShit];
 //	
