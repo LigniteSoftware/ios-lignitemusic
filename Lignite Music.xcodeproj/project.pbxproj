@@ -407,10 +407,12 @@
 		6A4BAEEF1DC9C572000DF537 /* BigListSubviews */ = {
 			isa = PBXGroup;
 			children = (
-				6A4BAEF01DC9C59B000DF537 /* LMTiledAlbumCoverView.h */,
-				6A4BAEF11DC9C59B000DF537 /* LMTiledAlbumCoverView.m */,
+				6A4BAEEC1DC984EC000DF537 /* LMBigListEntry.h */,
+				6A4BAEED1DC984EC000DF537 /* LMBigListEntry.m */,
 				6AD480611DCAAF4D00DB891B /* LMCollectionInfoView.h */,
 				6AD480621DCAAF4D00DB891B /* LMCollectionInfoView.m */,
+				6A4BAEF01DC9C59B000DF537 /* LMTiledAlbumCoverView.h */,
+				6A4BAEF11DC9C59B000DF537 /* LMTiledAlbumCoverView.m */,
 			);
 			name = BigListSubviews;
 			sourceTree = "<group>";
@@ -569,8 +571,6 @@
 			children = (
 				6AFD2EDB1BC41ECC0083FE9E /* LMAlbumViewItem.h */,
 				6AFD2EDC1BC41ECC0083FE9E /* LMAlbumViewItem.m */,
-				6A4BAEEC1DC984EC000DF537 /* LMBigListEntry.h */,
-				6A4BAEED1DC984EC000DF537 /* LMBigListEntry.m */,
 			);
 			name = Subviews;
 			sourceTree = "<group>";

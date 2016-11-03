@@ -122,17 +122,16 @@
 }
 
 - (void)setup {
-	self.infoView = [LMCollectionInfoView newAutoLayoutView];
-//	self.infoView.backgroundColor = [UIColor blueColor];
-	self.infoView.delegate = self;
-	[self addSubview:self.infoView];
-	
-	[self.infoView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:20];
-	[self.infoView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:20];
-	[self.infoView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:300];
-	[self.infoView autoSetDimension:ALDimensionHeight toSize:75];
-	
-	[self.infoView reloadData];
+//	self.infoView = [LMCollectionInfoView newAutoLayoutView];
+//	self.infoView.delegate = self;
+//	[self addSubview:self.infoView];
+//	
+//	[self.infoView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:20];
+//	[self.infoView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:20];
+//	[self.infoView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:300];
+//	[self.infoView autoSetDimension:ALDimensionHeight toSize:75];
+//	
+//	[self.infoView reloadData];
 	
 //	[self changeShit];
 //	
