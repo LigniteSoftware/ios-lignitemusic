@@ -13,8 +13,9 @@
 #import "LMTableView.h"
 #import "LMTiledAlbumCoverView.h"
 #import "LMCollectionInfoView.h"
+#import "LMBigListEntry.h"
 
-@interface LMPlaylistView()<LMControlBarViewDelegate, LMTableViewSubviewDelegate, LMCollectionInfoViewDelegate>
+@interface LMPlaylistView()<LMControlBarViewDelegate, LMTableViewSubviewDelegate, LMCollectionInfoViewDelegate, LMBigListEntryDelegate>
 
 @property LMTableView *rootTableView;
 
@@ -26,9 +27,27 @@
 
 @property LMCollectionInfoView *infoView;
 
+@property LMBigListEntry *bigListEntry;
+@property NSLayoutConstraint *bigListEntryHeightConstraint;
+
 @end
 
 @implementation LMPlaylistView
+
+- (void)sizeChangedTo:(CGSize)newSize forBigListEntry:(LMBigListEntry *)bigListEntry {
+	NSLog(@"New big list entry size %@", NSStringFromCGSize(newSize));
+	self.bigListEntryHeightConstraint.constant = newSize.height;
+	[self layoutIfNeeded];
+}
+
+- (float)contentSubviewHeightFactorialForBigListEntry:(LMBigListEntry *)bigListEntry {
+	return 0.4;
+}
+
+- (id)contentSubviewForBigListEntry:(LMBigListEntry *)bigListEntry {
+	return self.tiledAlbumCoverView;
+}
+
 
 - (NSString*)titleForInfoView:(LMCollectionInfoView *)infoView {
 	return @"Title!";
@@ -122,7 +141,21 @@
 }
 
 - (void)setup {
-//	self.infoView = [LMCollectionInfoView newAutoLayoutView];
+	self.tiledAlbumCoverView = [LMTiledAlbumCoverView newAutoLayoutView];
+	[self addSubview:self.tiledAlbumCoverView];
+	
+	self.bigListEntry = [LMBigListEntry newAutoLayoutView];
+	self.bigListEntry.entryDelegate = self;
+	[self addSubview:self.bigListEntry];
+	
+	[self.bigListEntry autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:100];
+	[self.bigListEntry autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:10];
+	[self.bigListEntry autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:10];
+	self.bigListEntryHeightConstraint = [self.bigListEntry autoSetDimension:ALDimensionHeight toSize:0];
+	
+	[self.bigListEntry setup];
+	
+	//	self.infoView = [LMCollectionInfoView newAutoLayoutView];
 //	self.infoView.delegate = self;
 //	[self addSubview:self.infoView];
 //	

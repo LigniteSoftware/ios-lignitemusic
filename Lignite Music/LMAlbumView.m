@@ -247,8 +247,6 @@
 		newItem.userInteractionEnabled = YES;
 		[self.albumsItemArray addObject:newItem];
 	}
-	
-	NSLog(@"New size %lu", (unsigned long)self.albumsItemArray.count);
 }
 
 /**
