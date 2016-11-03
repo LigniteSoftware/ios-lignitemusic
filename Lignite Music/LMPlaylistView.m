@@ -12,6 +12,7 @@
 #import "LMAppIcon.h"
 #import "LMTableView.h"
 #import "LMTiledAlbumCoverView.h"
+#import "LMCollectionInfoView.h"
 
 @interface LMPlaylistView()<LMControlBarViewDelegate, LMTableViewSubviewDelegate>
 
@@ -22,6 +23,8 @@
 @property float windowPercentage;
 
 @property LMTiledAlbumCoverView *tiledAlbumCoverView;
+
+@property LMCollectionInfoView *infoView;
 
 @end
 
@@ -91,20 +94,29 @@
 	}
 	
 	self.tiledAlbumCoverView = [LMTiledAlbumCoverView newAutoLayoutView];
-	self.tiledAlbumCoverView.backgroundColor = [UIColor orangeColor];
+//	self.tiledAlbumCoverView.backgroundColor = [UIColor orangeColor];
 	[self addSubview:self.tiledAlbumCoverView];
 	
 	[self.tiledAlbumCoverView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:100];
 	[self.tiledAlbumCoverView autoAlignAxisToSuperviewAxis:ALAxisVertical];
 	[self.tiledAlbumCoverView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withOffset:-20];
-	[self.tiledAlbumCoverView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self withOffset:-200];
+	[self.tiledAlbumCoverView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self withOffset:-20];
 }
 
 - (void)setup {
-	[self changeShit];
+	self.infoView = [LMCollectionInfoView newAutoLayoutView];
+	self.infoView.backgroundColor = [UIColor blueColor];
+	[self addSubview:self.infoView];
 	
-	UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(changeShit)];
-	[self addGestureRecognizer:gesture];
+	[self.infoView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:20];
+	[self.infoView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:20];
+	[self.infoView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:100];
+	[self.infoView autoSetDimension:ALDimensionHeight toSize:100];
+	
+//	[self changeShit];
+//	
+//	UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(changeShit)];
+//	[self addGestureRecognizer:gesture];
 	
 	//[NSTimer scheduledTimerWithTimeInterval:20.0 target:self selector:@selector(changeShit) userInfo:nil repeats:YES];
 	
