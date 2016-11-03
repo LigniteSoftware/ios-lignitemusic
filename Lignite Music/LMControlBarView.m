@@ -90,9 +90,9 @@
 - (void)layoutSubviews {
 	[super layoutSubviews];
 	
-//	NSLog(@"New frame %@", NSStringFromCGRect(self.frame));
+	NSLog(@"Control bar new frame %@ root view frame %@", NSStringFromCGRect(self.frame), NSStringFromCGRect(self.rootView.frame));
 	
-	[self.delegate sizeChangedTo:self.frame.size forControlBarView:self];
+	[self.delegate sizeChangedTo:self.rootView.frame.size forControlBarView:self];
 }
 
 - (void)what{
@@ -100,14 +100,14 @@
 }
 
 - (void)setup {
-	self.backgroundColor = [UIColor clearColor];
 	self.userInteractionEnabled = YES;
 	
 	self.actualHeightConstraint = [self autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height/50.0];
 	
 	self.rootView = [UILabel newAutoLayoutView];
 //	self.rootView.backgroundColor = [UIColor orangeColor];
-	self.rootView.userInteractionEnabled = NO;
+	self.rootView.userInteractionEnabled = YES
+	self.rootViewHeightConstraint.constant -= self.controlBarViewHeightConstraint.constant; ;
 	[self addSubview:self.rootView];
 	
 	[self.rootView autoPinEdgeToSuperviewEdge:ALEdgeTop];

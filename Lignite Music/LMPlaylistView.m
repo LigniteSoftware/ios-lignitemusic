@@ -146,6 +146,7 @@
 	
 	self.bigListEntry = [LMBigListEntry newAutoLayoutView];
 	self.bigListEntry.entryDelegate = self;
+	self.bigListEntry.infoDelegate = self;
 	[self addSubview:self.bigListEntry];
 	
 	[self.bigListEntry autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:100];
