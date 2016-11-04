@@ -35,18 +35,18 @@
 @implementation LMControlBarView
 
 - (void)updateHeightConstraintWithHeight:(float)height {
-	[self.superview layoutIfNeeded];
+//	[self.superview layoutIfNeeded];
 	[self layoutIfNeeded];
 	[self.rootView layoutIfNeeded];
 	[self.backgroundView layoutIfNeeded];
 	
 	self.triangleConstraint.constant = height == 0 ? -50 : 0;
 	self.viewHeightConstraint.constant = WINDOW_FRAME.size.height/(height == 0 ? 50 : 8);
-	self.actualHeightConstraint.constant = self.viewHeightConstraint.constant;
+//	self.actualHeightConstraint.constant = self.viewHeightConstraint.constant;
 	self.controlBarHeightConstraint.constant = height;
 	
 	[UIView animateWithDuration:0.3 animations:^{
-		[self.superview layoutIfNeeded];
+//		[self.superview layoutIfNeeded];
 		[self layoutIfNeeded];
 		[self.rootView layoutIfNeeded];
 		[self.backgroundView layoutIfNeeded];
@@ -62,15 +62,11 @@
 }
 
 - (void)invert {
-	NSLog(@"Invert");
 	self.viewHeightConstraint.constant < 20 ? [self open] : [self close];
 	//self.controlBarHeightConstraint.constant == 0 ? [self open] : [self close];
 }
 
 - (void)tappedButtonBackgroundView:(UITapGestureRecognizer*)gestureRecognizer {
-	[self invert];
-	return;
-	
 	UIView *viewTapped = gestureRecognizer.view;
 	uint8_t viewTappedIndex = 0;
 	for(int i = 0; i < self.controlButtonViews.count; i++){
@@ -90,24 +86,17 @@
 - (void)layoutSubviews {
 	[super layoutSubviews];
 	
-	NSLog(@"Control bar new frame %@ root view frame %@", NSStringFromCGRect(self.frame), NSStringFromCGRect(self.rootView.frame));
-	
 	[self.delegate sizeChangedTo:self.rootView.frame.size forControlBarView:self];
-}
-
-- (void)what{
-	NSLog(@"What");
 }
 
 - (void)setup {
 	self.userInteractionEnabled = YES;
 	
-	self.actualHeightConstraint = [self autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height/50.0];
+//	self.actualHeightConstraint = [self autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height/50.0];
 	
 	self.rootView = [UILabel newAutoLayoutView];
 //	self.rootView.backgroundColor = [UIColor orangeColor];
-	self.rootView.userInteractionEnabled = YES
-	self.rootViewHeightConstraint.constant -= self.controlBarViewHeightConstraint.constant; ;
+	self.rootView.userInteractionEnabled = YES;
 	[self addSubview:self.rootView];
 	
 	[self.rootView autoPinEdgeToSuperviewEdge:ALEdgeTop];
