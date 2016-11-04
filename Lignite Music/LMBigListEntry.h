@@ -33,10 +33,11 @@
 /**
  Is called when the size to the big list entry changes. This should only happen when the UIControlBarView changes its size in portrait.
 
- @param newSize The new size.
+ @param largeSize Whether or not the big list entry is now large.
+ @param withHeight The new height of the big list entry.
  @param bigListEntry The big list entry.
  */
-- (void)sizeChangedTo:(CGSize)newSize forBigListEntry:(LMBigListEntry*)bigListEntry;
+- (void)sizeChangedToLargeSize:(BOOL)largeSize withHeight:(float)newHeight forBigListEntry:(LMBigListEntry*)bigListEntry;
 
 @end
 
@@ -45,6 +46,15 @@
 @property id<LMBigListEntryDelegate> entryDelegate;
 @property id<LMCollectionInfoViewDelegate> infoDelegate;
 
-- (void)setup;
+@property BOOL isLargeSize;
+@property NSUInteger collectionIndex;
+
+/**
+ Gets the small/average size of the big list entry with a provided delegate. Warning: will pass nil to contentSubviewHeightFactorialForBigListEntry:.
+
+ @param delegate The delegate associated.
+ @return The height in px.
+ */
++ (float)smallSizeForBigListEntryWithDelegate:(id<LMBigListEntryDelegate>)delegate;
 
 @end

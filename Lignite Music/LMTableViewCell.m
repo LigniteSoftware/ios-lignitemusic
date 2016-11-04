@@ -62,20 +62,22 @@
 		
 		[self.contentView addSubview:cellSubview];
 		
+//		self.contentView.backgroundColor = [UIColor redColor];
+		
 		[NSLayoutConstraint autoSetPriority:UILayoutPriorityRequired forConstraints:^{
 			[cellSubview autoSetContentCompressionResistancePriorityForAxis:ALAxisVertical];
 		}];
 
 		[cellSubview autoPinEdgeToSuperviewEdge:ALEdgeTop];
-		if(!self.shouldNotPinContentsToBottom) {
+//		if(!self.shouldNotPinContentsToBottom) {
 			[cellSubview autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		}
+//		}
 		[cellSubview autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[cellSubview autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 		
 		self.didSetupConstraints = YES;
 		
-//		NSLog(@"Setup!");
+		NSLog(@"Setup!");
 	}
 	
 	[super updateConstraints];
@@ -83,7 +85,7 @@
 
 - (void)setFrame:(CGRect)frame {
 	[super setFrame:frame];
-		
+	
 	if (self.window) {
 		[UIView animateWithDuration:0.3 animations:^{
 			self.heightGuideConstraint.constant = frame.size.height;

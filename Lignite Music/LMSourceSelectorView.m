@@ -407,8 +407,6 @@
 	[self.viewsTableView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.sourceSelectorButtonBackgroundView];
 	[self.viewsTableView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.contentBackgroundView];
 	[self.viewsTableView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.contentBackgroundView];
-	
-	NSLog(@"Setup!!!");
 }
 
 /*

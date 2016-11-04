@@ -31,6 +31,8 @@
 	self = [super initWithFrame:CGRectMake(0, 0, 0, 0) style:UITableViewStylePlain];
 	if(self){
 		self.alwaysBounceVertical = NO;
+		self.amountOfItemsTotal = 0;
+		self.amountOfItemsRequired = 0;
 	}
 	else{
 		NSLog(@"Error creating LMTableView");
@@ -40,12 +42,15 @@
 
 - (void)configureCell:(LMTableViewCell*)cell forRowAtIndexPath:(NSIndexPath*)indexPath {
 	cell.subview = [self.subviewDelegate prepareSubviewAtIndex:indexPath.section];
+	NSLog(@"Set subview");
 	cell.shouldNotPinContentsToBottom = self.dynamicCellSize;
 	if(!cell.didSetupConstraints){
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
 		[cell setNeedsUpdateConstraints];
 		[cell updateConstraintsIfNeeded];
+		NSLog(@"Cell update");
 	}
+	NSLog(@"Done configure cell");
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -63,7 +68,21 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 //	NSLog(@"Asked for height %f", UITableViewAutomaticDimension);
-	return self.calculatedHeight;
+//	return 100;
+	
+	if(!self.dynamicCellSize){
+//		NSLog(@"Returning static calculated height %f %d", self.calculatedHeight, self.dynamicCellSize);
+		return self.calculatedHeight;
+	}
+	else{
+		NSArray *largeSizes = [self.subviewDelegate largeCellSizesAffectedIndexesForTableView:self];
+		float largeSize = [self.subviewDelegate largeCellSizeForTableView:self];
+		
+		BOOL isLarge = [largeSizes containsObject:@(indexPath.section)];
+		return isLarge ? largeSize : self.calculatedHeight;
+	}
+	
+	return 10;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -133,8 +152,8 @@
 		float delegateHeight = [self.subviewDelegate sizingFactorialRelativeToWindowForTableView:self height:YES];
 		
 		self.calculatedHeight = ceilf(delegateHeight*WINDOW_FRAME.size.height);
-		self.calculatedSpacing = ceilf(self.calculatedHeight*(delegateHeight/2.0));
-	
+		self.calculatedSpacing = ceilf(self.calculatedHeight*(delegateHeight/5.0));
+		
 		self.loadedStatus = 1;
 	}
 }
@@ -158,15 +177,9 @@
 			self.amountOfItemsRequired = self.amountOfItemsTotal;
 		}
 		
-		NSLog(@"Class %@", [[self.subviewDelegate class] description]);
-		if([[[self.subviewDelegate class] description] isEqualToString:@"LMPlaylistView"]){
-			NSLog(@"HEyyyy");
-//			[NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(changeHeightTest) userInfo:nil repeats:NO];
-		}
-		
 		[self.subviewDelegate totalAmountOfSubviewsRequired:self.amountOfItemsRequired forTableView:self];
 		
-		//NSLog(@"\n--- LMTableView ---\nFrame:%@\nCalculated height: %f\nCalculated spacing: %f\nAmount of items total: %lu\nAmount of items required: %lu\n--- End ---", NSStringFromCGRect(self.frame), self.calculatedHeight, self.calculatedSpacing, (unsigned long)self.amountOfItemsTotal, (unsigned long)self.amountOfItemsRequired);
+		NSLog(@"\n--- LMTableView ---\nFrame:%@\nCalculated height: %f\nCalculated spacing: %f\nAmount of items total: %lu\nAmount of items required: %lu\n--- End ---", NSStringFromCGRect(self.frame), self.calculatedHeight, self.calculatedSpacing, (unsigned long)self.amountOfItemsTotal, (unsigned long)self.amountOfItemsRequired);
 		
 		for(int i = 0; i < self.amountOfItemsRequired; i++){
 			[self registerClass:[LMTableViewCell class] forCellReuseIdentifier:[NSString stringWithFormat:@"ShitPost%d", i]];
@@ -180,7 +193,6 @@
 		
 		self.loadedStatus = 2;
 	}
-	
 	[super layoutSubviews];
 }
 

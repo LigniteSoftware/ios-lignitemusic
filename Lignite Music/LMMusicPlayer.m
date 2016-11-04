@@ -775,7 +775,7 @@ BOOL shuffleForDebug = NO;
 - (void)setShuffleMode:(LMMusicShuffleMode)shuffleMode {
 	_shuffleMode = shuffleMode;
 	
-	NSLog(@"New shuffle is %d", _shuffleMode);
+//	NSLog(@"New shuffle is %d", _shuffleMode);
 	
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer){
 		MPMusicShuffleMode associatedShuffleModes[] = {

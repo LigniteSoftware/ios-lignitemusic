@@ -37,7 +37,7 @@
 	return nil;
 }
 
-- (void)insertAlbumCovers {
+- (void)insertAlbumCovers {	
 	NSMutableArray *highestIds = [NSMutableArray new];
 	NSMutableArray *regularIds = [NSMutableArray new];
 	
@@ -85,14 +85,14 @@
 	}
 	
 	for(int i = 0; i < self.tilesArray.count; i++){
-		NSLog(@"Spook %d", i);
+//		NSLog(@"Spook %d", i);
 		UIImageView *tile = [self.tilesArray objectAtIndex:i];
 		if(![self.bigTileArray containsObject:tile]){
 			tile.image = [[self musicTrackForPersistentIdString:[regularIds objectAtIndex:i]] albumArt];
 		}
 	}
 	
-	NSLog(@"Highest IDs %@\nRegular IDs %@", highestIds, regularIds);
+//	NSLog(@"Highest IDs %@\nRegular IDs %@", highestIds, regularIds);
 }
 
 - (NSMutableDictionary*)uniqueAlbumsInCollection {
@@ -103,7 +103,7 @@
 		NSString *formattedPersistentString = [NSString stringWithFormat:@"%llu", track.albumPersistentID];
 		NSNumber *count = [NSNumber numberWithInt:0];
 		
-		NSLog(@"Album %@ has id %@", track.albumTitle, formattedPersistentString);
+//		NSLog(@"Album %@ has id %@", track.albumTitle, formattedPersistentString);
 		
 		NSNumber *numberObject = [albumIdsCountDictionary objectForKey:formattedPersistentString];
 		if(numberObject){
@@ -116,7 +116,7 @@
 		[albumIdsCountDictionary setObject:count forKey:formattedPersistentString];
 	}
 	
-	NSLog(@"fuck you %lu", (unsigned long)[albumIdsCountDictionary allKeys].count);
+//	NSLog(@"fuck you %lu", (unsigned long)[albumIdsCountDictionary allKeys].count);
 	
 	return albumIdsCountDictionary;
 }
@@ -132,7 +132,6 @@
 		
 		self.tilesArray = [NSMutableArray new];
 		
-		int amountOfItemsInCollection = 100;
 		float amountOfTiles = self.uniqueAlbumCoversDictionary.count - (self.uniqueAlbumCoversDictionary.count % 4); //Round the number off to a multiple of four
 		if(amountOfTiles < 4){
 			amountOfTiles = 4;
@@ -155,7 +154,7 @@
 		
 		CGSize tileSize = CGSizeMake(rawArea, rawArea);
 		
-		NSLog(@"\nLMTiledAlbumCover Generation\nAmount of items in collection: %d\nAmount of tiles generated: %f\nArea total: %f\nArea per tile: %f\nTile size: %@\nAmount of tiles X, Y: %d, %d", amountOfItemsInCollection, amountOfTiles, areaTotal, areaPerTile, NSStringFromCGSize(tileSize), amountOfTilesX, amountOfTilesY);
+//		NSLog(@"\nLMTiledAlbumCover Generation\nAmount of items in collection: %d\nAmount of tiles generated: %f\nArea total: %f\nArea per tile: %f\nTile size: %@\nAmount of tiles X, Y: %d, %d", amountOfItemsInCollection, amountOfTiles, areaTotal, areaPerTile, NSStringFromCGSize(tileSize), amountOfTilesX, amountOfTilesY);
 		
 		self.rootView = [UIView newAutoLayoutView];
 		self.rootView.backgroundColor = [UIColor purpleColor];
@@ -172,7 +171,7 @@
 				BOOL firstColumn = (x == 0);
 				UIImageView *sideElement = firstColumn ? self.rootView : [self.tilesArray objectAtIndex:x-1];
 				
-				int tileIndex = (y*amountOfTilesX)+x;
+//				int tileIndex = (y*amountOfTilesX)+x;
 				
 //				NSLog(@"Index of tile %d Column %d Row %d", tileIndex, x, y);
 				
@@ -273,7 +272,7 @@
 		[self insertAlbumCovers];
 	}
 	
-	NSLog(@"New frame %@!", NSStringFromCGRect(self.frame));
+//	NSLog(@"New frame %@!", NSStringFromCGRect(self.frame));
 }
 
 - (void)setupWithCollection:(LMMusicTrackCollection*)collection {

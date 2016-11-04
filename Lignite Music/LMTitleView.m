@@ -68,11 +68,9 @@
 //		if(updateNowPlayingStatus){
 //			[self musicPlaybackStateDidChange:self.musicPlayer.playbackState];
 //		}
-		NSLog(@"Set prev highlight");
 	}
 	
 	if(highlightedEntry){
-		NSLog(@"Highlighting entry %ld", (long)highlightedEntry.collectionIndex);
 		[highlightedEntry changeHighlightStatus:YES animated:YES];
 	}
 }

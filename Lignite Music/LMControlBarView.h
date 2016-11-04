@@ -55,6 +55,13 @@
  */
 @property id<LMControlBarViewDelegate> delegate;
 
++ (float)heightWhenIsOpened:(BOOL)isOpened;
+
+/**
+ Whether or not the control bar is open.
+ */
+@property BOOL isOpen;
+
 /**
  Open the control bar. Increases the height to one eighth the window's height.
  */

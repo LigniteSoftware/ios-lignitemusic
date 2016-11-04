@@ -198,7 +198,6 @@ BOOL didAutomaticallyClose = NO;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-	NSLog(@"Loaded");
     // Do any additional setup after loading the view
 	
 	self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];

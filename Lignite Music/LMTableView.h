@@ -23,7 +23,7 @@
 
 
 /**
- Gets the sizing factorial of an item in the table view relative to the window. The table view will handle the rest of the calculations.
+ Gets the sizing factorial of the average item in the table view relative to the window. The table view will handle the rest of the calculations.
  
  @param tableView The table view which requires the factorial.
  
@@ -59,6 +59,24 @@
  @return Whether or not a divider should be added.
  */
 - (void)totalAmountOfSubviewsRequired:(NSUInteger)amount forTableView:(LMTableView*)tableView;
+
+@optional
+
+/**
+ A number representing the large cell size for the table view. This opposite to sizingFactorialRelativeToWindowForTableView:, which is for the average/small cell size.
+
+ @param tableView The table view which is requesting the large cell size.
+ @return The large cell size.
+ */
+- (float)largeCellSizeForTableView:(LMTableView*)tableView;
+
+/**
+ The array of cell indexes which have a large cell size. Every index in this array will be increased to a large cell size, and if it is taken out of the array, it will revert back to the small size.
+
+ @param tableView The table view which needs the cell indexes affected array.
+ @return The affected indexes of the table view.
+ */
+- (NSArray*)largeCellSizesAffectedIndexesForTableView:(LMTableView*)tableView;
 
 @end
 

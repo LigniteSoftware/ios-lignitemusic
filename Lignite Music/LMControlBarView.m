@@ -16,7 +16,6 @@
 
 @interface LMControlBarView()
 
-@property NSLayoutConstraint *actualHeightConstraint;
 @property NSLayoutConstraint *viewHeightConstraint;
 @property NSLayoutConstraint *controlBarHeightConstraint;
 @property NSLayoutConstraint *triangleConstraint;
@@ -34,19 +33,22 @@
 
 @implementation LMControlBarView
 
++ (float)heightWhenIsOpened:(BOOL)isOpened {
+	return WINDOW_FRAME.size.height/(isOpened ? 8 : 50);
+}
+
 - (void)updateHeightConstraintWithHeight:(float)height {
-//	[self.superview layoutIfNeeded];
 	[self layoutIfNeeded];
 	[self.rootView layoutIfNeeded];
 	[self.backgroundView layoutIfNeeded];
 	
-	self.triangleConstraint.constant = height == 0 ? -50 : 0;
-	self.viewHeightConstraint.constant = WINDOW_FRAME.size.height/(height == 0 ? 50 : 8);
-//	self.actualHeightConstraint.constant = self.viewHeightConstraint.constant;
+	self.isOpen = (height != 0);
+	
+	self.triangleConstraint.constant = self.isOpen ? 0 : -50;
+	self.viewHeightConstraint.constant = WINDOW_FRAME.size.height/(self.isOpen ? 8 : 50);
 	self.controlBarHeightConstraint.constant = height;
 	
 	[UIView animateWithDuration:0.3 animations:^{
-//		[self.superview layoutIfNeeded];
 		[self layoutIfNeeded];
 		[self.rootView layoutIfNeeded];
 		[self.backgroundView layoutIfNeeded];
@@ -91,8 +93,6 @@
 
 - (void)setup {
 	self.userInteractionEnabled = YES;
-	
-//	self.actualHeightConstraint = [self autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height/50.0];
 	
 	self.rootView = [UILabel newAutoLayoutView];
 //	self.rootView.backgroundColor = [UIColor orangeColor];
