@@ -57,4 +57,11 @@
  */
 + (float)smallSizeForBigListEntryWithDelegate:(id<LMBigListEntryDelegate>)delegate;
 
+/**
+ Set the big list entry as large or not.
+
+ @param large The BOOL to make it large.
+ */
+- (void)setLarge:(BOOL)large;
+
 @end

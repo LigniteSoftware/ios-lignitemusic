@@ -68,7 +68,7 @@
 		6AC32B7B1DB6B57B0007C67E /* LMPebbleManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AC32B7A1DB6B57B0007C67E /* LMPebbleManager.m */; };
 		6AC32B7D1DB6CD950007C67E /* icon_bug.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AC32B7C1DB6CD950007C67E /* icon_bug.png */; };
 		6AC32B7F1DB73AFB0007C67E /* icon_no_cover_art.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AC32B7E1DB73AFB0007C67E /* icon_no_cover_art.png */; };
-		6AC77A091DC3B04B00BABBB3 /* LMPlaylistView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AC77A081DC3B04B00BABBB3 /* LMPlaylistView.m */; };
+		6AC77A091DC3B04B00BABBB3 /* LMResizingTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AC77A081DC3B04B00BABBB3 /* LMResizingTableView.m */; };
 		6AC77A141DC42C5500BABBB3 /* LMControlBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AC77A131DC42C5500BABBB3 /* LMControlBarView.m */; };
 		6AC77A161DC42CF400BABBB3 /* icon_playlists.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AC77A151DC42CF400BABBB3 /* icon_playlists.png */; };
 		6ACED1081DB7BE1D006EACD2 /* icon_repeat_one.png in Resources */ = {isa = PBXBuildFile; fileRef = 6ACED1061DB7BE1D006EACD2 /* icon_repeat_one.png */; };
@@ -202,8 +202,8 @@
 		6AC32B7A1DB6B57B0007C67E /* LMPebbleManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMPebbleManager.m; sourceTree = "<group>"; };
 		6AC32B7C1DB6CD950007C67E /* icon_bug.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_bug.png; sourceTree = "<group>"; };
 		6AC32B7E1DB73AFB0007C67E /* icon_no_cover_art.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_no_cover_art.png; sourceTree = "<group>"; };
-		6AC77A071DC3B04B00BABBB3 /* LMPlaylistView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMPlaylistView.h; sourceTree = "<group>"; };
-		6AC77A081DC3B04B00BABBB3 /* LMPlaylistView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMPlaylistView.m; sourceTree = "<group>"; };
+		6AC77A071DC3B04B00BABBB3 /* LMResizingTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMResizingTableView.h; sourceTree = "<group>"; };
+		6AC77A081DC3B04B00BABBB3 /* LMResizingTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMResizingTableView.m; sourceTree = "<group>"; };
 		6AC77A121DC42C5500BABBB3 /* LMControlBarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMControlBarView.h; sourceTree = "<group>"; };
 		6AC77A131DC42C5500BABBB3 /* LMControlBarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMControlBarView.m; sourceTree = "<group>"; };
 		6AC77A151DC42CF400BABBB3 /* icon_playlists.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_playlists.png; sourceTree = "<group>"; };
@@ -394,6 +394,8 @@
 		6A32A9F21DC69BC60056CC60 /* TableView */ = {
 			isa = PBXGroup;
 			children = (
+				6AC77A071DC3B04B00BABBB3 /* LMResizingTableView.h */,
+				6AC77A081DC3B04B00BABBB3 /* LMResizingTableView.m */,
 				6AAF61131DA0758400971875 /* LMTableView.h */,
 				6AAF61141DA0758400971875 /* LMTableView.m */,
 				6AAF61161DA0B9C700971875 /* LMTableViewCell.h */,
@@ -535,8 +537,6 @@
 			isa = PBXGroup;
 			children = (
 				6AC77A0E1DC424C400BABBB3 /* Detail */,
-				6AC77A071DC3B04B00BABBB3 /* LMPlaylistView.h */,
-				6AC77A081DC3B04B00BABBB3 /* LMPlaylistView.m */,
 			);
 			name = Playlist;
 			sourceTree = "<group>";
@@ -861,7 +861,7 @@
 				6AA4459C1D5AB264004C6739 /* LMPebbleSettingsView.m in Sources */,
 				6AFD2EDD1BC41ECD0083FE9E /* LMAlbumViewItem.m in Sources */,
 				6A514E121CE904F100AFB351 /* LMNowPlayingViewController.m in Sources */,
-				6AC77A091DC3B04B00BABBB3 /* LMPlaylistView.m in Sources */,
+				6AC77A091DC3B04B00BABBB3 /* LMResizingTableView.m in Sources */,
 				6AD227031DA5990B0056695A /* LMMusicPlayer.m in Sources */,
 				6AA445A01D5AD6AB004C6739 /* LMSettingsSwitch.m in Sources */,
 				6A32A9EF1DC6906D0056CC60 /* LMTriangleMaskView.m in Sources */,

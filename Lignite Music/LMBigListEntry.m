@@ -70,6 +70,10 @@ int createdSoFar = 0;
 	[self.controlBarView invert];
 }
 
+- (void)setLarge:(BOOL)large {
+	large ? [self.controlBarView open] : [self.controlBarView close];
+}
+
 + (float)smallSizeForBigListEntryWithDelegate:(id<LMBigListEntryDelegate>)delegate {
 	float contentViewHeightFactorial = [delegate contentSubviewHeightFactorialForBigListEntry:nil];
 	float infoViewHeightFactorial = (1.0/10.0);

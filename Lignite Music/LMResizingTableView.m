@@ -7,7 +7,7 @@
 //
 
 #import <PureLayout/PureLayout.h>
-#import "LMPlaylistView.h"
+#import "LMResizingTableView.h"
 #import "LMTableView.h"
 #import "LMBigListEntry.h"
 #import "LMTiledAlbumCoverView.h"
@@ -22,7 +22,7 @@
 //#import "LMBigListEntry.h"
 
 //@interface LMPlaylistView()<LMControlBarViewDelegate, LMTableViewSubviewDelegate, LMCollectionInfoViewDelegate, LMBigListEntryDelegate>
-@interface LMPlaylistView()<LMTableViewSubviewDelegate, LMCollectionInfoViewDelegate, LMBigListEntryDelegate>
+@interface LMResizingTableView()<LMTableViewSubviewDelegate, LMCollectionInfoViewDelegate, LMBigListEntryDelegate>
 
 @property LMTableView *rootTableView;
 
@@ -31,12 +31,16 @@
 
 @property float largeCellSize;
 
+@property NSInteger currentLargeEntry;
+
 @end
 
-@implementation LMPlaylistView
+@implementation LMResizingTableView
 
 - (void)setup {
-	NSLog(@"Setup playlist view");
+	NSLog(@"Setup resizing table view");
+	
+	self.currentLargeEntry = -1;
 	
 	self.rootTableView = [LMTableView newAutoLayoutView];
 	self.rootTableView.subviewDelegate = self;
@@ -45,8 +49,7 @@
 	[self.rootTableView autoCenterInSuperview];
 	[self.rootTableView autoPinEdgesToSuperviewEdges];
 	
-//	[self rebuildTrackCollection];
-	self.rootTableView.amountOfItemsTotal = 4;
+	self.rootTableView.amountOfItemsTotal = 40;
 	self.rootTableView.dynamicCellSize = YES;
 	[self.rootTableView regenerate:NO];
 }
@@ -96,12 +99,10 @@
 }
 
 - (NSString*)rightTextForInfoView:(LMCollectionInfoView *)infoView {
-	return nil;
 	return @"Right text!";
 }
 
 - (UIImage*)centerImageForInfoView:(LMCollectionInfoView *)infoView {
-	return nil;
 	return [UIImage imageNamed:@"icon_bug.png"];
 }
 
@@ -112,7 +113,6 @@
 	if(!height){
 		return 0.1;
 	}
-	NSLog(@"Returning %f/%f: %f for small", [LMBigListEntry smallSizeForBigListEntryWithDelegate:self], WINDOW_FRAME.size.height, [LMBigListEntry smallSizeForBigListEntryWithDelegate:self]/WINDOW_FRAME.size.height);
 	return [LMBigListEntry smallSizeForBigListEntryWithDelegate:self]/WINDOW_FRAME.size.height;
 //	return height ? self.windowPercentage : 0.2;
 }
@@ -120,20 +120,11 @@
 - (float)largeCellSizeForTableView:(LMTableView *)tableView {
 //	return 200;
 	
-	NSLog(@"Returning %f for large", self.largeCellSize ? self.largeCellSize : 200);
 	return self.largeCellSize ? self.largeCellSize : 200;
 }
 
 - (NSArray*)largeCellSizesAffectedIndexesForTableView:(LMTableView *)tableView {
-	NSMutableArray *largeCellArray = [NSMutableArray new];
-	for(int i = 0; i < self.playlistItemsArray.count; i++){
-		LMBigListEntry *bigListEntry = [self.playlistItemsArray objectAtIndex:i];
-		if(bigListEntry.isLargeSize){
-			[largeCellArray addObject:@(bigListEntry.collectionIndex)];
-		}
-	}
-	NSLog(@"Affected %@", largeCellArray);
-	return largeCellArray;
+	return (self.currentLargeEntry == -1) ? @[] : @[@(self.currentLargeEntry)];
 }
 
 - (void)sizeChangedToLargeSize:(BOOL)largeSize withHeight:(float)newHeight forBigListEntry:(LMBigListEntry *)bigListEntry {
@@ -141,6 +132,23 @@
 	if(largeSize && !self.largeCellSize){
 		self.largeCellSize = newHeight;
 	}
+	
+	if(self.currentLargeEntry != -1){
+		LMBigListEntry *currentBigEntry = [self bigListEntryForIndex:self.currentLargeEntry];
+		if(currentBigEntry){
+			NSLog(@"Setting %ld as closed", currentBigEntry.collectionIndex);
+			[currentBigEntry setLarge:NO];
+		}
+	}
+	
+	if(largeSize){
+		self.currentLargeEntry = bigListEntry.collectionIndex;
+	}
+	
+	if(!largeSize && bigListEntry.collectionIndex == self.currentLargeEntry){
+		self.currentLargeEntry = -1;
+	}
+	
 	[self.rootTableView reloadSize];
 }
 
@@ -189,6 +197,7 @@
 	NSLog(@"Returning prepared subview index %d", (int)(index % self.playlistItemsArray.count));
 	LMBigListEntry *bigListEntry = [self.playlistItemsArray objectAtIndex:index % self.playlistItemsArray.count];
 	bigListEntry.collectionIndex = index;
+//	[bigListEntry setLarge:bigListEntry.collectionIndex == self.currentLargeEntry];
 	NSLog(@"Sending off");
 	return bigListEntry;
 }

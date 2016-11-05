@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface LMPlaylistView : UIView
+@interface LMResizingTableView : UIView
 
 - (void)setup;
 
