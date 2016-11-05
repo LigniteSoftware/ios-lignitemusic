@@ -37,7 +37,7 @@
 	return WINDOW_FRAME.size.height/(isOpened ? 8 : 50);
 }
 
-- (void)updateHeightConstraintWithHeight:(float)height {
+- (void)updateHeightConstraintWithHeight:(float)height animated:(BOOL)animated {
 	[self layoutIfNeeded];
 	[self.rootView layoutIfNeeded];
 	[self.backgroundView layoutIfNeeded];
@@ -48,24 +48,34 @@
 	self.viewHeightConstraint.constant = WINDOW_FRAME.size.height/(self.isOpen ? 8 : 50);
 	self.controlBarHeightConstraint.constant = height;
 	
-	[UIView animateWithDuration:0.3 animations:^{
+	if(animated){
+		[UIView animateWithDuration:0.3 animations:^{
+			[self layoutIfNeeded];
+			[self.rootView layoutIfNeeded];
+			[self.backgroundView layoutIfNeeded];
+		}];
+	}
+	else{
 		[self layoutIfNeeded];
 		[self.rootView layoutIfNeeded];
 		[self.backgroundView layoutIfNeeded];
-	}];
+	}
 }
 
-- (void)open {
-	[self updateHeightConstraintWithHeight:WINDOW_FRAME.size.height/8];
+- (void)open:(BOOL)animated {
+	[self updateHeightConstraintWithHeight:WINDOW_FRAME.size.height/8 animated:animated];
 }
 
-- (void)close {
-	[self updateHeightConstraintWithHeight:0];
+- (void)close:(BOOL)animated {
+	[self updateHeightConstraintWithHeight:0 animated:animated];
 }
 
-- (void)invert {
-	self.viewHeightConstraint.constant < 20 ? [self open] : [self close];
-	//self.controlBarHeightConstraint.constant == 0 ? [self open] : [self close];
+- (void)invert:(BOOL)animated {
+	self.isOpen ? [self close:animated] : [self open:animated];
+}
+
+- (void)animatedInvert {
+	[self invert:YES];
 }
 
 - (void)tappedButtonBackgroundView:(UITapGestureRecognizer*)gestureRecognizer {
@@ -118,7 +128,7 @@
 	[self.threeDotIconImageView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 	[self.threeDotIconImageView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 	
-	UITapGestureRecognizer *tapOnThreeDotGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(invert)];
+	UITapGestureRecognizer *tapOnThreeDotGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(animatedInvert)];
 	[self addGestureRecognizer:tapOnThreeDotGesture];
 	
 //	[NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(invert) userInfo:nil repeats:YES];
@@ -204,7 +214,7 @@
 	self.triangleView.userInteractionEnabled = YES;
 	[self.backgroundView addSubview:self.triangleView];
 	
-	UITapGestureRecognizer *tapOnTriangleGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(invert)];
+	UITapGestureRecognizer *tapOnTriangleGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(animatedInvert)];
 	[self.triangleView addGestureRecognizer:tapOnTriangleGesture];
 	
 	[self.triangleView autoAlignAxisToSuperviewAxis:ALAxisVertical];

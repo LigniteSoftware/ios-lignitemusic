@@ -42,15 +42,12 @@
 
 - (void)configureCell:(LMTableViewCell*)cell forRowAtIndexPath:(NSIndexPath*)indexPath {
 	cell.subview = [self.subviewDelegate prepareSubviewAtIndex:indexPath.section];
-	NSLog(@"Set subview");
 	cell.shouldNotPinContentsToBottom = self.dynamicCellSize;
 	if(!cell.didSetupConstraints){
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
 		[cell setNeedsUpdateConstraints];
 		[cell updateConstraintsIfNeeded];
-		NSLog(@"Cell update");
 	}
-	NSLog(@"Done configure cell");
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -60,7 +57,13 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 //	NSLog(@"Loading %ld", (long)(indexPath.section % self.amountOfItemsRequired));
-	LMTableViewCell *cell = (LMTableViewCell*)[tableView dequeueReusableCellWithIdentifier:[NSString stringWithFormat:@"ShitPost%ld", (long)(indexPath.section % self.amountOfItemsRequired)]];
+	NSString *cellIdentifier = [NSString stringWithFormat:@"ShitPost%ld", (long)(indexPath.section % self.amountOfItemsRequired)];
+	LMTableViewCell *cell = (LMTableViewCell*)[tableView dequeueReusableCellWithIdentifier:cellIdentifier forIndexPath:indexPath];
+	
+	if (!cell) {
+		NSLog(@"Dick?");
+//		cell = [[LMTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+	}
 	
 	//[self configureCell:cell forRowAtIndexPath:indexPath];
 	return cell;
@@ -86,8 +89,8 @@
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-//	NSLog(@"Asked for sections");
-	return self.amountOfItemsTotal;
+//	NSLog(@"Asked for sections %d", (int)self.amountOfItemsTotal);
+	return self.loadedStatus == 2 ? self.amountOfItemsTotal : 0;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -111,7 +114,7 @@
 - (UIView*)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
 	CGRect frame = CGRectMake(0, 0, self.frame.size.width, [self tableView:self heightForHeaderInSection:section]);
 	UIView *view = [[UIView alloc] initWithFrame:frame];
-	view.backgroundColor = [UIColor clearColor];
+	view.backgroundColor = [UIColor blueColor];
 	
 	if([self.subviewDelegate dividerForTableView:self] && section != 0){
 		uint8_t dividerHeight = 1;
@@ -146,7 +149,7 @@
 	if(self.loadedStatus == 0){
 		self.delegate = self;
 		self.dataSource = self;
-		self.backgroundColor = [UIColor whiteColor];
+		self.backgroundColor = [UIColor clearColor];
 		self.separatorColor = [UIColor clearColor];
 		
 		float delegateHeight = [self.subviewDelegate sizingFactorialRelativeToWindowForTableView:self height:YES];
@@ -160,11 +163,11 @@
 
 - (void)reloadSize {
 	[UIView animateWithDuration:0.3 animations:^{
-		float delegateHeight = [self.subviewDelegate sizingFactorialRelativeToWindowForTableView:self height:YES];
+		[self beginUpdates];
 		
+		float delegateHeight = [self.subviewDelegate sizingFactorialRelativeToWindowForTableView:self height:YES];
 		self.calculatedHeight = ceilf(delegateHeight*WINDOW_FRAME.size.height);
 		
-		[self beginUpdates];
 		[self endUpdates];
 	}];
 }
@@ -182,6 +185,7 @@
 		NSLog(@"\n--- LMTableView ---\nFrame:%@\nCalculated height: %f\nCalculated spacing: %f\nAmount of items total: %lu\nAmount of items required: %lu\n--- End ---", NSStringFromCGRect(self.frame), self.calculatedHeight, self.calculatedSpacing, (unsigned long)self.amountOfItemsTotal, (unsigned long)self.amountOfItemsRequired);
 		
 		for(int i = 0; i < self.amountOfItemsRequired; i++){
+//			NSLog(@"Registered %@", [NSString stringWithFormat:@"ShitPost%d", i]);
 			[self registerClass:[LMTableViewCell class] forCellReuseIdentifier:[NSString stringWithFormat:@"ShitPost%d", i]];
 		}
 		

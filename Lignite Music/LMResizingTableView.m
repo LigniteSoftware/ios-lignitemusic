@@ -26,8 +26,8 @@
 
 @property LMTableView *rootTableView;
 
-@property NSMutableArray *contentSubviewsArray;
-@property NSMutableArray *playlistItemsArray;
+@property (strong, nonatomic) NSMutableArray *contentSubviewsArray;
+@property (strong, nonatomic) NSMutableArray *playlistItemsArray;
 
 @property float largeCellSize;
 
@@ -37,20 +37,18 @@
 
 @implementation LMResizingTableView
 
-- (void)setup {
-	NSLog(@"Setup resizing table view");
-	
+- (void)setup {	
 	self.currentLargeEntry = -1;
 	
 	self.rootTableView = [LMTableView newAutoLayoutView];
 	self.rootTableView.subviewDelegate = self;
+	self.rootTableView.amountOfItemsTotal = 40;
+	self.rootTableView.dynamicCellSize = YES;
 	[self addSubview:self.rootTableView];
 	
 	[self.rootTableView autoCenterInSuperview];
 	[self.rootTableView autoPinEdgesToSuperviewEdges];
 	
-	self.rootTableView.amountOfItemsTotal = 40;
-	self.rootTableView.dynamicCellSize = YES;
 	[self.rootTableView regenerate:NO];
 }
 
@@ -60,7 +58,6 @@
 	}
 	
 	for(int i = 0; i < self.playlistItemsArray.count; i++){
-		NSLog(@"Searching index %d", i);
 		LMBigListEntry *indexEntry = [self.playlistItemsArray objectAtIndex:i];
 		if(indexEntry.collectionIndex == index){
 			return indexEntry;
@@ -70,8 +67,6 @@
 }
 
 - (void)sizeChangedTo:(CGSize)newSize forBigListEntry:(LMBigListEntry *)bigListEntry {
-	NSLog(@"New big list entry size %@", NSStringFromCGSize(newSize));
-	
 	if(newSize.height > 0 && self.largeCellSize < 1){
 		self.largeCellSize = newSize.height;
 	}
@@ -86,12 +81,27 @@
 }
 
 - (id)contentSubviewForBigListEntry:(LMBigListEntry *)bigListEntry {
-	NSLog(@"Returning content subview for playlist %lu", (unsigned long)bigListEntry.collectionIndex);
 	return [self.contentSubviewsArray objectAtIndex:bigListEntry.collectionIndex % self.contentSubviewsArray.count];
 }
 
+- (int)indexInArrayForInfoView:(LMCollectionInfoView*)infoView {
+	for(int i = 0; i < self.playlistItemsArray.count; i++){
+		LMBigListEntry *bigListEntry = [self.playlistItemsArray objectAtIndex:i];
+		UIView *rootView = [bigListEntry.subviews objectAtIndex:0];
+		for(int rootIndex = 0; rootIndex < rootView.subviews.count; rootIndex++){
+			UIView *subview = [rootView.subviews objectAtIndex:rootIndex];
+			if([subview isEqual:infoView]){
+				return i;
+			}
+		}
+	}
+	return -1;
+}
+
 - (NSString*)titleForInfoView:(LMCollectionInfoView *)infoView {
-	return @"Playlist Test";
+	int rindex = [self indexInArrayForInfoView:infoView];
+	LMBigListEntry *entry = [self.playlistItemsArray objectAtIndex:rindex];
+	return [NSString stringWithFormat:@"CIndex %ld - RIndex %d", entry.collectionIndex, rindex];
 }
 
 - (NSString*)leftTextForInfoView:(LMCollectionInfoView *)infoView {
@@ -128,16 +138,16 @@
 }
 
 - (void)sizeChangedToLargeSize:(BOOL)largeSize withHeight:(float)newHeight forBigListEntry:(LMBigListEntry *)bigListEntry {
-	NSLog(@"%@ changed to large size %d %f", bigListEntry, largeSize, newHeight);
 	if(largeSize && !self.largeCellSize){
 		self.largeCellSize = newHeight;
 	}
 	
 	if(self.currentLargeEntry != -1){
-		LMBigListEntry *currentBigEntry = [self bigListEntryForIndex:self.currentLargeEntry];
-		if(currentBigEntry){
-			NSLog(@"Setting %ld as closed", currentBigEntry.collectionIndex);
-			[currentBigEntry setLarge:NO];
+		if(largeSize && bigListEntry.collectionIndex != self.currentLargeEntry){
+			LMBigListEntry *currentBigEntry = [self bigListEntryForIndex:self.currentLargeEntry];
+			if(currentBigEntry){
+				[currentBigEntry setLarge:NO animated:YES];
+			}
 		}
 	}
 	
@@ -168,37 +178,37 @@
 }
 
 - (BOOL)buttonTappedWithIndex:(uint8_t)index forControlBarView:(LMControlBarView *)controlBar {
-	NSLog(@"Tapped index %d", index);
 	return YES;
 }
 
 - (void)totalAmountOfSubviewsRequired:(NSUInteger)amount forTableView:(LMTableView *)tableView {
-	NSLog(@"Spooked! Required items %d", (int)amount);
 	if(!self.playlistItemsArray){
 		self.contentSubviewsArray = [NSMutableArray new];
 		self.playlistItemsArray = [NSMutableArray new];
 		
 		for(int i = 0; i < amount; i++){
 			LMBigListEntry *bigListEntry = [LMBigListEntry newAutoLayoutView];
-			bigListEntry.infoDelegate = self;
-			bigListEntry.entryDelegate = self;
-//			bigListEntry.backgroundColor = [UIColor colorWithRed:0.2*(arc4random_uniform(5)) green:0.2*(arc4random_uniform(5)) blue:0.2*(arc4random_uniform(5)) alpha:0.5];
-			
 			LMTiledAlbumCoverView *contentSubview = [LMTiledAlbumCoverView newAutoLayoutView];
-//			contentSubview.backgroundColor = [UIColor blueColor];
+			//			contentSubview.backgroundColor = [UIColor blueColor];
 			
 			[self.playlistItemsArray addObject:bigListEntry];
 			[self.contentSubviewsArray addObject:contentSubview];
+			
+			bigListEntry.infoDelegate = self;
+			bigListEntry.entryDelegate = self;
+			[bigListEntry setup];
+//			bigListEntry.backgroundColor = [UIColor colorWithRed:0.2*(arc4random_uniform(5)) green:0.2*(arc4random_uniform(5)) blue:0.2*(arc4random_uniform(5)) alpha:0.5];
 		}
 	}
 }
 
 - (id)prepareSubviewAtIndex:(NSUInteger)index {
-	NSLog(@"Returning prepared subview index %d", (int)(index % self.playlistItemsArray.count));
 	LMBigListEntry *bigListEntry = [self.playlistItemsArray objectAtIndex:index % self.playlistItemsArray.count];
 	bigListEntry.collectionIndex = index;
+	[bigListEntry reloadData];
+	
+	[bigListEntry setLarge:(self.currentLargeEntry == index) animated:NO];
 //	[bigListEntry setLarge:bigListEntry.collectionIndex == self.currentLargeEntry];
-	NSLog(@"Sending off");
 	return bigListEntry;
 }
 

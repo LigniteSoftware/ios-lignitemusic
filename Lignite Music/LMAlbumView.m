@@ -264,9 +264,7 @@
 //		MPMediaItemCollection *collection = [self.everything.collections objectAtIndex:index];
 //		[item setupWithAlbumCount:[collection count] andDelegate:self];
 //	}
-	
-	NSLog(@"Reloading index %d", (int)index);
-	
+		
 	LMAlbumViewItem *albumViewItem = [self.albumsItemArray objectAtIndex:index % self.albumsItemArray.count];
 	[albumViewItem.playButton setImage:(index == self.currentlyPlaying && self.musicPlayer.playbackState == LMMusicPlaybackStatePlaying) ? [LMAppIcon imageForIcon:LMIconPause] : [LMAppIcon imageForIcon:LMIconPlay]];
 	LMMusicTrackCollection *collection = [self.albumCollections objectAtIndex:index];
@@ -292,10 +290,7 @@
 	[self addSubview:self.rootTableView];
 	
 	[self.rootTableView autoCenterInSuperview];
-	[self.rootTableView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-	[self.rootTableView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:0];
-	[self.rootTableView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-	[self.rootTableView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+	[self.rootTableView autoPinEdgesToSuperviewEdges];
 	
 	[self rebuildTrackCollection];
 	[self.rootTableView regenerate:NO];

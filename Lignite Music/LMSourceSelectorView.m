@@ -145,7 +145,7 @@
 		return;
 	}
 	
-	NSLog(@"Source image %@", source.icon);
+//	NSLog(@"Source image %@", source.icon);
 	
 	[self.sourceSelectorButton setImage:[LMAppIcon invertImage:source.icon]];
 	

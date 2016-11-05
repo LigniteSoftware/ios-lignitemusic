@@ -64,18 +64,24 @@
 
 /**
  Open the control bar. Increases the height to one eighth the window's height.
+ 
+ @param animated Whether or not to animate the change. NO should be entered if view is off-screen.
  */
-- (void)open;
+- (void)open:(BOOL)animated;
 
 /**
  Close the control bar. Decreases the height to 0.
+ 
+ @param animated Whether or not to animate the change. NO should be entered if view is off-screen.
  */
-- (void)close;
+- (void)close:(BOOL)animated;
 
 /**
  Invert the state of the control bar automatically. If opened, will close. If closed, will open.
+ 
+ @param animated Whether or not to animate the change. NO should be entered if view is off-screen.
  */
-- (void)invert;
+- (void)invert:(BOOL)animated;
 
 /**
  Setup the control bar view.

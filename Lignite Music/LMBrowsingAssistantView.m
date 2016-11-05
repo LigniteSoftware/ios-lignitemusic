@@ -178,6 +178,8 @@
 	UISwipeGestureRecognizer *swipeDownGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeDown)];
 	[swipeDownGesture setDirection:UISwipeGestureRecognizerDirectionDown];
 	[self.miniPlayerView addGestureRecognizer:swipeDownGesture];
+	
+	[NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(close) userInfo:nil repeats:NO];
 }
 
 - (instancetype)init {

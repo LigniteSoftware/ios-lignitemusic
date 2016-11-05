@@ -20,6 +20,9 @@
 
 - (void)updateConstraints {
 	if (!self.didSetupConstraints && self.subview) {
+		self.didSetupConstraints = YES;
+		
+		NSLog(@"Setup");
 //		UILabel *label = [UILabel newAutoLayoutView];
 //		label.backgroundColor = [UIColor blueColor];
 //		label.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:100 + (int)(rand() % 100)];
@@ -62,7 +65,7 @@
 		
 		[self.contentView addSubview:cellSubview];
 		
-		self.backgroundColor = [UIColor redColor];
+		self.contentView.backgroundColor = [UIColor redColor];
 		
 		[NSLayoutConstraint autoSetPriority:UILayoutPriorityRequired forConstraints:^{
 			[cellSubview autoSetContentCompressionResistancePriorityForAxis:ALAxisVertical];
@@ -74,10 +77,6 @@
 //		}
 		[cellSubview autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[cellSubview autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-		
-		self.didSetupConstraints = YES;
-		
-		NSLog(@"Setup!");
 	}
 	
 	[super updateConstraints];

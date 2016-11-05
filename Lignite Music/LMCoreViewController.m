@@ -43,11 +43,11 @@
 @implementation LMCoreViewController
 
 - (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState {
-	NSLog(@"Got new playback state %d", newState);
+//	NSLog(@"Got new playback state %d", newState);
 }
 
 - (void)musicTrackDidChange:(LMMusicTrack *)newTrack {
-	NSLog(@"Got new track, title %@", newTrack.title);
+//	NSLog(@"Got new track, title %@", newTrack.title);
 }
 
 - (BOOL)prefersStatusBarHidden {
@@ -142,9 +142,7 @@ BOOL didAutomaticallyClose = NO;
 	didAutomaticallyClose = [self.browsingAssistant close];
 }
 
-- (void)sourceSelected:(LMSource *)source {
-	NSLog(@"Selected source with title %@", source.title);
-	
+- (void)sourceSelected:(LMSource *)source {	
 	int indexOfSource = -1;
 	for(int i = 0; i < self.sourcesForSourceSelector.count; i++){
 		LMSource *indexSource = [self.sourcesForSourceSelector objectAtIndex:i];

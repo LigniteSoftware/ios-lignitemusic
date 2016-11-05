@@ -25,18 +25,28 @@
 
 @property BOOL didInitialSetup;
 
+@property CGRect previousFrame;
+
 @end
 
 @implementation LMBigListEntry
 
-int createdSoFar = 0;
-- (instancetype)init {
-	self = [super init];
-	if(self) {
-		createdSoFar++;
-		NSLog(@"%d LMBigListEntrys created so far", createdSoFar);
-	}
-	return self;
+//int createdSoFar = 0;
+//- (instancetype)init {
+//	self = [super init];
+//	if(self) {
+//		createdSoFar++;
+//		NSLog(@"%d LMBigListEntrys created so far", createdSoFar);
+//	}
+//	return self;
+//}
+
++ (float)smallSizeForBigListEntryWithDelegate:(id<LMBigListEntryDelegate>)delegate {
+	float contentViewHeightFactorial = [delegate contentSubviewHeightFactorialForBigListEntry:nil];
+	float infoViewHeightFactorial = (1.0/10.0);
+	float controlBarFactorial = [LMControlBarView heightWhenIsOpened:NO]/WINDOW_FRAME.size.height;
+	
+	return (contentViewHeightFactorial+infoViewHeightFactorial+controlBarFactorial)*WINDOW_FRAME.size.height+20;
 }
 
 - (uint8_t)amountOfButtonsForControlBarView:(LMControlBarView *)controlBar {
@@ -45,13 +55,11 @@ int createdSoFar = 0;
 
 - (void)sizeChangedTo:(CGSize)newSize forControlBarView:(LMControlBarView *)controlBar {
 	self.rootViewHeightConstraint.constant -= self.controlBarViewHeightConstraint.constant == 0 ? 0 : self.controlBarViewHeightConstraint.constant+20;
-	self.rootViewHeightConstraint.constant += newSize.height + 30;
+	self.rootViewHeightConstraint.constant += newSize.height + 20;
 	
 	self.controlBarViewHeightConstraint.constant = newSize.height;
 	[self.rootView layoutIfNeeded];
 	[self layoutIfNeeded];
-	
-	NSLog(@"Constant is %f", self.rootViewHeightConstraint.constant);
 	
 	self.isLargeSize = self.controlBarView.isOpen;
 	
@@ -67,51 +75,48 @@ int createdSoFar = 0;
 }
 
 - (void)invertControlView {
-	[self.controlBarView invert];
+	[self.controlBarView invert:YES];
 }
 
-- (void)setLarge:(BOOL)large {
-	large ? [self.controlBarView open] : [self.controlBarView close];
+- (void)setLarge:(BOOL)large animated:(BOOL)animated {
+	large ? [self.controlBarView open:animated] : [self.controlBarView close:animated];
 }
 
-+ (float)smallSizeForBigListEntryWithDelegate:(id<LMBigListEntryDelegate>)delegate {
-	float contentViewHeightFactorial = [delegate contentSubviewHeightFactorialForBigListEntry:nil];
-	float infoViewHeightFactorial = (1.0/10.0);
-	float controlBarFactorial = [LMControlBarView heightWhenIsOpened:NO]/WINDOW_FRAME.size.height;
+- (void)reloadData {
+	[self.collectionInfoView reloadData];
+}
+
+- (void)setup {
+//	NSLog(@"big entry array index %ld New frame %@ previous frame %@", self.collectionIndex % 40, NSStringFromCGRect(self.frame), NSStringFromCGRect(self.previousFrame));
 	
-	return (contentViewHeightFactorial+infoViewHeightFactorial+controlBarFactorial)*WINDOW_FRAME.size.height+20;
-}
-
-- (void)layoutSubviews {
-	[super layoutSubviews];
+//	self.previousFrame = self.frame;
 	
-	if(!self.didInitialSetup){
-		self.didInitialSetup = YES;
-		
-		NSLog(@"Getting content view %@", self);
+//	if(!self.didInitialSetup){
+//		self.didInitialSetup = YES;
+	
 		self.contentView = [self.entryDelegate contentSubviewForBigListEntry:self];
+	
+	self.contentView = [UIView newAutoLayoutView];
+	[self.contentView setBackgroundColor:[UIColor greenColor]];
+	
 		float contentViewHeightFactorial = [self.entryDelegate contentSubviewHeightFactorialForBigListEntry:self];
 		float infoViewHeightFactorial = (1.0/10.0);
-		
-		NSLog(@"factorial %f Running initial setup on view %@", contentViewHeightFactorial, self);
-				
+	
 		if(contentViewHeightFactorial == 0.0){
 			NSLog(@"Rejecting, gutless piece of shit.");
 			return;
 		}
-		
-		NSLog(@"accepted");
-		
+				
 		self.rootView = [UIView newAutoLayoutView];
 		[self addSubview:self.rootView];
 		
 		[self.rootView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-		[self.rootView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-		[self.rootView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.rootView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
 		self.rootViewHeightConstraint = [self.rootView autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height*(contentViewHeightFactorial+infoViewHeightFactorial)];
 		
 //		self.rootView.backgroundColor = [UIColor colorWithRed:0.2*arc4random_uniform(5) green:0.2*arc4random_uniform(5) blue:0.2*arc4random_uniform(5) alpha:0.5];
-		
+	self.rootView.backgroundColor = [UIColor orangeColor];
+	
 		UIView *contentView = self.contentView;
 		[self.rootView addSubview:contentView];
 		
@@ -131,23 +136,25 @@ int createdSoFar = 0;
 		
 		[self.collectionInfoView reloadData];
 		
-		self.controlBarView = [LMControlBarView newAutoLayoutView];
-		self.controlBarView.delegate = self;
-		self.controlBarView.userInteractionEnabled = YES;
-		[self.rootView addSubview:self.controlBarView];
-		
-		[self.controlBarView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:10];
-		[self.controlBarView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:10];
-		[self.controlBarView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.collectionInfoView withOffset:10];
-		self.controlBarViewHeightConstraint = [self.controlBarView autoSetDimension:ALDimensionHeight toSize:0];
-		
-		[self.controlBarView setup];
-		
+//		self.controlBarView = [LMControlBarView newAutoLayoutView];
+//		self.controlBarView.delegate = self;
+//		self.controlBarView.userInteractionEnabled = YES;
+//		[self.rootView addSubview:self.controlBarView];
+//	
+//	return;
+//		
+//		[self.controlBarView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:10];
+//		[self.controlBarView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:10];
+//		[self.controlBarView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.collectionInfoView withOffset:10];
+//		self.controlBarViewHeightConstraint = [self.controlBarView autoSetDimension:ALDimensionHeight toSize:0];
+//		
+//		[self.controlBarView setup];
+//		
 		UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(invertControlView)];
 		[self.collectionInfoView addGestureRecognizer:tapGesture];
-		
-		[self.entryDelegate sizeChangedToLargeSize:NO withHeight:self.rootViewHeightConstraint.constant forBigListEntry:self];
-	}
+	
+		[self.entryDelegate sizeChangedToLargeSize:NO withHeight:self.rootViewHeightConstraint.constant + 100 forBigListEntry:self];
+//	}
 }
 
 @end

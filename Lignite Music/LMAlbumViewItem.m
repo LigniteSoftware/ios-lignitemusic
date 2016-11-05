@@ -41,7 +41,6 @@
 }
 
 - (void)updateContentsWithMusicTrack:(LMMusicTrack*)track andNumberOfItems:(NSInteger)numberOfItems {
-	NSLog(@"Updating contents with track %@", track.albumTitle);
 	if(!self.queue){
 		self.queue = [[LMOperationQueue alloc] init];
 	}

@@ -61,7 +61,15 @@
  Set the big list entry as large or not.
 
  @param large The BOOL to make it large.
+ @param animated Whether or not to animate the change. NO if view is off-screen.
  */
-- (void)setLarge:(BOOL)large;
+- (void)setLarge:(BOOL)large animated:(BOOL)animated;
+
+/**
+ Reload the data of the big list entry.
+ */
+- (void)reloadData;
+
+- (void)setup;
 
 @end
