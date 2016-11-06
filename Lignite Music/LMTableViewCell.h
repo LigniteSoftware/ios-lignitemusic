@@ -22,9 +22,6 @@
 @property id subview;
 @property BOOL didSetupConstraints;
 
-/**
- If NO, the cell will not pin the subview to the bottom (in case of resizing cells)
- */
-@property BOOL shouldNotPinContentsToBottom;
+@property int index;
 
 @end

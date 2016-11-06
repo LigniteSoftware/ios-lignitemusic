@@ -69,13 +69,12 @@
 		[NSLayoutConstraint autoSetPriority:UILayoutPriorityRequired forConstraints:^{
 			[cellSubview autoSetContentCompressionResistancePriorityForAxis:ALAxisVertical];
 		}];
-
-		[cellSubview autoPinEdgeToSuperviewEdge:ALEdgeTop];
-//		if(!self.shouldNotPinContentsToBottom) {
-			[cellSubview autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-//		}
-		[cellSubview autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-		[cellSubview autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		
+		[cellSubview autoPinEdgesToSuperviewEdges];
+		
+		if(self.index != 0){
+			NSLog(@"Setup %d", self.index);
+		}
 	}
 	
 	[super updateConstraints];

@@ -48,6 +48,8 @@
 }
 
 - (BOOL)close {
+	self.hidden = YES;
+	
 	int squadGoals = self.currentElementBackgroundView.frame.size.height-10;
 	if(self.textBackgroundConstraint.constant == squadGoals){
 		return NO;
@@ -179,7 +181,7 @@
 	[swipeDownGesture setDirection:UISwipeGestureRecognizerDirectionDown];
 	[self.miniPlayerView addGestureRecognizer:swipeDownGesture];
 	
-	[NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(close) userInfo:nil repeats:NO];
+	[NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(close) userInfo:nil repeats:NO];
 }
 
 - (instancetype)init {

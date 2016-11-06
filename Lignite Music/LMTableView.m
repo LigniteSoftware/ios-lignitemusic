@@ -40,7 +40,7 @@
 
 - (void)configureCell:(LMTableViewCell*)cell forRowAtIndexPath:(NSIndexPath*)indexPath {
 	cell.subview = [self.subviewDelegate prepareSubviewAtIndex:indexPath.section];
-	cell.shouldNotPinContentsToBottom = self.dynamicCellSize;
+
 	if(!cell.didSetupConstraints){
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
 		[cell setNeedsUpdateConstraints];
@@ -180,7 +180,7 @@
 		
 		[self.subviewDelegate totalAmountOfSubviewsRequired:self.amountOfItemsRequired forTableView:self];
 		
-		NSLog(@"\n--- LMTableView ---\nFrame:%@\nCalculated height: %f\nCalculated spacing: %f\nAmount of items total: %lu\nAmount of items required: %lu\n--- End ---", NSStringFromCGRect(self.frame), self.calculatedHeight, self.calculatedSpacing, (unsigned long)self.amountOfItemsTotal, (unsigned long)self.amountOfItemsRequired);
+//		NSLog(@"\n--- LMTableView ---\nFrame:%@\nCalculated height: %f\nCalculated spacing: %f\nAmount of items total: %lu\nAmount of items required: %lu\n--- End ---", NSStringFromCGRect(self.frame), self.calculatedHeight, self.calculatedSpacing, (unsigned long)self.amountOfItemsTotal, (unsigned long)self.amountOfItemsRequired);
 		
 		for(int i = 0; i < self.amountOfItemsRequired; i++){
 //			NSLog(@"Registered %@", [NSString stringWithFormat:@"ShitPost%d", i]);

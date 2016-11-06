@@ -55,6 +55,8 @@
  */
 @property id<LMControlBarViewDelegate> delegate;
 
+@property NSInteger index;
+
 + (float)heightWhenIsOpened:(BOOL)isOpened;
 
 /**

@@ -16,11 +16,9 @@
 
 @interface LMControlBarView()
 
-@property NSLayoutConstraint *viewHeightConstraint;
 @property NSLayoutConstraint *controlBarHeightConstraint;
 @property NSLayoutConstraint *triangleConstraint;
 
-@property UIView *rootView;
 @property UIView *backgroundView;
 @property UIView *buttonBackgroundView;
 
@@ -38,27 +36,24 @@
 }
 
 - (void)updateHeightConstraintWithHeight:(float)height animated:(BOOL)animated {
-	[self layoutIfNeeded];
-	[self.rootView layoutIfNeeded];
 	[self.backgroundView layoutIfNeeded];
 	
 	self.isOpen = (height != 0);
 	
 	self.triangleConstraint.constant = self.isOpen ? 0 : -50;
-	self.viewHeightConstraint.constant = WINDOW_FRAME.size.height/(self.isOpen ? 8 : 50);
 	self.controlBarHeightConstraint.constant = height;
 	
 	if(animated){
 		[UIView animateWithDuration:0.3 animations:^{
-			[self layoutIfNeeded];
-			[self.rootView layoutIfNeeded];
 			[self.backgroundView layoutIfNeeded];
 		}];
 	}
 	else{
-		[self layoutIfNeeded];
-		[self.rootView layoutIfNeeded];
 		[self.backgroundView layoutIfNeeded];
+	}
+	
+	if(animated){
+		[self.delegate sizeChangedTo:CGSizeMake(0, [LMControlBarView heightWhenIsOpened:self.isOpen]) forControlBarView:self];
 	}
 }
 
@@ -95,33 +90,28 @@
 	}];
 }
 
-- (void)layoutSubviews {
-	[super layoutSubviews];
-	
-	[self.delegate sizeChangedTo:self.rootView.frame.size forControlBarView:self];
+//- (void)layoutSubviews {
+//	[super layoutSubviews];
+//	
+//	[self.delegate sizeChangedTo:self.rootView.frame.size forControlBarView:self];
+//}
+
+- (instancetype)init {
+	self = [super init];
+	if(self) {
+		self.backgroundColor = [UIColor clearColor];
+	}
+	return self;
 }
 
 - (void)setup {
 	self.userInteractionEnabled = YES;
 	
-	self.rootView = [UILabel newAutoLayoutView];
-//	self.rootView.backgroundColor = [UIColor orangeColor];
-	self.rootView.userInteractionEnabled = YES;
-	[self addSubview:self.rootView];
-	
-	[self.rootView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-	[self.rootView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-	[self.rootView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	
-	[NSLayoutConstraint autoSetPriority:UILayoutPriorityDefaultHigh forConstraints:^{
-		self.viewHeightConstraint = [self.rootView autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height/50.0];
-	}];
-	
 	self.threeDotIconImageView = [UIImageView newAutoLayoutView];
 	self.threeDotIconImageView.image = [LMAppIcon invertImage:[LMAppIcon imageForIcon:LMIconTripleHorizontalDots]];
 	self.threeDotIconImageView.contentMode = UIViewContentModeScaleAspectFit;
 	self.threeDotIconImageView.userInteractionEnabled = YES;
-	[self.rootView addSubview:self.threeDotIconImageView];
+	[self addSubview:self.threeDotIconImageView];
 	
 	[self.threeDotIconImageView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 	[self.threeDotIconImageView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
@@ -138,7 +128,7 @@
 	self.backgroundView.layer.masksToBounds = YES;
 	self.backgroundView.layer.cornerRadius = 10.0;
 	self.backgroundView.userInteractionEnabled = YES;
-	[self.rootView addSubview:self.backgroundView];
+	[self addSubview:self.backgroundView];
 	
 	[self.backgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 	[self.backgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
