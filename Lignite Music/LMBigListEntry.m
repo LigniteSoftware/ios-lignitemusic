@@ -136,20 +136,20 @@
 		
 		[self.collectionInfoView reloadData];
 		
-//		self.controlBarView = [LMControlBarView newAutoLayoutView];
-//		self.controlBarView.delegate = self;
-//		self.controlBarView.userInteractionEnabled = YES;
-//		[self.rootView addSubview:self.controlBarView];
-//	
+		self.controlBarView = [LMControlBarView newAutoLayoutView];
+		self.controlBarView.delegate = self;
+		self.controlBarView.userInteractionEnabled = YES;
+		[self.rootView addSubview:self.controlBarView];
+	
 //	return;
-//		
-//		[self.controlBarView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:10];
-//		[self.controlBarView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:10];
-//		[self.controlBarView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.collectionInfoView withOffset:10];
-//		self.controlBarViewHeightConstraint = [self.controlBarView autoSetDimension:ALDimensionHeight toSize:0];
-//		
-//		[self.controlBarView setup];
-//		
+		
+		[self.controlBarView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:10];
+		[self.controlBarView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:10];
+		[self.controlBarView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.collectionInfoView withOffset:10];
+		self.controlBarViewHeightConstraint = [self.controlBarView autoSetDimension:ALDimensionHeight toSize:0];
+		
+		[self.controlBarView setup];
+
 		UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(invertControlView)];
 		[self.collectionInfoView addGestureRecognizer:tapGesture];
 	
