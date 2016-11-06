@@ -38,27 +38,44 @@
 }
 
 - (float)heightAtIndex:(NSUInteger)index forTableView:(LMNewTableView*)tableView {
-	LMControlBarView *controlBarView = [self.controlBarViews objectAtIndex:index % self.controlBarViews.count];
-	
-	return [LMControlBarView heightWhenIsOpened:[controlBarView isOpen] && controlBarView.index == self.currentlyOpenedIndex];
+	return [LMControlBarView heightWhenIsOpened:index == self.currentlyOpenedIndex];
 }
 
 - (float)spacingAtIndex:(NSUInteger)index forTableView:(LMNewTableView*)tableView {
-	return 20;
+	if(index == 0){
+		return 80;
+	}
+	else{
+		return 20;
+	}
 }
 
 - (void)sizeChangedTo:(CGSize)newSize forControlBarView:(LMControlBarView *)controlBar {
 //	NSLog(@"Control bar changed size to %@", NSStringFromCGSize(newSize));
 	
-	if(newSize.height > 20){
+	//If the new size is large/opened
+	if(controlBar.isOpen){
+		//Find the last control bar view which was open and close it
+		for(int i = 0; i < self.controlBarViews.count; i++){
+			LMControlBarView *controlBarView = [self.controlBarViews objectAtIndex:i];
+			if(controlBarView.index == self.currentlyOpenedIndex){
+				[controlBarView close:YES];
+				break;
+			}
+		}
+		
+		//Set the currently opened control bar view as the opened one
 		for(int i = 0; i < self.controlBarViews.count; i++){
 			LMControlBarView *controlBarView = [self.controlBarViews objectAtIndex:i];
 			if([controlBarView isEqual:controlBar]){
 				self.currentlyOpenedIndex = controlBarView.index;
-				NSLog(@"Currently opened index is %d", (int)controlBarView.index);
 				break;
 			}
 		}
+	}
+	//If the new size is small/closed
+	else if(controlBar.index == self.currentlyOpenedIndex && !controlBar.isOpen){
+		self.currentlyOpenedIndex = -1;
 	}
 	
 	[self.tableView reloadSubviewSizes];
@@ -110,7 +127,7 @@
 	
 	self.tableView = [LMNewTableView newAutoLayoutView];
 	self.tableView.title = @"BigTestView";
-	self.tableView.averageCellHeight = [LMControlBarView heightWhenIsOpened:NO] * 2;
+	self.tableView.averageCellHeight = [LMControlBarView heightWhenIsOpened:NO];
 	self.tableView.totalAmountOfObjects = 500;
 	self.tableView.shouldUseDividers = YES;
 	self.tableView.subviewDataSource = self;
