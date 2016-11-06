@@ -19,11 +19,6 @@
  */
 @property BOOL hasRegisteredCellIdentifiers;
 
-/**
- Whether or not the table header view has been setup. This flag exists to prevent layoutSubviews setting up the subview header multiple times. The subview header is there to prevent floating headers in this UITableViewStyle we use.
- */
-@property BOOL hasSetupTableHeaderView;
-
 @end
 
 @implementation LMNewTableView
@@ -67,7 +62,10 @@
 	}
 	self.hasRegisteredCellIdentifiers = YES;
 	
-	
+	CGFloat dummyViewHeight = 100;
+	UIView *dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, WINDOW_FRAME.size.width, dummyViewHeight)];
+	self.tableHeaderView = dummyView;
+	self.contentInset = UIEdgeInsetsMake(-dummyViewHeight, 0, 0, 0);
 	
 	[self.subviewDataSource amountOfObjectsRequiredChangedTo:self.requiredAmountOfObjects forTableView:self];
 }
@@ -115,6 +113,10 @@
 	return 1;
 }
 
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+	return self.totalAmountOfObjects;
+}
+
 - (NSString*)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
 	return nil;
 }
@@ -138,22 +140,6 @@
 	}
 	
 	return view;
-}
-
-- (void)layoutSubviews {
-	[super layoutSubviews];
-	if(!self.hasSetupTableHeaderView){
-		self.hasSetupTableHeaderView = YES;
-		
-		/*
-		 Thanks to the following thread for helping get rid of floating headers, which are not within our design.
-		 http://stackoverflow.com/questions/1074006/is-it-possible-to-disable-floating-headers-in-uitableview-with-uitableviewstylep
-		 */
-		CGFloat dummyViewHeight = 100;
-		UIView *dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, dummyViewHeight)];
-		self.tableHeaderView = dummyView;
-		self.contentInset = UIEdgeInsetsMake(-dummyViewHeight, 0, 0, 0);
-	}
 }
 
 @end

@@ -22,7 +22,6 @@
 	if (!self.didSetupConstraints && self.subview) {
 		self.didSetupConstraints = YES;
 		
-		NSLog(@"Setup");
 //		UILabel *label = [UILabel newAutoLayoutView];
 //		label.backgroundColor = [UIColor blueColor];
 //		label.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:100 + (int)(rand() % 100)];

@@ -50,6 +50,15 @@
  */
 - (void)amountOfObjectsRequiredChangedTo:(NSUInteger)amountOfObjects forTableView:(LMNewTableView*)tableView;
 
+/*
+ * Quick copy and paste
+ *
+- (id)subviewAtIndex:(NSUInteger)index forTableView:(LMNewTableView*)tableView;
+- (float)heightAtIndex:(NSUInteger)index forTableView:(LMNewTableView*)tableView;
+- (float)spacingAtIndex:(NSUInteger)index forTableView:(LMNewTableView*)tableView;
+- (void)amountOfObjectsRequiredChangedTo:(NSUInteger)amountOfObjects forTableView:(LMNewTableView*)tableView;
+ */
+
 @end
 
 @interface LMNewTableView : UITableView
