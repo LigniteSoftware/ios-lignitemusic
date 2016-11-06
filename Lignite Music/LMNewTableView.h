@@ -48,11 +48,16 @@
  @param amountOfObjects The new amount of objects that are required for this table view.
  @param tableView The table view which is telling the delegate the amount of objects required.
  */
-- (void)amountOfObjectsRequiredChangedTo:(NSInteger)amountOfObjects forTableView:(LMNewTableView*)tableView;
+- (void)amountOfObjectsRequiredChangedTo:(NSUInteger)amountOfObjects forTableView:(LMNewTableView*)tableView;
 
 @end
 
 @interface LMNewTableView : UITableView
+
+/**
+ The title of this LMTableView. Is used for the cell identifiers and to log information about the LMTableView.
+ */
+@property NSString *title;
 
 /**
  The average height of a cell. This will be used to calculate the amount of objects which are required for the table view. Must be set before any generation occurs.
@@ -70,8 +75,23 @@
 @property BOOL shouldUseDividers;
 
 /**
+ The colour of the dividers. Default is [UIColor blackColor].
+ */
+@property UIColor *dividerColour;
+
+/**
  The subview data source for this table view.
  */
 @property id<LMTableViewSubviewDataSource> subviewDataSource;
+
+/**
+ Reloads the subview data. Recalculates the amount of objects required, sets up the basic layout of the table view (ie. background colour) and tells delegate of new calculations.
+ */
+- (void)reloadSubviewData;
+
+/**
+ Reloads the subview sizes (cell sizes) based on delegate provided data.
+ */
+- (void)reloadSubviewSizes;
 
 @end

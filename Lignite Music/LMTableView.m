@@ -21,8 +21,6 @@
 @property float calculatedHeight;
 @property float calculatedSpacing;
 
-@property float amountToAdd;
-
 @end
 
 @implementation LMTableView
