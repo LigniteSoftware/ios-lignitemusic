@@ -32,9 +32,7 @@
 	[super layoutSubviews];
 	
 	self.backgroundColor = [UIColor whiteColor];
-	
-	NSLog(@"Hey dawg %@", NSStringFromCGRect(self.frame));
-	
+		
 	if(self.bounds.size.height == 0){
 		return;
 	}

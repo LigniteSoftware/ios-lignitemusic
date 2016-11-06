@@ -9,36 +9,40 @@
 #import <PureLayout/PureLayout.h>
 #import "LMResizingTableView.h"
 #import "LMNewTableView.h"
-#import "LMControlBarView.h"
+#import "LMBigListEntry.h"
 
-@interface LMResizingTableView()<LMTableViewSubviewDataSource, LMControlBarViewDelegate>
+@interface LMResizingTableView()<LMTableViewSubviewDataSource, LMCollectionInfoViewDelegate, LMBigListEntryDelegate>
 
 @property LMNewTableView *tableView;
 
-@property float thisShit;
-
-@property NSMutableArray *controlBarViews;
+@property NSMutableArray *bigListEntriesArray;
 
 @property NSInteger currentlyOpenedIndex;
+
+@property float normalSize;
+@property float largeSize;
 
 @end
 
 @implementation LMResizingTableView
 
 - (id)subviewAtIndex:(NSUInteger)index forTableView:(LMNewTableView*)tableView {
-	LMControlBarView *controlBarView = [self.controlBarViews objectAtIndex:index % self.controlBarViews.count];
-	controlBarView.index = index;
-	if(controlBarView.index == self.currentlyOpenedIndex){
-		[controlBarView open:NO];
+	LMBigListEntry *bigListEntry = [self.bigListEntriesArray objectAtIndex:index % self.bigListEntriesArray.count];
+	bigListEntry.collectionIndex = index;
+	if(index == self.currentlyOpenedIndex){
+		//[bigListEntry open:NO];
+		[bigListEntry setLarge:YES animated:NO];
 	}
 	else{
-		[controlBarView close:NO];
+		//[bigListEntry close:NO];
+		[bigListEntry setLarge:NO animated:NO];
 	}
-	return controlBarView;
+	NSLog(@"Entry index %lu", (unsigned long)bigListEntry.collectionIndex);
+	return bigListEntry;
 }
 
 - (float)heightAtIndex:(NSUInteger)index forTableView:(LMNewTableView*)tableView {
-	return [LMControlBarView heightWhenIsOpened:index == self.currentlyOpenedIndex];
+	return index == self.currentlyOpenedIndex ? self.largeSize : self.normalSize;
 }
 
 - (float)spacingAtIndex:(NSUInteger)index forTableView:(LMNewTableView*)tableView {
@@ -50,31 +54,42 @@
 	}
 }
 
-- (void)sizeChangedTo:(CGSize)newSize forControlBarView:(LMControlBarView *)controlBar {
-//	NSLog(@"Control bar changed size to %@", NSStringFromCGSize(newSize));
-	
+- (id)contentSubviewForBigListEntry:(LMBigListEntry*)bigListEntry {
+	return [UIView newAutoLayoutView];
+}
+
+- (float)contentSubviewHeightFactorialForBigListEntry:(LMBigListEntry*)bigListEntry {
+	return 0.4;
+}
+
+- (void)sizeChangedToLargeSize:(BOOL)largeSize withHeight:(float)newHeight forBigListEntry:(LMBigListEntry*)bigListEntry {
 	//If the new size is large/opened
-	if(controlBar.isOpen){
+	largeSize ? (self.largeSize = newHeight) : (self.normalSize = newHeight);
+	
+	if(bigListEntry.isLargeSize){
 		//Find the last control bar view which was open and close it
-		for(int i = 0; i < self.controlBarViews.count; i++){
-			LMControlBarView *controlBarView = [self.controlBarViews objectAtIndex:i];
-			if(controlBarView.index == self.currentlyOpenedIndex){
-				[controlBarView close:YES];
+		for(int i = 0; i < self.bigListEntriesArray.count; i++){
+			LMBigListEntry *bigListIndexEntry = [self.bigListEntriesArray objectAtIndex:i];
+			if(bigListIndexEntry.collectionIndex == self.currentlyOpenedIndex){
+				//[bigListEntry close:YES];
+				NSLog(@"Setting %d to small", i);
+				[bigListIndexEntry setLarge:NO animated:YES];
 				break;
 			}
 		}
 		
 		//Set the currently opened control bar view as the opened one
-		for(int i = 0; i < self.controlBarViews.count; i++){
-			LMControlBarView *controlBarView = [self.controlBarViews objectAtIndex:i];
-			if([controlBarView isEqual:controlBar]){
-				self.currentlyOpenedIndex = controlBarView.index;
+		for(int i = 0; i < self.bigListEntriesArray.count; i++){
+			LMBigListEntry *bigListIndexEntry = [self.bigListEntriesArray objectAtIndex:i];
+			if([bigListIndexEntry isEqual:bigListEntry]){
+				NSLog(@"Setting %ld to current opened", bigListIndexEntry.collectionIndex);
+				self.currentlyOpenedIndex = bigListIndexEntry.collectionIndex;
 				break;
 			}
 		}
 	}
 	//If the new size is small/closed
-	else if(controlBar.index == self.currentlyOpenedIndex && !controlBar.isOpen){
+	else if(bigListEntry.collectionIndex == self.currentlyOpenedIndex && !bigListEntry.isLargeSize){
 		self.currentlyOpenedIndex = -1;
 	}
 	
@@ -93,42 +108,52 @@
 	return 3;
 }
 
+- (NSString*)titleForInfoView:(LMCollectionInfoView*)infoView {
+	return @"Title";
+}
+
+- (NSString*)leftTextForInfoView:(LMCollectionInfoView*)infoView {
+	return @"Left text";
+}
+
+- (NSString*)rightTextForInfoView:(LMCollectionInfoView*)infoView {
+	return @"Right text";
+}
+
+- (UIImage*)centerImageForInfoView:(LMCollectionInfoView*)infoView {
+	return [UIImage imageNamed:@"icon_bug.png"];
+}
+
 - (void)amountOfObjectsRequiredChangedTo:(NSUInteger)amountOfObjects forTableView:(LMNewTableView*)tableView {
 	NSLog(@"I need %lu objects to survive!", (unsigned long)amountOfObjects);
 	
-	for(int i = 0; i < self.controlBarViews.count; i++){
-		LMControlBarView *controlBarView = [self.controlBarViews objectAtIndex:i];
-		[controlBarView removeFromSuperview];
-		controlBarView.hidden = YES;
+	for(int i = 0; i < self.bigListEntriesArray.count; i++){
+		LMBigListEntry *bigListEntry = [self.bigListEntriesArray objectAtIndex:i];
+		[bigListEntry removeFromSuperview];
+		bigListEntry.hidden = YES;
 	}
 	
-	self.controlBarViews = [NSMutableArray new];
+	self.bigListEntriesArray = [NSMutableArray new];
 	
 	for(int i = 0; i < amountOfObjects; i++){
-		LMControlBarView *newControlBar = [LMControlBarView newAutoLayoutView];
-		newControlBar.delegate = self;
-		[newControlBar setup];
+		LMBigListEntry *newBigListEntry = [LMBigListEntry newAutoLayoutView];
+		newBigListEntry.infoDelegate = self;
+		newBigListEntry.entryDelegate = self;
+		[newBigListEntry setup];
 		
-		[self.controlBarViews addObject:newControlBar];
+		[self.bigListEntriesArray addObject:newBigListEntry];
 	}
-}
-
-- (void)increaseThisShit {
-	self.thisShit += 40;
-	
-	[self.tableView reloadSubviewSizes];
 }
 
 - (void)setup {
-	NSLog(@"Set me up!");
-	
-	self.thisShit = 20;
 	self.currentlyOpenedIndex = -1;
+	
+	self.normalSize = 100;
 	
 	self.tableView = [LMNewTableView newAutoLayoutView];
 	self.tableView.title = @"BigTestView";
-	self.tableView.averageCellHeight = [LMControlBarView heightWhenIsOpened:NO];
-	self.tableView.totalAmountOfObjects = 500;
+	self.tableView.averageCellHeight = 100;
+	self.tableView.totalAmountOfObjects = 40;
 	self.tableView.shouldUseDividers = YES;
 	self.tableView.subviewDataSource = self;
 	[self addSubview:self.tableView];
@@ -136,8 +161,6 @@
 	[self.tableView autoPinEdgesToSuperviewEdges];
 	
 	[self.tableView reloadSubviewData];
-	
-//	[NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(increaseThisShit) userInfo:nil repeats:YES];
 }
 
 @end
