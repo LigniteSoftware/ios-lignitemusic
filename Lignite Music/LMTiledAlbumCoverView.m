@@ -42,6 +42,7 @@
 	
 	NSLog(@"Inserting album covers. Big tile count %ld regular count %ld", self.bigTileArray.count, self.tilesArray.count);
 	
+	//For each big tile, go through the songs and find which ones have the highest cover count in the collection
 	for(int i = 0; i < self.bigTileArray.count; i++){
 		NSString *highestIdKey = @"";
 		int highestIdValue = -1;
@@ -57,6 +58,12 @@
 		[highestIds addObject:highestIdKey];
 	}
 	
+	NSLog(@"Showing %d", (int)self.uniqueAlbumCoversDictionary.count);
+	if(self.uniqueAlbumCoversDictionary.count == 3){
+		NSLog(@"UNIQUE SHIT %@", self.uniqueAlbumCoversDictionary);
+	}
+	
+	//Remove all of the lowest covers from the dictionary of unique covers
 	while(self.uniqueAlbumCoversDictionary.count > self.amountOfAlbumsShowing){
 		NSString *lowestIdKey = @"";
 		int lowestIdValue = INT_MAX;
@@ -72,6 +79,7 @@
 		[self.uniqueAlbumCoversDictionary removeObjectForKey:lowestIdKey];
 	}
 	
+	//Insert all of the rest of the IDs into the regular covers array where they will live happy normal lives
 	for(int i = 0; i < self.uniqueAlbumCoversDictionary.count; i++){
 		NSString *key = [self.uniqueAlbumCoversDictionary.allKeys objectAtIndex:i];
 		
@@ -80,18 +88,21 @@
 		}
 	}
 	
+	//For each big tile display its associated big album art
 	for(int i = 0; i < self.bigTileArray.count; i++){
 		UIImageView *bigTile = [self.bigTileArray objectAtIndex:i];
 		bigTile.image = [[self musicTrackForPersistentIdString:[highestIds objectAtIndex:i]] albumArt];
 	}
 	
+	//For each regular tile show its regular image
 	for(int i = 0; i < self.tilesArray.count; i++){
-//		NSLog(@"Spook %d", i);
 		UIImageView *tile = [self.tilesArray objectAtIndex:i];
 		if(![self.bigTileArray containsObject:tile]){
-//			NSLog(@"Count %ld index %d", regularIds.count, i);
 			if(regularIds.count > i){
 				tile.image = [[self musicTrackForPersistentIdString:[regularIds objectAtIndex:i]] albumArt];
+			}
+			else if(regularIds.count == 2 || regularIds.count == 3){
+				tile.image = [[self musicTrackForPersistentIdString:[regularIds objectAtIndex:(i == 2) ? 1 : 0]] albumArt];
 			}
 		}
 	}
@@ -208,8 +219,8 @@
 		
 		self.bigTileArray = [NSMutableArray new];
 		
-		if(self.tilesArray.count > 4){
-			int amountOfBigCovers = floor(sqrt(self.tilesArray.count)/2);
+		if(self.tilesArray.count > 4 || self.uniqueAlbumCoversDictionary.count == 1){
+			int amountOfBigCovers = self.uniqueAlbumCoversDictionary.count == 1 ? 1 : floor(sqrt(self.tilesArray.count)/2);
 //			NSLog(@"Will generate %d big covers", amountOfBigCovers);
 			if(amountOfTilesX > 1 && amountOfTilesY > 1){
 				for(int i = 0; i < amountOfBigCovers; i++){
