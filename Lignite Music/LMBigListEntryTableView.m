@@ -7,11 +7,10 @@
 //
 
 #import <PureLayout/PureLayout.h>
-#import "LMResizingTableView.h"
+#import "LMBigListEntryTableView.h"
 #import "LMNewTableView.h"
-#import "LMBigListEntry.h"
 
-@interface LMResizingTableView()<LMTableViewSubviewDataSource, LMCollectionInfoViewDelegate, LMBigListEntryDelegate>
+@interface LMBigListEntryTableView()<LMTableViewSubviewDataSource, LMCollectionInfoViewDelegate, LMBigListEntryDelegate, LMControlBarViewDelegate>
 
 @property LMNewTableView *tableView;
 
@@ -24,7 +23,35 @@
 
 @end
 
-@implementation LMResizingTableView
+@implementation LMBigListEntryTableView
+
+- (LMBigListEntry*)bigListEntryForCollectionInfoView:(LMCollectionInfoView*)infoView {
+	for(int i = 0; i < self.bigListEntriesArray.count; i++){
+		LMBigListEntry *bigListEntry = [self.bigListEntriesArray objectAtIndex:i];
+		for(int subviewIndex = 0; subviewIndex < bigListEntry.subviews.count; subviewIndex++){
+			id subview = [bigListEntry.subviews objectAtIndex:subviewIndex];
+			if([subview isEqual:infoView]){
+				return bigListEntry;
+			}
+		}
+	}
+	NSLog(@"WARNING: Returning nil for big list entry!");
+	return nil;
+}
+
+- (LMBigListEntry*)bigListEntryForControlBar:(LMControlBarView*)controlBar {
+	for(int i = 0; i < self.bigListEntriesArray.count; i++){
+		LMBigListEntry *bigListEntry = [self.bigListEntriesArray objectAtIndex:i];
+		for(int subviewIndex = 0; subviewIndex < bigListEntry.subviews.count; subviewIndex++){
+			UIView *subview = [bigListEntry.subviews objectAtIndex:subviewIndex];
+			if([subview isEqual:controlBar]){
+				return bigListEntry;
+			}
+		}
+	}
+	NSLog(@"WARNING: Returning nil for control bar view!");
+	return nil;
+}
 
 - (id)subviewAtIndex:(NSUInteger)index forTableView:(LMNewTableView*)tableView {
 	LMBigListEntry *bigListEntry = [self.bigListEntriesArray objectAtIndex:index % self.bigListEntriesArray.count];
@@ -37,7 +64,6 @@
 		//[bigListEntry close:NO];
 		[bigListEntry setLarge:NO animated:NO];
 	}
-	NSLog(@"Entry index %lu", (unsigned long)bigListEntry.collectionIndex);
 	return bigListEntry;
 }
 
@@ -55,11 +81,11 @@
 }
 
 - (id)contentSubviewForBigListEntry:(LMBigListEntry*)bigListEntry {
-	return [UIView newAutoLayoutView];
+	return [self.delegate contentSubviewForBigListEntry:bigListEntry];
 }
 
 - (float)contentSubviewHeightFactorialForBigListEntry:(LMBigListEntry*)bigListEntry {
-	return 0.4;
+	return [self.delegate contentSubviewHeightFactorialForBigListEntry:bigListEntry];
 }
 
 - (void)sizeChangedToLargeSize:(BOOL)largeSize withHeight:(float)newHeight forBigListEntry:(LMBigListEntry*)bigListEntry {
@@ -97,31 +123,31 @@
 }
 
 - (UIImage*)imageWithIndex:(uint8_t)index forControlBarView:(LMControlBarView *)controlBar {
-	return [UIImage imageNamed:@"icon_bug.png"];
+	return [self.delegate imageWithIndex:index forBigListEntry:[self bigListEntryForControlBar:controlBar]];
 }
 
 - (BOOL)buttonTappedWithIndex:(uint8_t)index forControlBarView:(LMControlBarView *)controlBar {
-	return YES;
+	return [self.delegate buttonTappedWithIndex:index forBigListEntry:[self bigListEntryForControlBar:controlBar]];;
 }
 
 - (uint8_t)amountOfButtonsForControlBarView:(LMControlBarView *)controlBar {
-	return 3;
+	return [self.delegate amountOfButtonsForBigListEntry:[self bigListEntryForControlBar:controlBar]];
 }
 
 - (NSString*)titleForInfoView:(LMCollectionInfoView*)infoView {
-	return @"Title";
+	return [self.delegate titleForBigListEntry:[self bigListEntryForCollectionInfoView:infoView]];
 }
 
 - (NSString*)leftTextForInfoView:(LMCollectionInfoView*)infoView {
-	return @"Left text";
+	return [self.delegate leftTextForBigListEntry:[self bigListEntryForCollectionInfoView:infoView]];
 }
 
 - (NSString*)rightTextForInfoView:(LMCollectionInfoView*)infoView {
-	return @"Right text";
+	return [self.delegate rightTextForBigListEntry:[self bigListEntryForCollectionInfoView:infoView]];
 }
 
 - (UIImage*)centerImageForInfoView:(LMCollectionInfoView*)infoView {
-	return [UIImage imageNamed:@"icon_bug.png"];
+	return [self.delegate centerImageForBigListEntry:[self bigListEntryForCollectionInfoView:infoView]];
 }
 
 - (void)amountOfObjectsRequiredChangedTo:(NSUInteger)amountOfObjects forTableView:(LMNewTableView*)tableView {
@@ -139,9 +165,12 @@
 		LMBigListEntry *newBigListEntry = [LMBigListEntry newAutoLayoutView];
 		newBigListEntry.infoDelegate = self;
 		newBigListEntry.entryDelegate = self;
-		[newBigListEntry setup];
+		newBigListEntry.controlBarDelegate = self;
+		newBigListEntry.collectionIndex = i;
 		
 		[self.bigListEntriesArray addObject:newBigListEntry];
+		
+		[newBigListEntry setup];
 	}
 }
 
@@ -153,8 +182,8 @@
 	self.tableView = [LMNewTableView newAutoLayoutView];
 	self.tableView.title = @"BigTestView";
 	self.tableView.averageCellHeight = 100;
-	self.tableView.totalAmountOfObjects = 40;
-	self.tableView.shouldUseDividers = YES;
+	self.tableView.totalAmountOfObjects = self.totalAmountOfObjects;
+	self.tableView.shouldUseDividers = NO;
 	self.tableView.subviewDataSource = self;
 	[self addSubview:self.tableView];
 	

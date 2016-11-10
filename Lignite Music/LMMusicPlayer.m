@@ -532,6 +532,9 @@ BOOL shuffleForDebug = NO;
 				[musicCollection addObject:musicTrack];
 			}
 			LMMusicTrackCollection *trackCollection = [[LMMusicTrackCollection alloc]initWithItems:musicCollection basedOnSourceCollection:itemCollection];
+			if(associatedGrouping == MPMediaGroupingPlaylist){
+				trackCollection.title = [[collections objectAtIndex:i] valueForProperty:MPMediaPlaylistPropertyName];
+			}
 			[musicTracks addObject:trackCollection];
 		}
 		

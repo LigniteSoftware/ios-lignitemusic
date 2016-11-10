@@ -45,6 +45,7 @@
 
 @property id<LMBigListEntryDelegate> entryDelegate;
 @property id<LMCollectionInfoViewDelegate> infoDelegate;
+@property id<LMControlBarViewDelegate> controlBarDelegate;
 
 @property BOOL isLargeSize;
 @property NSUInteger collectionIndex;

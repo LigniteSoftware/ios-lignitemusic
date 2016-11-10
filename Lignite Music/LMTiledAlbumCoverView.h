@@ -10,4 +10,9 @@
 
 @interface LMTiledAlbumCoverView : UIView
 
+/**
+ The music collection associated with this LMTiledAlbumCoverView.
+ */
+@property LMMusicTrackCollection *musicCollection;
+
 @end

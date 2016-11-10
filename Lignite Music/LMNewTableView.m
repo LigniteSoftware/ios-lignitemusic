@@ -129,22 +129,22 @@ BOOL shitpost = NO;
 /**
  Gets the view for a header for a certain section. If shouldUseDividers is set to YES, this will draw a divider half way through the view of the header.
  **/
-//- (UIView*)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-//	CGRect frame = CGRectMake(0, 0, self.frame.size.width, [self tableView:self heightForHeaderInSection:section]);
-//	UIView *view = [[UIView alloc] initWithFrame:frame];
+- (UIView*)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+	CGRect frame = CGRectMake(0, 0, self.frame.size.width, [self tableView:self heightForHeaderInSection:section]);
+	UIView *view = [[UIView alloc] initWithFrame:frame];
 //	view.backgroundColor = [UIColor blueColor];
-//	
-//	if(self.shouldUseDividers && section != 0){
-//		uint8_t dividerHeight = 1;
-//		float frameWidth = (frame.size.width * 0.9);
-//		float frameX = (frame.size.width-frameWidth)/2;
-//		float frameY = frame.size.height/2 - dividerHeight/2;
-//		UIView *dividerView = [[UIView alloc]initWithFrame:CGRectMake(frameX, frameY, frameWidth, dividerHeight)];
-//		dividerView.backgroundColor = self.dividerColour ? self.dividerColour : [UIColor colorWithRed:0.82 green:0.82 blue:0.82 alpha:1.0];
-//		[view addSubview:dividerView];
-//	}
-//	
-//	return view;
-//}
+	
+	if(self.shouldUseDividers && section != 0){
+		uint8_t dividerHeight = 1;
+		float frameWidth = (frame.size.width * 0.9);
+		float frameX = (frame.size.width-frameWidth)/2;
+		float frameY = frame.size.height/2 - dividerHeight/2;
+		UIView *dividerView = [[UIView alloc]initWithFrame:CGRectMake(frameX, frameY, frameWidth, dividerHeight)];
+		dividerView.backgroundColor = self.dividerColour ? self.dividerColour : [UIColor colorWithRed:0.82 green:0.82 blue:0.82 alpha:1.0];
+		[view addSubview:dividerView];
+	}
+	
+	return view;
+}
 
 @end

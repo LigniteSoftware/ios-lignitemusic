@@ -17,7 +17,7 @@
 #import "LMSourceSelectorView.h"
 #import "LMSource.h"
 #import "LMExtras.h"
-#import "LMResizingTableView.h"
+#import "LMPlaylistView.h"
 
 @interface LMCoreViewController () <LMMusicPlayerDelegate, LMSourceDelegate>
 
@@ -27,7 +27,7 @@
 
 @property LMAlbumView *albumView;
 @property LMTitleView *titleView;
-@property LMResizingTableView *resizingTableView;
+@property LMPlaylistView *playlistView;
 
 @property LMBrowsingAssistantView *browsingAssistant;
 @property LMSourceSelectorView *sourceSelector;
@@ -174,8 +174,8 @@ BOOL didAutomaticallyClose = NO;
 			break;
 		}
 		case 2:{
-			self.resizingTableView.hidden = NO;
-			self.currentSource = self.resizingTableView;
+			self.playlistView.hidden = NO;
+			self.currentSource = self.playlistView;
 			break;
 		}
 		case 3:{
@@ -265,18 +265,18 @@ BOOL didAutomaticallyClose = NO;
 	[self.titleView setup];
 	self.titleView.hidden = YES;
 	
-	self.resizingTableView = [LMResizingTableView newAutoLayoutView];
-	self.resizingTableView.backgroundColor = [UIColor whiteColor];
-	[self.view addSubview:self.resizingTableView];
+	self.playlistView = [LMPlaylistView newAutoLayoutView];
+	self.playlistView.backgroundColor = [UIColor whiteColor];
+	[self.view addSubview:self.playlistView];
 	
-	[self.resizingTableView autoCenterInSuperview];
-	[self.resizingTableView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
-	[self.resizingTableView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
+	[self.playlistView autoCenterInSuperview];
+	[self.playlistView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
+	[self.playlistView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
 	
-	[self.resizingTableView setup];
+	[self.playlistView setup];
 	
-//	[self.resizingTableView setup];
-	self.resizingTableView.hidden = YES;
+//	[self.playlistView setup];
+	self.playlistView.hidden = YES;
 
 	self.browsingAssistant = [[LMBrowsingAssistantView alloc]initForAutoLayout];
 	self.browsingAssistant.coreViewController = self;

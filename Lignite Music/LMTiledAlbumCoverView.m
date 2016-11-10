@@ -17,7 +17,6 @@
 @property NSMutableArray *tilesArray;
 @property NSMutableArray *bigTileArray;
 
-@property LMMusicTrackCollection *musicCollection;
 @property NSMutableDictionary *uniqueAlbumCoversDictionary;
 
 @property int amountOfAlbumsShowing;
@@ -40,6 +39,8 @@
 - (void)insertAlbumCovers {	
 	NSMutableArray *highestIds = [NSMutableArray new];
 	NSMutableArray *regularIds = [NSMutableArray new];
+	
+	NSLog(@"Inserting album covers. Big tile count %ld regular count %ld", self.bigTileArray.count, self.tilesArray.count);
 	
 	for(int i = 0; i < self.bigTileArray.count; i++){
 		NSString *highestIdKey = @"";
@@ -88,11 +89,14 @@
 //		NSLog(@"Spook %d", i);
 		UIImageView *tile = [self.tilesArray objectAtIndex:i];
 		if(![self.bigTileArray containsObject:tile]){
-			tile.image = [[self musicTrackForPersistentIdString:[regularIds objectAtIndex:i]] albumArt];
+//			NSLog(@"Count %ld index %d", regularIds.count, i);
+			if(regularIds.count > i){
+				tile.image = [[self musicTrackForPersistentIdString:[regularIds objectAtIndex:i]] albumArt];
+			}
 		}
 	}
 	
-//	NSLog(@"Highest IDs %@\nRegular IDs %@", highestIds, regularIds);
+	NSLog(@"Highest IDs %@\nRegular IDs %@", highestIds, regularIds);
 }
 
 - (NSMutableDictionary*)uniqueAlbumsInCollection {
@@ -124,10 +128,7 @@
 - (void)layoutSubviews {
 	[super layoutSubviews];
 	
-	if(!self.tilesArray){
-		LMMusicPlayer *musicPlayer = [LMMusicPlayer sharedMusicPlayer];
-		self.musicCollection = [[musicPlayer queryCollectionsForMusicType:LMMusicTypePlaylists] objectAtIndex:5];
-		
+	if(!self.tilesArray){		
 		self.uniqueAlbumCoversDictionary = [self uniqueAlbumsInCollection];
 		
 		self.tilesArray = [NSMutableArray new];
@@ -137,32 +138,49 @@
 			amountOfTiles = 4;
 		}
 		
+		NSLog(@"%f tiles", amountOfTiles);
+		
 		self.amountOfAlbumsShowing = amountOfTiles;
 		
-		float areaTotal = self.frame.size.width * self.frame.size.height;
+		float smallerDimension = MIN(self.frame.size.width, self.frame.size.height);
+		float largerDimension = MAX(self.frame.size.width, self.frame.size.height);
+		float differencePercentage = smallerDimension/largerDimension;
+		BOOL maintainSquare = differencePercentage > 0.75;
+//		BOOL smallerDimensionIsWidth = (smallerDimension == self.frame.size.width);
+		
+		float widthToUse = maintainSquare ? smallerDimension : self.frame.size.width;
+		float heightToUse = maintainSquare ? smallerDimension : self.frame.size.height;
+		
+		if(maintainSquare){
+			largerDimension = smallerDimension;
+		}
+		
+		float areaTotal = widthToUse * heightToUse;
 		float areaPerTile = areaTotal/amountOfTiles;
-		float rawArea = sqrtf(areaPerTile);
+		float sideLength = sqrtf(areaPerTile);
 		
-		int amountOfTilesX = (int)floorf(self.frame.size.width/rawArea);
-		int amountOfTilesY = (int)floorf(self.frame.size.height/rawArea);
+		int amountOfTilesX = (int)floorf(widthToUse/sideLength);
+		int amountOfTilesY = (int)floorf(heightToUse/sideLength);
 		
-		while((amountOfTilesX*(rawArea+1) < self.frame.size.width) && (amountOfTilesY*(rawArea+1) < self.frame.size.height)){
-			rawArea++;
+		while((amountOfTilesX*(sideLength+1) < widthToUse) && (amountOfTilesY*(sideLength+1) < heightToUse)){
+			sideLength++;
 		}
 		
 		int actualAmountOfTiles = (amountOfTilesX * amountOfTilesY);
 		
-		CGSize tileSize = CGSizeMake(rawArea, rawArea);
+		CGSize tileSize = CGSizeMake(sideLength, sideLength);
 		
-//		NSLog(@"\nLMTiledAlbumCover Generation\nAmount of items in collection: %d\nAmount of tiles generated: %f\nArea total: %f\nArea per tile: %f\nTile size: %@\nAmount of tiles X, Y: %d, %d", amountOfItemsInCollection, amountOfTiles, areaTotal, areaPerTile, NSStringFromCGSize(tileSize), amountOfTilesX, amountOfTilesY);
+		NSLog(@"Smaller %f larger %f difference %f maintainSquare %d", smallerDimension, largerDimension, differencePercentage, maintainSquare);
+		
+		NSLog(@"\nLMTiledAlbumCover Generation\nFrame: %@\nAmount of items in collection: %d\nAmount of tiles generated: %f\nArea total: %f\nArea per tile: %f\nTile size: %@\nAmount of tiles X, Y: %d, %d", NSStringFromCGRect(self.frame), (int)self.musicCollection.count, amountOfTiles, areaTotal, areaPerTile, NSStringFromCGSize(tileSize), amountOfTilesX, amountOfTilesY);
 		
 		self.rootView = [UIView newAutoLayoutView];
 		self.rootView.backgroundColor = [UIColor purpleColor];
 		[self addSubview:self.rootView];
 		
 		[self.rootView autoCenterInSuperview];
-		[self.rootView autoSetDimension:ALDimensionWidth toSize:amountOfTilesX*rawArea];
-		[self.rootView autoSetDimension:ALDimensionHeight toSize:amountOfTilesY*rawArea];
+		[self.rootView autoSetDimension:ALDimensionWidth toSize:amountOfTilesX*sideLength];
+		[self.rootView autoSetDimension:ALDimensionHeight toSize:amountOfTilesY*sideLength];
 		
 		for(int y = 0; y < amountOfTilesY; y++){
 			BOOL firstRow = (y == 0);
@@ -181,8 +199,8 @@
 				
 				[testView autoPinEdge:ALEdgeTop toEdge:firstRow ? ALEdgeTop : ALEdgeBottom ofView:topElement];
 				[testView autoPinEdge:ALEdgeLeading toEdge:firstColumn ? ALEdgeLeading : ALEdgeTrailing ofView:sideElement];
-				[testView autoSetDimension:ALDimensionHeight toSize:rawArea];
-				[testView autoSetDimension:ALDimensionWidth toSize:rawArea];
+				[testView autoSetDimension:ALDimensionHeight toSize:sideLength];
+				[testView autoSetDimension:ALDimensionWidth toSize:sideLength];
 				
 				[self.tilesArray addObject:testView];
 			}

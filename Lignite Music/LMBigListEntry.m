@@ -33,7 +33,7 @@
 }
 
 - (uint8_t)amountOfButtonsForControlBarView:(LMControlBarView *)controlBar {
-	return 3;
+	return [self.controlBarDelegate amountOfButtonsForControlBarView:controlBar];
 }
 
 - (void)sizeChangedTo:(CGSize)newSize forControlBarView:(LMControlBarView *)controlBar {
@@ -46,11 +46,11 @@
 }
 
 - (UIImage*)imageWithIndex:(uint8_t)index forControlBarView:(LMControlBarView *)controlBar {
-	return [UIImage imageNamed:@"icon_bug.png"];
+	return [self.controlBarDelegate imageWithIndex:index forControlBarView:controlBar];
 }
 
 - (BOOL)buttonTappedWithIndex:(uint8_t)index forControlBarView:(LMControlBarView *)controlBar {
-	return YES;
+	return [self.controlBarDelegate buttonTappedWithIndex:index forControlBarView:controlBar];
 }
 
 - (void)invertControlView {
@@ -68,8 +68,8 @@
 - (void)setup {
 	self.contentView = [self.entryDelegate contentSubviewForBigListEntry:self];
 
-	self.contentView = [UIView newAutoLayoutView];
-	[self.contentView setBackgroundColor:[UIColor greenColor]];
+//	self.contentView = [UIView newAutoLayoutView];
+//	[self.contentView setBackgroundColor:[UIColor greenColor]];
 
 	float contentViewHeightFactorial = [self.entryDelegate contentSubviewHeightFactorialForBigListEntry:self];
 	float infoViewHeightFactorial = (1.0/10.0);
@@ -79,7 +79,7 @@
 		return;
 	}
 
-	self.backgroundColor = [UIColor orangeColor];
+//	self.backgroundColor = [UIColor orangeColor];
 
 	UIView *contentView = self.contentView;
 	[self addSubview:contentView];

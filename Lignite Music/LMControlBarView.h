@@ -38,6 +38,8 @@
  */
 - (BOOL)buttonTappedWithIndex:(uint8_t)index forControlBarView:(LMControlBarView*)controlBar;
 
+@optional //Optional because delegates of delegates will not implement this function. The first layer should always implement so as to not run into errors.
+
 /**
  The size of the control bar view changed. This means it either expanded or shrunk.
 

@@ -27,6 +27,11 @@
 @property NSUInteger count;
 
 /**
+ The title of this collection, if it applies. Currently only for playlists.
+ */
+@property NSString *title;
+
+/**
  Whether or not this collection has various artists instead of a singluar artist.
  If YES, the representative item cannot be trusted for artist information.
  */

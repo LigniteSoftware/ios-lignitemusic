@@ -47,6 +47,7 @@
 		6A7DF1201DB124030077B979 /* icon_triple_horizontal_dots.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A7DF11F1DB124030077B979 /* icon_triple_horizontal_dots.png */; };
 		6A7DF1241DB12C860077B979 /* LMTitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A7DF1231DB12C860077B979 /* LMTitleView.m */; };
 		6A8CF2B91DB4952A00777525 /* LMSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A8CF2B81DB4952A00777525 /* LMSettings.m */; };
+		6A92F81C1DD3C1A9002045C2 /* LMPlaylistView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A92F81B1DD3C1A9002045C2 /* LMPlaylistView.m */; };
 		6A9C053B1DB4441200713D1C /* icon_albums.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A9C05371DB4441200713D1C /* icon_albums.png */; };
 		6A9C053C1DB4441200713D1C /* icon_compilations.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A9C05381DB4441200713D1C /* icon_compilations.png */; };
 		6A9C053D1DB4441200713D1C /* icon_genres.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A9C05391DB4441200713D1C /* icon_genres.png */; };
@@ -69,7 +70,7 @@
 		6AC32B7B1DB6B57B0007C67E /* LMPebbleManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AC32B7A1DB6B57B0007C67E /* LMPebbleManager.m */; };
 		6AC32B7D1DB6CD950007C67E /* icon_bug.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AC32B7C1DB6CD950007C67E /* icon_bug.png */; };
 		6AC32B7F1DB73AFB0007C67E /* icon_no_cover_art.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AC32B7E1DB73AFB0007C67E /* icon_no_cover_art.png */; };
-		6AC77A091DC3B04B00BABBB3 /* LMResizingTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AC77A081DC3B04B00BABBB3 /* LMResizingTableView.m */; };
+		6AC77A091DC3B04B00BABBB3 /* LMBigListEntryTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AC77A081DC3B04B00BABBB3 /* LMBigListEntryTableView.m */; };
 		6AC77A141DC42C5500BABBB3 /* LMControlBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AC77A131DC42C5500BABBB3 /* LMControlBarView.m */; };
 		6AC77A161DC42CF400BABBB3 /* icon_playlists.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AC77A151DC42CF400BABBB3 /* icon_playlists.png */; };
 		6ACED1081DB7BE1D006EACD2 /* icon_repeat_one.png in Resources */ = {isa = PBXBuildFile; fileRef = 6ACED1061DB7BE1D006EACD2 /* icon_repeat_one.png */; };
@@ -172,6 +173,8 @@
 		6A7DF1231DB12C860077B979 /* LMTitleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMTitleView.m; sourceTree = "<group>"; };
 		6A8CF2B71DB4952A00777525 /* LMSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMSettings.h; sourceTree = "<group>"; };
 		6A8CF2B81DB4952A00777525 /* LMSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMSettings.m; sourceTree = "<group>"; };
+		6A92F81A1DD3C1A9002045C2 /* LMPlaylistView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMPlaylistView.h; sourceTree = "<group>"; };
+		6A92F81B1DD3C1A9002045C2 /* LMPlaylistView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMPlaylistView.m; sourceTree = "<group>"; };
 		6A9C05371DB4441200713D1C /* icon_albums.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_albums.png; sourceTree = "<group>"; };
 		6A9C05381DB4441200713D1C /* icon_compilations.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_compilations.png; sourceTree = "<group>"; };
 		6A9C05391DB4441200713D1C /* icon_genres.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_genres.png; sourceTree = "<group>"; };
@@ -205,8 +208,8 @@
 		6AC32B7A1DB6B57B0007C67E /* LMPebbleManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMPebbleManager.m; sourceTree = "<group>"; };
 		6AC32B7C1DB6CD950007C67E /* icon_bug.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_bug.png; sourceTree = "<group>"; };
 		6AC32B7E1DB73AFB0007C67E /* icon_no_cover_art.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_no_cover_art.png; sourceTree = "<group>"; };
-		6AC77A071DC3B04B00BABBB3 /* LMResizingTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMResizingTableView.h; sourceTree = "<group>"; };
-		6AC77A081DC3B04B00BABBB3 /* LMResizingTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMResizingTableView.m; sourceTree = "<group>"; };
+		6AC77A071DC3B04B00BABBB3 /* LMBigListEntryTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMBigListEntryTableView.h; sourceTree = "<group>"; };
+		6AC77A081DC3B04B00BABBB3 /* LMBigListEntryTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMBigListEntryTableView.m; sourceTree = "<group>"; };
 		6AC77A121DC42C5500BABBB3 /* LMControlBarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMControlBarView.h; sourceTree = "<group>"; };
 		6AC77A131DC42C5500BABBB3 /* LMControlBarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMControlBarView.m; sourceTree = "<group>"; };
 		6AC77A151DC42CF400BABBB3 /* icon_playlists.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_playlists.png; sourceTree = "<group>"; };
@@ -397,8 +400,8 @@
 		6A32A9F21DC69BC60056CC60 /* TableView */ = {
 			isa = PBXGroup;
 			children = (
-				6AC77A071DC3B04B00BABBB3 /* LMResizingTableView.h */,
-				6AC77A081DC3B04B00BABBB3 /* LMResizingTableView.m */,
+				6AC77A071DC3B04B00BABBB3 /* LMBigListEntryTableView.h */,
+				6AC77A081DC3B04B00BABBB3 /* LMBigListEntryTableView.m */,
 				6A7115B51DCEE410006DE00F /* LMNewTableView.h */,
 				6A7115B61DCEE410006DE00F /* LMNewTableView.m */,
 				6AAF61131DA0758400971875 /* LMTableView.h */,
@@ -541,7 +544,8 @@
 		6AC77A0C1DC4249800BABBB3 /* Playlist */ = {
 			isa = PBXGroup;
 			children = (
-				6AC77A0E1DC424C400BABBB3 /* Detail */,
+				6A92F81A1DD3C1A9002045C2 /* LMPlaylistView.h */,
+				6A92F81B1DD3C1A9002045C2 /* LMPlaylistView.m */,
 			);
 			name = Playlist;
 			sourceTree = "<group>";
@@ -553,13 +557,6 @@
 				6A7DF1231DB12C860077B979 /* LMTitleView.m */,
 			);
 			name = Title;
-			sourceTree = "<group>";
-		};
-		6AC77A0E1DC424C400BABBB3 /* Detail */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Detail;
 			sourceTree = "<group>";
 		};
 		6AC77A0F1DC424CA00BABBB3 /* Detail */ = {
@@ -866,7 +863,7 @@
 				6AA4459C1D5AB264004C6739 /* LMPebbleSettingsView.m in Sources */,
 				6AFD2EDD1BC41ECD0083FE9E /* LMAlbumViewItem.m in Sources */,
 				6A514E121CE904F100AFB351 /* LMNowPlayingViewController.m in Sources */,
-				6AC77A091DC3B04B00BABBB3 /* LMResizingTableView.m in Sources */,
+				6AC77A091DC3B04B00BABBB3 /* LMBigListEntryTableView.m in Sources */,
 				6AD227031DA5990B0056695A /* LMMusicPlayer.m in Sources */,
 				6AA445A01D5AD6AB004C6739 /* LMSettingsSwitch.m in Sources */,
 				6A32A9EF1DC6906D0056CC60 /* LMTriangleMaskView.m in Sources */,
@@ -903,6 +900,7 @@
 				6AD227061DA599E50056695A /* LMMusicTrack.m in Sources */,
 				6A555BB01DA168860078C9FC /* LMOperationQueue.m in Sources */,
 				6A1FB9C71D99EB0A00890BF3 /* LMAlbumView.m in Sources */,
+				6A92F81C1DD3C1A9002045C2 /* LMPlaylistView.m in Sources */,
 				6AD226FC1DA4B7770056695A /* LMNowPlayingView.m in Sources */,
 				6AC32B7B1DB6B57B0007C67E /* LMPebbleManager.m in Sources */,
 				6A514E191CEA15D900AFB351 /* LMSlider.m in Sources */,

@@ -15,6 +15,7 @@
 	if(self) {
 		self.items = items;
 		self.count = items.count;
+		self.title = @"Unknown Error";
 		self.sourceCollection = sourceCollection;
 		
 		if(self.items.count > 0){
