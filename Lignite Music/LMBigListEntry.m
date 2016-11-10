@@ -27,9 +27,8 @@
 + (float)smallSizeForBigListEntryWithDelegate:(id<LMBigListEntryDelegate>)delegate {
 	float contentViewHeightFactorial = [delegate contentSubviewHeightFactorialForBigListEntry:nil];
 	float infoViewHeightFactorial = (1.0/10.0);
-	float controlBarFactorial = [LMControlBarView heightWhenIsOpened:NO]/WINDOW_FRAME.size.height;
 	
-	return (contentViewHeightFactorial+infoViewHeightFactorial+controlBarFactorial)*WINDOW_FRAME.size.height+20;
+	return (contentViewHeightFactorial+infoViewHeightFactorial)*WINDOW_FRAME.size.height+20+[LMControlBarView heightWhenIsOpened:NO];
 }
 
 - (uint8_t)amountOfButtonsForControlBarView:(LMControlBarView *)controlBar {
@@ -42,7 +41,7 @@
 	
 	self.isLargeSize = self.controlBarView.isOpen;
 	
-	[self.entryDelegate sizeChangedToLargeSize:self.controlBarView.isOpen withHeight:newSize.height+400 forBigListEntry:self];
+	[self.entryDelegate sizeChangedToLargeSize:self.controlBarView.isOpen withHeight:[LMBigListEntry smallSizeForBigListEntryWithDelegate:self.entryDelegate]+(self.controlBarView.isOpen ? newSize.height-[LMControlBarView heightWhenIsOpened:NO] : 0) forBigListEntry:self];
 }
 
 - (UIImage*)imageWithIndex:(uint8_t)index forControlBarView:(LMControlBarView *)controlBar {
@@ -108,14 +107,14 @@
 	[self.controlBarView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:10];
 	[self.controlBarView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:10];
 	[self.controlBarView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.collectionInfoView withOffset:10];
-	self.controlBarViewHeightConstraint = [self.controlBarView autoSetDimension:ALDimensionHeight toSize:0];
+	self.controlBarViewHeightConstraint = [self.controlBarView autoSetDimension:ALDimensionHeight toSize:[LMControlBarView heightWhenIsOpened:NO]];
 	
 	[self.controlBarView setup];
 
 	UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(invertControlView)];
 	[self.collectionInfoView addGestureRecognizer:tapGesture];
 
-	[self.entryDelegate sizeChangedToLargeSize:NO withHeight:400 forBigListEntry:self];
+	[self.entryDelegate sizeChangedToLargeSize:NO withHeight:[LMBigListEntry smallSizeForBigListEntryWithDelegate:self.entryDelegate] forBigListEntry:self];
 }
 
 @end

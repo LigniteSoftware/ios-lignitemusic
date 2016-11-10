@@ -40,7 +40,7 @@
 	
 	self.isOpen = (height != 0);
 	
-	self.triangleConstraint.constant = self.isOpen ? 0 : -50;
+	self.triangleConstraint.constant = self.isOpen ? -2 : -50;
 	self.controlBarHeightConstraint.constant = height;
 	
 	if(animated){

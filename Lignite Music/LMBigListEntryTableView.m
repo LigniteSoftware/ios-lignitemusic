@@ -9,6 +9,7 @@
 #import <PureLayout/PureLayout.h>
 #import "LMBigListEntryTableView.h"
 #import "LMNewTableView.h"
+#import "LMExtras.h"
 
 @interface LMBigListEntryTableView()<LMTableViewSubviewDataSource, LMCollectionInfoViewDelegate, LMBigListEntryDelegate, LMControlBarViewDelegate>
 
@@ -64,6 +65,7 @@
 		//[bigListEntry close:NO];
 		[bigListEntry setLarge:NO animated:NO];
 	}
+	[bigListEntry reloadData];
 	return bigListEntry;
 }
 
@@ -181,7 +183,7 @@
 	
 	self.tableView = [LMNewTableView newAutoLayoutView];
 	self.tableView.title = @"BigTestView";
-	self.tableView.averageCellHeight = 100;
+	self.tableView.averageCellHeight = WINDOW_FRAME.size.height*(1.0/3.0);
 	self.tableView.totalAmountOfObjects = self.totalAmountOfObjects;
 	self.tableView.shouldUseDividers = NO;
 	self.tableView.subviewDataSource = self;
