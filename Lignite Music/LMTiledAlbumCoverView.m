@@ -179,7 +179,7 @@
 					bigTileView.image = image;
 				}
 				
-				//Set each regular image to its associated view
+				//Set each regular image to its associated view by taking the image at the top of the array and setting that as the image
 				for(int i = 0; i < self.tilesArray.count; i++){
 					if(regularTileImages.count > 0){
 						UIImage *image = [regularTileImages objectAtIndex:0];
@@ -401,11 +401,6 @@
 		[self regenerate];
 	}
 }
-
-- (void)setupWithCollection:(LMMusicTrackCollection*)collection {
-	
-}
-
 
 /*
 // Only override drawRect: if you perform custom drawing.

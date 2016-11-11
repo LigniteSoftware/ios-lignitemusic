@@ -37,6 +37,7 @@
 
 - (void)updateHeightConstraintWithHeight:(float)height animated:(BOOL)animated {
 	[self.backgroundView layoutIfNeeded];
+	[self layoutIfNeeded];
 	
 	self.isOpen = (height != 0);
 	
@@ -46,10 +47,12 @@
 	if(animated){
 		[UIView animateWithDuration:0.3 animations:^{
 			[self.backgroundView layoutIfNeeded];
+			[self layoutIfNeeded];
 		}];
 	}
 	else{
 		[self.backgroundView layoutIfNeeded];
+		[self layoutIfNeeded];
 	}
 	
 	if(animated){
@@ -104,7 +107,7 @@
 	return self;
 }
 
-- (void)setup {
+- (void)setup {	
 	self.userInteractionEnabled = YES;
 	
 	self.threeDotIconImageView = [UIImageView newAutoLayoutView];
@@ -129,6 +132,8 @@
 	self.backgroundView.layer.cornerRadius = 10.0;
 	self.backgroundView.userInteractionEnabled = YES;
 	[self addSubview:self.backgroundView];
+	
+//	self.backgroundView.hidden = YES;
 	
 	[self.backgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 	[self.backgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];

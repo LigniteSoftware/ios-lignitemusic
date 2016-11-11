@@ -36,8 +36,13 @@
 }
 
 - (void)sizeChangedTo:(CGSize)newSize forControlBarView:(LMControlBarView *)controlBar {
-	self.controlBarViewHeightConstraint.constant = newSize.height;
 	[self layoutIfNeeded];
+	
+	self.controlBarViewHeightConstraint.constant = newSize.height;
+	
+	[UIView animateWithDuration:0.3 animations:^{
+		[self layoutIfNeeded];
+	}];
 	
 	self.isLargeSize = self.controlBarView.isOpen;
 	
