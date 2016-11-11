@@ -89,6 +89,11 @@
 @property UIColor *dividerColour;
 
 /**
+ The divider sections to ignore. Should be an array of NSNumbers. Each number which is in here will not show a divider for that associated section when shouldUseDividers is YES.
+ */
+@property NSArray *dividerSectionsToIgnore;
+
+/**
  The subview data source for this table view.
  */
 @property id<LMTableViewSubviewDataSource> subviewDataSource;

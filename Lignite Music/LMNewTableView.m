@@ -41,6 +41,8 @@
 		
 		self.totalAmountOfObjects = 0;
 		self.requiredAmountOfObjects = 0;
+		
+		self.dividerSectionsToIgnore = @[ @(0) ];
 				
 		self.title = @"UnnamedLMTableView";
 	}
@@ -145,7 +147,7 @@
 	UIView *view = [[UIView alloc] initWithFrame:frame];
 //	view.backgroundColor = [UIColor blueColor];
 	
-	if(self.shouldUseDividers && section != 0){
+	if(self.shouldUseDividers && ![self.dividerSectionsToIgnore containsObject:@(section)]){
 		uint8_t dividerHeight = 1;
 		float frameWidth = (frame.size.width * 0.9);
 		float frameX = (frame.size.width-frameWidth)/2;

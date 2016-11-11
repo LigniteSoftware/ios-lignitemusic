@@ -501,9 +501,9 @@
         }
         //If this happens, it's tracks asking for its artist and duration.
         else if(type == MPMediaGroupingPodcastTitle && subtitleType == 2){
-            NSNumber *trackLength = [item valueForProperty:MPMediaItemPropertyPlaybackDuration];
-            NSString *artistName = [item valueForProperty:MPMediaItemPropertyArtist];
-            
+//            NSNumber *trackLength = [item valueForProperty:MPMediaItemPropertyPlaybackDuration];
+//            NSString *artistName = [item valueForProperty:MPMediaItemPropertyArtist];
+			
 //            if(artistName){
 //                value = [NSString stringWithFormat:@"%@ | %@",
 //                         [LMNowPlayingViewController durationStringTotalPlaybackTime:[trackLength longValue]],

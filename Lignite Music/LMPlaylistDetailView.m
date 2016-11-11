@@ -15,6 +15,7 @@
 #import "LMTiledAlbumCoverView.h"
 #import "LMColour.h"
 #import "LMNowPlayingView.h"
+#import "LMMusicPlayer.h"
 
 @interface LMPlaylistDetailView()<LMTableViewSubviewDataSource, LMBigListEntryDelegate, LMCollectionInfoViewDelegate, LMControlBarViewDelegate, LMListEntryDelegate>
 
@@ -23,16 +24,67 @@
 @property LMBigListEntry *headerBigListEntry;
 @property NSMutableArray *songEntries;
 
+@property float largeSize;
+
+@property LMMusicPlayer *musicPlayer;
+
 @end
 
 @implementation LMPlaylistDetailView
 
 - (UIImage*)imageWithIndex:(uint8_t)index forControlBarView:(LMControlBarView *)controlBar {
-	return [UIImage imageNamed:@"icon_bug.png"];
+	switch(index){
+		case 0:{
+			BOOL isPlaying = [self.musicPlayer.nowPlayingCollection isEqual:self.playlistCollection] && self.musicPlayer.playbackState == LMMusicPlaybackStatePlaying;
+			
+			return [LMAppIcon invertImage:[LMAppIcon imageForIcon:isPlaying ? LMIconPause : LMIconPlay]];
+		}
+		case 1:{
+			return [LMAppIcon imageForIcon:LMIconRepeat];
+		}
+		case 2:{
+			return [LMAppIcon imageForIcon:LMIconShuffle];
+		}
+	}
+	return [LMAppIcon imageForIcon:LMIconBug];
 }
 
-- (BOOL)buttonHighlightedWithIndex:(uint8_t)index wasJustTapped:(BOOL)wasJustTapped forControlBar:(LMControlBarView *)controlBar {
-	return NO;
+- (BOOL)buttonHighlightedWithIndex:(uint8_t)index wasJustTapped:(BOOL)wasJustTapped forControlBar:(LMControlBarView *)controlBar {	
+	BOOL isPlayingMusic = (self.musicPlayer.playbackState == LMMusicPlaybackStatePlaying);
+	
+	switch(index) {
+		case 0:{ //Play button
+			LMMusicTrackCollection *trackCollection = self.playlistCollection;
+			if(wasJustTapped){
+				if(trackCollection.count > 0){
+					if(self.musicPlayer.nowPlayingCollection != trackCollection){
+						self.musicPlayer.autoPlay = YES;
+						isPlayingMusic = YES;
+						[self.musicPlayer setNowPlayingCollection:trackCollection];
+					}
+					else{
+						isPlayingMusic ? [self.musicPlayer pause] : [self.musicPlayer play];
+						isPlayingMusic = !isPlayingMusic;
+					}
+				}
+				return isPlayingMusic;
+			}
+			else{
+				return [self.musicPlayer.nowPlayingCollection isEqual:trackCollection] && isPlayingMusic;
+			}
+		}
+		case 1: //Repeat button
+			if(wasJustTapped){
+				(self.musicPlayer.repeatMode == LMMusicRepeatModeAll) ? (self.musicPlayer.repeatMode = LMMusicRepeatModeNone) : (self.musicPlayer.repeatMode = LMMusicRepeatModeAll);
+			}
+			return (self.musicPlayer.repeatMode == LMMusicRepeatModeAll);
+		case 2: //Shuffle button
+			if(wasJustTapped){
+				self.musicPlayer.shuffleMode = !self.musicPlayer.shuffleMode;
+			}
+			return (self.musicPlayer.shuffleMode == LMMusicShuffleModeOn);
+	}
+	return YES;
 }
 
 - (uint8_t)amountOfButtonsForControlBarView:(LMControlBarView *)controlBar {
@@ -62,14 +114,20 @@
 }
 
 - (float)contentSubviewHeightFactorialForBigListEntry:(LMBigListEntry*)bigListEntry {
-	return 0.3;
+	return 0.25;
 }
 
 - (void)sizeChangedToLargeSize:(BOOL)largeSize withHeight:(float)newHeight forBigListEntry:(LMBigListEntry*)bigListEntry {
-	
+	if(largeSize){
+		self.largeSize = newHeight;
+		NSLog(@"Set");
+	}
+	[self.tableView reloadSubviewSizes];
 }
 
 - (void)tappedListEntry:(LMListEntry*)entry {
+	NSLog(@"Yes");
+	
 //	LMMusicTrack *track = [self.albumCollection.items objectAtIndex:entry.collectionIndex];
 //	
 //	NSLog(@"Tapped list entry with artist %@", self.albumCollection.representativeItem.artist);
@@ -122,7 +180,7 @@
 
 - (float)heightAtIndex:(NSUInteger)index forTableView:(LMNewTableView*)tableView {
 	if(index == 0){
-		return [LMBigListEntry smallSizeForBigListEntryWithDelegate:self];
+		return [LMBigListEntry sizeForBigListEntryWhenOpened:self.headerBigListEntry.isLargeSize forDelegate:self];
 	}
 	return WINDOW_FRAME.size.height/8;
 }
@@ -148,18 +206,23 @@
 }
 
 - (void)setup {
+	self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
+	
 	self.headerBigListEntry = [LMBigListEntry newAutoLayoutView];
 	self.headerBigListEntry.infoDelegate = self;
 	self.headerBigListEntry.entryDelegate = self;
 	self.headerBigListEntry.controlBarDelegate = self;
 	self.headerBigListEntry.collectionIndex = 0;
+	self.headerBigListEntry.isLargeSize = YES;
+	self.headerBigListEntry.userInteractionEnabled = YES;
 	[self.headerBigListEntry setup];
-	
+
 	self.tableView = [LMNewTableView newAutoLayoutView];
 	self.tableView.title = @"PlaylistDetailView";
 	self.tableView.averageCellHeight = WINDOW_FRAME.size.height*(1.0/10.0);
 	self.tableView.totalAmountOfObjects = self.playlistCollection.count + 1;
 	self.tableView.shouldUseDividers = YES;
+	self.tableView.dividerSectionsToIgnore = @[ @(0), @(1) ];
 	self.tableView.subviewDataSource = self;
 	[self addSubview:self.tableView];
 	

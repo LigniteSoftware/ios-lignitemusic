@@ -71,12 +71,13 @@
 @property NSUInteger collectionIndex;
 
 /**
- Gets the small/average size of the big list entry with a provided delegate. Warning: will pass nil to contentSubviewHeightFactorialForBigListEntry:.
+ Gets the size of a big list entry with an associated delegate for whether or not it is open.
 
+ @param opened Whether or not it is open.
  @param delegate The delegate associated.
- @return The height in px.
+ @return The size of the big list entry.
  */
-+ (float)smallSizeForBigListEntryWithDelegate:(id<LMBigListEntryDelegate>)delegate;
++ (float)sizeForBigListEntryWhenOpened:(BOOL)opened forDelegate:(id<LMBigListEntryDelegate>)delegate;
 
 /**
  Set the big list entry as large or not.

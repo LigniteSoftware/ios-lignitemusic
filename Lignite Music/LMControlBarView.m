@@ -46,6 +46,8 @@
 	
 	self.isOpen = (height != 0);
 	
+	NSLog(@"Setting to open %d %f", self.isOpen, height);
+	
 	self.triangleConstraint.constant = self.isOpen ? -2 : -50;
 	self.controlBarHeightConstraint.constant = height;
 	
@@ -81,7 +83,7 @@
 	[self invert:YES];
 }
 
-- (void)buttonHighlightStatusUpdate:(UIView*)viewChecking wasJustTapped:(BOOL)wasJustTapped {
+- (void)buttonHighlightStatusUpdate:(UIView*)viewChecking wasJustTapped:(BOOL)wasJustTapped {	
 	uint8_t viewCheckingIndex = 0;
 	for(int i = 0; i < self.controlButtonViews.count; i++){
 		UIView *view = [self.controlButtonViews objectAtIndex:i];
@@ -130,6 +132,8 @@
 
 - (void)setup {
 	self.userInteractionEnabled = YES;
+	
+//	self.backgroundColor = [UIColor blueColor];
 	
 	self.threeDotIconImageView = [UIImageView newAutoLayoutView];
 	self.threeDotIconImageView.image = [LMAppIcon invertImage:[LMAppIcon imageForIcon:LMIconTripleHorizontalDots]];
@@ -220,11 +224,7 @@
 	innerShadowView.cornerRadius = 8.0;
 	[self.backgroundView addSubview:innerShadowView];
 	
-	[innerShadowView autoCenterInSuperview];
-	[innerShadowView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-	[innerShadowView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-	[innerShadowView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-	[innerShadowView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+	[innerShadowView autoPinEdgesToSuperviewEdges];
 	
 	self.triangleView = [LMTriangleView newAutoLayoutView];
 	self.triangleView.userInteractionEnabled = YES;
