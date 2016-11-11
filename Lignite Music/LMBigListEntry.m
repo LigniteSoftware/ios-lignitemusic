@@ -65,9 +65,11 @@
 	large ? [self.controlBarView open:animated] : [self.controlBarView close:animated];
 }
 
-- (void)reloadData {
-	[self.collectionInfoView reloadData];
-	[self.entryDelegate contentSubviewForBigListEntry:self];
+- (void)reloadData:(BOOL)fullReload {
+	if(fullReload) {
+		[self.collectionInfoView reloadData];
+		[self.entryDelegate contentSubviewForBigListEntry:self];
+	}
 	[self.controlBarView reloadHighlightedButtons];
 }
 

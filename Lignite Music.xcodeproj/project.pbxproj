@@ -48,6 +48,7 @@
 		6A7DF1241DB12C860077B979 /* LMTitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A7DF1231DB12C860077B979 /* LMTitleView.m */; };
 		6A8CF2B91DB4952A00777525 /* LMSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A8CF2B81DB4952A00777525 /* LMSettings.m */; };
 		6A92F81C1DD3C1A9002045C2 /* LMPlaylistView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A92F81B1DD3C1A9002045C2 /* LMPlaylistView.m */; };
+		6A92F8201DD5A17B002045C2 /* LMPlaylistDetailView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A92F81F1DD5A17B002045C2 /* LMPlaylistDetailView.m */; };
 		6A9C053B1DB4441200713D1C /* icon_albums.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A9C05371DB4441200713D1C /* icon_albums.png */; };
 		6A9C053C1DB4441200713D1C /* icon_compilations.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A9C05381DB4441200713D1C /* icon_compilations.png */; };
 		6A9C053D1DB4441200713D1C /* icon_genres.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A9C05391DB4441200713D1C /* icon_genres.png */; };
@@ -175,6 +176,8 @@
 		6A8CF2B81DB4952A00777525 /* LMSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMSettings.m; sourceTree = "<group>"; };
 		6A92F81A1DD3C1A9002045C2 /* LMPlaylistView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMPlaylistView.h; sourceTree = "<group>"; };
 		6A92F81B1DD3C1A9002045C2 /* LMPlaylistView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMPlaylistView.m; sourceTree = "<group>"; };
+		6A92F81E1DD5A17B002045C2 /* LMPlaylistDetailView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMPlaylistDetailView.h; sourceTree = "<group>"; };
+		6A92F81F1DD5A17B002045C2 /* LMPlaylistDetailView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMPlaylistDetailView.m; sourceTree = "<group>"; };
 		6A9C05371DB4441200713D1C /* icon_albums.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_albums.png; sourceTree = "<group>"; };
 		6A9C05381DB4441200713D1C /* icon_compilations.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_compilations.png; sourceTree = "<group>"; };
 		6A9C05391DB4441200713D1C /* icon_genres.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_genres.png; sourceTree = "<group>"; };
@@ -484,6 +487,15 @@
 			name = Layovers;
 			sourceTree = "<group>";
 		};
+		6A92F81D1DD5A168002045C2 /* Detail */ = {
+			isa = PBXGroup;
+			children = (
+				6A92F81E1DD5A17B002045C2 /* LMPlaylistDetailView.h */,
+				6A92F81F1DD5A17B002045C2 /* LMPlaylistDetailView.m */,
+			);
+			name = Detail;
+			sourceTree = "<group>";
+		};
 		6AA4459D1D5AD676004C6739 /* SettingsControls */ = {
 			isa = PBXGroup;
 			children = (
@@ -544,6 +556,7 @@
 		6AC77A0C1DC4249800BABBB3 /* Playlist */ = {
 			isa = PBXGroup;
 			children = (
+				6A92F81D1DD5A168002045C2 /* Detail */,
 				6A92F81A1DD3C1A9002045C2 /* LMPlaylistView.h */,
 				6A92F81B1DD3C1A9002045C2 /* LMPlaylistView.m */,
 			);
@@ -862,6 +875,7 @@
 				6AD226F91DA49C720056695A /* LMProgressCircleView.m in Sources */,
 				6AA4459C1D5AB264004C6739 /* LMPebbleSettingsView.m in Sources */,
 				6AFD2EDD1BC41ECD0083FE9E /* LMAlbumViewItem.m in Sources */,
+				6A92F8201DD5A17B002045C2 /* LMPlaylistDetailView.m in Sources */,
 				6A514E121CE904F100AFB351 /* LMNowPlayingViewController.m in Sources */,
 				6AC77A091DC3B04B00BABBB3 /* LMBigListEntryTableView.m in Sources */,
 				6AD227031DA5990B0056695A /* LMMusicPlayer.m in Sources */,

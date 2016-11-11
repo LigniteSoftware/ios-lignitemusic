@@ -60,6 +60,12 @@
 
 @property NSInteger index;
 
+/**
+ Get the height of the control bar for whether or not its open.
+
+ @param isOpened Whether or not the control bar is open for the height.
+ @return The height of whether or not opened.
+ */
 + (float)heightWhenIsOpened:(BOOL)isOpened;
 
 /**

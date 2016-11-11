@@ -55,6 +55,13 @@
 	return nil;
 }
 
+- (void)reloadControlBars {
+	for(int i = 0; i < self.bigListEntriesArray.count; i++){
+		LMBigListEntry *bigListEntry = [self.bigListEntriesArray objectAtIndex:i];
+		[bigListEntry reloadData:NO];
+	}
+}
+
 - (id)subviewAtIndex:(NSUInteger)index forTableView:(LMNewTableView*)tableView {
 	LMBigListEntry *bigListEntry = [self.bigListEntriesArray objectAtIndex:index % self.bigListEntriesArray.count];
 	bigListEntry.collectionIndex = index;
@@ -66,7 +73,7 @@
 		//[bigListEntry close:NO];
 		[bigListEntry setLarge:NO animated:NO];
 	}
-	[bigListEntry reloadData];
+	[bigListEntry reloadData:YES];
 	return bigListEntry;
 }
 

@@ -62,4 +62,9 @@
  */
 - (void)setup;
 
+/**
+ Reload the control bars which are associated with the big list entries of this view.
+ */
+- (void)reloadControlBars;
+
 @end

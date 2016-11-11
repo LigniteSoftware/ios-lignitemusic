@@ -27,6 +27,11 @@
 
 @property NSMutableArray *controlButtonViews;
 
+/**
+ To prevent any collisions in animating button views and state changes.
+ */
+@property UIView *viewCurrentlyAnimating;
+
 @end
 
 @implementation LMControlBarView
@@ -87,13 +92,20 @@
 	}
 	
 	BOOL shouldHighlight = [self.delegate buttonHighlightedWithIndex:viewCheckingIndex wasJustTapped:wasJustTapped forControlBar:self];
-	if(wasJustTapped){
+	if(self.viewCurrentlyAnimating != viewChecking){
 		[UIView animateWithDuration:0.3 animations:^{
+			self.viewCurrentlyAnimating = viewChecking;
 			viewChecking.backgroundColor = shouldHighlight ? [UIColor whiteColor] : [LMColour lightGrayBackgroundColour];
+		} completion:^(BOOL finished) {
+			if(finished){
+				self.viewCurrentlyAnimating = nil;
+			}
 		}];
 	}
-	else{
-		viewChecking.backgroundColor = shouldHighlight ? [UIColor whiteColor] : [LMColour lightGrayBackgroundColour];
+	
+	if(viewChecking.subviews.count > 0){
+		UIImageView *iconView = [viewChecking.subviews objectAtIndex:0];
+		iconView.image = [self.delegate imageWithIndex:viewCheckingIndex forControlBarView:self];
 	}
 }
 
@@ -107,12 +119,6 @@
 - (void)tappedButtonBackgroundView:(UITapGestureRecognizer*)gestureRecognizer {
 	[self buttonHighlightStatusUpdate:gestureRecognizer.view wasJustTapped:YES];
 }
-
-//- (void)layoutSubviews {
-//	[super layoutSubviews];
-//	
-//	[self.delegate sizeChangedTo:self.rootView.frame.size forControlBarView:self];
-//}
 
 - (instancetype)init {
 	self = [super init];

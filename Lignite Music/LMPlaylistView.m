@@ -13,7 +13,7 @@
 #import "LMTiledAlbumCoverView.h"
 #import "LMAppIcon.h"
 
-@interface LMPlaylistView()<LMBigListEntryTableViewDelegate>
+@interface LMPlaylistView()<LMBigListEntryTableViewDelegate, LMMusicPlayerDelegate>
 
 @property LMBigListEntryTableView *bigListEntryTableView;
 @property NSArray<LMMusicTrackCollection*> *playlistCollections;
@@ -23,6 +23,18 @@
 @end
 
 @implementation LMPlaylistView
+
+- (void)musicTrackDidChange:(LMMusicTrack*)newTrack {
+	[self.bigListEntryTableView reloadControlBars];
+}
+
+- (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState {
+	[self.bigListEntryTableView reloadControlBars];
+}
+
+- (void)musicLibraryDidChange {
+	NSLog(@"Music library changed");
+}
 
 - (NSString*)titleForBigListEntry:(LMBigListEntry*)bigListEntry {
 	LMMusicTrackCollection *collection = [self.playlistCollections objectAtIndex:bigListEntry.collectionIndex];
@@ -45,31 +57,46 @@
 }
 
 - (UIImage*)imageWithIndex:(uint8_t)index forBigListEntry:(LMBigListEntry*)bigListEntry {
+	LMMusicTrackCollection *trackCollection = [self.playlistCollections objectAtIndex:bigListEntry.collectionIndex];
+	
 	switch(index){
-		case 0:
-			return [LMAppIcon invertImage:[LMAppIcon imageForIcon:LMIconPlay]];
-		case 1:
+		case 0:{
+			BOOL isPlaying = [self.musicPlayer.nowPlayingCollection isEqual:trackCollection] && self.musicPlayer.playbackState == LMMusicPlaybackStatePlaying;
+			
+			return [LMAppIcon invertImage:[LMAppIcon imageForIcon:isPlaying ? LMIconPause : LMIconPlay]];
+		}
+		case 1:{
 			return [LMAppIcon imageForIcon:LMIconRepeat];
-		case 2:
+		}
+		case 2:{
 			return [LMAppIcon imageForIcon:LMIconShuffle];
+		}
 	}
 	return [LMAppIcon imageForIcon:LMIconBug];
 }
 
 - (BOOL)buttonHighlightedWithIndex:(uint8_t)index wasJustTapped:(BOOL)wasJustTapped forBigListEntry:(LMBigListEntry*)bigListEntry {
+	BOOL isPlayingMusic = (self.musicPlayer.playbackState == LMMusicPlaybackStatePlaying);
+	
 	switch(index) {
 		case 0:{ //Play button
 			LMMusicTrackCollection *trackCollection = [self.playlistCollections objectAtIndex:bigListEntry.collectionIndex];
 			if(wasJustTapped){
 				if(trackCollection.count > 0){
-					[self.musicPlayer setNowPlayingCollection:trackCollection];
-					[self.musicPlayer play];
-					return YES;
+					if(self.musicPlayer.nowPlayingCollection != trackCollection){
+						self.musicPlayer.autoPlay = YES;
+						isPlayingMusic = YES;
+						[self.musicPlayer setNowPlayingCollection:trackCollection];
+					}
+					else{
+						isPlayingMusic ? [self.musicPlayer pause] : [self.musicPlayer play];
+						isPlayingMusic = !isPlayingMusic;
+					}
 				}
-				return NO;
+				return isPlayingMusic;
 			}
 			else{
-				return [self.musicPlayer.nowPlayingCollection isEqual:trackCollection];
+				return [self.musicPlayer.nowPlayingCollection isEqual:trackCollection] && isPlayingMusic;
 			}
 		}
 		case 1: //Repeat button
@@ -120,6 +147,8 @@
 	[self.bigListEntryTableView autoPinEdgesToSuperviewEdges];
 	
 	[self.bigListEntryTableView setup];
+	
+	[self.musicPlayer addMusicDelegate:self];
 }
 
 @end
