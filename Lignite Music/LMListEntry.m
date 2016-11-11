@@ -13,8 +13,6 @@
 
 @interface LMListEntry()
 
-@property id delegate;
-
 @property UIView *contentView;
 
 @property UIView *iconBackgroundView;

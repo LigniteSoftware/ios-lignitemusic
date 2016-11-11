@@ -66,4 +66,9 @@
  */
 @property BOOL iPromiseIWillHaveAnIconForYouSoon;
 
+/**
+ The delegate for the list entry.
+ */
+@property id<LMListEntryDelegate> delegate;
+
 @end

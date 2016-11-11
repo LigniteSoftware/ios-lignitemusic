@@ -7,7 +7,18 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LMMusicPlayer.h"
 
 @interface LMPlaylistDetailView : UIView
+
+/**
+ The playlist associated with this LMPlaylistDetailView.
+ */
+@property LMMusicTrackCollection *playlistCollection;
+
+/**
+ Setup this view.
+ */
+- (void)setup;
 
 @end

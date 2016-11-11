@@ -162,6 +162,12 @@
 	return [self.delegate centerImageForBigListEntry:[self bigListEntryForCollectionInfoView:infoView]];
 }
 
+- (void)contentViewTappedForBigListEntry:(LMBigListEntry *)bigListEntry {
+	if([self.delegate respondsToSelector:@selector(contentViewTappedForBigListEntry:)]){
+		[self.delegate contentViewTappedForBigListEntry:bigListEntry];
+	}
+}
+
 - (void)amountOfObjectsRequiredChangedTo:(NSUInteger)amountOfObjects forTableView:(LMNewTableView*)tableView {
 	NSLog(@"I need %lu objects to survive!", (unsigned long)amountOfObjects);
 	

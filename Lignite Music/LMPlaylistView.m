@@ -12,6 +12,7 @@
 #import "LMMusicPlayer.h"
 #import "LMTiledAlbumCoverView.h"
 #import "LMAppIcon.h"
+#import "LMPlaylistDetailView.h"
 
 @interface LMPlaylistView()<LMBigListEntryTableViewDelegate, LMMusicPlayerDelegate>
 
@@ -73,6 +74,18 @@
 		}
 	}
 	return [LMAppIcon imageForIcon:LMIconBug];
+}
+
+- (void)contentViewTappedForBigListEntry:(LMBigListEntry *)bigListEntry {
+	NSLog(@"Tapped %ld", bigListEntry.collectionIndex);
+	
+	LMPlaylistDetailView *playlistDetailView = [LMPlaylistDetailView newAutoLayoutView];
+	playlistDetailView.playlistCollection = [self.playlistCollections objectAtIndex:bigListEntry.collectionIndex];
+	[self addSubview:playlistDetailView];
+	
+	[playlistDetailView autoPinEdgesToSuperviewEdges];
+	
+	[playlistDetailView setup];
 }
 
 - (BOOL)buttonHighlightedWithIndex:(uint8_t)index wasJustTapped:(BOOL)wasJustTapped forBigListEntry:(LMBigListEntry*)bigListEntry {

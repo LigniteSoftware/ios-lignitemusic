@@ -39,6 +39,26 @@
  */
 - (void)sizeChangedToLargeSize:(BOOL)largeSize withHeight:(float)newHeight forBigListEntry:(LMBigListEntry*)bigListEntry;
 
+@optional
+
+/**
+ A content view was tapped on this big list entry.
+
+ @param bigListEntry The big list entry which was tapped.
+ */
+- (void)contentViewTappedForBigListEntry:(LMBigListEntry*)bigListEntry;
+
+/*
+ * Quick Copy Paste
+ *
+ 
+ - (id)contentSubviewForBigListEntry:(LMBigListEntry*)bigListEntry;
+ - (float)contentSubviewHeightFactorialForBigListEntry:(LMBigListEntry*)bigListEntry;
+ - (void)sizeChangedToLargeSize:(BOOL)largeSize withHeight:(float)newHeight forBigListEntry:(LMBigListEntry*)bigListEntry;
+ 
+ - (void)contentViewTappedForBigListEntry:(LMBigListEntry*)bigListEntry;
+ */
+
 @end
 
 @interface LMBigListEntry : UIView

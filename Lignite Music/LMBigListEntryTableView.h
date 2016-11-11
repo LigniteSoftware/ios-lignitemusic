@@ -43,6 +43,13 @@
  */
 - (void)prepareContentSubview:(id)subview forBigListEntry:(LMBigListEntry *)bigListEntry;
 
+@optional
+
+/**
+ See LMBigListEntryDelegate for more info on this optional delegate function.
+ */
+- (void)contentViewTappedForBigListEntry:(LMBigListEntry *)bigListEntry;
+
 @end
 
 @interface LMBigListEntryTableView : UIView

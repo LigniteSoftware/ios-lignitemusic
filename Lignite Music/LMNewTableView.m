@@ -6,6 +6,7 @@
 //  Copyright © 2016 Lignite. All rights reserved.
 //
 
+#import <PureLayout/PureLayout.h>
 #import "LMNewTableView.h"
 #import "LMTableViewCell.h"
 #import "LMExtras.h"
@@ -40,9 +41,7 @@
 		
 		self.totalAmountOfObjects = 0;
 		self.requiredAmountOfObjects = 0;
-		
-		self.dividerColour = [UIColor blackColor];
-		
+				
 		self.title = @"UnnamedLMTableView";
 	}
 	return self;
@@ -70,7 +69,6 @@
 	[self.subviewDataSource amountOfObjectsRequiredChangedTo:self.requiredAmountOfObjects forTableView:self];
 }
 
-BOOL shitpost = NO;
 - (void)reloadSubviewSizes {
 	if(!self.hasRegisteredCellIdentifiers) {
 		NSLog(@"[LMTableView \"%@\"]: This LMTableView does not have its cell identifiers registered yet! Rejecting resize.", self.title);
@@ -78,17 +76,30 @@ BOOL shitpost = NO;
 	}
 
 //	[UIView animateWithDuration:0.3 animations:^{
-		[self beginUpdates];
-		[self endUpdates];
-//	} completion:^(BOOL finished) {
-//		shitpost = NO;
+	
+	[self beginUpdates];
+	[self endUpdates];
+	
 //	}];
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
 	LMTableViewCell *lmCell = (LMTableViewCell*)cell;
 	
-	lmCell.subview = [self.subviewDataSource subviewAtIndex:indexPath.section forTableView:self];
+	id newSubview = [self.subviewDataSource subviewAtIndex:indexPath.section forTableView:self];
+	
+	for(int i = 0; i < lmCell.contentView.subviews.count; i++){
+		id subview = [lmCell.contentView.subviews objectAtIndex:i];
+		if(([[[subview class] description] isEqualToString:@"LMBigListEntry"] && [[[newSubview class] description] isEqualToString:@"LMListEntry"]) || ([[[subview class] description] isEqualToString:@"LMListEntry"] && [[[newSubview class] description] isEqualToString:@"LMBigListEntry"])){ //If there's a big list entry on top and we're replacing it with a list entry or vice versa, remove the old view from the superview and attach the new one
+			[subview removeFromSuperview];
+			
+			[lmCell.contentView addSubview:newSubview];
+			
+			[newSubview autoPinEdgesToSuperviewEdges];
+		}
+	}
+	
+	lmCell.subview = newSubview;
 	lmCell.index = (int)indexPath.section;
 	
 	if(!lmCell.didSetupConstraints){

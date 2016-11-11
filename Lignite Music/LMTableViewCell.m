@@ -18,20 +18,35 @@
 
 @implementation LMTableViewCell
 
+//      Too laggy
+//
+//@synthesize subview = _subview;
+//
+//- (id)subview {
+//	return _subview;
+//}
+//
+//- (void)setSubview:(id)subview {
+//	_subview = subview;
+//	
+//	UIView *cellSubview = self.subview;
+//	
+//	[self.contentView addSubview:cellSubview];
+//	
+//	//		self.contentView.backgroundColor = [UIColor redColor];
+//	
+//	[NSLayoutConstraint autoSetPriority:UILayoutPriorityRequired forConstraints:^{
+//		[cellSubview autoSetContentCompressionResistancePriorityForAxis:ALAxisVertical];
+//	}];
+//	
+//	[cellSubview autoPinEdgesToSuperviewEdges];
+//}
+
 - (void)updateConstraints {
 	if (!self.didSetupConstraints && self.subview) {
 		self.didSetupConstraints = YES;
 		
-//		UILabel *label = [UILabel newAutoLayoutView];
-//		label.backgroundColor = [UIColor blueColor];
-//		label.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:100 + (int)(rand() % 100)];
-//		label.text = @"Hey there!";
-//		
-//		UIView *cellSubview = label;
 		//http://stackoverflow.com/questions/39104846/uitableviewcell-animate-height-issue-in-ios-10
-		
-//		self.contentView.backgroundColor = [UIColor colorWithRed:0 green:0.5 blue:0 alpha:0.25];
-		
 		UIView *heightGuide = [[UIView alloc] init];
 		heightGuide.translatesAutoresizingMaskIntoConstraints = NO;
 		[self.contentView addSubview:heightGuide];
@@ -53,7 +68,6 @@
 			[NSLayoutConstraint constraintWithItem:anotherView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeLeft multiplier:1.0f constant:0.0f];
 		})];
 		[self.contentView addConstraint:({
-			// This is our constraint that used to be attached to self.contentView
 			[NSLayoutConstraint constraintWithItem:anotherView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:heightGuide attribute:NSLayoutAttributeBottom multiplier:1.0f constant:0.0f];
 		})];
 		[self.contentView addConstraint:({

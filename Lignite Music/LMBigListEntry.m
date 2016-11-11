@@ -73,6 +73,12 @@
 	[self.controlBarView reloadHighlightedButtons];
 }
 
+- (void)tappedContentView:(UITapGestureRecognizer*)recognizer {
+	if([self.entryDelegate respondsToSelector:@selector(contentViewTappedForBigListEntry:)]){
+		[self.entryDelegate contentViewTappedForBigListEntry:self];
+	}
+}
+
 - (void)setup {
 	self.contentView = [self.entryDelegate contentSubviewForBigListEntry:self];
 
@@ -96,6 +102,10 @@
 	[contentView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 	[contentView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:0.8];
 	[contentView autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height*contentViewHeightFactorial];
+	
+	UITapGestureRecognizer *contentTapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tappedContentView:)];
+	[contentView addGestureRecognizer:contentTapGesture];
+	contentView.userInteractionEnabled = YES;
 	
 	self.collectionInfoView = [LMCollectionInfoView newAutoLayoutView];
 	self.collectionInfoView.delegate = self.infoDelegate;
