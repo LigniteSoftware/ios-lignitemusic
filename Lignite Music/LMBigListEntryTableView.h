@@ -34,6 +34,15 @@
 - (id)contentSubviewForBigListEntry:(LMBigListEntry*)bigListEntry;
 - (float)contentSubviewHeightFactorialForBigListEntry:(LMBigListEntry*)bigListEntry;
 
+
+/**
+ Asks the delegate to prepare a content subview for an associated big list entry.
+
+ @param subview The subview which needs to be prepared.
+ @param bigListEntry The big list entry which needs the content view prepared.
+ */
+- (void)prepareContentSubview:(id)subview forBigListEntry:(LMBigListEntry *)bigListEntry;
+
 @end
 
 @interface LMBigListEntryTableView : UIView

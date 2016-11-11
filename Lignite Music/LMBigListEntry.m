@@ -62,6 +62,7 @@
 
 - (void)reloadData {
 	[self.collectionInfoView reloadData];
+	[self.entryDelegate contentSubviewForBigListEntry:self];
 }
 
 - (void)setup {

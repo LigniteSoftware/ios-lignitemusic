@@ -47,32 +47,32 @@
 		
 	[self.queue cancelAllOperations];
 	
-		NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
-			@autoreleasepool {
+	NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
+		@autoreleasepool {
+			
+			MPMediaItemArtwork *artwork = [track.sourceTrack artwork];
+			
+			//NSLog(@"Artwork %@", artwork);
+			__weak UIImage *image = [artwork imageWithSize:artwork.bounds.size];
+			
+			dispatch_sync(dispatch_get_main_queue(), ^{
+				if(operation.cancelled){
+					NSLog(@"Rejecting.");
+					return;
+				}
+				self.albumImageView.image = image;
 				
-				MPMediaItemArtwork *artwork = [track.sourceTrack artwork];
+				self.albumTitleView.text = track.albumTitle ? track.albumTitle : NSLocalizedString(@"UnknownAlbum", nil);
+				self.albumArtistView.text = [NSString stringWithFormat:@"%@ | %ld %@", track.artist, (long)numberOfItems, NSLocalizedString(numberOfItems == 1 ? @"Song" : @"Songs", nil)];
+				//self.albumCountView.text = [NSString stringWithFormat:@"%lu", (unsigned long)numberOfItems];
 				
-				//NSLog(@"Artwork %@", artwork);
-				__weak UIImage *image = [artwork imageWithSize:artwork.bounds.size];
-				
-				dispatch_sync(dispatch_get_main_queue(), ^{
-					if(operation.cancelled){
-						NSLog(@"Rejecting.");
-						return;
-					}
-					self.albumImageView.image = image;
-					
-					self.albumTitleView.text = track.albumTitle ? track.albumTitle : NSLocalizedString(@"UnknownAlbum", nil);
-					self.albumArtistView.text = [NSString stringWithFormat:@"%@ | %ld %@", track.artist, (long)numberOfItems, NSLocalizedString(numberOfItems == 1 ? @"Song" : @"Songs", nil)];
-					//self.albumCountView.text = [NSString stringWithFormat:@"%lu", (unsigned long)numberOfItems];
-					
-					self.track = track;
-				});
-				
-			}
-		}];
+				self.track = track;
+			});
+			
+		}
+	}];
 
-		[self.queue addOperation:operation];
+	[self.queue addOperation:operation];
 	
 	//[self.shadingBackgroundView updateConstraints];
 }

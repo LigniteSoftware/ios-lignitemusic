@@ -26,7 +26,7 @@
 
 - (NSString*)titleForBigListEntry:(LMBigListEntry*)bigListEntry {
 	LMMusicTrackCollection *collection = [self.playlistCollections objectAtIndex:bigListEntry.collectionIndex];
-	NSLog(@"Collection index %ld", bigListEntry.collectionIndex);
+//	NSLog(@"Collection index %ld", bigListEntry.collectionIndex);
 	return collection.title;
 }
 
@@ -62,6 +62,11 @@
 
 - (uint8_t)amountOfButtonsForBigListEntry:(LMBigListEntry*)bigListEntry {
 	return 3;
+}
+
+- (void)prepareContentSubview:(id)subview forBigListEntry:(LMBigListEntry *)bigListEntry {
+	LMTiledAlbumCoverView *tiledAlbumCover = subview;
+	tiledAlbumCover.musicCollection = [self.playlistCollections objectAtIndex:bigListEntry.collectionIndex];
 }
 
 - (id)contentSubviewForBigListEntry:(LMBigListEntry*)bigListEntry {

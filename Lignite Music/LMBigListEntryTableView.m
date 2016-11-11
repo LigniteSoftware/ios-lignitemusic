@@ -16,6 +16,7 @@
 @property LMNewTableView *tableView;
 
 @property NSMutableArray *bigListEntriesArray;
+@property NSMutableArray *contentViewsArray;
 
 @property NSInteger currentlyOpenedIndex;
 
@@ -83,7 +84,11 @@
 }
 
 - (id)contentSubviewForBigListEntry:(LMBigListEntry*)bigListEntry {
-	return [self.delegate contentSubviewForBigListEntry:bigListEntry];
+	id contentSubview = [self.contentViewsArray objectAtIndex:bigListEntry.collectionIndex % self.bigListEntriesArray.count];
+	
+	[self.delegate prepareContentSubview:contentSubview forBigListEntry:bigListEntry];
+	
+	return contentSubview;
 }
 
 - (float)contentSubviewHeightFactorialForBigListEntry:(LMBigListEntry*)bigListEntry {
@@ -162,6 +167,7 @@
 	}
 	
 	self.bigListEntriesArray = [NSMutableArray new];
+	self.contentViewsArray = [NSMutableArray new];
 	
 	for(int i = 0; i < amountOfObjects; i++){
 		LMBigListEntry *newBigListEntry = [LMBigListEntry newAutoLayoutView];
@@ -171,6 +177,7 @@
 		newBigListEntry.collectionIndex = i;
 		
 		[self.bigListEntriesArray addObject:newBigListEntry];
+		[self.contentViewsArray addObject:[self.delegate contentSubviewForBigListEntry:newBigListEntry]];
 		
 		[newBigListEntry setup];
 	}
