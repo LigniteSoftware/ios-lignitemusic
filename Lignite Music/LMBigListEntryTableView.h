@@ -25,7 +25,7 @@
  See LMControlBarViewDelegate for more info on these delegate functions.
  */
 - (UIImage*)imageWithIndex:(uint8_t)index forBigListEntry:(LMBigListEntry*)bigListEntry;
-- (BOOL)buttonTappedWithIndex:(uint8_t)index forBigListEntry:(LMBigListEntry*)bigListEntry;
+- (BOOL)buttonHighlightedWithIndex:(uint8_t)index wasJustTapped:(BOOL)wasJustTapped forBigListEntry:(LMBigListEntry*)bigListEntry;
 - (uint8_t)amountOfButtonsForBigListEntry:(LMBigListEntry*)bigListEntry;
 
 /**

@@ -56,7 +56,33 @@
 	return [LMAppIcon imageForIcon:LMIconBug];
 }
 
-- (BOOL)buttonTappedWithIndex:(uint8_t)index forBigListEntry:(LMBigListEntry*)bigListEntry {
+- (BOOL)buttonHighlightedWithIndex:(uint8_t)index wasJustTapped:(BOOL)wasJustTapped forBigListEntry:(LMBigListEntry*)bigListEntry {
+	switch(index) {
+		case 0:{ //Play button
+			LMMusicTrackCollection *trackCollection = [self.playlistCollections objectAtIndex:bigListEntry.collectionIndex];
+			if(wasJustTapped){
+				if(trackCollection.count > 0){
+					[self.musicPlayer setNowPlayingCollection:trackCollection];
+					[self.musicPlayer play];
+					return YES;
+				}
+				return NO;
+			}
+			else{
+				return [self.musicPlayer.nowPlayingCollection isEqual:trackCollection];
+			}
+		}
+		case 1: //Repeat button
+			if(wasJustTapped){
+				(self.musicPlayer.repeatMode == LMMusicRepeatModeAll) ? (self.musicPlayer.repeatMode = LMMusicRepeatModeNone) : (self.musicPlayer.repeatMode = LMMusicRepeatModeAll);
+			}
+			return (self.musicPlayer.repeatMode == LMMusicRepeatModeAll);
+		case 2: //Shuffle button
+			if(wasJustTapped){
+				self.musicPlayer.shuffleMode = !self.musicPlayer.shuffleMode;
+			}
+			return (self.musicPlayer.shuffleMode == LMMusicShuffleModeOn);
+	}
 	return YES;
 }
 

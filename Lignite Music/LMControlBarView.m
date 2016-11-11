@@ -76,21 +76,36 @@
 	[self invert:YES];
 }
 
-- (void)tappedButtonBackgroundView:(UITapGestureRecognizer*)gestureRecognizer {
-	UIView *viewTapped = gestureRecognizer.view;
-	uint8_t viewTappedIndex = 0;
+- (void)buttonHighlightStatusUpdate:(UIView*)viewChecking wasJustTapped:(BOOL)wasJustTapped {
+	uint8_t viewCheckingIndex = 0;
 	for(int i = 0; i < self.controlButtonViews.count; i++){
 		UIView *view = [self.controlButtonViews objectAtIndex:i];
-		if(view == viewTapped){
-			viewTappedIndex = i;
+		if(view == viewChecking){
+			viewCheckingIndex = i;
 			break;
 		}
 	}
 	
-	BOOL shouldHighlight = [self.delegate buttonTappedWithIndex:viewTappedIndex forControlBarView:self];
-	[UIView animateWithDuration:0.5 animations:^{
-		viewTapped.backgroundColor = shouldHighlight ? [UIColor whiteColor] : [LMColour lightGrayBackgroundColour];
-	}];
+	BOOL shouldHighlight = [self.delegate buttonHighlightedWithIndex:viewCheckingIndex wasJustTapped:wasJustTapped forControlBar:self];
+	if(wasJustTapped){
+		[UIView animateWithDuration:0.3 animations:^{
+			viewChecking.backgroundColor = shouldHighlight ? [UIColor whiteColor] : [LMColour lightGrayBackgroundColour];
+		}];
+	}
+	else{
+		viewChecking.backgroundColor = shouldHighlight ? [UIColor whiteColor] : [LMColour lightGrayBackgroundColour];
+	}
+}
+
+- (void)reloadHighlightedButtons {
+	for(int i = 0; i < self.controlButtonViews.count; i++){
+		UIView *controlButtonView = [self.controlButtonViews objectAtIndex:i];
+		[self buttonHighlightStatusUpdate:controlButtonView wasJustTapped:NO];
+	}
+}
+
+- (void)tappedButtonBackgroundView:(UITapGestureRecognizer*)gestureRecognizer {
+	[self buttonHighlightStatusUpdate:gestureRecognizer.view wasJustTapped:YES];
 }
 
 //- (void)layoutSubviews {
@@ -107,7 +122,7 @@
 	return self;
 }
 
-- (void)setup {	
+- (void)setup {
 	self.userInteractionEnabled = YES;
 	
 	self.threeDotIconImageView = [UIImageView newAutoLayoutView];

@@ -42,12 +42,9 @@
 	
 	self.shouldRegenerate = YES;
 	
-	NSLog(@"%@ Frame is %@", (id)self, NSStringFromCGRect(self.frameToUse));
-	
 	if(self.frameToUse.size.width > 0){
 		self.shouldRegenerate = NO;
-		NSLog(@"Regenerating %d tiles.", (int)self.tilesArray.count);
-
+		
 		for(int i = 0; i < self.tilesArray.count; i++){
 			UIView *tile = [self.tilesArray objectAtIndex:i];
 			[tile.constraints autoRemoveConstraints];
@@ -62,8 +59,6 @@
 
 		[self regenerate];
 	}
-	
-	NSLog(@"Music collection set.");
 }
 
 - (LMMusicTrack*)musicTrackForPersistentIdString:(NSString*)persistentId {
@@ -239,7 +234,7 @@
 			amountOfTiles = 4;
 		}
 		
-		NSLog(@"%f tiles", amountOfTiles);
+//		NSLog(@"%f tiles", amountOfTiles);
 		
 		self.amountOfAlbumsShowing = amountOfTiles;
 		
@@ -273,7 +268,7 @@
 		
 //		NSLog(@"Smaller %f larger %f difference %f maintainSquare %d", smallerDimension, largerDimension, differencePercentage, maintainSquare);
 		
-		NSLog(@"\nLMTiledAlbumCover Generation\nFrame: %@\nAmount of items in collection: %d\nAmount of tiles generated: %f\nArea total: %f\nArea per tile: %f\nTile size: %@\nAmount of tiles X, Y: %d, %d", NSStringFromCGRect(self.frame), (int)self.musicCollection.count, amountOfTiles, areaTotal, areaPerTile, NSStringFromCGSize(tileSize), amountOfTilesX, amountOfTilesY);
+//		NSLog(@"\nLMTiledAlbumCover Generation\nFrame: %@\nAmount of items in collection: %d\nAmount of tiles generated: %f\nArea total: %f\nArea per tile: %f\nTile size: %@\nAmount of tiles X, Y: %d, %d", NSStringFromCGRect(self.frame), (int)self.musicCollection.count, amountOfTiles, areaTotal, areaPerTile, NSStringFromCGSize(tileSize), amountOfTilesX, amountOfTilesY);
 		
 		self.rootView = [UIView newAutoLayoutView];
 		self.rootView.backgroundColor = [UIColor purpleColor];

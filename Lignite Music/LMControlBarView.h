@@ -33,10 +33,11 @@
  A button at a certain index was tapped on the control bar.
 
  @param index The index of the button which was tapped, relative to the control bar.
+ @param wasJustTapped Whether or not when this function was called is right after the button was tapped. If NO, the control bar is simply asking whether or not it should mark itself highlighted for UI purposes.
  @param controlBar The control bar which had its button tapped.
  @return Whether or not the button that was tapped should mark itself as highlighted.
  */
-- (BOOL)buttonTappedWithIndex:(uint8_t)index forControlBarView:(LMControlBarView*)controlBar;
+- (BOOL)buttonHighlightedWithIndex:(uint8_t)index wasJustTapped:(BOOL)wasJustTapped forControlBar:(LMControlBarView*)controlBar;
 
 @optional //Optional because delegates of delegates will not implement this function. The first layer should always implement so as to not run into errors.
 
@@ -86,6 +87,11 @@
  @param animated Whether or not to animate the change. NO should be entered if view is off-screen.
  */
 - (void)invert:(BOOL)animated;
+
+/**
+ Reload the highlighted buttons statuses.
+ */
+- (void)reloadHighlightedButtons;
 
 /**
  Setup the control bar view.

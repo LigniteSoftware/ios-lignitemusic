@@ -53,8 +53,8 @@
 	return [self.controlBarDelegate imageWithIndex:index forControlBarView:controlBar];
 }
 
-- (BOOL)buttonTappedWithIndex:(uint8_t)index forControlBarView:(LMControlBarView *)controlBar {
-	return [self.controlBarDelegate buttonTappedWithIndex:index forControlBarView:controlBar];
+- (BOOL)buttonHighlightedWithIndex:(uint8_t)index wasJustTapped:(BOOL)wasJustTapped forControlBar:(LMControlBarView *)controlBar {
+	return [self.controlBarDelegate buttonHighlightedWithIndex:index wasJustTapped:wasJustTapped forControlBar:controlBar];
 }
 
 - (void)invertControlView {
@@ -68,6 +68,7 @@
 - (void)reloadData {
 	[self.collectionInfoView reloadData];
 	[self.entryDelegate contentSubviewForBigListEntry:self];
+	[self.controlBarView reloadHighlightedButtons];
 }
 
 - (void)setup {

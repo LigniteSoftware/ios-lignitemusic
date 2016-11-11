@@ -104,8 +104,6 @@
 		for(int i = 0; i < self.bigListEntriesArray.count; i++){
 			LMBigListEntry *bigListIndexEntry = [self.bigListEntriesArray objectAtIndex:i];
 			if(bigListIndexEntry.collectionIndex == self.currentlyOpenedIndex){
-				//[bigListEntry close:YES];
-				NSLog(@"Setting %d to small", i);
 				[bigListIndexEntry setLarge:NO animated:YES];
 				break;
 			}
@@ -133,8 +131,8 @@
 	return [self.delegate imageWithIndex:index forBigListEntry:[self bigListEntryForControlBar:controlBar]];
 }
 
-- (BOOL)buttonTappedWithIndex:(uint8_t)index forControlBarView:(LMControlBarView *)controlBar {
-	return [self.delegate buttonTappedWithIndex:index forBigListEntry:[self bigListEntryForControlBar:controlBar]];;
+- (BOOL)buttonHighlightedWithIndex:(uint8_t)index wasJustTapped:(BOOL)wasJustTapped forControlBar:(LMControlBarView *)controlBar {
+	return [self.delegate buttonHighlightedWithIndex:index wasJustTapped:wasJustTapped forBigListEntry:[self bigListEntryForControlBar:controlBar]];
 }
 
 - (uint8_t)amountOfButtonsForControlBarView:(LMControlBarView *)controlBar {
