@@ -206,10 +206,9 @@
 	}
 }
 
-- (void)pinchedView {
-	[self.rootView dismissViewOnTop];
+- (void)swipedViewRight {
 	[self.musicPlayer removeMusicDelegate:self];
-	NSLog(@"Pinched");
+	[self.rootView dismissViewOnTop];
 }
 
 - (void)totalAmountOfSubviewsRequired:(NSUInteger)amount forTableView:(LMTableView *)tableView {
@@ -442,8 +441,9 @@
 	self.textBackgroundView.layer.shadowOffset = CGSizeMake(0, 10);
 	self.textBackgroundView.layer.masksToBounds = NO;
 	
-	UIPinchGestureRecognizer *pinchGesture = [[UIPinchGestureRecognizer alloc]initWithTarget:self action:@selector(pinchedView)];
-	[self addGestureRecognizer:pinchGesture];
+	UISwipeGestureRecognizer *swipeGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipedViewRight)];
+	swipeGesture.direction = UISwipeGestureRecognizerDirectionRight;
+	[self addGestureRecognizer:swipeGesture];
 	
 	[self.musicPlayer addMusicDelegate:self];
 	[self musicTrackDidChange:self.musicPlayer.nowPlayingTrack];

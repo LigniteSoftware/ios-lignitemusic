@@ -306,7 +306,6 @@
 				6A313C171BB59AE8002BBC33 /* LMButton.m */,
 				6A2A29C61DB1EAB6008E7792 /* LMCircleView.h */,
 				6A2A29C71DB1EAB6008E7792 /* LMCircleView.m */,
-				6A4BAEEF1DC9C572000DF537 /* BigListSubviews */,
 				6A1FB9CA1D9AE76A00890BF3 /* LMLabel.h */,
 				6A1FB9CB1D9AE76A00890BF3 /* LMLabel.m */,
 				6A6351901D9D71D300498582 /* LMListEntry.h */,
@@ -318,7 +317,6 @@
 				6A514E171CEA15D900AFB351 /* LMSlider.h */,
 				6A514E181CEA15D900AFB351 /* LMSlider.m */,
 				6A32A9F11DC69BB50056CC60 /* ShadowView */,
-				6A32A9F21DC69BC60056CC60 /* TableView */,
 				6A32A9E91DC68F150056CC60 /* TriangleView */,
 			);
 			name = OtherViews;
@@ -635,6 +633,7 @@
 		6AEB9CFA1BACF60E00AD19FA /* Lignite Music */ = {
 			isa = PBXGroup;
 			children = (
+				6A4BAEEF1DC9C572000DF537 /* BigListSubviews */,
 				6AFD2EDA1BC41EAC0083FE9E /* Browsing */,
 				6A1FB9C21D99C8B900890BF3 /* Core */,
 				6AEB9D2E1BAD679F00AD19FA /* Images */,
@@ -647,6 +646,7 @@
 				6AA4459D1D5AD676004C6739 /* SettingsControls */,
 				6A1FB9C31D99C8C900890BF3 /* Storyboards */,
 				6AAF610A1DA0195900971875 /* Strings */,
+				6A32A9F21DC69BC60056CC60 /* TableView */,
 				6ABF6A861CF37A19003E4EFA /* Utilities */,
 			);
 			path = "Lignite Music";

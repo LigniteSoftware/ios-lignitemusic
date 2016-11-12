@@ -195,15 +195,13 @@ BOOL didAutomaticallyClose = NO;
 	}
 }
 
-- (void)shitpost {
+- (void)showWhatsPoppin {
 	NSArray *currentBuildChanges = @[
-									 @"Added playlist browser",
-									 @"Fixed a crash on load",
-									 @"Swipe from left to right to exit detail views, top to bottom to exit now playing view"
+									 @"None"
 									 ];
 	
 	NSArray *currentBuildIssues = @[
-									@"Playlists are laggy",
+									@"None",
 									@"\nPlease do not report already known issues to us, thanks!"
 									];
 	
@@ -217,7 +215,7 @@ BOOL didAutomaticallyClose = NO;
 	}
 	
 	NSLog(@"Current app %@ last app %@", currentAppBuildString, lastAppBuildString);
-	if(![currentAppBuildString isEqualToString:lastAppBuildString] || true){
+	if(![currentAppBuildString isEqualToString:lastAppBuildString]){
 		NSLog(@"Spooked Super!");
 		
 		NSMutableString *changesString = [NSMutableString stringWithFormat:@"\nChanges\n---------\n"];
@@ -381,7 +379,7 @@ BOOL didAutomaticallyClose = NO;
 	self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 	[self.musicPlayer addMusicDelegate:self];
 	
-	[NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(shitpost) userInfo:nil repeats:NO];
+	[NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(showWhatsPoppin) userInfo:nil repeats:NO];
 	
 //	[NSTimer scheduledTimerWithTimeInterval:0.75
 //									 target:self

@@ -53,7 +53,7 @@
 
 - (void)dismissViewOnTop {
 	[self layoutIfNeeded];
-	self.topConstraint.constant = self.frame.size.height;
+	self.topConstraint.constant = self.frame.size.width;
 	[UIView animateWithDuration:0.5 delay:0.05
 		 usingSpringWithDamping:0.75 initialSpringVelocity:0.0f
 						options:0 animations:^{
@@ -149,10 +149,10 @@
 	detailView.translatesAutoresizingMaskIntoConstraints = NO;
 	[self addSubview:detailView];
 	
-	self.topConstraint = [detailView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self withOffset:self.frame.size.height];
-	[detailView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self];
-	[detailView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
-	[detailView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self];
+	[detailView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self];
+	[detailView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
+	self.topConstraint = [detailView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self withOffset:self.frame.size.width];
+	[detailView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
 	
 	[detailView setup];
 	

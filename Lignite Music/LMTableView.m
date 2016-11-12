@@ -112,7 +112,7 @@
 - (UIView*)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
 	CGRect frame = CGRectMake(0, 0, self.frame.size.width, [self tableView:self heightForHeaderInSection:section]);
 	UIView *view = [[UIView alloc] initWithFrame:frame];
-//	view.backgroundColor = [UIColor blueColor];
+	view.backgroundColor = [UIColor whiteColor];
 	
 	if([self.subviewDelegate dividerForTableView:self] && section != 0){
 		uint8_t dividerHeight = 1;
@@ -153,7 +153,7 @@
 		float delegateHeight = [self.subviewDelegate sizingFactorialRelativeToWindowForTableView:self height:YES];
 		
 		self.calculatedHeight = ceilf(delegateHeight*WINDOW_FRAME.size.height);
-		self.calculatedSpacing = ceilf(self.calculatedHeight*(delegateHeight/5.0));
+		self.calculatedSpacing = ceilf(self.calculatedHeight*(delegateHeight/2.0));
 		
 		self.loadedStatus = 1;
 	}

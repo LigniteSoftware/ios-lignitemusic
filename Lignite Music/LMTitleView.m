@@ -8,17 +8,18 @@
 
 #import <PureLayout/PureLayout.h>
 #import "LMTitleView.h"
-#import "LMTableView.h"
+#import "LMNewTableView.h"
 #import "LMListEntry.h"
 #import "LMColour.h"
 #import "LMOperationQueue.h"
 #import "LMMusicPlayer.h"
+#import "LMExtras.h"
 
-@interface LMTitleView() <LMListEntryDelegate, LMTableViewSubviewDelegate, LMMusicPlayerDelegate>
+@interface LMTitleView() <LMListEntryDelegate, LMTableViewSubviewDataSource, LMMusicPlayerDelegate>
 
 @property LMMusicPlayer *musicPlayer;
 
-@property LMTableView *songListTableView;
+@property LMNewTableView *songListTableView;
 @property NSMutableArray *itemArray;
 @property NSMutableArray *itemIconArray;
 
@@ -95,20 +96,19 @@
 	[musicTracks addObject:trackCollection];
 	
 	self.musicTitles = [[LMMusicTrackCollection alloc]initWithItems:musicCollection basedOnSourceCollection:mediaCollection];
-	self.songListTableView.amountOfItemsTotal = self.musicTitles.count;
+	self.songListTableView.totalAmountOfObjects = self.musicTitles.count;
 	[self reloadSourceSelectorInfo];
 }
 
 - (void)musicLibraryDidChange {
 	[self rebuildTrackCollection];
 	
-	[self.songListTableView regenerate:YES];
-	[self.songListTableView reloadData];
+	[self.songListTableView reloadSubviewData];
 	
 	[self musicTrackDidChange:self.musicPlayer.nowPlayingTrack];
 }
 
-- (id)prepareSubviewAtIndex:(NSUInteger)index {	
+- (id)subviewAtIndex:(NSUInteger)index forTableView:(LMNewTableView *)tableView {
 	LMListEntry *entry = [self.itemArray objectAtIndex:index % self.itemArray.count];
 	entry.collectionIndex = index;
 	entry.associatedData = [self.musicTitles.items objectAtIndex:index];
@@ -155,11 +155,11 @@
 	return entry;
 }
 
-- (void)totalAmountOfSubviewsRequired:(NSUInteger)amount forTableView:(LMTableView *)tableView {
+- (void)amountOfObjectsRequiredChangedTo:(NSUInteger)amountOfObjects forTableView:(LMNewTableView *)tableView {
 	if(!self.itemArray){
 		self.itemArray = [NSMutableArray new];
 		self.itemIconArray = [NSMutableArray new];
-		for(int i = 0; i < amount; i++){
+		for(int i = 0; i < amountOfObjects; i++){
 			LMListEntry *listEntry = [[LMListEntry alloc]initWithDelegate:self];
 			listEntry.collectionIndex = i;
 			listEntry.iPromiseIWillHaveAnIconForYouSoon = YES;
@@ -172,11 +172,8 @@
 	}
 }
 
-- (float)sizingFactorialRelativeToWindowForTableView:(LMTableView *)tableView height:(BOOL)height {
-	if(height){
-		return (1.0f/8.0f);
-	}
-	return 0.9;
+- (float)heightAtIndex:(NSUInteger)index forTableView:(LMNewTableView *)tableView {
+	return WINDOW_FRAME.size.height/8;
 }
 
 - (LMListEntry*)listEntryForIndex:(NSInteger)index {
@@ -207,12 +204,11 @@
 	return indexOfEntry;
 }
 
-- (float)topSpacingForTableView:(LMTableView *)tableView {
-	return (self.frame.size.height*0.1);
-}
-
-- (BOOL)dividerForTableView:(LMTableView *)tableView {
-	return YES;
+- (float)spacingAtIndex:(NSUInteger)index forTableView:(LMNewTableView *)tableView {
+	if(index == 0){
+		return (self.frame.size.height*0.1);
+	}
+	return 10; //TODO: Fix this
 }
 
 - (void)tappedListEntry:(LMListEntry*)entry{
@@ -274,17 +270,16 @@
 - (void)setup {
 	[self rebuildTrackCollection];
 	
-	self.songListTableView = [[LMTableView alloc]init];
-	self.songListTableView.translatesAutoresizingMaskIntoConstraints = NO;
-	self.songListTableView.amountOfItemsTotal = self.musicTitles.count;
-	self.songListTableView.subviewDelegate = self;
-	[self.songListTableView regenerate:NO];
+	self.songListTableView = [LMNewTableView newAutoLayoutView];
+	self.songListTableView.totalAmountOfObjects = self.musicTitles.count;
+	self.songListTableView.subviewDataSource = self;
+	self.songListTableView.shouldUseDividers = YES;
+	self.songListTableView.averageCellHeight = (WINDOW_FRAME.size.height/10);
 	[self addSubview:self.songListTableView];
 	
-	[self.songListTableView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self];
-	[self.songListTableView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
-	[self.songListTableView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
-	[self.songListTableView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self];
+	[self.songListTableView autoPinEdgesToSuperviewEdges];
+	
+	[self.songListTableView reloadSubviewData];
 	
 	[self.musicPlayer addMusicDelegate:self];
 	[self musicTrackDidChange:self.musicPlayer.nowPlayingTrack];
