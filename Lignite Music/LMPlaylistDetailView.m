@@ -17,7 +17,7 @@
 #import "LMNowPlayingView.h"
 #import "LMMusicPlayer.h"
 
-@interface LMPlaylistDetailView()<LMTableViewSubviewDataSource, LMBigListEntryDelegate, LMCollectionInfoViewDelegate, LMControlBarViewDelegate, LMListEntryDelegate>
+@interface LMPlaylistDetailView()<LMTableViewSubviewDataSource, LMBigListEntryDelegate, LMCollectionInfoViewDelegate, LMControlBarViewDelegate, LMListEntryDelegate, LMMusicPlayerDelegate>
 
 @property LMNewTableView *tableView;
 
@@ -28,9 +28,88 @@
 
 @property LMMusicPlayer *musicPlayer;
 
+@property NSInteger currentlyHighlighted;
+
 @end
 
 @implementation LMPlaylistDetailView
+
+- (LMListEntry*)listEntryForIndex:(NSInteger)index {
+	if(index == -1){
+		return nil;
+	}
+	
+	LMListEntry *entry = nil;
+	for(int i = 0; i < self.songEntries.count; i++){
+		LMListEntry *indexEntry = [self.songEntries objectAtIndex:i];
+		if(indexEntry.collectionIndex == index){
+			entry = indexEntry;
+			break;
+		}
+	}
+	return entry;
+}
+
+- (void)musicTrackDidChange:(LMMusicTrack*)newTrack {
+	LMListEntry *highlightedEntry = nil;
+	int newHighlightedIndex = -1;
+	for(int i = 0; i < self.playlistCollection.count; i++){
+		LMMusicTrack *track = [self.playlistCollection.items objectAtIndex:i];
+		LMListEntry *entry = [self listEntryForIndex:i];
+		LMMusicTrack *entryTrack = entry.associatedData;
+		
+		if(entryTrack.persistentID == newTrack.persistentID){
+			highlightedEntry = entry;
+		}
+		
+		if(track.persistentID == newTrack.persistentID){
+			newHighlightedIndex = i;
+		}
+	}
+	
+	NSLog(@"Currently highlighted %d %@ collection index %d", newHighlightedIndex, highlightedEntry, (int)highlightedEntry.collectionIndex);
+	
+	LMListEntry *previousHighlightedEntry = [self listEntryForIndex:self.currentlyHighlighted];
+	if(![previousHighlightedEntry isEqual:highlightedEntry] || highlightedEntry == nil){
+		[previousHighlightedEntry changeHighlightStatus:NO animated:YES];
+		BOOL updateNowPlayingStatus = self.currentlyHighlighted == -1;
+		self.currentlyHighlighted = newHighlightedIndex;
+		if(updateNowPlayingStatus){
+			[self musicPlaybackStateDidChange:self.musicPlayer.playbackState];
+		}
+	}
+	
+	if(highlightedEntry){
+		[highlightedEntry changeHighlightStatus:YES animated:YES];
+	}
+}
+
+- (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState {
+	NSLog(@"Playback state did change");
+	
+	if(self.currentlyHighlighted != -1){ //The music playing is this album.
+		switch(newState){
+			case LMMusicPlaybackStatePaused:
+			case LMMusicPlaybackStateStopped:
+			case LMMusicPlaybackStateInterrupted:
+			default:
+//				[self.playButton setImage:[LMAppIcon imageForIcon:LMIconPlay]];
+				break;
+			case LMMusicPlaybackStatePlaying:
+//				[self.playButton setImage:[LMAppIcon imageForIcon:LMIconPause]];
+				break;
+		}
+	}
+	else{ //Not playing.
+//		[self.playButton setImage:[LMAppIcon imageForIcon:LMIconPlay]];
+	}
+	
+	[self.headerBigListEntry reloadData:NO];
+}
+
+- (void)musicLibraryDidChange {
+	[self swipeRightClose];
+}
 
 - (UIImage*)imageWithIndex:(uint8_t)index forControlBarView:(LMControlBarView *)controlBar {
 	switch(index){
@@ -126,27 +205,25 @@
 }
 
 - (void)tappedListEntry:(LMListEntry*)entry {
-	NSLog(@"Yes");
+	LMMusicTrack *track = [self.playlistCollection.items objectAtIndex:entry.collectionIndex];
 	
-//	LMMusicTrack *track = [self.albumCollection.items objectAtIndex:entry.collectionIndex];
-//	
-//	NSLog(@"Tapped list entry with artist %@", self.albumCollection.representativeItem.artist);
-//	
-//	LMListEntry *previousHighlightedEntry = [self listEntryForIndex:self.currentlyHighlighted];
-//	if(previousHighlightedEntry){
-//		[previousHighlightedEntry changeHighlightStatus:NO animated:YES];
-//	}
-//	
-//	[entry changeHighlightStatus:YES animated:YES];
-//	self.currentlyHighlighted = entry.collectionIndex;
-//	
-//	if(self.musicPlayer.nowPlayingCollection != self.albumCollection){
-//		[self.musicPlayer stop];
-//		[self.musicPlayer setNowPlayingCollection:self.albumCollection];
-//	}
-//	self.musicPlayer.autoPlay = YES;
-//	
-//	[self.musicPlayer setNowPlayingTrack:track];
+	NSLog(@"Tapped list entry with artist %@", self.playlistCollection.representativeItem.artist);
+	
+	LMListEntry *previousHighlightedEntry = [self listEntryForIndex:self.currentlyHighlighted];
+	if(previousHighlightedEntry){
+		[previousHighlightedEntry changeHighlightStatus:NO animated:YES];
+	}
+	
+	[entry changeHighlightStatus:YES animated:YES];
+	self.currentlyHighlighted = entry.collectionIndex;
+	
+	if(self.musicPlayer.nowPlayingCollection != self.playlistCollection){
+		[self.musicPlayer stop];
+		[self.musicPlayer setNowPlayingCollection:self.playlistCollection];
+	}
+	self.musicPlayer.autoPlay = YES;
+	
+	[self.musicPlayer setNowPlayingTrack:track];
 }
 
 - (UIColor*)tapColourForListEntry:(LMListEntry*)entry {
@@ -172,8 +249,9 @@
 	if(index == 0){
 		return self.headerBigListEntry;
 	}
-	LMListEntry *listEntry = [self.songEntries objectAtIndex:index % self.songEntries.count];
+	LMListEntry *listEntry = [self.songEntries objectAtIndex:(index-1) % self.songEntries.count];
 	listEntry.collectionIndex = index-1; //To adjust for the big list entry at the top
+	listEntry.associatedData = [self.playlistCollection.items objectAtIndex:listEntry.collectionIndex];
 	[listEntry reloadContents];
 	return listEntry;
 }
@@ -195,14 +273,22 @@
 - (void)amountOfObjectsRequiredChangedTo:(NSUInteger)amountOfObjects forTableView:(LMNewTableView*)tableView {
 	self.songEntries = [NSMutableArray new];
 	
-	for(int i = 0; i < amountOfObjects; i++){
+	for(int i = 0; i < MIN(amountOfObjects, self.playlistCollection.count); i++){
 		LMListEntry *listEntry = [LMListEntry newAutoLayoutView];
 		listEntry.delegate = self;
 		listEntry.collectionIndex = i;
+		listEntry.associatedData = [self.playlistCollection.items objectAtIndex:i];
 		[listEntry setup];
 		
 		[self.songEntries addObject:listEntry];
 	}
+}
+
+- (void)swipeRightClose {
+	[self.musicPlayer removeMusicDelegate:self];
+	
+	[self removeFromSuperview];
+	self.hidden = YES;
 }
 
 - (void)setup {
@@ -229,6 +315,12 @@
 	[self.tableView autoPinEdgesToSuperviewEdges];
 	
 	[self.tableView reloadSubviewData];
+	
+	UISwipeGestureRecognizer *swipeRightGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeRightClose)];
+	swipeRightGesture.direction = UISwipeGestureRecognizerDirectionRight;
+	[self addGestureRecognizer:swipeRightGesture];
+	
+	[self.musicPlayer addMusicDelegate:self];
 }
 
 @end

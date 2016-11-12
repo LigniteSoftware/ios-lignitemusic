@@ -45,9 +45,7 @@
 	[self layoutIfNeeded];
 	
 	self.isOpen = (height != 0);
-	
-	NSLog(@"Setting to open %d %f", self.isOpen, height);
-	
+		
 	self.triangleConstraint.constant = self.isOpen ? -2 : -50;
 	self.controlBarHeightConstraint.constant = height;
 	

@@ -10,6 +10,7 @@
 #import "LMMusicPlayer.h"
 #import "LMTiledAlbumCoverView.h"
 #import "LMOperationQueue.h"
+#import "LMExtras.h"
 
 @interface LMTiledAlbumCoverView()
 
@@ -271,7 +272,11 @@
 //		NSLog(@"\nLMTiledAlbumCover Generation\nFrame: %@\nAmount of items in collection: %d\nAmount of tiles generated: %f\nArea total: %f\nArea per tile: %f\nTile size: %@\nAmount of tiles X, Y: %d, %d", NSStringFromCGRect(self.frame), (int)self.musicCollection.count, amountOfTiles, areaTotal, areaPerTile, NSStringFromCGSize(tileSize), amountOfTilesX, amountOfTilesY);
 		
 		self.rootView = [UIView newAutoLayoutView];
-		self.rootView.backgroundColor = [UIColor purpleColor];
+		self.rootView.backgroundColor = [UIColor blackColor];
+		self.rootView.layer.shadowColor = [UIColor blackColor].CGColor;
+		self.rootView.layer.shadowRadius = WINDOW_FRAME.size.width/99;
+		self.rootView.layer.shadowOffset = CGSizeMake(0, self.rootView.layer.shadowRadius/2);
+		self.rootView.layer.shadowOpacity = 0.5f;
 		[self addSubview:self.rootView];
 		
 		[self.rootView autoCenterInSuperview];
