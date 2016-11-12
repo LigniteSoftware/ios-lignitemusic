@@ -208,7 +208,7 @@
 
 - (void)swipedViewRight {
 	[self.musicPlayer removeMusicDelegate:self];
-	[self.rootView dismissViewOnTop];
+//	[self.rootView dismissViewOnTop];
 }
 
 - (void)totalAmountOfSubviewsRequired:(NSUInteger)amount forTableView:(LMTableView *)tableView {

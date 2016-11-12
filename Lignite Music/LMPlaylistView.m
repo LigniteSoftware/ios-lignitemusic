@@ -26,6 +26,7 @@
 - (void)setup {
 	self.browsingView = [LMBrowsingView newAutoLayoutView];
 	self.browsingView.musicTrackCollections = [[LMMusicPlayer sharedMusicPlayer] queryCollectionsForMusicType:LMMusicTypePlaylists];
+	self.browsingView.musicType = LMMusicTypePlaylists;
 	[self addSubview:self.browsingView];
 	
 	[self.browsingView autoPinEdgesToSuperviewEdges];

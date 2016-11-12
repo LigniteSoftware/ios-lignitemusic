@@ -151,25 +151,60 @@
 }
 
 - (NSString*)titleForInfoView:(LMCollectionInfoView*)infoView {
-	return self.musicTrackCollection.title;
+	switch(self.musicType){
+		case LMMusicTypePlaylists: {
+			return self.musicTrackCollection.title;
+		}
+		default:{
+			return nil;
+		}
+	}
 }
 
 - (NSString*)leftTextForInfoView:(LMCollectionInfoView*)infoView {
-	return [NSString stringWithFormat:@"%ld %@", self.musicTrackCollection.count, NSLocalizedString(self.musicTrackCollection.count == 1 ? @"Song" : @"Songs", nil)];
+	switch(self.musicType){
+		case LMMusicTypePlaylists: {
+			return [NSString stringWithFormat:@"%ld %@", self.musicTrackCollection.count, NSLocalizedString(self.musicTrackCollection.count == 1 ? @"Song" : @"Songs", nil)];
+		}
+		default: {
+			return nil;
+		}
+	}
 }
 
 - (NSString*)rightTextForInfoView:(LMCollectionInfoView*)infoView {
-	return nil;
+	switch(self.musicType){
+		case LMMusicTypePlaylists: {
+			return nil;
+		}
+		default: {
+			return nil;
+		}
+	}
 }
 
 - (UIImage*)centerImageForInfoView:(LMCollectionInfoView*)infoView {
-	return nil;
+	switch(self.musicType){
+		case LMMusicTypePlaylists: {
+			return nil;
+		}
+		default: {
+			return nil;
+		}
+	}
 }
 
 - (id)contentSubviewForBigListEntry:(LMBigListEntry*)bigListEntry {
-	LMTiledAlbumCoverView *tiledAlbumCover = [LMTiledAlbumCoverView newAutoLayoutView];
-	tiledAlbumCover.musicCollection = self.musicTrackCollection;
-	return tiledAlbumCover;
+	switch(self.musicType){
+		case LMMusicTypePlaylists: {
+			LMTiledAlbumCoverView *tiledAlbumCover = [LMTiledAlbumCoverView newAutoLayoutView];
+			tiledAlbumCover.musicCollection = self.musicTrackCollection;
+			return tiledAlbumCover;
+		}
+		default: {
+			return nil;
+		}
+	}
 }
 
 - (float)contentSubviewHeightFactorialForBigListEntry:(LMBigListEntry*)bigListEntry {

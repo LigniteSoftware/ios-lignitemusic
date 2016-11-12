@@ -8,13 +8,15 @@
 
 #import <UIKit/UIKit.h>
 #import "LMCoreViewController.h"
-#import "LMMusicTrackCollection.h"
+#import "LMMusicPlayer.h"
 
 @interface LMBrowsingView : UIView
 
 @property LMCoreViewController *rootViewController;
 
 @property NSArray<LMMusicTrackCollection*> *musicTrackCollections;
+
+@property LMMusicType musicType;
 
 @property BOOL showingDetailView;
 

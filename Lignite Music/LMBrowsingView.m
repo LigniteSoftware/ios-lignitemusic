@@ -69,22 +69,64 @@
 
 - (NSString*)titleForBigListEntry:(LMBigListEntry*)bigListEntry {
 	LMMusicTrackCollection *collection = [self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex];
-	//	NSLog(@"Collection index %ld", bigListEntry.collectionIndex);
-	return collection.title;
+	
+	switch(self.musicType){
+		case LMMusicTypePlaylists: {
+			return collection.title;
+		}
+		case LMMusicTypeAlbums: {
+			return collection.representativeItem.albumTitle ? collection.representativeItem.albumTitle : NSLocalizedString(@"UnknownAlbum", nil);
+		}
+		default: {
+			return nil;
+		}
+	}
 }
 
 - (NSString*)leftTextForBigListEntry:(LMBigListEntry*)bigListEntry {
 	LMMusicTrackCollection *collection = [self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex];
 	
-	return [NSString stringWithFormat:@"%ld %@", collection.count, NSLocalizedString(collection.count == 1 ? @"Song" : @"Songs", nil)];
+	switch(self.musicType){
+		case LMMusicTypePlaylists: {
+			return [NSString stringWithFormat:@"%ld %@", collection.count, NSLocalizedString(collection.count == 1 ? @"Song" : @"Songs", nil)];
+		}
+		case LMMusicTypeAlbums: {
+			return collection.representativeItem.artist ? collection.representativeItem.artist : NSLocalizedString(@"UnknownArtist", nil);
+		}
+		default: {
+			return nil;
+		}
+	}
 }
 
 - (NSString*)rightTextForBigListEntry:(LMBigListEntry*)bigListEntry {
-	return nil;
+	LMMusicTrackCollection *collection = [self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex];
+	
+	switch(self.musicType){
+		case LMMusicTypePlaylists: {
+			return nil;
+		}
+		case LMMusicTypeAlbums: {
+			return [NSString stringWithFormat:@"%lu %@", collection.count, NSLocalizedString(collection.count == 1 ? @"Song" : @"Songs", nil)];
+		}
+		default: {
+			return nil;
+		}
+	}
 }
 
 - (UIImage*)centerImageForBigListEntry:(LMBigListEntry*)bigListEntry {
-	return nil;
+	switch(self.musicType){
+		case LMMusicTypePlaylists: {
+			return nil;
+		}
+		case LMMusicTypeAlbums: {
+			return nil;
+		}
+		default: {
+			return nil;
+		}
+	}
 }
 
 - (UIImage*)imageWithIndex:(uint8_t)index forBigListEntry:(LMBigListEntry*)bigListEntry {
@@ -111,6 +153,7 @@
 	
 	LMBrowsingDetailView *browsingDetailView = [LMBrowsingDetailView newAutoLayoutView];
 	browsingDetailView.musicTrackCollection = [self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex];
+	browsingDetailView.musicType = self.musicType;
 	[self addSubview:browsingDetailView];
 	
 	[browsingDetailView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self];
@@ -176,16 +219,39 @@
 }
 
 - (void)prepareContentSubview:(id)subview forBigListEntry:(LMBigListEntry *)bigListEntry {
-	LMTiledAlbumCoverView *tiledAlbumCover = subview;
-	tiledAlbumCover.musicCollection = [self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex];
+	switch(self.musicType){
+		case LMMusicTypePlaylists: {
+			LMTiledAlbumCoverView *tiledAlbumCover = subview;
+			tiledAlbumCover.musicCollection = [self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex];
+			break;
+		}
+		case LMMusicTypeAlbums: {
+			
+			break;
+		}
+		default: {
+			break;
+		}
+	}
 }
 
+//TODO look into this and fix it cuz there's a prep function as well and I don't think we need both lol
 - (id)contentSubviewForBigListEntry:(LMBigListEntry*)bigListEntry {
-	LMTiledAlbumCoverView *tiledAlbumCover = [LMTiledAlbumCoverView newAutoLayoutView];
-	//	NSLog(@"Collection index %ld count %ld", bigListEntry.collectionIndex, self.musicTrackCollections.count);
-	tiledAlbumCover.musicCollection = [self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex];
-	//	NSLog(@"Returning");
-	return tiledAlbumCover;
+	switch(self.musicType){
+		case LMMusicTypePlaylists: {
+			LMTiledAlbumCoverView *tiledAlbumCover = [LMTiledAlbumCoverView newAutoLayoutView];
+			tiledAlbumCover.musicCollection = [self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex];
+			return tiledAlbumCover;
+		}
+		case LMMusicTypeAlbums: {
+			
+			return [UIView newAutoLayoutView];
+		}
+		default: {
+			NSLog(@"Windows fucking error!");
+			return nil;
+		}
+	}
 }
 
 - (float)contentSubviewHeightFactorialForBigListEntry:(LMBigListEntry*)bigListEntry {

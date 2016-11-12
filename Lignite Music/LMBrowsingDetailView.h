@@ -18,6 +18,11 @@
 @property LMMusicTrackCollection *musicTrackCollection;
 
 /**
+ The music type/collection type that's associated with this detail view.
+ */
+@property LMMusicType musicType;
+
+/**
  Setup this view.
  */
 - (void)setup;

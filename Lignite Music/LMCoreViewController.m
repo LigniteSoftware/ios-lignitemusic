@@ -162,9 +162,9 @@ BOOL didAutomaticallyClose = NO;
 			self.albumView.hidden = NO;
 			[self.albumView reloadSourceSelectorInfo];
 			self.currentSource = self.albumView;
-			if(self.albumView.showingDetailView){
-				[self.browsingAssistant close];
-			}
+//			if(self.albumView.showingDetailView){
+//				[self.browsingAssistant close];
+//			}
 			break;
 		}
 		case 1:{
@@ -297,7 +297,7 @@ BOOL didAutomaticallyClose = NO;
 	self.musicPlayer.sourceSelector = self.sourceSelector;
 
 	self.albumView = [LMAlbumView newAutoLayoutView];
-	self.albumView.rootViewController = self;
+//	self.albumView.rootViewController = self;
 	self.albumView.hidden = YES;
 	[self.view addSubview:self.albumView];
 
