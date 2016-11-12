@@ -7,9 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LMCoreViewController.h"
 
 @interface LMPlaylistView : UIView
 
+@property LMCoreViewController *rootViewController;
+
+@property BOOL showingDetailView;
+
 - (void)setup;
+- (void)reloadSourceSelectorInfo;
+- (void)dismissDetailView;
 
 @end

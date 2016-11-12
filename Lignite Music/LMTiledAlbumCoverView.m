@@ -216,7 +216,9 @@
 		value++;
 		count = [NSNumber numberWithInt:value];
 		
-		[albumIdsCountDictionary setObject:count forKey:formattedPersistentString];
+		if(([[self musicTrackForPersistentIdString:formattedPersistentString] albumArt] != nil)){
+			[albumIdsCountDictionary setObject:count forKey:formattedPersistentString];
+		}
 	}
 	
 //	NSLog(@"fuck you %lu", (unsigned long)[albumIdsCountDictionary allKeys].count);
@@ -296,6 +298,7 @@
 				
 				UIImageView *testView = [UIImageView newAutoLayoutView];
 				testView.backgroundColor = [UIColor colorWithRed:0.2*((float)(arc4random_uniform(5))+1.0) green:0.2*((float)(arc4random_uniform(5))+1.0) blue:0.2*((float)(arc4random_uniform(5))+1.0) alpha:1.0];
+				testView.image = [LMAppIcon imageForIcon:LMIconPlaylists];
 				[self.rootView addSubview:testView];
 				
 				[testView autoPinEdge:ALEdgeTop toEdge:firstRow ? ALEdgeTop : ALEdgeBottom ofView:topElement];

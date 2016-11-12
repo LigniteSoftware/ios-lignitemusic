@@ -21,9 +21,40 @@
 
 @property LMMusicPlayer *musicPlayer;
 
+@property NSLayoutConstraint *topConstraint;
+
 @end
 
 @implementation LMPlaylistView
+
+- (void)reloadSourceSelectorInfo {
+	if(self.hidden){
+		return;
+	}
+	
+	NSString *collectionString = NSLocalizedString(self.playlistCollections.count == 1 ? @"Playlist" : @"Playlists", nil);
+	
+	NSLog(@"Setting source selector info.");
+	
+	[self.musicPlayer setSourceTitle:collectionString];
+	[self.musicPlayer setSourceSubtitle:[NSString stringWithFormat:@"%ld %@", (long)self.playlistCollections.count, collectionString]];
+	
+	NSLog(@"Set!");
+}
+
+- (void)dismissDetailView {
+	[self layoutIfNeeded];
+	self.topConstraint.constant = self.frame.size.width;
+	[UIView animateWithDuration:0.5 delay:0.05
+		 usingSpringWithDamping:0.75 initialSpringVelocity:0.0f
+						options:0 animations:^{
+							[self layoutIfNeeded];
+						} completion:nil];
+	
+	self.showingDetailView = NO;
+	
+	[self.rootViewController openBrowsingAssistant];
+}
 
 - (void)musicTrackDidChange:(LMMusicTrack*)newTrack {
 	[self.bigListEntryTableView reloadControlBars];
@@ -83,9 +114,24 @@
 	playlistDetailView.playlistCollection = [self.playlistCollections objectAtIndex:bigListEntry.collectionIndex];
 	[self addSubview:playlistDetailView];
 	
-	[playlistDetailView autoPinEdgesToSuperviewEdges];
+	[playlistDetailView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self];
+	[playlistDetailView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
+	self.topConstraint = [playlistDetailView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self withOffset:self.frame.size.width];
+	[playlistDetailView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
 	
 	[playlistDetailView setup];
+	
+	[self layoutIfNeeded];
+	self.topConstraint.constant = 0;
+	[UIView animateWithDuration:0.5 delay:0.1
+		 usingSpringWithDamping:0.75 initialSpringVelocity:0.0f
+						options:0 animations:^{
+							[self layoutIfNeeded];
+						} completion:nil];
+	
+	self.showingDetailView = YES;
+	
+	[self.rootViewController closeBrowsingAssistant];
 }
 
 - (BOOL)buttonHighlightedWithIndex:(uint8_t)index wasJustTapped:(BOOL)wasJustTapped forBigListEntry:(LMBigListEntry*)bigListEntry {

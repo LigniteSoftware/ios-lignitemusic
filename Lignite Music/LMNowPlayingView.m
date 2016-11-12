@@ -287,7 +287,6 @@
 	[self.blurredBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.backgroundImageView];
 	[self.blurredBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.backgroundImageView];
 	[self.blurredBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-	[self.blurredBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 	
 	self.albumArtRootView = [UIView newAutoLayoutView];
 	self.albumArtRootView.backgroundColor = [UIColor clearColor];

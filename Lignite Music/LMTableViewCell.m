@@ -87,7 +87,7 @@
 		[cellSubview autoPinEdgesToSuperviewEdges];
 		
 		if(self.index != 0){
-			NSLog(@"Setup %d", self.index);
+//			NSLog(@"Setup %d", self.index);
 		}
 	}
 	

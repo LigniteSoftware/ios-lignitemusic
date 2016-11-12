@@ -16,6 +16,7 @@
 #import "LMColour.h"
 #import "LMNowPlayingView.h"
 #import "LMMusicPlayer.h"
+#import "LMPlaylistView.h"
 
 @interface LMPlaylistDetailView()<LMTableViewSubviewDataSource, LMBigListEntryDelegate, LMCollectionInfoViewDelegate, LMControlBarViewDelegate, LMListEntryDelegate, LMMusicPlayerDelegate>
 
@@ -67,8 +68,6 @@
 		}
 	}
 	
-	NSLog(@"Currently highlighted %d %@ collection index %d", newHighlightedIndex, highlightedEntry, (int)highlightedEntry.collectionIndex);
-	
 	LMListEntry *previousHighlightedEntry = [self listEntryForIndex:self.currentlyHighlighted];
 	if(![previousHighlightedEntry isEqual:highlightedEntry] || highlightedEntry == nil){
 		[previousHighlightedEntry changeHighlightStatus:NO animated:YES];
@@ -85,25 +84,6 @@
 }
 
 - (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState {
-	NSLog(@"Playback state did change");
-	
-	if(self.currentlyHighlighted != -1){ //The music playing is this album.
-		switch(newState){
-			case LMMusicPlaybackStatePaused:
-			case LMMusicPlaybackStateStopped:
-			case LMMusicPlaybackStateInterrupted:
-			default:
-//				[self.playButton setImage:[LMAppIcon imageForIcon:LMIconPlay]];
-				break;
-			case LMMusicPlaybackStatePlaying:
-//				[self.playButton setImage:[LMAppIcon imageForIcon:LMIconPause]];
-				break;
-		}
-	}
-	else{ //Not playing.
-//		[self.playButton setImage:[LMAppIcon imageForIcon:LMIconPlay]];
-	}
-	
 	[self.headerBigListEntry reloadData:NO];
 }
 
@@ -207,8 +187,6 @@
 - (void)tappedListEntry:(LMListEntry*)entry {
 	LMMusicTrack *track = [self.playlistCollection.items objectAtIndex:entry.collectionIndex];
 	
-	NSLog(@"Tapped list entry with artist %@", self.playlistCollection.representativeItem.artist);
-	
 	LMListEntry *previousHighlightedEntry = [self listEntryForIndex:self.currentlyHighlighted];
 	if(previousHighlightedEntry){
 		[previousHighlightedEntry changeHighlightStatus:NO animated:YES];
@@ -252,6 +230,7 @@
 	LMListEntry *listEntry = [self.songEntries objectAtIndex:(index-1) % self.songEntries.count];
 	listEntry.collectionIndex = index-1; //To adjust for the big list entry at the top
 	listEntry.associatedData = [self.playlistCollection.items objectAtIndex:listEntry.collectionIndex];
+	[listEntry changeHighlightStatus:self.currentlyHighlighted == listEntry.collectionIndex animated:NO];
 	[listEntry reloadContents];
 	return listEntry;
 }
@@ -287,11 +266,13 @@
 - (void)swipeRightClose {
 	[self.musicPlayer removeMusicDelegate:self];
 	
-	[self removeFromSuperview];
-	self.hidden = YES;
+	LMPlaylistView *playlistView = (LMPlaylistView*)self.superview;
+	[playlistView dismissDetailView];
 }
 
 - (void)setup {
+	self.currentlyHighlighted = -1;
+	
 	self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 	
 	self.headerBigListEntry = [LMBigListEntry newAutoLayoutView];

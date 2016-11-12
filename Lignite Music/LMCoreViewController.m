@@ -175,6 +175,7 @@ BOOL didAutomaticallyClose = NO;
 		}
 		case 2:{
 			self.playlistView.hidden = NO;
+			[self.playlistView reloadSourceSelectorInfo];
 			self.currentSource = self.playlistView;
 			break;
 		}
@@ -191,6 +192,58 @@ BOOL didAutomaticallyClose = NO;
 		default:
 			NSLog(@"Unknown index of source %@.", source);
 			break;
+	}
+}
+
+- (void)shitpost {
+	NSArray *currentBuildChanges = @[
+									 @"Added playlist browser",
+									 @"Fixed a crash on load",
+									 @"Swipe from left to right to exit detail views, top to bottom to exit now playing view"
+									 ];
+	
+	NSArray *currentBuildIssues = @[
+									@"Playlists are laggy",
+									@"\nPlease do not report already known issues to us, thanks!"
+									];
+	
+	NSString *currentAppBuildString = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
+	
+	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+	
+	NSString *lastAppBuildString = currentAppBuildString;
+	if([userDefaults objectForKey:@"LastVersionBuildString"]){
+		lastAppBuildString = [userDefaults objectForKey:@"LastVersionBuildString"];
+	}
+	
+	NSLog(@"Current app %@ last app %@", currentAppBuildString, lastAppBuildString);
+	if(![currentAppBuildString isEqualToString:lastAppBuildString] || true){
+		NSLog(@"Spooked Super!");
+		
+		NSMutableString *changesString = [NSMutableString stringWithFormat:@"\nChanges\n---------\n"];
+		for(int i = 0; i < currentBuildChanges.count; i++){
+			[changesString appendFormat:@"%@%@", [currentBuildChanges objectAtIndex:i], (i+1) == currentBuildChanges.count ? @"\n\n" : @"\n"];
+		}
+		[changesString appendString:@"New issues\n-------------\n"];
+		for(int i = 0; i < currentBuildIssues.count; i++){
+			[changesString appendFormat:@"%@%@", [currentBuildIssues objectAtIndex:i], (i+1) == currentBuildIssues.count ? @"" : @"\n"];
+		}
+		
+		UIAlertController *alert = [UIAlertController
+									alertControllerWithTitle:[NSString stringWithFormat:@"What's Poppin' in Build %@", currentAppBuildString]
+									message:changesString
+									preferredStyle:UIAlertControllerStyleAlert];
+		
+		UIAlertAction *yesButton = [UIAlertAction
+									actionWithTitle:@"👌"
+									style:UIAlertActionStyleDefault
+									handler:^(UIAlertAction *action) {
+										[userDefaults setObject:currentAppBuildString forKey:@"LastVersionBuildString"];
+									}];
+		
+		[alert addAction:yesButton];
+		
+		[self presentViewController:alert animated:YES completion:nil];
 	}
 }
 
@@ -327,6 +380,8 @@ BOOL didAutomaticallyClose = NO;
 	
 	self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 	[self.musicPlayer addMusicDelegate:self];
+	
+	[NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(shitpost) userInfo:nil repeats:NO];
 	
 //	[NSTimer scheduledTimerWithTimeInterval:0.75
 //									 target:self
