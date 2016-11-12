@@ -156,6 +156,7 @@
 }
 
 - (void)amountOfObjectsRequiredChangedTo:(NSUInteger)amountOfObjects forTableView:(LMNewTableView *)tableView {
+	NSLog(@"Title view needs %d objects", (int)amountOfObjects);
 	if(!self.itemArray){
 		self.itemArray = [NSMutableArray new];
 		self.itemIconArray = [NSMutableArray new];
@@ -173,7 +174,7 @@
 }
 
 - (float)heightAtIndex:(NSUInteger)index forTableView:(LMNewTableView *)tableView {
-	return WINDOW_FRAME.size.height/8;
+	return WINDOW_FRAME.size.height/8.0;
 }
 
 - (LMListEntry*)listEntryForIndex:(NSInteger)index {
@@ -280,7 +281,7 @@
 	[self.songListTableView autoPinEdgesToSuperviewEdges];
 	
 	[self.songListTableView reloadSubviewData];
-	
+		
 	[self.musicPlayer addMusicDelegate:self];
 	[self musicTrackDidChange:self.musicPlayer.nowPlayingTrack];
 	[self musicPlaybackStateDidChange:self.musicPlayer.playbackState];

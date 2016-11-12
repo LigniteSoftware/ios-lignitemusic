@@ -77,9 +77,7 @@
 		UIView *cellSubview = self.subview;
 		
 		[self.contentView addSubview:cellSubview];
-		
-//		self.contentView.backgroundColor = [UIColor redColor];
-		
+				
 		[NSLayoutConstraint autoSetPriority:UILayoutPriorityRequired forConstraints:^{
 			[cellSubview autoSetContentCompressionResistancePriorityForAxis:ALAxisVertical];
 		}];

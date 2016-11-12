@@ -11,13 +11,13 @@
 #import "LMButton.h"
 #import "LMCircleView.h"
 #import "LMLabel.h"
-#import "LMTableView.h"
+#import "LMNewTableView.h"
 #import "LMListEntry.h"
 #import "LMColour.h"
 #import "LMExtras.h"
 #import "LMSettings.h"
 
-@interface LMSourceSelectorView() <LMButtonDelegate, LMTableViewSubviewDelegate, LMListEntryDelegate>
+@interface LMSourceSelectorView() <LMButtonDelegate, LMTableViewSubviewDataSource, LMListEntryDelegate>
 
 @property UIVisualEffectView *blurredBackgroundView;
 
@@ -31,7 +31,7 @@
 @property UIView *currentSourceLabelBackgroundView, *detailInfoLabelBackgroundView;
 @property LMLabel *currentSourceLabel, *detailInfoLabel;
 
-@property LMTableView *viewsTableView;
+@property LMNewTableView *viewsTableView;
 @property NSMutableArray *itemArray;
 
 @property NSInteger currentlyHighlighted;
@@ -57,7 +57,7 @@
 	}
 }
 
-- (id)prepareSubviewAtIndex:(NSUInteger)index {
+- (id)subviewAtIndex:(NSUInteger)index forTableView:(LMNewTableView *)tableView {
 	LMListEntry *entry = [self.itemArray objectAtIndex:index % self.itemArray.count];
 	entry.collectionIndex = index;
 	entry.associatedData = [self.sources objectAtIndex:index];
@@ -68,10 +68,10 @@
 	return entry;
 }
 
-- (void)totalAmountOfSubviewsRequired:(NSUInteger)amount forTableView:(LMTableView *)tableView {
+- (void)amountOfObjectsRequiredChangedTo:(NSUInteger)amountOfObjects forTableView:(LMNewTableView *)tableView {
 	if(!self.itemArray){
 		self.itemArray = [NSMutableArray new];
-		for(int i = 0; i < amount; i++){
+		for(int i = 0; i < amountOfObjects; i++){
 			LMListEntry *listEntry = [[LMListEntry alloc]initWithDelegate:self];
 			listEntry.collectionIndex = i;
 			listEntry.iconInsetMultiplier = (1.0/3.0);
@@ -91,11 +91,8 @@
 	}
 }
 
-- (float)sizingFactorialRelativeToWindowForTableView:(LMTableView *)tableView height:(BOOL)height {
-	if(height){
-		return (1.0f/8.0f);
-	}
-	return 0.9;
+- (float)heightAtIndex:(NSUInteger)index forTableView:(LMNewTableView *)tableView {
+	return WINDOW_FRAME.size.height*(1.0f/8.0f);
 }
 
 - (LMListEntry*)listEntryForIndex:(NSInteger)index {
@@ -126,12 +123,11 @@
 	return indexOfEntry;
 }
 
-- (float)topSpacingForTableView:(LMTableView *)tableView {
-	return 0.0f;
-}
-
-- (BOOL)dividerForTableView:(LMTableView *)tableView {
-	return YES;
+- (float) spacingAtIndex:(NSUInteger)index forTableView:(LMNewTableView *)tableView {
+	if(index == 0){
+		return 0.0f;
+	}
+	return 10;
 }
 
 - (void)setCurrentSourceWithIndex:(NSInteger)index {
@@ -395,18 +391,19 @@
 	[self.detailInfoLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.detailInfoLabelBackgroundView withMultiplier:widthMultiplier];
 	[self.detailInfoLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.detailInfoLabelBackgroundView withMultiplier:heightMultiplier];
 	
-	self.viewsTableView = [[LMTableView alloc]init];
-	self.viewsTableView.translatesAutoresizingMaskIntoConstraints = NO;
-	self.viewsTableView.amountOfItemsTotal = self.sources.count;
-	self.viewsTableView.subviewDelegate = self;
+	self.viewsTableView = [LMNewTableView newAutoLayoutView];
+	self.viewsTableView.totalAmountOfObjects = self.sources.count;
+	self.viewsTableView.subviewDataSource = self;
+	self.viewsTableView.shouldUseDividers = YES;
 	self.viewsTableView.dividerColour = [UIColor blackColor];
-	[self.viewsTableView regenerate:NO];
 	[self addSubview:self.viewsTableView];
 	
 	[self.viewsTableView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.chooseYourViewLabel];
 	[self.viewsTableView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.sourceSelectorButtonBackgroundView];
 	[self.viewsTableView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.contentBackgroundView];
 	[self.viewsTableView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.contentBackgroundView];
+	
+	[self.viewsTableView reloadSubviewData];
 }
 
 /*
