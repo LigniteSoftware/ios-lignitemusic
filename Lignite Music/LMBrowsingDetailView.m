@@ -1,5 +1,5 @@
 //
-//  LMPlaylistDetailView.m
+//  LMBrowsingDetailView.m
 //  Lignite Music
 //
 //  Created by Edwin Finch on 11/11/16.
@@ -7,7 +7,7 @@
 //
 
 #import <PureLayout/PureLayout.h>
-#import "LMPlaylistDetailView.h"
+#import "LMBrowsingDetailView.h"
 #import "LMBigListEntry.h"
 #import "LMListEntry.h"
 #import "LMNewTableView.h"
@@ -18,7 +18,7 @@
 #import "LMMusicPlayer.h"
 #import "LMPlaylistView.h"
 
-@interface LMPlaylistDetailView()<LMTableViewSubviewDataSource, LMBigListEntryDelegate, LMCollectionInfoViewDelegate, LMControlBarViewDelegate, LMListEntryDelegate, LMMusicPlayerDelegate>
+@interface LMBrowsingDetailView()<LMTableViewSubviewDataSource, LMBigListEntryDelegate, LMCollectionInfoViewDelegate, LMControlBarViewDelegate, LMListEntryDelegate, LMMusicPlayerDelegate>
 
 @property LMNewTableView *tableView;
 
@@ -33,7 +33,7 @@
 
 @end
 
-@implementation LMPlaylistDetailView
+@implementation LMBrowsingDetailView
 
 - (LMListEntry*)listEntryForIndex:(NSInteger)index {
 	if(index == -1){
@@ -54,8 +54,8 @@
 - (void)musicTrackDidChange:(LMMusicTrack*)newTrack {
 	LMListEntry *highlightedEntry = nil;
 	int newHighlightedIndex = -1;
-	for(int i = 0; i < self.playlistCollection.count; i++){
-		LMMusicTrack *track = [self.playlistCollection.items objectAtIndex:i];
+	for(int i = 0; i < self.musicTrackCollection.count; i++){
+		LMMusicTrack *track = [self.musicTrackCollection.items objectAtIndex:i];
 		LMListEntry *entry = [self listEntryForIndex:i];
 		LMMusicTrack *entryTrack = entry.associatedData;
 		
@@ -94,7 +94,7 @@
 - (UIImage*)imageWithIndex:(uint8_t)index forControlBarView:(LMControlBarView *)controlBar {
 	switch(index){
 		case 0:{
-			BOOL isPlaying = [self.musicPlayer.nowPlayingCollection isEqual:self.playlistCollection] && self.musicPlayer.playbackState == LMMusicPlaybackStatePlaying;
+			BOOL isPlaying = [self.musicPlayer.nowPlayingCollection isEqual:self.musicTrackCollection] && self.musicPlayer.playbackState == LMMusicPlaybackStatePlaying;
 			
 			return [LMAppIcon invertImage:[LMAppIcon imageForIcon:isPlaying ? LMIconPause : LMIconPlay]];
 		}
@@ -108,12 +108,12 @@
 	return [LMAppIcon imageForIcon:LMIconBug];
 }
 
-- (BOOL)buttonHighlightedWithIndex:(uint8_t)index wasJustTapped:(BOOL)wasJustTapped forControlBar:(LMControlBarView *)controlBar {	
+- (BOOL)buttonHighlightedWithIndex:(uint8_t)index wasJustTapped:(BOOL)wasJustTapped forControlBar:(LMControlBarView *)controlBar {
 	BOOL isPlayingMusic = (self.musicPlayer.playbackState == LMMusicPlaybackStatePlaying);
 	
 	switch(index) {
 		case 0:{ //Play button
-			LMMusicTrackCollection *trackCollection = self.playlistCollection;
+			LMMusicTrackCollection *trackCollection = self.musicTrackCollection;
 			if(wasJustTapped){
 				if(trackCollection.count > 0){
 					if(self.musicPlayer.nowPlayingCollection != trackCollection){
@@ -151,11 +151,11 @@
 }
 
 - (NSString*)titleForInfoView:(LMCollectionInfoView*)infoView {
-	return self.playlistCollection.title;
+	return self.musicTrackCollection.title;
 }
 
 - (NSString*)leftTextForInfoView:(LMCollectionInfoView*)infoView {
-	return [NSString stringWithFormat:@"%ld %@", self.playlistCollection.count, NSLocalizedString(self.playlistCollection.count == 1 ? @"Song" : @"Songs", nil)];
+	return [NSString stringWithFormat:@"%ld %@", self.musicTrackCollection.count, NSLocalizedString(self.musicTrackCollection.count == 1 ? @"Song" : @"Songs", nil)];
 }
 
 - (NSString*)rightTextForInfoView:(LMCollectionInfoView*)infoView {
@@ -168,7 +168,7 @@
 
 - (id)contentSubviewForBigListEntry:(LMBigListEntry*)bigListEntry {
 	LMTiledAlbumCoverView *tiledAlbumCover = [LMTiledAlbumCoverView newAutoLayoutView];
-	tiledAlbumCover.musicCollection = self.playlistCollection;
+	tiledAlbumCover.musicCollection = self.musicTrackCollection;
 	return tiledAlbumCover;
 }
 
@@ -185,7 +185,7 @@
 }
 
 - (void)tappedListEntry:(LMListEntry*)entry {
-	LMMusicTrack *track = [self.playlistCollection.items objectAtIndex:entry.collectionIndex];
+	LMMusicTrack *track = [self.musicTrackCollection.items objectAtIndex:entry.collectionIndex];
 	
 	LMListEntry *previousHighlightedEntry = [self listEntryForIndex:self.currentlyHighlighted];
 	if(previousHighlightedEntry){
@@ -195,9 +195,9 @@
 	[entry changeHighlightStatus:YES animated:YES];
 	self.currentlyHighlighted = entry.collectionIndex;
 	
-	if(self.musicPlayer.nowPlayingCollection != self.playlistCollection){
+	if(self.musicPlayer.nowPlayingCollection != self.musicTrackCollection){
 		[self.musicPlayer stop];
-		[self.musicPlayer setNowPlayingCollection:self.playlistCollection];
+		[self.musicPlayer setNowPlayingCollection:self.musicTrackCollection];
 	}
 	self.musicPlayer.autoPlay = YES;
 	
@@ -209,17 +209,17 @@
 }
 
 - (NSString*)titleForListEntry:(LMListEntry*)entry {
-	LMMusicTrack *track = [self.playlistCollection.items objectAtIndex:entry.collectionIndex];
+	LMMusicTrack *track = [self.musicTrackCollection.items objectAtIndex:entry.collectionIndex];
 	return track.title;
 }
 
 - (NSString*)subtitleForListEntry:(LMListEntry*)entry {
-	LMMusicTrack *track = [self.playlistCollection.items objectAtIndex:entry.collectionIndex];
+	LMMusicTrack *track = [self.musicTrackCollection.items objectAtIndex:entry.collectionIndex];
 	return [NSString stringWithFormat:NSLocalizedString(@"LengthOfSong", nil), [LMNowPlayingView durationStringTotalPlaybackTime:track.playbackDuration]];
 }
 
 - (UIImage*)iconForListEntry:(LMListEntry*)entry {
-	LMMusicTrack *track = [self.playlistCollection.items objectAtIndex:entry.collectionIndex];
+	LMMusicTrack *track = [self.musicTrackCollection.items objectAtIndex:entry.collectionIndex];
 	return [track albumArt];
 }
 
@@ -229,7 +229,7 @@
 	}
 	LMListEntry *listEntry = [self.songEntries objectAtIndex:(index-1) % self.songEntries.count];
 	listEntry.collectionIndex = index-1; //To adjust for the big list entry at the top
-	listEntry.associatedData = [self.playlistCollection.items objectAtIndex:listEntry.collectionIndex];
+	listEntry.associatedData = [self.musicTrackCollection.items objectAtIndex:listEntry.collectionIndex];
 	[listEntry changeHighlightStatus:self.currentlyHighlighted == listEntry.collectionIndex animated:NO];
 	[listEntry reloadContents];
 	return listEntry;
@@ -252,11 +252,11 @@
 - (void)amountOfObjectsRequiredChangedTo:(NSUInteger)amountOfObjects forTableView:(LMNewTableView*)tableView {
 	self.songEntries = [NSMutableArray new];
 	
-	for(int i = 0; i < MIN(amountOfObjects, self.playlistCollection.count); i++){
+	for(int i = 0; i < MIN(amountOfObjects, self.musicTrackCollection.count); i++){
 		LMListEntry *listEntry = [LMListEntry newAutoLayoutView];
 		listEntry.delegate = self;
 		listEntry.collectionIndex = i;
-		listEntry.associatedData = [self.playlistCollection.items objectAtIndex:i];
+		listEntry.associatedData = [self.musicTrackCollection.items objectAtIndex:i];
 		[listEntry setup];
 		
 		[self.songEntries addObject:listEntry];
@@ -283,11 +283,11 @@
 	self.headerBigListEntry.isLargeSize = YES;
 	self.headerBigListEntry.userInteractionEnabled = YES;
 	[self.headerBigListEntry setup];
-
+	
 	self.tableView = [LMNewTableView newAutoLayoutView];
 	self.tableView.title = @"PlaylistDetailView";
 	self.tableView.averageCellHeight = WINDOW_FRAME.size.height*(1.0/10.0);
-	self.tableView.totalAmountOfObjects = self.playlistCollection.count + 1;
+	self.tableView.totalAmountOfObjects = self.musicTrackCollection.count + 1;
 	self.tableView.shouldUseDividers = YES;
 	self.tableView.dividerSectionsToIgnore = @[ @(0), @(1) ];
 	self.tableView.subviewDataSource = self;

@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "LMMusicPlayer.h"
+#import "LMBrowsingView.h"
 
 @interface LMPlaylistDetailView : UIView
 
