@@ -495,7 +495,8 @@ BOOL shuffleForDebug = NO;
 			MPMediaGroupingAlbum,
 			MPMediaGroupingTitle,
 			MPMediaGroupingPlaylist,
-			MPMediaGroupingComposer
+			MPMediaGroupingComposer,
+			MPMediaGroupingGenre
 		};
 		MPMediaGrouping associatedGrouping = associatedMediaTypes[musicType];
 		
@@ -514,6 +515,9 @@ BOOL shuffleForDebug = NO;
 				break;
 			case MPMediaGroupingComposer:
 				query = [MPMediaQuery composersQuery];
+				break;
+			case MPMediaGroupingGenre:
+				query = [MPMediaQuery genresQuery];
 				break;
 			default:
 				query = [MPMediaQuery songsQuery];
@@ -534,6 +538,9 @@ BOOL shuffleForDebug = NO;
 			LMMusicTrackCollection *trackCollection = [[LMMusicTrackCollection alloc]initWithItems:musicCollection basedOnSourceCollection:itemCollection];
 			if(associatedGrouping == MPMediaGroupingPlaylist){
 				trackCollection.title = [[collections objectAtIndex:i] valueForProperty:MPMediaPlaylistPropertyName];
+			}
+			if(associatedGrouping == MPMediaGroupingGenre) {
+				trackCollection.title = trackCollection.representativeItem.genre;
 			}
 			[musicTracks addObject:trackCollection];
 		}

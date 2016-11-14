@@ -1,23 +1,23 @@
 //
-//  LMPlaylistView.m
+//  LMGenreView.m
 //  Lignite Music
 //
-//  Created by Edwin Finch on 11/9/16.
+//  Created by Edwin Finch on 11/13/16.
 //  Copyright © 2016 Lignite. All rights reserved.
 //
 
 #import <PureLayout/PureLayout.h>
-#import "LMPlaylistView.h"
+#import "LMGenreView.h"
 #import "LMMusicPlayer.h"
 #import "LMBrowsingView.h"
 
-@interface LMPlaylistView()
+@interface LMGenreView()
 
 @property LMBrowsingView *browsingView;
 
 @end
 
-@implementation LMPlaylistView
+@implementation LMGenreView
 
 - (void)reloadSourceSelectorInfo {
 	[self.browsingView reloadSourceSelectorInfo];
@@ -26,8 +26,8 @@
 - (void)setup {
 	self.browsingView = [LMBrowsingView newAutoLayoutView];
 	
-	self.browsingView.musicTrackCollections = [[LMMusicPlayer sharedMusicPlayer] queryCollectionsForMusicType:LMMusicTypePlaylists];
-	self.browsingView.musicType = LMMusicTypePlaylists;
+	self.browsingView.musicTrackCollections = [[LMMusicPlayer sharedMusicPlayer] queryCollectionsForMusicType:LMMusicTypeGenres];
+	self.browsingView.musicType = LMMusicTypeGenres;
 	[self addSubview:self.browsingView];
 	
 	[self.browsingView autoPinEdgesToSuperviewEdges];

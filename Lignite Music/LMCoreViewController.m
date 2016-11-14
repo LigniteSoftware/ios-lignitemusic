@@ -18,6 +18,7 @@
 #import "LMSource.h"
 #import "LMExtras.h"
 #import "LMPlaylistView.h"
+#import "LMGenreView.h"
 
 @interface LMCoreViewController () <LMMusicPlayerDelegate, LMSourceDelegate>
 
@@ -28,6 +29,7 @@
 @property LMAlbumView *albumView;
 @property LMTitleView *titleView;
 @property LMPlaylistView *playlistView;
+@property LMGenreView *genreView;
 
 @property LMBrowsingAssistantView *browsingAssistant;
 @property LMSourceSelectorView *sourceSelector;
@@ -180,11 +182,17 @@ BOOL didAutomaticallyClose = NO;
 			break;
 		}
 		case 3:{
+			self.genreView.hidden = NO;
+			[self.genreView reloadSourceSelectorInfo];
+			self.currentSource = self.genreView;
+			break;
+		}
+		case 4:{
 			LMPebbleManager *pebbleManager = [LMPebbleManager sharedPebbleManager];
 			[pebbleManager showSettings];
 			break;
 		}
-		case 4:{
+		case 5:{
 			[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://www.lignite.io/feedback/"]];
 			NSLog(@"Debug menu");
 			break;
@@ -197,11 +205,14 @@ BOOL didAutomaticallyClose = NO;
 
 - (void)showWhatsPoppin {
 	NSArray *currentBuildChanges = @[
-									 @"None"
+									 @"Added genre browser",
+									 @"Redesigned album browser",
+									 @"Redesigned album detail view",
+									 @"Fixed crash on playlist browser",
 									 ];
 	
 	NSArray *currentBuildIssues = @[
-									@"None",
+									@"Genre view is also laggy",
 									@"\nPlease do not report already known issues to us, thanks!"
 									];
 	
@@ -256,16 +267,16 @@ BOOL didAutomaticallyClose = NO;
 	[pebbleManager attachToViewController:self];
 	
 	NSArray *sourceTitles = @[
-							  @"Albums", @"Titles", @"Playlists", @"Settings", @"Report Bug"
+							  @"Albums", @"Titles", @"Playlists", @"Genres", @"Settings", @"Report Bug"
 							  ];
 	NSArray *sourceSubtitles = @[
-								 @"", @"", @"", @"Only for Pebble", @"Or send feedback"
+								 @"", @"", @"", @"", @"Only for Pebble", @"Or send feedback"
 								 ];
 	LMIcon sourceIcons[] = {
-		LMIconAlbums, LMIconTitles, LMIconPlaylists, LMIconSettings, LMIconBug
+		LMIconAlbums, LMIconTitles, LMIconPlaylists, LMIconGenres, LMIconSettings, LMIconBug
 	};
 	BOOL notSelect[] = {
-		NO, NO, NO, YES, YES
+		NO, NO, NO, NO, YES, YES
 	};
 	
 	NSMutableArray *sources = [NSMutableArray new];
@@ -296,6 +307,8 @@ BOOL didAutomaticallyClose = NO;
 
 	self.musicPlayer.sourceSelector = self.sourceSelector;
 
+	//Album View
+	
 	self.albumView = [LMAlbumView newAutoLayoutView];
 //	self.albumView.rootViewController = self;
 	self.albumView.hidden = YES;
@@ -304,6 +317,8 @@ BOOL didAutomaticallyClose = NO;
 	[self.albumView autoCenterInSuperview];
 	[self.albumView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
 	[self.albumView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
+	
+	//Title view
 	
 	self.titleView = [LMTitleView newAutoLayoutView];
 	self.titleView.backgroundColor = [UIColor redColor];
@@ -316,6 +331,8 @@ BOOL didAutomaticallyClose = NO;
 	[self.titleView setup];
 	self.titleView.hidden = YES;
 	
+	//Playlist view
+	
 	self.playlistView = [LMPlaylistView newAutoLayoutView];
 	self.playlistView.backgroundColor = [UIColor whiteColor];
 	[self.view addSubview:self.playlistView];
@@ -325,9 +342,21 @@ BOOL didAutomaticallyClose = NO;
 	[self.playlistView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
 	
 	[self.playlistView setup];
-	
-//	[self.playlistView setup];
 	self.playlistView.hidden = YES;
+	
+	//Genre view
+	
+	self.genreView = [LMGenreView newAutoLayoutView];
+	self.genreView.backgroundColor = [UIColor whiteColor];
+	[self.view addSubview:self.genreView];
+	
+	[self.genreView autoCenterInSuperview];
+	[self.genreView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
+	[self.genreView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
+	
+	[self.genreView setup];
+	self.genreView.hidden = YES;
+	
 
 	self.browsingAssistant = [[LMBrowsingAssistantView alloc]initForAutoLayout];
 	self.browsingAssistant.coreViewController = self;

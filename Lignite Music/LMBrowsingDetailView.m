@@ -152,6 +152,7 @@
 
 - (NSString*)titleForInfoView:(LMCollectionInfoView*)infoView {
 	switch(self.musicType){
+		case LMMusicTypeGenres:
 		case LMMusicTypePlaylists: {
 			return self.musicTrackCollection.title;
 		}
@@ -166,6 +167,7 @@
 
 - (NSString*)leftTextForInfoView:(LMCollectionInfoView*)infoView {
 	switch(self.musicType){
+		case LMMusicTypeGenres:
 		case LMMusicTypePlaylists: {
 			return [NSString stringWithFormat:@"%ld %@", self.musicTrackCollection.count, NSLocalizedString(self.musicTrackCollection.count == 1 ? @"Song" : @"Songs", nil)];
 		}
@@ -180,6 +182,7 @@
 
 - (NSString*)rightTextForInfoView:(LMCollectionInfoView*)infoView {
 	switch(self.musicType){
+		case LMMusicTypeGenres:
 		case LMMusicTypePlaylists: {
 			return nil;
 		}
@@ -198,6 +201,7 @@
 
 - (id)contentSubviewForBigListEntry:(LMBigListEntry*)bigListEntry {
 	switch(self.musicType){
+		case LMMusicTypeGenres:
 		case LMMusicTypePlaylists: {
 			LMTiledAlbumCoverView *tiledAlbumCover = [LMTiledAlbumCoverView newAutoLayoutView];
 			tiledAlbumCover.musicCollection = self.musicTrackCollection;
@@ -217,6 +221,7 @@
 
 - (float)contentSubviewFactorial:(BOOL)height forBigListEntry:(LMBigListEntry *)bigListEntry {
 	switch(self.musicType){
+		case LMMusicTypeGenres:
 		case LMMusicTypePlaylists: {
 			return height ? 0.25 : 0.80;
 		}
@@ -273,6 +278,7 @@
 
 - (UIImage*)iconForListEntry:(LMListEntry*)entry {
 	switch(self.musicType) {
+		case LMMusicTypeGenres:
 		case LMMusicTypePlaylists: {
 			LMMusicTrack *track = [self.musicTrackCollection.items objectAtIndex:entry.collectionIndex];
 			return [track albumArt];

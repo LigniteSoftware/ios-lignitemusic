@@ -37,16 +37,8 @@
  
  */
 
-"UnknownTitle" = "Unnamed Track";
-"UnknownArtist" = "Unknown Artist";
-"UnknownAlbumTitle" = "Unknown Album";
-"Album" = "Album";
-"Title" = "Title";
-"Artist" = "Artist";
-"Playlist" = "Playlist";
-"Composer" = "Composer";
-"Genre" = "Genre";
-"Compilation" = "Compilation";
+"List" = "List";
+"Lists" = "Lists";
 
 /*
  

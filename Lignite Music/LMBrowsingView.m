@@ -32,11 +32,44 @@
 		return;
 	}
 	
-	NSString *collectionString = NSLocalizedString(self.musicTrackCollections.count == 1 ? @"Playlist" : @"Playlists", nil);
+	NSString *titleString;
+	NSString *singlularString;
+	NSString *pluralString;
+	
+	NSLog(@"Yes %d", self.musicType);
+	
+	switch(self.musicType){
+		case LMMusicTypePlaylists:{
+			titleString = @"Playlists";
+			singlularString = @"List";
+			pluralString = @"Lists";
+			break;
+		}
+		case LMMusicTypeAlbums:{
+			titleString = @"Albums";
+			singlularString = @"Album";
+			pluralString = @"Albums";
+			break;
+		}
+		case LMMusicTypeGenres:{
+			titleString = @"Genres";
+			singlularString = @"Genre";
+			pluralString = @"Genres";
+			break;
+		}
+		default: {
+			titleString = @"Unknowns";
+			singlularString = @"Unknown";
+			pluralString = @"Unknowns";
+			break;
+		}
+	}
+	
+	NSString *collectionString = NSLocalizedString(self.musicTrackCollections.count == 1 ? singlularString : pluralString, nil);
 	
 	NSLog(@"Setting source selector info.");
 	
-	[self.musicPlayer setSourceTitle:collectionString];
+	[self.musicPlayer setSourceTitle:NSLocalizedString(titleString, nil)];
 	[self.musicPlayer setSourceSubtitle:[NSString stringWithFormat:@"%ld %@", (long)self.musicTrackCollections.count, collectionString]];
 	
 	NSLog(@"Set!");
@@ -72,7 +105,9 @@
 	LMMusicTrackCollection *collection = [self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex];
 	
 	switch(self.musicType){
-		case LMMusicTypePlaylists: {
+		case LMMusicTypePlaylists:
+		case LMMusicTypeGenres:
+		{
 			return collection.title;
 		}
 		case LMMusicTypeAlbums: {
@@ -88,7 +123,9 @@
 	LMMusicTrackCollection *collection = [self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex];
 	
 	switch(self.musicType){
-		case LMMusicTypePlaylists: {
+		case LMMusicTypeGenres:
+		case LMMusicTypePlaylists:
+		{
 			return [NSString stringWithFormat:@"%ld %@", collection.count, NSLocalizedString(collection.count == 1 ? @"Song" : @"Songs", nil)];
 		}
 		case LMMusicTypeAlbums: {
@@ -104,7 +141,9 @@
 	LMMusicTrackCollection *collection = [self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex];
 	
 	switch(self.musicType){
-		case LMMusicTypePlaylists: {
+		case LMMusicTypeGenres:
+		case LMMusicTypePlaylists:
+		{
 			return nil;
 		}
 		case LMMusicTypeAlbums: {
@@ -118,10 +157,9 @@
 
 - (UIImage*)centerImageForBigListEntry:(LMBigListEntry*)bigListEntry {
 	switch(self.musicType){
+		case LMMusicTypeGenres:
+		case LMMusicTypeAlbums:
 		case LMMusicTypePlaylists: {
-			return nil;
-		}
-		case LMMusicTypeAlbums: {
 			return nil;
 		}
 		default: {
@@ -227,6 +265,7 @@
 	[bigListEntry.queue cancelAllOperations];
 	
 	switch(self.musicType){
+		case LMMusicTypeGenres:
 		case LMMusicTypePlaylists: {
 			LMTiledAlbumCoverView *tiledAlbumCover = subview;
 			
@@ -261,6 +300,7 @@
 
 - (id)contentSubviewForBigListEntry:(LMBigListEntry*)bigListEntry {
 	switch(self.musicType){
+		case LMMusicTypeGenres:
 		case LMMusicTypePlaylists: {
 			LMTiledAlbumCoverView *tiledAlbumCover = [LMTiledAlbumCoverView newAutoLayoutView];
 			tiledAlbumCover.musicCollection = [self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex];
