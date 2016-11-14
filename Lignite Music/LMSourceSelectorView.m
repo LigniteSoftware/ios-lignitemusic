@@ -86,9 +86,7 @@
 		if([settings objectForKey:LMSettingsKeyLastOpenedSource]){
 			lastSourceOpened = [settings integerForKey:LMSettingsKeyLastOpenedSource];
 		}
-		
-		NSLog(@"Last source opened %d, %@", (int)lastSourceOpened, self.sources);
-		
+				
 		[self tappedListEntry:[self.itemArray objectAtIndex:lastSourceOpened]];
 	}
 }

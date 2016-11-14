@@ -93,6 +93,8 @@
 		6AEB9D0B1BACF60E00AD19FA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6AEB9D091BACF60E00AD19FA /* LaunchScreen.storyboard */; };
 		6AEB9D351BAD812700AD19FA /* icon_pause.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AEB9D311BAD812700AD19FA /* icon_pause.png */; };
 		6AEB9D361BAD812700AD19FA /* icon_play.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AEB9D321BAD812700AD19FA /* icon_play.png */; };
+		6AF2C9431DDA16CC005E4643 /* icon_source.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AF2C9411DDA16CC005E4643 /* icon_source.png */; };
+		6AF2C9441DDA16CC005E4643 /* icon_browse.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AF2C9421DDA16CC005E4643 /* icon_browse.png */; };
 		6AFD2EDD1BC41ECD0083FE9E /* LMAlbumViewItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AFD2EDC1BC41ECC0083FE9E /* LMAlbumViewItem.m */; };
 		6AFD2EDF1BC423850083FE9E /* no_album.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AFD2EDE1BC423850083FE9E /* no_album.png */; };
 		A75C073ECBB2FEB1EFE05613 /* Pods_Lignite_Music.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0647B1CCD075642CBF2B75C8 /* Pods_Lignite_Music.framework */; };
@@ -252,6 +254,8 @@
 		6AEB9D221BACF60F00AD19FA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6AEB9D311BAD812700AD19FA /* icon_pause.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_pause.png; sourceTree = "<group>"; };
 		6AEB9D321BAD812700AD19FA /* icon_play.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_play.png; sourceTree = "<group>"; };
+		6AF2C9411DDA16CC005E4643 /* icon_source.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_source.png; sourceTree = "<group>"; };
+		6AF2C9421DDA16CC005E4643 /* icon_browse.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_browse.png; sourceTree = "<group>"; };
 		6AF571FE1BC714DF009993E0 /* PebbleKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = PebbleKit.framework; sourceTree = "<group>"; };
 		6AFD2EDB1BC41ECC0083FE9E /* LMAlbumViewItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMAlbumViewItem.h; sourceTree = "<group>"; };
 		6AFD2EDC1BC41ECC0083FE9E /* LMAlbumViewItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMAlbumViewItem.m; sourceTree = "<group>"; };
@@ -434,6 +438,8 @@
 		6A66C76C1CDA1B4E009019CF /* Icons */ = {
 			isa = PBXGroup;
 			children = (
+				6AF2C9411DDA16CC005E4643 /* icon_source.png */,
+				6AF2C9421DDA16CC005E4643 /* icon_browse.png */,
 				6A9C05371DB4441200713D1C /* icon_albums.png */,
 				6AC32B7C1DB6CD950007C67E /* icon_bug.png */,
 				6A9C05381DB4441200713D1C /* icon_compilations.png */,
@@ -790,12 +796,14 @@
 			files = (
 				6AE4A7FC1D49461C002B67CD /* pebble_colours_64.gif in Resources */,
 				6A0750721D5EAB8000BCBC9C /* aplite_colours.gif in Resources */,
+				6AF2C9431DDA16CC005E4643 /* icon_source.png in Resources */,
 				6AB12E9C1D57AD9800280383 /* icon_settings.png in Resources */,
 				6AEB9D0B1BACF60E00AD19FA /* LaunchScreen.storyboard in Resources */,
 				6A514E1F1CEA3FCE00AFB351 /* splash_portrait.png in Resources */,
 				6AC32B771DB53EB20007C67E /* icon_repeat_general.png in Resources */,
 				6A9C053B1DB4441200713D1C /* icon_albums.png in Resources */,
 				6AC32B7D1DB6CD950007C67E /* icon_bug.png in Resources */,
+				6AF2C9441DDA16CC005E4643 /* icon_browse.png in Resources */,
 				6ACED1091DB7BE1D006EACD2 /* icon_shuffle.png in Resources */,
 				6ACED1081DB7BE1D006EACD2 /* icon_repeat_one.png in Resources */,
 				6A0750741D5EC0C000BCBC9C /* never_forget.png in Resources */,

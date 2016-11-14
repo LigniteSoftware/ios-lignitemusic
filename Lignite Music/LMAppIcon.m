@@ -38,6 +38,10 @@
 			return @"icon_bug.png";
 		case LMIconNoAlbumArt:
 			return @"icon_no_cover_art.png";
+		case LMIconSource:
+			return @"icon_source.png";
+		case LMIconBrowse:
+			return @"icon_browse.png";
 	}
 }
 

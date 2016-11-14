@@ -211,7 +211,7 @@ BOOL didAutomaticallyClose = NO;
 									 @"Fixed crash on playlist browser",
 									 @"Fixed app opening to blank screen",
 									 @"Fixed source being incorrectly chosen",
-									 @"Improvements for some cases when there's no album art"
+									 @"Visual touches for no album art"
 									 ];
 	
 	NSArray *currentBuildIssues = @[
@@ -370,7 +370,7 @@ BOOL didAutomaticallyClose = NO;
  	self.browsingAssistant.textBackgroundConstraint = [self.browsingAssistant autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.view];
 	[self.browsingAssistant autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.view];
 	[self.browsingAssistant autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.view];
-	[self.browsingAssistant autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:0.225];
+	[self.browsingAssistant autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
 
 	UIView *temporaryWhiteView = [UIView newAutoLayoutView];
 	temporaryWhiteView.backgroundColor = [UIColor whiteColor];
