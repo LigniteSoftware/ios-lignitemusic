@@ -157,6 +157,7 @@ BOOL didAutomaticallyClose = NO;
 	
 	if(!source.shouldNotSelect){
 		[self.currentSource setHidden:YES];
+		[self.browsingAssistant closeSourceSelector];
 	}
 	
 	switch(indexOfSource){
@@ -296,18 +297,6 @@ BOOL didAutomaticallyClose = NO;
 	}
 	
 	self.sourcesForSourceSelector = [NSArray arrayWithArray:sources];
-	
-	self.sourceSelector = [LMSourceSelectorView newAutoLayoutView];
-	self.sourceSelector.backgroundColor = [UIColor redColor];
-	self.sourceSelector.sources = self.sourcesForSourceSelector;
-	[self.view addSubview:self.sourceSelector];
-	
-	[self.sourceSelector autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.view];
-	[self.sourceSelector autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.view];
-	self.sourceSelector.bottomConstraint = [self.sourceSelector autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.view withOffset:-WINDOW_FRAME.size.height*(0.9)];
-	[self.sourceSelector autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
-
-	self.musicPlayer.sourceSelector = self.sourceSelector;
 
 	//Album View
 	
@@ -364,6 +353,7 @@ BOOL didAutomaticallyClose = NO;
 	self.browsingAssistant = [[LMBrowsingAssistantView alloc]initForAutoLayout];
 	self.browsingAssistant.coreViewController = self;
 	self.browsingAssistant.backgroundColor = [UIColor orangeColor];
+	self.browsingAssistant.sourcesForSourceSelector = self.sourcesForSourceSelector;
 	[self.view addSubview:self.browsingAssistant];
 	[self.browsingAssistant setup];
 	
@@ -371,40 +361,6 @@ BOOL didAutomaticallyClose = NO;
 	[self.browsingAssistant autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.view];
 	[self.browsingAssistant autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.view];
 	[self.browsingAssistant autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
-
-	UIView *temporaryWhiteView = [UIView newAutoLayoutView];
-	temporaryWhiteView.backgroundColor = [UIColor whiteColor];
-	[self.view addSubview:temporaryWhiteView];
-	
-	[temporaryWhiteView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.browsingAssistant];
-	[temporaryWhiteView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.browsingAssistant];
-	[temporaryWhiteView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.browsingAssistant];
-	[temporaryWhiteView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.browsingAssistant];
-	
-	UILabel *easterEgg = [UILabel newAutoLayoutView];
-	easterEgg.text = @"🎶 So baby pull me closer on the front screen of your iPhone 🎶";
-	easterEgg.textColor = [UIColor lightGrayColor];
-	easterEgg.textAlignment = NSTextAlignmentCenter;
-	easterEgg.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:12.0f];
-	[temporaryWhiteView addSubview:easterEgg];
-
-	[easterEgg autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-	[easterEgg autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	[easterEgg autoPinEdgeToSuperviewEdge:ALEdgeTop];
-	[easterEgg autoSetDimension:ALDimensionHeight toSize:14];
-	
-	UILabel *anotherEasterEgg = [UILabel newAutoLayoutView];
-	anotherEasterEgg.text = @"Technically, you could pull this all the way up to the top of your screen if you tried hard enough. And on this view specifically, I set no limit on how high you could go. And in addition to that, this bottom white spacer matches the height of the mini player, so you could see the bottom of this view easier than seeing it hit the top. Papa bless, 祝你好運!";
-	anotherEasterEgg.textColor = [UIColor lightGrayColor];
-	anotherEasterEgg.textAlignment = NSTextAlignmentCenter;
-	anotherEasterEgg.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:10.0f];
-	anotherEasterEgg.numberOfLines = 0;
-	[temporaryWhiteView addSubview:anotherEasterEgg];
-	
-	[anotherEasterEgg autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-	[anotherEasterEgg autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	[anotherEasterEgg autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:easterEgg];
-	[anotherEasterEgg autoSetDimension:ALDimensionHeight toSize:70];
 	
 	[self.view bringSubviewToFront:self.sourceSelector];
 	

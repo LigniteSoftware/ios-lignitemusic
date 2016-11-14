@@ -14,6 +14,8 @@
 #import "LMMusicPlayer.h"
 #import "LMSource.h"
 #import "LMLabel.h"
+#import "LMSourceSelectorView.h"
+#import "LMExtras.h"
 
 @interface LMBrowsingAssistantView()
 
@@ -29,9 +31,13 @@
 @property CGPoint originalPoint, currentPoint;
 
 @property int8_t currentlySelectedTab;
+@property int8_t previouslySelectedTab;
 
 @property NSMutableArray *tabViews;
-@property NSArray *sourcesForSourceSelector;
+@property NSArray<LMSource*>* sourcesForTabs;
+
+@property LMSourceSelectorView *sourceSelector;
+@property NSLayoutConstraint *sourceSelectorPositionConstraint;
 
 @end
 
@@ -119,9 +125,47 @@
 	[self close];
 }
 
+- (void)moveSourceSelectorToPosition:(float)position {
+	[self layoutIfNeeded];
+	
+	self.sourceSelectorPositionConstraint.constant = position;
+	
+	[UIView animateWithDuration:0.75
+						  delay:0.0
+		 usingSpringWithDamping:0.7
+		  initialSpringVelocity:0.0
+						options:0
+					 animations:^{
+						 [self layoutIfNeeded];
+					 } completion:nil];
+}
+
+- (void)closeSourceSelector {
+	[self moveSourceSelectorToPosition:WINDOW_FRAME.size.height];
+	[self selectSource:self.previouslySelectedTab];
+}
+
+- (void)openSourceSelector {
+	[self moveSourceSelectorToPosition:0];
+}
+
 - (void)selectSource:(uint8_t)sourceSelectedIndex {
+	if(sourceSelectedIndex == self.currentlySelectedTab){
+		return;
+	}
+	
+	//Perform the action associated with tab to implement the new tab selection
+	switch(sourceSelectedIndex){
+		case 1:{
+			[self openSourceSelector];
+			self.previouslySelectedTab = self.currentlySelectedTab;
+			break;
+		}
+	}
+	
 	UIView *backgroundView = [self.tabViews objectAtIndex:sourceSelectedIndex];
 	
+	//Animate the tabs
 	[UIView animateWithDuration:0.10 animations:^{
 		backgroundView.backgroundColor = [UIColor whiteColor];
 		
@@ -164,6 +208,10 @@
 		
 		self.currentlySelectedTab = sourceSelectedIndex;
 	}];
+	
+	if(sourceSelectedIndex != 1 && self.sourceSelectorPositionConstraint.constant < 10){
+		[self closeSourceSelector];
+	}
 }
 
 - (void)sourceTapped:(UITapGestureRecognizer*)tapGesture {
@@ -207,10 +255,10 @@
 		[sources addObject:source];
 	}
 	
-	self.sourcesForSourceSelector = [NSArray arrayWithArray:sources];
+	self.sourcesForTabs = [NSArray arrayWithArray:sources];
 	
 	self.selectorBackgroundView = [UIView newAutoLayoutView];
-	self.selectorBackgroundView.backgroundColor = [UIColor orangeColor];
+	self.selectorBackgroundView.backgroundColor = [UIColor whiteColor];
 	[self addSubview:self.selectorBackgroundView];
 	
 	NSLog(@"Loading browsing");
@@ -222,8 +270,8 @@
 	
 	self.tabViews = [NSMutableArray new];
 	
-	for(int i = 0; i < self.sourcesForSourceSelector.count; i++){
-		LMSource *source = [self.sourcesForSourceSelector objectAtIndex:i];
+	for(int i = 0; i < self.sourcesForTabs.count; i++){
+		LMSource *source = [self.sourcesForTabs objectAtIndex:i];
 		
 		BOOL isFirst = (i == 0);
 		
@@ -236,8 +284,8 @@
 		UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(sourceTapped:)];
 		[sourceTabBackgroundView addGestureRecognizer:tapGesture];
 		
-		[sourceTabBackgroundView autoPinEdge:ALEdgeLeading toEdge:isFirst ? ALEdgeLeading : ALEdgeTrailing ofView:leadingView];
-		[sourceTabBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.selectorBackgroundView withMultiplier:(1.0/(float)self.sourcesForSourceSelector.count)];
+		[sourceTabBackgroundView autoPinEdge:ALEdgeLeading toEdge:isFirst ? ALEdgeLeading : ALEdgeTrailing ofView:leadingView withOffset:!isFirst];
+		[sourceTabBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.selectorBackgroundView withMultiplier:(1.0/(float)self.sourcesForTabs.count)];
 		[sourceTabBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 		[sourceTabBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 		
@@ -290,7 +338,24 @@
 	self.currentElementBackgroundView.layer.masksToBounds = NO;
 	self.currentElementBackgroundView.layer.shadowRadius = 5;
 	
+	self.sourceSelector = [LMSourceSelectorView newAutoLayoutView];
+	self.sourceSelector.backgroundColor = [UIColor redColor];
+	self.sourceSelector.sources = self.sourcesForSourceSelector;
+	[self addSubview:self.sourceSelector];
+	
+	[self.sourceSelector autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
+	[self.sourceSelector autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self];
+	self.sourceSelectorPositionConstraint = [self.sourceSelector autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self withOffset:WINDOW_FRAME.size.height];
+	[self.sourceSelector autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self];
+	
+	self.musicPlayer.sourceSelector = self.sourceSelector;
+	
+	[self.sourceSelector setup];
+	
 	[self insertSubview:self.selectorBackgroundView aboveSubview:self.currentElementBackgroundView];
+	
+	[self insertSubview:self.sourceSelector aboveSubview:self.currentElementBackgroundView];
+	[self insertSubview:self.sourceSelector belowSubview:self.selectorBackgroundView];
 	
 //	[NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(close) userInfo:nil repeats:NO];
 }
@@ -301,6 +366,7 @@
 		self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 		
 		self.currentlySelectedTab = -1;
+		self.previouslySelectedTab = 0;
 	}
 	else{
 		NSLog(@"Error creating browsing assistant");
