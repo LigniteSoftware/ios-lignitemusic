@@ -59,7 +59,12 @@
 		//__weak UIImage *image = [mediaItem.artwork imageWithSize:CGSizeMake(480, 480)];
 		//self.loadedAlbumArt = image;
 		
-		return [mediaItem.artwork imageWithSize:CGSizeMake(480, 480)];
+		UIImage *albumArtImage = [mediaItem.artwork imageWithSize:CGSizeMake(480, 480)];
+		if(!albumArtImage){
+			albumArtImage = [LMAppIcon imageForIcon:LMIconNoAlbumArt];
+		}
+		
+		return albumArtImage;
 	}
 	
 	NSLog(@"Warning: Album art image not found for track %@.", self.title);

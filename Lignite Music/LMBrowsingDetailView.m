@@ -313,7 +313,7 @@
 
 - (float)spacingAtIndex:(NSUInteger)index forTableView:(LMNewTableView*)tableView {
 	if(index == 0){
-		return 20;
+		return self.musicType == LMMusicTypeAlbums ? 0 : 20;
 	}
 	return 10;
 }

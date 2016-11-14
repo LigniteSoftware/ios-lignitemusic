@@ -297,8 +297,8 @@
 				//				NSLog(@"Index of tile %d Column %d Row %d", tileIndex, x, y);
 				
 				UIImageView *testView = [UIImageView newAutoLayoutView];
-				testView.backgroundColor = [UIColor colorWithRed:0.2*((float)(arc4random_uniform(5))+1.0) green:0.2*((float)(arc4random_uniform(5))+1.0) blue:0.2*((float)(arc4random_uniform(5))+1.0) alpha:1.0];
-				testView.image = [LMAppIcon imageForIcon:LMIconPlaylists];
+				testView.backgroundColor = [UIColor whiteColor]; //[UIColor colorWithRed:0.2*((float)(arc4random_uniform(5))+1.0) green:0.2*((float)(arc4random_uniform(5))+1.0) blue:0.2*((float)(arc4random_uniform(5))+1.0) alpha:1.0];
+				testView.image = [LMAppIcon imageForIcon:LMIconNoAlbumArt];
 				[self.rootView addSubview:testView];
 				
 				[testView autoPinEdge:ALEdgeTop toEdge:firstRow ? ALEdgeTop : ALEdgeBottom ofView:topElement];
@@ -369,7 +369,7 @@
 						UIImageView *topLeftCornerView = [self.tilesArray objectAtIndex:finalIndex];
 						
 						UIImageView *bigTileView = [UIImageView newAutoLayoutView];
-						bigTileView.backgroundColor = [UIColor colorWithRed:0.2*((float)(arc4random_uniform(5))+1.0) green:0.2*((float)(arc4random_uniform(5))+1.0) blue:0.2*((float)(arc4random_uniform(5))+1.0) alpha:1.0];
+						bigTileView.backgroundColor = [UIColor whiteColor]; //[UIColor colorWithRed:0.2*((float)(arc4random_uniform(5))+1.0) green:0.2*((float)(arc4random_uniform(5))+1.0) blue:0.2*((float)(arc4random_uniform(5))+1.0) alpha:1.0];
 						[self.rootView addSubview:bigTileView];
 						
 						[bigTileView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:topLeftCornerView];

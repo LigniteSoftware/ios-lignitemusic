@@ -87,6 +87,8 @@
 			lastSourceOpened = [settings integerForKey:LMSettingsKeyLastOpenedSource];
 		}
 		
+		NSLog(@"Last source opened %d", (int)lastSourceOpened);
+		
 		[self tappedListEntry:[self.itemArray objectAtIndex:lastSourceOpened]];
 	}
 }
@@ -157,6 +159,7 @@
 	
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	[defaults setInteger:index forKey:LMSettingsKeyLastOpenedSource];
+	[defaults synchronize];
 }
 
 - (void)tappedListEntry:(LMListEntry*)entry{
