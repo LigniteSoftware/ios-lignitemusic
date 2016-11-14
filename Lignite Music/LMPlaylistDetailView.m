@@ -172,8 +172,8 @@
 	return tiledAlbumCover;
 }
 
-- (float)contentSubviewHeightFactorialForBigListEntry:(LMBigListEntry*)bigListEntry {
-	return 0.25;
+- (float)contentSubviewFactorial:(BOOL)height forBigListEntry:(LMBigListEntry *)bigListEntry {
+	return height ? 0.25 : 0.8;
 }
 
 - (void)sizeChangedToLargeSize:(BOOL)largeSize withHeight:(float)newHeight forBigListEntry:(LMBigListEntry*)bigListEntry {

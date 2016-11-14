@@ -13,6 +13,7 @@
 #import "LMTiledAlbumCoverView.h"
 #import "LMAppIcon.h"
 #import "LMBrowsingDetailView.h"
+#import "LMExtras.h"
 
 @interface LMBrowsingView()<LMBigListEntryTableViewDelegate, LMMusicPlayerDelegate>
 
@@ -219,14 +220,37 @@
 }
 
 - (void)prepareContentSubview:(id)subview forBigListEntry:(LMBigListEntry *)bigListEntry {
+	if(!bigListEntry.queue){
+		bigListEntry.queue = [[LMOperationQueue alloc] init];
+	}
+	
+	[bigListEntry.queue cancelAllOperations];
+	
 	switch(self.musicType){
 		case LMMusicTypePlaylists: {
 			LMTiledAlbumCoverView *tiledAlbumCover = subview;
+			
 			tiledAlbumCover.musicCollection = [self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex];
 			break;
 		}
 		case LMMusicTypeAlbums: {
+			UIImageView *imageView = (UIImageView*)subview;
 			
+			NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
+				LMMusicTrack *representativeTrack = [self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex].representativeItem;
+				UIImage *albumArt = [representativeTrack albumArt];
+				
+				dispatch_sync(dispatch_get_main_queue(), ^{
+					if(operation.cancelled){
+						NSLog(@"Rejecting.");
+						return;
+					}
+					
+					imageView.image = albumArt;
+				});
+			}];
+			
+			[bigListEntry.queue addOperation:operation];
 			break;
 		}
 		default: {
@@ -235,7 +259,6 @@
 	}
 }
 
-//TODO look into this and fix it cuz there's a prep function as well and I don't think we need both lol
 - (id)contentSubviewForBigListEntry:(LMBigListEntry*)bigListEntry {
 	switch(self.musicType){
 		case LMMusicTypePlaylists: {
@@ -244,8 +267,14 @@
 			return tiledAlbumCover;
 		}
 		case LMMusicTypeAlbums: {
-			
-			return [UIView newAutoLayoutView];
+			UIImageView *imageView = [UIImageView newAutoLayoutView];
+			imageView.image = [[self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex].representativeItem albumArt];
+			imageView.contentMode = UIViewContentModeScaleAspectFit;
+			imageView.layer.shadowColor = [UIColor blackColor].CGColor;
+			imageView.layer.shadowRadius = WINDOW_FRAME.size.width/45;
+			imageView.layer.shadowOffset = CGSizeMake(0, imageView.layer.shadowRadius/2);
+			imageView.layer.shadowOpacity = 0.25f;
+			return imageView;
 		}
 		default: {
 			NSLog(@"Windows fucking error!");
@@ -254,8 +283,8 @@
 	}
 }
 
-- (float)contentSubviewHeightFactorialForBigListEntry:(LMBigListEntry*)bigListEntry {
-	return 0.4;
+- (float)contentSubviewFactorial:(BOOL)height forBigListEntry:(LMBigListEntry *)bigListEntry {
+	return height ? 0.4 : 0.8;
 }
 
 - (void)setup {

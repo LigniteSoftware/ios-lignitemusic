@@ -155,6 +155,9 @@
 		case LMMusicTypePlaylists: {
 			return self.musicTrackCollection.title;
 		}
+		case LMMusicTypeAlbums: {
+			return self.musicTrackCollection.representativeItem.albumTitle;
+		}
 		default:{
 			return nil;
 		}
@@ -165,6 +168,9 @@
 	switch(self.musicType){
 		case LMMusicTypePlaylists: {
 			return [NSString stringWithFormat:@"%ld %@", self.musicTrackCollection.count, NSLocalizedString(self.musicTrackCollection.count == 1 ? @"Song" : @"Songs", nil)];
+		}
+		case LMMusicTypeAlbums: {
+			return self.musicTrackCollection.representativeItem.artist;
 		}
 		default: {
 			return nil;
@@ -177,6 +183,9 @@
 		case LMMusicTypePlaylists: {
 			return nil;
 		}
+		case LMMusicTypeAlbums: {
+			return [NSString stringWithFormat:@"%ld %@", self.musicTrackCollection.count, NSLocalizedString(self.musicTrackCollection.count == 1 ? @"Song" : @"Songs", nil)];
+		}
 		default: {
 			return nil;
 		}
@@ -184,14 +193,7 @@
 }
 
 - (UIImage*)centerImageForInfoView:(LMCollectionInfoView*)infoView {
-	switch(self.musicType){
-		case LMMusicTypePlaylists: {
-			return nil;
-		}
-		default: {
-			return nil;
-		}
-	}
+	return nil;
 }
 
 - (id)contentSubviewForBigListEntry:(LMBigListEntry*)bigListEntry {
@@ -201,14 +203,30 @@
 			tiledAlbumCover.musicCollection = self.musicTrackCollection;
 			return tiledAlbumCover;
 		}
+		case LMMusicTypeAlbums: {
+			UIImageView *imageView = [UIImageView newAutoLayoutView];
+			imageView.contentMode = UIViewContentModeScaleAspectFit;
+			imageView.image = [self.musicTrackCollection.representativeItem albumArt];
+			return imageView;
+		}
 		default: {
 			return nil;
 		}
 	}
 }
 
-- (float)contentSubviewHeightFactorialForBigListEntry:(LMBigListEntry*)bigListEntry {
-	return 0.25;
+- (float)contentSubviewFactorial:(BOOL)height forBigListEntry:(LMBigListEntry *)bigListEntry {
+	switch(self.musicType){
+		case LMMusicTypePlaylists: {
+			return height ? 0.25 : 0.80;
+		}
+		case LMMusicTypeAlbums: {
+			return height ? WINDOW_FRAME.size.width/WINDOW_FRAME.size.height : 1.0; //To fill to the edge of the screen
+		}
+		default: {
+			return 0.50;
+		}
+	}
 }
 
 - (void)sizeChangedToLargeSize:(BOOL)largeSize withHeight:(float)newHeight forBigListEntry:(LMBigListEntry*)bigListEntry {
@@ -254,8 +272,18 @@
 }
 
 - (UIImage*)iconForListEntry:(LMListEntry*)entry {
-	LMMusicTrack *track = [self.musicTrackCollection.items objectAtIndex:entry.collectionIndex];
-	return [track albumArt];
+	switch(self.musicType) {
+		case LMMusicTypePlaylists: {
+			LMMusicTrack *track = [self.musicTrackCollection.items objectAtIndex:entry.collectionIndex];
+			return [track albumArt];
+		}
+		case LMMusicTypeAlbums: {
+			return nil;
+		}
+		default: {
+			return nil;
+		}
+	}
 }
 
 - (id)subviewAtIndex:(NSUInteger)index forTableView:(LMNewTableView*)tableView {

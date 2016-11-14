@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "LMCollectionInfoView.h"
 #import "LMControlBarView.h"
+#import "LMOperationQueue.h"
 
 @class LMBigListEntry;
 
@@ -25,10 +26,11 @@
 /**
  Get the content subview's height factorial (percentage) for the big list entry.
 
+ @param height Whether or not it wants the height factorial.
  @param bigListEntry The big list entry.
  @return The content factorial.
  */
-- (float)contentSubviewHeightFactorialForBigListEntry:(LMBigListEntry*)bigListEntry;
+- (float)contentSubviewFactorial:(BOOL)height forBigListEntry:(LMBigListEntry*)bigListEntry;
 
 /**
  Is called when the size to the big list entry changes. This should only happen when the UIControlBarView changes its size in portrait.
@@ -53,7 +55,7 @@
  *
  
  - (id)contentSubviewForBigListEntry:(LMBigListEntry*)bigListEntry;
- - (float)contentSubviewHeightFactorialForBigListEntry:(LMBigListEntry*)bigListEntry;
+ - (float)contentSubviewFactorial:(BOOL)height forBigListEntry:(LMBigListEntry*)bigListEntry;
  - (void)sizeChangedToLargeSize:(BOOL)largeSize withHeight:(float)newHeight forBigListEntry:(LMBigListEntry*)bigListEntry;
  
  - (void)contentViewTappedForBigListEntry:(LMBigListEntry*)bigListEntry;
@@ -69,6 +71,13 @@
 
 @property BOOL isLargeSize;
 @property NSUInteger collectionIndex;
+
+@property LMOperationQueue *queue;
+
+/**
+ How much the width of the content view should take up in multiplier sense. 1.0 will touch both edges of the big list entry. Default is 0.8.
+ */
+@property float contentViewWidthMultiplier;
 
 /**
  Gets the size of a big list entry with an associated delegate for whether or not it is open.

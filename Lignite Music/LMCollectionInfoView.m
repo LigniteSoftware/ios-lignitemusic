@@ -96,18 +96,18 @@
 		[self.topView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 		[self.topView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.7];
 		
-		[self.bottomView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-		[self.bottomView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.bottomView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:20];
+		[self.bottomView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:20];
 		[self.bottomView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 		[self.bottomView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.topView];
 		
-		[self.titleLabel autoCenterInSuperview];
-		[self.titleLabel autoPinEdgesToSuperviewEdges];
+		[self.titleLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.topView withOffset:20];
+		[self.titleLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.topView withOffset:-20];
+		[self.titleLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.topView];
+		[self.titleLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.topView];
 		 
-		[self.middleDividerLabel autoCenterInSuperview];
 		[self.middleDividerLabel autoPinEdgesToSuperviewEdges];
 		
-		[self.middleDividerImageView autoCenterInSuperview];
 		[self.middleDividerImageView autoPinEdgesToSuperviewEdges];
 	}
 	

@@ -98,8 +98,8 @@
 	return contentSubview;
 }
 
-- (float)contentSubviewHeightFactorialForBigListEntry:(LMBigListEntry*)bigListEntry {
-	return [self.delegate contentSubviewHeightFactorialForBigListEntry:bigListEntry];
+- (float)contentSubviewFactorial:(BOOL)height forBigListEntry:(LMBigListEntry *)bigListEntry {
+	return [self.delegate contentSubviewFactorial:height forBigListEntry:bigListEntry];
 }
 
 - (void)sizeChangedToLargeSize:(BOOL)largeSize withHeight:(float)newHeight forBigListEntry:(LMBigListEntry*)bigListEntry {

@@ -24,8 +24,16 @@
 
 @implementation LMBigListEntry
 
+- (instancetype)init {
+	self = [super init];
+	if(self) {
+		self.contentViewWidthMultiplier = 0.8;
+	}
+	return self;
+}
+
 + (float)sizeForBigListEntryWhenOpened:(BOOL)opened forDelegate:(id<LMBigListEntryDelegate>)delegate {
-	float contentViewHeightFactorial = [delegate contentSubviewHeightFactorialForBigListEntry:nil];
+	float contentViewHeightFactorial = [delegate contentSubviewFactorial:YES forBigListEntry:nil];
 	float infoViewHeightFactorial = (1.0/10.0);
 	
 	return (contentViewHeightFactorial+infoViewHeightFactorial)*WINDOW_FRAME.size.height+20+[LMControlBarView heightWhenIsOpened:opened];
@@ -88,7 +96,8 @@
 //	self.contentView = [UIView newAutoLayoutView];
 //	[self.contentView setBackgroundColor:[UIColor greenColor]];
 
-	float contentViewHeightFactorial = [self.entryDelegate contentSubviewHeightFactorialForBigListEntry:self];
+	float contentViewHeightFactorial = [self.entryDelegate contentSubviewFactorial:YES forBigListEntry:self];
+	float contentViewWidthFactorial = [self.entryDelegate contentSubviewFactorial:NO forBigListEntry:self];
 	float infoViewHeightFactorial = (1.0/10.0);
 
 	if(contentViewHeightFactorial == 0.0){
@@ -97,13 +106,13 @@
 	}
 
 //	self.backgroundColor = [UIColor orangeColor];
-
+ 
 	UIView *contentView = self.contentView;
 	[self addSubview:contentView];
 	
 	[contentView autoAlignAxisToSuperviewAxis:ALAxisVertical];
 	[contentView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-	[contentView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:0.8];
+	[contentView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:contentViewWidthFactorial];
 	[contentView autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height*contentViewHeightFactorial];
 	
 	UITapGestureRecognizer *contentTapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tappedContentView:)];
