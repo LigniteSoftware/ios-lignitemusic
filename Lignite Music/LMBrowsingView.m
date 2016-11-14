@@ -28,10 +28,6 @@
 @implementation LMBrowsingView
 
 - (void)reloadSourceSelectorInfo {
-	if(self.hidden){
-		return;
-	}
-	
 	NSString *titleString;
 	NSString *singlularString;
 	NSString *pluralString;

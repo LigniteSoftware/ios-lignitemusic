@@ -12,5 +12,6 @@
 @interface LMAlbumView : UIView
 
 - (void)reloadSourceSelectorInfo;
+- (void)setup;
 
 @end

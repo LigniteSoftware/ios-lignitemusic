@@ -21,20 +21,10 @@
 @implementation LMAlbumView
 
 - (void)reloadSourceSelectorInfo {
-	if(self.hidden){
-		return;
-	}
-	
 	[self.browsingView reloadSourceSelectorInfo];
 }
 
-
-- (void)layoutSubviews {
-	if(self.loaded){
-		return;
-	}
-	self.loaded = YES;
-	
+- (void)setup {
 	self.browsingView = [LMBrowsingView newAutoLayoutView];
 	self.browsingView.musicTrackCollections = [[LMMusicPlayer sharedMusicPlayer] queryCollectionsForMusicType:LMMusicTypeAlbums];
 	self.browsingView.musicType = LMMusicTypeAlbums;

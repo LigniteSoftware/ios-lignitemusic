@@ -209,10 +209,13 @@ BOOL didAutomaticallyClose = NO;
 									 @"Redesigned album browser",
 									 @"Redesigned album detail view",
 									 @"Fixed crash on playlist browser",
+									 @"Fixed app opening to blank screen",
+									 @"Fixed source being incorrectly chosen",
+									 @"Improvements for some cases when there's no album art"
 									 ];
 	
 	NSArray *currentBuildIssues = @[
-									@"Genre view is also laggy",
+									@"Genre view is laggy",
 									@"\nPlease do not report already known issues to us, thanks!"
 									];
 	
@@ -248,6 +251,7 @@ BOOL didAutomaticallyClose = NO;
 									style:UIAlertActionStyleDefault
 									handler:^(UIAlertAction *action) {
 										[userDefaults setObject:currentAppBuildString forKey:@"LastVersionBuildString"];
+										[userDefaults synchronize];
 									}];
 		
 		[alert addAction:yesButton];
@@ -302,21 +306,20 @@ BOOL didAutomaticallyClose = NO;
 	[self.sourceSelector autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.view];
 	self.sourceSelector.bottomConstraint = [self.sourceSelector autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.view withOffset:-WINDOW_FRAME.size.height*(0.9)];
 	[self.sourceSelector autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
-	
-	[self.sourceSelector setup];
 
 	self.musicPlayer.sourceSelector = self.sourceSelector;
 
 	//Album View
 	
 	self.albumView = [LMAlbumView newAutoLayoutView];
-//	self.albumView.rootViewController = self;
-	self.albumView.hidden = YES;
 	[self.view addSubview:self.albumView];
 
 	[self.albumView autoCenterInSuperview];
 	[self.albumView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
 	[self.albumView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
+	
+	[self.albumView setup];
+	self.albumView.hidden = YES;
 	
 	//Title view
 	
@@ -409,6 +412,10 @@ BOOL didAutomaticallyClose = NO;
 	[self.musicPlayer addMusicDelegate:self];
 	
 	[NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(showWhatsPoppin) userInfo:nil repeats:NO];
+	
+	NSLog(@"Loaded shit");
+	
+	[self.sourceSelector setup];
 	
 //	[NSTimer scheduledTimerWithTimeInterval:0.75
 //									 target:self
