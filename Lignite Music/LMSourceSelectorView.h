@@ -9,12 +9,37 @@
 #import <UIKit/UIKit.h>
 #import "LMSource.h"
 
+@class LMSourceSelectorView;
+
+@protocol LMSourceSelectorDelegate <NSObject>
+
+/**
+ The title changed to...
+
+ @param title This new title.
+ */
+- (void)sourceTitleChangedTo:(NSString*)title;
+
+/**
+ The subtitle changed to...
+
+ @param subtitle This new subtitle.
+ */
+- (void)sourceSubtitleChangedTo:(NSString*)subtitle;
+
+@end
+
 @interface LMSourceSelectorView : UIView
 
 /**
  The array of sources to expose to the user.
  */
 @property NSArray<LMSource*> *sources;
+
+/**
+ The delegate which will draw the title and subtitles.
+ */
+@property id<LMSourceSelectorDelegate> delegate;
 
 /**
  Setup the source selector and its constraints.

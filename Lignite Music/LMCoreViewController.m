@@ -231,12 +231,12 @@ BOOL didAutomaticallyClose = NO;
 - (void)showWhatsPoppin {
 	NSArray *currentBuildChanges = @[
 									 @"Added new tabbed navigation at the bottom",
-									 @"Got rid of old source selector",
-									 @"Fixed miniplayer getting out of sync"
+									 @"\n(Swipe down on navigation/miniplayer to minimize, tap or swipe up on minimized view to expand)",
+									 @"\nFixed miniplayer getting out of sync",
+									 @"\nGot rid of old source selector"
 									 ];
 	
 	NSArray *currentBuildIssues = @[
-									@"Genre view is laggy",
 									@"\nPlease do not report already known issues to us, thanks!"
 									];
 	
@@ -255,11 +255,13 @@ BOOL didAutomaticallyClose = NO;
 		
 		NSMutableString *changesString = [NSMutableString stringWithFormat:@"\nChanges\n---------\n"];
 		for(int i = 0; i < currentBuildChanges.count; i++){
-			[changesString appendFormat:@"%@%@", [currentBuildChanges objectAtIndex:i], (i+1) == currentBuildChanges.count ? @"\n\n" : @"\n"];
+			[changesString appendFormat:@"%@%@", [currentBuildChanges objectAtIndex:i], ((i+1) == currentBuildChanges.count && currentBuildIssues.count > 1) ? @"\n\n" : @"\n"];
 		}
-		[changesString appendString:@"New issues\n-------------\n"];
-		for(int i = 0; i < currentBuildIssues.count; i++){
-			[changesString appendFormat:@"%@%@", [currentBuildIssues objectAtIndex:i], (i+1) == currentBuildIssues.count ? @"" : @"\n"];
+		if(currentBuildIssues.count > 1){
+			[changesString appendString:@"New issues\n-------------\n"];
+			for(int i = 0; i < currentBuildIssues.count; i++){
+				[changesString appendFormat:@"%@%@", [currentBuildIssues objectAtIndex:i], (i+1) == currentBuildIssues.count ? @"" : @"\n"];
+			}
 		}
 		
 		UIAlertController *alert = [UIAlertController

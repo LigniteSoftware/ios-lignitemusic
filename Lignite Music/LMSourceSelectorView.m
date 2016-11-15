@@ -29,15 +29,15 @@
 @implementation LMSourceSelectorView
 
 - (void)setSourceTitle:(NSString*)title {
-//	if(self.currentSourceLabel){
-//		self.currentSourceLabel.text = title;
-//	}
+	if(self.delegate){
+		[self.delegate sourceTitleChangedTo:title];
+	}
 }
 
 - (void)setSourceSubtitle:(NSString*)subtitle {
-//	if(self.detailInfoLabel){
-//		self.detailInfoLabel.text = subtitle;
-//	}
+	if(self.delegate){
+		[self.delegate sourceSubtitleChangedTo:subtitle];
+	}
 }
 
 - (id)subviewAtIndex:(NSUInteger)index forTableView:(LMNewTableView *)tableView {

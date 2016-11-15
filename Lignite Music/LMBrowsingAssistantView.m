@@ -19,7 +19,7 @@
 #import "LMLabel.h"
 #import "LMButton.h"
 
-@interface LMBrowsingAssistantView()<LMButtonDelegate>
+@interface LMBrowsingAssistantView()<LMButtonDelegate, LMSourceSelectorDelegate>
 
 @property LMMusicPlayer *musicPlayer;
 
@@ -48,6 +48,14 @@
 @end
 
 @implementation LMBrowsingAssistantView
+
+- (void)sourceTitleChangedTo:(NSString *)title {
+	self.currentSourceLabel.text = title;
+}
+
+- (void)sourceSubtitleChangedTo:(NSString *)subtitle {
+	self.currentSourceDetailLabel.text = subtitle;
+}
 
 - (BOOL)open {
 	if(self.selectorPositionConstraint.constant == 0){
@@ -412,6 +420,7 @@
 	self.sourceSelector = [LMSourceSelectorView newAutoLayoutView];
 	self.sourceSelector.backgroundColor = [UIColor redColor];
 	self.sourceSelector.sources = self.sourcesForSourceSelector;
+	self.sourceSelector.delegate = self;
 	[self addSubview:self.sourceSelector];
 	
 	[self.sourceSelector autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
