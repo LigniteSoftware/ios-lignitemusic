@@ -24,13 +24,12 @@
 @property LMMusicPlayer *musicPlayer;
 
 @property UIView *selectorBackgroundView;
+@property NSLayoutConstraint *selectorPositionConstraint;
 
 @property UIView *grabberView;
 @property UIImageView *grabberImageView;
 
 @property LMMiniPlayerView *miniPlayerView;
-
-@property CGPoint originalPoint, currentPoint;
 
 @property int8_t currentlySelectedTab;
 @property int8_t previouslySelectedTab;
@@ -51,79 +50,49 @@
 @implementation LMBrowsingAssistantView
 
 - (BOOL)open {
-	if(self.textBackgroundConstraint.constant == 0){
+	if(self.selectorPositionConstraint.constant == 0){
 		return NO;
 	}
 	
 	NSLog(@"Open browsing assistant");
 	
-	[[self superview] layoutIfNeeded];
-	self.textBackgroundConstraint.constant = 0;
-	self.currentPoint = CGPointMake(self.originalPoint.x, self.originalPoint.y);
+	
+	[self layoutIfNeeded];
+	self.selectorPositionConstraint.constant = 0;
 	[UIView animateWithDuration:0.5 delay:0
 		 usingSpringWithDamping:0.6 initialSpringVelocity:0.0f
 						options:0 animations:^{
-							[[self superview] layoutIfNeeded];
+							[self layoutIfNeeded];
 						} completion:nil];
+	
+	[self.delegate heightRequiredChangedTo:self.selectorBackgroundView.frame.size.height+self.miniPlayerView.frame.size.height forBrowsingView:self];
 	
 	return YES;
 }
 
 - (BOOL)close {
-//	int squadGoals = self.currentElementBackgroundView.frame.size.height-10;
-//	if(self.textBackgroundConstraint.constant == squadGoals){
-//		return NO;
-//	}
-//	
+	if(self.textBackgroundConstraint.constant == self.frame.size.height){
+		return NO;
+	}
+	
 	NSLog(@"Close browsing assistant");
-//	
-//	[[self superview] layoutIfNeeded];
-//	self.textBackgroundConstraint.constant = squadGoals;
-//	self.currentPoint = CGPointMake(self.originalPoint.x, self.originalPoint.y + self.textBackgroundConstraint.constant);
-//	[UIView animateWithDuration:0.5 delay:0
-//		 usingSpringWithDamping:0.6 initialSpringVelocity:0.0f
-//						options:0 animations:^{
-//							[[self superview] layoutIfNeeded];
-//						} completion:nil];
+	
+	if(self.currentlySelectedTab == 1){
+		[self closeSourceSelector];
+	}
 
 	
+	[self layoutIfNeeded];
+	self.selectorPositionConstraint.constant = self.frame.size.height;
+	[UIView animateWithDuration:0.5 delay:0
+		 usingSpringWithDamping:0.6 initialSpringVelocity:0.0f
+						options:0 animations:^{
+							[self layoutIfNeeded];
+						} completion:nil];
+
+	[self.delegate heightRequiredChangedTo:self.currentSourceBackgroundView.frame.size.height forBrowsingView:self];
 	
 	return YES;
-}
-
-- (void)handlePan:(UIPanGestureRecognizer *)recognizer {
-	CGPoint translation = [recognizer translationInView:self];
-	
-	if(self.originalPoint.y == 0){
-		self.originalPoint = self.frame.origin;
-		self.currentPoint = self.frame.origin;
-	}
-	float totalTranslation = translation.y + (self.currentPoint.y-self.originalPoint.y);
-	
-//	NSLog(@"%f", totalTranslation);
-	
-	if(totalTranslation < 0){
-		self.textBackgroundConstraint.constant = -sqrt(-totalTranslation);
-	}
-	else{
-		self.textBackgroundConstraint.constant = totalTranslation;
-	}
-	
-	[[self superview] layoutIfNeeded];
-	
-	if(recognizer.state == UIGestureRecognizerStateEnded){
-		//NSLog(@"Dick is not a bone %@", NSStringFromCGPoint(self.currentPoint));
-		self.currentPoint = CGPointMake(self.currentPoint.x, self.originalPoint.y + totalTranslation);
-		
-//		NSLog(@"Dick is not a bone %@", NSStringFromCGPoint(self.currentPoint));
-		
-		if((translation.y >= 0)){
-			[self close];
-		}
-		else if((translation.y < 0)){
-			[self open];
-		}
-	}
 }
 	
 - (void)swipeUp {
@@ -260,7 +229,8 @@
 }
 
 - (void)clickedButton:(LMButton *)button {
-	
+	NSLog(@"Spoooooked");
+	[self open];
 }
 
 - (void)setup {
@@ -298,16 +268,76 @@
 	
 	self.sourcesForTabs = [NSArray arrayWithArray:sources];
 	
+	
+	
+	self.currentSourceBackgroundView = [UIView newAutoLayoutView];
+	self.currentSourceBackgroundView.backgroundColor = [UIColor purpleColor];
+	[self addSubview:self.currentSourceBackgroundView];
+	
+	[self.currentSourceBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+	[self.currentSourceBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+	[self.currentSourceBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+	[self.currentSourceBackgroundView autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height/14.0];
+	
+	self.currentSourceBackgroundView.backgroundColor = [UIColor whiteColor];
+	self.currentSourceBackgroundView.layer.shadowColor = [UIColor blackColor].CGColor;
+	self.currentSourceBackgroundView.layer.shadowOpacity = 0.25f;
+	self.currentSourceBackgroundView.layer.shadowOffset = CGSizeMake(0, 0);
+	self.currentSourceBackgroundView.layer.masksToBounds = NO;
+	self.currentSourceBackgroundView.layer.shadowRadius = 5;
+	
+	self.currentSourceButton = [LMButton newAutoLayoutView];
+	self.currentSourceButton.delegate = self;
+	[self.currentSourceBackgroundView addSubview:self.currentSourceButton];
+	
+	[self.currentSourceButton autoCenterInSuperview];
+	[self.currentSourceButton autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.currentSourceBackgroundView withMultiplier:0.8];
+	[self.currentSourceButton autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.currentSourceBackgroundView withMultiplier:0.8];
+	
+	[self.currentSourceButton setupWithImageMultiplier:0.525];
+	
+	[self.currentSourceButton setImage:[LMAppIcon imageForIcon:LMIconPlaylists]];
+	
+	self.currentSourceLabel = [LMLabel newAutoLayoutView];
+	self.currentSourceLabel.text = @"Text post please ignore";
+	[self.currentSourceBackgroundView addSubview:self.currentSourceLabel];
+	
+	[self.currentSourceLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:10];
+	[self.currentSourceLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.currentSourceButton withOffset:-10];
+	[self.currentSourceLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.currentSourceBackgroundView withMultiplier:(1.0/3.0)];
+	[self.currentSourceLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+	
+	self.currentSourceDetailLabel = [LMLabel newAutoLayoutView];
+	self.currentSourceDetailLabel.text = @"You didn't ignore it";
+	self.currentSourceDetailLabel.textAlignment = NSTextAlignmentRight;
+	[self.currentSourceBackgroundView addSubview:self.currentSourceDetailLabel];
+	
+	[self.currentSourceDetailLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:10];
+	[self.currentSourceDetailLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.currentSourceButton withOffset:10];
+	[self.currentSourceDetailLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.currentSourceBackgroundView withMultiplier:(1.0/3.0)];
+	[self.currentSourceDetailLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+	
+	
+	
 	self.selectorBackgroundView = [UIView newAutoLayoutView];
 	self.selectorBackgroundView.backgroundColor = [UIColor whiteColor];
 	[self addSubview:self.selectorBackgroundView];
 	
 	NSLog(@"Loading browsing");
 	
-	[self.selectorBackgroundView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
+	self.selectorPositionConstraint = [self.selectorBackgroundView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
 	[self.selectorBackgroundView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
 	[self.selectorBackgroundView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self];
 	[self.selectorBackgroundView autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height/8.0];
+	
+	UIView *whiteViewForAnimation = [UIView newAutoLayoutView]; //For when the view slightly bounces up
+	whiteViewForAnimation.backgroundColor = [UIColor whiteColor];
+	[self addSubview:whiteViewForAnimation];
+	
+	[whiteViewForAnimation autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.selectorBackgroundView];
+	[whiteViewForAnimation autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+	[whiteViewForAnimation autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+	[whiteViewForAnimation autoSetDimension:ALDimensionHeight toSize:100];
 	
 	self.tabViews = [NSMutableArray new];
 	
@@ -392,55 +422,6 @@
 	self.musicPlayer.sourceSelector = self.sourceSelector;
 	
 	[self.sourceSelector setup];
-	
-	
-	
-	self.currentSourceBackgroundView = [UIView newAutoLayoutView];
-	self.currentSourceBackgroundView.backgroundColor = [UIColor purpleColor];
-	[self addSubview:self.currentSourceBackgroundView];
-	
-	[self.currentSourceBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-	[self.currentSourceBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-	[self.currentSourceBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	[self.currentSourceBackgroundView autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height/14.0];
-	
-	self.currentSourceBackgroundView.backgroundColor = [UIColor whiteColor];
-	self.currentSourceBackgroundView.layer.shadowColor = [UIColor blackColor].CGColor;
-	self.currentSourceBackgroundView.layer.shadowOpacity = 0.25f;
-	self.currentSourceBackgroundView.layer.shadowOffset = CGSizeMake(0, 0);
-	self.currentSourceBackgroundView.layer.masksToBounds = NO;
-	self.currentSourceBackgroundView.layer.shadowRadius = 5;
-	
-	self.currentSourceButton = [LMButton newAutoLayoutView];
-	self.currentSourceButton.delegate = self;
-	[self.currentSourceBackgroundView addSubview:self.currentSourceButton];
-	
-	[self.currentSourceButton autoCenterInSuperview];
-	[self.currentSourceButton autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.currentSourceBackgroundView withMultiplier:0.8];
-	[self.currentSourceButton autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.currentSourceBackgroundView withMultiplier:0.8];
-	
-	[self.currentSourceButton setupWithImageMultiplier:0.525];
-	
-	[self.currentSourceButton setImage:[LMAppIcon imageForIcon:LMIconPlaylists]];
-	
-	self.currentSourceLabel = [LMLabel newAutoLayoutView];
-	self.currentSourceLabel.text = @"Text post please ignore";
-	[self.currentSourceBackgroundView addSubview:self.currentSourceLabel];
-	
-	[self.currentSourceLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:10];
-	[self.currentSourceLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.currentSourceButton withOffset:-10];
-	[self.currentSourceLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.currentSourceBackgroundView withMultiplier:(1.0/3.0)];
-	[self.currentSourceLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
-	
-	self.currentSourceDetailLabel = [LMLabel newAutoLayoutView];
-	self.currentSourceDetailLabel.text = @"You didn't ignore it";
-	self.currentSourceDetailLabel.textAlignment = NSTextAlignmentRight;
-	[self.currentSourceBackgroundView addSubview:self.currentSourceDetailLabel];
-	
-	[self.currentSourceDetailLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:10];
-	[self.currentSourceDetailLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.currentSourceButton withOffset:10];
-	[self.currentSourceDetailLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.currentSourceBackgroundView withMultiplier:(1.0/3.0)];
-	[self.currentSourceDetailLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
 	
 	
 	
