@@ -20,7 +20,7 @@
 #import "LMPlaylistView.h"
 #import "LMGenreView.h"
 
-@interface LMCoreViewController () <LMMusicPlayerDelegate, LMSourceDelegate>
+@interface LMCoreViewController () <LMMusicPlayerDelegate, LMSourceDelegate, LMBrowsingAssistantDelegate>
 
 @property LMMusicPlayer *musicPlayer;
 
@@ -37,6 +37,7 @@
 @property NSArray<LMSource*> *sourcesForSourceSelector;
 
 @property NSLayoutConstraint *topConstraint;
+@property NSLayoutConstraint *browsingAssistantHeightConstraint;
 
 @property id currentSource;
 
@@ -204,15 +205,30 @@ BOOL didAutomaticallyClose = NO;
 	}
 }
 
+- (void)heightRequiredChangedTo:(float)heightRequired forBrowsingView:(LMBrowsingAssistantView *)browsingView {
+	if(!self.browsingAssistantHeightConstraint){
+		self.browsingAssistantHeightConstraint = [self.browsingAssistant autoSetDimension:ALDimensionHeight toSize:heightRequired];
+		
+		[self.view layoutIfNeeded];
+		return;
+	}
+	
+	[self.view layoutIfNeeded];
+	
+	self.browsingAssistantHeightConstraint.constant = heightRequired;
+	
+	[UIView animateWithDuration:0.75 animations:^{
+		[self.view layoutIfNeeded];
+	}];
+	
+	NSLog(@"Spook %f", heightRequired);
+}
+
 - (void)showWhatsPoppin {
 	NSArray *currentBuildChanges = @[
-									 @"Added genre browser",
-									 @"Redesigned album browser",
-									 @"Redesigned album detail view",
-									 @"Fixed crash on playlist browser",
-									 @"Fixed app opening to blank screen",
-									 @"Fixed source being incorrectly chosen",
-									 @"Visual touches for no album art"
+									 @"Added new tabbed navigation at the bottom",
+									 @"Got rid of old source selector",
+									 @"Fixed miniplayer getting out of sync"
 									 ];
 	
 	NSArray *currentBuildIssues = @[
@@ -354,13 +370,14 @@ BOOL didAutomaticallyClose = NO;
 	self.browsingAssistant.coreViewController = self;
 	self.browsingAssistant.backgroundColor = [UIColor orangeColor];
 	self.browsingAssistant.sourcesForSourceSelector = self.sourcesForSourceSelector;
+	self.browsingAssistant.delegate = self;
 	[self.view addSubview:self.browsingAssistant];
 	[self.browsingAssistant setup];
 	
  	self.browsingAssistant.textBackgroundConstraint = [self.browsingAssistant autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.view];
 	[self.browsingAssistant autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.view];
 	[self.browsingAssistant autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.view];
-	[self.browsingAssistant autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
+//	self.browsingAssistantHeightConstraint = [self.browsingAssistant autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height];
 	
 	[self.view bringSubviewToFront:self.sourceSelector];
 	

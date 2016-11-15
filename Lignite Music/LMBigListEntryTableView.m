@@ -82,12 +82,7 @@
 }
 
 - (float)spacingAtIndex:(NSUInteger)index forTableView:(LMNewTableView*)tableView {
-	if(index == 0){
-		return 80;
-	}
-	else{
-		return 20;
-	}
+	return index == 0 ? 40 : 20;
 }
 
 - (id)contentSubviewForBigListEntry:(LMBigListEntry*)bigListEntry {

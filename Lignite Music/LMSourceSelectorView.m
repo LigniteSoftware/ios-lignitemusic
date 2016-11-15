@@ -106,10 +106,7 @@
 	return indexOfEntry;
 }
 
-- (float) spacingAtIndex:(NSUInteger)index forTableView:(LMNewTableView *)tableView {
-	if(index == 0){
-		return 0.0f;
-	}
+- (float)spacingAtIndex:(NSUInteger)index forTableView:(LMNewTableView *)tableView {
 	return 10;
 }
 
@@ -173,6 +170,7 @@
 	self.viewsTableView.totalAmountOfObjects = self.sources.count;
 	self.viewsTableView.subviewDataSource = self;
 	self.viewsTableView.shouldUseDividers = YES;
+	self.viewsTableView.title = @"SourceSelector";
 	self.viewsTableView.dividerColour = [UIColor blackColor];
 	[self addSubview:self.viewsTableView];
 	

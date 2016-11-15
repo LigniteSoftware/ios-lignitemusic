@@ -20,6 +20,11 @@
  */
 @property BOOL hasRegisteredCellIdentifiers;
 
+/**
+ The last frame. Temporary fix for weird frame resizing.
+ */
+@property CGRect previousFrame;
+
 @end
 
 @implementation LMNewTableView
@@ -139,13 +144,24 @@
 	return [NSString stringWithFormat:@"%ld", section];
 }
 
+- (void)layoutSubviews {
+	[super layoutSubviews];
+	
+	//Fixes dividers going off to the right way too far
+	if([self.title isEqualToString:@"SourceSelector"] && self.previousFrame.size.width > self.frame.size.width){
+		[self reloadData];
+	}
+	
+	self.previousFrame = self.frame;
+}
+
 /**
  Gets the view for a header for a certain section. If shouldUseDividers is set to YES, this will draw a divider half way through the view of the header.
  **/
 - (UIView*)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
 	CGRect frame = CGRectMake(0, 0, self.frame.size.width, [self tableView:self heightForHeaderInSection:section]);
 	UIView *view = [[UIView alloc] initWithFrame:frame];
-//	view.backgroundColor = [UIColor blueColor];
+//	view.backgroundColor = [UIColor yellowColor];
 	
 	if(self.shouldUseDividers && ![self.dividerSectionsToIgnore containsObject:@(section)]){
 		uint8_t dividerHeight = 1;
@@ -155,6 +171,8 @@
 		UIView *dividerView = [[UIView alloc]initWithFrame:CGRectMake(frameX, frameY, frameWidth, dividerHeight)];
 		dividerView.backgroundColor = self.dividerColour ? self.dividerColour : [UIColor colorWithRed:0.82 green:0.82 blue:0.82 alpha:1.0];
 		[view addSubview:dividerView];
+		
+//		NSLog(@"%@ RESULTS\nWindow frame %@\ntable frame %@\nheader frame %@\ndivider frame %@", self.title, NSStringFromCGRect(WINDOW_FRAME),  NSStringFromCGRect(self.frame), NSStringFromCGRect(frame), NSStringFromCGRect(dividerView.frame));
 	}
 	
 	return view;

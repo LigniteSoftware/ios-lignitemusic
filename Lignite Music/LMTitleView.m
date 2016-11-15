@@ -206,9 +206,6 @@
 }
 
 - (float)spacingAtIndex:(NSUInteger)index forTableView:(LMNewTableView *)tableView {
-	if(index == 0){
-		return (self.frame.size.height*0.1);
-	}
 	return 10; //TODO: Fix this
 }
 

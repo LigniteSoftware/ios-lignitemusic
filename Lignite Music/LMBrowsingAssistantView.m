@@ -21,7 +21,7 @@
 
 @property LMMusicPlayer *musicPlayer;
 
-@property UIView *currentElementBackgroundView, *selectorBackgroundView;
+@property UIView *selectorBackgroundView;
 
 @property UIView *grabberView;
 @property UIImageView *grabberImageView;
@@ -63,21 +63,23 @@
 }
 
 - (BOOL)close {
-	int squadGoals = self.currentElementBackgroundView.frame.size.height-10;
-	if(self.textBackgroundConstraint.constant == squadGoals){
-		return NO;
-	}
-	
+//	int squadGoals = self.currentElementBackgroundView.frame.size.height-10;
+//	if(self.textBackgroundConstraint.constant == squadGoals){
+//		return NO;
+//	}
+//	
 	NSLog(@"Close browsing assistant");
+//	
+//	[[self superview] layoutIfNeeded];
+//	self.textBackgroundConstraint.constant = squadGoals;
+//	self.currentPoint = CGPointMake(self.originalPoint.x, self.originalPoint.y + self.textBackgroundConstraint.constant);
+//	[UIView animateWithDuration:0.5 delay:0
+//		 usingSpringWithDamping:0.6 initialSpringVelocity:0.0f
+//						options:0 animations:^{
+//							[[self superview] layoutIfNeeded];
+//						} completion:nil];
+
 	
-	[[self superview] layoutIfNeeded];
-	self.textBackgroundConstraint.constant = squadGoals;
-	self.currentPoint = CGPointMake(self.originalPoint.x, self.originalPoint.y + self.textBackgroundConstraint.constant);
-	[UIView animateWithDuration:0.5 delay:0
-		 usingSpringWithDamping:0.6 initialSpringVelocity:0.0f
-						options:0 animations:^{
-							[[self superview] layoutIfNeeded];
-						} completion:nil];
 	
 	return YES;
 }
@@ -130,14 +132,18 @@
 	
 	self.sourceSelectorPositionConstraint.constant = position;
 	
-	[UIView animateWithDuration:0.75
-						  delay:0.0
+	[UIView animateWithDuration:1.0
+						  delay:0.10
 		 usingSpringWithDamping:0.7
 		  initialSpringVelocity:0.0
 						options:0
 					 animations:^{
 						 [self layoutIfNeeded];
 					 } completion:nil];
+}
+
+- (void)heightOfCurrentElementChangedTo:(float)newHeight {
+	[self.delegate heightRequiredChangedTo:WINDOW_FRAME.size.height/8.0 + newHeight forBrowsingView:self];
 }
 
 - (void)closeSourceSelector {
@@ -156,9 +162,15 @@
 	
 	//Perform the action associated with tab to implement the new tab selection
 	switch(sourceSelectedIndex){
+		case 0:{
+			[self heightOfCurrentElementChangedTo:WINDOW_FRAME.size.height/5];
+			break;
+		}
 		case 1:{
 			[self openSourceSelector];
 			self.previouslySelectedTab = self.currentlySelectedTab;
+			
+			[self heightOfCurrentElementChangedTo:WINDOW_FRAME.size.height/8 * 7];
 			break;
 		}
 	}
@@ -222,6 +234,10 @@
 	[self selectSource:viewTappedIndex];
 }
 
+- (void)shitpost {
+	[self.delegate heightRequiredChangedTo:WINDOW_FRAME.size.height/3 forBrowsingView:self];
+}
+
 - (void)setup {
 	self.backgroundColor = [UIColor clearColor];
 	
@@ -266,7 +282,7 @@
 	[self.selectorBackgroundView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
 	[self.selectorBackgroundView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
 	[self.selectorBackgroundView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self];
-	[self.selectorBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.135];
+	[self.selectorBackgroundView autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height/8.0];
 	
 	self.tabViews = [NSMutableArray new];
 	
@@ -314,29 +330,21 @@
 		[textLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.selectorBackgroundView withMultiplier:(1.0/6.0)];
 	}
 	
-	self.currentElementBackgroundView = [UIView newAutoLayoutView];
-	self.currentElementBackgroundView.backgroundColor = [UIColor blueColor];
-	[self addSubview:self.currentElementBackgroundView];
-	
-	[self.currentElementBackgroundView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.selectorBackgroundView];
-	[self.currentElementBackgroundView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.selectorBackgroundView];
-	[self.currentElementBackgroundView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.selectorBackgroundView];
-	[self.currentElementBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:/*(2.0/3.0)**/(2.0/10.0)];
-
 	self.miniPlayerView = [LMMiniPlayerView newAutoLayoutView];
-	[self.currentElementBackgroundView addSubview:self.miniPlayerView];
+	[self addSubview:self.miniPlayerView];
 	
-	[self.miniPlayerView autoPinEdgesToSuperviewEdges];
+	[self.miniPlayerView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.selectorBackgroundView];
+	[self.miniPlayerView autoSetDimension:ALDimensionWidth toSize:WINDOW_FRAME.size.width];
+	[self.miniPlayerView autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height/5];
 	
 	[self.miniPlayerView setup];
-
-	self.currentElementBackgroundView.translatesAutoresizingMaskIntoConstraints = NO;
-	self.currentElementBackgroundView.backgroundColor = [UIColor whiteColor];
-	self.currentElementBackgroundView.layer.shadowColor = [UIColor blackColor].CGColor;
-	self.currentElementBackgroundView.layer.shadowOpacity = 0.25f;
-	self.currentElementBackgroundView.layer.shadowOffset = CGSizeMake(0, 0);
-	self.currentElementBackgroundView.layer.masksToBounds = NO;
-	self.currentElementBackgroundView.layer.shadowRadius = 5;
+	
+	self.miniPlayerView.backgroundColor = [UIColor whiteColor];
+	self.miniPlayerView.layer.shadowColor = [UIColor blackColor].CGColor;
+	self.miniPlayerView.layer.shadowOpacity = 0.25f;
+	self.miniPlayerView.layer.shadowOffset = CGSizeMake(0, 0);
+	self.miniPlayerView.layer.masksToBounds = NO;
+	self.miniPlayerView.layer.shadowRadius = 5;
 	
 	self.sourceSelector = [LMSourceSelectorView newAutoLayoutView];
 	self.sourceSelector.backgroundColor = [UIColor redColor];
@@ -352,11 +360,13 @@
 	
 	[self.sourceSelector setup];
 	
-	[self insertSubview:self.selectorBackgroundView aboveSubview:self.currentElementBackgroundView];
+	[self insertSubview:self.selectorBackgroundView aboveSubview:self.miniPlayerView];
 	
-	[self insertSubview:self.sourceSelector aboveSubview:self.currentElementBackgroundView];
+	[self insertSubview:self.sourceSelector aboveSubview:self.miniPlayerView];
 	[self insertSubview:self.sourceSelector belowSubview:self.selectorBackgroundView];
 	
+	[NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(shitpost) userInfo:nil repeats:NO];
+
 //	[NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(close) userInfo:nil repeats:NO];
 }
 

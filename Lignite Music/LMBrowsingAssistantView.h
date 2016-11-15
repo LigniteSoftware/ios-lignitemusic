@@ -10,13 +10,42 @@
 #import "LMCoreViewController.h"
 #import "LMSource.h"
 
+@class LMBrowsingAssistantView;
+
+@protocol LMBrowsingAssistantDelegate <NSObject>
+
+/**
+ The height for the browsing view changed to a specific height. The delegate, which should be its superview, should now animate the browsing view down to the requested size.
+
+ @param heightRequired The new height required.
+ @param browsingView The browsing view which is notifying of the height requirement.
+ */
+- (void)heightRequiredChangedTo:(float)heightRequired forBrowsingView:(LMBrowsingAssistantView*)browsingView;
+
+@end
+
 @interface LMBrowsingAssistantView : UIView
 
+@property id<LMBrowsingAssistantDelegate> delegate;
+
+/**
+ The view controller which controls this browsing assistant view.
+ */
 @property LMCoreViewController *coreViewController;
+
+/**
+ The text background constraint.
+ */
 @property NSLayoutConstraint *textBackgroundConstraint;
 
+/**
+ The sources for the source selector (ie. Albums, Titles, etc.)
+ */
 @property NSArray<LMSource*>* sourcesForSourceSelector;
 
+/**
+ Setup the browsing assistant.
+ */
 - (void)setup;
 
 /**
