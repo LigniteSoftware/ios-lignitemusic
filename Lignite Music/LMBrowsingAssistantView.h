@@ -72,4 +72,11 @@
  */
 - (void)openSourceSelector;
 
+/**
+ Set the icon of the current source.
+
+ @param icon The icon of the current
+ */
+- (void)setCurrentSourceIcon:(UIImage*)icon;
+
 @end

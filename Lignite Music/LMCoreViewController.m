@@ -19,6 +19,8 @@
 #import "LMExtras.h"
 #import "LMPlaylistView.h"
 #import "LMGenreView.h"
+#import "UIImage+AverageColour.h"
+#import "UIColor+isLight.h"
 
 @interface LMCoreViewController () <LMMusicPlayerDelegate, LMSourceDelegate, LMBrowsingAssistantDelegate>
 
@@ -203,6 +205,8 @@ BOOL didAutomaticallyClose = NO;
 			NSLog(@"Unknown index of source %@.", source);
 			break;
 	}
+	
+	[self.browsingAssistant setCurrentSourceIcon:[[source.icon averageColour] isLight] ? source.icon : [LMAppIcon invertImage:source.icon]];
 }
 
 - (void)heightRequiredChangedTo:(float)heightRequired forBrowsingView:(LMBrowsingAssistantView *)browsingView {
