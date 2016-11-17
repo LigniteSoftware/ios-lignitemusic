@@ -325,7 +325,14 @@
 	[self.currentSourceDetailLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.currentSourceBackgroundView withMultiplier:(1.0/3.0)];
 	[self.currentSourceDetailLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
 	
+	UISwipeGestureRecognizer *swipeUpOnCurrentSourceGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(open)];
+	swipeUpOnCurrentSourceGesture.direction = UISwipeGestureRecognizerDirectionUp;
+	[self.currentSourceBackgroundView addGestureRecognizer:swipeUpOnCurrentSourceGesture];
 	
+	UITapGestureRecognizer *tapOnCurrentSourceGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(open)];
+	[self.currentSourceBackgroundView addGestureRecognizer:tapOnCurrentSourceGesture];
+	
+
 	
 	self.selectorBackgroundView = [UIView newAutoLayoutView];
 	self.selectorBackgroundView.backgroundColor = [UIColor whiteColor];

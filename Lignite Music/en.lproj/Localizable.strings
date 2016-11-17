@@ -1,4 +1,4 @@
-/* 
+/*
   Localizable.strings
   Lignite Music
 
@@ -9,7 +9,7 @@
 /*
  Hello, and thanks for translating Lignite Music!
  
- Please read the following notes thoroughly.
+ Please read the following notes *thoroughly*.
  
  1. The following characters in between quotes must be left in exact format and must not be deleted, changed or 
  modified in any other way:
@@ -26,6 +26,9 @@
  what a strinhg is doing, and if you are, just let us know and we'll clarify. Now that you've read this far, 
  please send us a picture of a walrus so we know you did. Yes, seriously.
  
+ 4. The following words/terms should *never* be translated into your language for legal reasons:
+	"Lignite Music", "Lignite", "Pebble", "Apple Music", "Spotify"
+ 
  Thanks, and have fun!
  */
 
@@ -39,6 +42,28 @@
 
 "List" = "List";
 "Lists" = "Lists";
+
+"OnboardingWelcomeTitle" = "Welcome to Lignite Music";
+"OnboardingWelcomeDescription" = "We're hoping to bring you the ultimate music player experience.\n\nWe're going to run through a few quick steps to get you up and running.";
+
+"OnboardingMusicPermissionTitle" = "We need your music so you can jam!";
+"OnboardingMusicPermissionDescription" = "Once clicking the button below, you will be asked to grant permission to Lignite Music for access to your music library.\n\nPlease accept this permission so we can get you one step closer to rockin' out!";
+
+"OnboardingPebblePermissionTitle" = "We're between a rock and a hard place"; //This is an English expression which essentially means "We have a dilemma". In the end, what we want to express in this title is something slightly witty (though not disrespectful) which infers there is a rock involved, since the word "Pebble" is the smartwatch associated.
+"OnboardingPebblePermissionDescription" = "Pebble is an awesome smartwatch and we've built a watchapp which allows you to browse your whole music library right from your wrist.\n\nPlease accept the next permission so we can communicate with your Pebble.";
+
+"OnboardingTutorialTitle" = "Want us to walk you through?";
+"OnboardingTutorialDescription" = "We have a quick X step tutorial which is easy to follow and should get you setup with the basics of Lignite Music, such as installing the Pebble app.\n\nFeel free to skip it if you're feeling adventurous, though.";
+
+//The user is gutless most likely because they did not take the time to read the dialog and simply clicked deny. However, we understand shit happens and they might have slipped or something.
+"OnboardingUserIsGutlessTitle" = "Music, please? :(";
+"OnboardingUserIsGutlessDescription" = "Somewhere along the way the music permission for Lignite Music was denied. Don't worry, it's easy to fix.\n\n1. Go to your iPhone's settings app\n2. Find the 'Lignite Music' entry near the bottom and go into it\n3. Make sure the 'Media Library' toggle is turned on\n\nOnce that's done, come back here, press the button below to continue and you'll be all set!"; //Please ensure for this translation that the language used in guiding the users through the iOS settings menu *exactly matches* the actual settings menu in that language.
+
+"LetsGo" = "Let's go!";
+"HitMeWithIt" = "Hit me with it"; //Slang for continue, this is used on the button which when pressed will show the dialog asking user for permission to access their music library
+"SoundsGood" = "Sounds good"; //Also slang for continue, for the Pebble permission button, which when clicked will prompt the user for access to Bluetooth permissions
+"OpenTutorial" = "Open tutorial";
+"CloseTutorial" = "Close tutorial";
 
 /*
  

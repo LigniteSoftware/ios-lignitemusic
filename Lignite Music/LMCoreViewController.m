@@ -21,6 +21,8 @@
 #import "LMGenreView.h"
 #import "UIImage+AverageColour.h"
 #import "UIColor+isLight.h"
+#import "LMSettings.h"
+#import "LMTutorialViewPagerController.h"
 
 @interface LMCoreViewController () <LMMusicPlayerDelegate, LMSourceDelegate, LMBrowsingAssistantDelegate>
 
@@ -230,10 +232,7 @@ BOOL didAutomaticallyClose = NO;
 
 - (void)showWhatsPoppin {
 	NSArray *currentBuildChanges = @[
-									 @"Added new tabbed navigation at the bottom",
-									 @"\n(Swipe down on navigation/miniplayer to minimize, tap or swipe up on minimized view to expand)",
-									 @"\nFixed miniplayer getting out of sync",
-									 @"\nGot rid of old source selector"
+									 @"Windows error"
 									 ];
 	
 	NSArray *currentBuildIssues = @[
@@ -283,12 +282,24 @@ BOOL didAutomaticallyClose = NO;
 	}
 }
 
+- (void)launchOnboarding {
+	LMTutorialViewPagerController *controller = [[LMTutorialViewPagerController alloc]init];
+	[self presentViewController:controller animated:YES completion:nil];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view
 	
+	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+	if(![userDefaults objectForKey:LMSettingsKeyOnboardingComplete]){
+		NSLog(@"User has not yet completed onboarding, launching onboarding.");
+		
+		[NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(launchOnboarding) userInfo:nil repeats:NO];
+		return;
+	}
+	
 	self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
-	[self.musicPlayer addMusicDelegate:self];
 	
 	LMPebbleManager *pebbleManager = [LMPebbleManager sharedPebbleManager];
 	[pebbleManager attachToViewController:self];
@@ -387,7 +398,6 @@ BOOL didAutomaticallyClose = NO;
 	
 	[self.view bringSubviewToFront:self.sourceSelector];
 	
-	self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 	[self.musicPlayer addMusicDelegate:self];
 	
 	[NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(showWhatsPoppin) userInfo:nil repeats:NO];

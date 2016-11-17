@@ -11,5 +11,6 @@
 @interface LMSettings : NSUserDefaults
 
 #define LMSettingsKeyLastOpenedSource @"LMSettingsKeyLastOpenedSource"
+#define LMSettingsKeyOnboardingComplete @"LMSettingsKeyOnboardingComplete"
 
 @end

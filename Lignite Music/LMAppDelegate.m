@@ -21,6 +21,8 @@
 
 - (void)application:(UIApplication *)application performActionForShortcutItem:(UIApplicationShortcutItem *)shortcutItem completionHandler:(void (^)(BOOL))completionHandler {
 	
+	NSLog(@"Allahu");
+	
 	int indexOfItem = -1;
 	NSArray<UIApplicationShortcutItem*>*shortcutItems = [UIApplication sharedApplication].shortcutItems;
 	for(int i = 0; i < shortcutItems.count; i++){
@@ -45,8 +47,12 @@
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+	NSLog(@"[LMAppDelegate]: Did finish launching with options");
+	
     // Override point for customization after application launch.
-	self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
+//	self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
+	
+	NSLog(@"Actually finished");
 	
 //	const int amountOfItems = 2;
 //	LMIcon icons[] = {
@@ -100,7 +106,7 @@
 	
 	NSLog(@"Setting %@", self.musicPlayer.nowPlayingTrack.title);
 	
-	[self.musicPlayer prepareForTermination];
+//	[self.musicPlayer prepareForTermination];
     
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }

@@ -8,6 +8,8 @@
 
 #import "LMMusicPlayer.h"
 
+@import StoreKit;
+
 @interface LMMusicPlayer() <AVAudioPlayerDelegate>
 
 /**
@@ -77,8 +79,39 @@
 - (instancetype)init {
 	self = [super init];
 	if(self){
+		NSLog(@"Starting init");
+		
+		[SKCloudServiceController requestAuthorization:^(SKCloudServiceAuthorizationStatus status) {
+			NSLog(@"status is %ld", (long)status);
+			SKCloudServiceController *cloudServiceController;
+			cloudServiceController = [[SKCloudServiceController alloc] init];
+			[cloudServiceController requestCapabilitiesWithCompletionHandler:^(SKCloudServiceCapability capabilities, NSError * _Nullable error) {
+				NSLog(@"%lu %@", (unsigned long)capabilities, error ? error : @"(No error)");
+				
+				if (capabilities >= SKCloudServiceCapabilityAddToCloudMusicLibrary){
+					NSLog(@"You CAN add to iCloud!");
+//					[[MPMediaLibrary defaultMediaLibrary] addItemWithProductID:productID completionHandler:^(NSArray<__kindof MPMediaEntity *> * _Nonnull           entities, NSError * _Nullable error) {
+//						 NSLog(@"added id%@ entities: %@ and error is %@", productID, entities, error);
+//						 NSArray *tracksToPlay = [NSArray arrayWithObject:productID];
+//						 [[MPMusicPlayerController systemMusicPlayer] setQueueWithStoreIDs:tracksToPlay];
+//						 [[MPMusicPlayerController systemMusicPlayer] play];
+//						 
+//						 [self performSelectorOnMainThread:@selector(getInfoFromAddedAppleMusicTrack:) withObject:productID waitUntilDone:YES];
+//						 
+//					 }];
+				}
+				else {
+					NSLog(@"Blast! The ability to add Apple Music track is not there. sigh.");
+				}
+				
+			}];
+			
+		}];
+		
 		self.systemMusicPlayer = [MPMusicPlayerController systemMusicPlayer];
 		[self.systemMusicPlayer beginGeneratingPlaybackNotifications];
+		
+		NSLog(@"Got system music player.");
 		
 		//http://stackoverflow.com/questions/3059255/how-do-i-clear-the-queue-of-a-mpmusicplayercontroller
 		MPMediaPropertyPredicate *predicate = [MPMediaPropertyPredicate predicateWithValue:@"MotherFuckingShitpost69"
@@ -89,13 +122,18 @@
 		self.bullshitQuery = q;
 		
 		self.nowPlayingTrack = [[LMMusicTrack alloc]initWithMPMediaItem:self.systemMusicPlayer.nowPlayingItem];
+		
+		NSLog(@"Shitpost");
+		
 		self.playerType = LMMusicPlayerTypeSystemMusicPlayer;
-		self.delegates = [[NSMutableArray alloc]init];
+		self.delegates = [NSMutableArray new];
 		self.delegatesSubscribedToCurrentPlaybackTimeChange = [[NSMutableArray alloc]init];
 		self.delegatesSubscribedToLibraryDidChange = [[NSMutableArray alloc]init];
 		self.shuffleMode = LMMusicShuffleModeOff;
 		self.repeatMode = LMMusicRepeatModeNone;
 		self.previousPlaybackTime = self.systemMusicPlayer.currentPlaybackTime;
+		
+		NSLog(@"Setup basic stuff.");
 		
 		self.autoPlay = (self.systemMusicPlayer.playbackState == MPMusicPlaybackStatePlaying);
 		
@@ -146,6 +184,8 @@
 		}];
 	
 		[commandCenter.changePlaybackPositionCommand addTarget:self action:@selector(handlePlaybackPositionChange:)];
+		
+		NSLog(@"Setup commands.");
 	}
 	else{
 		NSLog(@"Fatal error! Failed to create instance of LMMusicPlayer.");
@@ -170,6 +210,9 @@
 }
 
 + (id)sharedMusicPlayer {
+	NSLog(@"Called");
+	return nil;
+	
 	static LMMusicPlayer *sharedPlayer;
 	static dispatch_once_t token;
 	dispatch_once(&token, ^{
