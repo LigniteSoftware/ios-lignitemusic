@@ -49,7 +49,7 @@
 	
 	self.titleArray = [[NSArray alloc]initWithObjects:
 					   @"OnboardingWelcomeTitle",
-					   @"OnboardingKickstarterLoginTitle",
+//					   @"OnboardingKickstarterLoginTitle",
 					   @"OnboardingMusicPermissionTitle",
 					   @"OnboardingPebblePermissionTitle",
 					   @"OnboardingTutorialTitle",
@@ -58,7 +58,7 @@
 	
 	self.descriptionArray = [[NSArray alloc]initWithObjects:
 							 @"OnboardingWelcomeDescription",
-							 @"OnboardingKickstarterLoginDescription",
+//							 @"OnboardingKickstarterLoginDescription",
 							 @"OnboardingMusicPermissionDescription",
 							 @"OnboardingPebblePermissionDescription",
 							 @"OnboardingTutorialDescription",
@@ -67,7 +67,7 @@
 	
 	self.screenshotsArray = [[NSArray alloc]initWithObjects:
 							 @"icon_no_cover_art.png",
-							 @"icon_no_cover_art.png",
+//							 @"icon_no_cover_art.png",
 							 @"onboarding_library_access.png",
 							 @"onboarding_bluetooth.png",
 							 @"icon_no_cover_art.png",
@@ -76,7 +76,7 @@
 	
 	self.buttonNamesArray = [[NSArray alloc]initWithObjects:
 							 @"LetsGo",
-							 @"LogMeIn",
+//							 @"LogMeIn",
 							 @"HitMeWithIt",
 							 @"SoundsGood",
 							 @"OpenTutorial",
@@ -130,6 +130,11 @@
 	childViewController.screenshotImage = [UIImage imageNamed:[self.screenshotsArray objectAtIndex:index]];
 	childViewController.buttonTitle = NSLocalizedString([self.buttonNamesArray objectAtIndex:index], nil);
 	childViewController.forcedScreenshotHeight = self.screenshotHeight;
+	childViewController.sourcePagerController = self.pageController;
+	
+	if(index < AMOUNT_OF_TUTORIAL_SCREENS-1){
+		childViewController.nextViewController = [self viewControllerAtIndex:index+1];
+	}
 	
 	return childViewController;
 	

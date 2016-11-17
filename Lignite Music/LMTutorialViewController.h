@@ -7,8 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LMTutorialViewPagerController.h"
 
 @interface LMTutorialViewController : UIViewController
+
+@property UIPageViewController *sourcePagerController;
+
+@property LMTutorialViewController *nextViewController;
 
 @property int index;
 @property NSString *contentTitle;

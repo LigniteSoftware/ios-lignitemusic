@@ -8,10 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
-#define AMOUNT_OF_TUTORIAL_SCREENS 6
+@class LMTutorialViewController;
+
+#define AMOUNT_OF_TUTORIAL_SCREENS 5
 
 @interface LMTutorialViewPagerController : UIViewController <UIPageViewControllerDataSource>
 
 @property (strong, nonatomic) UIPageViewController *pageController;
+
+- (LMTutorialViewController *)viewControllerAtIndex:(NSUInteger)index;
 
 @end

@@ -73,6 +73,10 @@
 "CloseTutorial" = "Close tutorial";
 "AwesomeThanks" = "Awesome, thanks!";
 
+"Checking" = "Checking..."; //Checking for permission
+"GoodToGo" = "Good to go!"; //Permission has been granted
+"OhBoy" = "Oh boy"; //Error with permission (user probably hit don't allow)
+
 /*
  
  END NEW STRINGS

@@ -6,10 +6,13 @@
 //  Copyright © 2015 Edwin Finch. All rights reserved.
 //
 
+#import <PebbleKit/PebbleKit.h>
 #import <PureLayout/PureLayout.h>
 #import "LMTutorialViewController.h"
 #import "LMTutorialViewPagerController.h"
 #import "LMColour.h"
+
+@import StoreKit;
 
 @interface LMTutorialViewController ()
 
@@ -30,8 +33,76 @@
 	self.view.backgroundColor = [UIColor whiteColor];
 }
 
-- (void)finishTutorial {
-	[[self presentingViewController] dismissViewControllerAnimated:YES completion:nil];
+- (void)threeBlindMice {
+	[self.sourcePagerController setViewControllers:@[self.nextViewController] direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:^(BOOL finished) {
+		//Done
+	}];
+}
+
+- (void)performOnboardingAction {
+	switch(self.index){
+		case 0: {
+			//Go to next slide
+			[self threeBlindMice];
+			break;
+		}
+//		case 1: {
+//			//Kickstarter backer login
+//			break;
+//		}
+		case 1: {
+			[self.finishedButton setTitle:NSLocalizedString(@"Checking", nil) forState:UIControlStateNormal];
+			
+			[SKCloudServiceController requestAuthorization:^(SKCloudServiceAuthorizationStatus status) {
+				NSLog(@"Status is %ld", (long)status);
+				
+				SKCloudServiceController *cloudServiceController;
+				cloudServiceController = [SKCloudServiceController new];
+				
+				[cloudServiceController requestCapabilitiesWithCompletionHandler:^(SKCloudServiceCapability capabilities, NSError * _Nullable error) {
+					NSLog(@"%lu %@", (unsigned long)capabilities, error ? error : @"(No error)");
+					
+					if (capabilities >= SKCloudServiceCapabilityAddToCloudMusicLibrary){
+						NSLog(@"You CAN add to iCloud!");
+						
+						dispatch_async(dispatch_get_main_queue(), ^{
+							[self.finishedButton setTitle:NSLocalizedString(@"GoodToGo", nil) forState:UIControlStateNormal];
+							[self threeBlindMice];
+						});
+						
+						//Continue to next
+					}
+					else {
+						//Shove the music permission down their throat
+						
+						[self.finishedButton setTitle:NSLocalizedString(@"OhBoy", nil) forState:UIControlStateNormal];
+					}
+				}];
+			}];
+			break;
+		}
+		case 2: {
+			PBPebbleCentral *central = [PBPebbleCentral defaultCentral];
+			
+			central.appUUID = [[NSUUID alloc] initWithUUIDString:@"edf76057-f3ef-4de6-b841-cb9532a81a5a"];
+			
+			[central run];
+			
+			[self threeBlindMice];
+			
+			//Skip to next
+			break;
+		}
+		case 3: {
+			//Tutorial launch
+			[self threeBlindMice];
+			break;
+		}
+		case 4: {
+			[[self presentingViewController] dismissViewControllerAnimated:YES completion:nil];
+			break;
+		}
+	}
 }
 
 + (UIImage *)imageWithImage:(UIImage *)image scaledToSize:(CGSize)newSize {
@@ -54,7 +125,7 @@
 	self.finishedButton.layer.masksToBounds = YES;
 	self.finishedButton.layer.cornerRadius = 6;
 	[self.finishedButton.titleLabel setFont:[UIFont fontWithName:@"HelveticaNeue" size:18.0f]];
-	[self.finishedButton addTarget:self action:@selector(finishTutorial) forControlEvents:UIControlEventTouchUpInside];
+	[self.finishedButton addTarget:self action:@selector(performOnboardingAction) forControlEvents:UIControlEventTouchUpInside];
 	[self.finishedButton setTitle:self.buttonTitle forState:UIControlStateNormal];
 	[self.view addSubview:self.finishedButton];
 	
@@ -66,7 +137,7 @@
 	
 	self.pageControl = [UIPageControl newAutoLayoutView];
 	self.pageControl.pageIndicatorTintColor = [UIColor darkGrayColor];
-	self.pageControl.numberOfPages = 6;
+	self.pageControl.numberOfPages = 5;
 	self.pageControl.currentPage = self.index;
 	self.pageControl.currentPageIndicatorTintColor = [LMColour ligniteRedColour];
 //	self.pageControl.backgroundColor = [UIColor redColor];
