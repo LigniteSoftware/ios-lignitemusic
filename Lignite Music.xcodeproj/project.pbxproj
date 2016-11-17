@@ -103,6 +103,7 @@
 		6AFF01901DDD6B1A00F24D8E /* onboarding_bluetooth.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AFF018C1DDD6B1A00F24D8E /* onboarding_bluetooth.png */; };
 		6AFF01911DDD6B1A00F24D8E /* onboarding_pebble.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AFF018D1DDD6B1A00F24D8E /* onboarding_pebble.png */; };
 		6AFF01921DDD6B1A00F24D8E /* onboarding_us.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AFF018E1DDD6B1A00F24D8E /* onboarding_us.png */; };
+		6AFF01951DDE4EAF00F24D8E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6AFF01971DDE4EAF00F24D8E /* InfoPlist.strings */; };
 		A75C073ECBB2FEB1EFE05613 /* Pods_Lignite_Music.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0647B1CCD075642CBF2B75C8 /* Pods_Lignite_Music.framework */; };
 /* End PBXBuildFile section */
 
@@ -274,6 +275,9 @@
 		6AFF018C1DDD6B1A00F24D8E /* onboarding_bluetooth.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = onboarding_bluetooth.png; sourceTree = "<group>"; };
 		6AFF018D1DDD6B1A00F24D8E /* onboarding_pebble.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = onboarding_pebble.png; sourceTree = "<group>"; };
 		6AFF018E1DDD6B1A00F24D8E /* onboarding_us.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = onboarding_us.png; sourceTree = "<group>"; };
+		6AFF01961DDE4EAF00F24D8E /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		6AFF01981DDE4EB300F24D8E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		6AFF01991DDE4EB400F24D8E /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		A0B9C2DB66A8B7F673456C95 /* Pods-Lignite Music.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lignite Music.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Lignite Music/Pods-Lignite Music.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -540,6 +544,7 @@
 		6AAF610A1DA0195900971875 /* Strings */ = {
 			isa = PBXGroup;
 			children = (
+				6AFF01971DDE4EAF00F24D8E /* InfoPlist.strings */,
 				6AAF610F1DA0286F00971875 /* Localizable.strings */,
 			);
 			name = Strings;
@@ -833,6 +838,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6AE4A7FC1D49461C002B67CD /* pebble_colours_64.gif in Resources */,
+				6AFF01951DDE4EAF00F24D8E /* InfoPlist.strings in Resources */,
 				6AFF018F1DDD6B1A00F24D8E /* onboarding_library_access.png in Resources */,
 				6A0750721D5EAB8000BCBC9C /* aplite_colours.gif in Resources */,
 				6AFF01921DDD6B1A00F24D8E /* onboarding_us.png in Resources */,
@@ -1009,6 +1015,17 @@
 				6AEB9D0A1BACF60E00AD19FA /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		6AFF01971DDE4EAF00F24D8E /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6AFF01961DDE4EAF00F24D8E /* Base */,
+				6AFF01981DDE4EB300F24D8E /* en */,
+				6AFF01991DDE4EB400F24D8E /* de */,
+			);
+			name = InfoPlist.strings;
+			path = ..;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

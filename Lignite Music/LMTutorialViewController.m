@@ -6,6 +6,7 @@
 //  Copyright © 2015 Edwin Finch. All rights reserved.
 //
 
+#import <CoreBluetooth/CoreBluetooth.h>
 #import <PebbleKit/PebbleKit.h>
 #import <PureLayout/PureLayout.h>
 #import "LMTutorialViewController.h"
@@ -14,13 +15,15 @@
 
 @import StoreKit;
 
-@interface LMTutorialViewController ()
+@interface LMTutorialViewController ()<CBPeripheralManagerDelegate, CBCentralManagerDelegate>
 
 @property UILabel *titleLabel, *descriptionLabel;
 @property UIImageView *screenshotView, *iconView;
 @property UIButton *finishedButton;
 
 @property UIPageControl *pageControl;
+
+@property BOOL checkComplete;
 
 @end
 
@@ -37,6 +40,64 @@
 	[self.sourcePagerController setViewControllers:@[self.nextViewController] direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:^(BOOL finished) {
 		//Done
 	}];
+}
+
+- (void)centralManagerDidUpdateState:(CBCentralManager *)central {
+	CBManagerState state = central.state;
+	
+	NSLog(@"Got cm state %d", (int)state);
+	
+	switch (state) {
+		case CBPeripheralManagerStateResetting:
+		case CBPeripheralManagerStateUnknown: {
+			// pass on this, an update is imminent (according to docs)
+			break;
+		}
+		case CBPeripheralManagerStateUnsupported: {
+			// the user device is too old, LE will never work, Classic will still work, so you probably want to run PBPebbleCentral anyway.
+			break;
+		}
+		case CBPeripheralManagerStateUnauthorized: {
+			// the user didn’t authorize LE
+			break;
+		}
+		case CBPeripheralManagerStatePoweredOff:
+		case CBPeripheralManagerStatePoweredOn: {
+			// Either of this three tells you that the authorization was successful
+			
+			[self threeBlindMice];
+			break;
+		}
+	}
+}
+
+- (void)peripheralManagerDidUpdateState:(CBPeripheralManager *)peripheralManager {
+	CBManagerState state = peripheralManager.state;
+	
+	NSLog(@"Got pm state %d", (int)state);
+	
+	switch (state) {
+		case CBPeripheralManagerStateUnknown: {
+			// pass on this, an update is imminent (according to docs)
+			break;
+		}
+		case CBPeripheralManagerStateUnsupported: {
+			// the user device is too old, LE will never work, Classic will still work, so you probably want to run PBPebbleCentral anyway.
+			break;
+		}
+		case CBPeripheralManagerStateUnauthorized: {
+			// the user didn’t authorize LE
+			break;
+		}
+		case CBPeripheralManagerStateResetting:
+		case CBPeripheralManagerStatePoweredOff:
+		case CBPeripheralManagerStatePoweredOn: {
+			// Either of this three tells you that the authorization was successful
+			
+			[self threeBlindMice];
+			break;
+		}
+	}
 }
 
 - (void)performOnboardingAction {
@@ -67,7 +128,7 @@
 						
 						dispatch_async(dispatch_get_main_queue(), ^{
 							[self.finishedButton setTitle:NSLocalizedString(@"GoodToGo", nil) forState:UIControlStateNormal];
-							[self threeBlindMice];
+							[NSTimer scheduledTimerWithTimeInterval:0.75 target:self selector:@selector(threeBlindMice) userInfo:nil repeats:NO];
 						});
 						
 						//Continue to next
@@ -82,15 +143,48 @@
 			break;
 		}
 		case 2: {
+			NSLog(@"Creating");
+//			CBCentralManager *centralManager = [[CBCentralManager alloc]initWithDelegate:self queue:nil];
+//			CBPeripheralManager *peripheralManager = [[CBPeripheralManager alloc]initWithDelegate:self queue:nil];
 			PBPebbleCentral *central = [PBPebbleCentral defaultCentral];
-			
 			central.appUUID = [[NSUUID alloc] initWithUUIDString:@"edf76057-f3ef-4de6-b841-cb9532a81a5a"];
-			
 			[central run];
-			
-			[self threeBlindMice];
-			
-			//Skip to next
+//			NSLog(@"Current state %d", (int)[peripheralManager state]);
+			NSLog(@"Created.");
+			for (NSUInteger index = 0; index < 20; index++) {
+				dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(index * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+					if(self.checkComplete) {
+						return;
+					}
+					CBPeripheralManagerAuthorizationStatus status = [CBPeripheralManager authorizationStatus];
+					if (status == CBPeripheralManagerAuthorizationStatusNotDetermined) {
+						// Not determined
+						NSLog(@"Not determined");
+						[self.finishedButton setTitle:NSLocalizedString(@"Checking", nil) forState:UIControlStateNormal];
+					}
+					else if (status == CBPeripheralManagerAuthorizationStatusAuthorized) {
+						// Authorized
+						NSLog(@"Authorized!");
+						[self.finishedButton setTitle:NSLocalizedString(@"AllSetHere", nil) forState:UIControlStateNormal];
+						[NSTimer scheduledTimerWithTimeInterval:0.75 target:self selector:@selector(threeBlindMice) userInfo:nil repeats:NO];
+					}
+					else if (status == CBPeripheralManagerAuthorizationStatusDenied) {
+						// Denied
+						NSLog(@"Denied :(");
+						[self.finishedButton setTitle:NSLocalizedString(@"OuchDenied", nil) forState:UIControlStateNormal];
+					}
+					else if (status == CBPeripheralManagerAuthorizationStatusRestricted) {
+						// Restricted
+						NSLog(@"Restricted");
+						[self.finishedButton setTitle:NSLocalizedString(@"Restricted", nil) forState:UIControlStateNormal];
+					}
+					
+					if(status != CBPeripheralManagerAuthorizationStatusNotDetermined) {
+						self.checkComplete = YES;
+					}
+				});
+			}
+			//Pebble permission
 			break;
 		}
 		case 3: {

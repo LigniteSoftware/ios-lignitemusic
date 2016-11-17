@@ -26,10 +26,6 @@
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSAppleMusicUsageDescription</key>
-	<string>Without music, would we be a music app?</string>
-	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>We use Bluetooth to communicate with Pebble and Apple Watch companion apps.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>
