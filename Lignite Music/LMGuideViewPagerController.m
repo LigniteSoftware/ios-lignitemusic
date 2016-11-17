@@ -101,10 +101,10 @@
 									 , nil];
 			
 			self.buttonNamesArray = [[NSArray alloc]initWithObjects:
-									 @"CloseTutorial",
-									 @"CloseTutorial",
-									 @"CloseTutorial",
-									 @"Install"
+									 @"Cool",
+									 @"Sweet",
+									 @"WhatsNext",
+									 @"EndTutorial"
 							   , nil];
 			break;
 		}

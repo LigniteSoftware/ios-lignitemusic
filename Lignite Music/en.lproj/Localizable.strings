@@ -56,7 +56,7 @@
 "OnboardingPebblePermissionDescription" = "Pebble is an awesome smartwatch and we've built a watchapp which allows you to browse your whole music library right from your wrist.\n\nPlease accept the next permission so we can communicate with your Pebble.";
 
 "OnboardingTutorialTitle" = "Want us to walk you through?";
-"OnboardingTutorialDescription" = "We have a quick X step tutorial which is easy to follow and should get you setup with the basics of Lignite Music, such as installing the Pebble app.\n\nFeel free to skip it if you're feeling adventurous, though.";
+"OnboardingTutorialDescription" = "We have a quick tutorial which is easy to follow and should get you setup with the basics of Lignite Music, such as installing the Pebble app.\n\nFeel free to skip it if you're feeling adventurous, though.";
 
 //The user is gutless most likely because they did not take the time to read the dialog and simply clicked deny. However, we understand shit happens and they might have slipped or something.
 "OnboardingUserIsGutlessTitle" = "Music, please? :(";
@@ -68,7 +68,7 @@
 "DoNothing" = "Do nothing"; //Instead of contacting us
 
 "OnboardingThanksTitle" = "We hope you enjoy Lignite Music!";
-"OnboardingThanksDescription" = "We are a two geek, designer and developer team in love with writing iOS apps.\n\nCountless hours went into making this app a reality and we hope you enjoy it as much as we enjoyed making it.";
+"OnboardingThanksDescription" = "We are a two geek team: designer and developer. We love making apps that are beautiful and functional.\n\nCountless hours went into making this app a reality and we hope you enjoy it as much as we enjoyed making it.";
 
 "LetsGo" = "Let's go!";
 "LogMeIn" = "Log me in"; //For the kickstarter login button in onboarding
@@ -87,9 +87,14 @@
 "OuchDenied" = "Ouch, denied :("; //User denied Pebble permission (this is acceptable though)
 "Restricted" = "Restricted"; //The bluetooth permission is restricted (probably on a school-run device)
 "Error" = "Error";
-"CloseTutorial" = "Close tutorial"; //This goes on any slide but the last in the tutorial
+"SkipTutorial" = "Skip tutorial";
 "EndTutorial" = "End tutorial"; //This goes on the last slide of the tutorial
 "Install" = "Install";
+
+//Expressions for the tutorial so when the user clicks the buttons with these titles it puts them on the next slide
+"Cool" = "Cool";
+"WhatsNext" = "What's next?";
+"Sweet" = "Sweet";
 
 "TutorialBrowsingTitle" = "Browsing is simple";
 "TutorialBrowsingDescription" = "Every single browsing view is a simple list.\n\nFor big list entries, like the one in the photo, tap the album cover for more info, or tap the title area to bring up controls for it such as play and pause.";
@@ -101,7 +106,7 @@
 "TutorialPlayingControlsDescription" = "Using tiny buttons to control your music can be a mess when you're doing awesome things. That's why all of our controls are big or gesture based.\n\nSwipe to the left or to the right on the player to go back and forth between songs.\n\nTap anywhere on the player to play or pause.";
 
 "TutorialPebbleAppTitle" = "Have a Pebble?";
-"TUtorialPebbleAppDescription" = "No, not a rock, sorry.\n\nIf you have a Pebble smartwatch, you can fully browse your library right from your wrist.\n\nClick the button below to go install the app.";
+"TutorialPebbleAppDescription" = "No, not a rock, sorry.\n\nIf you have a Pebble smartwatch, you can fully browse your library right from your wrist.\n\nClick the install button below to go install the app.";
 
 
 /*

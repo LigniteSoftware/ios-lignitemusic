@@ -19,7 +19,10 @@
 
 @property UILabel *titleLabel, *descriptionLabel;
 @property UIImageView *screenshotView, *iconView;
+
+@property UIView *buttonArea;
 @property UIButton *finishedButton;
+@property UIButton *secondaryButton;
 
 @property UIPageControl *pageControl;
 
@@ -244,10 +247,10 @@
 		}
 		case GuideModeTutorial: {
 			if(self.index == 3){
-				
+				[self dismissViewControllerAnimated:YES completion:nil];
 			}
 			else{
-				[self dismissViewControllerAnimated:YES completion:nil];
+				[self threeBlindMice];
 			}
 			break;
 		}
@@ -330,8 +333,29 @@
 	return newImage;
 }
 
+- (void)secondaryAction {
+	if(self.guideMode == GuideModeTutorial){
+		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"pebble://appstore/579c3ee922f599cf7e0001ea"]];
+		
+		[self dismissViewControllerAnimated:YES completion:nil];
+	}
+	else{
+		[self threeBlindMice];
+	}
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
+	
+
+	self.buttonArea = [UIView newAutoLayoutView];
+	[self.view addSubview:self.buttonArea];
+	
+	[self.buttonArea autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:self.view.frame.size.height/30.0];
+	[self.buttonArea autoAlignAxisToSuperviewAxis:ALAxisVertical];
+	[self.buttonArea autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+	[self.buttonArea autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+	[self.buttonArea autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/16.0)];
 	
 	self.finishedButton = [UIButton newAutoLayoutView];
 	self.finishedButton.backgroundColor = [LMColour ligniteRedColour];
@@ -341,12 +365,58 @@
 	[self.finishedButton.titleLabel setFont:[UIFont fontWithName:@"HelveticaNeue" size:18.0f]];
 	[self.finishedButton addTarget:self action:@selector(performOnboardingAction) forControlEvents:UIControlEventTouchUpInside];
 	[self.finishedButton setTitle:self.buttonTitle forState:UIControlStateNormal];
-	[self.view addSubview:self.finishedButton];
 	
-	[self.finishedButton autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:self.view.frame.size.height/30.0];
-	[self.finishedButton autoAlignAxisToSuperviewAxis:ALAxisVertical];
-	[self.finishedButton autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/17.5)];
-	[self.finishedButton autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(1.0/2.5)];
+	if((self.guideMode == GuideModeTutorial && self.index == 3) || (self.guideMode == GuideModeOnboarding && self.index == 3)){ //Pebble screen
+		UIView *firstButtonArea = [UIView newAutoLayoutView];
+//		firstButtonArea.backgroundColor = [UIColor redColor];
+		[self.buttonArea addSubview:firstButtonArea];
+		
+		[firstButtonArea autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[firstButtonArea autoPinEdgeToSuperviewEdge:ALEdgeTop];
+		[firstButtonArea autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[firstButtonArea autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.buttonArea withMultiplier:(1.0/2.0)];
+		
+		self.secondaryButton = [UIButton newAutoLayoutView];
+		self.secondaryButton.backgroundColor = [LMColour ligniteRedColour];
+		self.secondaryButton.titleLabel.textColor = [UIColor whiteColor];
+		self.secondaryButton.layer.masksToBounds = YES;
+		self.secondaryButton.layer.cornerRadius = 6;
+		[self.secondaryButton.titleLabel setFont:[UIFont fontWithName:@"HelveticaNeue" size:18.0f]];
+		[self.secondaryButton addTarget:self action:@selector(secondaryAction) forControlEvents:UIControlEventTouchUpInside];
+		[self.secondaryButton setTitle:NSLocalizedString(self.guideMode == GuideModeOnboarding ? @"SkipTutorial" : @"Install", nil) forState:UIControlStateNormal];
+		
+		[firstButtonArea addSubview:self.secondaryButton];
+		
+		[self.secondaryButton autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(1.0/2.5)];
+		[self.secondaryButton autoPinEdgeToSuperviewEdge:ALEdgeTop];
+		[self.secondaryButton autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[self.secondaryButton autoAlignAxisToSuperviewAxis:ALAxisVertical];
+		
+		
+		UIView *secondButtonArea = [UIView newAutoLayoutView];
+//		secondButtonArea.backgroundColor = [UIColor orangeColor];
+		[self.buttonArea addSubview:secondButtonArea];
+		
+		[secondButtonArea autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[secondButtonArea autoPinEdgeToSuperviewEdge:ALEdgeTop];
+		[secondButtonArea autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[secondButtonArea autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.buttonArea withMultiplier:(1.0/2.0)];
+		
+		[secondButtonArea addSubview:self.finishedButton];
+		
+		[self.finishedButton autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(1.0/2.5)];
+		[self.finishedButton autoPinEdgeToSuperviewEdge:ALEdgeTop];
+		[self.finishedButton autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[self.finishedButton autoAlignAxisToSuperviewAxis:ALAxisVertical];
+	}
+	else{
+		[self.buttonArea addSubview:self.finishedButton];
+		
+		[self.finishedButton autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(1.0/2.5)];
+		[self.finishedButton autoPinEdgeToSuperviewEdge:ALEdgeTop];
+		[self.finishedButton autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[self.finishedButton autoAlignAxisToSuperviewAxis:ALAxisVertical];
+	}
 	
 	
 	self.pageControl = [UIPageControl newAutoLayoutView];
@@ -358,7 +428,7 @@
 //	self.pageControl.backgroundColor = [UIColor redColor];
 	[self.view addSubview: self.pageControl];
 	
-	[self.pageControl autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.finishedButton];
+	[self.pageControl autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.buttonArea];
 	[self.pageControl autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 	[self.pageControl autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 	[self.pageControl autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:self.amountOfPages == 1 ? (1.0/25.0) : (1.0/10.0)];
