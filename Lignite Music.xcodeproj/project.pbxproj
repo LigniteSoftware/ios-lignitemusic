@@ -97,8 +97,8 @@
 		6AF2C9441DDA16CC005E4643 /* icon_browse.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AF2C9421DDA16CC005E4643 /* icon_browse.png */; };
 		6AFD2EDD1BC41ECD0083FE9E /* LMAlbumViewItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AFD2EDC1BC41ECC0083FE9E /* LMAlbumViewItem.m */; };
 		6AFD2EDF1BC423850083FE9E /* no_album.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AFD2EDE1BC423850083FE9E /* no_album.png */; };
-		6AFF01881DDD656E00F24D8E /* LMTutorialViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AFF01851DDD656E00F24D8E /* LMTutorialViewController.m */; };
-		6AFF01891DDD656E00F24D8E /* LMTutorialViewPagerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AFF01871DDD656E00F24D8E /* LMTutorialViewPagerController.m */; };
+		6AFF01881DDD656E00F24D8E /* LMGuideViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AFF01851DDD656E00F24D8E /* LMGuideViewController.m */; };
+		6AFF01891DDD656E00F24D8E /* LMGuideViewPagerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AFF01871DDD656E00F24D8E /* LMGuideViewPagerController.m */; };
 		6AFF018F1DDD6B1A00F24D8E /* onboarding_library_access.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AFF018B1DDD6B1A00F24D8E /* onboarding_library_access.png */; };
 		6AFF01901DDD6B1A00F24D8E /* onboarding_bluetooth.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AFF018C1DDD6B1A00F24D8E /* onboarding_bluetooth.png */; };
 		6AFF01911DDD6B1A00F24D8E /* onboarding_pebble.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AFF018D1DDD6B1A00F24D8E /* onboarding_pebble.png */; };
@@ -267,10 +267,10 @@
 		6AFD2EDB1BC41ECC0083FE9E /* LMAlbumViewItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMAlbumViewItem.h; sourceTree = "<group>"; };
 		6AFD2EDC1BC41ECC0083FE9E /* LMAlbumViewItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMAlbumViewItem.m; sourceTree = "<group>"; };
 		6AFD2EDE1BC423850083FE9E /* no_album.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = no_album.png; sourceTree = "<group>"; };
-		6AFF01841DDD656E00F24D8E /* LMTutorialViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMTutorialViewController.h; sourceTree = "<group>"; };
-		6AFF01851DDD656E00F24D8E /* LMTutorialViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMTutorialViewController.m; sourceTree = "<group>"; };
-		6AFF01861DDD656E00F24D8E /* LMTutorialViewPagerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMTutorialViewPagerController.h; sourceTree = "<group>"; };
-		6AFF01871DDD656E00F24D8E /* LMTutorialViewPagerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMTutorialViewPagerController.m; sourceTree = "<group>"; };
+		6AFF01841DDD656E00F24D8E /* LMGuideViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMGuideViewController.h; sourceTree = "<group>"; };
+		6AFF01851DDD656E00F24D8E /* LMGuideViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMGuideViewController.m; sourceTree = "<group>"; };
+		6AFF01861DDD656E00F24D8E /* LMGuideViewPagerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMGuideViewPagerController.h; sourceTree = "<group>"; };
+		6AFF01871DDD656E00F24D8E /* LMGuideViewPagerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMGuideViewPagerController.m; sourceTree = "<group>"; };
 		6AFF018B1DDD6B1A00F24D8E /* onboarding_library_access.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = onboarding_library_access.png; sourceTree = "<group>"; };
 		6AFF018C1DDD6B1A00F24D8E /* onboarding_bluetooth.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = onboarding_bluetooth.png; sourceTree = "<group>"; };
 		6AFF018D1DDD6B1A00F24D8E /* onboarding_pebble.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = onboarding_pebble.png; sourceTree = "<group>"; };
@@ -734,10 +734,10 @@
 		6AFF01831DDD655C00F24D8E /* Onboarding */ = {
 			isa = PBXGroup;
 			children = (
-				6AFF01841DDD656E00F24D8E /* LMTutorialViewController.h */,
-				6AFF01851DDD656E00F24D8E /* LMTutorialViewController.m */,
-				6AFF01861DDD656E00F24D8E /* LMTutorialViewPagerController.h */,
-				6AFF01871DDD656E00F24D8E /* LMTutorialViewPagerController.m */,
+				6AFF01841DDD656E00F24D8E /* LMGuideViewController.h */,
+				6AFF01851DDD656E00F24D8E /* LMGuideViewController.m */,
+				6AFF01861DDD656E00F24D8E /* LMGuideViewPagerController.h */,
+				6AFF01871DDD656E00F24D8E /* LMGuideViewPagerController.m */,
 			);
 			name = Onboarding;
 			sourceTree = "<group>";
@@ -956,7 +956,7 @@
 				6ABF6A851CF3768A003E4EFA /* UIColor+isLight.m in Sources */,
 				6A313C121BB44959002BBC33 /* LMAlbumArtView.m in Sources */,
 				6ADDBD3D1DA29D3E00DB99EF /* LMShadowView.m in Sources */,
-				6AFF01881DDD656E00F24D8E /* LMTutorialViewController.m in Sources */,
+				6AFF01881DDD656E00F24D8E /* LMGuideViewController.m in Sources */,
 				6A7C62F51DA93F6100B025BA /* LMColour.m in Sources */,
 				6A4BAEEE1DC984EC000DF537 /* LMBigListEntry.m in Sources */,
 				6A6CCD5B1DB290FA006035C1 /* LMAppIcon.m in Sources */,
@@ -977,7 +977,7 @@
 				6AD227061DA599E50056695A /* LMMusicTrack.m in Sources */,
 				6A555BB01DA168860078C9FC /* LMOperationQueue.m in Sources */,
 				6A1FB9C71D99EB0A00890BF3 /* LMAlbumView.m in Sources */,
-				6AFF01891DDD656E00F24D8E /* LMTutorialViewPagerController.m in Sources */,
+				6AFF01891DDD656E00F24D8E /* LMGuideViewPagerController.m in Sources */,
 				6A92F81C1DD3C1A9002045C2 /* LMPlaylistView.m in Sources */,
 				6AD226FC1DA4B7770056695A /* LMNowPlayingView.m in Sources */,
 				6AC32B7B1DB6B57B0007C67E /* LMPebbleManager.m in Sources */,

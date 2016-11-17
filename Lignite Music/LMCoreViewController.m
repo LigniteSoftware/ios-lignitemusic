@@ -22,7 +22,7 @@
 #import "UIImage+AverageColour.h"
 #import "UIColor+isLight.h"
 #import "LMSettings.h"
-#import "LMTutorialViewPagerController.h"
+#import "LMGuideViewPagerController.h"
 
 @interface LMCoreViewController () <LMMusicPlayerDelegate, LMSourceDelegate, LMBrowsingAssistantDelegate>
 
@@ -283,7 +283,8 @@ BOOL didAutomaticallyClose = NO;
 }
 
 - (void)launchOnboarding {
-	LMTutorialViewPagerController *controller = [[LMTutorialViewPagerController alloc]init];
+	LMGuideViewPagerController *controller = [[LMGuideViewPagerController alloc]init];
+	controller.guideMode = GuideModeOnboarding;
 	[self presentViewController:controller animated:YES completion:nil];
 }
 

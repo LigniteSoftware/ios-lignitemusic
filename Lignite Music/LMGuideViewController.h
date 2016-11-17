@@ -7,21 +7,21 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "LMTutorialViewPagerController.h"
+#import "LMGuideViewPagerController.h"
 
-@interface LMTutorialViewController : UIViewController
+@interface LMGuideViewController : UIViewController
 
 @property UIPageViewController *sourcePagerController;
 
-@property LMTutorialViewController *nextViewController;
+@property LMGuideViewController *nextViewController;
 
+@property NSUInteger amountOfPages;
+@property GuideMode guideMode;
 @property int index;
 @property NSString *contentTitle;
 @property NSString *contentDescription;
 @property UIImage *screenshotImage;
 @property NSString *buttonTitle;
-@property int screenshotViewHeight;
-@property int forcedScreenshotHeight;
 @property (strong, nonatomic) UILabel *screenNumber;
 
 @end

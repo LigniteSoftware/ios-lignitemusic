@@ -60,7 +60,12 @@
 
 //The user is gutless most likely because they did not take the time to read the dialog and simply clicked deny. However, we understand shit happens and they might have slipped or something.
 "OnboardingUserIsGutlessTitle" = "Music, please? :(";
-"OnboardingUserIsGutlessDescription" = "Somewhere along the way the music permission for Lignite Music was denied. Don't worry, it's easy to fix.\n\n1. Go to your iPhone's settings app\n2. Find the 'Lignite Music' entry near the bottom and go into it\n3. Make sure the 'Media Library' toggle is turned on\n\nOnce that's done, come back here, press the button below to continue and you'll be all set!"; //Please ensure for this translation that the language used in guiding the users through the iOS settings menu *exactly matches* the actual settings menu in that language.
+"OnboardingUserIsGutlessDescription" = "Somewhere along the way the music permission for Lignite Music was denied. Don't worry, it's easy to fix.\n\n1. Go to your iPhone's settings app\n2. Find the 'Lignite Music' entry near the bottom and go into it\n3. Make sure the 'Media Library' toggle is turned on\n\nOnce that's done, reopen Lignite Music and you should be set!"; //Please ensure for this translation that the language used in guiding the users through the iOS settings menu *exactly matches* the actual settings menu in that language.
+
+"StillCantAccessMusicTitle" = "We are still having trouble.";
+"StillCantAccessMusicDescription" = "We still can't access your music for some reason even though you've probably tried what we asked.\n\nWe're really sorry that this has not gone smoothly, we are not sure what is going wrong.\n\nPlease click the 'Contact Us' button below you can reach out to us directly. We will be sure to get you sorted out one way or another.\n\nThank you."; //Please ensure the 'Contact Us' in quotes is the same as the ContactUs string in this file
+"ContactUs" = "Contact us";
+"DoNothing" = "Do nothing"; //Instead of contacting us
 
 "OnboardingThanksTitle" = "We hope you enjoy Lignite Music!";
 "OnboardingThanksDescription" = "We are a two geek, designer and developer team in love with writing iOS apps.\n\nCountless hours went into making this app a reality and we hope you enjoy it as much as we enjoyed making it.";
@@ -73,12 +78,31 @@
 "CloseTutorial" = "Close tutorial";
 "AwesomeThanks" = "Awesome, thanks!";
 
+"OkDone" = "Ok, done"; //This is the button that goes with the screen which says the user needs to reenable the music permission in settings.
 "Checking" = "Checking..."; //Checking for permission
 "GoodToGo" = "Good to go!"; //Permission has been granted
 "OhBoy" = "Oh boy"; //Error with permission (user probably hit don't allow)
+"TapToTryAgain" = "Tap to try again"; //Whatever the user did didn't work for enabling the music permission
 "AllSetHere" = "All set here!"; //User accepted Pebble permission
 "OuchDenied" = "Ouch, denied :("; //User denied Pebble permission (this is acceptable though)
 "Restricted" = "Restricted"; //The bluetooth permission is restricted (probably on a school-run device)
+"Error" = "Error";
+"CloseTutorial" = "Close tutorial"; //This goes on any slide but the last in the tutorial
+"EndTutorial" = "End tutorial"; //This goes on the last slide of the tutorial
+"Install" = "Install";
+
+"TutorialBrowsingTitle" = "Browsing is simple";
+"TutorialBrowsingDescription" = "Every single browsing view is a simple list.\n\nFor big list entries, like the one in the photo, tap the album cover for more info, or tap the title area to bring up controls for it such as play and pause.";
+
+"TutorialBottomControlsTitle" = "Control at your fingertips";
+"TutorialBottomControlsDescription" = "Easily switch between the mini player, browsing views, and search for music all from the bottom tab.\n\nIt's all at the touch of a finger.";
+
+"TutorialPlayingControlsTitle" = "Size matters";
+"TutorialPlayingControlsDescription" = "Using tiny buttons to control your music can be a mess when you're doing awesome things. That's why all of our controls are big or gesture based.\n\nSwipe to the left or to the right on the player to go back and forth between songs.\n\nTap anywhere on the player to play or pause.";
+
+"TutorialPebbleAppTitle" = "Have a Pebble?";
+"TUtorialPebbleAppDescription" = "No, not a rock, sorry.\n\nIf you have a Pebble smartwatch, you can fully browse your library right from your wrist.\n\nClick the button below to go install the app.";
+
 
 /*
  
