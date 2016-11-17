@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-#define AMOUNT_OF_TUTORIAL_SCREENS 8
+#define AMOUNT_OF_TUTORIAL_SCREENS 6
 
 @interface LMTutorialViewPagerController : UIViewController <UIPageViewControllerDataSource>
 

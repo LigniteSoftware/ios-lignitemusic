@@ -46,6 +46,9 @@
 "OnboardingWelcomeTitle" = "Welcome to Lignite Music";
 "OnboardingWelcomeDescription" = "We're hoping to bring you the ultimate music player experience.\n\nWe're going to run through a few quick steps to get you up and running.";
 
+"OnboardingKickstarterLoginTitle" = "Are you a Kickstarter backer?";
+"OnboardingKickstarterLoginDescription" = "Lignite Music was born and raised on Kickstarter with 339 awesome backers.\n\nIf you're one of them, you can unlock the full app now by clicking the login button below.\n\nOtherwise, continue on and you'll be hooked up with a full trial!";
+
 "OnboardingMusicPermissionTitle" = "We need your music so you can jam!";
 "OnboardingMusicPermissionDescription" = "Once clicking the button below, you will be asked to grant permission to Lignite Music for access to your music library.\n\nPlease accept this permission so we can get you one step closer to rockin' out!";
 
@@ -59,11 +62,16 @@
 "OnboardingUserIsGutlessTitle" = "Music, please? :(";
 "OnboardingUserIsGutlessDescription" = "Somewhere along the way the music permission for Lignite Music was denied. Don't worry, it's easy to fix.\n\n1. Go to your iPhone's settings app\n2. Find the 'Lignite Music' entry near the bottom and go into it\n3. Make sure the 'Media Library' toggle is turned on\n\nOnce that's done, come back here, press the button below to continue and you'll be all set!"; //Please ensure for this translation that the language used in guiding the users through the iOS settings menu *exactly matches* the actual settings menu in that language.
 
+"OnboardingThanksTitle" = "We hope you enjoy Lignite Music!";
+"OnboardingThanksDescription" = "We are a two geek, designer and developer team in love with writing iOS apps.\n\nCountless hours went into making this app a reality and we hope you enjoy it as much as we enjoyed making it.";
+
 "LetsGo" = "Let's go!";
+"LogMeIn" = "Log me in"; //For the kickstarter login button in onboarding
 "HitMeWithIt" = "Hit me with it"; //Slang for continue, this is used on the button which when pressed will show the dialog asking user for permission to access their music library
 "SoundsGood" = "Sounds good"; //Also slang for continue, for the Pebble permission button, which when clicked will prompt the user for access to Bluetooth permissions
 "OpenTutorial" = "Open tutorial";
 "CloseTutorial" = "Close tutorial";
+"AwesomeThanks" = "Awesome, thanks!";
 
 /*
  
