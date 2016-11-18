@@ -67,7 +67,7 @@
 "OnboardingMusicPermissionTitle" = "We need your music so you can jam!";
 "OnboardingMusicPermissionDescription" = "Once clicking the button below, you will be asked to grant permission to Lignite Music for access to your music library.\n\nPlease accept this permission so we can get you one step closer to rockin' out!";
 
-"OnboardingPebblePermissionTitle" = "We're between a rock and a hard place"; //This is an English expression which essentially means "We have a dilemma". In the end, what we want to express in this title is something slightly witty (though not disrespectful) which infers there is a rock involved, since the word "Pebble" is the smartwatch associated.
+"OnboardingPebblePermissionTitle" = "Give us a blue tooth, please"; //"Blue teeth" because of "Bluetooth". If it does not translate well or make sense, you can translate this from "Give us Bluetooth, please" instead.
 "OnboardingPebblePermissionDescription" = "Pebble is an awesome smartwatch and we've built a watchapp which allows you to browse your whole music library right from your wrist.\n\nPlease accept the next permission so we can communicate with your Pebble.";
 
 "OnboardingTutorialTitle" = "Want us to walk you through?";

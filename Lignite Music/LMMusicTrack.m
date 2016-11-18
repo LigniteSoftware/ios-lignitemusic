@@ -52,8 +52,8 @@
 		return self.loadedAlbumArt;
 	}
 	
-	LMMusicPlayerType currentPlayerType = [LMMusicPlayer savedPlayerType];
-	if(currentPlayerType == LMMusicPlayerTypeSystemMusicPlayer){
+	LMMusicPlayerType currentPlayerType = [[LMMusicPlayer sharedMusicPlayer] playerType];
+	if(currentPlayerType == LMMusicPlayerTypeSystemMusicPlayer || currentPlayerType == LMMusicPlayerTypeAppleMusic){
 		MPMediaItem *mediaItem = self.sourceTrack;
 		
 		//__weak UIImage *image = [mediaItem.artwork imageWithSize:CGSizeMake(480, 480)];

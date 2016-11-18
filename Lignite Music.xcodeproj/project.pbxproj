@@ -62,7 +62,6 @@
 		6AA473631BC7103B0066D47E /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AA473621BC7103B0066D47E /* CoreMotion.framework */; };
 		6AA473651BC710460066D47E /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AA473641BC710460066D47E /* MessageUI.framework */; };
 		6AAF610D1DA0286F00971875 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6AAF610F1DA0286F00971875 /* Localizable.strings */; };
-		6AAF61151DA0758400971875 /* LMTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AAF61141DA0758400971875 /* LMTableView.m */; };
 		6AAF61181DA0B9C800971875 /* LMTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AAF61171DA0B9C700971875 /* LMTableViewCell.m */; };
 		6AB12E9C1D57AD9800280383 /* icon_settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AB12E9B1D57AD9800280383 /* icon_settings.png */; };
 		6ABF6A821CF374F7003E4EFA /* UIImage+AverageColour.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ABF6A811CF374F7003E4EFA /* UIImage+AverageColour.m */; };
@@ -212,8 +211,6 @@
 		6AAF610E1DA0286F00971875 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6AAF61101DA028AE00971875 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6AAF61111DA028C200971875 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
-		6AAF61131DA0758400971875 /* LMTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMTableView.h; sourceTree = "<group>"; };
-		6AAF61141DA0758400971875 /* LMTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMTableView.m; sourceTree = "<group>"; };
 		6AAF61161DA0B9C700971875 /* LMTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMTableViewCell.h; sourceTree = "<group>"; };
 		6AAF61171DA0B9C700971875 /* LMTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMTableViewCell.m; sourceTree = "<group>"; };
 		6AB12E9B1D57AD9800280383 /* icon_settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_settings.png; sourceTree = "<group>"; };
@@ -438,8 +435,6 @@
 				6AC77A081DC3B04B00BABBB3 /* LMBigListEntryTableView.m */,
 				6A7115B51DCEE410006DE00F /* LMNewTableView.h */,
 				6A7115B61DCEE410006DE00F /* LMNewTableView.m */,
-				6AAF61131DA0758400971875 /* LMTableView.h */,
-				6AAF61141DA0758400971875 /* LMTableView.m */,
 				6AAF61161DA0B9C700971875 /* LMTableViewCell.h */,
 				6AAF61171DA0B9C700971875 /* LMTableViewCell.m */,
 			);
@@ -991,7 +986,6 @@
 				6AEB9CFD1BACF60E00AD19FA /* main.m in Sources */,
 				6A2A29C81DB1EAB6008E7792 /* LMCircleView.m in Sources */,
 				6A6F4B641DC5D4EB00BD01C2 /* YIInnerShadowView.m in Sources */,
-				6AAF61151DA0758400971875 /* LMTableView.m in Sources */,
 				6ABF6A821CF374F7003E4EFA /* UIImage+AverageColour.m in Sources */,
 				6A92F82B1DD95848002045C2 /* LMGenreView.m in Sources */,
 				6A313C181BB59AE8002BBC33 /* LMButton.m in Sources */,

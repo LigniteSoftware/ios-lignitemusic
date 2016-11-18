@@ -64,6 +64,11 @@
 @interface LMNewTableView : UITableView
 
 /**
+ The amount of spacing you'd like between the bottom of the table view and the last entry in it. Default is 0.
+ */
+@property NSUInteger bottomSpacing;
+
+/**
  The title of this LMTableView. Is used for the cell identifiers and to log information about the LMTableView.
  */
 @property NSString *title;

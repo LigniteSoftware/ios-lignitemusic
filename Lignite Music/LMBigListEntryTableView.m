@@ -200,6 +200,7 @@
 	self.tableView.totalAmountOfObjects = self.totalAmountOfObjects;
 	self.tableView.shouldUseDividers = NO;
 	self.tableView.subviewDataSource = self;
+	self.tableView.bottomSpacing = 25;
 	[self addSubview:self.tableView];
 	
 	[self.tableView autoPinEdgesToSuperviewEdges];

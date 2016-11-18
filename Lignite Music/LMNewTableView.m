@@ -129,11 +129,11 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-	return [self.subviewDataSource spacingAtIndex:section forTableView:self];
+	return self.bottomSpacing > 0 ? self.bottomSpacing : [self.subviewDataSource spacingAtIndex:section forTableView:self];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	return 1;
+	return !(self.bottomSpacing > 0 && section == self.numberOfSections-1);
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {

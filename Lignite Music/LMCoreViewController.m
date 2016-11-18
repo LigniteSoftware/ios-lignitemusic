@@ -45,6 +45,8 @@
 @property NSLayoutConstraint *topConstraint;
 @property NSLayoutConstraint *browsingAssistantHeightConstraint;
 
+@property NSMutableArray<NSLayoutConstraint*>*heightConstraintArray;
+
 @property id currentSource;
 
 @end
@@ -223,6 +225,16 @@ BOOL didAutomaticallyClose = NO;
 	
 	[self.view layoutIfNeeded];
 	
+	if(heightRequired < self.view.frame.size.height/2.0){
+		for(int i = 0; i < self.heightConstraintArray.count; i++){
+			NSLayoutConstraint *constraint = [self.heightConstraintArray objectAtIndex:i];
+			constraint.constant = (WINDOW_FRAME.size.height-heightRequired) + 10;
+		}
+		[UIView animateWithDuration:(heightRequired < self.browsingAssistantHeightConstraint.constant) ? 0.10 : 0.75 animations:^{
+			[self.view layoutIfNeeded];
+		}];
+	}
+	
 	self.browsingAssistantHeightConstraint.constant = heightRequired;
 	
 	[UIView animateWithDuration:0.75 animations:^{
@@ -248,8 +260,9 @@ BOOL didAutomaticallyClose = NO;
 	
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 	
-	NSString *lastAppBuildString = currentAppBuildString;
+	NSString *lastAppBuildString = @"0";
 	if([userDefaults objectForKey:@"LastVersionBuildString"]){
+		NSLog(@"Did get %@ from storage", [userDefaults objectForKey:@"LastVersionBuildString"]);
 		lastAppBuildString = [userDefaults objectForKey:@"LastVersionBuildString"];
 	}
 	
@@ -379,13 +392,15 @@ BOOL didAutomaticallyClose = NO;
 						
 						self.sourcesForSourceSelector = [NSArray arrayWithArray:sources];
 
+						self.heightConstraintArray = [NSMutableArray new];
+						
 						//Album View
 						
 						self.albumView = [LMAlbumView newAutoLayoutView];
 						[self.view addSubview:self.albumView];
 
-						[self.albumView autoCenterInSuperview];
-						[self.albumView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
+						[self.albumView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+						[self.heightConstraintArray addObject:[self.albumView autoSetDimension:ALDimensionHeight toSize:self.view.frame.size.height]];
 						[self.albumView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
 						
 						[self.albumView setup];
@@ -397,8 +412,8 @@ BOOL didAutomaticallyClose = NO;
 						self.titleView.backgroundColor = [UIColor redColor];
 						[self.view addSubview:self.titleView];
 						
-						[self.titleView autoCenterInSuperview];
-						[self.titleView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
+						[self.titleView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+						[self.heightConstraintArray addObject:[self.titleView autoSetDimension:ALDimensionHeight toSize:self.view.frame.size.height]];
 						[self.titleView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
 						
 						[self.titleView setup];
@@ -410,8 +425,8 @@ BOOL didAutomaticallyClose = NO;
 						self.playlistView.backgroundColor = [UIColor whiteColor];
 						[self.view addSubview:self.playlistView];
 						
-						[self.playlistView autoCenterInSuperview];
-						[self.playlistView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
+						[self.playlistView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+						[self.heightConstraintArray addObject:[self.playlistView autoSetDimension:ALDimensionHeight toSize:self.view.frame.size.height]];
 						[self.playlistView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
 						
 						[self.playlistView setup];
@@ -423,8 +438,8 @@ BOOL didAutomaticallyClose = NO;
 						self.genreView.backgroundColor = [UIColor whiteColor];
 						[self.view addSubview:self.genreView];
 						
-						[self.genreView autoCenterInSuperview];
-						[self.genreView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
+						[self.genreView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+						[self.heightConstraintArray addObject:[self.genreView autoSetDimension:ALDimensionHeight toSize:self.view.frame.size.height]];
 						[self.genreView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
 						
 						[self.genreView setup];
@@ -448,7 +463,8 @@ BOOL didAutomaticallyClose = NO;
 						
 						[self.musicPlayer addMusicDelegate:self];
 						
-						[NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(showWhatsPoppin) userInfo:nil repeats:NO];
+						[NSTimer scheduledTimerWithTimeInterval:1.0
+														 target:self selector:@selector(showWhatsPoppin) userInfo:nil repeats:NO];
 						
 						NSLog(@"Loaded shit");
 						
