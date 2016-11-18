@@ -5,3 +5,6 @@
  Created by Edwin Finch on 11/17/16.
  Copyright © 2016 Lignite. All rights reserved.
  */
+
+"NSAppleMusicUsageDescription" = "Wäre es eine Musik App ohne Musik?";
+"NSBluetoothPeripheralUsageDescription" = "Wir brauchen diese Bewilligung, damit wir mit der Pebble App kommunizieren können.";

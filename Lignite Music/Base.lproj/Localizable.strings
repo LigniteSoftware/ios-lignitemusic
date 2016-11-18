@@ -29,6 +29,102 @@
  Thanks, and have fun!
  */
 
+/*
+ 
+ NEW STRINGS
+ 
+ */
+
+"List" = "List";
+"Lists" = "Lists";
+
+/*
+ Onboarding
+ ==========
+ Onboarding is the first thing that a user who just installed the app sees. To give you an idea, the slides go as follow:
+ 
+ 1. Welcome
+ 2. Setup music permission
+ 2.1. If the user denies the music permission, we see force them to accept it (otherwise the app is useless) in an external screen
+ 3. Setup Bluetooth permission
+ 3.1. This is optional so we do not force it
+ 4. Tutorial
+ 4.1. If user views tutorial, it goes to the tutorial
+ 4.2. Otherwise they can skip it and it will go to the next slide
+ 5. Thank you screen/end of onboarding
+ */
+"OnboardingWelcomeTitle" = "Welcome to Lignite Music";
+"OnboardingWelcomeDescription" = "We're hoping to bring you the ultimate music player experience.\n\nWe're going to run through a few quick steps to get you up and running.";
+
+"OnboardingKickstarterLoginTitle" = "Are you a Kickstarter backer?";
+"OnboardingKickstarterLoginDescription" = "Lignite Music was born and raised on Kickstarter with 339 awesome backers.\n\nIf you're one of them, you can unlock the full app now by clicking the login button below.\n\nOtherwise, continue on and you'll be hooked up with a full trial!";
+
+"OnboardingMusicPermissionTitle" = "We need your music so you can jam!";
+"OnboardingMusicPermissionDescription" = "Once clicking the button below, you will be asked to grant permission to Lignite Music for access to your music library.\n\nPlease accept this permission so we can get you one step closer to rockin' out!";
+
+"OnboardingPebblePermissionTitle" = "We're between a rock and a hard place"; //This is an English expression which essentially means "We have a dilemma". In the end, what we want to express in this title is something slightly witty (though not disrespectful) which infers there is a rock involved, since the word "Pebble" is the smartwatch associated.
+"OnboardingPebblePermissionDescription" = "Pebble is an awesome smartwatch and we've built a watchapp which allows you to browse your whole music library right from your wrist.\n\nPlease accept the next permission so we can communicate with your Pebble.";
+
+"OnboardingTutorialTitle" = "Want us to walk you through?";
+"OnboardingTutorialDescription" = "We have a quick tutorial which is easy to follow and should get you setup with the basics of Lignite Music, such as installing the Pebble app.\n\nFeel free to skip it if you're feeling adventurous, though.";
+
+//The user is gutless most likely because they did not take the time to read the dialog and simply clicked deny. However, we understand shit happens and they might have slipped or something.
+"OnboardingUserIsGutlessTitle" = "Music, please? :(";
+"OnboardingUserIsGutlessDescription" = "Somewhere along the way the music permission for Lignite Music was denied. Don't worry, it's easy to fix.\n\n1. Go to your iPhone's settings app\n2. Find the 'Lignite Music' entry near the bottom and go into it\n3. Make sure the 'Media Library' toggle is turned on\n\nOnce that's done, reopen Lignite Music and you should be set!"; //Please ensure for this translation that the language used in guiding the users through the iOS settings menu *exactly matches* the actual settings menu in that language.
+
+"StillCantAccessMusicTitle" = "We are still having trouble.";
+"StillCantAccessMusicDescription" = "We still can't access your music for some reason even though you've probably tried what we asked.\n\nWe're really sorry that this has not gone smoothly, we are not sure what is going wrong.\n\nPlease click the 'Contact Us' button below you can reach out to us directly. We will be sure to get you sorted out one way or another.\n\nThank you."; //Please ensure the 'Contact Us' in quotes is the same as the ContactUs string in this file
+"ContactUs" = "Contact us";
+"DoNothing" = "Do nothing"; //Instead of contacting us
+
+"OnboardingThanksTitle" = "We hope you enjoy Lignite Music!";
+"OnboardingThanksDescription" = "We are a two geek team: designer and developer. We love making apps that are beautiful and functional.\n\nCountless hours went into making this app a reality and we hope you enjoy it as much as we enjoyed making it.";
+
+"HangOn" = "Hang on..."; //Meaning "Wait..."
+"Cool" = "Cool";
+"WhatsNext" = "What's next?";
+"Sweet" = "Sweet";
+"LetsGo" = "Let's go!";
+"LogMeIn" = "Log me in"; //For the kickstarter login button in onboarding
+"HitMeWithIt" = "Hit me with it"; //Slang for continue, this is used on the button which when pressed will show the dialog asking user for permission to access their music library
+"SoundsGood" = "Sounds good"; //Also slang for continue, for the Pebble permission button, which when clicked will prompt the user for access to Bluetooth permissions
+"OpenTutorial" = "Open tutorial";
+"CloseTutorial" = "Close tutorial";
+"AwesomeThanks" = "Awesome, thanks!";
+"OkDone" = "Ok, done"; //This is the button that goes with the screen which says the user needs to reenable the music permission in settings.
+"Checking" = "Checking..."; //Checking for permission
+"GoodToGo" = "Good to go!"; //Permission has been granted
+"OhBoy" = "Oh boy"; //Error with permission (user probably hit don't allow)
+"TapToTryAgain" = "Tap to try again"; //Whatever the user did didn't work for enabling the music permission
+"AllSetHere" = "All set here!"; //User accepted Pebble permission
+"OuchDenied" = "Ouch, denied :("; //User denied Pebble permission (this is acceptable though)
+"Restricted" = "Restricted"; //The bluetooth permission is restricted (probably on a school-run device)
+"Error" = "Error";
+"SkipTutorial" = "Skip tutorial";
+"EndTutorial" = "End tutorial"; //This goes on the last slide of the tutorial
+"Install" = "Install";
+
+/* Tutorial */
+"TutorialBrowsingTitle" = "Browsing is simple";
+"TutorialBrowsingDescription" = "Every single browsing view is a simple list.\n\nFor big list entries, like the one in the photo, tap the album cover for more info, or tap the title area to bring up controls for it such as play and pause.";
+
+"TutorialBottomControlsTitle" = "Control at your fingertips";
+"TutorialBottomControlsDescription" = "Easily switch between the mini player, browsing views, and search for music all from the bottom tab.\n\nIt's all at the touch of a finger.";
+
+"TutorialPlayingControlsTitle" = "Size matters";
+"TutorialPlayingControlsDescription" = "Using tiny buttons to control your music can be a mess when you're doing awesome things. That's why all of our controls are big or gesture based.\n\nSwipe to the left or to the right on the player to go back and forth between songs.\n\nTap anywhere on the player to play or pause.";
+
+"TutorialPebbleAppTitle" = "Have a Pebble?";
+"TutorialPebbleAppDescription" = "No, not a rock, sorry.\n\nIf you have a Pebble smartwatch, you can fully browse your library right from your wrist.\n\nClick the install button below to go install the app.";
+
+
+/*
+ 
+ END NEW STRINGS
+ 
+ */
+
+
 /* General */
 "SongXofX" = "Song %d of %d";
 "SongX" = "Song %d";

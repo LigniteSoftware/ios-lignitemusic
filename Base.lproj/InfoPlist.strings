@@ -6,5 +6,5 @@
   Copyright © 2016 Lignite. All rights reserved.
 */
 
-"MusicPermission" = "Without music, would we be a music app?!";
-"BluetoothPermission" = "This is required so the app can talk to the Pebble watchapp!";
+"NSAppleMusicUsageDescription" = "Without music, would we be a music app?";
+"NSBluetoothPeripheralUsageDescription" = "This is required so the app can talk to the Pebble watchapp.";

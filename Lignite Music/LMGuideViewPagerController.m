@@ -120,7 +120,7 @@
 							   , nil];
 			
 			self.screenshotsArray = [[NSArray alloc]initWithObjects:
-									 @"icon_no_cover_art.png"
+									 @"onboarding_gutless_user.png"
 									 , nil];
 			
 			self.buttonNamesArray = [[NSArray alloc]initWithObjects:

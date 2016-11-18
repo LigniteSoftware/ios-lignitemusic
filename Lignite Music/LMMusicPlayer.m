@@ -294,6 +294,8 @@
 - (void)reloadAudioPlayerWithNowPlayingItem {
 	NSError *error = nil;
 	
+	NSLog(@"Now playing item is %@ is cloud item %d", self.systemMusicPlayer.nowPlayingItem.title, self.systemMusicPlayer.nowPlayingItem.isCloudItem);
+	
 	NSURL *url = [self.systemMusicPlayer.nowPlayingItem valueForProperty:MPMediaItemPropertyAssetURL];
 	
 	self.audioPlayer = nil;
@@ -303,7 +305,10 @@
 	if(error){
 		//TODO: make sure this doesn't happen again, apply better fix
 		NSLog(@"Error loading audio player with url %@: %@", url, error);
-		[self skipToNextTrack];
+		
+		[self.systemMusicPlayer play];
+		
+		//[self skipToNextTrack];
 	}
 	else{
 		[self.audioPlayer prepareToPlay];

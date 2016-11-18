@@ -312,6 +312,9 @@
 }
 
 - (float)spacingAtIndex:(NSUInteger)index forTableView:(LMNewTableView*)tableView {
+	if(index == 0){
+		return 0;
+	}
 	return 10;
 }
 

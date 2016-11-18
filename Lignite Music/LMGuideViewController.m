@@ -12,10 +12,11 @@
 #import "LMGuideViewController.h"
 #import "LMGuideViewPagerController.h"
 #import "LMColour.h"
+#import "LMSettings.h"
 
 @import StoreKit;
 
-@interface LMGuideViewController ()<CBPeripheralManagerDelegate, CBCentralManagerDelegate>
+@interface LMGuideViewController ()
 
 @property UILabel *titleLabel, *descriptionLabel;
 @property UIImageView *screenshotView, *iconView;
@@ -47,64 +48,6 @@
 	[self.sourcePagerController setViewControllers:@[self.nextViewController] direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:^(BOOL finished) {
 		//Done
 	}];
-}
-
-- (void)centralManagerDidUpdateState:(CBCentralManager *)central {
-	CBManagerState state = central.state;
-	
-	NSLog(@"Got cm state %d", (int)state);
-	
-	switch (state) {
-		case CBPeripheralManagerStateResetting:
-		case CBPeripheralManagerStateUnknown: {
-			// pass on this, an update is imminent (according to docs)
-			break;
-		}
-		case CBPeripheralManagerStateUnsupported: {
-			// the user device is too old, LE will never work, Classic will still work, so you probably want to run PBPebbleCentral anyway.
-			break;
-		}
-		case CBPeripheralManagerStateUnauthorized: {
-			// the user didn’t authorize LE
-			break;
-		}
-		case CBPeripheralManagerStatePoweredOff:
-		case CBPeripheralManagerStatePoweredOn: {
-			// Either of this three tells you that the authorization was successful
-			
-			[self threeBlindMice];
-			break;
-		}
-	}
-}
-
-- (void)peripheralManagerDidUpdateState:(CBPeripheralManager *)peripheralManager {
-	CBManagerState state = peripheralManager.state;
-	
-	NSLog(@"Got pm state %d", (int)state);
-	
-	switch (state) {
-		case CBPeripheralManagerStateUnknown: {
-			// pass on this, an update is imminent (according to docs)
-			break;
-		}
-		case CBPeripheralManagerStateUnsupported: {
-			// the user device is too old, LE will never work, Classic will still work, so you probably want to run PBPebbleCentral anyway.
-			break;
-		}
-		case CBPeripheralManagerStateUnauthorized: {
-			// the user didn’t authorize LE
-			break;
-		}
-		case CBPeripheralManagerStateResetting:
-		case CBPeripheralManagerStatePoweredOff:
-		case CBPeripheralManagerStatePoweredOn: {
-			// Either of this three tells you that the authorization was successful
-			
-			[self threeBlindMice];
-			break;
-		}
-	}
 }
 
 - (void)dismissViewController {
@@ -162,23 +105,19 @@
 								cloudServiceController = [SKCloudServiceController new];
 								
 								[cloudServiceController requestCapabilitiesWithCompletionHandler:^(SKCloudServiceCapability capabilities, NSError * _Nullable error) {
-									NSLog(@"%lu %@", (unsigned long)capabilities, error ? error : @"(No error)");
+									NSLog(@"%lu (%d, %d, %d, %d) %@", (unsigned long)capabilities, SKCloudServiceCapabilityNone, SKCloudServiceCapabilityMusicCatalogPlayback, SKCloudServiceCapabilityMusicCatalogSubscriptionEligible, SKCloudServiceCapabilityAddToCloudMusicLibrary,  error ? error : @"(No error)");
 									
-									if (capabilities >= SKCloudServiceCapabilityAddToCloudMusicLibrary){
-										NSLog(@"You CAN add to iCloud!");
+									dispatch_async(dispatch_get_main_queue(), ^{
+										if (capabilities >= SKCloudServiceCapabilityAddToCloudMusicLibrary){
+											NSLog(@"You CAN add to iCloud!");
+										}
+										else {
+											NSLog(@"Windows error!!");
+										}
 										
-										dispatch_async(dispatch_get_main_queue(), ^{
-											[self.finishedButton setTitle:NSLocalizedString(@"GoodToGo", nil) forState:UIControlStateNormal];
-											[NSTimer scheduledTimerWithTimeInterval:1.00 target:self selector:@selector(threeBlindMice) userInfo:nil repeats:NO];
-										});
-										
-										//Continue to next
-									}
-									else {
-										//Shove the music permission down their throat
-										
-										[self.finishedButton setTitle:NSLocalizedString(@"OhBoy", nil) forState:UIControlStateNormal];
-									}
+										[self.finishedButton setTitle:NSLocalizedString(@"GoodToGo", nil) forState:UIControlStateNormal];
+										[NSTimer scheduledTimerWithTimeInterval:1.00 target:self selector:@selector(threeBlindMice) userInfo:nil repeats:NO];
+									});
 								}];
 								
 								break;
@@ -240,6 +179,10 @@
 					break;
 				}
 				case 4: {
+					NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+					[userDefaults setObject:@"tutorialVersion1" forKey:LMSettingsKeyOnboardingComplete];
+					[userDefaults synchronize];
+					
 					[self.coreViewController prepareToLoadView];
 					[[self presentingViewController] dismissViewControllerAnimated:YES completion:nil];
 					break;
