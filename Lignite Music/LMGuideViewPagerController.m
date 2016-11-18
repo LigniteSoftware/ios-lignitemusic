@@ -155,7 +155,8 @@
 
 - (LMGuideViewController *)viewControllerAtIndex:(NSUInteger)index {
 	
-	LMGuideViewController *childViewController = [[LMGuideViewController alloc] init];
+	LMGuideViewController *childViewController = [LMGuideViewController new];
+	
 	childViewController.amountOfPages = self.amountOfPages;
 	childViewController.guideMode = self.guideMode;
 	childViewController.index = (int)index;
@@ -164,6 +165,7 @@
 	childViewController.screenshotImage = [UIImage imageNamed:[self.screenshotsArray objectAtIndex:index]];
 	childViewController.buttonTitle = NSLocalizedString([self.buttonNamesArray objectAtIndex:index], nil);
 	childViewController.sourcePagerController = self.pageController;
+	childViewController.coreViewController = self.coreViewController;
 	
 	if(index < self.amountOfPages-1){
 		childViewController.nextViewController = [self viewControllerAtIndex:index+1];

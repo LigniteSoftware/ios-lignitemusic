@@ -285,128 +285,160 @@ BOOL didAutomaticallyClose = NO;
 - (void)launchOnboarding {
 	LMGuideViewPagerController *controller = [[LMGuideViewPagerController alloc]init];
 	controller.guideMode = GuideModeOnboarding;
+	controller.coreViewController = self;
 	[self presentViewController:controller animated:YES completion:nil];
 }
 
+- (void)prepareToLoadView {
+	NSLog(@"Preparing to load view");
+	[NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(viewDidLoad) userInfo:nil repeats:NO];
+}
+
+BOOL shitpost = NO;
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view
 	
+	NSLog(@"Loading view");
+	
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-	if(![userDefaults objectForKey:LMSettingsKeyOnboardingComplete]){
+	if(![userDefaults objectForKey:LMSettingsKeyOnboardingComplete] && !shitpost){
 		NSLog(@"User has not yet completed onboarding, launching onboarding.");
 		
 		[NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(launchOnboarding) userInfo:nil repeats:NO];
-		return;
+		shitpost = YES;
+		
+		UIImageView *hangOnImage = [UIImageView newAutoLayoutView];
+		hangOnImage.image = [LMAppIcon imageForIcon:LMIconNoAlbumArt];
+		hangOnImage.contentMode = UIViewContentModeScaleAspectFit;
+		[self.view addSubview:hangOnImage];
+		
+		[hangOnImage autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:self.view.frame.size.width/5.0];
+		[hangOnImage autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:self.view.frame.size.width/5.0];
+		[hangOnImage autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:self.view.frame.size.height/4.0];
+		[hangOnImage autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/3.0)];
+		
+		UILabel *hangOnLabel = [UILabel newAutoLayoutView];
+		hangOnLabel.text = NSLocalizedString(@"HangOn", nil);
+		hangOnLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:30.0f];
+		hangOnLabel.textAlignment = NSTextAlignmentCenter;
+		[self.view addSubview:hangOnLabel];
+		
+		[hangOnLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:hangOnImage withOffset:10];
+		[hangOnLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[hangOnLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 	}
-	
-	self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
-	
-	LMPebbleManager *pebbleManager = [LMPebbleManager sharedPebbleManager];
-	[pebbleManager attachToViewController:self];
-	
-	NSArray *sourceTitles = @[
-							  @"Albums", @"Titles", @"Playlists", @"Genres", @"Report Bug", @"Settings"
-							  ];
-	NSArray *sourceSubtitles = @[
-								 @"", @"", @"", @"",  @"Or send feedback", @"Only for Pebble"
-								 ];
-	LMIcon sourceIcons[] = {
-		LMIconAlbums, LMIconTitles, LMIconPlaylists, LMIconGenres, LMIconBug, LMIconSettings
-	};
-	BOOL notSelect[] = {
-		NO, NO, NO, NO, YES, YES
-	};
-	
-	NSMutableArray *sources = [NSMutableArray new];
-	
-	for(int i = 0; i < sourceTitles.count; i++){
-		NSString *subtitle = [sourceSubtitles objectAtIndex:i];
-		LMSource *source = [LMSource sourceWithTitle:NSLocalizedString([sourceTitles objectAtIndex:i], nil)
-										 andSubtitle:[subtitle isEqualToString:@""]  ? nil : NSLocalizedString(subtitle, nil)
-											 andIcon:sourceIcons[i]];
-		source.shouldNotSelect = notSelect[i];
-		source.delegate = self;
-		[sources addObject:source];
+	else{
+		NSLog(@"Full load");
+		
+		self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
+		
+		LMPebbleManager *pebbleManager = [LMPebbleManager sharedPebbleManager];
+		[pebbleManager attachToViewController:self];
+		
+		NSArray *sourceTitles = @[
+								  @"Albums", @"Titles", @"Playlists", @"Genres", @"Report Bug", @"Settings"
+								  ];
+		NSArray *sourceSubtitles = @[
+									 @"", @"", @"", @"",  @"Or send feedback", @"Only for Pebble"
+									 ];
+		LMIcon sourceIcons[] = {
+			LMIconAlbums, LMIconTitles, LMIconPlaylists, LMIconGenres, LMIconBug, LMIconSettings
+		};
+		BOOL notSelect[] = {
+			NO, NO, NO, NO, YES, YES
+		};
+		
+		NSMutableArray *sources = [NSMutableArray new];
+		
+		for(int i = 0; i < sourceTitles.count; i++){
+			NSString *subtitle = [sourceSubtitles objectAtIndex:i];
+			LMSource *source = [LMSource sourceWithTitle:NSLocalizedString([sourceTitles objectAtIndex:i], nil)
+											 andSubtitle:[subtitle isEqualToString:@""]  ? nil : NSLocalizedString(subtitle, nil)
+												 andIcon:sourceIcons[i]];
+			source.shouldNotSelect = notSelect[i];
+			source.delegate = self;
+			[sources addObject:source];
+		}
+		
+		self.sourcesForSourceSelector = [NSArray arrayWithArray:sources];
+
+		//Album View
+		
+		self.albumView = [LMAlbumView newAutoLayoutView];
+		[self.view addSubview:self.albumView];
+
+		[self.albumView autoCenterInSuperview];
+		[self.albumView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
+		[self.albumView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
+		
+		[self.albumView setup];
+		self.albumView.hidden = YES;
+		
+		//Title view
+		
+		self.titleView = [LMTitleView newAutoLayoutView];
+		self.titleView.backgroundColor = [UIColor redColor];
+		[self.view addSubview:self.titleView];
+		
+		[self.titleView autoCenterInSuperview];
+		[self.titleView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
+		[self.titleView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
+		
+		[self.titleView setup];
+		self.titleView.hidden = YES;
+		
+		//Playlist view
+		
+		self.playlistView = [LMPlaylistView newAutoLayoutView];
+		self.playlistView.backgroundColor = [UIColor whiteColor];
+		[self.view addSubview:self.playlistView];
+		
+		[self.playlistView autoCenterInSuperview];
+		[self.playlistView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
+		[self.playlistView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
+		
+		[self.playlistView setup];
+		self.playlistView.hidden = YES;
+		
+		//Genre view
+		
+		self.genreView = [LMGenreView newAutoLayoutView];
+		self.genreView.backgroundColor = [UIColor whiteColor];
+		[self.view addSubview:self.genreView];
+		
+		[self.genreView autoCenterInSuperview];
+		[self.genreView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
+		[self.genreView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
+		
+		[self.genreView setup];
+		self.genreView.hidden = YES;
+		
+
+		self.browsingAssistant = [[LMBrowsingAssistantView alloc]initForAutoLayout];
+		self.browsingAssistant.coreViewController = self;
+		self.browsingAssistant.backgroundColor = [UIColor orangeColor];
+		self.browsingAssistant.sourcesForSourceSelector = self.sourcesForSourceSelector;
+		self.browsingAssistant.delegate = self;
+		[self.view addSubview:self.browsingAssistant];
+		[self.browsingAssistant setup];
+		
+		self.browsingAssistant.textBackgroundConstraint = [self.browsingAssistant autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.view];
+		[self.browsingAssistant autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.view];
+		[self.browsingAssistant autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.view];
+	//	self.browsingAssistantHeightConstraint = [self.browsingAssistant autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height];
+		
+		[self.view bringSubviewToFront:self.sourceSelector];
+		
+		[self.musicPlayer addMusicDelegate:self];
+		
+		[NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(showWhatsPoppin) userInfo:nil repeats:NO];
+		
+		NSLog(@"Loaded shit");
+		
+		[self.sourceSelector setup];
 	}
-	
-	self.sourcesForSourceSelector = [NSArray arrayWithArray:sources];
-
-	//Album View
-	
-	self.albumView = [LMAlbumView newAutoLayoutView];
-	[self.view addSubview:self.albumView];
-
-	[self.albumView autoCenterInSuperview];
-	[self.albumView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
-	[self.albumView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
-	
-	[self.albumView setup];
-	self.albumView.hidden = YES;
-	
-	//Title view
-	
-	self.titleView = [LMTitleView newAutoLayoutView];
-	self.titleView.backgroundColor = [UIColor redColor];
-	[self.view addSubview:self.titleView];
-	
-	[self.titleView autoCenterInSuperview];
-	[self.titleView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
-	[self.titleView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
-	
-	[self.titleView setup];
-	self.titleView.hidden = YES;
-	
-	//Playlist view
-	
-	self.playlistView = [LMPlaylistView newAutoLayoutView];
-	self.playlistView.backgroundColor = [UIColor whiteColor];
-	[self.view addSubview:self.playlistView];
-	
-	[self.playlistView autoCenterInSuperview];
-	[self.playlistView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
-	[self.playlistView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
-	
-	[self.playlistView setup];
-	self.playlistView.hidden = YES;
-	
-	//Genre view
-	
-	self.genreView = [LMGenreView newAutoLayoutView];
-	self.genreView.backgroundColor = [UIColor whiteColor];
-	[self.view addSubview:self.genreView];
-	
-	[self.genreView autoCenterInSuperview];
-	[self.genreView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
-	[self.genreView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
-	
-	[self.genreView setup];
-	self.genreView.hidden = YES;
-	
-
-	self.browsingAssistant = [[LMBrowsingAssistantView alloc]initForAutoLayout];
-	self.browsingAssistant.coreViewController = self;
-	self.browsingAssistant.backgroundColor = [UIColor orangeColor];
-	self.browsingAssistant.sourcesForSourceSelector = self.sourcesForSourceSelector;
-	self.browsingAssistant.delegate = self;
-	[self.view addSubview:self.browsingAssistant];
-	[self.browsingAssistant setup];
-	
- 	self.browsingAssistant.textBackgroundConstraint = [self.browsingAssistant autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.view];
-	[self.browsingAssistant autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.view];
-	[self.browsingAssistant autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.view];
-//	self.browsingAssistantHeightConstraint = [self.browsingAssistant autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height];
-	
-	[self.view bringSubviewToFront:self.sourceSelector];
-	
-	[self.musicPlayer addMusicDelegate:self];
-	
-	[NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(showWhatsPoppin) userInfo:nil repeats:NO];
-	
-	NSLog(@"Loaded shit");
-	
-	[self.sourceSelector setup];
-	
+		
 //	[NSTimer scheduledTimerWithTimeInterval:0.75
 //									 target:self
 //								   selector:@selector(openNowPlayingView)

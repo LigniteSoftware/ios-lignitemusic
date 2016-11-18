@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LMCoreViewController.h"
 
 @class LMGuideViewController;
 
@@ -20,6 +21,7 @@ typedef enum {
 
 @property (strong, nonatomic) UIPageViewController *pageController;
 @property GuideMode guideMode;
+@property LMCoreViewController *coreViewController;
 
 - (LMGuideViewController *)viewControllerAtIndex:(NSUInteger)index;
 

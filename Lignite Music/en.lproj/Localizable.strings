@@ -85,7 +85,7 @@
 "OnboardingThanksTitle" = "We hope you enjoy Lignite Music!";
 "OnboardingThanksDescription" = "We are a two geek team: designer and developer. We love making apps that are beautiful and functional.\n\nCountless hours went into making this app a reality and we hope you enjoy it as much as we enjoyed making it.";
 
-//Expressions so when the user clicks the buttons with these titles it puts them on the next slide of the tutorial
+"HangOn" = "Hang on..."; //Meaning "Wait..."
 "Cool" = "Cool";
 "WhatsNext" = "What's next?";
 "Sweet" = "Sweet";

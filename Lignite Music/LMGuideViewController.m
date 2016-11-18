@@ -42,6 +42,8 @@
 }
 
 - (void)threeBlindMice {
+	NSLog(@"Some called the three blind mice");
+	
 	[self.sourcePagerController setViewControllers:@[self.nextViewController] direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:^(BOOL finished) {
 		//Done
 	}];
@@ -238,6 +240,7 @@
 					break;
 				}
 				case 4: {
+					[self.coreViewController prepareToLoadView];
 					[[self presentingViewController] dismissViewControllerAnimated:YES completion:nil];
 					break;
 				}

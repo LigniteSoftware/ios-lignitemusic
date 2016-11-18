@@ -15,4 +15,6 @@
 - (void)openBrowsingAssistant;
 - (void)closeBrowsingAssistant;
 
+- (void)prepareToLoadView;
+
 @end

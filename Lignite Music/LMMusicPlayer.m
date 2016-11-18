@@ -81,33 +81,6 @@
 	if(self){
 		NSLog(@"Starting init");
 		
-		[SKCloudServiceController requestAuthorization:^(SKCloudServiceAuthorizationStatus status) {
-			NSLog(@"status is %ld", (long)status);
-			SKCloudServiceController *cloudServiceController;
-			cloudServiceController = [[SKCloudServiceController alloc] init];
-			[cloudServiceController requestCapabilitiesWithCompletionHandler:^(SKCloudServiceCapability capabilities, NSError * _Nullable error) {
-				NSLog(@"%lu %@", (unsigned long)capabilities, error ? error : @"(No error)");
-				
-				if (capabilities >= SKCloudServiceCapabilityAddToCloudMusicLibrary){
-					NSLog(@"You CAN add to iCloud!");
-//					[[MPMediaLibrary defaultMediaLibrary] addItemWithProductID:productID completionHandler:^(NSArray<__kindof MPMediaEntity *> * _Nonnull           entities, NSError * _Nullable error) {
-//						 NSLog(@"added id%@ entities: %@ and error is %@", productID, entities, error);
-//						 NSArray *tracksToPlay = [NSArray arrayWithObject:productID];
-//						 [[MPMusicPlayerController systemMusicPlayer] setQueueWithStoreIDs:tracksToPlay];
-//						 [[MPMusicPlayerController systemMusicPlayer] play];
-//						 
-//						 [self performSelectorOnMainThread:@selector(getInfoFromAddedAppleMusicTrack:) withObject:productID waitUntilDone:YES];
-//						 
-//					 }];
-				}
-				else {
-					NSLog(@"Blast! The ability to add Apple Music track is not there. sigh.");
-				}
-				
-			}];
-			
-		}];
-		
 		self.systemMusicPlayer = [MPMusicPlayerController systemMusicPlayer];
 		[self.systemMusicPlayer beginGeneratingPlaybackNotifications];
 		
@@ -211,12 +184,11 @@
 
 + (id)sharedMusicPlayer {
 	NSLog(@"Called");
-	return nil;
 	
 	static LMMusicPlayer *sharedPlayer;
 	static dispatch_once_t token;
 	dispatch_once(&token, ^{
-		sharedPlayer = [[self alloc] init];
+		sharedPlayer = [self new];
 		sharedPlayer.pebbleManager = [LMPebbleManager sharedPebbleManager];
 		[sharedPlayer.pebbleManager setManagerMusicPlayer:sharedPlayer];
 	});

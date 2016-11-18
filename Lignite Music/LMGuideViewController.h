@@ -8,8 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import "LMGuideViewPagerController.h"
+#import "LMCoreViewController.h"
 
 @interface LMGuideViewController : UIViewController
+
+@property LMCoreViewController *coreViewController;
 
 @property UIPageViewController *sourcePagerController;
 
