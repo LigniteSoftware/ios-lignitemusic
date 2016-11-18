@@ -414,7 +414,7 @@
 	
 	self.screenshotView = [UIImageView newAutoLayoutView];
 //	self.screenshotView.backgroundColor = [UIColor redColor];
-	self.screenshotView.contentMode = UIViewContentModeScaleAspectFit;
+	self.screenshotView.contentMode = (self.guideMode == GuideModeOnboarding && self.index == 4) ? UIViewContentModeScaleAspectFill : UIViewContentModeScaleAspectFit;
 	self.screenshotView.image = self.screenshotImage;
 	[self.view addSubview:self.screenshotView];
 	
@@ -422,6 +422,8 @@
 	[self.screenshotView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 	[self.screenshotView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 	[self.screenshotView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+	
+	[self.view insertSubview:self.titleLabel aboveSubview:self.screenshotView];
 }
 
 - (void)didReceiveMemoryWarning {

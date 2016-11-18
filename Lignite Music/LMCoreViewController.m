@@ -246,13 +246,20 @@ BOOL didAutomaticallyClose = NO;
 
 - (void)showWhatsPoppin {
 	NSArray *currentBuildChanges = @[
+									 @"Added Apple Music support",
+									 @"Added iTunes Match support (experimental)",
 									 @"Added onboarding",
 									 @"Added actual tutorial",
+									 @"Fixed app crashing due to Apple Music song",
+									 @"Fixed app automatically skipping over Apple Music/cloud songs",
+									 @"Fixed a crash due to overloading music player",
+									 @"Fixed music not playing sometimes",
 									 @"Fixed not being able to handle rejection of music permission",
 									 @"Improved app's self confidence across the board :)"
 									 ];
 	
 	NSArray *currentBuildIssues = @[
+									@"Music library changes (such as adding new songs) do not work",
 									@"\nPlease do not report already known issues to us, thanks!"
 									];
 	
@@ -295,6 +302,11 @@ BOOL didAutomaticallyClose = NO;
 									}];
 		
 		[alert addAction:yesButton];
+		
+		NSArray *viewArray = [[[[[[[[[[[[alert view] subviews] firstObject] subviews] firstObject] subviews] firstObject] subviews] firstObject] subviews] firstObject] subviews]; //lol
+//		UILabel *alertTitle = viewArray[0];
+		UILabel *alertMessage = viewArray[1];
+		alertMessage.textAlignment = NSTextAlignmentLeft;
 		
 		[self presentViewController:alert animated:YES completion:nil];
 	}

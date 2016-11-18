@@ -83,7 +83,7 @@
 "DoNothing" = "Do nothing"; //Instead of contacting us
 
 "OnboardingThanksTitle" = "We hope you enjoy Lignite Music!";
-"OnboardingThanksDescription" = "We are a two geek team: designer and developer. We love making apps that are beautiful and functional.\n\nCountless hours went into making this app a reality and we hope you enjoy it as much as we enjoyed making it.";
+"OnboardingThanksDescription" = "We are a two geek team: designer and developer.\n\nWe love making apps that are beautiful and functional and we hope you enjoy it as much as we enjoyed making it!";
 
 "HangOn" = "Hang on..."; //Meaning "Wait..."
 "Cool" = "Cool";

@@ -23,6 +23,8 @@
 		6A32A9E81DC654500056CC60 /* LMTriangleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A32A9E71DC654500056CC60 /* LMTriangleView.m */; };
 		6A32A9EC1DC68F440056CC60 /* LMTriangleContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A32A9EB1DC68F440056CC60 /* LMTriangleContainerView.m */; };
 		6A32A9EF1DC6906D0056CC60 /* LMTriangleMaskView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A32A9EE1DC6906D0056CC60 /* LMTriangleMaskView.m */; };
+		6A43BCE71DDFA471009FB0E9 /* tutorial_now_playing.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A43BCE61DDFA471009FB0E9 /* tutorial_now_playing.png */; };
+		6A43BCE91DDFA66B009FB0E9 /* onboarding_us.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A43BCE81DDFA66B009FB0E9 /* onboarding_us.png */; };
 		6A4BAEEE1DC984EC000DF537 /* LMBigListEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A4BAEED1DC984EC000DF537 /* LMBigListEntry.m */; };
 		6A4BAEF21DC9C59B000DF537 /* LMTiledAlbumCoverView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A4BAEF11DC9C59B000DF537 /* LMTiledAlbumCoverView.m */; };
 		6A514E121CE904F100AFB351 /* LMNowPlayingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A514E111CE904F000AFB351 /* LMNowPlayingViewController.m */; };
@@ -83,6 +85,8 @@
 		6AD227061DA599E50056695A /* LMMusicTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AD227051DA599E50056695A /* LMMusicTrack.m */; };
 		6AD227091DA59AA00056695A /* LMMusicTrackCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AD227081DA59AA00056695A /* LMMusicTrackCollection.m */; };
 		6AD480631DCAAF4D00DB891B /* LMCollectionInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AD480621DCAAF4D00DB891B /* LMCollectionInfoView.m */; };
+		6ADC48EF1DDF8C8000FE57F1 /* onboarding_library_access.png in Resources */ = {isa = PBXBuildFile; fileRef = 6ADC48ED1DDF8C8000FE57F1 /* onboarding_library_access.png */; };
+		6ADC48F01DDF8C8000FE57F1 /* onboarding_bluetooth.png in Resources */ = {isa = PBXBuildFile; fileRef = 6ADC48EE1DDF8C8000FE57F1 /* onboarding_bluetooth.png */; };
 		6ADDBD3D1DA29D3E00DB99EF /* LMShadowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ADDBD3C1DA29D3E00DB99EF /* LMShadowView.m */; };
 		6AE4A7FC1D49461C002B67CD /* pebble_colours_64.gif in Resources */ = {isa = PBXBuildFile; fileRef = 6AE4A7FB1D49461C002B67CD /* pebble_colours_64.gif */; };
 		6AEB9CFD1BACF60E00AD19FA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AEB9CFC1BACF60E00AD19FA /* main.m */; };
@@ -98,15 +102,11 @@
 		6AFD2EDF1BC423850083FE9E /* no_album.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AFD2EDE1BC423850083FE9E /* no_album.png */; };
 		6AFF01881DDD656E00F24D8E /* LMGuideViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AFF01851DDD656E00F24D8E /* LMGuideViewController.m */; };
 		6AFF01891DDD656E00F24D8E /* LMGuideViewPagerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AFF01871DDD656E00F24D8E /* LMGuideViewPagerController.m */; };
-		6AFF018F1DDD6B1A00F24D8E /* onboarding_library_access.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AFF018B1DDD6B1A00F24D8E /* onboarding_library_access.png */; };
-		6AFF01901DDD6B1A00F24D8E /* onboarding_bluetooth.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AFF018C1DDD6B1A00F24D8E /* onboarding_bluetooth.png */; };
 		6AFF01911DDD6B1A00F24D8E /* onboarding_pebble.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AFF018D1DDD6B1A00F24D8E /* onboarding_pebble.png */; };
 		6AFF01951DDE4EAF00F24D8E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6AFF01971DDE4EAF00F24D8E /* InfoPlist.strings */; };
 		6AFF019F1DDE7D2D00F24D8E /* tutorial_pebble.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AFF019B1DDE7D2D00F24D8E /* tutorial_pebble.png */; };
 		6AFF01A01DDE7D2D00F24D8E /* tutorial_browsing.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AFF019C1DDE7D2D00F24D8E /* tutorial_browsing.png */; };
 		6AFF01A11DDE7D2D00F24D8E /* tutorial_bottom_tabs.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AFF019D1DDE7D2D00F24D8E /* tutorial_bottom_tabs.png */; };
-		6AFF01A21DDE7D2D00F24D8E /* tutorial_now_playing.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AFF019E1DDE7D2D00F24D8E /* tutorial_now_playing.png */; };
-		6AFF01A41DDED00300F24D8E /* onboarding_us.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AFF01A31DDED00300F24D8E /* onboarding_us.png */; };
 		6AFF01A81DDED15100F24D8E /* onboarding_gutless_user.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AFF01A71DDED15100F24D8E /* onboarding_gutless_user.png */; };
 		A75C073ECBB2FEB1EFE05613 /* Pods_Lignite_Music.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0647B1CCD075642CBF2B75C8 /* Pods_Lignite_Music.framework */; };
 /* End PBXBuildFile section */
@@ -146,6 +146,8 @@
 		6A32A9ED1DC6906D0056CC60 /* LMTriangleMaskView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMTriangleMaskView.h; sourceTree = "<group>"; };
 		6A32A9EE1DC6906D0056CC60 /* LMTriangleMaskView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMTriangleMaskView.m; sourceTree = "<group>"; };
 		6A32A9F01DC695020056CC60 /* main.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = main.h; sourceTree = "<group>"; };
+		6A43BCE61DDFA471009FB0E9 /* tutorial_now_playing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tutorial_now_playing.png; sourceTree = "<group>"; };
+		6A43BCE81DDFA66B009FB0E9 /* onboarding_us.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = onboarding_us.png; sourceTree = "<group>"; };
 		6A4BAEEC1DC984EC000DF537 /* LMBigListEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMBigListEntry.h; sourceTree = "<group>"; };
 		6A4BAEED1DC984EC000DF537 /* LMBigListEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMBigListEntry.m; sourceTree = "<group>"; };
 		6A4BAEF01DC9C59B000DF537 /* LMTiledAlbumCoverView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMTiledAlbumCoverView.h; sourceTree = "<group>"; };
@@ -246,6 +248,8 @@
 		6AD227081DA59AA00056695A /* LMMusicTrackCollection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMMusicTrackCollection.m; sourceTree = "<group>"; };
 		6AD480611DCAAF4D00DB891B /* LMCollectionInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMCollectionInfoView.h; sourceTree = "<group>"; };
 		6AD480621DCAAF4D00DB891B /* LMCollectionInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMCollectionInfoView.m; sourceTree = "<group>"; };
+		6ADC48ED1DDF8C8000FE57F1 /* onboarding_library_access.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = onboarding_library_access.png; sourceTree = "<group>"; };
+		6ADC48EE1DDF8C8000FE57F1 /* onboarding_bluetooth.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = onboarding_bluetooth.png; sourceTree = "<group>"; };
 		6ADDBD3B1DA29D3E00DB99EF /* LMShadowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMShadowView.h; sourceTree = "<group>"; };
 		6ADDBD3C1DA29D3E00DB99EF /* LMShadowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMShadowView.m; sourceTree = "<group>"; };
 		6AE4A7FB1D49461C002B67CD /* pebble_colours_64.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = pebble_colours_64.gif; sourceTree = "<group>"; };
@@ -273,8 +277,6 @@
 		6AFF01851DDD656E00F24D8E /* LMGuideViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMGuideViewController.m; sourceTree = "<group>"; };
 		6AFF01861DDD656E00F24D8E /* LMGuideViewPagerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMGuideViewPagerController.h; sourceTree = "<group>"; };
 		6AFF01871DDD656E00F24D8E /* LMGuideViewPagerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMGuideViewPagerController.m; sourceTree = "<group>"; };
-		6AFF018B1DDD6B1A00F24D8E /* onboarding_library_access.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = onboarding_library_access.png; sourceTree = "<group>"; };
-		6AFF018C1DDD6B1A00F24D8E /* onboarding_bluetooth.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = onboarding_bluetooth.png; sourceTree = "<group>"; };
 		6AFF018D1DDD6B1A00F24D8E /* onboarding_pebble.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = onboarding_pebble.png; sourceTree = "<group>"; };
 		6AFF01961DDE4EAF00F24D8E /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		6AFF01981DDE4EB300F24D8E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -282,8 +284,6 @@
 		6AFF019B1DDE7D2D00F24D8E /* tutorial_pebble.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tutorial_pebble.png; sourceTree = "<group>"; };
 		6AFF019C1DDE7D2D00F24D8E /* tutorial_browsing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tutorial_browsing.png; sourceTree = "<group>"; };
 		6AFF019D1DDE7D2D00F24D8E /* tutorial_bottom_tabs.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tutorial_bottom_tabs.png; sourceTree = "<group>"; };
-		6AFF019E1DDE7D2D00F24D8E /* tutorial_now_playing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tutorial_now_playing.png; sourceTree = "<group>"; };
-		6AFF01A31DDED00300F24D8E /* onboarding_us.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = onboarding_us.png; sourceTree = "<group>"; };
 		6AFF01A71DDED15100F24D8E /* onboarding_gutless_user.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = onboarding_gutless_user.png; sourceTree = "<group>"; };
 		A0B9C2DB66A8B7F673456C95 /* Pods-Lignite Music.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lignite Music.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Lignite Music/Pods-Lignite Music.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -751,10 +751,10 @@
 			isa = PBXGroup;
 			children = (
 				6AFF019A1DDE7CD100F24D8E /* Tutorial */,
-				6AFF018B1DDD6B1A00F24D8E /* onboarding_library_access.png */,
-				6AFF018C1DDD6B1A00F24D8E /* onboarding_bluetooth.png */,
+				6ADC48ED1DDF8C8000FE57F1 /* onboarding_library_access.png */,
+				6ADC48EE1DDF8C8000FE57F1 /* onboarding_bluetooth.png */,
 				6AFF018D1DDD6B1A00F24D8E /* onboarding_pebble.png */,
-				6AFF01A31DDED00300F24D8E /* onboarding_us.png */,
+				6A43BCE81DDFA66B009FB0E9 /* onboarding_us.png */,
 				6AFF01A71DDED15100F24D8E /* onboarding_gutless_user.png */,
 			);
 			name = Onboarding;
@@ -765,8 +765,8 @@
 			children = (
 				6AFF019B1DDE7D2D00F24D8E /* tutorial_pebble.png */,
 				6AFF019C1DDE7D2D00F24D8E /* tutorial_browsing.png */,
+				6A43BCE61DDFA471009FB0E9 /* tutorial_now_playing.png */,
 				6AFF019D1DDE7D2D00F24D8E /* tutorial_bottom_tabs.png */,
-				6AFF019E1DDE7D2D00F24D8E /* tutorial_now_playing.png */,
 			);
 			name = Tutorial;
 			sourceTree = "<group>";
@@ -855,12 +855,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6ADC48EF1DDF8C8000FE57F1 /* onboarding_library_access.png in Resources */,
 				6AE4A7FC1D49461C002B67CD /* pebble_colours_64.gif in Resources */,
 				6AFF01A11DDE7D2D00F24D8E /* tutorial_bottom_tabs.png in Resources */,
 				6AFF01951DDE4EAF00F24D8E /* InfoPlist.strings in Resources */,
-				6AFF018F1DDD6B1A00F24D8E /* onboarding_library_access.png in Resources */,
 				6A0750721D5EAB8000BCBC9C /* aplite_colours.gif in Resources */,
 				6AFF01A01DDE7D2D00F24D8E /* tutorial_browsing.png in Resources */,
+				6A43BCE91DDFA66B009FB0E9 /* onboarding_us.png in Resources */,
 				6AF2C9431DDA16CC005E4643 /* icon_source.png in Resources */,
 				6AB12E9C1D57AD9800280383 /* icon_settings.png in Resources */,
 				6AEB9D0B1BACF60E00AD19FA /* LaunchScreen.storyboard in Resources */,
@@ -868,8 +869,6 @@
 				6AC32B771DB53EB20007C67E /* icon_repeat_general.png in Resources */,
 				6A9C053B1DB4441200713D1C /* icon_albums.png in Resources */,
 				6AC32B7D1DB6CD950007C67E /* icon_bug.png in Resources */,
-				6AFF01901DDD6B1A00F24D8E /* onboarding_bluetooth.png in Resources */,
-				6AFF01A41DDED00300F24D8E /* onboarding_us.png in Resources */,
 				6AF2C9441DDA16CC005E4643 /* icon_browse.png in Resources */,
 				6ACED1091DB7BE1D006EACD2 /* icon_shuffle.png in Resources */,
 				6ACED1081DB7BE1D006EACD2 /* icon_repeat_one.png in Resources */,
@@ -881,13 +880,14 @@
 				6AFF01A81DDED15100F24D8E /* onboarding_gutless_user.png in Resources */,
 				6A514E141CE9621B00AFB351 /* icon_dynamic_playlist.png in Resources */,
 				6AC77A161DC42CF400BABBB3 /* icon_playlists.png in Resources */,
-				6AFF01A21DDE7D2D00F24D8E /* tutorial_now_playing.png in Resources */,
 				6A9C053E1DB4441200713D1C /* icon_titles.png in Resources */,
 				6AEB9D351BAD812700AD19FA /* icon_pause.png in Resources */,
 				6AC32B7F1DB73AFB0007C67E /* icon_no_cover_art.png in Resources */,
+				6A43BCE71DDFA471009FB0E9 /* tutorial_now_playing.png in Resources */,
 				6A9C053D1DB4441200713D1C /* icon_genres.png in Resources */,
 				6AFF019F1DDE7D2D00F24D8E /* tutorial_pebble.png in Resources */,
 				6A9C053C1DB4441200713D1C /* icon_compilations.png in Resources */,
+				6ADC48F01DDF8C8000FE57F1 /* onboarding_bluetooth.png in Resources */,
 				6A7DF1201DB124030077B979 /* icon_triple_horizontal_dots.png in Resources */,
 				6AFD2EDF1BC423850083FE9E /* no_album.png in Resources */,
 				6AAF610D1DA0286F00971875 /* Localizable.strings in Resources */,
