@@ -61,7 +61,7 @@
 		//							 @"icon_no_cover_art.png",
 									 @"onboarding_library_access.png",
 									 @"onboarding_bluetooth.png",
-									 @"icon_no_cover_art.png",
+									 @"tutorial_browsing.png",
 									 @"onboarding_us.png"
 									 , nil];
 			
@@ -94,10 +94,10 @@
 							   , nil];
 			
 			self.screenshotsArray = [[NSArray alloc]initWithObjects:
-									 @"icon_no_cover_art.png",
-									 @"icon_no_cover_art.png",
-									 @"icon_no_cover_art.png",
-									 @"icon_no_cover_art.png"
+									 @"tutorial_browsing.png",
+									 @"tutorial_bottom_tabs.png",
+									 @"tutorial_now_playing.png",
+									 @"tutorial_pebble.png"
 									 , nil];
 			
 			self.buttonNamesArray = [[NSArray alloc]initWithObjects:
@@ -132,7 +132,7 @@
 	
 	self.pageController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
 	
-	self.pageController.dataSource = self;
+//	self.pageController.dataSource = self;
 	[[self.pageController view] setFrame:[[self view] bounds]];
 	
 	LMGuideViewController *initialViewController = [self viewControllerAtIndex:0];

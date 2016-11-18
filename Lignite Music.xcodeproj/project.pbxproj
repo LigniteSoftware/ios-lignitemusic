@@ -104,6 +104,10 @@
 		6AFF01911DDD6B1A00F24D8E /* onboarding_pebble.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AFF018D1DDD6B1A00F24D8E /* onboarding_pebble.png */; };
 		6AFF01921DDD6B1A00F24D8E /* onboarding_us.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AFF018E1DDD6B1A00F24D8E /* onboarding_us.png */; };
 		6AFF01951DDE4EAF00F24D8E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6AFF01971DDE4EAF00F24D8E /* InfoPlist.strings */; };
+		6AFF019F1DDE7D2D00F24D8E /* tutorial_pebble.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AFF019B1DDE7D2D00F24D8E /* tutorial_pebble.png */; };
+		6AFF01A01DDE7D2D00F24D8E /* tutorial_browsing.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AFF019C1DDE7D2D00F24D8E /* tutorial_browsing.png */; };
+		6AFF01A11DDE7D2D00F24D8E /* tutorial_bottom_tabs.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AFF019D1DDE7D2D00F24D8E /* tutorial_bottom_tabs.png */; };
+		6AFF01A21DDE7D2D00F24D8E /* tutorial_now_playing.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AFF019E1DDE7D2D00F24D8E /* tutorial_now_playing.png */; };
 		A75C073ECBB2FEB1EFE05613 /* Pods_Lignite_Music.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0647B1CCD075642CBF2B75C8 /* Pods_Lignite_Music.framework */; };
 /* End PBXBuildFile section */
 
@@ -278,6 +282,10 @@
 		6AFF01961DDE4EAF00F24D8E /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		6AFF01981DDE4EB300F24D8E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		6AFF01991DDE4EB400F24D8E /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		6AFF019B1DDE7D2D00F24D8E /* tutorial_pebble.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tutorial_pebble.png; sourceTree = "<group>"; };
+		6AFF019C1DDE7D2D00F24D8E /* tutorial_browsing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tutorial_browsing.png; sourceTree = "<group>"; };
+		6AFF019D1DDE7D2D00F24D8E /* tutorial_bottom_tabs.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tutorial_bottom_tabs.png; sourceTree = "<group>"; };
+		6AFF019E1DDE7D2D00F24D8E /* tutorial_now_playing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tutorial_now_playing.png; sourceTree = "<group>"; };
 		A0B9C2DB66A8B7F673456C95 /* Pods-Lignite Music.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lignite Music.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Lignite Music/Pods-Lignite Music.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -745,12 +753,24 @@
 		6AFF018A1DDD6B0E00F24D8E /* Onboarding */ = {
 			isa = PBXGroup;
 			children = (
+				6AFF019A1DDE7CD100F24D8E /* Tutorial */,
 				6AFF018B1DDD6B1A00F24D8E /* onboarding_library_access.png */,
 				6AFF018C1DDD6B1A00F24D8E /* onboarding_bluetooth.png */,
 				6AFF018D1DDD6B1A00F24D8E /* onboarding_pebble.png */,
 				6AFF018E1DDD6B1A00F24D8E /* onboarding_us.png */,
 			);
 			name = Onboarding;
+			sourceTree = "<group>";
+		};
+		6AFF019A1DDE7CD100F24D8E /* Tutorial */ = {
+			isa = PBXGroup;
+			children = (
+				6AFF019B1DDE7D2D00F24D8E /* tutorial_pebble.png */,
+				6AFF019C1DDE7D2D00F24D8E /* tutorial_browsing.png */,
+				6AFF019D1DDE7D2D00F24D8E /* tutorial_bottom_tabs.png */,
+				6AFF019E1DDE7D2D00F24D8E /* tutorial_now_playing.png */,
+			);
+			name = Tutorial;
 			sourceTree = "<group>";
 		};
 		EEE9F5AA536DDB5B28CE09F9 /* Frameworks */ = {
@@ -838,9 +858,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				6AE4A7FC1D49461C002B67CD /* pebble_colours_64.gif in Resources */,
+				6AFF01A11DDE7D2D00F24D8E /* tutorial_bottom_tabs.png in Resources */,
 				6AFF01951DDE4EAF00F24D8E /* InfoPlist.strings in Resources */,
 				6AFF018F1DDD6B1A00F24D8E /* onboarding_library_access.png in Resources */,
 				6A0750721D5EAB8000BCBC9C /* aplite_colours.gif in Resources */,
+				6AFF01A01DDE7D2D00F24D8E /* tutorial_browsing.png in Resources */,
 				6AFF01921DDD6B1A00F24D8E /* onboarding_us.png in Resources */,
 				6AF2C9431DDA16CC005E4643 /* icon_source.png in Resources */,
 				6AB12E9C1D57AD9800280383 /* icon_settings.png in Resources */,
@@ -860,10 +882,12 @@
 				6AEB9D061BACF60E00AD19FA /* Main.storyboard in Resources */,
 				6A514E141CE9621B00AFB351 /* icon_dynamic_playlist.png in Resources */,
 				6AC77A161DC42CF400BABBB3 /* icon_playlists.png in Resources */,
+				6AFF01A21DDE7D2D00F24D8E /* tutorial_now_playing.png in Resources */,
 				6A9C053E1DB4441200713D1C /* icon_titles.png in Resources */,
 				6AEB9D351BAD812700AD19FA /* icon_pause.png in Resources */,
 				6AC32B7F1DB73AFB0007C67E /* icon_no_cover_art.png in Resources */,
 				6A9C053D1DB4441200713D1C /* icon_genres.png in Resources */,
+				6AFF019F1DDE7D2D00F24D8E /* tutorial_pebble.png in Resources */,
 				6A9C053C1DB4441200713D1C /* icon_compilations.png in Resources */,
 				6A7DF1201DB124030077B979 /* icon_triple_horizontal_dots.png in Resources */,
 				6AFD2EDF1BC423850083FE9E /* no_album.png in Resources */,
