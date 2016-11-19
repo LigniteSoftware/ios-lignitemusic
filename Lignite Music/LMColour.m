@@ -9,17 +9,18 @@
 #import <UIKit/UIKit.h>
 #import "LMColour.h"
 
-#define LIGNITE_RED [UIColor colorWithRed:0.69 green:0.16 blue:0.15 alpha:1.0]
-#define FADED_COLOUR [UIColor colorWithRed:1.00 green: 1.00 blue: 1.00 alpha: 0.35]
-
 @implementation LMColour
 
 + (UIColor*)ligniteRedColour {
-	return LIGNITE_RED;
+	return [UIColor colorWithRed:0.69 green:0.16 blue:0.15 alpha:1.0];
+}
+
++ (UIColor*)darkLigniteRedColour {
+	return [UIColor colorWithRed:0.33 green:0.00 blue:0.00 alpha:1.0];;
 }
 
 + (UIColor*)fadedColour {
-	return FADED_COLOUR;
+	return [UIColor colorWithRed:1.00 green: 1.00 blue: 1.00 alpha: 0.35];
 }
 
 + (UIColor*)lightGrayBackgroundColour {

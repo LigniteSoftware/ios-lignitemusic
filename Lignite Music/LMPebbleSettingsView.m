@@ -11,7 +11,7 @@
 #import "LMSettingsSwitch.h"
 #import "LMSettingsLabel.h"
 
-@interface LMPebbleSettingsView () <MFMailComposeViewControllerDelegate>
+@interface LMPebbleSettingsView ()
 
 @property NSDictionary *settingsMapping;
 @property NSDictionary *defaultsMapping;
@@ -113,16 +113,6 @@
 	}
 }
 
-- (void)mailComposeController:(MFMailComposeViewController*)controller
-		  didFinishWithResult:(MFMailComposeResult)result
-						error:(NSError*)error;
-{
-	if (result == MFMailComposeResultSent) {
-		NSLog(@"It's away!");
-	}
-	[self dismissViewControllerAnimated:YES completion:nil];
-}
-
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
 	[tableView deselectRowAtIndexPath:indexPath animated:YES];
 	if(indexPath.section == 2){
@@ -134,37 +124,11 @@
 				[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://www.lignite.io/feedback/"]];
 				break;
 			case 2:{
-				UIAlertController * alert = [UIAlertController
-											 alertControllerWithTitle:NSLocalizedString(@"HowToUse", nil)
-											 message:NSLocalizedString(@"HowToUseDescription", nil)
-											 preferredStyle:UIAlertControllerStyleAlert];
-				
-				UIAlertAction* yesButton = [UIAlertAction
-											actionWithTitle:NSLocalizedString(@"OkThanks", nil)
-											style:UIAlertActionStyleDefault
-											handler:^(UIAlertAction * action) {
-												//[defaults setBool:YES forKey:@"shitty_tutorial"];
-											}];
-				
-				[alert addAction:yesButton];
-				
-				NSArray *viewArray = [[[[[[[[[[[[alert view] subviews] firstObject] subviews] firstObject] subviews] firstObject] subviews] firstObject] subviews] firstObject] subviews];
-				UILabel *alertMessage = viewArray[1];
-				alertMessage.textAlignment = NSTextAlignmentLeft;
-				
-				[self presentViewController:alert animated:YES completion:nil];
+				//Old tutorial
 				break;
 			}
 			case 3:{
-				MFMailComposeViewController* controller = [[MFMailComposeViewController alloc] init];
-				controller.mailComposeDelegate = self;
-				[controller setToRecipients:[[NSArray alloc] initWithObjects:@"jonb@pebble.com", nil]];
-				[controller setSubject:@"APP_MSG_BUSY Locking Up Watchapp"];
-				[controller setMessageBody:@"Hi there,\n\nI am having an issue with one of my watchapps which causes it to lock up when it gets the APP_MSG_BUSY error. I have to completely restart the watchapp to fix this, it's very frustrating.\n\nThis exact issue is on this forum thread: https://forums.pebble.com/t/how-to-recover-from-app-msg-busy-after-bluetooth-reconnects/22948\n\nHoping this issue is fixed soon.\n\nThanks!" isHTML:NO];
-				if (controller){
-					//[self presentModalViewController:controller animated:YES];
-					[self showViewController:controller sender:self];
-				}
+				//Old rant email
 				break;
 			}
 		}

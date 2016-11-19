@@ -18,6 +18,13 @@
 + (UIColor*)ligniteRedColour;
 
 /**
+ Dark Lignite Red colour is basically a brown colour. It should be used for denying related tasks.
+
+ @return The dark Lignite Red colour.
+ */
++ (UIColor*)darkLigniteRedColour;
+
+/**
  A 35% transparent white which is the background to the circular cover art, for example.
 
  @return The 35% transparent white.
