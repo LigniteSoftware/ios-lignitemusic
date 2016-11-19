@@ -36,6 +36,8 @@
 		6A5821021DADE54400A4FAB1 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A5821011DADE54400A4FAB1 /* AVFoundation.framework */; };
 		6A5821041DAF312C00A4FAB1 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A5821031DAF312C00A4FAB1 /* AudioToolbox.framework */; };
 		6A6351921D9D71D300498582 /* LMListEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A6351911D9D71D300498582 /* LMListEntry.m */; };
+		6A6C186B1DDFFE7600D651E1 /* LMArtistView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A6C186A1DDFFE7600D651E1 /* LMArtistView.m */; };
+		6A6C186D1DE0014A00D651E1 /* icon_artists.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A6C186C1DE0014A00D651E1 /* icon_artists.png */; };
 		6A6CCD5B1DB290FA006035C1 /* LMAppIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A6CCD5A1DB290FA006035C1 /* LMAppIcon.m */; };
 		6A6F4B631DC5D4EB00BD01C2 /* YIInnerShadowLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A6F4B601DC5D4EB00BD01C2 /* YIInnerShadowLayer.m */; };
 		6A6F4B641DC5D4EB00BD01C2 /* YIInnerShadowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A6F4B621DC5D4EB00BD01C2 /* YIInnerShadowView.m */; };
@@ -165,6 +167,9 @@
 		6A5821031DAF312C00A4FAB1 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		6A6351901D9D71D300498582 /* LMListEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMListEntry.h; sourceTree = "<group>"; };
 		6A6351911D9D71D300498582 /* LMListEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMListEntry.m; sourceTree = "<group>"; };
+		6A6C18691DDFFE7600D651E1 /* LMArtistView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMArtistView.h; sourceTree = "<group>"; };
+		6A6C186A1DDFFE7600D651E1 /* LMArtistView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMArtistView.m; sourceTree = "<group>"; };
+		6A6C186C1DE0014A00D651E1 /* icon_artists.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_artists.png; sourceTree = "<group>"; };
 		6A6CCD591DB290FA006035C1 /* LMAppIcon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMAppIcon.h; sourceTree = "<group>"; };
 		6A6CCD5A1DB290FA006035C1 /* LMAppIcon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMAppIcon.m; sourceTree = "<group>"; };
 		6A6F4B5F1DC5D4EB00BD01C2 /* YIInnerShadowLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YIInnerShadowLayer.h; sourceTree = "<group>"; };
@@ -459,9 +464,9 @@
 		6A66C76C1CDA1B4E009019CF /* Icons */ = {
 			isa = PBXGroup;
 			children = (
-				6AF2C9411DDA16CC005E4643 /* icon_source.png */,
-				6AF2C9421DDA16CC005E4643 /* icon_browse.png */,
 				6A9C05371DB4441200713D1C /* icon_albums.png */,
+				6A6C186C1DE0014A00D651E1 /* icon_artists.png */,
+				6AF2C9421DDA16CC005E4643 /* icon_browse.png */,
 				6AC32B7C1DB6CD950007C67E /* icon_bug.png */,
 				6A9C05381DB4441200713D1C /* icon_compilations.png */,
 				6A514E131CE9621B00AFB351 /* icon_dynamic_playlist.png */,
@@ -474,6 +479,7 @@
 				6ACED1061DB7BE1D006EACD2 /* icon_repeat_one.png */,
 				6AB12E9B1D57AD9800280383 /* icon_settings.png */,
 				6ACED1071DB7BE1D006EACD2 /* icon_shuffle.png */,
+				6AF2C9411DDA16CC005E4643 /* icon_source.png */,
 				6A9C053A1DB4441200713D1C /* icon_titles.png */,
 				6A7DF11F1DB124030077B979 /* icon_triple_horizontal_dots.png */,
 			);
@@ -489,6 +495,15 @@
 				6AFD2EDE1BC423850083FE9E /* no_album.png */,
 			);
 			name = Other;
+			sourceTree = "<group>";
+		};
+		6A6C18681DDFFE3700D651E1 /* Artists */ = {
+			isa = PBXGroup;
+			children = (
+				6A6C18691DDFFE7600D651E1 /* LMArtistView.h */,
+				6A6C186A1DDFFE7600D651E1 /* LMArtistView.m */,
+			);
+			name = Artists;
 			sourceTree = "<group>";
 		};
 		6A6CCD5C1DB295E4006035C1 /* Pebble */ = {
@@ -579,6 +594,7 @@
 			isa = PBXGroup;
 			children = (
 				6AC77A0B1DC4247F00BABBB3 /* Albums */,
+				6A6C18681DDFFE3700D651E1 /* Artists */,
 				6A92F8211DD6D5F7002045C2 /* Core */,
 				6A92F8281DD95810002045C2 /* Genres */,
 				6AC77A0C1DC4249800BABBB3 /* Playlists */,
@@ -878,6 +894,7 @@
 				6AEB9D081BACF60E00AD19FA /* Assets.xcassets in Resources */,
 				6AEB9D061BACF60E00AD19FA /* Main.storyboard in Resources */,
 				6AFF01A81DDED15100F24D8E /* onboarding_gutless_user.png in Resources */,
+				6A6C186D1DE0014A00D651E1 /* icon_artists.png in Resources */,
 				6A514E141CE9621B00AFB351 /* icon_dynamic_playlist.png in Resources */,
 				6AC77A161DC42CF400BABBB3 /* icon_playlists.png in Resources */,
 				6A9C053E1DB4441200713D1C /* icon_titles.png in Resources */,
@@ -954,6 +971,7 @@
 				6A32A9EC1DC68F440056CC60 /* LMTriangleContainerView.m in Sources */,
 				6A92F8241DD6D62A002045C2 /* LMBrowsingView.m in Sources */,
 				6A3211411DA732470060DD07 /* LMTrackInfoView.m in Sources */,
+				6A6C186B1DDFFE7600D651E1 /* LMArtistView.m in Sources */,
 				6AC1B7391DA308F80029E08B /* LMSongDetailControlView.m in Sources */,
 				6A4BAEF21DC9C59B000DF537 /* LMTiledAlbumCoverView.m in Sources */,
 				6A6351921D9D71D300498582 /* LMListEntry.m in Sources */,

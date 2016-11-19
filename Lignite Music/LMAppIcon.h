@@ -23,6 +23,7 @@ typedef enum {
 	LMIconAlbums,
 	LMIconPlaylists,
 	LMIconGenres,
+	LMIconArtists,
 	LMIconBug,
 	LMIconNoAlbumArt,
 	LMIconSource,

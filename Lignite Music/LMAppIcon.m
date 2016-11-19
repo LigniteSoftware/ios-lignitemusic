@@ -34,6 +34,8 @@
 			return @"icon_playlists.png";
 		case LMIconGenres:
 			return @"icon_genres.png";
+		case LMIconArtists:
+			return @"icon_artists.png";
 		case LMIconBug:
 			return @"icon_bug.png";
 		case LMIconNoAlbumArt:

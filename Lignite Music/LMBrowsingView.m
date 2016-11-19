@@ -53,6 +53,12 @@
 			pluralString = @"Genres";
 			break;
 		}
+		case LMMusicTypeArtists: {
+			titleString = @"Artists";
+			singlularString = @"Artist";
+			pluralString = @"Artists";
+			break;
+		}
 		default: {
 			titleString = @"Unknowns";
 			singlularString = @"Unknown";
@@ -109,6 +115,9 @@
 		case LMMusicTypeAlbums: {
 			return collection.representativeItem.albumTitle ? collection.representativeItem.albumTitle : NSLocalizedString(@"UnknownAlbum", nil);
 		}
+		case LMMusicTypeArtists: {
+			return collection.representativeItem.artist ? collection.representativeItem.artist : NSLocalizedString(@"UnknownArtist", nil);
+		}
 		default: {
 			return nil;
 		}
@@ -127,6 +136,9 @@
 		case LMMusicTypeAlbums: {
 			return collection.representativeItem.artist ? collection.representativeItem.artist : NSLocalizedString(@"UnknownArtist", nil);
 		}
+		case LMMusicTypeArtists: {
+			return @"Left Text";
+		}
 		default: {
 			return nil;
 		}
@@ -142,6 +154,7 @@
 		{
 			return nil;
 		}
+		case LMMusicTypeArtists:
 		case LMMusicTypeAlbums: {
 			return [NSString stringWithFormat:@"%lu %@", collection.count, NSLocalizedString(collection.count == 1 ? @"Song" : @"Songs", nil)];
 		}
@@ -153,6 +166,7 @@
 
 - (UIImage*)centerImageForBigListEntry:(LMBigListEntry*)bigListEntry {
 	switch(self.musicType){
+		case LMMusicTypeArtists:
 		case LMMusicTypeGenres:
 		case LMMusicTypeAlbums:
 		case LMMusicTypePlaylists: {
@@ -261,6 +275,7 @@
 	[bigListEntry.queue cancelAllOperations];
 	
 	switch(self.musicType){
+		case LMMusicTypeArtists:
 		case LMMusicTypeGenres:
 		case LMMusicTypePlaylists: {
 			LMTiledAlbumCoverView *tiledAlbumCover = subview;
@@ -296,6 +311,7 @@
 
 - (id)contentSubviewForBigListEntry:(LMBigListEntry*)bigListEntry {
 	switch(self.musicType){
+		case LMMusicTypeArtists:
 		case LMMusicTypeGenres:
 		case LMMusicTypePlaylists: {
 			LMTiledAlbumCoverView *tiledAlbumCover = [LMTiledAlbumCoverView newAutoLayoutView];

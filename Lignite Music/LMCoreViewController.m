@@ -23,6 +23,7 @@
 #import "UIColor+isLight.h"
 #import "LMSettings.h"
 #import "LMGuideViewPagerController.h"
+#import "LMArtistView.h"
 
 @import StoreKit;
 
@@ -36,6 +37,7 @@
 @property LMTitleView *titleView;
 @property LMPlaylistView *playlistView;
 @property LMGenreView *genreView;
+@property LMArtistView *artistView;
 
 @property LMBrowsingAssistantView *browsingAssistant;
 @property LMSourceSelectorView *sourceSelector;
@@ -197,12 +199,18 @@ BOOL didAutomaticallyClose = NO;
 			self.currentSource = self.genreView;
 			break;
 		}
-		case 4:{
+		case 4: {
+			self.artistView.hidden = NO;
+			[self.artistView reloadSourceSelectorInfo];
+			self.currentSource = self.artistView;
+			break;
+		}
+		case 5:{
 			[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://www.lignite.io/feedback/"]];
 			NSLog(@"Debug menu");
 			break;
 		}
-		case 5:{
+		case 6:{
 			LMPebbleManager *pebbleManager = [LMPebbleManager sharedPebbleManager];
 			[pebbleManager showSettings];
 			break;
@@ -378,16 +386,16 @@ BOOL didAutomaticallyClose = NO;
 						[pebbleManager attachToViewController:self];
 						
 						NSArray *sourceTitles = @[
-												  @"Albums", @"Titles", @"Playlists", @"Genres", @"Report Bug", @"Settings"
+												  @"Albums", @"Titles", @"Playlists", @"Genres", @"Artists", @"Report Bug", @"Settings"
 												  ];
 						NSArray *sourceSubtitles = @[
-													 @"", @"", @"", @"",  @"Or send feedback", @"Only for Pebble"
+													 @"", @"", @"", @"", @"", @"Or send feedback", @"Only for Pebble"
 													 ];
 						LMIcon sourceIcons[] = {
-							LMIconAlbums, LMIconTitles, LMIconPlaylists, LMIconGenres, LMIconBug, LMIconSettings
+							LMIconAlbums, LMIconTitles, LMIconPlaylists, LMIconGenres, LMIconArtists, LMIconBug, LMIconSettings
 						};
 						BOOL notSelect[] = {
-							NO, NO, NO, NO, YES, YES
+							NO, NO, NO, NO, NO, YES, YES
 						};
 						
 						NSMutableArray *sources = [NSMutableArray new];
@@ -456,6 +464,18 @@ BOOL didAutomaticallyClose = NO;
 						
 						[self.genreView setup];
 						self.genreView.hidden = YES;
+						
+						
+						self.artistView = [LMArtistView newAutoLayoutView];
+						self.artistView.backgroundColor = [UIColor whiteColor];
+						[self.view addSubview:self.artistView];
+						
+						[self.artistView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+						[self.heightConstraintArray addObject:[self.artistView autoSetDimension:ALDimensionHeight toSize:self.view.frame.size.height]];
+						[self.artistView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
+						
+						[self.artistView setup];
+						self.artistView.hidden = YES;
 						
 
 						self.browsingAssistant = [[LMBrowsingAssistantView alloc]initForAutoLayout];
