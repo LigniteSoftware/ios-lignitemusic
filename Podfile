@@ -10,6 +10,7 @@ pod 'PebbleKit'
 pod 'YYImage'
 pod 'ImageMagick', '6.8.8-9'
 pod 'PureLayout'
+pod 'SDWebImage', '~>3.8'
 
 end
 

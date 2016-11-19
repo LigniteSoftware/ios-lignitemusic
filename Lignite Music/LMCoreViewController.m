@@ -358,6 +358,8 @@ BOOL didAutomaticallyClose = NO;
 	[hangOnLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 	[hangOnLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 	
+	return;
+	
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 	if(![userDefaults objectForKey:LMSettingsKeyOnboardingComplete]){
 		NSLog(@"User has not yet completed onboarding, launching onboarding.");

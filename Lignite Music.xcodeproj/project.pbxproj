@@ -110,12 +110,12 @@
 		6AFF01A01DDE7D2D00F24D8E /* tutorial_browsing.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AFF019C1DDE7D2D00F24D8E /* tutorial_browsing.png */; };
 		6AFF01A11DDE7D2D00F24D8E /* tutorial_bottom_tabs.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AFF019D1DDE7D2D00F24D8E /* tutorial_bottom_tabs.png */; };
 		6AFF01A81DDED15100F24D8E /* onboarding_gutless_user.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AFF01A71DDED15100F24D8E /* onboarding_gutless_user.png */; };
-		A75C073ECBB2FEB1EFE05613 /* Pods_Lignite_Music.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0647B1CCD075642CBF2B75C8 /* Pods_Lignite_Music.framework */; };
+		957F3E1F9B7281591E9E88BC /* Pods_Lignite_Music.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50AA3F2AD5E6CE2B672C8B09 /* Pods_Lignite_Music.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		0647B1CCD075642CBF2B75C8 /* Pods_Lignite_Music.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Lignite_Music.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		09E6F5244BE516BDD4E0D08C /* Pods-Lignite Music.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lignite Music.release.xcconfig"; path = "Pods/Target Support Files/Pods-Lignite Music/Pods-Lignite Music.release.xcconfig"; sourceTree = "<group>"; };
+		4B6ECEC3C77D957550FD31E0 /* Pods-Lignite Music.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lignite Music.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Lignite Music/Pods-Lignite Music.debug.xcconfig"; sourceTree = "<group>"; };
+		50AA3F2AD5E6CE2B672C8B09 /* Pods_Lignite_Music.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Lignite_Music.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6A0750711D5EAB8000BCBC9C /* aplite_colours.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = aplite_colours.gif; sourceTree = "<group>"; };
 		6A0750731D5EC0C000BCBC9C /* never_forget.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = never_forget.png; sourceTree = "<group>"; };
 		6A106B121BC710D4003AE55A /* Lignite Music.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Lignite Music.entitlements"; sourceTree = "<group>"; };
@@ -290,7 +290,7 @@
 		6AFF019C1DDE7D2D00F24D8E /* tutorial_browsing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tutorial_browsing.png; sourceTree = "<group>"; };
 		6AFF019D1DDE7D2D00F24D8E /* tutorial_bottom_tabs.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tutorial_bottom_tabs.png; sourceTree = "<group>"; };
 		6AFF01A71DDED15100F24D8E /* onboarding_gutless_user.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = onboarding_gutless_user.png; sourceTree = "<group>"; };
-		A0B9C2DB66A8B7F673456C95 /* Pods-Lignite Music.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lignite Music.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Lignite Music/Pods-Lignite Music.debug.xcconfig"; sourceTree = "<group>"; };
+		8FBC9717282C4F0D39EA52C6 /* Pods-Lignite Music.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lignite Music.release.xcconfig"; path = "Pods/Target Support Files/Pods-Lignite Music/Pods-Lignite Music.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -305,22 +305,13 @@
 				6AA473651BC710460066D47E /* MessageUI.framework in Frameworks */,
 				6AA473631BC7103B0066D47E /* CoreMotion.framework in Frameworks */,
 				6AA473611BC710320066D47E /* CoreBluetooth.framework in Frameworks */,
-				A75C073ECBB2FEB1EFE05613 /* Pods_Lignite_Music.framework in Frameworks */,
+				957F3E1F9B7281591E9E88BC /* Pods_Lignite_Music.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		5035A8E2149262BBE52B6FB6 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				A0B9C2DB66A8B7F673456C95 /* Pods-Lignite Music.debug.xcconfig */,
-				09E6F5244BE516BDD4E0D08C /* Pods-Lignite Music.release.xcconfig */,
-			);
-			name = Pods;
-			sourceTree = "<group>";
-		};
 		6A1FB9C01D99C72200890BF3 /* Pebble */ = {
 			isa = PBXGroup;
 			children = (
@@ -669,7 +660,7 @@
 				6AEB9D1F1BACF60F00AD19FA /* Lignite MusicUITests */,
 				6AEB9CF91BACF60E00AD19FA /* Products */,
 				EEE9F5AA536DDB5B28CE09F9 /* Frameworks */,
-				5035A8E2149262BBE52B6FB6 /* Pods */,
+				88366BCA106EFEBEDF47DFA0 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -787,6 +778,15 @@
 			name = Tutorial;
 			sourceTree = "<group>";
 		};
+		88366BCA106EFEBEDF47DFA0 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				4B6ECEC3C77D957550FD31E0 /* Pods-Lignite Music.debug.xcconfig */,
+				8FBC9717282C4F0D39EA52C6 /* Pods-Lignite Music.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		EEE9F5AA536DDB5B28CE09F9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -798,7 +798,7 @@
 				6AA473621BC7103B0066D47E /* CoreMotion.framework */,
 				6AA473601BC710320066D47E /* CoreBluetooth.framework */,
 				6AA4735E1BC70FBA0066D47E /* ExternalAccessory.framework */,
-				0647B1CCD075642CBF2B75C8 /* Pods_Lignite_Music.framework */,
+				50AA3F2AD5E6CE2B672C8B09 /* Pods_Lignite_Music.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -942,7 +942,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		D083EC8A2EC9BA4BD0DF3154 /* [CP] Copy Pods Resources */ = {
@@ -1161,7 +1161,7 @@
 		};
 		6AEB9D261BACF60F00AD19FA /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A0B9C2DB66A8B7F673456C95 /* Pods-Lignite Music.debug.xcconfig */;
+			baseConfigurationReference = 4B6ECEC3C77D957550FD31E0 /* Pods-Lignite Music.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -1196,7 +1196,7 @@
 		};
 		6AEB9D271BACF60F00AD19FA /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 09E6F5244BE516BDD4E0D08C /* Pods-Lignite Music.release.xcconfig */;
+			baseConfigurationReference = 8FBC9717282C4F0D39EA52C6 /* Pods-Lignite Music.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;

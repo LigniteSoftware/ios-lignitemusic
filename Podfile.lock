@@ -8,29 +8,34 @@ PODS:
   - ImageMagick/png (6.8.8-9)
   - ImageMagick/tiff (6.8.8-9)
   - ImageMagick/wand (6.8.8-9)
-  - MarqueeLabel (2.7.5):
-    - MarqueeLabel/ObjC (= 2.7.5)
-  - MarqueeLabel/ObjC (2.7.5)
+  - MarqueeLabel (3.0.1):
+    - MarqueeLabel/ObjC (= 3.0.1)
+  - MarqueeLabel/ObjC (3.0.1)
   - PebbleKit (3.1.1)
-  - PureLayout (3.0.1)
-  - YYImage (1.0.2):
-    - YYImage/Core (= 1.0.2)
-  - YYImage/Core (1.0.2)
+  - PureLayout (3.0.2)
+  - SDWebImage (3.8.2):
+    - SDWebImage/Core (= 3.8.2)
+  - SDWebImage/Core (3.8.2)
+  - YYImage (1.0.4):
+    - YYImage/Core (= 1.0.4)
+  - YYImage/Core (1.0.4)
 
 DEPENDENCIES:
   - ImageMagick (= 6.8.8-9)
   - MarqueeLabel
   - PebbleKit
   - PureLayout
+  - SDWebImage (~> 3.8)
   - YYImage
 
 SPEC CHECKSUMS:
   ImageMagick: e8c089d133679d505c98dc97f3dc5be0e706e1df
-  MarqueeLabel: bd476f1a91e4414a6aec4ea4096a9979e8c8c2ad
+  MarqueeLabel: 80ba85d2b76a9f5fa6c13de337db80bcd94feb1d
   PebbleKit: 390181163256815738e467f183e7c65e16b56d25
-  PureLayout: f35f5384c9c4e4479df041dbe33ad7577b71ddfb
-  YYImage: 2cc79ed49b9549b71c6715cefe7b0f5ab3d33abf
+  PureLayout: 4d550abe49a94f24c2808b9b95db9131685fe4cd
+  SDWebImage: 098e97e6176540799c27e804c96653ee0833d13c
+  YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
 
-PODFILE CHECKSUM: 3b17778b88a4aa109a36fc4801a315abdb847999
+PODFILE CHECKSUM: e255e58a4ba2d0d35e3d4e2f131f7faeb026b459
 
-COCOAPODS: 1.0.1
+COCOAPODS: 1.1.1
