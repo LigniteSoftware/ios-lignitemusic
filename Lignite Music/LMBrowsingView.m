@@ -275,7 +275,26 @@
 	[bigListEntry.queue cancelAllOperations];
 	
 	switch(self.musicType){
-		case LMMusicTypeArtists:
+		case LMMusicTypeArtists: {
+			UIImageView *imageView = (UIImageView*)subview;
+			
+			NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
+				LMMusicTrack *representativeTrack = [self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex].representativeItem;
+				UIImage *artistImage = [representativeTrack artistImage];
+				
+				dispatch_sync(dispatch_get_main_queue(), ^{
+					if(operation.cancelled){
+						NSLog(@"Rejecting.");
+						return;
+					}
+					
+					imageView.image = artistImage;
+				});
+			}];
+			
+			[bigListEntry.queue addOperation:operation];
+			break;
+		}
 		case LMMusicTypeGenres:
 		case LMMusicTypePlaylists: {
 			LMTiledAlbumCoverView *tiledAlbumCover = subview;
@@ -311,7 +330,16 @@
 
 - (id)contentSubviewForBigListEntry:(LMBigListEntry*)bigListEntry {
 	switch(self.musicType){
-		case LMMusicTypeArtists:
+		case LMMusicTypeArtists: {
+			UIImageView *imageView = [UIImageView newAutoLayoutView];
+			imageView.image = [[self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex].representativeItem artistImage];
+			imageView.contentMode = UIViewContentModeScaleAspectFit;
+			imageView.layer.shadowColor = [UIColor blackColor].CGColor;
+			imageView.layer.shadowRadius = WINDOW_FRAME.size.width/45;
+			imageView.layer.shadowOffset = CGSizeMake(0, imageView.layer.shadowRadius/2);
+			imageView.layer.shadowOpacity = 0.25f;
+			return imageView;
+		}
 		case LMMusicTypeGenres:
 		case LMMusicTypePlaylists: {
 			LMTiledAlbumCoverView *tiledAlbumCover = [LMTiledAlbumCoverView newAutoLayoutView];

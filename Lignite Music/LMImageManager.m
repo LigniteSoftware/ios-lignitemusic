@@ -15,8 +15,33 @@
 #import "LMMusicPlayer.h"
 @import SDWebImage;
 
+/**
+ The estimated average size of an image from LastFM in bytes.
+
+ @return The estimated average.
+ */
 #define AVERAGE_IMAGE_SIZE_IN_BYTES 215000
+
+/**
+ The image manager's disk cache namespace for storing images.
+
+ @return The name of the disk namespace.
+ */
 #define LMImageManagerCacheNamespace @"LMImageManagerCache"
+
+/**
+ Our LastFM API key. God forbid this ever get cutoff.
+
+ @return The API key.
+ */
+#define LMLastFMAPIKey @"8f53580e3745f1b99e3446ff5f82b7df"
+
+/**
+ The amount of items per page that LastFM should return in its API results.
+
+ @return The number of items per page.
+ */
+#define LMLastFMItemsPerPageLimit 15
 
 @interface LMImageManager()
 
@@ -67,12 +92,16 @@
 		
 		self.operationQueue = [NSOperationQueue new];
 		
-		LMMusicTrack *randomItem = [[self.artistsCollection objectAtIndex:arc4random_uniform(90)] representativeItem];
-		[self imageNeedsDownloadingForRepresentativeItem:randomItem
+		LMMusicTrack *randomItem = [[self.artistsCollection objectAtIndex:5] representativeItem];
+		[self imageNeedsDownloadingForMusicTrack:randomItem
 											 forCategory:LMImageManagerCategoryArtistImages
 											  completion:^(BOOL needsDownloading) {
-												  NSLog(@"%@: Needs downloading: %d", [self imageNamespaceKeyForRepresentativeItem:randomItem
+												  NSLog(@"%@: Needs downloading: %d", [self imageCacheKeyForMusicTrack:randomItem
 																													   forCategory:LMImageManagerCategoryArtistImages], needsDownloading);
+												  
+												  if(needsDownloading){
+													  [self downloadImageForMusicTrack:randomItem forCategory:LMImageManagerCategoryArtistImages];
+												  }
 											  }];
 	}
 	return self;
@@ -93,7 +122,7 @@
  *
  */
 
-- (NSString*)imageNamespaceKeyForRepresentativeItem:(LMMusicTrack*)representativeItem forCategory:(LMImageManagerCategory)category {
+- (NSString*)imageCacheKeyForMusicTrack:(LMMusicTrack*)representativeItem forCategory:(LMImageManagerCategory)category {
 	LMMusicTrackPersistentID persistentID;
 	NSString *categoryName = @"";
 	
@@ -113,7 +142,7 @@
 	return namespaceKey;
 }
 
-- (void)imageNeedsDownloadingForRepresentativeItem:(LMMusicTrack*)representativeItem forCategory:(LMImageManagerCategory)category completion:(void(^)(BOOL needsDownloading))completionHandler {
+- (void)imageNeedsDownloadingForMusicTrack:(LMMusicTrack*)representativeItem forCategory:(LMImageManagerCategory)category completion:(void(^)(BOOL needsDownloading))completionHandler {
 	
 	NSBlockOperation *albumArtOperation = [NSBlockOperation blockOperationWithBlock:^{
 		NSLog(@"Album art operation %@", albumArtOperation);
@@ -126,13 +155,102 @@
 				image = [representativeItem albumArt];
 				break;
 			case LMImageManagerCategoryArtistImages:
-				//image = [representativeItem artistImage];
+				image = [representativeItem artistImage];
 				break;
 		}
 		completionHandler(image == nil);
 	}];
 	
 	[self.operationQueue addOperation:albumArtOperation];
+}
+
+- (void)downloadImageForMusicTrack:(LMMusicTrack*)randomTrack forCategory:(LMImageManagerCategory)category {
+	NSError *error;
+	
+	//Prepare the contents of the search
+	NSString *typeOfSearch = @"";
+	NSString *imageNameSearchString = @"";
+	switch(category){
+		case LMImageManagerCategoryAlbumImages:
+			typeOfSearch = @"album";
+			imageNameSearchString = randomTrack.albumTitle;
+			break;
+		case LMImageManagerCategoryArtistImages:
+			typeOfSearch = @"artist";
+			imageNameSearchString = randomTrack.artist;
+			break;
+	}
+	
+	NSLog(@"Download search beginning an %@ image, with contents %@", typeOfSearch, imageNameSearchString);
+	
+	NSString *matchesString = [NSString stringWithFormat:@"%@matches", typeOfSearch];
+	
+	imageNameSearchString = [imageNameSearchString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
+	
+	//Prepare the API url
+	NSString *urlString = [NSString stringWithFormat:@"https://ws.audioscrobbler.com/2.0/?method=%@.search&%@=%@&limit=%d&api_key=%@&format=json",
+						   typeOfSearch, //For the method
+						   typeOfSearch, //For the variable name
+						   imageNameSearchString, //The actual search query
+						   LMLastFMItemsPerPageLimit, //The limit of items per page
+						   LMLastFMAPIKey]; //Our API key
+	
+	//Get the data from the API URL
+	NSURL *jsonURL = [NSURL URLWithString:urlString];
+	NSData *data = [NSData dataWithContentsOfURL:jsonURL];
+	NSDictionary *jsonResponse = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+
+	//Get the items of search results that were returned
+	NSArray *items = [[[jsonResponse objectForKey:@"results"] objectForKey:matchesString] objectForKey:typeOfSearch];
+	
+	//Loop through each one
+	for(int i = 0; i < items.count; i++){
+		NSDictionary *item = [items objectAtIndex:i];
+		
+		NSLog(@"%d Image name %@", i, [item objectForKey:@"name"]);
+		//Get the item's images (each have a different size)
+		NSArray *itemImages = [item objectForKey:@"image"];
+		
+		//Loop through each of those
+		for(int itemImageIndex = 0; itemImageIndex < [itemImages count]; itemImageIndex++){
+			//Get that image object
+			NSDictionary *itemImage = [itemImages objectAtIndex:itemImageIndex];
+			
+			NSString *itemImageURL = [itemImage objectForKey:@"#text"];
+			NSString *itemImageSize = [itemImage objectForKey:@"size"];
+			NSString *sizeRequired = @"extralarge";
+			
+			//Check if it's the size we need
+			if([itemImageSize isEqualToString:sizeRequired] && ![itemImageURL isEqualToString:@""]){
+				NSLog(@"Extra large image @ %@", itemImageURL);
+				
+				NSString *imageCacheKey = [self imageCacheKeyForMusicTrack:randomTrack forCategory:category];
+				
+				NSLog(@"Cache key %@", imageCacheKey);
+
+				//Good to download!
+				
+				SDWebImageDownloader *downloader = [SDWebImageDownloader sharedDownloader];
+				[downloader downloadImageWithURL:[NSURL URLWithString:itemImageURL]
+										 options:0
+										progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+											NSLog(@"%.02f%% complete", (float)receivedSize/(float)expectedSize * 100);
+										}
+									   completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished) {
+										   if(image && finished) {
+											   NSLog(@"Done, now storing to %@.", imageCacheKey);
+											   
+											   [self.imageCache storeImage:image forKey:imageCacheKey];
+										   }
+									   }];
+				return;
+			}
+		}
+	}
+}
+
+- (UIImage*)imageForMusicTrack:(LMMusicTrack*)musicTrack withCategory:(LMImageManagerCategory)category {
+	return [self.imageCache imageFromDiskCacheForKey:[self imageCacheKeyForMusicTrack:musicTrack forCategory:category]];
 }
 
 
@@ -263,16 +381,12 @@
 	
 	NetworkStatus status = [reachability currentReachabilityStatus];
 	
-	if (status != NotReachable){
-		return YES;
-	}
-	
-	return NO;
+	return status != NotReachable;
 }
 
 - (NSString*)permissionRequestDescriptionStringForCategory:(LMImageManagerCategory)category {
 	BOOL storageSpaceLow = [self storageSpaceLowForCategory:category];
-	BOOL isOnCellularData = YES;
+	BOOL isOnCellularData = [self isOnCellularData];
 	
 	//Tells the user why the images won't automatically download
 	NSMutableString *problemsString = [NSMutableString stringWithString:@""];

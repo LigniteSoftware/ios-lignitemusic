@@ -340,58 +340,19 @@ BOOL didAutomaticallyClose = NO;
 	
 	NSLog(@"Loading view");
 	
-	LMImageManager *imageManager = [LMImageManager sharedImageManager];
-	[imageManager launchPermissionRequestOnView:self.view
-									forCategory:LMImageManagerCategoryAlbumImages
-						  withCompletionHandler:^(LMImageManagerPermissionStatus permissionStatus) {
-							  NSLog(@"Done. Got permission status %d.", permissionStatus);
-						  }];
-	
-	return;
+//	LMImageManager *imageManager = [LMImageManager sharedImageManager];
+//	[imageManager launchPermissionRequestOnView:self.view
+//									forCategory:LMImageManagerCategoryAlbumImages
+//						  withCompletionHandler:^(LMImageManagerPermissionStatus permissionStatus) {
+//							  NSLog(@"Done. Got permission status %d.", permissionStatus);
+//						  }];
+//	
+//	return;
 	
 //	NSLog(@"Query %@", query);
 	
 	UIImageView *hangOnImage = [UIImageView newAutoLayoutView];
-//	[hangOnImage sd_setImageWithURL:[NSURL URLWithString:@"https://lastfm-img2.akamaized.net/i/u/69a1705a221a44eb9ecda0cd077e3de0.png"]
-//				   placeholderImage:[LMAppIcon imageForIcon:LMIconNoAlbumArt]];
-	
-	NSLog(@"Getting random track");
-	
-	self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
-	LMMusicTrack *randomTrack = [[[self.musicPlayer queryCollectionsForMusicType:LMMusicTypeAlbums] objectAtIndex:arc4random_uniform(70)] representativeItem];
-	
-	NSLog(@"Random %@", randomTrack.artist);
-	
-//	SDImageCache *imageCache = [[SDImageCache alloc] initWithNamespace:@"ArtistImages"];
-//	[imageCache queryDiskCacheForKey:@"ChiddyBang" done:^(UIImage *image, SDImageCacheType cacheType) {
-//		NSLog(image ? @"Found Chiddy Bang image! Setting." : @"Didn't find image, sorry.");
-//		NSLog(@"(Cache type %d)", (int)cacheType);
-//		if(image){
-//			hangOnImage.image = image;
-//		}
-//		else{
-//			SDWebImageDownloader *downloader = [SDWebImageDownloader sharedDownloader];
-//			[downloader downloadImageWithURL:[NSURL URLWithString:@"https://lastfm-img2.akamaized.net/i/u/69a1705a221a44eb9ecda0cd077e3de0.png"]
-//									 options:0
-//									progress:^(NSInteger receivedSize, NSInteger expectedSize) {
-//										NSLog(@"%f%% complete", (float)receivedSize/(float)expectedSize * 100);
-//									}
-//								   completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished) {
-//									   if (image && finished) {
-//										   NSLog(@"Done.");
-//										   SDImageCache *chiddyCache = [[SDImageCache alloc] initWithNamespace:@"ArtistImages"];
-//										   [chiddyCache storeImage:image forKey:@"ChiddyBang"];
-//										   
-//										   dispatch_sync(dispatch_get_main_queue(), ^{
-//											   hangOnImage.image = image;
-//										   });
-//										   // do something with image
-//									   }
-//								   }];
-//		}
-//		
-//	}];
-	
+	hangOnImage.image = [LMAppIcon imageForIcon:LMIconNoAlbumArt];
 	hangOnImage.contentMode = UIViewContentModeScaleAspectFit;
 	[self.view addSubview:hangOnImage];
 	
@@ -401,7 +362,7 @@ BOOL didAutomaticallyClose = NO;
 	[hangOnImage autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/3.0)];
 	
 	UILabel *hangOnLabel = [UILabel newAutoLayoutView];
-	hangOnLabel.text = randomTrack.artist; //NSLocalizedString(@"HangOn", nil);
+	hangOnLabel.text = NSLocalizedString(@"HangOn", nil);
 	hangOnLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:30.0f];
 	hangOnLabel.textAlignment = NSTextAlignmentCenter;
 	[self.view addSubview:hangOnLabel];
@@ -409,51 +370,6 @@ BOOL didAutomaticallyClose = NO;
 	[hangOnLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:hangOnImage withOffset:10];
 	[hangOnLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 	[hangOnLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	
-//	NSError *error;
-//	NSString *artist_string = [[NSString stringWithFormat:@"%@", randomTrack.artist] stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
-//	NSString *url_string = [NSString stringWithFormat:@"https://ws.audioscrobbler.com/2.0/?method=artist.search&artist=%@&limit=15&api_key=8f53580e3745f1b99e3446ff5f82b7df&format=json", artist_string];
-//	NSURL *url = [NSURL URLWithString:url_string];
-//	NSData *data = [NSData dataWithContentsOfURL:url];
-//	NSLog(@"URL string %@ url %@", url_string, url);
-//	NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
-//	NSLog(@"Dict %@", json);
-//	
-//	NSArray *artists = [[[json objectForKey:@"results"] objectForKey:@"artistmatches"] objectForKey:@"artist"];
-//	for(int i = 0; i < artists.count; i++){
-//		NSDictionary *artist = [artists objectAtIndex:i];
-//		NSLog(@"%d Artist name %@", i, [artist objectForKey:@"name"]);
-//		NSArray *artistImages = [artist objectForKey:@"image"];
-//		for(int artistImageIndex = 0; artistImageIndex < [artistImages count]; artistImageIndex++){
-//			NSDictionary *artistImage = [artistImages objectAtIndex:artistImageIndex];
-//			NSString *artistImageUrl = [artistImage objectForKey:@"#text"];
-//			NSString *artistImageSize = [artistImage objectForKey:@"size"];
-//			
-//			if([artistImageSize isEqualToString:@"extralarge"] && ![artistImageUrl isEqualToString:@""]){
-//				NSLog(@"Extra large image @ %@", artistImageUrl);
-//				
-//				SDWebImageDownloader *downloader = [SDWebImageDownloader sharedDownloader];
-//				[downloader downloadImageWithURL:[NSURL URLWithString:artistImageUrl]
-//										 options:0
-//										progress:^(NSInteger receivedSize, NSInteger expectedSize) {
-//											NSLog(@"%f%% complete", (float)receivedSize/(float)expectedSize * 100);
-//										}
-//									   completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished) {
-//										   if (image && finished) {
-//											   NSLog(@"Done.");
-//											   //											   SDImageCache *chiddyCache = [[SDImageCache alloc] initWithNamespace:@"ArtistImages"];
-//											   //											   [chiddyCache storeImage:image forKey:@"ChiddyBang"];
-//											   
-//											   dispatch_sync(dispatch_get_main_queue(), ^{
-//												   hangOnImage.image = image;
-//											   });
-//											   // do something with image
-//										   }
-//									   }];
-//				return;
-//			}
-//		}
-//	}
 	
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 	if(![userDefaults objectForKey:LMSettingsKeyOnboardingComplete]){

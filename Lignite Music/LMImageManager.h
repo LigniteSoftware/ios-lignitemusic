@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
+@class LMMusicTrack;
 @class LMImageManager;
 
 @protocol LMImageManagerDelegate <NSObject>
@@ -50,6 +51,15 @@ typedef enum {
  @return The shared image manager.
  */
 + (LMImageManager*)sharedImageManager;
+
+/**
+ Get an image which has been downloaded for a certain category from the music track provided. nil if the image is not in storage.
+
+ @param musicTrack The music track to use details for.
+ @param category The category to search in.
+ @return The image.
+ */
+- (UIImage*)imageForMusicTrack:(LMMusicTrack*)musicTrack withCategory:(LMImageManagerCategory)category;
 
 /**
  Gets the current condition level of downloading a category of images.

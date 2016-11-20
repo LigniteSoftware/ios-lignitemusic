@@ -9,10 +9,9 @@
 #import <MediaPlayer/MediaPlayer.h>
 #import "LMMusicTrack.h"
 #import "LMMusicPlayer.h"
+#import "LMImageManager.h"
 
 @interface LMMusicTrack()
-
-@property UIImage *loadedAlbumArt;
 
 @end
 
@@ -48,26 +47,45 @@
 }
 
 - (UIImage*)albumArt {
-	if(self.loadedAlbumArt){
-		return self.loadedAlbumArt;
-	}
-	
 	LMMusicPlayerType currentPlayerType = [[LMMusicPlayer sharedMusicPlayer] playerType];
+	
 	if(currentPlayerType == LMMusicPlayerTypeSystemMusicPlayer || currentPlayerType == LMMusicPlayerTypeAppleMusic){
 		MPMediaItem *mediaItem = self.sourceTrack;
 		
-		//__weak UIImage *image = [mediaItem.artwork imageWithSize:CGSizeMake(480, 480)];
-		//self.loadedAlbumArt = image;
-		
+		//Get the standard album artwork
 		UIImage *albumArtImage = [mediaItem.artwork imageWithSize:CGSizeMake(480, 480)];
 		if(!albumArtImage){
-			albumArtImage = [LMAppIcon imageForIcon:LMIconNoAlbumArt];
+			//If not found search the image cache for it
+			albumArtImage = [[LMImageManager sharedImageManager] imageForMusicTrack:self withCategory:LMImageManagerCategoryAlbumImages];
+			
+			//If that's not found too, default back to no album art image
+			if(!albumArtImage){
+				albumArtImage = [LMAppIcon imageForIcon:LMIconNoAlbumArt];
+			}
 		}
 		
 		return albumArtImage;
 	}
 	
 	NSLog(@"Warning: Album art image not found for track %@.", self.title);
+	
+	return nil;
+}
+
+- (UIImage*)artistImage {
+	LMMusicPlayerType currentPlayerType = [[LMMusicPlayer sharedMusicPlayer] playerType];
+	
+	if(currentPlayerType == LMMusicPlayerTypeSystemMusicPlayer || currentPlayerType == LMMusicPlayerTypeAppleMusic){
+		UIImage *artistImage = [[LMImageManager sharedImageManager] imageForMusicTrack:self withCategory:LMImageManagerCategoryArtistImages];
+			
+		if(!artistImage){
+//			artistImage = [LMAppIcon imageForIcon:LMIconNoAlbumArt];
+		}
+		
+		return artistImage;
+	}
+	
+	NSLog(@"Warning: Artist image not found for track %@.", self.title);
 	
 	return nil;
 }
