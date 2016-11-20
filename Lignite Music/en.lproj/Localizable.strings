@@ -40,9 +40,24 @@
  
  */
 
+/*
+ Image Management
+ ----------------
+ Lignite Music automatically downloads images from last.fm to ensure maximum visual quality. However, this can take up a signifigant amount of space or cellular data, so we ensure that users know what we are doing and allow us to do it should they be low on storage or on cellular data. They can always change their decision in settings.
+ */
 "ArtistImagesTitle" = "Artist images";
 "AlbumImagesTitle" = "Album images";
-"ArtistImagesDescription" = "
+
+"ImagesDownloadWarningDescription" = "We download images %@.\n\nHowever, we have noticed that %@.\n\nIt will take about %d.%dMB to download the images.\n\nIf you tap '%@', we will download them anyway.\n\nOtherwise, if you tap '%@', you can always change your mind later in settings.";
+
+"OfYourArtists" = "of your artists so we can create a beautiful visual list of them";
+"OfYourAlbums" = "of your albums which don't have cover art to ensure maximum visual quality";
+
+"YouAreOnData" = "you are on cellular data"; //All lowercase because it will go within the above description
+"YouAreLowOnStorage" = "your phone is low on storage"; //Same case
+
+"DownloadAnyway" = "Download anyway"; //Goes on the accept button for downloading images
+"DontDownload" = "Don't download"; //Goes on the deny button for downloading images
 
 /*
  
@@ -144,7 +159,7 @@
 
 /*
  Onboarding
- ==========
+ ----------
  Onboarding is the first thing that a user who just installed the app sees. To give you an idea, the slides go as follow:
  
  1. Welcome
