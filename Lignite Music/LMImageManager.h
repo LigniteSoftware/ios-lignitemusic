@@ -35,6 +35,9 @@ typedef enum {
 	LMImageManagerPermissionStatusAuthorized //The user has authorized our request to download images for the associated permission.
 } LMImageManagerPermissionStatus;
 
+/**
+ LMImageManagerConditionLevel is the condition level of image downloading, from optimal to never download.
+ */
 typedef enum {
 	LMImageManagerConditionLevelOptimal = 0, //Images are optimal for downloading and the app should begin the download process as soon as possible.
 	LMImageManagerConditionLevelSuboptimal, //The conditions for downloading are suboptimal (ie. phone is low on storage) and the user should be prompted before continuing to download.

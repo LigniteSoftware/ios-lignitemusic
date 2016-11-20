@@ -40,9 +40,20 @@
  */
 @property SDImageCache *imageCache;
 
+/**
+ The operation queue.
+ */
+@property NSOperationQueue *operationQueue;
+
 @end
 
 @implementation LMImageManager
+
+/**
+ *
+ * GENERAL CODE
+ *
+ */
 
 - (instancetype)init {
 	self = [super init];
@@ -53,6 +64,16 @@
 		self.artistsCollection = [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeArtists];
 		
 		self.imageCache = [[SDImageCache alloc] initWithNamespace:LMImageManagerCacheNamespace];
+		
+		self.operationQueue = [NSOperationQueue new];
+		
+		LMMusicTrack *randomItem = [[self.artistsCollection objectAtIndex:arc4random_uniform(90)] representativeItem];
+		[self imageNeedsDownloadingForRepresentativeItem:randomItem
+											 forCategory:LMImageManagerCategoryArtistImages
+											  completion:^(BOOL needsDownloading) {
+												  NSLog(@"%@: Needs downloading: %d", [self imageNamespaceKeyForRepresentativeItem:randomItem
+																													   forCategory:LMImageManagerCategoryArtistImages], needsDownloading);
+											  }];
 	}
 	return self;
 }
@@ -65,6 +86,61 @@
 	});
 	return sharedImageManager;
 }
+
+/**
+ *
+ * END GENERAL CODE AND BEGIN IMAGE DOWNLOADING CODE
+ *
+ */
+
+- (NSString*)imageNamespaceKeyForRepresentativeItem:(LMMusicTrack*)representativeItem forCategory:(LMImageManagerCategory)category {
+	LMMusicTrackPersistentID persistentID;
+	NSString *categoryName = @"";
+	
+	switch(category){
+		case LMImageManagerCategoryAlbumImages:
+			persistentID = representativeItem.albumPersistentID;
+			categoryName = @"albumArtImages";
+			break;
+		case LMImageManagerCategoryArtistImages:
+			persistentID = representativeItem.artistPersistentID;
+			categoryName = @"artistImages";
+			break;
+	}
+	
+	NSString *namespaceKey = [NSString stringWithFormat:@"%@_id%lld", categoryName, persistentID];
+	
+	return namespaceKey;
+}
+
+- (void)imageNeedsDownloadingForRepresentativeItem:(LMMusicTrack*)representativeItem forCategory:(LMImageManagerCategory)category completion:(void(^)(BOOL needsDownloading))completionHandler {
+	
+	NSBlockOperation *albumArtOperation = [NSBlockOperation blockOperationWithBlock:^{
+		NSLog(@"Album art operation %@", albumArtOperation);
+		if(albumArtOperation.isCancelled){
+			return;
+		}
+		UIImage *image = nil;
+		switch(category){
+			case LMImageManagerCategoryAlbumImages:
+				image = [representativeItem albumArt];
+				break;
+			case LMImageManagerCategoryArtistImages:
+				//image = [representativeItem artistImage];
+				break;
+		}
+		completionHandler(image == nil);
+	}];
+	
+	[self.operationQueue addOperation:albumArtOperation];
+}
+
+
+/**
+ *
+ * END IMAGE DOWNLOADING CODE AND BEGIN PERMISSION AND CONDITION LEVEL RELATED CODE
+ *
+ */
 
 - (LMImageManagerConditionLevel)conditionLevelForDownloadingForCategory:(LMImageManagerCategory)category {
 	if(![self hasInternetConnection]){
@@ -256,5 +332,11 @@
 		completionHandler((LMImageManagerPermissionStatus)optionSelected);
 	}];
 }
+
+/**
+ *
+ * END PERMISSION AND CONDITION LEVEL RELATED CODE
+ *
+ */
 
 @end
