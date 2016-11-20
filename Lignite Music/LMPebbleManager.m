@@ -89,9 +89,9 @@
 	switch(self.watchModel){
 		case WATCH_INFO_MODEL_PEBBLE_TIME_ROUND_14:
 		case WATCH_INFO_MODEL_PEBBLE_TIME_ROUND_20:
-			return true;
+			return YES;
 		default:
-			return false;
+			return NO;
 	}
 }
 
@@ -101,9 +101,9 @@
 		case WATCH_INFO_MODEL_PEBBLE_STEEL:
 		case WATCH_INFO_MODEL_PEBBLE_2_HR:
 		case WATCH_INFO_MODEL_PEBBLE_2_SE:
-			return true;
+			return YES;
 		default:
-			return false;
+			return NO;
 	}
 }
 

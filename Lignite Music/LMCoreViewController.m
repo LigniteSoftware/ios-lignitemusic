@@ -183,13 +183,13 @@ BOOL didAutomaticallyClose = NO;
 //			}
 			break;
 		}
-		case 1:{
+		case 1: {
 			self.titleView.hidden = NO;
 			[self.titleView reloadSourceSelectorInfo];
 			self.currentSource = self.titleView;
 			break;
 		}
-		case 2:{
+		case 2: {
 			self.playlistView.hidden = NO;
 			[self.playlistView reloadSourceSelectorInfo];
 			self.currentSource = self.playlistView;
@@ -207,14 +207,14 @@ BOOL didAutomaticallyClose = NO;
 			self.currentSource = self.artistView;
 			break;
 		}
-		case 5:{
-			[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://www.lignite.io/feedback/"]];
-			NSLog(@"Debug menu");
-			break;
-		}
-		case 6:{
+		case 5: {
 			LMPebbleManager *pebbleManager = [LMPebbleManager sharedPebbleManager];
 			[pebbleManager showSettings];
+			break;
+		}
+		case 6: {
+			[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://www.lignite.io/feedback/"]];
+			NSLog(@"Debug menu");
 			break;
 		}
 		default:
@@ -399,13 +399,13 @@ BOOL didAutomaticallyClose = NO;
 						[pebbleManager attachToViewController:self];
 						
 						NSArray *sourceTitles = @[
-												  @"Albums", @"Titles", @"Playlists", @"Genres", @"Artists", @"Report Bug", @"Settings"
+												  @"Albums", @"Titles", @"Playlists", @"Genres", @"Artists", @"Settings", @"Report Bug"
 												  ];
 						NSArray *sourceSubtitles = @[
-													 @"", @"", @"", @"", @"", @"Or send feedback", @"Only for Pebble"
+													 @"", @"", @"", @"", @"", @"", @"Or send feedback"
 													 ];
 						LMIcon sourceIcons[] = {
-							LMIconAlbums, LMIconTitles, LMIconPlaylists, LMIconGenres, LMIconArtists, LMIconBug, LMIconSettings
+							LMIconAlbums, LMIconTitles, LMIconPlaylists, LMIconGenres, LMIconArtists, LMIconSettings, LMIconBug
 						};
 						BOOL notSelect[] = {
 							NO, NO, NO, NO, NO, YES, YES

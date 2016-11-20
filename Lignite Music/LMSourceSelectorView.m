@@ -118,7 +118,6 @@
 	[source.delegate sourceSelected:source];
 	
 	if(source.shouldNotSelect){
-		NSLog(@"REEASDJNKADLFKJNSDLFN");
 		return;
 	}
 	
@@ -172,6 +171,7 @@
 	self.viewsTableView.shouldUseDividers = YES;
 	self.viewsTableView.title = @"SourceSelector";
 	self.viewsTableView.dividerColour = [UIColor blackColor];
+	self.viewsTableView.bottomSpacing = WINDOW_FRAME.size.height/8 + 10;
 	[self addSubview:self.viewsTableView];
 	
 	[self.viewsTableView autoPinEdgesToSuperviewEdges];

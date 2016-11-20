@@ -251,7 +251,7 @@
 								 @"", @""
 								 ];
 	LMIcon sourceIcons[] = {
-		LMIconPlay, LMIconGenres
+		LMIconMiniplayer, LMIconGenres
 	};
 	BOOL notSelect[] = {
 		NO, NO

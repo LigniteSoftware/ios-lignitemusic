@@ -44,6 +44,8 @@
 			return @"icon_source.png";
 		case LMIconBrowse:
 			return @"icon_browse.png";
+		case LMIconMiniplayer:
+			return @"icon_miniplayer.png";
 	}
 }
 

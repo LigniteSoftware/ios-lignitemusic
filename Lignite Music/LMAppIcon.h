@@ -27,7 +27,8 @@ typedef enum {
 	LMIconBug,
 	LMIconNoAlbumArt,
 	LMIconSource,
-	LMIconBrowse
+	LMIconBrowse,
+	LMIconMiniplayer
 } LMIcon;
 
 /**

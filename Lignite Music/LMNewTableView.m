@@ -48,6 +48,7 @@
 		self.requiredAmountOfObjects = 0;
 		
 		self.dividerSectionsToIgnore = @[ @(0) ];
+		self.bottomSpacing = 0;
 				
 		self.title = @"UnnamedLMTableView";
 	}
@@ -129,7 +130,7 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-	return self.bottomSpacing > 0 ? self.bottomSpacing : [self.subviewDataSource spacingAtIndex:section forTableView:self];
+	return (self.bottomSpacing > 0 && section == self.numberOfSections-1) ? self.bottomSpacing : [self.subviewDataSource spacingAtIndex:section forTableView:self];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -137,7 +138,7 @@
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	return self.totalAmountOfObjects;
+	return self.totalAmountOfObjects + (self.bottomSpacing > 0);
 }
 
 - (NSString*)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -163,7 +164,7 @@
 	UIView *view = [[UIView alloc] initWithFrame:frame];
 //	view.backgroundColor = [UIColor yellowColor];
 	
-	if(self.shouldUseDividers && ![self.dividerSectionsToIgnore containsObject:@(section)]){
+	if(self.shouldUseDividers && ![self.dividerSectionsToIgnore containsObject:@(section)] && !(self.bottomSpacing > 0 && section == self.numberOfSections-1)){
 		uint8_t dividerHeight = 1;
 		float frameWidth = (frame.size.width * 0.9);
 		float frameX = (frame.size.width-frameWidth)/2;

@@ -12,11 +12,13 @@
 @implementation LMColour
 
 + (UIColor*)ligniteRedColour {
+//	return [UIColor colorWithRed:0.33 green:0.33 blue:0.33 alpha:1.0];
+//	return [UIColor colorWithRed:1.00 green:0.33 blue:0.00 alpha:1.0];
 	return [UIColor colorWithRed:0.69 green:0.16 blue:0.15 alpha:1.0];
 }
 
 + (UIColor*)darkLigniteRedColour {
-	return [UIColor colorWithRed:0.33 green:0.00 blue:0.00 alpha:1.0];;
+	return [UIColor colorWithRed:0.33 green:0.00 blue:0.00 alpha:1.0];
 }
 
 + (UIColor*)fadedColour {
