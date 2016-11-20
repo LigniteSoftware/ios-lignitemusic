@@ -54,6 +54,7 @@
 "OfYourAlbums" = "of your albums which don't have cover art to ensure maximum visual quality";
 
 "YouAreOnData" = "you are on cellular data"; //All lowercase because it will go within the above description
+"SpaceAndSpace" = " and "; //The spaces are important here. If your language does not need spaces in between the YouAreOnData and YouAreLowOnStorage contents, remove the spaces and insert your language's equivalent of "and". Otherwise, keep the spaces.
 "YouAreLowOnStorage" = "your phone is low on storage"; //Same case
 
 "DownloadAnyway" = "Download anyway"; //Goes on the accept button for downloading images
