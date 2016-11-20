@@ -13,7 +13,7 @@
  
  1. The following characters in between quotes must be left in exact format and must not be deleted, changed or 
  modified in any other way:
-	"\n", "%02i", "%d", "%lu", "%@", "%%"
+	"\n", "%02i", "%d", "%lu", "%@", "%%", "%f", "%.02f", "%.03f"
  Any string in the above list with a percentage (%) symbol I will now reference as "formatters".
  
  2. Any character mentioned in point 1 that is in a string will have data injected into it. If there are more than
@@ -48,7 +48,9 @@
 "ArtistImagesTitle" = "Artist images";
 "AlbumImagesTitle" = "Album images";
 
-"ImagesDownloadWarningDescription" = "We download images %@.\n\nHowever, we have noticed that %@.\n\nIt will take about %d.%dMB to download the images.\n\nIf you tap '%@', we will download them anyway.\n\nOtherwise, if you tap '%@', you can always change your mind later in settings.";
+"ImagesDownloadWarningDescription" = "We will download images %@.\n\nHowever, we have noticed that %@.\n\nIt will take about %.02fMB to download the images%@.\n\nIf you tap '%@', we will download them anyway.\n\nOtherwise, if you tap '%@', you can always change your mind later in settings.";
+
+"AboutXOfYourStorage" = " (about %.02f%% of your remaining storage)"; //The space in front of the first bracket is important, as it will be inserted after the "[...] take about %.02fMB to download the images%@." (goes where the %@ is in there). If your language does not need the space feel free to take it out.
 
 "OfYourArtists" = "of your artists so we can create a beautiful visual list of them";
 "OfYourAlbums" = "of your albums which don't have cover art to ensure maximum visual quality";

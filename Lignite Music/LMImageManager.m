@@ -12,10 +12,26 @@
 #import "LMColour.h"
 #import "LMAlertView.h"
 #import "LMReachability.h"
+#import "LMMusicPlayer.h"
 
-#define AVERAGE_IMAGE_SIZE_IN_BYTES 200000
+#define AVERAGE_IMAGE_SIZE_IN_BYTES 215000
 
 @interface LMImageManager()
+
+/**
+ The system music player.
+ */
+@property LMMusicPlayer *musicPlayer;
+
+/**
+ The collection of albums.
+ */
+@property NSArray<LMMusicTrackCollection*> *albumsCollection;
+
+/**
+ The collection of artists.
+ */
+@property NSArray<LMMusicTrackCollection*> *artistsCollection;
 
 @end
 
@@ -24,7 +40,10 @@
 - (instancetype)init {
 	self = [super init];
 	if(self){
-		NSLog(@"Initititit");
+		self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
+		
+		self.albumsCollection = [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeAlbums];
+		self.artistsCollection = [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeArtists];
 	}
 	return self;
 }
@@ -36,6 +55,12 @@
 		sharedImageManager = [self new];
 	});
 	return sharedImageManager;
+}
+
+- (LMImageManagerConditionLevel)conditionLevelForDownloadingForCategory:(LMImageManagerCategory)category {
+	LMImageManagerConditionLevel conditionLevel = LMImageManagerConditionLevelOptimal;
+	
+	return conditionLevel;
 }
 
 /**
@@ -95,29 +120,59 @@
 	return totalFreeSpace;
 }
 
-- (NSString*)permissionRequestDescriptionStringForCategory:(LMImageManagerCategory)category {
-	BOOL storageSpaceLow = YES;
-	BOOL isOnCellularData = NO;
-	
-	NSMutableString *problemsString = [NSMutableString stringWithString:@""];
-	
-	uint64_t freeSpace = [LMImageManager diskBytesFree];
-	uint64_t spaceRequired = 107*AVERAGE_IMAGE_SIZE_IN_BYTES;
-	
-	float freeSpacePercentageUsedIfDownloaded = (float)spaceRequired/(float)freeSpace;
-	
-	if(freeSpacePercentageUsedIfDownloaded >= 0.50){ //If the space required to download all of the images is at least half the free space
-		storageSpaceLow = YES;
+- (NSUInteger)itemCountForCategory:(LMImageManagerCategory)category {
+	switch(category){
+		case LMImageManagerCategoryAlbumImages:
+			return self.albumsCollection.count;
+		case LMImageManagerCategoryArtistImages:
+			return self.artistsCollection.count;
 	}
+}
+
+- (uint64_t)spaceRequiredForCategory:(LMImageManagerCategory)category {
+	return [self itemCountForCategory:category]*AVERAGE_IMAGE_SIZE_IN_BYTES;
+}
+
+- (float)freeSpacePercentageUsedIfDownloadedCategory:(LMImageManagerCategory)category {
+	uint64_t freeSpace = [LMImageManager diskBytesFree];
+	uint64_t spaceRequired = [self spaceRequiredForCategory:category];
 	
+	return ((float)spaceRequired)/((float)freeSpace);
+}
+
+- (BOOL)storageSpaceLowForCategory:(LMImageManagerCategory)category {
+	return [self freeSpacePercentageUsedIfDownloadedCategory:category] >= 0.50;
+}
+
+- (BOOL)isOnCellularData {
 	LMReachability *reachability = [LMReachability reachabilityForInternetConnection];
 	[reachability startNotifier];
 	
 	NetworkStatus status = [reachability currentReachabilityStatus];
 	
-	if (status == ReachableViaWWAN){
-		isOnCellularData = YES;
+	return status == ReachableViaWWAN;
+}
+
+- (BOOL)hasInternetConnection {
+	LMReachability *reachability = [LMReachability reachabilityForInternetConnection];
+	[reachability startNotifier];
+	
+	NetworkStatus status = [reachability currentReachabilityStatus];
+	
+	if (status != NotReachable){
+		return YES;
 	}
+	
+	return NO;
+}
+
+- (NSString*)permissionRequestDescriptionStringForCategory:(LMImageManagerCategory)category {
+	BOOL storageSpaceLow = [self storageSpaceLowForCategory:category];
+	BOOL isOnCellularData = YES;
+	
+	NSMutableString *problemsString = [NSMutableString stringWithString:@""];
+	
+	
 	
 	if(storageSpaceLow){
 		problemsString = [NSMutableString stringWithString:NSLocalizedString(@"YouAreLowOnStorage", nil)];
@@ -140,7 +195,13 @@
 			break;
 	}
 	
-	NSString *descriptionString = [NSString stringWithFormat:NSLocalizedString(@"ImagesDownloadWarningDescription", nil), ofYourTypeString,  problemsString, 21, 7, NSLocalizedString(@"DownloadAnyway", nil), NSLocalizedString(@"DontDownload", nil)];
+	NSString *descriptionString = [NSString stringWithFormat:NSLocalizedString(@"ImagesDownloadWarningDescription", nil),
+								   NSLocalizedString(ofYourTypeString, nil),
+								   problemsString,
+								   (float)[self spaceRequiredForCategory:category]/1000000.0,
+								   storageSpaceLow ? [NSString stringWithFormat:NSLocalizedString(@"AboutXOfYourStorage", nil), ([self freeSpacePercentageUsedIfDownloadedCategory:category])*100.0] : @"",
+								   NSLocalizedString(@"DownloadAnyway", nil),
+								   NSLocalizedString(@"DontDownload", nil)];
 	
 	return descriptionString;
 }

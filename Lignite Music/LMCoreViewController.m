@@ -342,7 +342,7 @@ BOOL didAutomaticallyClose = NO;
 	
 	LMImageManager *imageManager = [LMImageManager sharedImageManager];
 	[imageManager launchPermissionRequestOnView:self.view
-									forCategory:LMImageManagerCategoryArtistImages
+									forCategory:LMImageManagerCategoryAlbumImages
 						  withCompletionHandler:^(LMImageManagerPermissionStatus permissionStatus) {
 							  NSLog(@"Done. Got permission status %d.", permissionStatus);
 						  }];

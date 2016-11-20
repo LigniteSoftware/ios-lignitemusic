@@ -22,8 +22,8 @@
  LMImageManagerCategory is the category of images, such as artist images.
  */
 typedef enum {
-	LMImageManagerCategoryArtistImages = 0,
-	LMImageManagerCategoryAlbumImages
+	LMImageManagerCategoryArtistImages = 0, //Images of artists
+	LMImageManagerCategoryAlbumImages //Images of album art which are missing
 } LMImageManagerCategory;
 
 /**
@@ -35,12 +35,26 @@ typedef enum {
 	LMImageManagerPermissionStatusAuthorized //The user has authorized our request to download images for the associated permission.
 } LMImageManagerPermissionStatus;
 
+typedef enum {
+	LMImageManagerConditionLevelOptimal = 0, //Images are optimal for downloading and the app should begin the download process as soon as possible.
+	LMImageManagerConditionLevelSuboptimal, //The conditions for downloading are suboptimal (ie. phone is low on storage) and the user should be prompted before continuing to download.
+	LMImageManagerConditionLevelNever //There are conditions for downloading which either make it impossible (ie. no Internet connection) or the user has denied our request for downloading images. Images should never download.
+} LMImageManagerConditionLevel;
+
 /**
  The system's shared image manager.
 
  @return The shared image manager.
  */
 + (LMImageManager*)sharedImageManager;
+
+/**
+ Gets the current condition level of downloading a category of images.
+
+ @param category The category of images to check.
+ @return The current download condition level.
+ */
+- (LMImageManagerConditionLevel)conditionLevelForDownloadingForCategory:(LMImageManagerCategory)category;
 
 /**
  Gets the permission status for a certain category.
