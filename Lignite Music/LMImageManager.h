@@ -38,7 +38,7 @@ typedef enum {
 typedef enum {
 	LMImageManagerConditionLevelOptimal = 0, //Images are optimal for downloading and the app should begin the download process as soon as possible.
 	LMImageManagerConditionLevelSuboptimal, //The conditions for downloading are suboptimal (ie. phone is low on storage) and the user should be prompted before continuing to download.
-	LMImageManagerConditionLevelNever //There are conditions for downloading which either make it impossible (ie. no Internet connection) or the user has denied our request for downloading images. Images should never download.
+	LMImageManagerConditionLevelNever //There are conditions for downloading which either make it impossible (ie. no Internet connection) or the user has denied our request for downloading images. Images should never download under these conditions.
 } LMImageManagerConditionLevel;
 
 /**

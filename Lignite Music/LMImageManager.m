@@ -13,8 +13,10 @@
 #import "LMAlertView.h"
 #import "LMReachability.h"
 #import "LMMusicPlayer.h"
+@import SDWebImage;
 
 #define AVERAGE_IMAGE_SIZE_IN_BYTES 215000
+#define LMImageManagerCacheNamespace @"LMImageManagerCache"
 
 @interface LMImageManager()
 
@@ -33,6 +35,11 @@
  */
 @property NSArray<LMMusicTrackCollection*> *artistsCollection;
 
+/**
+ The image cache of the image manager.
+ */
+@property SDImageCache *imageCache;
+
 @end
 
 @implementation LMImageManager
@@ -44,6 +51,8 @@
 		
 		self.albumsCollection = [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeAlbums];
 		self.artistsCollection = [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeArtists];
+		
+		self.imageCache = [[SDImageCache alloc] initWithNamespace:LMImageManagerCacheNamespace];
 	}
 	return self;
 }
@@ -58,9 +67,28 @@
 }
 
 - (LMImageManagerConditionLevel)conditionLevelForDownloadingForCategory:(LMImageManagerCategory)category {
-	LMImageManagerConditionLevel conditionLevel = LMImageManagerConditionLevelOptimal;
+	if(![self hasInternetConnection]){
+		return LMImageManagerConditionLevelNever;
+	}
 	
-	return conditionLevel;
+	LMImageManagerPermissionStatus permissionStatusForCategory = [self permissionStatusForCategory:category];
+	switch(permissionStatusForCategory){
+		case LMImageManagerPermissionStatusDenied:
+			return LMImageManagerConditionLevelNever;
+			
+		case LMImageManagerPermissionStatusNotDetermined:
+		case LMImageManagerPermissionStatusAuthorized:
+			break;
+	}
+	
+	if([self storageSpaceLowForCategory:category] || [self isOnCellularData]){
+		return LMImageManagerConditionLevelSuboptimal;
+	}
+	
+	//Conditions are optimal and the user has not explicitly denied us from downloading the images, so set it to authorized
+	[self setPermissionStatus:LMImageManagerPermissionStatusAuthorized forCategory:category];
+	
+	return LMImageManagerConditionLevelOptimal;
 }
 
 /**
@@ -170,9 +198,8 @@
 	BOOL storageSpaceLow = [self storageSpaceLowForCategory:category];
 	BOOL isOnCellularData = YES;
 	
+	//Tells the user why the images won't automatically download
 	NSMutableString *problemsString = [NSMutableString stringWithString:@""];
-	
-	
 	
 	if(storageSpaceLow){
 		problemsString = [NSMutableString stringWithString:NSLocalizedString(@"YouAreLowOnStorage", nil)];
