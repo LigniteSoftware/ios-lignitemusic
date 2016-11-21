@@ -1,5 +1,5 @@
 //
-//  LMNewTableView.m
+//  LMTableView.m
 //  Lignite Music
 //
 //  Created by Edwin Finch on 11/6/16.
@@ -7,11 +7,11 @@
 //
 
 #import <PureLayout/PureLayout.h>
-#import "LMNewTableView.h"
+#import "LMTableView.h"
 #import "LMTableViewCell.h"
 #import "LMExtras.h"
 
-@interface LMNewTableView()<UITableViewDelegate, UITableViewDataSource>
+@interface LMTableView()<UITableViewDelegate, UITableViewDataSource>
 
 @property NSUInteger requiredAmountOfObjects;
 
@@ -27,7 +27,7 @@
 
 @end
 
-@implementation LMNewTableView
+@implementation LMTableView
 
 /**
  Initializes the LMTableView with its defaults as stated in LMTableView.h.

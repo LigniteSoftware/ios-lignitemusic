@@ -8,7 +8,7 @@
 
 #import <PureLayout/PureLayout.h>
 #import "LMTitleView.h"
-#import "LMNewTableView.h"
+#import "LMTableView.h"
 #import "LMListEntry.h"
 #import "LMColour.h"
 #import "LMOperationQueue.h"
@@ -19,7 +19,7 @@
 
 @property LMMusicPlayer *musicPlayer;
 
-@property LMNewTableView *songListTableView;
+@property LMTableView *songListTableView;
 @property NSMutableArray *itemArray;
 @property NSMutableArray *itemIconArray;
 
@@ -108,7 +108,7 @@
 	[self musicTrackDidChange:self.musicPlayer.nowPlayingTrack];
 }
 
-- (id)subviewAtIndex:(NSUInteger)index forTableView:(LMNewTableView *)tableView {
+- (id)subviewAtIndex:(NSUInteger)index forTableView:(LMTableView *)tableView {
 	LMListEntry *entry = [self.itemArray objectAtIndex:index % self.itemArray.count];
 	entry.collectionIndex = index;
 	entry.associatedData = [self.musicTitles.items objectAtIndex:index];
@@ -155,7 +155,7 @@
 	return entry;
 }
 
-- (void)amountOfObjectsRequiredChangedTo:(NSUInteger)amountOfObjects forTableView:(LMNewTableView *)tableView {
+- (void)amountOfObjectsRequiredChangedTo:(NSUInteger)amountOfObjects forTableView:(LMTableView *)tableView {
 	NSLog(@"Title view needs %d objects", (int)amountOfObjects);
 	if(!self.itemArray){
 		self.itemArray = [NSMutableArray new];
@@ -173,7 +173,7 @@
 	}
 }
 
-- (float)heightAtIndex:(NSUInteger)index forTableView:(LMNewTableView *)tableView {
+- (float)heightAtIndex:(NSUInteger)index forTableView:(LMTableView *)tableView {
 	return WINDOW_FRAME.size.height/8.0;
 }
 
@@ -205,7 +205,7 @@
 	return indexOfEntry;
 }
 
-- (float)spacingAtIndex:(NSUInteger)index forTableView:(LMNewTableView *)tableView {
+- (float)spacingAtIndex:(NSUInteger)index forTableView:(LMTableView *)tableView {
 	return 10; //TODO: Fix this
 }
 
@@ -268,7 +268,7 @@
 - (void)setup {
 	[self rebuildTrackCollection];
 	
-	self.songListTableView = [LMNewTableView newAutoLayoutView];
+	self.songListTableView = [LMTableView newAutoLayoutView];
 	self.songListTableView.totalAmountOfObjects = self.musicTitles.count;
 	self.songListTableView.subviewDataSource = self;
 	self.songListTableView.shouldUseDividers = YES;

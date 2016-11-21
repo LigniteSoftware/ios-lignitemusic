@@ -11,7 +11,7 @@
 #import "LMButton.h"
 #import "LMCircleView.h"
 #import "LMLabel.h"
-#import "LMNewTableView.h"
+#import "LMTableView.h"
 #import "LMListEntry.h"
 #import "LMColour.h"
 #import "LMExtras.h"
@@ -19,7 +19,7 @@
 
 @interface LMSourceSelectorView() <LMTableViewSubviewDataSource, LMListEntryDelegate>
 
-@property LMNewTableView *viewsTableView;
+@property LMTableView *viewsTableView;
 @property NSMutableArray *itemArray;
 
 @property NSInteger currentlyHighlighted;
@@ -40,7 +40,7 @@
 	}
 }
 
-- (id)subviewAtIndex:(NSUInteger)index forTableView:(LMNewTableView *)tableView {
+- (id)subviewAtIndex:(NSUInteger)index forTableView:(LMTableView *)tableView {
 	LMListEntry *entry = [self.itemArray objectAtIndex:index % self.itemArray.count];
 	entry.collectionIndex = index;
 	entry.associatedData = [self.sources objectAtIndex:index];
@@ -51,7 +51,7 @@
 	return entry;
 }
 
-- (void)amountOfObjectsRequiredChangedTo:(NSUInteger)amountOfObjects forTableView:(LMNewTableView *)tableView {
+- (void)amountOfObjectsRequiredChangedTo:(NSUInteger)amountOfObjects forTableView:(LMTableView *)tableView {
 	if(!self.itemArray){
 		self.itemArray = [NSMutableArray new];
 		for(int i = 0; i < amountOfObjects; i++){
@@ -74,7 +74,7 @@
 	}
 }
 
-- (float)heightAtIndex:(NSUInteger)index forTableView:(LMNewTableView *)tableView {
+- (float)heightAtIndex:(NSUInteger)index forTableView:(LMTableView *)tableView {
 	return WINDOW_FRAME.size.height*(1.0f/8.0f);
 }
 
@@ -106,7 +106,7 @@
 	return indexOfEntry;
 }
 
-- (float)spacingAtIndex:(NSUInteger)index forTableView:(LMNewTableView *)tableView {
+- (float)spacingAtIndex:(NSUInteger)index forTableView:(LMTableView *)tableView {
 	return 10;
 }
 
@@ -165,7 +165,7 @@
 	self.backgroundColor = [UIColor clearColor];
 	self.currentlyHighlighted = -1;
 	
-	self.viewsTableView = [LMNewTableView newAutoLayoutView];
+	self.viewsTableView = [LMTableView newAutoLayoutView];
 	self.viewsTableView.totalAmountOfObjects = self.sources.count;
 	self.viewsTableView.subviewDataSource = self;
 	self.viewsTableView.shouldUseDividers = YES;

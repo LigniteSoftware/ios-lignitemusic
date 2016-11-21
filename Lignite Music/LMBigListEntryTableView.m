@@ -8,12 +8,12 @@
 
 #import <PureLayout/PureLayout.h>
 #import "LMBigListEntryTableView.h"
-#import "LMNewTableView.h"
+#import "LMTableView.h"
 #import "LMExtras.h"
 
 @interface LMBigListEntryTableView()<LMTableViewSubviewDataSource, LMCollectionInfoViewDelegate, LMBigListEntryDelegate, LMControlBarViewDelegate>
 
-@property LMNewTableView *tableView;
+@property LMTableView *tableView;
 
 @property NSMutableArray *bigListEntriesArray;
 @property NSMutableArray *contentViewsArray;
@@ -62,7 +62,7 @@
 	}
 }
 
-- (id)subviewAtIndex:(NSUInteger)index forTableView:(LMNewTableView*)tableView {
+- (id)subviewAtIndex:(NSUInteger)index forTableView:(LMTableView*)tableView {
 	LMBigListEntry *bigListEntry = [self.bigListEntriesArray objectAtIndex:index % self.bigListEntriesArray.count];
 	bigListEntry.collectionIndex = index;
 	if(index == self.currentlyOpenedIndex){
@@ -77,11 +77,11 @@
 	return bigListEntry;
 }
 
-- (float)heightAtIndex:(NSUInteger)index forTableView:(LMNewTableView*)tableView {
+- (float)heightAtIndex:(NSUInteger)index forTableView:(LMTableView*)tableView {
 	return index == self.currentlyOpenedIndex ? self.largeSize : self.normalSize;
 }
 
-- (float)spacingAtIndex:(NSUInteger)index forTableView:(LMNewTableView*)tableView {
+- (float)spacingAtIndex:(NSUInteger)index forTableView:(LMTableView*)tableView {
 	return index == 0 ? 40 : 20;
 }
 
@@ -163,7 +163,7 @@
 	}
 }
 
-- (void)amountOfObjectsRequiredChangedTo:(NSUInteger)amountOfObjects forTableView:(LMNewTableView*)tableView {
+- (void)amountOfObjectsRequiredChangedTo:(NSUInteger)amountOfObjects forTableView:(LMTableView*)tableView {
 	NSLog(@"I need %lu objects to survive!", (unsigned long)amountOfObjects);
 	
 	for(int i = 0; i < self.bigListEntriesArray.count; i++){
@@ -194,7 +194,7 @@
 	
 	self.normalSize = 100;
 	
-	self.tableView = [LMNewTableView newAutoLayoutView];
+	self.tableView = [LMTableView newAutoLayoutView];
 	self.tableView.title = @"BigTestView";
 	self.tableView.averageCellHeight = WINDOW_FRAME.size.height*(1.0/3.0);
 	self.tableView.totalAmountOfObjects = self.totalAmountOfObjects;

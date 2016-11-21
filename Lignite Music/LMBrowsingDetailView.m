@@ -10,7 +10,7 @@
 #import "LMBrowsingDetailView.h"
 #import "LMBigListEntry.h"
 #import "LMListEntry.h"
-#import "LMNewTableView.h"
+#import "LMTableView.h"
 #import "LMExtras.h"
 #import "LMTiledAlbumCoverView.h"
 #import "LMColour.h"
@@ -20,7 +20,7 @@
 
 @interface LMBrowsingDetailView()<LMTableViewSubviewDataSource, LMBigListEntryDelegate, LMCollectionInfoViewDelegate, LMControlBarViewDelegate, LMListEntryDelegate, LMMusicPlayerDelegate>
 
-@property LMNewTableView *tableView;
+@property LMTableView *tableView;
 
 @property LMBigListEntry *headerBigListEntry;
 @property NSMutableArray *songEntries;
@@ -292,7 +292,7 @@
 	}
 }
 
-- (id)subviewAtIndex:(NSUInteger)index forTableView:(LMNewTableView*)tableView {
+- (id)subviewAtIndex:(NSUInteger)index forTableView:(LMTableView*)tableView {
 	if(index == 0){
 		return self.headerBigListEntry;
 	}
@@ -304,21 +304,21 @@
 	return listEntry;
 }
 
-- (float)heightAtIndex:(NSUInteger)index forTableView:(LMNewTableView*)tableView {
+- (float)heightAtIndex:(NSUInteger)index forTableView:(LMTableView*)tableView {
 	if(index == 0){
 		return [LMBigListEntry sizeForBigListEntryWhenOpened:self.headerBigListEntry.isLargeSize forDelegate:self];
 	}
 	return WINDOW_FRAME.size.height/8;
 }
 
-- (float)spacingAtIndex:(NSUInteger)index forTableView:(LMNewTableView*)tableView {
+- (float)spacingAtIndex:(NSUInteger)index forTableView:(LMTableView*)tableView {
 	if(index == 0){
 		return 0;
 	}
 	return 10;
 }
 
-- (void)amountOfObjectsRequiredChangedTo:(NSUInteger)amountOfObjects forTableView:(LMNewTableView*)tableView {
+- (void)amountOfObjectsRequiredChangedTo:(NSUInteger)amountOfObjects forTableView:(LMTableView*)tableView {
 	self.songEntries = [NSMutableArray new];
 	
 	for(int i = 0; i < MIN(amountOfObjects, self.musicTrackCollection.count); i++){
@@ -353,7 +353,7 @@
 	self.headerBigListEntry.userInteractionEnabled = YES;
 	[self.headerBigListEntry setup];
 	
-	self.tableView = [LMNewTableView newAutoLayoutView];
+	self.tableView = [LMTableView newAutoLayoutView];
 	self.tableView.title = @"PlaylistDetailView";
 	self.tableView.averageCellHeight = WINDOW_FRAME.size.height*(1.0/10.0);
 	self.tableView.totalAmountOfObjects = self.musicTrackCollection.count + 1;

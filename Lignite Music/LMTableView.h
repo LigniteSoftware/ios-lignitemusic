@@ -1,5 +1,5 @@
 //
-//  LMNewTableView.h
+//  LMTableView.h
 //  Lignite Music
 //
 //  Created by Edwin Finch on 11/6/16.
@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@class LMNewTableView;
+@class LMTableView;
 
 /**
  The subview data source exchanges information related to the table view's contents. It provides subviews, dimensions, and is told when anything updates which will require the data source's attention.
@@ -22,7 +22,7 @@
  @param tableView The table view which is requesting the subview.
  @return The subview.
  */
-- (id)subviewAtIndex:(NSUInteger)index forTableView:(LMNewTableView*)tableView;
+- (id)subviewAtIndex:(NSUInteger)index forTableView:(LMTableView*)tableView;
 
 /**
  Gets the height at a certain index for the table view.
@@ -31,7 +31,7 @@
  @param tableView The table view which is requesting the height.
  @return The height.
  */
-- (float)heightAtIndex:(NSUInteger)index forTableView:(LMNewTableView*)tableView;
+- (float)heightAtIndex:(NSUInteger)index forTableView:(LMTableView*)tableView;
 
 /**
  Gets the spacing at a certain index for the table view.
@@ -40,7 +40,7 @@
  @param tableView The table view which is requesting the spacing.
  @return The spacing.
  */
-- (float)spacingAtIndex:(NSUInteger)index forTableView:(LMNewTableView*)tableView;
+- (float)spacingAtIndex:(NSUInteger)index forTableView:(LMTableView*)tableView;
 
 /**
  Tells the delegate the amount of objects which are required for the table view. This will only be called upon when the amount of objects changes. The delegate should reload associated data and be prepared to pass new subviews in through subviewAtIndex:.
@@ -48,20 +48,20 @@
  @param amountOfObjects The new amount of objects that are required for this table view.
  @param tableView The table view which is telling the delegate the amount of objects required.
  */
-- (void)amountOfObjectsRequiredChangedTo:(NSUInteger)amountOfObjects forTableView:(LMNewTableView*)tableView;
+- (void)amountOfObjectsRequiredChangedTo:(NSUInteger)amountOfObjects forTableView:(LMTableView*)tableView;
 
 /*
  * Quick copy and paste
  *
-- (id)subviewAtIndex:(NSUInteger)index forTableView:(LMNewTableView*)tableView;
-- (float)heightAtIndex:(NSUInteger)index forTableView:(LMNewTableView*)tableView;
-- (float)spacingAtIndex:(NSUInteger)index forTableView:(LMNewTableView*)tableView;
-- (void)amountOfObjectsRequiredChangedTo:(NSUInteger)amountOfObjects forTableView:(LMNewTableView*)tableView;
+- (id)subviewAtIndex:(NSUInteger)index forTableView:(LMTableView*)tableView;
+- (float)heightAtIndex:(NSUInteger)index forTableView:(LMTableView*)tableView;
+- (float)spacingAtIndex:(NSUInteger)index forTableView:(LMTableView*)tableView;
+- (void)amountOfObjectsRequiredChangedTo:(NSUInteger)amountOfObjects forTableView:(LMTableView*)tableView;
  */
 
 @end
 
-@interface LMNewTableView : UITableView
+@interface LMTableView : UITableView
 
 /**
  The amount of spacing you'd like between the bottom of the table view and the last entry in it. Default is 0.
