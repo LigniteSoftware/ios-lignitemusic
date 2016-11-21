@@ -26,21 +26,11 @@
 }
 
 - (NSString*)titleAtSection:(NSUInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView {
-	return @"Section title";
+	return [NSString stringWithFormat:@"Section %d", (int)section];
 }
 
 - (NSUInteger)numberOfRowsForSection:(NSUInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView {
-	switch(section){
-		case 0:
-			return 1;
-		case 1:
-			return 3;
-		case 2:
-			return 5;
-		case 3:
-			return 1;
-	}
-	return 0;
+	return section % 3 + 1;
 }
 
 - (NSString*)titleForIndexPath:(NSIndexPath*)indexPath forSectionTableView:(LMSectionTableView*)sectionTableView {
@@ -61,7 +51,7 @@
 		
 		self.sectionTableView = [LMSectionTableView newAutoLayoutView];
 		self.sectionTableView.delegate = self;
-		self.sectionTableView.numberOfSections = 4;
+		self.sectionTableView.numberOfSections = 100;
 		[self addSubview:self.sectionTableView];
 		
 		[self.sectionTableView autoPinEdgesToSuperviewEdges];

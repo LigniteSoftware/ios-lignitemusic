@@ -34,14 +34,40 @@
 
 @implementation LMSectionTableView
 
+- (NSUInteger)sectionNumberForIndex:(NSUInteger)index {
+//	NSLog(@"Sections are %@", self.sectionIndexArray);
+	
+	NSUInteger section = [[self.sectionIndexArray objectAtIndex:self.sectionIndexArray.count-1] unsignedIntegerValue];
+	
+//	NSLog(@"Top section is %d", (int)section);
+	
+	NSUInteger searchIndex = self.sectionIndexArray.count-1;
+	while(section > index){
+		searchIndex--;
+		section = [[self.sectionIndexArray objectAtIndex:searchIndex] unsignedIntegerValue];
+		
+//		NSLog(@"Next section is %d with an index of %d", (int)section, (int)searchIndex);
+	}
+	
+//	NSLog(@"Returning %d", (int)searchIndex);
+	
+	return searchIndex;
+}
+
 - (id)subviewAtIndex:(NSUInteger)index forTableView:(LMTableView*)tableView {
-	UIView *view = [UIView newAutoLayoutView];
+	NSUInteger section = [self sectionNumberForIndex:index];
+//	NSLog(@"Index %d is in section %d", (int)index, (int)[self sectionNumberForIndex:index]);
+	
 	if([self.sectionIndexArray containsObject:@(index)]){
-		view.backgroundColor = [UIColor whiteColor];
+		NSLog(@"Section %d %d %d", (int)section, (int)index, (int)([self.sectionIndexArray indexOfObject:@(index)] % self.sectionHeaderViewsArray.count));
+		LMSectionHeaderView *sectionHeader = [self.sectionHeaderViewsArray objectAtIndex:[self.sectionIndexArray indexOfObject:@(index)] % self.sectionHeaderViewsArray.count];
+		sectionHeader.sectionHeaderTitle = [self.delegate titleAtSection:section forSectionTableView:self];
+		sectionHeader.icon = [self.delegate iconAtSection:section forSectionTableView:self];
+		return sectionHeader;
 	}
-	else{
-		view.backgroundColor = [LMColour superLightGrayColour];
-	}
+	
+	UIView *view = [UIView newAutoLayoutView];
+	view.backgroundColor = [LMColour superLightGrayColour];
 	return view;
 }
 
@@ -87,6 +113,12 @@
 }
 
 - (void)setup {
+	self.sectionHeaderViewsArray = [NSMutableArray new];
+	for(int i = 0; i < 6; i++){
+		LMSectionHeaderView *sectionHeader = [LMSectionHeaderView newAutoLayoutView];
+		[self.sectionHeaderViewsArray addObject:sectionHeader];
+	}
+	
 	self.tableView = [LMTableView newAutoLayoutView];
 	self.tableView.totalAmountOfObjects = 4; //self.sources.count;
 	self.tableView.subviewDataSource = self;

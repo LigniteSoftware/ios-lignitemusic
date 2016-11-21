@@ -10,4 +10,19 @@
 
 @interface LMSectionHeaderView : UIView
 
+/**
+ The title which goes on the top if there's enough room.
+ */
+@property NSString *title;
+
+/**
+ The section's header title that goes beside the icon.
+ */
+@property NSString *sectionHeaderTitle;
+
+/**
+ The icon which goes on the left side.
+ */
+@property UIImage *icon;
+
 @end
