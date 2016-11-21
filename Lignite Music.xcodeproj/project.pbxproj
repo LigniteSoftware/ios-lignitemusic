@@ -12,6 +12,8 @@
 		6A1FB9C71D99EB0A00890BF3 /* LMAlbumView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A1FB9C61D99EB0A00890BF3 /* LMAlbumView.m */; };
 		6A1FB9CC1D9AE76A00890BF3 /* LMLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A1FB9CB1D9AE76A00890BF3 /* LMLabel.m */; };
 		6A2566F31D4089E8004EDE41 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A2566F21D4089E8004EDE41 /* MediaPlayer.framework */; };
+		6A26B4671DE2B8BD008B5B69 /* LMSettingsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A26B4661DE2B8BD008B5B69 /* LMSettingsView.m */; };
+		6A26B46A1DE2D1A3008B5B69 /* LMSectionHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A26B4691DE2D1A3008B5B69 /* LMSectionHeaderView.m */; };
 		6A2A29C51DB1D89C008E7792 /* LMSourceSelectorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A2A29C41DB1D89C008E7792 /* LMSourceSelectorView.m */; };
 		6A2A29C81DB1EAB6008E7792 /* LMCircleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A2A29C71DB1EAB6008E7792 /* LMCircleView.m */; };
 		6A2A29CB1DB1F1C3008E7792 /* LMSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A2A29CA1DB1F1C3008E7792 /* LMSource.m */; };
@@ -129,6 +131,10 @@
 		6A1FB9CA1D9AE76A00890BF3 /* LMLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMLabel.h; sourceTree = "<group>"; };
 		6A1FB9CB1D9AE76A00890BF3 /* LMLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMLabel.m; sourceTree = "<group>"; };
 		6A2566F21D4089E8004EDE41 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+		6A26B4651DE2B8BD008B5B69 /* LMSettingsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMSettingsView.h; sourceTree = "<group>"; };
+		6A26B4661DE2B8BD008B5B69 /* LMSettingsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMSettingsView.m; sourceTree = "<group>"; };
+		6A26B4681DE2D1A3008B5B69 /* LMSectionHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMSectionHeaderView.h; sourceTree = "<group>"; };
+		6A26B4691DE2D1A3008B5B69 /* LMSectionHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMSectionHeaderView.m; sourceTree = "<group>"; };
 		6A2A29C31DB1D89C008E7792 /* LMSourceSelectorView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMSourceSelectorView.h; sourceTree = "<group>"; };
 		6A2A29C41DB1D89C008E7792 /* LMSourceSelectorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMSourceSelectorView.m; sourceTree = "<group>"; };
 		6A2A29C61DB1EAB6008E7792 /* LMCircleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMCircleView.h; sourceTree = "<group>"; };
@@ -449,6 +455,10 @@
 				6AAF61171DA0B9C700971875 /* LMTableViewCell.m */,
 				6AF9D5401DE251FD006368B6 /* LMSectionTableView.h */,
 				6AF9D5411DE251FD006368B6 /* LMSectionTableView.m */,
+				6A26B4681DE2D1A3008B5B69 /* LMSectionHeaderView.h */,
+				6A26B4691DE2D1A3008B5B69 /* LMSectionHeaderView.m */,
+				6A26B4651DE2B8BD008B5B69 /* LMSettingsView.h */,
+				6A26B4661DE2B8BD008B5B69 /* LMSettingsView.m */,
 			);
 			name = TableView;
 			sourceTree = "<group>";
@@ -993,6 +1003,7 @@
 			files = (
 				6AA445A31D5AD7B0004C6739 /* LMSettingsLabel.m in Sources */,
 				6A32A9EC1DC68F440056CC60 /* LMTriangleContainerView.m in Sources */,
+				6A26B46A1DE2D1A3008B5B69 /* LMSectionHeaderView.m in Sources */,
 				6A92F8241DD6D62A002045C2 /* LMBrowsingView.m in Sources */,
 				6A3211411DA732470060DD07 /* LMTrackInfoView.m in Sources */,
 				6A6C186B1DDFFE7600D651E1 /* LMArtistView.m in Sources */,
@@ -1019,6 +1030,7 @@
 				6A73CF611D451BFA0097A400 /* LMPebbleMessageQueue.m in Sources */,
 				6A8CF2B91DB4952A00777525 /* LMSettings.m in Sources */,
 				6A92F8271DD6DF00002045C2 /* LMBrowsingDetailView.m in Sources */,
+				6A26B4671DE2B8BD008B5B69 /* LMSettingsView.m in Sources */,
 				6ABF6A851CF3768A003E4EFA /* UIColor+isLight.m in Sources */,
 				6A313C121BB44959002BBC33 /* LMAlbumArtView.m in Sources */,
 				6ADDBD3D1DA29D3E00DB99EF /* LMShadowView.m in Sources */,

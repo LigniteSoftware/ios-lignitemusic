@@ -25,6 +25,7 @@
 #import "LMGuideViewPagerController.h"
 #import "LMArtistView.h"
 #import "LMImageManager.h"
+#import "LMSettingsView.h"
 
 @import SDWebImage;
 @import StoreKit;
@@ -40,6 +41,8 @@
 @property LMPlaylistView *playlistView;
 @property LMGenreView *genreView;
 @property LMArtistView *artistView;
+
+@property LMSettingsView *settingsView;
 
 @property LMBrowsingAssistantView *browsingAssistant;
 @property LMSourceSelectorView *sourceSelector;
@@ -339,6 +342,13 @@ BOOL didAutomaticallyClose = NO;
     // Do any additional setup after loading the view
 	
 	NSLog(@"Loading view");
+	
+	self.settingsView = [LMSettingsView newAutoLayoutView];
+	[self.view addSubview:self.settingsView];
+	
+	[self.settingsView autoPinEdgesToSuperviewEdges];
+	
+	return;
 	
 //	LMImageManager *imageManager = [LMImageManager sharedImageManager];
 //	[imageManager launchPermissionRequestOnView:self.view

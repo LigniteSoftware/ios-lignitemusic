@@ -25,6 +25,13 @@
 + (UIColor*)darkLigniteRedColour;
 
 /**
+ A super duper light gray colour. Used in section table views.
+
+ @return The super light gray.
+ */
++ (UIColor*)superLightGrayColour;
+
+/**
  A 35% transparent white which is the background to the circular cover art, for example.
 
  @return The 35% transparent white.

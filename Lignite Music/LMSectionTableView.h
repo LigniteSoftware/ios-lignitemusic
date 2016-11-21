@@ -66,6 +66,19 @@
  */
 - (UIImage*)iconForIndexPath:(NSIndexPath*)indexPath forSectionTableView:(LMSectionTableView*)sectionTableView;
 
+/**
+ * Quick copy and paste
+ *
+ 
+- (UIImage*)iconAtSection:(NSUInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView;
+- (NSString*)titleAtSection:(NSUInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView;
+- (NSUInteger)numberOfRowsForSection:(NSUInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView;
+- (NSString*)titleForIndexPath:(NSIndexPath*)indexPath forSectionTableView:(LMSectionTableView*)sectionTableView;
+- (NSString*)subtitleForIndexPath:(NSIndexPath*)indexPath forSectionTableView:(LMSectionTableView*)sectionTableView;
+- (UIImage*)iconForIndexPath:(NSIndexPath*)indexPath forSectionTableView:(LMSectionTableView*)sectionTableView;
+ 
+ */
+
 @end
 
 @interface LMSectionTableView : UIView
@@ -74,5 +87,15 @@
  The delegate for the data that will go inside the table view.
  */
 @property id<LMSectionTableViewDelegate> delegate;
+
+/**
+ The number of sections for this sectioned table view.
+ */
+@property NSUInteger numberOfSections;
+
+/**
+ Setup the section table view.
+ */
+- (void)setup;
 
 @end
