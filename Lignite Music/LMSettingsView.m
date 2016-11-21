@@ -50,8 +50,8 @@
 		self.hasPreparedSubviews = YES;
 		
 		self.sectionTableView = [LMSectionTableView newAutoLayoutView];
-		self.sectionTableView.delegate = self;
-		self.sectionTableView.numberOfSections = 100;
+//		self.sectionTableView.delegate = self;
+//		self.sectionTableView.numberOfSections = 100;
 		[self addSubview:self.sectionTableView];
 		
 		[self.sectionTableView autoPinEdgesToSuperviewEdges];

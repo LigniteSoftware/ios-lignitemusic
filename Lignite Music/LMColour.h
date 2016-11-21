@@ -45,4 +45,11 @@
  */
 + (UIColor*)lightGrayBackgroundColour;
 
+/**
+ Generate a completely random colour. Used for testing purposes.
+
+ @return The random colour.
+ */
++ (UIColor*)randomColour;
+
 @end

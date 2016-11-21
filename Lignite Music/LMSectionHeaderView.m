@@ -76,9 +76,6 @@
 		
 		self.sectionHeaderLabel.backgroundColor = [UIColor redColor];
 	}
-	else{
-		NSLog(@"Spook %@", NSStringFromCGRect(self.frame));
-	}
 }
 
 - (UIImage*)icon {
@@ -96,32 +93,30 @@
 - (void)layoutSubviews {
 	[super layoutSubviews];
 	
-	NSLog(@"Spook");
-	
 	if(!self.hasDoneLayoutSubviews){
 		self.hasDoneLayoutSubviews = YES;
 		
 		self.backgroundColor = [UIColor whiteColor];
 		
 		
-		self.sectionHeaderBackgroundView = [UIView newAutoLayoutView];
-//		self.sectionHeaderBackgroundView.backgroundColor = [UIColor greenColor];
-		[self addSubview:self.sectionHeaderBackgroundView];
-		
-		[self.sectionHeaderBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		[self.sectionHeaderBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-		[self.sectionHeaderBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-		[self.sectionHeaderBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(8.0/10.0)];
+//		self.sectionHeaderBackgroundView = [UIView newAutoLayoutView];
+////		self.sectionHeaderBackgroundView.backgroundColor = [UIColor greenColor];
+//		[self addSubview:self.sectionHeaderBackgroundView];
+//		
+//		[self.sectionHeaderBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+//		[self.sectionHeaderBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+//		[self.sectionHeaderBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+//		[self.sectionHeaderBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(10.0/10.0)];
 		
 		
 		self.sectionHeaderIconImageBackgroundView = [UIView newAutoLayoutView];
 //		self.sectionHeaderIconImageBackgroundView.backgroundColor = [UIColor orangeColor];
-		[self.sectionHeaderBackgroundView addSubview:self.sectionHeaderIconImageBackgroundView];
+		[self addSubview:self.sectionHeaderIconImageBackgroundView];
 		
 		[self.sectionHeaderIconImageBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:10];
 		[self.sectionHeaderIconImageBackgroundView autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
-		[self.sectionHeaderIconImageBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.sectionHeaderBackgroundView];
-		[self.sectionHeaderIconImageBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.sectionHeaderBackgroundView];
+		[self.sectionHeaderIconImageBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self];
+		[self.sectionHeaderIconImageBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self];
 		
 		
 		self.sectionHeaderIconImageView = [UIImageView newAutoLayoutView];
@@ -130,15 +125,15 @@
 		[self.sectionHeaderIconImageBackgroundView addSubview:self.sectionHeaderIconImageView];
 		
 		[self.sectionHeaderIconImageView autoCenterInSuperview];
-		[self.sectionHeaderIconImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.sectionHeaderBackgroundView withMultiplier:(2.0/4.0)];
-		[self.sectionHeaderIconImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.sectionHeaderBackgroundView withMultiplier:(2.0/4.0)];
+		[self.sectionHeaderIconImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(2.0/4.0)];
+		[self.sectionHeaderIconImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self withMultiplier:(2.0/4.0)];
 		
 		
 		self.sectionHeaderLabel = [LMLabel newAutoLayoutView];
 		self.sectionHeaderLabel.text = self.sectionHeaderTitle ? self.sectionHeaderTitle : @"Unnamed Section";
 		self.sectionHeaderLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:50];
 //		self.sectionHeaderLabel.backgroundColor = [UIColor cyanColor];
-		[self.sectionHeaderBackgroundView addSubview:self.sectionHeaderLabel];
+		[self addSubview:self.sectionHeaderLabel];
 		
 		[self.sectionHeaderLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.sectionHeaderIconImageBackgroundView withOffset:0];
 		[self.sectionHeaderLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:10];

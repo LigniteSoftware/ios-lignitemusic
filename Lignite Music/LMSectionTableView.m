@@ -8,130 +8,134 @@
 
 #import <PureLayout/PureLayout.h>
 #import "LMSectionTableView.h"
-#import "LMTableView.h"
+#import "LMTableViewCell.h"
 #import "LMExtras.h"
-#import "LMColour.h"
 #import "LMSectionHeaderView.h"
+#import "LMColour.h"
+#import "LMListEntry.h"
+#import "LMAppIcon.h"
 
-@interface LMSectionTableView()<LMTableViewSubviewDataSource>
+@interface LMSectionTableView()<UITableViewDelegate, UITableViewDataSource, LMListEntryDelegate>
 
-/**
- The table view which is at the heart of the section table view.
- */
-@property LMTableView *tableView;
+@property NSUInteger requiredAmountOfObjects;
 
-/**
- The array of which indexes are section headers.
- */
-@property NSMutableArray<NSNumber*> *sectionIndexArray;
-
-/**
- The array of section header views which contain all of the text and stuff for the headers.
- */
-@property NSMutableArray<LMSectionHeaderView*> *sectionHeaderViewsArray;
+@property BOOL hasRegisteredCellIdentifiers;
 
 @end
 
 @implementation LMSectionTableView
 
-- (NSUInteger)sectionNumberForIndex:(NSUInteger)index {
-//	NSLog(@"Sections are %@", self.sectionIndexArray);
+- (void)tappedListEntry:(LMListEntry*)entry {
 	
-	NSUInteger section = [[self.sectionIndexArray objectAtIndex:self.sectionIndexArray.count-1] unsignedIntegerValue];
-	
-//	NSLog(@"Top section is %d", (int)section);
-	
-	NSUInteger searchIndex = self.sectionIndexArray.count-1;
-	while(section > index){
-		searchIndex--;
-		section = [[self.sectionIndexArray objectAtIndex:searchIndex] unsignedIntegerValue];
-		
-//		NSLog(@"Next section is %d with an index of %d", (int)section, (int)searchIndex);
-	}
-	
-//	NSLog(@"Returning %d", (int)searchIndex);
-	
-	return searchIndex;
 }
 
-- (id)subviewAtIndex:(NSUInteger)index forTableView:(LMTableView*)tableView {
-	NSUInteger section = [self sectionNumberForIndex:index];
-//	NSLog(@"Index %d is in section %d", (int)index, (int)[self sectionNumberForIndex:index]);
+- (UIColor*)tapColourForListEntry:(LMListEntry*)entry {
+	return [UIColor redColor];
+}
+
+- (NSString*)titleForListEntry:(LMListEntry*)entry {
+	return [NSString stringWithFormat:@"Row %d", (int)entry.collectionIndex];
+}
+
+- (NSString*)subtitleForListEntry:(LMListEntry*)entry {
+	return @"Subtitle";
+}
+
+- (UIImage*)iconForListEntry:(LMListEntry*)entry {
+	return [LMAppIcon imageForIcon:LMIconAlbums];
+}
+
+- (instancetype)init {
+	self = [super initWithFrame:CGRectMake(0, 0, 0, 0) style:UITableViewStyleGrouped];
+	if(self){
+		self.backgroundColor = [UIColor whiteColor];
+		self.separatorColor = [LMColour superLightGrayColour];
+		self.alwaysBounceVertical = YES;
+		
+		self.delegate = self;
+		self.dataSource = self;
 	
-	if([self.sectionIndexArray containsObject:@(index)]){
-		NSLog(@"Section %d %d %d", (int)section, (int)index, (int)([self.sectionIndexArray indexOfObject:@(index)] % self.sectionHeaderViewsArray.count));
-		LMSectionHeaderView *sectionHeader = [self.sectionHeaderViewsArray objectAtIndex:[self.sectionIndexArray indexOfObject:@(index)] % self.sectionHeaderViewsArray.count];
-		sectionHeader.sectionHeaderTitle = [self.delegate titleAtSection:section forSectionTableView:self];
-		sectionHeader.icon = [self.delegate iconAtSection:section forSectionTableView:self];
-		return sectionHeader;
+		
+		self.title = @"SectionTableView";
 	}
+	return self;
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+//	LMTableViewCell *lmCell = (LMTableViewCell*)cell;
 	
-	UIView *view = [UIView newAutoLayoutView];
-	view.backgroundColor = [LMColour superLightGrayColour];
+	//prepare shit
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+	NSString *cellIdentifier = [NSString stringWithFormat:@"%@Cell_%lu", self.title, indexPath.section % self.requiredAmountOfObjects];
+	
+	LMTableViewCell *cell = (LMTableViewCell*)[tableView dequeueReusableCellWithIdentifier:cellIdentifier forIndexPath:indexPath];
+	
+	cell.contentView.backgroundColor = [LMColour superLightGrayColour];
+	
+	LMListEntry *listEntry = [LMListEntry newAutoLayoutView];
+	listEntry.collectionIndex = indexPath.row;
+	listEntry.delegate = self;
+	[cell.contentView addSubview:listEntry];
+	
+	[listEntry autoPinEdgesToSuperviewEdges];
+	
+	[listEntry setup];
+												   
+	return cell;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+	return WINDOW_FRAME.size.height/8;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+	return WINDOW_FRAME.size.height/12;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+	return 2;
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+	return 5;
+}
+
+- (NSString*)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+	return [NSString stringWithFormat:@"%ld", section];
+}
+
+/**
+ Gets the view for a header for a certain section. If shouldUseDividers is set to YES, this will draw a divider half way through the view of the header.
+ **/
+- (UIView*)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+	CGRect frame = CGRectMake(0, 0, self.frame.size.width, [self tableView:self heightForHeaderInSection:section]);
+	LMSectionHeaderView *view = [[LMSectionHeaderView alloc] initWithFrame:frame];
+	view.sectionHeaderTitle = [NSString stringWithFormat:@"Section %d", (int)section];
+	view.icon = [UIImage imageNamed:@"icon_bug.png"];
+//	//	view.backgroundColor = [UIColor yellowColor];
+//	
+//	if(self.shouldUseDividers && ![self.dividerSectionsToIgnore containsObject:@(section)] && !(self.bottomSpacing > 0 && section == self.numberOfSections-1)){
+//		uint8_t dividerHeight = 1;
+//		float frameWidth = (frame.size.width * 0.9);
+//		float frameX = (frame.size.width-frameWidth)/2;
+//		float frameY = frame.size.height/2 - dividerHeight/2;
+//		UIView *dividerView = [[UIView alloc]initWithFrame:CGRectMake(frameX, frameY, frameWidth, dividerHeight)];
+//		dividerView.backgroundColor = self.dividerColour ? self.dividerColour : [UIColor colorWithRed:0.82 green:0.82 blue:0.82 alpha:1.0];
+//		[view addSubview:dividerView];
+//		
+//		//		NSLog(@"%@ RESULTS\nWindow frame %@\ntable frame %@\nheader frame %@\ndivider frame %@", self.title, NSStringFromCGRect(WINDOW_FRAME),  NSStringFromCGRect(self.frame), NSStringFromCGRect(frame), NSStringFromCGRect(dividerView.frame));
+//	}
+	
 	return view;
 }
 
-- (float)heightAtIndex:(NSUInteger)index forTableView:(LMTableView*)tableView {
-	if([self.sectionIndexArray containsObject:@(index)]){
-		return WINDOW_FRAME.size.height/10.0 + ((index == 0) ? WINDOW_FRAME.size.height/20 : 0);
-	}
-	return WINDOW_FRAME.size.height/8.0;
-}
-
-- (float)spacingAtIndex:(NSUInteger)index forTableView:(LMTableView*)tableView {
-	return 0;
-}
-
-- (void)amountOfObjectsRequiredChangedTo:(NSUInteger)amountOfObjects forTableView:(LMTableView*)tableView {
-	NSLog(@"Number of objects %lu", (unsigned long)amountOfObjects);
-}
-
-- (void)reloadData {
-	self.sectionIndexArray = [NSMutableArray new];
-	if(self.numberOfSections > 0){
-		[self.sectionIndexArray addObject:@(0)];
-	}
-	
-	for(int section = 1; section < self.numberOfSections; section++){
-		NSUInteger numberOfRowsForPreviousSection = [self.delegate numberOfRowsForSection:section-1 forSectionTableView:self];
-		NSUInteger previousSectionIndex = [[self.sectionIndexArray objectAtIndex:section-1] unsignedIntegerValue];
-		
-		[self.sectionIndexArray addObject:@(previousSectionIndex + numberOfRowsForPreviousSection + 1)];
-	}
-	
-	NSUInteger totalNumberOfItems = 0;
-	totalNumberOfItems += self.numberOfSections;
-	for(int i = 0; i < self.numberOfSections; i++){
-		totalNumberOfItems += [self.delegate numberOfRowsForSection:i forSectionTableView:self];
-	}
-	
-	self.tableView.totalAmountOfObjects = totalNumberOfItems;
-	
-	[self.tableView reloadSubviewData];
-	
-	NSLog(@"There %d total entries with sections @ %@", (int)totalNumberOfItems, self.sectionIndexArray);
-}
-
 - (void)setup {
-	self.sectionHeaderViewsArray = [NSMutableArray new];
-	for(int i = 0; i < 6; i++){
-		LMSectionHeaderView *sectionHeader = [LMSectionHeaderView newAutoLayoutView];
-		[self.sectionHeaderViewsArray addObject:sectionHeader];
+	for(int i = 0; i < 100; i++){
+		[self registerClass:[LMTableViewCell class] forCellReuseIdentifier:[NSString stringWithFormat:@"%@Cell_%d", self.title, i]];
 	}
-	
-	self.tableView = [LMTableView newAutoLayoutView];
-	self.tableView.totalAmountOfObjects = 4; //self.sources.count;
-	self.tableView.subviewDataSource = self;
-	self.tableView.shouldUseDividers = YES;
-	self.tableView.averageCellHeight = WINDOW_FRAME.size.height/12.0;
-	self.tableView.title = @"SectionTableView";
-	self.tableView.dividerColour = [UIColor blackColor];
-	self.tableView.bottomSpacing = 0;
-	[self addSubview:self.tableView];
-	
-	[self.tableView autoPinEdgesToSuperviewEdges];
-	
-	[self reloadData];
+	self.hasRegisteredCellIdentifiers = YES;
 }
 
 @end

@@ -81,17 +81,22 @@
 
 @end
 
-@interface LMSectionTableView : UIView
+@interface LMSectionTableView : UITableView
+
+/**
+ Title for the section table view.
+ */
+@property NSString *title;
 
 /**
  The delegate for the data that will go inside the table view.
  */
-@property id<LMSectionTableViewDelegate> delegate;
+//@property id<LMSectionTableViewDelegate> delegate;
 
 /**
  The number of sections for this sectioned table view.
  */
-@property NSUInteger numberOfSections;
+//@property NSUInteger numberOfSections;
 
 /**
  Setup the section table view.
