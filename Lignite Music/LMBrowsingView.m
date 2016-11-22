@@ -134,6 +134,9 @@
 			return [NSString stringWithFormat:@"%ld %@", collection.count, NSLocalizedString(collection.count == 1 ? @"Song" : @"Songs", nil)];
 		}
 		case LMMusicTypeAlbums: {
+			if(collection.variousArtists){
+				return NSLocalizedString(@"Various", nil);
+			}
 			return collection.representativeItem.artist ? collection.representativeItem.artist : NSLocalizedString(@"UnknownArtist", nil);
 		}
 		case LMMusicTypeArtists: {

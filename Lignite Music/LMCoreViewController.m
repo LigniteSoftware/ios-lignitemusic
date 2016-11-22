@@ -343,12 +343,12 @@ BOOL didAutomaticallyClose = NO;
 	
 	NSLog(@"Loading view");
 	
-	self.settingsView = [LMSettingsView newAutoLayoutView];
-	[self.view addSubview:self.settingsView];
-	
-	[self.settingsView autoPinEdgesToSuperviewEdges];
-	
-	return;
+//	self.settingsView = [LMSettingsView newAutoLayoutView];
+//	[self.view addSubview:self.settingsView];
+//	
+//	[self.settingsView autoPinEdgesToSuperviewEdges];
+//	
+//	return;
 	
 //	LMImageManager *imageManager = [LMImageManager sharedImageManager];
 //	[imageManager launchPermissionRequestOnView:self.view

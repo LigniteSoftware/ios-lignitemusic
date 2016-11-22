@@ -172,7 +172,10 @@
 			return [NSString stringWithFormat:@"%ld %@", self.musicTrackCollection.count, NSLocalizedString(self.musicTrackCollection.count == 1 ? @"Song" : @"Songs", nil)];
 		}
 		case LMMusicTypeAlbums: {
-			return self.musicTrackCollection.representativeItem.artist;
+			if(self.musicTrackCollection.variousArtists){
+				return NSLocalizedString(@"Various", nil);
+			}
+			return self.musicTrackCollection.representativeItem.artist ? self.musicTrackCollection.representativeItem.artist : NSLocalizedString(@"UnknownArtist", nil);
 		}
 		default: {
 			return nil;
