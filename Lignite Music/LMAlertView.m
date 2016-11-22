@@ -70,6 +70,9 @@
 
 - (void)launchOnView:(UIView*)alertRootView withCompletionHandler:(void(^)(NSUInteger optionSelected))completionHandler {
 	NSLog(@"Frame %@", NSStringFromCGRect(alertRootView.frame));
+	
+	self.backgroundColor = [UIColor whiteColor];
+	
 	self.completionHandler = completionHandler;
 	
 	self.buttonsArray = [NSMutableArray new];

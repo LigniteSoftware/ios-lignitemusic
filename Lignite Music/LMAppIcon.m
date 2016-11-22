@@ -46,6 +46,12 @@
 			return @"icon_browse.png";
 		case LMIconMiniplayer:
 			return @"icon_miniplayer.png";
+		case LMIconLookAndFeel:
+			return @"icon_look_and_feel.png";
+		case LMIconAbout:
+			return @"icon_about.png";
+		case LMIconCloudDownload:
+			return @"icon_download.png";
 	}
 }
 

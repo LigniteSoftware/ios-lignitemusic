@@ -61,9 +61,14 @@
 @property NSArray<LMMusicTrackCollection*> *artistsCollection;
 
 /**
- The image cache of the image manager.
+ The artist image cache of the image manager.
  */
-@property SDImageCache *imageCache;
+@property SDImageCache *artistImageCache;
+
+/**
+ The album art image cache of the image manager.
+ */
+@property SDImageCache *albumImageCache;
 
 /**
  The operation queue.
@@ -88,7 +93,8 @@
 		self.albumsCollection = [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeAlbums];
 		self.artistsCollection = [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeArtists];
 		
-		self.imageCache = [[SDImageCache alloc] initWithNamespace:LMImageManagerCacheNamespace];
+		self.albumImageCache = [[SDImageCache alloc] initWithNamespace:LMImageManagerCacheNamespace];
+		self.artistImageCache = [[SDImageCache alloc] initWithNamespace:LMImageManagerCacheNamespace];
 		
 		self.operationQueue = [NSOperationQueue new];
 		
@@ -121,6 +127,25 @@
  * END GENERAL CODE AND BEGIN IMAGE DOWNLOADING CODE
  *
  */
+
+- (SDImageCache*)imageCacheForCategory:(LMImageManagerCategory)category {
+	switch(category){
+		case LMImageManagerCategoryAlbumImages:
+			return self.albumImageCache;
+		case LMImageManagerCategoryArtistImages:
+			return self.artistImageCache;
+	}
+}
+
+- (NSUInteger)totalSpaceAllocated {
+	return [[self imageCacheForCategory:LMImageManagerCategoryAlbumImages] getSize] + [[self imageCacheForCategory:LMImageManagerCategoryArtistImages] getSize];
+}
+
+- (void)clearCacheForCategory:(LMImageManagerCategory)category {
+	SDImageCache *imageCache = [self imageCacheForCategory:category];
+	[imageCache clearDisk];
+	[imageCache cleanDisk];
+}
 
 - (NSString*)imageCacheKeyForMusicTrack:(LMMusicTrack*)representativeItem forCategory:(LMImageManagerCategory)category {
 	LMMusicTrackPersistentID persistentID;
@@ -240,7 +265,7 @@
 										   if(image && finished) {
 											   NSLog(@"Done, now storing to %@.", imageCacheKey);
 											   
-											   [self.imageCache storeImage:image forKey:imageCacheKey];
+											   [[self imageCacheForCategory:category] storeImage:image forKey:imageCacheKey];
 										   }
 									   }];
 				return;
@@ -250,7 +275,7 @@
 }
 
 - (UIImage*)imageForMusicTrack:(LMMusicTrack*)musicTrack withCategory:(LMImageManagerCategory)category {
-	return [self.imageCache imageFromDiskCacheForKey:[self imageCacheKeyForMusicTrack:musicTrack forCategory:category]];
+	return [[self imageCacheForCategory:category] imageFromDiskCacheForKey:[self imageCacheKeyForMusicTrack:musicTrack forCategory:category]];
 }
 
 

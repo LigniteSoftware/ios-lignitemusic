@@ -25,4 +25,9 @@
  */
 @property UIImage *icon;
 
+/**
+ The factorial of total space to take up within the given superview. Automatically pinned to the bottom.
+ */
+@property float heightFactorial;
+
 @end

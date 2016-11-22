@@ -14,6 +14,7 @@
 #import "LMColour.h"
 #import "LMListEntry.h"
 #import "LMAppIcon.h"
+#import "LMLabel.h"
 
 @interface LMSectionTableView()<UITableViewDelegate, UITableViewDataSource, LMListEntryDelegate>
 
@@ -38,7 +39,7 @@
 }
 
 - (void)tappedListEntry:(LMListEntry*)entry {
-	
+	[self.contentsDelegate tappedIndexPath:entry.indexPath forSectionTableView:self];
 }
 
 - (UIColor*)tapColourForListEntry:(LMListEntry*)entry {
@@ -68,7 +69,7 @@
 	self = [super initWithFrame:CGRectMake(0, 0, 0, 0) style:UITableViewStyleGrouped];
 	if(self){
 		self.backgroundColor = [UIColor whiteColor];
-		self.separatorColor = [LMColour superLightGrayColour];
+//		self.separatorColor = [LMColour superLightGrayColour];
 		self.alwaysBounceVertical = YES;
 		
 		self.delegate = self;
@@ -93,12 +94,8 @@
 	LMTableViewCell *cell = (LMTableViewCell*)[tableView dequeueReusableCellWithIdentifier:cellIdentifier forIndexPath:indexPath];
 	
 	cell.contentView.backgroundColor = [LMColour superLightGrayColour];
-
-	
-	NSLog(@"Raw row %d", (int)rawRow);
-	
+		
 	LMListEntry *subview = [self.listEntryArray objectAtIndex:rawRow % self.listEntryArray.count];
-	subview.backgroundColor = [LMColour ligniteRedColour];
 	subview.indexPath = indexPath;
 	[subview reloadContents];
 	
@@ -118,6 +115,9 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+	if(section == 0){
+		return WINDOW_FRAME.size.height/12 + WINDOW_FRAME.size.height/20;
+	}
 	return WINDOW_FRAME.size.height/12;
 }
 
@@ -141,6 +141,12 @@
 	LMSectionHeaderView *view = [[LMSectionHeaderView alloc] initWithFrame:frame];
 	view.sectionHeaderTitle = [self.contentsDelegate titleAtSection:section forSectionTableView:self];
 	view.icon = [self.contentsDelegate iconAtSection:section forSectionTableView:self];
+	
+	if(section == 0){
+		view.heightFactorial = (WINDOW_FRAME.size.height/12) / frame.size.height;
+		view.title = self.title;
+	}
+	
 //	//	view.backgroundColor = [UIColor yellowColor];
 //	
 //	if(self.shouldUseDividers && ![self.dividerSectionsToIgnore containsObject:@(section)] && !(self.bottomSpacing > 0 && section == self.numberOfSections-1)){

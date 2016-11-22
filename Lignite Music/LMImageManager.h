@@ -53,6 +53,20 @@ typedef enum {
 + (LMImageManager*)sharedImageManager;
 
 /**
+ Gets the total amount of space currently allocated in the disk caches.
+
+ @return The total amount of space in bytes.
+ */
+- (NSUInteger)totalSpaceAllocated;
+
+/**
+ Clear the cache for a category of images.
+
+ @param category The category to clear the cache of.
+ */
+- (void)clearCacheForCategory:(LMImageManagerCategory)category;
+
+/**
  Get an image which has been downloaded for a certain category from the music track provided. nil if the image is not in storage.
 
  @param musicTrack The music track to use details for.

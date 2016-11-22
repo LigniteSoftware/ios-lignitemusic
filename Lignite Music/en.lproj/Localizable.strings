@@ -62,6 +62,31 @@
 "DownloadAnyway" = "Download anyway"; //Goes on the accept button for downloading images
 "DontDownload" = "Don't download"; //Goes on the deny button for downloading images
 
+/* Settings related */
+"AppSettings" = "App Settings";
+"PebbleSettings" = "Pebble Settings";
+
+"LookAndFeel" = "Look and Feel";
+"Colour" = "Colour";
+"TapToChooseColour" = "Tap here to choose a colour";
+"StatusBar" = "Status bar";
+"StatusBarDescription" = "Show the iOS status bar";
+
+"ImageDownloads" = "Image Downloads";
+"ArtistImages" = "Artist images";
+"AlbumCoverArts" = "Missing album cover art";
+"LMImageManagerPermissionStatusDenied" = "Will not download";
+"LMImageManagerPermissionStatusAuthorized" = "Will download on WiFi";
+"ImageCacheSize" = "Image cache size";
+"ImageCacheClickToManage" = "Storing %.02fMB. Tap here to manage";
+"ClearCacheAndDisable" = "Clear cache and disable";
+"KeepEnabled" = "Keep enabled";
+"SettingImagesAlertDescription" = "We download images %@.\n\nHowever you can turn this off to save storage and bandwidth.\n\nIf you turn it off, we will not download images of this kind unless you turn the setting back on.%@";
+
+"About" = "About";
+"Credits" = "Credits";
+"CreditsMore" = "Tap here for credits";
+
 /*
  
  END NEW STRINGS
