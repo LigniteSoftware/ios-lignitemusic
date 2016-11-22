@@ -17,13 +17,25 @@
 
 @interface LMSectionTableView()<UITableViewDelegate, UITableViewDataSource, LMListEntryDelegate>
 
-@property NSUInteger requiredAmountOfObjects;
-
 @property BOOL hasRegisteredCellIdentifiers;
+
+@property NSMutableArray *listEntryArray;
 
 @end
 
 @implementation LMSectionTableView
+
+- (NSUInteger)rawIndexForIndexPath:(NSIndexPath*)indexPath {
+	NSInteger section = indexPath.section;
+	NSInteger row = indexPath.row;
+	
+	NSUInteger totalRows = row;
+	for(NSUInteger i = 0; i < section; i++){
+		totalRows += [self.contentsDelegate numberOfRowsForSection:i forSectionTableView:self];
+	}
+	
+	return totalRows;
+}
 
 - (void)tappedListEntry:(LMListEntry*)entry {
 	
@@ -34,14 +46,21 @@
 }
 
 - (NSString*)titleForListEntry:(LMListEntry*)entry {
-	return [NSString stringWithFormat:@"Row %d", (int)entry.collectionIndex];
+	if(entry.indexPath){
+		return [self.contentsDelegate titleForIndexPath:entry.indexPath forSectionTableView:self];
+	}
+	return @"Unnamned title";
 }
 
 - (NSString*)subtitleForListEntry:(LMListEntry*)entry {
-	return @"Subtitle";
+	if(entry.indexPath){
+		return [self.contentsDelegate subtitleForIndexPath:entry.indexPath forSectionTableView:self];
+	}
+	return @"Unnamned subtitle";
 }
 
 - (UIImage*)iconForListEntry:(LMListEntry*)entry {
+	return nil;
 	return [LMAppIcon imageForIcon:LMIconAlbums];
 }
 
@@ -55,7 +74,6 @@
 		self.delegate = self;
 		self.dataSource = self;
 	
-		
 		self.title = @"SectionTableView";
 	}
 	return self;
@@ -68,21 +86,30 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	NSString *cellIdentifier = [NSString stringWithFormat:@"%@Cell_%lu", self.title, indexPath.section % self.requiredAmountOfObjects];
+	NSUInteger rawRow = [self rawIndexForIndexPath:indexPath];
+	
+	NSString *cellIdentifier = [NSString stringWithFormat:@"%@Cell_%lu", self.title, rawRow % self.listEntryArray.count];
 	
 	LMTableViewCell *cell = (LMTableViewCell*)[tableView dequeueReusableCellWithIdentifier:cellIdentifier forIndexPath:indexPath];
 	
 	cell.contentView.backgroundColor = [LMColour superLightGrayColour];
+
 	
-	LMListEntry *listEntry = [LMListEntry newAutoLayoutView];
-	listEntry.collectionIndex = indexPath.row;
-	listEntry.delegate = self;
-	[cell.contentView addSubview:listEntry];
+	NSLog(@"Raw row %d", (int)rawRow);
 	
-	[listEntry autoPinEdgesToSuperviewEdges];
+	LMListEntry *subview = [self.listEntryArray objectAtIndex:rawRow % self.listEntryArray.count];
+	subview.backgroundColor = [LMColour ligniteRedColour];
+	subview.indexPath = indexPath;
+	[subview reloadContents];
 	
-	[listEntry setup];
-												   
+	cell.subview = subview;
+	
+	if(!cell.didSetupConstraints){
+		cell.selectionStyle = UITableViewCellSelectionStyleNone;
+		[cell setNeedsUpdateConstraints];
+		[cell updateConstraintsIfNeeded];
+	}
+	
 	return cell;
 }
 
@@ -95,15 +122,15 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	return 2;
+	return [self.contentsDelegate numberOfRowsForSection:section forSectionTableView:self];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	return 5;
+	return self.totalNumberOfSections;
 }
 
 - (NSString*)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-	return [NSString stringWithFormat:@"%ld", section];
+	return nil;
 }
 
 /**
@@ -112,8 +139,8 @@
 - (UIView*)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
 	CGRect frame = CGRectMake(0, 0, self.frame.size.width, [self tableView:self heightForHeaderInSection:section]);
 	LMSectionHeaderView *view = [[LMSectionHeaderView alloc] initWithFrame:frame];
-	view.sectionHeaderTitle = [NSString stringWithFormat:@"Section %d", (int)section];
-	view.icon = [UIImage imageNamed:@"icon_bug.png"];
+	view.sectionHeaderTitle = [self.contentsDelegate titleAtSection:section forSectionTableView:self];
+	view.icon = [self.contentsDelegate iconAtSection:section forSectionTableView:self];
 //	//	view.backgroundColor = [UIColor yellowColor];
 //	
 //	if(self.shouldUseDividers && ![self.dividerSectionsToIgnore containsObject:@(section)] && !(self.bottomSpacing > 0 && section == self.numberOfSections-1)){
@@ -132,7 +159,22 @@
 }
 
 - (void)setup {
-	for(int i = 0; i < 100; i++){
+	self.listEntryArray = [NSMutableArray new];
+	
+	for(int i = 0; i < 12; i++){
+		LMListEntry *listEntry = [LMListEntry newAutoLayoutView];
+		listEntry.delegate = self;
+		
+		[self.listEntryArray addObject:listEntry];
+		
+		[listEntry setup];
+	}
+	
+	int totalRows = (int)[self rawIndexForIndexPath:[NSIndexPath indexPathForRow:[self.contentsDelegate numberOfRowsForSection:self.totalNumberOfSections-1 forSectionTableView:self] inSection:self.totalNumberOfSections-1]];
+	
+	NSLog(@"%d total rows", totalRows);
+	
+	for(int i = 0; i < totalRows; i++){
 		[self registerClass:[LMTableViewCell class] forCellReuseIdentifier:[NSString stringWithFormat:@"%@Cell_%d", self.title, i]];
 	}
 	self.hasRegisteredCellIdentifiers = YES;

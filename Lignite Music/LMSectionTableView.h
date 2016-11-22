@@ -91,16 +91,22 @@
 /**
  The delegate for the data that will go inside the table view.
  */
-//@property id<LMSectionTableViewDelegate> delegate;
+@property id<LMSectionTableViewDelegate> contentsDelegate;
 
 /**
- The number of sections for this sectioned table view.
+ The total number of sections for this sectioned table view.
  */
-//@property NSUInteger numberOfSections;
+@property NSUInteger totalNumberOfSections;
 
 /**
  Setup the section table view.
  */
 - (void)setup;
+
+
+
+
+
+- (NSUInteger)rawIndexForIndexPath:(NSIndexPath*)indexPath;
 
 @end

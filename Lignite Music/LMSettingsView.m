@@ -26,19 +26,20 @@
 }
 
 - (NSString*)titleAtSection:(NSUInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView {
-	return [NSString stringWithFormat:@"Section %d", (int)section];
+	return [NSString stringWithFormat:@"A section called #%d", (int)section];
 }
 
 - (NSUInteger)numberOfRowsForSection:(NSUInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView {
-	return section % 3 + 1;
+	return section;
 }
 
 - (NSString*)titleForIndexPath:(NSIndexPath*)indexPath forSectionTableView:(LMSectionTableView*)sectionTableView {
-	return @"Title";
+	NSUInteger rawRow = [sectionTableView rawIndexForIndexPath:indexPath];
+	return [NSString stringWithFormat:@"Title %d.%d: %d %d", (int)indexPath.section, (int)indexPath.row, (int)rawRow, (int)rawRow % 12];
 }
 
 - (NSString*)subtitleForIndexPath:(NSIndexPath*)indexPath forSectionTableView:(LMSectionTableView*)sectionTableView {
-	return @"Subtitle";
+	return [NSString stringWithFormat:@"Subtitle %d.%d", (int)indexPath.section, (int)indexPath.row];
 }
 
 - (UIImage*)iconForIndexPath:(NSIndexPath*)indexPath forSectionTableView:(LMSectionTableView*)sectionTableView {
@@ -50,8 +51,8 @@
 		self.hasPreparedSubviews = YES;
 		
 		self.sectionTableView = [LMSectionTableView newAutoLayoutView];
-//		self.sectionTableView.delegate = self;
-//		self.sectionTableView.numberOfSections = 100;
+		self.sectionTableView.contentsDelegate = self;
+		self.sectionTableView.totalNumberOfSections = 100;
 		[self addSubview:self.sectionTableView];
 		
 		[self.sectionTableView autoPinEdgesToSuperviewEdges];

@@ -47,6 +47,11 @@
 @property NSInteger collectionIndex;
 
 /**
+ The index path in case the list entry is being used on a sectioned table view.
+ */
+@property NSIndexPath *indexPath;
+
+/**
  Optional. Associated data with this LMListEntry.
  */
 @property id associatedData;
