@@ -4,6 +4,11 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>MBProgressHUD.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>MarqueeLabel.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -32,22 +37,27 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>0281007561450D89EDB8D79E95071E27</key>
+		<key>41FA54D12162DAD51D02FC58A2CD5034</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>42B57337BCF7BAEA6FA54CCA7FAA23BD</key>
+		<key>42A3B1804983E57C2445BA449472810A</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>44D5E46383DAD771597C1431497C1EED</key>
+		<key>8BBD29DA87363F1D3814901CF5ECFC08</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>D225327BAE192EE2F18FFCE162C5AFA6</key>
+		<key>B7F8BB6F29D55D68E001A85B61121261</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>BD45EA5AB70CA218B52ACE8CC2A92E6D</key>
 		<dict>
 			<key>primary</key>
 			<true/>

@@ -23,11 +23,12 @@
 #define AVERAGE_IMAGE_SIZE_IN_BYTES 215000
 
 /**
- The image manager's disk cache namespace for storing images.
+ The image manager's disk cache namespaces for storing images.
 
- @return The name of the disk namespace.
+ @return The name of a disk namespace.
  */
-#define LMImageManagerCacheNamespace @"LMImageManagerCache"
+#define LMImageManagerCacheNamespaceArtist @"LMImageManagerCacheArtist"
+#define LMImageManagerCacheNamespaceAlbum @"LMImageManagerCacheAlbum"
 
 /**
  Our LastFM API key. God forbid this ever get cutoff.
@@ -93,8 +94,8 @@
 		self.albumsCollection = [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeAlbums];
 		self.artistsCollection = [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeArtists];
 		
-		self.albumImageCache = [[SDImageCache alloc] initWithNamespace:LMImageManagerCacheNamespace];
-		self.artistImageCache = [[SDImageCache alloc] initWithNamespace:LMImageManagerCacheNamespace];
+		self.albumImageCache = [[SDImageCache alloc] initWithNamespace:LMImageManagerCacheNamespaceAlbum];
+		self.artistImageCache = [[SDImageCache alloc] initWithNamespace:LMImageManagerCacheNamespaceArtist];
 		
 		self.operationQueue = [NSOperationQueue new];
 		
@@ -137,8 +138,14 @@
 	}
 }
 
-- (NSUInteger)totalSpaceAllocated {
-	return [[self imageCacheForCategory:LMImageManagerCategoryAlbumImages] getSize] + [[self imageCacheForCategory:LMImageManagerCategoryArtistImages] getSize];
+- (NSUInteger)sizeOfCacheForCategory:(LMImageManagerCategory)category {
+	SDImageCache *imageCache = [self imageCacheForCategory:category];
+	
+	return [imageCache getSize];
+}
+
+- (NSUInteger)sizeOfAllCaches {
+	return [self sizeOfCacheForCategory:LMImageManagerCategoryAlbumImages] + [self sizeOfCacheForCategory:LMImageManagerCategoryArtistImages];
 }
 
 - (void)clearCacheForCategory:(LMImageManagerCategory)category {

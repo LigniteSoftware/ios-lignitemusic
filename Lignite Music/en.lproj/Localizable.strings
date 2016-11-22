@@ -79,9 +79,10 @@
 "LMImageManagerPermissionStatusAuthorized" = "Will download on WiFi";
 "ImageCacheSize" = "Image cache size";
 "ImageCacheClickToManage" = "Storing %.02fMB. Tap here to manage";
-"ClearCacheAndDisable" = "Clear cache and disable";
+"ClearCacheAndDisable" = "Delete images and disable";
 "KeepEnabled" = "Keep enabled";
-"SettingImagesAlertDescription" = "We download images %@.\n\nHowever you can turn this off to save storage and bandwidth.\n\nIf you turn it off, we will not download images of this kind unless you turn the setting back on.%@";
+"SettingImagesAlertDescription" = "We download images %@.\n\nThese images are currently using %.02fMB of your storage.\n\nYou can delete these images and turn this feature off to save storage and bandwidth.\n\nIf you do so, we will not download images of this kind unless you turn the setting back on.";
+"ImagesDeleted" = "Images deleted";
 
 "About" = "About";
 "Credits" = "Credits";

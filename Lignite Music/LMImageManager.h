@@ -53,11 +53,19 @@ typedef enum {
 + (LMImageManager*)sharedImageManager;
 
 /**
+ Gets the total space allocated in a certain disk cache.
+
+ @param category The category of the cache to check.
+ @return The size of the cache in bytes.
+ */
+- (NSUInteger)sizeOfCacheForCategory:(LMImageManagerCategory)category;
+
+/**
  Gets the total amount of space currently allocated in the disk caches.
 
  @return The total amount of space in bytes.
  */
-- (NSUInteger)totalSpaceAllocated;
+- (NSUInteger)sizeOfAllCaches;
 
 /**
  Clear the cache for a category of images.

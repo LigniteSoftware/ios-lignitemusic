@@ -41,6 +41,7 @@
 		6A5821021DADE54400A4FAB1 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A5821011DADE54400A4FAB1 /* AVFoundation.framework */; };
 		6A5821041DAF312C00A4FAB1 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A5821031DAF312C00A4FAB1 /* AudioToolbox.framework */; };
 		6A6351921D9D71D300498582 /* LMListEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A6351911D9D71D300498582 /* LMListEntry.m */; };
+		6A63D16F1DE41FD000EABA53 /* icon_checkmark.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A63D16E1DE41FD000EABA53 /* icon_checkmark.png */; };
 		6A6C186B1DDFFE7600D651E1 /* LMArtistView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A6C186A1DDFFE7600D651E1 /* LMArtistView.m */; };
 		6A6C186D1DE0014A00D651E1 /* icon_artists.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A6C186C1DE0014A00D651E1 /* icon_artists.png */; };
 		6A6CCD5B1DB290FA006035C1 /* LMAppIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A6CCD5A1DB290FA006035C1 /* LMAppIcon.m */; };
@@ -184,6 +185,7 @@
 		6A5821031DAF312C00A4FAB1 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		6A6351901D9D71D300498582 /* LMListEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMListEntry.h; sourceTree = "<group>"; };
 		6A6351911D9D71D300498582 /* LMListEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMListEntry.m; sourceTree = "<group>"; };
+		6A63D16E1DE41FD000EABA53 /* icon_checkmark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_checkmark.png; sourceTree = "<group>"; };
 		6A6C18691DDFFE7600D651E1 /* LMArtistView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMArtistView.h; sourceTree = "<group>"; };
 		6A6C186A1DDFFE7600D651E1 /* LMArtistView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMArtistView.m; sourceTree = "<group>"; };
 		6A6C186C1DE0014A00D651E1 /* icon_artists.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_artists.png; sourceTree = "<group>"; };
@@ -487,6 +489,7 @@
 		6A66C76C1CDA1B4E009019CF /* Icons */ = {
 			isa = PBXGroup;
 			children = (
+				6A63D16E1DE41FD000EABA53 /* icon_checkmark.png */,
 				6A26B4731DE409C8008B5B69 /* icon_about.png */,
 				6A26B46F1DE40824008B5B69 /* icon_download.png */,
 				6A26B46B1DE4074E008B5B69 /* icon_look_and_feel.png */,
@@ -944,6 +947,7 @@
 				6A9C053E1DB4441200713D1C /* icon_titles.png in Resources */,
 				6AEB9D351BAD812700AD19FA /* icon_pause.png in Resources */,
 				6A26B4741DE409C8008B5B69 /* icon_about.png in Resources */,
+				6A63D16F1DE41FD000EABA53 /* icon_checkmark.png in Resources */,
 				6AC32B7F1DB73AFB0007C67E /* icon_no_cover_art.png in Resources */,
 				6A43BCE71DDFA471009FB0E9 /* tutorial_now_playing.png in Resources */,
 				6AF9D53E1DE244B4006368B6 /* icon_miniplayer.png in Resources */,

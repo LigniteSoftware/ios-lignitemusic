@@ -11,6 +11,7 @@ PODS:
   - MarqueeLabel (3.0.1):
     - MarqueeLabel/ObjC (= 3.0.1)
   - MarqueeLabel/ObjC (3.0.1)
+  - MBProgressHUD (1.0.0)
   - PebbleKit (3.1.1)
   - PureLayout (3.0.2)
   - SDWebImage (3.8.2):
@@ -23,6 +24,7 @@ PODS:
 DEPENDENCIES:
   - ImageMagick (= 6.8.8-9)
   - MarqueeLabel
+  - MBProgressHUD (~> 1.0.0)
   - PebbleKit
   - PureLayout
   - SDWebImage (~> 3.8)
@@ -31,11 +33,12 @@ DEPENDENCIES:
 SPEC CHECKSUMS:
   ImageMagick: e8c089d133679d505c98dc97f3dc5be0e706e1df
   MarqueeLabel: 80ba85d2b76a9f5fa6c13de337db80bcd94feb1d
+  MBProgressHUD: 4890f671c94e8a0f3cf959aa731e9de2f036d71a
   PebbleKit: 390181163256815738e467f183e7c65e16b56d25
   PureLayout: 4d550abe49a94f24c2808b9b95db9131685fe4cd
   SDWebImage: 098e97e6176540799c27e804c96653ee0833d13c
   YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
 
-PODFILE CHECKSUM: e255e58a4ba2d0d35e3d4e2f131f7faeb026b459
+PODFILE CHECKSUM: ce598ec7e72f81f45b8cf8e26b183d1aa1080f0d
 
 COCOAPODS: 1.1.1

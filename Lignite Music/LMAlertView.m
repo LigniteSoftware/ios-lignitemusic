@@ -144,7 +144,7 @@
 		[self.buttonsArray addObject:optionButton];
 	}
 
-	[NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(showAlert) userInfo:nil repeats:NO];
+	[NSTimer scheduledTimerWithTimeInterval:0.05 target:self selector:@selector(showAlert) userInfo:nil repeats:NO];
 }
 
 @end

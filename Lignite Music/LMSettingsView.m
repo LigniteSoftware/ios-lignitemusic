@@ -7,6 +7,7 @@
 //
 
 #import <PureLayout/PureLayout.h>
+#import <MBProgressHUD/MBProgressHUD.h>
 #import "LMSettingsView.h"
 #import "LMSectionTableView.h"
 #import "LMAppIcon.h"
@@ -115,7 +116,7 @@
 					return NSLocalizedString(approved ? @"LMImageManagerPermissionStatusAuthorized" : @"LMImageManagerPermissionStatusDenied", nil);
 				}
 				case 2:
-					return [NSString stringWithFormat:NSLocalizedString(@"ImageCacheClickToManage", nil), (float)[imageManager totalSpaceAllocated]/1000000];
+					return [NSString stringWithFormat:NSLocalizedString(@"ImageCacheClickToManage", nil), (float)[imageManager sizeOfAllCaches]/1000000];
 			}
 			break;
 		case 2:
@@ -151,13 +152,23 @@
 				case 0: {
 					LMAlertView *alertView = [LMAlertView newAutoLayoutView];
 					alertView.title = NSLocalizedString(@"ArtistImages", nil);
-					alertView.body = [NSString stringWithFormat:NSLocalizedString(@"SettingImagesAlertDescription", nil), NSLocalizedString(@"OfYourArtists", nil)];
+					alertView.body = [NSString stringWithFormat:NSLocalizedString(@"SettingImagesAlertDescription", nil), NSLocalizedString(@"OfYourArtists", nil), (float)[imageManager sizeOfCacheForCategory:LMImageManagerCategoryArtistImages]/1000000];
 					alertView.alertOptionTitles = @[NSLocalizedString(@"ClearCacheAndDisable", nil), NSLocalizedString(@"KeepEnabled", nil)];
 					alertView.alertOptionColours = @[[LMColour darkLigniteRedColour], [LMColour ligniteRedColour]];
 					[alertView launchOnView:self withCompletionHandler:^(NSUInteger optionSelected) {
 						NSLog(@"Selected %d", (int)optionSelected);
 						if(optionSelected == 0){
 							[imageManager clearCacheForCategory:LMImageManagerCategoryArtistImages];
+							
+							MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self animated:YES];
+							
+							hud.mode = MBProgressHUDModeCustomView;
+							UIImage *image = [[UIImage imageNamed:@"icon_checkmark.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+							hud.customView = [[UIImageView alloc] initWithImage:image];
+							hud.square = YES;
+							hud.label.text = NSLocalizedString(@"ImagesDeleted", nil);
+							
+							[hud hideAnimated:YES afterDelay:3.f];
 						}
 					}];
 					
