@@ -55,7 +55,7 @@
 
 "AboutXOfYourStorage" = " (about %.02f%% f your remaining storage)"; //The space in front of the first bracket is important, as it will be inserted after the "[...] take about %.02fMB to download the images%@." (goes where the %@ is in there). If your language does not need the space feel free to take it out.
 "UsingXOfYourStorage" = "These images are currently using %.02fMB of your storage.";
-"TakingUpXMB" = "Using %.02fMB.";
+"TakingUpXMB" = "Using %.02fMB";
 
 "OfYourArtists" = "of your artists so we can create a beautiful visual list of them";
 "OfYourAlbums" = "of your albums which don't have cover art to ensure maximum visual quality";
@@ -68,8 +68,8 @@
 "DontDownload" = "Don't download"; //Goes on the deny button for downloading images
 
 "ImageDownloads" = "Image Downloads";
-"LMImageManagerPermissionStatusDenied" = "Will not download";
-"LMImageManagerPermissionStatusAuthorized" = "Will download on WiFi";
+"LMImageManagerPermissionStatusDenied" = "won't download";
+"LMImageManagerPermissionStatusAuthorized" = "downloads on WiFi";
 
 "ClearCache" = "Delete images";
 "ClearCacheAndDisable" = "Delete images and disable";

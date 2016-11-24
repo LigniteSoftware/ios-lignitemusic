@@ -88,6 +88,17 @@
  
  */
 
+@optional
+
+/**
+ Gets the accessory view for the index path. Can be nil.
+
+ @param indexPath The index path that wants the accessory view.
+ @param sectionTableView The table view associated.
+ @return The view.
+ */
+- (id)accessoryViewForIndexPath:(NSIndexPath*)indexPath forSectionTableView:(LMSectionTableView*)sectionTableView;
+
 @end
 
 @interface LMSectionTableView : UITableView

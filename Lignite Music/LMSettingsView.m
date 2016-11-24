@@ -52,7 +52,7 @@
 - (NSUInteger)numberOfRowsForSection:(NSUInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView {
 	switch(section){
 		case 0:
-			return 2;
+			return 1;
 		case 1:
 			return 2;
 		case 2:
@@ -65,9 +65,9 @@
 	switch(indexPath.section){
 		case 0:
 			switch(indexPath.row){
+//				case 0:
+//					return NSLocalizedString(@"Colour", nil);
 				case 0:
-					return NSLocalizedString(@"Colour", nil);
-				case 1:
 					return NSLocalizedString(@"StatusBar", nil);
 			}
 			break;
@@ -98,9 +98,9 @@
 	
 	NSString *approvedString = NSLocalizedString(approved ? @"LMImageManagerPermissionStatusAuthorized" : @"LMImageManagerPermissionStatusDenied", nil);
 	
-	NSString *takingUpString = [NSString stringWithFormat:NSLocalizedString(@"TakingUpXMB", nil), (float)[imageManager sizeOfAllCaches]/1000000];
+	NSString *takingUpString = [NSString stringWithFormat:NSLocalizedString(@"TakingUpXMB", nil), (float)[imageManager sizeOfCacheForCategory:category]/1000000];
 	
-	return [NSString stringWithString:[NSMutableString stringWithFormat:@"%@ %@", takingUpString, approvedString]];
+	return [NSString stringWithString:[NSMutableString stringWithFormat:@"%@ - %@", takingUpString, approvedString]];
 }
 
 - (NSString*)subtitleForIndexPath:(NSIndexPath*)indexPath forSectionTableView:(LMSectionTableView*)sectionTableView {
@@ -109,9 +109,9 @@
 	switch(indexPath.section){
 		case 0:
 			switch(indexPath.row){
+//				case 0:
+//					return NSLocalizedString(@"TapToChooseColour", nil);
 				case 0:
-					return NSLocalizedString(@"TapToChooseColour", nil);
-				case 1:
 					return NSLocalizedString(@"StatusBarDescription", nil);
 			}
 			break;
@@ -219,15 +219,13 @@
 }
 
 - (void)tappedIndexPath:(NSIndexPath*)indexPath forSectionTableView:(LMSectionTableView*)sectionTableView {
-	
-	
 	switch(indexPath.section){
 		case 0:
 			switch(indexPath.row){
+//				case 0:
+//					NSLog(@"Pick theme");
+//					break;
 				case 0:
-					NSLog(@"Pick theme");
-					break;
-				case 1:
 					NSLog(@"Status bar");
 					break;
 			}
@@ -257,6 +255,15 @@
 			}
 			break;
 	}
+}
+
+- (id)accessoryViewForIndexPath:(NSIndexPath *)indexPath forSectionTableView:(LMSectionTableView *)sectionTableView {
+	if(indexPath.section == 0){
+		return [UISwitch newAutoLayoutView];
+	}
+	UIImageView *imageView = [UIImageView newAutoLayoutView];
+	imageView.image = [LMAppIcon imageForIcon:LMIconForwardArrow];
+	return imageView;
 }
 
 - (void)layoutSubviews {

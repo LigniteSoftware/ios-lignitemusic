@@ -32,6 +32,11 @@
 - (id)initWithDelegate:(id)delegate;
 
 /**
+ Don't fuck with this unless you know what you're doing boss
+ */
+@property UIView *contentView;
+
+/**
  The multiplier of how much to inset the icon within its background view. For example, 0.5 would inset the icon half way into the background view, centered. Default after setup: 0.8
  */
 @property float iconInsetMultiplier;

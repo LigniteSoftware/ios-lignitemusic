@@ -52,6 +52,8 @@
 			return @"icon_about.png";
 		case LMIconCloudDownload:
 			return @"icon_download.png";
+		case LMIconForwardArrow:
+			return @"icon_arrow_forward";
 	}
 }
 

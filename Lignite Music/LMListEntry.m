@@ -13,8 +13,6 @@
 
 @interface LMListEntry()
 
-@property UIView *contentView;
-
 @property UIView *iconBackgroundView;
 @property UIImageView *iconView;
 @property LMLabel *titleLabel, *subtitleLabel;

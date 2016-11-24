@@ -105,6 +105,48 @@
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
 		[cell setNeedsUpdateConstraints];
 		[cell updateConstraintsIfNeeded];
+		
+		if([self.contentsDelegate respondsToSelector:@selector(accessoryViewForIndexPath:forSectionTableView:)]){
+			id accessorySubview = [self.contentsDelegate accessoryViewForIndexPath:indexPath forSectionTableView:self];
+			NSString *accessorySubviewClass = [[accessorySubview class] description];
+			BOOL shouldHangRight = ![accessorySubviewClass isEqualToString:@"UISwitch"];
+			
+			UIView *accessoryView = [UIView newAutoLayoutView];
+//			accessoryView.backgroundColor = [LMColour randomColour];
+			[cell.contentView addSubview:accessoryView];
+			
+			[accessoryView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:subview.contentView withOffset:shouldHangRight ? 10 : 0];
+			[accessoryView autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+			[accessoryView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:cell.contentView withMultiplier:(1.0/2.0)];
+			[accessoryView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:cell.contentView withMultiplier:(1.0/2.0)];
+			
+			[accessoryView addSubview:accessorySubview];
+			
+			if([accessorySubviewClass isEqualToString:@"UISwitch"]){
+				[accessorySubview autoCenterInSuperview];
+			}
+			else if([accessorySubviewClass isEqualToString:@"UIImageView"]){
+				[accessorySubview autoCenterInSuperview];
+				[accessorySubview autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:accessoryView withMultiplier:(1.0/2.0)];
+				[accessorySubview autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:accessoryView withMultiplier:(1.0/2.0)];
+			}
+			else{
+				NSLog(@"[%@]: Unknown class %@ for accessory.", self.title, accessorySubviewClass);
+			}
+		}
+		
+//		UIImageView *arrowView = [UIImageView newAutoLayoutView];
+//		arrowView.image = [UIImage imageNamed:@"icon_arrow_forward.png"];
+//		[accessoryView addSubview:arrowView];
+//		
+//		[arrowView autoCenterInSuperview];
+//		[arrowView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:accessoryView withMultiplier:(1.0/2.0)];
+//		[arrowView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:accessoryView withMultiplier:(1.0/2.0)];
+		
+//		UISwitch *testSwitch = [UISwitch newAutoLayoutView];
+//		[accessoryView addSubview:testSwitch];
+//		
+//		[testSwitch autoCenterInSuperview];
 	}
 	
 	return cell;
@@ -145,20 +187,6 @@
 //	if(section == 0 && true == false){
 //		view.heightFactorial = (WINDOW_FRAME.size.height/10) / frame.size.height;
 //		view.title = self.title;
-//	}
-	
-//	//	view.backgroundColor = [UIColor yellowColor];
-//	
-//	if(self.shouldUseDividers && ![self.dividerSectionsToIgnore containsObject:@(section)] && !(self.bottomSpacing > 0 && section == self.numberOfSections-1)){
-//		uint8_t dividerHeight = 1;
-//		float frameWidth = (frame.size.width * 0.9);
-//		float frameX = (frame.size.width-frameWidth)/2;
-//		float frameY = frame.size.height/2 - dividerHeight/2;
-//		UIView *dividerView = [[UIView alloc]initWithFrame:CGRectMake(frameX, frameY, frameWidth, dividerHeight)];
-//		dividerView.backgroundColor = self.dividerColour ? self.dividerColour : [UIColor colorWithRed:0.82 green:0.82 blue:0.82 alpha:1.0];
-//		[view addSubview:dividerView];
-//		
-//		//		NSLog(@"%@ RESULTS\nWindow frame %@\ntable frame %@\nheader frame %@\ndivider frame %@", self.title, NSStringFromCGRect(WINDOW_FRAME),  NSStringFromCGRect(self.frame), NSStringFromCGRect(frame), NSStringFromCGRect(dividerView.frame));
 //	}
 	
 	return view;

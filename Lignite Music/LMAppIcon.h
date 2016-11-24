@@ -31,7 +31,8 @@ typedef enum {
 	LMIconMiniplayer,
 	LMIconLookAndFeel,
 	LMIconAbout,
-	LMIconCloudDownload
+	LMIconCloudDownload,
+	LMIconForwardArrow
 } LMIcon;
 
 /**

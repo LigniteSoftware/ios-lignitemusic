@@ -99,7 +99,7 @@
 		
 		self.operationQueue = [NSOperationQueue new];
 		
-		LMMusicTrack *randomItem = [[self.artistsCollection objectAtIndex:5] representativeItem];
+		LMMusicTrack *randomItem = [[self.artistsCollection objectAtIndex:1] representativeItem];
 		[self imageNeedsDownloadingForMusicTrack:randomItem
 											 forCategory:LMImageManagerCategoryArtistImages
 											  completion:^(BOOL needsDownloading) {
