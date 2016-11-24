@@ -115,10 +115,10 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-	if(section == 0){
-		return WINDOW_FRAME.size.height/12 + WINDOW_FRAME.size.height/20;
-	}
-	return WINDOW_FRAME.size.height/12;
+//	if(section == 0 && true == false){
+//		return WINDOW_FRAME.size.height/10 + WINDOW_FRAME.size.height/14;
+//	}
+	return WINDOW_FRAME.size.height/10;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -142,10 +142,10 @@
 	view.sectionHeaderTitle = [self.contentsDelegate titleAtSection:section forSectionTableView:self];
 	view.icon = [self.contentsDelegate iconAtSection:section forSectionTableView:self];
 	
-	if(section == 0){
-		view.heightFactorial = (WINDOW_FRAME.size.height/12) / frame.size.height;
-		view.title = self.title;
-	}
+//	if(section == 0 && true == false){
+//		view.heightFactorial = (WINDOW_FRAME.size.height/10) / frame.size.height;
+//		view.title = self.title;
+//	}
 	
 //	//	view.backgroundColor = [UIColor yellowColor];
 //	
@@ -170,6 +170,7 @@
 	for(int i = 0; i < 12; i++){
 		LMListEntry *listEntry = [LMListEntry newAutoLayoutView];
 		listEntry.delegate = self;
+		listEntry.contentViewHeightMultiplier = 0.875;
 		
 		[self.listEntryArray addObject:listEntry];
 		

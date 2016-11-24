@@ -66,11 +66,14 @@
 }
 
 - (void)setup {
-	if(self.iconInsetMultiplier == 0){
+	if(self.iconInsetMultiplier < 0.01){
 		self.iconInsetMultiplier = 0.8;
 	}
-	if(self.iconPaddingMultiplier == 0){
+	if(self.iconPaddingMultiplier < 0.01){
 		self.iconPaddingMultiplier = 1.0;
+	}
+	if(self.contentViewHeightMultiplier < 0.01){
+		self.contentViewHeightMultiplier = 0.95;
 	}
 	
 	self.contentView = [UIView newAutoLayoutView];
@@ -80,7 +83,7 @@
 	[self addSubview:self.contentView];
 	
 	[self.contentView autoCenterInSuperview];
-	[self.contentView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.95];
+	[self.contentView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:self.contentViewHeightMultiplier];
 	[self.contentView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:0.9];
 	
 	UIImage *icon = [self.delegate iconForListEntry:self];

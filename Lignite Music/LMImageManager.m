@@ -106,8 +106,13 @@
 												  NSLog(@"%@: Needs downloading: %d", [self imageCacheKeyForMusicTrack:randomItem
 																													   forCategory:LMImageManagerCategoryArtistImages], needsDownloading);
 												  
-												  if(needsDownloading){
+												  if(needsDownloading && [self permissionStatusForCategory:LMImageManagerCategoryArtistImages] == LMImageManagerPermissionStatusAuthorized){
+													  NSLog(@"Approved for download.");
+													  
 													  [self downloadImageForMusicTrack:randomItem forCategory:LMImageManagerCategoryArtistImages];
+												  }
+												  else{
+													  NSLog(@"Not clear for download.");
 												  }
 											  }];
 	}
@@ -328,7 +333,7 @@
 		case LMImageManagerCategoryAlbumImages:
 			return @"LMImageManagerPermissionAlbumImages";
 		case LMImageManagerCategoryArtistImages:
-			return @"LMImageManagerPermissionAlbumImages";
+			return @"LMImageManagerPermissionArtistImages";
 	}
 }
 
@@ -349,7 +354,7 @@
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 	NSString *permissionStatusKey = [LMImageManager keyForPermission:category];
 	
-	[userDefaults setInteger:(NSInteger)category forKey:permissionStatusKey];
+	[userDefaults setInteger:(NSInteger)status forKey:permissionStatusKey];
 	[userDefaults synchronize];
 }
 

@@ -42,6 +42,11 @@
 @property float iconPaddingMultiplier;
 
 /**
+ The multiplier of the content view. Default after setup: 0.95
+ */
+@property float contentViewHeightMultiplier;
+
+/**
  The index of this LMListEntry in the collection its associated with.
  */
 @property NSInteger collectionIndex;

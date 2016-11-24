@@ -54,7 +54,7 @@
 		case 0:
 			return 2;
 		case 1:
-			return 3;
+			return 2;
 		case 2:
 			return 1;
 	}
@@ -74,11 +74,9 @@
 		case 1:
 			switch(indexPath.row){
 				case 0:
-					return NSLocalizedString(@"ArtistImages", nil);
+					return NSLocalizedString(@"ArtistImagesTitle", nil);
 				case 1:
-					return NSLocalizedString(@"AlbumCoverArts", nil);
-				case 2:
-					return NSLocalizedString(@"ImageCacheSize", nil);
+					return NSLocalizedString(@"AlbumImagesTitle", nil);
 			}
 			break;
 		case 2:
@@ -89,6 +87,20 @@
 			break;
 	}
 	return @"Unknown entry";
+}
+
+- (NSString*)subtitleForCategory:(LMImageManagerCategory)category {
+	LMImageManager *imageManager = [LMImageManager sharedImageManager];
+	
+	LMImageManagerPermissionStatus artistImagesStatus = [imageManager permissionStatusForCategory:category];
+	
+	BOOL approved = (artistImagesStatus == LMImageManagerPermissionStatusAuthorized);
+	
+	NSString *approvedString = NSLocalizedString(approved ? @"LMImageManagerPermissionStatusAuthorized" : @"LMImageManagerPermissionStatusDenied", nil);
+	
+	NSString *takingUpString = [NSString stringWithFormat:NSLocalizedString(@"TakingUpXMB", nil), (float)[imageManager sizeOfAllCaches]/1000000];
+	
+	return [NSString stringWithString:[NSMutableString stringWithFormat:@"%@ %@", takingUpString, approvedString]];
 }
 
 - (NSString*)subtitleForIndexPath:(NSIndexPath*)indexPath forSectionTableView:(LMSectionTableView*)sectionTableView {
@@ -106,14 +118,10 @@
 		case 1:
 			switch(indexPath.row){
 				case 0: {
-					LMImageManagerPermissionStatus artistImagesStatus = [imageManager permissionStatusForCategory:LMImageManagerCategoryArtistImages];
-					BOOL approved = (artistImagesStatus == LMImageManagerPermissionStatusAuthorized);
-					return NSLocalizedString(approved ? @"LMImageManagerPermissionStatusAuthorized" : @"LMImageManagerPermissionStatusDenied", nil);
+					return [self subtitleForCategory:LMImageManagerCategoryArtistImages];
 				}
 				case 1: {
-					LMImageManagerPermissionStatus albumArtworkStatus = [imageManager permissionStatusForCategory:LMImageManagerCategoryAlbumImages];
-					BOOL approved = (albumArtworkStatus == LMImageManagerPermissionStatusAuthorized);
-					return NSLocalizedString(approved ? @"LMImageManagerPermissionStatusAuthorized" : @"LMImageManagerPermissionStatusDenied", nil);
+					return [self subtitleForCategory:LMImageManagerCategoryAlbumImages];
 				}
 				case 2:
 					return [NSString stringWithFormat:NSLocalizedString(@"ImageCacheClickToManage", nil), (float)[imageManager sizeOfAllCaches]/1000000];
@@ -133,8 +141,85 @@
 	return [LMAppIcon imageForIcon:LMIconNoAlbumArt];
 }
 
-- (void)tappedIndexPath:(NSIndexPath*)indexPath forSectionTableView:(LMSectionTableView*)sectionTableView {
+- (void)cacheAlertForCategory:(LMImageManagerCategory)category {
 	LMImageManager *imageManager = [LMImageManager sharedImageManager];
+	
+	LMImageManagerPermissionStatus currentStatus = [imageManager permissionStatusForCategory:category];
+	
+	LMAlertView *alertView = [LMAlertView newAutoLayoutView];
+	NSString *titleKey = @"";
+	NSString *bodyKey = @"";
+	NSString *youCanKey = @"";
+	NSString *enableButtonKey = @"";
+	NSString *disableButtonKey = @"";
+	NSString *currentStatusText = @"";
+	switch(category) {
+		case LMImageManagerCategoryAlbumImages:
+			titleKey = @"AlbumImagesTitle";
+			bodyKey = @"OfYourAlbums";
+			break;
+		case LMImageManagerCategoryArtistImages:
+			titleKey = @"ArtistImagesTitle";
+			bodyKey = @"OfYourArtists";
+			break;
+	}
+	switch(currentStatus){
+		case LMImageManagerPermissionStatusNotDetermined:
+		case LMImageManagerPermissionStatusDenied:
+			youCanKey = @"YouCanTurnOnTo";
+			enableButtonKey = @"Enable";
+			disableButtonKey = @"KeepDisabled";
+			currentStatusText = NSLocalizedString(@"YouCurrentlyHaveThisFeatureOff", nil);
+			break;
+		case LMImageManagerPermissionStatusAuthorized:
+			youCanKey = @"YouCanTurnOffTo";
+			enableButtonKey = @"KeepEnabled";
+			disableButtonKey = @"ClearCacheAndDisable";
+			currentStatusText = [NSString stringWithFormat:NSLocalizedString(@"UsingXOfYourStorage", nil), (float)[imageManager sizeOfCacheForCategory:category]/1000000];
+			break;
+	}
+	alertView.title = NSLocalizedString(titleKey, nil);
+	
+	alertView.body = [NSString stringWithFormat:NSLocalizedString(@"SettingImagesAlertDescription", nil), NSLocalizedString(bodyKey, nil), currentStatusText, NSLocalizedString(youCanKey, nil)];
+	
+	alertView.alertOptionTitles = @[NSLocalizedString(disableButtonKey, nil), NSLocalizedString(enableButtonKey, nil)];
+	alertView.alertOptionColours = @[[LMColour darkLigniteRedColour], [LMColour ligniteRedColour]];
+	
+	[alertView launchOnView:self withCompletionHandler:^(NSUInteger optionSelected) {
+		NSLog(@"Selected %d", (int)optionSelected);
+		
+		if(optionSelected == 0){
+			[imageManager clearCacheForCategory:category];
+			
+			MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self animated:YES];
+			
+			hud.mode = MBProgressHUDModeCustomView;
+			UIImage *image = [[UIImage imageNamed:@"icon_checkmark.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+			hud.customView = [[UIImageView alloc] initWithImage:image];
+			hud.square = YES;
+			hud.label.text = NSLocalizedString(@"ImagesDeleted", nil);
+			
+			[hud hideAnimated:YES afterDelay:3.f];
+		}
+		
+		LMImageManagerPermissionStatus permissionStatus = LMImageManagerPermissionStatusNotDetermined;
+		switch(optionSelected){
+			case 0:
+				permissionStatus = LMImageManagerPermissionStatusDenied;
+				break;
+			case 1:
+				permissionStatus = LMImageManagerPermissionStatusAuthorized;
+				break;
+		}
+		
+		[imageManager setPermissionStatus:permissionStatus forCategory:category];
+		
+		[self.sectionTableView reloadData];
+	}];
+}
+
+- (void)tappedIndexPath:(NSIndexPath*)indexPath forSectionTableView:(LMSectionTableView*)sectionTableView {
+	
 	
 	switch(indexPath.section){
 		case 0:
@@ -150,32 +235,12 @@
 		case 1:
 			switch(indexPath.row){
 				case 0: {
-					LMAlertView *alertView = [LMAlertView newAutoLayoutView];
-					alertView.title = NSLocalizedString(@"ArtistImages", nil);
-					alertView.body = [NSString stringWithFormat:NSLocalizedString(@"SettingImagesAlertDescription", nil), NSLocalizedString(@"OfYourArtists", nil), (float)[imageManager sizeOfCacheForCategory:LMImageManagerCategoryArtistImages]/1000000];
-					alertView.alertOptionTitles = @[NSLocalizedString(@"ClearCacheAndDisable", nil), NSLocalizedString(@"KeepEnabled", nil)];
-					alertView.alertOptionColours = @[[LMColour darkLigniteRedColour], [LMColour ligniteRedColour]];
-					[alertView launchOnView:self withCompletionHandler:^(NSUInteger optionSelected) {
-						NSLog(@"Selected %d", (int)optionSelected);
-						if(optionSelected == 0){
-							[imageManager clearCacheForCategory:LMImageManagerCategoryArtistImages];
-							
-							MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self animated:YES];
-							
-							hud.mode = MBProgressHUDModeCustomView;
-							UIImage *image = [[UIImage imageNamed:@"icon_checkmark.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-							hud.customView = [[UIImageView alloc] initWithImage:image];
-							hud.square = YES;
-							hud.label.text = NSLocalizedString(@"ImagesDeleted", nil);
-							
-							[hud hideAnimated:YES afterDelay:3.f];
-						}
-					}];
-					
+					[self cacheAlertForCategory:LMImageManagerCategoryArtistImages];
 					NSLog(@"Artist alert");
 					break;
 				}
 				case 1: {
+					[self cacheAlertForCategory:LMImageManagerCategoryAlbumImages];
 					NSLog(@"Album alert");
 					break;
 				}
