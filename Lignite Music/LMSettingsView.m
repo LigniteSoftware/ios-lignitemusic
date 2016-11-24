@@ -14,6 +14,7 @@
 #import "LMImageManager.h"
 #import "LMAlertView.h"
 #import "LMColour.h"
+#import "LMSettings.h"
 
 @interface LMSettingsView()<LMSectionTableViewDelegate>
 
@@ -257,9 +258,33 @@
 	}
 }
 
+- (void)didChangeStatusBarSwitchView:(UISwitch*)switchView {
+	NSLog(@"switch %d", switchView.on);
+	
+	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+	[userDefaults setInteger:switchView.on forKey:LMSettingsKeyStatusBar];
+	[userDefaults synchronize];
+	
+	[self.coreViewController setNeedsStatusBarAppearanceUpdate];
+}
+
 - (id)accessoryViewForIndexPath:(NSIndexPath *)indexPath forSectionTableView:(LMSectionTableView *)sectionTableView {
 	if(indexPath.section == 0){
-		return [UISwitch newAutoLayoutView];
+		UISwitch *switchView = [UISwitch newAutoLayoutView];
+		
+		[switchView addTarget:self action:@selector(didChangeStatusBarSwitchView:) forControlEvents:UIControlEventValueChanged];
+		
+		NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+		
+		BOOL enabled = YES;
+		
+		if([userDefaults objectForKey:LMSettingsKeyStatusBar]){
+			enabled = [userDefaults integerForKey:LMSettingsKeyStatusBar];
+		}
+		
+		switchView.on = enabled;
+		
+		return switchView;
 	}
 	UIImageView *imageView = [UIImageView newAutoLayoutView];
 	imageView.image = [LMAppIcon imageForIcon:LMIconForwardArrow];

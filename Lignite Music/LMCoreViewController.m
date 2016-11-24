@@ -69,7 +69,15 @@
 }
 
 - (BOOL)prefersStatusBarHidden {
-	return YES;
+	BOOL settingEnabled = YES;
+	
+	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+	
+	if([userDefaults objectForKey:LMSettingsKeyStatusBar]){
+		settingEnabled = [[NSUserDefaults standardUserDefaults] integerForKey:LMSettingsKeyStatusBar];
+	}
+	
+	return !settingEnabled;
 }
 
 - (void)pause {
@@ -343,12 +351,13 @@ BOOL didAutomaticallyClose = NO;
 	
 	NSLog(@"Loading view");
 	
-	self.settingsView = [LMSettingsView newAutoLayoutView];
-	[self.view addSubview:self.settingsView];
+//	self.settingsView = [LMSettingsView newAutoLayoutView];
+//	self.settingsView.coreViewController = self;
+//	[self.view addSubview:self.settingsView];
+//	
+//	[self.settingsView autoPinEdgesToSuperviewEdges];
 	
-	[self.settingsView autoPinEdgesToSuperviewEdges];
-	
-	return;
+//	return;
 	
 //	LMImageManager *imageManager = [LMImageManager sharedImageManager];
 //	[imageManager launchPermissionRequestOnView:self.view
@@ -524,6 +533,17 @@ BOOL didAutomaticallyClose = NO;
 						NSLog(@"Loaded shit");
 						
 						[self.sourceSelector setup];
+						
+						UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
+						UIVisualEffectView *blurEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+						blurEffectView.translatesAutoresizingMaskIntoConstraints = NO;
+						
+						[self.view addSubview:blurEffectView];
+						
+						[blurEffectView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+						[blurEffectView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+						[blurEffectView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+						[blurEffectView autoSetDimension:ALDimensionHeight toSize:20];
 					});
 					break;
 				}

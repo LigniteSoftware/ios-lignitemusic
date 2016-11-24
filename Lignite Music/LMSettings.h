@@ -12,5 +12,6 @@
 
 #define LMSettingsKeyLastOpenedSource @"LMSettingsKeyLastOpenedSource"
 #define LMSettingsKeyOnboardingComplete @"LMSettingsKeyOnboardingComplete"
+#define LMSettingsKeyStatusBar @"LMSettingsKeyStatusBar"
 
 @end
