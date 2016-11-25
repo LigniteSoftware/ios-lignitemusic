@@ -78,6 +78,12 @@
 	
 	self.statusBarBlurView.hidden = !shown;
 	
+	if(shown && self.statusBarBlurViewHeightConstraint.constant < 1){
+		self.statusBarBlurViewHeightConstraint.constant = 20;
+		[self.view layoutIfNeeded];
+		NSLog(@"Shit");
+	}
+	
 	NSLog(@"Update %d", (!shown || (self.nowPlayingView != nil)));
 	
 	return (!shown || (self.nowPlayingView != nil));
