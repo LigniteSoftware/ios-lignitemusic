@@ -88,7 +88,8 @@
 }
 
 - (void)musicLibraryDidChange {
-	[self swipeRightClose];
+	//[self.controll];
+	NSLog(@"Library did change, windows error!");
 }
 
 - (UIImage*)imageWithIndex:(uint8_t)index forControlBarView:(LMControlBarView *)controlBar {
@@ -335,11 +336,10 @@
 	}
 }
 
-- (void)swipeRightClose {
-	[self.musicPlayer removeMusicDelegate:self];
+- (void)layoutSubviews {
+	[super layoutSubviews];
 	
-	LMBrowsingView *browsingView = (LMBrowsingView*)self.superview;
-	[browsingView dismissDetailView];
+	NSLog(@"Detail frame is %@", NSStringFromCGRect(self.frame));
 }
 
 - (void)setup {
@@ -368,10 +368,6 @@
 	[self.tableView autoPinEdgesToSuperviewEdges];
 	
 	[self.tableView reloadSubviewData];
-	
-	UISwipeGestureRecognizer *swipeRightGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeRightClose)];
-	swipeRightGesture.direction = UISwipeGestureRecognizerDirectionRight;
-	[self addGestureRecognizer:swipeRightGesture];
 	
 	[self.musicPlayer addMusicDelegate:self];
 }

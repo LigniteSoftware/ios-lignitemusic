@@ -28,6 +28,7 @@
 	
 	self.browsingView.musicTrackCollections = [[LMMusicPlayer sharedMusicPlayer] queryCollectionsForMusicType:LMMusicTypeGenres];
 	self.browsingView.musicType = LMMusicTypeGenres;
+	self.browsingView.rootViewController = self.coreViewController;
 	[self addSubview:self.browsingView];
 	
 	[self.browsingView autoPinEdgesToSuperviewEdges];

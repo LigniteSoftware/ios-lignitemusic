@@ -14,6 +14,7 @@
 #import "LMAppIcon.h"
 #import "LMBrowsingDetailView.h"
 #import "LMExtras.h"
+#import "LMBrowsingDetailViewController.h"
 
 @interface LMBrowsingView()<LMBigListEntryTableViewDelegate, LMMusicPlayerDelegate>
 
@@ -22,6 +23,8 @@
 @property LMMusicPlayer *musicPlayer;
 
 @property NSLayoutConstraint *topConstraint;
+
+@property LMBrowsingDetailViewController *browsingDetailViewController;
 
 @end
 
@@ -202,6 +205,16 @@
 	LMBrowsingDetailView *browsingDetailView = [LMBrowsingDetailView newAutoLayoutView];
 	browsingDetailView.musicTrackCollection = [self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex];
 	browsingDetailView.musicType = self.musicType;
+	
+	self.browsingDetailViewController = [LMBrowsingDetailViewController new];
+	self.browsingDetailViewController.browsingDetailView = browsingDetailView;
+	self.browsingDetailViewController.requiredHeight = self.frame.size.height;
+	
+	self.rootViewController.currentDetailViewController = self.browsingDetailViewController;
+	
+	[self.rootViewController showViewController:self.browsingDetailViewController sender:self];
+	
+	return;
 	[self addSubview:browsingDetailView];
 	
 	[browsingDetailView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self];
@@ -364,6 +377,19 @@
 
 - (float)contentSubviewFactorial:(BOOL)height forBigListEntry:(LMBigListEntry *)bigListEntry {
 	return height ? 0.4 : 0.8;
+}
+
+- (void)layoutSubviews {
+	[super layoutSubviews];
+	
+	if(self.browsingDetailViewController) {
+//		self.browsingDetailViewController
+		CGRect newFrame = self.browsingDetailViewController.view.frame;
+		newFrame.size.height = self.frame.size.height;
+		self.browsingDetailViewController.view.frame = newFrame;
+	}
+	
+	NSLog(@"Frame is %@", NSStringFromCGRect(self.frame));
 }
 
 - (void)setup {

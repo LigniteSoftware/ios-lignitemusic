@@ -11,6 +11,8 @@
 
 @interface LMPlaylistView : UIView
 
+@property LMCoreViewController *coreViewController;
+
 - (void)setup;
 - (void)reloadSourceSelectorInfo;
 

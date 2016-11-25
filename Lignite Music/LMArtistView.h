@@ -11,6 +11,8 @@
 
 @interface LMArtistView : UIView
 
+@property LMCoreViewController *coreViewController;
+
 - (void)reloadSourceSelectorInfo;
 - (void)setup;
 

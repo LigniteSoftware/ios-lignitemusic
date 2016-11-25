@@ -43,6 +43,7 @@
 		6A59A5181DE6D76E00B346AC /* icon_arrow_forward.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A59A5171DE6D76E00B346AC /* icon_arrow_forward.png */; };
 		6A59A51B1DE7B08B00B346AC /* LMSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A59A51A1DE7B08B00B346AC /* LMSettingsViewController.m */; };
 		6A59A51D1DE81A2000B346AC /* icon_pebbles.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A59A51C1DE81A2000B346AC /* icon_pebbles.png */; };
+		6A59A5201DE825C200B346AC /* LMBrowsingDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A59A51F1DE825C200B346AC /* LMBrowsingDetailViewController.m */; };
 		6A6351921D9D71D300498582 /* LMListEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A6351911D9D71D300498582 /* LMListEntry.m */; };
 		6A63D16F1DE41FD000EABA53 /* icon_checkmark.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A63D16E1DE41FD000EABA53 /* icon_checkmark.png */; };
 		6A6C186B1DDFFE7600D651E1 /* LMArtistView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A6C186A1DDFFE7600D651E1 /* LMArtistView.m */; };
@@ -190,6 +191,8 @@
 		6A59A5191DE7B08B00B346AC /* LMSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMSettingsViewController.h; sourceTree = "<group>"; };
 		6A59A51A1DE7B08B00B346AC /* LMSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMSettingsViewController.m; sourceTree = "<group>"; };
 		6A59A51C1DE81A2000B346AC /* icon_pebbles.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_pebbles.png; sourceTree = "<group>"; };
+		6A59A51E1DE825C200B346AC /* LMBrowsingDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMBrowsingDetailViewController.h; sourceTree = "<group>"; };
+		6A59A51F1DE825C200B346AC /* LMBrowsingDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMBrowsingDetailViewController.m; sourceTree = "<group>"; };
 		6A6351901D9D71D300498582 /* LMListEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMListEntry.h; sourceTree = "<group>"; };
 		6A6351911D9D71D300498582 /* LMListEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMListEntry.m; sourceTree = "<group>"; };
 		6A63D16E1DE41FD000EABA53 /* icon_checkmark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_checkmark.png; sourceTree = "<group>"; };
@@ -578,6 +581,8 @@
 				6A92F8231DD6D62A002045C2 /* LMBrowsingView.m */,
 				6A92F8251DD6DF00002045C2 /* LMBrowsingDetailView.h */,
 				6A92F8261DD6DF00002045C2 /* LMBrowsingDetailView.m */,
+				6A59A51E1DE825C200B346AC /* LMBrowsingDetailViewController.h */,
+				6A59A51F1DE825C200B346AC /* LMBrowsingDetailViewController.m */,
 			);
 			name = Core;
 			sourceTree = "<group>";
@@ -1046,6 +1051,7 @@
 				6AF9D5421DE251FD006368B6 /* LMSectionTableView.m in Sources */,
 				6AC77A091DC3B04B00BABBB3 /* LMBigListEntryTableView.m in Sources */,
 				6AD227031DA5990B0056695A /* LMMusicPlayer.m in Sources */,
+				6A59A5201DE825C200B346AC /* LMBrowsingDetailViewController.m in Sources */,
 				6AA445A01D5AD6AB004C6739 /* LMSettingsSwitch.m in Sources */,
 				6A32A9EF1DC6906D0056CC60 /* LMTriangleMaskView.m in Sources */,
 				6A7DF1241DB12C860077B979 /* LMTitleView.m in Sources */,

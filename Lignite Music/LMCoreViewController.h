@@ -8,7 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
+@class LMBrowsingDetailViewController;
+
 @interface LMCoreViewController : UIViewController
+
+@property LMBrowsingDetailViewController *currentDetailViewController;
 
 - (void)openNowPlayingView;
 - (void)closeNowPlayingView;

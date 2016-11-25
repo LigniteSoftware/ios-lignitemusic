@@ -26,6 +26,7 @@
 #import "LMImageManager.h"
 #import "LMSettingsView.h"
 #import "LMSettingsViewController.h"
+#import "LMBrowsingDetailViewController.h"
 
 @import SDWebImage;
 @import StoreKit;
@@ -135,7 +136,7 @@
 							[self.view layoutIfNeeded];
 						} completion:nil];
 	
-	[self.view layoutIfNeeded];
+	[self.navigationController.view layoutIfNeeded];
 	
 	[self attachBrowsingAssistantToView:self.view];
 	
@@ -143,7 +144,7 @@
 	
 	[UIView animateWithDuration:0.25 animations:^{
 		[self setNeedsStatusBarAppearanceUpdate];
-		[self.view layoutIfNeeded];
+		[self.navigationController.view layoutIfNeeded];
 	}];
 }
 
@@ -157,13 +158,13 @@
 						} completion:^(BOOL finished) {
 							self.nowPlayingView = nil;
 							
-							[self.view layoutIfNeeded];
+							[self.navigationController.view layoutIfNeeded];
 							
 							self.statusBarBlurViewHeightConstraint.constant = 20;
 							
 							[UIView animateWithDuration:0.25 animations:^{
 								[self setNeedsStatusBarAppearanceUpdate];
-								[self.view layoutIfNeeded];
+								[self.navigationController.view layoutIfNeeded];
 							}];
 							
 							[self attachBrowsingAssistantToView:self.navigationController.view];
@@ -271,9 +272,17 @@ BOOL didAutomaticallyClose = NO;
 
 - (void)viewDidAppear:(BOOL)animated {
 	[self attachBrowsingAssistantToView:self.navigationController.view];
+	
+	self.currentDetailViewController = nil;
 }
 
 - (void)heightRequiredChangedTo:(float)heightRequired forBrowsingView:(LMBrowsingAssistantView *)browsingView {
+	NSLog(@"Height required changed to %f", heightRequired);
+	
+	if(self.currentDetailViewController){
+		[(LMBrowsingDetailViewController*)self.currentDetailViewController setRequiredHeight:(WINDOW_FRAME.size.height-heightRequired) + 10];;
+	}
+	
 	if(!self.browsingAssistantHeightConstraint){
 		self.browsingAssistantHeightConstraint = [self.browsingAssistant autoSetDimension:ALDimensionHeight toSize:heightRequired];
 		
@@ -487,6 +496,7 @@ BOOL didAutomaticallyClose = NO;
 						//Album View
 						
 						self.albumView = [LMAlbumView newAutoLayoutView];
+						self.albumView.coreViewController = self;
 						[self.view addSubview:self.albumView];
 
 						[self.albumView autoPinEdgeToSuperviewEdge:ALEdgeTop];
@@ -513,6 +523,7 @@ BOOL didAutomaticallyClose = NO;
 						
 						self.playlistView = [LMPlaylistView newAutoLayoutView];
 						self.playlistView.backgroundColor = [UIColor whiteColor];
+						self.playlistView.coreViewController = self;
 						[self.view addSubview:self.playlistView];
 						
 						[self.playlistView autoPinEdgeToSuperviewEdge:ALEdgeTop];
@@ -526,6 +537,7 @@ BOOL didAutomaticallyClose = NO;
 						
 						self.genreView = [LMGenreView newAutoLayoutView];
 						self.genreView.backgroundColor = [UIColor whiteColor];
+						self.genreView.coreViewController = self;
 						[self.view addSubview:self.genreView];
 						
 						[self.genreView autoPinEdgeToSuperviewEdge:ALEdgeTop];
@@ -538,6 +550,7 @@ BOOL didAutomaticallyClose = NO;
 						
 						self.artistView = [LMArtistView newAutoLayoutView];
 						self.artistView.backgroundColor = [UIColor whiteColor];
+						self.artistView.coreViewController = self;
 						[self.view addSubview:self.artistView];
 						
 						[self.artistView autoPinEdgeToSuperviewEdge:ALEdgeTop];
@@ -569,17 +582,17 @@ BOOL didAutomaticallyClose = NO;
 														 target:self selector:@selector(showWhatsPoppin) userInfo:nil repeats:NO];
 						
 						NSLog(@"Loaded shit");
-						
+					
 						UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
 						self.statusBarBlurView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
 						self.statusBarBlurView.translatesAutoresizingMaskIntoConstraints = NO;
 						
-						[self.view addSubview:self.statusBarBlurView];
+						[self.navigationController.view addSubview:self.statusBarBlurView];
 						
 						[self.statusBarBlurView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 						[self.statusBarBlurView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 						[self.statusBarBlurView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-						self.statusBarBlurViewHeightConstraint = [self.statusBarBlurView autoSetDimension:ALDimensionHeight toSize:20];
+						self.statusBarBlurViewHeightConstraint = [self.statusBarBlurView autoSetDimension:ALDimensionHeight toSize:20*[LMSettings shouldShowStatusBar]];
 					});
 					break;
 				}
