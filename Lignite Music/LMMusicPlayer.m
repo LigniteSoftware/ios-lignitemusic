@@ -509,7 +509,7 @@ BOOL shuffleForDebug = NO;
 
 - (NSArray<LMMusicTrackCollection*>*)queryCollectionsForMusicType:(LMMusicType)musicType {
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer || self.playerType == LMMusicPlayerTypeAppleMusic){
-		NSTimeInterval startingTime = [[NSDate date] timeIntervalSince1970];
+//		NSTimeInterval startingTime = [[NSDate date] timeIntervalSince1970];
 //		NSLog(@"Querying items for LMMusicType %d...", musicType);
 		
 		MPMediaQuery *query = nil;
@@ -568,14 +568,14 @@ BOOL shuffleForDebug = NO;
 			[musicTracks addObject:trackCollection];
 		}
 		
-		NSTimeInterval endingTime = [[NSDate date] timeIntervalSince1970];
+//		NSTimeInterval endingTime = [[NSDate date] timeIntervalSince1970];
 		
 		if(shuffleForDebug){
 			NSLog(@"--- Warning: Query is being automatically shuffled. ---");
 			[self shuffleArray:musicTracks];
 		}
 		
-		NSLog(@"[LMMusicPlayer]: Took %f seconds to complete query.", endingTime-startingTime);
+//		NSLog(@"[LMMusicPlayer]: Took %f seconds to complete query.", endingTime-startingTime);
 		
 		return musicTracks;
 	}

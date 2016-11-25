@@ -163,9 +163,7 @@
 	}
 }
 
-- (void)amountOfObjectsRequiredChangedTo:(NSUInteger)amountOfObjects forTableView:(LMTableView*)tableView {
-	NSLog(@"I need %lu objects to survive!", (unsigned long)amountOfObjects);
-	
+- (void)amountOfObjectsRequiredChangedTo:(NSUInteger)amountOfObjects forTableView:(LMTableView*)tableView {	
 	for(int i = 0; i < self.bigListEntriesArray.count; i++){
 		LMBigListEntry *bigListEntry = [self.bigListEntriesArray objectAtIndex:i];
 		[bigListEntry removeFromSuperview];

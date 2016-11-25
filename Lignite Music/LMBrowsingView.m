@@ -388,8 +388,6 @@
 		newFrame.size.height = self.frame.size.height;
 		self.browsingDetailViewController.view.frame = newFrame;
 	}
-	
-	NSLog(@"Frame is %@", NSStringFromCGRect(self.frame));
 }
 
 - (void)setup {

@@ -81,10 +81,7 @@
 	if(shown && self.statusBarBlurViewHeightConstraint.constant < 1){
 		self.statusBarBlurViewHeightConstraint.constant = 20;
 		[self.view layoutIfNeeded];
-		NSLog(@"Shit");
 	}
-	
-	NSLog(@"Update %d", (!shown || (self.nowPlayingView != nil)));
 	
 	return (!shown || (self.nowPlayingView != nil));
 }
@@ -199,7 +196,6 @@ BOOL didAutomaticallyClose = NO;
 			break;
 		}
 	}
-	NSLog(@"The index is %d", indexOfSource);
 	
 	if(!source.shouldNotSelect){
 		[self.currentSource setHidden:YES];
@@ -283,8 +279,6 @@ BOOL didAutomaticallyClose = NO;
 }
 
 - (void)heightRequiredChangedTo:(float)heightRequired forBrowsingView:(LMBrowsingAssistantView *)browsingView {
-	NSLog(@"Height required changed to %f", heightRequired);
-	
 	if(self.currentDetailViewController){
 		[(LMBrowsingDetailViewController*)self.currentDetailViewController setRequiredHeight:(WINDOW_FRAME.size.height-heightRequired) + 10];;
 	}
@@ -340,11 +334,9 @@ BOOL didAutomaticallyClose = NO;
 	
 	NSString *lastAppBuildString = @"0";
 	if([userDefaults objectForKey:@"LastVersionBuildString"]){
-		NSLog(@"Did get %@ from storage", [userDefaults objectForKey:@"LastVersionBuildString"]);
 		lastAppBuildString = [userDefaults objectForKey:@"LastVersionBuildString"];
 	}
 	
-	NSLog(@"Current app %@ last app %@", currentAppBuildString, lastAppBuildString);
 	if(![currentAppBuildString isEqualToString:lastAppBuildString]){
 		NSLog(@"Spooked Super!");
 		
@@ -586,9 +578,7 @@ BOOL didAutomaticallyClose = NO;
 						
 						[NSTimer scheduledTimerWithTimeInterval:1.0
 														 target:self selector:@selector(showWhatsPoppin) userInfo:nil repeats:NO];
-						
-						NSLog(@"Loaded shit");
-					
+											
 						UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
 						self.statusBarBlurView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
 						self.statusBarBlurView.translatesAutoresizingMaskIntoConstraints = NO;

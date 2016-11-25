@@ -20,6 +20,8 @@
 @property BOOL highlighted;
 @property BOOL imageIsInverted;
 
+@property BOOL setupConstraints;
+
 @end
 
 @implementation LMListEntry
@@ -29,7 +31,7 @@
 	NSString *title = [self.delegate titleForListEntry:self];
 	NSString *subtitle = [self.delegate subtitleForListEntry:self];
 	self.titleLabel.text = title;
-	self.subtitleLabel.text = subtitle;
+	self.subtitleLabel.text = subtitle ? subtitle : @"";
 	self.iconView.image = self.imageIsInverted ? [LMAppIcon invertImage:icon] : icon;
 }
 
@@ -64,6 +66,20 @@
 }
 
 - (void)setup {
+	
+}
+
+- (void)layoutSubviews {
+	[super layoutSubviews];
+	
+	if(self.setupConstraints){
+		return;
+	}
+	
+//	self.backgroundColor = [UIColor orangeColor];
+	
+	self.setupConstraints = YES;
+	
 	if(self.iconInsetMultiplier < 0.01){
 		self.iconInsetMultiplier = 0.8;
 	}
@@ -101,8 +117,8 @@
 		[self.iconBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.contentView];
 		[self.iconBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.contentView withMultiplier:self.iconPaddingMultiplier];
 		
-		self.iconView = [[UIImageView alloc]initWithImage:icon];
-		self.iconView.translatesAutoresizingMaskIntoConstraints = NO;
+		self.iconView = [UIImageView newAutoLayoutView];
+		self.iconView.image = icon;
 		[self.iconBackgroundView addSubview:self.iconView];
 		
 		[self.iconView autoCenterInSuperview];
@@ -112,11 +128,10 @@
 	
 	NSMutableArray *titleConstraints = [[NSMutableArray alloc]init];
 	
-	self.titleLabel = [[LMLabel alloc]init];
+	self.titleLabel = [LMLabel newAutoLayoutView];
 	self.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:50.0f];
 	self.titleLabel.text = title;
 	self.titleLabel.textColor = [UIColor blackColor];
-	self.titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
 	if(title){
 		[self.contentView addSubview:self.titleLabel];
 		
@@ -131,11 +146,10 @@
 		[titleConstraints addObject:centerConstraint];
 	}
 	
-	self.subtitleLabel = [[LMLabel alloc]init];
+	self.subtitleLabel = [LMLabel newAutoLayoutView];
 	self.subtitleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:40.0f];
-	self.subtitleLabel.text = subtitle;
+	self.subtitleLabel.text = subtitle ? subtitle : @"";
 	self.subtitleLabel.textColor = [UIColor blackColor];
-	self.subtitleLabel.translatesAutoresizingMaskIntoConstraints = NO;
 	if(subtitle){
 		[self.contentView addSubview:self.subtitleLabel];
 		

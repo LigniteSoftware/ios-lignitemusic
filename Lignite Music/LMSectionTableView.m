@@ -57,7 +57,7 @@
 	if(entry.indexPath){
 		return [self.contentsDelegate subtitleForIndexPath:entry.indexPath forSectionTableView:self];
 	}
-	return @"Unnamned subtitle";
+	return nil;
 }
 
 - (UIImage*)iconForListEntry:(LMListEntry*)entry {
@@ -98,9 +98,9 @@
 	LMListEntry *subview = [self.listEntryArray objectAtIndex:rawRow % self.listEntryArray.count];
 	subview.indexPath = indexPath;
 	[subview reloadContents];
-	
+
 	cell.subview = subview;
-	
+
 	if(!cell.didSetupConstraints){
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
 		[cell setNeedsUpdateConstraints];
@@ -108,45 +108,35 @@
 		
 		if([self.contentsDelegate respondsToSelector:@selector(accessoryViewForIndexPath:forSectionTableView:)]){
 			id accessorySubview = [self.contentsDelegate accessoryViewForIndexPath:indexPath forSectionTableView:self];
-			NSString *accessorySubviewClass = [[accessorySubview class] description];
-			BOOL shouldHangRight = ![accessorySubviewClass isEqualToString:@"UISwitch"];
 			
-			UIView *accessoryView = [UIView newAutoLayoutView];
-//			accessoryView.backgroundColor = [LMColour randomColour];
-			[cell.contentView addSubview:accessoryView];
-			
-			[accessoryView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:subview.contentView withOffset:shouldHangRight ? 10 : 0];
-			[accessoryView autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
-			[accessoryView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:cell.contentView withMultiplier:(1.0/2.0)];
-			[accessoryView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:cell.contentView withMultiplier:(1.0/2.0)];
-			
-			[accessoryView addSubview:accessorySubview];
-			
-			if([accessorySubviewClass isEqualToString:@"UISwitch"]){
-				[accessorySubview autoCenterInSuperview];
-			}
-			else if([accessorySubviewClass isEqualToString:@"UIImageView"]){
-				[accessorySubview autoCenterInSuperview];
-				[accessorySubview autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:accessoryView withMultiplier:(1.0/2.0)];
-				[accessorySubview autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:accessoryView withMultiplier:(1.0/2.0)];
-			}
-			else{
-				NSLog(@"[%@]: Unknown class %@ for accessory.", self.title, accessorySubviewClass);
+			if(accessorySubview){
+				NSString *accessorySubviewClass = [[accessorySubview class] description];
+				BOOL shouldHangRight = ![accessorySubviewClass isEqualToString:@"UISwitch"];
+				
+				UIView *accessoryView = [UIView newAutoLayoutView];
+//				accessoryView.backgroundColor = [LMColour randomColour];
+				[cell.contentView addSubview:accessoryView];
+				
+				[accessoryView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:cell.contentView withOffset:shouldHangRight ? -10 : -10];
+				[accessoryView autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+				[accessoryView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:cell.contentView withMultiplier:(1.0/2.0)];
+				[accessoryView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:cell.contentView withMultiplier:(1.0/2.0)];
+				
+				[accessoryView addSubview:accessorySubview];
+				
+				if([accessorySubviewClass isEqualToString:@"UISwitch"]){
+					[accessorySubview autoCenterInSuperview];
+				}
+				else if([accessorySubviewClass isEqualToString:@"UIImageView"]){
+					[accessorySubview autoCenterInSuperview];
+					[accessorySubview autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:accessoryView withMultiplier:(1.0/2.0)];
+					[accessorySubview autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:accessoryView withMultiplier:(1.0/2.0)];
+				}
+				else{
+					NSLog(@"[%@]: Unknown class %@ for accessory.", self.title, accessorySubviewClass);
+				}
 			}
 		}
-		
-//		UIImageView *arrowView = [UIImageView newAutoLayoutView];
-//		arrowView.image = [UIImage imageNamed:@"icon_arrow_forward.png"];
-//		[accessoryView addSubview:arrowView];
-//		
-//		[arrowView autoCenterInSuperview];
-//		[arrowView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:accessoryView withMultiplier:(1.0/2.0)];
-//		[arrowView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:accessoryView withMultiplier:(1.0/2.0)];
-		
-//		UISwitch *testSwitch = [UISwitch newAutoLayoutView];
-//		[accessoryView addSubview:testSwitch];
-//		
-//		[testSwitch autoCenterInSuperview];
 	}
 	
 	return cell;
@@ -201,8 +191,6 @@
 		listEntry.contentViewHeightMultiplier = 0.875;
 		
 		[self.listEntryArray addObject:listEntry];
-		
-		[listEntry setup];
 	}
 	
 	int totalRows = (int)[self rawIndexForIndexPath:[NSIndexPath indexPathForRow:[self.contentsDelegate numberOfRowsForSection:self.totalNumberOfSections-1 forSectionTableView:self] inSection:self.totalNumberOfSections-1]];

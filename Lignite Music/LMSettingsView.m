@@ -15,6 +15,7 @@
 #import "LMAlertView.h"
 #import "LMColour.h"
 #import "LMSettings.h"
+#import "LMPebbleManager.h"
 
 @interface LMSettingsView()<LMSectionTableViewDelegate>
 
@@ -33,6 +34,8 @@
 		case 1:
 			return [LMAppIcon imageForIcon:LMIconCloudDownload];
 		case 2:
+			return [LMAppIcon imageForIcon:LMIconPebbles];
+		case 3:
 			return [LMAppIcon imageForIcon:LMIconAbout];
 	}
 	return [LMAppIcon imageForIcon:LMIconBug];
@@ -45,6 +48,8 @@
 		case 1:
 			return NSLocalizedString(@"ImageDownloads", nil);
 		case 2:
+			return NSLocalizedString(@"Pebble", nil);
+		case 3:
 			return NSLocalizedString(@"About", nil);
 	}
 	return @"Unknown section";
@@ -57,6 +62,8 @@
 		case 1:
 			return 2;
 		case 2:
+			return 2;
+		case 3:
 			return 1;
 	}
 	return 0;
@@ -81,6 +88,14 @@
 			}
 			break;
 		case 2:
+			switch(indexPath.row){
+				case 0:
+					return NSLocalizedString(@"InstallPebbleApp", nil);
+				case 1:
+					return NSLocalizedString(@"PebbleSettings", nil);
+			}
+			break;
+		case 3:
 			switch(indexPath.row){
 				case 0:
 					return NSLocalizedString(@"Credits", nil);
@@ -129,6 +144,16 @@
 			}
 			break;
 		case 2:
+			switch(indexPath.row){
+				case 0: {
+					return nil;
+				}
+				case 1: {
+					return nil;
+				}
+			}
+			break;
+		case 3:
 			switch(indexPath.row){
 				case 0:
 					return NSLocalizedString(@"CreditsMore", nil);
@@ -250,6 +275,23 @@
 			break;
 		case 2:
 			switch(indexPath.row){
+				case 0: {
+					NSURL *pebbleURL = [NSURL URLWithString:@"pebble://appstore/579c3ee922f599cf7e0001ea"];
+					NSURL *pebbleWebURL = [NSURL URLWithString:@"http://apps.getpebble.com/en_US/application/579c3ee922f599cf7e0001ea"];
+					BOOL canOpenPebbleURL = [[UIApplication sharedApplication] canOpenURL:pebbleURL];
+					[[UIApplication sharedApplication] openURL:canOpenPebbleURL ? pebbleURL : pebbleWebURL];
+					break;
+				}
+				case 1:{
+					NSLog(@"Pebble settings");
+					LMPebbleManager *pebbleManager = [LMPebbleManager sharedPebbleManager];
+					[pebbleManager showSettings];
+					break;
+				}
+			}
+			break;
+		case 3:
+			switch(indexPath.row){
 				case 0:
 					NSLog(@"Credits");
 					break;
@@ -291,16 +333,17 @@
 }
 
 - (void)layoutSubviews {
-	NSLog(@"Layout shit");
 	if(!self.hasPreparedSubviews){
 		self.hasPreparedSubviews = YES;
 		
 		self.sectionTableView = [LMSectionTableView newAutoLayoutView];
 		self.sectionTableView.contentsDelegate = self;
-		self.sectionTableView.totalNumberOfSections = 3;
+		self.sectionTableView.totalNumberOfSections = 4;
 		self.sectionTableView.title = NSLocalizedString(@"AppSettings", nil);
 		[self addSubview:self.sectionTableView];
 		
+		NSLog(@"section %@", self.sectionTableView);
+
 		[self.sectionTableView autoPinEdgesToSuperviewEdges];
 		
 		[self.sectionTableView setup];

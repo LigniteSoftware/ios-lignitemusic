@@ -28,6 +28,8 @@
  
  4. The following words/terms should *never* be translated into your language for legal reasons:
 	"Lignite Music", "Lignite", "Pebble", "Apple Music", "Spotify"
+	
+	If you need to clarify the above in your language, for example "Pebble" needs to be the equivalent of "Pebble Smartwatch" in your language to make sure the idea is clear, it's ok to add words for clarity if necessary and you don't change the legal name. To demonstrate as an example if you needed this, in simplified Chinese, you would write "Pebble 智能手表".
  
  Thanks, and have fun!
  */
@@ -87,7 +89,9 @@
 
 /* Other settings related */
 "AppSettings" = "App Settings";
-"PebbleSettings" = "Pebble Settings";
+
+"Pebble" = "Pebble"; //Pebble smartwatch. See point 4 of the top of this file for details on legal naming schemes.
+"PebbleSettings" = "Pebble settings";
 
 "LookAndFeel" = "Look and Feel";
 "Colour" = "Colour";
@@ -97,7 +101,7 @@
 
 "About" = "About";
 "Credits" = "Credits";
-"CreditsMore" = "Tap here for credits";
+"CreditsMore" = "Created by Edwin Finch & Philipp Weder";
 
 /*
  
@@ -172,7 +176,7 @@
 "ArtistLabel" = "Artist label"; /* For Pebble. Shows the text that displays the artist on the now playing screen. */
 "PebbleStyleControls" = "Pebble-style controls"; /* For Pebble, can you tell? This one makes the controls (ie. play/pause) emulate the stock Pebble music app controls instead of Lignite-style. */
 "DisplayTime" = "Show the time"; /* For Pebble. Shows the time on the now playing screen. */
-"InstallPebbleApp" = "Install Pebble App"; /* Sends the user to the Pebble appstore. */
+"InstallPebbleApp" = "Install Pebble app"; /* Sends the user to the Pebble appstore. */
 "SendFeedback" = "Send Feedback/Report Bug";
 "ReplayTutorial" = "Replay tutorial";
 "Functionality" = "Functionality"; /* Functionality related settings like battery saver mode. */

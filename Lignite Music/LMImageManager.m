@@ -182,7 +182,7 @@
 - (void)imageNeedsDownloadingForMusicTrack:(LMMusicTrack*)representativeItem forCategory:(LMImageManagerCategory)category completion:(void(^)(BOOL needsDownloading))completionHandler {
 	
 	NSBlockOperation *albumArtOperation = [NSBlockOperation blockOperationWithBlock:^{
-		NSLog(@"Album art operation %@", albumArtOperation);
+		//TODO: Fix this not being cancelled because of weak reference
 		if(albumArtOperation.isCancelled){
 			return;
 		}

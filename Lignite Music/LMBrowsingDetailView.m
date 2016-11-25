@@ -336,12 +336,6 @@
 	}
 }
 
-- (void)layoutSubviews {
-	[super layoutSubviews];
-	
-	NSLog(@"Detail frame is %@", NSStringFromCGRect(self.frame));
-}
-
 - (void)setup {
 	self.currentlyHighlighted = -1;
 	

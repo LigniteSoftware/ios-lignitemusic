@@ -174,17 +174,6 @@
 	[self.musicPlayer autoBackThrough];
 }
 
-- (void)layoutSubviews {
-	[super layoutSubviews];
-	
-//	if(self.frame.origin.x < 0){
-//		NSLog(@"Correcting.");
-//		self.frame = CGRectMake(0, self.frame.origin.y, self.frame.size.width, self.frame.size.height);
-//	}
-	
-	NSLog(@"New frame %@", NSStringFromCGRect(self.frame));
-}
-
 - (void)setup {
 	self.albumArtImageBackgroundView = [UIView newAutoLayoutView];
 	[self addSubview:self.albumArtImageBackgroundView];
