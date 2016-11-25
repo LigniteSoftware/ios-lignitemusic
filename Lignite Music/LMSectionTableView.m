@@ -111,20 +111,22 @@
 			
 			if(accessorySubview){
 				NSString *accessorySubviewClass = [[accessorySubview class] description];
-				BOOL shouldHangRight = ![accessorySubviewClass isEqualToString:@"UISwitch"];
+//				BOOL shouldHangRight = ![accessorySubviewClass isEqualToString:@"UISwitch"];
 				
 				UIView *accessoryView = [UIView newAutoLayoutView];
 //				accessoryView.backgroundColor = [LMColour randomColour];
 				[cell.contentView addSubview:accessoryView];
 				
-				[accessoryView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:cell.contentView withOffset:shouldHangRight ? -10 : -10];
+				float padding = 0.06*WINDOW_FRAME.size.width;
+				
+				[accessoryView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:cell.contentView withOffset:-padding];
 				[accessoryView autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
 				[accessoryView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:cell.contentView withMultiplier:(1.0/2.0)];
 				[accessoryView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:cell.contentView withMultiplier:(1.0/2.0)];
 				
 				[accessoryView addSubview:accessorySubview];
 				
-				if([accessorySubviewClass isEqualToString:@"UISwitch"]){
+				if([accessorySubviewClass isEqualToString:@"UISwitch"] || [accessorySubviewClass isEqualToString:@"LMSettingsSwitch"]){
 					[accessorySubview autoCenterInSuperview];
 				}
 				else if([accessorySubviewClass isEqualToString:@"UIImageView"]){

@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "LMPebbleMessageQueue.h"
 
 @class LMMusicPlayer;
 
@@ -81,6 +82,11 @@ typedef enum {
 
 #define MAX_LABEL_LENGTH 20
 #define MAX_RESPONSE_COUNT 90
+
+/**
+ The message queue for communicating with Pebble.
+ */
+@property LMPebbleMessageQueue *messageQueue;
 
 /**
  The shared Pebble manager.

@@ -12,16 +12,14 @@
 #import "LMNowPlayingViewController.h"
 #import "LMPebbleImage.h"
 #import "LMPebbleManager.h"
-#import "LMPebbleMessageQueue.h"
 #import "LMMusicPlayer.h"
 #import "LMNowPlayingView.h"
+#import "LMPebbleSettingsViewController.h"
 
 @interface LMPebbleManager()<PBPebbleCentralDelegate, LMMusicPlayerDelegate>
 
 @property (weak, nonatomic) PBWatch *pebbleWatch;
 @property (weak, nonatomic) PBPebbleCentral *central;
-
-@property LMPebbleMessageQueue *messageQueue;
 
 //Watch related info
 @property WatchInfoModel watchModel;
@@ -519,7 +517,7 @@
 	}];
 	
 	if(self.rootSettingsViewController){
-		[self.rootSettingsViewController.tableView reloadData];
+//		[self.rootSettingsViewController.tableView reloadData];
 	}
 }
 
@@ -530,7 +528,7 @@
 	}
 	
 	if(self.rootSettingsViewController){
-		[self.rootSettingsViewController.tableView reloadData];
+//		[self.rootSettingsViewController.tableView reloadData];
 	}
 }
 
@@ -573,9 +571,9 @@
 
 	[self.volumeViewSlider addTarget:self action:@selector(handleVolumeChanged:) forControlEvents:UIControlEventValueChanged];
 	
-	UINavigationController *settingsController = [viewControllerToAttachTo.storyboard instantiateViewControllerWithIdentifier:@"PebbleSettingsController"];
-	self.rootSettingsViewController = [settingsController.viewControllers firstObject];
-	self.rootSettingsViewController.messageQueue = self.messageQueue;
+//	UINavigationController *settingsController = [viewControllerToAttachTo.storyboard instantiateViewControllerWithIdentifier:@"PebbleSettingsController"];
+//	self.rootSettingsViewController = [settingsController.viewControllers firstObject];
+//	self.rootSettingsViewController.messageQueue = self.messageQueue;
 //	self.rootSettingsViewController.navigationController.navigationBarHidden = NO;
 	
 	self.rootViewController = viewControllerToAttachTo;
@@ -584,10 +582,13 @@
 - (void)showSettings {
 	if(self.rootViewController){
 //		[self.rootViewController showDetailViewController:self.rootSettingsViewController sender:self.rootViewController];
-		UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:self.rootSettingsViewController];
-		[self.rootViewController presentViewController:navController animated:YES completion:^{
-			NSLog(@"Done");
-		}];
+//		UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:self.rootSettingsViewController];
+//		[self.rootViewController presentViewController:navController animated:YES completion:^{
+//			NSLog(@"Done");
+//		}];
+		
+		LMPebbleSettingsViewController *settingsViewController = [LMPebbleSettingsViewController new];
+		[self.rootViewController.navigationController showViewController:settingsViewController sender:self];
 	}
 	else{
 		NSLog(@"The root view controller no longer exists! Can't show Pebble settings.");

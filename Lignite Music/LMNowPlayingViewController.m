@@ -348,7 +348,7 @@
 	
 	if(self.rootSettingsViewController){
 		self.rootSettingsViewController.messageQueue = self.messageQueue;
-		[self.rootSettingsViewController.tableView reloadData];
+//		[self.rootSettingsViewController.tableView reloadData];
 	}
 }
 
@@ -361,7 +361,7 @@
 	
 	if(self.rootSettingsViewController){
 		self.rootSettingsViewController.messageQueue = nil;
-		[self.rootSettingsViewController.tableView reloadData];
+//		[self.rootSettingsViewController.tableView reloadData];
 	}
 }
 

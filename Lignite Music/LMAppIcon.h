@@ -33,7 +33,8 @@ typedef enum {
 	LMIconAbout,
 	LMIconCloudDownload,
 	LMIconForwardArrow,
-	LMIconPebbles
+	LMIconPebbles,
+	LMIconFunctionality
 } LMIcon;
 
 /**

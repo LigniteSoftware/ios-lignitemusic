@@ -56,6 +56,8 @@
 			return @"icon_arrow_forward.png";
 		case LMIconPebbles:
 			return @"icon_pebbles.png";
+		case LMIconFunctionality:
+			return @"icon_functionality.png";
 	}
 }
 

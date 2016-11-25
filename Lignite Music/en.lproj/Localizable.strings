@@ -103,6 +103,12 @@
 "Credits" = "Credits";
 "CreditsMore" = "Created by Edwin Finch & Philipp Weder";
 
+/* Pebble settings */
+"BatterySaverDescription" = "Reduces screen refesh";
+"ArtistLabelDescription" = "Shows the artist's name in now playing";
+"PebbleStyleControlsDescription" = "Mimick Pebble's music player controls";
+"DisplayTimeDescription" = "Show the time in now playing";
+
 /*
  
  END NEW STRINGS

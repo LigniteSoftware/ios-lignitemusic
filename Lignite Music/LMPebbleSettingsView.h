@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "LMPebbleMessageQueue.h"
 
-@interface LMPebbleSettingsView : UITableViewController
+@interface LMPebbleSettingsView : UIView
 
 @property LMPebbleMessageQueue *messageQueue;
 

@@ -282,7 +282,7 @@
 					[[UIApplication sharedApplication] openURL:canOpenPebbleURL ? pebbleURL : pebbleWebURL];
 					break;
 				}
-				case 1:{
+				case 1: {
 					NSLog(@"Pebble settings");
 					LMPebbleManager *pebbleManager = [LMPebbleManager sharedPebbleManager];
 					[pebbleManager showSettings];
@@ -302,7 +302,7 @@
 
 - (void)didChangeStatusBarSwitchView:(UISwitch*)switchView {	
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-	[userDefaults setInteger:switchView.on forKey:LMSettingsKeyStatusBar];
+	[userDefaults setBool:switchView.on forKey:LMSettingsKeyStatusBar];
 	[userDefaults synchronize];
 	
 	[self.coreViewController setNeedsStatusBarAppearanceUpdate];
