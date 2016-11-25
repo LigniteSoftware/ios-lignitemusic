@@ -239,6 +239,11 @@
 - (void)clickedButton:(LMButton *)button {
 	NSLog(@"Spoooooked");
 	[self open];
+//	[self openSourceSelector];
+}
+
+- (void)layoutSubviews {
+	[super layoutSubviews];
 }
 
 - (void)setup {
@@ -406,7 +411,8 @@
 	[self addSubview:self.miniPlayerView];
 	
 	[self.miniPlayerView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.selectorBackgroundView];
-	[self.miniPlayerView autoSetDimension:ALDimensionWidth toSize:WINDOW_FRAME.size.width];
+	[self.miniPlayerView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+	[self.miniPlayerView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 	[self.miniPlayerView autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height/5];
 	
 	[self.miniPlayerView setup];

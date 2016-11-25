@@ -105,7 +105,6 @@
 								cloudServiceController = [SKCloudServiceController new];
 								
 								[cloudServiceController requestCapabilitiesWithCompletionHandler:^(SKCloudServiceCapability capabilities, NSError * _Nullable error) {
-									NSLog(@"%lu (%d, %d, %d, %d) %@", (unsigned long)capabilities, SKCloudServiceCapabilityNone, SKCloudServiceCapabilityMusicCatalogPlayback, SKCloudServiceCapabilityMusicCatalogSubscriptionEligible, SKCloudServiceCapabilityAddToCloudMusicLibrary,  error ? error : @"(No error)");
 									
 									dispatch_async(dispatch_get_main_queue(), ^{
 										if (capabilities >= SKCloudServiceCapabilityAddToCloudMusicLibrary){

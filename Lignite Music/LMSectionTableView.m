@@ -157,9 +157,9 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-//	if(section == 0 && true == false){
-//		return WINDOW_FRAME.size.height/10 + WINDOW_FRAME.size.height/14;
-//	}
+	if(section == 0){
+		return WINDOW_FRAME.size.height/10 + WINDOW_FRAME.size.height/30;
+	}
 	return WINDOW_FRAME.size.height/10;
 }
 
@@ -184,10 +184,10 @@
 	view.sectionHeaderTitle = [self.contentsDelegate titleAtSection:section forSectionTableView:self];
 	view.icon = [self.contentsDelegate iconAtSection:section forSectionTableView:self];
 	
-//	if(section == 0 && true == false){
-//		view.heightFactorial = (WINDOW_FRAME.size.height/10) / frame.size.height;
-//		view.title = self.title;
-//	}
+	if(section == 0){
+		view.heightFactorial = (WINDOW_FRAME.size.height/10) / frame.size.height;
+		view.title = @""; //self.title;
+	}
 	
 	return view;
 }

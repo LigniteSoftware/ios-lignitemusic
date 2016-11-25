@@ -10,4 +10,16 @@
 
 @implementation LMSettings
 
++ (BOOL)shouldShowStatusBar {
+	BOOL settingEnabled = YES;
+	
+	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+	
+	if([userDefaults objectForKey:LMSettingsKeyStatusBar]){
+		settingEnabled = [[NSUserDefaults standardUserDefaults] integerForKey:LMSettingsKeyStatusBar];
+	}
+	
+	return settingEnabled;
+}
+
 @end

@@ -69,12 +69,8 @@
 	
 	NSString *collectionString = NSLocalizedString(self.musicTrackCollections.count == 1 ? singlularString : pluralString, nil);
 	
-	NSLog(@"Setting source selector info.");
-	
 	[self.musicPlayer setSourceTitle:NSLocalizedString(titleString, nil)];
 	[self.musicPlayer setSourceSubtitle:[NSString stringWithFormat:@"%ld %@", (long)self.musicTrackCollections.count, collectionString]];
-	
-	NSLog(@"Set!");
 }
 
 - (void)dismissDetailView {

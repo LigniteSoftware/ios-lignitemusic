@@ -266,6 +266,7 @@
 	[userDefaults synchronize];
 	
 	[self.coreViewController setNeedsStatusBarAppearanceUpdate];
+	[self.settingsViewController setNeedsStatusBarAppearanceUpdate];
 }
 
 - (id)accessoryViewForIndexPath:(NSIndexPath *)indexPath forSectionTableView:(LMSectionTableView *)sectionTableView {
@@ -292,6 +293,7 @@
 }
 
 - (void)layoutSubviews {
+	NSLog(@"Layout shit");
 	if(!self.hasPreparedSubviews){
 		self.hasPreparedSubviews = YES;
 		

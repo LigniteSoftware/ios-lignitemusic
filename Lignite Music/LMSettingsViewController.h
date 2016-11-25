@@ -1,17 +1,15 @@
 //
-//  LMSettingsView.h
+//  LMSettingsViewController.h
 //  Lignite Music
 //
-//  Created by Edwin Finch on 11/21/16.
+//  Created by Edwin Finch on 11/24/16.
 //  Copyright © 2016 Lignite. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 
-@interface LMSettingsView : UIView
+@interface LMSettingsViewController : UIViewController
 
 @property UIViewController *coreViewController;
-
-@property UIViewController *settingsViewController;
 
 @end

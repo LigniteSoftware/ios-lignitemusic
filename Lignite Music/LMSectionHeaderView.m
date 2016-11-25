@@ -76,9 +76,6 @@
 		
 		self.sectionHeaderLabel.backgroundColor = [UIColor redColor];
 	}
-	else{
-		NSLog(@"Spook %@", NSStringFromCGRect(self.frame));
-	}
 }
 
 - (UIImage*)icon {
@@ -95,8 +92,6 @@
 
 - (void)layoutSubviews {
 	[super layoutSubviews];
-	
-	NSLog(@"Spook");
 	
 	if(!self.hasDoneLayoutSubviews){
 		self.hasDoneLayoutSubviews = YES;

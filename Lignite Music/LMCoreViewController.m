@@ -14,7 +14,6 @@
 #import "LMNowPlayingView.h"
 #import "LMBrowsingAssistantView.h"
 #import "LMTitleView.h"
-#import "LMSourceSelectorView.h"
 #import "LMSource.h"
 #import "LMExtras.h"
 #import "LMPlaylistView.h"
@@ -26,11 +25,12 @@
 #import "LMArtistView.h"
 #import "LMImageManager.h"
 #import "LMSettingsView.h"
+#import "LMSettingsViewController.h"
 
 @import SDWebImage;
 @import StoreKit;
 
-@interface LMCoreViewController () <LMMusicPlayerDelegate, LMSourceDelegate, LMBrowsingAssistantDelegate>
+@interface LMCoreViewController () <LMMusicPlayerDelegate, LMSourceDelegate, LMBrowsingAssistantDelegate, UIGestureRecognizerDelegate>
 
 @property LMMusicPlayer *musicPlayer;
 
@@ -45,7 +45,6 @@
 @property LMSettingsView *settingsView;
 
 @property LMBrowsingAssistantView *browsingAssistant;
-@property LMSourceSelectorView *sourceSelector;
 
 @property NSArray<LMSource*> *sourcesForSourceSelector;
 
@@ -69,15 +68,7 @@
 }
 
 - (BOOL)prefersStatusBarHidden {
-	BOOL settingEnabled = YES;
-	
-	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-	
-	if([userDefaults objectForKey:LMSettingsKeyStatusBar]){
-		settingEnabled = [[NSUserDefaults standardUserDefaults] integerForKey:LMSettingsKeyStatusBar];
-	}
-	
-	return !settingEnabled;
+	return ![LMSettings shouldShowStatusBar];
 }
 
 - (void)pause {
@@ -139,7 +130,6 @@
 		 usingSpringWithDamping:0.75 initialSpringVelocity:0.0f
 						options:0 animations:^{
 							[self.view layoutIfNeeded];
-							NSLog(@"Spook");
 						} completion:nil];
 }
 
@@ -182,6 +172,8 @@ BOOL didAutomaticallyClose = NO;
 	if(!source.shouldNotSelect){
 		[self.currentSource setHidden:YES];
 		[self.browsingAssistant closeSourceSelector];
+		
+		[self.browsingAssistant setCurrentSourceIcon:[[source.icon averageColour] isLight] ? source.icon : [LMAppIcon invertImage:source.icon]];
 	}
 	
 	switch(indexOfSource){
@@ -219,8 +211,16 @@ BOOL didAutomaticallyClose = NO;
 			break;
 		}
 		case 5: {
-			LMPebbleManager *pebbleManager = [LMPebbleManager sharedPebbleManager];
-			[pebbleManager showSettings];
+			[self.browsingAssistant removeFromSuperview];
+			[self.view addSubview:self.browsingAssistant];
+			
+			self.browsingAssistant.textBackgroundConstraint = [self.browsingAssistant autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.view];
+			[self.browsingAssistant autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.view];
+			[self.browsingAssistant autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.view];
+						
+			LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
+			settingsViewController.coreViewController = self;
+			[self.navigationController pushViewController:settingsViewController animated:YES];
 			break;
 		}
 		case 6: {
@@ -232,8 +232,6 @@ BOOL didAutomaticallyClose = NO;
 			NSLog(@"Unknown index of source %@.", source);
 			break;
 	}
-	
-	[self.browsingAssistant setCurrentSourceIcon:[[source.icon averageColour] isLight] ? source.icon : [LMAppIcon invertImage:source.icon]];
 }
 
 - (void)heightRequiredChangedTo:(float)heightRequired forBrowsingView:(LMBrowsingAssistantView *)browsingView {
@@ -261,8 +259,6 @@ BOOL didAutomaticallyClose = NO;
 	[UIView animateWithDuration:0.75 animations:^{
 		[self.view layoutIfNeeded];
 	}];
-	
-	NSLog(@"Spook %f", heightRequired);
 }
 
 - (void)showWhatsPoppin {
@@ -349,7 +345,10 @@ BOOL didAutomaticallyClose = NO;
     [super viewDidLoad];
     // Do any additional setup after loading the view
 	
-	NSLog(@"Loading view");
+	self.navigationController.navigationBarHidden = YES;
+	self.navigationController.interactivePopGestureRecognizer.delegate = self;
+	
+	NSLog(@"Loading view %@", self.navigationController);
 	
 //	self.settingsView = [LMSettingsView newAutoLayoutView];
 //	self.settingsView.coreViewController = self;
@@ -515,15 +514,13 @@ BOOL didAutomaticallyClose = NO;
 						self.browsingAssistant.backgroundColor = [UIColor orangeColor];
 						self.browsingAssistant.sourcesForSourceSelector = self.sourcesForSourceSelector;
 						self.browsingAssistant.delegate = self;
-						[self.view addSubview:self.browsingAssistant];
+						[self.navigationController.view addSubview:self.browsingAssistant];
+//						[self.view addSubview:self.browsingAssistant];
 						[self.browsingAssistant setup];
 						
-						self.browsingAssistant.textBackgroundConstraint = [self.browsingAssistant autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.view];
-						[self.browsingAssistant autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.view];
-						[self.browsingAssistant autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.view];
-					//	self.browsingAssistantHeightConstraint = [self.browsingAssistant autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height];
-						
-						[self.view bringSubviewToFront:self.sourceSelector];
+						self.browsingAssistant.textBackgroundConstraint = [self.browsingAssistant autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.navigationController.view];
+						[self.browsingAssistant autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.navigationController.view];
+						[self.browsingAssistant autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.navigationController.view];
 						
 						[self.musicPlayer addMusicDelegate:self];
 						
@@ -531,8 +528,6 @@ BOOL didAutomaticallyClose = NO;
 														 target:self selector:@selector(showWhatsPoppin) userInfo:nil repeats:NO];
 						
 						NSLog(@"Loaded shit");
-						
-						[self.sourceSelector setup];
 						
 						UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
 						UIVisualEffectView *blurEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
@@ -544,6 +539,15 @@ BOOL didAutomaticallyClose = NO;
 						[blurEffectView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 						[blurEffectView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 						[blurEffectView autoSetDimension:ALDimensionHeight toSize:20];
+						
+//						UIView *testView = [UIView newAutoLayoutView];
+//						testView.backgroundColor = [UIColor redColor];
+//						[self.navigationController.view addSubview:testView];
+//						
+//						[testView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+//						[testView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+//						[testView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+//						[testView autoSetDimension:ALDimensionHeight toSize:30];
 					});
 					break;
 				}
