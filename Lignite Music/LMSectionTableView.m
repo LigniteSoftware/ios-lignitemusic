@@ -206,9 +206,7 @@
 	}
 	
 	int totalRows = (int)[self rawIndexForIndexPath:[NSIndexPath indexPathForRow:[self.contentsDelegate numberOfRowsForSection:self.totalNumberOfSections-1 forSectionTableView:self] inSection:self.totalNumberOfSections-1]];
-	
-	NSLog(@"%d total rows", totalRows);
-	
+		
 	for(int i = 0; i < totalRows; i++){
 		[self registerClass:[LMTableViewCell class] forCellReuseIdentifier:[NSString stringWithFormat:@"%@Cell_%d", self.title, i]];
 	}

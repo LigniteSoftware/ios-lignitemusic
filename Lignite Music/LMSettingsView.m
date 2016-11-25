@@ -258,9 +258,7 @@
 	}
 }
 
-- (void)didChangeStatusBarSwitchView:(UISwitch*)switchView {
-	NSLog(@"switch %d", switchView.on);
-	
+- (void)didChangeStatusBarSwitchView:(UISwitch*)switchView {	
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 	[userDefaults setInteger:switchView.on forKey:LMSettingsKeyStatusBar];
 	[userDefaults synchronize];

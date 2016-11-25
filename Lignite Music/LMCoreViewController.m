@@ -55,6 +55,11 @@
 
 @property id currentSource;
 
+@property UIVisualEffectView *statusBarBlurView;
+@property NSLayoutConstraint *statusBarBlurViewHeightConstraint;
+
+@property UIView *browsingAssistantViewAttachedTo;
+
 @end
 
 @implementation LMCoreViewController
@@ -68,17 +73,24 @@
 }
 
 - (BOOL)prefersStatusBarHidden {
-	return ![LMSettings shouldShowStatusBar];
+	BOOL shown = [LMSettings shouldShowStatusBar];
+	
+	self.statusBarBlurView.hidden = !shown;
+	
+	NSLog(@"Update %d", (!shown || (self.nowPlayingView != nil)));
+	
+	return (!shown || (self.nowPlayingView != nil));
+}
+
+- (UIStatusBarAnimation)preferredStatusBarUpdateAnimation{
+	return UIStatusBarAnimationSlide;
 }
 
 - (void)pause {
-	NSLog(@"Dude!");
 	[self.musicPlayer pause];
 }
 
 - (void)play {
-	NSLog(@"Dude");
-	
 	[NSTimer scheduledTimerWithTimeInterval:5.0
 									 target:self
 								   selector:@selector(pause)
@@ -98,11 +110,8 @@
 
 - (void)openNowPlayingView {
 	if(self.nowPlayingView){
-		NSLog(@"Now playing view already exists, rejecting");
 		return;
 	}
-	
-	NSLog(@"Opening now playing view");
 	
 	self.nowPlayingView = [LMNowPlayingView new];
 	self.nowPlayingView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -115,15 +124,9 @@
 	[self.nowPlayingView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
 	[self.nowPlayingView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
 	
-	NSLog(@"Setting up now playing");
-	
 	[self.nowPlayingView setup];
 	
-	NSLog(@"Setup");
-	
 	[self.view layoutIfNeeded];
-	
-	NSLog(@"Laying out done");
 	
 	self.topConstraint.constant = 0;
 	[UIView animateWithDuration:1.0 delay:0.1
@@ -131,6 +134,17 @@
 						options:0 animations:^{
 							[self.view layoutIfNeeded];
 						} completion:nil];
+	
+	[self.view layoutIfNeeded];
+	
+	[self attachBrowsingAssistantToView:self.view];
+	
+	self.statusBarBlurViewHeightConstraint.constant = 0;
+	
+	[UIView animateWithDuration:0.25 animations:^{
+		[self setNeedsStatusBarAppearanceUpdate];
+		[self.view layoutIfNeeded];
+	}];
 }
 
 - (void)closeNowPlayingView {
@@ -142,6 +156,17 @@
 							[self.view layoutIfNeeded];
 						} completion:^(BOOL finished) {
 							self.nowPlayingView = nil;
+							
+							[self.view layoutIfNeeded];
+							
+							self.statusBarBlurViewHeightConstraint.constant = 20;
+							
+							[UIView animateWithDuration:0.25 animations:^{
+								[self setNeedsStatusBarAppearanceUpdate];
+								[self.view layoutIfNeeded];
+							}];
+							
+							[self attachBrowsingAssistantToView:self.navigationController.view];
 						}];
 }
 
@@ -211,13 +236,8 @@ BOOL didAutomaticallyClose = NO;
 			break;
 		}
 		case 5: {
-			[self.browsingAssistant removeFromSuperview];
-			[self.view addSubview:self.browsingAssistant];
+			[self attachBrowsingAssistantToView:self.view];
 			
-			self.browsingAssistant.textBackgroundConstraint = [self.browsingAssistant autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.view];
-			[self.browsingAssistant autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.view];
-			[self.browsingAssistant autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.view];
-						
 			LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
 			settingsViewController.coreViewController = self;
 			[self.navigationController pushViewController:settingsViewController animated:YES];
@@ -234,15 +254,34 @@ BOOL didAutomaticallyClose = NO;
 	}
 }
 
+- (void)attachBrowsingAssistantToView:(UIView*)view {
+	[self.browsingAssistant removeFromSuperview];
+	[view addSubview:self.browsingAssistant];
+	
+	self.browsingAssistant.textBackgroundConstraint = [self.browsingAssistant autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:view];
+	[self.browsingAssistant autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:view];
+	[self.browsingAssistant autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:view];
+	
+	self.browsingAssistantViewAttachedTo = view;
+	
+	if(view == self.view){
+		[self.view bringSubviewToFront:self.nowPlayingView];
+	}
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+	[self attachBrowsingAssistantToView:self.navigationController.view];
+}
+
 - (void)heightRequiredChangedTo:(float)heightRequired forBrowsingView:(LMBrowsingAssistantView *)browsingView {
 	if(!self.browsingAssistantHeightConstraint){
 		self.browsingAssistantHeightConstraint = [self.browsingAssistant autoSetDimension:ALDimensionHeight toSize:heightRequired];
 		
-		[self.view layoutIfNeeded];
+		[self.browsingAssistantViewAttachedTo layoutIfNeeded];
 		return;
 	}
 	
-	[self.view layoutIfNeeded];
+	[self.browsingAssistantViewAttachedTo layoutIfNeeded];
 	
 	if(heightRequired < self.view.frame.size.height/2.0){
 		for(int i = 0; i < self.heightConstraintArray.count; i++){
@@ -250,14 +289,14 @@ BOOL didAutomaticallyClose = NO;
 			constraint.constant = (WINDOW_FRAME.size.height-heightRequired) + 10;
 		}
 		[UIView animateWithDuration:(heightRequired < self.browsingAssistantHeightConstraint.constant) ? 0.10 : 0.75 animations:^{
-			[self.view layoutIfNeeded];
+			[self.browsingAssistantViewAttachedTo layoutIfNeeded];
 		}];
 	}
 	
 	self.browsingAssistantHeightConstraint.constant = heightRequired;
 	
 	[UIView animateWithDuration:0.75 animations:^{
-		[self.view layoutIfNeeded];
+		[self.browsingAssistantViewAttachedTo layoutIfNeeded];
 	}];
 }
 
@@ -522,6 +561,8 @@ BOOL didAutomaticallyClose = NO;
 						[self.browsingAssistant autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.navigationController.view];
 						[self.browsingAssistant autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.navigationController.view];
 						
+						self.browsingAssistantViewAttachedTo = self.navigationController.view;
+						
 						[self.musicPlayer addMusicDelegate:self];
 						
 						[NSTimer scheduledTimerWithTimeInterval:1.0
@@ -530,24 +571,15 @@ BOOL didAutomaticallyClose = NO;
 						NSLog(@"Loaded shit");
 						
 						UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
-						UIVisualEffectView *blurEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
-						blurEffectView.translatesAutoresizingMaskIntoConstraints = NO;
+						self.statusBarBlurView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+						self.statusBarBlurView.translatesAutoresizingMaskIntoConstraints = NO;
 						
-						[self.view addSubview:blurEffectView];
+						[self.view addSubview:self.statusBarBlurView];
 						
-						[blurEffectView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-						[blurEffectView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-						[blurEffectView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-						[blurEffectView autoSetDimension:ALDimensionHeight toSize:20];
-						
-//						UIView *testView = [UIView newAutoLayoutView];
-//						testView.backgroundColor = [UIColor redColor];
-//						[self.navigationController.view addSubview:testView];
-//						
-//						[testView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-//						[testView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-//						[testView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-//						[testView autoSetDimension:ALDimensionHeight toSize:30];
+						[self.statusBarBlurView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+						[self.statusBarBlurView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+						[self.statusBarBlurView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+						self.statusBarBlurViewHeightConstraint = [self.statusBarBlurView autoSetDimension:ALDimensionHeight toSize:20];
 					});
 					break;
 				}

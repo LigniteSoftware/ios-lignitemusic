@@ -42,6 +42,7 @@
 		6A5821041DAF312C00A4FAB1 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A5821031DAF312C00A4FAB1 /* AudioToolbox.framework */; };
 		6A59A5181DE6D76E00B346AC /* icon_arrow_forward.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A59A5171DE6D76E00B346AC /* icon_arrow_forward.png */; };
 		6A59A51B1DE7B08B00B346AC /* LMSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A59A51A1DE7B08B00B346AC /* LMSettingsViewController.m */; };
+		6A59A51D1DE81A2000B346AC /* icon_pebbles.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A59A51C1DE81A2000B346AC /* icon_pebbles.png */; };
 		6A6351921D9D71D300498582 /* LMListEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A6351911D9D71D300498582 /* LMListEntry.m */; };
 		6A63D16F1DE41FD000EABA53 /* icon_checkmark.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A63D16E1DE41FD000EABA53 /* icon_checkmark.png */; };
 		6A6C186B1DDFFE7600D651E1 /* LMArtistView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A6C186A1DDFFE7600D651E1 /* LMArtistView.m */; };
@@ -188,6 +189,7 @@
 		6A59A5171DE6D76E00B346AC /* icon_arrow_forward.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_arrow_forward.png; sourceTree = "<group>"; };
 		6A59A5191DE7B08B00B346AC /* LMSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMSettingsViewController.h; sourceTree = "<group>"; };
 		6A59A51A1DE7B08B00B346AC /* LMSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMSettingsViewController.m; sourceTree = "<group>"; };
+		6A59A51C1DE81A2000B346AC /* icon_pebbles.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_pebbles.png; sourceTree = "<group>"; };
 		6A6351901D9D71D300498582 /* LMListEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMListEntry.h; sourceTree = "<group>"; };
 		6A6351911D9D71D300498582 /* LMListEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMListEntry.m; sourceTree = "<group>"; };
 		6A63D16E1DE41FD000EABA53 /* icon_checkmark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_checkmark.png; sourceTree = "<group>"; };
@@ -498,6 +500,7 @@
 			children = (
 				6A59A5171DE6D76E00B346AC /* icon_arrow_forward.png */,
 				6A63D16E1DE41FD000EABA53 /* icon_checkmark.png */,
+				6A59A51C1DE81A2000B346AC /* icon_pebbles.png */,
 				6A26B4731DE409C8008B5B69 /* icon_about.png */,
 				6A26B46F1DE40824008B5B69 /* icon_download.png */,
 				6A26B46B1DE4074E008B5B69 /* icon_look_and_feel.png */,
@@ -928,6 +931,7 @@
 				6AE4A7FC1D49461C002B67CD /* pebble_colours_64.gif in Resources */,
 				6AFF01A11DDE7D2D00F24D8E /* tutorial_bottom_tabs.png in Resources */,
 				6AFF01951DDE4EAF00F24D8E /* InfoPlist.strings in Resources */,
+				6A59A51D1DE81A2000B346AC /* icon_pebbles.png in Resources */,
 				6A0750721D5EAB8000BCBC9C /* aplite_colours.gif in Resources */,
 				6AFF01A01DDE7D2D00F24D8E /* tutorial_browsing.png in Resources */,
 				6A26B4701DE40824008B5B69 /* icon_download.png in Resources */,
