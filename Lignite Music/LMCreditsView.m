@@ -271,7 +271,7 @@
 			textLabel.text = text;
 			textLabel.font = [UIFont fontWithName:textFontIsBold ? @"HelveticaNeue-Bold" : @"HelveticaNeue-Light" size:fontSize];
 			textLabel.numberOfLines = 0;
-			textLabel.textAlignment = NSTextAlignmentJustified;
+			textLabel.textAlignment = NSTextAlignmentLeft;
 			[self.scrollView addSubview:textLabel];
 			
 			[textLabel autoSetDimension:ALDimensionWidth toSize:self.frame.size.width*0.90];

@@ -16,6 +16,7 @@
 #import "LMColour.h"
 #import "LMSettings.h"
 #import "LMPebbleManager.h"
+#import "LMCreditsViewController.h"
 
 @interface LMSettingsView()<LMSectionTableViewDelegate>
 
@@ -294,6 +295,8 @@
 			switch(indexPath.row){
 				case 0:
 					NSLog(@"Credits");
+					LMCreditsViewController *creditsViewController = [LMCreditsViewController new];
+					[self.coreViewController.navigationController showViewController:creditsViewController sender:self];
 					break;
 			}
 			break;

@@ -27,7 +27,6 @@
 #import "LMSettingsView.h"
 #import "LMSettingsViewController.h"
 #import "LMBrowsingDetailViewController.h"
-#import "LMCreditsView.h"
 
 @import SDWebImage;
 @import StoreKit;
@@ -396,13 +395,6 @@ BOOL didAutomaticallyClose = NO;
 	self.navigationController.interactivePopGestureRecognizer.delegate = self;
 	
 	NSLog(@"Loading view %@", self.navigationController);
-	
-	LMCreditsView *creditsView = [LMCreditsView newAutoLayoutView];
-	[self.view addSubview:creditsView];
-	
-	[creditsView autoPinEdgesToSuperviewEdges];
-	
-	return;
 	
 //	self.settingsView = [LMSettingsView newAutoLayoutView];
 //	self.settingsView.coreViewController = self;
