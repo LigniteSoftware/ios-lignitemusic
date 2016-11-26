@@ -57,6 +57,7 @@
 		6A759D401DE8DDC50051E1A9 /* LMPebbleSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A759D3F1DE8DDC50051E1A9 /* LMPebbleSettingsViewController.m */; };
 		6A759D421DE8EB0E0051E1A9 /* icon_functionality.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A759D411DE8EB0E0051E1A9 /* icon_functionality.png */; };
 		6A759D451DE93A0F0051E1A9 /* LMCreditsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A759D441DE93A0F0051E1A9 /* LMCreditsView.m */; };
+		6A759D481DE96B9A0051E1A9 /* LMScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A759D471DE96B9A0051E1A9 /* LMScrollView.m */; };
 		6A7C62F51DA93F6100B025BA /* LMColour.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A7C62F41DA93F6100B025BA /* LMColour.m */; };
 		6A7DF1171DB10D510077B979 /* LMBrowsingAssistantView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A7DF1161DB10D510077B979 /* LMBrowsingAssistantView.m */; };
 		6A7DF11A1DB112140077B979 /* LMMiniPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A7DF1191DB112140077B979 /* LMMiniPlayerView.m */; };
@@ -219,6 +220,8 @@
 		6A759D411DE8EB0E0051E1A9 /* icon_functionality.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_functionality.png; sourceTree = "<group>"; };
 		6A759D431DE93A0F0051E1A9 /* LMCreditsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMCreditsView.h; sourceTree = "<group>"; };
 		6A759D441DE93A0F0051E1A9 /* LMCreditsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMCreditsView.m; sourceTree = "<group>"; };
+		6A759D461DE96B9A0051E1A9 /* LMScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMScrollView.h; sourceTree = "<group>"; };
+		6A759D471DE96B9A0051E1A9 /* LMScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMScrollView.m; sourceTree = "<group>"; };
 		6A7C62F31DA93F6100B025BA /* LMColour.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMColour.h; sourceTree = "<group>"; };
 		6A7C62F41DA93F6100B025BA /* LMColour.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMColour.m; sourceTree = "<group>"; };
 		6A7DF1151DB10D510077B979 /* LMBrowsingAssistantView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMBrowsingAssistantView.h; sourceTree = "<group>"; };
@@ -405,6 +408,8 @@
 				6AD226FE1DA4B8000056695A /* LMCoreViewController.m */,
 				6A759D431DE93A0F0051E1A9 /* LMCreditsView.h */,
 				6A759D441DE93A0F0051E1A9 /* LMCreditsView.m */,
+				6A759D461DE96B9A0051E1A9 /* LMScrollView.h */,
+				6A759D471DE96B9A0051E1A9 /* LMScrollView.m */,
 			);
 			name = Core;
 			sourceTree = "<group>";
@@ -1093,6 +1098,7 @@
 				6A2A29C81DB1EAB6008E7792 /* LMCircleView.m in Sources */,
 				6A6F4B641DC5D4EB00BD01C2 /* YIInnerShadowView.m in Sources */,
 				6ABF6A821CF374F7003E4EFA /* UIImage+AverageColour.m in Sources */,
+				6A759D481DE96B9A0051E1A9 /* LMScrollView.m in Sources */,
 				6A759D451DE93A0F0051E1A9 /* LMCreditsView.m in Sources */,
 				6A92F82B1DD95848002045C2 /* LMGenreView.m in Sources */,
 				6A313C181BB59AE8002BBC33 /* LMButton.m in Sources */,

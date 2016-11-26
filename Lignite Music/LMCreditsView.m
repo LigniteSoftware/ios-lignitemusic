@@ -8,6 +8,7 @@
 
 #import <PureLayout/PureLayout.h>
 #import "LMCreditsView.h"
+#import "LMScrollView.h"
 
 @interface LMCreditsView()
 
@@ -19,7 +20,7 @@
 /**
  The root scroll view of the credits view.
  */
-@property UIScrollView *scrollView;
+@property LMScrollView *scrollView;
 
 /**
  The image view for Philipp and I's photo together :)
@@ -49,7 +50,7 @@
 	if(!self.didSetupConstraints){
 		self.didSetupConstraints = YES;
 		
-		self.scrollView = [UIScrollView newAutoLayoutView];
+		self.scrollView = [LMScrollView newAutoLayoutView];
 		self.scrollView.backgroundColor = [UIColor whiteColor];
 		[self addSubview:self.scrollView];
 		
@@ -132,7 +133,11 @@
 							  @"LibraryMarqueeLabelDescription",
 							  
 							  @"LibraryReachability",
-							  @"LibraryReachabilityDescription"
+							  @"LibraryReachabilityDescription",
+							  
+							  @"Icons",
+							  @"IconsDescription",
+							  @"DesignedByNobody"
 	    ];
 		float textFontSizes[] = {
 			20.0,
@@ -189,6 +194,10 @@
 			
 			20.0,
 			20.0,
+			
+			34.0,
+			20.0,
+			20.0
 		};
 		BOOL textFontIsBoldOptions[] = {
 			NO,
@@ -245,6 +254,10 @@
 			
 			YES,
 			NO,
+			
+			NO,
+			NO,
+			YES
 		};
 
 		for(int i = 0; i < textKeys.count; i++){

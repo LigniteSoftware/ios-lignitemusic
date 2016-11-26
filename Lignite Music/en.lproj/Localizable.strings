@@ -145,6 +145,12 @@
 "LibraryReachability" = "Reachability - Tony Million";
 "LibraryReachabilityDescription" = "Reachability is a handy library which lets you do a bunch of tasks related to your Internet connection.";
 
+"Icons" = "Icons";
+"IconsDescription" = "Many of our icons were from www.flaticon.com, created by icon artists who were generous enough to license them under CC 3.0. Here they are!";
+"DesignedByNobody" = "Designed by...";
+
+
+
 /*
  *
  * Important!
