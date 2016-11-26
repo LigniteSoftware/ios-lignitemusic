@@ -76,11 +76,6 @@
 - (BOOL)prefersStatusBarHidden {
 	BOOL shown = [LMSettings shouldShowStatusBar];
 	
-	if(shown && self.statusBarBlurViewHeightConstraint.constant < 1){
-		self.statusBarBlurViewHeightConstraint.constant = 20;
-		[self.view layoutIfNeeded];
-	}
-	
 	return (!shown || (self.nowPlayingView != nil));
 }
 
@@ -258,6 +253,7 @@ BOOL didAutomaticallyClose = NO;
 - (void)attachBrowsingAssistantToView:(UIView*)view {
 	[self.browsingAssistant removeFromSuperview];
 	[view addSubview:self.browsingAssistant];
+	[view bringSubviewToFront:self.statusBarBlurView];
 	
 	self.browsingAssistant.textBackgroundConstraint = [self.browsingAssistant autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:view];
 	[self.browsingAssistant autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:view];
@@ -275,9 +271,9 @@ BOOL didAutomaticallyClose = NO;
 	
 	self.currentDetailViewController = nil;
 	
-//	if(self.statusBarBlurView.hidden && ![self prefersStatusBarHidden]){
-//		self.statusBarBlurView.hidden = NO;
-//	}
+	if(self.statusBarBlurViewHeightConstraint.constant < 0.1 && ![self prefersStatusBarHidden]){
+		[self setStatusBarBlurHidden:NO];
+	}
 }
 
 - (void)setStatusBarBlurHidden:(BOOL)hidden {

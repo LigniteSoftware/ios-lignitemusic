@@ -285,11 +285,12 @@
 			break;
 		case 3:
 			switch(indexPath.row){
-				case 0:
+				case 0:{
 					LMCreditsViewController *creditsViewController = [LMCreditsViewController new];
 					[self.coreViewController.navigationController showViewController:creditsViewController sender:self];
 					[(LMCoreViewController*)self.coreViewController setStatusBarBlurHidden:YES];
 					break;
+				}
 			}
 			break;
 	}
