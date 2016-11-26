@@ -301,7 +301,7 @@
 	
 	if(self.messageQueue){
 		NSNumber *key = [self.settingsMapping objectForKey:changedSwitch.switchID];
-		[self.messageQueue enqueue:@{key:@(changedSwitch.on)}];
+		[self.messageQueue enqueue:@{key:[NSNumber numberWithBool:changedSwitch.on]}];
 		
 		NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 		[defaults setBool:changedSwitch.on forKey:changedSwitch.switchID];
@@ -317,7 +317,7 @@
 			case 0:
 				switch(indexPath.row){
 					case 0:
-						switchView.switchID = @"pebble_style_controls";
+						switchView.switchID = @"pebble_artist_label";
 						break;
 					case 1:
 						switchView.switchID = @"pebble_show_time";
@@ -330,7 +330,7 @@
 						switchView.switchID = @"pebble_battery_saver";
 						break;
 					case 1:
-						switchView.switchID = @"pebble_artist_label";
+						switchView.switchID = @"pebble_style_controls";
 						break;
 				}
 				break;
@@ -339,7 +339,7 @@
 		[switchView addTarget:self action:@selector(changeSwitch:) forControlEvents:UIControlEventValueChanged];
 		
 		NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	NSLog(@"%@ %@", switchView.switchID, [defaults objectForKey:switchView.switchID]);
+	NSLog(@"%d.%d: %@ %@", (int)indexPath.section, (int)indexPath.row, switchView.switchID, [defaults objectForKey:switchView.switchID]);
 		if([defaults objectForKey:switchView.switchID]){
 			switchView.on = [defaults boolForKey:switchView.switchID];
 		}

@@ -26,7 +26,7 @@
     }
     if(!message) return;
     @synchronized(queue) {
-        //NSLog(@"Enqueued message: %@", message);
+        NSLog(@"Enqueued message: %@", message);
         [queue addObject:message];
         [self sendRequest];
     }

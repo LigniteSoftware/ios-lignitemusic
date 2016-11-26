@@ -109,6 +109,86 @@
 "PebbleStyleControlsDescription" = "Mimick Pebble's music player controls";
 "DisplayTimeDescription" = "Show the time in now playing";
 
+/* Credits */
+"ThankYou" = "Thank you!";
+"ThankYouDescription" = "Countless hours have gone into making this app a reality and we couldn't have done it without the funding and support of our amazing Kickstarter backers, many open source libraries, and a whole lot of passion.\n\nBelow we'd like to credit everyone and everything that had a part in making this app a reality.\n\nWe are forever thankful for all of you!";
+
+"KickstarterBackers" = "Kickstarter Backers";
+
+"LastFMAPI" = "Last.fm API";
+"LastFMAPIDescription" = "We want to give a big shoutout to Last.fm's absolutely breathtaking API.\n\nWe use it for its images of artists and images of missing cover art and it works like a charm! It has a great rate limit and many, many functions.";
+
+"OpenSourceLibraries" = "Open Source Libraries";
+"OpenSourceLibrariesLicensing" = "Lignite Music is built off of many powerful open source libraries.\n\nBig thanks to the original authors and all who contributed to their development!";
+
+"LibraryYYImage" = "YYImage - ibireme";
+"LibraryYYImageDescription" = "YYImage is a powerful image framework which lets you encode/decode many types of images.";
+
+"LibrarySDWebImage" = "SDWebImage - Olivier Poitrey";
+"LibrarySDWebImageDescription" = "SDWebImage is an outstanding asynchronous image downloader that even has cache support!";
+
+"LibraryImageMagick" = "ImageMagick C API";
+"LibraryImageMagickDescription" = "ImageMagick lets you literally perform magic with images. You can create, edit, compose, or convert all sorts of images.";
+
+"LibraryPebbleKit" = "PebbleKit";
+"LibraryPebbleKitDescription" = "PebbleKit is Pebble's iOS framework for communicating with Pebble smartwatches. While we're at it, thanks to Pebble for an excellent watch!";
+
+"LibraryPureLayout" = "PureLayout - Tyler Fox";
+"LibraryPureLayoutDescription" = "PureLayout is exactly as they say it is, 'impressively simple, immensely powerful', letting you layout constraints easily.";
+
+"LibraryMBProgressHUD" = "MBProgressHUD - Jonathan George";
+"LibraryMBProgressHUDDescription" = "MBProgressHUD is a simple yet perfect library for showing those simple confirmation popups that look like iOS's volume indicator popup.";
+
+"LibraryMarqueeLabel" = "MarqueeLabel - Charles Powell";
+"LibraryMarqueeLabelDescription" = "MarqueeLabel is a super nice drop-in replacement for normal labels which lets you have text that scrolls!";
+
+"LibraryReachability" = "Reachability - Tony Million";
+"LibraryReachabilityDescription" = "Reachability is a handy library which lets you do a bunch of tasks related to your Internet connection.";
+
+/*
+ *
+ * Important!
+ *
+ * \/ Please do not translate the strings within these big comments! \/
+ *
+ * Thank you.
+ *
+ */
+
+
+"RankLigniteLover" = "Lignite Lovers";
+"RankLigniteLoverPeople" = "Person, person.";
+
+"RankSuperSupporters" = "Super Supporters";
+"RankSuperSupportersPeople" = "Person, person...";
+
+"RankLigniteMusicInfluencers" = "Lignite Music Influencers";
+"RankLigniteMusicInfluencersPeople" = "Person, person!";
+
+"RankBetaAccess" = "Beta Access Backers";
+"RankBetaAccessPeople" = "Person, person!";
+
+"RankEarlyBird" = "Early Birds";
+"RankEarlyBirdPeople" = "Person, person!";
+
+"RankSuperEarlyBird" = "Super Early Birds";
+"RankSuperEarlyBirdPeople" = "Person, person!";
+
+"RankLigniteSupporter" = "Lignite Supporter";
+"RankLigniteSupporterPeople" = "Person, person!";
+
+
+/* 
+ * 
+ * Important!
+ *
+ * /\ Please do not translate the strings within these big comments! /\
+ *
+ * Thank you.
+ *
+ */
+
+
 /*
  
  END NEW STRINGS
