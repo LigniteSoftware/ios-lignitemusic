@@ -10,6 +10,7 @@
 #import "LMSettingsViewController.h"
 #import "LMSettingsView.h"
 #import "LMSettings.h"
+#import "LMCoreViewController.h"
 
 @interface LMSettingsViewController ()
 
@@ -20,7 +21,17 @@
 @implementation LMSettingsViewController
 
 - (BOOL)prefersStatusBarHidden {
-	return ![LMSettings shouldShowStatusBar];
+	BOOL shouldShowStatusBar = [LMSettings shouldShowStatusBar];
+		
+	return !shouldShowStatusBar;
+}
+
+- (UIStatusBarAnimation)preferredStatusBarUpdateAnimation {
+	return UIStatusBarAnimationSlide;
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+	[(LMCoreViewController*)self.coreViewController setStatusBarBlurHidden:![LMSettings shouldShowStatusBar]];
 }
 
 - (void)loadView {

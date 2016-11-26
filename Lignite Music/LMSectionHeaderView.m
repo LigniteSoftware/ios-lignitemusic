@@ -145,18 +145,18 @@
 		[self.sectionHeaderLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
 		[self.sectionHeaderLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.sectionHeaderIconImageView withMultiplier:(8.5/10.0)];
 		
-		if(self.heightFactorial < 1.0){
-			self.titleLabel = [LMLabel newAutoLayoutView];
-			self.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:50.0f];
-			self.titleLabel.text = self.title;
-	//		self.titleLabel.backgroundColor = [UIColor cyanColor];
-			[self addSubview:self.titleLabel];
-			
-			[self.titleLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.sectionHeaderIconImageView];
-			[self.titleLabel autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:10];
-			[self.titleLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.sectionHeaderLabel];
-			[self.titleLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.sectionHeaderBackgroundView withOffset:-10];
-		}
+//		if(self.heightFactorial < 1.0){
+//			self.titleLabel = [LMLabel newAutoLayoutView];
+//			self.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:50.0f];
+//			self.titleLabel.text = self.title;
+//	//		self.titleLabel.backgroundColor = [UIColor cyanColor];
+//			[self addSubview:self.titleLabel];
+//			
+//			[self.titleLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.sectionHeaderIconImageView];
+//			[self.titleLabel autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:10];
+//			[self.titleLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.sectionHeaderLabel];
+//			[self.titleLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.sectionHeaderBackgroundView withOffset:-10];
+//		}
 	}
 }
 

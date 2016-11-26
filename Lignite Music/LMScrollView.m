@@ -7,6 +7,7 @@
 //
 
 #import "LMScrollView.h"
+#import "LMExtras.h"
 
 @interface LMScrollView()<UIScrollViewDelegate>
 
@@ -15,10 +16,6 @@
 @end
 
 @implementation LMScrollView
-
-- (void)scrollViewDidScroll:(UIScrollView*)sender {
-	self.contentOffset = CGPointMake(0, self.contentOffset.y);
-}
 
 - (void)layoutSubviews {
 	[super layoutSubviews];
@@ -35,6 +32,8 @@
 	for (UIView *view in self.subviews) {
 		contentRect = CGRectUnion(contentRect, view.frame);
 	}
+	contentRect = CGRectMake(0, 0, WINDOW_FRAME.size.width /* I know, it's hacky. */, contentRect.size.height);
+	
 	self.contentSize = contentRect.size;
 }
 

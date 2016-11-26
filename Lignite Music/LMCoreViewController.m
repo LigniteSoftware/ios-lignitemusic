@@ -76,8 +76,6 @@
 - (BOOL)prefersStatusBarHidden {
 	BOOL shown = [LMSettings shouldShowStatusBar];
 	
-	self.statusBarBlurView.hidden = !shown;
-	
 	if(shown && self.statusBarBlurViewHeightConstraint.constant < 1){
 		self.statusBarBlurViewHeightConstraint.constant = 20;
 		[self.view layoutIfNeeded];
@@ -276,6 +274,21 @@ BOOL didAutomaticallyClose = NO;
 	[self attachBrowsingAssistantToView:self.navigationController.view];
 	
 	self.currentDetailViewController = nil;
+	
+//	if(self.statusBarBlurView.hidden && ![self prefersStatusBarHidden]){
+//		self.statusBarBlurView.hidden = NO;
+//	}
+}
+
+- (void)setStatusBarBlurHidden:(BOOL)hidden {
+	[self.navigationController.view layoutIfNeeded];
+	
+	self.statusBarBlurViewHeightConstraint.constant = hidden ? 0 : 20;
+	
+	[UIView animateWithDuration:0.25 animations:^{
+//		[self setNeedsStatusBarAppearanceUpdate];
+		[self.navigationController.view layoutIfNeeded];
+	}];
 }
 
 - (void)heightRequiredChangedTo:(float)heightRequired forBrowsingView:(LMBrowsingAssistantView *)browsingView {
@@ -385,6 +398,11 @@ BOOL didAutomaticallyClose = NO;
 - (void)prepareToLoadView {
 	NSLog(@"Preparing to load view");
 	[NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(viewDidLoad) userInfo:nil repeats:NO];
+}
+
+//http://stackoverflow.com/questions/18946302/uinavigationcontroller-interactive-pop-gesture-not-working
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+	return YES;
 }
 
 - (void)viewDidLoad {

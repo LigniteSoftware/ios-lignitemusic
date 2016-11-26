@@ -17,6 +17,7 @@
 #import "LMSettings.h"
 #import "LMPebbleManager.h"
 #import "LMCreditsViewController.h"
+#import "LMCoreViewController.h"
 
 @interface LMSettingsView()<LMSectionTableViewDelegate>
 
@@ -249,9 +250,6 @@
 	switch(indexPath.section){
 		case 0:
 			switch(indexPath.row){
-//				case 0:
-//					NSLog(@"Pick theme");
-//					break;
 				case 0:
 					NSLog(@"Status bar");
 					break;
@@ -261,17 +259,12 @@
 			switch(indexPath.row){
 				case 0: {
 					[self cacheAlertForCategory:LMImageManagerCategoryArtistImages];
-					NSLog(@"Artist alert");
 					break;
 				}
 				case 1: {
 					[self cacheAlertForCategory:LMImageManagerCategoryAlbumImages];
-					NSLog(@"Album alert");
 					break;
 				}
-				case 2:
-					NSLog(@"Image cache size alert");
-					break;
 			}
 			break;
 		case 2:
@@ -284,7 +277,6 @@
 					break;
 				}
 				case 1: {
-					NSLog(@"Pebble settings");
 					LMPebbleManager *pebbleManager = [LMPebbleManager sharedPebbleManager];
 					[pebbleManager showSettings];
 					break;
@@ -294,9 +286,9 @@
 		case 3:
 			switch(indexPath.row){
 				case 0:
-					NSLog(@"Credits");
 					LMCreditsViewController *creditsViewController = [LMCreditsViewController new];
 					[self.coreViewController.navigationController showViewController:creditsViewController sender:self];
+					[(LMCoreViewController*)self.coreViewController setStatusBarBlurHidden:YES];
 					break;
 			}
 			break;
@@ -308,8 +300,12 @@
 	[userDefaults setBool:switchView.on forKey:LMSettingsKeyStatusBar];
 	[userDefaults synchronize];
 	
-	[self.coreViewController setNeedsStatusBarAppearanceUpdate];
-	[self.settingsViewController setNeedsStatusBarAppearanceUpdate];
+	[UIView animateWithDuration:0.3 animations:^{
+		[self.coreViewController setNeedsStatusBarAppearanceUpdate];
+		[self.settingsViewController setNeedsStatusBarAppearanceUpdate];
+	}];
+	
+	[(LMCoreViewController*)self.coreViewController setStatusBarBlurHidden:!switchView.on];
 }
 
 - (id)accessoryViewForIndexPath:(NSIndexPath *)indexPath forSectionTableView:(LMSectionTableView *)sectionTableView {
