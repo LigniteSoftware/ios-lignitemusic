@@ -29,6 +29,8 @@
 #import "LMBrowsingDetailViewController.h"
 #import "LMContactView.h"
 
+#define SKIP_ONBOARDING
+
 @import SDWebImage;
 @import StoreKit;
 
@@ -386,7 +388,7 @@ BOOL didAutomaticallyClose = NO;
 }
 
 - (void)launchOnboarding {
-	LMGuideViewPagerController *controller = [[LMGuideViewPagerController alloc]init];
+	LMGuideViewPagerController *controller = [LMGuideViewPagerController new];
 	controller.guideMode = GuideModeOnboarding;
 	controller.coreViewController = self;
 	[self presentViewController:controller animated:YES completion:nil];
@@ -400,6 +402,37 @@ BOOL didAutomaticallyClose = NO;
 //http://stackoverflow.com/questions/18946302/uinavigationcontroller-interactive-pop-gesture-not-working
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
 	return YES;
+}
+
+- (void)checkImagePermission {
+	LMImageManager *imageManager = [LMImageManager sharedImageManager];
+	LMImageManagerConditionLevel currentConditionLevel = [imageManager conditionLevelForDownloadingForCategory:LMImageManagerCategoryArtistImages];
+	
+	switch(currentConditionLevel){
+		case LMImageManagerConditionLevelNever:
+			NSLog(@"Images should never download.");
+			break;
+		case LMImageManagerConditionLevelSuboptimal: {
+			NSLog(@"There are conditions which worry me for downloading images. I will check with user first.");
+			[self attachBrowsingAssistantToView:self.view];
+			[imageManager launchPermissionRequestOnView:self.view
+											forCategory:LMImageManagerCategoryArtistImages
+								  withCompletionHandler:^(LMImageManagerPermissionStatus permissionStatus) {
+									  [NSTimer scheduledTimerWithTimeInterval:0.75 repeats:NO block:^(NSTimer * _Nonnull timer) {
+										  [self attachBrowsingAssistantToView:self.navigationController.view];
+									  }];
+									  
+									  if(permissionStatus == LMImageManagerPermissionStatusAuthorized) {
+										  [imageManager beginDownloadingImagesForCategory:LMImageManagerCategoryArtistImages];
+									  }
+								  }];
+			break;
+		}
+		case LMImageManagerConditionLevelOptimal:
+			NSLog(@"Clear to go!!!");
+			[imageManager beginDownloadingImagesForCategory:LMImageManagerCategoryArtistImages];
+			break;
+	}
 }
 
 - (void)viewDidLoad {
@@ -457,8 +490,12 @@ BOOL didAutomaticallyClose = NO;
 	[hangOnLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 	[hangOnLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 	
+#ifdef SKIP_ONBOARDING
+	if(true == false){
+#else
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 	if(![userDefaults objectForKey:LMSettingsKeyOnboardingComplete]){
+#endif
 		NSLog(@"User has not yet completed onboarding, launching onboarding.");
 		
 		[NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(launchOnboarding) userInfo:nil repeats:NO];
@@ -611,6 +648,8 @@ BOOL didAutomaticallyClose = NO;
 						[self.statusBarBlurView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 						[self.statusBarBlurView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 						self.statusBarBlurViewHeightConstraint = [self.statusBarBlurView autoSetDimension:ALDimensionHeight toSize:20*[LMSettings shouldShowStatusBar]];
+						
+						[NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(checkImagePermission) userInfo:nil repeats:NO];
 					});
 					break;
 				}

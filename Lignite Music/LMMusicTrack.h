@@ -80,6 +80,13 @@ typedef uint64_t LMMusicTrackPersistentID;
 - (UIImage*)albumArt;
 
 /**
+ Gets the album art for a track if it exists in either the track itself or in image cache. Otherwise it returns nil.
+
+ @return The album art, if it exists.
+ */
+- (UIImage*)uncorrectedAlbumArt;
+
+/**
  Gets the artist image associated with this track. The artist image is stored within the LMImageManager cache and is nil if the artist image has not been downloaded or could not be found.
 
  @return The artist image.

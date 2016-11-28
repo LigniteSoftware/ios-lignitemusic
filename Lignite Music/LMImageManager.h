@@ -84,6 +84,13 @@ typedef enum {
 - (UIImage*)imageForMusicTrack:(LMMusicTrack*)musicTrack withCategory:(LMImageManagerCategory)category;
 
 /**
+ Begins the search and download process for a category of images.
+
+ @param category The category of images to begin the process for.
+ */
+- (void)beginDownloadingImagesForCategory:(LMImageManagerCategory)category;
+
+/**
  Gets the current condition level of downloading a category of images.
 
  @param category The category of images to check.

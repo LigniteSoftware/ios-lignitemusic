@@ -69,9 +69,7 @@
 - (void)setSectionHeaderTitle:(NSString *)sectionHeaderTitle {
 	_sectionHeaderTitle = sectionHeaderTitle;
 	
-	if(self.sectionHeaderLabel){
-		NSLog(@"%d Setting %@ %@", self.hasDoneLayoutSubviews, sectionHeaderTitle, NSStringFromCGRect(self.frame));
-		
+	if(self.sectionHeaderLabel){		
 		self.sectionHeaderLabel.text = sectionHeaderTitle;
 		
 		self.sectionHeaderLabel.backgroundColor = [UIColor redColor];

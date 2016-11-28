@@ -38,6 +38,20 @@
 #define LMLastFMAPIKey @"8f53580e3745f1b99e3446ff5f82b7df"
 
 /**
+ The amount of calls which can be made per second as per the rate limit of the last.fm API.
+
+ @return The amount of calls.
+ */
+#define LastFMAPICallsPerSecondLimit 5.0
+
+/**
+ The amount of calls we will actually make per second maximum.
+
+ @return The amount of calls.
+ */
+#define LMLastFMAPICallsPerSecondLimit 3.0
+
+/**
  The amount of items per page that LastFM should return in its API results.
 
  @return The number of items per page.
@@ -76,6 +90,16 @@
  */
 @property NSOperationQueue *operationQueue;
 
+/**
+ The queue of tracks which are lined up to have images downloaded for them.
+ */
+@property NSMutableArray<LMMusicTrack*>* trackDownloadQueue;
+
+/**
+ The category associated with the track in queue for downloading array.
+ */
+@property NSMutableArray<NSNumber*>* categoryDownloadQueue;
+
 @end
 
 @implementation LMImageManager
@@ -99,22 +123,28 @@
 		
 		self.operationQueue = [NSOperationQueue new];
 		
-		LMMusicTrack *randomItem = [[self.artistsCollection objectAtIndex:18] representativeItem];
-		[self imageNeedsDownloadingForMusicTrack:randomItem
-											 forCategory:LMImageManagerCategoryArtistImages
-											  completion:^(BOOL needsDownloading) {
-												  NSLog(@"%@: Needs downloading: %d", [self imageCacheKeyForMusicTrack:randomItem
-																										   forCategory:LMImageManagerCategoryArtistImages], needsDownloading);
-												  
-												  if(needsDownloading && [self permissionStatusForCategory:LMImageManagerCategoryArtistImages] == LMImageManagerPermissionStatusAuthorized){
-													  NSLog(@"Approved for download.");
-													  
-													  [self downloadImageForMusicTrack:randomItem forCategory:LMImageManagerCategoryArtistImages];
-												  }
-												  else{
-													  NSLog(@"Not clear for download.");
-												  }
-											  }];
+		self.trackDownloadQueue = [NSMutableArray new];
+		self.categoryDownloadQueue = [NSMutableArray new];
+
+//		[self clearCacheForCategory:LMImageManagerCategoryArtistImages];
+//		NSLog(@"Cleared artist cache.");
+		
+//		LMMusicTrack *randomItem = [[self.artistsCollection objectAtIndex:0] representativeItem];
+//		[self imageNeedsDownloadingForMusicTrack:randomItem
+//											 forCategory:LMImageManagerCategoryArtistImages
+//											  completion:^(BOOL needsDownloading) {
+//												  NSLog(@"%@: Needs downloading: %d", [self imageCacheKeyForMusicTrack:randomItem
+//																										   forCategory:LMImageManagerCategoryArtistImages], needsDownloading);
+//												  
+//												  if(needsDownloading && [self permissionStatusForCategory:LMImageManagerCategoryArtistImages] == LMImageManagerPermissionStatusAuthorized){
+//													  NSLog(@"Approved for download.");
+//													  
+//													  [self downloadImageForMusicTrack:randomItem forCategory:LMImageManagerCategoryArtistImages];
+//												  }
+//												  else{
+//													  NSLog(@"Not clear for download.");
+//												  }
+//											  }];
 	}
 	return self;
 }
@@ -189,10 +219,10 @@
 		UIImage *image = nil;
 		switch(category){
 			case LMImageManagerCategoryAlbumImages:
-				image = [representativeItem albumArt];
+				image = [representativeItem uncorrectedAlbumArt];
 				break;
 			case LMImageManagerCategoryArtistImages:
-				image = [representativeItem artistImage];
+				image = [[LMImageManager sharedImageManager] imageForMusicTrack:representativeItem withCategory:LMImageManagerCategoryArtistImages];
 				break;
 		}
 		completionHandler(image == nil);
@@ -231,6 +261,8 @@
 						   imageNameSearchString, //The actual search query
 						   LMLastFMItemsPerPageLimit, //The limit of items per page
 						   LMLastFMAPIKey]; //Our API key
+	
+	NSLog(@"%@", urlString);
 	
 	//Get the data from the API URL
 	NSURL *jsonURL = [NSURL URLWithString:urlString];
@@ -288,6 +320,65 @@
 
 - (UIImage*)imageForMusicTrack:(LMMusicTrack*)musicTrack withCategory:(LMImageManagerCategory)category {
 	return [[self imageCacheForCategory:category] imageFromDiskCacheForKey:[self imageCacheKeyForMusicTrack:musicTrack forCategory:category]];
+}
+
+- (void)downloadNextImageInQueue {
+	__weak id weakSelf = self;
+	
+	double delayInSeconds = (LMLastFMAPICallsPerSecondLimit / LastFMAPICallsPerSecondLimit);
+	
+	dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+	dispatch_after(popTime, dispatch_get_global_queue(NSQualityOfServiceUtility, 0), ^(void){
+		id strongSelf = weakSelf;
+		
+		if (!strongSelf) {
+			return;
+		}
+		
+		LMImageManager *imageManager = strongSelf;
+		
+		LMMusicTrack *musicTrack = [imageManager.trackDownloadQueue firstObject];
+		LMImageManagerCategory category = (LMImageManagerCategory)[[imageManager.categoryDownloadQueue firstObject] integerValue];
+		
+		[imageManager.trackDownloadQueue removeObjectAtIndex:0];
+		[imageManager.categoryDownloadQueue removeObjectAtIndex:0];
+		
+		[imageManager downloadImageForMusicTrack:musicTrack forCategory:category];
+		
+		NSLog(@"Downloading %@ from queue with category %d.", musicTrack.artist, category);
+	
+		if(imageManager.trackDownloadQueue.count > 0){
+			[imageManager downloadNextImageInQueue];
+		}
+	});
+}
+
+- (void)beginDownloadingImagesForCategory:(LMImageManagerCategory)category {
+	NSLog(@"[LMImageManager]: Will begin the process for downloading images for category %d.", category);
+	
+	NSMutableDictionary *imagesWhichRequireDownloading = [NSMutableDictionary new];
+	NSArray *collectionsAssociated = (category == LMImageManagerCategoryArtistImages) ? self.artistsCollection : self.albumsCollection;
+	
+	for(int i = 0; i < collectionsAssociated.count; i++){
+		LMMusicTrackCollection *collection = [collectionsAssociated objectAtIndex:i];
+		LMMusicTrack *representativeTrack = collection.representativeItem;
+		
+		[self imageNeedsDownloadingForMusicTrack:representativeTrack
+									 forCategory:category
+									  completion:^(BOOL needsDownloading) {
+										  NSLog(@"%d %@ needs downloading: %d", i, representativeTrack.artist, needsDownloading);
+										  
+										  if(needsDownloading){
+											  [self.trackDownloadQueue addObject:representativeTrack];
+											  [self.categoryDownloadQueue addObject:[NSNumber numberWithInteger:(NSInteger)category]];
+										  }
+										  
+										  //Since this should mean we're at least part way through the list (since its asynchronus), we can know with fairly high confidence that there will be some items in the queue, so we can start downloading them since we don't actually start downloading instantly.
+										  if(i == collectionsAssociated.count-1){
+											  [self downloadNextImageInQueue];
+										  }
+									  }];
+	}
 }
 
 

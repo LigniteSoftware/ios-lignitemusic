@@ -7,9 +7,12 @@
 */
 
 /*
+ 
  Hello, and thanks for translating Lignite Music!
  
  Please read the following notes *thoroughly*.
+ 
+ 0. In general it is a good idea when translating to keep strings equal to or lesser than the length of their English counterparts. All strings have been visually prepared so they fit the app. Long strings will often cause visual troubles throughout the app.
  
  1. The following characters in between quotes must be left in exact format and must not be deleted, changed or 
  modified in any other way:
@@ -32,6 +35,7 @@
 	If you need to clarify the above in your language, for example "Pebble" needs to be the equivalent of "Pebble Smartwatch" in your language to make sure the idea is clear, it's ok to add words for clarity if necessary and you don't change the legal name. To demonstrate as an example if you needed this, in simplified Chinese, you would write "Pebble 智能手表".
  
  Thanks, and have fun!
+ 
  */
 
 
@@ -55,7 +59,7 @@
 
 "ImagesDownloadWarningDescription" = "We will download images %@.\n\nHowever, we have noticed that %@.\n\nIt will take about %.02fMB to download the images%@.\n\nIf you tap '%@', we will download them anyway.\n\nOtherwise, if you tap '%@', you can always change your mind later in settings.";
 
-"AboutXOfYourStorage" = " (about %.02f%% f your remaining storage)"; //The space in front of the first bracket is important, as it will be inserted after the "[...] take about %.02fMB to download the images%@." (goes where the %@ is in there). If your language does not need the space feel free to take it out.
+"AboutXOfYourStorage" = " (about %.02f%% of your remaining storage)"; //The space in front of the first bracket is important, as it will be inserted after the "[...] take about %.02fMB to download the images%@." (goes where the %@ is in there). If your language does not need the space feel free to take it out.
 "UsingXOfYourStorage" = "These images are currently using %.02fMB of your storage.";
 "TakingUpXMB" = "Using %.02fMB";
 
@@ -86,6 +90,7 @@
 "YouCanTurnOnTo" = "You can turn this feature on to bring the most beauty to Lignite Music.\n\nWe will download images on WiFi and when you have enough storage, and will ask you what to do if either of those don't happen.";
 
 "ImagesDeleted" = "Images deleted";
+"WillBeginDownloading" = "Will download";
 
 /* Other settings related */
 "AppSettings" = "App Settings";
@@ -147,7 +152,7 @@
 
 "Icons" = "Icons";
 "IconsDescription" = "Many of our icons were from www.flaticon.com, created by icon artists who were generous enough to license them under CC 3.0. Here they are!";
-"DesignedByNobody" = "Designed by...";
+"DesignedByNobody" = "We're working on it!\n\nCredits for icon artists are coming soon.";
 
 /* Contact */
 "ContactUs" = "Contact us";

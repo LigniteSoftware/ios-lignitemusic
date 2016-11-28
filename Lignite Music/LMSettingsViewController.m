@@ -48,8 +48,6 @@
 	[self.view addSubview:self.settingsView];
 	
 	[self.settingsView autoPinEdgesToSuperviewEdges];
-	
-	NSLog(@"View did load!!!");
 }
 
 - (void)didReceiveMemoryWarning {

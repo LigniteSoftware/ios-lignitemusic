@@ -47,6 +47,18 @@
 }
 
 - (UIImage*)albumArt {
+	//Get the album artwork
+	UIImage *albumArtImage = [self uncorrectedAlbumArt];
+
+	//If that's not found, default back to no album art image
+	if(!albumArtImage){
+		albumArtImage = [LMAppIcon imageForIcon:LMIconNoAlbumArt];
+	}
+	
+	return albumArtImage;
+}
+
+- (UIImage*)uncorrectedAlbumArt {
 	LMMusicPlayerType currentPlayerType = [[LMMusicPlayer sharedMusicPlayer] playerType];
 	
 	if(currentPlayerType == LMMusicPlayerTypeSystemMusicPlayer || currentPlayerType == LMMusicPlayerTypeAppleMusic){
@@ -57,11 +69,6 @@
 		if(!albumArtImage){
 			//If not found search the image cache for it
 			albumArtImage = [[LMImageManager sharedImageManager] imageForMusicTrack:self withCategory:LMImageManagerCategoryAlbumImages];
-			
-			//If that's not found too, default back to no album art image
-			if(!albumArtImage){
-				albumArtImage = [LMAppIcon imageForIcon:LMIconNoAlbumArt];
-			}
 		}
 		
 		return albumArtImage;
@@ -77,9 +84,9 @@
 	
 	if(currentPlayerType == LMMusicPlayerTypeSystemMusicPlayer || currentPlayerType == LMMusicPlayerTypeAppleMusic){
 		UIImage *artistImage = [[LMImageManager sharedImageManager] imageForMusicTrack:self withCategory:LMImageManagerCategoryArtistImages];
-			
-		if(!artistImage){
-//			artistImage = [LMAppIcon imageForIcon:LMIconNoAlbumArt];
+		
+		if(!artistImage) {
+			artistImage = [LMAppIcon imageForIcon:LMIconNoAlbumArt];
 		}
 		
 		return artistImage;

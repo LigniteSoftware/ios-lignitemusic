@@ -34,7 +34,7 @@
 			}
 		}
 		else{
-			NSLog(@"Warning: There are 0 items in this LMMusicTrackCollection.");
+			NSLog(@"[LMMusicTrackCollection]: Warning - There are 0 items in this collection.");
 		}
 	}
 	else{

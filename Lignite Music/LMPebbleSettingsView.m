@@ -206,7 +206,7 @@
 	alertView.alertOptionColours = @[[LMColour darkLigniteRedColour], [LMColour ligniteRedColour]];
 	
 	[alertView launchOnView:self withCompletionHandler:^(NSUInteger optionSelected) {
-		NSLog(@"Selected %d", (int)optionSelected);
+//		NSLog(@"Selected %d", (int)optionSelected);
 		
 		if(optionSelected == 0){
 			[imageManager clearCacheForCategory:category];

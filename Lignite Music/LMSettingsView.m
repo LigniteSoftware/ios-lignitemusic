@@ -219,20 +219,40 @@
 	alertView.alertOptionColours = @[[LMColour darkLigniteRedColour], [LMColour ligniteRedColour]];
 	
 	[alertView launchOnView:self withCompletionHandler:^(NSUInteger optionSelected) {
-		NSLog(@"Selected %d", (int)optionSelected);
+//		NSLog(@"Selected %d", (int)optionSelected);
 		
-		if(optionSelected == 0){
-			[imageManager clearCacheForCategory:category];
-			
-			MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self animated:YES];
-			
-			hud.mode = MBProgressHUDModeCustomView;
-			UIImage *image = [[UIImage imageNamed:@"icon_checkmark.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-			hud.customView = [[UIImageView alloc] initWithImage:image];
-			hud.square = YES;
-			hud.label.text = NSLocalizedString(@"ImagesDeleted", nil);
-			
-			[hud hideAnimated:YES afterDelay:3.f];
+		LMImageManagerPermissionStatus previousPermissionStatus = [imageManager permissionStatusForCategory:category];
+		
+		if(previousPermissionStatus != LMImageManagerPermissionStatusDenied){
+			if(optionSelected == 0){
+				[imageManager clearCacheForCategory:category];
+				
+				MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self animated:YES];
+				
+				hud.mode = MBProgressHUDModeCustomView;
+				UIImage *image = [[UIImage imageNamed:@"icon_checkmark.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+				hud.customView = [[UIImageView alloc] initWithImage:image];
+				hud.square = YES;
+				hud.label.text = NSLocalizedString(@"ImagesDeleted", nil);
+				
+				[hud hideAnimated:YES afterDelay:3.f];
+			}
+		}
+		
+		if(previousPermissionStatus == LMImageManagerPermissionStatusDenied) {
+			if(optionSelected == 1){
+				[imageManager clearCacheForCategory:category];
+				
+				MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self animated:YES];
+				
+				hud.mode = MBProgressHUDModeCustomView;
+				UIImage *image = [[UIImage imageNamed:@"icon_checkmark.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+				hud.customView = [[UIImageView alloc] initWithImage:image];
+				hud.square = YES;
+				hud.label.text = NSLocalizedString(@"WillBeginDownloading", nil);
+				
+				[hud hideAnimated:YES afterDelay:3.f];
+			}
 		}
 		
 		LMImageManagerPermissionStatus permissionStatus = LMImageManagerPermissionStatusNotDetermined;

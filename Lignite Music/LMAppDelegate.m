@@ -104,7 +104,7 @@
 - (void)applicationWillTerminate:(UIApplication *)application {
     NSLog(@"[LMAppDelegate]: Will terminate.");
 	
-	NSLog(@"Setting %@", self.musicPlayer.nowPlayingTrack.title);
+//	NSLog(@"Setting %@", self.musicPlayer.nowPlayingTrack.title);
 	
 	[self.musicPlayer prepareForTermination];
     

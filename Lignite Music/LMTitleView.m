@@ -156,7 +156,6 @@
 }
 
 - (void)amountOfObjectsRequiredChangedTo:(NSUInteger)amountOfObjects forTableView:(LMTableView *)tableView {
-	NSLog(@"Title view needs %d objects", (int)amountOfObjects);
 	if(!self.itemArray){
 		self.itemArray = [NSMutableArray new];
 		self.itemIconArray = [NSMutableArray new];
