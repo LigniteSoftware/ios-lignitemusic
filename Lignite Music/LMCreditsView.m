@@ -32,6 +32,11 @@
  */
 @property UILabel *thankYouLabel;
 
+/**
+ The signatures view which goes above the thank you label.
+ */
+//@property UIImageView *signaturesView;
+
 @end
 
 @implementation LMCreditsView
@@ -68,15 +73,27 @@
 		[self.philippAndEdwinView autoSetDimension:ALDimensionHeight toSize:0.88*self.frame.size.width];
 		
 		
+//		self.signaturesView = [UIImageView newAutoLayoutView];
+//		self.signaturesView.image = [UIImage imageNamed:@"signatures.png"];
+//		self.signaturesView.contentMode = UIViewContentModeScaleToFill;
+//		[self.scrollView addSubview:self.signaturesView];
+//		
+//		[self.signaturesView autoAlignAxisToSuperviewAxis:ALAxisVertical];
+//		[self.signaturesView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.philippAndEdwinView withOffset:-self.frame.size.width*0.10];
+//		float scaleFactor = 0.75;
+//		[self.signaturesView autoSetDimension:ALDimensionWidth toSize:self.frame.size.width*scaleFactor];
+//		[self.signaturesView autoSetDimension:ALDimensionHeight toSize:self.frame.size.width*0.296*scaleFactor];
+		
+
 		self.thankYouLabel = [UILabel newAutoLayoutView];
-		self.thankYouLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:50.0f];
+		self.thankYouLabel.font = [UIFont fontWithName:@"HoneyScript-SemiBold" size:75.0f];
 		self.thankYouLabel.text = NSLocalizedString(@"ThankYou", nil);
 		self.thankYouLabel.textAlignment = NSTextAlignmentCenter;
 		[self.scrollView addSubview:self.thankYouLabel];
 		
 		[self.thankYouLabel autoSetDimension:ALDimensionWidth toSize:self.frame.size.width];
 		[self.thankYouLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.philippAndEdwinView withOffset:-self.frame.size.width*0.10];
-
+		
 		
 		NSMutableArray *textLabelsArray = [NSMutableArray new];
 		

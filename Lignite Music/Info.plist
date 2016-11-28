@@ -27,6 +27,7 @@
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>pebble</string>
+		<string>twitter</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
@@ -34,6 +35,11 @@
 	<string>NSAppleMusicUsageDescription</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>NSBluetoothPeripheralUsageDescription</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>HoneyScript-Light.ttf</string>
+		<string>HoneyScript-SemiBold.ttf</string>
+	</array>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>

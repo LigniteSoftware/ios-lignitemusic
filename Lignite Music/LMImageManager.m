@@ -99,12 +99,12 @@
 		
 		self.operationQueue = [NSOperationQueue new];
 		
-		LMMusicTrack *randomItem = [[self.artistsCollection objectAtIndex:1] representativeItem];
+		LMMusicTrack *randomItem = [[self.artistsCollection objectAtIndex:18] representativeItem];
 		[self imageNeedsDownloadingForMusicTrack:randomItem
 											 forCategory:LMImageManagerCategoryArtistImages
 											  completion:^(BOOL needsDownloading) {
 												  NSLog(@"%@: Needs downloading: %d", [self imageCacheKeyForMusicTrack:randomItem
-																													   forCategory:LMImageManagerCategoryArtistImages], needsDownloading);
+																										   forCategory:LMImageManagerCategoryArtistImages], needsDownloading);
 												  
 												  if(needsDownloading && [self permissionStatusForCategory:LMImageManagerCategoryArtistImages] == LMImageManagerPermissionStatusAuthorized){
 													  NSLog(@"Approved for download.");

@@ -18,6 +18,7 @@
 #import "LMPebbleManager.h"
 #import "LMCreditsViewController.h"
 #import "LMCoreViewController.h"
+#import "LMContactViewController.h"
 
 @interface LMSettingsView()<LMSectionTableViewDelegate>
 
@@ -66,7 +67,7 @@
 		case 2:
 			return 2;
 		case 3:
-			return 1;
+			return 2;
 	}
 	return 0;
 }
@@ -101,6 +102,8 @@
 			switch(indexPath.row){
 				case 0:
 					return NSLocalizedString(@"Credits", nil);
+				case 1:
+					return NSLocalizedString(@"ContactUs", nil);
 			}
 			break;
 	}
@@ -159,6 +162,8 @@
 			switch(indexPath.row){
 				case 0:
 					return NSLocalizedString(@"CreditsMore", nil);
+				case 1:
+					return nil;
 			}
 			break;
 	}
@@ -290,6 +295,11 @@
 					[self.coreViewController.navigationController showViewController:creditsViewController sender:self];
 					[(LMCoreViewController*)self.coreViewController setStatusBarBlurHidden:YES];
 					break;
+				}
+				case 1: {
+					LMContactViewController *contactViewController = [LMContactViewController new];
+					[self.coreViewController.navigationController showViewController:contactViewController sender:self];
+					[(LMCoreViewController*)self.coreViewController setStatusBarBlurHidden:YES];
 				}
 			}
 			break;

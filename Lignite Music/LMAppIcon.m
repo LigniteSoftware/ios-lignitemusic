@@ -58,6 +58,12 @@
 			return @"icon_pebbles.png";
 		case LMIconFunctionality:
 			return @"icon_functionality.png";
+		case LMIconPaperPlane:
+			return @"icon_paper_plane.png";
+		case LMIconTwitter:
+			return @"icon_twitter.png";
+		case LMIconLink:
+			return @"icon_link.png";
 	}
 }
 

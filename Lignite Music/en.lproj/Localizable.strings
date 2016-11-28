@@ -149,6 +149,14 @@
 "IconsDescription" = "Many of our icons were from www.flaticon.com, created by icon artists who were generous enough to license them under CC 3.0. Here they are!";
 "DesignedByNobody" = "Designed by...";
 
+/* Contact */
+"ContactUs" = "Contact us";
+"ContactHi" = "Hi!";
+"ContactDescription" = "We hope you enjoy Lignite Music as much as we enjoyed bringing it to life.\n\nShould you have any issues with it at all or would like to get in touch with us for any other reason, please feel free to contact us.";
+"ContactEmail" = "contact@lignite.io";
+"ContactTwitter" = "@WeAreLignite";
+"ContactWebsite" = "www.lignite.io";
+"ContactThanks" = "Thanks very much for your support and best regards from the both of us!";
 
 /*
  *

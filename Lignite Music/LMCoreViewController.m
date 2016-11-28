@@ -27,6 +27,7 @@
 #import "LMSettingsView.h"
 #import "LMSettingsViewController.h"
 #import "LMBrowsingDetailViewController.h"
+#import "LMContactView.h"
 
 @import SDWebImage;
 @import StoreKit;
@@ -409,6 +410,13 @@ BOOL didAutomaticallyClose = NO;
 	self.navigationController.interactivePopGestureRecognizer.delegate = self;
 	
 	NSLog(@"Loading view %@", self.navigationController);
+	
+//	LMContactView *contactView = [LMContactView newAutoLayoutView];
+//	[self.view addSubview:contactView];
+//	
+//	[contactView autoPinEdgesToSuperviewEdges];
+//	
+//	return;
 	
 //	self.settingsView = [LMSettingsView newAutoLayoutView];
 //	self.settingsView.coreViewController = self;

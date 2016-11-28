@@ -139,7 +139,10 @@
 			return collection.representativeItem.artist ? collection.representativeItem.artist : NSLocalizedString(@"UnknownArtist", nil);
 		}
 		case LMMusicTypeArtists: {
-			return @"Left Text";
+			if([collection.representativeItem.artist isEqualToString:@"Blink-182"]){
+				return @"3 albums";
+			}
+			return @"3 albums";
 		}
 		default: {
 			return nil;
