@@ -400,34 +400,6 @@ BOOL didAutomaticallyClose = NO;
 	return YES;
 }
 
-- (void)checkImagePermission {
-	LMImageManager *imageManager = [LMImageManager sharedImageManager];
-	LMImageManagerConditionLevel currentConditionLevel = [imageManager conditionLevelForDownloadingForCategory:LMImageManagerCategoryArtistImages];
-	
-	switch(currentConditionLevel){
-		case LMImageManagerConditionLevelNever:
-			NSLog(@"Images should never download.");
-			break;
-		case LMImageManagerConditionLevelSuboptimal: {
-			NSLog(@"There are conditions which worry me for downloading images. I will check with user first.");
-			[imageManager launchPermissionRequestOnView:self.navigationController.view
-											forCategory:LMImageManagerCategoryArtistImages
-								  withCompletionHandler:^(LMImageManagerPermissionStatus permissionStatus) {
-									  NSLog(@"asdlkndsf %d", permissionStatus);
-									  if(permissionStatus == LMImageManagerPermissionStatusAuthorized) {
-										  NSLog(@"Authorized. Beginning download.");
-										  [imageManager beginDownloadingImagesForCategory:LMImageManagerCategoryArtistImages];
-									  }
-								  }];
-			break;
-		}
-		case LMImageManagerConditionLevelOptimal:
-			NSLog(@"Clear to go!!!");
-			[imageManager beginDownloadingImagesForCategory:LMImageManagerCategoryArtistImages];
-			break;
-	}
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view
@@ -642,7 +614,9 @@ BOOL didAutomaticallyClose = NO;
 						[self.statusBarBlurView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 						self.statusBarBlurViewHeightConstraint = [self.statusBarBlurView autoSetDimension:ALDimensionHeight toSize:20*[LMSettings shouldShowStatusBar]];
 						
-						[NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(checkImagePermission) userInfo:nil repeats:NO];
+						LMImageManager *imageManager = [LMImageManager sharedImageManager];
+						imageManager.viewToDisplayAlertsOn = self.navigationController.view;
+						[imageManager downloadIfNeededForCategory:LMImageManagerCategoryArtistImages];
 					});
 					break;
 				}

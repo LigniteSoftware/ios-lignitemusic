@@ -11,14 +11,6 @@
 @class LMMusicTrack;
 @class LMImageManager;
 
-@protocol LMImageManagerDelegate <NSObject>
-
-
-
-@end
-
-@interface LMImageManager : NSObject
-
 /**
  LMImageManagerCategory is the category of images, such as artist images.
  */
@@ -53,12 +45,45 @@ typedef enum {
 	LMImageManagerSpecialDownloadPermissionCellularData
 } LMImageManagerSpecialDownloadPermission;
 
+@protocol LMImageManagerDelegate <NSObject>
+@optional
+
+/**
+ The cache size of a certain category changed.
+
+ @param newCacheSize The new cache size in bytes.
+ @param category The category which had the change of cache size.
+ */
+- (void)cacheSizeChangedTo:(uint64_t)newCacheSize forCategory:(LMImageManagerCategory)category;
+
+@end
+
+@interface LMImageManager : NSObject
+
+
+
 /**
  The system's shared image manager.
 
  @return The shared image manager.
  */
 + (LMImageManager*)sharedImageManager;
+
+/**
+ Adds a delegate to the image manager's list of delegates.
+
+ @param delegate The delegate to add.
+ */
+- (void)addDelegate:(id<LMImageManagerDelegate>)delegate;
+
+/**
+ Removes a delegate from the image manager's list of delegates.
+
+ @param delegate The delegate to remove.
+ */
+- (void)removeDelegate:(id<LMImageManagerDelegate>)delegate;
+
+
 
 /**
  Gets the total space allocated in a certain disk cache.
@@ -82,6 +107,8 @@ typedef enum {
  */
 - (void)clearCacheForCategory:(LMImageManagerCategory)category;
 
+
+
 /**
  Get an image which has been downloaded for a certain category from the music track provided. nil if the image is not in storage.
 
@@ -97,6 +124,13 @@ typedef enum {
  @param category The category of images to begin the process for.
  */
 - (void)beginDownloadingImagesForCategory:(LMImageManagerCategory)category;
+
+/**
+ Checks whether or not the user has authorized downloading, handles the according authorization and will begin downloading images if necessary.
+
+ @param category The category to begin downloading for.
+ */
+- (void)downloadIfNeededForCategory:(LMImageManagerCategory)category;
 
 /**
  Gets the current condition level of downloading a category of images.
@@ -123,6 +157,22 @@ typedef enum {
 - (void)setPermissionStatus:(LMImageManagerPermissionStatus)status forCategory:(LMImageManagerCategory)category;
 
 /**
+ Gets the permission status for a certain special download permission.
+ 
+ @param specialDownloadPermission The special download permission to check.
+ @return The permission status of that special download permission.
+ */
+- (LMImageManagerPermissionStatus)permissionStatusForSpecialDownloadPermission:(LMImageManagerSpecialDownloadPermission)specialDownloadPermission;
+
+/**
+ Sets the permission status for the associated special download permission.
+
+ @param permissionStatus The new status of the permission to set.
+ @param specialDownloadPermission The special download permission to set the status to.
+ */
+- (void)setPermissionStatus:(LMImageManagerPermissionStatus)permissionStatus forSpecialDownloadPermission:(LMImageManagerSpecialDownloadPermission)specialDownloadPermission;
+
+/**
  Launch the permission request dialog on a UIView for a certain category. All saving of the permission status and dismissing of the created view is automatically handled.
 
  @param view The view to launch the permission request on.
@@ -130,5 +180,12 @@ typedef enum {
  @param completionHandler The completion handler for when the user makes their decision.
  */
 - (void)launchPermissionRequestOnView:(UIView*)view forCategory:(LMImageManagerCategory)category withCompletionHandler:(void(^)(LMImageManagerPermissionStatus permissionStatus))completionHandler;
+
+
+
+/**
+ The view of which to place alerts on top of.
+ */
+@property UIView *viewToDisplayAlertsOn;
 
 @end

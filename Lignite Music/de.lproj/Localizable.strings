@@ -52,7 +52,7 @@
 
 "ImagesDownloadWarningDescription" = "Wir werden Bilder %@.\n\nLeider mussten wir feststellen, dass %@.\n\nDie herunterzuladende Datenmenge beträgt %.02fMB %@.\n\nFalls du auf '%@' tippst, werden wir die Bilder trotzdem herunterladen.\n\nSolltest du andernfalls auf '%@' tippen, kannst du deine Meinung jederzeit in den Einstellungen ändern.";
 
-"AboutXOfYourStorage" = " (ungefähr %.02f%% deiner verbleibenden Speicherkapazität)"; //The space in front of the first bracket is important, as it will be inserted after the "[...] take about %.02fMB to download the images%@." (goes where the %@ is in there). If your language does not need the space feel free to take it out.
+"AboutXOfYourStorage" = " (ungefähr %.02f%% deines noch verfügbaren Speicherplatzes)"; //The space in front of the first bracket is important, as it will be inserted after the "[...] take about %.02fMB to download the images%@." (goes where the %@ is in there). If your language does not need the space feel free to take it out.
 "UsingXOfYourStorage" = "Die Bilder belegen ca. %.02fMB deiner verbleibenden Speicherkapazität.";
 "TakingUpXMB" = "%.02fMB verwendet";
 

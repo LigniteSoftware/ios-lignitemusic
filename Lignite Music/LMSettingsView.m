@@ -20,7 +20,7 @@
 #import "LMCoreViewController.h"
 #import "LMContactViewController.h"
 
-@interface LMSettingsView()<LMSectionTableViewDelegate>
+@interface LMSettingsView()<LMSectionTableViewDelegate, LMImageManagerDelegate>
 
 @property LMSectionTableView *sectionTableView;
 
@@ -174,6 +174,10 @@
 	return [LMAppIcon imageForIcon:LMIconNoAlbumArt];
 }
 
+- (void)cacheSizeChangedTo:(uint64_t)newCacheSize forCategory:(LMImageManagerCategory)category {
+	[self.sectionTableView reloadData];
+}
+
 - (void)cacheAlertForCategory:(LMImageManagerCategory)category {
 	LMImageManager *imageManager = [LMImageManager sharedImageManager];
 	
@@ -219,7 +223,12 @@
 	alertView.alertOptionColours = @[[LMColour darkLigniteRedColour], [LMColour ligniteRedColour]];
 	
 	[alertView launchOnView:self withCompletionHandler:^(NSUInteger optionSelected) {
-//		NSLog(@"Selected %d", (int)optionSelected);
+		//Reset the special permission statuses because the user's stance maybe different now and we'll have to recheck
+		[imageManager setPermissionStatus:LMImageManagerPermissionStatusNotDetermined
+			 forSpecialDownloadPermission:LMImageManagerSpecialDownloadPermissionLowStorage];
+		
+		[imageManager setPermissionStatus:LMImageManagerPermissionStatusNotDetermined
+			 forSpecialDownloadPermission:LMImageManagerSpecialDownloadPermissionCellularData];
 		
 		LMImageManagerPermissionStatus previousPermissionStatus = [imageManager permissionStatusForCategory:category];
 		
@@ -252,6 +261,8 @@
 				hud.label.text = NSLocalizedString(@"WillBeginDownloading", nil);
 				
 				[hud hideAnimated:YES afterDelay:3.f];
+				
+				[imageManager beginDownloadingImagesForCategory:category];
 			}
 		}
 		
@@ -377,7 +388,15 @@
 		[self.sectionTableView autoPinEdgesToSuperviewEdges];
 		
 		[self.sectionTableView setup];
+		
+		LMImageManager *imageManager = [LMImageManager sharedImageManager];
+		[imageManager addDelegate:self];
 	}
+}
+
+- (void)prepareForDestroy {
+	LMImageManager *imageManager = [LMImageManager sharedImageManager];
+	[imageManager removeDelegate:self];
 }
 
 @end

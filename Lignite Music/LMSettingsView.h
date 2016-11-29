@@ -14,4 +14,6 @@
 
 @property UIViewController *settingsViewController;
 
+- (void)prepareForDestroy;
+
 @end

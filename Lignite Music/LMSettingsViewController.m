@@ -50,6 +50,10 @@
 	[self.settingsView autoPinEdgesToSuperviewEdges];
 }
 
+- (void)viewDidDisappear:(BOOL)animated {
+	[self.settingsView prepareForDestroy];
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }

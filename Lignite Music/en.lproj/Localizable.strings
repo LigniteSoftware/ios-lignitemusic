@@ -68,7 +68,7 @@
  6. The "DontDownload" string
  */
 
-"AboutXOfYourStorage" = " (about %.02f%% of your remaining storage)"; //The space in front of the first bracket is important, as it will be inserted after the "[...] take about %.02fMB to download the images%@." (goes where the %@ is in there). If your language does not need the space feel free to take it out.
+"AboutXOfYourStorage" = " (about %.02f%% of your remaining storage in total)"; //The space in front of the first bracket is important, as it will be inserted after the "[...] take about %.02fMB to download the images%@." (goes where the %@ is in there). If your language does not need the space feel free to take it out.
 "UsingXOfYourStorage" = "These images are currently using %.02fMB of your storage.";
 "TakingUpXMB" = "Using %.02fMB";
 
