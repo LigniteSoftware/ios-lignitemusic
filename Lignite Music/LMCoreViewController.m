@@ -323,16 +323,12 @@ BOOL didAutomaticallyClose = NO;
 
 - (void)showWhatsPoppin {
 	NSArray *currentBuildChanges = @[
-									 @"Added Apple Music support",
-									 @"Added iTunes Match support (experimental)",
-									 @"Added onboarding",
-									 @"Added actual tutorial",
-									 @"Fixed app crashing due to Apple Music song",
-									 @"Fixed app automatically skipping over Apple Music/cloud songs",
-									 @"Fixed a crash due to overloading music player",
-									 @"Fixed music not playing sometimes",
-									 @"Fixed not being able to handle rejection of music permission",
-									 @"Improved app's self confidence across the board :)"
+									 @"Added artist view",
+									 @"Added settings",
+									 @"Added status bar option",
+									 @"Added support for automatic image downloading",
+									 @"Fixed crash opening now playing",
+									 @"Improved swipe gestures getting out of views"
 									 ];
 	
 	NSArray *currentBuildIssues = @[
@@ -414,15 +410,12 @@ BOOL didAutomaticallyClose = NO;
 			break;
 		case LMImageManagerConditionLevelSuboptimal: {
 			NSLog(@"There are conditions which worry me for downloading images. I will check with user first.");
-			[self attachBrowsingAssistantToView:self.view];
-			[imageManager launchPermissionRequestOnView:self.view
+			[imageManager launchPermissionRequestOnView:self.navigationController.view
 											forCategory:LMImageManagerCategoryArtistImages
 								  withCompletionHandler:^(LMImageManagerPermissionStatus permissionStatus) {
-									  [NSTimer scheduledTimerWithTimeInterval:0.75 repeats:NO block:^(NSTimer * _Nonnull timer) {
-										  [self attachBrowsingAssistantToView:self.navigationController.view];
-									  }];
-									  
+									  NSLog(@"asdlkndsf %d", permissionStatus);
 									  if(permissionStatus == LMImageManagerPermissionStatusAuthorized) {
+										  NSLog(@"Authorized. Beginning download.");
 										  [imageManager beginDownloadingImagesForCategory:LMImageManagerCategoryArtistImages];
 									  }
 								  }];

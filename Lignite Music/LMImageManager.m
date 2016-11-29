@@ -49,7 +49,8 @@
 
  @return The amount of calls.
  */
-#define LMLastFMAPICallsPerSecondLimit 3.0
+#define LMLastFMAPICallsPerSecondLimit 0.5
+//TODO: change this to 3.0 for release
 
 /**
  The amount of items per page that LastFM should return in its API results.
@@ -394,6 +395,7 @@
 	}
 	
 	LMImageManagerPermissionStatus permissionStatusForCategory = [self permissionStatusForCategory:category];
+	
 	switch(permissionStatusForCategory){
 		case LMImageManagerPermissionStatusDenied:
 			return LMImageManagerConditionLevelNever;
@@ -403,8 +405,30 @@
 			break;
 	}
 	
-	if([self storageSpaceLowForCategory:category] || [self isOnCellularData]){
-		return LMImageManagerConditionLevelSuboptimal;
+	LMImageManagerPermissionStatus permissionStatusForLowStorage = [self permissionStatusForSpecialDownloadPermission:LMImageManagerSpecialDownloadPermissionLowStorage];
+	
+	if([self storageSpaceLowForCategory:category]){
+		switch(permissionStatusForLowStorage) {
+			case LMImageManagerPermissionStatusNotDetermined:
+				return LMImageManagerConditionLevelSuboptimal;
+			case LMImageManagerPermissionStatusDenied:
+				return LMImageManagerConditionLevelNever;
+			case LMImageManagerPermissionStatusAuthorized:
+				break;
+		}
+	}
+	
+	LMImageManagerPermissionStatus permissionStatusForCellularData = [self permissionStatusForSpecialDownloadPermission:LMImageManagerSpecialDownloadPermissionCellularData];
+	
+	if([self isOnCellularData]){
+		switch(permissionStatusForCellularData) {
+			case LMImageManagerPermissionStatusNotDetermined:
+				return LMImageManagerConditionLevelSuboptimal;
+			case LMImageManagerPermissionStatusDenied:
+				return LMImageManagerConditionLevelNever;
+			case LMImageManagerPermissionStatusAuthorized:
+				break;
+		}
 	}
 	
 	//Conditions are optimal and the user has not explicitly denied us from downloading the images, so set it to authorized
@@ -512,6 +536,37 @@
 	return status != NotReachable;
 }
 
+- (NSString*)storageKeyForSpecialDownloadPermission:(LMImageManagerSpecialDownloadPermission)specialDownloadPermission {
+	switch(specialDownloadPermission){
+		case LMImageManagerSpecialDownloadPermissionLowStorage:
+			return @"LMImageManagerSpecialDownloadPermissionLowStorage";
+		case LMImageManagerSpecialDownloadPermissionCellularData:
+			return @"LMImageManagerSpecialDownloadPermissionCellularData";
+	}
+}
+
+- (LMImageManagerPermissionStatus)permissionStatusForSpecialDownloadPermission:(LMImageManagerSpecialDownloadPermission)specialDownloadPermission {
+	NSString *downloadPermissionKey = [self storageKeyForSpecialDownloadPermission:specialDownloadPermission];
+	
+	LMImageManagerPermissionStatus permissionStatus = LMImageManagerPermissionStatusNotDetermined;
+	
+	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+	if([userDefaults objectForKey:downloadPermissionKey]){
+		permissionStatus = (LMImageManagerPermissionStatus)[userDefaults integerForKey:downloadPermissionKey];
+	}
+	
+	return permissionStatus;
+}
+
+- (void)setPermissionStatus:(LMImageManagerPermissionStatus)permissionStatus forSpecialDownloadPermission:(LMImageManagerSpecialDownloadPermission)specialDownloadPermission {
+	
+	NSString *downloadPermissionKey = [self storageKeyForSpecialDownloadPermission:specialDownloadPermission];
+	
+	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+	[userDefaults setInteger:(NSInteger)permissionStatus forKey:downloadPermissionKey];
+	[userDefaults synchronize];
+}
+
 - (NSString*)permissionRequestDescriptionStringForCategory:(LMImageManagerCategory)category {
 	BOOL storageSpaceLow = [self storageSpaceLowForCategory:category];
 	BOOL isOnCellularData = [self isOnCellularData];
@@ -563,6 +618,9 @@
 			break;
 	}
 	
+	BOOL storageSpaceLow = [self storageSpaceLowForCategory:category];
+	BOOL isOnCellularData = [self isOnCellularData];
+	
 	LMAlertView *alertView = [LMAlertView newAutoLayoutView];
 	
 	alertView.title = NSLocalizedString(titleString, nil);
@@ -571,7 +629,16 @@
 	alertView.alertOptionTitles = @[NSLocalizedString(@"DontDownload", nil), NSLocalizedString(@"DownloadAnyway", nil)];
 	
 	[alertView launchOnView:view withCompletionHandler:^(NSUInteger optionSelected) {
-		completionHandler((LMImageManagerPermissionStatus)optionSelected);
+		LMImageManagerPermissionStatus permissionStatus = (optionSelected == 1) ? LMImageManagerPermissionStatusAuthorized : LMImageManagerPermissionStatusDenied;
+		
+		completionHandler(permissionStatus);
+		
+		if(storageSpaceLow){
+			[self setPermissionStatus:permissionStatus forSpecialDownloadPermission:LMImageManagerSpecialDownloadPermissionLowStorage];
+		}
+		if(isOnCellularData){
+			[self setPermissionStatus:permissionStatus forSpecialDownloadPermission:LMImageManagerSpecialDownloadPermissionCellularData];
+		}
 	}];
 }
 

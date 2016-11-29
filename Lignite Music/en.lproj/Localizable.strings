@@ -39,7 +39,6 @@
  */
 
 
-
 /* 
  
  NEW STRINGS
@@ -57,7 +56,17 @@
 "ArtistImagesTitle" = "Artist images";
 "AlbumImagesTitle" = "Missing album cover art";
 
+//See comment below this string for how it will be formatted
 "ImagesDownloadWarningDescription" = "We will download images %@.\n\nHowever, we have noticed that %@.\n\nIt will take about %.02fMB to download the images%@.\n\nIf you tap '%@', we will download them anyway.\n\nOtherwise, if you tap '%@', you can always change your mind later in settings.";
+/*
+ What is inserted into "ImagesDownloadWarningDescription", in order of formatters:
+ 1. Either the "OfYourArtists" string or "OfYourAlbums" string
+ 2. Either or both of the following strings: "YouAreOnData", "YouAreLowOnStorage" (the "SpaceAndSpace" string would go in between these if both)
+ 3. The amount of space in MB that the images will take up (estimated)
+ 4. If the user is low on storage, it will insert the "AboutXOfYourStorage" string here
+ 5. The "DownloadAnyway" string
+ 6. The "DontDownload" string
+ */
 
 "AboutXOfYourStorage" = " (about %.02f%% of your remaining storage)"; //The space in front of the first bracket is important, as it will be inserted after the "[...] take about %.02fMB to download the images%@." (goes where the %@ is in there). If your language does not need the space feel free to take it out.
 "UsingXOfYourStorage" = "These images are currently using %.02fMB of your storage.";
@@ -74,8 +83,8 @@
 "DontDownload" = "Don't download"; //Goes on the deny button for downloading images
 
 "ImageDownloads" = "Image Downloads";
-"LMImageManagerPermissionStatusDenied" = "won't download";
-"LMImageManagerPermissionStatusAuthorized" = "downloads on WiFi";
+"LMImageManagerPermissionStatusDenied" = "downloading is off";
+"LMImageManagerPermissionStatusAuthorized" = "downloading is on";
 
 "ClearCache" = "Delete images";
 "ClearCacheAndDisable" = "Delete images and disable";

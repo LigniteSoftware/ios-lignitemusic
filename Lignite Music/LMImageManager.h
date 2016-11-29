@@ -46,6 +46,14 @@ typedef enum {
 } LMImageManagerConditionLevel;
 
 /**
+ LMImageManagerSpecialDownloadPermission are special permissions which the user needs to explicitly grant for us to download images
+ */
+typedef enum {
+	LMImageManagerSpecialDownloadPermissionLowStorage = 0,
+	LMImageManagerSpecialDownloadPermissionCellularData
+} LMImageManagerSpecialDownloadPermission;
+
+/**
  The system's shared image manager.
 
  @return The shared image manager.
