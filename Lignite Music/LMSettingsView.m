@@ -232,10 +232,13 @@
 		
 		LMImageManagerPermissionStatus previousPermissionStatus = [imageManager permissionStatusForCategory:category];
 		
+		//In the rare case that for some reason something was left behind in the cache, we want to make sure the disable button always clears it even if it's already disabled, just to make sure the user is happy.
+		if(optionSelected == 0){
+			[imageManager clearCacheForCategory:category];
+		}
+		
 		if(previousPermissionStatus != LMImageManagerPermissionStatusDenied){
 			if(optionSelected == 0){
-				[imageManager clearCacheForCategory:category];
-				
 				MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self animated:YES];
 				
 				hud.mode = MBProgressHUDModeCustomView;

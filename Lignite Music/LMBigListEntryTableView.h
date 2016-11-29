@@ -74,8 +74,8 @@
 - (void)reloadControlBars;
 
 /**
- Reload the core table view's subview data.
+ Reload the core table view's data, which will simply redraw anything on screen.
  */
-- (void)reloadSubviewData;
+- (void)reloadData;
 
 @end

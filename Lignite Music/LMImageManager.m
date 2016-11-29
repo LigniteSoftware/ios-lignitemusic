@@ -49,7 +49,7 @@
 
  @return The amount of calls.
  */
-#define LMLastFMAPICallsPerSecondLimit 0.5
+#define LMLastFMAPICallsPerSecondLimit 4.0
 //TODO: change this to 3.0 for release
 
 /**
@@ -166,6 +166,7 @@
 			LMImageManager *imageManager = strongSelf;
 			dispatch_async(dispatch_get_main_queue(), ^{
 				[imageManager downloadIfNeededForCategory:LMImageManagerCategoryArtistImages];
+				[imageManager downloadIfNeededForCategory:LMImageManagerCategoryAlbumImages];
 			});
 		});
 	}
@@ -211,9 +212,9 @@
 	for(int i = 0; i < self.delegates.count; i++){
 		id<LMImageManagerDelegate> delegate = [self.delegates objectAtIndex:i];
 		
-		if([delegate respondsToSelector:@selector(imageCacheChanged)]){
+		if([delegate respondsToSelector:@selector(imageCacheChangedForCategory:)]){
 			dispatch_async(dispatch_get_main_queue(), ^{
-				[delegate imageCacheChanged];
+				[delegate imageCacheChangedForCategory:category];
 			});
 		}
 	}
@@ -247,6 +248,7 @@
 	[imageCache clearMemory];
 	
 	[self notifyDelegatesOfCacheSizeChangeForCategory:category];
+	[self notifyDelegatesOfImageCacheChangeForCategory:category];
 }
 
 - (NSString*)imageCacheKeyForMusicTrack:(LMMusicTrack*)representativeItem forCategory:(LMImageManagerCategory)category {
@@ -301,6 +303,10 @@
 		case LMImageManagerCategoryAlbumImages:
 			typeOfSearch = @"album";
 			imageNameSearchString = randomTrack.albumTitle;
+			
+			if(randomTrack.artist){
+				imageNameSearchString = [NSString stringWithFormat:@"%@ %@", randomTrack.albumTitle, randomTrack.artist];
+			}
 			break;
 		case LMImageManagerCategoryArtistImages:
 			typeOfSearch = @"artist";
@@ -430,7 +436,7 @@
 		
 		[imageManager downloadImageForMusicTrack:musicTrack forCategory:category];
 		
-		NSLog(@"Downloading %@ from queue with category %d.", musicTrack.artist, category);
+		NSLog(@"Downloading %@ from queue with category %d.", musicTrack.albumTitle, category);
 	
 		if(imageManager.trackDownloadQueue.count > 0){
 			[imageManager downloadNextImageInQueue];
@@ -450,7 +456,7 @@
 		[self imageNeedsDownloadingForMusicTrack:representativeTrack
 									 forCategory:category
 									  completion:^(BOOL needsDownloading) {
-										  NSLog(@"%d %@ needs downloading: %d", i, representativeTrack.artist, needsDownloading);
+										  NSLog(@"%d %@ needs downloading: %d", i, representativeTrack.albumTitle, needsDownloading);
 										  
 										  if(needsDownloading && ![self.trackDownloadQueue containsObject:representativeTrack]){
 											  [self.trackDownloadQueue addObject:representativeTrack];
@@ -473,7 +479,7 @@
 			break;
 		case LMImageManagerConditionLevelSuboptimal: {
 			[self launchPermissionRequestOnView:self.viewToDisplayAlertsOn
-											forCategory:LMImageManagerCategoryArtistImages
+											forCategory:category
 								  withCompletionHandler:^(LMImageManagerPermissionStatus permissionStatus) {
 									  if(permissionStatus == LMImageManagerPermissionStatusAuthorized) {
 										  [self beginDownloadingImagesForCategory:category];
@@ -500,9 +506,7 @@
 	}
 	
 	LMImageManagerPermissionStatus permissionStatusForCategory = [self permissionStatusForCategory:category];
-	
-	NSLog(@"Permission status %d", permissionStatusForCategory);
-	
+		
 	switch(permissionStatusForCategory){
 		case LMImageManagerPermissionStatusDenied:
 			return LMImageManagerConditionLevelNever;

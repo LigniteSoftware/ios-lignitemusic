@@ -616,7 +616,7 @@ BOOL didAutomaticallyClose = NO;
 						
 						LMImageManager *imageManager = [LMImageManager sharedImageManager];
 						imageManager.viewToDisplayAlertsOn = self.navigationController.view;
-						[imageManager downloadIfNeededForCategory:LMImageManagerCategoryArtistImages];
+						[imageManager downloadIfNeededForCategory:LMImageManagerCategoryAlbumImages];
 					});
 					break;
 				}

@@ -57,9 +57,11 @@ typedef enum {
 - (void)cacheSizeChangedTo:(uint64_t)newCacheSize forCategory:(LMImageManagerCategory)category;
 
 /**
- The image cache changed.
+ The image cache changed for a certain category.
+ 
+ @param category The category which had the change of images.
  */
-- (void)imageCacheChanged;
+- (void)imageCacheChangedForCategory:(LMImageManagerCategory)category;
 
 @end
 

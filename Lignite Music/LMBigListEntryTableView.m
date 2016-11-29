@@ -187,7 +187,7 @@
 	}
 }
 
-- (void)reloadSubviewData {
+- (void)reloadData {
 	[self.tableView reloadData];
 }
 

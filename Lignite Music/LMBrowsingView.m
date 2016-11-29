@@ -394,10 +394,10 @@
 	}
 }
 
-- (void)imageCacheChanged {
-	if(self.musicType == LMMusicTypeArtists){
-		[self.bigListEntryTableView reloadSubviewData];
-	}
+- (void)imageCacheChangedForCategory:(LMImageManagerCategory)category {
+//	if(self.musicType == LMMusicTypeArtists && category == LMImageManagerCategoryArtistImages){
+		[self.bigListEntryTableView reloadData];
+//	}
 }
 
 - (void)setup {

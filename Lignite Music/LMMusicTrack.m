@@ -65,7 +65,7 @@
 		MPMediaItem *mediaItem = self.sourceTrack;
 		
 		//Get the standard album artwork
-		UIImage *albumArtImage = [mediaItem.artwork imageWithSize:CGSizeMake(480, 480)];
+		UIImage *albumArtImage = nil;//[mediaItem.artwork imageWithSize:CGSizeMake(480, 480)];
 		if(!albumArtImage){
 			//If not found search the image cache for it
 			albumArtImage = [[LMImageManager sharedImageManager] imageForMusicTrack:self withCategory:LMImageManagerCategoryAlbumImages];
