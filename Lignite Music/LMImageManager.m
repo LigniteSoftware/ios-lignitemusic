@@ -13,6 +13,7 @@
 #import "LMAlertView.h"
 #import "LMReachability.h"
 #import "LMMusicPlayer.h"
+#import "LMSettings.h"
 @import SDWebImage;
 
 /**
@@ -49,15 +50,22 @@
 
  @return The amount of calls.
  */
-#define LMLastFMAPICallsPerSecondLimit 4.0
+#define LMLastFMAPICallsPerSecondLimit 0.25
 //TODO: change this to 3.0 for release
+
+/**
+ The amount of seconds between API calls.
+
+ @return The amount of seconds.
+ */
+#define LMLastFMAPISecondsBetweenAPICalls (1.0/LMLastFMAPICallsPerSecondLimit)
 
 /**
  The amount of items per page that LastFM should return in its API results.
 
  @return The number of items per page.
  */
-#define LMLastFMItemsPerPageLimit 15
+#define LMLastFMItemsPerPageLimit 40
 
 /**
  How often the image manager should check to download images (WiFi might have changed, etc.)
@@ -112,6 +120,11 @@
  The delegates for the image manager.
  */
 @property NSMutableArray<id<LMImageManagerDelegate>>* delegates;
+
+/**
+ The last time an image was downloaded.
+ */
+@property NSTimeInterval lastImageDownloadTime;
 
 @end
 
@@ -218,6 +231,29 @@
 			});
 		}
 	}
+}
+
+- (BOOL)highQualityImages {
+	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+	
+	BOOL highQuality = NO;
+	
+	if([userDefaults objectForKey:LMSettingsKeyHighQualityImages]){
+		highQuality = [userDefaults boolForKey:LMSettingsKeyHighQualityImages];
+	}
+	
+	return highQuality;
+}
+
+- (void)highQualityImagesOptionDidChange {
+	self.trackDownloadQueue = [NSMutableArray new];
+	self.categoryDownloadQueue = [NSMutableArray new];
+	
+	[self clearCacheForCategory:LMImageManagerCategoryAlbumImages];
+	[self clearCacheForCategory:LMImageManagerCategoryArtistImages];
+	
+	[self beginDownloadingImagesForCategory:LMImageManagerCategoryAlbumImages];
+//	[self beginDownloadingImagesForCategory:LMImageManagerCategoryArtistImages];
 }
 
 - (SDImageCache*)imageCacheForCategory:(LMImageManagerCategory)category {
@@ -357,11 +393,17 @@
 			
 			//Check if it's the size we need
 			if([itemImageSize isEqualToString:sizeRequired] && ![itemImageURL isEqualToString:@""]){
-				NSLog(@"Extra large image @ %@", itemImageURL);
-				
 				NSString *imageCacheKey = [self imageCacheKeyForMusicTrack:randomTrack forCategory:category];
 				
 				NSLog(@"Cache key %@", imageCacheKey);
+				
+				if([self highQualityImages]){
+					itemImageURL = [itemImageURL stringByReplacingOccurrencesOfString:@"/300x300" withString:@""];
+					NSLog(@"High quality image being downloaded from %@.", itemImageURL);
+				}
+				else{
+					NSLog(@"Extra large image @ %@", itemImageURL);
+				}
 
 				//Good to download!
 				
@@ -413,6 +455,22 @@
 		
 		LMImageManager *imageManager = strongSelf;
 		
+		NSTimeInterval currentDownloadTime = [[NSDate new] timeIntervalSince1970];
+		NSTimeInterval lastDownloadTime = imageManager.lastImageDownloadTime;
+		
+		NSTimeInterval differenceInTime = currentDownloadTime-lastDownloadTime;
+		
+		NSLog(@"Difference %f seconds between %f", differenceInTime, LMLastFMAPISecondsBetweenAPICalls);
+		
+		if(differenceInTime < LMLastFMAPISecondsBetweenAPICalls){
+			NSLog(@"Attempting to make calls to fast! Rejecting.");
+			return;
+		}
+		
+		if(imageManager.trackDownloadQueue.count < 1){
+			return;
+		}
+		
 		LMMusicTrack *musicTrack = [imageManager.trackDownloadQueue firstObject];
 		LMImageManagerCategory category = (LMImageManagerCategory)[[imageManager.categoryDownloadQueue firstObject] integerValue];
 		
@@ -430,8 +488,12 @@
 			return;
 		}
 		
-		[imageManager.trackDownloadQueue removeObjectAtIndex:0];
-		[imageManager.categoryDownloadQueue removeObjectAtIndex:0];
+		if(imageManager.trackDownloadQueue.count > 0){
+			[imageManager.trackDownloadQueue removeObjectAtIndex:0];
+		}
+		if(imageManager.categoryDownloadQueue.count > 0){
+			[imageManager.categoryDownloadQueue removeObjectAtIndex:0];
+		}
 		
 		
 		[imageManager downloadImageForMusicTrack:musicTrack forCategory:category];
@@ -441,6 +503,8 @@
 		if(imageManager.trackDownloadQueue.count > 0){
 			[imageManager downloadNextImageInQueue];
 		}
+		
+		imageManager.lastImageDownloadTime = currentDownloadTime;
 	});
 }
 
@@ -615,7 +679,8 @@
 }
 
 - (uint64_t)spaceRequiredForCategory:(LMImageManagerCategory)category {
-	return [self itemCountForCategory:category]*AVERAGE_IMAGE_SIZE_IN_BYTES;
+	//High quality images are about 10x the space of normal images
+	return [self itemCountForCategory:category]*AVERAGE_IMAGE_SIZE_IN_BYTES*([self highQualityImages] ? 10 : 1);
 }
 
 - (float)freeSpacePercentageUsedIfDownloadedCategory:(LMImageManagerCategory)category {

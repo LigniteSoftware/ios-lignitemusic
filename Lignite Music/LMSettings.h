@@ -13,6 +13,7 @@
 #define LMSettingsKeyLastOpenedSource @"LMSettingsKeyLastOpenedSource"
 #define LMSettingsKeyOnboardingComplete @"LMSettingsKeyOnboardingComplete"
 #define LMSettingsKeyStatusBar @"LMSettingsKeyStatusBar"
+#define LMSettingsKeyHighQualityImages @"LMSettingsKeyHighQualityImages"
 
 /**
  Whether or not the app should show the status bar.

@@ -63,7 +63,7 @@
 		case 0:
 			return 1;
 		case 1:
-			return 2;
+			return 3;
 		case 2:
 			return 2;
 		case 3:
@@ -88,6 +88,8 @@
 					return NSLocalizedString(@"ArtistImagesTitle", nil);
 				case 1:
 					return NSLocalizedString(@"AlbumImagesTitle", nil);
+				case 2:
+					return NSLocalizedString(@"HighQualityImagesTitle", nil);
 			}
 			break;
 		case 2:
@@ -145,7 +147,7 @@
 					return [self subtitleForCategory:LMImageManagerCategoryAlbumImages];
 				}
 				case 2:
-					return [NSString stringWithFormat:NSLocalizedString(@"ImageCacheClickToManage", nil), (float)[imageManager sizeOfAllCaches]/1000000];
+					return NSLocalizedString(@"HighQualityImagesDescription", nil);
 			}
 			break;
 		case 2:
@@ -342,6 +344,7 @@
 
 - (void)didChangeStatusBarSwitchView:(UISwitch*)switchView {	
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+	
 	[userDefaults setBool:switchView.on forKey:LMSettingsKeyStatusBar];
 	[userDefaults synchronize];
 	
@@ -353,18 +356,42 @@
 	[(LMCoreViewController*)self.coreViewController setStatusBarBlurHidden:!switchView.on];
 }
 
+- (void)didChangeHighestResolutionSwitchView:(UISwitch*)switchView {
+	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+	
+	[userDefaults setBool:switchView.on forKey:LMSettingsKeyHighQualityImages];
+	[userDefaults synchronize];
+	
+	LMImageManager *imageManager = [LMImageManager sharedImageManager];
+	[imageManager highQualityImagesOptionDidChange];
+}
+
 - (id)accessoryViewForIndexPath:(NSIndexPath *)indexPath forSectionTableView:(LMSectionTableView *)sectionTableView {
-	if(indexPath.section == 0){
+	if(indexPath.section == 0 || (indexPath.section == 1 && indexPath.row == 2)){
 		UISwitch *switchView = [UISwitch newAutoLayoutView];
 		
-		[switchView addTarget:self action:@selector(didChangeStatusBarSwitchView:) forControlEvents:UIControlEventValueChanged];
+		NSString *settingsKey = @"";
+		BOOL enabled = YES;
+		
+		switch(indexPath.section){
+			case 0:
+				[switchView addTarget:self action:@selector(didChangeStatusBarSwitchView:) forControlEvents:UIControlEventValueChanged];
+				
+				settingsKey = LMSettingsKeyStatusBar;
+				break;
+			case 1:
+				[switchView addTarget:self action:@selector(didChangeHighestResolutionSwitchView:) forControlEvents:UIControlEventValueChanged];
+				
+				settingsKey = LMSettingsKeyHighQualityImages;
+				enabled = NO;
+				break;
+				
+		}
 		
 		NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 		
-		BOOL enabled = YES;
-		
-		if([userDefaults objectForKey:LMSettingsKeyStatusBar]){
-			enabled = [userDefaults integerForKey:LMSettingsKeyStatusBar];
+		if([userDefaults objectForKey:settingsKey]){
+			enabled = [userDefaults integerForKey:settingsKey];
 		}
 		
 		switchView.on = enabled;

@@ -91,6 +91,10 @@ typedef enum {
 - (void)removeDelegate:(id<LMImageManagerDelegate>)delegate;
 
 
+/**
+ Call this when the option for high quality images changes so that the image manager can restart the whole process.
+ */
+- (void)highQualityImagesOptionDidChange;
 
 /**
  Gets the total space allocated in a certain disk cache.
