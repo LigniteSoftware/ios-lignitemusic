@@ -73,4 +73,9 @@
  */
 - (void)reloadControlBars;
 
+/**
+ Reload the core table view's subview data.
+ */
+- (void)reloadSubviewData;
+
 @end

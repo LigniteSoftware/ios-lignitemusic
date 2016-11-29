@@ -56,6 +56,11 @@ typedef enum {
  */
 - (void)cacheSizeChangedTo:(uint64_t)newCacheSize forCategory:(LMImageManagerCategory)category;
 
+/**
+ The image cache changed.
+ */
+- (void)imageCacheChanged;
+
 @end
 
 @interface LMImageManager : NSObject

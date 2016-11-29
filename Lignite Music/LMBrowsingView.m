@@ -15,12 +15,14 @@
 #import "LMBrowsingDetailView.h"
 #import "LMExtras.h"
 #import "LMBrowsingDetailViewController.h"
+#import "LMImageManager.h"
 
-@interface LMBrowsingView()<LMBigListEntryTableViewDelegate, LMMusicPlayerDelegate>
+@interface LMBrowsingView()<LMBigListEntryTableViewDelegate, LMMusicPlayerDelegate, LMImageManagerDelegate>
 
 @property LMBigListEntryTableView *bigListEntryTableView;
 
 @property LMMusicPlayer *musicPlayer;
+@property LMImageManager *imageManager;
 
 @property NSLayoutConstraint *topConstraint;
 
@@ -284,7 +286,7 @@
 
 - (void)prepareContentSubview:(id)subview forBigListEntry:(LMBigListEntry *)bigListEntry {
 	if(!bigListEntry.queue){
-		bigListEntry.queue = [[LMOperationQueue alloc] init];
+		bigListEntry.queue = [LMOperationQueue new];
 	}
 	
 	[bigListEntry.queue cancelAllOperations];
@@ -386,15 +388,21 @@
 	[super layoutSubviews];
 	
 	if(self.browsingDetailViewController) {
-//		self.browsingDetailViewController
 		CGRect newFrame = self.browsingDetailViewController.view.frame;
 		newFrame.size.height = self.frame.size.height;
 		self.browsingDetailViewController.view.frame = newFrame;
 	}
 }
 
+- (void)imageCacheChanged {
+	if(self.musicType == LMMusicTypeArtists){
+		[self.bigListEntryTableView reloadSubviewData];
+	}
+}
+
 - (void)setup {
 	self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
+	self.imageManager = [LMImageManager sharedImageManager];
 	
 	self.bigListEntryTableView = [LMBigListEntryTableView newAutoLayoutView];
 	self.bigListEntryTableView.delegate = self;
@@ -406,6 +414,7 @@
 	[self.bigListEntryTableView setup];
 	
 	[self.musicPlayer addMusicDelegate:self];
+	[self.imageManager addDelegate:self];
 }
 
 @end

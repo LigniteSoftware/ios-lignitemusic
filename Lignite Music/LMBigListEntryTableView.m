@@ -187,6 +187,10 @@
 	}
 }
 
+- (void)reloadSubviewData {
+	[self.tableView reloadData];
+}
+
 - (void)setup {
 	self.currentlyOpenedIndex = -1;
 	

@@ -49,7 +49,7 @@
 
  @return The amount of calls.
  */
-#define LMLastFMAPICallsPerSecondLimit 1.0
+#define LMLastFMAPICallsPerSecondLimit 0.5
 //TODO: change this to 3.0 for release
 
 /**
@@ -146,6 +146,9 @@
 		
 		[self setPermissionStatus:LMImageManagerPermissionStatusNotDetermined
 	 forSpecialDownloadPermission:LMImageManagerSpecialDownloadPermissionCellularData];
+		
+		[self clearCacheForCategory:LMImageManagerCategoryArtistImages];
+		[self clearCacheForCategory:LMImageManagerCategoryAlbumImages];
 
 		//Start a loop which fires every LMDownloadCheckFrequencyInSeconds seconds to check for redownloading images
 		__weak id weakSelf = self;
@@ -199,6 +202,18 @@
 		if([delegate respondsToSelector:@selector(cacheSizeChangedTo:forCategory:)]){
 			dispatch_async(dispatch_get_main_queue(), ^{
 				[delegate cacheSizeChangedTo:[self sizeOfCacheForCategory:category] forCategory:category];
+			});
+		}
+	}
+}
+
+- (void)notifyDelegatesOfImageCacheChangeForCategory:(LMImageManagerCategory)category {
+	for(int i = 0; i < self.delegates.count; i++){
+		id<LMImageManagerDelegate> delegate = [self.delegates objectAtIndex:i];
+		
+		if([delegate respondsToSelector:@selector(imageCacheChanged)]){
+			dispatch_async(dispatch_get_main_queue(), ^{
+				[delegate imageCacheChanged];
 			});
 		}
 	}
@@ -360,6 +375,7 @@
 												   [[self imageCacheForCategory:category] storeImage:image forKey:imageCacheKey];
 												   
 												   [self notifyDelegatesOfCacheSizeChangeForCategory:category];
+												   [self notifyDelegatesOfImageCacheChangeForCategory:category];
 											   }
 											   else{
 												   NSLog(@"Not storing, conditions aren't right.");
