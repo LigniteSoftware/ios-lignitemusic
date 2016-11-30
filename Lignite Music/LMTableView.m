@@ -10,6 +10,7 @@
 #import "LMTableView.h"
 #import "LMTableViewCell.h"
 #import "LMExtras.h"
+#import "LMColour.h"
 
 @interface LMTableView()<UITableViewDelegate, UITableViewDataSource>
 
@@ -49,6 +50,8 @@
 		
 		self.dividerSectionsToIgnore = @[ @(0) ];
 		self.bottomSpacing = 0;
+		
+		self.dividerColour = [LMColour lightGrayBackgroundColour];
 				
 		self.title = @"UnnamedLMTableView";
 	}

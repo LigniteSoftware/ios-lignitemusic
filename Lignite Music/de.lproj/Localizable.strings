@@ -52,11 +52,11 @@
 "ArtistImagesTitle" = "Künstler Fotos";
 "AlbumImagesTitle" = "Fehlendes Albumcover";
 
-"ImagesDownloadWarningDescription" = "Wir werden Bilder %@.\n\nLeider mussten wir feststellen, dass %@.\n\nDie herunterzuladende Datenmenge beträgt %.02fMB %@.\n\nFalls du auf '%@' tippst, werden wir die Bilder trotzdem herunterladen.\n\nSolltest du andernfalls auf '%@' tippen, kannst du deine Meinung jederzeit in den Einstellungen ändern.";
+"ImagesDownloadWarningDescription" = "Wir werden Bilder %@.\n\nLeider mussten wir feststellen, dass %@.\n\nDie herunterzuladende Datenmenge beträgt %.02f MB %@.\n\nFalls du auf '%@' tippst, werden wir die Bilder trotzdem herunterladen.\n\nSolltest du andernfalls auf '%@' tippen, kannst du deine Meinung jederzeit in den Einstellungen ändern.";
 
 "AboutXOfYourStorage" = " (ungefähr %.02f%% deines noch verfügbaren Speicherplatzes)"; //The space in front of the first bracket is important, as it will be inserted after the "[...] take about %.02fMB to download the images%@." (goes where the %@ is in there). If your language does not need the space feel free to take it out.
-"UsingXOfYourStorage" = "Die Bilder belegen ca. %.02fMB deiner verbleibenden Speicherkapazität.";
-"TakingUpXMB" = "%.02fMB verwendet";
+"UsingXOfYourStorage" = "Die Bilder belegen ca. %.02f MB deiner verbleibenden Speicherkapazität.";
+"TakingUpXMB" = "%.02f MB verwendet";
 
 "OfYourArtists" = "deiner Künstler herunterladen, damit wir von ihnen eine schöne Liste zusammenstellen können";
 "OfYourAlbums" = "deiner Alben herunterladen, die kein Cover hinterlegt haben, um eine möglichst gute Qualität hinzukriegen";
@@ -105,8 +105,8 @@
 
 /* Pebble settings */
 "BatterySaverDescription" = "Screen Refresh reduzieren";
-"ArtistLabelDescription" = "Zeigt den Künstlernamen in der aktuellen Wiedergabe";
-"PebbleStyleControlsDescription" = "Gleiches Verhalten wie die Pebble Musik Steuerung";
+"ArtistLabelDescription" = "Anzeige während der Wiedergabe";
+"PebbleStyleControlsDescription" = "Gleiches Verhalten wie Pebble Music App";
 "DisplayTimeDescription" = "Zeit während der Wiedergabe anzeigen";
 
 /* Credits */

@@ -565,7 +565,10 @@ BOOL shuffleForDebug = NO;
 			if(associatedGrouping == MPMediaGroupingGenre) {
 				trackCollection.title = trackCollection.representativeItem.genre;
 			}
-			[musicTracks addObject:trackCollection];
+			
+			if(trackCollection.count > 0){
+				[musicTracks addObject:trackCollection];
+			}
 		}
 		
 //		NSTimeInterval endingTime = [[NSDate date] timeIntervalSince1970];

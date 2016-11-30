@@ -7,13 +7,16 @@
  */
 
 /*
+ 
  Hello, and thanks for translating Lignite Music!
  
- Please read the following notes thoroughly.
+ Please read the following notes *thoroughly*.
+ 
+ 0. In general it is a good idea when translating to keep strings equal to or lesser than the length of their English counterparts. All strings have been visually prepared so they fit the app. Long strings will often cause visual troubles throughout the app.
  
  1. The following characters in between quotes must be left in exact format and must not be deleted, changed or
  modified in any other way:
-	"\n", "%02i", "%d", "%lu", "%@"
+	"\n", "%02i", "%d", "%lu", "%@", "%%", "%f", "%.02f", "%.03f"
  Any string in the above list with a percentage (%) symbol I will now reference as "formatters".
  
  2. Any character mentioned in point 1 that is in a string will have data injected into it. If there are more than
@@ -26,8 +29,18 @@
  what a strinhg is doing, and if you are, just let us know and we'll clarify. Now that you've read this far,
  please send us a picture of a walrus so we know you did. Yes, seriously.
  
+ 4. The following words/terms should *never* be translated into your language for legal reasons:
+	"Lignite Music", "Lignite", "Pebble", "Apple Music", "Spotify"
+	
+	If you need to clarify the above in your language, for example "Pebble" needs to be the equivalent of "Pebble Smartwatch" in your language to make sure the idea is clear, it's ok to add words for clarity if necessary and you don't change the legal name. To demonstrate as an example if you needed this, in simplified Chinese, you would write "Pebble 智能手表".
+ 
  Thanks, and have fun!
+ 
  */
+
+"HighQualityImagesTitle" = "Highest resolution";
+"HighQualityImagesDescription" = "(Takes up much more storage)";
+
 
 /*
  
@@ -35,87 +48,175 @@
  
  */
 
-"List" = "List";
-"Lists" = "Lists";
+/* Other */
+"Various" = "Various"; //For things like various artists
 
 /*
- Onboarding
- ==========
- Onboarding is the first thing that a user who just installed the app sees. To give you an idea, the slides go as follow:
- 
- 1. Welcome
- 2. Setup music permission
- 2.1. If the user denies the music permission, we see force them to accept it (otherwise the app is useless) in an external screen
- 3. Setup Bluetooth permission
- 3.1. This is optional so we do not force it
- 4. Tutorial
- 4.1. If user views tutorial, it goes to the tutorial
- 4.2. Otherwise they can skip it and it will go to the next slide
- 5. Thank you screen/end of onboarding
+ Image Management
+ ----------------
+ Lignite Music automatically downloads images from last.fm to ensure maximum visual quality. However, this can take up a signifigant amount of space or cellular data, so we ensure that users know what we are doing and make sure they allow us to do it should they be low on storage or on cellular data. They can always change their decision in settings.
  */
-"OnboardingWelcomeTitle" = "Welcome to Lignite Music";
-"OnboardingWelcomeDescription" = "We're hoping to bring you the ultimate music player experience.\n\nWe're going to run through a few quick steps to get you up and running.";
+"ArtistImagesTitle" = "Artist images";
+"AlbumImagesTitle" = "Missing album cover art";
 
-"OnboardingKickstarterLoginTitle" = "Are you a Kickstarter backer?";
-"OnboardingKickstarterLoginDescription" = "Lignite Music was born and raised on Kickstarter with 339 awesome backers.\n\nIf you're one of them, you can unlock the full app now by clicking the login button below.\n\nOtherwise, continue on and you'll be hooked up with a full trial!";
+//See comment below this string for how it will be formatted
+"ImagesDownloadWarningDescription" = "We will download images %@.\n\nHowever, we have noticed that %@.\n\nIt will take about %.02f MB to download the images%@.\n\nIf you tap '%@', we will download them anyway.\n\nOtherwise, if you tap '%@', you can always change your mind later in settings.";
+/*
+ What is inserted into "ImagesDownloadWarningDescription", in order of formatters:
+ 1. Either the "OfYourArtists" string or "OfYourAlbums" string
+ 2. Either or both of the following strings: "YouAreOnData", "YouAreLowOnStorage" (the "SpaceAndSpace" string would go in between these if both)
+ 3. The amount of space in MB that the images will take up (estimated)
+ 4. If the user is low on storage, it will insert the "AboutXOfYourStorage" string here
+ 5. The "DownloadAnyway" string
+ 6. The "DontDownload" string
+ */
 
-"OnboardingMusicPermissionTitle" = "We need your music so you can jam!";
-"OnboardingMusicPermissionDescription" = "Once clicking the button below, you will be asked to grant permission to Lignite Music for access to your music library.\n\nPlease accept this permission so we can get you one step closer to rockin' out!";
+"AboutXOfYourStorage" = " (about %.02f%% of your remaining storage in total)"; //The space in front of the first bracket is important, as it will be inserted after the "[...] take about %.02fMB to download the images%@." (goes where the %@ is in there). If your language does not need the space feel free to take it out.
+"UsingXOfYourStorage" = "These images are currently using %.02f MB of your storage.";
+"TakingUpXMB" = "Using %.02f MB";
 
-"OnboardingPebblePermissionTitle" = "We're between a rock and a hard place"; //This is an English expression which essentially means "We have a dilemma". In the end, what we want to express in this title is something slightly witty (though not disrespectful) which infers there is a rock involved, since the word "Pebble" is the smartwatch associated.
-"OnboardingPebblePermissionDescription" = "Pebble is an awesome smartwatch and we've built a watchapp which allows you to browse your whole music library right from your wrist.\n\nPlease accept the next permission so we can communicate with your Pebble.";
+"OfYourArtists" = "of your artists so we can create a beautiful visual list of them";
+"OfYourAlbums" = "of your albums which don't have cover art to ensure maximum visual quality";
 
-"OnboardingTutorialTitle" = "Want us to walk you through?";
-"OnboardingTutorialDescription" = "We have a quick tutorial which is easy to follow and should get you setup with the basics of Lignite Music, such as installing the Pebble app.\n\nFeel free to skip it if you're feeling adventurous, though.";
+"YouAreOnData" = "you are on cellular data"; //All lowercase because it will go within the above description
+"SpaceAndSpace" = " and "; //The spaces are important here. If your language does not need spaces in between the YouAreOnData and YouAreLowOnStorage contents, remove the spaces and insert your language's equivalent of "and". Otherwise, keep the spaces.
+"YouAreLowOnStorage" = "your phone is low on storage"; //Same case
 
-//The user is gutless most likely because they did not take the time to read the dialog and simply clicked deny. However, we understand shit happens and they might have slipped or something.
-"OnboardingUserIsGutlessTitle" = "Music, please? :(";
-"OnboardingUserIsGutlessDescription" = "Somewhere along the way the music permission for Lignite Music was denied. Don't worry, it's easy to fix.\n\n1. Go to your iPhone's settings app\n2. Find the 'Lignite Music' entry near the bottom and go into it\n3. Make sure the 'Media Library' toggle is turned on\n\nOnce that's done, reopen Lignite Music and you should be set!"; //Please ensure for this translation that the language used in guiding the users through the iOS settings menu *exactly matches* the actual settings menu in that language.
+"DownloadAnyway" = "Download anyway"; //Goes on the accept button for downloading images
+"DontDownload" = "Don't download"; //Goes on the deny button for downloading images
 
-"StillCantAccessMusicTitle" = "We are still having trouble.";
-"StillCantAccessMusicDescription" = "We still can't access your music for some reason even though you've probably tried what we asked.\n\nWe're really sorry that this has not gone smoothly, we are not sure what is going wrong.\n\nPlease click the 'Contact Us' button below you can reach out to us directly. We will be sure to get you sorted out one way or another.\n\nThank you."; //Please ensure the 'Contact Us' in quotes is the same as the ContactUs string in this file
+"ImageDownloads" = "Image Downloads";
+"LMImageManagerPermissionStatusDenied" = "downloading is off";
+"LMImageManagerPermissionStatusAuthorized" = "downloading is on";
+
+"ClearCache" = "Delete images";
+"ClearCacheAndDisable" = "Delete images and disable";
+"KeepDisabled" = "Keep disabled";
+"Enable" = "Enable";
+"Enabled" = "Enabled";
+"KeepEnabled" = "Keep enabled";
+
+"SettingImagesAlertDescription" = "We download images %@.\n\n%@\n\n%@";
+"YouCurrentlyHaveThisFeatureOff" = "You currently have this feature turned off.";
+"YouCanTurnOffTo" = "You can delete these images and turn this feature off to save storage and bandwidth.\n\nIf you do so, we will not download images of this kind unless you turn the setting back on.";
+"YouCanTurnOnTo" = "You can turn this feature on to bring the most beauty to Lignite Music.\n\nWe will download images on WiFi and when you have enough storage, and will ask you what to do if either of those don't happen.";
+
+"ImagesDeleted" = "Images deleted";
+"WillBeginDownloading" = "Will download";
+
+/* Other settings related */
+"AppSettings" = "App Settings";
+
+"Pebble" = "Pebble"; //Pebble smartwatch. See point 4 of the top of this file for details on legal naming schemes.
+"PebbleSettings" = "Pebble settings";
+
+"LookAndFeel" = "Look and Feel";
+"Colour" = "Colour";
+"TapToChooseColour" = "Tap here to choose a colour";
+"StatusBar" = "Status bar";
+"StatusBarDescription" = "Show the iOS status bar";
+
+"About" = "About";
+"Credits" = "Credits";
+"CreditsMore" = "Created by Edwin Finch & Philipp Weder";
+
+/* Pebble settings */
+"BatterySaverDescription" = "Reduces screen refesh";
+"ArtistLabelDescription" = "Shows the artist's name in now playing";
+"PebbleStyleControlsDescription" = "Mimick Pebble's music player controls";
+"DisplayTimeDescription" = "Show the time in now playing";
+
+/* Credits */
+"ThankYou" = "Thank you!";
+"ThankYouDescription" = "Countless hours have gone into making this app a reality and we couldn't have done it without the funding and support of our amazing Kickstarter backers, many open source libraries, and a whole lot of passion.\n\nBelow we'd like to credit everyone and everything that had a part in making this app a reality.\n\nWe are forever thankful for all of you!";
+
+"KickstarterBackers" = "Kickstarter Backers";
+
+"LastFMAPI" = "Last.fm API";
+"LastFMAPIDescription" = "We want to give a big shoutout to Last.fm's absolutely breathtaking API.\n\nWe use it for its images of artists and images of missing cover art and it works like a charm! It has a great rate limit and many, many functions.";
+
+"OpenSourceLibraries" = "Open Source Libraries";
+"OpenSourceLibrariesLicensing" = "Lignite Music is built off of many powerful open source libraries.\n\nBig thanks to the original authors and all who contributed to their development!";
+
+"LibraryYYImage" = "YYImage - ibireme";
+"LibraryYYImageDescription" = "YYImage is a powerful image framework which lets you encode/decode many types of images.";
+
+"LibrarySDWebImage" = "SDWebImage - Olivier Poitrey";
+"LibrarySDWebImageDescription" = "SDWebImage is an outstanding asynchronous image downloader that even has cache support!";
+
+"LibraryImageMagick" = "ImageMagick C API";
+"LibraryImageMagickDescription" = "ImageMagick lets you literally perform magic with images. You can create, edit, compose, or convert all sorts of images.";
+
+"LibraryPebbleKit" = "PebbleKit";
+"LibraryPebbleKitDescription" = "PebbleKit is Pebble's iOS framework for communicating with Pebble smartwatches. While we're at it, thanks to Pebble for an excellent watch!";
+
+"LibraryPureLayout" = "PureLayout - Tyler Fox";
+"LibraryPureLayoutDescription" = "PureLayout is exactly as they say it is, 'impressively simple, immensely powerful', letting you layout constraints easily.";
+
+"LibraryMBProgressHUD" = "MBProgressHUD - Jonathan George";
+"LibraryMBProgressHUDDescription" = "MBProgressHUD is a simple yet perfect library for showing those simple confirmation popups that look like iOS's volume indicator popup.";
+
+"LibraryMarqueeLabel" = "MarqueeLabel - Charles Powell";
+"LibraryMarqueeLabelDescription" = "MarqueeLabel is a super nice drop-in replacement for normal labels which lets you have text that scrolls!";
+
+"LibraryReachability" = "Reachability - Tony Million";
+"LibraryReachabilityDescription" = "Reachability is a handy library which lets you do a bunch of tasks related to your Internet connection.";
+
+"Icons" = "Icons";
+"IconsDescription" = "Many of our icons were from www.flaticon.com, created by icon artists who were generous enough to license them under CC 3.0. Here they are!";
+"DesignedByNobody" = "We're working on it!\n\nCredits for icon artists are coming soon.";
+
+/* Contact */
 "ContactUs" = "Contact us";
-"DoNothing" = "Do nothing"; //Instead of contacting us
+"ContactHi" = "Hi!";
+"ContactDescription" = "We hope you enjoy Lignite Music as much as we enjoyed bringing it to life.\n\nShould you have any issues with it at all or would like to get in touch with us for any other reason, please feel free to contact us.";
+"ContactEmail" = "contact@lignite.io";
+"ContactTwitter" = "@WeAreLignite";
+"ContactWebsite" = "www.lignite.io";
+"ContactThanks" = "Thanks very much for your support and best regards from the both of us!";
 
-"OnboardingThanksTitle" = "We hope you enjoy Lignite Music!";
-"OnboardingThanksDescription" = "We are a two geek team: designer and developer. We love making apps that are beautiful and functional.\n\nCountless hours went into making this app a reality and we hope you enjoy it as much as we enjoyed making it.";
+/*
+ *
+ * Important!
+ *
+ * \/ Please do not translate the strings within these big comments! \/
+ *
+ * Thank you.
+ *
+ */
 
-"HangOn" = "Hang on..."; //Meaning "Wait..."
-"Cool" = "Cool";
-"WhatsNext" = "What's next?";
-"Sweet" = "Sweet";
-"LetsGo" = "Let's go!";
-"LogMeIn" = "Log me in"; //For the kickstarter login button in onboarding
-"HitMeWithIt" = "Hit me with it"; //Slang for continue, this is used on the button which when pressed will show the dialog asking user for permission to access their music library
-"SoundsGood" = "Sounds good"; //Also slang for continue, for the Pebble permission button, which when clicked will prompt the user for access to Bluetooth permissions
-"OpenTutorial" = "Open tutorial";
-"CloseTutorial" = "Close tutorial";
-"AwesomeThanks" = "Awesome, thanks!";
-"OkDone" = "Ok, done"; //This is the button that goes with the screen which says the user needs to reenable the music permission in settings.
-"Checking" = "Checking..."; //Checking for permission
-"GoodToGo" = "Good to go!"; //Permission has been granted
-"OhBoy" = "Oh boy"; //Error with permission (user probably hit don't allow)
-"TapToTryAgain" = "Tap to try again"; //Whatever the user did didn't work for enabling the music permission
-"AllSetHere" = "All set here!"; //User accepted Pebble permission
-"OuchDenied" = "Ouch, denied :("; //User denied Pebble permission (this is acceptable though)
-"Restricted" = "Restricted"; //The bluetooth permission is restricted (probably on a school-run device)
-"Error" = "Error";
-"SkipTutorial" = "Skip tutorial";
-"EndTutorial" = "End tutorial"; //This goes on the last slide of the tutorial
-"Install" = "Install";
 
-/* Tutorial */
-"TutorialBrowsingTitle" = "Browsing is simple";
-"TutorialBrowsingDescription" = "Every single browsing view is a simple list.\n\nFor big list entries, like the one in the photo, tap the album cover for more info, or tap the title area to bring up controls for it such as play and pause.";
+"RankLigniteLover" = "Lignite Lovers";
+"RankLigniteLoverPeople" = "Daniel Bauen + Microfacturing, Jerry , Fred Tejan, Thomas Kupper, Dwayne Melançon";
 
-"TutorialBottomControlsTitle" = "Control at your fingertips";
-"TutorialBottomControlsDescription" = "Easily switch between the mini player, browsing views, and search for music all from the bottom tab.\n\nIt's all at the touch of a finger.";
+"RankSuperSupporters" = "Super Supporters";
+"RankSuperSupportersPeople" = "Nicholas Bomba, Senpai_Son, Mike Coogan, Daniel Amsler, Dave Peddle, Tim Parker-Smith, Robert ReGester, Nathan Ellingson, Vivek Correia";
 
-"TutorialPlayingControlsTitle" = "Size matters";
-"TutorialPlayingControlsDescription" = "Using tiny buttons to control your music can be a mess when you're doing awesome things. That's why all of our controls are big or gesture based.\n\nSwipe to the left or to the right on the player to go back and forth between songs.\n\nTap anywhere on the player to play or pause.";
+"RankLigniteMusicInfluencers" = "Lignite Music Influencers";
+"RankLigniteMusicInfluencersPeople" = "Halina Kaja Mydin, Sandra Wälli, Dirk Stoesser, Xenophys, Mathew Reiss, Monika, TokyoMike, Craig Paterson, Michael Jones, Michele De Paola, Donald D. Parker, Faye Salwin, Crayden Arcand, Michael McAuliffe, Elliot Chase, Giroux, Cyril Marques, K Everett, Richard Rochester, Michael, David Snell, Trang To, Maikel Bennebroek, Marc Roberts, Garrett Brusewitz, R LeRoy Kenyon II, Daniel Kremer, Sarah Baskerville, Matthias Lamm, Sean DeArras, David Gölzhäuser, Cory Gaetz, Rainer Windgassen, Amy, JDZ, Ronald Sutton, Terrill, Homero Padilla Cano, Stephen Africa Moore, Ionut Catalin Bolea, Garcy, Alex Lanigan, Derviş Murat Akbaba, John James Dooley, Steven Brunwasser, William Featherstone, Emmanuelle V, Mark Russell, Fl4v1en, Jennifer Graham, NEXUM, Mahmoud Shihab, Scott Friedman, Alvaro Farfan, Prasert Laosaengpha, Erich Zirnhelt, Haid Christoph, Flavio Tischhauser, Jeff Husson, Beat Jost, Jordan Thurston, Jonathan Higgins, Scott Seyforth, Yoga Nandiwardhana, Dennis Bray, Brian, eme assiak, Mike Tamis, Robert Dyson, Sarah Heile, JayC, James J McMullen, Justin Matlock, Peter Lönnebring, Renaldo McGee, Jean-Marc Bélanger";
 
-"TutorialPebbleAppTitle" = "Have a Pebble?";
-"TutorialPebbleAppDescription" = "No, not a rock, sorry.\n\nIf you have a Pebble smartwatch, you can fully browse your library right from your wrist.\n\nClick the install button below to go install the app.";
+"RankBetaAccess" = "Beta Access Backers";
+"RankBetaAccessPeople" = "Paul Fransen, Felix Draxler-Weber, Paul Joel, Scott Baker, Tristan, mike james, Adam Snyder, Toby Isaacson, Stephen Miller, \"No one important\" (we think you're important!), JirkaR, Frank Del Bove, Jocelyn Levac, Vincent Aarsbergen, Pieter Danckaert, Dorothy Strassner, Domenik Vogel, Cybsb, Christian Meyer, Matthias Maurer, Marsha Tyszler, Josh Salvi, Andrew Ericson, Isaac Whitfield, Jonathan Ding, Penguwin, Pablo Arroyo, Jorge Arce, Maxwell Stern, René Sebastian Shabastari, Jerry Sullivan, Thomas Bremer, Yos Sumarjono, John Thom, Domenic Marchese, Hans Burkart, Jason Dietrich, Florian Gramß, Shannon Carlsen, Steven L Reece, Max Villagomez, John Mayo, Christina, Matias Tørmoen, Neil Jones, ivo8177, Donald Ngo, Julian Johannes Hartl, Tobie Louw, Michael Goettler, Stefan Zeitlhofer, Thomas Purchas, Marina, Jan Ivar Erno, Jamie White, Philip Agnew, J. J. Franzen, Damien Ryan, Mickey Davies, Jordan Webb, Andrew Morris, Gajanan Aiyer, Dave Dyer, Neal Smith-Windsor, JoeWeiss, Choong-Soo Lee, Clark Hardaway, Calle Englund, Christopher Nellis, Hyoungseok Cho, Jose Luis, Wally Garza, Grant Voigt, Taro Okazaki, Allen May, Adam W. Duffy, Tekza, Ammar Dukhan, Brian Brewer, Chris, Chip Sillesa, Nate Casteel, Rachel Hansen, John MacMahon, Raphael Schmid, Jack Anderson, Maxim Efimov, Avidan Lamdan, Daniel Shields, Felix Faulmann, Oriol Escofet, Jonathan Frøland, Allan, Garric, Franco Cheng, John Miller, Mikael Persson, Derpison Fidoodle, Jonathan Huebsch, Ronan Lenoir, Tonet Baeza Anchang, Matt, Joerg Grau, Stephan Hadan, Alan Rodgers, Connor Wilson, Michael Rodriguez, Peter Hansen, Collin Kincannon";
+
+"RankEarlyBird" = "Early Birds";
+"RankEarlyBirdPeople" = "Bradley, Peter Martin, Nanda Anugerah Rizky, Daniel Snor, Scott Kendall, Edwin Solís, Davis Simon, CaffeineJunkie (hi old friend), Puki, William Quintana, Andrew Do, Robert Colburn, Martin Gear, Eric W, Christian Drake, James Hancock, Sean Kelly, James Thornton, CSC, Hans Bennink, Josh, Thalus, Himmi, Stephen Grice, Nicole pfau, John Mullen, Alex, Ross Dinwiddie, Michael Metzger, Ronald Cronk, Fernando Jasso, Wendy Betts, Enchik Sama, Lance Manasse, Michael T Richards, Dirk, Bryan Lang, Ronan Reid, KMMoore, Kellie Ramirez, Larry Anderson, KYeeOSU, Doug Brodil, Irene Godfrey, yu field, Jeremy Vigil, Ricardo Vargas Lübbert, Seraphine Nebbie Law, Douglas McLean, Jim Knoble, Linse92 , Troy Stronach, ed myers, Scott Levey, Ralf Wichary, Dale Butler, Donna Johnson, Bill, Philip Busch, Andreas Kleiner, James Takakura, Angelo Dimarelos, Mikhail Vaysman, Alfred Wong, Warren Johnson, Anson Chiu, Tanya, Dirk Disch, Thomas Spielmann, Samson Chiu, Wylie, Nithin Hari, Barron, Will Hirst, Vincent Black, Cindi Hickman, Filip Perichta, Alexander Burchenko, Aušrys, Jorge Parra, Ronald Ghaleb, Paula, Charlie Poole, Arnold, Ashley Elsdon, Jeth Estacio, Cliveland Lee, Patrick Steinke, Shlomi Zeevi, K. Alnajar, idewaki, Addy Missesyoumuch, Hudson, Bob Salvatorelli, Julia Flint, Diego Vilarino, Joel Phoenix, Cheng Han Hsing, David Wilson, Peter Sloan";
+
+"RankSuperEarlyBird" = "Super Early Birds";
+"RankSuperEarlyBirdPeople" = "Blegueni, Jan Jung, 유정환, Christian Salle, David Ford, Stephan Grenzius, Blake Randel, Louie Yabut, Samuel Leinoff, Truls Gårdmark, Peter Marshall, R Deckert, Karen McGowan, Rodolfo Martell, Pemarco , Joshua Kohn, Ben Crago-Schneider, David Deudor, Marco Huang, Berkay Oğulcan Tutal, Sonia Christina, Jens W., Hiroshi Kakuda, Bart Williamson, Dominic Engelbrecht \"(EhecHitsYou)\"";
+
+"RankLigniteSupporter" = "Lignite Supporter";
+"RankLigniteSupporterPeople" = "Nathanail Georgiou, Alexander Nilsen, G Di Giovanni, Kurt Alke, Michal Broska, Kristof Verpoorten (sup dude), Josh Snyder, \"the player formerly known as mousecop\"";
+
+
+/*
+ *
+ * Important!
+ *
+ * /\ Please do not translate the strings within these big comments! /\
+ *
+ * Thank you.
+ *
+ */
 
 
 /*
@@ -123,6 +224,7 @@
  END NEW STRINGS
  
  */
+
 
 
 /* General */
@@ -143,9 +245,12 @@
 "Titles" = "Titles"; //Individual songs
 "Artists" = "Artists";
 "Playlists" = "Playlists";
+"List" = "List"; //Short form for playlist
+"Lists" = "Lists"; //Short form for playlists
 "Composers" = "Composers";
 "Genres" = "Genres";
 "Compilations" = "Compilations";
+
 
 /*
  Song Durations
@@ -187,7 +292,7 @@
 "ArtistLabel" = "Artist label"; /* For Pebble. Shows the text that displays the artist on the now playing screen. */
 "PebbleStyleControls" = "Pebble-style controls"; /* For Pebble, can you tell? This one makes the controls (ie. play/pause) emulate the stock Pebble music app controls instead of Lignite-style. */
 "DisplayTime" = "Show the time"; /* For Pebble. Shows the time on the now playing screen. */
-"InstallPebbleApp" = "Install Pebble App"; /* Sends the user to the Pebble appstore. */
+"InstallPebbleApp" = "Install Pebble app"; /* Sends the user to the Pebble appstore. */
 "SendFeedback" = "Send Feedback/Report Bug";
 "ReplayTutorial" = "Replay tutorial";
 "Functionality" = "Functionality"; /* Functionality related settings like battery saver mode. */
@@ -212,7 +317,82 @@
 "PebbleConnectionRequestTitle" = "Pebble Connection";
 "PebbleConnectionRequestDescription" = "iOS is about to ask for your permission to use Bluetooth devices. Please allow the permission as we use it to communicate with Lignite Music watchapps.";
 
-/* Temporary strings that will be removed in a non-beta release */
-"HowToUse" = "How to Use";
-"HowToUseDescription" = "Hey! Welcome to the Lignite Music beta. We're going to having a better tutorial later, don't worry.\n\nTo play/pause the song, tap anywhere on the screen.\n\nTo skip/go to previous song, swipe left or right anywhere on the screen.\n\nDrag the slider to control the playing time.\n\nInstall the Pebble app within the settings page.\n\nYou can replay this tutorial any time in settings.";
-"OkThanks" = "Ok, thanks";
+/*
+ Onboarding
+ ----------
+ Onboarding is the first thing that a user who just installed the app sees. To give you an idea, the slides go as follow:
+ 
+ 1. Welcome
+ 2. Setup music permission
+ 2.1. If the user denies the music permission, we see force them to accept it (otherwise the app is useless) in an external screen
+ 3. Setup Bluetooth permission
+ 3.1. This is optional so we do not force it
+ 4. Tutorial
+ 4.1. If user views tutorial, it goes to the tutorial
+ 4.2. Otherwise they can skip it and it will go to the next slide
+ 5. Thank you screen/end of onboarding
+ */
+"OnboardingWelcomeTitle" = "Welcome to Lignite Music";
+"OnboardingWelcomeDescription" = "We're hoping to bring you the ultimate music player experience.\n\nWe're going to run through a few quick steps to get you up and running.";
+
+"OnboardingKickstarterLoginTitle" = "Are you a Kickstarter backer?";
+"OnboardingKickstarterLoginDescription" = "Lignite Music was born and raised on Kickstarter with 339 awesome backers.\n\nIf you're one of them, you can unlock the full app now by clicking the login button below.\n\nOtherwise, continue on and you'll be hooked up with a full trial!";
+
+"OnboardingMusicPermissionTitle" = "We need your music so you can jam!";
+"OnboardingMusicPermissionDescription" = "Once clicking the button below, you will be asked to grant permission to Lignite Music for access to your music library.\n\nPlease accept this permission so we can get you one step closer to rockin' out!";
+
+"OnboardingPebblePermissionTitle" = "Give us a blue tooth, please"; //"Blue teeth" because of "Bluetooth". If it does not translate well or make sense, you can translate this from "Give us Bluetooth, please" instead.
+"OnboardingPebblePermissionDescription" = "Pebble is an awesome smartwatch and we've built a watchapp which allows you to browse your whole music library right from your wrist.\n\nPlease accept the next permission so we can communicate with your Pebble.";
+
+"OnboardingTutorialTitle" = "Want us to walk you through?";
+"OnboardingTutorialDescription" = "We have a quick tutorial which is easy to follow and should get you setup with the basics of Lignite Music, such as installing the Pebble app.\n\nFeel free to skip it if you're feeling adventurous, though.";
+
+//The user is gutless most likely because they did not take the time to read the dialog and simply clicked deny. However, we understand shit happens and they might have slipped or something.
+"OnboardingUserIsGutlessTitle" = "Music, please? :(";
+"OnboardingUserIsGutlessDescription" = "Somewhere along the way the music permission for Lignite Music was denied. Don't worry, it's easy to fix.\n\n1. Go to your iPhone's settings app\n2. Find the 'Lignite Music' entry near the bottom and go into it\n3. Make sure the 'Media Library' toggle is turned on\n\nOnce that's done, reopen Lignite Music and you should be set!"; //Please ensure for this translation that the language used in guiding the users through the iOS settings menu *exactly matches* the actual settings menu in that language.
+
+"StillCantAccessMusicTitle" = "We are still having trouble.";
+"StillCantAccessMusicDescription" = "We still can't access your music for some reason even though you've probably tried what we asked.\n\nWe're really sorry that this has not gone smoothly, we are not sure what is going wrong.\n\nPlease click the 'Contact Us' button below you can reach out to us directly. We will be sure to get you sorted out one way or another.\n\nThank you."; //Please ensure the 'Contact Us' in quotes is the same as the ContactUs string in this file
+"ContactUs" = "Contact us";
+"DoNothing" = "Do nothing"; //Instead of contacting us
+
+"OnboardingThanksTitle" = "We hope you enjoy Lignite Music!";
+"OnboardingThanksDescription" = "We are a two geek team: designer and developer.\n\nWe love making apps that are beautiful and functional and we hope you enjoy it as much as we enjoyed making it!";
+
+/* Tutorial */
+"TutorialBrowsingTitle" = "Browsing is simple";
+"TutorialBrowsingDescription" = "Every single browsing view is a simple list.\n\nFor big list entries, like the one in the photo, tap the album cover for more info, or tap the title area to bring up controls for it such as play and pause.";
+
+"TutorialBottomControlsTitle" = "Control at your fingertips";
+"TutorialBottomControlsDescription" = "Easily switch between the mini player, browsing views, and search for music all from the bottom tab.\n\nIt's all at the touch of a finger.";
+
+"TutorialPlayingControlsTitle" = "Size matters";
+"TutorialPlayingControlsDescription" = "Using tiny buttons to control your music can be a mess when you're doing awesome things. That's why all of our controls are big or gesture based.\n\nSwipe to the left or to the right on the player to go back and forth between songs.\n\nTap anywhere on the player to play or pause.";
+
+"TutorialPebbleAppTitle" = "Have a Pebble?";
+"TutorialPebbleAppDescription" = "No, not a rock, sorry.\n\nIf you have a Pebble smartwatch, you can fully browse your library right from your wrist.\n\nClick the install button below to go install the app.";
+
+/* Button names */
+"HangOn" = "Hang on..."; //Meaning "Wait..."
+"Cool" = "Cool";
+"WhatsNext" = "What's next?";
+"Sweet" = "Sweet";
+"LetsGo" = "Let's go!";
+"LogMeIn" = "Log me in"; //For the kickstarter login button in onboarding
+"HitMeWithIt" = "Hit me with it"; //Slang for continue, this is used on the button which when pressed will show the dialog asking user for permission to access their music library
+"SoundsGood" = "Sounds good"; //Also slang for continue, for the Pebble permission button, which when clicked will prompt the user for access to Bluetooth permissions
+"OpenTutorial" = "Open tutorial";
+"CloseTutorial" = "Close tutorial";
+"AwesomeThanks" = "Awesome, thanks!";
+"OkDone" = "Ok, done"; //This is the button that goes with the screen which says the user needs to reenable the music permission in settings.
+"Checking" = "Checking..."; //Checking for permission
+"GoodToGo" = "Good to go!"; //Permission has been granted
+"OhBoy" = "Oh boy"; //Error with permission (user probably hit don't allow)
+"TapToTryAgain" = "Tap to try again"; //Whatever the user did didn't work for enabling the music permission
+"AllSetHere" = "All set here!"; //User accepted Pebble permission
+"OuchDenied" = "Ouch, denied :("; //User denied Pebble permission (this is acceptable though)
+"Restricted" = "Restricted"; //The bluetooth permission is restricted (probably on a school-run device)
+"Error" = "Error";
+"SkipTutorial" = "Skip tutorial";
+"EndTutorial" = "End tutorial"; //This goes on the last slide of the tutorial
+"Install" = "Install";

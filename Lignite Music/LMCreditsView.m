@@ -31,11 +31,16 @@
  The big "Thank you!" title label.
  */
 @property UILabel *thankYouLabel;
+	
+/**
+ The thanks for your support description label.
+ */
+@property UILabel *thanksForYourSupportLabel;
 
 /**
  The signatures view which goes above the thank you label.
  */
-//@property UIImageView *signaturesView;
+@property UIImageView *signaturesView;
 
 @end
 
@@ -86,7 +91,7 @@
 		
 
 		self.thankYouLabel = [UILabel newAutoLayoutView];
-		self.thankYouLabel.font = [UIFont fontWithName:@"HoneyScript-SemiBold" size:75.0f];
+		self.thankYouLabel.font = [UIFont fontWithName:@"HoneyScript-SemiBold" size:(self.frame.size.width/414.0)*75.0f];
 		self.thankYouLabel.text = NSLocalizedString(@"ThankYou", nil);
 		self.thankYouLabel.textAlignment = NSTextAlignmentCenter;
 		[self.scrollView addSubview:self.thankYouLabel];
@@ -94,11 +99,33 @@
 		[self.thankYouLabel autoSetDimension:ALDimensionWidth toSize:self.frame.size.width];
 		[self.thankYouLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.philippAndEdwinView withOffset:-self.frame.size.width*0.10];
 		
+		self.thanksForYourSupportLabel = [UILabel newAutoLayoutView];
+		self.thanksForYourSupportLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:(self.frame.size.width/414.0)*18.0f];
+		self.thanksForYourSupportLabel.text = NSLocalizedString(@"ThankYouDescription", nil);
+		self.thanksForYourSupportLabel.textAlignment = NSTextAlignmentLeft;
+		self.thanksForYourSupportLabel.numberOfLines = 0;
+		[self.scrollView addSubview:self.thanksForYourSupportLabel];
+		
+		[self.thanksForYourSupportLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
+		[self.thanksForYourSupportLabel autoSetDimension:ALDimensionWidth toSize:self.frame.size.width*0.9];
+		[self.thanksForYourSupportLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.thankYouLabel withOffset:self.frame.size.width*0.05];
+		
+		
+		self.signaturesView = [UIImageView newAutoLayoutView];
+		self.signaturesView.image = [UIImage imageNamed:@"signatures.png"];
+		self.signaturesView.contentMode = UIViewContentModeScaleToFill;
+		[self.scrollView addSubview:self.signaturesView];
+		
+		[self.signaturesView autoAlignAxisToSuperviewAxis:ALAxisVertical];
+		[self.signaturesView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.thanksForYourSupportLabel withOffset:self.frame.size.width*0.05];
+		float scaleFactor = 0.75;
+		[self.signaturesView autoSetDimension:ALDimensionWidth toSize:self.frame.size.width*scaleFactor];
+		[self.signaturesView autoSetDimension:ALDimensionHeight toSize:self.frame.size.width*0.296*scaleFactor];
+		
 		
 		NSMutableArray *textLabelsArray = [NSMutableArray new];
 		
-		NSArray *textKeys = @[@"ThankYouDescription",
-							  
+		NSArray *textKeys = @[
 							  @"KickstarterBackers",
 							  
 							  @"RankLigniteLover",
@@ -157,8 +184,6 @@
 							  @"DesignedByNobody"
 	    ];
 		float textFontSizes[] = {
-			20.0,
-			
 			34.0,
 
 			20.0,
@@ -219,8 +244,6 @@
 		BOOL textFontIsBoldOptions[] = {
 			NO,
 			
-			NO,
-			
 			YES,
 			NO,
 			
@@ -278,22 +301,25 @@
 		};
 
 		for(int i = 0; i < textKeys.count; i++){
-			UILabel *previousLabelToAttachTo = (i == 0) ? self.thankYouLabel : [textLabelsArray lastObject];
+			UILabel *previousLabelToAttachTo = (i == 0) ? self.signaturesView : [textLabelsArray lastObject];
 			
 			NSString *text = NSLocalizedString([textKeys objectAtIndex:i], nil);
 			float fontSize = textFontSizes[i];
+			
+			float actualFontSize = (self.frame.size.width/414.0)*fontSize;
+			
 			BOOL textFontIsBold = textFontIsBoldOptions[i];
 			
 			UILabel *textLabel = [UILabel newAutoLayoutView];
 			textLabel.text = text;
-			textLabel.font = [UIFont fontWithName:textFontIsBold ? @"HelveticaNeue-Bold" : @"HelveticaNeue-Light" size:fontSize];
+			textLabel.font = [UIFont fontWithName:textFontIsBold ? @"HelveticaNeue-Bold" : @"HelveticaNeue-Light" size:actualFontSize];
 			textLabel.numberOfLines = 0;
 			textLabel.textAlignment = NSTextAlignmentLeft;
 			[self.scrollView addSubview:textLabel];
 			
 			[textLabel autoSetDimension:ALDimensionWidth toSize:self.frame.size.width*0.90];
 			[textLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
-			[textLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:previousLabelToAttachTo withOffset:self.frame.size.width*0.035];
+			[textLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:previousLabelToAttachTo withOffset:self.frame.size.width*(i == 0 ? 0.05 : 0.035)];
 			
 			[textLabelsArray addObject:textLabel];
 		}

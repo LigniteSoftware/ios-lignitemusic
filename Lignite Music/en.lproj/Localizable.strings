@@ -60,7 +60,7 @@
 "AlbumImagesTitle" = "Missing album cover art";
 
 //See comment below this string for how it will be formatted
-"ImagesDownloadWarningDescription" = "We will download images %@.\n\nHowever, we have noticed that %@.\n\nIt will take about %.02fMB to download the images%@.\n\nIf you tap '%@', we will download them anyway.\n\nOtherwise, if you tap '%@', you can always change your mind later in settings.";
+"ImagesDownloadWarningDescription" = "We will download images %@.\n\nHowever, we have noticed that %@.\n\nIt will take about %.02f MB to download the images%@.\n\nIf you tap '%@', we will download them anyway.\n\nOtherwise, if you tap '%@', you can always change your mind later in settings.";
 /*
  What is inserted into "ImagesDownloadWarningDescription", in order of formatters:
  1. Either the "OfYourArtists" string or "OfYourAlbums" string
@@ -72,8 +72,8 @@
  */
 
 "AboutXOfYourStorage" = " (about %.02f%% of your remaining storage in total)"; //The space in front of the first bracket is important, as it will be inserted after the "[...] take about %.02fMB to download the images%@." (goes where the %@ is in there). If your language does not need the space feel free to take it out.
-"UsingXOfYourStorage" = "These images are currently using %.02fMB of your storage.";
-"TakingUpXMB" = "Using %.02fMB";
+"UsingXOfYourStorage" = "These images are currently using %.02f MB of your storage.";
+"TakingUpXMB" = "Using %.02f MB";
 
 "OfYourArtists" = "of your artists so we can create a beautiful visual list of them";
 "OfYourAlbums" = "of your albums which don't have cover art to ensure maximum visual quality";

@@ -44,6 +44,8 @@
 @property LMLabel *currentSourceLabel;
 @property LMLabel *currentSourceDetailLabel;
 @property LMButton *currentSourceButton;
+	
+@property BOOL openedSourceSelectorFromShortcut;
 
 @end
 
@@ -133,6 +135,11 @@
 - (void)closeSourceSelector {
 	[self moveSourceSelectorToPosition:WINDOW_FRAME.size.height];
 	[self selectSource:self.previouslySelectedTab];
+	
+	if(self.openedSourceSelectorFromShortcut){
+		[self close];
+		self.openedSourceSelectorFromShortcut = NO;
+	}
 }
 
 - (void)openSourceSelector {
@@ -140,8 +147,13 @@
 }
 
 - (void)selectSource:(uint8_t)sourceSelectedIndex {
-	if(sourceSelectedIndex == self.currentlySelectedTab){
+	if(sourceSelectedIndex == self.currentlySelectedTab && sourceSelectedIndex == 0){
 		return;
+	}
+	
+	//If tapped again on source thing
+	if(sourceSelectedIndex == 1 && sourceSelectedIndex == self.currentlySelectedTab){
+		sourceSelectedIndex = 0;
 	}
 	
 	//Perform the action associated with tab to implement the new tab selection
@@ -215,6 +227,10 @@
 	
 	uint8_t viewTappedIndex = [self.tabViews indexOfObject:viewTapped];
 	
+	if(viewTappedIndex == 0){
+		self.openedSourceSelectorFromShortcut = NO;
+	}
+	
 	[self selectSource:viewTappedIndex];
 }
 
@@ -238,7 +254,9 @@
 
 - (void)clickedButton:(LMButton *)button {
 	NSLog(@"Spoooooked");
+	self.openedSourceSelectorFromShortcut = YES;
 	[self open];
+	[self selectSource:1];
 //	[self openSourceSelector];
 }
 
@@ -317,7 +335,7 @@
 	
 	[self.currentSourceLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:10];
 	[self.currentSourceLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.currentSourceButton withOffset:-10];
-	[self.currentSourceLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.currentSourceBackgroundView withMultiplier:(1.0/3.0)];
+	[self.currentSourceLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.currentSourceBackgroundView withMultiplier:(1.0/2.0)];
 	[self.currentSourceLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
 	
 	self.currentSourceDetailLabel = [LMLabel newAutoLayoutView];
@@ -327,7 +345,7 @@
 	
 	[self.currentSourceDetailLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:10];
 	[self.currentSourceDetailLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.currentSourceButton withOffset:10];
-	[self.currentSourceDetailLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.currentSourceBackgroundView withMultiplier:(1.0/3.0)];
+	[self.currentSourceDetailLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.currentSourceBackgroundView withMultiplier:(1.0/2.0)];
 	[self.currentSourceDetailLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
 	
 	UISwipeGestureRecognizer *swipeUpOnCurrentSourceGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(open)];

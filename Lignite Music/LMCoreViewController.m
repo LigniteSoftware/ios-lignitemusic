@@ -29,7 +29,7 @@
 #import "LMBrowsingDetailViewController.h"
 #import "LMContactView.h"
 
-#define SKIP_ONBOARDING
+//#define SKIP_ONBOARDING
 
 @import SDWebImage;
 @import StoreKit;
@@ -326,13 +326,14 @@ BOOL didAutomaticallyClose = NO;
 									 @"Added artist view",
 									 @"Added settings",
 									 @"Added status bar option",
-									 @"Added support for automatic image downloading",
+									 @"Added support for artist image downloading",
+									 @"Added support for album image downloading",
 									 @"Fixed crash opening now playing",
 									 @"Improved swipe gestures getting out of views"
 									 ];
 	
 	NSArray *currentBuildIssues = @[
-									@"Music library changes (such as adding new songs) do not work",
+									@"The artist detail view is not complete",
 									@"\nPlease do not report already known issues to us, thanks!"
 									];
 	
@@ -457,6 +458,7 @@ BOOL didAutomaticallyClose = NO;
 	
 #ifdef SKIP_ONBOARDING
 	if(true == false){
+		NSLog(@"Warning: Onboarding is disabled.");
 #else
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 	if(![userDefaults objectForKey:LMSettingsKeyOnboardingComplete]){

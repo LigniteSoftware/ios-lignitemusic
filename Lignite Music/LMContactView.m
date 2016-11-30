@@ -32,12 +32,12 @@
 
 @property UILabel *descriptionLabel;
 
-@property UILabel *thanksForYourSupportLabel;
-
-/**
- The signatures view which goes above the thank you label.
- */
-@property UIImageView *signaturesView;
+//@property UILabel *thanksForYourSupportLabel;
+//
+///**
+// The signatures view which goes above the thank you label.
+// */
+//@property UIImageView *signaturesView;
 
 @end
 
@@ -88,7 +88,7 @@
 		
 		
 		self.thankYouLabel = [UILabel newAutoLayoutView];
-		self.thankYouLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:50.0f];
+		self.thankYouLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:(self.frame.size.width/414.0)*50.0f];
 		self.thankYouLabel.text = NSLocalizedString(@"ContactHi", nil);
 		self.thankYouLabel.textAlignment = NSTextAlignmentLeft;
 		[self.scrollView addSubview:self.thankYouLabel];
@@ -99,7 +99,7 @@
 		
 		
 		self.descriptionLabel = [UILabel newAutoLayoutView];
-		self.descriptionLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18.0f];
+		self.descriptionLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:(self.frame.size.width/414.0)*18.0f];
 		self.descriptionLabel.text = NSLocalizedString(@"ContactDescription", nil);
 		self.descriptionLabel.textAlignment = NSTextAlignmentLeft;
 		self.descriptionLabel.numberOfLines = 0;
@@ -182,35 +182,12 @@
 			UILabel *contactStringLabel = [UILabel newAutoLayoutView];
 			contactStringLabel.textColor = [UIColor whiteColor];
 			contactStringLabel.text = buttonString;
-			contactStringLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:22.0f];
+			contactStringLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:(self.frame.size.width/414.0)*22.0f];
 			[contactDetailsView addSubview:contactStringLabel];
 			
 			[contactStringLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:contactIconView withOffset:self.frame.size.width*0.05];
 			[contactStringLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
 		}
-		
-		self.thanksForYourSupportLabel = [UILabel newAutoLayoutView];
-		self.thanksForYourSupportLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18.0f];
-		self.thanksForYourSupportLabel.text = NSLocalizedString(@"ContactThanks", nil);
-		self.thanksForYourSupportLabel.textAlignment = NSTextAlignmentLeft;
-		self.thanksForYourSupportLabel.numberOfLines = 0;
-		[self.scrollView addSubview:self.thanksForYourSupportLabel];
-		
-		[self.thanksForYourSupportLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
-		[self.thanksForYourSupportLabel autoSetDimension:ALDimensionWidth toSize:self.frame.size.width*0.9];
-		[self.thanksForYourSupportLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:[contactButtonsArray lastObject] withOffset:self.frame.size.width*0.10];
-		
-		
-		self.signaturesView = [UIImageView newAutoLayoutView];
-		self.signaturesView.image = [UIImage imageNamed:@"signatures.png"];
-		self.signaturesView.contentMode = UIViewContentModeScaleToFill;
-		[self.scrollView addSubview:self.signaturesView];
-		
-		[self.signaturesView autoAlignAxisToSuperviewAxis:ALAxisVertical];
-		[self.signaturesView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.thanksForYourSupportLabel withOffset:self.frame.size.width*0.10];
-		float scaleFactor = 0.75;
-		[self.signaturesView autoSetDimension:ALDimensionWidth toSize:self.frame.size.width*scaleFactor];
-		[self.signaturesView autoSetDimension:ALDimensionHeight toSize:self.frame.size.width*0.296*scaleFactor];
 	}
 }
 
