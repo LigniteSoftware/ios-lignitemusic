@@ -121,6 +121,8 @@
 		6AEB9D0B1BACF60E00AD19FA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6AEB9D091BACF60E00AD19FA /* LaunchScreen.storyboard */; };
 		6AEB9D351BAD812700AD19FA /* icon_pause.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AEB9D311BAD812700AD19FA /* icon_pause.png */; };
 		6AEB9D361BAD812700AD19FA /* icon_play.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AEB9D321BAD812700AD19FA /* icon_play.png */; };
+		6AEF8C701DEF36F500D9A1BF /* LMDebugView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AEF8C6F1DEF36F500D9A1BF /* LMDebugView.m */; };
+		6AEF8C731DEF419D00D9A1BF /* LMDebugViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AEF8C721DEF419D00D9A1BF /* LMDebugViewController.m */; };
 		6AF2C9431DDA16CC005E4643 /* icon_source.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AF2C9411DDA16CC005E4643 /* icon_source.png */; };
 		6AF2C9441DDA16CC005E4643 /* icon_browse.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AF2C9421DDA16CC005E4643 /* icon_browse.png */; };
 		6AF9D5321DE0B73D006368B6 /* LMImageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AF9D5311DE0B73D006368B6 /* LMImageManager.m */; };
@@ -333,6 +335,10 @@
 		6AEB9D221BACF60F00AD19FA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6AEB9D311BAD812700AD19FA /* icon_pause.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_pause.png; sourceTree = "<group>"; };
 		6AEB9D321BAD812700AD19FA /* icon_play.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_play.png; sourceTree = "<group>"; };
+		6AEF8C6E1DEF36F500D9A1BF /* LMDebugView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMDebugView.h; sourceTree = "<group>"; };
+		6AEF8C6F1DEF36F500D9A1BF /* LMDebugView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMDebugView.m; sourceTree = "<group>"; };
+		6AEF8C711DEF419D00D9A1BF /* LMDebugViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMDebugViewController.h; sourceTree = "<group>"; };
+		6AEF8C721DEF419D00D9A1BF /* LMDebugViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMDebugViewController.m; sourceTree = "<group>"; };
 		6AF2C9411DDA16CC005E4643 /* icon_source.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_source.png; sourceTree = "<group>"; };
 		6AF2C9421DDA16CC005E4643 /* icon_browse.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_browse.png; sourceTree = "<group>"; };
 		6AF571FE1BC714DF009993E0 /* PebbleKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = PebbleKit.framework; sourceTree = "<group>"; };
@@ -437,6 +443,10 @@
 				6A759D581DEBF0470051E1A9 /* LMContactViewController.m */,
 				6A759D461DE96B9A0051E1A9 /* LMScrollView.h */,
 				6A759D471DE96B9A0051E1A9 /* LMScrollView.m */,
+				6AEF8C6E1DEF36F500D9A1BF /* LMDebugView.h */,
+				6AEF8C6F1DEF36F500D9A1BF /* LMDebugView.m */,
+				6AEF8C711DEF419D00D9A1BF /* LMDebugViewController.h */,
+				6AEF8C721DEF419D00D9A1BF /* LMDebugViewController.m */,
 			);
 			name = Core;
 			sourceTree = "<group>";
@@ -1102,6 +1112,7 @@
 				6AC1B7391DA308F80029E08B /* LMSongDetailControlView.m in Sources */,
 				6A4BAEF21DC9C59B000DF537 /* LMTiledAlbumCoverView.m in Sources */,
 				6A6351921D9D71D300498582 /* LMListEntry.m in Sources */,
+				6AEF8C701DEF36F500D9A1BF /* LMDebugView.m in Sources */,
 				6AD226F91DA49C720056695A /* LMProgressCircleView.m in Sources */,
 				6AA4459C1D5AB264004C6739 /* LMPebbleSettingsView.m in Sources */,
 				6AFD2EDD1BC41ECD0083FE9E /* LMAlbumViewItem.m in Sources */,
@@ -1157,6 +1168,7 @@
 				6AF9D5321DE0B73D006368B6 /* LMImageManager.m in Sources */,
 				6A1FB9C71D99EB0A00890BF3 /* LMAlbumView.m in Sources */,
 				6A59A51B1DE7B08B00B346AC /* LMSettingsViewController.m in Sources */,
+				6AEF8C731DEF419D00D9A1BF /* LMDebugViewController.m in Sources */,
 				6AFF01891DDD656E00F24D8E /* LMGuideViewPagerController.m in Sources */,
 				6A92F81C1DD3C1A9002045C2 /* LMPlaylistView.m in Sources */,
 				6AD226FC1DA4B7770056695A /* LMNowPlayingView.m in Sources */,
@@ -1314,6 +1326,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"COCOAPODS=1",
@@ -1349,6 +1362,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"COCOAPODS=1",

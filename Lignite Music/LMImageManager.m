@@ -124,6 +124,11 @@
  */
 @property NSTimer *reachabilityChangedTimer;
 
+/**
+ An array of categories which are currently being processed. When inside this array, the image download process should not begin again for them.
+ */
+@property NSMutableArray<NSNumber*> *currentlyProcessingCategoryArray;
+
 @end
 
 @implementation LMImageManager
@@ -152,21 +157,26 @@
 		
 		self.delegates = [NSMutableArray new];
 		
-		LMReachability* reach = [LMReachability reachabilityWithHostname:@"www.google.com"];
-		reach.reachableOnWWAN = NO;
-		
-		[[NSNotificationCenter defaultCenter] addObserver:self
-												 selector:@selector(reachabilityChanged:)
-													 name:kReachabilityChangedNotification
-												   object:nil];
-		[reach startNotifier];
-		
 //		[self setPermissionStatus:LMImageManagerPermissionStatusNotDetermined
 //	 forSpecialDownloadPermission:LMImageManagerSpecialDownloadPermissionLowStorage];
 //		
 //		[self setPermissionStatus:LMImageManagerPermissionStatusNotDetermined
 //	 forSpecialDownloadPermission:LMImageManagerSpecialDownloadPermissionCellularData];
 //		
+//		[self wifiReactivated];
+		
+		[NSTimer scheduledTimerWithTimeInterval:3.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
+			LMReachability* reach = [LMReachability reachabilityWithHostname:@"www.google.com"];
+			reach.reachableOnWWAN = NO;
+			
+			[[NSNotificationCenter defaultCenter] addObserver:self
+													 selector:@selector(reachabilityChanged:)
+														 name:kReachabilityChangedNotification
+													   object:nil];
+			[reach startNotifier];
+		}];
+		
+//
 //		[self clearCacheForCategory:LMImageManagerCategoryArtistImages];
 //		[self clearCacheForCategory:LMImageManagerCategoryAlbumImages];
 		
@@ -360,6 +370,9 @@
 	//Get the data from the API URL
 	NSURL *jsonURL = [NSURL URLWithString:urlString];
 	NSData *data = [NSData dataWithContentsOfURL:jsonURL];
+	if(!data){
+		return;
+	}
 	NSDictionary *jsonResponse = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
 
 	//Get the items of search results that were returned
@@ -463,6 +476,10 @@
 		}
 		
 		if(imageManager.trackDownloadQueue.count < 1){
+			[imageManager.currentlyProcessingCategoryArray removeObject:@(LMImageManagerCategoryAlbumImages)];
+			[imageManager.currentlyProcessingCategoryArray removeObject:@(LMImageManagerCategoryArtistImages)];
+			
+			NSLog(@"Queue has no items, rejecting.");
 			return;
 		}
 		
@@ -504,9 +521,13 @@
 }
 
 - (void)beginDownloadingImagesForCategory:(LMImageManagerCategory)category {
-//	NSLog(@"[LMImageManager]: Will begin the process for downloading images for category %d.", category);
+	NSLog(@"[LMImageManager]: Will begin the process for downloading images for category %d.", category);
 	
 	NSArray *collectionsAssociated = (category == LMImageManagerCategoryArtistImages) ? self.artistsCollection : self.albumsCollection;
+	
+	[self.currentlyProcessingCategoryArray addObject:@(category)];
+	
+	NSLog(@"Processing %d.", category);
 	
 	for(int i = 0; i < collectionsAssociated.count; i++){
 		LMMusicTrackCollection *collection = [collectionsAssociated objectAtIndex:i];
@@ -528,6 +549,7 @@
 										  
 										  //Since this should mean we're at least part way through the list (since its asynchronus), we can know with fairly high confidence that there will be some items in the queue, so we can start downloading them since we don't actually start downloading instantly.
 										  if(i == collectionsAssociated.count-1){
+											  NSLog(@"Firing download queue.");
 											  [self downloadNextImageInQueue];
 										  }
 									  }];
@@ -536,6 +558,11 @@
 
 - (void)downloadIfNeededForCategory:(LMImageManagerCategory)category {
 	LMImageManagerConditionLevel currentConditionLevel = [self conditionLevelForDownloadingForCategory:category];
+	
+	if([self.currentlyProcessingCategoryArray containsObject:@(category)]){
+		NSLog(@"Already processing %d, rejecting.", category);
+		return;
+	}
 	
 	switch(currentConditionLevel){
 		case LMImageManagerConditionLevelNever:
@@ -763,26 +790,27 @@
 }
 
 - (void)wifiReactivated {
+	NSLog(@"\n\nHello\n\n");
 	BOOL hasInternetConnection = [self hasInternetConnection];
-	BOOL isOnWifive = ![self isOnCellularData];
 	
-	if(hasInternetConnection && isOnWifive){
-		[self downloadIfNeededForCategory:LMImageManagerCategoryArtistImages];
+	if(hasInternetConnection){
+		[self downloadIfNeededForCategory:LMImageManagerCategoryArtistImages]; //Crash 3
 		[self downloadIfNeededForCategory:LMImageManagerCategoryAlbumImages];
 	}
 }
 
 - (void)reachabilityChanged:(NSNotification*)notification {
 	BOOL hasInternetConnection = [self hasInternetConnection];
-	BOOL isOnWifive = ![self isOnCellularData];
 	BOOL timerExists = self.reachabilityChangedTimer || self.reachabilityChangedTimer.valid;
+	
+	NSLog(@"Hey bud");
 	
 	if(timerExists){
 		[self.reachabilityChangedTimer invalidate];
 		self.reachabilityChangedTimer = nil;
 	}
 	
-	if(hasInternetConnection && isOnWifive){ //Shoutout to Ms. Mac's famous "Wifive" ;)
+	if(hasInternetConnection){ //Shoutout to Ms. Mac's famous "Wifive" ;)
 		self.reachabilityChangedTimer = [NSTimer scheduledTimerWithTimeInterval:1.0
 																		 target:self
 																	   selector:@selector(wifiReactivated)

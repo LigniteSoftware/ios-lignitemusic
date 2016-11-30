@@ -19,12 +19,15 @@
 #import "LMCreditsViewController.h"
 #import "LMCoreViewController.h"
 #import "LMContactViewController.h"
+#import "LMDebugViewController.h"
 
 @interface LMSettingsView()<LMSectionTableViewDelegate, LMImageManagerDelegate>
 
 @property LMSectionTableView *sectionTableView;
 
 @property BOOL hasPreparedSubviews;
+
+@property int debugTapCount;
 
 @end
 
@@ -267,7 +270,7 @@
 				
 				[hud hideAnimated:YES afterDelay:3.f];
 				
-				[imageManager beginDownloadingImagesForCategory:category];
+				[imageManager downloadIfNeededForCategory:category];
 			}
 		}
 		
@@ -293,6 +296,19 @@
 			switch(indexPath.row){
 				case 0:
 					NSLog(@"Status bar");
+					self.debugTapCount++;
+					if(self.debugTapCount > 10){
+						NSLog(@"Hey boi");
+						LMDebugViewController *debugViewController = [LMDebugViewController new];
+						[self.coreViewController.navigationController showViewController:debugViewController sender:self];
+					}
+					if(self.debugTapCount == 1){
+						NSLog(@"Timer registered");
+						[NSTimer scheduledTimerWithTimeInterval:5.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
+							self.debugTapCount = 0;
+							NSLog(@"Timer reset");
+						}];
+					}
 					break;
 			}
 			break;

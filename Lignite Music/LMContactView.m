@@ -16,16 +16,6 @@
 @property BOOL didLayoutSubviews;
 
 /**
- The root scroll view of the contact view.
- */
-@property LMScrollView *scrollView;
-
-/**
- The image view for Philipp and I's photo together :)
- */
-@property UIImageView *philippAndEdwinView;
-
-/**
  The big "Thank you!" title label.
  */
 @property UILabel *thankYouLabel;
@@ -69,33 +59,23 @@
 	if(!self.didLayoutSubviews){
 		self.didLayoutSubviews = YES;
 		
-		self.scrollView = [LMScrollView newAutoLayoutView];
-		self.scrollView.backgroundColor = [UIColor whiteColor];
-		[self addSubview:self.scrollView];
-		
-		[self.scrollView autoPinEdgesToSuperviewEdges];
-		
-		
-		self.philippAndEdwinView = [UIImageView newAutoLayoutView];
-		self.philippAndEdwinView.image = [UIImage imageNamed:@"onboarding_us.png"];
-		self.philippAndEdwinView.contentMode = UIViewContentModeScaleToFill;
-		self.philippAndEdwinView.backgroundColor = [UIColor purpleColor];
-		[self.scrollView addSubview:self.philippAndEdwinView];
-		
-		[self.philippAndEdwinView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-		[self.philippAndEdwinView autoSetDimension:ALDimensionWidth toSize:self.frame.size.width];
-		[self.philippAndEdwinView autoSetDimension:ALDimensionHeight toSize:0.88*self.frame.size.width];
+//		self.scrollView = [LMScrollView newAutoLayoutView];
+//		self.scrollView.backgroundColor = [UIColor whiteColor];
+//		self.scrollView.alwaysBounceVertical = YES;
+//		[self addSubview:self.scrollView];
+//		
+//		[self.scrollView autoPinEdgesToSuperviewEdges];
 		
 		
 		self.thankYouLabel = [UILabel newAutoLayoutView];
 		self.thankYouLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:(self.frame.size.width/414.0)*50.0f];
 		self.thankYouLabel.text = NSLocalizedString(@"ContactHi", nil);
 		self.thankYouLabel.textAlignment = NSTextAlignmentLeft;
-		[self.scrollView addSubview:self.thankYouLabel];
+		[self addSubview:self.thankYouLabel];
 		
 		[self.thankYouLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
 		[self.thankYouLabel autoSetDimension:ALDimensionWidth toSize:self.frame.size.width*0.9];
-		[self.thankYouLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.philippAndEdwinView withOffset:-self.frame.size.width*0.05];
+		[self.thankYouLabel autoPinEdgeToSuperviewMargin:ALEdgeTop];
 		
 		
 		self.descriptionLabel = [UILabel newAutoLayoutView];
@@ -103,7 +83,7 @@
 		self.descriptionLabel.text = NSLocalizedString(@"ContactDescription", nil);
 		self.descriptionLabel.textAlignment = NSTextAlignmentLeft;
 		self.descriptionLabel.numberOfLines = 0;
-		[self.scrollView addSubview:self.descriptionLabel];
+		[self addSubview:self.descriptionLabel];
 		
 		[self.descriptionLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
 		[self.descriptionLabel autoSetDimension:ALDimensionWidth toSize:self.frame.size.width*0.9];
@@ -131,7 +111,7 @@
 			contactButton.layer.cornerRadius = self.frame.size.width/50;
 			contactButton.layer.masksToBounds = YES;
 			
-			[self.scrollView addSubview:contactButton];
+			[self addSubview:contactButton];
 			
 			[contactButton autoAlignAxisToSuperviewAxis:ALAxisVertical];
 			[contactButton autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:0.9];
@@ -194,7 +174,7 @@
 - (instancetype)init {
 	self = [super init];
 	if(self) {
-		self.backgroundColor = [UIColor orangeColor];
+		self.backgroundColor = [UIColor whiteColor];
 	}
 	return self;
 }

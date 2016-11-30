@@ -28,8 +28,9 @@
 #import "LMSettingsViewController.h"
 #import "LMBrowsingDetailViewController.h"
 #import "LMContactView.h"
+#import "LMDebugView.h"
 
-//#define SKIP_ONBOARDING
+#define SKIP_ONBOARDING
 
 @import SDWebImage;
 @import StoreKit;
@@ -410,10 +411,10 @@ BOOL didAutomaticallyClose = NO;
 	
 	NSLog(@"Loading view %@", self.navigationController);
 	
-//	LMContactView *contactView = [LMContactView newAutoLayoutView];
-//	[self.view addSubview:contactView];
+//	LMDebugView *view = [LMDebugView newAutoLayoutView];
+//	[self.view addSubview:view];
 //	
-//	[contactView autoPinEdgesToSuperviewEdges];
+//	[view autoPinEdgesToSuperviewEdges];
 //	
 //	return;
 	
@@ -618,8 +619,6 @@ BOOL didAutomaticallyClose = NO;
 						
 						LMImageManager *imageManager = [LMImageManager sharedImageManager];
 						imageManager.viewToDisplayAlertsOn = self.navigationController.view;
-						[imageManager downloadIfNeededForCategory:LMImageManagerCategoryAlbumImages];
-						[imageManager downloadIfNeededForCategory:LMImageManagerCategoryArtistImages];
 					});
 					break;
 				}
