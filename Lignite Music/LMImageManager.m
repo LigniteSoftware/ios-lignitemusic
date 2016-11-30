@@ -169,6 +169,8 @@
 //		
 //		[self clearCacheForCategory:LMImageManagerCategoryArtistImages];
 //		[self clearCacheForCategory:LMImageManagerCategoryAlbumImages];
+		
+//		NSLog(@"Current keys %@", [[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] allKeys]);
 	}
 	return self;
 }
@@ -269,6 +271,8 @@
 	[imageCache cleanDisk];
 	
 	[imageCache clearMemory];
+	
+	[self clearBlacklistForCategory:category];
 	
 	[self notifyDelegatesOfCacheSizeChangeForCategory:category];
 	[self notifyDelegatesOfImageCacheChangeForCategory:category];
@@ -451,7 +455,7 @@
 		
 		NSTimeInterval differenceInTime = currentDownloadTime-lastDownloadTime;
 		
-		NSLog(@"Difference %f seconds between %f", differenceInTime, LMLastFMAPISecondsBetweenAPICalls);
+//		NSLog(@"Difference %f seconds between %f", differenceInTime, LMLastFMAPISecondsBetweenAPICalls);
 		
 		if(differenceInTime < LMLastFMAPISecondsBetweenAPICalls){
 			NSLog(@"Attempting to make calls to fast! Rejecting.");
@@ -489,7 +493,7 @@
 		
 		[imageManager downloadImageForMusicTrack:musicTrack forCategory:category];
 		
-		NSLog(@"Downloading %@ from queue with category %d.", musicTrack.albumTitle, category);
+		NSLog(@"Next image download attempt: %@, with category %d.", musicTrack.albumTitle, category);
 	
 		if(imageManager.trackDownloadQueue.count > 0){
 			[imageManager downloadNextImageInQueue];
@@ -500,7 +504,7 @@
 }
 
 - (void)beginDownloadingImagesForCategory:(LMImageManagerCategory)category {
-	NSLog(@"[LMImageManager]: Will begin the process for downloading images for category %d.", category);
+//	NSLog(@"[LMImageManager]: Will begin the process for downloading images for category %d.", category);
 	
 	NSArray *collectionsAssociated = (category == LMImageManagerCategoryArtistImages) ? self.artistsCollection : self.albumsCollection;
 	
@@ -511,7 +515,7 @@
 		[self imageNeedsDownloadingForMusicTrack:representativeTrack
 									 forCategory:category
 									  completion:^(BOOL needsDownloading) {
-										  NSLog(@"%d %@ needs downloading: %d", i, representativeTrack.albumTitle, needsDownloading);
+//										  NSLog(@"%d %@ needs downloading: %d", i, representativeTrack.albumTitle, needsDownloading);
 										  
 										  //If it needs downloading, is not already in queue, and is not on the blacklist
 										  if(needsDownloading
@@ -556,20 +560,9 @@
 	NSString *cacheKey = [self imageCacheKeyForMusicTrack:musicTrack forCategory:category];
 	NSString *blacklistKey = [NSString stringWithFormat:@"blacklist_%@", cacheKey];
 	
-	NSLog(@"Checking blacklist for %@.", blacklistKey);
-	
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 	
-	BOOL isOnBlacklist = [userDefaults objectForKey:blacklistKey] ? YES : NO;
-	
-	if(isOnBlacklist){
-		NSLog(@"Is on blacklist.");
-	}
-	else{
-		NSLog(@"Isn't on blacklist.");
-	}
-	
-	return isOnBlacklist;
+	return [userDefaults objectForKey:blacklistKey] ? YES : NO;
 }
 
 - (void)setMusicTrack:(LMMusicTrack*)musicTrack asBlacklisted:(BOOL)blacklisted forCategory:(LMImageManagerCategory)category {
@@ -580,10 +573,35 @@
 	
 	if(blacklisted){
 		[userDefaults setBool:YES forKey:blacklistKey];
-		NSLog(@"Blacklisted %@.", blacklistKey);
 	}
 	else{
 		[userDefaults setNilValueForKey:blacklistKey];
+	}
+	
+	[userDefaults synchronize];
+}
+
+- (void)clearBlacklistForCategory:(LMImageManagerCategory)category {
+	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+	
+	NSArray<NSString*> *allKeys = [[userDefaults dictionaryRepresentation] allKeys];
+	
+	NSString *categoryName = @"";
+	
+	switch(category){
+		case LMImageManagerCategoryAlbumImages:
+			categoryName = @"albumArtImages";
+			break;
+		case LMImageManagerCategoryArtistImages:
+			categoryName = @"artistImages";
+			break;
+	}
+	
+	for(int i = 0; i < allKeys.count; i++){
+		NSString *key = [allKeys objectAtIndex:i];
+		if([key containsString:categoryName]){
+			[userDefaults removeObjectForKey:key];
+		}
 	}
 	
 	[userDefaults synchronize];

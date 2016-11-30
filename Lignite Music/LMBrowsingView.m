@@ -129,6 +129,7 @@
 	LMMusicTrackCollection *collection = [self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex];
 	
 	switch(self.musicType){
+		case LMMusicTypeArtists:
 		case LMMusicTypeGenres:
 		case LMMusicTypePlaylists:
 		{
@@ -140,12 +141,6 @@
 			}
 			return collection.representativeItem.artist ? collection.representativeItem.artist : NSLocalizedString(@"UnknownArtist", nil);
 		}
-		case LMMusicTypeArtists: {
-			if([collection.representativeItem.artist isEqualToString:@"Blink-182"]){
-				return @"3 albums";
-			}
-			return @"3 albums";
-		}
 		default: {
 			return nil;
 		}
@@ -156,12 +151,12 @@
 	LMMusicTrackCollection *collection = [self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex];
 	
 	switch(self.musicType){
+		case LMMusicTypeArtists:
 		case LMMusicTypeGenres:
 		case LMMusicTypePlaylists:
 		{
 			return nil;
 		}
-		case LMMusicTypeArtists:
 		case LMMusicTypeAlbums: {
 			return [NSString stringWithFormat:@"%lu %@", collection.count, NSLocalizedString(collection.count == 1 ? @"Song" : @"Songs", nil)];
 		}

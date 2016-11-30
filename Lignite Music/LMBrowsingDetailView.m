@@ -160,6 +160,9 @@
 		case LMMusicTypeAlbums: {
 			return self.musicTrackCollection.representativeItem.albumTitle;
 		}
+		case LMMusicTypeArtists: {
+			return self.musicTrackCollection.representativeItem.artist;
+		}
 		default:{
 			return nil;
 		}
@@ -168,6 +171,7 @@
 
 - (NSString*)leftTextForInfoView:(LMCollectionInfoView*)infoView {
 	switch(self.musicType){
+		case LMMusicTypeArtists:
 		case LMMusicTypeGenres:
 		case LMMusicTypePlaylists: {
 			return [NSString stringWithFormat:@"%ld %@", self.musicTrackCollection.count, NSLocalizedString(self.musicTrackCollection.count == 1 ? @"Song" : @"Songs", nil)];
@@ -186,6 +190,7 @@
 
 - (NSString*)rightTextForInfoView:(LMCollectionInfoView*)infoView {
 	switch(self.musicType){
+		case LMMusicTypeArtists:
 		case LMMusicTypeGenres:
 		case LMMusicTypePlaylists: {
 			return nil;
@@ -217,6 +222,12 @@
 			imageView.image = [self.musicTrackCollection.representativeItem albumArt];
 			return imageView;
 		}
+		case LMMusicTypeArtists: {
+			UIImageView *imageView = [UIImageView newAutoLayoutView];
+			imageView.contentMode = UIViewContentModeScaleAspectFit;
+			imageView.image = [self.musicTrackCollection.representativeItem artistImage];
+			return imageView;
+		}
 		default: {
 			return nil;
 		}
@@ -229,6 +240,7 @@
 		case LMMusicTypePlaylists: {
 			return height ? 0.25 : 0.80;
 		}
+		case LMMusicTypeArtists:
 		case LMMusicTypeAlbums: {
 			return height ? WINDOW_FRAME.size.width/WINDOW_FRAME.size.height : 1.0; //To fill to the edge of the screen
 		}
@@ -282,6 +294,7 @@
 
 - (UIImage*)iconForListEntry:(LMListEntry*)entry {
 	switch(self.musicType) {
+		case LMMusicTypeArtists:
 		case LMMusicTypeGenres:
 		case LMMusicTypePlaylists: {
 			LMMusicTrack *track = [self.musicTrackCollection.items objectAtIndex:entry.collectionIndex];
