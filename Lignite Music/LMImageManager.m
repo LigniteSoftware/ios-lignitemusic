@@ -50,7 +50,7 @@
 
  @return The amount of calls.
  */
-#define LMLastFMAPICallsPerSecondLimit 0.25
+#define LMLastFMAPICallsPerSecondLimit 2.0
 //TODO: change this to 3.0 for release
 
 /**
@@ -65,14 +65,7 @@
 
  @return The number of items per page.
  */
-#define LMLastFMItemsPerPageLimit 40
-
-/**
- How often the image manager should check to download images (WiFi might have changed, etc.)
-
- @return The frequency in seconds. Currently 5 minutes.
- */
-#define LMDownloadCheckFrequencyInSeconds 300.0
+#define LMLastFMItemsPerPageLimit 10
 
 @interface LMImageManager()
 
@@ -126,6 +119,11 @@
  */
 @property NSTimeInterval lastImageDownloadTime;
 
+/**
+ The timer which will count down from 2 seconds and will then begin the downloading process if on WiFi.
+ */
+@property NSTimer *reachabilityChangedTimer;
+
 @end
 
 @implementation LMImageManager
@@ -154,34 +152,23 @@
 		
 		self.delegates = [NSMutableArray new];
 		
-		[self setPermissionStatus:LMImageManagerPermissionStatusNotDetermined
-	 forSpecialDownloadPermission:LMImageManagerSpecialDownloadPermissionLowStorage];
+		LMReachability* reach = [LMReachability reachabilityWithHostname:@"www.google.com"];
+		reach.reachableOnWWAN = NO;
 		
-		[self setPermissionStatus:LMImageManagerPermissionStatusNotDetermined
-	 forSpecialDownloadPermission:LMImageManagerSpecialDownloadPermissionCellularData];
+		[[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(reachabilityChanged:)
+													 name:kReachabilityChangedNotification
+												   object:nil];
+		[reach startNotifier];
 		
-		[self clearCacheForCategory:LMImageManagerCategoryArtistImages];
-		[self clearCacheForCategory:LMImageManagerCategoryAlbumImages];
-
-		//Start a loop which fires every LMDownloadCheckFrequencyInSeconds seconds to check for redownloading images
-		__weak id weakSelf = self;
-		
-		double delayInSeconds = LMDownloadCheckFrequencyInSeconds;
-		
-		dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
-		dispatch_after(popTime, dispatch_get_global_queue(NSQualityOfServiceUtility, 0), ^(void){
-			id strongSelf = weakSelf;
-			
-			if (!strongSelf) {
-				return;
-			}
-			
-			LMImageManager *imageManager = strongSelf;
-			dispatch_async(dispatch_get_main_queue(), ^{
-				[imageManager downloadIfNeededForCategory:LMImageManagerCategoryArtistImages];
-				[imageManager downloadIfNeededForCategory:LMImageManagerCategoryAlbumImages];
-			});
-		});
+//		[self setPermissionStatus:LMImageManagerPermissionStatusNotDetermined
+//	 forSpecialDownloadPermission:LMImageManagerSpecialDownloadPermissionLowStorage];
+//		
+//		[self setPermissionStatus:LMImageManagerPermissionStatusNotDetermined
+//	 forSpecialDownloadPermission:LMImageManagerSpecialDownloadPermissionCellularData];
+//		
+//		[self clearCacheForCategory:LMImageManagerCategoryArtistImages];
+//		[self clearCacheForCategory:LMImageManagerCategoryAlbumImages];
 	}
 	return self;
 }
@@ -253,7 +240,7 @@
 	[self clearCacheForCategory:LMImageManagerCategoryArtistImages];
 	
 	[self beginDownloadingImagesForCategory:LMImageManagerCategoryAlbumImages];
-//	[self beginDownloadingImagesForCategory:LMImageManagerCategoryArtistImages];
+	[self beginDownloadingImagesForCategory:LMImageManagerCategoryArtistImages];
 }
 
 - (SDImageCache*)imageCacheForCategory:(LMImageManagerCategory)category {
@@ -411,7 +398,7 @@
 				[downloader downloadImageWithURL:[NSURL URLWithString:itemImageURL]
 										 options:0
 										progress:^(NSInteger receivedSize, NSInteger expectedSize) {
-											NSLog(@"%.02f%% complete", (float)receivedSize/(float)expectedSize * 100);
+//											NSLog(@"%.02f%% complete", (float)receivedSize/(float)expectedSize * 100);
 										}
 									   completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished) {
 										   if(image && finished) {
@@ -710,6 +697,35 @@
 	NetworkStatus status = [reachability currentReachabilityStatus];
 	
 	return status != NotReachable;
+}
+
+- (void)wifiReactivated {
+	BOOL hasInternetConnection = [self hasInternetConnection];
+	BOOL isOnWifive = ![self isOnCellularData];
+	
+	if(hasInternetConnection && isOnWifive){
+		[self downloadIfNeededForCategory:LMImageManagerCategoryArtistImages];
+		[self downloadIfNeededForCategory:LMImageManagerCategoryAlbumImages];
+	}
+}
+
+- (void)reachabilityChanged:(NSNotification*)notification {	
+	BOOL hasInternetConnection = [self hasInternetConnection];
+	BOOL isOnWifive = ![self isOnCellularData];
+	BOOL timerExists = self.reachabilityChangedTimer || self.reachabilityChangedTimer.valid;
+	
+	if(timerExists){
+		[self.reachabilityChangedTimer invalidate];
+		self.reachabilityChangedTimer = nil;
+	}
+	
+	if(hasInternetConnection && isOnWifive){ //Shoutout to Ms. Mac's famous "Wifive" ;)
+		self.reachabilityChangedTimer = [NSTimer scheduledTimerWithTimeInterval:1.0
+																		 target:self
+																	   selector:@selector(wifiReactivated)
+																	   userInfo:nil
+																		repeats:NO];
+	}
 }
 
 - (NSString*)storageKeyForSpecialDownloadPermission:(LMImageManagerSpecialDownloadPermission)specialDownloadPermission {
