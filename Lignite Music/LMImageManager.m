@@ -421,6 +421,10 @@
 			}
 		}
 	}
+	
+	NSLog(@"Couldn't find anything, blacklisting.");
+	
+	[self setMusicTrack:randomTrack asBlacklisted:YES forCategory:category];
 }
 
 - (UIImage*)imageForMusicTrack:(LMMusicTrack*)musicTrack withCategory:(LMImageManagerCategory)category {
@@ -509,7 +513,11 @@
 									  completion:^(BOOL needsDownloading) {
 										  NSLog(@"%d %@ needs downloading: %d", i, representativeTrack.albumTitle, needsDownloading);
 										  
-										  if(needsDownloading && ![self.trackDownloadQueue containsObject:representativeTrack]){
+										  //If it needs downloading, is not already in queue, and is not on the blacklist
+										  if(needsDownloading
+											 && ![self.trackDownloadQueue containsObject:representativeTrack]
+											 && ![self musicTrackIsOnBlacklist:representativeTrack forCategory:category])
+										  {
 											  [self.trackDownloadQueue addObject:representativeTrack];
 											  [self.categoryDownloadQueue addObject:[NSNumber numberWithInteger:(NSInteger)category]];
 										  }
@@ -542,6 +550,43 @@
 			[self beginDownloadingImagesForCategory:category];
 			break;
 	}
+}
+
+- (BOOL)musicTrackIsOnBlacklist:(LMMusicTrack*)musicTrack forCategory:(LMImageManagerCategory)category {
+	NSString *cacheKey = [self imageCacheKeyForMusicTrack:musicTrack forCategory:category];
+	NSString *blacklistKey = [NSString stringWithFormat:@"blacklist_%@", cacheKey];
+	
+	NSLog(@"Checking blacklist for %@.", blacklistKey);
+	
+	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+	
+	BOOL isOnBlacklist = [userDefaults objectForKey:blacklistKey] ? YES : NO;
+	
+	if(isOnBlacklist){
+		NSLog(@"Is on blacklist.");
+	}
+	else{
+		NSLog(@"Isn't on blacklist.");
+	}
+	
+	return isOnBlacklist;
+}
+
+- (void)setMusicTrack:(LMMusicTrack*)musicTrack asBlacklisted:(BOOL)blacklisted forCategory:(LMImageManagerCategory)category {
+	NSString *cacheKey = [self imageCacheKeyForMusicTrack:musicTrack forCategory:category];
+	NSString *blacklistKey = [NSString stringWithFormat:@"blacklist_%@", cacheKey];
+	
+	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+	
+	if(blacklisted){
+		[userDefaults setBool:YES forKey:blacklistKey];
+		NSLog(@"Blacklisted %@.", blacklistKey);
+	}
+	else{
+		[userDefaults setNilValueForKey:blacklistKey];
+	}
+	
+	[userDefaults synchronize];
 }
 
 
@@ -709,7 +754,7 @@
 	}
 }
 
-- (void)reachabilityChanged:(NSNotification*)notification {	
+- (void)reachabilityChanged:(NSNotification*)notification {
 	BOOL hasInternetConnection = [self hasInternetConnection];
 	BOOL isOnWifive = ![self isOnCellularData];
 	BOOL timerExists = self.reachabilityChangedTimer || self.reachabilityChangedTimer.valid;
