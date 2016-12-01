@@ -14,14 +14,34 @@
 @interface LMProgressSlider()
 
 /**
- The text label which goes to the left of the view.
+ The text label which goes to the left of the view and below the dragger view.
  */
-@property LMLabel *leftTextLabel;
+@property LMLabel *leftTextBottomLabel;
 
 /**
- The text label which goes to the right of the view.
+ The text label which goes to the right of the view and below the dragger view.
  */
-@property LMLabel *rightTextLabel;
+@property LMLabel *rightTextBottomLabel;
+
+/**
+ The text label which goes to the left of the view and above the dragger view.
+ */
+@property LMLabel *leftTextTopLabel;
+
+/**
+ The width constraint for the left text top label.
+ */
+@property NSLayoutConstraint *leftTextTopLabelWidthConstraint;
+
+/**
+ The text label which goes to the right of the view and above the dragger view.
+ */
+@property LMLabel *rightTextTopLabel;
+
+/**
+ The width constraint for the right text top label.
+ */
+@property NSLayoutConstraint *rightTextTopLabelWidthConstraint;
 
 /**
  The background to the slider.
@@ -83,6 +103,12 @@
 	
 	[self layoutIfNeeded];
 	self.sliderBackgroundWidthConstraint.constant = translatedPoint.x;
+	
+	float topRightLabelWidth = self.sliderBackgroundWidthConstraint.constant-self.rightTextBottomLabel.frame.origin.x;
+	self.rightTextTopLabelWidthConstraint.constant = topRightLabelWidth > 0 ? topRightLabelWidth : 0;
+	
+	float topLeftLabelWidth = self.sliderBackgroundWidthConstraint.constant-self.sliderGrabberView.frame.size.width/2;
+	self.leftTextTopLabelWidthConstraint.constant = topLeftLabelWidth > self.leftTextBottomLabel.frame.size.width ? self.leftTextBottomLabel.frame.size.width : topLeftLabelWidth;
 	[self layoutIfNeeded];
 	
 	
@@ -94,29 +120,29 @@
 		
 		self.backgroundColor = [LMColour lightGrayBackgroundColour];
 		
-		self.leftTextLabel = [LMLabel newAutoLayoutView];
-		self.leftTextLabel.text = @"Left Text";
-		self.leftTextLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:50];
-		self.leftTextLabel.textColor = [UIColor blackColor];
-		[self addSubview:self.leftTextLabel];
+		self.leftTextBottomLabel = [LMLabel newAutoLayoutView];
+		self.leftTextBottomLabel.text = @"Left Text";
+		self.leftTextBottomLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:50];
+		self.leftTextBottomLabel.textColor = [UIColor blackColor];
+		[self addSubview:self.leftTextBottomLabel];
 		
-		[self.leftTextLabel autoPinEdgeToSuperviewMargin:ALEdgeLeading];
-		[self.leftTextLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
-		[self.leftTextLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self withOffset:self.frame.size.height/8];
-		[self.leftTextLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self withOffset:-self.frame.size.height/8];
+		[self.leftTextBottomLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self withOffset:10];
+		[self.leftTextBottomLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+		[self.leftTextBottomLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self withOffset:self.frame.size.height/8];
+		[self.leftTextBottomLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self withOffset:-self.frame.size.height/8];
 		
 		
 		
-		self.rightTextLabel = [LMLabel newAutoLayoutView];
-		self.rightTextLabel.text = @"Right Text";
-		self.rightTextLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:50];
-		self.rightTextLabel.textColor = [UIColor blackColor];
-		[self addSubview:self.rightTextLabel];
+		self.rightTextBottomLabel = [LMLabel newAutoLayoutView];
+		self.rightTextBottomLabel.text = @"Right Text";
+		self.rightTextBottomLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:50];
+		self.rightTextBottomLabel.textColor = [UIColor blackColor];
+		[self addSubview:self.rightTextBottomLabel];
 		
-		[self.rightTextLabel autoPinEdgeToSuperviewMargin:ALEdgeTrailing];
-		[self.rightTextLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
-		[self.rightTextLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self withOffset:self.frame.size.height/8];
-		[self.rightTextLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self withOffset:-self.frame.size.height/8];
+		[self.rightTextBottomLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self withOffset:-10];
+		[self.rightTextBottomLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+		[self.rightTextBottomLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self withOffset:self.frame.size.height/8];
+		[self.rightTextBottomLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self withOffset:-self.frame.size.height/8];
 		
 		
 		
@@ -129,6 +155,9 @@
 		[self.sliderBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 		self.sliderBackgroundWidthConstraint = [self.sliderBackgroundView autoSetDimension:ALDimensionWidth toSize:80];
 		
+		UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(sliderGrabberPan:)];
+		[self.sliderBackgroundView addGestureRecognizer:panGesture];
+		
 		
 		
 		self.sliderGrabberView = [UIView newAutoLayoutView];
@@ -140,10 +169,39 @@
 		[self.sliderGrabberView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 		[self.sliderGrabberView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(1.0/20.0)];
 		
-		UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(sliderGrabberPan:)];
-		[self.sliderBackgroundView addGestureRecognizer:panGesture];
 		
 		
+		self.rightTextTopLabel = [LMLabel newAutoLayoutView];
+		self.rightTextTopLabel.text = @"Right Text";
+		self.rightTextTopLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:50];
+		self.rightTextTopLabel.textColor = [UIColor whiteColor];
+		self.rightTextTopLabel.textAlignment = NSTextAlignmentLeft;
+//		self.rightTextTopLabel.backgroundColor = [UIColor yellowColor];
+		self.rightTextTopLabel.lineBreakMode = NSLineBreakByClipping;
+		[self addSubview:self.rightTextTopLabel];
+		
+		[self.rightTextTopLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.rightTextBottomLabel];
+		[self.rightTextTopLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+		self.rightTextTopLabelWidthConstraint = [self.rightTextTopLabel autoSetDimension:ALDimensionWidth toSize:0];
+		[self.rightTextTopLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self withOffset:self.frame.size.height/8];
+		[self.rightTextTopLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self withOffset:-self.frame.size.height/8];
+		
+		
+		
+		self.leftTextTopLabel = [LMLabel newAutoLayoutView];
+		self.leftTextTopLabel.text = @"Left Text";
+		self.leftTextTopLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:50];
+		self.leftTextTopLabel.textColor = [UIColor whiteColor];
+		self.leftTextTopLabel.textAlignment = NSTextAlignmentRight;
+		//		self.rightTextTopLabel.backgroundColor = [UIColor yellowColor];
+		self.leftTextTopLabel.lineBreakMode = NSLineBreakByClipping;
+		[self addSubview:self.leftTextTopLabel];
+		
+		[self.leftTextTopLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.leftTextBottomLabel];
+		[self.leftTextTopLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+		self.leftTextTopLabelWidthConstraint = [self.leftTextTopLabel autoSetDimension:ALDimensionWidth toSize:0];
+		[self.leftTextTopLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self withOffset:self.frame.size.height/8];
+		[self.leftTextTopLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self withOffset:-self.frame.size.height/8];
 	}
 }
 
