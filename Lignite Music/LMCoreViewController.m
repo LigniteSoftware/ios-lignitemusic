@@ -31,6 +31,7 @@
 #import "LMContactView.h"
 #import "LMDebugView.h"
 #import "LMCreditsView.h"
+#import "LMProgressSlider.h"
 
 //#define SKIP_ONBOARDING
 
@@ -410,6 +411,16 @@ BOOL didAutomaticallyClose = NO;
 	
 	self.navigationController.navigationBarHidden = YES;
 	self.navigationController.interactivePopGestureRecognizer.delegate = self;
+	
+	LMProgressSlider *progressSlider = [LMProgressSlider newAutoLayoutView];
+	[self.view addSubview:progressSlider];
+	
+	[progressSlider autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+	[progressSlider autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+	[progressSlider autoCenterInSuperview];
+	[progressSlider autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/20.0)];
+
+	return;
 	
 //	NSLog(@"Loading view %@", self.navigationController);
 	
