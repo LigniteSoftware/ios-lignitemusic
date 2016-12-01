@@ -52,7 +52,7 @@
 
 	//If that's not found, default back to no album art image
 	if(!albumArtImage){
-		albumArtImage = [LMAppIcon imageForIcon:LMIconNoAlbumArt];
+		albumArtImage = [LMAppIcon imageForIcon:LMIconNoAlbumArt75Percent];
 	}
 	
 	return albumArtImage;
@@ -86,7 +86,7 @@
 		UIImage *artistImage = [[LMImageManager sharedImageManager] imageForMusicTrack:self withCategory:LMImageManagerCategoryArtistImages];
 		
 		if(!artistImage) {
-			artistImage = [LMAppIcon imageForIcon:LMIconNoAlbumArt];
+			artistImage = [LMAppIcon imageForIcon:LMIconNoAlbumArt75Percent];
 		}
 		
 		return artistImage;

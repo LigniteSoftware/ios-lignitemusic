@@ -29,71 +29,101 @@
  Thanks, and have fun!
  */
 
-/* 
+/* General */
+"SongXofX" = "Song %d von %d";
+"SongX" = "Song %d";
+"Song" = "Song";
+"Songs" = "Songs";
+
+/*
+ Music Collection Types
+ ----------------------
+ Music collection types are what shows for sources, for example, a list of sources (Albums, Titles, Composers, etc.)
  
- 
- NEW NEW STRINGS
- 
- 
+ These strings are also used in-code to generate counts for sources. For example, the "Albums" string will be used to compose a string saying "69 Albums". If your language requires a different structure or format in this scenario, please reach out to us.
  */
+"Albums" = "Alben";
+"Titles" = "Titel"; //Individual songs
+"Artists" = "Künstler";
+"Playlists" = "Wiedergabelisten";
+"List" = "Liste";
+"Lists" = "Listen";
+"Composers" = "Komponisten";
+"Genres" = "Genres";
+"Compilations" = "Compilations";
 
-"HighQualityImagesTitle" = "Höchste Auflösung";
-"HighQualityImagesDescription" = "(Benötigt mehr Speicherplatz)";
+"UnknownTitle" = "Unbekannter Titel";
+"UnknownArtist" = "Unbekannter Künstler";
+"UnknownAlbumTitle" = "Unbekanntes Album";
+"Album" = "Album";
+"Title" = "Titel";
+"Artist" = "Künstler";
+"Playlist" = "Wiedergabeliste";
+"Composer" = "Komponist";
+"Genre" = "Genre";
+"Compilation" = "Kompilation";
 
-
-/* Other */
 "Various" = "Verschiedene"; //For things like various artists
 
 /*
- Image Management
- ----------------
- Lignite Music automatically downloads images from last.fm to ensure maximum visual quality. However, this can take up a signifigant amount of space or cellular data, so we ensure that users know what we are doing and make sure they allow us to do it should they be low on storage or on cellular data. They can always change their decision in settings.
+ Song Durations
+ --------------
+ Durations are formatted like this:
+ 
+ hours:minutes:seconds
+ 
+ the %@ after the DurationOfDuration strings is the total duration of the song playing. Time formats are automatically 0 padded.
  */
-"ArtistImagesTitle" = "Künstler Fotos";
-"AlbumImagesTitle" = "Fehlendes Albumcover";
+"LongSongDurationOfDuration" = "%02i:%02d:%02d of %@";
+"ShortSongDurationOfDuration" = "%02d:%02d of %@";
+"LongSongDuration" = "%02i:%02d:%02d";
+"ShortSongDuration" = "%02d:%02d";
+"BlankDuration" = "--:--";
+"LengthOfSong" = "Dauer: %@";
 
-"ImagesDownloadWarningDescription" = "Wir werden Bilder %@.\n\nLeider mussten wir feststellen, dass %@.\n\nDie herunterzuladende Datenmenge beträgt %.02f MB %@.\n\nFalls du auf '%@' tippst, werden wir die Bilder trotzdem herunterladen.\n\nSolltest du andernfalls auf '%@' tippen, kannst du deine Meinung jederzeit in den Einstellungen ändern.";
+/* Album view */
+"AlbumDetailInfoWithGenre" = "%@ | %lu %@"; /* ie. "Hiphop | 8 songs" */
+"AlbumDetailInfoWithoutGenre" = "%lu %@"; /* ie. "8 songs" */
 
-"AboutXOfYourStorage" = " (ungefähr %.02f%% deines noch verfügbaren Speicherplatzes)"; //The space in front of the first bracket is important, as it will be inserted after the "[...] take about %.02fMB to download the images%@." (goes where the %@ is in there). If your language does not need the space feel free to take it out.
-"UsingXOfYourStorage" = "Die Bilder belegen ca. %.02f MB deiner verbleibenden Speicherkapazität.";
-"TakingUpXMB" = "%.02f MB verwendet";
+/* System shuffle modes */
+"Shuffle" = "Shuffle";
+"DefaultShuffleMode" = "Normal";
+"OffShuffleMode" = "Aus";
+"SongsShuffleMode" = "Songs";
+"AlbumsShuffleMode" = "Alben";
 
-"OfYourArtists" = "deiner Künstler herunterladen, damit wir von ihnen eine schöne Liste zusammenstellen können";
-"OfYourAlbums" = "deiner Alben herunterladen, die kein Cover hinterlegt haben, um eine möglichst gute Qualität hinzukriegen";
+/* System repeat modes */
+"Repeat" = "Wiederholen";
+"DefaultRepeatMode" = "Normal";
+"OffRepeatMode" = "Aus";
+"ThisRepeatMode" = "1";
+"AllRepeatMode" = "Alles";
 
-"YouAreOnData" = "du in einem mobilen Netz und nicht in einem WiFi unterwegs bist"; //All lowercase because it will go within the above description
-"SpaceAndSpace" = " und "; //The spaces are important here. If your language does not need spaces in between the YouAreOnData and YouAreLowOnStorage contents, remove the spaces and insert your language's equivalent of "and". Otherwise, keep the spaces.
-"YouAreLowOnStorage" = "der Speicher deines iPhones bald voll ist"; //Same case
+/* Settings */
+"Settings" = "Einstellungen";
 
-"DownloadAnyway" = "Trotzdem herunterladen"; //Goes on the accept button for downloading images
-"DontDownload" = "Nicht herunterladen"; //Goes on the deny button for downloading images
+"PebbleSettings" = "Pebble Einstellungen";
+"BatterySaverDescription" = "Screen Refresh reduzieren";
+"ArtistLabelDescription" = "Anzeige während der Wiedergabe";
+"PebbleStyleControlsDescription" = "Gleiches Verhalten wie Pebble Music App";
+"DisplayTimeDescription" = "Zeit während der Wiedergabe anzeigen";
+"BatterySaver" = "Akku-Sparmodus"; /* For Pebble. Stops scrolling text, reduces redraw interval. */
+"ArtistLabel" = "Künstlernamen"; /* For Pebble. Shows the text that displays the artist on the now playing screen. */
+"PebbleStyleControls" = "Steuerung wie Pebble Musik App"; /* For Pebble, can you tell? This one makes the controls (ie. play/pause) emulate the stock Pebble music app controls instead of Lignite-style. */
+"DisplayTime" = "Zeit anzeigen"; /* For Pebble. Shows the time on the now playing screen. */
+"InstallPebbleApp" = "Pebble App installieren"; /* Sends the user to the Pebble appstore. */
+"SendFeedback" = "Feedback / Fehler melden";
+"ReplayTutorial" = "Einführung erneut abspielen";
+"Functionality" = "Funktionalität"; /* Functionality related settings like battery saver mode. */
 
-"ImageDownloads" = "Fotodownloads";
-"LMImageManagerPermissionStatusDenied" = "Download deaktiviert";
-"LMImageManagerPermissionStatusAuthorized" = "Download aktiviert";
-
-"ClearCache" = "Fotos löschen";
-"ClearCacheAndDisable" = "Fotos löschen und deaktivieren";
-"KeepDisabled" = "Deaktiviert lassen";
-"Enable" = "Aktivieren";
-"Enabled" = "Aktiviert";
-"KeepEnabled" = "Aktiviert lassen";
-
-"SettingImagesAlertDescription" = "Wir laden Fotos herunter %@.\n\n%@\n\n%@";
-"YouCurrentlyHaveThisFeatureOff" = "Dieses Feature ist zurzeit ausgeschaltet.";
-"YouCanTurnOffTo" = "Du kannst diese Fotos löschen und dieses Feature deaktivieren, um Speicherplatz und Datenvolumen zu sparen.\n\nFalls du dich dafür entscheidest, werden wir keine Fotos herunterladen, bis du es wieder aktivierst.";
-"YouCanTurnOnTo" = "Du kannst dieses Feature aktivieren, um eine visuell viel schönere Übersicht zu erhalten.\n\nWir werden die Fotos herunterladen, sobald du dich in einem WiFi befindest und genug Speicherplatz zur Verfügung hast. Sollte einer der beiden Voraussetzungen nicht erfüllt sein, werden wir dich entsprechend fragen, wie du weiterfahren möchtest.";
-
-"ImagesDeleted" = "Fotos gelöscht";
-"WillBeginDownloading" = "Wird heruntergeladen";
-
-/* Other settings related */
-"AppSettings" = "App Einstellungen";
 
 "Pebble" = "Pebble"; //Pebble smartwatch. See point 4 of the top of this file for details on legal naming schemes.
-"PebbleSettings" = "Pebble Einstellungen";
 
+"AppSettings" = "App Einstellungen";
 "LookAndFeel" = "Look & Feel";
+"HighQualityImagesTitle" = "Höchste Auflösung";
+"HighQualityImagesDescription" = "(Benötigt mehr Speicherplatz)";
+
 "Colour" = "Farbe";
 "TapToChooseColour" = "Tippe hier, um eine Farbe zu wählen";
 "StatusBar" = "Statusbar";
@@ -103,123 +133,24 @@
 "Credits" = "Danksagungen";
 "CreditsMore" = "Erstellt durch Edwin Finch & Philipp Weder";
 
-/* Pebble settings */
-"BatterySaverDescription" = "Screen Refresh reduzieren";
-"ArtistLabelDescription" = "Anzeige während der Wiedergabe";
-"PebbleStyleControlsDescription" = "Gleiches Verhalten wie Pebble Music App";
-"DisplayTimeDescription" = "Zeit während der Wiedergabe anzeigen";
+/* General/uncategorized */
+"Okay" = "Ok";
+"GeneralError" = "Fehler!";
+"Other" = "Anderes";
+"UnknownSection" = "Unbekannter Abschnitt";
 
-/* Credits */
-"ThankYou" = "Vielen Dank!";
-"ThankYouDescription" = "Unzählige Stunden wurden für diese App geopfert und wir hätten es ohne die Unterstützung unserer tollen Kickstarter Backers, vielen Open Source Libraries und sehr viel Leidenschaft nicht geschafft.\n\nUntenstehend möchten wir allen involvierten Personen danken, die aus einer simplen Idee diese tolle App entstehen liessen.\n\nWir sind euch allen zu grösstem Dank verpflichtet!";
-
-"KickstarterBackers" = "Kickstarter Backer";
-
-"LastFMAPI" = "Last.fm API";
-"LastFMAPIDescription" = "Vielen Dank an Last.fm für diese absolut atemberaubende API.\n\nWir verwenden sie, um die Künstlerfotos und fehlenden Albumcover herunterzuladen und es funktioniert absolut super!";
-
-"OpenSourceLibraries" = "Open Source Libraries";
-"OpenSourceLibrariesLicensing" = "Lignite Music basiert auf vielen leistungsstarken Open Source Libraries.\n\nVielen herzlichen Dank and deren Authoren und all denjenigen, die zur Entwicklung beigetragen haben!";
-
-"LibraryYYImage" = "YYImage - ibireme";
-"LibraryYYImageDescription" = "YYImage ist ein tolles Image Framework, welches uns erlaubt, viele Arten von Bilder zu enkodieren/dekodieren.";
-
-"LibrarySDWebImage" = "SDWebImage - Olivier Poitrey";
-"LibrarySDWebImageDescription" = "SDWebImage ist ein hervorragender asynchroner Bilderdownloader - sogar mit Cache Support!";
-
-"LibraryImageMagick" = "ImageMagick C API";
-"LibraryImageMagickDescription" = "ImageMagick erlaubt es uns wirklich, mit Bildern zu zaubern. Wir können erstellen, bearbeiten, konvertieren und vieles mehr.";
-
-"LibraryPebbleKit" = "PebbleKit";
-"LibraryPebbleKitDescription" = "PebbleKit ist Pebble's iOS Framework, um mit deren Smartwatches zu kommunizieren. Da wir schon dabei sind: Vielen Dank an Pebble für deren exzellente Smartwatches!";
-
-"LibraryPureLayout" = "PureLayout - Tyler Fox";
-"LibraryPureLayoutDescription" = "PureLayout ist genau das, was sein Name bereits sagt: 'beindruckend simpel, beindruckend leistungsstark'.";
-
-"LibraryMBProgressHUD" = "MBProgressHUD - Jonathan George";
-"LibraryMBProgressHUDDescription" = "MBProgressHUD ist eine simple aber dennoch perfekte Library für die ganzen Bestätigungspopups, die wie das Standard-Lautstärken-Popup von iOS aussehen.";
-
-"LibraryMarqueeLabel" = "MarqueeLabel - Charles Powell";
-"LibraryMarqueeLabelDescription" = "MarqueeLabel sorgt dafür, dass wir Texte (bspw. Songtitel) scrollen können";
-
-"LibraryReachability" = "Reachability - Tony Million";
-"LibraryReachabilityDescription" = "Reachability ist eine tolle Library, die uns erlaubt, verschiedene Tasks im Zusammenhang mit der Internet Verbindung auszuführen.";
-
-"Icons" = "Icons";
-"IconsDescription" = "Ein Grossteil unserer Icons stammt von www.flaticon.com und wurde von den folgenden Künstlern gestaltet, die so grosszügig waren, deren Icons unter CC 3.0 zu lizenzieren:";
-"DesignedByNobody" = "Wir arbeiten an der Übersicht und werden sie nachreichen sobald verfügbar.";
-
-/* Contact */
-"ContactUs" = "Kontaktiere uns";
-"ContactHi" = "Hey!";
-"ContactDescription" = "Wir hoffen, es macht dir genauso Spass, Lignite Music zu benutzen wie es uns Spass gemacht hat, sie zu gestalten und zu programmieren.\n\nSolltest du irgendwelche Probleme damit haben oder uns aus sonst einem Grund kontaktieren wollen, hier sind deine Möglichkeiten:";
-"ContactEmail" = "contact@lignite.io";
-"ContactTwitter" = "@WeAreLignite";
-"ContactWebsite" = "www.lignite.io";
-"ContactThanks" = "Vielen herzlichen Dank für deine Unterstützung und Grüsse von uns beiden!";
+/* When no music is playing */
+"NoMusic" = "Keine Musik";
+"NoMusicDescription" = "Starte die Musikwiedergabe auf deinem Smartphone oder deiner Uhr";
 
 /*
- *
- * Important!
- *
- * \/ Please do not translate the strings within these big comments! \/
- *
- * Thank you.
- *
- */
-
-
-"RankLigniteLover" = "Lignite Lovers";
-"RankLigniteLoverPeople" = "Daniel Bauen + Microfacturing, Jerry , Fred Tejan, Thomas Kupper, Dwayne Melançon";
-
-"RankSuperSupporters" = "Super Supporters";
-"RankSuperSupportersPeople" = "Nicholas Bomba, Senpai_Son, Mike Coogan, Daniel Amsler, Dave Peddle, Tim Parker-Smith, Robert ReGester, Nathan Ellingson, Vivek Correia";
-
-"RankLigniteMusicInfluencers" = "Lignite Music Influencers";
-"RankLigniteMusicInfluencersPeople" = "Halina Kaja Mydin, Sandra Wälli, Dirk Stoesser, Xenophys, Mathew Reiss, Monika, TokyoMike, Craig Paterson, Michael Jones, Michele De Paola, Donald D. Parker, Faye Salwin, Crayden Arcand, Michael McAuliffe, Elliot Chase, Giroux, Cyril Marques, K Everett, Richard Rochester, Michael, David Snell, Trang To, Maikel Bennebroek, Marc Roberts, Garrett Brusewitz, R LeRoy Kenyon II, Daniel Kremer, Sarah Baskerville, Matthias Lamm, Sean DeArras, David Gölzhäuser, Cory Gaetz, Rainer Windgassen, Amy, JDZ, Ronald Sutton, Terrill, Homero Padilla Cano, Stephen Africa Moore, Ionut Catalin Bolea, Garcy, Alex Lanigan, Derviş Murat Akbaba, John James Dooley, Steven Brunwasser, William Featherstone, Emmanuelle V, Mark Russell, Fl4v1en, Jennifer Graham, NEXUM, Mahmoud Shihab, Scott Friedman, Alvaro Farfan, Prasert Laosaengpha, Erich Zirnhelt, Haid Christoph, Flavio Tischhauser, Jeff Husson, Beat Jost, Jordan Thurston, Jonathan Higgins, Scott Seyforth, Yoga Nandiwardhana, Dennis Bray, Brian, eme assiak, Mike Tamis, Robert Dyson, Sarah Heile, JayC, James J McMullen, Justin Matlock, Peter Lönnebring, Renaldo McGee, Jean-Marc Bélanger";
-
-"RankBetaAccess" = "Beta Access Backers";
-"RankBetaAccessPeople" = "Paul Fransen, Felix Draxler-Weber, Paul Joel, Scott Baker, Tristan, mike james, Adam Snyder, Toby Isaacson, Stephen Miller, \"No one important\" (we think you're important!), JirkaR, Frank Del Bove, Jocelyn Levac, Vincent Aarsbergen, Pieter Danckaert, Dorothy Strassner, Domenik Vogel, Cybsb, Christian Meyer, Matthias Maurer, Marsha Tyszler, Josh Salvi, Andrew Ericson, Isaac Whitfield, Jonathan Ding, Penguwin, Pablo Arroyo, Jorge Arce, Maxwell Stern, René Sebastian Shabastari, Jerry Sullivan, Thomas Bremer, Yos Sumarjono, John Thom, Domenic Marchese, Hans Burkart, Jason Dietrich, Florian Gramß, Shannon Carlsen, Steven L Reece, Max Villagomez, John Mayo, Christina, Matias Tørmoen, Neil Jones, ivo8177, Donald Ngo, Julian Johannes Hartl, Tobie Louw, Michael Goettler, Stefan Zeitlhofer, Thomas Purchas, Marina, Jan Ivar Erno, Jamie White, Philip Agnew, J. J. Franzen, Damien Ryan, Mickey Davies, Jordan Webb, Andrew Morris, Gajanan Aiyer, Dave Dyer, Neal Smith-Windsor, JoeWeiss, Choong-Soo Lee, Clark Hardaway, Calle Englund, Christopher Nellis, Hyoungseok Cho, Jose Luis, Wally Garza, Grant Voigt, Taro Okazaki, Allen May, Adam W. Duffy, Tekza, Ammar Dukhan, Brian Brewer, Chris, Chip Sillesa, Nate Casteel, Rachel Hansen, John MacMahon, Raphael Schmid, Jack Anderson, Maxim Efimov, Avidan Lamdan, Daniel Shields, Felix Faulmann, Oriol Escofet, Jonathan Frøland, Allan, Garric, Franco Cheng, John Miller, Mikael Persson, Derpison Fidoodle, Jonathan Huebsch, Ronan Lenoir, Tonet Baeza Anchang, Matt, Joerg Grau, Stephan Hadan, Alan Rodgers, Connor Wilson, Michael Rodriguez, Peter Hansen, Collin Kincannon";
-
-"RankEarlyBird" = "Early Birds";
-"RankEarlyBirdPeople" = "Bradley, Peter Martin, Nanda Anugerah Rizky, Daniel Snor, Scott Kendall, Edwin Solís, Davis Simon, CaffeineJunkie (hi old friend), Puki, William Quintana, Andrew Do, Robert Colburn, Martin Gear, Eric W, Christian Drake, James Hancock, Sean Kelly, James Thornton, CSC, Hans Bennink, Josh, Thalus, Himmi, Stephen Grice, Nicole pfau, John Mullen, Alex, Ross Dinwiddie, Michael Metzger, Ronald Cronk, Fernando Jasso, Wendy Betts, Enchik Sama, Lance Manasse, Michael T Richards, Dirk, Bryan Lang, Ronan Reid, KMMoore, Kellie Ramirez, Larry Anderson, KYeeOSU, Doug Brodil, Irene Godfrey, yu field, Jeremy Vigil, Ricardo Vargas Lübbert, Seraphine Nebbie Law, Douglas McLean, Jim Knoble, Linse92 , Troy Stronach, ed myers, Scott Levey, Ralf Wichary, Dale Butler, Donna Johnson, Bill, Philip Busch, Andreas Kleiner, James Takakura, Angelo Dimarelos, Mikhail Vaysman, Alfred Wong, Warren Johnson, Anson Chiu, Tanya, Dirk Disch, Thomas Spielmann, Samson Chiu, Wylie, Nithin Hari, Barron, Will Hirst, Vincent Black, Cindi Hickman, Filip Perichta, Alexander Burchenko, Aušrys, Jorge Parra, Ronald Ghaleb, Paula, Charlie Poole, Arnold, Ashley Elsdon, Jeth Estacio, Cliveland Lee, Patrick Steinke, Shlomi Zeevi, K. Alnajar, idewaki, Addy Missesyoumuch, Hudson, Bob Salvatorelli, Julia Flint, Diego Vilarino, Joel Phoenix, Cheng Han Hsing, David Wilson, Peter Sloan";
-
-"RankSuperEarlyBird" = "Super Early Birds";
-"RankSuperEarlyBirdPeople" = "Blegueni, Jan Jung, 유정환, Christian Salle, David Ford, Stephan Grenzius, Blake Randel, Louie Yabut, Samuel Leinoff, Truls Gårdmark, Peter Marshall, R Deckert, Karen McGowan, Rodolfo Martell, Pemarco , Joshua Kohn, Ben Crago-Schneider, David Deudor, Marco Huang, Berkay Oğulcan Tutal, Sonia Christina, Jens W., Hiroshi Kakuda, Bart Williamson, Dominic Engelbrecht \"(EhecHitsYou)\"";
-
-"RankLigniteSupporter" = "Lignite Supporter";
-"RankLigniteSupporterPeople" = "Nathanail Georgiou, Alexander Nilsen, G Di Giovanni, Kurt Alke, Michal Broska, Kristof Verpoorten (sup dude), Josh Snyder, \"the player formerly known as mousecop\"";
-
-
-/*
- *
- * Important!
- *
- * /\ Please do not translate the strings within these big comments! /\
- *
- * Thank you.
- *
- */
-
-/*
- 
- 
- END NEW NEW STRINGS
- 
- 
- */
-
-
-
-
-/*
- 
- NEW STRINGS
- 
- */
-
-"List" = "Liste";
-"Lists" = "Listen";
+ Some Pebble Stuff
+ -----------------
+ This pops up when the user first opens the app and warns the user about the incoming iOS system warning.
+ After confirming, the user then will get a popup from iOS (which we have no control over) asking them if Lignite Music
+ has permission to use Bluetooth. */
+"PebbleConnectionRequestTitle" = "Pebble Verbindung";
+"PebbleConnectionRequestDescription" = "iOS wird dich um Erlaubnis fragen, um Bluetooth-Geräte nutzen zu dürfen. Akzeptiere die Anfrage bitte, damit wir mit der Lignite Music App kommunizieren können.";
 
 /*
  Onboarding
@@ -300,111 +231,141 @@
 "TutorialPebbleAppTitle" = "Hast du eine Pebble?";
 "TutorialPebbleAppDescription" = "Falls du eine Pebble Smartwatch hast, kannst du nun die komplette Musiksammlung deines iPhones direkt auf deinem Handgelenk durchsuchen und die Wiedergabe steuern.\n\nTippe auf den Button unten, um die App dafür zu installieren.";
 
-"UnknownTitle" = "Unbekannter Titel";
-"UnknownArtist" = "Unbekannter Künstler";
-"UnknownAlbumTitle" = "Unbekanntes Album";
-"Album" = "Album";
-"Title" = "Titel";
-"Artist" = "Künstler";
-"Playlist" = "Wiedergabeliste";
-"Composer" = "Komponist";
-"Genre" = "Genre";
-"Compilation" = "Kompilation";
+/*
+ Image Management
+ ----------------
+ Lignite Music automatically downloads images from last.fm to ensure maximum visual quality. However, this can take up a signifigant amount of space or cellular data, so we ensure that users know what we are doing and make sure they allow us to do it should they be low on storage or on cellular data. They can always change their decision in settings.
+ */
+"ArtistImagesTitle" = "Künstler Fotos";
+"AlbumImagesTitle" = "Fehlendes Albumcover";
+
+"ImagesDownloadWarningDescription" = "Wir werden Bilder %@.\n\nLeider mussten wir feststellen, dass %@.\n\nDie herunterzuladende Datenmenge beträgt %.02f MB %@.\n\nFalls du auf '%@' tippst, werden wir die Bilder trotzdem herunterladen.\n\nSolltest du andernfalls auf '%@' tippen, kannst du deine Meinung jederzeit in den Einstellungen ändern.";
+
+"AboutXOfYourStorage" = " (ungefähr %.02f%% deines noch verfügbaren Speicherplatzes)"; //The space in front of the first bracket is important, as it will be inserted after the "[...] take about %.02fMB to download the images%@." (goes where the %@ is in there). If your language does not need the space feel free to take it out.
+"UsingXOfYourStorage" = "Die Bilder belegen ca. %.02f MB deiner verbleibenden Speicherkapazität.";
+"TakingUpXMB" = "%.02f MB verwendet";
+
+"OfYourArtists" = "deiner Künstler herunterladen, damit wir von ihnen eine schöne Liste zusammenstellen können";
+"OfYourAlbums" = "deiner Alben herunterladen, die kein Cover hinterlegt haben, um eine möglichst gute Qualität hinzukriegen";
+
+"YouAreOnData" = "du in einem mobilen Netz und nicht in einem WiFi unterwegs bist"; //All lowercase because it will go within the above description
+"SpaceAndSpace" = " und "; //The spaces are important here. If your language does not need spaces in between the YouAreOnData and YouAreLowOnStorage contents, remove the spaces and insert your language's equivalent of "and". Otherwise, keep the spaces.
+"YouAreLowOnStorage" = "der Speicher deines iPhones bald voll ist"; //Same case
+
+"DownloadAnyway" = "Trotzdem herunterladen"; //Goes on the accept button for downloading images
+"DontDownload" = "Nicht herunterladen"; //Goes on the deny button for downloading images
+
+"ImageDownloads" = "Fotodownloads";
+"LMImageManagerPermissionStatusDenied" = "Download deaktiviert";
+"LMImageManagerPermissionStatusAuthorized" = "Download aktiviert";
+
+"ClearCache" = "Fotos löschen";
+"ClearCacheAndDisable" = "Fotos löschen und deaktivieren";
+"KeepDisabled" = "Deaktiviert lassen";
+"Enable" = "Aktivieren";
+"Enabled" = "Aktiviert";
+"KeepEnabled" = "Aktiviert lassen";
+
+"SettingImagesAlertDescription" = "Wir laden Fotos herunter %@.\n\n%@\n\n%@";
+"YouCurrentlyHaveThisFeatureOff" = "Dieses Feature ist zurzeit ausgeschaltet.";
+"YouCanTurnOffTo" = "Du kannst diese Fotos löschen und dieses Feature deaktivieren, um Speicherplatz und Datenvolumen zu sparen.\n\nFalls du dich dafür entscheidest, werden wir keine Fotos herunterladen, bis du es wieder aktivierst.";
+"YouCanTurnOnTo" = "Du kannst dieses Feature aktivieren, um eine visuell viel schönere Übersicht zu erhalten.\n\nWir werden die Fotos herunterladen, sobald du dich in einem WiFi befindest und genug Speicherplatz zur Verfügung hast. Sollte einer der beiden Voraussetzungen nicht erfüllt sein, werden wir dich entsprechend fragen, wie du weiterfahren möchtest.";
+
+"ImagesDeleted" = "Fotos gelöscht";
+"WillBeginDownloading" = "Wird heruntergeladen";
+
+/* Credits */
+"ThankYou" = "Vielen Dank!";
+"ThankYouDescription" = "Unzählige Stunden wurden für diese App geopfert und wir hätten es ohne die Unterstützung unserer tollen Kickstarter Backers, vielen Open Source Libraries und sehr viel Leidenschaft nicht geschafft.\n\nUntenstehend möchten wir allen involvierten Personen danken, die aus einer simplen Idee diese tolle App entstehen liessen.\n\nWir sind euch allen zu grösstem Dank verpflichtet!";
+
+"KickstarterBackers" = "Kickstarter Backer";
+
+"LastFMAPI" = "Last.fm API";
+"LastFMAPIDescription" = "Vielen Dank an Last.fm für diese absolut atemberaubende API.\n\nWir verwenden sie, um die Künstlerfotos und fehlenden Albumcover herunterzuladen und es funktioniert absolut super!";
+
+"OpenSourceLibraries" = "Open Source Libraries";
+"OpenSourceLibrariesLicensing" = "Lignite Music basiert auf vielen leistungsstarken Open Source Libraries.\n\nVielen herzlichen Dank and deren Authoren und all denjenigen, die zur Entwicklung beigetragen haben!";
+
+"LibraryYYImage" = "YYImage - ibireme";
+"LibraryYYImageDescription" = "YYImage ist ein tolles Image Framework, welches uns erlaubt, viele Arten von Bilder zu enkodieren/dekodieren.";
+
+"LibrarySDWebImage" = "SDWebImage - Olivier Poitrey";
+"LibrarySDWebImageDescription" = "SDWebImage ist ein hervorragender asynchroner Bilderdownloader - sogar mit Cache Support!";
+
+"LibraryImageMagick" = "ImageMagick C API";
+"LibraryImageMagickDescription" = "ImageMagick erlaubt es uns wirklich, mit Bildern zu zaubern. Wir können erstellen, bearbeiten, konvertieren und vieles mehr.";
+
+"LibraryPebbleKit" = "PebbleKit";
+"LibraryPebbleKitDescription" = "PebbleKit ist Pebble's iOS Framework, um mit deren Smartwatches zu kommunizieren. Da wir schon dabei sind: Vielen Dank an Pebble für deren exzellente Smartwatches!";
+
+"LibraryPureLayout" = "PureLayout - Tyler Fox";
+"LibraryPureLayoutDescription" = "PureLayout ist genau das, was sein Name bereits sagt: 'beindruckend simpel, beindruckend leistungsstark'.";
+
+"LibraryMBProgressHUD" = "MBProgressHUD - Jonathan George";
+"LibraryMBProgressHUDDescription" = "MBProgressHUD ist eine simple aber dennoch perfekte Library für die ganzen Bestätigungspopups, die wie das Standard-Lautstärken-Popup von iOS aussehen.";
+
+"LibraryMarqueeLabel" = "MarqueeLabel - Charles Powell";
+"LibraryMarqueeLabelDescription" = "MarqueeLabel sorgt dafür, dass wir Texte (bspw. Songtitel) scrollen können";
+
+"LibraryReachability" = "Reachability - Tony Million";
+"LibraryReachabilityDescription" = "Reachability ist eine tolle Library, die uns erlaubt, verschiedene Tasks im Zusammenhang mit der Internet Verbindung auszuführen.";
+
+"Icons" = "Icons";
+"IconsDescription" = "Ein Grossteil unserer Icons stammt von www.flaticon.com und wurde von den folgenden Künstlern gestaltet, die so grosszügig waren, deren Icons unter CC 3.0 zu lizenzieren:";
+"DesignedByNobody" = "Wir arbeiten an der Übersicht und werden sie nachreichen sobald verfügbar.";
+
+/* Contact */
+"ContactUs" = "Kontaktiere uns";
+"ContactHi" = "Hey!";
+"ContactDescription" = "Wir hoffen, es macht dir genauso Spass, Lignite Music zu benutzen wie es uns Spass gemacht hat, sie zu gestalten und zu programmieren.\n\nSolltest du irgendwelche Probleme damit haben oder uns aus sonst einem Grund kontaktieren wollen, hier sind deine Möglichkeiten:";
+"ContactEmail" = "contact@lignite.io";
+"ContactTwitter" = "@WeAreLignite";
+"ContactWebsite" = "www.lignite.io";
+"ContactThanks" = "Vielen herzlichen Dank für deine Unterstützung und Grüsse von uns beiden!";
+
+
+
+
 
 /*
- 
- END NEW STRINGS
- 
+ *
+ * Important!
+ *
+ * \/ Please do not translate the strings within these big comments! \/
+ *
+ * Thank you.
+ *
  */
 
-/* General */
-"SongXofX" = "Song %d von %d";
-"SongX" = "Song %d";
-"Song" = "Song";
-"Songs" = "Songs";
+
+"RankLigniteLover" = "Lignite Lovers";
+"RankLigniteLoverPeople" = "Daniel Bauen + Microfacturing, Jerry , Fred Tejan, Thomas Kupper, Dwayne Melançon";
+
+"RankSuperSupporters" = "Super Supporters";
+"RankSuperSupportersPeople" = "Nicholas Bomba, Senpai_Son, Mike Coogan, Daniel Amsler, Dave Peddle, Tim Parker-Smith, Robert ReGester, Nathan Ellingson, Vivek Correia";
+
+"RankLigniteMusicInfluencers" = "Lignite Music Influencers";
+"RankLigniteMusicInfluencersPeople" = "Halina Kaja Mydin, Sandra Wälli, Dirk Stoesser, Xenophys, Mathew Reiss, Monika, TokyoMike, Craig Paterson, Michael Jones, Michele De Paola, Donald D. Parker, Faye Salwin, Crayden Arcand, Michael McAuliffe, Elliot Chase, Giroux, Cyril Marques, K Everett, Richard Rochester, Michael, David Snell, Trang To, Maikel Bennebroek, Marc Roberts, Garrett Brusewitz, R LeRoy Kenyon II, Daniel Kremer, Sarah Baskerville, Matthias Lamm, Sean DeArras, David Gölzhäuser, Cory Gaetz, Rainer Windgassen, Amy, JDZ, Ronald Sutton, Terrill, Homero Padilla Cano, Stephen Africa Moore, Ionut Catalin Bolea, Garcy, Alex Lanigan, Derviş Murat Akbaba, John James Dooley, Steven Brunwasser, William Featherstone, Emmanuelle V, Mark Russell, Fl4v1en, Jennifer Graham, NEXUM, Mahmoud Shihab, Scott Friedman, Alvaro Farfan, Prasert Laosaengpha, Erich Zirnhelt, Haid Christoph, Flavio Tischhauser, Jeff Husson, Beat Jost, Jordan Thurston, Jonathan Higgins, Scott Seyforth, Yoga Nandiwardhana, Dennis Bray, Brian, eme assiak, Mike Tamis, Robert Dyson, Sarah Heile, JayC, James J McMullen, Justin Matlock, Peter Lönnebring, Renaldo McGee, Jean-Marc Bélanger";
+
+"RankBetaAccess" = "Beta Access Backers";
+"RankBetaAccessPeople" = "Paul Fransen, Felix Draxler-Weber, Paul Joel, Scott Baker, Tristan, mike james, Adam Snyder, Toby Isaacson, Stephen Miller, \"No one important\" (we think you're important!), JirkaR, Frank Del Bove, Jocelyn Levac, Vincent Aarsbergen, Pieter Danckaert, Dorothy Strassner, Domenik Vogel, Cybsb, Christian Meyer, Matthias Maurer, Marsha Tyszler, Josh Salvi, Andrew Ericson, Isaac Whitfield, Jonathan Ding, Penguwin, Pablo Arroyo, Jorge Arce, Maxwell Stern, René Sebastian Shabastari, Jerry Sullivan, Thomas Bremer, Yos Sumarjono, John Thom, Domenic Marchese, Hans Burkart, Jason Dietrich, Florian Gramß, Shannon Carlsen, Steven L Reece, Max Villagomez, John Mayo, Christina, Matias Tørmoen, Neil Jones, ivo8177, Donald Ngo, Julian Johannes Hartl, Tobie Louw, Michael Goettler, Stefan Zeitlhofer, Thomas Purchas, Marina, Jan Ivar Erno, Jamie White, Philip Agnew, J. J. Franzen, Damien Ryan, Mickey Davies, Jordan Webb, Andrew Morris, Gajanan Aiyer, Dave Dyer, Neal Smith-Windsor, JoeWeiss, Choong-Soo Lee, Clark Hardaway, Calle Englund, Christopher Nellis, Hyoungseok Cho, Jose Luis, Wally Garza, Grant Voigt, Taro Okazaki, Allen May, Adam W. Duffy, Tekza, Ammar Dukhan, Brian Brewer, Chris, Chip Sillesa, Nate Casteel, Rachel Hansen, John MacMahon, Raphael Schmid, Jack Anderson, Maxim Efimov, Avidan Lamdan, Daniel Shields, Felix Faulmann, Oriol Escofet, Jonathan Frøland, Allan, Garric, Franco Cheng, John Miller, Mikael Persson, Derpison Fidoodle, Jonathan Huebsch, Ronan Lenoir, Tonet Baeza Anchang, Matt, Joerg Grau, Stephan Hadan, Alan Rodgers, Connor Wilson, Michael Rodriguez, Peter Hansen, Collin Kincannon";
+
+"RankEarlyBird" = "Early Birds";
+"RankEarlyBirdPeople" = "Bradley, Peter Martin, Nanda Anugerah Rizky, Daniel Snor, Scott Kendall, Edwin Solís, Davis Simon, CaffeineJunkie (hi old friend), Puki, William Quintana, Andrew Do, Robert Colburn, Martin Gear, Eric W, Christian Drake, James Hancock, Sean Kelly, James Thornton, CSC, Hans Bennink, Josh, Thalus, Himmi, Stephen Grice, Nicole pfau, John Mullen, Alex, Ross Dinwiddie, Michael Metzger, Ronald Cronk, Fernando Jasso, Wendy Betts, Enchik Sama, Lance Manasse, Michael T Richards, Dirk, Bryan Lang, Ronan Reid, KMMoore, Kellie Ramirez, Larry Anderson, KYeeOSU, Doug Brodil, Irene Godfrey, yu field, Jeremy Vigil, Ricardo Vargas Lübbert, Seraphine Nebbie Law, Douglas McLean, Jim Knoble, Linse92 , Troy Stronach, ed myers, Scott Levey, Ralf Wichary, Dale Butler, Donna Johnson, Bill, Philip Busch, Andreas Kleiner, James Takakura, Angelo Dimarelos, Mikhail Vaysman, Alfred Wong, Warren Johnson, Anson Chiu, Tanya, Dirk Disch, Thomas Spielmann, Samson Chiu, Wylie, Nithin Hari, Barron, Will Hirst, Vincent Black, Cindi Hickman, Filip Perichta, Alexander Burchenko, Aušrys, Jorge Parra, Ronald Ghaleb, Paula, Charlie Poole, Arnold, Ashley Elsdon, Jeth Estacio, Cliveland Lee, Patrick Steinke, Shlomi Zeevi, K. Alnajar, idewaki, Addy Missesyoumuch, Hudson, Bob Salvatorelli, Julia Flint, Diego Vilarino, Joel Phoenix, Cheng Han Hsing, David Wilson, Peter Sloan";
+
+"RankSuperEarlyBird" = "Super Early Birds";
+"RankSuperEarlyBirdPeople" = "Blegueni, Jan Jung, 유정환, Christian Salle, David Ford, Stephan Grenzius, Blake Randel, Louie Yabut, Samuel Leinoff, Truls Gårdmark, Peter Marshall, R Deckert, Karen McGowan, Rodolfo Martell, Pemarco , Joshua Kohn, Ben Crago-Schneider, David Deudor, Marco Huang, Berkay Oğulcan Tutal, Sonia Christina, Jens W., Hiroshi Kakuda, Bart Williamson, Dominic Engelbrecht \"(EhecHitsYou)\"";
+
+"RankLigniteSupporter" = "Lignite Supporter";
+"RankLigniteSupporterPeople" = "Nathanail Georgiou, Alexander Nilsen, G Di Giovanni, Kurt Alke, Michal Broska, Kristof Verpoorten (sup dude), Josh Snyder, \"the player formerly known as mousecop\"";
+
 
 /*
- Music Collection Types
- ----------------------
- Music collection types are what shows for sources, for example, a list of sources (Albums, Titles, Composers, etc.)
- 
- These strings are also used in-code to generate counts for sources. For example, the "Albums" string will be used to compose a string saying "69 Albums". If your language requires a different structure or format in this scenario, please reach out to us.
+ *
+ * Important!
+ *
+ * /\ Please do not translate the strings within these big comments! /\
+ *
+ * Thank you.
+ *
  */
-"ChooseYourView" = "Wähle deine Ansicht"; //Choose your collection type view, basically what is below this.
-"Albums" = "Alben";
-"Titles" = "Titel"; //Individual songs
-"Artists" = "Künstler";
-"Playlists" = "Wiedergabelisten";
-"Composers" = "Komponisten";
-"Genres" = "Genres";
-"Compilations" = "Compilations";
-
-/*
- Song Durations
- --------------
- Durations are formatted like this:
- 
- hours:minutes:seconds
- 
- the %@ after the DurationOfDuration strings is the total duration of the song playing. Time formats are automatically 0 padded.
- */
-"LongSongDurationOfDuration" = "%02i:%02d:%02d of %@";
-"ShortSongDurationOfDuration" = "%02d:%02d of %@";
-"LongSongDuration" = "%02i:%02d:%02d";
-"ShortSongDuration" = "%02d:%02d";
-"BlankDuration" = "--:--";
-"LengthOfSong" = "Dauer: %@";
-
-/* Album view */
-"AlbumDetailInfoWithGenre" = "%@ | %lu %@"; /* ie. "Hiphop | 8 songs" */
-"AlbumDetailInfoWithoutGenre" = "%lu %@"; /* ie. "8 songs" */
-
-/* System shuffle modes */
-"Shuffle" = "Shuffle";
-"DefaultShuffleMode" = "Normal";
-"OffShuffleMode" = "Aus";
-"SongsShuffleMode" = "Songs";
-"AlbumsShuffleMode" = "Alben";
-
-/* System repeat modes */
-"Repeat" = "Wiederholen";
-"DefaultRepeatMode" = "Normal";
-"OffRepeatMode" = "Aus";
-"ThisRepeatMode" = "1";
-"AllRepeatMode" = "Alles";
-
-/* Settings */
-"Settings" = "Einstellungen";
-"BatterySaver" = "Akku-Sparmodus"; /* For Pebble. Stops scrolling text, reduces redraw interval. */
-"ArtistLabel" = "Künstlernamen"; /* For Pebble. Shows the text that displays the artist on the now playing screen. */
-"PebbleStyleControls" = "Steuerung wie Pebble Musik App"; /* For Pebble, can you tell? This one makes the controls (ie. play/pause) emulate the stock Pebble music app controls instead of Lignite-style. */
-"DisplayTime" = "Zeit anzeigen"; /* For Pebble. Shows the time on the now playing screen. */
-"InstallPebbleApp" = "Pebble App installieren"; /* Sends the user to the Pebble appstore. */
-"SendFeedback" = "Feedback / Fehler melden";
-"ReplayTutorial" = "Einführung erneut abspielen";
-"Functionality" = "Funktionalität"; /* Functionality related settings like battery saver mode. */
-"LookAndFeel" = "Look & Feel";
-
-/* General/uncategorized */
-"Okay" = "Ok";
-"GeneralError" = "Fehler!";
-"Other" = "Anderes";
-"UnknownSection" = "Unbekannter Abschnitt";
-
-/* When no music is playing */
-"NoMusic" = "Keine Musik";
-"NoMusicDescription" = "Starte die Musikwiedergabe auf deinem Smartphone oder deiner Uhr";
-
-/*
- Some Pebble Stuff
- -----------------
- This pops up when the user first opens the app and warns the user about the incoming iOS system warning.
- After confirming, the user then will get a popup from iOS (which we have no control over) asking them if Lignite Music
- has permission to use Bluetooth. */
-"PebbleConnectionRequestTitle" = "Pebble Verbindung";
-"PebbleConnectionRequestDescription" = "iOS wird dich um Erlaubnis fragen, um Bluetooth-Geräte nutzen zu dürfen. Akzeptiere die Anfrage bitte, damit wir mit der Lignite Music App kommunizieren können.";
-
-/* Temporary strings that will be removed in a non-beta release */
-"HowToUse" = "Anleitung";
-"HowToUseDescription" = "Hey! Willkommen zur Lignite Music Beta. Wir werden in der finalen Version ein schönes Tutorial haben, keine Sorge.\n\nUm die Wiedergabe zu starten oder zu pausieren, tippe irgendwo auf dem Display.\n\nUm zum vorherigen oder nächsten Lied zu gelangen, streiche von links oder rechts über das Display.\n\nAuf der Verlaufsanzeige kannst du vor- und zurückspulen..\n\nDu kannst die Pebble app innerhalb der Einstellungen installieren.\n\nDu kannst diese Einführung jederzeit wieder aus den Einstellungen starten.";
-"OkThanks" = "Ok, danke";
