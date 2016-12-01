@@ -10,6 +10,8 @@
 
 @implementation LMMusicTrackCollection
 
+@synthesize numberOfAlbums = _numberOfAlbums;
+
 - (instancetype)initWithItems:(NSArray<LMMusicTrack *> *)items basedOnSourceCollection:(id)sourceCollection {
 	self = [super init];
 	if(self) {
@@ -41,6 +43,21 @@
 		NSLog(@"Error creating LMMusicTrackCollection with items %@", items);
 	}
 	return self;
+}
+
+- (NSUInteger)numberOfAlbums {
+	NSMutableArray *albumsArray = [NSMutableArray new];
+	
+	for(int i = 0; i < self.count; i++){
+		LMMusicTrack *musicTrack = [self.items objectAtIndex:i];
+		NSString *arrayKey = [NSString stringWithFormat:@"album_%llu", musicTrack.albumPersistentID];
+		
+		if(![albumsArray containsObject:arrayKey]){
+			[albumsArray addObject:arrayKey];
+		}
+	}
+	
+	return albumsArray.count;
 }
 
 @end

@@ -171,7 +171,9 @@
 
 - (NSString*)leftTextForInfoView:(LMCollectionInfoView*)infoView {
 	switch(self.musicType){
-		case LMMusicTypeArtists:
+		case LMMusicTypeArtists: {
+			return [NSString stringWithFormat:@"%lu %@", (unsigned long)self.musicTrackCollection.numberOfAlbums, [NSLocalizedString(self.musicTrackCollection.numberOfAlbums == 1 ? @"Album" : @"Albums", nil) lowercaseString]];
+		}
 		case LMMusicTypeGenres:
 		case LMMusicTypePlaylists: {
 			return [NSString stringWithFormat:@"%ld %@", self.musicTrackCollection.count, NSLocalizedString(self.musicTrackCollection.count == 1 ? @"Song" : @"Songs", nil)];
@@ -190,7 +192,9 @@
 
 - (NSString*)rightTextForInfoView:(LMCollectionInfoView*)infoView {
 	switch(self.musicType){
-		case LMMusicTypeArtists:
+		case LMMusicTypeArtists: {
+			return [NSString stringWithFormat:@"%ld %@", self.musicTrackCollection.count, NSLocalizedString(self.musicTrackCollection.count == 1 ? @"Song" : @"Songs", nil)];
+		}
 		case LMMusicTypeGenres:
 		case LMMusicTypePlaylists: {
 			return nil;

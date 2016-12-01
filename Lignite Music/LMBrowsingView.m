@@ -129,7 +129,9 @@
 	LMMusicTrackCollection *collection = [self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex];
 	
 	switch(self.musicType){
-		case LMMusicTypeArtists:
+		case LMMusicTypeArtists: {
+			return [NSString stringWithFormat:@"%lu %@", (unsigned long)collection.numberOfAlbums, [NSLocalizedString(collection.numberOfAlbums == 1 ? @"Album" : @"Albums", nil) lowercaseString]];
+		}
 		case LMMusicTypeGenres:
 		case LMMusicTypePlaylists:
 		{
@@ -151,7 +153,9 @@
 	LMMusicTrackCollection *collection = [self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex];
 	
 	switch(self.musicType){
-		case LMMusicTypeArtists:
+		case LMMusicTypeArtists: {
+			return [NSString stringWithFormat:@"%ld %@", collection.count, NSLocalizedString(collection.count == 1 ? @"Song" : @"Songs", nil)];
+		}
 		case LMMusicTypeGenres:
 		case LMMusicTypePlaylists:
 		{

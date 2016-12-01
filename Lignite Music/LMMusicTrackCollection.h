@@ -50,6 +50,11 @@
 @property id sourceCollection;
 
 /**
+ The number of albums in this collection.
+ */
+@property (readonly) NSUInteger numberOfAlbums;
+
+/**
  Creates an LMMusicTrackCollection based on the provided array of items. Determination
  of various artists and genres occurs within this function as well.
 
