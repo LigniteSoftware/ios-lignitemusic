@@ -540,7 +540,7 @@
 										  
 										  //If it needs downloading, is not already in queue, and is not on the blacklist
 										  if(needsDownloading
-											 && ![self.trackDownloadQueue containsObject:representativeTrack]
+//											 && ![self.trackDownloadQueue containsObject:representativeTrack]
 											 && ![self musicTrackIsOnBlacklist:representativeTrack forCategory:category])
 										  {
 											  [self.trackDownloadQueue addObject:representativeTrack];

@@ -129,9 +129,7 @@
 	return [NSString stringWithString:[NSMutableString stringWithFormat:@"%@ - %@", takingUpString, approvedString]];
 }
 
-- (NSString*)subtitleForIndexPath:(NSIndexPath*)indexPath forSectionTableView:(LMSectionTableView*)sectionTableView {
-	LMImageManager *imageManager = [LMImageManager sharedImageManager];
-	
+- (NSString*)subtitleForIndexPath:(NSIndexPath*)indexPath forSectionTableView:(LMSectionTableView*)sectionTableView {	
 	switch(indexPath.section){
 		case 0:
 			switch(indexPath.row){
@@ -297,14 +295,14 @@
 				case 0:
 					NSLog(@"Status bar");
 					self.debugTapCount++;
-					if(self.debugTapCount > 10){
+					if(self.debugTapCount > 5){
 						NSLog(@"Hey boi");
 						LMDebugViewController *debugViewController = [LMDebugViewController new];
 						[self.coreViewController.navigationController showViewController:debugViewController sender:self];
 					}
 					if(self.debugTapCount == 1){
 						NSLog(@"Timer registered");
-						[NSTimer scheduledTimerWithTimeInterval:5.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
+						[NSTimer scheduledTimerWithTimeInterval:3.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
 							self.debugTapCount = 0;
 							NSLog(@"Timer reset");
 						}];

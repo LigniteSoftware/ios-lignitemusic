@@ -214,27 +214,7 @@
 	
 	[self.rootViewController showViewController:self.browsingDetailViewController sender:self];
 	
-	return;
-	[self addSubview:browsingDetailView];
-	
-	[browsingDetailView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self];
-	[browsingDetailView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
-	self.topConstraint = [browsingDetailView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self withOffset:self.frame.size.width];
-	[browsingDetailView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
-	
-	[browsingDetailView setup];
-	
-	[self layoutIfNeeded];
-	self.topConstraint.constant = 0;
-	[UIView animateWithDuration:0.5 delay:0.1
-		 usingSpringWithDamping:0.75 initialSpringVelocity:0.0f
-						options:0 animations:^{
-							[self layoutIfNeeded];
-						} completion:nil];
-	
-	self.showingDetailView = YES;
-	
-	[self.rootViewController closeBrowsingAssistant];
+//	[self.rootViewController closeBrowsingAssistant];
 }
 
 - (BOOL)buttonHighlightedWithIndex:(uint8_t)index wasJustTapped:(BOOL)wasJustTapped forBigListEntry:(LMBigListEntry*)bigListEntry {

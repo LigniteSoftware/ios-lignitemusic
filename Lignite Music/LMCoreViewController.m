@@ -30,7 +30,7 @@
 #import "LMContactView.h"
 #import "LMDebugView.h"
 
-#define SKIP_ONBOARDING
+//#define SKIP_ONBOARDING
 
 @import SDWebImage;
 @import StoreKit;
