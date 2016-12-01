@@ -327,13 +327,7 @@ BOOL didAutomaticallyClose = NO;
 
 - (void)showWhatsPoppin {
 	NSArray *currentBuildChanges = @[
-									 @"Added artist view",
-									 @"Added settings",
-									 @"Added status bar option",
-									 @"Added support for artist image downloading",
-									 @"Added support for album image downloading",
-									 @"Fixed crash opening now playing",
-									 @"Improved swipe gestures getting out of views"
+									 @"Added artist view"
 									 ];
 	
 	NSArray *currentBuildIssues = @[
