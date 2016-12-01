@@ -10,7 +10,7 @@
  
  Hello, and thanks for translating Lignite Music!
  
- Please read the following notes *thoroughly*.
+ Please read the following notes *thoroughly*. You only have to read them once. If your translations show that you haven't read this (multiple mistakes, bad translations, app crashes using them frequently), we unfortunately may have to remove you from the translation team. Therefore it is important you read the following :)
  
  0. In general it is a good idea when translating to keep strings equal to or lesser than the length of their English counterparts. All strings have been visually prepared so they fit the app. Long strings will often cause visual troubles throughout the app.
  
@@ -51,7 +51,6 @@
  
  These strings are also used in-code to generate counts for sources. For example, the "Albums" string will be used to compose a string saying "69 Albums". If your language requires a different structure or format in this scenario, please reach out to us.
  */
-"ChooseYourView" = "Please choose your view"; //Choose your collection type view, basically what is below this.
 "Albums" = "Albums";
 "Titles" = "Titles"; //Individual songs
 "Artists" = "Artists";
@@ -62,6 +61,18 @@
 "Genres" = "Genres";
 "Compilations" = "Compilations";
 
+"UnknownTitle" = "Unknown Title";
+"UnknownArtist" = "Unknown Artist";
+"UnknownAlbumTitle" = "Unknown Album Title";
+"Album" = "Album";
+"Title" = "Title";
+"Artist" = "Artist";
+"Playlist" = "Playlist";
+"Composer" = "Composer";
+"Genre" = "Genre";
+"Compilation" = "Compilation";
+
+"Various" = "Various"; //For things like various artists
 
 /*
  Song Durations
@@ -99,8 +110,8 @@
 
 /* Settings */
 "Settings" = "Settings";
-"AppSettings" = "App Settings";
 
+"PebbleSettings" = "Pebble settings";
 "BatterySaverDescription" = "Reduces screen refesh";
 "ArtistLabelDescription" = "Shows the artist's name in now playing";
 "PebbleStyleControlsDescription" = "Mimick Pebble's music player controls";
@@ -110,14 +121,13 @@
 "PebbleStyleControls" = "Pebble-style controls"; /* This one makes the controls (ie. play/pause) emulate the stock Pebble music app controls instead of Lignite-style. */
 "DisplayTime" = "Show the time"; /* Shows the time on the now playing screen. */
 "InstallPebbleApp" = "Install Pebble app"; /* Sends the user to the Pebble appstore. */
+"Pebble" = "Pebble"; //Pebble smartwatch. See point 4 of the top of this file for details on legal naming schemes.
 
+"AppSettings" = "App Settings";
 "Functionality" = "Functionality"; /* Functionality related settings like battery saver mode. */
 "LookAndFeel" = "Look and Feel";
 "HighQualityImagesTitle" = "Highest resolution";
 "HighQualityImagesDescription" = "(Takes up much more storage)";
-
-"Pebble" = "Pebble"; //Pebble smartwatch. See point 4 of the top of this file for details on legal naming schemes.
-"PebbleSettings" = "Pebble settings";
 
 "LookAndFeel" = "Look and Feel";
 "Colour" = "Colour";
@@ -281,9 +291,6 @@
 "EndTutorial" = "End tutorial"; //This goes on the last slide of the tutorial
 "Install" = "Install";
 
-/* Other */
-"Various" = "Various"; //For things like various artists
-
 /* Credits */
 "ThankYou" = "Thank you!";
 "ThankYouDescription" = "Countless hours have gone into making this app a reality and we couldn't have done it without the funding and support of our amazing Kickstarter backers, many open source libraries, and a whole lot of passion.\n\nBelow we'd like to credit everyone and everything that had a part in making this app a reality.\n\nWe are forever thankful for all of you!";
@@ -328,7 +335,7 @@
 "ContactUs" = "Contact us";
 "ContactHi" = "Hi!";
 "ContactDescription" = "We hope you enjoy Lignite Music as much as we enjoyed bringing it to life.\n\nShould you have any issues with it at all or would like to get in touch with us for any other reason, please feel free to contact us.";
-"ContactThanks" = "Thanks very much for your support and best regards from the both of us!"
+"ContactThanks" = "Thanks very much for your support and best regards from the both of us!";
 
 
 

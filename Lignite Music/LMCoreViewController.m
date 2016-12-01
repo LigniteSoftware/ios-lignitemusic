@@ -27,8 +27,10 @@
 #import "LMSettingsView.h"
 #import "LMSettingsViewController.h"
 #import "LMBrowsingDetailViewController.h"
+
 #import "LMContactView.h"
 #import "LMDebugView.h"
+#import "LMCreditsView.h"
 
 //#define SKIP_ONBOARDING
 
@@ -411,12 +413,12 @@ BOOL didAutomaticallyClose = NO;
 	
 	NSLog(@"Loading view %@", self.navigationController);
 	
-//	LMDebugView *view = [LMDebugView newAutoLayoutView];
-//	[self.view addSubview:view];
-//	
-//	[view autoPinEdgesToSuperviewEdges];
-//	
-//	return;
+	LMCreditsView *view = [LMCreditsView newAutoLayoutView];
+	[self.view addSubview:view];
+	
+	[view autoPinEdgesToSuperviewEdges];
+	
+	return;
 	
 //	self.settingsView = [LMSettingsView newAutoLayoutView];
 //	self.settingsView.coreViewController = self;

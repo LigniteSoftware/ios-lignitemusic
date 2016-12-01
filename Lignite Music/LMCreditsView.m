@@ -9,6 +9,7 @@
 #import <PureLayout/PureLayout.h>
 #import "LMCreditsView.h"
 #import "LMScrollView.h"
+#import "LMAppIcon.h"
 
 @interface LMCreditsView()
 
@@ -180,8 +181,7 @@
 							  @"LibraryReachabilityDescription",
 							  
 							  @"Icons",
-							  @"IconsDescription",
-							  @"DesignedByNobody"
+							  @"IconsDescription"
 	    ];
 		float textFontSizes[] = {
 			34.0,
@@ -238,7 +238,6 @@
 			20.0,
 			
 			34.0,
-			20.0,
 			20.0
 		};
 		BOOL textFontIsBoldOptions[] = {
@@ -296,12 +295,18 @@
 			NO,
 			
 			NO,
-			NO,
-			YES
+			NO
 		};
 
+		//I would comment this better but honestly we don't have time
+		
+		//Goes through and detects which artists have icons and creates a row of icons
+		//Does not adapt for more than 8 in a row
+		
 		for(int i = 0; i < textKeys.count; i++){
-			UILabel *previousLabelToAttachTo = (i == 0) ? self.signaturesView : [textLabelsArray lastObject];
+			BOOL isFirst = (i == 0);
+			
+			UILabel *previousLabelToAttachTo = isFirst ? self.signaturesView : [textLabelsArray lastObject];
 			
 			NSString *text = NSLocalizedString([textKeys objectAtIndex:i], nil);
 			float fontSize = textFontSizes[i];
@@ -324,7 +329,182 @@
 			[textLabelsArray addObject:textLabel];
 		}
 		
-		[self.scrollView setContentSize:CGSizeMake(self.frame.size.width, self.frame.size.height*5)];
+		NSArray *artistsArray = @[
+								  @"Freepik",
+								  @"Minh Hoang",
+								  @"Hanan",
+								  @"EpicCoders",
+								  @"Nikita Golubev",
+								  @"Eugene Pavovsky",
+								  @"Eleonor Wang",
+								  @"Madebyoliver",
+								  @"Vectors Market",
+								  @"Dario Ferrando",
+								  @"Retinaicons",
+								  @"Elegant Themes"
+								  ];
+		
+		NSArray *artistImagesArray = @[
+									   @[
+										   @(LMIconArtists), @(LMIconLookAndFeel),
+										   @(LMIconRepeat), @(LMIconRepeatOne),
+										   @(LMIconSettings)
+										   ], //@"Freepik"
+									   
+									   @[
+										   @(LMIconShuffle)
+										   ], //@"Minh Hoang"
+									   
+									   @[
+										   @(LMIconAbout)
+										   ], //@"Hanan"
+									   
+									   @[
+										   @(LMIconBrowse)
+										   ], //@"EpicCoders"
+									   
+									   @[
+										   
+										   ], //@"Nikita Golubev"
+									   
+									   @[
+										   
+										   ], //@"Eugene Pavovsky"
+									   
+									   @[
+										   
+										   ], //@"Eleonor Wang"
+									   
+									   @[
+										   @(LMIconPaperPlane), @(LMIconCloudDownload), @(LMIconLink)
+										   ], //@"Madebyoliver"
+									   
+									   @[
+										   
+										   ], //@"Vectors Market"
+									   
+									   @[
+										   @(LMIconPlaylists), @(LMIconTitles)
+										   ],	//@"Dario Ferrando"
+									   
+									   @[
+										   
+										   ], //@"Retinaicons"
+									   
+									   @[
+										   @(LMIconTwitter)
+										   ], //@"Elegant Themes"
+									   ];
+		
+		//We don't have the luxury of time to automatically adapt
+		NSArray *invertIconArray = @[
+									   @[
+										   @(NO), @(NO),
+										   @(NO), @(NO),
+										   @(NO)
+										   ], //@"Freepik"
+									   
+									   @[
+										   @(NO)
+										   ], //@"Minh Hoang"
+									   
+									   @[
+										   @(NO)
+										   ], //@"Hanan"
+									   
+									   @[
+										   @(NO)
+										   ], //@"EpicCoders"
+									   
+									   @[
+										   
+										   ], //@"Nikita Golubev"
+									   
+									   @[
+										   
+										   ], //@"Eugene Pavovsky"
+									   
+									   @[
+										   
+										   ], //@"Eleonor Wang"
+									   
+									   @[
+										   @(YES), @(NO), @(YES)
+										   ], //@"Madebyoliver"
+									   
+									   @[
+										   
+										   ], //@"Vectors Market"
+									   
+									   @[
+										   @(NO), @(NO)
+										   ],	//@"Dario Ferrando"
+									   
+									   @[
+										   
+										   ], //@"Retinaicons"
+									   
+									   @[
+										   @(YES)
+										   ], //@"Elegant Themes"
+									   ];
+		
+		NSMutableArray *artistLabelsArray = [NSMutableArray new];
+		NSMutableArray *artistIconsArray = [NSMutableArray new];
+		
+		for(int i = 0; i < artistsArray.count; i++){
+			NSString *artistName = [artistsArray objectAtIndex:i];
+			NSArray *artistIcons = [artistImagesArray objectAtIndex:i];
+			
+			if(artistIcons.count > 0){
+				UIView *viewToPinTopTo = artistIconsArray.count > 0 ? [[artistIconsArray lastObject] objectAtIndex:0] : [textLabelsArray lastObject];
+				
+				UILabel *artistLabel = [UILabel newAutoLayoutView];
+				artistLabel.text = artistName;
+				artistLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:(self.frame.size.width/414.0)*20.0f];
+				artistLabel.textAlignment = NSTextAlignmentLeft;
+				artistLabel.textColor = [UIColor blackColor];
+				[self.scrollView addSubview:artistLabel];
+				
+				[artistLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:viewToPinTopTo withOffset:i == 0 ? self.frame.size.height*0.025 : self.frame.size.height*0.01];
+				[artistLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:viewToPinTopTo];
+				
+				for(int iconIndex = 0; iconIndex < artistIcons.count; iconIndex++){
+					BOOL isFirstIcon = iconIndex == 0;
+					
+					NSMutableArray *iconObjectArray;
+					if(isFirstIcon){
+						iconObjectArray = [NSMutableArray new];
+						[artistIconsArray addObject:iconObjectArray];
+					}
+					else{
+						iconObjectArray = [artistIconsArray objectAtIndex:artistLabelsArray.count];
+					}
+					
+					UIView *viewToPinIconTopTo = isFirstIcon ? artistLabel : [iconObjectArray lastObject];
+					UIImage *icon = [LMAppIcon imageForIcon:(LMIcon)[[artistIcons objectAtIndex:iconIndex] integerValue]];
+					BOOL shouldInvert = [[[invertIconArray objectAtIndex:i] objectAtIndex:iconIndex] boolValue];
+					
+					if(shouldInvert){
+						icon = [LMAppIcon invertImage:icon];
+					}
+					
+					UIImageView *iconView = [UIImageView newAutoLayoutView];
+					iconView.contentMode = UIViewContentModeScaleAspectFit;
+					iconView.image = icon;
+					[self.scrollView addSubview:iconView];
+					
+					[iconView autoPinEdge:ALEdgeLeading toEdge:isFirstIcon ? ALEdgeLeading : ALEdgeTrailing ofView:viewToPinIconTopTo withOffset:isFirstIcon ? 0 : 10];
+					[iconView autoPinEdge:ALEdgeTop toEdge:isFirstIcon ? ALEdgeBottom : ALEdgeTop ofView:viewToPinIconTopTo];
+					[iconView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(1.0/8.0)];
+					[iconView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(1.0/10.0)];
+					
+					[iconObjectArray addObject:iconView];
+				}
+				
+				[artistLabelsArray addObject:artistLabel];
+			}
+		}
 	}
 }
 
