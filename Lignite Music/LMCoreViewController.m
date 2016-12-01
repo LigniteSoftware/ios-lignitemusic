@@ -411,14 +411,14 @@ BOOL didAutomaticallyClose = NO;
 	self.navigationController.navigationBarHidden = YES;
 	self.navigationController.interactivePopGestureRecognizer.delegate = self;
 	
-	NSLog(@"Loading view %@", self.navigationController);
+//	NSLog(@"Loading view %@", self.navigationController);
 	
-	LMCreditsView *view = [LMCreditsView newAutoLayoutView];
-	[self.view addSubview:view];
-	
-	[view autoPinEdgesToSuperviewEdges];
-	
-	return;
+//	LMCreditsView *view = [LMCreditsView newAutoLayoutView];
+//	[self.view addSubview:view];
+//	
+//	[view autoPinEdgesToSuperviewEdges];
+//	
+//	return;
 	
 //	self.settingsView = [LMSettingsView newAutoLayoutView];
 //	self.settingsView.coreViewController = self;

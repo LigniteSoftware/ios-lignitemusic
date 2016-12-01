@@ -57,7 +57,7 @@ IN THE SOFTWARE.
 
 ## PebbleKit
 
-© 2015 Pebble Technology Corp. All rights reserved.
+© 2016 Pebble Technology Corp. All rights reserved.
 
 
 ## PureLayout

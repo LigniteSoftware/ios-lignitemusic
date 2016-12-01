@@ -52,7 +52,7 @@
     // Override point for customization after application launch.
 //	self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 	
-	NSLog(@"Actually finished");
+//	NSLog(@"Actually finished");
 	
 //	const int amountOfItems = 2;
 //	LMIcon icons[] = {

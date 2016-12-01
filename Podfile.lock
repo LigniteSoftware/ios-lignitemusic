@@ -12,7 +12,7 @@ PODS:
     - MarqueeLabel/ObjC (= 3.0.1)
   - MarqueeLabel/ObjC (3.0.1)
   - MBProgressHUD (1.0.0)
-  - PebbleKit (3.1.1)
+  - PebbleKit (4.0.0)
   - PureLayout (3.0.2)
   - SDWebImage (3.8.2):
     - SDWebImage/Core (= 3.8.2)
@@ -34,7 +34,7 @@ SPEC CHECKSUMS:
   ImageMagick: e8c089d133679d505c98dc97f3dc5be0e706e1df
   MarqueeLabel: 80ba85d2b76a9f5fa6c13de337db80bcd94feb1d
   MBProgressHUD: 4890f671c94e8a0f3cf959aa731e9de2f036d71a
-  PebbleKit: 390181163256815738e467f183e7c65e16b56d25
+  PebbleKit: 4af7a5f57522cbd371f1798e6dd80bd21ac9d46f
   PureLayout: 4d550abe49a94f24c2808b9b95db9131685fe4cd
   SDWebImage: 098e97e6176540799c27e804c96653ee0833d13c
   YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
