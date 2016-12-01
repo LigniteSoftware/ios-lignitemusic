@@ -47,7 +47,7 @@
 	
 	CGPoint translatedPoint = rawTranslatedPoint;
 	
-	UIView *sliderGrabber = panGestureRecognizer.view;
+	UIView *sliderGrabber = self.sliderGrabberView;
 	
 	static float firstX = 0;
 	static float firstY = 0;
@@ -57,17 +57,20 @@
 		firstY = sliderGrabber.frame.origin.y;
 	}
 	
-	translatedPoint = CGPointMake(firstX+translatedPoint.x, firstY);
+	translatedPoint = CGPointMake(firstX+translatedPoint.x+self.sliderGrabberView.frame.size.width, firstY);
+	
+	//The cap algorithm helps with scrolling it to the ends of the screen, because reaching the edges can be difficult.
+	//It accelerates the scrolling speed at the far left and far right.
 	
 	float capFactor = self.frame.size.width/5;
 	float capFactorRightSideWidth = (capFactor * 4);
 	float capFactorRightPercentage = ((translatedPoint.x-capFactorRightSideWidth)/capFactorRightSideWidth);
 	float capFactorLeftPercentage = 1.0-(translatedPoint.x/capFactor);
 	
-	if(translatedPoint.x > capFactorRightSideWidth){
+	if(translatedPoint.x > capFactorRightSideWidth && rawTranslatedPoint.x >= 0){
 		translatedPoint.x += capFactorRightPercentage*fabs(translatedPoint.x);
 	}
-	else if(translatedPoint.x < capFactor){
+	else if(translatedPoint.x < capFactor && rawTranslatedPoint.x < 0){
 		translatedPoint.x = translatedPoint.x -= capFactorLeftPercentage*capFactor;
 	}
 	
@@ -77,10 +80,12 @@
 	else if(translatedPoint.x-self.sliderGrabberView.frame.size.width < 0){
 		translatedPoint.x = self.sliderGrabberView.frame.size.width;
 	}
-		
+	
 	[self layoutIfNeeded];
 	self.sliderBackgroundWidthConstraint.constant = translatedPoint.x;
 	[self layoutIfNeeded];
+	
+	
 }
 
 - (void)layoutSubviews {
@@ -136,7 +141,7 @@
 		[self.sliderGrabberView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(1.0/20.0)];
 		
 		UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(sliderGrabberPan:)];
-		[self.sliderGrabberView addGestureRecognizer:panGesture];
+		[self.sliderBackgroundView addGestureRecognizer:panGesture];
 		
 		
 	}
