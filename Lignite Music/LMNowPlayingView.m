@@ -12,14 +12,14 @@
 #import "UIImage+AverageColour.h"
 #import "UIColor+isLight.h"
 #import "LMOperationQueue.h"
-#import "LMTrackDurationView.h"
 #import "LMTrackInfoView.h"
 #import "LMButton.h"
 #import "LMColour.h"
 #import "LMAppIcon.h"
 #import "LMMusicPlayer.h"
+#import "LMProgressSlider.h"
 
-@interface LMNowPlayingView() <LMMusicPlayerDelegate, LMButtonDelegate, LMTrackDurationDelegate>
+@interface LMNowPlayingView() <LMMusicPlayerDelegate, LMButtonDelegate, LMProgressSliderDelegate>
 
 @property LMMusicPlayer *musicPlayer;
 
@@ -33,14 +33,14 @@
 
 @property LMOperationQueue *queue;
 
-@property LMTrackDurationView *trackDurationView;
-
 @property LMTrackInfoView *trackInfoView;
 
 @property BOOL loaded;
 
 @property UIView *shuffleModeBackgroundView, *repeatModeBackgroundView, *playlistBackgroundView;
 @property LMButton *shuffleModeButton, *repeatModeButton, *playlistButton;
+
+@property LMProgressSlider *progressSlider;
 
 @end
 
@@ -68,18 +68,18 @@
 	long totalHours = (totalPlaybackTime / 3600);
 	
 	if(totalHours > 0){
-		self.trackDurationView.songDurationLabel.text = [NSString stringWithFormat:NSLocalizedString(@"LongSongDurationOfDuration", nil),
+		self.progressSlider.rightText = [NSString stringWithFormat:NSLocalizedString(@"LongSongDurationOfDuration", nil),
 									   (int)currentHours, (int)currentMinutes, currentSeconds,
 									   [LMNowPlayingView durationStringTotalPlaybackTime:totalPlaybackTime]];
 	}
 	else{
-		self.trackDurationView.songDurationLabel.text = [NSString stringWithFormat:NSLocalizedString(@"ShortSongDurationOfDuration", nil),
+		self.progressSlider.rightText = [NSString stringWithFormat:NSLocalizedString(@"ShortSongDurationOfDuration", nil),
 									   (int)currentMinutes, currentSeconds,
 									   [LMNowPlayingView durationStringTotalPlaybackTime:totalPlaybackTime]];
 	}
 }
 
-- (void)seekSliderValueChanged:(float)newValue isFinal:(BOOL)isFinal {
+- (void)progressSliderValueChanged:(float)newValue isFinal:(BOOL)isFinal {
 	//NSLog(@"New value %f", newValue);
 	if(![self.musicPlayer hasTrackLoaded]){
 		return;
@@ -94,15 +94,20 @@
 }
 
 - (void)musicCurrentPlaybackTimeDidChange:(NSTimeInterval)newPlaybackTime {
-	if(self.trackDurationView.shouldUpdateValue){
-		[self updateSongDurationLabelWithPlaybackTime:newPlaybackTime];
-		
-		self.trackDurationView.seekSlider.minimumValue = 0;
-		self.trackDurationView.seekSlider.maximumValue = self.musicPlayer.nowPlayingTrack.playbackDuration;
-		[UIView animateWithDuration:1.0 animations:^{
-			[self.trackDurationView.seekSlider setValue:newPlaybackTime animated:YES];
-		}];
+	if(self.progressSlider.userIsInteracting){
+		return;
 	}
+	
+	[self updateSongDurationLabelWithPlaybackTime:newPlaybackTime];
+	
+	self.progressSlider.finalValue = self.musicPlayer.nowPlayingTrack.playbackDuration;
+	if(newPlaybackTime < 0.1){
+		[self.progressSlider reset];
+	}
+	else{
+		[self.progressSlider tick];
+	}
+	
 }
 
 - (void)musicTrackDidChange:(LMMusicTrack *)newTrack {
@@ -148,8 +153,6 @@
 			self.trackInfoView.titleLabel.textColor = newTextColour;
 			self.trackInfoView.artistLabel.textColor = newTextColour;
 			self.trackInfoView.albumLabel.textColor = newTextColour;
-			self.trackDurationView.songDurationLabel.textColor = newTextColour;
-			self.trackDurationView.songCountLabel.textColor = newTextColour;
 			
 			if(albumImage.size.height > 0){
 				[self.albumArtImageView updateContentWithMusicTrack:newTrack];
@@ -168,8 +171,8 @@
 		[self.trackInfoView.titleLabel setText:NSLocalizedString(@"NoMusic", nil)];
 		[self.trackInfoView.artistLabel setText:NSLocalizedString(@"NoMusicDescription", nil)];
 		[self.trackInfoView.albumLabel setText:@""];
-		[self.trackDurationView.songDurationLabel setText:NSLocalizedString(@"BlankDuration", nil)];
-		[self.trackDurationView.songCountLabel setText:NSLocalizedString(@"NoMusic", nil)];
+		self.progressSlider.rightText = NSLocalizedString(@"BlankDuration", nil);
+		self.progressSlider.leftText = NSLocalizedString(@"NoMusic", nil);
 		
 		UIImage *albumImage;
 		albumImage = [UIImage imageNamed:@"lignite_background_portrait.png"];
@@ -186,18 +189,18 @@
 	self.trackInfoView.albumLabel.text = newTrack.albumTitle ? newTrack.albumTitle : NSLocalizedString(@"UnknownAlbumTitle", nil);
 	
 	if(self.musicPlayer.nowPlayingCollection){
-		self.trackDurationView.songCountLabel.text =
+		self.progressSlider.leftText =
 			[NSString stringWithFormat:NSLocalizedString(@"SongXofX", nil),
 			 (int)self.musicPlayer.indexOfNowPlayingTrack+1,
 			 (int)self.musicPlayer.nowPlayingCollection.count];
 	}
 	else{
-		self.trackDurationView.songCountLabel.text =
+		self.progressSlider.leftText =
 			[NSString stringWithFormat:NSLocalizedString(@"SongX", nil),
 			 (int)self.musicPlayer.indexOfNowPlayingTrack+1];
 	}
 	
-	self.trackDurationView.songDurationLabel.text = [LMNowPlayingView durationStringTotalPlaybackTime:newTrack.playbackDuration];
+	self.progressSlider.rightText = [LMNowPlayingView durationStringTotalPlaybackTime:newTrack.playbackDuration];
 	[self updateSongDurationLabelWithPlaybackTime:self.musicPlayer.currentPlaybackTime];
 }
 
@@ -246,9 +249,6 @@
 
 - (void)tappedNowPlaying {
 	if(![self.musicPlayer hasTrackLoaded]){
-		return;
-	}
-	if([self.trackDurationView didJustFinishEditing]){
 		return;
 	}
 	[self.musicPlayer invertPlaybackState];
@@ -327,31 +327,41 @@
 	[self.brandNewAlbumArtImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.albumArtRootView];
 	[self.brandNewAlbumArtImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.albumArtRootView];
 	
-	self.trackDurationView = [LMTrackDurationView newAutoLayoutView];
-	self.trackDurationView.delegate = self;
-	self.trackDurationView.shouldInsetInfo = YES;
-//	self.trackDurationView.backgroundColor = [UIColor yellowColor];
-	[self addSubview:self.trackDurationView];
-	[self.trackDurationView setup];
+	self.progressSlider = [LMProgressSlider newAutoLayoutView];
+	self.progressSlider.finalValue = self.musicPlayer.nowPlayingTrack.playbackDuration;
+	self.progressSlider.delegate = self;
+	[self addSubview:self.progressSlider];
 	
-	self.trackDurationView.seekSlider.minimumValue = 0;
-	self.trackDurationView.seekSlider.maximumValue = self.musicPlayer.nowPlayingTrack.playbackDuration;
-	self.trackDurationView.seekSlider.value = self.musicPlayer.currentPlaybackTime;
+	[self.progressSlider autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+	[self.progressSlider autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+	[self.progressSlider autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.albumArtRootView];
+	[self.progressSlider autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(1.0/20.0)];
 	
-	[self.trackDurationView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.albumArtRootView];
-	[self.trackDurationView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.albumArtRootView];
-	[self.trackDurationView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.albumArtImageView withOffset:-2];
-	NSLayoutConstraint *constraint = [self.trackDurationView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(1.0/10.0)];
-	constraint.priority = UILayoutPriorityRequired;
+//	self.trackDurationView = [LMTrackDurationView newAutoLayoutView];
+//	self.trackDurationView.delegate = self;
+//	self.trackDurationView.shouldInsetInfo = YES;
+////	self.trackDurationView.backgroundColor = [UIColor yellowColor];
+//	[self addSubview:self.trackDurationView];
+//	[self.trackDurationView setup];
+//	
+//	self.trackDurationView.seekSlider.minimumValue = 0;
+//	self.trackDurationView.seekSlider.maximumValue = self.musicPlayer.nowPlayingTrack.playbackDuration;
+//	self.trackDurationView.seekSlider.value = self.musicPlayer.currentPlaybackTime;
+//	
+//	[self.trackDurationView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.albumArtRootView];
+//	[self.trackDurationView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.albumArtRootView];
+//	[self.trackDurationView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.albumArtImageView withOffset:-2];
+//	NSLayoutConstraint *constraint = [self.trackDurationView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(1.0/10.0)];
+//	constraint.priority = UILayoutPriorityRequired;
 	
 	self.trackInfoView = [LMTrackInfoView newAutoLayoutView];
 	[self addSubview:self.trackInfoView];
 	[self.trackInfoView setupWithTextAlignment:NSTextAlignmentCenter];
 	
 	//TODO: Fix this being manually set value
-	[self.trackInfoView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.trackDurationView];
-	[self.trackInfoView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.trackDurationView withOffset:20];
-	[self.trackInfoView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.trackDurationView withOffset:-20];
+	[self.trackInfoView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.progressSlider withOffset:10];
+	[self.trackInfoView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.progressSlider withOffset:20];
+	[self.trackInfoView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.progressSlider withOffset:-20];
 	[self.trackInfoView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(1.0/5.0)];
 	
 	self.shuffleModeBackgroundView = [UIView newAutoLayoutView];

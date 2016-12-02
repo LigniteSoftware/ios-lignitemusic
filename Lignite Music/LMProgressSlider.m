@@ -58,23 +58,123 @@
  */
 @property UIView *sliderGrabberView;
 
+/**
+ The amount of width to incrememt by for a tick of seconds. Calculated off of the maximum value.
+ */
+@property float widthIncrementPerTick;
+
+/**
+ Whether or not the progress bar is currently animating.
+ */
+@property BOOL animating;
+
+/**
+ The last time the bar was slid manually.
+ */
+@property NSTimeInterval lastTimeSlid;
+
 @end
 
 @implementation LMProgressSlider
 
-- (void)reloadTextHighlighting {
-	[self layoutIfNeeded];
+@synthesize leftText = _leftText;
+@synthesize rightText = _rightText;
+@synthesize finalValue = _finalValue;
+
+- (NSString*)leftText {
+	return _leftText;
+}
+
+- (void)setLeftText:(NSString *)leftText {
+	leftText = leftText ? leftText : @"";
 	
+	_leftText = leftText;
+	
+	if(self.didLayoutConstraints){
+		self.leftTextBottomLabel.text = leftText;
+		self.leftTextTopLabel.text = leftText;
+	}
+}
+
+- (NSString*)rightText {
+	return _rightText;
+}
+
+- (void)setRightText:(NSString *)rightText {
+	rightText = rightText ? rightText : @"";
+	
+	_rightText = rightText;
+	
+	if(self.didLayoutConstraints){
+		self.rightTextBottomLabel.text = rightText;
+		self.rightTextTopLabel.text = rightText;
+	}
+}
+
+- (float)finalValue {
+	return _finalValue;
+}
+
+- (void)setFinalValue:(float)finalValue {
+	_finalValue = finalValue;
+	
+	if(self.didLayoutConstraints){
+		self.widthIncrementPerTick = self.frame.size.width/finalValue;
+	}
+}
+
+- (void)animate {
+	[UIView animateWithDuration:0.5
+						  delay:0
+						options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionCurveEaseInOut
+					 animations:^{
+						 [self layoutIfNeeded];
+					 } completion:^(BOOL finished) {
+						 self.animating = finished;
+					 }];
+}
+
+- (BOOL)didJustFinishSliding {
+	NSLog(@"%f", [[NSDate date] timeIntervalSince1970]-self.lastTimeSlid);
+	if([[NSDate date] timeIntervalSince1970]-self.lastTimeSlid < 0.5){
+		return YES;
+	}
+	return NO;
+}
+
+- (void)tick {
+	if(self.userIsInteracting || [self didJustFinishSliding]){
+		return;
+	}
+	
+	self.sliderBackgroundWidthConstraint.constant += self.widthIncrementPerTick;
+	[self reloadTextHighlightingConstants];
+	[self animate];
+}
+
+- (void)reset {
+	if(self.userIsInteracting){
+		return;
+	}
+	
+	self.sliderBackgroundWidthConstraint.constant = 0;
+	[self reloadTextHighlightingConstants];
+	[self animate];
+}
+
+- (void)reloadTextHighlightingConstants {
 	float topRightLabelWidth = self.sliderBackgroundWidthConstraint.constant-self.rightTextBottomLabel.frame.origin.x;
 	self.rightTextTopLabelWidthConstraint.constant = topRightLabelWidth > 0 ? topRightLabelWidth : 0;
 	
 	float topLeftLabelWidth = self.sliderBackgroundWidthConstraint.constant-self.sliderGrabberView.frame.size.width;
 	self.leftTextTopLabelWidthConstraint.constant = topLeftLabelWidth > self.leftTextBottomLabel.frame.size.width ? self.leftTextBottomLabel.frame.size.width : topLeftLabelWidth;
-	
-	[self layoutIfNeeded];
 }
 
 - (void)sliderGrabberPan:(UIPanGestureRecognizer*)panGestureRecognizer {
+	[self.sliderBackgroundView.layer removeAllAnimations];
+	
+	self.userIsInteracting = YES;
+	
 	CGPoint rawTranslatedPoint = [panGestureRecognizer translationInView:self];
 	
 //	NSLog(@"%@", NSStringFromCGPoint(rawTranslatedPoint));
@@ -91,7 +191,7 @@
 	
 	float capFactor = self.frame.size.width/5;
 	
-	if ([panGestureRecognizer state] == UIGestureRecognizerStateBegan) {
+	if (panGestureRecognizer.state == UIGestureRecognizerStateBegan) {
 		firstX = sliderGrabber.frame.size.width;
 		firstY = sliderGrabber.frame.size.height;
 		
@@ -112,17 +212,14 @@
 		translatedPoint.x += capFactorRightPercentage*fabs(translatedPoint.x);
 	}
 	else if(translatedPoint.x < capFactor && !didBeginSlidingFromLeft){
-		NSLog(@"%f: (%f/%f)/%f", capFactorLeftPercentage, translatedPoint.x, rawTranslatedPoint.x, capFactor);
 		translatedPoint.x -= capFactorLeftPercentage*capFactor;
 	}
 	
 	if(translatedPoint.x > capFactor){
-		NSLog(@"Reset left");
 		didBeginSlidingFromLeft = NO;
 	}
 	
 	if(translatedPoint.x < capFactorRightSideWidth){
-		NSLog(@"Reset right");
 		didBeginSlidingFromRight = NO;
 	}
 	
@@ -133,15 +230,26 @@
 		translatedPoint.x = self.sliderGrabberView.frame.size.width;
 	}
 	
-	[self layoutIfNeeded];
+	if(!self.animating){
+		[self layoutIfNeeded];
+	}
 	self.sliderBackgroundWidthConstraint.constant = translatedPoint.x;
-	[self layoutIfNeeded];
-	
-	[self reloadTextHighlighting];
+	[self reloadTextHighlightingConstants];
+	if(!self.animating){
+		[self layoutIfNeeded];
+	}
 	
 	if(panGestureRecognizer.state == UIGestureRecognizerStateEnded){
 		didBeginSlidingFromLeft = NO;
 		didBeginSlidingFromRight = NO;
+		self.userIsInteracting = NO;
+		
+		self.lastTimeSlid = [[NSDate date] timeIntervalSince1970];
+	}
+	
+	if(self.delegate){
+		float progress = translatedPoint.x/self.widthIncrementPerTick;
+		[self.delegate progressSliderValueChanged:progress isFinal:panGestureRecognizer.state == UIGestureRecognizerStateEnded];
 	}
 }
 
@@ -178,13 +286,13 @@
 		
 		
 		self.sliderBackgroundView = [UIView newAutoLayoutView];
-		self.sliderBackgroundView.backgroundColor = [UIColor cyanColor];
+		self.sliderBackgroundView.backgroundColor = [LMColour ligniteRedColour];
 		[self addSubview:self.sliderBackgroundView];
 		
 		[self.sliderBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[self.sliderBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 		[self.sliderBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		self.sliderBackgroundWidthConstraint = [self.sliderBackgroundView autoSetDimension:ALDimensionWidth toSize:80];
+		self.sliderBackgroundWidthConstraint = [self.sliderBackgroundView autoSetDimension:ALDimensionWidth toSize:0];
 		
 		UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(sliderGrabberPan:)];
 		[self.sliderBackgroundView addGestureRecognizer:panGesture];
@@ -192,7 +300,7 @@
 		
 		
 		self.sliderGrabberView = [UIView newAutoLayoutView];
-		self.sliderGrabberView.backgroundColor = [UIColor redColor];
+		self.sliderGrabberView.backgroundColor = [UIColor whiteColor];
 		[self.sliderBackgroundView addSubview:self.sliderGrabberView];
 		
 		[self.sliderGrabberView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
@@ -234,7 +342,8 @@
 		[self.leftTextTopLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self withOffset:self.frame.size.height/8];
 		[self.leftTextTopLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self withOffset:-self.frame.size.height/8];
 		
-		[self reloadTextHighlighting];
+		[self reloadTextHighlightingConstants];
+		[self layoutSubviews];
 	}
 }
 

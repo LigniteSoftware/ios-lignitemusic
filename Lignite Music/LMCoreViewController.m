@@ -406,15 +406,15 @@ BOOL didAutomaticallyClose = NO;
 	self.navigationController.navigationBarHidden = YES;
 	self.navigationController.interactivePopGestureRecognizer.delegate = self;
 	
-	LMProgressSlider *progressSlider = [LMProgressSlider newAutoLayoutView];
-	[self.view addSubview:progressSlider];
-	
-	[progressSlider autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-	[progressSlider autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	[progressSlider autoCenterInSuperview];
-	[progressSlider autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/20.0)];
-
-	return;
+//	LMProgressSlider *progressSlider = [LMProgressSlider newAutoLayoutView];
+//	[self.view addSubview:progressSlider];
+//	
+//	[progressSlider autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+//	[progressSlider autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+//	[progressSlider autoCenterInSuperview];
+//	[progressSlider autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/20.0)];
+//
+//	return;
 	
 //	NSLog(@"Loading view %@", self.navigationController);
 	
@@ -626,6 +626,8 @@ BOOL didAutomaticallyClose = NO;
 						
 						LMImageManager *imageManager = [LMImageManager sharedImageManager];
 						imageManager.viewToDisplayAlertsOn = self.navigationController.view;
+						
+						[self openNowPlayingView];
 					});
 					break;
 				}
