@@ -10,4 +10,9 @@
 
 @interface LMScrollView : UIScrollView
 
+/**
+ Should adapt for width. Default is NO. If YES, it will adapt for width instead of height.
+ */
+@property BOOL adaptForWidth;
+
 @end

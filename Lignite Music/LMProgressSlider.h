@@ -24,6 +24,11 @@
 @interface LMProgressSlider : LMView
 
 /**
+ The background to the slider.
+ */
+@property UIView *sliderBackgroundView;
+
+/**
  The text that goes on the left.
  */
 @property NSString *leftText;

@@ -39,6 +39,7 @@
 		6A514E1F1CEA3FCE00AFB351 /* splash_portrait.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A514E1E1CEA3FCE00AFB351 /* splash_portrait.png */; };
 		6A52574C1DF099480040210D /* LMView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A52574B1DF099480040210D /* LMView.m */; };
 		6A52574F1DF099720040210D /* LMProgressSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A52574E1DF099720040210D /* LMProgressSlider.m */; };
+		6A5257531DF1FC840040210D /* LMLetterTabView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A5257521DF1FC840040210D /* LMLetterTabView.m */; };
 		6A555BB01DA168860078C9FC /* LMOperationQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A555BAF1DA168860078C9FC /* LMOperationQueue.m */; };
 		6A5821021DADE54400A4FAB1 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A5821011DADE54400A4FAB1 /* AVFoundation.framework */; };
 		6A5821041DAF312C00A4FAB1 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A5821031DAF312C00A4FAB1 /* AudioToolbox.framework */; };
@@ -206,6 +207,8 @@
 		6A52574B1DF099480040210D /* LMView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMView.m; sourceTree = "<group>"; };
 		6A52574D1DF099720040210D /* LMProgressSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMProgressSlider.h; sourceTree = "<group>"; };
 		6A52574E1DF099720040210D /* LMProgressSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMProgressSlider.m; sourceTree = "<group>"; };
+		6A5257511DF1FC840040210D /* LMLetterTabView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMLetterTabView.h; sourceTree = "<group>"; };
+		6A5257521DF1FC840040210D /* LMLetterTabView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMLetterTabView.m; sourceTree = "<group>"; };
 		6A555BAE1DA168860078C9FC /* LMOperationQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMOperationQueue.h; sourceTree = "<group>"; };
 		6A555BAF1DA168860078C9FC /* LMOperationQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMOperationQueue.m; sourceTree = "<group>"; };
 		6A5821011DADE54400A4FAB1 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -568,6 +571,15 @@
 			name = BigListSubviews;
 			sourceTree = "<group>";
 		};
+		6A5257501DF1FC650040210D /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				6A5257511DF1FC840040210D /* LMLetterTabView.h */,
+				6A5257521DF1FC840040210D /* LMLetterTabView.m */,
+			);
+			name = Search;
+			sourceTree = "<group>";
+		};
 		6A66C76C1CDA1B4E009019CF /* Icons */ = {
 			isa = PBXGroup;
 			children = (
@@ -818,14 +830,15 @@
 				6A7DF1141DB10CC60077B979 /* Layovers */,
 				6AD227001DA598DD0056695A /* Music */,
 				6A313C091BB4485A002BBC33 /* NowPlayingView */,
+				6AFF01831DDD655C00F24D8E /* Onboarding */,
 				6A1FB9C41D99C8FC00890BF3 /* Other */,
 				6A1FB9C11D99C88500890BF3 /* OtherViews */,
 				6A1FB9C01D99C72200890BF3 /* Pebble */,
+				6A5257501DF1FC650040210D /* Search */,
 				6AA4459D1D5AD676004C6739 /* SettingsControls */,
 				6A1FB9C31D99C8C900890BF3 /* Storyboards */,
 				6AAF610A1DA0195900971875 /* Strings */,
 				6A32A9F21DC69BC60056CC60 /* TableView */,
-				6AFF01831DDD655C00F24D8E /* Onboarding */,
 				6ABF6A861CF37A19003E4EFA /* Utilities */,
 			);
 			path = "Lignite Music";
@@ -1182,6 +1195,7 @@
 				6A7115B71DCEE410006DE00F /* LMTableView.m in Sources */,
 				6AD227061DA599E50056695A /* LMMusicTrack.m in Sources */,
 				6AF9D5381DE13141006368B6 /* LMReachability.m in Sources */,
+				6A5257531DF1FC840040210D /* LMLetterTabView.m in Sources */,
 				6A555BB01DA168860078C9FC /* LMOperationQueue.m in Sources */,
 				6AF9D5321DE0B73D006368B6 /* LMImageManager.m in Sources */,
 				6A1FB9C71D99EB0A00890BF3 /* LMAlbumView.m in Sources */,

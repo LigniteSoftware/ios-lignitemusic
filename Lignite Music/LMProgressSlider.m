@@ -45,11 +45,6 @@
 @property NSLayoutConstraint *rightTextTopLabelWidthConstraint;
 
 /**
- The background to the slider.
- */
-@property UIView *sliderBackgroundView;
-
-/**
  The width constraint for the slider.
  */
 @property NSLayoutConstraint *sliderBackgroundWidthConstraint;
@@ -275,9 +270,7 @@
 - (void)layoutSubviews {
 	if(!self.didLayoutConstraints){
 		self.didLayoutConstraints = YES;
-		
-		self.backgroundColor = [LMColour lightGrayBackgroundColour];
-		
+				
 		if(self.finalValue > 0){
 			self.widthIncrementPerTick = self.frame.size.width/self.finalValue;
 		}
@@ -322,7 +315,7 @@
 		
 		
 		self.sliderGrabberView = [UIView newAutoLayoutView];
-		self.sliderGrabberView.backgroundColor = [UIColor colorWithRed:0.15 green:0.15 blue:0.15 alpha:1.0];
+		self.sliderGrabberView.backgroundColor = [UIColor whiteColor]; //[UIColor colorWithRed:0.15 green:0.15 blue:0.15 alpha:1.0];
 		[self.sliderBackgroundView addSubview:self.sliderGrabberView];
 		
 		[self.sliderGrabberView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];

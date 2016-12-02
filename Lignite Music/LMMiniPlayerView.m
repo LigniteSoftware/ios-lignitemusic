@@ -204,6 +204,7 @@
 	[self.trackInfoView setupWithTextAlignment:NSTextAlignmentLeft];
 	
 	self.progressSlider = [LMProgressSlider newAutoLayoutView];
+	self.progressSlider.backgroundColor = [UIColor colorWithRed:0.82 green:0.82 blue:0.82 alpha:0.25];
 	self.progressSlider.finalValue = self.musicPlayer.nowPlayingTrack.playbackDuration;
 	self.progressSlider.delegate = self;
 	self.progressSlider.value = self.musicPlayer.currentPlaybackTime;

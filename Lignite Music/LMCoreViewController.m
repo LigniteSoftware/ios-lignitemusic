@@ -32,8 +32,9 @@
 #import "LMDebugView.h"
 #import "LMCreditsView.h"
 #import "LMProgressSlider.h"
+#import "LMLetterTabView.h"
 
-//#define S8KIP_ONBOARDING
+#define SKIP_ONBOARDING
 
 @import SDWebImage;
 @import StoreKit;
@@ -406,15 +407,15 @@ BOOL didAutomaticallyClose = NO;
 	self.navigationController.navigationBarHidden = YES;
 	self.navigationController.interactivePopGestureRecognizer.delegate = self;
 	
-//	LMProgressSlider *progressSlider = [LMProgressSlider newAutoLayoutView];
-//	[self.view addSubview:progressSlider];
-//	
-//	[progressSlider autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-//	[progressSlider autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-//	[progressSlider autoCenterInSuperview];
-//	[progressSlider autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/20.0)];
-//
-//	return;
+	LMLetterTabView *letterTab = [LMLetterTabView newAutoLayoutView];
+	[self.view addSubview:letterTab];
+	
+	[letterTab autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+	[letterTab autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+	[letterTab autoCenterInSuperview];
+	[letterTab autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/20.0)];
+
+	return;
 	
 //	NSLog(@"Loading view %@", self.navigationController);
 	

@@ -19,7 +19,7 @@
 
 - (void)layoutSubviews {
 	[super layoutSubviews];
-	
+		
 	if(self.didSetupContentSize){
 		return;
 	}
@@ -32,9 +32,29 @@
 	for (UIView *view in self.subviews) {
 		contentRect = CGRectUnion(contentRect, view.frame);
 	}
-	contentRect = CGRectMake(0, 0, WINDOW_FRAME.size.width /* I know, it's hacky. */, contentRect.size.height);
+	
+	NSLog(@"Content frame %@", NSStringFromCGRect(contentRect));
+	
+	contentRect = CGRectMake(0, 0, self.adaptForWidth ? contentRect.size.width : WINDOW_FRAME.size.width, self.adaptForWidth ? self.frame.size.height/4 : contentRect.size.height);
 	
 	self.contentSize = contentRect.size;
+}
+
+- (instancetype)init {
+	self = [super init];
+	if(self) {
+		UIEdgeInsets insets = UIEdgeInsetsMake(0,
+											   0.0,
+											   0,
+											   0.0);
+		self.contentInset = insets;
+		
+		self.layoutMargins = insets;
+		
+		self.showsVerticalScrollIndicator = NO;
+		self.showsHorizontalScrollIndicator = NO;
+	}
+	return self;
 }
 
 @end

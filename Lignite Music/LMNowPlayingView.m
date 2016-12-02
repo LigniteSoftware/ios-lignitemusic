@@ -137,6 +137,8 @@
 			self.trackInfoView.artistLabel.textColor = newTextColour;
 			self.trackInfoView.albumLabel.textColor = newTextColour;
 			
+			self.progressSlider.sliderBackgroundView.backgroundColor = averageColour;
+			
 			if(albumImage.size.height > 0){
 				[self.albumArtImageView updateContentWithMusicTrack:newTrack];
 			}
@@ -318,6 +320,7 @@
 	[self.brandNewAlbumArtImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.albumArtRootView];
 	
 	self.progressSlider = [LMProgressSlider newAutoLayoutView];
+	self.progressSlider.backgroundColor = [LMColour fadedColour];
 	self.progressSlider.finalValue = self.musicPlayer.nowPlayingTrack.playbackDuration;
 	self.progressSlider.delegate = self;
 	self.progressSlider.value = self.musicPlayer.currentPlaybackTime;
