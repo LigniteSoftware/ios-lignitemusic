@@ -157,7 +157,7 @@
 		return;
 	}
 	
-	self.sliderBackgroundWidthConstraint.constant = 0;
+	self.sliderBackgroundWidthConstraint.constant = self.sliderGrabberView.frame.size.width;
 	[self reloadTextHighlightingConstants];
 	[self animate];
 }
@@ -248,7 +248,11 @@
 	}
 	
 	if(self.delegate){
-		float progress = translatedPoint.x/self.widthIncrementPerTick;
+		float grabberWidth = self.sliderGrabberView.frame.size.width;
+		
+		float percentageTowards = (self.sliderBackgroundView.frame.size.width-grabberWidth)/(self.frame.size.width-(grabberWidth));
+		float progress = self.finalValue*percentageTowards;
+								   
 		[self.delegate progressSliderValueChanged:progress isFinal:panGestureRecognizer.state == UIGestureRecognizerStateEnded];
 	}
 }
