@@ -62,36 +62,68 @@
 
 @implementation LMProgressSlider
 
+- (void)reloadTextHighlighting {
+	[self layoutIfNeeded];
+	
+	float topRightLabelWidth = self.sliderBackgroundWidthConstraint.constant-self.rightTextBottomLabel.frame.origin.x;
+	self.rightTextTopLabelWidthConstraint.constant = topRightLabelWidth > 0 ? topRightLabelWidth : 0;
+	
+	float topLeftLabelWidth = self.sliderBackgroundWidthConstraint.constant-self.sliderGrabberView.frame.size.width;
+	self.leftTextTopLabelWidthConstraint.constant = topLeftLabelWidth > self.leftTextBottomLabel.frame.size.width ? self.leftTextBottomLabel.frame.size.width : topLeftLabelWidth;
+	
+	[self layoutIfNeeded];
+}
+
 - (void)sliderGrabberPan:(UIPanGestureRecognizer*)panGestureRecognizer {
 	CGPoint rawTranslatedPoint = [panGestureRecognizer translationInView:self];
 	
+//	NSLog(@"%@", NSStringFromCGPoint(rawTranslatedPoint));
+	
 	CGPoint translatedPoint = rawTranslatedPoint;
 	
-	UIView *sliderGrabber = self.sliderGrabberView;
+	UIView *sliderGrabber = self.sliderBackgroundView;
 	
 	static float firstX = 0;
 	static float firstY = 0;
 	
+	static BOOL didBeginSlidingFromLeft = NO;
+	static BOOL didBeginSlidingFromRight = NO;
+	
+	float capFactor = self.frame.size.width/5;
+	
 	if ([panGestureRecognizer state] == UIGestureRecognizerStateBegan) {
-		firstX = sliderGrabber.frame.origin.x;
-		firstY = sliderGrabber.frame.origin.y;
+		firstX = sliderGrabber.frame.size.width;
+		firstY = sliderGrabber.frame.size.height;
+		
+		didBeginSlidingFromRight = (firstX > self.frame.size.width-capFactor);
+		didBeginSlidingFromLeft = (firstX < self.sliderGrabberView.frame.size.width+capFactor);
 	}
 	
-	translatedPoint = CGPointMake(firstX+translatedPoint.x+self.sliderGrabberView.frame.size.width, firstY);
+	translatedPoint = CGPointMake(firstX+translatedPoint.x, firstY);
 	
 	//The cap algorithm helps with scrolling it to the ends of the screen, because reaching the edges can be difficult.
 	//It accelerates the scrolling speed at the far left and far right.
 	
-	float capFactor = self.frame.size.width/5;
 	float capFactorRightSideWidth = (capFactor * 4);
 	float capFactorRightPercentage = ((translatedPoint.x-capFactorRightSideWidth)/capFactorRightSideWidth);
 	float capFactorLeftPercentage = 1.0-(translatedPoint.x/capFactor);
 	
-	if(translatedPoint.x > capFactorRightSideWidth && rawTranslatedPoint.x >= 0){
+	if(translatedPoint.x > capFactorRightSideWidth && !didBeginSlidingFromRight){
 		translatedPoint.x += capFactorRightPercentage*fabs(translatedPoint.x);
 	}
-	else if(translatedPoint.x < capFactor && rawTranslatedPoint.x < 0){
-		translatedPoint.x = translatedPoint.x -= capFactorLeftPercentage*capFactor;
+	else if(translatedPoint.x < capFactor && !didBeginSlidingFromLeft){
+		NSLog(@"%f: (%f/%f)/%f", capFactorLeftPercentage, translatedPoint.x, rawTranslatedPoint.x, capFactor);
+		translatedPoint.x -= capFactorLeftPercentage*capFactor;
+	}
+	
+	if(translatedPoint.x > capFactor){
+		NSLog(@"Reset left");
+		didBeginSlidingFromLeft = NO;
+	}
+	
+	if(translatedPoint.x < capFactorRightSideWidth){
+		NSLog(@"Reset right");
+		didBeginSlidingFromRight = NO;
 	}
 	
 	if(translatedPoint.x > self.frame.size.width){
@@ -103,15 +135,14 @@
 	
 	[self layoutIfNeeded];
 	self.sliderBackgroundWidthConstraint.constant = translatedPoint.x;
-	
-	float topRightLabelWidth = self.sliderBackgroundWidthConstraint.constant-self.rightTextBottomLabel.frame.origin.x;
-	self.rightTextTopLabelWidthConstraint.constant = topRightLabelWidth > 0 ? topRightLabelWidth : 0;
-	
-	float topLeftLabelWidth = self.sliderBackgroundWidthConstraint.constant-self.sliderGrabberView.frame.size.width/2;
-	self.leftTextTopLabelWidthConstraint.constant = topLeftLabelWidth > self.leftTextBottomLabel.frame.size.width ? self.leftTextBottomLabel.frame.size.width : topLeftLabelWidth;
 	[self layoutIfNeeded];
 	
+	[self reloadTextHighlighting];
 	
+	if(panGestureRecognizer.state == UIGestureRecognizerStateEnded){
+		didBeginSlidingFromLeft = NO;
+		didBeginSlidingFromRight = NO;
+	}
 }
 
 - (void)layoutSubviews {
@@ -167,7 +198,7 @@
 		[self.sliderGrabberView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 		[self.sliderGrabberView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 		[self.sliderGrabberView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		[self.sliderGrabberView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(1.0/20.0)];
+		[self.sliderGrabberView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(1.0/40.0)];
 		
 		
 		
@@ -202,6 +233,8 @@
 		self.leftTextTopLabelWidthConstraint = [self.leftTextTopLabel autoSetDimension:ALDimensionWidth toSize:0];
 		[self.leftTextTopLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self withOffset:self.frame.size.height/8];
 		[self.leftTextTopLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self withOffset:-self.frame.size.height/8];
+		
+		[self reloadTextHighlighting];
 	}
 }
 
