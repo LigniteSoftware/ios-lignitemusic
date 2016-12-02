@@ -106,6 +106,7 @@
 }
 	
 - (void)swipeUp {
+	NSLog(@"Swipe up");
 	[self.coreViewController openNowPlayingView];
 }
 	

@@ -790,7 +790,6 @@
 }
 
 - (void)wifiReactivated {
-	NSLog(@"\n\nHello\n\n");
 	BOOL hasInternetConnection = [self hasInternetConnection];
 	
 	if(hasInternetConnection){
@@ -802,8 +801,6 @@
 - (void)reachabilityChanged:(NSNotification*)notification {
 	BOOL hasInternetConnection = [self hasInternetConnection];
 	BOOL timerExists = self.reachabilityChangedTimer || self.reachabilityChangedTimer.valid;
-	
-	NSLog(@"Hey bud");
 	
 	if(timerExists){
 		[self.reachabilityChangedTimer invalidate];

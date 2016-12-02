@@ -33,7 +33,7 @@
 #import "LMCreditsView.h"
 #import "LMProgressSlider.h"
 
-#define SKIP_ONBOARDING
+//#define S8KIP_ONBOARDING
 
 @import SDWebImage;
 @import StoreKit;
@@ -324,11 +324,14 @@ BOOL didAutomaticallyClose = NO;
 
 - (void)showWhatsPoppin {
 	NSArray *currentBuildChanges = @[
-									 @"Added artist view"
+									 @"Added new music progress bar",
+									 @"Added icon credits",
+									 @"Fixed music sometimes not playing",
+									 @"A few small visual touches"
 									 ];
 	
 	NSArray *currentBuildIssues = @[
-									@"The artist detail view is not complete",
+									@"The artist detail view is still not complete",
 									@"\nPlease do not report already known issues to us, thanks!"
 									];
 	
@@ -623,8 +626,6 @@ BOOL didAutomaticallyClose = NO;
 						
 						LMImageManager *imageManager = [LMImageManager sharedImageManager];
 						imageManager.viewToDisplayAlertsOn = self.navigationController.view;
-						
-//						[self openNowPlayingView];
 					});
 					break;
 				}

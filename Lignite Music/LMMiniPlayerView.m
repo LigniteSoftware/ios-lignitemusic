@@ -207,7 +207,6 @@
 	self.progressSlider.finalValue = self.musicPlayer.nowPlayingTrack.playbackDuration;
 	self.progressSlider.delegate = self;
 	self.progressSlider.value = self.musicPlayer.currentPlaybackTime;
-	NSLog(@"Yep %f %f %f", self.progressSlider.value, self.musicPlayer.currentPlaybackTime, self.progressSlider.finalValue);
 	[self.trackInfoAndDurationBackgroundView addSubview:self.progressSlider];
 	
 	[self.progressSlider autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.trackInfoView];

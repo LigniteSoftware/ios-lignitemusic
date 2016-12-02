@@ -79,12 +79,8 @@
 - (instancetype)init {
 	self = [super init];
 	if(self){
-		NSLog(@"Starting init");
-		
 		self.systemMusicPlayer = [MPMusicPlayerController systemMusicPlayer];
 		[self.systemMusicPlayer beginGeneratingPlaybackNotifications];
-		
-		NSLog(@"Got system music player.");
 		
 		//http://stackoverflow.com/questions/3059255/how-do-i-clear-the-queue-of-a-mpmusicplayercontroller
 		MPMediaPropertyPredicate *predicate = [MPMediaPropertyPredicate predicateWithValue:@"MotherFuckingShitpost69"
@@ -96,8 +92,6 @@
 		
 		self.nowPlayingTrack = [[LMMusicTrack alloc]initWithMPMediaItem:self.systemMusicPlayer.nowPlayingItem];
 		
-		NSLog(@"Shitpost");
-		
 		self.playerType = LMMusicPlayerTypeSystemMusicPlayer;
 		self.delegates = [NSMutableArray new];
 		self.delegatesSubscribedToCurrentPlaybackTimeChange = [[NSMutableArray alloc]init];
@@ -106,8 +100,6 @@
 		self.repeatMode = LMMusicRepeatModeNone;
 		self.previousPlaybackTime = self.systemMusicPlayer.currentPlaybackTime;
 		self.currentPlaybackTime = self.systemMusicPlayer.currentPlaybackTime;
-		
-		NSLog(@"Setup basic stuff.");
 		
 		self.autoPlay = (self.systemMusicPlayer.playbackState == MPMusicPlaybackStatePlaying);
 		
@@ -159,7 +151,7 @@
 	
 		[commandCenter.changePlaybackPositionCommand addTarget:self action:@selector(handlePlaybackPositionChange:)];
 		
-		NSLog(@"Setup commands.");
+		NSLog(@"Setup LMMusicPlayer.");
 	}
 	else{
 		NSLog(@"Fatal error! Failed to create instance of LMMusicPlayer.");
