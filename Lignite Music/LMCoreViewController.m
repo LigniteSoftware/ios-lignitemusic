@@ -33,7 +33,7 @@
 #import "LMCreditsView.h"
 #import "LMProgressSlider.h"
 
-//#define SKIP_ONBOARDING
+#define SKIP_ONBOARDING
 
 @import SDWebImage;
 @import StoreKit;
@@ -117,9 +117,8 @@
 		return;
 	}
 	
-	self.nowPlayingView = [LMNowPlayingView new];
-	self.nowPlayingView.translatesAutoresizingMaskIntoConstraints = NO;
-	self.nowPlayingView.backgroundColor = [UIColor blueColor];
+	self.nowPlayingView = [LMNowPlayingView newAutoLayoutView];
+	self.nowPlayingView.backgroundColor = [UIColor whiteColor];
 	self.nowPlayingView.rootViewController = self;
 	[self.view addSubview:self.nowPlayingView];
 	
@@ -127,9 +126,7 @@
 	self.topConstraint = [self.nowPlayingView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.view withOffset:self.view.frame.size.height];
 	[self.nowPlayingView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
 	[self.nowPlayingView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
-	
-	[self.nowPlayingView setup];
-	
+		
 	[self.view layoutIfNeeded];
 	
 	self.topConstraint.constant = 0;
@@ -627,7 +624,7 @@ BOOL didAutomaticallyClose = NO;
 						LMImageManager *imageManager = [LMImageManager sharedImageManager];
 						imageManager.viewToDisplayAlertsOn = self.navigationController.view;
 						
-						[self openNowPlayingView];
+//						[self openNowPlayingView];
 					});
 					break;
 				}

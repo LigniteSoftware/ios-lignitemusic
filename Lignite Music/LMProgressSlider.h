@@ -34,6 +34,11 @@
 @property NSString *rightText;
 
 /**
+ The current value the slider should have.
+ */
+@property float value;
+
+/**
  The final value of the slider.
  */
 @property float finalValue;
@@ -47,11 +52,6 @@
  The delegate for this view which will get updates on progress slider changes.
  */
 @property id<LMProgressSliderDelegate> delegate;
-
-/**
- Ticks the progress slider one second/interval.
- */
-- (void)tick;
 
 /**
  Resets the progress slider to 0.

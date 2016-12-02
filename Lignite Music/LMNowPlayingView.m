@@ -101,13 +101,7 @@
 	[self updateSongDurationLabelWithPlaybackTime:newPlaybackTime];
 	
 	self.progressSlider.finalValue = self.musicPlayer.nowPlayingTrack.playbackDuration;
-	if(newPlaybackTime < 0.1){
-		[self.progressSlider reset];
-	}
-	else{
-		[self.progressSlider tick];
-	}
-	
+	self.progressSlider.value = newPlaybackTime;
 }
 
 - (void)musicTrackDidChange:(LMMusicTrack *)newTrack {
@@ -127,17 +121,6 @@
 		BOOL isLight = [averageColour isLight];
 		self.blurredBackgroundView.effect = [UIBlurEffect effectWithStyle:isLight ? UIBlurEffectStyleLight : UIBlurEffectStyleDark];
 		UIColor *newTextColour = isLight ? [UIColor blackColor] : [UIColor whiteColor];
-//
-//		CIFilter *gaussianBlurFilter = [CIFilter filterWithName:@"CIGaussianBlur"];
-//		[gaussianBlurFilter setDefaults];
-//		CIImage *inputImage = [CIImage imageWithCGImage:[albumImage CGImage]];
-//		[gaussianBlurFilter setValue:inputImage forKey:kCIInputImageKey];
-//		[gaussianBlurFilter setValue:@5 forKey:kCIInputRadiusKey];
-//		
-//		CIImage *outputImage = [gaussianBlurFilter outputImage];
-//		CIContext *context   = [CIContext contextWithOptions:nil];
-//		CGImageRef cgimg     = [context createCGImage:outputImage fromRect:[inputImage extent]];
-//		UIImage *image       = [UIImage imageWithCGImage:cgimg];
 		
 		dispatch_sync(dispatch_get_main_queue(), ^{
 			if(operation.cancelled){
@@ -159,9 +142,6 @@
 			}
 			
 			self.brandNewAlbumArtImageView.image = albumArt ? albumArt : [LMAppIcon imageForIcon:LMIconNoAlbumArt];
-						
-			//[self.albumArtImageView setupWithAlbumImage:albumImage];
-			//[self.albumArtImageView setImage:[item.artwork imageWithSize:CGSizeMake(self.frame.size.width, self.frame.size.width)]];
 		});
 	}];
 	
@@ -251,6 +231,7 @@
 	if(![self.musicPlayer hasTrackLoaded]){
 		return;
 	}
+	
 	[self.musicPlayer invertPlaybackState];
 }
 
@@ -258,6 +239,7 @@
 	if(![self.musicPlayer hasTrackLoaded]){
 		return;
 	}
+	
 	[self.musicPlayer skipToNextTrack];
 }
 
@@ -265,10 +247,18 @@
 	if(![self.musicPlayer hasTrackLoaded]){
 		return;
 	}
+	
 	[self.musicPlayer autoBackThrough];
 }
 
-- (void)setup {
+- (void)layoutSubviews {
+	[super layoutSubviews];
+
+	if(self.didLayoutConstraints){
+		return;
+	}
+	self.didLayoutConstraints = YES;
+	
 	self.backgroundImageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"lignite_background_portrait.png"]];
 	self.backgroundImageView.translatesAutoresizingMaskIntoConstraints = NO;
 	self.backgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
@@ -330,13 +320,14 @@
 	self.progressSlider = [LMProgressSlider newAutoLayoutView];
 	self.progressSlider.finalValue = self.musicPlayer.nowPlayingTrack.playbackDuration;
 	self.progressSlider.delegate = self;
+	self.progressSlider.value = self.musicPlayer.currentPlaybackTime;
 	[self addSubview:self.progressSlider];
 	
 	[self.progressSlider autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 	[self.progressSlider autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 	[self.progressSlider autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.albumArtRootView];
 	[self.progressSlider autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(1.0/20.0)];
-	
+		
 //	self.trackDurationView = [LMTrackDurationView newAutoLayoutView];
 //	self.trackDurationView.delegate = self;
 //	self.trackDurationView.shouldInsetInfo = YES;

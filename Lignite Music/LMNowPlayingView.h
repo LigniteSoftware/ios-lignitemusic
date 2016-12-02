@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "LMCoreViewController.h"
+#import "LMView.h"
 
-@interface LMNowPlayingView : UIView
+@interface LMNowPlayingView : LMView
 
 @property LMCoreViewController *rootViewController;
 
@@ -21,7 +22,5 @@
  @return The formatted string. 0 padded.
  */
 + (NSString*)durationStringTotalPlaybackTime:(long)totalPlaybackTime;
-
-- (void)setup;
 
 @end

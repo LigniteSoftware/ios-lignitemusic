@@ -105,6 +105,7 @@
 		self.shuffleMode = LMMusicShuffleModeOff;
 		self.repeatMode = LMMusicRepeatModeNone;
 		self.previousPlaybackTime = self.systemMusicPlayer.currentPlaybackTime;
+		self.currentPlaybackTime = self.systemMusicPlayer.currentPlaybackTime;
 		
 		NSLog(@"Setup basic stuff.");
 		
@@ -816,13 +817,12 @@ BOOL shuffleForDebug = NO;
 }
 
 - (NSTimeInterval)currentPlaybackTime {
-	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer){
+	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer && self.audioPlayer){
 		return self.audioPlayer.currentTime;
 	}
 	else if(self.playerType == LMMusicPlayerTypeAppleMusic) {
 		return self.systemMusicPlayer.currentPlaybackTime;
 	}
-	
 	return _currentPlaybackTime;
 }
 

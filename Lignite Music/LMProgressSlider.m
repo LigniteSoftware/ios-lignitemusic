@@ -10,6 +10,7 @@
 #import "LMProgressSlider.h"
 #import "LMColour.h"
 #import "LMLabel.h"
+#import "LMExtras.h"
 
 @interface LMProgressSlider()
 
@@ -80,6 +81,7 @@
 @synthesize leftText = _leftText;
 @synthesize rightText = _rightText;
 @synthesize finalValue = _finalValue;
+@synthesize value = _value;
 
 - (NSString*)leftText {
 	return _leftText;
@@ -123,6 +125,29 @@
 	}
 }
 
+- (void)setValue:(float)value {
+	_value = value;
+	
+	if(self.didLayoutConstraints){
+		if(self.userIsInteracting || [self didJustFinishSliding] || value == 0){
+			return;
+		}
+		
+		float grabberWidth = self.sliderGrabberView.frame.size.width;
+		float percentageTowards = value/self.finalValue;
+		float grabberPercent = (1.0-percentageTowards)*grabberWidth;
+		
+		self.sliderBackgroundWidthConstraint.constant = (self.frame.size.width*percentageTowards)+grabberPercent;
+		
+		[self reloadTextHighlightingConstants];
+		[self animate];
+	}
+}
+
+- (float)value {
+	return _value;
+}
+
 - (void)animate {
 	[UIView animateWithDuration:0.5
 						  delay:0
@@ -135,21 +160,10 @@
 }
 
 - (BOOL)didJustFinishSliding {
-	NSLog(@"%f", [[NSDate date] timeIntervalSince1970]-self.lastTimeSlid);
 	if([[NSDate date] timeIntervalSince1970]-self.lastTimeSlid < 0.5){
 		return YES;
 	}
 	return NO;
-}
-
-- (void)tick {
-	if(self.userIsInteracting || [self didJustFinishSliding]){
-		return;
-	}
-	
-	self.sliderBackgroundWidthConstraint.constant += self.widthIncrementPerTick;
-	[self reloadTextHighlightingConstants];
-	[self animate];
 }
 
 - (void)reset {
@@ -163,11 +177,12 @@
 }
 
 - (void)reloadTextHighlightingConstants {
+	float topLeftLabelWidth = self.sliderBackgroundWidthConstraint.constant-10;
+	
+	self.leftTextTopLabelWidthConstraint.constant = topLeftLabelWidth > self.leftTextBottomLabel.frame.size.width ? self.leftTextBottomLabel.frame.size.width : topLeftLabelWidth;
+	
 	float topRightLabelWidth = self.sliderBackgroundWidthConstraint.constant-self.rightTextBottomLabel.frame.origin.x;
 	self.rightTextTopLabelWidthConstraint.constant = topRightLabelWidth > 0 ? topRightLabelWidth : 0;
-	
-	float topLeftLabelWidth = self.sliderBackgroundWidthConstraint.constant-self.sliderGrabberView.frame.size.width;
-	self.leftTextTopLabelWidthConstraint.constant = topLeftLabelWidth > self.leftTextBottomLabel.frame.size.width ? self.leftTextBottomLabel.frame.size.width : topLeftLabelWidth;
 }
 
 - (void)sliderGrabberPan:(UIPanGestureRecognizer*)panGestureRecognizer {
@@ -263,8 +278,12 @@
 		
 		self.backgroundColor = [LMColour lightGrayBackgroundColour];
 		
+		if(self.finalValue > 0){
+			self.widthIncrementPerTick = self.frame.size.width/self.finalValue;
+		}
+				
 		self.leftTextBottomLabel = [LMLabel newAutoLayoutView];
-		self.leftTextBottomLabel.text = @"Left Text";
+		self.leftTextBottomLabel.text = self.leftText ? self.leftText : @"";
 		self.leftTextBottomLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:50];
 		self.leftTextBottomLabel.textColor = [UIColor blackColor];
 		[self addSubview:self.leftTextBottomLabel];
@@ -277,7 +296,7 @@
 		
 		
 		self.rightTextBottomLabel = [LMLabel newAutoLayoutView];
-		self.rightTextBottomLabel.text = @"Right Text";
+		self.rightTextBottomLabel.text = self.rightText ? self.rightText : @"";
 		self.rightTextBottomLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:50];
 		self.rightTextBottomLabel.textColor = [UIColor blackColor];
 		[self addSubview:self.rightTextBottomLabel];
@@ -296,26 +315,24 @@
 		[self.sliderBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[self.sliderBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 		[self.sliderBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		self.sliderBackgroundWidthConstraint = [self.sliderBackgroundView autoSetDimension:ALDimensionWidth toSize:0];
+		self.sliderBackgroundWidthConstraint = [self.sliderBackgroundView autoSetDimension:ALDimensionWidth toSize:(self.widthIncrementPerTick*self.value) + (self.frame.size.width*(1.0/40.0))];
 		
 		UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(sliderGrabberPan:)];
-		[self.sliderBackgroundView addGestureRecognizer:panGesture];
-		
+		[self addGestureRecognizer:panGesture];
 		
 		
 		self.sliderGrabberView = [UIView newAutoLayoutView];
-		self.sliderGrabberView.backgroundColor = [UIColor whiteColor];
+		self.sliderGrabberView.backgroundColor = [UIColor colorWithRed:0.15 green:0.15 blue:0.15 alpha:1.0];
 		[self.sliderBackgroundView addSubview:self.sliderGrabberView];
 		
 		[self.sliderGrabberView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 		[self.sliderGrabberView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 		[self.sliderGrabberView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		[self.sliderGrabberView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(1.0/40.0)];
-		
+		[self.sliderGrabberView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(1.0/40.0)]; //Change the sliderBackgroundWidthConstraint initial value too with this multiplier
 		
 		
 		self.rightTextTopLabel = [LMLabel newAutoLayoutView];
-		self.rightTextTopLabel.text = @"Right Text";
+		self.rightTextTopLabel.text = self.rightTextBottomLabel.text;
 		self.rightTextTopLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:50];
 		self.rightTextTopLabel.textColor = [UIColor whiteColor];
 		self.rightTextTopLabel.textAlignment = NSTextAlignmentLeft;
@@ -332,11 +349,10 @@
 		
 		
 		self.leftTextTopLabel = [LMLabel newAutoLayoutView];
-		self.leftTextTopLabel.text = @"Left Text";
+		self.leftTextTopLabel.text = self.leftTextBottomLabel.text;
 		self.leftTextTopLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:50];
 		self.leftTextTopLabel.textColor = [UIColor whiteColor];
-		self.leftTextTopLabel.textAlignment = NSTextAlignmentRight;
-		//		self.rightTextTopLabel.backgroundColor = [UIColor yellowColor];
+		self.leftTextTopLabel.textAlignment = NSTextAlignmentLeft;
 		self.leftTextTopLabel.lineBreakMode = NSLineBreakByClipping;
 		[self addSubview:self.leftTextTopLabel];
 		
@@ -346,9 +362,11 @@
 		[self.leftTextTopLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self withOffset:self.frame.size.height/8];
 		[self.leftTextTopLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self withOffset:-self.frame.size.height/8];
 		
-		[self reloadTextHighlightingConstants];
-		[self layoutSubviews];
+		[NSTimer scheduledTimerWithTimeInterval:0.5 repeats:NO block:^(NSTimer * _Nonnull timer) {
+			self.value = self.value;
+		}];
 	}
+	[super layoutSubviews];
 }
 
 /*
