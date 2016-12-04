@@ -11,7 +11,7 @@
 #import "LMLabel.h"
 #import "LMScrollView.h"
 
-@interface LMLetterTabView()<LMLetterTabDelegate>
+@interface LMLetterTabView()<LMLetterTabDelegate, UIGestureRecognizerDelegate>
 
 /**
  The scroll view for the letter views.
@@ -89,7 +89,7 @@
 	self.currentLetterLabelLifted = letterLabel;
 }
 
-- (void)pan:(UIGestureRecognizer*)panGestureRecognizer {
+- (void)selectLetterGesture:(UIGestureRecognizer*)panGestureRecognizer {
 	BOOL isTapGesture = [[[panGestureRecognizer class] description] isEqualToString:@"UITapGestureRecognizer"];
 	
 	if(isTapGesture){
@@ -127,6 +127,10 @@
 		self.selectionFeedbackGenerator = nil;
 	}
 	else{
+		if(self.letterScrollView.scrollEnabled){
+			return;
+		}
+				
 		if(panGestureRecognizer.state != UIGestureRecognizerStateEnded){
 			CGPoint pointInLetterScrollView = [panGestureRecognizer locationInView:self.letterScrollView];
 			CGPoint pointInView = [panGestureRecognizer locationInView:self];
@@ -134,7 +138,7 @@
 			float xPointInLetterScrollView = pointInLetterScrollView.x;
 			float xPointInView = pointInView.x;
 			
-			for(UIView *subview in panGestureRecognizer.view.subviews) {
+			for(UIView *subview in self.letterScrollView.subviews) {
 				CGFloat xPointOfSubview = subview.frame.origin.x;
 				CGFloat widthOfSubview = subview.frame.size.width;
 				
@@ -180,8 +184,38 @@
 	}
 }
 
+- (void)longPress:(UILongPressGestureRecognizer*)longPressGestureRecognizer {
+	switch(longPressGestureRecognizer.state){
+		case UIGestureRecognizerStateBegan:
+			self.letterScrollView.scrollEnabled = NO;
+			
+			[self selectLetterGesture:longPressGestureRecognizer];
+			
+			break;
+		case UIGestureRecognizerStateEnded:
+			self.letterScrollView.scrollEnabled = YES;
+			
+			[self setLetterLabelLifted:self.currentLetterLabelLifted withAnimationStyle:LMLetterTabLiftAnimationStyleNoLift];
+			
+			self.previousLetter = @"";
+			break;
+			
+		default: break;
+	}
+}
+
 - (void)letterSelected:(NSString *)letter {
-	NSLog(@"Letter selected %@", letter);
+//	NSLog(@"Letter selected %@", letter);
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+	
+//	NSString *class = [[gestureRecognizer class] description];
+//	NSString *otherClass = [[otherGestureRecognizer class] description];
+//	
+//	NSLog(@"%@ should work with %@?", class, otherClass);
+	
+	return YES;
 }
 
 - (void)layoutSubviews {
@@ -215,7 +249,8 @@
 		
 		[self.letterScrollView autoPinEdgesToSuperviewEdges];
 		
-		UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(pan:)];
+		UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(selectLetterGesture:)];
+		panGesture.delegate = self;
 		[self.letterScrollView addGestureRecognizer:panGesture];
 		
 		for(int i = 0; i < self.lettersArray.count; i++){
@@ -244,8 +279,12 @@
 			[letterLabel autoPinEdge:ALEdgeLeading toEdge:firstIndex ? ALEdgeLeading : ALEdgeTrailing ofView:viewToAttachTo withOffset:self.frame.size.width*0.02];
 			[letterLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:0.05];
 			
-			UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(pan:)];
+			UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(selectLetterGesture:)];
 			[letterLabel addGestureRecognizer:tapGesture];
+			
+			UILongPressGestureRecognizer *longPressGesture = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(longPress:)];
+			longPressGesture.minimumPressDuration = 0.10;
+			[letterLabel addGestureRecognizer:longPressGesture];
 			
 			[self.letterViewsArray addObject:letterLabel];
 		}
