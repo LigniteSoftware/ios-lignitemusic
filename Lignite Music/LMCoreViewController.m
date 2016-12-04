@@ -33,6 +33,7 @@
 #import "LMCreditsView.h"
 #import "LMProgressSlider.h"
 #import "LMLetterTabView.h"
+#import "LMSearchBar.h"
 
 #define SKIP_ONBOARDING
 
@@ -409,15 +410,25 @@ BOOL didAutomaticallyClose = NO;
 	
 	self.automaticallyAdjustsScrollViewInsets = NO;
 	
-	LMLetterTabView *letterTab = [LMLetterTabView newAutoLayoutView];
-	[self.view addSubview:letterTab];
+	LMSearchBar *searchBar = [LMSearchBar newAutoLayoutView];
+	[self.view addSubview:searchBar];
 	
-	[letterTab autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-	[letterTab autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	[letterTab autoCenterInSuperview];
-	[letterTab autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/20.0)];
-
+	[searchBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+	[searchBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+	[searchBar autoCenterInSuperview];
+	[searchBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/20.0)];
+	
 	return;
+	
+//	LMLetterTabView *letterTab = [LMLetterTabView newAutoLayoutView];
+//	[self.view addSubview:letterTab];
+//	
+//	[letterTab autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+//	[letterTab autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+//	[letterTab autoCenterInSuperview];
+//	[letterTab autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/20.0)];
+//
+//	return;
 	
 //	NSLog(@"Loading view %@", self.navigationController);
 	

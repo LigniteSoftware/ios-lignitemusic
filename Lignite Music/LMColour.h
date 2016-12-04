@@ -46,6 +46,13 @@
 + (UIColor*)lightGrayBackgroundColour;
 
 /**
+ The dark gray colour currently used within the search bar.
+
+ @return The dark gray.
+ */
++ (UIColor*)darkGrayColour;
+
+/**
  Generate a completely random colour. Used for testing purposes.
 
  @return The random colour.

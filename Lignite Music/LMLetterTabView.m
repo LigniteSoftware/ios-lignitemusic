@@ -10,6 +10,7 @@
 #import "LMLetterTabView.h"
 #import "LMLabel.h"
 #import "LMScrollView.h"
+#import "LMColour.h"
 
 @interface LMLetterTabView()<LMLetterTabDelegate, UIGestureRecognizerDelegate>
 
@@ -130,7 +131,7 @@
 		if(self.letterScrollView.scrollEnabled){
 			return;
 		}
-				
+		
 		if(panGestureRecognizer.state != UIGestureRecognizerStateEnded){
 			CGPoint pointInLetterScrollView = [panGestureRecognizer locationInView:self.letterScrollView];
 			CGPoint pointInView = [panGestureRecognizer locationInView:self];
@@ -166,14 +167,14 @@
 			if(xPointInView > rightFactor) {
 				CGPoint newContentOffset = CGPointMake(contentOffset.x + xPointInView-rightFactor, contentOffset.y);
 				
-				if(newContentOffset.x < (self.letterScrollView.contentSize.width-self.frame.size.width)){
+				if(newContentOffset.x < (self.letterScrollView.contentSize.width-rightFactor)){
 					[self.letterScrollView setContentOffset:newContentOffset animated:NO];
 				}
 			}
 			else if(xPointInView < factor){
 				CGPoint newContentOffset = CGPointMake(contentOffset.x - (factor-xPointInView), contentOffset.y);
 				
-				if(newContentOffset.x >= 0){
+				if(newContentOffset.x >= -factor){
 					[self.letterScrollView setContentOffset:newContentOffset animated:NO];
 				}
 			}
@@ -242,7 +243,7 @@
 		
 		self.letterScrollView = [LMScrollView newAutoLayoutView];
 		self.letterScrollView.adaptForWidth = YES;
-		self.letterScrollView.backgroundColor = [UIColor orangeColor];
+		self.letterScrollView.backgroundColor = [LMColour ligniteRedColour];
 		self.letterScrollView.scrollEnabled = YES;
 		self.letterScrollView.layer.masksToBounds = NO;
 		[self addSubview:self.letterScrollView];
@@ -265,8 +266,10 @@
 			letterLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:self.frame.size.width*0.05];
 			letterLabel.textColor = [UIColor blackColor];
 			letterLabel.textAlignment = NSTextAlignmentCenter;
-			letterLabel.backgroundColor = [UIColor yellowColor];
+			letterLabel.backgroundColor = [UIColor whiteColor];
 			letterLabel.userInteractionEnabled = YES;
+			letterLabel.layer.masksToBounds = YES;
+			letterLabel.layer.cornerRadius = 3;
 			[self.letterScrollView addSubview:letterLabel];
 
 			[self.letterScrollView addConstraint:[NSLayoutConstraint constraintWithItem:letterLabel
@@ -290,13 +293,5 @@
 		}
 	}
 }
-
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
-}
-*/
 
 @end

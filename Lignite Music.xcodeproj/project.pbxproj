@@ -93,6 +93,7 @@
 		6AA473611BC710320066D47E /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AA473601BC710320066D47E /* CoreBluetooth.framework */; };
 		6AA473631BC7103B0066D47E /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AA473621BC7103B0066D47E /* CoreMotion.framework */; };
 		6AA473651BC710460066D47E /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AA473641BC710460066D47E /* MessageUI.framework */; };
+		6AAA56011DF407A800692CFB /* LMSearchBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AAA56001DF407A800692CFB /* LMSearchBar.m */; };
 		6AAF610D1DA0286F00971875 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6AAF610F1DA0286F00971875 /* Localizable.strings */; };
 		6AAF61181DA0B9C800971875 /* LMTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AAF61171DA0B9C700971875 /* LMTableViewCell.m */; };
 		6AB12E9C1D57AD9800280383 /* icon_settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AB12E9B1D57AD9800280383 /* icon_settings.png */; };
@@ -291,6 +292,8 @@
 		6AA473601BC710320066D47E /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
 		6AA473621BC7103B0066D47E /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		6AA473641BC710460066D47E /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
+		6AAA55FF1DF407A800692CFB /* LMSearchBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMSearchBar.h; sourceTree = "<group>"; };
+		6AAA56001DF407A800692CFB /* LMSearchBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMSearchBar.m; sourceTree = "<group>"; };
 		6AAF610E1DA0286F00971875 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6AAF61101DA028AE00971875 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6AAF61111DA028C200971875 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -576,6 +579,8 @@
 			children = (
 				6A5257511DF1FC840040210D /* LMLetterTabView.h */,
 				6A5257521DF1FC840040210D /* LMLetterTabView.m */,
+				6AAA55FF1DF407A800692CFB /* LMSearchBar.h */,
+				6AAA56001DF407A800692CFB /* LMSearchBar.m */,
 			);
 			name = Search;
 			sourceTree = "<group>";
@@ -1188,6 +1193,7 @@
 				6AD480631DCAAF4D00DB891B /* LMCollectionInfoView.m in Sources */,
 				6AD226FF1DA4B8000056695A /* LMCoreViewController.m in Sources */,
 				6A3211441DA73EC90060DD07 /* LMMarqueeLabel.m in Sources */,
+				6AAA56011DF407A800692CFB /* LMSearchBar.m in Sources */,
 				6A73CF5C1D4127C70097A400 /* LMPebbleImage.m in Sources */,
 				6A759D4B1DE96D6B0051E1A9 /* LMCreditsViewController.m in Sources */,
 				6A32A9E81DC654500056CC60 /* LMTriangleView.m in Sources */,
