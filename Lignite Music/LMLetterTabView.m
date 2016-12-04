@@ -119,9 +119,6 @@
 		UILabel *labelTapped = (UILabel*)panGestureRecognizer.view;
 		NSString *letter = labelTapped.text;
 		
-		CGPoint point = [panGestureRecognizer locationInView:self];
-		NSLog(@"%@", NSStringFromCGPoint(point));
-		
 		[self alertDelegateOfNewLetter:letter];
 		[self setLetterLabelLifted:labelTapped withAnimationStyle:LMLetterTabLiftAnimationStyleBounce];
 		
@@ -131,15 +128,17 @@
 	}
 	else{
 		if(panGestureRecognizer.state != UIGestureRecognizerStateEnded){
+			CGPoint pointInLetterScrollView = [panGestureRecognizer locationInView:self.letterScrollView];
 			CGPoint pointInView = [panGestureRecognizer locationInView:self];
 			
+			float xPointInLetterScrollView = pointInLetterScrollView.x;
 			float xPointInView = pointInView.x;
 			
 			for(UIView *subview in panGestureRecognizer.view.subviews) {
 				CGFloat xPointOfSubview = subview.frame.origin.x;
 				CGFloat widthOfSubview = subview.frame.size.width;
 				
-				if(xPointInView >= xPointOfSubview && xPointInView < (xPointOfSubview+widthOfSubview)){
+				if(xPointInLetterScrollView >= xPointOfSubview && xPointInLetterScrollView < (xPointOfSubview+widthOfSubview)){
 					UILabel *label = (UILabel*)subview;
 					NSString *letter = label.text;
 					
@@ -154,6 +153,26 @@
 					}
 				}
 			}
+			
+			CGFloat factor = self.frame.size.width/10;
+			CGFloat rightFactor = factor * 9;
+			
+			CGPoint contentOffset = self.letterScrollView.contentOffset;
+			
+			if(xPointInView > rightFactor) {
+				CGPoint newContentOffset = CGPointMake(contentOffset.x + xPointInView-rightFactor, contentOffset.y);
+				
+				if(newContentOffset.x < (self.letterScrollView.contentSize.width-self.frame.size.width)){
+					[self.letterScrollView setContentOffset:newContentOffset animated:NO];
+				}
+			}
+			else if(xPointInView < factor){
+				CGPoint newContentOffset = CGPointMake(contentOffset.x - (factor-xPointInView), contentOffset.y);
+				
+				if(newContentOffset.x >= 0){
+					[self.letterScrollView setContentOffset:newContentOffset animated:NO];
+				}
+			}
 		}
 		else if(self.currentLetterLabelLifted){
 			[self setLetterLabelLifted:self.currentLetterLabelLifted withAnimationStyle:LMLetterTabLiftAnimationStyleNoLift];
@@ -165,12 +184,7 @@
 	NSLog(@"Letter selected %@", letter);
 }
 
-//- (void)longPress:(UILongPressGestureRecognizer*)longPressGesture {
-//	NSLog(@"Long press %@", longPressGesture.view);
-//}
-
 - (void)layoutSubviews {
-	NSLog(@"AIJShdkjandf");
 	if(!self.didLayoutConstraints){
 		self.delegate = self;
 		
@@ -195,7 +209,7 @@
 		self.letterScrollView = [LMScrollView newAutoLayoutView];
 		self.letterScrollView.adaptForWidth = YES;
 		self.letterScrollView.backgroundColor = [UIColor orangeColor];
-		self.letterScrollView.scrollEnabled = NO;
+		self.letterScrollView.scrollEnabled = YES;
 		self.letterScrollView.layer.masksToBounds = NO;
 		[self addSubview:self.letterScrollView];
 		
@@ -220,7 +234,6 @@
 			letterLabel.userInteractionEnabled = YES;
 			[self.letterScrollView addSubview:letterLabel];
 
-//			[letterLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
 			[self.letterScrollView addConstraint:[NSLayoutConstraint constraintWithItem:letterLabel
 																			  attribute:NSLayoutAttributeCenterY
 																			  relatedBy:NSLayoutRelationEqual
@@ -230,9 +243,6 @@
 																			   constant:0]];
 			[letterLabel autoPinEdge:ALEdgeLeading toEdge:firstIndex ? ALEdgeLeading : ALEdgeTrailing ofView:viewToAttachTo withOffset:self.frame.size.width*0.02];
 			[letterLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:0.05];
-			
-//			UILongPressGestureRecognizer *longPressGesture = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(longPress:)];
-//			[letterLabel addGestureRecognizer:longPressGesture];
 			
 			UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(pan:)];
 			[letterLabel addGestureRecognizer:tapGesture];
