@@ -497,14 +497,14 @@
 				6A514E111CE904F000AFB351 /* LMNowPlayingViewController.m */,
 				6AD226F71DA49C720056695A /* LMProgressCircleView.h */,
 				6AD226F81DA49C720056695A /* LMProgressCircleView.m */,
+				6A52574D1DF099720040210D /* LMProgressSlider.h */,
+				6A52574E1DF099720040210D /* LMProgressSlider.m */,
 				6A32113C1DA727960060DD07 /* LMTrackDurationView.h */,
 				6A32113D1DA727960060DD07 /* LMTrackDurationView.m */,
 				6A32113F1DA732470060DD07 /* LMTrackInfoView.h */,
 				6A3211401DA732470060DD07 /* LMTrackInfoView.m */,
 				6A52574A1DF099480040210D /* LMView.h */,
 				6A52574B1DF099480040210D /* LMView.m */,
-				6A52574D1DF099720040210D /* LMProgressSlider.h */,
-				6A52574E1DF099720040210D /* LMProgressSlider.m */,
 			);
 			name = NowPlayingView;
 			sourceTree = "<group>";

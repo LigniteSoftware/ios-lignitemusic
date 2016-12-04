@@ -19,11 +19,22 @@
 
 @end
 
+typedef enum {
+	LMLetterTabLiftAnimationStyleNoLift,
+	LMLetterTabLiftAnimationStyleLiftUp,
+	LMLetterTabLiftAnimationStyleBounce
+} LMLetterTabLiftAnimationStyle;
+
 @interface LMLetterTabView : LMView
 
 /**
  The letters which should be available for browsing.
  */
 @property NSArray *lettersArray;
+
+/**
+ The delegate for this view.
+ */
+@property id<LMLetterTabDelegate> delegate;
 
 @end

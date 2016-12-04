@@ -407,6 +407,8 @@ BOOL didAutomaticallyClose = NO;
 	self.navigationController.navigationBarHidden = YES;
 	self.navigationController.interactivePopGestureRecognizer.delegate = self;
 	
+	self.automaticallyAdjustsScrollViewInsets = NO;
+	
 	LMLetterTabView *letterTab = [LMLetterTabView newAutoLayoutView];
 	[self.view addSubview:letterTab];
 	

@@ -43,13 +43,18 @@
 - (instancetype)init {
 	self = [super init];
 	if(self) {
-		UIEdgeInsets insets = UIEdgeInsetsMake(0,
+		UIEdgeInsets insets = UIEdgeInsetsMake(0.0,
 											   0.0,
-											   0,
+											   0.0,
 											   0.0);
 		self.contentInset = insets;
 		
 		self.layoutMargins = insets;
+		
+		NSLog(@"SpookASD?");
+		
+		
+		
 		
 		self.showsVerticalScrollIndicator = NO;
 		self.showsHorizontalScrollIndicator = NO;
