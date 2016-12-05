@@ -25,7 +25,7 @@ typedef enum {
 	LMLetterTabLiftAnimationStyleBounce
 } LMLetterTabLiftAnimationStyle;
 
-@interface LMLetterTabView : LMView
+@interface LMLetterTabBar : LMView
 
 /**
  The letters which should be available for browsing.

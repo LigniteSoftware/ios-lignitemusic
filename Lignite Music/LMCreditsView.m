@@ -341,7 +341,8 @@
 								  @"Vectors Market",
 								  @"Dario Ferrando",
 								  @"Retinaicons",
-								  @"Elegant Themes"
+								  @"Elegant Themes",
+								  @"Gregor Cresnar"
 								  ];
 		
 		NSArray *artistImagesArray = @[
@@ -394,6 +395,11 @@
 									   @[
 										   @(LMIconTwitter)
 										   ], //@"Elegant Themes"
+									   
+									   @[
+										   @(LMIconSearch)
+										   ] //@"Gregor Cresnar"
+									   
 									   ];
 		
 		//We don't have the luxury of time to automatically adapt
@@ -447,6 +453,10 @@
 									   @[
 										   @(YES)
 										   ], //@"Elegant Themes"
+									   
+									   @[
+										   @(YES)
+										   ] //@"Gregor Cresnar"
 									   ];
 		
 		NSMutableArray *artistLabelsArray = [NSMutableArray new];

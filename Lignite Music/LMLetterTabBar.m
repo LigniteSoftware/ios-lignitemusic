@@ -7,12 +7,12 @@
 //
 
 #import <PureLayout/PureLayout.h>
-#import "LMLetterTabView.h"
+#import "LMLetterTabBar.h"
 #import "LMLabel.h"
 #import "LMScrollView.h"
 #import "LMColour.h"
 
-@interface LMLetterTabView()<LMLetterTabDelegate, UIGestureRecognizerDelegate>
+@interface LMLetterTabBar()<LMLetterTabDelegate, UIGestureRecognizerDelegate>
 
 /**
  The scroll view for the letter views.
@@ -41,7 +41,7 @@
 
 @end
 
-@implementation LMLetterTabView
+@implementation LMLetterTabBar
 
 /**
  Alerts the delegate of a new letter change, should one have occurred.

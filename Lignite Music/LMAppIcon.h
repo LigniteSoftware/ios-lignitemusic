@@ -39,7 +39,9 @@ typedef enum {
 	LMIconFunctionality,
 	LMIconPaperPlane,
 	LMIconLink,
-	LMIconTwitter
+	LMIconTwitter,
+	LMIconXCross,
+	LMIconSearch
 } LMIcon;
 
 /**

@@ -68,6 +68,10 @@
 			return @"icon_twitter.png";
 		case LMIconLink:
 			return @"icon_link.png";
+		case LMIconXCross:
+			return @"icon_x_cross.png";
+		case LMIconSearch:
+			return @"icon_search.png";
 	}
 }
 

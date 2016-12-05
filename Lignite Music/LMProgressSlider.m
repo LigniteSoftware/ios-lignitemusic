@@ -274,6 +274,13 @@
 		if(self.finalValue > 0){
 			self.widthIncrementPerTick = self.frame.size.width/self.finalValue;
 		}
+		
+		if(isnan(self.value)){
+			self.value = 0.0;
+		}
+		if(isnan(self.finalValue)){
+			self.finalValue = 0.0;
+		}
 				
 		self.leftTextBottomLabel = [LMLabel newAutoLayoutView];
 		self.leftTextBottomLabel.text = self.leftText ? self.leftText : @"";
@@ -298,8 +305,7 @@
 		[self.rightTextBottomLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
 		[self.rightTextBottomLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self withOffset:self.frame.size.height/8];
 		[self.rightTextBottomLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self withOffset:-self.frame.size.height/8];
-		
-		
+				
 		
 		self.sliderBackgroundView = [UIView newAutoLayoutView];
 		self.sliderBackgroundView.backgroundColor = [LMColour ligniteRedColour];

@@ -32,8 +32,7 @@
 #import "LMDebugView.h"
 #import "LMCreditsView.h"
 #import "LMProgressSlider.h"
-#import "LMLetterTabView.h"
-#import "LMSearchBar.h"
+#import "LMBrowsingBar.h"
 
 #define SKIP_ONBOARDING
 
@@ -402,6 +401,8 @@ BOOL didAutomaticallyClose = NO;
 }
 
 - (void)viewDidLoad {
+	NSTimeInterval startTime = [[NSDate new] timeIntervalSince1970];
+	
     [super viewDidLoad];
     // Do any additional setup after loading the view
 	
@@ -410,13 +411,13 @@ BOOL didAutomaticallyClose = NO;
 	
 	self.automaticallyAdjustsScrollViewInsets = NO;
 	
-	LMSearchBar *searchBar = [LMSearchBar newAutoLayoutView];
-	[self.view addSubview:searchBar];
+	LMBrowsingBar *browsingBar = [LMBrowsingBar newAutoLayoutView];
+	[self.view addSubview:browsingBar];
 	
-	[searchBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-	[searchBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	[searchBar autoCenterInSuperview];
-	[searchBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/20.0)];
+	[browsingBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+	[browsingBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+	[browsingBar autoCenterInSuperview];
+	[browsingBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/20.0)];
 	
 	return;
 	
@@ -505,6 +506,7 @@ BOOL didAutomaticallyClose = NO;
 				}
 				case SKCloudServiceAuthorizationStatusAuthorized: {
 					dispatch_async(dispatch_get_main_queue(), ^{
+						
 						self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 						
 						LMPebbleManager *pebbleManager = [LMPebbleManager sharedPebbleManager];
@@ -640,6 +642,11 @@ BOOL didAutomaticallyClose = NO;
 						
 						LMImageManager *imageManager = [LMImageManager sharedImageManager];
 						imageManager.viewToDisplayAlertsOn = self.navigationController.view;
+						
+						
+						NSTimeInterval endTime = [[NSDate new] timeIntervalSince1970];
+						
+						NSLog(@"Took %f seconds to load the app.", (endTime-startTime));
 					});
 					break;
 				}
