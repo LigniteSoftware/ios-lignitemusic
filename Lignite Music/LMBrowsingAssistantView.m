@@ -18,9 +18,8 @@
 #import "LMExtras.h"
 #import "LMLabel.h"
 #import "LMButton.h"
-#import "LMBrowsingBar.h"
 
-@interface LMBrowsingAssistantView()<LMButtonDelegate, LMSourceSelectorDelegate>
+@interface LMBrowsingAssistantView()<LMButtonDelegate, LMSourceSelectorDelegate, LMSearchBarDelegate>
 
 @property LMMusicPlayer *musicPlayer;
 
@@ -50,6 +49,8 @@
 @property BOOL openedSourceSelectorFromShortcut;
 
 @property LMBrowsingBar *browsingBar;
+
+@property CGFloat previousKeyboardHeight;
 
 @end
 
@@ -151,11 +152,11 @@
 }
 
 - (void)openSourceSelector {
-	[self moveSourceSelectorToPosition:0];
+	[self moveSourceSelectorToPosition:0.0];
 }
 
 - (void)selectSource:(uint8_t)sourceSelectedIndex {
-	if(sourceSelectedIndex == self.currentlySelectedTab && sourceSelectedIndex == LMBrowsingAssistantTabMiniplayer){
+	if(sourceSelectedIndex == self.currentlySelectedTab && sourceSelectedIndex != LMBrowsingAssistantTabView){
 		return;
 	}
 	
@@ -288,6 +289,20 @@
 
 - (void)setup {
 
+}
+
+- (void)searchTermChangedTo:(NSString *)searchTerm {
+	[self.searchBarDelegate searchTermChangedTo:searchTerm];
+}
+
+- (void)searchDialogOpened:(BOOL)opened withKeyboardHeight:(CGFloat)keyboardHeight {
+	[self layoutIfNeeded];
+	self.textBackgroundConstraint.constant = opened ? (-keyboardHeight+self.selectorBackgroundView.frame.size.height) : 0.0;
+	[self layoutIfNeeded];
+	
+	[self.searchBarDelegate searchDialogOpened:opened withKeyboardHeight:keyboardHeight];
+	
+	self.previousKeyboardHeight = keyboardHeight;
 }
 
 - (void)layoutSubviews {
@@ -455,6 +470,7 @@
 		
 		
 		self.browsingBar = [LMBrowsingBar newAutoLayoutView];
+		self.browsingBar.searchBarDelegate = self;
 		[self addSubview:self.browsingBar];
 		
 		[self.browsingBar autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.selectorBackgroundView];

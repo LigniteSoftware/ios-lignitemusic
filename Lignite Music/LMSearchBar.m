@@ -101,8 +101,42 @@
 	self.searchTextField.text = @"";
 }
 
+- (void)keyboardDidShow:(NSNotification*)notification {
+	NSDictionary *info = notification.userInfo;
+	NSValue *value = [info objectForKey:UIKeyboardFrameEndUserInfoKey];
+	
+	CGRect keyboardFrame = [value CGRectValue];
+	
+	NSLog(@"keyboard frame %@", NSStringFromCGRect(keyboardFrame));
+	
+	[self.delegate searchDialogOpened:YES withKeyboardHeight:keyboardFrame.size.height];
+}
+
+- (void)keyboardDidHide:(NSNotification*)notification {
+	[self.delegate searchDialogOpened:NO withKeyboardHeight:0.0];
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+	[textField resignFirstResponder];
+	return YES;
+}
+
+- (void)dismissKeyboard {
+	[self endEditing:YES];
+}
+
 - (void)layoutSubviews {
 	if(!self.didLayoutConstraints) {
+		[[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(keyboardDidShow:)
+													 name:UIKeyboardDidShowNotification
+												   object:nil];
+		
+		[[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(keyboardDidHide:)
+													 name:UIKeyboardDidHideNotification
+												   object:nil];
+		
 		self.musicPlayer = [MPMusicPlayerController systemMusicPlayer];
 		
 		self.backgroundColor = [LMColour darkGrayColour];
@@ -136,6 +170,7 @@
 		self.searchTextField = [UITextField newAutoLayoutView];
 		self.searchTextField.textColor = [UIColor whiteColor];
 		self.searchTextField.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:self.frame.size.height/2.25];
+		self.searchTextField.delegate = self;
 		[self.searchTextField addTarget:self
 								 action:@selector(searchFieldDidChange)
 					   forControlEvents:UIControlEventEditingChanged];

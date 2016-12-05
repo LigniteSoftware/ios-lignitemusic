@@ -10,6 +10,7 @@
 #import "LMCoreViewController.h"
 #import "LMSource.h"
 #import "LMView.h"
+#import "LMBrowsingBar.h"
 
 @class LMBrowsingAssistantView;
 
@@ -49,6 +50,16 @@ typedef enum {
  The sources for the source selector (ie. Albums, Titles, etc.)
  */
 @property NSArray<LMSource*>* sourcesForSourceSelector;
+
+/**
+ The search bar delegate.
+ */
+@property id<LMSearchBarDelegate> searchBarDelegate;
+
+/**
+ The letter tab bar delegate.
+ */
+@property id<LMLetterTabDelegate> letterTabBarDelegate;
 
 /**
  Setup the browsing assistant.

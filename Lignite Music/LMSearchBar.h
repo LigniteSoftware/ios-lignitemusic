@@ -34,4 +34,9 @@
  */
 @property id<LMSearchBarDelegate> delegate;
 
+/**
+ Dismiss the keyboard if it is being displayed.
+ */
+- (void)dismissKeyboard;
+
 @end

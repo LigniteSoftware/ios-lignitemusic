@@ -39,7 +39,7 @@
 @import SDWebImage;
 @import StoreKit;
 
-@interface LMCoreViewController () <LMMusicPlayerDelegate, LMSourceDelegate, LMBrowsingAssistantDelegate, UIGestureRecognizerDelegate>
+@interface LMCoreViewController () <LMMusicPlayerDelegate, LMSourceDelegate, LMBrowsingAssistantDelegate, UIGestureRecognizerDelegate, LMSearchBarDelegate>
 
 @property LMMusicPlayer *musicPlayer;
 
@@ -400,6 +400,14 @@ BOOL didAutomaticallyClose = NO;
 	return YES;
 }
 
+- (void)searchTermChangedTo:(NSString *)searchTerm {
+	NSLog(@"New search term");
+}
+
+- (void)searchDialogOpened:(BOOL)opened withKeyboardHeight:(CGFloat)keyboardHeight {
+	NSLog(@"Search was opened: %d", opened);
+}
+
 - (void)viewDidLoad {
 	NSTimeInterval startTime = [[NSDate new] timeIntervalSince1970];
 	
@@ -616,6 +624,8 @@ BOOL didAutomaticallyClose = NO;
 						self.browsingAssistant.backgroundColor = [UIColor orangeColor];
 						self.browsingAssistant.sourcesForSourceSelector = self.sourcesForSourceSelector;
 						self.browsingAssistant.delegate = self;
+						self.browsingAssistant.searchBarDelegate = self;
+						self.browsingAssistant.letterTabBarDelegate = self;
 						[self.navigationController.view addSubview:self.browsingAssistant];
 //						[self.view addSubview:self.browsingAssistant];
 						[self.browsingAssistant setup];

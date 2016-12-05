@@ -149,8 +149,6 @@
 			float xPointInView = pointInView.x;
 			
 			for(UIView *subview in self.letterScrollView.subviews) {
-				NSLog(@"%@", [[subview class] description]);
-				
 				if(![[[subview class] description] isEqualToString:@"UILabel"]){ //Idk how the fuck a UIImageView has snuck into our scroll view though I don't got the time to fix it so this quick patch does the job
 					break;
 				}
