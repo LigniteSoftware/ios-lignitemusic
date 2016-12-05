@@ -406,22 +406,22 @@ BOOL didAutomaticallyClose = NO;
     [super viewDidLoad];
     // Do any additional setup after loading the view
 	
-	self.view.backgroundColor = [UIColor lightGrayColor];
+//	self.view.backgroundColor = [UIColor lightGrayColor];
 	
 	self.navigationController.navigationBarHidden = YES;
 	self.navigationController.interactivePopGestureRecognizer.delegate = self;
 	
-	self.automaticallyAdjustsScrollViewInsets = NO;
+//	self.automaticallyAdjustsScrollViewInsets = NO;
 	
-	LMBrowsingBar *browsingBar = [LMBrowsingBar newAutoLayoutView];
-	[self.view addSubview:browsingBar];
-	
-	[browsingBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-	[browsingBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	[browsingBar autoCenterInSuperview];
-	[browsingBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/20.0)];
-	
-	return;
+//	LMBrowsingBar *browsingBar = [LMBrowsingBar newAutoLayoutView];
+//	[self.view addSubview:browsingBar];
+//	
+//	[browsingBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+//	[browsingBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+//	[browsingBar autoCenterInSuperview];
+//	[browsingBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/20.0)];
+//	
+//	return;
 	
 //	LMLetterTabView *letterTab = [LMLetterTabView newAutoLayoutView];
 //	[self.view addSubview:letterTab];

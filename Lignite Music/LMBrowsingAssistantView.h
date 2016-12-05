@@ -24,6 +24,12 @@
 
 @end
 
+typedef enum {
+	LMBrowsingAssistantTabBrowse = 0,
+	LMBrowsingAssistantTabMiniplayer,
+	LMBrowsingAssistantTabView
+} LMBrowsingAssistantTab;
+
 @interface LMBrowsingAssistantView : UIView
 
 @property id<LMBrowsingAssistantDelegate> delegate;

@@ -18,6 +18,7 @@
 #import "LMExtras.h"
 #import "LMLabel.h"
 #import "LMButton.h"
+#import "LMBrowsingBar.h"
 
 @interface LMBrowsingAssistantView()<LMButtonDelegate, LMSourceSelectorDelegate>
 
@@ -30,6 +31,7 @@
 @property UIImageView *grabberImageView;
 
 @property LMMiniPlayerView *miniPlayerView;
+@property NSLayoutConstraint *miniPlayerBottomConstraint;
 
 @property int8_t currentlySelectedTab;
 @property int8_t previouslySelectedTab;
@@ -46,6 +48,8 @@
 @property LMButton *currentSourceButton;
 	
 @property BOOL openedSourceSelectorFromShortcut;
+
+@property LMBrowsingBar *browsingBar;
 
 @end
 
@@ -87,10 +91,13 @@
 	
 	NSLog(@"Close browsing assistant");
 	
-	if(self.currentlySelectedTab == 1){
+	if(self.currentlySelectedTab == LMBrowsingAssistantTabView){
 		[self closeSourceSelector];
 	}
 
+	if(self.currentlySelectedTab == LMBrowsingAssistantTabView){
+		[self selectSource:LMBrowsingAssistantTabMiniplayer];
+	}
 	
 	[self layoutIfNeeded];
 	self.selectorPositionConstraint.constant = self.frame.size.height;
@@ -135,7 +142,7 @@
 
 - (void)closeSourceSelector {
 	[self moveSourceSelectorToPosition:WINDOW_FRAME.size.height];
-	[self selectSource:self.previouslySelectedTab];
+//	[self selectSource:self.previouslySelectedTab];
 	
 	if(self.openedSourceSelectorFromShortcut){
 		[self close];
@@ -148,26 +155,44 @@
 }
 
 - (void)selectSource:(uint8_t)sourceSelectedIndex {
-	if(sourceSelectedIndex == self.currentlySelectedTab && sourceSelectedIndex == 0){
+	if(sourceSelectedIndex == self.currentlySelectedTab && sourceSelectedIndex == LMBrowsingAssistantTabMiniplayer){
 		return;
 	}
 	
 	//If tapped again on source thing
-	if(sourceSelectedIndex == 1 && sourceSelectedIndex == self.currentlySelectedTab){
-		sourceSelectedIndex = 0;
+	if(sourceSelectedIndex == LMBrowsingAssistantTabView && sourceSelectedIndex == self.currentlySelectedTab){
+		sourceSelectedIndex = LMBrowsingAssistantTabMiniplayer;
 	}
 	
 	//Perform the action associated with tab to implement the new tab selection
 	switch(sourceSelectedIndex){
-		case 0:{
-			[self heightOfCurrentElementChangedTo:WINDOW_FRAME.size.height/5];
+		case LMBrowsingAssistantTabMiniplayer: {
+			[self heightOfCurrentElementChangedTo:WINDOW_FRAME.size.height/5.0];
+			
+			[self layoutIfNeeded];
+			
+			self.miniPlayerBottomConstraint.constant = 0;
+			[UIView animateWithDuration:0.5 animations:^{
+				[self layoutIfNeeded];
+			}];
 			break;
 		}
-		case 1:{
+		case LMBrowsingAssistantTabView: {
 			[self openSourceSelector];
 			self.previouslySelectedTab = self.currentlySelectedTab;
 			
-			[self heightOfCurrentElementChangedTo:WINDOW_FRAME.size.height/8 * 7];
+			[self heightOfCurrentElementChangedTo:WINDOW_FRAME.size.height/8.0 * 7.0];
+			break;
+		}
+		case LMBrowsingAssistantTabBrowse: {
+			[self heightOfCurrentElementChangedTo:WINDOW_FRAME.size.height/15.0];
+			
+			[self layoutIfNeeded];
+			
+			self.miniPlayerBottomConstraint.constant = self.miniPlayerView.frame.size.height;
+			[UIView animateWithDuration:0.5 animations:^{
+				[self layoutIfNeeded];
+			}];
 			break;
 		}
 	}
@@ -218,7 +243,7 @@
 		self.currentlySelectedTab = sourceSelectedIndex;
 	}];
 	
-	if(sourceSelectedIndex != 1 && self.sourceSelectorPositionConstraint.constant < 10){
+	if(sourceSelectedIndex != LMBrowsingAssistantTabView && self.sourceSelectorPositionConstraint.constant < 10.0){
 		[self closeSourceSelector];
 	}
 }
@@ -228,7 +253,7 @@
 	
 	uint8_t viewTappedIndex = [self.tabViews indexOfObject:viewTapped];
 	
-	if(viewTappedIndex == 0){
+	if(viewTappedIndex == LMBrowsingAssistantTabMiniplayer){
 		self.openedSourceSelectorFromShortcut = NO;
 	}
 	
@@ -240,7 +265,7 @@
 }
 
 - (void)setCurrentSourceIcon:(UIImage*)icon {
-	UIView *sourceBackgroundView = [self.tabViews objectAtIndex:1];
+	UIView *sourceBackgroundView = [self.tabViews objectAtIndex:LMBrowsingAssistantTabView];
 	UIImageView *iconView;
 	for(int i = 0; i < sourceBackgroundView.subviews.count; i++){
 		id subview = [sourceBackgroundView.subviews objectAtIndex:i];
@@ -257,7 +282,7 @@
 	NSLog(@"Spoooooked");
 	self.openedSourceSelectorFromShortcut = YES;
 	[self open];
-	[self selectSource:1];
+	[self selectSource:LMBrowsingAssistantTabView];
 //	[self openSourceSelector];
 }
 
@@ -269,19 +294,19 @@
 	self.backgroundColor = [UIColor clearColor];
 	
 	NSArray *sourceTitles = @[
-							  @"Miniplayer", @"View"
+							  @"Browse", @"Miniplayer", @"View"
 							  ];
 	NSArray *sourceSubtitles = @[
-								 @"", @""
+								 @"", @"", @""
 								 ];
 	LMIcon sourceIcons[] = {
-		LMIconMiniplayer, LMIconGenres
+		LMIconBrowse, LMIconMiniplayer, LMIconGenres
 	};
 	BOOL notSelect[] = {
-		NO, NO
+		NO, NO, NO
 	};
 	BOOL shouldInvertIcon[] = {
-		NO, YES
+		YES, NO, YES
 	};
 	
 	NSMutableArray *sources = [NSMutableArray new];
@@ -426,13 +451,23 @@
 	
 	
 	
+	self.browsingBar = [LMBrowsingBar newAutoLayoutView];
+	[self addSubview:self.browsingBar];
+	
+	[self.browsingBar autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.selectorBackgroundView];
+	[self.browsingBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+	[self.browsingBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+	[self.browsingBar autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height/15.0];
+	
+	
+	
 	self.miniPlayerView = [LMMiniPlayerView newAutoLayoutView];
 	[self addSubview:self.miniPlayerView];
 	
-	[self.miniPlayerView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.selectorBackgroundView];
+	self.miniPlayerBottomConstraint = [self.miniPlayerView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.selectorBackgroundView];
 	[self.miniPlayerView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 	[self.miniPlayerView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	[self.miniPlayerView autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height/5];
+	[self.miniPlayerView autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height/5.0];
 	
 	[self.miniPlayerView setup];
 	

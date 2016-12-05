@@ -97,6 +97,10 @@
 	});
 }
 
+- (void)tappedClearSearch {
+	self.searchTextField.text = @"";
+}
+
 - (void)layoutSubviews {
 	if(!self.didLayoutConstraints) {
 		self.musicPlayer = [MPMusicPlayerController systemMusicPlayer];
@@ -114,6 +118,9 @@
 		[self.clearTextButtonBackgroundView autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
 		[self.clearTextButtonBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self];
 		[self.clearTextButtonBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self];
+		
+		UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tappedClearSearch)];
+		[self.clearTextButtonBackgroundView addGestureRecognizer:tapGesture];
 		
 		
 		self.clearTextButtonImageView = [UIImageView newAutoLayoutView];

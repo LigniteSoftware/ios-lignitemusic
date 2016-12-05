@@ -33,9 +33,33 @@
  */
 @property LMSearchBar *searchBar;
 
+/**
+ The leading constraint for the search bar, so it can be offset depending on if the user is searching or not.
+ */
+@property NSLayoutConstraint *searchBarLeadingConstraint;
+
+/**
+ Whether or not the browsing bar is in search mode.
+ */
+@property BOOL isInSearchMode;
+
 @end
 
 @implementation LMBrowsingBar
+
+- (void)tappedToggleButton {
+	[self layoutIfNeeded];
+	
+	self.isInSearchMode = !self.isInSearchMode;
+	
+	self.searchBarLeadingConstraint.constant = self.isInSearchMode ? -self.letterTabBar.frame.size.width : 0.0;
+	
+	[UIView animateWithDuration:0.25 animations:^{
+		[self layoutIfNeeded];
+	}];
+	
+	self.toggleButtonImageView.image = self.isInSearchMode ? [LMAppIcon imageForIcon:LMIconSearch] : [LMAppIcon imageForIcon:LMIconAToZ];
+}
 
 - (void)layoutSubviews {
 	if(!self.didLayoutConstraints){
@@ -51,6 +75,9 @@
 		[self.toggleButtonBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self];
 		[self.toggleButtonBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self];
 		
+		UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tappedToggleButton)];
+		[self.toggleButtonBackgroundView addGestureRecognizer:tapGesture];
+		
 		
 		self.toggleButtonImageView = [UIImageView newAutoLayoutView];
 		self.toggleButtonImageView.image = [LMAppIcon imageForIcon:LMIconSearch];
@@ -63,12 +90,23 @@
 		
 		
 		self.letterTabBar = [LMLetterTabBar newAutoLayoutView];
+		self.letterTabBar.delegate = self.letterTabDelegate;
 		[self addSubview:self.letterTabBar];
 		
 		[self.letterTabBar autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.toggleButtonBackgroundView];
 		[self.letterTabBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
 		[self.letterTabBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 		[self.letterTabBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		
+		
+		self.searchBar = [LMSearchBar newAutoLayoutView];
+		self.searchBar.delegate = self.searchBarDelegate;
+		[self addSubview:self.searchBar];
+		
+		self.searchBarLeadingConstraint = [self.searchBar autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self];
+		[self.searchBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
+		[self.searchBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[self.searchBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.letterTabBar];
 		
 		
 		[self bringSubviewToFront:self.toggleButtonBackgroundView];

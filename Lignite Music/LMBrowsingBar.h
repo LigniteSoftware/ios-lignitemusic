@@ -12,6 +12,14 @@
 
 @interface LMBrowsingBar : LMView
 
+/**
+ The delegate for the letter tab bar.
+ */
+@property id<LMLetterTabDelegate> letterTabDelegate;
 
+/**
+ The delegate for the search bar.
+ */
+@property id<LMSearchBarDelegate> searchBarDelegate;
 
 @end
