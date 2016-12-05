@@ -149,6 +149,12 @@
 			float xPointInView = pointInView.x;
 			
 			for(UIView *subview in self.letterScrollView.subviews) {
+				NSLog(@"%@", [[subview class] description]);
+				
+				if(![[[subview class] description] isEqualToString:@"UILabel"]){ //Idk how the fuck a UIImageView has snuck into our scroll view though I don't got the time to fix it so this quick patch does the job
+					break;
+				}
+				
 				CGFloat xPointOfSubview = subview.frame.origin.x;
 				CGFloat widthOfSubview = subview.frame.size.width;
 				
@@ -269,6 +275,7 @@
 		panGesture.delegate = self;
 		[self.letterScrollView addGestureRecognizer:panGesture];
 		
+		
 		for(int i = 0; i < self.lettersArray.count; i++){
 			BOOL firstIndex = (i == 0);
 			
@@ -278,7 +285,7 @@
 			
 			UILabel *letterLabel = [UILabel newAutoLayoutView];
 			letterLabel.text = letter;
-			letterLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:self.frame.size.width*0.05];
+			letterLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:self.frame.size.height/2.25]; //.50 for W
 			letterLabel.textColor = [UIColor blackColor];
 			letterLabel.textAlignment = NSTextAlignmentCenter;
 			letterLabel.backgroundColor = [UIColor whiteColor];
@@ -294,8 +301,9 @@
 																			  attribute:NSLayoutAttributeCenterY
 																			 multiplier:1.0
 																			   constant:0]];
-			[letterLabel autoPinEdge:ALEdgeLeading toEdge:firstIndex ? ALEdgeLeading : ALEdgeTrailing ofView:viewToAttachTo withOffset:self.frame.size.width*0.02];
-			[letterLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:0.05];
+			[letterLabel autoPinEdge:ALEdgeLeading toEdge:firstIndex ? ALEdgeLeading : ALEdgeTrailing ofView:viewToAttachTo withOffset:self.frame.size.width*0.01];
+			[letterLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:0.06];
+			[letterLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.letterScrollView];
 			
 			UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(selectLetterGesture:)];
 			[letterLabel addGestureRecognizer:tapGesture];

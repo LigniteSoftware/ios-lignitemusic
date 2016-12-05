@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "LMCoreViewController.h"
 #import "LMSource.h"
+#import "LMView.h"
 
 @class LMBrowsingAssistantView;
 
@@ -30,7 +31,7 @@ typedef enum {
 	LMBrowsingAssistantTabView
 } LMBrowsingAssistantTab;
 
-@interface LMBrowsingAssistantView : UIView
+@interface LMBrowsingAssistantView : LMView
 
 @property id<LMBrowsingAssistantDelegate> delegate;
 

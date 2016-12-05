@@ -261,7 +261,7 @@
 }
 
 - (void)shitpost {
-	[self.delegate heightRequiredChangedTo:WINDOW_FRAME.size.height/3 forBrowsingView:self];
+	[self selectSource:LMBrowsingAssistantTabBrowse];
 }
 
 - (void)setCurrentSourceIcon:(UIImage*)icon {
@@ -286,233 +286,238 @@
 //	[self openSourceSelector];
 }
 
-- (void)layoutSubviews {
-	[super layoutSubviews];
+- (void)setup {
+
 }
 
-- (void)setup {
-	self.backgroundColor = [UIColor clearColor];
+- (void)layoutSubviews {
+	if(!self.didLayoutConstraints){
+		self.didLayoutConstraints = YES;
+
+		self.backgroundColor = [UIColor clearColor];
 	
-	NSArray *sourceTitles = @[
-							  @"Browse", @"Miniplayer", @"View"
-							  ];
-	NSArray *sourceSubtitles = @[
-								 @"", @"", @""
-								 ];
-	LMIcon sourceIcons[] = {
-		LMIconBrowse, LMIconMiniplayer, LMIconGenres
-	};
-	BOOL notSelect[] = {
-		NO, NO, NO
-	};
-	BOOL shouldInvertIcon[] = {
-		YES, NO, YES
-	};
-	
-	NSMutableArray *sources = [NSMutableArray new];
-	
-	for(int i = 0; i < sourceTitles.count; i++){
-		NSString *subtitle = [sourceSubtitles objectAtIndex:i];
-		LMSource *source = [LMSource sourceWithTitle:NSLocalizedString([sourceTitles objectAtIndex:i], nil)
-										 andSubtitle:[subtitle isEqualToString:@""]  ? nil : NSLocalizedString(subtitle, nil)
-											 andIcon:sourceIcons[i]];
-		source.shouldNotSelect = notSelect[i];
-		if(shouldInvertIcon[i]){
-			source.icon = [LMAppIcon invertImage:source.icon];
+		NSArray *sourceTitles = @[
+								  @"Browse", @"Miniplayer", @"View"
+								  ];
+		NSArray *sourceSubtitles = @[
+									 @"", @"", @""
+									 ];
+		LMIcon sourceIcons[] = {
+			LMIconBrowse, LMIconMiniplayer, LMIconGenres
+		};
+		BOOL notSelect[] = {
+			NO, NO, NO
+		};
+		BOOL shouldInvertIcon[] = {
+			YES, NO, YES
+		};
+		
+		NSMutableArray *sources = [NSMutableArray new];
+		
+		for(int i = 0; i < sourceTitles.count; i++){
+			NSString *subtitle = [sourceSubtitles objectAtIndex:i];
+			LMSource *source = [LMSource sourceWithTitle:NSLocalizedString([sourceTitles objectAtIndex:i], nil)
+											 andSubtitle:[subtitle isEqualToString:@""]  ? nil : NSLocalizedString(subtitle, nil)
+												 andIcon:sourceIcons[i]];
+			source.shouldNotSelect = notSelect[i];
+			if(shouldInvertIcon[i]){
+				source.icon = [LMAppIcon invertImage:source.icon];
+			}
+			[sources addObject:source];
 		}
-		[sources addObject:source];
+		
+		self.sourcesForTabs = [NSArray arrayWithArray:sources];
+		
+		
+		
+		self.currentSourceBackgroundView = [UIView newAutoLayoutView];
+		self.currentSourceBackgroundView.backgroundColor = [UIColor purpleColor];
+		[self addSubview:self.currentSourceBackgroundView];
+		
+		[self.currentSourceBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[self.currentSourceBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.currentSourceBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.currentSourceBackgroundView autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height/14.0];
+		
+		self.currentSourceBackgroundView.backgroundColor = [UIColor whiteColor];
+		self.currentSourceBackgroundView.layer.shadowColor = [UIColor blackColor].CGColor;
+		self.currentSourceBackgroundView.layer.shadowOpacity = 0.25f;
+		self.currentSourceBackgroundView.layer.shadowOffset = CGSizeMake(0, 0);
+		self.currentSourceBackgroundView.layer.masksToBounds = NO;
+		self.currentSourceBackgroundView.layer.shadowRadius = 5;
+		
+		self.currentSourceButton = [LMButton newAutoLayoutView];
+		self.currentSourceButton.delegate = self;
+		[self.currentSourceBackgroundView addSubview:self.currentSourceButton];
+		
+		[self.currentSourceButton autoCenterInSuperview];
+		[self.currentSourceButton autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.currentSourceBackgroundView withMultiplier:0.8];
+		[self.currentSourceButton autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.currentSourceBackgroundView withMultiplier:0.8];
+		
+		[self.currentSourceButton setupWithImageMultiplier:0.525];
+		
+		[self.currentSourceButton setImage:[LMAppIcon imageForIcon:LMIconPlaylists]];
+		
+		self.currentSourceLabel = [LMLabel newAutoLayoutView];
+		self.currentSourceLabel.text = @"Text post please ignore";
+		[self.currentSourceBackgroundView addSubview:self.currentSourceLabel];
+		
+		[self.currentSourceLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:10];
+		[self.currentSourceLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.currentSourceButton withOffset:-10];
+		[self.currentSourceLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.currentSourceBackgroundView withMultiplier:(1.0/2.0)];
+		[self.currentSourceLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+		
+		self.currentSourceDetailLabel = [LMLabel newAutoLayoutView];
+		self.currentSourceDetailLabel.text = @"You didn't ignore it";
+		self.currentSourceDetailLabel.textAlignment = NSTextAlignmentRight;
+		[self.currentSourceBackgroundView addSubview:self.currentSourceDetailLabel];
+		
+		[self.currentSourceDetailLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:10];
+		[self.currentSourceDetailLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.currentSourceButton withOffset:10];
+		[self.currentSourceDetailLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.currentSourceBackgroundView withMultiplier:(1.0/2.0)];
+		[self.currentSourceDetailLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+		
+		UISwipeGestureRecognizer *swipeUpOnCurrentSourceGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(open)];
+		swipeUpOnCurrentSourceGesture.direction = UISwipeGestureRecognizerDirectionUp;
+		[self.currentSourceBackgroundView addGestureRecognizer:swipeUpOnCurrentSourceGesture];
+		
+		UITapGestureRecognizer *tapOnCurrentSourceGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(open)];
+		[self.currentSourceBackgroundView addGestureRecognizer:tapOnCurrentSourceGesture];
+		
+
+		
+		self.selectorBackgroundView = [UIView newAutoLayoutView];
+		self.selectorBackgroundView.backgroundColor = [UIColor whiteColor];
+		[self addSubview:self.selectorBackgroundView];
+		
+		NSLog(@"Loading browsing");
+		
+		self.selectorPositionConstraint = [self.selectorBackgroundView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
+		[self.selectorBackgroundView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
+		[self.selectorBackgroundView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self];
+		[self.selectorBackgroundView autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height/8.0];
+		
+		UIView *whiteViewForAnimation = [UIView newAutoLayoutView]; //For when the view slightly bounces up
+		whiteViewForAnimation.backgroundColor = [UIColor whiteColor];
+		[self addSubview:whiteViewForAnimation];
+		
+		[whiteViewForAnimation autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.selectorBackgroundView];
+		[whiteViewForAnimation autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[whiteViewForAnimation autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[whiteViewForAnimation autoSetDimension:ALDimensionHeight toSize:100];
+		
+		self.tabViews = [NSMutableArray new];
+		
+		for(int i = 0; i < self.sourcesForTabs.count; i++){
+			LMSource *source = [self.sourcesForTabs objectAtIndex:i];
+			
+			BOOL isFirst = (i == 0);
+			
+			UIView *leadingView = isFirst ? self.selectorBackgroundView : [self.tabViews objectAtIndex:i-1];
+			
+			UIView *sourceTabBackgroundView = [UIView newAutoLayoutView];
+			sourceTabBackgroundView.backgroundColor = [LMColour ligniteRedColour];
+			[self.selectorBackgroundView addSubview:sourceTabBackgroundView];
+			
+			UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(sourceTapped:)];
+			[sourceTabBackgroundView addGestureRecognizer:tapGesture];
+			
+			[sourceTabBackgroundView autoPinEdge:ALEdgeLeading toEdge:isFirst ? ALEdgeLeading : ALEdgeTrailing ofView:leadingView withOffset:!isFirst];
+			[sourceTabBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.selectorBackgroundView withMultiplier:(1.0/(float)self.sourcesForTabs.count)];
+			[sourceTabBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+			[sourceTabBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+			
+			[self.tabViews addObject:sourceTabBackgroundView];
+			
+			UIImageView *iconView = [UIImageView newAutoLayoutView];
+			iconView.image = source.icon;
+			iconView.contentMode = UIViewContentModeScaleAspectFit;
+			[sourceTabBackgroundView addSubview:iconView];
+			
+			[iconView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:10];
+			[iconView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+			[iconView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+			[iconView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:sourceTabBackgroundView withMultiplier:(6.0/10.0)];
+			
+			LMLabel *textLabel = [LMLabel newAutoLayoutView];
+			textLabel.font = [UIFont fontWithName:@"HelveticaNeue-Thin" size:60.0f];
+			textLabel.text = [source.title uppercaseString];
+			textLabel.textColor = [UIColor whiteColor];
+			textLabel.textAlignment = NSTextAlignmentCenter;
+			[sourceTabBackgroundView addSubview:textLabel];
+			
+			[textLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:sourceTabBackgroundView withOffset:10];
+			[textLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:sourceTabBackgroundView withOffset:-10];
+			[textLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:sourceTabBackgroundView withOffset:-2];
+			[textLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.selectorBackgroundView withMultiplier:(1.0/6.0)];
+		}
+		
+		
+		
+		self.browsingBar = [LMBrowsingBar newAutoLayoutView];
+		[self addSubview:self.browsingBar];
+		
+		[self.browsingBar autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.selectorBackgroundView];
+		[self.browsingBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
+		[self.browsingBar autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height/15.0];
+		
+		
+		
+		self.miniPlayerView = [LMMiniPlayerView newAutoLayoutView];
+		[self addSubview:self.miniPlayerView];
+		
+		self.miniPlayerBottomConstraint = [self.miniPlayerView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.selectorBackgroundView withOffset:WINDOW_FRAME.size.height/5.0];
+		[self.miniPlayerView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.miniPlayerView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.miniPlayerView autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height/5.0];
+		
+		[self.miniPlayerView setup];
+		
+		UISwipeGestureRecognizer *swipeUpGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeUp)];
+		swipeUpGesture.direction = UISwipeGestureRecognizerDirectionUp;
+		[self.miniPlayerView addGestureRecognizer:swipeUpGesture];
+		
+		self.miniPlayerView.backgroundColor = [UIColor whiteColor];
+		self.miniPlayerView.layer.shadowColor = [UIColor blackColor].CGColor;
+		self.miniPlayerView.layer.shadowOpacity = 0.25f;
+		self.miniPlayerView.layer.shadowOffset = CGSizeMake(0, 0);
+		self.miniPlayerView.layer.masksToBounds = NO;
+		self.miniPlayerView.layer.shadowRadius = 5;
+		
+		
+		
+		self.sourceSelector = [LMSourceSelectorView newAutoLayoutView];
+		self.sourceSelector.backgroundColor = [UIColor redColor];
+		self.sourceSelector.sources = self.sourcesForSourceSelector;
+		self.sourceSelector.delegate = self;
+		[self addSubview:self.sourceSelector];
+		
+		[self.sourceSelector autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
+		[self.sourceSelector autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self];
+		self.sourceSelectorPositionConstraint = [self.sourceSelector autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self withOffset:WINDOW_FRAME.size.height];
+		[self.sourceSelector autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self];
+		
+		self.musicPlayer.sourceSelector = self.sourceSelector;
+		
+		[self.sourceSelector setup];
+		
+		
+		
+		[self insertSubview:self.selectorBackgroundView aboveSubview:self.miniPlayerView];
+		
+		[self insertSubview:self.sourceSelector aboveSubview:self.miniPlayerView];
+		[self insertSubview:self.sourceSelector belowSubview:self.selectorBackgroundView];
+		
+		UISwipeGestureRecognizer *swipeDownGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(close)];
+		swipeDownGesture.direction = UISwipeGestureRecognizerDirectionDown;
+		[self addGestureRecognizer:swipeDownGesture];
+		
+		[self selectSource:LMBrowsingAssistantTabBrowse];
+		
+	//	[NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(close) userInfo:nil repeats:NO];
 	}
 	
-	self.sourcesForTabs = [NSArray arrayWithArray:sources];
-	
-	
-	
-	self.currentSourceBackgroundView = [UIView newAutoLayoutView];
-	self.currentSourceBackgroundView.backgroundColor = [UIColor purpleColor];
-	[self addSubview:self.currentSourceBackgroundView];
-	
-	[self.currentSourceBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-	[self.currentSourceBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-	[self.currentSourceBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	[self.currentSourceBackgroundView autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height/14.0];
-	
-	self.currentSourceBackgroundView.backgroundColor = [UIColor whiteColor];
-	self.currentSourceBackgroundView.layer.shadowColor = [UIColor blackColor].CGColor;
-	self.currentSourceBackgroundView.layer.shadowOpacity = 0.25f;
-	self.currentSourceBackgroundView.layer.shadowOffset = CGSizeMake(0, 0);
-	self.currentSourceBackgroundView.layer.masksToBounds = NO;
-	self.currentSourceBackgroundView.layer.shadowRadius = 5;
-	
-	self.currentSourceButton = [LMButton newAutoLayoutView];
-	self.currentSourceButton.delegate = self;
-	[self.currentSourceBackgroundView addSubview:self.currentSourceButton];
-	
-	[self.currentSourceButton autoCenterInSuperview];
-	[self.currentSourceButton autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.currentSourceBackgroundView withMultiplier:0.8];
-	[self.currentSourceButton autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.currentSourceBackgroundView withMultiplier:0.8];
-	
-	[self.currentSourceButton setupWithImageMultiplier:0.525];
-	
-	[self.currentSourceButton setImage:[LMAppIcon imageForIcon:LMIconPlaylists]];
-	
-	self.currentSourceLabel = [LMLabel newAutoLayoutView];
-	self.currentSourceLabel.text = @"Text post please ignore";
-	[self.currentSourceBackgroundView addSubview:self.currentSourceLabel];
-	
-	[self.currentSourceLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:10];
-	[self.currentSourceLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.currentSourceButton withOffset:-10];
-	[self.currentSourceLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.currentSourceBackgroundView withMultiplier:(1.0/2.0)];
-	[self.currentSourceLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
-	
-	self.currentSourceDetailLabel = [LMLabel newAutoLayoutView];
-	self.currentSourceDetailLabel.text = @"You didn't ignore it";
-	self.currentSourceDetailLabel.textAlignment = NSTextAlignmentRight;
-	[self.currentSourceBackgroundView addSubview:self.currentSourceDetailLabel];
-	
-	[self.currentSourceDetailLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:10];
-	[self.currentSourceDetailLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.currentSourceButton withOffset:10];
-	[self.currentSourceDetailLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.currentSourceBackgroundView withMultiplier:(1.0/2.0)];
-	[self.currentSourceDetailLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
-	
-	UISwipeGestureRecognizer *swipeUpOnCurrentSourceGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(open)];
-	swipeUpOnCurrentSourceGesture.direction = UISwipeGestureRecognizerDirectionUp;
-	[self.currentSourceBackgroundView addGestureRecognizer:swipeUpOnCurrentSourceGesture];
-	
-	UITapGestureRecognizer *tapOnCurrentSourceGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(open)];
-	[self.currentSourceBackgroundView addGestureRecognizer:tapOnCurrentSourceGesture];
-	
-
-	
-	self.selectorBackgroundView = [UIView newAutoLayoutView];
-	self.selectorBackgroundView.backgroundColor = [UIColor whiteColor];
-	[self addSubview:self.selectorBackgroundView];
-	
-	NSLog(@"Loading browsing");
-	
-	self.selectorPositionConstraint = [self.selectorBackgroundView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
-	[self.selectorBackgroundView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
-	[self.selectorBackgroundView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self];
-	[self.selectorBackgroundView autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height/8.0];
-	
-	UIView *whiteViewForAnimation = [UIView newAutoLayoutView]; //For when the view slightly bounces up
-	whiteViewForAnimation.backgroundColor = [UIColor whiteColor];
-	[self addSubview:whiteViewForAnimation];
-	
-	[whiteViewForAnimation autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.selectorBackgroundView];
-	[whiteViewForAnimation autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-	[whiteViewForAnimation autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	[whiteViewForAnimation autoSetDimension:ALDimensionHeight toSize:100];
-	
-	self.tabViews = [NSMutableArray new];
-	
-	for(int i = 0; i < self.sourcesForTabs.count; i++){
-		LMSource *source = [self.sourcesForTabs objectAtIndex:i];
-		
-		BOOL isFirst = (i == 0);
-		
-		UIView *leadingView = isFirst ? self.selectorBackgroundView : [self.tabViews objectAtIndex:i-1];
-		
-		UIView *sourceTabBackgroundView = [UIView newAutoLayoutView];
-		sourceTabBackgroundView.backgroundColor = [LMColour ligniteRedColour];
-		[self.selectorBackgroundView addSubview:sourceTabBackgroundView];
-		
-		UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(sourceTapped:)];
-		[sourceTabBackgroundView addGestureRecognizer:tapGesture];
-		
-		[sourceTabBackgroundView autoPinEdge:ALEdgeLeading toEdge:isFirst ? ALEdgeLeading : ALEdgeTrailing ofView:leadingView withOffset:!isFirst];
-		[sourceTabBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.selectorBackgroundView withMultiplier:(1.0/(float)self.sourcesForTabs.count)];
-		[sourceTabBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-		[sourceTabBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		
-		[self.tabViews addObject:sourceTabBackgroundView];
-		
-		UIImageView *iconView = [UIImageView newAutoLayoutView];
-		iconView.image = source.icon;
-		iconView.contentMode = UIViewContentModeScaleAspectFit;
-		[sourceTabBackgroundView addSubview:iconView];
-		
-		[iconView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:10];
-		[iconView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-		[iconView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-		[iconView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:sourceTabBackgroundView withMultiplier:(6.0/10.0)];
-		
-		LMLabel *textLabel = [LMLabel newAutoLayoutView];
-		textLabel.font = [UIFont fontWithName:@"HelveticaNeue-Thin" size:60.0f];
-		textLabel.text = [source.title uppercaseString];
-		textLabel.textColor = [UIColor whiteColor];
-		textLabel.textAlignment = NSTextAlignmentCenter;
-		[sourceTabBackgroundView addSubview:textLabel];
-		
-		[textLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:sourceTabBackgroundView withOffset:10];
-		[textLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:sourceTabBackgroundView withOffset:-10];
-		[textLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:sourceTabBackgroundView withOffset:-2];
-		[textLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.selectorBackgroundView withMultiplier:(1.0/6.0)];
-	}
-	
-	
-	
-	self.browsingBar = [LMBrowsingBar newAutoLayoutView];
-	[self addSubview:self.browsingBar];
-	
-	[self.browsingBar autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.selectorBackgroundView];
-	[self.browsingBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-	[self.browsingBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	[self.browsingBar autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height/15.0];
-	
-	
-	
-	self.miniPlayerView = [LMMiniPlayerView newAutoLayoutView];
-	[self addSubview:self.miniPlayerView];
-	
-	self.miniPlayerBottomConstraint = [self.miniPlayerView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.selectorBackgroundView];
-	[self.miniPlayerView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-	[self.miniPlayerView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	[self.miniPlayerView autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height/5.0];
-	
-	[self.miniPlayerView setup];
-	
-	UISwipeGestureRecognizer *swipeUpGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeUp)];
-	swipeUpGesture.direction = UISwipeGestureRecognizerDirectionUp;
-	[self.miniPlayerView addGestureRecognizer:swipeUpGesture];
-	
-	self.miniPlayerView.backgroundColor = [UIColor whiteColor];
-	self.miniPlayerView.layer.shadowColor = [UIColor blackColor].CGColor;
-	self.miniPlayerView.layer.shadowOpacity = 0.25f;
-	self.miniPlayerView.layer.shadowOffset = CGSizeMake(0, 0);
-	self.miniPlayerView.layer.masksToBounds = NO;
-	self.miniPlayerView.layer.shadowRadius = 5;
-	
-	
-	
-	self.sourceSelector = [LMSourceSelectorView newAutoLayoutView];
-	self.sourceSelector.backgroundColor = [UIColor redColor];
-	self.sourceSelector.sources = self.sourcesForSourceSelector;
-	self.sourceSelector.delegate = self;
-	[self addSubview:self.sourceSelector];
-	
-	[self.sourceSelector autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
-	[self.sourceSelector autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self];
-	self.sourceSelectorPositionConstraint = [self.sourceSelector autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self withOffset:WINDOW_FRAME.size.height];
-	[self.sourceSelector autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self];
-	
-	self.musicPlayer.sourceSelector = self.sourceSelector;
-	
-	[self.sourceSelector setup];
-	
-	
-	
-	[self insertSubview:self.selectorBackgroundView aboveSubview:self.miniPlayerView];
-	
-	[self insertSubview:self.sourceSelector aboveSubview:self.miniPlayerView];
-	[self insertSubview:self.sourceSelector belowSubview:self.selectorBackgroundView];
-	
-	UISwipeGestureRecognizer *swipeDownGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(close)];
-	swipeDownGesture.direction = UISwipeGestureRecognizerDirectionDown;
-	[self addGestureRecognizer:swipeDownGesture];
-	
-	[NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(shitpost) userInfo:nil repeats:NO];
-
-//	[NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(close) userInfo:nil repeats:NO];
+	[super layoutSubviews];
 }
 
 - (instancetype)init {
@@ -521,7 +526,7 @@
 		self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 		
 		self.currentlySelectedTab = -1;
-		self.previouslySelectedTab = 0;
+		self.previouslySelectedTab = -1;
 	}
 	else{
 		NSLog(@"Error creating browsing assistant");

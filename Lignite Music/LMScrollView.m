@@ -30,7 +30,9 @@
 	
 	CGRect contentRect = CGRectZero;
 	for (UIView *view in self.subviews) {
-		contentRect = CGRectUnion(contentRect, view.frame);
+		if(([[[view class] description] isEqualToString:@"UILabel"] && self.adaptForWidth) || !self.adaptForWidth){
+			contentRect = CGRectUnion(contentRect, view.frame);
+		}
 	}
 		
 	contentRect = CGRectMake(0, 0, self.adaptForWidth ? (contentRect.size.width+10) : WINDOW_FRAME.size.width, self.adaptForWidth ? self.frame.size.height : contentRect.size.height);
@@ -50,7 +52,7 @@
 		self.layoutMargins = insets;
 		
 		self.showsVerticalScrollIndicator = NO;
-		self.showsHorizontalScrollIndicator = NO;
+//		self.showsHorizontalScrollIndicator = NO;
 	}
 	return self;
 }
