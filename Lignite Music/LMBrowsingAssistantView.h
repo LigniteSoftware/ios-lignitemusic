@@ -62,6 +62,11 @@ typedef enum {
 @property id<LMLetterTabDelegate> letterTabBarDelegate;
 
 /**
+ The browsing bar.
+ */
+@property LMBrowsingBar *browsingBar;
+
+/**
  Setup the browsing assistant.
  */
 - (void)setup;

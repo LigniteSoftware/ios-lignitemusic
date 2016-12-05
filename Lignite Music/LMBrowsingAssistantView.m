@@ -48,8 +48,6 @@
 	
 @property BOOL openedSourceSelectorFromShortcut;
 
-@property LMBrowsingBar *browsingBar;
-
 @property CGFloat previousKeyboardHeight;
 
 @end
@@ -119,6 +117,10 @@
 }
 	
 - (void)swipeDown {
+	if(self.browsingBar.isInSearchMode){
+		return;
+	}
+	
 	[self close];
 }
 
@@ -471,6 +473,7 @@
 		
 		self.browsingBar = [LMBrowsingBar newAutoLayoutView];
 		self.browsingBar.searchBarDelegate = self;
+		self.browsingBar.letterTabDelegate = self.letterTabBarDelegate;
 		[self addSubview:self.browsingBar];
 		
 		[self.browsingBar autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.selectorBackgroundView];

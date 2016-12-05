@@ -24,24 +24,9 @@
 @property UIImageView *toggleButtonImageView;
 
 /**
- The letter tab bar for browsing through letters.
- */
-@property LMLetterTabBar *letterTabBar;
-
-/**
- The search bar.
- */
-@property LMSearchBar *searchBar;
-
-/**
  The leading constraint for the search bar, so it can be offset depending on if the user is searching or not.
  */
 @property NSLayoutConstraint *searchBarLeadingConstraint;
-
-/**
- Whether or not the browsing bar is in search mode.
- */
-@property BOOL isInSearchMode;
 
 @end
 
@@ -59,6 +44,8 @@
 	}];
 	
 	self.toggleButtonImageView.image = self.isInSearchMode ? [LMAppIcon imageForIcon:LMIconSearch] : [LMAppIcon imageForIcon:LMIconAToZ];
+	
+	self.isInSearchMode ? [self.searchBar showKeyboard] : [self.searchBar dismissKeyboard];
 }
 
 - (void)layoutSubviews {

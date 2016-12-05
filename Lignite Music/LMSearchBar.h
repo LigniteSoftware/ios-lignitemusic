@@ -39,4 +39,9 @@
  */
 - (void)dismissKeyboard;
 
+/**
+ Show the keyboard/activate search text field.
+ */
+- (void)showKeyboard;
+
 @end

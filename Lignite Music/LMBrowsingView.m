@@ -32,6 +32,12 @@
 
 @implementation LMBrowsingView
 
+- (void)scrollViewToIndex:(NSUInteger)index {
+	[self.bigListEntryTableView.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:index]
+												atScrollPosition:UITableViewScrollPositionTop
+														animated:NO];
+}
+
 - (void)reloadSourceSelectorInfo {
 	NSString *titleString;
 	NSString *singlularString;

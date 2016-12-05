@@ -22,4 +22,19 @@
  */
 @property id<LMSearchBarDelegate> searchBarDelegate;
 
+/**
+ The letter tab bar for browsing through letters.
+ */
+@property LMLetterTabBar *letterTabBar;
+
+/**
+ The search bar.
+ */
+@property LMSearchBar *searchBar;
+
+/**
+ Whether or not the browsing bar is in search mode.
+ */
+@property BOOL isInSearchMode;
+
 @end

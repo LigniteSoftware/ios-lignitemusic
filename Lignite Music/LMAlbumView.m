@@ -12,8 +12,6 @@
 
 @interface LMAlbumView ()
 
-@property LMBrowsingView *browsingView;
-
 @property BOOL loaded;
 
 @end

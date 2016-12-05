@@ -212,6 +212,16 @@ typedef enum {
 + (LMMusicTrackCollection*)musicTrackCollectionFromMediaItemCollection:(MPMediaItemCollection*)itemCollection;
 
 /**
+ Gets a dictionary of the letters available. The key is the letter, the object is an NSNumber of the index in which that letter is first available within that collection.
+
+ @param collectionArray The collection array to scan for.
+ @param musicType The music type the letters are associated to.
+ @return The dictionary of letters with their indexes.
+ */
+- (NSDictionary*)lettersAvailableDictionaryForMusicTrackCollectionArray:(NSArray<LMMusicTrackCollection*>*)collectionArray
+												withAssociatedMusicType:(LMMusicType)musicType;
+
+/**
  Finds collections of music based off of the type provided.
 
  @param musicType The type of music to find.

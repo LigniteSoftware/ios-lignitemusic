@@ -12,7 +12,7 @@
 #import "LMScrollView.h"
 #import "LMColour.h"
 
-@interface LMLetterTabBar()<LMLetterTabDelegate, UIGestureRecognizerDelegate>
+@interface LMLetterTabBar()<UIGestureRecognizerDelegate>
 
 /**
  The scroll view for the letter views.
@@ -43,6 +43,33 @@
 
 @implementation LMLetterTabBar
 
+@synthesize lettersDictionary = _lettersDictionary;
+
+- (void)setLettersDictionary:(NSDictionary *)lettersDictionary {
+	_lettersDictionary = lettersDictionary;
+	
+	//Reload the view's contents
+	if(self.didLayoutConstraints){
+		for(NSUInteger i = 0; i < self.letterViewsArray.count; i++){
+			UIView *letterView = [self.letterViewsArray objectAtIndex:i];
+			
+			letterView.hidden = YES;
+			[letterView removeFromSuperview];
+		}
+		
+		self.letterScrollView.hidden = YES;
+		[self.letterScrollView removeFromSuperview];
+		
+		self.didLayoutConstraints = NO;
+		
+		[self layoutSubviews];
+	}
+}
+
+- (NSDictionary*)lettersDictionary {
+	return _lettersDictionary;
+}
+
 /**
  Alerts the delegate of a new letter change, should one have occurred.
 
@@ -53,7 +80,7 @@
 	BOOL isNewLetter = ![newLetter isEqualToString:self.previousLetter];
 	
 	if(isNewLetter){
-		[self.delegate letterSelected:newLetter];
+		[self.delegate letterSelected:newLetter atIndex:[[self.lettersDictionary objectForKey:newLetter] unsignedIntegerValue]];
 	}
 	
 	self.previousLetter = newLetter;
@@ -224,10 +251,6 @@
 	}
 }
 
-- (void)letterSelected:(NSString *)letter {
-//	NSLog(@"Letter selected %@", letter);
-}
-
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
 	
 //	NSString *class = [[gestureRecognizer class] description];
@@ -240,23 +263,21 @@
 
 - (void)layoutSubviews {
 	if(!self.didLayoutConstraints){
-		self.delegate = self;
-		
 		self.didLayoutConstraints = YES;
 		
 		self.layer.masksToBounds = NO;
 		
 		self.backgroundColor = [UIColor cyanColor];
 		
-		NSMutableArray *testArray = [NSMutableArray new];
-		
-		NSString *letters = @"ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-		for(int i = 0; i < letters.length; i++){
-			NSString *letter = [NSString stringWithFormat: @"%C", [letters characterAtIndex:i]];
-			[testArray addObject:letter];
-		}
-		
-		self.lettersArray = [NSArray arrayWithArray:testArray];
+//		NSMutableArray *testArray = [NSMutableArray new];
+//		
+//		NSString *letters = @"ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+//		for(int i = 0; i < letters.length; i++){
+//			NSString *letter = [NSString stringWithFormat: @"%C", [letters characterAtIndex:i]];
+//			[testArray addObject:letter];
+//		}
+//		
+//		self.lettersArray = [NSArray arrayWithArray:testArray];
 		
 		self.letterViewsArray = [NSMutableArray new];
 		
@@ -273,11 +294,13 @@
 		panGesture.delegate = self;
 		[self.letterScrollView addGestureRecognizer:panGesture];
 		
+		NSArray *letters = self.lettersDictionary.allKeys;
+		letters = [letters sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"" ascending:YES]]];
 		
-		for(int i = 0; i < self.lettersArray.count; i++){
+		for(int i = 0; i < letters.count; i++){
 			BOOL firstIndex = (i == 0);
 			
-			NSString *letter = [self.lettersArray objectAtIndex:i];
+			NSString *letter = [letters objectAtIndex:i];
 			
 			UIView *viewToAttachTo = firstIndex ? self.letterScrollView : [self.letterViewsArray objectAtIndex:i-1];
 			

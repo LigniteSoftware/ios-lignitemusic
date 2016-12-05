@@ -39,7 +39,7 @@
 @import SDWebImage;
 @import StoreKit;
 
-@interface LMCoreViewController () <LMMusicPlayerDelegate, LMSourceDelegate, LMBrowsingAssistantDelegate, UIGestureRecognizerDelegate, LMSearchBarDelegate>
+@interface LMCoreViewController () <LMMusicPlayerDelegate, LMSourceDelegate, LMBrowsingAssistantDelegate, UIGestureRecognizerDelegate, LMSearchBarDelegate, LMLetterTabDelegate>
 
 @property LMMusicPlayer *musicPlayer;
 
@@ -207,6 +207,10 @@ BOOL didAutomaticallyClose = NO;
 			self.albumView.hidden = NO;
 			[self.albumView reloadSourceSelectorInfo];
 			self.currentSource = self.albumView;
+			
+			self.browsingAssistant.browsingBar.letterTabBar.lettersDictionary =
+				[self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:self.albumView.browsingView.musicTrackCollections
+																 withAssociatedMusicType:LMMusicTypeAlbums];
 //			if(self.albumView.showingDetailView){
 //				[self.browsingAssistant close];
 //			}
@@ -325,6 +329,8 @@ BOOL didAutomaticallyClose = NO;
 
 - (void)showWhatsPoppin {
 	NSArray *currentBuildChanges = @[
+									 @"Added search (finally!)",
+									 @"Added letter tab browsing",
 									 @"Added new music progress bar",
 									 @"Added icon credits",
 									 @"Fixed music sometimes not playing",
@@ -406,6 +412,12 @@ BOOL didAutomaticallyClose = NO;
 
 - (void)searchDialogOpened:(BOOL)opened withKeyboardHeight:(CGFloat)keyboardHeight {
 	NSLog(@"Search was opened: %d", opened);
+}
+
+- (void)letterSelected:(NSString *)letter atIndex:(NSUInteger)index {
+	NSLog(@"Selected %@ at index %d.", letter, (int)index);
+	
+	[self.albumView.browsingView scrollViewToIndex:index];
 }
 
 - (void)viewDidLoad {
@@ -659,6 +671,9 @@ BOOL didAutomaticallyClose = NO;
 						NSTimeInterval endTime = [[NSDate new] timeIntervalSince1970];
 						
 						NSLog(@"Took %f seconds to load the app.", (endTime-startTime));
+						
+						NSLog(@"Nice algorithm %@", [self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:[self.musicPlayer queryCollectionsForMusicType:LMMusicTypeAlbums]
+																									 withAssociatedMusicType:LMMusicTypeAlbums]);
 					});
 					break;
 				}

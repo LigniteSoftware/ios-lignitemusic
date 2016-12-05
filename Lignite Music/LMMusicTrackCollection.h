@@ -17,7 +17,7 @@
 @property NSArray<LMMusicTrack *> *items;
 
 /**
- A representative item of the items in this collection.
+ A representative track of the tracks in this collection.
  */
 @property LMMusicTrack *representativeItem;
 

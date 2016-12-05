@@ -24,4 +24,11 @@
 - (void)reloadSourceSelectorInfo;
 - (void)dismissDetailView;
 
+/**
+ Scroll the view to a certain index in its music track collection.
+
+ @param index The index to scroll to.
+ */
+- (void)scrollViewToIndex:(NSUInteger)index;
+
 @end

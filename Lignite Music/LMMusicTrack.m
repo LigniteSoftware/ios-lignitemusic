@@ -24,6 +24,7 @@
 		self.artist = item.artist;
 		self.albumTitle = [item.albumTitle isEqualToString:@""] ? nil : item.albumTitle;
 		self.genre = item.genre;
+		self.composer = item.composer;
 		
 		self.persistentID = item.persistentID;
 		self.albumArtistPersistentID = item.albumArtistPersistentID;

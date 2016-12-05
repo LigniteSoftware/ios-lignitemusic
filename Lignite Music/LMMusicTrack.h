@@ -32,6 +32,11 @@ typedef uint64_t LMMusicTrackPersistentID;
 @property NSString *artist;
 
 /**
+ The song's composer.
+ */
+@property NSString *composer;
+
+/**
  The song's album name/title.
  */
 @property NSString *albumTitle;

@@ -13,8 +13,6 @@
 
 @interface LMBigListEntryTableView()<LMTableViewSubviewDataSource, LMCollectionInfoViewDelegate, LMBigListEntryDelegate, LMControlBarViewDelegate>
 
-@property LMTableView *tableView;
-
 @property NSMutableArray *bigListEntriesArray;
 @property NSMutableArray *contentViewsArray;
 

@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "LMBigListEntry.h"
+#import "LMTableView.h"
 
 @class LMBigListEntryTableView;
 
@@ -52,6 +53,11 @@
 @end
 
 @interface LMBigListEntryTableView : UIView
+
+/**
+ The core table view.
+ */
+@property LMTableView *tableView;
 
 /**
  The delegate provides some data for each the LMCollectionInfoView, LMControlBarView and LMBigListEntry.

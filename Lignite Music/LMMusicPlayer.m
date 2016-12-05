@@ -500,6 +500,62 @@ BOOL shuffleForDebug = NO;
 	return trackCollection;
 }
 
+- (NSString*)firstLetterForString:(NSString*)string {
+	return [[NSString stringWithFormat:@"%C", [string characterAtIndex:0]] uppercaseString];
+}
+
+- (NSDictionary*)lettersAvailableDictionaryForMusicTrackCollectionArray:(NSArray<LMMusicTrackCollection*>*)collectionArray
+												withAssociatedMusicType:(LMMusicType)musicType {
+	
+	NSMutableDictionary *lettersDictionary = [NSMutableDictionary new];
+	
+	for(NSUInteger i = 0; i < collectionArray.count; i++){
+		NSString *letter = @"?";
+		
+		LMMusicTrackCollection *collection = [collectionArray objectAtIndex:i];
+		LMMusicTrack *representativeTrack = collection.representativeItem;
+		
+		switch(musicType){
+			case LMMusicTypeArtists:
+				if(representativeTrack.artist){
+					letter = [self firstLetterForString:representativeTrack.artist];
+				}
+				break;
+			case LMMusicTypeAlbums:
+				if(representativeTrack.albumTitle){
+					letter = [self firstLetterForString:representativeTrack.albumTitle];
+				}
+				break;
+			case LMMusicTypeTitles:
+				if(representativeTrack.title){
+					letter = [self firstLetterForString:representativeTrack.title];
+				}
+				break;
+			case LMMusicTypePlaylists:
+				if(collection.title){
+					letter = [self firstLetterForString:collection.title];
+				}
+				break;
+			case LMMusicTypeComposers:
+				if(representativeTrack.composer){
+					letter = [self firstLetterForString:representativeTrack.composer];
+				}
+				break;
+			case LMMusicTypeGenres:
+				if(representativeTrack.genre){
+					letter = [self firstLetterForString:representativeTrack.genre];
+				}
+				break;
+		}
+		
+		if(![[lettersDictionary allKeys] containsObject:letter]){
+			[lettersDictionary setObject:[NSNumber numberWithUnsignedInteger:i] forKey:letter];
+		}
+	}
+	
+	return [NSDictionary dictionaryWithDictionary:lettersDictionary];
+}
+
 - (NSArray<LMMusicTrackCollection*>*)queryCollectionsForMusicType:(LMMusicType)musicType {
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer || self.playerType == LMMusicPlayerTypeAppleMusic){
 //		NSTimeInterval startingTime = [[NSDate date] timeIntervalSince1970];
@@ -564,6 +620,31 @@ BOOL shuffleForDebug = NO;
 			}
 		}
 		
+		NSString *sortKey = nil;
+		
+		switch(musicType){
+			case LMMusicTypeArtists:
+				sortKey = @"representativeItem.artist";
+				break;
+			case LMMusicTypeAlbums:
+				sortKey = @"representativeItem.albumTitle";
+				break;
+			case LMMusicTypeTitles:
+				sortKey = @"representativeItem.title";
+				break;
+			case LMMusicTypePlaylists:
+				sortKey = @"title";
+				break;
+			case LMMusicTypeComposers:
+				sortKey = @"representativeItem.composer";
+				break;
+			case LMMusicTypeGenres:
+				sortKey = @"representativeItem.genre";
+				break;
+		}
+		
+		NSSortDescriptor *albumSort = [NSSortDescriptor sortDescriptorWithKey:sortKey ascending:YES];
+		
 //		NSTimeInterval endingTime = [[NSDate date] timeIntervalSince1970];
 		
 		if(shuffleForDebug){
@@ -573,7 +654,7 @@ BOOL shuffleForDebug = NO;
 		
 //		NSLog(@"[LMMusicPlayer]: Took %f seconds to complete query.", endingTime-startingTime);
 		
-		return musicTracks;
+		return [musicTracks sortedArrayUsingDescriptors:@[albumSort]];
 	}
 	return nil;
 }

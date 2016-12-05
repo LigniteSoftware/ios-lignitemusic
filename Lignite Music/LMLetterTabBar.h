@@ -14,8 +14,9 @@
  A letter was selected.
 
  @param letter The letter selected.
+ @param index The index of the letter within the current view's subview array, relative to the music collection.
  */
-- (void)letterSelected:(NSString*)letter;
+- (void)letterSelected:(NSString*)letter atIndex:(NSUInteger)index;
 
 @end
 
@@ -28,9 +29,9 @@ typedef enum {
 @interface LMLetterTabBar : LMView
 
 /**
- The letters which should be available for browsing.
+ The letters which should be available for browsing along with their indexes.
  */
-@property NSArray *lettersArray;
+@property NSDictionary *lettersDictionary;
 
 /**
  The delegate for this view.

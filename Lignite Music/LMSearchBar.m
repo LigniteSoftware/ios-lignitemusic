@@ -125,6 +125,10 @@
 	[self endEditing:YES];
 }
 
+- (void)showKeyboard {
+	[self.searchTextField becomeFirstResponder];
+}
+
 - (void)layoutSubviews {
 	if(!self.didLayoutConstraints) {
 		[[NSNotificationCenter defaultCenter] addObserver:self

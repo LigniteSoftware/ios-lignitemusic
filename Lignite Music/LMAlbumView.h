@@ -9,9 +9,13 @@
 #import <UIKit/UIKit.h>
 #import "LMCoreViewController.h"
 
+@class LMBrowsingView;
+
 @interface LMAlbumView : UIView
 
 @property LMCoreViewController *coreViewController;
+
+@property LMBrowsingView *browsingView;
 
 - (void)reloadSourceSelectorInfo;
 - (void)setup;
