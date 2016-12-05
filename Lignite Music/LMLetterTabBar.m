@@ -90,6 +90,15 @@
 	self.currentLetterLabelLifted = letterLabel;
 }
 
+- (void)resetContentOffsetIfNeeded {
+	if(self.letterScrollView.contentOffset.x < 0){
+		[self.letterScrollView setContentOffset:CGPointMake(0, 0) animated:YES];
+	}
+	else if(self.letterScrollView.contentOffset.x > self.letterScrollView.contentSize.width-self.letterScrollView.frame.size.width){
+		[self.letterScrollView setContentOffset:CGPointMake(self.letterScrollView.contentSize.width-self.letterScrollView.frame.size.width, 0) animated:YES];
+	}
+}
+
 - (void)selectLetterGesture:(UIGestureRecognizer*)panGestureRecognizer {
 	BOOL isTapGesture = [[[panGestureRecognizer class] description] isEqualToString:@"UITapGestureRecognizer"];
 	
@@ -179,8 +188,12 @@
 				}
 			}
 		}
-		else if(self.currentLetterLabelLifted){
-			[self setLetterLabelLifted:self.currentLetterLabelLifted withAnimationStyle:LMLetterTabLiftAnimationStyleNoLift];
+		else{
+			if(self.currentLetterLabelLifted){
+				[self setLetterLabelLifted:self.currentLetterLabelLifted withAnimationStyle:LMLetterTabLiftAnimationStyleNoLift];
+			}
+			
+			[self resetContentOffsetIfNeeded];
 		}
 	}
 }
@@ -199,6 +212,8 @@
 			[self setLetterLabelLifted:self.currentLetterLabelLifted withAnimationStyle:LMLetterTabLiftAnimationStyleNoLift];
 			
 			self.previousLetter = @"";
+			
+			[self resetContentOffsetIfNeeded];
 			break;
 			
 		default: break;
@@ -243,7 +258,7 @@
 		
 		self.letterScrollView = [LMScrollView newAutoLayoutView];
 		self.letterScrollView.adaptForWidth = YES;
-		self.letterScrollView.backgroundColor = [LMColour ligniteRedColour];
+		self.letterScrollView.backgroundColor = [UIColor whiteColor];
 		self.letterScrollView.scrollEnabled = YES;
 		self.letterScrollView.layer.masksToBounds = NO;
 		[self addSubview:self.letterScrollView];

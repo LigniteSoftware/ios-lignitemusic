@@ -32,10 +32,8 @@
 	for (UIView *view in self.subviews) {
 		contentRect = CGRectUnion(contentRect, view.frame);
 	}
-	
-	NSLog(@"Content frame %@", NSStringFromCGRect(contentRect));
-	
-	contentRect = CGRectMake(0, 0, self.adaptForWidth ? contentRect.size.width : WINDOW_FRAME.size.width, self.adaptForWidth ? self.frame.size.height/4 : contentRect.size.height);
+		
+	contentRect = CGRectMake(0, 0, self.adaptForWidth ? (contentRect.size.width+10) : WINDOW_FRAME.size.width, self.adaptForWidth ? self.frame.size.height : contentRect.size.height);
 	
 	self.contentSize = contentRect.size;
 }
@@ -50,11 +48,6 @@
 		self.contentInset = insets;
 		
 		self.layoutMargins = insets;
-		
-		NSLog(@"SpookASD?");
-		
-		
-		
 		
 		self.showsVerticalScrollIndicator = NO;
 		self.showsHorizontalScrollIndicator = NO;

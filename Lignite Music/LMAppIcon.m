@@ -72,6 +72,8 @@
 			return @"icon_x_cross.png";
 		case LMIconSearch:
 			return @"icon_search.png";
+		case LMIconAToZ:
+			return @"icon_a_to_z.png";
 	}
 }
 
