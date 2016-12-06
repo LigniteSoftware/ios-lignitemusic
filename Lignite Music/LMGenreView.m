@@ -9,11 +9,8 @@
 #import <PureLayout/PureLayout.h>
 #import "LMGenreView.h"
 #import "LMMusicPlayer.h"
-#import "LMBrowsingView.h"
 
 @interface LMGenreView()
-
-@property LMBrowsingView *browsingView;
 
 @end
 

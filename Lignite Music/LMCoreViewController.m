@@ -27,6 +27,7 @@
 #import "LMSettingsView.h"
 #import "LMSettingsViewController.h"
 #import "LMBrowsingDetailViewController.h"
+#import "LMSearchView.h"
 
 #import "LMContactView.h"
 #import "LMDebugView.h"
@@ -68,6 +69,9 @@
 @property NSLayoutConstraint *statusBarBlurViewHeightConstraint;
 
 @property UIView *browsingAssistantViewAttachedTo;
+
+@property LMSearchView *searchView;
+@property NSLayoutConstraint *searchViewLeadingConstraint;
 
 @end
 
@@ -220,24 +224,40 @@ BOOL didAutomaticallyClose = NO;
 			self.titleView.hidden = NO;
 			[self.titleView reloadSourceSelectorInfo];
 			self.currentSource = self.titleView;
+			
+//			self.browsingAssistant.browsingBar.letterTabBar.lettersDictionary =
+//			[self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:self.titleView.musicTitles
+//															 withAssociatedMusicType:LMMusicTrack];
 			break;
 		}
 		case 2: {
 			self.playlistView.hidden = NO;
 			[self.playlistView reloadSourceSelectorInfo];
 			self.currentSource = self.playlistView;
+			
+			self.browsingAssistant.browsingBar.letterTabBar.lettersDictionary =
+			[self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:self.playlistView.browsingView.musicTrackCollections
+															 withAssociatedMusicType:LMMusicTypePlaylists];
 			break;
 		}
 		case 3:{
 			self.genreView.hidden = NO;
 			[self.genreView reloadSourceSelectorInfo];
 			self.currentSource = self.genreView;
+			
+			self.browsingAssistant.browsingBar.letterTabBar.lettersDictionary =
+			[self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:self.genreView.browsingView.musicTrackCollections
+															 withAssociatedMusicType:LMMusicTypeGenres];
 			break;
 		}
 		case 4: {
 			self.artistView.hidden = NO;
 			[self.artistView reloadSourceSelectorInfo];
 			self.currentSource = self.artistView;
+			
+			self.browsingAssistant.browsingBar.letterTabBar.lettersDictionary =
+			[self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:self.artistView.browsingView.musicTrackCollections
+															 withAssociatedMusicType:LMMusicTypeArtists];
 			break;
 		}
 		case 5: {
@@ -407,17 +427,21 @@ BOOL didAutomaticallyClose = NO;
 }
 
 - (void)searchTermChangedTo:(NSString *)searchTerm {
-	NSLog(@"New search term");
+	[self.searchView searchTermChangedTo:searchTerm];
 }
 
 - (void)searchDialogOpened:(BOOL)opened withKeyboardHeight:(CGFloat)keyboardHeight {
 	NSLog(@"Search was opened: %d", opened);
+	
+	[self.view layoutIfNeeded];
+	self.searchViewLeadingConstraint.constant = opened ? 0 : self.view.frame.size.width;
+	[UIView animateWithDuration:0.25 animations:^{
+		[self.view layoutIfNeeded];
+	}];
 }
 
-- (void)letterSelected:(NSString *)letter atIndex:(NSUInteger)index {
-	NSLog(@"Selected %@ at index %d.", letter, (int)index);
-	
-	[self.albumView.browsingView scrollViewToIndex:index];
+- (void)letterSelected:(NSString *)letter atIndex:(NSUInteger)index {	
+	[[self.currentSource browsingView] scrollViewToIndex:index];
 }
 
 - (void)viewDidLoad {
@@ -648,6 +672,16 @@ BOOL didAutomaticallyClose = NO;
 						
 						self.browsingAssistantViewAttachedTo = self.navigationController.view;
 						
+						
+						self.searchView = [LMSearchView newAutoLayoutView];
+						[self.view addSubview:self.searchView];
+						
+						[self.searchView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+						[self.searchView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.browsingAssistant withOffset:0];
+						[self.searchView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
+						self.searchViewLeadingConstraint = [self.searchView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+//						self.searchViewLeadingConstraint.constant = self.view.frame.size.width;
+						
 						[self.musicPlayer addMusicDelegate:self];
 						
 						[NSTimer scheduledTimerWithTimeInterval:1.0
@@ -672,8 +706,8 @@ BOOL didAutomaticallyClose = NO;
 						
 						NSLog(@"Took %f seconds to load the app.", (endTime-startTime));
 						
-						NSLog(@"Nice algorithm %@", [self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:[self.musicPlayer queryCollectionsForMusicType:LMMusicTypeAlbums]
-																									 withAssociatedMusicType:LMMusicTypeAlbums]);
+//						NSLog(@"Nice algorithm %@", [self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:[self.musicPlayer queryCollectionsForMusicType:LMMusicTypeAlbums]
+//																									 withAssociatedMusicType:LMMusicTypeAlbums]);
 					});
 					break;
 				}

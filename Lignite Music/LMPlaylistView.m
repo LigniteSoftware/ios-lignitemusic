@@ -13,8 +13,6 @@
 
 @interface LMPlaylistView()
 
-@property LMBrowsingView *browsingView;
-
 @end
 
 @implementation LMPlaylistView

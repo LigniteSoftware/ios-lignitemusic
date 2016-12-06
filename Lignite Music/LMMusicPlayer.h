@@ -222,6 +222,15 @@ typedef enum {
 												withAssociatedMusicType:(LMMusicType)musicType;
 
 /**
+ Gets the track collections for a media query with a certain music type.
+
+ @param mediaQuery The media query to convert.
+ @param musicType The music type associated.
+ @return The array of collections.
+ */
+- (NSArray<LMMusicTrackCollection*>*)trackCollectionsForMediaQuery:(MPMediaQuery*)mediaQuery withMusicType:(LMMusicType)musicType;
+
+/**
  Finds collections of music based off of the type provided.
 
  @param musicType The type of music to find.

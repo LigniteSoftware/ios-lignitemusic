@@ -25,8 +25,6 @@
 
 @property LMSectionTableView *sectionTableView;
 
-@property BOOL hasPreparedSubviews;
-
 @property int debugTapCount;
 
 @end
@@ -418,8 +416,8 @@
 }
 
 - (void)layoutSubviews {
-	if(!self.hasPreparedSubviews){
-		self.hasPreparedSubviews = YES;
+	if(!self.didLayoutConstraints){
+		self.didLayoutConstraints = YES;
 		
 		self.sectionTableView = [LMSectionTableView newAutoLayoutView];
 		self.sectionTableView.contentsDelegate = self;

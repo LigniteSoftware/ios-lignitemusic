@@ -123,8 +123,10 @@
  */
 - (void)setup;
 
-
-
+/**
+ Register the cell identifiers.
+ */
+- (void)registerCellIdentifiers;
 
 
 - (NSUInteger)rawIndexForIndexPath:(NSIndexPath*)indexPath;

@@ -184,6 +184,15 @@
 	return view;
 }
 
+- (void)registerCellIdentifiers {
+	int totalRows = (int)[self rawIndexForIndexPath:[NSIndexPath indexPathForRow:[self.contentsDelegate numberOfRowsForSection:self.totalNumberOfSections-1 forSectionTableView:self] inSection:self.totalNumberOfSections-1]];
+	
+	for(int i = 0; i < totalRows; i++){
+		[self registerClass:[LMTableViewCell class] forCellReuseIdentifier:[NSString stringWithFormat:@"%@Cell_%d", self.title, i]];
+	}
+	self.hasRegisteredCellIdentifiers = YES;
+}
+
 - (void)setup {
 	self.listEntryArray = [NSMutableArray new];
 	
@@ -195,12 +204,7 @@
 		[self.listEntryArray addObject:listEntry];
 	}
 	
-	int totalRows = (int)[self rawIndexForIndexPath:[NSIndexPath indexPathForRow:[self.contentsDelegate numberOfRowsForSection:self.totalNumberOfSections-1 forSectionTableView:self] inSection:self.totalNumberOfSections-1]];
-		
-	for(int i = 0; i < totalRows; i++){
-		[self registerClass:[LMTableViewCell class] forCellReuseIdentifier:[NSString stringWithFormat:@"%@Cell_%d", self.title, i]];
-	}
-	self.hasRegisteredCellIdentifiers = YES;
+	[self registerCellIdentifiers];
 }
 
 @end

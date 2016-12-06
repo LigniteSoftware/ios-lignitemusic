@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LMView.h"
 
-@interface LMSettingsView : UIView
+@interface LMSettingsView : LMView
 
 @property UIViewController *coreViewController;
 

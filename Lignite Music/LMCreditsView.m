@@ -365,7 +365,7 @@
 										   ], //@"EpicCoders"
 									   
 									   @[
-										   
+										   @(LMIconComposers)
 										   ], //@"Nikita Golubev"
 									   
 									   @[
@@ -423,7 +423,7 @@
 										   ], //@"EpicCoders"
 									   
 									   @[
-										   
+										   @(NO)
 										   ], //@"Nikita Golubev"
 									   
 									   @[

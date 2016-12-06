@@ -8,11 +8,8 @@
 
 #import <PureLayout/PureLayout.h>
 #import "LMArtistView.h"
-#import "LMBrowsingView.h"
 
 @interface LMArtistView ()
-
-@property LMBrowsingView *browsingView;
 
 @property BOOL loaded;
 

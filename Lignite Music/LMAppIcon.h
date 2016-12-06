@@ -24,6 +24,7 @@ typedef enum {
 	LMIconPlaylists,
 	LMIconGenres,
 	LMIconArtists,
+	LMIconComposers,
 	LMIconBug,
 	LMIconNoAlbumArt,
 	LMIconNoAlbumArt75Percent,

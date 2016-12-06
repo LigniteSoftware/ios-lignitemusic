@@ -43,7 +43,7 @@
 		[self layoutIfNeeded];
 	}];
 	
-	self.toggleButtonImageView.image = self.isInSearchMode ? [LMAppIcon imageForIcon:LMIconSearch] : [LMAppIcon imageForIcon:LMIconAToZ];
+	self.toggleButtonImageView.image = self.isInSearchMode ? [LMAppIcon imageForIcon:LMIconAToZ] : [LMAppIcon imageForIcon:LMIconSearch];
 	
 	self.isInSearchMode ? [self.searchBar showKeyboard] : [self.searchBar dismissKeyboard];
 }

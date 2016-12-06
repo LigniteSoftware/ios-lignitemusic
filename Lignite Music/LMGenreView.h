@@ -8,10 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import "LMCoreViewController.h"
+#import "LMBrowsingView.h"
 
 @interface LMGenreView : UIView
 
 @property LMCoreViewController *coreViewController;
+
+@property LMBrowsingView *browsingView;
 
 - (void)setup;
 - (void)reloadSourceSelectorInfo;
