@@ -66,25 +66,9 @@
 		
 		NSLog(@"Term %@", asyncSearchTerm);
 		
-		NSMutableArray *resultsArray = [NSMutableArray new];
-		
 		NSTimeInterval startTime = [[NSDate new] timeIntervalSince1970];
 		
-		for(NSUInteger i = 0; i < self.associatedGroupings.count; i++){
-			NSLog(@"Searching %d", (int)i);
-			MPMediaPropertyPredicate *predicate = [MPMediaPropertyPredicate predicateWithValue:asyncSearchTerm
-																				   forProperty:[self.associatedProperties objectAtIndex:i]
-																				comparisonType:MPMediaPredicateComparisonContains];
-			
-			MPMediaQuery *query = [MPMediaQuery new];
-			[query addFilterPredicate:predicate];
-			query.groupingType = (MPMediaGrouping)[[self.associatedGroupings objectAtIndex:i] unsignedIntegerValue];
-			
-			NSLog(@"'%@' %@ query done. Building collection section grouping count %d", asyncSearchTerm, [self.associatedProperties objectAtIndex:i], (int)query.collections.count);
-			
-			[resultsArray addObject:query.collections];
-			NSLog(@"Done building %d", (int)i);
-		}
+		NSArray *resultsArray = [LMSearch searchResultsForString:asyncSearchTerm];
 		
 		NSTimeInterval endTime = [[NSDate new] timeIntervalSince1970];
 		
@@ -95,26 +79,13 @@
 		
 		NSLog(@"Done search for %@. Completed in %fs.", searchView.currentSearchTerm, endTime-startTime);
 		
-		searchView.searchResultsArray = [NSArray arrayWithArray:resultsArray];
-		
 		dispatch_async(dispatch_get_main_queue(), ^{
+			NSLog(@"%d items", (int)resultsArray.count);
+			searchView.searchResultsArray = resultsArray;
+			searchView.sectionTableView.totalNumberOfSections = searchView.searchResultsArray.count;
 			[searchView.sectionTableView registerCellIdentifiers];
 			[searchView.sectionTableView reloadData];
 		});
-	});
-	
-	dispatch_async(dispatch_get_global_queue(NSQualityOfServiceUserInteractive, 0), ^{
-		id strongSelf = weakSelf;
-		
-		if (!strongSelf) {
-			return;
-		}
-		
-		LMSearchView *searchView = strongSelf;
-		
-		NSString *asyncSearchTerm = searchView.currentSearchTerm;
-		
-//		[LMSearch searchResultsForString:asyncSearchTerm];
 	});
 }
 
@@ -177,12 +148,21 @@
 - (NSString*)subtitleForIndexPath:(NSIndexPath*)indexPath forSectionTableView:(LMSectionTableView*)sectionTableView {
 	NSArray<MPMediaItemCollection*>* collections = [self.searchResultsArray objectAtIndex:indexPath.section];
 	MPMediaItemCollection *collection = [collections objectAtIndex:indexPath.row];
+	MPMediaItem *representativeItem = collection.representativeItem;
 	MPMediaGrouping mediaGrouping = (MPMediaGrouping)[[self.associatedGroupings objectAtIndex:indexPath.section] unsignedIntegerValue];
 	
 	switch(mediaGrouping){
 		case MPMediaGroupingArtist:
-		case MPMediaGroupingAlbum:
 		case MPMediaGroupingComposer:
+			return [NSString stringWithFormat:@"%lu %@", collections.count, NSLocalizedString(collections.count == 1 ? @"Album" : @"Albums", nil)];
+			
+		case MPMediaGroupingAlbum:
+			return [NSString stringWithFormat:
+					@"%@ | %lu %@",
+					representativeItem.artist ? representativeItem.artist : NSLocalizedString(@"UnknownArtist", nil),
+					collection.count,
+					NSLocalizedString(collection.count == 1 ? @"Song" : @"Songs", nil)];
+			
 		case MPMediaGroupingGenre:
 			return [NSString stringWithFormat:@"%lu %@", collection.count, NSLocalizedString(collection.count == 1 ? @"Song" : @"Songs", nil)];
 		case MPMediaGroupingTitle:
