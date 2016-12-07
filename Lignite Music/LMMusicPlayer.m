@@ -568,7 +568,7 @@ BOOL shuffleForDebug = NO;
 - (NSArray<LMMusicTrackCollection*>*)trackCollectionsForMediaQuery:(MPMediaQuery*)mediaQuery withMusicType:(LMMusicType)musicType {
 	MPMediaGrouping associatedGrouping = associatedMediaTypes[musicType];
 	
-	NSArray *collections = mediaQuery.collections;
+	NSArray *collections = musicType == LMMusicTypeTitles ? @[[MPMediaItemCollection collectionWithItems:mediaQuery.items]] : mediaQuery.collections;
 	NSMutableArray* musicTracks = [NSMutableArray new];
 	
 	for(int i = 0; i < collections.count; i++){
@@ -661,6 +661,11 @@ BOOL shuffleForDebug = NO;
 				NSLog(@"Defaulting to songs query!");
 				break;
 		}
+
+		MPMediaPropertyPredicate *musicFilterPredicate = [MPMediaPropertyPredicate predicateWithValue:[NSNumber numberWithInteger:MPMediaTypeMusic]
+																						  forProperty:MPMediaItemPropertyMediaType
+																					   comparisonType:MPMediaPredicateComparisonEqualTo];
+		[query addFilterPredicate:musicFilterPredicate];
 		
 		return [self trackCollectionsForMediaQuery:query withMusicType:musicType];
 	}

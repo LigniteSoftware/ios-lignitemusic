@@ -7,17 +7,17 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LMView.h"
 #import "LMCoreViewController.h"
 
 @class LMBrowsingView;
 
-@interface LMAlbumView : UIView
+@interface LMAlbumView : LMView
 
 @property LMCoreViewController *coreViewController;
 
 @property LMBrowsingView *browsingView;
 
 - (void)reloadSourceSelectorInfo;
-- (void)setup;
 
 @end

@@ -10,6 +10,7 @@
 #import "LMCreditsView.h"
 #import "LMScrollView.h"
 #import "LMAppIcon.h"
+#import "LMColour.h"
 
 @interface LMCreditsView()
 
@@ -55,11 +56,17 @@
 	return self;
 }
 
+- (void)creditLinks {
+	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"www.lignitemusic.com/licenses"]];
+}
+
 - (void)layoutSubviews {
 	[super layoutSubviews];
 	
 	if(!self.didSetupConstraints){
 		self.didSetupConstraints = YES;
+		
+		self.userInteractionEnabled = YES;
 		
 		self.scrollView = [LMScrollView newAutoLayoutView];
 		self.scrollView.backgroundColor = [UIColor whiteColor];
@@ -515,6 +522,26 @@
 				[artistLabelsArray addObject:artistLabel];
 			}
 		}
+		
+		UILabel *creditsLinkButton = [UILabel newAutoLayoutView];
+		creditsLinkButton.text = NSLocalizedString(@"CreditsLicenses", nil);
+		creditsLinkButton.textAlignment = NSTextAlignmentCenter;
+		creditsLinkButton.numberOfLines = 0;
+		creditsLinkButton.layer.masksToBounds = YES;
+		creditsLinkButton.layer.cornerRadius = 10.0;
+		creditsLinkButton.backgroundColor = [LMColour ligniteRedColour];
+		creditsLinkButton.textColor = [UIColor whiteColor];
+		creditsLinkButton.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:22.0f];
+		creditsLinkButton.userInteractionEnabled = YES;
+		[self.scrollView addSubview:creditsLinkButton];
+		
+		[creditsLinkButton autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:[[artistIconsArray lastObject] lastObject] withOffset:10];
+		[creditsLinkButton autoSetDimension:ALDimensionWidth toSize:self.frame.size.width * 0.9];
+		[creditsLinkButton autoAlignAxisToSuperviewAxis:ALAxisVertical];
+		[creditsLinkButton autoSetDimension:ALDimensionHeight toSize:self.frame.size.height/8.0];
+		
+		UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(creditLinks)];
+		[creditsLinkButton addGestureRecognizer:tapGesture];
 	}
 }
 

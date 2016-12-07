@@ -24,42 +24,42 @@ typedef uint64_t LMMusicTrackPersistentID;
 /**
  The song's name/title.
  */
-@property NSString *title;
+@property (readonly) NSString *title;
 
 /**
  The song's artist.
  */
-@property NSString *artist;
+@property (readonly) NSString *artist;
 
 /**
  The song's composer.
  */
-@property NSString *composer;
+@property (readonly) NSString *composer;
 
 /**
  The song's album name/title.
  */
-@property NSString *albumTitle;
+@property (readonly) NSString *albumTitle;
 
 /**
  The song's genre. There is a chance that this will be nil.
  */
-@property NSString *genre;
+@property (readonly) NSString *genre;
 
 /**
  The duration of the song in seconds.
  */
-@property NSTimeInterval playbackDuration;
+@property (readonly) NSTimeInterval playbackDuration;
 
 /**
  The persistent IDs of the track.
  */
-@property LMMusicTrackPersistentID persistentID;
-@property LMMusicTrackPersistentID albumArtistPersistentID;
-@property LMMusicTrackPersistentID albumPersistentID;
-@property LMMusicTrackPersistentID artistPersistentID;
-@property LMMusicTrackPersistentID composerPersistentID;
-@property LMMusicTrackPersistentID genrePersistentID;
+@property (readonly) LMMusicTrackPersistentID persistentID;
+@property (readonly) LMMusicTrackPersistentID albumArtistPersistentID;
+@property (readonly) LMMusicTrackPersistentID albumPersistentID;
+@property (readonly) LMMusicTrackPersistentID artistPersistentID;
+@property (readonly) LMMusicTrackPersistentID composerPersistentID;
+@property (readonly) LMMusicTrackPersistentID genrePersistentID;
 
 /**
  A reference to the source track which provided the LMMusicTrack with its data. 

@@ -38,6 +38,23 @@
  
  */
 
+
+/*
+ 
+ New strings
+ 
+ */
+
+"CreditsLicenses" = "License links";
+
+/*
+ 
+ End new strings
+ 
+ */
+
+
+
 /* General */
 "SongXofX" = "Song %d of %d";
 "SongX" = "Song %d";

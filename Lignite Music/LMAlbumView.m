@@ -22,16 +22,20 @@
 	[self.browsingView reloadSourceSelectorInfo];
 }
 
-- (void)setup {
-	self.browsingView = [LMBrowsingView newAutoLayoutView];
-	self.browsingView.musicTrackCollections = [[LMMusicPlayer sharedMusicPlayer] queryCollectionsForMusicType:LMMusicTypeAlbums];
-	self.browsingView.musicType = LMMusicTypeAlbums;
-	self.browsingView.rootViewController = self.coreViewController;
-	[self addSubview:self.browsingView];
-	
-	[self.browsingView autoPinEdgesToSuperviewEdges];
-	
-	[self.browsingView setup];
+- (void)layoutSubviews {
+	if(!self.didLayoutConstraints){
+		self.didLayoutConstraints = YES;
+		
+		self.browsingView = [LMBrowsingView newAutoLayoutView];
+		self.browsingView.musicTrackCollections = [[LMMusicPlayer sharedMusicPlayer] queryCollectionsForMusicType:LMMusicTypeAlbums];
+		self.browsingView.musicType = LMMusicTypeAlbums;
+		self.browsingView.rootViewController = self.coreViewController;
+		[self addSubview:self.browsingView];
+		
+		[self.browsingView autoPinEdgesToSuperviewEdges];
+		
+		[self.browsingView setup];
+	}
 }
 
 @end

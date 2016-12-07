@@ -11,6 +11,9 @@
 @implementation LMMusicTrackCollection
 
 @synthesize numberOfAlbums = _numberOfAlbums;
+@synthesize variousArtists = _variousArtists;
+@synthesize variousGenres = _variousGenres;
+@synthesize representativeItem = _representativeItem;
 
 - (instancetype)initWithItems:(NSArray<LMMusicTrack *> *)items basedOnSourceCollection:(id)sourceCollection {
 	self = [super init];
@@ -19,25 +22,6 @@
 		self.count = items.count;
 		self.title = @"Unknown Error";
 		self.sourceCollection = sourceCollection;
-		
-		if(self.items.count > 0){
-			self.representativeItem = [items objectAtIndex:0];
-			
-			for(NSUInteger i = 0; i < self.items.count; i++){
-				LMMusicTrack *track = [self.items objectAtIndex:i];
-				//Determine whether there are various artists in this collection.
-				if(![self.representativeItem.artist isEqualToString:track.artist] && !self.variousArtists){
-					self.variousArtists = YES;
-				}
-				//Determine whether there are various genres in this collection.
-				if(![self.representativeItem.genre isEqualToString:track.genre] && !self.variousArtists && track.genre != nil){
-					self.variousGenres = YES;
-				}
-			}
-		}
-		else{
-			NSLog(@"[LMMusicTrackCollection]: Warning - There are 0 items in this collection.");
-		}
 	}
 	else{
 		NSLog(@"Error creating LMMusicTrackCollection with items %@", items);
@@ -58,6 +42,44 @@
 	}
 	
 	return albumsArray.count;
+}
+
+- (BOOL)variousArtists {
+	LMMusicTrack *representativeTrack = self.representativeItem;
+	
+	for(NSUInteger i = 0; i < self.items.count; i++){
+		LMMusicTrack *track = [self.items objectAtIndex:i];
+		
+		//Determine whether there are various artists in this collection.
+		if(![representativeTrack.artist isEqualToString:track.artist]){
+			return YES;
+		}
+	}
+	
+	return NO;
+}
+
+- (BOOL)variousGenres {
+	LMMusicTrack *representativeTrack = self.representativeItem;
+	
+	for(NSUInteger i = 0; i < self.items.count; i++){
+		LMMusicTrack *track = [self.items objectAtIndex:i];
+		
+		//Determine whether there are various genres in this collection.
+		if(![representativeTrack.genre isEqualToString:track.genre] && track.genre != nil){
+			return YES;
+		}
+	}
+	
+	return NO;
+}
+
+- (LMMusicTrack*)representativeItem {
+	if(self.items.count > 0){
+		return [self.items objectAtIndex:0];
+	}
+	
+	return nil;
 }
 
 @end

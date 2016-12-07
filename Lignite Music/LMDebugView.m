@@ -130,8 +130,19 @@
 	
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	
+	NSTimeInterval startTime = [[NSDate new] timeIntervalSince1970];
+	
 	NSMutableString *debugString = [NSMutableString stringWithFormat:@"\nBuild %@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"]];
+	[debugString appendString:[NSString stringWithFormat:@"\n\nSong count: %lu", (unsigned long)[[musicPlayer queryCollectionsForMusicType:LMMusicTypeTitles] objectAtIndex:0].count]];
+	
 	[debugString appendString:[NSString stringWithFormat:@"\n\nSong count: %lu", (unsigned long)[musicPlayer queryCollectionsForMusicType:LMMusicTypeTitles].count]];
+	
+	NSTimeInterval endTime = [[NSDate new] timeIntervalSince1970];
+	
+	NSLog(@"Took %f seconds to load titles.", endTime-startTime);
+	
+	
+//	[debugString appendString:[NSString stringWithFormat:@"\n\nSong count: %lu", (unsigned long)[MPMediaQuery songsQuery].items.count]];
 	[debugString appendString:[NSString stringWithFormat:@"\nNow playing: %@\nNPPID: %llu\nNPTL: %fs", musicPlayer.nowPlayingTrack.title, musicPlayer.nowPlayingTrack.persistentID, musicPlayer.nowPlayingTrack.playbackDuration]];
 	[debugString appendString:[NSString stringWithFormat:@"\nBytes free: %llu", [LMDebugView diskBytesFree]]];
 	[debugString appendString:[NSString stringWithFormat:@"\nArtist cache: %lu", (unsigned long)[imageManager sizeOfCacheForCategory:LMImageManagerCategoryArtistImages]]];

@@ -19,7 +19,7 @@
 /**
  A representative track of the tracks in this collection.
  */
-@property LMMusicTrack *representativeItem;
+@property (readonly) LMMusicTrack *representativeItem;
 
 /**
  The number of items in this collection.
@@ -35,14 +35,14 @@
  Whether or not this collection has various artists instead of a singluar artist.
  If YES, the representative item cannot be trusted for artist information.
  */
-@property BOOL variousArtists;
+@property (readonly) BOOL variousArtists;
 
 /**
  Whether or not this collection has various genres associated with it instead of 
  a singluar genre.
  If YES, the representative item cannot be trusted for genre information.
  */
-@property BOOL variousGenres;
+@property (readonly) BOOL variousGenres;
 
 /**
  The source collection which the LMMusicTrackCollection is based off of.

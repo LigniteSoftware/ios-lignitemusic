@@ -133,7 +133,7 @@
 		//[self.itemIconArray object]
 //		NSLog(@"%@ %ld %ld", albumArt, self.itemIconArray.count, indexToInsert);
 		
-		dispatch_sync(dispatch_get_main_queue(), ^{
+		dispatch_async(dispatch_get_main_queue(), ^{
 			if(operation.cancelled){
 				NSLog(@"Rejecting.");
 				return;

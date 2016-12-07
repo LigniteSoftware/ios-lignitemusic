@@ -478,8 +478,6 @@
 		if(imageManager.trackDownloadQueue.count < 1){
 			[imageManager.currentlyProcessingCategoryArray removeObject:@(LMImageManagerCategoryAlbumImages)];
 			[imageManager.currentlyProcessingCategoryArray removeObject:@(LMImageManagerCategoryArtistImages)];
-			
-			NSLog(@"Queue has no items, rejecting.");
 			return;
 		}
 		
@@ -549,7 +547,6 @@
 										  
 										  //Since this should mean we're at least part way through the list (since its asynchronus), we can know with fairly high confidence that there will be some items in the queue, so we can start downloading them since we don't actually start downloading instantly.
 										  if(i == collectionsAssociated.count-1){
-											  NSLog(@"Firing download queue.");
 											  [self downloadNextImageInQueue];
 										  }
 									  }];

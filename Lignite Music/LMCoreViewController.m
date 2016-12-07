@@ -73,6 +73,8 @@
 @property LMSearchView *searchView;
 @property NSLayoutConstraint *searchViewLeadingConstraint;
 
+@property BOOL loaded;
+
 @end
 
 @implementation LMCoreViewController
@@ -86,12 +88,19 @@
 }
 
 - (BOOL)prefersStatusBarHidden {
+	if(!self.loaded){
+		NSLog(@"Loading");
+		return YES;
+	}
+	
+	NSLog(@"Not loading");
+	
 	BOOL shown = [LMSettings shouldShowStatusBar];
 	
 	return (!shown || (self.nowPlayingView != nil));
 }
 
-- (UIStatusBarAnimation)preferredStatusBarUpdateAnimation{
+- (UIStatusBarAnimation)preferredStatusBarUpdateAnimation {
 	return UIStatusBarAnimationSlide;
 }
 
@@ -354,7 +363,10 @@ BOOL didAutomaticallyClose = NO;
 									 @"Added new music progress bar",
 									 @"Added icon credits",
 									 @"Fixed music sometimes not playing",
-									 @"A few small visual touches"
+									 @"Fixed crash on some older devices",
+									 @"Improved some visual aspects",
+									 @"Improved app loading time",
+									 @"Removed godforsaken hang on screen",
 									 ];
 	
 	NSArray *currentBuildIssues = @[
@@ -445,7 +457,6 @@ BOOL didAutomaticallyClose = NO;
 }
 
 - (void)viewDidLoad {
-	NSTimeInterval startTime = [[NSDate new] timeIntervalSince1970];
 	
     [super viewDidLoad];
     // Do any additional setup after loading the view
@@ -454,6 +465,8 @@ BOOL didAutomaticallyClose = NO;
 	
 	self.navigationController.navigationBarHidden = YES;
 	self.navigationController.interactivePopGestureRecognizer.delegate = self;
+	
+	self.loaded = NO;
 	
 //	self.automaticallyAdjustsScrollViewInsets = NO;
 	
@@ -479,12 +492,12 @@ BOOL didAutomaticallyClose = NO;
 	
 //	NSLog(@"Loading view %@", self.navigationController);
 	
-//	LMCreditsView *view = [LMCreditsView newAutoLayoutView];
-//	[self.view addSubview:view];
-//	
-//	[view autoPinEdgesToSuperviewEdges];
-//	
-//	return;
+	LMCreditsView *view = [LMCreditsView newAutoLayoutView];
+	[self.view addSubview:view];
+	
+	[view autoPinEdgesToSuperviewEdges];
+	
+	return;
 	
 //	self.settingsView = [LMSettingsView newAutoLayoutView];
 //	self.settingsView.coreViewController = self;
@@ -506,24 +519,21 @@ BOOL didAutomaticallyClose = NO;
 //	NSLog(@"Query %@", query);
 	
 	UIImageView *hangOnImage = [UIImageView newAutoLayoutView];
-	hangOnImage.image = [LMAppIcon imageForIcon:LMIconNoAlbumArt];
-	hangOnImage.contentMode = UIViewContentModeScaleAspectFit;
+	hangOnImage.image = [UIImage imageNamed:@"splash_portrait.png"];
+	hangOnImage.contentMode = UIViewContentModeScaleAspectFill;
 	[self.view addSubview:hangOnImage];
 	
-	[hangOnImage autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:self.view.frame.size.width/5.0];
-	[hangOnImage autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:self.view.frame.size.width/5.0];
-	[hangOnImage autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:self.view.frame.size.height/4.0];
-	[hangOnImage autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/3.0)];
+	[hangOnImage autoPinEdgesToSuperviewEdges];
 	
-	UILabel *hangOnLabel = [UILabel newAutoLayoutView];
-	hangOnLabel.text = NSLocalizedString(@"HangOn", nil);
-	hangOnLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:30.0f];
-	hangOnLabel.textAlignment = NSTextAlignmentCenter;
-	[self.view addSubview:hangOnLabel];
-	
-	[hangOnLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:hangOnImage withOffset:10];
-	[hangOnLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-	[hangOnLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+//	UILabel *hangOnLabel = [UILabel newAutoLayoutView];
+//	hangOnLabel.text = NSLocalizedString(@"HangOn", nil);
+//	hangOnLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:30.0f];
+//	hangOnLabel.textAlignment = NSTextAlignmentCenter;
+//	[self.view addSubview:hangOnLabel];
+//	
+//	[hangOnLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:hangOnImage withOffset:10];
+//	[hangOnLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+//	[hangOnLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 	
 #ifdef SKIP_ONBOARDING
 	if(true == false){
@@ -552,12 +562,13 @@ BOOL didAutomaticallyClose = NO;
 				}
 				case SKCloudServiceAuthorizationStatusAuthorized: {
 					dispatch_async(dispatch_get_main_queue(), ^{
+						NSTimeInterval startTime = [[NSDate new] timeIntervalSince1970];
 						
 						self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
-						
+
 						LMPebbleManager *pebbleManager = [LMPebbleManager sharedPebbleManager];
 						[pebbleManager attachToViewController:self];
-						
+
 						NSArray *sourceTitles = @[
 												  @"Albums", @"Titles", @"Playlists", @"Genres", @"Artists", @"Settings", @"Report Bug"
 												  ];
@@ -589,71 +600,62 @@ BOOL didAutomaticallyClose = NO;
 						
 						//Album View
 						
-						self.albumView = [LMAlbumView newAutoLayoutView];
-						self.albumView.coreViewController = self;
-						[self.view addSubview:self.albumView];
+						
 
-						[self.albumView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-						[self.heightConstraintArray addObject:[self.albumView autoSetDimension:ALDimensionHeight toSize:self.view.frame.size.height]];
-						[self.albumView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
-						
-						[self.albumView setup];
-						self.albumView.hidden = YES;
-						
-						//Title view
-						
-						self.titleView = [LMTitleView newAutoLayoutView];
-						self.titleView.backgroundColor = [UIColor redColor];
-						[self.view addSubview:self.titleView];
-						
-						[self.titleView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-						[self.heightConstraintArray addObject:[self.titleView autoSetDimension:ALDimensionHeight toSize:self.view.frame.size.height]];
-						[self.titleView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
-						
-						[self.titleView setup];
-						self.titleView.hidden = YES;
-						
-						//Playlist view
-						
-						self.playlistView = [LMPlaylistView newAutoLayoutView];
-						self.playlistView.backgroundColor = [UIColor whiteColor];
-						self.playlistView.coreViewController = self;
-						[self.view addSubview:self.playlistView];
-						
-						[self.playlistView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-						[self.heightConstraintArray addObject:[self.playlistView autoSetDimension:ALDimensionHeight toSize:self.view.frame.size.height]];
-						[self.playlistView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
-						
-						[self.playlistView setup];
-						self.playlistView.hidden = YES;
-						
-						//Genre view
-						
-						self.genreView = [LMGenreView newAutoLayoutView];
-						self.genreView.backgroundColor = [UIColor whiteColor];
-						self.genreView.coreViewController = self;
-						[self.view addSubview:self.genreView];
-						
-						[self.genreView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-						[self.heightConstraintArray addObject:[self.genreView autoSetDimension:ALDimensionHeight toSize:self.view.frame.size.height]];
-						[self.genreView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
-						
-						[self.genreView setup];
-						self.genreView.hidden = YES;
-						
-						
-						self.artistView = [LMArtistView newAutoLayoutView];
-						self.artistView.backgroundColor = [UIColor whiteColor];
-						self.artistView.coreViewController = self;
-						[self.view addSubview:self.artistView];
-						
-						[self.artistView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-						[self.heightConstraintArray addObject:[self.artistView autoSetDimension:ALDimensionHeight toSize:self.view.frame.size.height]];
-						[self.artistView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
-						
-						[self.artistView setup];
-						self.artistView.hidden = YES;
-						
+//						//Title view
+//						
+//						self.titleView = [LMTitleView newAutoLayoutView];
+//						self.titleView.backgroundColor = [UIColor redColor];
+//						[self.view addSubview:self.titleView];
+//						
+//						[self.titleView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+//						[self.heightConstraintArray addObject:[self.titleView autoSetDimension:ALDimensionHeight toSize:self.view.frame.size.height]];
+//						[self.titleView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
+//						
+//						[self.titleView setup];
+//						self.titleView.hidden = YES;
+//
+//						//Playlist view
+//						
+//						self.playlistView = [LMPlaylistView newAutoLayoutView];
+//						self.playlistView.backgroundColor = [UIColor whiteColor];
+//						self.playlistView.coreViewController = self;
+//						[self.view addSubview:self.playlistView];
+//						
+//						[self.playlistView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+//						[self.heightConstraintArray addObject:[self.playlistView autoSetDimension:ALDimensionHeight toSize:self.view.frame.size.height]];
+//						[self.playlistView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
+//						
+//						[self.playlistView setup];
+//						self.playlistView.hidden = YES;
+//
+//						//Genre view
+//						
+//						self.genreView = [LMGenreView newAutoLayoutView];
+//						self.genreView.backgroundColor = [UIColor whiteColor];
+//						self.genreView.coreViewController = self;
+//						[self.view addSubview:self.genreView];
+//						
+//						[self.genreView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+//						[self.heightConstraintArray addObject:[self.genreView autoSetDimension:ALDimensionHeight toSize:self.view.frame.size.height]];
+//						[self.genreView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
+//						
+//						[self.genreView setup];
+//						self.genreView.hidden = YES;
+//
+//						
+//						self.artistView = [LMArtistView newAutoLayoutView];
+//						self.artistView.backgroundColor = [UIColor whiteColor];
+//						self.artistView.coreViewController = self;
+//						[self.view addSubview:self.artistView];
+//						
+//						[self.artistView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+//						[self.heightConstraintArray addObject:[self.artistView autoSetDimension:ALDimensionHeight toSize:self.view.frame.size.height]];
+//						[self.artistView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
+//						
+//						[self.artistView setup];
+//						self.artistView.hidden = YES;
+
 
 						self.browsingAssistant = [[LMBrowsingAssistantView alloc]initForAutoLayout];
 						self.browsingAssistant.coreViewController = self;
@@ -663,15 +665,26 @@ BOOL didAutomaticallyClose = NO;
 						self.browsingAssistant.searchBarDelegate = self;
 						self.browsingAssistant.letterTabBarDelegate = self;
 						[self.navigationController.view addSubview:self.browsingAssistant];
-//						[self.view addSubview:self.browsingAssistant];
-						[self.browsingAssistant setup];
-						
+
 						self.browsingAssistant.textBackgroundConstraint = [self.browsingAssistant autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.navigationController.view];
 						[self.browsingAssistant autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.navigationController.view];
 						[self.browsingAssistant autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.navigationController.view];
 						
 						self.browsingAssistantViewAttachedTo = self.navigationController.view;
 						
+						
+						
+						self.albumView = [LMAlbumView newAutoLayoutView];
+						self.albumView.coreViewController = self;
+						[self.view addSubview:self.albumView];
+						
+						[self.albumView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+						[self.albumView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.browsingAssistant];
+						[self.albumView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
+						
+						self.albumView.hidden = YES;
+						
+
 						
 						self.searchView = [LMSearchView newAutoLayoutView];
 						[self.view addSubview:self.searchView];
@@ -680,8 +693,8 @@ BOOL didAutomaticallyClose = NO;
 						[self.searchView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.browsingAssistant withOffset:0];
 						[self.searchView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
 						self.searchViewLeadingConstraint = [self.searchView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-//						self.searchViewLeadingConstraint.constant = self.view.frame.size.width;
-						
+						self.searchViewLeadingConstraint.constant = self.view.frame.size.width;
+
 						[self.musicPlayer addMusicDelegate:self];
 						
 						[NSTimer scheduledTimerWithTimeInterval:1.0
@@ -697,17 +710,23 @@ BOOL didAutomaticallyClose = NO;
 						[self.statusBarBlurView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 						[self.statusBarBlurView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 						self.statusBarBlurViewHeightConstraint = [self.statusBarBlurView autoSetDimension:ALDimensionHeight toSize:20*[LMSettings shouldShowStatusBar]];
-						
-						LMImageManager *imageManager = [LMImageManager sharedImageManager];
-						imageManager.viewToDisplayAlertsOn = self.navigationController.view;
+
+//						LMImageManager *imageManager = [LMImageManager sharedImageManager];
+//						imageManager.viewToDisplayAlertsOn = self.navigationController.view;
 						
 						
 						NSTimeInterval endTime = [[NSDate new] timeIntervalSince1970];
 						
-						NSLog(@"Took %f seconds to load the app.", (endTime-startTime));
+						NSLog(@"Took %f seconds.", (endTime-startTime));
 						
 //						NSLog(@"Nice algorithm %@", [self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:[self.musicPlayer queryCollectionsForMusicType:LMMusicTypeAlbums]
 //																									 withAssociatedMusicType:LMMusicTypeAlbums]);
+						
+						self.loaded = YES;
+						
+						[UIView animateWithDuration:0.25 animations:^{
+							[self setNeedsStatusBarAppearanceUpdate];
+						}];
 					});
 					break;
 				}

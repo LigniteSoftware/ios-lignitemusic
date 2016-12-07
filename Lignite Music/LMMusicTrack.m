@@ -11,40 +11,85 @@
 #import "LMMusicPlayer.h"
 #import "LMImageManager.h"
 
-@interface LMMusicTrack()
-
-@end
-
 @implementation LMMusicTrack
+
+@synthesize title = _title;
+@synthesize artist = _artist;
+@synthesize albumTitle = _albumTitle;
+@synthesize genre = _genre;
+@synthesize composer = _composer;
+
+@synthesize persistentID = _persistentID;
+@synthesize albumPersistentID = _albumPersistentID;
+@synthesize albumArtistPersistentID = _albumArtistPersistentID;
+@synthesize artistPersistentID = _artistPersistentID;
+@synthesize composerPersistentID = _composerPersistentID;
+@synthesize genrePersistentID = _genrePersistentID;
+
+@synthesize playbackDuration = _playbackDuration;
 
 - (instancetype)initWithMPMediaItem:(MPMediaItem*)item {
 	self = [super init];
 	if(self) {
-		self.title = item.title;
-		self.artist = item.artist;
-		self.albumTitle = [item.albumTitle isEqualToString:@""] ? nil : item.albumTitle;
-		self.genre = item.genre;
-		self.composer = item.composer;
-		
-		self.persistentID = item.persistentID;
-		self.albumArtistPersistentID = item.albumArtistPersistentID;
-		self.albumPersistentID = item.albumPersistentID;
-		self.artistPersistentID = item.artistPersistentID;
-		self.composerPersistentID = item.composerPersistentID;
-		self.genrePersistentID = item.genrePersistentID;
-		
-		self.playbackDuration = item.playbackDuration;
-		
 		self.sourceTrack = item;
-		
-		//NSLog(@"Creating image");
-		//[item.artwork imageWithSize:item.artwork.bounds.size];
-		//NSLog(@"Created image with size %@", NSStringFromCGRect(item.artwork.bounds));
 	}
 	else{
 		NSLog(@"Error creating LMMusicTrack with MPMediaItem %@!", item);
 	}
 	return self;
+}
+
+//- (LMMusicPlayerType)playerType {
+//	return [[LMMusicPlayer sharedMusicPlayer] playerType];
+//}
+
+- (NSString*)title {
+	return [(MPMediaItem*)self.sourceTrack title];
+}
+
+- (NSString*)artist {
+	return [(MPMediaItem*)self.sourceTrack artist];
+}
+
+- (NSString*)albumTitle {
+	NSString *sourceTrackAlbumTitle = [(MPMediaItem*)self.sourceTrack albumTitle];
+	return [sourceTrackAlbumTitle isEqualToString:@""] ? nil : sourceTrackAlbumTitle;
+}
+
+- (NSString*)genre {
+	return [(MPMediaItem*)self.sourceTrack genre];
+}
+
+- (NSString*)composer {
+	return [(MPMediaItem*)self.sourceTrack composer];
+}
+
+- (LMMusicTrackPersistentID)persistentID {
+	return [(MPMediaItem*)self.sourceTrack persistentID];
+}
+
+- (LMMusicTrackPersistentID)albumArtistPersistentID {
+	return [(MPMediaItem*)self.sourceTrack albumArtistPersistentID];
+}
+
+- (LMMusicTrackPersistentID)albumPersistentID {
+	return [(MPMediaItem*)self.sourceTrack albumPersistentID];
+}
+
+- (LMMusicTrackPersistentID)artistPersistentID {
+	return [(MPMediaItem*)self.sourceTrack artistPersistentID];
+}
+
+- (LMMusicTrackPersistentID)composerPersistentID {
+	return [(MPMediaItem*)self.sourceTrack composerPersistentID];
+}
+
+- (LMMusicTrackPersistentID)genrePersistentID {
+	return [(MPMediaItem*)self.sourceTrack genrePersistentID];
+}
+
+- (NSTimeInterval)playbackDuration {
+	return [(MPMediaItem*)self.sourceTrack playbackDuration];
 }
 
 - (UIImage*)albumArt {

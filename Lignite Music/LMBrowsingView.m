@@ -284,7 +284,7 @@
 				LMMusicTrack *representativeTrack = [self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex].representativeItem;
 				UIImage *artistImage = [representativeTrack artistImage];
 				
-				dispatch_sync(dispatch_get_main_queue(), ^{
+				dispatch_async(dispatch_get_main_queue(), ^{
 					if(operation.cancelled){
 						NSLog(@"Rejecting.");
 						return;
@@ -311,7 +311,7 @@
 				LMMusicTrack *representativeTrack = [self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex].representativeItem;
 				UIImage *albumArt = [representativeTrack albumArt];
 				
-				dispatch_sync(dispatch_get_main_queue(), ^{
+				dispatch_async(dispatch_get_main_queue(), ^{
 					if(operation.cancelled){
 						NSLog(@"Rejecting.");
 						return;

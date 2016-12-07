@@ -35,7 +35,7 @@
 		}
 	}
 		
-	contentRect = CGRectMake(0, 0, self.adaptForWidth ? (contentRect.size.width+10) : WINDOW_FRAME.size.width, self.adaptForWidth ? self.frame.size.height : contentRect.size.height);
+	contentRect = CGRectMake(0, 0, self.adaptForWidth ? (contentRect.size.width+10) : WINDOW_FRAME.size.width, self.adaptForWidth ? self.frame.size.height : (contentRect.size.height+20));
 	
 	self.contentSize = contentRect.size;
 }

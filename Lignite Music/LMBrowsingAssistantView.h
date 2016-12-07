@@ -67,11 +67,6 @@ typedef enum {
 @property LMBrowsingBar *browsingBar;
 
 /**
- Setup the browsing assistant.
- */
-- (void)setup;
-
-/**
  Close the browsing assistant.
  
  @return If it was automatically closed. NO if it was already closed.

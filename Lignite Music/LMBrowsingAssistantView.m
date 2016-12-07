@@ -289,10 +289,6 @@
 //	[self openSourceSelector];
 }
 
-- (void)setup {
-
-}
-
 - (void)searchTermChangedTo:(NSString *)searchTerm {
 	[self.searchBarDelegate searchTermChangedTo:searchTerm];
 }
