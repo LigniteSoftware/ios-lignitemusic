@@ -34,7 +34,8 @@
 								  MPMediaItemPropertyAlbumTitle,
 								  MPMediaItemPropertyTitle,
 								  MPMediaItemPropertyComposer,
-								  MPMediaItemPropertyGenre
+								  MPMediaItemPropertyGenre,
+								  MPMediaPlaylistPropertyName
 								  ];
 	
 	NSArray<NSNumber*> *associatedGroupings = @[
@@ -42,14 +43,18 @@
 								 @(MPMediaGroupingAlbum),
 								 @(MPMediaGroupingTitle),
 								 @(MPMediaGroupingComposer),
-								 @(MPMediaGroupingGenre)
+								 @(MPMediaGroupingGenre),
+								 @(MPMediaGroupingPlaylist)
 								 ];
 	
 	NSMutableArray<NSArray<MPMediaItemCollection*>*> *searchResults = [NSMutableArray new];
+	NSMutableArray<NSNumber*> *searchGroupings = [NSMutableArray new];
 	
 	for(NSUInteger baseIndex = 0; baseIndex < associatedProperties.count; baseIndex++){
 		MPMediaGrouping associatedMediaGrouping = [associatedGroupings[baseIndex] unsignedIntegerValue];
 
+		BOOL isPlaylist = (associatedMediaGrouping == MPMediaGroupingPlaylist);
+		
 		MPMediaQuery *baseQuery = [MPMediaQuery new];
 		baseQuery.groupingType = associatedMediaGrouping;
 		
@@ -61,41 +66,49 @@
 			MPMediaItemCollection *collection = [collections objectAtIndex:collectionIndex];
 			MPMediaItem *representativeItem = collection.representativeItem;
 			
-			NSArray *propertiesToCheck = nil;
-			switch(associatedMediaGrouping){
-				case MPMediaGroupingArtist:
-				case MPMediaGroupingComposer:
-					propertiesToCheck = @[ MPMediaItemPropertyArtist ];
-					break;
-				default:
-					propertiesToCheck = associatedProperties;
-					break;
+			if(isPlaylist){
+				NSString *playlistName = [collection valueForProperty:associatedProperties[baseIndex]];
+				if([LMSearch string:playlistName hasPrefix:searchString caseInsensitive:YES]){
+					[collectionsWhichApply addObject:collection];
+				}
 			}
-			
-			for(NSUInteger propertyIndex = 0; propertyIndex < propertiesToCheck.count; propertyIndex++){
-				BOOL propertyFound = NO;
+			else{
+				NSArray *propertiesToCheck = nil;
+				switch(associatedMediaGrouping){
+					case MPMediaGroupingArtist:
+					case MPMediaGroupingComposer:
+						propertiesToCheck = @[ MPMediaItemPropertyArtist ];
+						break;
+					default:
+						propertiesToCheck = associatedProperties;
+						break;
+				}
 				
-				NSString *completeProperty = [representativeItem valueForProperty:propertiesToCheck[propertyIndex]];
-				NSArray *propertyWords = [completeProperty componentsSeparatedByString:@" "];
-				
-				for(NSUInteger propertyWordIndex = 0; propertyWordIndex < propertyWords.count; propertyWordIndex++){
-					NSString *propertyWord = [propertyWords objectAtIndex:propertyWordIndex];
+				for(NSUInteger propertyIndex = 0; propertyIndex < propertiesToCheck.count; propertyIndex++){
+					BOOL propertyFound = NO;
 					
-					if([LMSearch string:propertyWord hasPrefix:searchString caseInsensitive:YES]){
-						[collectionsWhichApply addObject:collection];
+					NSString *completeProperty = [representativeItem valueForProperty:propertiesToCheck[propertyIndex]];
+					NSArray *propertyWords = [completeProperty componentsSeparatedByString:@" "];
+					
+					for(NSUInteger propertyWordIndex = 0; propertyWordIndex < propertyWords.count; propertyWordIndex++){
+						NSString *propertyWord = [propertyWords objectAtIndex:propertyWordIndex];
 						
-						propertyFound = YES;
+						if([LMSearch string:propertyWord hasPrefix:searchString caseInsensitive:YES]){
+							[collectionsWhichApply addObject:collection];
+							
+							propertyFound = YES;
+							break;
+						}
+					}
+					
+					if(propertyFound){
 						break;
 					}
-				}
-				
-				if(propertyFound){
-					break;
-				}
-				else{
-					if([LMSearch string:completeProperty hasPrefix:searchString caseInsensitive:YES]){
-						[collectionsWhichApply addObject:collection];
-						break;
+					else{
+						if([LMSearch string:completeProperty hasPrefix:searchString caseInsensitive:YES]){
+							[collectionsWhichApply addObject:collection];
+							break;
+						}
 					}
 				}
 			}
@@ -103,10 +116,21 @@
 		
 		NSLog(@"%@: %d results for %d", searchString, (int)collectionsWhichApply.count, (int)baseIndex);
 		
-		[searchResults addObject:collectionsWhichApply];
+		if(collectionsWhichApply.count > 0){
+			[searchResults addObject:collectionsWhichApply];
+			[searchGroupings addObject:@(associatedMediaGrouping)];
+		}
 	}
 	
-	return [NSArray arrayWithArray:searchResults];
+	NSMutableArray *finalArray = [NSMutableArray new];
+	[finalArray addObject:searchGroupings];
+	
+	for(NSUInteger i = 0; i < searchResults.count; i++){
+		NSArray *searchResultsArray = [searchResults objectAtIndex:i];
+		[finalArray addObject:searchResultsArray];
+	}
+	
+	return [NSArray arrayWithArray:finalArray];
 }
 
 @end

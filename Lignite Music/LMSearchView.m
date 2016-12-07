@@ -32,6 +32,11 @@
 @property NSArray<NSArray<MPMediaItemCollection*>*> *searchResultsArray;
 
 /**
+ The grouping types of the search results.
+ */
+@property NSArray<NSNumber*> *searchResultsGroupingArray;
+
+/**
  The properties associated with each index in search.
  */
 @property NSArray<NSString*>* associatedProperties;
@@ -86,9 +91,15 @@
 		NSLog(@"Done search for %@. Completed in %fs.", searchView.currentSearchTerm, endTime-startTime);
 		
 		dispatch_async(dispatch_get_main_queue(), ^{
-			NSLog(@"%d items", (int)resultsArray.count);
-			searchView.searchResultsArray = resultsArray;
-			searchView.sectionTableView.totalNumberOfSections = searchView.searchResultsArray.count;
+			NSLog(@"%d items for %@", (int)resultsArray.count, searchView.currentSearchTerm);
+			searchView.searchResultsGroupingArray = [resultsArray objectAtIndex:0];
+			NSMutableArray *actualResultsArray = [NSMutableArray arrayWithArray:resultsArray];
+			[actualResultsArray removeObjectAtIndex:0];
+			
+			NSLog(@"Search results grouping %@", self.searchResultsGroupingArray);
+			
+			searchView.searchResultsArray = actualResultsArray;
+			searchView.sectionTableView.totalNumberOfSections = searchView.searchResultsGroupingArray.count;
 			[searchView.sectionTableView registerCellIdentifiers];
 			[searchView.sectionTableView reloadData];
 		});
@@ -96,7 +107,7 @@
 }
 
 - (UIImage*)iconAtSection:(NSUInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView {
-	MPMediaGrouping mediaGrouping = (MPMediaGrouping)[[self.associatedGroupings objectAtIndex:section] unsignedIntegerValue];
+	MPMediaGrouping mediaGrouping = (MPMediaGrouping)[[self.searchResultsGroupingArray objectAtIndex:section] unsignedIntegerValue];
 	
 	switch(mediaGrouping){
 		case MPMediaGroupingArtist:
@@ -109,6 +120,8 @@
 			return [LMAppIcon imageForIcon:LMIconGenres];
 		case MPMediaGroupingTitle:
 			return [LMAppIcon imageForIcon:LMIconTitles];
+		case MPMediaGroupingPlaylist:
+			return [LMAppIcon imageForIcon:LMIconPlaylists];
 		default:
 			return [LMAppIcon imageForIcon:LMIconBug];
 	}
@@ -117,7 +130,7 @@
 - (NSString*)titleAtSection:(NSUInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView {
 	NSArray<MPMediaItemCollection*>* collections = [self.searchResultsArray objectAtIndex:section];
 
-	MPMediaGrouping mediaGrouping = (MPMediaGrouping)[[self.associatedGroupings objectAtIndex:section] unsignedIntegerValue];
+	MPMediaGrouping mediaGrouping = (MPMediaGrouping)[[self.searchResultsGroupingArray objectAtIndex:section] unsignedIntegerValue];
 	
 	switch(mediaGrouping){
 		case MPMediaGroupingArtist:
@@ -130,6 +143,8 @@
 			return [NSString stringWithFormat:@"%lu %@", collections.count, NSLocalizedString(collections.count == 1 ? @"Genre" : @"Genres", nil)];
 		case MPMediaGroupingTitle:
 			return [NSString stringWithFormat:@"%lu %@", collections.count, NSLocalizedString(collections.count == 1 ? @"Title" : @"Titles", nil)];
+		case MPMediaGroupingPlaylist:
+			return [NSString stringWithFormat:@"%lu %@", collections.count, NSLocalizedString(collections.count == 1 ? @"Playlist" : @"Playlists", nil)];
 		default:
 			return @"Unknown Section";
 	}
@@ -147,15 +162,16 @@
 - (NSString*)titleForIndexPath:(NSIndexPath*)indexPath forSectionTableView:(LMSectionTableView*)sectionTableView {
 	NSArray<MPMediaItemCollection*>* collections = [self.searchResultsArray objectAtIndex:indexPath.section];
 	MPMediaItemCollection *collection = [collections objectAtIndex:indexPath.row];
+	MPMediaGrouping mediaGrouping = (MPMediaGrouping)[[self.searchResultsGroupingArray objectAtIndex:indexPath.section] unsignedIntegerValue];
 	
-	return [collection.representativeItem valueForProperty:[self.associatedProperties objectAtIndex:indexPath.section]];
+	return (mediaGrouping == MPMediaGroupingPlaylist) ? [collection valueForProperty:MPMediaPlaylistPropertyName] : [collection.representativeItem valueForProperty:[self.associatedProperties objectAtIndex:[self.associatedGroupings indexOfObject:@(mediaGrouping)]]];
 }
 
 - (NSString*)subtitleForIndexPath:(NSIndexPath*)indexPath forSectionTableView:(LMSectionTableView*)sectionTableView {
 	NSArray<MPMediaItemCollection*>* collections = [self.searchResultsArray objectAtIndex:indexPath.section];
 	MPMediaItemCollection *collection = [collections objectAtIndex:indexPath.row];
 	MPMediaItem *representativeItem = collection.representativeItem;
-	MPMediaGrouping mediaGrouping = (MPMediaGrouping)[[self.associatedGroupings objectAtIndex:indexPath.section] unsignedIntegerValue];
+	MPMediaGrouping mediaGrouping = (MPMediaGrouping)[[self.searchResultsGroupingArray objectAtIndex:indexPath.section] unsignedIntegerValue];
 	
 	switch(mediaGrouping){
 //		case MPMediaGroupingArtist:
@@ -172,6 +188,7 @@
 		case MPMediaGroupingArtist:
 		case MPMediaGroupingComposer:
 		case MPMediaGroupingGenre:
+		case MPMediaGroupingPlaylist:
 			return [NSString stringWithFormat:@"%lu %@", collection.count, NSLocalizedString(collection.count == 1 ? @"Song" : @"Songs", nil)];
 		case MPMediaGroupingTitle:
 			return collection.representativeItem.artist;
@@ -212,7 +229,8 @@
 									   MPMediaItemPropertyAlbumTitle,
 									   MPMediaItemPropertyTitle,
 									   MPMediaItemPropertyComposer,
-									   MPMediaItemPropertyGenre
+									   MPMediaItemPropertyGenre,
+									   MPMediaPlaylistPropertyName
 									   ];
 		
 		self.associatedGroupings = @[
@@ -220,14 +238,15 @@
 									 @(MPMediaGroupingAlbum),
 									 @(MPMediaGroupingTitle),
 									 @(MPMediaGroupingComposer),
-									 @(MPMediaGroupingGenre)
+									 @(MPMediaGroupingGenre),
+									 @(MPMediaGroupingPlaylist)
 									 ];
 		
 		self.backgroundColor = [UIColor cyanColor];
 		
 		self.sectionTableView = [LMSectionTableView newAutoLayoutView];
 		self.sectionTableView.contentsDelegate = self;
-		self.sectionTableView.totalNumberOfSections = 5;
+		self.sectionTableView.totalNumberOfSections = 6;
 		self.sectionTableView.title = @"Search";
 		[self addSubview:self.sectionTableView];
 		
