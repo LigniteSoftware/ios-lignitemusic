@@ -11,6 +11,7 @@
 #import "LMMusicPlayer.h"
 #import "LMSectionTableView.h"
 #import "LMAppIcon.h"
+#import "LMSearch.h"
 
 @interface LMSearchView()<LMSectionTableViewDelegate>
 
@@ -100,6 +101,20 @@
 			[searchView.sectionTableView registerCellIdentifiers];
 			[searchView.sectionTableView reloadData];
 		});
+	});
+	
+	dispatch_async(dispatch_get_global_queue(NSQualityOfServiceUserInteractive, 0), ^{
+		id strongSelf = weakSelf;
+		
+		if (!strongSelf) {
+			return;
+		}
+		
+		LMSearchView *searchView = strongSelf;
+		
+		NSString *asyncSearchTerm = searchView.currentSearchTerm;
+		
+//		[LMSearch searchResultsForString:asyncSearchTerm];
 	});
 }
 

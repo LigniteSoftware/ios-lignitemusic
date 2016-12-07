@@ -9,7 +9,6 @@
 #import <PebbleKit/PebbleKit.h>
 #import <YYImage/YYImage.h>
 #import "LMPebbleSettingsView.h"
-#import "LMNowPlayingViewController.h"
 #import "LMPebbleImage.h"
 #import "LMPebbleManager.h"
 #import "LMMusicPlayer.h"
@@ -65,13 +64,13 @@
 	NSString *album = track.albumTitle ? track.albumTitle : @"";
 
 	NSLog(@"Pushing now playing details to watch.");
-	NSDictionary *titleDict = @{MessageKeyNowPlaying: title, MessageKeyNowPlayingResponseType:[NSNumber numberWithUint8:NowPlayingTitle]};
+	NSDictionary *titleDict = @{MessageKeyNowPlaying: title, MessageKeyNowPlayingResponseType:[NSNumber pb_numberWithUint8:NowPlayingTitle]};
 	[self sendMessageToPebble:titleDict];
 	
-	NSDictionary *artistDict = @{MessageKeyNowPlaying: artist, MessageKeyNowPlayingResponseType:[NSNumber numberWithUint8:NowPlayingArtist]};
+	NSDictionary *artistDict = @{MessageKeyNowPlaying: artist, MessageKeyNowPlayingResponseType:[NSNumber pb_numberWithUint8:NowPlayingArtist]};
 	[self sendMessageToPebble:artistDict];
 	
-	NSDictionary *albumDict = @{MessageKeyNowPlaying: album, MessageKeyNowPlayingResponseType:[NSNumber numberWithUint8:NowPlayingAlbum]};
+	NSDictionary *albumDict = @{MessageKeyNowPlaying: album, MessageKeyNowPlayingResponseType:[NSNumber pb_numberWithUint8:NowPlayingAlbum]};
 	[self sendMessageToPebble:albumDict];
 	
 	//[self pushCurrentStateToWatch];
@@ -108,8 +107,8 @@
 - (void)playTrackFromMessage:(NSDictionary *)message withTrackPlayMode:(TrackPlayMode)trackPlayMode {
 	MPMediaItemCollection *queue = [self getCollectionFromMessage:message][0];
 	LMMusicTrackCollection *trackCollection = [LMMusicPlayer musicTrackCollectionFromMediaItemCollection:queue];
-	LMMusicTrack *track = [trackCollection items][[[message[MessageKeyPlayTrack] int16Value] < 0 ? 0 : message[MessageKeyPlayTrack] int16Value]];
-	NSLog(@"Got index %d", [message[MessageKeyPlayTrack] int16Value]);
+	LMMusicTrack *track = [trackCollection items][[[message[MessageKeyPlayTrack] pb_int16Value] < 0 ? 0 : message[MessageKeyPlayTrack] pb_int16Value]];
+	NSLog(@"Got index %d", [message[MessageKeyPlayTrack] pb_int16Value]);
 //	for(int i = 0; i < [[queue items] count]; i++){
 //		NSLog(@"Got item %@: %d", [[[queue items] objectAtIndex:i]valueForProperty:MPMediaItemPropertyTitle], i);
 //	}
@@ -162,7 +161,7 @@
 - (void)sublistRequest:(NSDictionary*)request {
 	NSArray *results = [self getCollectionFromMessage:request];
 	MPMediaGrouping request_type = [request[MessageKeyRequestLibrary] integerValue];
-	uint16_t offset = [request[MessageKeyRequestOffset] uint16Value];
+	uint16_t offset = [request[MessageKeyRequestOffset] pb_uint16Value];
 	if(request_type == MPMediaGroupingTitle) {
 		results = [results[0] items];
 	}
@@ -345,7 +344,7 @@
 		if(self.pebbleWatch){
 			if(!albumArtImage) {
 				NSLog(@"No image!");
-				[self sendMessageToPebble:@{MessageKeyAlbumArtLength:[NSNumber numberWithUint16:1], MessageKeyImagePart:[NSNumber numberWithUint8:index]}];
+				[self sendMessageToPebble:@{MessageKeyAlbumArtLength:[NSNumber pb_numberWithUint16:1], MessageKeyImagePart:[NSNumber pb_numberWithUint8:index]}];
 			}
 			else {
 				NSData *bitmap = [NSData dataWithContentsOfFile:imageString];
@@ -353,7 +352,7 @@
 				
 				size_t length = [bitmap length];
 				
-				NSDictionary *sizeDict = @{MessageKeyAlbumArtLength: [NSNumber numberWithUint16:length], MessageKeyImagePart:[NSNumber numberWithUint8:index]};
+				NSDictionary *sizeDict = @{MessageKeyAlbumArtLength: [NSNumber pb_numberWithUint16:length], MessageKeyImagePart:[NSNumber pb_numberWithUint8:index]};
 				NSLog(@"Album art size message: %@", sizeDict);
 				
 				[self sendMessageToPebble:sizeDict];
@@ -365,7 +364,7 @@
 					NSRange rangeOfBytes = NSMakeRange(i, MIN(self.appMessageSize-1, length - i));
 					[outgoing appendBytes:[[bitmap subdataWithRange:rangeOfBytes] bytes] length:rangeOfBytes.length];
 					
-					NSDictionary *dict = @{MessageKeyAlbumArt: outgoing, MessageKeyAlbumArtIndex:[NSNumber numberWithUint16:j], MessageKeyImagePart:[NSNumber numberWithUint8:index]};
+					NSDictionary *dict = @{MessageKeyAlbumArt: outgoing, MessageKeyAlbumArtIndex:[NSNumber pb_numberWithUint16:j], MessageKeyImagePart:[NSNumber pb_numberWithUint8:index]};
 					NSLog(@"Sending index %d", j);
 					[self sendMessageToPebble:dict];
 					j++;
@@ -388,13 +387,13 @@
 	
 	if(!albumArtImage) {
 		NSLog(@"No image!");
-		[self sendMessageToPebble:@{MessageKeyHeaderIconLength:[NSNumber numberWithUint8:1]}];
+		[self sendMessageToPebble:@{MessageKeyHeaderIconLength:[NSNumber pb_numberWithUint8:1]}];
 	}
 	else {
 		NSData *bitmap = [NSData dataWithContentsOfFile:imageString];
 		
 		size_t length = [bitmap length];
-		NSDictionary *sizeDict = @{MessageKeyHeaderIconLength: [NSNumber numberWithUint16:[bitmap length]]};
+		NSDictionary *sizeDict = @{MessageKeyHeaderIconLength: [NSNumber pb_numberWithUint16:[bitmap length]]};
 		NSLog(@"Album art size message: %@", sizeDict);
 		[self sendMessageToPebble:sizeDict];
 		
@@ -405,7 +404,7 @@
 			NSRange rangeOfBytes = NSMakeRange(i, MIN(self.appMessageSize-1, length - i));
 			[outgoing appendBytes:[[bitmap subdataWithRange:rangeOfBytes] bytes] length:rangeOfBytes.length];
 			
-			NSDictionary *dict = @{MessageKeyHeaderIcon: outgoing, MessageKeyHeaderIconIndex:[NSNumber numberWithUint16:j]};
+			NSDictionary *dict = @{MessageKeyHeaderIcon: outgoing, MessageKeyHeaderIconIndex:[NSNumber pb_numberWithUint16:j]};
 			[self sendMessageToPebble:dict];
 			j++;
 		}
@@ -465,7 +464,7 @@
 	
 	self.messageQueue.watch = self.pebbleWatch;
 	
-	[self.pebbleWatch appMessagesPushUpdate:@{MessageKeyAlbumArtLength:[NSNumber numberWithUint8:1]} onSent:^(PBWatch * _Nonnull watch, NSDictionary * _Nonnull update, NSError * _Nullable error) {
+	[self.pebbleWatch appMessagesPushUpdate:@{MessageKeyAlbumArtLength:[NSNumber pb_numberWithUint8:1]} onSent:^(PBWatch * _Nonnull watch, NSDictionary * _Nonnull update, NSError * _Nullable error) {
 		if(error){
 			NSLog(@"Error sending to watch %@", error);
 		}
@@ -484,7 +483,7 @@
 		}
 		if(update[MessageKeyPlayTrack]) {
 			NSLog(@"Will play track from message %@", update);
-			[self playTrackFromMessage:update withTrackPlayMode:[update[MessageKeyTrackPlayMode] uint8Value]];
+			[self playTrackFromMessage:update withTrackPlayMode:[update[MessageKeyTrackPlayMode] pb_uint8Value]];
 		}
 		else if(update[MessageKeyRequestLibrary]) {
 			if(update[MessageKeyRequestParent]) {
@@ -495,10 +494,10 @@
 		}
 		else if(update[MessageKeyNowPlaying]) {
 			NSLog(@"Now playing key sent");
-			self.requestType = [update[MessageKeyNowPlaying] uint8Value];
-			self.watchModel = [update[MessageKeyWatchModel] uint8Value];
-			self.imageParts = [update[MessageKeyImagePart] uint8Value];
-			self.appMessageSize = [update[MessageKeyAppMessageSize] uint16Value];
+			self.requestType = [update[MessageKeyNowPlaying] pb_uint8Value];
+			self.watchModel = [update[MessageKeyWatchModel] pb_uint8Value];
+			self.imageParts = [update[MessageKeyImagePart] pb_uint8Value];
+			self.appMessageSize = [update[MessageKeyAppMessageSize] pb_uint16Value];
 			if(update[MessageKeyFirstOpen]){
 				NSLog(@"\nIs first app open!\n");
 				self.firstPebbleAppOpen = YES;
@@ -511,7 +510,7 @@
 			[self changeState:(NowPlayingState)[update[MessageKeyChangeState] integerValue]];
 		}
 		else if(update[MessageKeyConnectionTest]){
-			[self.messageQueue enqueue:@{ MessageKeyConnectionTest:[NSNumber numberWithInt8:1] }];
+			[self.messageQueue enqueue:@{ MessageKeyConnectionTest:[NSNumber pb_numberWithInt8:1] }];
 		}
 		return YES;
 	}];

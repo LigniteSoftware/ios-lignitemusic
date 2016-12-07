@@ -362,6 +362,7 @@ BOOL didAutomaticallyClose = NO;
 									 @"Added letter tab browsing",
 									 @"Added new music progress bar",
 									 @"Added icon credits",
+									 @"Added license links in credits",
 									 @"Fixed music sometimes not playing",
 									 @"Fixed crash on some older devices",
 									 @"Improved some visual aspects",
@@ -492,12 +493,12 @@ BOOL didAutomaticallyClose = NO;
 	
 //	NSLog(@"Loading view %@", self.navigationController);
 	
-	LMCreditsView *view = [LMCreditsView newAutoLayoutView];
-	[self.view addSubview:view];
-	
-	[view autoPinEdgesToSuperviewEdges];
-	
-	return;
+//	LMCreditsView *view = [LMCreditsView newAutoLayoutView];
+//	[self.view addSubview:view];
+//	
+//	[view autoPinEdgesToSuperviewEdges];
+//	
+//	return;
 	
 //	self.settingsView = [LMSettingsView newAutoLayoutView];
 //	self.settingsView.coreViewController = self;

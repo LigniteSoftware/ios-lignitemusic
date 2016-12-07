@@ -45,7 +45,7 @@
  
  */
 
-"CreditsLicenses" = "License links";
+"CreditsLicenses" = "License links"; //Links to licenses, such as library licenses and icon licenses.
 
 /*
  

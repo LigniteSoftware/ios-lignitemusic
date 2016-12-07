@@ -57,7 +57,7 @@
 }
 
 - (void)creditLinks {
-	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"www.lignitemusic.com/licenses"]];
+	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://www.lignitemusic.com/licenses/"]];
 }
 
 - (void)layoutSubviews {
@@ -65,9 +65,7 @@
 	
 	if(!self.didSetupConstraints){
 		self.didSetupConstraints = YES;
-		
-		self.userInteractionEnabled = YES;
-		
+				
 		self.scrollView = [LMScrollView newAutoLayoutView];
 		self.scrollView.backgroundColor = [UIColor whiteColor];
 		[self addSubview:self.scrollView];

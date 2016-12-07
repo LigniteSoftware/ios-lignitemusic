@@ -33,7 +33,6 @@
 		6A43BCE91DDFA66B009FB0E9 /* onboarding_us.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A43BCE81DDFA66B009FB0E9 /* onboarding_us.png */; };
 		6A4BAEEE1DC984EC000DF537 /* LMBigListEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A4BAEED1DC984EC000DF537 /* LMBigListEntry.m */; };
 		6A4BAEF21DC9C59B000DF537 /* LMTiledAlbumCoverView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A4BAEF11DC9C59B000DF537 /* LMTiledAlbumCoverView.m */; };
-		6A514E121CE904F100AFB351 /* LMNowPlayingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A514E111CE904F000AFB351 /* LMNowPlayingViewController.m */; };
 		6A514E141CE9621B00AFB351 /* icon_dynamic_playlist.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A514E131CE9621B00AFB351 /* icon_dynamic_playlist.png */; };
 		6A514E161CEA125B00AFB351 /* lignite_background_portrait.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A514E151CEA125B00AFB351 /* lignite_background_portrait.png */; };
 		6A514E191CEA15D900AFB351 /* LMSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A514E181CEA15D900AFB351 /* LMSlider.m */; };
@@ -57,6 +56,7 @@
 		6A7115B71DCEE410006DE00F /* LMTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A7115B61DCEE410006DE00F /* LMTableView.m */; };
 		6A73CF5C1D4127C70097A400 /* LMPebbleImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A73CF5B1D4127C70097A400 /* LMPebbleImage.m */; };
 		6A73CF611D451BFA0097A400 /* LMPebbleMessageQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A73CF601D451BFA0097A400 /* LMPebbleMessageQueue.m */; };
+		6A7565301DF7E38900A9EDD6 /* LMSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A75652F1DF7E38900A9EDD6 /* LMSearch.m */; };
 		6A759D3D1DE8C63A0051E1A9 /* icon_pebbles.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A759D3C1DE8C63A0051E1A9 /* icon_pebbles.png */; };
 		6A759D401DE8DDC50051E1A9 /* LMPebbleSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A759D3F1DE8DDC50051E1A9 /* LMPebbleSettingsViewController.m */; };
 		6A759D421DE8EB0E0051E1A9 /* icon_functionality.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A759D411DE8EB0E0051E1A9 /* icon_functionality.png */; };
@@ -204,8 +204,6 @@
 		6A4BAEED1DC984EC000DF537 /* LMBigListEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMBigListEntry.m; sourceTree = "<group>"; };
 		6A4BAEF01DC9C59B000DF537 /* LMTiledAlbumCoverView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMTiledAlbumCoverView.h; sourceTree = "<group>"; };
 		6A4BAEF11DC9C59B000DF537 /* LMTiledAlbumCoverView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMTiledAlbumCoverView.m; sourceTree = "<group>"; };
-		6A514E101CE904F000AFB351 /* LMNowPlayingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMNowPlayingViewController.h; sourceTree = "<group>"; };
-		6A514E111CE904F000AFB351 /* LMNowPlayingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMNowPlayingViewController.m; sourceTree = "<group>"; };
 		6A514E131CE9621B00AFB351 /* icon_dynamic_playlist.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_dynamic_playlist.png; sourceTree = "<group>"; };
 		6A514E151CEA125B00AFB351 /* lignite_background_portrait.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lignite_background_portrait.png; sourceTree = "<group>"; };
 		6A514E171CEA15D900AFB351 /* LMSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMSlider.h; sourceTree = "<group>"; };
@@ -244,6 +242,8 @@
 		6A73CF5B1D4127C70097A400 /* LMPebbleImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMPebbleImage.m; sourceTree = "<group>"; };
 		6A73CF5F1D451BFA0097A400 /* LMPebbleMessageQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMPebbleMessageQueue.h; sourceTree = "<group>"; };
 		6A73CF601D451BFA0097A400 /* LMPebbleMessageQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMPebbleMessageQueue.m; sourceTree = "<group>"; };
+		6A75652E1DF7E38900A9EDD6 /* LMSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMSearch.h; sourceTree = "<group>"; };
+		6A75652F1DF7E38900A9EDD6 /* LMSearch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMSearch.m; sourceTree = "<group>"; };
 		6A759D3C1DE8C63A0051E1A9 /* icon_pebbles.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_pebbles.png; sourceTree = "<group>"; };
 		6A759D3E1DE8DDC50051E1A9 /* LMPebbleSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMPebbleSettingsViewController.h; sourceTree = "<group>"; };
 		6A759D3F1DE8DDC50051E1A9 /* LMPebbleSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMPebbleSettingsViewController.m; sourceTree = "<group>"; };
@@ -510,8 +510,6 @@
 				6A313C111BB44959002BBC33 /* LMAlbumArtView.m */,
 				6AD226FA1DA4B7770056695A /* LMNowPlayingView.h */,
 				6AD226FB1DA4B7770056695A /* LMNowPlayingView.m */,
-				6A514E101CE904F000AFB351 /* LMNowPlayingViewController.h */,
-				6A514E111CE904F000AFB351 /* LMNowPlayingViewController.m */,
 				6AD226F71DA49C720056695A /* LMProgressCircleView.h */,
 				6AD226F81DA49C720056695A /* LMProgressCircleView.m */,
 				6A52574D1DF099720040210D /* LMProgressSlider.h */,
@@ -599,6 +597,8 @@
 				6AAA56001DF407A800692CFB /* LMSearchBar.m */,
 				6AAA560B1DF631EC00692CFB /* LMSearchView.h */,
 				6AAA560C1DF631EC00692CFB /* LMSearchView.m */,
+				6A75652E1DF7E38900A9EDD6 /* LMSearch.h */,
+				6A75652F1DF7E38900A9EDD6 /* LMSearch.m */,
 			);
 			name = Search;
 			sourceTree = "<group>";
@@ -1178,7 +1178,6 @@
 				6AD226F91DA49C720056695A /* LMProgressCircleView.m in Sources */,
 				6AA4459C1D5AB264004C6739 /* LMPebbleSettingsView.m in Sources */,
 				6AFD2EDD1BC41ECD0083FE9E /* LMAlbumViewItem.m in Sources */,
-				6A514E121CE904F100AFB351 /* LMNowPlayingViewController.m in Sources */,
 				6AF9D5421DE251FD006368B6 /* LMSectionTableView.m in Sources */,
 				6AC77A091DC3B04B00BABBB3 /* LMBigListEntryTableView.m in Sources */,
 				6AD227031DA5990B0056695A /* LMMusicPlayer.m in Sources */,
@@ -1237,6 +1236,7 @@
 				6AEF8C731DEF419D00D9A1BF /* LMDebugViewController.m in Sources */,
 				6AFF01891DDD656E00F24D8E /* LMGuideViewPagerController.m in Sources */,
 				6A92F81C1DD3C1A9002045C2 /* LMPlaylistView.m in Sources */,
+				6A7565301DF7E38900A9EDD6 /* LMSearch.m in Sources */,
 				6AD226FC1DA4B7770056695A /* LMNowPlayingView.m in Sources */,
 				6AC32B7B1DB6B57B0007C67E /* LMPebbleManager.m in Sources */,
 				6A52574F1DF099720040210D /* LMProgressSlider.m in Sources */,
