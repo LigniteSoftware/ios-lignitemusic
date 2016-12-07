@@ -55,6 +55,16 @@
 
 @implementation LMSearchView
 
+- (BOOL)noResults {
+	if(!self.searchResultsArray || !self.searchResultsGroupingArray){
+		return YES;
+	}
+	if(self.searchResultsArray.count == 0){
+		return YES;
+	}
+	return NO;
+}
+
 - (void)searchTermChangedTo:(NSString*)searchTerm {
 	NSLog(@"Search view got new search term %@", searchTerm);
 	
@@ -99,14 +109,26 @@
 			NSLog(@"Search results grouping %@", self.searchResultsGroupingArray);
 			
 			searchView.searchResultsArray = actualResultsArray;
-			searchView.sectionTableView.totalNumberOfSections = searchView.searchResultsGroupingArray.count;
-			[searchView.sectionTableView registerCellIdentifiers];
+			searchView.sectionTableView.totalNumberOfSections = searchView.searchResultsArray.count;
+			
+			if(searchView.searchResultsArray.count == 0){
+				searchView.searchResultsArray = nil;
+				searchView.searchResultsGroupingArray = nil;
+				searchView.sectionTableView.totalNumberOfSections = 1;
+			}
+			else{
+				[searchView.sectionTableView registerCellIdentifiers];
+			}
 			[searchView.sectionTableView reloadData];
 		});
 	});
 }
 
 - (UIImage*)iconAtSection:(NSUInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView {
+	if([self noResults]){
+		return [LMAppIcon imageForIcon:LMIconBug];
+	}
+	
 	MPMediaGrouping mediaGrouping = (MPMediaGrouping)[[self.searchResultsGroupingArray objectAtIndex:section] unsignedIntegerValue];
 	
 	switch(mediaGrouping){
@@ -128,6 +150,10 @@
 }
 
 - (NSString*)titleAtSection:(NSUInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView {
+	if([self noResults]){
+		return NSLocalizedString(@"NoSearchResults", nil);
+	}
+	
 	NSArray<MPMediaItemCollection*>* collections = [self.searchResultsArray objectAtIndex:section];
 
 	MPMediaGrouping mediaGrouping = (MPMediaGrouping)[[self.searchResultsGroupingArray objectAtIndex:section] unsignedIntegerValue];
@@ -153,6 +179,10 @@
 }
 
 - (NSUInteger)numberOfRowsForSection:(NSUInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView {
+	if([self noResults]){
+		return 0;
+	}
+	
 	NSArray<MPMediaItemCollection*>* collections = [self.searchResultsArray objectAtIndex:section];
 	
 
@@ -202,8 +232,9 @@
 	NSArray<MPMediaItemCollection*>* collections = [self.searchResultsArray objectAtIndex:indexPath.section];
 	MPMediaItemCollection *collection = [collections objectAtIndex:indexPath.row];
 	MPMediaItem *representativeItem = collection.representativeItem;
+	MPMediaGrouping mediaGrouping = (MPMediaGrouping)[[self.searchResultsGroupingArray objectAtIndex:indexPath.section] unsignedIntegerValue];
 
-	UIImage *image = (indexPath.section == 0 || indexPath.section == 3) ? [self.imageManager imageForMediaItem:representativeItem withCategory:LMImageManagerCategoryArtistImages] : [[representativeItem artwork] imageWithSize:CGSizeMake(480, 480)];
+	UIImage *image = (mediaGrouping == MPMediaGroupingArtist || mediaGrouping == MPMediaGroupingComposer) ? [self.imageManager imageForMediaItem:representativeItem withCategory:LMImageManagerCategoryArtistImages] : [[representativeItem artwork] imageWithSize:CGSizeMake(480, 480)];
 	
 	if(!image){
 		image = [LMAppIcon imageForIcon:LMIconNoAlbumArt];
@@ -246,7 +277,7 @@
 		
 		self.sectionTableView = [LMSectionTableView newAutoLayoutView];
 		self.sectionTableView.contentsDelegate = self;
-		self.sectionTableView.totalNumberOfSections = 6;
+		self.sectionTableView.totalNumberOfSections = 1;
 		self.sectionTableView.title = @"Search";
 		[self addSubview:self.sectionTableView];
 		
