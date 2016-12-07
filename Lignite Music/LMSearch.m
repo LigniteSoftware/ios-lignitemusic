@@ -23,6 +23,12 @@
 }
 
 + (NSArray<NSArray<MPMediaItemCollection*>*>*)searchResultsForString:(NSString*)searchString {
+	NSCharacterSet *bannedCharacters = [NSCharacterSet characterSetWithCharactersInString:@"?!'\"&();:-/[]{}#%*_."];
+	
+	searchString = [searchString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]; //Get rid of white space
+	searchString = [[searchString componentsSeparatedByCharactersInSet:bannedCharacters] componentsJoinedByString:@" "]; //Get rid of banned characters and replace them with spaces
+	searchString = [searchString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]; //Get rid of white space again
+	
 	NSArray<NSString*> *associatedProperties = @[
 								  MPMediaItemPropertyArtist,
 								  MPMediaItemPropertyAlbumTitle,
@@ -55,7 +61,16 @@
 			MPMediaItemCollection *collection = [collections objectAtIndex:collectionIndex];
 			MPMediaItem *representativeItem = collection.representativeItem;
 			
-			NSArray *propertiesToCheck = (associatedMediaGrouping == MPMediaGroupingArtist) ? @[ MPMediaItemPropertyArtist ] : associatedProperties;
+			NSArray *propertiesToCheck = nil;
+			switch(associatedMediaGrouping){
+				case MPMediaGroupingArtist:
+				case MPMediaGroupingComposer:
+					propertiesToCheck = @[ MPMediaItemPropertyArtist ];
+					break;
+				default:
+					propertiesToCheck = associatedProperties;
+					break;
+			}
 			
 			for(NSUInteger propertyIndex = 0; propertyIndex < propertiesToCheck.count; propertyIndex++){
 				BOOL propertyFound = NO;
@@ -76,6 +91,12 @@
 				
 				if(propertyFound){
 					break;
+				}
+				else{
+					if([LMSearch string:completeProperty hasPrefix:searchString caseInsensitive:YES]){
+						[collectionsWhichApply addObject:collection];
+						break;
+					}
 				}
 			}
 		}

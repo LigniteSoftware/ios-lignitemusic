@@ -12,6 +12,7 @@
 #import "LMSectionTableView.h"
 #import "LMAppIcon.h"
 #import "LMSearch.h"
+#import "LMImageManager.h"
 
 @interface LMSearchView()<LMSectionTableViewDelegate>
 
@@ -39,6 +40,11 @@
  The groupings associated.
  */
 @property NSArray<NSNumber*>* associatedGroupings;
+
+/**
+ The image manager.
+ */
+@property LMImageManager *imageManager;
 
 @end
 
@@ -152,9 +158,9 @@
 	MPMediaGrouping mediaGrouping = (MPMediaGrouping)[[self.associatedGroupings objectAtIndex:indexPath.section] unsignedIntegerValue];
 	
 	switch(mediaGrouping){
-		case MPMediaGroupingArtist:
-		case MPMediaGroupingComposer:
-			return [NSString stringWithFormat:@"%lu %@", collections.count, NSLocalizedString(collections.count == 1 ? @"Album" : @"Albums", nil)];
+//		case MPMediaGroupingArtist:
+//		case MPMediaGroupingComposer:
+//			return [NSString stringWithFormat:@"%lu %@", collections.count, NSLocalizedString(collections.count == 1 ? @"Album" : @"Albums", nil)];
 			
 		case MPMediaGroupingAlbum:
 			return [NSString stringWithFormat:
@@ -163,6 +169,8 @@
 					collection.count,
 					NSLocalizedString(collection.count == 1 ? @"Song" : @"Songs", nil)];
 			
+		case MPMediaGroupingArtist:
+		case MPMediaGroupingComposer:
 		case MPMediaGroupingGenre:
 			return [NSString stringWithFormat:@"%lu %@", collection.count, NSLocalizedString(collection.count == 1 ? @"Song" : @"Songs", nil)];
 		case MPMediaGroupingTitle:
@@ -174,7 +182,17 @@
 }
 
 - (UIImage*)iconForIndexPath:(NSIndexPath*)indexPath forSectionTableView:(LMSectionTableView*)sectionTableView {
-	return nil;
+	NSArray<MPMediaItemCollection*>* collections = [self.searchResultsArray objectAtIndex:indexPath.section];
+	MPMediaItemCollection *collection = [collections objectAtIndex:indexPath.row];
+	MPMediaItem *representativeItem = collection.representativeItem;
+
+	UIImage *image = (indexPath.section == 0 || indexPath.section == 3) ? [self.imageManager imageForMediaItem:representativeItem withCategory:LMImageManagerCategoryArtistImages] : [[representativeItem artwork] imageWithSize:CGSizeMake(480, 480)];
+	
+	if(!image){
+		image = [LMAppIcon imageForIcon:LMIconNoAlbumArt];
+	}
+	
+	return image;
 }
 
 - (void)tappedIndexPath:(NSIndexPath*)indexPath forSectionTableView:(LMSectionTableView*)sectionTableView {
@@ -186,6 +204,8 @@
 		self.didLayoutConstraints = YES;
 		
 		self.currentSearchTerm = @"Title";
+		
+		self.imageManager = [LMImageManager sharedImageManager];
 		
 		self.associatedProperties = @[
 									   MPMediaItemPropertyArtist,

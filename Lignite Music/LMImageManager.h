@@ -10,6 +10,7 @@
 
 @class LMMusicTrack;
 @class LMImageManager;
+@class MPMediaItem;
 
 /**
  LMImageManagerCategory is the category of images, such as artist images.
@@ -128,6 +129,15 @@ typedef enum {
  @return The image.
  */
 - (UIImage*)imageForMusicTrack:(LMMusicTrack*)musicTrack withCategory:(LMImageManagerCategory)category;
+
+/**
+ Quick patch for media item code speed leak because I am running low on time. Does the same as above function but with a media item.
+
+ @param mediaItem The media item to get the image for.
+ @param category The category of image.
+ @return The image.
+ */
+- (UIImage*)imageForMediaItem:(MPMediaItem*)mediaItem withCategory:(LMImageManagerCategory)category;
 
 /**
  Begins the search and download process for a category of images.

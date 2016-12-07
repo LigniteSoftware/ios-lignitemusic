@@ -308,6 +308,27 @@
 	return namespaceKey;
 }
 
+
+- (NSString*)imageCacheKeyForMediaItem:(MPMediaItem*)representativeItem forCategory:(LMImageManagerCategory)category {
+	LMMusicTrackPersistentID persistentID;
+	NSString *categoryName = @"";
+	
+	switch(category){
+		case LMImageManagerCategoryAlbumImages:
+			persistentID = representativeItem.albumPersistentID;
+			categoryName = @"albumArtImages";
+			break;
+		case LMImageManagerCategoryArtistImages:
+			persistentID = representativeItem.artistPersistentID;
+			categoryName = @"artistImages";
+			break;
+	}
+	
+	NSString *namespaceKey = [NSString stringWithFormat:@"%@_id%lld", categoryName, persistentID];
+	
+	return namespaceKey;
+}
+
 - (void)imageNeedsDownloadingForMusicTrack:(LMMusicTrack*)representativeItem forCategory:(LMImageManagerCategory)category completion:(void(^)(BOOL needsDownloading))completionHandler {
 	
 	NSBlockOperation *albumArtOperation = [NSBlockOperation blockOperationWithBlock:^{
@@ -446,6 +467,10 @@
 
 - (UIImage*)imageForMusicTrack:(LMMusicTrack*)musicTrack withCategory:(LMImageManagerCategory)category {
 	return [[self imageCacheForCategory:category] imageFromDiskCacheForKey:[self imageCacheKeyForMusicTrack:musicTrack forCategory:category]];
+}
+
+- (UIImage*)imageForMediaItem:(MPMediaItem*)mediaItem withCategory:(LMImageManagerCategory)category {
+	return [[self imageCacheForCategory:category] imageFromDiskCacheForKey:[self imageCacheKeyForMediaItem:mediaItem forCategory:category]];
 }
 
 - (void)downloadNextImageInQueue {

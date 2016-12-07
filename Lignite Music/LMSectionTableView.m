@@ -61,8 +61,10 @@
 }
 
 - (UIImage*)iconForListEntry:(LMListEntry*)entry {
+	if(entry.indexPath){
+		return [self.contentsDelegate iconForIndexPath:entry.indexPath forSectionTableView:self];
+	}
 	return nil;
-	return [LMAppIcon imageForIcon:LMIconAlbums];
 }
 
 - (instancetype)init {
