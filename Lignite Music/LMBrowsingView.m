@@ -85,6 +85,8 @@
 		index = 0;
 	}
 	
+	[self.bigListEntryTableView focusBigListEntryAtIndex:index];
+	
 	[self scrollViewToIndex:index];
 }
 

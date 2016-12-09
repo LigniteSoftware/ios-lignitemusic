@@ -218,16 +218,6 @@ BOOL didAutomaticallyClose = NO;
 	
 	switch(source.sourceID){
 		case LMIconAlbums:{
-			if(!self.albumView){
-				self.albumView = [LMAlbumView newAutoLayoutView];
-				self.albumView.coreViewController = self;
-				[self.view addSubview:self.albumView];
-				
-				[self.albumView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-				[self.heightConstraintArray addObject:[self.albumView autoSetDimension:ALDimensionHeight toSize:self.view.frame.size.height]];
-				[self.albumView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
-			}
-			
 			self.albumView.hidden = NO;
 			[self.albumView reloadSourceSelectorInfo];
 			self.currentSource = self.albumView;
@@ -241,18 +231,6 @@ BOOL didAutomaticallyClose = NO;
 			break;
 		}
 		case LMIconTitles: {
-			if(!self.titleView){
-				self.titleView = [LMTitleView newAutoLayoutView];
-				self.titleView.backgroundColor = [UIColor redColor];
-				[self.view addSubview:self.titleView];
-				
-				[self.titleView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-				[self.heightConstraintArray addObject:[self.titleView autoSetDimension:ALDimensionHeight toSize:self.view.frame.size.height]];
-				[self.titleView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
-				
-				[self.titleView setup];
-			}
-			
 			self.titleView.hidden = NO;
 			[self.titleView reloadSourceSelectorInfo];
 			self.currentSource = self.titleView;
@@ -263,19 +241,6 @@ BOOL didAutomaticallyClose = NO;
 			break;
 		}
 		case LMIconPlaylists: {
-			if(!self.playlistView){
-				self.playlistView = [LMPlaylistView newAutoLayoutView];
-				self.playlistView.backgroundColor = [UIColor whiteColor];
-				self.playlistView.coreViewController = self;
-				[self.view addSubview:self.playlistView];
-				
-				[self.playlistView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-				[self.heightConstraintArray addObject:[self.playlistView autoSetDimension:ALDimensionHeight toSize:self.view.frame.size.height]];
-				[self.playlistView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
-				
-				[self.playlistView setup];
-			}
-
 			self.playlistView.hidden = NO;
 			[self.playlistView reloadSourceSelectorInfo];
 			self.currentSource = self.playlistView;
@@ -286,19 +251,6 @@ BOOL didAutomaticallyClose = NO;
 			break;
 		}
 		case LMIconGenres:{
-			if(!self.genreView){
-				self.genreView = [LMGenreView newAutoLayoutView];
-				self.genreView.backgroundColor = [UIColor whiteColor];
-				self.genreView.coreViewController = self;
-				[self.view addSubview:self.genreView];
-				
-				[self.genreView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-				[self.heightConstraintArray addObject:[self.genreView autoSetDimension:ALDimensionHeight toSize:self.view.frame.size.height]];
-				[self.genreView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
-				
-				[self.genreView setup];
-			}
-			
 			self.genreView.hidden = NO;
 			[self.genreView reloadSourceSelectorInfo];
 			self.currentSource = self.genreView;
@@ -309,19 +261,6 @@ BOOL didAutomaticallyClose = NO;
 			break;
 		}
 		case LMIconArtists: {
-			if(!self.artistView){
-				self.artistView = [LMArtistView newAutoLayoutView];
-				self.artistView.backgroundColor = [UIColor whiteColor];
-				self.artistView.coreViewController = self;
-				[self.view addSubview:self.artistView];
-				
-				[self.artistView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-				[self.heightConstraintArray addObject:[self.artistView autoSetDimension:ALDimensionHeight toSize:self.view.frame.size.height]];
-				[self.artistView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
-				
-				[self.artistView setup];
-			}
-			
 			self.artistView.hidden = NO;
 			[self.artistView reloadSourceSelectorInfo];
 			self.currentSource = self.artistView;
@@ -678,6 +617,70 @@ BOOL didAutomaticallyClose = NO;
 
 						
 						self.heightConstraintArray = [NSMutableArray new];
+						
+						
+						
+						self.titleView = [LMTitleView newAutoLayoutView];
+						self.titleView.backgroundColor = [UIColor redColor];
+						[self.view addSubview:self.titleView];
+
+						[self.titleView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+						[self.heightConstraintArray addObject:[self.titleView autoSetDimension:ALDimensionHeight toSize:self.view.frame.size.height]];
+						[self.titleView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
+
+						[self.titleView setup];
+						self.titleView.hidden = YES;
+
+						//Playlist view
+
+						self.playlistView = [LMPlaylistView newAutoLayoutView];
+						self.playlistView.backgroundColor = [UIColor whiteColor];
+						self.playlistView.coreViewController = self;
+						[self.view addSubview:self.playlistView];
+
+						[self.playlistView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+						[self.heightConstraintArray addObject:[self.playlistView autoSetDimension:ALDimensionHeight toSize:self.view.frame.size.height]];
+						[self.playlistView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
+
+						[self.playlistView setup];
+						self.playlistView.hidden = YES;
+
+						//Genre view
+
+						self.genreView = [LMGenreView newAutoLayoutView];
+						self.genreView.backgroundColor = [UIColor whiteColor];
+						self.genreView.coreViewController = self;
+						[self.view addSubview:self.genreView];
+
+						[self.genreView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+						[self.heightConstraintArray addObject:[self.genreView autoSetDimension:ALDimensionHeight toSize:self.view.frame.size.height]];
+						[self.genreView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
+
+						[self.genreView setup];
+						self.genreView.hidden = YES;
+
+
+						self.artistView = [LMArtistView newAutoLayoutView];
+						self.artistView.backgroundColor = [UIColor whiteColor];
+						self.artistView.coreViewController = self;
+						[self.view addSubview:self.artistView];
+
+						[self.artistView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+						[self.heightConstraintArray addObject:[self.artistView autoSetDimension:ALDimensionHeight toSize:self.view.frame.size.height]];
+						[self.artistView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
+						
+						[self.artistView setup];
+						self.artistView.hidden = YES;
+						
+						
+						self.albumView = [LMAlbumView newAutoLayoutView];
+						self.albumView.coreViewController = self;
+						[self.view addSubview:self.albumView];
+						
+						[self.albumView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+						[self.heightConstraintArray addObject:[self.albumView autoSetDimension:ALDimensionHeight toSize:self.view.frame.size.height]];
+						[self.albumView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
+						self.albumView.hidden = YES;
 						
 
 						self.browsingAssistant = [[LMBrowsingAssistantView alloc]initForAutoLayout];

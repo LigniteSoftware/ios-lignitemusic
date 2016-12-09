@@ -10,6 +10,7 @@
 #import "LMBigListEntryTableView.h"
 #import "LMTableView.h"
 #import "LMExtras.h"
+#import "LMColour.h"
 
 @interface LMBigListEntryTableView()<LMTableViewSubviewDataSource, LMCollectionInfoViewDelegate, LMBigListEntryDelegate, LMControlBarViewDelegate>
 
@@ -159,6 +160,21 @@
 	if([self.delegate respondsToSelector:@selector(contentViewTappedForBigListEntry:)]){
 		[self.delegate contentViewTappedForBigListEntry:bigListEntry];
 	}
+}
+
+- (void)focusBigListEntryAtIndex:(NSUInteger)index {
+	LMBigListEntry *bigListEntry = [self subviewAtIndex:index forTableView:self.tableView];
+//	[bigListEntry setLarge:YES animated:YES];
+	
+	[NSTimer scheduledTimerWithTimeInterval:0.5 repeats:NO block:^(NSTimer * _Nonnull timer) {
+		[UIView animateWithDuration:0.50 animations:^{
+			bigListEntry.backgroundColor = [UIColor colorWithRed:0.33 green:0.33 blue:0.33 alpha:0.15];
+		} completion:^(BOOL finished) {
+			[UIView animateWithDuration:0.50 animations:^{
+				bigListEntry.backgroundColor = [UIColor whiteColor];
+			}];
+		}];
+	}];
 }
 
 - (void)amountOfObjectsRequiredChangedTo:(NSUInteger)amountOfObjects forTableView:(LMTableView*)tableView {	

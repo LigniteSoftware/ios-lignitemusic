@@ -84,4 +84,11 @@
  */
 - (void)reloadData;
 
+/**
+ Focuses a big list entry so it becomes large.
+
+ @param index <#index description#>
+ */
+- (void)focusBigListEntryAtIndex:(NSUInteger)index;
+
 @end
