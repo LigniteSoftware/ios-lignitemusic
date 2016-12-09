@@ -31,4 +31,11 @@
  */
 - (void)scrollViewToIndex:(NSUInteger)index;
 
+/**
+ Scroll to the position in the list with that persistent ID.
+
+ @param persistentID The persistent ID to scroll to.
+ */
+- (void)scrollToItemWithPersistentID:(LMMusicTrackPersistentID)persistentID;
+
 @end

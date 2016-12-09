@@ -115,27 +115,21 @@
 	
 	LMSource *source = [self.sources objectAtIndex:index];
 	
-	[source.delegate sourceSelected:source];
-	
-	if(source.shouldNotSelect){
-		return;
-	}
-	
-//	NSLog(@"Source image %@", source.icon);
-	
-//	[self.sourceSelectorButton setImage:[LMAppIcon invertImage:source.icon]];
-	
-	LMListEntry *previousHighlightedEntry = [self listEntryForIndex:self.currentlyHighlighted];
-	if(previousHighlightedEntry){
-		[previousHighlightedEntry changeHighlightStatus:NO animated:YES];
-	}
-	
-	[entry changeHighlightStatus:YES animated:YES];
-	self.currentlyHighlighted = index;
+	if(!source.shouldNotHighlight){
+		LMListEntry *previousHighlightedEntry = [self listEntryForIndex:self.currentlyHighlighted];
+		if(previousHighlightedEntry){
+			[previousHighlightedEntry changeHighlightStatus:NO animated:YES];
+		}
 		
-	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	[defaults setInteger:index forKey:LMSettingsKeyLastOpenedSource];
-	[defaults synchronize];
+		[entry changeHighlightStatus:YES animated:YES];
+		self.currentlyHighlighted = index;
+		
+		NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+		[defaults setInteger:index forKey:LMSettingsKeyLastOpenedSource];
+		[defaults synchronize];
+	}
+	
+	[source.delegate sourceSelected:source];
 }
 
 - (void)tappedListEntry:(LMListEntry*)entry{

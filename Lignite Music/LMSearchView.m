@@ -8,7 +8,6 @@
 
 #import <PureLayout/PureLayout.h>
 #import "LMSearchView.h"
-#import "LMMusicPlayer.h"
 #import "LMSectionTableView.h"
 #import "LMAppIcon.h"
 #import "LMSearch.h"
@@ -257,6 +256,37 @@
 
 - (void)tappedIndexPath:(NSIndexPath*)indexPath forSectionTableView:(LMSectionTableView*)sectionTableView {
 	NSLog(@"Tapped %d.%d", (int)indexPath.section, (int)indexPath.row);
+	
+	NSArray<MPMediaItemCollection*>* collections = [self.searchResultsArray objectAtIndex:indexPath.section];
+	MPMediaItemCollection *collection = [collections objectAtIndex:indexPath.row];
+	MPMediaItem *representativeItem = [collection representativeItem];
+	MPMediaGrouping mediaGrouping = (MPMediaGrouping)[[self.searchResultsGroupingArray objectAtIndex:indexPath.section] unsignedIntegerValue];
+	
+	switch(mediaGrouping){
+		case MPMediaGroupingAlbum:
+			[self.searchSelectedDelegate searchEntryTappedWithPersistentID:representativeItem.albumPersistentID withMusicType:LMMusicTypeAlbums];
+			break;
+		case MPMediaGroupingArtist:
+			[self.searchSelectedDelegate searchEntryTappedWithPersistentID:representativeItem.artistPersistentID withMusicType:LMMusicTypeArtists];
+			break;
+		case MPMediaGroupingComposer:
+			[self.searchSelectedDelegate searchEntryTappedWithPersistentID:representativeItem.composerPersistentID withMusicType:LMMusicTypeComposers];
+			break;
+		case MPMediaGroupingGenre:
+			[self.searchSelectedDelegate searchEntryTappedWithPersistentID:representativeItem.genrePersistentID withMusicType:LMMusicTypeGenres];
+			break;
+		case MPMediaGroupingPlaylist:
+			[self.searchSelectedDelegate searchEntryTappedWithPersistentID:collection.persistentID withMusicType:LMMusicTypePlaylists];
+			break;
+		case MPMediaGroupingTitle:
+			[self.searchSelectedDelegate searchEntryTappedWithPersistentID:representativeItem.persistentID withMusicType:LMMusicTypeTitles];
+			break;
+		default:
+			NSLog(@"Windows fucking error! Tapped an index not recognized.");
+			break;
+	}
+	
+	NSLog(@"%d items", (int)collection.count);
 }
 
 - (void)layoutSubviews {

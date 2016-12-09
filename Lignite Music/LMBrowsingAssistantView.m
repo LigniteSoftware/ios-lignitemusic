@@ -145,11 +145,11 @@
 
 - (void)closeSourceSelector {
 	[self moveSourceSelectorToPosition:WINDOW_FRAME.size.height];
-//	[self selectSource:self.previouslySelectedTab];
+	[self selectSource:self.previouslySelectedTab];
 	
 	if(self.openedSourceSelectorFromShortcut){
-		[self close];
 		self.openedSourceSelectorFromShortcut = NO;
+		[self close];
 	}
 }
 
@@ -158,6 +158,11 @@
 }
 
 - (void)selectSource:(uint8_t)sourceSelectedIndex {
+	//Reject invalid sources
+	if(sourceSelectedIndex > LMBrowsingAssistantTabView){
+		return;
+	}
+	
 	if(sourceSelectedIndex == self.currentlySelectedTab && sourceSelectedIndex != LMBrowsingAssistantTabView){
 		return;
 	}
@@ -256,7 +261,7 @@
 	
 	uint8_t viewTappedIndex = [self.tabViews indexOfObject:viewTapped];
 	
-	if(viewTappedIndex == LMBrowsingAssistantTabMiniplayer){
+	if(viewTappedIndex == LMBrowsingAssistantTabView){
 		self.openedSourceSelectorFromShortcut = NO;
 	}
 	
@@ -298,8 +303,6 @@
 }
 
 - (void)layoutSubviews {
-	NSLog(@"New browsing assistant frame %@", NSStringFromCGRect(self.frame));
-	
 	if(!self.didLayoutConstraints){
 		self.didLayoutConstraints = YES;
 
@@ -314,9 +317,6 @@
 		LMIcon sourceIcons[] = {
 			LMIconBrowse, LMIconMiniplayer, LMIconGenres
 		};
-		BOOL notSelect[] = {
-			NO, NO, NO
-		};
 		BOOL shouldInvertIcon[] = {
 			YES, NO, YES
 		};
@@ -328,7 +328,6 @@
 			LMSource *source = [LMSource sourceWithTitle:NSLocalizedString([sourceTitles objectAtIndex:i], nil)
 											 andSubtitle:[subtitle isEqualToString:@""]  ? nil : NSLocalizedString(subtitle, nil)
 												 andIcon:sourceIcons[i]];
-			source.shouldNotSelect = notSelect[i];
 			if(shouldInvertIcon[i]){
 				source.icon = [LMAppIcon invertImage:source.icon];
 			}

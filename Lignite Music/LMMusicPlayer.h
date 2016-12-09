@@ -35,8 +35,8 @@ typedef enum {
 	LMMusicTypeAlbums,
 	LMMusicTypeTitles,
 	LMMusicTypePlaylists,
-	LMMusicTypeComposers,
-	LMMusicTypeGenres
+	LMMusicTypeGenres,
+	LMMusicTypeComposers
 } LMMusicType;
 
 /**

@@ -14,6 +14,7 @@
 @synthesize variousArtists = _variousArtists;
 @synthesize variousGenres = _variousGenres;
 @synthesize representativeItem = _representativeItem;
+@synthesize persistentID = _persistentID;
 
 - (instancetype)initWithItems:(NSArray<LMMusicTrack *> *)items basedOnSourceCollection:(id)sourceCollection {
 	self = [super init];
@@ -80,6 +81,10 @@
 	}
 	
 	return nil;
+}
+
+- (LMMusicTrackPersistentID)persistentID {
+	return [self.sourceCollection persistentID];
 }
 
 @end

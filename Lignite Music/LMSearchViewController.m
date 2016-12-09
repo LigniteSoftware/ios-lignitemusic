@@ -8,10 +8,9 @@
 
 #import <PureLayout/PureLayout.h>
 #import "LMSearchViewController.h"
-#import "LMSearchView.h"
 #import "LMSearchBar.h"
 
-@interface LMSearchViewController () <LMSearchBarDelegate>
+@interface LMSearchViewController () <LMSearchBarDelegate, LMSearchSelectedDelegate>
 
 /**
  The search bar for user input.
@@ -31,6 +30,12 @@
 @end
 
 @implementation LMSearchViewController
+
+- (void)searchEntryTappedWithPersistentID:(LMMusicTrackPersistentID)persistentID withMusicType:(LMMusicType)musicType {
+	[self.searchSelectedDelegate searchEntryTappedWithPersistentID:persistentID withMusicType:musicType];
+	
+	NSLog(@"Dismiss");
+}
 
 - (void)searchTermChangedTo:(NSString *)searchTerm {
 	[self.searchView searchTermChangedTo:searchTerm];
@@ -62,6 +67,7 @@
 	
 	
 	self.searchView = [LMSearchView newAutoLayoutView];
+	self.searchView.searchSelectedDelegate = self;
 	[self.view addSubview:self.searchView];
 	
 	[self.searchView autoPinEdgeToSuperviewEdge:ALEdgeLeading];

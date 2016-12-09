@@ -49,13 +49,18 @@
 @property UIImage *icon;
 
 /**
+ The source's ID.
+ */
+@property uint8_t sourceID;
+
+/**
  The delegate which should be called upon when this source is acted upon.
  */
 @property id<LMSourceDelegate> delegate;
 
 /**
- Whether or not this source is selectable. If YES, the source will not be selected and will not be saved to defaults for the next user's load of the app. Default: NO
+ Whether or not this source is highlightable. If YES, the source will not be highlighted and will not be saved to defaults for the next user's load of the app. Default: NO
  */
-@property BOOL shouldNotSelect;
+@property BOOL shouldNotHighlight;
 
 @end
