@@ -23,6 +23,7 @@
 }
 
 - (void)layoutSubviews {
+	NSLog(@"Changed to! %@", NSStringFromCGRect(self.frame));
 	if(!self.didLayoutConstraints){
 		self.didLayoutConstraints = YES;
 		

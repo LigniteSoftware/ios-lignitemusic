@@ -298,6 +298,8 @@
 }
 
 - (void)layoutSubviews {
+	NSLog(@"New browsing assistant frame %@", NSStringFromCGRect(self.frame));
+	
 	if(!self.didLayoutConstraints){
 		self.didLayoutConstraints = YES;
 

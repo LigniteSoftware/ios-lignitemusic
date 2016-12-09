@@ -93,8 +93,6 @@
 		return YES;
 	}
 	
-	NSLog(@"Not loading");
-	
 	BOOL shown = [LMSettings shouldShowStatusBar];
 	
 	return (!shown || (self.nowPlayingView != nil));
@@ -200,6 +198,7 @@ BOOL didAutomaticallyClose = NO;
 
 - (void)sourceSelected:(LMSource *)source {	
 	int indexOfSource = -1;
+	
 	for(int i = 0; i < self.sourcesForSourceSelector.count; i++){
 		LMSource *indexSource = [self.sourcesForSourceSelector objectAtIndex:i];
 		if([source isEqual:indexSource]){
@@ -214,6 +213,8 @@ BOOL didAutomaticallyClose = NO;
 		
 		[self.browsingAssistant setCurrentSourceIcon:[[source.icon averageColour] isLight] ? source.icon : [LMAppIcon invertImage:source.icon]];
 	}
+	
+	NSLog(@"New source %@", source.title);
 	
 	switch(indexOfSource){
 		case 0:{
@@ -308,6 +309,7 @@ BOOL didAutomaticallyClose = NO;
 	[self attachBrowsingAssistantToView:self.navigationController.view];
 	
 	self.currentDetailViewController = nil;
+	self.searchViewController = nil;
 	
 	if(self.statusBarBlurViewHeightConstraint.constant < 0.1 && ![self prefersStatusBarHidden]){
 		[self setStatusBarBlurHidden:NO];
@@ -325,7 +327,7 @@ BOOL didAutomaticallyClose = NO;
 	}];
 }
 
-- (void)heightRequiredChangedTo:(float)heightRequired forBrowsingView:(LMBrowsingAssistantView *)browsingView {
+- (void)heightRequiredChangedTo:(CGFloat)heightRequired forBrowsingView:(LMBrowsingAssistantView *)browsingView {
 	if(self.currentDetailViewController){
 		[(LMBrowsingDetailViewController*)self.currentDetailViewController setRequiredHeight:(WINDOW_FRAME.size.height-heightRequired) + 10];;
 	}
@@ -447,7 +449,7 @@ BOOL didAutomaticallyClose = NO;
 	NSLog(@"Search was opened: %d", opened);
 	
 	if(!self.searchViewController){
-//		[self attachBrowsingAssistantToView:self.view];
+		[self attachBrowsingAssistantToView:self.view];
 		
 		self.searchViewController = [LMSearchViewController new];
 		[self.navigationController pushViewController:self.searchViewController animated:YES];
@@ -681,7 +683,7 @@ BOOL didAutomaticallyClose = NO;
 						[self.view addSubview:self.albumView];
 						
 						[self.albumView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-						[self.albumView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.browsingAssistant];
+						[self.heightConstraintArray addObject:[self.albumView autoSetDimension:ALDimensionHeight toSize:self.view.frame.size.height]];
 						[self.albumView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
 						
 						self.albumView.hidden = YES;

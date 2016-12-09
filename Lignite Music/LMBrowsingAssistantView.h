@@ -22,7 +22,7 @@
  @param heightRequired The new height required.
  @param browsingView The browsing view which is notifying of the height requirement.
  */
-- (void)heightRequiredChangedTo:(float)heightRequired forBrowsingView:(LMBrowsingAssistantView*)browsingView;
+- (void)heightRequiredChangedTo:(CGFloat)heightRequired forBrowsingView:(LMBrowsingAssistantView*)browsingView;
 
 @end
 
