@@ -52,53 +52,12 @@
 	if(self.delegate){
 		[self.delegate searchTermChangedTo:searchTerm];
 	}
-	
-	__weak id weakSelf = self;
-	
-	dispatch_async(dispatch_get_global_queue(NSQualityOfServiceUserInteractive, 0), ^{
-		id strongSelf = weakSelf;
-		
-		if (!strongSelf) {
-			return;
-		}
-		
-		LMSearchBar *searchBar = strongSelf;
-		
-		NSString *asyncSearchTerm = searchBar.currentSearchTerm;
-		
-		LMMusicPlayer *musicPlayer = [LMMusicPlayer sharedMusicPlayer];
-		
-		NSLog(@"Term %@", asyncSearchTerm);
-		
-		NSTimeInterval startTime = [[NSDate new] timeIntervalSince1970];
-		
-		MPMediaPropertyPredicate *artistNamePredicate = [MPMediaPropertyPredicate predicateWithValue:asyncSearchTerm
-																						 forProperty:MPMediaItemPropertyArtist
-																					  comparisonType:MPMediaPredicateComparisonContains];
-	
-		MPMediaQuery *myArtistQuery = [[MPMediaQuery alloc] init];
-		[myArtistQuery addFilterPredicate: artistNamePredicate];
-		
-//		MPMediaQuery *myArtistQuery = [MPMediaQuery songsQuery];
-		
-		NSArray *itemsFromArtistQuery = [myArtistQuery items];
-		
-		[musicPlayer queryCollectionsForMusicType:LMMusicTypeArtists];
-		
-		
-		NSTimeInterval endTime = [[NSDate new] timeIntervalSince1970];
-		
-		if(![asyncSearchTerm isEqualToString:searchBar.currentSearchTerm]){
-			NSLog(@"Rejecting %@ (current %@).", asyncSearchTerm, searchBar.currentSearchTerm);
-			return;
-		}
-		
-		NSLog(@"%d results for %@ (current %@). Completed in %fs.", (int)itemsFromArtistQuery.count, asyncSearchTerm, searchBar.currentSearchTerm, endTime-startTime);
-	});
 }
 
 - (void)tappedClearSearch {
 	self.searchTextField.text = @"";
+	[self searchFieldDidChange];
+	[self dismissKeyboard];
 }
 
 - (void)keyboardDidShow:(NSNotification*)notification {
@@ -116,10 +75,10 @@
 	[self.delegate searchDialogOpened:NO withKeyboardHeight:0.0];
 }
 
-- (BOOL)textFieldShouldReturn:(UITextField *)textField {
-	[textField resignFirstResponder];
-	return YES;
-}
+//- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+//	[textField resignFirstResponder];
+//	return YES;
+//}
 
 - (void)dismissKeyboard {
 	[self endEditing:YES];
@@ -174,7 +133,7 @@
 		self.searchTextField = [UITextField newAutoLayoutView];
 		self.searchTextField.textColor = [UIColor whiteColor];
 		self.searchTextField.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:self.frame.size.height/2.25];
-		self.searchTextField.delegate = self;
+//		self.searchTextField.delegate = self;
 		[self.searchTextField addTarget:self
 								 action:@selector(searchFieldDidChange)
 					   forControlEvents:UIControlEventEditingChanged];

@@ -70,7 +70,19 @@
 	
 	self.currentSearchTerm = searchTerm;
 	
+	BOOL isBlankSearch = [[self.currentSearchTerm stringByReplacingOccurrencesOfString:@" " withString:@""] isEqualToString:@""];
+	
+	if(isBlankSearch){
+		self.searchResultsArray = nil;
+		self.searchResultsGroupingArray = nil;
+		self.sectionTableView.totalNumberOfSections = 1;
+	}
+	
 	[self.sectionTableView reloadData];
+	
+	if(isBlankSearch){
+		return;
+	}
 	
 	__weak id weakSelf = self;
 	
@@ -279,6 +291,7 @@
 		self.sectionTableView.contentsDelegate = self;
 		self.sectionTableView.totalNumberOfSections = 1;
 		self.sectionTableView.title = @"Search";
+		self.sectionTableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
 		[self addSubview:self.sectionTableView];
 		
 		NSLog(@"section %@", self.sectionTableView);

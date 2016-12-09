@@ -205,16 +205,16 @@
 			CGPoint contentOffset = self.letterScrollView.contentOffset;
 			
 			if(xPointInView > rightFactor) {
-				CGPoint newContentOffset = CGPointMake(contentOffset.x + xPointInView-rightFactor, contentOffset.y);
+				CGPoint newContentOffset = CGPointMake(contentOffset.x + xPointInView - rightFactor, contentOffset.y);
 				
-				if(newContentOffset.x < (self.letterScrollView.contentSize.width-rightFactor)){
+				if(newContentOffset.x < (self.letterScrollView.contentSize.width-self.frame.size.width)){
 					[self.letterScrollView setContentOffset:newContentOffset animated:NO];
 				}
 			}
 			else if(xPointInView < factor){
-				CGPoint newContentOffset = CGPointMake(contentOffset.x - (factor-xPointInView), contentOffset.y);
+				CGPoint newContentOffset = CGPointMake(contentOffset.x - factor- xPointInView, contentOffset.y);
 				
-				if(newContentOffset.x >= -factor){
+				if(newContentOffset.x >= 0){
 					[self.letterScrollView setContentOffset:newContentOffset animated:NO];
 				}
 			}

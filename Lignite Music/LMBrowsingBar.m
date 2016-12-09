@@ -32,20 +32,44 @@
 
 @implementation LMBrowsingBar
 
+@synthesize isInSearchMode = _isInSearchMode;
+@synthesize keyboardIsShowing = _keyboardIsShowing;
+
+- (void)setIsInSearchMode:(BOOL)isInSearchMode {
+	_isInSearchMode = isInSearchMode;
+	
+	if(self.didLayoutConstraints){
+		[self layoutIfNeeded];
+		
+		self.searchBarLeadingConstraint.constant = self.isInSearchMode ? -self.frame.size.width : 0.0;
+		
+		[UIView animateWithDuration:0.25 animations:^{
+			[self layoutIfNeeded];
+		}];
+	}
+}
+
+- (BOOL)isInSearchMode {
+	return _isInSearchMode;
+}
+
+- (void)setKeyboardIsShowing:(BOOL)keyboardIsShowing {
+	_keyboardIsShowing = keyboardIsShowing;
+	
+	if(self.searchBarDelegate){
+		[self.searchBarDelegate searchDialogOpened:YES withKeyboardHeight:0];
+	}
+}
+
+- (BOOL)keyboardIsShowing {
+	return _keyboardIsShowing;
+}
+
 - (void)tappedToggleButton {
-	[self layoutIfNeeded];
+	NSLog(@"Is in search");
 	
 	self.isInSearchMode = !self.isInSearchMode;
-	
-	self.searchBarLeadingConstraint.constant = self.isInSearchMode ? -self.letterTabBar.frame.size.width : 0.0;
-	
-	[UIView animateWithDuration:0.25 animations:^{
-		[self layoutIfNeeded];
-	}];
-	
-	self.toggleButtonImageView.image = self.isInSearchMode ? [LMAppIcon imageForIcon:LMIconAToZ] : [LMAppIcon imageForIcon:LMIconSearch];
-	
-	self.isInSearchMode ? [self.searchBar showKeyboard] : [self.searchBar dismissKeyboard];
+	self.keyboardIsShowing = YES;
 }
 
 - (void)layoutSubviews {
@@ -84,16 +108,6 @@
 		[self.letterTabBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
 		[self.letterTabBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 		[self.letterTabBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		
-		
-		self.searchBar = [LMSearchBar newAutoLayoutView];
-		self.searchBar.delegate = self.searchBarDelegate;
-		[self addSubview:self.searchBar];
-		
-		self.searchBarLeadingConstraint = [self.searchBar autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self];
-		[self.searchBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
-		[self.searchBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		[self.searchBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.letterTabBar];
 		
 		
 		[self bringSubviewToFront:self.toggleButtonBackgroundView];

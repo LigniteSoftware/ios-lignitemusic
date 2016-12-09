@@ -28,6 +28,7 @@
 #import "LMSettingsViewController.h"
 #import "LMBrowsingDetailViewController.h"
 #import "LMSearchView.h"
+#import "LMSearchViewController.h"
 
 #import "LMContactView.h"
 #import "LMDebugView.h"
@@ -70,8 +71,7 @@
 
 @property UIView *browsingAssistantViewAttachedTo;
 
-@property LMSearchView *searchView;
-@property NSLayoutConstraint *searchViewLeadingConstraint;
+@property LMSearchViewController *searchViewController;
 
 @property BOOL loaded;
 
@@ -440,17 +440,18 @@ BOOL didAutomaticallyClose = NO;
 }
 
 - (void)searchTermChangedTo:(NSString *)searchTerm {
-	[self.searchView searchTermChangedTo:searchTerm];
+	NSLog(@"Changed to %@", searchTerm);
 }
 
 - (void)searchDialogOpened:(BOOL)opened withKeyboardHeight:(CGFloat)keyboardHeight {
 	NSLog(@"Search was opened: %d", opened);
 	
-	[self.view layoutIfNeeded];
-	self.searchViewLeadingConstraint.constant = opened ? 0 : self.view.frame.size.width;
-	[UIView animateWithDuration:0.25 animations:^{
-		[self.view layoutIfNeeded];
-	}];
+	if(!self.searchViewController){
+//		[self attachBrowsingAssistantToView:self.view];
+		
+		self.searchViewController = [LMSearchViewController new];
+		[self.navigationController pushViewController:self.searchViewController animated:YES];
+	}
 }
 
 - (void)letterSelected:(NSString *)letter atIndex:(NSUInteger)index {	
@@ -686,15 +687,6 @@ BOOL didAutomaticallyClose = NO;
 						self.albumView.hidden = YES;
 						
 
-						
-						self.searchView = [LMSearchView newAutoLayoutView];
-						[self.view addSubview:self.searchView];
-						
-						[self.searchView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-						[self.searchView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.browsingAssistant withOffset:0];
-						[self.searchView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
-						self.searchViewLeadingConstraint = [self.searchView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-						self.searchViewLeadingConstraint.constant = self.view.frame.size.width;
 
 						[self.musicPlayer addMusicDelegate:self];
 						

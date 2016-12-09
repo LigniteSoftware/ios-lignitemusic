@@ -28,13 +28,13 @@
 @property LMLetterTabBar *letterTabBar;
 
 /**
- The search bar.
- */
-@property LMSearchBar *searchBar;
-
-/**
  Whether or not the browsing bar is in search mode.
  */
 @property BOOL isInSearchMode;
+
+/**
+ Whether or not the keyboard is currently showing.
+ */
+@property BOOL keyboardIsShowing;
 
 @end

@@ -294,13 +294,7 @@
 }
 
 - (void)searchDialogOpened:(BOOL)opened withKeyboardHeight:(CGFloat)keyboardHeight {
-	[self layoutIfNeeded];
-	self.textBackgroundConstraint.constant = opened ? (-keyboardHeight+self.selectorBackgroundView.frame.size.height) : 0.0;
-	[self layoutIfNeeded];
-	
 	[self.searchBarDelegate searchDialogOpened:opened withKeyboardHeight:keyboardHeight];
-	
-	self.previousKeyboardHeight = keyboardHeight;
 }
 
 - (void)layoutSubviews {
@@ -459,8 +453,8 @@
 			textLabel.textAlignment = NSTextAlignmentCenter;
 			[sourceTabBackgroundView addSubview:textLabel];
 			
-			[textLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:sourceTabBackgroundView withOffset:10];
-			[textLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:sourceTabBackgroundView withOffset:-10];
+			[textLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+			[textLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 			[textLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:sourceTabBackgroundView withOffset:-2];
 			[textLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.selectorBackgroundView withMultiplier:(1.0/6.0)];
 		}
@@ -473,7 +467,8 @@
 		[self addSubview:self.browsingBar];
 		
 		[self.browsingBar autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.selectorBackgroundView];
-		[self.browsingBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
+		[self.browsingBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.browsingBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 		[self.browsingBar autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height/15.0];
 		
 		

@@ -122,6 +122,7 @@
 		6AD227061DA599E50056695A /* LMMusicTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AD227051DA599E50056695A /* LMMusicTrack.m */; };
 		6AD227091DA59AA00056695A /* LMMusicTrackCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AD227081DA59AA00056695A /* LMMusicTrackCollection.m */; };
 		6AD480631DCAAF4D00DB891B /* LMCollectionInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AD480621DCAAF4D00DB891B /* LMCollectionInfoView.m */; };
+		6ADA6CEB1DF84A8D0073D449 /* LMSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ADA6CEA1DF84A8D0073D449 /* LMSearchViewController.m */; };
 		6ADC48EF1DDF8C8000FE57F1 /* onboarding_library_access.png in Resources */ = {isa = PBXBuildFile; fileRef = 6ADC48ED1DDF8C8000FE57F1 /* onboarding_library_access.png */; };
 		6ADC48F01DDF8C8000FE57F1 /* onboarding_bluetooth.png in Resources */ = {isa = PBXBuildFile; fileRef = 6ADC48EE1DDF8C8000FE57F1 /* onboarding_bluetooth.png */; };
 		6ADDBD3D1DA29D3E00DB99EF /* LMShadowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ADDBD3C1DA29D3E00DB99EF /* LMShadowView.m */; };
@@ -346,6 +347,8 @@
 		6AD227081DA59AA00056695A /* LMMusicTrackCollection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMMusicTrackCollection.m; sourceTree = "<group>"; };
 		6AD480611DCAAF4D00DB891B /* LMCollectionInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMCollectionInfoView.h; sourceTree = "<group>"; };
 		6AD480621DCAAF4D00DB891B /* LMCollectionInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMCollectionInfoView.m; sourceTree = "<group>"; };
+		6ADA6CE91DF84A8D0073D449 /* LMSearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMSearchViewController.h; sourceTree = "<group>"; };
+		6ADA6CEA1DF84A8D0073D449 /* LMSearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMSearchViewController.m; sourceTree = "<group>"; };
 		6ADC48ED1DDF8C8000FE57F1 /* onboarding_library_access.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = onboarding_library_access.png; sourceTree = "<group>"; };
 		6ADC48EE1DDF8C8000FE57F1 /* onboarding_bluetooth.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = onboarding_bluetooth.png; sourceTree = "<group>"; };
 		6ADDBD3B1DA29D3E00DB99EF /* LMShadowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMShadowView.h; sourceTree = "<group>"; };
@@ -599,6 +602,8 @@
 				6AAA56001DF407A800692CFB /* LMSearchBar.m */,
 				6AAA560B1DF631EC00692CFB /* LMSearchView.h */,
 				6AAA560C1DF631EC00692CFB /* LMSearchView.m */,
+				6ADA6CE91DF84A8D0073D449 /* LMSearchViewController.h */,
+				6ADA6CEA1DF84A8D0073D449 /* LMSearchViewController.m */,
 			);
 			name = Search;
 			sourceTree = "<group>";
@@ -1179,6 +1184,7 @@
 				6AA4459C1D5AB264004C6739 /* LMPebbleSettingsView.m in Sources */,
 				6AFD2EDD1BC41ECD0083FE9E /* LMAlbumViewItem.m in Sources */,
 				6AF9D5421DE251FD006368B6 /* LMSectionTableView.m in Sources */,
+				6ADA6CEB1DF84A8D0073D449 /* LMSearchViewController.m in Sources */,
 				6AC77A091DC3B04B00BABBB3 /* LMBigListEntryTableView.m in Sources */,
 				6AD227031DA5990B0056695A /* LMMusicPlayer.m in Sources */,
 				6A59A5201DE825C200B346AC /* LMBrowsingDetailViewController.m in Sources */,
