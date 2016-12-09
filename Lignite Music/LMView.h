@@ -8,8 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
+@class LMView;
+
 @interface LMView : UIView
 
+/**
+ Whether or not the constraints of this view have been lain out.
+ */
 @property BOOL didLayoutConstraints;
 
 @end

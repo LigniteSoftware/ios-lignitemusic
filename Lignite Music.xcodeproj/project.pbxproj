@@ -453,6 +453,8 @@
 				6ADDBD3C1DA29D3E00DB99EF /* LMShadowView.m */,
 				6A514E171CEA15D900AFB351 /* LMSlider.h */,
 				6A514E181CEA15D900AFB351 /* LMSlider.m */,
+				6A52574A1DF099480040210D /* LMView.h */,
+				6A52574B1DF099480040210D /* LMView.m */,
 				6A32A9F11DC69BB50056CC60 /* ShadowView */,
 				6A32A9E91DC68F150056CC60 /* TriangleView */,
 			);
@@ -521,8 +523,6 @@
 				6A32113D1DA727960060DD07 /* LMTrackDurationView.m */,
 				6A32113F1DA732470060DD07 /* LMTrackInfoView.h */,
 				6A3211401DA732470060DD07 /* LMTrackInfoView.m */,
-				6A52574A1DF099480040210D /* LMView.h */,
-				6A52574B1DF099480040210D /* LMView.m */,
 			);
 			name = NowPlayingView;
 			sourceTree = "<group>";

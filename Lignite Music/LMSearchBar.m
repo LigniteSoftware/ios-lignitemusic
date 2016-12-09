@@ -60,20 +60,32 @@
 	[self dismissKeyboard];
 }
 
-- (void)keyboardDidShow:(NSNotification*)notification {
+- (void)keyboardWillShow:(NSNotification*)notification {
 	NSDictionary *info = notification.userInfo;
 	NSValue *value = [info objectForKey:UIKeyboardFrameEndUserInfoKey];
 	
 	CGRect keyboardFrame = [value CGRectValue];
-	
-	NSLog(@"keyboard frame %@", NSStringFromCGRect(keyboardFrame));
-	
+		
 	[self.delegate searchDialogOpened:YES withKeyboardHeight:keyboardFrame.size.height];
 }
 
-- (void)keyboardDidHide:(NSNotification*)notification {
+- (void)keyboardWillHide:(NSNotification*)notification {
 	[self.delegate searchDialogOpened:NO withKeyboardHeight:0.0];
 }
+
+//- (void)textFieldDidBeginEditing:(UITextField *)textField {
+//	[UIView setAnimationsEnabled:NO];
+//	[NSTimer scheduledTimerWithTimeInterval:0.50 repeats:NO block:^(NSTimer * _Nonnull timer) {
+//		[UIView setAnimationsEnabled:YES];
+//	}];
+//}
+//
+//- (void)textFieldDidEndEditing:(UITextField *)textField {
+//	[UIView setAnimationsEnabled:NO];
+//	[NSTimer scheduledTimerWithTimeInterval:1.10 repeats:NO block:^(NSTimer * _Nonnull timer) {
+//		[UIView setAnimationsEnabled:YES];
+//	}];
+//}
 
 //- (BOOL)textFieldShouldReturn:(UITextField *)textField {
 //	[textField resignFirstResponder];
@@ -81,6 +93,7 @@
 //}
 
 - (void)dismissKeyboard {
+	[self.delegate searchDialogOpened:NO withKeyboardHeight:0.0];
 	[self endEditing:YES];
 }
 
@@ -91,13 +104,13 @@
 - (void)layoutSubviews {
 	if(!self.didLayoutConstraints) {
 		[[NSNotificationCenter defaultCenter] addObserver:self
-												 selector:@selector(keyboardDidShow:)
-													 name:UIKeyboardDidShowNotification
+												 selector:@selector(keyboardWillShow:)
+													 name:UIKeyboardWillShowNotification
 												   object:nil];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self
-												 selector:@selector(keyboardDidHide:)
-													 name:UIKeyboardDidHideNotification
+												 selector:@selector(keyboardWillHide:)
+													 name:UIKeyboardWillHideNotification
 												   object:nil];
 		
 		self.musicPlayer = [MPMusicPlayerController systemMusicPlayer];
@@ -133,7 +146,7 @@
 		self.searchTextField = [UITextField newAutoLayoutView];
 		self.searchTextField.textColor = [UIColor whiteColor];
 		self.searchTextField.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:self.frame.size.height/2.25];
-//		self.searchTextField.delegate = self;
+		self.searchTextField.delegate = self;
 		[self.searchTextField addTarget:self
 								 action:@selector(searchFieldDidChange)
 					   forControlEvents:UIControlEventEditingChanged];
