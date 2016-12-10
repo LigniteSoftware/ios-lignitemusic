@@ -16,4 +16,18 @@
 - (void)setup;
 - (void)reloadSourceSelectorInfo;
 
+/**
+ Scrolls to an index of a track.
+
+ @param index The index to scroll to.
+ */
+- (void)scrollToTrackIndex:(NSUInteger)index;
+
+/**
+ Scroll to a track with its persistent ID.
+
+ @param persistentID The persistent ID of the track to scroll to.
+ */
+- (void)scrollToTrackWithPersistentID:(LMMusicTrackPersistentID)persistentID;
+
 @end

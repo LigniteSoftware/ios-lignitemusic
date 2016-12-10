@@ -235,9 +235,9 @@ BOOL didAutomaticallyClose = NO;
 			[self.titleView reloadSourceSelectorInfo];
 			self.currentSource = self.titleView;
 			
-//			self.browsingAssistant.browsingBar.letterTabBar.lettersDictionary =
-//			[self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:self.titleView.musicTitles
-//															 withAssociatedMusicType:LMMusicTrack];
+			self.browsingAssistant.browsingBar.letterTabBar.lettersDictionary =
+			[self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:@[self.titleView.musicTitles]
+															 withAssociatedMusicType:LMMusicTypeTitles];
 			break;
 		}
 		case LMIconPlaylists: {
@@ -462,7 +462,10 @@ BOOL didAutomaticallyClose = NO;
 	
 	[self sourceSelected:[self.sourcesForSourceSelector objectAtIndex:musicType]];
 	
-	if(![self.currentSource isEqual:self.titleView]){
+	if([self.currentSource isEqual:self.titleView]){
+		[self.titleView scrollToTrackWithPersistentID:persistentID];
+	}
+	else{
 		LMBrowsingView *browsingView = [self.currentSource browsingView];
 		[browsingView scrollToItemWithPersistentID:persistentID];
 	}
@@ -470,8 +473,13 @@ BOOL didAutomaticallyClose = NO;
 	[self.navigationController popViewControllerAnimated:YES];
 }
 
-- (void)letterSelected:(NSString *)letter atIndex:(NSUInteger)index {	
-	[[self.currentSource browsingView] scrollViewToIndex:index];
+- (void)letterSelected:(NSString *)letter atIndex:(NSUInteger)index {
+	if([self.currentSource isEqual:self.titleView]){
+		[self.titleView scrollToTrackIndex:index == 0 ? 0 : index-1];
+	}
+	else{
+		[[self.currentSource browsingView] scrollViewToIndex:index];
+	}
 }
 
 - (void)viewDidLoad {

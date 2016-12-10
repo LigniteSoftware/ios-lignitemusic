@@ -296,6 +296,15 @@
 		
 		NSArray *letters = self.lettersDictionary.allKeys;
 		letters = [letters sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"" ascending:YES]]];
+				
+		//Adjust array so question mark is at the back
+		if(self.lettersDictionary){
+			NSMutableArray *adjustedArray = [NSMutableArray arrayWithArray:letters];
+			NSString *questionMark = [letters objectAtIndex:1];
+			[adjustedArray removeObjectAtIndex:1];
+			[adjustedArray insertObject:questionMark atIndex:adjustedArray.count];
+			letters = [NSArray arrayWithArray:adjustedArray];
+		}
 		
 		for(int i = 0; i < letters.count; i++){
 			BOOL firstIndex = (i == 0);

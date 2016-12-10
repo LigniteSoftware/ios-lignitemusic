@@ -81,7 +81,12 @@
 }
 
 - (void)rebuildTrackCollection {
-	MPMediaQuery *everything = [[MPMediaQuery alloc] init];
+	MPMediaQuery *everything = [MPMediaQuery new];
+	MPMediaPropertyPredicate *musicFilterPredicate = [MPMediaPropertyPredicate predicateWithValue:[NSNumber numberWithInteger:MPMediaTypeMusic]
+																					  forProperty:MPMediaItemPropertyMediaType
+																				   comparisonType:MPMediaPredicateComparisonEqualTo];
+	[everything addFilterPredicate:musicFilterPredicate];
+
 	NSArray *songs = [everything items];
 	MPMediaItemCollection *mediaCollection = [MPMediaItemCollection collectionWithItems:songs];
 	NSMutableArray* musicTracks = [[NSMutableArray alloc]init];
@@ -92,6 +97,11 @@
 		LMMusicTrack *musicTrack = [[LMMusicTrack alloc]initWithMPMediaItem:musicItem];
 		[musicCollection addObject:musicTrack];
 	}
+	
+	NSString *sortKey = @"title";
+	NSSortDescriptor *albumSort = [NSSortDescriptor sortDescriptorWithKey:sortKey ascending:YES];
+	musicCollection = [NSMutableArray arrayWithArray:[musicCollection sortedArrayUsingDescriptors:@[albumSort]]];
+	
 	LMMusicTrackCollection *trackCollection = [[LMMusicTrackCollection alloc]initWithItems:musicCollection basedOnSourceCollection:mediaCollection];
 	[musicTracks addObject:trackCollection];
 	
@@ -153,6 +163,43 @@
 	[entry reloadContents];
 	
 	return entry;
+}
+
+- (void)scrollToTrackIndex:(NSUInteger)index {
+	[self.songListTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:index]
+								  atScrollPosition:UITableViewScrollPositionTop
+										  animated:NO];
+}
+
+- (void)scrollToTrackWithPersistentID:(LMMusicTrackPersistentID)persistentID {
+	NSInteger index = -1;
+	
+	for(NSUInteger i = 0; i < self.musicTitles.count; i++){
+		LMMusicTrack *track = [self.musicTitles.items objectAtIndex:i];
+		
+		if(persistentID == track.persistentID){
+			index = i;
+		}
+		
+		if(index != -1){
+			break;
+		}
+	}
+	
+	if(index == -1){
+		index = 0;
+	}
+	
+	[self.songListTableView focusCellAtIndex:index];
+	
+	//Fix index for adjustment
+	index = (index == 0) ? 0 : (index-2);
+	
+	[self.songListTableView focusCellAtIndex:index];
+	
+//	[self.bigListEntryTableView focusBigListEntryAtIndex:index];
+	
+	[self scrollToTrackIndex:index];
 }
 
 - (void)amountOfObjectsRequiredChangedTo:(NSUInteger)amountOfObjects forTableView:(LMTableView *)tableView {

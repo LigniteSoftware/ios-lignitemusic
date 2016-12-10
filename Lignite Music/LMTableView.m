@@ -120,6 +120,21 @@
 	}
 }
 
+- (void)focusCellAtIndex:(NSUInteger)index {
+	UIView *cellSubview = [self.subviewDataSource subviewAtIndex:index forTableView:self];
+	//	[bigListEntry setLarge:YES animated:YES];
+	
+	[NSTimer scheduledTimerWithTimeInterval:0.5 repeats:NO block:^(NSTimer * _Nonnull timer) {
+		[UIView animateWithDuration:0.75 animations:^{
+			cellSubview.backgroundColor = [UIColor colorWithRed:0.33 green:0.33 blue:0.33 alpha:0.15];
+		} completion:^(BOOL finished) {
+			[UIView animateWithDuration:0.75 animations:^{
+				cellSubview.backgroundColor = [UIColor whiteColor];
+			}];
+		}];
+	}];
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	NSString *cellIdentifier = [NSString stringWithFormat:@"%@Cell_%lu", self.title, indexPath.section % self.requiredAmountOfObjects];
 	

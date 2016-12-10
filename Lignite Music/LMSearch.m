@@ -50,6 +50,10 @@
 	NSMutableArray<NSArray<MPMediaItemCollection*>*> *searchResults = [NSMutableArray new];
 	NSMutableArray<NSNumber*> *searchGroupings = [NSMutableArray new];
 	
+	MPMediaPropertyPredicate *musicFilterPredicate = [MPMediaPropertyPredicate predicateWithValue:[NSNumber numberWithInteger:MPMediaTypeMusic]
+																					  forProperty:MPMediaItemPropertyMediaType
+																				   comparisonType:MPMediaPredicateComparisonEqualTo];
+	
 	for(NSUInteger baseIndex = 0; baseIndex < associatedProperties.count; baseIndex++){
 		MPMediaGrouping associatedMediaGrouping = [associatedGroupings[baseIndex] unsignedIntegerValue];
 
@@ -57,7 +61,8 @@
 		
 		MPMediaQuery *baseQuery = [MPMediaQuery new];
 		baseQuery.groupingType = associatedMediaGrouping;
-		
+		[baseQuery addFilterPredicate:musicFilterPredicate];
+
 		NSArray<MPMediaItemCollection*>* collections = baseQuery.collections;
 	
 		NSMutableArray *collectionsWhichApply = [NSMutableArray new];

@@ -113,4 +113,11 @@
  */
 - (void)reloadSubviewSizes;
 
+/**
+ Briefly focus a cell at a certain index.
+
+ @param index The index to focus.
+ */
+- (void)focusCellAtIndex:(NSUInteger)index;
+
 @end

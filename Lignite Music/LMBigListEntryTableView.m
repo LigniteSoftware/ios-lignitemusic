@@ -167,10 +167,10 @@
 //	[bigListEntry setLarge:YES animated:YES];
 	
 	[NSTimer scheduledTimerWithTimeInterval:0.5 repeats:NO block:^(NSTimer * _Nonnull timer) {
-		[UIView animateWithDuration:0.50 animations:^{
+		[UIView animateWithDuration:0.75 animations:^{
 			bigListEntry.backgroundColor = [UIColor colorWithRed:0.33 green:0.33 blue:0.33 alpha:0.15];
 		} completion:^(BOOL finished) {
-			[UIView animateWithDuration:0.50 animations:^{
+			[UIView animateWithDuration:0.75 animations:^{
 				bigListEntry.backgroundColor = [UIColor whiteColor];
 			}];
 		}];

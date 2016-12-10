@@ -516,51 +516,154 @@ BOOL shuffleForDebug = NO;
 - (NSDictionary*)lettersAvailableDictionaryForMusicTrackCollectionArray:(NSArray<LMMusicTrackCollection*>*)collectionArray
 												withAssociatedMusicType:(LMMusicType)musicType {
 	
+	NSUInteger lastCollectionIndex = 0;
+	
 	NSMutableDictionary *lettersDictionary = [NSMutableDictionary new];
 	
-	for(NSUInteger i = 0; i < collectionArray.count; i++){
-		NSString *letter = @"?";
+	BOOL isTitles = (musicType == LMMusicTypeTitles);
+	
+	LMMusicTrackCollection *firstTrackCollection = nil;
+	if(isTitles && collectionArray.count > 0){
+		firstTrackCollection = [collectionArray objectAtIndex:0];
+	}
+	
+	NSUInteger countToUse = isTitles ? firstTrackCollection.count : collectionArray.count;
+	
+	NSLog(@"Using count %d", (int)countToUse);
+	
+	NSString *letters = @"#ABCDEFGHIJKLMNOPQRSTUVWXYZ?";
+	for(int i = 0; i < letters.length; i++){
+		NSString *locationLetter = [NSString stringWithFormat: @"%C", [letters characterAtIndex:i]];
 		
-		LMMusicTrackCollection *collection = [collectionArray objectAtIndex:i];
-		LMMusicTrack *representativeTrack = collection.representativeItem;
-		
-		switch(musicType){
-			case LMMusicTypeArtists:
-				if(representativeTrack.artist){
-					letter = [self firstLetterForString:representativeTrack.artist];
-				}
+		for(NSUInteger collectionIndex = lastCollectionIndex; collectionIndex < countToUse; collectionIndex++){
+			NSString *trackLetter = @"?";
+			
+			LMMusicTrackCollection *musicCollection = nil;
+			LMMusicTrack *musicTrack = nil;
+			
+			if(isTitles){
+				musicCollection = firstTrackCollection;
+				musicTrack = [firstTrackCollection.items objectAtIndex:collectionIndex];
+			}
+			else{
+				musicCollection = [collectionArray objectAtIndex:collectionIndex];
+				musicTrack = musicCollection.representativeItem;
+			}
+			
+			switch(musicType){
+				case LMMusicTypeArtists:
+					if(musicTrack.artist){
+						trackLetter = [self firstLetterForString:musicTrack.artist];
+					}
+					break;
+				case LMMusicTypeAlbums:
+					if(musicTrack.albumTitle){
+						trackLetter = [self firstLetterForString:musicTrack.albumTitle];
+					}
+					break;
+				case LMMusicTypeTitles:
+					if(musicTrack.title){
+						trackLetter = [self firstLetterForString:musicTrack.title];
+					}
+					break;
+				case LMMusicTypePlaylists:
+					if(musicCollection.title){
+						trackLetter = [self firstLetterForString:musicCollection.title];
+					}
+					break;
+				case LMMusicTypeComposers:
+					if(musicTrack.composer){
+						trackLetter = [self firstLetterForString:musicTrack.composer];
+					}
+					break;
+				case LMMusicTypeGenres:
+					if(musicTrack.genre){
+						trackLetter = [self firstLetterForString:musicTrack.genre];
+					}
+					break;
+			}
+			
+			trackLetter = [trackLetter uppercaseString];
+			NSLog(@"%d: %@: %@", (int)collectionIndex, trackLetter, musicTrack.title);
+			
+			BOOL doesntContainLetter = ![[lettersDictionary allKeys] containsObject:locationLetter];
+			BOOL letterIsDigit = isdigit([trackLetter characterAtIndex:0]);
+			
+			//If the character is a number and we're scanning for the first pound sign index
+			if((letterIsDigit
+				&& [locationLetter isEqualToString:@"#"]
+				&& doesntContainLetter)
+			   //Or, if the letter is not yet in the dictionary and the letter matches the one being searched for
+			   || ([locationLetter isEqualToString:trackLetter]
+			   && doesntContainLetter)
+			   //Or if it's an unknown letter/character and no question mark index has been logged yet and it's not a digit
+			   || (![letters containsString:[NSString stringWithFormat: @"%C", [trackLetter characterAtIndex:0]]]
+				   && ![[lettersDictionary allKeys] containsObject:@"?"]
+				   && [locationLetter isEqualToString:@"?"]
+				   && !letterIsDigit))
+			{
+				//Log that bitch
+				[lettersDictionary setObject:[NSNumber numberWithUnsignedInteger:collectionIndex] forKey:locationLetter];
+				
+				lastCollectionIndex = collectionIndex;
+				
+				NSLog(@"%d/%d: Logging %@ (%@)", (int)i, (int)collectionIndex, locationLetter, musicTrack.title);
 				break;
-			case LMMusicTypeAlbums:
-				if(representativeTrack.albumTitle){
-					letter = [self firstLetterForString:representativeTrack.albumTitle];
-				}
-				break;
-			case LMMusicTypeTitles:
-				if(representativeTrack.title){
-					letter = [self firstLetterForString:representativeTrack.title];
-				}
-				break;
-			case LMMusicTypePlaylists:
-				if(collection.title){
-					letter = [self firstLetterForString:collection.title];
-				}
-				break;
-			case LMMusicTypeComposers:
-				if(representativeTrack.composer){
-					letter = [self firstLetterForString:representativeTrack.composer];
-				}
-				break;
-			case LMMusicTypeGenres:
-				if(representativeTrack.genre){
-					letter = [self firstLetterForString:representativeTrack.genre];
-				}
-				break;
-		}
-		
-		if(![[lettersDictionary allKeys] containsObject:letter]){
-			[lettersDictionary setObject:[NSNumber numberWithUnsignedInteger:i] forKey:letter];
+			}
+			//If we're on the last index and there's no hope set the letter's index to the last index that was found
+			else if(collectionIndex == countToUse-1){
+				[lettersDictionary setObject:[NSNumber numberWithUnsignedInteger:lastCollectionIndex] forKey:locationLetter];
+				
+				NSLog(@"%d/%d: No hope for %@ (%@)", (int)i, (int)collectionIndex, locationLetter, musicTrack.title);
+			}
 		}
 	}
+	
+//	return [NSArray arrayWithArray:lettersArray];
+	
+//	for(NSUInteger i = 0; i < collectionArray.count; i++){
+//		NSString *letter = @"?";
+//		
+//		LMMusicTrackCollection *collection = [collectionArray objectAtIndex:i];
+//		LMMusicTrack *representativeTrack = collection.representativeItem;
+//		
+//		switch(musicType){
+//			case LMMusicTypeArtists:
+//				if(representativeTrack.artist){
+//					letter = [self firstLetterForString:representativeTrack.artist];
+//				}
+//				break;
+//			case LMMusicTypeAlbums:
+//				if(representativeTrack.albumTitle){
+//					letter = [self firstLetterForString:representativeTrack.albumTitle];
+//				}
+//				break;
+//			case LMMusicTypeTitles:
+//				if(representativeTrack.title){
+//					letter = [self firstLetterForString:representativeTrack.title];
+//				}
+//				break;
+//			case LMMusicTypePlaylists:
+//				if(collection.title){
+//					letter = [self firstLetterForString:collection.title];
+//				}
+//				break;
+//			case LMMusicTypeComposers:
+//				if(representativeTrack.composer){
+//					letter = [self firstLetterForString:representativeTrack.composer];
+//				}
+//				break;
+//			case LMMusicTypeGenres:
+//				if(representativeTrack.genre){
+//					letter = [self firstLetterForString:representativeTrack.genre];
+//				}
+//				break;
+//		}
+//		
+//		if(![[lettersDictionary allKeys] containsObject:letter]){
+//			[lettersDictionary setObject:[NSNumber numberWithUnsignedInteger:i] forKey:letter];
+//		}
+//	}
 	
 	return [NSDictionary dictionaryWithDictionary:lettersDictionary];
 }
