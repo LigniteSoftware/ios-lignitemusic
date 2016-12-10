@@ -11,6 +11,7 @@
 #import "LMColour.h"
 #import "LMMusicPlayer.h"
 #import "LMAppIcon.h"
+#import "LMAppDelegate.h"
 
 @interface LMSearchBar()<UITextFieldDelegate>
 
@@ -55,9 +56,13 @@
 }
 
 - (void)tappedClearSearch {
-	self.searchTextField.text = @"";
-	[self searchFieldDidChange];
-	[self dismissKeyboard];
+	if([self.searchTextField.text isEqualToString:@""]){
+		[(UINavigationController*)self.window.rootViewController popViewControllerAnimated:YES];
+	}
+	else{
+		self.searchTextField.text = @"";
+		[self searchFieldDidChange];
+	}
 }
 
 - (void)keyboardWillShow:(NSNotification*)notification {

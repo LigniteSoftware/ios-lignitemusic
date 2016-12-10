@@ -38,6 +38,24 @@
  
  */
 
+
+/*
+ 
+ New strings
+ 
+ */
+
+"CreditsLicenses" = "License links"; //Links to licenses, such as library licenses and icon licenses.
+"NoSearchResults" = "No results";
+
+/*
+ 
+ End new strings
+ 
+ */
+
+
+
 /* General */
 "SongXofX" = "Song %d of %d";
 "SongX" = "Song %d";

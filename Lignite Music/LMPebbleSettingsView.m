@@ -339,8 +339,8 @@
 		[switchView addTarget:self action:@selector(changeSwitch:) forControlEvents:UIControlEventValueChanged];
 		
 		NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	NSLog(@"%d.%d: %@ %@", (int)indexPath.section, (int)indexPath.row, switchView.switchID, [defaults objectForKey:switchView.switchID]);
-		if([defaults objectForKey:switchView.switchID]){
+
+	if([defaults objectForKey:switchView.switchID]){
 			switchView.on = [defaults boolForKey:switchView.switchID];
 		}
 		else{

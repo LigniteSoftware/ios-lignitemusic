@@ -584,7 +584,7 @@ BOOL shuffleForDebug = NO;
 			}
 			
 			trackLetter = [trackLetter uppercaseString];
-			NSLog(@"%d: %@: %@", (int)collectionIndex, trackLetter, musicTrack.title);
+//			NSLog(@"%d: %@: %@", (int)collectionIndex, trackLetter, musicTrack.title);
 			
 			BOOL doesntContainLetter = ![[lettersDictionary allKeys] containsObject:locationLetter];
 			BOOL letterIsDigit = isdigit([trackLetter characterAtIndex:0]);

@@ -29,6 +29,13 @@
  Thanks, and have fun!
  */
 
+
+
+"CreditsLicenses" = "Lizenzlinks";
+"NoSearchResults" = "Keine Ergebnisse";
+
+
+
 /* General */
 "SongXofX" = "Song %d von %d";
 "SongX" = "Song %d";
