@@ -37,6 +37,7 @@
 #import "LMBrowsingBar.h"
 
 #define SKIP_ONBOARDING
+#define SPEED_DEMON_MODE
 
 @import SDWebImage;
 @import StoreKit;
@@ -494,6 +495,12 @@ BOOL didAutomaticallyClose = NO;
 	
 	self.loaded = NO;
 	
+	
+#ifdef SPEED_DEMON_MODE
+	[UIView setAnimationsEnabled:NO];
+#endif
+	
+	
 //	self.automaticallyAdjustsScrollViewInsets = NO;
 	
 //	LMBrowsingBar *browsingBar = [LMBrowsingBar newAutoLayoutView];
@@ -518,12 +525,12 @@ BOOL didAutomaticallyClose = NO;
 	
 //	NSLog(@"Loading view %@", self.navigationController);
 	
-	LMCreditsView *view = [LMCreditsView newAutoLayoutView];
-	[self.view addSubview:view];
-	
-	[view autoPinEdgesToSuperviewEdges];
-	
-	return;
+//	LMCreditsView *view = [LMCreditsView newAutoLayoutView];
+//	[self.view addSubview:view];
+//	
+//	[view autoPinEdgesToSuperviewEdges];
+//	
+//	return;
 	
 //	self.settingsView = [LMSettingsView newAutoLayoutView];
 //	self.settingsView.coreViewController = self;
@@ -724,8 +731,8 @@ BOOL didAutomaticallyClose = NO;
 						[self.statusBarBlurView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 						self.statusBarBlurViewHeightConstraint = [self.statusBarBlurView autoSetDimension:ALDimensionHeight toSize:20*[LMSettings shouldShowStatusBar]];
 
-//						LMImageManager *imageManager = [LMImageManager sharedImageManager];
-//						imageManager.viewToDisplayAlertsOn = self.navigationController.view;
+						LMImageManager *imageManager = [LMImageManager sharedImageManager];
+						imageManager.viewToDisplayAlertsOn = self.navigationController.view;
 						
 						
 						NSTimeInterval endTime = [[NSDate new] timeIntervalSince1970];

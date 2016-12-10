@@ -39,7 +39,7 @@
 		label.leadingBuffer = 6;
 		label.trailingBuffer = label.leadingBuffer;
 		
-		label.backgroundColor = [UIColor colorWithRed:(0.2*i)+0.3 green:0 blue:0 alpha:1.0];
+//		label.backgroundColor = [UIColor colorWithRed:(0.2*i)+0.3 green:0 blue:0 alpha:1.0];
 		label.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:60.0f];
 		label.text = [NSString stringWithFormat:@"Hey %d", i];
 		label.textAlignment = textAlignment;

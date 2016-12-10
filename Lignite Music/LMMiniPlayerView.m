@@ -186,7 +186,7 @@
 	[self.albumArtImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.albumArtImageBackgroundView withMultiplier:(8.0/10.0)];
 	
 	self.trackInfoAndDurationBackgroundView = [UIView newAutoLayoutView];
-	self.trackInfoAndDurationBackgroundView.backgroundColor = [UIColor cyanColor];
+//	self.trackInfoAndDurationBackgroundView.backgroundColor = [UIColor cyanColor];
 	[self addSubview:self.trackInfoAndDurationBackgroundView];
 	
 	[self.trackInfoAndDurationBackgroundView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.albumArtImageView];

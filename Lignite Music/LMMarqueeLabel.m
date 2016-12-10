@@ -43,7 +43,7 @@
 			}
 		}
 	}
-	return [self.font fontWithSize:fontSizeAverage+2];
+	return [self.font fontWithSize:fontSizeAverage];
 }
 
 - (void)layoutSubviews {

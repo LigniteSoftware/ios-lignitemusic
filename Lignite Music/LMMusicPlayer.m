@@ -607,14 +607,14 @@ BOOL shuffleForDebug = NO;
 				
 				lastCollectionIndex = collectionIndex;
 				
-				NSLog(@"%d/%d: Logging %@ (%@)", (int)i, (int)collectionIndex, locationLetter, musicTrack.title);
+//				NSLog(@"%d/%d: Logging %@ (%@)", (int)i, (int)collectionIndex, locationLetter, musicTrack.title);
 				break;
 			}
 			//If we're on the last index and there's no hope set the letter's index to the last index that was found
 			else if(collectionIndex == countToUse-1){
 				[lettersDictionary setObject:[NSNumber numberWithUnsignedInteger:lastCollectionIndex] forKey:locationLetter];
 				
-				NSLog(@"%d/%d: No hope for %@ (%@)", (int)i, (int)collectionIndex, locationLetter, musicTrack.title);
+//				NSLog(@"%d/%d: No hope for %@ (%@)", (int)i, (int)collectionIndex, locationLetter, musicTrack.title);
 			}
 		}
 	}
