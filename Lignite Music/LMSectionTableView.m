@@ -13,7 +13,6 @@
 #import "LMSectionHeaderView.h"
 #import "LMColour.h"
 #import "LMListEntry.h"
-#import "LMAppIcon.h"
 #import "LMLabel.h"
 
 @interface LMSectionTableView()<UITableViewDelegate, UITableViewDataSource, LMListEntryDelegate>

@@ -166,9 +166,10 @@
 	LMMusicTrackCollection *collection = [self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex];
 	
 	switch(self.musicType){
-		case LMMusicTypePlaylists:
-		case LMMusicTypeGenres:
-		{
+		case LMMusicTypeGenres: {
+			return collection.representativeItem.genre ? collection.representativeItem.genre : NSLocalizedString(@"UnknownGenre", nil);
+		}
+		case LMMusicTypePlaylists:{
 			return collection.title;
 		}
 		case LMMusicTypeAlbums: {

@@ -152,6 +152,8 @@
 		self.searchTextField.textColor = [UIColor whiteColor];
 		self.searchTextField.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:self.frame.size.height/2.25];
 		self.searchTextField.delegate = self;
+		self.searchTextField.keyboardType = UIKeyboardTypeDefault;
+		self.searchTextField.returnKeyType = UIReturnKeySearch;
 		[self.searchTextField addTarget:self
 								 action:@selector(searchFieldDidChange)
 					   forControlEvents:UIControlEventEditingChanged];

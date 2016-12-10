@@ -329,7 +329,7 @@
 			
 			[textLabel autoSetDimension:ALDimensionWidth toSize:self.frame.size.width*0.90];
 			[textLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
-			[textLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:previousLabelToAttachTo withOffset:self.frame.size.width*(i == 0 ? 0.05 : 0.035)];
+			[textLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:previousLabelToAttachTo withOffset:self.frame.size.width*(i == 0 ? 0.10 : (fontSize == 34.0 ? 0.075 : 0.035))];
 			
 			[textLabelsArray addObject:textLabel];
 		}

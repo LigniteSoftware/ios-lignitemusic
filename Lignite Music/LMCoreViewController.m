@@ -518,12 +518,12 @@ BOOL didAutomaticallyClose = NO;
 	
 //	NSLog(@"Loading view %@", self.navigationController);
 	
-//	LMCreditsView *view = [LMCreditsView newAutoLayoutView];
-//	[self.view addSubview:view];
-//	
-//	[view autoPinEdgesToSuperviewEdges];
-//	
-//	return;
+	LMCreditsView *view = [LMCreditsView newAutoLayoutView];
+	[self.view addSubview:view];
+	
+	[view autoPinEdgesToSuperviewEdges];
+	
+	return;
 	
 //	self.settingsView = [LMSettingsView newAutoLayoutView];
 //	self.settingsView.coreViewController = self;

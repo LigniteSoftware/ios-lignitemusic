@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "LMMarqueeLabel.h"
+#import "LMLabel.h"
 
 @interface LMTrackInfoView : UIView
 

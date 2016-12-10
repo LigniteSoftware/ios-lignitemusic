@@ -9,7 +9,7 @@
 #import "LMMarqueeLabel.h"
 
 #define DISPLAY_FONT_MINIMUM 6
-#define DISPLAY_FONT_MAXIMUM 50
+#define DISPLAY_FONT_MAXIMUM 100
 
 @implementation LMMarqueeLabel
 
@@ -43,7 +43,7 @@
 			}
 		}
 	}
-	return [self.font fontWithSize:fontSizeAverage-2];
+	return [self.font fontWithSize:fontSizeAverage+2];
 }
 
 - (void)layoutSubviews {

@@ -186,6 +186,7 @@
 	[self.albumArtImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.albumArtImageBackgroundView withMultiplier:(8.0/10.0)];
 	
 	self.trackInfoAndDurationBackgroundView = [UIView newAutoLayoutView];
+	self.trackInfoAndDurationBackgroundView.backgroundColor = [UIColor cyanColor];
 	[self addSubview:self.trackInfoAndDurationBackgroundView];
 	
 	[self.trackInfoAndDurationBackgroundView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.albumArtImageView];
@@ -199,7 +200,7 @@
 	[self.trackInfoView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.trackInfoAndDurationBackgroundView];
 	[self.trackInfoView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.trackInfoAndDurationBackgroundView];
 	[self.trackInfoView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.trackInfoAndDurationBackgroundView withOffset:-10];
-	[self.trackInfoView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.trackInfoAndDurationBackgroundView withMultiplier:(6.0/10.0)];
+	[self.trackInfoView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.trackInfoAndDurationBackgroundView withMultiplier:(7.5/10.0)];
 	
 	[self.trackInfoView setupWithTextAlignment:NSTextAlignmentLeft];
 	

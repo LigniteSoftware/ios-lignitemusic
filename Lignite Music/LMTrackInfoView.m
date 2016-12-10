@@ -18,9 +18,9 @@
 - (void)setupWithTextAlignment:(NSTextAlignment)textAlignment {
 //	self.backgroundColor = [UIColor yellowColor];
 	
-	self.titleLabel = [[LMMarqueeLabel alloc]init];
-	self.artistLabel = [[LMMarqueeLabel alloc]init];
-	self.albumLabel = [[LMMarqueeLabel alloc]init];
+	self.titleLabel = [LMMarqueeLabel newAutoLayoutView];
+	self.artistLabel = [LMMarqueeLabel newAutoLayoutView];
+	self.albumLabel = [LMMarqueeLabel newAutoLayoutView];
 	
 	float heightMultipliers[] = {
 		(1.0/2.0), (1.0/4.0), (1.0/5.0)
@@ -37,9 +37,9 @@
 		
 		label.fadeLength = 10;
 		label.leadingBuffer = 6;
+		label.trailingBuffer = label.leadingBuffer;
 		
-//		label.backgroundColor = [UIColor colorWithRed:(0.2*i)+0.3 green:0 blue:0 alpha:1.0];
-		label.translatesAutoresizingMaskIntoConstraints = NO;
+		label.backgroundColor = [UIColor colorWithRed:(0.2*i)+0.3 green:0 blue:0 alpha:1.0];
 		label.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:60.0f];
 		label.text = [NSString stringWithFormat:@"Hey %d", i];
 		label.textAlignment = textAlignment;
