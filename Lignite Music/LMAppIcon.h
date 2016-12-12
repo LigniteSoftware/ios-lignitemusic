@@ -43,7 +43,8 @@ typedef enum {
 	LMIconTwitter,
 	LMIconXCross,
 	LMIconSearch,
-	LMIconAToZ
+	LMIconAToZ,
+	LMIconGrabRectangle
 } LMIcon;
 
 /**

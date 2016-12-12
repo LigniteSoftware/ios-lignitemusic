@@ -11,6 +11,9 @@
 #import "LMSource.h"
 #import "LMView.h"
 #import "LMBrowsingBar.h"
+#import "LMExtras.h"
+
+#define TAB_HEIGHT WINDOW_FRAME.size.height/25.0
 
 @class LMBrowsingAssistantView;
 

@@ -76,6 +76,8 @@
 			return @"icon_search.png";
 		case LMIconAToZ:
 			return @"icon_a_to_z.png";
+		case LMIconGrabRectangle:
+			return @"icon_grab_rectangle.png";
 	}
 }
 

@@ -15,7 +15,6 @@
 #import "LMSource.h"
 #import "LMLabel.h"
 #import "LMSourceSelectorView.h"
-#import "LMExtras.h"
 #import "LMLabel.h"
 #import "LMButton.h"
 
@@ -28,6 +27,8 @@
 
 @property UIView *grabberView;
 @property UIImageView *grabberImageView;
+
+@property CGPoint originalPoint, currentPoint;
 
 @property LMMiniPlayerView *miniPlayerView;
 @property NSLayoutConstraint *miniPlayerBottomConstraint, *browsingBarBottomConstraint;
@@ -330,6 +331,41 @@
 	[self.searchBarDelegate searchDialogOpened:opened withKeyboardHeight:keyboardHeight];
 }
 
+- (void)handlePan:(UIPanGestureRecognizer *)recognizer {
+	CGPoint translation = [recognizer translationInView:self];
+	
+	if(self.originalPoint.y == 0){
+		self.originalPoint = self.frame.origin;
+		self.currentPoint = self.frame.origin;
+	}
+	float totalTranslation = translation.y + (self.currentPoint.y-self.originalPoint.y);
+	
+	//	NSLog(@"%f", totalTranslation);
+	
+	if(totalTranslation < 0){
+		self.textBackgroundConstraint.constant = -sqrt(-totalTranslation);
+	}
+	else{
+		self.textBackgroundConstraint.constant = totalTranslation;
+	}
+	
+	[[self superview] layoutIfNeeded];
+	
+	if(recognizer.state == UIGestureRecognizerStateEnded){
+		//NSLog(@"Dick is not a bone %@", NSStringFromCGPoint(self.currentPoint));
+		self.currentPoint = CGPointMake(self.currentPoint.x, self.originalPoint.y + totalTranslation);
+		
+		//		NSLog(@"Dick is not a bone %@", NSStringFromCGPoint(self.currentPoint));
+		
+		if((translation.y >= 0)){
+			[self close];
+		}
+		else if((translation.y < 0)){
+			[self open];
+		}
+	}
+}
+
 - (void)layoutSubviews {
 	if(!self.didLayoutConstraints){
 		self.didLayoutConstraints = YES;
@@ -366,6 +402,34 @@
 		
 		
 		
+		self.grabberView = [UIView newAutoLayoutView];
+		self.grabberView.backgroundColor = [LMColour ligniteRedColour];
+		self.grabberView.layer.masksToBounds = YES;
+		self.grabberView.layer.cornerRadius = 0.024*WINDOW_FRAME.size.width;
+		[self addSubview:self.grabberView];
+		
+		CGFloat tabHeight = TAB_HEIGHT;
+		
+		[self.grabberView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self withOffset:(tabHeight*(1.0/4.0))+tabHeight];
+		[self.grabberView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(1.0/6.0)];
+		[self.grabberView autoSetDimension:ALDimensionHeight toSize:tabHeight];
+		[self.grabberView autoAlignAxisToSuperviewAxis:ALAxisVertical];
+		
+		UIPanGestureRecognizer *moveRecognizer = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(handlePan:)];
+		[self.grabberView addGestureRecognizer:moveRecognizer];
+		
+		self.grabberImageView = [UIImageView newAutoLayoutView];
+		self.grabberImageView.image = [LMAppIcon imageForIcon:LMIconGrabRectangle];
+		self.grabberImageView.contentMode = UIViewContentModeScaleAspectFit;
+		[self.grabberView addSubview:self.grabberImageView];
+		
+		[self.grabberImageView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+		[self.grabberImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.grabberView withMultiplier:(7.5/10.0)];
+		[self.grabberImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.grabberView withMultiplier:(1.0/2.0)];
+		[self.grabberImageView autoAlignAxisToSuperviewAxis:ALAxisVertical];
+		
+		
+		
 		self.currentSourceBackgroundView = [UIView newAutoLayoutView];
 		self.currentSourceBackgroundView.backgroundColor = [UIColor purpleColor];
 		[self addSubview:self.currentSourceBackgroundView];
@@ -382,6 +446,8 @@
 		self.currentSourceBackgroundView.layer.masksToBounds = NO;
 		self.currentSourceBackgroundView.layer.shadowRadius = 5;
 		
+		
+		
 		self.currentSourceButton = [LMButton newAutoLayoutView];
 		self.currentSourceButton.delegate = self;
 		[self.currentSourceBackgroundView addSubview:self.currentSourceButton];
@@ -394,6 +460,8 @@
 		
 		[self.currentSourceButton setImage:[LMAppIcon imageForIcon:LMIconPlaylists]];
 		
+		
+		
 		self.currentSourceLabel = [LMLabel newAutoLayoutView];
 		self.currentSourceLabel.text = @"Text post please ignore";
 		[self.currentSourceBackgroundView addSubview:self.currentSourceLabel];
@@ -402,6 +470,8 @@
 		[self.currentSourceLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.currentSourceButton withOffset:-10];
 		[self.currentSourceLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.currentSourceBackgroundView withMultiplier:(1.0/2.0)];
 		[self.currentSourceLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+		
+		
 		
 		self.currentSourceDetailLabel = [LMLabel newAutoLayoutView];
 		self.currentSourceDetailLabel.text = @"You didn't ignore it";
@@ -412,6 +482,7 @@
 		[self.currentSourceDetailLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.currentSourceButton withOffset:10];
 		[self.currentSourceDetailLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.currentSourceBackgroundView withMultiplier:(1.0/2.0)];
 		[self.currentSourceDetailLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+		
 		
 		UISwipeGestureRecognizer *swipeUpOnCurrentSourceGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(open)];
 		swipeUpOnCurrentSourceGesture.direction = UISwipeGestureRecognizerDirectionUp;
@@ -539,7 +610,6 @@
 		self.musicPlayer.sourceSelector = self.sourceSelector;
 		
 		[self.sourceSelector setup];
-		
 		
 		
 		[self insertSubview:self.selectorBackgroundView aboveSubview:self.miniPlayerView];

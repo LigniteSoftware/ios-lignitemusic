@@ -334,7 +334,7 @@ BOOL didAutomaticallyClose = NO;
 	}
 	
 	if(!self.browsingAssistantHeightConstraint){
-		self.browsingAssistantHeightConstraint = [self.browsingAssistant autoSetDimension:ALDimensionHeight toSize:heightRequired];
+		self.browsingAssistantHeightConstraint = [self.browsingAssistant autoSetDimension:ALDimensionHeight toSize:heightRequired+TAB_HEIGHT];
 		
 		[self.browsingAssistantViewAttachedTo layoutIfNeeded];
 		return;
@@ -352,7 +352,7 @@ BOOL didAutomaticallyClose = NO;
 		}];
 	}
 	
-	self.browsingAssistantHeightConstraint.constant = heightRequired;
+	self.browsingAssistantHeightConstraint.constant = heightRequired+TAB_HEIGHT;
 	
 	[UIView animateWithDuration:0.75 animations:^{
 		[self.browsingAssistantViewAttachedTo layoutIfNeeded];
