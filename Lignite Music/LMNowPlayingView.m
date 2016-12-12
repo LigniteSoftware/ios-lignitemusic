@@ -349,8 +349,8 @@
 //	constraint.priority = UILayoutPriorityRequired;
 	
 	self.trackInfoView = [LMTrackInfoView newAutoLayoutView];
+	self.trackInfoView.textAlignment = NSTextAlignmentCenter;
 	[self addSubview:self.trackInfoView];
-	[self.trackInfoView setupWithTextAlignment:NSTextAlignmentCenter];
 	
 	//TODO: Fix this being manually set value
 	[self.trackInfoView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.progressSlider withOffset:10];

@@ -9,11 +9,18 @@
 #import <UIKit/UIKit.h>
 #import "LMMarqueeLabel.h"
 #import "LMLabel.h"
+#import "LMView.h"
 
-@interface LMTrackInfoView : UIView
+@interface LMTrackInfoView : LMView
 
-@property LMMarqueeLabel *titleLabel, *artistLabel, *albumLabel;
+/**
+ The text alignment to use.
+ */
+@property NSTextAlignment textAlignment;
 
-- (void)setupWithTextAlignment:(NSTextAlignment)textAlignment;
+/**
+ The labels of the track info view.
+ */
+@property MarqueeLabel *titleLabel, *artistLabel, *albumLabel;
 
 @end

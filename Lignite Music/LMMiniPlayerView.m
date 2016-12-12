@@ -194,7 +194,9 @@
 	[self.trackInfoAndDurationBackgroundView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.albumArtImageView];
 	[self.trackInfoAndDurationBackgroundView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self];
 	
+	
 	self.trackInfoView = [LMTrackInfoView newAutoLayoutView];
+	self.trackInfoView.textAlignment = NSTextAlignmentLeft;
 	[self addSubview:self.trackInfoView];
 	
 	[self.trackInfoView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.trackInfoAndDurationBackgroundView];
@@ -202,7 +204,6 @@
 	[self.trackInfoView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.trackInfoAndDurationBackgroundView withOffset:-10];
 	[self.trackInfoView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.trackInfoAndDurationBackgroundView withMultiplier:(7.5/10.0)];
 	
-	[self.trackInfoView setupWithTextAlignment:NSTextAlignmentLeft];
 	
 	self.progressSlider = [LMProgressSlider newAutoLayoutView];
 	self.progressSlider.backgroundColor = [UIColor colorWithRed:0.82 green:0.82 blue:0.82 alpha:0.25];

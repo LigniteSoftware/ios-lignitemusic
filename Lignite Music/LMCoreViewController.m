@@ -501,7 +501,7 @@ BOOL didAutomaticallyClose = NO;
 #endif
 	
 	
-//	self.automaticallyAdjustsScrollViewInsets = NO;
+	self.automaticallyAdjustsScrollViewInsets = YES;
 	
 //	LMBrowsingBar *browsingBar = [LMBrowsingBar newAutoLayoutView];
 //	[self.view addSubview:browsingBar];

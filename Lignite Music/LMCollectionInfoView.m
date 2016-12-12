@@ -51,6 +51,7 @@
 		self.leftTextLabel = [LMLabel newAutoLayoutView];
 		self.leftTextLabel.text = @"Left text";
 		self.leftTextLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:50.0f];
+		self.leftTextLabel.textAlignment = NSTextAlignmentCenter;
 		[self.bottomView addSubview:self.leftTextLabel];
 		
 		self.middleDividerView = [UIView newAutoLayoutView];
@@ -71,7 +72,10 @@
 		self.rightTextLabel = [LMLabel newAutoLayoutView];
 		self.rightTextLabel.text = @"Right text";
 		self.rightTextLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:50.0f];
+		self.rightTextLabel.textAlignment = NSTextAlignmentCenter;
 		[self.bottomView addSubview:self.rightTextLabel];
+		
+		self.backgroundColor = [UIColor whiteColor];
 	}
 	else{
 		NSLog(@"Windows error creating LMCollectionInfoView");
@@ -93,8 +97,8 @@
 	if(!self.didInitialSetup){
 		[self.topView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[self.topView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-		[self.topView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-		[self.topView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.7];
+		[self.topView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:10];
+		[self.topView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(6.0/10.0)];
 		
 		[self.bottomView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:20];
 		[self.bottomView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:20];
@@ -119,8 +123,8 @@
 	if(hasRightText){
 		self.middleDividerView.hidden = NO;
 		
-		self.leftTextLabel.textAlignment = NSTextAlignmentRight;
-		self.rightTextLabel.textAlignment = NSTextAlignmentLeft;
+		self.leftTextLabel.textAlignment = NSTextAlignmentCenter;
+		self.rightTextLabel.textAlignment = NSTextAlignmentCenter;
 		self.middleDividerLabel.hidden = hasMiddleImage;
 		self.middleDividerImageView.hidden = !hasMiddleImage;
 		

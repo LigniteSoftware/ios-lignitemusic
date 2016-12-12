@@ -10,4 +10,12 @@
 
 @interface LMMarqueeLabel : MarqueeLabel
 
+/**
+ Gets a HelveticaNeue-Light font to fit a certain height.
+
+ @param height The height to fit.
+ @return The font which will fit it.
+ */
++ (UIFont*)fontToFitHeight:(CGFloat)height;
+
 @end

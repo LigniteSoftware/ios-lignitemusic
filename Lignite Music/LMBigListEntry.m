@@ -34,7 +34,7 @@
 
 + (float)sizeForBigListEntryWhenOpened:(BOOL)opened forDelegate:(id<LMBigListEntryDelegate>)delegate {
 	float contentViewHeightFactorial = [delegate contentSubviewFactorial:YES forBigListEntry:nil];
-	float infoViewHeightFactorial = (1.0/10.0);
+	float infoViewHeightFactorial = (1.0/9.0);
 	
 	return (contentViewHeightFactorial+infoViewHeightFactorial)*WINDOW_FRAME.size.height+20+[LMControlBarView heightWhenIsOpened:opened];
 }
@@ -98,7 +98,7 @@
 
 	float contentViewHeightFactorial = [self.entryDelegate contentSubviewFactorial:YES forBigListEntry:self];
 	float contentViewWidthFactorial = [self.entryDelegate contentSubviewFactorial:NO forBigListEntry:self];
-	float infoViewHeightFactorial = (1.0/10.0);
+	float infoViewHeightFactorial = (1.0/9.0); //Update the sizeForBigListEntryWhenOpened:: function's variable too
 
 	if(contentViewHeightFactorial == 0.0){
 		NSLog(@"Rejecting, gutless piece of shit.");
@@ -125,7 +125,7 @@
 	
 	[self.collectionInfoView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 	[self.collectionInfoView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	[self.collectionInfoView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:contentView withOffset:10];
+	[self.collectionInfoView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:contentView];
 	[self.collectionInfoView autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height*infoViewHeightFactorial];
 	
 	[self.collectionInfoView reloadData];

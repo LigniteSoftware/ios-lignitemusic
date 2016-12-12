@@ -217,11 +217,11 @@
 	}
 	
 	YIInnerShadowView* innerShadowView = [YIInnerShadowView newAutoLayoutView];
-	innerShadowView.shadowRadius = 4;
+	innerShadowView.shadowRadius = 3.0;
 	innerShadowView.shadowMask = YIInnerShadowMaskAll;
 	innerShadowView.cornerRadius = 8.0;
 	[self.backgroundView addSubview:innerShadowView];
-	
+//	innerShadowView.hidden = YES;
 	[innerShadowView autoPinEdgesToSuperviewEdges];
 	
 	self.triangleView = [LMTriangleView newAutoLayoutView];

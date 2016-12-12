@@ -13,43 +13,50 @@
 
 @implementation LMMarqueeLabel
 
-- (UIFont*)fontToFitHeight {
-	float minimumFontSize = DISPLAY_FONT_MINIMUM;
-	float maximumFontSize = DISPLAY_FONT_MAXIMUM;
-	float fontSizeAverage = 0;
-	float textAndLabelHeightDifference = 0;
++ (UIFont*)fontToFitHeight:(CGFloat)height {
+	CGFloat adjustment = 1.0;
 	
-	while(minimumFontSize <= maximumFontSize){
-		fontSizeAverage = minimumFontSize + (maximumFontSize - minimumFontSize) / 2;
-		if(self.text){
-			float labelHeight = self.frame.size.height;
-			float testStringHeight = [self.text sizeWithAttributes:@{
-																	 NSFontAttributeName: [self.font fontWithSize:fontSizeAverage]
+	UIFont *tempFont = nil;
+	NSString *testString = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	
+	NSInteger tempMin = 6;
+	NSInteger tempMax = 256;
+	NSInteger mid = 0;
+	NSInteger difference = 0;
+	
+	NSString *fontName = @"HelveticaNeue-Light";
+	
+	while (tempMin <= tempMax) {
+		mid = tempMin + (tempMax - tempMin) / 2;
+		tempFont = [UIFont fontWithName:fontName size:mid];
+		difference = height - [testString sizeWithAttributes:@{
+																	 NSFontAttributeName:tempFont
 																	 }].height;
+		
+		if (mid == tempMin || mid == tempMax) {
+			if (difference < 0) {
+				return [UIFont fontWithName:fontName size:(mid - 1)*adjustment];
+			}
 			
-			textAndLabelHeightDifference = labelHeight - testStringHeight;
-			
-			if(fontSizeAverage == minimumFontSize || fontSizeAverage == maximumFontSize){
-				return [self.font fontWithSize:fontSizeAverage- (textAndLabelHeightDifference < 0)];
-			}
-			if(textAndLabelHeightDifference < 0){
-				maximumFontSize = fontSizeAverage - 1;
-			}
-			else if(textAndLabelHeightDifference > 0){
-				minimumFontSize = fontSizeAverage + 1;
-			}
-			else{
-				return [self.font fontWithSize:fontSizeAverage];
-			}
+			return [UIFont fontWithName:fontName size:mid*adjustment];
+		}
+		
+		if (difference < 0) {
+			tempMax = mid - 1;
+		} else if (difference > 0) {
+			tempMin = mid + 1;
+		} else {
+			return [UIFont fontWithName:fontName size:mid*adjustment];
 		}
 	}
-	return [self.font fontWithSize:fontSizeAverage];
+	
+	return [UIFont fontWithName:fontName size:mid*adjustment];
 }
 
 - (void)layoutSubviews {
 	[super layoutSubviews];
 	
-	self.font = [self fontToFitHeight];
+	self.font = [LMMarqueeLabel fontToFitHeight:self.frame.size.height];
 }
 
 @end

@@ -286,6 +286,7 @@
 		self.letterScrollView.backgroundColor = [UIColor whiteColor];
 		self.letterScrollView.scrollEnabled = YES;
 		self.letterScrollView.layer.masksToBounds = NO;
+		self.letterScrollView.showsHorizontalScrollIndicator = NO;
 		[self addSubview:self.letterScrollView];
 		
 		[self.letterScrollView autoPinEdgesToSuperviewEdges];
