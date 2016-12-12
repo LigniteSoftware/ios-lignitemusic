@@ -99,6 +99,14 @@
  */
 - (id)accessoryViewForIndexPath:(NSIndexPath*)indexPath forSectionTableView:(LMSectionTableView*)sectionTableView;
 
+
+/**
+ The close button was tapped.
+
+ @param sectionTableView The section table view which had its close button tapped.
+ */
+- (void)tappedCloseButtonForSectionTableView:(LMSectionTableView*)sectionTableView;
+
 @end
 
 @interface LMSectionTableView : UITableView
@@ -127,8 +135,5 @@
  Register the cell identifiers.
  */
 - (void)registerCellIdentifiers;
-
-
-- (NSUInteger)rawIndexForIndexPath:(NSIndexPath*)indexPath;
 
 @end

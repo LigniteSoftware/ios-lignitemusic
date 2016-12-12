@@ -28,6 +28,16 @@
 /**
  The factorial of total space to take up within the given superview. Automatically pinned to the bottom.
  */
-@property float heightFactorial;
+@property CGFloat heightFactorial;
+
+/**
+ The background view for the section header's actual content (icon and section title).
+ */
+@property UIView *sectionHeaderBackgroundView;
+
+/**
+ The selector to call when the X icon is tapped. If not set, no X icon will appear.
+ */
+@property SEL xIconTapSelector;
 
 @end

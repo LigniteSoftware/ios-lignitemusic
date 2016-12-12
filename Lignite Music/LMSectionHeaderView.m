@@ -9,6 +9,7 @@
 #import <PureLayout/PureLayout.h>
 #import "LMSectionHeaderView.h"
 #import "LMLabel.h"
+#import "LMAppIcon.h"
 
 @interface LMSectionHeaderView()
 
@@ -16,11 +17,6 @@
  Whether or not the views subviews have been lain out.
  */
 @property BOOL hasDoneLayoutSubviews;
-
-/**
- The background view for the section header's actual content (icon and section title).
- */
-@property UIView *sectionHeaderBackgroundView;
 
 /**
  The background view for the icon view below.
@@ -50,6 +46,14 @@
 @synthesize sectionHeaderTitle = _sectionHeaderTitle;
 @synthesize icon = _icon;
 
+- (instancetype)initWithFrame:(CGRect)frame {
+	self = [super initWithFrame:frame];
+	if(self) {
+		self.sectionHeaderBackgroundView = [UIView newAutoLayoutView]; //So the X button can pin itself to this
+	}
+	return self;
+}
+
 - (NSString*)title {
 	return _title;
 }
@@ -71,8 +75,6 @@
 	
 	if(self.sectionHeaderLabel){		
 		self.sectionHeaderLabel.text = sectionHeaderTitle;
-		
-		self.sectionHeaderLabel.backgroundColor = [UIColor redColor];
 	}
 }
 
@@ -102,7 +104,6 @@
 		
 //		NSLog(@"Height factorial is %f", self.heightFactorial);
 		
-		self.sectionHeaderBackgroundView = [UIView newAutoLayoutView];
 //		self.sectionHeaderBackgroundView.backgroundColor = [UIColor greenColor];
 		[self addSubview:self.sectionHeaderBackgroundView];
 		
@@ -131,7 +132,6 @@
 		[self.sectionHeaderIconImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.sectionHeaderBackgroundView withMultiplier:(2.0/4.0)];
 		[self.sectionHeaderIconImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.sectionHeaderBackgroundView withMultiplier:(2.0/4.0)];
 		
-		
 		self.sectionHeaderLabel = [LMLabel newAutoLayoutView];
 		self.sectionHeaderLabel.text = self.sectionHeaderTitle ? self.sectionHeaderTitle : @"Unnamed Section";
 		self.sectionHeaderLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:50];
@@ -142,6 +142,24 @@
 		[self.sectionHeaderLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:10];
 		[self.sectionHeaderLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
 		[self.sectionHeaderLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.sectionHeaderIconImageView withMultiplier:(8.5/10.0)];
+		
+		if(self.xIconTapSelector){
+			UIImageView *xIconView = [UIImageView newAutoLayoutView];
+			xIconView.image = [LMAppIcon invertImage:[LMAppIcon imageForIcon:LMIconXCross]];
+			xIconView.contentMode = UIViewContentModeScaleAspectFit;
+			xIconView.userInteractionEnabled = YES;
+			[self addSubview:xIconView];
+			
+			[xIconView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self withOffset:-(0.05*self.frame.size.width)];
+			[xIconView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:(0.10*self.frame.size.width)];
+			[xIconView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight
+								   ofView:self.sectionHeaderBackgroundView withMultiplier:(1.5/5.0)];
+			[xIconView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight
+								   ofView:self.sectionHeaderBackgroundView withMultiplier:(1.5/5.0)];
+						
+			UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self.superview action:self.xIconTapSelector];
+			[xIconView addGestureRecognizer:tapGesture];
+		}
 		
 //		if(self.heightFactorial < 1.0){
 //			self.titleLabel = [LMLabel newAutoLayoutView];

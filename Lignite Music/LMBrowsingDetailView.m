@@ -121,6 +121,9 @@
 						self.musicPlayer.autoPlay = YES;
 						isPlayingMusic = YES;
 						[self.musicPlayer setNowPlayingCollection:trackCollection];
+						
+						[self.musicPlayer.browsingAssistant selectSource:LMBrowsingAssistantTabMiniplayer];
+						[self.musicPlayer.browsingAssistant open];
 					}
 					else{
 						isPlayingMusic ? [self.musicPlayer pause] : [self.musicPlayer play];

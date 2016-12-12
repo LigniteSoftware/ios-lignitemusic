@@ -278,6 +278,9 @@
 	self.musicPlayer.autoPlay = YES;
 	
 	[self.musicPlayer setNowPlayingTrack:track];
+	
+	[self.musicPlayer.browsingAssistant selectSource:LMBrowsingAssistantTabMiniplayer];
+	[self.musicPlayer.browsingAssistant open];
 }
 
 - (UIColor*)tapColourForListEntry:(LMListEntry*)entry {

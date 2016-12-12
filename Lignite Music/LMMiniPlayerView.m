@@ -201,8 +201,14 @@
 	
 	[self.trackInfoView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.trackInfoAndDurationBackgroundView];
 	[self.trackInfoView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.trackInfoAndDurationBackgroundView];
-	[self.trackInfoView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.trackInfoAndDurationBackgroundView withOffset:-10];
-	[self.trackInfoView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.trackInfoAndDurationBackgroundView withMultiplier:(7.5/10.0)];
+	[self.trackInfoView autoMatchDimension:ALDimensionWidth
+							   toDimension:ALDimensionWidth
+									ofView:self.trackInfoAndDurationBackgroundView
+							withMultiplier:(9.5/10.0)];
+	[self.trackInfoView autoMatchDimension:ALDimensionHeight
+							   toDimension:ALDimensionHeight
+									ofView:self.trackInfoAndDurationBackgroundView
+							withMultiplier:(7.5/10.0)];
 	
 	
 	self.progressSlider = [LMProgressSlider newAutoLayoutView];

@@ -18,12 +18,9 @@
 - (void)layoutSubviews {
 //	self.backgroundColor = [UIColor yellowColor];
 	
-	if(self.didLayoutConstraints){
-		[self.titleLabel sizeToFit];
-		[self.artistLabel sizeToFit];
-		[self.albumLabel sizeToFit];
-	}
-	else{
+	if(!self.didLayoutConstraints){
+		self.didLayoutConstraints = YES;
+		
 		self.titleLabel = [MarqueeLabel newAutoLayoutView];
 		self.artistLabel = [MarqueeLabel newAutoLayoutView];
 		self.albumLabel = [MarqueeLabel newAutoLayoutView];

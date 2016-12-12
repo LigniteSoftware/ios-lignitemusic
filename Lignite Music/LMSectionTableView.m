@@ -14,6 +14,7 @@
 #import "LMColour.h"
 #import "LMListEntry.h"
 #import "LMLabel.h"
+#import "LMAppIcon.h"
 
 @interface LMSectionTableView()<UITableViewDelegate, UITableViewDataSource, LMListEntryDelegate>
 
@@ -168,6 +169,14 @@
 	return nil;
 }
 
+- (void)tappedClose {
+	if(self.contentsDelegate){
+		if([self.contentsDelegate respondsToSelector:@selector(tappedCloseButtonForSectionTableView:)]){
+			[self.contentsDelegate tappedCloseButtonForSectionTableView:self];
+		}
+	}
+}
+
 /**
  Gets the view for a header for a certain section. If shouldUseDividers is set to YES, this will draw a divider half way through the view of the header.
  **/
@@ -180,6 +189,8 @@
 	if(section == 0){
 		view.heightFactorial = (WINDOW_FRAME.size.height/10) / frame.size.height;
 		view.title = @""; //self.title;
+		
+		view.xIconTapSelector = @selector(tappedClose);
 	}
 	
 	return view;

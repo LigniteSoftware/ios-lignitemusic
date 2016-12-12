@@ -9,6 +9,7 @@
 #import <PureLayout/PureLayout.h>
 #import "LMSearchViewController.h"
 #import "LMSearchBar.h"
+#import "LMSettings.h"
 
 @interface LMSearchViewController () <LMSearchBarDelegate, LMSearchSelectedDelegate>
 
@@ -30,6 +31,12 @@
 @end
 
 @implementation LMSearchViewController
+
+- (BOOL)prefersStatusBarHidden {
+	BOOL shown = [LMSettings shouldShowStatusBar];
+	
+	return !shown;
+}
 
 - (void)searchEntryTappedWithPersistentID:(LMMusicTrackPersistentID)persistentID withMusicType:(LMMusicType)musicType {
 	[self.searchSelectedDelegate searchEntryTappedWithPersistentID:persistentID withMusicType:musicType];
@@ -90,6 +97,8 @@
 	
 	self.view = [UIView new];
 	self.view.backgroundColor = [UIColor whiteColor];
+	
+	self.automaticallyAdjustsScrollViewInsets = YES;
 }
 
 @end

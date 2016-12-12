@@ -57,7 +57,7 @@
 
 - (void)tappedClearSearch {
 	if([self.searchTextField.text isEqualToString:@""]){
-		[(UINavigationController*)self.window.rootViewController popViewControllerAnimated:YES];
+		[(UINavigationController*)self.window.rootViewController dismissViewControllerAnimated:YES completion:nil];
 	}
 	else{
 		self.searchTextField.text = @"";
@@ -92,10 +92,10 @@
 //	}];
 //}
 
-//- (BOOL)textFieldShouldReturn:(UITextField *)textField {
-//	[textField resignFirstResponder];
-//	return YES;
-//}
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+	[textField resignFirstResponder];
+	return YES;
+}
 
 - (void)dismissKeyboard {
 	[self.delegate searchDialogOpened:NO withKeyboardHeight:0.0];

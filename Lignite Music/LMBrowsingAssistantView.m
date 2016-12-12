@@ -30,7 +30,7 @@
 @property UIImageView *grabberImageView;
 
 @property LMMiniPlayerView *miniPlayerView;
-@property NSLayoutConstraint *miniPlayerBottomConstraint;
+@property NSLayoutConstraint *miniPlayerBottomConstraint, *browsingBarBottomConstraint;
 
 @property int8_t currentlySelectedTab;
 @property int8_t previouslySelectedTab;
@@ -91,7 +91,7 @@
 	NSLog(@"Close browsing assistant");
 	
 	if(self.currentlySelectedTab == LMBrowsingAssistantTabView){
-		[self closeSourceSelector];
+		[self closeSourceSelectorAndOpenPreviousTab:NO];
 	}
 
 	if(self.currentlySelectedTab == LMBrowsingAssistantTabView){
@@ -124,6 +124,10 @@
 	[self close];
 }
 
+- (BOOL)sourceSelectorIsOpen {
+	return self.sourceSelectorPositionConstraint.constant < 1;
+}
+
 - (void)moveSourceSelectorToPosition:(float)position {
 	[self layoutIfNeeded];
 	
@@ -143,9 +147,14 @@
 	[self.delegate heightRequiredChangedTo:WINDOW_FRAME.size.height/8.0 + newHeight forBrowsingView:self];
 }
 
-- (void)closeSourceSelector {
+- (void)closeSourceSelectorAndOpenPreviousTab:(BOOL)openPreviousTab {
 	[self moveSourceSelectorToPosition:WINDOW_FRAME.size.height];
-	[self selectSource:self.previouslySelectedTab];
+	
+	NSLog(@"Move to position");
+	
+	if(openPreviousTab){
+		[self selectSource:self.previouslySelectedTab];
+	}
 	
 	if(self.openedSourceSelectorFromShortcut){
 		self.openedSourceSelectorFromShortcut = NO;
@@ -157,7 +166,26 @@
 	[self moveSourceSelectorToPosition:0.0];
 }
 
-- (void)selectSource:(uint8_t)sourceSelectedIndex {
+- (void)setMiniPlayerOpen:(BOOL)open {
+	NSLog(@"%d open mini", open);
+	[self layoutIfNeeded];
+	
+	self.miniPlayerBottomConstraint.constant = open ? 0 : self.miniPlayerView.frame.size.height;
+	[UIView animateWithDuration:0.5 animations:^{
+		[self layoutIfNeeded];
+	}];
+}
+
+- (void)setBrowsingBarOpen:(BOOL)open {
+	[self layoutIfNeeded];
+	
+	self.browsingBarBottomConstraint.constant = open ? 0 : self.browsingBar.frame.size.height;
+	[UIView animateWithDuration:0.5 animations:^{
+		[self layoutIfNeeded];
+	}];
+}
+
+- (void)selectSource:(LMBrowsingAssistantTab)sourceSelectedIndex {
 	//Reject invalid sources
 	if(sourceSelectedIndex > LMBrowsingAssistantTabView){
 		return;
@@ -167,45 +195,44 @@
 		return;
 	}
 	
-	//If tapped again on source thing
-	if(sourceSelectedIndex == LMBrowsingAssistantTabView && sourceSelectedIndex == self.currentlySelectedTab){
-		sourceSelectedIndex = LMBrowsingAssistantTabMiniplayer;
-	}
+	[self setMiniPlayerOpen:NO];
+	[self setBrowsingBarOpen:NO];
 	
 	//Perform the action associated with tab to implement the new tab selection
 	switch(sourceSelectedIndex){
 		case LMBrowsingAssistantTabMiniplayer: {
 			[self heightOfCurrentElementChangedTo:WINDOW_FRAME.size.height/5.0];
-			
-			[self layoutIfNeeded];
-			
-			self.miniPlayerBottomConstraint.constant = 0;
-			[UIView animateWithDuration:0.5 animations:^{
-				[self layoutIfNeeded];
-			}];
+			[self setMiniPlayerOpen:YES];
 			break;
 		}
 		case LMBrowsingAssistantTabView: {
-			[self openSourceSelector];
-			self.previouslySelectedTab = self.currentlySelectedTab;
-			
-			[self heightOfCurrentElementChangedTo:WINDOW_FRAME.size.height/8.0 * 7.0];
+			if([self sourceSelectorIsOpen]){
+				NSLog(@"Closing");
+				[self closeSourceSelectorAndOpenPreviousTab:NO];
+				[self heightOfCurrentElementChangedTo:0];
+			}
+			else{
+				NSLog(@"Opening");
+				[self heightOfCurrentElementChangedTo:0]; //Quick hack to make sure the little bit of the splash doesn't appear
+				[self openSourceSelector];
+				[self heightOfCurrentElementChangedTo:WINDOW_FRAME.size.height/8.0 * 7.0];
+			}
 			break;
 		}
 		case LMBrowsingAssistantTabBrowse: {
 			[self heightOfCurrentElementChangedTo:WINDOW_FRAME.size.height/15.0];
 			
-			[self layoutIfNeeded];
-			
-			self.miniPlayerBottomConstraint.constant = self.miniPlayerView.frame.size.height;
-			[UIView animateWithDuration:0.5 animations:^{
-				[self layoutIfNeeded];
-			}];
+			[self setBrowsingBarOpen:YES];
 			break;
 		}
 	}
 	
 	UIView *backgroundView = [self.tabViews objectAtIndex:sourceSelectedIndex];
+	
+	//If tapped again on source thing
+	if(sourceSelectedIndex == LMBrowsingAssistantTabView && sourceSelectedIndex == self.currentlySelectedTab){
+		return; //Stop the tab from being changed
+	}
 	
 	//Animate the tabs
 	[UIView animateWithDuration:0.10 animations:^{
@@ -248,11 +275,12 @@
 			textLabel.textColor = [UIColor whiteColor];
 		}
 		
+		self.previouslySelectedTab = self.currentlySelectedTab;
 		self.currentlySelectedTab = sourceSelectedIndex;
 	}];
 	
 	if(sourceSelectedIndex != LMBrowsingAssistantTabView && self.sourceSelectorPositionConstraint.constant < 10.0){
-		[self closeSourceSelector];
+		[self closeSourceSelectorAndOpenPreviousTab:NO];
 	}
 }
 
@@ -437,16 +465,6 @@
 			
 			[self.tabViews addObject:sourceTabBackgroundView];
 			
-			UIImageView *iconView = [UIImageView newAutoLayoutView];
-			iconView.image = source.icon;
-			iconView.contentMode = UIViewContentModeScaleAspectFit;
-			[sourceTabBackgroundView addSubview:iconView];
-			
-			[iconView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:10];
-			[iconView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-			[iconView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-			[iconView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:sourceTabBackgroundView withMultiplier:(6.0/10.0)];
-			
 			LMLabel *textLabel = [LMLabel newAutoLayoutView];
 			textLabel.font = [UIFont fontWithName:@"HelveticaNeue-Thin" size:60.0f];
 			textLabel.text = [source.title uppercaseString];
@@ -458,6 +476,16 @@
 			[textLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 			[textLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:sourceTabBackgroundView withOffset:-2];
 			[textLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.selectorBackgroundView withMultiplier:(1.0/6.0)];
+			
+			UIImageView *iconView = [UIImageView newAutoLayoutView];
+			iconView.image = source.icon;
+			iconView.contentMode = UIViewContentModeScaleAspectFit;
+			[sourceTabBackgroundView addSubview:iconView];
+			
+			[iconView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:10];
+			[iconView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:textLabel withOffset:-10];
+			[iconView autoAlignAxisToSuperviewAxis:ALAxisVertical];
+			[iconView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:sourceTabBackgroundView withMultiplier:(3.0/10.0)];
 		}
 		
 		
@@ -467,7 +495,7 @@
 		self.browsingBar.letterTabDelegate = self.letterTabBarDelegate;
 		[self addSubview:self.browsingBar];
 		
-		[self.browsingBar autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.selectorBackgroundView];
+		self.browsingBarBottomConstraint = [self.browsingBar autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.selectorBackgroundView];
 		[self.browsingBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[self.browsingBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 		[self.browsingBar autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height/15.0];

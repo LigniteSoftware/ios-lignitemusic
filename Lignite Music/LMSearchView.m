@@ -50,6 +50,11 @@
  */
 @property LMImageManager *imageManager;
 
+/**
+ Whether or not the user has done any search query.
+ */
+@property BOOL hasSearched;
+
 @end
 
 @implementation LMSearchView
@@ -62,6 +67,10 @@
 		return YES;
 	}
 	return NO;
+}
+
+- (void)tappedCloseButtonForSectionTableView:(LMSectionTableView *)sectionTableView {
+	[(UINavigationController*)self.window.rootViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)searchTermChangedTo:(NSString*)searchTerm {
@@ -130,6 +139,7 @@
 			else{
 				[searchView.sectionTableView registerCellIdentifiers];
 			}
+			searchView.hasSearched = YES;
 			[searchView.sectionTableView reloadData];
 		});
 	});
@@ -137,7 +147,7 @@
 
 - (UIImage*)iconAtSection:(NSUInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView {
 	if([self noResults]){
-		return [LMAppIcon imageForIcon:LMIconBug];
+		return [LMAppIcon invertImage:[LMAppIcon imageForIcon:LMIconSearch]];
 	}
 	
 	MPMediaGrouping mediaGrouping = (MPMediaGrouping)[[self.searchResultsGroupingArray objectAtIndex:section] unsignedIntegerValue];
@@ -162,7 +172,7 @@
 
 - (NSString*)titleAtSection:(NSUInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView {
 	if([self noResults]){
-		return NSLocalizedString(@"NoSearchResults", nil);
+		return NSLocalizedString(self.hasSearched ? @"NoSearchResults" : @"WelcomeToSearch", nil);
 	}
 	
 	NSArray<MPMediaItemCollection*>* collections = [self.searchResultsArray objectAtIndex:section];
@@ -315,7 +325,7 @@
 									 @(MPMediaGroupingPlaylist)
 									 ];
 		
-		self.backgroundColor = [UIColor cyanColor];
+		self.backgroundColor = [UIColor clearColor];
 		
 		self.sectionTableView = [LMSectionTableView newAutoLayoutView];
 		self.sectionTableView.contentsDelegate = self;

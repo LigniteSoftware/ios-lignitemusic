@@ -13,6 +13,7 @@
 #import "LMMusicTrackCollection.h"
 #import "LMSourceSelectorView.h"
 #import "LMPebbleManager.h"
+#import "LMBrowsingAssistantView.h"
 
 /**
  Storage key for the user set player type. Correlates to LMMusicPlayerType.
@@ -148,9 +149,14 @@ typedef enum {
 @property BOOL autoPlay;
 
 /**
- The source selector for the music app. This is the top part which is never destroyed, and should be set on init. The music player uses this to set the source title and source subtitle.
+ The source selector for the music app. This is the bottom part which is never destroyed, and should be set on init. The music player uses this to set the source title and source subtitle.
  */
 @property LMSourceSelectorView *sourceSelector;
+
+/**
+ The browsing assistant which goes at the bottom of the screen.
+ */
+@property LMBrowsingAssistantView *browsingAssistant;
 
 /**
  The shared music player.

@@ -82,8 +82,10 @@ typedef enum {
 
 /**
  Close the source selector.
+ 
+ @param openPreviousTab Whether or not to open the previous tab.
  */
-- (void)closeSourceSelector;
+- (void)closeSourceSelectorAndOpenPreviousTab:(BOOL)openPreviousTab;
 
 /**
  Open the source selector.
@@ -96,5 +98,12 @@ typedef enum {
  @param icon The icon of the current
  */
 - (void)setCurrentSourceIcon:(UIImage*)icon;
+
+/**
+ Select a source.
+
+ @param sourceSelectedIndex The source to select.
+ */
+- (void)selectSource:(LMBrowsingAssistantTab)sourceSelectedIndex;
 
 @end

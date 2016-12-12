@@ -37,7 +37,7 @@
 #import "LMBrowsingBar.h"
 
 #define SKIP_ONBOARDING
-#define SPEED_DEMON_MODE
+//#define SPEED_DEMON_MODE
 
 @import SDWebImage;
 @import StoreKit;
@@ -210,7 +210,7 @@ BOOL didAutomaticallyClose = NO;
 	
 	if(!source.shouldNotHighlight){
 		[self.currentSource setHidden:YES];
-		[self.browsingAssistant closeSourceSelector];
+		[self.browsingAssistant closeSourceSelectorAndOpenPreviousTab:YES];
 		
 		[self.browsingAssistant setCurrentSourceIcon:[[source.icon averageColour] isLight] ? source.icon : [LMAppIcon invertImage:source.icon]];
 	}
@@ -368,7 +368,7 @@ BOOL didAutomaticallyClose = NO;
 									 @"Added license links in credits",
 									 @"Fixed music sometimes not playing",
 									 @"Fixed crash on some older devices",
-									 @"Improved some visual aspects",
+									 @"Improved many visual things",
 									 @"Improved app loading time",
 									 @"Removed godforsaken hang on screen",
 									 ];
@@ -454,7 +454,7 @@ BOOL didAutomaticallyClose = NO;
 		
 		self.searchViewController = [LMSearchViewController new];
 		self.searchViewController.searchSelectedDelegate = self;
-		[self.navigationController pushViewController:self.searchViewController animated:YES];
+		[self.navigationController presentViewController:self.searchViewController animated:YES completion:nil];
 	}
 }
 
@@ -537,7 +537,7 @@ BOOL didAutomaticallyClose = NO;
 //	[self.view addSubview:self.settingsView];
 //	
 //	[self.settingsView autoPinEdgesToSuperviewEdges];
-	
+//	
 //	return;
 	
 //	LMImageManager *imageManager = [LMImageManager sharedImageManager];
@@ -712,6 +712,8 @@ BOOL didAutomaticallyClose = NO;
 						[self.browsingAssistant autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.navigationController.view];
 						
 						self.browsingAssistantViewAttachedTo = self.navigationController.view;
+						
+						self.musicPlayer.browsingAssistant = self.browsingAssistant;
 						
 
 

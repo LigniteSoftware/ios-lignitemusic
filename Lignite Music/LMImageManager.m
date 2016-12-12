@@ -423,7 +423,7 @@
 				NSLog(@"Cache key %@", imageCacheKey);
 				
 				if([self highQualityImages]){
-					itemImageURL = [itemImageURL stringByReplacingOccurrencesOfString:@"/300x300" withString:@""];
+					itemImageURL = [itemImageURL stringByReplacingOccurrencesOfString:@"/300x300" withString:@"/500x500"];
 					NSLog(@"High quality image being downloaded from %@.", itemImageURL);
 				}
 				else{
