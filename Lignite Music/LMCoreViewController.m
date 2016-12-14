@@ -36,8 +36,8 @@
 #import "LMProgressSlider.h"
 #import "LMBrowsingBar.h"
 
-//#define SKIP_ONBOARDING
-//#define SPEED_DEMON_MODE
+#define SKIP_ONBOARDING
+#define SPEED_DEMON_MODE
 
 @import SDWebImage;
 @import StoreKit;
@@ -378,6 +378,7 @@ BOOL didAutomaticallyClose = NO;
 									 @"Added new music progress bar",
 									 @"Added icon credits",
 									 @"Added license links in credits",
+									 @"Added new colour adapting layout in now playing",
 									 @"Fixed music sometimes not playing",
 									 @"Fixed crash on some older devices",
 									 @"Improved many visual things",
@@ -386,7 +387,7 @@ BOOL didAutomaticallyClose = NO;
 									 ];
 	
 	NSArray *currentBuildIssues = @[
-									@"The artist detail view is still not complete",
+									@"Opening the now playing view from within a detail view (ie. specific artist) will break things!",
 									@"\nPlease do not report already known issues to us, thanks!"
 									];
 	

@@ -49,7 +49,7 @@
 "NoSearchResults" = "No results";
 "WelcomeToSearch" = "Type to search";
 "Browse" = "Browse"; //Like: "To browse music"
-"Miniplyer" = "Miniplayer"; //The miniature music player
+"Miniplayer" = "Miniplayer"; //The miniature music player
 "View" = "View"; //The view the user is on, ie. "Album view". Is used as a singular word, though.
 
 /*

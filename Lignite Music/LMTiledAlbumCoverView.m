@@ -24,8 +24,6 @@
 @property int amountOfAlbumsShowing;
 @property BOOL shouldRegenerate;
 
-@property CGRect frameToUse;
-
 @property LMOperationQueue *queue;
 
 @end
@@ -43,12 +41,13 @@
 	
 	self.shouldRegenerate = YES;
 	
-	if(self.frameToUse.size.width > 0){
+	if(self.frame.size.width > 0){
 		self.shouldRegenerate = NO;
 		
 		for(int i = 0; i < self.tilesArray.count; i++){
 			UIView *tile = [self.tilesArray objectAtIndex:i];
-			[tile.constraints autoRemoveConstraints];
+			tile.frame = CGRectZero;
+//			[tile.constraints autoRemoveConstraints];
 			[tile removeFromSuperview];
 			[tile setHidden:YES];
 		}
@@ -273,7 +272,7 @@
 		
 //		NSLog(@"\nLMTiledAlbumCover Generation\nFrame: %@\nAmount of items in collection: %d\nAmount of tiles generated: %f\nArea total: %f\nArea per tile: %f\nTile size: %@\nAmount of tiles X, Y: %d, %d", NSStringFromCGRect(self.frame), (int)self.musicCollection.count, amountOfTiles, areaTotal, areaPerTile, NSStringFromCGSize(tileSize), amountOfTilesX, amountOfTilesY);
 		
-		self.rootView = [UIView newAutoLayoutView];
+		self.rootView = [UIView new];
 		self.rootView.backgroundColor = [UIColor blackColor];
 		self.rootView.layer.shadowColor = [UIColor blackColor].CGColor;
 		self.rootView.layer.shadowRadius = WINDOW_FRAME.size.width/99;
@@ -281,9 +280,9 @@
 		self.rootView.layer.shadowOpacity = 0.5f;
 		[self addSubview:self.rootView];
 		
-		[self.rootView autoCenterInSuperview];
-		[self.rootView autoSetDimension:ALDimensionWidth toSize:amountOfTilesX*sideLength];
-		[self.rootView autoSetDimension:ALDimensionHeight toSize:amountOfTilesY*sideLength];
+		CGSize rootViewSize = CGSizeMake(amountOfTilesX*sideLength, amountOfTilesY*sideLength);
+		CGPoint rootViewPosition = CGPointMake((self.frame.size.width-rootViewSize.width)/2, (self.frame.size.height-rootViewSize.height)/2);
+		self.rootView.frame = CGRectMake(rootViewPosition.x, rootViewPosition.y, rootViewSize.width, rootViewSize.height);
 		
 		for(int y = 0; y < amountOfTilesY; y++){
 			BOOL firstRow = (y == 0);
@@ -296,15 +295,24 @@
 				
 				//				NSLog(@"Index of tile %d Column %d Row %d", tileIndex, x, y);
 				
-				UIImageView *testView = [UIImageView newAutoLayoutView];
-				testView.backgroundColor = [UIColor whiteColor]; //[UIColor colorWithRed:0.2*((float)(arc4random_uniform(5))+1.0) green:0.2*((float)(arc4random_uniform(5))+1.0) blue:0.2*((float)(arc4random_uniform(5))+1.0) alpha:1.0];
-				testView.image = [LMAppIcon imageForIcon:LMIconNoAlbumArt];
+				UIImageView *testView = [UIImageView new];
+				testView.backgroundColor = [UIColor colorWithRed:0.2*((float)(arc4random_uniform(5))+1.0) green:0.2*((float)(arc4random_uniform(5))+1.0) blue:0.2*((float)(arc4random_uniform(5))+1.0) alpha:1.0];
+//				testView.image = [LMAppIcon imageForIcon:LMIconNoAlbumArt];
+				testView.contentMode = UIViewContentModeScaleAspectFit;
 				[self.rootView addSubview:testView];
 				
-				[testView autoPinEdge:ALEdgeTop toEdge:firstRow ? ALEdgeTop : ALEdgeBottom ofView:topElement];
-				[testView autoPinEdge:ALEdgeLeading toEdge:firstColumn ? ALEdgeLeading : ALEdgeTrailing ofView:sideElement];
-				[testView autoSetDimension:ALDimensionHeight toSize:sideLength];
-				[testView autoSetDimension:ALDimensionWidth toSize:sideLength];
+//				[testView autoPinEdge:ALEdgeTop toEdge:firstRow ? ALEdgeTop : ALEdgeBottom ofView:topElement];
+//				[testView autoPinEdge:ALEdgeLeading toEdge:firstColumn ? ALEdgeLeading : ALEdgeTrailing ofView:sideElement];
+//				[testView autoSetDimension:ALDimensionHeight toSize:sideLength];
+//				[testView autoSetDimension:ALDimensionWidth toSize:sideLength];
+				
+				CGSize testViewSize = CGSizeMake(sideLength, sideLength);
+				CGPoint testViewPosition = CGPointMake(0, 0);
+				
+				testViewPosition.x = firstColumn ? 0 : (sideElement.frame.origin.x+sideElement.frame.size.width);
+				testViewPosition.y = firstRow ? 0 : (topElement.frame.origin.y+topElement.frame.size.height);
+				
+				testView.frame = CGRectMake(testViewPosition.x, testViewPosition.y, testViewSize.width, testViewSize.height);
 				
 				[self.tilesArray addObject:testView];
 			}
@@ -314,7 +322,9 @@
 		
 		if(self.tilesArray.count > 4 || self.uniqueAlbumCoversDictionary.count == 1){
 			int amountOfBigCovers = self.uniqueAlbumCoversDictionary.count == 1 ? 1 : floor(sqrt(self.tilesArray.count)/2);
-			//			NSLog(@"Will generate %d big covers", amountOfBigCovers);
+			
+			NSLog(@"Will generate %d big covers", amountOfBigCovers);
+			
 			if(amountOfTilesX > 1 && amountOfTilesY > 1){
 				for(int i = 0; i < amountOfBigCovers; i++){
 					int finalIndex = -1;
@@ -368,14 +378,19 @@
 					if(finalIndex > -1){
 						UIImageView *topLeftCornerView = [self.tilesArray objectAtIndex:finalIndex];
 						
-						UIImageView *bigTileView = [UIImageView newAutoLayoutView];
-						bigTileView.backgroundColor = [UIColor whiteColor]; //[UIColor colorWithRed:0.2*((float)(arc4random_uniform(5))+1.0) green:0.2*((float)(arc4random_uniform(5))+1.0) blue:0.2*((float)(arc4random_uniform(5))+1.0) alpha:1.0];
+						UIImageView *bigTileView = [UIImageView new];
+						bigTileView.backgroundColor = [UIColor colorWithRed:0.2*((float)(arc4random_uniform(5))+1.0) green:0.2*((float)(arc4random_uniform(5))+1.0) blue:0.2*((float)(arc4random_uniform(5))+1.0) alpha:1.0];
 						[self.rootView addSubview:bigTileView];
 						
-						[bigTileView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:topLeftCornerView];
-						[bigTileView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:topLeftCornerView];
-						[bigTileView autoSetDimension:ALDimensionHeight toSize:tileSize.height*2];
-						[bigTileView autoSetDimension:ALDimensionWidth toSize:tileSize.width*2];
+						CGSize bigTileViewSize = CGSizeMake(tileSize.height*2, tileSize.height*2);
+						CGPoint bigTileViewPosition = CGPointMake(topLeftCornerView.frame.origin.x, topLeftCornerView.frame.origin.y);
+						
+						bigTileView.frame = CGRectMake(bigTileViewPosition.x, bigTileViewPosition.y, bigTileViewSize.width, bigTileViewSize.height);
+						
+//						[bigTileView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:topLeftCornerView];
+//						[bigTileView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:topLeftCornerView];
+//						[bigTileView autoSetDimension:ALDimensionHeight toSize:tileSize.height*2];
+//						[bigTileView autoSetDimension:ALDimensionWidth toSize:tileSize.height*2];
 						
 						[self.bigTileArray addObject:bigTileView];
 						
@@ -391,7 +406,7 @@
 			}
 		}
 		
-		[self insertAlbumCovers];
+//		[self insertAlbumCovers];
 	}
 }
 
@@ -399,8 +414,6 @@
 	[super layoutSubviews];
 	
 	if(self.frame.size.width > 0){
-		self.frameToUse = self.frame;
-		
 		[self regenerate];
 	}
 }

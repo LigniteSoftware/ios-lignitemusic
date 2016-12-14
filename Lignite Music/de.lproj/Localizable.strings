@@ -30,10 +30,16 @@
  */
 
 
+//New strings
 
 "CreditsLicenses" = "Lizenzlinks";
 "NoSearchResults" = "Keine Ergebnisse";
 "WelcomeToSearch" = "Bitte Suchbegriff eintippen";
+"Browse" = "Durchsuchen"; //Like: "To browse music"
+"Miniplayer" = "Miniplayer"; //The miniature music player
+"View" = "Anzeige"; //The view the user is on, ie. "Album view". Is used as a singular word, though.
+
+//End new strings
 
 
 /* General */
