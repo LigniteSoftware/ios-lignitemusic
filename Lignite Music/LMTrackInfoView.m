@@ -11,9 +11,69 @@
 
 @interface LMTrackInfoView()
 
+/**
+ The labels of the track info view.
+ */
+@property MarqueeLabel *titleLabel, *artistLabel, *albumLabel;
+
 @end
 
 @implementation LMTrackInfoView
+
+@synthesize titleText = _titleText;
+@synthesize artistText = _artistText;
+@synthesize albumText = _albumText;
+@synthesize textColour = _textColour;
+
+- (NSString*)titleText {
+	return _titleText;
+}
+
+- (void)setTitleText:(NSString *)titleText {
+	_titleText = titleText;
+	
+	if(self.titleLabel){
+		self.titleLabel.text = titleText;
+	}
+}
+
+- (NSString*)artistText {
+	return _artistText;
+}
+
+- (void)setArtistText:(NSString *)artistText {
+	_artistText = artistText;
+	
+	if(self.artistLabel){
+		self.artistLabel.text = artistText;
+	}
+}
+
+- (NSString*)albumText {
+	return _albumText;
+}
+
+- (void)setAlbumText:(NSString *)albumText {
+	_albumText = albumText;
+	
+	if(self.albumLabel){
+		self.albumLabel.text = albumText;
+	}
+}
+
+- (UIColor*)textColour {
+	return _textColour;
+}
+
+- (void)setTextColour:(UIColor *)textColour {
+	_textColour = textColour;
+	
+	if(self.didLayoutConstraints){
+		self.titleLabel.textColor = textColour;
+		self.artistLabel.textColor = textColour;
+		self.albumLabel.textColor = textColour;
+	}
+}
 
 - (void)layoutSubviews {
 //	self.backgroundColor = [UIColor yellowColor];
@@ -33,6 +93,9 @@
 		NSArray *labels = @[
 			self.titleLabel, self.artistLabel, self.albumLabel
 		];
+		NSArray *texts = @[
+			self.titleText, self.artistText, self.albumText
+		];
 		
 		for(int i = 0; i < labels.count; i++){
 			BOOL isFirst = (i == 0);
@@ -46,9 +109,9 @@
 			
 //			label.backgroundColor = [UIColor colorWithRed:(0.2*i)+0.3 green:0 blue:0 alpha:1.0];
 			label.font = [LMMarqueeLabel fontToFitHeight:self.frame.size.height*heightMultipliers[i]];
-			label.text = [NSString stringWithFormat:@"Hey %d", i];
+			label.text = [texts objectAtIndex:i];
 			label.textAlignment = self.textAlignment;
-			NSLog(@"%@ insets", NSStringFromUIEdgeInsets(label.layoutMargins));
+			label.textColor = self.textColour;
 			[self addSubview:label];
 			
 			[label autoPinEdge:ALEdgeTop toEdge:isFirst ? ALEdgeTop : ALEdgeBottom ofView:isFirst ? self : previousLabel withOffset:isFirst ? -label.layoutMargins.top : 0];
@@ -60,6 +123,14 @@
 	}
 		
 	[super layoutSubviews];
+}
+
+- (instancetype)init {
+	self = [super init];
+	if(self){
+		self.textColour = [UIColor blackColor];
+	}
+	return self;
 }
 
 /*

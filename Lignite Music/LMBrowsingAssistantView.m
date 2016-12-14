@@ -17,7 +17,7 @@
 #import "LMSourceSelectorView.h"
 #import "LMLabel.h"
 #import "LMButton.h"
-#import "LMGrabberView.h"
+//#import "LMGrabberView.h"
 
 @interface LMBrowsingAssistantView()<LMButtonDelegate, LMSourceSelectorDelegate, LMSearchBarDelegate, UIGestureRecognizerDelegate>
 
@@ -26,7 +26,7 @@
 @property UIView *selectorBackgroundView;
 @property NSLayoutConstraint *selectorPositionConstraint;
 
-@property LMGrabberView *grabberView;
+//@property LMGrabberView *grabberView;
 
 @property CGPoint originalPoint, currentPoint;
 
@@ -565,9 +565,9 @@
 		
 		[self.miniPlayerView setup];
 		
-//		UISwipeGestureRecognizer *swipeUpGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeUp)];
-//		swipeUpGesture.direction = UISwipeGestureRecognizerDirectionUp;
-//		[self.miniPlayerView addGestureRecognizer:swipeUpGesture];
+		UISwipeGestureRecognizer *swipeUpGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeUp)];
+		swipeUpGesture.direction = UISwipeGestureRecognizerDirectionUp;
+		[self.miniPlayerView addGestureRecognizer:swipeUpGesture];
 		
 		self.miniPlayerView.backgroundColor = [UIColor whiteColor];
 		self.miniPlayerView.layer.shadowColor = [UIColor blackColor].CGColor;
@@ -594,23 +594,23 @@
 		[self.sourceSelector setup];
 		
 		
-		self.grabberView = [LMGrabberView newAutoLayoutView];
-		self.grabberView.backgroundColor = [LMColour ligniteRedColour];
-		self.grabberView.layer.masksToBounds = YES;
-		[self addSubview:self.grabberView];
-		CGFloat tabHeight = TAB_HEIGHT;
+//		self.grabberView = [LMGrabberView newAutoLayoutView];
+//		self.grabberView.backgroundColor = [LMColour ligniteRedColour];
+//		self.grabberView.layer.masksToBounds = YES;
+//		[self addSubview:self.grabberView];
+//		CGFloat tabHeight = TAB_HEIGHT;
+//		
+//		[self.grabberView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.browsingBar];
+//		[self.grabberView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(1.0/6.0)];
+//		[self.grabberView autoSetDimension:ALDimensionHeight toSize:tabHeight];
+//		[self.grabberView autoAlignAxisToSuperviewAxis:ALAxisVertical];
+//		
+//		
+//		UIPanGestureRecognizer *moveRecognizer = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(handlePan:)];
+//		moveRecognizer.delegate = self;
+//		[self.grabberView addGestureRecognizer:moveRecognizer];
 		
-		[self.grabberView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.browsingBar];
-		[self.grabberView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(1.0/6.0)];
-		[self.grabberView autoSetDimension:ALDimensionHeight toSize:tabHeight];
-		[self.grabberView autoAlignAxisToSuperviewAxis:ALAxisVertical];
-		
-		
-		UIPanGestureRecognizer *moveRecognizer = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(handlePan:)];
-		moveRecognizer.delegate = self;
-		[self.grabberView addGestureRecognizer:moveRecognizer];
-		
-		[self insertSubview:self.browsingBar aboveSubview:self.grabberView];
+//		[self insertSubview:self.browsingBar aboveSubview:self.grabberView];
 		
 		[self insertSubview:self.selectorBackgroundView aboveSubview:self.miniPlayerView];
 		

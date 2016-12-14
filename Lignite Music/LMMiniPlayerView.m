@@ -84,17 +84,17 @@
 	[self.queue addOperation:operation];
 	
 	if(noTrackPlaying){
-		[self.trackInfoView.titleLabel setText:NSLocalizedString(@"NoMusic", nil)];
-		[self.trackInfoView.artistLabel setText:NSLocalizedString(@"NoMusicDescription", nil)];
-		[self.trackInfoView.albumLabel setText:@""];
+		self.trackInfoView.titleText = NSLocalizedString(@"NoMusic", nil);
+		self.trackInfoView.artistText = NSLocalizedString(@"NoMusicDescription", nil);
+		self.trackInfoView.albumText = @"";
 		self.progressSlider.rightText = NSLocalizedString(@"BlankDuration", nil);
 		self.progressSlider.leftText = NSLocalizedString(@"NoMusic", nil);
 		return;
 	}
 	
-	self.trackInfoView.titleLabel.text = newTrack.title ? newTrack.title : NSLocalizedString(@"UnknownTitle", nil);
-	self.trackInfoView.artistLabel.text = newTrack.artist ? newTrack.artist : NSLocalizedString(@"UnknownArtist", nil);
-	self.trackInfoView.albumLabel.text = newTrack.albumTitle ? newTrack.albumTitle : NSLocalizedString(@"UnknownAlbumTitle", nil);
+	self.trackInfoView.titleText = newTrack.title ? newTrack.title : NSLocalizedString(@"UnknownTitle", nil);
+	self.trackInfoView.artistText = newTrack.artist ? newTrack.artist : NSLocalizedString(@"UnknownArtist", nil);
+	self.trackInfoView.albumText = newTrack.albumTitle ? newTrack.albumTitle : NSLocalizedString(@"UnknownAlbumTitle", nil);
 	
 	if(self.musicPlayer.nowPlayingCollection){
 		self.progressSlider.leftText =

@@ -19,8 +19,13 @@
 @property NSTextAlignment textAlignment;
 
 /**
- The labels of the track info view.
+ The text of the track info view.
  */
-@property MarqueeLabel *titleLabel, *artistLabel, *albumLabel;
+@property NSString *titleText, *artistText, *albumText;
+
+/**
+ The text colour for all titles.
+ */
+@property UIColor *textColour;
 
 @end
