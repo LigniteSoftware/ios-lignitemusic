@@ -36,7 +36,7 @@
 #import "LMProgressSlider.h"
 #import "LMBrowsingBar.h"
 
-#define SKIP_ONBOARDING
+//#define SKIP_ONBOARDING
 //#define SPEED_DEMON_MODE
 
 @import SDWebImage;

@@ -116,7 +116,7 @@
 	
 }
 
-- (void)progressSliderValueChanged:(float)newValue isFinal:(BOOL)isFinal {
+- (void)progressSliderValueChanged:(CGFloat)newValue isFinal:(BOOL)isFinal {
 	//NSLog(@"New value %f", newValue);
 	if(![self.musicPlayer hasTrackLoaded]){
 		return;
@@ -216,6 +216,7 @@
 	self.progressSlider.finalValue = self.musicPlayer.nowPlayingTrack.playbackDuration;
 	self.progressSlider.delegate = self;
 	self.progressSlider.value = self.musicPlayer.currentPlaybackTime;
+	self.progressSlider.lightTheme = YES;
 	[self.trackInfoAndDurationBackgroundView addSubview:self.progressSlider];
 	
 	[self.progressSlider autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.trackInfoView];

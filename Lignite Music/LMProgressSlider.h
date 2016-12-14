@@ -17,7 +17,7 @@
  @param newValue The new value of the slider.
  @param isFinal Whether or not the change is final (if so, things like song placement should be changed).
  */
-- (void)progressSliderValueChanged:(float)newValue isFinal:(BOOL)isFinal;
+- (void)progressSliderValueChanged:(CGFloat)newValue isFinal:(BOOL)isFinal;
 
 @end
 
@@ -39,14 +39,19 @@
 @property NSString *rightText;
 
 /**
+ Whether or not the text should be in a light theme (light theme is black on the bottom and white on top of the sliderBackgroundView).
+ */
+@property BOOL lightTheme;
+
+/**
  The current value the slider should have.
  */
-@property float value;
+@property CGFloat value;
 
 /**
  The final value of the slider.
  */
-@property float finalValue;
+@property CGFloat finalValue;
 
 /**
  Whether or not the user is interacting with the slider.

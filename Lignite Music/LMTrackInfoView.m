@@ -104,7 +104,7 @@
 			MarqueeLabel *previousLabel = isFirst ? [labels objectAtIndex:0] : [labels objectAtIndex:i-1];
 			
 			label.fadeLength = 10;
-			label.leadingBuffer = 6;
+			label.leadingBuffer = 0;
 			label.trailingBuffer = label.leadingBuffer;
 			
 //			label.backgroundColor = [UIColor colorWithRed:(0.2*i)+0.3 green:0 blue:0 alpha:1.0];

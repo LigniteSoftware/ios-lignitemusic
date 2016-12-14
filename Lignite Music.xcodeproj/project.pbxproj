@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		6A0750721D5EAB8000BCBC9C /* aplite_colours.gif in Resources */ = {isa = PBXBuildFile; fileRef = 6A0750711D5EAB8000BCBC9C /* aplite_colours.gif */; };
 		6A0750741D5EC0C000BCBC9C /* never_forget.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A0750731D5EC0C000BCBC9C /* never_forget.png */; };
+		6A13A8011E011D19006A768B /* SLColorArt.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A13A7FC1E011D19006A768B /* SLColorArt.m */; };
+		6A13A8021E011D19006A768B /* UIImage+ColorArt.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A13A7FE1E011D19006A768B /* UIImage+ColorArt.m */; };
+		6A13A8031E011D19006A768B /* UIImage+Scale.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A13A8001E011D19006A768B /* UIImage+Scale.m */; };
 		6A1FB9C71D99EB0A00890BF3 /* LMAlbumView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A1FB9C61D99EB0A00890BF3 /* LMAlbumView.m */; };
 		6A1FB9CC1D9AE76A00890BF3 /* LMLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A1FB9CB1D9AE76A00890BF3 /* LMLabel.m */; };
 		6A2566F31D4089E8004EDE41 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A2566F21D4089E8004EDE41 /* MediaPlayer.framework */; };
@@ -164,6 +167,12 @@
 		6A0750711D5EAB8000BCBC9C /* aplite_colours.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = aplite_colours.gif; sourceTree = "<group>"; };
 		6A0750731D5EC0C000BCBC9C /* never_forget.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = never_forget.png; sourceTree = "<group>"; };
 		6A106B121BC710D4003AE55A /* Lignite Music.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Lignite Music.entitlements"; sourceTree = "<group>"; };
+		6A13A7FB1E011D19006A768B /* SLColorArt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLColorArt.h; sourceTree = "<group>"; };
+		6A13A7FC1E011D19006A768B /* SLColorArt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLColorArt.m; sourceTree = "<group>"; };
+		6A13A7FD1E011D19006A768B /* UIImage+ColorArt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ColorArt.h"; sourceTree = "<group>"; };
+		6A13A7FE1E011D19006A768B /* UIImage+ColorArt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ColorArt.m"; sourceTree = "<group>"; };
+		6A13A7FF1E011D19006A768B /* UIImage+Scale.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Scale.h"; sourceTree = "<group>"; };
+		6A13A8001E011D19006A768B /* UIImage+Scale.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Scale.m"; sourceTree = "<group>"; };
 		6A1FB9C51D99EB0A00890BF3 /* LMAlbumView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMAlbumView.h; sourceTree = "<group>"; };
 		6A1FB9C61D99EB0A00890BF3 /* LMAlbumView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMAlbumView.m; sourceTree = "<group>"; };
 		6A1FB9CA1D9AE76A00890BF3 /* LMLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMLabel.h; sourceTree = "<group>"; };
@@ -426,6 +435,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6A13A7FA1E011D09006A768B /* ColorArt */ = {
+			isa = PBXGroup;
+			children = (
+				6A13A7FB1E011D19006A768B /* SLColorArt.h */,
+				6A13A7FC1E011D19006A768B /* SLColorArt.m */,
+				6A13A7FD1E011D19006A768B /* UIImage+ColorArt.h */,
+				6A13A7FE1E011D19006A768B /* UIImage+ColorArt.m */,
+				6A13A7FF1E011D19006A768B /* UIImage+Scale.h */,
+				6A13A8001E011D19006A768B /* UIImage+Scale.m */,
+			);
+			name = ColorArt;
+			sourceTree = "<group>";
+		};
 		6A1FB9C01D99C72200890BF3 /* Pebble */ = {
 			isa = PBXGroup;
 			children = (
@@ -865,6 +887,7 @@
 			children = (
 				6A4BAEEF1DC9C572000DF537 /* BigListSubviews */,
 				6AFD2EDA1BC41EAC0083FE9E /* Browsing */,
+				6A13A7FA1E011D09006A768B /* ColorArt */,
 				6A1FB9C21D99C8B900890BF3 /* Core */,
 				6AEB9D2E1BAD679F00AD19FA /* Images */,
 				6A7DF1141DB10CC60077B979 /* Layovers */,
@@ -1186,6 +1209,7 @@
 				6A3211411DA732470060DD07 /* LMTrackInfoView.m in Sources */,
 				6A6C186B1DDFFE7600D651E1 /* LMArtistView.m in Sources */,
 				6AC1B7391DA308F80029E08B /* LMSongDetailControlView.m in Sources */,
+				6A13A8021E011D19006A768B /* UIImage+ColorArt.m in Sources */,
 				6AC066F41E00E335008A6FCA /* LMGrabberView.m in Sources */,
 				6A4BAEF21DC9C59B000DF537 /* LMTiledAlbumCoverView.m in Sources */,
 				6A6351921D9D71D300498582 /* LMListEntry.m in Sources */,
@@ -1194,6 +1218,7 @@
 				6AA4459C1D5AB264004C6739 /* LMPebbleSettingsView.m in Sources */,
 				6AFD2EDD1BC41ECD0083FE9E /* LMAlbumViewItem.m in Sources */,
 				6AF9D5421DE251FD006368B6 /* LMSectionTableView.m in Sources */,
+				6A13A8031E011D19006A768B /* UIImage+Scale.m in Sources */,
 				6ADA6CEB1DF84A8D0073D449 /* LMSearchViewController.m in Sources */,
 				6AC77A091DC3B04B00BABBB3 /* LMBigListEntryTableView.m in Sources */,
 				6AD227031DA5990B0056695A /* LMMusicPlayer.m in Sources */,
@@ -1255,6 +1280,7 @@
 				6A7565301DF7E38900A9EDD6 /* LMSearch.m in Sources */,
 				6AD226FC1DA4B7770056695A /* LMNowPlayingView.m in Sources */,
 				6AC32B7B1DB6B57B0007C67E /* LMPebbleManager.m in Sources */,
+				6A13A8011E011D19006A768B /* SLColorArt.m in Sources */,
 				6A52574F1DF099720040210D /* LMProgressSlider.m in Sources */,
 				6A514E191CEA15D900AFB351 /* LMSlider.m in Sources */,
 				6A7DF1171DB10D510077B979 /* LMBrowsingAssistantView.m in Sources */,

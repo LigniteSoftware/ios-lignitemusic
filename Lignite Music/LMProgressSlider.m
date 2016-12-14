@@ -11,6 +11,7 @@
 #import "LMColour.h"
 #import "LMLabel.h"
 #import "LMExtras.h"
+#import "LMMarqueeLabel.h"
 
 @interface LMProgressSlider()
 
@@ -57,7 +58,7 @@
 /**
  The amount of width to incrememt by for a tick of seconds. Calculated off of the maximum value.
  */
-@property float widthIncrementPerTick;
+@property CGFloat widthIncrementPerTick;
 
 /**
  Whether or not the progress bar is currently animating.
@@ -75,6 +76,7 @@
 
 @synthesize leftText = _leftText;
 @synthesize rightText = _rightText;
+@synthesize lightTheme = _lightTheme;
 @synthesize finalValue = _finalValue;
 @synthesize value = _value;
 
@@ -108,11 +110,30 @@
 	}
 }
 
-- (float)finalValue {
+- (BOOL)lightTheme {
+	return _lightTheme;
+}
+
+- (void)setLightTheme:(BOOL)lightTheme {
+	_lightTheme = lightTheme;
+	
+	if(self.didLayoutConstraints){
+		UIColor *bottomColour = lightTheme ? [UIColor blackColor] : [UIColor whiteColor];
+		UIColor *topColour = lightTheme ? [UIColor whiteColor] : [UIColor blackColor];
+		
+		self.leftTextBottomLabel.textColor = bottomColour;
+		self.rightTextBottomLabel.textColor = bottomColour;
+		
+		self.leftTextTopLabel.textColor = topColour;
+		self.rightTextTopLabel.textColor = topColour;
+	}
+}
+
+- (CGFloat)finalValue {
 	return _finalValue;
 }
 
-- (void)setFinalValue:(float)finalValue {
+- (void)setFinalValue:(CGFloat)finalValue {
 	_finalValue = finalValue;
 	
 	if(self.didLayoutConstraints){
@@ -120,7 +141,7 @@
 	}
 }
 
-- (void)setValue:(float)value {
+- (void)setValue:(CGFloat)value {
 	_value = value;
 	
 	if(self.didLayoutConstraints){
@@ -128,9 +149,9 @@
 			return;
 		}
 		
-		float grabberWidth = self.sliderGrabberView.frame.size.width;
-		float percentageTowards = value/self.finalValue;
-		float grabberPercent = (1.0-percentageTowards)*grabberWidth;
+		CGFloat grabberWidth = self.sliderGrabberView.frame.size.width;
+		CGFloat percentageTowards = value/self.finalValue;
+		CGFloat grabberPercent = (1.0-percentageTowards)*grabberWidth;
 		
 		self.sliderBackgroundWidthConstraint.constant = (self.frame.size.width*percentageTowards)+grabberPercent;
 		
@@ -139,7 +160,7 @@
 	}
 }
 
-- (float)value {
+- (CGFloat)value {
 	return _value;
 }
 
@@ -172,11 +193,15 @@
 }
 
 - (void)reloadTextHighlightingConstants {
-	float topLeftLabelWidth = self.sliderBackgroundWidthConstraint.constant-10;
+	CGFloat topLeftLabelWidth = self.sliderBackgroundWidthConstraint.constant-10;
+	
+	if(topLeftLabelWidth < 0){
+		topLeftLabelWidth = 0;
+	}
 	
 	self.leftTextTopLabelWidthConstraint.constant = topLeftLabelWidth > self.leftTextBottomLabel.frame.size.width ? self.leftTextBottomLabel.frame.size.width : topLeftLabelWidth;
 	
-	float topRightLabelWidth = self.sliderBackgroundWidthConstraint.constant-self.rightTextBottomLabel.frame.origin.x;
+	CGFloat topRightLabelWidth = self.sliderBackgroundWidthConstraint.constant-self.rightTextBottomLabel.frame.origin.x;
 	self.rightTextTopLabelWidthConstraint.constant = topRightLabelWidth > 0 ? topRightLabelWidth : 0;
 }
 
@@ -193,13 +218,13 @@
 	
 	UIView *sliderGrabber = self.sliderBackgroundView;
 	
-	static float firstX = 0;
-	static float firstY = 0;
+	static CGFloat firstX = 0;
+	static CGFloat firstY = 0;
 	
 	static BOOL didBeginSlidingFromLeft = NO;
 	static BOOL didBeginSlidingFromRight = NO;
 	
-	float capFactor = self.frame.size.width/5;
+	CGFloat capFactor = self.frame.size.width/5;
 	
 	if (panGestureRecognizer.state == UIGestureRecognizerStateBegan) {
 		firstX = sliderGrabber.frame.size.width;
@@ -214,9 +239,9 @@
 	//The cap algorithm helps with scrolling it to the ends of the screen, because reaching the edges can be difficult.
 	//It accelerates the scrolling speed at the far left and far right.
 	
-	float capFactorRightSideWidth = (capFactor * 4);
-	float capFactorRightPercentage = ((translatedPoint.x-capFactorRightSideWidth)/capFactorRightSideWidth);
-	float capFactorLeftPercentage = 1.0-(translatedPoint.x/capFactor);
+	CGFloat capFactorRightSideWidth = (capFactor * 4);
+	CGFloat capFactorRightPercentage = ((translatedPoint.x-capFactorRightSideWidth)/capFactorRightSideWidth);
+	CGFloat capFactorLeftPercentage = 1.0-(translatedPoint.x/capFactor);
 	
 	if(translatedPoint.x > capFactorRightSideWidth && !didBeginSlidingFromRight){
 		translatedPoint.x += capFactorRightPercentage*fabs(translatedPoint.x);
@@ -258,10 +283,10 @@
 	}
 	
 	if(self.delegate){
-		float grabberWidth = self.sliderGrabberView.frame.size.width;
+		CGFloat grabberWidth = self.sliderGrabberView.frame.size.width;
 		
-		float percentageTowards = (self.sliderBackgroundView.frame.size.width-grabberWidth)/(self.frame.size.width-(grabberWidth));
-		float progress = self.finalValue*percentageTowards;
+		CGFloat percentageTowards = (self.sliderBackgroundView.frame.size.width-grabberWidth)/(self.frame.size.width-(grabberWidth));
+		CGFloat progress = self.finalValue*percentageTowards;
 								   
 		[self.delegate progressSliderValueChanged:progress isFinal:panGestureRecognizer.state == UIGestureRecognizerStateEnded];
 	}
@@ -292,6 +317,7 @@
 		[self.leftTextBottomLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
 		[self.leftTextBottomLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self withOffset:self.frame.size.height/8];
 		[self.leftTextBottomLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self withOffset:-self.frame.size.height/8];
+		[self.leftTextBottomLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(0.45)];
 		
 		
 		
@@ -299,16 +325,19 @@
 		self.rightTextBottomLabel.text = self.rightText ? self.rightText : @"";
 		self.rightTextBottomLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:50];
 		self.rightTextBottomLabel.textColor = [UIColor blackColor];
+		self.rightTextBottomLabel.textAlignment = NSTextAlignmentRight;
 		[self addSubview:self.rightTextBottomLabel];
 		
 		[self.rightTextBottomLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self withOffset:-10];
 		[self.rightTextBottomLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
 		[self.rightTextBottomLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self withOffset:self.frame.size.height/8];
 		[self.rightTextBottomLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self withOffset:-self.frame.size.height/8];
+		[self.rightTextBottomLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(0.45)];
 				
 		
 		self.sliderBackgroundView = [UIView newAutoLayoutView];
 		self.sliderBackgroundView.backgroundColor = [LMColour ligniteRedColour];
+		self.sliderBackgroundView.clipsToBounds = YES;
 		[self addSubview:self.sliderBackgroundView];
 		
 		[self.sliderBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
@@ -334,14 +363,14 @@
 		self.rightTextTopLabel.text = self.rightTextBottomLabel.text;
 		self.rightTextTopLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:50];
 		self.rightTextTopLabel.textColor = [UIColor whiteColor];
-		self.rightTextTopLabel.textAlignment = NSTextAlignmentLeft;
-//		self.rightTextTopLabel.backgroundColor = [UIColor yellowColor];
+		self.rightTextTopLabel.textAlignment = NSTextAlignmentRight;
+		self.rightTextTopLabel.clipsToBounds = YES;
 		self.rightTextTopLabel.lineBreakMode = NSLineBreakByClipping;
-		[self addSubview:self.rightTextTopLabel];
+		[self.sliderBackgroundView addSubview:self.rightTextTopLabel];
 		
-		[self.rightTextTopLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.rightTextBottomLabel];
+		[self.rightTextTopLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.rightTextBottomLabel];
 		[self.rightTextTopLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
-		self.rightTextTopLabelWidthConstraint = [self.rightTextTopLabel autoSetDimension:ALDimensionWidth toSize:0];
+		[self.rightTextTopLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.rightTextBottomLabel];
 		[self.rightTextTopLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self withOffset:self.frame.size.height/8];
 		[self.rightTextTopLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self withOffset:-self.frame.size.height/8];
 		
@@ -360,6 +389,8 @@
 		self.leftTextTopLabelWidthConstraint = [self.leftTextTopLabel autoSetDimension:ALDimensionWidth toSize:0];
 		[self.leftTextTopLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self withOffset:self.frame.size.height/8];
 		[self.leftTextTopLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self withOffset:-self.frame.size.height/8];
+		
+		[self setLightTheme:self.lightTheme];
 		
 		[NSTimer scheduledTimerWithTimeInterval:0.5 repeats:NO block:^(NSTimer * _Nonnull timer) {
 			self.value = self.value;

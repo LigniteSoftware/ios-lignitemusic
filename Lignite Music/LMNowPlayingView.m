@@ -11,6 +11,7 @@
 #import "LMAlbumArtView.h"
 #import "UIImage+AverageColour.h"
 #import "UIColor+isLight.h"
+#import "UIImage+ColorArt.h"
 #import "LMOperationQueue.h"
 #import "LMTrackInfoView.h"
 #import "LMButton.h"
@@ -26,6 +27,11 @@
 @property UIImageView *backgroundImageView;
 //@property UIView *shadingView;
 @property UIVisualEffectView *blurredBackgroundView;
+
+/**
+ Goes in front of the background image view for now while we test this new design
+ */
+@property UIView *colourBackgroundView;
 
 @property UIView *albumArtRootView;
 @property LMAlbumArtView *albumArtImageView;
@@ -79,7 +85,7 @@
 	}
 }
 
-- (void)progressSliderValueChanged:(float)newValue isFinal:(BOOL)isFinal {
+- (void)progressSliderValueChanged:(CGFloat)newValue isFinal:(BOOL)isFinal {
 	//NSLog(@"New value %f", newValue);
 	if(![self.musicPlayer hasTrackLoaded]){
 		return;
@@ -106,7 +112,7 @@
 
 - (void)musicTrackDidChange:(LMMusicTrack *)newTrack {
 	if(!self.queue){
-		self.queue = [[LMOperationQueue alloc] init];
+		self.queue = [LMOperationQueue new];
 	}
 	
 	[self.queue cancelAllOperations];
@@ -117,10 +123,12 @@
 		UIImage *albumArt = [newTrack albumArt];
 		UIImage *albumImage = (noTrackPlaying || !albumArt) ? [UIImage imageNamed:@"lignite_background_portrait.png"] : albumArt;
 		
-		UIColor *averageColour = [albumImage averageColour];
-		BOOL isLight = [averageColour isLight];
-		self.blurredBackgroundView.effect = [UIBlurEffect effectWithStyle:isLight ? UIBlurEffectStyleLight : UIBlurEffectStyleDark];
-		UIColor *newTextColour = isLight ? [UIColor blackColor] : [UIColor whiteColor];
+//		UIColor *averageColour = [albumImage averageColour];
+//		BOOL isLight = [averageColour isLight];
+//		self.blurredBackgroundView.effect = [UIBlurEffect effectWithStyle:isLight ? UIBlurEffectStyleLight : UIBlurEffectStyleDark];
+//		UIColor *newTextColour = isLight ? [UIColor blackColor] : [UIColor whiteColor];
+		
+		SLColorArt *colorArt = [albumImage colorArt];
 		
 		dispatch_async(dispatch_get_main_queue(), ^{
 			if(operation.cancelled){
@@ -133,13 +141,21 @@
 			
 			self.albumArtImageView.albumArtImageView.image = nil;
 			
-			self.trackInfoView.textColour = newTextColour;
+//			self.trackInfoView.textColour = newTextColour;
 			
-			self.progressSlider.sliderBackgroundView.backgroundColor = averageColour;
+			self.progressSlider.sliderBackgroundView.backgroundColor = colorArt.primaryColor;
+			self.colourBackgroundView.backgroundColor = colorArt.backgroundColor;
+			
+			BOOL isLight = [self.colourBackgroundView.backgroundColor isLight];
+			
+			self.trackInfoView.textColour = isLight ? [UIColor blackColor] : [UIColor whiteColor];
+			self.progressSlider.lightTheme = isLight;
 			
 			if(albumImage.size.height > 0){
 				[self.albumArtImageView updateContentWithMusicTrack:newTrack];
 			}
+			
+			NSLog(@"Spook me solid");
 			
 			self.brandNewAlbumArtImageView.image = albumArt ? albumArt : [LMAppIcon imageForIcon:LMIconNoAlbumArt];
 		});
@@ -278,6 +294,14 @@
 	[self.blurredBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.backgroundImageView];
 	[self.blurredBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 	
+	
+	self.colourBackgroundView = [UIView newAutoLayoutView];
+	self.colourBackgroundView.backgroundColor = [UIColor whiteColor];
+	[self.blurredBackgroundView addSubview:self.colourBackgroundView];
+	
+	[self.colourBackgroundView autoPinEdgesToSuperviewEdges];
+	
+	
 	self.albumArtRootView = [UIView newAutoLayoutView];
 	self.albumArtRootView.backgroundColor = [UIColor clearColor];
 	[self addSubview:self.albumArtRootView];
@@ -296,8 +320,7 @@
 	heightConstraint.priority = UILayoutPriorityRequired;
 	[self addConstraint:heightConstraint];
 	
-	self.albumArtImageView = [[LMAlbumArtView alloc]init];
-	self.albumArtImageView.translatesAutoresizingMaskIntoConstraints = NO;
+	self.albumArtImageView = [LMAlbumArtView newAutoLayoutView];
 	[self.albumArtRootView addSubview:self.albumArtImageView];
 	
 	[self.albumArtImageView autoCenterInSuperview];
@@ -322,6 +345,7 @@
 	self.progressSlider.finalValue = self.musicPlayer.nowPlayingTrack.playbackDuration;
 	self.progressSlider.delegate = self;
 	self.progressSlider.value = self.musicPlayer.currentPlaybackTime;
+	self.progressSlider.lightTheme = YES;
 	[self addSubview:self.progressSlider];
 	
 	[self.progressSlider autoPinEdgeToSuperviewEdge:ALEdgeLeading];
@@ -348,10 +372,11 @@
 	
 	self.trackInfoView = [LMTrackInfoView newAutoLayoutView];
 	self.trackInfoView.textAlignment = NSTextAlignmentCenter;
+	self.trackInfoView.textColour = [UIColor blackColor];
 	[self addSubview:self.trackInfoView];
 	
 	//TODO: Fix this being manually set value
-	[self.trackInfoView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.progressSlider withOffset:10];
+	[self.trackInfoView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.progressSlider withOffset:20];
 	[self.trackInfoView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.progressSlider withOffset:20];
 	[self.trackInfoView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.progressSlider withOffset:-20];
 	[self.trackInfoView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(1.0/5.0)];
@@ -360,9 +385,9 @@
 	self.repeatModeBackgroundView = [UIView newAutoLayoutView];
 	self.playlistBackgroundView = [UIView newAutoLayoutView];
 	
-	self.shuffleModeButton = [[LMButton alloc]initForAutoLayout];
-	self.repeatModeButton = [[LMButton alloc]initForAutoLayout];
-	self.playlistButton = [[LMButton alloc]initForAutoLayout];
+	self.shuffleModeButton = [LMButton newAutoLayoutView];
+	self.repeatModeButton = [LMButton newAutoLayoutView];
+	self.playlistButton = [LMButton newAutoLayoutView];
 	
 	NSArray *backgrounds = @[
 		self.shuffleModeBackgroundView, self.repeatModeBackgroundView, self.playlistBackgroundView
