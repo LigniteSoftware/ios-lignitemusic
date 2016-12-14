@@ -17,16 +17,16 @@
 #import "LMSourceSelectorView.h"
 #import "LMLabel.h"
 #import "LMButton.h"
+#import "LMGrabberView.h"
 
-@interface LMBrowsingAssistantView()<LMButtonDelegate, LMSourceSelectorDelegate, LMSearchBarDelegate>
+@interface LMBrowsingAssistantView()<LMButtonDelegate, LMSourceSelectorDelegate, LMSearchBarDelegate, UIGestureRecognizerDelegate>
 
 @property LMMusicPlayer *musicPlayer;
 
 @property UIView *selectorBackgroundView;
 @property NSLayoutConstraint *selectorPositionConstraint;
 
-@property UIView *grabberView;
-@property UIImageView *grabberImageView;
+@property LMGrabberView *grabberView;
 
 @property CGPoint originalPoint, currentPoint;
 
@@ -55,6 +55,12 @@
 
 @implementation LMBrowsingAssistantView
 
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+	NSLog(@"%@ and %@", gestureRecognizer, otherGestureRecognizer);
+	
+	return YES;
+}
+
 - (void)sourceTitleChangedTo:(NSString *)title {
 	self.currentSourceLabel.text = title;
 }
@@ -70,37 +76,34 @@
 	
 	NSLog(@"Open browsing assistant");
 	
-	
 	[self layoutIfNeeded];
 	self.selectorPositionConstraint.constant = 0;
+	self.currentPoint = self.originalPoint;
 	[UIView animateWithDuration:0.5 delay:0
 		 usingSpringWithDamping:0.6 initialSpringVelocity:0.0f
 						options:0 animations:^{
 							[self layoutIfNeeded];
 						} completion:nil];
 	
-	[self.delegate heightRequiredChangedTo:self.selectorBackgroundView.frame.size.height+self.miniPlayerView.frame.size.height forBrowsingView:self];
+	[self.delegate heightRequiredChangedTo:self.selectorBackgroundView.frame.size.height+self.currentSourceBackgroundView.frame.size.height forBrowsingView:self];
 	
 	return YES;
 }
 
 - (BOOL)close {
-	if(self.textBackgroundConstraint.constant == self.frame.size.height){
+	if(self.selectorPositionConstraint.constant == self.frame.size.height){
 		return NO;
 	}
 	
 	NSLog(@"Close browsing assistant");
 	
 	if(self.currentlySelectedTab == LMBrowsingAssistantTabView){
-		[self closeSourceSelectorAndOpenPreviousTab:NO];
-	}
-
-	if(self.currentlySelectedTab == LMBrowsingAssistantTabView){
-		[self selectSource:LMBrowsingAssistantTabMiniplayer];
+		[self closeSourceSelectorAndOpenPreviousTab:YES];
 	}
 	
 	[self layoutIfNeeded];
 	self.selectorPositionConstraint.constant = self.frame.size.height;
+	self.currentPoint = CGPointMake(self.originalPoint.x, self.originalPoint.y + self.selectorPositionConstraint.constant);
 	[UIView animateWithDuration:0.5 delay:0
 		 usingSpringWithDamping:0.6 initialSpringVelocity:0.0f
 						options:0 animations:^{
@@ -110,6 +113,44 @@
 	[self.delegate heightRequiredChangedTo:self.currentSourceBackgroundView.frame.size.height forBrowsingView:self];
 	
 	return YES;
+}
+
+- (void)handlePan:(UIPanGestureRecognizer *)recognizer {
+	CGPoint translation = [recognizer translationInView:self];
+	
+	if(self.originalPoint.y == 0){
+		self.originalPoint = self.selectorBackgroundView.frame.origin;
+		self.currentPoint = self.selectorBackgroundView.frame.origin;
+	}
+	CGFloat totalTranslation = translation.y + (self.currentPoint.y-self.originalPoint.y);
+	
+	NSLog(@"%f", totalTranslation);
+	
+	if(totalTranslation < 0){ //Moving upward
+		self.selectorPositionConstraint.constant = -sqrt(-totalTranslation);
+	}
+	else{ //Moving downward
+		self.selectorPositionConstraint.constant = totalTranslation;
+	}
+	
+	[self layoutIfNeeded];
+	
+	if(recognizer.state == UIGestureRecognizerStateEnded){
+		//NSLog(@"Dick is not a bone %@", NSStringFromCGPoint(self.currentPoint));
+		self.currentPoint = CGPointMake(self.currentPoint.x, self.originalPoint.y + totalTranslation);
+		
+		//		NSLog(@"Dick is not a bone %@", NSStringFromCGPoint(self.currentPoint));
+		
+		if((translation.y >= 0)){
+			[self close];
+		}
+		else if((translation.y < 0)){
+			[self open];
+		}
+	}
+	else if(recognizer.state == UIGestureRecognizerStateBegan){
+		[self.delegate heightRequiredChangedTo:LMBrowsingAssistantViewDynamicHeight forBrowsingView:self];
+	}
 }
 	
 - (void)swipeUp {
@@ -144,7 +185,7 @@
 					 } completion:nil];
 }
 
-- (void)heightOfCurrentElementChangedTo:(float)newHeight {
+- (void)heightOfCurrentElementChangedTo:(CGFloat)newHeight {
 	[self.delegate heightRequiredChangedTo:WINDOW_FRAME.size.height/8.0 + newHeight forBrowsingView:self];
 }
 
@@ -195,6 +236,8 @@
 	if(sourceSelectedIndex == self.currentlySelectedTab && sourceSelectedIndex != LMBrowsingAssistantTabView){
 		return;
 	}
+	
+	self.originalPoint = CGPointMake(0, 0);
 	
 	[self setMiniPlayerOpen:NO];
 	[self setBrowsingBarOpen:NO];
@@ -331,41 +374,6 @@
 	[self.searchBarDelegate searchDialogOpened:opened withKeyboardHeight:keyboardHeight];
 }
 
-- (void)handlePan:(UIPanGestureRecognizer *)recognizer {
-	CGPoint translation = [recognizer translationInView:self];
-	
-	if(self.originalPoint.y == 0){
-		self.originalPoint = self.frame.origin;
-		self.currentPoint = self.frame.origin;
-	}
-	float totalTranslation = translation.y + (self.currentPoint.y-self.originalPoint.y);
-	
-	//	NSLog(@"%f", totalTranslation);
-	
-	if(totalTranslation < 0){
-		self.textBackgroundConstraint.constant = -sqrt(-totalTranslation);
-	}
-	else{
-		self.textBackgroundConstraint.constant = totalTranslation;
-	}
-	
-	[[self superview] layoutIfNeeded];
-	
-	if(recognizer.state == UIGestureRecognizerStateEnded){
-		//NSLog(@"Dick is not a bone %@", NSStringFromCGPoint(self.currentPoint));
-		self.currentPoint = CGPointMake(self.currentPoint.x, self.originalPoint.y + totalTranslation);
-		
-		//		NSLog(@"Dick is not a bone %@", NSStringFromCGPoint(self.currentPoint));
-		
-		if((translation.y >= 0)){
-			[self close];
-		}
-		else if((translation.y < 0)){
-			[self open];
-		}
-	}
-}
-
 - (void)layoutSubviews {
 	if(!self.didLayoutConstraints){
 		self.didLayoutConstraints = YES;
@@ -399,34 +407,6 @@
 		}
 		
 		self.sourcesForTabs = [NSArray arrayWithArray:sources];
-		
-		
-		
-		self.grabberView = [UIView newAutoLayoutView];
-		self.grabberView.backgroundColor = [LMColour ligniteRedColour];
-		self.grabberView.layer.masksToBounds = YES;
-		self.grabberView.layer.cornerRadius = 0.024*WINDOW_FRAME.size.width;
-		[self addSubview:self.grabberView];
-		
-		CGFloat tabHeight = TAB_HEIGHT;
-		
-		[self.grabberView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self withOffset:(tabHeight*(1.0/4.0))+tabHeight];
-		[self.grabberView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(1.0/6.0)];
-		[self.grabberView autoSetDimension:ALDimensionHeight toSize:tabHeight];
-		[self.grabberView autoAlignAxisToSuperviewAxis:ALAxisVertical];
-		
-		UIPanGestureRecognizer *moveRecognizer = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(handlePan:)];
-		[self.grabberView addGestureRecognizer:moveRecognizer];
-		
-		self.grabberImageView = [UIImageView newAutoLayoutView];
-		self.grabberImageView.image = [LMAppIcon imageForIcon:LMIconGrabRectangle];
-		self.grabberImageView.contentMode = UIViewContentModeScaleAspectFit;
-		[self.grabberView addSubview:self.grabberImageView];
-		
-		[self.grabberImageView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-		[self.grabberImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.grabberView withMultiplier:(7.5/10.0)];
-		[self.grabberImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.grabberView withMultiplier:(1.0/2.0)];
-		[self.grabberImageView autoAlignAxisToSuperviewAxis:ALAxisVertical];
 		
 		
 		
@@ -513,6 +493,8 @@
 		[whiteViewForAnimation autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 		[whiteViewForAnimation autoSetDimension:ALDimensionHeight toSize:100];
 		
+		
+		
 		self.tabViews = [NSMutableArray new];
 		
 		for(int i = 0; i < self.sourcesForTabs.count; i++){
@@ -583,9 +565,9 @@
 		
 		[self.miniPlayerView setup];
 		
-		UISwipeGestureRecognizer *swipeUpGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeUp)];
-		swipeUpGesture.direction = UISwipeGestureRecognizerDirectionUp;
-		[self.miniPlayerView addGestureRecognizer:swipeUpGesture];
+//		UISwipeGestureRecognizer *swipeUpGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeUp)];
+//		swipeUpGesture.direction = UISwipeGestureRecognizerDirectionUp;
+//		[self.miniPlayerView addGestureRecognizer:swipeUpGesture];
 		
 		self.miniPlayerView.backgroundColor = [UIColor whiteColor];
 		self.miniPlayerView.layer.shadowColor = [UIColor blackColor].CGColor;
@@ -612,14 +594,32 @@
 		[self.sourceSelector setup];
 		
 		
+		self.grabberView = [LMGrabberView newAutoLayoutView];
+		self.grabberView.backgroundColor = [LMColour ligniteRedColour];
+		self.grabberView.layer.masksToBounds = YES;
+		[self addSubview:self.grabberView];
+		CGFloat tabHeight = TAB_HEIGHT;
+		
+		[self.grabberView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.browsingBar];
+		[self.grabberView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(1.0/6.0)];
+		[self.grabberView autoSetDimension:ALDimensionHeight toSize:tabHeight];
+		[self.grabberView autoAlignAxisToSuperviewAxis:ALAxisVertical];
+		
+		
+		UIPanGestureRecognizer *moveRecognizer = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(handlePan:)];
+		moveRecognizer.delegate = self;
+		[self.grabberView addGestureRecognizer:moveRecognizer];
+		
+		[self insertSubview:self.browsingBar aboveSubview:self.grabberView];
+		
 		[self insertSubview:self.selectorBackgroundView aboveSubview:self.miniPlayerView];
 		
 		[self insertSubview:self.sourceSelector aboveSubview:self.miniPlayerView];
 		[self insertSubview:self.sourceSelector belowSubview:self.selectorBackgroundView];
 		
-		UISwipeGestureRecognizer *swipeDownGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(close)];
-		swipeDownGesture.direction = UISwipeGestureRecognizerDirectionDown;
-		[self addGestureRecognizer:swipeDownGesture];
+//		UISwipeGestureRecognizer *swipeDownGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(close)];
+//		swipeDownGesture.direction = UISwipeGestureRecognizerDirectionDown;
+//		[self addGestureRecognizer:swipeDownGesture];
 		
 		[self selectSource:LMBrowsingAssistantTabBrowse];
 		

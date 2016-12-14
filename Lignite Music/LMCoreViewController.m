@@ -329,18 +329,28 @@ BOOL didAutomaticallyClose = NO;
 }
 
 - (void)heightRequiredChangedTo:(CGFloat)heightRequired forBrowsingView:(LMBrowsingAssistantView *)browsingView {
+	NSLog(@"Height required %f", heightRequired);
+	
+	BOOL isDynamic = (heightRequired < 0.0);
+	
+	if(isDynamic){
+		heightRequired = 0.0;
+	}
+	
 	if(self.currentDetailViewController){
 		[(LMBrowsingDetailViewController*)self.currentDetailViewController setRequiredHeight:(WINDOW_FRAME.size.height-heightRequired) + 10];;
 	}
 	
-	if(!self.browsingAssistantHeightConstraint){
-		self.browsingAssistantHeightConstraint = [self.browsingAssistant autoSetDimension:ALDimensionHeight toSize:heightRequired+TAB_HEIGHT];
+	if(!isDynamic){
+		if(!self.browsingAssistantHeightConstraint){
+			self.browsingAssistantHeightConstraint = [self.browsingAssistant autoSetDimension:ALDimensionHeight toSize:heightRequired+TAB_HEIGHT];
+			
+			[self.browsingAssistantViewAttachedTo layoutIfNeeded];
+			return;
+		}
 		
 		[self.browsingAssistantViewAttachedTo layoutIfNeeded];
-		return;
 	}
-	
-	[self.browsingAssistantViewAttachedTo layoutIfNeeded];
 	
 	if(heightRequired < self.view.frame.size.height/2.0){
 		for(int i = 0; i < self.heightConstraintArray.count; i++){
@@ -352,7 +362,9 @@ BOOL didAutomaticallyClose = NO;
 		}];
 	}
 	
-	self.browsingAssistantHeightConstraint.constant = heightRequired+TAB_HEIGHT;
+	if(!isDynamic){
+		self.browsingAssistantHeightConstraint.constant = heightRequired+TAB_HEIGHT;
+	}
 	
 	[UIView animateWithDuration:0.75 animations:^{
 		[self.browsingAssistantViewAttachedTo layoutIfNeeded];
