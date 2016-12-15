@@ -158,7 +158,7 @@
 }
 
 - (UIImage*)iconForIndexPath:(NSIndexPath*)indexPath forSectionTableView:(LMSectionTableView*)sectionTableView {
-	return [LMAppIcon imageForIcon:LMIconNoAlbumArt];
+	return nil;
 }
 
 - (void)cacheAlertForCategory:(LMImageManagerCategory)category {

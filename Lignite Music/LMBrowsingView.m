@@ -209,10 +209,10 @@
 	LMMusicTrackCollection *collection = [self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex];
 	
 	switch(self.musicType){
+		case LMMusicTypeComposers:
 		case LMMusicTypeArtists: {
 			return [NSString stringWithFormat:@"%lu %@", (unsigned long)collection.numberOfAlbums, [NSLocalizedString(collection.numberOfAlbums == 1 ? @"Album" : @"Albums", nil) lowercaseString]];
 		}
-		case LMMusicTypeComposers:
 		case LMMusicTypeGenres:
 		case LMMusicTypePlaylists:
 		case LMMusicTypeCompilations:
@@ -381,32 +381,13 @@
 			[bigListEntry.queue addOperation:operation];
 			break;
 		}
+		case LMMusicTypeAlbums:
 		case LMMusicTypeCompilations:
 		case LMMusicTypeGenres:
 		case LMMusicTypePlaylists: {
 			LMTiledAlbumCoverView *tiledAlbumCover = subview;
 //			tiledAlbumCover.simpleMode = YES;
 			tiledAlbumCover.musicCollection = [self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex];
-			break;
-		}
-		case LMMusicTypeAlbums: {
-			UIImageView *imageView = (UIImageView*)subview;
-			
-			NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
-				LMMusicTrack *representativeTrack = [self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex].representativeItem;
-				UIImage *albumArt = [representativeTrack albumArt];
-				
-				dispatch_async(dispatch_get_main_queue(), ^{
-					if(operation.cancelled){
-						NSLog(@"Rejecting.");
-						return;
-					}
-					
-					imageView.image = albumArt;
-				});
-			}];
-			
-			[bigListEntry.queue addOperation:operation];
 			break;
 		}
 		default: {
@@ -428,6 +409,7 @@
 			imageView.layer.shadowOpacity = 0.25f;
 			return imageView;
 		}
+		case LMMusicTypeAlbums:
 		case LMMusicTypeCompilations:
 		case LMMusicTypeGenres:
 		case LMMusicTypePlaylists: {
@@ -435,16 +417,6 @@
 			tiledAlbumCover.musicCollection = [self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex];
 //			tiledAlbumCover.simpleMode = YES;
 			return tiledAlbumCover;
-		}
-		case LMMusicTypeAlbums: {
-			UIImageView *imageView = [UIImageView newAutoLayoutView];
-			imageView.image = [[self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex].representativeItem albumArt];
-			imageView.contentMode = UIViewContentModeScaleAspectFit;
-			imageView.layer.shadowColor = [UIColor blackColor].CGColor;
-			imageView.layer.shadowRadius = WINDOW_FRAME.size.width/45;
-			imageView.layer.shadowOffset = CGSizeMake(0, imageView.layer.shadowRadius/2);
-			imageView.layer.shadowOpacity = 0.25f;
-			return imageView;
 		}
 		default: {
 			NSLog(@"Windows fucking error!");
@@ -474,6 +446,10 @@
 }
 
 - (void)setup {
+	self.bigListEntryTableView.hidden = YES;
+	[self.bigListEntryTableView removeFromSuperview];
+	self.bigListEntryTableView = nil;
+	
 	self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 	self.imageManager = [LMImageManager sharedImageManager];
 	

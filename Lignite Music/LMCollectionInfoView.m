@@ -123,8 +123,8 @@
 	if(hasRightText){
 		self.middleDividerView.hidden = NO;
 		
-		self.leftTextLabel.textAlignment = NSTextAlignmentCenter;
-		self.rightTextLabel.textAlignment = NSTextAlignmentCenter;
+		self.leftTextLabel.textAlignment = NSTextAlignmentRight;
+		self.rightTextLabel.textAlignment = NSTextAlignmentLeft;
 		self.middleDividerLabel.hidden = hasMiddleImage;
 		self.middleDividerImageView.hidden = !hasMiddleImage;
 		

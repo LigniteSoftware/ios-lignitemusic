@@ -33,8 +33,8 @@
 #import "LMProgressSlider.h"
 #import "LMBrowsingBar.h"
 
-//#define SKIP_ONBOARDING
-//#define SPEED_DEMON_MODE
+#define SKIP_ONBOARDING
+#define SPEED_DEMON_MODE
 
 @import SDWebImage;
 @import StoreKit;
@@ -96,28 +96,6 @@
 	return UIStatusBarAnimationSlide;
 }
 
-- (void)pause {
-	[self.musicPlayer pause];
-}
-
-- (void)play {
-	[NSTimer scheduledTimerWithTimeInterval:5.0
-									 target:self
-								   selector:@selector(pause)
-								   userInfo:nil
-									repeats:NO];
-	
-	NSArray *items = [self.musicPlayer queryCollectionsForMusicType:LMMusicTypePlaylists];
-	NSLog(@"Got %lu items.", (unsigned long)items.count);
-	
-	int random = rand() % items.count;
-	NSLog(@"%d", random);
-	LMMusicTrackCollection *collection = [items objectAtIndex:random];
-	[self.musicPlayer setNowPlayingCollection:collection];
-	[self.musicPlayer setNowPlayingTrack:collection.representativeItem];
-	[self.musicPlayer play];
-}
-
 - (void)openNowPlayingView {
 //	[self attachBrowsingAssistantToView:self.view];
 	
@@ -173,17 +151,52 @@ BOOL didAutomaticallyClose = NO;
 	NSLog(@"New source %@", source.title);
 	
 	switch(source.sourceID){
+		case LMIconArtists:
+		case LMIconGenres:
+		case LMIconPlaylists:
+		case LMIconComposers:
+		case LMIconCompilations:
 		case LMIconAlbums:{
-			self.albumView.hidden = NO;
-			[self.albumView reloadSourceSelectorInfo];
-			self.currentSource = self.albumView;
+			LMMusicType associatedMusicType = LMMusicTypeAlbums;
 			
-			self.browsingAssistant.browsingBar.letterTabBar.lettersDictionary =
-				[self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:self.albumView.browsingView.musicTrackCollections
-																 withAssociatedMusicType:LMMusicTypeAlbums];
-//			if(self.albumView.showingDetailView){
-//				[self.browsingAssistant close];
-//			}
+			switch(source.sourceID){
+				case LMIconArtists:
+					associatedMusicType = LMMusicTypeArtists;
+					break;
+				case LMIconAlbums:
+					associatedMusicType = LMMusicTypeAlbums;
+					break;
+				case LMIconPlaylists:
+					associatedMusicType = LMMusicTypePlaylists;
+					break;
+				case LMIconComposers:
+					associatedMusicType = LMMusicTypeComposers;
+					break;
+				case LMIconGenres:
+					associatedMusicType = LMMusicTypeGenres;
+					break;
+				case LMIconCompilations:
+					associatedMusicType = LMMusicTypeCompilations;
+					break;
+			}
+			
+			NSLog(@"Type %d", associatedMusicType);
+			
+			self.browsingView.musicTrackCollections = [[LMMusicPlayer sharedMusicPlayer] queryCollectionsForMusicType:associatedMusicType];
+			self.browsingView.musicType = associatedMusicType;
+			self.browsingView.hidden = NO;
+			[self.browsingView setup];
+			[self.browsingView layoutIfNeeded];
+			
+//			[self.albumView reloadSourceSelectorInfo];
+			self.currentSource = self.browsingView;
+//
+//			self.browsingAssistant.browsingBar.letterTabBar.lettersDictionary =
+//				[self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:self.browsingView.musicTrackCollections
+//																 withAssociatedMusicType:LMMusicTypeAlbums];
+////			if(self.albumView.showingDetailView){
+////				[self.browsingAssistant close];
+////			}
 			break;
 		}
 		case LMIconTitles: {
@@ -194,36 +207,6 @@ BOOL didAutomaticallyClose = NO;
 			self.browsingAssistant.browsingBar.letterTabBar.lettersDictionary =
 			[self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:@[self.titleView.musicTitles]
 															 withAssociatedMusicType:LMMusicTypeTitles];
-			break;
-		}
-		case LMIconPlaylists: {
-			self.playlistView.hidden = NO;
-			[self.playlistView reloadSourceSelectorInfo];
-			self.currentSource = self.playlistView;
-			
-			self.browsingAssistant.browsingBar.letterTabBar.lettersDictionary =
-			[self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:self.playlistView.browsingView.musicTrackCollections
-															 withAssociatedMusicType:LMMusicTypePlaylists];
-			break;
-		}
-		case LMIconGenres:{
-			self.genreView.hidden = NO;
-			[self.genreView reloadSourceSelectorInfo];
-			self.currentSource = self.genreView;
-			
-			self.browsingAssistant.browsingBar.letterTabBar.lettersDictionary =
-			[self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:self.genreView.browsingView.musicTrackCollections
-															 withAssociatedMusicType:LMMusicTypeGenres];
-			break;
-		}
-		case LMIconArtists: {
-			self.artistView.hidden = NO;
-			[self.artistView reloadSourceSelectorInfo];
-			self.currentSource = self.artistView;
-			
-			self.browsingAssistant.browsingBar.letterTabBar.lettersDictionary =
-			[self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:self.artistView.browsingView.musicTrackCollections
-															 withAssociatedMusicType:LMMusicTypeArtists];
 			break;
 		}
 		case LMIconSettings: {
@@ -576,16 +559,16 @@ BOOL didAutomaticallyClose = NO;
 						[pebbleManager attachToViewController:self];
 
 						NSArray *sourceTitles = @[
-												  @"Artists", @"Albums", @"Titles", @"Playlists", @"Genres", @"Settings", @"Report Bug"
+												  @"Artists", @"Albums", @"Titles", @"Playlists", @"Genres", @"Composers", @"Compilations", @"Settings", @"ReportBug"
 												  ];
 						NSArray *sourceSubtitles = @[
-													 @"", @"", @"", @"", @"", @"", @"Or send feedback"
+													 @"", @"", @"", @"", @"", @"", @"", @"", @"OrSendFeedback"
 													 ];
 						LMIcon sourceIcons[] = {
-							LMIconArtists, LMIconAlbums, LMIconTitles, LMIconPlaylists, LMIconGenres, LMIconSettings, LMIconBug
+							LMIconArtists, LMIconAlbums, LMIconTitles, LMIconPlaylists, LMIconGenres, LMIconComposers, LMIconCompilations, LMIconSettings, LMIconBug
 						};
 						BOOL notHighlight[] = {
-							NO, NO, NO, NO, NO, YES, YES
+							NO, NO, NO, NO, NO, NO, NO, YES, YES
 						};
 						
 						NSMutableArray *sources = [NSMutableArray new];
@@ -618,57 +601,18 @@ BOOL didAutomaticallyClose = NO;
 
 						[self.titleView setup];
 						self.titleView.hidden = YES;
-
-						//Playlist view
-
-						self.playlistView = [LMPlaylistView newAutoLayoutView];
-						self.playlistView.backgroundColor = [UIColor whiteColor];
-						self.playlistView.coreViewController = self;
-						[self.view addSubview:self.playlistView];
-
-						[self.playlistView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-						[self.heightConstraintArray addObject:[self.playlistView autoSetDimension:ALDimensionHeight toSize:self.view.frame.size.height]];
-						[self.playlistView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
-
-						[self.playlistView setup];
-						self.playlistView.hidden = YES;
-
-						//Genre view
-
-						self.genreView = [LMGenreView newAutoLayoutView];
-						self.genreView.backgroundColor = [UIColor whiteColor];
-						self.genreView.coreViewController = self;
-						[self.view addSubview:self.genreView];
-
-						[self.genreView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-						[self.heightConstraintArray addObject:[self.genreView autoSetDimension:ALDimensionHeight toSize:self.view.frame.size.height]];
-						[self.genreView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
-
-						[self.genreView setup];
-						self.genreView.hidden = YES;
-
-
-						self.artistView = [LMArtistView newAutoLayoutView];
-						self.artistView.backgroundColor = [UIColor whiteColor];
-						self.artistView.coreViewController = self;
-						[self.view addSubview:self.artistView];
-
-						[self.artistView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-						[self.heightConstraintArray addObject:[self.artistView autoSetDimension:ALDimensionHeight toSize:self.view.frame.size.height]];
-						[self.artistView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
-						
-						[self.artistView setup];
-						self.artistView.hidden = YES;
 						
 						
-						self.albumView = [LMAlbumView newAutoLayoutView];
-						self.albumView.coreViewController = self;
-						[self.view addSubview:self.albumView];
+						self.browsingView = [LMBrowsingView newAutoLayoutView];
+						self.browsingView.rootViewController = self;
+						[self.view addSubview:self.browsingView];
 						
-						[self.albumView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-						[self.heightConstraintArray addObject:[self.albumView autoSetDimension:ALDimensionHeight toSize:self.view.frame.size.height]];
-						[self.albumView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
-						self.albumView.hidden = YES;
+						[self.browsingView setup];
+						
+						[self.browsingView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+						[self.heightConstraintArray addObject:[self.browsingView autoSetDimension:ALDimensionHeight toSize:self.view.frame.size.height]];
+						[self.browsingView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
+						self.browsingView.hidden = YES;
 						
 
 						self.browsingAssistant = [[LMBrowsingAssistantView alloc]initForAutoLayout];

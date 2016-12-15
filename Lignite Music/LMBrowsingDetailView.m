@@ -155,15 +155,19 @@
 
 - (NSString*)titleForInfoView:(LMCollectionInfoView*)infoView {
 	switch(self.musicType){
+		case LMMusicTypeCompilations:
 		case LMMusicTypeGenres:
 		case LMMusicTypePlaylists: {
 			return self.musicTrackCollection.title;
 		}
 		case LMMusicTypeAlbums: {
-			return self.musicTrackCollection.representativeItem.albumTitle;
+			return self.musicTrackCollection.representativeItem.albumTitle ? self.musicTrackCollection.representativeItem.albumTitle : NSLocalizedString(@"UnknownAlbum", nil);
+		}
+		case LMMusicTypeComposers: {
+			return self.musicTrackCollection.representativeItem.composer ? self.musicTrackCollection.representativeItem.composer : NSLocalizedString(@"UnknownComposer", nil);
 		}
 		case LMMusicTypeArtists: {
-			return self.musicTrackCollection.representativeItem.artist;
+			return self.musicTrackCollection.representativeItem.artist ? self.musicTrackCollection.representativeItem.artist : NSLocalizedString(@"UnknownArtist", nil);
 		}
 		default:{
 			return nil;
@@ -173,6 +177,7 @@
 
 - (NSString*)leftTextForInfoView:(LMCollectionInfoView*)infoView {
 	switch(self.musicType){
+		case LMMusicTypeComposers:
 		case LMMusicTypeArtists: {
 			return [NSString stringWithFormat:@"%lu %@", (unsigned long)self.musicTrackCollection.numberOfAlbums, [NSLocalizedString(self.musicTrackCollection.numberOfAlbums == 1 ? @"Album" : @"Albums", nil) lowercaseString]];
 		}
@@ -180,6 +185,7 @@
 		case LMMusicTypePlaylists: {
 			return [NSString stringWithFormat:@"%ld %@", self.musicTrackCollection.count, NSLocalizedString(self.musicTrackCollection.count == 1 ? @"Song" : @"Songs", nil)];
 		}
+		case LMMusicTypeCompilations:
 		case LMMusicTypeAlbums: {
 			if(self.musicTrackCollection.variousArtists){
 				return NSLocalizedString(@"Various", nil);
@@ -194,6 +200,7 @@
 
 - (NSString*)rightTextForInfoView:(LMCollectionInfoView*)infoView {
 	switch(self.musicType){
+		case LMMusicTypeComposers:
 		case LMMusicTypeArtists: {
 			return [NSString stringWithFormat:@"%ld %@", self.musicTrackCollection.count, NSLocalizedString(self.musicTrackCollection.count == 1 ? @"Song" : @"Songs", nil)];
 		}
@@ -201,6 +208,7 @@
 		case LMMusicTypePlaylists: {
 			return nil;
 		}
+		case LMMusicTypeCompilations:
 		case LMMusicTypeAlbums: {
 			return [NSString stringWithFormat:@"%ld %@", self.musicTrackCollection.count, NSLocalizedString(self.musicTrackCollection.count == 1 ? @"Song" : @"Songs", nil)];
 		}
@@ -222,12 +230,14 @@
 			tiledAlbumCover.musicCollection = self.musicTrackCollection;
 			return tiledAlbumCover;
 		}
+		case LMMusicTypeCompilations:
 		case LMMusicTypeAlbums: {
 			UIImageView *imageView = [UIImageView newAutoLayoutView];
 			imageView.contentMode = UIViewContentModeScaleAspectFit;
 			imageView.image = [self.musicTrackCollection.representativeItem albumArt];
 			return imageView;
 		}
+		case LMMusicTypeComposers:
 		case LMMusicTypeArtists: {
 			UIImageView *imageView = [UIImageView newAutoLayoutView];
 			imageView.contentMode = UIViewContentModeScaleAspectFit;
@@ -246,7 +256,9 @@
 		case LMMusicTypePlaylists: {
 			return height ? 0.25 : 0.80;
 		}
+		case LMMusicTypeComposers:
 		case LMMusicTypeArtists:
+		case LMMusicTypeCompilations:
 		case LMMusicTypeAlbums: {
 			return height ? WINDOW_FRAME.size.width/WINDOW_FRAME.size.height : 1.0; //To fill to the edge of the screen
 		}
@@ -300,12 +312,14 @@
 
 - (UIImage*)iconForListEntry:(LMListEntry*)entry {
 	switch(self.musicType) {
+		case LMMusicTypeComposers:
 		case LMMusicTypeArtists:
 		case LMMusicTypeGenres:
 		case LMMusicTypePlaylists: {
 			LMMusicTrack *track = [self.musicTrackCollection.items objectAtIndex:entry.collectionIndex];
 			return [track albumArt];
 		}
+		case LMMusicTypeCompilations:
 		case LMMusicTypeAlbums: {
 			return nil;
 		}
