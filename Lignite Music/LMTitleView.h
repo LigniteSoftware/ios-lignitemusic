@@ -30,4 +30,9 @@
  */
 - (void)scrollToTrackWithPersistentID:(LMMusicTrackPersistentID)persistentID;
 
+/**
+ Rebuild the track collection of the title view.
+ */
+- (void)rebuildTrackCollection;
+
 @end

@@ -271,7 +271,6 @@
 - (void)sizeChangedToLargeSize:(BOOL)largeSize withHeight:(float)newHeight forBigListEntry:(LMBigListEntry*)bigListEntry {
 	if(largeSize){
 		self.largeSize = newHeight;
-		NSLog(@"Set");
 	}
 	[self.tableView reloadSubviewSizes];
 }

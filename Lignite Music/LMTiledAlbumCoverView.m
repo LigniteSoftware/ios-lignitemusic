@@ -267,12 +267,6 @@
 				int amountOfTilesX = (int)floorf(widthToUse/sideLength);
 				int amountOfTilesY = (int)floorf(heightToUse/sideLength);
 				
-				if(tiledAlbumCoverView.simpleMode){
-					amountOfTilesX = 2;
-					amountOfTilesY = 2;
-					tiledAlbumCoverView.amountOfAlbumsShowing = 4;
-				}
-				
 				if(tiledAlbumCoverView.uniqueAlbumCoversDictionary.count == 1){ //Improve for one album art
 					amountOfTilesX = 1;
 					amountOfTilesY = 1;

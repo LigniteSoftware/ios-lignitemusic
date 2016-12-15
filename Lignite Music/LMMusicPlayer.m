@@ -436,21 +436,22 @@ MPMediaGrouping associatedMediaTypes[] = {
 }
 
 - (void)mediaLibraryContentsChanged:(id)notification {
-	NSLog(@"Library changed!!!");
+	NSLog(@"Library changed, called by %@!!!", [[notification class] description]);
+	
 	for(int i = 0; i < self.delegatesSubscribedToLibraryDidChange.count; i++){
 		[[self.delegatesSubscribedToLibraryDidChange objectAtIndex:i] musicLibraryDidChange];
 	}
 	
-	if([self.libraryChangeTimer isValid]){
-		[self.libraryChangeTimer invalidate];
-	}
-	if([[[notification class] description] isEqualToString:@"NSDictionary"]){
-		self.libraryChangeTimer = [NSTimer scheduledTimerWithTimeInterval:0.5
-																   target:self
-																 selector:@selector(mediaLibraryContentsChanged:)
-																 userInfo:nil
-																  repeats:NO];
-	}
+//	if([self.libraryChangeTimer isValid]){
+//		[self.libraryChangeTimer invalidate];
+//	}
+//	if([[[notification class] description] isEqualToString:@"NSConcreteNotification"]){
+//		self.libraryChangeTimer = [NSTimer scheduledTimerWithTimeInterval:2.0
+//																   target:self
+//																 selector:@selector(mediaLibraryContentsChanged:)
+//																 userInfo:nil
+//																  repeats:NO];
+//	}
 }
 
 - (void)setSourceTitle:(NSString*)title {

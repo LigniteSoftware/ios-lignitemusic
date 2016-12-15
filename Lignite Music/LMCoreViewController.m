@@ -67,6 +67,13 @@
 
 @property LMSearchViewController *searchViewController;
 
+@property NSArray *musicCollectionsArray;
+
+/**
+ The time stamp for syncing.
+ */
+@property NSTimeInterval syncTimeStamp;
+
 @property BOOL loaded;
 
 @end
@@ -78,7 +85,76 @@
 }
 
 - (void)musicTrackDidChange:(LMMusicTrack *)newTrack {
-//	NSLog(@"Got new track, title %@", newTrack.title);
+//	NSLog(@"HEY! Got new track, title %@", newTrack.title);
+}
+
+- (void)musicLibraryDidChange {
+	NSLog(@"Changed library for core");
+	
+	__weak id weakSelf = self;
+	
+	dispatch_async(dispatch_get_global_queue(NSQualityOfServiceUserInitiated, 0), ^{
+		id strongSelf = weakSelf;
+		
+		if(!strongSelf){
+			return;
+		}
+		
+		LMCoreViewController *coreViewController = strongSelf;
+		
+		NSMutableArray *musicCollections = [NSMutableArray new];
+		
+		NSTimeInterval startTime = [[NSDate new] timeIntervalSince1970];
+		
+		coreViewController.syncTimeStamp = startTime;
+		
+		for(int i = 0; i <= LMMusicTypeCompilations; i++){
+			if(coreViewController.syncTimeStamp != startTime){
+				NSLog(@"Abandoning this thread, another sync notification has come in.");
+				return;
+			}
+			
+			LMMusicType musicType = i;
+			NSLog(@"Loading %d", musicType);
+			NSArray *shitpost = [coreViewController.musicPlayer queryCollectionsForMusicType:musicType];
+			[musicCollections addObject:shitpost];
+		}
+		
+		coreViewController.musicCollectionsArray = [NSArray arrayWithArray:musicCollections];
+		
+		NSTimeInterval endTime = [[NSDate new] timeIntervalSince1970];
+		
+		NSLog(@"Took %f seconds to complete sync.", endTime-startTime);
+		
+		dispatch_async(dispatch_get_main_queue(), ^{
+			[coreViewController reloadCurrentBrowsingView];
+		});
+	});
+}
+
+- (void)reloadCurrentBrowsingView {
+	if(self.currentSource == self.titleView){
+		[self.titleView rebuildTrackCollection];
+	}
+	else{
+		[self setupBrowsingViewWithMusicType:[self.currentSource musicType]];
+	}
+}
+
+- (void)setupBrowsingViewWithMusicType:(LMMusicType)musicType {
+	if(self.musicCollectionsArray){
+		NSLog(@"Loading music from cache.");
+		self.browsingView.musicTrackCollections = [self.musicCollectionsArray objectAtIndex:musicType];
+	}
+	else{
+		NSLog(@"Loading music directly.");
+		self.browsingView.musicTrackCollections = [[LMMusicPlayer sharedMusicPlayer] queryCollectionsForMusicType:musicType];
+	}
+	self.browsingView.musicType = musicType;
+	self.browsingView.hidden = NO;
+	
+	[self.browsingView setup];
+	[self.browsingView layoutIfNeeded];
 }
 
 - (BOOL)prefersStatusBarHidden {
@@ -156,7 +232,7 @@ BOOL didAutomaticallyClose = NO;
 		case LMIconPlaylists:
 		case LMIconComposers:
 		case LMIconCompilations:
-		case LMIconAlbums:{
+		case LMIconAlbums: {
 			LMMusicType associatedMusicType = LMMusicTypeAlbums;
 			
 			switch(source.sourceID){
@@ -182,11 +258,7 @@ BOOL didAutomaticallyClose = NO;
 			
 			NSLog(@"Type %d", associatedMusicType);
 			
-			self.browsingView.musicTrackCollections = [[LMMusicPlayer sharedMusicPlayer] queryCollectionsForMusicType:associatedMusicType];
-			self.browsingView.musicType = associatedMusicType;
-			self.browsingView.hidden = NO;
-			[self.browsingView setup];
-			[self.browsingView layoutIfNeeded];
+			[self setupBrowsingViewWithMusicType:associatedMusicType];
 			
 //			[self.albumView reloadSourceSelectorInfo];
 			self.currentSource = self.browsingView;
@@ -317,10 +389,13 @@ BOOL didAutomaticallyClose = NO;
 	NSArray *currentBuildChanges = @[
 									 @"Added search (finally!)",
 									 @"Added letter tab browsing",
+									 @"Added compilations",
+									 @"Added composers",
 									 @"Added new music progress bar",
 									 @"Added icon credits",
 									 @"Added license links in credits",
 									 @"Added new colour adapting layout in now playing",
+									 @"Added support for library syncing again",
 									 @"Fixed music sometimes not playing",
 									 @"Fixed crash on some older devices",
 									 @"Fixed tiled album cover lag (hi Mike!)",
@@ -666,6 +741,13 @@ BOOL didAutomaticallyClose = NO;
 						[UIView animateWithDuration:0.25 animations:^{
 							[self setNeedsStatusBarAppearanceUpdate];
 						}];
+						
+						[self musicLibraryDidChange];
+						
+//						[NSTimer scheduledTimerWithTimeInterval:5.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
+//							NSLog(@"Firing library shit");
+//							[self musicLibraryDidChange];
+//						}];
 					});
 					break;
 				}
