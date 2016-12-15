@@ -81,8 +81,9 @@ MPMediaGrouping associatedMediaTypes[] = {
 	MPMediaGroupingAlbum,
 	MPMediaGroupingTitle,
 	MPMediaGroupingPlaylist,
+	MPMediaGroupingGenre,
 	MPMediaGroupingComposer,
-	MPMediaGroupingGenre
+	MPMediaGroupingComposer //Compilations, actually. The queries adjust for this.
 };
 
 - (instancetype)init {
@@ -567,6 +568,7 @@ BOOL shuffleForDebug = NO;
 					}
 					break;
 				case LMMusicTypePlaylists:
+				case LMMusicTypeCompilations:
 					if(musicCollection.title){
 						trackLetter = [self firstLetterForString:musicCollection.title];
 					}
@@ -619,52 +621,6 @@ BOOL shuffleForDebug = NO;
 		}
 	}
 	
-//	return [NSArray arrayWithArray:lettersArray];
-	
-//	for(NSUInteger i = 0; i < collectionArray.count; i++){
-//		NSString *letter = @"?";
-//		
-//		LMMusicTrackCollection *collection = [collectionArray objectAtIndex:i];
-//		LMMusicTrack *representativeTrack = collection.representativeItem;
-//		
-//		switch(musicType){
-//			case LMMusicTypeArtists:
-//				if(representativeTrack.artist){
-//					letter = [self firstLetterForString:representativeTrack.artist];
-//				}
-//				break;
-//			case LMMusicTypeAlbums:
-//				if(representativeTrack.albumTitle){
-//					letter = [self firstLetterForString:representativeTrack.albumTitle];
-//				}
-//				break;
-//			case LMMusicTypeTitles:
-//				if(representativeTrack.title){
-//					letter = [self firstLetterForString:representativeTrack.title];
-//				}
-//				break;
-//			case LMMusicTypePlaylists:
-//				if(collection.title){
-//					letter = [self firstLetterForString:collection.title];
-//				}
-//				break;
-//			case LMMusicTypeComposers:
-//				if(representativeTrack.composer){
-//					letter = [self firstLetterForString:representativeTrack.composer];
-//				}
-//				break;
-//			case LMMusicTypeGenres:
-//				if(representativeTrack.genre){
-//					letter = [self firstLetterForString:representativeTrack.genre];
-//				}
-//				break;
-//		}
-//		
-//		if(![[lettersDictionary allKeys] containsObject:letter]){
-//			[lettersDictionary setObject:[NSNumber numberWithUnsignedInteger:i] forKey:letter];
-//		}
-//	}
-	
 	return [NSDictionary dictionaryWithDictionary:lettersDictionary];
 }
 
@@ -689,6 +645,9 @@ BOOL shuffleForDebug = NO;
 		if(associatedGrouping == MPMediaGroupingGenre) {
 			trackCollection.title = trackCollection.representativeItem.genre;
 		}
+		if(musicType == LMMusicTypeCompilations){
+			trackCollection.title = trackCollection.representativeItem.albumTitle;
+		}
 		
 		if(trackCollection.count > 0){
 			[musicTracks addObject:trackCollection];
@@ -708,6 +667,7 @@ BOOL shuffleForDebug = NO;
 			sortKey = @"representativeItem.title";
 			break;
 		case LMMusicTypePlaylists:
+		case LMMusicTypeCompilations:
 			sortKey = @"title";
 			break;
 		case LMMusicTypeComposers:
@@ -737,32 +697,39 @@ BOOL shuffleForDebug = NO;
 //		NSTimeInterval startingTime = [[NSDate date] timeIntervalSince1970];
 //		NSLog(@"Querying items for LMMusicType %d...", musicType);
 		
+		BOOL isCompilations = musicType == LMMusicTypeCompilations;
+		
 		MPMediaQuery *query = nil;
 		MPMediaGrouping associatedGrouping = associatedMediaTypes[musicType];
 		
-		switch(associatedGrouping){
-			case MPMediaGroupingArtist:
-				query = [MPMediaQuery artistsQuery];
-				break;
-			case MPMediaGroupingAlbum:
-				query = [MPMediaQuery albumsQuery];
-				break;
-			case MPMediaGroupingTitle:
-				query = [MPMediaQuery songsQuery];
-				break;
-			case MPMediaGroupingPlaylist:
-				query = [MPMediaQuery playlistsQuery];
-				break;
-			case MPMediaGroupingComposer:
-				query = [MPMediaQuery composersQuery];
-				break;
-			case MPMediaGroupingGenre:
-				query = [MPMediaQuery genresQuery];
-				break;
-			default:
-				query = [MPMediaQuery songsQuery];
-				NSLog(@"Defaulting to songs query!");
-				break;
+		if(isCompilations){
+			query = [MPMediaQuery compilationsQuery];
+		}
+		else{
+			switch(associatedGrouping){
+				case MPMediaGroupingArtist:
+					query = [MPMediaQuery artistsQuery];
+					break;
+				case MPMediaGroupingAlbum:
+					query = [MPMediaQuery albumsQuery];
+					break;
+				case MPMediaGroupingTitle:
+					query = [MPMediaQuery songsQuery];
+					break;
+				case MPMediaGroupingPlaylist:
+					query = [MPMediaQuery playlistsQuery];
+					break;
+				case MPMediaGroupingComposer:
+					query = [MPMediaQuery composersQuery];
+					break;
+				case MPMediaGroupingGenre:
+					query = [MPMediaQuery genresQuery];
+					break;
+				default:
+					query = [MPMediaQuery songsQuery];
+					NSLog(@"Defaulting to songs query!");
+					break;
+			}
 		}
 
 		MPMediaPropertyPredicate *musicFilterPredicate = [MPMediaPropertyPredicate predicateWithValue:[NSNumber numberWithInteger:MPMediaTypeMusic]

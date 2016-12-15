@@ -10,19 +10,16 @@
 #import "LMAppDelegate.h"
 #import "LMCoreViewController.h"
 #import "LMMusicPlayer.h"
-#import "LMAlbumView.h"
 #import "LMNowPlayingViewController.h"
+#import "LMBrowsingView.h"
 #import "LMBrowsingAssistantView.h"
 #import "LMTitleView.h"
 #import "LMSource.h"
 #import "LMExtras.h"
-#import "LMPlaylistView.h"
-#import "LMGenreView.h"
 #import "UIImage+AverageColour.h"
 #import "UIColor+isLight.h"
 #import "LMSettings.h"
 #import "LMGuideViewPagerController.h"
-#import "LMArtistView.h"
 #import "LMImageManager.h"
 #import "LMSettingsView.h"
 #import "LMSettingsViewController.h"
@@ -36,7 +33,7 @@
 #import "LMProgressSlider.h"
 #import "LMBrowsingBar.h"
 
-#define SKIP_ONBOARDING
+//#define SKIP_ONBOARDING
 //#define SPEED_DEMON_MODE
 
 @import SDWebImage;
@@ -48,11 +45,8 @@
 
 @property LMNowPlayingViewController *nowPlayingViewController;
 
-@property LMAlbumView *albumView;
+@property LMBrowsingView *browsingView;
 @property LMTitleView *titleView;
-@property LMPlaylistView *playlistView;
-@property LMGenreView *genreView;
-@property LMArtistView *artistView;
 
 @property LMSettingsView *settingsView;
 

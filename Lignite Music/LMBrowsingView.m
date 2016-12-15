@@ -71,6 +71,11 @@
 					index = i;
 				}
 				break;
+			case LMMusicTypeCompilations:
+				if(persistentID == trackCollection.persistentID){
+					index = i;
+				}
+				break;
 			default:
 				NSLog(@"Unsupported search result in browsing view.");
 				break;
@@ -122,6 +127,18 @@
 			pluralString = @"Artists";
 			break;
 		}
+		case LMMusicTypeComposers: {
+			titleString = @"Composers";
+			singlularString = @"Composer";
+			pluralString = @"Composers";
+			break;
+		}
+		case LMMusicTypeCompilations: {
+			titleString = @"Compilations";
+			singlularString = @"Compilation";
+			pluralString = @"Compilations";
+			break;
+		}
 		default: {
 			titleString = @"Unknowns";
 			singlularString = @"Unknown";
@@ -169,6 +186,7 @@
 		case LMMusicTypeGenres: {
 			return collection.representativeItem.genre ? collection.representativeItem.genre : NSLocalizedString(@"UnknownGenre", nil);
 		}
+		case LMMusicTypeCompilations:
 		case LMMusicTypePlaylists:{
 			return collection.title;
 		}
@@ -177,6 +195,9 @@
 		}
 		case LMMusicTypeArtists: {
 			return collection.representativeItem.artist ? collection.representativeItem.artist : NSLocalizedString(@"UnknownArtist", nil);
+		}
+		case LMMusicTypeComposers: {
+			return collection.representativeItem.composer ? collection.representativeItem.composer : NSLocalizedString(@"UnknownComposer", nil);
 		}
 		default: {
 			return nil;
@@ -191,10 +212,12 @@
 		case LMMusicTypeArtists: {
 			return [NSString stringWithFormat:@"%lu %@", (unsigned long)collection.numberOfAlbums, [NSLocalizedString(collection.numberOfAlbums == 1 ? @"Album" : @"Albums", nil) lowercaseString]];
 		}
+		case LMMusicTypeComposers:
 		case LMMusicTypeGenres:
 		case LMMusicTypePlaylists:
+		case LMMusicTypeCompilations:
 		{
-			return [NSString stringWithFormat:@"%ld %@", collection.count, NSLocalizedString(collection.count == 1 ? @"Song" : @"Songs", nil)];
+			return [NSString stringWithFormat:@"%ld %@", (unsigned long)collection.count, NSLocalizedString(collection.count == 1 ? @"Song" : @"Songs", nil)];
 		}
 		case LMMusicTypeAlbums: {
 			if(collection.variousArtists){
@@ -212,16 +235,18 @@
 	LMMusicTrackCollection *collection = [self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex];
 	
 	switch(self.musicType){
+		case LMMusicTypeComposers:
 		case LMMusicTypeArtists: {
-			return [NSString stringWithFormat:@"%ld %@", collection.count, NSLocalizedString(collection.count == 1 ? @"Song" : @"Songs", nil)];
+			return [NSString stringWithFormat:@"%ld %@", (unsigned long)collection.count, NSLocalizedString(collection.count == 1 ? @"Song" : @"Songs", nil)];
 		}
 		case LMMusicTypeGenres:
 		case LMMusicTypePlaylists:
+		case LMMusicTypeCompilations:
 		{
 			return nil;
 		}
 		case LMMusicTypeAlbums: {
-			return [NSString stringWithFormat:@"%lu %@", collection.count, NSLocalizedString(collection.count == 1 ? @"Song" : @"Songs", nil)];
+			return [NSString stringWithFormat:@"%lu %@", (unsigned long)collection.count, NSLocalizedString(collection.count == 1 ? @"Song" : @"Songs", nil)];
 		}
 		default: {
 			return nil;
@@ -234,6 +259,8 @@
 		case LMMusicTypeArtists:
 		case LMMusicTypeGenres:
 		case LMMusicTypeAlbums:
+		case LMMusicTypeComposers:
+		case LMMusicTypeCompilations:
 		case LMMusicTypePlaylists: {
 			return nil;
 		}
@@ -333,6 +360,7 @@
 	[bigListEntry.queue cancelAllOperations];
 	
 	switch(self.musicType){
+		case LMMusicTypeComposers:
 		case LMMusicTypeArtists: {
 			UIImageView *imageView = (UIImageView*)subview;
 			
@@ -353,6 +381,7 @@
 			[bigListEntry.queue addOperation:operation];
 			break;
 		}
+		case LMMusicTypeCompilations:
 		case LMMusicTypeGenres:
 		case LMMusicTypePlaylists: {
 			LMTiledAlbumCoverView *tiledAlbumCover = subview;
@@ -388,6 +417,7 @@
 
 - (id)contentSubviewForBigListEntry:(LMBigListEntry*)bigListEntry {
 	switch(self.musicType){
+		case LMMusicTypeComposers:
 		case LMMusicTypeArtists: {
 			UIImageView *imageView = [UIImageView newAutoLayoutView];
 			imageView.image = [[self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex].representativeItem artistImage];
@@ -398,6 +428,7 @@
 			imageView.layer.shadowOpacity = 0.25f;
 			return imageView;
 		}
+		case LMMusicTypeCompilations:
 		case LMMusicTypeGenres:
 		case LMMusicTypePlaylists: {
 			LMTiledAlbumCoverView *tiledAlbumCover = [LMTiledAlbumCoverView newAutoLayoutView];
