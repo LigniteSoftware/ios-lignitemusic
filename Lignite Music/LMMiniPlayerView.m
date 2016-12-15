@@ -208,7 +208,7 @@
 	[self.trackInfoView autoMatchDimension:ALDimensionHeight
 							   toDimension:ALDimensionHeight
 									ofView:self.trackInfoAndDurationBackgroundView
-							withMultiplier:(7.5/10.0)];
+							withMultiplier:(7.0/10.0)];
 	
 	
 	self.progressSlider = [LMProgressSlider newAutoLayoutView];

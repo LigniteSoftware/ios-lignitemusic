@@ -356,7 +356,7 @@
 		case LMMusicTypeGenres:
 		case LMMusicTypePlaylists: {
 			LMTiledAlbumCoverView *tiledAlbumCover = subview;
-			
+//			tiledAlbumCover.simpleMode = YES;
 			tiledAlbumCover.musicCollection = [self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex];
 			break;
 		}
@@ -402,6 +402,7 @@
 		case LMMusicTypePlaylists: {
 			LMTiledAlbumCoverView *tiledAlbumCover = [LMTiledAlbumCoverView newAutoLayoutView];
 			tiledAlbumCover.musicCollection = [self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex];
+//			tiledAlbumCover.simpleMode = YES;
 			return tiledAlbumCover;
 		}
 		case LMMusicTypeAlbums: {

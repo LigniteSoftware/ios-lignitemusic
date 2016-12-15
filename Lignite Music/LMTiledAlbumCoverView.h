@@ -15,4 +15,9 @@
  */
 @property LMMusicTrackCollection *musicCollection;
 
+/**
+ The simple mode which will lay out the view in 2*2 square and reduce lag. Temporary patch.
+ */
+@property BOOL simpleMode;
+
 @end

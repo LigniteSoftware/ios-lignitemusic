@@ -22,7 +22,6 @@
 @property NSMutableDictionary *uniqueAlbumCoversDictionary;
 
 @property int amountOfAlbumsShowing;
-@property BOOL shouldRegenerate;
 
 @property LMOperationQueue *queue;
 
@@ -39,11 +38,7 @@
 - (void)setMusicCollection:(LMMusicTrackCollection *)musicCollection {
 	_musicCollection = musicCollection;
 	
-	self.shouldRegenerate = YES;
-	
 	if(self.frame.size.width > 0){
-		self.shouldRegenerate = NO;
-		
 		for(int i = 0; i < self.tilesArray.count; i++){
 			UIView *tile = [self.tilesArray objectAtIndex:i];
 			tile.frame = CGRectZero;
@@ -56,7 +51,7 @@
 		[self.rootView setHidden:YES];
 		
 		self.tilesArray = nil;
-
+		
 		[self regenerate];
 	}
 }
@@ -227,186 +222,205 @@
 
 - (void)regenerate {
 	if(!self.tilesArray){
-		self.uniqueAlbumCoversDictionary = [self uniqueAlbumsInCollection];
-		
 		self.tilesArray = [NSMutableArray new];
 		
-		float amountOfTiles = self.uniqueAlbumCoversDictionary.count - (self.uniqueAlbumCoversDictionary.count % 4); //Round the number off to a multiple of four
-		if(amountOfTiles < 4){
-			amountOfTiles = 4;
-		}
-		
-//		NSLog(@"%f tiles", amountOfTiles);
-		
-		self.amountOfAlbumsShowing = amountOfTiles;
-		
-		float smallerDimension = MIN(self.frame.size.width, self.frame.size.height);
-		float largerDimension = MAX(self.frame.size.width, self.frame.size.height);
-		float differencePercentage = smallerDimension/largerDimension;
-		BOOL maintainSquare = differencePercentage > 0.75;
-		//		BOOL smallerDimensionIsWidth = (smallerDimension == self.frame.size.width);
-		
-		float widthToUse = maintainSquare ? smallerDimension : self.frame.size.width;
-		float heightToUse = maintainSquare ? smallerDimension : self.frame.size.height;
-		
-		if(maintainSquare){
-			largerDimension = smallerDimension;
-		}
-		
-		float areaTotal = widthToUse * heightToUse;
-		float areaPerTile = areaTotal/amountOfTiles;
-		float sideLength = sqrtf(areaPerTile);
-		
-		int amountOfTilesX = (int)floorf(widthToUse/sideLength);
-		int amountOfTilesY = (int)floorf(heightToUse/sideLength);
-		
-		while((amountOfTilesX*(sideLength+1) < widthToUse) && (amountOfTilesY*(sideLength+1) < heightToUse)){
-			sideLength++;
-		}
-		
-		int actualAmountOfTiles = (amountOfTilesX * amountOfTilesY);
-		
-		CGSize tileSize = CGSizeMake(sideLength, sideLength);
-		
-//		NSLog(@"Smaller %f larger %f difference %f maintainSquare %d", smallerDimension, largerDimension, differencePercentage, maintainSquare);
-		
-//		NSLog(@"\nLMTiledAlbumCover Generation\nFrame: %@\nAmount of items in collection: %d\nAmount of tiles generated: %f\nArea total: %f\nArea per tile: %f\nTile size: %@\nAmount of tiles X, Y: %d, %d", NSStringFromCGRect(self.frame), (int)self.musicCollection.count, amountOfTiles, areaTotal, areaPerTile, NSStringFromCGSize(tileSize), amountOfTilesX, amountOfTilesY);
-		
-		self.rootView = [UIView new];
-		self.rootView.backgroundColor = [UIColor blackColor];
-		self.rootView.layer.shadowColor = [UIColor blackColor].CGColor;
-		self.rootView.layer.shadowRadius = WINDOW_FRAME.size.width/99;
-		self.rootView.layer.shadowOffset = CGSizeMake(0, self.rootView.layer.shadowRadius/2);
-		self.rootView.layer.shadowOpacity = 0.5f;
-		[self addSubview:self.rootView];
-		
-		CGSize rootViewSize = CGSizeMake(amountOfTilesX*sideLength, amountOfTilesY*sideLength);
-		CGPoint rootViewPosition = CGPointMake((self.frame.size.width-rootViewSize.width)/2, (self.frame.size.height-rootViewSize.height)/2);
-		self.rootView.frame = CGRectMake(rootViewPosition.x, rootViewPosition.y, rootViewSize.width, rootViewSize.height);
-		
-		for(int y = 0; y < amountOfTilesY; y++){
-			BOOL firstRow = (y == 0);
-			UIImageView *topElement = firstRow ? self.rootView : [self.tilesArray objectAtIndex:(y*amountOfTilesX)-1];
-			for(int x = 0; x < amountOfTilesX; x++){
-				BOOL firstColumn = (x == 0);
-				UIImageView *sideElement = firstColumn ? self.rootView : [self.tilesArray objectAtIndex:x-1];
-				
-				//				int tileIndex = (y*amountOfTilesX)+x;
-				
-				//				NSLog(@"Index of tile %d Column %d Row %d", tileIndex, x, y);
-				
-				UIImageView *testView = [UIImageView new];
-				testView.backgroundColor = [UIColor colorWithRed:0.2*((float)(arc4random_uniform(5))+1.0) green:0.2*((float)(arc4random_uniform(5))+1.0) blue:0.2*((float)(arc4random_uniform(5))+1.0) alpha:1.0];
-//				testView.image = [LMAppIcon imageForIcon:LMIconNoAlbumArt];
-				testView.contentMode = UIViewContentModeScaleAspectFit;
-				[self.rootView addSubview:testView];
-				
-//				[testView autoPinEdge:ALEdgeTop toEdge:firstRow ? ALEdgeTop : ALEdgeBottom ofView:topElement];
-//				[testView autoPinEdge:ALEdgeLeading toEdge:firstColumn ? ALEdgeLeading : ALEdgeTrailing ofView:sideElement];
-//				[testView autoSetDimension:ALDimensionHeight toSize:sideLength];
-//				[testView autoSetDimension:ALDimensionWidth toSize:sideLength];
-				
-				CGSize testViewSize = CGSizeMake(sideLength, sideLength);
-				CGPoint testViewPosition = CGPointMake(0, 0);
-				
-				testViewPosition.x = firstColumn ? 0 : (sideElement.frame.origin.x+sideElement.frame.size.width);
-				testViewPosition.y = firstRow ? 0 : (topElement.frame.origin.y+topElement.frame.size.height);
-				
-				testView.frame = CGRectMake(testViewPosition.x, testViewPosition.y, testViewSize.width, testViewSize.height);
-				
-				[self.tilesArray addObject:testView];
+		__weak id weakSelf = self;
+
+		dispatch_async(dispatch_get_global_queue(NSQualityOfServiceUserInteractive, 0), ^{
+			id strongSelf = weakSelf;
+			
+			if (!strongSelf) {
+				return;
 			}
-		}
-		
-		self.bigTileArray = [NSMutableArray new];
-		
-		if(self.tilesArray.count > 4 || self.uniqueAlbumCoversDictionary.count == 1){
-			int amountOfBigCovers = self.uniqueAlbumCoversDictionary.count == 1 ? 1 : floor(sqrt(self.tilesArray.count)/2);
 			
-			NSLog(@"Will generate %d big covers", amountOfBigCovers);
+			LMTiledAlbumCoverView *tiledAlbumCoverView = strongSelf;
 			
-			if(amountOfTilesX > 1 && amountOfTilesY > 1){
-				for(int i = 0; i < amountOfBigCovers; i++){
-					int finalIndex = -1;
-					BOOL validIndex = NO;
-					int attempts = 0;
-					while(!validIndex){
-						BOOL bigRedFlagPleaseWaveIfTrouble = NO;
+			tiledAlbumCoverView.uniqueAlbumCoversDictionary = [tiledAlbumCoverView uniqueAlbumsInCollection];
+			
+			dispatch_async(dispatch_get_main_queue(), ^{
+				float amountOfTiles = tiledAlbumCoverView.uniqueAlbumCoversDictionary.count - (tiledAlbumCoverView.uniqueAlbumCoversDictionary.count % 4); //Round the number off to a multiple of four
+				if(amountOfTiles < 4){
+					amountOfTiles = 4;
+				}
+				
+				//		NSLog(@"%f tiles", amountOfTiles);
+				
+				tiledAlbumCoverView.amountOfAlbumsShowing = amountOfTiles;
+				
+				float smallerDimension = MIN(tiledAlbumCoverView.frame.size.width, tiledAlbumCoverView.frame.size.height);
+				float largerDimension = MAX(tiledAlbumCoverView.frame.size.width, tiledAlbumCoverView.frame.size.height);
+				float differencePercentage = smallerDimension/largerDimension;
+				BOOL maintainSquare = differencePercentage > 0.75;
+				//		BOOL smallerDimensionIsWidth = (smallerDimension == tiledAlbumCoverView.frame.size.width);
+				
+				float widthToUse = maintainSquare ? smallerDimension : tiledAlbumCoverView.frame.size.width;
+				float heightToUse = maintainSquare ? smallerDimension : tiledAlbumCoverView.frame.size.height;
+				
+				if(maintainSquare){
+					largerDimension = smallerDimension;
+				}
+				
+				float areaTotal = widthToUse * heightToUse;
+				float areaPerTile = areaTotal/amountOfTiles;
+				float sideLength = sqrtf(areaPerTile);
+				
+				int amountOfTilesX = (int)floorf(widthToUse/sideLength);
+				int amountOfTilesY = (int)floorf(heightToUse/sideLength);
+				
+				if(tiledAlbumCoverView.simpleMode){
+					amountOfTilesX = 2;
+					amountOfTilesY = 2;
+					tiledAlbumCoverView.amountOfAlbumsShowing = 4;
+				}
+				
+				while((amountOfTilesX*(sideLength+1) < widthToUse) && (amountOfTilesY*(sideLength+1) < heightToUse)){
+					sideLength++;
+				}
+				
+				int actualAmountOfTiles = (amountOfTilesX * amountOfTilesY);
+				
+				CGSize tileSize = CGSizeMake(sideLength, sideLength);
+				
+				//		NSLog(@"Smaller %f larger %f difference %f maintainSquare %d", smallerDimension, largerDimension, differencePercentage, maintainSquare);
+				
+//				NSLog(@"\nLMTiledAlbumCover %@ Generation\nFrame: %@\nAmount of items in collection: %d\nAmount of tiles generated: %f\nArea total: %f\nArea per tile: %f\nTile size: %@\nAmount of tiles X, Y: %d, %d", tiledAlbumCoverView, NSStringFromCGRect(tiledAlbumCoverView.frame), (int)tiledAlbumCoverView.musicCollection.count, amountOfTiles, areaTotal, areaPerTile, NSStringFromCGSize(tileSize), amountOfTilesX, amountOfTilesY);
+				
+				tiledAlbumCoverView.rootView = [UIView new];
+				tiledAlbumCoverView.rootView.backgroundColor = [UIColor blackColor];
+				tiledAlbumCoverView.rootView.layer.shadowColor = [UIColor blackColor].CGColor;
+				tiledAlbumCoverView.rootView.layer.shadowRadius = WINDOW_FRAME.size.width/99;
+				tiledAlbumCoverView.rootView.layer.shadowOffset = CGSizeMake(0, tiledAlbumCoverView.rootView.layer.shadowRadius/2);
+				tiledAlbumCoverView.rootView.layer.shadowOpacity = 0.5f;
+				[tiledAlbumCoverView addSubview:tiledAlbumCoverView.rootView];
+				
+				CGSize rootViewSize = CGSizeMake(amountOfTilesX*sideLength, amountOfTilesY*sideLength);
+				CGPoint rootViewPosition = CGPointMake((tiledAlbumCoverView.frame.size.width-rootViewSize.width)/2, (tiledAlbumCoverView.frame.size.height-rootViewSize.height)/2);
+				tiledAlbumCoverView.rootView.frame = CGRectMake(rootViewPosition.x, rootViewPosition.y, rootViewSize.width, rootViewSize.height);
+				
+				for(int y = 0; y < amountOfTilesY; y++){
+					BOOL firstRow = (y == 0);
+					UIImageView *topElement = firstRow ? tiledAlbumCoverView.rootView : [tiledAlbumCoverView.tilesArray objectAtIndex:(y*amountOfTilesX)-1];
+					for(int x = 0; x < amountOfTilesX; x++){
+						BOOL firstColumn = (x == 0);
+						UIImageView *sideElement = firstColumn ? tiledAlbumCoverView.rootView : [tiledAlbumCoverView.tilesArray objectAtIndex:x-1];
 						
-						attempts++;
+						//				int tileIndex = (y*amountOfTilesX)+x;
 						
-						int indexOfBigTile = arc4random_uniform(actualAmountOfTiles);
-						int columnOfBigTile = indexOfBigTile % amountOfTilesX;
-						int rowOfBigTile = (indexOfBigTile-columnOfBigTile)/amountOfTilesY;
-						//						NSLog(@"\nIndex of big tile %d\nColumn %d\nRow %d", indexOfBigTile, columnOfBigTile, rowOfBigTile);
+						//				NSLog(@"Index of tile %d Column %d Row %d", tileIndex, x, y);
 						
-						if((columnOfBigTile+1) > (amountOfTilesX-1) || (rowOfBigTile+1) > (amountOfTilesY-1)){
-							bigRedFlagPleaseWaveIfTrouble = YES;
-							//							NSLog(@"Index is on the edge, rejecting");
-						}
-						if(actualAmountOfTiles == 16 && indexOfBigTile == 5){ //Prevents centering of big album art in 16 tile square view
-							bigRedFlagPleaseWaveIfTrouble = YES;
-							//							NSLog(@"Index is cockblock, rejecting");
-						}
-						if(!bigRedFlagPleaseWaveIfTrouble){
-							for(int otherBigTileIndex = 0; otherBigTileIndex < self.bigTileArray.count; otherBigTileIndex++){
-								UIImageView *otherBigTile = [self.bigTileArray objectAtIndex:otherBigTileIndex];
+						UIImageView *testView = [UIImageView new];
+						testView.backgroundColor = [UIColor whiteColor]; //[UIColor colorWithRed:0.2*((float)(arc4random_uniform(5))+1.0) green:0.2*((float)(arc4random_uniform(5))+1.0) blue:0.2*((float)(arc4random_uniform(5))+1.0) alpha:1.0];
+						//				testView.image = [LMAppIcon imageForIcon:LMIconNoAlbumArt];
+						testView.contentMode = UIViewContentModeScaleAspectFit;
+						[tiledAlbumCoverView.rootView addSubview:testView];
+						
+						//				[testView autoPinEdge:ALEdgeTop toEdge:firstRow ? ALEdgeTop : ALEdgeBottom ofView:topElement];
+						//				[testView autoPinEdge:ALEdgeLeading toEdge:firstColumn ? ALEdgeLeading : ALEdgeTrailing ofView:sideElement];
+						//				[testView autoSetDimension:ALDimensionHeight toSize:sideLength];
+						//				[testView autoSetDimension:ALDimensionWidth toSize:sideLength];
+						
+						CGSize testViewSize = CGSizeMake(sideLength, sideLength);
+						CGPoint testViewPosition = CGPointMake(0, 0);
+						
+						testViewPosition.x = firstColumn ? 0 : (sideElement.frame.origin.x+sideElement.frame.size.width);
+						testViewPosition.y = firstRow ? 0 : (topElement.frame.origin.y+topElement.frame.size.height);
+						
+						testView.frame = CGRectMake(testViewPosition.x, testViewPosition.y, testViewSize.width, testViewSize.height);
+						
+						[tiledAlbumCoverView.tilesArray addObject:testView];
+					}
+				}
+				
+				tiledAlbumCoverView.bigTileArray = [NSMutableArray new];
+				
+				if(tiledAlbumCoverView.tilesArray.count > 4 || tiledAlbumCoverView.uniqueAlbumCoversDictionary.count == 1){
+					int amountOfBigCovers = tiledAlbumCoverView.uniqueAlbumCoversDictionary.count == 1 ? 1 : floor(sqrt(tiledAlbumCoverView.tilesArray.count)/2);
+										
+					if(amountOfTilesX > 1 && amountOfTilesY > 1){
+						for(int i = 0; i < amountOfBigCovers; i++){
+							int finalIndex = -1;
+							BOOL validIndex = NO;
+							int attempts = 0;
+							while(!validIndex){
+								BOOL bigRedFlagPleaseWaveIfTrouble = NO;
 								
-								int indexesToCheck[4] = {
-									indexOfBigTile, indexOfBigTile+1,
-									indexOfBigTile+amountOfTilesX, indexOfBigTile+amountOfTilesX+1
-								};
-								for(int otherViewIndex = 0; otherViewIndex < 4; otherViewIndex++){
-									UIImageView *otherView = [self.tilesArray objectAtIndex:indexesToCheck[otherViewIndex]];
-									if([otherView isEqual:otherBigTile]){
-										//										NSLog(@"Loop %d: Index is taken by another big tile at index %d, rejecting", otherViewIndex, indexesToCheck[otherViewIndex]);
-										bigRedFlagPleaseWaveIfTrouble = YES;
+								attempts++;
+								
+								int indexOfBigTile = arc4random_uniform(actualAmountOfTiles);
+								int columnOfBigTile = indexOfBigTile % amountOfTilesX;
+								int rowOfBigTile = (indexOfBigTile-columnOfBigTile)/amountOfTilesY;
+								//						NSLog(@"\nIndex of big tile %d\nColumn %d\nRow %d", indexOfBigTile, columnOfBigTile, rowOfBigTile);
+								
+								if((columnOfBigTile+1) > (amountOfTilesX-1) || (rowOfBigTile+1) > (amountOfTilesY-1)){
+									bigRedFlagPleaseWaveIfTrouble = YES;
+									//							NSLog(@"Index is on the edge, rejecting");
+								}
+								if(actualAmountOfTiles == 16 && indexOfBigTile == 5){ //Prevents centering of big album art in 16 tile square view
+									bigRedFlagPleaseWaveIfTrouble = YES;
+									//							NSLog(@"Index is cockblock, rejecting");
+								}
+								if(!bigRedFlagPleaseWaveIfTrouble){
+									for(int otherBigTileIndex = 0; otherBigTileIndex < tiledAlbumCoverView.bigTileArray.count; otherBigTileIndex++){
+										UIImageView *otherBigTile = [tiledAlbumCoverView.bigTileArray objectAtIndex:otherBigTileIndex];
+										
+										int indexesToCheck[4] = {
+											indexOfBigTile, indexOfBigTile+1,
+											indexOfBigTile+amountOfTilesX, indexOfBigTile+amountOfTilesX+1
+										};
+										for(int otherViewIndex = 0; otherViewIndex < 4; otherViewIndex++){
+											UIImageView *otherView = [tiledAlbumCoverView.tilesArray objectAtIndex:indexesToCheck[otherViewIndex]];
+											if([otherView isEqual:otherBigTile]){
+												//										NSLog(@"Loop %d: Index is taken by another big tile at index %d, rejecting", otherViewIndex, indexesToCheck[otherViewIndex]);
+												bigRedFlagPleaseWaveIfTrouble = YES;
+											}
+										}
 									}
+								}
+								if(!bigRedFlagPleaseWaveIfTrouble){
+									validIndex = YES;
+									finalIndex = indexOfBigTile;
+									//							NSLog(@"Valid index @ %d", indexOfBigTile);
+								}
+								if(attempts > 50){
+									validIndex = YES;
+									//							NSLog(@"Giving up hope.");
+								}
+							}
+							if(finalIndex > -1){
+								UIImageView *topLeftCornerView = [tiledAlbumCoverView.tilesArray objectAtIndex:finalIndex];
+								
+								UIImageView *bigTileView = [UIImageView new];
+								bigTileView.backgroundColor = [UIColor whiteColor]; //[UIColor colorWithRed:0.2*((float)(arc4random_uniform(5))+1.0) green:0.2*((float)(arc4random_uniform(5))+1.0) blue:0.2*((float)(arc4random_uniform(5))+1.0) alpha:1.0];
+								[tiledAlbumCoverView.rootView addSubview:bigTileView];
+								
+								CGSize bigTileViewSize = CGSizeMake(tileSize.height*2, tileSize.height*2);
+								CGPoint bigTileViewPosition = CGPointMake(topLeftCornerView.frame.origin.x, topLeftCornerView.frame.origin.y);
+								
+								bigTileView.frame = CGRectMake(bigTileViewPosition.x, bigTileViewPosition.y, bigTileViewSize.width, bigTileViewSize.height);
+								
+								//						[bigTileView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:topLeftCornerView];
+								//						[bigTileView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:topLeftCornerView];
+								//						[bigTileView autoSetDimension:ALDimensionHeight toSize:tileSize.height*2];
+								//						[bigTileView autoSetDimension:ALDimensionWidth toSize:tileSize.height*2];
+								
+								[tiledAlbumCoverView.bigTileArray addObject:bigTileView];
+								
+								int indexesToReplace[4] = {
+									finalIndex, finalIndex+1,
+									finalIndex+amountOfTilesX, finalIndex+amountOfTilesX+1
+								};
+								for(int viewToReplaceIndex = 0; viewToReplaceIndex < 4; viewToReplaceIndex++){
+									[tiledAlbumCoverView.tilesArray replaceObjectAtIndex:indexesToReplace[viewToReplaceIndex] withObject:bigTileView];
 								}
 							}
 						}
-						if(!bigRedFlagPleaseWaveIfTrouble){
-							validIndex = YES;
-							finalIndex = indexOfBigTile;
-							//							NSLog(@"Valid index @ %d", indexOfBigTile);
-						}
-						if(attempts > 50){
-							validIndex = YES;
-							//							NSLog(@"Giving up hope.");
-						}
-					}
-					if(finalIndex > -1){
-						UIImageView *topLeftCornerView = [self.tilesArray objectAtIndex:finalIndex];
-						
-						UIImageView *bigTileView = [UIImageView new];
-						bigTileView.backgroundColor = [UIColor colorWithRed:0.2*((float)(arc4random_uniform(5))+1.0) green:0.2*((float)(arc4random_uniform(5))+1.0) blue:0.2*((float)(arc4random_uniform(5))+1.0) alpha:1.0];
-						[self.rootView addSubview:bigTileView];
-						
-						CGSize bigTileViewSize = CGSizeMake(tileSize.height*2, tileSize.height*2);
-						CGPoint bigTileViewPosition = CGPointMake(topLeftCornerView.frame.origin.x, topLeftCornerView.frame.origin.y);
-						
-						bigTileView.frame = CGRectMake(bigTileViewPosition.x, bigTileViewPosition.y, bigTileViewSize.width, bigTileViewSize.height);
-						
-//						[bigTileView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:topLeftCornerView];
-//						[bigTileView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:topLeftCornerView];
-//						[bigTileView autoSetDimension:ALDimensionHeight toSize:tileSize.height*2];
-//						[bigTileView autoSetDimension:ALDimensionWidth toSize:tileSize.height*2];
-						
-						[self.bigTileArray addObject:bigTileView];
-						
-						int indexesToReplace[4] = {
-							finalIndex, finalIndex+1,
-							finalIndex+amountOfTilesX, finalIndex+amountOfTilesX+1
-						};
-						for(int viewToReplaceIndex = 0; viewToReplaceIndex < 4; viewToReplaceIndex++){
-							[self.tilesArray replaceObjectAtIndex:indexesToReplace[viewToReplaceIndex] withObject:bigTileView];
-						}
 					}
 				}
-			}
-		}
+				
+				[tiledAlbumCoverView insertAlbumCovers];
+			});
+		});
 		
-//		[self insertAlbumCovers];
 	}
 }
 

@@ -381,6 +381,7 @@ BOOL didAutomaticallyClose = NO;
 									 @"Added new colour adapting layout in now playing",
 									 @"Fixed music sometimes not playing",
 									 @"Fixed crash on some older devices",
+									 @"Fixed tiled album cover lag (hi Mike!)",
 									 @"Improved many visual things",
 									 @"Improved app loading time",
 									 @"Removed godforsaken hang on screen",
