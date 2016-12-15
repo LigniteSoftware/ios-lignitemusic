@@ -12,6 +12,7 @@
 		6A13A8011E011D19006A768B /* SLColorArt.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A13A7FC1E011D19006A768B /* SLColorArt.m */; };
 		6A13A8021E011D19006A768B /* UIImage+ColorArt.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A13A7FE1E011D19006A768B /* UIImage+ColorArt.m */; };
 		6A13A8031E011D19006A768B /* UIImage+Scale.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A13A8001E011D19006A768B /* UIImage+Scale.m */; };
+		6A13A8061E0249E8006A768B /* LMNowPlayingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A13A8051E0249E8006A768B /* LMNowPlayingViewController.m */; };
 		6A1FB9C71D99EB0A00890BF3 /* LMAlbumView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A1FB9C61D99EB0A00890BF3 /* LMAlbumView.m */; };
 		6A1FB9CC1D9AE76A00890BF3 /* LMLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A1FB9CB1D9AE76A00890BF3 /* LMLabel.m */; };
 		6A2566F31D4089E8004EDE41 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A2566F21D4089E8004EDE41 /* MediaPlayer.framework */; };
@@ -173,6 +174,8 @@
 		6A13A7FE1E011D19006A768B /* UIImage+ColorArt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ColorArt.m"; sourceTree = "<group>"; };
 		6A13A7FF1E011D19006A768B /* UIImage+Scale.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Scale.h"; sourceTree = "<group>"; };
 		6A13A8001E011D19006A768B /* UIImage+Scale.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Scale.m"; sourceTree = "<group>"; };
+		6A13A8041E0249E8006A768B /* LMNowPlayingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMNowPlayingViewController.h; sourceTree = "<group>"; };
+		6A13A8051E0249E8006A768B /* LMNowPlayingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMNowPlayingViewController.m; sourceTree = "<group>"; };
 		6A1FB9C51D99EB0A00890BF3 /* LMAlbumView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMAlbumView.h; sourceTree = "<group>"; };
 		6A1FB9C61D99EB0A00890BF3 /* LMAlbumView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMAlbumView.m; sourceTree = "<group>"; };
 		6A1FB9CA1D9AE76A00890BF3 /* LMLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMLabel.h; sourceTree = "<group>"; };
@@ -542,6 +545,8 @@
 				6A313C111BB44959002BBC33 /* LMAlbumArtView.m */,
 				6AD226FA1DA4B7770056695A /* LMNowPlayingView.h */,
 				6AD226FB1DA4B7770056695A /* LMNowPlayingView.m */,
+				6A13A8041E0249E8006A768B /* LMNowPlayingViewController.h */,
+				6A13A8051E0249E8006A768B /* LMNowPlayingViewController.m */,
 				6AD226F71DA49C720056695A /* LMProgressCircleView.h */,
 				6AD226F81DA49C720056695A /* LMProgressCircleView.m */,
 				6A52574D1DF099720040210D /* LMProgressSlider.h */,
@@ -1251,6 +1256,7 @@
 				6A2A29C81DB1EAB6008E7792 /* LMCircleView.m in Sources */,
 				6A6F4B641DC5D4EB00BD01C2 /* YIInnerShadowView.m in Sources */,
 				6A759D561DEBD94F0051E1A9 /* LMContactView.m in Sources */,
+				6A13A8061E0249E8006A768B /* LMNowPlayingViewController.m in Sources */,
 				6ABF6A821CF374F7003E4EFA /* UIImage+AverageColour.m in Sources */,
 				6A759D481DE96B9A0051E1A9 /* LMScrollView.m in Sources */,
 				6A759D451DE93A0F0051E1A9 /* LMCreditsView.m in Sources */,

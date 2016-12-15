@@ -51,7 +51,7 @@
 		self.leftTextLabel = [LMLabel newAutoLayoutView];
 		self.leftTextLabel.text = @"Left text";
 		self.leftTextLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:50.0f];
-		self.leftTextLabel.textAlignment = NSTextAlignmentCenter;
+		self.leftTextLabel.textAlignment = NSTextAlignmentRight;
 		[self.bottomView addSubview:self.leftTextLabel];
 		
 		self.middleDividerView = [UIView newAutoLayoutView];
@@ -72,7 +72,7 @@
 		self.rightTextLabel = [LMLabel newAutoLayoutView];
 		self.rightTextLabel.text = @"Right text";
 		self.rightTextLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:50.0f];
-		self.rightTextLabel.textAlignment = NSTextAlignmentCenter;
+		self.rightTextLabel.textAlignment = NSTextAlignmentLeft;
 		[self.bottomView addSubview:self.rightTextLabel];
 		
 		self.backgroundColor = [UIColor whiteColor];
@@ -132,12 +132,12 @@
 		[self.middleDividerView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.bottomView withMultiplier:hasMiddleImage ? 2.0 : 0.5]; //The multiplier is to ensure some spacing for the label
 		[self.middleDividerView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.bottomView];
 		
-		[self.leftTextLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.leftTextLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:10];
 		[self.leftTextLabel autoPinEdgeToSuperviewEdge:ALEdgeTop];
 		[self.leftTextLabel autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 		[self.leftTextLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.middleDividerView];
 		
-		[self.rightTextLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.rightTextLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:10];
 		[self.rightTextLabel autoPinEdgeToSuperviewEdge:ALEdgeTop];
 		[self.rightTextLabel autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 		[self.rightTextLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.middleDividerView];

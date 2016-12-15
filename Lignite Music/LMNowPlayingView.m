@@ -240,7 +240,7 @@
 
 - (void)closeNowPlaying {
 	[self.musicPlayer removeMusicDelegate:self];
-	[self.rootViewController closeNowPlayingView];
+	[(UINavigationController*)self.window.rootViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)tappedNowPlaying {

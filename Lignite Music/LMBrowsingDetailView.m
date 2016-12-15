@@ -88,8 +88,7 @@
 }
 
 - (void)musicLibraryDidChange {
-	//[self.controll];
-	NSLog(@"Library did change, windows error!");
+	[(UINavigationController*)self.window.rootViewController popViewControllerAnimated:YES];
 }
 
 - (UIImage*)imageWithIndex:(uint8_t)index forControlBarView:(LMControlBarView *)controlBar {

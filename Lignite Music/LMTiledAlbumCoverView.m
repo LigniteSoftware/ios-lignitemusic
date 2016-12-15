@@ -273,6 +273,11 @@
 					tiledAlbumCoverView.amountOfAlbumsShowing = 4;
 				}
 				
+				if(tiledAlbumCoverView.uniqueAlbumCoversDictionary.count == 1){ //Improve for one album art
+					amountOfTilesX = 1;
+					amountOfTilesY = 1;
+				}
+				
 				while((amountOfTilesX*(sideLength+1) < widthToUse) && (amountOfTilesY*(sideLength+1) < heightToUse)){
 					sideLength++;
 				}

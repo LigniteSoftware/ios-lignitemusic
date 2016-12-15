@@ -11,7 +11,7 @@
 #import "LMCoreViewController.h"
 #import "LMMusicPlayer.h"
 #import "LMAlbumView.h"
-#import "LMNowPlayingView.h"
+#import "LMNowPlayingViewController.h"
 #import "LMBrowsingAssistantView.h"
 #import "LMTitleView.h"
 #import "LMSource.h"
@@ -37,7 +37,7 @@
 #import "LMBrowsingBar.h"
 
 #define SKIP_ONBOARDING
-#define SPEED_DEMON_MODE
+//#define SPEED_DEMON_MODE
 
 @import SDWebImage;
 @import StoreKit;
@@ -46,7 +46,7 @@
 
 @property LMMusicPlayer *musicPlayer;
 
-@property LMNowPlayingView *nowPlayingView;
+@property LMNowPlayingViewController *nowPlayingViewController;
 
 @property LMAlbumView *albumView;
 @property LMTitleView *titleView;
@@ -60,7 +60,6 @@
 
 @property NSArray<LMSource*> *sourcesForSourceSelector;
 
-@property NSLayoutConstraint *topConstraint;
 @property NSLayoutConstraint *browsingAssistantHeightConstraint;
 
 @property NSMutableArray<NSLayoutConstraint*>*heightConstraintArray;
@@ -96,7 +95,7 @@
 	
 	BOOL shown = [LMSettings shouldShowStatusBar];
 	
-	return (!shown || (self.nowPlayingView != nil));
+	return (!shown || (self.nowPlayingViewController != nil));
 }
 
 - (UIStatusBarAnimation)preferredStatusBarUpdateAnimation {
@@ -126,32 +125,13 @@
 }
 
 - (void)openNowPlayingView {
-	if(self.nowPlayingView){
-		return;
-	}
+//	[self attachBrowsingAssistantToView:self.view];
 	
-	self.nowPlayingView = [LMNowPlayingView newAutoLayoutView];
-	self.nowPlayingView.backgroundColor = [UIColor whiteColor];
-	self.nowPlayingView.rootViewController = self;
-	[self.view addSubview:self.nowPlayingView];
-	
-	[self.nowPlayingView autoAlignAxisToSuperviewAxis:ALAxisVertical];
-	self.topConstraint = [self.nowPlayingView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.view withOffset:self.view.frame.size.height];
-	[self.nowPlayingView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
-	[self.nowPlayingView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
-		
-	[self.view layoutIfNeeded];
-	
-	self.topConstraint.constant = 0;
-	[UIView animateWithDuration:1.0 delay:0.1
-		 usingSpringWithDamping:0.75 initialSpringVelocity:0.0f
-						options:0 animations:^{
-							[self.view layoutIfNeeded];
-						} completion:nil];
+	self.nowPlayingViewController = [[LMNowPlayingViewController alloc] init];
+	self.nowPlayingViewController.modalPresentationStyle = UIModalPresentationPopover;
+	[self.navigationController presentViewController:self.nowPlayingViewController animated:YES completion:nil];
 	
 	[self.navigationController.view layoutIfNeeded];
-	
-	[self attachBrowsingAssistantToView:self.view];
 	
 	self.statusBarBlurViewHeightConstraint.constant = 0;
 	
@@ -162,26 +142,7 @@
 }
 
 - (void)closeNowPlayingView {
-	[self.view layoutIfNeeded];
-	self.topConstraint.constant = self.view.frame.size.height*1.5;
-	[UIView animateWithDuration:1.0 delay:0.05
-		 usingSpringWithDamping:0.75 initialSpringVelocity:0.0f
-						options:0 animations:^{
-							[self.view layoutIfNeeded];
-						} completion:^(BOOL finished) {
-							self.nowPlayingView = nil;
-							
-							[self.navigationController.view layoutIfNeeded];
-							
-							self.statusBarBlurViewHeightConstraint.constant = 20;
-							
-							[UIView animateWithDuration:0.25 animations:^{
-								[self setNeedsStatusBarAppearanceUpdate];
-								[self.navigationController.view layoutIfNeeded];
-							}];
-							
-							[self attachBrowsingAssistantToView:self.navigationController.view];
-						}];
+	[[self presentingViewController] dismissViewControllerAnimated:YES completion:nil];
 }
 
 BOOL didAutomaticallyClose = NO;
@@ -291,6 +252,7 @@ BOOL didAutomaticallyClose = NO;
 }
 
 - (void)attachBrowsingAssistantToView:(UIView*)view {
+	NSLog(@"Attaching browsing assistant to view navigation ? %d", view == self.navigationController.view);
 	[self.browsingAssistant removeFromSuperview];
 	[view addSubview:self.browsingAssistant];
 	[view bringSubviewToFront:self.statusBarBlurView];
@@ -301,16 +263,19 @@ BOOL didAutomaticallyClose = NO;
 	
 	self.browsingAssistantViewAttachedTo = view;
 	
-	if(view == self.view){
-		[self.view bringSubviewToFront:self.nowPlayingView];
-	}
+//	if(view == self.view){
+//		[self.view bringSubviewToFront:self.nowPlayingView];
+//	}
 }
 
 - (void)viewDidAppear:(BOOL)animated {
+	NSLog(@"View did appear animated %d", animated);
+	
 	[self attachBrowsingAssistantToView:self.navigationController.view];
 	
 	self.currentDetailViewController = nil;
 	self.searchViewController = nil;
+	self.nowPlayingViewController = nil;
 	
 	if(self.statusBarBlurViewHeightConstraint.constant < 0.1 && ![self prefersStatusBarHidden]){
 		[self setStatusBarBlurHidden:NO];

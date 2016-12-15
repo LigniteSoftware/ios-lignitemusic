@@ -12,8 +12,6 @@
 
 @interface LMNowPlayingView : LMView
 
-@property LMCoreViewController *rootViewController;
-
 /**
  Gets a duration string for a total playback time.
 
