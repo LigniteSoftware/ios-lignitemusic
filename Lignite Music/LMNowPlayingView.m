@@ -56,6 +56,16 @@
  */
 @property LMTableView *queueTableView;
 
+/**
+ The title label for nothing in queue.
+ */
+@property UILabel *nothingInQueueTitleLabel;
+
+/**
+ The label which will display if nothing is in queue or iOS isn't giving us a queue.
+ */
+@property UILabel *nothingInQueueLabel;
+
 @property UIImageView *backgroundImageView;
 //@property UIView *shadingView;
 @property UIVisualEffectView *blurredBackgroundView;
@@ -233,6 +243,37 @@
 	
 	self.queueTableView.totalAmountOfObjects = self.musicPlayer.nowPlayingCollection.count;
 	[self.queueTableView reloadSubviewData];
+	
+	
+	LMListEntry *highlightedEntry = nil;
+	int newHighlightedIndex = -1;
+	for(int i = 0; i < self.musicPlayer.nowPlayingCollection.count; i++){
+		LMMusicTrack *track = [self.musicPlayer.nowPlayingCollection.items objectAtIndex:i];
+		LMListEntry *entry = [self listEntryForIndex:i];
+		LMMusicTrack *entryTrack = entry.associatedData;
+		
+		if(entryTrack.persistentID == newTrack.persistentID){
+			highlightedEntry = entry;
+		}
+		
+		if(track.persistentID == newTrack.persistentID){
+			newHighlightedIndex = i;
+		}
+	}
+	
+	NSLog(@"New highlighted %d previous %ld", newHighlightedIndex, (long)self.currentlyHighlighted);
+	
+	LMListEntry *previousHighlightedEntry = [self listEntryForIndex:self.currentlyHighlighted];
+	
+	self.currentlyHighlighted = newHighlightedIndex;
+	
+	if(![previousHighlightedEntry isEqual:highlightedEntry] || highlightedEntry == nil){
+		[previousHighlightedEntry changeHighlightStatus:NO animated:YES];
+	}
+	
+	if(highlightedEntry){
+		[highlightedEntry changeHighlightStatus:YES animated:YES];
+	}
 }
 
 - (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState {
@@ -340,15 +381,32 @@
 - (id)subviewAtIndex:(NSUInteger)index forTableView:(LMTableView *)tableView {
 	LMListEntry *entry = [self.itemArray objectAtIndex:index % self.itemArray.count];
 	entry.collectionIndex = index;
-//	entry.associatedData = [self.sources objectAtIndex:index];
+	entry.associatedData = [self.musicPlayer.nowPlayingCollection.items objectAtIndex:index];
 	
-	[entry changeHighlightStatus:self.currentlyHighlighted == entry.collectionIndex animated:NO];
+	NSLog(@"Collection index %d, current %d match? %d", (int)entry.collectionIndex, (int)self.currentlyHighlighted, ((self.currentlyHighlighted == entry.collectionIndex)));
+	
+	[entry changeHighlightStatus:(self.currentlyHighlighted == entry.collectionIndex) animated:NO];
+	
+//	if((self.currentlyHighlighted == entry.collectionIndex) ){
+//		entry.backgroundColor = [UIColor cyanColor];
+//	}
 	
 	[entry reloadContents];
 	return entry;
 }
 
+- (void)refreshNothingInQueueText {
+	BOOL hidden = (self.itemArray.count > 0);
+	
+	self.nothingInQueueLabel.hidden = hidden;
+	self.nothingInQueueTitleLabel.hidden = hidden;
+	
+	self.nothingInQueueLabel.text = NSLocalizedString((self.musicPlayer.nowPlayingTrack && !self.musicPlayer.nowPlayingCollection) ? @"iOSNotProvidingQueue" : @"TheresNothingHere", nil);
+}
+
 - (void)amountOfObjectsRequiredChangedTo:(NSUInteger)amountOfObjects forTableView:(LMTableView *)tableView {
+	NSLog(@"Required! %d", (int)amountOfObjects);
+	
 	if(!self.itemArray){
 		self.itemArray = [NSMutableArray new];
 		for(int i = 0; i < amountOfObjects; i++){
@@ -361,6 +419,8 @@
 			[self.itemArray addObject:listEntry];
 		}
 	}
+	
+	[self refreshNothingInQueueText];
 }
 
 - (float)heightAtIndex:(NSUInteger)index forTableView:(LMTableView *)tableView {
@@ -401,12 +461,19 @@
 
 - (void)tappedListEntry:(LMListEntry*)entry{
 	NSLog(@"Hey %d", (int)entry.collectionIndex);
+	LMListEntry *currentHighlighted = [self listEntryForIndex:self.currentlyHighlighted];
+	[currentHighlighted changeHighlightStatus:NO animated:YES];
+	
 	[entry changeHighlightStatus:YES animated:YES];
 	
 	self.currentlyHighlighted = entry.collectionIndex;
+	
+	[self.musicPlayer setNowPlayingTrack:[self.musicPlayer.nowPlayingCollection.items objectAtIndex:entry.collectionIndex]];
+	[self.musicPlayer play];
 }
 
 - (UIColor*)tapColourForListEntry:(LMListEntry*)entry {
+	NSLog(@"Returning for %d", (int)entry.collectionIndex);
 	return [LMColour ligniteRedColour];
 }
 
@@ -466,6 +533,33 @@
 	[self.queueTableView autoPinEdgesToSuperviewEdges];
 	
 	[self.queueTableView reloadSubviewData];
+	
+	
+	self.nothingInQueueTitleLabel = [UILabel newAutoLayoutView];
+	self.nothingInQueueTitleLabel.numberOfLines = 0;
+	self.nothingInQueueTitleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:22.0f];
+	self.nothingInQueueTitleLabel.text = NSLocalizedString(@"NothingInQueue", nil);
+	self.nothingInQueueTitleLabel.textAlignment = NSTextAlignmentLeft;
+	self.nothingInQueueTitleLabel.backgroundColor = [UIColor whiteColor];
+	[self.queueView addSubview:self.nothingInQueueTitleLabel];
+	
+	[self.nothingInQueueTitleLabel autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:20];
+	[self.nothingInQueueTitleLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:20];
+	[self.nothingInQueueTitleLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:20];
+	
+	self.nothingInQueueLabel = [UILabel newAutoLayoutView];
+	self.nothingInQueueLabel.numberOfLines = 0;
+	self.nothingInQueueLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:20.0f];
+	self.nothingInQueueLabel.text = NSLocalizedString(@"TheresNothingHere", nil);
+	self.nothingInQueueLabel.textAlignment = NSTextAlignmentLeft;
+	self.nothingInQueueLabel.backgroundColor = [UIColor whiteColor];
+	[self.queueView addSubview:self.nothingInQueueLabel];
+	
+	[self.nothingInQueueLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.nothingInQueueTitleLabel withOffset:20];
+	[self.nothingInQueueLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:20];
+	[self.nothingInQueueLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:20];
+	
+	[self refreshNothingInQueueText];
 	
 	
 	self.backgroundImageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"lignite_background_portrait.png"]];
@@ -535,7 +629,7 @@
 	[self.brandNewAlbumArtImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.albumArtRootView];
 	
 	self.progressSlider = [LMProgressSlider newAutoLayoutView];
-	self.progressSlider.backgroundColor = [UIColor whiteColor];
+	self.progressSlider.backgroundColor = [LMColour fadedColour];
 	self.progressSlider.finalValue = self.musicPlayer.nowPlayingTrack.playbackDuration;
 	self.progressSlider.delegate = self;
 	self.progressSlider.value = self.musicPlayer.currentPlaybackTime;
@@ -659,7 +753,7 @@
 	[self.mainView addGestureRecognizer:swipeDownGesture];
 	
 	
-	[self setNowPlayingQueueOpen:YES];
+//	[self setNowPlayingQueueOpen:YES];
 }
 
 - (instancetype)init {

@@ -84,6 +84,8 @@
 			return @"icon_hamburger.png";
 		case LMIconAirPlay:
 			return @"icon_airplay.png";
+		case LMIconBack:
+			return @"icon_back.png";
 	}
 }
 

@@ -36,6 +36,7 @@
 		6A32A9E81DC654500056CC60 /* LMTriangleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A32A9E71DC654500056CC60 /* LMTriangleView.m */; };
 		6A32A9EC1DC68F440056CC60 /* LMTriangleContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A32A9EB1DC68F440056CC60 /* LMTriangleContainerView.m */; };
 		6A32A9EF1DC6906D0056CC60 /* LMTriangleMaskView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A32A9EE1DC6906D0056CC60 /* LMTriangleMaskView.m */; };
+		6A4157CD1E04669E00D09D4B /* icon_back.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A4157CC1E04669E00D09D4B /* icon_back.png */; };
 		6A43BCE71DDFA471009FB0E9 /* tutorial_now_playing.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A43BCE61DDFA471009FB0E9 /* tutorial_now_playing.png */; };
 		6A43BCE91DDFA66B009FB0E9 /* onboarding_us.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A43BCE81DDFA66B009FB0E9 /* onboarding_us.png */; };
 		6A4BAEEE1DC984EC000DF537 /* LMBigListEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A4BAEED1DC984EC000DF537 /* LMBigListEntry.m */; };
@@ -142,6 +143,8 @@
 		6AEF8C731DEF419D00D9A1BF /* LMDebugViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AEF8C721DEF419D00D9A1BF /* LMDebugViewController.m */; };
 		6AF2C9431DDA16CC005E4643 /* icon_source.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AF2C9411DDA16CC005E4643 /* icon_source.png */; };
 		6AF2C9441DDA16CC005E4643 /* icon_browse.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AF2C9421DDA16CC005E4643 /* icon_browse.png */; };
+		6AF751631E0446D80001E18B /* LMFeedbackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AF751621E0446D80001E18B /* LMFeedbackViewController.m */; };
+		6AF751661E0454B50001E18B /* LMPaddedTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AF751651E0454B50001E18B /* LMPaddedTextField.m */; };
 		6AF9D5321DE0B73D006368B6 /* LMImageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AF9D5311DE0B73D006368B6 /* LMImageManager.m */; };
 		6AF9D5351DE0F2AE006368B6 /* LMAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AF9D5341DE0F2AE006368B6 /* LMAlertView.m */; };
 		6AF9D5381DE13141006368B6 /* LMReachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AF9D5371DE13141006368B6 /* LMReachability.m */; };
@@ -214,6 +217,7 @@
 		6A32A9ED1DC6906D0056CC60 /* LMTriangleMaskView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMTriangleMaskView.h; sourceTree = "<group>"; };
 		6A32A9EE1DC6906D0056CC60 /* LMTriangleMaskView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMTriangleMaskView.m; sourceTree = "<group>"; };
 		6A32A9F01DC695020056CC60 /* main.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = main.h; sourceTree = "<group>"; };
+		6A4157CC1E04669E00D09D4B /* icon_back.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_back.png; sourceTree = "<group>"; };
 		6A43BCE61DDFA471009FB0E9 /* tutorial_now_playing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tutorial_now_playing.png; sourceTree = "<group>"; };
 		6A43BCE81DDFA66B009FB0E9 /* onboarding_us.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = onboarding_us.png; sourceTree = "<group>"; };
 		6A4BAEEC1DC984EC000DF537 /* LMBigListEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMBigListEntry.h; sourceTree = "<group>"; };
@@ -383,6 +387,10 @@
 		6AF2C9411DDA16CC005E4643 /* icon_source.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_source.png; sourceTree = "<group>"; };
 		6AF2C9421DDA16CC005E4643 /* icon_browse.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_browse.png; sourceTree = "<group>"; };
 		6AF571FE1BC714DF009993E0 /* PebbleKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = PebbleKit.framework; sourceTree = "<group>"; };
+		6AF751611E0446D70001E18B /* LMFeedbackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMFeedbackViewController.h; sourceTree = "<group>"; };
+		6AF751621E0446D80001E18B /* LMFeedbackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMFeedbackViewController.m; sourceTree = "<group>"; };
+		6AF751641E0454B50001E18B /* LMPaddedTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMPaddedTextField.h; sourceTree = "<group>"; };
+		6AF751651E0454B50001E18B /* LMPaddedTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMPaddedTextField.m; sourceTree = "<group>"; };
 		6AF9D5301DE0B73D006368B6 /* LMImageManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMImageManager.h; sourceTree = "<group>"; };
 		6AF9D5311DE0B73D006368B6 /* LMImageManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMImageManager.m; sourceTree = "<group>"; };
 		6AF9D5331DE0F2AE006368B6 /* LMAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMAlertView.h; sourceTree = "<group>"; };
@@ -501,6 +509,10 @@
 				6AEF8C6F1DEF36F500D9A1BF /* LMDebugView.m */,
 				6AEF8C711DEF419D00D9A1BF /* LMDebugViewController.h */,
 				6AEF8C721DEF419D00D9A1BF /* LMDebugViewController.m */,
+				6AF751611E0446D70001E18B /* LMFeedbackViewController.h */,
+				6AF751621E0446D80001E18B /* LMFeedbackViewController.m */,
+				6AF751641E0454B50001E18B /* LMPaddedTextField.h */,
+				6AF751651E0454B50001E18B /* LMPaddedTextField.m */,
 			);
 			name = Core;
 			sourceTree = "<group>";
@@ -638,6 +650,7 @@
 				6A9C05371DB4441200713D1C /* icon_albums.png */,
 				6A59A5171DE6D76E00B346AC /* icon_arrow_forward.png */,
 				6A6C186C1DE0014A00D651E1 /* icon_artists.png */,
+				6A4157CC1E04669E00D09D4B /* icon_back.png */,
 				6AF2C9421DDA16CC005E4643 /* icon_browse.png */,
 				6AC32B7C1DB6CD950007C67E /* icon_bug.png */,
 				6A63D16E1DE41FD000EABA53 /* icon_checkmark.png */,
@@ -1090,6 +1103,7 @@
 				6A59A5181DE6D76E00B346AC /* icon_arrow_forward.png in Resources */,
 				6A759D5D1DEBF4580051E1A9 /* HoneyScript-SemiBold.ttf in Resources */,
 				6AFD2EDF1BC423850083FE9E /* no_album.png in Resources */,
+				6A4157CD1E04669E00D09D4B /* icon_back.png in Resources */,
 				6AAF610D1DA0286F00971875 /* Localizable.strings in Resources */,
 				6A514E161CEA125B00AFB351 /* lignite_background_portrait.png in Resources */,
 			);
@@ -1154,6 +1168,7 @@
 				6A32A9EC1DC68F440056CC60 /* LMTriangleContainerView.m in Sources */,
 				6A26B46A1DE2D1A3008B5B69 /* LMSectionHeaderView.m in Sources */,
 				6A92F8241DD6D62A002045C2 /* LMBrowsingView.m in Sources */,
+				6AF751631E0446D80001E18B /* LMFeedbackViewController.m in Sources */,
 				6A3211411DA732470060DD07 /* LMTrackInfoView.m in Sources */,
 				6AC1B7391DA308F80029E08B /* LMSongDetailControlView.m in Sources */,
 				6A13A8021E011D19006A768B /* UIImage+ColorArt.m in Sources */,
@@ -1201,6 +1216,7 @@
 				6ABF6A821CF374F7003E4EFA /* UIImage+AverageColour.m in Sources */,
 				6A759D481DE96B9A0051E1A9 /* LMScrollView.m in Sources */,
 				6A759D451DE93A0F0051E1A9 /* LMCreditsView.m in Sources */,
+				6AF751661E0454B50001E18B /* LMPaddedTextField.m in Sources */,
 				6A1AF0841E0341BC00F8934C /* MPMediaItem+LigniteImages.m in Sources */,
 				6A313C181BB59AE8002BBC33 /* LMButton.m in Sources */,
 				6AD480631DCAAF4D00DB891B /* LMCollectionInfoView.m in Sources */,

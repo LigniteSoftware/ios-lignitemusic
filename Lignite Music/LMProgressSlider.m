@@ -148,6 +148,9 @@
 		if(self.userIsInteracting || [self didJustFinishSliding] || value == 0){
 			return;
 		}
+		if(isnan(self.value)){
+			self.value = 0.0;
+		}
 		
 		CGFloat grabberWidth = self.sliderGrabberView.frame.size.width;
 		CGFloat percentageTowards = value/self.finalValue;

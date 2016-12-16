@@ -1,0 +1,312 @@
+//
+//  LMFeedbackViewController.m
+//  Lignite Music
+//
+//  Created by Edwin Finch on 12/16/16.
+//  Copyright © 2016 Lignite. All rights reserved.
+//
+
+#import <PureLayout/PureLayout.h>
+#import "LMFeedbackViewController.h"
+#import "LMScrollView.h"
+#import "LMPaddedTextField.h"
+#import "LMColour.h"
+#import "LMAppIcon.h"
+
+@interface LMFeedbackViewController () <UITextFieldDelegate, UITextViewDelegate>
+
+/**
+ The root view so we can adjust for the keyboard.
+ */
+@property UIView *rootView;
+
+/**
+ The height constraint for the root view.
+ */
+@property NSLayoutConstraint *rootViewHeightConstraint;
+
+/**
+ The root scroll view of the feedback view.
+ */
+@property LMScrollView *scrollView;
+
+/**
+ The title label.
+ */
+@property UILabel *titleLabel;
+
+/**
+ The description label for telling the user what's gonna go down.
+ */
+@property UILabel *descriptionLabel;
+
+/**
+ The controls for the bottom.
+ */
+@property UIView *bottomControlsBackgroundView;
+
+/**
+ The view for the send button.
+ */
+@property UIView *sendButtonView;
+
+/**
+ The view for the back button.
+ */
+@property UIView *backButtonView;
+
+@end
+
+@implementation LMFeedbackViewController
+
+- (BOOL)prefersStatusBarHidden {
+	return YES;
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+	[textField resignFirstResponder];
+	return YES;
+}
+
+- (void)scrollToView:(UIView*)view {
+	[self.scrollView setContentOffset:CGPointMake(0, view.frame.origin.y-40) animated:YES];
+}
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField {
+	[self scrollToView:textField];
+}
+
+- (void)textViewDidBeginEditing:(UITextView *)textView {
+	[self scrollToView:textView];
+}
+
+- (void)keyboardWillShow:(NSNotification*)notification {
+	NSDictionary *info = notification.userInfo;
+	NSValue *value = [info objectForKey:UIKeyboardFrameEndUserInfoKey];
+	
+	CGRect keyboardFrame = [value CGRectValue];
+	
+	[self.view layoutIfNeeded];
+	self.rootViewHeightConstraint.constant = -keyboardFrame.size.height;
+	
+	[UIView animateWithDuration:0.25 animations:^{
+		[self.view layoutIfNeeded];
+	}];
+}
+
+- (void)keyboardWillHide:(NSNotification*)notification {
+	[self.view layoutIfNeeded];
+	self.rootViewHeightConstraint.constant = 0;
+	[UIView animateWithDuration:0.25 animations:^{
+		[self.view layoutIfNeeded];
+	}];
+}
+
+- (void)sendFeedback {
+	NSLog(@"Check and send feedback");
+}
+
+- (void)closeView {
+	[(UINavigationController*)self.view.window.rootViewController dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+	
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(keyboardWillShow:)
+												 name:UIKeyboardWillShowNotification
+											   object:nil];
+	
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(keyboardWillHide:)
+												 name:UIKeyboardWillHideNotification
+											   object:nil];
+	
+	
+	self.rootView = [UIView newAutoLayoutView];
+	[self.view addSubview:self.rootView];
+	
+	[self.rootView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+	[self.rootView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+	[self.rootView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+	self.rootViewHeightConstraint = [self.rootView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+	
+	
+	self.bottomControlsBackgroundView = [UIView newAutoLayoutView];
+	self.bottomControlsBackgroundView.backgroundColor = [UIColor whiteColor];
+	[self.rootView addSubview:self.bottomControlsBackgroundView];
+	
+	[self.bottomControlsBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+	[self.bottomControlsBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+	[self.bottomControlsBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+	[self.bottomControlsBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/8.0)];
+	
+	self.sendButtonView = [UIView newAutoLayoutView];
+	self.sendButtonView.backgroundColor = [LMColour ligniteRedColour];
+	[self.bottomControlsBackgroundView addSubview:self.sendButtonView];
+	
+	[self.sendButtonView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+	[self.sendButtonView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+	[self.sendButtonView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+	[self.sendButtonView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.bottomControlsBackgroundView withMultiplier:(1.0/2.0)].constant = -1;
+	
+	UITapGestureRecognizer *sendButtonTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(sendFeedback)];
+	[self.sendButtonView addGestureRecognizer:sendButtonTap];
+	
+	UIImageView *sendButtonIcon = [UIImageView newAutoLayoutView];
+	sendButtonIcon.contentMode = UIViewContentModeScaleAspectFit;
+	sendButtonIcon.image = [LMAppIcon imageForIcon:LMIconPaperPlane];
+	[self.sendButtonView addSubview:sendButtonIcon];
+	
+	[sendButtonIcon autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+	[sendButtonIcon autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+	[sendButtonIcon autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+	[sendButtonIcon autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.bottomControlsBackgroundView withMultiplier:(1.0/3.0)];
+	
+	self.backButtonView = [UIView newAutoLayoutView];
+	self.backButtonView.backgroundColor = [LMColour ligniteRedColour];
+	[self.bottomControlsBackgroundView addSubview:self.backButtonView];
+	
+	[self.backButtonView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+	[self.backButtonView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+	[self.backButtonView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+	[self.backButtonView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.bottomControlsBackgroundView withMultiplier:(1.0/2.0)].constant = -1;
+	
+	UITapGestureRecognizer *backButtonTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(closeView)];
+	[self.backButtonView addGestureRecognizer:backButtonTap];
+	
+	UIImageView *backButtonIcon = [UIImageView newAutoLayoutView];
+	backButtonIcon.contentMode = UIViewContentModeScaleAspectFit;
+	backButtonIcon.image = [LMAppIcon imageForIcon:LMIconBack];
+	[self.backButtonView addSubview:backButtonIcon];
+	
+	[backButtonIcon autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+	[backButtonIcon autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+	[backButtonIcon autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+	[backButtonIcon autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.bottomControlsBackgroundView withMultiplier:(1.0/3.0)];
+	
+	
+	self.scrollView = [LMScrollView newAutoLayoutView];
+	self.scrollView.backgroundColor = [UIColor whiteColor];
+	self.scrollView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
+	[self.rootView addSubview:self.scrollView];
+	
+	[self.scrollView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+	[self.scrollView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+	[self.scrollView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+	[self.scrollView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.bottomControlsBackgroundView];
+
+	self.titleLabel = [UILabel newAutoLayoutView];
+	self.titleLabel.numberOfLines = 0;
+	self.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:20.0f];
+	self.titleLabel.text = NSLocalizedString(@"SendFeedbackTitle", nil);
+	self.titleLabel.textAlignment = NSTextAlignmentLeft;
+	[self.scrollView addSubview:self.titleLabel];
+	
+	[self.titleLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:20];
+	[self.titleLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:20];
+	[self.titleLabel autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:20];
+	
+	
+	self.descriptionLabel = [UILabel newAutoLayoutView];
+	self.descriptionLabel.numberOfLines = 0;
+	self.descriptionLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:20.0f];
+	self.descriptionLabel.text = NSLocalizedString(@"SendFeedbackDescription", nil);
+	self.descriptionLabel.textAlignment = NSTextAlignmentLeft;
+	[self.scrollView addSubview:self.descriptionLabel];
+	
+	[self.descriptionLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:20];
+	[self.descriptionLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:20];
+	[self.descriptionLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.titleLabel withOffset:20];
+	
+	NSMutableArray *viewsArray = [NSMutableArray new];
+	
+	NSArray *textKeys = @[
+						  @"Name",
+						  @"Email",
+						  @"SummaryOfReport",
+						  @"DetailedReport"
+						  ];
+	
+	UIKeyboardType keyboardTypes[] = {
+		UIKeyboardTypeDefault, UIKeyboardTypeEmailAddress, UIKeyboardTypeDefault, UIKeyboardTypeDefault
+	};
+	
+	for(int i = 0; i < textKeys.count; i++){
+		BOOL isFirst = (i == 0);
+		
+		UIView *previousViewToAttachTo = isFirst ? self.descriptionLabel : [viewsArray lastObject];
+		
+		NSString *text = NSLocalizedString([textKeys objectAtIndex:i], nil);
+		
+		UILabel *textLabel = [UILabel newAutoLayoutView];
+		textLabel.text = text;
+		textLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:20.0];
+		textLabel.numberOfLines = 0;
+		textLabel.textAlignment = NSTextAlignmentLeft;
+		[self.scrollView addSubview:textLabel];
+		
+		[textLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:previousViewToAttachTo];
+		[textLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:previousViewToAttachTo];
+		[textLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
+		[textLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:previousViewToAttachTo withOffset:20];
+		
+		if([[textKeys objectAtIndex:i] isEqualToString:@"DetailedReport"]){
+			UITextView *textView = [UITextView newAutoLayoutView];
+			textView.textColor = [UIColor blackColor];
+			textView.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18.0];
+			textView.textContainerInset = UIEdgeInsetsMake(10, 10, 10, 10);
+			textView.keyboardType = UIKeyboardTypeDefault;
+			textView.returnKeyType = UIReturnKeyDone;
+			textView.backgroundColor = [UIColor colorWithRed:0.91 green:0.90 blue:0.91 alpha:1.0];
+			textView.clipsToBounds = YES;
+			textView.layer.masksToBounds = YES;
+			textView.layer.cornerRadius = 10;
+			textView.delegate = self;
+			[self.scrollView addSubview:textView];
+			
+			[textView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:previousViewToAttachTo];
+			[textView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:previousViewToAttachTo];
+			[textView autoAlignAxisToSuperviewAxis:ALAxisVertical];
+			[textView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:textLabel withOffset:10];
+			[textView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(2.0/8.0)];
+			
+			[viewsArray addObject:textView];
+		}
+		else{
+			LMPaddedTextField *textField = [LMPaddedTextField newAutoLayoutView];
+			textField.textColor = [UIColor blackColor];
+			textField.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18.0];
+			textField.delegate = self;
+			textField.keyboardType = keyboardTypes[i];
+			textField.returnKeyType = UIReturnKeyDone;
+			textField.backgroundColor = [UIColor colorWithRed:0.91 green:0.90 blue:0.91 alpha:1.0];
+			textField.clipsToBounds = YES;
+			textField.layer.masksToBounds = YES;
+			textField.layer.cornerRadius = 10;
+			[self.scrollView addSubview:textField];
+			
+			[textField autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:previousViewToAttachTo];
+			[textField autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:previousViewToAttachTo];
+			[textField autoAlignAxisToSuperviewAxis:ALAxisVertical];
+			[textField autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:textLabel withOffset:10];
+			[textField autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/8.0)];
+			
+			[viewsArray addObject:textField];
+		}
+	}
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+
+}
+
+- (void)loadView {
+	self.view = [UIView new];
+	
+	self.view.backgroundColor = [UIColor whiteColor];
+}
+
+@end

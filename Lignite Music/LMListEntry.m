@@ -36,10 +36,6 @@
 }
 
 - (void)changeHighlightStatus:(BOOL)highlighted animated:(BOOL)animated {
-	if(self.highlighted && highlighted){
-		return;
-	}
-	
 	self.highlighted = highlighted;
 	
 //	NSLog(@"List entry with collectionIndex %ld highlighted %d, image is inverted %d, invert on highlight %d", self.collectionIndex, self.highlighted, self.imageIsInverted, self.invertIconOnHighlight);
@@ -179,10 +175,12 @@
 	
 	UITapGestureRecognizer *tappedViewRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tappedView)];
 	[self.contentView addGestureRecognizer:tappedViewRecognizer];
+	
+	[self changeHighlightStatus:self.highlighted animated:NO];
 }
 
 - (id)initWithDelegate:(id)delegate {
-	self = [super init];
+	self = [super initForAutoLayout];
 	//self.backgroundColor = [UIColor redColor];
 	if(self){
 		self.delegate = delegate;

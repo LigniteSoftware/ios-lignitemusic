@@ -47,7 +47,8 @@ typedef enum {
 	LMIconAToZ,
 	LMIconGrabRectangle,
 	LMIconHamburger,
-	LMIconAirPlay
+	LMIconAirPlay,
+	LMIconBack
 } LMIcon;
 
 /**

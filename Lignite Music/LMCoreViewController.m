@@ -32,6 +32,7 @@
 #import "LMCreditsView.h"
 #import "LMProgressSlider.h"
 #import "LMBrowsingBar.h"
+#import "LMFeedbackViewController.h"
 
 #define SKIP_ONBOARDING
 #define SPEED_DEMON_MODE
@@ -388,6 +389,8 @@ BOOL didAutomaticallyClose = NO;
 
 - (void)showWhatsPoppin {
 	NSArray *currentBuildChanges = @[
+									 @"Added now playing queue within the now playing screen",
+									 @"Added AirPlay support",
 									 @"Improved app loading time (please contact us if the app takes longer than 7 seconds to load)",
 									 ];
 	
@@ -520,6 +523,11 @@ BOOL didAutomaticallyClose = NO;
 	
 	
 	self.automaticallyAdjustsScrollViewInsets = YES;
+	
+	LMFeedbackViewController *feedbackController = [LMFeedbackViewController new];
+	[self.navigationController presentViewController:feedbackController animated:YES completion:nil];
+	
+	return;
 	
 //	LMBrowsingBar *browsingBar = [LMBrowsingBar newAutoLayoutView];
 //	[self.view addSubview:browsingBar];
@@ -734,9 +742,9 @@ BOOL didAutomaticallyClose = NO;
 //							[self musicLibraryDidChange];
 //						}];
 						
-						[NSTimer scheduledTimerWithTimeInterval:1.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
-							[self openNowPlayingView];
-						}];
+//						[NSTimer scheduledTimerWithTimeInterval:1.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
+//							[self openNowPlayingView];
+//						}];
 					});
 					break;
 				}
