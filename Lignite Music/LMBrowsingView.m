@@ -186,9 +186,11 @@
 		case LMMusicTypeGenres: {
 			return collection.representativeItem.genre ? collection.representativeItem.genre : NSLocalizedString(@"UnknownGenre", nil);
 		}
-		case LMMusicTypeCompilations:
+		case LMMusicTypeCompilations:{
+			return [collection titleForMusicType:LMMusicTypeCompilations];
+		}
 		case LMMusicTypePlaylists:{
-			return collection.title;
+			return [collection titleForMusicType:LMMusicTypePlaylists];
 		}
 		case LMMusicTypeAlbums: {
 			return collection.representativeItem.albumTitle ? collection.representativeItem.albumTitle : NSLocalizedString(@"UnknownAlbum", nil);

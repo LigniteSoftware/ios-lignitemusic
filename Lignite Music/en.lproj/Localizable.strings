@@ -54,6 +54,8 @@
 "ReportBug" = "Report Bug"; //Report an issue with the app
 "OrSendFeedback" = "Or send feedback";
 
+"TheresNothingHere" = "Oh boy, there's nothing here!"; //Nothing for a certain view (ie. no compilations)
+
 /*
  
  End new strings

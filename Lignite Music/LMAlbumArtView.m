@@ -83,11 +83,11 @@
 }
 
 - (void)updateContentWithMusicTrack:(LMMusicTrack*)track {
-	if(!track.sourceTrack){
+	if(!track){
 		NSLog(@"Source track don't exist");
 		return;
 	}
-	MPMediaItem *nowPlayingItem = track.sourceTrack;
+	MPMediaItem *nowPlayingItem = track;
 	
 	if(track != self.currentTrack && self.albumArtImageView.frame.size.width != 0){
 		self.albumArtImageView.image = nil;

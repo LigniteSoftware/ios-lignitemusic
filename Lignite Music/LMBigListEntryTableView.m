@@ -222,6 +222,18 @@
 	[self.tableView autoPinEdgesToSuperviewEdges];
 	
 	[self.tableView reloadSubviewData];
+	
+	if(self.totalAmountOfObjects == 0){
+		UILabel *noObjectsLabel = [UILabel newAutoLayoutView];
+		noObjectsLabel.numberOfLines = 0;
+		noObjectsLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:24.0f];
+		noObjectsLabel.text = NSLocalizedString(@"TheresNothingHere", nil);
+		noObjectsLabel.textAlignment = NSTextAlignmentCenter;
+		noObjectsLabel.backgroundColor = [UIColor whiteColor];
+		[self addSubview:noObjectsLabel];
+		
+		[noObjectsLabel autoPinEdgesToSuperviewMargins];
+	}
 }
 
 @end

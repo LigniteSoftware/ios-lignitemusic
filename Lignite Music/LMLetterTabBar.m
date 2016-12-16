@@ -299,7 +299,7 @@
 		letters = [letters sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"" ascending:YES]]];
 				
 		//Adjust array so question mark is at the back
-		if(self.lettersDictionary){
+		if(self.lettersDictionary && letters.count > 0){
 			NSMutableArray *adjustedArray = [NSMutableArray arrayWithArray:letters];
 			NSString *questionMark = [letters objectAtIndex:1];
 			[adjustedArray removeObjectAtIndex:1];

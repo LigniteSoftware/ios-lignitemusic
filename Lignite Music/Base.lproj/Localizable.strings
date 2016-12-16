@@ -51,6 +51,8 @@
 "Browse" = "Browse"; //Like: "To browse music"
 "Miniplayer" = "Miniplayer"; //The miniature music player
 "View" = "View"; //The view the user is on, ie. "Album view". Is used as a singular word, though.
+"ReportBug" = "Report Bug"; //Report an issue with the app
+"OrSendFeedback" = "Or send feedback";
 
 /*
  

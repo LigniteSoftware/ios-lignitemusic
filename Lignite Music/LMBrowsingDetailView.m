@@ -158,7 +158,7 @@
 		case LMMusicTypeCompilations:
 		case LMMusicTypeGenres:
 		case LMMusicTypePlaylists: {
-			return self.musicTrackCollection.title;
+			return [self.musicTrackCollection titleForMusicType:self.musicType];
 		}
 		case LMMusicTypeAlbums: {
 			return self.musicTrackCollection.representativeItem.albumTitle ? self.musicTrackCollection.representativeItem.albumTitle : NSLocalizedString(@"UnknownAlbum", nil);

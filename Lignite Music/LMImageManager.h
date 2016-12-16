@@ -7,10 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "MPMediaItem+LigniteImages.h"
 
-@class LMMusicTrack;
 @class LMImageManager;
-@class MPMediaItem;
 
 /**
  LMImageManagerCategory is the category of images, such as artist images.

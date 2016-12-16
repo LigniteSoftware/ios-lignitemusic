@@ -155,6 +155,10 @@
 	
 	[self.browsingView setup];
 	[self.browsingView layoutIfNeeded];
+	
+	self.browsingAssistant.browsingBar.letterTabBar.lettersDictionary =
+	[self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:self.browsingView.musicTrackCollections
+													 withAssociatedMusicType:musicType];
 }
 
 - (BOOL)prefersStatusBarHidden {
@@ -263,9 +267,6 @@ BOOL didAutomaticallyClose = NO;
 //			[self.albumView reloadSourceSelectorInfo];
 			self.currentSource = self.browsingView;
 //
-//			self.browsingAssistant.browsingBar.letterTabBar.lettersDictionary =
-//				[self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:self.browsingView.musicTrackCollections
-//																 withAssociatedMusicType:LMMusicTypeAlbums];
 ////			if(self.albumView.showingDetailView){
 ////				[self.browsingAssistant close];
 ////			}
@@ -387,25 +388,11 @@ BOOL didAutomaticallyClose = NO;
 
 - (void)showWhatsPoppin {
 	NSArray *currentBuildChanges = @[
-									 @"Added search (finally!)",
-									 @"Added letter tab browsing",
-									 @"Added compilations",
-									 @"Added composers",
-									 @"Added new music progress bar",
-									 @"Added icon credits",
-									 @"Added license links in credits",
-									 @"Added new colour adapting layout in now playing",
-									 @"Added support for library syncing again",
-									 @"Fixed music sometimes not playing",
-									 @"Fixed crash on some older devices",
-									 @"Fixed tiled album cover lag (hi Mike!)",
-									 @"Improved many visual things",
-									 @"Improved app loading time",
-									 @"Removed godforsaken hang on screen",
+									 @"Nothing, yet",
 									 ];
 	
 	NSArray *currentBuildIssues = @[
-									@"Opening the now playing view from within a detail view (ie. specific artist) will break things!",
+									
 									@"\nPlease do not report already known issues to us, thanks!"
 									];
 	
@@ -498,11 +485,11 @@ BOOL didAutomaticallyClose = NO;
 		[self.titleView scrollToTrackWithPersistentID:persistentID];
 	}
 	else{
-		LMBrowsingView *browsingView = [self.currentSource browsingView];
+		LMBrowsingView *browsingView = self.currentSource;
 		[browsingView scrollToItemWithPersistentID:persistentID];
 	}
 	
-	[self.navigationController popViewControllerAnimated:YES];
+	[self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)letterSelected:(NSString *)letter atIndex:(NSUInteger)index {
@@ -510,7 +497,7 @@ BOOL didAutomaticallyClose = NO;
 		[self.titleView scrollToTrackIndex:index == 0 ? 0 : index-1];
 	}
 	else{
-		[[self.currentSource browsingView] scrollViewToIndex:index];
+		[self.currentSource scrollViewToIndex:index];
 	}
 }
 
@@ -634,16 +621,16 @@ BOOL didAutomaticallyClose = NO;
 						[pebbleManager attachToViewController:self];
 
 						NSArray *sourceTitles = @[
-												  @"Artists", @"Albums", @"Titles", @"Playlists", @"Genres", @"Composers", @"Compilations", @"Settings", @"ReportBug"
+												  @"Artists", @"Albums", @"Titles", @"Playlists", @"Genres", @"Compilations", @"Settings", @"ReportBug"
 												  ];
 						NSArray *sourceSubtitles = @[
-													 @"", @"", @"", @"", @"", @"", @"", @"", @"OrSendFeedback"
+													 @"", @"", @"", @"", @"", @"", @"", @"OrSendFeedback"
 													 ];
 						LMIcon sourceIcons[] = {
-							LMIconArtists, LMIconAlbums, LMIconTitles, LMIconPlaylists, LMIconGenres, LMIconComposers, LMIconCompilations, LMIconSettings, LMIconBug
+							LMIconArtists, LMIconAlbums, LMIconTitles, LMIconPlaylists, LMIconGenres, LMIconCompilations, LMIconSettings, LMIconBug
 						};
 						BOOL notHighlight[] = {
-							NO, NO, NO, NO, NO, NO, NO, YES, YES
+							NO, NO, NO, NO, NO, NO, YES, YES
 						};
 						
 						NSMutableArray *sources = [NSMutableArray new];
@@ -675,8 +662,7 @@ BOOL didAutomaticallyClose = NO;
 						[self.titleView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
 
 						[self.titleView setup];
-						self.titleView.hidden = YES;
-						
+//						self.titleView.hidden = YES;
 						
 						self.browsingView = [LMBrowsingView newAutoLayoutView];
 						self.browsingView.rootViewController = self;
@@ -706,9 +692,7 @@ BOOL didAutomaticallyClose = NO;
 						self.browsingAssistantViewAttachedTo = self.navigationController.view;
 						
 						self.musicPlayer.browsingAssistant = self.browsingAssistant;
-						
-
-
+				
 						[self.musicPlayer addMusicDelegate:self];
 						
 						[NSTimer scheduledTimerWithTimeInterval:1.0
@@ -725,6 +709,7 @@ BOOL didAutomaticallyClose = NO;
 						[self.statusBarBlurView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 						self.statusBarBlurViewHeightConstraint = [self.statusBarBlurView autoSetDimension:ALDimensionHeight toSize:20*[LMSettings shouldShowStatusBar]];
 
+						
 						LMImageManager *imageManager = [LMImageManager sharedImageManager];
 						imageManager.viewToDisplayAlertsOn = self.navigationController.view;
 						
@@ -748,6 +733,10 @@ BOOL didAutomaticallyClose = NO;
 //							NSLog(@"Firing library shit");
 //							[self musicLibraryDidChange];
 //						}];
+						
+						[NSTimer scheduledTimerWithTimeInterval:1.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
+							[self openNowPlayingView];
+						}];
 					});
 					break;
 				}

@@ -9,11 +9,11 @@
 #import <AVFoundation/AVFoundation.h>
 #import <MediaPlayer/MediaPlayer.h>
 #import <Foundation/Foundation.h>
-#import "LMMusicTrack.h"
-#import "LMMusicTrackCollection.h"
 #import "LMSourceSelectorView.h"
 #import "LMPebbleManager.h"
 #import "LMBrowsingAssistantView.h"
+#import "MPMediaItem+LigniteImages.h"
+#import "MPMediaItemCollection+LigniteInfo.h"
 
 /**
  Storage key for the user set player type. Correlates to LMMusicPlayerType.
@@ -88,6 +88,7 @@ typedef enum {
  @param newState The new state.
  */
 - (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState;
+
 @optional
 /**
  Is called when the current playback time of the song changes.

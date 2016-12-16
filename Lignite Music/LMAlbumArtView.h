@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "LMMusicTrack.h"
+#import "MPMediaItem+LigniteImages.h"
 
 @interface LMAlbumArtView : UIView
 

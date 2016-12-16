@@ -94,7 +94,7 @@
 	NSMutableArray *musicCollection = [[NSMutableArray alloc]init];
 	for(int itemIndex = 0; itemIndex < mediaCollection.items.count; itemIndex++){
 		MPMediaItem *musicItem = [mediaCollection.items objectAtIndex:itemIndex];
-		LMMusicTrack *musicTrack = [[LMMusicTrack alloc]initWithMPMediaItem:musicItem];
+		LMMusicTrack *musicTrack = musicItem;
 		[musicCollection addObject:musicTrack];
 	}
 	
@@ -102,10 +102,10 @@
 	NSSortDescriptor *albumSort = [NSSortDescriptor sortDescriptorWithKey:sortKey ascending:YES];
 	musicCollection = [NSMutableArray arrayWithArray:[musicCollection sortedArrayUsingDescriptors:@[albumSort]]];
 	
-	LMMusicTrackCollection *trackCollection = [[LMMusicTrackCollection alloc]initWithItems:musicCollection basedOnSourceCollection:mediaCollection];
+	LMMusicTrackCollection *trackCollection = mediaCollection;
 	[musicTracks addObject:trackCollection];
 	
-	self.musicTitles = [[LMMusicTrackCollection alloc]initWithItems:musicCollection basedOnSourceCollection:mediaCollection];
+	self.musicTitles = mediaCollection;
 	self.songListTableView.totalAmountOfObjects = self.musicTitles.count;
 	[self reloadSourceSelectorInfo];
 }
@@ -328,6 +328,18 @@
 	[self addSubview:self.songListTableView];
 	
 	[self.songListTableView autoPinEdgesToSuperviewEdges];
+	
+	if(self.musicTitles.count == 0){
+		UILabel *noObjectsLabel = [UILabel newAutoLayoutView];
+		noObjectsLabel.numberOfLines = 0;
+		noObjectsLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:24.0f];
+		noObjectsLabel.text = NSLocalizedString(@"TheresNothingHere", nil);
+		noObjectsLabel.textAlignment = NSTextAlignmentCenter;
+		noObjectsLabel.backgroundColor = [UIColor whiteColor];
+		[self addSubview:noObjectsLabel];
+		
+		[noObjectsLabel autoPinEdgesToSuperviewMargins];
+	}
 	
 	[self.songListTableView reloadSubviewData];
 		

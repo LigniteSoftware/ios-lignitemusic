@@ -100,7 +100,7 @@ MPMediaGrouping associatedMediaTypes[] = {
 		
 		self.bullshitQuery = q;
 		
-		self.nowPlayingTrack = [[LMMusicTrack alloc]initWithMPMediaItem:self.systemMusicPlayer.nowPlayingItem];
+		self.nowPlayingTrack = self.systemMusicPlayer.nowPlayingItem;
 		
 		self.playerType = LMMusicPlayerTypeSystemMusicPlayer;
 		self.delegates = [NSMutableArray new];
@@ -199,9 +199,9 @@ MPMediaGrouping associatedMediaTypes[] = {
 - (void)prepareForTermination {
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer){
 		if(self.nowPlayingCollection){
-			[self.systemMusicPlayer setQueueWithItemCollection:self.nowPlayingCollection.sourceCollection];
+			[self.systemMusicPlayer setQueueWithItemCollection:self.nowPlayingCollection];
 		}
-		self.systemMusicPlayer.nowPlayingItem = self.nowPlayingTrack.sourceTrack;
+		self.systemMusicPlayer.nowPlayingItem = self.nowPlayingTrack;
 		self.systemMusicPlayer.currentPlaybackTime = self.currentPlaybackTime;
 		
 		if(self.audioPlayer.isPlaying){
@@ -336,8 +336,8 @@ MPMediaGrouping associatedMediaTypes[] = {
 	[newInfo setObject:self.nowPlayingTrack.albumTitle ? self.nowPlayingTrack.albumTitle : NSLocalizedString(@"UnknownAlbumTitle", nil) forKey:MPMediaItemPropertyAlbumTitle];
 	[newInfo setObject:@(self.nowPlayingTrack.playbackDuration) forKey:MPMediaItemPropertyPlaybackDuration];
 	[newInfo setObject:@(self.audioPlayer.currentTime) forKey:MPNowPlayingInfoPropertyElapsedPlaybackTime];
-	if([self.nowPlayingTrack.sourceTrack artwork]){
-		[newInfo setObject:[self.nowPlayingTrack.sourceTrack artwork] forKey:MPMediaItemPropertyArtwork];
+	if([self.nowPlayingTrack artwork]){
+		[newInfo setObject:[self.nowPlayingTrack artwork] forKey:MPMediaItemPropertyArtwork];
 	}
 	[newInfo setObject:@(isPlaying) forKey:MPNowPlayingInfoPropertyPlaybackRate];
 	
@@ -351,7 +351,7 @@ MPMediaGrouping associatedMediaTypes[] = {
 	
 	[self reloadAudioPlayerWithNowPlayingItem];
 	
-	LMMusicTrack *newTrack = [[LMMusicTrack alloc]initWithMPMediaItem:self.systemMusicPlayer.nowPlayingItem];
+	LMMusicTrack *newTrack = self.systemMusicPlayer.nowPlayingItem;
 	self.nowPlayingTrack = newTrack;
 	self.indexOfNowPlayingTrack = self.systemMusicPlayer.indexOfNowPlayingItem;
 	if(self.systemMusicPlayer.currentPlaybackTime != 0){
@@ -504,10 +504,10 @@ BOOL shuffleForDebug = NO;
 	NSMutableArray *musicCollection = [[NSMutableArray alloc]init];
 	for(int itemIndex = 0; itemIndex < itemCollection.count; itemIndex++){
 		MPMediaItem *musicItem = [itemCollection.items objectAtIndex:itemIndex];
-		LMMusicTrack *musicTrack = [[LMMusicTrack alloc]initWithMPMediaItem:musicItem];
+		LMMusicTrack *musicTrack = musicItem;
 		[musicCollection addObject:musicTrack];
 	}
-	LMMusicTrackCollection *trackCollection = [[LMMusicTrackCollection alloc]initWithItems:musicCollection basedOnSourceCollection:itemCollection];
+	LMMusicTrackCollection *trackCollection = itemCollection;
 	return trackCollection;
 }
 
@@ -530,8 +530,6 @@ BOOL shuffleForDebug = NO;
 	}
 	
 	NSUInteger countToUse = isTitles ? firstTrackCollection.count : collectionArray.count;
-	
-	NSLog(@"Using count %d", (int)countToUse);
 	
 	NSString *letters = @"#ABCDEFGHIJKLMNOPQRSTUVWXYZ?";
 	for(int i = 0; i < letters.length; i++){
@@ -568,12 +566,14 @@ BOOL shuffleForDebug = NO;
 						trackLetter = [self firstLetterForString:musicTrack.title];
 					}
 					break;
-				case LMMusicTypePlaylists:
 				case LMMusicTypeCompilations:
-					if(musicCollection.title){
-						trackLetter = [self firstLetterForString:musicCollection.title];
+				case LMMusicTypePlaylists: {
+					NSString *title = [musicCollection titleForMusicType:musicType];
+					if(title){
+						trackLetter = [self firstLetterForString:title];
 					}
 					break;
+				}
 				case LMMusicTypeComposers:
 					if(musicTrack.composer){
 						trackLetter = [self firstLetterForString:musicTrack.composer];
@@ -629,31 +629,24 @@ BOOL shuffleForDebug = NO;
 	MPMediaGrouping associatedGrouping = associatedMediaTypes[musicType];
 	
 	NSArray *collections = musicType == LMMusicTypeTitles ? @[[MPMediaItemCollection collectionWithItems:mediaQuery.items]] : mediaQuery.collections;
-	NSMutableArray* musicTracks = [NSMutableArray new];
+	NSMutableArray<LMMusicTrackCollection*> *musicTracks = [NSMutableArray new];
 	
 	for(int i = 0; i < collections.count; i++){
 		MPMediaItemCollection *itemCollection = [collections objectAtIndex:i];
 		NSMutableArray *musicCollection = [[NSMutableArray alloc]init];
 		for(int itemIndex = 0; itemIndex < itemCollection.count; itemIndex++){
 			MPMediaItem *musicItem = [itemCollection.items objectAtIndex:itemIndex];
-			LMMusicTrack *musicTrack = [[LMMusicTrack alloc]initWithMPMediaItem:musicItem];
+			LMMusicTrack *musicTrack = musicItem;
 			[musicCollection addObject:musicTrack];
 		}
-		LMMusicTrackCollection *trackCollection = [[LMMusicTrackCollection alloc]initWithItems:musicCollection basedOnSourceCollection:itemCollection];
-		if(associatedGrouping == MPMediaGroupingPlaylist){
-			trackCollection.title = [[collections objectAtIndex:i] valueForProperty:MPMediaPlaylistPropertyName];
-		}
-		if(associatedGrouping == MPMediaGroupingGenre) {
-			trackCollection.title = trackCollection.representativeItem.genre;
-		}
-		if(musicType == LMMusicTypeCompilations){
-			trackCollection.title = trackCollection.representativeItem.albumTitle;
-		}
+		LMMusicTrackCollection *trackCollection = itemCollection;
 		
 		if(trackCollection.count > 0){
 			[musicTracks addObject:trackCollection];
 		}
 	}
+	
+//	return musicTracks;
 	
 	NSString *sortKey = nil;
 	
@@ -661,6 +654,7 @@ BOOL shuffleForDebug = NO;
 		case LMMusicTypeArtists:
 			sortKey = @"representativeItem.artist";
 			break;
+		case LMMusicTypeCompilations:
 		case LMMusicTypeAlbums:
 			sortKey = @"representativeItem.albumTitle";
 			break;
@@ -668,8 +662,7 @@ BOOL shuffleForDebug = NO;
 			sortKey = @"representativeItem.title";
 			break;
 		case LMMusicTypePlaylists:
-		case LMMusicTypeCompilations:
-			sortKey = @"title";
+			sortKey = @"";
 			break;
 		case LMMusicTypeComposers:
 			sortKey = @"representativeItem.composer";
@@ -679,7 +672,26 @@ BOOL shuffleForDebug = NO;
 			break;
 	}
 	
-	NSSortDescriptor *albumSort = [NSSortDescriptor sortDescriptorWithKey:sortKey ascending:YES];
+//	sortKey = @"representativeItem";
+	
+	NSLog(@"Loading sort");
+	
+	NSSortDescriptor *albumSort;
+	
+	if(musicType == LMMusicTypePlaylists) {
+		albumSort = [NSSortDescriptor sortDescriptorWithKey:sortKey ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+			MPMediaPlaylist *firstPlaylist = obj1;
+			MPMediaPlaylist *secondPlaylist = obj2;
+			
+			NSString *firstPlaylistName = [firstPlaylist valueForProperty:MPMediaPlaylistPropertyName];
+			NSString *secondPlaylistName = [secondPlaylist valueForProperty:MPMediaPlaylistPropertyName];
+			
+			return [firstPlaylistName compare:secondPlaylistName];
+		}];
+	}
+	else{
+		albumSort = [NSSortDescriptor sortDescriptorWithKey:sortKey ascending:YES];
+	}
 	
 	//		NSTimeInterval endingTime = [[NSDate date] timeIntervalSince1970];
 	
@@ -899,7 +911,7 @@ BOOL shuffleForDebug = NO;
 	}
 	
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer || self.playerType == LMMusicPlayerTypeAppleMusic){
-		MPMediaItem *associatedMediaItem = nowPlayingTrack.sourceTrack;
+		MPMediaItem *associatedMediaItem = nowPlayingTrack;
 		if(self.systemMusicPlayer.nowPlayingItem.persistentID != associatedMediaItem.persistentID){
 			[self.systemMusicPlayer setNowPlayingItem:associatedMediaItem];
 		}
@@ -921,8 +933,8 @@ BOOL shuffleForDebug = NO;
 		if(!self.nowPlayingCollection){
 			[self clearNowPlayingCollection];
 		}
-		[self.systemMusicPlayer setQueueWithItemCollection:nowPlayingCollection.sourceCollection];
-		[self.systemMusicPlayer setNowPlayingItem:[[nowPlayingCollection.sourceCollection items] objectAtIndex:0]];
+		[self.systemMusicPlayer setQueueWithItemCollection:nowPlayingCollection];
+		[self.systemMusicPlayer setNowPlayingItem:[[nowPlayingCollection items] objectAtIndex:0]];
 	}
 	_nowPlayingCollection = nowPlayingCollection;
 }

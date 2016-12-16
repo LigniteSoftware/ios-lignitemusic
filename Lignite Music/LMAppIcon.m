@@ -80,6 +80,8 @@
 			return @"icon_a_to_z.png";
 		case LMIconGrabRectangle:
 			return @"icon_grab_rectangle.png";
+		case LMIconHamburger:
+			return @"icon_hamburger.png";
 	}
 }
 

@@ -43,8 +43,8 @@
 
 @property BOOL loaded;
 
-@property UIView *shuffleModeBackgroundView, *repeatModeBackgroundView, *playlistBackgroundView;
-@property LMButton *shuffleModeButton, *repeatModeButton, *playlistButton;
+@property UIView *shuffleModeBackgroundView, *repeatModeBackgroundView, *queueBackgroundView;
+@property LMButton *shuffleModeButton, *repeatModeButton, *queueButton;
 
 @property LMProgressSlider *progressSlider;
 
@@ -236,6 +236,9 @@
 			[button setColour:(self.musicPlayer.repeatMode != LMMusicRepeatModeNone) ? [UIColor whiteColor] : [LMColour fadedColour]];
 		}];
 	}
+	else if(button == self.queueButton){
+		
+	}
 }
 
 - (void)closeNowPlaying {
@@ -383,20 +386,20 @@
 	
 	self.shuffleModeBackgroundView = [UIView newAutoLayoutView];
 	self.repeatModeBackgroundView = [UIView newAutoLayoutView];
-	self.playlistBackgroundView = [UIView newAutoLayoutView];
+	self.queueBackgroundView = [UIView newAutoLayoutView];
 	
 	self.shuffleModeButton = [LMButton newAutoLayoutView];
 	self.repeatModeButton = [LMButton newAutoLayoutView];
-	self.playlistButton = [LMButton newAutoLayoutView];
+	self.queueButton = [LMButton newAutoLayoutView];
 	
 	NSArray *backgrounds = @[
-		self.shuffleModeBackgroundView, self.repeatModeBackgroundView, self.playlistBackgroundView
+		self.shuffleModeBackgroundView, self.repeatModeBackgroundView, self.queueBackgroundView
 	];
 	NSArray *buttons = @[
-		self.shuffleModeButton, self.repeatModeButton
+		self.shuffleModeButton, self.repeatModeButton, self.queueButton
 	];
 	LMIcon icons[] = {
-		LMIconShuffle, LMIconRepeat, LMIconSettings
+		LMIconShuffle, LMIconRepeat, LMIconHamburger
 	};
 	
 	for(int i = 0; i < buttons.count; i++){
@@ -408,7 +411,7 @@
 		//background.backgroundColor = [UIColor colorWithRed:(0.2*i)+0.3 green:0 blue:0 alpha:1.0];
 		[self addSubview:background];
 		
-		[background autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.trackInfoView withOffset:10];
+		[background autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.trackInfoView withOffset:-10];
 		[background autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
 		[background autoPinEdge:ALEdgeLeading toEdge:isFirst ? ALEdgeLeading : ALEdgeTrailing ofView:previousBackground];
 		[background autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.trackInfoView withMultiplier:(1.0/(float)buttons.count)];

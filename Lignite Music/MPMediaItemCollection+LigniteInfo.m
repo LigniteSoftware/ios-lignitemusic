@@ -1,33 +1,28 @@
 //
-//  LMMusicTrackCollection.m
+//  MPMediaItemCollection+LigniteInfo.m
 //  Lignite Music
 //
-//  Created by Edwin Finch on 10/5/16.
+//  Created by Edwin Finch on 12/15/16.
 //  Copyright © 2016 Lignite. All rights reserved.
 //
 
-#import "LMMusicTrackCollection.h"
+#import "LMMusicPlayer.h"
+#import "MPMediaItemCollection+LigniteInfo.h"
+#import "MPMediaItem+LigniteImages.h"
 
-@implementation LMMusicTrackCollection
+@implementation MPMediaItemCollection (LigniteInfo)
 
-@synthesize numberOfAlbums = _numberOfAlbums;
-@synthesize variousArtists = _variousArtists;
-@synthesize variousGenres = _variousGenres;
-@synthesize representativeItem = _representativeItem;
-@synthesize persistentID = _persistentID;
-
-- (instancetype)initWithItems:(NSArray<LMMusicTrack *> *)items basedOnSourceCollection:(id)sourceCollection {
-	self = [super init];
-	if(self) {
-		self.items = items;
-		self.count = items.count;
-		self.title = @"Unknown Error";
-		self.sourceCollection = sourceCollection;
+- (NSString*)titleForMusicType:(uint8_t)musicType {
+	if(musicType == LMMusicTypePlaylists){
+		return [self valueForProperty:MPMediaPlaylistPropertyName];
 	}
-	else{
-		NSLog(@"Error creating LMMusicTrackCollection with items %@", items);
+	if(musicType == LMMusicTypeGenres) {
+		return self.representativeItem.genre;
 	}
-	return self;
+	if(musicType == LMMusicTypeCompilations){
+		return self.representativeItem.albumTitle;
+	}
+	return @"Unknown Title";
 }
 
 - (NSUInteger)numberOfAlbums {
@@ -75,16 +70,5 @@
 	return NO;
 }
 
-- (LMMusicTrack*)representativeItem {
-	if(self.items.count > 0){
-		return [self.items objectAtIndex:0];
-	}
-	
-	return nil;
-}
-
-- (LMMusicTrackPersistentID)persistentID {
-	return [self.sourceCollection persistentID];
-}
 
 @end
