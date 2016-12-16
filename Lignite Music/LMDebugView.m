@@ -47,7 +47,7 @@
 	return totalFreeSpace;
 }
 
-- (BOOL)isOnCellularData {
++ (BOOL)isOnCellularData {
 	LMReachability *reachability = [LMReachability reachabilityForInternetConnection];
 	[reachability startNotifier];
 	
@@ -56,7 +56,7 @@
 	return status == ReachableViaWWAN;
 }
 
-- (BOOL)hasInternetConnection {
++ (BOOL)hasInternetConnection {
 	LMReachability *reachability = [LMReachability reachabilityForInternetConnection];
 	[reachability startNotifier];
 	
@@ -80,6 +80,43 @@
 //	hud.label.text = NSLocalizedString(@"ImagesDeleted", nil);
 	
 	[hud hideAnimated:YES afterDelay:2.0f];
+}
+
++ (NSString*)currentAppVersion {
+	return @"1.0";
+}
+
++ (NSString*)appDebugInfoString {
+	LMImageManager *imageManager = [LMImageManager sharedImageManager];
+	LMMusicPlayer *musicPlayer = [LMMusicPlayer sharedMusicPlayer];
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	
+	NSMutableString *debugString = [NSMutableString stringWithFormat:@"\nVersion %@\nBuild %@", [LMDebugView currentAppVersion], [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"]];
+	
+	[debugString appendString:[NSString stringWithFormat:@"\niOS: %@", [[UIDevice currentDevice] systemVersion]]];
+	[debugString appendString:[NSString stringWithFormat:@"\nModel: %@", [[UIDevice currentDevice] model]]];
+	
+	[debugString appendString:[NSString stringWithFormat:@"\n\nSong count: %lu", (unsigned long)[[musicPlayer queryCollectionsForMusicType:LMMusicTypeTitles] objectAtIndex:0].count]];
+	
+	[debugString appendString:[NSString stringWithFormat:@"\n\nSong count: %lu", (unsigned long)[musicPlayer queryCollectionsForMusicType:LMMusicTypeTitles].count]];
+	
+	
+	//	[debugString appendString:[NSString stringWithFormat:@"\n\nSong count: %lu", (unsigned long)[MPMediaQuery songsQuery].items.count]];
+	[debugString appendString:[NSString stringWithFormat:@"\nNow playing: %@\nNPPID: %llu\nNPTL: %fs", musicPlayer.nowPlayingTrack.title, musicPlayer.nowPlayingTrack.persistentID, musicPlayer.nowPlayingTrack.playbackDuration]];
+	[debugString appendString:[NSString stringWithFormat:@"\nBytes free: %llu", [LMDebugView diskBytesFree]]];
+	[debugString appendString:[NSString stringWithFormat:@"\nArtist cache: %lu", (unsigned long)[imageManager sizeOfCacheForCategory:LMImageManagerCategoryArtistImages]]];
+	[debugString appendString:[NSString stringWithFormat:@"\nAlbum cache: %lu", (unsigned long)[imageManager sizeOfCacheForCategory:LMImageManagerCategoryAlbumImages]]];
+	[debugString appendString:[NSString stringWithFormat:@"\nHigh quality images: %d", [defaults boolForKey:LMSettingsKeyHighQualityImages]]];
+	[debugString appendString:[NSString stringWithFormat:@"\nDownload on low storage: %d", [imageManager permissionStatusForSpecialDownloadPermission:LMImageManagerSpecialDownloadPermissionLowStorage]]];
+	[debugString appendString:[NSString stringWithFormat:@"\nDownload on cellular: %d", [imageManager permissionStatusForSpecialDownloadPermission:LMImageManagerSpecialDownloadPermissionCellularData]]];
+	[debugString appendString:[NSString stringWithFormat:@"\nInternet: %d", [LMDebugView hasInternetConnection]]];
+	[debugString appendString:[NSString stringWithFormat:@"\nCellular: %d", [LMDebugView isOnCellularData]]];
+	[debugString appendString:[NSString stringWithFormat:@"\nStatus bar: %d", [defaults boolForKey:LMSettingsKeyStatusBar]]];
+	[debugString appendString:[NSString stringWithFormat:@"\nOBS: %@", [defaults objectForKey:LMSettingsKeyOnboardingComplete]]];
+	
+	[debugString appendString:[NSString stringWithFormat:@"\n\nNSUserDefault keys: %@", [[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] allKeys]]];
+	
+	return debugString;
 }
 
 - (void)layoutSubviews {
@@ -124,38 +161,8 @@
 	UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(shitpost)];
 	[self.toClipboardButton addGestureRecognizer:tapGesture];
 	
-	
-	LMImageManager *imageManager = [LMImageManager sharedImageManager];
-	LMMusicPlayer *musicPlayer = [LMMusicPlayer sharedMusicPlayer];
-	
-	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	
-	NSTimeInterval startTime = [[NSDate new] timeIntervalSince1970];
-	
-	NSMutableString *debugString = [NSMutableString stringWithFormat:@"\nBuild %@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"]];
-	[debugString appendString:[NSString stringWithFormat:@"\n\nSong count: %lu", (unsigned long)[[musicPlayer queryCollectionsForMusicType:LMMusicTypeTitles] objectAtIndex:0].count]];
-	
-	[debugString appendString:[NSString stringWithFormat:@"\n\nSong count: %lu", (unsigned long)[musicPlayer queryCollectionsForMusicType:LMMusicTypeTitles].count]];
-	
-	NSTimeInterval endTime = [[NSDate new] timeIntervalSince1970];
-	
-	NSLog(@"Took %f seconds to load titles.", endTime-startTime);
-	
-	
-//	[debugString appendString:[NSString stringWithFormat:@"\n\nSong count: %lu", (unsigned long)[MPMediaQuery songsQuery].items.count]];
-	[debugString appendString:[NSString stringWithFormat:@"\nNow playing: %@\nNPPID: %llu\nNPTL: %fs", musicPlayer.nowPlayingTrack.title, musicPlayer.nowPlayingTrack.persistentID, musicPlayer.nowPlayingTrack.playbackDuration]];
-	[debugString appendString:[NSString stringWithFormat:@"\nBytes free: %llu", [LMDebugView diskBytesFree]]];
-	[debugString appendString:[NSString stringWithFormat:@"\nArtist cache: %lu", (unsigned long)[imageManager sizeOfCacheForCategory:LMImageManagerCategoryArtistImages]]];
-	[debugString appendString:[NSString stringWithFormat:@"\nAlbum cache: %lu", (unsigned long)[imageManager sizeOfCacheForCategory:LMImageManagerCategoryAlbumImages]]];
-	[debugString appendString:[NSString stringWithFormat:@"\nHigh quality images: %d", [defaults boolForKey:LMSettingsKeyHighQualityImages]]];
-	[debugString appendString:[NSString stringWithFormat:@"\nDownload on low storage: %d", [imageManager permissionStatusForSpecialDownloadPermission:LMImageManagerSpecialDownloadPermissionLowStorage]]];
-	[debugString appendString:[NSString stringWithFormat:@"\nDownload on cellular: %d", [imageManager permissionStatusForSpecialDownloadPermission:LMImageManagerSpecialDownloadPermissionCellularData]]];
-	[debugString appendString:[NSString stringWithFormat:@"\nInternet: %d", [self hasInternetConnection]]];
-	[debugString appendString:[NSString stringWithFormat:@"\nCellular: %d", [self isOnCellularData]]];
-	[debugString appendString:[NSString stringWithFormat:@"\nStatus bar: %d", [defaults boolForKey:LMSettingsKeyStatusBar]]];
-	[debugString appendString:[NSString stringWithFormat:@"\nOBS: %@", [defaults objectForKey:LMSettingsKeyOnboardingComplete]]];
-	
-	[debugString appendString:[NSString stringWithFormat:@"\n\nNSUserDefault keys: %@", [[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] allKeys]]];
+
+	NSString *debugString = [LMDebugView appDebugInfoString];
 	
 	self.debugLabel = [UILabel newAutoLayoutView];
 	self.debugLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18];

@@ -227,7 +227,7 @@
 "OkDone" = "Ok, erledigt"; //This is the button that goes with the screen which says the user needs to reenable the music permission in settings.
 "Checking" = "Überprüfe..."; //Checking for permission
 "GoodToGo" = "Alles gut!"; //Permission has been granted
-"OhBoy" = "Oh nein"; //Error with permission (user probably hit don't allow)
+"OhBoy" = "Oh nein"; //Error/issue
 "TapToTryAgain" = "Tippe für einen neuen Versuch"; //Whatever the user did didn't work for enabling the music permission
 "AllSetHere" = "Alles gut hier!"; //User accepted Pebble permission
 "OuchDenied" = "Aua, verweigert :("; //User denied Pebble permission (this is acceptable though)

@@ -65,6 +65,15 @@
 "SummaryOfReport" = "Quick summary of report";
 "DetailedReport" = "Detailed report";
 
+"EnterAName" = "Please enter a name longer than a couple characters.";
+"EnterAValidEmail" = "Please enter a valid email address.";
+"EnterAQuickSummary" = "Please enter a quick summary longer than 5 characters.";
+"EnterADetailedReport" = "Please enter a detailed report longer than 15 characters.";
+
+"GatheringInfo" = "Gathering debug info...";
+"SendingToServer" = "Sending to Lignite...";
+"ThanksForSubmitting" = "Thanks!";
+
 /*
  
  End new strings
@@ -316,7 +325,7 @@
 "OkDone" = "Ok, done"; //This is the button that goes with the screen which says the user needs to reenable the music permission in settings.
 "Checking" = "Checking..."; //Checking for permission
 "GoodToGo" = "Good to go!"; //Permission has been granted
-"OhBoy" = "Oh boy"; //Error with permission (user probably hit don't allow)
+"OhBoy" = "Oh boy"; //Error/issue
 "TapToTryAgain" = "Tap to try again"; //Whatever the user did didn't work for enabling the music permission
 "AllSetHere" = "All set here!"; //User accepted Pebble permission
 "OuchDenied" = "Ouch, denied :("; //User denied Pebble permission (this is acceptable though)

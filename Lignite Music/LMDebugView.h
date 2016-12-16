@@ -11,4 +11,18 @@
 
 @interface LMDebugView : LMScrollView
 
+/**
+ The app debug info.
+
+ @return App debug info.
+ */
++ (NSString*)appDebugInfoString;
+
+/**
+ Gets the current version string of the app.
+
+ @return The current version string.
+ */
++ (NSString*)currentAppVersion;
+
 @end

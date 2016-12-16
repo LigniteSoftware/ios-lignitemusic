@@ -12,6 +12,7 @@ pod 'ImageMagick', '6.8.8-9'
 pod 'PureLayout'
 pod 'SDWebImage', '~>3.8'
 pod 'MBProgressHUD', '~> 1.0.0'
+pod 'AFNetworking', '~> 3.0'
 
 end
 

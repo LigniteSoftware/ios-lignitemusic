@@ -6,12 +6,16 @@
 //  Copyright © 2016 Lignite. All rights reserved.
 //
 
+#import <sys/utsname.h>
+#import <AFNetworking/AFNetworking.h>
 #import <PureLayout/PureLayout.h>
+#import <MBProgressHUD/MBProgressHUD.h>
 #import "LMFeedbackViewController.h"
 #import "LMScrollView.h"
 #import "LMPaddedTextField.h"
 #import "LMColour.h"
 #import "LMAppIcon.h"
+#import "LMDebugView.h"
 
 @interface LMFeedbackViewController () <UITextFieldDelegate, UITextViewDelegate>
 
@@ -54,6 +58,16 @@
  The view for the back button.
  */
 @property UIView *backButtonView;
+
+/**
+ The text field/views for text entries array.
+ */
+@property NSMutableArray *textEntryArray;
+
+/**
+ The view controller which displays when the feedback sending is pending.
+ */
+@property UIAlertController *pendingViewController;
 
 @end
 
@@ -102,8 +116,177 @@
 	}];
 }
 
+//http://stackoverflow.com/questions/3139619/check-that-an-email-address-is-valid-on-ios
+- (BOOL)validEmail:(NSString*)checkString {
+	BOOL stricterFilter = NO;
+	NSString *stricterFilterString = @"^[A-Z0-9a-z\\._%+-]+@([A-Za-z0-9-]+\\.)+[A-Za-z]{2,4}$";
+	NSString *laxString = @"^.+@([A-Za-z0-9-]+\\.)+[A-Za-z]{2}[A-Za-z]*$";
+	NSString *emailRegex = stricterFilter ? stricterFilterString : laxString;
+	NSPredicate *emailTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", emailRegex];
+	return [emailTest evaluateWithObject:checkString];
+}
+
+- (void)dismissKeyboard {
+	[self.view endEditing:YES];
+}
+
+- (NSString*)jsonStringWithDictionary:(NSDictionary*)dictionary prettyPrint:(BOOL)prettyPrint {
+	NSError *error;
+	NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dictionary
+													   options:(NSJSONWritingOptions)(prettyPrint ? NSJSONWritingPrettyPrinted : 0)
+														 error:&error];
+	
+	if (!jsonData) {
+		NSLog(@"jsonStringWithDictionary: error: %@", error.localizedDescription);
+		return @"{}";
+	} else {
+		return [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+	}
+}
+
+NSString* deviceName(){
+	struct utsname systemInfo;
+	uname(&systemInfo);
+	
+	return [NSString stringWithCString:systemInfo.machine
+							  encoding:NSUTF8StringEncoding];
+}
+
 - (void)sendFeedback {
 	NSLog(@"Check and send feedback");
+	
+	NSString *nameText = [[self.textEntryArray objectAtIndex:0] text];
+	NSString *emailText = [[self.textEntryArray objectAtIndex:1] text];
+	NSString *quickSummaryText = [[self.textEntryArray objectAtIndex:2] text];
+	NSString *detailedText = [[self.textEntryArray objectAtIndex:3] text];
+	
+	NSLog(@"\nName: '%@'\nEmail: '%@'\nQuick summary: '%@'\nLong: '%@'", nameText, emailText, quickSummaryText, detailedText);
+	
+	NSString *errorText = nil;
+	
+	if(nameText.length < 3){
+		errorText = @"EnterAName";
+	}
+	else if(![self validEmail:emailText]){
+		errorText = @"EnterAValidEmail";
+	}
+	else if(quickSummaryText.length <= 5){
+		errorText = @"EnterAQuickSummary";
+	}
+	else if(detailedText.length <= 15){
+		errorText = @"EnterADetailedReport";
+	}
+	
+	errorText = nil;
+	
+	nameText = @"Edwin";
+	emailText = @"edwin@lignite.io";
+	quickSummaryText = @"Testing";
+	detailedText = @"Sup dawg? Testing the new feedback submitter.";
+	
+	if(errorText){
+		UIAlertController *alert = [UIAlertController
+									alertControllerWithTitle:NSLocalizedString(@"OhBoy", nil)
+									message:[NSString stringWithFormat:@"\n%@\n", NSLocalizedString(errorText, nil)]
+									preferredStyle:UIAlertControllerStyleAlert];
+		
+		UIAlertAction *yesButton = [UIAlertAction
+									actionWithTitle:NSLocalizedString(@"Okay", nil)
+									style:UIAlertActionStyleDefault
+									handler:nil];
+		
+		[alert addAction:yesButton];
+		
+		NSArray *viewArray = [[[[[[[[[[[[alert view] subviews] firstObject] subviews] firstObject] subviews] firstObject] subviews] firstObject] subviews] firstObject] subviews]; //lol
+		//		UILabel *alertTitle = viewArray[0];
+		UILabel *alertMessage = viewArray[1];
+		alertMessage.textAlignment = NSTextAlignmentLeft;
+		
+		[self presentViewController:alert animated:YES completion:nil];
+	}
+	else{
+		[self dismissKeyboard];
+		
+		//http://stackoverflow.com/a/32518540/5883707
+		self.pendingViewController = [UIAlertController alertControllerWithTitle:nil
+																		 message:[NSString stringWithFormat:@"%@\n\n\n", NSLocalizedString(@"GatheringInfo", nil)]
+																  preferredStyle:UIAlertControllerStyleAlert];
+		UIActivityIndicatorView* indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+		indicator.color = [UIColor blackColor];
+		indicator.translatesAutoresizingMaskIntoConstraints = NO;
+		[self.pendingViewController.view addSubview:indicator];
+		NSDictionary * views = @{ @"pending": self.pendingViewController.view,
+								  @"indicator": indicator };
+		
+		NSArray *constraintsVertical = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[indicator]-(20)-|" options:0 metrics:nil views:views];
+		NSArray *constraintsHorizontal = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[indicator]|" options:0 metrics:nil views:views];
+		NSArray *constraints = [constraintsVertical arrayByAddingObjectsFromArray:constraintsHorizontal];
+		[self.pendingViewController.view addConstraints:constraints];
+		
+		[indicator setUserInteractionEnabled:NO];
+		[indicator startAnimating];
+		
+		[self presentViewController:self.pendingViewController animated:YES completion:nil];
+		[NSTimer scheduledTimerWithTimeInterval:1.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
+			NSString *debugInfo = [LMDebugView appDebugInfoString];
+			
+//			NSLog(@"Debug info %@", debugInfo);
+			
+			self.pendingViewController.message = [NSString stringWithFormat:@"%@\n\n\n", NSLocalizedString(@"SendingToServer", nil)];
+			
+			NSDictionary *feedbackDictionary = @{
+												@"submitterName": nameText,
+												@"submitterEmail": emailText,
+												@"affected": @"iOS App",
+												@"subject": quickSummaryText,
+												@"description": detailedText,
+												@"timeCreated": @((NSUInteger)floorf([[NSDate new] timeIntervalSince1970])*1000),
+												@"iOSVersion": [[UIDevice currentDevice] systemVersion],
+												@"deviceModel": deviceName(),
+												@"appVersion": [NSString stringWithFormat:@"%@ (%@)", [LMDebugView currentAppVersion], [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"]],
+												@"status": @(0)
+												 };
+			
+			NSLog(@"%@", feedbackDictionary);
+			
+			NSString *URLString = @"https://api.lignite.me:6969/submit";
+			NSURLRequest *urlRequest = [[AFJSONRequestSerializer serializer] requestWithMethod:@"POST" URLString:URLString parameters:feedbackDictionary error:nil];
+			
+			NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+			AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:configuration];
+			
+			AFHTTPResponseSerializer *responseSerializer = manager.responseSerializer;
+			
+			responseSerializer.acceptableContentTypes = [responseSerializer.acceptableContentTypes setByAddingObject:@"text/plain"];
+			
+			NSURLSessionDataTask *dataTask = [manager dataTaskWithRequest:urlRequest completionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
+				if (error) {
+					NSLog(@"Error: %@", error);
+					
+					[self dismissViewControllerAnimated:YES completion:nil];
+				} else {
+					NSLog(@"%@ %@", response, responseObject);
+					
+					[self dismissViewControllerAnimated:YES completion:^{
+						MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+						
+						hud.mode = MBProgressHUDModeCustomView;
+						UIImage *image = [[UIImage imageNamed:@"icon_checkmark.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+						hud.customView = [[UIImageView alloc] initWithImage:image];
+						hud.square = YES;
+						hud.label.text = NSLocalizedString(@"ThanksForSubmitting", nil);
+						
+						[hud hideAnimated:YES afterDelay:2.0f];
+						
+						[NSTimer scheduledTimerWithTimeInterval:2.25 repeats:NO block:^(NSTimer * _Nonnull timer) {
+							[self closeView];
+						}];
+					}];
+				}
+			}];
+			[dataTask resume];
+		}];
+	}
 }
 
 - (void)closeView {
@@ -291,11 +474,17 @@
 			[textField autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:previousViewToAttachTo];
 			[textField autoAlignAxisToSuperviewAxis:ALAxisVertical];
 			[textField autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:textLabel withOffset:10];
-			[textField autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/8.0)];
+			[textField autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/11.0)];
 			
 			[viewsArray addObject:textField];
+			
+			if(keyboardTypes[i] == UIKeyboardTypeEmailAddress){
+				textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+			}
 		}
 	}
+	
+	self.textEntryArray = viewsArray;
 }
 
 - (void)didReceiveMemoryWarning {

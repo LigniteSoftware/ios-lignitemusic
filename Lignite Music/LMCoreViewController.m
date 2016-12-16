@@ -35,7 +35,7 @@
 #import "LMFeedbackViewController.h"
 
 #define SKIP_ONBOARDING
-#define SPEED_DEMON_MODE
+//#define SPEED_DEMON_MODE
 
 @import SDWebImage;
 @import StoreKit;
