@@ -388,7 +388,7 @@ BOOL didAutomaticallyClose = NO;
 
 - (void)showWhatsPoppin {
 	NSArray *currentBuildChanges = @[
-									 @"Nothing, yet",
+									 @"Improved app loading time (please contact us if the app takes longer than 7 seconds to load)",
 									 ];
 	
 	NSArray *currentBuildIssues = @[

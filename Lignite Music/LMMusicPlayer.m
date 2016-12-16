@@ -102,7 +102,7 @@ MPMediaGrouping associatedMediaTypes[] = {
 		
 		self.nowPlayingTrack = self.systemMusicPlayer.nowPlayingItem;
 		
-		self.playerType = LMMusicPlayerTypeSystemMusicPlayer;
+		self.playerType = LMMusicPlayerTypeAppleMusic;
 		self.delegates = [NSMutableArray new];
 		self.delegatesSubscribedToCurrentPlaybackTimeChange = [[NSMutableArray alloc]init];
 		self.delegatesSubscribedToLibraryDidChange = [[NSMutableArray alloc]init];
@@ -293,34 +293,35 @@ MPMediaGrouping associatedMediaTypes[] = {
 }
 
 - (void)reloadAudioPlayerWithNowPlayingItem {
-	NSError *error = nil;
-	
-	NSLog(@"Now playing item is %@ is cloud item %d", self.systemMusicPlayer.nowPlayingItem.title, self.systemMusicPlayer.nowPlayingItem.isCloudItem);
-	
-	NSURL *url = [self.systemMusicPlayer.nowPlayingItem valueForProperty:MPMediaItemPropertyAssetURL];
-	
-	if(url == nil){
-		self.playerType = LMMusicPlayerTypeAppleMusic;
-	}
-	else if(error){
-		//TODO: make sure this doesn't happen again, apply better fix
-		NSLog(@"Error loading audio player with url %@: %@", url, error);
-		
-//		[self.systemMusicPlayer play];
-		
-		//[self skipToNextTrack];
-	}
-	else{
-		self.playerType = LMMusicPlayerTypeSystemMusicPlayer;
-		
-		self.audioPlayer = nil;
-		self.audioPlayer = [[AVAudioPlayer alloc]initWithContentsOfURL:url error:&error];
-		self.audioPlayer.delegate = self;
-		
-		[self.audioPlayer prepareToPlay];
-		
-		[self updateNowPlayingTimeDelegates];
-	}
+	self.playerType = LMMusicPlayerTypeAppleMusic;
+//	NSError *error = nil;
+//	
+//	NSLog(@"Now playing item is %@ is cloud item %d", self.systemMusicPlayer.nowPlayingItem.title, self.systemMusicPlayer.nowPlayingItem.isCloudItem);
+//	
+//	NSURL *url = [self.systemMusicPlayer.nowPlayingItem valueForProperty:MPMediaItemPropertyAssetURL];
+//	
+//	if(url == nil){
+//		self.playerType = LMMusicPlayerTypeAppleMusic;
+//	}
+//	else if(error){
+//		//TODO: make sure this doesn't happen again, apply better fix
+//		NSLog(@"Error loading audio player with url %@: %@", url, error);
+//		
+////		[self.systemMusicPlayer play];
+//		
+//		//[self skipToNextTrack];
+//	}
+//	else{
+//		self.playerType = LMMusicPlayerTypeSystemMusicPlayer;
+//		
+//		self.audioPlayer = nil;
+//		self.audioPlayer = [[AVAudioPlayer alloc]initWithContentsOfURL:url error:&error];
+//		self.audioPlayer.delegate = self;
+//		
+//		[self.audioPlayer prepareToPlay];
+//		
+//		[self updateNowPlayingTimeDelegates];
+//	}
 }
 
 - (void)reloadInfoCenter:(BOOL)isPlaying {

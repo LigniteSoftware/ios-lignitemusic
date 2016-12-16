@@ -16,7 +16,6 @@
 #import "LMColour.h"
 #import "LMNowPlayingView.h"
 #import "LMMusicPlayer.h"
-#import "LMPlaylistView.h"
 
 @interface LMBrowsingDetailView()<LMTableViewSubviewDataSource, LMBigListEntryDelegate, LMCollectionInfoViewDelegate, LMControlBarViewDelegate, LMListEntryDelegate, LMMusicPlayerDelegate>
 

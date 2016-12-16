@@ -19,10 +19,42 @@
 #import "LMAppIcon.h"
 #import "LMMusicPlayer.h"
 #import "LMProgressSlider.h"
+#import "LMTableView.h"
+#import "LMListEntry.h"
 
-@interface LMNowPlayingView() <LMMusicPlayerDelegate, LMButtonDelegate, LMProgressSliderDelegate>
+@interface LMNowPlayingView() <LMMusicPlayerDelegate, LMButtonDelegate, LMProgressSliderDelegate, LMTableViewSubviewDataSource, LMListEntryDelegate>
 
 @property LMMusicPlayer *musicPlayer;
+
+/**
+ The main view of the now playing view which is separate from the now playing queue.
+ */
+@property UIView *mainView;
+
+/**
+ The leading constraint for the main view.
+ */
+@property NSLayoutConstraint *mainViewLeadingConstraint;
+
+/**
+ The background view for the now playing  queue.
+ */
+@property UIView *queueView;
+
+/**
+ The items array for the now playing queue.
+ */
+@property NSMutableArray *itemArray;
+
+/**
+ The index of the currently highlighted item.
+ */
+@property NSInteger currentlyHighlighted;
+
+/**
+ The now playing queue table view.
+ */
+@property LMTableView *queueTableView;
 
 @property UIImageView *backgroundImageView;
 //@property UIView *shadingView;
@@ -43,8 +75,8 @@
 
 @property BOOL loaded;
 
-@property UIView *shuffleModeBackgroundView, *repeatModeBackgroundView, *queueBackgroundView;
-@property LMButton *shuffleModeButton, *repeatModeButton, *queueButton;
+@property UIView *shuffleModeBackgroundView, *repeatModeBackgroundView, *queueBackgroundView, *airplayBackgroundView;
+@property LMButton *shuffleModeButton, *repeatModeButton, *queueButton, *airplayButton;
 
 @property LMProgressSlider *progressSlider;
 
@@ -198,6 +230,9 @@
 	
 	self.progressSlider.rightText = [LMNowPlayingView durationStringTotalPlaybackTime:newTrack.playbackDuration];
 	[self updateSongDurationLabelWithPlaybackTime:self.musicPlayer.currentPlaybackTime];
+	
+	self.queueTableView.totalAmountOfObjects = self.musicPlayer.nowPlayingCollection.count;
+	[self.queueTableView reloadSubviewData];
 }
 
 - (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState {
@@ -211,6 +246,20 @@
 	NSLog(@"Repeat mode %d", self.musicPlayer.repeatMode);
 	UIImage *icon = [LMAppIcon imageForIcon:icons[self.musicPlayer.repeatMode]];
 	[self.repeatModeButton setImage:icon];
+}
+
+- (void)setNowPlayingQueueOpen:(BOOL)open {
+	[self layoutIfNeeded];
+	
+	self.mainViewLeadingConstraint.constant = open ? -self.queueView.frame.size.width : 0;
+	
+	[UIView animateWithDuration:0.25 animations:^{
+		[self layoutIfNeeded];
+	}];
+}
+
+- (BOOL)nowPlayingQueueOpen {
+	return self.mainViewLeadingConstraint.constant < 0;
 }
 
 - (void)clickedButton:(LMButton *)button {
@@ -237,7 +286,23 @@
 		}];
 	}
 	else if(button == self.queueButton){
-		
+		[self setNowPlayingQueueOpen:![self nowPlayingQueueOpen]];
+	}
+	else if(button == self.airplayButton){
+		MPVolumeView *volumeView;
+		for(id subview in self.airplayButton.subviews){
+			if([[[subview class] description] isEqualToString:@"MPVolumeView"]){
+				volumeView = subview;
+				break;
+			}
+		}
+		for(UIView *wnd in volumeView.subviews){
+			if([wnd isKindOfClass:[UIButton class]]) {
+				UIButton *button = (UIButton*) wnd;
+				[button sendActionsForControlEvents:UIControlEventTouchUpInside];
+				break;
+			}
+		}
 	}
 }
 
@@ -270,6 +335,95 @@
 	[self.musicPlayer autoBackThrough];
 }
 
+
+
+- (id)subviewAtIndex:(NSUInteger)index forTableView:(LMTableView *)tableView {
+	LMListEntry *entry = [self.itemArray objectAtIndex:index % self.itemArray.count];
+	entry.collectionIndex = index;
+//	entry.associatedData = [self.sources objectAtIndex:index];
+	
+	[entry changeHighlightStatus:self.currentlyHighlighted == entry.collectionIndex animated:NO];
+	
+	[entry reloadContents];
+	return entry;
+}
+
+- (void)amountOfObjectsRequiredChangedTo:(NSUInteger)amountOfObjects forTableView:(LMTableView *)tableView {
+	if(!self.itemArray){
+		self.itemArray = [NSMutableArray new];
+		for(int i = 0; i < amountOfObjects; i++){
+			LMListEntry *listEntry = [[LMListEntry alloc]initWithDelegate:self];
+			listEntry.collectionIndex = i;
+			listEntry.iconInsetMultiplier = (1.0/3.0);
+			listEntry.iconPaddingMultiplier = (3.0/4.0);
+			listEntry.invertIconOnHighlight = YES;
+			[listEntry setup];
+			[self.itemArray addObject:listEntry];
+		}
+	}
+}
+
+- (float)heightAtIndex:(NSUInteger)index forTableView:(LMTableView *)tableView {
+	return WINDOW_FRAME.size.height*(1.0f/8.0f);
+}
+
+- (LMListEntry*)listEntryForIndex:(NSInteger)index {
+	if(index == -1){
+		return nil;
+	}
+	
+	LMListEntry *entry = nil;
+	for(int i = 0; i < self.itemArray.count; i++){
+		LMListEntry *indexEntry = [self.itemArray objectAtIndex:i];
+		if(indexEntry.collectionIndex == index){
+			entry = indexEntry;
+			break;
+		}
+	}
+	return entry;
+}
+
+- (int)indexOfListEntry:(LMListEntry*)entry {
+	int indexOfEntry = -1;
+	for(int i = 0; i < self.itemArray.count; i++){
+		LMListEntry *subviewEntry = (LMListEntry*)[self.itemArray objectAtIndex:i];
+		if([entry isEqual:subviewEntry]){
+			indexOfEntry = i;
+			break;
+		}
+	}
+	return indexOfEntry;
+}
+
+- (float)spacingAtIndex:(NSUInteger)index forTableView:(LMTableView *)tableView {
+	return 10;
+}
+
+- (void)tappedListEntry:(LMListEntry*)entry{
+	NSLog(@"Hey %d", (int)entry.collectionIndex);
+	[entry changeHighlightStatus:YES animated:YES];
+	
+	self.currentlyHighlighted = entry.collectionIndex;
+}
+
+- (UIColor*)tapColourForListEntry:(LMListEntry*)entry {
+	return [LMColour ligniteRedColour];
+}
+
+- (NSString*)titleForListEntry:(LMListEntry*)entry {
+	return [NSString stringWithFormat:@"%@", [self.musicPlayer.nowPlayingCollection.items objectAtIndex:entry.collectionIndex].title];
+}
+
+- (NSString*)subtitleForListEntry:(LMListEntry*)entry {
+	return [NSString stringWithFormat:@"%@", [LMNowPlayingView durationStringTotalPlaybackTime:[self.musicPlayer.nowPlayingCollection.items objectAtIndex:entry.collectionIndex].playbackDuration]];
+}
+
+- (UIImage*)iconForListEntry:(LMListEntry*)entry {
+	return nil;
+}
+
+
+
 - (void)layoutSubviews {
 	[super layoutSubviews];
 
@@ -278,20 +432,57 @@
 	}
 	self.didLayoutConstraints = YES;
 	
+	
+	self.mainView = [UIView newAutoLayoutView];
+	self.mainView.backgroundColor = [UIColor purpleColor];
+	[self addSubview:self.mainView];
+	
+	self.mainViewLeadingConstraint = [self.mainView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+	[self.mainView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+	[self.mainView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+	[self.mainView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
+	
+	
+	self.queueView = [UIView newAutoLayoutView];
+	self.queueView.backgroundColor = [UIColor cyanColor];
+	[self addSubview:self.queueView];
+	
+	[self.queueView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+	[self.queueView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+	[self.queueView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.mainView];
+	[self.queueView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(3.0/4.0)];
+	
+	
+	self.currentlyHighlighted = -1;
+	
+	self.queueTableView = [LMTableView newAutoLayoutView];
+	self.queueTableView.totalAmountOfObjects = self.musicPlayer.nowPlayingCollection.count;
+	self.queueTableView.subviewDataSource = self;
+	self.queueTableView.shouldUseDividers = YES;
+	self.queueTableView.title = @"QueueTableView";
+	self.queueTableView.bottomSpacing = 10;
+	[self.queueView addSubview:self.queueTableView];
+	
+	[self.queueTableView autoPinEdgesToSuperviewEdges];
+	
+	[self.queueTableView reloadSubviewData];
+	
+	
 	self.backgroundImageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"lignite_background_portrait.png"]];
 	self.backgroundImageView.translatesAutoresizingMaskIntoConstraints = NO;
 	self.backgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
-	[self addSubview:self.backgroundImageView];
+	[self.mainView addSubview:self.backgroundImageView];
 	
 	[self.backgroundImageView autoCenterInSuperview];
 	[self.backgroundImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:1.1];
 	[self.backgroundImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:1.1];
 	
+	
 	UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
 	self.blurredBackgroundView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
 	self.blurredBackgroundView.translatesAutoresizingMaskIntoConstraints = NO;
 	
-	[self addSubview:self.blurredBackgroundView];
+	[self.mainView addSubview:self.blurredBackgroundView];
 	
 	[self.blurredBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.backgroundImageView];
 	[self.blurredBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.backgroundImageView];
@@ -307,16 +498,16 @@
 	
 	self.albumArtRootView = [UIView newAutoLayoutView];
 	self.albumArtRootView.backgroundColor = [UIColor clearColor];
-	[self addSubview:self.albumArtRootView];
+	[self.mainView addSubview:self.albumArtRootView];
 	
-	[self.albumArtRootView autoAlignAxis:ALAxisVertical toSameAxisOfView:self];
-	[self.albumArtRootView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
-	[self.albumArtRootView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self];
-	[self.albumArtRootView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self];
+	[self.albumArtRootView autoAlignAxis:ALAxisVertical toSameAxisOfView:self.mainView];
+	[self.albumArtRootView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.mainView];
+	[self.albumArtRootView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.mainView];
+	[self.albumArtRootView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.mainView];
 	NSLayoutConstraint *heightConstraint = [NSLayoutConstraint constraintWithItem:self.albumArtRootView
 																		attribute:NSLayoutAttributeHeight
 																		relatedBy:NSLayoutRelationEqual
-																		   toItem:self
+																		   toItem:self.mainView
 																		attribute:NSLayoutAttributeWidth
 																	   multiplier:1.0
 																		 constant:0];
@@ -344,12 +535,12 @@
 	[self.brandNewAlbumArtImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.albumArtRootView];
 	
 	self.progressSlider = [LMProgressSlider newAutoLayoutView];
-	self.progressSlider.backgroundColor = [LMColour fadedColour];
+	self.progressSlider.backgroundColor = [UIColor whiteColor];
 	self.progressSlider.finalValue = self.musicPlayer.nowPlayingTrack.playbackDuration;
 	self.progressSlider.delegate = self;
 	self.progressSlider.value = self.musicPlayer.currentPlaybackTime;
 	self.progressSlider.lightTheme = YES;
-	[self addSubview:self.progressSlider];
+	[self.mainView addSubview:self.progressSlider];
 	
 	[self.progressSlider autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 	[self.progressSlider autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
@@ -376,7 +567,7 @@
 	self.trackInfoView = [LMTrackInfoView newAutoLayoutView];
 	self.trackInfoView.textAlignment = NSTextAlignmentCenter;
 	self.trackInfoView.textColour = [UIColor blackColor];
-	[self addSubview:self.trackInfoView];
+	[self.mainView addSubview:self.trackInfoView];
 	
 	//TODO: Fix this being manually set value
 	[self.trackInfoView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.progressSlider withOffset:20];
@@ -387,19 +578,21 @@
 	self.shuffleModeBackgroundView = [UIView newAutoLayoutView];
 	self.repeatModeBackgroundView = [UIView newAutoLayoutView];
 	self.queueBackgroundView = [UIView newAutoLayoutView];
+	self.airplayBackgroundView = [UIView newAutoLayoutView];
 	
 	self.shuffleModeButton = [LMButton newAutoLayoutView];
 	self.repeatModeButton = [LMButton newAutoLayoutView];
 	self.queueButton = [LMButton newAutoLayoutView];
+	self.airplayButton = [LMButton newAutoLayoutView];
 	
 	NSArray *backgrounds = @[
-		self.shuffleModeBackgroundView, self.repeatModeBackgroundView, self.queueBackgroundView
+		self.shuffleModeBackgroundView, self.repeatModeBackgroundView, self.airplayBackgroundView, self.queueBackgroundView
 	];
 	NSArray *buttons = @[
-		self.shuffleModeButton, self.repeatModeButton, self.queueButton
+		self.shuffleModeButton, self.repeatModeButton, self.airplayButton, self.queueButton
 	];
 	LMIcon icons[] = {
-		LMIconShuffle, LMIconRepeat, LMIconHamburger
+		LMIconShuffle, LMIconRepeat, LMIconAirPlay, LMIconHamburger
 	};
 	
 	for(int i = 0; i < buttons.count; i++){
@@ -409,7 +602,7 @@
 		UIView *previousBackground = isFirst ? self.trackInfoView : [backgrounds objectAtIndex:i-1];
 		
 		//background.backgroundColor = [UIColor colorWithRed:(0.2*i)+0.3 green:0 blue:0 alpha:1.0];
-		[self addSubview:background];
+		[self.mainView addSubview:background];
 		
 		[background autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.trackInfoView withOffset:-10];
 		[background autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
@@ -419,15 +612,25 @@
 		LMButton *button = [buttons objectAtIndex:i];
 		button.userInteractionEnabled = YES;
 		[button setDelegate:self];
-		[button setupWithImageMultiplier:0.5];
+		[button setupWithImageMultiplier:0.4];
 		[button setImage:[LMAppIcon imageForIcon:icons[i]]];
 		[button setColour:[LMColour fadedColour]];
 		[background addSubview:button];
 
 		[button autoAlignAxisToSuperviewAxis:ALAxisVertical];
 		[button autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self withOffset:-20];
-		[button autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:background withMultiplier:0.35];
+		[button autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:background withMultiplier:0.6];
 		[button autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:background];
+		
+		if(button == self.airplayButton){
+			MPVolumeView *volumeView = [MPVolumeView newAutoLayoutView];
+//			volumeView.backgroundColor = [UIColor orangeColor];
+			[volumeView setShowsVolumeSlider:NO];
+			[volumeView setShowsRouteButton:NO];
+			[button addSubview:volumeView];
+			
+			[volumeView autoPinEdgesToSuperviewEdges];
+		}
 	}
 	
 	[self.shuffleModeButton setColour:self.musicPlayer.shuffleMode ? [UIColor whiteColor] : [LMColour fadedColour]];
@@ -441,19 +644,22 @@
 	[self musicPlaybackStateDidChange:self.musicPlayer.playbackState];
 	
 	UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tappedNowPlaying)];
-	[self addGestureRecognizer:tapGesture];
+	[self.mainView addGestureRecognizer:tapGesture];
 	
 	UISwipeGestureRecognizer *swipeToRightGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipedRightNowPlaying)];
 	swipeToRightGesture.direction = UISwipeGestureRecognizerDirectionLeft;
-	[self addGestureRecognizer:swipeToRightGesture];
+	[self.mainView addGestureRecognizer:swipeToRightGesture];
 	
 	UISwipeGestureRecognizer *swipeToLeftGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipedLeftNowPlaying)];
 	swipeToLeftGesture.direction = UISwipeGestureRecognizerDirectionRight;
-	[self addGestureRecognizer:swipeToLeftGesture];
+	[self.mainView addGestureRecognizer:swipeToLeftGesture];
 	
 	UISwipeGestureRecognizer *swipeDownGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(closeNowPlaying)];
 	swipeDownGesture.direction = UISwipeGestureRecognizerDirectionDown;
-	[self addGestureRecognizer:swipeDownGesture];
+	[self.mainView addGestureRecognizer:swipeDownGesture];
+	
+	
+	[self setNowPlayingQueueOpen:YES];
 }
 
 - (instancetype)init {
