@@ -292,7 +292,9 @@ BOOL didAutomaticallyClose = NO;
 			break;
 		}
 		case LMIconBug: {
-			[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://www.lignite.io/feedback/"]];
+//			[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://www.lignite.io/feedback/"]];
+			LMFeedbackViewController *feedbackController = [LMFeedbackViewController new];
+			[self.navigationController presentViewController:feedbackController animated:YES completion:nil];
 			NSLog(@"Debug menu");
 			break;
 		}
@@ -522,12 +524,12 @@ BOOL didAutomaticallyClose = NO;
 #endif
 	
 	
-	self.automaticallyAdjustsScrollViewInsets = YES;
-	
-	LMFeedbackViewController *feedbackController = [LMFeedbackViewController new];
-	[self.navigationController presentViewController:feedbackController animated:YES completion:nil];
-	
-	return;
+//	self.automaticallyAdjustsScrollViewInsets = YES;
+//	
+//	LMFeedbackViewController *feedbackController = [LMFeedbackViewController new];
+//	[self.navigationController presentViewController:feedbackController animated:YES completion:nil];
+//	
+//	return;
 	
 //	LMBrowsingBar *browsingBar = [LMBrowsingBar newAutoLayoutView];
 //	[self.view addSubview:browsingBar];
@@ -629,10 +631,10 @@ BOOL didAutomaticallyClose = NO;
 						[pebbleManager attachToViewController:self];
 
 						NSArray *sourceTitles = @[
-												  @"Artists", @"Albums", @"Titles", @"Playlists", @"Genres", @"Compilations", @"Settings", @"ReportBug"
+												  @"Artists", @"Albums", @"Titles", @"Playlists", @"Genres", @"Compilations", @"Settings", @"ReportBugOrSendFeedback"
 												  ];
 						NSArray *sourceSubtitles = @[
-													 @"", @"", @"", @"", @"", @"", @"", @"OrSendFeedback"
+													 @"", @"", @"", @"", @"", @"", @"", @""
 													 ];
 						LMIcon sourceIcons[] = {
 							LMIconArtists, LMIconAlbums, LMIconTitles, LMIconPlaylists, LMIconGenres, LMIconCompilations, LMIconSettings, LMIconBug

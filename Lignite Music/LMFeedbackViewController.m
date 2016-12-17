@@ -16,6 +16,7 @@
 #import "LMColour.h"
 #import "LMAppIcon.h"
 #import "LMDebugView.h"
+#import "LMSettings.h"
 
 @interface LMFeedbackViewController () <UITextFieldDelegate, UITextViewDelegate>
 
@@ -68,6 +69,11 @@
  The view controller which displays when the feedback sending is pending.
  */
 @property UIAlertController *pendingViewController;
+
+/**
+ The label/button for seeing all reports.
+ */
+@property UILabel *seeAllReportsLabel;
 
 @end
 
@@ -152,6 +158,22 @@ NSString* deviceName(){
 							  encoding:NSUTF8StringEncoding];
 }
 
+- (void)saveDetailsToStorage:(BOOL)allDetails {
+	NSString *nameText = [[self.textEntryArray objectAtIndex:0] text];
+	NSString *emailText = [[self.textEntryArray objectAtIndex:1] text];
+	NSString *quickSummaryText = [[self.textEntryArray objectAtIndex:2] text];
+	NSString *detailedText = [[self.textEntryArray objectAtIndex:3] text];
+	
+	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+	[userDefaults setObject:nameText forKey:LMFeedbackKeyName];
+	[userDefaults setObject:emailText forKey:LMFeedbackKeyEmail];
+	if(allDetails){
+		[userDefaults setObject:quickSummaryText forKey:LMFeedbackKeyQuickSummary];
+		[userDefaults setObject:detailedText forKey:LMFeedbackKeyDetailedReport];
+	}
+	[userDefaults synchronize];
+}
+
 - (void)sendFeedback {
 	NSLog(@"Check and send feedback");
 	
@@ -159,8 +181,6 @@ NSString* deviceName(){
 	NSString *emailText = [[self.textEntryArray objectAtIndex:1] text];
 	NSString *quickSummaryText = [[self.textEntryArray objectAtIndex:2] text];
 	NSString *detailedText = [[self.textEntryArray objectAtIndex:3] text];
-	
-	NSLog(@"\nName: '%@'\nEmail: '%@'\nQuick summary: '%@'\nLong: '%@'", nameText, emailText, quickSummaryText, detailedText);
 	
 	NSString *errorText = nil;
 	
@@ -177,12 +197,12 @@ NSString* deviceName(){
 		errorText = @"EnterADetailedReport";
 	}
 	
-	errorText = nil;
-	
-	nameText = @"Edwin";
-	emailText = @"edwin@lignite.io";
-	quickSummaryText = @"Testing";
-	detailedText = @"Sup dawg? Testing the new feedback submitter.";
+//	errorText = nil;
+//	
+//	nameText = @"Edwin";
+//	emailText = @"edwin@lignite.io";
+//	quickSummaryText = @"Testing";
+//	detailedText = @"Sup dawg? Testing the new feedback submitter.";
 	
 	if(errorText){
 		UIAlertController *alert = [UIAlertController
@@ -244,7 +264,8 @@ NSString* deviceName(){
 												@"iOSVersion": [[UIDevice currentDevice] systemVersion],
 												@"deviceModel": deviceName(),
 												@"appVersion": [NSString stringWithFormat:@"%@ (%@)", [LMDebugView currentAppVersion], [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"]],
-												@"status": @(0)
+												@"status": @(0),
+												@"debugInfo": debugInfo
 												 };
 			
 			NSLog(@"%@", feedbackDictionary);
@@ -261,9 +282,50 @@ NSString* deviceName(){
 			
 			NSURLSessionDataTask *dataTask = [manager dataTaskWithRequest:urlRequest completionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
 				if (error) {
-					NSLog(@"Error: %@", error);
+					NSLog(@"Error sending feedback: %@", error);
 					
-					[self dismissViewControllerAnimated:YES completion:nil];
+					[self dismissViewControllerAnimated:YES completion:^{
+						UIAlertController *alert = [UIAlertController
+													alertControllerWithTitle:NSLocalizedString(@"CantSendFeedback", nil)
+													message:NSLocalizedString(@"CantSendFeedbackDescription", nil)
+													preferredStyle:UIAlertControllerStyleAlert];
+						
+						UIAlertAction *yesButton = [UIAlertAction
+													actionWithTitle:NSLocalizedString(@"ContactUs", nil)
+													style:UIAlertActionStyleDefault
+													handler:^(UIAlertAction *action) {
+														dispatch_async(dispatch_get_main_queue(), ^{
+															NSString *errorString = [NSString stringWithFormat:@"Hey guys,\n\nI'm trying to send by feedback and it's not working!\n\nThe error says '%@'.\n\nMy feedback was going to be\n%@.\n\nThanks!", error, feedbackDictionary];
+															
+															NSString *recipients = [NSString stringWithFormat:@"mailto:contact@lignite.io?subject=%@&body=%@",
+																					[@"Lignite Music can't send feedback" stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]],
+																					[errorString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]]];
+															//															recipients = [recipients stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
+															NSLog(@"Can open %@ %d", recipients, [[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:recipients]]);
+															
+															[[UIApplication sharedApplication] openURL:[NSURL URLWithString:recipients] options:@{} completionHandler:^(BOOL success) {
+																NSLog(@"Done %d", success);
+																
+																if(success){
+																	[[self.textEntryArray objectAtIndex:2] setText:@""];
+																	[[self.textEntryArray objectAtIndex:3] setText:@""];
+																}
+															}];
+														});
+													}];
+						
+						UIAlertAction *nopeButton = [UIAlertAction
+													 actionWithTitle:NSLocalizedString(@"DoNothing", nil)
+													 style:UIAlertActionStyleCancel
+													 handler:^(UIAlertAction *action) {
+														 
+													 }];
+						
+						[alert addAction:yesButton];
+						[alert addAction:nopeButton];
+						
+						[self presentViewController:alert animated:YES completion:nil];
+					}];
 				} else {
 					NSLog(@"%@ %@", response, responseObject);
 					
@@ -279,6 +341,9 @@ NSString* deviceName(){
 						[hud hideAnimated:YES afterDelay:2.0f];
 						
 						[NSTimer scheduledTimerWithTimeInterval:2.25 repeats:NO block:^(NSTimer * _Nonnull timer) {
+							[[self.textEntryArray objectAtIndex:2] setText:@""];
+							[[self.textEntryArray objectAtIndex:3] setText:@""];
+							
 							[self closeView];
 						}];
 					}];
@@ -291,6 +356,10 @@ NSString* deviceName(){
 
 - (void)closeView {
 	[(UINavigationController*)self.view.window.rootViewController dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)seeAllReportsTapped {
+	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://www.lignite.io/feedback/"]];
 }
 
 - (void)viewDidLoad {
@@ -416,6 +485,15 @@ NSString* deviceName(){
 		UIKeyboardTypeDefault, UIKeyboardTypeEmailAddress, UIKeyboardTypeDefault, UIKeyboardTypeDefault
 	};
 	
+	NSArray *savedTextKeys = @[
+							   LMFeedbackKeyName,
+							   LMFeedbackKeyEmail,
+							   LMFeedbackKeyQuickSummary,
+							   LMFeedbackKeyDetailedReport
+							   ];
+	
+	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+	
 	for(int i = 0; i < textKeys.count; i++){
 		BOOL isFirst = (i == 0);
 		
@@ -447,6 +525,7 @@ NSString* deviceName(){
 			textView.layer.masksToBounds = YES;
 			textView.layer.cornerRadius = 10;
 			textView.delegate = self;
+			textView.text = [userDefaults objectForKey:[savedTextKeys objectAtIndex:i]];
 			[self.scrollView addSubview:textView];
 			
 			[textView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:previousViewToAttachTo];
@@ -468,6 +547,7 @@ NSString* deviceName(){
 			textField.clipsToBounds = YES;
 			textField.layer.masksToBounds = YES;
 			textField.layer.cornerRadius = 10;
+			textField.text = [userDefaults objectForKey:[savedTextKeys objectAtIndex:i]];
 			[self.scrollView addSubview:textField];
 			
 			[textField autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:previousViewToAttachTo];
@@ -485,6 +565,34 @@ NSString* deviceName(){
 	}
 	
 	self.textEntryArray = viewsArray;
+	
+	
+	self.seeAllReportsLabel = [UILabel newAutoLayoutView];
+	self.seeAllReportsLabel.text = NSLocalizedString(@"SeeAllReports", nil);
+	self.seeAllReportsLabel.textAlignment = NSTextAlignmentCenter;
+	self.seeAllReportsLabel.numberOfLines = 0;
+	self.seeAllReportsLabel.layer.masksToBounds = YES;
+	self.seeAllReportsLabel.layer.cornerRadius = 10.0;
+	self.seeAllReportsLabel.backgroundColor = [LMColour ligniteRedColour];
+	self.seeAllReportsLabel.textColor = [UIColor whiteColor];
+	self.seeAllReportsLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:22.0f];
+	self.seeAllReportsLabel.userInteractionEnabled = YES;
+	[self.scrollView addSubview:self.seeAllReportsLabel];
+	
+	UIView *lastView = [self.textEntryArray lastObject];
+	
+	[self.seeAllReportsLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:lastView withOffset:20];
+	[self.seeAllReportsLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:lastView];
+	[self.seeAllReportsLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:lastView];
+	[self.seeAllReportsLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
+	[self.seeAllReportsLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/11.0)];
+	
+	UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(seeAllReportsTapped)];
+	[self.seeAllReportsLabel addGestureRecognizer:tapGesture];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+	[self saveDetailsToStorage:YES];
 }
 
 - (void)didReceiveMemoryWarning {

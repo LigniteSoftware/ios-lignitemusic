@@ -14,6 +14,10 @@
 #define LMSettingsKeyOnboardingComplete @"LMSettingsKeyOnboardingComplete"
 #define LMSettingsKeyStatusBar @"LMSettingsKeyStatusBar"
 #define LMSettingsKeyHighQualityImages @"LMSettingsKeyHighQualityImages"
+#define LMFeedbackKeyName @"LMFeedbackKeyName"
+#define LMFeedbackKeyEmail @"LMFeedbackKeyEmail"
+#define LMFeedbackKeyQuickSummary @"LMFeedbackKeyQuickSummary"
+#define LMFeedbackKeyDetailedReport @"LMFeedbackKeyDetailedReport"
 
 /**
  Whether or not the app should show the status bar.

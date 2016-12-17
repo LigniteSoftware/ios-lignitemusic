@@ -91,8 +91,8 @@
 	LMMusicPlayer *musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	
-	NSMutableString *debugString = [NSMutableString stringWithFormat:@"\nVersion %@\nBuild %@", [LMDebugView currentAppVersion], [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"]];
-	
+	NSMutableString *debugString = [NSMutableString stringWithFormat:@"\nVersion %@ (build %@)", [LMDebugView currentAppVersion], [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"]];
+	[debugString appendString:[NSString stringWithFormat:@"\nLanguage: %@", [[NSLocale preferredLanguages] objectAtIndex:0]]];
 	[debugString appendString:[NSString stringWithFormat:@"\niOS: %@", [[UIDevice currentDevice] systemVersion]]];
 	[debugString appendString:[NSString stringWithFormat:@"\nModel: %@", [[UIDevice currentDevice] model]]];
 	
