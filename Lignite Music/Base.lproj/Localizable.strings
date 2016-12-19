@@ -51,12 +51,32 @@
 "Browse" = "Browse"; //Like: "To browse music"
 "Miniplayer" = "Miniplayer"; //The miniature music player
 "View" = "View"; //The view the user is on, ie. "Album view". Is used as a singular word, though.
-"ReportBug" = "Report Bug"; //Report an issue with the app
-"OrSendFeedback" = "Or send feedback";
+"ReportBugOrSendFeedback" = "Send us bugs or feedback";
 
 "TheresNothingHere" = "Oh boy, there's nothing here!"; //Nothing for a certain view (ie. no compilations)
 "iOSNotProvidingQueue" = "iOS isn't telling us what's up next.\n\nStart new music from within Lignite Music to see what's next here.";
 "NothingInQueue" = "Nothing in queue";
+
+"SendFeedbackTitle" = "Report a bug or send feedback";
+"SendFeedbackDescription" = "Here you can send us bugs you've found or your feedback.\n\nWe publicly share your report, though not any of your private information.\n\nWe read over every single bug report and piece of feedback and may reach out to you through email to further investigate.\n\nThanks!";
+"Name" = "Name";
+"Email" = "Email";
+"SummaryOfReport" = "Quick summary of report";
+"DetailedReport" = "Detailed report";
+
+"EnterAName" = "Please enter a name longer than a couple characters.";
+"EnterAValidEmail" = "Please enter a valid email address.";
+"EnterAQuickSummary" = "Please enter a quick summary longer than 5 characters.";
+"EnterADetailedReport" = "Please enter a detailed report longer than 15 characters.";
+
+"SeeAllReports" = "See all reports";
+
+"GatheringInfo" = "Gathering debug info...";
+"SendingToServer" = "Sending to Lignite...";
+"ThanksForSubmitting" = "Thanks!";
+
+"CantSendFeedback" = "Can't send :(";
+"CantSendFeedbackDescription" = "\nSadly, something went wrong in sending your feedback.\n\nPlease make sure your Internet connection is stable and is not blocking www.lignite.io.\n\nIf you think you're all good on your side and you still can't send it, email us by clicking the button below.";
 
 /*
  

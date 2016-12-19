@@ -7,10 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LMCoreViewController.h"
 #import "LMMusicPlayer.h"
 #import "LMBrowsingView.h"
 
 @interface LMBrowsingDetailView : UIView
+
+/**
+ The root view controller.
+ */
+@property LMCoreViewController *rootViewController;
 
 /**
  The music tracks associated with this LMBrowsingDetailView.

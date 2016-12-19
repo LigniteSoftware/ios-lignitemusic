@@ -83,7 +83,7 @@
 }
 
 + (NSString*)currentAppVersion {
-	return @"1.0";
+	return @"1.0 beta";
 }
 
 + (NSString*)appDebugInfoString {
@@ -92,18 +92,16 @@
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	
 	NSMutableString *debugString = [NSMutableString stringWithFormat:@"\nVersion %@ (build %@)", [LMDebugView currentAppVersion], [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"]];
-	[debugString appendString:[NSString stringWithFormat:@"\nLanguage: %@", [[NSLocale preferredLanguages] objectAtIndex:0]]];
+	[debugString appendString:[NSString stringWithFormat:@"\n\nLanguage: %@", [[NSLocale preferredLanguages] objectAtIndex:0]]];
 	[debugString appendString:[NSString stringWithFormat:@"\niOS: %@", [[UIDevice currentDevice] systemVersion]]];
 	[debugString appendString:[NSString stringWithFormat:@"\nModel: %@", [[UIDevice currentDevice] model]]];
 	
 	[debugString appendString:[NSString stringWithFormat:@"\n\nSong count: %lu", (unsigned long)[[musicPlayer queryCollectionsForMusicType:LMMusicTypeTitles] objectAtIndex:0].count]];
 	
-	[debugString appendString:[NSString stringWithFormat:@"\n\nSong count: %lu", (unsigned long)[musicPlayer queryCollectionsForMusicType:LMMusicTypeTitles].count]];
-	
 	
 	//	[debugString appendString:[NSString stringWithFormat:@"\n\nSong count: %lu", (unsigned long)[MPMediaQuery songsQuery].items.count]];
-	[debugString appendString:[NSString stringWithFormat:@"\nNow playing: %@\nNPPID: %llu\nNPTL: %fs", musicPlayer.nowPlayingTrack.title, musicPlayer.nowPlayingTrack.persistentID, musicPlayer.nowPlayingTrack.playbackDuration]];
-	[debugString appendString:[NSString stringWithFormat:@"\nBytes free: %llu", [LMDebugView diskBytesFree]]];
+	[debugString appendString:[NSString stringWithFormat:@"\nNow playing: %@\nPID: %llu\nSL: %f", musicPlayer.nowPlayingTrack.title, musicPlayer.nowPlayingTrack.persistentID, musicPlayer.nowPlayingTrack.playbackDuration]];
+	[debugString appendString:[NSString stringWithFormat:@"\n\nBytes free: %llu", [LMDebugView diskBytesFree]]];
 	[debugString appendString:[NSString stringWithFormat:@"\nArtist cache: %lu", (unsigned long)[imageManager sizeOfCacheForCategory:LMImageManagerCategoryArtistImages]]];
 	[debugString appendString:[NSString stringWithFormat:@"\nAlbum cache: %lu", (unsigned long)[imageManager sizeOfCacheForCategory:LMImageManagerCategoryAlbumImages]]];
 	[debugString appendString:[NSString stringWithFormat:@"\nHigh quality images: %d", [defaults boolForKey:LMSettingsKeyHighQualityImages]]];
@@ -111,7 +109,7 @@
 	[debugString appendString:[NSString stringWithFormat:@"\nDownload on cellular: %d", [imageManager permissionStatusForSpecialDownloadPermission:LMImageManagerSpecialDownloadPermissionCellularData]]];
 	[debugString appendString:[NSString stringWithFormat:@"\nInternet: %d", [LMDebugView hasInternetConnection]]];
 	[debugString appendString:[NSString stringWithFormat:@"\nCellular: %d", [LMDebugView isOnCellularData]]];
-	[debugString appendString:[NSString stringWithFormat:@"\nStatus bar: %d", [defaults boolForKey:LMSettingsKeyStatusBar]]];
+	[debugString appendString:[NSString stringWithFormat:@"\n\nStatus bar: %d", [defaults boolForKey:LMSettingsKeyStatusBar]]];
 	[debugString appendString:[NSString stringWithFormat:@"\nOBS: %@", [defaults objectForKey:LMSettingsKeyOnboardingComplete]]];
 	
 	[debugString appendString:[NSString stringWithFormat:@"\n\nNSUserDefault keys: %@", [[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] allKeys]]];
@@ -153,7 +151,7 @@
 	self.toClipboardButton.userInteractionEnabled = YES;
 	[self addSubview:self.toClipboardButton];
 	
-	[self.toClipboardButton autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.titleLabel withOffset:10];
+	[self.toClipboardButton autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.titleLabel withOffset:20];
 	[self.toClipboardButton autoSetDimension:ALDimensionWidth toSize:self.frame.size.width * 0.9];
 	[self.toClipboardButton autoAlignAxisToSuperviewAxis:ALAxisVertical];
 	[self.toClipboardButton autoSetDimension:ALDimensionHeight toSize:self.frame.size.height/8.0];

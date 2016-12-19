@@ -155,6 +155,7 @@
 	[query setGroupingType:request_type];
 	[query addFilterPredicate:[MPMediaPropertyPredicate predicateWithValue:@(MPMediaTypeMusic) forProperty:MPMediaItemPropertyMediaType]];
 	NSArray* results = [query collections];
+	NSLog(@"Got %d results of library data", (int)results.count);
 	[self pushLibraryResults:results withOffset:offset type:request_type isSubtitle:0];
 }
 
@@ -165,6 +166,7 @@
 	if(request_type == MPMediaGroupingTitle) {
 		results = [results[0] items];
 	}
+	NSLog(@"Got %d results of sublist request", (int)results.count);
 	[self pushLibraryResults:results withOffset:offset type:request_type isSubtitle:0];
 }
 
@@ -219,6 +221,8 @@
 			break;
 	}
 	
+	NSLog(@"Got %d results in the pushLibraryResults call", (int)results.count);
+	
 	NSArray* subset;
 	if(offset < [results count]) {
 		NSInteger count = MAX_RESPONSE_COUNT;
@@ -234,9 +238,13 @@
 	// (pascal style)
 	uint8_t type_byte = (uint8_t)type;
 	uint16_t metabytes[] = {[results count], offset};
+	
+	NSLog(@"Meta bytes length %d", metabytes[0]);
+	
 	// Include the type of library
 	[result appendBytes:&type_byte length:1];
 	[result appendBytes:metabytes length:4];
+	
 	MPMediaItem *representativeItem;
 	int i = 0;
 	for (MPMediaItemCollection* item in subset) {

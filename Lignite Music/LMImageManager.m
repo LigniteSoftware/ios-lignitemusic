@@ -185,9 +185,7 @@
 	return self;
 }
 
-+ (LMImageManager*)sharedImageManager {
-	return nil;
-	
++ (LMImageManager*)sharedImageManager {	
 	static LMImageManager *sharedImageManager;
 	static dispatch_once_t token;
 	dispatch_once(&token, ^{

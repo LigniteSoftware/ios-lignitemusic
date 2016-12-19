@@ -34,7 +34,7 @@
 #import "LMBrowsingBar.h"
 #import "LMFeedbackViewController.h"
 
-#define SKIP_ONBOARDING
+//#define SKIP_ONBOARDING
 //#define SPEED_DEMON_MODE
 
 @import SDWebImage;
@@ -391,13 +391,12 @@ BOOL didAutomaticallyClose = NO;
 
 - (void)showWhatsPoppin {
 	NSArray *currentBuildChanges = @[
-									 @"Added now playing queue within the now playing screen",
-									 @"Added AirPlay support",
-									 @"Improved app loading time (please contact us if the app takes longer than 7 seconds to load)",
+									 @"Added album browsing through individual artists",
+									 @"Fixed Pebble app lists getting cut off at about 150 items",
+									 @"Fixed Pebble app crash"
 									 ];
 	
 	NSArray *currentBuildIssues = @[
-									
 									@"\nPlease do not report already known issues to us, thanks!"
 									];
 	

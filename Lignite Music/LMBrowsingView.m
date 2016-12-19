@@ -297,6 +297,7 @@
 	LMBrowsingDetailView *browsingDetailView = [LMBrowsingDetailView newAutoLayoutView];
 	browsingDetailView.musicTrackCollection = [self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex];
 	browsingDetailView.musicType = self.musicType;
+	browsingDetailView.rootViewController = self.rootViewController;
 	
 	self.browsingDetailViewController = [LMBrowsingDetailViewController new];
 	self.browsingDetailViewController.browsingDetailView = browsingDetailView;

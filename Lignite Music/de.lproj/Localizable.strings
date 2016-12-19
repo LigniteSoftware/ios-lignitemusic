@@ -38,12 +38,33 @@
 "Browse" = "Durchsuchen"; //Like: "To browse music"
 "Miniplayer" = "Miniplayer"; //The miniature music player
 "View" = "Anzeige"; //The view the user is on, ie. "Album view". Is used as a singular word, though.
-"ReportBug" = "Fehler / Problem melden"; //Report an issue with the app
-"OrSendFeedback" = "Oder Feedback senden";
 
 "TheresNothingHere" = "Gehen Sie weiter, hier gibt's nichts zu sehen!"; //Nothing for a certain view (ie. no compilations)
 "iOSNotProvidingQueue" = "iOS teilt uns die nächsten Songs nicht mit.\n\nStarte die Wiedergabe von dieser App, um diese Liste automatisch füllen zu lassen.";
 "NothingInQueue" = "Keine Songs in der Liste";
+
+"ReportBugOrSendFeedback" = "Sende Fehler oder Feedback";
+
+"SendFeedbackTitle" = "Melde einen Fehler oder sende uns Feedback";
+"SendFeedbackDescription" = "Nutze das nachfolgende Formular, um gefundene Fehler / Probleme oder sonstiges Feedback zu senden.\n\nDeine Meldung wird öffentlich zugänglich sein, allerdings ohne jegliche Rückschlüsse auf dich bzw. deine privaten Daten.\n\nWir lesen jede einzelne Meldung und melden uns ggf. via E-Mail für weitere Fragen bei dir.\n\Vielen Dank!";
+"Name" = "Name";
+"Email" = "E-Mail";
+"SummaryOfReport" = "Titel / Betreff";
+"DetailedReport" = "Genauere Beschreibung";
+
+"EnterAName" = "Tippe bitte einen Namen mit mehr Buchstaben ein.";
+"EnterAValidEmail" = "Tippe bitte eine gültige Mailadresse ein.";
+"EnterAQuickSummary" = "Tippe bitte mehr als 5 Zeichen als Titel / Betreff ein.";
+"EnterADetailedReport" = "Tippe bitte mehr als 15 Zeichen als genaue Beschreibung ein.";
+
+"SeeAllReports" = "Alle Rückmeldungen anzeigen";
+
+"GatheringInfo" = "Debug-Informationen werden gesammelt...";
+"SendingToServer" = "Daten werden an den Server übermittelt..";
+"ThanksForSubmitting" = "Danke!";
+
+"CantSendFeedback" = "Kann nicht gesendet werden :-(";
+"CantSendFeedbackDescription" = "\nLeider ist bei der Übermittling etwas schief gelaufen.\n\nStelle bitte sicher, dass du über eine funktionsfähige Internetverbindung verfügst und dass lignite.io nicht geblockt wird.\n\nFalls du der Meinung bist, dass deinerseits alles in Ordnung bist und die Daten noch immer nicht übermittelt werden können, benutze bitte den nachfolgenden Button, um uns die Informationen zu senden.";
 
 //End new strings
 

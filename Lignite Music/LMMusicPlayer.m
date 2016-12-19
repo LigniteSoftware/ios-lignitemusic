@@ -627,25 +627,26 @@ BOOL shuffleForDebug = NO;
 }
 
 - (NSArray<LMMusicTrackCollection*>*)trackCollectionsForMediaQuery:(MPMediaQuery*)mediaQuery withMusicType:(LMMusicType)musicType {
-	MPMediaGrouping associatedGrouping = associatedMediaTypes[musicType];
+//	MPMediaGrouping associatedGrouping = associatedMediaTypes[musicType];
 	
-	NSArray *collections = musicType == LMMusicTypeTitles ? @[[MPMediaItemCollection collectionWithItems:mediaQuery.items]] : mediaQuery.collections;
-	NSMutableArray<LMMusicTrackCollection*> *musicTracks = [NSMutableArray new];
+	NSMutableArray *collections =
+		[[NSMutableArray alloc]initWithArray:(musicType == LMMusicTypeTitles) ? @[[MPMediaItemCollection collectionWithItems:mediaQuery.items]] : mediaQuery.collections];
+//	NSMutableArray<LMMusicTrackCollection*> *musicTracks = [NSMutableArray new];
 	
-	for(int i = 0; i < collections.count; i++){
-		MPMediaItemCollection *itemCollection = [collections objectAtIndex:i];
-		NSMutableArray *musicCollection = [[NSMutableArray alloc]init];
-		for(int itemIndex = 0; itemIndex < itemCollection.count; itemIndex++){
-			MPMediaItem *musicItem = [itemCollection.items objectAtIndex:itemIndex];
-			LMMusicTrack *musicTrack = musicItem;
-			[musicCollection addObject:musicTrack];
-		}
-		LMMusicTrackCollection *trackCollection = itemCollection;
-		
-		if(trackCollection.count > 0){
-			[musicTracks addObject:trackCollection];
-		}
-	}
+//	for(int i = 0; i < collections.count; i++){
+//		MPMediaItemCollection *itemCollection = [collections objectAtIndex:i];
+//		NSMutableArray *musicCollection = [[NSMutableArray alloc]init];
+//		for(int itemIndex = 0; itemIndex < itemCollection.count; itemIndex++){
+//			MPMediaItem *musicItem = [itemCollection.items objectAtIndex:itemIndex];
+//			LMMusicTrack *musicTrack = musicItem;
+//			[musicCollection addObject:musicTrack];
+//		}
+//		LMMusicTrackCollection *trackCollection = itemCollection;
+//		
+//		if(trackCollection.count > 0){
+//			[musicTracks addObject:trackCollection];
+//		}
+//	}
 	
 //	return musicTracks;
 	
@@ -698,12 +699,14 @@ BOOL shuffleForDebug = NO;
 	
 	if(shuffleForDebug){
 		NSLog(@"--- Warning: Query is being automatically shuffled. ---");
-		[self shuffleArray:musicTracks];
+		[self shuffleArray:collections];
 	}
 	
 	//		NSLog(@"[LMMusicPlayer]: Took %f seconds to complete query.", endingTime-startingTime);
 	
-	return [musicTracks sortedArrayUsingDescriptors:@[albumSort]];
+	NSLog(@"Returning sort");
+	
+	return [collections sortedArrayUsingDescriptors:@[albumSort]];
 }
 
 - (NSArray<LMMusicTrackCollection*>*)queryCollectionsForMusicType:(LMMusicType)musicType {
@@ -745,15 +748,26 @@ BOOL shuffleForDebug = NO;
 					break;
 			}
 		}
-
-		MPMediaPropertyPredicate *musicFilterPredicate = [MPMediaPropertyPredicate predicateWithValue:[NSNumber numberWithInteger:MPMediaTypeMusic]
-																						  forProperty:MPMediaItemPropertyMediaType
-																					   comparisonType:MPMediaPredicateComparisonEqualTo];
-		[query addFilterPredicate:musicFilterPredicate];
 		
+		query.groupingType = associatedMediaTypes[musicType];
+
 		return [self trackCollectionsForMediaQuery:query withMusicType:musicType];
 	}
 	return nil;
+}
+
+- (NSArray<LMMusicTrackCollection*>*)collectionsForPersistentID:(LMMusicTrackPersistentID)persistentID forMusicType:(LMMusicType)musicType {
+	MPMediaQuery *query = nil;
+	
+	query = [MPMediaQuery new];
+	query.groupingType = MPMediaGroupingAlbum;
+	
+	MPMediaPropertyPredicate *musicFilterPredicate = [MPMediaPropertyPredicate predicateWithValue:@(persistentID)
+																					  forProperty:MPMediaItemPropertyArtistPersistentID
+																				   comparisonType:MPMediaPredicateComparisonEqualTo];
+	[query addFilterPredicate:musicFilterPredicate];
+	
+	return [self trackCollectionsForMediaQuery:query withMusicType:musicType];
 }
 
 - (void)skipToNextTrack {
