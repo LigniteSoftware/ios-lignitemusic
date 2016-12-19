@@ -11,11 +11,13 @@
 /**
  The length of the whole app trial in seconds.
  */
-#define LMPurchaseManagerTrialLengthInSeconds 259200
+//#define LMPurchaseManagerTrialLengthInSeconds 259200
+#define LMPurchaseManagerTrialLengthInSeconds 10
 
 typedef NSString LMPurchaseManagerProductIdentifier;
 
 @protocol LMPurchaseManagerDelegate <NSObject>
+@optional
 
 /**
  The user purchased a product with a certain idenfier.
@@ -38,7 +40,7 @@ typedef NSString LMPurchaseManagerProductIdentifier;
 
  @return The shared purchase manager.
  */
-+ (id)sharedPurchaseManager;
++ (LMPurchaseManager*)sharedPurchaseManager;
 
 /**
  Adds a delegate to the list of delegates.

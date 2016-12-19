@@ -20,6 +20,11 @@
  */
 #define LMPurchaseManagerTrialStartTimeKey @"LMPurchaseManagerTrialStartTimeKey"
 
+/**
+ The interval of time in seconds for the purchase manager to check if the user has run out of time in their trial.
+ */
+#define LMPurchaseManagerTrialTimeCheckIntervalInSeconds 3.0
+
 @interface LMPurchaseManager() <SKPaymentTransactionObserver, SKProductsRequestDelegate>
 
 /**
@@ -32,6 +37,11 @@
  */
 @property NSUserDefaults *userDefaults;
 
+/**
+ The timer for checking for the trial.
+ */
+@property NSTimer *trialCheckTimer;
+
 @end
 
 @implementation LMPurchaseManager
@@ -43,13 +53,21 @@
  General code
  */
 
-+ (id)sharedPurchaseManager {
++ (LMPurchaseManager*)sharedPurchaseManager {
 	static LMPurchaseManager *sharedPurchaseManager;
 	static dispatch_once_t token;
 	
 	dispatch_once(&token, ^{
 		sharedPurchaseManager = [self new];
+		sharedPurchaseManager.delegatesArray = [NSMutableArray new];
 		sharedPurchaseManager.userDefaults = [NSUserDefaults standardUserDefaults];
+		sharedPurchaseManager.trialCheckTimer = [NSTimer scheduledTimerWithTimeInterval:LMPurchaseManagerTrialTimeCheckIntervalInSeconds
+																				 target:sharedPurchaseManager
+																			   selector:@selector(checkTrialTimeRemaining)
+																			   userInfo:nil
+																				repeats:YES];
+		
+		NSLog(@"The user currently has %f seconds left.", [sharedPurchaseManager amountOfTrialTimeRemainingInSeconds]);
 	});
 	
 	return sharedPurchaseManager;
@@ -71,8 +89,12 @@
 
 - (void)completePurchaseForProductIdentifier:(LMPurchaseManagerProductIdentifier*)productIdentifier {
 	for(id<LMPurchaseManagerDelegate> delegate in self.delegatesArray){
-		[delegate userPurchasedProductWithIdentifier:productIdentifier];
+		if([delegate respondsToSelector:@selector(userPurchasedProductWithIdentifier:)]){
+			[delegate userPurchasedProductWithIdentifier:productIdentifier];
+		}
 	}
+	
+	[self.userDefaults setBool:YES forKey:productIdentifier]; //To avoid confusing naming conventions for if they've purchased, we just set a YES flag to its ID.
 }
 
 - (BOOL)userOwnsProductWithIdentifier:(LMPurchaseManagerProductIdentifier*)productIdentifier {
@@ -180,6 +202,25 @@
  End purchase code and begin ownership code
  */
 
+- (NSTimeInterval)amountOfTrialTimeRemainingInSeconds {
+	NSTimeInterval startTime = [[NSDate new] timeIntervalSince1970];
+		
+	if([self.userDefaults secretObjectForKey:LMPurchaseManagerTrialStartTimeKey]){
+		startTime = [self.userDefaults secretDoubleForKey:LMPurchaseManagerTrialStartTimeKey];
+	}
+	else{
+		[self.userDefaults setSecretDouble:startTime forKey:LMPurchaseManagerTrialStartTimeKey];
+		[self.userDefaults synchronize];
+	}
+	NSLog(@"The user's start of trial time was on %@.", [NSDate dateWithTimeIntervalSince1970:startTime]);
+	
+	NSTimeInterval currentTime = [[NSDate new] timeIntervalSince1970];
+	
+	NSTimeInterval timeDifferenceSinceStartOfTrial = currentTime-startTime;
+	
+	return (LMPurchaseManagerTrialLengthInSeconds-timeDifferenceSinceStartOfTrial);
+}
+
 - (BOOL)userHasAccessToTheApp {
 	//First check whether or not they own the app
 	if([self userOwnsProductWithIdentifier:LMPurchaseManagerProductIdentifierLifetimeMusic]){
@@ -187,23 +228,41 @@
 		return YES;
 	}
 	
-	//Otherwise check their remaining trial time
-	NSTimeInterval startTime = [[NSDate new] timeIntervalSince1970];
-	if([self.userDefaults secretObjectForKey:LMPurchaseManagerTrialStartTimeKey]){
-		startTime = [self.userDefaults secretDoubleForKey:LMPurchaseManagerTrialStartTimeKey];
-	}
-	NSLog(@"The user's start of trial time was on %@.", [NSDate dateWithTimeIntervalSince1970:startTime]);
-	
-	NSTimeInterval currentTime = [[NSDate new]timeIntervalSince1970];
-	
-	NSTimeInterval timeDifferenceSinceStartOfTrial = currentTime-startTime;
-	if(timeDifferenceSinceStartOfTrial > LMPurchaseManagerTrialLengthInSeconds){
+	NSTimeInterval amountOfTrialTimeRemaining = [self amountOfTrialTimeRemainingInSeconds];
+	if(amountOfTrialTimeRemaining < 0){
 		NSLog(@"The user is out of trial time.");
 		return NO;
 	}
 	
-	NSLog(@"The user is within the trial timeframe with %f seconds left.", (LMPurchaseManagerTrialLengthInSeconds-timeDifferenceSinceStartOfTrial));
+	NSLog(@"The user is within the trial timeframe with %f seconds left.", amountOfTrialTimeRemaining);
 	return YES;
+}
+
+- (void)checkTrialTimeRemaining {
+	NSLog(@"Checking trial time.");
+	
+	//If they already have access to the app, kill the constant checks for the trial ending.
+	if([self userOwnsProductWithIdentifier:LMPurchaseManagerProductIdentifierLifetimeMusic]){
+		NSLog(@"Killing trial timer in cold blood.");
+		[self.trialCheckTimer invalidate];
+		self.trialCheckTimer = nil;
+		return;
+	}
+	
+	NSTimeInterval amountOfTrialTimeRemaining = [self amountOfTrialTimeRemainingInSeconds];
+	if(amountOfTrialTimeRemaining < 0){
+		NSLog(@"The user is now out of trial time.");
+		for(id<LMPurchaseManagerDelegate>delegate in self.delegatesArray){
+			if([delegate respondsToSelector:@selector(userHasRunOutOfTrialTime)]){
+				[delegate userHasRunOutOfTrialTime];
+			}
+		}
+		[self.trialCheckTimer invalidate];
+		self.trialCheckTimer = nil;
+	}
+	else{
+		NSLog(@"The user is still within the trial window.");
+	}
 }
 
 @end

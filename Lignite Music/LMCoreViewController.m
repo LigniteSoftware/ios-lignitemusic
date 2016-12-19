@@ -26,6 +26,7 @@
 #import "LMBrowsingDetailViewController.h"
 #import "LMSearchView.h"
 #import "LMSearchViewController.h"
+#import "LMPurchaseManager.h"
 
 #import "LMContactView.h"
 #import "LMDebugView.h"
@@ -40,7 +41,7 @@
 @import SDWebImage;
 @import StoreKit;
 
-@interface LMCoreViewController () <LMMusicPlayerDelegate, LMSourceDelegate, LMBrowsingAssistantDelegate, UIGestureRecognizerDelegate, LMSearchBarDelegate, LMLetterTabDelegate, LMSearchSelectedDelegate>
+@interface LMCoreViewController () <LMMusicPlayerDelegate, LMSourceDelegate, LMBrowsingAssistantDelegate, UIGestureRecognizerDelegate, LMSearchBarDelegate, LMLetterTabDelegate, LMSearchSelectedDelegate, LMPurchaseManagerDelegate>
 
 @property LMMusicPlayer *musicPlayer;
 
@@ -77,9 +78,15 @@
 
 @property BOOL loaded;
 
+@property LMPurchaseManager *purchaseManager;
+
 @end
 
 @implementation LMCoreViewController
+
+- (void)userHasRunOutOfTrialTime {
+	NSLog(@"Got a notification here saying you've run out of trial time, sir.");
+}
 
 - (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState {
 //	NSLog(@"Got new playback state %d", newState);
@@ -625,6 +632,8 @@ BOOL didAutomaticallyClose = NO;
 						NSTimeInterval startTime = [[NSDate new] timeIntervalSince1970];
 						
 						self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
+						self.purchaseManager = [LMPurchaseManager sharedPurchaseManager];
+						[self.purchaseManager addDelegate:self];
 
 						LMPebbleManager *pebbleManager = [LMPebbleManager sharedPebbleManager];
 						[pebbleManager attachToViewController:self];
