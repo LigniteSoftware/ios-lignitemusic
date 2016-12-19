@@ -9,6 +9,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>CocoaSecurity.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>MBProgressHUD.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -34,6 +39,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>SecureNSUserDefaults.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>YYImage.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -42,7 +52,12 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>2DC2BFD4C64C933B3A95C45989830622</key>
+		<key>10F2778869AFDF4C1D6FE11F9F5CD7DA</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>1CE15060B0E33F7AE0A78865CFACF946</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -52,7 +67,12 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>B6E6514E20011EFD45FCFE7A8B490B12</key>
+		<key>A28FE8E555677F0B21E879750ACF0A5C</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>B525C03A236B49A765124BB3299CA29F</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -62,12 +82,12 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>ECFB467F23D038E55B415BA1C9865C2A</key>
+		<key>EEF3D45CC453A62A957FF0F45A62156F</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>F85E7FFADFECC533CFD5DAB8B5C36539</key>
+		<key>EF8EF75FFCC794D966483D26D3EA95FE</key>
 		<dict>
 			<key>primary</key>
 			<true/>

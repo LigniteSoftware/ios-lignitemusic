@@ -14,6 +14,7 @@ PODS:
   - AFNetworking/Serialization (3.1.0)
   - AFNetworking/UIKit (3.1.0):
     - AFNetworking/NSURLSession
+  - CocoaSecurity (1.2.4)
   - ImageMagick (6.8.8-9):
     - ImageMagick/jpeg (= 6.8.8-9)
     - ImageMagick/png (= 6.8.8-9)
@@ -32,6 +33,8 @@ PODS:
   - SDWebImage (3.8.2):
     - SDWebImage/Core (= 3.8.2)
   - SDWebImage/Core (3.8.2)
+  - SecureNSUserDefaults (1.0.1):
+    - CocoaSecurity (~> 1.2.4)
   - YYImage (1.0.4):
     - YYImage/Core (= 1.0.4)
   - YYImage/Core (1.0.4)
@@ -44,18 +47,21 @@ DEPENDENCIES:
   - PebbleKit
   - PureLayout
   - SDWebImage (~> 3.8)
+  - SecureNSUserDefaults (~> 1.0.1)
   - YYImage
 
 SPEC CHECKSUMS:
   AFNetworking: 5e0e199f73d8626b11e79750991f5d173d1f8b67
+  CocoaSecurity: d288a6f87e0f363823d2cb83e753814a6944f71a
   ImageMagick: e8c089d133679d505c98dc97f3dc5be0e706e1df
   MarqueeLabel: 80ba85d2b76a9f5fa6c13de337db80bcd94feb1d
   MBProgressHUD: 4890f671c94e8a0f3cf959aa731e9de2f036d71a
   PebbleKit: 4af7a5f57522cbd371f1798e6dd80bd21ac9d46f
   PureLayout: 4d550abe49a94f24c2808b9b95db9131685fe4cd
   SDWebImage: 098e97e6176540799c27e804c96653ee0833d13c
+  SecureNSUserDefaults: 8a07fc6a6fde31c7f8fa6ead73d3c9c3706a6364
   YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
 
-PODFILE CHECKSUM: 18e9d88da59212809054b9e969e63453370aa07e
+PODFILE CHECKSUM: 01fda0c6651ec3879a55da848a5879e5a143b40a
 
 COCOAPODS: 1.1.1

@@ -6,6 +6,7 @@
 //  Copyright © 2015 Lignite. All rights reserved.
 //
 
+#import <SecureNSUserDefaults/NSUserDefaults+SecureAdditions.h>
 #import "LMAppDelegate.h"
 #import "LMMusicPlayer.h"
 #import "LMAppIcon.h"
@@ -47,7 +48,9 @@
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-	NSLog(@"[LMAppDelegate]: Did finish launching with options");
+	NSLog(@"[LMAppDelegate]: Did finish launching with options.");
+	
+	[[NSUserDefaults standardUserDefaults] setSecret:@"efd07a3e-8af2-4b19-9198-c8c67cbe93ab"];
 	
     // Override point for customization after application launch.
 //	self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];

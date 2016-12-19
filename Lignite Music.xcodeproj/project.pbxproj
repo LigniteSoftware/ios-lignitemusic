@@ -84,6 +84,8 @@
 		6A7DF1201DB124030077B979 /* icon_triple_horizontal_dots.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A7DF11F1DB124030077B979 /* icon_triple_horizontal_dots.png */; };
 		6A7DF1241DB12C860077B979 /* LMTitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A7DF1231DB12C860077B979 /* LMTitleView.m */; };
 		6A8190BE1DDD3B5B00DBFE85 /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AA4735E1BC70FBA0066D47E /* ExternalAccessory.framework */; };
+		6A838A951E07A8FF006E7DE0 /* LMPurchaseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A838A941E07A8FF006E7DE0 /* LMPurchaseManager.m */; };
+		6A838A971E07A9CF006E7DE0 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A838A961E07A9CF006E7DE0 /* StoreKit.framework */; };
 		6A8CF2B91DB4952A00777525 /* LMSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A8CF2B81DB4952A00777525 /* LMSettings.m */; };
 		6A92F8241DD6D62A002045C2 /* LMBrowsingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A92F8231DD6D62A002045C2 /* LMBrowsingView.m */; };
 		6A92F8271DD6DF00002045C2 /* LMBrowsingDetailView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A92F8261DD6DF00002045C2 /* LMBrowsingDetailView.m */; };
@@ -291,6 +293,9 @@
 		6A7DF11F1DB124030077B979 /* icon_triple_horizontal_dots.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_triple_horizontal_dots.png; sourceTree = "<group>"; };
 		6A7DF1221DB12C860077B979 /* LMTitleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMTitleView.h; sourceTree = "<group>"; };
 		6A7DF1231DB12C860077B979 /* LMTitleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMTitleView.m; sourceTree = "<group>"; };
+		6A838A931E07A8FF006E7DE0 /* LMPurchaseManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMPurchaseManager.h; sourceTree = "<group>"; };
+		6A838A941E07A8FF006E7DE0 /* LMPurchaseManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMPurchaseManager.m; sourceTree = "<group>"; };
+		6A838A961E07A9CF006E7DE0 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		6A8CF2B71DB4952A00777525 /* LMSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMSettings.h; sourceTree = "<group>"; };
 		6A8CF2B81DB4952A00777525 /* LMSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMSettings.m; sourceTree = "<group>"; };
 		6A92F8221DD6D62A002045C2 /* LMBrowsingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMBrowsingView.h; sourceTree = "<group>"; };
@@ -421,6 +426,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6A838A971E07A9CF006E7DE0 /* StoreKit.framework in Frameworks */,
 				6A8190BE1DDD3B5B00DBFE85 /* ExternalAccessory.framework in Frameworks */,
 				6A5821041DAF312C00A4FAB1 /* AudioToolbox.framework in Frameworks */,
 				6A5821021DADE54400A4FAB1 /* AVFoundation.framework in Frameworks */,
@@ -725,6 +731,15 @@
 			name = Layovers;
 			sourceTree = "<group>";
 		};
+		6A838A921E07A8E2006E7DE0 /* Purchases */ = {
+			isa = PBXGroup;
+			children = (
+				6A838A931E07A8FF006E7DE0 /* LMPurchaseManager.h */,
+				6A838A941E07A8FF006E7DE0 /* LMPurchaseManager.m */,
+			);
+			name = Purchases;
+			sourceTree = "<group>";
+		};
 		6A92F8211DD6D5F7002045C2 /* Core */ = {
 			isa = PBXGroup;
 			children = (
@@ -857,6 +872,7 @@
 				6A1FB9C41D99C8FC00890BF3 /* Other */,
 				6A1FB9C11D99C88500890BF3 /* OtherViews */,
 				6A1FB9C01D99C72200890BF3 /* Pebble */,
+				6A838A921E07A8E2006E7DE0 /* Purchases */,
 				6A5257501DF1FC650040210D /* Search */,
 				6AA4459D1D5AD676004C6739 /* SettingsControls */,
 				6A1FB9C31D99C8C900890BF3 /* Storyboards */,
@@ -963,6 +979,7 @@
 		EEE9F5AA536DDB5B28CE09F9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6A838A961E07A9CF006E7DE0 /* StoreKit.framework */,
 				6A5821031DAF312C00A4FAB1 /* AudioToolbox.framework */,
 				6A5821011DADE54400A4FAB1 /* AVFoundation.framework */,
 				6A2566F21D4089E8004EDE41 /* MediaPlayer.framework */,
@@ -1197,6 +1214,7 @@
 				6A8CF2B91DB4952A00777525 /* LMSettings.m in Sources */,
 				6A92F8271DD6DF00002045C2 /* LMBrowsingDetailView.m in Sources */,
 				6A26B4671DE2B8BD008B5B69 /* LMSettingsView.m in Sources */,
+				6A838A951E07A8FF006E7DE0 /* LMPurchaseManager.m in Sources */,
 				6ABF6A851CF3768A003E4EFA /* UIColor+isLight.m in Sources */,
 				6A313C121BB44959002BBC33 /* LMAlbumArtView.m in Sources */,
 				6ADDBD3D1DA29D3E00DB99EF /* LMShadowView.m in Sources */,
