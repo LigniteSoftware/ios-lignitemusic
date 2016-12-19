@@ -9,11 +9,7 @@
 #import <SecureNSUserDefaults/NSUserDefaults+SecureAdditions.h>
 #import <StoreKit/StoreKit.h>
 #import "LMPurchaseManager.h"
-
-/**
- The product identifier for lifetime access to the app.
- */
-#define LMPurchaseManagerProductIdentifierLifetimeMusic @"lignite.io.music.LifetimeMusic"
+#import "LMPurchaseViewController.h"
 
 /**
  The key for storing the start time of the trial.
@@ -46,7 +42,7 @@
 
 @implementation LMPurchaseManager
 
-@synthesize userHasAccessToTheApp = _userHasAccessToTheApp;
+@synthesize appOwnershipStatus = _appOwnershipStatus;
 
 
 /*
@@ -92,6 +88,16 @@
 		if([delegate respondsToSelector:@selector(userPurchasedProductWithIdentifier:)]){
 			[delegate userPurchasedProductWithIdentifier:productIdentifier];
 		}
+	}
+	
+	//Alert delegates which are subscribed to appOwnershipStatusChanged: that the app ownership has changed to purchased
+	if([productIdentifier isEqualToString:LMPurchaseManagerProductIdentifierLifetimeMusic]){
+		for(id<LMPurchaseManagerDelegate> delegate in self.delegatesArray){
+			if([delegate respondsToSelector:@selector(userPurchasedProductWithIdentifier:)]){
+				[delegate appOwnershipStatusChanged:LMPurchaseManagerAppOwnershipStatusPurchased];
+			}
+		}
+
 	}
 	
 	[self.userDefaults setBool:YES forKey:productIdentifier]; //To avoid confusing naming conventions for if they've purchased, we just set a YES flag to its ID.
@@ -221,21 +227,21 @@
 	return (LMPurchaseManagerTrialLengthInSeconds-timeDifferenceSinceStartOfTrial);
 }
 
-- (BOOL)userHasAccessToTheApp {
+- (LMPurchaseManagerAppOwnershipStatus)appOwnershipStatus {
 	//First check whether or not they own the app
 	if([self userOwnsProductWithIdentifier:LMPurchaseManagerProductIdentifierLifetimeMusic]){
 		NSLog(@"The user has already purchased the app.");
-		return YES;
+		return LMPurchaseManagerAppOwnershipStatusPurchased;
 	}
 	
 	NSTimeInterval amountOfTrialTimeRemaining = [self amountOfTrialTimeRemainingInSeconds];
 	if(amountOfTrialTimeRemaining < 0){
 		NSLog(@"The user is out of trial time.");
-		return NO;
+		return LMPurchaseManagerAppOwnershipStatusTrialExpired;
 	}
 	
 	NSLog(@"The user is within the trial timeframe with %f seconds left.", amountOfTrialTimeRemaining);
-	return YES;
+	return LMPurchaseManagerAppOwnershipStatusInTrial;
 }
 
 - (void)checkTrialTimeRemaining {
@@ -253,8 +259,8 @@
 	if(amountOfTrialTimeRemaining < 0){
 		NSLog(@"The user is now out of trial time.");
 		for(id<LMPurchaseManagerDelegate>delegate in self.delegatesArray){
-			if([delegate respondsToSelector:@selector(userHasRunOutOfTrialTime)]){
-				[delegate userHasRunOutOfTrialTime];
+			if([delegate respondsToSelector:@selector(appOwnershipStatusChanged:)]){
+				[delegate appOwnershipStatusChanged:LMPurchaseManagerAppOwnershipStatusTrialExpired];
 			}
 		}
 		[self.trialCheckTimer invalidate];
@@ -263,6 +269,18 @@
 	else{
 		NSLog(@"The user is still within the trial window.");
 	}
+}
+
+- (void)showPurchaseViewControllerOnViewController:(UIViewController*)viewController present:(BOOL)present {
+	LMPurchaseViewController *purchaseViewController  = [LMPurchaseViewController new];
+	
+	if(present) {
+		[viewController presentViewController:purchaseViewController animated:YES completion:nil];
+	}
+	else{
+		[viewController showViewController:purchaseViewController sender:self];
+	}
+	
 }
 
 @end

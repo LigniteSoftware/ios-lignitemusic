@@ -9,12 +9,24 @@
 #import <Foundation/Foundation.h>
 
 /**
+ The product identifier for lifetime access to the app.
+ */
+#define LMPurchaseManagerProductIdentifierLifetimeMusic @"lignite.io.music.LifetimeMusic"
+
+/**
  The length of the whole app trial in seconds.
  */
 //#define LMPurchaseManagerTrialLengthInSeconds 259200
 #define LMPurchaseManagerTrialLengthInSeconds 10
 
 typedef NSString LMPurchaseManagerProductIdentifier;
+
+typedef enum {
+	LMPurchaseManagerAppOwnershipStatusInTrial = 0, //The user is still within the 3 day trial period
+	LMPurchaseManagerAppOwnershipStatusTrialExpired, //The user has run out of trial time and doesn't own the app at all
+	LMPurchaseManagerAppOwnershipStatusPurchased, //The user has purchased the app
+	LMPurchaseManagerAppOwnershipStatusLoggedInAsBacker //The user is a backer and is logged in
+} LMPurchaseManagerAppOwnershipStatus;
 
 @protocol LMPurchaseManagerDelegate <NSObject>
 @optional
@@ -29,7 +41,7 @@ typedef NSString LMPurchaseManagerProductIdentifier;
 /**
  The user has run out of trial time.
  */
-- (void)userHasRunOutOfTrialTime;
+- (void)appOwnershipStatusChanged:(LMPurchaseManagerAppOwnershipStatus)newOwnershipStatus;
 
 @end
 
@@ -72,8 +84,23 @@ typedef NSString LMPurchaseManagerProductIdentifier;
 - (void)makePurchaseWithProductIdentifier:(LMPurchaseManagerProductIdentifier*)productIdentifier;
 
 /**
- Whether or not the user is has access to the app. Should the user does not have access if they have run out of trial time and not purchased the app. Though, a user who is within the trial period or has purchased it does.
+ The amount of trial time remaining in seconds.
+
+ @return The amount of trial time.
  */
-@property (readonly) BOOL userHasAccessToTheApp;
+- (NSTimeInterval)amountOfTrialTimeRemainingInSeconds;
+
+/**
+ Shows the purchase view controller on a certain view controller. Optionally presented so it can take over the whole screen.
+
+ @param viewController The view controller to show the purchase view controller on top of.
+ @param present Whether or not to present the purchase view controller.
+ */
+- (void)showPurchaseViewControllerOnViewController:(UIViewController*)viewController present:(BOOL)present;
+
+/**
+ The status of the user's ownership of the app.
+ */
+@property (readonly) LMPurchaseManagerAppOwnershipStatus appOwnershipStatus;
 
 @end

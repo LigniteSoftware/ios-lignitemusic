@@ -84,8 +84,22 @@
 
 @implementation LMCoreViewController
 
-- (void)userHasRunOutOfTrialTime {
-	NSLog(@"Got a notification here saying you've run out of trial time, sir.");
+- (void)appOwnershipStatusChanged:(LMPurchaseManagerAppOwnershipStatus)newOwnershipStatus {
+	NSLog(@"The app ownership status changed:");
+	switch(newOwnershipStatus){
+		case LMPurchaseManagerAppOwnershipStatusInTrial:
+			NSLog(@"The user is currently in trial.");
+			break;
+		case LMPurchaseManagerAppOwnershipStatusTrialExpired:
+			NSLog(@"The user's trial has expired.");
+			break;
+		case LMPurchaseManagerAppOwnershipStatusPurchased:
+			NSLog(@"The user purchased the app.");
+			break;
+		case LMPurchaseManagerAppOwnershipStatusLoggedInAsBacker:
+			NSLog(@"The user is logged in as a backer.");
+			break;
+	}
 }
 
 - (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState {
@@ -566,13 +580,17 @@ BOOL didAutomaticallyClose = NO;
 //	
 //	return;
 	
-//	self.settingsView = [LMSettingsView newAutoLayoutView];
-//	self.settingsView.coreViewController = self;
-//	[self.view addSubview:self.settingsView];
-//	
-//	[self.settingsView autoPinEdgesToSuperviewEdges];
-//	
-//	return;
+	[NSTimer scheduledTimerWithTimeInterval:1.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
+		[[LMPurchaseManager sharedPurchaseManager] showPurchaseViewControllerOnViewController:self.navigationController present:YES];
+	}];
+	
+	self.settingsView = [LMSettingsView newAutoLayoutView];
+	self.settingsView.coreViewController = self;
+	[self.view addSubview:self.settingsView];
+	
+	[self.settingsView autoPinEdgesToSuperviewEdges];
+	
+	return;
 	
 //	LMImageManager *imageManager = [LMImageManager sharedImageManager];
 //	[imageManager launchPermissionRequestOnView:self.view
@@ -754,6 +772,10 @@ BOOL didAutomaticallyClose = NO;
 						
 //						[NSTimer scheduledTimerWithTimeInterval:1.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
 //							[self openNowPlayingView];
+//						}];
+						
+//						[NSTimer scheduledTimerWithTimeInterval:3.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
+//							[self.purchaseManager makePurchaseWithProductIdentifier:LMPurchaseManagerProductIdentifierLifetimeMusic];
 //						}];
 					});
 					break;

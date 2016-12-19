@@ -20,6 +20,7 @@
 #import "LMCoreViewController.h"
 #import "LMContactViewController.h"
 #import "LMDebugViewController.h"
+#import "LMPurchaseManager.h"
 
 @interface LMSettingsView()<LMSectionTableViewDelegate, LMImageManagerDelegate>
 
@@ -72,7 +73,7 @@
 		case 2:
 			return 2;
 		case 3:
-			return 2;
+			return 3;
 	}
 	return 0;
 }
@@ -107,9 +108,34 @@
 			break;
 		case 3:
 			switch(indexPath.row){
-				case 0:
-					return NSLocalizedString(@"Credits", nil);
+				case 0: {
+					LMPurchaseManagerAppOwnershipStatus currentOwnershipStatus = [LMPurchaseManager sharedPurchaseManager].appOwnershipStatus;
+					switch(currentOwnershipStatus){
+						case LMPurchaseManagerAppOwnershipStatusInTrial:{
+							NSTimeInterval trialTimeRemaining = [[LMPurchaseManager sharedPurchaseManager] amountOfTrialTimeRemainingInSeconds];
+							NSString *trialTimeRemainingString = nil;
+							if(trialTimeRemaining <= 3600) { //One hour
+								trialTimeRemainingString = [NSString stringWithFormat:NSLocalizedString(@"XMinutesLeftInTrial", nil), (trialTimeRemaining/60.0)];
+							}
+							else if(trialTimeRemaining <= 86400) { //One day
+								trialTimeRemainingString = [NSString stringWithFormat:NSLocalizedString(@"XHoursLeftInTrial", nil), (trialTimeRemaining/3600.0)];
+							}
+							else {
+								trialTimeRemainingString = [NSString stringWithFormat:NSLocalizedString(@"XDaysLeftInTrial", nil), (trialTimeRemaining/86400.0)];
+							}
+							return trialTimeRemainingString;
+						}
+						case LMPurchaseManagerAppOwnershipStatusTrialExpired:
+							return NSLocalizedString(@"OutOfTrialTime", nil);
+						case LMPurchaseManagerAppOwnershipStatusPurchased:
+							return NSLocalizedString(@"YouOwnLigniteMusic", nil);
+						case LMPurchaseManagerAppOwnershipStatusLoggedInAsBacker:
+							return NSLocalizedString(@"LoggedInAsABacker", nil);
+					}
+				}
 				case 1:
+					return NSLocalizedString(@"Credits", nil);
+				case 2:
 					return NSLocalizedString(@"ContactUs", nil);
 			}
 			break;
@@ -165,9 +191,21 @@
 			break;
 		case 3:
 			switch(indexPath.row){
-				case 0:
-					return NSLocalizedString(@"CreditsMore", nil);
+				case 0: {
+					LMPurchaseManagerAppOwnershipStatus currentOwnershipStatus = [LMPurchaseManager sharedPurchaseManager].appOwnershipStatus;
+					switch(currentOwnershipStatus){
+						case LMPurchaseManagerAppOwnershipStatusInTrial:
+						case LMPurchaseManagerAppOwnershipStatusTrialExpired:
+							return NSLocalizedString(@"TapToUseTheAppForever", nil);
+						case LMPurchaseManagerAppOwnershipStatusPurchased:
+							return NSLocalizedString(@"ThanksForYourSupport", nil);
+						case LMPurchaseManagerAppOwnershipStatusLoggedInAsBacker:
+							return NSLocalizedString(@"TapToLogout", nil);
+					}
+				}
 				case 1:
+					return NSLocalizedString(@"CreditsMore", nil);
+				case 2:
 					return nil;
 			}
 			break;
@@ -342,16 +380,21 @@
 			break;
 		case 3:
 			switch(indexPath.row){
-				case 0:{
+				case 0: {
+					[[LMPurchaseManager sharedPurchaseManager] showPurchaseViewControllerOnViewController:self.coreViewController present:NO];
+					break;
+				}
+				case 1:{
 					LMCreditsViewController *creditsViewController = [LMCreditsViewController new];
 					[self.coreViewController.navigationController showViewController:creditsViewController sender:self];
 					[(LMCoreViewController*)self.coreViewController setStatusBarBlurHidden:YES];
 					break;
 				}
-				case 1: {
+				case 2: {
 					LMContactViewController *contactViewController = [LMContactViewController new];
 					[self.coreViewController.navigationController showViewController:contactViewController sender:self];
 					[(LMCoreViewController*)self.coreViewController setStatusBarBlurHidden:YES];
+					break;
 				}
 			}
 			break;

@@ -432,29 +432,29 @@
 
 				//Good to download!
 				
-				SDWebImageDownloader *downloader = [SDWebImageDownloader sharedDownloader];
-				[downloader downloadImageWithURL:[NSURL URLWithString:itemImageURL]
-										 options:0
-										progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+SDWebImageDownloader *downloader = [SDWebImageDownloader sharedDownloader];
+[downloader downloadImageWithURL:[NSURL URLWithString:itemImageURL]
+						 options:0
+						progress:^(NSInteger receivedSize, NSInteger expectedSize) {
 //											NSLog(@"%.02f%% complete", (float)receivedSize/(float)expectedSize * 100);
-										}
-									   completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished) {
-										   if(image && finished) {
-											   LMImageManagerConditionLevel currentConditionLevel = [self conditionLevelForDownloadingForCategory:category];
-											   
-											   if(currentConditionLevel == LMImageManagerConditionLevelOptimal){
-												   NSLog(@"Done, now storing to %@.", imageCacheKey);
-												   
-												   [[self imageCacheForCategory:category] storeImage:image forKey:imageCacheKey];
-												   
-												   [self notifyDelegatesOfCacheSizeChangeForCategory:category];
-												   [self notifyDelegatesOfImageCacheChangeForCategory:category];
-											   }
-											   else{
-												   NSLog(@"Not storing, conditions aren't right.");
-											   }
-										   }
-									   }];
+						}
+					   completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished) {
+						   if(image && finished) {
+							   LMImageManagerConditionLevel currentConditionLevel = [self conditionLevelForDownloadingForCategory:category];
+							   
+							   if(currentConditionLevel == LMImageManagerConditionLevelOptimal){
+								   NSLog(@"Done, now storing to %@.", imageCacheKey);
+								   
+								   [[self imageCacheForCategory:category] storeImage:image forKey:imageCacheKey];
+								   
+								   [self notifyDelegatesOfCacheSizeChangeForCategory:category];
+								   [self notifyDelegatesOfImageCacheChangeForCategory:category];
+							   }
+							   else{
+								   NSLog(@"Not storing, conditions aren't right.");
+							   }
+						   }
+					   }];
 				return;
 			}
 		}
