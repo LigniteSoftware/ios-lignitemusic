@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <StoreKit/StoreKit.h>
 
 /**
  The product identifier for lifetime access to the app.
@@ -32,11 +33,12 @@ typedef enum {
 @optional
 
 /**
- The user purchased a product with a certain idenfier.
+ The transaction state of a product being purchased changed for a certain product with a product identifier.
 
- @param productIdentifier The product identifier which links to the product purchased.
+ @param transactionState The new transaction state.
+ @param productIdentifier The product identifier for the product.
  */
-- (void)userPurchasedProductWithIdentifier:(LMPurchaseManagerProductIdentifier*)productIdentifier;
+- (void)transactionStateChangedTo:(SKPaymentTransactionState)transactionState forProductWithIdentifier:(LMPurchaseManagerProductIdentifier*)productIdentifier;
 
 /**
  The user has run out of trial time.

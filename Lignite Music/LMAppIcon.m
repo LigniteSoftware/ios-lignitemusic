@@ -86,6 +86,12 @@
 			return @"icon_airplay.png";
 		case LMIconBack:
 			return @"icon_back.png";
+		case LMIconGreenCheckmark:
+			return @"icon_green_checkmark.png";
+		case LMIconBuy:
+			return @"icon_buy.png";
+		case LMIconKickstarter:
+			return @"icon_kickstarter.png";
 	}
 }
 

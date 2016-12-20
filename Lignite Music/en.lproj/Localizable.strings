@@ -93,6 +93,15 @@
 "YouOwnLigniteMusic" = "You own Lignite Music";
 "ThanksForYourSupport" = "Thanks for your support!";
 
+"TrialTimeIsUpTitle" = "Your 3 day trial has come to an end";
+"TrialTimeIsUpDescription" = "For about the price of a coffee, you can keep using Lignite Music, which does a lot more than coffee and never runs out.";
+"AppAdvantage0" = "Gesture-driven and intuitive";
+"AppAdvantage1" = "Easy to use in the car, at the gym, or anywhere else";
+"AppAdvantage2" = "Beautifully designed and simple";
+"IfYoureAKickstarterBacker" = "If you're a Kickstarter backer, you can login by tapping the Kickstarter button below.";
+
+"HoldOn" = "Hold on a sec...";
+
 /*
  
  End new strings

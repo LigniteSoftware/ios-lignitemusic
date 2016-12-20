@@ -7,7 +7,6 @@
 //
 
 #import <SecureNSUserDefaults/NSUserDefaults+SecureAdditions.h>
-#import <StoreKit/StoreKit.h>
 #import "LMPurchaseManager.h"
 #import "LMPurchaseViewController.h"
 
@@ -84,16 +83,10 @@
  */
 
 - (void)completePurchaseForProductIdentifier:(LMPurchaseManagerProductIdentifier*)productIdentifier {
-	for(id<LMPurchaseManagerDelegate> delegate in self.delegatesArray){
-		if([delegate respondsToSelector:@selector(userPurchasedProductWithIdentifier:)]){
-			[delegate userPurchasedProductWithIdentifier:productIdentifier];
-		}
-	}
-	
 	//Alert delegates which are subscribed to appOwnershipStatusChanged: that the app ownership has changed to purchased
 	if([productIdentifier isEqualToString:LMPurchaseManagerProductIdentifierLifetimeMusic]){
 		for(id<LMPurchaseManagerDelegate> delegate in self.delegatesArray){
-			if([delegate respondsToSelector:@selector(userPurchasedProductWithIdentifier:)]){
+			if([delegate respondsToSelector:@selector(appOwnershipStatusChanged:)]){
 				[delegate appOwnershipStatusChanged:LMPurchaseManagerAppOwnershipStatusPurchased];
 			}
 		}
@@ -170,9 +163,19 @@
 	}
 }
 
-- (void)paymentQueue:(SKPaymentQueue *)queue updatedTransactions:(NSArray *)transactions{
+- (void)paymentQueue:(SKPaymentQueue *)queue updatedTransactions:(NSArray *)transactions {
 	for(SKPaymentTransaction *transaction in transactions){
-		switch(transaction.transactionState){
+		NSString *productIdentifier = transaction.payment.productIdentifier;
+		SKPaymentTransactionState transactionState = transaction.transactionState;
+		
+		for(id<LMPurchaseManagerDelegate> delegate in self.delegatesArray){
+			if([delegate respondsToSelector:@selector(transactionStateChangedTo:forProductWithIdentifier:)]){
+				[delegate transactionStateChangedTo:transactionState
+						   forProductWithIdentifier:productIdentifier];
+			}
+		}
+	
+		switch(transactionState){
 			case SKPaymentTransactionStatePurchasing:
 				NSLog(@"[LMPurchaseManager]: User is working on their purchase.");
 				break;
@@ -181,7 +184,7 @@
 				
 				[[SKPaymentQueue defaultQueue] finishTransaction:transaction];
 				
-				[self completePurchaseForProductIdentifier:transaction.payment.productIdentifier];
+				[self completePurchaseForProductIdentifier:productIdentifier];
 				break;
 			}
 			case SKPaymentTransactionStateRestored:
