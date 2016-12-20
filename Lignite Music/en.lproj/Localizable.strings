@@ -110,6 +110,23 @@
 "CantLoginTitle" = "Can't login";
 "CantLoginDescription" = "Sorry, we're having trouble processing your login.\n\nPlease make sure you're on a stable Internet connection which doesn't block www.lignite.io.\n\nIf you believe you're all good on your side, please contact us and we'll sort you out.";
 "LoggedIn" = "Logged in";
+"EnterAValidPassword" = "Please enter a valid password";
+
+"LoginsAllUsedUpTitle" = "Logins all used up";
+"LoginsAllUsedUpDescription" = "This Lignite Music backer account has been logged into %d times, which is its maximum amount.\n\nIf you want to login on this device, you'll have to logout on one of your other devices.\n\nTo do so, tap the manage accounts button below.";
+"ManageAccounts" = "Manage accounts";
+
+"AccountNotFoundTitle" = "Account not found";
+"AccountNotFoundDescription" = "A Lignite Music backer account was not found with these details, sorry.\n\nWe collected Lignite Music Kickstarter emails way back in August of 2016.\n\nIf you have changed your Kickstarter email since then, use the old one.\n\nIf you're still having troubles, tap below for more help.";
+
+
+"Privacy" = "Privacy"; //App privacy, for things like analytics tracking
+"UsageData" = "Usage data & statistics";
+"UsageDataDescription" = "We collect a bit of data so we can learn how you use our app and make it better for you.\n\nIf you are not a Kickstarter backer, there isn't a single piece of personal data we log about you.\n\nIf you are a Kickstarter backer, we log your email address, which we already had because you backed us.\n\nShould you choose to opt-out we will completely stop logging your data.";
+"OptionOptIn" = "Opt-in";
+"OptionOptOut" = "Opt-out";
+"OptedOut" = "You have opted-out";
+"OptedIn" = "Thanks for making Lignite Music better!";
 
 /*
  
@@ -303,7 +320,7 @@
 "AlbumImagesTitle" = "Missing album cover art";
 
 //See comment below this string for how it will be formatted
-"ImagesDownloadWarningDescription" = "We will download images %@.\n\nHowever, we have noticed that %@.\n\nIt will take about %.02f MB to download the images%@.\n\nIf you tap '%@', we will download them anyway.\n\nOtherwise, if you tap '%@', you can always change your mind later in settings.";
+"ImagesDownloadWarningDescription" = "We will download images %@.\n\nHowever, we have noticed that %@.\n\nIt will take at the most %.02f MB to download the images%@.\n\nIf you tap '%@', we will download them anyway.\n\nOtherwise, if you tap '%@', you can always change your mind later in settings.";
 /*
  What is inserted into "ImagesDownloadWarningDescription", in order of formatters:
  1. Either the "OfYourArtists" string or "OfYourAlbums" string
@@ -314,7 +331,7 @@
  6. The "DontDownload" string
  */
 
-"AboutXOfYourStorage" = " (about %.02f%% of your remaining storage in total)"; //The space in front of the first bracket is important, as it will be inserted after the "[...] take about %.02fMB to download the images%@." (goes where the %@ is in there). If your language does not need the space feel free to take it out.
+"AboutXOfYourStorage" = " (at most %.02f%% of your remaining storage in total)"; //The space in front of the first bracket is important, as it will be inserted after the "[...] take at most %.02fMB to download the images%@." (goes where the %@ is in there). If your language does not need the space feel free to take it out.
 "UsingXOfYourStorage" = "These images are currently using %.02f MB of your storage.";
 "TakingUpXMB" = "Using %.02f MB";
 

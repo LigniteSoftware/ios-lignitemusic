@@ -66,6 +66,16 @@
 
 - (void)appOwnershipStatusChanged:(LMPurchaseManagerAppOwnershipStatus)newOwnershipStatus {
 	NSLog(@"Got new app ownership on the purchase view, too.");
+	
+	switch(newOwnershipStatus){
+		case LMPurchaseManagerAppOwnershipStatusInTrial:
+		case LMPurchaseManagerAppOwnershipStatusTrialExpired:
+			break;
+		case LMPurchaseManagerAppOwnershipStatusPurchased:
+		case LMPurchaseManagerAppOwnershipStatusLoggedInAsBacker:
+			[self dismissViewControllerAnimated:YES completion:nil];
+			break;
+	}
 }
 
 - (void)transactionStateChangedTo:(SKPaymentTransactionState)transactionState forProductWithIdentifier:(LMPurchaseManagerProductIdentifier *)productIdentifier {
@@ -254,11 +264,13 @@
 	[self.ownershipButtonBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/8.0)];
 	
 	
-	[NSTimer scheduledTimerWithTimeInterval:1.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
-		LMBackerLoginViewController *backerLoginController = [LMBackerLoginViewController new];
-		
-		[self presentViewController:backerLoginController animated:YES completion:nil];
-	}];
+//	[NSTimer scheduledTimerWithTimeInterval:1.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
+//		LMBackerLoginViewController *backerLoginController = [LMBackerLoginViewController new];
+//		
+//		[self dismissViewControllerAnimated:YES completion:^{
+//			[self presentViewController:backerLoginController animated:YES completion:nil];
+//		}];
+//	}];
 }
 
 - (void)didReceiveMemoryWarning {

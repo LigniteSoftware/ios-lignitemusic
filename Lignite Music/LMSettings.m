@@ -22,4 +22,16 @@
 	return settingEnabled;
 }
 
++ (BOOL)userHasOptedOutOfTracking {
+	BOOL settingEnabled = NO;
+	
+	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+	
+	if([userDefaults objectForKey:LMSettingsKeyOptOutOfTracking]){
+		settingEnabled = [[NSUserDefaults standardUserDefaults] integerForKey:LMSettingsKeyOptOutOfTracking];
+	}
+	
+	return settingEnabled;
+}
+
 @end

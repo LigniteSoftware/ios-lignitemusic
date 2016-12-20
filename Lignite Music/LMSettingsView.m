@@ -21,6 +21,7 @@
 #import "LMContactViewController.h"
 #import "LMDebugViewController.h"
 #import "LMPurchaseManager.h"
+#import "LMAnswers.h"
 
 @interface LMSettingsView()<LMSectionTableViewDelegate, LMImageManagerDelegate>
 
@@ -73,7 +74,7 @@
 		case 2:
 			return 2;
 		case 3:
-			return 3;
+			return 4;
 	}
 	return 0;
 }
@@ -137,6 +138,8 @@
 					return NSLocalizedString(@"Credits", nil);
 				case 2:
 					return NSLocalizedString(@"ContactUs", nil);
+				case 3:
+					return NSLocalizedString(@"UsageData", nil);
 			}
 			break;
 	}
@@ -207,6 +210,8 @@
 					return NSLocalizedString(@"CreditsMore", nil);
 				case 2:
 					return nil;
+				case 3:
+					return NSLocalizedString([LMSettings userHasOptedOutOfTracking] ? @"OptedOut" : @"OptedIn" , nil);
 			}
 			break;
 	}
@@ -369,6 +374,8 @@
 					NSURL *pebbleWebURL = [NSURL URLWithString:@"http://apps.getpebble.com/en_US/application/579c3ee922f599cf7e0001ea"];
 					BOOL canOpenPebbleURL = [[UIApplication sharedApplication] canOpenURL:pebbleURL];
 					[[UIApplication sharedApplication] openURL:canOpenPebbleURL ? pebbleURL : pebbleWebURL];
+					
+					[LMAnswers logCustomEventWithName:@"Opened Pebble App Install Link" customAttributes:nil];
 					break;
 				}
 				case 1: {
@@ -388,13 +395,44 @@
 					LMCreditsViewController *creditsViewController = [LMCreditsViewController new];
 					[self.coreViewController.navigationController showViewController:creditsViewController sender:self];
 					[(LMCoreViewController*)self.coreViewController setStatusBarBlurHidden:YES];
+					
+					[LMAnswers logCustomEventWithName:@"Viewed Credits" customAttributes:nil];
 					break;
 				}
 				case 2: {
 					LMContactViewController *contactViewController = [LMContactViewController new];
 					[self.coreViewController.navigationController showViewController:contactViewController sender:self];
 					[(LMCoreViewController*)self.coreViewController setStatusBarBlurHidden:YES];
+					
+					[LMAnswers logCustomEventWithName:@"Viewed Contact Us Screen" customAttributes:nil];
 					break;
+				}
+				case 3: {
+					LMAlertView *alertView = [LMAlertView newAutoLayoutView];
+					
+					alertView.title = NSLocalizedString(@"UsageData", nil);
+					alertView.body = NSLocalizedString(@"UsageDataDescription", nil);
+					alertView.alertOptionColours = @[[LMColour darkLigniteRedColour], [LMColour ligniteRedColour]];
+					alertView.alertOptionTitles = @[NSLocalizedString(@"OptionOptOut", nil), NSLocalizedString(@"OptionOptIn", nil)];
+					
+					[alertView launchOnView:self withCompletionHandler:^(NSUInteger optionSelected) {
+						BOOL optedOut = (optionSelected == 0);
+						
+						NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+						
+						if(optedOut && ![userDefaults objectForKey:LMSettingsKeyOptOutOfTracking]){ //User's opted out and never selected to opt out before
+							[LMAnswers logCustomEventWithName:@"Opted-Out of Tracking" customAttributes:nil];
+						}
+						//User was previously opted out then opted back in
+						else if([userDefaults objectForKey:LMSettingsKeyOptOutOfTracking] && [userDefaults boolForKey:LMSettingsKeyOptOutOfTracking] && !optedOut){
+							[LMAnswers logCustomEventWithName:@"Opted Back Into Tracking" customAttributes:nil];
+						}
+						
+						[userDefaults setBool:optedOut forKey:LMSettingsKeyOptOutOfTracking];
+						[userDefaults synchronize];
+						
+						[self.sectionTableView reloadData];
+					}];
 				}
 			}
 			break;

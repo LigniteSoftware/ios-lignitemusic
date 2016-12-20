@@ -62,6 +62,7 @@
 		6A59A5181DE6D76E00B346AC /* icon_arrow_forward.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A59A5171DE6D76E00B346AC /* icon_arrow_forward.png */; };
 		6A59A51B1DE7B08B00B346AC /* LMSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A59A51A1DE7B08B00B346AC /* LMSettingsViewController.m */; };
 		6A59A5201DE825C200B346AC /* LMBrowsingDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A59A51F1DE825C200B346AC /* LMBrowsingDetailViewController.m */; };
+		6A5F43E21E09E003005E0075 /* LMAnswers.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A5F43E11E09E003005E0075 /* LMAnswers.m */; };
 		6A6351921D9D71D300498582 /* LMListEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A6351911D9D71D300498582 /* LMListEntry.m */; };
 		6A63D16F1DE41FD000EABA53 /* icon_checkmark.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A63D16E1DE41FD000EABA53 /* icon_checkmark.png */; };
 		6A6C186D1DE0014A00D651E1 /* icon_artists.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A6C186C1DE0014A00D651E1 /* icon_artists.png */; };
@@ -265,6 +266,8 @@
 		6A59A51A1DE7B08B00B346AC /* LMSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMSettingsViewController.m; sourceTree = "<group>"; };
 		6A59A51E1DE825C200B346AC /* LMBrowsingDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMBrowsingDetailViewController.h; sourceTree = "<group>"; };
 		6A59A51F1DE825C200B346AC /* LMBrowsingDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMBrowsingDetailViewController.m; sourceTree = "<group>"; };
+		6A5F43E01E09E003005E0075 /* LMAnswers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMAnswers.h; sourceTree = "<group>"; };
+		6A5F43E11E09E003005E0075 /* LMAnswers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMAnswers.m; sourceTree = "<group>"; };
 		6A6351901D9D71D300498582 /* LMListEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMListEntry.h; sourceTree = "<group>"; };
 		6A6351911D9D71D300498582 /* LMListEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMListEntry.m; sourceTree = "<group>"; };
 		6A63D16E1DE41FD000EABA53 /* icon_checkmark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_checkmark.png; sourceTree = "<group>"; };
@@ -760,6 +763,8 @@
 		6A838A921E07A8E2006E7DE0 /* Purchases */ = {
 			isa = PBXGroup;
 			children = (
+				6A5F43E01E09E003005E0075 /* LMAnswers.h */,
+				6A5F43E11E09E003005E0075 /* LMAnswers.m */,
 				6A51689B1E090B4600A6446F /* LMBackerLoginViewController.h */,
 				6A51689C1E090B4600A6446F /* LMBackerLoginViewController.m */,
 				6A838A931E07A8FF006E7DE0 /* LMPurchaseManager.h */,
@@ -1036,6 +1041,7 @@
 				6AEB9CF61BACF60E00AD19FA /* Resources */,
 				33E11C0464958C7B098CDE2D /* [CP] Embed Pods Frameworks */,
 				D083EC8A2EC9BA4BD0DF3154 /* [CP] Copy Pods Resources */,
+				6A5F43DF1E0994BF005E0075 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1179,6 +1185,19 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Lignite Music/Pods-Lignite Music-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		6A5F43DF1E0994BF005E0075 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Fabric/run\" a47ad8454b2466904b779cc64b6dca8ba21db95c 100e8f7624f51f9a568cdfa4b7762299bb4e42fac93ef549c9d6de5fbea9c20c";
+		};
 		A2831B82361EA222CB9D86D0 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1298,6 +1317,7 @@
 				6A13A8011E011D19006A768B /* SLColorArt.m in Sources */,
 				6A52574F1DF099720040210D /* LMProgressSlider.m in Sources */,
 				6A514E191CEA15D900AFB351 /* LMSlider.m in Sources */,
+				6A5F43E21E09E003005E0075 /* LMAnswers.m in Sources */,
 				6A7DF1171DB10D510077B979 /* LMBrowsingAssistantView.m in Sources */,
 				6A5168831E0899B100A6446F /* LMPurchaseViewController.m in Sources */,
 				6A2A29CB1DB1F1C3008E7792 /* LMSource.m in Sources */,

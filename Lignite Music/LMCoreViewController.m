@@ -27,6 +27,7 @@
 #import "LMSearchView.h"
 #import "LMSearchViewController.h"
 #import "LMPurchaseManager.h"
+#import "LMAnswers.h"
 
 #import "LMContactView.h"
 #import "LMDebugView.h"
@@ -232,7 +233,38 @@ BOOL didAutomaticallyClose = NO;
 	didAutomaticallyClose = [self.browsingAssistant close];
 }
 
-- (void)sourceSelected:(LMSource *)source {	
+- (void)logMusicTypeView:(LMMusicType)type {
+	NSString *viewName = @"";
+	switch(type){
+		case LMMusicTypeArtists:
+			viewName = @"Artist";
+			break;
+		case LMMusicTypeAlbums:
+			viewName = @"Album";
+			break;
+		case LMMusicTypePlaylists:
+			viewName = @"Playlist";
+			break;
+		case LMMusicTypeComposers:
+			viewName = @"Composer";
+			break;
+		case LMMusicTypeGenres:
+			viewName = @"Genre";
+			break;
+		case LMMusicTypeCompilations:
+			viewName = @"Compilation";
+			break;
+		case LMMusicTypeTitles:
+			viewName = @"Title";
+			break;
+	}
+	[LMAnswers logContentViewWithName:viewName
+						contentType:@"Browsing View"
+						  contentId:[NSString stringWithFormat:@"view_%d", type]
+				   customAttributes:@{}];
+}
+
+- (void)sourceSelected:(LMSource *)source {
 	int indexOfSource = -1;
 	
 	for(int i = 0; i < self.sourcesForSourceSelector.count; i++){
@@ -282,6 +314,8 @@ BOOL didAutomaticallyClose = NO;
 					break;
 			}
 			
+			[self logMusicTypeView:associatedMusicType];
+			
 			NSLog(@"Type %d", associatedMusicType);
 			
 			[self setupBrowsingViewWithMusicType:associatedMusicType];
@@ -302,6 +336,8 @@ BOOL didAutomaticallyClose = NO;
 			self.browsingAssistant.browsingBar.letterTabBar.lettersDictionary =
 			[self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:@[self.titleView.musicTitles]
 															 withAssociatedMusicType:LMMusicTypeTitles];
+			
+			[self logMusicTypeView:LMMusicTypeTitles];
 			break;
 		}
 		case LMIconSettings: {
@@ -580,9 +616,9 @@ BOOL didAutomaticallyClose = NO;
 //	
 //	return;
 	
-	[NSTimer scheduledTimerWithTimeInterval:0.5 repeats:NO block:^(NSTimer * _Nonnull timer) {
-		[[LMPurchaseManager sharedPurchaseManager] showPurchaseViewControllerOnViewController:self.navigationController present:YES];
-	}];
+//	[NSTimer scheduledTimerWithTimeInterval:0.5 repeats:NO block:^(NSTimer * _Nonnull timer) {
+//		[[LMPurchaseManager sharedPurchaseManager] showPurchaseViewControllerOnViewController:self.navigationController present:YES];
+//	}];
 	
 	self.settingsView = [LMSettingsView newAutoLayoutView];
 	self.settingsView.coreViewController = self;

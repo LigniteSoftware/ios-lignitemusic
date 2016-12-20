@@ -9,6 +9,7 @@
 #import <SecureNSUserDefaults/NSUserDefaults+SecureAdditions.h>
 #import "LMPurchaseManager.h"
 #import "LMPurchaseViewController.h"
+#import "LMAnswers.h"
 
 /**
  The key for storing the start time of the trial.
@@ -19,6 +20,10 @@
  The interval of time in seconds for the purchase manager to check if the user has run out of time in their trial.
  */
 #define LMPurchaseManagerTrialTimeCheckIntervalInSeconds 3.0
+
+#define LMPurchaseManagerKickstarterLoginCredentialEmail @"LMPurchaseManagerKickstarterLoginCredentialEmail"
+#define LMPurchaseManagerKickstarterLoginCredentialPassword @"LMPurchaseManagerKickstarterLoginCredentialPassword"
+#define LMPurchaseManagerKickstarterLoginCredentialSessionToken @"LMPurchaseManagerKickstarterLoginCredentialSessionToken"
 
 @interface LMPurchaseManager() <SKPaymentTransactionObserver, SKProductsRequestDelegate>
 
@@ -36,6 +41,11 @@
  The timer for checking for the trial.
  */
 @property NSTimer *trialCheckTimer;
+
+/**
+ The product currently being purchased.
+ */
+@property SKProduct *currentlyPurchasingProduct;
 
 @end
 
@@ -126,6 +136,13 @@
 	for(SKProduct *product in response.products){
 		NSLog(@"[LMPurchaseManager]: Valid product '%@', beginning process.", product.productIdentifier);
 		
+		self.currentlyPurchasingProduct = product;
+		
+		[LMAnswers logStartCheckoutWithPrice:product.price
+								  currency:product.priceLocale.currencyCode
+								 itemCount:@(1)
+						  customAttributes:@{ @"productID":product.productIdentifier }];
+		
 		[self purchaseProduct:product];
 	}
 	
@@ -163,6 +180,13 @@
 	}
 }
 
+- (NSString*)productTypeForIdentifier:(LMPurchaseManagerProductIdentifier*)productIdentifier {
+	if([productIdentifier isEqualToString:LMPurchaseManagerProductIdentifierLifetimeMusic]){
+		return @"Essential";
+	}
+	return @"Unknown";
+}
+
 - (void)paymentQueue:(SKPaymentQueue *)queue updatedTransactions:(NSArray *)transactions {
 	for(SKPaymentTransaction *transaction in transactions){
 		NSString *productIdentifier = transaction.payment.productIdentifier;
@@ -185,6 +209,14 @@
 				[[SKPaymentQueue defaultQueue] finishTransaction:transaction];
 				
 				[self completePurchaseForProductIdentifier:productIdentifier];
+				
+				[LMAnswers logPurchaseWithPrice:self.currentlyPurchasingProduct.price
+									 currency:self.currentlyPurchasingProduct.priceLocale.currencyCode
+									  success:@YES
+									 itemName:self.currentlyPurchasingProduct.localizedTitle
+									 itemType:[self productTypeForIdentifier:productIdentifier]
+									   itemId:productIdentifier
+							 customAttributes:@{}];
 				break;
 			}
 			case SKPaymentTransactionStateRestored:
@@ -236,7 +268,16 @@
 		NSLog(@"The user has already purchased the app.");
 		return LMPurchaseManagerAppOwnershipStatusPurchased;
 	}
+
+	//Then check if they're logged in as a backer
+	if([self.userDefaults secretObjectForKey:LMPurchaseManagerKickstarterLoginCredentialEmail]
+	   && [self.userDefaults secretObjectForKey:LMPurchaseManagerKickstarterLoginCredentialPassword]
+	   && [self.userDefaults secretObjectForKey:LMPurchaseManagerKickstarterLoginCredentialSessionToken]){
+		
+		return LMPurchaseManagerAppOwnershipStatusLoggedInAsBacker;
+	}
 	
+	//Then check their trial time
 	NSTimeInterval amountOfTrialTimeRemaining = [self amountOfTrialTimeRemainingInSeconds];
 	if(amountOfTrialTimeRemaining < 0){
 		NSLog(@"The user is out of trial time.");
@@ -284,6 +325,39 @@
 		[viewController showViewController:purchaseViewController sender:self];
 	}
 	
+}
+
+
+
+/*
+ End ownership code and begin backer code
+ */
+
+- (void)setBackerDetailsWithEmail:(NSString*)email password:(NSInteger)password sessionToken:(NSString*)sessionToken {
+	if(password < 0){ //Logout
+		[self.userDefaults removeObjectForKey:LMPurchaseManagerKickstarterLoginCredentialEmail];
+		[self.userDefaults removeObjectForKey:LMPurchaseManagerKickstarterLoginCredentialPassword];
+		[self.userDefaults removeObjectForKey:LMPurchaseManagerKickstarterLoginCredentialSessionToken];
+	}
+	else{
+		[self.userDefaults setSecretObject:email forKey:LMPurchaseManagerKickstarterLoginCredentialEmail];
+		[self.userDefaults setSecretInteger:password forKey:LMPurchaseManagerKickstarterLoginCredentialPassword];
+		[self.userDefaults setSecretObject:sessionToken forKey:LMPurchaseManagerKickstarterLoginCredentialSessionToken];
+	}
+	
+	[self.userDefaults synchronize];
+	
+	LMPurchaseManagerAppOwnershipStatus ownershipStatus = [self appOwnershipStatus];
+	
+	for(id<LMPurchaseManagerDelegate>delegate in self.delegatesArray){
+		if([delegate respondsToSelector:@selector(appOwnershipStatusChanged:)]){
+			[delegate appOwnershipStatusChanged:ownershipStatus];
+		}
+	}
+}
+
+- (void)logoutBacker {
+	[self setBackerDetailsWithEmail:nil password:-1 sessionToken:nil];
 }
 
 @end

@@ -101,6 +101,20 @@ typedef enum {
 - (void)showPurchaseViewControllerOnViewController:(UIViewController*)viewController present:(BOOL)present;
 
 /**
+ Sets the backer's login details and notifies delegates of change in ownership status.
+
+ @param email The email to set.
+ @param password The password/backer number to set.
+ @param sessionToken The session token to set.
+ */
+- (void)setBackerDetailsWithEmail:(NSString*)email password:(NSInteger)password sessionToken:(NSString*)sessionToken;
+
+/**
+ Logs out a backer and notifies delegates of change in ownership status.
+ */
+- (void)logoutBacker;
+
+/**
  The status of the user's ownership of the app.
  */
 @property (readonly) LMPurchaseManagerAppOwnershipStatus appOwnershipStatus;

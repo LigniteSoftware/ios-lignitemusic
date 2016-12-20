@@ -17,6 +17,9 @@
 #import "LMAppIcon.h"
 #import "LMDebugView.h"
 #import "LMSettings.h"
+#import "LMAlertView.h"
+#import "LMPurchaseManager.h"
+#import "LMAnswers.h"
 
 @interface LMBackerLoginViewController () <UITextFieldDelegate, UITextViewDelegate>
 
@@ -153,22 +156,32 @@
 	}
 }
 
-//NSString* deviceName(){
-//	struct utsname systemInfo;
-//	uname(&systemInfo);
-//	
-//	return [NSString stringWithCString:systemInfo.machine
-//							  encoding:NSUTF8StringEncoding];
-//}
+NSString* backerDeviceName(){
+	struct utsname systemInfo;
+	uname(&systemInfo);
+	
+	return [NSString stringWithCString:systemInfo.machine
+							  encoding:NSUTF8StringEncoding];
+}
 
 - (void)sendFeedback {
 	NSString *emailText = [[self.textEntryArray objectAtIndex:0] text];
 	NSString *passwordText = [[self.textEntryArray objectAtIndex:1] text];
 	
+	emailText = @"edwin@lignite.io";
+	passwordText = @"1";
+	
 	NSString *errorText = nil;
+	
+	NSNumberFormatter *formatter = [NSNumberFormatter new];
+	formatter.numberStyle = NSNumberFormatterDecimalStyle;
+	NSNumber *passwordNumber = [formatter numberFromString:passwordText];
 	
 	if(![self validEmail:emailText]){
 		errorText = @"EnterAValidEmail";
+	}
+	if(!passwordNumber){
+		errorText = @"EnterAValidPassword";
 	}
 	
 	if(errorText){
@@ -216,12 +229,14 @@
 		[self presentViewController:self.pendingViewController animated:YES completion:nil];
 		[NSTimer scheduledTimerWithTimeInterval:1.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
 			NSDictionary *loginDictionary = @{
-												 
+												@"email": emailText,
+												@"password": @([passwordNumber integerValue]),
+												@"device": backerDeviceName()
 												 };
 			
 			NSLog(@"%@", loginDictionary);
 			
-			NSString *URLString = @"https://api.lignite.me:6969/submit";
+			NSString *URLString = @"https://api.lignite.me:1212/login";
 			NSURLRequest *urlRequest = [[AFJSONRequestSerializer serializer] requestWithMethod:@"POST" URLString:URLString parameters:loginDictionary error:nil];
 			
 			NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
@@ -272,24 +287,127 @@
 						
 						[self presentViewController:alert animated:YES completion:nil];
 					}];
-				} else {
-					NSLog(@"%@ %@", response, responseObject);
 					
-					[self dismissViewControllerAnimated:YES completion:^{
-						MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-						
-						hud.mode = MBProgressHUDModeCustomView;
-						UIImage *image = [[UIImage imageNamed:@"icon_checkmark.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-						hud.customView = [[UIImageView alloc] initWithImage:image];
-						hud.square = YES;
-						hud.label.text = NSLocalizedString(@"LoggedIn", nil);
-						
-						[hud hideAnimated:YES afterDelay:2.0f];
-						
-						[NSTimer scheduledTimerWithTimeInterval:2.25 repeats:NO block:^(NSTimer * _Nonnull timer) {
-							[self closeView];
+					[LMAnswers logLoginWithMethod:@"Backer"
+										success:@NO
+							   customAttributes:@{ @"email":emailText, @"error": error }];
+				} else {
+					NSLog(@"%@ %@", response, [[responseObject class] description]);
+					
+					NSDictionary *jsonDictionary = responseObject;
+					
+					NSLog(@"Response dict %@", jsonDictionary);
+					
+					NSInteger statusCode = [[jsonDictionary objectForKey:@"status"] integerValue];
+					
+					if(statusCode == 200){ //Good to go
+						[self dismissViewControllerAnimated:YES completion:^{
+							MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+							
+							hud.mode = MBProgressHUDModeCustomView;
+							UIImage *image = [[UIImage imageNamed:@"icon_checkmark.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+							hud.customView = [[UIImageView alloc] initWithImage:image];
+							hud.square = YES;
+							hud.label.text = NSLocalizedString(@"LoggedIn", nil);
+							
+							[hud hideAnimated:YES afterDelay:2.0f];
+							
+							[[LMPurchaseManager sharedPurchaseManager] setBackerDetailsWithEmail:emailText
+																						password:[passwordNumber integerValue]
+																					sessionToken:[jsonDictionary objectForKey:@"token"]];
+							
+							[NSTimer scheduledTimerWithTimeInterval:2.25 repeats:NO block:^(NSTimer * _Nonnull timer) {
+								[self closeView];
+							}];
+							
+							[LMAnswers logLoginWithMethod:@"Backer"
+												success:@YES
+									   customAttributes:@{ @"email":emailText }];
 						}];
-					}];
+					}
+					else if(statusCode == 420){ //Account usage hit
+						[self dismissViewControllerAnimated:YES completion:^{
+							LMAlertView *alertView = [LMAlertView newAutoLayoutView];
+							
+							alertView.title = NSLocalizedString(@"LoginsAllUsedUpTitle", nil);
+							alertView.body = [NSString stringWithFormat:NSLocalizedString(@"LoginsAllUsedUpDescription", nil), (int)[[jsonDictionary objectForKey:@"sessionsLimit"] integerValue]];
+							alertView.alertOptionColours = @[[LMColour darkLigniteRedColour], [LMColour ligniteRedColour]];
+							alertView.alertOptionTitles = @[NSLocalizedString(@"DoNothing", nil), NSLocalizedString(@"ManageAccounts", nil)];
+							
+							[alertView launchOnView:self.view withCompletionHandler:^(NSUInteger optionSelected) {
+								if(optionSelected == 1){
+									[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://www.lignite.io/manage_logins/"]];
+								}
+							}];
+						}];
+						
+						[LMAnswers logLoginWithMethod:@"Backer"
+											success:@NO
+								   customAttributes:@{ @"email":emailText, @"error": @"Out of sessions", @"outOfSessions":@YES }];
+					}
+					else if(statusCode == 401){ //User not found or mutiple accounts
+						[self dismissViewControllerAnimated:YES completion:^{
+							LMAlertView *alertView = [LMAlertView newAutoLayoutView];
+							
+							alertView.title = NSLocalizedString(@"AccountNotFoundTitle", nil);
+							alertView.body = NSLocalizedString(@"AccountNotFoundDescription", nil);
+							alertView.alertOptionColours = @[[LMColour darkLigniteRedColour], [LMColour ligniteRedColour]];
+							alertView.alertOptionTitles = @[NSLocalizedString(@"DoNothing", nil), NSLocalizedString(@"INeedHelpLoggingIn", nil)];
+							
+							[alertView launchOnView:self.view withCompletionHandler:^(NSUInteger optionSelected) {
+								if(optionSelected == 1){
+									[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://www.lignitemusic.com/help/"]];
+								}
+							}];
+						}];
+						
+						[LMAnswers logLoginWithMethod:@"Backer"
+											success:@NO
+								   customAttributes:@{ @"email":emailText, @"error": @"User not found" }];
+					}
+					else{
+						[self dismissViewControllerAnimated:YES completion:^{
+							UIAlertController *alert = [UIAlertController
+														alertControllerWithTitle:NSLocalizedString(@"CantLoginTitle", nil)
+														message:NSLocalizedString(@"CantLoginDescription", nil)
+														preferredStyle:UIAlertControllerStyleAlert];
+							
+							UIAlertAction *yesButton = [UIAlertAction
+														actionWithTitle:NSLocalizedString(@"ContactUs", nil)
+														style:UIAlertActionStyleDefault
+														handler:^(UIAlertAction *action) {
+															dispatch_async(dispatch_get_main_queue(), ^{
+																NSString *errorString = [NSString stringWithFormat:@"Hey guys,\n\nI'm trying to login and it's not working!\n\nThe error says '%@'.\n\nMy login details:\n%@\n\nThanks!", [NSString stringWithFormat:@"internalError%d", (int)statusCode], loginDictionary];
+																
+																NSString *recipients = [NSString stringWithFormat:@"mailto:contact@lignite.io?subject=%@&body=%@",
+																						[@"Can't login to Lignite Music" stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]],
+																						[errorString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]]];
+																//															recipients = [recipients stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
+																NSLog(@"Can open %@ %d", recipients, [[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:recipients]]);
+																
+																[[UIApplication sharedApplication] openURL:[NSURL URLWithString:recipients] options:@{} completionHandler:^(BOOL success) {
+																	NSLog(@"Done %d", success);
+																}];
+															});
+														}];
+							
+							UIAlertAction *nopeButton = [UIAlertAction
+														 actionWithTitle:NSLocalizedString(@"DoNothing", nil)
+														 style:UIAlertActionStyleCancel
+														 handler:^(UIAlertAction *action) {
+															 
+														 }];
+							
+							[alert addAction:yesButton];
+							[alert addAction:nopeButton];
+							
+							[self presentViewController:alert animated:YES completion:nil];
+						}];
+						
+						[LMAnswers logLoginWithMethod:@"Backer"
+											success:@NO
+								   customAttributes:@{ @"email":emailText, @"error": [NSString stringWithFormat:@"Unknown server error %d", (int)statusCode] }];
+					}
 				}
 			}];
 			[dataTask resume];
@@ -427,7 +545,7 @@
 						  ];
 	
 	UIKeyboardType keyboardTypes[] = {
-		UIKeyboardTypeEmailAddress, UIKeyboardTypeDefault
+		UIKeyboardTypeEmailAddress, UIKeyboardTypeNumberPad
 	};
 	
 	for(int i = 0; i < textKeys.count; i++){

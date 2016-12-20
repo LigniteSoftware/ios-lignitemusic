@@ -7,6 +7,8 @@
 //
 
 #import <SecureNSUserDefaults/NSUserDefaults+SecureAdditions.h>
+#import <Fabric/Fabric.h>
+#import <Crashlytics/Crashlytics.h>
 #import "LMAppDelegate.h"
 #import "LMMusicPlayer.h"
 #import "LMAppIcon.h"
@@ -49,6 +51,9 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 	NSLog(@"[LMAppDelegate]: Did finish launching with options.");
+	
+	[[Fabric sharedSDK] setDebug:YES];
+	[Fabric with:@[[Crashlytics class]]];
 	
 	[[NSUserDefaults standardUserDefaults] setSecret:@"efd07a3e-8af2-4b19-9198-c8c67cbe93ab"];
 	

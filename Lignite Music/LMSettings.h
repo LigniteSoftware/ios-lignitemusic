@@ -14,6 +14,8 @@
 #define LMSettingsKeyOnboardingComplete @"LMSettingsKeyOnboardingComplete"
 #define LMSettingsKeyStatusBar @"LMSettingsKeyStatusBar"
 #define LMSettingsKeyHighQualityImages @"LMSettingsKeyHighQualityImages"
+#define LMSettingsKeyOptOutOfTracking @"LMSettingsKeyOptOutOfTracking"
+
 #define LMFeedbackKeyName @"LMFeedbackKeyName"
 #define LMFeedbackKeyEmail @"LMFeedbackKeyEmail"
 #define LMFeedbackKeyQuickSummary @"LMFeedbackKeyQuickSummary"
@@ -22,8 +24,15 @@
 /**
  Whether or not the app should show the status bar.
 
- @return The BOOL of whether or not to show it.
+ @return Whether or not to show it.
  */
 + (BOOL)shouldShowStatusBar;
+
+/**
+ Whether or not the user has opted out of analytics tracking.
+
+ @return Whether or not the user has opted out.
+ */
++ (BOOL)userHasOptedOutOfTracking;
 
 @end
