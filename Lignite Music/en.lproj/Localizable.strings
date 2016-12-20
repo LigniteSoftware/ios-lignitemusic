@@ -102,6 +102,15 @@
 
 "HoldOn" = "Hold on a sec...";
 
+"Password" = "Password";
+"BackerLoginTitle" = "Hey Kickstarter backer!";
+"BackerLoginDescription" = "Thanks for being awesome and helping bring this app to life.\n\nPlease login below to unlock your full copy of the app.";
+"INeedHelpLoggingIn" = "I need help logging in";
+"LoggingYouIn" = "Logging you in...";
+"CantLoginTitle" = "Can't login";
+"CantLoginDescription" = "Sorry, we're having trouble processing your login.\n\nPlease make sure you're on a stable Internet connection which doesn't block www.lignite.io.\n\nIf you believe you're all good on your side, please contact us and we'll sort you out.";
+"LoggedIn" = "Logged in";
+
 /*
  
  End new strings

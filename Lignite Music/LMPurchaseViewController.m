@@ -12,6 +12,7 @@
 #import "LMExtras.h"
 #import "LMButtonBar.h"
 #import "LMPurchaseManager.h"
+#import "LMBackerLoginViewController.h"
 
 @interface LMPurchaseViewController () <LMButtonBarDelegate, LMPurchaseManagerDelegate>
 
@@ -77,10 +78,7 @@
 - (void)tappedButtonBarButtonAtIndex:(NSUInteger)index forButtonBar:(LMButtonBar *)buttonBar {
 	NSLog(@"Tapped %d!", (int)index);
 	switch(index){
-		case 0: { //Backer login
-			break;
-		}
-		case 1: {
+		case 0: {
 			[self.purchaseManager makePurchaseWithProductIdentifier:LMPurchaseManagerProductIdentifierLifetimeMusic];
 			
 			self.pendingViewController = [UIAlertController alertControllerWithTitle:nil
@@ -102,6 +100,12 @@
 			[indicator startAnimating];
 			
 			[self presentViewController:self.pendingViewController animated:YES completion:nil];
+			break;
+		}
+		case 1: { //Backer login
+			LMBackerLoginViewController *backerLoginController = [LMBackerLoginViewController new];
+			
+			[self presentViewController:backerLoginController animated:YES completion:nil];
 			break;
 		}
 	}
@@ -152,7 +156,7 @@
 	self.headerImageView.image = [UIImage imageNamed:@"purchase_header.png"];
 	[self.view addSubview:self.headerImageView];
 	
-	[self.headerImageView autoPinEdgeToSuperviewMargin:ALEdgeTop];
+	[self.headerImageView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:15];
 	[self.headerImageView autoPinEdgeToSuperviewMargin:ALEdgeLeading];
 	[self.headerImageView autoPinEdgeToSuperviewMargin:ALEdgeTrailing];
 	[self.headerImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(3.75/10.0)];
@@ -206,7 +210,7 @@
 		[checkmarkView autoPinEdgeToSuperviewMargin:ALEdgeLeading];
 		[checkmarkView autoSetDimension:ALDimensionHeight toSize:stringHeight];
 		[checkmarkView autoSetDimension:ALDimensionWidth toSize:stringHeight];
-		[checkmarkView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:previousView withOffset:10];
+		[checkmarkView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:previousView withOffset:firstView ? 20 : 10];
 	
 		
 		UILabel *advantageLabel = [UILabel newAutoLayoutView];
@@ -238,8 +242,8 @@
 
 	self.ownershipButtonBar = [LMButtonBar newAutoLayoutView];
 	self.ownershipButtonBar.amountOfButtons = 2;
-	self.ownershipButtonBar.buttonIconsArray = @[ @(LMIconKickstarter), @(LMIconBuy) ];
-	self.ownershipButtonBar.buttonScaleFactorsArray = @[ @(1.0), @(1.0) ];
+	self.ownershipButtonBar.buttonIconsArray = @[ @(LMIconBuy), @(LMIconKickstarter) ];
+	self.ownershipButtonBar.buttonScaleFactorsArray = @[ @(0.85), @(1.0) ];
 	self.ownershipButtonBar.delegate = self;
 	self.ownershipButtonBar.backgroundColor = [UIColor whiteColor];
 	[self.view addSubview:self.ownershipButtonBar];
@@ -248,6 +252,13 @@
 	[self.ownershipButtonBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 	[self.ownershipButtonBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 	[self.ownershipButtonBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/8.0)];
+	
+	
+	[NSTimer scheduledTimerWithTimeInterval:1.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
+		LMBackerLoginViewController *backerLoginController = [LMBackerLoginViewController new];
+		
+		[self presentViewController:backerLoginController animated:YES completion:nil];
+	}];
 }
 
 - (void)didReceiveMemoryWarning {

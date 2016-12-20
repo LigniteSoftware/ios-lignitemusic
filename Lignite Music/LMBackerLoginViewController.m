@@ -1,5 +1,5 @@
 //
-//  LMFeedbackViewController.m
+//  LMBackerLoginViewController.m
 //  Lignite Music
 //
 //  Created by Edwin Finch on 12/16/16.
@@ -10,7 +10,7 @@
 #import <AFNetworking/AFNetworking.h>
 #import <PureLayout/PureLayout.h>
 #import <MBProgressHUD/MBProgressHUD.h>
-#import "LMFeedbackViewController.h"
+#import "LMBackerLoginViewController.h"
 #import "LMScrollView.h"
 #import "LMPaddedTextField.h"
 #import "LMColour.h"
@@ -18,7 +18,7 @@
 #import "LMDebugView.h"
 #import "LMSettings.h"
 
-@interface LMFeedbackViewController () <UITextFieldDelegate, UITextViewDelegate>
+@interface LMBackerLoginViewController () <UITextFieldDelegate, UITextViewDelegate>
 
 /**
  The root view so we can adjust for the keyboard.
@@ -77,7 +77,7 @@
 
 @end
 
-@implementation LMFeedbackViewController
+@implementation LMBackerLoginViewController
 
 - (BOOL)prefersStatusBarHidden {
 	return YES;
@@ -89,6 +89,7 @@
 }
 
 - (void)scrollToView:(UIView*)view {
+	view = [self.textEntryArray objectAtIndex:0];
 	[self.scrollView setContentOffset:CGPointMake(0, view.frame.origin.y-40) animated:YES];
 }
 
@@ -120,6 +121,8 @@
 	[UIView animateWithDuration:0.25 animations:^{
 		[self.view layoutIfNeeded];
 	}];
+	
+	[self.scrollView setContentOffset:CGPointMake(0, 0) animated:YES];
 }
 
 //http://stackoverflow.com/questions/3139619/check-that-an-email-address-is-valid-on-ios
@@ -150,59 +153,23 @@
 	}
 }
 
-NSString* deviceName(){
-	struct utsname systemInfo;
-	uname(&systemInfo);
-	
-	return [NSString stringWithCString:systemInfo.machine
-							  encoding:NSUTF8StringEncoding];
-}
-
-- (void)saveDetailsToStorage:(BOOL)allDetails {
-	NSString *nameText = [[self.textEntryArray objectAtIndex:0] text];
-	NSString *emailText = [[self.textEntryArray objectAtIndex:1] text];
-	NSString *quickSummaryText = [[self.textEntryArray objectAtIndex:2] text];
-	NSString *detailedText = [[self.textEntryArray objectAtIndex:3] text];
-	
-	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-	[userDefaults setObject:nameText forKey:LMFeedbackKeyName];
-	[userDefaults setObject:emailText forKey:LMFeedbackKeyEmail];
-	if(allDetails){
-		[userDefaults setObject:quickSummaryText forKey:LMFeedbackKeyQuickSummary];
-		[userDefaults setObject:detailedText forKey:LMFeedbackKeyDetailedReport];
-	}
-	[userDefaults synchronize];
-}
+//NSString* deviceName(){
+//	struct utsname systemInfo;
+//	uname(&systemInfo);
+//	
+//	return [NSString stringWithCString:systemInfo.machine
+//							  encoding:NSUTF8StringEncoding];
+//}
 
 - (void)sendFeedback {
-	NSLog(@"Check and send feedback");
-	
-	NSString *nameText = [[self.textEntryArray objectAtIndex:0] text];
-	NSString *emailText = [[self.textEntryArray objectAtIndex:1] text];
-	NSString *quickSummaryText = [[self.textEntryArray objectAtIndex:2] text];
-	NSString *detailedText = [[self.textEntryArray objectAtIndex:3] text];
+	NSString *emailText = [[self.textEntryArray objectAtIndex:0] text];
+	NSString *passwordText = [[self.textEntryArray objectAtIndex:1] text];
 	
 	NSString *errorText = nil;
 	
-	if(nameText.length < 3){
-		errorText = @"EnterAName";
-	}
-	else if(![self validEmail:emailText]){
+	if(![self validEmail:emailText]){
 		errorText = @"EnterAValidEmail";
 	}
-	else if(quickSummaryText.length <= 5){
-		errorText = @"EnterAQuickSummary";
-	}
-	else if(detailedText.length <= 15){
-		errorText = @"EnterADetailedReport";
-	}
-	
-//	errorText = nil;
-//	
-//	nameText = @"Edwin";
-//	emailText = @"edwin@lignite.io";
-//	quickSummaryText = @"Testing";
-//	detailedText = @"Sup dawg? Testing the new feedback submitter.";
 	
 	if(errorText){
 		UIAlertController *alert = [UIAlertController
@@ -229,7 +196,7 @@ NSString* deviceName(){
 		
 		//http://stackoverflow.com/a/32518540/5883707
 		self.pendingViewController = [UIAlertController alertControllerWithTitle:nil
-																		 message:[NSString stringWithFormat:@"%@\n\n\n", NSLocalizedString(@"GatheringInfo", nil)]
+																		 message:[NSString stringWithFormat:@"%@\n\n\n", NSLocalizedString(@"LoggingYouIn", nil)]
 																  preferredStyle:UIAlertControllerStyleAlert];
 		UIActivityIndicatorView* indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
 		indicator.color = [UIColor blackColor];
@@ -248,30 +215,14 @@ NSString* deviceName(){
 		
 		[self presentViewController:self.pendingViewController animated:YES completion:nil];
 		[NSTimer scheduledTimerWithTimeInterval:1.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
-			NSString *debugInfo = [LMDebugView appDebugInfoString];
-			
-//			NSLog(@"Debug info %@", debugInfo);
-			
-			self.pendingViewController.message = [NSString stringWithFormat:@"%@\n\n\n", NSLocalizedString(@"SendingToServer", nil)];
-			
-			NSDictionary *feedbackDictionary = @{
-												@"submitterName": nameText,
-												@"submitterEmail": emailText,
-												@"affected": @"iOS App",
-												@"subject": quickSummaryText,
-												@"description": detailedText,
-												@"timeCreated": @((NSUInteger)floorf([[NSDate new] timeIntervalSince1970])*1000),
-												@"iOSVersion": [[UIDevice currentDevice] systemVersion],
-												@"deviceModel": deviceName(),
-												@"appVersion": [NSString stringWithFormat:@"%@ (%@)", [LMDebugView currentAppVersion], [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"]],
-												@"status": @(0),
-												@"debugInfo": debugInfo
+			NSDictionary *loginDictionary = @{
+												 
 												 };
 			
-			NSLog(@"%@", feedbackDictionary);
+			NSLog(@"%@", loginDictionary);
 			
 			NSString *URLString = @"https://api.lignite.me:6969/submit";
-			NSURLRequest *urlRequest = [[AFJSONRequestSerializer serializer] requestWithMethod:@"POST" URLString:URLString parameters:feedbackDictionary error:nil];
+			NSURLRequest *urlRequest = [[AFJSONRequestSerializer serializer] requestWithMethod:@"POST" URLString:URLString parameters:loginDictionary error:nil];
 			
 			NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
 			AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:configuration];
@@ -282,12 +233,12 @@ NSString* deviceName(){
 			
 			NSURLSessionDataTask *dataTask = [manager dataTaskWithRequest:urlRequest completionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
 				if (error) {
-					NSLog(@"Error sending feedback: %@", error);
+					NSLog(@"Error logging in: %@", error);
 					
 					[self dismissViewControllerAnimated:YES completion:^{
 						UIAlertController *alert = [UIAlertController
-													alertControllerWithTitle:NSLocalizedString(@"CantSendFeedback", nil)
-													message:NSLocalizedString(@"CantSendFeedbackDescription", nil)
+													alertControllerWithTitle:NSLocalizedString(@"CantLoginTitle", nil)
+													message:NSLocalizedString(@"CantLoginDescription", nil)
 													preferredStyle:UIAlertControllerStyleAlert];
 						
 						UIAlertAction *yesButton = [UIAlertAction
@@ -295,21 +246,16 @@ NSString* deviceName(){
 													style:UIAlertActionStyleDefault
 													handler:^(UIAlertAction *action) {
 														dispatch_async(dispatch_get_main_queue(), ^{
-															NSString *errorString = [NSString stringWithFormat:@"Hey guys,\n\nI'm trying to send by feedback and it's not working!\n\nThe error says '%@'.\n\nMy feedback was going to be\n%@.\n\nThanks!", error, feedbackDictionary];
+															NSString *errorString = [NSString stringWithFormat:@"Hey guys,\n\nI'm trying to login and it's not working!\n\nThe error says '%@'.\n\nMy login details:\n%@.\n\nThanks!", error, loginDictionary];
 															
 															NSString *recipients = [NSString stringWithFormat:@"mailto:contact@lignite.io?subject=%@&body=%@",
-																					[@"Lignite Music can't send feedback" stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]],
+																					[@"Can't login to Lignite Music" stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]],
 																					[errorString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]]];
 															//															recipients = [recipients stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
 															NSLog(@"Can open %@ %d", recipients, [[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:recipients]]);
 															
 															[[UIApplication sharedApplication] openURL:[NSURL URLWithString:recipients] options:@{} completionHandler:^(BOOL success) {
 																NSLog(@"Done %d", success);
-																
-																if(success){
-																	[[self.textEntryArray objectAtIndex:2] setText:@""];
-																	[[self.textEntryArray objectAtIndex:3] setText:@""];
-																}
 															}];
 														});
 													}];
@@ -336,14 +282,11 @@ NSString* deviceName(){
 						UIImage *image = [[UIImage imageNamed:@"icon_checkmark.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
 						hud.customView = [[UIImageView alloc] initWithImage:image];
 						hud.square = YES;
-						hud.label.text = NSLocalizedString(@"ThanksForSubmitting", nil);
+						hud.label.text = NSLocalizedString(@"LoggedIn", nil);
 						
 						[hud hideAnimated:YES afterDelay:2.0f];
 						
 						[NSTimer scheduledTimerWithTimeInterval:2.25 repeats:NO block:^(NSTimer * _Nonnull timer) {
-							[[self.textEntryArray objectAtIndex:2] setText:@""];
-							[[self.textEntryArray objectAtIndex:3] setText:@""];
-							
 							[self closeView];
 						}];
 					}];
@@ -359,11 +302,11 @@ NSString* deviceName(){
 }
 
 - (void)seeAllReportsTapped {
-	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://www.lignite.io/feedback/"]];
+	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://www.lignitemusic.com/help/"]];
 }
 
 - (void)viewDidLoad {
-    [super viewDidLoad];
+	[super viewDidLoad];
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(keyboardWillShow:)
@@ -408,7 +351,7 @@ NSString* deviceName(){
 	
 	UIImageView *sendButtonIcon = [UIImageView newAutoLayoutView];
 	sendButtonIcon.contentMode = UIViewContentModeScaleAspectFit;
-	sendButtonIcon.image = [LMAppIcon imageForIcon:LMIconPaperPlane];
+	sendButtonIcon.image = [LMAppIcon imageForIcon:LMIconWhiteCheckmark];
 	[self.sendButtonView addSubview:sendButtonIcon];
 	
 	[sendButtonIcon autoPinEdgeToSuperviewEdge:ALEdgeLeading];
@@ -442,17 +385,21 @@ NSString* deviceName(){
 	self.scrollView = [LMScrollView newAutoLayoutView];
 	self.scrollView.backgroundColor = [UIColor whiteColor];
 	self.scrollView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
+	self.scrollView.scrollEnabled = NO;
 	[self.rootView addSubview:self.scrollView];
+	
+	UITapGestureRecognizer *dismissKeyboardOnScrollTapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(dismissKeyboard)];
+	[self.scrollView addGestureRecognizer:dismissKeyboardOnScrollTapGesture];
 	
 	[self.scrollView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 	[self.scrollView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 	[self.scrollView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 	[self.scrollView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.bottomControlsBackgroundView];
-
+	
 	self.titleLabel = [UILabel newAutoLayoutView];
 	self.titleLabel.numberOfLines = 0;
 	self.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:20.0f];
-	self.titleLabel.text = NSLocalizedString(@"SendFeedbackTitle", nil);
+	self.titleLabel.text = NSLocalizedString(@"BackerLoginTitle", nil);
 	self.titleLabel.textAlignment = NSTextAlignmentLeft;
 	[self.scrollView addSubview:self.titleLabel];
 	
@@ -464,7 +411,7 @@ NSString* deviceName(){
 	self.descriptionLabel = [UILabel newAutoLayoutView];
 	self.descriptionLabel.numberOfLines = 0;
 	self.descriptionLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:20.0f];
-	self.descriptionLabel.text = NSLocalizedString(@"SendFeedbackDescription", nil);
+	self.descriptionLabel.text = NSLocalizedString(@"BackerLoginDescription", nil);
 	self.descriptionLabel.textAlignment = NSTextAlignmentLeft;
 	[self.scrollView addSubview:self.descriptionLabel];
 	
@@ -475,24 +422,13 @@ NSString* deviceName(){
 	NSMutableArray *viewsArray = [NSMutableArray new];
 	
 	NSArray *textKeys = @[
-						  @"Name",
 						  @"Email",
-						  @"SummaryOfReport",
-						  @"DetailedReport"
+						  @"Password"
 						  ];
 	
 	UIKeyboardType keyboardTypes[] = {
-		UIKeyboardTypeDefault, UIKeyboardTypeEmailAddress, UIKeyboardTypeDefault, UIKeyboardTypeDefault
+		UIKeyboardTypeEmailAddress, UIKeyboardTypeDefault
 	};
-	
-	NSArray *savedTextKeys = @[
-							   LMFeedbackKeyName,
-							   LMFeedbackKeyEmail,
-							   LMFeedbackKeyQuickSummary,
-							   LMFeedbackKeyDetailedReport
-							   ];
-	
-	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 	
 	for(int i = 0; i < textKeys.count; i++){
 		BOOL isFirst = (i == 0);
@@ -525,7 +461,6 @@ NSString* deviceName(){
 			textView.layer.masksToBounds = YES;
 			textView.layer.cornerRadius = 0;
 			textView.delegate = self;
-			textView.text = [userDefaults objectForKey:[savedTextKeys objectAtIndex:i]];
 			[self.scrollView addSubview:textView];
 			
 			[textView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:previousViewToAttachTo];
@@ -547,7 +482,6 @@ NSString* deviceName(){
 			textField.clipsToBounds = YES;
 			textField.layer.masksToBounds = YES;
 			textField.layer.cornerRadius = 0;
-			textField.text = [userDefaults objectForKey:[savedTextKeys objectAtIndex:i]];
 			[self.scrollView addSubview:textField];
 			
 			[textField autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:previousViewToAttachTo];
@@ -568,7 +502,7 @@ NSString* deviceName(){
 	
 	
 	self.seeAllReportsLabel = [UILabel newAutoLayoutView];
-	self.seeAllReportsLabel.text = NSLocalizedString(@"SeeAllReports", nil);
+	self.seeAllReportsLabel.text = NSLocalizedString(@"INeedHelpLoggingIn", nil);
 	self.seeAllReportsLabel.textAlignment = NSTextAlignmentCenter;
 	self.seeAllReportsLabel.numberOfLines = 0;
 	self.seeAllReportsLabel.layer.masksToBounds = YES;
@@ -591,13 +525,9 @@ NSString* deviceName(){
 	[self.seeAllReportsLabel addGestureRecognizer:tapGesture];
 }
 
-- (void)viewDidDisappear:(BOOL)animated {
-	[self saveDetailsToStorage:YES];
-}
-
 - (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-
+	[super didReceiveMemoryWarning];
+	
 }
 
 - (void)loadView {

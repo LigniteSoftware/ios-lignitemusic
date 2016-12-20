@@ -86,6 +86,8 @@
 			return @"icon_airplay.png";
 		case LMIconBack:
 			return @"icon_back.png";
+		case LMIconWhiteCheckmark:
+			return @"icon_white_checkmark.png";
 		case LMIconGreenCheckmark:
 			return @"icon_green_checkmark.png";
 		case LMIconBuy:

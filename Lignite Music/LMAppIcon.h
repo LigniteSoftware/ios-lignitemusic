@@ -49,6 +49,7 @@ typedef enum {
 	LMIconHamburger,
 	LMIconAirPlay,
 	LMIconBack,
+	LMIconWhiteCheckmark,
 	LMIconGreenCheckmark,
 	LMIconBuy,
 	LMIconKickstarter

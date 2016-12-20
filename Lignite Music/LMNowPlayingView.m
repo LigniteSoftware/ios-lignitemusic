@@ -165,7 +165,7 @@
 		UIImage *albumArt = [newTrack albumArt];
 		UIImage *albumImage = (noTrackPlaying || !albumArt) ? [UIImage imageNamed:@"lignite_background_portrait.png"] : albumArt;
 		
-//		UIColor *averageColour = [albumImage averageColour];
+		UIColor *averageColour = [albumImage averageColour];
 //		BOOL isLight = [averageColour isLight];
 //		self.blurredBackgroundView.effect = [UIBlurEffect effectWithStyle:isLight ? UIBlurEffectStyleLight : UIBlurEffectStyleDark];
 //		UIColor *newTextColour = isLight ? [UIColor blackColor] : [UIColor whiteColor];
@@ -185,13 +185,15 @@
 			
 //			self.trackInfoView.textColour = newTextColour;
 			
-			self.progressSlider.sliderBackgroundView.backgroundColor = colorArt.primaryColor;
+			self.progressSlider.sliderBackgroundView.backgroundColor = averageColour;
 			self.colourBackgroundView.backgroundColor = colorArt.backgroundColor;
 			
 			BOOL isLight = [self.colourBackgroundView.backgroundColor isLight];
 			
+			self.blurredBackgroundView.effect = [UIBlurEffect effectWithStyle:isLight ? UIBlurEffectStyleLight : UIBlurEffectStyleDark];
+			
 			self.trackInfoView.textColour = isLight ? [UIColor blackColor] : [UIColor whiteColor];
-			self.progressSlider.lightTheme = isLight;
+			self.progressSlider.lightTheme = !isLight;
 			
 			if(albumImage.size.height > 0){
 				[self.albumArtImageView updateContentWithMusicTrack:newTrack];
@@ -588,6 +590,7 @@
 	[self.blurredBackgroundView addSubview:self.colourBackgroundView];
 	
 	[self.colourBackgroundView autoPinEdgesToSuperviewEdges];
+	self.colourBackgroundView.hidden = YES;
 	
 	
 	self.albumArtRootView = [UIView newAutoLayoutView];
