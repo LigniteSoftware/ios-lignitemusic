@@ -258,10 +258,10 @@ BOOL didAutomaticallyClose = NO;
 			viewName = @"Title";
 			break;
 	}
-	[LMAnswers logContentViewWithName:viewName
-						contentType:@"Browsing View"
-						  contentId:[NSString stringWithFormat:@"view_%d", type]
-				   customAttributes:@{}];
+	[LMAnswers logContentViewWithName:[NSString stringWithFormat:@"%@ View", viewName]
+						  contentType:@"Browsing View"
+							contentId:[NSString stringWithFormat:@"browsing_view_%@", [viewName lowercaseString]]
+					 customAttributes:@{}];
 }
 
 - (void)sourceSelected:(LMSource *)source {
@@ -620,13 +620,13 @@ BOOL didAutomaticallyClose = NO;
 //		[[LMPurchaseManager sharedPurchaseManager] showPurchaseViewControllerOnViewController:self.navigationController present:YES];
 //	}];
 	
-	self.settingsView = [LMSettingsView newAutoLayoutView];
-	self.settingsView.coreViewController = self;
-	[self.view addSubview:self.settingsView];
-	
-	[self.settingsView autoPinEdgesToSuperviewEdges];
-	
-	return;
+//	self.settingsView = [LMSettingsView newAutoLayoutView];
+//	self.settingsView.coreViewController = self;
+//	[self.view addSubview:self.settingsView];
+//	
+//	[self.settingsView autoPinEdgesToSuperviewEdges];
+//	
+//	return;
 	
 //	LMImageManager *imageManager = [LMImageManager sharedImageManager];
 //	[imageManager launchPermissionRequestOnView:self.view

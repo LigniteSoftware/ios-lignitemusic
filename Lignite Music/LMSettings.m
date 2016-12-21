@@ -23,6 +23,8 @@
 }
 
 + (BOOL)userHasOptedOutOfTracking {
+	return NO;
+	
 	BOOL settingEnabled = NO;
 	
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];

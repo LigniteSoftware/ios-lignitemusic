@@ -52,8 +52,18 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 	NSLog(@"[LMAppDelegate]: Did finish launching with options.");
 	
+	
 	[[Fabric sharedSDK] setDebug:YES];
+	
+#ifdef DEBUG
+	NSLog(@"Setting to internal fabric.io organization.");
+	[Crashlytics startWithAPIKey:@"a47ad8454b2466904b779cc64b6dca8ba21db95c"];
+#else
+	NSLog(@"Setting to production fabric.io organization.");
+	[Crashlytics startWithAPIKey:@"80609ea5c474b98aad591fc3f3ba299a28a01a77"];
+#endif
 	[Fabric with:@[[Crashlytics class]]];
+	
 	
 	[[NSUserDefaults standardUserDefaults] setSecret:@"efd07a3e-8af2-4b19-9198-c8c67cbe93ab"];
 	
