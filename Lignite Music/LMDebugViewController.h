@@ -10,4 +10,18 @@
 
 @interface LMDebugViewController : UIViewController
 
+/**
+ The current app version.
+
+ @return The app version string.
+ */
++ (NSString*)currentAppVersion;
+
+/**
+ The debug string for the app's internal info.
+
+ @return The debug string.
+ */
++ (NSString*)appDebugInfoString;
+
 @end

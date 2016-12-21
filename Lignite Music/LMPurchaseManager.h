@@ -17,8 +17,8 @@
 /**
  The length of the whole app trial in seconds.
  */
-//#define LMPurchaseManagerTrialLengthInSeconds 259200
-#define LMPurchaseManagerTrialLengthInSeconds 10
+#define LMPurchaseManagerTrialLengthInSeconds 259200
+//#define LMPurchaseManagerTrialLengthInSeconds 10
 
 typedef NSString LMPurchaseManagerProductIdentifier;
 

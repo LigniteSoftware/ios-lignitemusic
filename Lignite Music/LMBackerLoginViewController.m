@@ -15,7 +15,7 @@
 #import "LMPaddedTextField.h"
 #import "LMColour.h"
 #import "LMAppIcon.h"
-#import "LMDebugView.h"
+#import "LMDebugViewController.h"
 #import "LMSettings.h"
 #import "LMAlertView.h"
 #import "LMPurchaseManager.h"

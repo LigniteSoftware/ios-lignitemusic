@@ -21,7 +21,6 @@
 #import "LMSettings.h"
 #import "LMGuideViewPagerController.h"
 #import "LMImageManager.h"
-#import "LMSettingsView.h"
 #import "LMSettingsViewController.h"
 #import "LMBrowsingDetailViewController.h"
 #import "LMSearchView.h"
@@ -29,9 +28,6 @@
 #import "LMPurchaseManager.h"
 #import "LMAnswers.h"
 
-#import "LMContactView.h"
-#import "LMDebugView.h"
-#import "LMCreditsView.h"
 #import "LMProgressSlider.h"
 #import "LMBrowsingBar.h"
 #import "LMFeedbackViewController.h"
@@ -50,8 +46,6 @@
 
 @property LMBrowsingView *browsingView;
 @property LMTitleView *titleView;
-
-@property LMSettingsView *settingsView;
 
 @property LMBrowsingAssistantView *browsingAssistant;
 
@@ -93,6 +87,8 @@
 			break;
 		case LMPurchaseManagerAppOwnershipStatusTrialExpired:
 			NSLog(@"The user's trial has expired.");
+			
+			[self.purchaseManager showPurchaseViewControllerOnViewController:self.navigationController present:YES];
 			break;
 		case LMPurchaseManagerAppOwnershipStatusPurchased:
 			NSLog(@"The user purchased the app.");
@@ -517,9 +513,9 @@ BOOL didAutomaticallyClose = NO;
 }
 
 //http://stackoverflow.com/questions/18946302/uinavigationcontroller-interactive-pop-gesture-not-working
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
-	return YES;
-}
+//- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+//	return YES;
+//}
 
 - (void)searchTermChangedTo:(NSString *)searchTerm {
 	NSLog(@"Changed to %@", searchTerm);
@@ -620,13 +616,11 @@ BOOL didAutomaticallyClose = NO;
 //		[[LMPurchaseManager sharedPurchaseManager] showPurchaseViewControllerOnViewController:self.navigationController present:YES];
 //	}];
 	
-//	self.settingsView = [LMSettingsView newAutoLayoutView];
-//	self.settingsView.coreViewController = self;
-//	[self.view addSubview:self.settingsView];
-//	
-//	[self.settingsView autoPinEdgesToSuperviewEdges];
-//	
-//	return;
+	LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
+	settingsViewController.coreViewController = self;
+	[self.navigationController pushViewController:settingsViewController animated:YES];
+	
+	return;
 	
 //	LMImageManager *imageManager = [LMImageManager sharedImageManager];
 //	[imageManager launchPermissionRequestOnView:self.view

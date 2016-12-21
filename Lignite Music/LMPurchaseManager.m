@@ -14,16 +14,16 @@
 /**
  The key for storing the start time of the trial.
  */
-#define LMPurchaseManagerTrialStartTimeKey @"LMPurchaseManagerTrialStartTimeKey"
+#define LMPurchaseManagerTrialStartTimeKey @"AppleLibraryAccessPermission" //Disguise the contents
 
 /**
  The interval of time in seconds for the purchase manager to check if the user has run out of time in their trial.
  */
 #define LMPurchaseManagerTrialTimeCheckIntervalInSeconds 3.0
 
-#define LMPurchaseManagerKickstarterLoginCredentialEmail @"LMPurchaseManagerKickstarterLoginCredentialEmail"
-#define LMPurchaseManagerKickstarterLoginCredentialPassword @"LMPurchaseManagerKickstarterLoginCredentialPassword"
-#define LMPurchaseManagerKickstarterLoginCredentialSessionToken @"LMPurchaseManagerKickstarterLoginCredentialSessionToken"
+#define LMPurchaseManagerKickstarterLoginCredentialEmail @"AppleKeyboardsSavedState"
+#define LMPurchaseManagerKickstarterLoginCredentialPassword @"HealthKitSyncTime"
+#define LMPurchaseManagerKickstarterLoginCredentialSessionToken @"AppleLoadManager"
 
 @interface LMPurchaseManager() <SKPaymentTransactionObserver, SKProductsRequestDelegate>
 

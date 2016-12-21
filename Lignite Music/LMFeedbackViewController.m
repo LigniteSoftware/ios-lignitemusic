@@ -15,7 +15,7 @@
 #import "LMPaddedTextField.h"
 #import "LMColour.h"
 #import "LMAppIcon.h"
-#import "LMDebugView.h"
+#import "LMDebugViewController.h"
 #import "LMSettings.h"
 
 @interface LMFeedbackViewController () <UITextFieldDelegate, UITextViewDelegate>
@@ -248,7 +248,7 @@ NSString* deviceName(){
 		
 		[self presentViewController:self.pendingViewController animated:YES completion:nil];
 		[NSTimer scheduledTimerWithTimeInterval:1.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
-			NSString *debugInfo = [LMDebugView appDebugInfoString];
+			NSString *debugInfo = [LMDebugViewController appDebugInfoString];
 			
 //			NSLog(@"Debug info %@", debugInfo);
 			
@@ -263,7 +263,7 @@ NSString* deviceName(){
 												@"timeCreated": @((NSUInteger)floorf([[NSDate new] timeIntervalSince1970])*1000),
 												@"iOSVersion": [[UIDevice currentDevice] systemVersion],
 												@"deviceModel": deviceName(),
-												@"appVersion": [NSString stringWithFormat:@"%@ (%@)", [LMDebugView currentAppVersion], [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"]],
+												@"appVersion": [NSString stringWithFormat:@"%@ (%@)", [LMDebugViewController currentAppVersion], [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"]],
 												@"status": @(0),
 												@"debugInfo": debugInfo
 												 };

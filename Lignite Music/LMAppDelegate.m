@@ -60,7 +60,7 @@
 	[Crashlytics startWithAPIKey:@"a47ad8454b2466904b779cc64b6dca8ba21db95c"];
 #else
 	NSLog(@"Setting to production fabric.io organization.");
-	[Crashlytics startWithAPIKey:@"80609ea5c474b98aad591fc3f3ba299a28a01a77"];
+	[Crashlytics startWithAPIKey:@"63b415ad88e31c971ef0208169ac2967178e23fc"];
 #endif
 	[Fabric with:@[[Crashlytics class]]];
 	
