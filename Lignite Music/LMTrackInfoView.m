@@ -85,6 +85,16 @@
 		self.artistLabel = [MarqueeLabel newAutoLayoutView];
 		self.albumLabel = [MarqueeLabel newAutoLayoutView];
 		
+		if(!self.titleText){
+			self.titleText = @"";
+		}
+		if(!self.artistText){
+			self.artistText = @"";
+		}
+		if(!self.albumText){
+			self.albumText = @"";
+		}
+		
 	//	self.titleLabel.layoutMargins = UIEdgeInsetsMake(0, -4, 0, -4);
 		
 		CGFloat heightMultipliers[] = {

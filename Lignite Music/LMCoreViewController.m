@@ -27,6 +27,8 @@
 #import "LMSearchViewController.h"
 #import "LMPurchaseManager.h"
 #import "LMAnswers.h"
+#import "LMAlertView.h"
+#import "LMColour.h"
 
 #import "LMProgressSlider.h"
 #import "LMBrowsingBar.h"
@@ -88,7 +90,7 @@
 		case LMPurchaseManagerAppOwnershipStatusTrialExpired: {
 			NSLog(@"The user's trial has expired.");
 			[NSTimer scheduledTimerWithTimeInterval:3.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
-				[self.purchaseManager showPurchaseViewControllerOnViewController:self.navigationController present:YES];
+//				[self.purchaseManager showPurchaseViewControllerOnViewController:self.navigationController present:YES];
 			}];
 			break;
 		}
@@ -174,12 +176,18 @@
 	self.browsingView.musicType = musicType;
 	self.browsingView.hidden = NO;
 	
+	NSLog(@"Setting up browsing view");
+	
 	[self.browsingView setup];
 	[self.browsingView layoutIfNeeded];
+	
+	NSLog(@"Done setting up");
 	
 	self.browsingAssistant.browsingBar.letterTabBar.lettersDictionary =
 	[self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:self.browsingView.musicTrackCollections
 													 withAssociatedMusicType:musicType];
+	
+	NSLog(@"Setup letters dictionary");
 }
 
 - (BOOL)prefersStatusBarHidden {
@@ -452,6 +460,7 @@ BOOL didAutomaticallyClose = NO;
 									 ];
 	
 	NSArray *currentBuildIssues = @[
+									@"Hey there",
 									@"\nPlease do not report already known issues to us, thanks!"
 									];
 	
@@ -464,41 +473,31 @@ BOOL didAutomaticallyClose = NO;
 		lastAppBuildString = [userDefaults objectForKey:@"LastVersionBuildString"];
 	}
 	
-	if(![currentAppBuildString isEqualToString:lastAppBuildString]){
+	if(![currentAppBuildString isEqualToString:lastAppBuildString] || true){
 		NSLog(@"Spooked Super!");
 		
-		NSMutableString *changesString = [NSMutableString stringWithFormat:@"\nChanges\n---------\n"];
+		NSMutableString *changesString = [NSMutableString stringWithFormat:@"\n|  Changes  |\n\n"];
 		for(int i = 0; i < currentBuildChanges.count; i++){
-			[changesString appendFormat:@"%@%@", [currentBuildChanges objectAtIndex:i], ((i+1) == currentBuildChanges.count && currentBuildIssues.count > 1) ? @"\n\n" : @"\n"];
+			[changesString appendFormat:@"- %@%@", [currentBuildChanges objectAtIndex:i], ((i+1) == currentBuildChanges.count && currentBuildIssues.count > 1) ? @"\n\n" : @"\n"];
 		}
 		if(currentBuildIssues.count > 1){
-			[changesString appendString:@"New issues\n-------------\n"];
+			[changesString appendString:@"|  New issues  |\n\n"];
 			for(int i = 0; i < currentBuildIssues.count; i++){
-				[changesString appendFormat:@"%@%@", [currentBuildIssues objectAtIndex:i], (i+1) == currentBuildIssues.count ? @"" : @"\n"];
+				int isLastIndex = (i+1) == currentBuildIssues.count;
+				[changesString appendFormat:@"%@%@%@", isLastIndex ? @"" : @"- ", [currentBuildIssues objectAtIndex:i], isLastIndex ? @"" : @"\n"];
 			}
 		}
 		
-		UIAlertController *alert = [UIAlertController
-									alertControllerWithTitle:[NSString stringWithFormat:@"What's Poppin' in Build %@", currentAppBuildString]
-									message:changesString
-									preferredStyle:UIAlertControllerStyleAlert];
+		LMAlertView *alertView = [LMAlertView newAutoLayoutView];
 		
-		UIAlertAction *yesButton = [UIAlertAction
-									actionWithTitle:@"👌"
-									style:UIAlertActionStyleDefault
-									handler:^(UIAlertAction *action) {
-										[userDefaults setObject:currentAppBuildString forKey:@"LastVersionBuildString"];
-										[userDefaults synchronize];
-									}];
+		alertView.title = [NSString stringWithFormat:@"What's new in this build"];
+		alertView.body = changesString;
+		alertView.alertOptionColours = @[[LMColour ligniteRedColour]];
+		alertView.alertOptionTitles = @[NSLocalizedString(@"Awesome", nil)];
 		
-		[alert addAction:yesButton];
-		
-		NSArray *viewArray = [[[[[[[[[[[[alert view] subviews] firstObject] subviews] firstObject] subviews] firstObject] subviews] firstObject] subviews] firstObject] subviews]; //lol
-//		UILabel *alertTitle = viewArray[0];
-		UILabel *alertMessage = viewArray[1];
-		alertMessage.textAlignment = NSTextAlignmentLeft;
-		
-		[self presentViewController:alert animated:YES completion:nil];
+		[alertView launchOnView:self.navigationController.view withCompletionHandler:^(NSUInteger optionSelected) {
+			
+		}];
 	}
 }
 
@@ -715,7 +714,6 @@ BOOL didAutomaticallyClose = NO;
 						}
 						
 						self.sourcesForSourceSelector = [NSArray arrayWithArray:sources];
-
 						
 						self.heightConstraintArray = [NSMutableArray new];
 						
@@ -762,6 +760,7 @@ BOOL didAutomaticallyClose = NO;
 						self.musicPlayer.browsingAssistant = self.browsingAssistant;
 				
 						[self.musicPlayer addMusicDelegate:self];
+						
 						
 						[NSTimer scheduledTimerWithTimeInterval:1.0
 														 target:self selector:@selector(showWhatsPoppin) userInfo:nil repeats:NO];

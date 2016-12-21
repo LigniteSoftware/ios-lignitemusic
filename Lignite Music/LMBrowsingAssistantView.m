@@ -427,7 +427,6 @@
 		self.currentSourceBackgroundView.layer.shadowRadius = 5;
 		
 		
-		
 		self.currentSourceButton = [LMButton newAutoLayoutView];
 		self.currentSourceButton.delegate = self;
 		[self.currentSourceBackgroundView addSubview:self.currentSourceButton];
@@ -452,7 +451,6 @@
 		[self.currentSourceLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
 		
 		
-		
 		self.currentSourceDetailLabel = [LMLabel newAutoLayoutView];
 		self.currentSourceDetailLabel.text = @"You didn't ignore it";
 		self.currentSourceDetailLabel.textAlignment = NSTextAlignmentRight;
@@ -462,6 +460,7 @@
 		[self.currentSourceDetailLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.currentSourceButton withOffset:10];
 		[self.currentSourceDetailLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.currentSourceBackgroundView withMultiplier:(1.0/2.0)];
 		[self.currentSourceDetailLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+		
 		
 		
 		UISwipeGestureRecognizer *swipeUpOnCurrentSourceGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(open)];
@@ -564,6 +563,7 @@
 		[self.miniPlayerView autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height/5.0];
 		
 		[self.miniPlayerView setup];
+		
 		
 		UISwipeGestureRecognizer *swipeUpGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeUp)];
 		swipeUpGesture.direction = UISwipeGestureRecognizerDirectionUp;

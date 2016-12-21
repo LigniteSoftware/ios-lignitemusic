@@ -455,7 +455,7 @@
 											if (error) {
 												NSLog(@"Error logging in: %@", error);
 												
-												[LMAnswers logCustomEventWithName:@"Logout Status"
+												[LMAnswers logCustomEventWithName:@"Log Out"
 																 customAttributes:@{ @"Status":@"Fail", @"Error": error, @"Time":@([[NSDate new] timeIntervalSince1970]) }];
 											} else {
 												NSLog(@"%@ %@", response, [[responseObject class] description]);
@@ -467,11 +467,11 @@
 												NSInteger statusCode = [[jsonDictionary objectForKey:@"status"] integerValue];
 												
 												if(statusCode == 200){ //Good to go
-													[LMAnswers logCustomEventWithName:@"Logout Status"
+													[LMAnswers logCustomEventWithName:@"Log Out"
 																	 customAttributes:@{ @"Status": @"Success", @"Time":@([[NSDate new] timeIntervalSince1970]) }];
 												}
 												else{
-													[LMAnswers logCustomEventWithName:@"Logout Status"
+													[LMAnswers logCustomEventWithName:@"Log Out"
 																	 customAttributes:@{ @"Status": @"Fail", @"Error":[NSString stringWithFormat:@"ServerError_%d", (int)statusCode], @"Time":@([[NSDate new] timeIntervalSince1970]) }];
 												}
 											}

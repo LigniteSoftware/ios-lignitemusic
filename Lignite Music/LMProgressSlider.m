@@ -154,6 +154,9 @@
 		
 		CGFloat grabberWidth = self.sliderGrabberView.frame.size.width;
 		CGFloat percentageTowards = value/self.finalValue;
+		if(isinf(percentageTowards)){
+			percentageTowards = 0.0;
+		}
 		CGFloat grabberPercent = (1.0-percentageTowards)*grabberWidth;
 		
 		self.sliderBackgroundWidthConstraint.constant = (self.frame.size.width*percentageTowards)+grabberPercent;
