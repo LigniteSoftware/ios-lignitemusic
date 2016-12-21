@@ -13,8 +13,9 @@
 #import "LMButtonBar.h"
 #import "LMPurchaseManager.h"
 #import "LMBackerLoginViewController.h"
+#import "LMAnswers.h"
 
-@interface LMPurchaseViewController () <LMButtonBarDelegate, LMPurchaseManagerDelegate>
+@interface LMPurchaseViewController () <LMButtonBarDelegate, LMPurchaseManagerDelegate, SKProductsRequestDelegate>
 
 /**
  The background (tiled) image view.
@@ -76,7 +77,7 @@
 			NSLog(@"Was presented %d", self.wasPresented);
 			if(self.wasPresented){
 				NSLog(@"Dismissing");
-				[self dismissViewControllerAnimated:YES completion:nil];
+				[[self presentingViewController] dismissViewControllerAnimated:YES completion:nil];
 			}
 			else{
 				NSLog(@"Popping");
@@ -129,8 +130,28 @@
 	}
 }
 
+- (void)productsRequest:(SKProductsRequest *)request didReceiveResponse:(SKProductsResponse *)response{
+	for(SKProduct *product in response.products){
+		[LMAnswers logAddToCartWithPrice:product.price
+								currency:product.priceLocale.currencyCode
+								itemName:@"Lifetime Music"
+								itemType:@"Essential"
+								  itemId:LMPurchaseManagerProductIdentifierLifetimeMusic
+						customAttributes:@{}];
+	}
+	
+	if(response.products.count == 0){
+		NSLog(@"[LMPurchaseManager]: No valid products available.");
+	}
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
+	
+	SKProductsRequest *productsRequest = [[SKProductsRequest alloc] initWithProductIdentifiers:[NSSet setWithObject:LMPurchaseManagerProductIdentifierLifetimeMusic]];
+	productsRequest.delegate = self;
+	
+	[productsRequest start];
 	
 	self.purchaseManager = [LMPurchaseManager sharedPurchaseManager];
 	[self.purchaseManager addDelegate:self];

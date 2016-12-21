@@ -133,6 +133,7 @@
 "Logout" = "Logout";
 "LogoutDescription" = "You can easily logout of your Lignite Music backer account by tapping the button below.\n\nDoing so will allow you to use this account to login to another device again.";
 "StayLoggedIn" = "Stay logged in";
+"KeepGoing" = "Keep going"; //ie. "Keep going instead of doing this" (won't do it)
 
 /*
  
@@ -281,7 +282,7 @@
 "OnboardingWelcomeDescription" = "We're hoping to bring you the ultimate music player experience.\n\nWe're going to run through a few quick steps to get you up and running.";
 
 "OnboardingKickstarterLoginTitle" = "Are you a Kickstarter backer?";
-"OnboardingKickstarterLoginDescription" = "Lignite Music was born and raised on Kickstarter with 339 awesome backers.\n\nIf you're one of them, you can unlock the full app now by clicking the login button below.\n\nOtherwise, continue on and you'll be hooked up with a full trial!";
+"OnboardingKickstarterLoginDescription" = "Lignite Music was born and raised on Kickstarter with 339 awesome backers.\n\nIf you're one of them, you can unlock the full app now by clicking the login button below.\n\nOtherwise, continue on and you'll be hooked up with a full-access 3 day trial!";
 
 "OnboardingMusicPermissionTitle" = "We need your music so you can jam!";
 "OnboardingMusicPermissionDescription" = "Once clicking the button below, you will be asked to grant permission to Lignite Music for access to your music library.\n\nPlease accept this permission so we can get you one step closer to rockin' out!";

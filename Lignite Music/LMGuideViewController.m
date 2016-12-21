@@ -13,6 +13,8 @@
 #import "LMGuideViewPagerController.h"
 #import "LMColour.h"
 #import "LMSettings.h"
+#import "LMAnswers.h"
+#import "LMBackerLoginViewController.h"
 
 @import StoreKit;
 
@@ -45,9 +47,7 @@
 - (void)threeBlindMice {
 	NSLog(@"Some called the three blind mice");
 	
-	[self.sourcePagerController setViewControllers:@[self.nextViewController] direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:^(BOOL finished) {
-		//Done
-	}];
+	[self.sourcePagerController setViewControllers:@[self.nextViewController] direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:nil];
 }
 
 - (void)dismissViewController {
@@ -64,11 +64,16 @@
 					[self threeBlindMice];
 					break;
 				}
-					//		case 1: {
-					//			//Kickstarter backer login
-					//			break;
-					//		}
 				case 1: {
+					[NSTimer scheduledTimerWithTimeInterval:1.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
+						[self threeBlindMice];
+					}];
+					
+					LMBackerLoginViewController *backerLoginViewController = [LMBackerLoginViewController new];
+					[self presentViewController:backerLoginViewController animated:YES completion:nil];
+					break;
+				}
+				case 2: {
 					[self.finishedButton setTitle:NSLocalizedString(@"Checking", nil) forState:UIControlStateNormal];
 					
 					[SKCloudServiceController requestAuthorization:^(SKCloudServiceAuthorizationStatus status) {
@@ -91,11 +96,15 @@
 									guideViewPager.guideMode = GuideModeMusicPermissionDenied;
 									[self presentViewController:guideViewPager animated:YES completion:nil];
 								});
+								
+								[LMAnswers logCustomEventWithName:@"Music Permission Status" customAttributes:@{ @"Status":@"Denied" }];
 								break;
 							}
 							case SKCloudServiceAuthorizationStatusRestricted: {
 								//Device might be in education mode or something
 								buttonTitleToSet = @"Restricted";
+								
+								[LMAnswers logCustomEventWithName:@"Music Permission Status" customAttributes:@{ @"Status":@"Restricted" }];
 								break;
 							}
 							case SKCloudServiceAuthorizationStatusAuthorized: {
@@ -119,6 +128,7 @@
 									});
 								}];
 								
+								[LMAnswers logCustomEventWithName:@"Music Permission Status" customAttributes:@{ @"Status":@"Authorized" }];
 								break;
 							}
 						}
@@ -129,7 +139,7 @@
 					}];
 					break;
 				}
-				case 2: {
+				case 3: {
 					NSLog(@"Creating");
 					//			CBCentralManager *centralManager = [[CBCentralManager alloc]initWithDelegate:self queue:nil];
 					//			CBPeripheralManager *peripheralManager = [[CBPeripheralManager alloc]initWithDelegate:self queue:nil];
@@ -167,7 +177,7 @@
 					//Pebble permission
 					break;
 				}
-				case 3: {
+				case 4: {
 					//Tutorial launch
 //					[[self presentingViewController] dismissViewControllerAnimated:YES completion:nil];
 					[self threeBlindMice];
@@ -175,9 +185,11 @@
 					LMGuideViewPagerController *guideViewPager = [LMGuideViewPagerController new];
 					guideViewPager.guideMode = GuideModeTutorial;
 					[self presentViewController:guideViewPager animated:YES completion:nil];
+					
+					[LMAnswers logCustomEventWithName:@"Launch Tutorial" customAttributes:@{}];
 					break;
 				}
-				case 4: {
+				case 5: {
 					NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 					[userDefaults setObject:@"tutorialVersion1" forKey:LMSettingsKeyOnboardingComplete];
 					[userDefaults synchronize];
@@ -306,12 +318,15 @@
 	self.finishedButton.backgroundColor = [LMColour ligniteRedColour];
 	self.finishedButton.titleLabel.textColor = [UIColor whiteColor];
 	self.finishedButton.layer.masksToBounds = YES;
-	self.finishedButton.layer.cornerRadius = 6;
+	self.finishedButton.layer.cornerRadius = 0;
 	[self.finishedButton.titleLabel setFont:[UIFont fontWithName:@"HelveticaNeue" size:18.0f]];
 	[self.finishedButton addTarget:self action:@selector(performOnboardingAction) forControlEvents:UIControlEventTouchUpInside];
 	[self.finishedButton setTitle:self.buttonTitle forState:UIControlStateNormal];
 	
-	if((self.guideMode == GuideModeTutorial && self.index == 3) || (self.guideMode == GuideModeOnboarding && self.index == 3)){ //Pebble screen
+	if((self.guideMode == GuideModeTutorial && self.index == 3) //End of tutorial
+	   || (self.guideMode == GuideModeOnboarding && self.index == 4) //Pebble screen
+	   || (self.guideMode == GuideModeOnboarding && self.index == 1)){ //Backer login
+		
 		UIView *firstButtonArea = [UIView newAutoLayoutView];
 //		firstButtonArea.backgroundColor = [UIColor redColor];
 		[self.buttonArea addSubview:firstButtonArea];
@@ -325,10 +340,11 @@
 		self.secondaryButton.backgroundColor = [LMColour ligniteRedColour];
 		self.secondaryButton.titleLabel.textColor = [UIColor whiteColor];
 		self.secondaryButton.layer.masksToBounds = YES;
-		self.secondaryButton.layer.cornerRadius = 6;
+		self.secondaryButton.layer.cornerRadius = 0;
 		[self.secondaryButton.titleLabel setFont:[UIFont fontWithName:@"HelveticaNeue" size:18.0f]];
 		[self.secondaryButton addTarget:self action:@selector(secondaryAction) forControlEvents:UIControlEventTouchUpInside];
-		[self.secondaryButton setTitle:NSLocalizedString(self.guideMode == GuideModeOnboarding ? @"SkipTutorial" : @"Install", nil) forState:UIControlStateNormal];
+		[self.secondaryButton setTitle:
+		 NSLocalizedString(self.guideMode == GuideModeOnboarding ? @"KeepGoing" : @"Install", nil) forState:UIControlStateNormal];
 		
 		[firstButtonArea addSubview:self.secondaryButton];
 		
@@ -413,7 +429,7 @@
 	
 	self.screenshotView = [UIImageView newAutoLayoutView];
 //	self.screenshotView.backgroundColor = [UIColor redColor];
-	self.screenshotView.contentMode = (self.guideMode == GuideModeOnboarding && self.index == 4) ? UIViewContentModeScaleAspectFill : UIViewContentModeScaleAspectFit;
+	self.screenshotView.contentMode = (self.guideMode == GuideModeOnboarding && self.index == 5) ? UIViewContentModeScaleAspectFill : UIViewContentModeScaleAspectFit;
 	self.screenshotView.image = self.screenshotImage;
 	[self.view addSubview:self.screenshotView];
 	

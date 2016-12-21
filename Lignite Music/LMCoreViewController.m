@@ -32,7 +32,7 @@
 #import "LMBrowsingBar.h"
 #import "LMFeedbackViewController.h"
 
-//#define SKIP_ONBOARDING
+#define SKIP_ONBOARDING
 //#define SPEED_DEMON_MODE
 
 @import SDWebImage;
@@ -85,11 +85,13 @@
 		case LMPurchaseManagerAppOwnershipStatusInTrial:
 			NSLog(@"The user is currently in trial.");
 			break;
-		case LMPurchaseManagerAppOwnershipStatusTrialExpired:
+		case LMPurchaseManagerAppOwnershipStatusTrialExpired: {
 			NSLog(@"The user's trial has expired.");
-			
-			[self.purchaseManager showPurchaseViewControllerOnViewController:self.navigationController present:YES];
+			[NSTimer scheduledTimerWithTimeInterval:3.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
+				[self.purchaseManager showPurchaseViewControllerOnViewController:self.navigationController present:YES];
+			}];
 			break;
+		}
 		case LMPurchaseManagerAppOwnershipStatusPurchased:
 			NSLog(@"The user purchased the app.");
 			break;
@@ -616,11 +618,11 @@ BOOL didAutomaticallyClose = NO;
 //		[[LMPurchaseManager sharedPurchaseManager] showPurchaseViewControllerOnViewController:self.navigationController present:YES];
 //	}];
 	
-	LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
-	settingsViewController.coreViewController = self;
-	[self.navigationController pushViewController:settingsViewController animated:YES];
-	
-	return;
+//	LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
+//	settingsViewController.coreViewController = self;
+//	[self.navigationController pushViewController:settingsViewController animated:YES];
+//	
+//	return;
 	
 //	LMImageManager *imageManager = [LMImageManager sharedImageManager];
 //	[imageManager launchPermissionRequestOnView:self.view
@@ -634,7 +636,7 @@ BOOL didAutomaticallyClose = NO;
 //	NSLog(@"Query %@", query);
 	
 	UIImageView *hangOnImage = [UIImageView newAutoLayoutView];
-	hangOnImage.image = [UIImage imageNamed:@"splash_portrait.png"];
+	hangOnImage.image = [UIImage imageNamed:@"splash_image_portrait.png"];
 	hangOnImage.contentMode = UIViewContentModeScaleAspectFill;
 	[self.view addSubview:hangOnImage];
 	

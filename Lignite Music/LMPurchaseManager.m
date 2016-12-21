@@ -68,9 +68,16 @@
 																			   userInfo:nil
 																				repeats:YES];
 		
-//		[sharedPurchaseManager.userDefaults removeObjectForKey:LMPurchaseManagerKickstarterLoginCredentialEmail];
-//		[sharedPurchaseManager.userDefaults removeObjectForKey:LMPurchaseManagerKickstarterLoginCredentialPassword];
-//		[sharedPurchaseManager.userDefaults removeObjectForKey:LMPurchaseManagerKickstarterLoginCredentialSessionToken];
+		//Fire it after only 3 seconds to ensure no massive gap between launch and check
+		[NSTimer scheduledTimerWithTimeInterval:3
+										 target:sharedPurchaseManager
+									   selector:@selector(checkTrialTimeRemaining)
+									   userInfo:nil
+										repeats:NO];
+		
+		[sharedPurchaseManager.userDefaults removeObjectForKey:LMPurchaseManagerKickstarterLoginCredentialEmail];
+		[sharedPurchaseManager.userDefaults removeObjectForKey:LMPurchaseManagerKickstarterLoginCredentialPassword];
+		[sharedPurchaseManager.userDefaults removeObjectForKey:LMPurchaseManagerKickstarterLoginCredentialSessionToken];
 		
 		NSLog(@"The user currently has %f seconds left.", [sharedPurchaseManager amountOfTrialTimeRemainingInSeconds]);
 	});
@@ -92,6 +99,13 @@
  End general code and begin purchase management code
  */
 
+- (NSString*)keyForProductIdentifier:(LMPurchaseManagerProductIdentifier*)productIdentifier {
+	if([productIdentifier isEqualToString:LMPurchaseManagerProductIdentifierLifetimeMusic]){
+		return LMPurchaseManagerProductKeyLifetimeMusic;
+	}
+	return @"AppleUnknownDeviceMetric";
+}
+
 - (void)completePurchaseForProductIdentifier:(LMPurchaseManagerProductIdentifier*)productIdentifier {
 	//Alert delegates which are subscribed to appOwnershipStatusChanged: that the app ownership has changed to purchased
 	if([productIdentifier isEqualToString:LMPurchaseManagerProductIdentifierLifetimeMusic]){
@@ -103,14 +117,16 @@
 
 	}
 	
-	[self.userDefaults setBool:YES forKey:productIdentifier]; //To avoid confusing naming conventions for if they've purchased, we just set a YES flag to its ID.
+	[self.userDefaults setSecretBool:YES forKey:[self keyForProductIdentifier:productIdentifier]];
 }
 
 - (BOOL)userOwnsProductWithIdentifier:(LMPurchaseManagerProductIdentifier*)productIdentifier {
 	BOOL ownsProduct = NO;
 	
-	if([self.userDefaults secretObjectForKey:productIdentifier]){
-		ownsProduct = [self.userDefaults secretBoolForKey:productIdentifier];
+	NSString *productKey = [self keyForProductIdentifier:productIdentifier];
+	
+	if([self.userDefaults secretObjectForKey:productKey]){
+		ownsProduct = [self.userDefaults secretBoolForKey:productKey];
 	}
 	
 	return ownsProduct;
@@ -141,7 +157,7 @@
 		[LMAnswers logStartCheckoutWithPrice:product.price
 								  currency:product.priceLocale.currencyCode
 								 itemCount:@(1)
-						  customAttributes:@{ @"productID":product.productIdentifier }];
+						  customAttributes:@{ @"ProductIdentifier":product.productIdentifier }];
 		
 		[self purchaseProduct:product];
 	}
@@ -329,7 +345,6 @@
 	else{
 		[viewController showViewController:purchaseViewController sender:self];
 	}
-	
 }
 
 

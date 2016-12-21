@@ -139,6 +139,10 @@
 		return;
 	}
 	
+	[super logStartCheckoutWithPrice:totalPriceOrNil
+							currency:currencyOrNil
+						   itemCount:itemCountOrNil
+					customAttributes:customAttributesOrNil];
 }
 
 + (void)logRating:(nullable NSNumber *)ratingOrNil

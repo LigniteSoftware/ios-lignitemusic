@@ -36,20 +36,20 @@
 
 	switch(self.guideMode){
 		case GuideModeOnboarding: {
-			self.amountOfPages = 5;
-			
 			self.titleArray = [[NSArray alloc]initWithObjects:
 							   @"OnboardingWelcomeTitle",
-		//					   @"OnboardingKickstarterLoginTitle",
+							   @"OnboardingKickstarterLoginTitle",
 							   @"OnboardingMusicPermissionTitle",
 							   @"OnboardingPebblePermissionTitle",
 							   @"OnboardingTutorialTitle",
 							   @"OnboardingThanksTitle"
 							   , nil];
 			
+			self.amountOfPages = self.titleArray.count;
+			
 			self.descriptionArray = [[NSArray alloc]initWithObjects:
 									 @"OnboardingWelcomeDescription",
-		//							 @"OnboardingKickstarterLoginDescription",
+									 @"OnboardingKickstarterLoginDescription",
 									 @"OnboardingMusicPermissionDescription",
 									 @"OnboardingPebblePermissionDescription",
 									 @"OnboardingTutorialDescription",
@@ -58,7 +58,7 @@
 			
 			self.screenshotsArray = [[NSArray alloc]initWithObjects:
 									 @"icon_no_cover_art.png",
-		//							 @"icon_no_cover_art.png",
+									 @"onboarding_kickstarter.png",
 									 @"onboarding_library_access.png",
 									 @"onboarding_bluetooth.png",
 									 @"tutorial_browsing.png",
@@ -67,7 +67,7 @@
 			
 			self.buttonNamesArray = [[NSArray alloc]initWithObjects:
 									 @"LetsGo",
-		//							 @"LogMeIn",
+									 @"LogMeIn",
 									 @"HitMeWithIt",
 									 @"SoundsGood",
 									 @"OpenTutorial",

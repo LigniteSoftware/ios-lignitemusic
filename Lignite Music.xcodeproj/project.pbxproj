@@ -150,6 +150,7 @@
 		6AEF8C731DEF419D00D9A1BF /* LMDebugViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AEF8C721DEF419D00D9A1BF /* LMDebugViewController.m */; };
 		6AF2C9431DDA16CC005E4643 /* icon_source.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AF2C9411DDA16CC005E4643 /* icon_source.png */; };
 		6AF2C9441DDA16CC005E4643 /* icon_browse.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AF2C9421DDA16CC005E4643 /* icon_browse.png */; };
+		6AF3AD9C1E0A7C7D00D8E8F1 /* onboarding_kickstarter.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AF3AD9B1E0A7C7D00D8E8F1 /* onboarding_kickstarter.png */; };
 		6AF751631E0446D80001E18B /* LMFeedbackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AF751621E0446D80001E18B /* LMFeedbackViewController.m */; };
 		6AF751661E0454B50001E18B /* LMPaddedTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AF751651E0454B50001E18B /* LMPaddedTextField.m */; };
 		6AF9D5321DE0B73D006368B6 /* LMImageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AF9D5311DE0B73D006368B6 /* LMImageManager.m */; };
@@ -401,6 +402,7 @@
 		6AEF8C721DEF419D00D9A1BF /* LMDebugViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMDebugViewController.m; sourceTree = "<group>"; };
 		6AF2C9411DDA16CC005E4643 /* icon_source.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_source.png; sourceTree = "<group>"; };
 		6AF2C9421DDA16CC005E4643 /* icon_browse.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_browse.png; sourceTree = "<group>"; };
+		6AF3AD9B1E0A7C7D00D8E8F1 /* onboarding_kickstarter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = onboarding_kickstarter.png; sourceTree = "<group>"; };
 		6AF571FE1BC714DF009993E0 /* PebbleKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = PebbleKit.framework; sourceTree = "<group>"; };
 		6AF751611E0446D70001E18B /* LMFeedbackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMFeedbackViewController.h; sourceTree = "<group>"; };
 		6AF751621E0446D80001E18B /* LMFeedbackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMFeedbackViewController.m; sourceTree = "<group>"; };
@@ -969,12 +971,13 @@
 		6AFF018A1DDD6B0E00F24D8E /* Onboarding */ = {
 			isa = PBXGroup;
 			children = (
-				6AFF019A1DDE7CD100F24D8E /* Tutorial */,
-				6ADC48ED1DDF8C8000FE57F1 /* onboarding_library_access.png */,
 				6ADC48EE1DDF8C8000FE57F1 /* onboarding_bluetooth.png */,
+				6AFF01A71DDED15100F24D8E /* onboarding_gutless_user.png */,
+				6AF3AD9B1E0A7C7D00D8E8F1 /* onboarding_kickstarter.png */,
+				6ADC48ED1DDF8C8000FE57F1 /* onboarding_library_access.png */,
 				6AFF018D1DDD6B1A00F24D8E /* onboarding_pebble.png */,
 				6A43BCE81DDFA66B009FB0E9 /* onboarding_us.png */,
-				6AFF01A71DDED15100F24D8E /* onboarding_gutless_user.png */,
+				6AFF019A1DDE7CD100F24D8E /* Tutorial */,
 			);
 			name = Onboarding;
 			sourceTree = "<group>";
@@ -982,10 +985,10 @@
 		6AFF019A1DDE7CD100F24D8E /* Tutorial */ = {
 			isa = PBXGroup;
 			children = (
-				6AFF019B1DDE7D2D00F24D8E /* tutorial_pebble.png */,
+				6AFF019D1DDE7D2D00F24D8E /* tutorial_bottom_tabs.png */,
 				6AFF019C1DDE7D2D00F24D8E /* tutorial_browsing.png */,
 				6A43BCE61DDFA471009FB0E9 /* tutorial_now_playing.png */,
-				6AFF019D1DDE7D2D00F24D8E /* tutorial_bottom_tabs.png */,
+				6AFF019B1DDE7D2D00F24D8E /* tutorial_pebble.png */,
 			);
 			name = Tutorial;
 			sourceTree = "<group>";
@@ -1123,6 +1126,7 @@
 				6AFF01A81DDED15100F24D8E /* onboarding_gutless_user.png in Resources */,
 				6A5168A11E090C6D00A6446F /* purchase_header.png in Resources */,
 				6A6C186D1DE0014A00D651E1 /* icon_artists.png in Resources */,
+				6AF3AD9C1E0A7C7D00D8E8F1 /* onboarding_kickstarter.png in Resources */,
 				6A5168961E09002800A6446F /* icon_green_checkmark.png in Resources */,
 				6A514E141CE9621B00AFB351 /* icon_dynamic_playlist.png in Resources */,
 				6A759D511DEA40230051E1A9 /* icon_twitter.png in Resources */,

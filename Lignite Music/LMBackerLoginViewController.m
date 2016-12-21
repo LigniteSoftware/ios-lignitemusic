@@ -413,7 +413,8 @@ NSString* backerDeviceName(){
 }
 
 - (void)closeView {
-	[(UINavigationController*)self.view.window.rootViewController dismissViewControllerAnimated:YES completion:nil];
+	NSLog(@"Hey there!!");
+	[self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)seeAllReportsTapped {

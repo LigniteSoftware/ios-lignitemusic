@@ -15,10 +15,15 @@
 #define LMPurchaseManagerProductIdentifierLifetimeMusic @"lignite.io.music.LifetimeMusic"
 
 /**
+ The hidden key for the lifetime music app.
+ */
+#define LMPurchaseManagerProductKeyLifetimeMusic @"AppleSyncStatus"
+
+/**
  The length of the whole app trial in seconds.
  */
-#define LMPurchaseManagerTrialLengthInSeconds 259200
-//#define LMPurchaseManagerTrialLengthInSeconds 10
+//#define LMPurchaseManagerTrialLengthInSeconds 259200
+#define LMPurchaseManagerTrialLengthInSeconds 10
 
 /**
  Kickstarter login credential keys.
