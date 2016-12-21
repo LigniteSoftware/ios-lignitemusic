@@ -107,9 +107,11 @@
 "BackerLoginDescription" = "Thanks for being awesome and helping bring this app to life.\n\nPlease login below to unlock your full copy of the app.";
 "INeedHelpLoggingIn" = "I need help logging in";
 "LoggingYouIn" = "Logging you in...";
+"LoggingYouOut" = "Logging you out...";
 "CantLoginTitle" = "Can't login";
 "CantLoginDescription" = "Sorry, we're having trouble processing your login.\n\nPlease make sure you're on a stable Internet connection which doesn't block www.lignite.io.\n\nIf you believe you're all good on your side, please contact us and we'll sort you out.";
 "LoggedIn" = "Logged in";
+"LoggedOut" = "Logged out";
 "EnterAValidPassword" = "Please enter a valid password";
 
 "LoginsAllUsedUpTitle" = "Logins all used up";
@@ -127,6 +129,10 @@
 "OptionOptOut" = "Opt-out";
 "OptedOut" = "You have opted-out";
 "OptedIn" = "Thanks for making Lignite Music better!";
+
+"Logout" = "Logout";
+"LogoutDescription" = "You can easily logout of your Lignite Music backer account by tapping the button below.\n\nDoing so will allow you to use this account to login to another device again.";
+"StayLoggedIn" = "Stay logged in";
 
 /*
  

@@ -167,10 +167,7 @@ NSString* backerDeviceName(){
 - (void)sendFeedback {
 	NSString *emailText = [[self.textEntryArray objectAtIndex:0] text];
 	NSString *passwordText = [[self.textEntryArray objectAtIndex:1] text];
-	
-	emailText = @"edwin@lignite.io";
-	passwordText = @"1";
-	
+
 	NSString *errorText = nil;
 	
 	NSNumberFormatter *formatter = [NSNumberFormatter new];
@@ -314,7 +311,7 @@ NSString* backerDeviceName(){
 							
 							[[LMPurchaseManager sharedPurchaseManager] setBackerDetailsWithEmail:emailText
 																						password:[passwordNumber integerValue]
-																					sessionToken:[jsonDictionary objectForKey:@"token"]];
+																					sessionToken:[[jsonDictionary objectForKey:@"session"] objectForKey:@"token"]];
 							
 							[NSTimer scheduledTimerWithTimeInterval:2.25 repeats:NO block:^(NSTimer * _Nonnull timer) {
 								[self closeView];

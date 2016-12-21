@@ -494,12 +494,17 @@
 				6A1FB9CB1D9AE76A00890BF3 /* LMLabel.m */,
 				6A3211421DA73EC90060DD07 /* LMMarqueeLabel.h */,
 				6A3211431DA73EC90060DD07 /* LMMarqueeLabel.m */,
+				6AF751641E0454B50001E18B /* LMPaddedTextField.h */,
+				6AF751651E0454B50001E18B /* LMPaddedTextField.m */,
+				6A759D461DE96B9A0051E1A9 /* LMScrollView.h */,
+				6A759D471DE96B9A0051E1A9 /* LMScrollView.m */,
 				6ADDBD3B1DA29D3E00DB99EF /* LMShadowView.h */,
 				6ADDBD3C1DA29D3E00DB99EF /* LMShadowView.m */,
 				6A514E171CEA15D900AFB351 /* LMSlider.h */,
 				6A514E181CEA15D900AFB351 /* LMSlider.m */,
 				6A52574A1DF099480040210D /* LMView.h */,
 				6A52574B1DF099480040210D /* LMView.m */,
+				6AA4459D1D5AD676004C6739 /* SettingsControls */,
 				6A32A9F11DC69BB50056CC60 /* ShadowView */,
 				6A32A9E91DC68F150056CC60 /* TriangleView */,
 			);
@@ -513,18 +518,6 @@
 				6AEB9CFF1BACF60E00AD19FA /* LMAppDelegate.m */,
 				6AD226FD1DA4B8000056695A /* LMCoreViewController.h */,
 				6AD226FE1DA4B8000056695A /* LMCoreViewController.m */,
-				6A759D491DE96D6B0051E1A9 /* LMCreditsViewController.h */,
-				6A759D4A1DE96D6B0051E1A9 /* LMCreditsViewController.m */,
-				6A759D571DEBF0470051E1A9 /* LMContactViewController.h */,
-				6A759D581DEBF0470051E1A9 /* LMContactViewController.m */,
-				6A759D461DE96B9A0051E1A9 /* LMScrollView.h */,
-				6A759D471DE96B9A0051E1A9 /* LMScrollView.m */,
-				6AEF8C711DEF419D00D9A1BF /* LMDebugViewController.h */,
-				6AEF8C721DEF419D00D9A1BF /* LMDebugViewController.m */,
-				6AF751611E0446D70001E18B /* LMFeedbackViewController.h */,
-				6AF751621E0446D80001E18B /* LMFeedbackViewController.m */,
-				6AF751641E0454B50001E18B /* LMPaddedTextField.h */,
-				6AF751651E0454B50001E18B /* LMPaddedTextField.m */,
 			);
 			name = Core;
 			sourceTree = "<group>";
@@ -599,20 +592,18 @@
 		6A32A9F21DC69BC60056CC60 /* TableView */ = {
 			isa = PBXGroup;
 			children = (
-				6A6351901D9D71D300498582 /* LMListEntry.h */,
-				6A6351911D9D71D300498582 /* LMListEntry.m */,
 				6AC77A071DC3B04B00BABBB3 /* LMBigListEntryTableView.h */,
 				6AC77A081DC3B04B00BABBB3 /* LMBigListEntryTableView.m */,
+				6A6351901D9D71D300498582 /* LMListEntry.h */,
+				6A6351911D9D71D300498582 /* LMListEntry.m */,
+				6A26B4681DE2D1A3008B5B69 /* LMSectionHeaderView.h */,
+				6A26B4691DE2D1A3008B5B69 /* LMSectionHeaderView.m */,
+				6AF9D5401DE251FD006368B6 /* LMSectionTableView.h */,
+				6AF9D5411DE251FD006368B6 /* LMSectionTableView.m */,
 				6A7115B51DCEE410006DE00F /* LMTableView.h */,
 				6A7115B61DCEE410006DE00F /* LMTableView.m */,
 				6AAF61161DA0B9C700971875 /* LMTableViewCell.h */,
 				6AAF61171DA0B9C700971875 /* LMTableViewCell.m */,
-				6AF9D5401DE251FD006368B6 /* LMSectionTableView.h */,
-				6AF9D5411DE251FD006368B6 /* LMSectionTableView.m */,
-				6A26B4681DE2D1A3008B5B69 /* LMSectionHeaderView.h */,
-				6A26B4691DE2D1A3008B5B69 /* LMSectionHeaderView.m */,
-				6A59A5191DE7B08B00B346AC /* LMSettingsViewController.h */,
-				6A59A51A1DE7B08B00B346AC /* LMSettingsViewController.m */,
 			);
 			name = TableView;
 			sourceTree = "<group>";
@@ -758,12 +749,12 @@
 		6A92F8211DD6D5F7002045C2 /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				6A92F8221DD6D62A002045C2 /* LMBrowsingView.h */,
-				6A92F8231DD6D62A002045C2 /* LMBrowsingView.m */,
 				6A92F8251DD6DF00002045C2 /* LMBrowsingDetailView.h */,
 				6A92F8261DD6DF00002045C2 /* LMBrowsingDetailView.m */,
 				6A59A51E1DE825C200B346AC /* LMBrowsingDetailViewController.h */,
 				6A59A51F1DE825C200B346AC /* LMBrowsingDetailViewController.m */,
+				6A92F8221DD6D62A002045C2 /* LMBrowsingView.h */,
+				6A92F8231DD6D62A002045C2 /* LMBrowsingView.m */,
 			);
 			name = Core;
 			sourceTree = "<group>";
@@ -889,7 +880,7 @@
 				6A1FB9C01D99C72200890BF3 /* Pebble */,
 				6A838A921E07A8E2006E7DE0 /* Purchases */,
 				6A5257501DF1FC650040210D /* Search */,
-				6AA4459D1D5AD676004C6739 /* SettingsControls */,
+				6AF3AD9A1E0A3F0300D8E8F1 /* Settings */,
 				6A1FB9C31D99C8C900890BF3 /* Storyboards */,
 				6AAF610A1DA0195900971875 /* Strings */,
 				6A32A9F21DC69BC60056CC60 /* TableView */,
@@ -936,6 +927,23 @@
 				6A6CCD5C1DB295E4006035C1 /* Pebble */,
 			);
 			name = Images;
+			sourceTree = "<group>";
+		};
+		6AF3AD9A1E0A3F0300D8E8F1 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				6A759D491DE96D6B0051E1A9 /* LMCreditsViewController.h */,
+				6A759D4A1DE96D6B0051E1A9 /* LMCreditsViewController.m */,
+				6A759D571DEBF0470051E1A9 /* LMContactViewController.h */,
+				6A759D581DEBF0470051E1A9 /* LMContactViewController.m */,
+				6AEF8C711DEF419D00D9A1BF /* LMDebugViewController.h */,
+				6AEF8C721DEF419D00D9A1BF /* LMDebugViewController.m */,
+				6AF751611E0446D70001E18B /* LMFeedbackViewController.h */,
+				6AF751621E0446D80001E18B /* LMFeedbackViewController.m */,
+				6A59A5191DE7B08B00B346AC /* LMSettingsViewController.h */,
+				6A59A51A1DE7B08B00B346AC /* LMSettingsViewController.m */,
+			);
+			name = Settings;
 			sourceTree = "<group>";
 		};
 		6AFD2EDA1BC41EAC0083FE9E /* Browsing */ = {

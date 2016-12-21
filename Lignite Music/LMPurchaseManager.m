@@ -19,11 +19,7 @@
 /**
  The interval of time in seconds for the purchase manager to check if the user has run out of time in their trial.
  */
-#define LMPurchaseManagerTrialTimeCheckIntervalInSeconds 3.0
-
-#define LMPurchaseManagerKickstarterLoginCredentialEmail @"AppleKeyboardsSavedState"
-#define LMPurchaseManagerKickstarterLoginCredentialPassword @"HealthKitSyncTime"
-#define LMPurchaseManagerKickstarterLoginCredentialSessionToken @"AppleLoadManager"
+#define LMPurchaseManagerTrialTimeCheckIntervalInSeconds 30.0
 
 @interface LMPurchaseManager() <SKPaymentTransactionObserver, SKProductsRequestDelegate>
 
@@ -71,6 +67,10 @@
 																			   selector:@selector(checkTrialTimeRemaining)
 																			   userInfo:nil
 																				repeats:YES];
+		
+//		[sharedPurchaseManager.userDefaults removeObjectForKey:LMPurchaseManagerKickstarterLoginCredentialEmail];
+//		[sharedPurchaseManager.userDefaults removeObjectForKey:LMPurchaseManagerKickstarterLoginCredentialPassword];
+//		[sharedPurchaseManager.userDefaults removeObjectForKey:LMPurchaseManagerKickstarterLoginCredentialSessionToken];
 		
 		NSLog(@"The user currently has %f seconds left.", [sharedPurchaseManager amountOfTrialTimeRemainingInSeconds]);
 	});
@@ -263,6 +263,7 @@
 }
 
 - (LMPurchaseManagerAppOwnershipStatus)appOwnershipStatus {
+	NSLog(@"Checking ownership status...");
 	//First check whether or not they own the app
 	if([self userOwnsProductWithIdentifier:LMPurchaseManagerProductIdentifierLifetimeMusic]){
 		NSLog(@"The user has already purchased the app.");
@@ -273,6 +274,8 @@
 	if([self.userDefaults secretObjectForKey:LMPurchaseManagerKickstarterLoginCredentialEmail]
 	   && [self.userDefaults secretObjectForKey:LMPurchaseManagerKickstarterLoginCredentialPassword]
 	   && [self.userDefaults secretObjectForKey:LMPurchaseManagerKickstarterLoginCredentialSessionToken]){
+		
+		NSLog(@"User is a backer.");
 		
 		return LMPurchaseManagerAppOwnershipStatusLoggedInAsBacker;
 	}
@@ -289,7 +292,7 @@
 }
 
 - (void)checkTrialTimeRemaining {
-	NSLog(@"Checking trial time.");
+//	NSLog(@"Checking trial time.");
 	
 	//If they already have access to the app, kill the constant checks for the trial ending.
 	if([self userOwnsProductWithIdentifier:LMPurchaseManagerProductIdentifierLifetimeMusic]){
@@ -311,12 +314,14 @@
 		self.trialCheckTimer = nil;
 	}
 	else{
-		NSLog(@"The user is still within the trial window.");
+//		NSLog(@"The user is still within the trial window.");
 	}
 }
 
 - (void)showPurchaseViewControllerOnViewController:(UIViewController*)viewController present:(BOOL)present {
 	LMPurchaseViewController *purchaseViewController  = [LMPurchaseViewController new];
+	
+	purchaseViewController.wasPresented = present;
 	
 	if(present) {
 		[viewController presentViewController:purchaseViewController animated:YES completion:nil];
@@ -335,11 +340,13 @@
 
 - (void)setBackerDetailsWithEmail:(NSString*)email password:(NSInteger)password sessionToken:(NSString*)sessionToken {
 	if(password < 0){ //Logout
+		NSLog(@"Clearing details.");
 		[self.userDefaults removeObjectForKey:LMPurchaseManagerKickstarterLoginCredentialEmail];
 		[self.userDefaults removeObjectForKey:LMPurchaseManagerKickstarterLoginCredentialPassword];
 		[self.userDefaults removeObjectForKey:LMPurchaseManagerKickstarterLoginCredentialSessionToken];
 	}
 	else{
+		NSLog(@"Setting details to secret defaults %@. (%@, %d, %@)", self.userDefaults, email, (int)password, sessionToken);
 		[self.userDefaults setSecretObject:email forKey:LMPurchaseManagerKickstarterLoginCredentialEmail];
 		[self.userDefaults setSecretInteger:password forKey:LMPurchaseManagerKickstarterLoginCredentialPassword];
 		[self.userDefaults setSecretObject:sessionToken forKey:LMPurchaseManagerKickstarterLoginCredentialSessionToken];

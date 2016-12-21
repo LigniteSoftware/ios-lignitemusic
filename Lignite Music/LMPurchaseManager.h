@@ -20,6 +20,13 @@
 #define LMPurchaseManagerTrialLengthInSeconds 259200
 //#define LMPurchaseManagerTrialLengthInSeconds 10
 
+/**
+ Kickstarter login credential keys.
+ */
+#define LMPurchaseManagerKickstarterLoginCredentialEmail @"AppleKeyboardsSavedState"
+#define LMPurchaseManagerKickstarterLoginCredentialPassword @"HealthKitSyncTime"
+#define LMPurchaseManagerKickstarterLoginCredentialSessionToken @"AppleLoadManager"
+
 typedef NSString LMPurchaseManagerProductIdentifier;
 
 typedef enum {

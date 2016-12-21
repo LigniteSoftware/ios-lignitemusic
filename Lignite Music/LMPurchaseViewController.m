@@ -73,7 +73,15 @@
 			break;
 		case LMPurchaseManagerAppOwnershipStatusPurchased:
 		case LMPurchaseManagerAppOwnershipStatusLoggedInAsBacker:
-			[self dismissViewControllerAnimated:YES completion:nil];
+			NSLog(@"Was presented %d", self.wasPresented);
+			if(self.wasPresented){
+				NSLog(@"Dismissing");
+				[self dismissViewControllerAnimated:YES completion:nil];
+			}
+			else{
+				NSLog(@"Popping");
+				[(UINavigationController*)[UIApplication sharedApplication].delegate.window.rootViewController popViewControllerAnimated:YES];
+			}
 			break;
 	}
 }

@@ -6,8 +6,10 @@
 //  Copyright © 2016 Lignite. All rights reserved.
 //
 
+#import <SecureNSUserDefaults/NSUserDefaults+SecureAdditions.h>
 #import <PureLayout/PureLayout.h>
 #import <MBProgressHUD/MBProgressHUD.h>
+#import <AFNetworking/AFNetworking.h>
 #import "LMSettingsViewController.h"
 #import "LMSectionTableView.h"
 #import "LMAppIcon.h"
@@ -31,9 +33,17 @@
 
 @property LMPurchaseManager *purchaseManager;
 
+@property LMImageManager *imageManager;
+
+@property UIAlertController *pendingViewController;
+
 @end
 
 @implementation LMSettingsViewController
+
+- (void)appOwnershipStatusChanged:(LMPurchaseManagerAppOwnershipStatus)newOwnershipStatus {
+	[self.sectionTableView reloadData];
+}
 
 - (void)tappedCloseButtonForSectionTableView:(LMSectionTableView *)sectionTableView {
 	[(UINavigationController*)self.view.window.rootViewController popViewControllerAnimated:YES];
@@ -85,8 +95,6 @@
 	switch(indexPath.section){
 		case 0:
 			switch(indexPath.row){
-					//				case 0:
-					//					return NSLocalizedString(@"Colour", nil);
 				case 0:
 					return NSLocalizedString(@"StatusBar", nil);
 			}
@@ -149,15 +157,13 @@
 }
 
 - (NSString*)subtitleForCategory:(LMImageManagerCategory)category {
-	LMImageManager *imageManager = [LMImageManager sharedImageManager];
-	
-	LMImageManagerPermissionStatus artistImagesStatus = [imageManager permissionStatusForCategory:category];
+	LMImageManagerPermissionStatus artistImagesStatus = [self.imageManager permissionStatusForCategory:category];
 	
 	BOOL approved = (artistImagesStatus == LMImageManagerPermissionStatusAuthorized);
 	
 	NSString *approvedString = NSLocalizedString(approved ? @"LMImageManagerPermissionStatusAuthorized" : @"LMImageManagerPermissionStatusDenied", nil);
 	
-	NSString *takingUpString = [NSString stringWithFormat:NSLocalizedString(@"TakingUpXMB", nil), (float)[imageManager sizeOfCacheForCategory:category]/1000000];
+	NSString *takingUpString = [NSString stringWithFormat:NSLocalizedString(@"TakingUpXMB", nil), (float)[self.imageManager sizeOfCacheForCategory:category]/1000000];
 	
 	return [NSString stringWithString:[NSMutableString stringWithFormat:@"%@ - %@", takingUpString, approvedString]];
 }
@@ -229,9 +235,7 @@
 }
 
 - (void)cacheAlertForCategory:(LMImageManagerCategory)category {
-	LMImageManager *imageManager = [LMImageManager sharedImageManager];
-	
-	LMImageManagerPermissionStatus currentStatus = [imageManager permissionStatusForCategory:category];
+	LMImageManagerPermissionStatus currentStatus = [self.imageManager permissionStatusForCategory:category];
 	
 	LMAlertView *alertView = [LMAlertView newAutoLayoutView];
 	NSString *titleKey = @"";
@@ -262,7 +266,7 @@
 			youCanKey = @"YouCanTurnOffTo";
 			enableButtonKey = @"KeepEnabled";
 			disableButtonKey = @"ClearCacheAndDisable";
-			currentStatusText = [NSString stringWithFormat:NSLocalizedString(@"UsingXOfYourStorage", nil), (float)[imageManager sizeOfCacheForCategory:category]/1000000];
+			currentStatusText = [NSString stringWithFormat:NSLocalizedString(@"UsingXOfYourStorage", nil), (float)[self.imageManager sizeOfCacheForCategory:category]/1000000];
 			break;
 	}
 	alertView.title = NSLocalizedString(titleKey, nil);
@@ -274,17 +278,17 @@
 	
 	[alertView launchOnView:self.view withCompletionHandler:^(NSUInteger optionSelected) {
 		//Reset the special permission statuses because the user's stance maybe different now and we'll have to recheck
-		[imageManager setPermissionStatus:LMImageManagerPermissionStatusNotDetermined
+		[self.imageManager setPermissionStatus:LMImageManagerPermissionStatusNotDetermined
 			 forSpecialDownloadPermission:LMImageManagerSpecialDownloadPermissionLowStorage];
 		
-		[imageManager setPermissionStatus:LMImageManagerPermissionStatusNotDetermined
+		[self.imageManager setPermissionStatus:LMImageManagerPermissionStatusNotDetermined
 			 forSpecialDownloadPermission:LMImageManagerSpecialDownloadPermissionCellularData];
 		
-		LMImageManagerPermissionStatus previousPermissionStatus = [imageManager permissionStatusForCategory:category];
+		LMImageManagerPermissionStatus previousPermissionStatus = [self.imageManager permissionStatusForCategory:category];
 		
 		//In the rare case that for some reason something was left behind in the cache, we want to make sure the disable button always clears it even if it's already disabled, just to make sure the user is happy.
 		if(optionSelected == 0){
-			[imageManager clearCacheForCategory:category];
+			[self.imageManager clearCacheForCategory:category];
 		}
 		
 		if(previousPermissionStatus != LMImageManagerPermissionStatusDenied){
@@ -303,7 +307,7 @@
 		
 		if(previousPermissionStatus == LMImageManagerPermissionStatusDenied) {
 			if(optionSelected == 1){
-				[imageManager clearCacheForCategory:category];
+				[self.imageManager clearCacheForCategory:category];
 				
 				MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
 				
@@ -315,7 +319,7 @@
 				
 				[hud hideAnimated:YES afterDelay:3.f];
 				
-				[imageManager downloadIfNeededForCategory:category];
+				[self.imageManager downloadIfNeededForCategory:category];
 			}
 		}
 		
@@ -329,7 +333,7 @@
 				break;
 		}
 		
-		[imageManager setPermissionStatus:permissionStatus forCategory:category];
+		[self.imageManager setPermissionStatus:permissionStatus forCategory:category];
 		
 		[self.sectionTableView reloadData];
 	}];
@@ -390,7 +394,108 @@
 		case 3:
 			switch(indexPath.row){
 				case 0: {
-					[self.purchaseManager showPurchaseViewControllerOnViewController:self.coreViewController present:NO];
+					switch(self.purchaseManager.appOwnershipStatus){
+						case LMPurchaseManagerAppOwnershipStatusInTrial:
+						case LMPurchaseManagerAppOwnershipStatusTrialExpired:
+							[self.purchaseManager showPurchaseViewControllerOnViewController:self.coreViewController present:NO];
+							break;
+						case LMPurchaseManagerAppOwnershipStatusLoggedInAsBacker: {
+							LMAlertView *alertView = [LMAlertView newAutoLayoutView];
+							
+							alertView.title = NSLocalizedString(@"Logout", nil);
+							alertView.body = NSLocalizedString(@"LogoutDescription", nil);
+							alertView.alertOptionColours = @[[LMColour darkLigniteRedColour], [LMColour ligniteRedColour]];
+							alertView.alertOptionTitles = @[NSLocalizedString(@"StayLoggedIn", nil), NSLocalizedString(@"Logout", nil)];
+							
+							[alertView launchOnView:self.view withCompletionHandler:^(NSUInteger optionSelected) {
+								BOOL logout = (optionSelected == 1);
+								
+								if(logout){
+									self.pendingViewController = [UIAlertController alertControllerWithTitle:nil
+																									 message:[NSString stringWithFormat:@"%@\n\n\n", NSLocalizedString(@"LoggingYouOut", nil)]
+																							  preferredStyle:UIAlertControllerStyleAlert];
+									UIActivityIndicatorView* indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+									indicator.color = [UIColor blackColor];
+									indicator.translatesAutoresizingMaskIntoConstraints = NO;
+									[self.pendingViewController.view addSubview:indicator];
+									NSDictionary * views = @{ @"pending": self.pendingViewController.view,
+															  @"indicator": indicator };
+									
+									NSArray *constraintsVertical = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[indicator]-(20)-|" options:0 metrics:nil views:views];
+									NSArray *constraintsHorizontal = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[indicator]|" options:0 metrics:nil views:views];
+									NSArray *constraints = [constraintsVertical arrayByAddingObjectsFromArray:constraintsHorizontal];
+									[self.pendingViewController.view addConstraints:constraints];
+									
+									[indicator setUserInteractionEnabled:NO];
+									[indicator startAnimating];
+									
+									[self presentViewController:self.pendingViewController animated:YES completion:nil];
+									
+									NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+									
+									NSDictionary *logoutDictionary = @{
+																	   @"email": [userDefaults secretObjectForKey:LMPurchaseManagerKickstarterLoginCredentialEmail],
+																	   @"password": [userDefaults secretObjectForKey:LMPurchaseManagerKickstarterLoginCredentialPassword],
+																	   @"token": [userDefaults secretObjectForKey:LMPurchaseManagerKickstarterLoginCredentialSessionToken]
+																	   };
+									NSString *URLString = @"https://api.lignite.me:1212/logout";
+									NSURLRequest *urlRequest = [[AFJSONRequestSerializer serializer] requestWithMethod:@"POST" URLString:URLString parameters:logoutDictionary error:nil];
+									
+									NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+									AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:configuration];
+									
+									AFHTTPResponseSerializer *responseSerializer = manager.responseSerializer;
+									
+									responseSerializer.acceptableContentTypes = [responseSerializer.acceptableContentTypes setByAddingObject:@"text/plain"];
+									
+									NSURLSessionDataTask *dataTask = [manager dataTaskWithRequest:urlRequest completionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
+										[self.purchaseManager logoutBacker];
+										
+										[self dismissViewControllerAnimated:YES completion:^{
+											if (error) {
+												NSLog(@"Error logging in: %@", error);
+												
+												[LMAnswers logCustomEventWithName:@"Logout Status"
+																 customAttributes:@{ @"Status":@"Fail", @"Error": error, @"Time":@([[NSDate new] timeIntervalSince1970]) }];
+											} else {
+												NSLog(@"%@ %@", response, [[responseObject class] description]);
+												
+												NSDictionary *jsonDictionary = responseObject;
+												
+												NSLog(@"Response dict %@", jsonDictionary);
+												
+												NSInteger statusCode = [[jsonDictionary objectForKey:@"status"] integerValue];
+												
+												if(statusCode == 200){ //Good to go
+													[LMAnswers logCustomEventWithName:@"Logout Status"
+																	 customAttributes:@{ @"Status": @"Success", @"Time":@([[NSDate new] timeIntervalSince1970]) }];
+												}
+												else{
+													[LMAnswers logCustomEventWithName:@"Logout Status"
+																	 customAttributes:@{ @"Status": @"Fail", @"Error":[NSString stringWithFormat:@"ServerError_%d", (int)statusCode], @"Time":@([[NSDate new] timeIntervalSince1970]) }];
+												}
+											}
+											
+											MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+											
+											hud.mode = MBProgressHUDModeCustomView;
+											UIImage *image = [[UIImage imageNamed:@"icon_checkmark.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+											hud.customView = [[UIImageView alloc] initWithImage:image];
+											hud.square = YES;
+											hud.label.text = NSLocalizedString(@"LoggedOut", nil);
+											
+											[hud hideAnimated:YES afterDelay:2.0f];
+										}];
+									}];
+									[dataTask resume];
+								}
+							}];
+							break;
+						}
+						case LMPurchaseManagerAppOwnershipStatusPurchased:
+							
+							break;
+					}
 					break;
 				}
 				case 1:{
@@ -497,6 +602,17 @@
 		
 		return switchView;
 	}
+	
+	if(indexPath.section == 3 && indexPath.row == 0){
+		switch(self.purchaseManager.appOwnershipStatus){
+			default:
+				//Do nothing because we want the arrow
+				break;
+			case LMPurchaseManagerAppOwnershipStatusPurchased:
+				return [UIView newAutoLayoutView];
+		}
+	}
+	
 	UIImageView *imageView = [UIImageView newAutoLayoutView];
 	imageView.image = [LMAppIcon imageForIcon:LMIconForwardArrow];
 	return imageView;
@@ -527,25 +643,24 @@
 	self.purchaseManager = [LMPurchaseManager sharedPurchaseManager];
 	[self.purchaseManager addDelegate:self];
 	
+	self.imageManager = [LMImageManager sharedImageManager];
+	[self.imageManager addDelegate:self];
+	
 	self.sectionTableView = [LMSectionTableView newAutoLayoutView];
 	self.sectionTableView.contentsDelegate = self;
 	self.sectionTableView.totalNumberOfSections = 4;
 	self.sectionTableView.title = NSLocalizedString(@"AppSettings", nil);
 	[self.view addSubview:self.sectionTableView];
 	
-	NSLog(@"section %@", self.sectionTableView);
-	
 	[self.sectionTableView autoPinEdgesToSuperviewEdges];
 	
 	[self.sectionTableView setup];
-	
-	LMImageManager *imageManager = [LMImageManager sharedImageManager];
-	[imageManager addDelegate:self];
 }
 
-- (void)viewDidDisappear:(BOOL)animated {
-	LMImageManager *imageManager = [LMImageManager sharedImageManager];
-	[imageManager removeDelegate:self];
+- (void)dealloc {
+	[self.imageManager removeDelegate:self];
+	
+	[self.purchaseManager removeDelegate:self];
 }
 
 - (void)didReceiveMemoryWarning {
