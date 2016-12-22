@@ -57,8 +57,12 @@
 }
 
 - (LMMusicTrack*)musicTrackForPersistentIdString:(NSString*)persistentId {
-	for(int i = 0; i < self.musicCollection.count; i++){
-		LMMusicTrack *track = [self.musicCollection.items objectAtIndex:i];
+	LMMusicTrackCollection *collectionToIterate = self.musicCollection;
+	for(int i = 0; i < collectionToIterate.count; i++){
+		if(self.musicCollection.items.count < collectionToIterate.items.count){
+//			NSLog(@"Crash would have happened :)");
+		}
+		LMMusicTrack *track = [collectionToIterate.items objectAtIndex:i];
 		
 		if([persistentId isEqualToString:[NSString stringWithFormat:@"%llu", track.albumPersistentID]]){
 			return track;
@@ -357,7 +361,7 @@
 									bigRedFlagPleaseWaveIfTrouble = YES;
 									//							NSLog(@"Index is on the edge, rejecting");
 								}
-								if(actualAmountOfTiles == 16 && indexOfBigTile == 5){ //Prevents centering of big album art in 16 tile square view
+								if(actualAmountOfTiles == 16  && indexOfBigTile == 5){ //Prevents centering of big album art in 16 tile square view
 									bigRedFlagPleaseWaveIfTrouble = YES;
 									//							NSLog(@"Index is cockblock, rejecting");
 								}

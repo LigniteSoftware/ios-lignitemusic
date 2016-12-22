@@ -385,7 +385,7 @@
 	entry.collectionIndex = index;
 	entry.associatedData = [self.musicPlayer.nowPlayingCollection.items objectAtIndex:index];
 	
-	NSLog(@"Collection index %d, current %d match? %d", (int)entry.collectionIndex, (int)self.currentlyHighlighted, ((self.currentlyHighlighted == entry.collectionIndex)));
+//	NSLog(@"Collection index %d, current %d match? %d", (int)entry.collectionIndex, (int)self.currentlyHighlighted, ((self.currentlyHighlighted == entry.collectionIndex)));
 	
 	[entry changeHighlightStatus:(self.currentlyHighlighted == entry.collectionIndex) animated:NO];
 	

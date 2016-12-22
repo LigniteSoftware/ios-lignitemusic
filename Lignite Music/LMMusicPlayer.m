@@ -695,6 +695,14 @@ BOOL shuffleForDebug = NO;
 		albumSort = [NSSortDescriptor sortDescriptorWithKey:sortKey ascending:YES];
 	}
 	
+	NSMutableArray *fixedCollections = [NSMutableArray arrayWithArray:[collections sortedArrayUsingDescriptors:@[albumSort]]];
+	
+	for(LMMusicTrackCollection *collection in fixedCollections){
+		if(collection.count == 0){
+			[collections removeObject:collection];
+		}
+	}
+	
 	//		NSTimeInterval endingTime = [[NSDate date] timeIntervalSince1970];
 	
 	if(shuffleForDebug){
