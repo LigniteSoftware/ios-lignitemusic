@@ -24,6 +24,7 @@
 #import "LMDebugViewController.h"
 #import "LMPurchaseManager.h"
 #import "LMAnswers.h"
+#import "NSTimer+Blocks.h"
 
 @interface LMSettingsViewController ()<LMSectionTableViewDelegate, LMImageManagerDelegate, LMPurchaseManagerDelegate>
 
@@ -353,10 +354,10 @@
 					}
 					if(self.debugTapCount == 1){
 						NSLog(@"Timer registered");
-						[NSTimer scheduledTimerWithTimeInterval:3.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
+						[NSTimer scheduledTimerWithTimeInterval:3.0 block:^() {
 							self.debugTapCount = 0;
 							NSLog(@"Timer reset");
-						}];
+						} repeats:NO];
 					}
 					break;
 			}

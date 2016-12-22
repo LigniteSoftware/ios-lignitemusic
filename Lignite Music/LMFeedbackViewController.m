@@ -17,6 +17,7 @@
 #import "LMAppIcon.h"
 #import "LMDebugViewController.h"
 #import "LMSettings.h"
+#import "NSTimer+Blocks.h"
 
 @interface LMFeedbackViewController () <UITextFieldDelegate, UITextViewDelegate>
 
@@ -247,7 +248,7 @@ NSString* deviceName(){
 		[indicator startAnimating];
 		
 		[self presentViewController:self.pendingViewController animated:YES completion:nil];
-		[NSTimer scheduledTimerWithTimeInterval:1.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
+		[NSTimer scheduledTimerWithTimeInterval:1.0 block:^() {
 			NSString *debugInfo = [LMDebugViewController appDebugInfoString];
 			
 //			NSLog(@"Debug info %@", debugInfo);
@@ -340,17 +341,17 @@ NSString* deviceName(){
 						
 						[hud hideAnimated:YES afterDelay:2.0f];
 						
-						[NSTimer scheduledTimerWithTimeInterval:2.25 repeats:NO block:^(NSTimer * _Nonnull timer) {
+						[NSTimer scheduledTimerWithTimeInterval:2.25 block:^() {
 							[[self.textEntryArray objectAtIndex:2] setText:@""];
 							[[self.textEntryArray objectAtIndex:3] setText:@""];
 							
 							[self closeView];
-						}];
+						} repeats:NO];
 					}];
 				}
 			}];
 			[dataTask resume];
-		}];
+		} repeats:NO];
 	}
 }
 

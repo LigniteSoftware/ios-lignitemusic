@@ -74,7 +74,7 @@
 "CantSendFeedback" = "Kann nicht gesendet werden :(";
 "CantSendFeedbackDescription" = "\nLeider ist bei der Übermittlung etwas schief gelaufen.\n\nStelle bitte sicher, dass du über eine stabile Internetverbindung verfügst und www.lignite.io nicht geblockt wird.\n\nFalls es noch immer nicht funktionieren sollte, melde dich bitte via E-Mail bei uns.";
 
-"OutOfTrialTime" = "Testphase abgelaufen";
+"OutOfTrialTime" = "Testphase zu Ende";
 "XDaysLeftInTrial" = "%.00f Tage deiner Testphase übrig";
 "XHoursLeftInTrial" = "%.00f Stunden deiner Testphase übrig";
 "XMinutesLeftInTrial" = "%.00f Minuten deiner Testphase übrig";
@@ -86,7 +86,7 @@
 "YouOwnLigniteMusic" = "Lignite Music ist freigeschaltet";
 "ThanksForYourSupport" = "Vielen Dank für deine Unterstützung!";
 
-"TrialTimeIsUpTitle" = "Deine 3-tägige Testphase ist abgelaufen";
+"TrialTimeIsUpTitle" = "Deine 3-tägige Testphase ist zu Ende";
 "TrialTimeIsUpDescription" = "Für den Preis eines Kaffees kannst du Lignite Music weiterhin benutzen. Die App kann weit mehr als ein Kaffee und wird nie kalt.";
 "AppAdvantage0" = "Gesten-basiert und intuitiv zu nutzen";
 "AppAdvantage1" = "Einfache Handhabung im Auto, unterwegs, im Gym oder überall sonst";

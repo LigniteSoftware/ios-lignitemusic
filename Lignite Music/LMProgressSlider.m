@@ -12,6 +12,7 @@
 #import "LMLabel.h"
 #import "LMExtras.h"
 #import "LMMarqueeLabel.h"
+#import "NSTimer+Blocks.h"
 
 @interface LMProgressSlider()
 
@@ -134,6 +135,9 @@
 }
 
 - (void)setFinalValue:(CGFloat)finalValue {
+	if(isinf(finalValue)){
+		finalValue = 0.0;
+	}
 	_finalValue = finalValue;
 	
 	if(self.didLayoutConstraints){
@@ -142,14 +146,14 @@
 }
 
 - (void)setValue:(CGFloat)value {
+	if(isnan(value)){
+		value = 0.0;
+	}
 	_value = value;
 	
 	if(self.didLayoutConstraints){
 		if(self.userIsInteracting || [self didJustFinishSliding] || value == 0){
 			return;
-		}
-		if(isnan(self.value)){
-			self.value = 0.0;
 		}
 		
 		CGFloat grabberWidth = self.sliderGrabberView.frame.size.width;
@@ -306,10 +310,10 @@
 			self.widthIncrementPerTick = self.frame.size.width/self.finalValue;
 		}
 		
-		if(isnan(self.value)){
+		if(isnan(self.value) || isinf(self.value)){
 			self.value = 0.0;
 		}
-		if(isnan(self.finalValue)){
+		if(isnan(self.finalValue) || isinf(self.finalValue)){
 			self.finalValue = 0.0;
 		}
 				
@@ -398,9 +402,9 @@
 		
 		[self setLightTheme:self.lightTheme];
 		
-		[NSTimer scheduledTimerWithTimeInterval:0.5 repeats:NO block:^(NSTimer * _Nonnull timer) {
+		[NSTimer scheduledTimerWithTimeInterval:0.5 block:^() {
 			self.value = self.value;
-		}];
+		} repeats:NO];
 	}
 	[super layoutSubviews];
 }

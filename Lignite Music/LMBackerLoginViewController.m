@@ -20,6 +20,7 @@
 #import "LMAlertView.h"
 #import "LMPurchaseManager.h"
 #import "LMAnswers.h"
+#import "NSTimer+Blocks.h"
 
 @interface LMBackerLoginViewController () <UITextFieldDelegate, UITextViewDelegate>
 
@@ -224,7 +225,7 @@ NSString* backerDeviceName(){
 		[indicator startAnimating];
 		
 		[self presentViewController:self.pendingViewController animated:YES completion:nil];
-		[NSTimer scheduledTimerWithTimeInterval:1.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
+		[NSTimer scheduledTimerWithTimeInterval:1.0 block:^{
 			NSDictionary *loginDictionary = @{
 												@"email": emailText,
 												@"password": @([passwordNumber integerValue]),
@@ -313,9 +314,9 @@ NSString* backerDeviceName(){
 																						password:[passwordNumber integerValue]
 																					sessionToken:[[jsonDictionary objectForKey:@"session"] objectForKey:@"token"]];
 							
-							[NSTimer scheduledTimerWithTimeInterval:2.25 repeats:NO block:^(NSTimer * _Nonnull timer) {
+							[NSTimer scheduledTimerWithTimeInterval:2.25 block:^() {
 								[self closeView];
-							}];
+							} repeats:NO];
 							
 							[LMAnswers logLoginWithMethod:@"Backer"
 												success:@YES
@@ -411,7 +412,7 @@ NSString* backerDeviceName(){
 				}
 			}];
 			[dataTask resume];
-		}];
+		} repeats:NO];
 	}
 }
 

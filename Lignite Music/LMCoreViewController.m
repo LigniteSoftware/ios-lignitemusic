@@ -29,6 +29,7 @@
 #import "LMAnswers.h"
 #import "LMAlertView.h"
 #import "LMColour.h"
+#import "NSTimer+Blocks.h"
 
 #import "LMProgressSlider.h"
 #import "LMBrowsingBar.h"
@@ -89,9 +90,9 @@
 			break;
 		case LMPurchaseManagerAppOwnershipStatusTrialExpired: {
 			NSLog(@"The user's trial has expired.");
-			[NSTimer scheduledTimerWithTimeInterval:3.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
+			[NSTimer scheduledTimerWithTimeInterval:3.0 block:^() {
 				[self.purchaseManager showPurchaseViewControllerOnViewController:self.navigationController present:YES];
-			}];
+			} repeats:NO];
 			break;
 		}
 		case LMPurchaseManagerAppOwnershipStatusPurchased:
@@ -614,15 +615,15 @@ BOOL didAutomaticallyClose = NO;
 //	
 //	return;
 	
-//	[NSTimer scheduledTimerWithTimeInterval:0.5 repeats:NO block:^(NSTimer * _Nonnull timer) {
+//	[NSTimer scheduledTimerWithTimeInterval:0.5 repeats:NO block:^() {
 //		[[LMPurchaseManager sharedPurchaseManager] showPurchaseViewControllerOnViewController:self.navigationController present:YES];
 //	}];
-	
-	LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
-	settingsViewController.coreViewController = self;
-	[self.navigationController pushViewController:settingsViewController animated:YES];
-	
-	return;
+//	
+//	LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
+//	settingsViewController.coreViewController = self;
+//	[self.navigationController pushViewController:settingsViewController animated:YES];
+//	
+//	return;
 	
 //	LMImageManager *imageManager = [LMImageManager sharedImageManager];
 //	[imageManager launchPermissionRequestOnView:self.view

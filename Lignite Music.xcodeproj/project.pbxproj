@@ -113,6 +113,7 @@
 		6AAA56081DF54D7800692CFB /* LMBrowsingBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AAA56071DF54D7800692CFB /* LMBrowsingBar.m */; };
 		6AAA560A1DF553AF00692CFB /* icon_a_to_z.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AAA56091DF553AF00692CFB /* icon_a_to_z.png */; };
 		6AAA560D1DF631EC00692CFB /* LMSearchView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AAA560C1DF631EC00692CFB /* LMSearchView.m */; };
+		6AAD5A531E0C655A00D8B406 /* NSTimer+Blocks.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AAD5A521E0C655A00D8B406 /* NSTimer+Blocks.m */; };
 		6AAF610D1DA0286F00971875 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6AAF610F1DA0286F00971875 /* Localizable.strings */; };
 		6AAF61181DA0B9C800971875 /* LMTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AAF61171DA0B9C700971875 /* LMTableViewCell.m */; };
 		6AB12E9C1D57AD9800280383 /* icon_settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AB12E9B1D57AD9800280383 /* icon_settings.png */; };
@@ -339,6 +340,8 @@
 		6AAA56091DF553AF00692CFB /* icon_a_to_z.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_a_to_z.png; sourceTree = "<group>"; };
 		6AAA560B1DF631EC00692CFB /* LMSearchView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMSearchView.h; sourceTree = "<group>"; };
 		6AAA560C1DF631EC00692CFB /* LMSearchView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMSearchView.m; sourceTree = "<group>"; };
+		6AAD5A511E0C655A00D8B406 /* NSTimer+Blocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSTimer+Blocks.h"; sourceTree = "<group>"; };
+		6AAD5A521E0C655A00D8B406 /* NSTimer+Blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSTimer+Blocks.m"; sourceTree = "<group>"; };
 		6AAF610E1DA0286F00971875 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6AAF61101DA028AE00971875 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6AAF61111DA028C200971875 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -794,6 +797,8 @@
 				6AF9D5371DE13141006368B6 /* LMReachability.m */,
 				6A8CF2B71DB4952A00777525 /* LMSettings.h */,
 				6A8CF2B81DB4952A00777525 /* LMSettings.m */,
+				6AAD5A511E0C655A00D8B406 /* NSTimer+Blocks.h */,
+				6AAD5A521E0C655A00D8B406 /* NSTimer+Blocks.m */,
 				6ABF6A831CF3768A003E4EFA /* UIColor+isLight.h */,
 				6ABF6A841CF3768A003E4EFA /* UIColor+isLight.m */,
 				6ABF6A801CF374F7003E4EFA /* UIImage+AverageColour.h */,
@@ -1220,6 +1225,7 @@
 				6A92F8241DD6D62A002045C2 /* LMBrowsingView.m in Sources */,
 				6AF751631E0446D80001E18B /* LMFeedbackViewController.m in Sources */,
 				6A3211411DA732470060DD07 /* LMTrackInfoView.m in Sources */,
+				6AAD5A531E0C655A00D8B406 /* NSTimer+Blocks.m in Sources */,
 				6A13A8021E011D19006A768B /* UIImage+ColorArt.m in Sources */,
 				6AC066F41E00E335008A6FCA /* LMGrabberView.m in Sources */,
 				6A4BAEF21DC9C59B000DF537 /* LMTiledAlbumCoverView.m in Sources */,

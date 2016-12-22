@@ -14,6 +14,7 @@
 #import "LMReachability.h"
 #import "LMMusicPlayer.h"
 #import "LMSettings.h"
+#import "NSTimer+Blocks.h"
 @import SDWebImage;
 
 /**
@@ -165,7 +166,7 @@
 //		
 //		[self wifiReactivated];
 		
-		[NSTimer scheduledTimerWithTimeInterval:3.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
+		[NSTimer scheduledTimerWithTimeInterval:3.0 block:^() {
 			LMReachability* reach = [LMReachability reachabilityWithHostname:@"www.google.com"];
 			reach.reachableOnWWAN = NO;
 			
@@ -174,7 +175,7 @@
 														 name:kReachabilityChangedNotification
 													   object:nil];
 			[reach startNotifier];
-		}];
+		} repeats:NO];
 		
 //
 //		[self clearCacheForCategory:LMImageManagerCategoryArtistImages];

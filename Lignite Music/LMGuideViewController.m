@@ -15,6 +15,7 @@
 #import "LMSettings.h"
 #import "LMAnswers.h"
 #import "LMBackerLoginViewController.h"
+#import "NSTimer+Blocks.h"
 
 @import StoreKit;
 
@@ -65,9 +66,10 @@
 					break;
 				}
 				case 1: {
-					[NSTimer scheduledTimerWithTimeInterval:1.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
+					
+					[NSTimer scheduledTimerWithTimeInterval:1.0 block:^{
 						[self threeBlindMice];
-					}];
+					} repeats:NO];
 					
 					LMBackerLoginViewController *backerLoginViewController = [LMBackerLoginViewController new];
 					[self presentViewController:backerLoginViewController animated:YES completion:nil];

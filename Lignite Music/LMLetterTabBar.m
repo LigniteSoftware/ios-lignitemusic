@@ -11,6 +11,7 @@
 #import "LMLabel.h"
 #import "LMScrollView.h"
 #import "LMColour.h"
+#import "NSTimer+Blocks.h"
 
 @interface LMLetterTabBar()<UIGestureRecognizerDelegate>
 
@@ -108,9 +109,9 @@
 		[self.letterScrollView layoutIfNeeded];
 	} completion:^(BOOL finished) {
 		if(finished && (animationStyle == LMLetterTabLiftAnimationStyleBounce)){
-			[NSTimer scheduledTimerWithTimeInterval:0.1 repeats:NO block:^(NSTimer * _Nonnull timer) {
+			[NSTimer scheduledTimerWithTimeInterval:0.1 block:^() {
 				[self setLetterLabelLifted:letterLabel withAnimationStyle:LMLetterTabLiftAnimationStyleNoLift];
-			}];
+			} repeats:NO];
 		}
 	}];
 	

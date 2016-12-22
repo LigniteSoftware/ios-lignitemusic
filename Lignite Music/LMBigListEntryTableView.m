@@ -11,6 +11,7 @@
 #import "LMTableView.h"
 #import "LMExtras.h"
 #import "LMColour.h"
+#import "NSTimer+Blocks.h"
 
 @interface LMBigListEntryTableView()<LMTableViewSubviewDataSource, LMCollectionInfoViewDelegate, LMBigListEntryDelegate, LMControlBarViewDelegate>
 
@@ -166,7 +167,7 @@
 	LMBigListEntry *bigListEntry = [self subviewAtIndex:index forTableView:self.tableView];
 //	[bigListEntry setLarge:YES animated:YES];
 	
-	[NSTimer scheduledTimerWithTimeInterval:0.5 repeats:NO block:^(NSTimer * _Nonnull timer) {
+	[NSTimer scheduledTimerWithTimeInterval:0.5 block:^() {
 		[UIView animateWithDuration:0.75 animations:^{
 			bigListEntry.backgroundColor = [UIColor colorWithRed:0.33 green:0.33 blue:0.33 alpha:0.15];
 		} completion:^(BOOL finished) {
@@ -174,7 +175,7 @@
 				bigListEntry.backgroundColor = [UIColor whiteColor];
 			}];
 		}];
-	}];
+	} repeats:NO];
 }
 
 - (void)amountOfObjectsRequiredChangedTo:(NSUInteger)amountOfObjects forTableView:(LMTableView*)tableView {	

@@ -258,7 +258,7 @@
 	
 	self.titleLabel = [UILabel newAutoLayoutView];
 	self.titleLabel.text = NSLocalizedString(@"TrialTimeIsUpTitle", nil);
-	self.titleLabel.textAlignment = NSTextAlignmentJustified;
+	self.titleLabel.textAlignment = NSTextAlignmentLeft;
 	self.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:(WINDOW_FRAME.size.width*0.0483)];
 	self.titleLabel.numberOfLines = 0;
 	[self.rootScrollView addSubview:self.titleLabel];
@@ -270,7 +270,7 @@
 	
 	self.descriptionLabel = [UILabel newAutoLayoutView];
 	self.descriptionLabel.text = NSLocalizedString(@"TrialTimeIsUpDescription", nil);
-	self.descriptionLabel.textAlignment = NSTextAlignmentJustified;
+	self.descriptionLabel.textAlignment = NSTextAlignmentLeft;
 	self.descriptionLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:(WINDOW_FRAME.size.width*0.0437)];
 	self.descriptionLabel.numberOfLines = 0;
 	[self.view addSubview:self.descriptionLabel];
@@ -325,7 +325,7 @@
 	
 	self.kickstarterBackerLabel = [UILabel newAutoLayoutView];
 	self.kickstarterBackerLabel.text = NSLocalizedString(@"IfYoureAKickstarterBacker", nil);
-	self.kickstarterBackerLabel.textAlignment = NSTextAlignmentJustified;
+	self.kickstarterBackerLabel.textAlignment = NSTextAlignmentLeft;
 	self.kickstarterBackerLabel.font = self.descriptionLabel.font;
 	self.kickstarterBackerLabel.numberOfLines = 0;
 	[self.rootScrollView addSubview:self.kickstarterBackerLabel];

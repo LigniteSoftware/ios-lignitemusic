@@ -80,16 +80,16 @@
 
 //- (void)textFieldDidBeginEditing:(UITextField *)textField {
 //	[UIView setAnimationsEnabled:NO];
-//	[NSTimer scheduledTimerWithTimeInterval:0.50 repeats:NO block:^(NSTimer * _Nonnull timer) {
+//	[NSTimer scheduledTimerWithTimeInterval:0.50 block:^(NSTimer * _Nonnull timer) {
 //		[UIView setAnimationsEnabled:YES];
-//	}];
+//	} repeats:NO];
 //}
 //
 //- (void)textFieldDidEndEditing:(UITextField *)textField {
 //	[UIView setAnimationsEnabled:NO];
-//	[NSTimer scheduledTimerWithTimeInterval:1.10 repeats:NO block:^(NSTimer * _Nonnull timer) {
+//	[NSTimer scheduledTimerWithTimeInterval:1.10 block:^(NSTimer * _Nonnull timer) {
 //		[UIView setAnimationsEnabled:YES];
-//	}];
+//	} repeats:NO];
 //}
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {

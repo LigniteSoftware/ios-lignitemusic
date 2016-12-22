@@ -10,6 +10,7 @@
 #import "LMSearchViewController.h"
 #import "LMSearchBar.h"
 #import "LMSettings.h"
+#import "NSTimer+Blocks.h"
 
 @interface LMSearchViewController () <LMSearchBarDelegate, LMSearchSelectedDelegate>
 
@@ -82,9 +83,9 @@
 	[self.searchView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 	[self.searchView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.searchBar];
 	
-	[NSTimer scheduledTimerWithTimeInterval:0.25 repeats:NO block:^(NSTimer * _Nonnull timer) {
+	[NSTimer scheduledTimerWithTimeInterval:0.25 block:^() {
 		[self.searchBar showKeyboard];
-	}];
+	} repeats:NO];
 }
 
 - (void)didReceiveMemoryWarning {

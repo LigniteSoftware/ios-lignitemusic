@@ -11,6 +11,7 @@
 #import "LMTableViewCell.h"
 #import "LMExtras.h"
 #import "LMColour.h"
+#import "NSTimer+Blocks.h"
 
 @interface LMTableView()<UITableViewDelegate, UITableViewDataSource>
 
@@ -124,7 +125,7 @@
 	UIView *cellSubview = [self.subviewDataSource subviewAtIndex:index forTableView:self];
 	//	[bigListEntry setLarge:YES animated:YES];
 	
-	[NSTimer scheduledTimerWithTimeInterval:0.5 repeats:NO block:^(NSTimer * _Nonnull timer) {
+	[NSTimer scheduledTimerWithTimeInterval:0.5 block:^() {
 		[UIView animateWithDuration:0.75 animations:^{
 			cellSubview.backgroundColor = [UIColor colorWithRed:0.33 green:0.33 blue:0.33 alpha:0.15];
 		} completion:^(BOOL finished) {
@@ -132,7 +133,7 @@
 				cellSubview.backgroundColor = [UIColor whiteColor];
 			}];
 		}];
-	}];
+	} repeats:NO];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
