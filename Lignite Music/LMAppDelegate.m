@@ -7,12 +7,14 @@
 //
 
 #import <SecureNSUserDefaults/NSUserDefaults+SecureAdditions.h>
+#import <AFNetworking/AFNetworking.h>
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
 #import "LMAppDelegate.h"
 #import "LMMusicPlayer.h"
 #import "LMAppIcon.h"
 #import "LMSettings.h"
+#import "LMPurchaseManager.h"
 
 @interface LMAppDelegate ()
 
@@ -64,8 +66,10 @@
 #endif
 	[Fabric with:@[[Crashlytics class]]];
 	
+	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 	
-	[[NSUserDefaults standardUserDefaults] setSecret:@"efd07a3e-8af2-4b19-9198-c8c67cbe93ab"];
+	[userDefaults setSecret:@"efd07a3e-8af2-4b19-9198-c8c67cbe93ab"];
+	[userDefaults synchronize];
 	
     // Override point for customization after application launch.
 //	self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
@@ -87,6 +91,50 @@
 //	}
 	
 	[UIApplication sharedApplication].shortcutItems = nil;
+	
+	NSLog(@"Email %@", [userDefaults secretObjectForKey:LMPurchaseManagerKickstarterLoginCredentialEmail]);
+	
+	if([[LMPurchaseManager sharedPurchaseManager] appOwnershipStatus] == LMPurchaseManagerAppOwnershipStatusLoggedInAsBacker) {
+		NSDictionary *checkDictionary = @{
+										  @"email": [userDefaults secretObjectForKey:LMPurchaseManagerKickstarterLoginCredentialEmail],
+										  @"password": @([userDefaults secretIntegerForKey:LMPurchaseManagerKickstarterLoginCredentialPassword]),
+										  @"token": [userDefaults secretObjectForKey:LMPurchaseManagerKickstarterLoginCredentialSessionToken]
+										  };
+		
+		NSLog(@"Checking with %@", checkDictionary);
+		
+		NSString *URLString = @"https://api.lignite.me:1212/check";
+		NSURLRequest *urlRequest = [[AFJSONRequestSerializer serializer] requestWithMethod:@"POST" URLString:URLString parameters:checkDictionary error:nil];
+		
+		NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+		AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:configuration];
+		
+		AFHTTPResponseSerializer *responseSerializer = manager.responseSerializer;
+		
+		responseSerializer.acceptableContentTypes = [responseSerializer.acceptableContentTypes setByAddingObject:@"text/plain"];
+		
+		NSURLSessionDataTask *dataTask = [manager dataTaskWithRequest:urlRequest completionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
+			if (error) {
+				NSLog(@"Error checking for validity %@", error);
+			}
+			else{
+				NSDictionary *jsonDictionary = responseObject;
+				
+				if([jsonDictionary objectForKey:@"error"]){
+					
+				}
+				else{
+					BOOL validSession = [[jsonDictionary objectForKey:@"validSession"] boolValue];
+					NSLog(@"Valid session %d", validSession);
+					
+					if(!validSession){
+						[[LMPurchaseManager sharedPurchaseManager] logoutBacker];
+					}
+				}
+			}
+		}];
+		[dataTask resume];
+	}
 	
     return YES;
 }

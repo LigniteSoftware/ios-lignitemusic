@@ -90,7 +90,7 @@
 		case LMPurchaseManagerAppOwnershipStatusTrialExpired: {
 			NSLog(@"The user's trial has expired.");
 			[NSTimer scheduledTimerWithTimeInterval:3.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
-//				[self.purchaseManager showPurchaseViewControllerOnViewController:self.navigationController present:YES];
+				[self.purchaseManager showPurchaseViewControllerOnViewController:self.navigationController present:YES];
 			}];
 			break;
 		}
@@ -473,7 +473,7 @@ BOOL didAutomaticallyClose = NO;
 		lastAppBuildString = [userDefaults objectForKey:@"LastVersionBuildString"];
 	}
 	
-	if(![currentAppBuildString isEqualToString:lastAppBuildString] || true){
+	if(![currentAppBuildString isEqualToString:lastAppBuildString]){
 		NSLog(@"Spooked Super!");
 		
 		NSMutableString *changesString = [NSMutableString stringWithFormat:@"\n|  Changes  |\n\n"];

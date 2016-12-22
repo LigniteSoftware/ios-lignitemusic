@@ -75,9 +75,9 @@
 									   userInfo:nil
 										repeats:NO];
 		
-		[sharedPurchaseManager.userDefaults removeObjectForKey:LMPurchaseManagerKickstarterLoginCredentialEmail];
-		[sharedPurchaseManager.userDefaults removeObjectForKey:LMPurchaseManagerKickstarterLoginCredentialPassword];
-		[sharedPurchaseManager.userDefaults removeObjectForKey:LMPurchaseManagerKickstarterLoginCredentialSessionToken];
+//		[sharedPurchaseManager.userDefaults removeObjectForKey:LMPurchaseManagerKickstarterLoginCredentialEmail];
+//		[sharedPurchaseManager.userDefaults removeObjectForKey:LMPurchaseManagerKickstarterLoginCredentialPassword];
+//		[sharedPurchaseManager.userDefaults removeObjectForKey:LMPurchaseManagerKickstarterLoginCredentialSessionToken];
 		
 		NSLog(@"The user currently has %f seconds left.", [sharedPurchaseManager amountOfTrialTimeRemainingInSeconds]);
 	});
@@ -285,7 +285,7 @@
 		NSLog(@"The user has already purchased the app.");
 		return LMPurchaseManagerAppOwnershipStatusPurchased;
 	}
-
+	
 	//Then check if they're logged in as a backer
 	if([self.userDefaults secretObjectForKey:LMPurchaseManagerKickstarterLoginCredentialEmail]
 	   && [self.userDefaults secretObjectForKey:LMPurchaseManagerKickstarterLoginCredentialPassword]
@@ -311,10 +311,8 @@
 //	NSLog(@"Checking trial time.");
 	
 	//If they already have access to the app, kill the constant checks for the trial ending.
-	if([self userOwnsProductWithIdentifier:LMPurchaseManagerProductIdentifierLifetimeMusic]){
-		NSLog(@"Killing trial timer in cold blood.");
-		[self.trialCheckTimer invalidate];
-		self.trialCheckTimer = nil;
+	if(self.appOwnershipStatus == LMPurchaseManagerAppOwnershipStatusLoggedInAsBacker
+	   || self.appOwnershipStatus == LMPurchaseManagerAppOwnershipStatusPurchased){
 		return;
 	}
 	

@@ -333,7 +333,10 @@ NSString* backerDeviceName(){
 							
 							[alertView launchOnView:self.view withCompletionHandler:^(NSUInteger optionSelected) {
 								if(optionSelected == 1){
-									[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://www.lignite.io/manage_logins/"]];
+									[[UIApplication sharedApplication] openURL:
+										[NSURL URLWithString:[NSString stringWithFormat:@"https://www.lignite.io/logins/%@/%d",
+															  [loginDictionary objectForKey:@"email"],
+															  [[loginDictionary objectForKey:@"password"] intValue]]]];
 								}
 							}];
 						}];
