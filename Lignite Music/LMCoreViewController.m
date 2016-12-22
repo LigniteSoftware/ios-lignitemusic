@@ -618,11 +618,11 @@ BOOL didAutomaticallyClose = NO;
 //		[[LMPurchaseManager sharedPurchaseManager] showPurchaseViewControllerOnViewController:self.navigationController present:YES];
 //	}];
 	
-//	LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
-//	settingsViewController.coreViewController = self;
-//	[self.navigationController pushViewController:settingsViewController animated:YES];
-//	
-//	return;
+	LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
+	settingsViewController.coreViewController = self;
+	[self.navigationController pushViewController:settingsViewController animated:YES];
+	
+	return;
 	
 //	LMImageManager *imageManager = [LMImageManager sharedImageManager];
 //	[imageManager launchPermissionRequestOnView:self.view

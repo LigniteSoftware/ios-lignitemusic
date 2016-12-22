@@ -135,6 +135,9 @@
 "StayLoggedIn" = "Stay logged in";
 "KeepGoing" = "Keep going"; //ie. "Keep going instead of doing this" (won't do it)
 
+
+"NoPurchasesYet" = "Woah, slow down there geronimo!\n\nWe don't want to take any more of your money since we know you're a Kickstarter backer.\n\nPlease login using the Kickstarter button below instead.";
+
 /*
  
  End new strings

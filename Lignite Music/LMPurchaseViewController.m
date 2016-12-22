@@ -14,8 +14,14 @@
 #import "LMPurchaseManager.h"
 #import "LMBackerLoginViewController.h"
 #import "LMAnswers.h"
+#import "LMScrollView.h"
 
 @interface LMPurchaseViewController () <LMButtonBarDelegate, LMPurchaseManagerDelegate, SKProductsRequestDelegate>
+
+/**
+ The root scroll view.
+ */
+@property LMScrollView *rootScrollView;
 
 /**
  The background (tiled) image view.
@@ -98,27 +104,46 @@
 	NSLog(@"Tapped %d!", (int)index);
 	switch(index){
 		case 0: {
-			[self.purchaseManager makePurchaseWithProductIdentifier:LMPurchaseManagerProductIdentifierLifetimeMusic];
+			UIAlertController *alert = [UIAlertController
+										alertControllerWithTitle:NSLocalizedString(@"OhBoy", nil)
+										message:[NSString stringWithFormat:@"\n%@\n", NSLocalizedString(@"NoPurchasesYet", nil)]
+										preferredStyle:UIAlertControllerStyleAlert];
 			
-			self.pendingViewController = [UIAlertController alertControllerWithTitle:nil
-																			 message:[NSString stringWithFormat:@"%@\n\n\n", NSLocalizedString(@"HoldOn", nil)]
-																	  preferredStyle:UIAlertControllerStyleAlert];
-			UIActivityIndicatorView* indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-			indicator.color = [UIColor blackColor];
-			indicator.translatesAutoresizingMaskIntoConstraints = NO;
-			[self.pendingViewController.view addSubview:indicator];
-			NSDictionary * views = @{ @"pending": self.pendingViewController.view,
-									  @"indicator": indicator };
+			UIAlertAction *yesButton = [UIAlertAction
+										actionWithTitle:NSLocalizedString(@"Okay", nil)
+										style:UIAlertActionStyleDefault
+										handler:nil];
 			
-			NSArray *constraintsVertical = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[indicator]-(20)-|" options:0 metrics:nil views:views];
-			NSArray *constraintsHorizontal = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[indicator]|" options:0 metrics:nil views:views];
-			NSArray *constraints = [constraintsVertical arrayByAddingObjectsFromArray:constraintsHorizontal];
-			[self.pendingViewController.view addConstraints:constraints];
+			[alert addAction:yesButton];
 			
-			[indicator setUserInteractionEnabled:NO];
-			[indicator startAnimating];
+			NSArray *viewArray = [[[[[[[[[[[[alert view] subviews] firstObject] subviews] firstObject] subviews] firstObject] subviews] firstObject] subviews] firstObject] subviews]; //lol
+			//		UILabel *alertTitle = viewArray[0];
+			UILabel *alertMessage = viewArray[1];
+			alertMessage.textAlignment = NSTextAlignmentLeft;
 			
-			[self presentViewController:self.pendingViewController animated:YES completion:nil];
+			[self presentViewController:alert animated:YES completion:nil];
+			
+//			[self.purchaseManager makePurchaseWithProductIdentifier:LMPurchaseManagerProductIdentifierLifetimeMusic];
+//			
+//			self.pendingViewController = [UIAlertController alertControllerWithTitle:nil
+//																			 message:[NSString stringWithFormat:@"%@\n\n\n", NSLocalizedString(@"HoldOn", nil)]
+//																	  preferredStyle:UIAlertControllerStyleAlert];
+//			UIActivityIndicatorView* indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+//			indicator.color = [UIColor blackColor];
+//			indicator.translatesAutoresizingMaskIntoConstraints = NO;
+//			[self.pendingViewController.view addSubview:indicator];
+//			NSDictionary * views = @{ @"pending": self.pendingViewController.view,
+//									  @"indicator": indicator };
+//			
+//			NSArray *constraintsVertical = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[indicator]-(20)-|" options:0 metrics:nil views:views];
+//			NSArray *constraintsHorizontal = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[indicator]|" options:0 metrics:nil views:views];
+//			NSArray *constraints = [constraintsVertical arrayByAddingObjectsFromArray:constraintsHorizontal];
+//			[self.pendingViewController.view addConstraints:constraints];
+//			
+//			[indicator setUserInteractionEnabled:NO];
+//			[indicator startAnimating];
+//			
+//			[self presentViewController:self.pendingViewController animated:YES completion:nil];
 			break;
 		}
 		case 1: { //Backer login
@@ -132,12 +157,12 @@
 
 - (void)productsRequest:(SKProductsRequest *)request didReceiveResponse:(SKProductsResponse *)response{
 	for(SKProduct *product in response.products){
-		[LMAnswers logAddToCartWithPrice:product.price
-								currency:product.priceLocale.currencyCode
-								itemName:@"Lifetime Music"
-								itemType:@"Essential"
-								  itemId:LMPurchaseManagerProductIdentifierLifetimeMusic
-						customAttributes:@{}];
+//		[LMAnswers logAddToCartWithPrice:product.price
+//								currency:product.priceLocale.currencyCode
+//								itemName:@"Lifetime Music"
+//								itemType:@"Essential"
+//								  itemId:LMPurchaseManagerProductIdentifierLifetimeMusic
+//						customAttributes:@{}];
 	}
 	
 	if(response.products.count == 0){
@@ -155,6 +180,7 @@
 	
 	self.purchaseManager = [LMPurchaseManager sharedPurchaseManager];
 	[self.purchaseManager addDelegate:self];
+	
 	
 	self.backgroundImageView = [UIImageView newAutoLayoutView];
 	self.backgroundImageView.contentMode = UIViewContentModeScaleToFill;
@@ -190,14 +216,43 @@
 	[self.backgroundImageView addMotionEffect:group];
 	
 	
+	self.ownershipButtonBar = [LMButtonBar newAutoLayoutView];
+	self.ownershipButtonBar.amountOfButtons = 2;
+	self.ownershipButtonBar.buttonIconsArray = @[ @(LMIconBuy), @(LMIconKickstarter) ];
+	self.ownershipButtonBar.buttonScaleFactorsArray = @[ @(0.85), @(1.0) ];
+	self.ownershipButtonBar.delegate = self;
+	self.ownershipButtonBar.backgroundColor = [UIColor whiteColor];
+	self.ownershipButtonBar.layer.shadowColor = [UIColor blackColor].CGColor;
+	self.ownershipButtonBar.layer.shadowRadius = WINDOW_FRAME.size.width/45;
+	self.ownershipButtonBar.layer.shadowOpacity = 0.40f;
+	[self.view addSubview:self.ownershipButtonBar];
+	
+	[self.ownershipButtonBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+	[self.ownershipButtonBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+	[self.ownershipButtonBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+	[self.ownershipButtonBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/8.0)];
+	
+	
+	self.rootScrollView = [LMScrollView newAutoLayoutView];
+//	self.rootScrollView.backgroundColor = [UIColor greenColor];
+	self.rootScrollView.adaptForWidth = NO;
+	[self.view addSubview:self.rootScrollView];
+	
+	[self.rootScrollView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+	[self.rootScrollView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+	[self.rootScrollView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+	[self.rootScrollView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.ownershipButtonBar];
+	
+	
+	
 	self.headerImageView = [UIImageView newAutoLayoutView];
 	self.headerImageView.contentMode = UIViewContentModeScaleAspectFit;
 	self.headerImageView.image = [UIImage imageNamed:@"purchase_header.png"];
-	[self.view addSubview:self.headerImageView];
+	[self.rootScrollView addSubview:self.headerImageView];
 	
 	[self.headerImageView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:15];
-	[self.headerImageView autoPinEdgeToSuperviewMargin:ALEdgeLeading];
-	[self.headerImageView autoPinEdgeToSuperviewMargin:ALEdgeTrailing];
+	[self.headerImageView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.view withOffset:15];
+	[self.headerImageView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.view withOffset:-15];
 	[self.headerImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(3.75/10.0)];
 	
 	
@@ -206,11 +261,11 @@
 	self.titleLabel.textAlignment = NSTextAlignmentJustified;
 	self.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:(WINDOW_FRAME.size.width*0.0483)];
 	self.titleLabel.numberOfLines = 0;
-	[self.view addSubview:self.titleLabel];
+	[self.rootScrollView addSubview:self.titleLabel];
 	
 	[self.titleLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.headerImageView withOffset:20];
-	[self.titleLabel autoPinEdgeToSuperviewMargin:ALEdgeLeading];
-	[self.titleLabel autoPinEdgeToSuperviewMargin:ALEdgeTrailing];
+	[self.titleLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.view withOffset:15];
+	[self.titleLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.view withOffset:-15];
 	
 	
 	self.descriptionLabel = [UILabel newAutoLayoutView];
@@ -221,8 +276,8 @@
 	[self.view addSubview:self.descriptionLabel];
 	
 	[self.descriptionLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.titleLabel withOffset:20];
-	[self.descriptionLabel autoPinEdgeToSuperviewMargin:ALEdgeLeading];
-	[self.descriptionLabel autoPinEdgeToSuperviewMargin:ALEdgeTrailing];
+	[self.descriptionLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.view withOffset:15];
+	[self.descriptionLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.view withOffset:-15];
 	
 	
 	NSMutableArray *advantagesLabelArray = [NSMutableArray new];
@@ -244,9 +299,9 @@
 		UIImageView *checkmarkView = [UIImageView newAutoLayoutView];
 		checkmarkView.contentMode = UIViewContentModeScaleAspectFit;
 		checkmarkView.image = [LMAppIcon imageForIcon:LMIconGreenCheckmark];
-		[self.view addSubview:checkmarkView];
+		[self.rootScrollView addSubview:checkmarkView];
 		
-		[checkmarkView autoPinEdgeToSuperviewMargin:ALEdgeLeading];
+		[checkmarkView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.view withOffset:15];
 		[checkmarkView autoSetDimension:ALDimensionHeight toSize:stringHeight];
 		[checkmarkView autoSetDimension:ALDimensionWidth toSize:stringHeight];
 		[checkmarkView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:previousView withOffset:firstView ? 20 : 10];
@@ -257,10 +312,11 @@
 		advantageLabel.textAlignment = NSTextAlignmentLeft;
 		advantageLabel.font = self.descriptionLabel.font;
 		advantageLabel.numberOfLines = 0;
-		[self.view addSubview:advantageLabel];
+		[self.rootScrollView addSubview:advantageLabel];
 		
 		[advantageLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:checkmarkView];
 		[advantageLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:checkmarkView withOffset:10];
+		[advantageLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.view withOffset:-15];
 		[advantageLabel autoPinEdgeToSuperviewMargin:ALEdgeTrailing];
 		
 		[advantagesLabelArray addObject:advantageLabel];
@@ -272,25 +328,11 @@
 	self.kickstarterBackerLabel.textAlignment = NSTextAlignmentJustified;
 	self.kickstarterBackerLabel.font = self.descriptionLabel.font;
 	self.kickstarterBackerLabel.numberOfLines = 0;
-	[self.view addSubview:self.kickstarterBackerLabel];
+	[self.rootScrollView addSubview:self.kickstarterBackerLabel];
 	
-	[self.kickstarterBackerLabel autoPinEdgeToSuperviewMargin:ALEdgeLeading];
-	[self.kickstarterBackerLabel autoPinEdgeToSuperviewMargin:ALEdgeTrailing];
+	[self.kickstarterBackerLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.view withOffset:15];
+	[self.kickstarterBackerLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.view withOffset:-15];
 	[self.kickstarterBackerLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:[advantagesLabelArray lastObject] withOffset:20];
-
-
-	self.ownershipButtonBar = [LMButtonBar newAutoLayoutView];
-	self.ownershipButtonBar.amountOfButtons = 2;
-	self.ownershipButtonBar.buttonIconsArray = @[ @(LMIconBuy), @(LMIconKickstarter) ];
-	self.ownershipButtonBar.buttonScaleFactorsArray = @[ @(0.85), @(1.0) ];
-	self.ownershipButtonBar.delegate = self;
-	self.ownershipButtonBar.backgroundColor = [UIColor whiteColor];
-	[self.view addSubview:self.ownershipButtonBar];
-	
-	[self.ownershipButtonBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-	[self.ownershipButtonBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	[self.ownershipButtonBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-	[self.ownershipButtonBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/8.0)];
 	
 	
 //	[NSTimer scheduledTimerWithTimeInterval:1.0 repeats:NO block:^(NSTimer * _Nonnull timer) {

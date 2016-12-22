@@ -397,6 +397,7 @@
 					switch(self.purchaseManager.appOwnershipStatus){
 						case LMPurchaseManagerAppOwnershipStatusInTrial:
 						case LMPurchaseManagerAppOwnershipStatusTrialExpired:
+							[(LMCoreViewController*)self.coreViewController setStatusBarBlurHidden:YES];
 							[self.purchaseManager showPurchaseViewControllerOnViewController:self.coreViewController present:NO];
 							break;
 						case LMPurchaseManagerAppOwnershipStatusLoggedInAsBacker: {

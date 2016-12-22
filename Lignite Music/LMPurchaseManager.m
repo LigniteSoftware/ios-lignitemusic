@@ -154,10 +154,10 @@
 		
 		self.currentlyPurchasingProduct = product;
 		
-		[LMAnswers logStartCheckoutWithPrice:product.price
-								  currency:product.priceLocale.currencyCode
-								 itemCount:@(1)
-						  customAttributes:@{ @"ProductIdentifier":product.productIdentifier }];
+//		[LMAnswers logStartCheckoutWithPrice:product.price
+//								  currency:product.priceLocale.currencyCode
+//								 itemCount:@(1)
+//						  customAttributes:@{ @"ProductIdentifier":product.productIdentifier }];
 		
 		[self purchaseProduct:product];
 	}
@@ -226,13 +226,13 @@
 				
 				[self completePurchaseForProductIdentifier:productIdentifier];
 				
-				[LMAnswers logPurchaseWithPrice:self.currentlyPurchasingProduct.price
-									 currency:self.currentlyPurchasingProduct.priceLocale.currencyCode
-									  success:@YES
-									 itemName:self.currentlyPurchasingProduct.localizedTitle
-									 itemType:[self productTypeForIdentifier:productIdentifier]
-									   itemId:productIdentifier
-							 customAttributes:@{}];
+//				[LMAnswers logPurchaseWithPrice:self.currentlyPurchasingProduct.price
+//									 currency:self.currentlyPurchasingProduct.priceLocale.currencyCode
+//									  success:@YES
+//									 itemName:self.currentlyPurchasingProduct.localizedTitle
+//									 itemType:[self productTypeForIdentifier:productIdentifier]
+//									   itemId:productIdentifier
+//							 customAttributes:@{}];
 				break;
 			}
 			case SKPaymentTransactionStateRestored:

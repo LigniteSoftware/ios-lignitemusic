@@ -51,11 +51,14 @@
 "Browse" = "Browse"; //Like: "To browse music"
 "Miniplayer" = "Miniplayer"; //The miniature music player
 "View" = "View"; //The view the user is on, ie. "Album view". Is used as a singular word, though.
-"ReportBugOrSendFeedback" = "Send us bugs or feedback";
+
 
 "TheresNothingHere" = "Oh boy, there's nothing here!"; //Nothing for a certain view (ie. no compilations)
 "iOSNotProvidingQueue" = "iOS isn't telling us what's up next.\n\nStart new music from within Lignite Music to see what's next here.";
 "NothingInQueue" = "Nothing in queue";
+
+
+"ReportBugOrSendFeedback" = "Send us bugs or feedback";
 
 "SendFeedbackTitle" = "Report a bug or send feedback";
 "SendFeedbackDescription" = "Here you can send us bugs you've found or your feedback.\n\nWe publicly share your report, though not any of your private information.\n\nWe read over every single bug report and piece of feedback and may reach out to you through email to further investigate.\n\nThanks!";
@@ -77,6 +80,63 @@
 
 "CantSendFeedback" = "Can't send :(";
 "CantSendFeedbackDescription" = "\nSadly, something went wrong in sending your feedback.\n\nPlease make sure your Internet connection is stable and is not blocking www.lignite.io.\n\nIf you think you're all good on your side and you still can't send it, email us by clicking the button below.";
+
+"OutOfTrialTime" = "Out of trial time";
+"XDaysLeftInTrial" = "%.00f days left in trial";
+"XHoursLeftInTrial" = "%.00f hours left in trial";
+"XMinutesLeftInTrial" = "%.00f minutes left in trial";
+"TapToUseTheAppForever" = "Tap here to use the app forever";
+
+"LoggedInAsABacker" = "Logged in as a backer";
+"TapToLogout" = "Tap here to logout";
+
+"YouOwnLigniteMusic" = "You own Lignite Music";
+"ThanksForYourSupport" = "Thanks for your support!";
+
+"TrialTimeIsUpTitle" = "Your 3 day trial has come to an end";
+"TrialTimeIsUpDescription" = "For about the price of a coffee, you can keep using Lignite Music, which does a lot more than coffee and never runs out.";
+"AppAdvantage0" = "Gesture-driven and intuitive";
+"AppAdvantage1" = "Easy to use in the car, at the gym, or anywhere else";
+"AppAdvantage2" = "Beautifully designed and simple";
+"IfYoureAKickstarterBacker" = "If you're a Kickstarter backer, you can login by tapping the Kickstarter button below.";
+
+"HoldOn" = "Hold on a sec...";
+
+"Password" = "Password";
+"BackerLoginTitle" = "Hey Kickstarter backer!";
+"BackerLoginDescription" = "Thanks for being awesome and helping bring this app to life.\n\nPlease login below to unlock your full copy of the app.";
+"INeedHelpLoggingIn" = "I need help logging in";
+"LoggingYouIn" = "Logging you in...";
+"LoggingYouOut" = "Logging you out...";
+"CantLoginTitle" = "Can't login";
+"CantLoginDescription" = "Sorry, we're having trouble processing your login.\n\nPlease make sure you're on a stable Internet connection which doesn't block www.lignite.io.\n\nIf you believe you're all good on your side, please contact us and we'll sort you out.";
+"LoggedIn" = "Logged in";
+"LoggedOut" = "Logged out";
+"EnterAValidPassword" = "Please enter a valid password";
+
+"LoginsAllUsedUpTitle" = "Logins all used up";
+"LoginsAllUsedUpDescription" = "This Lignite Music backer account has been logged into %d times, which is its maximum amount.\n\nIf you want to login on this device, you'll have to logout on one of your other devices.\n\nTo do so, tap the manage accounts button below.";
+"ManageAccounts" = "Manage accounts";
+
+"AccountNotFoundTitle" = "Account not found";
+"AccountNotFoundDescription" = "A Lignite Music backer account was not found with these details, sorry.\n\nWe collected Lignite Music Kickstarter emails way back in August of 2016.\n\nIf you have changed your Kickstarter email since then, use the old one.\n\nIf you're still having troubles, tap below for more help.";
+
+
+"Privacy" = "Privacy"; //App privacy, for things like analytics tracking
+"UsageData" = "Usage data & statistics";
+"UsageDataDescription" = "We collect a bit of data so we can learn how you use our app and make it better for you.\n\nIf you are not a Kickstarter backer, there isn't a single piece of personal data we log about you.\n\nIf you are a Kickstarter backer, we log your email address, which we already had because you backed us.\n\nShould you choose to opt-out we will completely stop logging your data.";
+"OptionOptIn" = "Opt-in";
+"OptionOptOut" = "Opt-out";
+"OptedOut" = "You have opted-out";
+"OptedIn" = "Thanks for making Lignite Music better!";
+
+"Logout" = "Logout";
+"LogoutDescription" = "You can easily logout of your Lignite Music backer account by tapping the button below.\n\nDoing so will allow you to use this account to login to another device again.";
+"StayLoggedIn" = "Stay logged in";
+"KeepGoing" = "Keep going"; //ie. "Keep going instead of doing this" (won't do it)
+
+
+"NoPurchasesYet" = "Woah, slow down there geronimo!\n\nWe don't want to take any more of your money since we know you're a Kickstarter backer.\n\nPlease login using the Kickstarter button below instead.";
 
 /*
  
@@ -225,7 +285,7 @@
 "OnboardingWelcomeDescription" = "We're hoping to bring you the ultimate music player experience.\n\nWe're going to run through a few quick steps to get you up and running.";
 
 "OnboardingKickstarterLoginTitle" = "Are you a Kickstarter backer?";
-"OnboardingKickstarterLoginDescription" = "Lignite Music was born and raised on Kickstarter with 339 awesome backers.\n\nIf you're one of them, you can unlock the full app now by clicking the login button below.\n\nOtherwise, continue on and you'll be hooked up with a full trial!";
+"OnboardingKickstarterLoginDescription" = "Lignite Music was born and raised on Kickstarter with 339 awesome backers.\n\nIf you're one of them, you can unlock the full app now by clicking the login button below.\n\nOtherwise, continue on and you'll be hooked up with a full-access 3 day trial!";
 
 "OnboardingMusicPermissionTitle" = "We need your music so you can jam!";
 "OnboardingMusicPermissionDescription" = "Once clicking the button below, you will be asked to grant permission to Lignite Music for access to your music library.\n\nPlease accept this permission so we can get you one step closer to rockin' out!";
@@ -270,7 +330,7 @@
 "AlbumImagesTitle" = "Missing album cover art";
 
 //See comment below this string for how it will be formatted
-"ImagesDownloadWarningDescription" = "We will download images %@.\n\nHowever, we have noticed that %@.\n\nIt will take about %.02f MB to download the images%@.\n\nIf you tap '%@', we will download them anyway.\n\nOtherwise, if you tap '%@', you can always change your mind later in settings.";
+"ImagesDownloadWarningDescription" = "We will download images %@.\n\nHowever, we have noticed that %@.\n\nIt will take at the most %.02f MB to download the images%@.\n\nIf you tap '%@', we will download them anyway.\n\nOtherwise, if you tap '%@', you can always change your mind later in settings.";
 /*
  What is inserted into "ImagesDownloadWarningDescription", in order of formatters:
  1. Either the "OfYourArtists" string or "OfYourAlbums" string
@@ -281,7 +341,7 @@
  6. The "DontDownload" string
  */
 
-"AboutXOfYourStorage" = " (about %.02f%% of your remaining storage in total)"; //The space in front of the first bracket is important, as it will be inserted after the "[...] take about %.02fMB to download the images%@." (goes where the %@ is in there). If your language does not need the space feel free to take it out.
+"AboutXOfYourStorage" = " (at most %.02f%% of your remaining storage in total)"; //The space in front of the first bracket is important, as it will be inserted after the "[...] take at most %.02fMB to download the images%@." (goes where the %@ is in there). If your language does not need the space feel free to take it out.
 "UsingXOfYourStorage" = "These images are currently using %.02f MB of your storage.";
 "TakingUpXMB" = "Using %.02f MB";
 

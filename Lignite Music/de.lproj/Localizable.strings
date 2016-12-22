@@ -32,39 +32,107 @@
 
 //New strings
 
-"CreditsLicenses" = "Lizenzlinks";
-"NoSearchResults" = "Keine Ergebnisse";
-"WelcomeToSearch" = "Bitte Suchbegriff eintippen";
+/*
+ 
+ New strings
+ 
+ */
+
+"CreditsLicenses" = "Lizenzlinks"; //Links to licenses, such as library licenses and icon licenses.
+"NoSearchResults" = "Keine Suchergebnisse";
+"WelcomeToSearch" = "Tippe bitte untenstehend deinen gewünschten Suchbegriff ein";
 "Browse" = "Durchsuchen"; //Like: "To browse music"
 "Miniplayer" = "Miniplayer"; //The miniature music player
 "View" = "Anzeige"; //The view the user is on, ie. "Album view". Is used as a singular word, though.
 
-"TheresNothingHere" = "Gehen Sie weiter, hier gibt's nichts zu sehen!"; //Nothing for a certain view (ie. no compilations)
-"iOSNotProvidingQueue" = "iOS teilt uns die nächsten Songs nicht mit.\n\nStarte die Wiedergabe von dieser App, um diese Liste automatisch füllen zu lassen.";
+
+"TheresNothingHere" = "Gehen Sie bitte weiter, hier gibt es nichts zu sehen!"; //Nothing for a certain view (ie. no compilations)
+"iOSNotProvidingQueue" = "iOS teilt uns die als nächstes abzuspielenden Songs nicht mit.\n\nStarte die Wiedergabe von dieser App, um diese Liste automatisch füllen zu lassen.";
 "NothingInQueue" = "Keine Songs in der Liste";
+
 
 "ReportBugOrSendFeedback" = "Sende Fehler oder Feedback";
 
 "SendFeedbackTitle" = "Melde einen Fehler oder sende uns Feedback";
-"SendFeedbackDescription" = "Nutze das nachfolgende Formular, um gefundene Fehler / Probleme oder sonstiges Feedback zu senden.\n\nDeine Meldung wird öffentlich zugänglich sein, allerdings ohne jegliche Rückschlüsse auf dich bzw. deine privaten Daten.\n\nWir lesen jede einzelne Meldung und melden uns ggf. via E-Mail für weitere Fragen bei dir.\n\Vielen Dank!";
+"SendFeedbackDescription" = "Nutze das nachfolgende Formular, um gefundene Fehler / Probleme oder sonstiges Feedback zu senden.\n\nDeine Meldung wird öffentlich zugänglich sein, allerdings ohne jegliche Rückschlüsse auf dich bzw. deine privaten Daten.\n\nWir lesen jede einzelne Meldung und melden uns ggf. via E-Mail für weitere Fragen bei dir.\n\nVielen Dank!";
 "Name" = "Name";
 "Email" = "E-Mail";
 "SummaryOfReport" = "Titel / Betreff";
 "DetailedReport" = "Genauere Beschreibung";
 
-"EnterAName" = "Tippe bitte einen Namen mit mehr Buchstaben ein.";
-"EnterAValidEmail" = "Tippe bitte eine gültige Mailadresse ein.";
-"EnterAQuickSummary" = "Tippe bitte mehr als 5 Zeichen als Titel / Betreff ein.";
-"EnterADetailedReport" = "Tippe bitte mehr als 15 Zeichen als genaue Beschreibung ein.";
+"EnterAName" = "Tippe bitte mehr als bloss ein paar Zeichen bei deinem Namen ein.";
+"EnterAValidEmail" = "Tippe bitte eine gültige E-Mailadresse ein.";
+"EnterAQuickSummary" = "Tippe bitte einen Titel mit mehr als 5 Zeichen ein.";
+"EnterADetailedReport" = "Die Beschreibung muss mehr als bloss 15 Zeichen enthalten.";
 
 "SeeAllReports" = "Alle Rückmeldungen anzeigen";
 
 "GatheringInfo" = "Debug-Informationen werden gesammelt...";
-"SendingToServer" = "Daten werden an den Server übermittelt..";
-"ThanksForSubmitting" = "Danke!";
+"SendingToServer" = "Übermittlung an Lignite...";
+"ThanksForSubmitting" = "Vielen Dank!";
 
-"CantSendFeedback" = "Kann nicht gesendet werden :-(";
-"CantSendFeedbackDescription" = "\nLeider ist bei der Übermittling etwas schief gelaufen.\n\nStelle bitte sicher, dass du über eine funktionsfähige Internetverbindung verfügst und dass lignite.io nicht geblockt wird.\n\nFalls du der Meinung bist, dass deinerseits alles in Ordnung bist und die Daten noch immer nicht übermittelt werden können, benutze bitte den nachfolgenden Button, um uns die Informationen zu senden.";
+"CantSendFeedback" = "Kann nicht gesendet werden :(";
+"CantSendFeedbackDescription" = "\nLeider ist bei der Übermittlung etwas schief gelaufen.\n\nStelle bitte sicher, dass du über eine stabile Internetverbindung verfügst und www.lignite.io nicht geblockt wird.\n\nFalls es noch immer nicht funktionieren sollte, melde dich bitte via E-Mail bei uns.";
+
+"OutOfTrialTime" = "Testphase abgelaufen";
+"XDaysLeftInTrial" = "%.00f Tage deiner Testphase übrig";
+"XHoursLeftInTrial" = "%.00f Stunden deiner Testphase übrig";
+"XMinutesLeftInTrial" = "%.00f Minuten deiner Testphase übrig";
+"TapToUseTheAppForever" = "Tippe hier, um die App freizuschalten";
+
+"LoggedInAsABacker" = "Eingeloggt als BAcker";
+"TapToLogout" = "Hier tippen, um auszuloggen";
+
+"YouOwnLigniteMusic" = "Lignite Music ist freigeschaltet";
+"ThanksForYourSupport" = "Vielen Dank für deine Unterstützung!";
+
+"TrialTimeIsUpTitle" = "Deine 3-tägige Testphase ist abgelaufen";
+"TrialTimeIsUpDescription" = "Für den Preis eines Kaffees kannst du Lignite Music weiterhin benutzen. Die App kann weit mehr als ein Kaffee und wird nie kalt.";
+"AppAdvantage0" = "Gesten-basiert und intuitiv zu nutzen";
+"AppAdvantage1" = "Einfache Handhabung im Auto, unterwegs, im Gym oder überall sonst";
+"AppAdvantage2" = "Wunderschön und einfach gestaltet";
+"IfYoureAKickstarterBacker" = "Falls du ein Kickstarter Backer bist, tippe auf den Kickstarter Button unten, um dich einzuloggen.";
+
+"HoldOn" = "Einen kleinen Moment, bitte...";
+
+"Password" = "Passwort";
+"BackerLoginTitle" = "Hey Kickstarter Backer!";
+"BackerLoginDescription" = "Vielen herzlichen Dank für deine Unterstützung, diese App Realität werden zu lassen.\n\nLogge dich bitte hier ein, um Lignite Music freizuschalten.";
+"INeedHelpLoggingIn" = "Ich benötige Hilfe";
+"LoggingYouIn" = "Du wirst eingeloggt...";
+"LoggingYouOut" = "Du wirst ausgeloggt...";
+"CantLoginTitle" = "Login nicht möglich";
+"CantLoginDescription" = "Sorry, wir haben Probleme, dich einzuloggen.\n\nStelle bitte sicher, dass du über eine stabile Internetverbindung verfügst und www.lignite.io nicht geblockt wird\n\nFalls es noch immer nicht funktionieren sollte, melde dich bitte via E-Mail bei uns";
+"LoggedIn" = "Eingeloggt";
+"LoggedOut" = "Ausgeloggt";
+"EnterAValidPassword" = "Tippe bitte ein gültiges Passwort ein";
+
+"LoginsAllUsedUpTitle" = "Alle vorhandenen Logins in Gebrauch";
+"LoginsAllUsedUpDescription" = "Dieses Lignite Music Backerprofil wurde %d x verwendet, was dem Maximum entspricht.\n\nFalls du dich auf diesem Gerät einloggen möchtest, musst du dich zuerst auf einem der anderen eingeloggten Geräten abmelden.\n\nDu kannst das ganz einfach mittels dem untenstehenden \"Aktive Geräte\"-Button tun.";
+"ManageAccounts" = "Aktive Geräte";
+
+"AccountNotFoundTitle" = "Benutzerkonto nicht gefunden";
+"AccountNotFoundDescription" = "Dein Lignite Music Benutzerkonto mit den angegebenen Details konnte leider nicht gefunden werden.\n\nWir haben die dazugehörigen Mailadressen im August 2016 gesammelt.\n\nFalls du deine Kickstarter-Mailadresse seither geändert hast, verwende bitte hierfür die alte Adresse.\n\nSolltest du noch immer Probleme haben, tippe bitte untenstehend für Hilfe.";
+
+
+"Privacy" = "Privatsphäre"; //App privacy, for things like analytics tracking
+"UsageData" = "Nutzungsdaten & Statistiken";
+"UsageDataDescription" = "Wir sammeln Daten, um zu sehen, wie unsere App genutzt wird und wie wir sie besser für dich machen können.\n\nFalls du kein Kickstarter Backer bist, werden keinerlei persönliche Daten über dich gespeichert.\n\nFalls du ein Kickstarter Backer bist, wird einzig und alleine deine Mailadresse gespeichert, welche wir jedoch bereits haben, da du uns ja unterstützt hast.\n\nSolltest du dich vom Statistik-Feature abmelden, werden keinerlei Daten mehr gesammelt.";
+"OptionOptIn" = "Anmelden (Opt-in)";
+"OptionOptOut" = "Abmelden (Opt-out)";
+"OptedOut" = "Du hast dich abgemeldet";
+"OptedIn" = "Vielen Dank für deine Hilfe, Lignite Music besser zu machen!";
+
+"Logout" = "Ausloggen";
+"LogoutDescription" = "Du kannst dich ganz einfach aus deinem Lignite Music Backer-Konto abmelden, indem du den untenstehenden Button antippst.\n\nDadurch kannst du dich wieder bei einem anderen Gerät anmelden.";
+"StayLoggedIn" = "Eingeloggt bleiben";
+"KeepGoing" = "Abbrechen"; //ie. "Keep going instead of doing this" (won't do it)
+
+/*
+ 
+ End new strings
+ 
+ */
 
 //End new strings
 
