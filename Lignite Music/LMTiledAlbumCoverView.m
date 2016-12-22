@@ -25,6 +25,11 @@
 
 @property LMOperationQueue *queue;
 
+/**
+ The generation key for keeping track of asycnrohnus changes.
+ */
+@property NSString *generationKey;
+
 @end
 
 @implementation LMTiledAlbumCoverView
@@ -202,8 +207,10 @@
 - (NSMutableDictionary*)uniqueAlbumsInCollection {
 	NSMutableDictionary *albumIdsCountDictionary = [NSMutableDictionary new];
 	
-	for(int i = 0; i < self.musicCollection.count; i++){
-		LMMusicTrack *track = [self.musicCollection.items objectAtIndex:i];
+	LMMusicTrackCollection *collectionToIterate = self.musicCollection;
+	
+	for(int i = 0; i < collectionToIterate.count; i++){
+		LMMusicTrack *track = [collectionToIterate.items objectAtIndex:i];
 		NSString *formattedPersistentString = [NSString stringWithFormat:@"%llu", track.albumPersistentID];
 		NSNumber *count = [NSNumber numberWithInt:0];
 		
@@ -227,6 +234,17 @@
 	return albumIdsCountDictionary;
 }
 
+- (NSString*)randomStringWithLength:(int)len {
+	NSString *letters = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+	NSMutableString *randomString = [NSMutableString stringWithCapacity: len];
+	
+	for (int i=0; i<len; i++) {
+		[randomString appendFormat: @"%C", [letters characterAtIndex: arc4random_uniform((uint32_t)[letters length])]];
+	}
+	
+	return randomString;
+}
+
 - (void)regenerate {
 	if(!self.tilesArray){
 		self.tilesArray = [NSMutableArray new];
@@ -242,7 +260,15 @@
 			
 			LMTiledAlbumCoverView *tiledAlbumCoverView = strongSelf;
 			
+			NSString *generationKey = [self randomStringWithLength:10];
+			tiledAlbumCoverView.generationKey = generationKey;
+			
 			tiledAlbumCoverView.uniqueAlbumCoversDictionary = [tiledAlbumCoverView uniqueAlbumsInCollection];
+			
+			if(![generationKey isEqualToString:tiledAlbumCoverView.generationKey]){
+				NSLog(@"Outdated, rejecting %@", generationKey);
+				return;
+			}
 			
 			dispatch_async(dispatch_get_main_queue(), ^{
 				float amountOfTiles = tiledAlbumCoverView.uniqueAlbumCoversDictionary.count - (tiledAlbumCoverView.uniqueAlbumCoversDictionary.count % 4); //Round the number off to a multiple of four
