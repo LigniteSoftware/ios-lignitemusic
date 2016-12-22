@@ -12,7 +12,7 @@
 
 @implementation MPMediaItem (LigniteImages)
 
-- (UIImage*)albumArt {
+- (UIImage*)albumArt {	
 	//Get the album artwork
 	UIImage *albumArtImage = [self uncorrectedAlbumArt];
 	

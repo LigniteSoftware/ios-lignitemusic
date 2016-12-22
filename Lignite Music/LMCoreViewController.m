@@ -34,7 +34,7 @@
 #import "LMBrowsingBar.h"
 #import "LMFeedbackViewController.h"
 
-#define SKIP_ONBOARDING
+//#define SKIP_ONBOARDING
 //#define SPEED_DEMON_MODE
 
 @import SDWebImage;
@@ -452,54 +452,55 @@ BOOL didAutomaticallyClose = NO;
 	}];
 }
 
-- (void)showWhatsPoppin {
-	NSArray *currentBuildChanges = @[
-									 @"Added album browsing through individual artists",
-									 @"Fixed Pebble app lists getting cut off at about 150 items",
-									 @"Fixed Pebble app crash"
-									 ];
-	
-	NSArray *currentBuildIssues = @[
-									@"Hey there",
-									@"\nPlease do not report already known issues to us, thanks!"
-									];
-	
-	NSString *currentAppBuildString = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
-	
-	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-	
-	NSString *lastAppBuildString = @"0";
-	if([userDefaults objectForKey:@"LastVersionBuildString"]){
-		lastAppBuildString = [userDefaults objectForKey:@"LastVersionBuildString"];
-	}
-	
-	if(![currentAppBuildString isEqualToString:lastAppBuildString]){
-		NSLog(@"Spooked Super!");
-		
-		NSMutableString *changesString = [NSMutableString stringWithFormat:@"\n|  Changes  |\n\n"];
-		for(int i = 0; i < currentBuildChanges.count; i++){
-			[changesString appendFormat:@"- %@%@", [currentBuildChanges objectAtIndex:i], ((i+1) == currentBuildChanges.count && currentBuildIssues.count > 1) ? @"\n\n" : @"\n"];
-		}
-		if(currentBuildIssues.count > 1){
-			[changesString appendString:@"|  New issues  |\n\n"];
-			for(int i = 0; i < currentBuildIssues.count; i++){
-				int isLastIndex = (i+1) == currentBuildIssues.count;
-				[changesString appendFormat:@"%@%@%@", isLastIndex ? @"" : @"- ", [currentBuildIssues objectAtIndex:i], isLastIndex ? @"" : @"\n"];
-			}
-		}
-		
-		LMAlertView *alertView = [LMAlertView newAutoLayoutView];
-		
-		alertView.title = [NSString stringWithFormat:@"What's new in this build"];
-		alertView.body = changesString;
-		alertView.alertOptionColours = @[[LMColour ligniteRedColour]];
-		alertView.alertOptionTitles = @[NSLocalizedString(@"Awesome", nil)];
-		
-		[alertView launchOnView:self.navigationController.view withCompletionHandler:^(NSUInteger optionSelected) {
-			
-		}];
-	}
-}
+//- (void)showWhatsPoppin {
+//	NSArray *currentBuildChanges = @[
+//									 @"Added album browsing through individual artists",
+//									 @"Fixed Pebble app lists getting cut off at about 150 items",
+//									 @"Fixed Pebble app crash"
+//									 ];
+//	
+//	NSArray *currentBuildIssues = @[
+//									@"Hey there",
+//									@"\nPlease do not report already known issues to us, thanks!"
+//									];
+//	
+//	NSString *currentAppBuildString = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
+//	
+//	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+//	
+//	NSString *lastAppBuildString = @"0";
+//	if([userDefaults objectForKey:@"LastVersionBuildString"]){
+//		lastAppBuildString = [userDefaults objectForKey:@"LastVersionBuildString"];
+//	}
+//	
+//	if(![currentAppBuildString isEqualToString:lastAppBuildString]){
+//		NSLog(@"Spooked Super!");
+//		
+//		NSMutableString *changesString = [NSMutableString stringWithFormat:@"\n|  Changes  |\n\n"];
+//		for(int i = 0; i < currentBuildChanges.count; i++){
+//			[changesString appendFormat:@"- %@%@", [currentBuildChanges objectAtIndex:i], ((i+1) == currentBuildChanges.count && currentBuildIssues.count > 1) ? @"\n\n" : @"\n"];
+//		}
+//		if(currentBuildIssues.count > 1){
+//			[changesString appendString:@"|  New issues  |\n\n"];
+//			for(int i = 0; i < currentBuildIssues.count; i++){
+//				int isLastIndex = (i+1) == currentBuildIssues.count;
+//				[changesString appendFormat:@"%@%@%@", isLastIndex ? @"" : @"- ", [currentBuildIssues objectAtIndex:i], isLastIndex ? @"" : @"\n"];
+//			}
+//		}
+//		
+//		LMAlertView *alertView = [LMAlertView newAutoLayoutView];
+//		
+//		alertView.title = [NSString stringWithFormat:@"What's new in this build"];
+//		alertView.body = changesString;
+//		alertView.alertOptionColours = @[[LMColour ligniteRedColour]];
+//		alertView.alertOptionTitles = @[NSLocalizedString(@"Awesome", nil)];
+//		
+//		[alertView launchOnView:self.navigationController.view withCompletionHandler:^(NSUInteger optionSelected) {
+//			[userDefaults setObject:currentAppBuildString forKey:@"LastVersionBuildString"];
+//			[userDefaults synchronize];
+//		}];
+//	}
+//}
 
 - (void)launchOnboarding {
 	LMGuideViewPagerController *controller = [LMGuideViewPagerController new];
@@ -762,9 +763,9 @@ BOOL didAutomaticallyClose = NO;
 						[self.musicPlayer addMusicDelegate:self];
 						
 						
-						[NSTimer scheduledTimerWithTimeInterval:1.0
-														 target:self selector:@selector(showWhatsPoppin) userInfo:nil repeats:NO];
-											
+//						[NSTimer scheduledTimerWithTimeInterval:1.0
+//														 target:self selector:@selector(showWhatsPoppin) userInfo:nil repeats:NO];
+						
 						UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
 						self.statusBarBlurView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
 						self.statusBarBlurView.translatesAutoresizingMaskIntoConstraints = NO;
