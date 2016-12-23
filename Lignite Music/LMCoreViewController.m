@@ -638,20 +638,20 @@ BOOL didAutomaticallyClose = NO;
 //	NSLog(@"Query %@", query);
 	
 	
-	LMNavigationBar *navigationBar = [LMNavigationBar newAutoLayoutView];
-	[self.view addSubview:navigationBar];
-	
-	[navigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-	[navigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	[navigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-	[navigationBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/8.0)];
-	
-	
-	return;
+//	LMNavigationBar *navigationBar = [LMNavigationBar newAutoLayoutView];
+//	[self.view addSubview:navigationBar];
+//	
+//	[navigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+//	[navigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+//	[navigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+//	[navigationBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/8.0)];
+//	
+//	
+//	return;
 	
 	
 	UIImageView *hangOnImage = [UIImageView newAutoLayoutView];
-	hangOnImage.image = [UIImage imageNamed:@"splash_image_portrait.png"];
+	hangOnImage.image = [UIImage imageNamed:@"splash_redesigned.png"];
 	hangOnImage.contentMode = UIViewContentModeScaleAspectFill;
 	[self.view addSubview:hangOnImage];
 	
