@@ -106,6 +106,11 @@ typedef enum {
 @interface LMMusicPlayer : NSObject
 
 /**
+ The system music player.
+ */
+@property MPMusicPlayerController *systemMusicPlayer;
+
+/**
  The music player's current type.
  */
 @property LMMusicPlayerType playerType;

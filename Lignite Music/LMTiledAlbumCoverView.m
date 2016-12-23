@@ -173,21 +173,25 @@
 					return;
 				}
 				
+				NSArray *bigTileArrayToUse = [NSArray arrayWithArray:self.bigTileArray];
+				
 				//Set each big image to its associated view
 				for(int i = 0; i < bigTileImages.count; i++){
 					UIImage *image = [bigTileImages objectAtIndex:i];
-					UIImageView *bigTileView = [self.bigTileArray objectAtIndex:i];
+					UIImageView *bigTileView = [bigTileArrayToUse objectAtIndex:i];
 					
 					bigTileView.image = image;
 				}
 				
+				NSArray *tilesArrayToUse = [NSArray arrayWithArray:self.tilesArray];
+				
 				//Set each regular image to its associated view by taking the image at the top of the array and setting that as the image
-				for(int i = 0; i < self.tilesArray.count; i++){
+				for(int i = 0; i < tilesArrayToUse.count; i++){
 					if(regularTileImages.count > 0){
 						UIImage *image = [regularTileImages firstObject];
-						UIImageView *tile = [self.tilesArray objectAtIndex:i];
+						UIImageView *tile = [tilesArrayToUse objectAtIndex:i];
 						
-						if(![self.bigTileArray containsObject:tile]){
+						if(![bigTileArrayToUse containsObject:tile]){
 							tile.image = image;
 							
 							[regularTileImages removeObjectAtIndex:0]; //Remove first object

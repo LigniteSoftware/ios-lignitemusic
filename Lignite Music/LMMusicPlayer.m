@@ -13,11 +13,6 @@
 @interface LMMusicPlayer() <AVAudioPlayerDelegate>
 
 /**
- The system music player. Simply provides info related to the music and does not control playback.
- */
-@property MPMusicPlayerController *systemMusicPlayer;
-
-/**
  The audio player. Is the actual controller of the system music player contents.
  */
 @property AVAudioPlayer *audioPlayer;
@@ -75,6 +70,7 @@
 @synthesize currentPlaybackTime = _currentPlaybackTime;
 @synthesize repeatMode = _repeatMode;
 @synthesize shuffleMode = _shuffleMode;
+@synthesize systemMusicPlayer = _systemMusicPlayer;
 
 MPMediaGrouping associatedMediaTypes[] = {
 	MPMediaGroupingArtist,
@@ -86,10 +82,17 @@ MPMediaGrouping associatedMediaTypes[] = {
 	MPMediaGroupingComposer //Compilations, actually. The queries adjust for this.
 };
 
+- (MPMusicPlayerController*)systemMusicPlayer {
+	return [MPMusicPlayerController systemMusicPlayer];
+}
+
+- (void)setSystemMusicPlayer:(MPMusicPlayerController *)systemMusicPlayer {
+	//Do nothing
+}
+
 - (instancetype)init {
 	self = [super init];
 	if(self){
-		self.systemMusicPlayer = [MPMusicPlayerController systemMusicPlayer];
 		[self.systemMusicPlayer beginGeneratingPlaybackNotifications];
 		
 		//http://stackoverflow.com/questions/3059255/how-do-i-clear-the-queue-of-a-mpmusicplayercontroller
