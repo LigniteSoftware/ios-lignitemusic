@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
+
 @class LMBrowsingDetailViewController;
 
 @interface LMCoreViewController : UIViewController

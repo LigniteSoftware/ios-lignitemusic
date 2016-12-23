@@ -7,7 +7,6 @@
 //
 
 #import "LMView.h"
-#import "LMAppIcon.h"
 
 @class LMButtonBar;
 
@@ -18,8 +17,9 @@
 
  @param index The index which was tapped.
  @param buttonBar The button bar which the button was tapped for.
+ @return Whether or not to set the tapped index as highlighted. If so, the background will switch to white and the icon will automatically invert.
  */
-- (void)tappedButtonBarButtonAtIndex:(NSUInteger)index forButtonBar:(LMButtonBar*)buttonBar;
+- (BOOL)tappedButtonBarButtonAtIndex:(NSUInteger)index forButtonBar:(LMButtonBar*)buttonBar;
 
 @end
 
@@ -41,8 +41,21 @@
 @property NSArray<NSNumber*> *buttonScaleFactorsArray;
 
 /**
+ The array of button icon indexes to invert the icons for on load.
+ */
+@property NSArray<NSNumber*> *buttonIconsToInvertArray;
+
+/**
  The delegate for button tap events.
  */
 @property id<LMButtonBarDelegate> delegate;
+
+/**
+ Sets a button at a certain index as inverted.
+
+ @param index The index of the button to apply the inverting on.
+ @param highlighted Whether or not to highlight. YES is a white background colour.
+ */
+- (void)setButtonAtIndex:(NSInteger)index highlighted:(BOOL)highlight;
 
 @end

@@ -34,6 +34,7 @@
 #import "LMProgressSlider.h"
 #import "LMBrowsingBar.h"
 #import "LMFeedbackViewController.h"
+#import "LMNavigationBar.h"
 
 //#define SKIP_ONBOARDING
 //#define SPEED_DEMON_MODE
@@ -635,6 +636,19 @@ BOOL didAutomaticallyClose = NO;
 //	return;
 	
 //	NSLog(@"Query %@", query);
+	
+	
+	LMNavigationBar *navigationBar = [LMNavigationBar newAutoLayoutView];
+	[self.view addSubview:navigationBar];
+	
+	[navigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+	[navigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+	[navigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+	[navigationBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/8.0)];
+	
+	
+	return;
+	
 	
 	UIImageView *hangOnImage = [UIImageView newAutoLayoutView];
 	hangOnImage.image = [UIImage imageNamed:@"splash_image_portrait.png"];

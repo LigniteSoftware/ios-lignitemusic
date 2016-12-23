@@ -9,6 +9,7 @@
 #import <PureLayout/PureLayout.h>
 #import "LMButtonBar.h"
 #import "LMColour.h"
+#import "LMAppIcon.h"
 
 @interface LMButtonBar()
 
@@ -17,13 +18,63 @@
  */
 @property NSMutableArray<UIView*> *buttonsArray;
 
+/**
+ The array of button indexes which are highlighted.
+ */
+@property NSMutableArray<NSNumber*> *currentlyHighlightedButtonsArray;
+
 @end
 
 @implementation LMButtonBar
 
+- (void)invertIconForButtonBackgroundView:(UIView*)buttonBackgroundView {
+	UIImageView *iconView = nil;
+	for(id subview in buttonBackgroundView.subviews){
+		if([subview class] == [UIImageView class]){
+			iconView = subview;
+			break;
+		}
+	}
+	if(iconView){
+		iconView.image = [LMAppIcon invertImage:iconView.image];
+	}
+}
+
+- (void)setBackgroundColourForButtonBackgroundView:(UIView*)buttonBackgroundView toColour:(UIColor*)colour animated:(BOOL)animated {
+	[UIView animateWithDuration:animated ? 0.10 : 0.0 animations:^{
+		buttonBackgroundView.backgroundColor = colour;
+	}];
+}
+
+- (void)setBackgroundView:(UIView*)backgroundView inverted:(BOOL)inverted {
+	[self invertIconForButtonBackgroundView:backgroundView];
+	[self setBackgroundColourForButtonBackgroundView:backgroundView toColour:inverted ? [UIColor whiteColor] : [LMColour ligniteRedColour] animated:YES];
+}
+
+- (void)setButtonAtIndex:(NSInteger)index highlighted:(BOOL)highlight {
+	BOOL alreadyHighlighted = [self.currentlyHighlightedButtonsArray containsObject:@(index)];
+	if(alreadyHighlighted && !highlight){
+		[self.currentlyHighlightedButtonsArray removeObject:@(index)];
+	}
+	else if(!alreadyHighlighted && highlight){
+		[self.currentlyHighlightedButtonsArray addObject:@(index)];
+	}
+	else if((alreadyHighlighted && highlight) || (!alreadyHighlighted && !highlight)){
+		return;
+	}
+	[self setBackgroundView:[self.buttonsArray objectAtIndex:index] inverted:highlight];
+}
+
 - (void)didTapBackgroundView:(UITapGestureRecognizer*)tapGesutre {
 	if(self.delegate) {
-		[self.delegate tappedButtonBarButtonAtIndex:[self.buttonsArray indexOfObject:tapGesutre.view] forButtonBar:self];
+		UIView *tappedView = tapGesutre.view;
+		NSInteger buttonIndex = [self.buttonsArray indexOfObject:tappedView];
+		
+		BOOL shouldSetAsHighlighted = [self.delegate tappedButtonBarButtonAtIndex:buttonIndex forButtonBar:self];
+		
+		NSLog(@"Should set as highlighted: %d (numbers %@)", shouldSetAsHighlighted, self.currentlyHighlightedButtonsArray);
+		
+		[self setButtonAtIndex:buttonIndex highlighted:shouldSetAsHighlighted];
 	}
 }
 
@@ -32,6 +83,7 @@
 		self.didLayoutConstraints = YES;
 		
 		self.buttonsArray = [NSMutableArray new];
+		self.currentlyHighlightedButtonsArray = [NSMutableArray new];
 		
 		for(NSUInteger i = 0; i < self.amountOfButtons; i++){
 			BOOL isFirst = (i == 0);
@@ -64,6 +116,9 @@
 			UIImageView *sendButtonIcon = [UIImageView newAutoLayoutView];
 			sendButtonIcon.contentMode = UIViewContentModeScaleAspectFit;
 			sendButtonIcon.image = [LMAppIcon imageForIcon:(LMIcon)[[self.buttonIconsArray objectAtIndex:i] unsignedIntegerValue]];
+			if([self.buttonIconsToInvertArray containsObject:@(i)]){
+				sendButtonIcon.image = [LMAppIcon invertImage:sendButtonIcon.image];
+			}
 			[newBackgroundView addSubview:sendButtonIcon];
 			
 			[sendButtonIcon autoPinEdgeToSuperviewEdge:ALEdgeLeading];
