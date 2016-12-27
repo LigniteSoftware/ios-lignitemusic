@@ -279,10 +279,10 @@
 }
 
 - (LMPurchaseManagerAppOwnershipStatus)appOwnershipStatus {
-	NSLog(@"Checking ownership status...");
+//	NSLog(@"Checking ownership status...");
 	//First check whether or not they own the app
 	if([self userOwnsProductWithIdentifier:LMPurchaseManagerProductIdentifierLifetimeMusic]){
-		NSLog(@"The user has already purchased the app.");
+//		NSLog(@"The user has already purchased the app.");
 		return LMPurchaseManagerAppOwnershipStatusPurchased;
 	}
 	
@@ -291,7 +291,7 @@
 	   && [self.userDefaults secretObjectForKey:LMPurchaseManagerKickstarterLoginCredentialPassword]
 	   && [self.userDefaults secretObjectForKey:LMPurchaseManagerKickstarterLoginCredentialSessionToken]){
 		
-		NSLog(@"User is a backer.");
+//		NSLog(@"User is a backer.");
 		
 		return LMPurchaseManagerAppOwnershipStatusLoggedInAsBacker;
 	}
@@ -299,11 +299,11 @@
 	//Then check their trial time
 	NSTimeInterval amountOfTrialTimeRemaining = [self amountOfTrialTimeRemainingInSeconds];
 	if(amountOfTrialTimeRemaining < 0){
-		NSLog(@"The user is out of trial time.");
+//		NSLog(@"The user is out of trial time.");
 		return LMPurchaseManagerAppOwnershipStatusTrialExpired;
 	}
 	
-	NSLog(@"The user is within the trial timeframe with %f seconds left.", amountOfTrialTimeRemaining);
+//	NSLog(@"The user is within the trial timeframe with %f seconds left.", amountOfTrialTimeRemaining);
 	return LMPurchaseManagerAppOwnershipStatusInTrial;
 }
 
@@ -353,13 +353,13 @@
 
 - (void)setBackerDetailsWithEmail:(NSString*)email password:(NSInteger)password sessionToken:(NSString*)sessionToken {
 	if(password < 0){ //Logout
-		NSLog(@"Clearing details.");
+//		NSLog(@"Clearing details.");
 		[self.userDefaults removeObjectForKey:LMPurchaseManagerKickstarterLoginCredentialEmail];
 		[self.userDefaults removeObjectForKey:LMPurchaseManagerKickstarterLoginCredentialPassword];
 		[self.userDefaults removeObjectForKey:LMPurchaseManagerKickstarterLoginCredentialSessionToken];
 	}
 	else{
-		NSLog(@"Setting details to secret defaults %@. (%@, %d, %@)", self.userDefaults, email, (int)password, sessionToken);
+//		NSLog(@"Setting details to secret defaults %@. (%@, %d, %@)", self.userDefaults, email, (int)password, sessionToken);
 		[self.userDefaults setSecretObject:email forKey:LMPurchaseManagerKickstarterLoginCredentialEmail];
 		[self.userDefaults setSecretInteger:password forKey:LMPurchaseManagerKickstarterLoginCredentialPassword];
 		[self.userDefaults setSecretObject:sessionToken forKey:LMPurchaseManagerKickstarterLoginCredentialSessionToken];

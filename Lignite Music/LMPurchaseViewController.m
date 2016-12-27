@@ -100,7 +100,7 @@
 	}
 }
 
-- (BOOL)tappedButtonBarButtonAtIndex:(NSUInteger)index forButtonBar:(LMButtonBar *)buttonBar {
+- (void)tappedButtonBarButtonAtIndex:(NSUInteger)index forButtonBar:(LMButtonBar *)buttonBar {
 	NSLog(@"Tapped %d!", (int)index);
 	switch(index){
 		case 0: {
@@ -153,7 +153,6 @@
 			break;
 		}
 	}
-	return NO;
 }
 
 - (void)productsRequest:(SKProductsRequest *)request didReceiveResponse:(SKProductsResponse *)response{

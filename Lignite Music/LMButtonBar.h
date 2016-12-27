@@ -17,9 +17,8 @@
 
  @param index The index which was tapped.
  @param buttonBar The button bar which the button was tapped for.
- @return Whether or not to set the tapped index as highlighted. If so, the background will switch to white and the icon will automatically invert.
  */
-- (BOOL)tappedButtonBarButtonAtIndex:(NSUInteger)index forButtonBar:(LMButtonBar*)buttonBar;
+- (void)tappedButtonBarButtonAtIndex:(NSUInteger)index forButtonBar:(LMButtonBar*)buttonBar;
 
 @end
 
@@ -49,6 +48,14 @@
  The delegate for button tap events.
  */
 @property id<LMButtonBarDelegate> delegate;
+
+/**
+ Gets the view of a background of a button for a certain index.
+
+ @param index The index of the background to get.
+ @return The background view.
+ */
+- (UIView*)backgroundViewForIndex:(NSInteger)index;
 
 /**
  Sets a button at a certain index as inverted.

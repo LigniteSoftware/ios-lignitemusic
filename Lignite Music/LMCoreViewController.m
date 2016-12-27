@@ -7,34 +7,35 @@
 //
 
 #import <PureLayout/PureLayout.h>
-#import "LMAppDelegate.h"
-#import "LMCoreViewController.h"
-#import "LMMusicPlayer.h"
-#import "LMNowPlayingViewController.h"
-#import "LMBrowsingView.h"
-#import "LMBrowsingAssistantView.h"
-#import "LMTitleView.h"
-#import "LMSource.h"
-#import "LMExtras.h"
-#import "UIImage+AverageColour.h"
-#import "UIColor+isLight.h"
-#import "LMSettings.h"
-#import "LMGuideViewPagerController.h"
-#import "LMImageManager.h"
-#import "LMSettingsViewController.h"
-#import "LMBrowsingDetailViewController.h"
-#import "LMSearchView.h"
-#import "LMSearchViewController.h"
-#import "LMPurchaseManager.h"
-#import "LMAnswers.h"
-#import "LMAlertView.h"
-#import "LMColour.h"
-#import "NSTimer+Blocks.h"
 
+#import "LMBrowsingDetailViewController.h"
+#import "LMGuideViewPagerController.h"
+#import "LMNowPlayingViewController.h"
+#import "LMSettingsViewController.h"
+#import "LMBrowsingAssistantView.h"
+#import "LMSearchViewController.h"
+#import "UIImage+AverageColour.h"
+#import "LMCoreViewController.h"
+#import "LMPurchaseManager.h"
+#import "LMNavigationBar.h"
+#import "UIColor+isLight.h"
+#import "NSTimer+Blocks.h"
+#import "LMImageManager.h"
+#import "LMBrowsingView.h"
+#import "LMMusicPlayer.h"
+#import "LMAppDelegate.h"
+#import "LMSearchView.h"
+#import "LMAlertView.h"
+#import "LMTitleView.h"
+#import "LMSettings.h"
+#import "LMAnswers.h"
+#import "LMColour.h"
+#import "LMExtras.h"
+#import "LMSource.h"
+
+#import "LMFeedbackViewController.h"
 #import "LMProgressSlider.h"
 #import "LMBrowsingBar.h"
-#import "LMFeedbackViewController.h"
-#import "LMNavigationBar.h"
 
 //#define SKIP_ONBOARDING
 //#define SPEED_DEMON_MODE
@@ -78,6 +79,11 @@
 @property BOOL loaded;
 
 @property LMPurchaseManager *purchaseManager;
+
+/**
+ The navigation bar that goes at the bottom.
+ */
+@property LMNavigationBar *navigationBar;
 
 @end
 
@@ -286,6 +292,7 @@ BOOL didAutomaticallyClose = NO;
 	if(!source.shouldNotHighlight){
 		[self.currentSource setHidden:YES];
 		[self.browsingAssistant closeSourceSelectorAndOpenPreviousTab:YES];
+		[self.navigationBar setSelectedTab:LMNavigationTabBrowse];
 		
 		[self.browsingAssistant setCurrentSourceIcon:[[source.icon averageColour] isLight] ? source.icon : [LMAppIcon invertImage:source.icon]];
 	}
@@ -337,15 +344,15 @@ BOOL didAutomaticallyClose = NO;
 			break;
 		}
 		case LMIconTitles: {
-			self.titleView.hidden = NO;
-			[self.titleView reloadSourceSelectorInfo];
-			self.currentSource = self.titleView;
-			
-			self.browsingAssistant.browsingBar.letterTabBar.lettersDictionary =
-			[self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:@[self.titleView.musicTitles]
-															 withAssociatedMusicType:LMMusicTypeTitles];
-			
-			[self logMusicTypeView:LMMusicTypeTitles];
+//			self.titleView.hidden = NO;
+//			[self.titleView reloadSourceSelectorInfo];
+//			self.currentSource = self.titleView;
+//			
+//			self.browsingAssistant.browsingBar.letterTabBar.lettersDictionary =
+//			[self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:@[self.titleView.musicTitles]
+//															 withAssociatedMusicType:LMMusicTypeTitles];
+//			
+//			[self logMusicTypeView:LMMusicTypeTitles];
 			break;
 		}
 		case LMIconSettings: {
@@ -638,18 +645,6 @@ BOOL didAutomaticallyClose = NO;
 //	NSLog(@"Query %@", query);
 	
 	
-//	LMNavigationBar *navigationBar = [LMNavigationBar newAutoLayoutView];
-//	[self.view addSubview:navigationBar];
-//	
-//	[navigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-//	[navigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-//	[navigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-//	[navigationBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/8.0)];
-//	
-//	
-//	return;
-	
-	
 	UIImageView *hangOnImage = [UIImageView newAutoLayoutView];
 	hangOnImage.image = [UIImage imageNamed:@"splash_redesigned.png"];
 	hangOnImage.contentMode = UIViewContentModeScaleAspectFill;
@@ -733,6 +728,18 @@ BOOL didAutomaticallyClose = NO;
 						
 						self.heightConstraintArray = [NSMutableArray new];
 						
+						
+						self.navigationBar = [LMNavigationBar newAutoLayoutView];
+						self.navigationBar.sourcesForSourceSelector = self.sourcesForSourceSelector;
+						[self.view addSubview:self.navigationBar];
+						
+						[self.navigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+						[self.navigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+						[self.navigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+						[self.navigationBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/1.0)];
+						
+						
+						return;
 						
 						
 						self.titleView = [LMTitleView newAutoLayoutView];

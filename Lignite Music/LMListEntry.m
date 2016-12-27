@@ -103,9 +103,6 @@
 	if(!title){
 		title = @"";
 	}
-	if(!subtitle){
-		subtitle = @"";
-	}
 	
 	BOOL willHaveAnIcon = (icon != nil) || self.iPromiseIWillHaveAnIconForYouSoon;
 	

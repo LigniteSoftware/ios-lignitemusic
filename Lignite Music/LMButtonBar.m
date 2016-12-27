@@ -40,6 +40,10 @@
 	}
 }
 
+- (UIView*)backgroundViewForIndex:(NSInteger)index {
+	return [self.buttonsArray objectAtIndex:index];
+}
+
 - (void)setBackgroundColourForButtonBackgroundView:(UIView*)buttonBackgroundView toColour:(UIColor*)colour animated:(BOOL)animated {
 	[UIView animateWithDuration:animated ? 0.10 : 0.0 animations:^{
 		buttonBackgroundView.backgroundColor = colour;
@@ -70,11 +74,7 @@
 		UIView *tappedView = tapGesutre.view;
 		NSInteger buttonIndex = [self.buttonsArray indexOfObject:tappedView];
 		
-		BOOL shouldSetAsHighlighted = [self.delegate tappedButtonBarButtonAtIndex:buttonIndex forButtonBar:self];
-		
-		NSLog(@"Should set as highlighted: %d (numbers %@)", shouldSetAsHighlighted, self.currentlyHighlightedButtonsArray);
-		
-		[self setButtonAtIndex:buttonIndex highlighted:shouldSetAsHighlighted];
+		[self.delegate tappedButtonBarButtonAtIndex:buttonIndex forButtonBar:self];
 	}
 }
 
