@@ -838,6 +838,12 @@ BOOL shuffleForDebug = NO;
 
 - (void)skipToPreviousItem {
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer || self.playerType == LMMusicPlayerTypeAppleMusic){
+//		if([self.systemMusicPlayer respondsToSelector:@selector(skipToPreviousItem)]){
+//			[self.systemMusicPlayer skipToPreviousItem];
+//		}
+//		else{
+//			NSLog(@"[LMMusicPlayer] Warning: systemMusicPlayer does not respond to skipToPreviousItem selector!");
+//		}
 		[self.systemMusicPlayer skipToPreviousItem];
 	}
 }

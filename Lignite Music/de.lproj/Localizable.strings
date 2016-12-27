@@ -128,6 +128,8 @@
 "StayLoggedIn" = "Eingeloggt bleiben";
 "KeepGoing" = "Abbrechen"; //ie. "Keep going instead of doing this" (won't do it)
 
+"NoPurchasesYet" = "Hey, hey, hey, laaaangsam...!\n\nWir wollen kein Geld mehr von dir, da du bereits ein Kickstarter Backer bist.\n\nMelde dich stattdessen bitte mit dem Kickstarter-Button unten ein.";
+
 /*
  
  End new strings

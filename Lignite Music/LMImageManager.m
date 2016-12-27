@@ -549,7 +549,9 @@ SDWebImageDownloader *downloader = [SDWebImageDownloader sharedDownloader];
 	
 	NSArray *collectionsAssociated = (category == LMImageManagerCategoryArtistImages) ? self.artistsCollection : self.albumsCollection;
 	
-	[self.currentlyProcessingCategoryArray addObject:@(category)];
+	NSNumber *categoryNumber = @(category);
+	
+	[self.currentlyProcessingCategoryArray addObject:categoryNumber];
 	
 	NSLog(@"Processing %d.", category);
 	
@@ -567,8 +569,10 @@ SDWebImageDownloader *downloader = [SDWebImageDownloader sharedDownloader];
 //											 && ![self.trackDownloadQueue containsObject:representativeTrack]
 											 && ![self musicTrackIsOnBlacklist:representativeTrack forCategory:category])
 										  {
-											  [self.trackDownloadQueue addObject:representativeTrack];
-											  [self.categoryDownloadQueue addObject:[NSNumber numberWithInteger:(NSInteger)category]];
+											  if(representativeTrack && categoryNumber){
+												  [self.trackDownloadQueue addObject:representativeTrack];
+												  [self.categoryDownloadQueue addObject:categoryNumber];
+											  }
 										  }
 										  
 										  //Since this should mean we're at least part way through the list (since its asynchronus), we can know with fairly high confidence that there will be some items in the queue, so we can start downloading them since we don't actually start downloading instantly.

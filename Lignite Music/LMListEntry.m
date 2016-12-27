@@ -100,6 +100,13 @@
 	NSString *title = [self.delegate titleForListEntry:self];
 	NSString *subtitle = [self.delegate subtitleForListEntry:self];
 	
+	if(!title){
+		title = @"";
+	}
+	if(!subtitle){
+		subtitle = @"";
+	}
+	
 	BOOL willHaveAnIcon = (icon != nil) || self.iPromiseIWillHaveAnIconForYouSoon;
 	
 	if(willHaveAnIcon){

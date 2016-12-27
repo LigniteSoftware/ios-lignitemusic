@@ -142,11 +142,16 @@
 			
 			//For each big tile load its associated big album art
 			for(int i = 0; i < self.bigTileArray.count; i++){
-				UIImage *image = [[self musicTrackForPersistentIdString:[highestIds objectAtIndex:i]] albumArt];
+				UIImage *image = nil;
+				if(i < highestIds.count){
+					image = [[self musicTrackForPersistentIdString:[highestIds objectAtIndex:i]] albumArt];
+				}
 				if(!image){
 					image = [LMAppIcon imageForIcon:LMIconNoAlbumArt75Percent];
 				}
-				[bigTileImages addObject:image];
+				if(image != nil){
+					[bigTileImages addObject:image];
+				}
 			}
 			
 			//For each regular tile load its regular image
@@ -178,9 +183,11 @@
 				//Set each big image to its associated view
 				for(int i = 0; i < bigTileImages.count; i++){
 					UIImage *image = [bigTileImages objectAtIndex:i];
-					UIImageView *bigTileView = [bigTileArrayToUse objectAtIndex:i];
-					
-					bigTileView.image = image;
+					if(i < bigTileArrayToUse.count){
+						UIImageView *bigTileView = [bigTileArrayToUse objectAtIndex:i];
+						
+						bigTileView.image = image;
+					}
 				}
 				
 				NSArray *tilesArrayToUse = [NSArray arrayWithArray:self.tilesArray];

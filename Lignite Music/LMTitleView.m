@@ -135,7 +135,9 @@
 		
 		NSInteger indexToInsert = (index % self.itemArray.count);
 		
-		[self.itemIconArray removeObjectAtIndex:indexToInsert];
+		if(self.itemIconArray.count < indexToInsert){
+			[self.itemIconArray removeObjectAtIndex:indexToInsert];
+		}
 		[self.itemIconArray insertObject:albumArt ? albumArt : [LMAppIcon imageForIcon:LMIconAlbums] atIndex:indexToInsert];
 		
 		entry.invertIconOnHighlight = albumArt == nil;
