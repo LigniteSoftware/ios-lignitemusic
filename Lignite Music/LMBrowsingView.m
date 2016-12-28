@@ -432,18 +432,6 @@
 	return height ? 0.4 : 0.8;
 }
 
-- (void)layoutSubviews {
-	NSLog(@"Hey new frame my friend %@", NSStringFromCGRect(self.frame));
-	
-	[super layoutSubviews];
-	
-	if(self.browsingDetailViewController) {
-		CGRect newFrame = self.browsingDetailViewController.view.frame;
-		newFrame.size.height = self.frame.size.height;
-		self.browsingDetailViewController.view.frame = newFrame;
-	}
-}
-
 - (void)imageCacheChangedForCategory:(LMImageManagerCategory)category {
 //	if(self.musicType == LMMusicTypeArtists && category == LMImageManagerCategoryArtistImages){
 		[self.bigListEntryTableView reloadData];

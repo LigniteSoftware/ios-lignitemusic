@@ -11,12 +11,15 @@
 #import "LMMiniPlayerView.h"
 #import "LMNavigationBar.h"
 #import "LMMusicPlayer.h"
+#import "LMGrabberView.h"
 #import "LMButtonBar.h"
 #import "LMAppIcon.h"
+#import "LMColour.h"
 #import "LMButton.h"
 #import "LMLabel.h"
 
-@interface LMNavigationBar()<LMButtonBarDelegate, LMButtonDelegate, LMSearchBarDelegate, LMSourceSelectorDelegate>
+@interface LMNavigationBar()<UIGestureRecognizerDelegate,
+							 LMButtonBarDelegate, LMButtonDelegate, LMSearchBarDelegate, LMSourceSelectorDelegate>
 
 /**
  The music player.
@@ -52,6 +55,7 @@
 @property LMLabel *currentSourceLabel;
 @property LMLabel *currentSourceDetailLabel;
 @property LMButton *currentSourceButton;
+@property CGPoint originalPoint, currentPoint;
 
 @end
 
@@ -88,13 +92,15 @@
 	
 	[self layoutIfNeeded];
 	
-	previousViewTopConstraint.constant = 25;
+	previousViewTopConstraint.constant = LMNavigationBarGrabberHeight + 10;
 	currentViewTopConstraint.constant = -viewAttachedToButtonBar.frame.size.height;
 	
 	[UIView animateWithDuration:0.25 animations:^{
 		[self layoutIfNeeded];
 	} completion:^(BOOL finished) {
-		[self.delegate requiredHeightForNavigationBarChangedTo:self.buttonBar.frame.size.height + (viewAttachedToButtonBar.frame.size.height)
+		[self.delegate requiredHeightForNavigationBarChangedTo:self.buttonBar.frame.size.height
+															+ (viewAttachedToButtonBar.frame.size.height)
+															+ LMNavigationBarGrabberHeight
 										 withAnimationDuration:isDecreasing ? 0.10 : 0.50];
 	}];
 		
@@ -102,11 +108,59 @@
 }
 
 - (void)minimize {
-	[self setButtonBarBottomConstraintConstant:self.buttonBar.frame.size.height + self.viewAttachedToButtonBar.frame.size.height];
+	[self setButtonBarBottomConstraintConstant:self.buttonBar.frame.size.height
+											 + self.viewAttachedToButtonBar.frame.size.height
+											 + LMNavigationBarGrabberHeight
+											 + 10];
 }
 
 - (void)maximize {
 	[self setButtonBarBottomConstraintConstant:0];
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+	NSLog(@"%@ and %@", gestureRecognizer, otherGestureRecognizer);
+	
+	return YES;
+}
+
+- (void)handlePan:(UIPanGestureRecognizer *)recognizer {
+	CGPoint translation = [recognizer translationInView:recognizer.view];
+	
+	if(self.originalPoint.y == 0){
+		self.originalPoint = self.buttonBar.frame.origin;
+		self.currentPoint = self.buttonBar.frame.origin;
+	}
+	CGFloat totalTranslation = translation.y + (self.currentPoint.y-self.originalPoint.y);
+	
+	NSLog(@"%f", totalTranslation);
+	
+	if(totalTranslation < 0){ //Moving upward
+		self.buttonBarBottomConstraint.constant = -sqrt(-totalTranslation);
+	}
+	else{ //Moving downward
+		self.buttonBarBottomConstraint.constant = totalTranslation;
+	}
+	
+	[self layoutIfNeeded];
+	
+	if(recognizer.state == UIGestureRecognizerStateEnded){
+		//NSLog(@"Dick is not a bone %@", NSStringFromCGPoint(self.currentPoint));
+		self.currentPoint = CGPointMake(self.currentPoint.x, self.originalPoint.y + totalTranslation);
+		
+		//		NSLog(@"Dick is not a bone %@", NSStringFromCGPoint(self.currentPoint));
+		
+		if((translation.y >= 0)){
+			[self minimize];
+		}
+		else if((translation.y < 0)){
+			[self maximize];
+		}
+	}
+	else if(recognizer.state == UIGestureRecognizerStateBegan){
+		NSLog(@"Began");
+//		[self.delegate heightRequiredChangedTo:LMBrowsingAssistantViewDynamicHeight forBrowsingView:self];
+	}
 }
 
 - (void)sourceTitleChangedTo:(NSString *)title {
@@ -267,8 +321,36 @@
 		
 		
 		
+		LMGrabberView *browsingBarGrabberView = [LMGrabberView newAutoLayoutView];
+		browsingBarGrabberView.backgroundColor = [LMColour ligniteRedColour];
+		browsingBarGrabberView.layer.masksToBounds = YES;
+		[self addSubview:browsingBarGrabberView];
+		
+		[browsingBarGrabberView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.browsingBar];
+		[browsingBarGrabberView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(1.0/6.0)];
+		[browsingBarGrabberView autoSetDimension:ALDimensionHeight toSize:LMNavigationBarGrabberHeight];
+		[browsingBarGrabberView autoAlignAxisToSuperviewAxis:ALAxisVertical];
+
+		
+		UIPanGestureRecognizer *moveRecognizer = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(handlePan:)];
+		moveRecognizer.delegate = self;
+		[browsingBarGrabberView addGestureRecognizer:moveRecognizer];
+		
+		
+		
 		self.miniPlayerView = [LMMiniPlayerView newAutoLayoutView];
 		[self addSubview:self.miniPlayerView];
+		
+		
+		LMGrabberView *miniPlayerGrabberView = [LMGrabberView newAutoLayoutView];
+		miniPlayerGrabberView.backgroundColor = [LMColour ligniteRedColour];
+		miniPlayerGrabberView.layer.masksToBounds = YES;
+		[self addSubview:miniPlayerGrabberView];
+		
+		[miniPlayerGrabberView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.miniPlayerView];
+		[miniPlayerGrabberView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(1.0/6.0)];
+		[miniPlayerGrabberView autoSetDimension:ALDimensionHeight toSize:LMNavigationBarGrabberHeight];
+		[miniPlayerGrabberView autoAlignAxisToSuperviewAxis:ALAxisVertical];
 		
 		
 		
@@ -296,7 +378,7 @@
 		
 		
 		
-		[self.miniPlayerView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.buttonBar withOffset:25];
+		[self.miniPlayerView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.buttonBar withOffset:LMNavigationBarGrabberHeight + 10];
 		[self.miniPlayerView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[self.miniPlayerView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 		[self.miniPlayerView autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height/5.0];

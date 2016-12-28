@@ -269,6 +269,10 @@
 }
 
 - (void)sourceSelected:(LMSource *)source {
+	if(self.currentDetailViewController){
+		[self.navigationController popViewControllerAnimated:YES];
+	}
+	
 	int indexOfSource = -1;
 	
 	for(int i = 0; i < self.sourcesForSourceSelector.count; i++){

@@ -47,7 +47,7 @@
 
 - (void)loadView {
 	self.view = [UIView new];
-	self.view.backgroundColor = [UIColor orangeColor];
+	self.view.backgroundColor = [UIColor whiteColor];
 }
 
 - (void)viewDidLoad {

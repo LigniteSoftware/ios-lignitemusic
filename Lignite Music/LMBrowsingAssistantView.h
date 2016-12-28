@@ -13,8 +13,8 @@
 #import "LMBrowsingBar.h"
 #import "LMExtras.h"
 
-#define TAB_HEIGHT 0
-//#define TAB_HEIGHT (((WINDOW_FRAME.size.height/25.0)/4.0)*4.0)
+//#define TAB_HEIGHT 0
+#define TAB_HEIGHT (((WINDOW_FRAME.size.height/25.0)/4.0)*4.0)
 
 /**
  Dynamic height for the browsing assistant where the height is being actively changed by the user through the view's pan gesture. Views should adjust to show the whole view to prevent being shown as cut off.

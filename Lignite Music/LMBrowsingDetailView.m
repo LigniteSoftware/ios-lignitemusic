@@ -449,6 +449,7 @@
 	self.tableView.shouldUseDividers = YES;
 	self.tableView.dividerSectionsToIgnore = @[ @(0), @(1) ];
 	self.tableView.subviewDataSource = self;
+	self.tableView.bottomSpacing = WINDOW_FRAME.size.height/5.0;
 	[self addSubview:self.tableView];
 	
 	[self.tableView autoPinEdgesToSuperviewEdges];
