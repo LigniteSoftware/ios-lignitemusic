@@ -12,7 +12,6 @@
 #import "LMGuideViewPagerController.h"
 #import "LMNowPlayingViewController.h"
 #import "LMSettingsViewController.h"
-#import "LMBrowsingAssistantView.h"
 #import "LMSearchViewController.h"
 #import "UIImage+AverageColour.h"
 #import "LMCoreViewController.h"
@@ -43,7 +42,7 @@
 @import SDWebImage;
 @import StoreKit;
 
-@interface LMCoreViewController () <LMMusicPlayerDelegate, LMSourceDelegate, LMBrowsingAssistantDelegate, UIGestureRecognizerDelegate, LMSearchBarDelegate, LMLetterTabDelegate, LMSearchSelectedDelegate, LMPurchaseManagerDelegate>
+@interface LMCoreViewController () <LMMusicPlayerDelegate, LMSourceDelegate, UIGestureRecognizerDelegate, LMSearchBarDelegate, LMLetterTabDelegate, LMSearchSelectedDelegate, LMPurchaseManagerDelegate, LMNavigationBarDelegate>
 
 @property LMMusicPlayer *musicPlayer;
 
@@ -51,8 +50,6 @@
 
 @property LMBrowsingView *browsingView;
 @property LMTitleView *titleView;
-
-@property LMBrowsingAssistantView *browsingAssistant;
 
 @property NSArray<LMSource*> *sourcesForSourceSelector;
 
@@ -84,6 +81,11 @@
  The navigation bar that goes at the bottom.
  */
 @property LMNavigationBar *navigationBar;
+
+/**
+ The height constraint for the navigation bar.
+ */
+@property NSLayoutConstraint *navigationBarHeightConstraint;
 
 @end
 
@@ -191,9 +193,9 @@
 	
 	NSLog(@"Done setting up");
 	
-	self.browsingAssistant.browsingBar.letterTabBar.lettersDictionary =
-	[self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:self.browsingView.musicTrackCollections
-													 withAssociatedMusicType:musicType];
+	self.navigationBar.browsingBar.letterTabBar.lettersDictionary =
+		[self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:self.browsingView.musicTrackCollections
+														 withAssociatedMusicType:musicType];
 	
 	NSLog(@"Setup letters dictionary");
 }
@@ -232,19 +234,6 @@
 
 - (void)closeNowPlayingView {
 	[[self presentingViewController] dismissViewControllerAnimated:YES completion:nil];
-}
-
-BOOL didAutomaticallyClose = NO;
-
-- (void)openBrowsingAssistant {
-	if(didAutomaticallyClose){
-		[self.browsingAssistant open];
-		didAutomaticallyClose = NO;
-	}
-}
-
-- (void)closeBrowsingAssistant {
-	didAutomaticallyClose = [self.browsingAssistant close];
 }
 
 - (void)logMusicTypeView:(LMMusicType)type {
@@ -291,10 +280,9 @@ BOOL didAutomaticallyClose = NO;
 	
 	if(!source.shouldNotHighlight){
 		[self.currentSource setHidden:YES];
-		[self.browsingAssistant closeSourceSelectorAndOpenPreviousTab:YES];
 		[self.navigationBar setSelectedTab:LMNavigationTabBrowse];
 		
-		[self.browsingAssistant setCurrentSourceIcon:[[source.icon averageColour] isLight] ? source.icon : [LMAppIcon invertImage:source.icon]];
+//		[self.browsingAssistant setCurrentSourceIcon:[[source.icon averageColour] isLight] ? source.icon : [LMAppIcon invertImage:source.icon]];
 	}
 	
 	NSLog(@"New source %@", source.title);
@@ -356,7 +344,7 @@ BOOL didAutomaticallyClose = NO;
 			break;
 		}
 		case LMIconSettings: {
-			[self attachBrowsingAssistantToView:self.view];
+//			[self attachBrowsingAssistantToView:self.view];
 			
 			LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
 			settingsViewController.coreViewController = self;
@@ -376,27 +364,27 @@ BOOL didAutomaticallyClose = NO;
 	}
 }
 
-- (void)attachBrowsingAssistantToView:(UIView*)view {
-	NSLog(@"Attaching browsing assistant to view navigation ? %d", view == self.navigationController.view);
-	[self.browsingAssistant removeFromSuperview];
-	[view addSubview:self.browsingAssistant];
-	[view bringSubviewToFront:self.statusBarBlurView];
-	
-	self.browsingAssistant.textBackgroundConstraint = [self.browsingAssistant autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:view];
-	[self.browsingAssistant autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:view];
-	[self.browsingAssistant autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:view];
-	
-	self.browsingAssistantViewAttachedTo = view;
-	
-//	if(view == self.view){
-//		[self.view bringSubviewToFront:self.nowPlayingView];
-//	}
-}
+//- (void)attachBrowsingAssistantToView:(UIView*)view {
+//	NSLog(@"Attaching browsing assistant to view navigation ? %d", view == self.navigationController.view);
+//	[self.browsingAssistant removeFromSuperview];
+//	[view addSubview:self.browsingAssistant];
+//	[view bringSubviewToFront:self.statusBarBlurView];
+//	
+//	self.browsingAssistant.textBackgroundConstraint = [self.browsingAssistant autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:view];
+//	[self.browsingAssistant autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:view];
+//	[self.browsingAssistant autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:view];
+//	
+//	self.browsingAssistantViewAttachedTo = view;
+//	
+////	if(view == self.view){
+////		[self.view bringSubviewToFront:self.nowPlayingView];
+////	}
+//}
 
 - (void)viewDidAppear:(BOOL)animated {
 	NSLog(@"View did appear animated %d", animated);
 	
-	[self attachBrowsingAssistantToView:self.navigationController.view];
+//	[self attachBrowsingAssistantToView:self.navigationController.view];
 	
 	self.currentDetailViewController = nil;
 	self.searchViewController = nil;
@@ -418,48 +406,60 @@ BOOL didAutomaticallyClose = NO;
 	}];
 }
 
-- (void)heightRequiredChangedTo:(CGFloat)heightRequired forBrowsingView:(LMBrowsingAssistantView *)browsingView {
-	NSLog(@"Height required %f", heightRequired);
+- (void)requiredHeightForNavigationBarChangedTo:(CGFloat)requiredHeight {	
+	BOOL isDecreasing = requiredHeight < self.navigationBarHeightConstraint.constant;
 	
-	BOOL isDynamic = (heightRequired < 0.0);
+	[self.navigationController.view layoutIfNeeded];
 	
-	if(isDynamic){
-		heightRequired = 0.0;
-	}
+	self.navigationBarHeightConstraint.constant = requiredHeight;
 	
-	if(self.currentDetailViewController){
-		[(LMBrowsingDetailViewController*)self.currentDetailViewController setRequiredHeight:(WINDOW_FRAME.size.height-heightRequired) + 10];;
-	}
-	
-	if(!isDynamic){
-		if(!self.browsingAssistantHeightConstraint){
-			self.browsingAssistantHeightConstraint = [self.browsingAssistant autoSetDimension:ALDimensionHeight toSize:heightRequired+TAB_HEIGHT];
-			
-			[self.browsingAssistantViewAttachedTo layoutIfNeeded];
-			return;
-		}
-		
-		[self.browsingAssistantViewAttachedTo layoutIfNeeded];
-	}
-	
-	if(heightRequired < self.view.frame.size.height/2.0){
-		for(int i = 0; i < self.heightConstraintArray.count; i++){
-			NSLayoutConstraint *constraint = [self.heightConstraintArray objectAtIndex:i];
-			constraint.constant = (WINDOW_FRAME.size.height-heightRequired) + 10;
-		}
-		[UIView animateWithDuration:(heightRequired < self.browsingAssistantHeightConstraint.constant) ? 0.10 : 0.75 animations:^{
-			[self.browsingAssistantViewAttachedTo layoutIfNeeded];
-		}];
-	}
-	
-	if(!isDynamic){
-		self.browsingAssistantHeightConstraint.constant = heightRequired+TAB_HEIGHT;
-	}
-	
-	[UIView animateWithDuration:0.75 animations:^{
-		[self.browsingAssistantViewAttachedTo layoutIfNeeded];
+	[UIView animateWithDuration:isDecreasing ? 0.10 : 0.50 animations:^{
+		[self.navigationController.view layoutIfNeeded];
 	}];
 }
+
+//- (void)heightRequiredChangedTo:(CGFloat)heightRequired forBrowsingView:(LMBrowsingAssistantView *)browsingView {
+//	NSLog(@"Height required %f", heightRequired);
+//	
+//	BOOL isDynamic = (heightRequired < 0.0);
+//	
+//	if(isDynamic){
+//		heightRequired = 0.0;
+//	}
+//	
+//	if(self.currentDetailViewController){
+//		[(LMBrowsingDetailViewController*)self.currentDetailViewController setRequiredHeight:(WINDOW_FRAME.size.height-heightRequired) + 10];;
+//	}
+//	
+//	if(!isDynamic){
+//		if(!self.browsingAssistantHeightConstraint){
+////			self.browsingAssistantHeightConstraint = [self.browsingAssistant autoSetDimension:ALDimensionHeight toSize:heightRequired+TAB_HEIGHT];
+//			
+//			[self.browsingAssistantViewAttachedTo layoutIfNeeded];
+//			return;
+//		}
+//		
+//		[self.browsingAssistantViewAttachedTo layoutIfNeeded];
+//	}
+//	
+//	if(heightRequired < self.view.frame.size.height/2.0){
+//		for(int i = 0; i < self.heightConstraintArray.count; i++){
+//			NSLayoutConstraint *constraint = [self.heightConstraintArray objectAtIndex:i];
+//			constraint.constant = (WINDOW_FRAME.size.height-heightRequired) + 10;
+//		}
+//		[UIView animateWithDuration:(heightRequired < self.browsingAssistantHeightConstraint.constant) ? 0.10 : 0.75 animations:^{
+//			[self.browsingAssistantViewAttachedTo layoutIfNeeded];
+//		}];
+//	}
+//	
+//	if(!isDynamic){
+//		self.browsingAssistantHeightConstraint.constant = heightRequired+TAB_HEIGHT;
+//	}
+//	
+//	[UIView animateWithDuration:0.75 animations:^{
+//		[self.browsingAssistantViewAttachedTo layoutIfNeeded];
+//	}];
+//}
 
 //- (void)showWhatsPoppin {
 //	NSArray *currentBuildChanges = @[
@@ -536,7 +536,7 @@ BOOL didAutomaticallyClose = NO;
 	NSLog(@"Search was opened: %d", opened);
 	
 	if(!self.searchViewController){
-		[self attachBrowsingAssistantToView:self.view];
+//		[self attachBrowsingAssistantToView:self.view];
 		
 		self.searchViewController = [LMSearchViewController new];
 		self.searchViewController.searchSelectedDelegate = self;
@@ -729,17 +729,19 @@ BOOL didAutomaticallyClose = NO;
 						self.heightConstraintArray = [NSMutableArray new];
 						
 						
+						
 						self.navigationBar = [LMNavigationBar newAutoLayoutView];
 						self.navigationBar.sourcesForSourceSelector = self.sourcesForSourceSelector;
-						[self.view addSubview:self.navigationBar];
+						self.navigationBar.delegate = self;
+						[self.navigationController.view addSubview:self.navigationBar];
 						
 						[self.navigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 						[self.navigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 						[self.navigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-						[self.navigationBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/1.0)];
+						self.navigationBarHeightConstraint = [self.navigationBar autoSetDimension:ALDimensionHeight toSize:0.0];
 						
+						self.musicPlayer.navigationBar = self.navigationBar;
 						
-						return;
 						
 						
 						self.titleView = [LMTitleView newAutoLayoutView];
@@ -747,11 +749,14 @@ BOOL didAutomaticallyClose = NO;
 						[self.view addSubview:self.titleView];
 
 						[self.titleView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-						[self.heightConstraintArray addObject:[self.titleView autoSetDimension:ALDimensionHeight toSize:self.view.frame.size.height]];
+//						[self.heightConstraintArray addObject:[self.titleView autoSetDimension:ALDimensionHeight toSize:self.view.frame.size.height]];
+						[self.titleView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.navigationBar];
 						[self.titleView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
 
 						[self.titleView setup];
 //						self.titleView.hidden = YES;
+						
+						
 						
 						self.browsingView = [LMBrowsingView newAutoLayoutView];
 						self.browsingView.rootViewController = self;
@@ -760,27 +765,11 @@ BOOL didAutomaticallyClose = NO;
 						[self.browsingView setup];
 						
 						[self.browsingView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-						[self.heightConstraintArray addObject:[self.browsingView autoSetDimension:ALDimensionHeight toSize:self.view.frame.size.height]];
+//						[self.heightConstraintArray addObject:[self.browsingView autoSetDimension:ALDimensionHeight toSize:self.view.frame.size.height]];
+						[self.browsingView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.navigationBar];
 						[self.browsingView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
 						self.browsingView.hidden = YES;
-						
-
-						self.browsingAssistant = [[LMBrowsingAssistantView alloc]initForAutoLayout];
-						self.browsingAssistant.coreViewController = self;
-						self.browsingAssistant.backgroundColor = [UIColor orangeColor];
-						self.browsingAssistant.sourcesForSourceSelector = self.sourcesForSourceSelector;
-						self.browsingAssistant.delegate = self;
-						self.browsingAssistant.searchBarDelegate = self;
-						self.browsingAssistant.letterTabBarDelegate = self;
-						[self.navigationController.view addSubview:self.browsingAssistant];
-
-						self.browsingAssistant.textBackgroundConstraint = [self.browsingAssistant autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.navigationController.view];
-						[self.browsingAssistant autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.navigationController.view];
-						[self.browsingAssistant autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.navigationController.view];
-						
-						self.browsingAssistantViewAttachedTo = self.navigationController.view;
-						
-						self.musicPlayer.browsingAssistant = self.browsingAssistant;
+		
 				
 						[self.musicPlayer addMusicDelegate:self];
 						

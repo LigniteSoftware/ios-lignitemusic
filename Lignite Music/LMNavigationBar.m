@@ -13,7 +13,6 @@
 #import "LMMusicPlayer.h"
 #import "LMButtonBar.h"
 #import "LMAppIcon.h"
-#import "LMExtras.h"
 #import "LMButton.h"
 #import "LMLabel.h"
 
@@ -92,7 +91,11 @@
 	
 	[UIView animateWithDuration:0.25 animations:^{
 		[self layoutIfNeeded];
-	} completion:nil];
+	} completion:^(BOOL finished) {
+		[self.delegate requiredHeightForNavigationBarChangedTo:self.buttonBar.frame.size.height + (viewAttachedToButtonBar.frame.size.height)];
+	}];
+		
+	[self.delegate requiredHeightForNavigationBarChangedTo:0.0];
 }
 
 - (void)minimize {
@@ -183,7 +186,7 @@
 		NSLog(@"Did layout constraints!");
 		
 		
-		self.backgroundColor = [UIColor cyanColor];
+//		self.backgroundColor = [UIColor cyanColor];
 		
 		
 		self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
@@ -286,7 +289,7 @@
 		[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 		self.buttonBarBottomConstraint = [self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		[self.buttonBar autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height/8.0];
+		[self.buttonBar autoSetDimension:ALDimensionHeight toSize:LMNavigationBarTabHeight];
 		
 		
 		
@@ -318,7 +321,7 @@
 		[self.sourceSelector autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
 		[self.sourceSelector autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self];
 		[self.sourceSelector autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.buttonBar];
-		[self.sourceSelector autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withOffset:-(WINDOW_FRAME.size.height/8.0)];
+		[self.sourceSelector autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height-LMNavigationBarTabHeight];
 		
 		self.musicPlayer.sourceSelector = self.sourceSelector;
 		

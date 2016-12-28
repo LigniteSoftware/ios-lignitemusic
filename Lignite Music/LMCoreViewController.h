@@ -17,8 +17,6 @@
 
 - (void)openNowPlayingView;
 - (void)closeNowPlayingView;
-- (void)openBrowsingAssistant;
-- (void)closeBrowsingAssistant;
 - (void)prepareToLoadView;
 - (void)setStatusBarBlurHidden:(BOOL)hidden;
 

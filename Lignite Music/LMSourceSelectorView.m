@@ -164,7 +164,7 @@
 	self.viewsTableView.subviewDataSource = self;
 	self.viewsTableView.shouldUseDividers = YES;
 	self.viewsTableView.title = @"SourceSelector";
-	self.viewsTableView.bottomSpacing = WINDOW_FRAME.size.height/8 + 10;
+	self.viewsTableView.bottomSpacing = 10;
 	[self addSubview:self.viewsTableView];
 	
 	[self.viewsTableView autoPinEdgesToSuperviewEdges];

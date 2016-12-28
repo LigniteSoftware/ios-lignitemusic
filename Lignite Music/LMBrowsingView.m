@@ -164,7 +164,7 @@
 	
 	self.showingDetailView = NO;
 	
-	[self.rootViewController openBrowsingAssistant];
+//	[self.rootViewController openBrowsingAssistant];
 }
 
 - (void)musicTrackDidChange:(LMMusicTrack*)newTrack {
@@ -323,8 +323,8 @@
 						isPlayingMusic = YES;
 						[self.musicPlayer setNowPlayingCollection:trackCollection];
 						
-						[self.musicPlayer.browsingAssistant selectSource:LMBrowsingAssistantTabMiniplayer];
-						[self.musicPlayer.browsingAssistant open];
+						[self.musicPlayer.navigationBar setSelectedTab:LMNavigationTabMiniplayer];
+						[self.musicPlayer.navigationBar maximize];
 					}
 					else{
 						isPlayingMusic ? [self.musicPlayer pause] : [self.musicPlayer play];

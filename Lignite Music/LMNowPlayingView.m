@@ -21,6 +21,7 @@
 #import "LMProgressSlider.h"
 #import "LMTableView.h"
 #import "LMListEntry.h"
+#import "LMExtras.h"
 
 @interface LMNowPlayingView() <LMMusicPlayerDelegate, LMButtonDelegate, LMProgressSliderDelegate, LMTableViewSubviewDataSource, LMListEntryDelegate>
 

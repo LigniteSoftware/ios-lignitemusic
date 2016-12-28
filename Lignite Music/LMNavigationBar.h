@@ -8,7 +8,21 @@
 
 #import "LMBrowsingBar.h"
 #import "LMSource.h"
+#import "LMExtras.h"
 #import "LMView.h"
+
+#define LMNavigationBarTabHeight (WINDOW_FRAME.size.height/8.0)
+
+@protocol LMNavigationBarDelegate <NSObject>
+
+/**
+ The height for the navigation bar changed needs to be a specific height. The delegate, which should be its superview, should now animate the browsing view to the requested size.
+ 
+ @param requiredHeight The new height required.
+ */
+- (void)requiredHeightForNavigationBarChangedTo:(CGFloat)requiredHeight;
+
+@end
 
 @interface LMNavigationBar : LMView
 
@@ -40,6 +54,21 @@ typedef NS_ENUM(NSUInteger, LMNavigationTab) {
  The browsing bar.
  */
 @property LMBrowsingBar *browsingBar;
+
+/**
+ The delegate.
+ */
+@property id<LMNavigationBarDelegate> delegate;
+
+/**
+ Minimize the navigation bar down to its small size.
+ */
+- (void)minimize;
+
+/**
+ Maximize the navigation bar to its full size.
+ */
+- (void)maximize;
 
 /**
  Set the tab that's selected.

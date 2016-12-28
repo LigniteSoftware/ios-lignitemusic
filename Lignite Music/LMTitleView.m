@@ -281,8 +281,8 @@
 	
 	[self.musicPlayer setNowPlayingTrack:track];
 	
-	[self.musicPlayer.browsingAssistant selectSource:LMBrowsingAssistantTabMiniplayer];
-	[self.musicPlayer.browsingAssistant open];
+	[self.musicPlayer.navigationBar setSelectedTab:LMNavigationTabMiniplayer];
+	[self.musicPlayer.navigationBar maximize];
 }
 
 - (UIColor*)tapColourForListEntry:(LMListEntry*)entry {

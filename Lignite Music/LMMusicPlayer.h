@@ -11,9 +11,9 @@
 #import <Foundation/Foundation.h>
 #import "LMSourceSelectorView.h"
 #import "LMPebbleManager.h"
-#import "LMBrowsingAssistantView.h"
 #import "MPMediaItem+LigniteImages.h"
 #import "MPMediaItemCollection+LigniteInfo.h"
+#import "LMNavigationBar.h"
 
 /**
  Storage key for the user set player type. Correlates to LMMusicPlayerType.
@@ -161,9 +161,9 @@ typedef enum {
 @property LMSourceSelectorView *sourceSelector;
 
 /**
- The browsing assistant which goes at the bottom of the screen.
+ The navigation bar which goes at the bottom of the screen to help the user navigate their music.
  */
-@property LMBrowsingAssistantView *browsingAssistant;
+@property LMNavigationBar *navigationBar;
 
 /**
  The shared music player.
