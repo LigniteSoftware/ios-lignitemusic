@@ -818,15 +818,6 @@
 			name = Utilities;
 			sourceTree = "<group>";
 		};
-		6AC77A0A1DC4245800BABBB3 /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				6A92F8211DD6D5F7002045C2 /* Core */,
-				6AC77A0D1DC424A000BABBB3 /* Titles */,
-			);
-			name = Views;
-			sourceTree = "<group>";
-		};
 		6AC77A0D1DC424A000BABBB3 /* Titles */ = {
 			isa = PBXGroup;
 			children = (
@@ -955,7 +946,8 @@
 		6AFD2EDA1BC41EAC0083FE9E /* Browsing */ = {
 			isa = PBXGroup;
 			children = (
-				6AC77A0A1DC4245800BABBB3 /* Views */,
+				6A92F8211DD6D5F7002045C2 /* Core */,
+				6AC77A0D1DC424A000BABBB3 /* Titles */,
 			);
 			name = Browsing;
 			sourceTree = "<group>";

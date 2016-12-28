@@ -56,6 +56,7 @@
 @property NSLayoutConstraint *browsingAssistantHeightConstraint;
 
 @property NSMutableArray<NSLayoutConstraint*>*heightConstraintArray;
+@property NSMutableArray<NSLayoutConstraint*>*bottomConstraintArray;
 
 @property id currentSource;
 
@@ -332,15 +333,15 @@
 			break;
 		}
 		case LMIconTitles: {
-//			self.titleView.hidden = NO;
-//			[self.titleView reloadSourceSelectorInfo];
-//			self.currentSource = self.titleView;
-//			
-//			self.browsingAssistant.browsingBar.letterTabBar.lettersDictionary =
-//			[self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:@[self.titleView.musicTitles]
-//															 withAssociatedMusicType:LMMusicTypeTitles];
-//			
-//			[self logMusicTypeView:LMMusicTypeTitles];
+			self.titleView.hidden = NO;
+			[self.titleView reloadSourceSelectorInfo];
+			self.currentSource = self.titleView;
+			
+			self.navigationBar.browsingBar.letterTabBar.lettersDictionary =
+			[self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:@[self.titleView.musicTitles]
+															 withAssociatedMusicType:LMMusicTypeTitles];
+			
+			[self logMusicTypeView:LMMusicTypeTitles];
 			break;
 		}
 		case LMIconSettings: {
@@ -381,10 +382,28 @@
 ////	}
 //}
 
+- (void)viewWillDisappear:(BOOL)animated {
+	NSLog(@"View is about to go bye bye %@", NSStringFromCGRect(self.browsingView.frame));
+	
+	[self.view layoutIfNeeded];
+	
+	for(NSLayoutConstraint *bottomConstraint in self.bottomConstraintArray){
+		bottomConstraint.active = NO;
+	}
+	for(NSLayoutConstraint *heightConstraint in self.heightConstraintArray){
+		heightConstraint.active = YES;
+		heightConstraint.constant = [heightConstraint.firstItem frame].size.height;
+	}
+	
+	[self.view layoutIfNeeded];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+	NSLog(@"View went bye bye %@", NSStringFromCGRect(self.browsingView.frame));
+}
+
 - (void)viewDidAppear:(BOOL)animated {
 	NSLog(@"View did appear animated %d", animated);
-	
-//	[self attachBrowsingAssistantToView:self.navigationController.view];
 	
 	self.currentDetailViewController = nil;
 	self.searchViewController = nil;
@@ -393,6 +412,18 @@
 	if(self.statusBarBlurViewHeightConstraint.constant < 0.1 && ![self prefersStatusBarHidden]){
 		[self setStatusBarBlurHidden:NO];
 	}
+	
+	[self.view layoutIfNeeded];
+	
+	for(NSLayoutConstraint *bottomConstraint in self.bottomConstraintArray){
+		bottomConstraint.active = YES;
+	}
+	for(NSLayoutConstraint *heightConstraint in self.heightConstraintArray){
+		heightConstraint.active = NO;
+		heightConstraint.constant = [heightConstraint.firstItem frame].size.height;
+	}
+	
+	[self.view layoutIfNeeded];
 }
 
 - (void)setStatusBarBlurHidden:(BOOL)hidden {
@@ -406,14 +437,14 @@
 	}];
 }
 
-- (void)requiredHeightForNavigationBarChangedTo:(CGFloat)requiredHeight {	
-	BOOL isDecreasing = requiredHeight < self.navigationBarHeightConstraint.constant;
+- (void)requiredHeightForNavigationBarChangedTo:(CGFloat)requiredHeight withAnimationDuration:(CGFloat)animationDuration {
+	NSLog(@"Height changed to %f", requiredHeight);
 	
 	[self.navigationController.view layoutIfNeeded];
 	
 	self.navigationBarHeightConstraint.constant = requiredHeight;
 	
-	[UIView animateWithDuration:isDecreasing ? 0.10 : 0.50 animations:^{
+	[UIView animateWithDuration:animationDuration animations:^{
 		[self.navigationController.view layoutIfNeeded];
 	}];
 }
@@ -727,12 +758,15 @@
 						self.sourcesForSourceSelector = [NSArray arrayWithArray:sources];
 						
 						self.heightConstraintArray = [NSMutableArray new];
+						self.bottomConstraintArray = [NSMutableArray new];
 						
 						
 						
 						self.navigationBar = [LMNavigationBar newAutoLayoutView];
 						self.navigationBar.sourcesForSourceSelector = self.sourcesForSourceSelector;
 						self.navigationBar.delegate = self;
+						self.navigationBar.searchBarDelegate = self;
+						self.navigationBar.letterTabBarDelegate = self;
 						[self.navigationController.view addSubview:self.navigationBar];
 						
 						[self.navigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
@@ -749,12 +783,13 @@
 						[self.view addSubview:self.titleView];
 
 						[self.titleView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-//						[self.heightConstraintArray addObject:[self.titleView autoSetDimension:ALDimensionHeight toSize:self.view.frame.size.height]];
-						[self.titleView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.navigationBar];
+						[self.heightConstraintArray addObject:[self.titleView autoSetDimension:ALDimensionHeight toSize:self.view.frame.size.height]];
+						[[self.heightConstraintArray lastObject] setActive:NO];
+						[self.bottomConstraintArray addObject:[self.titleView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.navigationBar]];
 						[self.titleView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
 
 						[self.titleView setup];
-//						self.titleView.hidden = YES;
+						self.titleView.hidden = YES;
 						
 						
 						
@@ -765,9 +800,11 @@
 						[self.browsingView setup];
 						
 						[self.browsingView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-//						[self.heightConstraintArray addObject:[self.browsingView autoSetDimension:ALDimensionHeight toSize:self.view.frame.size.height]];
-						[self.browsingView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.navigationBar];
+						[self.heightConstraintArray addObject:[self.browsingView autoSetDimension:ALDimensionHeight toSize:self.view.frame.size.height]];
+						[[self.heightConstraintArray lastObject] setActive:NO];
+						[self.bottomConstraintArray addObject:[self.browsingView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.navigationBar]];
 						[self.browsingView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
+						[self.browsingView autoAlignAxisToSuperviewAxis:ALAxisVertical];
 						self.browsingView.hidden = YES;
 		
 				

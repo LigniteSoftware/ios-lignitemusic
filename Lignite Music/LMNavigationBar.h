@@ -19,8 +19,9 @@
  The height for the navigation bar changed needs to be a specific height. The delegate, which should be its superview, should now animate the browsing view to the requested size.
  
  @param requiredHeight The new height required.
+ @param animationDuration The duration of the animation which should be used, in seconds.
  */
-- (void)requiredHeightForNavigationBarChangedTo:(CGFloat)requiredHeight;
+- (void)requiredHeightForNavigationBarChangedTo:(CGFloat)requiredHeight withAnimationDuration:(CGFloat)animationDuration;
 
 @end
 

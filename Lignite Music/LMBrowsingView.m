@@ -305,7 +305,7 @@
 	
 	self.rootViewController.currentDetailViewController = self.browsingDetailViewController;
 	
-	[self.rootViewController showViewController:self.browsingDetailViewController sender:self];
+	[self.rootViewController showViewController:self.browsingDetailViewController sender:self.rootViewController];
 	
 //	[self.rootViewController closeBrowsingAssistant];
 }
@@ -433,6 +433,8 @@
 }
 
 - (void)layoutSubviews {
+	NSLog(@"Hey new frame my friend %@", NSStringFromCGRect(self.frame));
+	
 	[super layoutSubviews];
 	
 	if(self.browsingDetailViewController) {

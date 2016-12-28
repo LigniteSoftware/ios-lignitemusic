@@ -79,6 +79,8 @@
 - (void)setViewAttachedToButtonBar:(UIView *)viewAttachedToButtonBar {
 	UIView *previouslyAttachedView = self.viewAttachedToButtonBar;
 	
+	BOOL isDecreasing = viewAttachedToButtonBar.frame.size.height < previouslyAttachedView.frame.size.height;
+	
 	_viewAttachedToButtonBar = viewAttachedToButtonBar;
 	
 	NSLayoutConstraint *previousViewTopConstraint = [self topConstrantForView:previouslyAttachedView];
@@ -92,10 +94,11 @@
 	[UIView animateWithDuration:0.25 animations:^{
 		[self layoutIfNeeded];
 	} completion:^(BOOL finished) {
-		[self.delegate requiredHeightForNavigationBarChangedTo:self.buttonBar.frame.size.height + (viewAttachedToButtonBar.frame.size.height)];
+		[self.delegate requiredHeightForNavigationBarChangedTo:self.buttonBar.frame.size.height + (viewAttachedToButtonBar.frame.size.height)
+										 withAnimationDuration:isDecreasing ? 0.10 : 0.50];
 	}];
 		
-	[self.delegate requiredHeightForNavigationBarChangedTo:0.0];
+	[self.delegate requiredHeightForNavigationBarChangedTo:0.0 withAnimationDuration:0.10];
 }
 
 - (void)minimize {

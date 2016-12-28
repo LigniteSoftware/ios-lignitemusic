@@ -54,9 +54,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
 	
-	NSLog(@"Did load!");
-	
-	NSLog(@"shit %@", NSStringFromCGRect(self.view.frame));
+	NSLog(@"!shit %@", NSStringFromCGRect(self.view.frame));
 	
 	[self.view addSubview:self.browsingDetailView];
 	
