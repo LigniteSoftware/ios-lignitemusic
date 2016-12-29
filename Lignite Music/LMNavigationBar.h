@@ -79,4 +79,18 @@ typedef NS_ENUM(NSUInteger, LMNavigationTab) {
  */
 - (void)setSelectedTab:(LMNavigationTab)tab;
 
+/**
+ Set the icon for the current source.
+
+ @param icon The new icon.
+ */
+- (void)setCurrentSourceIcon:(UIImage*)icon;
+
+/**
+ Move the bottom constraint to a certain position.
+
+ @param yPosition The new position.
+ */
+- (void)moveToYPosition:(CGFloat)yPosition;
+
 @end

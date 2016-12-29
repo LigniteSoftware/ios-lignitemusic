@@ -95,6 +95,38 @@
 //	}];
 }
 
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+	if(self.secondaryDelegate){
+		if([self.secondaryDelegate respondsToSelector:@selector(scrollViewWillBeginDragging:)]){
+			[self.secondaryDelegate scrollViewWillBeginDragging:scrollView];
+		}
+	}
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+	if(self.secondaryDelegate){
+		if([self.secondaryDelegate respondsToSelector:@selector(scrollViewDidEndDragging:willDecelerate:)]){
+			[self.secondaryDelegate scrollViewDidEndDragging:scrollView willDecelerate:decelerate];
+		}
+	}
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+	if(self.secondaryDelegate){
+		if([self.secondaryDelegate respondsToSelector:@selector(scrollViewDidScroll:)]){
+			[self.secondaryDelegate scrollViewDidScroll:scrollView];
+		}
+	}
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+	if(self.secondaryDelegate){
+		if([self.secondaryDelegate respondsToSelector:@selector(scrollViewDidEndDecelerating:)]){
+			[self.secondaryDelegate scrollViewDidEndDecelerating:scrollView];
+		}
+	}
+}
+
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
 	LMTableViewCell *lmCell = (LMTableViewCell*)cell;
 	

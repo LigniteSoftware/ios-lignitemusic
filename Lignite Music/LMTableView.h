@@ -99,6 +99,11 @@
 @property NSArray *dividerSectionsToIgnore;
 
 /**
+ The secondary delegate which will get some table view delegate information such as changes in scroll dragging.
+ */
+@property id<UITableViewDelegate> secondaryDelegate;
+
+/**
  The subview data source for this table view.
  */
 @property id<LMTableViewSubviewDataSource> subviewDataSource;

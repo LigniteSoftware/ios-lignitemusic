@@ -58,10 +58,7 @@
 	
 	[self.view addSubview:self.browsingDetailView];
 	
-	[self.browsingDetailView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-	[self.browsingDetailView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-	[self.browsingDetailView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	self.browsingDetailViewHeightConstraint = [self.browsingDetailView autoSetDimension:ALDimensionHeight toSize:self.requiredHeight];
+	[self.browsingDetailView autoPinEdgesToSuperviewEdges];
 	
 	[self.browsingDetailView setup];
 }

@@ -287,7 +287,7 @@
 		[self.currentSource setHidden:YES];
 		[self.navigationBar setSelectedTab:LMNavigationTabBrowse];
 		
-//		[self.browsingAssistant setCurrentSourceIcon:[[source.icon averageColour] isLight] ? source.icon : [LMAppIcon invertImage:source.icon]];
+		[self.navigationBar setCurrentSourceIcon:[[source.icon averageColour] isLight] ? source.icon : [LMAppIcon invertImage:source.icon]];
 	}
 	
 	NSLog(@"New source %@", source.title);
@@ -328,7 +328,7 @@
 			
 			[self setupBrowsingViewWithMusicType:associatedMusicType];
 			
-//			[self.albumView reloadSourceSelectorInfo];
+			[self.browsingView reloadSourceSelectorInfo];
 			self.currentSource = self.browsingView;
 //
 ////			if(self.albumView.showingDetailView){
@@ -789,7 +789,7 @@
 						[self.titleView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 						[self.heightConstraintArray addObject:[self.titleView autoSetDimension:ALDimensionHeight toSize:self.view.frame.size.height]];
 						[[self.heightConstraintArray lastObject] setActive:NO];
-						[self.bottomConstraintArray addObject:[self.titleView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.navigationBar]];
+						[self.bottomConstraintArray addObject:[self.titleView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.navigationBar withOffset:LMNavigationBarGrabberHeight]];
 						[self.titleView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
 
 						[self.titleView setup];
@@ -806,7 +806,7 @@
 						[self.browsingView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 						[self.heightConstraintArray addObject:[self.browsingView autoSetDimension:ALDimensionHeight toSize:self.view.frame.size.height]];
 						[[self.heightConstraintArray lastObject] setActive:NO];
-						[self.bottomConstraintArray addObject:[self.browsingView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.navigationBar]];
+						[self.bottomConstraintArray addObject:[self.browsingView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.navigationBar withOffset:LMNavigationBarGrabberHeight]];
 						[self.browsingView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
 						[self.browsingView autoAlignAxisToSuperviewAxis:ALAxisVertical];
 						self.browsingView.hidden = YES;

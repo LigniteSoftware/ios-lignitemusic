@@ -16,8 +16,10 @@
 #import "LMExtras.h"
 #import "LMBrowsingDetailViewController.h"
 #import "LMImageManager.h"
+#import "NSTimer+Blocks.h"
 
-@interface LMBrowsingView()<LMBigListEntryTableViewDelegate, LMMusicPlayerDelegate, LMImageManagerDelegate>
+@interface LMBrowsingView()<UITableViewDelegate,
+							LMBigListEntryTableViewDelegate, LMMusicPlayerDelegate, LMImageManagerDelegate>
 
 @property LMBigListEntryTableView *bigListEntryTableView;
 
@@ -28,9 +30,54 @@
 
 @property LMBrowsingDetailViewController *browsingDetailViewController;
 
+@property CGPoint originalOffset, currentOffset;
+
 @end
 
 @implementation LMBrowsingView
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+	NSLog(@"Will begin dragging");
+	self.originalOffset = scrollView.contentOffset;
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+	NSLog(@"Did end animating");
+	
+	CGFloat difference = self.currentOffset.y - self.originalOffset.y;
+	
+	if(difference < 0){
+		[self.musicPlayer.navigationBar maximize];
+	}
+	else{
+		[self.musicPlayer.navigationBar minimize];
+	}
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+	if(!decelerate){
+		NSLog(@"Did end animating");
+		
+		CGFloat difference = self.currentOffset.y - self.originalOffset.y;
+		
+		if(difference < 0){
+			[self.musicPlayer.navigationBar maximize];
+		}
+		else{
+			[self.musicPlayer.navigationBar minimize];
+		}
+	}
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+	self.currentOffset = scrollView.contentOffset;
+	
+	CGFloat difference = self.currentOffset.y - self.originalOffset.y;
+	
+	NSLog(difference < 0 ? @"Scrolling upwards" : @"Scrolling downwards");
+	
+	[self.musicPlayer.navigationBar moveToYPosition:difference];
+}
 
 - (void)scrollViewToIndex:(NSUInteger)index {
 	[self.bigListEntryTableView.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:index]
@@ -439,6 +486,8 @@
 }
 
 - (void)setup {
+	self.originalOffset = CGPointMake(0, 0);
+	
 	self.bigListEntryTableView.hidden = YES;
 	[self.bigListEntryTableView removeFromSuperview];
 	self.bigListEntryTableView = nil;
@@ -454,6 +503,8 @@
 	[self.bigListEntryTableView autoPinEdgesToSuperviewEdges];
 	
 	[self.bigListEntryTableView setup];
+	
+	self.bigListEntryTableView.tableView.secondaryDelegate = self;
 	
 	[self.musicPlayer addMusicDelegate:self];
 	[self.imageManager addDelegate:self];

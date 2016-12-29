@@ -112,16 +112,54 @@
 											 + self.viewAttachedToButtonBar.frame.size.height
 											 + LMNavigationBarGrabberHeight
 											 + 10];
+	
+	[self.delegate requiredHeightForNavigationBarChangedTo:self.currentSourceBackgroundView.frame.size.height
+									 withAnimationDuration:0.10];
+	
+	self.currentPoint = CGPointMake(self.originalPoint.x, self.originalPoint.y + self.buttonBarBottomConstraint.constant);
 }
 
 - (void)maximize {
 	[self setButtonBarBottomConstraintConstant:0];
+	
+	[self.delegate requiredHeightForNavigationBarChangedTo:self.buttonBar.frame.size.height
+														 + self.viewAttachedToButtonBar.frame.size.height
+														 + LMNavigationBarGrabberHeight
+									 withAnimationDuration:0.30];
+	
+	self.currentPoint = self.originalPoint;
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
 	NSLog(@"%@ and %@", gestureRecognizer, otherGestureRecognizer);
 	
 	return YES;
+}
+
+- (void)moveToYPosition:(CGFloat)yPosition {
+	NSLog(@"%f", self.buttonBarBottomConstraint.constant);
+	
+	if(self.buttonBarBottomConstraint.constant < 0.0){
+		NSLog(@"Stopping");
+		return;
+	}
+	if(yPosition < 0){
+		yPosition = 0.0;
+	}
+	
+	CGFloat currentHeight = self.buttonBar.frame.size.height
+						+ self.viewAttachedToButtonBar.frame.size.height
+						+ (-yPosition)
+						+ LMNavigationBarGrabberHeight;
+	
+	if(currentHeight < self.currentSourceBackgroundView.frame.size.height){
+		currentHeight = self.currentSourceBackgroundView.frame.size.height;
+	}
+	
+	[self.delegate requiredHeightForNavigationBarChangedTo:currentHeight
+									 withAnimationDuration:0.0];
+	
+	self.buttonBarBottomConstraint.constant = yPosition;
 }
 
 - (void)handlePan:(UIPanGestureRecognizer *)recognizer {
@@ -143,6 +181,18 @@
 	}
 	
 	[self layoutIfNeeded];
+	
+	CGFloat currentHeight = self.buttonBar.frame.size.height
+	+ self.viewAttachedToButtonBar.frame.size.height
+	+ (-self.buttonBarBottomConstraint.constant)
+	+ LMNavigationBarGrabberHeight;
+	
+	if(currentHeight < self.currentSourceBackgroundView.frame.size.height){
+		currentHeight = self.currentSourceBackgroundView.frame.size.height;
+	}
+	
+	[self.delegate requiredHeightForNavigationBarChangedTo:currentHeight
+									 withAnimationDuration:0.0];
 	
 	if(recognizer.state == UIGestureRecognizerStateEnded){
 		//NSLog(@"Dick is not a bone %@", NSStringFromCGPoint(self.currentPoint));
@@ -265,6 +315,10 @@
 		self.currentSourceBackgroundView.layer.masksToBounds = NO;
 		self.currentSourceBackgroundView.layer.shadowRadius = 5;
 		
+		UIPanGestureRecognizer *currentSourceBackgroundViewGrabberMoveRecognizer = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(handlePan:)];
+		currentSourceBackgroundViewGrabberMoveRecognizer.delegate = self;
+		[self.currentSourceBackgroundView addGestureRecognizer:currentSourceBackgroundViewGrabberMoveRecognizer];
+		
 		
 		
 		self.currentSourceButton = [LMButton newAutoLayoutView];
@@ -302,11 +356,6 @@
 		[self.currentSourceDetailLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
 		
 		
-		
-		UISwipeGestureRecognizer *swipeUpOnCurrentSourceGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(maximize)];
-		swipeUpOnCurrentSourceGesture.direction = UISwipeGestureRecognizerDirectionUp;
-		[self.currentSourceBackgroundView addGestureRecognizer:swipeUpOnCurrentSourceGesture];
-		
 		UITapGestureRecognizer *tapOnCurrentSourceGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(maximize)];
 		[self.currentSourceBackgroundView addGestureRecognizer:tapOnCurrentSourceGesture];
 		
@@ -332,9 +381,9 @@
 		[browsingBarGrabberView autoAlignAxisToSuperviewAxis:ALAxisVertical];
 
 		
-		UIPanGestureRecognizer *moveRecognizer = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(handlePan:)];
-		moveRecognizer.delegate = self;
-		[browsingBarGrabberView addGestureRecognizer:moveRecognizer];
+		UIPanGestureRecognizer *browsingBarGrabberMoveRecognizer = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(handlePan:)];
+		browsingBarGrabberMoveRecognizer.delegate = self;
+		[browsingBarGrabberView addGestureRecognizer:browsingBarGrabberMoveRecognizer];
 		
 		
 		
@@ -351,6 +400,11 @@
 		[miniPlayerGrabberView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(1.0/6.0)];
 		[miniPlayerGrabberView autoSetDimension:ALDimensionHeight toSize:LMNavigationBarGrabberHeight];
 		[miniPlayerGrabberView autoAlignAxisToSuperviewAxis:ALAxisVertical];
+		
+		
+		UIPanGestureRecognizer *miniPlayerGrabberMoveRecognizer = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(handlePan:)];
+		miniPlayerGrabberMoveRecognizer.delegate = self;
+		[miniPlayerGrabberView addGestureRecognizer:miniPlayerGrabberMoveRecognizer];
 		
 		
 		
