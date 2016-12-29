@@ -81,6 +81,8 @@
 }
 
 - (void)rebuildTrackCollection {
+	NSLog(@"Higgasdas");
+	
 	MPMediaQuery *everything = [MPMediaQuery new];
 	MPMediaPropertyPredicate *musicFilterPredicate = [MPMediaPropertyPredicate predicateWithValue:[NSNumber numberWithInteger:MPMediaTypeMusic]
 																					  forProperty:MPMediaItemPropertyMediaType
@@ -105,7 +107,7 @@
 	LMMusicTrackCollection *trackCollection = mediaCollection;
 	[musicTracks addObject:trackCollection];
 	
-	self.musicTitles = mediaCollection;
+	self.musicTitles = [MPMediaItemCollection collectionWithItems:[NSArray arrayWithArray:musicCollection]];
 	self.songListTableView.totalAmountOfObjects = self.musicTitles.count;
 	[self reloadSourceSelectorInfo];
 }

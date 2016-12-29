@@ -31,6 +31,10 @@
 
 @implementation LMPebbleSettingsView
 
+- (void)tappedCloseButtonForSectionTableView:(LMSectionTableView *)sectionTableView {
+	[(UINavigationController*)self.window.rootViewController popViewControllerAnimated:YES];
+}
+
 - (UIImage*)iconAtSection:(NSUInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView {
 	switch(section){
 		case 0:
