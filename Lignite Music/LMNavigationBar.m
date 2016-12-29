@@ -51,6 +51,11 @@
  */
 @property LMSourceSelectorView *sourceSelector;
 
+/**
+ The height of the navigation bar when the adjustment of the scroll position began.
+ */
+@property NSInteger heightBeforeAdjustingToScrollPosition;
+
 @property UIView *currentSourceBackgroundView;
 @property LMLabel *currentSourceLabel;
 @property LMLabel *currentSourceDetailLabel;
@@ -60,6 +65,12 @@
 @end
 
 @implementation LMNavigationBar
+
+- (CGFloat)totalHeight {
+	return self.buttonBar.frame.size.height
+		 + self.viewAttachedToButtonBar.frame.size.height
+		 + LMNavigationBarGrabberHeight;
+}
 
 - (void)setButtonBarBottomConstraintConstant:(NSInteger)constant {
 	[self layoutIfNeeded];
@@ -108,6 +119,7 @@
 }
 
 - (void)minimize {
+	NSLog(@"Minimize");
 	[self setButtonBarBottomConstraintConstant:self.buttonBar.frame.size.height
 											 + self.viewAttachedToButtonBar.frame.size.height
 											 + LMNavigationBarGrabberHeight
@@ -117,9 +129,12 @@
 									 withAnimationDuration:0.10];
 	
 	self.currentPoint = CGPointMake(self.originalPoint.x, self.originalPoint.y + self.buttonBarBottomConstraint.constant);
+	
+	self.heightBeforeAdjustingToScrollPosition = -1;
 }
 
 - (void)maximize {
+	NSLog(@"Maximize");
 	[self setButtonBarBottomConstraintConstant:0];
 	
 	[self.delegate requiredHeightForNavigationBarChangedTo:self.buttonBar.frame.size.height
@@ -128,6 +143,8 @@
 									 withAnimationDuration:0.30];
 	
 	self.currentPoint = self.originalPoint;
+	
+	self.heightBeforeAdjustingToScrollPosition = -1;
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
@@ -137,29 +154,47 @@
 }
 
 - (void)moveToYPosition:(CGFloat)yPosition {
-	NSLog(@"%f", self.buttonBarBottomConstraint.constant);
+	NSLog(@"self.buttonBarBottomConstraint.constant %f - yPosition %f", self.buttonBarBottomConstraint.constant, yPosition);
 	
-	if(self.buttonBarBottomConstraint.constant < 0.0){
-		NSLog(@"Stopping");
+	if(self.heightBeforeAdjustingToScrollPosition == -1){
+		self.heightBeforeAdjustingToScrollPosition = (NSInteger)self.buttonBarBottomConstraint.constant;
+	}
+	
+	BOOL wasMaximizedBeforeScrolling = self.heightBeforeAdjustingToScrollPosition == 0;
+	BOOL wasMinimizedBeforeScrolling = !wasMaximizedBeforeScrolling;
+	
+	if(wasMaximizedBeforeScrolling && yPosition < 0){
+		NSLog(@"Was maximized, rejecting.");
 		return;
 	}
-	if(yPosition < 0){
-		yPosition = 0.0;
+	if(wasMinimizedBeforeScrolling && yPosition < 0){
+		yPosition = [self totalHeight]+(yPosition+(WINDOW_FRAME.size.height/3.0));
+		NSLog(@"Min up change to yPosition to %f", yPosition);
+		if(yPosition <= 0){
+			self.heightBeforeAdjustingToScrollPosition = (NSInteger)self.buttonBarBottomConstraint.constant;
+			yPosition = 0.0;
+		}
+	}
+	else if(wasMinimizedBeforeScrolling && yPosition > 0){ //The user is scrolling down and it's already minimized
+		return;
 	}
 	
-	CGFloat currentHeight = self.buttonBar.frame.size.height
-						+ self.viewAttachedToButtonBar.frame.size.height
-						+ (-yPosition)
-						+ LMNavigationBarGrabberHeight;
+	CGFloat currentHeight = [self totalHeight] - yPosition;
 	
-	if(currentHeight < self.currentSourceBackgroundView.frame.size.height){
-		currentHeight = self.currentSourceBackgroundView.frame.size.height;
-	}
+	BOOL movingDown = (currentHeight < self.heightBeforeAdjustingToScrollPosition);
+	BOOL movingUp = !movingDown; //For clarity
+	
+	NSLog(@"Maximized before? %d. Moving down? %d.", wasMaximizedBeforeScrolling, movingDown);
 	
 	[self.delegate requiredHeightForNavigationBarChangedTo:currentHeight
 									 withAnimationDuration:0.0];
 	
 	self.buttonBarBottomConstraint.constant = yPosition;
+	
+	if(yPosition >= [self totalHeight]){
+		NSLog(@"Resetting start position for minimized view");
+		self.heightBeforeAdjustingToScrollPosition = (NSInteger)self.buttonBarBottomConstraint.constant;
+	}
 }
 
 - (void)handlePan:(UIPanGestureRecognizer *)recognizer {
@@ -182,10 +217,7 @@
 	
 	[self layoutIfNeeded];
 	
-	CGFloat currentHeight = self.buttonBar.frame.size.height
-	+ self.viewAttachedToButtonBar.frame.size.height
-	+ (-self.buttonBarBottomConstraint.constant)
-	+ LMNavigationBarGrabberHeight;
+	CGFloat currentHeight = [self totalHeight] - self.buttonBarBottomConstraint.constant;
 	
 	if(currentHeight < self.currentSourceBackgroundView.frame.size.height){
 		currentHeight = self.currentSourceBackgroundView.frame.size.height;
@@ -195,10 +227,7 @@
 									 withAnimationDuration:0.0];
 	
 	if(recognizer.state == UIGestureRecognizerStateEnded){
-		//NSLog(@"Dick is not a bone %@", NSStringFromCGPoint(self.currentPoint));
 		self.currentPoint = CGPointMake(self.currentPoint.x, self.originalPoint.y + totalTranslation);
-		
-		//		NSLog(@"Dick is not a bone %@", NSStringFromCGPoint(self.currentPoint));
 		
 		if((translation.y >= 0)){
 			[self minimize];
@@ -206,10 +235,6 @@
 		else if((translation.y < 0)){
 			[self maximize];
 		}
-	}
-	else if(recognizer.state == UIGestureRecognizerStateBegan){
-		NSLog(@"Began");
-//		[self.delegate heightRequiredChangedTo:LMBrowsingAssistantViewDynamicHeight forBrowsingView:self];
 	}
 }
 
@@ -297,6 +322,8 @@
 		
 		
 		self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
+		
+		self.heightBeforeAdjustingToScrollPosition = -1;
 		
 		
 		self.currentSourceBackgroundView = [UIView newAutoLayoutView];

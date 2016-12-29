@@ -36,6 +36,44 @@
 
 @implementation LMBrowsingView
 
+- (void)adjustNavigationBarForDifference {
+//	if((self.bigListEntryTableView.tableView.contentSize.height
+//		-self.bigListEntryTableView.tableView.contentOffset.y
+//		-self.bigListEntryTableView.tableView.frame.size.height)
+//	   < self.frame.size.height/2){
+//		return;
+//	}
+	
+	CGFloat difference = self.currentOffset.y - self.originalOffset.y;
+	
+	if(difference == 0){
+		return;
+	}
+	
+	CGFloat maximizeGive = (WINDOW_FRAME.size.height/3);
+	CGFloat minimizeGive = (WINDOW_FRAME.size.height/8);
+	
+	BOOL goingUp = difference < 0;
+	BOOL enoughGiveForMaximize = (fabs(difference) > maximizeGive);
+	BOOL enoughGiveForMinimize = (difference > minimizeGive);
+	
+	NSLog(@"%f Going up %d", difference, goingUp);
+	
+	if(goingUp && enoughGiveForMaximize){
+		[self.musicPlayer.navigationBar maximize];
+	}
+	else{
+		if(!goingUp && enoughGiveForMinimize){
+			[self.musicPlayer.navigationBar minimize];
+		}
+		else if(!goingUp){
+			[self.musicPlayer.navigationBar maximize];
+		}
+	}
+	
+	self.currentOffset = self.originalOffset;
+}
+
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
 	NSLog(@"Will begin dragging");
 	self.originalOffset = scrollView.contentOffset;
@@ -44,37 +82,30 @@
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
 	NSLog(@"Did end animating");
 	
-	CGFloat difference = self.currentOffset.y - self.originalOffset.y;
-	
-	if(difference < 0){
-		[self.musicPlayer.navigationBar maximize];
-	}
-	else{
-		[self.musicPlayer.navigationBar minimize];
-	}
+	[self adjustNavigationBarForDifference];
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
 	if(!decelerate){
-		NSLog(@"Did end animating");
+		NSLog(@"Did end dragging");
 		
-		CGFloat difference = self.currentOffset.y - self.originalOffset.y;
-		
-		if(difference < 0){
-			[self.musicPlayer.navigationBar maximize];
-		}
-		else{
-			[self.musicPlayer.navigationBar minimize];
-		}
+		[self adjustNavigationBarForDifference];
 	}
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+	if((self.bigListEntryTableView.tableView.contentSize.height
+		-self.bigListEntryTableView.tableView.contentOffset.y
+		-self.bigListEntryTableView.tableView.frame.size.height)
+	    < self.frame.size.height/2){
+		return;
+	}
+	   
 	self.currentOffset = scrollView.contentOffset;
 	
 	CGFloat difference = self.currentOffset.y - self.originalOffset.y;
 	
-	NSLog(difference < 0 ? @"Scrolling upwards" : @"Scrolling downwards");
+//	NSLog(difference < 0 ? @"Scrolling upwards" : @"Scrolling downwards");
 	
 	[self.musicPlayer.navigationBar moveToYPosition:difference];
 }

@@ -442,7 +442,7 @@
 }
 
 - (void)requiredHeightForNavigationBarChangedTo:(CGFloat)requiredHeight withAnimationDuration:(CGFloat)animationDuration {
-	NSLog(@"Height changed to %f", requiredHeight);
+//	NSLog(@"Height changed to %f", requiredHeight);
 	
 	[self.navigationController.view layoutIfNeeded];
 	
