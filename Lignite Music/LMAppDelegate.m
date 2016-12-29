@@ -54,7 +54,6 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 	NSLog(@"[LMAppDelegate]: Did finish launching with options.");
 	
-	
 	[[Fabric sharedSDK] setDebug:YES];
 	
 #ifdef DEBUG

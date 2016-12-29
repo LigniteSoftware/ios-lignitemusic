@@ -81,8 +81,6 @@
 }
 
 - (void)rebuildTrackCollection {
-	NSLog(@"Higgasdas");
-	
 	MPMediaQuery *everything = [MPMediaQuery new];
 	MPMediaPropertyPredicate *musicFilterPredicate = [MPMediaPropertyPredicate predicateWithValue:[NSNumber numberWithInteger:MPMediaTypeMusic]
 																					  forProperty:MPMediaItemPropertyMediaType

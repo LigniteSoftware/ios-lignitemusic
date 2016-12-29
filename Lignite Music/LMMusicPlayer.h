@@ -244,13 +244,13 @@ typedef enum {
 - (NSArray<LMMusicTrackCollection*>*)trackCollectionsForMediaQuery:(MPMediaQuery*)mediaQuery withMusicType:(LMMusicType)musicType;
 
 /**
- Compiles an array of collections associated to a persistent ID and music type. For example, the persistent ID of Chiddy Bang and the music type of LMMusicTypeArtists would result in collections of all of Chiddy Bang's albums.
+ Compiles an array of collections associated to a persistent ID from a track and music type. For example, the track with a persistent ID of Chiddy Bang and the music type of LMMusicTypeArtists would result in collections of all of Chiddy Bang's albums.
 
- @param persistentID The persistent ID to use in the query.
+ @param representativeTrack The representative track to use in the query and pull data from.
  @param musicType The music type to group for.
  @return The grouped collections.
  */
-- (NSArray<LMMusicTrackCollection*>*)collectionsForPersistentID:(LMMusicTrackPersistentID)persistentID forMusicType:(LMMusicType)musicType;
+- (NSArray<LMMusicTrackCollection*>*)collectionsForRepresentativeTrack:(LMMusicTrack*)representativeTrack forMusicType:(LMMusicType)musicType;
 
 /**
  Finds collections of music based off of the type provided.

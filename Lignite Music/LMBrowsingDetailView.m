@@ -36,6 +36,11 @@
  */
 @property NSArray<LMMusicTrackCollection*>* specificTrackCollections;
 
+/**
+ Whether or not to use the specific track collections. NO on playlists and compilations.
+ */
+@property BOOL usingSpecificTrackCollections;
+
 @end
 
 @implementation LMBrowsingDetailView
@@ -59,17 +64,10 @@
 - (void)musicTrackDidChange:(LMMusicTrack*)newTrack {
 	LMListEntry *highlightedEntry = nil;
 	int newHighlightedIndex = -1;
-	if(self.musicType == LMMusicTypeArtists){
+	if(self.usingSpecificTrackCollections){
 		int count = 0;
 		for(LMMusicTrackCollection *collection in self.specificTrackCollections){
 			for(LMMusicTrack *track in collection.items){
-				//				LMListEntry *entry = [self listEntryForIndex:i];
-				//				LMMusicTrack *entryTrack = entry.associatedData;
-				//
-				//				if(entryTrack.persistentID == newTrack.persistentID){
-				//					highlightedEntry = entry;
-				//				}
-				
 				if(track.persistentID == newTrack.persistentID){
 					newHighlightedIndex = count;
 					NSLog(@"Found a match");
@@ -298,7 +296,7 @@
 }
 
 - (void)tappedListEntry:(LMListEntry*)entry {
-	if(self.musicType == LMMusicTypeArtists){
+	if(self.usingSpecificTrackCollections){
 		LMMusicTrackCollection *collection = [self.specificTrackCollections objectAtIndex:entry.collectionIndex];
 		
 		LMBrowsingDetailViewController *browsingDetailController = [LMBrowsingDetailViewController new];
@@ -333,7 +331,7 @@
 }
 
 - (NSString*)titleForListEntry:(LMListEntry*)entry {
-	if(self.musicType == LMMusicTypeArtists){
+	if(self.usingSpecificTrackCollections){
 		LMMusicTrackCollection *collection = [self.specificTrackCollections objectAtIndex:entry.collectionIndex];
 		return collection.representativeItem.albumTitle ? collection.representativeItem.albumTitle : NSLocalizedString(@"UnknownAlbum", nil);
 	}
@@ -342,7 +340,7 @@
 }
 
 - (NSString*)subtitleForListEntry:(LMListEntry*)entry {
-	if(self.musicType == LMMusicTypeArtists){
+	if(self.usingSpecificTrackCollections){
 		LMMusicTrackCollection *collection = [self.specificTrackCollections objectAtIndex:entry.collectionIndex];
 		return [NSString stringWithFormat:@"%ld %@", collection.count, NSLocalizedString(collection.count == 1 ? @"Song" : @"Songs", nil)];
 	}
@@ -378,7 +376,7 @@
 	}
 	LMListEntry *listEntry = [self.songEntries objectAtIndex:(index-1) % self.songEntries.count];
 	listEntry.collectionIndex = index-1; //To adjust for the big list entry at the top
-	if(self.musicType == LMMusicTypeArtists) {
+	if(self.usingSpecificTrackCollections) {
 		listEntry.associatedData = [self.specificTrackCollections objectAtIndex:listEntry.collectionIndex];
 	}
 	else{
@@ -406,17 +404,14 @@
 - (void)amountOfObjectsRequiredChangedTo:(NSUInteger)amountOfObjects forTableView:(LMTableView*)tableView {
 	self.songEntries = [NSMutableArray new];
 	
-	NSUInteger countToUse = (self.musicType == LMMusicTypeArtists) ? self.specificTrackCollections.count : self.musicTrackCollection.count;
+	NSUInteger countToUse = self.usingSpecificTrackCollections ? self.specificTrackCollections.count : self.musicTrackCollection.count;
 	for(int i = 0; i < MIN(amountOfObjects, countToUse); i++){
 		LMListEntry *listEntry = [LMListEntry newAutoLayoutView];
 		listEntry.delegate = self;
 		listEntry.collectionIndex = i;
-		if(self.musicType == LMMusicTypeArtists) {
-			listEntry.associatedData = [self.specificTrackCollections objectAtIndex:i];
-		}
-		else{
-			listEntry.associatedData = [self.musicTrackCollection.items objectAtIndex:i];
-		}
+		listEntry.associatedData = self.usingSpecificTrackCollections ?
+									[self.specificTrackCollections objectAtIndex:i] :
+									[self.musicTrackCollection.items objectAtIndex:i];
 		[listEntry setup];
 		
 		[self.songEntries addObject:listEntry];
@@ -428,9 +423,13 @@
 	
 	self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 	
-	BOOL isArtists = self.musicType == LMMusicTypeArtists;
-	if(isArtists){
-		self.specificTrackCollections = [self.musicPlayer collectionsForPersistentID:self.musicTrackCollection.representativeItem.artistPersistentID forMusicType:LMMusicTypeArtists];
+	self.usingSpecificTrackCollections = (self.musicType != LMMusicTypePlaylists
+										  && self.musicType != LMMusicTypeCompilations
+										  && self.musicType != LMMusicTypeAlbums);
+	
+	if(self.usingSpecificTrackCollections){
+		self.specificTrackCollections = [self.musicPlayer collectionsForRepresentativeTrack:self.musicTrackCollection.representativeItem
+																			   forMusicType:self.musicType];
 	}
 	
 	self.headerBigListEntry = [LMBigListEntry newAutoLayoutView];
@@ -445,7 +444,7 @@
 	self.tableView = [LMTableView newAutoLayoutView];
 	self.tableView.title = @"PlaylistDetailView";
 	self.tableView.averageCellHeight = WINDOW_FRAME.size.height*(1.0/10.0);
-	self.tableView.totalAmountOfObjects = (isArtists ? self.specificTrackCollections.count : self.musicTrackCollection.count) + 1;
+	self.tableView.totalAmountOfObjects = (self.usingSpecificTrackCollections ? self.specificTrackCollections.count : self.musicTrackCollection.count) + 1;
 	self.tableView.shouldUseDividers = YES;
 	self.tableView.dividerSectionsToIgnore = @[ @(0), @(1) ];
 	self.tableView.subviewDataSource = self;

@@ -767,14 +767,36 @@ BOOL shuffleForDebug = NO;
 	return nil;
 }
 
-- (NSArray<LMMusicTrackCollection*>*)collectionsForPersistentID:(LMMusicTrackPersistentID)persistentID forMusicType:(LMMusicType)musicType {
+- (NSArray<LMMusicTrackCollection*>*)collectionsForRepresentativeTrack:(LMMusicTrack*)representativeTrack forMusicType:(LMMusicType)musicType {
+	MPMediaGrouping associatedGroupings[] = {
+		MPMediaGroupingAlbum, //Artists
+		MPMediaGroupingTitle, //Albums
+		MPMediaGroupingTitle, //Titles
+		MPMediaGroupingTitle, //Playlists
+		MPMediaGroupingAlbum, //Genres
+		MPMediaGroupingAlbum, //Composers
+		MPMediaGroupingTitle  //Compilations
+	};
+	
+	NSArray<NSString*> *associatedPersistentIDProperties = @[
+		MPMediaItemPropertyArtistPersistentID,   //Artists
+		MPMediaItemPropertyAlbumPersistentID,    //Albums
+		MPMediaItemPropertyPersistentID,         //Titles
+		MPMediaPlaylistPropertyName,             //Playlists
+		MPMediaItemPropertyGenrePersistentID,    //Genres
+		MPMediaItemPropertyComposerPersistentID, //Composers
+		MPMediaItemPropertyIsCompilation         //Compilations
+	];
+	
+	NSString *associatedProperty = [associatedPersistentIDProperties objectAtIndex:musicType];
+	
 	MPMediaQuery *query = nil;
 	
 	query = [MPMediaQuery new];
-	query.groupingType = MPMediaGroupingAlbum;
+	query.groupingType = associatedGroupings[musicType];
 	
-	MPMediaPropertyPredicate *musicFilterPredicate = [MPMediaPropertyPredicate predicateWithValue:@(persistentID)
-																					  forProperty:MPMediaItemPropertyArtistPersistentID
+	MPMediaPropertyPredicate *musicFilterPredicate = [MPMediaPropertyPredicate predicateWithValue:[representativeTrack valueForProperty:associatedProperty]
+																					  forProperty:associatedProperty
 																				   comparisonType:MPMediaPredicateComparisonEqualTo];
 	[query addFilterPredicate:musicFilterPredicate];
 	
