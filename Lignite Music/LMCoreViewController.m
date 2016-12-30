@@ -348,8 +348,8 @@
 			[self logMusicTypeView:LMMusicTypeTitles];
 			break;
 		}
-		case LMIconSettings: {
-//			[self attachBrowsingAssistantToView:self.view];
+		case LMIconSettings: {			
+			[self attachNavigationBarToView:self.view];
 			
 			LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
 			settingsViewController.coreViewController = self;
@@ -369,22 +369,24 @@
 	}
 }
 
-//- (void)attachBrowsingAssistantToView:(UIView*)view {
-//	NSLog(@"Attaching browsing assistant to view navigation ? %d", view == self.navigationController.view);
-//	[self.browsingAssistant removeFromSuperview];
-//	[view addSubview:self.browsingAssistant];
-//	[view bringSubviewToFront:self.statusBarBlurView];
-//	
-//	self.browsingAssistant.textBackgroundConstraint = [self.browsingAssistant autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:view];
-//	[self.browsingAssistant autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:view];
-//	[self.browsingAssistant autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:view];
-//	
-//	self.browsingAssistantViewAttachedTo = view;
-//	
-////	if(view == self.view){
-////		[self.view bringSubviewToFront:self.nowPlayingView];
-////	}
-//}
+- (void)attachNavigationBarToView:(UIView*)view {
+	NSLog(@"Attaching browsing assistant to view navigation ? %d", view == self.navigationController.view);
+	
+	[self.navigationBar removeFromSuperview];
+	[view addSubview:self.navigationBar];
+	[view bringSubviewToFront:self.statusBarBlurView];
+	
+	[self.navigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+	[self.navigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+	[self.navigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+	self.navigationBarHeightConstraint = [self.navigationBar autoSetDimension:ALDimensionHeight toSize:self.navigationBarHeightConstraint.constant];
+	
+	self.browsingAssistantViewAttachedTo = view;
+	
+//	if(view == self.view){
+//		[self.view bringSubviewToFront:self.nowPlayingView];
+//	}
+}
 
 - (void)viewWillDisappear:(BOOL)animated {
 	NSLog(@"View is about to go bye bye %@", NSStringFromCGRect(self.browsingView.frame));
@@ -408,6 +410,8 @@
 
 - (void)viewDidAppear:(BOOL)animated {
 	NSLog(@"View did appear animated %d", animated);
+	
+	[self attachNavigationBarToView:self.navigationController.view];
 	
 	self.currentDetailViewController = nil;
 	self.searchViewController = nil;
@@ -681,7 +685,7 @@
 	
 	
 	UIImageView *hangOnImage = [UIImageView newAutoLayoutView];
-	hangOnImage.image = [UIImage imageNamed:@"splash_redesigned.png"];
+	hangOnImage.image = [UIImage imageNamed:@"cleaner_splash_portrait.png"];
 	hangOnImage.contentMode = UIViewContentModeScaleAspectFill;
 	[self.view addSubview:hangOnImage];
 	

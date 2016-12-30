@@ -17,6 +17,10 @@
 	return [UIColor colorWithRed:0.69 green:0.16 blue:0.15 alpha:1.0];
 }
 
++ (UIColor*)semiTransparentLigniteRedColour {
+	return [UIColor colorWithRed:0.69 green:0.16 blue:0.15 alpha:0.5];
+}
+
 + (UIColor*)darkLigniteRedColour {
 	return [UIColor colorWithRed:0.33 green:0.00 blue:0.00 alpha:1.0];
 }

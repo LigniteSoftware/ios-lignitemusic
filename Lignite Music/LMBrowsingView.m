@@ -295,10 +295,10 @@
 		}
 		case LMMusicTypeGenres:
 		case LMMusicTypePlaylists:
-		case LMMusicTypeCompilations:
 		{
 			return [NSString stringWithFormat:@"%ld %@", (unsigned long)collection.count, NSLocalizedString(collection.count == 1 ? @"Song" : @"Songs", nil)];
 		}
+		case LMMusicTypeCompilations:
 		case LMMusicTypeAlbums: {
 			if(collection.variousArtists){
 				return NSLocalizedString(@"Various", nil);
@@ -321,10 +321,10 @@
 		}
 		case LMMusicTypeGenres:
 		case LMMusicTypePlaylists:
-		case LMMusicTypeCompilations:
 		{
 			return nil;
 		}
+		case LMMusicTypeCompilations:
 		case LMMusicTypeAlbums: {
 			return [NSString stringWithFormat:@"%lu %@", (unsigned long)collection.count, NSLocalizedString(collection.count == 1 ? @"Song" : @"Songs", nil)];
 		}

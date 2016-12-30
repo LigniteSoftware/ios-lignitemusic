@@ -32,6 +32,11 @@
 @property LMButtonBar *buttonBar;
 
 /**
+ The whitespace view which goes below the button bar so that if the user drags up too high, they don't see the contents below it.
+ */
+@property UIView *buttonBarBottomWhitespaceView;
+
+/**
  The constraint which pins the button bar to the bottom of the view.
  */
 @property NSLayoutConstraint *buttonBarBottomConstraint;
@@ -66,10 +71,14 @@
 
 @implementation LMNavigationBar
 
-- (CGFloat)totalHeight {
+- (CGFloat)maximizedHeight {
 	return self.buttonBar.frame.size.height
 		 + self.viewAttachedToButtonBar.frame.size.height
 		 + LMNavigationBarGrabberHeight;
+}
+
+- (CGFloat)minimizedHeight {
+	return self.currentSourceBackgroundView.frame.size.height + LMNavigationBarGrabberHeight;
 }
 
 - (void)setButtonBarBottomConstraintConstant:(NSInteger)constant {
@@ -125,7 +134,7 @@
 											 + LMNavigationBarGrabberHeight
 											 + 10];
 	
-	[self.delegate requiredHeightForNavigationBarChangedTo:self.currentSourceBackgroundView.frame.size.height
+	[self.delegate requiredHeightForNavigationBarChangedTo:[self minimizedHeight]
 									 withAnimationDuration:0.10];
 	
 	self.currentPoint = CGPointMake(self.originalPoint.x, self.originalPoint.y + self.buttonBarBottomConstraint.constant);
@@ -137,9 +146,7 @@
 	NSLog(@"Maximize");
 	[self setButtonBarBottomConstraintConstant:0];
 	
-	[self.delegate requiredHeightForNavigationBarChangedTo:self.buttonBar.frame.size.height
-														 + self.viewAttachedToButtonBar.frame.size.height
-														 + LMNavigationBarGrabberHeight
+	[self.delegate requiredHeightForNavigationBarChangedTo:[self maximizedHeight]
 									 withAnimationDuration:0.30];
 	
 	self.currentPoint = self.originalPoint;
@@ -150,7 +157,7 @@
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
 	NSLog(@"%@ and %@", gestureRecognizer, otherGestureRecognizer);
 	
-	return YES;
+	return [otherGestureRecognizer class] != [UIPanGestureRecognizer class];
 }
 
 - (void)moveToYPosition:(CGFloat)yPosition {
@@ -168,7 +175,7 @@
 		return;
 	}
 	if(wasMinimizedBeforeScrolling && yPosition < 0){
-		yPosition = [self totalHeight]+(yPosition+(WINDOW_FRAME.size.height/3.0));
+		yPosition = [self maximizedHeight]+(yPosition+(WINDOW_FRAME.size.height/3.0));
 		NSLog(@"Min up change to yPosition to %f", yPosition);
 		if(yPosition <= 0){
 			self.heightBeforeAdjustingToScrollPosition = (NSInteger)self.buttonBarBottomConstraint.constant;
@@ -179,7 +186,10 @@
 		return;
 	}
 	
-	CGFloat currentHeight = [self totalHeight] - yPosition;
+	CGFloat currentHeight = [self maximizedHeight] - yPosition;
+	if(currentHeight < [self minimizedHeight]){
+		currentHeight = [self minimizedHeight];
+	}
 	
 	BOOL movingDown = (currentHeight < self.heightBeforeAdjustingToScrollPosition);
 	BOOL movingUp = !movingDown; //For clarity
@@ -191,7 +201,7 @@
 	
 	self.buttonBarBottomConstraint.constant = yPosition;
 	
-	if(yPosition >= [self totalHeight]){
+	if(yPosition >= [self maximizedHeight]){
 		NSLog(@"Resetting start position for minimized view");
 		self.heightBeforeAdjustingToScrollPosition = (NSInteger)self.buttonBarBottomConstraint.constant;
 	}
@@ -217,7 +227,7 @@
 	
 	[self layoutIfNeeded];
 	
-	CGFloat currentHeight = [self totalHeight] - self.buttonBarBottomConstraint.constant;
+	CGFloat currentHeight = [self maximizedHeight] - self.buttonBarBottomConstraint.constant;
 	
 	if(currentHeight < self.currentSourceBackgroundView.frame.size.height){
 		currentHeight = self.currentSourceBackgroundView.frame.size.height;
@@ -256,11 +266,16 @@
 		case LMNavigationTabBrowse:
 			[self setViewAttachedToButtonBar:self.browsingBar];
 			break;
-		case LMNavigationTabView:
-			[self setViewAttachedToButtonBar:self.sourceSelector];
-			break;
 		case LMNavigationTabMiniplayer:
 			[self setViewAttachedToButtonBar:self.miniPlayerView];
+			break;
+		case LMNavigationTabView:
+			if(self.viewAttachedToButtonBar == self.sourceSelector){
+				[self setViewAttachedToButtonBar:nil]; //Hide the source selector
+			}
+			else{
+				[self setViewAttachedToButtonBar:self.sourceSelector];
+			}
 			break;
 	}
 	
@@ -347,6 +362,23 @@
 		[self.currentSourceBackgroundView addGestureRecognizer:currentSourceBackgroundViewGrabberMoveRecognizer];
 		
 		
+		LMGrabberView *currentSourceBackgroundGrabberView = [LMGrabberView newAutoLayoutView];
+		currentSourceBackgroundGrabberView.backgroundColor = [LMColour semiTransparentLigniteRedColour];
+		currentSourceBackgroundGrabberView.layer.masksToBounds = YES;
+		[self addSubview:currentSourceBackgroundGrabberView];
+		
+		[currentSourceBackgroundGrabberView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.currentSourceBackgroundView];
+		[currentSourceBackgroundGrabberView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(1.0/6.0)];
+		[currentSourceBackgroundGrabberView autoSetDimension:ALDimensionHeight toSize:LMNavigationBarGrabberHeight];
+		[currentSourceBackgroundGrabberView autoAlignAxisToSuperviewAxis:ALAxisVertical];
+		
+		UIPanGestureRecognizer *currentSourceBackgroundGrabberMoveRecognizer = [[UIPanGestureRecognizer alloc]initWithTarget:self
+																													  action:@selector(handlePan:)];
+		currentSourceBackgroundGrabberMoveRecognizer.delegate = self;
+		[currentSourceBackgroundGrabberView addGestureRecognizer:currentSourceBackgroundGrabberMoveRecognizer];
+
+		
+		
 		
 		self.currentSourceButton = [LMButton newAutoLayoutView];
 		self.currentSourceButton.delegate = self;
@@ -398,7 +430,7 @@
 		
 		
 		LMGrabberView *browsingBarGrabberView = [LMGrabberView newAutoLayoutView];
-		browsingBarGrabberView.backgroundColor = [LMColour ligniteRedColour];
+		browsingBarGrabberView.backgroundColor = [LMColour semiTransparentLigniteRedColour];
 		browsingBarGrabberView.layer.masksToBounds = YES;
 		[self addSubview:browsingBarGrabberView];
 		
@@ -419,7 +451,7 @@
 		
 		
 		LMGrabberView *miniPlayerGrabberView = [LMGrabberView newAutoLayoutView];
-		miniPlayerGrabberView.backgroundColor = [LMColour ligniteRedColour];
+		miniPlayerGrabberView.backgroundColor = [LMColour semiTransparentLigniteRedColour];
 		miniPlayerGrabberView.layer.masksToBounds = YES;
 		[self addSubview:miniPlayerGrabberView];
 		
@@ -457,6 +489,20 @@
 		self.buttonBarBottomConstraint = [self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 		[self.buttonBar autoSetDimension:ALDimensionHeight toSize:LMNavigationBarTabHeight];
 		
+		
+		UIPanGestureRecognizer *buttonBarGrabberMoveRecognizer = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(handlePan:)];
+		buttonBarGrabberMoveRecognizer.delegate = self;
+		[self.buttonBar addGestureRecognizer:buttonBarGrabberMoveRecognizer];
+		
+		
+		self.buttonBarBottomWhitespaceView = [UIView newAutoLayoutView];
+		self.buttonBarBottomWhitespaceView.backgroundColor = [UIColor whiteColor];
+		[self.buttonBar addSubview:self.buttonBarBottomWhitespaceView];
+		
+		[self.buttonBarBottomWhitespaceView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.buttonBar];
+		[self.buttonBarBottomWhitespaceView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.buttonBarBottomWhitespaceView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.buttonBarBottomWhitespaceView autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height/3.0];
 		
 		
 		[self.miniPlayerView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.buttonBar withOffset:LMNavigationBarGrabberHeight + 10];

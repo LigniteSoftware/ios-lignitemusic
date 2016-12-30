@@ -349,25 +349,12 @@
 }
 
 - (UIImage*)iconForListEntry:(LMListEntry*)entry {
-	switch(self.musicType) {
-		case LMMusicTypeComposers:
-		case LMMusicTypeArtists: {
-			LMMusicTrackCollection *collection = [self.specificTrackCollections objectAtIndex:entry.collectionIndex];
-			return [collection.representativeItem albumArt];
-		}
-		case LMMusicTypeGenres:
-		case LMMusicTypePlaylists: {
-			LMMusicTrack *track = [self.musicTrackCollection.items objectAtIndex:entry.collectionIndex];
-			return [track albumArt];
-		}
-		case LMMusicTypeCompilations:
-		case LMMusicTypeAlbums: {
-			return nil;
-		}
-		default: {
-			return nil;
-		}
+	if(self.usingSpecificTrackCollections){
+		LMMusicTrackCollection *collection = [self.specificTrackCollections objectAtIndex:entry.collectionIndex];
+		return [collection.representativeItem albumArt];
 	}
+	LMMusicTrack *track = [self.musicTrackCollection.items objectAtIndex:entry.collectionIndex];
+	return [track albumArt];
 }
 
 - (id)subviewAtIndex:(NSUInteger)index forTableView:(LMTableView*)tableView {
