@@ -10,4 +10,9 @@
 
 @interface LMGrabberView : LMView
 
+/**
+ The icon to use. If nil on first subview layout, it will set itself to the flat bar.
+ */
+@property UIImage *grabberIcon;
+
 @end

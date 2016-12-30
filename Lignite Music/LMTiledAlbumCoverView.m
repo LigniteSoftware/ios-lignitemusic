@@ -331,7 +331,7 @@
 				tiledAlbumCoverView.rootView = [UIView new];
 				tiledAlbumCoverView.rootView.backgroundColor = [UIColor blackColor];
 				tiledAlbumCoverView.rootView.layer.shadowColor = [UIColor blackColor].CGColor;
-				tiledAlbumCoverView.rootView.layer.shadowRadius = WINDOW_FRAME.size.width/99;
+				tiledAlbumCoverView.rootView.layer.shadowRadius = WINDOW_FRAME.size.width/45;
 				tiledAlbumCoverView.rootView.layer.shadowOffset = CGSizeMake(0, tiledAlbumCoverView.rootView.layer.shadowRadius/2);
 				tiledAlbumCoverView.rootView.layer.shadowOpacity = 0.5f;
 				[tiledAlbumCoverView addSubview:tiledAlbumCoverView.rootView];

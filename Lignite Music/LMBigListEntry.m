@@ -108,6 +108,10 @@
 //	self.backgroundColor = [UIColor orangeColor];
  
 	UIView *contentView = self.contentView;
+//	contentView.layer.shadowColor = [UIColor blackColor].CGColor;
+//	contentView.layer.shadowRadius = WINDOW_FRAME.size.width/45;
+//	contentView.layer.shadowOffset = CGSizeMake(0, contentView.layer.shadowRadius/2);
+//	contentView.layer.shadowOpacity = 0.5f;
 	[self addSubview:contentView];
 	
 	[contentView autoAlignAxisToSuperviewAxis:ALAxisVertical];

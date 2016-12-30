@@ -55,6 +55,15 @@
 	[self dismissViewControllerAnimated:YES completion:nil];
 }
 
+- (void)completeTutorial {
+	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+	[userDefaults setObject:@"tutorialVersion1" forKey:LMSettingsKeyOnboardingComplete];
+	[userDefaults synchronize];
+	
+	[self.coreViewController prepareToLoadView];
+	[[self presentingViewController] dismissViewControllerAnimated:YES completion:nil];
+}
+
 - (void)performOnboardingAction {
 	switch(self.guideMode){
 		case GuideModeOnboarding: {
@@ -172,7 +181,7 @@
 							
 							if(status != CBPeripheralManagerAuthorizationStatusNotDetermined) {
 								self.checkComplete = YES;
-								[NSTimer scheduledTimerWithTimeInterval:1.00 target:self selector:@selector(threeBlindMice) userInfo:nil repeats:NO];
+								[NSTimer scheduledTimerWithTimeInterval:1.00 target:self selector:@selector(completeTutorial) userInfo:nil repeats:NO];
 							}
 						});
 					}
@@ -192,12 +201,7 @@
 					break;
 				}
 				case 5: {
-					NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-					[userDefaults setObject:@"tutorialVersion1" forKey:LMSettingsKeyOnboardingComplete];
-					[userDefaults synchronize];
-					
-					[self.coreViewController prepareToLoadView];
-					[[self presentingViewController] dismissViewControllerAnimated:YES completion:nil];
+					[self completeTutorial];
 					break;
 				}
 			}

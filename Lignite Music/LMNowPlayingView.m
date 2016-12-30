@@ -91,6 +91,8 @@
 
 @property LMProgressSlider *progressSlider;
 
+@property CGPoint originalPoint, currentPoint;
+
 @end
 
 @implementation LMNowPlayingView
@@ -492,6 +494,43 @@
 	return nil;
 }
 
+- (void)panNowPlayingDown:(UIPanGestureRecognizer *)recognizer {
+	CGPoint translation = [recognizer translationInView:recognizer.view];
+	
+	if(self.originalPoint.y == 0){
+		self.originalPoint = self.mainView.frame.origin;
+		self.currentPoint = self.mainView.frame.origin;
+	}
+	CGFloat totalTranslation = translation.y + (self.currentPoint.y-self.originalPoint.y);
+	
+	NSLog(@"%f", totalTranslation);
+	
+	if(totalTranslation < 0){ //Moving upward
+		return;
+	}
+	else{ //Moving downward
+		self.topConstraint.constant = totalTranslation;
+	}
+	
+	[self.superview layoutIfNeeded];
+	
+	if(recognizer.state == UIGestureRecognizerStateEnded){
+		self.currentPoint = CGPointMake(self.currentPoint.x, self.originalPoint.y + totalTranslation);
+		
+		[self.superview layoutIfNeeded];
+		
+		if((translation.y >= self.frame.size.height/5.0)){
+			self.topConstraint.constant = self.frame.size.height;
+		}
+		else{
+			self.topConstraint.constant = 0.0;
+		}
+		
+		[UIView animateWithDuration:0.25 animations:^{
+			[self.superview layoutIfNeeded];
+		}];
+	}
+}
 
 
 - (void)layoutSubviews {
@@ -505,6 +544,7 @@
 	
 	self.mainView = [UIView newAutoLayoutView];
 	self.mainView.backgroundColor = [UIColor purpleColor];
+	self.mainView.clipsToBounds = YES;
 	[self addSubview:self.mainView];
 	
 	self.mainViewLeadingConstraint = [self.mainView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
@@ -565,8 +605,8 @@
 	[self refreshNothingInQueueText];
 	
 	
-	self.backgroundImageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"lignite_background_portrait.png"]];
-	self.backgroundImageView.translatesAutoresizingMaskIntoConstraints = NO;
+	self.backgroundImageView = [UIImageView newAutoLayoutView];
+	self.backgroundImageView.image = [UIImage imageNamed:@"lignite_background_portrait.png"];
 	self.backgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
 	[self.mainView addSubview:self.backgroundImageView];
 	
@@ -668,10 +708,10 @@
 	[self.mainView addSubview:self.trackInfoView];
 	
 	//TODO: Fix this being manually set value
-	[self.trackInfoView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.progressSlider withOffset:20];
+	[self.trackInfoView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.progressSlider withOffset:30];
 	[self.trackInfoView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.progressSlider withOffset:20];
 	[self.trackInfoView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.progressSlider withOffset:-20];
-	[self.trackInfoView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(1.0/5.0)];
+	[self.trackInfoView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(1.0/6.0)];
 	
 	self.shuffleModeBackgroundView = [UIView newAutoLayoutView];
 	self.repeatModeBackgroundView = [UIView newAutoLayoutView];
@@ -699,7 +739,7 @@
 		UIView *background = [backgrounds objectAtIndex:i];
 		UIView *previousBackground = isFirst ? self.trackInfoView : [backgrounds objectAtIndex:i-1];
 		
-		//background.backgroundColor = [UIColor colorWithRed:(0.2*i)+0.3 green:0 blue:0 alpha:1.0];
+//		background.backgroundColor = [UIColor colorWithRed:(0.2*i)+0.3 green:0 blue:0 alpha:1.0];
 		[self.mainView addSubview:background];
 		
 		[background autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.trackInfoView withOffset:-10];
@@ -752,9 +792,9 @@
 	swipeToLeftGesture.direction = UISwipeGestureRecognizerDirectionRight;
 	[self.mainView addGestureRecognizer:swipeToLeftGesture];
 	
-	UISwipeGestureRecognizer *swipeDownGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(closeNowPlaying)];
-	swipeDownGesture.direction = UISwipeGestureRecognizerDirectionDown;
-	[self.mainView addGestureRecognizer:swipeDownGesture];
+	UIPanGestureRecognizer *panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panNowPlayingDown:)];
+	self.brandNewAlbumArtImageView.userInteractionEnabled = YES;
+	[self.brandNewAlbumArtImageView addGestureRecognizer:panGestureRecognizer];
 	
 	
 //	[self setNowPlayingQueueOpen:YES];

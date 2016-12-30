@@ -94,6 +94,10 @@
 			return @"icon_buy.png";
 		case LMIconKickstarter:
 			return @"icon_kickstarter.png";
+		case LMIconDownArrow:
+			return @"icon_down_arrow.png";
+		case LMIconUpArrow:
+			return @"icon_up_arrow.png";
 	}
 }
 

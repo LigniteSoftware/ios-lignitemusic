@@ -15,8 +15,6 @@
 
 @property LMBrowsingDetailViewController *currentDetailViewController;
 
-- (void)openNowPlayingView;
-- (void)closeNowPlayingView;
 - (void)prepareToLoadView;
 - (void)setStatusBarBlurHidden:(BOOL)hidden;
 

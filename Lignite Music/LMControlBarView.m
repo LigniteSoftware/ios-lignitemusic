@@ -134,7 +134,7 @@
 //	self.backgroundColor = [UIColor blueColor];
 	
 	self.threeDotIconImageView = [UIImageView newAutoLayoutView];
-	self.threeDotIconImageView.image = [LMAppIcon invertImage:[LMAppIcon imageForIcon:LMIconTripleHorizontalDots]];
+	self.threeDotIconImageView.image = [LMAppIcon imageForIcon:LMIconTripleHorizontalDots];
 	self.threeDotIconImageView.contentMode = UIViewContentModeScaleAspectFit;
 	self.threeDotIconImageView.userInteractionEnabled = YES;
 	[self addSubview:self.threeDotIconImageView];

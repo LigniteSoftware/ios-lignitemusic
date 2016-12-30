@@ -8,7 +8,6 @@
 
 #import <PureLayout/PureLayout.h>
 #import "LMSourceSelectorView.h"
-#import "LMMiniPlayerView.h"
 #import "LMNavigationBar.h"
 #import "LMMusicPlayer.h"
 #import "LMGrabberView.h"
@@ -45,11 +44,6 @@
  The view which is attached to the top of the button bar.
  */
 @property (nonatomic) UIView *viewAttachedToButtonBar;
-
-/**
- The miniplayer.
- */
-@property LMMiniPlayerView *miniPlayerView;
 
 /**
  The source selector.
@@ -446,13 +440,15 @@
 		
 		
 		
-		self.miniPlayerView = [LMMiniPlayerView newAutoLayoutView];
+//		self.miniPlayerView = [LMMiniPlayerView newAutoLayoutView];
+		// ^ has already been created
 		[self addSubview:self.miniPlayerView];
 		
 		
 		LMGrabberView *miniPlayerGrabberView = [LMGrabberView newAutoLayoutView];
 		miniPlayerGrabberView.backgroundColor = [LMColour semiTransparentLigniteRedColour];
 		miniPlayerGrabberView.layer.masksToBounds = YES;
+		miniPlayerGrabberView.grabberIcon = [LMAppIcon imageForIcon:LMIconUpArrow];
 		[self addSubview:miniPlayerGrabberView];
 		
 		[miniPlayerGrabberView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.miniPlayerView];
@@ -543,6 +539,14 @@
 		
 		[self setSelectedTab:LMNavigationTabBrowse];
 	}
+}
+
+- (instancetype)init {
+	self = [super init];
+	if(self) {
+		self.miniPlayerView = [LMMiniPlayerView newAutoLayoutView];
+	}
+	return self;
 }
 
 /*

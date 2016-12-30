@@ -40,45 +40,41 @@
 							   @"OnboardingWelcomeTitle",
 							   @"OnboardingKickstarterLoginTitle",
 							   @"OnboardingMusicPermissionTitle",
-							   @"OnboardingPebblePermissionTitle",
-							   @"OnboardingTutorialTitle",
-							   @"OnboardingThanksTitle"
+							   @"OnboardingPebblePermissionTitle"
+//							   @"OnboardingTutorialTitle",
+//							   @"OnboardingThanksTitle"
 							   , nil];
-			
-			self.amountOfPages = self.titleArray.count;
-			
+	
 			self.descriptionArray = [[NSArray alloc]initWithObjects:
 									 @"OnboardingWelcomeDescription",
 									 @"OnboardingKickstarterLoginDescription",
 									 @"OnboardingMusicPermissionDescription",
-									 @"OnboardingPebblePermissionDescription",
-									 @"OnboardingTutorialDescription",
-									 @"OnboardingThanksDescription"
+									 @"OnboardingPebblePermissionDescription"
+//									 @"OnboardingTutorialDescription",
+//									 @"OnboardingThanksDescription"
 							   , nil];
 			
 			self.screenshotsArray = [[NSArray alloc]initWithObjects:
 									 @"icon_no_cover_art.png",
 									 @"onboarding_kickstarter.png",
 									 @"onboarding_library_access.png",
-									 @"onboarding_bluetooth.png",
-									 @"tutorial_browsing.png",
-									 @"onboarding_us.png"
+									 @"onboarding_bluetooth.png"
+//									 @"tutorial_browsing.png",
+//									 @"onboarding_us.png"
 									 , nil];
 			
 			self.buttonNamesArray = [[NSArray alloc]initWithObjects:
 									 @"LetsGo",
 									 @"LogMeIn",
 									 @"HitMeWithIt",
-									 @"SoundsGood",
-									 @"OpenTutorial",
-									 @"AwesomeThanks"
+									 @"SoundsGood"
+//									 @"OpenTutorial",
+//									 @"AwesomeThanks"
 							   , nil];
 			
 			break;
 		}
 		case GuideModeTutorial: {
-			self.amountOfPages = 4;
-			
 			self.titleArray = [[NSArray alloc]initWithObjects:
 							   @"TutorialBrowsingTitle",
 							   @"TutorialBottomControlsTitle",
@@ -109,8 +105,6 @@
 			break;
 		}
 		case GuideModeMusicPermissionDenied: {
-			self.amountOfPages = 1;
-			
 			self.titleArray = [[NSArray alloc]initWithObjects:
 							   @"OnboardingUserIsGutlessTitle"
 							   , nil];
@@ -129,6 +123,8 @@
 			break;
 		}
 	}
+	
+	self.amountOfPages = self.titleArray.count;
 	
 	self.pageController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
 	

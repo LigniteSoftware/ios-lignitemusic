@@ -155,7 +155,7 @@
 	
 - (void)swipeUp {
 	NSLog(@"Swipe up");
-	[self.coreViewController openNowPlayingView];
+//	[self.coreViewController openNowPlayingView];
 }
 	
 - (void)swipeDown {

@@ -281,7 +281,7 @@
 "OnboardingWelcomeDescription" = "Wir haben hart dafür gearbeitet, dir das ultimative Musikerlebnis zu ermöglichen.\n\nUm dies sicherzustellen, gehen wir mit dir ein paar wenige Schritte durch, damit alles korrekt aufgesetzt werden kann.";
 
 "OnboardingKickstarterLoginTitle" = "Bist du ein Kickstarter backer?";
-"OnboardingKickstarterLoginDescription" = "Lignite Music wurde durch 339 tolle Backer auf Kickstarter zur Realität.\n\nFalls du einer von ihnen bist, kannst du die App durch das Einloggen zur Vollversion freischalten.\n\nAndernfalls kannst du eine 3-tägige, vll funktionale Demo-Version starten!";
+"OnboardingKickstarterLoginDescription" = "Lignite Music wurde durch 339 tolle Backer auf Kickstarter zur Realität.\n\nFalls du einer von ihnen bist, kannst du die App durch das Einloggen zur Vollversion freischalten.\n\nAndernfalls kannst du eine 3-tägige, voll funktionale Demo-Version starten!";
 
 "OnboardingMusicPermissionTitle" = "Wir benötigen deine Musik, um abzurocken!";
 "OnboardingMusicPermissionDescription" = "Nachdem du den untenstehenden Button angetippt hast, wird dich die App um Zugriff auf deine Musiksammlung bitten.\n\nBewillige die Anfrage bitte, da unsere App deine Musik sonst nicht anzeigen kann.";
@@ -309,7 +309,7 @@
 "WhatsNext" = "Wow, super!";
 "Sweet" = "Sehr schön!";
 "LetsGo" = "Los gehts!";
-"LogMeIn" = "Melde mich an"; //For the kickstarter login button in onboarding
+"LogMeIn" = "Einloggen"; //For the kickstarter login button in onboarding
 "HitMeWithIt" = "Klar, gerne!"; //Slang for continue, this is used on the button which when pressed will show the dialog asking user for permission to access their music library
 "SoundsGood" = "Tönt gut"; //Also slang for continue, for the Pebble permission button, which when clicked will prompt the user for access to Bluetooth permissions
 "OpenTutorial" = "Klar, gerne!";

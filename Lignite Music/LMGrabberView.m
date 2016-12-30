@@ -23,6 +23,10 @@
 	if(!self.didLayoutConstraints){
 		self.didLayoutConstraints = YES;
 		
+		if(!self.grabberIcon){
+			self.grabberIcon = [LMAppIcon imageForIcon:LMIconGrabRectangle];
+		}
+		
 		CGFloat cornerRadius = 0.024*WINDOW_FRAME.size.width;
 		
 		// Create the path (with only the top-left corner rounded)
@@ -39,7 +43,7 @@
 		self.layer.mask = maskLayer;
 		
 		self.grabberImageView = [UIImageView newAutoLayoutView];
-		self.grabberImageView.image = [LMAppIcon imageForIcon:LMIconGrabRectangle];
+		self.grabberImageView.image = self.grabberIcon;
 		self.grabberImageView.contentMode = UIViewContentModeScaleAspectFit;
 		self.grabberImageView.userInteractionEnabled = YES;
 		[self addSubview:self.grabberImageView];

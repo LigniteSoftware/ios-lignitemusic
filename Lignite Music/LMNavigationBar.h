@@ -6,6 +6,7 @@
 //  Copyright © 2016 Lignite. All rights reserved.
 //
 
+#import "LMMiniPlayerView.h"
 #import "LMBrowsingBar.h"
 #import "LMSource.h"
 #import "LMExtras.h"
@@ -56,6 +57,11 @@ typedef NS_ENUM(NSUInteger, LMNavigationTab) {
  The browsing bar.
  */
 @property LMBrowsingBar *browsingBar;
+
+/**
+ The miniplayer.
+ */
+@property LMMiniPlayerView *miniPlayerView;
 
 /**
  The delegate.

@@ -21,7 +21,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="splash_redesigned.png" translatesAutoresizingMaskIntoConstraints="NO" id="dMt-1e-8Ko">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cleaner_splash_portrait.png" translatesAutoresizingMaskIntoConstraints="NO" id="dMt-1e-8Ko">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </imageView>
                         </subviews>
@@ -42,6 +42,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="splash_redesigned.png" width="1080" height="1920"/>
+        <image name="cleaner_splash_portrait.png" width="1080" height="1920"/>
     </resources>
 </document>

@@ -10,12 +10,12 @@
 
 #import "LMBrowsingDetailViewController.h"
 #import "LMGuideViewPagerController.h"
-#import "LMNowPlayingViewController.h"
 #import "LMSettingsViewController.h"
 #import "LMSearchViewController.h"
 #import "UIImage+AverageColour.h"
 #import "LMCoreViewController.h"
 #import "LMPurchaseManager.h"
+#import "LMNowPlayingView.h"
 #import "LMNavigationBar.h"
 #import "UIColor+isLight.h"
 #import "NSTimer+Blocks.h"
@@ -46,7 +46,7 @@
 
 @property LMMusicPlayer *musicPlayer;
 
-@property LMNowPlayingViewController *nowPlayingViewController;
+@property LMNowPlayingView *nowPlayingView;
 
 @property LMBrowsingView *browsingView;
 @property LMTitleView *titleView;
@@ -87,6 +87,8 @@
  The height constraint for the navigation bar.
  */
 @property NSLayoutConstraint *navigationBarHeightConstraint;
+
+@property CGPoint originalPoint, currentPoint;
 
 @end
 
@@ -209,32 +211,11 @@
 	
 	BOOL shown = [LMSettings shouldShowStatusBar];
 	
-	return (!shown || (self.nowPlayingViewController != nil));
+	return !shown;
 }
 
 - (UIStatusBarAnimation)preferredStatusBarUpdateAnimation {
 	return UIStatusBarAnimationSlide;
-}
-
-- (void)openNowPlayingView {
-//	[self attachBrowsingAssistantToView:self.view];
-	
-	self.nowPlayingViewController = [[LMNowPlayingViewController alloc] init];
-	self.nowPlayingViewController.modalPresentationStyle = UIModalPresentationPopover;
-	[self.navigationController presentViewController:self.nowPlayingViewController animated:YES completion:nil];
-	
-	[self.navigationController.view layoutIfNeeded];
-	
-	self.statusBarBlurViewHeightConstraint.constant = 0;
-	
-	[UIView animateWithDuration:0.25 animations:^{
-		[self setNeedsStatusBarAppearanceUpdate];
-		[self.navigationController.view layoutIfNeeded];
-	}];
-}
-
-- (void)closeNowPlayingView {
-	[[self presentingViewController] dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)logMusicTypeView:(LMMusicType)type {
@@ -415,7 +396,6 @@
 	
 	self.currentDetailViewController = nil;
 	self.searchViewController = nil;
-	self.nowPlayingViewController = nil;
 	
 	if(self.statusBarBlurViewHeightConstraint.constant < 0.1 && ![self prefersStatusBarHidden]){
 		[self setStatusBarBlurHidden:NO];
@@ -608,6 +588,44 @@
 	}
 }
 
+- (void)panNowPlayingUp:(UIPanGestureRecognizer *)recognizer {
+	CGPoint translation = [recognizer translationInView:recognizer.view];
+	
+	if(self.originalPoint.y == 0){
+		self.originalPoint = self.view.frame.origin;
+		self.currentPoint = self.nowPlayingView.frame.origin;
+	}
+	CGFloat totalTranslation = translation.y + (self.currentPoint.y-self.originalPoint.y);
+	
+	NSLog(@"%f to %f %@", translation.y, totalTranslation, NSStringFromCGPoint(self.currentPoint));
+	
+	if(totalTranslation < 0){ //Moving downward
+		return;
+	}
+	else{ //Moving downward
+		self.nowPlayingView.topConstraint.constant = self.nowPlayingView.frame.size.height+translation.y;
+	}
+	
+	[self.nowPlayingView.superview layoutIfNeeded];
+	
+	if(recognizer.state == UIGestureRecognizerStateEnded){
+		self.currentPoint = CGPointMake(self.currentPoint.x, self.originalPoint.y + totalTranslation);
+		
+		[self.nowPlayingView.superview layoutIfNeeded];
+		
+		if((-translation.y <= self.nowPlayingView.frame.size.height/5.0)){
+			self.nowPlayingView.topConstraint.constant = self.nowPlayingView.frame.size.height;
+		}
+		else{
+			self.nowPlayingView.topConstraint.constant = 0.0;
+		}
+		
+		[UIView animateWithDuration:0.25 animations:^{
+			[self.nowPlayingView.superview layoutIfNeeded];
+		}];
+	}
+}
+
 - (void)viewDidLoad {
 	
     [super viewDidLoad];
@@ -785,6 +803,22 @@
 						self.musicPlayer.navigationBar = self.navigationBar;
 						
 						
+						UIPanGestureRecognizer *miniPlayerDragUpPanGesture =
+							[[UIPanGestureRecognizer alloc] initWithTarget:self
+																	action:@selector(panNowPlayingUp:)];
+						[self.navigationBar.miniPlayerView addGestureRecognizer:miniPlayerDragUpPanGesture];
+						
+						
+						
+						self.nowPlayingView = [LMNowPlayingView newAutoLayoutView];
+						[self.navigationController.view addSubview:self.nowPlayingView];
+						
+						[self.nowPlayingView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+						[self.nowPlayingView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+						self.nowPlayingView.topConstraint = [self.nowPlayingView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+						[self.nowPlayingView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
+						
+						
 						
 						self.titleView = [LMTitleView newAutoLayoutView];
 						self.titleView.backgroundColor = [UIColor redColor];
@@ -858,9 +892,10 @@
 //							[self musicLibraryDidChange];
 //						}];
 						
-//						[NSTimer scheduledTimerWithTimeInterval:1.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
+						[NSTimer scheduledTimerWithTimeInterval:1.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
 //							[self openNowPlayingView];
-//						}];
+							NSLog(@"Open now playing view");
+						}];
 						
 //						[NSTimer scheduledTimerWithTimeInterval:3.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
 //							[self.purchaseManager makePurchaseWithProductIdentifier:LMPurchaseManagerProductIdentifierLifetimeMusic];
