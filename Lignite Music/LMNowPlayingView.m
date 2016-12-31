@@ -291,6 +291,12 @@
 	
 }
 
+- (void)musicOutputPortDidChange:(AVAudioSessionPortDescription *)outputPort {
+	[UIView animateWithDuration:0.25 animations:^{
+		[self.airplayButton setColour:[LMMusicPlayer outputPortIsWireless:outputPort] ? [UIColor whiteColor] : [LMColour fadedColour]];
+	}];
+}
+
 - (void)updateRepeatButtonImage {
 	LMIcon icons[] = {
 		LMIconRepeat, LMIconRepeat, LMIconRepeat, LMIconRepeatOne
@@ -312,6 +318,7 @@
 	self.originalPoint = CGPointZero;
 	
 	[UIView animateWithDuration:0.25 animations:^{
+		[self.queueButton setColour:open ? [UIColor whiteColor] : [LMColour fadedColour]];
 		[self layoutIfNeeded];
 	}];
 }
@@ -856,7 +863,7 @@
 	
 	
 	self.queueOpenDraggingOverlayView = [UIView newAutoLayoutView];;
-	self.queueOpenDraggingOverlayView.backgroundColor = [UIColor colorWithRed:0.3 green:0.3 blue:0.5 alpha:0.4];
+//	self.queueOpenDraggingOverlayView.backgroundColor = [UIColor colorWithRed:0.3 green:0.3 blue:0.5 alpha:0.4];
 	self.queueOpenDraggingOverlayView.hidden = YES;
 	[self.mainView addSubview:self.queueOpenDraggingOverlayView];
 	
@@ -869,6 +876,12 @@
 	[self.queueOpenDraggingOverlayView addGestureRecognizer:queueOpenTapGesture];
 	
 //	[self setNowPlayingQueueOpen:YES];
+	
+	AVAudioSession* audioSession = [AVAudioSession sharedInstance];
+	AVAudioSessionRouteDescription* currentRoute = audioSession.currentRoute;
+	for(AVAudioSessionPortDescription* outputPort in currentRoute.outputs){
+		[self musicOutputPortDidChange:outputPort];
+	}
 }
 
 - (instancetype)init {

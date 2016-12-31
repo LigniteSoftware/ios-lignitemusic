@@ -101,6 +101,13 @@ typedef enum {
  The music library did change. When this is called, the object subscribed to this method should reload any media collections or queries it has and redraw any according layers.
  */
 - (void)musicLibraryDidChange;
+
+/**
+ The output port of the music changed.
+
+ @param audioRoute The new output port.
+ */
+- (void)musicOutputPortDidChange:(AVAudioSessionPortDescription*)outputPort;
 @end
 
 @interface LMMusicPlayer : NSObject
@@ -314,6 +321,14 @@ typedef enum {
  @return The saved LMMusicPlayerType.
  */
 + (LMMusicPlayerType)savedPlayerType;
+
+/**
+ Whether or not an output port is wireless.
+
+ @param outputPort The audio route to check.
+ @return Whether or not that route is wireless (ie. Bluetooth).
+ */
++ (BOOL)outputPortIsWireless:(AVAudioSessionPortDescription*)outputPort;
 
 /**
  The pebbleManager manages the connection between the phone and the Pebble. It is directly linked to the music player to ensure that new data is pushed directly to the watch without a view or view controller required.

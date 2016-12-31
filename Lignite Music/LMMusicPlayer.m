@@ -125,6 +125,12 @@ MPMediaGrouping associatedMediaTypes[] = {
 		
 		[notificationCenter
 		 addObserver:self
+		    selector:@selector(audioRouteChanged:)
+			    name:AVAudioSessionRouteChangeNotification
+			  object:nil];
+		
+		[notificationCenter
+		 addObserver:self
 			selector:@selector(systemMusicPlayerTrackChanged:)
 				name:MPMusicPlayerControllerNowPlayingItemDidChangeNotification
 			  object:self.systemMusicPlayer];
@@ -433,10 +439,35 @@ MPMediaGrouping associatedMediaTypes[] = {
 - (void)audioRouteChanged:(id)notification {
 	NSDictionary *info = [notification userInfo];
 	
+	NSLog(@"Audio route changed %@", info);
+	
 	AVAudioSessionRouteChangeReason changeReason = [[info objectForKey:AVAudioSessionRouteChangeReasonKey] integerValue];
 	if(changeReason == 2){ //Audio jack removed or BT headset removed
 		[self pause];
 	}
+	
+	AVAudioSession* audioSession = [AVAudioSession sharedInstance];
+	AVAudioSessionRouteDescription* currentRoute = audioSession.currentRoute;
+	for(AVAudioSessionPortDescription* outputPort in currentRoute.outputs){
+		for(NSInteger i = 0; i < self.delegates.count; i++){
+			id<LMMusicPlayerDelegate> delegate = [self.delegates objectAtIndex:i];
+			if([delegate respondsToSelector:@selector(musicOutputPortDidChange:)]){
+				[delegate musicOutputPortDidChange:outputPort];
+			}
+		}
+	}
+}
+
++ (BOOL)outputPortIsWireless:(AVAudioSessionPortDescription *)outputPort {
+	if(   [outputPort.portType isEqualToString:AVAudioSessionPortBluetoothA2DP]
+	   || [outputPort.portType isEqualToString:AVAudioSessionPortAirPlay]
+	   || [outputPort.portType isEqualToString:AVAudioSessionPortBluetoothLE]
+	   || [outputPort.portType isEqualToString:AVAudioSessionPortBluetoothHFP]){
+		
+		return YES;
+	}
+	
+	return NO;
 }
 
 - (void)mediaLibraryContentsChanged:(id)notification {
