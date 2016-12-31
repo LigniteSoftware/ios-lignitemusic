@@ -141,7 +141,7 @@
 	[self layoutIfNeeded];
 	
 	previousViewTopConstraint.constant = LMNavigationBarGrabberHeight + 10;
-	currentViewTopConstraint.constant = -viewAttachedToButtonBar.frame.size.height;
+	currentViewTopConstraint.constant = -viewAttachedToButtonBar.frame.size.height+1; //The +1 is to fix a weird issue where only the search bar will have a 1px gap between it and the button bar
 	
 	[UIView animateWithDuration:0.25 animations:^{
 		[self layoutIfNeeded];

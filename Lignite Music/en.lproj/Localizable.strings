@@ -47,7 +47,7 @@
 
 "CreditsLicenses" = "License links"; //Links to licenses, such as library licenses and icon licenses.
 "NoSearchResults" = "No results";
-"WelcomeToSearch" = "Type to search";
+"WelcomeToSearch" = "Welcome to search";
 "Browse" = "Browse"; //Like: "To browse music"
 "Miniplayer" = "Miniplayer"; //The miniature music player
 "View" = "View"; //The view the user is on, ie. "Album view". Is used as a singular word, though.

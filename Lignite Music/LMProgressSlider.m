@@ -423,7 +423,6 @@
 		[self addSubview:self.leftTextBottomLabel];
 		
 		[self.leftTextBottomLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self withOffset:10];
-		[self.leftTextBottomLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
 		[self.leftTextBottomLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self withOffset:topAndBottomLabelPadding];
 		[self.leftTextBottomLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self withOffset:-topAndBottomLabelPadding];
 		[self.leftTextBottomLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(0.45)];
@@ -438,7 +437,6 @@
 		[self addSubview:self.rightTextBottomLabel];
 		
 		[self.rightTextBottomLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self withOffset:-10];
-		[self.rightTextBottomLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
 		[self.rightTextBottomLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self withOffset:topAndBottomLabelPadding];
 		[self.rightTextBottomLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self withOffset:-topAndBottomLabelPadding];
 		[self.rightTextBottomLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(0.45)];
@@ -489,7 +487,6 @@
 		[self.sliderBackgroundView addSubview:self.rightTextTopLabel];
 		
 		[self.rightTextTopLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.rightTextBottomLabel];
-		[self.rightTextTopLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
 		[self.rightTextTopLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.rightTextBottomLabel];
 		[self.rightTextTopLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self withOffset:topAndBottomLabelPadding];
 		[self.rightTextTopLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self withOffset:-topAndBottomLabelPadding];
@@ -505,7 +502,6 @@
 		[self.sliderBackgroundView addSubview:self.leftTextTopLabel];
 		
 		[self.leftTextTopLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.leftTextBottomLabel];
-		[self.leftTextTopLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
 		self.leftTextTopLabelWidthConstraint = [self.leftTextTopLabel autoSetDimension:ALDimensionWidth toSize:0];
 		[self.leftTextTopLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self withOffset:topAndBottomLabelPadding];
 		[self.leftTextTopLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self withOffset:-topAndBottomLabelPadding];

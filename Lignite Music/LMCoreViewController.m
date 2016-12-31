@@ -55,9 +55,6 @@
 
 @property NSLayoutConstraint *browsingAssistantHeightConstraint;
 
-@property NSMutableArray<NSLayoutConstraint*>*heightConstraintArray;
-@property NSMutableArray<NSLayoutConstraint*>*bottomConstraintArray;
-
 @property id currentSource;
 
 @property UIVisualEffectView *statusBarBlurView;
@@ -351,39 +348,37 @@
 }
 
 - (void)attachNavigationBarToView:(UIView*)view {
+	if(view == self.browsingAssistantViewAttachedTo){
+		return;
+	}
+	
+	CGFloat constantBeforeReload = self.navigationBarHeightConstraint.constant;
+	
 	NSLog(@"Attaching browsing assistant to view navigation ? %d", view == self.navigationController.view);
+	
+	[self.navigationBar.constraints autoRemoveConstraints];
+	for(NSLayoutConstraint *constraint in self.browsingAssistantViewAttachedTo.constraints){
+		if(constraint.firstItem == self.navigationBar){
+			[self.browsingAssistantViewAttachedTo removeConstraint:constraint];
+		}
+	}
 	
 	[self.navigationBar removeFromSuperview];
 	[view addSubview:self.navigationBar];
+	
 	[self.navigationController.view bringSubviewToFront:self.nowPlayingView];
 	[view bringSubviewToFront:self.statusBarBlurView];
 	
 	[self.navigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 	[self.navigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 	[self.navigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-	self.navigationBarHeightConstraint = [self.navigationBar autoSetDimension:ALDimensionHeight toSize:self.navigationBarHeightConstraint.constant];
+	self.navigationBarHeightConstraint = [self.navigationBar autoSetDimension:ALDimensionHeight toSize:constantBeforeReload];
 	
 	self.browsingAssistantViewAttachedTo = view;
 	
 //	if(view == self.view){
 //		[self.view bringSubviewToFront:self.nowPlayingView];
 //	}
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-	NSLog(@"View is about to go bye bye %@", NSStringFromCGRect(self.browsingView.frame));
-	
-	[self.view layoutIfNeeded];
-	
-	for(NSLayoutConstraint *bottomConstraint in self.bottomConstraintArray){
-		bottomConstraint.active = NO;
-	}
-	for(NSLayoutConstraint *heightConstraint in self.heightConstraintArray){
-		heightConstraint.active = YES;
-		heightConstraint.constant = [heightConstraint.firstItem frame].size.height;
-	}
-	
-	[self.view layoutIfNeeded];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -401,18 +396,6 @@
 	if(self.statusBarBlurViewHeightConstraint.constant < 0.1 && ![self prefersStatusBarHidden]){
 		[self setStatusBarBlurHidden:NO];
 	}
-	
-	[self.view layoutIfNeeded];
-	
-	for(NSLayoutConstraint *bottomConstraint in self.bottomConstraintArray){
-		bottomConstraint.active = YES;
-	}
-	for(NSLayoutConstraint *heightConstraint in self.heightConstraintArray){
-		heightConstraint.active = NO;
-		heightConstraint.constant = [heightConstraint.firstItem frame].size.height;
-	}
-	
-	[self.view layoutIfNeeded];
 }
 
 - (void)setStatusBarBlurHidden:(BOOL)hidden {
@@ -434,9 +417,9 @@
 	
 	self.navigationBarHeightConstraint.constant = requiredHeight;
 	
-	[UIView animateWithDuration:animationDuration animations:^{
+//	[UIView animateWithDuration:animationDuration animations:^{
 		[self.navigationController.view layoutIfNeeded];
-	}];
+//	}];
 }
 
 //- (void)heightRequiredChangedTo:(CGFloat)heightRequired forBrowsingView:(LMBrowsingAssistantView *)browsingView {
@@ -785,9 +768,6 @@
 						
 						self.sourcesForSourceSelector = [NSArray arrayWithArray:sources];
 						
-						self.heightConstraintArray = [NSMutableArray new];
-						self.bottomConstraintArray = [NSMutableArray new];
-						
 						
 						
 						self.navigationBar = [LMNavigationBar newAutoLayoutView];
@@ -817,7 +797,7 @@
 						
 						[self.nowPlayingView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 						[self.nowPlayingView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-						self.nowPlayingView.topConstraint = [self.nowPlayingView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+						self.nowPlayingView.topConstraint = [self.nowPlayingView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:self.view.frame.size.height];
 						[self.nowPlayingView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.navigationController.view];
 						
 						
@@ -826,11 +806,7 @@
 						self.titleView.backgroundColor = [UIColor redColor];
 						[self.view addSubview:self.titleView];
 
-						[self.titleView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-						[self.heightConstraintArray addObject:[self.titleView autoSetDimension:ALDimensionHeight toSize:self.view.frame.size.height]];
-						[[self.heightConstraintArray lastObject] setActive:NO];
-						[self.bottomConstraintArray addObject:[self.titleView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.navigationBar withOffset:LMNavigationBarGrabberHeight]];
-						[self.titleView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
+						[self.titleView autoPinEdgesToSuperviewEdges];
 
 						[self.titleView setup];
 						self.titleView.hidden = YES;
@@ -843,12 +819,7 @@
 						
 						[self.browsingView setup];
 						
-						[self.browsingView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-//						[self.heightConstraintArray addObject:[self.browsingView autoSetDimension:ALDimensionHeight toSize:self.view.frame.size.height]];
-//						[[self.heightConstraintArray lastObject] setActive:NO];
-						[self.bottomConstraintArray addObject:[self.browsingView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.view withOffset:0]];
-						[self.browsingView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
-						[self.browsingView autoAlignAxisToSuperviewAxis:ALAxisVertical];
+						[self.browsingView autoPinEdgesToSuperviewEdges];
 						self.browsingView.hidden = YES;
 		
 				
@@ -894,10 +865,10 @@
 //							[self musicLibraryDidChange];
 //						}];
 						
-						[NSTimer scheduledTimerWithTimeInterval:1.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
-//							[self openNowPlayingView];
-							NSLog(@"Open now playing view");
-						}];
+//						[NSTimer scheduledTimerWithTimeInterval:1.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
+////							[self openNowPlayingView];
+//							NSLog(@"Open now playing view");
+//						}];
 						
 //						[NSTimer scheduledTimerWithTimeInterval:3.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
 //							[self.purchaseManager makePurchaseWithProductIdentifier:LMPurchaseManagerProductIdentifierLifetimeMusic];

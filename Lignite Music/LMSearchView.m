@@ -55,6 +55,32 @@
  */
 @property BOOL hasSearched;
 
+
+/**
+ The background view for the stupid welcome to search screen.
+ */
+@property UIView *welcomeToSearchBackgroundView;
+
+/**
+ The background view for the content of the ri-dic-u-lous welcome to search screen.
+ */
+@property UIView *welcomeToSearchContentBackgroundView;
+
+/**
+ The label for the insane welcome to search screen.
+ */
+@property UILabel *welcomeToSearchLabel;
+
+/**
+ Ugh, I hate this stupid welcome to search screen.
+ */
+@property UIView *welcomeToSearchImageBackgroundView;
+
+/**
+ The image view for the search icon for the annoying welcome to search screen.
+ */
+@property UIImageView *welcomeToSearchImageView;
+
 @end
 
 @implementation LMSearchView
@@ -75,6 +101,8 @@
 
 - (void)searchTermChangedTo:(NSString*)searchTerm {
 	NSLog(@"Search view got new search term %@", searchTerm);
+	
+	self.welcomeToSearchBackgroundView.hidden = YES;
 	
 	self.currentSearchTerm = searchTerm;
 	
@@ -339,6 +367,54 @@
 		[self.sectionTableView autoPinEdgesToSuperviewEdges];
 		
 		[self.sectionTableView setup];
+		
+		
+		
+		self.welcomeToSearchBackgroundView = [UIView newAutoLayoutView];
+		self.welcomeToSearchBackgroundView.backgroundColor = [UIColor whiteColor];
+		[self addSubview:self.welcomeToSearchBackgroundView];
+		
+		[self.welcomeToSearchBackgroundView autoPinEdgesToSuperviewEdges];
+		
+		
+		self.welcomeToSearchContentBackgroundView = [UIView newAutoLayoutView];
+//		self.welcomeToSearchContentBackgroundView.backgroundColor = [UIColor magentaColor];
+		[self.welcomeToSearchBackgroundView addSubview:self.welcomeToSearchContentBackgroundView];
+		
+		[self.welcomeToSearchContentBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(6.0/10.0)];
+		[self.welcomeToSearchContentBackgroundView autoPinEdgeToSuperviewMargin:ALEdgeLeading];
+		[self.welcomeToSearchContentBackgroundView autoPinEdgeToSuperviewMargin:ALEdgeTrailing];
+		[self.welcomeToSearchContentBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:20];
+		
+		self.welcomeToSearchLabel = [UILabel newAutoLayoutView];
+		self.welcomeToSearchLabel.numberOfLines = 0;
+		self.welcomeToSearchLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:24.0f];
+		self.welcomeToSearchLabel.text = NSLocalizedString(@"WelcomeToSearch", nil);
+		self.welcomeToSearchLabel.textAlignment = NSTextAlignmentCenter;
+		[self.welcomeToSearchContentBackgroundView addSubview:self.welcomeToSearchLabel];
+		
+		[self.welcomeToSearchLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.welcomeToSearchLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.welcomeToSearchLabel autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		
+		
+		self.welcomeToSearchImageBackgroundView = [UIView newAutoLayoutView];
+//		self.welcomeToSearchImageBackgroundView.backgroundColor = [UIColor yellowColor];
+		[self.welcomeToSearchContentBackgroundView addSubview:self.welcomeToSearchImageBackgroundView];
+		
+		[self.welcomeToSearchImageBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.welcomeToSearchImageBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.welcomeToSearchImageBackgroundView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.welcomeToSearchLabel withOffset:-20];
+		[self.welcomeToSearchImageBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.welcomeToSearchContentBackgroundView withMultiplier:(2.0/10.0)];
+		
+		
+		self.welcomeToSearchImageView = [UIImageView newAutoLayoutView];
+//		self.welcomeToSearchImageView.backgroundColor = [UIColor orangeColor];
+		self.welcomeToSearchImageView.image = [LMAppIcon invertImage:[LMAppIcon imageForIcon:LMIconSearch]];
+		self.welcomeToSearchImageView.contentMode = UIViewContentModeScaleAspectFit;
+		[self.welcomeToSearchImageBackgroundView addSubview:self.welcomeToSearchImageView];
+
+		[self.welcomeToSearchImageView autoPinEdgesToSuperviewEdges];
 	}
 	
 	[super layoutSubviews];

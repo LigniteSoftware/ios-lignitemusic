@@ -328,6 +328,7 @@
 	self.songListTableView.subviewDataSource = self;
 	self.songListTableView.shouldUseDividers = YES;
 	self.songListTableView.averageCellHeight = (WINDOW_FRAME.size.height/10);
+	self.songListTableView.bottomSpacing = (WINDOW_FRAME.size.height/3.0);
 	[self addSubview:self.songListTableView];
 	
 	[self.songListTableView autoPinEdgesToSuperviewEdges];
