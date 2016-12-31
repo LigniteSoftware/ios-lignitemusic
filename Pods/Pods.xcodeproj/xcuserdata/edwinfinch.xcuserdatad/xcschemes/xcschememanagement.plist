@@ -9,6 +9,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>BSKeyboardControls.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>CocoaSecurity.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -52,7 +57,7 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>10F2778869AFDF4C1D6FE11F9F5CD7DA</key>
+		<key>13E95473A378D718518B2FE42B9EE381</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -67,12 +72,17 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>A28FE8E555677F0B21E879750ACF0A5C</key>
+		<key>6ADBB0EE23C2D2FD420F71CFAA806EE1</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>B525C03A236B49A765124BB3299CA29F</key>
+		<key>78DE89C3CE99AC9A75E96A9DA9752E80</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>B636B5F567AF0D85F05A134CEB66E7D4</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -82,12 +92,12 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>EEF3D45CC453A62A957FF0F45A62156F</key>
+		<key>D05A7318484C8B1589FF0AF7BAD7498D</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>EF8EF75FFCC794D966483D26D3EA95FE</key>
+		<key>EB8BA554CBC1F234AEA8C7D65B5560E8</key>
 		<dict>
 			<key>primary</key>
 			<true/>

@@ -85,6 +85,7 @@ strip_invalid_archs() {
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "$BUILT_PRODUCTS_DIR/AFNetworking/AFNetworking.framework"
+  install_framework "$BUILT_PRODUCTS_DIR/BSKeyboardControls/BSKeyboardControls.framework"
   install_framework "$BUILT_PRODUCTS_DIR/CocoaSecurity/CocoaSecurity.framework"
   install_framework "$BUILT_PRODUCTS_DIR/MBProgressHUD/MBProgressHUD.framework"
   install_framework "$BUILT_PRODUCTS_DIR/MarqueeLabel/MarqueeLabel.framework"
@@ -96,6 +97,7 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "$BUILT_PRODUCTS_DIR/AFNetworking/AFNetworking.framework"
+  install_framework "$BUILT_PRODUCTS_DIR/BSKeyboardControls/BSKeyboardControls.framework"
   install_framework "$BUILT_PRODUCTS_DIR/CocoaSecurity/CocoaSecurity.framework"
   install_framework "$BUILT_PRODUCTS_DIR/MBProgressHUD/MBProgressHUD.framework"
   install_framework "$BUILT_PRODUCTS_DIR/MarqueeLabel/MarqueeLabel.framework"

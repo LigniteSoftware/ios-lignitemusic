@@ -388,7 +388,7 @@
 		
 		self.heightBeforeAdjustingToScrollPosition = -1;
 		
-		CGFloat minibarHeight = WINDOW_FRAME.size.height/14.0;
+		CGFloat minibarHeight = WINDOW_FRAME.size.height/19.0;
 		
 		self.minibarBackgroundView = [UIView newAutoLayoutView];
 		self.minibarBackgroundView.backgroundColor = [UIColor purpleColor];

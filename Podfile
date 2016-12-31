@@ -16,6 +16,7 @@ pod 'AFNetworking', '~> 3.0'
 pod 'SecureNSUserDefaults', '~> 1.0.1'
 pod 'Fabric'
 pod 'Crashlytics'
+pod 'BSKeyboardControls', '~> 2.2'
 
 end
 

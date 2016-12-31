@@ -6,20 +6,22 @@
 //  Copyright © 2016 Lignite. All rights reserved.
 //
 
-#import <sys/utsname.h>
+#import <BSKeyboardControls/BSKeyboardControls.h>
+#import <MBProgressHUD/MBProgressHUD.h>
 #import <AFNetworking/AFNetworking.h>
 #import <PureLayout/PureLayout.h>
-#import <MBProgressHUD/MBProgressHUD.h>
-#import "LMFeedbackViewController.h"
-#import "LMScrollView.h"
-#import "LMPaddedTextField.h"
-#import "LMColour.h"
-#import "LMAppIcon.h"
-#import "LMDebugViewController.h"
-#import "LMSettings.h"
-#import "NSTimer+Blocks.h"
+#import <sys/utsname.h>
 
-@interface LMFeedbackViewController () <UITextFieldDelegate, UITextViewDelegate>
+#import "LMFeedbackViewController.h"
+#import "LMDebugViewController.h"
+#import "LMPaddedTextField.h"
+#import "NSTimer+Blocks.h"
+#import "LMScrollView.h"
+#import "LMSettings.h"
+#import "LMAppIcon.h"
+#import "LMColour.h"
+
+@interface LMFeedbackViewController () <UITextFieldDelegate, UITextViewDelegate, BSKeyboardControlsDelegate>
 
 /**
  The root view so we can adjust for the keyboard.
@@ -76,6 +78,11 @@
  */
 @property UILabel *seeAllReportsLabel;
 
+/**
+ Keyboard controls for forward/back/done.
+ */
+@property BSKeyboardControls *keyboardControls;
+
 @end
 
 @implementation LMFeedbackViewController
@@ -89,16 +96,25 @@
 	return YES;
 }
 
-- (void)scrollToView:(UIView*)view {
-	[self.scrollView setContentOffset:CGPointMake(0, view.frame.origin.y-40) animated:YES];
+- (void)keyboardControlsDonePressed:(BSKeyboardControls *)keyboardControls
+{
+	[keyboardControls.activeField resignFirstResponder];
 }
 
-- (void)textFieldDidBeginEditing:(UITextField *)textField {
+- (void)textViewDidBeginEditing:(UITextView *)textView
+{
+	[self.keyboardControls setActiveField:textView];
+	[self scrollToView:textView];
+}
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+	[self.keyboardControls setActiveField:textField];
 	[self scrollToView:textField];
 }
 
-- (void)textViewDidBeginEditing:(UITextView *)textView {
-	[self scrollToView:textView];
+- (void)scrollToView:(UIView*)view {
+	[self.scrollView setContentOffset:CGPointMake(0, view.frame.origin.y-40) animated:YES];
 }
 
 - (void)keyboardWillShow:(NSNotification*)notification {
@@ -473,6 +489,8 @@ NSString* deviceName(){
 	[self.descriptionLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:20];
 	[self.descriptionLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.titleLabel withOffset:20];
 	
+	
+	
 	NSMutableArray *viewsArray = [NSMutableArray new];
 	
 	NSArray *textKeys = @[
@@ -566,6 +584,9 @@ NSString* deviceName(){
 	}
 	
 	self.textEntryArray = viewsArray;
+	
+	self.keyboardControls = [[BSKeyboardControls alloc] initWithFields:self.textEntryArray];
+	self.keyboardControls.delegate = self;
 	
 	
 	self.seeAllReportsLabel = [UILabel newAutoLayoutView];

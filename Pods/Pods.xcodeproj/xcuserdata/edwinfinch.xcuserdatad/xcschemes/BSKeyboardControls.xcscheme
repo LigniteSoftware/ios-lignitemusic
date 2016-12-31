@@ -14,10 +14,10 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = '6ADBB0EE23C2D2FD420F71CFAA806EE1'
-               BlueprintName = 'YYImage'
+               BlueprintIdentifier = 'EB8BA554CBC1F234AEA8C7D65B5560E8'
+               BlueprintName = 'BSKeyboardControls'
                ReferencedContainer = 'container:Pods.xcodeproj'
-               BuildableName = 'YYImage.framework'>
+               BuildableName = 'BSKeyboardControls.framework'>
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>

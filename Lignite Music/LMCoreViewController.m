@@ -631,10 +631,10 @@
 	
 //	self.automaticallyAdjustsScrollViewInsets = YES;
 //	
-//	LMFeedbackViewController *feedbackController = [LMFeedbackViewController new];
-//	[self.navigationController presentViewController:feedbackController animated:YES completion:nil];
-//	
-//	return;
+	LMFeedbackViewController *feedbackController = [LMFeedbackViewController new];
+	[self.navigationController presentViewController:feedbackController animated:YES completion:nil];
+	
+	return;
 	
 //	LMBrowsingBar *browsingBar = [LMBrowsingBar newAutoLayoutView];
 //	[self.view addSubview:browsingBar];
