@@ -212,6 +212,7 @@
 			LMListEntry *listEntry = [[LMListEntry alloc]initWithDelegate:self];
 			listEntry.collectionIndex = i;
 			listEntry.iPromiseIWillHaveAnIconForYouSoon = YES;
+			listEntry.alignIconToLeft = YES;
 			[listEntry setup];
 			[self.itemArray addObject:listEntry];
 			

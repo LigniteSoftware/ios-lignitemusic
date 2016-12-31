@@ -355,6 +355,7 @@
 	
 	[self.navigationBar removeFromSuperview];
 	[view addSubview:self.navigationBar];
+	[self.navigationController.view bringSubviewToFront:self.nowPlayingView];
 	[view bringSubviewToFront:self.statusBarBlurView];
 	
 	[self.navigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
@@ -426,7 +427,8 @@
 }
 
 - (void)requiredHeightForNavigationBarChangedTo:(CGFloat)requiredHeight withAnimationDuration:(CGFloat)animationDuration {
-//	NSLog(@"Height changed to %f", requiredHeight);
+	NSLog(@"Height changed to %f", requiredHeight);
+	
 	
 	[self.navigationController.view layoutIfNeeded];
 	
@@ -613,7 +615,7 @@
 		
 		[self.nowPlayingView.superview layoutIfNeeded];
 		
-		if((-translation.y <= self.nowPlayingView.frame.size.height/5.0)){
+		if((-translation.y <= self.nowPlayingView.frame.size.height/10.0)){
 			self.nowPlayingView.topConstraint.constant = self.nowPlayingView.frame.size.height;
 		}
 		else{
@@ -816,7 +818,7 @@
 						[self.nowPlayingView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 						[self.nowPlayingView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 						self.nowPlayingView.topConstraint = [self.nowPlayingView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-						[self.nowPlayingView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
+						[self.nowPlayingView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.navigationController.view];
 						
 						
 						
@@ -842,9 +844,9 @@
 						[self.browsingView setup];
 						
 						[self.browsingView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-						[self.heightConstraintArray addObject:[self.browsingView autoSetDimension:ALDimensionHeight toSize:self.view.frame.size.height]];
-						[[self.heightConstraintArray lastObject] setActive:NO];
-						[self.bottomConstraintArray addObject:[self.browsingView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.navigationBar withOffset:LMNavigationBarGrabberHeight]];
+//						[self.heightConstraintArray addObject:[self.browsingView autoSetDimension:ALDimensionHeight toSize:self.view.frame.size.height]];
+//						[[self.heightConstraintArray lastObject] setActive:NO];
+						[self.bottomConstraintArray addObject:[self.browsingView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.view withOffset:0]];
 						[self.browsingView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
 						[self.browsingView autoAlignAxisToSuperviewAxis:ALAxisVertical];
 						self.browsingView.hidden = YES;

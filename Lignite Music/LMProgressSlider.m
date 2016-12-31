@@ -316,6 +316,8 @@
 		if(isnan(self.finalValue) || isinf(self.finalValue)){
 			self.finalValue = 0.0;
 		}
+		
+		CGFloat topAndBottomLabelPadding = self.frame.size.height/6;
 				
 		self.leftTextBottomLabel = [LMLabel newAutoLayoutView];
 		self.leftTextBottomLabel.text = self.leftText ? self.leftText : @"";
@@ -325,8 +327,8 @@
 		
 		[self.leftTextBottomLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self withOffset:10];
 		[self.leftTextBottomLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
-		[self.leftTextBottomLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self withOffset:self.frame.size.height/8];
-		[self.leftTextBottomLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self withOffset:-self.frame.size.height/8];
+		[self.leftTextBottomLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self withOffset:topAndBottomLabelPadding];
+		[self.leftTextBottomLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self withOffset:-topAndBottomLabelPadding];
 		[self.leftTextBottomLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(0.45)];
 		
 		
@@ -340,8 +342,8 @@
 		
 		[self.rightTextBottomLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self withOffset:-10];
 		[self.rightTextBottomLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
-		[self.rightTextBottomLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self withOffset:self.frame.size.height/8];
-		[self.rightTextBottomLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self withOffset:-self.frame.size.height/8];
+		[self.rightTextBottomLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self withOffset:topAndBottomLabelPadding];
+		[self.rightTextBottomLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self withOffset:-topAndBottomLabelPadding];
 		[self.rightTextBottomLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(0.45)];
 				
 		
@@ -381,8 +383,8 @@
 		[self.rightTextTopLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.rightTextBottomLabel];
 		[self.rightTextTopLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
 		[self.rightTextTopLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.rightTextBottomLabel];
-		[self.rightTextTopLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self withOffset:self.frame.size.height/8];
-		[self.rightTextTopLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self withOffset:-self.frame.size.height/8];
+		[self.rightTextTopLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self withOffset:topAndBottomLabelPadding];
+		[self.rightTextTopLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self withOffset:-topAndBottomLabelPadding];
 		
 		
 		
@@ -397,8 +399,8 @@
 		[self.leftTextTopLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.leftTextBottomLabel];
 		[self.leftTextTopLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
 		self.leftTextTopLabelWidthConstraint = [self.leftTextTopLabel autoSetDimension:ALDimensionWidth toSize:0];
-		[self.leftTextTopLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self withOffset:self.frame.size.height/8];
-		[self.leftTextTopLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self withOffset:-self.frame.size.height/8];
+		[self.leftTextTopLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self withOffset:topAndBottomLabelPadding];
+		[self.leftTextTopLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self withOffset:-topAndBottomLabelPadding];
 		
 		[self setLightTheme:self.lightTheme];
 		

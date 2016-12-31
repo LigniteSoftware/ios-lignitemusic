@@ -55,10 +55,34 @@
  */
 @property NSInteger heightBeforeAdjustingToScrollPosition;
 
-@property UIView *currentSourceBackgroundView;
-@property LMLabel *currentSourceLabel;
-@property LMLabel *currentSourceDetailLabel;
-@property LMButton *currentSourceButton;
+/**
+ The minimized bar's background view.
+ */
+@property UIView *minibarBackgroundView;
+
+/**
+ The constraint for the bottom pin of the minibar.
+ */
+@property NSLayoutConstraint *minibarBottomConstraint;
+
+/**
+ The main label for the minibar which resides on the left.
+ */
+@property LMLabel *minibarLabel;
+
+/**
+ The detail label for the minibar which resides on the right.
+ */
+@property LMLabel *minibarDetailLabel;
+
+/**
+ The button which goes in the center of the minibar.
+ */
+@property LMButton *minibarButton;
+
+/**
+ The two points required for calculating the drag position.
+ */
 @property CGPoint originalPoint, currentPoint;
 
 @end
@@ -72,13 +96,23 @@
 }
 
 - (CGFloat)minimizedHeight {
-	return self.currentSourceBackgroundView.frame.size.height + LMNavigationBarGrabberHeight;
+	return self.minibarBackgroundView.frame.size.height + LMNavigationBarGrabberHeight;
 }
 
-- (void)setButtonBarBottomConstraintConstant:(NSInteger)constant {
+- (void)setButtonBarBottomConstraintConstant:(NSInteger)constant completion:(void (^ __nullable)(BOOL finished))completion {
 	[self layoutIfNeeded];
 	
 	self.buttonBarBottomConstraint.constant = constant;
+	
+	[UIView animateWithDuration:0.25 animations:^{
+		[self layoutIfNeeded];
+	} completion:completion];
+}
+
+- (void)setMinibarBottomConstraintConstant:(NSInteger)constant {
+	[self layoutIfNeeded];
+	
+	self.minibarBottomConstraint.constant = constant;
 	
 	[UIView animateWithDuration:0.25 animations:^{
 		[self layoutIfNeeded];
@@ -123,13 +157,26 @@
 
 - (void)minimize {
 	NSLog(@"Minimize");
+	
+	__weak id weakSelf = self;
+	
 	[self setButtonBarBottomConstraintConstant:self.buttonBar.frame.size.height
 											 + self.viewAttachedToButtonBar.frame.size.height
 											 + LMNavigationBarGrabberHeight
-											 + 10];
-	
-	[self.delegate requiredHeightForNavigationBarChangedTo:[self minimizedHeight]
-									 withAnimationDuration:0.10];
+											 + 10
+									completion:^(BOOL finished) {
+										LMNavigationBar *strongSelf = weakSelf;
+										if(!strongSelf){
+											return;
+										}
+										
+										if(finished) {
+											[strongSelf setMinibarBottomConstraintConstant:0];
+											
+											[strongSelf.delegate requiredHeightForNavigationBarChangedTo:[strongSelf minimizedHeight]
+																			 withAnimationDuration:0.30];
+										}
+									}];
 	
 	self.currentPoint = CGPointMake(self.originalPoint.x, self.originalPoint.y + self.buttonBarBottomConstraint.constant);
 	
@@ -138,10 +185,22 @@
 
 - (void)maximize {
 	NSLog(@"Maximize");
-	[self setButtonBarBottomConstraintConstant:0];
 	
-	[self.delegate requiredHeightForNavigationBarChangedTo:[self maximizedHeight]
-									 withAnimationDuration:0.30];
+	__weak id weakSelf = self;
+	
+	[self setButtonBarBottomConstraintConstant:0 completion:^(BOOL finished) {
+		LMNavigationBar *strongSelf = weakSelf;
+		if(!strongSelf){
+			return;
+		}
+		
+		if(finished) {
+			[strongSelf setMinibarBottomConstraintConstant:strongSelf.minibarBackgroundView.frame.size.height+LMNavigationBarGrabberHeight];
+			
+			[strongSelf.delegate requiredHeightForNavigationBarChangedTo:[strongSelf maximizedHeight]
+												   withAnimationDuration:0.10];
+		}
+	}];
 	
 	self.currentPoint = self.originalPoint;
 	
@@ -181,14 +240,9 @@
 	}
 	
 	CGFloat currentHeight = [self maximizedHeight] - yPosition;
-	if(currentHeight < [self minimizedHeight]){
-		currentHeight = [self minimizedHeight];
+	if(currentHeight < 0){
+		currentHeight = 0;
 	}
-	
-	BOOL movingDown = (currentHeight < self.heightBeforeAdjustingToScrollPosition);
-	BOOL movingUp = !movingDown; //For clarity
-	
-	NSLog(@"Maximized before? %d. Moving down? %d.", wasMaximizedBeforeScrolling, movingDown);
 	
 	[self.delegate requiredHeightForNavigationBarChangedTo:currentHeight
 									 withAnimationDuration:0.0];
@@ -210,7 +264,7 @@
 	}
 	CGFloat totalTranslation = translation.y + (self.currentPoint.y-self.originalPoint.y);
 	
-	NSLog(@"%f", totalTranslation);
+//	NSLog(@"%f", totalTranslation);
 	
 	if(totalTranslation < 0){ //Moving upward
 		self.buttonBarBottomConstraint.constant = -sqrt(-totalTranslation);
@@ -223,8 +277,8 @@
 	
 	CGFloat currentHeight = [self maximizedHeight] - self.buttonBarBottomConstraint.constant;
 	
-	if(currentHeight < self.currentSourceBackgroundView.frame.size.height){
-		currentHeight = self.currentSourceBackgroundView.frame.size.height;
+	if(currentHeight < 0){
+		currentHeight = 0;
 	}
 	
 	[self.delegate requiredHeightForNavigationBarChangedTo:currentHeight
@@ -243,11 +297,11 @@
 }
 
 - (void)sourceTitleChangedTo:(NSString *)title {
-	self.currentSourceLabel.text = title;
+	self.minibarLabel.text = title;
 }
 
 - (void)sourceSubtitleChangedTo:(NSString *)subtitle {
-	self.currentSourceDetailLabel.text = subtitle;
+	self.minibarDetailLabel.text = subtitle;
 }
 
 - (void)setSelectedTab:(LMNavigationTab)tab {
@@ -301,7 +355,7 @@
 	}
 	iconView.image = icon;
 	
-	[self.currentSourceButton setImage:icon];
+	[self.minibarButton setImage:icon];
 }
 
 - (void)clickedButton:(LMButton *)button {
@@ -334,83 +388,84 @@
 		
 		self.heightBeforeAdjustingToScrollPosition = -1;
 		
+		CGFloat minibarHeight = WINDOW_FRAME.size.height/14.0;
 		
-		self.currentSourceBackgroundView = [UIView newAutoLayoutView];
-		self.currentSourceBackgroundView.backgroundColor = [UIColor purpleColor];
-		[self addSubview:self.currentSourceBackgroundView];
+		self.minibarBackgroundView = [UIView newAutoLayoutView];
+		self.minibarBackgroundView.backgroundColor = [UIColor purpleColor];
+		[self addSubview:self.minibarBackgroundView];
 		
-		[self.currentSourceBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		[self.currentSourceBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-		[self.currentSourceBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-		[self.currentSourceBackgroundView autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height/14.0];
+		self.minibarBottomConstraint = [self.minibarBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:-minibarHeight-LMNavigationBarGrabberHeight-10];
+		[self.minibarBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.minibarBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.minibarBackgroundView autoSetDimension:ALDimensionHeight toSize:minibarHeight];
 		
-		self.currentSourceBackgroundView.backgroundColor = [UIColor whiteColor];
-		self.currentSourceBackgroundView.layer.shadowColor = [UIColor blackColor].CGColor;
-		self.currentSourceBackgroundView.layer.shadowOpacity = 0.25f;
-		self.currentSourceBackgroundView.layer.shadowOffset = CGSizeMake(0, 0);
-		self.currentSourceBackgroundView.layer.masksToBounds = NO;
-		self.currentSourceBackgroundView.layer.shadowRadius = 5;
+		self.minibarBackgroundView.backgroundColor = [UIColor whiteColor];
+		self.minibarBackgroundView.layer.shadowColor = [UIColor blackColor].CGColor;
+		self.minibarBackgroundView.layer.shadowOpacity = 0.25f;
+		self.minibarBackgroundView.layer.shadowOffset = CGSizeMake(0, 0);
+		self.minibarBackgroundView.layer.masksToBounds = NO;
+		self.minibarBackgroundView.layer.shadowRadius = 5;
 		
-		UIPanGestureRecognizer *currentSourceBackgroundViewGrabberMoveRecognizer = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(handlePan:)];
-		currentSourceBackgroundViewGrabberMoveRecognizer.delegate = self;
-		[self.currentSourceBackgroundView addGestureRecognizer:currentSourceBackgroundViewGrabberMoveRecognizer];
+		UIPanGestureRecognizer *minibarBackgroundViewGrabberMoveRecognizer = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(handlePan:)];
+		minibarBackgroundViewGrabberMoveRecognizer.delegate = self;
+		[self.minibarBackgroundView addGestureRecognizer:minibarBackgroundViewGrabberMoveRecognizer];
 		
 		
-		LMGrabberView *currentSourceBackgroundGrabberView = [LMGrabberView newAutoLayoutView];
-		currentSourceBackgroundGrabberView.backgroundColor = [LMColour semiTransparentLigniteRedColour];
-		currentSourceBackgroundGrabberView.layer.masksToBounds = YES;
-		[self addSubview:currentSourceBackgroundGrabberView];
+		LMGrabberView *minibarBackgroundGrabberView = [LMGrabberView newAutoLayoutView];
+		minibarBackgroundGrabberView.backgroundColor = [LMColour semiTransparentLigniteRedColour];
+		minibarBackgroundGrabberView.layer.masksToBounds = YES;
+		[self addSubview:minibarBackgroundGrabberView];
 		
-		[currentSourceBackgroundGrabberView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.currentSourceBackgroundView];
-		[currentSourceBackgroundGrabberView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(1.0/6.0)];
-		[currentSourceBackgroundGrabberView autoSetDimension:ALDimensionHeight toSize:LMNavigationBarGrabberHeight];
-		[currentSourceBackgroundGrabberView autoAlignAxisToSuperviewAxis:ALAxisVertical];
+		[minibarBackgroundGrabberView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.minibarBackgroundView];
+		[minibarBackgroundGrabberView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(1.0/6.0)];
+		[minibarBackgroundGrabberView autoSetDimension:ALDimensionHeight toSize:LMNavigationBarGrabberHeight];
+		[minibarBackgroundGrabberView autoAlignAxisToSuperviewAxis:ALAxisVertical];
 		
-		UIPanGestureRecognizer *currentSourceBackgroundGrabberMoveRecognizer = [[UIPanGestureRecognizer alloc]initWithTarget:self
+		UIPanGestureRecognizer *minibarBackgroundGrabberMoveRecognizer = [[UIPanGestureRecognizer alloc]initWithTarget:self
 																													  action:@selector(handlePan:)];
-		currentSourceBackgroundGrabberMoveRecognizer.delegate = self;
-		[currentSourceBackgroundGrabberView addGestureRecognizer:currentSourceBackgroundGrabberMoveRecognizer];
+		minibarBackgroundGrabberMoveRecognizer.delegate = self;
+		[minibarBackgroundGrabberView addGestureRecognizer:minibarBackgroundGrabberMoveRecognizer];
 
 		
 		
 		
-		self.currentSourceButton = [LMButton newAutoLayoutView];
-		self.currentSourceButton.delegate = self;
-		[self.currentSourceBackgroundView addSubview:self.currentSourceButton];
+		self.minibarButton = [LMButton newAutoLayoutView];
+		self.minibarButton.delegate = self;
+		[self.minibarBackgroundView addSubview:self.minibarButton];
 		
-		[self.currentSourceButton autoCenterInSuperview];
-		[self.currentSourceButton autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.currentSourceBackgroundView withMultiplier:0.8];
-		[self.currentSourceButton autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.currentSourceBackgroundView withMultiplier:0.8];
+		[self.minibarButton autoCenterInSuperview];
+		[self.minibarButton autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.minibarBackgroundView withMultiplier:0.8];
+		[self.minibarButton autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.minibarBackgroundView withMultiplier:0.8];
 		
-		[self.currentSourceButton setupWithImageMultiplier:0.525];
+		[self.minibarButton setupWithImageMultiplier:0.525];
 		
-		[self.currentSourceButton setImage:[LMAppIcon invertImage:[LMAppIcon imageForIcon:LMIconPlaylists]]];
-		
-		
-		
-		self.currentSourceLabel = [LMLabel newAutoLayoutView];
-		self.currentSourceLabel.text = @"Text post please ignore";
-		[self.currentSourceBackgroundView addSubview:self.currentSourceLabel];
-		
-		[self.currentSourceLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:10];
-		[self.currentSourceLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.currentSourceButton withOffset:-10];
-		[self.currentSourceLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.currentSourceBackgroundView withMultiplier:(1.0/2.0)];
-		[self.currentSourceLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+		[self.minibarButton setImage:[LMAppIcon invertImage:[LMAppIcon imageForIcon:LMIconPlaylists]]];
 		
 		
-		self.currentSourceDetailLabel = [LMLabel newAutoLayoutView];
-		self.currentSourceDetailLabel.text = @"You didn't ignore it";
-		self.currentSourceDetailLabel.textAlignment = NSTextAlignmentRight;
-		[self.currentSourceBackgroundView addSubview:self.currentSourceDetailLabel];
 		
-		[self.currentSourceDetailLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:10];
-		[self.currentSourceDetailLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.currentSourceButton withOffset:10];
-		[self.currentSourceDetailLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.currentSourceBackgroundView withMultiplier:(1.0/2.0)];
-		[self.currentSourceDetailLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+		self.minibarLabel = [LMLabel newAutoLayoutView];
+		self.minibarLabel.text = @"Text post please ignore";
+		[self.minibarBackgroundView addSubview:self.minibarLabel];
+		
+		[self.minibarLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:10];
+		[self.minibarLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.minibarButton withOffset:-10];
+		[self.minibarLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.minibarBackgroundView withMultiplier:(1.0/2.0)];
+		[self.minibarLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
 		
 		
-		UITapGestureRecognizer *tapOnCurrentSourceGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(maximize)];
-		[self.currentSourceBackgroundView addGestureRecognizer:tapOnCurrentSourceGesture];
+		self.minibarDetailLabel = [LMLabel newAutoLayoutView];
+		self.minibarDetailLabel.text = @"You didn't ignore it";
+		self.minibarDetailLabel.textAlignment = NSTextAlignmentRight;
+		[self.minibarBackgroundView addSubview:self.minibarDetailLabel];
+		
+		[self.minibarDetailLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:10];
+		[self.minibarDetailLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.minibarButton withOffset:10];
+		[self.minibarDetailLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.minibarBackgroundView withMultiplier:(1.0/2.0)];
+		[self.minibarDetailLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+		
+		
+		UITapGestureRecognizer *tapOnminibarGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(maximize)];
+		[self.minibarBackgroundView addGestureRecognizer:tapOnminibarGesture];
 		
 		
 		//Setup the order of the views first then later impose constraints 

@@ -74,41 +74,41 @@
 	self.currentOffset = self.originalOffset;
 }
 
-- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-	NSLog(@"Will begin dragging");
-	self.originalOffset = scrollView.contentOffset;
-}
-
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-	NSLog(@"Did end animating");
-	
-	[self adjustNavigationBarForDifference];
-}
-
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
-	if(!decelerate){
-		NSLog(@"Did end dragging");
-		
-		[self adjustNavigationBarForDifference];
-	}
-}
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-	if((self.bigListEntryTableView.tableView.contentSize.height
-		-self.bigListEntryTableView.tableView.contentOffset.y
-		-self.bigListEntryTableView.tableView.frame.size.height)
-	    < self.frame.size.height/2){
-		return;
-	}
-	   
-	self.currentOffset = scrollView.contentOffset;
-	
-	CGFloat difference = self.currentOffset.y - self.originalOffset.y;
-	
-//	NSLog(difference < 0 ? @"Scrolling upwards" : @"Scrolling downwards");
-	
-	[self.musicPlayer.navigationBar moveToYPosition:difference];
-}
+//- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+//	NSLog(@"Will begin dragging");
+//	self.originalOffset = scrollView.contentOffset;
+//}
+//
+//- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+//	NSLog(@"Did end animating");
+//	
+//	[self adjustNavigationBarForDifference];
+//}
+//
+//- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+//	if(!decelerate){
+//		NSLog(@"Did end dragging");
+//		
+//		[self adjustNavigationBarForDifference];
+//	}
+//}
+//
+//- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+//	if((self.bigListEntryTableView.tableView.contentSize.height
+//		-self.bigListEntryTableView.tableView.contentOffset.y
+//		-self.bigListEntryTableView.tableView.frame.size.height)
+//	    < self.frame.size.height/2){
+//		return;
+//	}
+//	   
+//	self.currentOffset = scrollView.contentOffset;
+//	
+//	CGFloat difference = self.currentOffset.y - self.originalOffset.y;
+//	
+////	NSLog(difference < 0 ? @"Scrolling upwards" : @"Scrolling downwards");
+//	
+//	[self.musicPlayer.navigationBar moveToYPosition:difference];
+//}
 
 - (void)scrollViewToIndex:(NSUInteger)index {
 	[self.bigListEntryTableView.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:index]
@@ -536,6 +536,8 @@
 	[self.bigListEntryTableView setup];
 	
 	self.bigListEntryTableView.tableView.secondaryDelegate = self;
+	
+	self.bigListEntryTableView.tableView.bottomSpacing = WINDOW_FRAME.size.height/3 + 20;
 	
 	[self.musicPlayer addMusicDelegate:self];
 	[self.imageManager addDelegate:self];

@@ -43,6 +43,11 @@
 @property UIView *queueView;
 
 /**
+ The view that goes on top of the main view when the queue is open so that the user can drag it from left to right to close the queue.
+ */
+@property UIView *queueOpenDraggingOverlayView;
+
+/**
  The items array for the now playing queue.
  */
 @property NSMutableArray *itemArray;
@@ -92,6 +97,7 @@
 @property LMProgressSlider *progressSlider;
 
 @property CGPoint originalPoint, currentPoint;
+@property CGPoint queueOriginalPoint;
 
 @end
 
@@ -297,11 +303,21 @@
 - (void)setNowPlayingQueueOpen:(BOOL)open {
 	[self layoutIfNeeded];
 	
+	NSLog(open ? @"Open queue" : @"Close queue");
+	
+	self.queueOpenDraggingOverlayView.hidden = !open;
+	
 	self.mainViewLeadingConstraint.constant = open ? -self.queueView.frame.size.width : 0;
+	
+	self.originalPoint = CGPointZero;
 	
 	[UIView animateWithDuration:0.25 animations:^{
 		[self layoutIfNeeded];
 	}];
+}
+
+- (void)queueCloseTap {
+	[self setNowPlayingQueueOpen:NO];
 }
 
 - (BOOL)nowPlayingQueueOpen {
@@ -503,7 +519,7 @@
 	}
 	CGFloat totalTranslation = translation.y + (self.currentPoint.y-self.originalPoint.y);
 	
-	NSLog(@"%f", totalTranslation);
+	NSLog(@"%f to %f %@", translation.y, totalTranslation, NSStringFromCGPoint(self.currentPoint));
 	
 	if(totalTranslation < 0){ //Moving upward
 		return;
@@ -517,9 +533,7 @@
 	if(recognizer.state == UIGestureRecognizerStateEnded){
 		self.currentPoint = CGPointMake(self.currentPoint.x, self.originalPoint.y + totalTranslation);
 		
-		[self.superview layoutIfNeeded];
-		
-		if((translation.y >= self.frame.size.height/5.0)){
+		if((translation.y >= self.frame.size.height/10.0)){
 			self.topConstraint.constant = self.frame.size.height;
 		}
 		else{
@@ -529,6 +543,46 @@
 		[UIView animateWithDuration:0.25 animations:^{
 			[self.superview layoutIfNeeded];
 		}];
+	}
+}
+
+
+- (void)panQueueClosed:(UIPanGestureRecognizer *)recognizer {
+	CGPoint translation = [recognizer translationInView:self.mainView];
+	
+	if(self.queueOriginalPoint.x == 0){
+		self.queueOriginalPoint = self.mainView.frame.origin;
+	}
+	
+	CGFloat totalTranslation;
+	if(recognizer.view == self.queueOpenDraggingOverlayView){
+		totalTranslation = (self.queueOriginalPoint.x-self.queueView.frame.size.width) + translation.x;
+	}
+	else{
+		totalTranslation = self.queueOriginalPoint.x + translation.x;
+	}
+	
+	NSLog(@"%f %f %ld", translation.x, totalTranslation, (long)recognizer.state);
+	
+	if(totalTranslation > 0){ //Moving too far to the right?
+		NSLog(@"Fuck");
+		[self setNowPlayingQueueOpen:NO];
+		return;
+	}
+	else{ //Moving downward
+		self.mainViewLeadingConstraint.constant = totalTranslation;
+	}
+	
+	[self layoutIfNeeded];
+	
+	if(recognizer.state == UIGestureRecognizerStateEnded || recognizer.state == UIGestureRecognizerStateCancelled){
+		NSLog(@"Done");
+		if((translation.x >= self.frame.size.width/4.0)){
+			[self setNowPlayingQueueOpen:NO];
+		}
+		else{
+			[self setNowPlayingQueueOpen:YES];
+		}
 	}
 }
 
@@ -769,6 +823,10 @@
 			
 			[volumeView autoPinEdgesToSuperviewEdges];
 		}
+		else if(button == self.queueButton){
+			UIPanGestureRecognizer *queueOpenPanGesture = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(panQueueClosed:)];
+			[self.queueButton addGestureRecognizer:queueOpenPanGesture];
+		}
 	}
 	
 	[self.shuffleModeButton setColour:self.musicPlayer.shuffleMode ? [UIColor whiteColor] : [LMColour fadedColour]];
@@ -796,6 +854,19 @@
 	self.brandNewAlbumArtImageView.userInteractionEnabled = YES;
 	[self.brandNewAlbumArtImageView addGestureRecognizer:panGestureRecognizer];
 	
+	
+	self.queueOpenDraggingOverlayView = [UIView newAutoLayoutView];;
+	self.queueOpenDraggingOverlayView.backgroundColor = [UIColor colorWithRed:0.3 green:0.3 blue:0.5 alpha:0.4];
+	self.queueOpenDraggingOverlayView.hidden = YES;
+	[self.mainView addSubview:self.queueOpenDraggingOverlayView];
+	
+	[self.queueOpenDraggingOverlayView autoPinEdgesToSuperviewEdges];
+	
+	UIPanGestureRecognizer *queueOpenPanGesture = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(panQueueClosed:)];
+	[self.queueOpenDraggingOverlayView addGestureRecognizer:queueOpenPanGesture];
+	
+	UITapGestureRecognizer *queueOpenTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(queueCloseTap)];
+	[self.queueOpenDraggingOverlayView addGestureRecognizer:queueOpenTapGesture];
 	
 //	[self setNowPlayingQueueOpen:YES];
 }

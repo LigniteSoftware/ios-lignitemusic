@@ -12,7 +12,6 @@
 		6A13A8011E011D19006A768B /* SLColorArt.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A13A7FC1E011D19006A768B /* SLColorArt.m */; };
 		6A13A8021E011D19006A768B /* UIImage+ColorArt.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A13A7FE1E011D19006A768B /* UIImage+ColorArt.m */; };
 		6A13A8031E011D19006A768B /* UIImage+Scale.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A13A8001E011D19006A768B /* UIImage+Scale.m */; };
-		6A13A8061E0249E8006A768B /* LMNowPlayingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A13A8051E0249E8006A768B /* LMNowPlayingViewController.m */; };
 		6A1AF0811E028E3500F8934C /* icon_hamburger.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A1AF0801E028E3400F8934C /* icon_hamburger.png */; };
 		6A1AF0841E0341BC00F8934C /* MPMediaItem+LigniteImages.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A1AF0831E0341BC00F8934C /* MPMediaItem+LigniteImages.m */; };
 		6A1AF0871E037CCD00F8934C /* MPMediaItemCollection+LigniteInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A1AF0861E037CCD00F8934C /* MPMediaItemCollection+LigniteInfo.m */; };
@@ -187,8 +186,6 @@
 		6A13A7FE1E011D19006A768B /* UIImage+ColorArt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ColorArt.m"; sourceTree = "<group>"; };
 		6A13A7FF1E011D19006A768B /* UIImage+Scale.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Scale.h"; sourceTree = "<group>"; };
 		6A13A8001E011D19006A768B /* UIImage+Scale.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Scale.m"; sourceTree = "<group>"; };
-		6A13A8041E0249E8006A768B /* LMNowPlayingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMNowPlayingViewController.h; sourceTree = "<group>"; };
-		6A13A8051E0249E8006A768B /* LMNowPlayingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMNowPlayingViewController.m; sourceTree = "<group>"; };
 		6A1AF0801E028E3400F8934C /* icon_hamburger.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_hamburger.png; sourceTree = "<group>"; };
 		6A1AF0821E0341BC00F8934C /* MPMediaItem+LigniteImages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MPMediaItem+LigniteImages.h"; sourceTree = "<group>"; };
 		6A1AF0831E0341BC00F8934C /* MPMediaItem+LigniteImages.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MPMediaItem+LigniteImages.m"; sourceTree = "<group>"; };
@@ -565,8 +562,6 @@
 				6A313C111BB44959002BBC33 /* LMAlbumArtView.m */,
 				6AD226FA1DA4B7770056695A /* LMNowPlayingView.h */,
 				6AD226FB1DA4B7770056695A /* LMNowPlayingView.m */,
-				6A13A8041E0249E8006A768B /* LMNowPlayingViewController.h */,
-				6A13A8051E0249E8006A768B /* LMNowPlayingViewController.m */,
 				6AD226F71DA49C720056695A /* LMProgressCircleView.h */,
 				6AD226F81DA49C720056695A /* LMProgressCircleView.m */,
 				6A52574D1DF099720040210D /* LMProgressSlider.h */,
@@ -1280,7 +1275,6 @@
 				6A759D401DE8DDC50051E1A9 /* LMPebbleSettingsViewController.m in Sources */,
 				6A2A29C81DB1EAB6008E7792 /* LMCircleView.m in Sources */,
 				6A6F4B641DC5D4EB00BD01C2 /* YIInnerShadowView.m in Sources */,
-				6A13A8061E0249E8006A768B /* LMNowPlayingViewController.m in Sources */,
 				6ABF6A821CF374F7003E4EFA /* UIImage+AverageColour.m in Sources */,
 				6A759D481DE96B9A0051E1A9 /* LMScrollView.m in Sources */,
 				6A51689D1E090B4600A6446F /* LMBackerLoginViewController.m in Sources */,

@@ -121,7 +121,14 @@
 		self.iconView.image = icon;
 		[self.iconBackgroundView addSubview:self.iconView];
 		
-		[self.iconView autoCenterInSuperview];
+		if(self.alignIconToLeft){
+			[self.iconView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+			[self.iconView autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+		}
+		else{
+			[self.iconView autoCenterInSuperview];
+		}
+			
 		[self.iconView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.iconBackgroundView withMultiplier:self.iconInsetMultiplier];
 		[self.iconView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.iconBackgroundView withMultiplier:self.iconInsetMultiplier];
 	}

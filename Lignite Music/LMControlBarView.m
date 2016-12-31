@@ -45,7 +45,9 @@
 	[self layoutIfNeeded];
 	
 	self.isOpen = (height != 0);
-		
+	
+//	self.backgroundColor = self.isOpen ? [UIColor redColor] : [UIColor greenColor];
+	
 	self.triangleConstraint.constant = self.isOpen ? -2 : -50;
 	self.controlBarHeightConstraint.constant = height;
 	
@@ -142,7 +144,7 @@
 	[self.threeDotIconImageView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 	[self.threeDotIconImageView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 	[self.threeDotIconImageView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	[self.threeDotIconImageView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+	[self.threeDotIconImageView autoSetDimension:ALDimensionHeight toSize:[LMControlBarView heightWhenIsOpened:NO]];
 	
 	UITapGestureRecognizer *tapOnThreeDotGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(animatedInvert)];
 	[self addGestureRecognizer:tapOnThreeDotGesture];

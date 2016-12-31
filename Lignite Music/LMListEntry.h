@@ -82,6 +82,11 @@
 @property BOOL iPromiseIWillHaveAnIconForYouSoon;
 
 /**
+ Whether or not to align the icon to the far left of the view.
+ */
+@property BOOL alignIconToLeft;
+
+/**
  The delegate for the list entry.
  */
 @property id<LMListEntryDelegate> delegate;
