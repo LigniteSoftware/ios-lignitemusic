@@ -734,11 +734,12 @@
 	[self.brandNewAlbumArtImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.albumArtRootView];
 	
 	self.progressSlider = [LMProgressSlider newAutoLayoutView];
-	self.progressSlider.backgroundColor = [LMColour fadedColour];
+	self.progressSlider.backgroundBackgroundColour = [LMColour fadedColour];
 	self.progressSlider.finalValue = self.musicPlayer.nowPlayingTrack.playbackDuration;
 	self.progressSlider.delegate = self;
 	self.progressSlider.value = self.musicPlayer.currentPlaybackTime;
 	self.progressSlider.lightTheme = YES;
+	self.progressSlider.autoShrink = YES;
 	[self.mainView addSubview:self.progressSlider];
 	
 	[self.progressSlider autoPinEdgeToSuperviewEdge:ALEdgeLeading];

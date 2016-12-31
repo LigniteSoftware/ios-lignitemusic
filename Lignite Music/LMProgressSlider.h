@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "LMView.h"
 
+#define LMProgressSliderTopAndBottomLabelPadding (self.frame.size.height/6)
+
 @protocol LMProgressSliderDelegate <NSObject>
 
 /**
@@ -57,6 +59,16 @@
  Whether or not the user is interacting with the slider.
  */
 @property BOOL userIsInteracting;
+
+/**
+ Whether or not the progress slider should autoshrink when the user is not interacting.
+ */
+@property BOOL autoShrink;
+
+/**
+ The colour to use for the background of the background to the slider. Default is [UIColor clearColour].
+ */
+@property UIColor *backgroundBackgroundColour;
 
 /**
  The delegate for this view which will get updates on progress slider changes.
