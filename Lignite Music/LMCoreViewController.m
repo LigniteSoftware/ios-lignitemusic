@@ -208,7 +208,7 @@
 	
 	BOOL shown = [LMSettings shouldShowStatusBar];
 	
-	return !shown;
+	return !shown || self.nowPlayingView.isOpen;
 }
 
 - (UIStatusBarAnimation)preferredStatusBarUpdateAnimation {
@@ -327,7 +327,7 @@
 			break;
 		}
 		case LMIconSettings: {			
-			[self attachNavigationBarToView:self.view];
+			self.navigationBar.hidden = YES;
 			
 			LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
 			settingsViewController.coreViewController = self;
@@ -388,10 +388,12 @@
 - (void)viewDidAppear:(BOOL)animated {
 	NSLog(@"View did appear animated %d", animated);
 	
-	[self attachNavigationBarToView:self.navigationController.view];
+//	[self attachNavigationBarToView:self.navigationController.view];
 	
 	self.currentDetailViewController = nil;
 	self.searchViewController = nil;
+	
+	self.navigationBar.hidden = NO;
 	
 	if(self.statusBarBlurViewHeightConstraint.constant < 0.1 && ![self prefersStatusBarHidden]){
 		[self setStatusBarBlurHidden:NO];
@@ -600,13 +602,24 @@
 		
 		if((-translation.y <= self.nowPlayingView.frame.size.height/10.0)){
 			self.nowPlayingView.topConstraint.constant = self.nowPlayingView.frame.size.height;
+			
+			self.nowPlayingView.isOpen = NO;
 		}
 		else{
 			self.nowPlayingView.topConstraint.constant = 0.0;
+			
+			self.nowPlayingView.isOpen = YES;
 		}
 		
 		[UIView animateWithDuration:0.25 animations:^{
 			[self.nowPlayingView.superview layoutIfNeeded];
+		} completion:^(BOOL finished) {
+			if(finished){
+				[UIView animateWithDuration:0.25 animations:^{
+					[self setNeedsStatusBarAppearanceUpdate];
+					[self setStatusBarBlurHidden:self.nowPlayingView.isOpen];
+				}];
+			}
 		}];
 	}
 }
@@ -631,10 +644,10 @@
 	
 //	self.automaticallyAdjustsScrollViewInsets = YES;
 //	
-	LMFeedbackViewController *feedbackController = [LMFeedbackViewController new];
-	[self.navigationController presentViewController:feedbackController animated:YES completion:nil];
-	
-	return;
+//	LMFeedbackViewController *feedbackController = [LMFeedbackViewController new];
+//	[self.navigationController presentViewController:feedbackController animated:YES completion:nil];
+//	
+//	return;
 	
 //	LMBrowsingBar *browsingBar = [LMBrowsingBar newAutoLayoutView];
 //	[self.view addSubview:browsingBar];

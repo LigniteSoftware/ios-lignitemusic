@@ -375,11 +375,6 @@
 	}
 }
 
-- (void)closeNowPlaying {
-	[self.musicPlayer removeMusicDelegate:self];
-	[(UINavigationController*)self.window.rootViewController dismissViewControllerAnimated:YES completion:nil];
-}
-
 - (void)tappedNowPlaying {
 	if(![self.musicPlayer hasTrackLoaded]){
 		return;
@@ -542,13 +537,22 @@
 		
 		if((translation.y >= self.frame.size.height/10.0)){
 			self.topConstraint.constant = self.frame.size.height;
+			self.isOpen = YES;
 		}
 		else{
 			self.topConstraint.constant = 0.0;
+			self.isOpen = NO;
 		}
 		
 		[UIView animateWithDuration:0.25 animations:^{
 			[self.superview layoutIfNeeded];
+		} completion:^(BOOL finished) {
+			if(finished){
+				[UIView animateWithDuration:0.25 animations:^{
+					[self.coreViewController setNeedsStatusBarAppearanceUpdate];
+					[self.coreViewController setStatusBarBlurHidden:self.isOpen];
+				}];
+			}
 		}];
 	}
 }

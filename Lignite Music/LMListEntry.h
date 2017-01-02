@@ -19,6 +19,16 @@
 - (NSString*)subtitleForListEntry:(LMListEntry*)entry;
 - (UIImage*)iconForListEntry:(LMListEntry*)entry;
 
+@optional
+
+/**
+ Gets text for the list entry which goes where the icon goes. If the delegate responds to this selector, the icon will be overridden by this and this will be called on refresh.
+
+ @param entry The entry to get the text for.
+ @return The text.
+ */
+- (NSString*)textForListEntry:(LMListEntry*)entry;
+
 @end
 
 @interface LMListEntry : UIView
@@ -85,6 +95,11 @@
  Whether or not to align the icon to the far left of the view.
  */
 @property BOOL alignIconToLeft;
+
+/**
+ Whether or not to base off the label instead of icon. If yes, the textForListEntry: will be called and the delegate must conform to it.
+ */
+@property BOOL isLabelBased;
 
 /**
  The delegate for the list entry.

@@ -60,6 +60,8 @@
  */
 @property UIView *minibarBackgroundView;
 
+@property (readonly) LMGrabberView *minibarBackgroundGrabber;
+
 /**
  The constraint for the bottom pin of the minibar.
  */
@@ -88,6 +90,22 @@
 @end
 
 @implementation LMNavigationBar
+
+- (LMGrabberView*)minibarBackgroundGrabber {
+	LMGrabberView *grabberView = nil;
+	
+	for(NSLayoutConstraint *constraint in self.constraints){
+		id firstView = constraint.firstItem;
+		id secondView = constraint.secondItem;
+		
+		if([firstView class] == [LMGrabberView class] && [secondView isEqual:self.minibarBackgroundView]) {
+			grabberView = firstView;
+			break;
+		}
+	}
+	
+	return grabberView;
+}
 
 - (CGFloat)maximizedHeight {
 	return self.buttonBar.frame.size.height
@@ -159,6 +177,9 @@
 	NSLog(@"Minimize");
 	
 	__weak id weakSelf = self;
+	
+	self.minibarBackgroundView.alpha = 1.0;
+	self.minibarBackgroundGrabber.alpha = 1.0;
 	
 	[self setButtonBarBottomConstraintConstant:self.buttonBar.frame.size.height
 											 + self.viewAttachedToButtonBar.frame.size.height
@@ -264,13 +285,29 @@
 	}
 	CGFloat totalTranslation = translation.y + (self.currentPoint.y-self.originalPoint.y);
 	
-//	NSLog(@"%f", totalTranslation);
+	NSLog(@"%f %f", totalTranslation, translation.y);
 	
 	if(totalTranslation < 0){ //Moving upward
 		self.buttonBarBottomConstraint.constant = -sqrt(-totalTranslation);
 	}
 	else{ //Moving downward
 		self.buttonBarBottomConstraint.constant = totalTranslation;
+	}
+	
+	if(translation.y < 0){ //Moving up
+		CGFloat newMinibarAlphaValue = 1.0;
+		
+		newMinibarAlphaValue = 1.0 + (translation.y/LMNavigationBarGrabberHeight);
+		
+		if(newMinibarAlphaValue < 0){
+			newMinibarAlphaValue = 0;
+		}
+		if(newMinibarAlphaValue > 1){
+			newMinibarAlphaValue = 1;
+		}
+		
+		self.minibarBackgroundView.alpha = newMinibarAlphaValue;
+		self.minibarBackgroundGrabber.alpha = newMinibarAlphaValue;
 	}
 	
 	[self layoutIfNeeded];
@@ -359,11 +396,8 @@
 }
 
 - (void)clickedButton:(LMButton *)button {
-//	NSLog(@"Spoooooked");
-//	self.openedSourceSelectorFromShortcut = YES;
-//	[self open];
-//	[self selectSource:LMBrowsingAssistantTabView];
-//	[self openSourceSelector];
+	[self maximize];
+	[self setSelectedTab:LMNavigationTabView];
 }
 
 - (void)searchTermChangedTo:(NSString *)searchTerm {
@@ -388,7 +422,7 @@
 		
 		self.heightBeforeAdjustingToScrollPosition = -1;
 		
-		CGFloat minibarHeight = WINDOW_FRAME.size.height/19.0;
+		CGFloat minibarHeight = WINDOW_FRAME.size.height/12.0;
 		
 		self.minibarBackgroundView = [UIView newAutoLayoutView];
 		self.minibarBackgroundView.backgroundColor = [UIColor purpleColor];
@@ -449,7 +483,7 @@
 		
 		[self.minibarLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:10];
 		[self.minibarLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.minibarButton withOffset:-10];
-		[self.minibarLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.minibarBackgroundView withMultiplier:(1.0/2.0)];
+		[self.minibarLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.minibarBackgroundView withMultiplier:(1.0/3.0)];
 		[self.minibarLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
 		
 		
@@ -460,7 +494,7 @@
 		
 		[self.minibarDetailLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:10];
 		[self.minibarDetailLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.minibarButton withOffset:10];
-		[self.minibarDetailLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.minibarBackgroundView withMultiplier:(1.0/2.0)];
+		[self.minibarDetailLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.minibarBackgroundView withMultiplier:(1.0/3.0)];
 		[self.minibarDetailLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
 		
 		
@@ -544,6 +578,27 @@
 		UIPanGestureRecognizer *buttonBarGrabberMoveRecognizer = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(handlePan:)];
 		buttonBarGrabberMoveRecognizer.delegate = self;
 		[self.buttonBar addGestureRecognizer:buttonBarGrabberMoveRecognizer];
+		
+		
+		
+		LMGrabberView *buttonBarGrabberView = [LMGrabberView newAutoLayoutView];
+		buttonBarGrabberView.backgroundColor = [LMColour semiTransparentLigniteRedColour];
+		buttonBarGrabberView.layer.masksToBounds = YES;
+		buttonBarGrabberView.userInteractionEnabled = YES;
+		[self addSubview:buttonBarGrabberView];
+		
+		[buttonBarGrabberView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.buttonBar];
+		[buttonBarGrabberView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(1.0/6.0)];
+		[buttonBarGrabberView autoSetDimension:ALDimensionHeight toSize:LMNavigationBarGrabberHeight];
+		[buttonBarGrabberView autoAlignAxisToSuperviewAxis:ALAxisVertical];
+		
+		UIPanGestureRecognizer *buttonBarGrabberViewMoveRecognizer = [[UIPanGestureRecognizer alloc]initWithTarget:self
+																											action:@selector(handlePan:)];
+		buttonBarGrabberViewMoveRecognizer.delegate = self;
+		[buttonBarGrabberView addGestureRecognizer:buttonBarGrabberViewMoveRecognizer];
+		
+		[self sendSubviewToBack:buttonBarGrabberView];
+		
 		
 		
 		self.buttonBarBottomWhitespaceView = [UIView newAutoLayoutView];

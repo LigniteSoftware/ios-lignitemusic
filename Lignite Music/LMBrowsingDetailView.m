@@ -357,6 +357,13 @@
 	return [track albumArt];
 }
 
+- (NSString*)textForListEntry:(LMListEntry *)entry {
+	if(self.musicType == LMMusicTypeAlbums){
+		return [NSString stringWithFormat:@"%ld", entry.collectionIndex + 1];
+	}
+	return @":)";
+}
+
 - (id)subviewAtIndex:(NSUInteger)index forTableView:(LMTableView*)tableView {
 	if(index == 0){
 		return self.headerBigListEntry;
@@ -399,6 +406,7 @@
 		listEntry.associatedData = self.usingSpecificTrackCollections ?
 									[self.specificTrackCollections objectAtIndex:i] :
 									[self.musicTrackCollection.items objectAtIndex:i];
+		listEntry.isLabelBased = (self.musicType == LMMusicTypeAlbums);
 		[listEntry setup];
 		
 		[self.songEntries addObject:listEntry];

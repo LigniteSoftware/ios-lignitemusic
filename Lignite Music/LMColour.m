@@ -18,7 +18,9 @@
 }
 
 + (UIColor*)semiTransparentLigniteRedColour {
-	return [UIColor colorWithRed:0.69 green:0.16 blue:0.15 alpha:0.5];
+//	return [UIColor colorWithRed:0.69 green:0.16 blue:0.15 alpha:0.75];
+	
+	return [LMColour ligniteRedColour]; //Temporary fix because Philipp wants to try it
 }
 
 + (UIColor*)darkLigniteRedColour {

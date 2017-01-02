@@ -15,6 +15,7 @@
 
 @property UIView *iconBackgroundView;
 @property UIImageView *iconView;
+@property LMLabel *leftTextLabel;
 @property LMLabel *titleLabel, *subtitleLabel;
 
 @property BOOL highlighted;
@@ -30,9 +31,15 @@
 	UIImage *icon = [self.delegate iconForListEntry:self];
 	NSString *title = [self.delegate titleForListEntry:self];
 	NSString *subtitle = [self.delegate subtitleForListEntry:self];
+	NSString *leftText;
+	if([self.delegate respondsToSelector:@selector(textForListEntry:)]){
+		leftText = [self.delegate textForListEntry:self];
+	}
+	
 	self.titleLabel.text = title;
 	self.subtitleLabel.text = subtitle ? subtitle : @"";
 	self.iconView.image = self.imageIsInverted ? [LMAppIcon invertImage:icon] : icon;
+	self.leftTextLabel.text = leftText;
 }
 
 - (void)changeHighlightStatus:(BOOL)highlighted animated:(BOOL)animated {
@@ -44,6 +51,7 @@
 		self.contentView.backgroundColor = highlighted ? [self.delegate tapColourForListEntry:self] : [UIColor clearColor];
 		self.titleLabel.textColor = highlighted ? [UIColor whiteColor] : [UIColor blackColor];
 		self.subtitleLabel.textColor = highlighted ? [UIColor whiteColor] : [UIColor blackColor];
+//		self.leftTextLabel.textColor = highlighted ? [UIColor whiteColor] : [UIColor blackColor];
 		if(self.iconView.image && self.invertIconOnHighlight){
 			if(!self.imageIsInverted && self.highlighted){
 				self.iconView.image = [LMAppIcon invertImage:self.iconView.image];
@@ -86,10 +94,15 @@
 		self.contentViewHeightMultiplier = 0.95;
 	}
 	
+	if(self.isLabelBased){
+		self.iconPaddingMultiplier = 0.75;
+	}
+	
 	self.contentView = [UIView newAutoLayoutView];
 	self.contentView.clipsToBounds = NO;
 	self.contentView.layer.masksToBounds = NO;
 	self.contentView.layer.cornerRadius = 8;
+	self.contentView.backgroundColor = [UIColor orangeColor];
 	[self addSubview:self.contentView];
 	
 	[self.contentView autoCenterInSuperview];
@@ -105,6 +118,10 @@
 	}
 	
 	BOOL willHaveAnIcon = (icon != nil) || self.iPromiseIWillHaveAnIconForYouSoon;
+	
+	if(self.isLabelBased){
+		willHaveAnIcon = NO;
+	}
 	
 	if(willHaveAnIcon){
 		self.iconBackgroundView = [UIView newAutoLayoutView];
@@ -132,6 +149,31 @@
 		[self.iconView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.iconBackgroundView withMultiplier:self.iconInsetMultiplier];
 		[self.iconView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.iconBackgroundView withMultiplier:self.iconInsetMultiplier];
 	}
+	
+	
+	if(self.isLabelBased){
+		willHaveAnIcon = YES;
+		
+		self.iconBackgroundView = [UIView newAutoLayoutView];
+		self.iconBackgroundView.backgroundColor = [UIColor clearColor];
+		[self.contentView addSubview:self.iconBackgroundView];
+		
+		[self.iconBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.iconBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+		[self.iconBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[self.iconBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.contentView];
+		[self.iconBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.contentView withMultiplier:self.iconPaddingMultiplier];
+	
+		
+		self.leftTextLabel = [LMLabel newAutoLayoutView];
+		self.leftTextLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:50.0f];
+		self.leftTextLabel.text = [NSString stringWithFormat:@"%ld", self.collectionIndex + 1];
+		self.leftTextLabel.textColor = [UIColor lightGrayColor];
+		self.leftTextLabel.textAlignment = NSTextAlignmentRight;
+//		self.leftTextLabel.backgroundColor = [UIColor redColor];
+		[self.iconBackgroundView addSubview:self.leftTextLabel];
+	}
+	
 	
 	NSMutableArray *titleConstraints = [[NSMutableArray alloc]init];
 	
@@ -182,6 +224,12 @@
 																			 multiplier:1.0
 																			   constant:0];
 		[self.contentView addConstraint:titleTopConstraint];
+	}
+	
+	if(self.isLabelBased){
+		[self.leftTextLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.titleLabel];
+		[self.leftTextLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.titleLabel];
+		[self.leftTextLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.titleLabel withOffset:-15];
 	}
 	
 	UITapGestureRecognizer *tappedViewRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tappedView)];

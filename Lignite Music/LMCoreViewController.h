@@ -16,7 +16,12 @@
 @property LMBrowsingDetailViewController *currentDetailViewController;
 
 - (void)prepareToLoadView;
-- (void)setStatusBarBlurHidden:(BOOL)hidden;
 
+/**
+ Set the status bar blur as hidden or not.
+
+ @param hidden Whether or not to hide the status bar blur.
+ */
+- (void)setStatusBarBlurHidden:(BOOL)hidden;
 
 @end
