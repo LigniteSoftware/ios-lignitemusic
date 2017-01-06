@@ -293,7 +293,7 @@
 
 - (void)musicOutputPortDidChange:(AVAudioSessionPortDescription *)outputPort {
 	[UIView animateWithDuration:0.25 animations:^{
-		[self.airplayButton setColour:[LMMusicPlayer outputPortIsWireless:outputPort] ? [UIColor whiteColor] : [LMColour fadedColour]];
+		[self.airplayButton setColour:[LMMusicPlayer outputPortIsWireless:outputPort] ? [[UIColor whiteColor] colorWithAlphaComponent:(8.0/10.0)] : [LMColour fadedColour]];
 	}];
 }
 
@@ -318,7 +318,7 @@
 	self.originalPoint = CGPointZero;
 	
 	[UIView animateWithDuration:0.25 animations:^{
-		[self.queueButton setColour:open ? [UIColor whiteColor] : [LMColour fadedColour]];
+		[self.queueButton setColour:open ? [[UIColor whiteColor] colorWithAlphaComponent:(8.0/10.0)] : [LMColour fadedColour]];
 		[self layoutIfNeeded];
 	}];
 }
@@ -337,7 +337,7 @@
 		self.musicPlayer.shuffleMode = !self.musicPlayer.shuffleMode;
 		
 		[UIView animateWithDuration:0.25 animations:^{
-			[button setColour:self.musicPlayer.shuffleMode ? [UIColor whiteColor] : [LMColour fadedColour]];
+			[button setColour:self.musicPlayer.shuffleMode ? [[UIColor whiteColor] colorWithAlphaComponent:(8.0/10.0)] : [LMColour fadedColour]];
 		}];
 	}
 	else if(button == self.repeatModeButton){
@@ -351,7 +351,7 @@
 		[self updateRepeatButtonImage];
 		
 		[UIView animateWithDuration:0.25 animations:^{
-			[button setColour:(self.musicPlayer.repeatMode != LMMusicRepeatModeNone) ? [UIColor whiteColor] : [LMColour fadedColour]];
+			[button setColour:(self.musicPlayer.repeatMode != LMMusicRepeatModeNone) ? [[UIColor whiteColor] colorWithAlphaComponent:(8.0/10.0)] : [LMColour fadedColour]];
 		}];
 	}
 	else if(button == self.queueButton){
@@ -839,8 +839,8 @@
 		}
 	}
 	
-	[self.shuffleModeButton setColour:self.musicPlayer.shuffleMode ? [UIColor whiteColor] : [LMColour fadedColour]];
-	[self.repeatModeButton setColour:(self.musicPlayer.repeatMode != LMMusicRepeatModeNone) ? [UIColor whiteColor] : [LMColour fadedColour]];
+	[self.shuffleModeButton setColour:self.musicPlayer.shuffleMode ? [[UIColor whiteColor] colorWithAlphaComponent:(8.0/10.0)] : [LMColour fadedColour]];
+	[self.repeatModeButton setColour:(self.musicPlayer.repeatMode != LMMusicRepeatModeNone) ? [[UIColor whiteColor] colorWithAlphaComponent:(8.0/10.0)] : [LMColour fadedColour]];
 	
 	[self.musicPlayer addMusicDelegate:self];
 	

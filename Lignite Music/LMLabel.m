@@ -26,7 +26,7 @@
 	while(minimumFontSize <= maximumFontSize){
 		fontSizeAverage = minimumFontSize + (maximumFontSize - minimumFontSize) / 2;
 		if(self.text){
-			float labelHeight = self.frame.size.height;
+			float labelHeight = self.frame.size.height - (self.topAndBottomPadding * 10);
 			float testStringHeight = [self.text sizeWithAttributes:@{
 																NSFontAttributeName: [self.font fontWithSize:fontSizeAverage]
 																}].height;

@@ -55,7 +55,7 @@
 							   , nil];
 			
 			self.screenshotsArray = [[NSArray alloc]initWithObjects:
-									 @"icon_no_cover_art.png",
+									 @"icon_no_cover_art_75.png",
 									 @"onboarding_kickstarter.png",
 									 @"onboarding_library_access.png",
 									 @"onboarding_bluetooth.png"

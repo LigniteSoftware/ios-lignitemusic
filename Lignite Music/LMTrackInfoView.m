@@ -98,7 +98,7 @@
 	//	self.titleLabel.layoutMargins = UIEdgeInsetsMake(0, -4, 0, -4);
 		
 		CGFloat heightMultipliers[] = {
-			(1.0/2.0), (1.0/4.0), (1.0/5.0)
+			(1.0/2.25), (1.0/4.0), (1.0/5.0)
 		};
 		NSArray *labels = @[
 			self.titleLabel, self.artistLabel, self.albumLabel

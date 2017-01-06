@@ -611,6 +611,40 @@ NSString* deviceName(){
 	
 	UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(seeAllReportsTapped)];
 	[self.seeAllReportsLabel addGestureRecognizer:tapGesture];
+	
+	[NSTimer scheduledTimerWithTimeInterval:1.0 block:^{
+		dispatch_async(dispatch_get_main_queue(), ^{
+	
+			if(![[NSUserDefaults standardUserDefaults] objectForKey:@"PleaseStopSendingNavigationFeedbackPopup"]){
+				NSLog(@"Spookdd!!!");
+				
+				UIAlertController *alert = [UIAlertController
+											alertControllerWithTitle:NSLocalizedString(@"PleaseStopSendingNavigationFeedbackTitle", nil)
+											message:NSLocalizedString(@"PleaseStopSendingNavigationFeedbackDescription", nil)
+											preferredStyle:UIAlertControllerStyleAlert];
+				
+				UIAlertAction *okButton = [UIAlertAction
+										   actionWithTitle:NSLocalizedString(@"Okay", nil)
+										   style:UIAlertActionStyleDefault
+										   handler:^(UIAlertAction *action) {
+											   [[NSUserDefaults standardUserDefaults] setObject:@"No hope for humanity (except for you since you figured out a way to read this)  ;)"
+																						 forKey:@"PleaseStopSendingNavigationFeedbackPopup"];
+										   }];
+				
+				[alert addAction:okButton];
+				
+				NSArray *viewArray = [[[[[[[[[[[[alert view] subviews] firstObject] subviews] firstObject] subviews] firstObject] subviews] firstObject] subviews] firstObject] subviews]; //lol
+				//		UILabel *alertTitle = viewArray[0];
+				UILabel *alertMessage = viewArray[1];
+				alertMessage.textAlignment = NSTextAlignmentLeft;
+				
+				[self presentViewController:alert animated:YES completion:^{
+					NSLog(@"Done my friend!");
+				}];
+			}
+			
+		});
+	} repeats:NO];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {

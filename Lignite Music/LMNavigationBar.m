@@ -60,6 +60,14 @@
  */
 @property UIView *minibarBackgroundView;
 
+/**
+ The label that goes right above the minibar for when the source selector is minimized.
+ */
+@property LMLabel *buttonBarSourceSelectorWarningLabel;
+
+/**
+ The grabber for the background of the minibar.
+ */
 @property (readonly) LMGrabberView *minibarBackgroundGrabber;
 
 /**
@@ -108,9 +116,17 @@
 }
 
 - (CGFloat)maximizedHeight {
+	CGFloat extra = 0;
+	
+	if(self.viewAttachedToButtonBar == nil){ //Source selector minimized
+		extra = self.buttonBarSourceSelectorWarningLabel.frame.size.height;
+		NSLog(@"Adding %f extra", extra);
+	}
+	
 	return self.buttonBar.frame.size.height
 		 + self.viewAttachedToButtonBar.frame.size.height
-		 + LMNavigationBarGrabberHeight;
+		 + LMNavigationBarGrabberHeight
+		 + extra;
 }
 
 - (CGFloat)minimizedHeight {
@@ -164,9 +180,7 @@
 	[UIView animateWithDuration:0.25 animations:^{
 		[self layoutIfNeeded];
 	} completion:^(BOOL finished) {
-		[self.delegate requiredHeightForNavigationBarChangedTo:self.buttonBar.frame.size.height
-															+ (viewAttachedToButtonBar.frame.size.height)
-															+ LMNavigationBarGrabberHeight
+		[self.delegate requiredHeightForNavigationBarChangedTo:[self maximizedHeight]
 										 withAnimationDuration:isDecreasing ? 0.10 : 0.50];
 	}];
 		
@@ -415,7 +429,7 @@
 		NSLog(@"Did layout constraints!");
 		
 		
-//		self.backgroundColor = [UIColor cyanColor];
+//		self.backgroundColor = [UIColor purpleColor];
 		
 		
 		self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
@@ -443,6 +457,7 @@
 		UIPanGestureRecognizer *minibarBackgroundViewGrabberMoveRecognizer = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(handlePan:)];
 		minibarBackgroundViewGrabberMoveRecognizer.delegate = self;
 		[self.minibarBackgroundView addGestureRecognizer:minibarBackgroundViewGrabberMoveRecognizer];
+		
 		
 		
 		LMGrabberView *minibarBackgroundGrabberView = [LMGrabberView newAutoLayoutView];
@@ -509,7 +524,6 @@
 		self.browsingBar.searchBarDelegate = self;
 		self.browsingBar.letterTabDelegate = self.letterTabBarDelegate;
 		[self addSubview:self.browsingBar];
-		
 		
 		
 		LMGrabberView *browsingBarGrabberView = [LMGrabberView newAutoLayoutView];
@@ -580,6 +594,29 @@
 		[self.buttonBar addGestureRecognizer:buttonBarGrabberMoveRecognizer];
 		
 		
+		self.buttonBarSourceSelectorWarningLabel = [LMLabel newAutoLayoutView];
+		self.buttonBarSourceSelectorWarningLabel.text = NSLocalizedString(@"TapViewAgainToOpenSourceSelector", nil);
+		self.buttonBarSourceSelectorWarningLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:50.0f];
+		self.buttonBarSourceSelectorWarningLabel.textAlignment = NSTextAlignmentCenter;
+		self.buttonBarSourceSelectorWarningLabel.textColor = [UIColor blackColor];
+		self.buttonBarSourceSelectorWarningLabel.backgroundColor = [UIColor whiteColor];
+		self.buttonBarSourceSelectorWarningLabel.topAndBottomPadding = 1.0;
+		self.buttonBarSourceSelectorWarningLabel.userInteractionEnabled = YES;
+		[self addSubview:self.buttonBarSourceSelectorWarningLabel];
+		
+		[self.buttonBarSourceSelectorWarningLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.buttonBarSourceSelectorWarningLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.buttonBarSourceSelectorWarningLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.buttonBar];
+		[self.buttonBarSourceSelectorWarningLabel autoMatchDimension:ALDimensionHeight
+													   toDimension:ALDimensionHeight
+															ofView:self.buttonBar
+													withMultiplier:(1.0/3.0)];
+		
+		
+		UIPanGestureRecognizer *buttonBarSourceWarningGrabberMoveRecognizer = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(handlePan:)];
+		buttonBarSourceWarningGrabberMoveRecognizer.delegate = self;
+		[self.buttonBarSourceSelectorWarningLabel addGestureRecognizer:buttonBarSourceWarningGrabberMoveRecognizer];
+		
 		
 		LMGrabberView *buttonBarGrabberView = [LMGrabberView newAutoLayoutView];
 		buttonBarGrabberView.backgroundColor = [LMColour semiTransparentLigniteRedColour];
@@ -587,7 +624,7 @@
 		buttonBarGrabberView.userInteractionEnabled = YES;
 		[self addSubview:buttonBarGrabberView];
 		
-		[buttonBarGrabberView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.buttonBar];
+		[buttonBarGrabberView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.buttonBarSourceSelectorWarningLabel];
 		[buttonBarGrabberView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(1.0/6.0)];
 		[buttonBarGrabberView autoSetDimension:ALDimensionHeight toSize:LMNavigationBarGrabberHeight];
 		[buttonBarGrabberView autoAlignAxisToSuperviewAxis:ALAxisVertical];
@@ -597,6 +634,7 @@
 		buttonBarGrabberViewMoveRecognizer.delegate = self;
 		[buttonBarGrabberView addGestureRecognizer:buttonBarGrabberViewMoveRecognizer];
 		
+		[self sendSubviewToBack:self.buttonBarSourceSelectorWarningLabel];
 		[self sendSubviewToBack:buttonBarGrabberView];
 		
 		

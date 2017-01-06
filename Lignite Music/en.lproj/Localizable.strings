@@ -39,6 +39,15 @@
  */
 
 
+
+
+//Temporary
+"PleaseStopSendingNavigationFeedbackTitle" = "Please read";
+"PleaseStopSendingNavigationFeedbackDescription" = "Please stop sending feedback about not being able to exit views.\n\nYou can swipe from the left edge of the display to the right to exit any view that comes in from the right. Sorry this was never explained clearly.\n\nWe are working on a more streamlined way to exit views.\n\nThank you.";
+
+"TapViewAgainToOpenSourceSelector" = "Tap view button again to open view selector";
+
+
 /*
  
  New strings

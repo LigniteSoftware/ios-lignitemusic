@@ -10,4 +10,9 @@
 
 @interface LMLabel : UILabel
 
+/**
+ The amount of padding to put on the top and bottom.
+ */
+@property CGFloat topAndBottomPadding;
+
 @end

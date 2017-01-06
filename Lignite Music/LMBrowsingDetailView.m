@@ -352,7 +352,12 @@
 	}
 	LMMusicTrack *track = [self.musicTrackCollection.items objectAtIndex:entry.collectionIndex];
 	if(self.musicTrackCollection.variousArtists){
-		return [NSString stringWithFormat:@"%@ | %@", [LMNowPlayingView durationStringTotalPlaybackTime:track.playbackDuration], track.artist ? track.artist : NSLocalizedString(@"UnknownArtist", nil)];
+		if(self.musicType == LMMusicTypePlaylists){
+			return [NSString stringWithFormat:@"#%ld | %@ | %@", (entry.collectionIndex + 1), [LMNowPlayingView durationStringTotalPlaybackTime:track.playbackDuration], track.artist ? track.artist : NSLocalizedString(@"UnknownArtist", nil)];
+		}
+		else{
+			return [NSString stringWithFormat:@"%@ | %@", [LMNowPlayingView durationStringTotalPlaybackTime:track.playbackDuration], track.artist ? track.artist : NSLocalizedString(@"UnknownArtist", nil)];
+		}
 	}
 	else{
 		return [NSString stringWithFormat:NSLocalizedString(@"LengthOfSong", nil), [LMNowPlayingView durationStringTotalPlaybackTime:track.playbackDuration]];
@@ -369,7 +374,7 @@
 }
 
 - (NSString*)textForListEntry:(LMListEntry *)entry {
-	if(self.musicType == LMMusicTypeAlbums){
+	if(self.musicType == LMMusicTypeAlbums || self.musicType == LMMusicTypeCompilations){
 		return [NSString stringWithFormat:@"%ld", entry.collectionIndex + 1];
 	}
 	return @":)";
@@ -417,7 +422,7 @@
 		listEntry.associatedData = self.usingSpecificTrackCollections ?
 									[self.specificTrackCollections objectAtIndex:i] :
 									[self.musicTrackCollection.items objectAtIndex:i];
-		listEntry.isLabelBased = (self.musicType == LMMusicTypeAlbums);
+		listEntry.isLabelBased = (self.musicType == LMMusicTypeAlbums || self.musicType == LMMusicTypeCompilations);
 		[listEntry setup];
 		
 		[self.songEntries addObject:listEntry];

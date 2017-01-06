@@ -43,9 +43,9 @@
 		case LMIconBug:
 			return @"icon_bug.png";
 		case LMIconNoAlbumArt50Percent:
-//			return @"icon_no_cover_art_50.png";
+			return @"icon_no_cover_art_50.png";
 		case LMIconNoAlbumArt75Percent:
-//			return @"icon_no_cover_art_75.png";
+			return @"icon_no_cover_art_75.png";
 		case LMIconNoAlbumArt:
 			return @"icon_no_cover_art.png";
 		case LMIconSource:
