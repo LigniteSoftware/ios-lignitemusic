@@ -703,7 +703,7 @@
 	
 	
 	UIImageView *hangOnImage = [UIImageView newAutoLayoutView];
-	hangOnImage.image = [UIImage imageNamed:@"cleaner_splash_portrait.png"];
+	hangOnImage.image = [UIImage imageNamed:@"splash_wings.png"];
 	hangOnImage.contentMode = UIViewContentModeScaleAspectFill;
 	[self.view addSubview:hangOnImage];
 	
