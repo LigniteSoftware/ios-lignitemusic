@@ -42,12 +42,12 @@
 			return @"icon_compilations.png";
 		case LMIconBug:
 			return @"icon_bug.png";
+		case LMIconNoAlbumArt50Percent:
+//			return @"icon_no_cover_art_50.png";
+		case LMIconNoAlbumArt75Percent:
+//			return @"icon_no_cover_art_75.png";
 		case LMIconNoAlbumArt:
 			return @"icon_no_cover_art.png";
-		case LMIconNoAlbumArt50Percent:
-			return @"icon_no_cover_art_50.png";
-		case LMIconNoAlbumArt75Percent:
-			return @"icon_no_cover_art_75.png";
 		case LMIconSource:
 			return @"icon_source.png";
 		case LMIconBrowse:
@@ -98,6 +98,8 @@
 			return @"icon_down_arrow.png";
 		case LMIconUpArrow:
 			return @"icon_up_arrow.png";
+		case LMIconNoSearchResults:
+			return @"icon_no_search_results.png";
 	}
 }
 

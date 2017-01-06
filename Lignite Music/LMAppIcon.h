@@ -54,7 +54,8 @@ typedef enum {
 	LMIconBuy,
 	LMIconKickstarter,
 	LMIconDownArrow,
-	LMIconUpArrow
+	LMIconUpArrow,
+	LMIconNoSearchResults
 } LMIcon;
 
 /**

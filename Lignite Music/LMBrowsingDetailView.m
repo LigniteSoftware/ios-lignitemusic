@@ -199,7 +199,12 @@
 	switch(self.musicType){
 		case LMMusicTypeComposers:
 		case LMMusicTypeArtists: {
-			return [NSString stringWithFormat:@"%lu %@", (unsigned long)self.musicTrackCollection.numberOfAlbums, [NSLocalizedString(self.musicTrackCollection.numberOfAlbums == 1 ? @"Album" : @"Albums", nil) lowercaseString]];
+			if(self.usingSpecificTrackCollections){
+				return [NSString stringWithFormat:@"%lu %@", (unsigned long)self.specificTrackCollections.count, NSLocalizedString(self.specificTrackCollections.count == 1 ? @"AlbumInline" : @"AlbumsInline", nil)];
+			}
+			else{
+				return [NSString stringWithFormat:@"%lu %@", (unsigned long)self.musicTrackCollection.numberOfAlbums, NSLocalizedString(self.musicTrackCollection.numberOfAlbums == 1 ? @"AlbumInline" : @"AlbumsInline", nil)];
+			}
 		}
 		case LMMusicTypeGenres:
 		case LMMusicTypePlaylists: {
@@ -273,9 +278,10 @@
 - (float)contentSubviewFactorial:(BOOL)height forBigListEntry:(LMBigListEntry *)bigListEntry {
 	switch(self.musicType){
 		case LMMusicTypeGenres:
-		case LMMusicTypePlaylists: {
-			return height ? 0.25 : 0.80;
-		}
+		case LMMusicTypePlaylists:
+//		{
+//			return height ? 0.25 : 0.80;
+//		}
 		case LMMusicTypeComposers:
 		case LMMusicTypeArtists:
 		case LMMusicTypeCompilations:
@@ -345,7 +351,12 @@
 		return [NSString stringWithFormat:@"%ld %@", collection.count, NSLocalizedString(collection.count == 1 ? @"Song" : @"Songs", nil)];
 	}
 	LMMusicTrack *track = [self.musicTrackCollection.items objectAtIndex:entry.collectionIndex];
-	return [NSString stringWithFormat:NSLocalizedString(@"LengthOfSong", nil), [LMNowPlayingView durationStringTotalPlaybackTime:track.playbackDuration]];
+	if(self.musicTrackCollection.variousArtists){
+		return [NSString stringWithFormat:@"%@ | %@", [LMNowPlayingView durationStringTotalPlaybackTime:track.playbackDuration], track.artist ? track.artist : NSLocalizedString(@"UnknownArtist", nil)];
+	}
+	else{
+		return [NSString stringWithFormat:NSLocalizedString(@"LengthOfSong", nil), [LMNowPlayingView durationStringTotalPlaybackTime:track.playbackDuration]];
+	}
 }
 
 - (UIImage*)iconForListEntry:(LMListEntry*)entry {

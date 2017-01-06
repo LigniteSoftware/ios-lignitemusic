@@ -33,6 +33,7 @@
 #import "LMSource.h"
 
 #import "LMFeedbackViewController.h"
+#import "LMCreditsViewController.h"
 #import "LMProgressSlider.h"
 #import "LMBrowsingBar.h"
 
@@ -671,12 +672,12 @@
 	
 //	NSLog(@"Loading view %@", self.navigationController);
 	
-//	LMCreditsView *view = [LMCreditsView newAutoLayoutView];
-//	[self.view addSubview:view];
-//	
-//	[view autoPinEdgesToSuperviewEdges];
+	
+//	LMCreditsViewController *creditsViewController = [LMCreditsViewController new];
+//	[self.navigationController pushViewController:creditsViewController animated:YES];
 //	
 //	return;
+
 	
 //	[NSTimer scheduledTimerWithTimeInterval:0.5 repeats:NO block:^() {
 //		[[LMPurchaseManager sharedPurchaseManager] showPurchaseViewControllerOnViewController:self.navigationController present:YES];
@@ -687,6 +688,7 @@
 //	[self.navigationController pushViewController:settingsViewController animated:YES];
 //	
 //	return;
+	
 	
 //	LMImageManager *imageManager = [LMImageManager sharedImageManager];
 //	[imageManager launchPermissionRequestOnView:self.view
@@ -806,6 +808,7 @@
 						
 						
 						self.nowPlayingView = [LMNowPlayingView newAutoLayoutView];
+						self.nowPlayingView.coreViewController = self;
 						[self.navigationController.view addSubview:self.nowPlayingView];
 						
 						[self.nowPlayingView autoPinEdgeToSuperviewEdge:ALEdgeLeading];

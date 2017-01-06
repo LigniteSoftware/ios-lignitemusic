@@ -183,61 +183,61 @@
 						  @"IconsDescription"
 						  ];
 	float textFontSizes[] = {
-		34.0,
+		30.0,
 		
-		20.0,
-		20.0,
+		18.0,
+		18.0,
 		
-		20.0,
-		20.0,
+		18.0,
+		18.0,
 		
-		20.0,
-		20.0,
+		18.0,
+		18.0,
 		
-		20.0,
-		20.0,
+		18.0,
+		18.0,
 		
-		20.0,
-		20.0,
+		18.0,
+		18.0,
 		
-		20.0,
-		20.0,
+		18.0,
+		18.0,
 		
-		20.0,
-		20.0,
+		18.0,
+		18.0,
 		
-		34.0,
-		20.0,
+		30.0,
+		18.0,
 		
-		34.0,
-		20.0,
+		30.0,
+		18.0,
 		
-		20.0,
-		20.0,
+		18.0,
+		18.0,
 		
-		20.0,
-		20.0,
+		18.0,
+		18.0,
 		
-		20.0,
-		20.0,
+		18.0,
+		18.0,
 		
-		20.0,
-		20.0,
+		18.0,
+		18.0,
 		
-		20.0,
-		20.0,
+		18.0,
+		18.0,
 		
-		20.0,
-		20.0,
+		18.0,
+		18.0,
 		
-		20.0,
-		20.0,
+		18.0,
+		18.0,
 		
-		20.0,
-		20.0,
+		18.0,
+		18.0,
 		
-		34.0,
-		20.0
+		30.0,
+		18.0
 	};
 	BOOL textFontIsBoldOptions[] = {
 		NO,
@@ -323,7 +323,7 @@
 		
 		[textLabel autoSetDimension:ALDimensionWidth toSize:WINDOW_FRAME.size.width*0.90];
 		[textLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
-		[textLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:previousLabelToAttachTo withOffset:WINDOW_FRAME.size.width*(i == 0 ? 0.10 : (fontSize == 34.0 ? 0.075 : 0.035))];
+		[textLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:previousLabelToAttachTo withOffset:WINDOW_FRAME.size.width*(i == 0 ? 0.10 : (fontSize == 30.0 ? 0.075 : 0.035))];
 		
 		[textLabelsArray addObject:textLabel];
 	}

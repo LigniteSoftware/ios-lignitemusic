@@ -537,12 +537,14 @@
 		
 		if((translation.y >= self.frame.size.height/10.0)){
 			self.topConstraint.constant = self.frame.size.height;
-			self.isOpen = YES;
+			self.isOpen = NO;
 		}
 		else{
 			self.topConstraint.constant = 0.0;
-			self.isOpen = NO;
+			self.isOpen = YES;
 		}
+		
+		NSLog(@"Finished is open %d", self.isOpen);
 		
 		[UIView animateWithDuration:0.25 animations:^{
 			[self.superview layoutIfNeeded];
@@ -560,10 +562,6 @@
 
 - (void)panQueueClosed:(UIPanGestureRecognizer *)recognizer {
 	CGPoint translation = [recognizer translationInView:self.mainView];
-	
-	if(self.queueOriginalPoint.x == 0){
-		self.queueOriginalPoint = self.mainView.frame.origin;
-	}
 	
 	CGFloat totalTranslation;
 	if(recognizer.view == self.queueOpenDraggingOverlayView){

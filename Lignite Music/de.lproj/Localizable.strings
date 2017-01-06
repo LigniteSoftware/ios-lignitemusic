@@ -153,6 +153,7 @@
  These strings are also used in-code to generate counts for sources. For example, the "Albums" string will be used to compose a string saying "69 Albums". If your language requires a different structure or format in this scenario, please reach out to us.
  */
 "Albums" = "Alben";
+"AlbumsInline" = "Alben";
 "Titles" = "Titel"; //Individual songs
 "Artists" = "Künstler";
 "Playlists" = "Wiedergabelisten";
@@ -166,6 +167,7 @@
 "UnknownArtist" = "Unbekannter Künstler";
 "UnknownAlbumTitle" = "Unbekanntes Album";
 "Album" = "Album";
+"AlbumInline" = "Album";
 "Title" = "Titel";
 "Artist" = "Künstler";
 "Playlist" = "Wiedergabeliste";

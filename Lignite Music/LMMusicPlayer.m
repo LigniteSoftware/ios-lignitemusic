@@ -79,7 +79,7 @@ MPMediaGrouping associatedMediaTypes[] = {
 	MPMediaGroupingPlaylist,
 	MPMediaGroupingGenre,
 	MPMediaGroupingComposer,
-	MPMediaGroupingComposer //Compilations, actually. The queries adjust for this.
+	MPMediaGroupingAlbum //Compilations, actually. The queries adjust for this.
 };
 
 - (MPMusicPlayerController*)systemMusicPlayer {

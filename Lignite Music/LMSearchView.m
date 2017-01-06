@@ -102,8 +102,6 @@
 - (void)searchTermChangedTo:(NSString*)searchTerm {
 	NSLog(@"Search view got new search term %@", searchTerm);
 	
-	self.welcomeToSearchBackgroundView.hidden = YES;
-	
 	self.currentSearchTerm = searchTerm;
 	
 	BOOL isBlankSearch = [[self.currentSearchTerm stringByReplacingOccurrencesOfString:@" " withString:@""] isEqualToString:@""];
@@ -112,7 +110,12 @@
 		self.searchResultsArray = nil;
 		self.searchResultsGroupingArray = nil;
 		self.sectionTableView.totalNumberOfSections = 1;
+		
+		self.welcomeToSearchLabel.text = NSLocalizedString(@"WelcomeToSearch", nil);
+		self.welcomeToSearchImageView.image = [LMAppIcon invertImage:[LMAppIcon imageForIcon:LMIconSearch]];
 	}
+	
+	self.welcomeToSearchBackgroundView.hidden = !isBlankSearch;
 	
 	[self.sectionTableView reloadData];
 	
@@ -163,10 +166,16 @@
 				searchView.searchResultsArray = nil;
 				searchView.searchResultsGroupingArray = nil;
 				searchView.sectionTableView.totalNumberOfSections = 1;
+				
+				searchView.welcomeToSearchLabel.text = NSLocalizedString(@"NoSearchResults", nil);
+				searchView.welcomeToSearchImageView.image = [LMAppIcon imageForIcon:LMIconNoSearchResults];
 			}
 			else{
 				[searchView.sectionTableView registerCellIdentifiers];
 			}
+			
+			self.welcomeToSearchBackgroundView.hidden = !(searchView.searchResultsArray.count == 0);
+			
 			searchView.hasSearched = YES;
 			[searchView.sectionTableView reloadData];
 		});
@@ -175,7 +184,7 @@
 
 - (UIImage*)iconAtSection:(NSUInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView {
 	if([self noResults]){
-		return [LMAppIcon invertImage:[LMAppIcon imageForIcon:LMIconSearch]];
+		return nil;
 	}
 	
 	MPMediaGrouping mediaGrouping = (MPMediaGrouping)[[self.searchResultsGroupingArray objectAtIndex:section] unsignedIntegerValue];
@@ -200,7 +209,7 @@
 
 - (NSString*)titleAtSection:(NSUInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView {
 	if([self noResults]){
-		return NSLocalizedString(self.hasSearched ? @"NoSearchResults" : @"WelcomeToSearch", nil);
+		return @"";
 	}
 	
 	NSArray<MPMediaItemCollection*>* collections = [self.searchResultsArray objectAtIndex:section];
@@ -374,7 +383,10 @@
 		self.welcomeToSearchBackgroundView.backgroundColor = [UIColor whiteColor];
 		[self addSubview:self.welcomeToSearchBackgroundView];
 		
-		[self.welcomeToSearchBackgroundView autoPinEdgesToSuperviewEdges];
+		[self.welcomeToSearchBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.welcomeToSearchBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.welcomeToSearchBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[self.welcomeToSearchBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:WINDOW_FRAME.size.height/11.0]; //Headers are /10.0
 		
 		
 		self.welcomeToSearchContentBackgroundView = [UIView newAutoLayoutView];
@@ -405,7 +417,7 @@
 		[self.welcomeToSearchImageBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[self.welcomeToSearchImageBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 		[self.welcomeToSearchImageBackgroundView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.welcomeToSearchLabel withOffset:-20];
-		[self.welcomeToSearchImageBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.welcomeToSearchContentBackgroundView withMultiplier:(2.0/10.0)];
+		[self.welcomeToSearchImageBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.welcomeToSearchContentBackgroundView withMultiplier:(3.0/10.0)];
 		
 		
 		self.welcomeToSearchImageView = [UIImageView newAutoLayoutView];

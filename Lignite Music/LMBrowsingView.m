@@ -291,7 +291,19 @@
 	switch(self.musicType){
 		case LMMusicTypeComposers:
 		case LMMusicTypeArtists: {
-			return [NSString stringWithFormat:@"%lu %@", (unsigned long)collection.numberOfAlbums, [NSLocalizedString(collection.numberOfAlbums == 1 ? @"Album" : @"Albums", nil) lowercaseString]];
+			BOOL usingSpecificTrackCollections = (self.musicType != LMMusicTypePlaylists
+												  && self.musicType != LMMusicTypeCompilations
+												  && self.musicType != LMMusicTypeAlbums);
+			
+			if(usingSpecificTrackCollections){
+				//Fixes for compilations
+				NSUInteger albums = [self.musicPlayer collectionsForRepresentativeTrack:collection.representativeItem
+																		   forMusicType:self.musicType].count;
+				return [NSString stringWithFormat:@"%lu %@", (unsigned long)albums, NSLocalizedString(albums == 1 ? @"AlbumInline" : @"AlbumsInline", nil)];
+			}
+			else{
+				return [NSString stringWithFormat:@"%lu %@", (unsigned long)collection.numberOfAlbums, NSLocalizedString(collection.numberOfAlbums == 1 ? @"AlbumInline" : @"AlbumsInline", nil)];
+			}
 		}
 		case LMMusicTypeGenres:
 		case LMMusicTypePlaylists:
@@ -484,10 +496,10 @@
 			UIImageView *imageView = [UIImageView newAutoLayoutView];
 			imageView.image = [[self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex].representativeItem artistImage];
 			imageView.contentMode = UIViewContentModeScaleAspectFit;
-//			imageView.layer.shadowColor = [UIColor blackColor].CGColor;
-//			imageView.layer.shadowRadius = WINDOW_FRAME.size.width/45;
-//			imageView.layer.shadowOffset = CGSizeMake(0, imageView.layer.shadowRadius/2);
-//			imageView.layer.shadowOpacity = 0.25f;
+			imageView.layer.shadowColor = [UIColor blackColor].CGColor;
+			imageView.layer.shadowRadius = WINDOW_FRAME.size.width/45;
+			imageView.layer.shadowOffset = CGSizeMake(0, imageView.layer.shadowRadius/2);
+			imageView.layer.shadowOpacity = 0.25f;
 			return imageView;
 		}
 		case LMMusicTypeAlbums:
