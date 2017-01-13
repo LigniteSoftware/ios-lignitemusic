@@ -89,7 +89,7 @@
 "XMinutesLeftInTrial" = "%.00f Minuten deiner Testphase übrig";
 "TapToUseTheAppForever" = "Tippe hier, um die App freizuschalten";
 
-"LoggedInAsABacker" = "Eingeloggt als BAcker";
+"LoggedInAsABacker" = "Eingeloggt als Backer";
 "TapToLogout" = "Hier tippen, um auszuloggen";
 
 "YouOwnLigniteMusic" = "Lignite Music ist freigeschaltet";
@@ -130,7 +130,7 @@
 "OptionOptIn" = "Anmelden (Opt-in)";
 "OptionOptOut" = "Abmelden (Opt-out)";
 "OptedOut" = "Du hast dich abgemeldet";
-"OptedIn" = "Vielen Dank für deine Hilfe, Lignite Music besser zu machen!";
+"OptedIn" = "Helfe mit, Lignite Music zu verbessern";
 
 "Logout" = "Ausloggen";
 "LogoutDescription" = "Du kannst dich ganz einfach aus deinem Lignite Music Backer-Konto abmelden, indem du den untenstehenden Button antippst.\n\nDadurch kannst du dich wieder bei einem anderen Gerät anmelden.";
@@ -248,7 +248,7 @@
 "StatusBar" = "Statusbar";
 "StatusBarDescription" = "Die iOS-Statusbar anzeigen";
 
-"About" = "Über";
+"About" = "Über die App & uns";
 "Credits" = "Danksagungen";
 "CreditsMore" = "von Edwin Finch & Philipp Weder";
 
