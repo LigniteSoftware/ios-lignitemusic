@@ -36,7 +36,6 @@
 		6A32A9EC1DC68F440056CC60 /* LMTriangleContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A32A9EB1DC68F440056CC60 /* LMTriangleContainerView.m */; };
 		6A32A9EF1DC6906D0056CC60 /* LMTriangleMaskView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A32A9EE1DC6906D0056CC60 /* LMTriangleMaskView.m */; };
 		6A4157CD1E04669E00D09D4B /* icon_back.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A4157CC1E04669E00D09D4B /* icon_back.png */; };
-		6A42BAE11E0CE30700F75D34 /* LMNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A42BAE01E0CE30700F75D34 /* LMNavigationBar.m */; };
 		6A43BCE71DDFA471009FB0E9 /* tutorial_now_playing.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A43BCE61DDFA471009FB0E9 /* tutorial_now_playing.png */; };
 		6A43BCE91DDFA66B009FB0E9 /* onboarding_us.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A43BCE81DDFA66B009FB0E9 /* onboarding_us.png */; };
 		6A48A73C1E1F5EC1003C86B6 /* icon_no_search_results.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A48A73B1E1F5EC1003C86B6 /* icon_no_search_results.png */; };
@@ -146,7 +145,6 @@
 		6AA5CB0E1E285C0A005F853F /* LMSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A8CF2B81DB4952A00777525 /* LMSettings.m */; };
 		6AA5CB0F1E285C0A005F853F /* LMBrowsingDetailView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A92F8261DD6DF00002045C2 /* LMBrowsingDetailView.m */; };
 		6AA5CB101E285C0A005F853F /* LMPurchaseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A838A941E07A8FF006E7DE0 /* LMPurchaseManager.m */; };
-		6AA5CB111E285C0A005F853F /* LMNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A42BAE01E0CE30700F75D34 /* LMNavigationBar.m */; };
 		6AA5CB121E285C0A005F853F /* UIColor+isLight.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ABF6A841CF3768A003E4EFA /* UIColor+isLight.m */; };
 		6AA5CB131E285C0A005F853F /* LMAlbumArtView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A313C111BB44959002BBC33 /* LMAlbumArtView.m */; };
 		6AA5CB141E285C0A005F853F /* LMShadowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ADDBD3C1DA29D3E00DB99EF /* LMShadowView.m */; };
@@ -279,9 +277,10 @@
 		6AA5CB951E285C0A005F853F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6AAF610F1DA0286F00971875 /* Localizable.strings */; };
 		6AA5CB961E285C0A005F853F /* splash_image_portrait.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A51688A1E08A55A00A6446F /* splash_image_portrait.png */; };
 		6AA5CB971E285C0A005F853F /* icon_no_cover_art_75.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A48A73E1E2024D1003C86B6 /* icon_no_cover_art_75.png */; };
-		6AA5CBC41E285DAC005F853F /* SpotifyAudioPlayback.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AA5CBC11E285DAC005F853F /* SpotifyAudioPlayback.framework */; };
-		6AA5CBC51E285DAC005F853F /* SpotifyAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AA5CBC21E285DAC005F853F /* SpotifyAuthentication.framework */; };
-		6AA5CBC61E285DAC005F853F /* SpotifyMetadata.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AA5CBC31E285DAC005F853F /* SpotifyMetadata.framework */; };
+		6AA5CBC81E285FC4005F853F /* SpotifyAudioPlayback.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AA5CBC71E285FC4005F853F /* SpotifyAudioPlayback.framework */; };
+		6AA5CBCB1E28603A005F853F /* SpotifyAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AA5CBC91E28603A005F853F /* SpotifyAuthentication.framework */; };
+		6AA5CBCC1E28603A005F853F /* SpotifyMetadata.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AA5CBCA1E28603A005F853F /* SpotifyMetadata.framework */; };
+		6AA5CBD71E2873BB005F853F /* Spotify.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AA5CBD51E2873BB005F853F /* Spotify.m */; };
 		6AAA56011DF407A800692CFB /* LMSearchBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AAA56001DF407A800692CFB /* LMSearchBar.m */; };
 		6AAA56031DF5459A00692CFB /* icon_x_cross.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AAA56021DF5459A00692CFB /* icon_x_cross.png */; };
 		6AAA56051DF5491C00692CFB /* icon_search.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AAA56041DF5491B00692CFB /* icon_search.png */; };
@@ -309,6 +308,8 @@
 		6AD226FF1DA4B8000056695A /* LMCoreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AD226FE1DA4B8000056695A /* LMCoreViewController.m */; };
 		6AD227031DA5990B0056695A /* LMMusicPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AD227021DA5990B0056695A /* LMMusicPlayer.m */; };
 		6AD480631DCAAF4D00DB891B /* LMCollectionInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AD480621DCAAF4D00DB891B /* LMCollectionInfoView.m */; };
+		6AD4B8A71E394A6700BE3177 /* LMButtonNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AD4B8A61E394A6700BE3177 /* LMButtonNavigationBar.m */; };
+		6AD4B8A81E394A6700BE3177 /* LMButtonNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AD4B8A61E394A6700BE3177 /* LMButtonNavigationBar.m */; };
 		6ADA6CEB1DF84A8D0073D449 /* LMSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ADA6CEA1DF84A8D0073D449 /* LMSearchViewController.m */; };
 		6ADC48EF1DDF8C8000FE57F1 /* onboarding_library_access.png in Resources */ = {isa = PBXBuildFile; fileRef = 6ADC48ED1DDF8C8000FE57F1 /* onboarding_library_access.png */; };
 		6ADC48F01DDF8C8000FE57F1 /* onboarding_bluetooth.png in Resources */ = {isa = PBXBuildFile; fileRef = 6ADC48EE1DDF8C8000FE57F1 /* onboarding_bluetooth.png */; };
@@ -397,8 +398,6 @@
 		6A32A9EE1DC6906D0056CC60 /* LMTriangleMaskView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMTriangleMaskView.m; sourceTree = "<group>"; };
 		6A32A9F01DC695020056CC60 /* main.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = main.h; sourceTree = "<group>"; };
 		6A4157CC1E04669E00D09D4B /* icon_back.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_back.png; sourceTree = "<group>"; };
-		6A42BADF1E0CE30700F75D34 /* LMNavigationBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMNavigationBar.h; sourceTree = "<group>"; };
-		6A42BAE01E0CE30700F75D34 /* LMNavigationBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMNavigationBar.m; sourceTree = "<group>"; };
 		6A43BCE61DDFA471009FB0E9 /* tutorial_now_playing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tutorial_now_playing.png; sourceTree = "<group>"; };
 		6A43BCE81DDFA66B009FB0E9 /* onboarding_us.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = onboarding_us.png; sourceTree = "<group>"; };
 		6A48A73B1E1F5EC1003C86B6 /* icon_no_search_results.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_no_search_results.png; sourceTree = "<group>"; };
@@ -512,9 +511,11 @@
 		6AA473641BC710460066D47E /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		6AA5CB9E1E285C0A005F853F /* Lignite Music for Spotify.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Lignite Music for Spotify.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6AA5CB9F1E285C0B005F853F /* LigniteMusicForSpotify-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "LigniteMusicForSpotify-Info.plist"; path = "/Users/edwinfinch/ios-projects/Lignite Music/LigniteMusicForSpotify-Info.plist"; sourceTree = "<absolute>"; };
-		6AA5CBC11E285DAC005F853F /* SpotifyAudioPlayback.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SpotifyAudioPlayback.framework; sourceTree = "<group>"; };
-		6AA5CBC21E285DAC005F853F /* SpotifyAuthentication.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SpotifyAuthentication.framework; sourceTree = "<group>"; };
-		6AA5CBC31E285DAC005F853F /* SpotifyMetadata.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SpotifyMetadata.framework; sourceTree = "<group>"; };
+		6AA5CBC71E285FC4005F853F /* SpotifyAudioPlayback.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SpotifyAudioPlayback.framework; sourceTree = "<group>"; };
+		6AA5CBC91E28603A005F853F /* SpotifyAuthentication.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SpotifyAuthentication.framework; sourceTree = "<group>"; };
+		6AA5CBCA1E28603A005F853F /* SpotifyMetadata.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SpotifyMetadata.framework; sourceTree = "<group>"; };
+		6AA5CBD41E2873BB005F853F /* Spotify.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Spotify.h; sourceTree = "<group>"; };
+		6AA5CBD51E2873BB005F853F /* Spotify.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Spotify.m; sourceTree = "<group>"; };
 		6AAA55FF1DF407A800692CFB /* LMSearchBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMSearchBar.h; sourceTree = "<group>"; };
 		6AAA56001DF407A800692CFB /* LMSearchBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMSearchBar.m; sourceTree = "<group>"; };
 		6AAA56021DF5459A00692CFB /* icon_x_cross.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_x_cross.png; sourceTree = "<group>"; };
@@ -560,6 +561,8 @@
 		6AD227021DA5990B0056695A /* LMMusicPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMMusicPlayer.m; sourceTree = "<group>"; };
 		6AD480611DCAAF4D00DB891B /* LMCollectionInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMCollectionInfoView.h; sourceTree = "<group>"; };
 		6AD480621DCAAF4D00DB891B /* LMCollectionInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMCollectionInfoView.m; sourceTree = "<group>"; };
+		6AD4B8A51E394A6700BE3177 /* LMButtonNavigationBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMButtonNavigationBar.h; sourceTree = "<group>"; };
+		6AD4B8A61E394A6700BE3177 /* LMButtonNavigationBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMButtonNavigationBar.m; sourceTree = "<group>"; };
 		6ADA6CE91DF84A8D0073D449 /* LMSearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMSearchViewController.h; sourceTree = "<group>"; };
 		6ADA6CEA1DF84A8D0073D449 /* LMSearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMSearchViewController.m; sourceTree = "<group>"; };
 		6ADC48ED1DDF8C8000FE57F1 /* onboarding_library_access.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = onboarding_library_access.png; sourceTree = "<group>"; };
@@ -621,9 +624,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6AA5CBC61E285DAC005F853F /* SpotifyMetadata.framework in Frameworks */,
+				6AA5CBCC1E28603A005F853F /* SpotifyMetadata.framework in Frameworks */,
 				6AA5CB441E285C0A005F853F /* AdSupport.framework in Frameworks */,
-				6AA5CBC51E285DAC005F853F /* SpotifyAuthentication.framework in Frameworks */,
+				6AA5CBCB1E28603A005F853F /* SpotifyAuthentication.framework in Frameworks */,
 				6AA5CB451E285C0A005F853F /* StoreKit.framework in Frameworks */,
 				6AA5CB461E285C0A005F853F /* ExternalAccessory.framework in Frameworks */,
 				6AA5CB471E285C0A005F853F /* AudioToolbox.framework in Frameworks */,
@@ -632,7 +635,7 @@
 				6AA5CB4A1E285C0A005F853F /* MessageUI.framework in Frameworks */,
 				6AA5CB4B1E285C0A005F853F /* CoreMotion.framework in Frameworks */,
 				6AA5CB4C1E285C0A005F853F /* CoreBluetooth.framework in Frameworks */,
-				6AA5CBC41E285DAC005F853F /* SpotifyAudioPlayback.framework in Frameworks */,
+				6AA5CBC81E285FC4005F853F /* SpotifyAudioPlayback.framework in Frameworks */,
 				6AA5CB4D1E285C0A005F853F /* Pods_Lignite_Music.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -931,8 +934,8 @@
 				6AC066F31E00E335008A6FCA /* LMGrabberView.m */,
 				6A7DF1181DB112140077B979 /* LMMiniPlayerView.h */,
 				6A7DF1191DB112140077B979 /* LMMiniPlayerView.m */,
-				6A42BADF1E0CE30700F75D34 /* LMNavigationBar.h */,
-				6A42BAE01E0CE30700F75D34 /* LMNavigationBar.m */,
+				6AD4B8A51E394A6700BE3177 /* LMButtonNavigationBar.h */,
+				6AD4B8A61E394A6700BE3177 /* LMButtonNavigationBar.m */,
 				6A2A29C91DB1F1C3008E7792 /* LMSource.h */,
 				6A2A29CA1DB1F1C3008E7792 /* LMSource.m */,
 				6A2A29C31DB1D89C008E7792 /* LMSourceSelectorView.h */,
@@ -983,9 +986,11 @@
 		6AA5CAEC1E285BD2005F853F /* Spotify */ = {
 			isa = PBXGroup;
 			children = (
-				6AA5CBC11E285DAC005F853F /* SpotifyAudioPlayback.framework */,
-				6AA5CBC21E285DAC005F853F /* SpotifyAuthentication.framework */,
-				6AA5CBC31E285DAC005F853F /* SpotifyMetadata.framework */,
+				6AA5CBC91E28603A005F853F /* SpotifyAuthentication.framework */,
+				6AA5CBCA1E28603A005F853F /* SpotifyMetadata.framework */,
+				6AA5CBC71E285FC4005F853F /* SpotifyAudioPlayback.framework */,
+				6AA5CBD41E2873BB005F853F /* Spotify.h */,
+				6AA5CBD51E2873BB005F853F /* Spotify.m */,
 			);
 			name = Spotify;
 			sourceTree = "<group>";
@@ -1602,6 +1607,7 @@
 			files = (
 				6AA5CAF01E285C0A005F853F /* LMSettingsLabel.m in Sources */,
 				6AA5CAF11E285C0A005F853F /* LMTriangleContainerView.m in Sources */,
+				6AA5CBD71E2873BB005F853F /* Spotify.m in Sources */,
 				6AA5CAF21E285C0A005F853F /* LMSectionHeaderView.m in Sources */,
 				6AA5CAF31E285C0A005F853F /* LMBrowsingView.m in Sources */,
 				6AA5CAF41E285C0A005F853F /* LMFeedbackViewController.m in Sources */,
@@ -1633,7 +1639,6 @@
 				6AA5CB0E1E285C0A005F853F /* LMSettings.m in Sources */,
 				6AA5CB0F1E285C0A005F853F /* LMBrowsingDetailView.m in Sources */,
 				6AA5CB101E285C0A005F853F /* LMPurchaseManager.m in Sources */,
-				6AA5CB111E285C0A005F853F /* LMNavigationBar.m in Sources */,
 				6AA5CB121E285C0A005F853F /* UIColor+isLight.m in Sources */,
 				6AA5CB131E285C0A005F853F /* LMAlbumArtView.m in Sources */,
 				6AA5CB141E285C0A005F853F /* LMShadowView.m in Sources */,
@@ -1670,6 +1675,7 @@
 				6AA5CB331E285C0A005F853F /* LMImageManager.m in Sources */,
 				6AA5CB341E285C0A005F853F /* LMSearchView.m in Sources */,
 				6AA5CB351E285C0A005F853F /* LMSettingsViewController.m in Sources */,
+				6AD4B8A81E394A6700BE3177 /* LMButtonNavigationBar.m in Sources */,
 				6AA5CB361E285C0A005F853F /* LMDebugViewController.m in Sources */,
 				6AA5CB371E285C0A005F853F /* LMGuideViewPagerController.m in Sources */,
 				6AA5CB381E285C0A005F853F /* LMSearch.m in Sources */,
@@ -1694,6 +1700,7 @@
 				6A32A9EC1DC68F440056CC60 /* LMTriangleContainerView.m in Sources */,
 				6A26B46A1DE2D1A3008B5B69 /* LMSectionHeaderView.m in Sources */,
 				6A92F8241DD6D62A002045C2 /* LMBrowsingView.m in Sources */,
+				6AD4B8A71E394A6700BE3177 /* LMButtonNavigationBar.m in Sources */,
 				6AF751631E0446D80001E18B /* LMFeedbackViewController.m in Sources */,
 				6A3211411DA732470060DD07 /* LMTrackInfoView.m in Sources */,
 				6AAD5A531E0C655A00D8B406 /* NSTimer+Blocks.m in Sources */,
@@ -1723,7 +1730,6 @@
 				6A8CF2B91DB4952A00777525 /* LMSettings.m in Sources */,
 				6A92F8271DD6DF00002045C2 /* LMBrowsingDetailView.m in Sources */,
 				6A838A951E07A8FF006E7DE0 /* LMPurchaseManager.m in Sources */,
-				6A42BAE11E0CE30700F75D34 /* LMNavigationBar.m in Sources */,
 				6ABF6A851CF3768A003E4EFA /* UIColor+isLight.m in Sources */,
 				6A313C121BB44959002BBC33 /* LMAlbumArtView.m in Sources */,
 				6ADDBD3D1DA29D3E00DB99EF /* LMShadowView.m in Sources */,
@@ -1833,7 +1839,12 @@
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/**",
+					"$(PROJECT_DIR)/Lignite\\ Music",
+					"$(PROJECT_DIR)/Lignite\\ Music",
+					"$(PROJECT_DIR)/Lignite\\ Music",
+					"$(PROJECT_DIR)/Lignite\\ Music",
+					"$(PROJECT_DIR)/Lignite\\ Music",
 					"$(PROJECT_DIR)/Lignite\\ Music",
 					"$(PROJECT_DIR)/Lignite\\ Music",
 					"$(PROJECT_DIR)/Lignite\\ Music",
@@ -1844,6 +1855,7 @@
 					"COCOAPODS=1",
 					"MAGICKCORE_QUANTUM_DEPTH=16",
 					"MAGICKCORE_HDRI_ENABLE=YES",
+					"SPOTIFY=1",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/LigniteMusicForSpotify-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
@@ -1873,7 +1885,12 @@
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/**",
+					"$(PROJECT_DIR)/Lignite\\ Music",
+					"$(PROJECT_DIR)/Lignite\\ Music",
+					"$(PROJECT_DIR)/Lignite\\ Music",
+					"$(PROJECT_DIR)/Lignite\\ Music",
+					"$(PROJECT_DIR)/Lignite\\ Music",
 					"$(PROJECT_DIR)/Lignite\\ Music",
 					"$(PROJECT_DIR)/Lignite\\ Music",
 					"$(PROJECT_DIR)/Lignite\\ Music",
@@ -1884,6 +1901,7 @@
 					"COCOAPODS=1",
 					"MAGICKCORE_QUANTUM_DEPTH=16",
 					"MAGICKCORE_HDRI_ENABLE=YES",
+					"SPOTIFY=1",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/LigniteMusicForSpotify-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
@@ -1999,7 +2017,10 @@
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/**",
+					"$(PROJECT_DIR)/Lignite\\ Music",
+					"$(PROJECT_DIR)/Lignite\\ Music",
+					"$(PROJECT_DIR)/Lignite\\ Music",
 				);
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -2035,7 +2056,10 @@
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/**",
+					"$(PROJECT_DIR)/Lignite\\ Music",
+					"$(PROJECT_DIR)/Lignite\\ Music",
+					"$(PROJECT_DIR)/Lignite\\ Music",
 				);
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (

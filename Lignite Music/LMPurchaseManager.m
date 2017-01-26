@@ -269,7 +269,7 @@
 		[self.userDefaults setSecretDouble:startTime forKey:LMPurchaseManagerTrialStartTimeKey];
 		[self.userDefaults synchronize];
 	}
-	NSLog(@"The user's start of trial time was on %@.", [NSDate dateWithTimeIntervalSince1970:startTime]);
+//	NSLog(@"The user's start of trial time was on %@.", [NSDate dateWithTimeIntervalSince1970:startTime]);
 	
 	NSTimeInterval currentTime = [[NSDate new] timeIntervalSince1970];
 	

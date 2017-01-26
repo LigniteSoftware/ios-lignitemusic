@@ -16,6 +16,10 @@
 #import "LMSettings.h"
 #import "LMPurchaseManager.h"
 
+#ifdef SPOTIFY
+#import "Spotify.h"
+#endif
+
 @interface LMAppDelegate ()
 
 @property LMMusicPlayer *musicPlayer;
@@ -53,6 +57,22 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 	NSLog(@"[LMAppDelegate]: Did finish launching with options.");
+	
+#ifdef SPOTIFY
+	NSLog(@"You are running Lignite Music for Spotify! Woohoo!");
+	
+	SPTAuth *auth = [SPTAuth defaultInstance];
+	auth.clientID = SpotifyClientID;
+	auth.requestedScopes = @[SPTAuthStreamingScope, SPTAuthUserLibraryReadScope];
+	auth.redirectURL = [NSURL URLWithString:SpotifyCallbackURL];
+#ifdef kTokenSwapServiceURL
+	auth.tokenSwapURL = [NSURL URLWithString:@kTokenSwapServiceURL];
+#endif
+#ifdef kTokenRefreshServiceURL
+	auth.tokenRefreshURL = [NSURL URLWithString:@kTokenRefreshServiceURL];
+#endif
+	auth.sessionUserDefaultsKey = SpotifySessionUserDefaultsKey;
+#endif
 	
 	[[Fabric sharedSDK] setDebug:YES];
 	
@@ -134,6 +154,13 @@
 		}];
 		[dataTask resume];
 	}
+	
+#ifdef SPOTIFY
+	[NSTimer scheduledTimerWithTimeInterval:1.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
+		
+		[[Spotify sharedInstance] openLogin];
+	}];
+#endif
 	
     return YES;
 }

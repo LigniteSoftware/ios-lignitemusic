@@ -8,7 +8,7 @@
 
 #import <PureLayout/PureLayout.h>
 #import "LMSourceSelectorView.h"
-#import "LMNavigationBar.h"
+#import "LMButtonNavigationBar.h"
 #import "LMMusicPlayer.h"
 #import "LMGrabberView.h"
 #import "LMButtonBar.h"
@@ -17,7 +17,7 @@
 #import "LMButton.h"
 #import "LMLabel.h"
 
-@interface LMNavigationBar()<UIGestureRecognizerDelegate,
+@interface LMButtonNavigationBar()<UIGestureRecognizerDelegate,
 							 LMButtonBarDelegate, LMButtonDelegate, LMSearchBarDelegate, LMSourceSelectorDelegate>
 
 /**
@@ -97,7 +97,7 @@
 
 @end
 
-@implementation LMNavigationBar
+@implementation LMButtonNavigationBar
 
 - (LMGrabberView*)minibarBackgroundGrabber {
 	LMGrabberView *grabberView = nil;
@@ -200,7 +200,7 @@
 											 + LMNavigationBarGrabberHeight
 											 + 10
 									completion:^(BOOL finished) {
-										LMNavigationBar *strongSelf = weakSelf;
+										LMButtonNavigationBar *strongSelf = weakSelf;
 										if(!strongSelf){
 											return;
 										}
@@ -224,7 +224,7 @@
 	__weak id weakSelf = self;
 	
 	[self setButtonBarBottomConstraintConstant:0 completion:^(BOOL finished) {
-		LMNavigationBar *strongSelf = weakSelf;
+		LMButtonNavigationBar *strongSelf = weakSelf;
 		if(!strongSelf){
 			return;
 		}

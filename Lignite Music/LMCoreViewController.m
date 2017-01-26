@@ -12,11 +12,11 @@
 #import "LMGuideViewPagerController.h"
 #import "LMSettingsViewController.h"
 #import "LMSearchViewController.h"
+#import "LMButtonNavigationBar.h"
 #import "UIImage+AverageColour.h"
 #import "LMCoreViewController.h"
 #import "LMPurchaseManager.h"
 #import "LMNowPlayingView.h"
-#import "LMNavigationBar.h"
 #import "UIColor+isLight.h"
 #import "NSTimer+Blocks.h"
 #import "LMImageManager.h"
@@ -43,7 +43,7 @@
 @import SDWebImage;
 @import StoreKit;
 
-@interface LMCoreViewController () <LMMusicPlayerDelegate, LMSourceDelegate, UIGestureRecognizerDelegate, LMSearchBarDelegate, LMLetterTabDelegate, LMSearchSelectedDelegate, LMPurchaseManagerDelegate, LMNavigationBarDelegate>
+@interface LMCoreViewController () <LMMusicPlayerDelegate, LMSourceDelegate, UIGestureRecognizerDelegate, LMSearchBarDelegate, LMLetterTabDelegate, LMSearchSelectedDelegate, LMPurchaseManagerDelegate, LMButtonNavigationBarDelegate, UINavigationBarDelegate>
 
 @property LMMusicPlayer *musicPlayer;
 
@@ -58,7 +58,7 @@
 
 @property id currentSource;
 
-@property UIVisualEffectView *statusBarBlurView;
+@property UIView *statusBarBlurView;
 @property NSLayoutConstraint *statusBarBlurViewHeightConstraint;
 
 @property UIView *browsingAssistantViewAttachedTo;
@@ -79,12 +79,14 @@
 /**
  The navigation bar that goes at the bottom.
  */
-@property LMNavigationBar *navigationBar;
+@property LMButtonNavigationBar *buttonNavigationBar;
 
 /**
  The height constraint for the navigation bar.
  */
-@property NSLayoutConstraint *navigationBarHeightConstraint;
+@property NSLayoutConstraint *buttonNavigationBarHeightConstraint;
+
+@property UINavigationBar *navigationBar;
 
 @property CGPoint originalPoint, currentPoint;
 
@@ -194,7 +196,7 @@
 	
 	NSLog(@"Done setting up");
 	
-	self.navigationBar.browsingBar.letterTabBar.lettersDictionary =
+	self.buttonNavigationBar.browsingBar.letterTabBar.lettersDictionary =
 		[self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:self.browsingView.musicTrackCollections
 														 withAssociatedMusicType:musicType];
 	
@@ -264,9 +266,9 @@
 	
 	if(!source.shouldNotHighlight){
 		[self.currentSource setHidden:YES];
-		[self.navigationBar setSelectedTab:LMNavigationTabBrowse];
+		[self.buttonNavigationBar setSelectedTab:LMNavigationTabBrowse];
 		
-		[self.navigationBar setCurrentSourceIcon:[[source.icon averageColour] isLight] ? source.icon : [LMAppIcon invertImage:source.icon]];
+		[self.buttonNavigationBar setCurrentSourceIcon:[[source.icon averageColour] isLight] ? source.icon : [LMAppIcon invertImage:source.icon]];
 	}
 	
 	NSLog(@"New source %@", source.title);
@@ -320,7 +322,7 @@
 			[self.titleView reloadSourceSelectorInfo];
 			self.currentSource = self.titleView;
 			
-			self.navigationBar.browsingBar.letterTabBar.lettersDictionary =
+			self.buttonNavigationBar.browsingBar.letterTabBar.lettersDictionary =
 			[self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:@[self.titleView.musicTitles]
 															 withAssociatedMusicType:LMMusicTypeTitles];
 			
@@ -328,7 +330,7 @@
 			break;
 		}
 		case LMIconSettings: {			
-			self.navigationBar.hidden = YES;
+			self.buttonNavigationBar.hidden = YES;
 			
 			LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
 			settingsViewController.coreViewController = self;
@@ -353,27 +355,27 @@
 		return;
 	}
 	
-	CGFloat constantBeforeReload = self.navigationBarHeightConstraint.constant;
+	CGFloat constantBeforeReload = self.buttonNavigationBarHeightConstraint.constant;
 	
 	NSLog(@"Attaching browsing assistant to view navigation ? %d", view == self.navigationController.view);
 	
-	[self.navigationBar.constraints autoRemoveConstraints];
+	[self.buttonNavigationBar.constraints autoRemoveConstraints];
 	for(NSLayoutConstraint *constraint in self.browsingAssistantViewAttachedTo.constraints){
-		if(constraint.firstItem == self.navigationBar){
+		if(constraint.firstItem == self.buttonNavigationBar){
 			[self.browsingAssistantViewAttachedTo removeConstraint:constraint];
 		}
 	}
 	
-	[self.navigationBar removeFromSuperview];
-	[view addSubview:self.navigationBar];
+	[self.buttonNavigationBar removeFromSuperview];
+	[view addSubview:self.buttonNavigationBar];
 	
 	[self.navigationController.view bringSubviewToFront:self.nowPlayingView];
 	[view bringSubviewToFront:self.statusBarBlurView];
 	
-	[self.navigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-	[self.navigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	[self.navigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-	self.navigationBarHeightConstraint = [self.navigationBar autoSetDimension:ALDimensionHeight toSize:constantBeforeReload];
+	[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+	[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+	[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+	self.buttonNavigationBarHeightConstraint = [self.buttonNavigationBar autoSetDimension:ALDimensionHeight toSize:constantBeforeReload];
 	
 	self.browsingAssistantViewAttachedTo = view;
 	
@@ -384,6 +386,18 @@
 
 - (void)viewDidDisappear:(BOOL)animated {
 	NSLog(@"View went bye bye %@", NSStringFromCGRect(self.browsingView.frame));
+	
+	UINavigationItem *navigationItem = [[UINavigationItem alloc]initWithTitle:@"24K Magic"];
+	
+	UIImageView *titleImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
+	titleImageView.contentMode = UIViewContentModeScaleAspectFit;
+	titleImageView.image = [LMAppIcon imageForIcon:LMIconNoAlbumArt75Percent];
+	
+	UIBarButtonItem *barButtonItem = [[UIBarButtonItem alloc]initWithCustomView:titleImageView];
+	
+	navigationItem.rightBarButtonItem = barButtonItem;
+	
+	[self.navigationBar pushNavigationItem:navigationItem animated:YES];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -394,7 +408,7 @@
 	self.currentDetailViewController = nil;
 	self.searchViewController = nil;
 	
-	self.navigationBar.hidden = NO;
+	self.buttonNavigationBar.hidden = NO;
 	
 	if(self.statusBarBlurViewHeightConstraint.constant < 0.1 && ![self prefersStatusBarHidden]){
 		[self setStatusBarBlurHidden:NO];
@@ -418,7 +432,7 @@
 	
 	[self.navigationController.view layoutIfNeeded];
 	
-	self.navigationBarHeightConstraint.constant = requiredHeight;
+	self.buttonNavigationBarHeightConstraint.constant = requiredHeight;
 	
 //	[UIView animateWithDuration:animationDuration animations:^{
 		[self.navigationController.view layoutIfNeeded];
@@ -574,6 +588,11 @@
 	else{
 		[self.currentSource scrollViewToIndex:index];
 	}
+}
+
+- (UIBarPosition)positionForBar:(id<UIBarPositioning>)bar {
+	NSLog(@"And it's getting to the point where even I have a problem with it");
+	return UIBarPositionTopAttached;
 }
 
 - (void)panNowPlayingUp:(UIPanGestureRecognizer *)recognizer {
@@ -785,25 +804,25 @@
 						
 						
 						
-						self.navigationBar = [LMNavigationBar newAutoLayoutView];
-						self.navigationBar.sourcesForSourceSelector = self.sourcesForSourceSelector;
-						self.navigationBar.delegate = self;
-						self.navigationBar.searchBarDelegate = self;
-						self.navigationBar.letterTabBarDelegate = self;
-						[self.navigationController.view addSubview:self.navigationBar];
+						self.buttonNavigationBar = [LMButtonNavigationBar newAutoLayoutView];
+						self.buttonNavigationBar.sourcesForSourceSelector = self.sourcesForSourceSelector;
+						self.buttonNavigationBar.delegate = self;
+						self.buttonNavigationBar.searchBarDelegate = self;
+						self.buttonNavigationBar.letterTabBarDelegate = self;
+						[self.navigationController.view addSubview:self.buttonNavigationBar];
 						
-						[self.navigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-						[self.navigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-						[self.navigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-						self.navigationBarHeightConstraint = [self.navigationBar autoSetDimension:ALDimensionHeight toSize:0.0];
+						[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+						[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+						[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+						self.buttonNavigationBarHeightConstraint = [self.buttonNavigationBar autoSetDimension:ALDimensionHeight toSize:0.0];
 						
-						self.musicPlayer.navigationBar = self.navigationBar;
+						self.musicPlayer.navigationBar = self.buttonNavigationBar;
 						
 						
 						UIPanGestureRecognizer *miniPlayerDragUpPanGesture =
 							[[UIPanGestureRecognizer alloc] initWithTarget:self
 																	action:@selector(panNowPlayingUp:)];
-						[self.navigationBar.miniPlayerView addGestureRecognizer:miniPlayerDragUpPanGesture];
+						[self.buttonNavigationBar.miniPlayerView addGestureRecognizer:miniPlayerDragUpPanGesture];
 						
 						
 						
@@ -845,9 +864,10 @@
 //						[NSTimer scheduledTimerWithTimeInterval:1.0
 //														 target:self selector:@selector(showWhatsPoppin) userInfo:nil repeats:NO];
 						
-						UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
-						self.statusBarBlurView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
-						self.statusBarBlurView.translatesAutoresizingMaskIntoConstraints = NO;
+//						UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
+						self.statusBarBlurView = [UIView newAutoLayoutView];
+						self.statusBarBlurView.backgroundColor = [UIColor whiteColor];
+//						self.statusBarBlurView.translatesAutoresizingMaskIntoConstraints = NO;
 						
 						[self.navigationController.view addSubview:self.statusBarBlurView];
 						
@@ -875,6 +895,47 @@
 						}];
 						
 						[self musicLibraryDidChange];
+						
+						
+						self.navigationBar = [UINavigationBar newAutoLayoutView];
+						self.navigationBar.delegate = self;
+						[self.navigationController.view addSubview:self.navigationBar];
+						
+//						self.navigationController.navigationBar
+						
+						[self.navigationBar autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:20];
+						[self.navigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+						[self.navigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+						
+						self.navigationBar.barTintColor = [UIColor whiteColor];
+						self.navigationBar.tintColor = [UIColor blackColor];
+						self.navigationBar.translucent = NO;
+						
+						self.navigationBar.layer.shadowColor = [UIColor blackColor].CGColor;
+						self.navigationBar.layer.shadowRadius = WINDOW_FRAME.size.width / 45 / 2;
+						self.navigationBar.layer.shadowOffset = CGSizeMake(0, self.navigationBar.layer.shadowRadius/2);
+						self.navigationBar.layer.shadowOpacity = 0.25f;
+						
+//						UIBarButtonItem *barButtonItem = [[UIBarButtonItem alloc]initWithTitle:@"Hey" style:UIBarButtonItemStylePlain target:self action:nil];
+						
+						
+						UIView *titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
+						titleView.backgroundColor = [UIColor orangeColor];
+						
+						UIImageView *titleImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
+						titleImageView.contentMode = UIViewContentModeScaleAspectFit;
+						titleImageView.image = [LMAppIcon imageForIcon:LMIconNoAlbumArt75Percent];
+						
+						
+						UINavigationItem *navigationItem = [[UINavigationItem alloc]initWithTitle:@"Albums"];
+						navigationItem.titleView = titleImageView;
+//						navigationItem.rightBarButtonItem = barButtonItem;
+						
+						[self.navigationBar pushNavigationItem:navigationItem animated:YES];
+						
+//						UIBarButtonItem *barButtonItem = [[UIBarButtonItem alloc]initWithTitle:@"Test" style:UIBarButtonItemStylePlain target:self action:nil];
+//						
+//						self.navigationItem.rightBarButtonItem = barButtonItem;
 						
 //						[NSTimer scheduledTimerWithTimeInterval:5.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
 //							NSLog(@"Firing library shit");

@@ -13,7 +13,7 @@
 #import "LMPebbleManager.h"
 #import "MPMediaItem+LigniteImages.h"
 #import "MPMediaItemCollection+LigniteInfo.h"
-#import "LMNavigationBar.h"
+#import "LMButtonNavigationBar.h"
 
 /**
  Storage key for the user set player type. Correlates to LMMusicPlayerType.
@@ -170,7 +170,7 @@ typedef enum {
 /**
  The navigation bar which goes at the bottom of the screen to help the user navigate their music.
  */
-@property LMNavigationBar *navigationBar;
+@property LMButtonNavigationBar *navigationBar;
 
 /**
  The shared music player.

@@ -15,7 +15,7 @@
 #define LMNavigationBarTabHeight (WINDOW_FRAME.size.height/8.0)
 #define LMNavigationBarGrabberHeight (((WINDOW_FRAME.size.height/25.0)/4.0)*4.0)
 
-@protocol LMNavigationBarDelegate <NSObject>
+@protocol LMButtonNavigationBarDelegate <NSObject>
 
 /**
  The height for the navigation bar changed needs to be a specific height. The delegate, which should be its superview, should now animate the browsing view to the requested size.
@@ -27,7 +27,7 @@
 
 @end
 
-@interface LMNavigationBar : LMView
+@interface LMButtonNavigationBar : LMView
 
 /**
  The bottom tabs of the navigation bar which control.
@@ -66,7 +66,7 @@ typedef NS_ENUM(NSUInteger, LMNavigationTab) {
 /**
  The delegate.
  */
-@property id<LMNavigationBarDelegate> delegate;
+@property id<LMButtonNavigationBarDelegate> delegate;
 
 /**
  Minimize the navigation bar down to its small size.
