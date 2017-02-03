@@ -11,6 +11,8 @@
 @implementation LMSettings
 
 + (BOOL)shouldShowStatusBar {
+	return YES;
+	
 	BOOL settingEnabled = YES;
 	
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];

@@ -190,7 +190,7 @@
 		view.heightFactorial = (WINDOW_FRAME.size.height/10) / frame.size.height;
 		view.title = @""; //self.title;
 		
-		view.xIconTapSelector = @selector(tappedClose);
+//		view.xIconTapSelector = @selector(tappedClose);
 	}
 	
 	return view;

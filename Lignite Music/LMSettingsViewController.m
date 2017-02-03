@@ -503,7 +503,7 @@
 				case 1:{
 					LMCreditsViewController *creditsViewController = [LMCreditsViewController new];
 					[self.coreViewController.navigationController showViewController:creditsViewController sender:self];
-					[(LMCoreViewController*)self.coreViewController setStatusBarBlurHidden:YES];
+					[(LMCoreViewController*)self.coreViewController pushItemOntoNavigationBarWithTitle:NSLocalizedString(@"Credits", nil) withNowPlayingButton:NO];
 					
 					[LMAnswers logCustomEventWithName:@"Viewed Credits" customAttributes:nil];
 					break;
@@ -511,7 +511,8 @@
 				case 2: {
 					LMContactViewController *contactViewController = [LMContactViewController new];
 					[self.coreViewController.navigationController showViewController:contactViewController sender:self];
-					[(LMCoreViewController*)self.coreViewController setStatusBarBlurHidden:YES];
+//					[(LMCoreViewController*)self.coreViewController setStatusBarBlurHidden:YES];
+					[(LMCoreViewController*)self.coreViewController pushItemOntoNavigationBarWithTitle:NSLocalizedString(@"ContactUs", nil) withNowPlayingButton:NO];
 					
 					[LMAnswers logCustomEventWithName:@"Viewed Contact Us Screen" customAttributes:nil];
 					break;
@@ -654,7 +655,10 @@
 	self.sectionTableView.title = NSLocalizedString(@"AppSettings", nil);
 	[self.view addSubview:self.sectionTableView];
 	
-	[self.sectionTableView autoPinEdgesToSuperviewEdges];
+	[self.sectionTableView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+	[self.sectionTableView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+	[self.sectionTableView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+	[self.sectionTableView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:44];
 	
 	[self.sectionTableView setup];
 }

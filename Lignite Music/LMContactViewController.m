@@ -43,7 +43,7 @@
 }
 
 - (BOOL)prefersStatusBarHidden {
-	return YES;
+	return NO;
 }
 
 - (void)viewDidLoad {
@@ -58,7 +58,7 @@
 	
 	[self.thankYouLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
 	[self.thankYouLabel autoSetDimension:ALDimensionWidth toSize:WINDOW_FRAME.size.width*0.9];
-	[self.thankYouLabel autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:20];
+	[self.thankYouLabel autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:84];
 	
 	
 	self.descriptionLabel = [UILabel newAutoLayoutView];

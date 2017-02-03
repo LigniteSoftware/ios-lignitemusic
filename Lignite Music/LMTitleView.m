@@ -256,7 +256,7 @@
 
 - (float)spacingAtIndex:(NSUInteger)index forTableView:(LMTableView *)tableView {
 	if(index == 0){
-		return 25;
+		return 10;
 	}
 	return 10; //TODO: Fix this
 }
@@ -331,7 +331,10 @@
 	self.songListTableView.bottomSpacing = (WINDOW_FRAME.size.height/3.0);
 	[self addSubview:self.songListTableView];
 	
-	[self.songListTableView autoPinEdgesToSuperviewEdges];
+	[self.songListTableView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+	[self.songListTableView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+	[self.songListTableView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+	[self.songListTableView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:64];
 	
 	if(self.musicTitles.count == 0){
 		UILabel *noObjectsLabel = [UILabel newAutoLayoutView];

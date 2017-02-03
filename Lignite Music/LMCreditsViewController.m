@@ -50,7 +50,7 @@
 @implementation LMCreditsViewController
 
 - (BOOL)prefersStatusBarHidden {
-	return YES;
+	return NO;
 }
 
 - (void)creditLinks {
@@ -64,7 +64,10 @@
 	self.scrollView.backgroundColor = [UIColor whiteColor];
 	[self.view addSubview:self.scrollView];
 	
-	[self.scrollView autoPinEdgesToSuperviewEdges];
+	[self.scrollView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+	[self.scrollView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+	[self.scrollView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+	[self.scrollView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:44];
 	
 	
 	self.philippAndEdwinView = [UIImageView newAutoLayoutView];

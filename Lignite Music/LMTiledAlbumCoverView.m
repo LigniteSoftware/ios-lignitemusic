@@ -322,6 +322,8 @@
 				
 				int actualAmountOfTiles = (amountOfTilesX * amountOfTilesY);
 				
+				sideLength += 1; //To ensure that it fits the edges of the detail view properly
+				
 				CGSize tileSize = CGSizeMake(sideLength, sideLength);
 				
 				//		NSLog(@"Smaller %f larger %f difference %f maintainSquare %d", smallerDimension, largerDimension, differencePercentage, maintainSquare);

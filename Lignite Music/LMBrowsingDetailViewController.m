@@ -56,7 +56,10 @@
 		
 	[self.view addSubview:self.browsingDetailView];
 	
-	[self.browsingDetailView autoPinEdgesToSuperviewEdges];
+	[self.browsingDetailView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+	[self.browsingDetailView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+	[self.browsingDetailView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+	[self.browsingDetailView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:44];
 	
 	[self.browsingDetailView setup];
 }
@@ -64,12 +67,6 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
-- (void)viewDidUnload {
-	if(![self.browsingDetailView.rootViewController.navigationBar.topItem.title isEqualToString:@""]){
-		[self.browsingDetailView.rootViewController.navigationBar popNavigationItemAnimated:YES];
-	}
 }
 
 /*

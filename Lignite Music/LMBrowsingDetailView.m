@@ -469,7 +469,7 @@
 	
 	[self.musicPlayer addMusicDelegate:self];
 	
-	[self.rootViewController pushItemOntoNavigationBarWithTitle:[self titleForInfoView:self.headerBigListEntry.collectionInfoView]];
+	[self.rootViewController pushItemOntoNavigationBarWithTitle:[self titleForInfoView:self.headerBigListEntry.collectionInfoView] withNowPlayingButton:YES];
 }
 
 @end

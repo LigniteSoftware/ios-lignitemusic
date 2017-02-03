@@ -204,6 +204,9 @@
 }
 
 - (BOOL)prefersStatusBarHidden {
+	return NO;
+	
+	
 	if(!self.loaded){
 		NSLog(@"Loading");
 		return YES;
@@ -335,6 +338,8 @@
 			LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
 			settingsViewController.coreViewController = self;
 			[self.navigationController pushViewController:settingsViewController animated:YES];
+			
+			[self pushItemOntoNavigationBarWithTitle:NSLocalizedString(@"Settings", nil) withNowPlayingButton:NO];
 			break;
 		}
 		case LMIconBug: {
@@ -350,7 +355,7 @@
 	}
 }
 
-- (void)attachNavigationBarToView:(UIView*)view {
+- (void)attachButtonNavigationBarToView:(UIView*)view {
 	if(view == self.browsingAssistantViewAttachedTo){
 		return;
 	}
@@ -507,16 +512,41 @@
 	return YES;
 }
 
-- (void)pushItemOntoNavigationBarWithTitle:(NSString*)title {
+- (void)launchNowPlayingFromNavigationBar {
+	[self.nowPlayingView.superview layoutIfNeeded];
+	
+	self.nowPlayingView.topConstraint.constant = 0;
+	
+	self.nowPlayingView.isOpen = YES;
+
+	[UIView animateWithDuration:0.25 animations:^{
+		[self.nowPlayingView.superview layoutIfNeeded];
+	} completion:^(BOOL finished) {
+		if(finished){
+			[UIView animateWithDuration:0.25 animations:^{
+				[self setNeedsStatusBarAppearanceUpdate];
+				[self setStatusBarBlurHidden:self.nowPlayingView.isOpen];
+			}];
+		}
+	}];
+}
+
+- (void)pushItemOntoNavigationBarWithTitle:(NSString*)title withNowPlayingButton:(BOOL)nowPlayingButton {
 	UINavigationItem *navigationItem = [[UINavigationItem alloc]initWithTitle:title];
 	
-	UIImageView *titleImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
-	titleImageView.contentMode = UIViewContentModeScaleAspectFit;
-	titleImageView.image = [LMAppIcon imageForIcon:LMIconNoAlbumArt75Percent];
-	
-	UIBarButtonItem *barButtonItem = [[UIBarButtonItem alloc]initWithCustomView:titleImageView];
-	
-	navigationItem.rightBarButtonItem = barButtonItem;
+	if(nowPlayingButton){
+		UIImageView *titleImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
+		titleImageView.contentMode = UIViewContentModeScaleAspectFit;
+		titleImageView.image = [LMAppIcon imageForIcon:LMIconNoAlbumArt75Percent];
+		titleImageView.userInteractionEnabled = YES;
+		
+		UITapGestureRecognizer *nowPlayingTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(launchNowPlayingFromNavigationBar)];
+		[titleImageView addGestureRecognizer:nowPlayingTapGestureRecognizer];
+		
+		UIBarButtonItem *barButtonItem = [[UIBarButtonItem alloc]initWithCustomView:titleImageView];
+		
+		navigationItem.rightBarButtonItem = barButtonItem;
+	}
 	
 	[self.navigationBar pushNavigationItem:navigationItem animated:YES];
 }
@@ -677,6 +707,51 @@
 						
 						
 						
+						self.navigationBar = [UINavigationBar newAutoLayoutView];
+						self.navigationBar.delegate = self;
+						[self.navigationController.view addSubview:self.navigationBar];
+						
+						//						self.navigationController.navigationBar
+						
+						[self.navigationBar autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:20];
+						[self.navigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+						[self.navigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+						
+						self.navigationBar.barTintColor = [UIColor whiteColor];
+						self.navigationBar.tintColor = [UIColor blackColor];
+						self.navigationBar.translucent = NO;
+						
+						self.navigationBar.layer.shadowColor = [UIColor blackColor].CGColor;
+						self.navigationBar.layer.shadowRadius = WINDOW_FRAME.size.width / 45 / 2;
+						self.navigationBar.layer.shadowOffset = CGSizeMake(0, self.navigationBar.layer.shadowRadius/2);
+						self.navigationBar.layer.shadowOpacity = 0.25f;
+						
+						//						UIBarButtonItem *barButtonItem = [[UIBarButtonItem alloc]initWithTitle:@"Hey" style:UIBarButtonItemStylePlain target:self action:nil];
+						
+						
+						UIView *titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
+						titleView.backgroundColor = [UIColor orangeColor];
+						
+						UIImageView *titleImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
+						titleImageView.contentMode = UIViewContentModeScaleAspectFit;
+						titleImageView.image = [LMAppIcon imageForIcon:LMIconNoAlbumArt75Percent];
+						titleImageView.userInteractionEnabled = YES;
+						
+						UITapGestureRecognizer *nowPlayingTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(launchNowPlayingFromNavigationBar)];
+						[titleImageView addGestureRecognizer:nowPlayingTapGestureRecognizer];
+						
+						
+						UINavigationItem *navigationItem = [[UINavigationItem alloc]initWithTitle:@""];
+						navigationItem.titleView = titleImageView;
+						//						navigationItem.rightBarButtonItem = barButtonItem;
+						
+						[self.navigationBar pushNavigationItem:navigationItem animated:YES];
+						
+						self.navigationController.delegate = self;
+						
+						
+						
+						
 						self.buttonNavigationBar = [LMButtonNavigationBar newAutoLayoutView];
 						self.buttonNavigationBar.sourcesForSourceSelector = self.sourcesForSourceSelector;
 						self.buttonNavigationBar.delegate = self;
@@ -727,7 +802,10 @@
 						
 						[self.browsingView setup];
 						
-						[self.browsingView autoPinEdgesToSuperviewEdges];
+						[self.browsingView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+						[self.browsingView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+						[self.browsingView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+						[self.browsingView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:64];
 						self.browsingView.hidden = YES;
 		
 				
@@ -768,45 +846,6 @@
 						}];
 						
 						[self musicLibraryDidChange];
-						
-						
-						self.navigationBar = [UINavigationBar newAutoLayoutView];
-						self.navigationBar.delegate = self;
-						[self.navigationController.view addSubview:self.navigationBar];
-						
-//						self.navigationController.navigationBar
-						
-						[self.navigationBar autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:20];
-						[self.navigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-						[self.navigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-						
-						self.navigationBar.barTintColor = [UIColor whiteColor];
-						self.navigationBar.tintColor = [UIColor blackColor];
-						self.navigationBar.translucent = NO;
-						
-						self.navigationBar.layer.shadowColor = [UIColor blackColor].CGColor;
-						self.navigationBar.layer.shadowRadius = WINDOW_FRAME.size.width / 45 / 2;
-						self.navigationBar.layer.shadowOffset = CGSizeMake(0, self.navigationBar.layer.shadowRadius/2);
-						self.navigationBar.layer.shadowOpacity = 0.25f;
-						
-//						UIBarButtonItem *barButtonItem = [[UIBarButtonItem alloc]initWithTitle:@"Hey" style:UIBarButtonItemStylePlain target:self action:nil];
-						
-						
-						UIView *titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
-						titleView.backgroundColor = [UIColor orangeColor];
-						
-						UIImageView *titleImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
-						titleImageView.contentMode = UIViewContentModeScaleAspectFit;
-						titleImageView.image = [LMAppIcon imageForIcon:LMIconNoAlbumArt75Percent];
-						
-						
-						UINavigationItem *navigationItem = [[UINavigationItem alloc]initWithTitle:@""];
-						navigationItem.titleView = titleImageView;
-//						navigationItem.rightBarButtonItem = barButtonItem;
-						
-						[self.navigationBar pushNavigationItem:navigationItem animated:YES];
-						
-						self.navigationController.delegate = self;
 					});
 					break;
 				}
