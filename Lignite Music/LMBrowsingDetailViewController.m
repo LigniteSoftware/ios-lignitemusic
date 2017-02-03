@@ -53,9 +53,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-	
-	NSLog(@"!shit %@", NSStringFromCGRect(self.view.frame));
-	
+		
 	[self.view addSubview:self.browsingDetailView];
 	
 	[self.browsingDetailView autoPinEdgesToSuperviewEdges];
@@ -66,6 +64,12 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)viewDidUnload {
+	if(![self.browsingDetailView.rootViewController.navigationBar.topItem.title isEqualToString:@""]){
+		[self.browsingDetailView.rootViewController.navigationBar popNavigationItemAnimated:YES];
+	}
 }
 
 /*

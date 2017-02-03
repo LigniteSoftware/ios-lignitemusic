@@ -75,6 +75,11 @@
 @property LMOperationQueue *queue;
 
 /**
+ The info view for the big list entry.
+ */
+@property LMCollectionInfoView *collectionInfoView;
+
+/**
  How much the width of the content view should take up in multiplier sense. 1.0 will touch both edges of the big list entry. Default is 0.8.
  */
 @property float contentViewWidthMultiplier;

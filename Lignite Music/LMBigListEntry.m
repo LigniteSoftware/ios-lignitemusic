@@ -15,7 +15,6 @@
 @property UIView *contentSubviewBackgroundView;
 @property id contentView;
 
-@property LMCollectionInfoView *collectionInfoView;
 
 @property LMControlBarView *controlBarView;
 @property NSLayoutConstraint* controlBarViewHeightConstraint;

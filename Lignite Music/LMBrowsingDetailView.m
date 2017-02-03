@@ -310,6 +310,7 @@
 		browsingDetailController.browsingDetailView.musicType = LMMusicTypeAlbums;
 		browsingDetailController.browsingDetailView.musicTrackCollection = collection;
 		browsingDetailController.requiredHeight = self.frame.size.height;
+		browsingDetailController.browsingDetailView.rootViewController = self.rootViewController;
 		[self.rootViewController showViewController:browsingDetailController sender:self];
 		return;
 	}
@@ -467,6 +468,8 @@
 	[self.tableView reloadSubviewData];
 	
 	[self.musicPlayer addMusicDelegate:self];
+	
+	[self.rootViewController pushItemOntoNavigationBarWithTitle:[self titleForInfoView:self.headerBigListEntry.collectionInfoView]];
 }
 
 @end

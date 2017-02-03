@@ -43,7 +43,7 @@
 @import SDWebImage;
 @import StoreKit;
 
-@interface LMCoreViewController () <LMMusicPlayerDelegate, LMSourceDelegate, UIGestureRecognizerDelegate, LMSearchBarDelegate, LMLetterTabDelegate, LMSearchSelectedDelegate, LMPurchaseManagerDelegate, LMButtonNavigationBarDelegate, UINavigationBarDelegate>
+@interface LMCoreViewController () <LMMusicPlayerDelegate, LMSourceDelegate, UIGestureRecognizerDelegate, LMSearchBarDelegate, LMLetterTabDelegate, LMSearchSelectedDelegate, LMPurchaseManagerDelegate, LMButtonNavigationBarDelegate, UINavigationBarDelegate, UINavigationControllerDelegate>
 
 @property LMMusicPlayer *musicPlayer;
 
@@ -67,6 +67,8 @@
 
 @property NSArray *musicCollectionsArray;
 
+@property UINavigationItem *itemPopped;
+
 /**
  The time stamp for syncing.
  */
@@ -85,8 +87,6 @@
  The height constraint for the navigation bar.
  */
 @property NSLayoutConstraint *buttonNavigationBarHeightConstraint;
-
-@property UINavigationBar *navigationBar;
 
 @property CGPoint originalPoint, currentPoint;
 
@@ -384,24 +384,8 @@
 //	}
 }
 
-- (void)viewDidDisappear:(BOOL)animated {
-	NSLog(@"View went bye bye %@", NSStringFromCGRect(self.browsingView.frame));
-	
-	UINavigationItem *navigationItem = [[UINavigationItem alloc]initWithTitle:@"24K Magic"];
-	
-	UIImageView *titleImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
-	titleImageView.contentMode = UIViewContentModeScaleAspectFit;
-	titleImageView.image = [LMAppIcon imageForIcon:LMIconNoAlbumArt75Percent];
-	
-	UIBarButtonItem *barButtonItem = [[UIBarButtonItem alloc]initWithCustomView:titleImageView];
-	
-	navigationItem.rightBarButtonItem = barButtonItem;
-	
-	[self.navigationBar pushNavigationItem:navigationItem animated:YES];
-}
-
 - (void)viewDidAppear:(BOOL)animated {
-	NSLog(@"View did appear animated %d", animated);
+//	NSLog(@"View did appear animated %d", animated);
 	
 //	[self attachNavigationBarToView:self.navigationController.view];
 	
@@ -438,99 +422,6 @@
 		[self.navigationController.view layoutIfNeeded];
 //	}];
 }
-
-//- (void)heightRequiredChangedTo:(CGFloat)heightRequired forBrowsingView:(LMBrowsingAssistantView *)browsingView {
-//	NSLog(@"Height required %f", heightRequired);
-//	
-//	BOOL isDynamic = (heightRequired < 0.0);
-//	
-//	if(isDynamic){
-//		heightRequired = 0.0;
-//	}
-//	
-//	if(self.currentDetailViewController){
-//		[(LMBrowsingDetailViewController*)self.currentDetailViewController setRequiredHeight:(WINDOW_FRAME.size.height-heightRequired) + 10];;
-//	}
-//	
-//	if(!isDynamic){
-//		if(!self.browsingAssistantHeightConstraint){
-////			self.browsingAssistantHeightConstraint = [self.browsingAssistant autoSetDimension:ALDimensionHeight toSize:heightRequired+TAB_HEIGHT];
-//			
-//			[self.browsingAssistantViewAttachedTo layoutIfNeeded];
-//			return;
-//		}
-//		
-//		[self.browsingAssistantViewAttachedTo layoutIfNeeded];
-//	}
-//	
-//	if(heightRequired < self.view.frame.size.height/2.0){
-//		for(int i = 0; i < self.heightConstraintArray.count; i++){
-//			NSLayoutConstraint *constraint = [self.heightConstraintArray objectAtIndex:i];
-//			constraint.constant = (WINDOW_FRAME.size.height-heightRequired) + 10;
-//		}
-//		[UIView animateWithDuration:(heightRequired < self.browsingAssistantHeightConstraint.constant) ? 0.10 : 0.75 animations:^{
-//			[self.browsingAssistantViewAttachedTo layoutIfNeeded];
-//		}];
-//	}
-//	
-//	if(!isDynamic){
-//		self.browsingAssistantHeightConstraint.constant = heightRequired+TAB_HEIGHT;
-//	}
-//	
-//	[UIView animateWithDuration:0.75 animations:^{
-//		[self.browsingAssistantViewAttachedTo layoutIfNeeded];
-//	}];
-//}
-
-//- (void)showWhatsPoppin {
-//	NSArray *currentBuildChanges = @[
-//									 @"Added album browsing through individual artists",
-//									 @"Fixed Pebble app lists getting cut off at about 150 items",
-//									 @"Fixed Pebble app crash"
-//									 ];
-//	
-//	NSArray *currentBuildIssues = @[
-//									@"Hey there",
-//									@"\nPlease do not report already known issues to us, thanks!"
-//									];
-//	
-//	NSString *currentAppBuildString = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
-//	
-//	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-//	
-//	NSString *lastAppBuildString = @"0";
-//	if([userDefaults objectForKey:@"LastVersionBuildString"]){
-//		lastAppBuildString = [userDefaults objectForKey:@"LastVersionBuildString"];
-//	}
-//	
-//	if(![currentAppBuildString isEqualToString:lastAppBuildString]){
-//		NSLog(@"Spooked Super!");
-//		
-//		NSMutableString *changesString = [NSMutableString stringWithFormat:@"\n|  Changes  |\n\n"];
-//		for(int i = 0; i < currentBuildChanges.count; i++){
-//			[changesString appendFormat:@"- %@%@", [currentBuildChanges objectAtIndex:i], ((i+1) == currentBuildChanges.count && currentBuildIssues.count > 1) ? @"\n\n" : @"\n"];
-//		}
-//		if(currentBuildIssues.count > 1){
-//			[changesString appendString:@"|  New issues  |\n\n"];
-//			for(int i = 0; i < currentBuildIssues.count; i++){
-//				int isLastIndex = (i+1) == currentBuildIssues.count;
-//				[changesString appendFormat:@"%@%@%@", isLastIndex ? @"" : @"- ", [currentBuildIssues objectAtIndex:i], isLastIndex ? @"" : @"\n"];
-//			}
-//		}
-//		
-//		LMAlertView *alertView = [LMAlertView newAutoLayoutView];
-//		
-//		alertView.title = [NSString stringWithFormat:@"What's new in this build"];
-//		alertView.body = changesString;
-//		alertView.alertOptionColours = @[[LMColour ligniteRedColour]];
-//		alertView.alertOptionTitles = @[NSLocalizedString(@"Awesome", nil)];
-//		
-//		[alertView launchOnView:self.navigationController.view withCompletionHandler:^(NSUInteger optionSelected) {
-//			[userDefaults setObject:currentAppBuildString forKey:@"LastVersionBuildString"];
-//			[userDefaults synchronize];
-//		}];
-//	}
-//}
 
 - (void)launchOnboarding {
 	LMGuideViewPagerController *controller = [LMGuideViewPagerController new];
@@ -591,8 +482,57 @@
 }
 
 - (UIBarPosition)positionForBar:(id<UIBarPositioning>)bar {
-	NSLog(@"And it's getting to the point where even I have a problem with it");
+//	NSLog(@"And it's getting to the point where even I have a problem with it");
 	return UIBarPositionTopAttached;
+}
+
+- (void)navigationBar:(UINavigationBar *)navigationBar didPopItem:(UINavigationItem *)item {
+	NSLog(@"Item %@ was pop popped!", item.title);
+}
+
+- (void)navigationBar:(UINavigationBar *)navigationBar didPushItem:(UINavigationItem *)item {
+//	NSLog(@"Item %@ was pushed!", item.title);
+}
+
+- (BOOL)navigationBar:(UINavigationBar *)navigationBar shouldPopItem:(UINavigationItem *)item {
+	NSLog(@"Pop? %@", item);
+	
+	if(![item isEqual:self.itemPopped]){ //Pressed back instead of swipped back
+		NSLog(@"Dismissing shit too");
+		[self.navigationController popViewControllerAnimated:YES];
+	}
+	
+	self.itemPopped = nil;
+		
+	return YES;
+}
+
+- (void)pushItemOntoNavigationBarWithTitle:(NSString*)title {
+	UINavigationItem *navigationItem = [[UINavigationItem alloc]initWithTitle:title];
+	
+	UIImageView *titleImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
+	titleImageView.contentMode = UIViewContentModeScaleAspectFit;
+	titleImageView.image = [LMAppIcon imageForIcon:LMIconNoAlbumArt75Percent];
+	
+	UIBarButtonItem *barButtonItem = [[UIBarButtonItem alloc]initWithCustomView:titleImageView];
+	
+	navigationItem.rightBarButtonItem = barButtonItem;
+	
+	[self.navigationBar pushNavigationItem:navigationItem animated:YES];
+}
+
+- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated
+{
+	//Check if swipe gesture backward went through or not, if it did, pop the nav item
+	id<UIViewControllerTransitionCoordinator> tc = navigationController.topViewController.transitionCoordinator;
+	[tc notifyWhenInteractionEndsUsingBlock:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+		if(![context isCancelled]){
+			NSLog(@"Shit");
+			self.itemPopped = self.navigationBar.topItem;
+			[self.navigationBar popNavigationItemAnimated:YES];
+			NSLog(@"Is this anybody's water? %@", self.itemPopped);
+		}
+	}];
 }
 
 - (void)panNowPlayingUp:(UIPanGestureRecognizer *)recognizer {
@@ -662,64 +602,6 @@
 #endif
 	
 	
-//	self.automaticallyAdjustsScrollViewInsets = YES;
-//	
-//	LMFeedbackViewController *feedbackController = [LMFeedbackViewController new];
-//	[self.navigationController presentViewController:feedbackController animated:YES completion:nil];
-//	
-//	return;
-	
-//	LMBrowsingBar *browsingBar = [LMBrowsingBar newAutoLayoutView];
-//	[self.view addSubview:browsingBar];
-//	
-//	[browsingBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-//	[browsingBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-//	[browsingBar autoCenterInSuperview];
-//	[browsingBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/20.0)];
-//	
-//	return;
-	
-//	LMLetterTabView *letterTab = [LMLetterTabView newAutoLayoutView];
-//	[self.view addSubview:letterTab];
-//	
-//	[letterTab autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-//	[letterTab autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-//	[letterTab autoCenterInSuperview];
-//	[letterTab autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/20.0)];
-//
-//	return;
-	
-//	NSLog(@"Loading view %@", self.navigationController);
-	
-	
-//	LMCreditsViewController *creditsViewController = [LMCreditsViewController new];
-//	[self.navigationController pushViewController:creditsViewController animated:YES];
-//	
-//	return;
-
-	
-//	[NSTimer scheduledTimerWithTimeInterval:0.5 repeats:NO block:^() {
-//		[[LMPurchaseManager sharedPurchaseManager] showPurchaseViewControllerOnViewController:self.navigationController present:YES];
-//	}];
-//	
-//	LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
-//	settingsViewController.coreViewController = self;
-//	[self.navigationController pushViewController:settingsViewController animated:YES];
-//	
-//	return;
-	
-	
-//	LMImageManager *imageManager = [LMImageManager sharedImageManager];
-//	[imageManager launchPermissionRequestOnView:self.view
-//									forCategory:LMImageManagerCategoryAlbumImages
-//						  withCompletionHandler:^(LMImageManagerPermissionStatus permissionStatus) {
-//							  NSLog(@"Done. Got permission status %d.", permissionStatus);
-//						  }];
-//	
-//	return;
-	
-//	NSLog(@"Query %@", query);
-	
 	
 	UIImageView *hangOnImage = [UIImageView newAutoLayoutView];
 	hangOnImage.image = [UIImage imageNamed:@"splash_wings.png"];
@@ -728,15 +610,6 @@
 	
 	[hangOnImage autoPinEdgesToSuperviewEdges];
 	
-//	UILabel *hangOnLabel = [UILabel newAutoLayoutView];
-//	hangOnLabel.text = NSLocalizedString(@"HangOn", nil);
-//	hangOnLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:30.0f];
-//	hangOnLabel.textAlignment = NSTextAlignmentCenter;
-//	[self.view addSubview:hangOnLabel];
-//	
-//	[hangOnLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:hangOnImage withOffset:10];
-//	[hangOnLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-//	[hangOnLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 	
 #ifdef SKIP_ONBOARDING
 	if(true == false){
@@ -927,59 +800,24 @@
 						titleImageView.image = [LMAppIcon imageForIcon:LMIconNoAlbumArt75Percent];
 						
 						
-						UINavigationItem *navigationItem = [[UINavigationItem alloc]initWithTitle:@"Albums"];
+						UINavigationItem *navigationItem = [[UINavigationItem alloc]initWithTitle:@""];
 						navigationItem.titleView = titleImageView;
 //						navigationItem.rightBarButtonItem = barButtonItem;
 						
 						[self.navigationBar pushNavigationItem:navigationItem animated:YES];
 						
-//						UIBarButtonItem *barButtonItem = [[UIBarButtonItem alloc]initWithTitle:@"Test" style:UIBarButtonItemStylePlain target:self action:nil];
-//						
-//						self.navigationItem.rightBarButtonItem = barButtonItem;
-						
-//						[NSTimer scheduledTimerWithTimeInterval:5.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
-//							NSLog(@"Firing library shit");
-//							[self musicLibraryDidChange];
-//						}];
-						
-//						[NSTimer scheduledTimerWithTimeInterval:1.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
-////							[self openNowPlayingView];
-//							NSLog(@"Open now playing view");
-//						}];
-						
-//						[NSTimer scheduledTimerWithTimeInterval:3.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
-//							[self.purchaseManager makePurchaseWithProductIdentifier:LMPurchaseManagerProductIdentifierLifetimeMusic];
-//						}];
+						self.navigationController.delegate = self;
 					});
 					break;
 				}
 			}
 		}];
 	}
-		
-//	[NSTimer scheduledTimerWithTimeInterval:0.75
-//									 target:self
-//								   selector:@selector(openNowPlayingView)
-//								   userInfo:nil
-//									repeats:NO];
-	
-//	UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(play)];
-//	[self.view addGestureRecognizer:gesture];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end
