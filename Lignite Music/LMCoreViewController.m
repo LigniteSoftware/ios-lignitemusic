@@ -34,6 +34,7 @@
 
 #import "LMFeedbackViewController.h"
 #import "LMCreditsViewController.h"
+#import "LMCompactBrowsingView.h"
 #import "LMProgressSlider.h"
 #import "LMBrowsingBar.h"
 
@@ -43,7 +44,8 @@
 @import SDWebImage;
 @import StoreKit;
 
-@interface LMCoreViewController () <LMMusicPlayerDelegate, LMSourceDelegate, UIGestureRecognizerDelegate, LMSearchBarDelegate, LMLetterTabDelegate, LMSearchSelectedDelegate, LMPurchaseManagerDelegate, LMButtonNavigationBarDelegate, UINavigationBarDelegate, UINavigationControllerDelegate>
+@interface LMCoreViewController () <LMMusicPlayerDelegate, LMSourceDelegate, UIGestureRecognizerDelegate, LMSearchBarDelegate, LMLetterTabDelegate, LMSearchSelectedDelegate, LMPurchaseManagerDelegate, LMButtonNavigationBarDelegate, UINavigationBarDelegate, UINavigationControllerDelegate,
+	UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
 @property LMMusicPlayer *musicPlayer;
 
@@ -612,8 +614,42 @@
 	}
 }
 
-- (void)viewDidLoad {
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
+	return 1;
+}
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+	return 25;
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+	UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cellIdentifier" forIndexPath:indexPath];
 	
+	cell.backgroundColor = [UIColor greenColor];
+	
+	return cell;
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
+//	NSLog(@"Path %@", indexPath);
+	NSInteger factor = 3;
+	
+	CGFloat sideLength = self.view.frame.size.width/factor;
+	
+	sideLength -= 20;
+	
+	CGFloat spacing = (self.view.frame.size.width-(sideLength*factor))/(factor+1);
+	
+	NSLog(@"Fuck %f", spacing);
+	
+	UICollectionViewFlowLayout *flowLayout = (UICollectionViewFlowLayout*)collectionViewLayout;
+	flowLayout.sectionInset = UIEdgeInsetsMake(spacing, spacing, spacing, spacing);
+	flowLayout.minimumLineSpacing = spacing;
+	
+	return CGSizeMake(sideLength, sideLength * (3.0/2.0));
+}
+
+- (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view
 	
@@ -628,6 +664,25 @@
 #ifdef SPEED_DEMON_MODE
 	[UIView setAnimationsEnabled:NO];
 #endif
+	
+	
+	NSLog(@"Frame set %@", NSStringFromCGRect(self.view.frame));
+	
+	UICollectionViewFlowLayout *fuck = [[UICollectionViewFlowLayout alloc]init];
+//	fuck.sectionInset = UIEdgeInsetsMake(15, 15, 15, 15);
+//	fuck.itemSize = CGSizeMake(90, 120);
+	
+	LMCompactBrowsingView *compactBrowsingView = [[LMCompactBrowsingView alloc] initWithFrame:self.view.frame collectionViewLayout:fuck];
+//	compactBrowsingView.translatesAutoresizingMaskIntoConstraints = NO;
+	compactBrowsingView.delegate = self;
+	compactBrowsingView.dataSource = self;
+	[compactBrowsingView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"cellIdentifier"];
+//	[compactBrowsingView setBackgroundColor:[UIColor redColor]];
+	[self.view addSubview:compactBrowsingView];
+	
+//	[compactBrowsingView autoPinEdgesToSuperviewEdges];
+	
+	return;
 	
 	
 	

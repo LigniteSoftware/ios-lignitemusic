@@ -19,6 +19,8 @@
 		6A1FB9CC1D9AE76A00890BF3 /* LMLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A1FB9CB1D9AE76A00890BF3 /* LMLabel.m */; };
 		6A23AF4A1E454D1E00A56F5F /* LMNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A23AF491E454D1E00A56F5F /* LMNavigationBar.m */; };
 		6A23AF4B1E454D1E00A56F5F /* LMNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A23AF491E454D1E00A56F5F /* LMNavigationBar.m */; };
+		6A23AF4E1E46254400A56F5F /* LMCompactBrowsingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A23AF4D1E46254400A56F5F /* LMCompactBrowsingView.m */; };
+		6A23AF4F1E46254400A56F5F /* LMCompactBrowsingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A23AF4D1E46254400A56F5F /* LMCompactBrowsingView.m */; };
 		6A2566F31D4089E8004EDE41 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A2566F21D4089E8004EDE41 /* MediaPlayer.framework */; };
 		6A26B46A1DE2D1A3008B5B69 /* LMSectionHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A26B4691DE2D1A3008B5B69 /* LMSectionHeaderView.m */; };
 		6A26B46C1DE4074E008B5B69 /* icon_look_and_feel.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A26B46B1DE4074E008B5B69 /* icon_look_and_feel.png */; };
@@ -369,6 +371,8 @@
 		6A1FB9CB1D9AE76A00890BF3 /* LMLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMLabel.m; sourceTree = "<group>"; };
 		6A23AF481E454D1E00A56F5F /* LMNavigationBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMNavigationBar.h; sourceTree = "<group>"; };
 		6A23AF491E454D1E00A56F5F /* LMNavigationBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMNavigationBar.m; sourceTree = "<group>"; };
+		6A23AF4C1E46254400A56F5F /* LMCompactBrowsingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMCompactBrowsingView.h; sourceTree = "<group>"; };
+		6A23AF4D1E46254400A56F5F /* LMCompactBrowsingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMCompactBrowsingView.m; sourceTree = "<group>"; };
 		6A2566F21D4089E8004EDE41 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		6A26B4681DE2D1A3008B5B69 /* LMSectionHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMSectionHeaderView.h; sourceTree = "<group>"; };
 		6A26B4691DE2D1A3008B5B69 /* LMSectionHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMSectionHeaderView.m; sourceTree = "<group>"; };
@@ -731,6 +735,8 @@
 				6AEB9CFF1BACF60E00AD19FA /* LMAppDelegate.m */,
 				6AD226FD1DA4B8000056695A /* LMCoreViewController.h */,
 				6AD226FE1DA4B8000056695A /* LMCoreViewController.m */,
+				6A23AF4C1E46254400A56F5F /* LMCompactBrowsingView.h */,
+				6A23AF4D1E46254400A56F5F /* LMCompactBrowsingView.m */,
 			);
 			name = Core;
 			sourceTree = "<group>";
@@ -1681,6 +1687,7 @@
 				6AA5CB321E285C0A005F853F /* LMOperationQueue.m in Sources */,
 				6AA5CB331E285C0A005F853F /* LMImageManager.m in Sources */,
 				6AA5CB341E285C0A005F853F /* LMSearchView.m in Sources */,
+				6A23AF4F1E46254400A56F5F /* LMCompactBrowsingView.m in Sources */,
 				6AA5CB351E285C0A005F853F /* LMSettingsViewController.m in Sources */,
 				6AD4B8A81E394A6700BE3177 /* LMButtonNavigationBar.m in Sources */,
 				6AA5CB361E285C0A005F853F /* LMDebugViewController.m in Sources */,
@@ -1757,6 +1764,7 @@
 				6AF751661E0454B50001E18B /* LMPaddedTextField.m in Sources */,
 				6A1AF0841E0341BC00F8934C /* MPMediaItem+LigniteImages.m in Sources */,
 				6A313C181BB59AE8002BBC33 /* LMButton.m in Sources */,
+				6A23AF4E1E46254400A56F5F /* LMCompactBrowsingView.m in Sources */,
 				6AD480631DCAAF4D00DB891B /* LMCollectionInfoView.m in Sources */,
 				6AD226FF1DA4B8000056695A /* LMCoreViewController.m in Sources */,
 				6A3211441DA73EC90060DD07 /* LMMarqueeLabel.m in Sources */,
