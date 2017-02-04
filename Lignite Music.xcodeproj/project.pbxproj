@@ -17,6 +17,8 @@
 		6A1AF0871E037CCD00F8934C /* MPMediaItemCollection+LigniteInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A1AF0861E037CCD00F8934C /* MPMediaItemCollection+LigniteInfo.m */; };
 		6A1AF0891E03BC1000F8934C /* icon_airplay.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A1AF0881E03BC1000F8934C /* icon_airplay.png */; };
 		6A1FB9CC1D9AE76A00890BF3 /* LMLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A1FB9CB1D9AE76A00890BF3 /* LMLabel.m */; };
+		6A23AF4A1E454D1E00A56F5F /* LMNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A23AF491E454D1E00A56F5F /* LMNavigationBar.m */; };
+		6A23AF4B1E454D1E00A56F5F /* LMNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A23AF491E454D1E00A56F5F /* LMNavigationBar.m */; };
 		6A2566F31D4089E8004EDE41 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A2566F21D4089E8004EDE41 /* MediaPlayer.framework */; };
 		6A26B46A1DE2D1A3008B5B69 /* LMSectionHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A26B4691DE2D1A3008B5B69 /* LMSectionHeaderView.m */; };
 		6A26B46C1DE4074E008B5B69 /* icon_look_and_feel.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A26B46B1DE4074E008B5B69 /* icon_look_and_feel.png */; };
@@ -365,6 +367,8 @@
 		6A1AF0881E03BC1000F8934C /* icon_airplay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_airplay.png; sourceTree = "<group>"; };
 		6A1FB9CA1D9AE76A00890BF3 /* LMLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMLabel.h; sourceTree = "<group>"; };
 		6A1FB9CB1D9AE76A00890BF3 /* LMLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMLabel.m; sourceTree = "<group>"; };
+		6A23AF481E454D1E00A56F5F /* LMNavigationBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMNavigationBar.h; sourceTree = "<group>"; };
+		6A23AF491E454D1E00A56F5F /* LMNavigationBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMNavigationBar.m; sourceTree = "<group>"; };
 		6A2566F21D4089E8004EDE41 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		6A26B4681DE2D1A3008B5B69 /* LMSectionHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMSectionHeaderView.h; sourceTree = "<group>"; };
 		6A26B4691DE2D1A3008B5B69 /* LMSectionHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMSectionHeaderView.m; sourceTree = "<group>"; };
@@ -930,12 +934,14 @@
 		6A7DF1141DB10CC60077B979 /* Layovers */ = {
 			isa = PBXGroup;
 			children = (
+				6AD4B8A51E394A6700BE3177 /* LMButtonNavigationBar.h */,
+				6AD4B8A61E394A6700BE3177 /* LMButtonNavigationBar.m */,
 				6AC066F21E00E335008A6FCA /* LMGrabberView.h */,
 				6AC066F31E00E335008A6FCA /* LMGrabberView.m */,
 				6A7DF1181DB112140077B979 /* LMMiniPlayerView.h */,
 				6A7DF1191DB112140077B979 /* LMMiniPlayerView.m */,
-				6AD4B8A51E394A6700BE3177 /* LMButtonNavigationBar.h */,
-				6AD4B8A61E394A6700BE3177 /* LMButtonNavigationBar.m */,
+				6A23AF481E454D1E00A56F5F /* LMNavigationBar.h */,
+				6A23AF491E454D1E00A56F5F /* LMNavigationBar.m */,
 				6A2A29C91DB1F1C3008E7792 /* LMSource.h */,
 				6A2A29CA1DB1F1C3008E7792 /* LMSource.m */,
 				6A2A29C31DB1D89C008E7792 /* LMSourceSelectorView.h */,
@@ -1638,6 +1644,7 @@
 				6AA5CB0D1E285C0A005F853F /* LMPebbleMessageQueue.m in Sources */,
 				6AA5CB0E1E285C0A005F853F /* LMSettings.m in Sources */,
 				6AA5CB0F1E285C0A005F853F /* LMBrowsingDetailView.m in Sources */,
+				6A23AF4B1E454D1E00A56F5F /* LMNavigationBar.m in Sources */,
 				6AA5CB101E285C0A005F853F /* LMPurchaseManager.m in Sources */,
 				6AA5CB121E285C0A005F853F /* UIColor+isLight.m in Sources */,
 				6AA5CB131E285C0A005F853F /* LMAlbumArtView.m in Sources */,
@@ -1766,6 +1773,7 @@
 				6AF9D5321DE0B73D006368B6 /* LMImageManager.m in Sources */,
 				6AAA560D1DF631EC00692CFB /* LMSearchView.m in Sources */,
 				6A59A51B1DE7B08B00B346AC /* LMSettingsViewController.m in Sources */,
+				6A23AF4A1E454D1E00A56F5F /* LMNavigationBar.m in Sources */,
 				6AEF8C731DEF419D00D9A1BF /* LMDebugViewController.m in Sources */,
 				6AFF01891DDD656E00F24D8E /* LMGuideViewPagerController.m in Sources */,
 				6A7565301DF7E38900A9EDD6 /* LMSearch.m in Sources */,

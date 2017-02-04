@@ -204,17 +204,12 @@
 }
 
 - (BOOL)prefersStatusBarHidden {
-	return NO;
-	
-	
 	if(!self.loaded){
 		NSLog(@"Loading");
 		return YES;
 	}
 	
-	BOOL shown = [LMSettings shouldShowStatusBar];
-	
-	return !shown || self.nowPlayingView.isOpen;
+	return self.nowPlayingView.isOpen;
 }
 
 - (UIStatusBarAnimation)preferredStatusBarUpdateAnimation {
@@ -254,7 +249,10 @@
 
 - (void)sourceSelected:(LMSource *)source {
 	if(self.currentDetailViewController){
-		[self.navigationController popViewControllerAnimated:YES];
+		[self.navigationBar popNavigationItemAnimated:NO];
+		if(self.navigationBar.items.count > 1){
+			[self.navigationBar popNavigationItemAnimated:NO];
+		}
 	}
 	
 	int indexOfSource = -1;
@@ -707,7 +705,7 @@
 						
 						
 						
-						self.navigationBar = [UINavigationBar newAutoLayoutView];
+						self.navigationBar = [LMNavigationBar newAutoLayoutView];
 						self.navigationBar.delegate = self;
 						[self.navigationController.view addSubview:self.navigationBar];
 						

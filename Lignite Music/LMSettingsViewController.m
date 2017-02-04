@@ -51,9 +51,11 @@
 }
 
 - (UIImage*)iconAtSection:(NSUInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView {
+	section++;
+	
 	switch(section){
-		case 0:
-			return [LMAppIcon imageForIcon:LMIconLookAndFeel];
+//		case 0:
+//			return [LMAppIcon imageForIcon:LMIconLookAndFeel];
 		case 1:
 			return [LMAppIcon imageForIcon:LMIconCloudDownload];
 		case 2:
@@ -65,9 +67,11 @@
 }
 
 - (NSString*)titleAtSection:(NSUInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView {
+	section++;
+	
 	switch(section){
-		case 0:
-			return NSLocalizedString(@"LookAndFeel", nil);
+//		case 0:
+//			return NSLocalizedString(@"LookAndFeel", nil);
 		case 1:
 			return NSLocalizedString(@"ImageDownloads", nil);
 		case 2:
@@ -79,9 +83,11 @@
 }
 
 - (NSUInteger)numberOfRowsForSection:(NSUInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView {
+	section++;
+	
 	switch(section){
-		case 0:
-			return 1;
+//		case 0:
+//			return 1;
 		case 1:
 			return 3;
 		case 2:
@@ -93,13 +99,13 @@
 }
 
 - (NSString*)titleForIndexPath:(NSIndexPath*)indexPath forSectionTableView:(LMSectionTableView*)sectionTableView {
-	switch(indexPath.section){
-		case 0:
-			switch(indexPath.row){
-				case 0:
-					return NSLocalizedString(@"StatusBar", nil);
-			}
-			break;
+	switch(indexPath.section+1){
+//		case 0:
+//			switch(indexPath.row){
+//				case 0:
+//					return NSLocalizedString(@"StatusBar", nil);
+//			}
+//			break;
 		case 1:
 			switch(indexPath.row){
 				case 0:
@@ -170,15 +176,15 @@
 }
 
 - (NSString*)subtitleForIndexPath:(NSIndexPath*)indexPath forSectionTableView:(LMSectionTableView*)sectionTableView {
-	switch(indexPath.section){
-		case 0:
-			switch(indexPath.row){
-					//				case 0:
-					//					return NSLocalizedString(@"TapToChooseColour", nil);
-				case 0:
-					return NSLocalizedString(@"StatusBarDescription", nil);
-			}
-			break;
+	switch(indexPath.section+1){
+//		case 0:
+//			switch(indexPath.row){
+//					//				case 0:
+//					//					return NSLocalizedString(@"TapToChooseColour", nil);
+//				case 0:
+//					return NSLocalizedString(@"StatusBarDescription", nil);
+//			}
+//			break;
 		case 1:
 			switch(indexPath.row){
 				case 0: {
@@ -277,7 +283,7 @@
 	alertView.alertOptionTitles = @[NSLocalizedString(disableButtonKey, nil), NSLocalizedString(enableButtonKey, nil)];
 	alertView.alertOptionColours = @[[LMColour darkLigniteRedColour], [LMColour ligniteRedColour]];
 	
-	[alertView launchOnView:self.view withCompletionHandler:^(NSUInteger optionSelected) {
+	[alertView launchOnView:self.coreViewController.navigationController.view withCompletionHandler:^(NSUInteger optionSelected) {
 		//Reset the special permission statuses because the user's stance maybe different now and we'll have to recheck
 		[self.imageManager setPermissionStatus:LMImageManagerPermissionStatusNotDetermined
 			 forSpecialDownloadPermission:LMImageManagerSpecialDownloadPermissionLowStorage];
@@ -341,27 +347,27 @@
 }
 
 - (void)tappedIndexPath:(NSIndexPath*)indexPath forSectionTableView:(LMSectionTableView*)sectionTableView {
-	switch(indexPath.section){
-		case 0:
-			switch(indexPath.row){
-				case 0:
-					NSLog(@"Status bar");
-					self.debugTapCount++;
-					if(self.debugTapCount > 5){
-						NSLog(@"Hey boi");
-						LMDebugViewController *debugViewController = [LMDebugViewController new];
-						[self.coreViewController.navigationController showViewController:debugViewController sender:self];
-					}
-					if(self.debugTapCount == 1){
-						NSLog(@"Timer registered");
-						[NSTimer scheduledTimerWithTimeInterval:3.0 block:^() {
-							self.debugTapCount = 0;
-							NSLog(@"Timer reset");
-						} repeats:NO];
-					}
-					break;
-			}
-			break;
+	switch(indexPath.section+1){
+//		case 0:
+//			switch(indexPath.row){
+//				case 0:
+//					NSLog(@"Status bar");
+//					self.debugTapCount++;
+//					if(self.debugTapCount > 5){
+//						NSLog(@"Hey boi");
+//						LMDebugViewController *debugViewController = [LMDebugViewController new];
+//						[self.coreViewController.navigationController showViewController:debugViewController sender:self];
+//					}
+//					if(self.debugTapCount == 1){
+//						NSLog(@"Timer registered");
+//						[NSTimer scheduledTimerWithTimeInterval:3.0 block:^() {
+//							self.debugTapCount = 0;
+//							NSLog(@"Timer reset");
+//						} repeats:NO];
+//					}
+//					break;
+//			}
+//			break;
 		case 1:
 			switch(indexPath.row){
 				case 0: {
@@ -388,6 +394,8 @@
 				case 1: {
 					LMPebbleManager *pebbleManager = [LMPebbleManager sharedPebbleManager];
 					[pebbleManager showSettings];
+					
+					[(LMCoreViewController*)self.coreViewController pushItemOntoNavigationBarWithTitle:NSLocalizedString(@"PebbleSettings", nil) withNowPlayingButton:NO];
 					break;
 				}
 			}
@@ -409,7 +417,7 @@
 							alertView.alertOptionColours = @[[LMColour darkLigniteRedColour], [LMColour ligniteRedColour]];
 							alertView.alertOptionTitles = @[NSLocalizedString(@"StayLoggedIn", nil), NSLocalizedString(@"Logout", nil)];
 							
-							[alertView launchOnView:self.view withCompletionHandler:^(NSUInteger optionSelected) {
+							[alertView launchOnView:self.coreViewController.navigationController.view withCompletionHandler:^(NSUInteger optionSelected) {
 								BOOL logout = (optionSelected == 1);
 								
 								if(logout){
@@ -525,7 +533,7 @@
 					alertView.alertOptionColours = @[[LMColour darkLigniteRedColour], [LMColour ligniteRedColour]];
 					alertView.alertOptionTitles = @[NSLocalizedString(@"OptionOptOut", nil), NSLocalizedString(@"OptionOptIn", nil)];
 					
-					[alertView launchOnView:self.view withCompletionHandler:^(NSUInteger optionSelected) {
+					[alertView launchOnView:self.coreViewController.navigationController.view withCompletionHandler:^(NSUInteger optionSelected) {
 						BOOL optedOut = (optionSelected == 0);
 						
 						NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
@@ -574,18 +582,19 @@
 }
 
 - (id)accessoryViewForIndexPath:(NSIndexPath *)indexPath forSectionTableView:(LMSectionTableView *)sectionTableView {
-	if(indexPath.section == 0 || (indexPath.section == 1 && indexPath.row == 2)){
+//	if(indexPath.section == 0 || (indexPath.section == 1 && indexPath.row == 2)){
+	if((indexPath.section == 0 && indexPath.row == 2)){
 		UISwitch *switchView = [UISwitch newAutoLayoutView];
 		
 		NSString *settingsKey = @"";
 		BOOL enabled = YES;
 		
-		switch(indexPath.section){
-			case 0:
-				[switchView addTarget:self action:@selector(didChangeStatusBarSwitchView:) forControlEvents:UIControlEventValueChanged];
-				
-				settingsKey = LMSettingsKeyStatusBar;
-				break;
+		switch(indexPath.section+1){
+//			case 0:
+//				[switchView addTarget:self action:@selector(didChangeStatusBarSwitchView:) forControlEvents:UIControlEventValueChanged];
+//				
+//				settingsKey = LMSettingsKeyStatusBar;
+//				break;
 			case 1:
 				[switchView addTarget:self action:@selector(didChangeHighestResolutionSwitchView:) forControlEvents:UIControlEventValueChanged];
 				
@@ -651,7 +660,7 @@
 	
 	self.sectionTableView = [LMSectionTableView newAutoLayoutView];
 	self.sectionTableView.contentsDelegate = self;
-	self.sectionTableView.totalNumberOfSections = 4;
+	self.sectionTableView.totalNumberOfSections = 3;
 	self.sectionTableView.title = NSLocalizedString(@"AppSettings", nil);
 	[self.view addSubview:self.sectionTableView];
 	

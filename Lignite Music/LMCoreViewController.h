@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "LMNavigationBar.h"
 
 @class LMBrowsingDetailViewController;
 
@@ -15,7 +15,7 @@
 
 @property LMBrowsingDetailViewController *currentDetailViewController;
 
-@property UINavigationBar *navigationBar;
+@property LMNavigationBar *navigationBar;
 
 - (void)prepareToLoadView;
 

@@ -710,7 +710,7 @@ BOOL shuffleForDebug = NO;
 	
 //	sortKey = @"representativeItem";
 	
-	NSLog(@"Loading sort");
+//	NSLog(@"Loading sort");
 	
 	NSSortDescriptor *albumSort;
 	
@@ -746,7 +746,7 @@ BOOL shuffleForDebug = NO;
 	
 	//		NSLog(@"[LMMusicPlayer]: Took %f seconds to complete query.", endingTime-startingTime);
 	
-	NSLog(@"Returning sort");
+//	NSLog(@"Returning sort");
 	
 	return [collections sortedArrayUsingDescriptors:@[albumSort]];
 }

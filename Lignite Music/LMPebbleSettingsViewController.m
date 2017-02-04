@@ -39,7 +39,10 @@
 	self.settingsView.messageQueue = self.messageQueue;
 	[self.view addSubview:self.settingsView];
 	
-	[self.settingsView autoPinEdgesToSuperviewEdges];
+	[self.settingsView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+	[self.settingsView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+	[self.settingsView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+	[self.settingsView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:64];
 }
 
 - (void)didReceiveMemoryWarning {
