@@ -8,6 +8,6 @@
 
 #import "LMView.h"
 
-@interface LMCompactBrowsingView : UICollectionView
+@interface LMCompactBrowsingView : LMView
 
 @end
