@@ -9,14 +9,69 @@
 #import <PureLayout/PureLayout.h>
 #import "LMCompactBrowsingView.h"
 #import "LMBigListEntry.h"
+#import "LMAppIcon.h"
 
-@interface LMCompactBrowsingView()<UICollectionViewDelegateFlowLayout, UICollectionViewDataSource>
+@interface LMCompactBrowsingView()<UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, LMCollectionInfoViewDelegate, LMBigListEntryDelegate, LMControlBarViewDelegate>
 
 @property UICollectionView *collectionView;
 
 @end
 
 @implementation LMCompactBrowsingView
+
+- (id)contentSubviewForBigListEntry:(LMBigListEntry*)bigListEntry {
+//	id contentSubview = [self.contentViewsArray objectAtIndex:bigListEntry.collectionIndex % self.bigListEntriesArray.count];
+	
+//	[self.delegate prepareContentSubview:contentSubview forBigListEntry:bigListEntry];
+	
+	UIView *contentSubview = [UIView newAutoLayoutView];
+	
+	contentSubview.backgroundColor = [UIColor orangeColor];
+	
+	return contentSubview;
+}
+
+- (float)contentSubviewFactorial:(BOOL)height forBigListEntry:(LMBigListEntry *)bigListEntry {
+	NSLog(@"Frame %@", NSStringFromCGRect(self.frame));
+	return height ? ((118.0/177.0)/3.0) : 1.0;
+}
+
+- (void)sizeChangedToLargeSize:(BOOL)largeSize withHeight:(float)newHeight forBigListEntry:(LMBigListEntry*)bigListEntry {
+	//If the new size is large/opened
+	NSLog(@"%@ changed large", bigListEntry);
+}
+
+- (UIImage*)imageWithIndex:(uint8_t)index forControlBarView:(LMControlBarView *)controlBar {
+	return [LMAppIcon imageForIcon:LMIconBug];
+}
+
+- (BOOL)buttonHighlightedWithIndex:(uint8_t)index wasJustTapped:(BOOL)wasJustTapped forControlBar:(LMControlBarView *)controlBar {
+	return NO;
+}
+
+- (uint8_t)amountOfButtonsForControlBarView:(LMControlBarView *)controlBar {
+	return 3;
+}
+
+- (NSString*)titleForInfoView:(LMCollectionInfoView*)infoView {
+	return @"title";
+}
+
+- (NSString*)leftTextForInfoView:(LMCollectionInfoView*)infoView {
+	return @"left text";
+}
+
+- (NSString*)rightTextForInfoView:(LMCollectionInfoView*)infoView {
+	return @"right text";
+}
+
+- (UIImage*)centerImageForInfoView:(LMCollectionInfoView*)infoView {
+	return nil;
+}
+
+- (void)contentViewTappedForBigListEntry:(LMBigListEntry *)bigListEntry {
+	NSLog(@"Content view tapped for %@", bigListEntry);
+}
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
 	return 1;
@@ -30,6 +85,16 @@
 	UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cellIdentifier" forIndexPath:indexPath];
 	
 	cell.backgroundColor = [UIColor greenColor];
+	
+	LMBigListEntry *bigListEntry = [LMBigListEntry newAutoLayoutView];
+	bigListEntry.infoDelegate = self;
+	bigListEntry.entryDelegate = self;
+	bigListEntry.controlBarDelegate = self;
+	bigListEntry.collectionIndex = 1;
+	[bigListEntry setup];
+	
+	[cell.contentView addSubview:bigListEntry];
+	[bigListEntry autoPinEdgesToSuperviewEdges];
 	
 	return cell;
 }
@@ -49,6 +114,8 @@
 	UICollectionViewFlowLayout *flowLayout = (UICollectionViewFlowLayout*)collectionViewLayout;
 	flowLayout.sectionInset = UIEdgeInsetsMake(spacing, spacing, spacing, spacing);
 	flowLayout.minimumLineSpacing = spacing;
+	
+	NSLog(@"Fuck %@", NSStringFromCGSize(CGSizeMake(sideLength, sideLength * (3.0/2.0))));
 	
 	return CGSizeMake(sideLength, sideLength * (3.0/2.0));
 }
