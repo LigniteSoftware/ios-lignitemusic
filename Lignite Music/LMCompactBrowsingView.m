@@ -32,8 +32,13 @@
 }
 
 - (float)contentSubviewFactorial:(BOOL)height forBigListEntry:(LMBigListEntry *)bigListEntry {
-	NSLog(@"Frame %@", NSStringFromCGRect(self.frame));
-	return height ? ((118.0/177.0)/3.0) : 1.0;
+	CGRect frame = [[self.collectionView.visibleCells firstObject] frame];
+	if(frame.size.width == 0){
+		frame = CGRectMake(0, 0, 117, 177);
+	}
+	CGFloat percentage = frame.size.width/self.frame.size.width;
+	NSLog(@"Frame %f%% %@", percentage, NSStringFromCGRect([[self.collectionView.visibleCells firstObject] frame]));
+	return height ? 0.1 : 1.0;
 }
 
 - (void)sizeChangedToLargeSize:(BOOL)largeSize withHeight:(float)newHeight forBigListEntry:(LMBigListEntry*)bigListEntry {
@@ -127,6 +132,7 @@
 		self.didLayoutConstraints = YES;
 		
 		UICollectionViewFlowLayout *fuck = [[UICollectionViewFlowLayout alloc]init];
+		fuck.scrollDirection = UICollectionViewScrollDirectionHorizontal;
 		//	fuck.sectionInset = UIEdgeInsetsMake(15, 15, 15, 15);
 		//	fuck.itemSize = CGSizeMake(90, 120);
 		

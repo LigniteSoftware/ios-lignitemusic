@@ -632,12 +632,12 @@
 	
 	NSLog(@"Frame set %@", NSStringFromCGRect(self.view.frame));
 	
-	LMCompactBrowsingView *compactBrowsingView = [LMCompactBrowsingView newAutoLayoutView];
-	[self.view addSubview:compactBrowsingView];
-	
-	[compactBrowsingView autoPinEdgesToSuperviewEdges];
-	
-	return;
+//	LMCompactBrowsingView *compactBrowsingView = [LMCompactBrowsingView newAutoLayoutView];
+//	[self.view addSubview:compactBrowsingView];
+//	
+//	[compactBrowsingView autoPinEdgesToSuperviewEdges];
+//	
+//	return;
 	
 	
 	
