@@ -85,6 +85,9 @@
 					break;
 				}
 				case 2: {
+#ifdef SPOTIFY
+					NSLog(@"Launch Spotify login");
+#else
 					[self.finishedButton setTitle:NSLocalizedString(@"Checking", nil) forState:UIControlStateNormal];
 					
 					[SKCloudServiceController requestAuthorization:^(SKCloudServiceAuthorizationStatus status) {
@@ -148,6 +151,7 @@
 							[self.finishedButton setTitle:NSLocalizedString(buttonTitleToSet, nil) forState:UIControlStateNormal];
 						});
 					}];
+#endif
 					break;
 				}
 				case 3: {
@@ -188,33 +192,8 @@
 					//Pebble permission
 					break;
 				}
-				case 4: {
-					//Tutorial launch
-//					[[self presentingViewController] dismissViewControllerAnimated:YES completion:nil];
-					[self threeBlindMice];
-					
-					LMGuideViewPagerController *guideViewPager = [LMGuideViewPagerController new];
-					guideViewPager.guideMode = GuideModeTutorial;
-					[self presentViewController:guideViewPager animated:YES completion:nil];
-					
-					[LMAnswers logCustomEventWithName:@"Launch Tutorial" customAttributes:@{}];
-					break;
-				}
-				case 5: {
-					[self completeTutorial];
-					break;
-				}
 			}
 			
-			break;
-		}
-		case GuideModeTutorial: {
-			if(self.index == 3){
-				[self dismissViewControllerAnimated:YES completion:nil];
-			}
-			else{
-				[self threeBlindMice];
-			}
 			break;
 		}
 		case GuideModeMusicPermissionDenied: {
@@ -297,10 +276,9 @@
 }
 
 - (void)secondaryAction {
-	if(self.guideMode == GuideModeTutorial){
-		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"pebble://appstore/579c3ee922f599cf7e0001ea"]];
-		
-		[self dismissViewControllerAnimated:YES completion:nil];
+	//For Spotify
+	if(self.index == 2){
+		NSLog(@"Get spotify");
 	}
 	else{
 		[self threeBlindMice];
@@ -329,9 +307,11 @@
 	[self.finishedButton addTarget:self action:@selector(performOnboardingAction) forControlEvents:UIControlEventTouchUpInside];
 	[self.finishedButton setTitle:self.buttonTitle forState:UIControlStateNormal];
 	
-	if((self.guideMode == GuideModeTutorial && self.index == 3) //End of tutorial
-	   || (self.guideMode == GuideModeOnboarding && self.index == 4) //Pebble screen
-	   || (self.guideMode == GuideModeOnboarding && self.index == 1)){ //Backer login
+	if(   (self.index == 4) //Pebble screen
+#ifdef SPOTIFY
+	   || (self.index == 2)
+#endif
+	   || (self.index == 1)){ //Backer login
 		
 		UIView *firstButtonArea = [UIView newAutoLayoutView];
 //		firstButtonArea.backgroundColor = [UIColor redColor];
@@ -349,8 +329,7 @@
 		self.secondaryButton.layer.cornerRadius = 0;
 		[self.secondaryButton.titleLabel setFont:[UIFont fontWithName:@"HelveticaNeue" size:18.0f]];
 		[self.secondaryButton addTarget:self action:@selector(secondaryAction) forControlEvents:UIControlEventTouchUpInside];
-		[self.secondaryButton setTitle:
-		 NSLocalizedString(self.guideMode == GuideModeOnboarding ? @"KeepGoing" : @"Install", nil) forState:UIControlStateNormal];
+		[self.secondaryButton setTitle:NSLocalizedString(self.index == 2 ? @"GetSpotify" : @"KeepGoing", nil) forState:UIControlStateNormal];
 		
 		[firstButtonArea addSubview:self.secondaryButton];
 		

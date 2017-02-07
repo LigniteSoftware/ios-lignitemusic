@@ -1,9 +1,9 @@
 //
-//  LNTutorialViewPagerController.m
+//  LMGuideViewPagerController.h
 //  Lignite
 //
-//  Created by Edwin Finch on 11/7/15.
-//  Copyright © 2015 Edwin Finch. All rights reserved.
+//  Created by Edwin Finch in 2016.
+//  Copyright © 2016 Edwin Finch. All rights reserved.
 //
 
 #import "LMGuideViewPagerController.h"
@@ -27,7 +27,7 @@
 	self.view.backgroundColor = [UIColor whiteColor];
 }
 
--(BOOL)prefersStatusBarHidden{
+- (BOOL)prefersStatusBarHidden{
 	return YES;
 }
 
@@ -36,13 +36,38 @@
 
 	switch(self.guideMode){
 		case GuideModeOnboarding: {
+#ifdef SPOTIFY
+			self.titleArray = [[NSArray alloc]initWithObjects:
+							   @"OnboardingWelcomeTitle",
+							   @"OnboardingKickstarterLoginTitle",
+							   @"OnboardingSpotifyLoginTitle"
+							   , nil];
+			
+			self.descriptionArray = [[NSArray alloc]initWithObjects:
+									 @"OnboardingWelcomeDescription",
+									 @"OnboardingKickstarterLoginDescription",
+									 @"OnboardingSpotifyLoginDescription"
+							   , nil];
+			
+			self.screenshotsArray = [[NSArray alloc]initWithObjects:
+									 @"icon_no_cover_art_75.png",
+									 @"onboarding_kickstarter.png",
+									 @"icon_no_cover_art_75.png"
+									 , nil];
+			
+			self.buttonNamesArray = [[NSArray alloc]initWithObjects:
+									 @"LetsGo",
+									 @"LogMeIn",
+									 @"LogMeIn"
+							   , nil];
+			
+			break;
+#else
 			self.titleArray = [[NSArray alloc]initWithObjects:
 							   @"OnboardingWelcomeTitle",
 							   @"OnboardingKickstarterLoginTitle",
 							   @"OnboardingMusicPermissionTitle",
 							   @"OnboardingPebblePermissionTitle"
-//							   @"OnboardingTutorialTitle",
-//							   @"OnboardingThanksTitle"
 							   , nil];
 	
 			self.descriptionArray = [[NSArray alloc]initWithObjects:
@@ -50,8 +75,6 @@
 									 @"OnboardingKickstarterLoginDescription",
 									 @"OnboardingMusicPermissionDescription",
 									 @"OnboardingPebblePermissionDescription"
-//									 @"OnboardingTutorialDescription",
-//									 @"OnboardingThanksDescription"
 							   , nil];
 			
 			self.screenshotsArray = [[NSArray alloc]initWithObjects:
@@ -59,8 +82,6 @@
 									 @"onboarding_kickstarter.png",
 									 @"onboarding_library_access.png",
 									 @"onboarding_bluetooth.png"
-//									 @"tutorial_browsing.png",
-//									 @"onboarding_us.png"
 									 , nil];
 			
 			self.buttonNamesArray = [[NSArray alloc]initWithObjects:
@@ -68,41 +89,10 @@
 									 @"LogMeIn",
 									 @"HitMeWithIt",
 									 @"SoundsGood"
-//									 @"OpenTutorial",
-//									 @"AwesomeThanks"
 							   , nil];
 			
 			break;
-		}
-		case GuideModeTutorial: {
-			self.titleArray = [[NSArray alloc]initWithObjects:
-							   @"TutorialBrowsingTitle",
-							   @"TutorialBottomControlsTitle",
-							   @"TutorialPlayingControlsTitle",
-							   @"TutorialPebbleAppTitle"
-							   , nil];
-			
-			self.descriptionArray = [[NSArray alloc]initWithObjects:
-									 @"TutorialBrowsingDescription",
-									 @"TutorialBottomControlsDescription",
-									 @"TutorialPlayingControlsDescription",
-									 @"TutorialPebbleAppDescription"
-							   , nil];
-			
-			self.screenshotsArray = [[NSArray alloc]initWithObjects:
-									 @"tutorial_browsing.png",
-									 @"tutorial_bottom_tabs.png",
-									 @"tutorial_now_playing.png",
-									 @"tutorial_pebble.png"
-									 , nil];
-			
-			self.buttonNamesArray = [[NSArray alloc]initWithObjects:
-									 @"Cool",
-									 @"Sweet",
-									 @"WhatsNext",
-									 @"EndTutorial"
-							   , nil];
-			break;
+#endif
 		}
 		case GuideModeMusicPermissionDenied: {
 			self.titleArray = [[NSArray alloc]initWithObjects:
@@ -199,20 +189,5 @@
 	return [self viewControllerAtIndex:index];
 	
 }
-
-//- (void)pageViewController:(UIPageViewController *)pageViewController willTransitionToViewControllers:(NSArray<UIViewController *> *)pendingViewControllers{
-//	LMGuideViewController *pageContentView = (LMGuideViewController*) pendingViewControllers[0];
-//	self.pageControl.currentPage = pageContentView.index;
-//}
-
-//- (NSInteger)presentationCountForPageViewController:(UIPageViewController *)pageViewController {
-//	// The number of items reflected in the page indicator.
-//	return AMOUNT_OF_TUTORIAL_SCREENS;
-//}
-//
-//- (NSInteger)presentationIndexForPageViewController:(UIPageViewController *)pageViewController {
-//	// The selected item reflected in the page indicator.
-//	return 0;
-//}
 
 @end

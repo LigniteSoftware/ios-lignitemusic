@@ -132,7 +132,7 @@
 		self.didLayoutConstraints = YES;
 		
 		UICollectionViewFlowLayout *fuck = [[UICollectionViewFlowLayout alloc]init];
-		fuck.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+//		fuck.scrollDirection = UICollectionViewScrollDirectionHorizontal;
 		//	fuck.sectionInset = UIEdgeInsetsMake(15, 15, 15, 15);
 		//	fuck.itemSize = CGSizeMake(90, 120);
 		

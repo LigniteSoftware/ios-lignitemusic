@@ -15,7 +15,6 @@
 
 typedef enum {
 	GuideModeOnboarding = 0,
-	GuideModeTutorial,
 	GuideModeMusicPermissionDenied
 } GuideMode;
 

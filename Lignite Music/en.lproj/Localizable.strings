@@ -40,19 +40,18 @@
 
 
 
-
-//Temporary
-"PleaseStopSendingNavigationFeedbackTitle" = "Please read";
-"PleaseStopSendingNavigationFeedbackDescription" = "Please stop sending feedback about not being able to exit views.\n\nYou can swipe from the left edge of the display to the right to exit any view that comes in from the right. Sorry this was never explained clearly.\n\nWe are working on a more streamlined way to exit views.\n\nThank you.";
-
-"TapViewAgainToOpenSourceSelector" = "Tap view button again to open view selector";
-
-
 /*
  
  New strings
  
  */
+
+
+"OnboardingSpotifyLoginTitle" = "Spotify";
+"OnboardingSpotifyLoginDescription" = "Our app is all about playing your Spotify music.\n\nIf you could please login, our app will use your Spotify account to bring you music awesomeness. If you don't have Spotify, feel free to get it using the button below.";
+"GetSpotify" = "Get Spotify";
+
+"TapViewAgainToOpenSourceSelector" = "Tap view button again to open view selector";
 
 "CreditsLicenses" = "License links"; //Links to licenses, such as library licenses and icon licenses.
 "NoSearchResults" = "No results";
