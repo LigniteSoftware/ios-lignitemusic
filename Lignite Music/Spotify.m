@@ -27,7 +27,7 @@
 	return sharedSpotify;
 }
 
-- (void)openLogin {
+- (void)openLoginOnViewController:(UIViewController*)viewController {
 	SPTAuth *auth = [SPTAuth defaultInstance];
 	
 	if ([SPTAuth supportsApplicationAuthentication]) {
@@ -36,9 +36,9 @@
 		self.authViewController = [[SFSafariViewController alloc] initWithURL:[[SPTAuth defaultInstance] spotifyWebAuthenticationURL]];
 		self.authViewController.delegate = self;
 		self.authViewController.modalPresentationStyle = UIModalPresentationPageSheet;
-		[[UIApplication sharedApplication].delegate.window.rootViewController presentViewController:self.authViewController
-																						   animated:YES
-																						 completion:nil];
+		[viewController presentViewController:self.authViewController
+									 animated:YES
+								   completion:nil];
 	}
 }
 

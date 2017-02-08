@@ -55,6 +55,38 @@
 	completionHandler(YES);
 }
 
+#ifdef SPOTIFY
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
+	NSLog(@"Got a request for URL %@", url);
+	
+	SPTAuth *auth = [SPTAuth defaultInstance];
+	
+	SPTAuthCallback authCallback = ^(NSError *error, SPTSession *session) {
+		// This is the callback that'll be triggered when auth is completed (or fails).
+		
+		if (error) {
+			NSLog(@"*** Auth error: %@", error);
+		} else {
+			auth.session = session;
+			NSLog(@"Authenticated");
+		}
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"sessionUpdated" object:self];
+	};
+	
+	/*
+	 Handle the callback from the authentication service. -[SPAuth -canHandleURL:]
+	 helps us filter out URLs that aren't authentication URLs (i.e., URLs you use elsewhere in your application).
+	 */
+	
+	if ([auth canHandleURL:url]) {
+		[auth handleAuthCallbackWithTriggeredAuthURL:url callback:authCallback];
+		return YES;
+	}
+	
+	return NO;
+}
+#endif
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 	NSLog(@"[LMAppDelegate]: Did finish launching with options.");
 	
@@ -62,6 +94,8 @@
 	NSLog(@"You are running Lignite Music for Spotify! Woohoo!");
 	
 	SPTAuth *auth = [SPTAuth defaultInstance];
+	
+	NSLog(@"Auth %@", auth.session);
 	auth.clientID = SpotifyClientID;
 	auth.requestedScopes = @[SPTAuthStreamingScope, SPTAuthUserLibraryReadScope];
 	auth.redirectURL = [NSURL URLWithString:SpotifyCallbackURL];
@@ -154,13 +188,6 @@
 		}];
 		[dataTask resume];
 	}
-	
-#ifdef SPOTIFY
-	[NSTimer scheduledTimerWithTimeInterval:1.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
-		
-		[[Spotify sharedInstance] openLogin];
-	}];
-#endif
 	
     return YES;
 }

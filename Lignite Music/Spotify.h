@@ -30,6 +30,6 @@
 
 + (id)sharedInstance;
 
-- (void)openLogin;
+- (void)openLoginOnViewController:(UIViewController*)viewController;
 
 @end

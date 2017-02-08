@@ -29,7 +29,7 @@
 			<string>io.lignite.music.forspotify-auth</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>lignite_music_spotify</string>
+				<string>lignitemusicspotify</string>
 			</array>
 		</dict>
 	</array>
@@ -55,6 +55,7 @@
 	<array>
 		<string>pebble</string>
 		<string>twitter</string>
+		<string>spotify-action</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
