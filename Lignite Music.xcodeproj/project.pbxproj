@@ -361,6 +361,7 @@
 		6A13A7FE1E011D19006A768B /* UIImage+ColorArt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ColorArt.m"; sourceTree = "<group>"; };
 		6A13A7FF1E011D19006A768B /* UIImage+Scale.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Scale.h"; sourceTree = "<group>"; };
 		6A13A8001E011D19006A768B /* UIImage+Scale.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Scale.m"; sourceTree = "<group>"; };
+		6A1847EA1E4AF284003CB487 /* SpotifyInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpotifyInfo.h; sourceTree = "<group>"; };
 		6A1AF0801E028E3400F8934C /* icon_hamburger.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_hamburger.png; sourceTree = "<group>"; };
 		6A1AF0821E0341BC00F8934C /* MPMediaItem+LigniteImages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MPMediaItem+LigniteImages.h"; sourceTree = "<group>"; };
 		6A1AF0831E0341BC00F8934C /* MPMediaItem+LigniteImages.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MPMediaItem+LigniteImages.m"; sourceTree = "<group>"; };
@@ -1002,6 +1003,7 @@
 				6AA5CBCA1E28603A005F853F /* SpotifyMetadata.framework */,
 				6AA5CBC71E285FC4005F853F /* SpotifyAudioPlayback.framework */,
 				6AA5CBD41E2873BB005F853F /* Spotify.h */,
+				6A1847EA1E4AF284003CB487 /* SpotifyInfo.h */,
 				6AA5CBD51E2873BB005F853F /* Spotify.m */,
 			);
 			name = Spotify;

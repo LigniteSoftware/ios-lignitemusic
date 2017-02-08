@@ -23,6 +23,9 @@
 @import StoreKit;
 
 @interface LMGuideViewController ()
+#ifdef SPOTIFY
+<SpotifyDelegate>
+#endif
 
 @property UILabel *titleLabel, *descriptionLabel;
 @property UIImageView *screenshotView, *iconView;
@@ -290,8 +293,24 @@
 	}
 }
 
+#ifdef SPOTIFY
+- (void)sessionUpdated:(BOOL)isValid {
+	if(isValid){
+		dispatch_async(dispatch_get_main_queue(), ^{
+			[self.finishedButton setTitle:NSLocalizedString(@"GoodToGo", nil) forState:UIControlStateNormal];
+			[NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(dismissViewController) userInfo:nil repeats:NO];
+		});
+	}
+}
+#endif
+
 - (void)viewDidLoad {
     [super viewDidLoad];
+	
+	
+#ifdef SPOTIFY
+	[[Spotify sharedInstance] addDelegate:self];
+#endif
 	
 
 	self.buttonArea = [UIView newAutoLayoutView];

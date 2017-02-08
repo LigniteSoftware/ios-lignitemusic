@@ -10,25 +10,42 @@
 #import <SpotifyAuthentication/SpotifyAuthentication.h>
 #import <SpotifyMetadata/SpotifyMetadata.h>
 #import <SpotifyAudioPlayback/SpotifyAudioPlayback.h>
+#import "SpotifyInfo.h"
+
+@protocol SpotifyDelegate <NSObject>
+@optional
 
 /**
- The client ID of our Spotify application.
- */
-#define SpotifyClientID @"d4059bd5066643ad8d9f4b6532f791e6"
+ The Spotify session's status updated.
 
-/**
- The key for the session in user defaults.
+ @param isValid Whether or not the session is valid.
  */
-#define SpotifySessionUserDefaultsKey @"SpotifySession"
+- (void)sessionUpdated:(BOOL)isValid;
 
-/**
- The callback URL for when Lignite Music is authenticated.
- */
-#define SpotifyCallbackURL @"lignitemusicspotify://"
+@end
 
 @interface Spotify : NSObject
 
-+ (id)sharedInstance;
+/**
+ The shared instance of the Spotify object.
+
+ @return The Spotify object.
+ */
++ (instancetype)sharedInstance;
+
+/**
+ Adds a delegate.
+
+ @param delegate The delegate to add.
+ */
+- (void)addDelegate:(id<SpotifyDelegate>)delegate;
+
+/**
+ Removes a delegate.
+
+ @param delegate The delegate to remove.
+ */
+- (void)removeDelegate:(id<SpotifyDelegate>)delegate;
 
 - (void)openLoginOnViewController:(UIViewController*)viewController;
 

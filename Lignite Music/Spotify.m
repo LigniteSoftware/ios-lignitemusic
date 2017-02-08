@@ -12,30 +12,50 @@
 
 @interface Spotify() <SFSafariViewControllerDelegate>
 
+/**
+ The view controller for authorizing Spotify in-app for those that don't have the native Spotify app installed.
+ */
 @property SFSafariViewController *authViewController;
+
+/**
+ The array of delegates.
+ */
+@property NSMutableArray<id<SpotifyDelegate>> *delegates;
 
 @end
 
 @implementation Spotify
 
-+ (id)sharedInstance {
++ (instancetype)sharedInstance {
 	static Spotify *sharedSpotify;
 	static dispatch_once_t token;
 	dispatch_once(&token, ^{
 		sharedSpotify = [self new];
+		
+		sharedSpotify.delegates = [NSMutableArray new];
 	});
 		
 	return sharedSpotify;
+}
+
+- (void)addDelegate:(id<SpotifyDelegate>)delegate {
+	[self.delegates addObject:delegate];
+}
+
+- (void)removeDelegate:(id<SpotifyDelegate>)delegate {
+	[self.delegates removeObject:delegate];
 }
 
 - (void)sessionUpdated {
 	SPTAuth *auth = [SPTAuth defaultInstance];
 	[self.authViewController dismissViewControllerAnimated:YES completion:nil];
 	
-	if (auth.session && [auth.session isValid]) {
-		NSLog(@"Good to go");
-	} else {
-		NSLog(@"*** Failed to log in");
+	BOOL sessionIsGood = auth.session && [auth.session isValid];
+	
+	for(id<SpotifyDelegate> delegate in self.delegates){
+		if([delegate respondsToSelector:@selector(sessionUpdated:)]){
+			[delegate sessionUpdated:sessionIsGood];
+		}
 	}
 }
 
