@@ -287,6 +287,7 @@
 	//For Spotify
 	if(self.index == 2){
 		NSLog(@"Get spotify");
+		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://www.spotify.com/premium/"]];
 	}
 	else{
 		[self threeBlindMice];

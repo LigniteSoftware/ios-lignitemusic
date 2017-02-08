@@ -24,7 +24,7 @@
 /**
  The callback URL for when Lignite Music is authenticated.
  */
-#define SpotifyCallbackURL @"lignite_music_spotify://"
+#define SpotifyCallbackURL @"lignitemusicspotify://"
 
 @interface Spotify : NSObject
 
