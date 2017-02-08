@@ -91,10 +91,6 @@
 #ifdef SPOTIFY
 					NSLog(@"Launch Spotify login");
 					[[Spotify sharedInstance] openLoginOnViewController:self];
-					
-					[NSTimer scheduledTimerWithTimeInterval:1.0 block:^{
-						NSLog(@"Valid? %d", [[SPTAuth defaultInstance].session isValid]);
-					} repeats:YES];
 #else
 					[self.finishedButton setTitle:NSLocalizedString(@"Checking", nil) forState:UIControlStateNormal];
 					

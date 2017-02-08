@@ -70,7 +70,7 @@
 			auth.session = session;
 			NSLog(@"Authenticated");
 		}
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"sessionUpdated" object:self];
+		[[Spotify sharedInstance] sessionUpdated];
 	};
 	
 	/*

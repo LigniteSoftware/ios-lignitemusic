@@ -24,13 +24,25 @@
 	dispatch_once(&token, ^{
 		sharedSpotify = [self new];
 	});
+		
 	return sharedSpotify;
+}
+
+- (void)sessionUpdated {
+	SPTAuth *auth = [SPTAuth defaultInstance];
+	[self.authViewController dismissViewControllerAnimated:YES completion:nil];
+	
+	if (auth.session && [auth.session isValid]) {
+		NSLog(@"Good to go");
+	} else {
+		NSLog(@"*** Failed to log in");
+	}
 }
 
 - (void)openLoginOnViewController:(UIViewController*)viewController {
 	SPTAuth *auth = [SPTAuth defaultInstance];
 	
-	if ([SPTAuth supportsApplicationAuthentication]) {
+	if ([SPTAuth supportsApplicationAuthentication] && true == false) {
 		[[UIApplication sharedApplication] openURL:[auth spotifyAppAuthenticationURL]];
 	} else {
 		self.authViewController = [[SFSafariViewController alloc] initWithURL:[[SPTAuth defaultInstance] spotifyWebAuthenticationURL]];

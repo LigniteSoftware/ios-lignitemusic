@@ -32,4 +32,6 @@
 
 - (void)openLoginOnViewController:(UIViewController*)viewController;
 
+- (void)sessionUpdated;
+
 @end
