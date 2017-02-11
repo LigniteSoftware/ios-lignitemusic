@@ -7,6 +7,9 @@
 //
 
 #import "LMMusicPlayer.h"
+#ifdef SPOTIFY
+#import "Spotify.h"
+#endif
 
 @import StoreKit;
 
@@ -106,6 +109,9 @@ MPMediaGrouping associatedMediaTypes[] = {
 		self.nowPlayingTrack = self.systemMusicPlayer.nowPlayingItem;
 		
 		self.playerType = LMMusicPlayerTypeAppleMusic;
+#ifdef SPOTIFY
+		self.playerType = LMMusicPlayerTypeSpotify;
+#endif
 		self.delegates = [NSMutableArray new];
 		self.delegatesSubscribedToCurrentPlaybackTimeChange = [[NSMutableArray alloc]init];
 		self.delegatesSubscribedToLibraryDidChange = [[NSMutableArray alloc]init];

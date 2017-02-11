@@ -62,7 +62,7 @@
 - (void)openLoginOnViewController:(UIViewController*)viewController {
 	SPTAuth *auth = [SPTAuth defaultInstance];
 	
-	if ([SPTAuth supportsApplicationAuthentication] && true == false) {
+	if ([SPTAuth supportsApplicationAuthentication]) {
 		[[UIApplication sharedApplication] openURL:[auth spotifyAppAuthenticationURL]];
 	} else {
 		self.authViewController = [[SFSafariViewController alloc] initWithURL:[[SPTAuth defaultInstance] spotifyWebAuthenticationURL]];

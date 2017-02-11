@@ -298,7 +298,7 @@
 	if(isValid){
 		dispatch_async(dispatch_get_main_queue(), ^{
 			[self.finishedButton setTitle:NSLocalizedString(@"GoodToGo", nil) forState:UIControlStateNormal];
-			[NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(dismissViewController) userInfo:nil repeats:NO];
+			[NSTimer scheduledTimerWithTimeInterval:1.00 target:self selector:@selector(completeTutorial) userInfo:nil repeats:NO];
 		});
 	}
 }

@@ -25,7 +25,8 @@
  */
 typedef enum {
 	LMMusicPlayerTypeSystemMusicPlayer = 0,
-	LMMusicPlayerTypeAppleMusic
+	LMMusicPlayerTypeAppleMusic,
+	LMMusicPlayerTypeSpotify
 } LMMusicPlayerType;
 
 /**

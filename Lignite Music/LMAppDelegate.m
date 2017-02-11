@@ -99,12 +99,8 @@
 	auth.clientID = SpotifyClientID;
 	auth.requestedScopes = @[SPTAuthStreamingScope, SPTAuthUserLibraryReadScope];
 	auth.redirectURL = [NSURL URLWithString:SpotifyCallbackURL];
-#ifdef kTokenSwapServiceURL
-	auth.tokenSwapURL = [NSURL URLWithString:@kTokenSwapServiceURL];
-#endif
-#ifdef kTokenRefreshServiceURL
-	auth.tokenRefreshURL = [NSURL URLWithString:@kTokenRefreshServiceURL];
-#endif
+	auth.tokenSwapURL = [NSURL URLWithString:SpotifyTokenSwapServiceURL];
+	auth.tokenRefreshURL = [NSURL URLWithString:SpotifyTokenRefreshServiceURL];
 	auth.sessionUserDefaultsKey = SpotifySessionUserDefaultsKey;
 #endif
 	

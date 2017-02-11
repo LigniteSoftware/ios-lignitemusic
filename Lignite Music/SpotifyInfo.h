@@ -24,4 +24,14 @@
  */
 #define SpotifyCallbackURL @"lignitemusicspotify://"
 
+/**
+ The token swap service endpoint for logging in.
+ */
+#define SpotifyTokenSwapServiceURL @"https://api.lignite.me:2006/swap"
+
+/**
+ The token refresh service endpoint for maintaining a login.
+ */
+#define SpotifyTokenRefreshServiceURL @"https://api.lignite.me:2006/refresh"
+
 #endif /* SpotifyInfo_h */
