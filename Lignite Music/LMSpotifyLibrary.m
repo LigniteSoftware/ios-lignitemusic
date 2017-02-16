@@ -13,14 +13,19 @@
 @interface LMSpotifyLibrary()
 
 /**
- The database of artists that the user has had in their library. Since artists are never removed from this database, there may be artists
- */
-@property CBLDatabase *artistsDatabase;
-
-/**
- The user's current library.
+ The user's current library of tracks.
  */
 @property CBLDatabase *tracksDatabase;
+
+/**
+ The database of albums which are in the user's library.
+ */
+@property CBLDatabase *albumsDatabase;
+
+/**
+ The database of artists that the user has in their library.
+ */
+@property CBLDatabase *artistsDatabase;
 
 @end
 
@@ -31,6 +36,18 @@
 	static dispatch_once_t token;
 	dispatch_once(&token, ^{
 		sharedLibrary = [self new];
+		
+		CBLManager *manager = [CBLManager sharedInstance];
+		NSError *databaseFetchError = nil;
+		sharedLibrary.tracksDatabase = [manager databaseNamed: @"library-tracks" error: &databaseFetchError];
+		sharedLibrary.albumsDatabase = [manager databaseNamed: @"library-albums" error: &databaseFetchError];
+		sharedLibrary.artistsDatabase = [manager databaseNamed: @"library-artists" error: &databaseFetchError];
+		if(databaseFetchError || (!sharedLibrary.tracksDatabase || !sharedLibrary.albumsDatabase || !sharedLibrary.artistsDatabase)) {
+			NSLog(@"Error getting a database, %@", databaseFetchError);
+		}
+		else{
+			NSLog(@"Got all databases successfully.");
+		}
 	});
 	return sharedLibrary;
 }
@@ -53,8 +70,11 @@
 				return;
 			}
 			
+			NSTimeInterval startTime = [[NSDate new] timeIntervalSince1970];
+			
 			NSLog(@"Got library JSON data (%@).", response);
 			
+			//Parse the JSON data into an NSDictionary
 			NSError *jsonLibraryError = nil;
 			NSDictionary *jsonLibrary = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&jsonLibraryError];
 			
@@ -68,8 +88,10 @@
 			NSArray *jsonTracks = [jsonLibrary objectForKey:@"items"];
 			
 			for(NSDictionary *track in jsonTracks){
-				NSMutableDictionary *newTrack = [NSMutableDictionary dictionaryWithDictionary:track];
+				NSMutableDictionary *newTrack = [NSMutableDictionary dictionaryWithDictionary:[track objectForKey:@"track"]];
 				
+				
+				//Parse the time string from Spotify (ie. "2017-02-16T01:12:21Z"), which is at the root of the track object, and include it in the database object
 				NSString *originalTimeString = [track objectForKey:@"added_at"];
 				NSMutableString *fixedTimeString = [NSMutableString stringWithString:originalTimeString];
 				[fixedTimeString replaceOccurrencesOfString:@"Z" withString:@"+0000" options:kNilOptions range:NSMakeRange(0, [originalTimeString length])];
@@ -78,27 +100,58 @@
 				[dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZ"];
 				NSDate *timeAddedDate = [dateFormatter dateFromString:fixedTimeString];
 				
-				NSLog(@"Track %@ added at %@ (%f/%@)", [[track objectForKey:@"track"] objectForKey:@"name"], timeAddedDate, [timeAddedDate timeIntervalSince1970], originalTimeString);
-				
 				[newTrack setObject:@([timeAddedDate timeIntervalSince1970]) forKey:@"added_at"];
-
-				NSLog(@"Track %@", newTrack);
 				
-//				NSLog(@"Time local %@, time UTC %@");
+
+				//Save the track to the tracks database
+				NSString *trackID = [newTrack objectForKey:@"id"];
+				CBLDocument *trackDatabaseDocument = [self.tracksDatabase documentWithID:trackID];
+				NSError *trackDatabaseDocumentError = nil;
+				[trackDatabaseDocument purgeDocument:&trackDatabaseDocumentError]; //Purge the track in case it already exists
+				if(![trackDatabaseDocument putProperties:newTrack error:&trackDatabaseDocumentError]) {
+					NSLog(@"Error writing database document: %@", trackDatabaseDocumentError);
+				}
+				else{
+					NSLog(@"Success writing database document (%@).", [trackDatabaseDocument.properties objectForKey:@"name"]);
+				}
+				
+				
+				//Save the artists that are in the track to the artists database
+				NSArray *jsonArtists = [newTrack objectForKey:@"artists"];
+				for(NSDictionary *artist in jsonArtists){
+					NSLog(@"Artist %@", [artist objectForKey:@"name"]);
+					
+					NSString *artistID = [artist objectForKey:@"id"];
+					CBLDocument *artistDatabaseDocument = [self.artistsDatabase documentWithID:artistID];
+					NSError *artistDatabaseDocumentError = nil;
+					[artistDatabaseDocument purgeDocument:&artistDatabaseDocumentError]; //Purge the track in case it already exists
+					if(![artistDatabaseDocument putProperties:artist error:&artistDatabaseDocumentError]) {
+						NSLog(@"Error writing artist database document: %@", artistDatabaseDocumentError);
+					}
+					else{
+						NSLog(@"Success writing artist database document (%@).", [artistDatabaseDocument.properties objectForKey:@"name"]);
+					}
+				}
+				
+				
+				//Save the album to the albums database
+				NSDictionary *album = [newTrack objectForKey:@"album"];
+				NSString *albumID = [album objectForKey:@"id"];
+				CBLDocument *albumDatabaseDocument = [self.albumsDatabase documentWithID:albumID];
+				NSError *albumDatabaseDocumentError = nil;
+				[albumDatabaseDocument purgeDocument:&albumDatabaseDocumentError]; //Purge the track in case it already exists
+				if(![albumDatabaseDocument putProperties:album error:&albumDatabaseDocumentError]) {
+					NSLog(@"Error writing album database document: %@", albumDatabaseDocumentError);
+				}
+				else{
+					NSLog(@"Success writing album database document (%@).", [albumDatabaseDocument.properties objectForKey:@"name"]);
+				}
 			}
+			
+			NSTimeInterval endTime = [[NSDate new] timeIntervalSince1970];
+			
+			NSLog(@"Took %f seconds.", endTime-startTime);
 		}];
-		
-//		CBLManager *manager = [CBLManager sharedInstance];
-//		NSError *error = nil;
-//		self.database = [manager databaseNamed: @"library-cache" error: &error];
-//		if (!self.database) {
-//			NSLog(@"Error getting database, %@", error);
-//		}
-//		else{
-//			NSLog(@"Got database.");
-//			
-//			
-//		}
 	}
 	else{
 		NSLog(@"Session isn't valid, renewing.");
