@@ -1,0 +1,6 @@
+framework module Pods_Lignite_Music_for_Spotify {
+  umbrella header "Pods-Lignite Music for Spotify-umbrella.h"
+
+  export *
+  module * { export * }
+}

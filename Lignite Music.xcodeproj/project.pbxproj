@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		486EC331BC4EA1CF8492E4F2 /* Pods_Lignite_Music_for_Spotify.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BDA8BF18ADBB227AD91C5334 /* Pods_Lignite_Music_for_Spotify.framework */; };
 		6A0750721D5EAB8000BCBC9C /* aplite_colours.gif in Resources */ = {isa = PBXBuildFile; fileRef = 6A0750711D5EAB8000BCBC9C /* aplite_colours.gif */; };
 		6A0750741D5EC0C000BCBC9C /* never_forget.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A0750731D5EC0C000BCBC9C /* never_forget.png */; };
 		6A13A8011E011D19006A768B /* SLColorArt.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A13A7FC1E011D19006A768B /* SLColorArt.m */; };
@@ -350,6 +351,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3C009873236EF4158CF9CA1F /* Pods-Lignite Music for Spotify.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lignite Music for Spotify.release.xcconfig"; path = "Pods/Target Support Files/Pods-Lignite Music for Spotify/Pods-Lignite Music for Spotify.release.xcconfig"; sourceTree = "<group>"; };
+		471F692D3297448A2C0073DD /* Pods-Lignite Music for Spotify.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lignite Music for Spotify.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Lignite Music for Spotify/Pods-Lignite Music for Spotify.debug.xcconfig"; sourceTree = "<group>"; };
 		4B6ECEC3C77D957550FD31E0 /* Pods-Lignite Music.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lignite Music.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Lignite Music/Pods-Lignite Music.debug.xcconfig"; sourceTree = "<group>"; };
 		50AA3F2AD5E6CE2B672C8B09 /* Pods_Lignite_Music.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Lignite_Music.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6A0750711D5EAB8000BCBC9C /* aplite_colours.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = aplite_colours.gif; sourceTree = "<group>"; };
@@ -626,6 +629,7 @@
 		6AFF019D1DDE7D2D00F24D8E /* tutorial_bottom_tabs.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tutorial_bottom_tabs.png; sourceTree = "<group>"; };
 		6AFF01A71DDED15100F24D8E /* onboarding_gutless_user.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = onboarding_gutless_user.png; sourceTree = "<group>"; };
 		8FBC9717282C4F0D39EA52C6 /* Pods-Lignite Music.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lignite Music.release.xcconfig"; path = "Pods/Target Support Files/Pods-Lignite Music/Pods-Lignite Music.release.xcconfig"; sourceTree = "<group>"; };
+		BDA8BF18ADBB227AD91C5334 /* Pods_Lignite_Music_for_Spotify.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Lignite_Music_for_Spotify.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -646,6 +650,7 @@
 				6AA5CB4C1E285C0A005F853F /* CoreBluetooth.framework in Frameworks */,
 				6AA5CBC81E285FC4005F853F /* SpotifyAudioPlayback.framework in Frameworks */,
 				6AA5CB4D1E285C0A005F853F /* Pods_Lignite_Music.framework in Frameworks */,
+				486EC331BC4EA1CF8492E4F2 /* Pods_Lignite_Music_for_Spotify.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1221,6 +1226,8 @@
 			children = (
 				4B6ECEC3C77D957550FD31E0 /* Pods-Lignite Music.debug.xcconfig */,
 				8FBC9717282C4F0D39EA52C6 /* Pods-Lignite Music.release.xcconfig */,
+				471F692D3297448A2C0073DD /* Pods-Lignite Music for Spotify.debug.xcconfig */,
+				3C009873236EF4158CF9CA1F /* Pods-Lignite Music for Spotify.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -1239,6 +1246,7 @@
 				6AA473601BC710320066D47E /* CoreBluetooth.framework */,
 				6AA4735E1BC70FBA0066D47E /* ExternalAccessory.framework */,
 				50AA3F2AD5E6CE2B672C8B09 /* Pods_Lignite_Music.framework */,
+				BDA8BF18ADBB227AD91C5334 /* Pods_Lignite_Music_for_Spotify.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1551,7 +1559,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Lignite Music/Pods-Lignite Music-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Lignite Music for Spotify/Pods-Lignite Music for Spotify-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		6AA5CB991E285C0A005F853F /* [CP] Copy Pods Resources */ = {
@@ -1566,7 +1574,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Lignite Music/Pods-Lignite Music-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Lignite Music for Spotify/Pods-Lignite Music for Spotify-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		6AA5CB9A1E285C0A005F853F /* ShellScript */ = {
@@ -1845,7 +1853,7 @@
 /* Begin XCBuildConfiguration section */
 		6AA5CB9C1E285C0A005F853F /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4B6ECEC3C77D957550FD31E0 /* Pods-Lignite Music.debug.xcconfig */;
+			baseConfigurationReference = 471F692D3297448A2C0073DD /* Pods-Lignite Music for Spotify.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -1891,7 +1899,7 @@
 		};
 		6AA5CB9D1E285C0A005F853F /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8FBC9717282C4F0D39EA52C6 /* Pods-Lignite Music.release.xcconfig */;
+			baseConfigurationReference = 3C009873236EF4158CF9CA1F /* Pods-Lignite Music for Spotify.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
