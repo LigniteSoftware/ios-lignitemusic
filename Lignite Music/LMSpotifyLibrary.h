@@ -10,6 +10,11 @@
 
 @interface LMSpotifyLibrary : NSObject
 
+/**
+ The shared Spotify library, single instance.
+
+ @return The library.
+ */
 + (instancetype)sharedLibrary;
 
 /**

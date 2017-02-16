@@ -27,6 +27,9 @@
  */
 @property CBLDatabase *artistsDatabase;
 
+
+@property NSTimeInterval startTime;
+
 @end
 
 @implementation LMSpotifyLibrary
@@ -169,7 +172,8 @@
 				[self getUserLibraryWithNextURLString:nextURLFromJSONResponse];
 			}
 			else{
-				NSLog(@"Done building user's library.");
+				NSTimeInterval endTime = [[NSDate new] timeIntervalSince1970];
+				NSLog(@"Done building user's library, took %f seconds.", endTime-self.startTime);
 			}
 		}];
 	}
@@ -190,6 +194,7 @@
 }
 
 - (void)buildDatabase {
+	self.startTime = [[NSDate new]timeIntervalSince1970];
 	[self getUserLibraryWithNextURLString:nil];
 }
 
