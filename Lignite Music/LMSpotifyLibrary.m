@@ -33,7 +33,8 @@
 		//Get the databases
 		CBLManager *manager = [CBLManager sharedInstance];
 		NSError *databaseFetchError = nil;
-		sharedLibrary.libraryDatabase = [manager databaseNamed: @"library-tracks" error: &databaseFetchError];
+		
+		sharedLibrary.libraryDatabase = [manager databaseNamed:@"library-tracks" error:&databaseFetchError];
 		if(databaseFetchError || !sharedLibrary.libraryDatabase) {
 			NSLog(@"Error getting a database, %@", databaseFetchError);
 		}
@@ -41,12 +42,15 @@
 			NSLog(@"Got all databases successfully.");
 		}
 		
-//		CBLView* phoneView = [db viewNamed: @"phones"];
-//		[view setMapBlock: MAPBLOCK({
-//			for (NSString* phone in doc[@"phones"]) {
-//				emit(phone, doc[@"name"]);
-//			}
-//		}) version: @"2"];
+		
+		//Setup the views for querying
+		CBLView *artistsView = [sharedLibrary.libraryDatabase viewNamed:@"artists"];
+		[artistsView setMapBlock:MAPBLOCK({
+			NSArray *artists = [doc objectForKey:@"artists"];
+			for(NSDictionary *artist in artists){
+				emit([artist objectForKey:@"id"], artist);
+			}
+		}) version:@"4"];
 	});
 	return sharedLibrary;
 }
@@ -160,23 +164,49 @@
 //	[self getUserLibraryWithNextURLString:nil];
 	
 	NSTimeInterval startTime = [[NSDate new]timeIntervalSince1970];
-	
+
 	NSError *queryError = nil;
-	CBLQuery *query = [self.libraryDatabase createAllDocumentsQuery];
-	query.allDocsMode = kCBLAllDocs;
-	CBLQueryEnumerator *result = [query run:&queryError];
-	if(queryError){
-		NSLog(@"Error in querying all documents %@", queryError);
-		return;
-	}
-	for(CBLQueryRow *row in result) {
-		NSLog(@"Got %@", row.documentID);
-	}
-	NSLog(@"Got %ld items.", result.count);
+	CBLQuery *query = [[self.libraryDatabase viewNamed:@"artists"] createQuery];
 	
+	CBLQueryEnumerator* result = [query run:&queryError];
+	if(queryError){
+		NSLog(@"Error in querying: %@", queryError);
+	}
+	
+	NSMutableArray *artistIDsArray = [NSMutableArray new];
+	
+	for (CBLQueryRow* row in result) {
+		NSDictionary *artist = row.value;
+		NSString *artistID = [artist objectForKey:@"id"];
+		if(![artistIDsArray containsObject:artistID]){
+			[artistIDsArray addObject:artistID];
+//			NSLog(@"%ld: %@", artistIDsArray.count, [artist objectForKey:@"name"]);
+		}
+	}
+	NSLog(@"Got %ld items (%ld no dupes).", result.count, artistIDsArray.count);
+
 	NSTimeInterval endTime = [[NSDate new]timeIntervalSince1970];
 	
 	NSLog(@"Done %f seconds", endTime-startTime);
+	
+//	NSTimeInterval startTime = [[NSDate new]timeIntervalSince1970];
+//	
+//	NSError *queryError = nil;
+//	CBLQuery *query = [self.libraryDatabase createAllDocumentsQuery];
+//	query.allDocsMode = kCBLAllDocs;
+//	CBLQueryEnumerator *result = [query run:&queryError];
+//	if(queryError){
+//		NSLog(@"Error in querying all documents %@", queryError);
+//		return;
+//	}
+//	for(CBLQueryRow *row in result) {
+//		NSLog(@"Got %@", row.documentID);
+//	}
+//	NSLog(@"Got %ld items.", result.count);
+//	
+//	NSTimeInterval endTime = [[NSDate new]timeIntervalSince1970];
+//	
+//	NSLog(@"Done %f seconds", endTime-startTime);
 }
 
 @end

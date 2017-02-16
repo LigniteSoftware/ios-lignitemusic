@@ -652,12 +652,12 @@
 	
 	[hangOnImage autoPinEdgesToSuperviewEdges];
 	
-#ifdef SPOTIFY
-	[[LMSpotifyLibrary sharedLibrary] buildDatabase];
-#endif
-	
-	
-	return;
+//#ifdef SPOTIFY
+//	[[LMSpotifyLibrary sharedLibrary] buildDatabase];
+//#endif
+//	
+//	
+//	return;
 	
 #ifdef SKIP_ONBOARDING
 	if(true == false){
