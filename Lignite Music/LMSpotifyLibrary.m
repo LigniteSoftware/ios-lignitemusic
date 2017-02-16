@@ -105,14 +105,15 @@
 
 				//Save the track to the tracks database
 				NSString *trackID = [newTrack objectForKey:@"id"];
-				CBLDocument *trackDatabaseDocument = [self.tracksDatabase documentWithID:trackID];
-				NSError *trackDatabaseDocumentError = nil;
-				[trackDatabaseDocument purgeDocument:&trackDatabaseDocumentError]; //Purge the track in case it already exists
-				if(![trackDatabaseDocument putProperties:newTrack error:&trackDatabaseDocumentError]) {
-					NSLog(@"Error writing database document: %@", trackDatabaseDocumentError);
-				}
-				else{
-					NSLog(@"Success writing database document (%@).", [trackDatabaseDocument.properties objectForKey:@"name"]);
+				if(![self.tracksDatabase existingDocumentWithID:trackID]){ //Track document doesn't already exist
+					CBLDocument *trackDatabaseDocument = [self.tracksDatabase documentWithID:trackID];
+					NSError *trackDatabaseDocumentError = nil;
+					if(![trackDatabaseDocument putProperties:newTrack error:&trackDatabaseDocumentError]) {
+						NSLog(@"Error writing database document: %@", trackDatabaseDocumentError);
+					}
+					else{
+						NSLog(@"Success writing database document (%@).", [trackDatabaseDocument.properties objectForKey:@"name"]);
+					}
 				}
 				
 				
@@ -122,14 +123,15 @@
 					NSLog(@"Artist %@", [artist objectForKey:@"name"]);
 					
 					NSString *artistID = [artist objectForKey:@"id"];
-					CBLDocument *artistDatabaseDocument = [self.artistsDatabase documentWithID:artistID];
-					NSError *artistDatabaseDocumentError = nil;
-					[artistDatabaseDocument purgeDocument:&artistDatabaseDocumentError]; //Purge the track in case it already exists
-					if(![artistDatabaseDocument putProperties:artist error:&artistDatabaseDocumentError]) {
-						NSLog(@"Error writing artist database document: %@", artistDatabaseDocumentError);
-					}
-					else{
-						NSLog(@"Success writing artist database document (%@).", [artistDatabaseDocument.properties objectForKey:@"name"]);
+					if(![self.artistsDatabase existingDocumentWithID:artistID]){ //Artist document doesn't already exist
+						CBLDocument *artistDatabaseDocument = [self.artistsDatabase documentWithID:artistID];
+						NSError *artistDatabaseDocumentError = nil;
+						if(![artistDatabaseDocument putProperties:artist error:&artistDatabaseDocumentError]) {
+							NSLog(@"Error writing artist database document: %@", artistDatabaseDocumentError);
+						}
+						else{
+							NSLog(@"Success writing artist database document (%@).", [artistDatabaseDocument.properties objectForKey:@"name"]);
+						}
 					}
 				}
 				
@@ -137,20 +139,21 @@
 				//Save the album to the albums database
 				NSDictionary *album = [newTrack objectForKey:@"album"];
 				NSString *albumID = [album objectForKey:@"id"];
-				CBLDocument *albumDatabaseDocument = [self.albumsDatabase documentWithID:albumID];
-				NSError *albumDatabaseDocumentError = nil;
-				[albumDatabaseDocument purgeDocument:&albumDatabaseDocumentError]; //Purge the track in case it already exists
-				if(![albumDatabaseDocument putProperties:album error:&albumDatabaseDocumentError]) {
-					NSLog(@"Error writing album database document: %@", albumDatabaseDocumentError);
-				}
-				else{
-					NSLog(@"Success writing album database document (%@).", [albumDatabaseDocument.properties objectForKey:@"name"]);
+				if(![self.albumsDatabase existingDocumentWithID:albumID]){ //Album document doesn't already exist
+					CBLDocument *albumDatabaseDocument = [self.albumsDatabase documentWithID:albumID];
+					NSError *albumDatabaseDocumentError = nil;
+					if(![albumDatabaseDocument putProperties:album error:&albumDatabaseDocumentError]) {
+						NSLog(@"Error writing album database document: %@", albumDatabaseDocumentError);
+					}
+					else{
+						NSLog(@"Success writing album database document (%@).", [albumDatabaseDocument.properties objectForKey:@"name"]);
+					}
 				}
 			}
 			
 			NSTimeInterval endTime = [[NSDate new] timeIntervalSince1970];
 			
-			NSLog(@"Took %f seconds.", endTime-startTime);
+			NSLog(@"Took %f seconds to parse 20 items.", endTime-startTime);
 		}];
 	}
 	else{
