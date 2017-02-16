@@ -295,6 +295,7 @@
 		6AAD5A531E0C655A00D8B406 /* NSTimer+Blocks.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AAD5A521E0C655A00D8B406 /* NSTimer+Blocks.m */; };
 		6AAF610D1DA0286F00971875 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6AAF610F1DA0286F00971875 /* Localizable.strings */; };
 		6AAF61181DA0B9C800971875 /* LMTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AAF61171DA0B9C700971875 /* LMTableViewCell.m */; };
+		6AB1046A1E55625500213396 /* LMSpotifyLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AB104691E55625500213396 /* LMSpotifyLibrary.m */; };
 		6AB12E9C1D57AD9800280383 /* icon_settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AB12E9B1D57AD9800280383 /* icon_settings.png */; };
 		6ABF6A821CF374F7003E4EFA /* UIImage+AverageColour.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ABF6A811CF374F7003E4EFA /* UIImage+AverageColour.m */; };
 		6ABF6A851CF3768A003E4EFA /* UIColor+isLight.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ABF6A841CF3768A003E4EFA /* UIColor+isLight.m */; };
@@ -544,6 +545,8 @@
 		6AAF61111DA028C200971875 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6AAF61161DA0B9C700971875 /* LMTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMTableViewCell.h; sourceTree = "<group>"; };
 		6AAF61171DA0B9C700971875 /* LMTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMTableViewCell.m; sourceTree = "<group>"; };
+		6AB104681E55625500213396 /* LMSpotifyLibrary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMSpotifyLibrary.h; sourceTree = "<group>"; };
+		6AB104691E55625500213396 /* LMSpotifyLibrary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMSpotifyLibrary.m; sourceTree = "<group>"; };
 		6AB12E9B1D57AD9800280383 /* icon_settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_settings.png; sourceTree = "<group>"; };
 		6ABF6A801CF374F7003E4EFA /* UIImage+AverageColour.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+AverageColour.h"; sourceTree = "<group>"; };
 		6ABF6A811CF374F7003E4EFA /* UIImage+AverageColour.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+AverageColour.m"; sourceTree = "<group>"; };
@@ -1010,6 +1013,8 @@
 				6AA5CBD41E2873BB005F853F /* Spotify.h */,
 				6A1847EA1E4AF284003CB487 /* SpotifyInfo.h */,
 				6AA5CBD51E2873BB005F853F /* Spotify.m */,
+				6AB104681E55625500213396 /* LMSpotifyLibrary.h */,
+				6AB104691E55625500213396 /* LMSpotifyLibrary.m */,
 			);
 			name = Spotify;
 			sourceTree = "<group>";
@@ -1627,6 +1632,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6AB1046A1E55625500213396 /* LMSpotifyLibrary.m in Sources */,
 				6AA5CAF01E285C0A005F853F /* LMSettingsLabel.m in Sources */,
 				6AA5CAF11E285C0A005F853F /* LMTriangleContainerView.m in Sources */,
 				6AA5CBD71E2873BB005F853F /* Spotify.m in Sources */,

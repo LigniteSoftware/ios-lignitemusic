@@ -38,6 +38,10 @@
 #import "LMProgressSlider.h"
 #import "LMBrowsingBar.h"
 
+#ifdef SPOTIFY
+#import "LMSpotifyLibrary.h"
+#endif
+
 //#define SKIP_ONBOARDING
 //#define SPEED_DEMON_MODE
 
@@ -648,6 +652,12 @@
 	
 	[hangOnImage autoPinEdgesToSuperviewEdges];
 	
+#ifdef SPOTIFY
+	[[LMSpotifyLibrary sharedLibrary] test];
+#endif
+	
+	
+	return;
 	
 #ifdef SKIP_ONBOARDING
 	if(true == false){
