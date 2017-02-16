@@ -15,17 +15,7 @@
 /**
  The user's current library of tracks.
  */
-@property CBLDatabase *tracksDatabase;
-
-/**
- The database of albums which are in the user's library.
- */
-@property CBLDatabase *albumsDatabase;
-
-/**
- The database of artists that the user has in their library.
- */
-@property CBLDatabase *artistsDatabase;
+@property CBLDatabase *libraryDatabase;
 
 
 @property NSTimeInterval startTime;
@@ -40,17 +30,23 @@
 	dispatch_once(&token, ^{
 		sharedLibrary = [self new];
 		
+		//Get the databases
 		CBLManager *manager = [CBLManager sharedInstance];
 		NSError *databaseFetchError = nil;
-		sharedLibrary.tracksDatabase = [manager databaseNamed: @"library-tracks" error: &databaseFetchError];
-		sharedLibrary.albumsDatabase = [manager databaseNamed: @"library-albums" error: &databaseFetchError];
-		sharedLibrary.artistsDatabase = [manager databaseNamed: @"library-artists" error: &databaseFetchError];
-		if(databaseFetchError || (!sharedLibrary.tracksDatabase || !sharedLibrary.albumsDatabase || !sharedLibrary.artistsDatabase)) {
+		sharedLibrary.libraryDatabase = [manager databaseNamed: @"library-tracks" error: &databaseFetchError];
+		if(databaseFetchError || !sharedLibrary.libraryDatabase) {
 			NSLog(@"Error getting a database, %@", databaseFetchError);
 		}
 		else{
 			NSLog(@"Got all databases successfully.");
 		}
+		
+//		CBLView* phoneView = [db viewNamed: @"phones"];
+//		[view setMapBlock: MAPBLOCK({
+//			for (NSString* phone in doc[@"phones"]) {
+//				emit(phone, doc[@"name"]);
+//			}
+//		}) version: @"2"];
 	});
 	return sharedLibrary;
 }
@@ -114,50 +110,16 @@
 				[newTrack setObject:@([timeAddedDate timeIntervalSince1970]) forKey:@"added_at"];
 				
 				
-				//Save the track to the tracks database
+				//Save the track to the user's library database
 				NSString *trackID = [newTrack objectForKey:@"id"];
-				if(![self.tracksDatabase existingDocumentWithID:trackID]){ //Track document doesn't already exist
-					CBLDocument *trackDatabaseDocument = [self.tracksDatabase documentWithID:trackID];
+				if(![self.libraryDatabase existingDocumentWithID:trackID]){ //Track document doesn't already exist
+					CBLDocument *trackDatabaseDocument = [self.libraryDatabase documentWithID:trackID];
 					NSError *trackDatabaseDocumentError = nil;
 					if(![trackDatabaseDocument putProperties:newTrack error:&trackDatabaseDocumentError]) {
 						NSLog(@"Error writing database document: %@", trackDatabaseDocumentError);
 					}
 					else{
 						NSLog(@"Success writing database document (%@).", [trackDatabaseDocument.properties objectForKey:@"name"]);
-					}
-				}
-				
-				
-				//Save the artists that are in the track to the artists database
-				NSArray *jsonArtists = [newTrack objectForKey:@"artists"];
-				for(NSDictionary *artist in jsonArtists){
-					NSLog(@"Artist %@", [artist objectForKey:@"name"]);
-					
-					NSString *artistID = [artist objectForKey:@"id"];
-					if(![self.artistsDatabase existingDocumentWithID:artistID]){ //Artist document doesn't already exist
-						CBLDocument *artistDatabaseDocument = [self.artistsDatabase documentWithID:artistID];
-						NSError *artistDatabaseDocumentError = nil;
-						if(![artistDatabaseDocument putProperties:artist error:&artistDatabaseDocumentError]) {
-							NSLog(@"Error writing artist database document: %@", artistDatabaseDocumentError);
-						}
-						else{
-							NSLog(@"Success writing artist database document (%@).", [artistDatabaseDocument.properties objectForKey:@"name"]);
-						}
-					}
-				}
-				
-				
-				//Save the album to the albums database
-				NSDictionary *album = [newTrack objectForKey:@"album"];
-				NSString *albumID = [album objectForKey:@"id"];
-				if(![self.albumsDatabase existingDocumentWithID:albumID]){ //Album document doesn't already exist
-					CBLDocument *albumDatabaseDocument = [self.albumsDatabase documentWithID:albumID];
-					NSError *albumDatabaseDocumentError = nil;
-					if(![albumDatabaseDocument putProperties:album error:&albumDatabaseDocumentError]) {
-						NSLog(@"Error writing album database document: %@", albumDatabaseDocumentError);
-					}
-					else{
-						NSLog(@"Success writing album database document (%@).", [albumDatabaseDocument.properties objectForKey:@"name"]);
 					}
 				}
 			}
@@ -194,8 +156,27 @@
 }
 
 - (void)buildDatabase {
-	self.startTime = [[NSDate new]timeIntervalSince1970];
-	[self getUserLibraryWithNextURLString:nil];
+//	self.startTime = [[NSDate new]timeIntervalSince1970];
+//	[self getUserLibraryWithNextURLString:nil];
+	
+	NSTimeInterval startTime = [[NSDate new]timeIntervalSince1970];
+	
+	NSError *queryError = nil;
+	CBLQuery *query = [self.libraryDatabase createAllDocumentsQuery];
+	query.allDocsMode = kCBLAllDocs;
+	CBLQueryEnumerator *result = [query run:&queryError];
+	if(queryError){
+		NSLog(@"Error in querying all documents %@", queryError);
+		return;
+	}
+	for(CBLQueryRow *row in result) {
+		NSLog(@"Got %@", row.documentID);
+	}
+	NSLog(@"Got %ld items.", result.count);
+	
+	NSTimeInterval endTime = [[NSDate new]timeIntervalSince1970];
+	
+	NSLog(@"Done %f seconds", endTime-startTime);
 }
 
 @end
