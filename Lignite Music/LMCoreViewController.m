@@ -653,7 +653,7 @@
 	[hangOnImage autoPinEdgesToSuperviewEdges];
 	
 #ifdef SPOTIFY
-	[[LMSpotifyLibrary sharedLibrary] test];
+	[[LMSpotifyLibrary sharedLibrary] buildDatabase];
 #endif
 	
 	

@@ -12,6 +12,9 @@
 
 + (instancetype)sharedLibrary;
 
-- (void)test;
+/**
+ Build the user's Spotify library database.
+ */
+- (void)buildDatabase;
 
 @end

@@ -52,8 +52,10 @@
 	return sharedLibrary;
 }
 
-- (void)test {
-	NSLog(@"Hey!");
+- (void)getUserLibraryWithNextURLString:(NSString*)nextURLString {
+	if(nextURLString == nil){
+		nextURLString = @"https://api.spotify.com/v1/me/tracks?limit=50&offset=0";
+	}
 	
 	SPTAuth *authorization = [SPTAuth defaultInstance];
 	SPTSession *spotifySession = authorization.session;
@@ -62,7 +64,13 @@
 		NSLog(@"Session is valid (expires %@).", spotifySession.expirationDate);
 		
 		NSError *libraryError = nil;
-		NSURLRequest *libraryRequest = [SPTYourMusic createRequestForCurrentUsersSavedTracksWithAccessToken:spotifySession.accessToken error:&libraryError];
+		NSURLRequest *libraryRequest = [SPTRequest createRequestForURL:[NSURL URLWithString:nextURLString]
+													   withAccessToken:spotifySession.accessToken
+															httpMethod:@"GET"
+																values:nil
+													   valueBodyIsJSON:NO
+												 sendDataAsQueryString:NO
+																 error:&libraryError];
 		
 		[[SPTRequest sharedHandler] performRequest:libraryRequest callback:^(NSError *error, NSURLResponse *response, NSData *data) {
 			if(error){
@@ -102,7 +110,7 @@
 				
 				[newTrack setObject:@([timeAddedDate timeIntervalSince1970]) forKey:@"added_at"];
 				
-
+				
 				//Save the track to the tracks database
 				NSString *trackID = [newTrack objectForKey:@"id"];
 				if(![self.tracksDatabase existingDocumentWithID:trackID]){ //Track document doesn't already exist
@@ -153,7 +161,16 @@
 			
 			NSTimeInterval endTime = [[NSDate new] timeIntervalSince1970];
 			
-			NSLog(@"Took %f seconds to parse 20 items.", endTime-startTime);
+			NSLog(@"Took %f seconds to parse 50 items (URL %@).", endTime-startTime, nextURLString);
+			
+			NSString *nextURLFromJSONResponse = [jsonLibrary objectForKey:@"next"];
+			NSLog(@"Next URL %@", [[nextURLFromJSONResponse class] description]);
+			if(nextURLFromJSONResponse && [nextURLFromJSONResponse class] != [NSNull class]){
+				[self getUserLibraryWithNextURLString:nextURLFromJSONResponse];
+			}
+			else{
+				NSLog(@"Done building user's library.");
+			}
 		}];
 	}
 	else{
@@ -167,9 +184,13 @@
 			
 			authorization.session = session;
 			
-			[self test];
+			[self buildDatabase];
 		}];
 	}
+}
+
+- (void)buildDatabase {
+	[self getUserLibraryWithNextURLString:nil];
 }
 
 @end
