@@ -310,16 +310,6 @@
 //			self.player.playbackDelegate = self;
 			self.player.diskCache = [[SPTDiskCache alloc] initWithCapacity:1024 * 1024 * 64];
 			[self.player loginWithAccessToken:session.accessToken];
-			
-			[NSTimer scheduledTimerWithTimeInterval:3.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
-				[self.player playSpotifyURI:[track objectForKey:@"uri"] startingWithIndex:0 startingWithPosition:0 callback:^(NSError *playbackError) {
-					if(playbackError){
-						NSLog(@"Playback error %@", playbackError);
-						return;
-					}
-					NSLog(@"Playing!!!");
-				}];
-			}];
 		} else {
 			self.player = nil;
 			UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error init" message:[error description] preferredStyle:UIAlertControllerStyleAlert];
@@ -327,6 +317,16 @@
 //			[self presentViewController:alert animated:YES completion:nil];
 //			[self closeSession];
 		}
+		
+		[NSTimer scheduledTimerWithTimeInterval:3.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
+			[self.player playSpotifyURI:[track objectForKey:@"uri"] startingWithIndex:0 startingWithPosition:0 callback:^(NSError *playbackError) {
+				if(playbackError){
+					NSLog(@"Playback error %@", playbackError);
+					return;
+				}
+				NSLog(@"Playing!!!");
+			}];
+		}];
 	}
 #else
 	LMMusicTrack *track = [self.musicTitles.items objectAtIndex:entry.collectionIndex];
