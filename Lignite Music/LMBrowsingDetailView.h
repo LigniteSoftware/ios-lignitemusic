@@ -10,6 +10,9 @@
 #import "LMCoreViewController.h"
 #import "LMMusicPlayer.h"
 #import "LMBrowsingView.h"
+#ifdef SPOTIFY
+#import "Spotify.h"
+#endif
 
 @interface LMBrowsingDetailView : UIView
 

@@ -52,9 +52,9 @@
 @property BOOL didJustFinishTrack;
 
 /**
- For some weird reason, if the app opens with a queue which is not exposed (currently 100% of the time) and you try to play a song within the same queue from the app, it will not work. So, we have to clear the queue with a query which will most likely never be existant. Then we set the nowPlayingItem to nil and we're good to do what we want to do. 
+ For some weird reason, if the app opens with a queue which is not exposed (currently 100% of the time) and you try to play a song within the same queue from the app, it will not work. So, we have to clear the queue with a query which will most likely never be existant. Then we set the nowPlayingItem to nil and we're good to do what we want to do.
  
-	 Sometimes software is really fucking weird.
+ Sometimes software is really fucking weird.
  */
 @property MPMediaQuery *bullshitQuery;
 
@@ -131,27 +131,27 @@ MPMediaGrouping associatedMediaTypes[] = {
 		
 		[notificationCenter
 		 addObserver:self
-		    selector:@selector(audioRouteChanged:)
-			    name:AVAudioSessionRouteChangeNotification
-			  object:nil];
+		 selector:@selector(audioRouteChanged:)
+		 name:AVAudioSessionRouteChangeNotification
+		 object:nil];
 		
 		[notificationCenter
 		 addObserver:self
 			selector:@selector(systemMusicPlayerTrackChanged:)
-				name:MPMusicPlayerControllerNowPlayingItemDidChangeNotification
-			  object:self.systemMusicPlayer];
+		 name:MPMusicPlayerControllerNowPlayingItemDidChangeNotification
+		 object:self.systemMusicPlayer];
 		
 		[notificationCenter
 		 addObserver:self
 			selector:@selector(systemMusicPlayerStateChanged:)
-				name:MPMusicPlayerControllerPlaybackStateDidChangeNotification
-			  object:self.systemMusicPlayer];
+		 name:MPMusicPlayerControllerPlaybackStateDidChangeNotification
+		 object:self.systemMusicPlayer];
 		
 		[notificationCenter
 		 addObserver:self
 			selector:@selector(mediaLibraryContentsChanged:)
-				name:MPMediaLibraryDidChangeNotification
-			  object:nil];
+		 name:MPMediaLibraryDidChangeNotification
+		 object:nil];
 		
 		MPMediaLibrary *mediaLibrary = [MPMediaLibrary defaultMediaLibrary];
 		[mediaLibrary beginGeneratingLibraryChangeNotifications];
@@ -173,7 +173,7 @@ MPMediaGrouping associatedMediaTypes[] = {
 			[self autoBackThrough];
 			return MPRemoteCommandHandlerStatusSuccess;
 		}];
-	
+		
 		[commandCenter.changePlaybackPositionCommand addTarget:self action:@selector(handlePlaybackPositionChange:)];
 		
 		NSLog(@"Setup LMMusicPlayer.");
@@ -286,7 +286,7 @@ MPMediaGrouping associatedMediaTypes[] = {
 
 - (void)currentPlaybackTimeChangeFireTimer:(BOOL)adjustForDifference {
 	__weak id weakSelf = self;
-
+	
 	double delayInSeconds = 0.1;
 	
 	dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
@@ -309,34 +309,34 @@ MPMediaGrouping associatedMediaTypes[] = {
 
 - (void)reloadAudioPlayerWithNowPlayingItem {
 	self.playerType = LMMusicPlayerTypeAppleMusic;
-//	NSError *error = nil;
-//	
-//	NSLog(@"Now playing item is %@ is cloud item %d", self.systemMusicPlayer.nowPlayingItem.title, self.systemMusicPlayer.nowPlayingItem.isCloudItem);
-//	
-//	NSURL *url = [self.systemMusicPlayer.nowPlayingItem valueForProperty:MPMediaItemPropertyAssetURL];
-//	
-//	if(url == nil){
-//		self.playerType = LMMusicPlayerTypeAppleMusic;
-//	}
-//	else if(error){
-//		//TODO: make sure this doesn't happen again, apply better fix
-//		NSLog(@"Error loading audio player with url %@: %@", url, error);
-//		
-////		[self.systemMusicPlayer play];
-//		
-//		//[self skipToNextTrack];
-//	}
-//	else{
-//		self.playerType = LMMusicPlayerTypeSystemMusicPlayer;
-//		
-//		self.audioPlayer = nil;
-//		self.audioPlayer = [[AVAudioPlayer alloc]initWithContentsOfURL:url error:&error];
-//		self.audioPlayer.delegate = self;
-//		
-//		[self.audioPlayer prepareToPlay];
-//		
-//		[self updateNowPlayingTimeDelegates];
-//	}
+	//	NSError *error = nil;
+	//
+	//	NSLog(@"Now playing item is %@ is cloud item %d", self.systemMusicPlayer.nowPlayingItem.title, self.systemMusicPlayer.nowPlayingItem.isCloudItem);
+	//
+	//	NSURL *url = [self.systemMusicPlayer.nowPlayingItem valueForProperty:MPMediaItemPropertyAssetURL];
+	//
+	//	if(url == nil){
+	//		self.playerType = LMMusicPlayerTypeAppleMusic;
+	//	}
+	//	else if(error){
+	//		//TODO: make sure this doesn't happen again, apply better fix
+	//		NSLog(@"Error loading audio player with url %@: %@", url, error);
+	//
+	////		[self.systemMusicPlayer play];
+	//
+	//		//[self skipToNextTrack];
+	//	}
+	//	else{
+	//		self.playerType = LMMusicPlayerTypeSystemMusicPlayer;
+	//
+	//		self.audioPlayer = nil;
+	//		self.audioPlayer = [[AVAudioPlayer alloc]initWithContentsOfURL:url error:&error];
+	//		self.audioPlayer.delegate = self;
+	//
+	//		[self.audioPlayer prepareToPlay];
+	//
+	//		[self updateNowPlayingTimeDelegates];
+	//	}
 }
 
 - (void)reloadInfoCenter:(BOOL)isPlaying {
@@ -352,12 +352,12 @@ MPMediaGrouping associatedMediaTypes[] = {
 	[newInfo setObject:self.nowPlayingTrack.albumTitle ? self.nowPlayingTrack.albumTitle : NSLocalizedString(@"UnknownAlbumTitle", nil) forKey:MPMediaItemPropertyAlbumTitle];
 	[newInfo setObject:@(self.nowPlayingTrack.playbackDuration) forKey:MPMediaItemPropertyPlaybackDuration];
 	[newInfo setObject:@(self.audioPlayer.currentTime) forKey:MPNowPlayingInfoPropertyElapsedPlaybackTime];
-	if([self.nowPlayingTrack artwork]){
-		[newInfo setObject:[self.nowPlayingTrack artwork] forKey:MPMediaItemPropertyArtwork];
-	}
+//	if([self.nowPlayingTrack artwork]){
+//		[newInfo setObject:[self.nowPlayingTrack artwork] forKey:MPMediaItemPropertyArtwork];
+//	}
 	[newInfo setObject:@(isPlaying) forKey:MPNowPlayingInfoPropertyPlaybackRate];
 	
-//	NSLog(@"Allahu is playing %d: %@", self.audioPlayer.isPlaying, newInfo);
+	//	NSLog(@"Allahu is playing %d: %@", self.audioPlayer.isPlaying, newInfo);
 	
 	infoCenter.nowPlayingInfo = newInfo;
 }
@@ -373,7 +373,7 @@ MPMediaGrouping associatedMediaTypes[] = {
 	if(self.systemMusicPlayer.currentPlaybackTime != 0){
 		self.currentPlaybackTime = self.systemMusicPlayer.currentPlaybackTime;
 	}
-
+	
 	for(int i = 0; i < self.delegates.count; i++){
 		id delegate = [self.delegates objectAtIndex:i];
 		[delegate musicTrackDidChange:self.nowPlayingTrack];
@@ -414,7 +414,7 @@ MPMediaGrouping associatedMediaTypes[] = {
 	}
 }
 
-- (void)systemMusicPlayerStateChanged:(id)sender {	
+- (void)systemMusicPlayerStateChanged:(id)sender {
 	if(self.systemMusicPlayer.playbackState == MPMusicPlaybackStateInterrupted){
 		self.playbackState = LMMusicPlaybackStatePlaying;
 		self.autoPlay = YES;
@@ -483,16 +483,16 @@ MPMediaGrouping associatedMediaTypes[] = {
 		[[self.delegatesSubscribedToLibraryDidChange objectAtIndex:i] musicLibraryDidChange];
 	}
 	
-//	if([self.libraryChangeTimer isValid]){
-//		[self.libraryChangeTimer invalidate];
-//	}
-//	if([[[notification class] description] isEqualToString:@"NSConcreteNotification"]){
-//		self.libraryChangeTimer = [NSTimer scheduledTimerWithTimeInterval:2.0
-//																   target:self
-//																 selector:@selector(mediaLibraryContentsChanged:)
-//																 userInfo:nil
-//																  repeats:NO];
-//	}
+	//	if([self.libraryChangeTimer isValid]){
+	//		[self.libraryChangeTimer invalidate];
+	//	}
+	//	if([[[notification class] description] isEqualToString:@"NSConcreteNotification"]){
+	//		self.libraryChangeTimer = [NSTimer scheduledTimerWithTimeInterval:2.0
+	//																   target:self
+	//																 selector:@selector(mediaLibraryContentsChanged:)
+	//																 userInfo:nil
+	//																  repeats:NO];
+	//	}
 }
 
 - (void)setSourceTitle:(NSString*)title {
@@ -628,7 +628,7 @@ BOOL shuffleForDebug = NO;
 			}
 			
 			trackLetter = [trackLetter uppercaseString];
-//			NSLog(@"%d: %@: %@", (int)collectionIndex, trackLetter, musicTrack.title);
+			//			NSLog(@"%d: %@: %@", (int)collectionIndex, trackLetter, musicTrack.title);
 			
 			BOOL doesntContainLetter = ![[lettersDictionary allKeys] containsObject:locationLetter];
 			BOOL letterIsDigit = isdigit([trackLetter characterAtIndex:0]);
@@ -639,7 +639,7 @@ BOOL shuffleForDebug = NO;
 				&& doesntContainLetter)
 			   //Or, if the letter is not yet in the dictionary and the letter matches the one being searched for
 			   || ([locationLetter isEqualToString:trackLetter]
-			   && doesntContainLetter)
+				   && doesntContainLetter)
 			   //Or if it's an unknown letter/character and no question mark index has been logged yet and it's not a digit
 			   || (![letters containsString:[NSString stringWithFormat: @"%C", [trackLetter characterAtIndex:0]]]
 				   && ![[lettersDictionary allKeys] containsObject:@"?"]
@@ -651,14 +651,14 @@ BOOL shuffleForDebug = NO;
 				
 				lastCollectionIndex = collectionIndex;
 				
-//				NSLog(@"%d/%d: Logging %@ (%@)", (int)i, (int)collectionIndex, locationLetter, musicTrack.title);
+				//				NSLog(@"%d/%d: Logging %@ (%@)", (int)i, (int)collectionIndex, locationLetter, musicTrack.title);
 				break;
 			}
 			//If we're on the last index and there's no hope set the letter's index to the last index that was found
 			else if(collectionIndex == countToUse-1){
 				[lettersDictionary setObject:[NSNumber numberWithUnsignedInteger:lastCollectionIndex] forKey:locationLetter];
 				
-//				NSLog(@"%d/%d: No hope for %@ (%@)", (int)i, (int)collectionIndex, locationLetter, musicTrack.title);
+				//				NSLog(@"%d/%d: No hope for %@ (%@)", (int)i, (int)collectionIndex, locationLetter, musicTrack.title);
 			}
 		}
 	}
@@ -667,28 +667,28 @@ BOOL shuffleForDebug = NO;
 }
 
 - (NSArray<LMMusicTrackCollection*>*)trackCollectionsForMediaQuery:(MPMediaQuery*)mediaQuery withMusicType:(LMMusicType)musicType {
-//	MPMediaGrouping associatedGrouping = associatedMediaTypes[musicType];
+	//	MPMediaGrouping associatedGrouping = associatedMediaTypes[musicType];
 	
 	NSMutableArray *collections =
-		[[NSMutableArray alloc]initWithArray:(musicType == LMMusicTypeTitles) ? @[[MPMediaItemCollection collectionWithItems:mediaQuery.items]] : mediaQuery.collections];
-//	NSMutableArray<LMMusicTrackCollection*> *musicTracks = [NSMutableArray new];
+	[[NSMutableArray alloc]initWithArray:(musicType == LMMusicTypeTitles) ? @[[MPMediaItemCollection collectionWithItems:mediaQuery.items]] : mediaQuery.collections];
+	//	NSMutableArray<LMMusicTrackCollection*> *musicTracks = [NSMutableArray new];
 	
-//	for(int i = 0; i < collections.count; i++){
-//		MPMediaItemCollection *itemCollection = [collections objectAtIndex:i];
-//		NSMutableArray *musicCollection = [[NSMutableArray alloc]init];
-//		for(int itemIndex = 0; itemIndex < itemCollection.count; itemIndex++){
-//			MPMediaItem *musicItem = [itemCollection.items objectAtIndex:itemIndex];
-//			LMMusicTrack *musicTrack = musicItem;
-//			[musicCollection addObject:musicTrack];
-//		}
-//		LMMusicTrackCollection *trackCollection = itemCollection;
-//		
-//		if(trackCollection.count > 0){
-//			[musicTracks addObject:trackCollection];
-//		}
-//	}
+	//	for(int i = 0; i < collections.count; i++){
+	//		MPMediaItemCollection *itemCollection = [collections objectAtIndex:i];
+	//		NSMutableArray *musicCollection = [[NSMutableArray alloc]init];
+	//		for(int itemIndex = 0; itemIndex < itemCollection.count; itemIndex++){
+	//			MPMediaItem *musicItem = [itemCollection.items objectAtIndex:itemIndex];
+	//			LMMusicTrack *musicTrack = musicItem;
+	//			[musicCollection addObject:musicTrack];
+	//		}
+	//		LMMusicTrackCollection *trackCollection = itemCollection;
+	//
+	//		if(trackCollection.count > 0){
+	//			[musicTracks addObject:trackCollection];
+	//		}
+	//	}
 	
-//	return musicTracks;
+	//	return musicTracks;
 	
 	NSString *sortKey = nil;
 	
@@ -714,9 +714,9 @@ BOOL shuffleForDebug = NO;
 			break;
 	}
 	
-//	sortKey = @"representativeItem";
+	//	sortKey = @"representativeItem";
 	
-//	NSLog(@"Loading sort");
+	//	NSLog(@"Loading sort");
 	
 	NSSortDescriptor *albumSort;
 	
@@ -752,15 +752,15 @@ BOOL shuffleForDebug = NO;
 	
 	//		NSLog(@"[LMMusicPlayer]: Took %f seconds to complete query.", endingTime-startingTime);
 	
-//	NSLog(@"Returning sort");
+	//	NSLog(@"Returning sort");
 	
 	return [collections sortedArrayUsingDescriptors:@[albumSort]];
 }
 
 - (NSArray<LMMusicTrackCollection*>*)queryCollectionsForMusicType:(LMMusicType)musicType {
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer || self.playerType == LMMusicPlayerTypeAppleMusic){
-//		NSTimeInterval startingTime = [[NSDate date] timeIntervalSince1970];
-//		NSLog(@"Querying items for LMMusicType %d...", musicType);
+		//		NSTimeInterval startingTime = [[NSDate date] timeIntervalSince1970];
+		//		NSLog(@"Querying items for LMMusicType %d...", musicType);
 		
 		BOOL isCompilations = musicType == LMMusicTypeCompilations;
 		
@@ -798,46 +798,49 @@ BOOL shuffleForDebug = NO;
 		}
 		
 		query.groupingType = associatedMediaTypes[musicType];
-
+		
 		return [self trackCollectionsForMediaQuery:query withMusicType:musicType];
 	}
 	return nil;
 }
 
 - (NSArray<LMMusicTrackCollection*>*)collectionsForRepresentativeTrack:(LMMusicTrack*)representativeTrack forMusicType:(LMMusicType)musicType {
-	MPMediaGrouping associatedGroupings[] = {
-		MPMediaGroupingAlbum, //Artists
-		MPMediaGroupingTitle, //Albums
-		MPMediaGroupingTitle, //Titles
-		MPMediaGroupingTitle, //Playlists
-		MPMediaGroupingAlbum, //Genres
-		MPMediaGroupingAlbum, //Composers
-		MPMediaGroupingTitle  //Compilations
-	};
 	
-	NSArray<NSString*> *associatedPersistentIDProperties = @[
-		MPMediaItemPropertyArtistPersistentID,   //Artists
-		MPMediaItemPropertyAlbumPersistentID,    //Albums
-		MPMediaItemPropertyPersistentID,         //Titles
-		MPMediaPlaylistPropertyName,             //Playlists
-		MPMediaItemPropertyGenrePersistentID,    //Genres
-		MPMediaItemPropertyComposerPersistentID, //Composers
-		MPMediaItemPropertyIsCompilation         //Compilations
-	];
+	return @[];
 	
-	NSString *associatedProperty = [associatedPersistentIDProperties objectAtIndex:musicType];
-	
-	MPMediaQuery *query = nil;
-	
-	query = [MPMediaQuery new];
-	query.groupingType = associatedGroupings[musicType];
-	
-	MPMediaPropertyPredicate *musicFilterPredicate = [MPMediaPropertyPredicate predicateWithValue:[representativeTrack valueForProperty:associatedProperty]
-																					  forProperty:associatedProperty
-																				   comparisonType:MPMediaPredicateComparisonEqualTo];
-	[query addFilterPredicate:musicFilterPredicate];
-	
-	return [self trackCollectionsForMediaQuery:query withMusicType:musicType];
+//	MPMediaGrouping associatedGroupings[] = {
+//		MPMediaGroupingAlbum, //Artists
+//		MPMediaGroupingTitle, //Albums
+//		MPMediaGroupingTitle, //Titles
+//		MPMediaGroupingTitle, //Playlists
+//		MPMediaGroupingAlbum, //Genres
+//		MPMediaGroupingAlbum, //Composers
+//		MPMediaGroupingTitle  //Compilations
+//	};
+//	
+//	NSArray<NSString*> *associatedPersistentIDProperties = @[
+//															 MPMediaItemPropertyArtistPersistentID,   //Artists
+//															 MPMediaItemPropertyAlbumPersistentID,    //Albums
+//															 MPMediaItemPropertyPersistentID,         //Titles
+//															 MPMediaPlaylistPropertyName,             //Playlists
+//															 MPMediaItemPropertyGenrePersistentID,    //Genres
+//															 MPMediaItemPropertyComposerPersistentID, //Composers
+//															 MPMediaItemPropertyIsCompilation         //Compilations
+//															 ];
+//	
+//	NSString *associatedProperty = [associatedPersistentIDProperties objectAtIndex:musicType];
+//	
+//	MPMediaQuery *query = nil;
+//	
+//	query = [MPMediaQuery new];
+//	query.groupingType = associatedGroupings[musicType];
+//	
+//	MPMediaPropertyPredicate *musicFilterPredicate = [MPMediaPropertyPredicate predicateWithValue:[representativeTrack valueForProperty:associatedProperty]
+//																					  forProperty:associatedProperty
+//																				   comparisonType:MPMediaPredicateComparisonEqualTo];
+//	[query addFilterPredicate:musicFilterPredicate];
+//	
+//	return [self trackCollectionsForMediaQuery:query withMusicType:musicType];
 }
 
 - (void)skipToNextTrack {
@@ -897,12 +900,12 @@ BOOL shuffleForDebug = NO;
 
 - (void)skipToPreviousItem {
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer || self.playerType == LMMusicPlayerTypeAppleMusic){
-//		if([self.systemMusicPlayer respondsToSelector:@selector(skipToPreviousItem)]){
-//			[self.systemMusicPlayer skipToPreviousItem];
-//		}
-//		else{
-//			NSLog(@"[LMMusicPlayer] Warning: systemMusicPlayer does not respond to skipToPreviousItem selector!");
-//		}
+		//		if([self.systemMusicPlayer respondsToSelector:@selector(skipToPreviousItem)]){
+		//			[self.systemMusicPlayer skipToPreviousItem];
+		//		}
+		//		else{
+		//			NSLog(@"[LMMusicPlayer] Warning: systemMusicPlayer does not respond to skipToPreviousItem selector!");
+		//		}
 		[self.systemMusicPlayer skipToPreviousItem];
 	}
 }
@@ -1107,7 +1110,7 @@ BOOL shuffleForDebug = NO;
 - (void)setShuffleMode:(LMMusicShuffleMode)shuffleMode {
 	_shuffleMode = shuffleMode;
 	
-//	NSLog(@"New shuffle is %d", _shuffleMode);
+	//	NSLog(@"New shuffle is %d", _shuffleMode);
 	
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer || self.playerType == LMMusicPlayerTypeAppleMusic){
 		MPMusicShuffleMode associatedShuffleModes[] = {

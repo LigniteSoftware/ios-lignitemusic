@@ -8,6 +8,9 @@
 
 #import <Foundation/Foundation.h>
 #import "MPMediaItem+LigniteImages.h"
+#ifdef SPOTIFY
+#import "Spotify.h"
+#endif
 
 @class LMImageManager;
 

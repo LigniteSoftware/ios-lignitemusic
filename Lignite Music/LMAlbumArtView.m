@@ -71,15 +71,16 @@
 
 - (void)updateContentWithMusicPlayer:(MPMusicPlayerController*)musicPlayer {
 //    NSLog(@"Reloading %@", NSStringFromCGRect(self.albumArtImageView.frame));
-    if(musicPlayer.nowPlayingItem != self.currentMediaItem && self.albumArtImageView.frame.size.width != 0){
-        self.albumArtImageView.image = [[musicPlayer.nowPlayingItem artwork]imageWithSize:self.albumArtImageView.frame.size];
-        self.albumArtImageView.layer.cornerRadius = MIN(self.albumArtImageView.frame.size.width, self.albumArtImageView.frame.size.height)/2;
-        self.albumArtImageView.clipsToBounds = YES;
-		
-		[self.albumArtImageView setNeedsDisplay];
-        NSLog(@"%f", self.albumArtImageView.layer.cornerRadius);
-        self.currentMediaItem = musicPlayer.nowPlayingItem;
-    }
+//    if(musicPlayer.nowPlayingItem != self.currentMediaItem && self.albumArtImageView.frame.size.width != 0){
+//        self.albumArtImageView.image = [[musicPlayer.nowPlayingItem artwork]imageWithSize:self.albumArtImageView.frame.size];
+//        self.albumArtImageView.layer.cornerRadius = MIN(self.albumArtImageView.frame.size.width, self.albumArtImageView.frame.size.height)/2;
+//        self.albumArtImageView.clipsToBounds = YES;
+//		
+//		[self.albumArtImageView setNeedsDisplay];
+//        NSLog(@"%f", self.albumArtImageView.layer.cornerRadius);
+//        self.currentMediaItem = musicPlayer.nowPlayingItem;
+//    }
+	NSLog(@"!!! === What the fuck is happening === !!!");
 }
 
 - (void)updateContentWithMusicTrack:(LMMusicTrack*)track {

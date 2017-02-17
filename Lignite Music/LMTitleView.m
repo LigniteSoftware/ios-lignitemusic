@@ -14,6 +14,9 @@
 #import "LMOperationQueue.h"
 #import "LMMusicPlayer.h"
 #import "LMExtras.h"
+#ifdef SPOTIFY
+#import "Spotify.h"
+#endif
 
 @interface LMTitleView() <LMListEntryDelegate, LMTableViewSubviewDataSource, LMMusicPlayerDelegate>
 
@@ -81,6 +84,9 @@
 }
 
 - (void)rebuildTrackCollection {
+#ifdef SPOTIFY
+	
+#else
 	MPMediaQuery *everything = [MPMediaQuery new];
 	MPMediaPropertyPredicate *musicFilterPredicate = [MPMediaPropertyPredicate predicateWithValue:[NSNumber numberWithInteger:MPMediaTypeMusic]
 																					  forProperty:MPMediaItemPropertyMediaType
@@ -108,6 +114,7 @@
 	self.musicTitles = [MPMediaItemCollection collectionWithItems:[NSArray arrayWithArray:musicCollection]];
 	self.songListTableView.totalAmountOfObjects = self.musicTitles.count;
 	[self reloadSourceSelectorInfo];
+#endif
 }
 
 - (void)musicLibraryDidChange {
@@ -322,6 +329,8 @@
 
 - (void)setup {
 	[self rebuildTrackCollection];
+	
+	return;
 	
 	self.songListTableView = [LMTableView newAutoLayoutView];
 	self.songListTableView.totalAmountOfObjects = self.musicTitles.count;

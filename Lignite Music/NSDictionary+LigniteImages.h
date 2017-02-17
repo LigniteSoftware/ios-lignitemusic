@@ -1,18 +1,16 @@
 //
-//  MPMediaItem+LigniteImages.h
+//  NSDictionary+LigniteImages.h
 //  Lignite Music
 //
-//  Created by Edwin Finch on 12/15/16.
-//  Copyright © 2016 Lignite. All rights reserved.
+//  Created by Edwin Finch on 2/16/17.
+//  Copyright © 2017 Lignite. All rights reserved.
 //
 
 #import <MediaPlayer/MediaPlayer.h>
 
-@interface MPMediaItem (LigniteImages)
+@interface NSDictionary (LigniteImages)
 
-#ifndef SPOTIFY
-
-typedef MPMediaItem LMMusicTrack;
+typedef NSDictionary LMMusicTrack;
 
 typedef MPMediaEntityPersistentID LMMusicTrackPersistentID;
 
@@ -37,6 +35,18 @@ typedef MPMediaEntityPersistentID LMMusicTrackPersistentID;
  */
 - (UIImage*)artistImage;
 
-#endif
+@property (readonly) LMMusicTrackPersistentID persistentID;
+@property (readonly) LMMusicTrackPersistentID albumPersistentID;
+@property (readonly) LMMusicTrackPersistentID artistPersistentID;
+@property (readonly) LMMusicTrackPersistentID composerPersistentID;
+@property (readonly) LMMusicTrackPersistentID genrePersistentID;
+
+@property (readonly) NSTimeInterval playbackDuration;
+
+@property (readonly) NSString *title;
+@property (readonly) NSString *artist;
+@property (readonly) NSString *albumTitle;
+@property (readonly) NSString *composer;
+@property (readonly) NSString *genre;
 
 @end

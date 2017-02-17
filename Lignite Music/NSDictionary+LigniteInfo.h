@@ -1,18 +1,17 @@
 //
-//  MPMediaItemCollection+LigniteInfo.h
+//  NSDictionary+LigniteInfo.h
 //  Lignite Music
 //
-//  Created by Edwin Finch on 12/15/16.
-//  Copyright © 2016 Lignite. All rights reserved.
+//  Created by Edwin Finch on 2/16/17.
+//  Copyright © 2017 Lignite. All rights reserved.
 //
 
 #import <MediaPlayer/MediaPlayer.h>
+#import "NSDictionary+LigniteImages.h"
 
-@interface MPMediaItemCollection (LigniteInfo)
+@interface NSDictionary (LigniteInfo)
 
-#ifndef SPOTIFY
-
-typedef MPMediaItemCollection LMMusicTrackCollection;
+typedef NSDictionary LMMusicTrackCollection;
 
 /**
  The title of this collection, if it applies.
@@ -44,6 +43,9 @@ typedef MPMediaItemCollection LMMusicTrackCollection;
  */
 - (NSUInteger)numberOfAlbums;
 
-#endif
+@property (readonly) NSArray *items;
+
+@property (readonly) LMMusicTrack *representativeItem;
 
 @end
+

@@ -8,6 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "MPMediaItem+LigniteImages.h"
+#ifdef SPOTIFY
+#import "Spotify.h"
+#endif
 
 @interface LMAlbumArtView : UIView
 

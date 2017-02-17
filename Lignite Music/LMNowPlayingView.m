@@ -501,11 +501,13 @@
 }
 
 - (NSString*)titleForListEntry:(LMListEntry*)entry {
-	return [NSString stringWithFormat:@"%@", [self.musicPlayer.nowPlayingCollection.items objectAtIndex:entry.collectionIndex].title];
+	return @"queue title";
+//	return [NSString stringWithFormat:@"%@", [self.musicPlayer.nowPlayingCollection.items objectAtIndex:entry.collectionIndex].title];
 }
 
 - (NSString*)subtitleForListEntry:(LMListEntry*)entry {
-	return [NSString stringWithFormat:@"%@", [LMNowPlayingView durationStringTotalPlaybackTime:[self.musicPlayer.nowPlayingCollection.items objectAtIndex:entry.collectionIndex].playbackDuration]];
+	return @"queue subtitle";
+//	return [NSString stringWithFormat:@"%@", [LMNowPlayingView durationStringTotalPlaybackTime:[self.musicPlayer.nowPlayingCollection.items objectAtIndex:entry.collectionIndex].playbackDuration]];
 }
 
 - (UIImage*)iconForListEntry:(LMListEntry*)entry {

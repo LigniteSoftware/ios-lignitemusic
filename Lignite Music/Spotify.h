@@ -11,6 +11,9 @@
 #import <SpotifyMetadata/SpotifyMetadata.h>
 #import <SpotifyAudioPlayback/SpotifyAudioPlayback.h>
 #import "SpotifyInfo.h"
+#import "LMSpotifyLibrary.h"
+#import "NSDictionary+LigniteImages.h"
+#import "NSDictionary+LigniteInfo.h"
 
 @protocol SpotifyDelegate <NSObject>
 @optional

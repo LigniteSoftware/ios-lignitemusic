@@ -14,6 +14,9 @@
 #import "MPMediaItem+LigniteImages.h"
 #import "MPMediaItemCollection+LigniteInfo.h"
 #import "LMButtonNavigationBar.h"
+#ifdef SPOTIFY
+#import "Spotify.h"
+#endif
 
 /**
  Storage key for the user set player type. Correlates to LMMusicPlayerType.
@@ -78,14 +81,14 @@ typedef enum {
 @required
 /**
  Is called when the music track of the app changes.
-
+ 
  @param newTrack The new track that is playing.
  */
 - (void)musicTrackDidChange:(LMMusicTrack*)newTrack;
 
 /**
  Is called when the music playback state of the app changes.
-
+ 
  @param newState The new state.
  */
 - (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState;
@@ -93,7 +96,7 @@ typedef enum {
 @optional
 /**
  Is called when the current playback time of the song changes.
-
+ 
  @param newPlaybackTime The new playback time.
  */
 - (void)musicCurrentPlaybackTimeDidChange:(NSTimeInterval)newPlaybackTime;
@@ -105,7 +108,7 @@ typedef enum {
 
 /**
  The output port of the music changed.
-
+ 
  @param audioRoute The new output port.
  */
 - (void)musicOutputPortDidChange:(AVAudioSessionPortDescription*)outputPort;
@@ -175,7 +178,7 @@ typedef enum {
 
 /**
  The shared music player.
-
+ 
  @return The shared music player.
  */
 + (id)sharedMusicPlayer;
@@ -211,30 +214,30 @@ typedef enum {
 
 /**
  Adds an LMMusicPlayerDelegate to the list of delegates.
-
+ 
  @param newDelegate The new delegate to add.
  */
 - (void)addMusicDelegate:(id<LMMusicPlayerDelegate>)newDelegate;
 
 /**
  Removes an LMMusicPlayerDelegate from the list of delegates.
-
+ 
  @param delegateToRemove The delegate to remove.
  */
 - (void)removeMusicDelegate:(id<LMMusicPlayerDelegate>)delegateToRemove;
 
 /**
  Creates an LMMusicTrackCollection based off a MPMediaItemCollection. Sets source collection automatically.
-
+ 
  @param itemCollection The item collection to base this track collection off of.
-
+ 
  @return The track collection.
  */
 + (LMMusicTrackCollection*)musicTrackCollectionFromMediaItemCollection:(MPMediaItemCollection*)itemCollection;
 
 /**
  Gets a dictionary of the letters available. The key is the letter, the object is an NSNumber of the index in which that letter is first available within that collection.
-
+ 
  @param collectionArray The collection array to scan for.
  @param musicType The music type the letters are associated to.
  @return The dictionary of letters with their indexes.
@@ -244,7 +247,7 @@ typedef enum {
 
 /**
  Gets the track collections for a media query with a certain music type.
-
+ 
  @param mediaQuery The media query to convert.
  @param musicType The music type associated.
  @return The array of collections.
@@ -253,7 +256,7 @@ typedef enum {
 
 /**
  Compiles an array of collections associated to a persistent ID from a track and music type. For example, the track with a persistent ID of Chiddy Bang and the music type of LMMusicTypeArtists would result in collections of all of Chiddy Bang's albums.
-
+ 
  @param representativeTrack The representative track to use in the query and pull data from.
  @param musicType The music type to group for.
  @return The grouped collections.
@@ -262,9 +265,9 @@ typedef enum {
 
 /**
  Finds collections of music based off of the type provided.
-
+ 
  @param musicType The type of music to find.
-
+ 
  @return The collections from the query's results.
  */
 - (NSArray<LMMusicTrackCollection*>*)queryCollectionsForMusicType:(LMMusicType)musicType;
@@ -311,21 +314,21 @@ typedef enum {
 
 /**
  Whether or not the music player has a track loaded.
-
+ 
  @return If a track is loaded. NO if track contains nil title, YES if there is a track.
  */
 - (BOOL)hasTrackLoaded;
 
 /**
  Gets the currently saved LMMusicPlayerType through NSUserDefaults. Returns LMMusicPlayerTypeSystemMusicPlayer if the entry doesn't exist in NSUserDefaults.
-
+ 
  @return The saved LMMusicPlayerType.
  */
 + (LMMusicPlayerType)savedPlayerType;
 
 /**
  Whether or not an output port is wireless.
-
+ 
  @param outputPort The audio route to check.
  @return Whether or not that route is wireless (ie. Bluetooth).
  */
