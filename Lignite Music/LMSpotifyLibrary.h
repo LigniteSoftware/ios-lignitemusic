@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "Spotify.h"
 
 @interface LMSpotifyLibrary : NSObject
 
@@ -21,5 +22,12 @@
  Build the user's Spotify library database.
  */
 - (void)buildDatabase;
+
+/**
+ Get the user's music tracks library.
+
+ @return The library.
+ */
+- (NSArray<LMMusicTrack*>*)musicTracks;
 
 @end

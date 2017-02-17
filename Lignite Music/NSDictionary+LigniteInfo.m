@@ -26,8 +26,16 @@
 	return 69;
 }
 
+- (LMMusicTrack*)representativeItem {
+	return [self.items objectAtIndex:0];
+}
+
 - (NSArray*)items {
-	return @[];
+	return [self objectForKey:@"items"];
+}
+
+- (NSInteger)trackCount {
+	return [self.items count];
 }
 
 @end

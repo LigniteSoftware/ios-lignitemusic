@@ -24,6 +24,10 @@
 	return [LMAppIcon imageForIcon:LMIconNoAlbumArt75Percent];
 }
 
+- (LMMusicTrackPersistentID)persistentID {
+	return 0;
+}
+
 - (LMMusicTrackPersistentID)albumPersistentID {
 	return 0;
 }
@@ -46,6 +50,22 @@
 
 - (NSString*)title {
 	return @"title :)";
+}
+
+- (NSString*)artist {
+	return @"artist :)";
+}
+
+- (NSString*)albumTitle {
+	return @"albumTitle :)";
+}
+
+- (NSString*)composer {
+	return @"composer :)";
+}
+
+- (NSString*)genre {
+	return @"genre :)";
 }
 
 @end

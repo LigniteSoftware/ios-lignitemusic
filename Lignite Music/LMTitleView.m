@@ -85,7 +85,14 @@
 
 - (void)rebuildTrackCollection {
 #ifdef SPOTIFY
+	//get shit
+	NSArray *musicTracks = [[LMSpotifyLibrary sharedLibrary] musicTracks];
 	
+	NSLog(@"Got %ld music tracks.", musicTracks.count);
+	
+	self.musicTitles = @{ @"items": musicTracks };
+	self.songListTableView.totalAmountOfObjects = musicTracks.count;
+	[self reloadSourceSelectorInfo];
 #else
 	MPMediaQuery *everything = [MPMediaQuery new];
 	MPMediaPropertyPredicate *musicFilterPredicate = [MPMediaPropertyPredicate predicateWithValue:[NSNumber numberWithInteger:MPMediaTypeMusic]
@@ -94,6 +101,8 @@
 	[everything addFilterPredicate:musicFilterPredicate];
 
 	NSArray *songs = [everything items];
+	
+	//Why the fuck do you do this? \/
 	MPMediaItemCollection *mediaCollection = [MPMediaItemCollection collectionWithItems:songs];
 	NSMutableArray* musicTracks = [[NSMutableArray alloc]init];
 	
@@ -103,6 +112,7 @@
 		LMMusicTrack *musicTrack = musicItem;
 		[musicCollection addObject:musicTrack];
 	}
+	//Fix this you fucking idiot ^
 	
 	NSString *sortKey = @"title";
 	NSSortDescriptor *albumSort = [NSSortDescriptor sortDescriptorWithKey:sortKey ascending:YES];
@@ -329,11 +339,9 @@
 
 - (void)setup {
 	[self rebuildTrackCollection];
-	
-	return;
-	
+		
 	self.songListTableView = [LMTableView newAutoLayoutView];
-	self.songListTableView.totalAmountOfObjects = self.musicTitles.count;
+	self.songListTableView.totalAmountOfObjects = self.musicTitles.trackCount;
 	self.songListTableView.subviewDataSource = self;
 	self.songListTableView.shouldUseDividers = YES;
 	self.songListTableView.averageCellHeight = (WINDOW_FRAME.size.height/10);

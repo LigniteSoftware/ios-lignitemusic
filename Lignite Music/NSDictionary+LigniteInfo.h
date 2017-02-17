@@ -47,5 +47,7 @@ typedef NSDictionary LMMusicTrackCollection;
 
 @property (readonly) LMMusicTrack *representativeItem;
 
+@property (readonly) NSInteger trackCount;
+
 @end
 

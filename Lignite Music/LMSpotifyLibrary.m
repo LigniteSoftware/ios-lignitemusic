@@ -8,7 +8,6 @@
 
 #import <CouchbaseLite/CouchbaseLite.h>
 #import "LMSpotifyLibrary.h"
-#import "Spotify.h"
 
 @interface LMSpotifyLibrary()
 
@@ -159,35 +158,64 @@
 	}
 }
 
+- (NSArray<LMMusicTrack*>*)musicTracks {
+	NSTimeInterval startTime = [[NSDate new]timeIntervalSince1970];
+	
+	NSMutableArray *trackArray = [NSMutableArray new];
+	
+	NSError *queryError = nil;
+	CBLQuery *query = [self.libraryDatabase createAllDocumentsQuery];
+	query.allDocsMode = kCBLAllDocs;
+	CBLQueryEnumerator *result = [query run:&queryError];
+	if(queryError){
+		NSLog(@"Error in querying all documents %@", queryError);
+		return @[];
+	}
+	for(CBLQueryRow *row in result) {
+		NSLog(@"Got %@", row.documentID);
+		[trackArray addObject:row.document.properties];
+	}
+	NSLog(@"Got %ld items.", result.count);
+	
+	NSTimeInterval endTime = [[NSDate new]timeIntervalSince1970];
+	
+	NSLog(@"Done %f seconds", endTime-startTime);
+
+	return trackArray;
+}
+
 - (void)buildDatabase {
 //	self.startTime = [[NSDate new]timeIntervalSince1970];
 //	[self getUserLibraryWithNextURLString:nil];
 	
-	NSTimeInterval startTime = [[NSDate new]timeIntervalSince1970];
-
-	NSError *queryError = nil;
-	CBLQuery *query = [[self.libraryDatabase viewNamed:@"artists"] createQuery];
 	
-	CBLQueryEnumerator* result = [query run:&queryError];
-	if(queryError){
-		NSLog(@"Error in querying: %@", queryError);
-	}
 	
-	NSMutableArray *artistIDsArray = [NSMutableArray new];
 	
-	for (CBLQueryRow* row in result) {
-		NSDictionary *artist = row.value;
-		NSString *artistID = [artist objectForKey:@"id"];
-		if(![artistIDsArray containsObject:artistID]){
-			[artistIDsArray addObject:artistID];
-//			NSLog(@"%ld: %@", artistIDsArray.count, [artist objectForKey:@"name"]);
-		}
-	}
-	NSLog(@"Got %ld items (%ld no dupes).", result.count, artistIDsArray.count);
-
-	NSTimeInterval endTime = [[NSDate new]timeIntervalSince1970];
-	
-	NSLog(@"Done %f seconds", endTime-startTime);
+//	NSTimeInterval startTime = [[NSDate new]timeIntervalSince1970];
+//
+//	NSError *queryError = nil;
+//	CBLQuery *query = [[self.libraryDatabase viewNamed:@"artists"] createQuery];
+//	
+//	CBLQueryEnumerator* result = [query run:&queryError];
+//	if(queryError){
+//		NSLog(@"Error in querying: %@", queryError);
+//	}
+//	
+//	NSMutableArray *artistIDsArray = [NSMutableArray new];
+//	
+//	for (CBLQueryRow* row in result) {
+//		NSDictionary *artist = row.value;
+//		NSString *artistID = [artist objectForKey:@"id"];
+//		if(![artistIDsArray containsObject:artistID]){
+//			[artistIDsArray addObject:artistID];
+////			NSLog(@"%ld: %@", artistIDsArray.count, [artist objectForKey:@"name"]);
+//		}
+//	}
+//	NSLog(@"Got %ld items (%ld no dupes).", result.count, artistIDsArray.count);
+//
+//	NSTimeInterval endTime = [[NSDate new]timeIntervalSince1970];
+//	
+//	NSLog(@"Done %f seconds", endTime-startTime);
 	
 //	NSTimeInterval startTime = [[NSDate new]timeIntervalSince1970];
 //	
