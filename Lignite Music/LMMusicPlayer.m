@@ -25,6 +25,11 @@
  */
 @property SPTAudioStreamingController *spotifyPlayer;
 
+/**
+ The current playback time of the Spotify player, made into a variable since a delegate function provides the info.
+ */
+@property NSTimeInterval spotifyPlayerCurrentPlaybackTime;
+
 #endif
 //End all Spotify-only variables
 
@@ -100,7 +105,12 @@ MPMediaGrouping associatedMediaTypes[] = {
 };
 
 - (MPMusicPlayerController*)systemMusicPlayer {
+#ifdef SPOTIFY
+	NSLog(@"!!!\n!!!\n!!! Someone called upon the system music player... Disappointing. !!!\n!!!\n!!!");
+	return nil;
+#else
 	return [MPMusicPlayerController systemMusicPlayer];
+#endif
 }
 
 - (void)setSystemMusicPlayer:(MPMusicPlayerController *)systemMusicPlayer {
@@ -192,6 +202,10 @@ MPMediaGrouping associatedMediaTypes[] = {
 
 - (void)audioStreaming:(SPTAudioStreamingController *)audioStreaming didChangePosition:(NSTimeInterval)position {
 	NSLog(@"Streaming changed position to %f", position);
+	
+	self.spotifyPlayerCurrentPlaybackTime = position;
+	
+	[self updateNowPlayingTimeDelegates];
 }
 
 - (void)audioStreaming:(SPTAudioStreamingController *)audioStreaming didStartPlayingTrack:(NSString *)trackUri {
@@ -239,14 +253,6 @@ MPMediaGrouping associatedMediaTypes[] = {
 	if(self){
 		[self.systemMusicPlayer beginGeneratingPlaybackNotifications];
 		
-		//http://stackoverflow.com/questions/3059255/how-do-i-clear-the-queue-of-a-mpmusicplayercontroller
-		MPMediaPropertyPredicate *predicate = [MPMediaPropertyPredicate predicateWithValue:@"MotherFuckingShitpost69"
-																			   forProperty:MPMediaItemPropertyTitle];
-		MPMediaQuery *q = [[MPMediaQuery alloc] init];
-		[q addFilterPredicate: predicate];
-		
-		self.bullshitQuery = q;
-		
 		self.playerType = LMMusicPlayerTypeAppleMusic;
 #ifdef SPOTIFY
 		self.playerType = LMMusicPlayerTypeSpotify;
@@ -278,6 +284,7 @@ MPMediaGrouping associatedMediaTypes[] = {
 		 name:AVAudioSessionRouteChangeNotification
 		 object:nil];
 		
+#ifndef SPOTIFY
 		[notificationCenter
 		 addObserver:self
 			selector:@selector(systemMusicPlayerTrackChanged:)
@@ -298,6 +305,7 @@ MPMediaGrouping associatedMediaTypes[] = {
 		
 		MPMediaLibrary *mediaLibrary = [MPMediaLibrary defaultMediaLibrary];
 		[mediaLibrary beginGeneratingLibraryChangeNotifications];
+#endif
 		
 		MPRemoteCommandCenter *commandCenter = [MPRemoteCommandCenter sharedCommandCenter];
 		[commandCenter.pauseCommand addTargetWithHandler:^MPRemoteCommandHandlerStatus(MPRemoteCommandEvent *event) {
@@ -330,6 +338,7 @@ MPMediaGrouping associatedMediaTypes[] = {
 - (void)deinit {
 	NSLog(@"Deinit on LMMusicPlayer called. Warning: Releasing notification center hooks to track playing changes!");
 	
+#ifndef SPOTIFY
 	[[NSNotificationCenter defaultCenter]
 	 removeObserver: self
 	 name:           MPMusicPlayerControllerNowPlayingItemDidChangeNotification
@@ -341,6 +350,7 @@ MPMediaGrouping associatedMediaTypes[] = {
 	 object:         self.systemMusicPlayer];
 	
 	[self.systemMusicPlayer endGeneratingPlaybackNotifications];
+#endif
 }
 
 + (id)sharedMusicPlayer {
@@ -354,6 +364,7 @@ MPMediaGrouping associatedMediaTypes[] = {
 	return sharedPlayer;
 }
 
+#ifndef SPOTIFY
 - (void)prepareForTermination {
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer){
 		if(self.nowPlayingCollection){
@@ -381,6 +392,7 @@ MPMediaGrouping associatedMediaTypes[] = {
 		}
 	}
 }
+#endif
 
 - (void)updateNowPlayingTimeDelegates {
 	for(int i = 0; i < self.delegatesSubscribedToCurrentPlaybackTimeChange.count; i++){
@@ -422,8 +434,12 @@ MPMediaGrouping associatedMediaTypes[] = {
 
 - (MPRemoteCommandHandlerStatus)handlePlaybackPositionChange:(MPChangePlaybackPositionCommandEvent*)positionEvent {
 	NSLog(@"New time %f", positionEvent.positionTime);
+#ifdef SPOTIFY
+	NSLog(@"Can't change time on Spotify yet");
+#else
 	self.audioPlayer.currentTime = positionEvent.positionTime;
 	[self reloadInfoCenter:self.audioPlayer.isPlaying];
+#endif
 	return MPRemoteCommandHandlerStatusSuccess;
 }
 
@@ -450,38 +466,6 @@ MPMediaGrouping associatedMediaTypes[] = {
 	});
 }
 
-- (void)reloadAudioPlayerWithNowPlayingItem {
-	self.playerType = LMMusicPlayerTypeAppleMusic;
-	//	NSError *error = nil;
-	//
-	//	NSLog(@"Now playing item is %@ is cloud item %d", self.systemMusicPlayer.nowPlayingItem.title, self.systemMusicPlayer.nowPlayingItem.isCloudItem);
-	//
-	//	NSURL *url = [self.systemMusicPlayer.nowPlayingItem valueForProperty:MPMediaItemPropertyAssetURL];
-	//
-	//	if(url == nil){
-	//		self.playerType = LMMusicPlayerTypeAppleMusic;
-	//	}
-	//	else if(error){
-	//		//TODO: make sure this doesn't happen again, apply better fix
-	//		NSLog(@"Error loading audio player with url %@: %@", url, error);
-	//
-	////		[self.systemMusicPlayer play];
-	//
-	//		//[self skipToNextTrack];
-	//	}
-	//	else{
-	//		self.playerType = LMMusicPlayerTypeSystemMusicPlayer;
-	//
-	//		self.audioPlayer = nil;
-	//		self.audioPlayer = [[AVAudioPlayer alloc]initWithContentsOfURL:url error:&error];
-	//		self.audioPlayer.delegate = self;
-	//
-	//		[self.audioPlayer prepareToPlay];
-	//
-	//		[self updateNowPlayingTimeDelegates];
-	//	}
-}
-
 - (void)reloadInfoCenter:(BOOL)isPlaying {
 	if(![self hasTrackLoaded]){
 		return;
@@ -505,10 +489,9 @@ MPMediaGrouping associatedMediaTypes[] = {
 	infoCenter.nowPlayingInfo = newInfo;
 }
 
+#ifndef SPOTIFY
 - (void)systemMusicPlayerTrackChanged:(id)sender {
 	BOOL autoPlay = self.audioPlayer.isPlaying;
-	
-	[self reloadAudioPlayerWithNowPlayingItem];
 	
 	LMMusicTrack *newTrack = self.systemMusicPlayer.nowPlayingItem;
 	self.nowPlayingTrack = newTrack;
@@ -533,28 +516,6 @@ MPMediaGrouping associatedMediaTypes[] = {
 	}
 	
 	[self reloadInfoCenter:autoPlay];
-}
-
-- (void)changeMusicPlayerState:(LMMusicPlaybackState)newState {
-	self.playbackState = newState;
-	
-	if(self.playbackState == LMMusicPlaybackStatePlaying){
-		if(!self.runBackgroundTimer){
-			self.runBackgroundTimer = YES;
-			[self currentPlaybackTimeChangeFireTimer:YES];
-		}
-	}
-	else {
-		self.runBackgroundTimer = NO;
-		
-		//[self.currentPlaybackTimeChangeTimer invalidate];
-		//self.currentPlaybackTimeChangeTimer = nil;
-	}
-	
-	for(int i = 0; i < self.delegates.count; i++){
-		id delegate = [self.delegates objectAtIndex:i];
-		[delegate musicPlaybackStateDidChange:self.playbackState];
-	}
 }
 
 - (void)systemMusicPlayerStateChanged:(id)sender {
@@ -584,6 +545,29 @@ MPMediaGrouping associatedMediaTypes[] = {
 		[delegate musicPlaybackStateDidChange:self.playbackState];
 	}
 }
+
+- (void)changeMusicPlayerState:(LMMusicPlaybackState)newState {
+	self.playbackState = newState;
+
+	if(self.playbackState == LMMusicPlaybackStatePlaying){
+		if(!self.runBackgroundTimer){
+			self.runBackgroundTimer = YES;
+			[self currentPlaybackTimeChangeFireTimer:YES];
+		}
+	}
+	else {
+		self.runBackgroundTimer = NO;
+		
+		//[self.currentPlaybackTimeChangeTimer invalidate];
+		//self.currentPlaybackTimeChangeTimer = nil;
+	}
+	
+	for(int i = 0; i < self.delegates.count; i++){
+		id delegate = [self.delegates objectAtIndex:i];
+		[delegate musicPlaybackStateDidChange:self.playbackState];
+	}
+}
+#endif
 
 - (void)audioRouteChanged:(id)notification {
 	NSDictionary *info = [notification userInfo];
@@ -619,24 +603,15 @@ MPMediaGrouping associatedMediaTypes[] = {
 	return NO;
 }
 
+#ifndef SPOTIFY
 - (void)mediaLibraryContentsChanged:(id)notification {
 	NSLog(@"Library changed, called by %@!!!", [[notification class] description]);
 	
 	for(int i = 0; i < self.delegatesSubscribedToLibraryDidChange.count; i++){
 		[[self.delegatesSubscribedToLibraryDidChange objectAtIndex:i] musicLibraryDidChange];
 	}
-	
-	//	if([self.libraryChangeTimer isValid]){
-	//		[self.libraryChangeTimer invalidate];
-	//	}
-	//	if([[[notification class] description] isEqualToString:@"NSConcreteNotification"]){
-	//		self.libraryChangeTimer = [NSTimer scheduledTimerWithTimeInterval:2.0
-	//																   target:self
-	//																 selector:@selector(mediaLibraryContentsChanged:)
-	//																 userInfo:nil
-	//																  repeats:NO];
-	//	}
 }
+#endif
 
 - (void)setSourceTitle:(NSString*)title {
 	if(self.sourceSelector){
@@ -684,24 +659,15 @@ BOOL shuffleForDebug = NO;
 	}
 }
 
-+ (LMMusicTrackCollection*)musicTrackCollectionFromMediaItemCollection:(MPMediaItemCollection*)itemCollection {
-	NSMutableArray *musicCollection = [[NSMutableArray alloc]init];
-	for(int itemIndex = 0; itemIndex < itemCollection.count; itemIndex++){
-		MPMediaItem *musicItem = [itemCollection.items objectAtIndex:itemIndex];
-		LMMusicTrack *musicTrack = musicItem;
-		[musicCollection addObject:musicTrack];
-	}
-	LMMusicTrackCollection *trackCollection = itemCollection;
-	return trackCollection;
-}
-
 - (NSString*)firstLetterForString:(NSString*)string {
 	return [[NSString stringWithFormat:@"%C", [string characterAtIndex:0]] uppercaseString];
 }
 
 - (NSDictionary*)lettersAvailableDictionaryForMusicTrackCollectionArray:(NSArray<LMMusicTrackCollection*>*)collectionArray
 												withAssociatedMusicType:(LMMusicType)musicType {
-	
+#ifdef SPOTIFY
+	return @{};
+#else
 	NSUInteger lastCollectionIndex = 0;
 	
 	NSMutableDictionary *lettersDictionary = [NSMutableDictionary new];
@@ -807,31 +773,17 @@ BOOL shuffleForDebug = NO;
 	}
 	
 	return [NSDictionary dictionaryWithDictionary:lettersDictionary];
+#endif
 }
 
 - (NSArray<LMMusicTrackCollection*>*)trackCollectionsForMediaQuery:(MPMediaQuery*)mediaQuery withMusicType:(LMMusicType)musicType {
+#ifdef SPOTIFY
+	return @[];
+#else
 	//	MPMediaGrouping associatedGrouping = associatedMediaTypes[musicType];
 	
 	NSMutableArray *collections =
 	[[NSMutableArray alloc]initWithArray:(musicType == LMMusicTypeTitles) ? @[[MPMediaItemCollection collectionWithItems:mediaQuery.items]] : mediaQuery.collections];
-	//	NSMutableArray<LMMusicTrackCollection*> *musicTracks = [NSMutableArray new];
-	
-	//	for(int i = 0; i < collections.count; i++){
-	//		MPMediaItemCollection *itemCollection = [collections objectAtIndex:i];
-	//		NSMutableArray *musicCollection = [[NSMutableArray alloc]init];
-	//		for(int itemIndex = 0; itemIndex < itemCollection.count; itemIndex++){
-	//			MPMediaItem *musicItem = [itemCollection.items objectAtIndex:itemIndex];
-	//			LMMusicTrack *musicTrack = musicItem;
-	//			[musicCollection addObject:musicTrack];
-	//		}
-	//		LMMusicTrackCollection *trackCollection = itemCollection;
-	//
-	//		if(trackCollection.count > 0){
-	//			[musicTracks addObject:trackCollection];
-	//		}
-	//	}
-	
-	//	return musicTracks;
 	
 	NSString *sortKey = nil;
 	
@@ -898,9 +850,13 @@ BOOL shuffleForDebug = NO;
 	//	NSLog(@"Returning sort");
 	
 	return [collections sortedArrayUsingDescriptors:@[albumSort]];
+#endif
 }
 
 - (NSArray<LMMusicTrackCollection*>*)queryCollectionsForMusicType:(LMMusicType)musicType {
+#ifdef SPOTIFY
+	return @[];
+#else
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer || self.playerType == LMMusicPlayerTypeAppleMusic){
 		//		NSTimeInterval startingTime = [[NSDate date] timeIntervalSince1970];
 		//		NSLog(@"Querying items for LMMusicType %d...", musicType);
@@ -945,48 +901,59 @@ BOOL shuffleForDebug = NO;
 		return [self trackCollectionsForMediaQuery:query withMusicType:musicType];
 	}
 	return nil;
+#endif
 }
 
 - (NSArray<LMMusicTrackCollection*>*)collectionsForRepresentativeTrack:(LMMusicTrack*)representativeTrack forMusicType:(LMMusicType)musicType {
-	
+#ifdef SPOTIFY
 	return @[];
+#else
+	MPMediaGrouping associatedGroupings[] = {
+		MPMediaGroupingAlbum, //Artists
+		MPMediaGroupingTitle, //Albums
+		MPMediaGroupingTitle, //Titles
+		MPMediaGroupingTitle, //Playlists
+		MPMediaGroupingAlbum, //Genres
+		MPMediaGroupingAlbum, //Composers
+		MPMediaGroupingTitle  //Compilations
+	};
 	
-//	MPMediaGrouping associatedGroupings[] = {
-//		MPMediaGroupingAlbum, //Artists
-//		MPMediaGroupingTitle, //Albums
-//		MPMediaGroupingTitle, //Titles
-//		MPMediaGroupingTitle, //Playlists
-//		MPMediaGroupingAlbum, //Genres
-//		MPMediaGroupingAlbum, //Composers
-//		MPMediaGroupingTitle  //Compilations
-//	};
-//	
-//	NSArray<NSString*> *associatedPersistentIDProperties = @[
-//															 MPMediaItemPropertyArtistPersistentID,   //Artists
-//															 MPMediaItemPropertyAlbumPersistentID,    //Albums
-//															 MPMediaItemPropertyPersistentID,         //Titles
-//															 MPMediaPlaylistPropertyName,             //Playlists
-//															 MPMediaItemPropertyGenrePersistentID,    //Genres
-//															 MPMediaItemPropertyComposerPersistentID, //Composers
-//															 MPMediaItemPropertyIsCompilation         //Compilations
-//															 ];
-//	
-//	NSString *associatedProperty = [associatedPersistentIDProperties objectAtIndex:musicType];
-//	
-//	MPMediaQuery *query = nil;
-//	
-//	query = [MPMediaQuery new];
-//	query.groupingType = associatedGroupings[musicType];
-//	
-//	MPMediaPropertyPredicate *musicFilterPredicate = [MPMediaPropertyPredicate predicateWithValue:[representativeTrack valueForProperty:associatedProperty]
-//																					  forProperty:associatedProperty
-//																				   comparisonType:MPMediaPredicateComparisonEqualTo];
-//	[query addFilterPredicate:musicFilterPredicate];
-//	
-//	return [self trackCollectionsForMediaQuery:query withMusicType:musicType];
+	NSArray<NSString*> *associatedPersistentIDProperties = @[
+															 MPMediaItemPropertyArtistPersistentID,   //Artists
+															 MPMediaItemPropertyAlbumPersistentID,    //Albums
+															 MPMediaItemPropertyPersistentID,         //Titles
+															 MPMediaPlaylistPropertyName,             //Playlists
+															 MPMediaItemPropertyGenrePersistentID,    //Genres
+															 MPMediaItemPropertyComposerPersistentID, //Composers
+															 MPMediaItemPropertyIsCompilation         //Compilations
+															 ];
+	
+	NSString *associatedProperty = [associatedPersistentIDProperties objectAtIndex:musicType];
+	
+	MPMediaQuery *query = nil;
+	
+	query = [MPMediaQuery new];
+	query.groupingType = associatedGroupings[musicType];
+	
+	MPMediaPropertyPredicate *musicFilterPredicate = [MPMediaPropertyPredicate predicateWithValue:[representativeTrack valueForProperty:associatedProperty]
+																					  forProperty:associatedProperty
+																				   comparisonType:MPMediaPredicateComparisonEqualTo];
+	[query addFilterPredicate:musicFilterPredicate];
+	
+	return [self trackCollectionsForMediaQuery:query withMusicType:musicType];
+#endif
 }
 
 - (void)skipToNextTrack {
+#ifdef SPOTIFY
+	[self.spotifyPlayer skipNext:^(NSError *error) {
+		if(error){
+			NSLog(@"Error skipping to next %@", error);
+			return;
+		}
+		NSLog(@"Good to go (skipped to next)");
+	}];
+#else
 	NSLog(@"Skip to next");
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer || self.playerType == LMMusicPlayerTypeAppleMusic){
 		if(self.repeatMode == LMMusicRepeatModeOne){
@@ -999,6 +966,7 @@ BOOL shuffleForDebug = NO;
 			[self systemMusicPlayerTrackChanged:self];
 		}
 	}
+#endif
 }
 
 - (void)autoSkipAudioPlayer {
@@ -1021,7 +989,12 @@ BOOL shuffleForDebug = NO;
 }
 
 - (void)autoBackThrough {
+#ifdef SPOTIFY
+	if(self.spotifyPlayerCurrentPlaybackTime > 5){
+#else
+	}
 	if(self.currentPlaybackTime > 5){
+#endif
 		NSLog(@"Skipping to beginning");
 		[self skipToBeginning];
 	}
@@ -1032,25 +1005,23 @@ BOOL shuffleForDebug = NO;
 }
 
 - (void)skipToBeginning {
-	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer){
-		[self pause];
-		[self autoSkipAudioPlayer];
-	}
-	else if(self.playerType == LMMusicPlayerTypeAppleMusic){
-		[self.systemMusicPlayer skipToBeginning];
-	}
+	[self setCurrentPlaybackTime:0];
 }
 
 - (void)skipToPreviousItem {
+#ifdef SPOTIFY
+	[self.spotifyPlayer skipPrevious:^(NSError *error) {
+		if(error){
+			NSLog(@"Error skipping to previous %@", error);
+			return;
+		}
+		NSLog(@"Good to go (skipped to previous)");
+	}];
+#else
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer || self.playerType == LMMusicPlayerTypeAppleMusic){
-		//		if([self.systemMusicPlayer respondsToSelector:@selector(skipToPreviousItem)]){
-		//			[self.systemMusicPlayer skipToPreviousItem];
-		//		}
-		//		else{
-		//			NSLog(@"[LMMusicPlayer] Warning: systemMusicPlayer does not respond to skipToPreviousItem selector!");
-		//		}
 		[self.systemMusicPlayer skipToPreviousItem];
 	}
+#endif
 }
 
 - (void)autoPauseAudioPlayer {
@@ -1074,6 +1045,15 @@ BOOL shuffleForDebug = NO;
 }
 
 - (void)play {
+#ifdef SPOTIFY
+	[self.spotifyPlayer setIsPlaying:YES callback:^(NSError *error) {
+		if(error){
+			NSLog(@"Error setting to playing %@", error);
+			return;
+		}
+		NSLog(@"Success playing Spotify player");
+	}];
+#else
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer){
 		[self changeMusicPlayerState:LMMusicPlaybackStatePlaying];
 		
@@ -1088,9 +1068,19 @@ BOOL shuffleForDebug = NO;
 	else if(self.playerType == LMMusicPlayerTypeAppleMusic){
 		[self.systemMusicPlayer play];
 	}
+#endif
 }
 
 - (void)pause {
+#ifdef SPOTIFY
+	[self.spotifyPlayer setIsPlaying:NO callback:^(NSError *error) {
+		if(error){
+			NSLog(@"Error setting to paused %@", error);
+			return;
+		}
+		NSLog(@"Success pausing Spotify player");
+	}];
+#else
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer){
 		[self changeMusicPlayerState:LMMusicPlaybackStatePaused];
 		//[self.systemMusicPlayer pause];
@@ -1100,18 +1090,38 @@ BOOL shuffleForDebug = NO;
 	else if(self.playerType == LMMusicPlayerTypeAppleMusic){
 		[self.systemMusicPlayer pause];
 	}
+#endif
 }
 
 - (void)stop {
+#ifdef SPOTIFY
+	NSError *error = nil;
+	[self.spotifyPlayer stopWithError:&error];
+	
+	if(error){
+		NSLog(@"Error in stopping player: %@", error);
+	}
+#else
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer){
 		[self.audioPlayer stop];
 	}
 	else if(self.playerType == LMMusicPlayerTypeAppleMusic){
 		[self.systemMusicPlayer stop];
 	}
+#endif
 }
 
 - (LMMusicPlaybackState)invertPlaybackState {
+#ifdef SPOTIFY
+	if(self.spotifyPlayer.playbackState.isPlaying){
+		[self pause];
+		return LMMusicPlaybackStatePaused;
+	}
+	else{
+		[self play];
+		return LMMusicPlaybackStatePlaying;
+	}
+#else
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer) {
 		switch(self.audioPlayer.isPlaying){
 			case LMMusicPlaybackStatePlaying:
@@ -1132,6 +1142,7 @@ BOOL shuffleForDebug = NO;
 				return LMMusicPlaybackStatePlaying;
 		}
 	}
+#endif
 }
 
 - (BOOL)hasTrackLoaded {
@@ -1139,6 +1150,15 @@ BOOL shuffleForDebug = NO;
 }
 
 - (void)setNowPlayingTrack:(LMMusicTrack*)nowPlayingTrack {
+#ifdef SPOTIFY
+	[self.spotifyPlayer playSpotifyURI:[nowPlayingTrack objectForKey:@"uri"] startingWithIndex:0 startingWithPosition:0 callback:^(NSError *playbackError) {
+		if(playbackError){
+			NSLog(@"Playback error %@", playbackError);
+			return;
+		}
+		NSLog(@"Playing!");
+	}];
+#else
 	for(int i = 0; i < self.nowPlayingCollection.count; i++){
 		LMMusicTrack *track = [self.nowPlayingCollection.items objectAtIndex:i];
 		if([nowPlayingTrack isEqual:track]){
@@ -1153,6 +1173,7 @@ BOOL shuffleForDebug = NO;
 			[self.systemMusicPlayer setNowPlayingItem:associatedMediaItem];
 		}
 	}
+#endif
 	_nowPlayingTrack = nowPlayingTrack;
 }
 
@@ -1161,11 +1182,15 @@ BOOL shuffleForDebug = NO;
 }
 
 - (void)clearNowPlayingCollection {
+#warning Set this up too
 	[self.systemMusicPlayer setQueueWithQuery:self.bullshitQuery];
 	[self.systemMusicPlayer setNowPlayingItem:nil];
 }
 
 - (void)setNowPlayingCollection:(LMMusicTrackCollection*)nowPlayingCollection {
+#ifdef SPOTIFY
+	#warning Set this up
+#else
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer || self.playerType == LMMusicPlayerTypeAppleMusic){
 		if(!self.nowPlayingCollection){
 			[self clearNowPlayingCollection];
@@ -1174,6 +1199,7 @@ BOOL shuffleForDebug = NO;
 		[self.systemMusicPlayer setNowPlayingItem:[[nowPlayingCollection items] objectAtIndex:0]];
 	}
 	_nowPlayingCollection = nowPlayingCollection;
+#endif
 }
 
 - (void)setPlayerType:(LMMusicPlayerType)playerType {
@@ -1189,6 +1215,9 @@ BOOL shuffleForDebug = NO;
 }
 
 + (LMMusicPlayerType)savedPlayerType {
+#ifdef SPOTIFY
+	return LMMusicPlayerTypeSpotify;
+#else
 	NSLog(@"\n\nSaved player type called.\n\n");
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	LMMusicPlayerType type = LMMusicPlayerTypeSystemMusicPlayer;
@@ -1196,6 +1225,7 @@ BOOL shuffleForDebug = NO;
 		type = (LMMusicPlayerType)[defaults integerForKey:DEFAULTS_KEY_PLAYER_TYPE];
 	}
 	return type;
+#endif
 }
 
 - (LMMusicTrackCollection*)nowPlayingCollection {
@@ -1203,6 +1233,15 @@ BOOL shuffleForDebug = NO;
 }
 
 - (void)setCurrentPlaybackTime:(NSTimeInterval)currentPlaybackTime {
+#ifdef SPOTIFY
+	[self.spotifyPlayer seekTo:currentPlaybackTime callback:^(NSError *error) {
+		if(error){
+			NSLog(@"Error setting current playback time: %@", error);
+			return;
+		}
+		NSLog(@"Success setting current playback time");
+	}];
+#else
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer){
 		NSLog(@"Setting current playback time to %f", currentPlaybackTime);
 		
@@ -1220,9 +1259,13 @@ BOOL shuffleForDebug = NO;
 		
 		[self updateNowPlayingTimeDelegates];
 	}
+#endif
 }
 
 - (NSTimeInterval)currentPlaybackTime {
+#ifdef SPOTIY
+	return self.spotifyPlayerCurrentPlaybackTime;
+#else
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer && self.audioPlayer){
 		return self.audioPlayer.currentTime;
 	}
@@ -1230,11 +1273,26 @@ BOOL shuffleForDebug = NO;
 		return self.systemMusicPlayer.currentPlaybackTime;
 	}
 	return _currentPlaybackTime;
+#endif
 }
 
 - (void)setRepeatMode:(LMMusicRepeatMode)repeatMode {
 	_repeatMode = repeatMode;
-	
+#ifdef SPOTIFY
+	SPTRepeatMode spotifyRepeatModes[4] = {
+		SPTRepeatOff,
+		SPTRepeatOff,
+		SPTRepeatContext,
+		SPTRepeatOne
+	};
+	[self.spotifyPlayer setRepeat:spotifyRepeatModes[repeatMode] callback:^(NSError *error) {
+		if(error){
+			NSLog(@"Error settings repeat: %@", error);
+			return;
+		}
+		NSLog(@"Success setting repeat");
+	}];
+#else
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer || self.playerType == LMMusicPlayerTypeAppleMusic){
 		MPMusicRepeatMode systemRepeatModes[4] = {
 			MPMusicRepeatModeNone,
@@ -1244,6 +1302,7 @@ BOOL shuffleForDebug = NO;
 		};
 		self.systemMusicPlayer.repeatMode = systemRepeatModes[repeatMode];
 	}
+#endif
 }
 
 - (LMMusicRepeatMode)repeatMode {

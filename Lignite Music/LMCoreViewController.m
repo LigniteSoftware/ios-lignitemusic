@@ -682,16 +682,16 @@
 	}
 #endif
 	
-	self.titleView = [LMTitleView newAutoLayoutView];
-	self.titleView.backgroundColor = [UIColor redColor];
-	[self.view addSubview:self.titleView];
-	
-	[self.titleView autoPinEdgesToSuperviewEdges];
-	
-	[self.titleView setup];
-//	self.titleView.hidden = YES;
-	
-	return;
+//	self.titleView = [LMTitleView newAutoLayoutView];
+//	self.titleView.backgroundColor = [UIColor redColor];
+//	[self.view addSubview:self.titleView];
+//	
+//	[self.titleView autoPinEdgesToSuperviewEdges];
+//	
+//	[self.titleView setup];
+////	self.titleView.hidden = YES;
+//	
+//	return;
 	
 #ifdef SKIP_ONBOARDING
 	if(true == false){

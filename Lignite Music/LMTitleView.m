@@ -288,46 +288,7 @@
 	LMMusicTrack *track = [self.musicTitles.items objectAtIndex:entry.collectionIndex];
 	NSLog(@"Track %@", track.title);
 	
-	SPTAuth *authorization = [SPTAuth defaultInstance];
-	SPTSession *session = authorization.session;
-	if(!session.isValid){
-		[authorization renewSession:session callback:^(NSError *error, SPTSession *newSession) {
-			if(error){
-				NSLog(@"Error renewing session: %@", error);
-				return;
-			}
-			
-			authorization.session = newSession;
-			
-			[self tappedListEntry:entry];
-		}];
-	}
-	else{
-		NSError *error = nil;
-		self.player = [SPTAudioStreamingController sharedInstance];
-		if ([self.player startWithClientId:authorization.clientID audioController:nil allowCaching:YES error:&error]) {
-//			self.player.delegate = self;
-//			self.player.playbackDelegate = self;
-			self.player.diskCache = [[SPTDiskCache alloc] initWithCapacity:1024 * 1024 * 64];
-			[self.player loginWithAccessToken:session.accessToken];
-		} else {
-			self.player = nil;
-			UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error init" message:[error description] preferredStyle:UIAlertControllerStyleAlert];
-			[alert addAction:[UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:nil]];
-//			[self presentViewController:alert animated:YES completion:nil];
-//			[self closeSession];
-		}
-		
-		[NSTimer scheduledTimerWithTimeInterval:3.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
-			[self.player playSpotifyURI:[track objectForKey:@"uri"] startingWithIndex:0 startingWithPosition:0 callback:^(NSError *playbackError) {
-				if(playbackError){
-					NSLog(@"Playback error %@", playbackError);
-					return;
-				}
-				NSLog(@"Playing!!!");
-			}];
-		}];
-	}
+	[self.musicPlayer setNowPlayingTrack:track];
 #else
 	LMMusicTrack *track = [self.musicTitles.items objectAtIndex:entry.collectionIndex];
 	

@@ -211,8 +211,9 @@
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     NSLog(@"[LMAppDelegate]: Will become active.");
 	
+#ifndef SPOTIFY
 	[self.musicPlayer prepareForActivation];
-    
+#endif
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
 }
 
@@ -221,8 +222,10 @@
 	
 //	NSLog(@"Setting %@", self.musicPlayer.nowPlayingTrack.title);
 	
+#ifndef SPOTIFY
 	[self.musicPlayer prepareForTermination];
-    
+#endif
+	
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 

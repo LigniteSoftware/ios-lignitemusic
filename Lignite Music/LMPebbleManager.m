@@ -106,7 +106,7 @@
 
 - (void)playTrackFromMessage:(NSDictionary *)message withTrackPlayMode:(TrackPlayMode)trackPlayMode {
 	MPMediaItemCollection *queue = [self getCollectionFromMessage:message][0];
-	LMMusicTrackCollection *trackCollection = [LMMusicPlayer musicTrackCollectionFromMediaItemCollection:queue];
+	LMMusicTrackCollection *trackCollection = queue;
 	LMMusicTrack *track = [trackCollection items][[[message[MessageKeyPlayTrack] pb_int16Value] < 0 ? 0 : message[MessageKeyPlayTrack] pb_int16Value]];
 	NSLog(@"Got index %d", [message[MessageKeyPlayTrack] pb_int16Value]);
 //	for(int i = 0; i < [[queue items] count]; i++){

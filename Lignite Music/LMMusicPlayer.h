@@ -188,6 +188,7 @@ typedef enum {
  */
 - (void)deinit;
 
+#ifndef SPOTIFY
 /**
  Prepare for app termination. The music player will transfer the contents of the now playing item to the system music player should it be using the system music player.
  */
@@ -197,6 +198,7 @@ typedef enum {
  Prepare for when the app is coming back into the foreground (being activated again).
  */
 - (void)prepareForActivation;
+#endif
 
 /**
  Set the source selector's title, which is the bottom left (bolder) text.
@@ -225,15 +227,6 @@ typedef enum {
  @param delegateToRemove The delegate to remove.
  */
 - (void)removeMusicDelegate:(id<LMMusicPlayerDelegate>)delegateToRemove;
-
-/**
- Creates an LMMusicTrackCollection based off a MPMediaItemCollection. Sets source collection automatically.
- 
- @param itemCollection The item collection to base this track collection off of.
- 
- @return The track collection.
- */
-+ (LMMusicTrackCollection*)musicTrackCollectionFromMediaItemCollection:(MPMediaItemCollection*)itemCollection;
 
 /**
  Gets a dictionary of the letters available. The key is the letter, the object is an NSNumber of the index in which that letter is first available within that collection.
