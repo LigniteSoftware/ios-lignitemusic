@@ -11,8 +11,8 @@
 #import <SpotifyMetadata/SpotifyMetadata.h>
 #import <SpotifyAudioPlayback/SpotifyAudioPlayback.h>
 #import "SpotifyInfo.h"
-#import "NSDictionary+LigniteImages.h"
-#import "NSDictionary+LigniteInfo.h"
+#import "MPMediaItem+LigniteImages.h"
+#import "MPMediaItemCollection+LigniteInfo.h"
 #import "LMSpotifyLibrary.h"
 
 #define SPOTIFY

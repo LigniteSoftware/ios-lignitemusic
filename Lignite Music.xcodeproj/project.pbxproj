@@ -97,6 +97,8 @@
 		6A759D5B1DEBF4210051E1A9 /* HoneyScript-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6A759D5A1DEBF29A0051E1A9 /* HoneyScript-Light.ttf */; };
 		6A759D5D1DEBF4580051E1A9 /* HoneyScript-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6A759D5C1DEBF4560051E1A9 /* HoneyScript-SemiBold.ttf */; };
 		6A76ECA71E1A081200424AC5 /* icon_no_cover_art.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A76ECA61E1A081200424AC5 /* icon_no_cover_art.png */; };
+		6A7C55BB1E57593400669647 /* MPMediaItemCollection+LigniteInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A1AF0861E037CCD00F8934C /* MPMediaItemCollection+LigniteInfo.m */; };
+		6A7C55BC1E57598C00669647 /* MPMediaItem+LigniteImages.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A1AF0831E0341BC00F8934C /* MPMediaItem+LigniteImages.m */; };
 		6A7C62F51DA93F6100B025BA /* LMColour.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A7C62F41DA93F6100B025BA /* LMColour.m */; };
 		6A7DF11A1DB112140077B979 /* LMMiniPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A7DF1191DB112140077B979 /* LMMiniPlayerView.m */; };
 		6A7DF1241DB12C860077B979 /* LMTitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A7DF1231DB12C860077B979 /* LMTitleView.m */; };
@@ -294,9 +296,7 @@
 		6AB1046A1E55625500213396 /* LMSpotifyLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AB104691E55625500213396 /* LMSpotifyLibrary.m */; };
 		6AB104701E56616700213396 /* LMMusicPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AB1046F1E56616700213396 /* LMMusicPlayer.m */; };
 		6AB104711E56616700213396 /* LMMusicPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AB1046F1E56616700213396 /* LMMusicPlayer.m */; };
-		6AB104751E56684400213396 /* NSDictionary+LigniteImages.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AB104741E56684400213396 /* NSDictionary+LigniteImages.m */; };
 		6AB104791E5669BE00213396 /* MPMediaItemCollection+LigniteInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A1AF0861E037CCD00F8934C /* MPMediaItemCollection+LigniteInfo.m */; };
-		6AB1047A1E566A5800213396 /* NSDictionary+LigniteInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AB104771E56694000213396 /* NSDictionary+LigniteInfo.m */; };
 		6AB12E9C1D57AD9800280383 /* icon_settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AB12E9B1D57AD9800280383 /* icon_settings.png */; };
 		6ABF6A821CF374F7003E4EFA /* UIImage+AverageColour.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ABF6A811CF374F7003E4EFA /* UIImage+AverageColour.m */; };
 		6ABF6A851CF3768A003E4EFA /* UIColor+isLight.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ABF6A841CF3768A003E4EFA /* UIColor+isLight.m */; };
@@ -549,10 +549,6 @@
 		6AB104691E55625500213396 /* LMSpotifyLibrary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMSpotifyLibrary.m; sourceTree = "<group>"; };
 		6AB1046E1E56616700213396 /* LMMusicPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMMusicPlayer.h; sourceTree = "<group>"; };
 		6AB1046F1E56616700213396 /* LMMusicPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMMusicPlayer.m; sourceTree = "<group>"; };
-		6AB104731E56684400213396 /* NSDictionary+LigniteImages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+LigniteImages.h"; sourceTree = "<group>"; };
-		6AB104741E56684400213396 /* NSDictionary+LigniteImages.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+LigniteImages.m"; sourceTree = "<group>"; };
-		6AB104761E56694000213396 /* NSDictionary+LigniteInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+LigniteInfo.h"; sourceTree = "<group>"; };
-		6AB104771E56694000213396 /* NSDictionary+LigniteInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+LigniteInfo.m"; sourceTree = "<group>"; };
 		6AB12E9B1D57AD9800280383 /* icon_settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_settings.png; sourceTree = "<group>"; };
 		6ABF6A801CF374F7003E4EFA /* UIImage+AverageColour.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+AverageColour.h"; sourceTree = "<group>"; };
 		6ABF6A811CF374F7003E4EFA /* UIImage+AverageColour.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+AverageColour.m"; sourceTree = "<group>"; };
@@ -1019,10 +1015,6 @@
 				6A1847EA1E4AF284003CB487 /* SpotifyInfo.h */,
 				6AB104681E55625500213396 /* LMSpotifyLibrary.h */,
 				6AB104691E55625500213396 /* LMSpotifyLibrary.m */,
-				6AB104761E56694000213396 /* NSDictionary+LigniteInfo.h */,
-				6AB104771E56694000213396 /* NSDictionary+LigniteInfo.m */,
-				6AB104731E56684400213396 /* NSDictionary+LigniteImages.h */,
-				6AB104741E56684400213396 /* NSDictionary+LigniteImages.m */,
 			);
 			name = Spotify;
 			sourceTree = "<group>";
@@ -1034,17 +1026,6 @@
 				6AAF610F1DA0286F00971875 /* Localizable.strings */,
 			);
 			name = Strings;
-			sourceTree = "<group>";
-		};
-		6AB104721E5665D400213396 /* Apple Music */ = {
-			isa = PBXGroup;
-			children = (
-				6A1AF0821E0341BC00F8934C /* MPMediaItem+LigniteImages.h */,
-				6A1AF0831E0341BC00F8934C /* MPMediaItem+LigniteImages.m */,
-				6A1AF0851E037CCD00F8934C /* MPMediaItemCollection+LigniteInfo.h */,
-				6A1AF0861E037CCD00F8934C /* MPMediaItemCollection+LigniteInfo.m */,
-			);
-			name = "Apple Music";
 			sourceTree = "<group>";
 		};
 		6ABF6A861CF37A19003E4EFA /* Utilities */ = {
@@ -1085,10 +1066,13 @@
 		6AD227001DA598DD0056695A /* Music */ = {
 			isa = PBXGroup;
 			children = (
-				6AB104721E5665D400213396 /* Apple Music */,
 				6AA5CAEC1E285BD2005F853F /* Spotify */,
 				6AB1046E1E56616700213396 /* LMMusicPlayer.h */,
 				6AB1046F1E56616700213396 /* LMMusicPlayer.m */,
+				6A1AF0821E0341BC00F8934C /* MPMediaItem+LigniteImages.h */,
+				6A1AF0831E0341BC00F8934C /* MPMediaItem+LigniteImages.m */,
+				6A1AF0851E037CCD00F8934C /* MPMediaItemCollection+LigniteInfo.h */,
+				6A1AF0861E037CCD00F8934C /* MPMediaItemCollection+LigniteInfo.m */,
 			);
 			name = Music;
 			sourceTree = "<group>";
@@ -1663,6 +1647,7 @@
 				6AA5CAFA1E285C0A005F853F /* LMListEntry.m in Sources */,
 				6AA5CAFB1E285C0A005F853F /* LMProgressCircleView.m in Sources */,
 				6AA5CAFC1E285C0A005F853F /* LMPebbleSettingsView.m in Sources */,
+				6A7C55BB1E57593400669647 /* MPMediaItemCollection+LigniteInfo.m in Sources */,
 				6AA5CAFD1E285C0A005F853F /* LMSectionTableView.m in Sources */,
 				6AA5CAFE1E285C0A005F853F /* UIImage+Scale.m in Sources */,
 				6AA5CAFF1E285C0A005F853F /* LMSearchViewController.m in Sources */,
@@ -1686,6 +1671,7 @@
 				6AA5CB121E285C0A005F853F /* UIColor+isLight.m in Sources */,
 				6AB104711E56616700213396 /* LMMusicPlayer.m in Sources */,
 				6AA5CB131E285C0A005F853F /* LMAlbumArtView.m in Sources */,
+				6A7C55BC1E57598C00669647 /* MPMediaItem+LigniteImages.m in Sources */,
 				6AA5CB141E285C0A005F853F /* LMShadowView.m in Sources */,
 				6AA5CB151E285C0A005F853F /* LMGuideViewController.m in Sources */,
 				6AA5CB161E285C0A005F853F /* LMColour.m in Sources */,
@@ -1705,7 +1691,6 @@
 				6AA5CB261E285C0A005F853F /* LMCollectionInfoView.m in Sources */,
 				6AA5CB271E285C0A005F853F /* LMCoreViewController.m in Sources */,
 				6AA5CB281E285C0A005F853F /* LMMarqueeLabel.m in Sources */,
-				6AB104751E56684400213396 /* NSDictionary+LigniteImages.m in Sources */,
 				6AA5CB291E285C0A005F853F /* LMSearchBar.m in Sources */,
 				6AA5CB2A1E285C0A005F853F /* LMPebbleImage.m in Sources */,
 				6AA5CB2B1E285C0A005F853F /* LMCreditsViewController.m in Sources */,
@@ -1718,7 +1703,6 @@
 				6AA5CB321E285C0A005F853F /* LMOperationQueue.m in Sources */,
 				6AA5CB331E285C0A005F853F /* LMImageManager.m in Sources */,
 				6AA5CB341E285C0A005F853F /* LMSearchView.m in Sources */,
-				6AB1047A1E566A5800213396 /* NSDictionary+LigniteInfo.m in Sources */,
 				6A23AF4F1E46254400A56F5F /* LMCompactBrowsingView.m in Sources */,
 				6AA5CB351E285C0A005F853F /* LMSettingsViewController.m in Sources */,
 				6AD4B8A81E394A6700BE3177 /* LMButtonNavigationBar.m in Sources */,

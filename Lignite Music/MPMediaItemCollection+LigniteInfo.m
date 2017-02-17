@@ -6,8 +6,49 @@
 //  Copyright © 2016 Lignite. All rights reserved.
 //
 
-#import "LMMusicPlayer.h"
 #import "MPMediaItemCollection+LigniteInfo.h"
+
+
+#ifdef SPOTIFY
+
+
+@implementation NSDictionary (LigniteInfo)
+
+- (NSString*)titleForMusicType:(uint8_t)musicType {
+	return @"title here :)";
+}
+
+- (BOOL)variousArtists {
+	return YES;
+}
+
+- (BOOL)variousGenres {
+	return YES;
+}
+
+- (NSUInteger)numberOfAlbums {
+	return 69;
+}
+
+- (LMMusicTrack*)representativeItem {
+	return [self.items objectAtIndex:0];
+}
+
+- (NSArray*)items {
+	return [self objectForKey:@"items"];
+}
+
+- (NSInteger)trackCount {
+	return [self.items count];
+}
+
+@end
+
+
+
+#else
+
+#import "LMMusicPlayer.h"
 #import "MPMediaItem+LigniteImages.h"
 
 @implementation MPMediaItemCollection (LigniteInfo)
@@ -72,3 +113,5 @@
 
 
 @end
+
+#endif
