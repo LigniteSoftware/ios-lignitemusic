@@ -49,15 +49,23 @@
 }
 
 - (NSString*)title {
-	return @"title :)";
+	return [self objectForKey:@"name"];
 }
 
 - (NSString*)artist {
-	return @"artist :)";
+	NSArray *artists = [self objectForKey:@"artists"];
+	NSMutableString *artistsString = [NSMutableString stringWithFormat:@""];
+	
+	for(NSDictionary *artist in artists){
+		NSString *artistName = [artist objectForKey:@"name"];
+		[artistsString appendString:[NSString stringWithFormat:@"%@, ", artistName]];
+	}
+	
+	return [artistsString stringByReplacingCharactersInRange:NSMakeRange([artistsString length]-2, 2) withString:@""];
 }
 
 - (NSString*)albumTitle {
-	return @"albumTitle :)";
+	return [[self objectForKey:@"album"] objectForKey:@"name"];
 }
 
 - (NSString*)composer {

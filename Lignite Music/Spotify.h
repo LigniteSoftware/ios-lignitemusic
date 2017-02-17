@@ -15,6 +15,8 @@
 #import "NSDictionary+LigniteInfo.h"
 #import "LMSpotifyLibrary.h"
 
+#define SPOTIFY
+
 @protocol SpotifyDelegate <NSObject>
 @optional
 
