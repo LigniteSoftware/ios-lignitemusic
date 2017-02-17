@@ -39,7 +39,7 @@
 #import "LMBrowsingBar.h"
 
 #ifdef SPOTIFY
-#import "LMSpotifyLibrary.h"
+#import "Spotify.h"
 #endif
 
 //#define SKIP_ONBOARDING
@@ -659,6 +659,29 @@
 //	
 //	return;
 	
+#ifdef SPOTIFY
+	SPTAuth *authorization = [SPTAuth defaultInstance];
+	SPTSession *session = authorization.session;
+	
+	if(!session.isValid){
+		NSLog(@"Session isn't valid, renewing first.");
+		[authorization renewSession:session callback:^(NSError *error, SPTSession *newSession) {
+			if(error){
+				NSLog(@"Error renewing session: %@", error);
+				return;
+			}
+			
+			authorization.session = newSession;
+			
+			[self viewDidLoad];
+		}];
+		return;
+	}
+	else{
+		NSLog(@"Spotify session is valid!");
+	}
+#endif
+	
 	self.titleView = [LMTitleView newAutoLayoutView];
 	self.titleView.backgroundColor = [UIColor redColor];
 	[self.view addSubview:self.titleView];
@@ -675,7 +698,7 @@
 		NSLog(@"Warning: Onboarding is disabled.");
 #else
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-	if(![userDefaults objectForKey:LMSettingsKeyOnboardingComplete] || true){
+	if(![userDefaults objectForKey:LMSettingsKeyOnboardingComplete]){
 #endif
 		NSLog(@"User has not yet completed onboarding, launching onboarding.");
 		

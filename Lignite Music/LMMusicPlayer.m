@@ -7,13 +7,27 @@
 //
 
 #import "LMMusicPlayer.h"
-#ifdef SPOTIFY
-#import "Spotify.h"
-#endif
 
 @import StoreKit;
 
-@interface LMMusicPlayer() <AVAudioPlayerDelegate>
+@interface LMMusicPlayer() <AVAudioPlayerDelegate
+#ifdef SPOTIFY
+, SPTAudioStreamingDelegate, SPTAudioStreamingDelegate, SPTAudioStreamingPlaybackDelegate
+#endif
+
+>
+
+//All Spotify-only variables
+#ifdef SPOTIFY
+
+/**
+ The Spotify audio player.
+ */
+@property SPTAudioStreamingController *spotifyPlayer;
+
+#endif
+//End all Spotify-only variables
+
 
 /**
  The audio player. Is the actual controller of the system music player contents.
@@ -93,6 +107,133 @@ MPMediaGrouping associatedMediaTypes[] = {
 	//Do nothing
 }
 
+#ifdef SPOTIFY
+- (void)activateSpotifyPlayer {
+	NSLog(@"Attempting to activate Spotify audio player...");
+	
+	SPTAuth *authorization = [SPTAuth defaultInstance];
+	SPTSession *session = authorization.session;
+	if(!session.isValid){
+		NSLog(@"Session isn't valid, renewing session before activating audio player.");
+		[authorization renewSession:session callback:^(NSError *error, SPTSession *newSession) {
+			if(error){
+				NSLog(@"Error renewing session: %@", error);
+				return;
+			}
+			
+			authorization.session = newSession;
+			
+			[self activateSpotifyPlayer];
+		}];
+	}
+	else{
+		NSLog(@"Session valid. Now attempting to activate.");
+		
+		NSError *error = nil;
+		self.spotifyPlayer = [SPTAudioStreamingController sharedInstance];
+		if ([self.spotifyPlayer startWithClientId:authorization.clientID audioController:nil allowCaching:NO error:&error]) {
+			self.spotifyPlayer.delegate = self;
+			self.spotifyPlayer.playbackDelegate = self;
+//			self.player.diskCache = [[SPTDiskCache alloc] initWithCapacity:1024 * 1024 * 64];
+			[self.spotifyPlayer loginWithAccessToken:session.accessToken];
+		} else {
+			self.spotifyPlayer = nil;
+			
+			NSLog(@"Error activating Spotify audio player: %@", [error description]);
+		}
+	}
+}
+
+#pragma mark - Track Player Delegates
+
+- (void)audioStreaming:(SPTAudioStreamingController *)audioStreaming didReceiveMessage:(NSString *)message {
+	NSLog(@"!!!!!!!! Got a message from Spotify, holy fuck!!! %@", message);
+}
+
+- (void)audioStreaming:(SPTAudioStreamingController *)audioStreaming didChangePlaybackStatus:(BOOL)isPlaying {
+	NSLog(isPlaying ? @"Spotify is playing" : @"Spotify isn't playing");
+	if (isPlaying) {
+		[self activateAudioSession];
+	} else {
+		[self deactivateAudioSession];
+	}
+}
+
+-(void)audioStreaming:(SPTAudioStreamingController *)audioStreaming didChangeMetadata:(SPTPlaybackMetadata *)metadata {
+	NSLog(@"Spotify metadata changed %@", metadata);
+}
+
+-(void)audioStreaming:(SPTAudioStreamingController *)audioStreaming didReceivePlaybackEvent:(SpPlaybackEvent)event withName:(NSString *)name {
+	NSLog(@"didReceivePlaybackEvent: %zd %@", event, name);
+	NSLog(@"isPlaying=%d isRepeating=%d isShuffling=%d isActiveDevice=%d positionMs=%f",
+		  self.spotifyPlayer.playbackState.isPlaying,
+		  self.spotifyPlayer.playbackState.isRepeating,
+		  self.spotifyPlayer.playbackState.isShuffling,
+		  self.spotifyPlayer.playbackState.isActiveDevice,
+		  self.spotifyPlayer.playbackState.position);
+}
+
+- (void)audioStreamingDidLogout:(SPTAudioStreamingController *)audioStreaming {
+	NSLog(@"Logout of Spotify");
+}
+
+- (void)audioStreaming:(SPTAudioStreamingController *)audioStreaming didReceiveError:(NSError* )error {
+	NSLog(@"Spotify got an error, oh boy: %zd %@", error.code, error.localizedDescription);
+	
+//	if (error.code == SPErrorNeedsPremium) {
+//		UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Premium account required" message:@"Premium account is required to showcase application functionality. Please login using premium account." preferredStyle:UIAlertControllerStyleAlert];
+//		[alert addAction:[UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction* action){
+//			[self closeSession];
+//		}]];
+//		[self presentViewController:alert animated:YES completion:nil];
+//		
+//	}
+}
+
+- (void)audioStreaming:(SPTAudioStreamingController *)audioStreaming didChangePosition:(NSTimeInterval)position {
+	NSLog(@"Streaming changed position to %f", position);
+}
+
+- (void)audioStreaming:(SPTAudioStreamingController *)audioStreaming didStartPlayingTrack:(NSString *)trackUri {
+	NSLog(@"Starting %@", trackUri);
+	NSLog(@"Source %@", self.spotifyPlayer.metadata.currentTrack.playbackSourceUri);
+	// If context is a single track and the uri of the actual track being played is different
+	// than we can assume that relink has happended.
+	BOOL isRelinked = [self.spotifyPlayer.metadata.currentTrack.playbackSourceUri containsString:@"spotify:track"]
+	&& ![self.spotifyPlayer.metadata.currentTrack.playbackSourceUri isEqualToString:trackUri];
+	NSLog(@"Relinked %d", isRelinked);
+}
+
+- (void)audioStreaming:(SPTAudioStreamingController *)audioStreaming didStopPlayingTrack:(NSString *)trackUri {
+	NSLog(@"Finishing: %@", trackUri);
+}
+
+- (void)audioStreamingDidLogin:(SPTAudioStreamingController *)audioStreaming {
+	NSLog(@"Clear to play tunes.");
+	//    [self.player playSpotifyURI:@"spotify:user:spotify:playlist:2yLXxKhhziG2xzy7eyD4TD" startingWithIndex:0 startingWithPosition:10 callback:^(NSError *error) {
+	//        if (error != nil) {
+	//            NSLog(@"*** failed to play: %@", error);
+	//            return;
+	//        }
+	//    }];
+}
+
+#pragma mark - Audio Session
+
+- (void)activateAudioSession
+{
+	[[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback
+										   error:nil];
+	[[AVAudioSession sharedInstance] setActive:YES error:nil];
+}
+
+- (void)deactivateAudioSession
+{
+	[[AVAudioSession sharedInstance] setActive:NO error:nil];
+}
+
+#endif
+
 - (instancetype)init {
 	self = [super init];
 	if(self){
@@ -106,11 +247,13 @@ MPMediaGrouping associatedMediaTypes[] = {
 		
 		self.bullshitQuery = q;
 		
-		self.nowPlayingTrack = self.systemMusicPlayer.nowPlayingItem;
-		
 		self.playerType = LMMusicPlayerTypeAppleMusic;
 #ifdef SPOTIFY
 		self.playerType = LMMusicPlayerTypeSpotify;
+		
+		[self activateSpotifyPlayer];
+#else
+		self.nowPlayingTrack = self.systemMusicPlayer.nowPlayingItem;
 #endif
 		self.delegates = [NSMutableArray new];
 		self.delegatesSubscribedToCurrentPlaybackTimeChange = [[NSMutableArray alloc]init];
@@ -1110,8 +1253,15 @@ BOOL shuffleForDebug = NO;
 - (void)setShuffleMode:(LMMusicShuffleMode)shuffleMode {
 	_shuffleMode = shuffleMode;
 	
-	//	NSLog(@"New shuffle is %d", _shuffleMode);
-	
+#ifdef SPOTIFY
+	[self.spotifyPlayer setShuffle:(_shuffleMode == LMMusicShuffleModeOn) callback:^(NSError *error) {
+		if(error){
+			NSLog(@"Error settings shuffle: %@", error);
+			return;
+		}
+		NSLog(@"Success setting shuffle");
+	}];
+#else
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer || self.playerType == LMMusicPlayerTypeAppleMusic){
 		MPMusicShuffleMode associatedShuffleModes[] = {
 			MPMusicShuffleModeOff,
@@ -1119,6 +1269,7 @@ BOOL shuffleForDebug = NO;
 		};
 		self.systemMusicPlayer.shuffleMode = associatedShuffleModes[shuffleMode];
 	}
+#endif
 }
 
 - (LMMusicShuffleMode)shuffleMode {
