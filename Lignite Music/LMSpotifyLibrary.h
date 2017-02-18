@@ -30,4 +30,12 @@
  */
 - (NSArray<LMMusicTrack*>*)musicTracks;
 
+
+/**
+ Get the artists in the user's music library.
+
+ @return The artists.
+ */
+- (NSArray<LMMusicTrackCollection*>*)artists;
+
 @end

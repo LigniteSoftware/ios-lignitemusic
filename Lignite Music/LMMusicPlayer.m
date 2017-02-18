@@ -1196,15 +1196,15 @@ BOOL shuffleForDebug = NO;
 }
 
 - (void)clearNowPlayingCollection {
-#warning Set this up too
+#warning Set this up
 	[self.systemMusicPlayer setQueueWithQuery:self.bullshitQuery];
 	[self.systemMusicPlayer setNowPlayingItem:nil];
 }
 
 - (void)setNowPlayingCollection:(LMMusicTrackCollection*)nowPlayingCollection {
 #ifdef SPOTIFY
-	#warning Set this up
-	[self.spotifyPlayer ]
+	#warning Set this up too
+//	[self.spotifyPlayer ]
 #else
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer || self.playerType == LMMusicPlayerTypeAppleMusic){
 		if(!self.nowPlayingCollection){

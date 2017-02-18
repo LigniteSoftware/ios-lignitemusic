@@ -184,6 +184,47 @@
 	return trackArray;
 }
 
+- (NSArray<LMMusicTrackCollection*>*)artists {
+	NSTimeInterval startTime = [[NSDate new]timeIntervalSince1970];
+	
+	NSMutableArray *trackArray = [NSMutableArray new];
+	
+	NSError *queryError = nil;
+	CBLQuery *query = [[self.libraryDatabase viewNamed:@"artists"] createQuery];
+	
+	CBLQueryEnumerator* result = [query run:&queryError];
+	if(queryError){
+		NSLog(@"Error in querying: %@", queryError);
+	}
+	
+	NSMutableArray *artistIDsArray = [NSMutableArray new];
+	
+	for (CBLQueryRow* row in result) {
+		NSDictionary *artist = row.value;
+		NSString *artistID = [artist objectForKey:@"id"];
+		if(![artistIDsArray containsObject:artistID]){
+			[artistIDsArray addObject:artistID];
+		}
+	}
+	NSLog(@"Got %ld items (%ld no dupes).", result.count, artistIDsArray.count);
+	
+	NSMutableArray *artistCollectionsArray = [NSMutableArray new];
+	
+	for(NSString *artistID in artistIDsArray){
+		NSMutableArray *songsOfArtist = [NSMutableArray new];
+
+		NSPredicate *filter = [NSPredicate predicateWithFormat:@"contact_type = 42"];
+		
+		NSArray *filteredContacts = [contacts filteredArrayUsingPredicate:filter];
+	}
+	
+	NSTimeInterval endTime = [[NSDate new]timeIntervalSince1970];
+	
+	NSLog(@"Done %f seconds", endTime-startTime);
+	
+	return trackArray;
+}
+
 - (void)buildDatabase {
 //	self.startTime = [[NSDate new]timeIntervalSince1970];
 //	[self getUserLibraryWithNextURLString:nil];
