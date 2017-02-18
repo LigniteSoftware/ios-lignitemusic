@@ -216,6 +216,16 @@ MPMediaGrouping associatedMediaTypes[] = {
 	BOOL isRelinked = [self.spotifyPlayer.metadata.currentTrack.playbackSourceUri containsString:@"spotify:track"]
 	&& ![self.spotifyPlayer.metadata.currentTrack.playbackSourceUri isEqualToString:trackUri];
 	NSLog(@"Relinked %d", isRelinked);
+	
+	self.indexOfNowPlayingTrack = self.spotifyPlayer.metadata.currentTrack.indexInContext;
+	if(self.spotifyPlayerCurrentPlaybackTime != 0){
+		self.currentPlaybackTime = self.spotifyPlayerCurrentPlaybackTime;
+	}
+	
+	for(int i = 0; i < self.delegates.count; i++){
+		id delegate = [self.delegates objectAtIndex:i];
+		[delegate musicTrackDidChange:self.nowPlayingTrack];
+	}
 }
 
 - (void)audioStreaming:(SPTAudioStreamingController *)audioStreaming didStopPlayingTrack:(NSString *)trackUri {
@@ -397,7 +407,11 @@ MPMediaGrouping associatedMediaTypes[] = {
 - (void)updateNowPlayingTimeDelegates {
 	for(int i = 0; i < self.delegatesSubscribedToCurrentPlaybackTimeChange.count; i++){
 		id<LMMusicPlayerDelegate> delegate = [self.delegatesSubscribedToCurrentPlaybackTimeChange objectAtIndex:i];
+#ifdef SPOTIFY
+		[delegate musicCurrentPlaybackTimeDidChange:self.spotifyPlayerCurrentPlaybackTime];
+#else
 		[delegate musicCurrentPlaybackTimeDidChange:self.currentPlaybackTime];
+#endif
 	}
 }
 
@@ -1190,6 +1204,7 @@ BOOL shuffleForDebug = NO;
 - (void)setNowPlayingCollection:(LMMusicTrackCollection*)nowPlayingCollection {
 #ifdef SPOTIFY
 	#warning Set this up
+	[self.spotifyPlayer ]
 #else
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer || self.playerType == LMMusicPlayerTypeAppleMusic){
 		if(!self.nowPlayingCollection){
@@ -1198,8 +1213,9 @@ BOOL shuffleForDebug = NO;
 		[self.systemMusicPlayer setQueueWithItemCollection:nowPlayingCollection];
 		[self.systemMusicPlayer setNowPlayingItem:[[nowPlayingCollection items] objectAtIndex:0]];
 	}
-	_nowPlayingCollection = nowPlayingCollection;
 #endif
+	
+	_nowPlayingCollection = nowPlayingCollection;
 }
 
 - (void)setPlayerType:(LMMusicPlayerType)playerType {

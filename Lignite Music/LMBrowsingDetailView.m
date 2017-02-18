@@ -325,7 +325,11 @@
 	self.currentlyHighlighted = entry.collectionIndex;
 	
 	if(self.musicPlayer.nowPlayingCollection != self.musicTrackCollection){
+#ifdef SPOTIFY
+		[self.musicPlayer pause];
+#else
 		[self.musicPlayer stop];
+#endif
 		[self.musicPlayer setNowPlayingCollection:self.musicTrackCollection];
 	}
 	self.musicPlayer.autoPlay = YES;
