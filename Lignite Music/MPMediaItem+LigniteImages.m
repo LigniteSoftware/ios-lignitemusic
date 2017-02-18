@@ -49,7 +49,7 @@
 }
 
 - (NSTimeInterval)playbackDuration {
-	return 60;
+	return [[self objectForKey:@"duration_ms"] integerValue]/1000;
 }
 
 - (NSString*)title {

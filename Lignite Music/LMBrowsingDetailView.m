@@ -77,7 +77,7 @@
 		}
 	}
 	else{
-		for(int i = 0; i < self.musicTrackCollection.count; i++){
+		for(int i = 0; i < self.musicTrackCollection.trackCount; i++){
 			LMMusicTrack *track = [self.musicTrackCollection.items objectAtIndex:i];
 			
 			if(track.persistentID == newTrack.persistentID){
@@ -135,7 +135,7 @@
 		case 0:{ //Play button
 			LMMusicTrackCollection *trackCollection = self.musicTrackCollection;
 			if(wasJustTapped){
-				if(trackCollection.count > 0){
+				if(trackCollection.trackCount > 0){
 					if(self.musicPlayer.nowPlayingCollection != trackCollection){
 						self.musicPlayer.autoPlay = YES;
 						isPlayingMusic = YES;
@@ -208,7 +208,7 @@
 		}
 		case LMMusicTypeGenres:
 		case LMMusicTypePlaylists: {
-			return [NSString stringWithFormat:@"%ld %@", self.musicTrackCollection.count, NSLocalizedString(self.musicTrackCollection.count == 1 ? @"Song" : @"Songs", nil)];
+			return [NSString stringWithFormat:@"%ld %@", self.musicTrackCollection.trackCount, NSLocalizedString(self.musicTrackCollection.trackCount == 1 ? @"Song" : @"Songs", nil)];
 		}
 		case LMMusicTypeCompilations:
 		case LMMusicTypeAlbums: {
@@ -227,7 +227,7 @@
 	switch(self.musicType){
 		case LMMusicTypeComposers:
 		case LMMusicTypeArtists: {
-			return [NSString stringWithFormat:@"%ld %@", self.musicTrackCollection.count, NSLocalizedString(self.musicTrackCollection.count == 1 ? @"Song" : @"Songs", nil)];
+			return [NSString stringWithFormat:@"%ld %@", self.musicTrackCollection.trackCount, NSLocalizedString(self.musicTrackCollection.trackCount == 1 ? @"Song" : @"Songs", nil)];
 		}
 		case LMMusicTypeGenres:
 		case LMMusicTypePlaylists: {
@@ -235,7 +235,7 @@
 		}
 		case LMMusicTypeCompilations:
 		case LMMusicTypeAlbums: {
-			return [NSString stringWithFormat:@"%ld %@", self.musicTrackCollection.count, NSLocalizedString(self.musicTrackCollection.count == 1 ? @"Song" : @"Songs", nil)];
+			return [NSString stringWithFormat:@"%ld %@", self.musicTrackCollection.trackCount, NSLocalizedString(self.musicTrackCollection.trackCount == 1 ? @"Song" : @"Songs", nil)];
 		}
 		default: {
 			return nil;
@@ -349,7 +349,7 @@
 - (NSString*)subtitleForListEntry:(LMListEntry*)entry {
 	if(self.usingSpecificTrackCollections){
 		LMMusicTrackCollection *collection = [self.specificTrackCollections objectAtIndex:entry.collectionIndex];
-		return [NSString stringWithFormat:@"%ld %@", collection.count, NSLocalizedString(collection.count == 1 ? @"Song" : @"Songs", nil)];
+		return [NSString stringWithFormat:@"%ld %@", collection.trackCount, NSLocalizedString(collection.trackCount == 1 ? @"Song" : @"Songs", nil)];
 	}
 	LMMusicTrack *track = [self.musicTrackCollection.items objectAtIndex:entry.collectionIndex];
 	if(self.musicTrackCollection.variousArtists){
@@ -415,7 +415,7 @@
 - (void)amountOfObjectsRequiredChangedTo:(NSUInteger)amountOfObjects forTableView:(LMTableView*)tableView {
 	self.songEntries = [NSMutableArray new];
 	
-	NSUInteger countToUse = self.usingSpecificTrackCollections ? self.specificTrackCollections.count : self.musicTrackCollection.count;
+	NSUInteger countToUse = self.usingSpecificTrackCollections ? self.specificTrackCollections.count : self.musicTrackCollection.trackCount;
 	for(int i = 0; i < MIN(amountOfObjects, countToUse); i++){
 		LMListEntry *listEntry = [LMListEntry newAutoLayoutView];
 		listEntry.delegate = self;
@@ -456,7 +456,7 @@
 	self.tableView = [LMTableView newAutoLayoutView];
 	self.tableView.title = @"PlaylistDetailView";
 	self.tableView.averageCellHeight = WINDOW_FRAME.size.height*(1.0/10.0);
-	self.tableView.totalAmountOfObjects = (self.usingSpecificTrackCollections ? self.specificTrackCollections.count : [[self.musicTrackCollection objectForKey:@"items"] count]) + 1;
+	self.tableView.totalAmountOfObjects = (self.usingSpecificTrackCollections ? self.specificTrackCollections.count : self.musicTrackCollection.trackCount) + 1;
 	self.tableView.shouldUseDividers = YES;
 	self.tableView.dividerSectionsToIgnore = @[ @(0), @(1) ];
 	self.tableView.subviewDataSource = self;

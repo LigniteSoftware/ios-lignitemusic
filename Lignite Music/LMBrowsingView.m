@@ -308,7 +308,7 @@
 		case LMMusicTypeGenres:
 		case LMMusicTypePlaylists:
 		{
-			return [NSString stringWithFormat:@"%ld %@", (unsigned long)collection.count, NSLocalizedString(collection.count == 1 ? @"Song" : @"Songs", nil)];
+			return [NSString stringWithFormat:@"%ld %@", (unsigned long)collection.trackCount, NSLocalizedString(collection.trackCount == 1 ? @"Song" : @"Songs", nil)];
 		}
 		case LMMusicTypeCompilations:
 		case LMMusicTypeAlbums: {
@@ -329,7 +329,7 @@
 	switch(self.musicType){
 		case LMMusicTypeComposers:
 		case LMMusicTypeArtists: {
-			return [NSString stringWithFormat:@"%ld %@", (unsigned long)collection.count, NSLocalizedString(collection.count == 1 ? @"Song" : @"Songs", nil)];
+			return [NSString stringWithFormat:@"%ld %@", (unsigned long)collection.trackCount, NSLocalizedString(collection.trackCount == 1 ? @"Song" : @"Songs", nil)];
 		}
 		case LMMusicTypeGenres:
 		case LMMusicTypePlaylists:
@@ -338,7 +338,7 @@
 		}
 		case LMMusicTypeCompilations:
 		case LMMusicTypeAlbums: {
-			return [NSString stringWithFormat:@"%lu %@", (unsigned long)collection.count, NSLocalizedString(collection.count == 1 ? @"Song" : @"Songs", nil)];
+			return [NSString stringWithFormat:@"%lu %@", (unsigned long)collection.trackCount, NSLocalizedString(collection.trackCount == 1 ? @"Song" : @"Songs", nil)];
 		}
 		default: {
 			return nil;
@@ -409,7 +409,7 @@
 		case 0:{ //Play button
 			LMMusicTrackCollection *trackCollection = [self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex];
 			if(wasJustTapped){
-				if(trackCollection.count > 0){
+				if(trackCollection.trackCount > 0){
 					if(self.musicPlayer.nowPlayingCollection != trackCollection){
 						self.musicPlayer.autoPlay = YES;
 						isPlayingMusic = YES;
