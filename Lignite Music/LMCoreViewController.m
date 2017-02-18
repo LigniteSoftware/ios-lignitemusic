@@ -658,12 +658,12 @@
 	
 	[hangOnImage autoPinEdgesToSuperviewEdges];
 	
-#ifdef SPOTIFY
-	[[LMSpotifyLibrary sharedLibrary] artists];
-#endif
-	
-	
-	return;
+//#ifdef SPOTIFY
+//	[[LMSpotifyLibrary sharedLibrary] artists];
+//#endif
+//	
+//	
+//	return;
 	
 #ifdef SPOTIFY
 	SPTAuth *authorization = [SPTAuth defaultInstance];
