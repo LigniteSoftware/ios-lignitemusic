@@ -389,6 +389,8 @@
 	browsingDetailView.musicType = self.musicType;
 	browsingDetailView.rootViewController = self.rootViewController;
 	
+	NSLog(@"Got count %ld", [[[self.musicTrackCollections objectAtIndex:0] objectForKey:@"items"] count]);
+	
 	self.browsingDetailViewController = [LMBrowsingDetailViewController new];
 	self.browsingDetailViewController.browsingDetailView = browsingDetailView;
 	self.browsingDetailViewController.requiredHeight = self.frame.size.height;

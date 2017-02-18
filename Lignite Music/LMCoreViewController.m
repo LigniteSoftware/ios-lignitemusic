@@ -129,6 +129,7 @@
 //	NSLog(@"HEY! Got new track, title %@", newTrack.title);
 }
 
+#ifndef SPOTIFY
 - (void)musicLibraryDidChange {
 	NSLog(@"Changed library for core");
 	
@@ -172,6 +173,7 @@
 		});
 	});
 }
+#endif
 
 - (void)reloadCurrentBrowsingView {
 	if(self.currentSource == self.titleView){
@@ -183,14 +185,18 @@
 }
 
 - (void)setupBrowsingViewWithMusicType:(LMMusicType)musicType {
+#ifdef SPOTIFY
+	self.browsingView.musicTrackCollections = [self.musicPlayer queryCollectionsForMusicType:musicType];
+#else
 	if(self.musicCollectionsArray){
 		NSLog(@"Loading music from cache.");
 		self.browsingView.musicTrackCollections = [self.musicCollectionsArray objectAtIndex:musicType];
 	}
 	else{
 		NSLog(@"Loading music directly.");
-		self.browsingView.musicTrackCollections = [[LMMusicPlayer sharedMusicPlayer] queryCollectionsForMusicType:musicType];
+		self.browsingView.musicTrackCollections = [self.musicPlayer queryCollectionsForMusicType:musicType];
 	}
+#endif
 	self.browsingView.musicType = musicType;
 	self.browsingView.hidden = NO;
 	
@@ -897,7 +903,7 @@
 							[self setNeedsStatusBarAppearanceUpdate];
 						}];
 						
-						[self musicLibraryDidChange];
+//						[self musicLibraryDidChange];
 					});
 					break;
 				}

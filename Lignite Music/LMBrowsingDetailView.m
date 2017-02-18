@@ -456,12 +456,14 @@
 	self.tableView = [LMTableView newAutoLayoutView];
 	self.tableView.title = @"PlaylistDetailView";
 	self.tableView.averageCellHeight = WINDOW_FRAME.size.height*(1.0/10.0);
-	self.tableView.totalAmountOfObjects = (self.usingSpecificTrackCollections ? self.specificTrackCollections.count : self.musicTrackCollection.count) + 1;
+	self.tableView.totalAmountOfObjects = (self.usingSpecificTrackCollections ? self.specificTrackCollections.count : [[self.musicTrackCollection objectForKey:@"items"] count]) + 1;
 	self.tableView.shouldUseDividers = YES;
 	self.tableView.dividerSectionsToIgnore = @[ @(0), @(1) ];
 	self.tableView.subviewDataSource = self;
 	self.tableView.bottomSpacing = WINDOW_FRAME.size.height/5.0;
 	[self addSubview:self.tableView];
+	
+	NSLog(@"Items %ld spec %d", self.tableView.totalAmountOfObjects, self.usingSpecificTrackCollections);
 	
 	[self.tableView autoPinEdgesToSuperviewEdges];
 	
