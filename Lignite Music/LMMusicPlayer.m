@@ -790,9 +790,23 @@ BOOL shuffleForDebug = NO;
 #endif
 }
 
-- (NSArray<LMMusicTrackCollection*>*)trackCollectionsForMediaQuery:(MPMediaQuery*)mediaQuery withMusicType:(LMMusicType)musicType {
+- (NSArray<LMMusicTrackCollection*>*)trackCollectionsForMediaQuery:(id)mediaQuery withMusicType:(LMMusicType)musicType {
+	
 #ifdef SPOTIFY
-	return @[];
+	NSArray *sortedArray;
+	
+	sortedArray = [mediaQuery sortedArrayUsingComparator:^NSComparisonResult(NSDictionary *firstCollection, NSDictionary *secondCollection) {
+		
+		NSDictionary *first = [firstCollection representativeItem];
+		NSDictionary *second = [secondCollection representativeItem];
+		
+		NSString *firstAlbumTitle = [first albumTitle];
+		NSString *secondAlbumTitle = [second albumTitle];
+		
+		return [firstAlbumTitle compare:secondAlbumTitle];
+	}];
+	
+	return sortedArray;
 #else
 	//	MPMediaGrouping associatedGrouping = associatedMediaTypes[musicType];
 	
@@ -869,8 +883,22 @@ BOOL shuffleForDebug = NO;
 
 - (NSArray<LMMusicTrackCollection*>*)queryCollectionsForMusicType:(LMMusicType)musicType {
 #ifdef SPOTIFY
-//	return @[ @{ @"items":[[LMSpotifyLibrary sharedLibrary] musicTracks] } ];
-	return [[LMSpotifyLibrary sharedLibrary] albums];
+	NSArray *queryArray = nil;
+	switch(musicType) {
+		case LMMusicTypeAlbums:
+			queryArray = [[LMSpotifyLibrary sharedLibrary] albums];
+			break;
+		case LMMusicTypeArtists:
+			queryArray = [[LMSpotifyLibrary sharedLibrary] artists];
+			break;
+		case LMMusicTypeTitles:
+			queryArray = [[LMSpotifyLibrary sharedLibrary] musicTracks];
+			break;
+		default:
+			NSLog(@"\n\nSpooked! Unknown shitpost\n\n");
+			break;
+	}
+	return [self trackCollectionsForMediaQuery:queryArray withMusicType:musicType];
 #else
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer || self.playerType == LMMusicPlayerTypeAppleMusic){
 		//		NSTimeInterval startingTime = [[NSDate date] timeIntervalSince1970];
