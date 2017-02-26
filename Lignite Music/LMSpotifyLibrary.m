@@ -180,7 +180,7 @@
 	NSTimeInterval endTime = [[NSDate new]timeIntervalSince1970];
 	
 	NSLog(@"Done %f seconds", endTime-startTime);
-
+//
 	return trackArray;
 }
 
