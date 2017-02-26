@@ -294,7 +294,7 @@
 			BOOL usingSpecificTrackCollections = (self.musicType != LMMusicTypePlaylists
 												  && self.musicType != LMMusicTypeCompilations
 												  && self.musicType != LMMusicTypeAlbums);
-			//
+			
 			if(usingSpecificTrackCollections){
 				//Fixes for compilations
 				NSUInteger albums = [self.musicPlayer collectionsForRepresentativeTrack:collection.representativeItem

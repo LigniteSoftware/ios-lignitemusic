@@ -180,7 +180,7 @@
 	NSTimeInterval endTime = [[NSDate new]timeIntervalSince1970];
 	
 	NSLog(@"Done %f seconds", endTime-startTime);
-//
+
 	return trackArray;
 }
 
@@ -210,23 +210,43 @@
 	
 	NSMutableArray *artistCollectionsArray = [NSMutableArray new];
 	
+	NSMutableDictionary *collectionsArrayDictionary = [NSMutableDictionary new];
 	for(NSString *artistID in artistIDsArray){
-		NSPredicate *filter = [NSPredicate predicateWithFormat:@"ANY %K.%K CONTAINS[c] %@", @"artists",@"id",artistID];
-		
-		NSArray *filteredResults = [allTracks filteredArrayUsingPredicate:filter];
-		
-		[artistCollectionsArray addObject:@{ @"items":filteredResults }];
-		
-		NSLog(@"Results first %@", [filteredResults objectAtIndex:0]);
-		
-		NSLog(@"Got %ld tracks for %@.", filteredResults.count, artistID);
+		[collectionsArrayDictionary setObject:[NSMutableArray new] forKey:artistID];
 	}
+	
+	for(LMMusicTrack *musicTrack in allTracks){
+		NSArray *artists = [musicTrack objectForKey:@"artists"];
+		for(NSDictionary *artist in artists){
+			NSMutableArray *tracksByThisArtist = [collectionsArrayDictionary objectForKey:[artist objectForKey:@"id"]];
+			[tracksByThisArtist addObject:musicTrack];
+		}
+	}
+	
+	for(NSString *key in [collectionsArrayDictionary allKeys]){
+		NSMutableArray *collectionArray = [collectionsArrayDictionary objectForKey:key];
+		[artistCollectionsArray addObject:@{ @"items":collectionArray }];
+	}
+	
+//	for(NSString *artistID in artistIDsArray){
+//		
+//		NSPredicate *filter = [NSPredicate predicateWithFormat:@"ANY %K.%K CONTAINS[c] %@", @"artists",@"id",artistID];
+//		
+//		NSArray *filteredResults = [allTracks filteredArrayUsingPredicate:filter];
+//		
+//		[artistCollectionsArray addObject:@{ @"items":filteredResults }];
+//		
+//		NSLog(@"Results first %@", [filteredResults objectAtIndex:0]);
+//		
+//		NSLog(@"Got %ld tracks for %@.", filteredResults.count, artistID);
+//	}
 	
 	NSTimeInterval endTime = [[NSDate new]timeIntervalSince1970];
 	
 	NSLog(@"Done %f seconds", endTime-startTime);
 	
-	return artistCollectionsArray;
+	return @[];
+//	return artistCollectionsArray;
 }
 
 - (void)buildDatabase {

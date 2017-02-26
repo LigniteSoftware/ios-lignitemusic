@@ -99,7 +99,7 @@
 		[self.topView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 		[self.topView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:10];
 		[self.topView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(5.0/10.0)];
-		//
+		
 		[self.bottomView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:20];
 		[self.bottomView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:20];
 		[self.bottomView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.topView];
