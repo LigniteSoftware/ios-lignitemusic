@@ -301,8 +301,8 @@
 }
 
 - (void)buildDatabase {
-//	self.startTime = [[NSDate new]timeIntervalSince1970];
-//	[self getUserLibraryWithNextURLString:nil];
+	self.startTime = [[NSDate new]timeIntervalSince1970];
+	[self getUserLibraryWithNextURLString:nil];
 	
 	
 	

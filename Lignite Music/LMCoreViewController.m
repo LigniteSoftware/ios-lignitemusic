@@ -659,7 +659,7 @@
 	[hangOnImage autoPinEdgesToSuperviewEdges];
 	
 //#ifdef SPOTIFY
-//	[[LMSpotifyLibrary sharedLibrary] artists];
+//	[[LMSpotifyLibrary sharedLibrary] buildDatabase];
 //#endif
 //	
 //	
@@ -735,6 +735,20 @@
 						LMPebbleManager *pebbleManager = [LMPebbleManager sharedPebbleManager];
 						[pebbleManager attachToViewController:self];
 
+#ifdef SPOTIFY
+						NSArray *sourceTitles = @[
+												  @"Artists", @"Albums", @"Titles", @"Playlists", @"Settings", @"ReportBugOrSendFeedback"
+												  ];
+						NSArray *sourceSubtitles = @[
+													 @"", @"", @"", @"", @"", @""
+													 ];
+						LMIcon sourceIcons[] = {
+							LMIconArtists, LMIconAlbums, LMIconTitles, LMIconPlaylists, LMIconSettings, LMIconBug
+						};
+						BOOL notHighlight[] = {
+							NO, NO, NO, NO, YES, YES
+						};
+#else
 						NSArray *sourceTitles = @[
 												  @"Artists", @"Albums", @"Titles", @"Playlists", @"Genres", @"Compilations", @"Settings", @"ReportBugOrSendFeedback"
 												  ];
@@ -747,6 +761,7 @@
 						BOOL notHighlight[] = {
 							NO, NO, NO, NO, NO, NO, YES, YES
 						};
+#endif
 						
 						NSMutableArray *sources = [NSMutableArray new];
 						
