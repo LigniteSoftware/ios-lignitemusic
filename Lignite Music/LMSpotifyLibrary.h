@@ -38,4 +38,6 @@
  */
 - (NSArray<LMMusicTrackCollection*>*)artists;
 
+- (NSArray<LMMusicTrackCollection*>*)albums;
+
 @end

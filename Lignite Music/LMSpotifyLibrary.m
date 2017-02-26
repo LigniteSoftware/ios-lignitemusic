@@ -50,6 +50,12 @@
 				emit([artist objectForKey:@"id"], artist);
 			}
 		}) version:@"4"];
+		
+		CBLView *albumsView = [sharedLibrary.libraryDatabase viewNamed:@"albums"];
+		[albumsView setMapBlock:MAPBLOCK({
+			NSDictionary *album = [doc objectForKey:@"album"];
+			emit([album objectForKey:@"id"], album);
+		}) version:@"1"];
 	});
 	return sharedLibrary;
 }
@@ -172,14 +178,11 @@
 		return @[];
 	}
 	for(CBLQueryRow *row in result) {
-		NSLog(@"Got %@", row.documentID);
 		[trackArray addObject:row.document.properties];
 	}
-	NSLog(@"Got %ld items.", result.count);
-	
 	NSTimeInterval endTime = [[NSDate new]timeIntervalSince1970];
 	
-	NSLog(@"Done %f seconds", endTime-startTime);
+	NSLog(@"Got all tracks (%ld) in %f seconds.", trackArray.count, endTime-startTime);
 
 	return trackArray;
 }
@@ -204,49 +207,97 @@
 			[artistIDsArray addObject:artistID];
 		}
 	}
-	NSLog(@"Got %ld items (%ld no dupes).", result.count, artistIDsArray.count);
+	NSLog(@"Got %ld artists (%ld no dupes).", result.count, artistIDsArray.count);
 	
 	NSArray *allTracks = [self musicTracks];
 	
 	NSMutableArray *artistCollectionsArray = [NSMutableArray new];
 	
+	//Create a dictionary with a key representing every collection/array
 	NSMutableDictionary *collectionsArrayDictionary = [NSMutableDictionary new];
 	for(NSString *artistID in artistIDsArray){
 		[collectionsArrayDictionary setObject:[NSMutableArray new] forKey:artistID];
 	}
 	
+	//Loop through each music track in the complete library
 	for(LMMusicTrack *musicTrack in allTracks){
 		NSArray *artists = [musicTrack objectForKey:@"artists"];
+		//Loop through that track's artists
 		for(NSDictionary *artist in artists){
+			//Add that track to the artist's list of songs
 			NSMutableArray *tracksByThisArtist = [collectionsArrayDictionary objectForKey:[artist objectForKey:@"id"]];
 			[tracksByThisArtist addObject:musicTrack];
 		}
 	}
 	
+	//For every key/artist ID in the collections array dictionary, add a collection with those items to the array of collections
 	for(NSString *key in [collectionsArrayDictionary allKeys]){
 		NSMutableArray *collectionArray = [collectionsArrayDictionary objectForKey:key];
 		[artistCollectionsArray addObject:@{ @"items":collectionArray }];
 	}
 	
-//	for(NSString *artistID in artistIDsArray){
-//		
-//		NSPredicate *filter = [NSPredicate predicateWithFormat:@"ANY %K.%K CONTAINS[c] %@", @"artists",@"id",artistID];
-//		
-//		NSArray *filteredResults = [allTracks filteredArrayUsingPredicate:filter];
-//		
-//		[artistCollectionsArray addObject:@{ @"items":filteredResults }];
-//		
-//		NSLog(@"Results first %@", [filteredResults objectAtIndex:0]);
-//		
-//		NSLog(@"Got %ld tracks for %@.", filteredResults.count, artistID);
-//	}
+	NSTimeInterval endTime = [[NSDate new]timeIntervalSince1970];
+	
+	NSLog(@"Got artist collections in %f seconds.", endTime-startTime);
+	
+	return artistCollectionsArray;
+//	return artistCollectionsArray;
+}
+
+- (NSArray<LMMusicTrackCollection*>*)albums {
+	NSTimeInterval startTime = [[NSDate new]timeIntervalSince1970];
+	
+	NSError *queryError = nil;
+	CBLQuery *query = [[self.libraryDatabase viewNamed:@"albums"] createQuery];
+	
+	CBLQueryEnumerator* result = [query run:&queryError];
+	if(queryError){
+		NSLog(@"Error in querying: %@", queryError);
+	}
+	
+	NSMutableArray *albumIDsArray = [NSMutableArray new];
+	
+	for (CBLQueryRow* row in result) {
+		NSDictionary *album = row.value;
+		NSString *albumID = [album objectForKey:@"id"];
+		if(![albumIDsArray containsObject:albumID]){
+			[albumIDsArray addObject:albumID];
+		}
+	}
+	NSLog(@"Got %ld albums (%ld no dupes).", result.count, albumIDsArray.count);
+	
+	NSArray *allTracks = [self musicTracks];
+	
+	NSMutableArray *albumCollectionsArray = [NSMutableArray new];
+	
+	//Create a dictionary with a key representing every collection/array
+	NSMutableDictionary *collectionsArrayDictionary = [NSMutableDictionary new];
+	for(NSString *albumID in albumIDsArray){
+		[collectionsArrayDictionary setObject:[NSMutableArray new] forKey:albumID];
+	}
+	
+	//Loop through each music track in the complete library
+	for(LMMusicTrack *musicTrack in allTracks){
+		//Get the album for that track
+		NSDictionary *album = [musicTrack objectForKey:@"album"];
+		//Add that track to the album's list of songs
+		NSMutableArray *tracksByThisAlbum = [collectionsArrayDictionary objectForKey:[album objectForKey:@"id"]];
+//		NSLog(@"Tracks %@", tracksByThisAlbum);
+		[tracksByThisAlbum addObject:musicTrack];
+	}
+	
+	//For every key/album ID in the collections array dictionary, add a collection with those items to the array of collections
+	for(NSString *key in [collectionsArrayDictionary allKeys]){
+		NSMutableArray *collectionArray = [collectionsArrayDictionary objectForKey:key];
+		[albumCollectionsArray addObject:@{ @"items":collectionArray }];
+	}
 	
 	NSTimeInterval endTime = [[NSDate new]timeIntervalSince1970];
 	
-	NSLog(@"Done %f seconds", endTime-startTime);
+	NSLog(@"Got album collections in %f seconds.", endTime-startTime);
 	
-	return @[];
-//	return artistCollectionsArray;
+//	return @[];
+		return albumCollectionsArray;
 }
 
 - (void)buildDatabase {

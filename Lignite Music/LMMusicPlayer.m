@@ -870,7 +870,7 @@ BOOL shuffleForDebug = NO;
 - (NSArray<LMMusicTrackCollection*>*)queryCollectionsForMusicType:(LMMusicType)musicType {
 #ifdef SPOTIFY
 //	return @[ @{ @"items":[[LMSpotifyLibrary sharedLibrary] musicTracks] } ];
-	return [[LMSpotifyLibrary sharedLibrary] artists];
+	return [[LMSpotifyLibrary sharedLibrary] albums];
 #else
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer || self.playerType == LMMusicPlayerTypeAppleMusic){
 		//		NSTimeInterval startingTime = [[NSDate date] timeIntervalSince1970];
