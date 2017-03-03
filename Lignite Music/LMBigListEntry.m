@@ -116,7 +116,9 @@
 	[contentView autoAlignAxisToSuperviewAxis:ALAxisVertical];
 	[contentView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 	[contentView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:contentViewWidthFactorial];
-	[contentView autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height*contentViewHeightFactorial];
+//	[contentView autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height*contentViewHeightFactorial];
+	
+	[contentView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self];
 	
 	UITapGestureRecognizer *contentTapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tappedContentView:)];
 	[contentView addGestureRecognizer:contentTapGesture];
@@ -129,7 +131,9 @@
 	[self.collectionInfoView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 	[self.collectionInfoView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 	[self.collectionInfoView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:contentView];
-	[self.collectionInfoView autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height*infoViewHeightFactorial];
+//	[self.collectionInfoView autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height*infoViewHeightFactorial];
+	
+	[self.collectionInfoView autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:10];
 	
 	[self.collectionInfoView reloadData];
 	
