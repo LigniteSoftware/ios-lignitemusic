@@ -6,7 +6,7 @@
 //  Copyright © 2016 Lignite. All rights reserved.
 //
 
-#define SPOTIFY
+//#define SPOTIFY
 
 #import <MediaPlayer/MediaPlayer.h>
 

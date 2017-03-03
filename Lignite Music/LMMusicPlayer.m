@@ -800,10 +800,23 @@ BOOL shuffleForDebug = NO;
 		NSDictionary *first = [firstCollection representativeItem];
 		NSDictionary *second = [secondCollection representativeItem];
 		
-		NSString *firstAlbumTitle = [first albumTitle];
-		NSString *secondAlbumTitle = [second albumTitle];
+		NSString *firstTitle = [first albumTitle];
+		NSString *secondTitle = [second albumTitle];
 		
-		return [firstAlbumTitle compare:secondAlbumTitle];
+		switch(musicType){
+			case LMMusicTypeArtists:
+				firstTitle = [first artist];
+				secondTitle = [second artist];
+				break;
+			case LMMusicTypeTitles:
+				firstTitle = [first title];
+				secondTitle = [second title];
+				break;
+			default:
+				break;
+		}
+		
+		return [firstTitle compare:secondTitle];
 	}];
 	
 	return sortedArray;
@@ -811,7 +824,7 @@ BOOL shuffleForDebug = NO;
 	//	MPMediaGrouping associatedGrouping = associatedMediaTypes[musicType];
 	
 	NSMutableArray *collections =
-	[[NSMutableArray alloc]initWithArray:(musicType == LMMusicTypeTitles) ? @[[MPMediaItemCollection collectionWithItems:mediaQuery.items]] : mediaQuery.collections];
+	[[NSMutableArray alloc]initWithArray:(musicType == LMMusicTypeTitles) ? @[[MPMediaItemCollection collectionWithItems:[mediaQuery items]]] : [mediaQuery collections]];
 	
 	NSString *sortKey = nil;
 	
@@ -1035,7 +1048,6 @@ BOOL shuffleForDebug = NO;
 #ifdef SPOTIFY
 	if(self.spotifyPlayerCurrentPlaybackTime > 5){
 #else
-	}
 	if(self.currentPlaybackTime > 5){
 #endif
 		NSLog(@"Skipping to beginning");

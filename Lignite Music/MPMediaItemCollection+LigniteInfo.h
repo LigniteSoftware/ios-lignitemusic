@@ -6,7 +6,7 @@
 //  Copyright © 2016 Lignite. All rights reserved.
 //
 
-#define SPOTIFY
+//#define SPOTIFY
 
 #ifdef SPOTIFY
 
@@ -95,6 +95,8 @@ typedef MPMediaItemCollection LMMusicTrackCollection;
  @return The number of albums in this collection.
  */
 - (NSUInteger)numberOfAlbums;
+
+@property (readonly) NSInteger trackCount;
 
 @end
 

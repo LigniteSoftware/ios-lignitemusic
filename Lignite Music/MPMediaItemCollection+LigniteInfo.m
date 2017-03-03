@@ -111,6 +111,9 @@
 	return NO;
 }
 
+- (NSInteger)trackCount {
+	return self.count;
+}
 
 @end
 
