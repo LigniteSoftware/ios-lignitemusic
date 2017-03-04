@@ -19,14 +19,21 @@
 
 @implementation LMCompactBrowsingView
 
+- (LMMusicTrackCollection*)musicTrackCollectionForBigListEntry:(LMBigListEntry*)bigListEntry {
+	return [self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex];
+}
+
 - (id)contentSubviewForBigListEntry:(LMBigListEntry*)bigListEntry {
 //	id contentSubview = [self.contentViewsArray objectAtIndex:bigListEntry.collectionIndex % self.bigListEntriesArray.count];
 	
 //	[self.delegate prepareContentSubview:contentSubview forBigListEntry:bigListEntry];
 	
-	UIView *contentSubview = [UIView newAutoLayoutView];
+	LMMusicTrackCollection *collection = [self musicTrackCollectionForBigListEntry:bigListEntry];
 	
-	contentSubview.backgroundColor = [UIColor orangeColor];
+	UIImageView *contentSubview = [UIImageView new];
+	
+	contentSubview.contentMode = UIViewContentModeScaleAspectFit;
+	contentSubview.image = [collection.representativeItem albumArt];
 	
 	return contentSubview;
 }
@@ -59,15 +66,18 @@
 }
 
 - (NSString*)titleForInfoView:(LMCollectionInfoView*)infoView {
-	return @"title";
+	return [[[self musicTrackCollectionForBigListEntry:infoView.associatedBigListEntry] representativeItem] albumTitle];
 }
 
 - (NSString*)leftTextForInfoView:(LMCollectionInfoView*)infoView {
-	return @"left text";
+	return [[[self musicTrackCollectionForBigListEntry:infoView.associatedBigListEntry] representativeItem] artist];;
 }
 
 - (NSString*)rightTextForInfoView:(LMCollectionInfoView*)infoView {
-	return @"right text";
+	NSInteger trackCount = [[[self musicTrackCollectionForBigListEntry:infoView.associatedBigListEntry] representativeItem] albumTrackCount];
+	return [NSString stringWithFormat:@"%ld %@",
+			trackCount,
+			trackCount == 1 ? NSLocalizedString(@"Song", nil) : NSLocalizedString(@"Songs", nil)];
 }
 
 - (UIImage*)centerImageForInfoView:(LMCollectionInfoView*)infoView {
@@ -83,19 +93,19 @@
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-	return 25;
+	return self.musicTrackCollections.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
 	UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cellIdentifier" forIndexPath:indexPath];
 	
-	cell.backgroundColor = [UIColor greenColor];
+	cell.backgroundColor = [UIColor whiteColor];
 	
 	LMBigListEntry *bigListEntry = [LMBigListEntry newAutoLayoutView];
 	bigListEntry.infoDelegate = self;
 	bigListEntry.entryDelegate = self;
 	bigListEntry.controlBarDelegate = self;
-	bigListEntry.collectionIndex = 1;
+	bigListEntry.collectionIndex = (indexPath.section * 3) + indexPath.row;
 	[bigListEntry setup];
 	
 	[cell.contentView addSubview:bigListEntry];
@@ -136,12 +146,17 @@
 		//	fuck.sectionInset = UIEdgeInsetsMake(15, 15, 15, 15);
 		//	fuck.itemSize = CGSizeMake(90, 120);
 		
+		self.musicTrackCollections = [[LMMusicPlayer sharedMusicPlayer] queryCollectionsForMusicType:LMMusicTypeAlbums];
+		
 		self.collectionView = [[UICollectionView alloc]initWithFrame:CGRectZero collectionViewLayout:fuck];
 		self.collectionView.translatesAutoresizingMaskIntoConstraints = NO;
 		self.collectionView.delegate = self;
 		self.collectionView.dataSource = self;
 		[self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"cellIdentifier"];
 		[self addSubview:self.collectionView];
+		
+		self.backgroundColor = [UIColor whiteColor];
+		self.collectionView.backgroundColor = [UIColor whiteColor];
 		
 		[self.collectionView autoPinEdgesToSuperviewEdges];
 	}

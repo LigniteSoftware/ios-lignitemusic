@@ -10,6 +10,7 @@
 #import "LMMusicPlayer.h"
 
 @class LMCollectionInfoView;
+@class LMBigListEntry;
 
 @protocol LMCollectionInfoViewDelegate <NSObject>
 
@@ -50,6 +51,8 @@
 @interface LMCollectionInfoView : UIView
 
 @property id<LMCollectionInfoViewDelegate> delegate;
+
+@property LMBigListEntry *associatedBigListEntry;
 
 /**
  Setup all of the views with the current collection as provided by the delegate.

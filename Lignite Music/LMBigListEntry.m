@@ -126,6 +126,7 @@
 	
 	self.collectionInfoView = [LMCollectionInfoView newAutoLayoutView];
 	self.collectionInfoView.delegate = self.infoDelegate;
+	self.collectionInfoView.associatedBigListEntry = self;
 	[self addSubview:self.collectionInfoView];
 	
 	[self.collectionInfoView autoPinEdgeToSuperviewEdge:ALEdgeLeading];

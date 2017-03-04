@@ -7,7 +7,13 @@
 //
 
 #import "LMView.h"
+#import "LMMusicPlayer.h"
 
 @interface LMCompactBrowsingView : LMView
+
+/**
+ The music track collections associated with this compact browsing view. For every collection there will be an entry.
+ */
+@property NSArray<LMMusicTrackCollection*> *musicTrackCollections;
 
 @end
