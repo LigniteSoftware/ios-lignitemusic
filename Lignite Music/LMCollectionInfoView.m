@@ -97,11 +97,11 @@
 	if(!self.didInitialSetup){
 		[self.topView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[self.topView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-		[self.topView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:10];
-		[self.topView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(5.0/10.0)];
+		[self.topView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:0];
+		[self.topView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(6.0/10.0)];
 		
-		[self.bottomView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:20];
-		[self.bottomView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:20];
+		[self.bottomView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:5];
+		[self.bottomView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:5];
 		[self.bottomView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.topView];
 		[self.bottomView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(3.0/10.0)];
 		

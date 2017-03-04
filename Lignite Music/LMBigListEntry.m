@@ -144,8 +144,9 @@
 
 	[self.controlBarView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:10];
 	[self.controlBarView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:10];
-	[self.controlBarView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.collectionInfoView withOffset:10];
-	self.controlBarViewHeightConstraint = [self.controlBarView autoSetDimension:ALDimensionHeight toSize:[LMControlBarView heightWhenIsOpened:self.isLargeSize]];
+	[self.controlBarView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.collectionInfoView];
+	[self.controlBarView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+//	self.controlBarViewHeightConstraint = [self.controlBarView autoSetDimension:ALDimensionHeight toSize:[LMControlBarView heightWhenIsOpened:self.isLargeSize]];
 	
 	[self.controlBarView setup];
 
