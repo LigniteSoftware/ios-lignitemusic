@@ -74,10 +74,7 @@
 }
 
 - (NSString*)rightTextForInfoView:(LMCollectionInfoView*)infoView {
-	NSInteger trackCount = [[[self musicTrackCollectionForBigListEntry:infoView.associatedBigListEntry] representativeItem] albumTrackCount];
-	return [NSString stringWithFormat:@"%ld %@",
-			trackCount,
-			trackCount == 1 ? NSLocalizedString(@"Song", nil) : NSLocalizedString(@"Songs", nil)];
+	return nil;
 }
 
 - (UIImage*)centerImageForInfoView:(LMCollectionInfoView*)infoView {
@@ -120,7 +117,7 @@
 	
 	CGFloat sideLength = self.frame.size.width/factor;
 	
-	sideLength -= 20;
+	sideLength -= 15;
 	
 	CGFloat spacing = (self.frame.size.width-(sideLength*factor))/(factor+1);
 	
