@@ -134,7 +134,7 @@
 	[self.collectionInfoView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:contentView];
 //	[self.collectionInfoView autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height*infoViewHeightFactorial];
 	
-	[self.collectionInfoView autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:10];
+	[self.collectionInfoView autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:0];
 	
 	[self.collectionInfoView reloadData];
 	
@@ -147,6 +147,9 @@
 	[self.controlBarView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:10];
 	[self.controlBarView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.collectionInfoView withOffset:-5];
 	[self.controlBarView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+	
+	self.controlBarView.hidden = YES; //Make this better
+	
 //	self.controlBarViewHeightConstraint = [self.controlBarView autoSetDimension:ALDimensionHeight toSize:[LMControlBarView heightWhenIsOpened:self.isLargeSize]];
 	
 	[self.controlBarView setup];

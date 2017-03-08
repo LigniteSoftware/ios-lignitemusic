@@ -96,7 +96,7 @@
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
 	UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cellIdentifier" forIndexPath:indexPath];
 	
-	cell.backgroundColor = [UIColor whiteColor];
+	cell.backgroundColor = [UIColor orangeColor];
 	
 	LMBigListEntry *bigListEntry = [LMBigListEntry newAutoLayoutView];
 	bigListEntry.infoDelegate = self;
@@ -129,7 +129,7 @@
 	
 	NSLog(@"Fuck %@", NSStringFromCGSize(CGSizeMake(sideLength, sideLength * (3.0/2.0))));
 	
-	return CGSizeMake(sideLength, sideLength * (3.0/2.0));
+	return CGSizeMake(sideLength, sideLength * (2.8/2.0));
 }
 
 - (void)layoutSubviews {
