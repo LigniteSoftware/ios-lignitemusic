@@ -73,7 +73,7 @@
 @property NSUInteger collectionIndex;
 
 @property LMOperationQueue *queue;
-
+//
 /**
  The info view for the big list entry.
  */
