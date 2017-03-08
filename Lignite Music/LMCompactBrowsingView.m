@@ -32,31 +32,31 @@
 - (id)contentSubviewForBigListEntry:(LMBigListEntry*)bigListEntry {
 	LMMusicTrackCollection *collection = [self musicTrackCollectionForBigListEntry:bigListEntry];
 	
-//	switch(self.musicType){
-//		case LMMusicTypeComposers:
-//		case LMMusicTypeArtists: {
-//			UIImageView *imageView = [UIImageView newAutoLayoutView];
-//			//			imageView.image = [[self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex].representativeItem artistImage];
-//			imageView.contentMode = UIViewContentModeScaleAspectFit;
-//			imageView.layer.shadowColor = [UIColor blackColor].CGColor;
-//			imageView.layer.shadowRadius = WINDOW_FRAME.size.width/45;
-//			imageView.layer.shadowOffset = CGSizeMake(0, imageView.layer.shadowRadius/2);
-//			imageView.layer.shadowOpacity = 0.25f;
-//			return imageView;
-//		}
-//		case LMMusicTypeAlbums:
-//		case LMMusicTypeCompilations:
-//		case LMMusicTypeGenres:
-//		case LMMusicTypePlaylists: {
-//			LMTiledAlbumCoverView *tiledAlbumCover = [LMTiledAlbumCoverView newAutoLayoutView];
-//			tiledAlbumCover.musicCollection = collection;
-//			return tiledAlbumCover;
-//		}
-//		default: {
-//			NSLog(@"Windows fucking error!");
-//			return nil;
-//		}
-//	}
+	switch(self.musicType){
+		case LMMusicTypeComposers:
+		case LMMusicTypeArtists: {
+			UIImageView *imageView = [UIImageView newAutoLayoutView];
+			//			imageView.image = [[self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex].representativeItem artistImage];
+			imageView.contentMode = UIViewContentModeScaleAspectFit;
+			imageView.layer.shadowColor = [UIColor blackColor].CGColor;
+			imageView.layer.shadowRadius = WINDOW_FRAME.size.width/45;
+			imageView.layer.shadowOffset = CGSizeMake(0, imageView.layer.shadowRadius/2);
+			imageView.layer.shadowOpacity = 0.25f;
+			return imageView;
+		}
+		case LMMusicTypeAlbums:
+		case LMMusicTypeCompilations:
+		case LMMusicTypeGenres:
+		case LMMusicTypePlaylists: {
+			LMTiledAlbumCoverView *tiledAlbumCover = [LMTiledAlbumCoverView newAutoLayoutView];
+			tiledAlbumCover.musicCollection = collection;
+			return tiledAlbumCover;
+		}
+		default: {
+			NSLog(@"Windows fucking error!");
+			return nil;
+		}
+	}
 	
 //	id contentSubview = [self.contentViewsArray objectAtIndex:bigListEntry.collectionIndex % self.bigListEntriesArray.count];
 	
@@ -126,6 +126,10 @@
 	UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cellIdentifier" forIndexPath:indexPath];
 	
 	cell.backgroundColor = [UIColor orangeColor];
+	
+	for(UIView *subview in cell.contentView.subviews){
+		[subview removeFromSuperview];
+	}
 	
 	LMBigListEntry *bigListEntry = [self.bigListEntries objectAtIndex:indexPath.row];
 	
