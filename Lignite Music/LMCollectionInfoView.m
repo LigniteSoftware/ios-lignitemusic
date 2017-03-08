@@ -95,13 +95,13 @@
 	self.middleDividerImageView.image = middleImage;
 	
 	if(!self.didInitialSetup){
-		[self.topView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-		[self.topView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.topView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:7.5];
+		[self.topView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:7.5];
 		[self.topView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:5];
 		[self.topView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(4.0/10.0)];
 		
-		[self.bottomView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:5];
-		[self.bottomView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:5];
+		[self.bottomView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:7.5];
+		[self.bottomView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:7.5];
 		[self.bottomView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.topView];
 		[self.bottomView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(3.5/10.0)];
 		

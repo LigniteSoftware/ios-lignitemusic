@@ -129,12 +129,10 @@
 	self.collectionInfoView.associatedBigListEntry = self;
 	[self addSubview:self.collectionInfoView];
 	
-	[self.collectionInfoView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-	[self.collectionInfoView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+	[self.collectionInfoView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:-7.5];
+	[self.collectionInfoView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:-7.5];
 	[self.collectionInfoView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:contentView];
-//	[self.collectionInfoView autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height*infoViewHeightFactorial];
-	
-	[self.collectionInfoView autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:0];
+	[self.collectionInfoView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 	
 	[self.collectionInfoView reloadData];
 	
