@@ -138,17 +138,17 @@
 	
 	[self.collectionInfoView reloadData];
 	
-	self.controlBarView = [LMControlBarView newAutoLayoutView];
-	self.controlBarView.delegate = self;
-	self.controlBarView.userInteractionEnabled = YES;
-	[self addSubview:self.controlBarView];
+	if(self.controlBarDelegate){
+		self.controlBarView = [LMControlBarView newAutoLayoutView];
+		self.controlBarView.delegate = self;
+		self.controlBarView.userInteractionEnabled = YES;
+		[self addSubview:self.controlBarView];
 
-	[self.controlBarView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:10];
-	[self.controlBarView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:10];
-	[self.controlBarView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.collectionInfoView withOffset:-5];
-	[self.controlBarView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-	
-	self.controlBarView.hidden = YES; //Make this better
+		[self.controlBarView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:10];
+		[self.controlBarView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:10];
+		[self.controlBarView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.collectionInfoView withOffset:-5];
+		[self.controlBarView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+	}
 	
 //	self.controlBarViewHeightConstraint = [self.controlBarView autoSetDimension:ALDimensionHeight toSize:[LMControlBarView heightWhenIsOpened:self.isLargeSize]];
 	

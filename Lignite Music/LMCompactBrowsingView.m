@@ -11,7 +11,7 @@
 #import "LMBigListEntry.h"
 #import "LMAppIcon.h"
 
-@interface LMCompactBrowsingView()<UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, LMCollectionInfoViewDelegate, LMBigListEntryDelegate, LMControlBarViewDelegate>
+@interface LMCompactBrowsingView()<UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, LMCollectionInfoViewDelegate, LMBigListEntryDelegate>
 
 @property UICollectionView *collectionView;
 
@@ -30,39 +30,34 @@
 	
 	LMMusicTrackCollection *collection = [self musicTrackCollectionForBigListEntry:bigListEntry];
 	
-	UIImageView *contentSubview = [UIImageView new];
+//	UIImageView *contentSubview = [UIImageView new];
+//	
+//	contentSubview.contentMode = UIViewContentModeScaleAspectFit;
+//	contentSubview.image = [collection.representativeItem albumArt];
 	
-	contentSubview.contentMode = UIViewContentModeScaleAspectFit;
-	contentSubview.image = [collection.representativeItem albumArt];
+	UIView *contentSubview = [UIView newAutoLayoutView];
+	
+	contentSubview.backgroundColor = [UIColor purpleColor];
 	
 	return contentSubview;
 }
 
 - (float)contentSubviewFactorial:(BOOL)height forBigListEntry:(LMBigListEntry *)bigListEntry {
 	CGRect frame = [[self.collectionView.visibleCells firstObject] frame];
+	
 	if(frame.size.width == 0){
-		frame = CGRectMake(0, 0, 117, 177);
+		CGSize initialSize = [self collectionView:self.collectionView
+										   layout:self.collectionView.collectionViewLayout
+						   sizeForItemAtIndexPath:[NSIndexPath indexPathWithIndex:bigListEntry.collectionIndex]];
+		frame = CGRectMake(0, 0, initialSize.width, initialSize.height);
 	}
-	CGFloat percentage = frame.size.width/self.frame.size.width;
-	NSLog(@"Frame %f%% %@", percentage, NSStringFromCGRect([[self.collectionView.visibleCells firstObject] frame]));
+	
 	return height ? 0.1 : 1.0;
 }
 
 - (void)sizeChangedToLargeSize:(BOOL)largeSize withHeight:(float)newHeight forBigListEntry:(LMBigListEntry*)bigListEntry {
 	//If the new size is large/opened
-	NSLog(@"%@ changed large", bigListEntry);
-}
-
-- (UIImage*)imageWithIndex:(uint8_t)index forControlBarView:(LMControlBarView *)controlBar {
-	return [LMAppIcon imageForIcon:LMIconBug];
-}
-
-- (BOOL)buttonHighlightedWithIndex:(uint8_t)index wasJustTapped:(BOOL)wasJustTapped forControlBar:(LMControlBarView *)controlBar {
-	return NO;
-}
-
-- (uint8_t)amountOfButtonsForControlBarView:(LMControlBarView *)controlBar {
-	return 3;
+//	NSLog(@"%@ changed large", bigListEntry);
 }
 
 - (NSString*)titleForInfoView:(LMCollectionInfoView*)infoView {
@@ -101,7 +96,6 @@
 	LMBigListEntry *bigListEntry = [LMBigListEntry newAutoLayoutView];
 	bigListEntry.infoDelegate = self;
 	bigListEntry.entryDelegate = self;
-	bigListEntry.controlBarDelegate = self;
 	bigListEntry.collectionIndex = (indexPath.section * 3) + indexPath.row;
 	[bigListEntry setup];
 	
@@ -127,7 +121,7 @@
 	flowLayout.sectionInset = UIEdgeInsetsMake(spacing, spacing, spacing, spacing);
 	flowLayout.minimumLineSpacing = spacing;
 	
-	NSLog(@"Fuck %@", NSStringFromCGSize(CGSizeMake(sideLength, sideLength * (3.0/2.0))));
+	NSLog(@"Fuck %@", NSStringFromCGSize(CGSizeMake(sideLength, sideLength * (2.8/2.0))));
 	
 	return CGSizeMake(sideLength, sideLength * (2.8/2.0));
 }
