@@ -7,6 +7,7 @@
 //
 
 #import <PureLayout/PureLayout.h>
+#import "LMTiledAlbumCoverView.h"
 #import "LMCompactBrowsingView.h"
 #import "LMBigListEntry.h"
 #import "LMAppIcon.h"
@@ -14,6 +15,11 @@
 @interface LMCompactBrowsingView()<UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, LMCollectionInfoViewDelegate, LMBigListEntryDelegate>
 
 @property UICollectionView *collectionView;
+
+/**
+ The big list entries that are used in the compact view.
+ */
+@property NSMutableArray *bigListEntries;
 
 @end
 
@@ -24,11 +30,37 @@
 }
 
 - (id)contentSubviewForBigListEntry:(LMBigListEntry*)bigListEntry {
+	LMMusicTrackCollection *collection = [self musicTrackCollectionForBigListEntry:bigListEntry];
+	
+//	switch(self.musicType){
+//		case LMMusicTypeComposers:
+//		case LMMusicTypeArtists: {
+//			UIImageView *imageView = [UIImageView newAutoLayoutView];
+//			//			imageView.image = [[self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex].representativeItem artistImage];
+//			imageView.contentMode = UIViewContentModeScaleAspectFit;
+//			imageView.layer.shadowColor = [UIColor blackColor].CGColor;
+//			imageView.layer.shadowRadius = WINDOW_FRAME.size.width/45;
+//			imageView.layer.shadowOffset = CGSizeMake(0, imageView.layer.shadowRadius/2);
+//			imageView.layer.shadowOpacity = 0.25f;
+//			return imageView;
+//		}
+//		case LMMusicTypeAlbums:
+//		case LMMusicTypeCompilations:
+//		case LMMusicTypeGenres:
+//		case LMMusicTypePlaylists: {
+//			LMTiledAlbumCoverView *tiledAlbumCover = [LMTiledAlbumCoverView newAutoLayoutView];
+//			tiledAlbumCover.musicCollection = collection;
+//			return tiledAlbumCover;
+//		}
+//		default: {
+//			NSLog(@"Windows fucking error!");
+//			return nil;
+//		}
+//	}
+	
 //	id contentSubview = [self.contentViewsArray objectAtIndex:bigListEntry.collectionIndex % self.bigListEntriesArray.count];
 	
 //	[self.delegate prepareContentSubview:contentSubview forBigListEntry:bigListEntry];
-	
-	LMMusicTrackCollection *collection = [self musicTrackCollectionForBigListEntry:bigListEntry];
 	
 //	UIImageView *contentSubview = [UIImageView new];
 //	
@@ -38,6 +70,8 @@
 	UIView *contentSubview = [UIView newAutoLayoutView];
 	
 	contentSubview.backgroundColor = [UIColor purpleColor];
+	
+	NSLog(@"Content subview %ld", bigListEntry.collectionIndex);
 	
 	return contentSubview;
 }
@@ -65,7 +99,7 @@
 }
 
 - (NSString*)leftTextForInfoView:(LMCollectionInfoView*)infoView {
-	return [[[self musicTrackCollectionForBigListEntry:infoView.associatedBigListEntry] representativeItem] artist];;
+	return [[[self musicTrackCollectionForBigListEntry:infoView.associatedBigListEntry] representativeItem] artist];
 }
 
 - (NSString*)rightTextForInfoView:(LMCollectionInfoView*)infoView {
@@ -93,11 +127,7 @@
 	
 	cell.backgroundColor = [UIColor orangeColor];
 	
-	LMBigListEntry *bigListEntry = [LMBigListEntry newAutoLayoutView];
-	bigListEntry.infoDelegate = self;
-	bigListEntry.entryDelegate = self;
-	bigListEntry.collectionIndex = (indexPath.section * 3) + indexPath.row;
-	[bigListEntry setup];
+	LMBigListEntry *bigListEntry = [self.bigListEntries objectAtIndex:indexPath.row];
 	
 	[cell.contentView addSubview:bigListEntry];
 	[bigListEntry autoPinEdgesToSuperviewEdges];
@@ -138,6 +168,8 @@
 		//	fuck.itemSize = CGSizeMake(90, 120);
 		
 		self.musicTrackCollections = [[LMMusicPlayer sharedMusicPlayer] queryCollectionsForMusicType:LMMusicTypeAlbums];
+		self.musicType = LMMusicTypeAlbums;
+		
 		
 		self.collectionView = [[UICollectionView alloc]initWithFrame:CGRectZero collectionViewLayout:fuck];
 		self.collectionView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -145,6 +177,20 @@
 		self.collectionView.dataSource = self;
 		[self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"cellIdentifier"];
 		[self addSubview:self.collectionView];
+		
+		
+		self.bigListEntries = [NSMutableArray new];
+		
+		for(int i = 0; i < [self collectionView:self.collectionView numberOfItemsInSection:0]; i++){
+			LMBigListEntry *bigListEntry = [LMBigListEntry newAutoLayoutView];
+			bigListEntry.infoDelegate = self;
+			bigListEntry.entryDelegate = self;
+			bigListEntry.collectionIndex = i;
+			[bigListEntry setup];
+			
+			[self.bigListEntries addObject:bigListEntry];
+		}
+		
 		
 		self.backgroundColor = [UIColor whiteColor];
 		self.collectionView.backgroundColor = [UIColor whiteColor];

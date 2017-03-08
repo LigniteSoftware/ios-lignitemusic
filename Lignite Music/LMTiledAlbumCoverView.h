@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LMMusicPlayer.h"
 
 @interface LMTiledAlbumCoverView : UIView
 

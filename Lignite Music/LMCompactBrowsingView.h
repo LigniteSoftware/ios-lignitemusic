@@ -16,4 +16,9 @@
  */
 @property NSArray<LMMusicTrackCollection*> *musicTrackCollections;
 
+/**
+ The current music type. 
+ */
+@property LMMusicType musicType;
+
 @end

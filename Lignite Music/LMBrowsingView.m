@@ -510,7 +510,6 @@
 		case LMMusicTypePlaylists: {
 			LMTiledAlbumCoverView *tiledAlbumCover = [LMTiledAlbumCoverView newAutoLayoutView];
 			tiledAlbumCover.musicCollection = [self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex];
-//			tiledAlbumCover.simpleMode = YES;
 			return tiledAlbumCover;
 		}
 		default: {
