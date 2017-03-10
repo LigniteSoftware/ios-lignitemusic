@@ -48,6 +48,7 @@
 		case LMMusicTypeCompilations:
 		case LMMusicTypeGenres:
 		case LMMusicTypePlaylists: {
+			//No need for prep since we're just gonna prep once
 			LMTiledAlbumCoverView *tiledAlbumCover = [LMTiledAlbumCoverView newAutoLayoutView];
 			tiledAlbumCover.musicCollection = collection;
 			return tiledAlbumCover;
@@ -58,20 +59,9 @@
 		}
 	}
 	
-//	id contentSubview = [self.contentViewsArray objectAtIndex:bigListEntry.collectionIndex % self.bigListEntriesArray.count];
-	
-//	[self.delegate prepareContentSubview:contentSubview forBigListEntry:bigListEntry];
-	
-//	UIImageView *contentSubview = [UIImageView new];
-//	
-//	contentSubview.contentMode = UIViewContentModeScaleAspectFit;
-//	contentSubview.image = [collection.representativeItem albumArt];
-	
 	UIView *contentSubview = [UIView newAutoLayoutView];
 	
 	contentSubview.backgroundColor = [UIColor purpleColor];
-	
-	NSLog(@"Content subview %ld", bigListEntry.collectionIndex);
 	
 	return contentSubview;
 }
@@ -168,8 +158,6 @@
 		
 		UICollectionViewFlowLayout *fuck = [[UICollectionViewFlowLayout alloc]init];
 //		fuck.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-		//	fuck.sectionInset = UIEdgeInsetsMake(15, 15, 15, 15);
-		//	fuck.itemSize = CGSizeMake(90, 120);
 		
 		self.musicTrackCollections = [[LMMusicPlayer sharedMusicPlayer] queryCollectionsForMusicType:LMMusicTypeAlbums];
 		self.musicType = LMMusicTypeAlbums;

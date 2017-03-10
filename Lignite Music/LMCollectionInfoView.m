@@ -93,7 +93,7 @@
 	self.leftTextLabel.text = leftText ? leftText : @"";
 	self.rightTextLabel.text = rightText ? rightText : @"";
 	self.middleDividerImageView.image = middleImage;
-	//
+	
 	if(!self.didInitialSetup){
 		[self.topView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:7.5];
 		[self.topView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:7.5];
