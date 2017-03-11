@@ -93,11 +93,73 @@
 }
 
 - (NSString*)titleForInfoView:(LMCollectionInfoView*)infoView {
-	return [[[self musicTrackCollectionForBigListEntry:infoView.associatedBigListEntry] representativeItem] albumTitle];
+	LMBigListEntry *bigListEntry = infoView.associatedBigListEntry;
+	
+	LMMusicTrackCollection *collection = [self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex];
+	
+	switch(self.musicType){
+		case LMMusicTypeGenres: {
+			return collection.representativeItem.genre ? collection.representativeItem.genre : NSLocalizedString(@"UnknownGenre", nil);
+		}
+		case LMMusicTypeCompilations:{
+			return [collection titleForMusicType:LMMusicTypeCompilations];
+		}
+		case LMMusicTypePlaylists:{
+			return [collection titleForMusicType:LMMusicTypePlaylists];
+		}
+		case LMMusicTypeAlbums: {
+			return collection.representativeItem.albumTitle ? collection.representativeItem.albumTitle : NSLocalizedString(@"UnknownAlbum", nil);
+		}
+		case LMMusicTypeArtists: {
+			return collection.representativeItem.artist ? collection.representativeItem.artist : NSLocalizedString(@"UnknownArtist", nil);
+		}
+		case LMMusicTypeComposers: {
+			return collection.representativeItem.composer ? collection.representativeItem.composer : NSLocalizedString(@"UnknownComposer", nil);
+		}
+		default: {
+			return nil;
+		}
+	}
 }
 
 - (NSString*)leftTextForInfoView:(LMCollectionInfoView*)infoView {
-	return [[[self musicTrackCollectionForBigListEntry:infoView.associatedBigListEntry] representativeItem] artist];
+	LMBigListEntry *bigListEntry = infoView.associatedBigListEntry;
+	
+	LMMusicTrackCollection *collection = [self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex];
+	
+	switch(self.musicType){
+		case LMMusicTypeComposers:
+		case LMMusicTypeArtists: {
+			BOOL usingSpecificTrackCollections = (self.musicType != LMMusicTypePlaylists
+												  && self.musicType != LMMusicTypeCompilations
+												  && self.musicType != LMMusicTypeAlbums);
+			
+			if(usingSpecificTrackCollections){
+				//Fixes for compilations
+				NSUInteger albums = [self.musicPlayer collectionsForRepresentativeTrack:collection.representativeItem
+																		   forMusicType:self.musicType].count;
+				return [NSString stringWithFormat:@"%lu %@", (unsigned long)albums, NSLocalizedString(albums == 1 ? @"AlbumInline" : @"AlbumsInline", nil)];
+			}
+			else{
+				return [NSString stringWithFormat:@"%lu %@", (unsigned long)collection.numberOfAlbums, NSLocalizedString(collection.numberOfAlbums == 1 ? @"AlbumInline" : @"AlbumsInline", nil)];
+			}
+		}
+		case LMMusicTypeGenres:
+		case LMMusicTypePlaylists:
+		{
+			return [NSString stringWithFormat:@"%ld %@", (unsigned long)collection.trackCount, NSLocalizedString(collection.trackCount == 1 ? @"Song" : @"Songs", nil)];
+		}
+		case LMMusicTypeCompilations:
+		case LMMusicTypeAlbums: {
+			if(collection.variousArtists){
+				return NSLocalizedString(@"Various", nil);
+			}
+			return collection.representativeItem.artist ? collection.representativeItem.artist : NSLocalizedString(@"UnknownArtist", nil);
+		}
+		default: {
+			return nil;
+		}
+	}
 }
 
 - (NSString*)rightTextForInfoView:(LMCollectionInfoView*)infoView {
