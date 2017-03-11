@@ -398,7 +398,7 @@
 	}
 	if(index == 1){
 		UIView *testView = [UIView newAutoLayoutView];
-		testView.backgroundColor = [UIColor orangeColor];
+		testView.backgroundColor = [UIColor blackColor];
 		return testView;
 	}
 	LMListEntry *listEntry = [self.songEntries objectAtIndex:(index-2) % self.songEntries.count];
@@ -416,7 +416,7 @@
 
 - (float)heightAtIndex:(NSUInteger)index forTableView:(LMTableView*)tableView {
 	if(index == 0){
-		return self.frame.size.height/4.0;
+		return self.frame.size.width;
 	}
 	if(index == 1){
 		return self.frame.size.height/10.0;

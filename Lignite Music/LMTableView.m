@@ -138,17 +138,14 @@
 			[subview removeFromSuperview];
 			
 			[lmCell.contentView addSubview:newSubview];
-			
-			lmCell.backgroundColor = [UIColor clearColor];
-			lmCell.contentView.backgroundColor = [UIColor clearColor];
-			[newSubview setBackgroundColor:[UIColor clearColor]];
-			
+						
 			[newSubview autoPinEdgesToSuperviewEdges];
 		}
 	}
 	
 	lmCell.subview = newSubview;
 	lmCell.index = (int)indexPath.section;
+	lmCell.backgroundColour = (indexPath.section == 0) ? [UIColor clearColor] : [UIColor whiteColor];
 	
 	if(!lmCell.didSetupConstraints){
 		lmCell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -217,7 +214,7 @@
 - (UIView*)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
 	CGRect frame = CGRectMake(0, 0, self.frame.size.width, [self tableView:self heightForHeaderInSection:section]);
 	UIView *view = [[UIView alloc] initWithFrame:frame];
-//	view.backgroundColor = [UIColor yellowColor];
+	view.backgroundColor = [UIColor whiteColor];
 	
 	if(self.shouldUseDividers && ![self.dividerSectionsToIgnore containsObject:@(section)] && !(self.bottomSpacing > 0 && section == self.numberOfSections-1)){
 		uint8_t dividerHeight = 1;

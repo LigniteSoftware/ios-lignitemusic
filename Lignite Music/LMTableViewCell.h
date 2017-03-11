@@ -22,6 +22,8 @@
 @property id subview;
 @property BOOL didSetupConstraints;
 
+@property UIColor *backgroundColour;
+
 @property int index;
 
 @end

@@ -59,7 +59,7 @@
 	[self.browsingDetailView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 	[self.browsingDetailView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 	[self.browsingDetailView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-	[self.browsingDetailView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:44];
+	[self.browsingDetailView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:64];
 	
 	[self.browsingDetailView setup];
 }
