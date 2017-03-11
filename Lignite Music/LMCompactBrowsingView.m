@@ -56,6 +56,8 @@
 			imageView.layer.shadowRadius = WINDOW_FRAME.size.width/45;
 			imageView.layer.shadowOffset = CGSizeMake(0, imageView.layer.shadowRadius/2);
 			imageView.layer.shadowOpacity = 0.25f;
+			UIImage *artistImage = [collection.representativeItem artistImage];
+			imageView.image = artistImage;
 			return imageView;
 		}
 		case LMMusicTypeAlbums:
@@ -206,7 +208,7 @@
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
 	UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cellIdentifier" forIndexPath:indexPath];
 	
-	cell.backgroundColor = [UIColor orangeColor];
+	cell.backgroundColor = [UIColor whiteColor];
 	
 	for(UIView *subview in cell.contentView.subviews){
 		[subview removeFromSuperview];

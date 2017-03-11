@@ -14,13 +14,13 @@
 #import "LMSearchViewController.h"
 #import "LMButtonNavigationBar.h"
 #import "UIImage+AverageColour.h"
+#import "LMCompactBrowsingView.h"
 #import "LMCoreViewController.h"
 #import "LMPurchaseManager.h"
 #import "LMNowPlayingView.h"
 #import "UIColor+isLight.h"
 #import "NSTimer+Blocks.h"
 #import "LMImageManager.h"
-#import "LMBrowsingView.h"
 #import "LMMusicPlayer.h"
 #import "LMAppDelegate.h"
 #import "LMSearchView.h"
@@ -35,7 +35,6 @@
 #import "LMFeedbackViewController.h"
 #import "LMCreditsViewController.h"
 
-#import "LMCompactBrowsingView.h"
 #import "LMProgressSlider.h"
 #import "LMControlBarView.h"
 #import "LMBrowsingBar.h"
@@ -59,7 +58,6 @@ LMControlBarViewDelegate
 
 @property LMNowPlayingView *nowPlayingView;
 
-@property LMBrowsingView *browsingView;
 @property LMTitleView *titleView;
 
 @property NSArray<LMSource*> *sourcesForSourceSelector;
@@ -197,24 +195,15 @@ LMControlBarViewDelegate
 #else
 	if(self.musicCollectionsArray){
 		NSLog(@"Loading music from cache.");
-		self.browsingView.musicTrackCollections = [self.musicCollectionsArray objectAtIndex:musicType];
 		self.compactView.musicTrackCollections = [self.musicCollectionsArray objectAtIndex:musicType];
 	}
 	else{
 		NSLog(@"Loading music directly.");
-		self.browsingView.musicTrackCollections = [self.musicPlayer queryCollectionsForMusicType:musicType];
 		self.compactView.musicTrackCollections = [self.musicPlayer queryCollectionsForMusicType:musicType];
 	}
 #endif
-	self.browsingView.musicType = musicType;
 	self.compactView.musicType = musicType;
-	self.browsingView.hidden = NO;
 	self.compactView.musicType = musicType;
-	
-	NSLog(@"Setting up browsing view");
-	
-	[self.browsingView setup];
-	[self.browsingView layoutIfNeeded];
 	
 	[self.compactView reloadContents];
 	
@@ -305,6 +294,8 @@ LMControlBarViewDelegate
 		case LMIconComposers:
 		case LMIconCompilations:
 		case LMIconAlbums: {
+			self.compactView.hidden = NO;
+			
 			LMMusicType associatedMusicType = LMMusicTypeAlbums;
 			
 			switch(source.sourceID){
@@ -334,15 +325,11 @@ LMControlBarViewDelegate
 			
 			[self setupBrowsingViewWithMusicType:associatedMusicType];
 			
-			[self.browsingView reloadSourceSelectorInfo];
-			self.currentSource = self.browsingView;
-//
-////			if(self.albumView.showingDetailView){
-////				[self.browsingAssistant close];
-////			}
+//			[self.browsingView reloadSourceSelectorInfo];
 			break;
 		}
 		case LMIconTitles: {
+			self.compactView.hidden = YES;
 			self.titleView.hidden = NO;
 			[self.titleView reloadSourceSelectorInfo];
 			self.currentSource = self.titleView;
@@ -909,20 +896,6 @@ LMControlBarViewDelegate
 
 						[self.titleView setup];
 						self.titleView.hidden = YES;
-						
-						
-						
-//						self.browsingView = [LMBrowsingView newAutoLayoutView];
-//						self.browsingView.rootViewController = self;
-//						[self.view addSubview:self.browsingView];
-//						
-//						[self.browsingView setup];
-//						
-//						[self.browsingView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-//						[self.browsingView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-//						[self.browsingView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-//						[self.browsingView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:64];
-//						self.browsingView.hidden = YES;
 						
 						
 						
