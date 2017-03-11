@@ -95,6 +95,8 @@
 
 @property CGPoint originalPoint, currentPoint;
 
+@property LMCompactBrowsingView *compactView;
+
 @end
 
 @implementation LMCoreViewController
@@ -642,12 +644,12 @@
 	
 	NSLog(@"Frame set %@", NSStringFromCGRect(self.view.frame));
 	
-	LMCompactBrowsingView *compactBrowsingView = [LMCompactBrowsingView newAutoLayoutView];
-	[self.view addSubview:compactBrowsingView];
-	
-	[compactBrowsingView autoPinEdgesToSuperviewEdges];
-	
-	return;
+//	LMCompactBrowsingView *compactBrowsingView = [LMCompactBrowsingView newAutoLayoutView];
+//	[self.view addSubview:compactBrowsingView];
+//	
+//	[compactBrowsingView autoPinEdgesToSuperviewEdges];
+//	
+//	return;
 	
 	
 	
@@ -869,17 +871,29 @@
 						
 						
 						
-						self.browsingView = [LMBrowsingView newAutoLayoutView];
-						self.browsingView.rootViewController = self;
-						[self.view addSubview:self.browsingView];
+//						self.browsingView = [LMBrowsingView newAutoLayoutView];
+//						self.browsingView.rootViewController = self;
+//						[self.view addSubview:self.browsingView];
+//						
+//						[self.browsingView setup];
+//						
+//						[self.browsingView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+//						[self.browsingView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+//						[self.browsingView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+//						[self.browsingView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:64];
+//						self.browsingView.hidden = YES;
 						
-						[self.browsingView setup];
 						
-						[self.browsingView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-						[self.browsingView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-						[self.browsingView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-						[self.browsingView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:64];
-						self.browsingView.hidden = YES;
+						
+						self.compactView = [LMCompactBrowsingView newAutoLayoutView];
+						[self.view addSubview:self.compactView];
+						
+						[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+						[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+						[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:20];
+						[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:64];
+						//Stuck on the road with no place to call home, had to just learn the whole game on my own!
+						self.compactView.hidden = NO;
 		
 				
 						[self.musicPlayer addMusicDelegate:self];
