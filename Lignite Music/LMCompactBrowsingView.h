@@ -21,4 +21,9 @@
  */
 @property LMMusicType musicType;
 
+/**
+ Reload the contents of the view after changing the music type and music track collections.
+ */
+- (void)reloadContents;
+
 @end

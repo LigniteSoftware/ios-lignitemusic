@@ -150,6 +150,19 @@
 	return CGSizeMake(sideLength, sideLength * (2.8/2.0));
 }
 
+- (void)reloadContents {
+	[self.collectionView removeFromSuperview];
+	self.collectionView = nil;
+	
+	for(UIView *subview in self.bigListEntries){
+		[subview removeFromSuperview];
+	}
+	
+	self.didLayoutConstraints = NO;
+	
+	[self layoutIfNeeded];
+}
+
 - (void)layoutSubviews {
 	[super layoutSubviews];
 	
@@ -159,8 +172,8 @@
 		UICollectionViewFlowLayout *fuck = [[UICollectionViewFlowLayout alloc]init];
 //		fuck.scrollDirection = UICollectionViewScrollDirectionHorizontal;
 		
-		self.musicTrackCollections = [[LMMusicPlayer sharedMusicPlayer] queryCollectionsForMusicType:LMMusicTypeAlbums];
-		self.musicType = LMMusicTypeAlbums;
+//		self.musicTrackCollections = [[LMMusicPlayer sharedMusicPlayer] queryCollectionsForMusicType:LMMusicTypeAlbums];
+//		self.musicType = LMMusicTypeAlbums;
 		
 		
 		self.collectionView = [[UICollectionView alloc]initWithFrame:CGRectZero collectionViewLayout:fuck];

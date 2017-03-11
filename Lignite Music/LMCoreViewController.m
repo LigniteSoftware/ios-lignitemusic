@@ -193,24 +193,30 @@
 	if(self.musicCollectionsArray){
 		NSLog(@"Loading music from cache.");
 		self.browsingView.musicTrackCollections = [self.musicCollectionsArray objectAtIndex:musicType];
+		self.compactView.musicTrackCollections = [self.musicCollectionsArray objectAtIndex:musicType];
 	}
 	else{
 		NSLog(@"Loading music directly.");
 		self.browsingView.musicTrackCollections = [self.musicPlayer queryCollectionsForMusicType:musicType];
+		self.compactView.musicTrackCollections = [self.musicPlayer queryCollectionsForMusicType:musicType];
 	}
 #endif
 	self.browsingView.musicType = musicType;
+	self.compactView.musicType = musicType;
 	self.browsingView.hidden = NO;
+	self.compactView.musicType = musicType;
 	
 	NSLog(@"Setting up browsing view");
 	
 	[self.browsingView setup];
 	[self.browsingView layoutIfNeeded];
 	
+	[self.compactView reloadContents];
+	
 	NSLog(@"Done setting up");
 	
 	self.buttonNavigationBar.browsingBar.letterTabBar.lettersDictionary =
-		[self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:self.browsingView.musicTrackCollections
+		[self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:self.compactView.musicTrackCollections
 														 withAssociatedMusicType:musicType];
 	
 	NSLog(@"Setup letters dictionary");
