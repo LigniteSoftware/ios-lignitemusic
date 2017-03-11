@@ -317,12 +317,6 @@
 	self.buttonArea = [UIView newAutoLayoutView];
 	[self.view addSubview:self.buttonArea];
 	
-	[self.buttonArea autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:self.view.frame.size.height/30.0];
-	[self.buttonArea autoAlignAxisToSuperviewAxis:ALAxisVertical];
-	[self.buttonArea autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-	[self.buttonArea autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	[self.buttonArea autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/16.0)];
-	
 	self.finishedButton = [UIButton newAutoLayoutView];
 	self.finishedButton.backgroundColor = [LMColour ligniteRedColour];
 	self.finishedButton.titleLabel.textColor = [UIColor whiteColor];
@@ -345,7 +339,7 @@
 		[firstButtonArea autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[firstButtonArea autoPinEdgeToSuperviewEdge:ALEdgeTop];
 		[firstButtonArea autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		[firstButtonArea autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.buttonArea withMultiplier:(1.0/2.0)];
+		[firstButtonArea autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.buttonArea withMultiplier:(1.0/2.25)];
 		
 		self.secondaryButton = [UIButton newAutoLayoutView];
 		self.secondaryButton.backgroundColor = [LMColour ligniteRedColour];
@@ -358,10 +352,7 @@
 		
 		[firstButtonArea addSubview:self.secondaryButton];
 		
-		[self.secondaryButton autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(1.0/2.5)];
-		[self.secondaryButton autoPinEdgeToSuperviewEdge:ALEdgeTop];
-		[self.secondaryButton autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		[self.secondaryButton autoAlignAxisToSuperviewAxis:ALAxisVertical];
+		[self.secondaryButton autoPinEdgesToSuperviewEdges];
 		
 		
 		UIView *secondButtonArea = [UIView newAutoLayoutView];
@@ -371,14 +362,11 @@
 		[secondButtonArea autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 		[secondButtonArea autoPinEdgeToSuperviewEdge:ALEdgeTop];
 		[secondButtonArea autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		[secondButtonArea autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.buttonArea withMultiplier:(1.0/2.0)];
+		[secondButtonArea autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.buttonArea withMultiplier:(1.0/2.25)];
 		
 		[secondButtonArea addSubview:self.finishedButton];
 		
-		[self.finishedButton autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(1.0/2.5)];
-		[self.finishedButton autoPinEdgeToSuperviewEdge:ALEdgeTop];
-		[self.finishedButton autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		[self.finishedButton autoAlignAxisToSuperviewAxis:ALAxisVertical];
+		[self.finishedButton autoPinEdgesToSuperviewEdges];
 	}
 	else{
 		[self.buttonArea addSubview:self.finishedButton];
@@ -390,22 +378,6 @@
 	}
 	
 	
-	self.pageControl = [UIPageControl newAutoLayoutView];
-	self.pageControl.pageIndicatorTintColor = [UIColor darkGrayColor];
-	self.pageControl.numberOfPages = self.amountOfPages;
-	self.pageControl.currentPage = self.index;
-	self.pageControl.currentPageIndicatorTintColor = [LMColour ligniteRedColour];
-	self.pageControl.hidesForSinglePage = YES;
-//	self.pageControl.backgroundColor = [UIColor redColor];
-	self.pageControl.hidden = YES;
-	[self.view addSubview: self.pageControl];
-	
-	[self.pageControl autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.buttonArea];
-	[self.pageControl autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-	[self.pageControl autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	[self.pageControl autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:self.amountOfPages == 1 ? (1.0/25.0) : (1.0/10.0)];
-	
-	
 	self.descriptionLabel = [UILabel newAutoLayoutView];
 	self.descriptionLabel.textAlignment = NSTextAlignmentLeft;
 	self.descriptionLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:16.0f];
@@ -413,13 +385,6 @@
 //	self.descriptionLabel.backgroundColor = [UIColor yellowColor];
 	self.descriptionLabel.text = self.contentDescription;
 	[self.view addSubview:self.descriptionLabel];
-	
-	[self.descriptionLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.pageControl];
-	[self.descriptionLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
-	[self.descriptionLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(8.0/10.0)];
-	[NSLayoutConstraint autoSetPriority:UILayoutPriorityRequired forConstraints:^{
-		[self.descriptionLabel autoSetContentCompressionResistancePriorityForAxis:ALAxisVertical];
-	}];
 	
 	
 	self.titleLabel = [UILabel newAutoLayoutView];
@@ -430,13 +395,6 @@
 	self.titleLabel.text = self.contentTitle;
 	[self.view addSubview:self.titleLabel];
 	
-	[self.titleLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.descriptionLabel withOffset:-20];
-	[self.titleLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
-	[self.titleLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(8.0/10.0)];
-	[NSLayoutConstraint autoSetPriority:UILayoutPriorityRequired forConstraints:^{
-		[self.titleLabel autoSetContentCompressionResistancePriorityForAxis:ALAxisVertical];
-	}];
-	
 	
 	self.screenshotView = [UIImageView newAutoLayoutView];
 //	self.screenshotView.backgroundColor = [UIColor redColor];
@@ -444,10 +402,52 @@
 	self.screenshotView.image = self.screenshotImage;
 	[self.view addSubview:self.screenshotView];
 	
-	[self.screenshotView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.titleLabel withOffset:-10];
-	[self.screenshotView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-	[self.screenshotView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	[self.screenshotView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+	if(self.screenshotImage){
+		[self.titleLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
+		[self.titleLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+		[self.titleLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(8.0/10.0)];
+		[NSLayoutConstraint autoSetPriority:UILayoutPriorityRequired forConstraints:^{
+			[self.titleLabel autoSetContentCompressionResistancePriorityForAxis:ALAxisVertical];
+		}];
+		
+		[self.descriptionLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.titleLabel withOffset:20];
+		[self.descriptionLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
+		[self.descriptionLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(8.0/10.0)];
+		[NSLayoutConstraint autoSetPriority:UILayoutPriorityRequired forConstraints:^{
+			[self.descriptionLabel autoSetContentCompressionResistancePriorityForAxis:ALAxisVertical];
+		}];
+		
+		[self.buttonArea autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.descriptionLabel withOffset:30];
+		[self.buttonArea autoAlignAxisToSuperviewAxis:ALAxisVertical];
+		[self.buttonArea autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.buttonArea autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.buttonArea autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/16.0)];
+		
+		[self.screenshotView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.titleLabel];
+		[self.screenshotView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.screenshotView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.screenshotView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/3.0)];
+	}
+	else{
+		[self.descriptionLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
+		[self.descriptionLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+		[self.descriptionLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(8.0/10.0)];
+		[NSLayoutConstraint autoSetPriority:UILayoutPriorityRequired forConstraints:^{
+			[self.descriptionLabel autoSetContentCompressionResistancePriorityForAxis:ALAxisVertical];
+		}];
+		
+		[self.titleLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.descriptionLabel withOffset:-20];
+		[self.titleLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
+		[self.titleLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(8.0/10.0)];
+		[NSLayoutConstraint autoSetPriority:UILayoutPriorityRequired forConstraints:^{
+			[self.titleLabel autoSetContentCompressionResistancePriorityForAxis:ALAxisVertical];
+		}];
+		
+		[self.buttonArea autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.descriptionLabel withOffset:30];
+		[self.buttonArea autoAlignAxisToSuperviewAxis:ALAxisVertical];
+		[self.buttonArea autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(8.0/10.0)];
+		[self.buttonArea autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/16.0)];
+	}
 	
 	[self.view insertSubview:self.titleLabel aboveSubview:self.screenshotView];
 }

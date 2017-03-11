@@ -80,9 +80,9 @@
 			
 			self.screenshotsArray = [[NSArray alloc]initWithObjects:
 									 @"icon_no_cover_art_75.png",
-									 @"onboarding_kickstarter.png",
-									 @"onboarding_library_access.png",
-									 @"onboarding_bluetooth.png"
+									 @"! onboarding_kickstarter.png",
+									 @"! onboarding_library_access.png",
+									 @"! onboarding_bluetooth.png"
 									 , nil];
 			
 			self.buttonNamesArray = [[NSArray alloc]initWithObjects:
@@ -105,7 +105,7 @@
 							   , nil];
 			
 			self.screenshotsArray = [[NSArray alloc]initWithObjects:
-									 @"onboarding_gutless_user.png"
+									 @"! onboarding_gutless_user.png"
 									 , nil];
 			
 			self.buttonNamesArray = [[NSArray alloc]initWithObjects:
