@@ -41,6 +41,11 @@
  */
 @property BOOL usingSpecificTrackCollections;
 
+/**
+ The background imageView for the album art which will initially be partially covered.
+ */
+@property UIImageView *backgroundImageView;
+
 @end
 
 @implementation LMBrowsingDetailView
@@ -358,7 +363,7 @@
 	LMMusicTrack *track = [self.musicTrackCollection.items objectAtIndex:entry.collectionIndex];
 	if(self.musicTrackCollection.variousArtists){
 		if(self.musicType == LMMusicTypePlaylists){
-			return [NSString stringWithFormat:@"#%ld | %@ | %@", (entry.collectionIndex + 1), [LMNowPlayingView durationStringTotalPlaybackTime:track.playbackDuration], track.artist ? track.artist : NSLocalizedString(@"UnknownArtist", nil)];
+			return [NSString stringWithFormat:@"#%ld | %@ | %@", (entry.collectionIndex + 2), [LMNowPlayingView durationStringTotalPlaybackTime:track.playbackDuration], track.artist ? track.artist : NSLocalizedString(@"UnknownArtist", nil)];
 		}
 		else{
 			return [NSString stringWithFormat:@"%@ | %@", [LMNowPlayingView durationStringTotalPlaybackTime:track.playbackDuration], track.artist ? track.artist : NSLocalizedString(@"UnknownArtist", nil)];
@@ -380,17 +385,24 @@
 
 - (NSString*)textForListEntry:(LMListEntry *)entry {
 	if(self.musicType == LMMusicTypeAlbums || self.musicType == LMMusicTypeCompilations){
-		return [NSString stringWithFormat:@"%ld", entry.collectionIndex + 1];
+		return [NSString stringWithFormat:@"%ld", entry.collectionIndex+1];
 	}
 	return @":)";
 }
 
 - (id)subviewAtIndex:(NSUInteger)index forTableView:(LMTableView*)tableView {
 	if(index == 0){
-		return self.headerBigListEntry;
+		UIView *testView = [UIView newAutoLayoutView];
+		testView.backgroundColor = [UIColor clearColor];
+		return testView;
 	}
-	LMListEntry *listEntry = [self.songEntries objectAtIndex:(index-1) % self.songEntries.count];
-	listEntry.collectionIndex = index-1; //To adjust for the big list entry at the top
+	if(index == 1){
+		UIView *testView = [UIView newAutoLayoutView];
+		testView.backgroundColor = [UIColor orangeColor];
+		return testView;
+	}
+	LMListEntry *listEntry = [self.songEntries objectAtIndex:(index-2) % self.songEntries.count];
+	listEntry.collectionIndex = index-2; //To adjust for the big list entry at the top
 	if(self.usingSpecificTrackCollections) {
 		listEntry.associatedData = [self.specificTrackCollections objectAtIndex:listEntry.collectionIndex];
 	}
@@ -404,13 +416,17 @@
 
 - (float)heightAtIndex:(NSUInteger)index forTableView:(LMTableView*)tableView {
 	if(index == 0){
-		return [LMBigListEntry sizeForBigListEntryWhenOpened:self.headerBigListEntry.isLargeSize forDelegate:self];
+		return self.frame.size.height/4.0;
+	}
+	if(index == 1){
+		return self.frame.size.height/10.0;
+//		return [LMBigListEntry sizeForBigListEntryWhenOpened:self.headerBigListEntry.isLargeSize forDelegate:self];
 	}
 	return WINDOW_FRAME.size.height/8;
 }
 
 - (float)spacingAtIndex:(NSUInteger)index forTableView:(LMTableView*)tableView {
-	if(index == 0){
+	if(index == 0 || index == 1){
 		return 0;
 	}
 	return 10;
@@ -437,6 +453,8 @@
 - (void)setup {
 	self.currentlyHighlighted = -1;
 	
+	self.backgroundColor = [UIColor whiteColor];
+	
 	self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 	
 	self.usingSpecificTrackCollections = (self.musicType != LMMusicTypePlaylists
@@ -448,19 +466,30 @@
 																			   forMusicType:self.musicType];
 	}
 	
-	self.headerBigListEntry = [LMBigListEntry newAutoLayoutView];
-	self.headerBigListEntry.infoDelegate = self;
-	self.headerBigListEntry.entryDelegate = self;
-	self.headerBigListEntry.controlBarDelegate = self;
-	self.headerBigListEntry.collectionIndex = 0;
-	self.headerBigListEntry.isLargeSize = YES;
-	self.headerBigListEntry.userInteractionEnabled = YES;
-	[self.headerBigListEntry setup];
+//	self.headerBigListEntry = [LMBigListEntry newAutoLayoutView];
+//	self.headerBigListEntry.infoDelegate = self;
+//	self.headerBigListEntry.entryDelegate = self;
+//	self.headerBigListEntry.controlBarDelegate = self;
+//	self.headerBigListEntry.collectionIndex = 0;
+//	self.headerBigListEntry.isLargeSize = YES;
+//	self.headerBigListEntry.userInteractionEnabled = YES;
+//	[self.headerBigListEntry setup];
+	
+	self.backgroundImageView = [UIImageView newAutoLayoutView];
+	self.backgroundImageView.contentMode = UIViewContentModeScaleAspectFit;
+	self.backgroundImageView.image = [self.musicTrackCollection.representativeItem albumArt];
+	[self addSubview:self.backgroundImageView];
+	
+	[self.backgroundImageView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+	[self.backgroundImageView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+	[self.backgroundImageView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+	[self.backgroundImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self];
+	
 	
 	self.tableView = [LMTableView newAutoLayoutView];
 	self.tableView.title = @"PlaylistDetailView";
 	self.tableView.averageCellHeight = WINDOW_FRAME.size.height*(1.0/10.0);
-	self.tableView.totalAmountOfObjects = (self.usingSpecificTrackCollections ? self.specificTrackCollections.count : self.musicTrackCollection.trackCount) + 1;
+	self.tableView.totalAmountOfObjects = (self.usingSpecificTrackCollections ? self.specificTrackCollections.count : self.musicTrackCollection.trackCount) + 2;
 	self.tableView.shouldUseDividers = YES;
 	self.tableView.dividerSectionsToIgnore = @[ @(0), @(1) ];
 	self.tableView.subviewDataSource = self;

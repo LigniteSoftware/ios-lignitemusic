@@ -39,7 +39,7 @@
 - (instancetype)init {
 	self = [super initWithFrame:CGRectMake(0, 0, 0, 0) style:UITableViewStylePlain];
 	if(self){
-		self.backgroundColor = [UIColor whiteColor];
+		self.backgroundColor = [UIColor clearColor];
 		self.separatorColor = [UIColor clearColor];
 		self.alwaysBounceVertical = NO;
 		
@@ -138,6 +138,10 @@
 			[subview removeFromSuperview];
 			
 			[lmCell.contentView addSubview:newSubview];
+			
+			lmCell.backgroundColor = [UIColor clearColor];
+			lmCell.contentView.backgroundColor = [UIColor clearColor];
+			[newSubview setBackgroundColor:[UIColor clearColor]];
 			
 			[newSubview autoPinEdgesToSuperviewEdges];
 		}

@@ -84,6 +84,10 @@
 		
 		[cellSubview autoPinEdgesToSuperviewEdges];
 		
+		self.backgroundColor = [UIColor clearColor];
+		self.opaque = NO;
+		self.backgroundView = nil;
+		
 		if(self.index != 0){
 //			NSLog(@"Setup %d", self.index);
 		}

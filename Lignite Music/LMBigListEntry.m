@@ -132,7 +132,7 @@
 	
 	UITapGestureRecognizer *contentTapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tappedContentView:)];
 	[contentView addGestureRecognizer:contentTapGesture];
-	[contentTapGesture requireGestureRecognizerToFail:contentDoubleTapGesture];
+//	[contentTapGesture requireGestureRecognizerToFail:contentDoubleTapGesture];
 	contentView.userInteractionEnabled = YES;
 
 	
