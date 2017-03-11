@@ -14,12 +14,20 @@
 
 @interface LMCompactBrowsingView()<UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, LMCollectionInfoViewDelegate, LMBigListEntryDelegate>
 
+/**
+ The actual collection view for displaying collections in a compact method.
+ */
 @property UICollectionView *collectionView;
 
 /**
  The big list entries that are used in the compact view.
  */
 @property NSMutableArray *bigListEntries;
+
+/**
+ The music player.
+ */
+@property LMMusicPlayer *musicPlayer;
 
 @end
 
@@ -101,7 +109,13 @@
 }
 
 - (void)contentViewTappedForBigListEntry:(LMBigListEntry *)bigListEntry {
-	NSLog(@"Content view tapped for %@", bigListEntry);
+	NSLog(@"Single tapped!");
+}
+
+- (void)contentViewDoubleTappedForBigListEntry:(LMBigListEntry *)bigListEntry {
+	[self.musicPlayer stop];
+	[self.musicPlayer setNowPlayingCollection:[self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex]];
+	[self.musicPlayer play];
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
@@ -168,6 +182,8 @@
 	
 	if(!self.didLayoutConstraints){
 		self.didLayoutConstraints = YES;
+		
+		self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 		
 		UICollectionViewFlowLayout *fuck = [[UICollectionViewFlowLayout alloc]init];
 //		fuck.scrollDirection = UICollectionViewScrollDirectionHorizontal;

@@ -89,6 +89,12 @@
 	}
 }
 
+- (void)doubleTappedContentView:(UITapGestureRecognizer*)recognizer {
+	if([self.entryDelegate respondsToSelector:@selector(contentViewDoubleTappedForBigListEntry:)]){
+		[self.entryDelegate contentViewDoubleTappedForBigListEntry:self];
+	}
+}
+
 - (void)setup {
 	self.contentView = [self.entryDelegate contentSubviewForBigListEntry:self];
 
@@ -119,10 +125,16 @@
 //	[contentView autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height*contentViewHeightFactorial];
 	
 	[contentView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self];
+
+	UITapGestureRecognizer *contentDoubleTapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(doubleTappedContentView:)];
+	contentDoubleTapGesture.numberOfTapsRequired = 2;
+	[contentView addGestureRecognizer:contentDoubleTapGesture];
 	
 	UITapGestureRecognizer *contentTapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tappedContentView:)];
 	[contentView addGestureRecognizer:contentTapGesture];
+	[contentTapGesture requireGestureRecognizerToFail:contentDoubleTapGesture];
 	contentView.userInteractionEnabled = YES;
+
 	
 	self.collectionInfoView = [LMCollectionInfoView newAutoLayoutView];
 	self.collectionInfoView.delegate = self.infoDelegate;

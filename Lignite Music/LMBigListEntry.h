@@ -50,6 +50,13 @@
  */
 - (void)contentViewTappedForBigListEntry:(LMBigListEntry*)bigListEntry;
 
+/**
+ A content view was double tapped on this big list entry.
+ 
+ @param bigListEntry The big list entry which was double tapped.
+ */
+- (void)contentViewDoubleTappedForBigListEntry:(LMBigListEntry*)bigListEntry;
+
 /*
  * Quick Copy Paste
  *
