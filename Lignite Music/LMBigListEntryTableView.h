@@ -75,11 +75,6 @@
 - (void)setup;
 
 /**
- Reload the control bars which are associated with the big list entries of this view.
- */
-- (void)reloadControlBars;
-
-/**
  Reload the core table view's data, which will simply redraw anything on screen.
  */
 - (void)reloadData;

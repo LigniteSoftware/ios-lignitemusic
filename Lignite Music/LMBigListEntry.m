@@ -10,13 +10,12 @@
 #import "LMBigListEntry.h"
 #import "LMExtras.h"
 
-@interface LMBigListEntry()<LMControlBarViewDelegate>
+@interface LMBigListEntry()
 
 @property UIView *contentSubviewBackgroundView;
 @property id contentView;
 
 
-@property LMControlBarView *controlBarView;
 @property NSLayoutConstraint* controlBarViewHeightConstraint;
 
 @end
@@ -35,52 +34,12 @@
 	float contentViewHeightFactorial = [delegate contentSubviewFactorial:YES forBigListEntry:nil];
 	float infoViewHeightFactorial = (1.0/9.0);
 	
-	return (contentViewHeightFactorial+infoViewHeightFactorial)*WINDOW_FRAME.size.height+20+[LMControlBarView heightWhenIsOpened:opened];
+	return (contentViewHeightFactorial+infoViewHeightFactorial)*WINDOW_FRAME.size.height+20;
 }
 
-- (uint8_t)amountOfButtonsForControlBarView:(LMControlBarView *)controlBar {
-	return [self.controlBarDelegate amountOfButtonsForControlBarView:controlBar];
-}
-
-- (void)sizeChangedTo:(CGSize)newSize forControlBarView:(LMControlBarView *)controlBar {
-	[self layoutIfNeeded];
-	
-	NSLog(@"Size changed to %@", NSStringFromCGSize(newSize));
-	
-	self.controlBarViewHeightConstraint.constant = newSize.height;
-	
-	[UIView animateWithDuration:0.3 animations:^{
-		[self layoutIfNeeded];
-	}];
-	
-	self.isLargeSize = self.controlBarView.isOpen;
-	
-	[self.entryDelegate sizeChangedToLargeSize:self.controlBarView.isOpen withHeight:[LMBigListEntry sizeForBigListEntryWhenOpened:self.isLargeSize forDelegate:self.entryDelegate] forBigListEntry:self];
-}
-
-- (UIImage*)imageWithIndex:(uint8_t)index forControlBarView:(LMControlBarView *)controlBar {
-	return [self.controlBarDelegate imageWithIndex:index forControlBarView:controlBar];
-}
-
-- (BOOL)buttonHighlightedWithIndex:(uint8_t)index wasJustTapped:(BOOL)wasJustTapped forControlBar:(LMControlBarView *)controlBar {
-	return [self.controlBarDelegate buttonHighlightedWithIndex:index wasJustTapped:wasJustTapped forControlBar:controlBar];
-}
-
-- (void)invertControlView {
-	[self.controlBarView invert:YES];
-}
-
-- (void)setLarge:(BOOL)large animated:(BOOL)animated {
-	self.isLargeSize = YES;
-	large ? [self.controlBarView open:animated] : [self.controlBarView close:animated];
-}
-
-- (void)reloadData:(BOOL)fullReload {
-	if(fullReload) {
-		[self.collectionInfoView reloadData];
-		[self.entryDelegate contentSubviewForBigListEntry:self];
-	}
-	[self.controlBarView reloadHighlightedButtons];
+- (void)reloadData {
+	[self.collectionInfoView reloadData];
+	[self.entryDelegate contentSubviewForBigListEntry:self];
 }
 
 - (void)tappedContentView:(UITapGestureRecognizer*)recognizer {
@@ -147,31 +106,8 @@
 	[self.collectionInfoView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 	
 	[self.collectionInfoView reloadData];
-	
-	if(self.controlBarDelegate){
-		self.controlBarView = [LMControlBarView newAutoLayoutView];
-		self.controlBarView.delegate = self;
-		self.controlBarView.userInteractionEnabled = YES;
-		[self addSubview:self.controlBarView];
-
-		[self.controlBarView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:10];
-		[self.controlBarView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:10];
-		[self.controlBarView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.collectionInfoView withOffset:-5];
-		[self.controlBarView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-	}
-	
-//	self.controlBarViewHeightConstraint = [self.controlBarView autoSetDimension:ALDimensionHeight toSize:[LMControlBarView heightWhenIsOpened:self.isLargeSize]];
-	
-	[self.controlBarView setup];
-
-	UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(invertControlView)];
-	[self.collectionInfoView addGestureRecognizer:tapGesture];
 
 	[self.entryDelegate sizeChangedToLargeSize:self.isLargeSize withHeight:[LMBigListEntry sizeForBigListEntryWhenOpened:self.isLargeSize forDelegate:self.entryDelegate] forBigListEntry:self];
-	
-	if(self.isLargeSize){
-		[self.controlBarView open:NO];
-	}
 }
 
 @end

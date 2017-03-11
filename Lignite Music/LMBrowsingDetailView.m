@@ -18,7 +18,7 @@
 #import "LMMusicPlayer.h"
 #import "LMBrowsingDetailViewController.h"
 
-@interface LMBrowsingDetailView()<LMTableViewSubviewDataSource, LMBigListEntryDelegate, LMCollectionInfoViewDelegate, LMControlBarViewDelegate, LMListEntryDelegate, LMMusicPlayerDelegate>
+@interface LMBrowsingDetailView()<LMTableViewSubviewDataSource, LMBigListEntryDelegate, LMCollectionInfoViewDelegate, LMListEntryDelegate, LMMusicPlayerDelegate>
 
 @property LMTableView *tableView;
 
@@ -54,6 +54,10 @@
 @end
 
 @implementation LMBrowsingDetailView
+
+- (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState {
+	NSLog(@"Playback state changed in browsing detail view delegate");
+}
 
 - (LMListEntry*)listEntryForIndex:(NSInteger)index {
 	if(index == -1){
@@ -111,10 +115,6 @@
 	if(highlightedEntry){
 		[highlightedEntry changeHighlightStatus:YES animated:YES];
 	}
-}
-
-- (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState {
-	[self.headerBigListEntry reloadData:NO];
 }
 
 - (void)musicLibraryDidChange {
@@ -442,6 +442,11 @@
 		[collectionInfoView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 		[collectionInfoView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:rootView withMultiplier:(6.0/10.0)];
 		
+		collectionInfoView.layer.shadowColor = [UIColor blackColor].CGColor;
+		collectionInfoView.layer.shadowRadius = WINDOW_FRAME.size.width/35;
+		collectionInfoView.layer.shadowOffset = CGSizeMake(0, collectionInfoView.layer.shadowRadius/2);
+		collectionInfoView.layer.shadowOpacity = 0.25f;
+		
 		[collectionInfoView reloadData];
 		
 		
@@ -484,7 +489,7 @@
 			
 			UIView *buttonBackgroundView = [UIImageView newAutoLayoutView];
 			buttonBackgroundView.layer.masksToBounds = YES;
-			buttonBackgroundView.layer.cornerRadius = 10.0;
+			buttonBackgroundView.layer.cornerRadius = 6.0;
 			buttonBackgroundView.userInteractionEnabled = YES;
 			[buttonAreaView addSubview:buttonBackgroundView];
 			
@@ -501,8 +506,8 @@
 			[buttonBackgroundView addSubview:buttonImageView];
 			
 			[buttonImageView autoCenterInSuperview];
-			[buttonImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:buttonBackgroundView withMultiplier:0.5];
-			[buttonImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:buttonBackgroundView withMultiplier:0.5];
+			[buttonImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:buttonBackgroundView withMultiplier:0.75];
+			[buttonImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:buttonBackgroundView withMultiplier:0.75];
 			
 			[controlButtonViews addObject:buttonBackgroundView];
 		}
@@ -530,7 +535,7 @@
 	}
 	if(index == 1){
 		//The size of the info view text + the size of the new control bar
-		return self.frame.size.height/8.0 + self.frame.size.height/10.0;
+		return self.frame.size.height/8.0 + self.frame.size.height/9.0;
 	}
 	return WINDOW_FRAME.size.height/8;
 }

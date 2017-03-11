@@ -72,12 +72,6 @@
 			return nil;
 		}
 	}
-	
-	UIView *contentSubview = [UIView newAutoLayoutView];
-	
-	contentSubview.backgroundColor = [UIColor purpleColor];
-	
-	return contentSubview;
 }
 
 - (float)contentSubviewFactorial:(BOOL)height forBigListEntry:(LMBigListEntry *)bigListEntry {

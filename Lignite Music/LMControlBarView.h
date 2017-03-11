@@ -39,16 +39,6 @@
  */
 - (BOOL)buttonHighlightedWithIndex:(uint8_t)index wasJustTapped:(BOOL)wasJustTapped forControlBar:(LMControlBarView*)controlBar;
 
-@optional //Optional because delegates of delegates will not implement this function. The first layer should always implement so as to not run into errors.
-
-/**
- The size of the control bar view changed. This means it either expanded or shrunk.
-
- @param newSize The new size of the control bar in pixels.
- @param controlBar The control bar which changed.
- */
-- (void)sizeChangedTo:(CGSize)newSize forControlBarView:(LMControlBarView*)controlBar;
-
 @end
 
 @interface LMControlBarView : UIView
@@ -59,40 +49,6 @@
 @property id<LMControlBarViewDelegate> delegate;
 
 @property NSInteger index;
-
-/**
- Get the height of the control bar for whether or not its open.
-
- @param isOpened Whether or not the control bar is open for the height.
- @return The height of whether or not opened.
- */
-+ (float)heightWhenIsOpened:(BOOL)isOpened;
-
-/**
- Whether or not the control bar is open.
- */
-@property BOOL isOpen;
-
-/**
- Open the control bar. Increases the height to one eighth the window's height.
- 
- @param animated Whether or not to animate the change. NO should be entered if view is off-screen.
- */
-- (void)open:(BOOL)animated;
-
-/**
- Close the control bar. Decreases the height to 0.
- 
- @param animated Whether or not to animate the change. NO should be entered if view is off-screen.
- */
-- (void)close:(BOOL)animated;
-
-/**
- Invert the state of the control bar automatically. If opened, will close. If closed, will open.
- 
- @param animated Whether or not to animate the change. NO should be entered if view is off-screen.
- */
-- (void)invert:(BOOL)animated;
 
 /**
  Reload the highlighted buttons statuses.

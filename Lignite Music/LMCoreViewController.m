@@ -34,8 +34,10 @@
 
 #import "LMFeedbackViewController.h"
 #import "LMCreditsViewController.h"
+
 #import "LMCompactBrowsingView.h"
 #import "LMProgressSlider.h"
+#import "LMControlBarView.h"
 #import "LMBrowsingBar.h"
 
 #ifdef SPOTIFY
@@ -48,7 +50,10 @@
 @import SDWebImage;
 @import StoreKit;
 
-@interface LMCoreViewController () <LMMusicPlayerDelegate, LMSourceDelegate, UIGestureRecognizerDelegate, LMSearchBarDelegate, LMLetterTabDelegate, LMSearchSelectedDelegate, LMPurchaseManagerDelegate, LMButtonNavigationBarDelegate, UINavigationBarDelegate, UINavigationControllerDelegate>
+@interface LMCoreViewController () <LMMusicPlayerDelegate, LMSourceDelegate, UIGestureRecognizerDelegate, LMSearchBarDelegate, LMLetterTabDelegate, LMSearchSelectedDelegate, LMPurchaseManagerDelegate, LMButtonNavigationBarDelegate, UINavigationBarDelegate, UINavigationControllerDelegate,
+
+LMControlBarViewDelegate
+>
 
 @property LMMusicPlayer *musicPlayer;
 
@@ -631,6 +636,22 @@
 	}
 }
 
+- (uint8_t)amountOfButtonsForControlBarView:(LMControlBarView*)controlBar {
+	return 3;
+}
+
+- (UIImage*)imageWithIndex:(uint8_t)index forControlBarView:(LMControlBarView*)controlBar {
+	return [LMAppIcon imageForIcon:LMIconBug];
+}
+
+- (BOOL)buttonHighlightedWithIndex:(uint8_t)index wasJustTapped:(BOOL)wasJustTapped forControlBar:(LMControlBarView*)controlBar {
+	return YES;
+}
+
+- (void)sizeChangedTo:(CGSize)newSize forControlBarView:(LMControlBarView *)controlBar {
+	NSLog(@"Changed");
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view
@@ -649,6 +670,20 @@
 	
 	
 	NSLog(@"Frame set %@", NSStringFromCGRect(self.view.frame));
+	
+	LMControlBarView *controlBarTest = [LMControlBarView newAutoLayoutView];
+	controlBarTest.delegate = self;
+	controlBarTest.backgroundColor = [UIColor orangeColor];
+	[self.view addSubview:controlBarTest];
+	
+	[controlBarTest autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+	[controlBarTest autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+	[controlBarTest autoAlignAxisToSuperviewAxis:ALAxisVertical];
+	[controlBarTest autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/9.0)];
+	
+	[controlBarTest setup];
+	
+	return;
 	
 //	LMCompactBrowsingView *compactBrowsingView = [LMCompactBrowsingView newAutoLayoutView];
 //	[self.view addSubview:compactBrowsingView];

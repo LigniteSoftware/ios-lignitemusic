@@ -16,72 +16,14 @@
 
 @interface LMControlBarView()
 
-@property NSLayoutConstraint *controlBarHeightConstraint;
-@property NSLayoutConstraint *triangleConstraint;
-
 @property UIView *backgroundView;
 @property UIView *buttonBackgroundView;
 
-@property LMTriangleView *triangleView;
-@property UIImageView *threeDotIconImageView;
-
 @property NSMutableArray *controlButtonViews;
-
-/**
- To prevent any collisions in animating button views and state changes.
- */
-@property UIView *viewCurrentlyAnimating;
 
 @end
 
 @implementation LMControlBarView
-
-+ (float)heightWhenIsOpened:(BOOL)isOpened {
-	return WINDOW_FRAME.size.height/(isOpened ? 8 : 50);
-}
-
-- (void)updateHeightConstraintWithHeight:(float)height animated:(BOOL)animated {
-	[self.backgroundView layoutIfNeeded];
-	[self layoutIfNeeded];
-	
-	self.isOpen = (height != 0);
-	
-//	self.backgroundColor = self.isOpen ? [UIColor redColor] : [UIColor greenColor];
-	
-	self.triangleConstraint.constant = self.isOpen ? -2 : -50;
-	self.controlBarHeightConstraint.constant = height;
-	
-	if(animated){
-		[UIView animateWithDuration:0.3 animations:^{
-			[self.backgroundView layoutIfNeeded];
-			[self layoutIfNeeded];
-		}];
-	}
-	else{
-		[self.backgroundView layoutIfNeeded];
-		[self layoutIfNeeded];
-	}
-	
-	if(animated){
-		[self.delegate sizeChangedTo:CGSizeMake(0, [LMControlBarView heightWhenIsOpened:self.isOpen]) forControlBarView:self];
-	}
-}
-
-- (void)open:(BOOL)animated {
-	[self updateHeightConstraintWithHeight:WINDOW_FRAME.size.height/8 animated:animated];
-}
-
-- (void)close:(BOOL)animated {
-	[self updateHeightConstraintWithHeight:0 animated:animated];
-}
-
-- (void)invert:(BOOL)animated {
-	self.isOpen ? [self close:animated] : [self open:animated];
-}
-
-- (void)animatedInvert {
-	[self invert:YES];
-}
 
 - (void)buttonHighlightStatusUpdate:(UIView*)viewChecking wasJustTapped:(BOOL)wasJustTapped {	
 	uint8_t viewCheckingIndex = 0;
@@ -94,17 +36,10 @@
 	}
 	
 	BOOL shouldHighlight = [self.delegate buttonHighlightedWithIndex:viewCheckingIndex wasJustTapped:wasJustTapped forControlBar:self];
-	if(self.viewCurrentlyAnimating != viewChecking){
-		[UIView animateWithDuration:0.3 animations:^{
-			self.viewCurrentlyAnimating = viewChecking;
-			viewChecking.backgroundColor = shouldHighlight ? [UIColor whiteColor] : [LMColour lightGrayBackgroundColour];
-		} completion:^(BOOL finished) {
-			if(finished){
-				self.viewCurrentlyAnimating = nil;
-			}
-		}];
-	}
-	
+	[UIView animateWithDuration:0.3 animations:^{
+		viewChecking.backgroundColor = shouldHighlight ? [UIColor whiteColor] : [LMColour lightGrayBackgroundColour];
+	} completion:nil];
+
 	if(viewChecking.subviews.count > 0){
 		UIImageView *iconView = [viewChecking.subviews objectAtIndex:0];
 		iconView.image = [self.delegate imageWithIndex:viewCheckingIndex forControlBarView:self];
@@ -135,20 +70,6 @@
 	
 //	self.backgroundColor = [UIColor blueColor];
 	
-	self.threeDotIconImageView = [UIImageView newAutoLayoutView];
-	self.threeDotIconImageView.image = [LMAppIcon imageForIcon:LMIconTripleHorizontalDots];
-	self.threeDotIconImageView.contentMode = UIViewContentModeScaleAspectFit;
-	self.threeDotIconImageView.userInteractionEnabled = YES;
-	[self addSubview:self.threeDotIconImageView];
-	
-	[self.threeDotIconImageView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-	[self.threeDotIconImageView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-	[self.threeDotIconImageView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	[self.threeDotIconImageView autoSetDimension:ALDimensionHeight toSize:[LMControlBarView heightWhenIsOpened:NO]];
-	
-	UITapGestureRecognizer *tapOnThreeDotGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(animatedInvert)];
-	[self addGestureRecognizer:tapOnThreeDotGesture];
-	
 //	[NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(invert) userInfo:nil repeats:YES];
 //	
 	self.backgroundView = [UIView newAutoLayoutView];
@@ -163,7 +84,7 @@
 	[self.backgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 	[self.backgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 	[self.backgroundView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	self.controlBarHeightConstraint = [self.backgroundView autoSetDimension:ALDimensionHeight toSize:0];
+	[self.backgroundView autoSetDimension:ALDimensionHeight toSize:40];
 	
 	self.controlButtonViews = [NSMutableArray new];
 	
@@ -217,26 +138,6 @@
 		
 		[self.controlButtonViews addObject:buttonBackgroundView];
 	}
-	
-	YIInnerShadowView* innerShadowView = [YIInnerShadowView newAutoLayoutView];
-	innerShadowView.shadowRadius = 3.0;
-	innerShadowView.shadowMask = YIInnerShadowMaskAll;
-	innerShadowView.cornerRadius = 8.0;
-	[self.backgroundView addSubview:innerShadowView];
-//	innerShadowView.hidden = YES;
-	[innerShadowView autoPinEdgesToSuperviewEdges];
-	
-	self.triangleView = [LMTriangleView newAutoLayoutView];
-	self.triangleView.userInteractionEnabled = YES;
-	[self.backgroundView addSubview:self.triangleView];
-	
-	UITapGestureRecognizer *tapOnTriangleGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(animatedInvert)];
-	[self.triangleView addGestureRecognizer:tapOnTriangleGesture];
-	
-	[self.triangleView autoAlignAxisToSuperviewAxis:ALAxisVertical];
-	self.triangleConstraint = [self.triangleView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:-50.0];
-	[self.triangleView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.backgroundView withMultiplier:(1.0/10.0)];
-	[self.triangleView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.backgroundView withMultiplier:(1.0/6.0)];
 }
 
 /*

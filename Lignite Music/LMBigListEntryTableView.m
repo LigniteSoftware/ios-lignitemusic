@@ -13,7 +13,7 @@
 #import "LMColour.h"
 #import "NSTimer+Blocks.h"
 
-@interface LMBigListEntryTableView()<LMTableViewSubviewDataSource, LMCollectionInfoViewDelegate, LMBigListEntryDelegate, LMControlBarViewDelegate>
+@interface LMBigListEntryTableView()<LMTableViewSubviewDataSource, LMCollectionInfoViewDelegate, LMBigListEntryDelegate>
 
 @property NSMutableArray *bigListEntriesArray;
 @property NSMutableArray *contentViewsArray;
@@ -55,25 +55,10 @@
 	return nil;
 }
 
-- (void)reloadControlBars {
-	for(int i = 0; i < self.bigListEntriesArray.count; i++){
-		LMBigListEntry *bigListEntry = [self.bigListEntriesArray objectAtIndex:i];
-		[bigListEntry reloadData:NO];
-	}
-}
-
 - (id)subviewAtIndex:(NSUInteger)index forTableView:(LMTableView*)tableView {
 	LMBigListEntry *bigListEntry = [self.bigListEntriesArray objectAtIndex:index % self.bigListEntriesArray.count];
 	bigListEntry.collectionIndex = index;
-	if(index == self.currentlyOpenedIndex){
-		//[bigListEntry open:NO];
-		[bigListEntry setLarge:YES animated:NO];
-	}
-	else{
-		//[bigListEntry close:NO];
-		[bigListEntry setLarge:NO animated:NO];
-	}
-	[bigListEntry reloadData:YES];
+	[bigListEntry reloadData];
 	return bigListEntry;
 }
 
@@ -95,50 +80,6 @@
 
 - (float)contentSubviewFactorial:(BOOL)height forBigListEntry:(LMBigListEntry *)bigListEntry {
 	return [self.delegate contentSubviewFactorial:height forBigListEntry:bigListEntry];
-}
-
-- (void)sizeChangedToLargeSize:(BOOL)largeSize withHeight:(float)newHeight forBigListEntry:(LMBigListEntry*)bigListEntry {
-	//If the new size is large/opened
-	largeSize ? (self.largeSize = newHeight) : (self.normalSize = newHeight);
-	
-	if(bigListEntry.isLargeSize){
-		//Find the last control bar view which was open and close it
-		for(int i = 0; i < self.bigListEntriesArray.count; i++){
-			LMBigListEntry *bigListIndexEntry = [self.bigListEntriesArray objectAtIndex:i];
-			if(bigListIndexEntry.collectionIndex == self.currentlyOpenedIndex){
-				[bigListIndexEntry setLarge:NO animated:YES];
-				break;
-			}
-		}
-		
-		//Set the currently opened control bar view as the opened one
-		for(int i = 0; i < self.bigListEntriesArray.count; i++){
-			LMBigListEntry *bigListIndexEntry = [self.bigListEntriesArray objectAtIndex:i];
-			if([bigListIndexEntry isEqual:bigListEntry]){
-				NSLog(@"Setting %ld to current opened", bigListIndexEntry.collectionIndex);
-				self.currentlyOpenedIndex = bigListIndexEntry.collectionIndex;
-				break;
-			}
-		}
-	}
-	//If the new size is small/closed
-	else if(bigListEntry.collectionIndex == self.currentlyOpenedIndex && !bigListEntry.isLargeSize){
-		self.currentlyOpenedIndex = -1;
-	}
-	
-	[self.tableView reloadSubviewSizes];
-}
-
-- (UIImage*)imageWithIndex:(uint8_t)index forControlBarView:(LMControlBarView *)controlBar {
-	return [self.delegate imageWithIndex:index forBigListEntry:[self bigListEntryForControlBar:controlBar]];
-}
-
-- (BOOL)buttonHighlightedWithIndex:(uint8_t)index wasJustTapped:(BOOL)wasJustTapped forControlBar:(LMControlBarView *)controlBar {
-	return [self.delegate buttonHighlightedWithIndex:index wasJustTapped:wasJustTapped forBigListEntry:[self bigListEntryForControlBar:controlBar]];
-}
-
-- (uint8_t)amountOfButtonsForControlBarView:(LMControlBarView *)controlBar {
-	return [self.delegate amountOfButtonsForBigListEntry:[self bigListEntryForControlBar:controlBar]];
 }
 
 - (NSString*)titleForInfoView:(LMCollectionInfoView*)infoView {

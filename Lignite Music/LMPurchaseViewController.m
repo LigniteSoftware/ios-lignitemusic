@@ -157,6 +157,7 @@
 
 - (void)productsRequest:(SKProductsRequest *)request didReceiveResponse:(SKProductsResponse *)response{
 	for(SKProduct *product in response.products){
+		NSLog(@"Product %@", product);
 //		[LMAnswers logAddToCartWithPrice:product.price
 //								currency:product.priceLocale.currencyCode
 //								itemName:@"Lifetime Music"

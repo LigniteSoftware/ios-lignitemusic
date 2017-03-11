@@ -246,11 +246,9 @@
 }
 
 - (void)musicTrackDidChange:(LMMusicTrack*)newTrack {
-	[self.bigListEntryTableView reloadControlBars];
 }
 
 - (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState {
-	[self.bigListEntryTableView reloadControlBars];
 }
 
 - (void)musicLibraryDidChange {
