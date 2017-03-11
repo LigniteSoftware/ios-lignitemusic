@@ -892,6 +892,7 @@
 						
 						
 						self.compactView = [LMCompactBrowsingView newAutoLayoutView];
+						self.compactView.rootViewController = self;
 						[self.view addSubview:self.compactView];
 						
 						[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeLeading];

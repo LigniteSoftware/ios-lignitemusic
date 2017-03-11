@@ -8,6 +8,7 @@
 
 #import "LMView.h"
 #import "LMMusicPlayer.h"
+#import "LMCoreViewController.h"
 
 @interface LMCompactBrowsingView : LMView
 
@@ -20,6 +21,11 @@
  The current music type. 
  */
 @property LMMusicType musicType;
+
+/**
+ The root/source view controller.
+ */
+@property LMCoreViewController *rootViewController;
 
 /**
  Reload the contents of the view after changing the music type and music track collections.

@@ -7,6 +7,7 @@
 //
 
 #import <PureLayout/PureLayout.h>
+#import "LMBrowsingDetailViewController.h"
 #import "LMTiledAlbumCoverView.h"
 #import "LMCompactBrowsingView.h"
 #import "LMBigListEntry.h"
@@ -28,6 +29,11 @@
  The music player.
  */
 @property LMMusicPlayer *musicPlayer;
+
+/**
+ The detail view controller for browsing in detail ;)
+ */
+@property LMBrowsingDetailViewController *browsingDetailViewController;
 
 @end
 
@@ -171,7 +177,22 @@
 }
 
 - (void)contentViewTappedForBigListEntry:(LMBigListEntry *)bigListEntry {
-	NSLog(@"Single tapped!");
+	NSLog(@"Tapped %ld", bigListEntry.collectionIndex);
+	
+	LMBrowsingDetailView *browsingDetailView = [LMBrowsingDetailView newAutoLayoutView];
+	browsingDetailView.musicTrackCollection = [self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex];
+	browsingDetailView.musicType = self.musicType;
+	browsingDetailView.rootViewController = self.rootViewController;
+	
+	NSLog(@"Got count %ld", browsingDetailView.musicTrackCollection.trackCount);
+	
+	self.browsingDetailViewController = [LMBrowsingDetailViewController new];
+	self.browsingDetailViewController.browsingDetailView = browsingDetailView;
+	self.browsingDetailViewController.requiredHeight = self.frame.size.height;
+	
+	self.rootViewController.currentDetailViewController = self.browsingDetailViewController;
+	
+	[self.rootViewController showViewController:self.browsingDetailViewController sender:self.rootViewController];
 }
 
 - (void)contentViewDoubleTappedForBigListEntry:(LMBigListEntry *)bigListEntry {
