@@ -712,7 +712,7 @@
 		NSLog(@"Warning: Onboarding is disabled.");
 #else
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-	if(![userDefaults objectForKey:LMSettingsKeyOnboardingComplete] || true){
+	if(![userDefaults objectForKey:LMSettingsKeyOnboardingComplete]){
 #endif
 		NSLog(@"User has not yet completed onboarding, launching onboarding.");
 		

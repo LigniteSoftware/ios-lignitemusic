@@ -397,9 +397,31 @@
 		return testView;
 	}
 	if(index == 1){
-		UIView *testView = [UIView newAutoLayoutView];
-		testView.backgroundColor = [UIColor colorWithRed:0.25 green:0.25 blue:0.25 alpha:1.0];;
-		return testView;
+		UIView *rootView = [UIView newAutoLayoutView];
+		
+		LMCollectionInfoView *collectionInfoView = [LMCollectionInfoView newAutoLayoutView];
+		collectionInfoView.delegate = self;
+		collectionInfoView.largeMode = YES;
+		[rootView addSubview:collectionInfoView];
+		
+		[collectionInfoView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[collectionInfoView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[collectionInfoView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+		[collectionInfoView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:rootView withMultiplier:(6.0/10.0)];
+		
+		[collectionInfoView reloadData];
+		
+		
+		UIView *newControlBarView = [UIView newAutoLayoutView];
+		newControlBarView.backgroundColor = [UIColor colorWithRed:0.25 green:0.25 blue:0.25 alpha:1.0];
+		[rootView addSubview:newControlBarView];
+		
+		[newControlBarView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[newControlBarView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[newControlBarView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[newControlBarView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:collectionInfoView];
+		
+		return rootView;
 	}
 	LMListEntry *listEntry = [self.songEntries objectAtIndex:(index-2) % self.songEntries.count];
 	listEntry.collectionIndex = index-2; //To adjust for the big list entry at the top
@@ -419,8 +441,8 @@
 		return self.frame.size.width;
 	}
 	if(index == 1){
-		return self.frame.size.height/10.0;
-//		return [LMBigListEntry sizeForBigListEntryWhenOpened:self.headerBigListEntry.isLargeSize forDelegate:self];
+		//The size of the info view text + the size of the new control bar
+		return self.frame.size.height/8.0 + self.frame.size.height/10.0;
 	}
 	return WINDOW_FRAME.size.height/8;
 }
