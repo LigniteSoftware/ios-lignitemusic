@@ -18,7 +18,7 @@
 #import "LMMusicPlayer.h"
 #import "LMBrowsingDetailViewController.h"
 
-@interface LMBrowsingDetailView()<LMTableViewSubviewDataSource, LMBigListEntryDelegate, LMCollectionInfoViewDelegate, LMListEntryDelegate, LMMusicPlayerDelegate>
+@interface LMBrowsingDetailView()<LMTableViewSubviewDataSource, LMBigListEntryDelegate, LMCollectionInfoViewDelegate, LMListEntryDelegate, LMMusicPlayerDelegate, LMControlBarViewDelegate>
 
 @property LMTableView *tableView;
 
@@ -126,13 +126,13 @@
 		case 0:{
 			BOOL isPlaying = [self.musicPlayer.nowPlayingCollection isEqual:self.musicTrackCollection] && self.musicPlayer.playbackState == LMMusicPlaybackStatePlaying;
 			
-			return [LMAppIcon invertImage:[LMAppIcon imageForIcon:isPlaying ? LMIconPause : LMIconPlay]];
+			return [LMAppIcon imageForIcon:isPlaying ? LMIconPause : LMIconPlay];
 		}
 		case 1:{
-			return [LMAppIcon imageForIcon:LMIconRepeat];
+			return [LMAppIcon invertImage:[LMAppIcon imageForIcon:LMIconRepeat]];
 		}
 		case 2:{
-			return [LMAppIcon imageForIcon:LMIconShuffle];
+			return [LMAppIcon invertImage:[LMAppIcon imageForIcon:LMIconShuffle]];
 		}
 	}
 	return [LMAppIcon imageForIcon:LMIconBug];
@@ -450,69 +450,14 @@
 		[collectionInfoView reloadData];
 		
 		
-		UIView *newControlBarView = [UIView newAutoLayoutView];
-		newControlBarView.backgroundColor = [UIColor colorWithRed:0.25 green:0.25 blue:0.25 alpha:1.0];
-		[rootView addSubview:newControlBarView];
+		LMControlBarView *controlBar = [LMControlBarView newAutoLayoutView];
+		controlBar.delegate = self;
+		[rootView addSubview:controlBar];
 		
-		[newControlBarView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-		[newControlBarView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-		[newControlBarView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		[newControlBarView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:collectionInfoView];
-		
-		NSMutableArray *controlButtonViews = [NSMutableArray new];
-		
-		UIView *buttonBackgroundView = [UIView newAutoLayoutView];
-		buttonBackgroundView.userInteractionEnabled = YES;
-		[newControlBarView addSubview:buttonBackgroundView];
-		
-		[buttonBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-		[buttonBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-		[buttonBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:newControlBarView withMultiplier:(8.0/10.0)];
-		[buttonBackgroundView autoCenterInSuperview];
-		
-		uint8_t amountOfItemsForControlBar = 3;
-		for(int i = 0; i < amountOfItemsForControlBar; i++){
-			UIView *lastBackgroundView = nil;
-			if(controlButtonViews.count > 0){
-				lastBackgroundView = [[controlButtonViews lastObject] superview];
-			}
-			
-			UIView *buttonAreaView = [UIView newAutoLayoutView];
-			[buttonBackgroundView addSubview:buttonAreaView];
-			
-			BOOL isFirstBackground = (controlButtonViews.count == 0);
-			
-			[buttonAreaView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-			[buttonAreaView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-			[buttonAreaView autoPinEdge:ALEdgeLeading toEdge:isFirstBackground ? ALEdgeLeading : ALEdgeTrailing ofView:isFirstBackground ? buttonBackgroundView : lastBackgroundView];
-			[buttonAreaView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:buttonBackgroundView withMultiplier:(1.0/(float)amountOfItemsForControlBar)];
-			
-			UIView *buttonBackgroundView = [UIImageView newAutoLayoutView];
-			buttonBackgroundView.layer.masksToBounds = YES;
-			buttonBackgroundView.layer.cornerRadius = 6.0;
-			buttonBackgroundView.userInteractionEnabled = YES;
-			[buttonAreaView addSubview:buttonBackgroundView];
-			
-			[buttonBackgroundView autoCenterInSuperview];
-			[buttonBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:buttonAreaView withMultiplier:0.8];
-			[buttonBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:buttonAreaView withMultiplier:0.8];
-			
-			UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(controlButtonViewTapped:)];
-			[buttonBackgroundView addGestureRecognizer:gestureRecognizer];
-			
-			UIImageView *buttonImageView = [UIImageView newAutoLayoutView];
-			buttonImageView.contentMode = UIViewContentModeScaleAspectFit;
-			buttonImageView.image = [UIImage imageNamed:@"icon_bug.png"];
-			[buttonBackgroundView addSubview:buttonImageView];
-			
-			[buttonImageView autoCenterInSuperview];
-			[buttonImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:buttonBackgroundView withMultiplier:0.75];
-			[buttonImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:buttonBackgroundView withMultiplier:0.75];
-			
-			[controlButtonViews addObject:buttonBackgroundView];
-		}
-
-		self.controlButtonViews = [NSArray arrayWithArray:controlButtonViews];
+		[controlBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[controlBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[controlBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[controlBar autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:collectionInfoView];
 		
 		return rootView;
 	}

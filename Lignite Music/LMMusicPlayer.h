@@ -14,9 +14,6 @@
 #import "MPMediaItem+LigniteImages.h"
 #import "MPMediaItemCollection+LigniteInfo.h"
 #import "LMButtonNavigationBar.h"
-#ifdef SPOTIFY
-#import "Spotify.h"
-#endif
 
 /**
  Storage key for the user set player type. Correlates to LMMusicPlayerType.

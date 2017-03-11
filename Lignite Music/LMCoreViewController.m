@@ -671,20 +671,20 @@ LMControlBarViewDelegate
 	
 	NSLog(@"Frame set %@", NSStringFromCGRect(self.view.frame));
 	
-	LMControlBarView *controlBarTest = [LMControlBarView newAutoLayoutView];
-	controlBarTest.delegate = self;
-	controlBarTest.backgroundColor = [UIColor orangeColor];
-	[self.view addSubview:controlBarTest];
-	
-	[controlBarTest autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-	[controlBarTest autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	[controlBarTest autoAlignAxisToSuperviewAxis:ALAxisVertical];
-	[controlBarTest autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/9.0)];
-	
-	[controlBarTest setup];
-	
-	return;
-	
+//	LMControlBarView *controlBarTest = [LMControlBarView newAutoLayoutView];
+//	controlBarTest.delegate = self;
+//	controlBarTest.backgroundColor = [UIColor orangeColor];
+//	[self.view addSubview:controlBarTest];
+//	
+//	[controlBarTest autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+//	[controlBarTest autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+//	[controlBarTest autoAlignAxisToSuperviewAxis:ALAxisVertical];
+//	[controlBarTest autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/9.0)];
+//	
+//	[controlBarTest setup];
+//	
+//	return;
+//	
 //	LMCompactBrowsingView *compactBrowsingView = [LMCompactBrowsingView newAutoLayoutView];
 //	[self.view addSubview:compactBrowsingView];
 //	

@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LMView.h"
 
 @class LMControlBarView;
 
@@ -41,7 +42,7 @@
 
 @end
 
-@interface LMControlBarView : UIView
+@interface LMControlBarView : LMView
 
 /**
  The delegate for this control bar.
@@ -54,10 +55,5 @@
  Reload the highlighted buttons statuses.
  */
 - (void)reloadHighlightedButtons;
-
-/**
- Setup the control bar view.
- */
-- (void)setup;
 
 @end

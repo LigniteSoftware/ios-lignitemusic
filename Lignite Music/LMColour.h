@@ -60,6 +60,13 @@
 + (UIColor*)darkGrayColour;
 
 /**
+ The super dark gray colour currently used within the rewritten control bar.
+ 
+ @return The super dark gray.
+ */
++ (UIColor*)superDarkGrayColour;
+
+/**
  Generate a completely random colour. Used for testing purposes.
 
  @return The random colour.

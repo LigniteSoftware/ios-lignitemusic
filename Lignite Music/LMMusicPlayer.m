@@ -263,6 +263,13 @@ MPMediaGrouping associatedMediaTypes[] = {
 	if(self){
 		[self.systemMusicPlayer beginGeneratingPlaybackNotifications];
 		
+		MPMediaPropertyPredicate *predicate = [MPMediaPropertyPredicate predicateWithValue:@"MotherFuckingShitpost69"
+																			   forProperty:MPMediaItemPropertyTitle];
+		MPMediaQuery *q = [[MPMediaQuery alloc] init];
+		[q addFilterPredicate: predicate];
+		
+		self.bullshitQuery = q;
+		
 		self.playerType = LMMusicPlayerTypeAppleMusic;
 #ifdef SPOTIFY
 		self.playerType = LMMusicPlayerTypeSpotify;
@@ -1251,6 +1258,7 @@ BOOL shuffleForDebug = NO;
 		if(!self.nowPlayingCollection){
 			[self clearNowPlayingCollection];
 		}
+		NSLog(@"Setting now playing collection to %@", nowPlayingCollection);
 		[self.systemMusicPlayer setQueueWithItemCollection:nowPlayingCollection];
 		[self.systemMusicPlayer setNowPlayingItem:[[nowPlayingCollection items] objectAtIndex:0]];
 	}
