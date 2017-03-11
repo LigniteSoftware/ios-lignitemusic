@@ -12,6 +12,7 @@
 #import "LMExtras.h"
 #import "LMColour.h"
 #import "NSTimer+Blocks.h"
+#import "LMListEntry.h"
 
 @interface LMTableView()<UITableViewDelegate, UITableViewDataSource>
 
@@ -134,7 +135,9 @@
 	
 	for(int i = 0; i < lmCell.contentView.subviews.count; i++){
 		id subview = [lmCell.contentView.subviews objectAtIndex:i];
-		if(([[[subview class] description] isEqualToString:@"LMBigListEntry"] && [[[newSubview class] description] isEqualToString:@"LMListEntry"]) || ([[[subview class] description] isEqualToString:@"LMListEntry"] && [[[newSubview class] description] isEqualToString:@"LMBigListEntry"])){ //If there's a big list entry on top and we're replacing it with a list entry or vice versa, remove the old view from the superview and attach the new one
+		NSLog(@"index %ld types %@ %@", indexPath.section, [[subview class] description], [[newSubview class] description]);
+		if(([subview class] == [UIView class]      && [newSubview class] == [LMListEntry class])
+		|| ([subview class] == [LMListEntry class] && [newSubview class] == [UIView class])){ //If there's a big list entry on top and we're replacing it with a list entry or vice versa, remove the old view from the superview and attach the new one
 			[subview removeFromSuperview];
 			
 			[lmCell.contentView addSubview:newSubview];
@@ -145,12 +148,15 @@
 	
 	lmCell.subview = newSubview;
 	lmCell.index = (int)indexPath.section;
-	lmCell.backgroundColour = (indexPath.section == 0) ? [UIColor clearColor] : [UIColor whiteColor];
+	lmCell.backgroundColour = (indexPath.section == 0 && self.firstEntryClear) ? [UIColor clearColor] : [UIColor whiteColor];
 	
 	if(!lmCell.didSetupConstraints){
 		lmCell.selectionStyle = UITableViewCellSelectionStyleNone;
 		[lmCell setNeedsUpdateConstraints];
 		[lmCell updateConstraintsIfNeeded];
+	}
+	else{
+		lmCell.backgroundColor = lmCell.backgroundColour ? lmCell.backgroundColour : [UIColor whiteColor]; //For the clear background colour required in detail view
 	}
 }
 

@@ -363,7 +363,7 @@
 	LMMusicTrack *track = [self.musicTrackCollection.items objectAtIndex:entry.collectionIndex];
 	if(self.musicTrackCollection.variousArtists){
 		if(self.musicType == LMMusicTypePlaylists){
-			return [NSString stringWithFormat:@"#%ld | %@ | %@", (entry.collectionIndex + 2), [LMNowPlayingView durationStringTotalPlaybackTime:track.playbackDuration], track.artist ? track.artist : NSLocalizedString(@"UnknownArtist", nil)];
+			return [NSString stringWithFormat:@"#%ld | %@ | %@", (entry.collectionIndex + 1), [LMNowPlayingView durationStringTotalPlaybackTime:track.playbackDuration], track.artist ? track.artist : NSLocalizedString(@"UnknownArtist", nil)];
 		}
 		else{
 			return [NSString stringWithFormat:@"%@ | %@", [LMNowPlayingView durationStringTotalPlaybackTime:track.playbackDuration], track.artist ? track.artist : NSLocalizedString(@"UnknownArtist", nil)];
@@ -398,7 +398,7 @@
 	}
 	if(index == 1){
 		UIView *testView = [UIView newAutoLayoutView];
-		testView.backgroundColor = [UIColor blackColor];
+		testView.backgroundColor = [UIColor colorWithRed:0.25 green:0.25 blue:0.25 alpha:1.0];;
 		return testView;
 	}
 	LMListEntry *listEntry = [self.songEntries objectAtIndex:(index-2) % self.songEntries.count];
@@ -491,9 +491,10 @@
 	self.tableView.averageCellHeight = WINDOW_FRAME.size.height*(1.0/10.0);
 	self.tableView.totalAmountOfObjects = (self.usingSpecificTrackCollections ? self.specificTrackCollections.count : self.musicTrackCollection.trackCount) + 2;
 	self.tableView.shouldUseDividers = YES;
-	self.tableView.dividerSectionsToIgnore = @[ @(0), @(1) ];
+	self.tableView.firstEntryClear = YES;
+	self.tableView.dividerSectionsToIgnore = @[ @(0), @(1), @(2) ];
 	self.tableView.subviewDataSource = self;
-	self.tableView.bottomSpacing = WINDOW_FRAME.size.height/5.0;
+	self.tableView.bottomSpacing = WINDOW_FRAME.size.height/3.0;
 	[self addSubview:self.tableView];
 	
 	NSLog(@"Items %ld spec %d", self.tableView.totalAmountOfObjects, self.usingSpecificTrackCollections);
@@ -501,6 +502,8 @@
 	[self.tableView autoPinEdgesToSuperviewEdges];
 	
 	[self.tableView reloadSubviewData];
+	
+	[self.tableView setContentOffset:CGPointMake(0, WINDOW_FRAME.size.width/4.0 * 3.0)];
 	
 	[self.musicPlayer addMusicDelegate:self];
 	

@@ -89,6 +89,11 @@
 @property BOOL shouldUseDividers;
 
 /**
+ Whether or not the first entry in the table view should have a clear background colour. YES for views such as the detail view. Default is NO.
+ */
+@property BOOL firstEntryClear;
+
+/**
  The colour of the dividers. Default is [UIColor blackColor].
  */
 @property UIColor *dividerColour;
