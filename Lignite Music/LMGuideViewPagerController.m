@@ -9,6 +9,7 @@
 #import "LMGuideViewPagerController.h"
 #import "LMGuideViewController.h"
 #import "LMColour.h"
+#import <PureLayout/PureLayout.h>
 
 @interface LMGuideViewPagerController ()
 
@@ -126,6 +127,17 @@
 	NSArray *viewControllers = [NSArray arrayWithObject:initialViewController];
 	
 	[self.pageController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+	
+	UIImageView *backgroundImageView = [UIImageView newAutoLayoutView];
+	backgroundImageView.contentMode = UIViewContentModeScaleAspectFit;
+	backgroundImageView.image = [UIImage imageNamed:@"lignite_background_portrait.png"];
+	[self.view addSubview:backgroundImageView];
+	
+	[backgroundImageView autoPinEdgesToSuperviewEdges];
+	
+//	UIView *testView = [UIView newAutoLayoutView];
+//	testView.backgroundColor = [UIColor blueColor];
+//	[self.view addSubview:testView];
 	
 	[self addChildViewController:self.pageController];
 	[self.view addSubview:self.pageController.view];

@@ -312,6 +312,7 @@
 	[[Spotify sharedInstance] addDelegate:self];
 #endif
 	
+	self.view.backgroundColor = [UIColor clearColor];
 
 	self.buttonArea = [UIView newAutoLayoutView];
 	[self.view addSubview:self.buttonArea];
@@ -396,6 +397,7 @@
 	self.pageControl.currentPageIndicatorTintColor = [LMColour ligniteRedColour];
 	self.pageControl.hidesForSinglePage = YES;
 //	self.pageControl.backgroundColor = [UIColor redColor];
+	self.pageControl.hidden = YES;
 	[self.view addSubview: self.pageControl];
 	
 	[self.pageControl autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.buttonArea];

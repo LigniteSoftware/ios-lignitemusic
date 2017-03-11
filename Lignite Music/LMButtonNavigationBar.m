@@ -493,7 +493,7 @@
 		
 		
 		self.minibarLabel = [LMLabel newAutoLayoutView];
-		self.minibarLabel.text = @"Text post please ignore";
+		self.minibarLabel.text = @"Albums";
 		[self.minibarBackgroundView addSubview:self.minibarLabel];
 		
 		[self.minibarLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:10];
