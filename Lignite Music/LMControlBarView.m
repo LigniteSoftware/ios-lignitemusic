@@ -139,6 +139,8 @@
 			[buttonImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:buttonBackgroundView withMultiplier:0.70];
 			
 			[self.controlButtonViews addObject:buttonBackgroundView];
+			
+			[self reloadHighlightedButtons];
 		}
 	}
 }

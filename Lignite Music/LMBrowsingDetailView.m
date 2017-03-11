@@ -47,9 +47,9 @@
 @property UIImageView *backgroundImageView;
 
 /**
- The array of control button views for stuff like playing.
+ The control bar.
  */
-@property NSArray *controlButtonViews;
+@property LMControlBarView *controlBar;
 
 @end
 
@@ -57,6 +57,8 @@
 
 - (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState {
 	NSLog(@"Playback state changed in browsing detail view delegate");
+	[self.controlBar reloadHighlightedButtons];
+	
 }
 
 - (LMListEntry*)listEntryForIndex:(NSInteger)index {
@@ -167,13 +169,17 @@
 		}
 		case 1: //Repeat button
 			if(wasJustTapped){
-				(self.musicPlayer.repeatMode == LMMusicRepeatModeAll) ? (self.musicPlayer.repeatMode = LMMusicRepeatModeNone) : (self.musicPlayer.repeatMode = LMMusicRepeatModeAll);
+				(self.musicPlayer.repeatMode == LMMusicRepeatModeAll)
+					? (self.musicPlayer.repeatMode = LMMusicRepeatModeNone)
+					: (self.musicPlayer.repeatMode = LMMusicRepeatModeAll);
 			}
+			NSLog(@"Repeat mode is %d", self.musicPlayer.repeatMode);
 			return (self.musicPlayer.repeatMode == LMMusicRepeatModeAll);
 		case 2: //Shuffle button
 			if(wasJustTapped){
 				self.musicPlayer.shuffleMode = !self.musicPlayer.shuffleMode;
 			}
+			NSLog(@"Shuffle mode is %d", self.musicPlayer.shuffleMode);
 			return (self.musicPlayer.shuffleMode == LMMusicShuffleModeOn);
 	}
 	return YES;
@@ -395,34 +401,6 @@
 	return @":)";
 }
 
-- (void)controlButtonViewTapped:(UITapGestureRecognizer*)recognizer {
-	UIView *viewTapped = recognizer.view;
-	UIImageView *iconImageViewAssociated = nil;
-	for(id subview in viewTapped.subviews){
-		if([subview class] == [UIImageView class]){
-			iconImageViewAssociated = subview;
-			break;
-		}
-	}
-	
-	NSInteger index = [self.controlButtonViews indexOfObject:viewTapped];
-	NSLog(@"Tapped %ld", index);
-
-	BOOL shouldHighlight = ![viewTapped.backgroundColor isEqual:[UIColor whiteColor]];
-	[UIView animateWithDuration:0.3 animations:^{
-		viewTapped.backgroundColor = shouldHighlight ? [UIColor whiteColor] : [UIColor colorWithRed:0.25 green:0.25 blue:0.25 alpha:1.0];
-	} completion:nil];
-	
-	if(index == 0){
-		if(shouldHighlight && self.musicPlayer.playbackState == LMMusicPlaybackStatePlaying){
-			
-		}
-	}
-	else{
-		iconImageViewAssociated.image = [LMAppIcon invertImage:iconImageViewAssociated.image];
-	}
-}
-
 - (id)subviewAtIndex:(NSUInteger)index forTableView:(LMTableView*)tableView {
 	if(index == 0){
 		UIView *testView = [UIView newAutoLayoutView];
@@ -458,6 +436,8 @@
 		[controlBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 		[controlBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 		[controlBar autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:collectionInfoView];
+		
+		self.controlBar = controlBar;
 		
 		return rootView;
 	}
