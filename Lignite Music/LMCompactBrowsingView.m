@@ -45,6 +45,64 @@
 	[self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredVertically animated:NO];
 }
 
+- (void)scrollToItemWithPersistentID:(LMMusicTrackPersistentID)persistentID {
+	NSInteger index = -1;
+	
+	for(NSUInteger i = 0; i < self.musicTrackCollections.count; i++){
+		LMMusicTrackCollection *trackCollection = [self.musicTrackCollections objectAtIndex:i];
+		LMMusicTrack *representativeTrack = [trackCollection representativeItem];
+		
+		switch(self.musicType) {
+			case LMMusicTypeAlbums:
+				if(persistentID == representativeTrack.albumPersistentID){
+					index = i;
+				}
+				break;
+			case LMMusicTypeArtists:
+				if(persistentID == representativeTrack.artistPersistentID){
+					index = i;
+				}
+				break;
+			case LMMusicTypeComposers:
+				if(persistentID == representativeTrack.composerPersistentID){
+					index = i;
+				}
+				break;
+			case LMMusicTypeGenres:
+				if(persistentID == representativeTrack.genrePersistentID){
+					index = i;
+				}
+				break;
+			case LMMusicTypePlaylists:
+				if(persistentID == trackCollection.persistentID){
+					index = i;
+				}
+				break;
+			case LMMusicTypeCompilations:
+				if(persistentID == trackCollection.persistentID){
+					index = i;
+				}
+				break;
+			default:
+				NSLog(@"Unsupported search result in browsing view.");
+				break;
+		}
+		
+		if(index != -1){
+			break;
+		}
+	}
+	
+	if(index == -1){
+		NSLog(@"index not found :( (per. id %llu)", persistentID);
+		index = 0;
+	}
+	
+//	[self.bigListEntryTableView focusBigListEntryAtIndex:index];
+	
+	[self scrollViewToIndex:index];
+}
+
 - (LMMusicTrackCollection*)musicTrackCollectionForBigListEntry:(LMBigListEntry*)bigListEntry {
 	return [self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex];
 }
