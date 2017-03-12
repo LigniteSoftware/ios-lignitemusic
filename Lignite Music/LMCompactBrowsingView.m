@@ -39,6 +39,12 @@
 
 @implementation LMCompactBrowsingView
 
+- (void)scrollViewToIndex:(NSUInteger)index {
+	NSLog(@"Scroll to %ld", index);
+	[self layoutIfNeeded];
+	[self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredVertically animated:NO];
+}
+
 - (LMMusicTrackCollection*)musicTrackCollectionForBigListEntry:(LMBigListEntry*)bigListEntry {
 	return [self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex];
 }

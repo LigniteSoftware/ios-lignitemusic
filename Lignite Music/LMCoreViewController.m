@@ -325,6 +325,8 @@ LMControlBarViewDelegate
 			
 			[self setupBrowsingViewWithMusicType:associatedMusicType];
 			
+			self.currentSource = self.compactView;
+			
 //			[self.browsingView reloadSourceSelectorInfo];
 			break;
 		}
