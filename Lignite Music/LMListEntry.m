@@ -51,6 +51,7 @@
 		self.contentView.backgroundColor = highlighted ? [self.delegate tapColourForListEntry:self] : [UIColor clearColor];
 		self.titleLabel.textColor = highlighted ? [UIColor whiteColor] : [UIColor blackColor];
 		self.subtitleLabel.textColor = highlighted ? [UIColor whiteColor] : [UIColor blackColor];
+		self.leftTextLabel.textColor = highlighted ? [UIColor whiteColor] : [UIColor lightGrayColor];
 //		self.leftTextLabel.textColor = highlighted ? [UIColor whiteColor] : [UIColor blackColor];
 		if(self.iconView.image && self.invertIconOnHighlight){
 			if(!self.imageIsInverted && self.highlighted){
