@@ -587,12 +587,7 @@ LMControlBarViewDelegate
 	
 	NSLog(@"%f to %f %@", translation.y, totalTranslation, NSStringFromCGPoint(self.currentPoint));
 	
-	if(totalTranslation < 0){ //Moving downward
-		return;
-	}
-	else{ //Moving downward
-		self.nowPlayingView.topConstraint.constant = self.nowPlayingView.frame.size.height+translation.y;
-	}
+	self.nowPlayingView.topConstraint.constant = self.nowPlayingView.frame.size.height+translation.y;
 	
 	[self.nowPlayingView.superview layoutIfNeeded];
 	
