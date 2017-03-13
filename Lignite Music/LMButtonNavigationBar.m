@@ -375,6 +375,7 @@
 			else{
 				[self setViewAttachedToButtonBar:self.sourceSelector];
 			}
+			self.buttonBarBottomConstraint.constant = 0;
 			break;
 	}
 	
