@@ -187,6 +187,30 @@
 	[self.delegate requiredHeightForNavigationBarChangedTo:0.0 withAnimationDuration:0.10];
 }
 
+- (void)completelyHide {
+	__weak id weakSelf = self;
+	
+	[self setButtonBarBottomConstraintConstant:WINDOW_FRAME.size.height/2 completion:^(BOOL finished) {
+		LMButtonNavigationBar *strongSelf = weakSelf;
+		if(!strongSelf){
+			return;
+		}
+		
+		NSLog(@"Looter in a riot");
+		
+		if(finished) {
+			[strongSelf setMinibarBottomConstraintConstant:strongSelf.minibarBackgroundView.frame.size.height+LMNavigationBarGrabberHeight];
+			
+			[strongSelf.delegate requiredHeightForNavigationBarChangedTo:0
+												   withAnimationDuration:0.10];
+		}
+	}];
+	
+	self.currentPoint = CGPointMake(self.originalPoint.x, self.originalPoint.y + self.frame.size.height);
+	
+	self.heightBeforeAdjustingToScrollPosition = -1;
+}
+
 - (void)minimize {
 	NSLog(@"Minimize");
 	

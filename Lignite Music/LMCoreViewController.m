@@ -100,6 +100,8 @@ LMControlBarViewDelegate
 
 @property LMCompactBrowsingView *compactView;
 
+@property BOOL settingsOpen;
+
 @end
 
 @implementation LMCoreViewController
@@ -343,8 +345,10 @@ LMControlBarViewDelegate
 			[self logMusicTypeView:LMMusicTypeTitles];
 			break;
 		}
-		case LMIconSettings: {			
-			self.buttonNavigationBar.hidden = YES;
+		case LMIconSettings: {
+			self.settingsOpen = YES;
+			[self.buttonNavigationBar setSelectedTab:LMNavigationTabBrowse];
+			[self.buttonNavigationBar completelyHide];
 			
 			LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
 			settingsViewController.coreViewController = self;
@@ -364,40 +368,6 @@ LMControlBarViewDelegate
 			NSLog(@"Unknown index of source %@.", source);
 			break;
 	}
-}
-
-- (void)attachButtonNavigationBarToView:(UIView*)view {
-	if(view == self.browsingAssistantViewAttachedTo){
-		return;
-	}
-	
-	CGFloat constantBeforeReload = self.buttonNavigationBarHeightConstraint.constant;
-	
-	NSLog(@"Attaching browsing assistant to view navigation ? %d", view == self.navigationController.view);
-	
-	[self.buttonNavigationBar.constraints autoRemoveConstraints];
-	for(NSLayoutConstraint *constraint in self.browsingAssistantViewAttachedTo.constraints){
-		if(constraint.firstItem == self.buttonNavigationBar){
-			[self.browsingAssistantViewAttachedTo removeConstraint:constraint];
-		}
-	}
-	
-	[self.buttonNavigationBar removeFromSuperview];
-	[view addSubview:self.buttonNavigationBar];
-	
-	[self.navigationController.view bringSubviewToFront:self.nowPlayingView];
-	[view bringSubviewToFront:self.statusBarBlurView];
-	
-	[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-	[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-	self.buttonNavigationBarHeightConstraint = [self.buttonNavigationBar autoSetDimension:ALDimensionHeight toSize:constantBeforeReload];
-	
-	self.browsingAssistantViewAttachedTo = view;
-	
-//	if(view == self.view){
-//		[self.view bringSubviewToFront:self.nowPlayingView];
-//	}
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -504,6 +474,11 @@ LMControlBarViewDelegate
 
 - (void)navigationBar:(UINavigationBar *)navigationBar didPopItem:(UINavigationItem *)item {
 	NSLog(@"Item %@ was pop popped!", item.title);
+	if(self.settingsOpen){
+		self.settingsOpen = NO;
+		
+		[self.buttonNavigationBar maximize];
+	}
 }
 
 - (void)navigationBar:(UINavigationBar *)navigationBar didPushItem:(UINavigationItem *)item {

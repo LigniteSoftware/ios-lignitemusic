@@ -69,6 +69,11 @@ typedef NS_ENUM(NSUInteger, LMNavigationTab) {
 @property id<LMButtonNavigationBarDelegate> delegate;
 
 /**
+ Completely hide the navigation button bar from the view. Minimize or maximize will need to be called to bring it back.
+ */
+- (void)completelyHide;
+
+/**
  Minimize the navigation bar down to its small size.
  */
 - (void)minimize;
