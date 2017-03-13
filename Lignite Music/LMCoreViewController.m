@@ -327,7 +327,7 @@ LMControlBarViewDelegate
 			
 			self.currentSource = self.compactView;
 			
-//			[self.browsingView reloadSourceSelectorInfo];
+			[self.compactView reloadSourceSelectorInfo];
 			break;
 		}
 		case LMIconTitles: {

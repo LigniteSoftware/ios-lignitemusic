@@ -891,7 +891,7 @@ BOOL shuffleForDebug = NO;
 	if(shuffleForDebug){
 		NSLog(@"--- Warning: Query is being automatically shuffled. ---");
 		[self shuffleArray:collections];
-	}  
+	}
 	
 	//		NSLog(@"[LMMusicPlayer]: Took %f seconds to complete query.", endingTime-startingTime);
 	
