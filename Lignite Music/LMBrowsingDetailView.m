@@ -47,6 +47,11 @@
 @property UIImageView *backgroundImageView;
 
 /**
+ The background tile for for music which is not artist based.
+ */
+@property LMTiledAlbumCoverView *backgroundTileView;
+
+/**
  The control bar.
  */
 @property LMControlBarView *controlBar;
@@ -515,15 +520,24 @@
 //	self.headerBigListEntry.userInteractionEnabled = YES;
 //	[self.headerBigListEntry setup];
 	
-	self.backgroundImageView = [UIImageView newAutoLayoutView];
-	self.backgroundImageView.contentMode = UIViewContentModeScaleAspectFit;
-	self.backgroundImageView.image = [self.musicTrackCollection.representativeItem albumArt];
-	[self addSubview:self.backgroundImageView];
+	if(self.musicType == LMMusicTypeArtists){
+		self.backgroundImageView = [UIImageView newAutoLayoutView];
+		self.backgroundImageView.contentMode = UIViewContentModeScaleAspectFit;
+		self.backgroundImageView.image = [self.musicTrackCollection.representativeItem artistImage];
+		[self addSubview:self.backgroundImageView];
+	}
+	else{
+		self.backgroundTileView = [LMTiledAlbumCoverView newAutoLayoutView];
+		self.backgroundTileView.musicCollection = self.musicTrackCollection;
+		[self addSubview:self.backgroundTileView];
+	}
 	
-	[self.backgroundImageView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-	[self.backgroundImageView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	[self.backgroundImageView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-	[self.backgroundImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self];
+	id viewToPin = (self.musicType == LMMusicTypeArtists) ? self.backgroundImageView : self.backgroundTileView;
+	
+	[viewToPin autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+	[viewToPin autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+	[viewToPin autoPinEdgeToSuperviewEdge:ALEdgeTop];
+	[viewToPin autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self];
 	
 	
 	self.tableView = [LMTableView newAutoLayoutView];
