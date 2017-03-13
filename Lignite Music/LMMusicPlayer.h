@@ -109,6 +109,14 @@ typedef enum {
  @param audioRoute The new output port.
  */
 - (void)musicOutputPortDidChange:(AVAudioSessionPortDescription*)outputPort;
+
+/**
+ A playback mode changed. Included in one delegate function instead of complicating with two.
+
+ @param shuffleMode The current shuffle mode.
+ @param repeatMode The current repeat mode.
+ */
+- (void)musicPlaybackModesDidChange:(LMMusicShuffleMode)shuffleMode repeatMode:(LMMusicRepeatMode)repeatMode;
 @end
 
 @interface LMMusicPlayer : NSObject

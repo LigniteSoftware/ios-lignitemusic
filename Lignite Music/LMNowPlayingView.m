@@ -161,6 +161,11 @@
 	self.progressSlider.value = newPlaybackTime;
 }
 
+- (void)musicPlaybackModesDidChange:(LMMusicShuffleMode)shuffleMode repeatMode:(LMMusicRepeatMode)repeatMode {
+	
+	[self updateMusicModeButtons];
+}
+
 - (void)musicTrackDidChange:(LMMusicTrack *)newTrack {
 	if(!self.queue){
 		self.queue = [LMOperationQueue new];
@@ -331,14 +336,20 @@
 	return self.mainViewLeadingConstraint.constant < 0;
 }
 
+- (void)updateMusicModeButtons {
+	[UIView animateWithDuration:0.25 animations:^{
+		[self.shuffleModeButton setColour:self.musicPlayer.shuffleMode ? [[UIColor whiteColor] colorWithAlphaComponent:(8.0/10.0)] : [LMColour fadedColour]];
+	}];
+	
+	[UIView animateWithDuration:0.25 animations:^{
+		[self.repeatModeButton setColour:(self.musicPlayer.repeatMode != LMMusicRepeatModeNone) ? [[UIColor whiteColor] colorWithAlphaComponent:(8.0/10.0)] : [LMColour fadedColour]];
+	}];
+}
+
 - (void)clickedButton:(LMButton *)button {
 	NSLog(@"Hey button %@", button);
 	if(button == self.shuffleModeButton){
 		self.musicPlayer.shuffleMode = !self.musicPlayer.shuffleMode;
-		
-		[UIView animateWithDuration:0.25 animations:^{
-			[button setColour:self.musicPlayer.shuffleMode ? [[UIColor whiteColor] colorWithAlphaComponent:(8.0/10.0)] : [LMColour fadedColour]];
-		}];
 	}
 	else if(button == self.repeatModeButton){
 		if(self.musicPlayer.repeatMode < LMMusicRepeatModeOne){
@@ -349,10 +360,6 @@
 		}
 		
 		[self updateRepeatButtonImage];
-		
-		[UIView animateWithDuration:0.25 animations:^{
-			[button setColour:(self.musicPlayer.repeatMode != LMMusicRepeatModeNone) ? [[UIColor whiteColor] colorWithAlphaComponent:(8.0/10.0)] : [LMColour fadedColour]];
-		}];
 	}
 	else if(button == self.queueButton){
 		[self setNowPlayingQueueOpen:![self nowPlayingQueueOpen]];
@@ -373,6 +380,8 @@
 			}
 		}
 	}
+	
+	[self updateMusicModeButtons];
 }
 
 - (void)tappedNowPlaying {

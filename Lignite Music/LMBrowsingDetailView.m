@@ -37,11 +37,6 @@
 @property NSArray<LMMusicTrackCollection*>* specificTrackCollections;
 
 /**
- Whether or not to use the specific track collections. NO on playlists and compilations.
- */
-@property BOOL usingSpecificTrackCollections;
-
-/**
  The background imageView for the album art which will initially be partially covered.
  */
 @property UIImageView *backgroundImageView;
@@ -85,7 +80,7 @@
 - (void)musicTrackDidChange:(LMMusicTrack*)newTrack {
 	LMListEntry *highlightedEntry = nil;
 	int newHighlightedIndex = -1;
-	if(self.usingSpecificTrackCollections){
+	if(self.specificTrackCollections){
 		int count = 0;
 		for(LMMusicTrackCollection *collection in self.specificTrackCollections){
 			for(LMMusicTrack *track in collection.items){
@@ -122,6 +117,10 @@
 	if(highlightedEntry){
 		[highlightedEntry changeHighlightStatus:YES animated:YES];
 	}
+}
+
+- (void)musicPlaybackModesDidChange:(LMMusicShuffleMode)shuffleMode repeatMode:(LMMusicRepeatMode)repeatMode {
+	[self.controlBar reloadHighlightedButtons];
 }
 
 - (void)musicLibraryDidChange {
@@ -220,7 +219,7 @@
 	switch(self.musicType){
 		case LMMusicTypeComposers:
 		case LMMusicTypeArtists: {
-			if(self.usingSpecificTrackCollections){
+			if(self.specificTrackCollections){
 				return [NSString stringWithFormat:@"%lu %@", (unsigned long)self.specificTrackCollections.count, NSLocalizedString(self.specificTrackCollections.count == 1 ? @"AlbumInline" : @"AlbumsInline", nil)];
 			}
 			else{
@@ -323,7 +322,7 @@
 }
 
 - (void)tappedListEntry:(LMListEntry*)entry {
-	if(self.usingSpecificTrackCollections){
+	if(self.specificTrackCollections){
 		LMMusicTrackCollection *collection = [self.specificTrackCollections objectAtIndex:entry.collectionIndex];
 		
 		LMBrowsingDetailViewController *browsingDetailController = [LMBrowsingDetailViewController new];
@@ -363,7 +362,7 @@
 }
 
 - (NSString*)titleForListEntry:(LMListEntry*)entry {
-	if(self.usingSpecificTrackCollections){
+	if(self.specificTrackCollections){
 		LMMusicTrackCollection *collection = [self.specificTrackCollections objectAtIndex:entry.collectionIndex];
 		return collection.representativeItem.albumTitle ? collection.representativeItem.albumTitle : NSLocalizedString(@"UnknownAlbum", nil);
 	}
@@ -372,7 +371,7 @@
 }
 
 - (NSString*)subtitleForListEntry:(LMListEntry*)entry {
-	if(self.usingSpecificTrackCollections){
+	if(self.specificTrackCollections){
 		LMMusicTrackCollection *collection = [self.specificTrackCollections objectAtIndex:entry.collectionIndex];
 		return [NSString stringWithFormat:@"%ld %@", collection.trackCount, NSLocalizedString(collection.trackCount == 1 ? @"Song" : @"Songs", nil)];
 	}
@@ -391,7 +390,7 @@
 }
 
 - (UIImage*)iconForListEntry:(LMListEntry*)entry {
-	if(self.usingSpecificTrackCollections){
+	if(self.specificTrackCollections){
 		LMMusicTrackCollection *collection = [self.specificTrackCollections objectAtIndex:entry.collectionIndex];
 		return [collection.representativeItem albumArt];
 	}
@@ -448,7 +447,7 @@
 	}
 	LMListEntry *listEntry = [self.songEntries objectAtIndex:(index-2) % self.songEntries.count];
 	listEntry.collectionIndex = index-2; //To adjust for the big list entry at the top
-	if(self.usingSpecificTrackCollections) {
+	if(self.specificTrackCollections) {
 		listEntry.associatedData = [self.specificTrackCollections objectAtIndex:listEntry.collectionIndex];
 	}
 	else{
@@ -480,12 +479,12 @@
 - (void)amountOfObjectsRequiredChangedTo:(NSUInteger)amountOfObjects forTableView:(LMTableView*)tableView {
 	self.songEntries = [NSMutableArray new];
 	
-	NSUInteger countToUse = self.usingSpecificTrackCollections ? self.specificTrackCollections.count : self.musicTrackCollection.trackCount;
+	NSUInteger countToUse = self.specificTrackCollections ? self.specificTrackCollections.count : self.musicTrackCollection.trackCount;
 	for(int i = 0; i < MIN(amountOfObjects, countToUse); i++){
 		LMListEntry *listEntry = [LMListEntry newAutoLayoutView];
 		listEntry.delegate = self;
 		listEntry.collectionIndex = i;
-		listEntry.associatedData = self.usingSpecificTrackCollections ?
+		listEntry.associatedData = self.specificTrackCollections ?
 									[self.specificTrackCollections objectAtIndex:i] :
 									[self.musicTrackCollection.items objectAtIndex:i];
 		listEntry.isLabelBased = (self.musicType == LMMusicTypeAlbums || self.musicType == LMMusicTypeCompilations);
@@ -502,23 +501,14 @@
 	
 	self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 	
-	self.usingSpecificTrackCollections = (self.musicType != LMMusicTypePlaylists
+	BOOL usingSpecificTrackCollections = (self.musicType != LMMusicTypePlaylists
 										  && self.musicType != LMMusicTypeCompilations
 										  && self.musicType != LMMusicTypeAlbums);
 	
-	if(self.usingSpecificTrackCollections){
+	if(usingSpecificTrackCollections){
 		self.specificTrackCollections = [self.musicPlayer collectionsForRepresentativeTrack:self.musicTrackCollection.representativeItem
 																			   forMusicType:self.musicType];
 	}
-	
-//	self.headerBigListEntry = [LMBigListEntry newAutoLayoutView];
-//	self.headerBigListEntry.infoDelegate = self;
-//	self.headerBigListEntry.entryDelegate = self;
-//	self.headerBigListEntry.controlBarDelegate = self;
-//	self.headerBigListEntry.collectionIndex = 0;
-//	self.headerBigListEntry.isLargeSize = YES;
-//	self.headerBigListEntry.userInteractionEnabled = YES;
-//	[self.headerBigListEntry setup];
 	
 	if(self.musicType == LMMusicTypeArtists){
 		self.backgroundImageView = [UIImageView newAutoLayoutView];
@@ -543,7 +533,7 @@
 	self.tableView = [LMTableView newAutoLayoutView];
 	self.tableView.title = @"PlaylistDetailView";
 	self.tableView.averageCellHeight = WINDOW_FRAME.size.height*(1.0/10.0);
-	self.tableView.totalAmountOfObjects = (self.usingSpecificTrackCollections ? self.specificTrackCollections.count : self.musicTrackCollection.trackCount) + 2;
+	self.tableView.totalAmountOfObjects = (self.specificTrackCollections ? self.specificTrackCollections.count : self.musicTrackCollection.trackCount) + 2;
 	self.tableView.shouldUseDividers = YES;
 	self.tableView.firstEntryClear = YES;
 	self.tableView.dividerSectionsToIgnore = @[ @(0), @(1), @(2) ];
@@ -551,7 +541,7 @@
 	self.tableView.bottomSpacing = WINDOW_FRAME.size.height/3.0;
 	[self addSubview:self.tableView];
 	
-	NSLog(@"Items %ld spec %d", self.tableView.totalAmountOfObjects, self.usingSpecificTrackCollections);
+	NSLog(@"Items %ld spec %d", self.tableView.totalAmountOfObjects, self.specificTrackCollections ? 1 : 0);
 	
 	[self.tableView autoPinEdgesToSuperviewEdges];
 	

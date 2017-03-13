@@ -1342,6 +1342,14 @@ BOOL shuffleForDebug = NO;
 	return _currentPlaybackTime;
 #endif
 }
+	
+- (void)updatePlaybackModeDelegates {
+	for(id<LMMusicPlayerDelegate>delegate in self.delegates){
+		if([delegate respondsToSelector:@selector(musicPlaybackModesDidChange:repeatMode:)]){
+			[delegate musicPlaybackModesDidChange:self.shuffleMode repeatMode:self.repeatMode];
+		}
+	}
+}
 
 - (void)setRepeatMode:(LMMusicRepeatMode)repeatMode {
 	_repeatMode = repeatMode;
@@ -1370,6 +1378,8 @@ BOOL shuffleForDebug = NO;
 		self.systemMusicPlayer.repeatMode = systemRepeatModes[repeatMode];
 	}
 #endif
+	
+	[self updatePlaybackModeDelegates];
 }
 
 - (LMMusicRepeatMode)repeatMode {
@@ -1396,6 +1406,8 @@ BOOL shuffleForDebug = NO;
 		self.systemMusicPlayer.shuffleMode = associatedShuffleModes[shuffleMode];
 	}
 #endif
+	
+	[self updatePlaybackModeDelegates];
 }
 
 - (LMMusicShuffleMode)shuffleMode {
