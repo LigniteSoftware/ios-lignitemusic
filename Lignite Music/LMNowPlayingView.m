@@ -439,7 +439,7 @@
 - (void)amountOfObjectsRequiredChangedTo:(NSUInteger)amountOfObjects forTableView:(LMTableView *)tableView {
 	NSLog(@"Required! %d", (int)amountOfObjects);
 	
-	if(!self.itemArray){
+	if(!self.itemArray || self.itemArray.count != amountOfObjects){
 		self.itemArray = [NSMutableArray new];
 		for(int i = 0; i < amountOfObjects; i++){
 			LMListEntry *listEntry = [[LMListEntry alloc]initWithDelegate:self];
@@ -510,13 +510,13 @@
 }
 
 - (NSString*)titleForListEntry:(LMListEntry*)entry {
-	return @"queue title";
-//	return [NSString stringWithFormat:@"%@", [self.musicPlayer.nowPlayingCollection.items objectAtIndex:entry.collectionIndex].title];
+//	return @"queue title";
+	return [NSString stringWithFormat:@"%@", [self.musicPlayer.nowPlayingCollection.items objectAtIndex:entry.collectionIndex].title];
 }
 
 - (NSString*)subtitleForListEntry:(LMListEntry*)entry {
-	return @"queue subtitle";
-//	return [NSString stringWithFormat:@"%@", [LMNowPlayingView durationStringTotalPlaybackTime:[self.musicPlayer.nowPlayingCollection.items objectAtIndex:entry.collectionIndex].playbackDuration]];
+//	return @"queue subtitle";
+	return [NSString stringWithFormat:@"%@", [LMNowPlayingView durationStringTotalPlaybackTime:[self.musicPlayer.nowPlayingCollection.items objectAtIndex:entry.collectionIndex].playbackDuration]];
 }
 
 - (UIImage*)iconForListEntry:(LMListEntry*)entry {
@@ -615,6 +615,7 @@
 	}
 	self.didLayoutConstraints = YES;
 	
+	NSLog(@"What the fuckkkkk!!!");
 	
 	self.mainView = [UIView newAutoLayoutView];
 	self.mainView.backgroundColor = [UIColor purpleColor];
@@ -628,7 +629,7 @@
 	
 	
 	self.queueView = [UIView newAutoLayoutView];
-	self.queueView.backgroundColor = [UIColor cyanColor];
+	self.queueView.backgroundColor = [UIColor whiteColor];
 	[self addSubview:self.queueView];
 	
 	[self.queueView autoPinEdgeToSuperviewEdge:ALEdgeTop];

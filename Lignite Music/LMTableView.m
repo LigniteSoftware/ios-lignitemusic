@@ -62,7 +62,7 @@
 
 - (void)reloadSubviewData {
 	self.hasRegisteredCellIdentifiers = NO;
-	
+
 	self.requiredAmountOfObjects = (WINDOW_FRAME.size.height/self.averageCellHeight);
 	
 	if(self.requiredAmountOfObjects > self.totalAmountOfObjects){
