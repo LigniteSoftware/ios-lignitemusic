@@ -390,6 +390,17 @@ LMControlBarViewDelegate
 	
 	self.statusBarBlurViewHeightConstraint.constant = hidden ? 0 : 20;
 	
+	if(self.currentDetailViewController){
+		[UIView animateWithDuration:0.25 animations:^{
+			[self.currentDetailViewController setNeedsStatusBarAppearanceUpdate];
+		}];
+		if(self.currentDetailViewController.nextDetailViewController){
+			[UIView animateWithDuration:0.25 animations:^{
+				[self.currentDetailViewController.nextDetailViewController setNeedsStatusBarAppearanceUpdate];
+			}];
+		}
+	}
+	
 	[UIView animateWithDuration:0.25 animations:^{
 //		[self setNeedsStatusBarAppearanceUpdate];
 		[self.navigationController.view layoutIfNeeded];
@@ -861,7 +872,7 @@ LMControlBarViewDelegate
 						
 						
 						self.titleView = [LMTitleView newAutoLayoutView];
-						self.titleView.backgroundColor = [UIColor redColor];
+						self.titleView.backgroundColor = [UIColor whiteColor];
 						[self.view addSubview:self.titleView];
 
 						[self.titleView autoPinEdgesToSuperviewEdges];
@@ -877,7 +888,7 @@ LMControlBarViewDelegate
 						
 						[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 						[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-						[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:20];
+						[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 						[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:64];
 						//Stuck on the road with no place to call home, had to just learn the whole game on my own!
 						self.compactView.hidden = NO;

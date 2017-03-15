@@ -329,7 +329,6 @@
 		browsingDetailController.browsingDetailView = [LMBrowsingDetailView newAutoLayoutView];
 		browsingDetailController.browsingDetailView.musicType = LMMusicTypeAlbums;
 		browsingDetailController.browsingDetailView.musicTrackCollection = collection;
-		browsingDetailController.requiredHeight = self.frame.size.height;
 		browsingDetailController.browsingDetailView.rootViewController = self.rootViewController;
 		[self.rootViewController showViewController:browsingDetailController sender:self];
 		return;

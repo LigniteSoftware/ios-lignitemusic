@@ -306,7 +306,6 @@
 	
 	self.browsingDetailViewController = [LMBrowsingDetailViewController new];
 	self.browsingDetailViewController.browsingDetailView = browsingDetailView;
-	self.browsingDetailViewController.requiredHeight = self.frame.size.height;
 	
 	self.rootViewController.currentDetailViewController = self.browsingDetailViewController;
 	

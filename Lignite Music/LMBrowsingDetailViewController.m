@@ -13,36 +13,12 @@
 
 @interface LMBrowsingDetailViewController ()
 
-@property NSLayoutConstraint *browsingDetailViewHeightConstraint;
-
 @end
 
 @implementation LMBrowsingDetailViewController
 
-@synthesize requiredHeight = _requiredHeight;
-
-- (float)requiredHeight {
-	return _requiredHeight;
-}
-
-- (void)setRequiredHeight:(float)requiredHeight {
-	_requiredHeight = requiredHeight;
-	
-	NSLog(@"Setting required height to %f", requiredHeight);
-	
-	if(self.browsingDetailViewHeightConstraint){
-		[self.view layoutIfNeeded];
-		
-		self.browsingDetailViewHeightConstraint.constant = requiredHeight;
-		
-		[UIView animateWithDuration:(WINDOW_FRAME.size.height/4 * 3 < requiredHeight) ? 0.10 : 0.75 animations:^{
-			[self.view layoutIfNeeded];
-		}];
-	}
-}
-
 - (BOOL)prefersStatusBarHidden {
-	return ![LMSettings shouldShowStatusBar];
+	return [self.browsingDetailView.rootViewController prefersStatusBarHidden];
 }
 
 - (void)loadView {

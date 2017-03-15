@@ -11,8 +11,14 @@
 
 @interface LMBrowsingDetailViewController : UIViewController
 
+/**
+ The browsing detail view which is actually attached to this controller's view.
+ */
 @property LMBrowsingDetailView *browsingDetailView;
 
-@property float requiredHeight;
+/**
+ The next detail view controller in sequence, if one exists. For example, genres -> rap (current) -> album (nextDetailViewController).
+ */
+@property LMBrowsingDetailViewController *nextDetailViewController;
 
 @end

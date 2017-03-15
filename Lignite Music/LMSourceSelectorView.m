@@ -159,7 +159,7 @@
 }
 
 - (void)setup {
-	self.backgroundColor = [UIColor clearColor];
+	self.backgroundColor = [UIColor whiteColor];
 	self.currentlyHighlighted = -1;
 	
 	self.viewsTableView = [LMTableView newAutoLayoutView];
