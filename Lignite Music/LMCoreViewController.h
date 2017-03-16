@@ -18,6 +18,8 @@
 
 @property LMNavigationBar *navigationBar;
 
+- (void)panNowPlayingUp:(UIPanGestureRecognizer *)recognizer;
+
 /**
  The navigation bar that goes at the bottom.
  */

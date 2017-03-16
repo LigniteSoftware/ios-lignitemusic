@@ -402,7 +402,7 @@ LMControlBarViewDelegate
 }
 
 - (void)requiredHeightForNavigationBarChangedTo:(CGFloat)requiredHeight withAnimationDuration:(CGFloat)animationDuration {
-	NSLog(@"Height changed to %f", requiredHeight);
+//	NSLog(@"Height changed to %f", requiredHeight);
 	
 	
 	[self.navigationController.view layoutIfNeeded];
@@ -427,9 +427,10 @@ LMControlBarViewDelegate
 }
 
 //http://stackoverflow.com/questions/18946302/uinavigationcontroller-interactive-pop-gesture-not-working
-//- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
-//	return YES;
-//}
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+//	NSLog(@"%@ work with %@", [[gestureRecognizer class] description], [[otherGestureRecognizer class]description]);
+	return [otherGestureRecognizer class] != [UIPanGestureRecognizer class];
+}
 
 - (void)searchTermChangedTo:(NSString *)searchTerm {
 	NSLog(@"Changed to %@", searchTerm);
@@ -565,7 +566,7 @@ LMControlBarViewDelegate
 	}
 	CGFloat totalTranslation = translation.y + (self.currentPoint.y-self.originalPoint.y);
 	
-	NSLog(@"%f to %f %@", translation.y, totalTranslation, NSStringFromCGPoint(self.currentPoint));
+//	NSLog(@"%f to %f %@", translation.y, totalTranslation, NSStringFromCGPoint(self.currentPoint));
 	
 	self.nowPlayingView.topConstraint.constant = self.nowPlayingView.frame.size.height+translation.y;
 	
@@ -833,6 +834,7 @@ LMControlBarViewDelegate
 						
 						
 						self.buttonNavigationBar = [LMButtonNavigationBar newAutoLayoutView];
+						self.buttonNavigationBar.rootViewController = self;
 						self.buttonNavigationBar.sourcesForSourceSelector = self.sourcesForSourceSelector;
 						self.buttonNavigationBar.delegate = self;
 						self.buttonNavigationBar.searchBarDelegate = self;
@@ -847,11 +849,12 @@ LMControlBarViewDelegate
 						self.musicPlayer.navigationBar = self.buttonNavigationBar;
 						
 						
-						UIPanGestureRecognizer *miniPlayerDragUpPanGesture =
-							[[UIPanGestureRecognizer alloc] initWithTarget:self
-																	action:@selector(panNowPlayingUp:)];
-						[self.buttonNavigationBar.miniPlayerView addGestureRecognizer:miniPlayerDragUpPanGesture];
-						
+//						UIPanGestureRecognizer *miniPlayerDragUpPanGesture =
+//							[[UIPanGestureRecognizer alloc] initWithTarget:self
+//																	action:@selector(panNowPlayingUp:)];
+//						miniPlayerDragUpPanGesture.delegate = self;
+//						[self.buttonNavigationBar.miniPlayerView addGestureRecognizer:miniPlayerDragUpPanGesture];
+//						
 						
 						
 						self.nowPlayingView = [LMNowPlayingView newAutoLayoutView];

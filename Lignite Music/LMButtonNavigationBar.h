@@ -39,6 +39,11 @@ typedef NS_ENUM(NSUInteger, LMNavigationTab) {
 };
 
 /**
+ The root view controller.
+ */
+@property id rootViewController;
+
+/**
  The sources for the source selector (ie. Albums, Titles, etc.)
  */
 @property NSArray<LMSource*>* sourcesForSourceSelector;

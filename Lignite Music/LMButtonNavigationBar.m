@@ -7,8 +7,9 @@
 //
 
 #import <PureLayout/PureLayout.h>
-#import "LMSourceSelectorView.h"
 #import "LMButtonNavigationBar.h"
+#import "LMSourceSelectorView.h"
+#import "LMCoreViewController.h"
 #import "NSTimer+Blocks.h"
 #import "LMMusicPlayer.h"
 #import "LMGrabberView.h"
@@ -268,9 +269,9 @@
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
-	NSLog(@"%@ and %@", gestureRecognizer, otherGestureRecognizer);
+	NSLog(@"%@ and %@? %d", [[gestureRecognizer class] description], [[otherGestureRecognizer class] description], ([gestureRecognizer class] != [UIPanGestureRecognizer class]));
 	
-	return [otherGestureRecognizer class] != [UIPanGestureRecognizer class];
+	return [gestureRecognizer class] != [UIPanGestureRecognizer class];
 }
 
 - (void)moveToYPosition:(CGFloat)yPosition {
@@ -324,9 +325,18 @@
 	}
 	CGFloat totalTranslation = translation.y + (self.currentPoint.y-self.originalPoint.y);
 	
-	NSLog(@"%f %f", totalTranslation, translation.y);
+//	NSLog(@"%f %f", totalTranslation, translation.y);
+	
+	if(recognizer.view == self.miniPlayerView){
+		LMCoreViewController *coreViewCotntroller = (LMCoreViewController*)self.rootViewController;
+		[coreViewCotntroller panNowPlayingUp:recognizer];
+	}
 	
 	if(totalTranslation < 0){ //Moving upward
+		if(recognizer.view == self.miniPlayerView){
+			return;
+		}
+		
 		self.buttonBarBottomConstraint.constant = -sqrt(-totalTranslation);
 	}
 	else{ //Moving downward
@@ -689,6 +699,11 @@
 		self.miniPlayerView.layer.masksToBounds = NO;
 		self.miniPlayerView.layer.shadowRadius = 5;
 //		self.miniPlayerView.hidden = YES;
+		
+		UIPanGestureRecognizer *miniPlayerViewMoveRecognizer = [[UIPanGestureRecognizer alloc]initWithTarget:self
+																											action:@selector(handlePan:)];
+		miniPlayerViewMoveRecognizer.delegate = self;
+		[self.miniPlayerView addGestureRecognizer:miniPlayerViewMoveRecognizer];
 		
 		
 

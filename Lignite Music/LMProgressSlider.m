@@ -250,7 +250,7 @@
 		return;
 	}
 	
-	NSLog(@"%d Current %f %f", shrunk, topConstraint.constant, bottomConstraint.constant);
+//	NSLog(@"%d Current %f %f", shrunk, topConstraint.constant, bottomConstraint.constant);
 	
 	[UIView transitionWithView:textLabel duration:0.25 options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
 		textLabel.textColor = ((shrunk ? !self.lightTheme : self.lightTheme) ? [UIColor blackColor] : [UIColor whiteColor]);

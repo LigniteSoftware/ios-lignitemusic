@@ -532,7 +532,7 @@
 	}
 	CGFloat totalTranslation = translation.y + (self.currentPoint.y-self.originalPoint.y);
 	
-	NSLog(@"%f to %f %@", translation.y, totalTranslation, NSStringFromCGPoint(self.currentPoint));
+//	NSLog(@"%f to %f %@", translation.y, totalTranslation, NSStringFromCGPoint(self.currentPoint));
 	
 	if(totalTranslation < 0){ //Moving upward
 		return;
@@ -582,7 +582,7 @@
 		totalTranslation = self.queueOriginalPoint.x + translation.x;
 	}
 	
-	NSLog(@"%f %f %ld", translation.x, totalTranslation, (long)recognizer.state);
+//	NSLog(@"%f %f %ld", translation.x, totalTranslation, (long)recognizer.state);
 	
 	if(totalTranslation > 0){ //Moving too far to the right?
 		NSLog(@"Fuck");
