@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "LMNavigationBar.h"
+#import "LMButtonNavigationBar.h"
 
 @class LMBrowsingDetailViewController;
 
@@ -16,6 +17,11 @@
 @property LMBrowsingDetailViewController *currentDetailViewController;
 
 @property LMNavigationBar *navigationBar;
+
+/**
+ The navigation bar that goes at the bottom.
+ */
+@property LMButtonNavigationBar *buttonNavigationBar;
 
 - (void)prepareToLoadView;
 

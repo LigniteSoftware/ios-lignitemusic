@@ -12,7 +12,6 @@
 #import "LMGuideViewPagerController.h"
 #import "LMSettingsViewController.h"
 #import "LMSearchViewController.h"
-#import "LMButtonNavigationBar.h"
 #import "UIImage+AverageColour.h"
 #import "LMCompactBrowsingView.h"
 #import "LMCoreViewController.h"
@@ -85,11 +84,6 @@ LMControlBarViewDelegate
 @property BOOL loaded;
 
 @property LMPurchaseManager *purchaseManager;
-
-/**
- The navigation bar that goes at the bottom.
- */
-@property LMButtonNavigationBar *buttonNavigationBar;
 
 /**
  The height constraint for the navigation bar.

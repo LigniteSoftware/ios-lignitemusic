@@ -35,6 +35,16 @@
  */
 @property LMBrowsingDetailViewController *browsingDetailViewController;
 
+/**
+ The last point in scrolling where the user stopped scrolling.
+ */
+@property CGPoint lastScrollingOffsetPoint;
+
+/**
+ Whether or not the scrolling that the user did broke the treshhold for minimizing the bottom button bar.
+ */
+@property BOOL brokeScrollingThreshhold;
+
 @end
 
 @implementation LMCompactBrowsingView
@@ -375,6 +385,24 @@
 	self.didLayoutConstraints = NO;
 	
 	[self layoutIfNeeded];
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+	NSLog(@"Scrolled to %@", NSStringFromCGPoint(self.collectionView.contentOffset));
+	CGFloat difference = fabs(scrollView.contentOffset.y-self.lastScrollingOffsetPoint.y);
+	NSLog(@"Difference %f", difference);
+	if(difference > WINDOW_FRAME.size.height/4){
+		self.brokeScrollingThreshhold = YES;
+		[self.rootViewController.buttonNavigationBar minimize];
+	}
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+	if(self.brokeScrollingThreshhold){
+//		[self.rootViewController.buttonNavigationBar minimize];
+	}
+	self.brokeScrollingThreshhold = NO;
+	self.lastScrollingOffsetPoint = scrollView.contentOffset;
 }
 
 - (void)layoutSubviews {

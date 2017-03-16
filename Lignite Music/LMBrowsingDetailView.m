@@ -18,7 +18,7 @@
 #import "LMMusicPlayer.h"
 #import "LMBrowsingDetailViewController.h"
 
-@interface LMBrowsingDetailView()<LMTableViewSubviewDataSource, LMBigListEntryDelegate, LMCollectionInfoViewDelegate, LMListEntryDelegate, LMMusicPlayerDelegate, LMControlBarViewDelegate>
+@interface LMBrowsingDetailView()<LMTableViewSubviewDataSource, LMBigListEntryDelegate, LMCollectionInfoViewDelegate, LMListEntryDelegate, LMMusicPlayerDelegate, LMControlBarViewDelegate, UITableViewDelegate>
 
 @property LMTableView *tableView;
 
@@ -51,9 +51,37 @@
  */
 @property LMControlBarView *controlBar;
 
+/**
+ The last point in scrolling where the user stopped scrolling.
+ */
+@property CGPoint lastScrollingOffsetPoint;
+
+/**
+ Whether or not the scrolling that the user did broke the treshhold for minimizing the bottom button bar.
+ */
+@property BOOL brokeScrollingThreshhold;
+
 @end
 
 @implementation LMBrowsingDetailView
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+	NSLog(@"Scrolled to %@", NSStringFromCGPoint(self.tableView.contentOffset));
+	CGFloat difference = fabs(scrollView.contentOffset.y-self.lastScrollingOffsetPoint.y);
+	NSLog(@"Difference %f", difference);
+	if(difference > WINDOW_FRAME.size.height/4){
+		self.brokeScrollingThreshhold = YES;
+		[self.rootViewController.buttonNavigationBar minimize];
+	}
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+	if(self.brokeScrollingThreshhold){
+		//[self.rootViewController.buttonNavigationBar minimize];
+	}
+	self.brokeScrollingThreshhold = NO;
+	self.lastScrollingOffsetPoint = scrollView.contentOffset;
+}
 
 - (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState {
 	NSLog(@"Playback state changed in browsing detail view delegate");
@@ -530,6 +558,7 @@
 	
 	
 	self.tableView = [LMTableView newAutoLayoutView];
+	self.tableView.secondaryDelegate = self;
 	self.tableView.title = @"PlaylistDetailView";
 	self.tableView.averageCellHeight = WINDOW_FRAME.size.height*(1.0/10.0);
 	self.tableView.totalAmountOfObjects = (self.specificTrackCollections ? self.specificTrackCollections.count : self.musicTrackCollection.trackCount) + 2;

@@ -9,6 +9,7 @@
 #import <PureLayout/PureLayout.h>
 #import "LMSourceSelectorView.h"
 #import "LMButtonNavigationBar.h"
+#import "NSTimer+Blocks.h"
 #import "LMMusicPlayer.h"
 #import "LMGrabberView.h"
 #import "LMButtonBar.h"
@@ -711,6 +712,12 @@
 		
 		
 		[self setSelectedTab:LMNavigationTabBrowse];
+		
+		[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
+			self.originalPoint = self.buttonBar.frame.origin;
+			self.currentPoint = self.buttonBar.frame.origin;
+			[self minimize];
+		} repeats:NO];
 	}
 }
 
