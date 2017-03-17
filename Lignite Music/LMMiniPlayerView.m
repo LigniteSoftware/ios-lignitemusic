@@ -13,7 +13,6 @@
 #import "LMOperationQueue.h"
 #import "LMNowPlayingView.h"
 #import "LMProgressSlider.h"
-#import "LMMusicPlayer.h"
 
 @interface  LMMiniPlayerView()<LMMusicPlayerDelegate, LMProgressSliderDelegate>
 
@@ -29,16 +28,6 @@
 @property LMOperationQueue *queue;
 
 @property LMMusicPlayer *musicPlayer;
-
-/**
- The track which this miniplayer holds.
- */
-@property LMMusicTrack *loadedTrack;
-
-/**
- The index of the loaded track in the queue playing.
- */
-@property NSInteger loadedTrackIndex;
 
 @end
 
@@ -149,7 +138,6 @@
 
 - (void)musicCurrentPlaybackTimeDidChange:(NSTimeInterval)newPlaybackTime {
 	if(self.musicPlayer.nowPlayingTrack.persistentID != self.loadedTrack.persistentID){
-		NSLog(@"Shit dawg");
 		return;
 	}
 	
@@ -235,6 +223,8 @@
 	[self addGestureRecognizer:tapGesture];
 	
 	[self.musicPlayer addMusicDelegate:self];
+	
+	NSLog(@"Setup miniplayer");
 }
 
 - (instancetype)init {

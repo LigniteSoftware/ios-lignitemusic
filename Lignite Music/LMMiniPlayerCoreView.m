@@ -43,24 +43,40 @@
  */
 @property BOOL hasPreviousTrack;
 
+/**
+ The timer to skip to the next or previous track.
+ */
+@property NSTimer *skipTracksTimer;
+
+/**
+ Whether or not to skip to next when the timer fires. NO for previous track.
+ */
+@property BOOL skipToNextTrackOnTimerFire;
+
+/**
+ The leading constraint for the center miniplayer. This is the constraint which the pan gesture uses for the motion of views.
+ */
 @property NSLayoutConstraint *miniPlayerLeadingConstraint;
+
+/**
+ The other constraints, will handle this soon.
+ */
 @property NSMutableArray *otherConstraints;
 
 @end
 
 @implementation LMMiniPlayerCoreView
 
-- (void)musicTrackDidChange:(LMMusicTrack *)newTrack {
-	NSInteger nowPlayingTrackIndex = self.musicPlayer.indexOfNowPlayingTrack;
-	NSInteger nextTrackIndex = nowPlayingTrackIndex+1;
-	NSInteger previousTrackIndex = nowPlayingTrackIndex-1;
+- (void)loadMusicTracksBasedOffIndex:(NSInteger)indexOfCenter {
+	NSInteger nextTrackIndex = indexOfCenter+1;
+	NSInteger previousTrackIndex = indexOfCenter-1;
 	self.hasNextTrack = (nextTrackIndex < self.musicPlayer.nowPlayingCollection.count);
 	if(!self.hasNextTrack){
 		nextTrackIndex = -1;
 	}
 	self.hasPreviousTrack = previousTrackIndex > -1;
 	
-	[self.centerMiniPlayerView changeMusicTrack:self.musicPlayer.nowPlayingTrack withIndex:nowPlayingTrackIndex];
+	[self.centerMiniPlayerView changeMusicTrack:[self.musicPlayer.nowPlayingCollection.items objectAtIndex:indexOfCenter] withIndex:indexOfCenter];
 	if(self.hasNextTrack){
 		[self.leadingMiniPlayerView changeMusicTrack:[self.musicPlayer.nowPlayingCollection.items objectAtIndex:nextTrackIndex]
 										   withIndex:nextTrackIndex];
@@ -71,8 +87,18 @@
 	}
 }
 
+- (void)musicTrackDidChange:(LMMusicTrack *)newTrack {
+	NSInteger nowPlayingTrackIndex = self.musicPlayer.indexOfNowPlayingTrack;
+	[self loadMusicTracksBasedOffIndex:nowPlayingTrackIndex];
+}
+
 - (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState {
 	
+}
+
+- (void)skipTracks {
+//	self.skipToNextTrackOnTimerFire ? [self.musicPlayer skipToNextTrack] : [self.musicPlayer skipToPreviousItem];
+	[self.musicPlayer setNowPlayingTrack:self.centerMiniPlayerView.loadedTrack];
 }
 
 - (void)rebuildConstraints:(BOOL)leadingIsCenter {
@@ -114,6 +140,8 @@
 	[self.leadingMiniPlayerView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self];
 	[self.leadingMiniPlayerView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
 	
+	[self loadMusicTracksBasedOffIndex:self.centerMiniPlayerView.loadedTrackIndex];
+	
 	[self layoutIfNeeded];
 	
 	NSLog(@"Constraints rebuilt.");
@@ -125,6 +153,11 @@
 	CGFloat totalTranslation = translation.x;
 	
 	//	NSLog(@"%f to %f %@", translation.y, totalTranslation, NSStringFromCGPoint(self.currentPoint));
+	
+	if(self.skipTracksTimer){
+		[self.skipTracksTimer invalidate];
+		self.skipTracksTimer = nil;
+	}
 	
 	self.miniPlayerLeadingConstraint.constant = totalTranslation;
 	
@@ -155,9 +188,15 @@
 		} completion:^(BOOL finished) {
 			if(finished){
 				if(rebuildConstraints){
-					[self rebuildConstraints:translation.x < -self.frame.size.width/4];
+					[self rebuildConstraints:nextSong];
 					
-					nextSong ? [self.musicPlayer skipToNextTrack] : [self.musicPlayer skipToPreviousItem];
+					self.skipToNextTrackOnTimerFire = nextSong;
+					
+					self.skipTracksTimer = [NSTimer scheduledTimerWithTimeInterval:1.0
+																			target:self
+																		  selector:@selector(skipTracks)
+																		  userInfo:nil
+																		   repeats:NO];
 				}
 				NSLog(@"Done.");
 			}
