@@ -36,12 +36,12 @@
 @implementation LMMiniPlayerCoreView
 
 - (void)rebuildConstraints:(BOOL)leadingIsCenter {
-	for(UIGestureRecognizer *gestureRecognizer in self.centerMiniPlayerView.gestureRecognizers){
-		if([gestureRecognizer class] == [UIPanGestureRecognizer class]){
-			[self.centerMiniPlayerView removeGestureRecognizer:gestureRecognizer];
-			NSLog(@"Removed center miniplayer gesture recognizer");
-		}
-	}
+//	for(UIGestureRecognizer *gestureRecognizer in self.centerMiniPlayerView.gestureRecognizers){
+//		if([gestureRecognizer class] == [UIPanGestureRecognizer class]){
+//			[self.centerMiniPlayerView removeGestureRecognizer:gestureRecognizer];
+//			NSLog(@"Removed center miniplayer gesture recognizer");
+//		}
+//	}
 	
 	NSArray *oldMiniPlayers = @[ self.trailingMiniPlayerView, self.centerMiniPlayerView, self.leadingMiniPlayerView ];
 //	for(LMMiniPlayerView *miniPlayer in oldMiniPlayers){
@@ -85,11 +85,11 @@
 //		}
 //	}
 	
-	UIPanGestureRecognizer *miniPlayerPanGesture =
-	[[UIPanGestureRecognizer alloc] initWithTarget:self
-											action:@selector(panMiniPlayer:)];
-	miniPlayerPanGesture.delegate = self;
-	[self.centerMiniPlayerView addGestureRecognizer:miniPlayerPanGesture];
+//	UIPanGestureRecognizer *miniPlayerPanGesture =
+//	[[UIPanGestureRecognizer alloc] initWithTarget:self
+//											action:@selector(panMiniPlayer:)];
+//	miniPlayerPanGesture.delegate = self;
+//	[self.centerMiniPlayerView addGestureRecognizer:miniPlayerPanGesture];
 	
 	[self addSubview:self.centerMiniPlayerView];
 	[self addSubview:self.leadingMiniPlayerView];
@@ -145,7 +145,7 @@
 			rebuildConstraints = NO;
 		}
 		
-		[UIView animateWithDuration:0.25 animations:^{
+		[UIView animateWithDuration:0.15 animations:^{
 			[self layoutIfNeeded];
 		} completion:^(BOOL finished) {
 			if(finished){
@@ -197,6 +197,12 @@
 		
 		[self.trailingMiniPlayerView setup];
 		
+		UIPanGestureRecognizer *miniPlayerTrailingPanGesture =
+		[[UIPanGestureRecognizer alloc] initWithTarget:self
+												action:@selector(panMiniPlayer:)];
+		miniPlayerTrailingPanGesture.delegate = self;
+		[self.trailingMiniPlayerView addGestureRecognizer:miniPlayerTrailingPanGesture];
+		
 		
 		self.leadingMiniPlayerView = [LMMiniPlayerView newAutoLayoutView];
 		self.leadingMiniPlayerView.backgroundColor = [UIColor redColor];
@@ -208,6 +214,12 @@
 		[self.leadingMiniPlayerView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
 		
 		[self.leadingMiniPlayerView setup];
+		
+		UIPanGestureRecognizer *miniPlayerLeadingPanGesture =
+		[[UIPanGestureRecognizer alloc] initWithTarget:self
+												action:@selector(panMiniPlayer:)];
+		miniPlayerLeadingPanGesture.delegate = self;
+		[self.leadingMiniPlayerView addGestureRecognizer:miniPlayerLeadingPanGesture];
 
 	}
 }
