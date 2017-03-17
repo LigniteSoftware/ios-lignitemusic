@@ -328,13 +328,13 @@
 	
 //	NSLog(@"%f %f", totalTranslation, translation.y);
 	
-	if(recognizer.view == self.miniPlayerView){
+	if(recognizer.view == self.miniPlayerCoreView){
 		LMCoreViewController *coreViewCotntroller = (LMCoreViewController*)self.rootViewController;
 		[coreViewCotntroller panNowPlayingUp:recognizer];
 	}
 	
 	if(totalTranslation < 0){ //Moving upward
-		if(recognizer.view == self.miniPlayerView){
+		if(recognizer.view == self.miniPlayerCoreView){
 			return;
 		}
 		
@@ -402,7 +402,7 @@
 			[self setViewAttachedToButtonBar:self.browsingBar];
 			break;
 		case LMNavigationTabMiniplayer:
-			[self setViewAttachedToButtonBar:self.miniPlayerView];
+			[self setViewAttachedToButtonBar:self.miniPlayerCoreView];
 			break;
 		case LMNavigationTabView:
 			if(self.viewAttachedToButtonBar == self.sourceSelector){
@@ -582,7 +582,7 @@
 		
 //		self.miniPlayerView = [LMMiniPlayerView newAutoLayoutView];
 		// ^ has already been created
-		[self addSubview:self.miniPlayerView];
+		[self addSubview:self.miniPlayerCoreView];
 		
 		
 		LMGrabberView *miniPlayerGrabberView = [LMGrabberView newAutoLayoutView];
@@ -591,7 +591,7 @@
 		miniPlayerGrabberView.grabberIcon = [LMAppIcon imageForIcon:LMIconUpArrow];
 		[self addSubview:miniPlayerGrabberView];
 		
-		[miniPlayerGrabberView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.miniPlayerView];
+		[miniPlayerGrabberView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.miniPlayerCoreView];
 		[miniPlayerGrabberView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(1.0/6.0)];
 		[miniPlayerGrabberView autoSetDimension:ALDimensionHeight toSize:LMNavigationBarGrabberHeight];
 		[miniPlayerGrabberView autoAlignAxisToSuperviewAxis:ALAxisVertical];
@@ -686,25 +686,25 @@
 		[self.buttonBarBottomWhitespaceView autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height/3.0];
 		
 		
-		[self.miniPlayerView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.buttonBar withOffset:LMNavigationBarGrabberHeight + 10];
-		[self.miniPlayerView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-		[self.miniPlayerView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-		[self.miniPlayerView autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height/5.0];
+		[self.miniPlayerCoreView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.buttonBar withOffset:LMNavigationBarGrabberHeight + 10];
+		[self.miniPlayerCoreView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.miniPlayerCoreView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.miniPlayerCoreView autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height/5.0];
 		
-		[self.miniPlayerView setup];
+//		[self.miniPlayerView setup];
 		
-		self.miniPlayerView.backgroundColor = [UIColor whiteColor];
-		self.miniPlayerView.layer.shadowColor = [UIColor blackColor].CGColor;
-		self.miniPlayerView.layer.shadowOpacity = 0.25f;
-		self.miniPlayerView.layer.shadowOffset = CGSizeMake(0, 0);
-		self.miniPlayerView.layer.masksToBounds = NO;
-		self.miniPlayerView.layer.shadowRadius = 5;
+		self.miniPlayerCoreView.backgroundColor = [UIColor whiteColor];
+		self.miniPlayerCoreView.layer.shadowColor = [UIColor blackColor].CGColor;
+		self.miniPlayerCoreView.layer.shadowOpacity = 0.25f;
+		self.miniPlayerCoreView.layer.shadowOffset = CGSizeMake(0, 0);
+		self.miniPlayerCoreView.layer.masksToBounds = NO;
+		self.miniPlayerCoreView.layer.shadowRadius = 5;
 //		self.miniPlayerView.hidden = YES;
 		
 		UIPanGestureRecognizer *miniPlayerViewMoveRecognizer = [[UIPanGestureRecognizer alloc]initWithTarget:self
 																											action:@selector(handlePan:)];
 		miniPlayerViewMoveRecognizer.delegate = self;
-		[self.miniPlayerView addGestureRecognizer:miniPlayerViewMoveRecognizer];
+		[self.miniPlayerCoreView addGestureRecognizer:miniPlayerViewMoveRecognizer];
 		
 		
 
@@ -740,7 +740,7 @@
 - (instancetype)init {
 	self = [super init];
 	if(self) {
-		self.miniPlayerView = [LMMiniPlayerView newAutoLayoutView];
+		self.miniPlayerCoreView = [LMMiniPlayerCoreView newAutoLayoutView];
 	}
 	return self;
 }

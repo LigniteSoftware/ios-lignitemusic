@@ -9,8 +9,9 @@
 #import <PureLayout/PureLayout.h>
 #import "LMMiniPlayerCoreView.h"
 #import "LMMiniPlayerView.h"
+#import "LMMusicPlayer.h"
 
-@interface LMMiniPlayerCoreView()<UIGestureRecognizerDelegate>
+@interface LMMiniPlayerCoreView()<UIGestureRecognizerDelegate, LMMusicPlayerDelegate>
 
 /**
  The miniplayer which goes in the back.
@@ -27,6 +28,20 @@
  */
 @property LMMiniPlayerView *leadingMiniPlayerView;
 
+/**
+ The music player.
+ */
+@property LMMusicPlayer *musicPlayer;
+
+/**
+ Whether or not there is a next track.
+ */
+@property BOOL hasNextTrack;
+
+/**
+ Whether or not there is a previous track from the current playing.
+ */
+@property BOOL hasPreviousTrack;
 
 @property NSLayoutConstraint *miniPlayerLeadingConstraint;
 @property NSMutableArray *otherConstraints;
@@ -35,28 +50,31 @@
 
 @implementation LMMiniPlayerCoreView
 
+- (void)musicTrackDidChange:(LMMusicTrack *)newTrack {
+	NSInteger nowPlayingTrackIndex = self.musicPlayer.indexOfNowPlayingTrack;
+	NSInteger nextTrackIndex = nowPlayingTrackIndex+1;
+	NSInteger previousTrackIndex = nowPlayingTrackIndex-1;
+	self.hasNextTrack = (nextTrackIndex < self.musicPlayer.nowPlayingCollection.count);
+	if(!self.hasNextTrack){
+		nextTrackIndex = -1;
+	}
+	self.hasPreviousTrack = previousTrackIndex > -1;
+	
+	[self.centerMiniPlayerView changeMusicTrack:self.musicPlayer.nowPlayingTrack];
+	if(self.hasNextTrack){
+		[self.leadingMiniPlayerView changeMusicTrack:[self.musicPlayer.nowPlayingCollection.items objectAtIndex:nextTrackIndex]];
+	}
+	if(self.hasPreviousTrack){
+		[self.trailingMiniPlayerView changeMusicTrack:[self.musicPlayer.nowPlayingCollection.items objectAtIndex:previousTrackIndex]];
+	}
+}
+
+- (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState {
+	
+}
+
 - (void)rebuildConstraints:(BOOL)leadingIsCenter {
-//	for(UIGestureRecognizer *gestureRecognizer in self.centerMiniPlayerView.gestureRecognizers){
-//		if([gestureRecognizer class] == [UIPanGestureRecognizer class]){
-//			[self.centerMiniPlayerView removeGestureRecognizer:gestureRecognizer];
-//			NSLog(@"Removed center miniplayer gesture recognizer");
-//		}
-//	}
-	
 	NSArray *oldMiniPlayers = @[ self.trailingMiniPlayerView, self.centerMiniPlayerView, self.leadingMiniPlayerView ];
-//	for(LMMiniPlayerView *miniPlayer in oldMiniPlayers){
-//		for(NSLayoutConstraint *constraint in miniPlayer.constraints){
-//			[miniPlayer removeConstraint:constraint];
-//			NSLog(@"Removed miniplayer constraint");
-//		}
-//	}
-	
-//	[self.miniPlayerLeadingConstraint autoRemove];
-//	for(NSLayoutConstraint *constraint in self.otherConstraints){
-//		[constraint autoRemove];
-//	}
-//	
-//	self.otherConstraints = [NSMutableArray new];
 	
 	[self.centerMiniPlayerView removeFromSuperview];
 	[self.leadingMiniPlayerView removeFromSuperview];
@@ -74,22 +92,6 @@
 		self.centerMiniPlayerView = oldMiniPlayers[0];
 		self.leadingMiniPlayerView = oldMiniPlayers[1];
 	}
-	
-//	NSArray *newMiniPlayers = @[ self.trailingMiniPlayerView, self.centerMiniPlayerView, self.leadingMiniPlayerView ];
-//	for(LMMiniPlayerView *miniPlayer in newMiniPlayers){
-//		for(NSLayoutConstraint *constraint in self.constraints){
-//			if(constraint.firstItem == miniPlayer || constraint.secondItem == miniPlayer){
-//				[self removeConstraint:constraint];
-//				NSLog(@"Removed self constraint");
-//			}
-//		}
-//	}
-	
-//	UIPanGestureRecognizer *miniPlayerPanGesture =
-//	[[UIPanGestureRecognizer alloc] initWithTarget:self
-//											action:@selector(panMiniPlayer:)];
-//	miniPlayerPanGesture.delegate = self;
-//	[self.centerMiniPlayerView addGestureRecognizer:miniPlayerPanGesture];
 	
 	[self addSubview:self.centerMiniPlayerView];
 	[self addSubview:self.leadingMiniPlayerView];
@@ -129,13 +131,14 @@
 	if(recognizer.state == UIGestureRecognizerStateEnded){		
 		[self layoutIfNeeded];
 		
+		BOOL nextSong = translation.x < -self.frame.size.width/4;
 		BOOL rebuildConstraints = YES;
 		
 		if(translation.x > self.frame.size.width/4){
 			NSLog(@"Slide forward");
 			self.miniPlayerLeadingConstraint.constant = self.frame.size.width;
 		}
-		else if(translation.x < -self.frame.size.width/4){
+		else if(nextSong){
 			NSLog(@"Slide backward");
 			self.miniPlayerLeadingConstraint.constant = -self.frame.size.width;
 		}
@@ -151,6 +154,8 @@
 			if(finished){
 				if(rebuildConstraints){
 					[self rebuildConstraints:translation.x < -self.frame.size.width/4];
+					
+					nextSong ? [self.musicPlayer skipToNextTrack] : [self.musicPlayer skipToPreviousItem];
 				}
 				NSLog(@"Done.");
 			}
@@ -168,8 +173,11 @@
 		
 		self.otherConstraints = [NSMutableArray new];
 		
+		self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
+		[self.musicPlayer addMusicDelegate:self];
+		
 		self.centerMiniPlayerView = [LMMiniPlayerView newAutoLayoutView];
-		self.centerMiniPlayerView.backgroundColor = [UIColor orangeColor];
+//		self.centerMiniPlayerView.backgroundColor = [UIColor orangeColor];
 		[self addSubview:self.centerMiniPlayerView];
 		
 		self.miniPlayerLeadingConstraint = [self.centerMiniPlayerView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
@@ -187,7 +195,7 @@
 		
 		
 		self.trailingMiniPlayerView = [LMMiniPlayerView newAutoLayoutView];
-		self.trailingMiniPlayerView.backgroundColor = [UIColor yellowColor];
+//		self.trailingMiniPlayerView.backgroundColor = [UIColor yellowColor];
 		[self addSubview:self.trailingMiniPlayerView];
 		
 		[self.otherConstraints addObject:[self.trailingMiniPlayerView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.centerMiniPlayerView]];
@@ -205,7 +213,7 @@
 		
 		
 		self.leadingMiniPlayerView = [LMMiniPlayerView newAutoLayoutView];
-		self.leadingMiniPlayerView.backgroundColor = [UIColor redColor];
+//		self.leadingMiniPlayerView.backgroundColor = [UIColor redColor];
 		[self addSubview:self.leadingMiniPlayerView];
 		
 		[self.otherConstraints addObject:[self.leadingMiniPlayerView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.centerMiniPlayerView]];
@@ -221,6 +229,12 @@
 		miniPlayerLeadingPanGesture.delegate = self;
 		[self.leadingMiniPlayerView addGestureRecognizer:miniPlayerLeadingPanGesture];
 
+//		LMMusicTrackCollection *currentCollection = self.musicPlayer.nowPlayingCollection;
+//		if(currentCollection == nil){
+//			
+//		}
+		
+		[self.centerMiniPlayerView changeMusicTrack:self.musicPlayer.nowPlayingTrack];
 	}
 }
 

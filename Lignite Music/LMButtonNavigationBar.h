@@ -6,7 +6,7 @@
 //  Copyright © 2016 Lignite. All rights reserved.
 //
 
-#import "LMMiniPlayerView.h"
+#import "LMMiniPlayerCoreView.h"
 #import "LMBrowsingBar.h"
 #import "LMSource.h"
 #import "LMExtras.h"
@@ -64,9 +64,9 @@ typedef NS_ENUM(NSUInteger, LMNavigationTab) {
 @property LMBrowsingBar *browsingBar;
 
 /**
- The miniplayer.
+ The core view of the miniplayer, which controls all 3 in queue.
  */
-@property LMMiniPlayerView *miniPlayerView;
+@property LMMiniPlayerCoreView *miniPlayerCoreView;
 
 /**
  The delegate.

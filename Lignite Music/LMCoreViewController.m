@@ -678,15 +678,16 @@ LMControlBarViewDelegate
 //
 //	[miniplayerTest setup];
 
-	LMMiniPlayerCoreView *miniPlayerCoreView = [LMMiniPlayerCoreView newAutoLayoutView];
-	[self.view addSubview:miniPlayerCoreView];
 	
-	[miniPlayerCoreView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.view];
-	[miniPlayerCoreView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.view];
-	[miniPlayerCoreView autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
-	[miniPlayerCoreView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:0.20];
-
-	return;
+//	LMMiniPlayerCoreView *miniPlayerCoreView = [LMMiniPlayerCoreView newAutoLayoutView];
+//	[self.view addSubview:miniPlayerCoreView];
+//	
+//	[miniPlayerCoreView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.view];
+//	[miniPlayerCoreView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.view];
+//	[miniPlayerCoreView autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+//	[miniPlayerCoreView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:0.20];
+//
+//	return;
 	
 	
 	

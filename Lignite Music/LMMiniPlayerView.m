@@ -12,8 +12,8 @@
 #import "LMTrackDurationView.h"
 #import "LMOperationQueue.h"
 #import "LMNowPlayingView.h"
-#import "LMMusicPlayer.h"
 #import "LMProgressSlider.h"
+#import "LMMusicPlayer.h"
 
 @interface  LMMiniPlayerView()<LMMusicPlayerDelegate, LMProgressSliderDelegate>
 
@@ -29,6 +29,11 @@
 @property LMOperationQueue *queue;
 
 @property LMMusicPlayer *musicPlayer;
+
+/**
+ The track which this miniplayer holds.
+ */
+@property LMMusicTrack *loadedTrack;
 
 @end
 
@@ -56,6 +61,10 @@
 }
 
 - (void)musicTrackDidChange:(LMMusicTrack *)newTrack {
+	
+}
+
+- (void)changeMusicTrack:(LMMusicTrack *)newTrack {
 	if(!self.queue){
 		self.queue = [[LMOperationQueue alloc] init];
 	}
@@ -131,6 +140,9 @@
 }
 
 - (void)musicCurrentPlaybackTimeDidChange:(NSTimeInterval)newPlaybackTime {
+	if(self.musicPlayer.nowPlayingTrack.persistentID != self.loadedTrack.persistentID){
+		return;
+	}
 	if(self.progressSlider.userIsInteracting){
 		return;
 	}
@@ -149,22 +161,6 @@
 	[self.musicPlayer invertPlaybackState];
 }
 
-- (void)swipedRightMiniPlayer {
-	if(![self.musicPlayer hasTrackLoaded]){
-		return;
-	}
-	
-	[self.musicPlayer skipToNextTrack];
-}
-
-- (void)swipedLeftMiniPlayer {
-	if(![self.musicPlayer hasTrackLoaded]){
-		return;
-	}
-	
-	[self.musicPlayer autoBackThrough];
-}
-
 - (void)setup {
 	self.albumArtImageBackgroundView = [UIView newAutoLayoutView];
 	[self addSubview:self.albumArtImageBackgroundView];
@@ -177,7 +173,7 @@
 	self.albumArtImageView = [UIImageView newAutoLayoutView];
 //	self.albumArtImageView.layer.masksToBounds = YES;
 //	self.albumArtImageView.layer.cornerRadius = 5.0;
-//  Rest in peace ;(
+//  Rest in peace :)
 	
 	[self.albumArtImageBackgroundView addSubview:self.albumArtImageView];
 	
@@ -228,17 +224,7 @@
 	UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tappedMiniPlayer)];
 	[self addGestureRecognizer:tapGesture];
 	
-	UISwipeGestureRecognizer *swipeToRightGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipedRightMiniPlayer)];
-	swipeToRightGesture.direction = UISwipeGestureRecognizerDirectionLeft;
-	[self addGestureRecognizer:swipeToRightGesture];
-	
-	UISwipeGestureRecognizer *swipeToLeftGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipedLeftMiniPlayer)];
-	swipeToLeftGesture.direction = UISwipeGestureRecognizerDirectionRight;
-	[self addGestureRecognizer:swipeToLeftGesture];
-	
 	[self.musicPlayer addMusicDelegate:self];
-	[self musicTrackDidChange:self.musicPlayer.nowPlayingTrack];
-	[self musicCurrentPlaybackTimeDidChange:self.musicPlayer.currentPlaybackTime];
 }
 
 - (instancetype)init {
