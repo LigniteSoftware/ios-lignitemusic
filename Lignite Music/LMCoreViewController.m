@@ -348,6 +348,8 @@ LMControlBarViewDelegate
 			settingsViewController.coreViewController = self;
 			[self.navigationController pushViewController:settingsViewController animated:YES];
 			
+//			[self.buttonNavigationBar.browsingBar setShowingLetterTabs:NO];
+			
 			[self pushItemOntoNavigationBarWithTitle:NSLocalizedString(@"Settings", nil) withNowPlayingButton:NO];
 			break;
 		}
@@ -377,6 +379,14 @@ LMControlBarViewDelegate
 	if(self.statusBarBlurViewHeightConstraint.constant < 0.1 && ![self prefersStatusBarHidden]){
 		[self setStatusBarBlurHidden:NO];
 	}
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+	[self.buttonNavigationBar.browsingBar setShowingLetterTabs:NO];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+	[self.buttonNavigationBar.browsingBar setShowingLetterTabs:YES];
 }
 
 - (void)setStatusBarBlurHidden:(BOOL)hidden {
@@ -655,6 +665,18 @@ LMControlBarViewDelegate
 //	
 //	[compactBrowsingView autoPinEdgesToSuperviewEdges];
 //	
+//	return;
+	
+	LMMiniPlayerView *miniplayerTest = [LMMiniPlayerView newAutoLayoutView];
+	[self.view addSubview:miniplayerTest];
+	
+	[miniplayerTest autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.view];
+	[miniplayerTest autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.view];
+	[miniplayerTest autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+	[miniplayerTest autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:0.20];
+	
+	[miniplayerTest setup];
+	
 //	return;
 	
 	

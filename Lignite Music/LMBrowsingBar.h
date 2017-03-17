@@ -37,4 +37,9 @@
  */
 @property BOOL keyboardIsShowing;
 
+/**
+ Whether or not the letter tabs are showing. If NO, they will be covered by the search bar.
+ */
+@property BOOL showingLetterTabs;
+
 @end

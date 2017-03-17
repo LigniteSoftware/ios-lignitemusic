@@ -28,12 +28,18 @@
  */
 @property NSLayoutConstraint *searchBarLeadingConstraint;
 
+/**
+ The constraint which is tied to the width of the search button for showing/hiding letter tabs.
+ */
+@property NSLayoutConstraint *searchButtonWidthConstraint;
+
 @end
 
 @implementation LMBrowsingBar
 
 @synthesize isInSearchMode = _isInSearchMode;
 @synthesize keyboardIsShowing = _keyboardIsShowing;
+@synthesize showingLetterTabs = _showingLetterTabs;
 
 - (void)setIsInSearchMode:(BOOL)isInSearchMode {
 	_isInSearchMode = isInSearchMode;
@@ -72,6 +78,20 @@
 	self.keyboardIsShowing = YES;
 }
 
+- (BOOL)showingLetterTabs {
+	return _showingLetterTabs;
+}
+
+- (void)setShowingLetterTabs:(BOOL)showingLetterTabs {
+	_showingLetterTabs = showingLetterTabs;
+	
+	[self layoutIfNeeded];
+	self.searchButtonWidthConstraint.constant = showingLetterTabs ? 0 : (self.frame.size.width-self.frame.size.height);
+	[UIView animateWithDuration:0.5 animations:^{
+		[self layoutIfNeeded];
+	}];
+}
+
 - (void)layoutSubviews {
 	if(!self.didLayoutConstraints){
 		self.didLayoutConstraints = YES;
@@ -83,7 +103,7 @@
 		
 		[self.toggleButtonBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[self.toggleButtonBackgroundView autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
-		[self.toggleButtonBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self];
+		self.searchButtonWidthConstraint = [self.toggleButtonBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self];
 		[self.toggleButtonBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self];
 		
 		UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tappedToggleButton)];
