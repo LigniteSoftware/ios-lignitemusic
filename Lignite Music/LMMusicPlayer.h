@@ -20,6 +20,8 @@
  */
 #define DEFAULTS_KEY_PLAYER_TYPE @"setPlayerType"
 
+#define DEFAULTS_KEY_NOW_PLAYING_COLLECTION @"nowPlayingCollection"
+
 /**
  LMMusicPlayerType is the type of music player, such as the system music player or Spotify.
  */
@@ -137,7 +139,7 @@ typedef enum {
 @property LMMusicTrack *nowPlayingTrack;
 
 /**
- The currently playing collection. Can be nil if the user was playing music outside of Lignite Music before entering.
+ The currently playing collection. Should rarely be nil, though nil cases should still be handled.
  */
 @property LMMusicTrackCollection *nowPlayingCollection;
 
@@ -316,6 +318,10 @@ typedef enum {
  @return If a track is loaded. NO if track contains nil title, YES if there is a track.
  */
 - (BOOL)hasTrackLoaded;
+
+
+- (void)saveNowPlayingCollectionState;
+- (void)loadNowPlayingCollectionState;
 
 /**
  Gets the currently saved LMMusicPlayerType through NSUserDefaults. Returns LMMusicPlayerTypeSystemMusicPlayer if the entry doesn't exist in NSUserDefaults.

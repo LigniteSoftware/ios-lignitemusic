@@ -214,7 +214,6 @@
 }
 
 - (void)minimize {
-	return;
 	NSLog(@"Minimize");
 	
 	__weak id weakSelf = self;

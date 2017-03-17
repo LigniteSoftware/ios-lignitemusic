@@ -62,6 +62,8 @@
 	self.loadedTrack = newTrack;
 	self.loadedTrackIndex = index;
 	
+	NSLog(@"ID is %@: %lld", newTrack.title, newTrack.persistentID);
+	
 	if(!self.queue){
 		self.queue = [[LMOperationQueue alloc] init];
 	}

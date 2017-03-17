@@ -62,7 +62,6 @@
 
 	float contentViewHeightFactorial = [self.entryDelegate contentSubviewFactorial:YES forBigListEntry:self];
 	float contentViewWidthFactorial = [self.entryDelegate contentSubviewFactorial:NO forBigListEntry:self];
-	float infoViewHeightFactorial = (1.0/9.0); //Update the sizeForBigListEntryWhenOpened:: function's variable too
 
 	if(contentViewHeightFactorial == 0.0){
 		NSLog(@"Rejecting, gutless piece of shit.");

@@ -66,9 +66,7 @@
 @implementation LMBrowsingDetailView
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-	NSLog(@"Scrolled to %@", NSStringFromCGPoint(self.tableView.contentOffset));
 	CGFloat difference = fabs(scrollView.contentOffset.y-self.lastScrollingOffsetPoint.y);
-	NSLog(@"Difference %f", difference);
 	if(difference > WINDOW_FRAME.size.height/4){
 		self.brokeScrollingThreshhold = YES;
 		[self.rootViewController.buttonNavigationBar minimize];

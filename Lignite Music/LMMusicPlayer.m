@@ -277,6 +277,9 @@ MPMediaGrouping associatedMediaTypes[] = {
 		[self activateSpotifyPlayer];
 #else
 		self.nowPlayingTrack = self.systemMusicPlayer.nowPlayingItem;
+		self.indexOfNowPlayingTrack = self.systemMusicPlayer.indexOfNowPlayingItem;
+		
+		[self loadNowPlayingCollectionState];
 #endif
 		self.delegates = [NSMutableArray new];
 		self.delegatesSubscribedToCurrentPlaybackTimeChange = [[NSMutableArray alloc]init];
@@ -381,9 +384,8 @@ MPMediaGrouping associatedMediaTypes[] = {
 	return sharedPlayer;
 }
 
-#ifndef SPOTIFY
 - (void)prepareForTermination {
-	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer){
+	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer || self.playerType == LMMusicPlayerTypeAppleMusic){
 		if(self.nowPlayingCollection){
 			[self.systemMusicPlayer setQueueWithItemCollection:self.nowPlayingCollection];
 		}
@@ -409,7 +411,6 @@ MPMediaGrouping associatedMediaTypes[] = {
 		}
 	}
 }
-#endif
 
 - (void)updateNowPlayingTimeDelegates {
 	for(int i = 0; i < self.delegatesSubscribedToCurrentPlaybackTimeChange.count; i++){
@@ -1244,11 +1245,67 @@ BOOL shuffleForDebug = NO;
 - (LMMusicTrack*)nowPlayingTrack {
 	return _nowPlayingTrack;
 }
-
-- (void)clearNowPlayingCollection {
-#warning Set this up
-	[self.systemMusicPlayer setQueueWithQuery:self.bullshitQuery];
-	[self.systemMusicPlayer setNowPlayingItem:nil];
+	
+- (void)saveNowPlayingCollectionState {
+	if(!self.nowPlayingCollection){
+		NSLog(@"Rejecting save");
+		return;
+	}
+	
+	NSMutableString *persistentIDString = [NSMutableString new];
+	for(LMMusicTrack *track in self.nowPlayingCollection.items) {
+		[persistentIDString appendString:[NSString stringWithFormat:@"%lld,", track.persistentID]];
+	}
+	
+	persistentIDString = [NSMutableString stringWithString:[persistentIDString substringToIndex:persistentIDString.length-1]];
+	
+	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+	[userDefaults setObject:persistentIDString forKey:DEFAULTS_KEY_NOW_PLAYING_COLLECTION];
+	[userDefaults synchronize];
+	
+	NSLog(@"Saved! %@", persistentIDString);
+}
+	
+- (void)loadNowPlayingCollectionState {
+	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+	NSString *allPersistentIDsString = [userDefaults objectForKey:DEFAULTS_KEY_NOW_PLAYING_COLLECTION];
+	NSArray *persistentIDsArray = [allPersistentIDsString componentsSeparatedByString:@","];
+	
+	
+	NSTimeInterval startTime = [[NSDate new]timeIntervalSince1970];
+	NSMutableArray *nowPlayingArray = [NSMutableArray new];
+	NSInteger itemCount = 0;
+	
+	NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+	formatter.numberStyle = NSNumberFormatterDecimalStyle;
+	
+	for(NSString *persistentIDString in persistentIDsArray){
+		NSNumber *persistentID = [formatter numberFromString:persistentIDString];
+		
+		MPMediaPropertyPredicate *predicate = [MPMediaPropertyPredicate predicateWithValue:persistentID forProperty:MPMediaItemPropertyPersistentID];
+		
+		MPMediaQuery *mediaQuery = [[MPMediaQuery alloc] initWithFilterPredicates:[NSSet setWithObject:predicate]];
+		
+		NSArray *items = mediaQuery.items;
+		for(MPMediaItem *item in items){
+			itemCount++;
+			[nowPlayingArray addObject:item];
+			NSLog(@"Got item %@", item.title);
+		}
+	}
+	
+	NSTimeInterval endTime = [[NSDate new]timeIntervalSince1970];
+	
+	NSLog(@"Got %ld items in %f seconds.", itemCount, endTime-startTime);
+	
+	MPMediaItemCollection *oldNowPlayingCollection = [MPMediaItemCollection collectionWithItems:nowPlayingArray];
+	[self setNowPlayingCollection:oldNowPlayingCollection];
+	
+	[self setNowPlayingTrack:[oldNowPlayingCollection.items objectAtIndex:0]];
+}
+	
+- (LMMusicTrackCollection*)nowPlayingCollection {
+	return _nowPlayingCollection;
 }
 
 - (void)setNowPlayingCollection:(LMMusicTrackCollection*)nowPlayingCollection {
@@ -1258,7 +1315,8 @@ BOOL shuffleForDebug = NO;
 #else
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer || self.playerType == LMMusicPlayerTypeAppleMusic){
 		if(!self.nowPlayingCollection){
-			[self clearNowPlayingCollection];
+			[self.systemMusicPlayer setQueueWithQuery:self.bullshitQuery];
+			[self.systemMusicPlayer setNowPlayingItem:nil];
 		}
 		NSLog(@"Setting now playing collection to %@", nowPlayingCollection);
 		[self.systemMusicPlayer setQueueWithItemCollection:nowPlayingCollection];
@@ -1293,10 +1351,6 @@ BOOL shuffleForDebug = NO;
 	}
 	return type;
 #endif
-}
-
-- (LMMusicTrackCollection*)nowPlayingCollection {
-	return _nowPlayingCollection;
 }
 
 - (void)setCurrentPlaybackTime:(NSTimeInterval)currentPlaybackTime {

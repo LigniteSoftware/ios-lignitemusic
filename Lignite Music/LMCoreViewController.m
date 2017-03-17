@@ -688,8 +688,39 @@ LMControlBarViewDelegate
 //	[miniPlayerCoreView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:0.20];
 //
 //	return;
+
+//	NSTimeInterval startTime = [[NSDate new]timeIntervalSince1970];
+//
+//	NSArray *ids = @[ @(5172712687844084401), @(5172712687844084402), @(5172712687844084400), @(5172712687844084404),
+//					  @(5172712687844084399), @(5172712687844084405), @(5172712687844084406), @(5172712687844084408) ];
+//	NSInteger itemCount = 0;
+//	
+//	for(NSNumber *theid in ids){
+//		MPMediaPropertyPredicate *predicate = [MPMediaPropertyPredicate predicateWithValue:theid forProperty:MPMediaItemPropertyPersistentID];
+//		
+//		MPMediaQuery *mediaQuery = [[MPMediaQuery alloc] initWithFilterPredicates:[NSSet setWithObject:predicate]];
+//		
+//		NSArray *items = mediaQuery.items;
+//		for(MPMediaItem *item in items){
+//			itemCount++;
+//			NSLog(@"Got item %@", item.title);
+//		}
+//	}
+//	
+//	NSTimeInterval endTime = [[NSDate new]timeIntervalSince1970];
+//	
+//	NSLog(@"Got %ld items in %f seconds.", itemCount, endTime-startTime);
 	
+//	
+//	NSArray *collections = mediaQuery.collections;
+//	for(MPMediaItemCollection *collection in collections){
+//		NSArray *items = collection.items;
+//		for(MPMediaItem *item in items){
+//			NSLog(@"Item %@", item.title);
+//		}
+//	}
 	
+//	return;
 	
 	UIImageView *hangOnImage = [UIImageView newAutoLayoutView];
 	hangOnImage.image = [UIImage imageNamed:@"splash_wings.png"];

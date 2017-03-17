@@ -121,7 +121,7 @@
 	[userDefaults synchronize];
 	
     // Override point for customization after application launch.
-//	self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
+	self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 	
 //	NSLog(@"Actually finished");
 	
@@ -221,6 +221,8 @@
     NSLog(@"[LMAppDelegate]: Will terminate.");
 	
 //	NSLog(@"Setting %@", self.musicPlayer.nowPlayingTrack.title);
+	
+	[self.musicPlayer saveNowPlayingCollectionState];
 	
 #ifndef SPOTIFY
 	[self.musicPlayer prepareForTermination];

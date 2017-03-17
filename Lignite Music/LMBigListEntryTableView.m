@@ -27,6 +27,10 @@
 
 @implementation LMBigListEntryTableView
 
+- (void)sizeChangedToLargeSize:(BOOL)largeSize withHeight:(float)newHeight forBigListEntry:(LMBigListEntry *)bigListEntry {
+	
+}
+
 - (LMBigListEntry*)bigListEntryForCollectionInfoView:(LMCollectionInfoView*)infoView {
 	for(int i = 0; i < self.bigListEntriesArray.count; i++){
 		LMBigListEntry *bigListEntry = [self.bigListEntriesArray objectAtIndex:i];
@@ -133,7 +137,6 @@
 		LMBigListEntry *newBigListEntry = [LMBigListEntry newAutoLayoutView];
 		newBigListEntry.infoDelegate = self;
 		newBigListEntry.entryDelegate = self;
-		newBigListEntry.controlBarDelegate = self;
 		newBigListEntry.collectionIndex = i;
 		
 		[self.bigListEntriesArray addObject:newBigListEntry];

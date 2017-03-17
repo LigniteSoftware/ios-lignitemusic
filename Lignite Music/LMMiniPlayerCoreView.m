@@ -192,7 +192,7 @@
 					
 					self.skipToNextTrackOnTimerFire = nextSong;
 					
-					self.skipTracksTimer = [NSTimer scheduledTimerWithTimeInterval:1.0
+					self.skipTracksTimer = [NSTimer scheduledTimerWithTimeInterval:0.25
 																			target:self
 																		  selector:@selector(skipTracks)
 																		  userInfo:nil
@@ -275,7 +275,9 @@
 //			
 //		}
 		
-		[self.centerMiniPlayerView changeMusicTrack:self.musicPlayer.nowPlayingTrack withIndex:self.musicPlayer.indexOfNowPlayingTrack];
+		NSLog(@"Index of %ld", self.musicPlayer.indexOfNowPlayingTrack);
+		
+		[self loadMusicTracksBasedOffIndex:self.musicPlayer.indexOfNowPlayingTrack];
 	}
 }
 
