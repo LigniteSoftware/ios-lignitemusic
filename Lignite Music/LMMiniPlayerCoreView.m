@@ -60,12 +60,14 @@
 	}
 	self.hasPreviousTrack = previousTrackIndex > -1;
 	
-	[self.centerMiniPlayerView changeMusicTrack:self.musicPlayer.nowPlayingTrack];
+	[self.centerMiniPlayerView changeMusicTrack:self.musicPlayer.nowPlayingTrack withIndex:nowPlayingTrackIndex];
 	if(self.hasNextTrack){
-		[self.leadingMiniPlayerView changeMusicTrack:[self.musicPlayer.nowPlayingCollection.items objectAtIndex:nextTrackIndex]];
+		[self.leadingMiniPlayerView changeMusicTrack:[self.musicPlayer.nowPlayingCollection.items objectAtIndex:nextTrackIndex]
+										   withIndex:nextTrackIndex];
 	}
 	if(self.hasPreviousTrack){
-		[self.trailingMiniPlayerView changeMusicTrack:[self.musicPlayer.nowPlayingCollection.items objectAtIndex:previousTrackIndex]];
+		[self.trailingMiniPlayerView changeMusicTrack:[self.musicPlayer.nowPlayingCollection.items objectAtIndex:previousTrackIndex]
+											withIndex:previousTrackIndex];
 	}
 }
 
@@ -169,7 +171,7 @@
 		
 		NSLog(@"Hey");
 		
-		self.backgroundColor = [UIColor blueColor];
+		self.backgroundColor = [UIColor whiteColor];
 		
 		self.otherConstraints = [NSMutableArray new];
 		
@@ -234,7 +236,7 @@
 //			
 //		}
 		
-		[self.centerMiniPlayerView changeMusicTrack:self.musicPlayer.nowPlayingTrack];
+		[self.centerMiniPlayerView changeMusicTrack:self.musicPlayer.nowPlayingTrack withIndex:self.musicPlayer.indexOfNowPlayingTrack];
 	}
 }
 

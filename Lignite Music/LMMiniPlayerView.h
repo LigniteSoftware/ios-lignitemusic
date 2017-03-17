@@ -10,7 +10,7 @@
 
 @interface LMMiniPlayerView : UIView
 
-- (void)changeMusicTrack:(id)newTrack;
+- (void)changeMusicTrack:(id)newTrack  withIndex:(NSInteger)index;
 
 - (void)setup;
 

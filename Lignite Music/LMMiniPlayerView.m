@@ -35,12 +35,17 @@
  */
 @property LMMusicTrack *loadedTrack;
 
+/**
+ The index of the loaded track in the queue playing.
+ */
+@property NSInteger loadedTrackIndex;
+
 @end
 
 @implementation LMMiniPlayerView
 
 - (void)updateSongDurationLabelWithPlaybackTime:(long)currentPlaybackTime {
-	long totalPlaybackTime = self.musicPlayer.nowPlayingTrack.playbackDuration;
+	long totalPlaybackTime = self.loadedTrack.playbackDuration;
 	
 	long currentHours = (currentPlaybackTime / 3600);
 	long currentMinutes = ((currentPlaybackTime / 60) - currentHours*60);
@@ -64,7 +69,10 @@
 	
 }
 
-- (void)changeMusicTrack:(LMMusicTrack *)newTrack {
+- (void)changeMusicTrack:(LMMusicTrack *)newTrack withIndex:(NSInteger)index {
+	self.loadedTrack = newTrack;
+	self.loadedTrackIndex = index;
+	
 	if(!self.queue){
 		self.queue = [[LMOperationQueue alloc] init];
 	}
@@ -108,13 +116,13 @@
 	if(self.musicPlayer.nowPlayingCollection){
 		self.progressSlider.leftText =
 		[NSString stringWithFormat:NSLocalizedString(@"SongXofX", nil),
-		 (int)self.musicPlayer.indexOfNowPlayingTrack+1,
+		 (int)self.loadedTrackIndex+1,
 		 (int)self.musicPlayer.nowPlayingCollection.count];
 	}
 	else{
 		self.progressSlider.leftText =
 		[NSString stringWithFormat:NSLocalizedString(@"SongX", nil),
-		 (int)self.musicPlayer.indexOfNowPlayingTrack+1];
+		 (int)self.loadedTrackIndex+1];
 	}
 	
 	self.progressSlider.rightText = [LMNowPlayingView durationStringTotalPlaybackTime:newTrack.playbackDuration];
@@ -141,15 +149,17 @@
 
 - (void)musicCurrentPlaybackTimeDidChange:(NSTimeInterval)newPlaybackTime {
 	if(self.musicPlayer.nowPlayingTrack.persistentID != self.loadedTrack.persistentID){
+		NSLog(@"Shit dawg");
 		return;
 	}
+	
 	if(self.progressSlider.userIsInteracting){
 		return;
 	}
 	
 	[self updateSongDurationLabelWithPlaybackTime:newPlaybackTime];
 	
-	self.progressSlider.finalValue = self.musicPlayer.nowPlayingTrack.playbackDuration;
+	self.progressSlider.finalValue = self.loadedTrack.playbackDuration;
 	self.progressSlider.value = newPlaybackTime;
 }
 
@@ -209,9 +219,9 @@
 	
 	self.progressSlider = [LMProgressSlider newAutoLayoutView];
 	self.progressSlider.backgroundColor = [UIColor colorWithRed:0.82 green:0.82 blue:0.82 alpha:0.25];
-	self.progressSlider.finalValue = self.musicPlayer.nowPlayingTrack.playbackDuration;
+	self.progressSlider.finalValue = 0;
 	self.progressSlider.delegate = self;
-	self.progressSlider.value = self.musicPlayer.currentPlaybackTime;
+	self.progressSlider.value = 0;
 	self.progressSlider.lightTheme = YES;
 	[self.trackInfoAndDurationBackgroundView addSubview:self.progressSlider];
 	
