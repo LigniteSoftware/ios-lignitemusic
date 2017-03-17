@@ -37,6 +37,7 @@
 #import "LMProgressSlider.h"
 #import "LMControlBarView.h"
 #import "LMBrowsingBar.h"
+#import "LMMiniPlayerCoreView.h"
 
 #ifdef SPOTIFY
 #import "Spotify.h"
@@ -667,17 +668,25 @@ LMControlBarViewDelegate
 //	
 //	return;
 	
-	LMMiniPlayerView *miniplayerTest = [LMMiniPlayerView newAutoLayoutView];
-	[self.view addSubview:miniplayerTest];
+//	LMMiniPlayerView *miniplayerTest = [LMMiniPlayerView newAutoLayoutView];
+//	[self.view addSubview:miniplayerTest];
+//	
+//	[miniplayerTest autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.view];
+//	[miniplayerTest autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.view];
+//	[miniplayerTest autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+//	[miniplayerTest autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:0.20];
+//
+//	[miniplayerTest setup];
+
+	LMMiniPlayerCoreView *miniPlayerCoreView = [LMMiniPlayerCoreView newAutoLayoutView];
+	[self.view addSubview:miniPlayerCoreView];
 	
-	[miniplayerTest autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.view];
-	[miniplayerTest autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.view];
-	[miniplayerTest autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
-	[miniplayerTest autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:0.20];
-	
-	[miniplayerTest setup];
-	
-//	return;
+	[miniPlayerCoreView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.view];
+	[miniPlayerCoreView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.view];
+	[miniPlayerCoreView autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+	[miniPlayerCoreView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:0.20];
+
+	return;
 	
 	
 	
