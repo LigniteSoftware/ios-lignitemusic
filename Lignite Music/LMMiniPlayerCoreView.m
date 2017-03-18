@@ -34,16 +34,6 @@
 @property LMMusicPlayer *musicPlayer;
 
 /**
- Whether or not there is a next track.
- */
-@property BOOL hasNextTrack;
-
-/**
- Whether or not there is a previous track from the current playing.
- */
-@property BOOL hasPreviousTrack;
-
-/**
  The timer to skip to the next or previous track.
  */
 @property NSTimer *skipTracksTimer;
@@ -70,21 +60,18 @@
 - (void)loadMusicTracksBasedOffIndex:(NSInteger)indexOfCenter {
 	NSInteger nextTrackIndex = indexOfCenter+1;
 	NSInteger previousTrackIndex = indexOfCenter-1;
-	self.hasNextTrack = (nextTrackIndex < self.musicPlayer.nowPlayingCollection.count);
-	if(!self.hasNextTrack){
-		nextTrackIndex = -1;
+	if(nextTrackIndex >= self.musicPlayer.nowPlayingCollection.count){
+		nextTrackIndex = 0;
 	}
-	self.hasPreviousTrack = previousTrackIndex > -1;
+	if(previousTrackIndex < 0){
+		previousTrackIndex = self.musicPlayer.nowPlayingCollection.count-1;
+	}
 	
 	[self.centerMiniPlayerView changeMusicTrack:[self.musicPlayer.nowPlayingCollection.items objectAtIndex:indexOfCenter] withIndex:indexOfCenter];
-	if(self.hasNextTrack){
-		[self.leadingMiniPlayerView changeMusicTrack:[self.musicPlayer.nowPlayingCollection.items objectAtIndex:nextTrackIndex]
-										   withIndex:nextTrackIndex];
-	}
-	if(self.hasPreviousTrack){
-		[self.trailingMiniPlayerView changeMusicTrack:[self.musicPlayer.nowPlayingCollection.items objectAtIndex:previousTrackIndex]
-											withIndex:previousTrackIndex];
-	}
+	[self.leadingMiniPlayerView changeMusicTrack:[self.musicPlayer.nowPlayingCollection.items objectAtIndex:nextTrackIndex]
+									   withIndex:nextTrackIndex];
+	[self.trailingMiniPlayerView changeMusicTrack:[self.musicPlayer.nowPlayingCollection.items objectAtIndex:previousTrackIndex]
+										withIndex:previousTrackIndex];
 }
 
 - (void)musicTrackDidChange:(LMMusicTrack *)newTrack {
