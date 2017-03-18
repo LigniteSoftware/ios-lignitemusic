@@ -222,7 +222,7 @@
 	
 //	NSLog(@"Setting %@", self.musicPlayer.nowPlayingTrack.title);
 	
-	[self.musicPlayer saveNowPlayingCollectionState];
+	[self.musicPlayer saveNowPlayingState];
 	
 #ifndef SPOTIFY
 	[self.musicPlayer prepareForTermination];

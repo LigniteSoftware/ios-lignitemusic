@@ -276,18 +276,14 @@ MPMediaGrouping associatedMediaTypes[] = {
 		
 		[self activateSpotifyPlayer];
 #else
-		self.nowPlayingTrack = self.systemMusicPlayer.nowPlayingItem;
-		self.indexOfNowPlayingTrack = self.systemMusicPlayer.indexOfNowPlayingItem;
-		
-		[self loadNowPlayingCollectionState];
+		[self loadNowPlayingState];
 #endif
 		self.delegates = [NSMutableArray new];
 		self.delegatesSubscribedToCurrentPlaybackTimeChange = [[NSMutableArray alloc]init];
 		self.delegatesSubscribedToLibraryDidChange = [[NSMutableArray alloc]init];
 		self.shuffleMode = LMMusicShuffleModeOff;
 		self.repeatMode = LMMusicRepeatModeNone;
-		self.previousPlaybackTime = self.systemMusicPlayer.currentPlaybackTime;
-		self.currentPlaybackTime = self.systemMusicPlayer.currentPlaybackTime;
+		self.previousPlaybackTime = self.currentPlaybackTime;
 		
 		self.autoPlay = (self.systemMusicPlayer.playbackState == MPMusicPlaybackStatePlaying);
 		
@@ -1246,12 +1242,13 @@ BOOL shuffleForDebug = NO;
 	return _nowPlayingTrack;
 }
 	
-- (void)saveNowPlayingCollectionState {
+- (void)saveNowPlayingState {
 	if(!self.nowPlayingCollection){
 		NSLog(@"Rejecting save");
 		return;
 	}
 	
+	//Save the now playing collection to storage
 	NSMutableString *persistentIDString = [NSMutableString new];
 	for(LMMusicTrack *track in self.nowPlayingCollection.items) {
 		[persistentIDString appendString:[NSString stringWithFormat:@"%lld,", track.persistentID]];
@@ -1261,14 +1258,36 @@ BOOL shuffleForDebug = NO;
 	
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 	[userDefaults setObject:persistentIDString forKey:DEFAULTS_KEY_NOW_PLAYING_COLLECTION];
+	
+	
+	//Save the now playing track and its state to storage
+	NSDictionary *nowPlayingTrackInfo = @{
+										  @"persistentID":@(self.nowPlayingTrack.persistentID),
+										  @"playbackTime":@((NSInteger)floorf(self.currentPlaybackTime))
+										  };
+	[userDefaults setObject:nowPlayingTrackInfo forKey:DEFAULTS_KEY_NOW_PLAYING_TRACK];
+	
 	[userDefaults synchronize];
 	
-	NSLog(@"Saved! %@", persistentIDString);
+	NSLog(@"Saved! %@ %@", persistentIDString, nowPlayingTrackInfo);
 }
 	
-- (void)loadNowPlayingCollectionState {
+- (void)loadNowPlayingState {
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 	NSString *allPersistentIDsString = [userDefaults objectForKey:DEFAULTS_KEY_NOW_PLAYING_COLLECTION];
+	
+	NSDictionary *nowPlayingTrackInfo = [userDefaults objectForKey:DEFAULTS_KEY_NOW_PLAYING_TRACK];
+	
+	NSLog(@"Got info %@", nowPlayingTrackInfo);
+	
+	NSNumber *nowPlayingTrackPersistentID = [nowPlayingTrackInfo objectForKey:@"persistentID"];
+	NSNumber *nowPlayingTrackPlaybackTime = [nowPlayingTrackInfo objectForKey:@"playbackTime"];
+	LMMusicTrack *nowPlayingTrack = nil;
+	
+	if(!allPersistentIDsString){
+		return;
+	}
+	
 	NSArray *persistentIDsArray = [allPersistentIDsString componentsSeparatedByString:@","];
 	
 	
@@ -1290,18 +1309,37 @@ BOOL shuffleForDebug = NO;
 		for(MPMediaItem *item in items){
 			itemCount++;
 			[nowPlayingArray addObject:item];
+			
+			if([persistentID isEqual:nowPlayingTrackPersistentID]){
+				NSLog(@"This was the now playing track (below)");
+				nowPlayingTrack = item;
+			}
+			
 			NSLog(@"Got item %@", item.title);
 		}
 	}
 	
 	NSTimeInterval endTime = [[NSDate new]timeIntervalSince1970];
 	
-	NSLog(@"Got %ld items in %f seconds.", itemCount, endTime-startTime);
+	NSLog(@"Got %ld items in %f seconds.", (long)itemCount, endTime-startTime);
 	
 	MPMediaItemCollection *oldNowPlayingCollection = [MPMediaItemCollection collectionWithItems:nowPlayingArray];
 	[self setNowPlayingCollection:oldNowPlayingCollection];
 	
-	[self setNowPlayingTrack:[oldNowPlayingCollection.items objectAtIndex:0]];
+	if(!nowPlayingTrack){
+		nowPlayingTrack = [oldNowPlayingCollection.items objectAtIndex:0];
+	}
+	if(!nowPlayingTrackPlaybackTime){
+		nowPlayingTrackPlaybackTime = @(0);
+	}
+	
+	NSUInteger indexOfNowPlayingTrack = [oldNowPlayingCollection.items indexOfObject:nowPlayingTrack];
+	
+	NSLog(@"The previous playing track was %@ with playback time %ld, it's position was %ld", nowPlayingTrack.title, [nowPlayingTrackPlaybackTime integerValue], indexOfNowPlayingTrack);
+	
+	[self setNowPlayingTrack:nowPlayingTrack];
+	[self setCurrentPlaybackTime:[nowPlayingTrackPlaybackTime integerValue]];
+	[self setIndexOfNowPlayingTrack:indexOfNowPlayingTrack];
 }
 	
 - (LMMusicTrackCollection*)nowPlayingCollection {

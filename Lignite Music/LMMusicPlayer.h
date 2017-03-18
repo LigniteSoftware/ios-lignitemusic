@@ -20,7 +20,15 @@
  */
 #define DEFAULTS_KEY_PLAYER_TYPE @"setPlayerType"
 
+/**
+ Storage key for the user's now playing collection.
+ */
 #define DEFAULTS_KEY_NOW_PLAYING_COLLECTION @"nowPlayingCollection"
+
+/**
+ Storage key for the user's now playing track and its associated data.
+ */
+#define DEFAULTS_KEY_NOW_PLAYING_TRACK @"nowPlayingTrack"
 
 /**
  LMMusicPlayerType is the type of music player, such as the system music player or Spotify.
@@ -319,9 +327,15 @@ typedef enum {
  */
 - (BOOL)hasTrackLoaded;
 
+/**
+ Save the now playing state to user defaults.
+ */
+- (void)saveNowPlayingState;
 
-- (void)saveNowPlayingCollectionState;
-- (void)loadNowPlayingCollectionState;
+/**
+ Load the now playing state from storage.
+ */
+- (void)loadNowPlayingState;
 
 /**
  Gets the currently saved LMMusicPlayerType through NSUserDefaults. Returns LMMusicPlayerTypeSystemMusicPlayer if the entry doesn't exist in NSUserDefaults.
