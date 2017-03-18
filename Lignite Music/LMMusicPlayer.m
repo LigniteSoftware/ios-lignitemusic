@@ -82,6 +82,11 @@
  */
 @property NSTimer *libraryChangeTimer;
 
+/**
+ Whether or not the user has set music within the app. If NO, the app should reject requests to change the song and whatnot from the system music player. Gotta love walled gardens.
+ */
+@property BOOL musicWasUserSet;
+
 @end
 
 @implementation LMMusicPlayer
@@ -507,9 +512,14 @@ MPMediaGrouping associatedMediaTypes[] = {
 	infoCenter.nowPlayingInfo = newInfo;
 }
 
-#ifndef SPOTIFY
 - (void)systemMusicPlayerTrackChanged:(id)sender {
 	BOOL autoPlay = self.audioPlayer.isPlaying;
+	
+	if(!self.musicWasUserSet){
+		return;
+	}
+	
+	NSLog(@"System music changed %@", self.systemMusicPlayer.nowPlayingItem);
 	
 	LMMusicTrack *newTrack = self.systemMusicPlayer.nowPlayingItem;
 	self.nowPlayingTrack = newTrack;
@@ -585,7 +595,6 @@ MPMediaGrouping associatedMediaTypes[] = {
 		[delegate musicPlaybackStateDidChange:self.playbackState];
 	}
 }
-#endif
 
 - (void)audioRouteChanged:(id)notification {
 	NSDictionary *info = [notification userInfo];
@@ -1211,6 +1220,7 @@ BOOL shuffleForDebug = NO;
 }
 
 - (void)setNowPlayingTrack:(LMMusicTrack*)nowPlayingTrack {
+	self.musicWasUserSet = YES;
 #ifdef SPOTIFY
 	[self.spotifyPlayer playSpotifyURI:[nowPlayingTrack objectForKey:@"uri"] startingWithIndex:0 startingWithPosition:0 callback:^(NSError *playbackError) {
 		if(playbackError){
@@ -1273,6 +1283,8 @@ BOOL shuffleForDebug = NO;
 }
 	
 - (void)loadNowPlayingState {
+	self.musicWasUserSet = YES;
+	
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 	NSString *allPersistentIDsString = [userDefaults objectForKey:DEFAULTS_KEY_NOW_PLAYING_COLLECTION];
 	
@@ -1284,7 +1296,9 @@ BOOL shuffleForDebug = NO;
 	NSNumber *nowPlayingTrackPlaybackTime = [nowPlayingTrackInfo objectForKey:@"playbackTime"];
 	LMMusicTrack *nowPlayingTrack = nil;
 	
-	if(!allPersistentIDsString){
+	if(!allPersistentIDsString || !nowPlayingTrackInfo){
+		NSLog(@"Rejecting load");
+		self.musicWasUserSet = NO;
 		return;
 	}
 	
@@ -1347,6 +1361,7 @@ BOOL shuffleForDebug = NO;
 }
 
 - (void)setNowPlayingCollection:(LMMusicTrackCollection*)nowPlayingCollection {
+	self.musicWasUserSet = YES;
 #ifdef SPOTIFY
 	#warning Set this up too
 //	[self.spotifyPlayer ]

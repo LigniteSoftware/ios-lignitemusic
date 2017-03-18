@@ -117,7 +117,8 @@
 	}
 	
 	self.progressSlider.rightText = [LMNowPlayingView durationStringTotalPlaybackTime:newTrack.playbackDuration];
-	[self updateSongDurationLabelWithPlaybackTime:self.musicPlayer.currentPlaybackTime];
+	[self updateSongDurationLabelWithPlaybackTime:0];
+	[self.progressSlider reset];
 }
 
 - (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState {

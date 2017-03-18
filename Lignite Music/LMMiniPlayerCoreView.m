@@ -148,6 +148,13 @@
 }
 
 - (void)panMiniPlayer:(UIPanGestureRecognizer *)recognizer {
+	if(!self.musicPlayer.nowPlayingTrack){
+		return;
+	}
+	else{
+		NSLog(@"Now playing %@", self.musicPlayer.nowPlayingTrack.title);
+	}
+	
 	CGPoint translation = [recognizer translationInView:recognizer.view];
 
 	CGFloat totalTranslation = translation.x;
