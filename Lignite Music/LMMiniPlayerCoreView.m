@@ -52,7 +52,12 @@
  The other constraints, will handle this soon.
  */
 @property NSMutableArray *otherConstraints;
-//Testing
+
+/**
+ The array of samples for determining which direction the gesture is headed in.
+ */
+@property NSMutableArray *samplesArray;
+
 @end
 
 @implementation LMMiniPlayerCoreView
@@ -135,67 +140,120 @@
 }
 
 - (void)panMiniPlayer:(UIPanGestureRecognizer *)recognizer {
-	if(!self.musicPlayer.nowPlayingTrack){
-		return;
-	}
-	else{
-		NSLog(@"Now playing %@", self.musicPlayer.nowPlayingTrack.title);
-	}
-	
-	CGPoint translation = [recognizer translationInView:recognizer.view];
-
-	CGFloat totalTranslation = translation.x;
-	
-	//	NSLog(@"%f to %f %@", translation.y, totalTranslation, NSStringFromCGPoint(self.currentPoint));
-	
-	if(self.skipTracksTimer){
-		[self.skipTracksTimer invalidate];
-		self.skipTracksTimer = nil;
-	}
-	
-	self.miniPlayerLeadingConstraint.constant = totalTranslation;
-	
-	[self layoutIfNeeded];
-
-	if(recognizer.state == UIGestureRecognizerStateEnded){		
-		[self layoutIfNeeded];
-		
-		BOOL nextSong = translation.x < -self.frame.size.width/4;
-		BOOL rebuildConstraints = YES;
-		
-		if(translation.x > self.frame.size.width/4){
-			NSLog(@"Slide forward");
-			self.miniPlayerLeadingConstraint.constant = self.frame.size.width;
-		}
-		else if(nextSong){
-			NSLog(@"Slide backward");
-			self.miniPlayerLeadingConstraint.constant = -self.frame.size.width;
-		}
-		else{
-			NSLog(@"Reset to center");
-			self.miniPlayerLeadingConstraint.constant = 0;
-			rebuildConstraints = NO;
-		}
-		
-		[UIView animateWithDuration:0.15 animations:^{
-			[self layoutIfNeeded];
-		} completion:^(BOOL finished) {
-			if(finished){
-				if(rebuildConstraints){
-					[self rebuildConstraints:nextSong];
-					
-					self.skipToNextTrackOnTimerFire = nextSong;
-					
-					self.skipTracksTimer = [NSTimer scheduledTimerWithTimeInterval:0.25
-																			target:self
-																		  selector:@selector(skipTracks)
-																		  userInfo:nil
-																		   repeats:NO];
-				}
-				NSLog(@"Done.");
-			}
-		}];
-	}
+    int threshhold = 3;
+    
+    CGPoint translation = [recognizer translationInView:recognizer.view];
+    
+    static BOOL userIsGoingInYAxis;
+    
+    [self.samplesArray addObject:NSStringFromCGPoint(translation)];
+    
+    if(self.samplesArray.count < threshhold){
+        return;
+    }
+    else if(self.samplesArray.count == threshhold){
+        CGFloat changeInX = 0;
+        CGFloat changeInY = 0;
+        //Calculate which direction the user is trying to send shit
+        for(NSString *sampleString in self.samplesArray){
+            CGPoint sample = CGPointFromString(sampleString);
+            changeInX += sample.x;
+            changeInY += sample.y;
+        }
+        
+        changeInX = changeInX/self.samplesArray.count;
+        changeInY = changeInY/self.samplesArray.count;
+        
+        userIsGoingInYAxis = fabs(changeInY) > fabs(changeInX);
+    }
+    else{
+        if(userIsGoingInYAxis){
+            if(recognizer.state == UIGestureRecognizerStateEnded){
+                self.samplesArray = [NSMutableArray new];
+            }
+        }
+        else{
+            //Test code for calculating rates of the translations. Will break after one use
+            static float amountOfTimes;
+            static BOOL hasDoneThis;
+            static NSTimeInterval startingTime;
+            NSTimeInterval currentTime = [[NSDate new] timeIntervalSince1970];
+            
+            if(!hasDoneThis){
+                hasDoneThis = YES;
+                startingTime = [[NSDate new] timeIntervalSince1970];
+            }
+            
+            amountOfTimes = amountOfTimes + 1.0;
+            NSTimeInterval timeDifference = currentTime-startingTime;
+            float rate = amountOfTimes/timeDifference;
+            
+            
+            if(!self.musicPlayer.nowPlayingTrack){
+                return;
+            }
+            else{
+                NSLog(@"Now playing %@", self.musicPlayer.nowPlayingTrack.title);
+            }
+            
+            //    NSLog(@"Translation %@ (%f/sec)", NSStringFromCGPoint(translation), rate);
+            
+            CGFloat totalTranslation = translation.x;
+            
+            //	NSLog(@"%f to %f %@", translation.y, totalTranslation, NSStringFromCGPoint(self.currentPoint));
+            
+            if(self.skipTracksTimer){
+                [self.skipTracksTimer invalidate];
+                self.skipTracksTimer = nil;
+            }
+            
+            self.miniPlayerLeadingConstraint.constant = totalTranslation;
+            
+            [self layoutIfNeeded];
+            
+            if(recognizer.state == UIGestureRecognizerStateEnded){
+                [self layoutIfNeeded];
+                
+                BOOL nextSong = translation.x < -self.frame.size.width/4;
+                BOOL rebuildConstraints = YES;
+                
+                if(translation.x > self.frame.size.width/4){
+                    NSLog(@"Slide forward");
+                    self.miniPlayerLeadingConstraint.constant = self.frame.size.width;
+                }
+                else if(nextSong){
+                    NSLog(@"Slide backward");
+                    self.miniPlayerLeadingConstraint.constant = -self.frame.size.width;
+                }
+                else{
+                    NSLog(@"Reset to center");
+                    self.miniPlayerLeadingConstraint.constant = 0;
+                    rebuildConstraints = NO;
+                }
+                
+                self.samplesArray = [NSMutableArray new];
+                
+                [UIView animateWithDuration:0.15 animations:^{
+                    [self layoutIfNeeded];
+                } completion:^(BOOL finished) {
+                    if(finished){
+                        if(rebuildConstraints){
+                            [self rebuildConstraints:nextSong];
+                            
+                            self.skipToNextTrackOnTimerFire = nextSong;
+                            
+                            self.skipTracksTimer = [NSTimer scheduledTimerWithTimeInterval:0.25
+                                                                                    target:self
+                                                                                  selector:@selector(skipTracks)
+                                                                                  userInfo:nil
+                                                                                   repeats:NO];
+                        }
+                        NSLog(@"Done.");
+                    }
+                }];
+            }
+        }
+    }
 }
 
 - (void)layoutSubviews {
@@ -207,6 +265,7 @@
 		self.backgroundColor = [UIColor whiteColor];
 		
 		self.otherConstraints = [NSMutableArray new];
+        self.samplesArray = [NSMutableArray new];
 		
 		self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 		[self.musicPlayer addMusicDelegate:self];
