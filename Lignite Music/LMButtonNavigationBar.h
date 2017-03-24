@@ -109,4 +109,6 @@ typedef NS_ENUM(NSUInteger, LMNavigationTab) {
  */
 - (void)moveToYPosition:(CGFloat)yPosition;
 
+- (void)handlePan:(UIPanGestureRecognizer *)recognizer;
+
 @end

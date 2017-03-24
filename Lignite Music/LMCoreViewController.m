@@ -577,7 +577,7 @@ LMControlBarViewDelegate
 	}
 	CGFloat totalTranslation = translation.y + (self.currentPoint.y-self.originalPoint.y);
 	
-//	NSLog(@"%f to %f %@", translation.y, totalTranslation, NSStringFromCGPoint(self.currentPoint));
+    NSLog(@"%f to %f %@", translation.y, totalTranslation, NSStringFromCGPoint(self.currentPoint));
 	
 	self.nowPlayingView.topConstraint.constant = self.nowPlayingView.frame.size.height+translation.y;
 	

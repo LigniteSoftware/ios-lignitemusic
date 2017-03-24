@@ -10,4 +10,7 @@
 
 @interface LMMiniPlayerCoreView : LMView
 
+@property id rootViewController;
+@property id buttonNavigationBar;
+
 @end

@@ -213,9 +213,7 @@
 	self.heightBeforeAdjustingToScrollPosition = -1;
 }
 
-- (void)minimize {
-    return;
-    
+- (void)minimize {    
 	NSLog(@"Minimize");
 	
 	__weak id weakSelf = self;
@@ -328,11 +326,6 @@
 	CGFloat totalTranslation = translation.y + (self.currentPoint.y-self.originalPoint.y);
 	
 //	NSLog(@"%f %f", totalTranslation, translation.y);
-	
-	if(recognizer.view == self.miniPlayerCoreView){
-		LMCoreViewController *coreViewCotntroller = (LMCoreViewController*)self.rootViewController;
-		[coreViewCotntroller panNowPlayingUp:recognizer];
-	}
 	
 	if(totalTranslation < 0){ //Moving upward
 		if(recognizer.view == self.miniPlayerCoreView){
@@ -583,6 +576,7 @@
 		
 //		self.miniPlayerView = [LMMiniPlayerView newAutoLayoutView];
 		// ^ has already been created
+        self.miniPlayerCoreView.rootViewController = self.rootViewController;
 		[self addSubview:self.miniPlayerCoreView];
 		
 		
@@ -742,6 +736,7 @@
 	self = [super init];
 	if(self) {
 		self.miniPlayerCoreView = [LMMiniPlayerCoreView newAutoLayoutView];
+        self.miniPlayerCoreView.buttonNavigationBar = self;
 	}
 	return self;
 }

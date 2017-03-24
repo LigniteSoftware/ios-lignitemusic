@@ -7,7 +7,9 @@
 //
 
 #import <PureLayout/PureLayout.h>
+#import "LMButtonNavigationBar.h"
 #import "LMMiniPlayerCoreView.h"
+#import "LMCoreViewController.h"
 #import "LMMiniPlayerView.h"
 #import "LMMusicPlayer.h"
 
@@ -140,6 +142,21 @@
 }
 
 - (void)panMiniPlayer:(UIPanGestureRecognizer *)recognizer {
+    //Test code for calculating rates of the translations. Will break after one use
+    static float amountOfTimes;
+    static BOOL hasDoneThis;
+    static NSTimeInterval startingTime;
+    NSTimeInterval currentTime = [[NSDate new] timeIntervalSince1970];
+    
+    if(!hasDoneThis){
+        hasDoneThis = YES;
+        startingTime = [[NSDate new] timeIntervalSince1970];
+    }
+    
+    amountOfTimes = amountOfTimes + 1.0;
+    NSTimeInterval timeDifference = currentTime-startingTime;
+    float rate = amountOfTimes/timeDifference;
+    
     int threshhold = 3;
     
     CGPoint translation = [recognizer translationInView:recognizer.view];
@@ -168,27 +185,21 @@
     }
     else{
         if(userIsGoingInYAxis){
+            NSLog(@"Sending to core (%@)", NSStringFromCGPoint(translation));
+            
+            LMCoreViewController *coreViewController = (LMCoreViewController*)self.rootViewController;
+            [coreViewController panNowPlayingUp:recognizer];
+            
+            if(translation.y > 0){
+                LMButtonNavigationBar *navigationBar = (LMButtonNavigationBar*)self.buttonNavigationBar;
+                [navigationBar handlePan:recognizer];
+            }
+            
             if(recognizer.state == UIGestureRecognizerStateEnded){
                 self.samplesArray = [NSMutableArray new];
             }
         }
         else{
-            //Test code for calculating rates of the translations. Will break after one use
-            static float amountOfTimes;
-            static BOOL hasDoneThis;
-            static NSTimeInterval startingTime;
-            NSTimeInterval currentTime = [[NSDate new] timeIntervalSince1970];
-            
-            if(!hasDoneThis){
-                hasDoneThis = YES;
-                startingTime = [[NSDate new] timeIntervalSince1970];
-            }
-            
-            amountOfTimes = amountOfTimes + 1.0;
-            NSTimeInterval timeDifference = currentTime-startingTime;
-            float rate = amountOfTimes/timeDifference;
-            
-            
             if(!self.musicPlayer.nowPlayingTrack){
                 return;
             }
@@ -196,7 +207,7 @@
                 NSLog(@"Now playing %@", self.musicPlayer.nowPlayingTrack.title);
             }
             
-            //    NSLog(@"Translation %@ (%f/sec)", NSStringFromCGPoint(translation), rate);
+            NSLog(@"Translation %@ (%f/sec)", NSStringFromCGPoint(translation), rate);
             
             CGFloat totalTranslation = translation.x;
             
