@@ -51,4 +51,11 @@
  */
 - (void)scrollToItemWithPersistentID:(LMMusicTrackPersistentID)persistentID;
 
+/**
+ Change the bottom spacing of the compact view, for when changes to the button bar occur.
+ 
+ @param persistentID The new bottom spacing to set.
+ */
+- (void)changeBottomSpacing:(CGFloat)bottomSpacing;
+
 @end

@@ -10,7 +10,6 @@
 #import "LMBrowsingDetailView.h"
 #import "LMBigListEntry.h"
 #import "LMListEntry.h"
-#import "LMTableView.h"
 #import "LMExtras.h"
 #import "LMTiledAlbumCoverView.h"
 #import "LMColour.h"
@@ -19,8 +18,6 @@
 #import "LMBrowsingDetailViewController.h"
 
 @interface LMBrowsingDetailView()<LMTableViewSubviewDataSource, LMBigListEntryDelegate, LMCollectionInfoViewDelegate, LMListEntryDelegate, LMMusicPlayerDelegate, LMControlBarViewDelegate, UITableViewDelegate>
-
-@property LMTableView *tableView;
 
 @property LMBigListEntry *headerBigListEntry;
 @property NSMutableArray *songEntries;

@@ -403,6 +403,12 @@
 	self.lastScrollingOffsetPoint = scrollView.contentOffset;
 }
 
+- (void)changeBottomSpacing:(CGFloat)bottomSpacing {
+    [UIView animateWithDuration:0.5 animations:^{
+       self.collectionView.contentInset = UIEdgeInsetsMake(0, 0, bottomSpacing, 0);
+    }];
+}
+
 - (void)layoutSubviews {
 	[super layoutSubviews];
 	
@@ -422,6 +428,7 @@
 		self.collectionView.translatesAutoresizingMaskIntoConstraints = NO;
 		self.collectionView.delegate = self;
 		self.collectionView.dataSource = self;
+        self.collectionView.contentInset = UIEdgeInsetsMake(0, 0, 100, 0);
 		[self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"cellIdentifier"];
 		[self addSubview:self.collectionView];
 		

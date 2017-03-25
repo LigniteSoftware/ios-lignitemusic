@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LMTableView.h"
 #import "LMMusicPlayer.h"
 
 @interface LMTitleView : UIView
@@ -34,5 +35,7 @@
  Rebuild the track collection of the title view.
  */
 - (void)rebuildTrackCollection;
+
+@property LMTableView *songListTableView;
 
 @end

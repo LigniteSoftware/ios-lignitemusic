@@ -10,11 +10,14 @@
 #import "LMCoreViewController.h"
 #import "LMMusicPlayer.h"
 #import "LMBrowsingView.h"
+#import "LMTableView.h"
 #ifdef SPOTIFY
 #import "Spotify.h"
 #endif
 
 @interface LMBrowsingDetailView : UIView
+
+@property LMTableView *tableView;
 
 /**
  The root view controller.

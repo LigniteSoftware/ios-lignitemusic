@@ -8,7 +8,6 @@
 
 #import <PureLayout/PureLayout.h>
 #import "LMTitleView.h"
-#import "LMTableView.h"
 #import "LMListEntry.h"
 #import "LMColour.h"
 #import "LMOperationQueue.h"
@@ -20,7 +19,6 @@
 
 @property LMMusicPlayer *musicPlayer;
 
-@property LMTableView *songListTableView;
 @property NSMutableArray *itemArray;
 @property NSMutableArray *itemIconArray;
 

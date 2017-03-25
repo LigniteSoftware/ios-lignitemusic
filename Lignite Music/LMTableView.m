@@ -32,6 +32,8 @@
 
 @implementation LMTableView
 
+@synthesize bottomSpacing = _bottomSpacing;
+
 /**
  Initializes the LMTableView with its defaults as stated in LMTableView.h.
 
@@ -58,6 +60,18 @@
 		self.title = @"UnnamedLMTableView";
 	}
 	return self;
+}
+
+- (NSUInteger)bottomSpacing {
+    return _bottomSpacing;
+}
+
+- (void)setBottomSpacing:(NSUInteger)bottomSpacing {
+    _bottomSpacing = bottomSpacing;
+    
+    [UIView animateWithDuration:0.5 animations:^{
+        self.contentInset = UIEdgeInsetsMake(0, 0, bottomSpacing, 0);
+    }];
 }
 
 - (void)reloadSubviewData {
@@ -188,15 +202,15 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-	return (self.bottomSpacing > 0 && section == self.numberOfSections-1) ? self.bottomSpacing : [self.subviewDataSource spacingAtIndex:section forTableView:self];
+	return [self.subviewDataSource spacingAtIndex:section forTableView:self];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	return !(self.bottomSpacing > 0 && section == self.numberOfSections-1);
+	return 1;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	return self.totalAmountOfObjects + (self.bottomSpacing > 0);
+	return self.totalAmountOfObjects;
 }
 
 - (NSString*)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -222,7 +236,7 @@
 	UIView *view = [[UIView alloc] initWithFrame:frame];
 	view.backgroundColor = [UIColor whiteColor];
 	
-	if(self.shouldUseDividers && ![self.dividerSectionsToIgnore containsObject:@(section)] && !(self.bottomSpacing > 0 && section == self.numberOfSections-1)){
+	if(self.shouldUseDividers && ![self.dividerSectionsToIgnore containsObject:@(section)]){
 		uint8_t dividerHeight = 1;
 		float frameWidth = (frame.size.width * 0.9);
 		float frameX = (frame.size.width-frameWidth)/2;

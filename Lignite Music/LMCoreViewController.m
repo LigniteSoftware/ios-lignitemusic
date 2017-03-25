@@ -414,16 +414,22 @@ LMControlBarViewDelegate
 }
 
 - (void)requiredHeightForNavigationBarChangedTo:(CGFloat)requiredHeight withAnimationDuration:(CGFloat)animationDuration {
-//	NSLog(@"Height changed to %f", requiredHeight);
+	NSLog(@"rHeight changed to %f", requiredHeight);
 	
 	
 	[self.navigationController.view layoutIfNeeded];
-	
 	self.buttonNavigationBarHeightConstraint.constant = requiredHeight;
-	
-//	[UIView animateWithDuration:animationDuration animations:^{
-		[self.navigationController.view layoutIfNeeded];
-//	}];
+    [self.navigationController.view layoutIfNeeded];
+    
+    CGFloat bottomSpacing = requiredHeight + 10;
+    [self.compactView changeBottomSpacing:bottomSpacing];
+    self.titleView.songListTableView.bottomSpacing = bottomSpacing;
+    if(self.currentDetailViewController){
+        self.currentDetailViewController.browsingDetailView.tableView.bottomSpacing = bottomSpacing;
+        if(self.currentDetailViewController.nextDetailViewController){
+            self.currentDetailViewController.nextDetailViewController.browsingDetailView.tableView.bottomSpacing = bottomSpacing;
+        }
+    }
 }
 
 - (void)launchOnboarding {
@@ -628,7 +634,7 @@ LMControlBarViewDelegate
 }
 
 - (void)sizeChangedTo:(CGSize)newSize forControlBarView:(LMControlBarView *)controlBar {
-	NSLog(@"Changed");
+	NSLog(@"Changed to %@", NSStringFromCGSize(newSize));
 }
 
 - (void)viewDidLoad {
