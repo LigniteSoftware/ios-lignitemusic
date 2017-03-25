@@ -8,18 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import "LMCoreViewController.h"
+#import "LMMusicPlayer.h"
 #import "LMView.h"
 
 @interface LMNowPlayingView : LMView
-
-/**
- Gets a duration string for a total playback time.
-
- @param totalPlaybackTime The total playback time of the track.
-
- @return The formatted string. 0 padded.
- */
-+ (NSString*)durationStringTotalPlaybackTime:(long)totalPlaybackTime;
 
 /**
  The core view controller, shared to provide status bar update changes.
@@ -35,5 +27,32 @@
  Whether or not the now playing view is open.
  */
 @property BOOL isOpen;
+
+/**
+ The track which this miniplayer holds.
+ */
+@property LMMusicTrack *loadedTrack;
+
+/**
+ The index of the loaded track in the queue playing.
+ */
+@property NSInteger loadedTrackIndex;
+
+/**
+ Change the music track that's associated with this miniplayer.
+ 
+ @param newTrack The new track to set.
+ @param index The index of the new track in its collection associated.
+ */
+- (void)changeMusicTrack:(LMMusicTrack*)newTrack  withIndex:(NSInteger)index;
+
+/**
+ Gets a duration string for a total playback time.
+ 
+ @param totalPlaybackTime The total playback time of the track.
+ 
+ @return The formatted string. 0 padded.
+ */
++ (NSString*)durationStringTotalPlaybackTime:(long)totalPlaybackTime;
 
 @end

@@ -7,21 +7,21 @@
 //
 
 #import <PureLayout/PureLayout.h>
-#import "LMNowPlayingView.h"
-#import "LMAlbumArtView.h"
 #import "UIImage+AverageColour.h"
-#import "UIColor+isLight.h"
-#import "UIImage+ColorArt.h"
-#import "LMOperationQueue.h"
-#import "LMTrackInfoView.h"
-#import "LMButton.h"
-#import "LMColour.h"
-#import "LMAppIcon.h"
-#import "LMMusicPlayer.h"
 #import "LMProgressSlider.h"
-#import "LMTableView.h"
+#import "LMOperationQueue.h"
+#import "UIImage+ColorArt.h"
+#import "LMNowPlayingView.h"
+#import "LMTrackInfoView.h"
+#import "UIColor+isLight.h"
+#import "LMAlbumArtView.h"
+#import "LMMusicPlayer.h"
 #import "LMListEntry.h"
+#import "LMTableView.h"
+#import "LMAppIcon.h"
 #import "LMExtras.h"
+#import "LMColour.h"
+#import "LMButton.h"
 
 @interface LMNowPlayingView() <LMMusicPlayerDelegate, LMButtonDelegate, LMProgressSliderDelegate, LMTableViewSubviewDataSource, LMListEntryDelegate>
 
@@ -151,6 +151,10 @@
 }
 
 - (void)musicCurrentPlaybackTimeDidChange:(NSTimeInterval)newPlaybackTime {
+    if(self.musicPlayer.nowPlayingTrack.persistentID != self.loadedTrack.persistentID){
+        return;
+    }
+    
 	if(self.progressSlider.userIsInteracting){
 		return;
 	}
@@ -167,6 +171,15 @@
 }
 
 - (void)musicTrackDidChange:(LMMusicTrack *)newTrack {
+    
+}
+
+- (void)changeMusicTrack:(LMMusicTrack*)newTrack withIndex:(NSInteger)index {
+    self.loadedTrack = newTrack;
+    self.loadedTrackIndex = index;
+    
+    NSLog(@"ID is %@: %lld", newTrack.title, newTrack.persistentID);
+    
 	if(!self.queue){
 		self.queue = [LMOperationQueue new];
 	}
@@ -623,7 +636,7 @@
 	self.mainView.backgroundColor = [UIColor purpleColor];
 	self.mainView.clipsToBounds = YES;
 	[self addSubview:self.mainView];
-	
+    
 	self.mainViewLeadingConstraint = [self.mainView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 	[self.mainView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 	[self.mainView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
@@ -632,6 +645,7 @@
 	
 	self.queueView = [UIView newAutoLayoutView];
 	self.queueView.backgroundColor = [UIColor whiteColor];
+    self.queueView.hidden = YES;
 	[self addSubview:self.queueView];
 	
 	[self.queueView autoPinEdgeToSuperviewEdge:ALEdgeTop];
@@ -866,17 +880,9 @@
 	UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tappedNowPlaying)];
 	[self.mainView addGestureRecognizer:tapGesture];
 	
-	UISwipeGestureRecognizer *swipeToRightGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipedRightNowPlaying)];
-	swipeToRightGesture.direction = UISwipeGestureRecognizerDirectionLeft;
-	[self.mainView addGestureRecognizer:swipeToRightGesture];
-	
-	UISwipeGestureRecognizer *swipeToLeftGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipedLeftNowPlaying)];
-	swipeToLeftGesture.direction = UISwipeGestureRecognizerDirectionRight;
-	[self.mainView addGestureRecognizer:swipeToLeftGesture];
-	
-	UIPanGestureRecognizer *panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panNowPlayingDown:)];
-	self.brandNewAlbumArtImageView.userInteractionEnabled = YES;
-	[self.brandNewAlbumArtImageView addGestureRecognizer:panGestureRecognizer];
+//	UIPanGestureRecognizer *panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panNowPlayingDown:)];
+//	self.brandNewAlbumArtImageView.userInteractionEnabled = YES;
+//	[self.brandNewAlbumArtImageView addGestureRecognizer:panGestureRecognizer];
 	
 	
 	self.queueOpenDraggingOverlayView = [UIView newAutoLayoutView];;

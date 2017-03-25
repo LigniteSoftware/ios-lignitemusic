@@ -15,6 +15,7 @@
 #import "UIImage+AverageColour.h"
 #import "LMCompactBrowsingView.h"
 #import "LMCoreViewController.h"
+#import "LMNowPlayingCoreView.h"
 #import "LMPurchaseManager.h"
 #import "LMNowPlayingView.h"
 #import "UIColor+isLight.h"
@@ -681,15 +682,15 @@ LMControlBarViewDelegate
 //	[miniplayerTest setup];
 
 	
-//	LMMiniPlayerCoreView *miniPlayerCoreView = [LMMiniPlayerCoreView newAutoLayoutView];
-//	[self.view addSubview:miniPlayerCoreView];
-//	
-//	[miniPlayerCoreView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.view];
-//	[miniPlayerCoreView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.view];
-//	[miniPlayerCoreView autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
-//	[miniPlayerCoreView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:0.20];
-//
-//	return;
+	LMNowPlayingCoreView *coreView = [LMNowPlayingCoreView newAutoLayoutView];
+	[self.view addSubview:coreView];
+	
+	[coreView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.view];
+	[coreView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.view];
+	[coreView autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+	[coreView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:1.0];
+
+	return;
 
 //	NSTimeInterval startTime = [[NSDate new]timeIntervalSince1970];
 //
