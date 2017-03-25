@@ -218,6 +218,8 @@
 - (NSMutableDictionary*)uniqueAlbumsInCollection {
 	NSMutableDictionary *albumIdsCountDictionary = [NSMutableDictionary new];
 	
+    NSTimeInterval startTime = [[NSDate new] timeIntervalSince1970];
+    
 	LMMusicTrackCollection *collectionToIterate = self.musicCollection;
 	
 	for(int i = 0; i < collectionToIterate.count; i++){
@@ -235,10 +237,19 @@
 		value++;
 		count = [NSNumber numberWithInt:value];
 		
-		if(([[self musicTrackForPersistentIdString:formattedPersistentString] albumArt] != nil)){
-			[albumIdsCountDictionary setObject:count forKey:formattedPersistentString];
-		}
+        if([albumIdsCountDictionary objectForKey:formattedPersistentString]){
+            [albumIdsCountDictionary setObject:count forKey:formattedPersistentString];
+        }
+        else{
+            if(([[self musicTrackForPersistentIdString:formattedPersistentString] albumArt] != nil)){
+                [albumIdsCountDictionary setObject:count forKey:formattedPersistentString];
+            }
+        }
 	}
+    
+    NSTimeInterval endTime = [[NSDate new] timeIntervalSince1970];
+    
+    NSLog(@"Converted covers (%ld) in %f seconds", collectionToIterate.count, endTime-startTime);
 	
 //	NSLog(@"fuck you %lu", (unsigned long)[albumIdsCountDictionary allKeys].count);
 	
@@ -276,6 +287,8 @@
 			
 			tiledAlbumCoverView.uniqueAlbumCoversDictionary = [tiledAlbumCoverView uniqueAlbumsInCollection];
 			
+            NSLog(@"Got %ld tiled covers", tiledAlbumCoverView.uniqueAlbumCoversDictionary.count);
+            
 			if(![generationKey isEqualToString:tiledAlbumCoverView.generationKey]){
 				NSLog(@"Outdated, rejecting %@", generationKey);
 				return;
