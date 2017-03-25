@@ -14,6 +14,7 @@
 #import "LMNowPlayingView.h"
 #import "LMTrackInfoView.h"
 #import "UIColor+isLight.h"
+#import "NSTimer+Blocks.h"
 #import "LMAlbumArtView.h"
 #import "LMMusicPlayer.h"
 #import "LMListEntry.h"
@@ -329,6 +330,15 @@
 }
 
 - (void)setNowPlayingQueueOpen:(BOOL)open {
+    if(!open){
+        [NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
+            self.queueView.hidden = YES;
+        } repeats:NO];
+    }
+    else{
+        self.queueView.hidden = NO;
+    }
+    
 	[self layoutIfNeeded];
 	
 	NSLog(open ? @"Open queue" : @"Close queue");
@@ -591,6 +601,8 @@
 
 
 - (void)panQueueClosed:(UIPanGestureRecognizer *)recognizer {
+    self.queueView.hidden = NO;
+    
 	CGPoint translation = [recognizer translationInView:self.mainView];
 	
 	CGFloat totalTranslation;

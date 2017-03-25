@@ -55,4 +55,11 @@
  */
 + (NSString*)durationStringTotalPlaybackTime:(long)totalPlaybackTime;
 
+/**
+ Pan now playing down gesture.
+
+ @param recognizer The gesture recognizer to forward.
+ */
+- (void)panNowPlayingDown:(UIPanGestureRecognizer *)recognizer;
+
 @end

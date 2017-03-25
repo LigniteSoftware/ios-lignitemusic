@@ -16,8 +16,8 @@
 #import "LMCompactBrowsingView.h"
 #import "LMCoreViewController.h"
 #import "LMNowPlayingCoreView.h"
+#import "LMNowPlayingCoreView.h"
 #import "LMPurchaseManager.h"
-#import "LMNowPlayingView.h"
 #import "UIColor+isLight.h"
 #import "NSTimer+Blocks.h"
 #import "LMImageManager.h"
@@ -57,7 +57,7 @@ LMControlBarViewDelegate
 
 @property LMMusicPlayer *musicPlayer;
 
-@property LMNowPlayingView *nowPlayingView;
+@property LMNowPlayingCoreView *nowPlayingCoreView;
 
 @property LMTitleView *titleView;
 
@@ -220,7 +220,7 @@ LMControlBarViewDelegate
 		return YES;
 	}
 	
-	return self.nowPlayingView.isOpen;
+	return self.nowPlayingCoreView.isOpen;
 }
 
 - (UIStatusBarAnimation)preferredStatusBarUpdateAnimation {
@@ -517,19 +517,19 @@ LMControlBarViewDelegate
 }
 
 - (void)launchNowPlayingFromNavigationBar {
-	[self.nowPlayingView.superview layoutIfNeeded];
+	[self.nowPlayingCoreView.superview layoutIfNeeded];
 	
-	self.nowPlayingView.topConstraint.constant = 0;
+	self.nowPlayingCoreView.topConstraint.constant = 0;
 	
-	self.nowPlayingView.isOpen = YES;
+	self.nowPlayingCoreView.isOpen = YES;
 
 	[UIView animateWithDuration:0.25 animations:^{
-		[self.nowPlayingView.superview layoutIfNeeded];
+		[self.nowPlayingCoreView.superview layoutIfNeeded];
 	} completion:^(BOOL finished) {
 		if(finished){
 			[UIView animateWithDuration:0.25 animations:^{
 				[self setNeedsStatusBarAppearanceUpdate];
-				[self setStatusBarBlurHidden:self.nowPlayingView.isOpen];
+				[self setStatusBarBlurHidden:self.nowPlayingCoreView.isOpen];
 			}];
 		}
 	}];
@@ -576,39 +576,39 @@ LMControlBarViewDelegate
     
 	if(self.originalPoint.y == 0){
 		self.originalPoint = self.view.frame.origin;
-		self.currentPoint = self.nowPlayingView.frame.origin;
+		self.currentPoint = self.nowPlayingCoreView.frame.origin;
 	}
 	CGFloat totalTranslation = translation.y + (self.currentPoint.y-self.originalPoint.y);
 	
     NSLog(@"%f to %f %@", translation.y, totalTranslation, NSStringFromCGPoint(self.currentPoint));
 	
-	self.nowPlayingView.topConstraint.constant = self.nowPlayingView.frame.size.height+translation.y;
+	self.nowPlayingCoreView.topConstraint.constant = self.nowPlayingCoreView.frame.size.height+translation.y;
 	
-	[self.nowPlayingView.superview layoutIfNeeded];
+	[self.nowPlayingCoreView.superview layoutIfNeeded];
 	
 	if(recognizer.state == UIGestureRecognizerStateEnded){
 		self.currentPoint = CGPointMake(self.currentPoint.x, self.originalPoint.y + totalTranslation);
 		
-		[self.nowPlayingView.superview layoutIfNeeded];
+		[self.nowPlayingCoreView.superview layoutIfNeeded];
 		
-		if((-translation.y <= self.nowPlayingView.frame.size.height/10.0)){
-			self.nowPlayingView.topConstraint.constant = self.nowPlayingView.frame.size.height;
+		if((-translation.y <= self.nowPlayingCoreView.frame.size.height/10.0)){
+			self.nowPlayingCoreView.topConstraint.constant = self.nowPlayingCoreView.frame.size.height;
 			
-			self.nowPlayingView.isOpen = NO;
+			self.nowPlayingCoreView.isOpen = NO;
 		}
 		else{
-			self.nowPlayingView.topConstraint.constant = 0.0;
+			self.nowPlayingCoreView.topConstraint.constant = 0.0;
 			
-			self.nowPlayingView.isOpen = YES;
+			self.nowPlayingCoreView.isOpen = YES;
 		}
 		
 		[UIView animateWithDuration:0.25 animations:^{
-			[self.nowPlayingView.superview layoutIfNeeded];
+			[self.nowPlayingCoreView.superview layoutIfNeeded];
 		} completion:^(BOOL finished) {
 			if(finished){
 				[UIView animateWithDuration:0.25 animations:^{
 					[self setNeedsStatusBarAppearanceUpdate];
-					[self setStatusBarBlurHidden:self.nowPlayingView.isOpen];
+					[self setStatusBarBlurHidden:self.nowPlayingCoreView.isOpen];
 				}];
 			}
 		}];
@@ -682,15 +682,15 @@ LMControlBarViewDelegate
 //	[miniplayerTest setup];
 
 	
-	LMNowPlayingCoreView *coreView = [LMNowPlayingCoreView newAutoLayoutView];
-	[self.view addSubview:coreView];
-	
-	[coreView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.view];
-	[coreView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.view];
-	[coreView autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
-	[coreView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:1.0];
-
-	return;
+//	LMNowPlayingCoreView *coreView = [LMNowPlayingCoreView newAutoLayoutView];
+//	[self.view addSubview:coreView];
+//	
+//	[coreView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.view];
+//	[coreView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.view];
+//	[coreView autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+//	[coreView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:1.0];
+//
+//	return;
 
 //	NSTimeInterval startTime = [[NSDate new]timeIntervalSince1970];
 //
@@ -923,14 +923,14 @@ LMControlBarViewDelegate
 //						
 						
 						
-						self.nowPlayingView = [LMNowPlayingView newAutoLayoutView];
-						self.nowPlayingView.coreViewController = self;
-						[self.navigationController.view addSubview:self.nowPlayingView];
+						self.nowPlayingCoreView = [LMNowPlayingCoreView newAutoLayoutView];
+						self.nowPlayingCoreView.rootViewController = self;
+						[self.navigationController.view addSubview:self.nowPlayingCoreView];
 						
-						[self.nowPlayingView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-						[self.nowPlayingView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-						self.nowPlayingView.topConstraint = [self.nowPlayingView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:self.view.frame.size.height];
-						[self.nowPlayingView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.navigationController.view];
+						[self.nowPlayingCoreView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+						[self.nowPlayingCoreView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+						self.nowPlayingCoreView.topConstraint = [self.nowPlayingCoreView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:self.view.frame.size.height];
+						[self.nowPlayingCoreView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.navigationController.view];
 						
 						
 						

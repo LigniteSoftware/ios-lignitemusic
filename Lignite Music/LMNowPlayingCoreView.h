@@ -13,4 +13,14 @@
 @property id rootViewController;
 @property id buttonNavigationBar;
 
+/**
+ The constraint which pins this now playing view to the top of its superview. Should be used in the pan gesture transition from top to bottom.
+ */
+@property NSLayoutConstraint *topConstraint;
+
+/**
+ Whether or not the now playing view is open.
+ */
+@property BOOL isOpen;
+
 @end

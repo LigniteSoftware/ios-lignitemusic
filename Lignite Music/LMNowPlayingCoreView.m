@@ -185,15 +185,50 @@
     }
     else{
         if(userIsGoingInYAxis){
-            NSLog(@"Sending to core (%@)", NSStringFromCGPoint(translation));
+//            [self.centerNowPlayingView panNowPlayingDown:recognizer];
             
-            LMCoreViewController *coreViewController = (LMCoreViewController*)self.rootViewController;
-            [coreViewController panNowPlayingUp:recognizer];
+            CGPoint translation = [recognizer translationInView:recognizer.view];
             
-            if(translation.y > 0){
-                LMButtonNavigationBar *navigationBar = (LMButtonNavigationBar*)self.buttonNavigationBar;
-                [navigationBar handlePan:recognizer];
+            //	NSLog(@"%f to %f %@", translation.y, totalTranslation, NSStringFromCGPoint(self.currentPoint));
+            
+            if(translation.y < 0){ //Moving upward
+                NSLog(@"什麼鬼");
+                self.topConstraint.constant = 0;
+                return;
             }
+            else{ //Moving downward
+                self.topConstraint.constant = translation.y;
+            }
+            
+            [self.superview layoutIfNeeded];
+            
+            if(recognizer.state == UIGestureRecognizerStateEnded){
+                
+                if((translation.y >= self.frame.size.height/10.0)){
+                    self.topConstraint.constant = self.frame.size.height;
+                    self.isOpen = NO;
+                }
+                else{
+                    self.topConstraint.constant = 0.0;
+                    self.isOpen = YES;
+                }
+                
+                NSLog(@"Finished is open %d", self.isOpen);
+                
+                [UIView animateWithDuration:0.25 animations:^{
+                    [self.superview layoutIfNeeded];
+                } completion:^(BOOL finished) {
+                    if(finished){
+                        [UIView animateWithDuration:0.25 animations:^{
+                            [self.rootViewController setNeedsStatusBarAppearanceUpdate];
+                            [self.rootViewController setStatusBarBlurHidden:self.isOpen];
+                        }];
+                    }
+                }];
+            }
+
+            
+//            NSLog(@"Sending to core (%@ %@)", NSStringFromCGPoint(translation), self.rootViewController);
             
             if(recognizer.state == UIGestureRecognizerStateEnded){
                 self.samplesArray = [NSMutableArray new];
@@ -283,6 +318,7 @@
         
         self.centerNowPlayingView = [LMNowPlayingView newAutoLayoutView];
         //		self.centerNowPlayingView.backgroundColor = [UIColor orangeColor];
+        self.centerNowPlayingView.coreViewController = (LMCoreViewController*)self.rootViewController;
         [self addSubview:self.centerNowPlayingView];
         
         self.nowPlayingLeadingConstraint = [self.centerNowPlayingView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
@@ -300,6 +336,7 @@
         
         self.trailingNowPlayingView = [LMNowPlayingView newAutoLayoutView];
         //		self.trailingNowPlayingView.backgroundColor = [UIColor yellowColor];
+        self.trailingNowPlayingView.coreViewController = (LMCoreViewController*)self.rootViewController;
         [self addSubview:self.trailingNowPlayingView];
         
         [self.otherConstraints addObject:[self.trailingNowPlayingView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.centerNowPlayingView]];
@@ -318,6 +355,7 @@
         
         self.leadingNowPlayingView = [LMNowPlayingView newAutoLayoutView];
         //		self.leadingNowPlayingView.backgroundColor = [UIColor redColor];
+        self.leadingNowPlayingView.coreViewController = (LMCoreViewController*)self.rootViewController;
         [self addSubview:self.leadingNowPlayingView];
         
         [self.otherConstraints addObject:[self.leadingNowPlayingView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.centerNowPlayingView]];
