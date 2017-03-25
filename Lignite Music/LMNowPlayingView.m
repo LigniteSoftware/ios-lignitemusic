@@ -535,6 +535,8 @@
 //	NSLog(@"%f to %f %@", translation.y, totalTranslation, NSStringFromCGPoint(self.currentPoint));
 	
 	if(totalTranslation < 0){ //Moving upward
+        NSLog(@"什麼鬼");
+        self.topConstraint.constant = 0;
 		return;
 	}
 	else{ //Moving downward

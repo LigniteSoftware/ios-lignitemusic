@@ -213,7 +213,7 @@
 	self.heightBeforeAdjustingToScrollPosition = -1;
 }
 
-- (void)minimize {    
+- (void)minimize {
 	NSLog(@"Minimize");
 	
 	__weak id weakSelf = self;

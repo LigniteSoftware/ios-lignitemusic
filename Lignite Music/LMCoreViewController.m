@@ -571,6 +571,8 @@ LMControlBarViewDelegate
 - (void)panNowPlayingUp:(UIPanGestureRecognizer *)recognizer {
 	CGPoint translation = [recognizer translationInView:recognizer.view];
 	
+    NSLog(@"Dick is not a bone 哈哈哈");
+    
 	if(self.originalPoint.y == 0){
 		self.originalPoint = self.view.frame.origin;
 		self.currentPoint = self.nowPlayingView.frame.origin;
