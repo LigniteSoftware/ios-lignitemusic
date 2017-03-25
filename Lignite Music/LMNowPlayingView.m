@@ -116,7 +116,7 @@
 }
 
 - (void)updateSongDurationLabelWithPlaybackTime:(long)currentPlaybackTime {
-	long totalPlaybackTime = self.musicPlayer.nowPlayingTrack.playbackDuration;
+	long totalPlaybackTime = self.loadedTrack.playbackDuration;
 	
 	long currentHours = (currentPlaybackTime / 3600);
 	long currentMinutes = ((currentPlaybackTime / 60) - currentHours*60);
@@ -255,20 +255,24 @@
 	self.trackInfoView.artistText = newTrack.artist ? newTrack.artist : NSLocalizedString(@"UnknownArtist", nil);
 	self.trackInfoView.albumText = newTrack.albumTitle ? newTrack.albumTitle : NSLocalizedString(@"UnknownAlbumTitle", nil);
 	
-	if(self.musicPlayer.nowPlayingCollection){
-		self.progressSlider.leftText =
-			[NSString stringWithFormat:NSLocalizedString(@"SongXofX", nil),
-			 (int)self.musicPlayer.indexOfNowPlayingTrack+1,
-			 (int)self.musicPlayer.nowPlayingCollection.count];
-	}
-	else{
-		self.progressSlider.leftText =
-			[NSString stringWithFormat:NSLocalizedString(@"SongX", nil),
-			 (int)self.musicPlayer.indexOfNowPlayingTrack+1];
-	}
-	
-	self.progressSlider.rightText = [LMNowPlayingView durationStringTotalPlaybackTime:newTrack.playbackDuration];
-	[self updateSongDurationLabelWithPlaybackTime:self.musicPlayer.currentPlaybackTime];
+    if(self.musicPlayer.nowPlayingCollection){
+        self.progressSlider.leftText =
+        [NSString stringWithFormat:NSLocalizedString(@"SongXofX", nil),
+             (int)self.loadedTrackIndex+1,
+             (int)self.musicPlayer.nowPlayingCollection.count];
+    }
+    else{
+        self.progressSlider.leftText =
+            [NSString stringWithFormat:NSLocalizedString(@"SongX", nil),
+             (int)self.loadedTrackIndex+1];
+    }
+    
+    CGFloat timeToUse = self.musicPlayer.nowPlayingTrack == self.loadedTrack ? self.musicPlayer.currentPlaybackTime : 0;
+    
+    self.progressSlider.rightText = [LMNowPlayingView durationStringTotalPlaybackTime:newTrack.playbackDuration];
+    [self updateSongDurationLabelWithPlaybackTime:timeToUse];
+    [self.progressSlider reset];
+    self.progressSlider.value = timeToUse;
 	
 	self.queueTableView.totalAmountOfObjects = self.musicPlayer.nowPlayingCollection.count;
 	[self.queueTableView reloadSubviewData];

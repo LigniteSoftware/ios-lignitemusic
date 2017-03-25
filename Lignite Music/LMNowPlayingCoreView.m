@@ -253,7 +253,7 @@
                             
                             self.skipToNextTrackOnTimerFire = nextSong;
                             
-                            self.skipTracksTimer = [NSTimer scheduledTimerWithTimeInterval:0.25
+                            self.skipTracksTimer = [NSTimer scheduledTimerWithTimeInterval:0.5
                                                                                     target:self
                                                                                   selector:@selector(skipTracks)
                                                                                   userInfo:nil
