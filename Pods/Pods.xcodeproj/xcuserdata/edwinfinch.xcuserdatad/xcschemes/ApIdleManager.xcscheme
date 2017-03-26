@@ -14,10 +14,10 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = '3391453C545104BB2BAF4CCD0E5DEDE3'
-               BlueprintName = 'PureLayout'
+               BlueprintIdentifier = 'FDB0BE27C97AAE642CD928C2275FD319'
+               BlueprintName = 'ApIdleManager'
                ReferencedContainer = 'container:Pods.xcodeproj'
-               BuildableName = 'PureLayout.framework'>
+               BuildableName = 'ApIdleManager.framework'>
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>

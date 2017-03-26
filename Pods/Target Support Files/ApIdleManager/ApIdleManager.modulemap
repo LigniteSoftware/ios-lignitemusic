@@ -1,0 +1,6 @@
+framework module ApIdleManager {
+  umbrella header "ApIdleManager-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		486EC331BC4EA1CF8492E4F2 /* Pods_Lignite_Music_for_Spotify.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BDA8BF18ADBB227AD91C5334 /* Pods_Lignite_Music_for_Spotify.framework */; };
+		6A072BEC1E87B95A0092EA44 /* LMCoreNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A072BEB1E87B9590092EA44 /* LMCoreNavigationController.m */; };
+		6A072BED1E87B95A0092EA44 /* LMCoreNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A072BEB1E87B9590092EA44 /* LMCoreNavigationController.m */; };
 		6A0750721D5EAB8000BCBC9C /* aplite_colours.gif in Resources */ = {isa = PBXBuildFile; fileRef = 6A0750711D5EAB8000BCBC9C /* aplite_colours.gif */; };
 		6A0750741D5EC0C000BCBC9C /* never_forget.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A0750731D5EC0C000BCBC9C /* never_forget.png */; };
 		6A13A8011E011D19006A768B /* SLColorArt.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A13A7FC1E011D19006A768B /* SLColorArt.m */; };
@@ -362,6 +364,8 @@
 		471F692D3297448A2C0073DD /* Pods-Lignite Music for Spotify.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lignite Music for Spotify.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Lignite Music for Spotify/Pods-Lignite Music for Spotify.debug.xcconfig"; sourceTree = "<group>"; };
 		4B6ECEC3C77D957550FD31E0 /* Pods-Lignite Music.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lignite Music.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Lignite Music/Pods-Lignite Music.debug.xcconfig"; sourceTree = "<group>"; };
 		50AA3F2AD5E6CE2B672C8B09 /* Pods_Lignite_Music.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Lignite_Music.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6A072BEA1E87B9590092EA44 /* LMCoreNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMCoreNavigationController.h; sourceTree = "<group>"; };
+		6A072BEB1E87B9590092EA44 /* LMCoreNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMCoreNavigationController.m; sourceTree = "<group>"; };
 		6A0750711D5EAB8000BCBC9C /* aplite_colours.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = aplite_colours.gif; sourceTree = "<group>"; };
 		6A0750731D5EC0C000BCBC9C /* never_forget.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = never_forget.png; sourceTree = "<group>"; };
 		6A106B121BC710D4003AE55A /* Lignite Music.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Lignite Music.entitlements"; sourceTree = "<group>"; };
@@ -753,6 +757,8 @@
 			children = (
 				6AEB9CFE1BACF60E00AD19FA /* LMAppDelegate.h */,
 				6AEB9CFF1BACF60E00AD19FA /* LMAppDelegate.m */,
+				6A072BEA1E87B9590092EA44 /* LMCoreNavigationController.h */,
+				6A072BEB1E87B9590092EA44 /* LMCoreNavigationController.m */,
 				6AD226FD1DA4B8000056695A /* LMCoreViewController.h */,
 				6AD226FE1DA4B8000056695A /* LMCoreViewController.m */,
 				6A23AF4C1E46254400A56F5F /* LMCompactBrowsingView.h */,
@@ -1710,6 +1716,7 @@
 				6AA5CB251E285C0A005F853F /* LMButton.m in Sources */,
 				6AA5CB261E285C0A005F853F /* LMCollectionInfoView.m in Sources */,
 				6AA5CB271E285C0A005F853F /* LMCoreViewController.m in Sources */,
+				6A072BED1E87B95A0092EA44 /* LMCoreNavigationController.m in Sources */,
 				6AA5CB281E285C0A005F853F /* LMMarqueeLabel.m in Sources */,
 				6AA5CB291E285C0A005F853F /* LMSearchBar.m in Sources */,
 				6AA5CB2A1E285C0A005F853F /* LMPebbleImage.m in Sources */,
@@ -1808,6 +1815,7 @@
 				6AD226FF1DA4B8000056695A /* LMCoreViewController.m in Sources */,
 				6A3211441DA73EC90060DD07 /* LMMarqueeLabel.m in Sources */,
 				6AAA56011DF407A800692CFB /* LMSearchBar.m in Sources */,
+				6A072BEC1E87B95A0092EA44 /* LMCoreNavigationController.m in Sources */,
 				6A73CF5C1D4127C70097A400 /* LMPebbleImage.m in Sources */,
 				6A759D4B1DE96D6B0051E1A9 /* LMCreditsViewController.m in Sources */,
 				6A32A9E81DC654500056CC60 /* LMTriangleView.m in Sources */,

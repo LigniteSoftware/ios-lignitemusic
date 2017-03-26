@@ -16,6 +16,7 @@ def shared_pods
     pod 'Fabric'
     pod 'Crashlytics'
     pod 'BSKeyboardControls', '~> 2.2'
+    pod 'ApIdleManager'
 end
 
 target 'Lignite Music' do

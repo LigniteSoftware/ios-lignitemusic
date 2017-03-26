@@ -7,6 +7,7 @@
 //
 
 #import <PureLayout/PureLayout.h>
+#import <ApIdleManager/APIdleManager.h>
 
 #import "LMBrowsingDetailViewController.h"
 #import "LMGuideViewPagerController.h"
@@ -98,6 +99,7 @@ LMControlBarViewDelegate
 
 @property NSInteger settingsOpen;
 @property BOOL willOpenSettings;
+@property NSTimer *settingsCheckTimer; //for activity checks
 
 @end
 
@@ -344,6 +346,10 @@ LMControlBarViewDelegate
 		}
 		case LMIconSettings: {
 			self.willOpenSettings = YES;
+            self.settingsCheckTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 block:^{
+                [[APIdleManager sharedInstance] didReceiveInput];
+            } repeats:YES];
+            
 			[self.buttonNavigationBar setSelectedTab:LMNavigationTabBrowse];
 			[self.buttonNavigationBar completelyHide];
 			
@@ -504,6 +510,9 @@ LMControlBarViewDelegate
 	}
     if(self.settingsOpen == 0){
         [self.buttonNavigationBar maximize];
+        
+        [self.settingsCheckTimer invalidate];
+        self.settingsCheckTimer = nil;
     }
 }
 
@@ -651,6 +660,11 @@ LMControlBarViewDelegate
 	NSLog(@"Changed to %@", NSStringFromCGSize(newSize));
 }
 
+- (UIResponder *)nextResponder {
+    [[APIdleManager sharedInstance] didReceiveInput];
+    return [super nextResponder];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view
@@ -744,7 +758,7 @@ LMControlBarViewDelegate
 //	}
 	
 //	return;
-	
+	    
 	UIImageView *hangOnImage = [UIImageView newAutoLayoutView];
 	hangOnImage.image = [UIImage imageNamed:@"splash_wings.png"];
 	hangOnImage.contentMode = UIViewContentModeScaleAspectFill;
@@ -1012,7 +1026,14 @@ LMControlBarViewDelegate
 						[UIView animateWithDuration:0.25 animations:^{
 							[self setNeedsStatusBarAppearanceUpdate];
 						}];
+                        
+                        [APIdleManager sharedInstance].onTimeout = ^(void){
+                            if(self.musicPlayer.playbackState == LMMusicPlaybackStatePlaying){
+                                [self launchNowPlayingFromNavigationBar];
+                            }
+                        };
 						
+                        
 //						[self musicLibraryDidChange];
 					});
 					break;

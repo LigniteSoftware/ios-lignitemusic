@@ -10,8 +10,8 @@
 #endif
 #endif
 
-#import "MarqueeLabel.h"
+#import "APIdleManager.h"
 
-FOUNDATION_EXPORT double MarqueeLabelVersionNumber;
-FOUNDATION_EXPORT const unsigned char MarqueeLabelVersionString[];
+FOUNDATION_EXPORT double ApIdleManagerVersionNumber;
+FOUNDATION_EXPORT const unsigned char ApIdleManagerVersionString[];
 
