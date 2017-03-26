@@ -139,20 +139,25 @@
 	[self layoutIfNeeded];
 	
 	self.buttonBarBottomConstraint.constant = constant;
+    
+    CGFloat totalHeight = self.viewAttachedToButtonBar.frame.size.height + self.buttonBar.frame.size.height - self.minibarBackgroundView.frame.size.height;
+    CGFloat percentageConverted = constant/totalHeight;
+    
+    if(percentageConverted > 1){
+        percentageConverted = 1;
+    }
+    
+    NSLog(@"Converted %f!", percentageConverted);
 	
 	[UIView animateWithDuration:0.25 animations:^{
 		[self layoutIfNeeded];
+        
+        self.viewAttachedToButtonBar.alpha = 1.0-percentageConverted;
+        self.buttonBar.alpha = self.viewAttachedToButtonBar.alpha;
+        
+        self.minibarBackgroundGrabber.alpha = percentageConverted;
+        self.minibarBackgroundView.alpha = self.minibarBackgroundGrabber.alpha;
 	} completion:completion];
-}
-
-- (void)setMinibarBottomConstraintConstant:(NSInteger)constant {
-	[self layoutIfNeeded];
-	
-	self.minibarBottomConstraint.constant = constant;
-	
-	[UIView animateWithDuration:0.25 animations:^{
-		[self layoutIfNeeded];
-	} completion:nil];
 }
 
 - (NSLayoutConstraint*)topConstrantForView:(UIView*)view {
@@ -201,8 +206,6 @@
 		NSLog(@"Looter in a riot");
 		
 		if(finished) {
-			[strongSelf setMinibarBottomConstraintConstant:strongSelf.minibarBackgroundView.frame.size.height+LMNavigationBarGrabberHeight];
-			
 			[strongSelf.delegate requiredHeightForNavigationBarChangedTo:0
 												   withAnimationDuration:0.10];
 		}
@@ -214,17 +217,16 @@
 }
 
 - (void)minimize {
+    //return;
+    
 	NSLog(@"Minimize");
 	
 	__weak id weakSelf = self;
 	
-	self.minibarBackgroundView.alpha = 1.0;
-	self.minibarBackgroundGrabber.alpha = 1.0;
-	
 	[self setButtonBarBottomConstraintConstant:self.buttonBar.frame.size.height
 											 + self.viewAttachedToButtonBar.frame.size.height
-											 + LMNavigationBarGrabberHeight
-											 + 10
+											 //+ LMNavigationBarGrabberHeight
+                                             - self.minibarBackgroundView.frame.size.height
 									completion:^(BOOL finished) {
 										LMButtonNavigationBar *strongSelf = weakSelf;
 										if(!strongSelf){
@@ -232,8 +234,6 @@
 										}
 										
 										if(finished) {
-											[strongSelf setMinibarBottomConstraintConstant:0];
-											
 											[strongSelf.delegate requiredHeightForNavigationBarChangedTo:[strongSelf minimizedHeight]
 																			 withAnimationDuration:0.30];
 										}
@@ -256,8 +256,6 @@
 		}
 		
 		if(finished) {
-			[strongSelf setMinibarBottomConstraintConstant:strongSelf.minibarBackgroundView.frame.size.height+LMNavigationBarGrabberHeight];
-			
 			[strongSelf.delegate requiredHeightForNavigationBarChangedTo:[strongSelf maximizedHeight]
 												   withAnimationDuration:0.10];
 		}
@@ -274,48 +272,6 @@
 	return [gestureRecognizer class] != [UIPanGestureRecognizer class];
 }
 
-- (void)moveToYPosition:(CGFloat)yPosition {
-	NSLog(@"self.buttonBarBottomConstraint.constant %f - yPosition %f", self.buttonBarBottomConstraint.constant, yPosition);
-	
-	if(self.heightBeforeAdjustingToScrollPosition == -1){
-		self.heightBeforeAdjustingToScrollPosition = (NSInteger)self.buttonBarBottomConstraint.constant;
-	}
-	
-	BOOL wasMaximizedBeforeScrolling = self.heightBeforeAdjustingToScrollPosition == 0;
-	BOOL wasMinimizedBeforeScrolling = !wasMaximizedBeforeScrolling;
-	
-	if(wasMaximizedBeforeScrolling && yPosition < 0){
-		NSLog(@"Was maximized, rejecting.");
-		return;
-	}
-	if(wasMinimizedBeforeScrolling && yPosition < 0){
-		yPosition = [self maximizedHeight]+(yPosition+(WINDOW_FRAME.size.height/3.0));
-		NSLog(@"Min up change to yPosition to %f", yPosition);
-		if(yPosition <= 0){
-			self.heightBeforeAdjustingToScrollPosition = (NSInteger)self.buttonBarBottomConstraint.constant;
-			yPosition = 0.0;
-		}
-	}
-	else if(wasMinimizedBeforeScrolling && yPosition > 0){ //The user is scrolling down and it's already minimized
-		return;
-	}
-	
-	CGFloat currentHeight = [self maximizedHeight] - yPosition;
-	if(currentHeight < 0){
-		currentHeight = 0;
-	}
-	
-	[self.delegate requiredHeightForNavigationBarChangedTo:currentHeight
-									 withAnimationDuration:0.0];
-	
-	self.buttonBarBottomConstraint.constant = yPosition;
-	
-	if(yPosition >= [self maximizedHeight]){
-		NSLog(@"Resetting start position for minimized view");
-		self.heightBeforeAdjustingToScrollPosition = (NSInteger)self.buttonBarBottomConstraint.constant;
-	}
-}
-
 - (void)handlePan:(UIPanGestureRecognizer *)recognizer {
 	CGPoint translation = [recognizer translationInView:recognizer.view];
 	
@@ -325,7 +281,7 @@
 	}
 	CGFloat totalTranslation = translation.y + (self.currentPoint.y-self.originalPoint.y);
 	
-//	NSLog(@"%f %f", totalTranslation, translation.y);
+    NSLog(@"%f %f", totalTranslation, translation.y);
 	
 	if(totalTranslation < 0){ //Moving upward
 		if(recognizer.view == self.miniPlayerCoreView){
@@ -338,21 +294,38 @@
 		self.buttonBarBottomConstraint.constant = totalTranslation;
 	}
 	
-	if(translation.y < 0){ //Moving up
-		CGFloat newMinibarAlphaValue = 1.0;
-		
-		newMinibarAlphaValue = 1.0 + (translation.y/LMNavigationBarGrabberHeight);
-		
-		if(newMinibarAlphaValue < 0){
-			newMinibarAlphaValue = 0;
-		}
-		if(newMinibarAlphaValue > 1){
-			newMinibarAlphaValue = 1;
-		}
-		
-		self.minibarBackgroundView.alpha = newMinibarAlphaValue;
-		self.minibarBackgroundGrabber.alpha = newMinibarAlphaValue;
-	}
+	if(translation.y < 0 && translation.y != totalTranslation){ //Moving up
+        CGFloat totalHeight = self.viewAttachedToButtonBar.frame.size.height + self.buttonBar.frame.size.height;
+        CGFloat percentageConverted = (-translation.y)/totalHeight;
+        
+        if(percentageConverted > 1){
+            percentageConverted = 1;
+        }
+        
+        NSLog(@"Converted %f", percentageConverted);
+        
+        self.viewAttachedToButtonBar.alpha = percentageConverted;
+        self.buttonBar.alpha = self.viewAttachedToButtonBar.alpha;
+        
+        self.minibarBackgroundGrabber.alpha = 1.0-percentageConverted;
+        self.minibarBackgroundView.alpha = self.minibarBackgroundGrabber.alpha;
+    }
+    else if(translation.y >= 0) {
+        CGFloat totalHeight = self.viewAttachedToButtonBar.frame.size.height + self.buttonBar.frame.size.height - self.minibarBackgroundView.frame.size.height;
+        CGFloat percentageConverted = translation.y/totalHeight;
+
+        if(percentageConverted > 1){
+            percentageConverted = 1;
+        }
+        
+        NSLog(@"Converted %f!", percentageConverted);
+        
+        self.viewAttachedToButtonBar.alpha = 1.0-percentageConverted;
+        self.buttonBar.alpha = self.viewAttachedToButtonBar.alpha;
+        
+        self.minibarBackgroundGrabber.alpha = percentageConverted;
+        self.minibarBackgroundView.alpha = self.minibarBackgroundGrabber.alpha;
+    }
 	
 	[self layoutIfNeeded];
 	
@@ -473,8 +446,8 @@
 		self.minibarBackgroundView.backgroundColor = [UIColor purpleColor];
 		[self addSubview:self.minibarBackgroundView];
 		
-		self.minibarBottomConstraint = [self.minibarBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:-minibarHeight-LMNavigationBarGrabberHeight-10];
-		[self.minibarBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+        [self.minibarBackgroundView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self withOffset:LMNavigationBarGrabberHeight];
+        [self.minibarBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[self.minibarBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 		[self.minibarBackgroundView autoSetDimension:ALDimensionHeight toSize:minibarHeight];
 		
@@ -524,7 +497,7 @@
 		
 		
 		self.minibarLabel = [LMLabel newAutoLayoutView];
-		self.minibarLabel.text = @"Albums";
+		self.minibarLabel.text = @"Text post please ignore";
 		[self.minibarBackgroundView addSubview:self.minibarLabel];
 		
 		[self.minibarLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:10];
@@ -555,6 +528,10 @@
 		self.browsingBar.searchBarDelegate = self;
 		self.browsingBar.letterTabDelegate = self.letterTabBarDelegate;
 		[self addSubview:self.browsingBar];
+        
+        UIPanGestureRecognizer *browsingBarMoveRecognizer = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(handlePan:)];
+        //browsingBarMoveRecognizer.delegate = self;
+        [self.browsingBar addGestureRecognizer:browsingBarMoveRecognizer];
 		
 		
 		LMGrabberView *browsingBarGrabberView = [LMGrabberView newAutoLayoutView];

@@ -254,12 +254,12 @@
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
 	
-//	NSString *class = [[gestureRecognizer class] description];
-//	NSString *otherClass = [[otherGestureRecognizer class] description];
-//	
-//	NSLog(@"%@ should work with %@?", class, otherClass);
+	//NSString *class = [[gestureRecognizer class] description];
+	//NSString *otherClass = [[otherGestureRecognizer class] description];
 	
-	return YES;
+	//NSLog(@"%@ should work with %@?", class, otherClass);
+	
+    return YES;
 }
 
 - (void)layoutSubviews {

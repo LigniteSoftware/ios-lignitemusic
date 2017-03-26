@@ -102,13 +102,6 @@ typedef NS_ENUM(NSUInteger, LMNavigationTab) {
  */
 - (void)setCurrentSourceIcon:(UIImage*)icon;
 
-/**
- Move the bottom constraint to a certain position.
-
- @param yPosition The new position.
- */
-- (void)moveToYPosition:(CGFloat)yPosition;
-
 - (void)handlePan:(UIPanGestureRecognizer *)recognizer;
 
 @end
