@@ -562,6 +562,8 @@
 		browsingBarGrabberMoveRecognizer.delegate = self;
 		[browsingBarGrabberView addGestureRecognizer:browsingBarGrabberMoveRecognizer];
 		
+        
+        [self insertSubview:self.browsingBar aboveSubview:browsingBarGrabberView];
 		
 		
 //		self.miniPlayerView = [LMMiniPlayerView newAutoLayoutView];

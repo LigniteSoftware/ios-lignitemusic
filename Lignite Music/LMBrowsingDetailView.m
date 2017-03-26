@@ -407,7 +407,7 @@
 		}
 	}
 	else{
-		return [NSString stringWithFormat:NSLocalizedString(@"LengthOfSong", nil), [LMNowPlayingView durationStringTotalPlaybackTime:track.playbackDuration]];
+		return [LMNowPlayingView durationStringTotalPlaybackTime:track.playbackDuration];
 	}
 }
 

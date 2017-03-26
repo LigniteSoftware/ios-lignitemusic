@@ -45,6 +45,11 @@
  */
 @property BOOL brokeScrollingThreshhold;
 
+/**
+ If YES, the user just scrolled through the letter tabs. Scroll delegate should then be ignored and this flag should be reset to NO.
+ */
+@property BOOL didJustScrollByLetter;
+
 @end
 
 @implementation LMCompactBrowsingView
@@ -109,6 +114,7 @@
 
 - (void)scrollViewToIndex:(NSUInteger)index {
 	NSLog(@"Scroll to %ld", index);
+    self.didJustScrollByLetter = YES;
 	[self layoutIfNeeded];
 	[self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredVertically animated:NO];
 }
@@ -388,6 +394,10 @@
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    if(self.didJustScrollByLetter){
+        self.didJustScrollByLetter = NO;
+        return;
+    }
 	CGFloat difference = fabs(scrollView.contentOffset.y-self.lastScrollingOffsetPoint.y);
 	if(difference > WINDOW_FRAME.size.height/4){
 		self.brokeScrollingThreshhold = YES;
