@@ -43,11 +43,6 @@
 @property NSLayoutConstraint *buttonBarBottomConstraint;
 
 /**
- The view which is attached to the top of the button bar.
- */
-@property (nonatomic) UIView *viewAttachedToButtonBar;
-
-/**
  The source selector.
  */
 @property LMSourceSelectorView *sourceSelector;
@@ -101,6 +96,8 @@
 
 @implementation LMButtonNavigationBar
 
+@synthesize viewAttachedToButtonBar = _viewAttachedToButtonBar;
+
 - (LMGrabberView*)minibarBackgroundGrabber {
 	LMGrabberView *grabberView = nil;
 	
@@ -118,17 +115,9 @@
 }
 
 - (CGFloat)maximizedHeight {
-	CGFloat extra = 0;
-	
-	if(self.viewAttachedToButtonBar == nil){ //Source selector minimized
-		extra = self.buttonBarSourceSelectorWarningLabel.frame.size.height;
-		NSLog(@"Adding %f extra", extra);
-	}
-	
 	return self.buttonBar.frame.size.height
-		 + self.viewAttachedToButtonBar.frame.size.height
-		 + LMNavigationBarGrabberHeight
-		 + extra;
+    + self.viewAttachedToButtonBar.frame.size.height
+    + LMNavigationBarGrabberHeight;
 }
 
 - (CGFloat)minimizedHeight {
@@ -169,6 +158,13 @@
 	return nil;
 }
 
+- (UIView*)viewAttachedToButtonBar {
+    if(!_viewAttachedToButtonBar){
+        return self.buttonBarSourceSelectorWarningLabel;
+    }
+    return _viewAttachedToButtonBar;
+}
+
 - (void)setViewAttachedToButtonBar:(UIView *)viewAttachedToButtonBar {
 	UIView *previouslyAttachedView = self.viewAttachedToButtonBar;
 	
@@ -183,7 +179,7 @@
     
     CGFloat minibarHeight = WINDOW_FRAME.size.height/12.0;
 
-    NSLog(@"Fuck you!!! lol");
+    NSLog(@"Fuck you!!! lol %@", viewAttachedToButtonBar);
     
 //    [self.minibarBackgroundView removeConstraints:self.minibarBackgroundView.constraints];
     
@@ -193,13 +189,13 @@
         }
     }
 
-    [self.minibarBackgroundView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:viewAttachedToButtonBar];
+    [self.minibarBackgroundView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:viewAttachedToButtonBar ? viewAttachedToButtonBar : self.buttonBarSourceSelectorWarningLabel];
     [self.minibarBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
     [self.minibarBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
     [self.minibarBackgroundView autoSetDimension:ALDimensionHeight toSize:minibarHeight];
     
 	
-	previousViewTopConstraint.constant = LMNavigationBarGrabberHeight + 20;
+	previousViewTopConstraint.constant = self.buttonBar.frame.size.height;
 	currentViewTopConstraint.constant = -viewAttachedToButtonBar.frame.size.height;
 	
 	[UIView animateWithDuration:0.25 animations:^{
@@ -242,7 +238,7 @@
 	__weak id weakSelf = self;
 	
 	[self setButtonBarBottomConstraintConstant:self.buttonBar.frame.size.height
-											 + self.viewAttachedToButtonBar.frame.size.height
+                                             + self.viewAttachedToButtonBar.frame.size.height
 											 //+ LMNavigationBarGrabberHeight
                                              - self.minibarBackgroundView.frame.size.height
 									completion:^(BOOL finished) {
@@ -679,7 +675,7 @@
 		[self.buttonBarBottomWhitespaceView autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height/3.0];
 		
 		
-		[self.miniPlayerCoreView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.buttonBar withOffset:LMNavigationBarGrabberHeight + 20];
+		[self.miniPlayerCoreView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.buttonBar withOffset:LMNavigationBarGrabberHeight*3];
 		[self.miniPlayerCoreView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[self.miniPlayerCoreView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 		[self.miniPlayerCoreView autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height/5.0];

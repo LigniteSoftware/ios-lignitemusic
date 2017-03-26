@@ -74,6 +74,11 @@ typedef NS_ENUM(NSUInteger, LMNavigationTab) {
 @property id<LMButtonNavigationBarDelegate> delegate;
 
 /**
+ The view which is attached to the top of the button bar.
+ */
+@property UIView *viewAttachedToButtonBar;
+
+/**
  Completely hide the navigation button bar from the view. Minimize or maximize will need to be called to bring it back.
  */
 - (void)completelyHide;
