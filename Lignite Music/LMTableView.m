@@ -69,9 +69,7 @@
 - (void)setBottomSpacing:(NSUInteger)bottomSpacing {
     _bottomSpacing = bottomSpacing;
     
-    [UIView animateWithDuration:0.5 animations:^{
-        self.contentInset = UIEdgeInsetsMake(0, 0, bottomSpacing, 0);
-    }];
+    [self reloadSubviewData];
 }
 
 - (void)reloadSubviewData {
@@ -91,7 +89,7 @@
 	CGFloat dummyViewHeight = 100;
 	UIView *dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, WINDOW_FRAME.size.width, dummyViewHeight)];
 	self.tableHeaderView = dummyView;
-	self.contentInset = UIEdgeInsetsMake(-dummyViewHeight, 0, 0, 0);
+	self.contentInset = UIEdgeInsetsMake(-dummyViewHeight, 0, self.bottomSpacing, 0);
 	
 	[self.subviewDataSource amountOfObjectsRequiredChangedTo:self.requiredAmountOfObjects forTableView:self];
 }
