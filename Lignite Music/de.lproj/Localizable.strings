@@ -315,6 +315,9 @@
 "OnboardingThanksTitle" = "Wir hoffen, dass dir Lignite Music gefällt!";
 "OnboardingThanksDescription" = "Wir sind ein 2 Geek Team: Designer & Entwickler. Wir lieben es, schöne und funktionelle Apps zu realisieren.\n\nSehr sehr viele Stunden wurden in diese App investiert und wir hoffen, du liebst es, sie zu nutzen genau wie wir es genossen haben, sie zu programmieren.";
 
+/* Button names */
+
+"BuyLigniteMusic" = "Lignite Music kaufen";
 "HangOn" = "Moment, bitte..."; //Meaning "Wait..."
 "Cool" = "Cool!";
 "WhatsNext" = "Wow, super!";

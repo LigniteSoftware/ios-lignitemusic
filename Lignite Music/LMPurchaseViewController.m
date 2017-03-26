@@ -251,7 +251,7 @@
 	self.headerImageView.image = [UIImage imageNamed:@"purchase_header.png"];
 	[self.rootScrollView addSubview:self.headerImageView];
 	
-	[self.headerImageView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:15];
+    [self.headerImageView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:self.wasPresented ? 15 : 65];
 	[self.headerImageView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.view withOffset:15];
 	[self.headerImageView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.view withOffset:-15];
 	[self.headerImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(3.75/10.0)];

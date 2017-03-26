@@ -39,11 +39,19 @@
  */
 
 
+
 /*
  
  New strings
  
  */
+
+
+"OnboardingSpotifyLoginTitle" = "Spotify";
+"OnboardingSpotifyLoginDescription" = "Our app is all about playing your Spotify music.\n\nIf you could please login, our app will use your Spotify account to bring you music awesomeness. If you don't have Spotify, feel free to get it using the button below.";
+"GetSpotify" = "Get Spotify";
+
+"TapViewAgainToOpenSourceSelector" = "Tap view button again to open view selector";
 
 "CreditsLicenses" = "License links"; //Links to licenses, such as library licenses and icon licenses.
 "NoSearchResults" = "No results";
@@ -377,6 +385,7 @@
 "WillBeginDownloading" = "Will download";
 
 /* Button names */
+"BuyLigniteMusic" = "Buy Lignite Music";
 "HangOn" = "Hang on..."; //Meaning "Wait..."
 "Cool" = "Cool";
 "WhatsNext" = "What's next?";

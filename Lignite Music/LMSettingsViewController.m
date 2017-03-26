@@ -408,6 +408,10 @@
 						case LMPurchaseManagerAppOwnershipStatusTrialExpired:
 							[(LMCoreViewController*)self.coreViewController setStatusBarBlurHidden:YES];
 							[self.purchaseManager showPurchaseViewControllerOnViewController:self.coreViewController present:NO];
+                            [(LMCoreViewController*)self.coreViewController pushItemOntoNavigationBarWithTitle:NSLocalizedString(@"BuyLigniteMusic", nil) withNowPlayingButton:NO];
+                            NSLog(@"Pushing the new navigation controller");
+                            [self.coreViewController.navigationController setNavigationBarHidden:YES animated:YES];
+//                            [self.navigationController setNavigationBarHidden:YES animated:YES];
 							break;
 						case LMPurchaseManagerAppOwnershipStatusLoggedInAsBacker: {
 							LMAlertView *alertView = [LMAlertView newAutoLayoutView];
@@ -521,6 +525,8 @@
 					[self.coreViewController.navigationController showViewController:contactViewController sender:self];
 //					[(LMCoreViewController*)self.coreViewController setStatusBarBlurHidden:YES];
 					[(LMCoreViewController*)self.coreViewController pushItemOntoNavigationBarWithTitle:NSLocalizedString(@"ContactUs", nil) withNowPlayingButton:NO];
+                    
+                    
 					
 					[LMAnswers logCustomEventWithName:@"Viewed Contact Us Screen" customAttributes:nil];
 					break;

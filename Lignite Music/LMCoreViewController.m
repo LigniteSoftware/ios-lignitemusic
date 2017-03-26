@@ -70,6 +70,7 @@ LMControlBarViewDelegate
 
 @property UIView *statusBarBlurView;
 @property NSLayoutConstraint *statusBarBlurViewHeightConstraint;
+@property NSLayoutConstraint *statusBarBlurViewTopConstraint;
 
 @property UIView *browsingAssistantViewAttachedTo;
 
@@ -513,6 +514,16 @@ LMControlBarViewDelegate
         
         [self.settingsCheckTimer invalidate];
         self.settingsCheckTimer = nil;
+        
+        if(![self prefersStatusBarHidden] && self.statusBarBlurViewTopConstraint.constant < 0){
+            [self.navigationController.view layoutIfNeeded];
+            
+//            self.statusBarBlurViewTopConstraint.constant = 0;
+            
+            [UIView animateWithDuration:0.5 animations:^{
+                [self.navigationController.view layoutIfNeeded];
+            }];
+        }
     }
 }
 
@@ -576,6 +587,16 @@ LMControlBarViewDelegate
 		
 		navigationItem.rightBarButtonItem = barButtonItem;
 	}
+    
+//    if([title isEqualToString:@""]){
+//        [self.navigationController.view layoutIfNeeded];
+//        
+////        self.statusBarBlurViewTopConstraint.constant = -20 - self.navigationBar.frame.size.height - 15;
+//        
+//        [UIView animateWithDuration:0.5 animations:^{
+//            [self.navigationController.view layoutIfNeeded];
+//        }];
+//    }
 	
 	[self.navigationBar pushNavigationItem:navigationItem animated:YES];
 }
@@ -812,7 +833,7 @@ LMControlBarViewDelegate
 		NSLog(@"Warning: Onboarding is disabled.");
 #else
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-	if(![userDefaults objectForKey:LMSettingsKeyOnboardingComplete] || true){
+	if(![userDefaults objectForKey:LMSettingsKeyOnboardingComplete]){
 #endif
 		NSLog(@"User has not yet completed onboarding, launching onboarding.");
 		
@@ -894,7 +915,6 @@ LMControlBarViewDelegate
 						
 						//						self.navigationController.navigationBar
 						
-						[self.navigationBar autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:20];
 						[self.navigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 						[self.navigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 						
@@ -1006,8 +1026,10 @@ LMControlBarViewDelegate
 						
 						[self.statusBarBlurView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 						[self.statusBarBlurView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-						[self.statusBarBlurView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+						self.statusBarBlurViewTopConstraint = [self.statusBarBlurView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 						self.statusBarBlurViewHeightConstraint = [self.statusBarBlurView autoSetDimension:ALDimensionHeight toSize:20*[LMSettings shouldShowStatusBar]];
+                        
+                        [self.navigationBar autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.statusBarBlurView];
 
 						
 						LMImageManager *imageManager = [LMImageManager sharedImageManager];
