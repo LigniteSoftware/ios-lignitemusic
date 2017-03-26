@@ -100,6 +100,8 @@
 			return @"icon_up_arrow.png";
 		case LMIconNoSearchResults:
 			return @"icon_no_search_results.png";
+        case LMIconLibraryAccess:
+            return @"icon_library_access.png";
 	}
 }
 
