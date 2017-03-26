@@ -22,11 +22,20 @@
 
 @interface LMAppDelegate ()
 
-@property LMMusicPlayer *musicPlayer;
+@property (nonatomic) LMMusicPlayer *musicPlayer;
 
 @end
 
 @implementation LMAppDelegate
+
+- (LMMusicPlayer*)musicPlayer {
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    
+    if(!_musicPlayer && [userDefaults objectForKey:LMSettingsKeyOnboardingComplete]){
+        return [LMMusicPlayer sharedMusicPlayer];
+    }
+    return _musicPlayer;
+}
 
 - (void)application:(UIApplication *)application performActionForShortcutItem:(UIApplicationShortcutItem *)shortcutItem completionHandler:(void (^)(BOOL))completionHandler {
 	
@@ -120,8 +129,9 @@
 	[userDefaults setSecret:@"efd07a3e-8af2-4b19-9198-c8c67cbe93ab"];
 	[userDefaults synchronize];
 	
-    // Override point for customization after application launch.
-	self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
+    if([userDefaults objectForKey:LMSettingsKeyOnboardingComplete]){
+        self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
+    }
 	
 //	NSLog(@"Actually finished");
 	

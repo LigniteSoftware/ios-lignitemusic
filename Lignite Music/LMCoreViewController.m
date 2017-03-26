@@ -765,7 +765,7 @@ LMControlBarViewDelegate
 	[self.view addSubview:hangOnImage];
 	
 	[hangOnImage autoPinEdgesToSuperviewEdges];
-	
+	    
 //#ifdef SPOTIFY
 //	[[LMSpotifyLibrary sharedLibrary] buildDatabase];
 //#endif
