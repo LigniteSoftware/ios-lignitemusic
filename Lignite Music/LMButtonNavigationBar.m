@@ -181,8 +181,8 @@
 	
 	[self layoutIfNeeded];
 	
-	previousViewTopConstraint.constant = LMNavigationBarGrabberHeight + 10;
-	currentViewTopConstraint.constant = -viewAttachedToButtonBar.frame.size.height+1; //The +1 is to fix a weird issue where only the search bar will have a 1px gap between it and the button bar
+	previousViewTopConstraint.constant = LMNavigationBarGrabberHeight + 20;
+	currentViewTopConstraint.constant = -viewAttachedToButtonBar.frame.size.height;
 	
 	[UIView animateWithDuration:0.25 animations:^{
 		[self layoutIfNeeded];
@@ -295,7 +295,7 @@
 	}
 	
 	if(translation.y < 0 && translation.y != totalTranslation){ //Moving up
-        CGFloat totalHeight = self.viewAttachedToButtonBar.frame.size.height + self.buttonBar.frame.size.height;
+        CGFloat totalHeight = self.viewAttachedToButtonBar.frame.size.height + self.buttonBar.frame.size.height - self.minibarBackgroundView.frame.size.height;
         CGFloat percentageConverted = (-translation.y)/totalHeight;
         
         if(percentageConverted > 1){
@@ -310,7 +310,7 @@
         self.minibarBackgroundGrabber.alpha = 1.0-percentageConverted;
         self.minibarBackgroundView.alpha = self.minibarBackgroundGrabber.alpha;
     }
-    else if(translation.y >= 0) {
+    else if(translation.y >= 0 && translation.y == totalTranslation) {
         CGFloat totalHeight = self.viewAttachedToButtonBar.frame.size.height + self.buttonBar.frame.size.height - self.minibarBackgroundView.frame.size.height;
         CGFloat percentageConverted = translation.y/totalHeight;
 
@@ -662,7 +662,7 @@
 		[self.buttonBarBottomWhitespaceView autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height/3.0];
 		
 		
-		[self.miniPlayerCoreView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.buttonBar withOffset:LMNavigationBarGrabberHeight + 10];
+		[self.miniPlayerCoreView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.buttonBar withOffset:LMNavigationBarGrabberHeight + 20];
 		[self.miniPlayerCoreView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[self.miniPlayerCoreView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 		[self.miniPlayerCoreView autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height/5.0];
@@ -694,7 +694,7 @@
 		
 		[self.sourceSelector autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
 		[self.sourceSelector autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self];
-		[self.sourceSelector autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.buttonBar];
+		[self.sourceSelector autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.buttonBar withOffset:20];
 		[self.sourceSelector autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height-LMNavigationBarTabHeight];
 		
 		self.musicPlayer.sourceSelector = self.sourceSelector;
