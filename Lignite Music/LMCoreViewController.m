@@ -529,6 +529,10 @@ LMControlBarViewDelegate
 }
 
 - (void)launchNowPlayingFromNavigationBar {
+    if(!self.musicPlayer.nowPlayingTrack){
+        return;
+    }
+    
 	[self.nowPlayingCoreView.superview layoutIfNeeded];
 	
 	self.nowPlayingCoreView.topConstraint.constant = 0;
@@ -582,6 +586,10 @@ LMControlBarViewDelegate
 }
 
 - (void)panNowPlayingUp:(UIPanGestureRecognizer *)recognizer {
+    if(!self.musicPlayer.nowPlayingTrack){
+        return;
+    }
+    
 	CGPoint translation = [recognizer translationInView:recognizer.view];
 	
     NSLog(@"Dick is not a bone 哈哈哈");

@@ -1248,7 +1248,7 @@ BOOL shuffleForDebug = NO;
 	_nowPlayingTrack = nowPlayingTrack;
 }
 
-- (LMMusicTrack*)nowPlayingTrack {
+- (LMMusicTrack*)nowPlayingTrack {    
 	return _nowPlayingTrack;
 }
 	
