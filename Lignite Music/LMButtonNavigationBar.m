@@ -634,6 +634,10 @@
 		self.buttonBarSourceSelectorWarningLabel.backgroundColor = [UIColor whiteColor];
 		self.buttonBarSourceSelectorWarningLabel.topAndBottomPadding = 1.0;
 		self.buttonBarSourceSelectorWarningLabel.userInteractionEnabled = YES;
+        self.buttonBarSourceSelectorWarningLabel.layer.shadowOpacity = 0.25f;
+        self.buttonBarSourceSelectorWarningLabel.layer.shadowOffset = CGSizeMake(0, 0);
+        self.buttonBarSourceSelectorWarningLabel.layer.masksToBounds = NO;
+        self.buttonBarSourceSelectorWarningLabel.layer.shadowRadius = 5;
 		[self addSubview:self.buttonBarSourceSelectorWarningLabel];
 		
 		[self.buttonBarSourceSelectorWarningLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading];

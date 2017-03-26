@@ -96,7 +96,8 @@ LMControlBarViewDelegate
 
 @property LMCompactBrowsingView *compactView;
 
-@property BOOL settingsOpen;
+@property NSInteger settingsOpen;
+@property BOOL willOpenSettings;
 
 @end
 
@@ -342,7 +343,7 @@ LMControlBarViewDelegate
 			break;
 		}
 		case LMIconSettings: {
-			self.settingsOpen = YES;
+			self.willOpenSettings = YES;
 			[self.buttonNavigationBar setSelectedTab:LMNavigationTabBrowse];
 			[self.buttonNavigationBar completelyHide];
 			
@@ -498,15 +499,20 @@ LMControlBarViewDelegate
 
 - (void)navigationBar:(UINavigationBar *)navigationBar didPopItem:(UINavigationItem *)item {
 	NSLog(@"Item %@ was pop popped!", item.title);
-	if(self.settingsOpen){
-		self.settingsOpen = NO;
-		
-		[self.buttonNavigationBar maximize];
+	if(self.settingsOpen > 0){
+		self.settingsOpen--;
 	}
+    if(self.settingsOpen == 0){
+        [self.buttonNavigationBar maximize];
+    }
 }
 
 - (void)navigationBar:(UINavigationBar *)navigationBar didPushItem:(UINavigationItem *)item {
-//	NSLog(@"Item %@ was pushed!", item.title);
+	NSLog(@"Item %@ was pushed!", item.title);
+    if(self.settingsOpen > 0 || self.willOpenSettings){
+        self.settingsOpen++;
+    }
+    self.willOpenSettings = NO;
 }
 
 - (BOOL)navigationBar:(UINavigationBar *)navigationBar shouldPopItem:(UINavigationItem *)item {
