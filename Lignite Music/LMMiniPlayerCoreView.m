@@ -211,6 +211,16 @@
             
             CGFloat totalTranslation = translation.x;
             
+            CGFloat newAlpha = 1.0 - fabs(totalTranslation)/(self.centerMiniPlayerView.frame.size.width/2);
+            
+            if(newAlpha < 0){
+                newAlpha = 0;
+            }
+            
+            self.centerMiniPlayerView.alpha = newAlpha;
+            self.leadingMiniPlayerView.alpha = 1.0 - newAlpha;
+            self.trailingMiniPlayerView.alpha = self.leadingMiniPlayerView.alpha;
+            
             //	NSLog(@"%f to %f %@", translation.y, totalTranslation, NSStringFromCGPoint(self.currentPoint));
             
             if(self.skipTracksTimer){
@@ -245,6 +255,16 @@
                 self.samplesArray = [NSMutableArray new];
                 
                 [UIView animateWithDuration:0.15 animations:^{
+                    if(rebuildConstraints){
+                        self.centerMiniPlayerView.alpha = 0;
+                        self.leadingMiniPlayerView.alpha = nextSong ? 1 : 0;
+                        self.trailingMiniPlayerView.alpha = nextSong ? 0 : 1;
+                    }
+                    else{
+                        self.centerMiniPlayerView.alpha = 1;
+                        self.leadingMiniPlayerView.alpha = 0;
+                        self.trailingMiniPlayerView.alpha = 0;
+                    }
                     [self layoutIfNeeded];
                 } completion:^(BOOL finished) {
                     if(finished){
@@ -253,7 +273,7 @@
                             
                             self.skipToNextTrackOnTimerFire = nextSong;
                             
-                            self.skipTracksTimer = [NSTimer scheduledTimerWithTimeInterval:0.25
+                            self.skipTracksTimer = [NSTimer scheduledTimerWithTimeInterval:0.50
                                                                                     target:self
                                                                                   selector:@selector(skipTracks)
                                                                                   userInfo:nil
