@@ -570,7 +570,18 @@
 	
 	[self.tableView reloadSubviewData];
 	
-	[self.tableView setContentOffset:CGPointMake(0, WINDOW_FRAME.size.width/4.0 * 3.0)];
+    NSInteger countOfItems = self.specificTrackCollections ? self.specificTrackCollections.count : self.musicTrackCollection.count;
+    
+    if(countOfItems < 4){
+//        [self.tableView reloadData];
+        NSLog(@"Count is fuck %ld with %ld num sex", countOfItems, self.tableView.numberOfSections);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:countOfItems-1] atScrollPosition:countOfItems == 1 ? UITableViewScrollPositionMiddle : UITableViewScrollPositionBottom animated:NO];
+        });
+    }
+    else{
+        [self.tableView setContentOffset:CGPointMake(0, WINDOW_FRAME.size.height/2.0)];
+    }
 	
 	[self.musicPlayer addMusicDelegate:self];
 	

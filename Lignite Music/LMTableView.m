@@ -222,7 +222,7 @@
 	if([self.title isEqualToString:@"SourceSelector"] && self.previousFrame.size.width > self.frame.size.width){
 		[self reloadData];
 	}
-	
+
 	self.previousFrame = self.frame;
 }
 
