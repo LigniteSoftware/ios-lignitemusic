@@ -94,6 +94,8 @@
 			return @"icon_buy.png";
 		case LMIconKickstarter:
 			return @"icon_kickstarter.png";
+        case LMIconKickstarterBlackAndWhite:
+            return @"icon_kickstarter_bw.png";
 		case LMIconDownArrow:
 			return @"icon_down_arrow.png";
 		case LMIconUpArrow:

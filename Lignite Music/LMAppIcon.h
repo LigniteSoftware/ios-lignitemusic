@@ -53,6 +53,7 @@ typedef enum {
 	LMIconGreenCheckmark,
 	LMIconBuy,
 	LMIconKickstarter,
+    LMIconKickstarterBlackAndWhite,
 	LMIconDownArrow,
 	LMIconUpArrow,
 	LMIconNoSearchResults,

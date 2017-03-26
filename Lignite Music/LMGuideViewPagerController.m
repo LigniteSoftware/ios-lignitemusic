@@ -80,7 +80,7 @@
 			
 			self.screenshotsArray = [[NSArray alloc]initWithObjects:
 									 @"icon_no_cover_art_75.png",
-									 @"! onboarding_kickstarter.png",
+									 @"icon_kickstarter_bw.png",
 									 @"icon_library_access.png",
 									 @"icon_pebbles.png"
 									 , nil];

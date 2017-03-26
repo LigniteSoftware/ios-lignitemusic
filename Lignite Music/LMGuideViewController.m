@@ -419,9 +419,9 @@
 		
 		[self.buttonArea autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.descriptionLabel withOffset:30];
 		[self.buttonArea autoAlignAxisToSuperviewAxis:ALAxisVertical];
-		[self.buttonArea autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-		[self.buttonArea autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-		[self.buttonArea autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/16.0)];
+		[self.buttonArea autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.descriptionLabel];
+		[self.buttonArea autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.descriptionLabel];
+        [self.buttonArea autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/16.0)];
 		
 		[self.screenshotView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.titleLabel];
 		[self.screenshotView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
