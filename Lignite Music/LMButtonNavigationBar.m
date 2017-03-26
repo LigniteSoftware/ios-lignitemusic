@@ -180,6 +180,24 @@
 	NSLayoutConstraint *currentViewTopConstraint = [self topConstrantForView:viewAttachedToButtonBar];
 	
 	[self layoutIfNeeded];
+    
+    CGFloat minibarHeight = WINDOW_FRAME.size.height/12.0;
+
+    NSLog(@"Fuck you!!! lol");
+    
+//    [self.minibarBackgroundView removeConstraints:self.minibarBackgroundView.constraints];
+    
+    for(NSLayoutConstraint *constraint in self.constraints){
+        if(constraint.firstItem == self.minibarBackgroundView){
+            [self removeConstraint:constraint];
+        }
+    }
+
+    [self.minibarBackgroundView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:viewAttachedToButtonBar];
+    [self.minibarBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+    [self.minibarBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+    [self.minibarBackgroundView autoSetDimension:ALDimensionHeight toSize:minibarHeight];
+    
 	
 	previousViewTopConstraint.constant = LMNavigationBarGrabberHeight + 20;
 	currentViewTopConstraint.constant = -viewAttachedToButtonBar.frame.size.height;
@@ -439,17 +457,16 @@
 		self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 		
 		self.heightBeforeAdjustingToScrollPosition = -1;
-		
-		CGFloat minibarHeight = WINDOW_FRAME.size.height/12.0;
+
 		
 		self.minibarBackgroundView = [UIView newAutoLayoutView];
 		self.minibarBackgroundView.backgroundColor = [UIColor purpleColor];
 		[self addSubview:self.minibarBackgroundView];
 		
-        [self.minibarBackgroundView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self withOffset:LMNavigationBarGrabberHeight];
-        [self.minibarBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-		[self.minibarBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-		[self.minibarBackgroundView autoSetDimension:ALDimensionHeight toSize:minibarHeight];
+//      [self.minibarBackgroundView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self withOffset:LMNavigationBarGrabberHeight];
+//      [self.minibarBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+//		[self.minibarBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+//		[self.minibarBackgroundView autoSetDimension:ALDimensionHeight toSize:minibarHeight];
 		
 		self.minibarBackgroundView.backgroundColor = [UIColor whiteColor];
 		self.minibarBackgroundView.layer.shadowColor = [UIColor blackColor].CGColor;
