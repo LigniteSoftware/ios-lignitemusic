@@ -79,6 +79,11 @@ typedef NS_ENUM(NSUInteger, LMNavigationTab) {
 @property UIView *viewAttachedToButtonBar;
 
 /**
+ Whether or not the navigation bar is in its minimized format.
+ */
+@property BOOL isMinimized;
+
+/**
  Completely hide the navigation button bar from the view. Minimize or maximize will need to be called to bring it back.
  */
 - (void)completelyHide;
