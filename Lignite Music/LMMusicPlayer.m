@@ -292,7 +292,7 @@ MPMediaGrouping associatedMediaTypes[] = {
 		[self activateSpotifyPlayer];
 #else
 		[self loadNowPlayingState];
-#endif
+#endif  
 		self.delegates = [NSMutableArray new];
 		self.delegatesSubscribedToCurrentPlaybackTimeChange = [[NSMutableArray alloc]init];
 		self.delegatesSubscribedToLibraryDidChange = [[NSMutableArray alloc]init];
