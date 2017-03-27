@@ -260,10 +260,10 @@
             if(recognizer.state == UIGestureRecognizerStateEnded){
                 [self layoutIfNeeded];
                 
-                BOOL nextSong = translation.x < -self.frame.size.width/4;
+                BOOL nextSong = translation.x < -self.frame.size.width/5;
                 BOOL rebuildConstraints = YES;
                 
-                if(translation.x > self.frame.size.width/4){
+                if(translation.x > self.frame.size.width/5){
                     NSLog(@"Slide forward");
                     self.nowPlayingLeadingConstraint.constant = self.frame.size.width;
                 }
@@ -288,7 +288,7 @@
                             
                             self.skipToNextTrackOnTimerFire = nextSong;
                             
-                            self.skipTracksTimer = [NSTimer scheduledTimerWithTimeInterval:0.5
+                            self.skipTracksTimer = [NSTimer scheduledTimerWithTimeInterval:1.0
                                                                                     target:self
                                                                                   selector:@selector(skipTracks)
                                                                                   userInfo:nil

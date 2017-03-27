@@ -40,6 +40,7 @@
 #import "LMControlBarView.h"
 #import "LMBrowsingBar.h"
 #import "LMMiniPlayerCoreView.h"
+#import "LMTutorialView.h"
 
 #ifdef SPOTIFY
 #import "Spotify.h"
@@ -805,6 +806,14 @@ LMControlBarViewDelegate
 //	
 //	
 //	return;
+    
+    
+    LMTutorialView *tutorialView = [[LMTutorialView alloc] initForAutoLayoutWithTitle:@"nice meme" description:@"classic"];
+    [self.view addSubview:tutorialView];
+    [tutorialView autoPinEdgesToSuperviewEdges];
+    
+    return;
+    
 	
 #ifdef SPOTIFY
 	SPTAuth *authorization = [SPTAuth defaultInstance];

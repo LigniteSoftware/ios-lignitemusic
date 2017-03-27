@@ -60,6 +60,8 @@
 		6A48A7421E202BBF003C86B6 /* splash_wings.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A48A7411E202BBF003C86B6 /* splash_wings.png */; };
 		6A4BAEEE1DC984EC000DF537 /* LMBigListEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A4BAEED1DC984EC000DF537 /* LMBigListEntry.m */; };
 		6A4BAEF21DC9C59B000DF537 /* LMTiledAlbumCoverView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A4BAEF11DC9C59B000DF537 /* LMTiledAlbumCoverView.m */; };
+		6A50AC911E891F3A005C7B3B /* LMTutorialView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A50AC901E891F3A005C7B3B /* LMTutorialView.m */; };
+		6A50AC921E891F3A005C7B3B /* LMTutorialView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A50AC901E891F3A005C7B3B /* LMTutorialView.m */; };
 		6A514E141CE9621B00AFB351 /* icon_dynamic_playlist.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A514E131CE9621B00AFB351 /* icon_dynamic_playlist.png */; };
 		6A514E191CEA15D900AFB351 /* LMSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A514E181CEA15D900AFB351 /* LMSlider.m */; };
 		6A5168831E0899B100A6446F /* LMPurchaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A5168821E0899B000A6446F /* LMPurchaseViewController.m */; };
@@ -438,6 +440,8 @@
 		6A4BAEED1DC984EC000DF537 /* LMBigListEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMBigListEntry.m; sourceTree = "<group>"; };
 		6A4BAEF01DC9C59B000DF537 /* LMTiledAlbumCoverView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMTiledAlbumCoverView.h; sourceTree = "<group>"; };
 		6A4BAEF11DC9C59B000DF537 /* LMTiledAlbumCoverView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMTiledAlbumCoverView.m; sourceTree = "<group>"; };
+		6A50AC8F1E891F3A005C7B3B /* LMTutorialView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMTutorialView.h; sourceTree = "<group>"; };
+		6A50AC901E891F3A005C7B3B /* LMTutorialView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMTutorialView.m; sourceTree = "<group>"; };
 		6A514E131CE9621B00AFB351 /* icon_dynamic_playlist.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_dynamic_playlist.png; sourceTree = "<group>"; };
 		6A514E171CEA15D900AFB351 /* LMSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMSlider.h; sourceTree = "<group>"; };
 		6A514E181CEA15D900AFB351 /* LMSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMSlider.m; sourceTree = "<group>"; };
@@ -1217,6 +1221,8 @@
 				6AFF01851DDD656E00F24D8E /* LMGuideViewController.m */,
 				6AFF01861DDD656E00F24D8E /* LMGuideViewPagerController.h */,
 				6AFF01871DDD656E00F24D8E /* LMGuideViewPagerController.m */,
+				6A50AC8F1E891F3A005C7B3B /* LMTutorialView.h */,
+				6A50AC901E891F3A005C7B3B /* LMTutorialView.m */,
 			);
 			name = Onboarding;
 			sourceTree = "<group>";
@@ -1666,6 +1672,7 @@
 				6AA5CAF51E285C0A005F853F /* LMTrackInfoView.m in Sources */,
 				6AA5CAF61E285C0A005F853F /* NSTimer+Blocks.m in Sources */,
 				6AA5CAF71E285C0A005F853F /* UIImage+ColorArt.m in Sources */,
+				6A50AC921E891F3A005C7B3B /* LMTutorialView.m in Sources */,
 				6AA5CAF81E285C0A005F853F /* LMGrabberView.m in Sources */,
 				6AA5CAF91E285C0A005F853F /* LMTiledAlbumCoverView.m in Sources */,
 				6AA5CAFA1E285C0A005F853F /* LMListEntry.m in Sources */,
@@ -1796,6 +1803,7 @@
 				6AF9D5351DE0F2AE006368B6 /* LMAlertView.m in Sources */,
 				6A4BAEEE1DC984EC000DF537 /* LMBigListEntry.m in Sources */,
 				6A6CCD5B1DB290FA006035C1 /* LMAppIcon.m in Sources */,
+				6A50AC911E891F3A005C7B3B /* LMTutorialView.m in Sources */,
 				6AEB9CFD1BACF60E00AD19FA /* main.m in Sources */,
 				6A759D591DEBF0470051E1A9 /* LMContactViewController.m in Sources */,
 				6A759D401DE8DDC50051E1A9 /* LMPebbleSettingsViewController.m in Sources */,
