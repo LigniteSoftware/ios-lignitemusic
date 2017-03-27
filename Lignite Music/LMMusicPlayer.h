@@ -23,12 +23,12 @@
 /**
  Storage key for the user's now playing collection.
  */
-#define DEFAULTS_KEY_NOW_PLAYING_COLLECTION @"nowPlayingCollection"
+#define DEFAULTS_KEY_NOW_PLAYING_COLLECTION @"nowPlayingCollectionVersion2"
 
 /**
  Storage key for the user's now playing track and its associated data.
  */
-#define DEFAULTS_KEY_NOW_PLAYING_TRACK @"nowPlayingTrack"
+#define DEFAULTS_KEY_NOW_PLAYING_TRACK @"nowPlayingTrackVersion2"
 
 /**
  LMMusicPlayerType is the type of music player, such as the system music player or Spotify.

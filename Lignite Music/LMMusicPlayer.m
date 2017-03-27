@@ -296,8 +296,9 @@ MPMediaGrouping associatedMediaTypes[] = {
 		self.delegates = [NSMutableArray new];
 		self.delegatesSubscribedToCurrentPlaybackTimeChange = [[NSMutableArray alloc]init];
 		self.delegatesSubscribedToLibraryDidChange = [[NSMutableArray alloc]init];
-		self.shuffleMode = LMMusicShuffleModeOff;
-		self.repeatMode = LMMusicRepeatModeNone;
+        if(self.repeatMode == LMMusicRepeatModeDefault){
+            self.repeatMode = LMMusicRepeatModeNone;
+        }
 		self.previousPlaybackTime = self.currentPlaybackTime;
 		
 		self.autoPlay = (self.systemMusicPlayer.playbackState == MPMusicPlaybackStatePlaying);
@@ -1270,7 +1271,7 @@ BOOL shuffleForDebug = NO;
 	
 	//Save the now playing collection to storage
 	NSMutableString *persistentIDString = [NSMutableString new];
-	for(LMMusicTrack *track in self.nowPlayingCollection.items) {
+	for(LMMusicTrack *track in self.nowPlayingCollectionSorted.items) {
 		[persistentIDString appendString:[NSString stringWithFormat:@"%lld,", track.persistentID]];
 	}
 	
@@ -1283,7 +1284,9 @@ BOOL shuffleForDebug = NO;
 	//Save the now playing track and its state to storage
 	NSDictionary *nowPlayingTrackInfo = @{
 										  @"persistentID":@(self.nowPlayingTrack.persistentID),
-										  @"playbackTime":@((NSInteger)floorf(self.currentPlaybackTime))
+										  @"playbackTime":@((NSInteger)floorf(self.currentPlaybackTime)),
+                                          @"shuffleMode":@(self.shuffleMode),
+                                          @"repeatMode":@(self.repeatMode)
 										  };
 	[userDefaults setObject:nowPlayingTrackInfo forKey:DEFAULTS_KEY_NOW_PLAYING_TRACK];
 	
@@ -1304,6 +1307,11 @@ BOOL shuffleForDebug = NO;
 	
 	NSNumber *nowPlayingTrackPersistentID = [nowPlayingTrackInfo objectForKey:@"persistentID"];
 	NSNumber *nowPlayingTrackPlaybackTime = [nowPlayingTrackInfo objectForKey:@"playbackTime"];
+    NSNumber *shuffleMode = [nowPlayingTrackInfo objectForKey:@"shuffleMode"];
+    NSNumber *repeatMode = [nowPlayingTrackInfo objectForKey:@"repeatMode"];
+    LMMusicShuffleMode nowPlayingShuffleMode = ([shuffleMode integerValue] == 1) ? LMMusicShuffleModeOn : LMMusicShuffleModeOff;
+    LMMusicRepeatMode nowPlayingRepeatMode = (LMMusicRepeatMode)[repeatMode integerValue];
+    NSLog(@"shuffle mode %d repeat %d", nowPlayingShuffleMode, nowPlayingRepeatMode);
 	LMMusicTrack *nowPlayingTrack = nil;
 	
 	if(!allPersistentIDsString || !nowPlayingTrackInfo){
@@ -1346,9 +1354,12 @@ BOOL shuffleForDebug = NO;
 	NSTimeInterval endTime = [[NSDate new]timeIntervalSince1970];
 	
 	NSLog(@"Got %ld items in %f seconds.", (long)itemCount, endTime-startTime);
+    
+    self.shuffleMode = nowPlayingShuffleMode;
+    self.repeatMode = nowPlayingRepeatMode;
 	
 	MPMediaItemCollection *oldNowPlayingCollection = [MPMediaItemCollection collectionWithItems:nowPlayingArray];
-	[self setNowPlayingCollection:oldNowPlayingCollection];
+    [self setNowPlayingCollection:oldNowPlayingCollection];
 	
 	if(!nowPlayingTrack){
 		nowPlayingTrack = [oldNowPlayingCollection.items objectAtIndex:0];
@@ -1362,11 +1373,14 @@ BOOL shuffleForDebug = NO;
 	NSLog(@"The previous playing track was %@ with playback time %ld, it's position was %ld", nowPlayingTrack.title, [nowPlayingTrackPlaybackTime integerValue], indexOfNowPlayingTrack);
 	
 	[self setNowPlayingTrack:nowPlayingTrack];
-	[self setCurrentPlaybackTime:[nowPlayingTrackPlaybackTime integerValue]];
+    if(nowPlayingShuffleMode != LMMusicShuffleModeOn){
+        [self setCurrentPlaybackTime:[nowPlayingTrackPlaybackTime integerValue]];
+    }
 	[self setIndexOfNowPlayingTrack:indexOfNowPlayingTrack];
 }
 	
 - (LMMusicTrackCollection*)nowPlayingCollection {
+    NSLog(@"Shuffle has been set to %d", self.shuffleMode);
     if(self.shuffleMode == LMMusicShuffleModeOn){
         return self.nowPlayingCollectionShuffled;
     }
@@ -1529,6 +1543,9 @@ BOOL shuffleForDebug = NO;
 	}];
 #else
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer || self.playerType == LMMusicPlayerTypeAppleMusic){
+        if(!self.nowPlayingCollection){
+            return;
+        }
         if(shuffleMode == LMMusicShuffleModeOn){
             [self reshuffleSortedCollection];
         }

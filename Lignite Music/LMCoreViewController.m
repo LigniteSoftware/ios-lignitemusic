@@ -786,6 +786,18 @@ LMControlBarViewDelegate
 	[self.view addSubview:hangOnImage];
 	
 	[hangOnImage autoPinEdgesToSuperviewEdges];
+    
+    //If user is using an iPad
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad || [(NSString*)[UIDevice currentDevice].model hasPrefix:@"iPad"]){
+        LMAlertView *alertView = [LMAlertView newAutoLayoutView];
+        alertView.title = NSLocalizedString(@"OhBoy", nil);
+        alertView.body = NSLocalizedString(@"NoiPadSupport", nil);
+        alertView.alertOptionColours = @[];
+        alertView.alertOptionTitles = @[];
+        [alertView launchOnView:self.view withCompletionHandler:nil];
+        
+        return;
+    }
 	    
 //#ifdef SPOTIFY
 //	[[LMSpotifyLibrary sharedLibrary] buildDatabase];

@@ -30,12 +30,6 @@
  */
 
 
-//Temporary
-"PleaseStopSendingNavigationFeedbackTitle" = "Bitte lesen";
-"PleaseStopSendingNavigationFeedbackDescription" = "Sende uns bitte keine Rückmeldung betr. der Navigation innerhalb der einzelnen Ansichten.\n\nDu kannst jeweils von links nach rechts wischen / swipen, um zurückzugehen. Es tut uns leid, dass es unklar war.\n\nWir arbeiten an einer einfacheren Lösung.\n\nDanke fürs Verständnis.";
-
-
-
 //New strings
 
 
@@ -44,6 +38,8 @@
  New strings
  
  */
+
+"NoiPadSupport" = "Sorry, Lignite Music unterstützt iPad in Zukunft, zurzeit jedoch noch nicht.\n\nStatt dir eine fehlerbehaftete Version auf dem iPad zu präsentieren, belassen wir es hierbei. Wir überlassen die Entscheidung dir, ob du die App zwischenzeitlich von deinem iPad deinstallieren willst oder nicht..\n\nWir werden eine allfällige iPad-Version via Kickstarter ankündigen.\n\nVielen Dank für dein Verständnis.";
 
 "TapViewAgainToOpenSourceSelector" = "Ansicht-Tab antippen, um die Liste erneut anzuzeigen";
 
