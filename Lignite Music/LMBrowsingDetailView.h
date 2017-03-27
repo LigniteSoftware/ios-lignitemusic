@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "LMCoreViewController.h"
 #import "LMMusicPlayer.h"
-#import "LMBrowsingView.h"
 #import "LMTableView.h"
 #ifdef SPOTIFY
 #import "Spotify.h"

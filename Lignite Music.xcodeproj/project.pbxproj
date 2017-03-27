@@ -116,7 +116,6 @@
 		6A838A951E07A8FF006E7DE0 /* LMPurchaseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A838A941E07A8FF006E7DE0 /* LMPurchaseManager.m */; };
 		6A838A971E07A9CF006E7DE0 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A838A961E07A9CF006E7DE0 /* StoreKit.framework */; };
 		6A8CF2B91DB4952A00777525 /* LMSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A8CF2B81DB4952A00777525 /* LMSettings.m */; };
-		6A92F8241DD6D62A002045C2 /* LMBrowsingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A92F8231DD6D62A002045C2 /* LMBrowsingView.m */; };
 		6A92F8271DD6DF00002045C2 /* LMBrowsingDetailView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A92F8261DD6DF00002045C2 /* LMBrowsingDetailView.m */; };
 		6A9C053B1DB4441200713D1C /* icon_albums.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A9C05371DB4441200713D1C /* icon_albums.png */; };
 		6A9C053C1DB4441200713D1C /* icon_compilations.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A9C05381DB4441200713D1C /* icon_compilations.png */; };
@@ -131,7 +130,6 @@
 		6AA5CAF01E285C0A005F853F /* LMSettingsLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AA445A21D5AD7B0004C6739 /* LMSettingsLabel.m */; };
 		6AA5CAF11E285C0A005F853F /* LMTriangleContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A32A9EB1DC68F440056CC60 /* LMTriangleContainerView.m */; };
 		6AA5CAF21E285C0A005F853F /* LMSectionHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A26B4691DE2D1A3008B5B69 /* LMSectionHeaderView.m */; };
-		6AA5CAF31E285C0A005F853F /* LMBrowsingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A92F8231DD6D62A002045C2 /* LMBrowsingView.m */; };
 		6AA5CAF41E285C0A005F853F /* LMFeedbackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AF751621E0446D80001E18B /* LMFeedbackViewController.m */; };
 		6AA5CAF51E285C0A005F853F /* LMTrackInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A3211401DA732470060DD07 /* LMTrackInfoView.m */; };
 		6AA5CAF61E285C0A005F853F /* NSTimer+Blocks.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AAD5A521E0C655A00D8B406 /* NSTimer+Blocks.m */; };
@@ -521,8 +519,6 @@
 		6A838A961E07A9CF006E7DE0 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		6A8CF2B71DB4952A00777525 /* LMSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMSettings.h; sourceTree = "<group>"; };
 		6A8CF2B81DB4952A00777525 /* LMSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMSettings.m; sourceTree = "<group>"; };
-		6A92F8221DD6D62A002045C2 /* LMBrowsingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMBrowsingView.h; sourceTree = "<group>"; };
-		6A92F8231DD6D62A002045C2 /* LMBrowsingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMBrowsingView.m; sourceTree = "<group>"; };
 		6A92F8251DD6DF00002045C2 /* LMBrowsingDetailView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMBrowsingDetailView.h; sourceTree = "<group>"; };
 		6A92F8261DD6DF00002045C2 /* LMBrowsingDetailView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMBrowsingDetailView.m; sourceTree = "<group>"; };
 		6A9C05371DB4441200713D1C /* icon_albums.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_albums.png; sourceTree = "<group>"; };
@@ -1013,8 +1009,6 @@
 				6A92F8261DD6DF00002045C2 /* LMBrowsingDetailView.m */,
 				6A59A51E1DE825C200B346AC /* LMBrowsingDetailViewController.h */,
 				6A59A51F1DE825C200B346AC /* LMBrowsingDetailViewController.m */,
-				6A92F8221DD6D62A002045C2 /* LMBrowsingView.h */,
-				6A92F8231DD6D62A002045C2 /* LMBrowsingView.m */,
 			);
 			name = Core;
 			sourceTree = "<group>";
@@ -1668,7 +1662,6 @@
 				6AA5CAF11E285C0A005F853F /* LMTriangleContainerView.m in Sources */,
 				6AA5CBD71E2873BB005F853F /* Spotify.m in Sources */,
 				6AA5CAF21E285C0A005F853F /* LMSectionHeaderView.m in Sources */,
-				6AA5CAF31E285C0A005F853F /* LMBrowsingView.m in Sources */,
 				6AA5CAF41E285C0A005F853F /* LMFeedbackViewController.m in Sources */,
 				6AA5CAF51E285C0A005F853F /* LMTrackInfoView.m in Sources */,
 				6AA5CAF61E285C0A005F853F /* NSTimer+Blocks.m in Sources */,
@@ -1763,7 +1756,6 @@
 				6AA445A31D5AD7B0004C6739 /* LMSettingsLabel.m in Sources */,
 				6A32A9EC1DC68F440056CC60 /* LMTriangleContainerView.m in Sources */,
 				6A26B46A1DE2D1A3008B5B69 /* LMSectionHeaderView.m in Sources */,
-				6A92F8241DD6D62A002045C2 /* LMBrowsingView.m in Sources */,
 				6AD4B8A71E394A6700BE3177 /* LMButtonNavigationBar.m in Sources */,
 				6AF751631E0446D80001E18B /* LMFeedbackViewController.m in Sources */,
 				6AB104791E5669BE00213396 /* MPMediaItemCollection+LigniteInfo.m in Sources */,

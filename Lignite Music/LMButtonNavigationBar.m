@@ -233,7 +233,7 @@
 }
 
 - (void)minimize {
-    //return;
+    return;
     
     if(self.isMinimized){
         return;
@@ -480,6 +480,7 @@
 		self.minibarBackgroundView.layer.shadowOffset = CGSizeMake(0, 0);
 		self.minibarBackgroundView.layer.masksToBounds = NO;
 		self.minibarBackgroundView.layer.shadowRadius = 5;
+        self.minibarBackgroundView.alpha = 0;
 		
 		UIPanGestureRecognizer *minibarBackgroundViewGrabberMoveRecognizer = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(handlePan:)];
 		minibarBackgroundViewGrabberMoveRecognizer.delegate = self;

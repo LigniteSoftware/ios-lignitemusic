@@ -483,8 +483,8 @@ LMControlBarViewDelegate
 		[self.titleView scrollToTrackWithPersistentID:persistentID];
 	}
 	else{
-		LMBrowsingView *browsingView = self.currentSource;
-		[browsingView scrollToItemWithPersistentID:persistentID];
+		LMCompactBrowsingView *compactView = self.currentSource;
+		[compactView scrollToItemWithPersistentID:persistentID];
 	}
 	
 	[self.navigationController dismissViewControllerAnimated:YES completion:nil];
