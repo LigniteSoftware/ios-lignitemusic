@@ -87,6 +87,16 @@
  */
 @property BOOL musicWasUserSet;
 
+/**
+ The now playing collection which is sorted.
+ */
+@property LMMusicTrackCollection *nowPlayingCollectionSorted;
+
+/**
+ The now playing collection which is shuffled.
+ */
+@property LMMusicTrackCollection *nowPlayingCollectionShuffled;
+
 @end
 
 @implementation LMMusicPlayer
@@ -1357,7 +1367,19 @@ BOOL shuffleForDebug = NO;
 }
 	
 - (LMMusicTrackCollection*)nowPlayingCollection {
-	return _nowPlayingCollection;
+    if(self.shuffleMode == LMMusicShuffleModeOn){
+        return self.nowPlayingCollectionShuffled;
+    }
+	return self.nowPlayingCollectionSorted;
+}
+    
+- (void)reshuffleSortedCollection {
+    NSMutableArray *shuffledArray = [NSMutableArray arrayWithArray:self.nowPlayingCollectionSorted.items];
+    [self shuffleArray:shuffledArray];
+    for(LMMusicTrack *track in shuffledArray){
+        NSLog(@"Track %@", track.title);
+    }
+    self.nowPlayingCollectionShuffled = [MPMediaItemCollection collectionWithItems:shuffledArray];
 }
 
 - (void)setNowPlayingCollection:(LMMusicTrackCollection*)nowPlayingCollection {
@@ -1367,17 +1389,18 @@ BOOL shuffleForDebug = NO;
 //	[self.spotifyPlayer ]
 #else
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer || self.playerType == LMMusicPlayerTypeAppleMusic){
+        self.nowPlayingCollectionSorted = nowPlayingCollection;
+        [self reshuffleSortedCollection];
+        
 		if(!self.nowPlayingCollection){
 			[self.systemMusicPlayer setQueueWithQuery:self.bullshitQuery];
 			[self.systemMusicPlayer setNowPlayingItem:nil];
 		}
 		NSLog(@"Setting now playing collection to %@", nowPlayingCollection);
-		[self.systemMusicPlayer setQueueWithItemCollection:nowPlayingCollection];
-		[self.systemMusicPlayer setNowPlayingItem:[[nowPlayingCollection items] objectAtIndex:0]];
+        [self.systemMusicPlayer setQueueWithItemCollection:self.nowPlayingCollection];
+		[self.systemMusicPlayer setNowPlayingItem:[[self.nowPlayingCollection items] objectAtIndex:0]];
 	}
 #endif
-	
-	_nowPlayingCollection = nowPlayingCollection;
 }
 
 - (void)setPlayerType:(LMMusicPlayerType)playerType {
@@ -1506,11 +1529,12 @@ BOOL shuffleForDebug = NO;
 	}];
 #else
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer || self.playerType == LMMusicPlayerTypeAppleMusic){
-		MPMusicShuffleMode associatedShuffleModes[] = {
-			MPMusicShuffleModeOff,
-			MPMusicShuffleModeSongs
-		};
-		self.systemMusicPlayer.shuffleMode = associatedShuffleModes[shuffleMode];
+        if(shuffleMode == LMMusicShuffleModeOn){
+            [self reshuffleSortedCollection];
+        }
+        NSInteger previousIndexOfNowPlaying = self.indexOfNowPlayingTrack;
+        [self.systemMusicPlayer setQueueWithItemCollection:self.nowPlayingCollection];
+        [self.systemMusicPlayer setNowPlayingItem:[self.nowPlayingCollection.items objectAtIndex:previousIndexOfNowPlaying]];
 	}
 #endif
 	
