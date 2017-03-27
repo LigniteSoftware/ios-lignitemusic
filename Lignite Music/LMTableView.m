@@ -67,9 +67,22 @@
 }
 
 - (void)setBottomSpacing:(NSUInteger)bottomSpacing {
+    BOOL shouldReload = (bottomSpacing != _bottomSpacing);
+    
     _bottomSpacing = bottomSpacing;
     
-    [self reloadSubviewData];
+    NSLog(@"Reloading shit");
+    
+    if(shouldReload){
+        [self reloadContentInset];
+    }
+}
+
+- (void)reloadContentInset {
+    CGFloat dummyViewHeight = 100;
+    UIView *dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, WINDOW_FRAME.size.width, dummyViewHeight)];
+    self.tableHeaderView = dummyView;
+    self.contentInset = UIEdgeInsetsMake(-dummyViewHeight, 0, self.bottomSpacing, 0);
 }
 
 - (void)reloadSubviewData {
@@ -86,10 +99,7 @@
 	}
 	self.hasRegisteredCellIdentifiers = YES;
 	
-	CGFloat dummyViewHeight = 100;
-	UIView *dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, WINDOW_FRAME.size.width, dummyViewHeight)];
-	self.tableHeaderView = dummyView;
-	self.contentInset = UIEdgeInsetsMake(-dummyViewHeight, 0, self.bottomSpacing, 0);
+    [self reloadContentInset];
 	
 	[self.subviewDataSource amountOfObjectsRequiredChangedTo:self.requiredAmountOfObjects forTableView:self];
 }
@@ -147,7 +157,7 @@
 	
 	for(int i = 0; i < lmCell.contentView.subviews.count; i++){
 		id subview = [lmCell.contentView.subviews objectAtIndex:i];
-		NSLog(@"index %ld types %@ %@", indexPath.section, [[subview class] description], [[newSubview class] description]);
+//		NSLog(@"index %ld types %@ %@", indexPath.section, [[subview class] description], [[newSubview class] description]);
 		if(([subview class] == [UIView class]      && [newSubview class] == [LMListEntry class])
 		|| ([subview class] == [LMListEntry class] && [newSubview class] == [UIView class])){ //If there's a big list entry on top and we're replacing it with a list entry or vice versa, remove the old view from the superview and attach the new one
 			[subview removeFromSuperview];
