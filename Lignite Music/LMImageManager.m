@@ -416,7 +416,7 @@
             return;
         }
         
-        NSLog(@"Response from Discogs made Lignite Music smile. Let's do this.");
+        NSLog(@"First response shitpost %ld %@", code, [[NSString alloc] initWithData:rawBody encoding:NSUTF8StringEncoding]);
         
         NSArray *searchResultArray = [searchJSONResult objectForKey:@"results"];
         NSDictionary *searchResultObject = nil;
@@ -453,6 +453,8 @@
                 return;
             }
             
+            NSLog(@"Second response shitpost %ld %@", code, [[NSString alloc] initWithData:rawBody encoding:NSUTF8StringEncoding]);
+            
             
             NSDictionary *finalResultJSONObject = body.JSONObject;
             NSInteger amountOfCallsLeft = [[responseHeaders objectForKey:@"X-Discogs-Ratelimit-Remaining"] integerValue];
@@ -464,10 +466,19 @@
             
             NSArray *imagesObjectArray = [finalResultJSONObject objectForKey:@"images"];
             
+            BOOL hasPrimaryImage = NO;
+            for(NSDictionary *imageObject in imagesObjectArray){
+                if([[imageObject objectForKey:@"type"] isEqualToString:@"primary"]){
+                    hasPrimaryImage = YES;
+                    break;
+                }
+            }
+            
             for(NSDictionary *imageObject in imagesObjectArray){
                 NSString *imageType = [imageObject objectForKey:@"type"];
                 NSString *imageURL = [imageObject objectForKey:@"uri"];
-                if([imageType isEqualToString:@"primary"] && imageURL){
+                //The image URL must exist and not be a blank string, and if the array has a primary image object, use that, otherwise use secondary
+                if(imageURL && ![imageURL isEqualToString:@""] && ((hasPrimaryImage && [imageType isEqualToString:@"primary"]) || !hasPrimaryImage)){
                     NSLog(@"Downloading %@", imageURL);
                     
                     SDWebImageDownloader *downloader = [SDWebImageDownloader sharedDownloader];
