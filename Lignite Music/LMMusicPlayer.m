@@ -1380,7 +1380,6 @@ BOOL shuffleForDebug = NO;
 }
 	
 - (LMMusicTrackCollection*)nowPlayingCollection {
-    NSLog(@"Shuffle has been set to %d", self.shuffleMode);
     if(self.shuffleMode == LMMusicShuffleModeOn){
         return self.nowPlayingCollectionShuffled;
     }

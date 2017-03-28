@@ -808,6 +808,12 @@ LMControlBarViewDelegate
 //	return;
     
     
+    
+    [[LMImageManager sharedImageManager] downloadImageForMusicTrack:nil forCategory:LMImageManagerCategoryArtistImages];
+    
+    return;
+    
+    
     LMTutorialView *tutorialView = [[LMTutorialView alloc] initForAutoLayoutWithTitle:@"nice meme" description:@"classic"];
     [self.view addSubview:tutorialView];
     [tutorialView autoPinEdgesToSuperviewEdges];

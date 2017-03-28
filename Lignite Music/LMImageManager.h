@@ -71,6 +71,8 @@ typedef enum {
 @interface LMImageManager : NSObject
 
 
+- (void)downloadImageForMusicTrack:(LMMusicTrack*)randomTrack forCategory:(LMImageManagerCategory)category;
+
 
 /**
  The system's shared image manager.
