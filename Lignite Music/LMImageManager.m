@@ -361,15 +361,21 @@
 }
 
 - (void)testDownloadWithCallback:(ShitpostCallback)callback {
-    LMMusicTrack *randomTrack = nil;
-    LMImageManagerCategory category = LMImageManagerCategoryArtistImages;
+    
+
+}
+
+- (void)downloadImageForMusicTrack:(LMMusicTrack*)randomTrack forCategory:(LMImageManagerCategory)category {
+    
+//    LMMusicTrack *randomTrack = nil;
+//    LMImageManagerCategory category = LMImageManagerCategoryArtistImages;
     
     BOOL isArtistCategory = (category == LMImageManagerCategoryArtistImages);
     
     NSString *typeString = isArtistCategory ? @"artist" : @"release";
     NSString *queryString = isArtistCategory ? randomTrack.artist : randomTrack.albumTitle;
-    typeString = @"artist";
-    queryString = @"chiddy bang";
+    //    typeString = @"artist";
+    //    queryString = @"chiddy bang";
     if(!queryString){ //If the name doesn't exist, just reject it. Users gotta check their ID3 tags.
         [self setMusicTrack:randomTrack asBlacklisted:YES forCategory:category];
         return;
@@ -391,7 +397,6 @@
     }] asJsonAsync:^(UNIHTTPJsonResponse* response, NSError *error) {
         // This is the asyncronous callback block
         NSInteger code = response.code;
-        NSDictionary *responseHeaders = response.headers;
         UNIJsonNode *body = response.body;
         NSDictionary *searchJSONResult = body.JSONObject;
         NSData *rawBody = response.rawBody;
@@ -410,7 +415,10 @@
             searchResultObject = [searchResultArray objectAtIndex:0];
         }
         else{
-            NSLog(@"For some reason, there were no results. Going to reject this one, boss.");
+            NSLog(@"For some reason, there were no results. Going to reject and blacklist this one, boss.");
+                    
+            [self setMusicTrack:randomTrack asBlacklisted:YES forCategory:category];
+
             return;
         }
         
@@ -429,7 +437,17 @@
             NSDictionary *responseHeaders = response.headers;
             UNIJsonNode *body = response.body;
             NSData *rawBody = response.rawBody;
+            
+            if(code != 200){
+                NSLog(@"There was an error trying to get the final result object, stopping");
+                return;
+            }
+            
+            
             NSDictionary *finalResultJSONObject = body.JSONObject;
+            NSInteger amountOfCallsLeft = [[responseHeaders objectForKey:@"X-Discogs-Ratelimit-Remaining"] integerValue];
+            
+            NSLog(@"Amount of calls left %ld", amountOfCallsLeft);
             
             NSArray *imagesObjectArray = [finalResultJSONObject objectForKey:@"images"];
             
@@ -443,20 +461,13 @@
                     [downloader downloadImageWithURL:[NSURL URLWithString:imageURL]
                                              options:kNilOptions
                                             progress:^(NSInteger receivedSize, NSInteger expectedSize) {
-                                                NSLog(@"%.02f%% complete", (float)receivedSize/(float)expectedSize * 100);
+//                                                NSLog(@"%.02f%% complete", (float)receivedSize/(float)expectedSize * 100);
                                             }
                                            completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished) {
                                                if(image && finished) {
                                                    LMImageManagerConditionLevel currentConditionLevel = [self conditionLevelForDownloadingForCategory:category];
                                                    
                                                    if(currentConditionLevel == LMImageManagerConditionLevelOptimal){
-                                                       //                                                       NSLog(@"Done, now storing to %@.", imageCacheKey);
-                                                       
-                                                       //                                                       [[self imageCacheForCategory:category] storeImage:image forKey:imageCacheKey];
-                                                       
-                                                       //                                                       [self notifyDelegatesOfCacheSizeChangeForCategory:category];
-                                                       //                                                       [self notifyDelegatesOfImageCacheChangeForCategory:category];
-                                                       
                                                        //Calculate which is smaller, between width/height
                                                        BOOL widthIsSmaller = (image.size.width < image.size.height);
                                                        //Figure out the smaller and larger size based off of that
@@ -472,11 +483,21 @@
                                                        UIImage *croppedImage = [UIImage imageWithCGImage:imageRef];
                                                        CGImageRelease(imageRef);
                                                        
-                                                       NSLog(@"Done. Crop rect %@, new size %@.", NSStringFromCGRect(newCropRect), NSStringFromCGSize(croppedImage.size));
                                                        
-                                                       dispatch_sync(dispatch_get_main_queue(), ^{
-                                                           callback(croppedImage);
-                                                       });
+                                                       NSString *imageCacheKey = [self imageCacheKeyForMusicTrack:randomTrack forCategory:category];
+                                                       NSLog(@"Done, now storing to %@.", imageCacheKey);
+                                                       
+                                                       [[self imageCacheForCategory:category] storeImage:croppedImage forKey:imageCacheKey];
+                                                       
+                                                       [self notifyDelegatesOfCacheSizeChangeForCategory:category];
+                                                       [self notifyDelegatesOfImageCacheChangeForCategory:category];
+                                                       
+                                                       
+                                                       //                                                       NSLog(@"Done. Crop rect %@, new size %@.", NSStringFromCGRect(newCropRect), NSStringFromCGSize(croppedImage.size));
+                                                       //
+                                                       //                                                       dispatch_sync(dispatch_get_main_queue(), ^{
+                                                       //                                                           callback(croppedImage);
+                                                       //                                                       });
                                                    }
                                                    else{
                                                        NSLog(@"Not storing, conditions aren't right.");
@@ -486,128 +507,11 @@
                 }
             }
             
-            NSLog(@"Shitpost %ld %@ %@", code, response.headers, [[NSString alloc] initWithData:rawBody encoding:NSUTF8StringEncoding]);
+            //            NSLog(@"Shitpost %ld %@ %@", code, response.headers, [[NSString alloc] initWithData:rawBody encoding:NSUTF8StringEncoding]);
         }];
         
         return;
     }];
-
-}
-
-- (void)downloadImageForMusicTrack:(LMMusicTrack*)randomTrack forCategory:(LMImageManagerCategory)category {
-    
-//	NSError *error;
-//	
-//	//Prepare the contents of the search
-//	NSString *typeOfSearch = @"";
-//	NSString *imageNameSearchString = @"";
-//	switch(category){
-//		case LMImageManagerCategoryAlbumImages:
-//			typeOfSearch = @"album";
-//			imageNameSearchString = randomTrack.albumTitle;
-//			
-//			if(randomTrack.artist){
-//				imageNameSearchString = [NSString stringWithFormat:@"%@ %@", randomTrack.albumTitle, randomTrack.artist];
-//			}
-//			break;
-//		case LMImageManagerCategoryArtistImages:
-//			typeOfSearch = @"artist";
-//			imageNameSearchString = randomTrack.artist;
-//			break;
-//	}
-//	
-//	NSLog(@"Download search beginning an %@ image, with contents %@", typeOfSearch, imageNameSearchString);
-//	
-//	NSString *matchesString = [NSString stringWithFormat:@"%@matches", typeOfSearch];
-//	
-//	imageNameSearchString = [imageNameSearchString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
-//	
-//	//Prepare the API url
-//	NSString *urlString = [NSString stringWithFormat:@"https://api.discogs.com/artists/%ld?method=%@.search&%@=%@&limit=%d&api_key=%@&format=json",
-//                           1000000
-//						   typeOfSearch, //For the method
-//						   typeOfSearch, //For the variable name
-//						   imageNameSearchString, //The actual search query
-//						   LMLastFMItemsPerPageLimit, //The limit of items per page
-//						   LMImageAPIKey]; //Our API key
-//	
-//	NSLog(@"%@", urlString);
-//	
-//	//Get the data from the API URL
-//	NSURL *jsonURL = [NSURL URLWithString:urlString];
-//	NSData *data = [NSData dataWithContentsOfURL:jsonURL];
-//	if(!data){
-//		return;
-//	}
-//	NSDictionary *jsonResponse = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
-//
-//	//Get the items of search results that were returned
-//	NSArray *items = [[[jsonResponse objectForKey:@"results"] objectForKey:matchesString] objectForKey:typeOfSearch];
-//	
-//	//Loop through each one
-//	for(int i = 0; i < items.count; i++){
-//		NSDictionary *item = [items objectAtIndex:i];
-//		
-//		NSLog(@"%d Image name %@", i, [item objectForKey:@"name"]);
-//		//Get the item's images (each have a different size)
-//		NSArray *itemImages = [item objectForKey:@"image"];
-//		
-//		//Loop through each of those
-//		for(int itemImageIndex = 0; itemImageIndex < [itemImages count]; itemImageIndex++){
-//			//Get that image object
-//			NSDictionary *itemImage = [itemImages objectAtIndex:itemImageIndex];
-//			
-//			NSString *itemImageURL = [itemImage objectForKey:@"#text"];
-//			NSString *itemImageSize = [itemImage objectForKey:@"size"];
-//			NSString *sizeRequired = @"extralarge";
-//			
-//			//Check if it's the size we need
-//			if([itemImageSize isEqualToString:sizeRequired] && ![itemImageURL isEqualToString:@""]){
-//				NSString *imageCacheKey = [self imageCacheKeyForMusicTrack:randomTrack forCategory:category];
-//				
-//				NSLog(@"Cache key %@", imageCacheKey);
-//				
-//				if([self highQualityImages]){
-//					itemImageURL = [itemImageURL stringByReplacingOccurrencesOfString:@"/300x300" withString:@"/500x500"];
-//					NSLog(@"High quality image being downloaded from %@.", itemImageURL);
-//				}
-//				else{
-//					NSLog(@"Extra large image @ %@", itemImageURL);
-//				}
-//
-//				//Good to download!
-//				
-//SDWebImageDownloader *downloader = [SDWebImageDownloader sharedDownloader];
-//[downloader downloadImageWithURL:[NSURL URLWithString:itemImageURL]
-//						 options:0
-//						progress:^(NSInteger receivedSize, NSInteger expectedSize) {
-////											NSLog(@"%.02f%% complete", (float)receivedSize/(float)expectedSize * 100);
-//						}
-//					   completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished) {
-//						   if(image && finished) {
-//							   LMImageManagerConditionLevel currentConditionLevel = [self conditionLevelForDownloadingForCategory:category];
-//							   
-//							   if(currentConditionLevel == LMImageManagerConditionLevelOptimal){
-//								   NSLog(@"Done, now storing to %@.", imageCacheKey);
-//								   
-//								   [[self imageCacheForCategory:category] storeImage:image forKey:imageCacheKey];
-//								   
-//								   [self notifyDelegatesOfCacheSizeChangeForCategory:category];
-//								   [self notifyDelegatesOfImageCacheChangeForCategory:category];
-//							   }
-//							   else{
-//								   NSLog(@"Not storing, conditions aren't right.");
-//							   }
-//						   }
-//					   }];
-//				return;
-//			}
-//		}
-//	}
-//	
-//	NSLog(@"Couldn't find anything, blacklisting.");
-//	
-//	[self setMusicTrack:randomTrack asBlacklisted:YES forCategory:category];
 }
 
 - (UIImage*)imageForMusicTrack:(LMMusicTrack*)musicTrack withCategory:(LMImageManagerCategory)category {

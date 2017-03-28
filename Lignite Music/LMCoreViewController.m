@@ -809,18 +809,18 @@ LMControlBarViewDelegate
     
     
     
-    [[LMImageManager sharedImageManager] testDownloadWithCallback:^(UIImage *croppedImage) {
-        UIImageView *hangOnImage = [UIImageView newAutoLayoutView];
-        hangOnImage.image = croppedImage;
-        hangOnImage.contentMode = UIViewContentModeScaleAspectFill;
-        [self.view addSubview:hangOnImage];
-        
-        [hangOnImage autoCenterInSuperview];
-        [hangOnImage autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
-        [hangOnImage autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.view];
-    }];
-    
-    return;
+//    [[LMImageManager sharedImageManager] testDownloadWithCallback:^(UIImage *croppedImage) {
+//        UIImageView *hangOnImage = [UIImageView newAutoLayoutView];
+//        hangOnImage.image = croppedImage;
+//        hangOnImage.contentMode = UIViewContentModeScaleAspectFill;
+//        [self.view addSubview:hangOnImage];
+//        
+//        [hangOnImage autoCenterInSuperview];
+//        [hangOnImage autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
+//        [hangOnImage autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.view];
+//    }];
+//    
+//    return;
     
     
     LMTutorialView *tutorialView = [[LMTutorialView alloc] initForAutoLayoutWithTitle:@"nice meme" description:@"classic"];
