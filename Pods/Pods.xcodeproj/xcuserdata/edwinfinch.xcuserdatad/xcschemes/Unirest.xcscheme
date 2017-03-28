@@ -14,10 +14,10 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = '9E367890011237AD3450A178A1C21E11'
-               BlueprintName = 'YYImage'
+               BlueprintIdentifier = '3018611FAF688D4BB3CF955D223FF9E8'
+               BlueprintName = 'Unirest'
                ReferencedContainer = 'container:Pods.xcodeproj'
-               BuildableName = 'YYImage.framework'>
+               BuildableName = 'Unirest.framework'>
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>

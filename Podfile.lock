@@ -43,6 +43,7 @@ PODS:
   - SDWebImage/Core (3.8.2)
   - SecureNSUserDefaults (1.0.1):
     - CocoaSecurity (~> 1.2.4)
+  - Unirest (1.1.4)
   - YYImage (1.0.4):
     - YYImage/Core (= 1.0.4)
   - YYImage/Core (1.0.4)
@@ -61,6 +62,7 @@ DEPENDENCIES:
   - PureLayout
   - SDWebImage (~> 3.8)
   - SecureNSUserDefaults (~> 1.0.1)
+  - Unirest
   - YYImage
 
 SPEC CHECKSUMS:
@@ -78,8 +80,9 @@ SPEC CHECKSUMS:
   PureLayout: 4d550abe49a94f24c2808b9b95db9131685fe4cd
   SDWebImage: 098e97e6176540799c27e804c96653ee0833d13c
   SecureNSUserDefaults: 8a07fc6a6fde31c7f8fa6ead73d3c9c3706a6364
+  Unirest: 5e4d93eaf32463bf619a4ecd3bbc8c32acf21eac
   YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
 
-PODFILE CHECKSUM: ab1c5c0e8a2d0f939a77f46c76ef66e459fda03d
+PODFILE CHECKSUM: cfea5a2168750832e024de79d319dd3fa85105b4
 
 COCOAPODS: 1.2.0

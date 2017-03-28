@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <PureLayout/PureLayout.h>
+#import <Unirest/UNIRest.h>
 #import "LMImageManager.h"
 #import "LMColour.h"
 #import "LMAlertView.h"
@@ -33,25 +34,32 @@
 #define LMImageManagerCacheNamespaceAlbum @"LMImageManagerCacheAlbum"
 
 /**
- Our LastFM API key. God forbid this ever get cutoff.
+ Our API key for the current image API. God forbid this ever get cutoff.
 
  @return The API key.
  */
-#define LMLastFMAPIKey @"8f53580e3745f1b99e3446ff5f82b7df"
+#define LMImageAPIKey @"PysouAgyWfodlbXkRrAq"
+
+/**
+ The API secret for the current image API. Godspeed.
+
+ @return The API secret.
+ */
+#define LMImageAPISecret @"uPoAOoqKhwgkrPebIrxTktOHEyjgslBK"
 
 /**
  The amount of calls which can be made per second as per the rate limit of the last.fm API.
 
  @return The amount of calls.
  */
-#define LastFMAPICallsPerSecondLimit 5.0
+#define ImageAPICallsPerSecondLimit 4.0
 
 /**
  The amount of calls we will actually make per second maximum.
 
  @return The amount of calls.
  */
-#define LMLastFMAPICallsPerSecondLimit 2.0
+#define LMImageAPICallsPerSecondLimit 0.25
 //TODO: change this to 3.0 for release
 
 /**
@@ -59,7 +67,7 @@
 
  @return The amount of seconds.
  */
-#define LMLastFMAPISecondsBetweenAPICalls (1.0/LMLastFMAPICallsPerSecondLimit)
+#define LMImageAPISecondsBetweenAPICalls (1.0/LMImageAPICallsPerSecondLimit)
 
 /**
  The amount of items per page that LastFM should return in its API results.
@@ -380,12 +388,13 @@
 	imageNameSearchString = [imageNameSearchString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
 	
 	//Prepare the API url
-	NSString *urlString = [NSString stringWithFormat:@"https://ws.audioscrobbler.com/2.0/?method=%@.search&%@=%@&limit=%d&api_key=%@&format=json",
+	NSString *urlString = [NSString stringWithFormat:@"https://api.discogs.com/artists/%ld?method=%@.search&%@=%@&limit=%d&api_key=%@&format=json",
+                           1000000
 						   typeOfSearch, //For the method
 						   typeOfSearch, //For the variable name
 						   imageNameSearchString, //The actual search query
 						   LMLastFMItemsPerPageLimit, //The limit of items per page
-						   LMLastFMAPIKey]; //Our API key
+						   LMImageAPIKey]; //Our API key
 	
 	NSLog(@"%@", urlString);
 	
@@ -477,7 +486,7 @@ SDWebImageDownloader *downloader = [SDWebImageDownloader sharedDownloader];
 - (void)downloadNextImageInQueue {
 	__weak id weakSelf = self;
 	
-	double delayInSeconds = 1.0 / LMLastFMAPICallsPerSecondLimit;
+	double delayInSeconds = 1.0 / LMImageAPICallsPerSecondLimit;
 	
 	dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
 	dispatch_after(popTime, dispatch_get_global_queue(NSQualityOfServiceUtility, 0), ^(void){
@@ -494,9 +503,9 @@ SDWebImageDownloader *downloader = [SDWebImageDownloader sharedDownloader];
 		
 		NSTimeInterval differenceInTime = currentDownloadTime-lastDownloadTime;
 		
-//		NSLog(@"Difference %f seconds between %f", differenceInTime, LMLastFMAPISecondsBetweenAPICalls);
+//		NSLog(@"Difference %f seconds between %f", differenceInTime, LMImageAPISecondsBetweenAPICalls);
 		
-		if(differenceInTime < LMLastFMAPISecondsBetweenAPICalls){
+		if(differenceInTime < LMImageAPISecondsBetweenAPICalls){
 			NSLog(@"Attempting to make calls to fast! Rejecting.");
 			return;
 		}

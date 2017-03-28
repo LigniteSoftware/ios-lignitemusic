@@ -812,7 +812,7 @@ LMControlBarViewDelegate
     [self.view addSubview:tutorialView];
     [tutorialView autoPinEdgesToSuperviewEdges];
     
-    return;
+//    return;
     
 	
 #ifdef SPOTIFY

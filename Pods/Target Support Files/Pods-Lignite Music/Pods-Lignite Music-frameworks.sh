@@ -99,6 +99,7 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "$BUILT_PRODUCTS_DIR/PureLayout/PureLayout.framework"
   install_framework "$BUILT_PRODUCTS_DIR/SDWebImage/SDWebImage.framework"
   install_framework "$BUILT_PRODUCTS_DIR/SecureNSUserDefaults/SecureNSUserDefaults.framework"
+  install_framework "$BUILT_PRODUCTS_DIR/Unirest/Unirest.framework"
   install_framework "$BUILT_PRODUCTS_DIR/YYImage/YYImage.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
@@ -112,6 +113,7 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "$BUILT_PRODUCTS_DIR/PureLayout/PureLayout.framework"
   install_framework "$BUILT_PRODUCTS_DIR/SDWebImage/SDWebImage.framework"
   install_framework "$BUILT_PRODUCTS_DIR/SecureNSUserDefaults/SecureNSUserDefaults.framework"
+  install_framework "$BUILT_PRODUCTS_DIR/Unirest/Unirest.framework"
   install_framework "$BUILT_PRODUCTS_DIR/YYImage/YYImage.framework"
 fi
 if [ "${COCOAPODS_PARALLEL_CODE_SIGN}" == "true" ]; then
