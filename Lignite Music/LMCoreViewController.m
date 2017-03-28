@@ -781,12 +781,12 @@ LMControlBarViewDelegate
 	
 //	return;
 	    
-	UIImageView *hangOnImage = [UIImageView newAutoLayoutView];
-	hangOnImage.image = [UIImage imageNamed:@"splash_wings.png"];
-	hangOnImage.contentMode = UIViewContentModeScaleAspectFill;
-	[self.view addSubview:hangOnImage];
-	
-	[hangOnImage autoPinEdgesToSuperviewEdges];
+//	UIImageView *hangOnImage = [UIImageView newAutoLayoutView];
+//	hangOnImage.image = [UIImage imageNamed:@"splash_wings.png"];
+//	hangOnImage.contentMode = UIViewContentModeScaleAspectFill;
+//	[self.view addSubview:hangOnImage];
+//	
+//	[hangOnImage autoPinEdgesToSuperviewEdges];
     
     //If user is using an iPad
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad || [(NSString*)[UIDevice currentDevice].model hasPrefix:@"iPad"]){
@@ -809,7 +809,16 @@ LMControlBarViewDelegate
     
     
     
-    [[LMImageManager sharedImageManager] downloadImageForMusicTrack:nil forCategory:LMImageManagerCategoryArtistImages];
+    [[LMImageManager sharedImageManager] testDownloadWithCallback:^(UIImage *croppedImage) {
+        UIImageView *hangOnImage = [UIImageView newAutoLayoutView];
+        hangOnImage.image = croppedImage;
+        hangOnImage.contentMode = UIViewContentModeScaleAspectFill;
+        [self.view addSubview:hangOnImage];
+        
+        [hangOnImage autoCenterInSuperview];
+        [hangOnImage autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
+        [hangOnImage autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.view];
+    }];
     
     return;
     

@@ -70,7 +70,9 @@ typedef enum {
 
 @interface LMImageManager : NSObject
 
+typedef void (^ShitpostCallback)(UIImage* croppedImage);
 
+- (void)testDownloadWithCallback:(ShitpostCallback)callback;
 - (void)downloadImageForMusicTrack:(LMMusicTrack*)randomTrack forCategory:(LMImageManagerCategory)category;
 
 

@@ -360,13 +360,16 @@
 	[self.operationQueue addOperation:albumArtOperation];
 }
 
-- (void)downloadImageForMusicTrack:(LMMusicTrack*)randomTrack forCategory:(LMImageManagerCategory)category {
+- (void)testDownloadWithCallback:(ShitpostCallback)callback {
+    LMMusicTrack *randomTrack = nil;
+    LMImageManagerCategory category = LMImageManagerCategoryArtistImages;
+    
     BOOL isArtistCategory = (category == LMImageManagerCategoryArtistImages);
     
     NSString *typeString = isArtistCategory ? @"artist" : @"release";
     NSString *queryString = isArtistCategory ? randomTrack.artist : randomTrack.albumTitle;
     typeString = @"artist";
-    queryString = @"adam lambert";
+    queryString = @"chiddy bang";
     if(!queryString){ //If the name doesn't exist, just reject it. Users gotta check their ID3 tags.
         [self setMusicTrack:randomTrack asBlacklisted:YES forCategory:category];
         return;
@@ -447,13 +450,33 @@
                                                    LMImageManagerConditionLevel currentConditionLevel = [self conditionLevelForDownloadingForCategory:category];
                                                    
                                                    if(currentConditionLevel == LMImageManagerConditionLevelOptimal){
-//                                                       NSLog(@"Done, now storing to %@.", imageCacheKey);
+                                                       //                                                       NSLog(@"Done, now storing to %@.", imageCacheKey);
                                                        
-//                                                       [[self imageCacheForCategory:category] storeImage:image forKey:imageCacheKey];
+                                                       //                                                       [[self imageCacheForCategory:category] storeImage:image forKey:imageCacheKey];
                                                        
-//                                                       [self notifyDelegatesOfCacheSizeChangeForCategory:category];
-//                                                       [self notifyDelegatesOfImageCacheChangeForCategory:category];
-                                                       NSLog(@"Done :)");
+                                                       //                                                       [self notifyDelegatesOfCacheSizeChangeForCategory:category];
+                                                       //                                                       [self notifyDelegatesOfImageCacheChangeForCategory:category];
+                                                       
+                                                       //Calculate which is smaller, between width/height
+                                                       BOOL widthIsSmaller = (image.size.width < image.size.height);
+                                                       //Figure out the smaller and larger size based off of that
+                                                       CGFloat smallerSize = widthIsSmaller ? image.size.width : image.size.height;
+                                                       CGFloat largerSize = widthIsSmaller ? image.size.height : image.size.width;
+                                                       //Figure out the CGPoint offset in that according axis to center it
+                                                       CGFloat offsetOriginPoint = (largerSize/2) - (smallerSize/2);
+                                                       //Create the point
+                                                       CGRect newCropRect = CGRectMake(widthIsSmaller ? 0 : offsetOriginPoint, widthIsSmaller ? offsetOriginPoint : 0, smallerSize, smallerSize);
+                                                       
+                                                       //Create the image
+                                                       CGImageRef imageRef = CGImageCreateWithImageInRect([image CGImage], newCropRect);
+                                                       UIImage *croppedImage = [UIImage imageWithCGImage:imageRef];
+                                                       CGImageRelease(imageRef);
+                                                       
+                                                       NSLog(@"Done. Crop rect %@, new size %@.", NSStringFromCGRect(newCropRect), NSStringFromCGSize(croppedImage.size));
+                                                       
+                                                       dispatch_sync(dispatch_get_main_queue(), ^{
+                                                           callback(croppedImage);
+                                                       });
                                                    }
                                                    else{
                                                        NSLog(@"Not storing, conditions aren't right.");
@@ -468,6 +491,10 @@
         
         return;
     }];
+
+}
+
+- (void)downloadImageForMusicTrack:(LMMusicTrack*)randomTrack forCategory:(LMImageManagerCategory)category {
     
 //	NSError *error;
 //	
