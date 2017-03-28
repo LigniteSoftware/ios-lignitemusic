@@ -28,6 +28,11 @@
  */
 @property CGRect previousFrame;
 
+/**
+ Whether or not the bottom white spacer has been added yet for ensuring content does not get revealed when scrolling too far.
+ */
+@property BOOL hasAddedBottomWhiteSpacer;
+
 @end
 
 @implementation LMTableView
@@ -42,7 +47,7 @@
 - (instancetype)init {
 	self = [super initWithFrame:CGRectMake(0, 0, 0, 0) style:UITableViewStylePlain];
 	if(self){
-		self.backgroundColor = [UIColor purpleColor];
+		self.backgroundColor = [UIColor clearColor];
 		self.separatorColor = [UIColor clearColor];
 		self.alwaysBounceVertical = NO;
 		
@@ -226,13 +231,31 @@
 }
 
 - (void)layoutSubviews {
-	[super layoutSubviews];
+    [super layoutSubviews];
 	
+//    NSLog(@"Prick %@ %@", self.title, NSStringFromCGSize(self.contentSize));
+    
 	//Fixes dividers going off to the right way too far
 	if([self.title isEqualToString:@"SourceSelector"] && self.previousFrame.size.width > self.frame.size.width){
 		[self reloadData];
 	}
-
+    
+    if(self.contentSize.width > 0 && self.contentSize.height > 0 && !self.hasAddedBottomWhiteSpacer){
+//        NSLog(@"Adding this shit");
+        UIView *testView = [UIView new];
+        testView.backgroundColor = [UIColor whiteColor];
+        [self addSubview:testView];
+    
+        CGRect testViewFrame = CGRectMake(0, self.contentSize.height, self.contentSize.width, self.contentSize.height/2);
+        testView.frame = testViewFrame;
+        
+//        NSLog(@"gutless %@ %@", self.title, NSStringFromCGRect(testViewFrame));
+        
+        self.hasAddedBottomWhiteSpacer = YES;
+        
+        self.clipsToBounds = NO;
+    }
+        
 	self.previousFrame = self.frame;
 }
 

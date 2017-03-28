@@ -400,8 +400,8 @@
 
 "KickstarterBackers" = "Kickstarter Backer";
 
-"LastFMAPI" = "Last.fm API";
-"LastFMAPIDescription" = "Vielen Dank an Last.fm für diese absolut atemberaubende API.\n\nWir verwenden sie, um die Künstlerfotos und fehlenden Albumcover herunterzuladen und es funktioniert absolut super!";
+"ImageAPI" = "Discogs API";
+"ImageAPIDescription" = "Wir möchten Discog an dieser Stelle für ihre atemberaubende API und Community danken.\n\nWir nutzen es für die Künstlerfotos und fehlende Albumcover und es funktioniert absolut wunderbar!";
 
 "OpenSourceLibraries" = "Open Source Libraries";
 "OpenSourceLibrariesLicensing" = "Lignite Music basiert auf vielen leistungsstarken Open Source Libraries.\n\nVielen herzlichen Dank and deren Authoren und all denjenigen, die zur Entwicklung beigetragen haben!";

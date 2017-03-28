@@ -374,9 +374,7 @@
 	UICollectionViewFlowLayout *flowLayout = (UICollectionViewFlowLayout*)collectionViewLayout;
 	flowLayout.sectionInset = UIEdgeInsetsMake(spacing, spacing, spacing, spacing);
 	flowLayout.minimumLineSpacing = spacing;
-	
-	NSLog(@"Fuck %@", NSStringFromCGSize(CGSizeMake(sideLength, sideLength * (2.8/2.0))));
-	
+		
 	return CGSizeMake(sideLength, sideLength * (2.8/2.0));
 }
 
