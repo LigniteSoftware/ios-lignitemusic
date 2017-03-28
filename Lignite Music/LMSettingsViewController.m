@@ -89,7 +89,7 @@
 //		case 0:
 //			return 1;
 		case 1:
-			return 3;
+			return 2;
 		case 2:
 			return 2;
 		case 3:
@@ -112,8 +112,8 @@
 					return NSLocalizedString(@"ArtistImagesTitle", nil);
 				case 1:
 					return NSLocalizedString(@"AlbumImagesTitle", nil);
-				case 2:
-					return NSLocalizedString(@"HighQualityImagesTitle", nil);
+//				case 2:
+//					return NSLocalizedString(@"HighQualityImagesTitle", nil);
 			}
 			break;
 		case 2:
@@ -193,8 +193,8 @@
 				case 1: {
 					return [self subtitleForCategory:LMImageManagerCategoryAlbumImages];
 				}
-				case 2:
-					return NSLocalizedString(@"HighQualityImagesDescription", nil);
+//				case 2:
+//					return NSLocalizedString(@"HighQualityImagesDescription", nil);
 			}
 			break;
 		case 2:
@@ -577,15 +577,15 @@
 	[(LMCoreViewController*)self.coreViewController setStatusBarBlurHidden:!switchView.on];
 }
 
-- (void)didChangeHighestResolutionSwitchView:(UISwitch*)switchView {
-	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-	
-	[userDefaults setBool:switchView.on forKey:LMSettingsKeyHighQualityImages];
-	[userDefaults synchronize];
-	
-	LMImageManager *imageManager = [LMImageManager sharedImageManager];
-	[imageManager highQualityImagesOptionDidChange];
-}
+//- (void)didChangeHighestResolutionSwitchView:(UISwitch*)switchView {
+//	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+//	
+//	[userDefaults setBool:switchView.on forKey:LMSettingsKeyHighQualityImages];
+//	[userDefaults synchronize];
+//	
+//	LMImageManager *imageManager = [LMImageManager sharedImageManager];
+//	[imageManager highQualityImagesOptionDidChange];
+//}
 
 - (id)accessoryViewForIndexPath:(NSIndexPath *)indexPath forSectionTableView:(LMSectionTableView *)sectionTableView {
 //	if(indexPath.section == 0 || (indexPath.section == 1 && indexPath.row == 2)){
@@ -601,12 +601,12 @@
 //				
 //				settingsKey = LMSettingsKeyStatusBar;
 //				break;
-			case 1:
-				[switchView addTarget:self action:@selector(didChangeHighestResolutionSwitchView:) forControlEvents:UIControlEventValueChanged];
-				
-				settingsKey = LMSettingsKeyHighQualityImages;
-				enabled = NO;
-				break;
+//			case 1:
+//				[switchView addTarget:self action:@selector(didChangeHighestResolutionSwitchView:) forControlEvents:UIControlEventValueChanged];
+//				
+//				settingsKey = LMSettingsKeyHighQualityImages;
+//				enabled = NO;
+//				break;
 				
 		}
 		

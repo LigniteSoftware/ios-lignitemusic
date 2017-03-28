@@ -46,6 +46,7 @@
  
  */
 
+"NoiPadSupport" = "Sorry, Lignite Music doesn't currently support iPad, but we will support it in the future.\n\nInstead of putting you into a potentially buggy app, we will just leave you here. Please feel free to uninstall the app from your iPad.\n\nWe will announce via Kickstarter when we add iPad support.\n\nThank you for your understanding.";
 
 "OnboardingSpotifyLoginTitle" = "Spotify";
 "OnboardingSpotifyLoginDescription" = "Our app is all about playing your Spotify music.\n\nIf you could please login, our app will use your Spotify account to bring you music awesomeness. If you don't have Spotify, feel free to get it using the button below.";
@@ -416,8 +417,8 @@
 
 "KickstarterBackers" = "Kickstarter Backers";
 
-"LastFMAPI" = "Last.fm API";
-"LastFMAPIDescription" = "We want to give a big shoutout to Last.fm's absolutely breathtaking API.\n\nWe use it for its images of artists and images of missing cover art and it works like a charm! It has a great rate limit and many, many functions.";
+"LastFMAPI" = "Discogs API";
+"LastFMAPIDescription" = "We want to give a big shoutout to Discogs's absolutely breathtaking API and community.\n\nWe use it for its images of artists and images of missing cover art and it works like a charm! It has a nice rate limit, many functions, and an excellent community.";
 
 "OpenSourceLibraries" = "Open Source Libraries";
 "OpenSourceLibrariesLicensing" = "Lignite Music is built off of many powerful open source libraries.\n\nBig thanks to the original authors and all who contributed to their development!";

@@ -152,8 +152,8 @@
 						  @"RankLigniteSupporter",
 						  @"RankLigniteSupporterPeople",
 						  
-						  @"LastFMAPI",
-						  @"LastFMAPIDescription",
+						  @"ImageAPI",
+						  @"ImageAPIDescription",
 						  
 						  @"OpenSourceLibraries",
 						  @"OpenSourceLibrariesLicensing",

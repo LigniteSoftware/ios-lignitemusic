@@ -252,15 +252,17 @@
 }
 
 - (BOOL)highQualityImages {
-	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-	
-	BOOL highQuality = NO;
-	
-	if([userDefaults objectForKey:LMSettingsKeyHighQualityImages]){
-		highQuality = [userDefaults boolForKey:LMSettingsKeyHighQualityImages];
-	}
-	
-	return highQuality;
+    return NO;
+    
+//	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+//	
+//	BOOL highQuality = NO;
+//	
+//	if([userDefaults objectForKey:LMSettingsKeyHighQualityImages]){
+//		highQuality = [userDefaults boolForKey:LMSettingsKeyHighQualityImages];
+//	}
+//	
+//	return highQuality;
 }
 
 - (void)highQualityImagesOptionDidChange {
@@ -615,10 +617,9 @@
 			[imageManager.categoryDownloadQueue removeObjectAtIndex:0];
 		}
 		
+        NSLog(@"Next image download attempt: %@, with category %d.", musicTrack.artist, category);
 		
 		[imageManager downloadImageForMusicTrack:musicTrack forCategory:category];
-		
-		NSLog(@"Next image download attempt: %@, with category %d.", musicTrack.artist, category);
 	
 		if(imageManager.trackDownloadQueue.count > 0){
 			[imageManager downloadNextImageInQueue];

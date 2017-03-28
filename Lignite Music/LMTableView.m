@@ -42,7 +42,7 @@
 - (instancetype)init {
 	self = [super initWithFrame:CGRectMake(0, 0, 0, 0) style:UITableViewStylePlain];
 	if(self){
-		self.backgroundColor = [UIColor clearColor];
+		self.backgroundColor = [UIColor purpleColor];
 		self.separatorColor = [UIColor clearColor];
 		self.alwaysBounceVertical = NO;
 		
