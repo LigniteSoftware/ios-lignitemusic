@@ -59,7 +59,7 @@
 
  @return The amount of calls.
  */
-#define LMImageAPICallsPerSecondLimit 0.25
+#define LMImageAPICallsPerSecondLimit 1.0
 //TODO: change this to 3.0 for release
 
 /**
@@ -137,6 +137,16 @@
  An array of categories which are currently being processed. When inside this array, the image download process should not begin again for them.
  */
 @property NSMutableArray<NSNumber*> *currentlyProcessingCategoryArray;
+
+/**
+ The last reported amount of available API calls which we can still use.
+ */
+@property NSInteger lastReportedAmountOfAvailableAPICalls;
+
+/**
+ The time when the amount of API calls available was reported.
+ */
+@property NSTimeInterval timeOfLastReportedAmountOfAvailableAPICalls;
 
 @end
 
@@ -447,6 +457,9 @@
             NSDictionary *finalResultJSONObject = body.JSONObject;
             NSInteger amountOfCallsLeft = [[responseHeaders objectForKey:@"X-Discogs-Ratelimit-Remaining"] integerValue];
             
+            self.lastReportedAmountOfAvailableAPICalls = amountOfCallsLeft;
+            self.timeOfLastReportedAmountOfAvailableAPICalls = [[NSDate date] timeIntervalSince1970];
+            
             NSLog(@"Amount of calls left %ld", amountOfCallsLeft);
             
             NSArray *imagesObjectArray = [finalResultJSONObject objectForKey:@"images"];
@@ -526,6 +539,18 @@
 	__weak id weakSelf = self;
 	
 	double delayInSeconds = 1.0 / LMImageAPICallsPerSecondLimit;
+    
+    NSTimeInterval timeNow = [[NSDate new] timeIntervalSince1970];
+    CGFloat timeDifference = timeNow-self.timeOfLastReportedAmountOfAvailableAPICalls;
+    //If it's been less than 70 seconds since an amount of API calls available went below 20, don't proceed and hold back
+    //the next attempt for 30 seconds, and retry then.
+    if(timeDifference < 70 && self.lastReportedAmountOfAvailableAPICalls < 20){
+        NSLog(@"We're close to hitting the limit of API calls, let's back that tush up.");
+        [NSTimer scheduledTimerWithTimeInterval:30 block:^{
+            [self downloadNextImageInQueue];
+        } repeats:NO];
+        return;
+    }
 	
 	dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
 	dispatch_after(popTime, dispatch_get_global_queue(NSQualityOfServiceUtility, 0), ^(void){
@@ -542,7 +567,7 @@
 		
 		NSTimeInterval differenceInTime = currentDownloadTime-lastDownloadTime;
 		
-//		NSLog(@"Difference %f seconds between %f", differenceInTime, LMImageAPISecondsBetweenAPICalls);
+		NSLog(@"Difference %f seconds between %f", differenceInTime, LMImageAPISecondsBetweenAPICalls);
 		
 		if(differenceInTime < LMImageAPISecondsBetweenAPICalls){
 			NSLog(@"Attempting to make calls to fast! Rejecting.");
@@ -582,7 +607,7 @@
 		
 		[imageManager downloadImageForMusicTrack:musicTrack forCategory:category];
 		
-		NSLog(@"Next image download attempt: %@, with category %d.", musicTrack.albumTitle, category);
+		NSLog(@"Next image download attempt: %@, with category %d.", musicTrack.artist, category);
 	
 		if(imageManager.trackDownloadQueue.count > 0){
 			[imageManager downloadNextImageInQueue];
