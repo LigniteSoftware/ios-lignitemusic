@@ -781,12 +781,12 @@ LMControlBarViewDelegate
 	
 //	return;
 	    
-//	UIImageView *hangOnImage = [UIImageView newAutoLayoutView];
-//	hangOnImage.image = [UIImage imageNamed:@"splash_wings.png"];
-//	hangOnImage.contentMode = UIViewContentModeScaleAspectFill;
-//	[self.view addSubview:hangOnImage];
-//	
-//	[hangOnImage autoPinEdgesToSuperviewEdges];
+	UIImageView *hangOnImage = [UIImageView newAutoLayoutView];
+	hangOnImage.image = [UIImage imageNamed:@"splash_wings.png"];
+	hangOnImage.contentMode = UIViewContentModeScaleAspectFill;
+	[self.view addSubview:hangOnImage];
+	
+	[hangOnImage autoPinEdgesToSuperviewEdges];
     
     //If user is using an iPad
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad || [(NSString*)[UIDevice currentDevice].model hasPrefix:@"iPad"]){
@@ -823,11 +823,15 @@ LMControlBarViewDelegate
 //    return;
     
     
-    LMTutorialView *tutorialView = [[LMTutorialView alloc] initForAutoLayoutWithTitle:@"nice meme" description:@"classic"];
+    LMTutorialView *tutorialView = [[LMTutorialView alloc] initForAutoLayoutWithTitle:@"nice meme" description:@"testing my new auto-wrapping code so that the box is the same size as the text\n\nwhat do you think?\n\nwhat are your thoughts on the padding?"];
     [self.view addSubview:tutorialView];
-    [tutorialView autoPinEdgesToSuperviewEdges];
+    tutorialView.boxAlignment = LMTutorialViewAlignmentBottom;
+    [tutorialView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+    [tutorialView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+    [tutorialView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+    [tutorialView autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:200];
     
-//    return;
+    return;
     
 	
 #ifdef SPOTIFY

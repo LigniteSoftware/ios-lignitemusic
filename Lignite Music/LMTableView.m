@@ -246,7 +246,7 @@
         testView.backgroundColor = [UIColor whiteColor];
         [self addSubview:testView];
     
-        CGRect testViewFrame = CGRectMake(0, self.contentSize.height, self.contentSize.width, self.contentSize.height/2);
+        CGRect testViewFrame = CGRectMake(0, self.contentSize.height, self.contentSize.width, self.contentSize.height);
         testView.frame = testViewFrame;
         
 //        NSLog(@"gutless %@ %@", self.title, NSStringFromCGRect(testViewFrame));

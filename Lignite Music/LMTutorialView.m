@@ -8,7 +8,7 @@
 
 #import <PureLayout/PureLayout.h>
 #import "LMTutorialView.h"
-#import "LMLabel.h"
+#import "LMColour.h"
 
 @interface LMTutorialView()
 
@@ -40,7 +40,7 @@
 /**
  The title label.
  */
-@property LMLabel *titleLabel;
+@property UILabel *titleLabel;
 
 /**
  The description label.
@@ -50,7 +50,12 @@
 /**
  The label for if the user wants us to stop the popups from coming up.
  */
-@property LMLabel *stopThesePopupsLabel;
+@property UILabel *stopThesePopupsLabel;
+
+/**
+ The button which lets the user dismiss the popup.
+ */
+@property UILabel *thanksForTheHintButton;
 
 @end
 
@@ -75,7 +80,7 @@
         self.didLayoutConstraints = YES;
         
         
-        self.backgroundColor = [UIColor purpleColor];
+        self.backgroundColor = [UIColor clearColor];
         
         
         UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
@@ -98,30 +103,63 @@
         if(self.boxAlignment == LMTutorialViewAlignmentCenter){
             [self.contentViewBackground autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
         }
-        [self.contentViewBackground autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(6.0/10.0)];
+        else {
+            [self.contentViewBackground autoPinEdgeToSuperviewEdge:(self.boxAlignment == LMTutorialViewAlignmentBottom) ? ALEdgeBottom : ALEdgeTop];
+        }
         [self.contentViewBackground autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(8.0/10.0)];
         
         
         self.contentView = [UIView newAutoLayoutView];
-        self.contentView.backgroundColor = [UIColor lightGrayColor];
+        self.contentView.backgroundColor = [UIColor clearColor];
         [self.contentViewBackground addSubview:self.contentView];
         
         [self.contentView autoCenterInSuperview];
+        
         [self.contentView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.contentViewBackground withMultiplier:(9.5/10.0)];
-        [self.contentView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.contentViewBackground withMultiplier:(9.5/10.0)];
+        [self.contentView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+        [self.contentView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+//        [self.contentView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.contentViewBackground withMultiplier:(9.5/10.0)];
         
         
-        self.titleLabel = [LMLabel newAutoLayoutView];
+        self.titleLabel = [UILabel newAutoLayoutView];
         self.titleLabel.text = self.titleText;
         self.titleLabel.textColor = [UIColor blackColor];
-        self.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:50.0f];
+        self.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:30.0f];
         self.titleLabel.textAlignment = NSTextAlignmentLeft;
         [self.contentView addSubview:self.titleLabel];
         
-        [self.titleLabel autoPinEdgeToSuperviewEdge:ALEdgeTop];
+        [self.titleLabel autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:10];
         [self.titleLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading];
         [self.titleLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-        [self.titleLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.contentView withMultiplier:(1.0/10.0)];
+        
+        
+        self.stopThesePopupsLabel = [UILabel newAutoLayoutView];
+        self.stopThesePopupsLabel.text = @"stop";
+        self.stopThesePopupsLabel.textColor = [UIColor blackColor];
+        self.stopThesePopupsLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:16.0f];
+        self.stopThesePopupsLabel.textAlignment = NSTextAlignmentCenter;
+        [self.contentView addSubview:self.stopThesePopupsLabel];
+        
+        [self.stopThesePopupsLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+        [self.stopThesePopupsLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+        [self.stopThesePopupsLabel autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:10];
+        
+        
+        self.thanksForTheHintButton = [UILabel newAutoLayoutView];
+        self.thanksForTheHintButton.text = @"close this bitch";
+        self.thanksForTheHintButton.textColor = [UIColor whiteColor];
+        self.thanksForTheHintButton.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:24.0f];
+        self.thanksForTheHintButton.backgroundColor = [LMColour ligniteRedColour];
+        self.thanksForTheHintButton.textAlignment = NSTextAlignmentCenter;
+        [self.contentView addSubview:self.thanksForTheHintButton];
+        
+        [self.thanksForTheHintButton autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+        [self.thanksForTheHintButton autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+        [self.thanksForTheHintButton autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.stopThesePopupsLabel withOffset:-10];
+        [self.thanksForTheHintButton autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.titleLabel withMultiplier:2.0];
+        
+        
+        
         
         
         self.descriptionLabel = [UILabel newAutoLayoutView];
@@ -129,24 +167,14 @@
         self.descriptionLabel.textColor = [UIColor blackColor];
         self.descriptionLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:20.0f];
         self.descriptionLabel.textAlignment = NSTextAlignmentLeft;
+        self.descriptionLabel.numberOfLines = 0;
         [self.contentView addSubview:self.descriptionLabel];
         
         [self.descriptionLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading];
         [self.descriptionLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-        [self.descriptionLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.titleLabel withOffset:10];
-        
-        
-        self.stopThesePopupsLabel = [LMLabel newAutoLayoutView];
-        self.stopThesePopupsLabel.text = @"stop";
-        self.stopThesePopupsLabel.textColor = [UIColor blackColor];
-        self.stopThesePopupsLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:20.0f];
-        self.stopThesePopupsLabel.textAlignment = NSTextAlignmentCenter;
-        [self.contentView addSubview:self.stopThesePopupsLabel];
-        
-        [self.stopThesePopupsLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-        [self.stopThesePopupsLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-        [self.stopThesePopupsLabel autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-        [self.stopThesePopupsLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.contentView withMultiplier:(1.0/20.0)];
+        [self.descriptionLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.titleLabel withOffset:20];
+        [self.descriptionLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.thanksForTheHintButton withOffset:-20];
+//        [self.descriptionLabel autoPinEdgesToSuperviewEdges];
     }
 }
 
