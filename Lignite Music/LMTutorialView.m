@@ -119,6 +119,12 @@
         [self.superview layoutIfNeeded];
     } completion:^(BOOL finished) {
         [self removeFromSuperview];
+        
+        if(self.delegate){
+            if([self.delegate respondsToSelector:@selector(tutorialFinishedWithKey:)]){
+                [self.delegate tutorialFinishedWithKey:self.key];
+            }
+        }
     }];
 }
 
@@ -185,7 +191,7 @@
             [self.contentViewBackground autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
         }
         else {
-            [self.contentViewBackground autoPinEdgeToSuperviewEdge:(self.boxAlignment == LMTutorialViewAlignmentBottom) ? ALEdgeBottom : ALEdgeTop];
+            [self.contentViewBackground autoPinEdgeToSuperviewEdge:(self.boxAlignment == LMTutorialViewAlignmentBottom) ? ALEdgeBottom : ALEdgeTop withInset:self.frame.size.height/8.0];
         }
         [self.contentViewBackground autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(8.0/10.0)];
         
@@ -294,6 +300,13 @@
         [self.descriptionLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
         [self.descriptionLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.titleLabel withOffset:20];
         [self.descriptionLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.thanksForTheHintButton withOffset:-20];
+        
+        
+        [self.superview layoutIfNeeded];
+        self.leadingLayoutConstraint.constant = 0;
+        [UIView animateWithDuration:0.5 animations:^{
+            [self.superview layoutIfNeeded];
+        }];
     }
 }
 

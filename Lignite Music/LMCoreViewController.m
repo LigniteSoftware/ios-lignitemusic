@@ -53,6 +53,7 @@
 @import StoreKit;
 
 @interface LMCoreViewController () <LMMusicPlayerDelegate, LMSourceDelegate, UIGestureRecognizerDelegate, LMSearchBarDelegate, LMLetterTabDelegate, LMSearchSelectedDelegate, LMPurchaseManagerDelegate, LMButtonNavigationBarDelegate, UINavigationBarDelegate, UINavigationControllerDelegate,
+LMTutorialViewDelegate,
 
 LMControlBarViewDelegate
 >
@@ -106,6 +107,65 @@ LMControlBarViewDelegate
 @end
 
 @implementation LMCoreViewController
+
+- (void)tutorialFinishedWithKey:(NSString *)key {
+    NSLog(@"Tutorial %@ finished, start another?", key);
+    
+    self.view.userInteractionEnabled = YES;
+    self.buttonNavigationBar.userInteractionEnabled = YES;
+    self.navigationBar.userInteractionEnabled = YES;
+    
+    if([key isEqualToString:LMTutorialKeyBottomNavigation]){
+        [self.buttonNavigationBar setSelectedTab:LMNavigationTabMiniplayer];
+        
+        [NSTimer scheduledTimerWithTimeInterval:1.0 block:^{
+            if([LMTutorialView tutorialShouldRunForKey:LMTutorialKeyMiniPlayer]){
+                self.view.userInteractionEnabled = NO;
+                self.buttonNavigationBar.userInteractionEnabled = NO;
+                
+                LMTutorialView *tutorialView = [[LMTutorialView alloc] initForAutoLayoutWithTitle:NSLocalizedString(@"TutorialMiniPlayerTitle", nil)
+                                                                                      description:NSLocalizedString(@"TutorialMiniPlayerDescription", nil)
+                                                                                              key:LMTutorialKeyMiniPlayer];
+                [self.navigationController.view addSubview:tutorialView];
+                tutorialView.boxAlignment = LMTutorialViewAlignmentBottom;
+                tutorialView.arrowAlignment = LMTutorialViewAlignmentBottom;
+                tutorialView.icon = [LMAppIcon imageForIcon:LMIconBug];
+                tutorialView.leadingLayoutConstraint = [tutorialView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+                tutorialView.leadingLayoutConstraint.constant = self.view.frame.size.width;
+                tutorialView.delegate = self;
+                [tutorialView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
+                [tutorialView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+                [tutorialView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.buttonNavigationBar withOffset:LMNavigationBarGrabberHeight];
+            }
+        } repeats:NO];
+    }
+    else if([key isEqualToString:LMTutorialKeyMiniPlayer]){
+        [NSTimer scheduledTimerWithTimeInterval:1.0 block:^{
+            if([LMTutorialView tutorialShouldRunForKey:LMTutorialKeyTopBar]){
+                self.navigationBar.userInteractionEnabled = NO;
+                
+                LMTutorialView *tutorialView = [[LMTutorialView alloc] initForAutoLayoutWithTitle:NSLocalizedString(@"TutorialTopBarTitle", nil)
+                                                                                      description:NSLocalizedString(@"TutorialTopBarDescription", nil)
+                                                                                              key:LMTutorialKeyTopBar];
+                [self.navigationController.view addSubview:tutorialView];
+                tutorialView.boxAlignment = LMTutorialViewAlignmentTop;
+                tutorialView.arrowAlignment = LMTutorialViewAlignmentTop;
+                tutorialView.icon = [LMAppIcon imageForIcon:LMIconBug];
+                tutorialView.leadingLayoutConstraint = [tutorialView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+                tutorialView.leadingLayoutConstraint.constant = self.view.frame.size.width;
+                tutorialView.delegate = self;
+                [tutorialView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
+                [tutorialView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+                [tutorialView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.navigationBar];
+            }
+        } repeats:NO];
+    }
+    
+    if(![LMTutorialView tutorialShouldRunForKey:LMTutorialKeyNowPlaying] && self.nowPlayingCoreView.tutorialView){
+        [self.nowPlayingCoreView.tutorialView removeFromSuperview];
+        self.nowPlayingCoreView.tutorialView = nil;
+    }
+}
 
 - (void)appOwnershipStatusChanged:(LMPurchaseManagerAppOwnershipStatus)newOwnershipStatus {
 	NSLog(@"The app ownership status changed:");
@@ -823,23 +883,22 @@ LMControlBarViewDelegate
 //    return;
     
     
-    if([LMTutorialView tutorialShouldRunForKey:@"shitpostkey1"]){
-        LMTutorialView *tutorialView = [[LMTutorialView alloc] initForAutoLayoutWithTitle:@"nice meme" description:@"testing my new auto-wrapping code so that the box is the same size as the text\n\nwhat do you think?\n\nwhat are your thoughts on the padding?" key:@"shitpostkey1"];
-        [self.view addSubview:tutorialView];
-        tutorialView.boxAlignment = LMTutorialViewAlignmentBottom;
-        tutorialView.arrowAlignment = LMTutorialViewAlignmentTop;
-        tutorialView.icon = [LMAppIcon imageForIcon:LMIconBug];
-        tutorialView.leadingLayoutConstraint = [tutorialView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-        [tutorialView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
-        [tutorialView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-        [tutorialView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-    }
-    else{
-        NSLog(@":)");
-    }
-        
-    return;
-    
+//    if([LMTutorialView tutorialShouldRunForKey:LMTutorialKeyBottomNavigation] || true){
+//        LMTutorialView *tutorialView = [[LMTutorialView alloc] initForAutoLayoutWithTitle:NSLocalizedString(@"TutorialBottomNavigationTitle", nil)
+//                                                                              description:NSLocalizedString(@"TutorialBottomNavigationDescription", nil)
+//                                                                                      key:LMTutorialKeyBottomNavigation];
+//        [self.view addSubview:tutorialView];
+//        tutorialView.boxAlignment = LMTutorialViewAlignmentBottom;
+//        tutorialView.arrowAlignment = LMTutorialViewAlignmentTop;
+//        tutorialView.icon = [LMAppIcon imageForIcon:LMIconBug];
+//        tutorialView.leadingLayoutConstraint = [tutorialView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+//        [tutorialView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
+//        [tutorialView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+//        [tutorialView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+//    }
+//    else{
+//        NSLog(@":)");
+//    }
 	
 #ifdef SPOTIFY
 	SPTAuth *authorization = [SPTAuth defaultInstance];
@@ -1101,7 +1160,37 @@ LMControlBarViewDelegate
                                 [self launchNowPlayingFromNavigationBar];
                             }
                         };
+                        
+                        NSUserDefaults* suserDefaults = [NSUserDefaults standardUserDefaults];
+                        [suserDefaults removeObjectForKey:LMTutorialKeyTopBar];
+                        [suserDefaults removeObjectForKey:LMTutorialKeyMiniPlayer];
+                        [suserDefaults removeObjectForKey:LMTutorialKeyBottomNavigation];
+                        [suserDefaults removeObjectForKey:LMTutorialKeyNowPlaying];
+                        [suserDefaults removeObjectForKey:@"LMTutorialViewDontShowHintsKey"];
+                        [suserDefaults synchronize];
 						
+                        
+                        [NSTimer scheduledTimerWithTimeInterval:1.0 block:^{
+                            if([LMTutorialView tutorialShouldRunForKey:LMTutorialKeyBottomNavigation]){
+                                self.view.userInteractionEnabled = NO;
+                                self.buttonNavigationBar.userInteractionEnabled = NO;
+                                
+                                LMTutorialView *tutorialView = [[LMTutorialView alloc] initForAutoLayoutWithTitle:NSLocalizedString(@"TutorialMainNavigationTitle", nil)
+                                                   description:NSLocalizedString(@"TutorialMainNavigationDescription", nil)
+                                                           key:LMTutorialKeyBottomNavigation];
+                                [self.navigationController.view addSubview:tutorialView];
+                                tutorialView.boxAlignment = LMTutorialViewAlignmentBottom;
+                                tutorialView.arrowAlignment = LMTutorialViewAlignmentBottom;
+//                                tutorialView.icon = [LMAppIcon imageForIcon:LMIconLookAndFeel];
+                                tutorialView.leadingLayoutConstraint = [tutorialView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+                                tutorialView.leadingLayoutConstraint.constant = self.view.frame.size.width;
+                                tutorialView.delegate = self;
+                                [tutorialView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
+                                [tutorialView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+                                [tutorialView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.buttonNavigationBar withOffset:LMNavigationBarGrabberHeight];
+                            }
+                        } repeats:NO];
+                        
                         
 //						[self musicLibraryDidChange];
 					});

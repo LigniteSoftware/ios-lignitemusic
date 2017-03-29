@@ -232,9 +232,7 @@
 	self.heightBeforeAdjustingToScrollPosition = -1;
 }
 
-- (void)minimize {
-    return;
-    
+- (void)minimize {    
     if(self.isMinimized){
         return;
     }
@@ -731,11 +729,11 @@
 		
 		[self setSelectedTab:LMNavigationTabBrowse];
 		
-		[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
-			self.originalPoint = self.buttonBar.frame.origin;
-			self.currentPoint = self.buttonBar.frame.origin;
-			[self minimize];
-		} repeats:NO];
+//		[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
+//			self.originalPoint = self.buttonBar.frame.origin;
+//			self.currentPoint = self.buttonBar.frame.origin;
+//			[self minimize];
+//		} repeats:NO];
 	}
 }
 

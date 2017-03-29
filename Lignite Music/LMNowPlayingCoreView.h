@@ -7,6 +7,7 @@
 //
 
 #import "LMView.h"
+#import "LMTutorialView.h"
 
 @interface LMNowPlayingCoreView : LMView
 
@@ -22,5 +23,10 @@
  Whether or not the now playing view is open.
  */
 @property BOOL isOpen;
+
+/**
+ The tutorial view for the now playing core view, if one exists.
+ */
+@property LMTutorialView *tutorialView;
 
 @end

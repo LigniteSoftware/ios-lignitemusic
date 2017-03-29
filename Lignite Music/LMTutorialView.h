@@ -13,6 +13,18 @@
 #define LMTutorialKeyTopBar @"LMTutorialKeyTopBar"
 #define LMTutorialKeyNowPlaying @"LMTutorialKeyNowPlaying"
 
+@protocol LMTutorialViewDelegate <NSObject>
+@optional
+
+/**
+ A tutorial finished (closed) with a certain key.
+
+ @param key The key of the tutorial that was finished.
+ */
+- (void)tutorialFinishedWithKey:(NSString*)key;
+
+@end
+
 @interface LMTutorialView : LMView
 
 typedef enum {
@@ -58,5 +70,10 @@ typedef enum {
  The image for the icon to display, if an icon is wanted. Otherwise, the view will auto adapt without an icon.
  */
 @property UIImage *icon;
+
+/**
+ The delegate, optional.
+ */
+@property id<LMTutorialViewDelegate> delegate;
 
 @end
