@@ -826,6 +826,8 @@ LMControlBarViewDelegate
     LMTutorialView *tutorialView = [[LMTutorialView alloc] initForAutoLayoutWithTitle:@"nice meme" description:@"testing my new auto-wrapping code so that the box is the same size as the text\n\nwhat do you think?\n\nwhat are your thoughts on the padding?"];
     [self.view addSubview:tutorialView];
     tutorialView.boxAlignment = LMTutorialViewAlignmentBottom;
+    tutorialView.arrowAlignment = LMTutorialViewAlignmentTop;
+    tutorialView.icon = [LMAppIcon imageForIcon:LMIconBug];
     [tutorialView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
     [tutorialView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
     [tutorialView autoPinEdgeToSuperviewEdge:ALEdgeTop];

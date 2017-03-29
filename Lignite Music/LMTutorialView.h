@@ -8,6 +8,11 @@
 
 #import "LMView.h"
 
+#define LMTutorialKeyBottomNavigation @"LMTutorialKeyBottomNavigation"
+#define LMTutorialKeyMiniPlayer @"LMTutorialKeyMiniPlayer"
+#define LMTutorialKeyTopBar @"LMTutorialKeyTopBar"
+#define LMTutorialKeyNowPlaying @"LMTutorialKeyNowPlaying"
+
 @interface LMTutorialView : LMView
 
 typedef enum {
@@ -24,6 +29,14 @@ typedef enum {
  @return The initialized tutorial view.
  */
 - (instancetype)initForAutoLayoutWithTitle:(NSString*)title description:(NSString*)description;
+
+/**
+ Returns whether or not a part of the tutorial should run for a certain key. Will always return NO if the user completely disables tutorials, for example.
+
+ @param tutorialKey The key of the tutorial part to check.
+ @return Whether or not to attach that tutorial to a view and run it.
+ */
+- (BOOL)tutorialShouldRunForKey:(NSString*)tutorialKey;
 
 /**
  The alignment of the actual content box.

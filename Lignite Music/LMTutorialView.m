@@ -49,6 +49,11 @@
 @property UILabel *descriptionLabel;
 
 /**
+ The view for the icon which goes beside the description label, if one is provided. 
+ */
+@property UIImageView *iconView;
+
+/**
  The label for if the user wants us to stop the popups from coming up.
  */
 @property UILabel *stopThesePopupsLabel;
@@ -74,11 +79,29 @@
         self.titleText = title;
         self.descriptionText = description;
         self.boxAlignment = LMTutorialViewAlignmentCenter;
-        self.arrowAlignment = LMTutorialViewAlignmentTop;
+        self.arrowAlignment = LMTutorialViewAlignmentCenter;
         self.icon = nil;
     }
     
     return self;
+}
+
+- (void)tappedCloseButton {
+    NSLog(@"Close button was tapped");
+    
+//    self.thanksForTheHintButton.backgroundColor = [UIColor blueColor];
+}
+
+- (void)tappedStopTutorialsButton {
+    NSLog(@"Tapped stop tutorials");
+    
+//    self.stopThesePopupsLabel.backgroundColor = [UIColor orangeColor];
+}
+
+- (BOOL)tutorialShouldRunForKey:(NSString*)tutorialKey {
+    
+    
+    return YES;
 }
 
 - (void)layoutSubviews {
@@ -115,24 +138,24 @@
         [self.contentViewBackground autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(8.0/10.0)];
         
         
-        self.triangleView = [LMTriangleView newAutoLayoutView];
-        self.triangleView.backgroundColor = [UIColor orangeColor];
-        [self.contentViewBackground addSubview:self.triangleView];
-        
-        [self.triangleView autoAlignAxisToSuperviewAxis:ALAxisVertical];
-        if(self.arrowAlignment == LMTutorialViewAlignmentBottom){
-            [self.triangleView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.contentViewBackground];
+        if(self.arrowAlignment != LMTutorialViewAlignmentCenter){
+            self.triangleView = [LMTriangleView newAutoLayoutView];
+            self.triangleView.backgroundColor = [UIColor orangeColor];
+            [self.contentViewBackground addSubview:self.triangleView];
+            
+            [self.triangleView autoAlignAxisToSuperviewAxis:ALAxisVertical];
+            if(self.arrowAlignment == LMTutorialViewAlignmentBottom){
+                [self.triangleView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.contentViewBackground];
+            }
+            else{
+                self.triangleView.pointingUpwards = YES;
+                [self.triangleView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.contentViewBackground];
+            }
+            [self.triangleView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.contentViewBackground withMultiplier:(2.0/10.0)];
+            [self.triangleView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.contentViewBackground withMultiplier:(1.0/10.0)];
+            
+            [self insertSubview:self.contentViewBackground aboveSubview:self.triangleView];
         }
-        else{
-            self.triangleView.pointingUpwards = YES;
-            [self.triangleView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.contentViewBackground];
-        }
-        [self.triangleView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.contentViewBackground withMultiplier:(2.0/10.0)];
-        [self.triangleView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.contentViewBackground withMultiplier:(1.0/10.0)];
-        
-        
-        [self insertSubview:self.contentViewBackground aboveSubview:self.triangleView];
-        
         
         self.contentView = [UIView newAutoLayoutView];
         self.contentView.backgroundColor = [UIColor whiteColor];
@@ -157,23 +180,28 @@
         
         
         self.stopThesePopupsLabel = [UILabel newAutoLayoutView];
-        self.stopThesePopupsLabel.text = @"stop";
+        self.stopThesePopupsLabel.text = NSLocalizedString(@"StopShowingTheseHints", nil);
         self.stopThesePopupsLabel.textColor = [UIColor blackColor];
         self.stopThesePopupsLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:16.0f];
         self.stopThesePopupsLabel.textAlignment = NSTextAlignmentCenter;
+        self.stopThesePopupsLabel.userInteractionEnabled = YES;
         [self.contentView addSubview:self.stopThesePopupsLabel];
         
         [self.stopThesePopupsLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading];
         [self.stopThesePopupsLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
         [self.stopThesePopupsLabel autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:10];
         
+        UITapGestureRecognizer *stopTutorialsGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tappedStopTutorialsButton)];
+        [self.stopThesePopupsLabel addGestureRecognizer:stopTutorialsGestureRecognizer];
+        
         
         self.thanksForTheHintButton = [UILabel newAutoLayoutView];
-        self.thanksForTheHintButton.text = @"close this bitch";
+        self.thanksForTheHintButton.text = NSLocalizedString(@"OkThanksForTheHint", nil);
         self.thanksForTheHintButton.textColor = [UIColor whiteColor];
         self.thanksForTheHintButton.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:24.0f];
         self.thanksForTheHintButton.backgroundColor = [LMColour ligniteRedColour];
         self.thanksForTheHintButton.textAlignment = NSTextAlignmentCenter;
+        self.thanksForTheHintButton.userInteractionEnabled = YES;
         [self.contentView addSubview:self.thanksForTheHintButton];
         
         [self.thanksForTheHintButton autoPinEdgeToSuperviewEdge:ALEdgeLeading];
@@ -182,22 +210,38 @@
         [self.thanksForTheHintButton autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.titleLabel withMultiplier:2.0];
         
         
+        UITapGestureRecognizer *closeTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tappedCloseButton)];
+        [self.thanksForTheHintButton addGestureRecognizer:closeTapGestureRecognizer];
         
-        
+        if(self.icon){
+            self.iconView = [UIImageView newAutoLayoutView];
+            self.iconView.image = self.icon;
+            self.iconView.contentMode = UIViewContentModeScaleAspectFit;
+            [self.contentView addSubview:self.iconView];
+            
+            [self.iconView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.contentView withMultiplier:(1.0/4.0)];
+            [self.iconView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.contentView withMultiplier:(1.0/4.0)];
+            [self.iconView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+            [self.iconView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.titleLabel withOffset:20];
+        }
         
         self.descriptionLabel = [UILabel newAutoLayoutView];
         self.descriptionLabel.text = self.descriptionText;
         self.descriptionLabel.textColor = [UIColor blackColor];
-        self.descriptionLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:20.0f];
+        self.descriptionLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18.0f];
         self.descriptionLabel.textAlignment = NSTextAlignmentLeft;
         self.descriptionLabel.numberOfLines = 0;
         [self.contentView addSubview:self.descriptionLabel];
         
-        [self.descriptionLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+        if(self.icon){
+            [self.descriptionLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.iconView withOffset:15];
+        }
+        else{
+            [self.descriptionLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+        }
         [self.descriptionLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
         [self.descriptionLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.titleLabel withOffset:20];
         [self.descriptionLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.thanksForTheHintButton withOffset:-20];
-//        [self.descriptionLabel autoPinEdgesToSuperviewEdges];
     }
 }
 

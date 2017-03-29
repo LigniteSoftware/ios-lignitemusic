@@ -46,6 +46,13 @@
  
  */
 
+
+
+"StopShowingTheseHints" = "Stop showing these hints";
+"OkThanksForTheHint" = "Ok, thanks for the hint";
+
+
+
 "NoiPadSupport" = "Sorry, Lignite Music doesn't currently support iPad, but we will support it in the future.\n\nInstead of putting you into a potentially buggy app, we will just leave you here. Please feel free to uninstall the app from your iPad.\n\nWe will announce via Kickstarter when we add iPad support.\n\nThank you for your understanding.";
 
 "OnboardingSpotifyLoginTitle" = "Spotify";
