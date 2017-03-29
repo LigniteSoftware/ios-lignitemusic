@@ -10,4 +10,9 @@
 
 @interface LMTriangleContainerView : UIView
 
+/**
+ Whether or not to point the triangle mask upwards on render.
+ */
+@property BOOL upwards;
+
 @end

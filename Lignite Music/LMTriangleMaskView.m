@@ -19,9 +19,16 @@
 
 - (UIBezierPath*)path {
 	UIBezierPath *path = [UIBezierPath new];
-	[path moveToPoint:(CGPoint){0, 0}];
-	[path addLineToPoint:(CGPoint){self.frame.size.width/2, self.frame.size.height}];
-	[path addLineToPoint:(CGPoint){self.frame.size.width, 0}];
+    if(self.upwards){
+        [path moveToPoint:(CGPoint){0, self.frame.size.height}];
+        [path addLineToPoint:(CGPoint){self.frame.size.width/2, 0}];
+        [path addLineToPoint:(CGPoint){self.frame.size.width, self.frame.size.height}];
+    }
+    else{
+        [path moveToPoint:(CGPoint){0, 0}];
+        [path addLineToPoint:(CGPoint){self.frame.size.width/2, self.frame.size.height}];
+        [path addLineToPoint:(CGPoint){self.frame.size.width, 0}];
+    }
 	//	[path addLineToPoint:(CGPoint){0, 0}];
 	[path closePath];
 	

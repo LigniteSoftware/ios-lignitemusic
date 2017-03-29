@@ -7,6 +7,7 @@
 //
 
 #import <PureLayout/PureLayout.h>
+#import "LMTriangleView.h"
 #import "LMTutorialView.h"
 #import "LMColour.h"
 
@@ -57,6 +58,11 @@
  */
 @property UILabel *thanksForTheHintButton;
 
+/**
+ The triamgle view for the pointer which will guide the user where to handle on the screen.
+ */
+@property LMTriangleView *triangleView;
+
 @end
 
 @implementation LMTutorialView
@@ -68,7 +74,7 @@
         self.titleText = title;
         self.descriptionText = description;
         self.boxAlignment = LMTutorialViewAlignmentCenter;
-        self.arrowAlignment = LMTutorialViewAlignmentCenter;
+        self.arrowAlignment = LMTutorialViewAlignmentTop;
         self.icon = nil;
     }
     
@@ -109,16 +115,33 @@
         [self.contentViewBackground autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(8.0/10.0)];
         
         
+        self.triangleView = [LMTriangleView newAutoLayoutView];
+        self.triangleView.backgroundColor = [UIColor orangeColor];
+        [self.contentViewBackground addSubview:self.triangleView];
+        
+        [self.triangleView autoAlignAxisToSuperviewAxis:ALAxisVertical];
+        if(self.arrowAlignment == LMTutorialViewAlignmentBottom){
+            [self.triangleView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.contentViewBackground];
+        }
+        else{
+            self.triangleView.pointingUpwards = YES;
+            [self.triangleView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.contentViewBackground];
+        }
+        [self.triangleView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.contentViewBackground withMultiplier:(2.0/10.0)];
+        [self.triangleView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.contentViewBackground withMultiplier:(1.0/10.0)];
+        
+        
+        [self insertSubview:self.contentViewBackground aboveSubview:self.triangleView];
+        
+        
         self.contentView = [UIView newAutoLayoutView];
-        self.contentView.backgroundColor = [UIColor clearColor];
+        self.contentView.backgroundColor = [UIColor whiteColor];
         [self.contentViewBackground addSubview:self.contentView];
         
         [self.contentView autoCenterInSuperview];
-        
         [self.contentView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.contentViewBackground withMultiplier:(9.5/10.0)];
         [self.contentView autoPinEdgeToSuperviewEdge:ALEdgeTop];
         [self.contentView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-//        [self.contentView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.contentViewBackground withMultiplier:(9.5/10.0)];
         
         
         self.titleLabel = [UILabel newAutoLayoutView];

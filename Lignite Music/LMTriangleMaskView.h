@@ -10,6 +10,14 @@
 
 @interface LMTriangleMaskView : UIView
 
+/**
+ Whether or not to point the triangle upwards.
+ */
+@property BOOL upwards;
+
+/**
+ Setup the triangle mask view.
+ */
 - (void)setup;
 
 /**

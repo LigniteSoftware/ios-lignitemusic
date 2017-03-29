@@ -10,4 +10,9 @@
 
 @interface LMTriangleView : UIView
 
+/**
+ Whether or not the triangle is pointing upwards. Default is NO.
+ */
+@property BOOL pointingUpwards;
+
 @end
