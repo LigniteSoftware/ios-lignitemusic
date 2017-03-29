@@ -11,6 +11,8 @@
 #import "LMTutorialView.h"
 #import "LMColour.h"
 
+#define LMTutorialViewDontShowHintsKey @"LMTutorialViewDontShowHintsKey"
+
 @interface LMTutorialView()
 
 /**
@@ -68,16 +70,30 @@
  */
 @property LMTriangleView *triangleView;
 
+/**
+ The user's defaults.
+ */
+@property NSUserDefaults *userDefaults;
+
+/**
+ The key that this tutorial is associated with.
+ */
+@property NSString *key;
+
 @end
 
 @implementation LMTutorialView
 
-- (instancetype)initForAutoLayoutWithTitle:(NSString*)title description:(NSString*)description {
+- (instancetype)initForAutoLayoutWithTitle:(NSString*)title description:(NSString*)description key:(NSString*)key {
     self = [super initForAutoLayout];
     
     if(self){
+        self.userDefaults = [NSUserDefaults standardUserDefaults];
+        
         self.titleText = title;
         self.descriptionText = description;
+        self.key = key;
+        
         self.boxAlignment = LMTutorialViewAlignmentCenter;
         self.arrowAlignment = LMTutorialViewAlignmentCenter;
         self.icon = nil;
@@ -86,21 +102,57 @@
     return self;
 }
 
+/**
+ Closes the tutorial view in an animated fashion and automatically removes it from its superview.
+ */
+- (void)close {
+    if(!self.leadingLayoutConstraint){
+        NSLog(@"\n\nWindows error! No leading constraint for tutorial %@", self.key);
+        return;
+    }
+    
+    [self.superview layoutIfNeeded];
+    
+    self.leadingLayoutConstraint.constant = self.frame.size.width;
+    
+    [UIView animateWithDuration:0.50 animations:^{
+        [self.superview layoutIfNeeded];
+    } completion:^(BOOL finished) {
+        [self removeFromSuperview];
+    }];
+}
+
 - (void)tappedCloseButton {
     NSLog(@"Close button was tapped");
     
-//    self.thanksForTheHintButton.backgroundColor = [UIColor blueColor];
+    [self.userDefaults setBool:YES forKey:LMTutorialViewDontShowHintsKey];
+    [self.userDefaults synchronize];
+    
+    [self close];
+    
+    NSLog(@"%@ tutorial done.", self.key);
 }
 
 - (void)tappedStopTutorialsButton {
     NSLog(@"Tapped stop tutorials");
     
-//    self.stopThesePopupsLabel.backgroundColor = [UIColor orangeColor];
+    [self.userDefaults setBool:YES forKey:LMTutorialViewDontShowHintsKey];
+    [self.userDefaults synchronize];
+    
+    [self close];
+    
+    NSLog(@"Tutorials disabled.");
 }
 
-- (BOOL)tutorialShouldRunForKey:(NSString*)tutorialKey {
++ (BOOL)tutorialShouldRunForKey:(NSString*)tutorialKey {
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     
+    //If the user has disabled tutorials or the specific tutorial has already been done do not run that tutorial
+    if([userDefaults objectForKey:LMTutorialViewDontShowHintsKey] || [userDefaults objectForKey:tutorialKey]){
+        return NO;
+    }
     
+    //Otherwise, go for it!
     return YES;
 }
 

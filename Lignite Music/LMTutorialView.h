@@ -26,9 +26,10 @@ typedef enum {
 
  @param title The title to set.
  @param description The description to set.
+ @param key The key that this tutorial is associated with.
  @return The initialized tutorial view.
  */
-- (instancetype)initForAutoLayoutWithTitle:(NSString*)title description:(NSString*)description;
+- (instancetype)initForAutoLayoutWithTitle:(NSString*)title description:(NSString*)description key:(NSString*)key;
 
 /**
  Returns whether or not a part of the tutorial should run for a certain key. Will always return NO if the user completely disables tutorials, for example.
@@ -36,7 +37,12 @@ typedef enum {
  @param tutorialKey The key of the tutorial part to check.
  @return Whether or not to attach that tutorial to a view and run it.
  */
-- (BOOL)tutorialShouldRunForKey:(NSString*)tutorialKey;
++ (BOOL)tutorialShouldRunForKey:(NSString*)tutorialKey;
+
+/**
+ The constraint which pins this tutorial view to the leading edge of the superview, for dismissal of tutorial.
+ */
+@property NSLayoutConstraint *leadingLayoutConstraint;
 
 /**
  The alignment of the actual content box.
