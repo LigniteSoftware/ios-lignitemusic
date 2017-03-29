@@ -129,25 +129,17 @@
 }
 
 - (void)tappedCloseButton {
-    NSLog(@"Close button was tapped");
-    
-    [self.userDefaults setBool:YES forKey:LMTutorialViewDontShowHintsKey];
+    [self.userDefaults setBool:YES forKey:self.key];
     [self.userDefaults synchronize];
     
     [self close];
-    
-    NSLog(@"%@ tutorial done.", self.key);
 }
 
 - (void)tappedStopTutorialsButton {
-    NSLog(@"Tapped stop tutorials");
-    
     [self.userDefaults setBool:YES forKey:LMTutorialViewDontShowHintsKey];
     [self.userDefaults synchronize];
     
     [self close];
-    
-    NSLog(@"Tutorials disabled.");
 }
 
 + (BOOL)tutorialShouldRunForKey:(NSString*)tutorialKey {

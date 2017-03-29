@@ -13,7 +13,6 @@
 @interface LMBigListEntry()
 
 @property UIView *contentSubviewBackgroundView;
-@property id contentView;
 
 
 @property NSLayoutConstraint* controlBarViewHeightConstraint;

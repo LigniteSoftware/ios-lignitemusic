@@ -59,7 +59,7 @@
 
  @return The amount of calls.
  */
-#define LMImageAPICallsPerSecondLimit 1.0
+#define LMImageAPICallsPerSecondLimit 0.25
 //TODO: change this to 3.0 for release
 
 /**
@@ -370,11 +370,6 @@
 	}];
 	
 	[self.operationQueue addOperation:albumArtOperation];
-}
-
-- (void)testDownloadWithCallback:(ShitpostCallback)callback {
-    
-
 }
 
 - (void)downloadImageForMusicTrack:(LMMusicTrack*)randomTrack forCategory:(LMImageManagerCategory)category {

@@ -28,6 +28,11 @@
 @property LMCoreViewController *rootViewController;
 
 /**
+ The actual collection view for displaying collections in a compact method.
+ */
+@property UICollectionView *collectionView;
+
+/**
  Reload the contents of the view after changing the music type and music track collections.
  */
 - (void)reloadContents;

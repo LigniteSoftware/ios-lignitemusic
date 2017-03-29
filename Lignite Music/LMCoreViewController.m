@@ -53,7 +53,7 @@
 @import StoreKit;
 
 @interface LMCoreViewController () <LMMusicPlayerDelegate, LMSourceDelegate, UIGestureRecognizerDelegate, LMSearchBarDelegate, LMLetterTabDelegate, LMSearchSelectedDelegate, LMPurchaseManagerDelegate, LMButtonNavigationBarDelegate, UINavigationBarDelegate, UINavigationControllerDelegate,
-LMTutorialViewDelegate,
+LMTutorialViewDelegate, LMImageManagerDelegate,
 
 LMControlBarViewDelegate
 >
@@ -107,6 +107,13 @@ LMControlBarViewDelegate
 @end
 
 @implementation LMCoreViewController
+
+- (void)cacheSizeChangedTo:(uint64_t)newCacheSize forCategory:(LMImageManagerCategory)category {
+    if((category == LMImageManagerCategoryArtistImages && self.compactView.musicType == LMMusicTypeArtists)
+    || (category == LMImageManagerCategoryAlbumImages && self.compactView.musicType == LMMusicTypeAlbums)){
+        [self.compactView.collectionView reloadData];
+    }
+}
 
 - (void)tutorialFinishedWithKey:(NSString *)key {
     NSLog(@"Tutorial %@ finished, start another?", key);
@@ -1140,6 +1147,7 @@ LMControlBarViewDelegate
 						
 						LMImageManager *imageManager = [LMImageManager sharedImageManager];
 						imageManager.viewToDisplayAlertsOn = self.navigationController.view;
+                        [imageManager addDelegate:self];
 						
 						
 						NSTimeInterval endTime = [[NSDate new] timeIntervalSince1970];

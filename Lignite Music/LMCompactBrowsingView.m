@@ -16,11 +16,6 @@
 @interface LMCompactBrowsingView()<UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, LMCollectionInfoViewDelegate, LMBigListEntryDelegate>
 
 /**
- The actual collection view for displaying collections in a compact method.
- */
-@property UICollectionView *collectionView;
-
-/**
  The big list entries that are used in the compact view.
  */
 @property NSMutableArray *bigListEntries;
@@ -184,34 +179,60 @@
 - (id)contentSubviewForBigListEntry:(LMBigListEntry*)bigListEntry {
 	LMMusicTrackCollection *collection = [self musicTrackCollectionForBigListEntry:bigListEntry];
 	
-	switch(self.musicType){
-		case LMMusicTypeComposers:
-		case LMMusicTypeArtists: {
-			UIImageView *imageView = [UIImageView newAutoLayoutView];
-			//			imageView.image = [[self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex].representativeItem artistImage];
-			imageView.contentMode = UIViewContentModeScaleAspectFit;
-			imageView.layer.shadowColor = [UIColor blackColor].CGColor;
-			imageView.layer.shadowRadius = WINDOW_FRAME.size.width/45;
-			imageView.layer.shadowOffset = CGSizeMake(0, imageView.layer.shadowRadius/2);
-			imageView.layer.shadowOpacity = 0.25f;
-			UIImage *artistImage = [collection.representativeItem artistImage];
-			imageView.image = artistImage;
-			return imageView;
-		}
-		case LMMusicTypeAlbums:
-		case LMMusicTypeCompilations:
-		case LMMusicTypeGenres:
-		case LMMusicTypePlaylists: {
-			//No need for prep since we're just gonna prep once
-			LMTiledAlbumCoverView *tiledAlbumCover = [LMTiledAlbumCoverView newAutoLayoutView];
-			tiledAlbumCover.musicCollection = collection;
-			return tiledAlbumCover;
-		}
-		default: {
-			NSLog(@"Windows fucking error!");
-			return nil;
-		}
-	}
+    if(bigListEntry.contentView){
+        switch(self.musicType){
+            case LMMusicTypeComposers:
+            case LMMusicTypeArtists: {
+                UIImageView *imageView = bigListEntry.contentView;
+                UIImage *artistImage = [collection.representativeItem artistImage];
+                imageView.image = artistImage;
+                return imageView;
+            }
+            case LMMusicTypeAlbums:
+            case LMMusicTypeCompilations:
+            case LMMusicTypeGenres:
+            case LMMusicTypePlaylists: {
+                //No need for prep since we're just gonna prep once
+                LMTiledAlbumCoverView *tiledAlbumCover = bigListEntry.contentView;
+                tiledAlbumCover.musicCollection = collection;
+                return tiledAlbumCover;
+            }
+            default: {
+                NSLog(@"Windows fucking error!");
+                return nil;
+            }
+        }
+    }
+    else{
+        switch(self.musicType){
+            case LMMusicTypeComposers:
+            case LMMusicTypeArtists: {
+                UIImageView *imageView = [UIImageView newAutoLayoutView];
+                //			imageView.image = [[self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex].representativeItem artistImage];
+                imageView.contentMode = UIViewContentModeScaleAspectFit;
+                imageView.layer.shadowColor = [UIColor blackColor].CGColor;
+                imageView.layer.shadowRadius = WINDOW_FRAME.size.width/45;
+                imageView.layer.shadowOffset = CGSizeMake(0, imageView.layer.shadowRadius/2);
+                imageView.layer.shadowOpacity = 0.25f;
+                UIImage *artistImage = [collection.representativeItem artistImage];
+                imageView.image = artistImage;
+                return imageView;
+            }
+            case LMMusicTypeAlbums:
+            case LMMusicTypeCompilations:
+            case LMMusicTypeGenres:
+            case LMMusicTypePlaylists: {
+                //No need for prep since we're just gonna prep once
+                LMTiledAlbumCoverView *tiledAlbumCover = [LMTiledAlbumCoverView newAutoLayoutView];
+                tiledAlbumCover.musicCollection = collection;
+                return tiledAlbumCover;
+            }
+            default: {
+                NSLog(@"Windows fucking error!");
+                return nil;
+            }
+        }
+    }
 }
 
 - (float)contentSubviewFactorial:(BOOL)height forBigListEntry:(LMBigListEntry *)bigListEntry {
@@ -355,6 +376,7 @@
 	
 	[cell.contentView addSubview:bigListEntry];
 	[bigListEntry autoPinEdgesToSuperviewEdges];
+    [bigListEntry reloadData];
 	
 	return cell;
 }
@@ -369,7 +391,7 @@
 	
 	CGFloat spacing = (self.frame.size.width-(sideLength*factor))/(factor+1);
 	
-	NSLog(@"Fuck %f", spacing);
+//	NSLog(@"Fuck %f", spacing);
 	
 	UICollectionViewFlowLayout *flowLayout = (UICollectionViewFlowLayout*)collectionViewLayout;
 	flowLayout.sectionInset = UIEdgeInsetsMake(spacing, spacing, spacing, spacing);

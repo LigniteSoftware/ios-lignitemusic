@@ -92,6 +92,11 @@
 @property float contentViewWidthMultiplier;
 
 /**
+ The content view. nil if not yet set, though should not be manually set.
+ */
+@property id contentView;
+
+/**
  Reload the data of the big list entry.
  */
 - (void)reloadData;
