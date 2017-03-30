@@ -136,7 +136,7 @@ LMControlBarViewDelegate
                 [self.navigationController.view addSubview:tutorialView];
                 tutorialView.boxAlignment = LMTutorialViewAlignmentBottom;
                 tutorialView.arrowAlignment = LMTutorialViewAlignmentBottom;
-                tutorialView.icon = [LMAppIcon imageForIcon:LMIconBug];
+                tutorialView.icon = [LMAppIcon imageForIcon:LMIconTutorialScroll];
                 tutorialView.leadingLayoutConstraint = [tutorialView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
                 tutorialView.delegate = self;
                 [tutorialView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
@@ -156,7 +156,7 @@ LMControlBarViewDelegate
                 [self.navigationController.view addSubview:tutorialView];
                 tutorialView.boxAlignment = LMTutorialViewAlignmentTop;
                 tutorialView.arrowAlignment = LMTutorialViewAlignmentTop;
-                tutorialView.icon = [LMAppIcon imageForIcon:LMIconBug];
+                tutorialView.icon = [LMAppIcon imageForIcon:LMIconTutorialTap];
                 tutorialView.leadingLayoutConstraint = [tutorialView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
                 tutorialView.delegate = self;
                 [tutorialView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];

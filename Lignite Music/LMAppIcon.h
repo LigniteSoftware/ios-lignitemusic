@@ -57,7 +57,10 @@ typedef enum {
 	LMIconDownArrow,
 	LMIconUpArrow,
 	LMIconNoSearchResults,
-    LMIconLibraryAccess
+    LMIconLibraryAccess,
+    LMIconTutorialScroll,
+    LMIconTutorialSwipe,
+    LMIconTutorialTap
 } LMIcon;
 
 /**

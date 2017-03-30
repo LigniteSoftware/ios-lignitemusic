@@ -104,6 +104,12 @@
 			return @"icon_no_search_results.png";
         case LMIconLibraryAccess:
             return @"icon_library_access.png";
+        case LMIconTutorialScroll:
+            return @"icon_tutorial_scroll.png";
+        case LMIconTutorialSwipe:
+            return @"icon_tutorial_swipe.png";
+        case LMIconTutorialTap:
+            return @"icon_tutorial_tap.png";
 	}
 }
 
