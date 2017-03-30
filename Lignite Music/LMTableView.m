@@ -105,7 +105,7 @@
 	self.hasRegisteredCellIdentifiers = YES;
 	
     [self reloadContentInset];
-	
+    
 	[self.subviewDataSource amountOfObjectsRequiredChangedTo:self.requiredAmountOfObjects forTableView:self];
 }
 

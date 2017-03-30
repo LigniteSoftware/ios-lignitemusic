@@ -172,7 +172,7 @@
 }
 
 - (void)musicTrackDidChange:(LMMusicTrack *)newTrack {
-    
+    //Nothing happens here
 }
 
 - (void)changeMusicTrack:(LMMusicTrack*)newTrack withIndex:(NSInteger)index {
@@ -277,7 +277,7 @@
 	
 	self.queueTableView.totalAmountOfObjects = self.musicPlayer.nowPlayingCollection.count;
 	[self.queueTableView reloadSubviewData];
-	
+    [self.queueTableView reloadData];
 	
 	LMListEntry *highlightedEntry = nil;
 	int newHighlightedIndex = -1;
@@ -329,9 +329,9 @@
 	[self.repeatModeButton setImage:icon];
 }
 
-- (void)setNowPlayingQueueOpen:(BOOL)open {
+- (void)setNowPlayingQueueOpen:(BOOL)open animated:(BOOL)animated {
     if(!open){
-        [NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
+        [NSTimer scheduledTimerWithTimeInterval:animated ? 0.5 : 0.0 block:^{
             self.queueView.hidden = YES;
         } repeats:NO];
     }
@@ -349,14 +349,14 @@
 	
 	self.originalPoint = CGPointZero;
 	
-	[UIView animateWithDuration:0.25 animations:^{
+    [UIView animateWithDuration:animated ? 0.25 : 0.0 animations:^{
 		[self.queueButton setColour:open ? [[UIColor whiteColor] colorWithAlphaComponent:(8.0/10.0)] : [LMColour fadedColour]];
 		[self layoutIfNeeded];
 	}];
 }
 
 - (void)queueCloseTap {
-	[self setNowPlayingQueueOpen:NO];
+	[self setNowPlayingQueueOpen:NO animated:YES];
 }
 
 - (BOOL)nowPlayingQueueOpen {
@@ -389,7 +389,7 @@
 		[self updateRepeatButtonImage];
 	}
 	else if(button == self.queueButton){
-		[self setNowPlayingQueueOpen:![self nowPlayingQueueOpen]];
+		[self setNowPlayingQueueOpen:![self nowPlayingQueueOpen] animated:YES];
 	}
 	else if(button == self.airplayButton){
 		MPVolumeView *volumeView;
@@ -466,9 +466,13 @@
 - (void)amountOfObjectsRequiredChangedTo:(NSUInteger)amountOfObjects forTableView:(LMTableView *)tableView {
 	NSLog(@"Required! %d", (int)amountOfObjects);
 	
-	if(!self.itemArray || self.itemArray.count != amountOfObjects){
-		self.itemArray = [NSMutableArray new];
-		for(int i = 0; i < amountOfObjects; i++){
+    if(!self.itemArray){
+        self.itemArray = [NSMutableArray new];
+    }
+    
+	if(self.itemArray.count < amountOfObjects){
+		for(NSUInteger i = self.itemArray.count; i < amountOfObjects; i++){
+            NSLog(@"Need to create %ld", i);
 			LMListEntry *listEntry = [[LMListEntry alloc]initWithDelegate:self];
 			listEntry.collectionIndex = i;
 			listEntry.iconInsetMultiplier = (1.0/3.0);
@@ -617,7 +621,7 @@
 	
 	if(totalTranslation > 0){ //Moving too far to the right?
 		NSLog(@"Fuck");
-		[self setNowPlayingQueueOpen:NO];
+		[self setNowPlayingQueueOpen:NO animated:YES];
 		return;
 	}
 	else{ //Moving downward
@@ -629,10 +633,10 @@
 	if(recognizer.state == UIGestureRecognizerStateEnded || recognizer.state == UIGestureRecognizerStateCancelled){
 		NSLog(@"Done");
 		if((translation.x >= self.frame.size.width/4.0)){
-			[self setNowPlayingQueueOpen:NO];
+			[self setNowPlayingQueueOpen:NO animated:YES];
 		}
 		else{
-			[self setNowPlayingQueueOpen:YES];
+			[self setNowPlayingQueueOpen:YES animated:YES];
 		}
 	}
 }
@@ -914,7 +918,7 @@
 	UITapGestureRecognizer *queueOpenTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(queueCloseTap)];
 	[self.queueOpenDraggingOverlayView addGestureRecognizer:queueOpenTapGesture];
 	
-//	[self setNowPlayingQueueOpen:YES];
+//	[self setNowPlayingQueueOpen:YES animated:YES];
 	
 	AVAudioSession* audioSession = [AVAudioSession sharedInstance];
 	AVAudioSessionRouteDescription* currentRoute = audioSession.currentRoute;

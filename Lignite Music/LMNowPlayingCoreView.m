@@ -139,6 +139,12 @@
     
     [self layoutIfNeeded];
     
+    LMNowPlayingView *oldCenterNowPlayingView = [oldNowPlayings objectAtIndex:1];
+    if([oldCenterNowPlayingView nowPlayingQueueOpen]){
+        [oldCenterNowPlayingView setNowPlayingQueueOpen:NO animated:NO];
+    }
+    
+    
     NSLog(@"Constraints rebuilt.");
 }
 

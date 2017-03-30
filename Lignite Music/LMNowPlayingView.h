@@ -62,4 +62,19 @@
  */
 - (void)panNowPlayingDown:(UIPanGestureRecognizer *)recognizer;
 
+/**
+ Whether or not the now playing queue is open.
+
+ @return Whether or not the queue is open.
+ */
+- (BOOL)nowPlayingQueueOpen;
+
+/**
+ Set whether or not the now playing queue is open.
+
+ @param open Whether or not to open it.
+ @param animated Whether or not to animate the transition.
+ */
+- (void)setNowPlayingQueueOpen:(BOOL)open animated:(BOOL)animated;
+
 @end
