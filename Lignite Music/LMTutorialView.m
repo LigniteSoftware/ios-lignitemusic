@@ -158,6 +158,9 @@
         self.didLayoutConstraints = YES;
         
         
+        CGFloat screenSizeScaleFactor = self.frame.size.width/414.0;
+        
+        
         self.backgroundColor = [UIColor clearColor];
         
         
@@ -219,7 +222,7 @@
         self.titleLabel = [UILabel newAutoLayoutView];
         self.titleLabel.text = self.titleText;
         self.titleLabel.textColor = [UIColor blackColor];
-        self.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:30.0f];
+        self.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:30.0f * screenSizeScaleFactor];
         self.titleLabel.textAlignment = NSTextAlignmentLeft;
         [self.contentView addSubview:self.titleLabel];
         
@@ -231,7 +234,7 @@
         self.stopThesePopupsLabel = [UILabel newAutoLayoutView];
         self.stopThesePopupsLabel.text = NSLocalizedString(@"StopShowingTheseHints", nil);
         self.stopThesePopupsLabel.textColor = [UIColor blackColor];
-        self.stopThesePopupsLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:16.0f];
+        self.stopThesePopupsLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:16.0f * screenSizeScaleFactor];
         self.stopThesePopupsLabel.textAlignment = NSTextAlignmentCenter;
         self.stopThesePopupsLabel.userInteractionEnabled = YES;
         [self.contentView addSubview:self.stopThesePopupsLabel];
@@ -247,7 +250,7 @@
         self.thanksForTheHintButton = [UILabel newAutoLayoutView];
         self.thanksForTheHintButton.text = NSLocalizedString(@"OkThanksForTheHint", nil);
         self.thanksForTheHintButton.textColor = [UIColor whiteColor];
-        self.thanksForTheHintButton.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:24.0f];
+        self.thanksForTheHintButton.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:24.0f * screenSizeScaleFactor];
         self.thanksForTheHintButton.backgroundColor = [LMColour ligniteRedColour];
         self.thanksForTheHintButton.textAlignment = NSTextAlignmentCenter;
         self.thanksForTheHintButton.userInteractionEnabled = YES;
@@ -277,7 +280,7 @@
         self.descriptionLabel = [UILabel newAutoLayoutView];
         self.descriptionLabel.text = self.descriptionText;
         self.descriptionLabel.textColor = [UIColor blackColor];
-        self.descriptionLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18.0f];
+        self.descriptionLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18.0f * screenSizeScaleFactor];
         self.descriptionLabel.textAlignment = NSTextAlignmentLeft;
         self.descriptionLabel.numberOfLines = 0;
         [self.contentView addSubview:self.descriptionLabel];
