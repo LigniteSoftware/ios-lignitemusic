@@ -299,6 +299,7 @@ MPMediaGrouping associatedMediaTypes[] = {
         if(self.repeatMode == LMMusicRepeatModeDefault){
             self.repeatMode = LMMusicRepeatModeNone;
         }
+        self.systemMusicPlayer.shuffleMode = MPMusicShuffleModeOff;
 		self.previousPlaybackTime = self.currentPlaybackTime;
 		
 		self.autoPlay = (self.systemMusicPlayer.playbackState == MPMusicPlaybackStatePlaying);
@@ -479,9 +480,17 @@ MPMediaGrouping associatedMediaTypes[] = {
 	return MPRemoteCommandHandlerStatusSuccess;
 }
 
+- (void)keepShuffleModeInLine {
+    if(self.systemMusicPlayer.shuffleMode != MPMusicShuffleModeOff){
+        self.systemMusicPlayer.shuffleMode = MPMusicShuffleModeOff;
+    }
+}
+
 - (void)currentPlaybackTimeChangeFireTimer:(BOOL)adjustForDifference {
 	__weak id weakSelf = self;
 	
+    [self keepShuffleModeInLine];
+    
 	double delayInSeconds = 0.1;
 	
 	dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
@@ -528,6 +537,8 @@ MPMediaGrouping associatedMediaTypes[] = {
 - (void)systemMusicPlayerTrackChanged:(id)sender {
 	BOOL autoPlay = self.audioPlayer.isPlaying;
 	
+    [self keepShuffleModeInLine];
+    
 	if(!self.musicWasUserSet){
 		return;
 	}
@@ -560,6 +571,8 @@ MPMediaGrouping associatedMediaTypes[] = {
 }
 
 - (void)systemMusicPlayerStateChanged:(id)sender {
+    [self keepShuffleModeInLine];
+    
 	if(self.systemMusicPlayer.playbackState == MPMusicPlaybackStateInterrupted){
 		self.playbackState = LMMusicPlaybackStatePlaying;
 		self.autoPlay = YES;
@@ -588,6 +601,8 @@ MPMediaGrouping associatedMediaTypes[] = {
 }
 
 - (void)changeMusicPlayerState:(LMMusicPlaybackState)newState {
+    [self keepShuffleModeInLine];
+    
 	self.playbackState = newState;
 
 	if(self.playbackState == LMMusicPlaybackStatePlaying){
