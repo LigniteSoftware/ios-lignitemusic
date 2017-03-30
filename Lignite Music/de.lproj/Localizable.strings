@@ -45,7 +45,7 @@
 "TutorialMainNavigationTitle" = "Die Hauptnavigation";
 "TutorialMainNavigationDescription" = "All die wichtigen Dinge an einem Ort.\n\nWechsle zwischen dem Durchsuchen-Tab, dem Mini Player & der Ansichtsauswahl, alles mit deinem Finger.";
 "TutorialMiniPlayerTitle" = "Mini Player";
-"TutorialMiniPlayerDescription" = "Steuere die Musik ganz einfach.\n\nTippe irgendwo auf den Mini Player, um die Musik zu pausieren / abzuspielen. Oder streiche nach links oder nach rechts um den Song zu wechseln. Streiche nach oben, um die Vollbildansicht anzuzeigen.";
+"TutorialMiniPlayerDescription" = "Steuere die Musik ganz einfach.\n\nTippe irgendwo auf den Mini Player, um die Musik zu pausieren/abzuspielen. Streiche links/rechts, um den Song zu wechseln oder nach oben, um zur Vollbildansicht zu gelangen.";
 "TutorialTopBarTitle" = "Topbar";
 "TutorialTopBarDescription" = "Die Topbar, die dir die Navigation erleichtert.\n\nVerwende sie, um zurück zu navigieren oder tippe auf das Lignite Music Icon, um zur Vollbildansicht zu gelangen.";
 "TutorialFullScreenPlaybackTitle" = "Vollbildansicht";

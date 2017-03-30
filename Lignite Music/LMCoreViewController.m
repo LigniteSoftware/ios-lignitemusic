@@ -1167,13 +1167,13 @@ LMControlBarViewDelegate
                             }
                         };
                         
-                        NSUserDefaults* suserDefaults = [NSUserDefaults standardUserDefaults];
-                        [suserDefaults removeObjectForKey:LMTutorialKeyTopBar];
-                        [suserDefaults removeObjectForKey:LMTutorialKeyMiniPlayer];
-                        [suserDefaults removeObjectForKey:LMTutorialKeyBottomNavigation];
-                        [suserDefaults removeObjectForKey:LMTutorialKeyNowPlaying];
-                        [suserDefaults removeObjectForKey:@"LMTutorialViewDontShowHintsKey"];
-                        [suserDefaults synchronize];
+//                        NSUserDefaults* suserDefaults = [NSUserDefaults standardUserDefaults];
+//                        [suserDefaults removeObjectForKey:LMTutorialKeyTopBar];
+//                        [suserDefaults removeObjectForKey:LMTutorialKeyMiniPlayer];
+//                        [suserDefaults removeObjectForKey:LMTutorialKeyBottomNavigation];
+//                        [suserDefaults removeObjectForKey:LMTutorialKeyNowPlaying];
+//                        [suserDefaults removeObjectForKey:@"LMTutorialViewDontShowHintsKey"];
+//                        [suserDefaults synchronize];
 						
                         
                         [NSTimer scheduledTimerWithTimeInterval:1.0 block:^{

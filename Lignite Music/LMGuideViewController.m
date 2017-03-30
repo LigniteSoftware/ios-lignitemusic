@@ -389,6 +389,7 @@
 		[self.finishedButton autoPinEdgesToSuperviewEdges];
 	}
 	else{
+        NSLog(@"Fuck is not a fuck");
 		[self.buttonArea addSubview:self.finishedButton];
 		
 		[self.finishedButton autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(1.0/2.5)];
@@ -425,6 +426,7 @@
     
     [self.buttonArea autoAlignAxisToSuperviewAxis:ALAxisVertical];
     [self.buttonArea autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+    [self.buttonArea autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/12.0)];
     [self.buttonArea autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(8.0/10.0)];
     
     [self.descriptionLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.buttonArea withOffset:-20];
