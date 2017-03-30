@@ -386,6 +386,8 @@ MPMediaGrouping associatedMediaTypes[] = {
 }
 
 + (id)sharedMusicPlayer {
+    return nil;
+    
 	static LMMusicPlayer *sharedPlayer;
 	static dispatch_once_t token;
 	dispatch_once(&token, ^{

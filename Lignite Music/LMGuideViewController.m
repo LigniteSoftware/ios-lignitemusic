@@ -7,15 +7,16 @@
 //
 
 #import <CoreBluetooth/CoreBluetooth.h>
-#import <PebbleKit/PebbleKit.h>
 #import <PureLayout/PureLayout.h>
-#import "LMGuideViewController.h"
+#import <PebbleKit/PebbleKit.h>
+
+#import "LMBackerLoginViewController.h"
 #import "LMGuideViewPagerController.h"
-#import "LMColour.h"
+#import "LMGuideViewController.h"
+#import "NSTimer+Blocks.h"
 #import "LMSettings.h"
 #import "LMAnswers.h"
-#import "LMBackerLoginViewController.h"
-#import "NSTimer+Blocks.h"
+#import "LMColour.h"
 #ifdef SPOTIFY
 #import "Spotify.h"
 #endif
@@ -26,6 +27,11 @@
 #ifdef SPOTIFY
 <SpotifyDelegate>
 #endif
+
+/**
+ The content view for centering all of the content on the horizontal axis, adapting to its size.
+ */
+@property UIView *contentView;
 
 @property UILabel *titleLabel, *descriptionLabel;
 @property UIImageView *screenshotView, *iconView;
@@ -71,6 +77,7 @@
 }
 
 - (void)performOnboardingAction {
+    NSLog(@"Hey bitch");
 	switch(self.guideMode){
 		case GuideModeOnboarding: {
 			
@@ -204,6 +211,8 @@
 			break;
 		}
 		case GuideModeMusicPermissionDenied: {
+            NSLog(@"Spookeeeed");
+            
 			[self.finishedButton setTitle:NSLocalizedString(@"Checking", nil) forState:UIControlStateNormal];
 			SKCloudServiceController *cloudServiceController;
 			cloudServiceController = [SKCloudServiceController new];
@@ -313,9 +322,20 @@
 #endif
 	
 	self.view.backgroundColor = [UIColor clearColor];
+    
+    self.contentView = [UIView newAutoLayoutView];
+    self.contentView.userInteractionEnabled = YES;
+    self.contentView.backgroundColor = [UIColor clearColor];
+    [self.view addSubview:self.contentView];
+    
+    [self.contentView autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+    [self.contentView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+    [self.contentView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+    
+    
 
 	self.buttonArea = [UIView newAutoLayoutView];
-	[self.view addSubview:self.buttonArea];
+	[self.contentView addSubview:self.buttonArea];
 	
 	self.finishedButton = [UIButton newAutoLayoutView];
 	self.finishedButton.backgroundColor = [LMColour ligniteRedColour];
@@ -384,7 +404,7 @@
 	self.descriptionLabel.numberOfLines = 0;
 //	self.descriptionLabel.backgroundColor = [UIColor yellowColor];
 	self.descriptionLabel.text = self.contentDescription;
-	[self.view addSubview:self.descriptionLabel];
+	[self.contentView addSubview:self.descriptionLabel];
 	
 	
 	self.titleLabel = [UILabel newAutoLayoutView];
@@ -393,63 +413,40 @@
 	self.titleLabel.numberOfLines = 0;
 //	self.titleLabel.backgroundColor = [UIColor orangeColor];
 	self.titleLabel.text = self.contentTitle;
-	[self.view addSubview:self.titleLabel];
+	[self.contentView addSubview:self.titleLabel];
 	
 	
 	self.screenshotView = [UIImageView newAutoLayoutView];
 //	self.screenshotView.backgroundColor = [UIColor redColor];
 	self.screenshotView.contentMode = (self.guideMode == GuideModeOnboarding && self.index == 5) ? UIViewContentModeScaleAspectFill : UIViewContentModeScaleAspectFit;
 	self.screenshotView.image = self.screenshotImage;
-	[self.view addSubview:self.screenshotView];
+	[self.contentView addSubview:self.screenshotView];
 	
-	if(self.screenshotImage){
-		[self.titleLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
-		[self.titleLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
-		[self.titleLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(8.0/10.0)];
-		[NSLayoutConstraint autoSetPriority:UILayoutPriorityRequired forConstraints:^{
-			[self.titleLabel autoSetContentCompressionResistancePriorityForAxis:ALAxisVertical];
-		}];
-		
-		[self.descriptionLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.titleLabel withOffset:20];
-		[self.descriptionLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
-		[self.descriptionLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(8.0/10.0)];
-		[NSLayoutConstraint autoSetPriority:UILayoutPriorityRequired forConstraints:^{
-			[self.descriptionLabel autoSetContentCompressionResistancePriorityForAxis:ALAxisVertical];
-		}];
-		
-		[self.buttonArea autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.descriptionLabel withOffset:30];
-		[self.buttonArea autoAlignAxisToSuperviewAxis:ALAxisVertical];
-		[self.buttonArea autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.descriptionLabel];
-		[self.buttonArea autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.descriptionLabel];
-        [self.buttonArea autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/16.0)];
-		
-		[self.screenshotView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.titleLabel];
-		[self.screenshotView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-		[self.screenshotView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-		[self.screenshotView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/3.0)];
-	}
-	else{
-		[self.descriptionLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
-		[self.descriptionLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
-		[self.descriptionLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(8.0/10.0)];
-		[NSLayoutConstraint autoSetPriority:UILayoutPriorityRequired forConstraints:^{
-			[self.descriptionLabel autoSetContentCompressionResistancePriorityForAxis:ALAxisVertical];
-		}];
-		
-		[self.titleLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.descriptionLabel withOffset:-20];
-		[self.titleLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
-		[self.titleLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(8.0/10.0)];
-		[NSLayoutConstraint autoSetPriority:UILayoutPriorityRequired forConstraints:^{
-			[self.titleLabel autoSetContentCompressionResistancePriorityForAxis:ALAxisVertical];
-		}];
-		
-		[self.buttonArea autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.descriptionLabel withOffset:30];
-		[self.buttonArea autoAlignAxisToSuperviewAxis:ALAxisVertical];
-		[self.buttonArea autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(8.0/10.0)];
-		[self.buttonArea autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/16.0)];
-	}
-	
-	[self.view insertSubview:self.titleLabel aboveSubview:self.screenshotView];
+    
+    [self.buttonArea autoAlignAxisToSuperviewAxis:ALAxisVertical];
+    [self.buttonArea autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+    [self.buttonArea autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(8.0/10.0)];
+    
+    [self.descriptionLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.buttonArea withOffset:-20];
+    [self.descriptionLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.buttonArea];
+    [self.descriptionLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.buttonArea];
+    
+    if(!self.screenshotImage){
+        [self.titleLabel autoPinEdgeToSuperviewEdge:ALEdgeTop];
+    }
+    [self.titleLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.descriptionLabel withOffset:-15];
+    [self.titleLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.descriptionLabel];
+    [self.titleLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.descriptionLabel];
+
+    if(self.screenshotImage){
+        [self.screenshotView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.contentView];
+        [self.screenshotView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.titleLabel];
+        [self.screenshotView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.titleLabel];
+        [self.screenshotView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.titleLabel];
+        [self.screenshotView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/3.0)];
+    }
+    
+	[self.contentView insertSubview:self.titleLabel aboveSubview:self.screenshotView];
 }
 
 - (void)didReceiveMemoryWarning {
