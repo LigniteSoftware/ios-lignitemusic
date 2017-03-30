@@ -45,11 +45,11 @@
 "TutorialMainNavigationTitle" = "Die Hauptnavigation";
 "TutorialMainNavigationDescription" = "All die wichtigen Dinge an einem Ort.\n\nWechsle zwischen dem Durchsuchen-Tab, dem Mini Player & der Ansichtsauswahl, alles mit deinem Finger.";
 "TutorialMiniPlayerTitle" = "Mini Player";
-"TutorialMiniPlayerDescription" = "Steuere die Musik ganz einfach.\n\nTippe irgendwo auf den Mini Player, um die Musik zu pausieren/abzuspielen. Streiche links/rechts, um den Song zu wechseln oder nach oben, um zur Vollbildansicht zu gelangen.";
+"TutorialMiniPlayerDescription" = "Tippe irgendwo auf den Mini Player, um die Musik zu pausieren/abzuspielen. Streiche links/rechts, um den Song zu wechseln oder nach oben, um zur Vollbildansicht zu gelangen.";
 "TutorialTopBarTitle" = "Topbar";
 "TutorialTopBarDescription" = "Die Topbar, die dir die Navigation erleichtert.\n\nVerwende sie, um zurück zu navigieren oder tippe auf das Lignite Music Icon, um zur Vollbildansicht zu gelangen.";
 "TutorialFullScreenPlaybackTitle" = "Vollbildansicht";
-"TutorialFullScreenPlaybackDescription" = "Unsere favorisierte Ansicht!\n\nDu kannst deine Musikwiedergabe hier genau wie beim Mini Player steuern. 1x irgendwo tippen pausiert die Wiedergabe, nach links oder rechts streichen wechselt zwischen den Songs und nach unten streichen bringt dich zurück zu deiner Musikbibliothek.\n\nEin Tippen auf das Icon unten rechts zeigt dir die kommenden Songs an.";
+"TutorialFullScreenPlaybackDescription" = "Du kannst deine Musikwiedergabe hier genau wie beim Mini Player steuern. 1x irgendwo tippen pausiert die Wiedergabe, nach links oder rechts streichen wechselt zwischen den Songs und nach unten streichen bringt dich zurück zu deiner Musikbibliothek.\n\nEin Tippen auf das Icon unten rechts zeigt dir die kommenden Songs an.";
 
 
 "NoiPadSupport" = "Sorry, Lignite Music unterstützt iPad in Zukunft, zurzeit jedoch noch nicht.\n\nStatt dir eine fehlerbehaftete Version auf dem iPad zu präsentieren, belassen wir es hierbei. Wir überlassen die Entscheidung dir, ob du die App zwischenzeitlich von deinem iPad deinstallieren willst oder nicht..\n\nWir werden eine allfällige iPad-Version via Kickstarter ankündigen.\n\nVielen Dank für dein Verständnis.";

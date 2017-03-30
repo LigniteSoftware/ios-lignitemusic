@@ -54,11 +54,11 @@
 "TutorialMainNavigationTitle" = "The main navigation";
 "TutorialMainNavigationDescription" = "All the important stuff in one place.\n\nSwitch between letter tabs/search, the mini player & what view you're browsing with the touch of a finger.";
 "TutorialMiniPlayerTitle" = "Mini player";
-"TutorialMiniPlayerDescription" = "Control your music easily.\n\nTap anywhere on the mini player to play/pause your music, or swipe left/right to go between your songs, and swipe up to reveal full-screen playback.";
+"TutorialMiniPlayerDescription" = "Tap anywhere on the mini player to play/pause your music, or swipe left/right to go between your songs, and swipe up to reveal full-screen playback.";
 "TutorialTopBarTitle" = "Top bar";
 "TutorialTopBarDescription" = "The top bar, to make navigation even easier.\n\nUse it to navigate back throughout pages, or tap the Lignite Music icon to reveal full-screen playback.";
 "TutorialFullScreenPlaybackTitle" = "Full-screen playback";
-"TutorialFullScreenPlaybackDescription" = "Our most loved screen!\n\nSame gestures as the mini player. Tap anywhere to pause, swipe left/right to navigate through tunes, and drag it down to go back to browsing.\n\nAs well, you can see what's coming up next by tapping the bottom right icon.";
+"TutorialFullScreenPlaybackDescription" = "Same gestures as the mini player. Tap anywhere to pause, swipe left/right to navigate through tunes, and drag it down to go back to browsing.\n\nAs well, you can see what's coming up next by tapping the bottom right icon.";
 
 
 "NoiPadSupport" = "Sorry, Lignite Music doesn't currently support iPad, but we will support it in the future.\n\nInstead of putting you into a potentially buggy app, we will just leave you here. Please feel free to uninstall the app from your iPad.\n\nWe will announce via Kickstarter when we add iPad support.\n\nThank you for your understanding.";

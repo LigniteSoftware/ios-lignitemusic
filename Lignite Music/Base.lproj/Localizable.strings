@@ -46,6 +46,21 @@
  
  */
 
+
+
+"StopShowingTheseHints" = "Stop showing these hints";
+"OkThanksForTheHint" = "Ok, thanks for the hint";
+
+"TutorialMainNavigationTitle" = "The main navigation";
+"TutorialMainNavigationDescription" = "All the important stuff in one place.\n\nSwitch between letter tabs/search, the mini player & what view you're browsing with the touch of a finger.";
+"TutorialMiniPlayerTitle" = "Mini player";
+"TutorialMiniPlayerDescription" = "Tap anywhere on the mini player to play/pause your music, or swipe left/right to go between your songs, and swipe up to reveal full-screen playback.";
+"TutorialTopBarTitle" = "Top bar";
+"TutorialTopBarDescription" = "The top bar, to make navigation even easier.\n\nUse it to navigate back throughout pages, or tap the Lignite Music icon to reveal full-screen playback.";
+"TutorialFullScreenPlaybackTitle" = "Full-screen playback";
+"TutorialFullScreenPlaybackDescription" = "Same gestures as the mini player. Tap anywhere to pause, swipe left/right to navigate through tunes, and drag it down to go back to browsing.\n\nAs well, you can see what's coming up next by tapping the bottom right icon.";
+
+
 "NoiPadSupport" = "Sorry, Lignite Music doesn't currently support iPad, but we will support it in the future.\n\nInstead of putting you into a potentially buggy app, we will just leave you here. Please feel free to uninstall the app from your iPad.\n\nWe will announce via Kickstarter when we add iPad support.\n\nThank you for your understanding.";
 
 "OnboardingSpotifyLoginTitle" = "Spotify";
@@ -417,8 +432,8 @@
 
 "KickstarterBackers" = "Kickstarter Backers";
 
-"LastFMAPI" = "Discogs API";
-"LastFMAPIDescription" = "We want to give a big shoutout to Discogs's absolutely breathtaking API and community.\n\nWe use it for its images of artists and images of missing cover art and it works like a charm! It has a nice rate limit, many functions, and an excellent community.";
+"ImageAPI" = "Discogs API";
+"ImageAPIDescription" = "We want to give a big shoutout to Discogs's absolutely breathtaking API and community.\n\nWe use it for its images of artists and images of missing cover art and it works like a charm! It has a nice rate limit, many functions, and an excellent community.";
 
 "OpenSourceLibraries" = "Open Source Libraries";
 "OpenSourceLibrariesLicensing" = "Lignite Music is built off of many powerful open source libraries.\n\nBig thanks to the original authors and all who contributed to their development!";
