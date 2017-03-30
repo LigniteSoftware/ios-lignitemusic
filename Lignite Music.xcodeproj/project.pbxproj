@@ -320,6 +320,12 @@
 		6ACB69AB1E87AE3A001A04B6 /* purchase_header.png in Resources */ = {isa = PBXBuildFile; fileRef = 6ACB69A91E87AE3A001A04B6 /* purchase_header.png */; };
 		6ACED1081DB7BE1D006EACD2 /* icon_repeat_one.png in Resources */ = {isa = PBXBuildFile; fileRef = 6ACED1061DB7BE1D006EACD2 /* icon_repeat_one.png */; };
 		6ACED1091DB7BE1D006EACD2 /* icon_shuffle.png in Resources */ = {isa = PBXBuildFile; fileRef = 6ACED1071DB7BE1D006EACD2 /* icon_shuffle.png */; };
+		6ACFB9701E8CE103009811F0 /* icon_tutorial_scroll.png in Resources */ = {isa = PBXBuildFile; fileRef = 6ACFB96D1E8CE103009811F0 /* icon_tutorial_scroll.png */; };
+		6ACFB9711E8CE103009811F0 /* icon_tutorial_scroll.png in Resources */ = {isa = PBXBuildFile; fileRef = 6ACFB96D1E8CE103009811F0 /* icon_tutorial_scroll.png */; };
+		6ACFB9721E8CE103009811F0 /* icon_tutorial_swipe.png in Resources */ = {isa = PBXBuildFile; fileRef = 6ACFB96E1E8CE103009811F0 /* icon_tutorial_swipe.png */; };
+		6ACFB9731E8CE103009811F0 /* icon_tutorial_swipe.png in Resources */ = {isa = PBXBuildFile; fileRef = 6ACFB96E1E8CE103009811F0 /* icon_tutorial_swipe.png */; };
+		6ACFB9741E8CE103009811F0 /* icon_tutorial_tap.png in Resources */ = {isa = PBXBuildFile; fileRef = 6ACFB96F1E8CE103009811F0 /* icon_tutorial_tap.png */; };
+		6ACFB9751E8CE103009811F0 /* icon_tutorial_tap.png in Resources */ = {isa = PBXBuildFile; fileRef = 6ACFB96F1E8CE103009811F0 /* icon_tutorial_tap.png */; };
 		6AD226F91DA49C720056695A /* LMProgressCircleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AD226F81DA49C720056695A /* LMProgressCircleView.m */; };
 		6AD226FC1DA4B7770056695A /* LMNowPlayingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AD226FB1DA4B7770056695A /* LMNowPlayingView.m */; };
 		6AD226FF1DA4B8000056695A /* LMCoreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AD226FE1DA4B8000056695A /* LMCoreViewController.m */; };
@@ -586,6 +592,9 @@
 		6ACB69A91E87AE3A001A04B6 /* purchase_header.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = purchase_header.png; sourceTree = "<group>"; };
 		6ACED1061DB7BE1D006EACD2 /* icon_repeat_one.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_repeat_one.png; sourceTree = "<group>"; };
 		6ACED1071DB7BE1D006EACD2 /* icon_shuffle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_shuffle.png; sourceTree = "<group>"; };
+		6ACFB96D1E8CE103009811F0 /* icon_tutorial_scroll.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_tutorial_scroll.png; sourceTree = "<group>"; };
+		6ACFB96E1E8CE103009811F0 /* icon_tutorial_swipe.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_tutorial_swipe.png; sourceTree = "<group>"; };
+		6ACFB96F1E8CE103009811F0 /* icon_tutorial_tap.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_tutorial_tap.png; sourceTree = "<group>"; };
 		6AD226F71DA49C720056695A /* LMProgressCircleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMProgressCircleView.h; sourceTree = "<group>"; };
 		6AD226F81DA49C720056695A /* LMProgressCircleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMProgressCircleView.m; sourceTree = "<group>"; };
 		6AD226FA1DA4B7770056695A /* LMNowPlayingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMNowPlayingView.h; sourceTree = "<group>"; };
@@ -912,6 +921,9 @@
 				6A514E131CE9621B00AFB351 /* icon_dynamic_playlist.png */,
 				6A759D411DE8EB0E0051E1A9 /* icon_functionality.png */,
 				6A9C05391DB4441200713D1C /* icon_genres.png */,
+				6ACFB96D1E8CE103009811F0 /* icon_tutorial_scroll.png */,
+				6ACFB96E1E8CE103009811F0 /* icon_tutorial_swipe.png */,
+				6ACFB96F1E8CE103009811F0 /* icon_tutorial_tap.png */,
 				6AC066F01DFF5253008A6FCA /* icon_grab_rectangle.png */,
 				6A5168951E09002800A6446F /* icon_green_checkmark.png */,
 				6A1AF0801E028E3400F8934C /* icon_hamburger.png */,
@@ -1383,6 +1395,7 @@
 				6AA5CB511E285C0A005F853F /* onboarding_library_access.png in Resources */,
 				6AA5CB521E285C0A005F853F /* signatures.png in Resources */,
 				6AA5CB531E285C0A005F853F /* pebble_colours_64.gif in Resources */,
+				6ACFB9751E8CE103009811F0 /* icon_tutorial_tap.png in Resources */,
 				6AA5CB541E285C0A005F853F /* tutorial_bottom_tabs.png in Resources */,
 				6AA5CB551E285C0A005F853F /* InfoPlist.strings in Resources */,
 				6AA5CB561E285C0A005F853F /* icon_hamburger.png in Resources */,
@@ -1391,6 +1404,7 @@
 				6AA5CB591E285C0A005F853F /* aplite_colours.gif in Resources */,
 				6AA5CB5A1E285C0A005F853F /* icon_a_to_z.png in Resources */,
 				6AA5CB5B1E285C0A005F853F /* icon_buy.png in Resources */,
+				6ACFB9731E8CE103009811F0 /* icon_tutorial_swipe.png in Resources */,
 				6AA5CB5C1E285C0A005F853F /* tutorial_browsing.png in Resources */,
 				6AA5CB5D1E285C0A005F853F /* icon_download.png in Resources */,
 				6AA5CB5E1E285C0A005F853F /* onboarding_us.png in Resources */,
@@ -1410,6 +1424,7 @@
 				6AA5CB6B1E285C0A005F853F /* icon_repeat_one.png in Resources */,
 				6AA5CB6C1E285C0A005F853F /* icon_white_checkmark.png in Resources */,
 				6AA5CB6D1E285C0A005F853F /* icon_airplay.png in Resources */,
+				6ACFB9711E8CE103009811F0 /* icon_tutorial_scroll.png in Resources */,
 				6AA5CB6E1E285C0A005F853F /* never_forget.png in Resources */,
 				6AA5CB6F1E285C0A005F853F /* onboarding_pebble.png in Resources */,
 				6AA5CB701E285C0A005F853F /* HoneyScript-Light.ttf in Resources */,
@@ -1465,6 +1480,7 @@
 				6ADC48EF1DDF8C8000FE57F1 /* onboarding_library_access.png in Resources */,
 				6A759D4D1DEA3D0C0051E1A9 /* signatures.png in Resources */,
 				6AE4A7FC1D49461C002B67CD /* pebble_colours_64.gif in Resources */,
+				6ACFB9741E8CE103009811F0 /* icon_tutorial_tap.png in Resources */,
 				6AFF01A11DDE7D2D00F24D8E /* tutorial_bottom_tabs.png in Resources */,
 				6AFF01951DDE4EAF00F24D8E /* InfoPlist.strings in Resources */,
 				6A1AF0811E028E3500F8934C /* icon_hamburger.png in Resources */,
@@ -1473,6 +1489,7 @@
 				6A0750721D5EAB8000BCBC9C /* aplite_colours.gif in Resources */,
 				6AAA560A1DF553AF00692CFB /* icon_a_to_z.png in Resources */,
 				6A5168931E08F4C800A6446F /* icon_buy.png in Resources */,
+				6ACFB9721E8CE103009811F0 /* icon_tutorial_swipe.png in Resources */,
 				6AFF01A01DDE7D2D00F24D8E /* tutorial_browsing.png in Resources */,
 				6A26B4701DE40824008B5B69 /* icon_download.png in Resources */,
 				6A43BCE91DDFA66B009FB0E9 /* onboarding_us.png in Resources */,
@@ -1492,6 +1509,7 @@
 				6ACED1081DB7BE1D006EACD2 /* icon_repeat_one.png in Resources */,
 				6A5168A31E09166000A6446F /* icon_white_checkmark.png in Resources */,
 				6A1AF0891E03BC1000F8934C /* icon_airplay.png in Resources */,
+				6ACFB9701E8CE103009811F0 /* icon_tutorial_scroll.png in Resources */,
 				6A0750741D5EC0C000BCBC9C /* never_forget.png in Resources */,
 				6AFF01911DDD6B1A00F24D8E /* onboarding_pebble.png in Resources */,
 				6A759D5B1DEBF4210051E1A9 /* HoneyScript-Light.ttf in Resources */,

@@ -111,18 +111,17 @@
         return;
     }
     
-    [self.superview layoutIfNeeded];
-    
-    self.leadingLayoutConstraint.constant = self.frame.size.width;
-    
     [UIView animateWithDuration:0.50 animations:^{
-        [self.superview layoutIfNeeded];
+        self.backgroundBlurView.effect = nil;
+        self.contentViewBackground.alpha = 0;
     } completion:^(BOOL finished) {
-        [self removeFromSuperview];
-        
-        if(self.delegate){
-            if([self.delegate respondsToSelector:@selector(tutorialFinishedWithKey:)]){
-                [self.delegate tutorialFinishedWithKey:self.key];
+        if(finished){
+            [self removeFromSuperview];
+            
+            if(self.delegate){
+                if([self.delegate respondsToSelector:@selector(tutorialFinishedWithKey:)]){
+                    [self.delegate tutorialFinishedWithKey:self.key];
+                }
             }
         }
     }];
@@ -163,8 +162,7 @@
         
         
         UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
-        self.backgroundBlurView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
-        self.backgroundBlurView.translatesAutoresizingMaskIntoConstraints = NO;
+        self.backgroundBlurView = [UIVisualEffectView newAutoLayoutView];
         [self addSubview:self.backgroundBlurView];
         
         [self.backgroundBlurView autoPinEdgesToSuperviewEdges];
@@ -176,6 +174,7 @@
         self.contentViewBackground.layer.shadowOffset = CGSizeMake(0, 0);
         self.contentViewBackground.layer.masksToBounds = NO;
         self.contentViewBackground.layer.shadowRadius = 15;
+        self.contentViewBackground.alpha = 0;
         [self addSubview:self.contentViewBackground];
         
         [self.contentViewBackground autoAlignAxisToSuperviewAxis:ALAxisVertical];
@@ -293,11 +292,9 @@
         [self.descriptionLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.titleLabel withOffset:20];
         [self.descriptionLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.thanksForTheHintButton withOffset:-20];
         
-        
-        [self.superview layoutIfNeeded];
-        self.leadingLayoutConstraint.constant = 0;
         [UIView animateWithDuration:0.5 animations:^{
-            [self.superview layoutIfNeeded];
+            self.contentViewBackground.alpha = 1;
+            self.backgroundBlurView.effect = blurEffect;
         }];
     }
 }

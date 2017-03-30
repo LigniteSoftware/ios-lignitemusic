@@ -138,7 +138,6 @@ LMControlBarViewDelegate
                 tutorialView.arrowAlignment = LMTutorialViewAlignmentBottom;
                 tutorialView.icon = [LMAppIcon imageForIcon:LMIconBug];
                 tutorialView.leadingLayoutConstraint = [tutorialView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-                tutorialView.leadingLayoutConstraint.constant = self.view.frame.size.width;
                 tutorialView.delegate = self;
                 [tutorialView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
                 [tutorialView autoPinEdgeToSuperviewEdge:ALEdgeTop];
@@ -159,7 +158,6 @@ LMControlBarViewDelegate
                 tutorialView.arrowAlignment = LMTutorialViewAlignmentTop;
                 tutorialView.icon = [LMAppIcon imageForIcon:LMIconBug];
                 tutorialView.leadingLayoutConstraint = [tutorialView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-                tutorialView.leadingLayoutConstraint.constant = self.view.frame.size.width;
                 tutorialView.delegate = self;
                 [tutorialView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
                 [tutorialView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
@@ -1191,7 +1189,6 @@ LMControlBarViewDelegate
                                 tutorialView.arrowAlignment = LMTutorialViewAlignmentBottom;
 //                                tutorialView.icon = [LMAppIcon imageForIcon:LMIconLookAndFeel];
                                 tutorialView.leadingLayoutConstraint = [tutorialView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-                                tutorialView.leadingLayoutConstraint.constant = self.view.frame.size.width;
                                 tutorialView.delegate = self;
                                 [tutorialView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
                                 [tutorialView autoPinEdgeToSuperviewEdge:ALEdgeTop];
