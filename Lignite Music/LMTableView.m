@@ -240,7 +240,7 @@
 		[self reloadData];
 	}
     
-    if(self.contentSize.width > 0 && self.contentSize.height > 0 && !self.hasAddedBottomWhiteSpacer){
+    if(self.contentSize.width > 0 && self.contentSize.height > 0 && !self.hasAddedBottomWhiteSpacer && self.addBottomWhiteSpace){
 //        NSLog(@"Adding this shit");
         UIView *testView = [UIView new];
         testView.backgroundColor = [UIColor whiteColor];

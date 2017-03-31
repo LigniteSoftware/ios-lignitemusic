@@ -553,6 +553,7 @@
 	
 	
 	self.tableView = [LMTableView newAutoLayoutView];
+    self.tableView.addBottomWhiteSpace = YES;
 	self.tableView.secondaryDelegate = self;
 	self.tableView.title = @"PlaylistDetailView";
 	self.tableView.averageCellHeight = WINDOW_FRAME.size.height*(1.0/10.0);

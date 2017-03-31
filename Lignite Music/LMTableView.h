@@ -114,6 +114,11 @@
 @property id<LMTableViewSubviewDataSource> subviewDataSource;
 
 /**
+ Add white space to the bottom of the content on the scroll view to prevent shit from going down.
+ */
+@property BOOL addBottomWhiteSpace;
+
+/**
  Reloads the subview data. Recalculates the amount of objects required, sets up the basic layout of the table view (ie. background colour) and tells delegate of new calculations.
  */
 - (void)reloadSubviewData;

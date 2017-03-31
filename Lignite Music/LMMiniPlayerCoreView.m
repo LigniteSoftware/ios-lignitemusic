@@ -65,6 +65,10 @@
 @implementation LMMiniPlayerCoreView
 
 - (void)loadMusicTracksBasedOffIndex:(NSInteger)indexOfCenter {
+    if(indexOfCenter > self.musicPlayer.nowPlayingCollection.items.count){
+        indexOfCenter = 0;
+    }
+    
 	NSInteger nextTrackIndex = indexOfCenter+1;
 	NSInteger previousTrackIndex = indexOfCenter-1;
 	if(nextTrackIndex >= self.musicPlayer.nowPlayingCollection.count){
