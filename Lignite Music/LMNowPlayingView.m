@@ -80,7 +80,7 @@
 /**
  Goes in front of the background image view for now while we test this new design
  */
-@property UIView *colourBackgroundView;
+//@property UIView *colourBackgroundView;
 
 @property UIView *albumArtRootView;
 @property LMAlbumArtView *albumArtImageView;
@@ -198,7 +198,7 @@
 //		self.blurredBackgroundView.effect = [UIBlurEffect effectWithStyle:isLight ? UIBlurEffectStyleLight : UIBlurEffectStyleDark];
 //		UIColor *newTextColour = isLight ? [UIColor blackColor] : [UIColor whiteColor];
 		
-		SLColorArt *colorArt = [albumImage colorArt];
+//		SLColorArt *colorArt = [albumImage colorArt];
 		
 		dispatch_async(dispatch_get_main_queue(), ^{
 			if(operation.cancelled){
@@ -214,9 +214,9 @@
 //			self.trackInfoView.textColour = newTextColour;
 			
 			self.progressSlider.sliderBackgroundView.backgroundColor = averageColour;
-			self.colourBackgroundView.backgroundColor = colorArt.backgroundColor;
+//			self.colourBackgroundView.backgroundColor = colorArt.backgroundColor;
 			
-			BOOL isLight = [self.colourBackgroundView.backgroundColor isLight];
+			BOOL isLight = [self.progressSlider.sliderBackgroundView.backgroundColor isLight];
 			
 			self.blurredBackgroundView.effect = [UIBlurEffect effectWithStyle:isLight ? UIBlurEffectStyleLight : UIBlurEffectStyleDark];
 			
@@ -737,12 +737,12 @@
 	[self.blurredBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 	
 	
-	self.colourBackgroundView = [UIView newAutoLayoutView];
-	self.colourBackgroundView.backgroundColor = [UIColor whiteColor];
-	[self.blurredBackgroundView addSubview:self.colourBackgroundView];
-	
-	[self.colourBackgroundView autoPinEdgesToSuperviewEdges];
-	self.colourBackgroundView.hidden = YES;
+//	self.colourBackgroundView = [UIView newAutoLayoutView];
+//	self.colourBackgroundView.backgroundColor = [UIColor whiteColor];
+//	[self.blurredBackgroundView addSubview:self.colourBackgroundView];
+//	
+//	[self.colourBackgroundView autoPinEdgesToSuperviewEdges];
+//	self.colourBackgroundView.hidden = YES;
 	
 	
 	self.albumArtRootView = [UIView newAutoLayoutView];
