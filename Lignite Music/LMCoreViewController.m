@@ -200,6 +200,11 @@ LMControlBarViewDelegate
 
 - (void)musicTrackDidChange:(LMMusicTrack *)newTrack {
 //	NSLog(@"HEY! Got new track, title %@", newTrack.title);
+    
+    if(!self.buttonNavigationBar.isCompletelyHidden){
+        [self.buttonNavigationBar maximize];
+        [self.buttonNavigationBar setSelectedTab:LMNavigationTabMiniplayer];
+    }
 }
 
 #ifndef SPOTIFY

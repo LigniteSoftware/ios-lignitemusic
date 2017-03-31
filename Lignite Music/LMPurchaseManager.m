@@ -154,10 +154,10 @@
 		
 		self.currentlyPurchasingProduct = product;
 		
-//		[LMAnswers logStartCheckoutWithPrice:product.price
-//								  currency:product.priceLocale.currencyCode
-//								 itemCount:@(1)
-//						  customAttributes:@{ @"ProductIdentifier":product.productIdentifier }];
+		[LMAnswers logStartCheckoutWithPrice:product.price
+								  currency:product.priceLocale.currencyCode
+								 itemCount:@(1)
+						  customAttributes:@{ @"ProductIdentifier":product.productIdentifier }];
 		
 		[self purchaseProduct:product];
 	}
@@ -168,6 +168,7 @@
 }
 
 - (void)purchaseProduct:(SKProduct *)product{
+    NSLog(@"[LMPurchaseManager]: Purchase product.");
 	SKPayment *payment = [SKPayment paymentWithProduct:product];
 	
 	[[SKPaymentQueue defaultQueue] addTransactionObserver:self];
@@ -204,9 +205,12 @@
 }
 
 - (void)paymentQueue:(SKPaymentQueue *)queue updatedTransactions:(NSArray *)transactions {
+    NSLog(@"[LMPurchaseManager]: Updated %ld transactions...", (long)transactions.count);
 	for(SKPaymentTransaction *transaction in transactions){
 		NSString *productIdentifier = transaction.payment.productIdentifier;
 		SKPaymentTransactionState transactionState = transaction.transactionState;
+        
+        NSLog(@"State %d", transactionState);
 		
 		for(id<LMPurchaseManagerDelegate> delegate in self.delegatesArray){
 			if([delegate respondsToSelector:@selector(transactionStateChangedTo:forProductWithIdentifier:)]){
@@ -226,13 +230,13 @@
 				
 				[self completePurchaseForProductIdentifier:productIdentifier];
 				
-//				[LMAnswers logPurchaseWithPrice:self.currentlyPurchasingProduct.price
-//									 currency:self.currentlyPurchasingProduct.priceLocale.currencyCode
-//									  success:@YES
-//									 itemName:self.currentlyPurchasingProduct.localizedTitle
-//									 itemType:[self productTypeForIdentifier:productIdentifier]
-//									   itemId:productIdentifier
-//							 customAttributes:@{}];
+				[LMAnswers logPurchaseWithPrice:self.currentlyPurchasingProduct.price
+									 currency:self.currentlyPurchasingProduct.priceLocale.currencyCode
+									  success:@YES
+									 itemName:self.currentlyPurchasingProduct.localizedTitle
+									 itemType:[self productTypeForIdentifier:productIdentifier]
+									   itemId:productIdentifier
+							 customAttributes:@{}];
 				break;
 			}
 			case SKPaymentTransactionStateRestored:
@@ -244,6 +248,9 @@
 				if(transaction.error.code == SKErrorPaymentCancelled){
 					NSLog(@"[LMPurchaseManager]: User cancelled their purchase.");
 				}
+                else{
+                    NSLog(@"[LMPurchaseManager]: The transaction failed for another reason, %@ (%ld).", transaction.error, transaction.error.code);
+                }
 				[[SKPaymentQueue defaultQueue] finishTransaction:transaction];
 				break;
 			case SKPaymentTransactionStateDeferred:

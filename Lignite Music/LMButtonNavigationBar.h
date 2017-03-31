@@ -82,6 +82,7 @@ typedef NS_ENUM(NSUInteger, LMNavigationTab) {
  Whether or not the navigation bar is in its minimized format.
  */
 @property BOOL isMinimized;
+@property BOOL isCompletelyHidden;
 
 /**
  Completely hide the navigation button bar from the view. Minimize or maximize will need to be called to bring it back.

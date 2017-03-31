@@ -104,46 +104,46 @@
 	NSLog(@"Tapped %d!", (int)index);
 	switch(index){
 		case 0: {
-			UIAlertController *alert = [UIAlertController
-										alertControllerWithTitle:NSLocalizedString(@"OhBoy", nil)
-										message:[NSString stringWithFormat:@"\n%@\n", NSLocalizedString(@"NoPurchasesYet", nil)]
-										preferredStyle:UIAlertControllerStyleAlert];
-			
-			UIAlertAction *yesButton = [UIAlertAction
-										actionWithTitle:NSLocalizedString(@"Okay", nil)
-										style:UIAlertActionStyleDefault
-										handler:nil];
-			
-			[alert addAction:yesButton];
-			
-			NSArray *viewArray = [[[[[[[[[[[[alert view] subviews] firstObject] subviews] firstObject] subviews] firstObject] subviews] firstObject] subviews] firstObject] subviews]; //lol
-			//		UILabel *alertTitle = viewArray[0];
-			UILabel *alertMessage = viewArray[1];
-			alertMessage.textAlignment = NSTextAlignmentLeft;
-			
-			[self presentViewController:alert animated:YES completion:nil];
-			
-//			[self.purchaseManager makePurchaseWithProductIdentifier:LMPurchaseManagerProductIdentifierLifetimeMusic];
+//			UIAlertController *alert = [UIAlertController
+//										alertControllerWithTitle:NSLocalizedString(@"OhBoy", nil)
+//										message:[NSString stringWithFormat:@"\n%@\n", NSLocalizedString(@"NoPurchasesYet", nil)]
+//										preferredStyle:UIAlertControllerStyleAlert];
 //			
-//			self.pendingViewController = [UIAlertController alertControllerWithTitle:nil
-//																			 message:[NSString stringWithFormat:@"%@\n\n\n", NSLocalizedString(@"HoldOn", nil)]
-//																	  preferredStyle:UIAlertControllerStyleAlert];
-//			UIActivityIndicatorView* indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-//			indicator.color = [UIColor blackColor];
-//			indicator.translatesAutoresizingMaskIntoConstraints = NO;
-//			[self.pendingViewController.view addSubview:indicator];
-//			NSDictionary * views = @{ @"pending": self.pendingViewController.view,
-//									  @"indicator": indicator };
+//			UIAlertAction *yesButton = [UIAlertAction
+//										actionWithTitle:NSLocalizedString(@"Okay", nil)
+//										style:UIAlertActionStyleDefault
+//										handler:nil];
 //			
-//			NSArray *constraintsVertical = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[indicator]-(20)-|" options:0 metrics:nil views:views];
-//			NSArray *constraintsHorizontal = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[indicator]|" options:0 metrics:nil views:views];
-//			NSArray *constraints = [constraintsVertical arrayByAddingObjectsFromArray:constraintsHorizontal];
-//			[self.pendingViewController.view addConstraints:constraints];
+//			[alert addAction:yesButton];
 //			
-//			[indicator setUserInteractionEnabled:NO];
-//			[indicator startAnimating];
+//			NSArray *viewArray = [[[[[[[[[[[[alert view] subviews] firstObject] subviews] firstObject] subviews] firstObject] subviews] firstObject] subviews] firstObject] subviews]; //lol
+//			//		UILabel *alertTitle = viewArray[0];
+//			UILabel *alertMessage = viewArray[1];
+//			alertMessage.textAlignment = NSTextAlignmentLeft;
 //			
-//			[self presentViewController:self.pendingViewController animated:YES completion:nil];
+//			[self presentViewController:alert animated:YES completion:nil];
+//			
+			[self.purchaseManager makePurchaseWithProductIdentifier:LMPurchaseManagerProductIdentifierLifetimeMusic];
+			
+			self.pendingViewController = [UIAlertController alertControllerWithTitle:nil
+																			 message:[NSString stringWithFormat:@"%@\n\n\n", NSLocalizedString(@"HoldOn", nil)]
+																	  preferredStyle:UIAlertControllerStyleAlert];
+			UIActivityIndicatorView* indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+			indicator.color = [UIColor blackColor];
+			indicator.translatesAutoresizingMaskIntoConstraints = NO;
+			[self.pendingViewController.view addSubview:indicator];
+			NSDictionary * views = @{ @"pending": self.pendingViewController.view,
+									  @"indicator": indicator };
+			
+			NSArray *constraintsVertical = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[indicator]-(20)-|" options:0 metrics:nil views:views];
+			NSArray *constraintsHorizontal = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[indicator]|" options:0 metrics:nil views:views];
+			NSArray *constraints = [constraintsVertical arrayByAddingObjectsFromArray:constraintsHorizontal];
+			[self.pendingViewController.view addConstraints:constraints];
+			
+			[indicator setUserInteractionEnabled:NO];
+			[indicator startAnimating];
+			
+			[self presentViewController:self.pendingViewController animated:YES completion:nil];
 			break;
 		}
 		case 1: { //Backer login

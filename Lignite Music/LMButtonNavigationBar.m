@@ -212,6 +212,7 @@
 	__weak id weakSelf = self;
     
     self.isMinimized = YES;
+    self.isCompletelyHidden = YES;
 	
 	[self setButtonBarBottomConstraintConstant:WINDOW_FRAME.size.height/2 completion:^(BOOL finished) {
 		LMButtonNavigationBar *strongSelf = weakSelf;
@@ -238,6 +239,7 @@
     }
     
     self.isMinimized = YES;
+    self.isCompletelyHidden = NO;
     
 	NSLog(@"Minimize");
 	
@@ -268,6 +270,7 @@
 	NSLog(@"Maximize");
     
     self.isMinimized = NO;
+    self.isCompletelyHidden = NO;
 	
 	__weak id weakSelf = self;
 	
