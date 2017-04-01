@@ -1106,6 +1106,7 @@ LMControlBarViewDelegate
 						
 						self.titleView = [LMTitleView newAutoLayoutView];
 						self.titleView.backgroundColor = [UIColor whiteColor];
+                        self.titleView.rootViewController = self;
 						[self.view addSubview:self.titleView];
 
 						[self.titleView autoPinEdgesToSuperviewEdges];

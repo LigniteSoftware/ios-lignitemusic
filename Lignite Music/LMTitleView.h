@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "LMTableView.h"
 #import "LMMusicPlayer.h"
+#import "LMCoreViewController.h"
 
 @interface LMTitleView : UIView
 
@@ -37,5 +38,6 @@
 - (void)rebuildTrackCollection;
 
 @property LMTableView *songListTableView;
+@property LMCoreViewController *rootViewController;
 
 @end

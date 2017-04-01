@@ -15,7 +15,7 @@
 #import "LMExtras.h"
 #import "Spotify.h"
 
-@interface LMTitleView() <LMListEntryDelegate, LMTableViewSubviewDataSource, LMMusicPlayerDelegate>
+@interface LMTitleView() <LMListEntryDelegate, LMTableViewSubviewDataSource, LMMusicPlayerDelegate, UITableViewDelegate>
 
 @property LMMusicPlayer *musicPlayer;
 
@@ -29,9 +29,36 @@
 
 @property SPTAudioStreamingController *player;
 
+
+/**
+ The last point in scrolling where the user stopped scrolling.
+ */
+@property CGPoint lastScrollingOffsetPoint;
+
+/**
+ Whether or not the scrolling that the user did broke the treshhold for minimizing the bottom button bar.
+ */
+@property BOOL brokeScrollingThreshhold;
+
 @end
 
 @implementation LMTitleView
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    CGFloat difference = fabs(scrollView.contentOffset.y-self.lastScrollingOffsetPoint.y);
+    if(difference > WINDOW_FRAME.size.height/4){
+        self.brokeScrollingThreshhold = YES;
+        [self.rootViewController.buttonNavigationBar minimize];
+    }
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    if(self.brokeScrollingThreshhold){
+        //[self.rootViewController.buttonNavigationBar minimize];
+    }
+    self.brokeScrollingThreshhold = NO;
+    self.lastScrollingOffsetPoint = scrollView.contentOffset;
+}
 
 - (void)reloadSourceSelectorInfo {
 	if(self.hidden){
@@ -360,6 +387,7 @@
 	self.songListTableView.shouldUseDividers = YES;
 	self.songListTableView.averageCellHeight = (WINDOW_FRAME.size.height/10);
 	self.songListTableView.bottomSpacing = (WINDOW_FRAME.size.height/3.0);
+    self.songListTableView.secondaryDelegate = self;
 	[self addSubview:self.songListTableView];
 	
 	[self.songListTableView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
