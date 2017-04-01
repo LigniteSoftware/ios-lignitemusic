@@ -87,7 +87,7 @@
 			}
 			else{
 				NSLog(@"Popping");
-				[(UINavigationController*)[UIApplication sharedApplication].delegate.window.rootViewController popViewControllerAnimated:YES];
+				[self.purchaseManager popNavigationBarItem];
 			}
 			break;
 	}

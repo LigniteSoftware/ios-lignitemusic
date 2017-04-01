@@ -8,6 +8,7 @@
 
 #import <SecureNSUserDefaults/NSUserDefaults+SecureAdditions.h>
 #import "LMPurchaseManager.h"
+#import "LMCoreViewController.h"
 #import "LMPurchaseViewController.h"
 #import "LMAnswers.h"
 
@@ -93,6 +94,17 @@
 	[self.delegatesArray removeObject:delegate];
 }
 
+- (void)popNavigationBarItem {
+	LMCoreViewController *coreViewController = nil;
+	for(id delegate in self.delegatesArray){
+		if([delegate class] == [LMCoreViewController class]){
+			coreViewController = delegate;
+			break;
+		}
+	}
+	
+	[coreViewController.navigationBar popNavigationItemAnimated:YES];
+}
 
 
 /*

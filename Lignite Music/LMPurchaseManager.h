@@ -83,6 +83,11 @@ typedef enum {
 - (void)removeDelegate:(id<LMPurchaseManagerDelegate>)delegate;
 
 /**
+ Pop the navigation bar item that's on the core view controller.
+ */
+- (void)popNavigationBarItem;
+
+/**
  Returns whether or not a user owns a product with a certain identifier for that product.
 
  @param productIdentifier The product identifier to check for.
