@@ -133,15 +133,17 @@
 }
 
 - (BOOL)userOwnsProductWithIdentifier:(LMPurchaseManagerProductIdentifier*)productIdentifier {
-	BOOL ownsProduct = NO;
+	return YES;
 	
-	NSString *productKey = [self keyForProductIdentifier:productIdentifier];
-	
-	if([self.userDefaults secretObjectForKey:productKey]){
-		ownsProduct = [self.userDefaults secretBoolForKey:productKey];
-	}
-	
-	return ownsProduct;
+//	BOOL ownsProduct = NO;
+//	
+//	NSString *productKey = [self keyForProductIdentifier:productIdentifier];
+//	
+//	if([self.userDefaults secretObjectForKey:productKey]){
+//		ownsProduct = [self.userDefaults secretBoolForKey:productKey];
+//	}
+//	
+//	return ownsProduct;
 }
 
 - (void)makePurchaseWithProductIdentifier:(LMPurchaseManagerProductIdentifier*)productIdentifier {
@@ -280,50 +282,55 @@
 
 - (NSTimeInterval)amountOfTrialTimeRemainingInSeconds {
 	NSTimeInterval startTime = [[NSDate new] timeIntervalSince1970];
-		
-	if([self.userDefaults secretObjectForKey:LMPurchaseManagerTrialStartTimeKey]){
-		startTime = [self.userDefaults secretDoubleForKey:LMPurchaseManagerTrialStartTimeKey];
-	}
-	else{
-		[self.userDefaults setSecretDouble:startTime forKey:LMPurchaseManagerTrialStartTimeKey];
-		[self.userDefaults synchronize];
-	}
-//	NSLog(@"The user's start of trial time was on %@.", [NSDate dateWithTimeIntervalSince1970:startTime]);
 	
-	NSTimeInterval currentTime = [[NSDate new] timeIntervalSince1970];
-	
-	NSTimeInterval timeDifferenceSinceStartOfTrial = currentTime-startTime;
-	
-	return (LMPurchaseManagerTrialLengthInSeconds-timeDifferenceSinceStartOfTrial);
+	return startTime; //An insanely long amount
+//	
+//	if([self.userDefaults secretObjectForKey:LMPurchaseManagerTrialStartTimeKey]){
+//		startTime = [self.userDefaults secretDoubleForKey:LMPurchaseManagerTrialStartTimeKey];
+//	}
+//	else{
+//		[self.userDefaults setSecretDouble:startTime forKey:LMPurchaseManagerTrialStartTimeKey];
+//		[self.userDefaults synchronize];
+//	}
+////	NSLog(@"The user's start of trial time was on %@.", [NSDate dateWithTimeIntervalSince1970:startTime]);
+//	
+//	NSTimeInterval currentTime = [[NSDate new] timeIntervalSince1970];
+//	
+//	NSTimeInterval timeDifferenceSinceStartOfTrial = currentTime-startTime;
+//	
+//	return (LMPurchaseManagerTrialLengthInSeconds-timeDifferenceSinceStartOfTrial);
 }
 
 - (LMPurchaseManagerAppOwnershipStatus)appOwnershipStatus {
+	return LMPurchaseManagerAppOwnershipStatusPurchased;
+	
+	
 //	NSLog(@"Checking ownership status...");
 	//First check whether or not they own the app
-	if([self userOwnsProductWithIdentifier:LMPurchaseManagerProductIdentifierLifetimeMusic]){
-//		NSLog(@"The user has already purchased the app.");
-		return LMPurchaseManagerAppOwnershipStatusPurchased;
-	}
-	
-	//Then check if they're logged in as a backer
-	if([self.userDefaults secretObjectForKey:LMPurchaseManagerKickstarterLoginCredentialEmail]
-	   && [self.userDefaults secretObjectForKey:LMPurchaseManagerKickstarterLoginCredentialPassword]
-	   && [self.userDefaults secretObjectForKey:LMPurchaseManagerKickstarterLoginCredentialSessionToken]){
-		
-//		NSLog(@"User is a backer.");
-		
-		return LMPurchaseManagerAppOwnershipStatusLoggedInAsBacker;
-	}
-	
-	//Then check their trial time
-	NSTimeInterval amountOfTrialTimeRemaining = [self amountOfTrialTimeRemainingInSeconds];
-	if(amountOfTrialTimeRemaining < 0){
-//		NSLog(@"The user is out of trial time.");
-		return LMPurchaseManagerAppOwnershipStatusTrialExpired;
-	}
-	
-//	NSLog(@"The user is within the trial timeframe with %f seconds left.", amountOfTrialTimeRemaining);
-	return LMPurchaseManagerAppOwnershipStatusInTrial;
+//	if([self userOwnsProductWithIdentifier:LMPurchaseManagerProductIdentifierLifetimeMusic]){
+////		NSLog(@"The user has already purchased the app.");
+//		return LMPurchaseManagerAppOwnershipStatusPurchased;
+//	}
+//	
+//	//Then check if they're logged in as a backer
+//	if([self.userDefaults secretObjectForKey:LMPurchaseManagerKickstarterLoginCredentialEmail]
+//	   && [self.userDefaults secretObjectForKey:LMPurchaseManagerKickstarterLoginCredentialPassword]
+//	   && [self.userDefaults secretObjectForKey:LMPurchaseManagerKickstarterLoginCredentialSessionToken]){
+//		
+////		NSLog(@"User is a backer.");
+//		
+//		return LMPurchaseManagerAppOwnershipStatusLoggedInAsBacker;
+//	}
+//	
+//	//Then check their trial time
+//	NSTimeInterval amountOfTrialTimeRemaining = [self amountOfTrialTimeRemainingInSeconds];
+//	if(amountOfTrialTimeRemaining < 0){
+////		NSLog(@"The user is out of trial time.");
+//		return LMPurchaseManagerAppOwnershipStatusTrialExpired;
+//	}
+//	
+////	NSLog(@"The user is within the trial timeframe with %f seconds left.", amountOfTrialTimeRemaining);
+//	return LMPurchaseManagerAppOwnershipStatusInTrial;
 }
 
 - (void)checkTrialTimeRemaining {

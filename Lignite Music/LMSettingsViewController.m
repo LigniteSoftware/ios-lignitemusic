@@ -93,7 +93,7 @@
 		case 2:
 			return 2;
 		case 3:
-			return 4;
+			return 3;
 	}
 	return 0;
 }
@@ -126,36 +126,36 @@
 			break;
 		case 3:
 			switch(indexPath.row){
-				case 0: {
-					LMPurchaseManagerAppOwnershipStatus currentOwnershipStatus = self.purchaseManager.appOwnershipStatus;
-					switch(currentOwnershipStatus){
-						case LMPurchaseManagerAppOwnershipStatusInTrial:{
-							NSTimeInterval trialTimeRemaining = [self.purchaseManager amountOfTrialTimeRemainingInSeconds];
-							NSString *trialTimeRemainingString = nil;
-							if(trialTimeRemaining <= 3600) { //One hour
-								trialTimeRemainingString = [NSString stringWithFormat:NSLocalizedString(@"XMinutesLeftInTrial", nil), (trialTimeRemaining/60.0)];
-							}
-							else if(trialTimeRemaining <= 86400) { //One day
-								trialTimeRemainingString = [NSString stringWithFormat:NSLocalizedString(@"XHoursLeftInTrial", nil), (trialTimeRemaining/3600.0)];
-							}
-							else {
-								trialTimeRemainingString = [NSString stringWithFormat:NSLocalizedString(@"XDaysLeftInTrial", nil), (trialTimeRemaining/86400.0)];
-							}
-							return trialTimeRemainingString;
-						}
-						case LMPurchaseManagerAppOwnershipStatusTrialExpired:
-							return NSLocalizedString(@"OutOfTrialTime", nil);
-						case LMPurchaseManagerAppOwnershipStatusPurchased:
-							return NSLocalizedString(@"YouOwnLigniteMusic", nil);
-						case LMPurchaseManagerAppOwnershipStatusLoggedInAsBacker:
-							return NSLocalizedString(@"LoggedInAsABacker", nil);
-					}
-				}
-				case 1:
+//				case 0: {
+//					LMPurchaseManagerAppOwnershipStatus currentOwnershipStatus = self.purchaseManager.appOwnershipStatus;
+//					switch(currentOwnershipStatus){
+//						case LMPurchaseManagerAppOwnershipStatusInTrial:{
+//							NSTimeInterval trialTimeRemaining = [self.purchaseManager amountOfTrialTimeRemainingInSeconds];
+//							NSString *trialTimeRemainingString = nil;
+//							if(trialTimeRemaining <= 3600) { //One hour
+//								trialTimeRemainingString = [NSString stringWithFormat:NSLocalizedString(@"XMinutesLeftInTrial", nil), (trialTimeRemaining/60.0)];
+//							}
+//							else if(trialTimeRemaining <= 86400) { //One day
+//								trialTimeRemainingString = [NSString stringWithFormat:NSLocalizedString(@"XHoursLeftInTrial", nil), (trialTimeRemaining/3600.0)];
+//							}
+//							else {
+//								trialTimeRemainingString = [NSString stringWithFormat:NSLocalizedString(@"XDaysLeftInTrial", nil), (trialTimeRemaining/86400.0)];
+//							}
+//							return trialTimeRemainingString;
+//						}
+//						case LMPurchaseManagerAppOwnershipStatusTrialExpired:
+//							return NSLocalizedString(@"OutOfTrialTime", nil);
+//						case LMPurchaseManagerAppOwnershipStatusPurchased:
+//							return NSLocalizedString(@"YouOwnLigniteMusic", nil);
+//						case LMPurchaseManagerAppOwnershipStatusLoggedInAsBacker:
+//							return NSLocalizedString(@"LoggedInAsABacker", nil);
+//					}
+//				}
+				case 0:
 					return NSLocalizedString(@"Credits", nil);
-				case 2:
+				case 1:
 					return NSLocalizedString(@"ContactUs", nil);
-				case 3:
+				case 2:
 					return NSLocalizedString(@"UsageData", nil);
 			}
 			break;
@@ -209,23 +209,23 @@
 			break;
 		case 3:
 			switch(indexPath.row){
-				case 0: {
-					LMPurchaseManagerAppOwnershipStatus currentOwnershipStatus = self.purchaseManager.appOwnershipStatus;
-					switch(currentOwnershipStatus){
-						case LMPurchaseManagerAppOwnershipStatusInTrial:
-						case LMPurchaseManagerAppOwnershipStatusTrialExpired:
-							return NSLocalizedString(@"TapToUseTheAppForever", nil);
-						case LMPurchaseManagerAppOwnershipStatusPurchased:
-							return NSLocalizedString(@"ThanksForYourSupport", nil);
-						case LMPurchaseManagerAppOwnershipStatusLoggedInAsBacker:
-							return NSLocalizedString(@"TapToLogout", nil);
-					}
-				}
-				case 1:
+//				case 0: {
+//					LMPurchaseManagerAppOwnershipStatus currentOwnershipStatus = self.purchaseManager.appOwnershipStatus;
+//					switch(currentOwnershipStatus){
+//						case LMPurchaseManagerAppOwnershipStatusInTrial:
+//						case LMPurchaseManagerAppOwnershipStatusTrialExpired:
+//							return NSLocalizedString(@"TapToUseTheAppForever", nil);
+//						case LMPurchaseManagerAppOwnershipStatusPurchased:
+//							return NSLocalizedString(@"ThanksForYourSupport", nil);
+//						case LMPurchaseManagerAppOwnershipStatusLoggedInAsBacker:
+//							return NSLocalizedString(@"TapToLogout", nil);
+//					}
+//				}
+				case 0:
 					return NSLocalizedString(@"CreditsMore", nil);
-				case 2:
+				case 1:
 					return nil;
-				case 3:
+				case 2:
 					return NSLocalizedString([LMSettings userHasOptedOutOfTracking] ? @"OptedOut" : @"OptedIn" , nil);
 			}
 			break;
@@ -402,117 +402,117 @@
 			break;
 		case 3:
 			switch(indexPath.row){
-				case 0: {
-					switch(self.purchaseManager.appOwnershipStatus){
-						case LMPurchaseManagerAppOwnershipStatusInTrial:
-						case LMPurchaseManagerAppOwnershipStatusTrialExpired:
-							[(LMCoreViewController*)self.coreViewController setStatusBarBlurHidden:YES];
-							[self.purchaseManager showPurchaseViewControllerOnViewController:self.coreViewController present:NO];
-                            [(LMCoreViewController*)self.coreViewController pushItemOntoNavigationBarWithTitle:NSLocalizedString(@"BuyLigniteMusic", nil) withNowPlayingButton:NO];
-                            NSLog(@"Pushing the new navigation controller");
-                            [self.coreViewController.navigationController setNavigationBarHidden:YES animated:YES];
-//                            [self.navigationController setNavigationBarHidden:YES animated:YES];
-							break;
-						case LMPurchaseManagerAppOwnershipStatusLoggedInAsBacker: {
-							LMAlertView *alertView = [LMAlertView newAutoLayoutView];
-							
-							alertView.title = NSLocalizedString(@"Logout", nil);
-							alertView.body = NSLocalizedString(@"LogoutDescription", nil);
-							alertView.alertOptionColours = @[[LMColour darkLigniteRedColour], [LMColour ligniteRedColour]];
-							alertView.alertOptionTitles = @[NSLocalizedString(@"StayLoggedIn", nil), NSLocalizedString(@"Logout", nil)];
-							
-							[alertView launchOnView:self.coreViewController.navigationController.view withCompletionHandler:^(NSUInteger optionSelected) {
-								BOOL logout = (optionSelected == 1);
-								
-								if(logout){
-									self.pendingViewController = [UIAlertController alertControllerWithTitle:nil
-																									 message:[NSString stringWithFormat:@"%@\n\n\n", NSLocalizedString(@"LoggingYouOut", nil)]
-																							  preferredStyle:UIAlertControllerStyleAlert];
-									UIActivityIndicatorView* indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-									indicator.color = [UIColor blackColor];
-									indicator.translatesAutoresizingMaskIntoConstraints = NO;
-									[self.pendingViewController.view addSubview:indicator];
-									NSDictionary * views = @{ @"pending": self.pendingViewController.view,
-															  @"indicator": indicator };
-									
-									NSArray *constraintsVertical = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[indicator]-(20)-|" options:0 metrics:nil views:views];
-									NSArray *constraintsHorizontal = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[indicator]|" options:0 metrics:nil views:views];
-									NSArray *constraints = [constraintsVertical arrayByAddingObjectsFromArray:constraintsHorizontal];
-									[self.pendingViewController.view addConstraints:constraints];
-									
-									[indicator setUserInteractionEnabled:NO];
-									[indicator startAnimating];
-									
-									[self presentViewController:self.pendingViewController animated:YES completion:nil];
-									
-									NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-									
-									NSDictionary *logoutDictionary = @{
-																	   @"email": [userDefaults secretObjectForKey:LMPurchaseManagerKickstarterLoginCredentialEmail],
-																	   @"password": [userDefaults secretObjectForKey:LMPurchaseManagerKickstarterLoginCredentialPassword],
-																	   @"token": [userDefaults secretObjectForKey:LMPurchaseManagerKickstarterLoginCredentialSessionToken]
-																	   };
-									NSString *URLString = @"https://api.lignite.me:1212/logout";
-									NSURLRequest *urlRequest = [[AFJSONRequestSerializer serializer] requestWithMethod:@"POST" URLString:URLString parameters:logoutDictionary error:nil];
-									
-									NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-									AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:configuration];
-									
-									AFHTTPResponseSerializer *responseSerializer = manager.responseSerializer;
-									
-									responseSerializer.acceptableContentTypes = [responseSerializer.acceptableContentTypes setByAddingObject:@"text/plain"];
-									
-									NSURLSessionDataTask *dataTask = [manager dataTaskWithRequest:urlRequest completionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
-										[self.purchaseManager logoutBacker];
-										
-										[self dismissViewControllerAnimated:YES completion:^{
-											if (error) {
-												NSLog(@"Error logging in: %@", error);
-												
-												[LMAnswers logCustomEventWithName:@"Log Out"
-																 customAttributes:@{ @"Status":@"Fail", @"Error": error, @"Time":@([[NSDate new] timeIntervalSince1970]) }];
-											} else {
-												NSLog(@"%@ %@", response, [[responseObject class] description]);
-												
-												NSDictionary *jsonDictionary = responseObject;
-												
-												NSLog(@"Response dict %@", jsonDictionary);
-												
-												NSInteger statusCode = [[jsonDictionary objectForKey:@"status"] integerValue];
-												
-												if(statusCode == 200){ //Good to go
-													[LMAnswers logCustomEventWithName:@"Log Out"
-																	 customAttributes:@{ @"Status": @"Success", @"Time":@([[NSDate new] timeIntervalSince1970]) }];
-												}
-												else{
-													[LMAnswers logCustomEventWithName:@"Log Out"
-																	 customAttributes:@{ @"Status": @"Fail", @"Error":[NSString stringWithFormat:@"ServerError_%d", (int)statusCode], @"Time":@([[NSDate new] timeIntervalSince1970]) }];
-												}
-											}
-											
-											MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-											
-											hud.mode = MBProgressHUDModeCustomView;
-											UIImage *image = [[UIImage imageNamed:@"icon_checkmark.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-											hud.customView = [[UIImageView alloc] initWithImage:image];
-											hud.square = YES;
-											hud.label.text = NSLocalizedString(@"LoggedOut", nil);
-											
-											[hud hideAnimated:YES afterDelay:2.0f];
-										}];
-									}];
-									[dataTask resume];
-								}
-							}];
-							break;
-						}
-						case LMPurchaseManagerAppOwnershipStatusPurchased:
-							
-							break;
-					}
-					break;
-				}
-				case 1:{
+//				case 0: {
+//					switch(self.purchaseManager.appOwnershipStatus){
+//						case LMPurchaseManagerAppOwnershipStatusInTrial:
+//						case LMPurchaseManagerAppOwnershipStatusTrialExpired:
+//							[(LMCoreViewController*)self.coreViewController setStatusBarBlurHidden:YES];
+//							[self.purchaseManager showPurchaseViewControllerOnViewController:self.coreViewController present:NO];
+//                            [(LMCoreViewController*)self.coreViewController pushItemOntoNavigationBarWithTitle:NSLocalizedString(@"BuyLigniteMusic", nil) withNowPlayingButton:NO];
+//                            NSLog(@"Pushing the new navigation controller");
+//                            [self.coreViewController.navigationController setNavigationBarHidden:YES animated:YES];
+////                            [self.navigationController setNavigationBarHidden:YES animated:YES];
+//							break;
+//						case LMPurchaseManagerAppOwnershipStatusLoggedInAsBacker: {
+//							LMAlertView *alertView = [LMAlertView newAutoLayoutView];
+//							
+//							alertView.title = NSLocalizedString(@"Logout", nil);
+//							alertView.body = NSLocalizedString(@"LogoutDescription", nil);
+//							alertView.alertOptionColours = @[[LMColour darkLigniteRedColour], [LMColour ligniteRedColour]];
+//							alertView.alertOptionTitles = @[NSLocalizedString(@"StayLoggedIn", nil), NSLocalizedString(@"Logout", nil)];
+//							
+//							[alertView launchOnView:self.coreViewController.navigationController.view withCompletionHandler:^(NSUInteger optionSelected) {
+//								BOOL logout = (optionSelected == 1);
+//								
+//								if(logout){
+//									self.pendingViewController = [UIAlertController alertControllerWithTitle:nil
+//																									 message:[NSString stringWithFormat:@"%@\n\n\n", NSLocalizedString(@"LoggingYouOut", nil)]
+//																							  preferredStyle:UIAlertControllerStyleAlert];
+//									UIActivityIndicatorView* indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+//									indicator.color = [UIColor blackColor];
+//									indicator.translatesAutoresizingMaskIntoConstraints = NO;
+//									[self.pendingViewController.view addSubview:indicator];
+//									NSDictionary * views = @{ @"pending": self.pendingViewController.view,
+//															  @"indicator": indicator };
+//									
+//									NSArray *constraintsVertical = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[indicator]-(20)-|" options:0 metrics:nil views:views];
+//									NSArray *constraintsHorizontal = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[indicator]|" options:0 metrics:nil views:views];
+//									NSArray *constraints = [constraintsVertical arrayByAddingObjectsFromArray:constraintsHorizontal];
+//									[self.pendingViewController.view addConstraints:constraints];
+//									
+//									[indicator setUserInteractionEnabled:NO];
+//									[indicator startAnimating];
+//									
+//									[self presentViewController:self.pendingViewController animated:YES completion:nil];
+//									
+//									NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+//									
+//									NSDictionary *logoutDictionary = @{
+//																	   @"email": [userDefaults secretObjectForKey:LMPurchaseManagerKickstarterLoginCredentialEmail],
+//																	   @"password": [userDefaults secretObjectForKey:LMPurchaseManagerKickstarterLoginCredentialPassword],
+//																	   @"token": [userDefaults secretObjectForKey:LMPurchaseManagerKickstarterLoginCredentialSessionToken]
+//																	   };
+//									NSString *URLString = @"https://api.lignite.me:1212/logout";
+//									NSURLRequest *urlRequest = [[AFJSONRequestSerializer serializer] requestWithMethod:@"POST" URLString:URLString parameters:logoutDictionary error:nil];
+//									
+//									NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+//									AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:configuration];
+//									
+//									AFHTTPResponseSerializer *responseSerializer = manager.responseSerializer;
+//									
+//									responseSerializer.acceptableContentTypes = [responseSerializer.acceptableContentTypes setByAddingObject:@"text/plain"];
+//									
+//									NSURLSessionDataTask *dataTask = [manager dataTaskWithRequest:urlRequest completionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
+//										[self.purchaseManager logoutBacker];
+//										
+//										[self dismissViewControllerAnimated:YES completion:^{
+//											if (error) {
+//												NSLog(@"Error logging in: %@", error);
+//												
+//												[LMAnswers logCustomEventWithName:@"Log Out"
+//																 customAttributes:@{ @"Status":@"Fail", @"Error": error, @"Time":@([[NSDate new] timeIntervalSince1970]) }];
+//											} else {
+//												NSLog(@"%@ %@", response, [[responseObject class] description]);
+//												
+//												NSDictionary *jsonDictionary = responseObject;
+//												
+//												NSLog(@"Response dict %@", jsonDictionary);
+//												
+//												NSInteger statusCode = [[jsonDictionary objectForKey:@"status"] integerValue];
+//												
+//												if(statusCode == 200){ //Good to go
+//													[LMAnswers logCustomEventWithName:@"Log Out"
+//																	 customAttributes:@{ @"Status": @"Success", @"Time":@([[NSDate new] timeIntervalSince1970]) }];
+//												}
+//												else{
+//													[LMAnswers logCustomEventWithName:@"Log Out"
+//																	 customAttributes:@{ @"Status": @"Fail", @"Error":[NSString stringWithFormat:@"ServerError_%d", (int)statusCode], @"Time":@([[NSDate new] timeIntervalSince1970]) }];
+//												}
+//											}
+//											
+//											MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+//											
+//											hud.mode = MBProgressHUDModeCustomView;
+//											UIImage *image = [[UIImage imageNamed:@"icon_checkmark.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+//											hud.customView = [[UIImageView alloc] initWithImage:image];
+//											hud.square = YES;
+//											hud.label.text = NSLocalizedString(@"LoggedOut", nil);
+//											
+//											[hud hideAnimated:YES afterDelay:2.0f];
+//										}];
+//									}];
+//									[dataTask resume];
+//								}
+//							}];
+//							break;
+//						}
+//						case LMPurchaseManagerAppOwnershipStatusPurchased:
+//							
+//							break;
+//					}
+//					break;
+//				}
+				case 0:{
 					LMCreditsViewController *creditsViewController = [LMCreditsViewController new];
 					[self.coreViewController.navigationController showViewController:creditsViewController sender:self];
 					[(LMCoreViewController*)self.coreViewController pushItemOntoNavigationBarWithTitle:NSLocalizedString(@"Credits", nil) withNowPlayingButton:NO];
@@ -520,7 +520,7 @@
 					[LMAnswers logCustomEventWithName:@"Viewed Credits" customAttributes:nil];
 					break;
 				}
-				case 2: {
+				case 1: {
 					LMContactViewController *contactViewController = [LMContactViewController new];
 					[self.coreViewController.navigationController showViewController:contactViewController sender:self];
 //					[(LMCoreViewController*)self.coreViewController setStatusBarBlurHidden:YES];
@@ -531,7 +531,7 @@
 					[LMAnswers logCustomEventWithName:@"Viewed Contact Us Screen" customAttributes:nil];
 					break;
 				}
-				case 3: {
+				case 2: {
 					LMAlertView *alertView = [LMAlertView newAutoLayoutView];
 					
 					alertView.title = NSLocalizedString(@"UsageData", nil);

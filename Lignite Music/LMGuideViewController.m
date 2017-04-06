@@ -87,17 +87,17 @@
 					[self threeBlindMice];
 					break;
 				}
+//				case 1: {
+//					
+//					[NSTimer scheduledTimerWithTimeInterval:1.0 block:^{
+//						[self threeBlindMice];
+//					} repeats:NO];
+//					
+//					LMBackerLoginViewController *backerLoginViewController = [LMBackerLoginViewController new];
+//					[self presentViewController:backerLoginViewController animated:YES completion:nil];
+//					break;
+//				}
 				case 1: {
-					
-					[NSTimer scheduledTimerWithTimeInterval:1.0 block:^{
-						[self threeBlindMice];
-					} repeats:NO];
-					
-					LMBackerLoginViewController *backerLoginViewController = [LMBackerLoginViewController new];
-					[self presentViewController:backerLoginViewController animated:YES completion:nil];
-					break;
-				}
-				case 2: {
 #ifdef SPOTIFY
 					NSLog(@"Launch Spotify login");
 					[[Spotify sharedInstance] openLoginOnViewController:self];
@@ -168,7 +168,7 @@
 #endif
 					break;
 				}
-				case 3: {
+				case 2: {
 					NSLog(@"Creating");
 					//			CBCentralManager *centralManager = [[CBCentralManager alloc]initWithDelegate:self queue:nil];
 					//			CBPeripheralManager *peripheralManager = [[CBPeripheralManager alloc]initWithDelegate:self queue:nil];
@@ -350,7 +350,7 @@
 #ifdef SPOTIFY
 	   || (self.index == 2)
 #endif
-	   || (self.index == 1)){ //Backer login
+	   || (self.index == 6)){ //Backer login (used to be 1)
 		
 		UIView *firstButtonArea = [UIView newAutoLayoutView];
 //		firstButtonArea.backgroundColor = [UIColor redColor];

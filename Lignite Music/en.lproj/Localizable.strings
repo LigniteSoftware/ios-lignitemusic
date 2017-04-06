@@ -105,45 +105,45 @@
 "CantSendFeedback" = "Can't send :(";
 "CantSendFeedbackDescription" = "\nSadly, something went wrong in sending your feedback.\n\nPlease make sure your Internet connection is stable and is not blocking www.lignite.io.\n\nIf you think you're all good on your side and you still can't send it, email us by clicking the button below.";
 
-"OutOfTrialTime" = "Out of trial time";
-"XDaysLeftInTrial" = "%.00f days left in trial";
-"XHoursLeftInTrial" = "%.00f hours left in trial";
-"XMinutesLeftInTrial" = "%.00f minutes left in trial";
-"TapToUseTheAppForever" = "Tap here to use the app forever";
-
-"LoggedInAsABacker" = "Logged in as a backer";
-"TapToLogout" = "Tap here to logout";
-
-"YouOwnLigniteMusic" = "You own Lignite Music";
-"ThanksForYourSupport" = "Thanks for your support!";
-
-"TrialTimeIsUpTitle" = "Your 3 day trial has come to an end";
-"TrialTimeIsUpDescription" = "For about the price of a coffee, you can keep using Lignite Music, which does a lot more than coffee and never runs out.";
-"AppAdvantage0" = "Gesture-driven and intuitive";
-"AppAdvantage1" = "Easy to use in the car, at the gym, or anywhere else";
-"AppAdvantage2" = "Beautifully designed and simple";
-"IfYoureAKickstarterBacker" = "If you're a Kickstarter backer, you can login by tapping the Kickstarter button below.";
-
-"HoldOn" = "Hold on a sec...";
-
-"Password" = "Password";
-"BackerLoginTitle" = "Hey Kickstarter backer!";
-"BackerLoginDescription" = "Thanks for being awesome and helping bring this app to life.\n\nPlease login below to unlock your full copy of the app.";
-"INeedHelpLoggingIn" = "I need help logging in";
-"LoggingYouIn" = "Logging you in...";
-"LoggingYouOut" = "Logging you out...";
-"CantLoginTitle" = "Can't login";
-"CantLoginDescription" = "Sorry, we're having trouble processing your login.\n\nPlease make sure you're on a stable Internet connection which doesn't block www.lignite.io.\n\nIf you believe you're all good on your side, please contact us and we'll sort you out.";
-"LoggedIn" = "Logged in";
-"LoggedOut" = "Logged out";
-"EnterAValidPassword" = "Please enter a valid password";
-
-"LoginsAllUsedUpTitle" = "Logins all used up";
-"LoginsAllUsedUpDescription" = "This Lignite Music backer account has been logged into %d times, which is its maximum amount.\n\nIf you want to login on this device, you'll have to logout on one of your other devices.\n\nTo do so, tap the manage accounts button below.";
-"ManageAccounts" = "Manage accounts";
-
-"AccountNotFoundTitle" = "Account not found";
-"AccountNotFoundDescription" = "A Lignite Music backer account was not found with these details, sorry.\n\nWe collected Lignite Music Kickstarter emails way back in August of 2016.\n\nIf you have changed your Kickstarter email since then, use the old one.\n\nIf you're still having troubles, tap below for more help.";
+//"OutOfTrialTime" = "Out of trial time";
+//"XDaysLeftInTrial" = "%.00f days left in trial";
+//"XHoursLeftInTrial" = "%.00f hours left in trial";
+//"XMinutesLeftInTrial" = "%.00f minutes left in trial";
+//"TapToUseTheAppForever" = "Tap here to use the app forever";
+//
+//"LoggedInAsABacker" = "Logged in as a backer";
+//"TapToLogout" = "Tap here to logout";
+//
+//"YouOwnLigniteMusic" = "You own Lignite Music";
+//"ThanksForYourSupport" = "Thanks for your support!";
+//
+//"TrialTimeIsUpTitle" = "Your 3 day trial has come to an end";
+//"TrialTimeIsUpDescription" = "For about the price of a coffee, you can keep using Lignite Music, which does a lot more than coffee and never runs out.";
+//"AppAdvantage0" = "Gesture-driven and intuitive";
+//"AppAdvantage1" = "Easy to use in the car, at the gym, or anywhere else";
+//"AppAdvantage2" = "Beautifully designed and simple";
+//"IfYoureAKickstarterBacker" = "If you're a Kickstarter backer, you can login by tapping the Kickstarter button below.";
+//
+//"HoldOn" = "Hold on a sec...";
+//
+//"Password" = "Password";
+//"BackerLoginTitle" = "Hey Kickstarter backer!";
+//"BackerLoginDescription" = "Thanks for being awesome and helping bring this app to life.\n\nPlease login below to unlock your full copy of the app.";
+//"INeedHelpLoggingIn" = "I need help logging in";
+//"LoggingYouIn" = "Logging you in...";
+//"LoggingYouOut" = "Logging you out...";
+//"CantLoginTitle" = "Can't login";
+//"CantLoginDescription" = "Sorry, we're having trouble processing your login.\n\nPlease make sure you're on a stable Internet connection which doesn't block www.lignite.io.\n\nIf you believe you're all good on your side, please contact us and we'll sort you out.";
+//"LoggedIn" = "Logged in";
+//"LoggedOut" = "Logged out";
+//"EnterAValidPassword" = "Please enter a valid password";
+//
+//"LoginsAllUsedUpTitle" = "Logins all used up";
+//"LoginsAllUsedUpDescription" = "This Lignite Music backer account has been logged into %d times, which is its maximum amount.\n\nIf you want to login on this device, you'll have to logout on one of your other devices.\n\nTo do so, tap the manage accounts button below.";
+//"ManageAccounts" = "Manage accounts";
+//
+//"AccountNotFoundTitle" = "Account not found";
+//"AccountNotFoundDescription" = "A Lignite Music backer account was not found with these details, sorry.\n\nWe collected Lignite Music Kickstarter emails way back in August of 2016.\n\nIf you have changed your Kickstarter email since then, use the old one.\n\nIf you're still having troubles, tap below for more help.";
 
 
 "Privacy" = "Privacy"; //App privacy, for things like analytics tracking
@@ -158,9 +158,6 @@
 "LogoutDescription" = "You can easily logout of your Lignite Music backer account by tapping the button below.\n\nDoing so will allow you to use this account to login to another device again.";
 "StayLoggedIn" = "Stay logged in";
 "KeepGoing" = "Keep going"; //ie. "Keep going instead of doing this" (won't do it)
-
-
-"NoPurchasesYet" = "Woah, slow down there geronimo!\n\nWe don't want to take any more of your money since we know you're a Kickstarter backer.\n\nPlease login using the Kickstarter button below instead.";
 
 /*
  
@@ -310,8 +307,8 @@
 "OnboardingWelcomeTitle" = "Welcome to Lignite Music";
 "OnboardingWelcomeDescription" = "We're hoping to bring you the ultimate music player experience.\n\nWe're going to run through a few quick steps to get you up and running.";
 
-"OnboardingKickstarterLoginTitle" = "Are you a Kickstarter backer?";
-"OnboardingKickstarterLoginDescription" = "Lignite Music was born and raised on Kickstarter with 339 awesome backers.\n\nIf you're one of them, you can unlock the full app now by clicking the login button below.\n\nOtherwise, continue on and you'll be hooked up with a full-access 3 day trial!";
+//"OnboardingKickstarterLoginTitle" = "Are you a Kickstarter backer?";
+//"OnboardingKickstarterLoginDescription" = "Lignite Music was born and raised on Kickstarter with 339 awesome backers.\n\nIf you're one of them, you can unlock the full app now by clicking the login button below.\n\nOtherwise, continue on and you'll be hooked up with a full-access 3 day trial!";
 
 "OnboardingMusicPermissionTitle" = "We need your music so you can jam!";
 "OnboardingMusicPermissionDescription" = "Once clicking the button below, you will be asked to grant permission to Lignite Music for access to your music library.\n\nPlease accept this permission so we can get you one step closer to rockin' out!";

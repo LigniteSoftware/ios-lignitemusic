@@ -40,25 +40,25 @@
 #ifdef SPOTIFY
 			self.titleArray = [[NSArray alloc]initWithObjects:
 							   @"OnboardingWelcomeTitle",
-							   @"OnboardingKickstarterLoginTitle",
+//							   @"OnboardingKickstarterLoginTitle",
 							   @"OnboardingSpotifyLoginTitle"
 							   , nil];
 			
 			self.descriptionArray = [[NSArray alloc]initWithObjects:
 									 @"OnboardingWelcomeDescription",
-									 @"OnboardingKickstarterLoginDescription",
+//									 @"OnboardingKickstarterLoginDescription",
 									 @"OnboardingSpotifyLoginDescription"
 							   , nil];
 			
 			self.screenshotsArray = [[NSArray alloc]initWithObjects:
 									 @"icon_no_cover_art_75.png",
-									 @"onboarding_kickstarter.png",
+//									 @"onboarding_kickstarter.png",
 									 @"icon_no_cover_art_75.png"
 									 , nil];
 			
 			self.buttonNamesArray = [[NSArray alloc]initWithObjects:
 									 @"LetsGo",
-									 @"LogMeIn",
+//									 @"LogMeIn",
 									 @"LogMeIn"
 							   , nil];
 			
@@ -66,28 +66,28 @@
 #else
 			self.titleArray = [[NSArray alloc]initWithObjects:
 							   @"OnboardingWelcomeTitle",
-							   @"OnboardingKickstarterLoginTitle",
+//							   @"OnboardingKickstarterLoginTitle",
 							   @"OnboardingMusicPermissionTitle",
 							   @"OnboardingPebblePermissionTitle"
 							   , nil];
 	
 			self.descriptionArray = [[NSArray alloc]initWithObjects:
 									 @"OnboardingWelcomeDescription",
-									 @"OnboardingKickstarterLoginDescription",
+//									 @"OnboardingKickstarterLoginDescription",
 									 @"OnboardingMusicPermissionDescription",
 									 @"OnboardingPebblePermissionDescription"
 							   , nil];
 			
 			self.screenshotsArray = [[NSArray alloc]initWithObjects:
 									 @"icon_no_cover_art_75.png",
-									 @"icon_kickstarter_bw.png",
+//									 @"icon_kickstarter_bw.png",
 									 @"icon_library_access.png",
 									 @"icon_pebbles.png"
 									 , nil];
 			
 			self.buttonNamesArray = [[NSArray alloc]initWithObjects:
 									 @"LetsGo",
-									 @"LogMeIn",
+//									 @"LogMeIn",
 									 @"HitMeWithIt",
 									 @"SoundsGood"
 							   , nil];
