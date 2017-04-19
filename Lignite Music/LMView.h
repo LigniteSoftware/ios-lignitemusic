@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LMLayoutManager.h"
 
 @class LMView;
 
@@ -16,5 +17,11 @@
  Whether or not the constraints of this view have been lain out.
  */
 @property BOOL didLayoutConstraints;
+
+@property LMLayoutClass settingLayoutClass;
+
+- (void)beginAddingNewPortraitConstraints;
+- (void)beginAddingNewLandscapeConstraints;
+- (void)endAddingNewConstraints;
 
 @end

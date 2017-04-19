@@ -20,6 +20,7 @@
 #import "LMNowPlayingCoreView.h"
 #import "LMPurchaseManager.h"
 #import "UIColor+isLight.h"
+#import "LMLayoutManager.h"
 #import "NSTimer+Blocks.h"
 #import "LMImageManager.h"
 #import "LMMusicPlayer.h"
@@ -103,6 +104,8 @@ LMControlBarViewDelegate
 @property NSInteger settingsOpen;
 @property BOOL willOpenSettings;
 @property NSTimer *settingsCheckTimer; //for activity checks
+
+@property LMLayoutManager *layoutManager;
 
 @end
 
@@ -757,6 +760,28 @@ LMControlBarViewDelegate
     return [super nextResponder];
 }
 
+- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
+	self.layoutManager.traitCollection = self.traitCollection;
+	[self.layoutManager traitCollectionDidChange:previousTraitCollection];
+}
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
+	[super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+	
+	[self.layoutManager rootViewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+	
+	NSLog(@"Starting rotation");
+	
+	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+		NSLog(@"Rotating");
+		
+	} completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+		NSLog(@"Rotated");
+		
+		self.layoutManager.size = self.view.frame.size;
+	}];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view
@@ -767,6 +792,10 @@ LMControlBarViewDelegate
 	self.navigationController.interactivePopGestureRecognizer.delegate = self;
 	
 	self.loaded = NO;
+	
+	self.layoutManager = [LMLayoutManager sharedLayoutManager];
+	self.layoutManager.traitCollection = self.traitCollection;
+	self.layoutManager.size = self.view.frame.size;
 	
 	
 #ifdef SPEED_DEMON_MODE

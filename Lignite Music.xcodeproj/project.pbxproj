@@ -119,6 +119,10 @@
 		6A838A971E07A9CF006E7DE0 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A838A961E07A9CF006E7DE0 /* StoreKit.framework */; };
 		6A8CF2B91DB4952A00777525 /* LMSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A8CF2B81DB4952A00777525 /* LMSettings.m */; };
 		6A92F8271DD6DF00002045C2 /* LMBrowsingDetailView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A92F8261DD6DF00002045C2 /* LMBrowsingDetailView.m */; };
+		6A94A7711EA79BB300319A38 /* LMLayoutManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A94A7701EA79BB300319A38 /* LMLayoutManager.m */; };
+		6A94A7721EA79BB300319A38 /* LMLayoutManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A94A7701EA79BB300319A38 /* LMLayoutManager.m */; };
+		6A94A7741EA79E9A00319A38 /* splash_landscape_lighter.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A94A7731EA79E9A00319A38 /* splash_landscape_lighter.png */; };
+		6A94A7751EA79E9A00319A38 /* splash_landscape_lighter.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A94A7731EA79E9A00319A38 /* splash_landscape_lighter.png */; };
 		6A9C053B1DB4441200713D1C /* icon_albums.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A9C05371DB4441200713D1C /* icon_albums.png */; };
 		6A9C053C1DB4441200713D1C /* icon_compilations.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A9C05381DB4441200713D1C /* icon_compilations.png */; };
 		6A9C053D1DB4441200713D1C /* icon_genres.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A9C05391DB4441200713D1C /* icon_genres.png */; };
@@ -531,6 +535,9 @@
 		6A8CF2B81DB4952A00777525 /* LMSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMSettings.m; sourceTree = "<group>"; };
 		6A92F8251DD6DF00002045C2 /* LMBrowsingDetailView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMBrowsingDetailView.h; sourceTree = "<group>"; };
 		6A92F8261DD6DF00002045C2 /* LMBrowsingDetailView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMBrowsingDetailView.m; sourceTree = "<group>"; };
+		6A94A76F1EA79BB300319A38 /* LMLayoutManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMLayoutManager.h; sourceTree = "<group>"; };
+		6A94A7701EA79BB300319A38 /* LMLayoutManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMLayoutManager.m; sourceTree = "<group>"; };
+		6A94A7731EA79E9A00319A38 /* splash_landscape_lighter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = splash_landscape_lighter.png; sourceTree = "<group>"; };
 		6A9C05371DB4441200713D1C /* icon_albums.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_albums.png; sourceTree = "<group>"; };
 		6A9C05381DB4441200713D1C /* icon_compilations.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_compilations.png; sourceTree = "<group>"; };
 		6A9C05391DB4441200713D1C /* icon_genres.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_genres.png; sourceTree = "<group>"; };
@@ -969,6 +976,7 @@
 				6ACB69A91E87AE3A001A04B6 /* purchase_header.png */,
 				6A759D4C1DEA3D0C0051E1A9 /* signatures.png */,
 				6A51688A1E08A55A00A6446F /* splash_image_portrait.png */,
+				6A94A7731EA79E9A00319A38 /* splash_landscape_lighter.png */,
 			);
 			name = Other;
 			sourceTree = "<group>";
@@ -1025,6 +1033,8 @@
 				6A92F8261DD6DF00002045C2 /* LMBrowsingDetailView.m */,
 				6A59A51E1DE825C200B346AC /* LMBrowsingDetailViewController.h */,
 				6A59A51F1DE825C200B346AC /* LMBrowsingDetailViewController.m */,
+				6A94A76F1EA79BB300319A38 /* LMLayoutManager.h */,
+				6A94A7701EA79BB300319A38 /* LMLayoutManager.m */,
 			);
 			name = Core;
 			sourceTree = "<group>";
@@ -1390,6 +1400,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6A072C001E87E79C0092EA44 /* icon_library_access.png in Resources */,
+				6A94A7751EA79E9A00319A38 /* splash_landscape_lighter.png in Resources */,
 				6AA5CB4F1E285C0A005F853F /* splash_wings.png in Resources */,
 				6AA5CB501E285C0A005F853F /* icon_search.png in Resources */,
 				6AA5CB511E285C0A005F853F /* onboarding_library_access.png in Resources */,
@@ -1475,6 +1486,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6A072BFF1E87E79C0092EA44 /* icon_library_access.png in Resources */,
+				6A94A7741EA79E9A00319A38 /* splash_landscape_lighter.png in Resources */,
 				6A48A7421E202BBF003C86B6 /* splash_wings.png in Resources */,
 				6AAA56051DF5491C00692CFB /* icon_search.png in Resources */,
 				6ADC48EF1DDF8C8000FE57F1 /* onboarding_library_access.png in Resources */,
@@ -1738,6 +1750,7 @@
 				6AA5CB221E285C0A005F853F /* LMBackerLoginViewController.m in Sources */,
 				6AA5CB231E285C0A005F853F /* LMPaddedTextField.m in Sources */,
 				6AA5CB251E285C0A005F853F /* LMButton.m in Sources */,
+				6A94A7721EA79BB300319A38 /* LMLayoutManager.m in Sources */,
 				6AA5CB261E285C0A005F853F /* LMCollectionInfoView.m in Sources */,
 				6AA5CB271E285C0A005F853F /* LMCoreViewController.m in Sources */,
 				6A072BED1E87B95A0092EA44 /* LMCoreNavigationController.m in Sources */,
@@ -1810,6 +1823,7 @@
 				6A73CF611D451BFA0097A400 /* LMPebbleMessageQueue.m in Sources */,
 				6A8CF2B91DB4952A00777525 /* LMSettings.m in Sources */,
 				6A92F8271DD6DF00002045C2 /* LMBrowsingDetailView.m in Sources */,
+				6A94A7711EA79BB300319A38 /* LMLayoutManager.m in Sources */,
 				6A838A951E07A8FF006E7DE0 /* LMPurchaseManager.m in Sources */,
 				6ABF6A851CF3768A003E4EFA /* UIColor+isLight.m in Sources */,
 				6A313C121BB44959002BBC33 /* LMAlbumArtView.m in Sources */,
