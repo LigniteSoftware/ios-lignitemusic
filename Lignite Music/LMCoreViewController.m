@@ -107,6 +107,8 @@ LMControlBarViewDelegate
 
 @property LMLayoutManager *layoutManager;
 
+@property UIImageView *splashImageView;
+
 @end
 
 @implementation LMCoreViewController
@@ -763,6 +765,8 @@ LMControlBarViewDelegate
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
 	self.layoutManager.traitCollection = self.traitCollection;
 	[self.layoutManager traitCollectionDidChange:previousTraitCollection];
+	
+	self.splashImageView.image = [UIImage imageNamed:self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular ? @"splash_landscape_lighter.png" : @"splash_wings.png"];
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
@@ -880,12 +884,12 @@ LMControlBarViewDelegate
 	
 //	return;
 	    
-	UIImageView *hangOnImage = [UIImageView newAutoLayoutView];
-	hangOnImage.image = [UIImage imageNamed:@"splash_wings.png"];
-	hangOnImage.contentMode = UIViewContentModeScaleAspectFill;
-	[self.view addSubview:hangOnImage];
+	self.splashImageView = [UIImageView newAutoLayoutView];
+	self.splashImageView.image = [UIImage imageNamed:self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular ? @"splash_landscape_lighter.png" : @"splash_wings.png"];
+	self.splashImageView.contentMode = UIViewContentModeScaleAspectFill;
+	[self.view addSubview:self.splashImageView];
 	
-	[hangOnImage autoPinEdgesToSuperviewEdges];
+	[self.splashImageView autoPinEdgesToSuperviewEdges];
     
     //If user is using an iPad
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad || [(NSString*)[UIDevice currentDevice].model hasPrefix:@"iPad"]){
