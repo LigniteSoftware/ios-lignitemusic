@@ -1237,6 +1237,8 @@ LMControlBarViewDelegate
                         
                         
 //						[self musicLibraryDidChange];
+						
+						[self launchNowPlayingFromNavigationBar];
 					});
 					break;
 				}

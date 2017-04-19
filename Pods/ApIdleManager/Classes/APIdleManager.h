@@ -6,7 +6,7 @@
 
 #import <Foundation/Foundation.h>
 
-#define kMaxIdleTimeSeconds 15.0
+#define kMaxIdleTimeSeconds 5.0
 
 typedef void(^APCompleteBlock)(void);
 

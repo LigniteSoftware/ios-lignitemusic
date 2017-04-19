@@ -285,18 +285,18 @@ static __NSMutableArray_of(NSString *) *_al_globalConstraintIdentifiers = nil;
  */
 - (void)autoInstall
 {
-#if PL__PureLayout_MinBaseSDK_iOS_8_0 || PL__PureLayout_MinBaseSDK_OSX_10_10
-    if ([self respondsToSelector:@selector(setActive:)]) {
-        [NSLayoutConstraint al_applyGlobalStateToConstraint:self];
-        if ([NSLayoutConstraint al_preventAutomaticConstraintInstallation]) {
-            [[NSLayoutConstraint al_currentArrayOfCreatedConstraints] addObject:self];
-        } else {
-            self.active = YES;
-        }
-        return;
-    }
-#endif /* PL__PureLayout_MinBaseSDK_iOS_8_0 || PL__PureLayout_MinBaseSDK_OSX_10_10 */
-    
+//#if PL__PureLayout_MinBaseSDK_iOS_8_0 || PL__PureLayout_MinBaseSDK_OSX_10_10
+//    if ([self respondsToSelector:@selector(setActive:)]) {
+//        [NSLayoutConstraint al_applyGlobalStateToConstraint:self];
+//        if ([NSLayoutConstraint al_preventAutomaticConstraintInstallation]) {
+//            [[NSLayoutConstraint al_currentArrayOfCreatedConstraints] addObject:self];
+//        } else {
+//            self.active = YES;
+//        }
+//        return;
+//    }
+//#endif /* PL__PureLayout_MinBaseSDK_iOS_8_0 || PL__PureLayout_MinBaseSDK_OSX_10_10 */
+	
     NSAssert(self.firstItem || self.secondItem, @"Can't install a constraint with nil firstItem and secondItem.");
     if (self.firstItem) {
         if (self.secondItem) {

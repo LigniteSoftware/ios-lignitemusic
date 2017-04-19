@@ -186,7 +186,7 @@
     }
     
     // Default headers
-    NSMutableDictionary* defaultHeaders = [NSMutableDictionary dictionary];
+    NSMutableDictionary* defaultHeaders = [UNIRest defaultHeaders];
     for(NSString* key in defaultHeaders) {
         NSString *value = [defaultHeaders objectForKey:key];
         [requestObj addValue:value forHTTPHeaderField:key];
