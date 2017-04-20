@@ -16,10 +16,10 @@
 
 @implementation LMNavigationBar
 
-- (void)layoutSubviews {
-	[super layoutSubviews];
-	
-	NSLog(@"Layout nav subviews");
-}
+//- (void)layoutSubviews {
+//	[super layoutSubviews];
+//	
+////	NSLog(@"Layout nav subviews");
+//}
 
 @end

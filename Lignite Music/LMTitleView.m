@@ -311,7 +311,7 @@
 	NSLog(@"Fuck me %ld", entry.collectionIndex);
 	
 	LMMusicTrack *track = [self.musicTitles.items objectAtIndex:entry.collectionIndex];
-	NSLog(@"Track %@", track.title);
+//	NSLog(@"Track %@", track.title);
 	
 	[self.musicPlayer setNowPlayingTrack:track];
 #else

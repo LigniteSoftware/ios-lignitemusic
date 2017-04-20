@@ -498,7 +498,7 @@ LMControlBarViewDelegate
 }
 
 - (void)requiredHeightForNavigationBarChangedTo:(CGFloat)requiredHeight withAnimationDuration:(CGFloat)animationDuration {
-	NSLog(@"rHeight changed to %f", requiredHeight);
+//	NSLog(@"rHeight changed to %f", requiredHeight);
 	
 	
 	[self.navigationController.view layoutIfNeeded];

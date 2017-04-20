@@ -543,7 +543,7 @@ MPMediaGrouping associatedMediaTypes[] = {
 		return;
 	}
 	
-	NSLog(@"System music changed %@", self.systemMusicPlayer.nowPlayingItem);
+//	NSLog(@"System music changed %@", self.systemMusicPlayer.nowPlayingItem);
 	
 	LMMusicTrack *newTrack = self.systemMusicPlayer.nowPlayingItem;
 	self.nowPlayingTrack = newTrack;
@@ -1364,7 +1364,7 @@ BOOL shuffleForDebug = NO;
 				nowPlayingTrack = item;
 			}
 			
-			NSLog(@"Got item %@", item.title);
+//			NSLog(@"Got item %@", item.title);
 		}
 	}
 	
@@ -1406,9 +1406,9 @@ BOOL shuffleForDebug = NO;
 - (void)reshuffleSortedCollection {
     NSMutableArray *shuffledArray = [NSMutableArray arrayWithArray:self.nowPlayingCollectionSorted.items];
     [self shuffleArray:shuffledArray];
-    for(LMMusicTrack *track in shuffledArray){
-        NSLog(@"Track %@", track.title);
-    }
+//    for(LMMusicTrack *track in shuffledArray){
+//        NSLog(@"Track %@", track.title);
+//    }
     self.nowPlayingCollectionShuffled = [MPMediaItemCollection collectionWithItems:shuffledArray];
 }
 

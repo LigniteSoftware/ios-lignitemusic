@@ -73,7 +73,7 @@
 }
 
 - (void)addConstraint:(NSLayoutConstraint *)constraint {
-	NSLog(@"Add constraint %@", NSStringFromCGRect(self.frame));
+//	NSLog(@"Add constraint %@", NSStringFromCGRect(self.frame));
 	
 	[super addConstraint:constraint];
 	
@@ -84,7 +84,7 @@
 	(self.settingLayoutClass == LMLayoutClassPortrait) ? [self.portraitConstraints addObject:constraint] : [self.landscapeConstraints addObject:constraint];
 	
 	if(self.settingLayoutClass != [LMLayoutManager sharedLayoutManager].currentLayoutClass){
-		NSLog(@"Deactivating %ld %ld", (long)self.settingLayoutClass, (long)[LMLayoutManager sharedLayoutManager].currentLayoutClass);
+//		NSLog(@"Deactivating %ld %ld", (long)self.settingLayoutClass, (long)[LMLayoutManager sharedLayoutManager].currentLayoutClass);
 		
 		[super removeConstraint:constraint];
 	}

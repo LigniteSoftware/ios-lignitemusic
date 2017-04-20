@@ -92,7 +92,7 @@
 
 @property BOOL loaded;
 
-@property UIView *shuffleModeBackgroundView, *repeatModeBackgroundView, *queueBackgroundView, *airplayBackgroundView;
+@property LMView *shuffleModeBackgroundView, *repeatModeBackgroundView, *queueBackgroundView, *airplayBackgroundView;
 @property LMButton *shuffleModeButton, *repeatModeButton, *queueButton, *airplayButton;
 
 @property LMProgressSlider *progressSlider;
@@ -179,8 +179,8 @@
     self.loadedTrack = newTrack;
     self.loadedTrackIndex = index;
     
-    NSLog(@"ID is %@: %lld", newTrack.title, newTrack.persistentID);
-    
+//    NSLog(@"ID is %@: %lld", newTrack.title, newTrack.persistentID);
+	
 	if(!self.queue){
 		self.queue = [LMOperationQueue new];
 	}
@@ -227,7 +227,7 @@
 				[self.albumArtImageView updateContentWithMusicTrack:newTrack];
 			}
 			
-			NSLog(@"Spook me solid");
+//			NSLog(@"Spook me solid");
 			
 			self.brandNewAlbumArtImageView.image = albumArt ? albumArt : [LMAppIcon imageForIcon:LMIconNoAlbumArt];
 		});
@@ -295,7 +295,7 @@
 		}
 	}
 	
-	NSLog(@"New highlighted %d previous %ld", newHighlightedIndex, (long)self.currentlyHighlighted);
+//	NSLog(@"New highlighted %d previous %ld", newHighlightedIndex, (long)self.currentlyHighlighted);
 	
 	LMListEntry *previousHighlightedEntry = [self listEntryForIndex:self.currentlyHighlighted];
 	
@@ -464,7 +464,7 @@
 }
 
 - (void)amountOfObjectsRequiredChangedTo:(NSUInteger)amountOfObjects forTableView:(LMTableView *)tableView {
-	NSLog(@"Required! %d", (int)amountOfObjects);
+//	NSLog(@"Required! %d", (int)amountOfObjects);
 	
     if(!self.itemArray){
         self.itemArray = [NSMutableArray new];
@@ -472,7 +472,7 @@
     
 	if(self.itemArray.count < amountOfObjects){
 		for(NSUInteger i = self.itemArray.count; i < amountOfObjects; i++){
-            NSLog(@"Need to create %ld", i);
+//            NSLog(@"Need to create %ld", i);
 			LMListEntry *listEntry = [[LMListEntry alloc]initWithDelegate:self];
 			listEntry.collectionIndex = i;
 			listEntry.iconInsetMultiplier = (1.0/3.0);
@@ -782,8 +782,6 @@
 	[self.albumArtRootView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.mainView withMultiplier:0.9];
 	[self.albumArtRootView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.mainView withMultiplier:0.9];
 	
-	[self.mainView endAddingNewConstraints];
-	
 	
 	self.albumArtImageView = [LMAlbumArtView newAutoLayoutView];
 	[self.albumArtRootView addSubview:self.albumArtImageView];
@@ -820,8 +818,6 @@
 	[self.progressSlider autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 	[self.progressSlider autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.mainView withMultiplier:(1.0/10.0)];
 	
-	[self.mainView endAddingNewConstraints];
-	
 	
 	self.trackInfoView = [LMTrackInfoView newAutoLayoutView];
 	self.trackInfoView.textAlignment = NSTextAlignmentCenter;
@@ -841,14 +837,13 @@
 	[self.trackInfoView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.mainView withOffset:-20];
 	[self.trackInfoView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.mainView withMultiplier:(1.0/6.0)];
 	
+	
 	[self.mainView endAddingNewConstraints];
 	
-	return;
-	
-	self.shuffleModeBackgroundView = [UIView newAutoLayoutView];
-	self.repeatModeBackgroundView = [UIView newAutoLayoutView];
-	self.queueBackgroundView = [UIView newAutoLayoutView];
-	self.airplayBackgroundView = [UIView newAutoLayoutView];
+	self.shuffleModeBackgroundView = [LMView newAutoLayoutView];
+	self.repeatModeBackgroundView = [LMView newAutoLayoutView];
+	self.queueBackgroundView = [LMView newAutoLayoutView];
+	self.airplayBackgroundView = [LMView newAutoLayoutView];
 	
 	self.shuffleModeButton = [LMButton newAutoLayoutView];
 	self.repeatModeButton = [LMButton newAutoLayoutView];
@@ -868,16 +863,24 @@
 	for(int i = 0; i < buttons.count; i++){
 		BOOL isFirst = (i == 0);
 		
-		UIView *background = [backgrounds objectAtIndex:i];
-		UIView *previousBackground = isFirst ? self.trackInfoView : [backgrounds objectAtIndex:i-1];
+		LMView *background = [backgrounds objectAtIndex:i];
+		LMView *previousBackground = isFirst ? self.trackInfoView : [backgrounds objectAtIndex:i-1];
 		
-//		background.backgroundColor = [UIColor colorWithRed:(0.2*i)+0.3 green:0 blue:0 alpha:1.0];
+		background.backgroundColor = [UIColor colorWithRed:(0.2*i)+0.3 green:0 blue:0 alpha:1.0];
 		[self.mainView addSubview:background];
 		
+		[self.mainView beginAddingNewPortraitConstraints];
 		[background autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.trackInfoView withOffset:-10];
-		[background autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
+		[background autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.mainView];
 		[background autoPinEdge:ALEdgeLeading toEdge:isFirst ? ALEdgeLeading : ALEdgeTrailing ofView:previousBackground];
 		[background autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.trackInfoView withMultiplier:(1.0/(float)buttons.count)];
+		
+		[self.mainView beginAddingNewLandscapeConstraints];
+		[background autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.progressSlider withOffset:-10];
+		[background autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.trackInfoView];
+		[background autoPinEdge:ALEdgeLeading toEdge:isFirst ? ALEdgeLeading : ALEdgeTrailing ofView:previousBackground];
+		[background autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.trackInfoView withMultiplier:(1.0/(float)buttons.count)];
+		
 		
 		LMButton *button = [buttons objectAtIndex:i];
 		button.userInteractionEnabled = YES;
@@ -887,10 +890,24 @@
 		[button setColour:[LMColour fadedColour]];
 		[background addSubview:button];
 
+//		[background beginAddingNewPortraitConstraints];
+//		[button autoAlignAxisToSuperviewAxis:ALAxisVertical];
+//		[button autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.mainView withOffset:-20];
+//		[button autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:background withMultiplier:0.6];
+//		[button autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:background];
+//		
+//		[background beginAddingNewLandscapeConstraints];
+//		[button autoAlignAxisToSuperviewAxis:ALAxisVertical];
+//		[button autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.progressSlider withOffset:-20];
+//		[button autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:background withMultiplier:0.6];
+//		[button autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:background];
+
+		[button autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:20];
 		[button autoAlignAxisToSuperviewAxis:ALAxisVertical];
-		[button autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self withOffset:-20];
-		[button autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:background withMultiplier:0.6];
+		[button autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:background withMultiplier:(6.0/10.0)];
 		[button autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:background];
+		
+//		[background endAddingNewConstraints];
 		
 		if(button == self.airplayButton){
 			MPVolumeView *volumeView = [MPVolumeView newAutoLayoutView];
@@ -906,6 +923,10 @@
 			[self.queueButton addGestureRecognizer:queueOpenPanGesture];
 		}
 	}
+	
+	
+	[self.mainView endAddingNewConstraints];
+	
 	
 	[self.shuffleModeButton setColour:self.musicPlayer.shuffleMode ? [[UIColor whiteColor] colorWithAlphaComponent:(8.0/10.0)] : [LMColour fadedColour]];
 	[self.repeatModeButton setColour:(self.musicPlayer.repeatMode != LMMusicRepeatModeNone) ? [[UIColor whiteColor] colorWithAlphaComponent:(8.0/10.0)] : [LMColour fadedColour]];

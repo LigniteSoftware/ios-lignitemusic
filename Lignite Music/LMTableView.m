@@ -76,7 +76,7 @@
     
     _bottomSpacing = bottomSpacing;
     
-    NSLog(@"Reloading shit");
+//    NSLog(@"Reloading shit");
     
     if(shouldReload){
         [self reloadContentInset];

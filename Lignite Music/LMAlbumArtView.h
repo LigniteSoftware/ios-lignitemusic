@@ -8,11 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import "MPMediaItem+LigniteImages.h"
+#import "LMView.h"
 #ifdef SPOTIFY
 #import "Spotify.h"
 #endif
 
-@interface LMAlbumArtView : UIView
+@interface LMAlbumArtView : LMView
 
 @property MPMusicPlayerController *musicPlayer;
 

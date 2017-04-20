@@ -136,7 +136,7 @@
         percentageConverted = 1;
     }
     
-    NSLog(@"Converted %f!", percentageConverted);
+//    NSLog(@"Converted %f!", percentageConverted);
 	
 	[UIView animateWithDuration:0.25 animations:^{
 		[self layoutIfNeeded];
@@ -179,8 +179,8 @@
     
     CGFloat minibarHeight = WINDOW_FRAME.size.height/12.0;
 
-    NSLog(@"Fuck you!!! lol %@", viewAttachedToButtonBar);
-    
+//    NSLog(@"Fuck you!!! lol %@", viewAttachedToButtonBar);
+	
 //    [self.minibarBackgroundView removeConstraints:self.minibarBackgroundView.constraints];
     
     for(NSLayoutConstraint *constraint in self.constraints){
@@ -327,8 +327,8 @@
             percentageConverted = 1;
         }
         
-        NSLog(@"Converted %f", percentageConverted);
-        
+//        NSLog(@"Converted %f", percentageConverted);
+		
         self.viewAttachedToButtonBar.alpha = percentageConverted;
         self.buttonBar.alpha = self.viewAttachedToButtonBar.alpha;
         
@@ -343,7 +343,7 @@
             percentageConverted = 1;
         }
         
-        NSLog(@"Converted %f!", percentageConverted);
+//        NSLog(@"Converted %f!", percentageConverted);
         
         self.viewAttachedToButtonBar.alpha = 1.0-percentageConverted;
         self.buttonBar.alpha = self.viewAttachedToButtonBar.alpha;

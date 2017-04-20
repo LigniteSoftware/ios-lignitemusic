@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LMView.h"
 
 @class LMButton;
 
@@ -15,7 +16,7 @@
 - (void)clickedButton:(LMButton*)button;
 @end
 
-@interface LMButton : UIView
+@interface LMButton : LMView
 
 @property (nonatomic, assign) id <LMButtonDelegate> delegate;
 @property BOOL heightIsSmaller;
