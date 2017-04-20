@@ -679,9 +679,9 @@
 	
 	
 	
-	LMContactViewController *creditsViewController = [LMContactViewController new];
-	[self.coreViewController.navigationController showViewController:creditsViewController sender:self];
-	[(LMCoreViewController*)self.coreViewController pushItemOntoNavigationBarWithTitle:NSLocalizedString(@"Credits", nil) withNowPlayingButton:NO];
+//	LMContactViewController *creditsViewController = [LMContactViewController new];
+//	[self.coreViewController.navigationController showViewController:creditsViewController sender:self];
+//	[(LMCoreViewController*)self.coreViewController pushItemOntoNavigationBarWithTitle:NSLocalizedString(@"Credits", nil) withNowPlayingButton:NO];
 }
 
 - (void)dealloc {
