@@ -670,11 +670,19 @@
     self.queueView.hidden = YES;
 	[self addSubview:self.queueView];
 	
+	[self beginAddingNewPortraitConstraints];
 	[self.queueView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 	[self.queueView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 	[self.queueView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.mainView];
 	[self.queueView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(3.0/4.0)];
 	
+	[self beginAddingNewLandscapeConstraints];
+	[self.queueView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+	[self.queueView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+	[self.queueView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.mainView];
+	[self.queueView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(1.0/2.0)];
+	
+	[self endAddingNewConstraints];
 	
 	
 	self.currentlyHighlighted = -1;
@@ -866,7 +874,7 @@
 		LMView *background = [backgrounds objectAtIndex:i];
 		LMView *previousBackground = isFirst ? self.trackInfoView : [backgrounds objectAtIndex:i-1];
 		
-		background.backgroundColor = [UIColor colorWithRed:(0.2*i)+0.3 green:0 blue:0 alpha:1.0];
+//		background.backgroundColor = [UIColor colorWithRed:(0.2*i)+0.3 green:0 blue:0 alpha:1.0];
 		[self.mainView addSubview:background];
 		
 		[self.mainView beginAddingNewPortraitConstraints];

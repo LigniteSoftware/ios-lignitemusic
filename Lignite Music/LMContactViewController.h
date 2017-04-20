@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LMView.h"
 
 @interface LMContactViewController : UIViewController
+
+@property LMView *view;
 
 @end

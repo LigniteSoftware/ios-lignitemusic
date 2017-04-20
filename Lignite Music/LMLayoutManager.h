@@ -31,6 +31,7 @@ typedef NS_ENUM(NSInteger, LMLayoutClass) {
 @property UITraitCollection *traitCollection;
 @property CGSize size;
 
+- (BOOL)isLandscape;
 + (LMLayoutManager*)sharedLayoutManager;
 - (void)addDelegate:(id<LMLayoutChangeDelegate>)delegate;
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection;

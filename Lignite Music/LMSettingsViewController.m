@@ -676,6 +676,12 @@
 	[self.sectionTableView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:44];
 	
 	[self.sectionTableView setup];
+	
+	
+	
+	LMContactViewController *creditsViewController = [LMContactViewController new];
+	[self.coreViewController.navigationController showViewController:creditsViewController sender:self];
+	[(LMCoreViewController*)self.coreViewController pushItemOntoNavigationBarWithTitle:NSLocalizedString(@"Credits", nil) withNowPlayingButton:NO];
 }
 
 - (void)dealloc {

@@ -782,6 +782,10 @@ LMControlBarViewDelegate
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
 		NSLog(@"Rotated");
 		
+		UITraitCollection *previousCollection = self.traitCollection;
+		self.layoutManager.traitCollection = self.traitCollection;
+		[self.layoutManager traitCollectionDidChange:previousCollection];
+		
 		self.layoutManager.size = self.view.frame.size;
 	}];
 }
@@ -1238,7 +1242,17 @@ LMControlBarViewDelegate
                         
 //						[self musicLibraryDidChange];
 						
-						[self launchNowPlayingFromNavigationBar];
+//						[self launchNowPlayingFromNavigationBar];
+						
+						[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
+							LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
+							settingsViewController.coreViewController = self;
+							[self.navigationController pushViewController:settingsViewController animated:YES];
+							
+//							[self.buttonNavigationBar completelyHide];
+							self.buttonNavigationBar.hidden = YES;
+							self.nowPlayingCoreView.hidden = YES;
+						} repeats:NO];
 					});
 					break;
 				}

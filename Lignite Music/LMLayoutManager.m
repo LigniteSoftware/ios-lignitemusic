@@ -37,10 +37,16 @@
 	[self.delegates addObject:delegate];
 }
 
+- (BOOL)isLandscape {
+	return [self currentLayoutClass] == LMLayoutClassLandscape;
+}
+
 - (LMLayoutClass)currentLayoutClass {
 	NSAssert(!CGSizeEqualToSize(self.size, CGSizeZero), @"Trait collection is nil and therefore the current layout class cannot be accessed!");
 	
-	return (self.size.height >= self.size.width) ? LMLayoutClassPortrait : LMLayoutClassLandscape;
+	return (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular) ? LMLayoutClassLandscape : LMLayoutClassPortrait;
+	
+//	return (self.size.height >= self.size.width) ? LMLayoutClassPortrait : LMLayoutClassLandscape;
 }
 
 //- (void)setCurrentLayoutClass:(LMLayoutClass)currentLayoutClass {
