@@ -1245,13 +1245,13 @@ LMControlBarViewDelegate
 //						[self launchNowPlayingFromNavigationBar];
 						
 						[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
-							LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
-							settingsViewController.coreViewController = self;
-							[self.navigationController pushViewController:settingsViewController animated:YES];
+//							LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
+//							settingsViewController.coreViewController = self;
+//							[self.navigationController pushViewController:settingsViewController animated:YES];
 							
 //							[self.buttonNavigationBar completelyHide];
-							self.buttonNavigationBar.hidden = YES;
-							self.nowPlayingCoreView.hidden = YES;
+//							self.buttonNavigationBar.hidden = YES;
+//							self.nowPlayingCoreView.hidden = YES;
 						} repeats:NO];
 					});
 					break;

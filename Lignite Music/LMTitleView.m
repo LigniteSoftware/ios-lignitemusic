@@ -7,6 +7,7 @@
 //
 
 #import <PureLayout/PureLayout.h>
+#import "LMLayoutManager.h"
 #import "LMTitleView.h"
 #import "LMListEntry.h"
 #import "LMColour.h"
@@ -15,7 +16,7 @@
 #import "LMExtras.h"
 #import "Spotify.h"
 
-@interface LMTitleView() <LMListEntryDelegate, LMTableViewSubviewDataSource, LMMusicPlayerDelegate, UITableViewDelegate>
+@interface LMTitleView() <LMListEntryDelegate, LMTableViewSubviewDataSource, LMMusicPlayerDelegate, UITableViewDelegate, LMLayoutChangeDelegate>
 
 @property LMMusicPlayer *musicPlayer;
 
@@ -39,6 +40,8 @@
  Whether or not the scrolling that the user did broke the treshhold for minimizing the bottom button bar.
  */
 @property BOOL brokeScrollingThreshhold;
+
+@property LMLayoutManager *layoutManager;
 
 @end
 
@@ -266,7 +269,7 @@
 }
 
 - (float)heightAtIndex:(NSUInteger)index forTableView:(LMTableView *)tableView {
-	return WINDOW_FRAME.size.height/8.0;
+	return self.layoutManager.isLandscape ? WINDOW_FRAME.size.width/8.0 : WINDOW_FRAME.size.height/8.0;
 }
 
 - (LMListEntry*)listEntryForIndex:(NSInteger)index {
@@ -378,8 +381,19 @@
 	return image;
 }
 
+- (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		[self.songListTableView reloadData];
+	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		//Nothing, yet
+	}];
+}
+
 - (void)setup {
 	[self rebuildTrackCollection];
+	
+	self.layoutManager = [LMLayoutManager sharedLayoutManager];
+	[self.layoutManager addDelegate:self];
 		
 	self.songListTableView = [LMTableView newAutoLayoutView];
 	self.songListTableView.totalAmountOfObjects = self.musicTitles.trackCount;
