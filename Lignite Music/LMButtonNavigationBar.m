@@ -10,6 +10,7 @@
 #import "LMButtonNavigationBar.h"
 #import "LMSourceSelectorView.h"
 #import "LMCoreViewController.h"
+#import "LMLayoutManager.h"
 #import "NSTimer+Blocks.h"
 #import "LMMusicPlayer.h"
 #import "LMGrabberView.h"
@@ -35,7 +36,7 @@
 /**
  The whitespace view which goes below the button bar so that if the user drags up too high, they don't see the contents below it.
  */
-@property UIView *buttonBarBottomWhitespaceView;
+@property LMView *buttonBarBottomWhitespaceView;
 
 /**
  The constraint which pins the button bar to the bottom of the view.
@@ -55,7 +56,7 @@
 /**
  The minimized bar's background view.
  */
-@property UIView *minibarBackgroundView;
+@property LMView *minibarBackgroundView;
 
 /**
  The label that goes right above the minibar for when the source selector is minimized.
@@ -91,6 +92,11 @@
  The two points required for calculating the drag position.
  */
 @property CGPoint originalPoint, currentPoint;
+
+/**
+ The layout manager.
+ */
+@property LMLayoutManager *layoutManager;
 
 @end
 
@@ -466,7 +472,7 @@
 		self.heightBeforeAdjustingToScrollPosition = -1;
 
 		
-		self.minibarBackgroundView = [UIView newAutoLayoutView];
+		self.minibarBackgroundView = [LMView newAutoLayoutView];
 		self.minibarBackgroundView.backgroundColor = [UIColor purpleColor];
 		[self addSubview:self.minibarBackgroundView];
 		
@@ -679,7 +685,7 @@
 		
 		
 		
-		self.buttonBarBottomWhitespaceView = [UIView newAutoLayoutView];
+		self.buttonBarBottomWhitespaceView = [LMView newAutoLayoutView];
 		self.buttonBarBottomWhitespaceView.backgroundColor = [UIColor whiteColor];
 		[self.buttonBar addSubview:self.buttonBarBottomWhitespaceView];
 		

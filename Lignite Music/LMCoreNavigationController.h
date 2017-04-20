@@ -7,7 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LMView.h"
 
 @interface LMCoreNavigationController : UINavigationController
+
+/**
+ A view which you can actually do shit on with adaptive constraints.
+ */
+@property LMView *rootView;
 
 @end

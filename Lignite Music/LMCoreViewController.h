@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "LMNavigationBar.h"
 #import "LMButtonNavigationBar.h"
+#import "LMCoreNavigationController.h"
 
 @class LMBrowsingDetailViewController;
 
@@ -17,6 +18,8 @@
 @property LMBrowsingDetailViewController *currentDetailViewController;
 
 @property LMNavigationBar *navigationBar;
+
+@property LMCoreNavigationController *navigationController;
 
 - (void)panNowPlayingUp:(UIPanGestureRecognizer *)recognizer;
 

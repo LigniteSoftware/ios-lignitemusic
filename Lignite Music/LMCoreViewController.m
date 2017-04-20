@@ -113,6 +113,23 @@ LMControlBarViewDelegate
 
 @implementation LMCoreViewController
 
+@dynamic navigationController;
+//@synthesize buttonNavigationBarHeightConstraint = _buttonNavigationBarHeightConstraint;
+//
+//- (NSLayoutConstraint*)buttonNavigationBarHeightConstraint {
+//	for(NSLayoutConstraint *constraint in self.navigationController.rootView.constraints){
+//		if(constraint.firstItem == self.buttonNavigationBar && (constraint.firstAttribute == NSLayoutAttributeWidth || constraint.firstAttribute == NSLayoutAttributeHeight)){
+//			
+//			NSLog(@"Got constraint %@", constraint);
+//			
+//			return constraint;
+//		}
+//	}
+//	
+//	NSLog(@"Exists %d", self.buttonNavigationBar != nil);
+//	return nil;
+//}
+
 - (void)cacheSizeChangedTo:(uint64_t)newCacheSize forCategory:(LMImageManagerCategory)category {
     if((category == LMImageManagerCategoryArtistImages && self.compactView.musicType == LMMusicTypeArtists)
     || (category == LMImageManagerCategoryAlbumImages && self.compactView.musicType == LMMusicTypeAlbums)){
@@ -1114,10 +1131,23 @@ LMControlBarViewDelegate
 						self.buttonNavigationBar.letterTabBarDelegate = self;
 						[self.navigationController.view addSubview:self.buttonNavigationBar];
 						
+//						self.buttonNavigationBar.backgroundColor = [UIColor cyanColor];
+						
+						NSLog(@"Class %@", [self.navigationController.view class]);
+						
+//						[self.navigationController.rootView beginAddingNewPortraitConstraints];
 						[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 						[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 						[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 						self.buttonNavigationBarHeightConstraint = [self.buttonNavigationBar autoSetDimension:ALDimensionHeight toSize:0.0];
+						
+//						[self.navigationController.rootView beginAddingNewLandscapeConstraints];
+//						[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+//						[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
+//						[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+//						[self.buttonNavigationBar autoSetDimension:ALDimensionWidth toSize:0.0];
+//						
+//						[self.navigationController.rootView endAddingNewConstraints];
 						
 						self.musicPlayer.navigationBar = self.buttonNavigationBar;
 						
@@ -1252,6 +1282,8 @@ LMControlBarViewDelegate
 //							[self.buttonNavigationBar completelyHide];
 //							self.buttonNavigationBar.hidden = YES;
 //							self.nowPlayingCoreView.hidden = YES;
+							
+							[self.buttonNavigationBar minimize];
 						} repeats:NO];
 					});
 					break;
