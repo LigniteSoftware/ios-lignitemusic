@@ -8,13 +8,19 @@
 
 #import <PureLayout/PureLayout.h>
 #import "LMTrackInfoView.h"
+#import "LMLayoutManager.h"
 
-@interface LMTrackInfoView()
+@interface LMTrackInfoView()<LMLayoutChangeDelegate>
 
 /**
  The labels of the track info view.
  */
 @property MarqueeLabel *titleLabel, *artistLabel, *albumLabel;
+
+/**
+ The layout manager.
+ */
+@property LMLayoutManager *layoutManager;
 
 @end
 
@@ -24,6 +30,13 @@
 @synthesize artistText = _artistText;
 @synthesize albumText = _albumText;
 @synthesize textColour = _textColour;
+
+- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
+	NSTextAlignment newTextAlignment = self.layoutManager.isLandscape ? NSTextAlignmentCenter : NSTextAlignmentLeft;
+	self.titleLabel.textAlignment = newTextAlignment;
+	self.artistLabel.textAlignment = newTextAlignment;
+	self.albumLabel.textAlignment = newTextAlignment;
+}
 
 - (NSString*)titleText {
 	return _titleText;
@@ -81,6 +94,8 @@
 	if(!self.didLayoutConstraints){
 		self.didLayoutConstraints = YES;
 		
+		[self.layoutManager addDelegate:self];
+		
 		self.titleLabel = [MarqueeLabel newAutoLayoutView];
 		self.artistLabel = [MarqueeLabel newAutoLayoutView];
 		self.albumLabel = [MarqueeLabel newAutoLayoutView];
@@ -129,6 +144,9 @@
 			[label autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self];
 			[label setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
 			[label setContentCompressionResistancePriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
+			
+			//Update alignments
+			[self traitCollectionDidChange:nil];
 		}
 	}
 		
@@ -139,6 +157,7 @@
 	self = [super init];
 	if(self){
 		self.textColour = [UIColor blackColor];
+		self.layoutManager = [LMLayoutManager sharedLayoutManager];
 	}
 	return self;
 }

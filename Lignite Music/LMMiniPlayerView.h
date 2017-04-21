@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "LMMusicPlayer.h"
+#import "LMView.h"
 
-@interface LMMiniPlayerView : UIView
+@interface LMMiniPlayerView : LMView
 
 /**
  The track which this miniplayer holds.

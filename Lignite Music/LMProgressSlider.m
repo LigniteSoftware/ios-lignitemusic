@@ -19,7 +19,7 @@
 /**
  The background to the background of the slider (lol), which is by default [UIColor clearColour] though can be changed in cases like the now playing screen.
  */
-@property UIView *sliderBackgroundBackgroundView;
+@property LMView *sliderBackgroundBackgroundView;
 
 /**
  The text label which goes to the left of the view and below the dragger view.
@@ -64,7 +64,7 @@
 /**
  The grabber view which the user uses to slide the view's progress.
  */
-@property UIView *sliderGrabberView;
+@property LMView *sliderGrabberView;
 
 /**
  The amount of width to incrememt by for a tick of seconds. Calculated off of the maximum value.
@@ -235,18 +235,15 @@
 }
 
 - (void)setTextLabel:(LMLabel*)textLabel asShrunk:(BOOL)shrunk {
-	NSLayoutConstraint *topConstraint, *bottomConstraint;
+	NSLayoutConstraint *topConstraint;
 	for(NSLayoutConstraint *constraint in self.constraints){
-		if(constraint.firstItem == textLabel && constraint.firstAttribute == ALEdgeTop){
+		if(constraint.firstItem == textLabel && constraint.firstAttribute == ALAxisHorizontal){
 			topConstraint = constraint;
-		}
-		if(constraint.firstItem == textLabel && constraint.firstAttribute == ALEdgeBottom){
-			bottomConstraint = constraint;
 		}
 	}
 	
-	if(!topConstraint || !bottomConstraint){
-		NSLog(@"Top (%@) or bottom (%@) constraint not found!", topConstraint, bottomConstraint);
+	if(!topConstraint){
+		NSLog(@"Top (%@) constraint not found!", topConstraint);
 		return;
 	}
 	
@@ -256,8 +253,7 @@
 		textLabel.textColor = ((shrunk ? !self.lightTheme : self.lightTheme) ? [UIColor blackColor] : [UIColor whiteColor]);
 	} completion:nil];
 	
-	topConstraint.constant = shrunk ? (LMProgressSliderTopAndBottomLabelPadding * 2) : (LMProgressSliderTopAndBottomLabelPadding);
-	bottomConstraint.constant = shrunk ? (0) : (-LMProgressSliderTopAndBottomLabelPadding);
+	topConstraint.constant = shrunk ? (LMProgressSliderTopAndBottomLabelPadding) : (0);
 }
 
 - (void)setSliderAsShrunk:(BOOL)shrunk {
@@ -414,19 +410,23 @@
 			self.backgroundBackgroundColour = [UIColor clearColor];
 		}
 		
-		CGFloat topAndBottomLabelPadding = LMProgressSliderTopAndBottomLabelPadding;
-				
 		self.leftTextBottomLabel = [LMLabel newAutoLayoutView];
 		self.leftTextBottomLabel.text = self.leftText ? self.leftText : @"";
 		self.leftTextBottomLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:50];
 		self.leftTextBottomLabel.textColor = [UIColor blackColor];
 		[self addSubview:self.leftTextBottomLabel];
 		
+		[self beginAddingNewPortraitConstraints];
 		[self.leftTextBottomLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self withOffset:10];
-		[self.leftTextBottomLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self withOffset:topAndBottomLabelPadding];
-		[self.leftTextBottomLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self withOffset:-topAndBottomLabelPadding];
+		[self.leftTextBottomLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+		[self.leftTextBottomLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.75];
 		[self.leftTextBottomLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(0.45)];
-		
+
+		[self beginAddingNewLandscapeConstraints];
+		[self.leftTextBottomLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self withOffset:10];
+		[self.leftTextBottomLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+		[self.leftTextBottomLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.5];
+		[self.leftTextBottomLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(0.45)];
 		
 		
 		self.rightTextBottomLabel = [LMLabel newAutoLayoutView];
@@ -436,18 +436,26 @@
 		self.rightTextBottomLabel.textAlignment = NSTextAlignmentRight;
 		[self addSubview:self.rightTextBottomLabel];
 		
+		[self beginAddingNewPortraitConstraints];
 		[self.rightTextBottomLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self withOffset:-10];
-		[self.rightTextBottomLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self withOffset:topAndBottomLabelPadding];
-		[self.rightTextBottomLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self withOffset:-topAndBottomLabelPadding];
+		[self.rightTextBottomLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+		[self.rightTextBottomLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.75];
 		[self.rightTextBottomLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(0.45)];
 		
+		[self beginAddingNewLandscapeConstraints];
+		[self.rightTextBottomLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self withOffset:-10];
+		[self.rightTextBottomLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+		[self.rightTextBottomLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.5];
+		[self.rightTextBottomLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(0.45)];
 		
-		self.sliderBackgroundBackgroundView = [UIView newAutoLayoutView];
+		[self endAddingNewConstraints];
+		
+		self.sliderBackgroundBackgroundView = [LMView newAutoLayoutView];
 		self.sliderBackgroundBackgroundView.backgroundColor = self.backgroundBackgroundColour;
 		[self addSubview:self.sliderBackgroundBackgroundView];
 		
 		
-		self.sliderBackgroundView = [UIView newAutoLayoutView];
+		self.sliderBackgroundView = [LMView newAutoLayoutView];
 		self.sliderBackgroundView.backgroundColor = [LMColour ligniteRedColour];
 		self.sliderBackgroundView.clipsToBounds = YES;
 		[self.sliderBackgroundBackgroundView addSubview:self.sliderBackgroundView];
@@ -467,7 +475,7 @@
 		[self addGestureRecognizer:panGesture];
 		
 		
-		self.sliderGrabberView = [UIView newAutoLayoutView];
+		self.sliderGrabberView = [LMView newAutoLayoutView];
 		self.sliderGrabberView.backgroundColor = [UIColor whiteColor]; //[UIColor colorWithRed:0.15 green:0.15 blue:0.15 alpha:1.0];
 		[self.sliderBackgroundView addSubview:self.sliderGrabberView];
 		
@@ -488,8 +496,8 @@
 		
 		[self.rightTextTopLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.rightTextBottomLabel];
 		[self.rightTextTopLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.rightTextBottomLabel];
-		[self.rightTextTopLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self withOffset:topAndBottomLabelPadding];
-		[self.rightTextTopLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self withOffset:-topAndBottomLabelPadding];
+		[self.rightTextTopLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.rightTextBottomLabel];
+		[self.rightTextTopLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.rightTextBottomLabel];
 		
 		
 		
@@ -503,8 +511,8 @@
 		
 		[self.leftTextTopLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.leftTextBottomLabel];
 		self.leftTextTopLabelWidthConstraint = [self.leftTextTopLabel autoSetDimension:ALDimensionWidth toSize:0];
-		[self.leftTextTopLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self withOffset:topAndBottomLabelPadding];
-		[self.leftTextTopLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self withOffset:-topAndBottomLabelPadding];
+		[self.leftTextTopLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.leftTextBottomLabel];
+		[self.leftTextTopLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.leftTextBottomLabel];
 		
 		[self setLightTheme:self.lightTheme];
 		

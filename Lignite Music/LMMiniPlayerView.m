@@ -16,13 +16,13 @@
 
 @interface  LMMiniPlayerView()<LMMusicPlayerDelegate, LMProgressSliderDelegate>
 
-@property UIView *miniPlayerBackgroundView;
+@property LMView *miniPlayerBackgroundView;
 
-@property UIView *trackInfoAndDurationBackgroundView;
+@property LMView *trackInfoAndDurationBackgroundView;
 @property LMTrackInfoView *trackInfoView;
 @property LMProgressSlider *progressSlider;
 
-@property UIView *albumArtImageBackgroundView;
+@property LMView *albumArtImageBackgroundView;
 @property UIImageView *albumArtImageView;
 
 @property LMOperationQueue *queue;
@@ -163,49 +163,62 @@
 }
 
 - (void)setup {
-	self.albumArtImageBackgroundView = [UIView newAutoLayoutView];
+	self.albumArtImageBackgroundView = [LMView newAutoLayoutView];
 	[self addSubview:self.albumArtImageBackgroundView];
 	
-	[self.albumArtImageBackgroundView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
-	[self.albumArtImageBackgroundView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
+	[self beginAddingNewPortraitConstraints];
+	[self.albumArtImageBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+	[self.albumArtImageBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 	[self.albumArtImageBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self];
 	[self.albumArtImageBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self];
 	
-	self.albumArtImageView = [UIImageView newAutoLayoutView];
-//	self.albumArtImageView.layer.masksToBounds = YES;
-//	self.albumArtImageView.layer.cornerRadius = 5.0;
-//  Rest in peace :)
+	[self beginAddingNewLandscapeConstraints];
+	[self.albumArtImageBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+	[self.albumArtImageBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+	[self.albumArtImageBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+	[self.albumArtImageBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self];
 	
+	
+	
+	
+	self.albumArtImageView = [UIImageView newAutoLayoutView];
 	[self.albumArtImageBackgroundView addSubview:self.albumArtImageView];
 	
 	[self.albumArtImageView autoCenterInSuperview];
 	[self.albumArtImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.albumArtImageBackgroundView withMultiplier:(8.0/10.0)];
 	[self.albumArtImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.albumArtImageBackgroundView withMultiplier:(8.0/10.0)];
 	
-	self.trackInfoAndDurationBackgroundView = [UIView newAutoLayoutView];
+	
+	self.trackInfoAndDurationBackgroundView = [LMView newAutoLayoutView];
 //	self.trackInfoAndDurationBackgroundView.backgroundColor = [UIColor cyanColor];
 	[self addSubview:self.trackInfoAndDurationBackgroundView];
 	
+	[self beginAddingNewPortraitConstraints];
 	[self.trackInfoAndDurationBackgroundView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.albumArtImageView];
 	[self.trackInfoAndDurationBackgroundView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.albumArtImageBackgroundView];
 	[self.trackInfoAndDurationBackgroundView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.albumArtImageView];
-	[self.trackInfoAndDurationBackgroundView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self];
+	[self.trackInfoAndDurationBackgroundView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self withOffset:-15];
+	
+	[self beginAddingNewLandscapeConstraints];
+	[self.trackInfoAndDurationBackgroundView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.albumArtImageView];
+	[self.trackInfoAndDurationBackgroundView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.albumArtImageView];
+	[self.trackInfoAndDurationBackgroundView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.albumArtImageBackgroundView];
+	[self.trackInfoAndDurationBackgroundView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
+	
+	[self endAddingNewConstraints];
 	
 	
 	self.trackInfoView = [LMTrackInfoView newAutoLayoutView];
 	self.trackInfoView.textAlignment = NSTextAlignmentLeft;
-	[self addSubview:self.trackInfoView];
+	[self.trackInfoAndDurationBackgroundView addSubview:self.trackInfoView];
 	
-	[self.trackInfoView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.trackInfoAndDurationBackgroundView];
-	[self.trackInfoView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.trackInfoAndDurationBackgroundView];
-	[self.trackInfoView autoMatchDimension:ALDimensionWidth
-							   toDimension:ALDimensionWidth
-									ofView:self.trackInfoAndDurationBackgroundView
-							withMultiplier:(9.5/10.0)];
+	[self.trackInfoView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+	[self.trackInfoView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+	[self.trackInfoView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:1];
 	[self.trackInfoView autoMatchDimension:ALDimensionHeight
 							   toDimension:ALDimensionHeight
 									ofView:self.trackInfoAndDurationBackgroundView
-							withMultiplier:(7.0/10.0)];
+							withMultiplier:(6.5/10.0)];
 	
 	
 	self.progressSlider = [LMProgressSlider newAutoLayoutView];
@@ -216,10 +229,22 @@
 	self.progressSlider.lightTheme = YES;
 	[self.trackInfoAndDurationBackgroundView addSubview:self.progressSlider];
 	
+	[self beginAddingNewPortraitConstraints];
+	[self.trackInfoAndDurationBackgroundView beginAddingNewPortraitConstraints];
 	[self.progressSlider autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.trackInfoView];
 	[self.progressSlider autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.trackInfoView];
 	[self.progressSlider autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.albumArtImageView];
 	[self.progressSlider autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(1.0/5.0)];
+	
+	[self beginAddingNewLandscapeConstraints];
+	[self.trackInfoAndDurationBackgroundView beginAddingNewLandscapeConstraints];
+	[self.progressSlider autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.trackInfoView];
+	[self.progressSlider autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.trackInfoView];
+	[self.progressSlider autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.trackInfoView];
+	[self.progressSlider autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(1.0/11.0)];
+	
+	[self endAddingNewConstraints];
+	[self.trackInfoAndDurationBackgroundView endAddingNewConstraints];
 	
 	
 	UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tappedMiniPlayer)];

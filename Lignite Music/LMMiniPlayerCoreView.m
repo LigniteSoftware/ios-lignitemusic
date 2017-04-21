@@ -297,7 +297,7 @@
 		
 		NSLog(@"Hey");
 		
-		self.backgroundColor = [UIColor whiteColor];
+		self.backgroundColor = [UIColor orangeColor];
 		
 		self.otherConstraints = [NSMutableArray new];
         self.samplesArray = [NSMutableArray new];

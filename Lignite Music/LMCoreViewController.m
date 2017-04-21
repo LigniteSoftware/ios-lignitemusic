@@ -41,6 +41,7 @@
 #import "LMControlBarView.h"
 #import "LMBrowsingBar.h"
 #import "LMMiniPlayerCoreView.h"
+#import "LMMiniPlayerView.h"
 #import "LMTutorialView.h"
 
 #ifdef SPOTIFY
@@ -851,15 +852,16 @@ LMControlBarViewDelegate
 //	
 //	return;
 	
-//	LMMiniPlayerView *miniplayerTest = [LMMiniPlayerView newAutoLayoutView];
+//	LMMiniPlayerCoreView *miniplayerTest = [LMMiniPlayerCoreView newAutoLayoutView];
+////	miniplayerTest.backgroundColor = [UIColor orangeColor];
 //	[self.view addSubview:miniplayerTest];
 //	
-//	[miniplayerTest autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.view];
-//	[miniplayerTest autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.view];
-//	[miniplayerTest autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
-//	[miniplayerTest autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:0.20];
-//
-//	[miniplayerTest setup];
+//	[miniplayerTest autoPinEdgeToSuperviewEdge:ALEdgeTop];
+//	[miniplayerTest autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+//	[miniplayerTest autoCenterInSuperview];
+//	[miniplayerTest autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(1.0/2.8)];
+//	
+//	return;
 
 	
 //	LMNowPlayingCoreView *coreView = [LMNowPlayingCoreView newAutoLayoutView];
@@ -1131,7 +1133,7 @@ LMControlBarViewDelegate
 						self.buttonNavigationBar.letterTabBarDelegate = self;
 						[self.navigationController.view addSubview:self.buttonNavigationBar];
 						
-//						self.buttonNavigationBar.backgroundColor = [UIColor cyanColor];
+						self.buttonNavigationBar.backgroundColor = [UIColor cyanColor];
 						
 						NSLog(@"Class %@", [self.navigationController.view class]);
 						
