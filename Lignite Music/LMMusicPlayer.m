@@ -668,18 +668,6 @@ MPMediaGrouping associatedMediaTypes[] = {
 }
 #endif
 
-- (void)setSourceTitle:(NSString*)title {
-	if(self.sourceSelector){
-		[self.sourceSelector setSourceTitle:title];
-	}
-}
-
-- (void)setSourceSubtitle:(NSString*)subtitle {
-	if(self.sourceSelector){
-		[self.sourceSelector setSourceSubtitle:subtitle];
-	}
-}
-
 - (void)addMusicDelegate:(id<LMMusicPlayerDelegate>)newDelegate {
 	[self.delegates addObject:newDelegate];
 	if([newDelegate respondsToSelector:@selector(musicCurrentPlaybackTimeDidChange:)]){

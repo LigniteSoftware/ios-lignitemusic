@@ -63,17 +63,6 @@
     self.lastScrollingOffsetPoint = scrollView.contentOffset;
 }
 
-- (void)reloadSourceSelectorInfo {
-	if(self.hidden){
-		return;
-	}
-	
-	NSString *collectionString = NSLocalizedString(self.musicTitles.count == 1 ? @"Title" : @"Titles", nil);
-	
-	[self.musicPlayer setSourceTitle:collectionString];
-	[self.musicPlayer setSourceSubtitle:[NSString stringWithFormat:@"%ld %@", (long)self.musicTitles.count, collectionString]];
-}
-
 - (void)musicTrackDidChange:(LMMusicTrack *)newTrack {
 	LMListEntry *highlightedEntry = nil;
 	int newHighlightedIndex = -1;
@@ -121,7 +110,6 @@
 	
 	self.musicTitles = @{ @"items": musicTracks };
 	self.songListTableView.totalAmountOfObjects = musicTracks.count;
-	[self reloadSourceSelectorInfo];
 #else
 	MPMediaQuery *everything = [MPMediaQuery new];
 	MPMediaPropertyPredicate *musicFilterPredicate = [MPMediaPropertyPredicate predicateWithValue:[NSNumber numberWithInteger:MPMediaTypeMusic]
@@ -152,7 +140,6 @@
 	
 	self.musicTitles = [MPMediaItemCollection collectionWithItems:[NSArray arrayWithArray:musicCollection]];
 	self.songListTableView.totalAmountOfObjects = self.musicTitles.count;
-	[self reloadSourceSelectorInfo];
 #endif
 }
 

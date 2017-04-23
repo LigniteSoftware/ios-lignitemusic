@@ -16,7 +16,7 @@
 /**
  The views for the background of all of the buttons.
  */
-@property NSMutableArray<UIView*> *buttonsArray;
+@property NSMutableArray<LMView*> *buttonsArray;
 
 /**
  The array of button indexes which are highlighted.
@@ -40,7 +40,7 @@
 	}
 }
 
-- (UIView*)backgroundViewForIndex:(NSInteger)index {
+- (LMView*)backgroundViewForIndex:(NSInteger)index {
 	return [self.buttonsArray objectAtIndex:index];
 }
 
@@ -87,14 +87,15 @@
 		
 		for(NSUInteger i = 0; i < self.amountOfButtons; i++){
 			BOOL isFirst = (i == 0);
-			UIView *previousView = isFirst ? self : [self.buttonsArray lastObject];
+			LMView *previousView = isFirst ? self : [self.buttonsArray lastObject];
 			
-			UIView *newBackgroundView = [UIView newAutoLayoutView];
+			LMView *newBackgroundView = [LMView newAutoLayoutView];
 			
-			newBackgroundView = [UIView newAutoLayoutView];
+			newBackgroundView = [LMView newAutoLayoutView];
 			newBackgroundView.backgroundColor = [LMColour ligniteRedColour];
 			[self addSubview:newBackgroundView];
 			
+			[self beginAddingNewPortraitConstraints];
 			[newBackgroundView autoPinEdge:ALEdgeLeading toEdge:isFirst ? ALEdgeLeading : ALEdgeTrailing ofView:previousView withOffset:!isFirst];
 			[newBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 			[newBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
@@ -102,6 +103,17 @@
 									  toDimension:ALDimensionWidth
 										   ofView:self
 								   withMultiplier:(1.0/(CGFloat)self.amountOfButtons)];
+			
+			[self beginAddingNewLandscapeConstraints];
+			[newBackgroundView autoPinEdge:ALEdgeTop toEdge:isFirst ? ALEdgeTop : ALEdgeBottom ofView:previousView withOffset:!isFirst];
+			[newBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+			[newBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+			[newBackgroundView autoMatchDimension:ALDimensionHeight
+									  toDimension:ALDimensionHeight
+										   ofView:self
+								   withMultiplier:(1.0/(CGFloat)self.amountOfButtons)];
+			
+			[self endAddingNewConstraints];
 			
 			
 			UITapGestureRecognizer *sendButtonTap =
@@ -124,7 +136,7 @@
 			[sendButtonIcon autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 			[sendButtonIcon autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 			[sendButtonIcon autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
-			[sendButtonIcon autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:[[self.buttonScaleFactorsArray objectAtIndex:i] floatValue]];
+			[sendButtonIcon autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:newBackgroundView withMultiplier:[[self.buttonScaleFactorsArray objectAtIndex:i] floatValue]];
 		}
 	}
 	

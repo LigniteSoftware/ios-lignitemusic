@@ -140,7 +140,6 @@
 		6AA5CAF51E285C0A005F853F /* LMTrackInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A3211401DA732470060DD07 /* LMTrackInfoView.m */; };
 		6AA5CAF61E285C0A005F853F /* NSTimer+Blocks.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AAD5A521E0C655A00D8B406 /* NSTimer+Blocks.m */; };
 		6AA5CAF71E285C0A005F853F /* UIImage+ColorArt.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A13A7FE1E011D19006A768B /* UIImage+ColorArt.m */; };
-		6AA5CAF81E285C0A005F853F /* LMGrabberView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AC066F31E00E335008A6FCA /* LMGrabberView.m */; };
 		6AA5CAF91E285C0A005F853F /* LMTiledAlbumCoverView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A4BAEF11DC9C59B000DF537 /* LMTiledAlbumCoverView.m */; };
 		6AA5CAFA1E285C0A005F853F /* LMListEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A6351911D9D71D300498582 /* LMListEntry.m */; };
 		6AA5CAFB1E285C0A005F853F /* LMProgressCircleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AD226F81DA49C720056695A /* LMProgressCircleView.m */; };
@@ -313,7 +312,6 @@
 		6ABF6A821CF374F7003E4EFA /* UIImage+AverageColour.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ABF6A811CF374F7003E4EFA /* UIImage+AverageColour.m */; };
 		6ABF6A851CF3768A003E4EFA /* UIColor+isLight.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ABF6A841CF3768A003E4EFA /* UIColor+isLight.m */; };
 		6AC066F11DFF5253008A6FCA /* icon_grab_rectangle.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AC066F01DFF5253008A6FCA /* icon_grab_rectangle.png */; };
-		6AC066F41E00E335008A6FCA /* LMGrabberView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AC066F31E00E335008A6FCA /* LMGrabberView.m */; };
 		6AC32B771DB53EB20007C67E /* icon_repeat_general.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AC32B751DB53EB20007C67E /* icon_repeat_general.png */; };
 		6AC32B7B1DB6B57B0007C67E /* LMPebbleManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AC32B7A1DB6B57B0007C67E /* LMPebbleManager.m */; };
 		6AC32B7D1DB6CD950007C67E /* icon_bug.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AC32B7C1DB6CD950007C67E /* icon_bug.png */; };
@@ -585,8 +583,6 @@
 		6ABF6A831CF3768A003E4EFA /* UIColor+isLight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+isLight.h"; sourceTree = "<group>"; };
 		6ABF6A841CF3768A003E4EFA /* UIColor+isLight.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+isLight.m"; sourceTree = "<group>"; };
 		6AC066F01DFF5253008A6FCA /* icon_grab_rectangle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_grab_rectangle.png; sourceTree = "<group>"; };
-		6AC066F21E00E335008A6FCA /* LMGrabberView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMGrabberView.h; sourceTree = "<group>"; };
-		6AC066F31E00E335008A6FCA /* LMGrabberView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMGrabberView.m; sourceTree = "<group>"; };
 		6AC32B751DB53EB20007C67E /* icon_repeat_general.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_repeat_general.png; sourceTree = "<group>"; };
 		6AC32B791DB6B57B0007C67E /* LMPebbleManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMPebbleManager.h; sourceTree = "<group>"; };
 		6AC32B7A1DB6B57B0007C67E /* LMPebbleManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMPebbleManager.m; sourceTree = "<group>"; };
@@ -995,8 +991,6 @@
 			children = (
 				6AD4B8A51E394A6700BE3177 /* LMButtonNavigationBar.h */,
 				6AD4B8A61E394A6700BE3177 /* LMButtonNavigationBar.m */,
-				6AC066F21E00E335008A6FCA /* LMGrabberView.h */,
-				6AC066F31E00E335008A6FCA /* LMGrabberView.m */,
 				6A2316731E7B782900E6A7F7 /* LMMiniPlayerCoreView.h */,
 				6A2316741E7B782900E6A7F7 /* LMMiniPlayerCoreView.m */,
 				6A7DF1181DB112140077B979 /* LMMiniPlayerView.h */,
@@ -1703,7 +1697,6 @@
 				6AA5CAF61E285C0A005F853F /* NSTimer+Blocks.m in Sources */,
 				6AA5CAF71E285C0A005F853F /* UIImage+ColorArt.m in Sources */,
 				6A50AC921E891F3A005C7B3B /* LMTutorialView.m in Sources */,
-				6AA5CAF81E285C0A005F853F /* LMGrabberView.m in Sources */,
 				6AA5CAF91E285C0A005F853F /* LMTiledAlbumCoverView.m in Sources */,
 				6AA5CAFA1E285C0A005F853F /* LMListEntry.m in Sources */,
 				6AA5CAFB1E285C0A005F853F /* LMProgressCircleView.m in Sources */,
@@ -1800,7 +1793,6 @@
 				6A3211411DA732470060DD07 /* LMTrackInfoView.m in Sources */,
 				6AAD5A531E0C655A00D8B406 /* NSTimer+Blocks.m in Sources */,
 				6A13A8021E011D19006A768B /* UIImage+ColorArt.m in Sources */,
-				6AC066F41E00E335008A6FCA /* LMGrabberView.m in Sources */,
 				6A4BAEF21DC9C59B000DF537 /* LMTiledAlbumCoverView.m in Sources */,
 				6A6351921D9D71D300498582 /* LMListEntry.m in Sources */,
 				6AD226F91DA49C720056695A /* LMProgressCircleView.m in Sources */,

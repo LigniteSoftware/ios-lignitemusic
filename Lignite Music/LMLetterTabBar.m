@@ -13,7 +13,7 @@
 #import "LMColour.h"
 #import "NSTimer+Blocks.h"
 
-@interface LMLetterTabBar()<UIGestureRecognizerDelegate>
+@interface LMLetterTabBar()<UIGestureRecognizerDelegate, LMLayoutChangeDelegate>
 
 /**
  The scroll view for the letter views.
@@ -40,11 +40,34 @@
  */
 @property UISelectionFeedbackGenerator *selectionFeedbackGenerator;
 
+/**
+ The layout manager.
+ */
+@property LMLayoutManager *layoutManager;
+
 @end
 
 @implementation LMLetterTabBar
 
 @synthesize lettersDictionary = _lettersDictionary;
+
+- (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		
+		BOOL isLandscape = (size.width > size.height);
+		
+		for(UILabel *label in self.letterViewsArray){
+			NSLog(@"Changing label with %@", label.text);
+			label.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:(isLandscape ? self.frame.size.width : self.frame.size.height
+																		   )/2.25]; //.50 for W;
+			self.letterScrollView.adaptForWidth = !isLandscape;
+			[self.letterScrollView reload];
+		}
+		
+	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		//Nothing...
+	}];
+}
 
 - (void)setLettersDictionary:(NSDictionary *)lettersDictionary {
 	_lettersDictionary = lettersDictionary;
@@ -52,7 +75,7 @@
 	//Reload the view's contents
 	if(self.didLayoutConstraints){
 		for(NSUInteger i = 0; i < self.letterViewsArray.count; i++){
-			UIView *letterView = [self.letterViewsArray objectAtIndex:i];
+			LMView *letterView = [self.letterViewsArray objectAtIndex:i];
 			
 			letterView.hidden = YES;
 			[letterView removeFromSuperview];
@@ -68,7 +91,16 @@
 }
 
 - (NSDictionary*)lettersDictionary {
-	return _lettersDictionary;
+	NSMutableDictionary *fixedLettersDictionary = [NSMutableDictionary new];
+	NSString *lettersinset = @"ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	for(int i = 0; i < lettersinset.length; i++){
+		NSString *letter = [NSString stringWithFormat: @"%C", [lettersinset characterAtIndex:i]];
+		[fixedLettersDictionary setObject:@(i) forKey:letter];
+	}
+	
+//	NSLog(@"%@", fixedLettersDictionary);
+	return fixedLettersDictionary;
+//	return _lettersDictionary;
 }
 
 /**
@@ -93,7 +125,11 @@
 	NSLayoutConstraint *centerYConstraint = nil;
 	
 	for(NSLayoutConstraint *constraint in self.letterScrollView.constraints){
-		if(constraint.firstAttribute == NSLayoutAttributeCenterY && constraint.firstItem == letterLabel){
+		BOOL isProperConstraint = self.layoutManager.isLandscape ?
+			constraint.firstAttribute == NSLayoutAttributeCenterX && constraint.firstItem == letterLabel
+			: constraint.firstAttribute == NSLayoutAttributeCenterY && constraint.firstItem == letterLabel;
+		
+		if(isProperConstraint){
 			centerYConstraint = constraint;
 		}
 	}
@@ -114,6 +150,8 @@
 			} repeats:NO];
 		}
 	}];
+	
+	NSLog(@"Lifting %@", letterLabel.text);
 	
 	self.currentLetterLabelLifted = letterLabel;
 }
@@ -173,16 +211,16 @@
 			CGPoint pointInLetterScrollView = [panGestureRecognizer locationInView:self.letterScrollView];
 			CGPoint pointInView = [panGestureRecognizer locationInView:self];
 			
-			float xPointInLetterScrollView = pointInLetterScrollView.x;
-			float xPointInView = pointInView.x;
+			float xPointInLetterScrollView = self.layoutManager.isLandscape ? pointInLetterScrollView.y : pointInLetterScrollView.x;
+			float xPointInView = self.layoutManager.isLandscape ? pointInView.y : pointInView.x;
 			
-			for(UIView *subview in self.letterScrollView.subviews) {
+			for(LMView *subview in self.letterScrollView.subviews) {
 				if(![[[subview class] description] isEqualToString:@"UILabel"]){ //Idk how the fuck a UIImageView has snuck into our scroll view though I don't got the time to fix it so this quick patch does the job
 					break;
 				}
 				
-				CGFloat xPointOfSubview = subview.frame.origin.x;
-				CGFloat widthOfSubview = subview.frame.size.width;
+				CGFloat xPointOfSubview = self.layoutManager.isLandscape ? subview.frame.origin.y : subview.frame.origin.x;
+				CGFloat widthOfSubview = self.layoutManager.isLandscape ? subview.frame.size.height : subview.frame.size.width;
 				
 				if(xPointInLetterScrollView >= xPointOfSubview && xPointInLetterScrollView < (xPointOfSubview+widthOfSubview)){
 					UILabel *label = (UILabel*)subview;
@@ -200,22 +238,26 @@
 				}
 			}
 			
-			CGFloat factor = self.frame.size.width/10;
+			CGFloat factor = (self.layoutManager.isLandscape ? self.frame.size.height : self.frame.size.width)/10;
 			CGFloat rightFactor = factor * 9;
 			
 			CGPoint contentOffset = self.letterScrollView.contentOffset;
 			
 			if(xPointInView > rightFactor) {
-				CGPoint newContentOffset = CGPointMake(contentOffset.x + xPointInView - rightFactor, contentOffset.y);
+				CGPoint newContentOffset = self.layoutManager.isLandscape ? CGPointMake(contentOffset.x, contentOffset.y + xPointInView - rightFactor)
+											: CGPointMake(contentOffset.x + xPointInView - rightFactor, contentOffset.y);
 				
-				if(newContentOffset.x < (self.letterScrollView.contentSize.width-self.frame.size.width)){
+				CGFloat adjustedWidth = self.layoutManager.isLandscape ? self.letterScrollView.contentSize.height-self.frame.size.height : self.letterScrollView.contentSize.width-self.frame.size.width;
+				
+				if((self.layoutManager.isLandscape ? newContentOffset.y : newContentOffset.x) < (adjustedWidth)){
 					[self.letterScrollView setContentOffset:newContentOffset animated:NO];
 				}
 			}
 			else if(xPointInView < factor){
-				CGPoint newContentOffset = CGPointMake(contentOffset.x - factor- xPointInView, contentOffset.y);
+				CGPoint newContentOffset = self.layoutManager.isLandscape ? CGPointMake(contentOffset.x, contentOffset.y + xPointInView - factor)
+											: CGPointMake(contentOffset.x - factor - xPointInView, contentOffset.y);
 				
-				if(newContentOffset.x >= 0){
+				if((self.layoutManager.isLandscape ? newContentOffset.y : newContentOffset.x) >= 0){
 					[self.letterScrollView setContentOffset:newContentOffset animated:NO];
 				}
 			}
@@ -266,25 +308,20 @@
 	if(!self.didLayoutConstraints){
 		self.didLayoutConstraints = YES;
 		
+		self.layoutManager = [LMLayoutManager sharedLayoutManager];
+		[self.layoutManager addDelegate:self];
+		
 		self.layer.masksToBounds = NO;
 		
-		self.backgroundColor = [UIColor cyanColor];
+		self.backgroundColor = [UIColor whiteColor];
 		
-//		NSMutableArray *testArray = [NSMutableArray new];
-//		
-//		NSString *letters = @"ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-//		for(int i = 0; i < letters.length; i++){
-//			NSString *letter = [NSString stringWithFormat: @"%C", [letters characterAtIndex:i]];
-//			[testArray addObject:letter];
-//		}
-//		
 //		self.lettersArray = [NSArray arrayWithArray:testArray];
 		
 		self.letterViewsArray = [NSMutableArray new];
 		
 		self.letterScrollView = [LMScrollView newAutoLayoutView];
-		self.letterScrollView.adaptForWidth = YES;
-		self.letterScrollView.backgroundColor = [UIColor whiteColor];
+		self.letterScrollView.adaptForWidth = !self.layoutManager.isLandscape;
+//		self.letterScrollView.backgroundColor = [UIColor purpleColor];
 		self.letterScrollView.scrollEnabled = YES;
 		self.letterScrollView.layer.masksToBounds = NO;
 		self.letterScrollView.showsHorizontalScrollIndicator = NO;
@@ -313,11 +350,11 @@
 			
 			NSString *letter = [letters objectAtIndex:i];
 			
-			UIView *viewToAttachTo = firstIndex ? self.letterScrollView : [self.letterViewsArray objectAtIndex:i-1];
+			LMView *viewToAttachTo = firstIndex ? self.letterScrollView : [self.letterViewsArray lastObject];
 			
 			UILabel *letterLabel = [UILabel newAutoLayoutView];
 			letterLabel.text = letter;
-			letterLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:self.frame.size.height/2.25]; //.50 for W
+			letterLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:(self.layoutManager.isLandscape ? self.frame.size.width : self.frame.size.height)/2.25]; //.50 for W
 			letterLabel.textColor = [UIColor blackColor];
 			letterLabel.textAlignment = NSTextAlignmentCenter;
 			letterLabel.backgroundColor = [UIColor whiteColor];
@@ -326,16 +363,19 @@
 			letterLabel.layer.cornerRadius = 3;
 			[self.letterScrollView addSubview:letterLabel];
 
-			[self.letterScrollView addConstraint:[NSLayoutConstraint constraintWithItem:letterLabel
-																			  attribute:NSLayoutAttributeCenterY
-																			  relatedBy:NSLayoutRelationEqual
-																				 toItem:self.letterScrollView
-																			  attribute:NSLayoutAttributeCenterY
-																			 multiplier:1.0
-																			   constant:0]];
+			[self.letterScrollView beginAddingNewPortraitConstraints];
+			[letterLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
 			[letterLabel autoPinEdge:ALEdgeLeading toEdge:firstIndex ? ALEdgeLeading : ALEdgeTrailing ofView:viewToAttachTo withOffset:self.frame.size.width*0.01];
-			[letterLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:0.06];
+			[letterLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.letterScrollView withMultiplier:0.06];
 			[letterLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.letterScrollView];
+			
+			[self.letterScrollView beginAddingNewLandscapeConstraints];
+			[letterLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
+			[letterLabel autoPinEdge:ALEdgeTop toEdge:firstIndex ? ALEdgeTop : ALEdgeBottom ofView:viewToAttachTo withOffset:self.frame.size.width*0.01];
+			[letterLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.letterScrollView withMultiplier:0.95];
+			[letterLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.letterScrollView withMultiplier:0.06];
+			
+			[self.letterScrollView endAddingNewConstraints];
 			
 			UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(selectLetterGesture:)];
 			[letterLabel addGestureRecognizer:tapGesture];

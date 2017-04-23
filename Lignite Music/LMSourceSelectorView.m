@@ -28,18 +28,6 @@
 
 @implementation LMSourceSelectorView
 
-- (void)setSourceTitle:(NSString*)title {
-	if(self.delegate){
-		[self.delegate sourceTitleChangedTo:title];
-	}
-}
-
-- (void)setSourceSubtitle:(NSString*)subtitle {
-	if(self.delegate){
-		[self.delegate sourceSubtitleChangedTo:subtitle];
-	}
-}
-
 - (id)subviewAtIndex:(NSUInteger)index forTableView:(LMTableView *)tableView {
 	LMListEntry *entry = [self.itemArray objectAtIndex:index % self.itemArray.count];
 	entry.collectionIndex = index;

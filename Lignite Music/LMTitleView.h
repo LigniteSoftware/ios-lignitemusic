@@ -16,7 +16,6 @@
 @property LMMusicTrackCollection *musicTitles;
 
 - (void)setup;
-- (void)reloadSourceSelectorInfo;
 
 /**
  Scrolls to an index of a track.

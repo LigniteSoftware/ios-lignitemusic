@@ -43,6 +43,7 @@
 #import "LMMiniPlayerCoreView.h"
 #import "LMMiniPlayerView.h"
 #import "LMTutorialView.h"
+#import "LMButtonBar.h"
 
 #ifdef SPOTIFY
 #import "Spotify.h"
@@ -164,7 +165,7 @@ LMControlBarViewDelegate
                 tutorialView.delegate = self;
                 [tutorialView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
                 [tutorialView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-                [tutorialView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.buttonNavigationBar withOffset:LMNavigationBarGrabberHeight];
+                [tutorialView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.buttonNavigationBar];
             }
         } repeats:NO];
     }
@@ -422,14 +423,11 @@ LMControlBarViewDelegate
 			[self setupBrowsingViewWithMusicType:associatedMusicType];
 			
 			self.currentSource = self.compactView;
-			
-			[self.compactView reloadSourceSelectorInfo];
 			break;
 		}
 		case LMIconTitles: {
 			self.compactView.hidden = YES;
 			self.titleView.hidden = NO;
-			[self.titleView reloadSourceSelectorInfo];
 			self.currentSource = self.titleView;
 			
 			self.buttonNavigationBar.browsingBar.letterTabBar.lettersDictionary =
@@ -812,7 +810,7 @@ LMControlBarViewDelegate
     [super viewDidLoad];
     // Do any additional setup after loading the view
 	
-//	self.view.backgroundColor = [UIColor lightGrayColor];
+	self.view.backgroundColor = [UIColor lightGrayColor];
 	
 	self.navigationController.navigationBarHidden = YES;
 	self.navigationController.interactivePopGestureRecognizer.delegate = self;
@@ -830,6 +828,34 @@ LMControlBarViewDelegate
 	
 	
 	NSLog(@"Frame set %@", NSStringFromCGRect(self.view.frame));
+	
+//	LMButtonBar *buttonBar = [LMButtonBar newAutoLayoutView];
+//	buttonBar.amountOfButtons = 3;
+//	buttonBar.buttonIconsArray = @[ @(LMIconBrowse), @(LMIconMiniplayer), @(LMIconSource) ];
+//	buttonBar.buttonScaleFactorsArray = @[ @(1.0/2.5), @(1.0/2.5), @(1.0/2.5) ];
+//	buttonBar.buttonIconsToInvertArray = @[ @(LMNavigationTabBrowse), @(LMNavigationTabView) ];
+////	buttonBar.delegate = self;
+//	buttonBar.backgroundColor = [UIColor whiteColor];
+//	[self.view addSubview:buttonBar];
+//	
+////	[self.view beginAddingNewLandscapeConstraints];
+//	[buttonBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
+//	[buttonBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+//	[buttonBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+//	[buttonBar autoSetDimension:ALDimensionWidth toSize:LMNavigationBarTabWidth];
+//	
+//	return;
+	
+//	LMBrowsingBar *browsingBar = [LMBrowsingBar newAutoLayoutView];
+//	browsingBar.backgroundColor = [UIColor cyanColor];
+//	[self.view addSubview:browsingBar];
+//	
+//	[browsingBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
+//	[browsingBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+//	[browsingBar autoCenterInSuperview];
+//	[browsingBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(1.0/20.0)];
+//	
+//	return;
 	
 //	LMControlBarView *controlBarTest = [LMControlBarView newAutoLayoutView];
 //	controlBarTest.delegate = self;
@@ -1099,6 +1125,8 @@ LMControlBarViewDelegate
 						self.navigationBar.layer.shadowOffset = CGSizeMake(0, self.navigationBar.layer.shadowRadius/2);
 						self.navigationBar.layer.shadowOpacity = 0.25f;
 						
+						self.navigationBar.hidden = YES;
+						
 						//						UIBarButtonItem *barButtonItem = [[UIBarButtonItem alloc]initWithTitle:@"Hey" style:UIBarButtonItemStylePlain target:self action:nil];
 						
 						
@@ -1131,25 +1159,25 @@ LMControlBarViewDelegate
 						self.buttonNavigationBar.delegate = self;
 						self.buttonNavigationBar.searchBarDelegate = self;
 						self.buttonNavigationBar.letterTabBarDelegate = self;
-						[self.navigationController.view addSubview:self.buttonNavigationBar];
+						[self.navigationController.rootView addSubview:self.buttonNavigationBar];
 						
-						self.buttonNavigationBar.backgroundColor = [UIColor cyanColor];
+						self.buttonNavigationBar.backgroundColor = [UIColor purpleColor];
 						
 						NSLog(@"Class %@", [self.navigationController.view class]);
 						
-//						[self.navigationController.rootView beginAddingNewPortraitConstraints];
+						[self.navigationController.rootView beginAddingNewPortraitConstraints];
 						[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 						[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 						[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 						self.buttonNavigationBarHeightConstraint = [self.buttonNavigationBar autoSetDimension:ALDimensionHeight toSize:0.0];
 						
-//						[self.navigationController.rootView beginAddingNewLandscapeConstraints];
-//						[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-//						[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
-//						[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-//						[self.buttonNavigationBar autoSetDimension:ALDimensionWidth toSize:0.0];
-//						
-//						[self.navigationController.rootView endAddingNewConstraints];
+						[self.navigationController.rootView beginAddingNewLandscapeConstraints];
+						[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+						[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
+						[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+						self.buttonNavigationBarHeightConstraint = [self.buttonNavigationBar autoSetDimension:ALDimensionWidth toSize:0.0];
+//
+						[self.navigationController.rootView endAddingNewConstraints];
 						
 						self.musicPlayer.navigationBar = self.buttonNavigationBar;
 						
@@ -1267,7 +1295,7 @@ LMControlBarViewDelegate
                                 tutorialView.delegate = self;
                                 [tutorialView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
                                 [tutorialView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-                                [tutorialView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.buttonNavigationBar withOffset:LMNavigationBarGrabberHeight];
+                                [tutorialView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.buttonNavigationBar];
                             }
                         } repeats:NO];
                         
@@ -1285,7 +1313,7 @@ LMControlBarViewDelegate
 //							self.buttonNavigationBar.hidden = YES;
 //							self.nowPlayingCoreView.hidden = YES;
 							
-							[self.buttonNavigationBar minimize];
+							[self.buttonNavigationBar setSelectedTab:LMNavigationTabBrowse];
 						} repeats:NO];
 					});
 					break;

@@ -55,7 +55,7 @@
  @param index The index of the background to get.
  @return The background view.
  */
-- (UIView*)backgroundViewForIndex:(NSInteger)index;
+- (LMView*)backgroundViewForIndex:(NSInteger)index;
 
 /**
  Sets a button at a certain index as inverted.

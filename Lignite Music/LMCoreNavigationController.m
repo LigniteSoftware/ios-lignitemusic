@@ -20,10 +20,11 @@
 	self = [super initWithCoder:aDecoder];
 	
 	if(self){
-//		self.rootView = [LMView newAutoLayoutView];
-//		[self.view addSubview:self.rootView];
-//		
-//		[self.rootView autoPinEdgesToSuperviewEdges];
+		self.rootView = [LMView newAutoLayoutView];
+		self.rootView.userInteractionEnabled = NO;
+		[self.view addSubview:self.rootView];
+		
+		[self.rootView autoPinEdgesToSuperviewEdges];
 	}
 	
 	return self;

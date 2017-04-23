@@ -35,14 +35,6 @@
 	return self;
 }
 
-//- (void)layoutSubviews {
-//	if(!self.didLayoutConstraints){
-//		[self.layoutManager addDelegate:self];
-//	}
-//	
-//	[super layoutSubviews];
-//}
-
 - (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
 	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		BOOL isNowLandscape = size.width > size.height;

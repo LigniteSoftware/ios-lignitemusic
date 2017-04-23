@@ -13,7 +13,7 @@
 #import "LMView.h"
 
 #define LMNavigationBarTabHeight (WINDOW_FRAME.size.height/8.0)
-#define LMNavigationBarGrabberHeight (((WINDOW_FRAME.size.height/25.0)/4.0)*4.0)
+#define LMNavigationBarTabWidth (WINDOW_FRAME.size.width/8.0)
 
 @protocol LMButtonNavigationBarDelegate <NSObject>
 
