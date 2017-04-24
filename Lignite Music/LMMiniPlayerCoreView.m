@@ -299,6 +299,8 @@
 		
 		self.backgroundColor = [UIColor whiteColor];
 		
+		self.clipsToBounds = YES;
+		
 		self.otherConstraints = [NSMutableArray new];
         self.samplesArray = [NSMutableArray new];
 		
@@ -362,6 +364,10 @@
 //		if(currentCollection == nil){
 //			
 //		}
+		
+		self.centerMiniPlayerView.clipsToBounds = YES;
+		self.leadingMiniPlayerView.clipsToBounds = YES;
+		self.trailingMiniPlayerView.clipsToBounds = YES;
 		
 		NSLog(@"Index of %ld", self.musicPlayer.indexOfNowPlayingTrack);
 		

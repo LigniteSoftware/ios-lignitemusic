@@ -74,8 +74,11 @@
 @synthesize viewAttachedToButtonBar = _viewAttachedToButtonBar;
 
 - (CGFloat)maximizedHeight {
-	return self.buttonBar.frame.size.height
-	+ self.viewAttachedToButtonBar.frame.size.height;
+	if(self.layoutManager.isLandscape){
+		return self.buttonBar.frame.size.width + self.viewAttachedToButtonBar.frame.size.width;
+	}
+	
+	return self.buttonBar.frame.size.height + self.viewAttachedToButtonBar.frame.size.height;
 }
 
 - (void)setButtonBarBottomConstraintConstant:(NSInteger)constant completion:(void (^ __nullable)(BOOL finished))completion {
@@ -477,16 +480,27 @@
 		[self.buttonBarBottomWhitespaceView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[self.buttonBarBottomWhitespaceView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 		[self.buttonBarBottomWhitespaceView autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height/2.0];
+	
+		//Dont even tell me how bad this shit is
+		CGFloat properNum = self.layoutManager.isLandscape ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height;
 		
-		
+		[self beginAddingNewPortraitConstraints];
 		[self.miniPlayerCoreView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.buttonBar];
 		[self.miniPlayerCoreView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[self.miniPlayerCoreView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-		[self.miniPlayerCoreView autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height/5.0];
+		[self.miniPlayerCoreView autoSetDimension:ALDimensionHeight toSize:properNum/5.0];
+		
+		[self beginAddingNewLandscapeConstraints];
+		[self.miniPlayerCoreView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.buttonBar];
+		[self.miniPlayerCoreView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+		[self.miniPlayerCoreView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[self.miniPlayerCoreView autoSetDimension:ALDimensionWidth toSize:properNum/2.8];
+		
+		[self endAddingNewConstraints];
 		
 //		[self.miniPlayerView setup];
 		
-		self.miniPlayerCoreView.backgroundColor = [UIColor whiteColor];
+		self.miniPlayerCoreView.backgroundColor = [UIColor blueColor];
 		self.miniPlayerCoreView.layer.shadowColor = [UIColor blackColor].CGColor;
 		self.miniPlayerCoreView.layer.shadowOpacity = 0.25f;
 		self.miniPlayerCoreView.layer.shadowOffset = CGSizeMake(0, 0);
@@ -500,13 +514,21 @@
 		[self.miniPlayerCoreView addGestureRecognizer:miniPlayerViewMoveRecognizer];
 		
 		
-
+		[self beginAddingNewPortraitConstraints];
 		[self.browsingBar autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.buttonBar];
 		[self.browsingBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[self.browsingBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-		[self.browsingBar autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height/15.0];
+		[self.browsingBar autoSetDimension:ALDimensionHeight toSize:properNum/15.0];
 //		self.browsingBar.hidden = YES;
 
+		[self beginAddingNewLandscapeConstraints];
+		[self.browsingBar autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.buttonBar];
+		[self.browsingBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
+		[self.browsingBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[self.browsingBar autoSetDimension:ALDimensionWidth toSize:properNum/17.5];
+		
+		[self endAddingNewConstraints];
+		
 		
 		[self.sourceSelector autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
 		[self.sourceSelector autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self];
@@ -522,6 +544,9 @@
 		
 		
 		[self setSelectedTab:LMNavigationTabBrowse];
+		
+		
+		self.sourceSelector.hidden = YES;
 		
 //		[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
 //			self.originalPoint = self.buttonBar.frame.origin;

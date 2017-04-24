@@ -654,7 +654,7 @@
 	
 	
 	self.mainView = [LMView newAutoLayoutView];
-	self.mainView.backgroundColor = [UIColor purpleColor];
+	self.mainView.backgroundColor = [UIColor yellowColor];
 	self.mainView.clipsToBounds = YES;
 	[self addSubview:self.mainView];
     

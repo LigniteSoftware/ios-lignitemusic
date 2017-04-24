@@ -21,7 +21,7 @@
 	
 	if(self){
 		self.rootView = [LMView newAutoLayoutView];
-		self.rootView.userInteractionEnabled = NO;
+		self.rootView.userInteractionEnabled = YES;
 		[self.view addSubview:self.rootView];
 		
 		[self.rootView autoPinEdgesToSuperviewEdges];
