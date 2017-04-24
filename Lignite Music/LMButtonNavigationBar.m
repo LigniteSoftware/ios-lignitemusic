@@ -574,14 +574,17 @@
 		[self.sourceSelector autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
 		[self.sourceSelector autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self];
 		[self.sourceSelector autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.buttonBar withOffset:20];
-		[self.sourceSelector autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height-LMNavigationBarTabHeight];
+		[self.sourceSelector beginAddingNewPortraitConstraints];
+		[self.sourceSelector autoSetDimension:ALDimensionHeight toSize:properNum-LMNavigationBarTabHeight];
 		
 		[self beginAddingNewLandscapeConstraints];
-		[self.sourceSelector autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[self.sourceSelector autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.buttonBar];
 		[self.sourceSelector autoPinEdgeToSuperviewEdge:ALEdgeTop];
 		[self.sourceSelector autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[self.sourceSelector beginAddingNewLandscapeConstraints];
+		[self.sourceSelector autoSetDimension:ALDimensionWidth toSize:properNum-LMNavigationBarTabWidth];
 		
+		[self.sourceSelector endAddingNewConstraints];
 		[self endAddingNewConstraints];
 		
 		self.musicPlayer.sourceSelector = self.sourceSelector;
@@ -595,7 +598,7 @@
 		[self setSelectedTab:LMNavigationTabBrowse];
 		
 		
-		self.sourceSelector.hidden = YES;
+//		self.sourceSelector.hidden = YES;
 //		self.miniPlayerCoreView.hidden = YES;
 		
 //		[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{

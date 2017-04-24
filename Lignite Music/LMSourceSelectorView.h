@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "LMSource.h"
+#import "LMView.h"
 
-@interface LMSourceSelectorView : UIView
+@interface LMSourceSelectorView : LMView
 
 /**
  The array of sources to expose to the user.
