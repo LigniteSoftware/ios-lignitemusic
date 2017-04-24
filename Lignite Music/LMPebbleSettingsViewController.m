@@ -11,6 +11,7 @@
 #import "LMSettings.h"
 #import "LMExtras.h"
 #import "LMPebbleSettingsView.h"
+#import "LMLayoutManager.h"
 
 @interface LMPebbleSettingsViewController ()
 
@@ -23,7 +24,7 @@
 @implementation LMPebbleSettingsViewController
 
 - (BOOL)prefersStatusBarHidden {
-	return ![LMSettings shouldShowStatusBar];
+	return ![LMSettings shouldShowStatusBar] || [LMLayoutManager sharedLayoutManager].isLandscape;
 }
 
 - (void)loadView {

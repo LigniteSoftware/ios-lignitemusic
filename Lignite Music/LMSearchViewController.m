@@ -36,7 +36,7 @@
 - (BOOL)prefersStatusBarHidden {
 	BOOL shown = [LMSettings shouldShowStatusBar];
 	
-	return !shown;
+	return !shown || [LMLayoutManager sharedLayoutManager].isLandscape;
 }
 
 - (void)searchEntryTappedWithPersistentID:(LMMusicTrackPersistentID)persistentID withMusicType:(LMMusicType)musicType {

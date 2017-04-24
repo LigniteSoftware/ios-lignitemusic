@@ -639,7 +639,7 @@
 - (BOOL)prefersStatusBarHidden {
 	BOOL shouldShowStatusBar = [LMSettings shouldShowStatusBar];
 		
-	return !shouldShowStatusBar;
+	return !shouldShowStatusBar || [LMLayoutManager sharedLayoutManager].isLandscape;
 }
 
 - (UIStatusBarAnimation)preferredStatusBarUpdateAnimation {

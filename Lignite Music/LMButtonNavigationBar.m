@@ -20,7 +20,7 @@
 #import "LMLabel.h"
 
 @interface LMButtonNavigationBar()<UIGestureRecognizerDelegate,
-							 LMButtonBarDelegate, LMButtonDelegate, LMSearchBarDelegate>
+							 LMButtonBarDelegate, LMButtonDelegate, LMSearchBarDelegate, LMLayoutChangeDelegate>
 
 /**
  The music player.
@@ -85,7 +85,9 @@
 	[self layoutIfNeeded];
 	
 	self.buttonBarBottomConstraint.constant = constant;
-    
+	
+	NSLog(@"Setting to %ld", constant);
+	
     CGFloat totalHeight = self.viewAttachedToButtonBar.frame.size.height + self.buttonBar.frame.size.height;
     CGFloat percentageConverted = constant/totalHeight;
     
@@ -105,7 +107,9 @@
 
 - (NSLayoutConstraint*)topConstrantForView:(UIView*)view {
 	for(NSLayoutConstraint *constraint in self.constraints){
-		if(constraint.firstAttribute == NSLayoutAttributeTop && constraint.firstItem == view) {
+		BOOL isValidConstraint = (self.layoutManager.isLandscape && constraint.firstAttribute == NSLayoutAttributeTrailing) ||
+			(constraint.firstAttribute == NSLayoutAttributeTop && !self.layoutManager.isLandscape);
+		if(constraint.firstItem == view && isValidConstraint) {
 			return constraint;
 		}
 	}
@@ -122,7 +126,10 @@
 - (void)setViewAttachedToButtonBar:(UIView *)viewAttachedToButtonBar {
 	UIView *previouslyAttachedView = self.viewAttachedToButtonBar;
 	
-	BOOL isDecreasing = viewAttachedToButtonBar.frame.size.height < previouslyAttachedView.frame.size.height;
+	NSLog(@"Set view attached with class %@", [[viewAttachedToButtonBar class] description]);
+	
+	BOOL isDecreasing = self.layoutManager.isLandscape ? (viewAttachedToButtonBar.frame.size.width < previouslyAttachedView.frame.size.width)
+		: (viewAttachedToButtonBar.frame.size.height < previouslyAttachedView.frame.size.height);
 	
 	_viewAttachedToButtonBar = viewAttachedToButtonBar;
 	
@@ -136,8 +143,8 @@
 //    [self.minibarBackgroundView removeConstraints:self.minibarBackgroundView.constraints];
     
 	
-	previousViewTopConstraint.constant = self.buttonBar.frame.size.height;
-	currentViewTopConstraint.constant = -viewAttachedToButtonBar.frame.size.height;
+	previousViewTopConstraint.constant = self.layoutManager.isLandscape ? (previouslyAttachedView.frame.size.height*2) : self.buttonBar.frame.size.height;
+	currentViewTopConstraint.constant = self.layoutManager.isLandscape ? 0 : -viewAttachedToButtonBar.frame.size.height;
 	
 	[UIView animateWithDuration:0.25 animations:^{
 		[self layoutIfNeeded];
@@ -146,7 +153,7 @@
 										 withAnimationDuration:isDecreasing ? 0.10 : 0.50];
 	}];
 		
-	[self.delegate requiredHeightForNavigationBarChangedTo:0.0 withAnimationDuration:0.10];
+//	[self.delegate requiredHeightForNavigationBarChangedTo:0.0 withAnimationDuration:0.10];
 }
 
 - (void)completelyHide {
@@ -371,6 +378,26 @@
 	[self.searchBarDelegate searchDialogOpened:opened withKeyboardHeight:keyboardHeight];
 }
 
+- (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		
+	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		NSLayoutConstraint *newButtonBarBottomConstraint = self.buttonBarBottomConstraint;
+		
+		for(NSLayoutConstraint *constraint in self.constraints){
+			if(constraint.firstItem == self.buttonBar
+				&& (  (constraint.firstAttribute == NSLayoutAttributeBottom && !self.layoutManager.isLandscape)
+				   || (constraint.firstAttribute == NSLayoutAttributeTrailing && self.layoutManager.isLandscape)  )){
+				   
+				NSLog(@"New constraint layout attribute %ld", constraint.firstAttribute);
+				newButtonBarBottomConstraint = constraint;
+			}
+		}
+		
+		self.buttonBarBottomConstraint = newButtonBarBottomConstraint;
+	}];
+}
+
 - (void)layoutSubviews {
 //	return;
 	
@@ -388,6 +415,8 @@
 		self.heightBeforeAdjustingToScrollPosition = -1;
 
 		
+		//Dont even tell me how bad this shit is
+		CGFloat properNum = self.layoutManager.isLandscape ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height;
 		
 	
 		
@@ -429,20 +458,27 @@
 		self.buttonBar.backgroundColor = [UIColor whiteColor];
 		[self addSubview:self.buttonBar];
 		
+		
+		NSLog(@"Frame %@", NSStringFromCGRect(WINDOW_FRAME));
+		
 		[self beginAddingNewPortraitConstraints];
 		[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 		self.buttonBarBottomConstraint = [self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		[self.buttonBar autoSetDimension:ALDimensionHeight toSize:LMNavigationBarTabHeight];
+		 [self.buttonBar beginAddingNewPortraitConstraints];
+		[self.buttonBar autoSetDimension:ALDimensionHeight toSize:properNum/8.0];
 		
 		[self beginAddingNewLandscapeConstraints];
 		[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
 		[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		self.buttonBarBottomConstraint = [self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-		[self.buttonBar autoSetDimension:ALDimensionWidth toSize:LMNavigationBarTabWidth];
+		if(self.layoutManager.isLandscape){
+			self.buttonBarBottomConstraint = [self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		}
+		 [self.buttonBar beginAddingNewLandscapeConstraints];
+		[self.buttonBar autoSetDimension:ALDimensionWidth toSize:properNum/8.0];
 		
 		[self endAddingNewConstraints];
-		
+		[self.buttonBar endAddingNewConstraints];
 		
 		
 		self.buttonBarSourceSelectorWarningLabel = [LMLabel newAutoLayoutView];
@@ -481,21 +517,23 @@
 		[self.buttonBarBottomWhitespaceView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 		[self.buttonBarBottomWhitespaceView autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height/2.0];
 	
-		//Dont even tell me how bad this shit is
-		CGFloat properNum = self.layoutManager.isLandscape ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height;
+		
 		
 		[self beginAddingNewPortraitConstraints];
 		[self.miniPlayerCoreView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.buttonBar];
 		[self.miniPlayerCoreView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[self.miniPlayerCoreView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		 [self.miniPlayerCoreView beginAddingNewPortraitConstraints];
 		[self.miniPlayerCoreView autoSetDimension:ALDimensionHeight toSize:properNum/5.0];
 		
 		[self beginAddingNewLandscapeConstraints];
 		[self.miniPlayerCoreView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.buttonBar];
 		[self.miniPlayerCoreView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 		[self.miniPlayerCoreView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		 [self.miniPlayerCoreView beginAddingNewLandscapeConstraints];
 		[self.miniPlayerCoreView autoSetDimension:ALDimensionWidth toSize:properNum/2.8];
 		
+		[self.miniPlayerCoreView endAddingNewConstraints];
 		[self endAddingNewConstraints];
 		
 //		[self.miniPlayerView setup];
@@ -518,6 +556,7 @@
 		[self.browsingBar autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.buttonBar];
 		[self.browsingBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[self.browsingBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		 [self.browsingBar beginAddingNewPortraitConstraints];
 		[self.browsingBar autoSetDimension:ALDimensionHeight toSize:properNum/15.0];
 //		self.browsingBar.hidden = YES;
 
@@ -525,7 +564,10 @@
 		[self.browsingBar autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.buttonBar];
 		[self.browsingBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
 		[self.browsingBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		 [self.browsingBar beginAddingNewLandscapeConstraints];
 		[self.browsingBar autoSetDimension:ALDimensionWidth toSize:properNum/17.5];
+		
+		[self.browsingBar endAddingNewConstraints];
 		
 		
 		[self beginAddingNewPortraitConstraints];
@@ -554,6 +596,7 @@
 		
 		
 		self.sourceSelector.hidden = YES;
+//		self.miniPlayerCoreView.hidden = YES;
 		
 //		[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
 //			self.originalPoint = self.buttonBar.frame.origin;

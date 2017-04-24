@@ -45,7 +45,7 @@
 }
 
 - (BOOL)prefersStatusBarHidden {
-	return NO;
+	return NO || [LMLayoutManager sharedLayoutManager].isLandscape;
 }
 
 - (void)viewDidLoad {

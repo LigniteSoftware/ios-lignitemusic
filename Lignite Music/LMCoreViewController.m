@@ -120,16 +120,12 @@ LMControlBarViewDelegate
 
 - (NSLayoutConstraint*)buttonNavigationBarHeightConstraint {
 	for(NSLayoutConstraint *constraint in self.buttonNavigationBar.constraints){
-		NSLog(@"classconstraint %@ first attribute %ld", [[constraint firstItem] class], (long)constraint.firstAttribute);
 		if(constraint.firstItem == self.buttonNavigationBar && (constraint.firstAttribute == NSLayoutAttributeWidth || constraint.firstAttribute == NSLayoutAttributeHeight)){
-			
-			NSLog(@"Got constraint %@", constraint);
 			
 			return constraint;
 		}
 	}
 	
-	NSLog(@"Exists %d", self.buttonNavigationBar != nil);
 	return nil;
 }
 
@@ -320,7 +316,7 @@ LMControlBarViewDelegate
 		return YES;
 	}
 	
-	return self.nowPlayingCoreView.isOpen;
+	return self.nowPlayingCoreView.isOpen || self.layoutManager.isLandscape;
 }
 
 - (UIStatusBarAnimation)preferredStatusBarUpdateAnimation {
@@ -808,6 +804,8 @@ LMControlBarViewDelegate
 		self.layoutManager.size = self.view.frame.size;
 		
 		self.buttonNavigationBarHeightConstraint.constant = previousButtonBarSizeConstraintConstant;
+		
+		[self setStatusBarBlurHidden:[self prefersStatusBarHidden]];
 	}];
 }
 
@@ -1327,6 +1325,8 @@ LMControlBarViewDelegate
 //							self.nowPlayingCoreView.hidden = YES;
 							
 							[self.buttonNavigationBar setSelectedTab:LMNavigationTabBrowse];
+							
+							[self setStatusBarBlurHidden:[self prefersStatusBarHidden]];
 						} repeats:NO];
 					});
 					break;
