@@ -527,13 +527,20 @@
 		[self.browsingBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 		[self.browsingBar autoSetDimension:ALDimensionWidth toSize:properNum/17.5];
 		
-		[self endAddingNewConstraints];
 		
-		
+		[self beginAddingNewPortraitConstraints];
 		[self.sourceSelector autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
 		[self.sourceSelector autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self];
 		[self.sourceSelector autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.buttonBar withOffset:20];
 		[self.sourceSelector autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height-LMNavigationBarTabHeight];
+		
+		[self beginAddingNewLandscapeConstraints];
+		[self.sourceSelector autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.sourceSelector autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.buttonBar];
+		[self.sourceSelector autoPinEdgeToSuperviewEdge:ALEdgeTop];
+		[self.sourceSelector autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		
+		[self endAddingNewConstraints];
 		
 		self.musicPlayer.sourceSelector = self.sourceSelector;
 		

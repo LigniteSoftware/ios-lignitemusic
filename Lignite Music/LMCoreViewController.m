@@ -97,7 +97,7 @@ LMControlBarViewDelegate
 /**
  The height constraint for the navigation bar.
  */
-@property NSLayoutConstraint *buttonNavigationBarHeightConstraint;
+@property (readonly) NSLayoutConstraint *buttonNavigationBarHeightConstraint;
 
 @property CGPoint originalPoint, currentPoint;
 
@@ -116,21 +116,22 @@ LMControlBarViewDelegate
 @implementation LMCoreViewController
 
 @dynamic navigationController;
-//@synthesize buttonNavigationBarHeightConstraint = _buttonNavigationBarHeightConstraint;
-//
-//- (NSLayoutConstraint*)buttonNavigationBarHeightConstraint {
-//	for(NSLayoutConstraint *constraint in self.navigationController.rootView.constraints){
-//		if(constraint.firstItem == self.buttonNavigationBar && (constraint.firstAttribute == NSLayoutAttributeWidth || constraint.firstAttribute == NSLayoutAttributeHeight)){
-//			
-//			NSLog(@"Got constraint %@", constraint);
-//			
-//			return constraint;
-//		}
-//	}
-//	
-//	NSLog(@"Exists %d", self.buttonNavigationBar != nil);
-//	return nil;
-//}
+@synthesize buttonNavigationBarHeightConstraint = _buttonNavigationBarHeightConstraint;
+
+- (NSLayoutConstraint*)buttonNavigationBarHeightConstraint {
+	for(NSLayoutConstraint *constraint in self.buttonNavigationBar.constraints){
+		NSLog(@"classconstraint %@ first attribute %ld", [[constraint firstItem] class], (long)constraint.firstAttribute);
+		if(constraint.firstItem == self.buttonNavigationBar && (constraint.firstAttribute == NSLayoutAttributeWidth || constraint.firstAttribute == NSLayoutAttributeHeight)){
+			
+			NSLog(@"Got constraint %@", constraint);
+			
+			return constraint;
+		}
+	}
+	
+	NSLog(@"Exists %d", self.buttonNavigationBar != nil);
+	return nil;
+}
 
 - (void)cacheSizeChangedTo:(uint64_t)newCacheSize forCategory:(LMImageManagerCategory)category {
     if((category == LMImageManagerCategoryArtistImages && self.compactView.musicType == LMMusicTypeArtists)
@@ -788,6 +789,8 @@ LMControlBarViewDelegate
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
 	[super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 	
+	CGFloat previousButtonBarSizeConstraintConstant = self.buttonNavigationBarHeightConstraint.constant;
+	
 	[self.layoutManager rootViewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 	
 	NSLog(@"Starting rotation");
@@ -803,6 +806,8 @@ LMControlBarViewDelegate
 		[self.layoutManager traitCollectionDidChange:previousCollection];
 		
 		self.layoutManager.size = self.view.frame.size;
+		
+		self.buttonNavigationBarHeightConstraint.constant = previousButtonBarSizeConstraintConstant;
 	}];
 }
 
@@ -1169,15 +1174,23 @@ LMControlBarViewDelegate
 						[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 						[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 						[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-						self.buttonNavigationBarHeightConstraint = [self.buttonNavigationBar autoSetDimension:ALDimensionHeight toSize:0.0];
+						/* self.buttonNavigationBarHeightConstraint = */
+						[self.buttonNavigationBar beginAddingNewPortraitConstraints];
+						[self.buttonNavigationBar autoSetDimension:ALDimensionHeight toSize:0.0];
 						
 						[self.navigationController.rootView beginAddingNewLandscapeConstraints];
 						[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 						[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
 						[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-						self.buttonNavigationBarHeightConstraint = [self.buttonNavigationBar autoSetDimension:ALDimensionWidth toSize:0.0];
-//
+						[self.buttonNavigationBar beginAddingNewLandscapeConstraints];
+						
+						/* NSLayoutConstraint *widthConstraint = */ [self.buttonNavigationBar autoSetDimension:ALDimensionWidth toSize:0.0];
+//						if(self.layoutManager.isLandscape){
+//							self.buttonNavigationBarHeightConstraint = widthConstraint;
+//						}
+						
 						[self.navigationController.rootView endAddingNewConstraints];
+						[self.buttonNavigationBar endAddingNewConstraints];
 						
 						self.musicPlayer.navigationBar = self.buttonNavigationBar;
 						
