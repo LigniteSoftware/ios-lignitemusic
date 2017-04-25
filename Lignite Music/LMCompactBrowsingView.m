@@ -10,10 +10,11 @@
 #import "LMBrowsingDetailViewController.h"
 #import "LMTiledAlbumCoverView.h"
 #import "LMCompactBrowsingView.h"
+#import "LMLayoutManager.h"
 #import "LMBigListEntry.h"
 #import "LMAppIcon.h"
 
-@interface LMCompactBrowsingView()<UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, LMCollectionInfoViewDelegate, LMBigListEntryDelegate>
+@interface LMCompactBrowsingView()<UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, LMCollectionInfoViewDelegate, LMBigListEntryDelegate, LMLayoutChangeDelegate>
 
 /**
  The big list entries that are used in the compact view.
@@ -44,6 +45,11 @@
  If YES, the user just scrolled through the letter tabs. Scroll delegate should then be ignored and this flag should be reset to NO.
  */
 @property BOOL didJustScrollByLetter;
+
+/**
+ The layout manager.
+ */
+@property LMLayoutManager *layoutManager;
 
 @end
 
@@ -325,7 +331,7 @@
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
 	//	NSLog(@"Path %@", indexPath);
-	NSInteger factor = 3;
+	NSInteger factor = self.layoutManager.isLandscape ? 5 : 3;
 	
 	CGFloat sideLength = self.frame.size.width/factor;
 	
@@ -381,6 +387,14 @@
     }];
 }
 
+- (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		[self.collectionView reloadData];
+	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		
+	}];
+}
+
 - (void)layoutSubviews {
 	[super layoutSubviews];
 	
@@ -388,6 +402,9 @@
 		self.didLayoutConstraints = YES;
 		
 		self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
+		
+		self.layoutManager = [LMLayoutManager sharedLayoutManager];
+		[self.layoutManager addDelegate:self];
 		
 		UICollectionViewFlowLayout *fuck = [[UICollectionViewFlowLayout alloc]init];
 //		fuck.scrollDirection = UICollectionViewScrollDirectionHorizontal;

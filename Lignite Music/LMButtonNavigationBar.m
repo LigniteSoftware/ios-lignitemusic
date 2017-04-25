@@ -234,84 +234,6 @@
 	self.heightBeforeAdjustingToScrollPosition = -1;
 }
 
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
-	NSLog(@"%@ and %@? %d", [[gestureRecognizer class] description], [[otherGestureRecognizer class] description], ([gestureRecognizer class] != [UIPanGestureRecognizer class]));
-	
-	return [gestureRecognizer class] != [UIPanGestureRecognizer class];
-}
-
-- (void)handlePan:(UIPanGestureRecognizer *)recognizer {
-	CGPoint translation = [recognizer translationInView:recognizer.view];
-	
-	if(self.originalPoint.y == 0){
-		self.originalPoint = self.buttonBar.frame.origin;
-		self.currentPoint = self.buttonBar.frame.origin;
-	}
-	CGFloat totalTranslation = translation.y + (self.currentPoint.y-self.originalPoint.y);
-	
-    NSLog(@"%f %f", totalTranslation, translation.y);
-	
-	if(totalTranslation < 0){ //Moving upward
-		if(recognizer.view == self.miniPlayerCoreView){
-			return;
-		}
-		
-		self.buttonBarBottomConstraint.constant = -sqrt(-totalTranslation);
-	}
-	else{ //Moving downward
-		self.buttonBarBottomConstraint.constant = totalTranslation;
-	}
-	
-	if(translation.y < 0 && translation.y != totalTranslation){ //Moving up
-        CGFloat totalHeight = self.viewAttachedToButtonBar.frame.size.height + self.buttonBar.frame.size.height;
-        CGFloat percentageConverted = (-translation.y)/totalHeight;
-        
-        if(percentageConverted > 1){
-            percentageConverted = 1;
-        }
-        
-//        NSLog(@"Converted %f", percentageConverted);
-		
-        self.viewAttachedToButtonBar.alpha = percentageConverted;
-        self.buttonBar.alpha = self.viewAttachedToButtonBar.alpha;
-    }
-    else if(translation.y >= 0 && translation.y == totalTranslation) {
-        CGFloat totalHeight = self.viewAttachedToButtonBar.frame.size.height + self.buttonBar.frame.size.height;
-        CGFloat percentageConverted = translation.y/totalHeight;
-
-        if(percentageConverted > 1){
-            percentageConverted = 1;
-        }
-        
-//        NSLog(@"Converted %f!", percentageConverted);
-        
-        self.viewAttachedToButtonBar.alpha = 1.0-percentageConverted;
-        self.buttonBar.alpha = self.viewAttachedToButtonBar.alpha;
-    }
-	
-	[self layoutIfNeeded];
-	
-	CGFloat currentHeight = [self maximizedHeight] - self.buttonBarBottomConstraint.constant;
-	
-	if(currentHeight < 0){
-		currentHeight = 0;
-	}
-	
-	[self.delegate requiredHeightForNavigationBarChangedTo:currentHeight
-									 withAnimationDuration:0.0];
-	
-	if(recognizer.state == UIGestureRecognizerStateEnded){
-		self.currentPoint = CGPointMake(self.currentPoint.x, self.originalPoint.y + totalTranslation);
-		
-		if((translation.y >= 0)){
-			[self minimize];
-		}
-		else if((translation.y < 0)){
-			[self maximize];
-		}
-	}
-}
-
 - (void)setSelectedTab:(LMNavigationTab)tab {
 	[self.buttonBar setButtonAtIndex:LMNavigationTabBrowse highlighted:NO];
 	[self.buttonBar setButtonAtIndex:LMNavigationTabView highlighted:NO];
@@ -384,6 +306,8 @@
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		NSLayoutConstraint *newButtonBarBottomConstraint = self.buttonBarBottomConstraint;
 		
+		CGFloat previousConstant = self.buttonBarBottomConstraint.constant;
+		
 		for(NSLayoutConstraint *constraint in self.constraints){
 			if(constraint.firstItem == self.buttonBar
 				&& (  (constraint.firstAttribute == NSLayoutAttributeBottom && !self.layoutManager.isLandscape)
@@ -395,6 +319,7 @@
 		}
 		
 		self.buttonBarBottomConstraint = newButtonBarBottomConstraint;
+//		self.buttonBarBottomConstraint.constant = -previousConstant;
 	}];
 }
 
@@ -427,11 +352,6 @@
 		self.browsingBar.searchBarDelegate = self;
 		self.browsingBar.letterTabDelegate = self.letterTabBarDelegate;
 		[self addSubview:self.browsingBar];
-        
-        UIPanGestureRecognizer *browsingBarMoveRecognizer = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(handlePan:)];
-        //browsingBarMoveRecognizer.delegate = self;
-        [self.browsingBar addGestureRecognizer:browsingBarMoveRecognizer];
-		
 		
 		
 //		self.miniPlayerView = [LMMiniPlayerView newAutoLayoutView];
@@ -471,8 +391,9 @@
 		[self beginAddingNewLandscapeConstraints];
 		[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
 		[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		NSLayoutConstraint *landscapeButtonBarConstraint = [self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 		if(self.layoutManager.isLandscape){
-			self.buttonBarBottomConstraint = [self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+			self.buttonBarBottomConstraint = landscapeButtonBarConstraint;
 		}
 		 [self.buttonBar beginAddingNewLandscapeConstraints];
 		[self.buttonBar autoSetDimension:ALDimensionWidth toSize:properNum/8.0];
@@ -546,11 +467,6 @@
 		self.miniPlayerCoreView.layer.shadowRadius = 5;
 //		self.miniPlayerView.hidden = YES;
 		
-		UIPanGestureRecognizer *miniPlayerViewMoveRecognizer = [[UIPanGestureRecognizer alloc]initWithTarget:self
-																											action:@selector(handlePan:)];
-		miniPlayerViewMoveRecognizer.delegate = self;
-		[self.miniPlayerCoreView addGestureRecognizer:miniPlayerViewMoveRecognizer];
-		
 		
 		[self beginAddingNewPortraitConstraints];
 		[self.browsingBar autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.buttonBar];
@@ -574,14 +490,14 @@
 		[self.sourceSelector autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
 		[self.sourceSelector autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self];
 		[self.sourceSelector autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.buttonBar withOffset:20];
-		[self.sourceSelector beginAddingNewPortraitConstraints];
+		 [self.sourceSelector beginAddingNewPortraitConstraints];
 		[self.sourceSelector autoSetDimension:ALDimensionHeight toSize:properNum-LMNavigationBarTabHeight];
 		
 		[self beginAddingNewLandscapeConstraints];
 		[self.sourceSelector autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.buttonBar];
 		[self.sourceSelector autoPinEdgeToSuperviewEdge:ALEdgeTop];
 		[self.sourceSelector autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		[self.sourceSelector beginAddingNewLandscapeConstraints];
+		 [self.sourceSelector beginAddingNewLandscapeConstraints];
 		[self.sourceSelector autoSetDimension:ALDimensionWidth toSize:properNum-LMNavigationBarTabWidth];
 		
 		[self.sourceSelector endAddingNewConstraints];
@@ -595,10 +511,13 @@
 		[self sendSubviewToBack:self.buttonBarSourceSelectorWarningLabel];
 		
 		
-		[self setSelectedTab:LMNavigationTabBrowse];
+		[self setSelectedTab:LMNavigationTabView];
+		[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
+			[self setSelectedTab:LMNavigationTabMiniplayer];
+		} repeats:NO];
 		
 		
-//		self.sourceSelector.hidden = YES;
+		self.sourceSelector.hidden = YES;
 //		self.miniPlayerCoreView.hidden = YES;
 		
 //		[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{

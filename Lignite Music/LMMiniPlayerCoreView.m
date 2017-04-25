@@ -13,7 +13,7 @@
 #import "LMMiniPlayerView.h"
 #import "LMMusicPlayer.h"
 
-@interface LMMiniPlayerCoreView()<UIGestureRecognizerDelegate, LMMusicPlayerDelegate>
+@interface LMMiniPlayerCoreView()<UIGestureRecognizerDelegate, LMMusicPlayerDelegate, LMLayoutChangeDelegate>
 
 /**
  The miniplayer which goes in the back.
@@ -145,6 +145,7 @@
 	NSLog(@"Constraints rebuilt.");
 }
 
+
 - (void)panMiniPlayer:(UIPanGestureRecognizer *)recognizer {
     //Test code for calculating rates of the translations. Will break after one use
     static float amountOfTimes;
@@ -193,11 +194,6 @@
             
             LMCoreViewController *coreViewController = (LMCoreViewController*)self.rootViewController;
             [coreViewController panNowPlayingUp:recognizer];
-            
-            if(translation.y > 0){
-                LMButtonNavigationBar *navigationBar = (LMButtonNavigationBar*)self.buttonNavigationBar;
-                [navigationBar handlePan:recognizer];
-            }
             
             if(recognizer.state == UIGestureRecognizerStateEnded){
                 self.samplesArray = [NSMutableArray new];
@@ -291,13 +287,21 @@
     }
 }
 
+- (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		
+	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		[self layoutIfNeeded];
+	}];
+}
+
 - (void)layoutSubviews {
 	if(!self.didLayoutConstraints){
 		self.didLayoutConstraints = YES;
 		
 		NSLog(@"Hey");
 		
-		self.backgroundColor = [UIColor whiteColor];
+		self.backgroundColor = [UIColor blueColor];
 		
 		self.clipsToBounds = YES;
 		
@@ -308,7 +312,7 @@
 		[self.musicPlayer addMusicDelegate:self];
 		
 		self.centerMiniPlayerView = [LMMiniPlayerView newAutoLayoutView];
-//		self.centerMiniPlayerView.backgroundColor = [UIColor orangeColor];
+		self.centerMiniPlayerView.backgroundColor = [UIColor orangeColor];
 		[self addSubview:self.centerMiniPlayerView];
 		
 		self.miniPlayerLeadingConstraint = [self.centerMiniPlayerView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
@@ -326,7 +330,7 @@
 		
 		
 		self.trailingMiniPlayerView = [LMMiniPlayerView newAutoLayoutView];
-//		self.trailingMiniPlayerView.backgroundColor = [UIColor yellowColor];
+		self.trailingMiniPlayerView.backgroundColor = [UIColor yellowColor];
 		[self addSubview:self.trailingMiniPlayerView];
 		
 		[self.otherConstraints addObject:[self.trailingMiniPlayerView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.centerMiniPlayerView]];
@@ -344,7 +348,7 @@
 		
 		
 		self.leadingMiniPlayerView = [LMMiniPlayerView newAutoLayoutView];
-//		self.leadingMiniPlayerView.backgroundColor = [UIColor redColor];
+		self.leadingMiniPlayerView.backgroundColor = [UIColor redColor];
 		[self addSubview:self.leadingMiniPlayerView];
 		
 		[self.otherConstraints addObject:[self.leadingMiniPlayerView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.centerMiniPlayerView]];

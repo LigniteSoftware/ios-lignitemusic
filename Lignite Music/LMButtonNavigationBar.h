@@ -113,6 +113,4 @@ typedef NS_ENUM(NSUInteger, LMNavigationTab) {
  */
 - (void)setCurrentSourceIcon:(UIImage*)icon;
 
-- (void)handlePan:(UIPanGestureRecognizer *)recognizer;
-
 @end

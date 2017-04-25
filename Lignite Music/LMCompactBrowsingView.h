@@ -38,11 +38,6 @@
 - (void)reloadContents;
 
 /**
- Reload the source selector info.
- */
-- (void)reloadSourceSelectorInfo;
-
-/**
  Scroll the view to a certain index in its music track collection.
  
  @param index The index to scroll to.

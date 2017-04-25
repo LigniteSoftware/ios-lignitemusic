@@ -1128,7 +1128,7 @@ LMControlBarViewDelegate
 						self.navigationBar.layer.shadowOffset = CGSizeMake(0, self.navigationBar.layer.shadowRadius/2);
 						self.navigationBar.layer.shadowOpacity = 0.25f;
 						
-						self.navigationBar.hidden = YES;
+//						self.navigationBar.hidden = YES;
 						
 						//						UIBarButtonItem *barButtonItem = [[UIBarButtonItem alloc]initWithTitle:@"Hey" style:UIBarButtonItemStylePlain target:self action:nil];
 						
@@ -1163,6 +1163,8 @@ LMControlBarViewDelegate
 						self.buttonNavigationBar.searchBarDelegate = self;
 						self.buttonNavigationBar.letterTabBarDelegate = self;
 						[self.navigationController.rootView addSubview:self.buttonNavigationBar];
+						
+						self.navigationController.rootView.hidden = YES;
 						
 						self.buttonNavigationBar.backgroundColor = [UIColor purpleColor];
 						
@@ -1321,8 +1323,8 @@ LMControlBarViewDelegate
 //							[self.navigationController pushViewController:settingsViewController animated:YES];
 							
 //							[self.buttonNavigationBar completelyHide];
-//							self.buttonNavigationBar.hidden = YES;
-//							self.nowPlayingCoreView.hidden = YES;
+							self.buttonNavigationBar.hidden = YES;
+							self.nowPlayingCoreView.hidden = YES;
 							
 							[self.buttonNavigationBar setSelectedTab:LMNavigationTabBrowse];
 							
