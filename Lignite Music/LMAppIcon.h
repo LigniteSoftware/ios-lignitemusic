@@ -60,7 +60,8 @@ typedef enum {
     LMIconLibraryAccess,
     LMIconTutorialScroll,
     LMIconTutorialSwipe,
-    LMIconTutorialTap
+    LMIconTutorialTap,
+	LMIconiOSBack
 } LMIcon;
 
 /**

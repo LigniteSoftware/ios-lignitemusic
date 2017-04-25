@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "LMNavigationBar.h"
 #import "LMButtonNavigationBar.h"
+#import "LMLandscapeNavigationBar.h"
 #import "LMCoreNavigationController.h"
 
 @class LMBrowsingDetailViewController;
@@ -18,6 +19,8 @@
 @property LMBrowsingDetailViewController *currentDetailViewController;
 
 @property LMNavigationBar *navigationBar;
+
+@property LMLandscapeNavigationBar *landscapeNavigationBar;
 
 @property LMCoreNavigationController *navigationController;
 

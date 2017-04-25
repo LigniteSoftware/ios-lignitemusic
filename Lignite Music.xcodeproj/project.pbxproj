@@ -114,6 +114,10 @@
 		6A7C62F51DA93F6100B025BA /* LMColour.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A7C62F41DA93F6100B025BA /* LMColour.m */; };
 		6A7DF11A1DB112140077B979 /* LMMiniPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A7DF1191DB112140077B979 /* LMMiniPlayerView.m */; };
 		6A7DF1241DB12C860077B979 /* LMTitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A7DF1231DB12C860077B979 /* LMTitleView.m */; };
+		6A8150DA1EAF6E7800F518C5 /* LMLandscapeNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A8150D91EAF6E7800F518C5 /* LMLandscapeNavigationBar.m */; };
+		6A8150DB1EAF6E7800F518C5 /* LMLandscapeNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A8150D91EAF6E7800F518C5 /* LMLandscapeNavigationBar.m */; };
+		6A8150DD1EAF70C300F518C5 /* icon_ios_back.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A8150DC1EAF70C300F518C5 /* icon_ios_back.png */; };
+		6A8150DE1EAF70C300F518C5 /* icon_ios_back.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A8150DC1EAF70C300F518C5 /* icon_ios_back.png */; };
 		6A8190BE1DDD3B5B00DBFE85 /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AA4735E1BC70FBA0066D47E /* ExternalAccessory.framework */; };
 		6A838A951E07A8FF006E7DE0 /* LMPurchaseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A838A941E07A8FF006E7DE0 /* LMPurchaseManager.m */; };
 		6A838A971E07A9CF006E7DE0 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A838A961E07A9CF006E7DE0 /* StoreKit.framework */; };
@@ -526,6 +530,9 @@
 		6A7DF1191DB112140077B979 /* LMMiniPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMMiniPlayerView.m; sourceTree = "<group>"; };
 		6A7DF1221DB12C860077B979 /* LMTitleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMTitleView.h; sourceTree = "<group>"; };
 		6A7DF1231DB12C860077B979 /* LMTitleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMTitleView.m; sourceTree = "<group>"; };
+		6A8150D81EAF6E7800F518C5 /* LMLandscapeNavigationBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMLandscapeNavigationBar.h; sourceTree = "<group>"; };
+		6A8150D91EAF6E7800F518C5 /* LMLandscapeNavigationBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMLandscapeNavigationBar.m; sourceTree = "<group>"; };
+		6A8150DC1EAF70C300F518C5 /* icon_ios_back.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_ios_back.png; sourceTree = "<group>"; };
 		6A838A931E07A8FF006E7DE0 /* LMPurchaseManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMPurchaseManager.h; sourceTree = "<group>"; };
 		6A838A941E07A8FF006E7DE0 /* LMPurchaseManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMPurchaseManager.m; sourceTree = "<group>"; };
 		6A838A961E07A9CF006E7DE0 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
@@ -924,13 +931,13 @@
 				6A514E131CE9621B00AFB351 /* icon_dynamic_playlist.png */,
 				6A759D411DE8EB0E0051E1A9 /* icon_functionality.png */,
 				6A9C05391DB4441200713D1C /* icon_genres.png */,
-				6ACFB96D1E8CE103009811F0 /* icon_tutorial_scroll.png */,
-				6ACFB96E1E8CE103009811F0 /* icon_tutorial_swipe.png */,
-				6ACFB96F1E8CE103009811F0 /* icon_tutorial_tap.png */,
 				6AC066F01DFF5253008A6FCA /* icon_grab_rectangle.png */,
 				6A5168951E09002800A6446F /* icon_green_checkmark.png */,
 				6A1AF0801E028E3400F8934C /* icon_hamburger.png */,
+				6A8150DC1EAF70C300F518C5 /* icon_ios_back.png */,
+				6A072BFA1E87E79C0092EA44 /* icon_kickstarter_bw.png */,
 				6A5168921E08F4C800A6446F /* icon_kickstarter.png */,
+				6A072BFB1E87E79C0092EA44 /* icon_library_access.png */,
 				6A759D4F1DEA40230051E1A9 /* icon_link.png */,
 				6A26B46B1DE4074E008B5B69 /* icon_look_and_feel.png */,
 				6AF9D53D1DE244B4006368B6 /* icon_miniplayer.png */,
@@ -938,11 +945,9 @@
 				6A48A73E1E2024D1003C86B6 /* icon_no_cover_art_75.png */,
 				6A76ECA61E1A081200424AC5 /* icon_no_cover_art.png */,
 				6A48A73B1E1F5EC1003C86B6 /* icon_no_search_results.png */,
-				6A072BFA1E87E79C0092EA44 /* icon_kickstarter_bw.png */,
-				6A072BFB1E87E79C0092EA44 /* icon_library_access.png */,
-				6A072BFC1E87E79C0092EA44 /* icon_pebbles.png */,
 				6A759D501DEA40230051E1A9 /* icon_paper_plane.png */,
 				6AEB9D311BAD812700AD19FA /* icon_pause.png */,
+				6A072BFC1E87E79C0092EA44 /* icon_pebbles.png */,
 				6AEB9D321BAD812700AD19FA /* icon_play.png */,
 				6AC77A151DC42CF400BABBB3 /* icon_playlists.png */,
 				6AC32B751DB53EB20007C67E /* icon_repeat_general.png */,
@@ -953,6 +958,9 @@
 				6AF2C9411DDA16CC005E4643 /* icon_source.png */,
 				6A9C053A1DB4441200713D1C /* icon_titles.png */,
 				6A7268201E163E8300FA01DB /* icon_triple_horizontal_dots.png */,
+				6ACFB96D1E8CE103009811F0 /* icon_tutorial_scroll.png */,
+				6ACFB96E1E8CE103009811F0 /* icon_tutorial_swipe.png */,
+				6ACFB96F1E8CE103009811F0 /* icon_tutorial_tap.png */,
 				6A759D4E1DEA40230051E1A9 /* icon_twitter.png */,
 				6A7268241E1640E700FA01DB /* icon_up_arrow.png */,
 				6A5168A21E09166000A6446F /* icon_white_checkmark.png */,
@@ -997,6 +1005,8 @@
 				6A7DF1191DB112140077B979 /* LMMiniPlayerView.m */,
 				6A23AF481E454D1E00A56F5F /* LMNavigationBar.h */,
 				6A23AF491E454D1E00A56F5F /* LMNavigationBar.m */,
+				6A8150D81EAF6E7800F518C5 /* LMLandscapeNavigationBar.h */,
+				6A8150D91EAF6E7800F518C5 /* LMLandscapeNavigationBar.m */,
 				6A2A29C91DB1F1C3008E7792 /* LMSource.h */,
 				6A2A29CA1DB1F1C3008E7792 /* LMSource.m */,
 				6A2A29C31DB1D89C008E7792 /* LMSourceSelectorView.h */,
@@ -1416,6 +1426,7 @@
 				6AA5CB5F1E285C0A005F853F /* icon_source.png in Resources */,
 				6AA5CB601E285C0A005F853F /* icon_link.png in Resources */,
 				6AA5CB611E285C0A005F853F /* icon_settings.png in Resources */,
+				6A8150DE1EAF70C300F518C5 /* icon_ios_back.png in Resources */,
 				6A072BFE1E87E79C0092EA44 /* icon_kickstarter_bw.png in Resources */,
 				6AA5CB621E285C0A005F853F /* icon_down_arrow.png in Resources */,
 				6AA5CB631E285C0A005F853F /* LaunchScreen.storyboard in Resources */,
@@ -1502,6 +1513,7 @@
 				6AF2C9431DDA16CC005E4643 /* icon_source.png in Resources */,
 				6A759D521DEA40230051E1A9 /* icon_link.png in Resources */,
 				6AB12E9C1D57AD9800280383 /* icon_settings.png in Resources */,
+				6A8150DD1EAF70C300F518C5 /* icon_ios_back.png in Resources */,
 				6A072BFD1E87E79C0092EA44 /* icon_kickstarter_bw.png in Resources */,
 				6A7268231E163F6400FA01DB /* icon_down_arrow.png in Resources */,
 				6AEB9D0B1BACF60E00AD19FA /* LaunchScreen.storyboard in Resources */,
@@ -1688,6 +1700,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6AB1046A1E55625500213396 /* LMSpotifyLibrary.m in Sources */,
+				6A8150DB1EAF6E7800F518C5 /* LMLandscapeNavigationBar.m in Sources */,
 				6AA5CAF01E285C0A005F853F /* LMSettingsLabel.m in Sources */,
 				6AA5CAF11E285C0A005F853F /* LMTriangleContainerView.m in Sources */,
 				6AA5CBD71E2873BB005F853F /* Spotify.m in Sources */,
@@ -1871,6 +1884,7 @@
 				6A5168831E0899B100A6446F /* LMPurchaseViewController.m in Sources */,
 				6A2A29CB1DB1F1C3008E7792 /* LMSource.m in Sources */,
 				6AC77A141DC42C5500BABBB3 /* LMControlBarView.m in Sources */,
+				6A8150DA1EAF6E7800F518C5 /* LMLandscapeNavigationBar.m in Sources */,
 				6A52574C1DF099480040210D /* LMView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -56,7 +56,7 @@
 @import StoreKit;
 
 @interface LMCoreViewController () <LMMusicPlayerDelegate, LMSourceDelegate, UIGestureRecognizerDelegate, LMSearchBarDelegate, LMLetterTabDelegate, LMSearchSelectedDelegate, LMPurchaseManagerDelegate, LMButtonNavigationBarDelegate, UINavigationBarDelegate, UINavigationControllerDelegate,
-LMTutorialViewDelegate, LMImageManagerDelegate,
+LMTutorialViewDelegate, LMImageManagerDelegate, LMLandscapeNavigationBarDelegate,
 
 LMControlBarViewDelegate
 >
@@ -482,10 +482,12 @@ LMControlBarViewDelegate
 
 - (void)viewWillDisappear:(BOOL)animated {
 	[self.buttonNavigationBar.browsingBar setShowingLetterTabs:NO];
+	[self.landscapeNavigationBar setMode:LMLandscapeNavigationBarModeWithBackButton];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
 	[self.buttonNavigationBar.browsingBar setShowingLetterTabs:YES];
+	[self.landscapeNavigationBar setMode:LMLandscapeNavigationBarModeOnlyLogo];
 }
 
 - (void)setStatusBarBlurHidden:(BOOL)hidden {
@@ -621,6 +623,7 @@ LMControlBarViewDelegate
     if(self.settingsOpen > 0 || self.willOpenSettings){
         self.settingsOpen++;
     }
+	
     self.willOpenSettings = NO;
 }
 
@@ -794,6 +797,16 @@ LMControlBarViewDelegate
 	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
 		NSLog(@"Rotating");
 		
+		BOOL willBeLandscape = size.width > size.height;
+		
+		self.navigationBar.hidden = NO;
+		self.landscapeNavigationBar.hidden = NO;
+		
+		self.navigationBar.layer.opacity = willBeLandscape ? 0.0 : 1.0;
+		self.landscapeNavigationBar.layer.opacity = !willBeLandscape ? 0.0 : 1.0;
+		
+		self.statusBarBlurView.layer.opacity = willBeLandscape ? 0.0 : 1.0;
+		
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
 		NSLog(@"Rotated");
 		
@@ -806,7 +819,28 @@ LMControlBarViewDelegate
 		self.buttonNavigationBarHeightConstraint.constant = previousButtonBarSizeConstraintConstant;
 		
 		[self setStatusBarBlurHidden:[self prefersStatusBarHidden]];
+		
+		
+		self.navigationBar.hidden = self.layoutManager.isLandscape;
+		self.landscapeNavigationBar.hidden = !self.layoutManager.isLandscape;
 	}];
+}
+
+- (void)buttonTappedOnLandscapeNavigationBar:(BOOL)backButtonPressed {
+	if(backButtonPressed){
+		NSLog(@"Go back");
+		
+		[self.navigationController popViewControllerAnimated:YES];
+		
+		if(self.navigationBar.backItem){
+			[self.navigationBar popNavigationItemAnimated:NO];
+		}
+	}
+	else{
+		NSLog(@"Now playing nav bar please");
+		
+		[self launchNowPlayingFromNavigationBar];
+	}
 }
 
 - (void)viewDidLoad {
@@ -1118,15 +1152,38 @@ LMControlBarViewDelegate
 						
 						[self.navigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 						[self.navigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+
 						
 						self.navigationBar.barTintColor = [UIColor whiteColor];
 						self.navigationBar.tintColor = [UIColor blackColor];
+						self.navigationBar.backgroundColor = [UIColor redColor];
 						self.navigationBar.translucent = NO;
 						
 						self.navigationBar.layer.shadowColor = [UIColor blackColor].CGColor;
 						self.navigationBar.layer.shadowRadius = WINDOW_FRAME.size.width / 45 / 2;
 						self.navigationBar.layer.shadowOffset = CGSizeMake(0, self.navigationBar.layer.shadowRadius/2);
 						self.navigationBar.layer.shadowOpacity = 0.25f;
+						
+						
+						self.landscapeNavigationBar = [LMLandscapeNavigationBar newAutoLayoutView];
+						self.landscapeNavigationBar.delegate = self;
+						[self.navigationController.view addSubview:self.landscapeNavigationBar];
+						
+						[self.landscapeNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+						[self.landscapeNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
+						[self.landscapeNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+						[self.landscapeNavigationBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.navigationBar];
+						
+						self.landscapeNavigationBar.layer.shadowColor = [UIColor blackColor].CGColor;
+						self.landscapeNavigationBar.layer.shadowRadius = WINDOW_FRAME.size.width / 45 / 2;
+						self.landscapeNavigationBar.layer.shadowOffset = CGSizeMake(0, self.navigationBar.layer.shadowRadius/2);
+						self.landscapeNavigationBar.layer.shadowOpacity = 0.25f;
+						
+						
+						self.navigationBar.hidden = self.layoutManager.isLandscape;
+						self.navigationBar.layer.opacity = self.navigationBar.hidden ? 0.0 : 1.0;
+						self.landscapeNavigationBar.hidden = !self.layoutManager.isLandscape;
+						self.landscapeNavigationBar.layer.opacity = self.landscapeNavigationBar.hidden ? 0.0 : 1.0;
 						
 //						self.navigationBar.hidden = YES;
 						
@@ -1183,6 +1240,8 @@ LMControlBarViewDelegate
 						[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
 						[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 						[self.buttonNavigationBar beginAddingNewLandscapeConstraints];
+						
+						self.buttonNavigationBar.hidden = YES;
 						
 						/* NSLayoutConstraint *widthConstraint = */ [self.buttonNavigationBar autoSetDimension:ALDimensionWidth toSize:0.0];
 //						if(self.layoutManager.isLandscape){
@@ -1324,7 +1383,7 @@ LMControlBarViewDelegate
 							
 //							[self.buttonNavigationBar completelyHide];
 //							self.buttonNavigationBar.hidden = YES;
-							self.nowPlayingCoreView.hidden = YES;
+//							self.nowPlayingCoreView.hidden = YES;
 							
 							[self.buttonNavigationBar setSelectedTab:LMNavigationTabBrowse];
 							

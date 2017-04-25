@@ -20,7 +20,7 @@
 #import "LMLabel.h"
 
 @interface LMButtonNavigationBar()<UIGestureRecognizerDelegate,
-							 LMButtonBarDelegate, LMButtonDelegate, LMSearchBarDelegate, LMLayoutChangeDelegate>
+							 LMButtonBarDelegate, LMButtonDelegate, LMSearchBarDelegate, LMLayoutChangeDelegate, LMLandscapeNavigationBarDelegate>
 
 /**
  The music player.

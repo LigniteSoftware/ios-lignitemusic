@@ -110,6 +110,8 @@
             return @"icon_tutorial_swipe.png";
         case LMIconTutorialTap:
             return @"icon_tutorial_tap.png";
+		case LMIconiOSBack:
+			return @"icon_ios_back.png";
 	}
 }
 
