@@ -473,7 +473,7 @@ LMControlBarViewDelegate
 	self.currentDetailViewController = nil;
 	self.searchViewController = nil;
 	
-	self.buttonNavigationBar.hidden = NO;
+//	self.buttonNavigationBar.hidden = NO;
 	
 	if(self.statusBarBlurViewHeightConstraint.constant < 0.1 && ![self prefersStatusBarHidden]){
 		[self setStatusBarBlurHidden:NO];
@@ -792,12 +792,12 @@ LMControlBarViewDelegate
 	
 	[self.layoutManager rootViewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 	
+	BOOL willBeLandscape = size.width > size.height;
+	
 	NSLog(@"Starting rotation");
 	
 	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
 		NSLog(@"Rotating");
-		
-		BOOL willBeLandscape = size.width > size.height;
 		
 		self.navigationBar.hidden = NO;
 		self.landscapeNavigationBar.hidden = NO;
@@ -821,8 +821,14 @@ LMControlBarViewDelegate
 		[self setStatusBarBlurHidden:[self prefersStatusBarHidden]];
 		
 		
-		self.navigationBar.hidden = self.layoutManager.isLandscape;
-		self.landscapeNavigationBar.hidden = !self.layoutManager.isLandscape;
+		self.navigationBar.hidden = willBeLandscape;
+		self.landscapeNavigationBar.hidden = !willBeLandscape;
+		
+		[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
+			[UIView animateWithDuration:0.25 animations:^{
+				[self setNeedsStatusBarAppearanceUpdate];
+			}];
+		} repeats:NO];
 	}];
 }
 
@@ -865,6 +871,18 @@ LMControlBarViewDelegate
 	
 	
 	NSLog(@"Frame set %@", NSStringFromCGRect(self.view.frame));
+	
+//	UILabel *shitpost = [UILabel newAutoLayoutView];
+//	shitpost.text = @"你智障 ;)";
+//	shitpost.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:20.0f];
+//	shitpost.textColor = [UIColor blackColor];
+//	shitpost.backgroundColor = [UIColor whiteColor];
+//	shitpost.textAlignment = NSTextAlignmentCenter;
+//	[self.view addSubview:shitpost];
+//	
+//	[shitpost autoPinEdgesToSuperviewEdges];
+//	
+//	return;
 	
 //	LMButtonBar *buttonBar = [LMButtonBar newAutoLayoutView];
 //	buttonBar.amountOfButtons = 3;

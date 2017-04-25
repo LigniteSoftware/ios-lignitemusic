@@ -44,7 +44,11 @@
 - (LMLayoutClass)currentLayoutClass {
 	NSAssert(!CGSizeEqualToSize(self.size, CGSizeZero), @"Trait collection is nil and therefore the current layout class cannot be accessed!");
 	
-	return (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular) ? LMLayoutClassLandscape : LMLayoutClassPortrait;
+//	NSLog(@"Shitpost %ld %ld", self.traitCollection.horizontalSizeClass, self.traitCollection.verticalSizeClass);
+	
+	return ((self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular)
+			|| self.traitCollection.horizontalSizeClass == self.traitCollection.verticalSizeClass)
+		? LMLayoutClassLandscape : LMLayoutClassPortrait;
 	
 //	return (self.size.height >= self.size.width) ? LMLayoutClassPortrait : LMLayoutClassLandscape;
 }
