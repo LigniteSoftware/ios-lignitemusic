@@ -75,6 +75,7 @@
 
 - (CGFloat)maximizedHeight {
 	if(self.layoutManager.isLandscape){
+		NSLog(@"Size is %f", self.buttonBar.frame.size.width + self.viewAttachedToButtonBar.frame.size.width);
 		return self.buttonBar.frame.size.width + self.viewAttachedToButtonBar.frame.size.width;
 	}
 	
@@ -88,20 +89,8 @@
 	
 	NSLog(@"Setting to %ld", constant);
 	
-    CGFloat totalHeight = self.viewAttachedToButtonBar.frame.size.height + self.buttonBar.frame.size.height;
-    CGFloat percentageConverted = constant/totalHeight;
-    
-    if(percentageConverted > 1){
-        percentageConverted = 1;
-    }
-    
-//    NSLog(@"Converted %f!", percentageConverted);
-	
 	[UIView animateWithDuration:0.25 animations:^{
 		[self layoutIfNeeded];
-        
-        self.viewAttachedToButtonBar.alpha = 1.0-percentageConverted;
-        self.buttonBar.alpha = self.viewAttachedToButtonBar.alpha;
 	} completion:completion];
 }
 
@@ -320,6 +309,9 @@
 		
 		self.buttonBarBottomConstraint = newButtonBarBottomConstraint;
 //		self.buttonBarBottomConstraint.constant = -previousConstant;
+		
+		[self.delegate requiredHeightForNavigationBarChangedTo:[self maximizedHeight]
+										 withAnimationDuration:0.25];
 	}];
 }
 

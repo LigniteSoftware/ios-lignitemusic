@@ -39,7 +39,7 @@
 	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		BOOL isNowLandscape = size.width > size.height;
 		
-		if(self.landscapeConstraints.count == 0){ //No landscape constraints have been defined, and that's ok. Leave it alone.
+		if(self.landscapeConstraints.count == 0 && self.portraitConstraints.count == 0){ //No specific constraints have been defined, and that's ok. Leave it alone.
 			return;
 		}
 		

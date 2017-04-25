@@ -1164,7 +1164,7 @@ LMControlBarViewDelegate
 						self.buttonNavigationBar.letterTabBarDelegate = self;
 						[self.navigationController.rootView addSubview:self.buttonNavigationBar];
 						
-						self.navigationController.rootView.hidden = YES;
+//						self.navigationController.rootView.hidden = YES;
 						
 						self.buttonNavigationBar.backgroundColor = [UIColor purpleColor];
 						
@@ -1323,7 +1323,7 @@ LMControlBarViewDelegate
 //							[self.navigationController pushViewController:settingsViewController animated:YES];
 							
 //							[self.buttonNavigationBar completelyHide];
-							self.buttonNavigationBar.hidden = YES;
+//							self.buttonNavigationBar.hidden = YES;
 							self.nowPlayingCoreView.hidden = YES;
 							
 							[self.buttonNavigationBar setSelectedTab:LMNavigationTabBrowse];
