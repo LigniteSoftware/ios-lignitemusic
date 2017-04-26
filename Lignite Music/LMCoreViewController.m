@@ -61,6 +61,8 @@ LMTutorialViewDelegate, LMImageManagerDelegate, LMLandscapeNavigationBarDelegate
 LMControlBarViewDelegate
 >
 
+@property LMView *rootView;
+
 @property LMMusicPlayer *musicPlayer;
 
 @property LMNowPlayingCoreView *nowPlayingCoreView;
@@ -139,7 +141,7 @@ LMControlBarViewDelegate
 - (void)tutorialFinishedWithKey:(NSString *)key {
     NSLog(@"Tutorial %@ finished, start another?", key);
     
-    self.view.userInteractionEnabled = YES;
+    self.rootView.userInteractionEnabled = YES;
     self.buttonNavigationBar.userInteractionEnabled = YES;
     self.navigationBar.userInteractionEnabled = YES;
     
@@ -148,7 +150,7 @@ LMControlBarViewDelegate
         
         [NSTimer scheduledTimerWithTimeInterval:1.0 block:^{
             if([LMTutorialView tutorialShouldRunForKey:LMTutorialKeyMiniPlayer]){
-                self.view.userInteractionEnabled = NO;
+                self.rootView.userInteractionEnabled = NO;
                 self.buttonNavigationBar.userInteractionEnabled = NO;
                 
                 LMTutorialView *tutorialView = [[LMTutorialView alloc] initForAutoLayoutWithTitle:NSLocalizedString(@"TutorialMiniPlayerTitle", nil)
@@ -160,7 +162,7 @@ LMControlBarViewDelegate
                 tutorialView.icon = [LMAppIcon imageForIcon:LMIconTutorialScroll];
                 tutorialView.leadingLayoutConstraint = [tutorialView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
                 tutorialView.delegate = self;
-                [tutorialView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
+                [tutorialView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.rootView];
                 [tutorialView autoPinEdgeToSuperviewEdge:ALEdgeTop];
                 [tutorialView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.buttonNavigationBar];
             }
@@ -180,7 +182,7 @@ LMControlBarViewDelegate
                 tutorialView.icon = [LMAppIcon imageForIcon:LMIconTutorialTap];
                 tutorialView.leadingLayoutConstraint = [tutorialView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
                 tutorialView.delegate = self;
-                [tutorialView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
+                [tutorialView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.rootView];
                 [tutorialView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
                 [tutorialView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.navigationBar];
             }
@@ -717,7 +719,7 @@ LMControlBarViewDelegate
     NSLog(@"Dick is not a bone 哈哈哈");
     
 	if(self.originalPoint.y == 0){
-		self.originalPoint = self.view.frame.origin;
+		self.originalPoint = self.rootView.frame.origin;
 		self.currentPoint = self.nowPlayingCoreView.frame.origin;
 	}
 	CGFloat totalTranslation = translation.y + (self.currentPoint.y-self.originalPoint.y);
@@ -805,6 +807,8 @@ LMControlBarViewDelegate
 		self.navigationBar.layer.opacity = willBeLandscape ? 0.0 : 1.0;
 		self.landscapeNavigationBar.layer.opacity = !willBeLandscape ? 0.0 : 1.0;
 		
+		self.navigationBar.frame = CGRectMake(0, 0, self.view.frame.size.width, willBeLandscape ? 0 : 64.0);
+		
 		self.statusBarBlurView.layer.opacity = willBeLandscape ? 0.0 : 1.0;
 		
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
@@ -814,15 +818,18 @@ LMControlBarViewDelegate
 		self.layoutManager.traitCollection = self.traitCollection;
 		[self.layoutManager traitCollectionDidChange:previousCollection];
 		
-		self.layoutManager.size = self.view.frame.size;
+		self.layoutManager.size = self.rootView.frame.size;
 		
 		self.buttonNavigationBarHeightConstraint.constant = previousButtonBarSizeConstraintConstant;
 		
 		[self setStatusBarBlurHidden:[self prefersStatusBarHidden]];
 		
-		
 		self.navigationBar.hidden = willBeLandscape;
 		self.landscapeNavigationBar.hidden = !willBeLandscape;
+		
+		
+		[self.rootView layoutIfNeeded];
+		
 		
 		[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
 			[UIView animateWithDuration:0.25 animations:^{
@@ -853,6 +860,13 @@ LMControlBarViewDelegate
     [super viewDidLoad];
     // Do any additional setup after loading the view
 	
+	self.rootView = [LMView newAutoLayoutView];
+	self.rootView.backgroundColor = [UIColor magentaColor];
+	[self.view addSubview:self.rootView];
+	
+	[self.rootView autoPinEdgesToSuperviewEdges];
+	
+	
 	self.view.backgroundColor = [UIColor lightGrayColor];
 	
 	self.navigationController.navigationBarHidden = YES;
@@ -872,126 +886,11 @@ LMControlBarViewDelegate
 	
 	NSLog(@"Frame set %@", NSStringFromCGRect(self.view.frame));
 	
-//	UILabel *shitpost = [UILabel newAutoLayoutView];
-//	shitpost.text = @"你智障 ;)";
-//	shitpost.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:20.0f];
-//	shitpost.textColor = [UIColor blackColor];
-//	shitpost.backgroundColor = [UIColor whiteColor];
-//	shitpost.textAlignment = NSTextAlignmentCenter;
-//	[self.view addSubview:shitpost];
-//	
-//	[shitpost autoPinEdgesToSuperviewEdges];
-//	
-//	return;
-	
-//	LMButtonBar *buttonBar = [LMButtonBar newAutoLayoutView];
-//	buttonBar.amountOfButtons = 3;
-//	buttonBar.buttonIconsArray = @[ @(LMIconBrowse), @(LMIconMiniplayer), @(LMIconSource) ];
-//	buttonBar.buttonScaleFactorsArray = @[ @(1.0/2.5), @(1.0/2.5), @(1.0/2.5) ];
-//	buttonBar.buttonIconsToInvertArray = @[ @(LMNavigationTabBrowse), @(LMNavigationTabView) ];
-////	buttonBar.delegate = self;
-//	buttonBar.backgroundColor = [UIColor whiteColor];
-//	[self.view addSubview:buttonBar];
-//	
-////	[self.view beginAddingNewLandscapeConstraints];
-//	[buttonBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
-//	[buttonBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-//	[buttonBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-//	[buttonBar autoSetDimension:ALDimensionWidth toSize:LMNavigationBarTabWidth];
-//	
-//	return;
-	
-//	LMBrowsingBar *browsingBar = [LMBrowsingBar newAutoLayoutView];
-//	browsingBar.backgroundColor = [UIColor cyanColor];
-//	[self.view addSubview:browsingBar];
-//	
-//	[browsingBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
-//	[browsingBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-//	[browsingBar autoCenterInSuperview];
-//	[browsingBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(1.0/20.0)];
-//	
-//	return;
-	
-//	LMControlBarView *controlBarTest = [LMControlBarView newAutoLayoutView];
-//	controlBarTest.delegate = self;
-//	controlBarTest.backgroundColor = [UIColor orangeColor];
-//	[self.view addSubview:controlBarTest];
-//	
-//	[controlBarTest autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-//	[controlBarTest autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-//	[controlBarTest autoAlignAxisToSuperviewAxis:ALAxisVertical];
-//	[controlBarTest autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/9.0)];
-//	
-//	[controlBarTest setup];
-//	
-//	return;
-//	
-//	LMCompactBrowsingView *compactBrowsingView = [LMCompactBrowsingView newAutoLayoutView];
-//	[self.view addSubview:compactBrowsingView];
-//	
-//	[compactBrowsingView autoPinEdgesToSuperviewEdges];
-//	
-//	return;
-	
-//	LMMiniPlayerCoreView *miniplayerTest = [LMMiniPlayerCoreView newAutoLayoutView];
-////	miniplayerTest.backgroundColor = [UIColor orangeColor];
-//	[self.view addSubview:miniplayerTest];
-//	
-//	[miniplayerTest autoPinEdgeToSuperviewEdge:ALEdgeTop];
-//	[miniplayerTest autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-//	[miniplayerTest autoCenterInSuperview];
-//	[miniplayerTest autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(1.0/2.8)];
-//	
-//	return;
-
-	
-//	LMNowPlayingCoreView *coreView = [LMNowPlayingCoreView newAutoLayoutView];
-//	[self.view addSubview:coreView];
-//	
-//	[coreView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.view];
-//	[coreView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.view];
-//	[coreView autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
-//	[coreView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:1.0];
-//
-//	return;
-
-//	NSTimeInterval startTime = [[NSDate new]timeIntervalSince1970];
-//
-//	NSArray *ids = @[ @(5172712687844084401), @(5172712687844084402), @(5172712687844084400), @(5172712687844084404),
-//					  @(5172712687844084399), @(5172712687844084405), @(5172712687844084406), @(5172712687844084408) ];
-//	NSInteger itemCount = 0;
-//	
-//	for(NSNumber *theid in ids){
-//		MPMediaPropertyPredicate *predicate = [MPMediaPropertyPredicate predicateWithValue:theid forProperty:MPMediaItemPropertyPersistentID];
-//		
-//		MPMediaQuery *mediaQuery = [[MPMediaQuery alloc] initWithFilterPredicates:[NSSet setWithObject:predicate]];
-//		
-//		NSArray *items = mediaQuery.items;
-//		for(MPMediaItem *item in items){
-//			itemCount++;
-//			NSLog(@"Got item %@", item.title);
-//		}
-//	}
-//	
-//	NSTimeInterval endTime = [[NSDate new]timeIntervalSince1970];
-//	
-//	NSLog(@"Got %ld items in %f seconds.", itemCount, endTime-startTime);
-	
-//	
-//	NSArray *collections = mediaQuery.collections;
-//	for(MPMediaItemCollection *collection in collections){
-//		NSArray *items = collection.items;
-//		for(MPMediaItem *item in items){
-//			NSLog(@"Item %@", item.title);
-//		}
-//	}
-	
-//	return;
 	    
 	self.splashImageView = [UIImageView newAutoLayoutView];
 	self.splashImageView.image = [UIImage imageNamed:self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular ? @"splash_landscape_lighter.png" : @"splash_wings.png"];
 	self.splashImageView.contentMode = UIViewContentModeScaleAspectFill;
-	[self.view addSubview:self.splashImageView];
+	[self.rootView addSubview:self.splashImageView];
 	
 	[self.splashImageView autoPinEdgesToSuperviewEdges];
     
@@ -1002,84 +901,41 @@ LMControlBarViewDelegate
         alertView.body = NSLocalizedString(@"NoiPadSupport", nil);
         alertView.alertOptionColours = @[];
         alertView.alertOptionTitles = @[];
-        [alertView launchOnView:self.view withCompletionHandler:nil];
+        [alertView launchOnView:self.rootView withCompletionHandler:nil];
         
         return;
     }
-	    
-//#ifdef SPOTIFY
-//	[[LMSpotifyLibrary sharedLibrary] buildDatabase];
-//#endif
-//	
-//	
-//	return;
-    
-    
-    
-//    [[LMImageManager sharedImageManager] testDownloadWithCallback:^(UIImage *croppedImage) {
-//        UIImageView *hangOnImage = [UIImageView newAutoLayoutView];
-//        hangOnImage.image = croppedImage;
-//        hangOnImage.contentMode = UIViewContentModeScaleAspectFill;
-//        [self.view addSubview:hangOnImage];
-//        
-//        [hangOnImage autoCenterInSuperview];
-//        [hangOnImage autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
-//        [hangOnImage autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.view];
-//    }];
-//    
-//    return;
-    
-    
-//    if([LMTutorialView tutorialShouldRunForKey:LMTutorialKeyBottomNavigation] || true){
-//        LMTutorialView *tutorialView = [[LMTutorialView alloc] initForAutoLayoutWithTitle:NSLocalizedString(@"TutorialBottomNavigationTitle", nil)
-//                                                                              description:NSLocalizedString(@"TutorialBottomNavigationDescription", nil)
-//                                                                                      key:LMTutorialKeyBottomNavigation];
-//        [self.view addSubview:tutorialView];
-//        tutorialView.boxAlignment = LMTutorialViewAlignmentBottom;
-//        tutorialView.arrowAlignment = LMTutorialViewAlignmentTop;
-//        tutorialView.icon = [LMAppIcon imageForIcon:LMIconBug];
-//        tutorialView.leadingLayoutConstraint = [tutorialView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-//        [tutorialView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
-//        [tutorialView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-//        [tutorialView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-//    }
-//    else{
-//        NSLog(@":)");
-//    }
 	
-#ifdef SPOTIFY
-	SPTAuth *authorization = [SPTAuth defaultInstance];
-	SPTSession *session = authorization.session;
 	
-	if(!session.isValid){
-		NSLog(@"Session isn't valid, renewing first.");
-		[authorization renewSession:session callback:^(NSError *error, SPTSession *newSession) {
-			if(error){
-				NSLog(@"Error renewing session: %@", error);
-				return;
-			}
-			
-			authorization.session = newSession;
-			
-			[self viewDidLoad];
-		}];
-		return;
+	NSArray *sourceTitles = @[
+							  @"Artists", @"Albums", @"Titles", @"Playlists", @"Genres", @"Compilations", @"Settings", @"ReportBugOrSendFeedback"
+							  ];
+	NSArray *sourceSubtitles = @[
+								 @"", @"", @"", @"", @"", @"", @"", @""
+								 ];
+	LMIcon sourceIcons[] = {
+		LMIconArtists, LMIconAlbums, LMIconTitles, LMIconPlaylists, LMIconGenres, LMIconCompilations, LMIconSettings, LMIconBug
+	};
+	BOOL notHighlight[] = {
+		NO, NO, NO, NO, NO, NO, YES, YES
+	};
+	
+	
+	NSMutableArray *sources = [NSMutableArray new];
+	
+	for(int i = 0; i < sourceTitles.count; i++){
+		NSString *subtitle = [sourceSubtitles objectAtIndex:i];
+		LMSource *source = [LMSource sourceWithTitle:NSLocalizedString([sourceTitles objectAtIndex:i], nil)
+										 andSubtitle:[subtitle isEqualToString:@""]  ? nil : NSLocalizedString(subtitle, nil)
+											 andIcon:sourceIcons[i]];
+		source.shouldNotHighlight = notHighlight[i];
+		source.delegate = self;
+		source.sourceID = sourceIcons[i];
+		[sources addObject:source];
 	}
-	else{
-		NSLog(@"Spotify session is valid!");
-	}
-#endif
 	
-//	self.titleView = [LMTitleView newAutoLayoutView];
-//	self.titleView.backgroundColor = [UIColor redColor];
-//	[self.view addSubview:self.titleView];
-//	
-//	[self.titleView autoPinEdgesToSuperviewEdges];
-//	
-//	[self.titleView setup];
-////	self.titleView.hidden = YES;
-//	
-//	return;
+	self.sourcesForSourceSelector = [NSArray arrayWithArray:sources];
+	
 	
 #ifdef SKIP_ONBOARDING
 	if(true == false){
@@ -1116,65 +972,19 @@ LMControlBarViewDelegate
 
 						LMPebbleManager *pebbleManager = [LMPebbleManager sharedPebbleManager];
 						[pebbleManager attachToViewController:self];
-
-#ifdef SPOTIFY
-						NSArray *sourceTitles = @[
-												  @"Artists", @"Albums", @"Titles", @"Playlists", @"Settings", @"ReportBugOrSendFeedback"
-												  ];
-						NSArray *sourceSubtitles = @[
-													 @"", @"", @"", @"", @"", @""
-													 ];
-						LMIcon sourceIcons[] = {
-							LMIconArtists, LMIconAlbums, LMIconTitles, LMIconPlaylists, LMIconSettings, LMIconBug
-						};
-						BOOL notHighlight[] = {
-							NO, NO, NO, NO, YES, YES
-						};
-#else
-						NSArray *sourceTitles = @[
-												  @"Artists", @"Albums", @"Titles", @"Playlists", @"Genres", @"Compilations", @"Settings", @"ReportBugOrSendFeedback"
-												  ];
-						NSArray *sourceSubtitles = @[
-													 @"", @"", @"", @"", @"", @"", @"", @""
-													 ];
-						LMIcon sourceIcons[] = {
-							LMIconArtists, LMIconAlbums, LMIconTitles, LMIconPlaylists, LMIconGenres, LMIconCompilations, LMIconSettings, LMIconBug
-						};
-						BOOL notHighlight[] = {
-							NO, NO, NO, NO, NO, NO, YES, YES
-						};
-#endif
-						
-						NSMutableArray *sources = [NSMutableArray new];
-						
-						for(int i = 0; i < sourceTitles.count; i++){
-							NSString *subtitle = [sourceSubtitles objectAtIndex:i];
-							LMSource *source = [LMSource sourceWithTitle:NSLocalizedString([sourceTitles objectAtIndex:i], nil)
-															 andSubtitle:[subtitle isEqualToString:@""]  ? nil : NSLocalizedString(subtitle, nil)
-																 andIcon:sourceIcons[i]];
-							source.shouldNotHighlight = notHighlight[i];
-							source.delegate = self;
-							source.sourceID = sourceIcons[i];
-							[sources addObject:source];
-						}
-						
-						self.sourcesForSourceSelector = [NSArray arrayWithArray:sources];
 						
 						
 						
-						self.navigationBar = [LMNavigationBar newAutoLayoutView];
+						self.navigationBar = [[LMNavigationBar alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 64.0f)];
 						self.navigationBar.delegate = self;
 						[self.navigationController.view addSubview:self.navigationBar];
 						
-						//						self.navigationController.navigationBar
-						
-						[self.navigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-						[self.navigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-
+//						[self.navigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+//						[self.navigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+//						[self.navigationBar autoSetDimension:ALDimensionHeight toSize:64.0f];
 						
 						self.navigationBar.barTintColor = [UIColor whiteColor];
 						self.navigationBar.tintColor = [UIColor blackColor];
-						self.navigationBar.backgroundColor = [UIColor redColor];
 						self.navigationBar.translucent = NO;
 						
 						self.navigationBar.layer.shadowColor = [UIColor blackColor].CGColor;
@@ -1182,159 +992,39 @@ LMControlBarViewDelegate
 						self.navigationBar.layer.shadowOffset = CGSizeMake(0, self.navigationBar.layer.shadowRadius/2);
 						self.navigationBar.layer.shadowOpacity = 0.25f;
 						
-						
-						self.landscapeNavigationBar = [LMLandscapeNavigationBar newAutoLayoutView];
-						self.landscapeNavigationBar.delegate = self;
-						[self.navigationController.view addSubview:self.landscapeNavigationBar];
-						
-						[self.landscapeNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-						[self.landscapeNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
-						[self.landscapeNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-						[self.landscapeNavigationBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.navigationBar];
-						
-						self.landscapeNavigationBar.layer.shadowColor = [UIColor blackColor].CGColor;
-						self.landscapeNavigationBar.layer.shadowRadius = WINDOW_FRAME.size.width / 45 / 2;
-						self.landscapeNavigationBar.layer.shadowOffset = CGSizeMake(0, self.navigationBar.layer.shadowRadius/2);
-						self.landscapeNavigationBar.layer.shadowOpacity = 0.25f;
-						
-						
-						self.navigationBar.hidden = self.layoutManager.isLandscape;
-						self.navigationBar.layer.opacity = self.navigationBar.hidden ? 0.0 : 1.0;
-						self.landscapeNavigationBar.hidden = !self.layoutManager.isLandscape;
-						self.landscapeNavigationBar.layer.opacity = self.landscapeNavigationBar.hidden ? 0.0 : 1.0;
-						
 //						self.navigationBar.hidden = YES;
-						
-						//						UIBarButtonItem *barButtonItem = [[UIBarButtonItem alloc]initWithTitle:@"Hey" style:UIBarButtonItemStylePlain target:self action:nil];
-						
-						
-						UIView *titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
-						titleView.backgroundColor = [UIColor orangeColor];
-						
-						UIImageView *titleImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
-						titleImageView.contentMode = UIViewContentModeScaleAspectFit;
-						titleImageView.image = [LMAppIcon imageForIcon:LMIconNoAlbumArt75Percent];
-						titleImageView.userInteractionEnabled = YES;
-						
-						UITapGestureRecognizer *nowPlayingTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(launchNowPlayingFromNavigationBar)];
-						[titleImageView addGestureRecognizer:nowPlayingTapGestureRecognizer];
-						
-						
-						UINavigationItem *navigationItem = [[UINavigationItem alloc]initWithTitle:@""];
-						navigationItem.titleView = titleImageView;
-						//						navigationItem.rightBarButtonItem = barButtonItem;
-						
-						[self.navigationBar pushNavigationItem:navigationItem animated:YES];
-						
-						self.navigationController.delegate = self;
-						
-						
-						
-						
-						self.buttonNavigationBar = [LMButtonNavigationBar newAutoLayoutView];
-						self.buttonNavigationBar.rootViewController = self;
-						self.buttonNavigationBar.sourcesForSourceSelector = self.sourcesForSourceSelector;
-						self.buttonNavigationBar.delegate = self;
-						self.buttonNavigationBar.searchBarDelegate = self;
-						self.buttonNavigationBar.letterTabBarDelegate = self;
-						[self.navigationController.rootView addSubview:self.buttonNavigationBar];
-						
-//						self.navigationController.rootView.hidden = YES;
-						
-						self.buttonNavigationBar.backgroundColor = [UIColor purpleColor];
-						
-						NSLog(@"Class %@", [self.navigationController.view class]);
-						
-						[self.navigationController.rootView beginAddingNewPortraitConstraints];
-						[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-						[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-						[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-						/* self.buttonNavigationBarHeightConstraint = */
-						[self.buttonNavigationBar beginAddingNewPortraitConstraints];
-						[self.buttonNavigationBar autoSetDimension:ALDimensionHeight toSize:0.0];
-						
-						[self.navigationController.rootView beginAddingNewLandscapeConstraints];
-						[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-						[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
-						[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-						[self.buttonNavigationBar beginAddingNewLandscapeConstraints];
-						
-						self.buttonNavigationBar.hidden = YES;
-						
-						/* NSLayoutConstraint *widthConstraint = */ [self.buttonNavigationBar autoSetDimension:ALDimensionWidth toSize:0.0];
-//						if(self.layoutManager.isLandscape){
-//							self.buttonNavigationBarHeightConstraint = widthConstraint;
-//						}
-						
-						[self.navigationController.rootView endAddingNewConstraints];
-						[self.buttonNavigationBar endAddingNewConstraints];
-						
-						self.musicPlayer.navigationBar = self.buttonNavigationBar;
-						
-						
-//						UIPanGestureRecognizer *miniPlayerDragUpPanGesture =
-//							[[UIPanGestureRecognizer alloc] initWithTarget:self
-//																	action:@selector(panNowPlayingUp:)];
-//						miniPlayerDragUpPanGesture.delegate = self;
-//						[self.buttonNavigationBar.miniPlayerView addGestureRecognizer:miniPlayerDragUpPanGesture];
-//						
-						
-						
-						self.nowPlayingCoreView = [LMNowPlayingCoreView newAutoLayoutView];
-						self.nowPlayingCoreView.rootViewController = self;
-						[self.navigationController.view addSubview:self.nowPlayingCoreView];
-						
-						[self.nowPlayingCoreView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-						[self.nowPlayingCoreView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-						self.nowPlayingCoreView.topConstraint = [self.nowPlayingCoreView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:self.view.frame.size.height];
-						[self.nowPlayingCoreView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.navigationController.view];
-						
-						
-						
-						self.titleView = [LMTitleView newAutoLayoutView];
-						self.titleView.backgroundColor = [UIColor whiteColor];
-                        self.titleView.rootViewController = self;
-						[self.view addSubview:self.titleView];
 
-						[self.titleView autoPinEdgesToSuperviewEdges];
-
-						[self.titleView setup];
-						self.titleView.hidden = YES;
 						
 						
 						
 						self.compactView = [LMCompactBrowsingView newAutoLayoutView];
 						self.compactView.rootViewController = self;
-						[self.view addSubview:self.compactView];
+						[self.rootView addSubview:self.compactView];
 						
+						[self.rootView beginAddingNewPortraitConstraints];
+						[self.compactView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.navigationBar];
 						[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-						[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 						[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-						[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:64];
-						//Stuck on the road with no place to call home, had to just learn the whole game on my own!
-						self.compactView.hidden = NO;
-		
-				
+						[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+						
+						[self.rootView beginAddingNewLandscapeConstraints];
+						[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+						[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+						[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+						[self.compactView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.rootView withMultiplier:0.75];
+						
+						[self.rootView endAddingNewConstraints];
+						
+						
+						
+						
+						
+						[self setupBrowsingViewWithMusicType:LMMusicTypeAlbums];
+						
+						
 						[self.musicPlayer addMusicDelegate:self];
 						
 						
-//						[NSTimer scheduledTimerWithTimeInterval:1.0
-//														 target:self selector:@selector(showWhatsPoppin) userInfo:nil repeats:NO];
-						
-//						UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
-						self.statusBarBlurView = [UIView newAutoLayoutView];
-						self.statusBarBlurView.backgroundColor = [UIColor whiteColor];
-//						self.statusBarBlurView.translatesAutoresizingMaskIntoConstraints = NO;
-						
-						[self.navigationController.view addSubview:self.statusBarBlurView];
-						
-						[self.statusBarBlurView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-						[self.statusBarBlurView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-						self.statusBarBlurViewTopConstraint = [self.statusBarBlurView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-						self.statusBarBlurViewHeightConstraint = [self.statusBarBlurView autoSetDimension:ALDimensionHeight toSize:20*[LMSettings shouldShowStatusBar]];
-                        
-                        [self.navigationBar autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.statusBarBlurView];
-
 						
 						LMImageManager *imageManager = [LMImageManager sharedImageManager];
 						imageManager.viewToDisplayAlertsOn = self.navigationController.view;
@@ -1345,9 +1035,7 @@ LMControlBarViewDelegate
 						
 						NSLog(@"Took %f seconds.", (endTime-startTime));
 						
-//						NSLog(@"Nice algorithm %@", [self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:[self.musicPlayer queryCollectionsForMusicType:LMMusicTypeAlbums]
-//																									 withAssociatedMusicType:LMMusicTypeAlbums]);
-						
+
 						self.loaded = YES;
 						
 						[UIView animateWithDuration:0.25 animations:^{
@@ -1359,19 +1047,11 @@ LMControlBarViewDelegate
                                 [self launchNowPlayingFromNavigationBar];
                             }
                         };
-                        
-//                        NSUserDefaults* suserDefaults = [NSUserDefaults standardUserDefaults];
-//                        [suserDefaults removeObjectForKey:LMTutorialKeyTopBar];
-//                        [suserDefaults removeObjectForKey:LMTutorialKeyMiniPlayer];
-//                        [suserDefaults removeObjectForKey:LMTutorialKeyBottomNavigation];
-//                        [suserDefaults removeObjectForKey:LMTutorialKeyNowPlaying];
-//                        [suserDefaults removeObjectForKey:@"LMTutorialViewDontShowHintsKey"];
-//                        [suserDefaults synchronize];
 						
                         
                         [NSTimer scheduledTimerWithTimeInterval:1.0 block:^{
                             if([LMTutorialView tutorialShouldRunForKey:LMTutorialKeyBottomNavigation]){
-                                self.view.userInteractionEnabled = NO;
+                                self.rootView.userInteractionEnabled = NO;
                                 self.buttonNavigationBar.userInteractionEnabled = NO;
                                 
                                 LMTutorialView *tutorialView = [[LMTutorialView alloc] initForAutoLayoutWithTitle:NSLocalizedString(@"TutorialMainNavigationTitle", nil)
@@ -1383,29 +1063,22 @@ LMControlBarViewDelegate
 //                                tutorialView.icon = [LMAppIcon imageForIcon:LMIconLookAndFeel];
                                 tutorialView.leadingLayoutConstraint = [tutorialView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
                                 tutorialView.delegate = self;
-                                [tutorialView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
+                                [tutorialView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.rootView];
                                 [tutorialView autoPinEdgeToSuperviewEdge:ALEdgeTop];
                                 [tutorialView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.buttonNavigationBar];
                             }
                         } repeats:NO];
-                        
-                        
-//						[self musicLibraryDidChange];
 						
-//						[self launchNowPlayingFromNavigationBar];
 						
 						[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
-//							LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
-//							settingsViewController.coreViewController = self;
-//							[self.navigationController pushViewController:settingsViewController animated:YES];
-							
-//							[self.buttonNavigationBar completelyHide];
-//							self.buttonNavigationBar.hidden = YES;
-//							self.nowPlayingCoreView.hidden = YES;
+							self.nowPlayingCoreView.hidden = YES;
 							
 							[self.buttonNavigationBar setSelectedTab:LMNavigationTabBrowse];
 							
 							[self setStatusBarBlurHidden:[self prefersStatusBarHidden]];
+							
+							
+							self.navigationController.rootView.hidden = YES;
 						} repeats:NO];
 					});
 					break;

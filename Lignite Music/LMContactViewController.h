@@ -11,6 +11,6 @@
 
 @interface LMContactViewController : UIViewController
 
-@property LMView *view;
+@property (null_resettable, nonatomic,strong) LMView *view;
 
 @end
