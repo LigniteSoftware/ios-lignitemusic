@@ -477,26 +477,6 @@ LMControlBarViewDelegate
 	[self.landscapeNavigationBar setMode:LMLandscapeNavigationBarModeOnlyLogo];
 }
 
-- (void)setStatusBarBlurHidden:(BOOL)hidden {
-	[self.navigationController.view layoutIfNeeded];
-	
-	if(self.currentDetailViewController){
-		[UIView animateWithDuration:0.25 animations:^{
-			[self.currentDetailViewController setNeedsStatusBarAppearanceUpdate];
-		}];
-		if(self.currentDetailViewController.nextDetailViewController){
-			[UIView animateWithDuration:0.25 animations:^{
-				[self.currentDetailViewController.nextDetailViewController setNeedsStatusBarAppearanceUpdate];
-			}];
-		}
-	}
-	
-	[UIView animateWithDuration:0.25 animations:^{
-//		[self setNeedsStatusBarAppearanceUpdate];
-		[self.navigationController.view layoutIfNeeded];
-	}];
-}
-
 - (void)requiredHeightForNavigationBarChangedTo:(CGFloat)requiredHeight withAnimationDuration:(CGFloat)animationDuration {
 //	NSLog(@"rHeight changed to %f", requiredHeight);
 	
@@ -632,7 +612,6 @@ LMControlBarViewDelegate
 		if(finished){
 			[UIView animateWithDuration:0.25 animations:^{
 				[self setNeedsStatusBarAppearanceUpdate];
-				[self setStatusBarBlurHidden:self.nowPlayingCoreView.isOpen];
 			}];
 		}
 	}];
@@ -725,7 +704,6 @@ LMControlBarViewDelegate
 			if(finished){
 				[UIView animateWithDuration:0.25 animations:^{
 					[self setNeedsStatusBarAppearanceUpdate];
-					[self setStatusBarBlurHidden:self.nowPlayingCoreView.isOpen];
 				}];
 			}
 		}];
@@ -791,8 +769,6 @@ LMControlBarViewDelegate
 		self.layoutManager.size = self.rootView.frame.size;
 		
 		self.buttonNavigationBarHeightConstraint.constant = previousButtonBarSizeConstraintConstant;
-		
-		[self setStatusBarBlurHidden:[self prefersStatusBarHidden]];
 		
 		self.navigationBar.hidden = willBeLandscape;
 		self.landscapeNavigationBar.hidden = !willBeLandscape;
@@ -1110,9 +1086,6 @@ LMControlBarViewDelegate
 //							self.nowPlayingCoreView.hidden = YES;
 							
 							[self.buttonNavigationBar setSelectedTab:LMNavigationTabBrowse];
-							
-							[self setStatusBarBlurHidden:[self prefersStatusBarHidden]];
-							
 							
 							self.navigationController.rootView.hidden = YES;
 						} repeats:NO];

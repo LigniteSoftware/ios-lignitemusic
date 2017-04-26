@@ -232,7 +232,6 @@
                     if(finished){
                         [UIView animateWithDuration:0.25 animations:^{
                             [self.rootViewController setNeedsStatusBarAppearanceUpdate];
-                            [self.rootViewController setStatusBarBlurHidden:self.isOpen];
                         }];
                     }
                 }];

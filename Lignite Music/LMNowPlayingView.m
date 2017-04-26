@@ -596,7 +596,6 @@
 			if(finished){
 				[UIView animateWithDuration:0.25 animations:^{
 					[self.coreViewController setNeedsStatusBarAppearanceUpdate];
-					[self.coreViewController setStatusBarBlurHidden:self.isOpen];
 				}];
 			}
 		}];

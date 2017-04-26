@@ -573,8 +573,6 @@
 		[self.coreViewController setNeedsStatusBarAppearanceUpdate];
 		[self setNeedsStatusBarAppearanceUpdate];
 	}];
-	
-	[(LMCoreViewController*)self.coreViewController setStatusBarBlurHidden:!switchView.on];
 }
 
 //- (void)didChangeHighestResolutionSwitchView:(UISwitch*)switchView {
@@ -644,10 +642,6 @@
 
 - (UIStatusBarAnimation)preferredStatusBarUpdateAnimation {
 	return UIStatusBarAnimationSlide;
-}
-
-- (void)viewDidAppear:(BOOL)animated {
-	[(LMCoreViewController*)self.coreViewController setStatusBarBlurHidden:![LMSettings shouldShowStatusBar]];
 }
 
 - (void)loadView {
