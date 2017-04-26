@@ -299,7 +299,6 @@ LMControlBarViewDelegate
 	}
 #endif
 	self.compactView.musicType = musicType;
-	self.compactView.musicType = musicType;
 	
 	[self.compactView reloadContents];
 	
@@ -975,6 +974,7 @@ LMControlBarViewDelegate
 						
 						
 						
+						
 						self.navigationBar = [[LMNavigationBar alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 64.0f)];
 						self.navigationBar.delegate = self;
 						[self.navigationController.view addSubview:self.navigationBar];
@@ -992,7 +992,22 @@ LMControlBarViewDelegate
 						self.navigationBar.layer.shadowOffset = CGSizeMake(0, self.navigationBar.layer.shadowRadius/2);
 						self.navigationBar.layer.shadowOpacity = 0.25f;
 						
-//						self.navigationBar.hidden = YES;
+						UIView *titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
+						titleView.backgroundColor = [UIColor orangeColor];
+						
+						UIImageView *titleImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
+						titleImageView.contentMode = UIViewContentModeScaleAspectFit;
+						titleImageView.image = [LMAppIcon imageForIcon:LMIconNoAlbumArt75Percent];
+						titleImageView.userInteractionEnabled = YES;
+						
+						UITapGestureRecognizer *nowPlayingTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(launchNowPlayingFromNavigationBar)];
+						[titleImageView addGestureRecognizer:nowPlayingTapGestureRecognizer];
+						
+						UINavigationItem *navigationItem = [[UINavigationItem alloc]initWithTitle:@""];
+						navigationItem.titleView = titleImageView;
+						[self.navigationBar pushNavigationItem:navigationItem animated:YES];
+						
+						
 						
 						
 						self.landscapeNavigationBar = [LMLandscapeNavigationBar newAutoLayoutView];
@@ -1044,9 +1059,21 @@ LMControlBarViewDelegate
 						
 						
 						
+						self.titleView = [LMTitleView newAutoLayoutView];
+						self.titleView.backgroundColor = [UIColor whiteColor];
+						self.titleView.rootViewController = self;
+						[self.rootView addSubview:self.titleView];
+						
+						[self.titleView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.compactView];
+						[self.titleView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.compactView];
+						[self.titleView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.compactView];
+						[self.titleView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.compactView];
+						
+						[self.titleView setup];
+//						self.titleView.hidden = YES;
 						
 						
-						[self setupBrowsingViewWithMusicType:LMMusicTypeAlbums];
+					
 						
 						
 						[self.musicPlayer addMusicDelegate:self];
@@ -1107,6 +1134,9 @@ LMControlBarViewDelegate
 							
 							self.navigationController.rootView.hidden = YES;
 						} repeats:NO];
+						
+						
+						[self setupBrowsingViewWithMusicType:LMMusicTypeArtists];
 					});
 					break;
 				}

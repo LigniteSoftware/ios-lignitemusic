@@ -391,10 +391,7 @@
     self.songListTableView.secondaryDelegate = self;
 	[self addSubview:self.songListTableView];
 	
-	[self.songListTableView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-	[self.songListTableView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	[self.songListTableView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-	[self.songListTableView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:64];
+	[self.songListTableView autoPinEdgesToSuperviewEdges];
 	
 	if(self.musicTitles.count == 0){
 		UILabel *noObjectsLabel = [UILabel newAutoLayoutView];
