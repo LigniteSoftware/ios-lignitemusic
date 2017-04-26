@@ -45,8 +45,11 @@
 		
 		NSLog(@"Rotating %p...", self);
 		
-		[self removeConstraints:isNowLandscape ? self.portraitConstraints : self.landscapeConstraints];
-		[self addConstraints:isNowLandscape ? self.landscapeConstraints : self.portraitConstraints];
+		[NSLayoutConstraint deactivateConstraints:isNowLandscape ? self.portraitConstraints : self.landscapeConstraints];
+		[NSLayoutConstraint activateConstraints:isNowLandscape ? self.landscapeConstraints : self.portraitConstraints];
+		
+//		[self removeConstraints:isNowLandscape ? self.portraitConstraints : self.landscapeConstraints];
+//		[self addConstraints:isNowLandscape ? self.landscapeConstraints : self.portraitConstraints];
 		
 		[self layoutIfNeeded];
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) { /* Completion code here, if you wish */ }];
@@ -78,7 +81,7 @@
 	if(self.settingLayoutClass != [LMLayoutManager sharedLayoutManager].currentLayoutClass){
 //		NSLog(@"Deactivating %ld %ld", (long)self.settingLayoutClass, (long)[LMLayoutManager sharedLayoutManager].currentLayoutClass);
 		
-		[super removeConstraint:constraint];
+		constraint.active = NO;
 	}
 }
 

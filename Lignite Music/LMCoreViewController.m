@@ -807,7 +807,7 @@ LMControlBarViewDelegate
 		self.navigationBar.layer.opacity = willBeLandscape ? 0.0 : 1.0;
 		self.landscapeNavigationBar.layer.opacity = !willBeLandscape ? 0.0 : 1.0;
 		
-		self.navigationBar.frame = CGRectMake(0, 0, self.view.frame.size.width, willBeLandscape ? 0 : 64.0);
+//		self.navigationBar.frame = CGRectMake(0, 0, self.view.frame.size.width, willBeLandscape ? 0 : 64.0);
 		
 		self.statusBarBlurView.layer.opacity = willBeLandscape ? 0.0 : 1.0;
 		
@@ -993,6 +993,29 @@ LMControlBarViewDelegate
 						self.navigationBar.layer.shadowOpacity = 0.25f;
 						
 //						self.navigationBar.hidden = YES;
+						
+						
+						self.landscapeNavigationBar = [LMLandscapeNavigationBar newAutoLayoutView];
+						self.landscapeNavigationBar.delegate = self;
+						[self.navigationController.view addSubview:self.landscapeNavigationBar];
+						
+						[self.landscapeNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+						[self.landscapeNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
+						[self.landscapeNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+						[self.landscapeNavigationBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.navigationBar];
+						
+						self.landscapeNavigationBar.layer.shadowColor = [UIColor blackColor].CGColor;
+						self.landscapeNavigationBar.layer.shadowRadius = WINDOW_FRAME.size.width / 45 / 2;
+						self.landscapeNavigationBar.layer.shadowOffset = CGSizeMake(0, self.navigationBar.layer.shadowRadius/2);
+						self.landscapeNavigationBar.layer.shadowOpacity = 0.25f;
+						
+						
+						self.navigationBar.hidden = self.layoutManager.isLandscape;
+						self.navigationBar.layer.opacity = self.navigationBar.hidden ? 0.0 : 1.0;
+//						self.navigationBar.frame = CGRectMake(0, 0, self.view.frame.size.width, self.navigationBar.hidden ? 0 : 64.0f);
+						self.landscapeNavigationBar.hidden = !self.layoutManager.isLandscape;
+						self.landscapeNavigationBar.layer.opacity = self.landscapeNavigationBar.hidden ? 0.0 : 1.0;
+
 
 						
 						
@@ -1002,16 +1025,20 @@ LMControlBarViewDelegate
 						[self.rootView addSubview:self.compactView];
 						
 						[self.rootView beginAddingNewPortraitConstraints];
-						[self.compactView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.navigationBar];
+						[NSLayoutConstraint autoSetPriority:UILayoutPriorityDefaultHigh forConstraints:^{
+							[self.compactView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.navigationBar];
+						}];
 						[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 						[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 						[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 						
 						[self.rootView beginAddingNewLandscapeConstraints];
-						[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+						[NSLayoutConstraint autoSetPriority:UILayoutPriorityDefaultHigh forConstraints:^{
+							[self.compactView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.landscapeNavigationBar];
+						}];
 						[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 						[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-						[self.compactView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.rootView withMultiplier:0.75];
+						[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 						
 						[self.rootView endAddingNewConstraints];
 						
