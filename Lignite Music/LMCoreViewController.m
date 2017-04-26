@@ -75,10 +75,6 @@ LMControlBarViewDelegate
 
 @property id currentSource;
 
-@property UIView *statusBarBlurView;
-@property NSLayoutConstraint *statusBarBlurViewHeightConstraint;
-@property NSLayoutConstraint *statusBarBlurViewTopConstraint;
-
 @property UIView *browsingAssistantViewAttachedTo;
 
 @property LMSearchViewController *searchViewController;
@@ -467,18 +463,8 @@ LMControlBarViewDelegate
 }
 
 - (void)viewDidAppear:(BOOL)animated {
-//	NSLog(@"View did appear animated %d", animated);
-	
-//	[self attachNavigationBarToView:self.navigationController.view];
-	
 	self.currentDetailViewController = nil;
 	self.searchViewController = nil;
-	
-//	self.buttonNavigationBar.hidden = NO;
-	
-	if(self.statusBarBlurViewHeightConstraint.constant < 0.1 && ![self prefersStatusBarHidden]){
-		[self setStatusBarBlurHidden:NO];
-	}
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -493,8 +479,6 @@ LMControlBarViewDelegate
 
 - (void)setStatusBarBlurHidden:(BOOL)hidden {
 	[self.navigationController.view layoutIfNeeded];
-	
-	self.statusBarBlurViewHeightConstraint.constant = hidden ? 0 : 20;
 	
 	if(self.currentDetailViewController){
 		[UIView animateWithDuration:0.25 animations:^{
@@ -606,16 +590,6 @@ LMControlBarViewDelegate
         
         [self.settingsCheckTimer invalidate];
         self.settingsCheckTimer = nil;
-        
-        if(![self prefersStatusBarHidden] && self.statusBarBlurViewTopConstraint.constant < 0){
-            [self.navigationController.view layoutIfNeeded];
-            
-//            self.statusBarBlurViewTopConstraint.constant = 0;
-            
-            [UIView animateWithDuration:0.5 animations:^{
-                [self.navigationController.view layoutIfNeeded];
-            }];
-        }
     }
 }
 
@@ -806,10 +780,7 @@ LMControlBarViewDelegate
 		self.navigationBar.layer.opacity = willBeLandscape ? 0.0 : 1.0;
 		self.landscapeNavigationBar.layer.opacity = !willBeLandscape ? 0.0 : 1.0;
 		
-//		self.navigationBar.frame = CGRectMake(0, 0, self.view.frame.size.width, willBeLandscape ? 0 : 64.0);
-		
-		self.statusBarBlurView.layer.opacity = willBeLandscape ? 0.0 : 1.0;
-		
+		self.navigationBar.frame = CGRectMake(0, 0, size.width, 64.0);
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
 		NSLog(@"Rotated");
 		
@@ -1073,6 +1044,17 @@ LMControlBarViewDelegate
 //						self.titleView.hidden = YES;
 						
 						
+						
+						self.nowPlayingCoreView = [LMNowPlayingCoreView newAutoLayoutView];
+						self.nowPlayingCoreView.rootViewController = self;
+						[self.navigationController.view addSubview:self.nowPlayingCoreView];
+						
+						[self.nowPlayingCoreView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+						[self.nowPlayingCoreView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+						[self.nowPlayingCoreView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.navigationController.view];
+						self.nowPlayingCoreView.topConstraint =
+							[self.nowPlayingCoreView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:self.view.frame.size.height];
+
 					
 						
 						
@@ -1125,7 +1107,7 @@ LMControlBarViewDelegate
 						
 						
 						[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
-							self.nowPlayingCoreView.hidden = YES;
+//							self.nowPlayingCoreView.hidden = YES;
 							
 							[self.buttonNavigationBar setSelectedTab:LMNavigationTabBrowse];
 							
