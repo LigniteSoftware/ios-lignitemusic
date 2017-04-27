@@ -48,9 +48,6 @@
 		[NSLayoutConstraint deactivateConstraints:isNowLandscape ? self.portraitConstraints : self.landscapeConstraints];
 		[NSLayoutConstraint activateConstraints:isNowLandscape ? self.landscapeConstraints : self.portraitConstraints];
 		
-//		[self removeConstraints:isNowLandscape ? self.portraitConstraints : self.landscapeConstraints];
-//		[self addConstraints:isNowLandscape ? self.landscapeConstraints : self.portraitConstraints];
-		
 		[self layoutIfNeeded];
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) { /* Completion code here, if you wish */ }];
 }
@@ -70,18 +67,12 @@
 - (void)addConstraint:(NSLayoutConstraint *)constraint {
 //	NSLog(@"Add constraint %@", NSStringFromCGRect(self.frame));
 	
-	[super addConstraint:constraint];
-	
-	if(self.settingLayoutClass == LMLayoutClassAll){
-		return;
+	if(self.settingLayoutClass == [LMLayoutManager sharedLayoutManager].currentLayoutClass || self.settingLayoutClass == LMLayoutClassAll){
+		[super addConstraint:constraint];
 	}
 	
-	(self.settingLayoutClass == LMLayoutClassPortrait) ? [self.portraitConstraints addObject:constraint] : [self.landscapeConstraints addObject:constraint];
-	
-	if(self.settingLayoutClass != [LMLayoutManager sharedLayoutManager].currentLayoutClass){
-//		NSLog(@"Deactivating %ld %ld", (long)self.settingLayoutClass, (long)[LMLayoutManager sharedLayoutManager].currentLayoutClass);
-		
-		constraint.active = NO;
+	if(self.settingLayoutClass != LMLayoutClassAll){
+		(self.settingLayoutClass == LMLayoutClassPortrait) ? [self.portraitConstraints addObject:constraint] : [self.landscapeConstraints addObject:constraint];
 	}
 }
 

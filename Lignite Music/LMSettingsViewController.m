@@ -526,7 +526,6 @@
 //					[(LMCoreViewController*)self.coreViewController setStatusBarBlurHidden:YES];
 					[(LMCoreViewController*)self.coreViewController pushItemOntoNavigationBarWithTitle:NSLocalizedString(@"ContactUs", nil) withNowPlayingButton:NO];
                     
-                    
 					
 					[LMAnswers logCustomEventWithName:@"Viewed Contact Us Screen" customAttributes:nil];
 					break;

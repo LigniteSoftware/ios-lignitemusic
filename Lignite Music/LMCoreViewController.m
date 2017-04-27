@@ -1021,17 +1021,46 @@ LMControlBarViewDelegate
 						
 						
 						
-						self.nowPlayingCoreView = [LMNowPlayingCoreView newAutoLayoutView];
-						self.nowPlayingCoreView.rootViewController = self;
-						[self.navigationController.view addSubview:self.nowPlayingCoreView];
-						
-						[self.nowPlayingCoreView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-						[self.nowPlayingCoreView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-						[self.nowPlayingCoreView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.navigationController.view];
-						self.nowPlayingCoreView.topConstraint =
-							[self.nowPlayingCoreView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:self.view.frame.size.height];
+//						self.nowPlayingCoreView = [LMNowPlayingCoreView newAutoLayoutView];
+//						self.nowPlayingCoreView.rootViewController = self;
+//						[self.navigationController.view addSubview:self.nowPlayingCoreView];
+//						
+//						[self.nowPlayingCoreView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+//						[self.nowPlayingCoreView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+//						[self.nowPlayingCoreView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.navigationController.view];
+//						self.nowPlayingCoreView.topConstraint =
+//							[self.nowPlayingCoreView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:self.view.frame.size.height];
 
 					
+						
+						
+						self.buttonNavigationBar = [LMButtonNavigationBar newAutoLayoutView];
+						self.buttonNavigationBar.rootViewController = self;
+						self.buttonNavigationBar.sourcesForSourceSelector = self.sourcesForSourceSelector;
+						self.buttonNavigationBar.delegate = self;
+						self.buttonNavigationBar.searchBarDelegate = self;
+						self.buttonNavigationBar.letterTabBarDelegate = self;
+						[self.navigationController.rootView addSubview:self.buttonNavigationBar];
+						
+						//						self.navigationController.rootView.hidden = YES;
+						
+//						self.buttonNavigationBar.backgroundColor = [UIColor purpleColor];
+						
+						NSLog(@"Class %@", [self.navigationController.view class]);
+						
+						[self.navigationController.rootView beginAddingNewPortraitConstraints];
+						[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+						[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+						[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+						[self.buttonNavigationBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.navigationController.rootView withMultiplier:(1.0/8.0)];
+						
+						[self.navigationController.rootView beginAddingNewLandscapeConstraints];
+						[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+						[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
+						[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+						[self.buttonNavigationBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.navigationController.rootView withMultiplier:(1.0/8.0)];
+						
+						[self.navigationController.rootView endAddingNewConstraints];
 						
 						
 						[self.musicPlayer addMusicDelegate:self];
@@ -1083,11 +1112,11 @@ LMControlBarViewDelegate
 						
 						
 						[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
-//							self.nowPlayingCoreView.hidden = YES;
+							self.nowPlayingCoreView.hidden = YES;
 							
 							[self.buttonNavigationBar setSelectedTab:LMNavigationTabBrowse];
 							
-							self.navigationController.rootView.hidden = YES;
+//							self.navigationController.rootView.hidden = YES;
 						} repeats:NO];
 						
 						

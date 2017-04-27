@@ -49,13 +49,7 @@
 	return ((self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular)
 			|| self.traitCollection.horizontalSizeClass == self.traitCollection.verticalSizeClass)
 		? LMLayoutClassLandscape : LMLayoutClassPortrait;
-	
-//	return (self.size.height >= self.size.width) ? LMLayoutClassPortrait : LMLayoutClassLandscape;
 }
-
-//- (void)setCurrentLayoutClass:(LMLayoutClass)currentLayoutClass {
-//	_currentLayoutClass = currentLayoutClass;
-//}
 
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
 	for(id<LMLayoutChangeDelegate>delegate in self.delegates){

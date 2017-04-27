@@ -289,34 +289,40 @@
 	[self.searchBarDelegate searchDialogOpened:opened withKeyboardHeight:keyboardHeight];
 }
 
-- (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
-	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-		
-	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-		NSLayoutConstraint *newButtonBarBottomConstraint = self.buttonBarBottomConstraint;
-		
-		CGFloat previousConstant = self.buttonBarBottomConstraint.constant;
-		
-		for(NSLayoutConstraint *constraint in self.constraints){
-			if(constraint.firstItem == self.buttonBar
-				&& (  (constraint.firstAttribute == NSLayoutAttributeBottom && !self.layoutManager.isLandscape)
-				   || (constraint.firstAttribute == NSLayoutAttributeTrailing && self.layoutManager.isLandscape)  )){
-				   
-				NSLog(@"New constraint layout attribute %ld", constraint.firstAttribute);
-				newButtonBarBottomConstraint = constraint;
-			}
-		}
-		
-		self.buttonBarBottomConstraint = newButtonBarBottomConstraint;
-//		self.buttonBarBottomConstraint.constant = -previousConstant;
-		
-		[self.delegate requiredHeightForNavigationBarChangedTo:[self maximizedHeight]
-										 withAnimationDuration:0.25];
-	}];
-}
+//- (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+//	BOOL willBeLandscape = size.width > size.height;
+//	
+//	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+//		for(NSLayoutConstraint *constraint in self.constraints){
+//			if(constraint.firstItem == self.buttonBar){
+//				[self removeConstraint:constraint];
+//			}
+//		}
+//		
+//		if(willBeLandscape){
+//			[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
+//			[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+//			[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+//			[self.buttonBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
+//		}
+//		else{
+//			[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+//			[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+//			[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+//			[self.buttonBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self];
+//		}
+//	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+//		
+//		
+////		[self.delegate requiredHeightForNavigationBarChangedTo:[self maximizedHeight]
+////										 withAnimationDuration:0.25];
+//	}];
+//}
 
 - (void)layoutSubviews {
 //	return;
+	
+	NSLog(@"New frame %@", NSStringFromCGRect(self.frame));
 	
 	if(!self.didLayoutConstraints){
 		self.didLayoutConstraints = YES;
@@ -324,7 +330,7 @@
 		NSLog(@"Did layout constraints!");
 		
 		
-//		self.backgroundColor = [UIColor purpleColor];
+		self.backgroundColor = [UIColor redColor];
 		
 		
 		self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
@@ -335,31 +341,16 @@
 		//Dont even tell me how bad this shit is
 		CGFloat properNum = self.layoutManager.isLandscape ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height;
 		
-	
 		
-		//Setup the order of the views first then later impose constraints 
+		LMView *testView = [LMView newAutoLayoutView];
+		testView.backgroundColor = [UIColor purpleColor];
+		[self addSubview:testView];
 		
-		
-		self.browsingBar = [LMBrowsingBar newAutoLayoutView];
-		self.browsingBar.searchBarDelegate = self;
-		self.browsingBar.letterTabDelegate = self.letterTabBarDelegate;
-		[self addSubview:self.browsingBar];
-		
-		
-//		self.miniPlayerView = [LMMiniPlayerView newAutoLayoutView];
-		// ^ has already been created
-        self.miniPlayerCoreView.rootViewController = self.rootViewController;
-		[self addSubview:self.miniPlayerCoreView];
-		
-		
-		
-		
-		self.sourceSelector = [LMSourceSelectorView newAutoLayoutView];
-		self.sourceSelector.backgroundColor = [UIColor redColor];
-		self.sourceSelector.sources = self.sourcesForSourceSelector;
-		[self addSubview:self.sourceSelector];
-		
-		
+		[testView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[testView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[testView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[testView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.5];
+
 		
 		self.buttonBar = [LMButtonBar newAutoLayoutView];
 		self.buttonBar.amountOfButtons = 3;
@@ -371,152 +362,21 @@
 		[self addSubview:self.buttonBar];
 		
 		
-		NSLog(@"Frame %@", NSStringFromCGRect(WINDOW_FRAME));
-		
-		[self beginAddingNewPortraitConstraints];
-		[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-		[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-		self.buttonBarBottomConstraint = [self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		 [self.buttonBar beginAddingNewPortraitConstraints];
-		[self.buttonBar autoSetDimension:ALDimensionHeight toSize:properNum/8.0];
+//		self.buttonBar.hidden = YES;
+				
+//		[self.buttonBar autoPinEdgesToSuperviewEdges];
 		
 		[self beginAddingNewLandscapeConstraints];
-		[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
-		[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		NSLayoutConstraint *landscapeButtonBarConstraint = [self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-		if(self.layoutManager.isLandscape){
-			self.buttonBarBottomConstraint = landscapeButtonBarConstraint;
-		}
-		 [self.buttonBar beginAddingNewLandscapeConstraints];
-		[self.buttonBar autoSetDimension:ALDimensionWidth toSize:properNum/8.0];
-		
+			[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
+			[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+			[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+			[self.buttonBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
+		[self beginAddingNewPortraitConstraints];
+			[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+			[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+			[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+			[self.buttonBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self];
 		[self endAddingNewConstraints];
-		[self.buttonBar endAddingNewConstraints];
-		
-		
-		self.buttonBarSourceSelectorWarningLabel = [LMLabel newAutoLayoutView];
-		self.buttonBarSourceSelectorWarningLabel.text = NSLocalizedString(@"TapViewAgainToOpenSourceSelector", nil);
-		self.buttonBarSourceSelectorWarningLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:50.0f];
-		self.buttonBarSourceSelectorWarningLabel.textAlignment = NSTextAlignmentCenter;
-		self.buttonBarSourceSelectorWarningLabel.textColor = [UIColor blackColor];
-		self.buttonBarSourceSelectorWarningLabel.backgroundColor = [UIColor whiteColor];
-		self.buttonBarSourceSelectorWarningLabel.topAndBottomPadding = 1.0;
-		self.buttonBarSourceSelectorWarningLabel.userInteractionEnabled = YES;
-        self.buttonBarSourceSelectorWarningLabel.layer.shadowOpacity = 0.25f;
-        self.buttonBarSourceSelectorWarningLabel.layer.shadowOffset = CGSizeMake(0, 0);
-        self.buttonBarSourceSelectorWarningLabel.layer.masksToBounds = NO;
-        self.buttonBarSourceSelectorWarningLabel.layer.shadowRadius = 5;
-		[self addSubview:self.buttonBarSourceSelectorWarningLabel];
-		
-		[self.buttonBarSourceSelectorWarningLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-		[self.buttonBarSourceSelectorWarningLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-		[self.buttonBarSourceSelectorWarningLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.buttonBar];
-		[self.buttonBarSourceSelectorWarningLabel autoMatchDimension:ALDimensionHeight
-													   toDimension:ALDimensionHeight
-															ofView:self.buttonBar
-													withMultiplier:(1.0/3.0)];
-		
-		
-		
-	
-		
-		
-		self.buttonBarBottomWhitespaceView = [LMView newAutoLayoutView];
-		self.buttonBarBottomWhitespaceView.backgroundColor = [UIColor whiteColor];
-		[self.buttonBar addSubview:self.buttonBarBottomWhitespaceView];
-		
-		[self.buttonBarBottomWhitespaceView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.buttonBar];
-		[self.buttonBarBottomWhitespaceView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-		[self.buttonBarBottomWhitespaceView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-		[self.buttonBarBottomWhitespaceView autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height/2.0];
-	
-		
-		
-		[self beginAddingNewPortraitConstraints];
-		[self.miniPlayerCoreView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.buttonBar];
-		[self.miniPlayerCoreView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-		[self.miniPlayerCoreView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-		 [self.miniPlayerCoreView beginAddingNewPortraitConstraints];
-		[self.miniPlayerCoreView autoSetDimension:ALDimensionHeight toSize:properNum/5.0];
-		
-		[self beginAddingNewLandscapeConstraints];
-		[self.miniPlayerCoreView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.buttonBar];
-		[self.miniPlayerCoreView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-		[self.miniPlayerCoreView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		 [self.miniPlayerCoreView beginAddingNewLandscapeConstraints];
-		[self.miniPlayerCoreView autoSetDimension:ALDimensionWidth toSize:properNum/2.8];
-		
-		[self.miniPlayerCoreView endAddingNewConstraints];
-		[self endAddingNewConstraints];
-		
-//		[self.miniPlayerView setup];
-		
-		self.miniPlayerCoreView.backgroundColor = [UIColor blueColor];
-		self.miniPlayerCoreView.layer.shadowColor = [UIColor blackColor].CGColor;
-		self.miniPlayerCoreView.layer.shadowOpacity = 0.25f;
-		self.miniPlayerCoreView.layer.shadowOffset = CGSizeMake(0, 0);
-		self.miniPlayerCoreView.layer.masksToBounds = NO;
-		self.miniPlayerCoreView.layer.shadowRadius = 5;
-//		self.miniPlayerView.hidden = YES;
-		
-		
-		[self beginAddingNewPortraitConstraints];
-		[self.browsingBar autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.buttonBar];
-		[self.browsingBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-		[self.browsingBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-		 [self.browsingBar beginAddingNewPortraitConstraints];
-		[self.browsingBar autoSetDimension:ALDimensionHeight toSize:properNum/15.0];
-//		self.browsingBar.hidden = YES;
-
-		[self beginAddingNewLandscapeConstraints];
-		[self.browsingBar autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.buttonBar];
-		[self.browsingBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
-		[self.browsingBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		 [self.browsingBar beginAddingNewLandscapeConstraints];
-		[self.browsingBar autoSetDimension:ALDimensionWidth toSize:properNum/17.5];
-		
-		[self.browsingBar endAddingNewConstraints];
-		
-		
-		[self beginAddingNewPortraitConstraints];
-		[self.sourceSelector autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
-		[self.sourceSelector autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self];
-		[self.sourceSelector autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.buttonBar withOffset:20];
-		 [self.sourceSelector beginAddingNewPortraitConstraints];
-		[self.sourceSelector autoSetDimension:ALDimensionHeight toSize:properNum-LMNavigationBarTabHeight];
-		
-		[self beginAddingNewLandscapeConstraints];
-		[self.sourceSelector autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.buttonBar];
-		[self.sourceSelector autoPinEdgeToSuperviewEdge:ALEdgeTop];
-		[self.sourceSelector autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		 [self.sourceSelector beginAddingNewLandscapeConstraints];
-		[self.sourceSelector autoSetDimension:ALDimensionWidth toSize:properNum-LMNavigationBarTabWidth];
-		
-		[self.sourceSelector endAddingNewConstraints];
-		[self endAddingNewConstraints];
-		
-		self.musicPlayer.sourceSelector = self.sourceSelector;
-		
-		[self.sourceSelector setup];
-		
-		
-		[self sendSubviewToBack:self.buttonBarSourceSelectorWarningLabel];
-		
-		
-		[self setSelectedTab:LMNavigationTabView];
-		[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
-			[self setSelectedTab:LMNavigationTabMiniplayer];
-		} repeats:NO];
-		
-		
-		self.sourceSelector.hidden = YES;
-//		self.miniPlayerCoreView.hidden = YES;
-		
-//		[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
-//			self.originalPoint = self.buttonBar.frame.origin;
-//			self.currentPoint = self.buttonBar.frame.origin;
-//			[self minimize];
-//		} repeats:NO];
 	}
 }
 

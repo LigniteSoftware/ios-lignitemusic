@@ -919,7 +919,7 @@ BOOL shuffleForDebug = NO;
 	
 	//	NSLog(@"Returning sort");
 	
-	NSLog(@"%ld before %ld after", [mediaQuery collections].count, [collections sortedArrayUsingDescriptors:@[albumSort]].count);
+//	NSLog(@"%ld before %ld after", [mediaQuery collections].count, [collections sortedArrayUsingDescriptors:@[albumSort]].count);
 	
 	return [collections sortedArrayUsingDescriptors:@[albumSort]];
 #endif

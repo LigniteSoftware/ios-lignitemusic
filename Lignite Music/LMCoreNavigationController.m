@@ -21,8 +21,8 @@
 	
 	if(self){
 		self.rootView = [LMView newAutoLayoutView];
-		self.rootView.userInteractionEnabled = NO;
-//		self.rootView.backgroundColor = [UIColor orangeColor];
+		self.rootView.userInteractionEnabled = YES;
+		self.rootView.backgroundColor = [UIColor magentaColor];
 		[self.view addSubview:self.rootView];
 		
 		[self.rootView autoPinEdgesToSuperviewEdges];

@@ -7,11 +7,12 @@
 //
 
 #import <PureLayout/PureLayout.h>
+#import "LMLayoutManager.h"
 #import "LMButtonBar.h"
 #import "LMColour.h"
 #import "LMAppIcon.h"
 
-@interface LMButtonBar()
+@interface LMButtonBar()<LMLayoutChangeDelegate>
 
 /**
  The views for the background of all of the buttons.
@@ -27,7 +28,21 @@
 
 @implementation LMButtonBar
 
-- (void)invertIconForButtonBackgroundView:(UIView*)buttonBackgroundView {
+//- (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+//	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+//		for(UIView *subview in self.subviews){
+//			[subview removeFromSuperview];
+//		}
+//		
+//		self.didLayoutConstraints = NO;
+//		[self setNeedsLayout];
+//		[self layoutIfNeeded];
+//	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+//		
+//	}];
+//}
+
+- (void)invertIconForButtonBackgroundView:(LMView*)buttonBackgroundView {
 	UIImageView *iconView = nil;
 	for(id subview in buttonBackgroundView.subviews){
 		if([subview class] == [UIImageView class]){
@@ -44,13 +59,13 @@
 	return [self.buttonsArray objectAtIndex:index];
 }
 
-- (void)setBackgroundColourForButtonBackgroundView:(UIView*)buttonBackgroundView toColour:(UIColor*)colour animated:(BOOL)animated {
+- (void)setBackgroundColourForButtonBackgroundView:(LMView*)buttonBackgroundView toColour:(UIColor*)colour animated:(BOOL)animated {
 	[UIView animateWithDuration:animated ? 0.10 : 0.0 animations:^{
 		buttonBackgroundView.backgroundColor = colour;
 	}];
 }
 
-- (void)setBackgroundView:(UIView*)backgroundView inverted:(BOOL)inverted {
+- (void)setBackgroundView:(LMView*)backgroundView inverted:(BOOL)inverted {
 	[self invertIconForButtonBackgroundView:backgroundView];
 	[self setBackgroundColourForButtonBackgroundView:backgroundView toColour:inverted ? [UIColor whiteColor] : [LMColour ligniteRedColour] animated:YES];
 }
@@ -71,7 +86,7 @@
 
 - (void)didTapBackgroundView:(UITapGestureRecognizer*)tapGesutre {
 	if(self.delegate) {
-		UIView *tappedView = tapGesutre.view;
+		LMView *tappedView = (LMView*)tapGesutre.view;
 		NSInteger buttonIndex = [self.buttonsArray indexOfObject:tappedView];
 		
 		[self.delegate tappedButtonBarButtonAtIndex:buttonIndex forButtonBar:self];
@@ -79,8 +94,12 @@
 }
 
 - (void)layoutSubviews {
+	NSLog(@"Dig %p frame %@", self, NSStringFromCGRect(self.frame));
+	
 	if(!self.didLayoutConstraints) {
 		self.didLayoutConstraints = YES;
+		
+		self.backgroundColor = [UIColor orangeColor];
 		
 		self.buttonsArray = [NSMutableArray new];
 		self.currentlyHighlightedButtonsArray = [NSMutableArray new];
@@ -125,6 +144,10 @@
 			[self.buttonsArray addObject:newBackgroundView];
 			
 			
+			[self setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
+			[self setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+			
+			
 			UIImageView *sendButtonIcon = [UIImageView newAutoLayoutView];
 			sendButtonIcon.contentMode = UIViewContentModeScaleAspectFit;
 			sendButtonIcon.image = [LMAppIcon imageForIcon:(LMIcon)[[self.buttonIconsArray objectAtIndex:i] unsignedIntegerValue]];
@@ -135,8 +158,11 @@
 			
 			[sendButtonIcon autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 			[sendButtonIcon autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-			[sendButtonIcon autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+			[sendButtonIcon autoCenterInSuperview];
 			[sendButtonIcon autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:newBackgroundView withMultiplier:[[self.buttonScaleFactorsArray objectAtIndex:i] floatValue]];
+			
+			[sendButtonIcon setContentHuggingPriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisVertical];
+			[sendButtonIcon setContentHuggingPriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
 		}
 	}
 	
