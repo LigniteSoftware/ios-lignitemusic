@@ -102,19 +102,22 @@
 		self.toggleButtonBackgroundView.backgroundColor = [LMColour ligniteRedColour];
 		[self addSubview:self.toggleButtonBackgroundView];
 		
-		[self beginAddingNewPortraitConstraints];
-		[self.toggleButtonBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-		[self.toggleButtonBackgroundView autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
-		self.searchButtonWidthConstraint = [self.toggleButtonBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self];
-		[self.toggleButtonBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self];
+		NSArray *toggleButtonBackgroundViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+			[self.toggleButtonBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+			[self.toggleButtonBackgroundView autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+			self.searchButtonWidthConstraint = [self.toggleButtonBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self];
+			[self.toggleButtonBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self];
+		}];
+		[LMLayoutManager addNewPortraitConstraints:toggleButtonBackgroundViewPortraitConstraints];
 		
-		[self beginAddingNewLandscapeConstraints];
-		[self.toggleButtonBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-		[self.toggleButtonBackgroundView autoAlignAxisToSuperviewAxis:ALAxisVertical];
-		self.searchButtonWidthConstraint = [self.toggleButtonBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self];
-		[self.toggleButtonBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
+		NSArray *toggleButtonBackgroundViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+			[self.toggleButtonBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+			[self.toggleButtonBackgroundView autoAlignAxisToSuperviewAxis:ALAxisVertical];
+			self.searchButtonWidthConstraint = [self.toggleButtonBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self];
+			[self.toggleButtonBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
+		}];
+		[LMLayoutManager addNewLandscapeConstraints:toggleButtonBackgroundViewLandscapeConstraints];
 		
-		[self endAddingNewConstraints];
 		
 		UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tappedToggleButton)];
 		[self.toggleButtonBackgroundView addGestureRecognizer:tapGesture];
@@ -134,21 +137,23 @@
 		self.letterTabBar.delegate = self.letterTabDelegate;
 		[self addSubview:self.letterTabBar];
 		
-		[self beginAddingNewPortraitConstraints];
-		[self.letterTabBar autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.toggleButtonBackgroundView];
-		[self.letterTabBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
-		[self.letterTabBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-		[self.letterTabBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		NSArray *letterTabBarPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+			[self.letterTabBar autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.toggleButtonBackgroundView];
+			[self.letterTabBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
+			[self.letterTabBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+			[self.letterTabBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		}];
+		[LMLayoutManager addNewPortraitConstraints:letterTabBarPortraitConstraints];
 		
-		[self beginAddingNewLandscapeConstraints];
-		[self.letterTabBar autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.toggleButtonBackgroundView];
-		[self.letterTabBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-		[self.letterTabBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-		[self.letterTabBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		NSArray *letterTabBarLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+			[self.letterTabBar autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.toggleButtonBackgroundView];
+			[self.letterTabBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+			[self.letterTabBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+			[self.letterTabBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		}];
+		[LMLayoutManager addNewLandscapeConstraints:letterTabBarLandscapeConstraints];
 		
-		
-		[self endAddingNewConstraints];
-		
+			
 		
 		[self bringSubviewToFront:self.toggleButtonBackgroundView];
 	}

@@ -36,5 +36,7 @@ typedef NS_ENUM(NSInteger, LMLayoutClass) {
 - (void)addDelegate:(id<LMLayoutChangeDelegate>)delegate;
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection;
 - (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator;
++ (void)addNewPortraitConstraints:(NSArray<NSLayoutConstraint*>*)constraintsArray;
++ (void)addNewLandscapeConstraints:(NSArray<NSLayoutConstraint*>*)constraintsArray;
 
 @end

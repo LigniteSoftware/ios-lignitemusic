@@ -92,11 +92,6 @@ LMControlBarViewDelegate
 
 @property LMPurchaseManager *purchaseManager;
 
-/**
- The height constraint for the navigation bar.
- */
-@property (readonly) NSLayoutConstraint *buttonNavigationBarHeightConstraint;
-
 @property CGPoint originalPoint, currentPoint;
 
 @property LMCompactBrowsingView *compactView;
@@ -114,18 +109,17 @@ LMControlBarViewDelegate
 @implementation LMCoreViewController
 
 @dynamic navigationController;
-@synthesize buttonNavigationBarHeightConstraint = _buttonNavigationBarHeightConstraint;
 
-- (NSLayoutConstraint*)buttonNavigationBarHeightConstraint {
-	for(NSLayoutConstraint *constraint in self.buttonNavigationBar.constraints){
-		if(constraint.firstItem == self.buttonNavigationBar && (constraint.firstAttribute == NSLayoutAttributeWidth || constraint.firstAttribute == NSLayoutAttributeHeight)){
-			
-			return constraint;
-		}
-	}
-	
-	return nil;
-}
+//- (NSLayoutConstraint*)buttonNavigationBarHeightConstraint {
+//	for(NSLayoutConstraint *constraint in self.buttonNavigationBar.constraints){
+//		if(constraint.firstItem == self.buttonNavigationBar && (constraint.firstAttribute == NSLayoutAttributeWidth || constraint.firstAttribute == NSLayoutAttributeHeight)){
+//			
+//			return constraint;
+//		}
+//	}
+//	
+//	return nil;
+//}
 
 - (void)cacheSizeChangedTo:(uint64_t)newCacheSize forCategory:(LMImageManagerCategory)category {
     if((category == LMImageManagerCategoryArtistImages && self.compactView.musicType == LMMusicTypeArtists)
@@ -479,11 +473,7 @@ LMControlBarViewDelegate
 
 - (void)requiredHeightForNavigationBarChangedTo:(CGFloat)requiredHeight withAnimationDuration:(CGFloat)animationDuration {
 //	NSLog(@"rHeight changed to %f", requiredHeight);
-	
-	
-	[self.navigationController.view layoutIfNeeded];
-	self.buttonNavigationBarHeightConstraint.constant = requiredHeight;
-    [self.navigationController.view layoutIfNeeded];
+
     
     CGFloat bottomSpacing = requiredHeight + 10;
     [self.compactView changeBottomSpacing:bottomSpacing];
@@ -741,8 +731,6 @@ LMControlBarViewDelegate
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
 	[super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 	
-	CGFloat previousButtonBarSizeConstraintConstant = self.buttonNavigationBarHeightConstraint.constant;
-	
 	[self.layoutManager rootViewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 	
 	BOOL willBeLandscape = size.width > size.height;
@@ -767,9 +755,7 @@ LMControlBarViewDelegate
 		[self.layoutManager traitCollectionDidChange:previousCollection];
 		
 		self.layoutManager.size = self.rootView.frame.size;
-		
-		self.buttonNavigationBarHeightConstraint.constant = previousButtonBarSizeConstraintConstant;
-		
+				
 		self.navigationBar.hidden = willBeLandscape;
 		self.landscapeNavigationBar.hidden = !willBeLandscape;
 		
@@ -807,7 +793,7 @@ LMControlBarViewDelegate
     // Do any additional setup after loading the view
 	
 	self.rootView = [LMView newAutoLayoutView];
-	self.rootView.backgroundColor = [UIColor magentaColor];
+	self.rootView.backgroundColor = [UIColor purpleColor];
 	[self.view addSubview:self.rootView];
 	
 	[self.rootView autoPinEdgesToSuperviewEdges];
@@ -823,6 +809,37 @@ LMControlBarViewDelegate
 	self.layoutManager = [LMLayoutManager sharedLayoutManager];
 	self.layoutManager.traitCollection = self.traitCollection;
 	self.layoutManager.size = self.view.frame.size;
+	
+	
+	
+//	LMButtonBar *buttonBar = [LMButtonBar newAutoLayoutView];
+//	buttonBar.amountOfButtons = 3;
+//	buttonBar.buttonIconsArray = @[ @(LMIconBrowse), @(LMIconMiniplayer), @(LMIconSource) ];
+//	buttonBar.buttonScaleFactorsArray = @[ @(1.0/2.5), @(1.0/2.5), @(1.0/2.5) ];
+//	buttonBar.buttonIconsToInvertArray = @[ @(LMNavigationTabBrowse), @(LMNavigationTabView) ];
+////	buttonBar.delegate = self;
+//	buttonBar.backgroundColor = [UIColor whiteColor];
+//	[self.view addSubview:buttonBar];
+//	
+//	
+//	NSArray *buttonBarPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+//		[buttonBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+//		[buttonBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+//		[buttonBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+//		[buttonBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:0.125];
+//	}];
+//	[LMLayoutManager addNewPortraitConstraints:buttonBarPortraitConstraints];
+//	
+//	NSArray *buttonBarLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+//		[buttonBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
+//		[buttonBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+//		[buttonBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+//		[buttonBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:0.125];
+//	}];
+//	[LMLayoutManager addNewLandscapeConstraints:buttonBarLandscapeConstraints];
+//	
+//	
+//	return;
 	
 	
 #ifdef SPEED_DEMON_MODE
@@ -922,101 +939,101 @@ LMControlBarViewDelegate
 						
 						
 						
-						self.navigationBar = [[LMNavigationBar alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 64.0f)];
-						self.navigationBar.delegate = self;
-						[self.navigationController.view addSubview:self.navigationBar];
+//						self.navigationBar = [[LMNavigationBar alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 64.0f)];
+//						self.navigationBar.delegate = self;
+//						[self.navigationController.view addSubview:self.navigationBar];
+//						
+////						[self.navigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+////						[self.navigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+////						[self.navigationBar autoSetDimension:ALDimensionHeight toSize:64.0f];
+//						
+//						self.navigationBar.barTintColor = [UIColor whiteColor];
+//						self.navigationBar.tintColor = [UIColor blackColor];
+//						self.navigationBar.translucent = NO;
+//						
+//						self.navigationBar.layer.shadowColor = [UIColor blackColor].CGColor;
+//						self.navigationBar.layer.shadowRadius = WINDOW_FRAME.size.width / 45 / 2;
+//						self.navigationBar.layer.shadowOffset = CGSizeMake(0, self.navigationBar.layer.shadowRadius/2);
+//						self.navigationBar.layer.shadowOpacity = 0.25f;
+//						
+//						UIView *titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
+//						titleView.backgroundColor = [UIColor orangeColor];
+//						
+//						UIImageView *titleImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
+//						titleImageView.contentMode = UIViewContentModeScaleAspectFit;
+//						titleImageView.image = [LMAppIcon imageForIcon:LMIconNoAlbumArt75Percent];
+//						titleImageView.userInteractionEnabled = YES;
+//						
+//						UITapGestureRecognizer *nowPlayingTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(launchNowPlayingFromNavigationBar)];
+//						[titleImageView addGestureRecognizer:nowPlayingTapGestureRecognizer];
+//						
+//						UINavigationItem *navigationItem = [[UINavigationItem alloc]initWithTitle:@""];
+//						navigationItem.titleView = titleImageView;
+//						[self.navigationBar pushNavigationItem:navigationItem animated:YES];
+//						
+//						
+//						
+//						
+//						self.landscapeNavigationBar = [LMLandscapeNavigationBar newAutoLayoutView];
+//						self.landscapeNavigationBar.delegate = self;
+//						[self.navigationController.view addSubview:self.landscapeNavigationBar];
+//						
+//						[self.landscapeNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+//						[self.landscapeNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
+//						[self.landscapeNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+//						[self.landscapeNavigationBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.navigationBar];
+//						
+//						self.landscapeNavigationBar.layer.shadowColor = [UIColor blackColor].CGColor;
+//						self.landscapeNavigationBar.layer.shadowRadius = WINDOW_FRAME.size.width / 45 / 2;
+//						self.landscapeNavigationBar.layer.shadowOffset = CGSizeMake(0, self.navigationBar.layer.shadowRadius/2);
+//						self.landscapeNavigationBar.layer.shadowOpacity = 0.25f;
+//						
+//						
+//						self.navigationBar.hidden = self.layoutManager.isLandscape;
+//						self.navigationBar.layer.opacity = self.navigationBar.hidden ? 0.0 : 1.0;
+////						self.navigationBar.frame = CGRectMake(0, 0, self.view.frame.size.width, self.navigationBar.hidden ? 0 : 64.0f);
+//						self.landscapeNavigationBar.hidden = !self.layoutManager.isLandscape;
+//						self.landscapeNavigationBar.layer.opacity = self.landscapeNavigationBar.hidden ? 0.0 : 1.0;
+//
+//
+//						
+//						
+//						
+//						self.compactView = [LMCompactBrowsingView newAutoLayoutView];
+//						self.compactView.rootViewController = self;
+//						[self.rootView addSubview:self.compactView];
+//						
+//						[self.rootView beginAddingNewPortraitConstraints];
+//						[NSLayoutConstraint autoSetPriority:UILayoutPriorityDefaultHigh forConstraints:^{
+//							[self.compactView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.navigationBar];
+//						}];
+//						[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+//						[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+//						[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+//						
+//						[self.rootView beginAddingNewLandscapeConstraints];
+//						[NSLayoutConstraint autoSetPriority:UILayoutPriorityDefaultHigh forConstraints:^{
+//							[self.compactView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.landscapeNavigationBar];
+//						}];
+//						[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+//						[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+//						[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+//						
+//						[self.rootView endAddingNewConstraints];
 						
-//						[self.navigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-//						[self.navigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-//						[self.navigationBar autoSetDimension:ALDimensionHeight toSize:64.0f];
-						
-						self.navigationBar.barTintColor = [UIColor whiteColor];
-						self.navigationBar.tintColor = [UIColor blackColor];
-						self.navigationBar.translucent = NO;
-						
-						self.navigationBar.layer.shadowColor = [UIColor blackColor].CGColor;
-						self.navigationBar.layer.shadowRadius = WINDOW_FRAME.size.width / 45 / 2;
-						self.navigationBar.layer.shadowOffset = CGSizeMake(0, self.navigationBar.layer.shadowRadius/2);
-						self.navigationBar.layer.shadowOpacity = 0.25f;
-						
-						UIView *titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
-						titleView.backgroundColor = [UIColor orangeColor];
-						
-						UIImageView *titleImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
-						titleImageView.contentMode = UIViewContentModeScaleAspectFit;
-						titleImageView.image = [LMAppIcon imageForIcon:LMIconNoAlbumArt75Percent];
-						titleImageView.userInteractionEnabled = YES;
-						
-						UITapGestureRecognizer *nowPlayingTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(launchNowPlayingFromNavigationBar)];
-						[titleImageView addGestureRecognizer:nowPlayingTapGestureRecognizer];
-						
-						UINavigationItem *navigationItem = [[UINavigationItem alloc]initWithTitle:@""];
-						navigationItem.titleView = titleImageView;
-						[self.navigationBar pushNavigationItem:navigationItem animated:YES];
 						
 						
-						
-						
-						self.landscapeNavigationBar = [LMLandscapeNavigationBar newAutoLayoutView];
-						self.landscapeNavigationBar.delegate = self;
-						[self.navigationController.view addSubview:self.landscapeNavigationBar];
-						
-						[self.landscapeNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-						[self.landscapeNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
-						[self.landscapeNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-						[self.landscapeNavigationBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.navigationBar];
-						
-						self.landscapeNavigationBar.layer.shadowColor = [UIColor blackColor].CGColor;
-						self.landscapeNavigationBar.layer.shadowRadius = WINDOW_FRAME.size.width / 45 / 2;
-						self.landscapeNavigationBar.layer.shadowOffset = CGSizeMake(0, self.navigationBar.layer.shadowRadius/2);
-						self.landscapeNavigationBar.layer.shadowOpacity = 0.25f;
-						
-						
-						self.navigationBar.hidden = self.layoutManager.isLandscape;
-						self.navigationBar.layer.opacity = self.navigationBar.hidden ? 0.0 : 1.0;
-//						self.navigationBar.frame = CGRectMake(0, 0, self.view.frame.size.width, self.navigationBar.hidden ? 0 : 64.0f);
-						self.landscapeNavigationBar.hidden = !self.layoutManager.isLandscape;
-						self.landscapeNavigationBar.layer.opacity = self.landscapeNavigationBar.hidden ? 0.0 : 1.0;
-
-
-						
-						
-						
-						self.compactView = [LMCompactBrowsingView newAutoLayoutView];
-						self.compactView.rootViewController = self;
-						[self.rootView addSubview:self.compactView];
-						
-						[self.rootView beginAddingNewPortraitConstraints];
-						[NSLayoutConstraint autoSetPriority:UILayoutPriorityDefaultHigh forConstraints:^{
-							[self.compactView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.navigationBar];
-						}];
-						[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-						[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-						[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-						
-						[self.rootView beginAddingNewLandscapeConstraints];
-						[NSLayoutConstraint autoSetPriority:UILayoutPriorityDefaultHigh forConstraints:^{
-							[self.compactView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.landscapeNavigationBar];
-						}];
-						[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-						[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-						[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-						
-						[self.rootView endAddingNewConstraints];
-						
-						
-						
-						self.titleView = [LMTitleView newAutoLayoutView];
-						self.titleView.backgroundColor = [UIColor whiteColor];
-						self.titleView.rootViewController = self;
-						[self.rootView addSubview:self.titleView];
-						
-						[self.titleView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.compactView];
-						[self.titleView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.compactView];
-						[self.titleView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.compactView];
-						[self.titleView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.compactView];
-						
-						[self.titleView setup];
+//						self.titleView = [LMTitleView newAutoLayoutView];
+//						self.titleView.backgroundColor = [UIColor whiteColor];
+//						self.titleView.rootViewController = self;
+//						[self.rootView addSubview:self.titleView];
+//						
+//						[self.titleView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.compactView];
+//						[self.titleView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.compactView];
+//						[self.titleView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.compactView];
+//						[self.titleView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.compactView];
+//						
+//						[self.titleView setup];
 //						self.titleView.hidden = YES;
 						
 						
@@ -1040,7 +1057,7 @@ LMControlBarViewDelegate
 						self.buttonNavigationBar.delegate = self;
 						self.buttonNavigationBar.searchBarDelegate = self;
 						self.buttonNavigationBar.letterTabBarDelegate = self;
-						[self.navigationController.rootView addSubview:self.buttonNavigationBar];
+						[self.rootView addSubview:self.buttonNavigationBar];
 						
 						//						self.navigationController.rootView.hidden = YES;
 						
@@ -1048,20 +1065,22 @@ LMControlBarViewDelegate
 						
 						NSLog(@"Class %@", [self.navigationController.view class]);
 						
-						[self.navigationController.rootView beginAddingNewPortraitConstraints];
-						[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-						[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-						[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-						[self.buttonNavigationBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.navigationController.rootView withMultiplier:(1.0/8.0)];
+						NSArray *buttonNavigationBarPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+							[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+							[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+							[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+							[self.buttonNavigationBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.rootView withMultiplier:(1.0/8.0)];
+						}];
+						[LMLayoutManager addNewPortraitConstraints:buttonNavigationBarPortraitConstraints];
 						
-						[self.navigationController.rootView beginAddingNewLandscapeConstraints];
-						[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-						[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
-						[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-						[self.buttonNavigationBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.navigationController.rootView withMultiplier:(1.0/8.0)];
-						
-						[self.navigationController.rootView endAddingNewConstraints];
-						
+						NSArray *buttonNavigationBarLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+							[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+							[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
+							[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+							[self.buttonNavigationBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.rootView withMultiplier:(1.0/8.0)];
+						}];
+						[LMLayoutManager addNewLandscapeConstraints:buttonNavigationBarLandscapeConstraints];
+												
 						
 						[self.musicPlayer addMusicDelegate:self];
 						

@@ -10,7 +10,15 @@
 
 @interface LMLayoutManager()
 
+/**
+ The array of delegates.
+ */
 @property NSMutableArray<id<LMLayoutChangeDelegate>> *delegates;
+
+/**
+ The arrays of portrait and landscape constraints.
+ */
+@property (strong) NSMutableArray<NSLayoutConstraint*> *portraitConstraintsArray, *landscapeConstraintsArray;
 
 @end
 
@@ -24,6 +32,8 @@
 	
 	dispatch_once(&token, ^{
 		sharedLayoutManager = [self new];
+		sharedLayoutManager.portraitConstraintsArray = [NSMutableArray new];
+		sharedLayoutManager.landscapeConstraintsArray = [NSMutableArray new];
 	});
 	
 	return sharedLayoutManager;
@@ -35,6 +45,30 @@
 	}
 	
 	[self.delegates addObject:delegate];
+}
+
++ (void)addNewPortraitConstraints:(NSArray<NSLayoutConstraint*>*)constraintsArray {
+	LMLayoutManager *layoutManager = [LMLayoutManager sharedLayoutManager];
+	
+	for(NSLayoutConstraint *constraint in constraintsArray){
+		[layoutManager.portraitConstraintsArray addObject:constraint];
+	}
+	
+	if(![layoutManager isLandscape]){
+		[NSLayoutConstraint activateConstraints:constraintsArray];
+	}
+}
+
++ (void)addNewLandscapeConstraints:(NSArray<NSLayoutConstraint*>*)constraintsArray {
+	LMLayoutManager *layoutManager = [LMLayoutManager sharedLayoutManager];
+	
+	for(NSLayoutConstraint *constraint in constraintsArray){
+		[layoutManager.landscapeConstraintsArray addObject:constraint];
+	}
+	
+	if([layoutManager isLandscape]){
+		[NSLayoutConstraint activateConstraints:constraintsArray];
+	}
 }
 
 - (BOOL)isLandscape {
@@ -57,6 +91,13 @@
 			[delegate traitCollectionDidChange:previousTraitCollection];
 		}
 	}
+	
+	NSLog(@"Swapping out %ld/%ld constraints...", self.portraitConstraintsArray.count, self.landscapeConstraintsArray.count);
+	
+	[NSLayoutConstraint deactivateConstraints:self.isLandscape ? self.portraitConstraintsArray : self.landscapeConstraintsArray];
+	[NSLayoutConstraint activateConstraints:self.isLandscape ? self.landscapeConstraintsArray : self.portraitConstraintsArray];
+	
+	NSLog(@"Swapped, now animating.");
 }
 
 - (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
@@ -65,6 +106,21 @@
 			[delegate rootViewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 		}
 	}
+	
+//	BOOL willBeLandscape = size.width > size.height;
+//	
+//	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+//		
+//		NSLog(@"Swapping out constraints...");
+//		
+//		[NSLayoutConstraint deactivateConstraints:willBeLandscape ? self.portraitConstraintsArray : self.landscapeConstraintsArray];
+//		[NSLayoutConstraint activateConstraints:willBeLandscape ? self.landscapeConstraintsArray : self.portraitConstraintsArray];
+//		
+//		NSLog(@"Swapped, now animating.");
+//		
+//	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+//		NSLog(@"Done.");
+//	}];
 }
 
 @end

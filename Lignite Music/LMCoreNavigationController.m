@@ -16,19 +16,19 @@
 @implementation LMCoreNavigationController
 
 
-- (instancetype)initWithCoder:(NSCoder *)aDecoder {
-	self = [super initWithCoder:aDecoder];
-	
-	if(self){
-		self.rootView = [LMView newAutoLayoutView];
-		self.rootView.userInteractionEnabled = YES;
-		self.rootView.backgroundColor = [UIColor magentaColor];
-		[self.view addSubview:self.rootView];
-		
-		[self.rootView autoPinEdgesToSuperviewEdges];
-	}
-	
-	return self;
-}
+//- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+//	self = [super initWithCoder:aDecoder];
+//	
+//	if(self){
+//		self.rootView = [LMView newAutoLayoutView];
+//		self.rootView.userInteractionEnabled = YES;
+//		self.rootView.backgroundColor = [UIColor magentaColor];
+//		[self.view addSubview:self.rootView];
+//		
+//		[self.rootView autoPinEdgesToSuperviewEdges];
+//	}
+//	
+//	return self;
+//}
 
 @end

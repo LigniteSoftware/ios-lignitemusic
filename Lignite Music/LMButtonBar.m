@@ -96,10 +96,11 @@
 - (void)layoutSubviews {
 	NSLog(@"Dig %p frame %@", self, NSStringFromCGRect(self.frame));
 	
+	
 	if(!self.didLayoutConstraints) {
 		self.didLayoutConstraints = YES;
 		
-		self.backgroundColor = [UIColor orangeColor];
+		self.backgroundColor = [UIColor whiteColor];
 		
 		self.buttonsArray = [NSMutableArray new];
 		self.currentlyHighlightedButtonsArray = [NSMutableArray new];
@@ -114,25 +115,29 @@
 			newBackgroundView.backgroundColor = [LMColour ligniteRedColour];
 			[self addSubview:newBackgroundView];
 			
-			[self beginAddingNewPortraitConstraints];
-			[newBackgroundView autoPinEdge:ALEdgeLeading toEdge:isFirst ? ALEdgeLeading : ALEdgeTrailing ofView:previousView withOffset:!isFirst];
-			[newBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-			[newBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-			[newBackgroundView autoMatchDimension:ALDimensionWidth
-									  toDimension:ALDimensionWidth
-										   ofView:self
-								   withMultiplier:(1.0/(CGFloat)self.amountOfButtons)];
+			NSArray *newBackgroundViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+				[newBackgroundView autoPinEdge:ALEdgeLeading toEdge:isFirst ? ALEdgeLeading : ALEdgeTrailing ofView:previousView withOffset:!isFirst];
+				[newBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+				[newBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+				[newBackgroundView autoMatchDimension:ALDimensionWidth
+										  toDimension:ALDimensionWidth
+											   ofView:self
+									   withMultiplier:(1.0/(CGFloat)self.amountOfButtons)];
+			}];
+			[LMLayoutManager addNewPortraitConstraints:newBackgroundViewPortraitConstraints];
 			
-			[self beginAddingNewLandscapeConstraints];
-			[newBackgroundView autoPinEdge:ALEdgeTop toEdge:isFirst ? ALEdgeTop : ALEdgeBottom ofView:previousView withOffset:!isFirst];
-			[newBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-			[newBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-			[newBackgroundView autoMatchDimension:ALDimensionHeight
-									  toDimension:ALDimensionHeight
-										   ofView:self
-								   withMultiplier:(1.0/(CGFloat)self.amountOfButtons)];
 			
-			[self endAddingNewConstraints];
+			NSArray *newBackgroundViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+				[newBackgroundView autoPinEdge:ALEdgeTop toEdge:isFirst ? ALEdgeTop : ALEdgeBottom ofView:previousView withOffset:!isFirst];
+				[newBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+				[newBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+				[newBackgroundView autoMatchDimension:ALDimensionHeight
+										  toDimension:ALDimensionHeight
+											   ofView:self
+									   withMultiplier:(1.0/(CGFloat)self.amountOfButtons)];
+			}];
+			[LMLayoutManager addNewLandscapeConstraints:newBackgroundViewLandscapeConstraints];
+			
 			
 			
 			UITapGestureRecognizer *sendButtonTap =
@@ -144,8 +149,6 @@
 			[self.buttonsArray addObject:newBackgroundView];
 			
 			
-			[self setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
-			[self setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
 			
 			
 			UIImageView *sendButtonIcon = [UIImageView newAutoLayoutView];
@@ -154,15 +157,12 @@
 			if([self.buttonIconsToInvertArray containsObject:@(i)]){
 				sendButtonIcon.image = [LMAppIcon invertImage:sendButtonIcon.image];
 			}
+//			sendButtonIcon.backgroundColor = [UIColor orangeColor];
 			[newBackgroundView addSubview:sendButtonIcon];
 			
-			[sendButtonIcon autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-			[sendButtonIcon autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+			[sendButtonIcon autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:newBackgroundView];
 			[sendButtonIcon autoCenterInSuperview];
 			[sendButtonIcon autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:newBackgroundView withMultiplier:[[self.buttonScaleFactorsArray objectAtIndex:i] floatValue]];
-			
-			[sendButtonIcon setContentHuggingPriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisVertical];
-			[sendButtonIcon setContentHuggingPriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
 		}
 	}
 	

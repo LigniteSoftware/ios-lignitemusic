@@ -30,27 +30,27 @@
 		
 		self.settingLayoutClass = LMLayoutClassAll;
 		
-		[self.layoutManager addDelegate:self];
+//		[self.layoutManager addDelegate:self];
 	}
 	return self;
 }
-
-- (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
-	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-		BOOL isNowLandscape = size.width > size.height;
-		
-		if(self.landscapeConstraints.count == 0 && self.portraitConstraints.count == 0){ //No specific constraints have been defined, and that's ok. Leave it alone.
-			return;
-		}
-		
-		NSLog(@"Rotating %p...", self);
-		
-		[NSLayoutConstraint deactivateConstraints:isNowLandscape ? self.portraitConstraints : self.landscapeConstraints];
-		[NSLayoutConstraint activateConstraints:isNowLandscape ? self.landscapeConstraints : self.portraitConstraints];
-		
-		[self layoutIfNeeded];
-	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) { /* Completion code here, if you wish */ }];
-}
+//
+//- (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+//	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+//		BOOL isNowLandscape = size.width > size.height;
+//		
+//		if(self.landscapeConstraints.count == 0 && self.portraitConstraints.count == 0){ //No specific constraints have been defined, and that's ok. Leave it alone.
+//			return;
+//		}
+//		
+//		NSLog(@"Rotating %p...", self);
+//		
+//		[NSLayoutConstraint deactivateConstraints:isNowLandscape ? self.portraitConstraints : self.landscapeConstraints];
+//		[NSLayoutConstraint activateConstraints:isNowLandscape ? self.landscapeConstraints : self.portraitConstraints];
+//		
+//		[self layoutIfNeeded];
+//	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) { /* Completion code here, if you wish */ }];
+//}
 
 - (void)beginAddingNewPortraitConstraints {
 	self.settingLayoutClass = LMLayoutClassPortrait;
@@ -67,13 +67,13 @@
 - (void)addConstraint:(NSLayoutConstraint *)constraint {
 //	NSLog(@"Add constraint %@", NSStringFromCGRect(self.frame));
 	
-	if(self.settingLayoutClass == [LMLayoutManager sharedLayoutManager].currentLayoutClass || self.settingLayoutClass == LMLayoutClassAll){
+	if(self.settingLayoutClass != LMLayoutClassLandscape){
 		[super addConstraint:constraint];
 	}
 	
-	if(self.settingLayoutClass != LMLayoutClassAll){
-		(self.settingLayoutClass == LMLayoutClassPortrait) ? [self.portraitConstraints addObject:constraint] : [self.landscapeConstraints addObject:constraint];
-	}
+//	if(self.settingLayoutClass != LMLayoutClassAll){
+//		(self.settingLayoutClass == LMLayoutClassPortrait) ? [self.portraitConstraints addObject:constraint] : [self.landscapeConstraints addObject:constraint];
+//	}
 }
 
 @end

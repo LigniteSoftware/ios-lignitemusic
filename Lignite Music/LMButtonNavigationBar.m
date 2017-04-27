@@ -342,14 +342,56 @@
 		CGFloat properNum = self.layoutManager.isLandscape ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height;
 		
 		
+		self.browsingBar = [LMBrowsingBar newAutoLayoutView];
+		self.browsingBar.searchBarDelegate = self;
+		self.browsingBar.letterTabDelegate = self.letterTabBarDelegate;
+		[self addSubview:self.browsingBar];
+
+		
+		self.miniPlayerCoreView.rootViewController = self.rootViewController;
+		[self addSubview:self.miniPlayerCoreView];
+
+		
+		
+		self.sourceSelector = [LMSourceSelectorView newAutoLayoutView];
+		self.sourceSelector.backgroundColor = [UIColor redColor];
+		self.sourceSelector.sources = self.sourcesForSourceSelector;
+		[self addSubview:self.sourceSelector];
+
+		self.musicPlayer.sourceSelector = self.sourceSelector;
+		
+		[self.sourceSelector setup];
+
+		
+		
+//		LMView *testView = [LMView newAutoLayoutView];
+////		testView.searchBarDelegate = self;
+////		testView.letterTabDelegate = self.letterTabBarDelegate;
+//		testView.backgroundColor = [UIColor blueColor];
+//		[self addSubview:testView];
+		
+
+		
+		
 		LMView *testView = [LMView newAutoLayoutView];
 		testView.backgroundColor = [UIColor purpleColor];
 		[self addSubview:testView];
 		
-		[testView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-		[testView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-		[testView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		[testView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.5];
+		NSArray *testViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+			[testView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+			[testView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+			[testView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+			[testView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:0.5];
+		}];
+		[LMLayoutManager addNewLandscapeConstraints:testViewLandscapeConstraints];
+		
+		NSArray *testViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+			[testView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+			[testView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+			[testView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+			[testView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.5];
+		}];
+		[LMLayoutManager addNewPortraitConstraints:testViewPortraitConstraints];
 
 		
 		self.buttonBar = [LMButtonBar newAutoLayoutView];
@@ -366,17 +408,77 @@
 				
 //		[self.buttonBar autoPinEdgesToSuperviewEdges];
 		
-		[self beginAddingNewLandscapeConstraints];
-			[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
-			[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-			[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-			[self.buttonBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
-		[self beginAddingNewPortraitConstraints];
+		NSArray *buttonBarPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 			[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 			[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 			[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 			[self.buttonBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self];
-		[self endAddingNewConstraints];
+		}];
+		[LMLayoutManager addNewPortraitConstraints:buttonBarPortraitConstraints];
+		
+		NSArray *buttonBarLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+			[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
+			[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+			[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+			[self.buttonBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
+		}];
+		[LMLayoutManager addNewLandscapeConstraints:buttonBarLandscapeConstraints];
+		
+		
+
+		NSArray *browsingBarPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+			[self.browsingBar autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.buttonBar];
+			[self.browsingBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+			[self.browsingBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+			[self.browsingBar autoSetDimension:ALDimensionHeight toSize:properNum/15.0];
+		}];
+		[LMLayoutManager addNewPortraitConstraints:browsingBarPortraitConstraints];
+		//		self.browsingBar.hidden = YES;
+		
+		NSArray *browsingBarLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+			[self.browsingBar autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.buttonBar];
+			[self.browsingBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
+			[self.browsingBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+			[self.browsingBar autoSetDimension:ALDimensionWidth toSize:properNum/17.5];
+		}];
+		[LMLayoutManager addNewLandscapeConstraints:browsingBarLandscapeConstraints];
+		
+		
+		
+		NSArray *miniPlayerCoreViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+			[self.miniPlayerCoreView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.buttonBar];
+			[self.miniPlayerCoreView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+			[self.miniPlayerCoreView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+			[self.miniPlayerCoreView autoSetDimension:ALDimensionHeight toSize:properNum/5.0];
+		}];
+		[LMLayoutManager addNewPortraitConstraints:miniPlayerCoreViewPortraitConstraints];
+		
+		NSArray *miniPlayerCoreViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+			[self.miniPlayerCoreView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.buttonBar];
+			[self.miniPlayerCoreView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+			[self.miniPlayerCoreView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+			[self.miniPlayerCoreView autoSetDimension:ALDimensionWidth toSize:properNum/2.8];
+
+		}];
+		[LMLayoutManager addNewLandscapeConstraints:miniPlayerCoreViewLandscapeConstraints];
+		
+		
+		
+		NSArray *sourceSelectorPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+			[self.sourceSelector autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
+			[self.sourceSelector autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self];
+			[self.sourceSelector autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.buttonBar withOffset:20];
+			[self.sourceSelector autoSetDimension:ALDimensionHeight toSize:properNum-LMNavigationBarTabHeight];
+		}];
+		[LMLayoutManager addNewPortraitConstraints:sourceSelectorPortraitConstraints];
+		
+		NSArray *sourceSelectorLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+			[self.sourceSelector autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.buttonBar];
+			[self.sourceSelector autoPinEdgeToSuperviewEdge:ALEdgeTop];
+			[self.sourceSelector autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+			[self.sourceSelector autoSetDimension:ALDimensionWidth toSize:properNum-LMNavigationBarTabWidth];
+		}];
+		[LMLayoutManager addNewLandscapeConstraints:sourceSelectorLandscapeConstraints];
 	}
 }
 
