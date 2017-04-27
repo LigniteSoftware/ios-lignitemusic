@@ -479,6 +479,9 @@
 			[self.sourceSelector autoSetDimension:ALDimensionWidth toSize:properNum-LMNavigationBarTabWidth];
 		}];
 		[LMLayoutManager addNewLandscapeConstraints:sourceSelectorLandscapeConstraints];
+		
+		
+		self.sourceSelector.hidden = YES;
 	}
 }
 

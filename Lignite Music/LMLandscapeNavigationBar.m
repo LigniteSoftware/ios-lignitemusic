@@ -93,7 +93,7 @@
 		self.didLayoutConstraints = YES;
 		
 		
-		self.backgroundColor = [UIColor orangeColor];
+		self.backgroundColor = [UIColor whiteColor];
 		
 		
 		[self setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];

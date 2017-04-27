@@ -301,7 +301,7 @@
 		
 		NSLog(@"Hey");
 		
-		self.backgroundColor = [UIColor blueColor];
+		self.backgroundColor = [UIColor whiteColor];
 		
 		self.clipsToBounds = YES;
 		
@@ -312,7 +312,7 @@
 		[self.musicPlayer addMusicDelegate:self];
 		
 		self.centerMiniPlayerView = [LMMiniPlayerView newAutoLayoutView];
-		self.centerMiniPlayerView.backgroundColor = [UIColor orangeColor];
+//		self.centerMiniPlayerView.backgroundColor = [UIColor orangeColor];
 		[self addSubview:self.centerMiniPlayerView];
 		
 		self.miniPlayerLeadingConstraint = [self.centerMiniPlayerView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
@@ -330,7 +330,7 @@
 		
 		
 		self.trailingMiniPlayerView = [LMMiniPlayerView newAutoLayoutView];
-		self.trailingMiniPlayerView.backgroundColor = [UIColor yellowColor];
+//		self.trailingMiniPlayerView.backgroundColor = [UIColor yellowColor];
 		[self addSubview:self.trailingMiniPlayerView];
 		
 		[self.otherConstraints addObject:[self.trailingMiniPlayerView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.centerMiniPlayerView]];
@@ -348,7 +348,7 @@
 		
 		
 		self.leadingMiniPlayerView = [LMMiniPlayerView newAutoLayoutView];
-		self.leadingMiniPlayerView.backgroundColor = [UIColor redColor];
+//		self.leadingMiniPlayerView.backgroundColor = [UIColor redColor];
 		[self addSubview:self.leadingMiniPlayerView];
 		
 		[self.otherConstraints addObject:[self.leadingMiniPlayerView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.centerMiniPlayerView]];

@@ -91,14 +91,14 @@
 }
 
 - (NSDictionary*)lettersDictionary {
-//	NSMutableDictionary *fixedLettersDictionary = [NSMutableDictionary new];
-//	NSString *lettersinset = @"ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-//	for(int i = 0; i < lettersinset.length; i++){
-//		NSString *letter = [NSString stringWithFormat: @"%C", [lettersinset characterAtIndex:i]];
-//		[fixedLettersDictionary setObject:@(i) forKey:letter];
-//	}
-//	
-//	return fixedLettersDictionary;
+	NSMutableDictionary *fixedLettersDictionary = [NSMutableDictionary new];
+	NSString *lettersinset = @"#?ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	for(int i = 0; i < lettersinset.length; i++){
+		NSString *letter = [NSString stringWithFormat: @"%C", [lettersinset characterAtIndex:i]];
+		[fixedLettersDictionary setObject:@(i) forKey:letter];
+	}
+	
+	return fixedLettersDictionary;
 	return _lettersDictionary;
 }
 
@@ -362,19 +362,21 @@
 			letterLabel.layer.cornerRadius = 3;
 			[self.letterScrollView addSubview:letterLabel];
 
-			[self.letterScrollView beginAddingNewPortraitConstraints];
-			[letterLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
-			[letterLabel autoPinEdge:ALEdgeLeading toEdge:firstIndex ? ALEdgeLeading : ALEdgeTrailing ofView:viewToAttachTo withOffset:self.frame.size.width*0.01];
-			[letterLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.letterScrollView withMultiplier:0.06];
-			[letterLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.letterScrollView];
+			NSArray *letterLabelPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+				[letterLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+				[letterLabel autoPinEdge:ALEdgeLeading toEdge:firstIndex ? ALEdgeLeading : ALEdgeTrailing ofView:viewToAttachTo withOffset:self.frame.size.width*0.01];
+				[letterLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.letterScrollView withMultiplier:0.06];
+				[letterLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.letterScrollView];
+			}];
+			[LMLayoutManager addNewPortraitConstraints:letterLabelPortraitConstraints];
 			
-			[self.letterScrollView beginAddingNewLandscapeConstraints];
-			[letterLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
-			[letterLabel autoPinEdge:ALEdgeTop toEdge:firstIndex ? ALEdgeTop : ALEdgeBottom ofView:viewToAttachTo withOffset:self.frame.size.width*0.01];
-			[letterLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.letterScrollView withMultiplier:0.95];
-			[letterLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.letterScrollView withMultiplier:0.06];
-			
-			[self.letterScrollView endAddingNewConstraints];
+			NSArray *letterLabelLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+				[letterLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
+				[letterLabel autoPinEdge:ALEdgeTop toEdge:firstIndex ? ALEdgeTop : ALEdgeBottom ofView:viewToAttachTo withOffset:self.frame.size.width*0.01];
+				[letterLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.letterScrollView withMultiplier:0.95];
+				[letterLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.letterScrollView withMultiplier:0.06];
+			}];
+			[LMLayoutManager addNewLandscapeConstraints:letterLabelLandscapeConstraints];
 			
 			UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(selectLetterGesture:)];
 			[letterLabel addGestureRecognizer:tapGesture];
