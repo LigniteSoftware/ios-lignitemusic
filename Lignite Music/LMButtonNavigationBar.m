@@ -343,11 +343,30 @@
 		self.browsingBar = [LMBrowsingBar newAutoLayoutView];
 		self.browsingBar.searchBarDelegate = self;
 		self.browsingBar.letterTabDelegate = self.letterTabBarDelegate;
+		self.browsingBar.layer.shadowOpacity = 0.25f;
+		self.browsingBar.layer.shadowOffset = CGSizeMake(0, 0);
+		self.browsingBar.layer.masksToBounds = NO;
+		self.browsingBar.layer.shadowRadius = 5;
 		[self addSubview:self.browsingBar];
 
 		
 		self.miniPlayerCoreView.rootViewController = self.rootViewController;
 		[self addSubview:self.miniPlayerCoreView];
+		
+		UIView *shadowView = [UIView newAutoLayoutView];
+		shadowView.layer.shadowOpacity = 0.25f;
+		shadowView.layer.shadowOffset = CGSizeMake(0, 0);
+		shadowView.layer.masksToBounds = NO;
+		shadowView.layer.shadowRadius = 5;
+		shadowView.backgroundColor = [UIColor lightGrayColor];
+		[self addSubview:shadowView];
+		
+		[shadowView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.miniPlayerCoreView];
+		[shadowView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.miniPlayerCoreView];
+		[shadowView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.miniPlayerCoreView];
+		[shadowView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.miniPlayerCoreView];
+		
+		[self insertSubview:shadowView belowSubview:self.miniPlayerCoreView];
 
 		
 		

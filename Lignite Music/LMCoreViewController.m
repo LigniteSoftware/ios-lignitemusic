@@ -987,7 +987,7 @@ LMControlBarViewDelegate
 						
 						NSArray *compactViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 							[NSLayoutConstraint autoSetPriority:UILayoutPriorityDefaultHigh forConstraints:^{
-								[self.compactView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.navigationBar];
+								[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:64];
 							}];
 							[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 							[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
