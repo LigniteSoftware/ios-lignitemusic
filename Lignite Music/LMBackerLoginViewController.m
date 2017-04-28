@@ -550,7 +550,7 @@ NSString* backerDeviceName(){
 		UIKeyboardTypeEmailAddress, UIKeyboardTypeNumberPad
 	};
 	
-	for(int i = 0; i < textKeys.count; i++){
+	for(int i = 0; i < 2; i++){
 		BOOL isFirst = (i == 0);
 		
 		UIView *previousViewToAttachTo = isFirst ? self.descriptionLabel : [viewsArray lastObject];

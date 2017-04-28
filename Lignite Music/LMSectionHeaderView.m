@@ -133,7 +133,7 @@
 		[self.sectionHeaderIconImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.sectionHeaderBackgroundView withMultiplier:(2.0/4.0)];
 		
 		self.sectionHeaderLabel = [LMLabel newAutoLayoutView];
-		self.sectionHeaderLabel.text = self.sectionHeaderTitle ? self.sectionHeaderTitle : @"Unnamed Section";
+		self.sectionHeaderLabel.text = self.sectionHeaderTitle ? self.sectionHeaderTitle : NSLocalizedString(@"Unnamed Section", nil);
 		self.sectionHeaderLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:50];
 //		self.sectionHeaderLabel.backgroundColor = [UIColor cyanColor];
 		[self.sectionHeaderBackgroundView addSubview:self.sectionHeaderLabel];

@@ -98,15 +98,15 @@
 	
 	NSMutableArray *contactButtonsArray = [NSMutableArray new];
 	
-	NSArray *contactButtonStrings = @[
+	const NSArray *contactButtonStrings = @[
 									  @"ContactEmail", @"ContactTwitter", @"ContactWebsite"
 									  ];
-	LMIcon contactButtonIcons[] = {
+	const LMIcon contactButtonIcons[] = {
 		LMIconPaperPlane, LMIconTwitter, LMIconLink
 	};
 	
 	
-	for(int i = 0; i < contactButtonStrings.count; i++){
+	for(int i = 0; i < 3; i++){
 		LMView *viewToPinTo = (i == 0) ? self.descriptionLabel : [contactButtonsArray objectAtIndex:i-1];
 		
 		NSString *buttonString = NSLocalizedString([contactButtonStrings objectAtIndex:i], nil);

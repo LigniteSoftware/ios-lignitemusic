@@ -184,15 +184,6 @@
 }
 
 - (float)contentSubviewFactorial:(BOOL)height forBigListEntry:(LMBigListEntry *)bigListEntry {
-	CGRect frame = [[self.collectionView.visibleCells firstObject] frame];
-	
-	if(frame.size.width == 0){
-		CGSize initialSize = [self collectionView:self.collectionView
-										   layout:self.collectionView.collectionViewLayout
-						   sizeForItemAtIndexPath:[NSIndexPath indexPathWithIndex:bigListEntry.collectionIndex]];
-		frame = CGRectMake(0, 0, initialSize.width, initialSize.height);
-	}
-	
 	return height ? 0.1 : 1.0;
 }
 

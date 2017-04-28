@@ -99,6 +99,7 @@
 	}
 	
 	return fixedLettersDictionary;
+	
 	return _lettersDictionary;
 }
 

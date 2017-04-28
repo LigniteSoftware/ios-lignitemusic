@@ -124,7 +124,7 @@ typedef NS_ENUM(NSUInteger, YYAnimatedImageType) {
     @package
     UIImage <YYAnimatedImage> *_curAnimatedImage;
     
-    dispatch_once_t _onceToken;
+//    dispatch_once_t _onceToken;
     dispatch_semaphore_t _lock; ///< lock for _buffer
     NSOperationQueue *_requestQueue; ///< image request queue, serial
     
@@ -228,6 +228,8 @@ typedef NS_ENUM(NSUInteger, YYAnimatedImageType) {
     self.highlightedImage = highlightedImage;
     return self;
 }
+
+static dispatch_once_t _onceToken;
 
 // init the animated params.
 - (void)resetAnimated {

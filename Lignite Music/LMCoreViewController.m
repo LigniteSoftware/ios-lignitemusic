@@ -351,15 +351,6 @@ LMControlBarViewDelegate
 		}
 	}
 	
-	int indexOfSource = -1;
-	
-	for(int i = 0; i < self.sourcesForSourceSelector.count; i++){
-		LMSource *indexSource = [self.sourcesForSourceSelector objectAtIndex:i];
-		if([source isEqual:indexSource]){
-			indexOfSource = i;
-			break;
-		}
-	}
 	
 	if(!source.shouldNotHighlight){
 		[self.currentSource setHidden:YES];
@@ -455,16 +446,22 @@ LMControlBarViewDelegate
 }
 
 - (void)viewDidAppear:(BOOL)animated {
+	[super viewDidAppear:animated];
+	
 	self.currentDetailViewController = nil;
 	self.searchViewController = nil;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
+	[super viewWillDisappear:animated];
+	
 	[self.buttonNavigationBar.browsingBar setShowingLetterTabs:NO];
 	[self.landscapeNavigationBar setMode:LMLandscapeNavigationBarModeWithBackButton];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+	[super viewWillAppear:animated];
+	
 	[self.buttonNavigationBar.browsingBar setShowingLetterTabs:YES];
 	[self.landscapeNavigationBar setMode:LMLandscapeNavigationBarModeOnlyLogo];
 }

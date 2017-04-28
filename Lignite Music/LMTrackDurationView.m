@@ -75,7 +75,6 @@
 //	self.songCountLabel.backgroundColor = [UIColor orangeColor];
 	self.songCountLabel.textAlignment = NSTextAlignmentLeft;
 	self.songCountLabel.textColor = [UIColor blackColor];
-	self.songCountLabel.text = @"Count";
 	self.songCountLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:50.0f];
 	[self addSubview:self.songCountLabel];
 	
@@ -89,7 +88,6 @@
 //	self.songDurationLabel.backgroundColor = [UIColor redColor];
 	self.songDurationLabel.textAlignment = NSTextAlignmentRight;
 	self.songDurationLabel.textColor = [UIColor blackColor];
-	self.songDurationLabel.text = @"Duration";
 	self.songDurationLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:50.0f];
 	[self addSubview:self.songDurationLabel];
 	

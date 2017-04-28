@@ -110,8 +110,6 @@
 			LMView *previousView = isFirst ? self : [self.buttonsArray lastObject];
 			
 			LMView *newBackgroundView = [LMView newAutoLayoutView];
-			
-			newBackgroundView = [LMView newAutoLayoutView];
 			newBackgroundView.backgroundColor = [LMColour ligniteRedColour];
 			[self addSubview:newBackgroundView];
 			

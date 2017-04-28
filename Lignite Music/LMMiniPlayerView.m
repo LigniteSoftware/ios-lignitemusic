@@ -72,7 +72,7 @@
 	
 	BOOL noTrackPlaying = ![self.musicPlayer hasTrackLoaded];
 	
-	NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
+	__block __weak NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
 		UIImage *titlesIcon = [LMAppIcon imageForIcon:LMIconNoAlbumArt];
 		UIImage *albumImage = noTrackPlaying ? titlesIcon : [newTrack albumArt];
 		if(!albumImage){

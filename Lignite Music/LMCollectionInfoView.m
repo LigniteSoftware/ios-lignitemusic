@@ -39,7 +39,7 @@
 		[self addSubview:self.topView];
 		
 		self.titleLabel = [LMLabel newAutoLayoutView];
-		self.titleLabel.text = @"Title";
+//		self.titleLabel.text = @"Title";
 		self.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:50.0f];
 		self.titleLabel.textAlignment = NSTextAlignmentCenter;
 		[self.topView addSubview:self.titleLabel];
@@ -49,7 +49,7 @@
 		[self addSubview:self.bottomView];
 		
 		self.leftTextLabel = [LMLabel newAutoLayoutView];
-		self.leftTextLabel.text = @"Left text";
+//		self.leftTextLabel.text = @"Left text";
 		self.leftTextLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:50.0f];
 		self.leftTextLabel.textAlignment = NSTextAlignmentRight;
 		[self.bottomView addSubview:self.leftTextLabel];
@@ -70,7 +70,7 @@
 		[self.middleDividerView addSubview:self.middleDividerImageView];
 		
 		self.rightTextLabel = [LMLabel newAutoLayoutView];
-		self.rightTextLabel.text = @"Right text";
+//		self.rightTextLabel.text = @"Right text";
 		self.rightTextLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:50.0f];
 		self.rightTextLabel.textAlignment = NSTextAlignmentLeft;
 		[self.bottomView addSubview:self.rightTextLabel];

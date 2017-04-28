@@ -199,7 +199,7 @@
 	
 	// Complete the lookup
 	NSUInteger request_type = [request[MessageKeyRequestLibrary] unsignedIntegerValue];
-	if(request_type == MPMediaGroupingTitle) {
+	if(request_type == MPMediaGroupingTitle && collection) {
 		return @[collection];
 	} else {
 		NSLog(@"Got persistent ID: %@", persistent_id);

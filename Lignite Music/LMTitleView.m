@@ -162,7 +162,7 @@
 	
 	[entry.queue cancelAllOperations];
 	
-	NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
+	__block __weak NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
 		LMMusicTrack *track = [self.musicTitles.items objectAtIndex:entry.collectionIndex];
 		UIImage *albumArt = [track albumArt];
 		

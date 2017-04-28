@@ -649,6 +649,8 @@ NSString* deviceName(){
 
 - (void)viewDidDisappear:(BOOL)animated {
 	[self saveDetailsToStorage:YES];
+	
+	[super viewDidDisappear:animated];
 }
 
 - (void)didReceiveMemoryWarning {

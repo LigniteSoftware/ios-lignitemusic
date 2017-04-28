@@ -352,7 +352,7 @@
 
 - (void)imageNeedsDownloadingForMusicTrack:(LMMusicTrack*)representativeItem forCategory:(LMImageManagerCategory)category completion:(void(^)(BOOL needsDownloading))completionHandler {
 	
-	NSBlockOperation *albumArtOperation = [NSBlockOperation blockOperationWithBlock:^{
+	__block __weak NSBlockOperation *albumArtOperation = [NSBlockOperation blockOperationWithBlock:^{
 		//TODO: Fix this not being cancelled because of weak reference
 		if(albumArtOperation.isCancelled){
 			return;
@@ -625,44 +625,42 @@
 }
 
 - (void)beginDownloadingImagesForCategory:(LMImageManagerCategory)category {
-	return;
-	
-	NSLog(@"[LMImageManager]: Will begin the process for downloading images for category %d.", category);
-	
-	NSArray *collectionsAssociated = (category == LMImageManagerCategoryArtistImages) ? self.artistsCollection : self.albumsCollection;
-	
-	NSNumber *categoryNumber = @(category);
-	
-	[self.currentlyProcessingCategoryArray addObject:categoryNumber];
-	
-	NSLog(@"Processing %d.", category);
-	
-	for(int i = 0; i < collectionsAssociated.count; i++){
-		LMMusicTrackCollection *collection = [collectionsAssociated objectAtIndex:i];
-		LMMusicTrack *representativeTrack = collection.representativeItem;
-		
-		[self imageNeedsDownloadingForMusicTrack:representativeTrack
-									 forCategory:category
-									  completion:^(BOOL needsDownloading) {
-//										  NSLog(@"%d %@ needs downloading: %d", i, representativeTrack.albumTitle, needsDownloading);
-										  
-										  //If it needs downloading, is not already in queue, and is not on the blacklist
-										  if(needsDownloading
-//											 && ![self.trackDownloadQueue containsObject:representativeTrack]
-											 && ![self musicTrackIsOnBlacklist:representativeTrack forCategory:category])
-										  {
-											  if(representativeTrack && categoryNumber){
-												  [self.trackDownloadQueue addObject:representativeTrack];
-												  [self.categoryDownloadQueue addObject:categoryNumber];
-											  }
-										  }
-										  
-										  //Since this should mean we're at least part way through the list (since its asynchronus), we can know with fairly high confidence that there will be some items in the queue, so we can start downloading them since we don't actually start downloading instantly.
-										  if(i == collectionsAssociated.count-1){
-											  [self downloadNextImageInQueue];
-										  }
-									  }];
-	}
+//	NSLog(@"[LMImageManager]: Will begin the process for downloading images for category %d.", category);
+//	
+//	NSArray *collectionsAssociated = (category == LMImageManagerCategoryArtistImages) ? self.artistsCollection : self.albumsCollection;
+//	
+//	NSNumber *categoryNumber = @(category);
+//	
+//	[self.currentlyProcessingCategoryArray addObject:categoryNumber];
+//	
+//	NSLog(@"Processing %d.", category);
+//	
+//	for(int i = 0; i < collectionsAssociated.count; i++){
+//		LMMusicTrackCollection *collection = [collectionsAssociated objectAtIndex:i];
+//		LMMusicTrack *representativeTrack = collection.representativeItem;
+//		
+//		[self imageNeedsDownloadingForMusicTrack:representativeTrack
+//									 forCategory:category
+//									  completion:^(BOOL needsDownloading) {
+////										  NSLog(@"%d %@ needs downloading: %d", i, representativeTrack.albumTitle, needsDownloading);
+//										  
+//										  //If it needs downloading, is not already in queue, and is not on the blacklist
+//										  if(needsDownloading
+////											 && ![self.trackDownloadQueue containsObject:representativeTrack]
+//											 && ![self musicTrackIsOnBlacklist:representativeTrack forCategory:category])
+//										  {
+//											  if(representativeTrack && categoryNumber){
+//												  [self.trackDownloadQueue addObject:representativeTrack];
+//												  [self.categoryDownloadQueue addObject:categoryNumber];
+//											  }
+//										  }
+//										  
+//										  //Since this should mean we're at least part way through the list (since its asynchronus), we can know with fairly high confidence that there will be some items in the queue, so we can start downloading them since we don't actually start downloading instantly.
+//										  if(i == collectionsAssociated.count-1){
+//											  [self downloadNextImageInQueue];
+//										  }
+//									  }];
+//	}
 }
 
 - (void)downloadIfNeededForCategory:(LMImageManagerCategory)category {
@@ -836,16 +834,13 @@
 
 // http://stackoverflow.com/questions/5712527/how-to-detect-total-available-free-disk-space-on-the-iphone-ipad-device
 + (uint64_t)diskBytesFree {
-	uint64_t totalSpace = 0;
 	uint64_t totalFreeSpace = 0;
 	NSError *error = nil;
 	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
 	NSDictionary *dictionary = [[NSFileManager defaultManager] attributesOfFileSystemForPath:[paths lastObject] error: &error];
 	
 	if (dictionary) {
-		NSNumber *fileSystemSizeInBytes = [dictionary objectForKey:NSFileSystemSize];
 		NSNumber *freeFileSystemSizeInBytes = [dictionary objectForKey:NSFileSystemFreeSize];
-		totalSpace = [fileSystemSizeInBytes unsignedLongLongValue];
 		totalFreeSpace = [freeFileSystemSizeInBytes unsignedLongLongValue];
 	}
 	else {

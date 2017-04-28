@@ -226,7 +226,7 @@ static __NSMutableArray_of(NSString *) *_al_globalConstraintIdentifiers = nil;
  When executing a constraints block passed into +[autoSetIdentifier:forConstraints:], this will return
  the identifier for the current block. Otherwise, nil is returned.
  */
-+ (NSString *)al_currentGlobalConstraintIdentifier
++ (NSString * __nullable)al_currentGlobalConstraintIdentifier
 {
     __NSMutableArray_of(NSString *) *globalConstraintIdentifiers = [self al_globalConstraintIdentifiers];
     if ([globalConstraintIdentifiers count] == 0) {

@@ -83,7 +83,7 @@
 	
 	[self.queue cancelAllOperations];
 	
-	NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
+	__block __weak NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
 		@autoreleasepool {
 			
 			NSMutableArray *highestIds = [NSMutableArray new];
@@ -313,9 +313,9 @@
 				float widthToUse = maintainSquare ? smallerDimension : tiledAlbumCoverView.frame.size.width;
 				float heightToUse = maintainSquare ? smallerDimension : tiledAlbumCoverView.frame.size.height;
 				
-				if(maintainSquare){
-					largerDimension = smallerDimension;
-				}
+//				if(maintainSquare){
+//					largerDimension = smallerDimension;
+//				}
 				
 				float areaTotal = widthToUse * heightToUse;
 				float areaPerTile = areaTotal/amountOfTiles;

@@ -189,7 +189,7 @@
 	
 	BOOL noTrackPlaying = ![self.musicPlayer hasTrackLoaded];
 	
-	NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
+	__weak __block NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
 		UIImage *albumArt = [newTrack albumArt];
 		UIImage *albumImage = (noTrackPlaying || !albumArt) ? [UIImage imageNamed:@"lignite_background_portrait.png"] : albumArt;
 		
@@ -542,12 +542,12 @@
 
 - (NSString*)titleForListEntry:(LMListEntry*)entry {
 //	return @"queue title";
-	return [NSString stringWithFormat:@"%@", [self.musicPlayer.nowPlayingCollection.items objectAtIndex:entry.collectionIndex].title];
+	return [NSString stringWithFormat:@"%@", [[self.musicPlayer.nowPlayingCollection.items objectAtIndex:entry.collectionIndex] title]];
 }
 
 - (NSString*)subtitleForListEntry:(LMListEntry*)entry {
 //	return @"queue subtitle";
-	return [NSString stringWithFormat:@"%@", [LMNowPlayingView durationStringTotalPlaybackTime:[self.musicPlayer.nowPlayingCollection.items objectAtIndex:entry.collectionIndex].playbackDuration]];
+	return [NSString stringWithFormat:@"%@", [LMNowPlayingView durationStringTotalPlaybackTime:[[self.musicPlayer.nowPlayingCollection.items objectAtIndex:entry.collectionIndex] playbackDuration]]];
 }
 
 - (UIImage*)iconForListEntry:(LMListEntry*)entry {
@@ -953,7 +953,7 @@
 //	[self.brandNewAlbumArtImageView addGestureRecognizer:panGestureRecognizer];
 	
 	
-	self.queueOpenDraggingOverlayView = [UIView newAutoLayoutView];;
+	self.queueOpenDraggingOverlayView = [LMView newAutoLayoutView];;
 //	self.queueOpenDraggingOverlayView.backgroundColor = [UIColor colorWithRed:0.3 green:0.3 blue:0.5 alpha:0.4];
 	self.queueOpenDraggingOverlayView.hidden = YES;
 	[self.mainView addSubview:self.queueOpenDraggingOverlayView];

@@ -20,7 +20,7 @@
 #import "LMLabel.h"
 
 @interface LMButtonNavigationBar()<UIGestureRecognizerDelegate,
-							 LMButtonBarDelegate, LMButtonDelegate, LMSearchBarDelegate, LMLayoutChangeDelegate, LMLandscapeNavigationBarDelegate>
+							 LMButtonBarDelegate, LMButtonDelegate, LMSearchBarDelegate, LMLayoutChangeDelegate>
 
 /**
  The music player.
@@ -171,31 +171,29 @@
 }
 
 - (void)minimize {
-	return;
-	
-    if(self.isMinimized){
-        return;
-    }
-    
-    self.isMinimized = YES;
-    self.isCompletelyHidden = NO;
-    
-	NSLog(@"Minimize");
-	
-	__weak id weakSelf = self;
-	
-	[self setButtonBarBottomConstraintConstant:self.buttonBar.frame.size.height
-                                             + self.viewAttachedToButtonBar.frame.size.height
-									completion:^(BOOL finished) {
-										LMButtonNavigationBar *strongSelf = weakSelf;
-										if(!strongSelf){
-											return;
-										}
-									}];
-	
-	self.currentPoint = CGPointMake(self.originalPoint.x, self.originalPoint.y + self.buttonBarBottomConstraint.constant);
-	
-	self.heightBeforeAdjustingToScrollPosition = -1;
+//    if(self.isMinimized){
+//        return;
+//    }
+//    
+//    self.isMinimized = YES;
+//    self.isCompletelyHidden = NO;
+//    
+//	NSLog(@"Minimize");
+//	
+//	__weak id weakSelf = self;
+//	
+//	[self setButtonBarBottomConstraintConstant:self.buttonBar.frame.size.height
+//                                             + self.viewAttachedToButtonBar.frame.size.height
+//									completion:^(BOOL finished) {
+//										LMButtonNavigationBar *strongSelf = weakSelf;
+//										if(!strongSelf){
+//											return;
+//										}
+//									}];
+//	
+//	self.currentPoint = CGPointMake(self.originalPoint.x, self.originalPoint.y + self.buttonBarBottomConstraint.constant);
+//	
+//	self.heightBeforeAdjustingToScrollPosition = -1;
 }
 
 - (void)maximize {

@@ -112,7 +112,7 @@
 		
 	//	self.titleLabel.layoutMargins = UIEdgeInsetsMake(0, -4, 0, -4);
 		
-		CGFloat heightMultipliers[] = {
+		const CGFloat heightMultipliers[] = {
 			(1.0/2.25), (1.0/4.0), (1.0/5.0)
 		};
 		NSArray *labels = @[
@@ -122,7 +122,7 @@
 			self.titleText, self.artistText, self.albumText
 		];
 		
-		for(int i = 0; i < labels.count; i++){
+		for(int i = 0; i < 3; i++){
 			BOOL isFirst = (i == 0);
 			
 			MarqueeLabel *label = [labels objectAtIndex:i];

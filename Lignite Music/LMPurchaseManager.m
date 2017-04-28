@@ -224,7 +224,7 @@
 		NSString *productIdentifier = transaction.payment.productIdentifier;
 		SKPaymentTransactionState transactionState = transaction.transactionState;
         
-        NSLog(@"State %d", transactionState);
+        NSLog(@"State %ld", (long)transactionState);
 		
 		for(id<LMPurchaseManagerDelegate> delegate in self.delegatesArray){
 			if([delegate respondsToSelector:@selector(transactionStateChangedTo:forProductWithIdentifier:)]){
