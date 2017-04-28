@@ -352,7 +352,7 @@
 
 - (void)imageNeedsDownloadingForMusicTrack:(LMMusicTrack*)representativeItem forCategory:(LMImageManagerCategory)category completion:(void(^)(BOOL needsDownloading))completionHandler {
 	
-	__block __weak NSBlockOperation *albumArtOperation = [NSBlockOperation blockOperationWithBlock:^{
+	__block NSBlockOperation *albumArtOperation = [NSBlockOperation blockOperationWithBlock:^{
 		//TODO: Fix this not being cancelled because of weak reference
 		if(albumArtOperation.isCancelled){
 			return;

@@ -105,7 +105,7 @@
 			if(self.controlButtonViews.count > 0){
 				lastBackgroundView = [[self.controlButtonViews objectAtIndex:i-1] superview];
 			}
-			NSAssert(lastBackgroundView, @"Last background view is nil! What the fuckkkk");
+//			NSAssert(lastBackgroundView, @"Last background view is nil! What the fuckkkk");
 			
 			UIView *buttonAreaView = [UIView newAutoLayoutView];
 			[self.buttonBackgroundView addSubview:buttonAreaView];

@@ -189,7 +189,7 @@
 	
 	BOOL noTrackPlaying = ![self.musicPlayer hasTrackLoaded];
 	
-	__weak __block NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
+	__block NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
 		UIImage *albumArt = [newTrack albumArt];
 		UIImage *albumImage = (noTrackPlaying || !albumArt) ? [UIImage imageNamed:@"lignite_background_portrait.png"] : albumArt;
 		
