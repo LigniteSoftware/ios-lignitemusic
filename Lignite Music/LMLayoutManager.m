@@ -71,6 +71,22 @@
 	}
 }
 
++ (void)removeAllConstraintsRelatedToView:(UIView*)view {
+	LMLayoutManager *layoutManager = [LMLayoutManager sharedLayoutManager];
+	
+	NSArray<NSMutableArray*> *arraysToMutate = @[ layoutManager.portraitConstraintsArray, layoutManager.landscapeConstraintsArray ];
+	
+	for(NSMutableArray *mutatingArray in arraysToMutate){
+		NSMutableArray *oldConstraintsArray = [NSMutableArray arrayWithArray:mutatingArray];
+		for(NSLayoutConstraint *constraint in oldConstraintsArray){
+			if(constraint.firstItem == view || constraint.secondItem == view){
+				constraint.active = NO;
+				[mutatingArray removeObject:constraint];
+			}
+		}
+	}
+}
+
 - (BOOL)isLandscape {
 	return [self currentLayoutClass] == LMLayoutClassLandscape;
 }

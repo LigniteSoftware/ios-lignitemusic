@@ -77,6 +77,8 @@
 		for(NSUInteger i = 0; i < self.letterViewsArray.count; i++){
 			LMView *letterView = [self.letterViewsArray objectAtIndex:i];
 			
+			[LMLayoutManager removeAllConstraintsRelatedToView:letterView];
+			
 			letterView.hidden = YES;
 			[letterView removeFromSuperview];
 		}

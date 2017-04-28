@@ -38,5 +38,6 @@ typedef NS_ENUM(NSInteger, LMLayoutClass) {
 - (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator;
 + (void)addNewPortraitConstraints:(NSArray<NSLayoutConstraint*>*)constraintsArray;
 + (void)addNewLandscapeConstraints:(NSArray<NSLayoutConstraint*>*)constraintsArray;
++ (void)removeAllConstraintsRelatedToView:(UIView*)view;
 
 @end
