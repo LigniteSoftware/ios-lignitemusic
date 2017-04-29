@@ -13,6 +13,7 @@
 #import "LMBackerLoginViewController.h"
 #import "LMGuideViewPagerController.h"
 #import "LMGuideViewController.h"
+#import "LMLayoutManager.h"
 #import "NSTimer+Blocks.h"
 #import "LMSettings.h"
 #import "LMAnswers.h"
@@ -23,7 +24,7 @@
 
 @import StoreKit;
 
-@interface LMGuideViewController ()
+@interface LMGuideViewController ()<LMLayoutChangeDelegate>
 #ifdef SPOTIFY
 <SpotifyDelegate>
 #endif
@@ -45,6 +46,8 @@
 @property BOOL checkComplete;
 
 @property int triesToAcceptPermission;
+
+@property LMLayoutManager *layoutManager;
 
 @end
 
@@ -313,13 +316,22 @@
 }
 #endif
 
+- (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+	BOOL willBeLandscape = size.width > size.height;
+	self.descriptionLabel.textAlignment = willBeLandscape ? NSTextAlignmentCenter : NSTextAlignmentLeft;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
 	
 	
 #ifdef SPOTIFY
-	[[Spotify sharedInstance] addDelegate:self];
+//	[[Spotify sharedInstance] addDelegate:self];
 #endif
+	
+	self.layoutManager = [LMLayoutManager sharedLayoutManager];
+	[self.layoutManager addDelegate:self];
+	
 	
 	self.view.backgroundColor = [UIColor clearColor];
     
@@ -405,6 +417,7 @@
 	self.descriptionLabel.numberOfLines = 0;
 //	self.descriptionLabel.backgroundColor = [UIColor yellowColor];
 	self.descriptionLabel.text = self.contentDescription;
+	self.descriptionLabel.textAlignment = self.layoutManager.isLandscape ? NSTextAlignmentCenter : NSTextAlignmentLeft;
 	[self.contentView addSubview:self.descriptionLabel];
 	
 	

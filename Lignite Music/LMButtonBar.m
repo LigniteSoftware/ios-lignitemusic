@@ -96,7 +96,7 @@
 - (void)layoutSubviews {
 	NSLog(@"Dig %p frame %@", self, NSStringFromCGRect(self.frame));
 	
-	BOOL isLandscape = [LMLayoutManager sharedLayoutManager].isLandscape;
+//	BOOL isLandscape = [LMLayoutManager sharedLayoutManager].isLandscape;
 	
 	if(!self.didLayoutConstraints) {
 		self.didLayoutConstraints = YES;

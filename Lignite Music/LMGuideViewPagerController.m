@@ -6,16 +6,22 @@
 //  Copyright © 2016 Edwin Finch. All rights reserved.
 //
 
-#import "LMGuideViewPagerController.h"
-#import "LMGuideViewController.h"
-#import "LMColour.h"
 #import <PureLayout/PureLayout.h>
 
-@interface LMGuideViewPagerController ()
+#import "LMGuideViewPagerController.h"
+#import "LMGuideViewController.h"
+#import "LMLayoutManager.h"
+#import "LMColour.h"
+
+@interface LMGuideViewPagerController () <LMLayoutChangeDelegate>
 
 @property NSArray *titleArray, *descriptionArray, *screenshotsArray, *buttonNamesArray;
 
 @property NSInteger amountOfPages;
+
+@property UIImageView *backgroundImageView;
+
+@property LMLayoutManager *layoutManager;
 
 @end
 
@@ -32,8 +38,16 @@
 	return YES;
 }
 
+- (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+	BOOL willBeLandscape = size.width > size.height;
+	self.backgroundImageView.image = [UIImage imageNamed:willBeLandscape ? @"lignite_background_landscape.png" : @"lignite_background_portrait.png"];
+}
+
 - (void)viewDidLoad {
 	[super viewDidLoad];
+	
+	self.layoutManager = [LMLayoutManager sharedLayoutManager];
+	[self.layoutManager addDelegate:self];
 
 	switch(self.guideMode){
 		case GuideModeOnboarding: {
@@ -128,12 +142,12 @@
 	
 	[self.pageController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
 	
-	UIImageView *backgroundImageView = [UIImageView newAutoLayoutView];
-	backgroundImageView.contentMode = UIViewContentModeScaleAspectFit;
-	backgroundImageView.image = [UIImage imageNamed:@"lignite_background_portrait.png"];
-	[self.view addSubview:backgroundImageView];
+	self.backgroundImageView = [UIImageView newAutoLayoutView];
+	self.backgroundImageView.contentMode = UIViewContentModeScaleAspectFit;
+	self.backgroundImageView.image = [UIImage imageNamed:self.layoutManager.isLandscape ? @"lignite_background_landscape.png" : @"lignite_background_portrait.png"];
+	[self.view addSubview:self.backgroundImageView];
 	
-	[backgroundImageView autoPinEdgesToSuperviewEdges];
+	[self.backgroundImageView autoPinEdgesToSuperviewEdges];
 	
 //	UIView *testView = [UIView newAutoLayoutView];
 //	testView.backgroundColor = [UIColor blueColor];
