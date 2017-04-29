@@ -313,8 +313,10 @@
 	
 	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		[self setSelectedTab:self.currentlySelectedTab];
+		
 		if(self.currentlySelectedTab != LMNavigationTabView){
 			[self topConstrantForView:(self.currentlySelectedTab == LMNavigationTabBrowse) ? self.miniPlayerCoreView : self.browsingBar].constant = WINDOW_FRAME.size.height * 2;
+			[self topConstrantForView:self.sourceSelector].constant = WINDOW_FRAME.size.height * 2;
 			[self layoutIfNeeded];
 		}
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
