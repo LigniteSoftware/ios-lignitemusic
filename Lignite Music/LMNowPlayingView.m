@@ -669,19 +669,21 @@
     self.queueView.hidden = YES;
 	[self addSubview:self.queueView];
 	
-	[self beginAddingNewPortraitConstraints];
-	[self.queueView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-	[self.queueView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-	[self.queueView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.mainView];
-	[self.queueView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(3.0/4.0)];
+	NSArray *queueViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.queueView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+		[self.queueView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[self.queueView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.mainView];
+		[self.queueView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(3.0/4.0)];
+	}];
+	[LMLayoutManager addNewPortraitConstraints:queueViewPortraitConstraints];
 	
-	[self beginAddingNewLandscapeConstraints];
-	[self.queueView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-	[self.queueView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-	[self.queueView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.mainView];
-	[self.queueView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(1.0/2.0)];
-	
-	[self endAddingNewConstraints];
+	NSArray *queueViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.queueView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+		[self.queueView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[self.queueView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.mainView];
+		[self.queueView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(1.0/2.0)];
+	}];
+	[LMLayoutManager addNewLandscapeConstraints:queueViewLandscapeConstraints];
 	
 	
 	self.currentlyHighlighted = -1;
@@ -775,19 +777,22 @@
 	self.albumArtRootView.backgroundColor = [UIColor clearColor];
 	[self.mainView addSubview:self.albumArtRootView];
 	
-	[self.mainView beginAddingNewPortraitConstraints];
-	[self.albumArtRootView autoAlignAxis:ALAxisVertical toSameAxisOfView:self.mainView];
-	[self.albumArtRootView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.mainView];
-	[self.albumArtRootView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.mainView];
-	[self.albumArtRootView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.mainView];
-	[self.albumArtRootView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.mainView];
-
+	NSArray *albumArtRootViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.albumArtRootView autoAlignAxis:ALAxisVertical toSameAxisOfView:self.mainView];
+		[self.albumArtRootView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.mainView];
+		[self.albumArtRootView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.mainView];
+		[self.albumArtRootView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.mainView];
+		[self.albumArtRootView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.mainView];
+	}];
+	[LMLayoutManager addNewPortraitConstraints:albumArtRootViewPortraitConstraints];
 	
-	[self.mainView beginAddingNewLandscapeConstraints];
-	[self.albumArtRootView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-	[self.albumArtRootView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-	[self.albumArtRootView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.mainView withMultiplier:0.9];
-	[self.albumArtRootView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.mainView withMultiplier:0.9];
+	NSArray *albumArtRootViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.albumArtRootView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+		[self.albumArtRootView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.albumArtRootView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.mainView withMultiplier:0.9];
+		[self.albumArtRootView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.mainView withMultiplier:0.9];
+	}];
+	[LMLayoutManager addNewLandscapeConstraints:albumArtRootViewLandscapeConstraints];
 	
 	
 	self.albumArtImageView = [LMAlbumArtView newAutoLayoutView];
@@ -812,18 +817,22 @@
 	
 	
 	
-	[self.mainView beginAddingNewPortraitConstraints];
-	[self.progressSlider autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-	[self.progressSlider autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	[self.progressSlider autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.albumArtRootView];
-	[self.progressSlider autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.mainView withMultiplier:(1.0/20.0)];
+	NSArray *progressSliderPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.progressSlider autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.progressSlider autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.progressSlider autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.albumArtRootView];
+		[self.progressSlider autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.mainView withMultiplier:(1.0/20.0)];
+	}];
+	[LMLayoutManager addNewPortraitConstraints:progressSliderPortraitConstraints];
 		
 
-	[self.mainView beginAddingNewLandscapeConstraints];
-	[self.progressSlider autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-	[self.progressSlider autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-	[self.progressSlider autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	[self.progressSlider autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.mainView withMultiplier:(1.0/10.0)];
+	NSArray *progressSliderLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.progressSlider autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[self.progressSlider autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.progressSlider autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.progressSlider autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.mainView withMultiplier:(1.0/10.0)];
+	}];
+	[LMLayoutManager addNewLandscapeConstraints:progressSliderLandscapeConstraints];
 	
 	
 	self.trackInfoView = [LMTrackInfoView newAutoLayoutView];
@@ -832,20 +841,22 @@
 	[self.mainView addSubview:self.trackInfoView];
 	
 	//TODO: Fix this being manually set value
-	[self.mainView beginAddingNewPortraitConstraints];
-	[self.trackInfoView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.progressSlider withOffset:30];
-	[self.trackInfoView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.progressSlider withOffset:20];
-	[self.trackInfoView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.progressSlider withOffset:-20];
-	[self.trackInfoView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.mainView withMultiplier:(1.0/6.0)];
+	NSArray *trackInfoViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.trackInfoView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.progressSlider withOffset:30];
+		[self.trackInfoView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.progressSlider withOffset:20];
+		[self.trackInfoView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.progressSlider withOffset:-20];
+		[self.trackInfoView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.mainView withMultiplier:(1.0/6.0)];
+	}];
+	[LMLayoutManager addNewPortraitConstraints:trackInfoViewPortraitConstraints];
 	
-	[self.mainView beginAddingNewLandscapeConstraints];
-	[self.trackInfoView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.mainView withOffset:30];
-	[self.trackInfoView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.albumArtRootView withOffset:20];
-	[self.trackInfoView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.mainView withOffset:-20];
-	[self.trackInfoView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.mainView withMultiplier:(1.0/6.0)];
-	
-	
-	[self.mainView endAddingNewConstraints];
+	NSArray *trackInfoViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.trackInfoView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.mainView withOffset:30];
+		[self.trackInfoView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.albumArtRootView withOffset:20];
+		[self.trackInfoView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.mainView withOffset:-20];
+		[self.trackInfoView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.mainView withMultiplier:(1.0/6.0)];
+	}];
+	[LMLayoutManager addNewLandscapeConstraints:trackInfoViewLandscapeConstraints];
+
 	
 	self.shuffleModeBackgroundView = [LMView newAutoLayoutView];
 	self.repeatModeBackgroundView = [LMView newAutoLayoutView];
@@ -876,17 +887,21 @@
 //		background.backgroundColor = [UIColor colorWithRed:(0.2*i)+0.3 green:0 blue:0 alpha:1.0];
 		[self.mainView addSubview:background];
 		
-		[self.mainView beginAddingNewPortraitConstraints];
-		[background autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.trackInfoView withOffset:-10];
-		[background autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.mainView];
-		[background autoPinEdge:ALEdgeLeading toEdge:isFirst ? ALEdgeLeading : ALEdgeTrailing ofView:previousBackground];
-		[background autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.trackInfoView withMultiplier:(1.0/(float)buttons.count)];
+		NSArray *backgroundPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+			[background autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.trackInfoView withOffset:-10];
+			[background autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.mainView];
+			[background autoPinEdge:ALEdgeLeading toEdge:isFirst ? ALEdgeLeading : ALEdgeTrailing ofView:previousBackground];
+			[background autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.trackInfoView withMultiplier:(1.0/(float)buttons.count)];
+		}];
+		[LMLayoutManager addNewPortraitConstraints:backgroundPortraitConstraints];
 		
-		[self.mainView beginAddingNewLandscapeConstraints];
-		[background autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.progressSlider withOffset:-10];
-		[background autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.trackInfoView];
-		[background autoPinEdge:ALEdgeLeading toEdge:isFirst ? ALEdgeLeading : ALEdgeTrailing ofView:previousBackground];
-		[background autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.trackInfoView withMultiplier:(1.0/(float)buttons.count)];
+		NSArray *backgroundLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+			[background autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.progressSlider withOffset:-10];
+			[background autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.trackInfoView];
+			[background autoPinEdge:ALEdgeLeading toEdge:isFirst ? ALEdgeLeading : ALEdgeTrailing ofView:previousBackground];
+			[background autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.trackInfoView withMultiplier:(1.0/(float)buttons.count)];
+		}];
+		[LMLayoutManager addNewLandscapeConstraints:backgroundLandscapeConstraints];
 		
 		
 		LMButton *button = [buttons objectAtIndex:i];
@@ -930,9 +945,6 @@
 			[self.queueButton addGestureRecognizer:queueOpenPanGesture];
 		}
 	}
-	
-	
-	[self.mainView endAddingNewConstraints];
 	
 	
 	[self.shuffleModeButton setColour:self.musicPlayer.shuffleMode ? [[UIColor whiteColor] colorWithAlphaComponent:(8.0/10.0)] : [LMColour fadedColour]];
