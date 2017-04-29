@@ -26,6 +26,15 @@
 	self.view.backgroundColor = [UIColor whiteColor];
 }
 
+- (void)handlePopGesture:(UIGestureRecognizer *)gesture{
+	if(self.navigationController.topViewController == self){
+		if(gesture.state == UIGestureRecognizerStateEnded){
+			self.browsingDetailView.rootViewController.itemPopped = self.browsingDetailView.rootViewController.navigationBar.topItem;
+			[self.browsingDetailView.rootViewController.navigationBar popNavigationItemAnimated:YES];
+		}
+	}
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -38,6 +47,8 @@
 	[self.browsingDetailView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:64];
 	
 	[self.browsingDetailView setup];
+	
+	[self.navigationController.interactivePopGestureRecognizer addTarget:self action:@selector(handlePopGesture:)];
 }
 
 - (void)didReceiveMemoryWarning {

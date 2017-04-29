@@ -24,6 +24,8 @@
 
 @property LMCoreNavigationController *navigationController;
 
+@property UINavigationItem *itemPopped;
+
 - (void)panNowPlayingUp:(UIPanGestureRecognizer *)recognizer;
 
 /**

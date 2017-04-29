@@ -93,14 +93,14 @@
 }
 
 - (NSDictionary*)lettersDictionary {
-	NSMutableDictionary *fixedLettersDictionary = [NSMutableDictionary new];
-	NSString *lettersinset = @"#?ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-	for(int i = 0; i < lettersinset.length; i++){
-		NSString *letter = [NSString stringWithFormat: @"%C", [lettersinset characterAtIndex:i]];
-		[fixedLettersDictionary setObject:@(i) forKey:letter];
-	}
-	
-	return fixedLettersDictionary;
+//	NSMutableDictionary *fixedLettersDictionary = [NSMutableDictionary new];
+//	NSString *lettersinset = @"#?ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+//	for(int i = 0; i < lettersinset.length; i++){
+//		NSString *letter = [NSString stringWithFormat: @"%C", [lettersinset characterAtIndex:i]];
+//		[fixedLettersDictionary setObject:@(i) forKey:letter];
+//	}
+//	
+//	return fixedLettersDictionary;
 	
 	return _lettersDictionary;
 }

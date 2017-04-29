@@ -79,8 +79,6 @@ LMControlBarViewDelegate
 
 @property NSArray *musicCollectionsArray;
 
-@property UINavigationItem *itemPopped;
-
 /**
  The time stamp for syncing.
  */
@@ -290,7 +288,7 @@ LMControlBarViewDelegate
 	
 	[self.compactView reloadContents];
 	
-	NSLog(@"Done setting up");
+	NSLog(@"Done setting up (is layed? %d)", self.buttonNavigationBar.browsingBar.didLayoutConstraints);
 	
 	self.buttonNavigationBar.browsingBar.letterTabBar.lettersDictionary =
 		[self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:self.compactView.musicTrackCollections
@@ -456,7 +454,7 @@ LMControlBarViewDelegate
 	[super viewWillDisappear:animated];
 	
 	[self.buttonNavigationBar.browsingBar setShowingLetterTabs:NO];
-//	[self.landscapeNavigationBar setMode:LMLandscapeNavigationBarModeWithBackButton];
+	[self.landscapeNavigationBar setMode:LMLandscapeNavigationBarModeWithBackButton];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -780,6 +778,14 @@ LMControlBarViewDelegate
 	}
 }
 
+- (void)handlePopGesture:(UIGestureRecognizer *)gesture{
+	if(self.navigationController.topViewController == self){
+		if(gesture.state == UIGestureRecognizerStateEnded){
+			[self.navigationBar popNavigationItemAnimated:YES];
+		}
+	}
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view
@@ -789,6 +795,7 @@ LMControlBarViewDelegate
 	
 	self.navigationController.navigationBarHidden = YES;
 	self.navigationController.interactivePopGestureRecognizer.delegate = self;
+	[self.navigationController.interactivePopGestureRecognizer addTarget:self action:@selector(handlePopGesture:)];
 	
 	self.loaded = NO;
 	
@@ -1138,7 +1145,7 @@ LMControlBarViewDelegate
 						} repeats:NO];
 						
 						
-						[self setupBrowsingViewWithMusicType:LMMusicTypeArtists];
+//						[self setupBrowsingViewWithMusicType:LMMusicTypeArtists];
 					});
 					break;
 				}

@@ -42,6 +42,14 @@
 @synthesize keyboardIsShowing = _keyboardIsShowing;
 @synthesize showingLetterTabs = _showingLetterTabs;
 
+- (instancetype)init {
+	self = [super init];
+	if(self) {
+		self.letterTabBar = [LMLetterTabBar newAutoLayoutView];
+	}
+	return self;
+}
+
 - (void)setIsInSearchMode:(BOOL)isInSearchMode {
 	_isInSearchMode = isInSearchMode;
 	
@@ -133,7 +141,7 @@
 		[self.toggleButtonImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.toggleButtonBackgroundView withMultiplier:(1.0/2.0)];
 		
 		
-		self.letterTabBar = [LMLetterTabBar newAutoLayoutView];
+		//Is created in init
 		self.letterTabBar.delegate = self.letterTabDelegate;
 		[self addSubview:self.letterTabBar];
 		
