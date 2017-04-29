@@ -239,6 +239,20 @@
 				[self setViewAttachedToButtonBar:nil]; //Hide the source selector
 			}
 			else{
+				//Find the width or height constraint for the source selector and adjust it based on the current frame size of the button navigation bar
+				
+				NSLayoutConstraint *sizeConstraint = nil;
+				for(NSLayoutConstraint *constraint in self.sourceSelector.constraints){
+					if(constraint.firstItem == self.sourceSelector){
+						if(constraint.firstAttribute == NSLayoutAttributeWidth || constraint.firstAttribute == NSLayoutAttributeHeight){
+							sizeConstraint = constraint;
+							break;
+						}
+					}
+				}
+				
+				sizeConstraint.constant = self.layoutManager.isLandscape ? (self.frame.size.width-LMNavigationBarTabWidth) : (self.frame.size.height-LMNavigationBarTabHeight);
+				
 				[self setViewAttachedToButtonBar:self.sourceSelector];
 			}
 			self.buttonBarBottomConstraint.constant = 0;
@@ -317,6 +331,16 @@
 //	}];
 //}
 
+- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
+	for(UIView *view in self.subviews){
+		CGPoint locationInView = [view convertPoint:point fromView:self];
+		if (CGRectContainsPoint(view.bounds, locationInView)) {
+			return YES;
+		}
+	}
+	return NO;
+}
+
 - (void)layoutSubviews {
 //	return;
 	
@@ -328,7 +352,7 @@
 		NSLog(@"Did layout constraints!");
 		
 		
-		self.backgroundColor = [UIColor redColor];
+		self.backgroundColor = [UIColor clearColor];
 		
 		
 		self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
@@ -390,25 +414,25 @@
 
 		
 		
-		LMView *testView = [LMView newAutoLayoutView];
-		testView.backgroundColor = [UIColor purpleColor];
-		[self addSubview:testView];
-		
-		NSArray *testViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-			[testView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-			[testView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-			[testView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-			[testView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:0.5];
-		}];
-		[LMLayoutManager addNewLandscapeConstraints:testViewLandscapeConstraints];
-		
-		NSArray *testViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-			[testView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-			[testView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-			[testView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-			[testView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.5];
-		}];
-		[LMLayoutManager addNewPortraitConstraints:testViewPortraitConstraints];
+//		LMView *testView = [LMView newAutoLayoutView];
+//		testView.backgroundColor = [UIColor purpleColor];
+//		[self addSubview:testView];
+//		
+//		NSArray *testViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+//			[testView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+//			[testView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+//			[testView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+//			[testView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:0.5];
+//		}];
+//		[LMLayoutManager addNewLandscapeConstraints:testViewLandscapeConstraints];
+//		
+//		NSArray *testViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+//			[testView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+//			[testView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+//			[testView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+//			[testView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.5];
+//		}];
+//		[LMLayoutManager addNewPortraitConstraints:testViewPortraitConstraints];
 
 		
 		self.buttonBar = [LMButtonBar newAutoLayoutView];
@@ -429,7 +453,8 @@
 			[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 			[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 			[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-			[self.buttonBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self];
+			[self.buttonBar autoSetDimension:ALDimensionHeight toSize:properNum/8.0];
+//			[self.buttonBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self];
 		}];
 		[LMLayoutManager addNewPortraitConstraints:buttonBarPortraitConstraints];
 		
@@ -437,7 +462,8 @@
 			[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
 			[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 			[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-			[self.buttonBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
+			[self.buttonBar autoSetDimension:ALDimensionWidth toSize:properNum/8.0];
+//			[self.buttonBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
 		}];
 		[LMLayoutManager addNewLandscapeConstraints:buttonBarLandscapeConstraints];
 		
@@ -498,7 +524,7 @@
 		[LMLayoutManager addNewLandscapeConstraints:sourceSelectorLandscapeConstraints];
 		
 		
-		self.sourceSelector.hidden = YES;
+//		self.sourceSelector.hidden = YES;
 	}
 }
 

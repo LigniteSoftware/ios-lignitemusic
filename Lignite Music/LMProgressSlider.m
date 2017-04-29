@@ -416,17 +416,22 @@
 		self.leftTextBottomLabel.textColor = [UIColor blackColor];
 		[self addSubview:self.leftTextBottomLabel];
 		
-		[self beginAddingNewPortraitConstraints];
-		[self.leftTextBottomLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self withOffset:10];
-		[self.leftTextBottomLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
-		[self.leftTextBottomLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.75];
-		[self.leftTextBottomLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(0.45)];
+		NSArray *leftTextBottomLabelPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+			[self.leftTextBottomLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self withOffset:10];
+			[self.leftTextBottomLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+			[self.leftTextBottomLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.75];
+			[self.leftTextBottomLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(0.45)];
+		}];
+		[LMLayoutManager addNewPortraitConstraints:leftTextBottomLabelPortraitConstraints];
 
-		[self beginAddingNewLandscapeConstraints];
-		[self.leftTextBottomLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self withOffset:10];
-		[self.leftTextBottomLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
-		[self.leftTextBottomLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.5];
-		[self.leftTextBottomLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(0.45)];
+		NSArray *leftTextBottomLabelLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+			[self.leftTextBottomLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self withOffset:10];
+			[self.leftTextBottomLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+			[self.leftTextBottomLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.5];
+			[self.leftTextBottomLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(0.45)];
+		}];
+		[LMLayoutManager addNewLandscapeConstraints:leftTextBottomLabelLandscapeConstraints];
+		
 		
 		
 		self.rightTextBottomLabel = [LMLabel newAutoLayoutView];
@@ -436,19 +441,23 @@
 		self.rightTextBottomLabel.textAlignment = NSTextAlignmentRight;
 		[self addSubview:self.rightTextBottomLabel];
 		
-		[self beginAddingNewPortraitConstraints];
-		[self.rightTextBottomLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self withOffset:-10];
-		[self.rightTextBottomLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
-		[self.rightTextBottomLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.75];
-		[self.rightTextBottomLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(0.45)];
+		NSArray *rightTextBottomLabelPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+			[self.rightTextBottomLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self withOffset:-10];
+			[self.rightTextBottomLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+			[self.rightTextBottomLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.75];
+			[self.rightTextBottomLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(0.45)];
+		}];
+		[LMLayoutManager addNewPortraitConstraints:rightTextBottomLabelPortraitConstraints];
 		
-		[self beginAddingNewLandscapeConstraints];
-		[self.rightTextBottomLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self withOffset:-10];
-		[self.rightTextBottomLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
-		[self.rightTextBottomLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.5];
-		[self.rightTextBottomLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(0.45)];
+		NSArray *rightTextBottomLabelLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+			[self.rightTextBottomLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self withOffset:-10];
+			[self.rightTextBottomLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+			[self.rightTextBottomLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.5];
+			[self.rightTextBottomLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(0.45)];
+		}];
+		[LMLayoutManager addNewLandscapeConstraints:rightTextBottomLabelLandscapeConstraints];
 		
-		[self endAddingNewConstraints];
+
 		
 		self.sliderBackgroundBackgroundView = [LMView newAutoLayoutView];
 		self.sliderBackgroundBackgroundView.backgroundColor = self.backgroundBackgroundColour;

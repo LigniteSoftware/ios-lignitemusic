@@ -1046,7 +1046,7 @@ LMControlBarViewDelegate
 						
 						//						self.navigationController.view.hidden = YES;
 						
-//						self.buttonNavigationBar.backgroundColor = [UIColor purpleColor];
+						self.buttonNavigationBar.backgroundColor = [UIColor purpleColor];
 						
 						NSLog(@"Class %@", [self.navigationController.view class]);
 						
@@ -1054,7 +1054,8 @@ LMControlBarViewDelegate
 							[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 							[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 							[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-							[self.buttonNavigationBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/8.0)];
+//							[self.buttonNavigationBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/1.0)];
+							[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:64];
 						}];
 						[LMLayoutManager addNewPortraitConstraints:buttonNavigationBarPortraitConstraints];
 						
@@ -1062,7 +1063,8 @@ LMControlBarViewDelegate
 							[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 							[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
 							[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-							[self.buttonNavigationBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(1.0/8.0)];
+//							[self.buttonNavigationBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(1.0/1.0)];
+							[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:64];
 						}];
 						[LMLayoutManager addNewLandscapeConstraints:buttonNavigationBarLandscapeConstraints];
 												

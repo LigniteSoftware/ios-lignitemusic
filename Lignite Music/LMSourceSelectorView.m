@@ -8,6 +8,7 @@
 
 #import <PureLayout/PureLayout.h>
 #import "LMSourceSelectorView.h"
+#import "LMLayoutManager.h"
 #import "LMButton.h"
 #import "LMCircleView.h"
 #import "LMLabel.h"
@@ -17,12 +18,14 @@
 #import "LMExtras.h"
 #import "LMSettings.h"
 
-@interface LMSourceSelectorView() <LMTableViewSubviewDataSource, LMListEntryDelegate>
+@interface LMSourceSelectorView() <LMTableViewSubviewDataSource, LMListEntryDelegate, LMLayoutChangeDelegate>
 
 @property LMTableView *viewsTableView;
 @property NSMutableArray *itemArray;
 
 @property NSInteger currentlyHighlighted;
+
+@property LMLayoutManager *layoutManager;
 
 @end
 
@@ -63,7 +66,7 @@
 }
 
 - (float)heightAtIndex:(NSUInteger)index forTableView:(LMTableView *)tableView {
-	return WINDOW_FRAME.size.height*(1.0f/8.0f);
+	return (self.layoutManager.isLandscape ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height)/8.0f;
 }
 
 - (LMListEntry*)listEntryForIndex:(NSInteger)index {
@@ -95,9 +98,6 @@
 }
 
 - (float)spacingAtIndex:(NSUInteger)index forTableView:(LMTableView *)tableView {
-	if(index == 0){
-		return 25;
-	}
 	return 10;
 }
 
@@ -146,7 +146,18 @@
 	return source.icon;
 }
 
+- (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		[self.viewsTableView reloadData];
+	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		
+	}];
+}
+
 - (void)setup {
+	self.layoutManager = [LMLayoutManager sharedLayoutManager];
+	[self.layoutManager addDelegate:self];
+	
 	self.backgroundColor = [UIColor whiteColor];
 	self.currentlyHighlighted = -1;
 	
