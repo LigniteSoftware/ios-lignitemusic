@@ -96,6 +96,7 @@
 - (void)layoutSubviews {
 	NSLog(@"Dig %p frame %@", self, NSStringFromCGRect(self.frame));
 	
+	BOOL isLandscape = [LMLayoutManager sharedLayoutManager].isLandscape;
 	
 	if(!self.didLayoutConstraints) {
 		self.didLayoutConstraints = YES;
@@ -114,7 +115,7 @@
 			[self addSubview:newBackgroundView];
 			
 			NSArray *newBackgroundViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-				[newBackgroundView autoPinEdge:ALEdgeLeading toEdge:isFirst ? ALEdgeLeading : ALEdgeTrailing ofView:previousView withOffset:!isFirst];
+				[newBackgroundView autoPinEdge:ALEdgeLeading toEdge:isFirst ? ALEdgeLeading : ALEdgeTrailing ofView:previousView withOffset:1];
 				[newBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 				[newBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 				[newBackgroundView autoMatchDimension:ALDimensionWidth
@@ -132,7 +133,7 @@
 				[newBackgroundView autoMatchDimension:ALDimensionHeight
 										  toDimension:ALDimensionHeight
 											   ofView:self
-									   withMultiplier:(1.0/(CGFloat)self.amountOfButtons)];
+									   withMultiplier:(1.0/(CGFloat)self.amountOfButtons)].constant = -1;
 			}];
 			[LMLayoutManager addNewLandscapeConstraints:newBackgroundViewLandscapeConstraints];
 			

@@ -112,6 +112,10 @@
             return @"icon_tutorial_tap.png";
 		case LMIconiOSBack:
 			return @"icon_ios_back.png";
+		case LMIcon3DotsHorizontal:
+			return @"icon_3_dots_horizontal.png";
+		case LMIcon3DotsVertical:
+			return @"icon_3_dots_vertical.png";
 	}
 }
 
