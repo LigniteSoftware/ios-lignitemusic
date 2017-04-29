@@ -67,6 +67,11 @@
  */
 @property LMLayoutManager *layoutManager;
 
+/**
+ The currently selected tab.
+ */
+@property LMNavigationTab currentlySelectedTab;
+
 @end
 
 @implementation LMButtonNavigationBar
@@ -222,6 +227,8 @@
 }
 
 - (void)setSelectedTab:(LMNavigationTab)tab {
+	self.currentlySelectedTab = tab;
+	
 	[self.buttonBar setButtonAtIndex:LMNavigationTabBrowse highlighted:NO];
 	[self.buttonBar setButtonAtIndex:LMNavigationTabView highlighted:NO];
 	[self.buttonBar setButtonAtIndex:LMNavigationTabMiniplayer highlighted:NO];
@@ -301,35 +308,21 @@
 	[self.searchBarDelegate searchDialogOpened:opened withKeyboardHeight:keyboardHeight];
 }
 
-//- (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+- (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
 //	BOOL willBeLandscape = size.width > size.height;
-//	
-//	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-//		for(NSLayoutConstraint *constraint in self.constraints){
-//			if(constraint.firstItem == self.buttonBar){
-//				[self removeConstraint:constraint];
-//			}
-//		}
-//		
-//		if(willBeLandscape){
-//			[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
-//			[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-//			[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-//			[self.buttonBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
-//		}
-//		else{
-//			[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-//			[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-//			[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-//			[self.buttonBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self];
-//		}
-//	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-//		
-//		
-////		[self.delegate requiredHeightForNavigationBarChangedTo:[self maximizedHeight]
-////										 withAnimationDuration:0.25];
-//	}];
-//}
+	
+	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		[self setSelectedTab:self.currentlySelectedTab];
+		if(self.currentlySelectedTab != LMNavigationTabView){
+			[self topConstrantForView:(self.currentlySelectedTab == LMNavigationTabBrowse) ? self.miniPlayerCoreView : self.browsingBar].constant = WINDOW_FRAME.size.height * 2;
+			[self layoutIfNeeded];
+		}
+	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		if(self.currentlySelectedTab == LMNavigationTabView){
+			[self setSelectedTab:self.currentlySelectedTab];
+		}
+	}];
+}
 
 - (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
 	for(UIView *view in self.subviews){
@@ -350,6 +343,10 @@
 		self.didLayoutConstraints = YES;
 		
 		NSLog(@"Did layout constraints!");
+		
+		
+		self.layoutManager = [LMLayoutManager sharedLayoutManager];
+		[self.layoutManager addDelegate:self];
 		
 		
 		self.backgroundColor = [UIColor clearColor];
@@ -479,7 +476,7 @@
 		//		self.browsingBar.hidden = YES;
 		
 		NSArray *browsingBarLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-			[self.browsingBar autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.buttonBar];
+			[self.browsingBar autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.buttonBar withOffset:properNum];
 			[self.browsingBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
 			[self.browsingBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 			[self.browsingBar autoSetDimension:ALDimensionWidth toSize:properNum/17.5];
@@ -497,7 +494,7 @@
 		[LMLayoutManager addNewPortraitConstraints:miniPlayerCoreViewPortraitConstraints];
 		
 		NSArray *miniPlayerCoreViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-			[self.miniPlayerCoreView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.buttonBar];
+			[self.miniPlayerCoreView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.buttonBar withOffset:properNum];
 			[self.miniPlayerCoreView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 			[self.miniPlayerCoreView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 			[self.miniPlayerCoreView autoSetDimension:ALDimensionWidth toSize:properNum/2.8];
@@ -516,7 +513,7 @@
 		[LMLayoutManager addNewPortraitConstraints:sourceSelectorPortraitConstraints];
 		
 		NSArray *sourceSelectorLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-			[self.sourceSelector autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.buttonBar];
+			[self.sourceSelector autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.buttonBar withOffset:properNum];
 			[self.sourceSelector autoPinEdgeToSuperviewEdge:ALEdgeTop];
 			[self.sourceSelector autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 			[self.sourceSelector autoSetDimension:ALDimensionWidth toSize:properNum-LMNavigationBarTabWidth];
