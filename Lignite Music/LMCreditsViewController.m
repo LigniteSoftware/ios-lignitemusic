@@ -60,6 +60,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 	
+	BOOL isLandscape = [LMLayoutManager sharedLayoutManager].isLandscape;
+	CGFloat properNumber = isLandscape ? WINDOW_FRAME.size.height : WINDOW_FRAME.size.width;
+	
 	self.scrollView = [LMScrollView newAutoLayoutView];
 	self.scrollView.backgroundColor = [UIColor whiteColor];
 	[self.view addSubview:self.scrollView];
@@ -67,8 +70,15 @@
 	[self.scrollView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 	[self.scrollView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 	[self.scrollView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-	[self.scrollView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:44];
+	NSArray *scrollViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.scrollView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:44];
+	}];
+	[LMLayoutManager addNewPortraitConstraints:scrollViewPortraitConstraints];
 	
+	NSArray *scrollViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.scrollView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+	}];
+	[LMLayoutManager addNewLandscapeConstraints:scrollViewLandscapeConstraints];
 	
 	self.philippAndEdwinView = [UIImageView newAutoLayoutView];
 	self.philippAndEdwinView.image = [UIImage imageNamed:@"onboarding_us.png"];
@@ -77,8 +87,16 @@
 	[self.scrollView addSubview:self.philippAndEdwinView];
 	
 	[self.philippAndEdwinView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-	[self.philippAndEdwinView autoSetDimension:ALDimensionWidth toSize:WINDOW_FRAME.size.width];
-	[self.philippAndEdwinView autoSetDimension:ALDimensionHeight toSize:0.88*WINDOW_FRAME.size.width];
+	[self.philippAndEdwinView autoSetDimension:ALDimensionWidth toSize:properNumber];
+	NSArray *philippAndEdwinViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.philippAndEdwinView autoSetDimension:ALDimensionHeight toSize:0.88*properNumber];
+	}];
+	[LMLayoutManager addNewPortraitConstraints:philippAndEdwinViewPortraitConstraints];
+	
+	NSArray *philippAndEdwinViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.philippAndEdwinView autoSetDimension:ALDimensionHeight toSize:0];
+	}];
+	[LMLayoutManager addNewLandscapeConstraints:philippAndEdwinViewLandscapeConstraints];
 	
 	
 	//		self.signaturesView = [UIImageView newAutoLayoutView];
@@ -94,24 +112,34 @@
 	
 	
 	self.thankYouLabel = [UILabel newAutoLayoutView];
-	self.thankYouLabel.font = [UIFont fontWithName:@"HoneyScript-SemiBold" size:(WINDOW_FRAME.size.width/414.0)*75.0f];
+	self.thankYouLabel.font = [UIFont fontWithName:@"HoneyScript-SemiBold" size:(properNumber/414.0)*75.0f];
 	self.thankYouLabel.text = NSLocalizedString(@"ThankYou", nil);
 	self.thankYouLabel.textAlignment = NSTextAlignmentCenter;
 	[self.scrollView addSubview:self.thankYouLabel];
 	
-	[self.thankYouLabel autoSetDimension:ALDimensionWidth toSize:WINDOW_FRAME.size.width];
-	[self.thankYouLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.philippAndEdwinView withOffset:-WINDOW_FRAME.size.width*0.10];
+	[self.thankYouLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
+	[self.thankYouLabel autoSetDimension:ALDimensionWidth toSize:properNumber];
+	NSArray *thankYouLabelPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.thankYouLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.philippAndEdwinView withOffset:-properNumber*0.10];
+	}];
+	[LMLayoutManager addNewPortraitConstraints:thankYouLabelPortraitConstraints];
+	
+	NSArray *thankYouLabelLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.thankYouLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.philippAndEdwinView withOffset:properNumber*0.10];
+	}];
+	[LMLayoutManager addNewLandscapeConstraints:thankYouLabelLandscapeConstraints];
+	
 	
 	self.thanksForYourSupportLabel = [UILabel newAutoLayoutView];
-	self.thanksForYourSupportLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:(WINDOW_FRAME.size.width/414.0)*18.0f];
+	self.thanksForYourSupportLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:(properNumber/414.0)*18.0f];
 	self.thanksForYourSupportLabel.text = NSLocalizedString(@"ThankYouDescription", nil);
 	self.thanksForYourSupportLabel.textAlignment = NSTextAlignmentLeft;
 	self.thanksForYourSupportLabel.numberOfLines = 0;
 	[self.scrollView addSubview:self.thanksForYourSupportLabel];
 	
 	[self.thanksForYourSupportLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
-	[self.thanksForYourSupportLabel autoSetDimension:ALDimensionWidth toSize:WINDOW_FRAME.size.width*0.9];
-	[self.thanksForYourSupportLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.thankYouLabel withOffset:WINDOW_FRAME.size.width*0.05];
+	[self.thanksForYourSupportLabel autoSetDimension:ALDimensionWidth toSize:properNumber*0.9];
+	[self.thanksForYourSupportLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.thankYouLabel withOffset:properNumber*0.05];
 	
 	
 	self.signaturesView = [UIImageView newAutoLayoutView];
@@ -120,10 +148,10 @@
 	[self.scrollView addSubview:self.signaturesView];
 	
 	[self.signaturesView autoAlignAxisToSuperviewAxis:ALAxisVertical];
-	[self.signaturesView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.thanksForYourSupportLabel withOffset:WINDOW_FRAME.size.width*0.05];
+	[self.signaturesView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.thanksForYourSupportLabel withOffset:properNumber*0.05];
 	float scaleFactor = 0.75;
-	[self.signaturesView autoSetDimension:ALDimensionWidth toSize:WINDOW_FRAME.size.width*scaleFactor];
-	[self.signaturesView autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.width*0.296*scaleFactor];
+	[self.signaturesView autoSetDimension:ALDimensionWidth toSize:properNumber*scaleFactor];
+	[self.signaturesView autoSetDimension:ALDimensionHeight toSize:properNumber*0.296*scaleFactor];
 	
 	
 	NSMutableArray *textLabelsArray = [NSMutableArray new];
@@ -313,7 +341,7 @@
 		NSString *text = NSLocalizedString([textKeys objectAtIndex:i], nil);
 		float fontSize = textFontSizes[i];
 		
-		float actualFontSize = (WINDOW_FRAME.size.width/414.0)*fontSize;
+		float actualFontSize = (properNumber/414.0)*fontSize;
 		
 		BOOL textFontIsBold = textFontIsBoldOptions[i];
 		
@@ -324,9 +352,9 @@
 		textLabel.textAlignment = NSTextAlignmentLeft;
 		[self.scrollView addSubview:textLabel];
 		
-		[textLabel autoSetDimension:ALDimensionWidth toSize:WINDOW_FRAME.size.width*0.90];
+		[textLabel autoSetDimension:ALDimensionWidth toSize:properNumber*0.90];
 		[textLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
-		[textLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:previousLabelToAttachTo withOffset:WINDOW_FRAME.size.width*(i == 0 ? 0.10 : (fontSize == 30.0 ? 0.075 : 0.035))];
+		[textLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:previousLabelToAttachTo withOffset:properNumber*(i == 0 ? 0.10 : (fontSize == 30.0 ? 0.075 : 0.035))];
 		
 		[textLabelsArray addObject:textLabel];
 	}
@@ -344,7 +372,7 @@
 	[self.scrollView addSubview:creditsLinkButton];
 	
 	[creditsLinkButton autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:[textLabelsArray lastObject] withOffset:20];
-	[creditsLinkButton autoSetDimension:ALDimensionWidth toSize:WINDOW_FRAME.size.width * 0.9];
+	[creditsLinkButton autoSetDimension:ALDimensionWidth toSize:properNumber * 0.9];
 	[creditsLinkButton autoAlignAxisToSuperviewAxis:ALAxisVertical];
 	[creditsLinkButton autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height/8.0];
 	
@@ -352,6 +380,12 @@
 	[creditsLinkButton addGestureRecognizer:tapGesture];
 	
     // Do any additional setup after loading the view.
+}
+
+- (void)dealloc {
+	[LMLayoutManager removeAllConstraintsRelatedToView:self.philippAndEdwinView];
+	[LMLayoutManager removeAllConstraintsRelatedToView:self.thankYouLabel];
+	[LMLayoutManager removeAllConstraintsRelatedToView:self.scrollView];
 }
 
 - (void)didReceiveMemoryWarning {
