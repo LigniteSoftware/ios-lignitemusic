@@ -31,6 +31,8 @@
  */
 - (void)searchTermChangedTo:(NSString*)searchTerm;
 
+- (void)reloadData;
+
 /**
  The search selected delegate.
  */

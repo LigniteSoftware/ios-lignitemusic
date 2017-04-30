@@ -89,6 +89,7 @@
 
 - (BOOL)isLandscape {
 	return [self currentLayoutClass] == LMLayoutClassLandscape;
+//	return self.size.width > self.size.height;
 }
 
 - (LMLayoutClass)currentLayoutClass {
@@ -117,6 +118,8 @@
 }
 
 - (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
+//	self.size = size;
+	
 	for(id<LMLayoutChangeDelegate>delegate in self.delegates){
 		if([delegate respondsToSelector:@selector(rootViewWillTransitionToSize:withTransitionCoordinator:)]){
 			[delegate rootViewWillTransitionToSize:size withTransitionCoordinator:coordinator];

@@ -12,6 +12,7 @@
 #import "LMAppIcon.h"
 #import "LMSearch.h"
 #import "LMImageManager.h"
+#import "LMLayoutManager.h"
 
 @interface LMSearchView()<LMSectionTableViewDelegate>
 
@@ -336,6 +337,10 @@
 	NSLog(@"%d items", (int)collection.count);
 }
 
+- (void)reloadData {
+	[self.sectionTableView reloadData];
+}
+
 - (void)layoutSubviews {
 	if(!self.didLayoutConstraints) {
 		self.didLayoutConstraints = YES;
@@ -380,13 +385,22 @@
 		
 		
 		self.welcomeToSearchBackgroundView = [UIView newAutoLayoutView];
-		self.welcomeToSearchBackgroundView.backgroundColor = [UIColor whiteColor];
+//		self.welcomeToSearchBackgroundView.backgroundColor = [UIColor blueColor];
 		[self addSubview:self.welcomeToSearchBackgroundView];
 		
 		[self.welcomeToSearchBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[self.welcomeToSearchBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 		[self.welcomeToSearchBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		[self.welcomeToSearchBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:WINDOW_FRAME.size.height/11.0]; //Headers are /10.0
+		
+		NSArray *welcomeToSearchBackgroundViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+			[self.welcomeToSearchBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:WINDOW_FRAME.size.height/11.0]; //Headers are /10.0
+		}];
+		[LMLayoutManager addNewPortraitConstraints:welcomeToSearchBackgroundViewPortraitConstraints];
+		
+		NSArray *welcomeToSearchBackgroundViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+			[self.welcomeToSearchBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:WINDOW_FRAME.size.height/20.0];
+		}];
+		[LMLayoutManager addNewLandscapeConstraints:welcomeToSearchBackgroundViewLandscapeConstraints];
 		
 		
 		self.welcomeToSearchContentBackgroundView = [UIView newAutoLayoutView];

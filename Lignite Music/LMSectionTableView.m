@@ -150,15 +150,15 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-	return (self.layoutManager.isLandscape ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height)/8;
+	return (self.layoutManager.isLandscape ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height)/8.0;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
 	CGFloat properNumber = (self.layoutManager.isLandscape ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height);
 	if(section == 0){
-		return properNumber/10 + properNumber/30;
+		return properNumber/10.0 + properNumber/30.0;
 	}
-	return properNumber/10;
+	return properNumber/10.0;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -213,8 +213,13 @@
 - (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
 	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		[self reloadData];
+		
+//		NSIndexSet *headers = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, self.numberOfSections)];
+//		[self reloadSections:headers withRowAnimation:UITableViewRowAnimationNone];
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		[self reloadData];
+		
+//		NSLog(@"Reloading %@", NSStringFromRange(NSMakeRange(0, self.numberOfSections)));
 	}];
 }
 
@@ -224,7 +229,7 @@
 	
 	self.listEntryArray = [NSMutableArray new];
 	
-	for(int i = 0; i < 12; i++){
+	for(int i = 0; i < 15; i++){
 		LMListEntry *listEntry = [LMListEntry newAutoLayoutView];
 		listEntry.delegate = self;
 		listEntry.contentViewHeightMultiplier = 0.875;
