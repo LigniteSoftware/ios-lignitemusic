@@ -28,4 +28,9 @@
  */
 @property UIColor *textColour;
 
+/**
+ Is for the miniplayer or not. Default: NO
+ */
+@property BOOL miniplayer;
+
 @end

@@ -32,7 +32,10 @@
 @synthesize textColour = _textColour;
 
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
-	NSTextAlignment newTextAlignment = self.layoutManager.isLandscape ? NSTextAlignmentCenter : NSTextAlignmentLeft;
+	NSTextAlignment newTextAlignment = self.layoutManager.isLandscape ? NSTextAlignmentLeft : NSTextAlignmentCenter;
+	if(self.miniplayer){
+		newTextAlignment = self.layoutManager.isLandscape ? NSTextAlignmentCenter : NSTextAlignmentLeft;
+	}
 	self.titleLabel.textAlignment = newTextAlignment;
 	self.artistLabel.textAlignment = newTextAlignment;
 	self.albumLabel.textAlignment = newTextAlignment;

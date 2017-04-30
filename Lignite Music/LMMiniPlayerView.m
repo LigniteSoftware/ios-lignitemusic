@@ -217,6 +217,7 @@
 	
 	self.trackInfoView = [LMTrackInfoView newAutoLayoutView];
 	self.trackInfoView.textAlignment = NSTextAlignmentLeft;
+	self.trackInfoView.miniplayer = YES;
 	[self.trackInfoAndDurationBackgroundView addSubview:self.trackInfoView];
 	
 	[self.trackInfoView autoPinEdgeToSuperviewEdge:ALEdgeLeading];

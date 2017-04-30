@@ -487,7 +487,7 @@
 }
 
 - (float)heightAtIndex:(NSUInteger)index forTableView:(LMTableView *)tableView {
-	return WINDOW_FRAME.size.height*(1.0f/8.0f);
+	return ([LMLayoutManager sharedLayoutManager].isLandscape ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height)/8.0f;
 }
 
 - (LMListEntry*)listEntryForIndex:(NSInteger)index {
