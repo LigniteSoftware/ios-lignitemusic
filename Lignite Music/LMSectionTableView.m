@@ -7,20 +7,23 @@
 //
 
 #import <PureLayout/PureLayout.h>
-#import "LMSectionTableView.h"
-#import "LMTableViewCell.h"
-#import "LMExtras.h"
 #import "LMSectionHeaderView.h"
-#import "LMColour.h"
+#import "LMSectionTableView.h"
+#import "LMLayoutManager.h"
+#import "LMTableViewCell.h"
 #import "LMListEntry.h"
-#import "LMLabel.h"
 #import "LMAppIcon.h"
+#import "LMColour.h"
+#import "LMExtras.h"
+#import "LMLabel.h"
 
-@interface LMSectionTableView()<UITableViewDelegate, UITableViewDataSource, LMListEntryDelegate>
+@interface LMSectionTableView()<UITableViewDelegate, UITableViewDataSource, LMListEntryDelegate, LMLayoutChangeDelegate>
 
 @property BOOL hasRegisteredCellIdentifiers;
 
 @property NSMutableArray *listEntryArray;
+
+@property LMLayoutManager *layoutManager;
 
 @end
 
@@ -147,14 +150,15 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-	return WINDOW_FRAME.size.height/8;
+	return (self.layoutManager.isLandscape ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height)/8;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+	CGFloat properNumber = (self.layoutManager.isLandscape ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height);
 	if(section == 0){
-		return WINDOW_FRAME.size.height/10 + WINDOW_FRAME.size.height/30;
+		return properNumber/10 + properNumber/30;
 	}
-	return WINDOW_FRAME.size.height/10;
+	return properNumber/10;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -187,7 +191,8 @@
 	view.icon = [self.contentsDelegate iconAtSection:section forSectionTableView:self];
 	
 	if(section == 0){
-		view.heightFactorial = (WINDOW_FRAME.size.height/10) / frame.size.height;
+		view.heightFactorial = ((self.layoutManager.isLandscape ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height)/10)
+								/ frame.size.height;
 		view.title = @""; //self.title;
 		
 //		view.xIconTapSelector = @selector(tappedClose);
@@ -205,7 +210,18 @@
 	self.hasRegisteredCellIdentifiers = YES;
 }
 
+- (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		[self reloadData];
+	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		[self reloadData];
+	}];
+}
+
 - (void)setup {
+	self.layoutManager = [LMLayoutManager sharedLayoutManager];
+	[self.layoutManager addDelegate:self];
+	
 	self.listEntryArray = [NSMutableArray new];
 	
 	for(int i = 0; i < 12; i++){

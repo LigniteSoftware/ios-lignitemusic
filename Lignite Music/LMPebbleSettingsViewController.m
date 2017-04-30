@@ -29,7 +29,7 @@
 
 - (void)loadView {
 	self.view = [UIView new];
-	self.view.backgroundColor = [UIColor orangeColor];
+	self.view.backgroundColor = [UIColor clearColor];
 }
 
 - (void)viewDidLoad {
@@ -40,10 +40,25 @@
 	self.settingsView.messageQueue = self.messageQueue;
 	[self.view addSubview:self.settingsView];
 	
-	[self.settingsView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-	[self.settingsView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	[self.settingsView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-	[self.settingsView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:64];
+	NSArray *settingsViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.settingsView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.settingsView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.settingsView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[self.settingsView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:44];
+	}];
+	[LMLayoutManager addNewPortraitConstraints:settingsViewPortraitConstraints];
+	
+	NSArray *settingsViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.settingsView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:64];
+		[self.settingsView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.settingsView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[self.settingsView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+	}];
+	[LMLayoutManager addNewLandscapeConstraints:settingsViewLandscapeConstraints];
+}
+
+- (void)dealloc {
+	[LMLayoutManager removeAllConstraintsRelatedToView:self.settingsView];
 }
 
 - (void)didReceiveMemoryWarning {

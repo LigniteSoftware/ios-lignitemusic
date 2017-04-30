@@ -898,7 +898,7 @@ LMControlBarViewDelegate
 		NSLog(@"Warning: Onboarding is disabled.");
 #else
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-	if(![userDefaults objectForKey:LMSettingsKeyOnboardingComplete] || true){
+	if(![userDefaults objectForKey:LMSettingsKeyOnboardingComplete]){
 #endif
 		NSLog(@"User has not yet completed onboarding, launching onboarding.");
 		
@@ -1133,13 +1133,23 @@ LMControlBarViewDelegate
 						
 						
 						[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
-//							self.nowPlayingCoreView.hidden = YES;
+							self.nowPlayingCoreView.hidden = YES;
+							
+							LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
+							settingsViewController.coreViewController = self;
+							[self.navigationController pushViewController:settingsViewController animated:YES];
+							
+							//			[self.buttonNavigationBar.browsingBar setShowingLetterTabs:NO];
+							
+							[self pushItemOntoNavigationBarWithTitle:NSLocalizedString(@"Settings", nil) withNowPlayingButton:NO];
 							
 //							self.landscapeNavigationBar.hidden = YES;
 							
-							[self.buttonNavigationBar setSelectedTab:LMNavigationTabBrowse];
+//							[self.buttonNavigationBar setSelectedTab:LMNavigationTabBrowse];
 							
 //							self.buttonNavigationBar.hidden = YES;
+							
+							[self.buttonNavigationBar minimize];
 							
 //							self.navigationController.view.hidden = YES;
 						} repeats:NO];

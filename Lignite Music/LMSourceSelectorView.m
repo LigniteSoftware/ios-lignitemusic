@@ -60,7 +60,10 @@
 		if([settings objectForKey:LMSettingsKeyLastOpenedSource]){
 			lastSourceOpened = [settings integerForKey:LMSettingsKeyLastOpenedSource];
 		}
-				
+		
+		if(lastSourceOpened >= self.itemArray.count){
+			return;
+		}
 		[self tappedListEntry:[self.itemArray objectAtIndex:lastSourceOpened]];
 	}
 }

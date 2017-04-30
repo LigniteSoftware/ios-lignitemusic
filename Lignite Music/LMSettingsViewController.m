@@ -7,24 +7,26 @@
 //
 
 #import <SecureNSUserDefaults/NSUserDefaults+SecureAdditions.h>
-#import <PureLayout/PureLayout.h>
 #import <MBProgressHUD/MBProgressHUD.h>
 #import <AFNetworking/AFNetworking.h>
+#import <PureLayout/PureLayout.h>
+
 #import "LMSettingsViewController.h"
+#import "LMContactViewController.h"
+#import "LMCreditsViewController.h"
+#import "LMDebugViewController.h"
+#import "LMCoreViewController.h"
 #import "LMSectionTableView.h"
-#import "LMAppIcon.h"
+#import "LMPurchaseManager.h"
+#import "LMPebbleManager.h"
+#import "LMLayoutManager.h"
+#import "NSTimer+Blocks.h"
 #import "LMImageManager.h"
 #import "LMAlertView.h"
-#import "LMColour.h"
 #import "LMSettings.h"
-#import "LMPebbleManager.h"
-#import "LMCreditsViewController.h"
-#import "LMCoreViewController.h"
-#import "LMContactViewController.h"
-#import "LMDebugViewController.h"
-#import "LMPurchaseManager.h"
 #import "LMAnswers.h"
-#import "NSTimer+Blocks.h"
+#import "LMAppIcon.h"
+#import "LMColour.h"
 
 @interface LMSettingsViewController ()<LMSectionTableViewDelegate, LMImageManagerDelegate, LMPurchaseManagerDelegate>
 
@@ -645,7 +647,7 @@
 
 - (void)loadView {
 	self.view = [UIView new];
-	self.view.backgroundColor = [UIColor cyanColor];
+	self.view.backgroundColor = [UIColor whiteColor];
 }
 
 - (void)viewDidLoad {
@@ -663,10 +665,21 @@
 	self.sectionTableView.title = NSLocalizedString(@"AppSettings", nil);
 	[self.view addSubview:self.sectionTableView];
 	
-	[self.sectionTableView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-	[self.sectionTableView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	[self.sectionTableView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-	[self.sectionTableView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:44];
+	NSArray *sectionTableViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.sectionTableView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.sectionTableView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.sectionTableView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[self.sectionTableView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:44];
+	}];
+	[LMLayoutManager addNewPortraitConstraints:sectionTableViewPortraitConstraints];
+	
+	NSArray *sectionTableViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.sectionTableView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:64];
+		[self.sectionTableView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.sectionTableView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[self.sectionTableView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+	}];
+	[LMLayoutManager addNewLandscapeConstraints:sectionTableViewLandscapeConstraints];
 	
 	[self.sectionTableView setup];
 	
@@ -681,6 +694,8 @@
 	[self.imageManager removeDelegate:self];
 	
 	[self.purchaseManager removeDelegate:self];
+	
+	[LMLayoutManager removeAllConstraintsRelatedToView:self.sectionTableView];
 }
 
 - (void)didReceiveMemoryWarning {
