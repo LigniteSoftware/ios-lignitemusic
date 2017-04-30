@@ -860,7 +860,7 @@
 	[LMLayoutManager addNewPortraitConstraints:trackInfoViewPortraitConstraints];
 	
 	NSArray *trackInfoViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-		[self.trackInfoView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.paddingView withOffset:30];
+		[self.trackInfoView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.paddingView withOffset:20];
 		[self.trackInfoView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.albumArtRootView withOffset:20];
 		[self.trackInfoView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.paddingView withOffset:-20];
 		[self.trackInfoView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.paddingView withMultiplier:(1.0/6.0)];

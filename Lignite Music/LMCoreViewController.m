@@ -1145,7 +1145,7 @@ LMControlBarViewDelegate
 							
 //							self.landscapeNavigationBar.hidden = YES;
 							
-							[self.buttonNavigationBar setSelectedTab:LMNavigationTabBrowse];
+//							[self.buttonNavigationBar setSelectedTab:LMNavigationTabBrowse];
 							
 //							self.buttonNavigationBar.hidden = YES;
 							
@@ -1153,7 +1153,7 @@ LMControlBarViewDelegate
 							
 //							self.navigationController.view.hidden = YES;
 							
-							[self launchNowPlayingFromNavigationBar];
+//							[self launchNowPlayingFromNavigationBar];
 						} repeats:NO];
 						
 						
