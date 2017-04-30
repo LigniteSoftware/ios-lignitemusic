@@ -230,9 +230,6 @@
 
 - (void)maximize {
 	NSLog(@"Maximize");
-    
-    self.isMinimized = NO;
-    self.isCompletelyHidden = NO;
 	
 	__weak id weakSelf = self;
 	
@@ -252,9 +249,12 @@
 	
 	self.heightBeforeAdjustingToScrollPosition = -1;
 	
-//	if(self.currentlySelectedTab == LMNavigationTabView && self.viewAttachedToButtonBar == nil){
-//		[self setSelectedTab:self.currentlySelectedTab];
-//	}
+	if(self.currentlySelectedTab == LMNavigationTabView && self.viewAttachedToButtonBar != nil && self.isMinimized){
+		[self setSelectedTab:self.currentlySelectedTab];
+	}
+	
+	self.isMinimized = NO;
+	self.isCompletelyHidden = NO;
 }
 
 - (void)setSelectedTab:(LMNavigationTab)tab {
@@ -272,29 +272,22 @@
 		case LMNavigationTabMiniplayer:
 			[self setViewAttachedToButtonBar:self.miniPlayerCoreView];
 			break;
-		case LMNavigationTabView:
-			if(self.viewAttachedToButtonBar == self.sourceSelector){
-				[self setViewAttachedToButtonBar:nil]; //Hide the source selector
-			}
-			else{
-				//Find the width or height constraint for the source selector and adjust it based on the current frame size of the button navigation bar
-				
-				NSLayoutConstraint *sizeConstraint = nil;
-				for(NSLayoutConstraint *constraint in self.sourceSelector.constraints){
-					if(constraint.firstItem == self.sourceSelector){
-						if(constraint.firstAttribute == NSLayoutAttributeWidth || constraint.firstAttribute == NSLayoutAttributeHeight){
-							sizeConstraint = constraint;
-							break;
-						}
+		case LMNavigationTabView:{
+			NSLayoutConstraint *sizeConstraint = nil;
+			for(NSLayoutConstraint *constraint in self.sourceSelector.constraints){
+				if(constraint.firstItem == self.sourceSelector){
+					if(constraint.firstAttribute == NSLayoutAttributeWidth || constraint.firstAttribute == NSLayoutAttributeHeight){
+						sizeConstraint = constraint;
+						break;
 					}
 				}
-				
-				sizeConstraint.constant = self.layoutManager.isLandscape ? (self.frame.size.width-LMNavigationBarTabWidth) : (self.frame.size.height-LMNavigationBarTabHeight);
-				
-				[self setViewAttachedToButtonBar:self.sourceSelector];
 			}
-			self.buttonBarBottomConstraint.constant = 0;
+			
+			sizeConstraint.constant = self.layoutManager.isLandscape ? (self.frame.size.width-LMNavigationBarTabWidth) : (self.frame.size.height-LMNavigationBarTabHeight);
+			
+			[self setViewAttachedToButtonBar:self.sourceSelector];
 			break;
+		}
 	}
 	
 	[self.buttonBar setButtonAtIndex:tab highlighted:YES];
@@ -364,9 +357,17 @@
 			[self maximize];
 		}
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-		if(self.currentlySelectedTab == LMNavigationTabView){
-			[self setSelectedTab:self.currentlySelectedTab];
-		}
+//		if(self.currentlySelectedTab == LMNavigationTabView){
+//			if(self.isMinimized){
+//				[self minimize];
+//			}
+//			else{
+//				[self setSelectedTab:LMNavigationTabView];
+//				[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
+//					[self setSelectedTab:LMNavigationTabView];
+//				} repeats:NO];
+//			}
+//		}
 	}];
 }
 

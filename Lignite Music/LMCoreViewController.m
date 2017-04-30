@@ -1135,13 +1135,13 @@ LMControlBarViewDelegate
 						[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
 //							self.nowPlayingCoreView.hidden = YES;
 //							
-							LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
-							settingsViewController.coreViewController = self;
-							[self.navigationController pushViewController:settingsViewController animated:YES];
-							
-							//			[self.buttonNavigationBar.browsingBar setShowingLetterTabs:NO];
-							
-							[self pushItemOntoNavigationBarWithTitle:NSLocalizedString(@"Settings", nil) withNowPlayingButton:NO];
+//							LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
+//							settingsViewController.coreViewController = self;
+//							[self.navigationController pushViewController:settingsViewController animated:YES];
+//							
+//							//			[self.buttonNavigationBar.browsingBar setShowingLetterTabs:NO];
+//							
+//							[self pushItemOntoNavigationBarWithTitle:NSLocalizedString(@"Settings", nil) withNowPlayingButton:NO];
 							
 //							self.landscapeNavigationBar.hidden = YES;
 							
