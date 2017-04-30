@@ -15,7 +15,6 @@
 #import "LMTrackInfoView.h"
 #import "UIColor+isLight.h"
 #import "NSTimer+Blocks.h"
-#import "LMAlbumArtView.h"
 #import "LMMusicPlayer.h"
 #import "LMListEntry.h"
 #import "LMTableView.h"
@@ -24,7 +23,7 @@
 #import "LMColour.h"
 #import "LMButton.h"
 
-@interface LMNowPlayingView() <LMMusicPlayerDelegate, LMButtonDelegate, LMProgressSliderDelegate, LMTableViewSubviewDataSource, LMListEntryDelegate>
+@interface LMNowPlayingView() <LMMusicPlayerDelegate, LMButtonDelegate, LMProgressSliderDelegate, LMTableViewSubviewDataSource, LMListEntryDelegate, LMLayoutChangeDelegate>
 
 @property LMMusicPlayer *musicPlayer;
 
@@ -32,6 +31,11 @@
  The main view of the now playing view which is separate from the now playing queue.
  */
 @property LMView *mainView;
+
+/**
+ The padding view which insets all of the controls and content.
+ */
+@property UIView *paddingView;
 
 /**
  The leading constraint for the main view.
@@ -69,6 +73,11 @@
 @property UILabel *nothingInQueueTitleLabel;
 
 /**
+ The layout manager.
+ */
+@property LMLayoutManager *layoutManager;
+
+/**
  The label which will display if nothing is in queue or iOS isn't giving us a queue.
  */
 @property UILabel *nothingInQueueLabel;
@@ -83,8 +92,7 @@
 //@property UIView *colourBackgroundView;
 
 @property LMView *albumArtRootView;
-@property LMAlbumArtView *albumArtImageView;
-@property UIImageView *brandNewAlbumArtImageView;
+@property UIImageView *albumArtImageView;
 
 @property LMOperationQueue *queue;
 
@@ -209,8 +217,6 @@
 			self.backgroundImageView.image = albumImage;
 			self.backgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
 			
-			self.albumArtImageView.albumArtImageView.image = nil;
-			
 //			self.trackInfoView.textColour = newTextColour;
 			
 			self.progressSlider.sliderBackgroundView.backgroundColor = averageColour;
@@ -223,13 +229,9 @@
 			self.trackInfoView.textColour = isLight ? [UIColor blackColor] : [UIColor whiteColor];
 			self.progressSlider.lightTheme = !isLight;
 			
-			if(albumImage.size.height > 0){
-				[self.albumArtImageView updateContentWithMusicTrack:newTrack];
-			}
-			
 //			NSLog(@"Spook me solid");
 			
-			self.brandNewAlbumArtImageView.image = albumArt ? albumArt : [LMAppIcon imageForIcon:LMIconNoAlbumArt];
+			self.albumArtImageView.image = albumArt ? albumArt : [LMAppIcon imageForIcon:LMIconNoAlbumArt];
 		});
 	}];
 	
@@ -247,8 +249,7 @@
 		self.backgroundImageView.contentMode = UIViewContentModeScaleAspectFit;
 		self.backgroundImageView.image = albumImage;
 		
-		[self.albumArtImageView updateContentWithMusicTrack:nil];
-		self.brandNewAlbumArtImageView.image = nil;
+		self.albumArtImageView.image = nil;
 		return;
 	}
 	
@@ -640,6 +641,13 @@
 	}
 }
 
+- (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		
+	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		self.progressSlider.autoShrink = !self.layoutManager.isLandscape;
+	}];
+}
 
 - (void)layoutSubviews {
 	[super layoutSubviews];
@@ -648,6 +656,8 @@
 		return;
 	}
 	self.didLayoutConstraints = YES;
+	
+	[self.layoutManager addDelegate:self];
 	
 	NSLog(@"What the fuckkkkk!!!");
 	
@@ -754,6 +764,17 @@
 	
 	
 	
+	self.paddingView = [UIView newAutoLayoutView];
+//	self.paddingView.backgroundColor = [UIColor purpleColor];
+	[self.mainView addSubview:self.paddingView];
+	
+	CGFloat paddingViewPadding = ([LMLayoutManager sharedLayoutManager].isLandscape ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height) * 0.04;
+	
+	[self.paddingView autoCenterInSuperview];
+	[self.paddingView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withOffset:-paddingViewPadding];
+	[self.paddingView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withOffset:-paddingViewPadding];
+	
+	
 //	self.colourBackgroundView = [UIView newAutoLayoutView];
 //	self.colourBackgroundView.backgroundColor = [UIColor whiteColor];
 //	[self.blurredBackgroundView addSubview:self.colourBackgroundView];
@@ -769,59 +790,48 @@
 	self.progressSlider.value = self.musicPlayer.currentPlaybackTime;
 	self.progressSlider.lightTheme = YES;
 	self.progressSlider.autoShrink = YES;
-	[self.mainView addSubview:self.progressSlider];
+	[self.paddingView addSubview:self.progressSlider];
 	//Constraints for this view are added below the image view constraint code since this view is pinned to the bottom of the album art root view
 	
 	
 	self.albumArtRootView = [LMView newAutoLayoutView];
 	self.albumArtRootView.backgroundColor = [UIColor clearColor];
-	[self.mainView addSubview:self.albumArtRootView];
+	[self.paddingView addSubview:self.albumArtRootView];
 	
 	NSArray *albumArtRootViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-		[self.albumArtRootView autoAlignAxis:ALAxisVertical toSameAxisOfView:self.mainView];
-		[self.albumArtRootView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.mainView];
-		[self.albumArtRootView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.mainView];
-		[self.albumArtRootView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.mainView];
-		[self.albumArtRootView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.mainView];
+		[self.albumArtRootView autoAlignAxis:ALAxisVertical toSameAxisOfView:self.paddingView];
+		[self.albumArtRootView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.paddingView];
+		[self.albumArtRootView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.paddingView];
+		[self.albumArtRootView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.paddingView];
+		[self.albumArtRootView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.paddingView];
 	}];
 	[LMLayoutManager addNewPortraitConstraints:albumArtRootViewPortraitConstraints];
 	
 	NSArray *albumArtRootViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 		[self.albumArtRootView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 		[self.albumArtRootView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-		[self.albumArtRootView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.mainView withMultiplier:0.9];
-		[self.albumArtRootView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.mainView withMultiplier:0.9];
+		[self.albumArtRootView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.progressSlider withOffset:-paddingViewPadding/2];
+		[self.albumArtRootView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.albumArtRootView];
 	}];
 	[LMLayoutManager addNewLandscapeConstraints:albumArtRootViewLandscapeConstraints];
 	
 	
-	self.albumArtImageView = [LMAlbumArtView newAutoLayoutView];
+	
+	self.albumArtImageView = [UIImageView newAutoLayoutView];
+//	self.albumArtImageView.backgroundColor = [UIColor orangeColor];
 	[self.albumArtRootView addSubview:self.albumArtImageView];
 	
 	[self.albumArtImageView autoCenterInSuperview];
-	[self.albumArtImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.albumArtRootView withMultiplier:0.9];
-	[self.albumArtImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.albumArtRootView withMultiplier:0.9];
-	
-	self.albumArtImageView.hidden = YES;
-	
-	[self.albumArtImageView setupWithAlbumImage:nil];
-	self.albumArtImageView.backgroundColor = [UIColor clearColor];
-	
-	self.brandNewAlbumArtImageView = [UIImageView newAutoLayoutView];
-//	self.brandNewAlbumArtImageView.backgroundColor = [UIColor orangeColor];
-	[self.albumArtRootView addSubview:self.brandNewAlbumArtImageView];
-	
-	[self.brandNewAlbumArtImageView autoCenterInSuperview];
-	[self.brandNewAlbumArtImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.albumArtRootView];
-	[self.brandNewAlbumArtImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.albumArtRootView];
+	[self.albumArtImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.albumArtRootView];
+	[self.albumArtImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.albumArtRootView];
 	
 	
 	
 	NSArray *progressSliderPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 		[self.progressSlider autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[self.progressSlider autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-		[self.progressSlider autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.albumArtRootView];
-		[self.progressSlider autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.mainView withMultiplier:(1.0/20.0)];
+		[self.progressSlider autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.albumArtRootView withOffset:paddingViewPadding/2];
+		[self.progressSlider autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self withMultiplier:(1.0/12.0)];
 	}];
 	[LMLayoutManager addNewPortraitConstraints:progressSliderPortraitConstraints];
 		
@@ -830,7 +840,7 @@
 		[self.progressSlider autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 		[self.progressSlider autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[self.progressSlider autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-		[self.progressSlider autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.mainView withMultiplier:(1.0/10.0)];
+		[self.progressSlider autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(1.0/12.0)];
 	}];
 	[LMLayoutManager addNewLandscapeConstraints:progressSliderLandscapeConstraints];
 	
@@ -838,22 +848,22 @@
 	self.trackInfoView = [LMTrackInfoView newAutoLayoutView];
 	self.trackInfoView.textAlignment = NSTextAlignmentCenter;
 	self.trackInfoView.textColour = [UIColor blackColor];
-	[self.mainView addSubview:self.trackInfoView];
+	[self.paddingView addSubview:self.trackInfoView];
 	
 	//TODO: Fix this being manually set value
 	NSArray *trackInfoViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 		[self.trackInfoView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.progressSlider withOffset:30];
 		[self.trackInfoView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.progressSlider withOffset:20];
 		[self.trackInfoView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.progressSlider withOffset:-20];
-		[self.trackInfoView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.mainView withMultiplier:(1.0/6.0)];
+		[self.trackInfoView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.paddingView withMultiplier:(1.0/6.0)];
 	}];
 	[LMLayoutManager addNewPortraitConstraints:trackInfoViewPortraitConstraints];
 	
 	NSArray *trackInfoViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-		[self.trackInfoView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.mainView withOffset:30];
+		[self.trackInfoView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.paddingView withOffset:30];
 		[self.trackInfoView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.albumArtRootView withOffset:20];
-		[self.trackInfoView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.mainView withOffset:-20];
-		[self.trackInfoView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.mainView withMultiplier:(1.0/6.0)];
+		[self.trackInfoView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.paddingView withOffset:-20];
+		[self.trackInfoView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.paddingView withMultiplier:(1.0/6.0)];
 	}];
 	[LMLayoutManager addNewLandscapeConstraints:trackInfoViewLandscapeConstraints];
 
@@ -885,11 +895,11 @@
 		LMView *previousBackground = isFirst ? self.trackInfoView : [backgrounds objectAtIndex:i-1];
 		
 //		background.backgroundColor = [UIColor colorWithRed:(0.2*i)+0.3 green:0 blue:0 alpha:1.0];
-		[self.mainView addSubview:background];
+		[self.paddingView addSubview:background];
 		
 		NSArray *backgroundPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 			[background autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.trackInfoView withOffset:-10];
-			[background autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.mainView];
+			[background autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.paddingView];
 			[background autoPinEdge:ALEdgeLeading toEdge:isFirst ? ALEdgeLeading : ALEdgeTrailing ofView:previousBackground];
 			[background autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.trackInfoView withMultiplier:(1.0/(float)buttons.count)];
 		}];
@@ -961,14 +971,14 @@
 	[self.mainView addGestureRecognizer:tapGesture];
 	
 //	UIPanGestureRecognizer *panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panNowPlayingDown:)];
-//	self.brandNewAlbumArtImageView.userInteractionEnabled = YES;
-//	[self.brandNewAlbumArtImageView addGestureRecognizer:panGestureRecognizer];
+//	self.albumArtImageView.userInteractionEnabled = YES;
+//	[self.albumArtImageView addGestureRecognizer:panGestureRecognizer];
 	
 	
 	self.queueOpenDraggingOverlayView = [LMView newAutoLayoutView];;
 //	self.queueOpenDraggingOverlayView.backgroundColor = [UIColor colorWithRed:0.3 green:0.3 blue:0.5 alpha:0.4];
 	self.queueOpenDraggingOverlayView.hidden = YES;
-	[self.mainView addSubview:self.queueOpenDraggingOverlayView];
+	[self.paddingView addSubview:self.queueOpenDraggingOverlayView];
 	
 	[self.queueOpenDraggingOverlayView autoPinEdgesToSuperviewEdges];
 	
@@ -991,6 +1001,7 @@
 	self = [super init];
 	if(self) {
 		self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
+		self.layoutManager = [LMLayoutManager sharedLayoutManager];
 	}
 	else{
 		NSLog(@"Windows error creating music player!");

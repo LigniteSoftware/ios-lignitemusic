@@ -100,6 +100,7 @@
 @synthesize lightTheme = _lightTheme;
 @synthesize finalValue = _finalValue;
 @synthesize value = _value;
+@synthesize autoShrink = _autoShrink;
 
 - (NSString*)leftText {
 	return _leftText;
@@ -204,6 +205,25 @@
 
 - (CGFloat)value {
 	return _value;
+}
+
+- (BOOL)autoShrink {
+	return _autoShrink;
+}
+
+- (void)setAutoShrink:(BOOL)autoShrink {
+	_autoShrink = autoShrink;
+	
+	if(!self.didLayoutConstraints){
+		return;
+	}
+	
+	if(self.sliderIsShrunk && !autoShrink){
+		[self setSliderAsShrunk:NO];
+	}
+	else if(!self.sliderIsShrunk && autoShrink){
+		[self setSliderAsShrunk:YES];
+	}
 }
 
 - (void)animate {

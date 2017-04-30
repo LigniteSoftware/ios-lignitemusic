@@ -90,11 +90,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMCoreViewController.m"
-            timestampString = "515249010.905342"
+            timestampString = "515269567.693912"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1168"
-            endingLineNumber = "1168"
+            startingLineNumber = "1170"
+            endingLineNumber = "1170"
             landmarkName = "-viewDidLoad"
             landmarkType = "7">
          </BreakpointContent>

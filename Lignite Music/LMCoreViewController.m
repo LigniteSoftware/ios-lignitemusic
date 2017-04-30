@@ -1152,6 +1152,8 @@ LMControlBarViewDelegate
 //							[self.buttonNavigationBar minimize];
 							
 //							self.navigationController.view.hidden = YES;
+							
+							[self launchNowPlayingFromNavigationBar];
 						} repeats:NO];
 						
 						
