@@ -62,15 +62,19 @@
 	self.thankYouLabel.textAlignment = NSTextAlignmentLeft;
 	[self.view addSubview:self.thankYouLabel];
 	
-	[self.view beginAddingNewPortraitConstraints];
-	[self.thankYouLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
-	[self.thankYouLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(9.0/10.0)];
-	[self.thankYouLabel autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:84];
+	NSArray *thankYouLabelPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.thankYouLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
+		[self.thankYouLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(9.0/10.0)];
+		[self.thankYouLabel autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:84];
+	}];
+	[LMLayoutManager addNewPortraitConstraints:thankYouLabelPortraitConstraints];
 	
-	[self.view beginAddingNewLandscapeConstraints];
-	[self.thankYouLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(1.0/2.5)];
-	[self.thankYouLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:20];
-	[self.thankYouLabel autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:64];
+	NSArray *thankYouLabelLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.thankYouLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(1.0/2.5)];
+		[self.thankYouLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:84];
+		[self.thankYouLabel autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:0];
+	}];
+	[LMLayoutManager addNewLandscapeConstraints:thankYouLabelLandscapeConstraints];
 	
 	
 	self.descriptionLabel = [UILabel newAutoLayoutView];
@@ -82,18 +86,20 @@
 	self.descriptionLabel.minimumScaleFactor = 0.1;
 	[self.view addSubview:self.descriptionLabel];
 	
-	[self.view beginAddingNewPortraitConstraints];
-	[self.descriptionLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
-	[self.descriptionLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(9.0/10.0)];
-	[self.descriptionLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.thankYouLabel withOffset:scaleFactorToUse*0.05];
+	NSArray *descriptionLabelPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.descriptionLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
+		[self.descriptionLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(9.0/10.0)];
+		[self.descriptionLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.thankYouLabel withOffset:scaleFactorToUse*0.05];
+	}];
+	[LMLayoutManager addNewPortraitConstraints:descriptionLabelPortraitConstraints];
 	
-	[self.view beginAddingNewLandscapeConstraints];
-	[self.descriptionLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.thankYouLabel];
-	[self.descriptionLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.thankYouLabel];
-	[self.descriptionLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.thankYouLabel];
-	[self.descriptionLabel autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:20];
-	
-	[self.view endAddingNewConstraints];
+	NSArray *descriptionLabelLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.descriptionLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.thankYouLabel];
+		[self.descriptionLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.thankYouLabel];
+		[self.descriptionLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.thankYouLabel];
+		[self.descriptionLabel autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:([LMLayoutManager sharedLayoutManager].isLandscape ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height)/15.0f];
+	}];
+	[LMLayoutManager addNewLandscapeConstraints:descriptionLabelLandscapeConstraints];
 	
 	
 	NSMutableArray *contactButtonsArray = [NSMutableArray new];
@@ -120,19 +126,22 @@
 		
 		[self.view addSubview:contactButton];
 		
-		[self.view beginAddingNewPortraitConstraints];
-		[contactButton autoAlignAxisToSuperviewAxis:ALAxisVertical];
-		[contactButton autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:0.9];
-		[contactButton autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/10.0)];
-		[contactButton autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:viewToPinTo withOffset:WINDOW_FRAME.size.height*((i == 0) ? 0.05 : 0.025)];
+		NSArray *contactButtonPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+			[contactButton autoAlignAxisToSuperviewAxis:ALAxisVertical];
+			[contactButton autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:0.9];
+			[contactButton autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/10.0)];
+			[contactButton autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:viewToPinTo withOffset:WINDOW_FRAME.size.height*((i == 0) ? 0.05 : 0.025)];
+		}];
+		[LMLayoutManager addNewPortraitConstraints:contactButtonPortraitConstraints];
 		
-		[self.view beginAddingNewLandscapeConstraints];
-		[contactButton autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.descriptionLabel withOffset:20];
-		[contactButton autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.view withOffset:-20];
-		[contactButton autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.view withMultiplier:(1.0/10.0)];
-		[contactButton autoPinEdge:ALEdgeBottom toEdge:((i == 0) ? ALEdgeBottom : ALEdgeTop) ofView:((i == 0) ? self.view : viewToPinTo) withOffset:(i == 0) ? -74 : -10];
+		NSArray *contactButtonLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+			[contactButton autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.descriptionLabel withOffset:20];
+			[contactButton autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.view withOffset:-20];
+			[contactButton autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.view withMultiplier:(1.0/10.0)];
+			[contactButton autoPinEdge:ALEdgeBottom toEdge:((i == 0) ? ALEdgeBottom : ALEdgeTop) ofView:((i == 0) ? self.view : viewToPinTo) withOffset:(i == 0) ? -74 : -10];
+		}];
+		[LMLayoutManager addNewLandscapeConstraints:contactButtonLandscapeConstraints];
 		
-		[self.view endAddingNewConstraints];
 		
 		UITapGestureRecognizer *tapGesture;
 		
@@ -195,6 +204,12 @@
 //		[contactStringLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
 		
 		[contactDetailsView endAddingNewConstraints];
+	}
+}
+
+- (void)dealloc {
+	for(UIView *subview in self.view.subviews){
+		[LMLayoutManager removeAllConstraintsRelatedToView:subview];
 	}
 }
 
