@@ -740,6 +740,8 @@ LMControlBarViewDelegate
 		self.landscapeNavigationBar.layer.opacity = !willBeLandscape ? 0.0 : 1.0;
 		
 		self.navigationBar.frame = CGRectMake(0, 0, size.width, willBeLandscape ? 0 : 64.0);
+		
+		self.nowPlayingCoreView.topConstraint.constant = self.nowPlayingCoreView.isOpen ? 0 : size.height;
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
 		NSLog(@"Rotated");
 		
@@ -1145,7 +1147,7 @@ LMControlBarViewDelegate
 							
 //							self.landscapeNavigationBar.hidden = YES;
 							
-//							[self.buttonNavigationBar setSelectedTab:LMNavigationTabBrowse];
+							[self.buttonNavigationBar setSelectedTab:LMNavigationTabMiniplayer];
 							
 //							self.buttonNavigationBar.hidden = YES;
 							

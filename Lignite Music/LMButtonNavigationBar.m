@@ -78,6 +78,11 @@
 @property UIView *minimizeButton;
 
 /**
+ The bottom constraint for the minimize button.
+ */
+@property (readonly) NSLayoutConstraint *minimizeButtonBottomConstraint;
+
+/**
  The icon image view for the minimize button.
  */
 @property UIImageView *minimizeButtonIconImageView;
@@ -88,14 +93,15 @@
 
 @synthesize buttonBarBottomConstraint = _buttonBarBottomConstraint;
 @synthesize viewAttachedToButtonBar = _viewAttachedToButtonBar;
+@synthesize minimizeButtonBottomConstraint = _minimizeButtonBottomConstraint;
 
 - (void)setButtonBarBottomConstraint:(NSLayoutConstraint *)buttonBarBottomConstraint {
 	NSLog(@"What");
 }
 
-- (NSLayoutConstraint*)buttonBarBottomConstraint {
+- (NSLayoutConstraint*)bottomConstraintForView:(UIView*)view {
 	for(NSLayoutConstraint *constraint in self.constraints){
-		if(constraint.firstItem == self.buttonBar){
+		if(constraint.firstItem == view){
 			if((constraint.firstAttribute == NSLayoutAttributeBottom && !self.layoutManager.isLandscape) ||
 			   (constraint.firstAttribute == NSLayoutAttributeTrailing && self.layoutManager.isLandscape)){
 				return constraint;
@@ -103,6 +109,14 @@
 		}
 	}
 	return nil;
+}
+
+- (NSLayoutConstraint*)buttonBarBottomConstraint {
+	return [self bottomConstraintForView:self.buttonBar];
+}
+
+- (NSLayoutConstraint*)minimizeButtonBottomConstraint {
+	return [self bottomConstraintForView:self.minimizeButton];
 }
 
 - (CGFloat)maximizedHeight {
@@ -183,7 +197,7 @@
     self.isMinimized = YES;
     self.isCompletelyHidden = YES;
 	
-	[self setButtonBarBottomConstraintConstant:WINDOW_FRAME.size.height/2 completion:^(BOOL finished) {
+	[self setButtonBarBottomConstraintConstant:WINDOW_FRAME.size.height completion:^(BOOL finished) {
 		LMButtonNavigationBar *strongSelf = weakSelf;
 		if(!strongSelf){
 			return;
@@ -200,6 +214,15 @@
 	self.currentPoint = CGPointMake(self.originalPoint.x, self.originalPoint.y + self.frame.size.height);
 	
 	self.heightBeforeAdjustingToScrollPosition = -1;
+	
+	
+	[self layoutIfNeeded];
+	
+	self.minimizeButtonBottomConstraint.constant = self.frame.size.height;
+	
+	[UIView animateWithDuration:0.5 animations:^{
+		[self layoutIfNeeded];
+	}];
 }
 
 - (void)minimize {
@@ -226,6 +249,15 @@
 	self.currentPoint = CGPointMake(self.originalPoint.x, self.originalPoint.y + self.buttonBarBottomConstraint.constant);
 	
 	self.heightBeforeAdjustingToScrollPosition = -1;
+	
+	
+	[self layoutIfNeeded];
+	
+	self.minimizeButtonBottomConstraint.constant = 0;
+	
+	[UIView animateWithDuration:0.5 animations:^{
+		[self layoutIfNeeded];
+	}];
 }
 
 - (void)maximize {
@@ -255,6 +287,15 @@
 	
 	self.isMinimized = NO;
 	self.isCompletelyHidden = NO;
+	
+	
+	[self layoutIfNeeded];
+	
+	self.minimizeButtonBottomConstraint.constant = 0;
+	
+	[UIView animateWithDuration:0.5 animations:^{
+		[self layoutIfNeeded];
+	}];
 }
 
 - (void)setSelectedTab:(LMNavigationTab)tab {
@@ -348,7 +389,12 @@
 		
 		self.minimizeButtonIconImageView.image = [LMAppIcon imageForIcon:willBeLandscape ? LMIcon3DotsHorizontal : LMIcon3DotsVertical];
 		
-		if(self.isMinimized){
+		if(self.isCompletelyHidden){
+			self.isCompletelyHidden = NO;
+			
+			[self completelyHide];
+		}
+		else if(self.isMinimized){
 			self.isMinimized = NO;
 			
 			[self minimize];
@@ -357,17 +403,11 @@
 			[self maximize];
 		}
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-//		if(self.currentlySelectedTab == LMNavigationTabView){
-//			if(self.isMinimized){
-//				[self minimize];
-//			}
-//			else{
-//				[self setSelectedTab:LMNavigationTabView];
-//				[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
-//					[self setSelectedTab:LMNavigationTabView];
-//				} repeats:NO];
-//			}
-//		}
+		if(self.isCompletelyHidden){
+			[NSTimer scheduledTimerWithTimeInterval:0.1 block:^{
+				[self completelyHide];
+			} repeats:NO];
+		}
 	}];
 }
 

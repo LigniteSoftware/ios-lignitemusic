@@ -67,15 +67,16 @@
 	self.scrollView.backgroundColor = [UIColor whiteColor];
 	[self.view addSubview:self.scrollView];
 	
-	[self.scrollView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 	[self.scrollView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 	[self.scrollView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 	NSArray *scrollViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.scrollView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[self.scrollView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:44];
 	}];
 	[LMLayoutManager addNewPortraitConstraints:scrollViewPortraitConstraints];
 	
 	NSArray *scrollViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.scrollView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:64];
 		[self.scrollView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 	}];
 	[LMLayoutManager addNewLandscapeConstraints:scrollViewLandscapeConstraints];
