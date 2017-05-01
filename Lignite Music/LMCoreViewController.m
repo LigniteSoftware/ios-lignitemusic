@@ -767,7 +767,7 @@ LMControlBarViewDelegate
 	if(backButtonPressed){
 		NSLog(@"Go back");
 		
-		[self.navigationController popViewControllerAnimated:YES];
+//		[self.navigationController popViewControllerAnimated:YES];
 		
 		if(self.navigationBar.backItem){
 			[self.navigationBar popNavigationItemAnimated:NO];
