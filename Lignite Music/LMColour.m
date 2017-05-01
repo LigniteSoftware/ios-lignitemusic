@@ -31,6 +31,10 @@
 	return [UIColor colorWithRed:0.97 green:0.97 blue:0.97 alpha:1.0];
 }
 
++ (UIColor*)controlBarGrayColour {
+	return [UIColor colorWithRed:0.93 green:0.93 blue:0.93 alpha:1.0];
+}
+
 + (UIColor*)fadedColour {
 	return [UIColor colorWithRed:1.00 green: 1.00 blue: 1.00 alpha: 0.35];
 }

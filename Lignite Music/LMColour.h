@@ -39,6 +39,13 @@
 + (UIColor*)superLightGrayColour;
 
 /**
+ The light gray for the control bar in detail view.
+ 
+ @return The light gray.
+ */
++ (UIColor*)controlBarGrayColour;
+
+/**
  A 35% transparent white which is the background to the circular cover art, for example.
 
  @return The 35% transparent white.

@@ -37,13 +37,13 @@
 	
 	BOOL shouldHighlight = [self.delegate buttonHighlightedWithIndex:viewCheckingIndex wasJustTapped:wasJustTapped forControlBar:self];
 	[UIView animateWithDuration:0.3 animations:^{
-		viewChecking.backgroundColor = shouldHighlight ? [UIColor whiteColor] : [LMColour superDarkGrayColour];
+		viewChecking.backgroundColor = shouldHighlight ? [UIColor whiteColor] : [LMColour controlBarGrayColour];
 	} completion:nil];
 
 	if(viewChecking.subviews.count > 0){
 		UIImageView *iconView = [viewChecking.subviews objectAtIndex:0];
 		if(shouldHighlight){
-			iconView.image = [LMAppIcon invertImage:[self.delegate imageWithIndex:viewCheckingIndex forControlBarView:self]];
+			iconView.image = [self.delegate imageWithIndex:viewCheckingIndex forControlBarView:self];
 		}
 		else{
 			iconView.image = [self.delegate imageWithIndex:viewCheckingIndex forControlBarView:self];
@@ -80,7 +80,7 @@
 	//	[NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(invert) userInfo:nil repeats:YES];
 	//	
 		self.backgroundView = [UIView newAutoLayoutView];
-		self.backgroundView.backgroundColor = [LMColour superDarkGrayColour];
+		self.backgroundView.backgroundColor = [LMColour controlBarGrayColour];
 		self.backgroundView.userInteractionEnabled = YES;
 		[self addSubview:self.backgroundView];
 		
@@ -124,8 +124,8 @@
 			[buttonAreaView addSubview:buttonBackgroundView];
 			
 			[buttonBackgroundView autoCenterInSuperview];
-			[buttonBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:buttonAreaView withMultiplier:0.8];
-			[buttonBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:buttonAreaView withMultiplier:0.8];
+			[buttonBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:buttonAreaView withMultiplier:0.7];
+			[buttonBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:buttonAreaView withMultiplier:0.7];
 			
 			UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tappedButtonBackgroundView:)];
 			[buttonBackgroundView addGestureRecognizer:gestureRecognizer];
@@ -136,8 +136,8 @@
 			[buttonBackgroundView addSubview:buttonImageView];
 			
 			[buttonImageView autoCenterInSuperview];
-			[buttonImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:buttonBackgroundView withMultiplier:0.70];
-			[buttonImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:buttonBackgroundView withMultiplier:0.70];
+			[buttonImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:buttonBackgroundView withMultiplier:0.60];
+			[buttonImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:buttonBackgroundView withMultiplier:0.60];
 			
 			[self.controlButtonViews addObject:buttonBackgroundView];
 			

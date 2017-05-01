@@ -8,6 +8,7 @@
 
 #import <PureLayout/PureLayout.h>
 #import "LMBrowsingDetailViewController.h"
+#import "LMLayoutManager.h"
 #import "LMSettings.h"
 #import "LMExtras.h"
 
@@ -41,14 +42,29 @@
 		
 	[self.view addSubview:self.browsingDetailView];
 	
-	[self.browsingDetailView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-	[self.browsingDetailView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	[self.browsingDetailView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-	[self.browsingDetailView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:64];
+	NSArray *browsingDetailViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.browsingDetailView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.browsingDetailView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.browsingDetailView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[self.browsingDetailView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:44];
+	}];
+	[LMLayoutManager addNewPortraitConstraints:browsingDetailViewPortraitConstraints];
+	
+	NSArray *browsingDetailViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.browsingDetailView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:64];
+		[self.browsingDetailView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.browsingDetailView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[self.browsingDetailView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+	}];
+	[LMLayoutManager addNewLandscapeConstraints:browsingDetailViewLandscapeConstraints];
 	
 	[self.browsingDetailView setup];
 	
 	[self.navigationController.interactivePopGestureRecognizer addTarget:self action:@selector(handlePopGesture:)];
+}
+
+- (void)dealloc {
+	[LMLayoutManager removeAllConstraintsRelatedToView:self.browsingDetailView];
 }
 
 - (void)didReceiveMemoryWarning {

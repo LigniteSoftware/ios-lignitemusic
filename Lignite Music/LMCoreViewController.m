@@ -1151,7 +1151,7 @@ LMControlBarViewDelegate
 							
 //							self.buttonNavigationBar.hidden = YES;
 							
-//							[self.buttonNavigationBar minimize];
+							[self.buttonNavigationBar minimize];
 							
 //							self.navigationController.view.hidden = YES;
 							
