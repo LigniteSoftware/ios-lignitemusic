@@ -498,6 +498,15 @@
 		
 		self.controlBar = controlBar;
 		
+		for(UIView *view in self.landscapeViewsToRelease){
+			if(view != controlBar && view != collectionInfoView){
+				view.hidden = YES;
+				[view removeFromSuperview];
+				[LMLayoutManager removeAllConstraintsRelatedToView:view];
+			}
+		}
+		[self.landscapeViewsToRelease removeAllObjects];
+		
 		[self.landscapeViewsToRelease addObject:collectionInfoView];
 		[self.landscapeViewsToRelease addObject:controlBar];
 		
