@@ -129,7 +129,7 @@
 		self.iconBackgroundView.backgroundColor = [UIColor clearColor];
 		[self.contentView addSubview:self.iconBackgroundView];
 		
-		[self.iconBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.iconBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:10];
 		[self.iconBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 		[self.iconBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 		[self.iconBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.contentView];
