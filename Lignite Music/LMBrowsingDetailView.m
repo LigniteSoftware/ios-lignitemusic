@@ -6,6 +6,7 @@
 //  Copyright © 2016 Lignite. All rights reserved.
 //
 
+#import <ApIdleManager/APIdleManager.h>
 #import <PureLayout/PureLayout.h>
 #import "LMBrowsingDetailViewController.h"
 #import "LMTiledAlbumCoverView.h"
@@ -84,6 +85,8 @@
 		self.brokeScrollingThreshhold = YES;
 		[self.rootViewController.buttonNavigationBar minimize];
 	}
+	
+	[[APIdleManager sharedInstance] didReceiveInput];
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {

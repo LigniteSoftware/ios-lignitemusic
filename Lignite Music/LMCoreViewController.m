@@ -709,7 +709,7 @@ LMControlBarViewDelegate
 	NSLog(@"Changed to %@", NSStringFromCGSize(newSize));
 }
 
-- (UIResponder *)nextResponder {
+- (UIResponder*)nextResponder {
     [[APIdleManager sharedInstance] didReceiveInput];
     return [super nextResponder];
 }

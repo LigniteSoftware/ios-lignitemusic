@@ -404,11 +404,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMBrowsingDetailView.m"
-            timestampString = "515354744.207877"
+            timestampString = "515411750.805244"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "698"
-            endingLineNumber = "698"
+            startingLineNumber = "701"
+            endingLineNumber = "701"
             landmarkName = "-dealloc"
             landmarkType = "7">
             <Locations>
@@ -420,11 +420,11 @@
                   moduleName = "Lignite Music"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/edwinfinch/ios-projects/Lignite%20Music/Lignite%20Music/LMBrowsingDetailView.m"
-                  timestampString = "515411503.134883"
+                  timestampString = "515411806.696689"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "698"
-                  endingLineNumber = "698"
+                  startingLineNumber = "701"
+                  endingLineNumber = "701"
                   offsetFromSymbolStart = "320">
                </Location>
                <Location
@@ -435,11 +435,11 @@
                   moduleName = "Lignite Music"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/edwinfinch/ios-projects/Lignite%20Music/Lignite%20Music/LMBrowsingDetailView.m"
-                  timestampString = "515411503.136134"
+                  timestampString = "515411806.698162"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "698"
-                  endingLineNumber = "698"
+                  startingLineNumber = "701"
+                  endingLineNumber = "701"
                   offsetFromSymbolStart = "336">
                </Location>
             </Locations>
@@ -458,6 +458,22 @@
             startingLineNumber = "69"
             endingLineNumber = "69"
             landmarkName = "-searchButtonWidthConstraint"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Lignite Music/LMCoreViewController.m"
+            timestampString = "515411660.743351"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "713"
+            endingLineNumber = "713"
+            landmarkName = "-nextResponder"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
