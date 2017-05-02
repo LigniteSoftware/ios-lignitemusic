@@ -718,7 +718,7 @@ LMControlBarViewDelegate
 	self.layoutManager.traitCollection = self.traitCollection;
 	[self.layoutManager traitCollectionDidChange:previousTraitCollection];
 	
-	self.splashImageView.image = [UIImage imageNamed:self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular ? @"splash_landscape_lighter.png" : @"splash_wings.png"];
+	self.splashImageView.image = [UIImage imageNamed:[LMLayoutManager sharedLayoutManager].isLandscape ? @"splash_landscape_g.png" : @"splash_portrait_g.png"];
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
@@ -846,7 +846,7 @@ LMControlBarViewDelegate
 	
 	    
 	self.splashImageView = [UIImageView newAutoLayoutView];
-	self.splashImageView.image = [UIImage imageNamed:self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular ? @"splash_landscape_lighter.png" : @"splash_wings.png"];
+	self.splashImageView.image = [UIImage imageNamed:[LMLayoutManager sharedLayoutManager].isLandscape ? @"splash_landscape_g.png" : @"splash_portrait_g.png"];
 	self.splashImageView.contentMode = UIViewContentModeScaleAspectFill;
 	[self.view addSubview:self.splashImageView];
 	
