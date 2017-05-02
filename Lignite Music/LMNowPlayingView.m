@@ -908,10 +908,10 @@
 		[LMLayoutManager addNewPortraitConstraints:backgroundPortraitConstraints];
 		
 		NSArray *backgroundLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-			[background autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.progressSlider withOffset:-10];
+			[background autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.albumArtImageView];
 			[background autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.trackInfoView];
-			[background autoPinEdge:ALEdgeLeading toEdge:isFirst ? ALEdgeLeading : ALEdgeTrailing ofView:previousBackground];
-			[background autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.trackInfoView withMultiplier:(1.0/(float)buttons.count)];
+			[background autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:isFirst ? self.albumArtImageView : previousBackground];
+			[background autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.trackInfoView withMultiplier:(1.0/(float)buttons.count)].constant = 40.0/(float)buttons.count;
 		}];
 		[LMLayoutManager addNewLandscapeConstraints:backgroundLandscapeConstraints];
 		
