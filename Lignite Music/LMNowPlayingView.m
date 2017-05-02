@@ -645,7 +645,9 @@
 	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-		self.progressSlider.autoShrink = !self.layoutManager.isLandscape;
+		[NSTimer scheduledTimerWithTimeInterval:0.25 block:^{
+			self.progressSlider.autoShrink = size.height > size.width;
+		} repeats:NO];
 	}];
 }
 

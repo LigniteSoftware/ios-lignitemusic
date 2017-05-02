@@ -422,7 +422,13 @@
 	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		self.sliderBackgroundHeightConstraint.constant = self.frame.size.height;
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-		
+		[NSTimer scheduledTimerWithTimeInterval:0.50 block:^{
+			self.sliderBackgroundHeightConstraint.constant = self.frame.size.height;
+			[self setSliderAsShrunk:self.sliderIsShrunk];
+			[UIView animateWithDuration:0.25 animations:^{
+				[self layoutIfNeeded];
+			}];
+		} repeats:NO];
 	}];
 }
 
