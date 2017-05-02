@@ -148,6 +148,11 @@
 		UIColor *bottomColour = lightTheme ? [UIColor blackColor] : [UIColor whiteColor];
 		UIColor *topColour = lightTheme ? [UIColor whiteColor] : [UIColor blackColor];
 		
+		if(self.nowPlayingView){
+			bottomColour = lightTheme ? [UIColor whiteColor] : [UIColor blackColor];
+			topColour = lightTheme ? [UIColor whiteColor] : [UIColor blackColor];
+		}
+		
 		if(self.sliderIsShrunk){
 			bottomColour = topColour;
 		}
@@ -275,7 +280,15 @@
 //	NSLog(@"%d Current %f %f", shrunk, topConstraint.constant, bottomConstraint.constant);
 	
 	[UIView transitionWithView:textLabel duration:0.25 options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
-		textLabel.textColor = ((shrunk ? !self.lightTheme : self.lightTheme) ? [UIColor blackColor] : [UIColor whiteColor]);
+//		bottomColour = lightTheme ? [UIColor blackColor] : [UIColor whiteColor];
+//		topColour = lightTheme ? [UIColor blackColor] : [UIColor whiteColor];
+		
+		if(self.nowPlayingView){
+			textLabel.textColor = (self.lightTheme ? [UIColor whiteColor] : [UIColor blackColor]);
+		}
+		else{
+			textLabel.textColor = ((shrunk ? !self.lightTheme : self.lightTheme) ? [UIColor blackColor] : [UIColor whiteColor]);
+		}
 	} completion:nil];
 	
 	topConstraint.constant = shrunk ? (LMProgressSliderTopAndBottomLabelPadding) : (0);

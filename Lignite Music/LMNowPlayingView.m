@@ -786,6 +786,7 @@
 	
 	
 	self.progressSlider = [LMProgressSlider newAutoLayoutView];
+	self.progressSlider.nowPlayingView = YES;
 	self.progressSlider.backgroundBackgroundColour = [LMColour fadedColour];
 	self.progressSlider.finalValue = self.musicPlayer.nowPlayingTrack.playbackDuration;
 	self.progressSlider.delegate = self;

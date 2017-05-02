@@ -76,6 +76,11 @@
 @property id<LMProgressSliderDelegate> delegate;
 
 /**
+ Whether or not it's for the now playing view.
+ */
+@property BOOL nowPlayingView;
+
+/**
  Resets the progress slider to 0.
  */
 - (void)reset;
