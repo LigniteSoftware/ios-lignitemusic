@@ -66,6 +66,18 @@
 		
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		//Nothing...
+		
+		[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
+			BOOL isLandscape = (size.width > size.height);
+			
+			for(UILabel *label in self.letterViewsArray){
+				NSLog(@"Changing label with %@", label.text);
+				label.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:(isLandscape ? self.frame.size.width : self.frame.size.height
+																			   )/2.25]; //.50 for W;
+				self.letterScrollView.adaptForWidth = !isLandscape;
+				[self.letterScrollView reload];
+			}
+		} repeats:NO];
 	}];
 }
 
