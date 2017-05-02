@@ -118,7 +118,7 @@
 }
 
 - (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
-//	self.size = size;
+	self.size = size;
 	
 	for(id<LMLayoutChangeDelegate>delegate in self.delegates){
 		if([delegate respondsToSelector:@selector(rootViewWillTransitionToSize:withTransitionCoordinator:)]){

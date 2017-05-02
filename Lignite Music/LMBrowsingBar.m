@@ -8,11 +8,12 @@
 
 #import <PureLayout/PureLayout.h>
 #import "LMLayoutManager.h"
+#import "NSTimer+Blocks.h"
 #import "LMBrowsingBar.h"
 #import "LMAppIcon.h"
 #import "LMColour.h"
 
-@interface LMBrowsingBar()
+@interface LMBrowsingBar()<LMLayoutChangeDelegate>
 
 /**
  The background view for the toggle button.
@@ -32,7 +33,12 @@
 /**
  The constraint which is tied to the width of the search button for showing/hiding letter tabs.
  */
-@property NSLayoutConstraint *searchButtonWidthConstraint;
+@property (readonly) NSLayoutConstraint *searchButtonWidthConstraint;
+
+/**
+ The layout manager.
+ */
+@property LMLayoutManager *layoutManager;
 
 @end
 
@@ -41,6 +47,7 @@
 @synthesize isInSearchMode = _isInSearchMode;
 @synthesize keyboardIsShowing = _keyboardIsShowing;
 @synthesize showingLetterTabs = _showingLetterTabs;
+@synthesize searchButtonWidthConstraint = _searchButtonWidthConstraint;
 
 - (instancetype)init {
 	self = [super init];
@@ -48,6 +55,18 @@
 		self.letterTabBar = [LMLetterTabBar newAutoLayoutView];
 	}
 	return self;
+}
+
+- (NSLayoutConstraint*)searchButtonWidthConstraint {
+	for(NSLayoutConstraint *constraint in self.constraints){
+		if(constraint.firstItem == self.toggleButtonBackgroundView){
+			if((constraint.firstAttribute == NSLayoutAttributeHeight && self.layoutManager.isLandscape)
+			   || (constraint.firstAttribute == NSLayoutAttributeWidth && !self.layoutManager.isLandscape)){
+				return constraint;
+			}
+		}
+	}
+	return nil;
 }
 
 - (void)setIsInSearchMode:(BOOL)isInSearchMode {
@@ -94,16 +113,35 @@
 - (void)setShowingLetterTabs:(BOOL)showingLetterTabs {
 	_showingLetterTabs = showingLetterTabs;
 	
+	BOOL isLandscape = [LMLayoutManager sharedLayoutManager].isLandscape;
+
+
 	[self layoutIfNeeded];
-	self.searchButtonWidthConstraint.constant = showingLetterTabs ? 0 : (self.frame.size.width-self.frame.size.height);
+	self.searchButtonWidthConstraint.constant = showingLetterTabs ? 0 : (isLandscape ? (self.frame.size.height-self.frame.size.width) : (self.frame.size.width-self.frame.size.height));
+	
+	NSLog(@"Is landscape %d set %d constant %f", isLandscape, showingLetterTabs, self.searchButtonWidthConstraint.constant);
+	
 	[UIView animateWithDuration:0.5 animations:^{
 		[self layoutIfNeeded];
+	}];
+}
+
+- (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		
+	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		[NSTimer scheduledTimerWithTimeInterval:0.25 block:^{
+			[self setShowingLetterTabs:self.showingLetterTabs];
+		} repeats:NO];
 	}];
 }
 
 - (void)layoutSubviews {
 	if(!self.didLayoutConstraints){
 		self.didLayoutConstraints = YES;
+		
+		self.layoutManager = [LMLayoutManager sharedLayoutManager];
+		[self.layoutManager addDelegate:self];
 
 		
 		self.toggleButtonBackgroundView = [LMView newAutoLayoutView];
@@ -113,7 +151,7 @@
 		NSArray *toggleButtonBackgroundViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 			[self.toggleButtonBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 			[self.toggleButtonBackgroundView autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
-			self.searchButtonWidthConstraint = [self.toggleButtonBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self];
+			[self.toggleButtonBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self];
 			[self.toggleButtonBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self];
 		}];
 		[LMLayoutManager addNewPortraitConstraints:toggleButtonBackgroundViewPortraitConstraints];
@@ -121,7 +159,7 @@
 		NSArray *toggleButtonBackgroundViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 			[self.toggleButtonBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 			[self.toggleButtonBackgroundView autoAlignAxisToSuperviewAxis:ALAxisVertical];
-			self.searchButtonWidthConstraint = [self.toggleButtonBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self];
+			[self.toggleButtonBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self];
 			[self.toggleButtonBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
 		}];
 		[LMLayoutManager addNewLandscapeConstraints:toggleButtonBackgroundViewLandscapeConstraints];

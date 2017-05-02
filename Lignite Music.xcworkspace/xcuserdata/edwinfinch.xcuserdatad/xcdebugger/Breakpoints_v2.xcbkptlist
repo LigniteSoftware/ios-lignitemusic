@@ -90,11 +90,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMCoreViewController.m"
-            timestampString = "515344221.849403"
+            timestampString = "515410054.150626"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1172"
-            endingLineNumber = "1172"
+            startingLineNumber = "1174"
+            endingLineNumber = "1174"
             landmarkName = "-viewDidLoad"
             landmarkType = "7">
          </BreakpointContent>
@@ -420,7 +420,7 @@
                   moduleName = "Lignite Music"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/edwinfinch/ios-projects/Lignite%20Music/Lignite%20Music/LMBrowsingDetailView.m"
-                  timestampString = "515409369.628107"
+                  timestampString = "515411503.134883"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "698"
@@ -435,7 +435,7 @@
                   moduleName = "Lignite Music"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/edwinfinch/ios-projects/Lignite%20Music/Lignite%20Music/LMBrowsingDetailView.m"
-                  timestampString = "515409369.629466"
+                  timestampString = "515411503.136134"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "698"
@@ -443,6 +443,22 @@
                   offsetFromSymbolStart = "336">
                </Location>
             </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Lignite Music/LMBrowsingBar.m"
+            timestampString = "515411502.07989"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "69"
+            endingLineNumber = "69"
+            landmarkName = "-searchButtonWidthConstraint"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
