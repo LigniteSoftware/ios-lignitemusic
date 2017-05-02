@@ -159,9 +159,19 @@
 //			sendButtonIcon.backgroundColor = [UIColor orangeColor];
 			[newBackgroundView addSubview:sendButtonIcon];
 			
-			[sendButtonIcon autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:newBackgroundView];
-			[sendButtonIcon autoCenterInSuperview];
-			[sendButtonIcon autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:newBackgroundView withMultiplier:[[self.buttonScaleFactorsArray objectAtIndex:i] floatValue]];
+			NSArray *sendButtonIconPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+				[sendButtonIcon autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:newBackgroundView];
+				[sendButtonIcon autoCenterInSuperview];
+				[sendButtonIcon autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:newBackgroundView withMultiplier:[[self.buttonScaleFactorsArray objectAtIndex:i] floatValue]];
+			}];
+			[LMLayoutManager addNewPortraitConstraints:sendButtonIconPortraitConstraints];
+			
+			NSArray *sendButtonIconLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+				[sendButtonIcon autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:newBackgroundView withMultiplier:[[self.buttonScaleFactorsArray objectAtIndex:i] floatValue]];
+				[sendButtonIcon autoCenterInSuperview];
+				[sendButtonIcon autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:newBackgroundView];
+			}];
+			[LMLayoutManager addNewLandscapeConstraints:sendButtonIconLandscapeConstraints];
 		}
 	}
 	
