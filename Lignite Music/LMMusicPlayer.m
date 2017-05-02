@@ -1390,7 +1390,11 @@ BOOL shuffleForDebug = NO;
     }
 	return self.nowPlayingCollectionSorted;
 }
-    
+	
+- (BOOL)nowPlayingCollectionIsEqualTo:(LMMusicTrackCollection*)musicTrackCollection {
+	return [self.nowPlayingCollectionShuffled isEqual:musicTrackCollection] || [self.nowPlayingCollectionSorted isEqual:musicTrackCollection];
+}
+	
 - (void)reshuffleSortedCollection {
     NSMutableArray *shuffledArray = [NSMutableArray arrayWithArray:self.nowPlayingCollectionSorted.items];
     [self shuffleArray:shuffledArray];

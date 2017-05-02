@@ -56,4 +56,11 @@
  */
 - (void)reloadHighlightedButtons;
 
+/**
+ Simulate a tap at a certain index.
+
+ @param index The index to simulate the tap of.
+ */
+- (void)simulateTapAtIndex:(uint8_t)index;
+
 @end

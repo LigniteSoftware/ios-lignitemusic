@@ -47,9 +47,19 @@
 @property LMTiledAlbumCoverView *backgroundTileView;
 
 /**
- The control bar.
+ The control bar which is currently in use.
  */
-@property LMControlBarView *controlBar;
+@property (readonly) LMControlBarView *controlBar;
+
+/**
+ The control bar which goes at the top of the scroll view in portrait mode.
+ */
+@property LMControlBarView *portraitControlBar;
+
+/**
+ The control bar which goes below the content view in landscape mode.
+ */
+@property LMControlBarView *landscapeControlBar;
 
 /**
  The last point in scrolling where the user stopped scrolling.
@@ -67,11 +77,6 @@
 @property LMLayoutManager *layoutManager;
 
 /**
- The control bar which goes below the content view in landscape mode.
- */
-@property LMControlBarView *landscapeControlBar;
-
-/**
  The current collection info view.
  */
 @property LMCollectionInfoView *collectionInfoView;
@@ -84,6 +89,12 @@
 @end
 
 @implementation LMBrowsingDetailView
+
+@synthesize controlBar = _controlBar;
+
+- (LMControlBarView*)controlBar {
+	return self.layoutManager.isLandscape ? self.landscapeControlBar : self.portraitControlBar;
+}
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
 	CGFloat difference = fabs(scrollView.contentOffset.y-self.lastScrollingOffsetPoint.y);
@@ -178,7 +189,7 @@
 - (UIImage*)imageWithIndex:(uint8_t)index forControlBarView:(LMControlBarView *)controlBar {
 	switch(index){
 		case 0:{
-			BOOL isPlaying = [self.musicPlayer.nowPlayingCollection isEqual:self.musicTrackCollection] && self.musicPlayer.playbackState == LMMusicPlaybackStatePlaying;
+			BOOL isPlaying = [self.musicPlayer nowPlayingCollectionIsEqualTo:self.musicTrackCollection] && self.musicPlayer.playbackState == LMMusicPlaybackStatePlaying;
 			
 			return [LMAppIcon invertImage:[LMAppIcon imageForIcon:isPlaying ? LMIconPause : LMIconPlay]];
 		}
@@ -200,23 +211,24 @@
 			LMMusicTrackCollection *trackCollection = self.musicTrackCollection;
 			if(wasJustTapped){
 				if(trackCollection.trackCount > 0){
-					if(self.musicPlayer.nowPlayingCollection != trackCollection){
+					if(![self.musicPlayer nowPlayingCollectionIsEqualTo:trackCollection]){
 						self.musicPlayer.autoPlay = YES;
-						isPlayingMusic = YES;
 						[self.musicPlayer setNowPlayingCollection:trackCollection];
 						
 						[self.musicPlayer.navigationBar setSelectedTab:LMNavigationTabMiniplayer];
 						[self.musicPlayer.navigationBar maximize];
+						
+						isPlayingMusic = YES;
 					}
 					else{
-						isPlayingMusic ? [self.musicPlayer pause] : [self.musicPlayer play];
+						[self.musicPlayer invertPlaybackState];
 						isPlayingMusic = !isPlayingMusic;
 					}
 				}
 				return isPlayingMusic;
 			}
 			else{
-				return [self.musicPlayer.nowPlayingCollection isEqual:trackCollection] && isPlayingMusic;
+				return [self.musicPlayer nowPlayingCollectionIsEqualTo:trackCollection] && isPlayingMusic;
 			}
 		}
 		case 1: //Repeat button
@@ -456,6 +468,9 @@
 	if(index == 0){
 		UIView *testView = [UIView newAutoLayoutView];
 		testView.backgroundColor = [UIColor clearColor];
+		
+		UITapGestureRecognizer *contentViewTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(contentViewTapped)];
+		[testView addGestureRecognizer:contentViewTapGestureRecognizer];
 		return testView;
 	}
 	if(index == 1){
@@ -521,8 +536,14 @@
 		
 		[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
 			[self.tableView reloadData];
+			[self.controlBar reloadHighlightedButtons];
 		} repeats:NO];
 	}];
+}
+
+- (void)contentViewTapped {
+	[self.controlBar simulateTapAtIndex:0];
+//	self.controlBar
 }
 
 - (void)setup {
@@ -576,6 +597,9 @@
 	}];
 	[LMLayoutManager addNewLandscapeConstraints:viewToPinLandscapeConstraints];
 	
+	
+	UITapGestureRecognizer *contentViewTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(contentViewTapped)];
+	[viewToPin addGestureRecognizer:contentViewTapGestureRecognizer];
 	
 	
 	self.landscapeControlBar = [LMControlBarView newAutoLayoutView];
@@ -690,7 +714,7 @@
 	}];
 	[LMLayoutManager addNewLandscapeConstraints:controlBarLandscapeConstraints];
 	
-	self.controlBar = controlBar;
+	self.portraitControlBar = controlBar;
 	self.rootView = rootView;
 	
 	

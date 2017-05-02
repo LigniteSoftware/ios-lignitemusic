@@ -331,6 +331,14 @@ typedef enum {
 + (LMMusicPlayerType)savedPlayerType;
 
 /**
+ Checks whether or not a now playing collection is equal to the currently playing collection or its shuffled version.
+
+ @param musicTrackCollection The music track collection to compare with.
+ @return Whether or not it's equal to either the shuffled collection which is now playing or the sorted base collection.
+ */
+- (BOOL)nowPlayingCollectionIsEqualTo:(LMMusicTrackCollection*)musicTrackCollection;
+
+/**
  Whether or not an output port is wireless.
  
  @param outputPort The audio route to check.

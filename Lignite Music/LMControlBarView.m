@@ -62,6 +62,11 @@
 	[self buttonHighlightStatusUpdate:gestureRecognizer.view wasJustTapped:YES];
 }
 
+- (void)simulateTapAtIndex:(uint8_t)index {
+	UIView *controlButtonView = [self.controlButtonViews objectAtIndex:index];
+	[self buttonHighlightStatusUpdate:controlButtonView wasJustTapped:YES];
+}
+
 - (instancetype)init {
 	self = [super init];
 	if(self) {
