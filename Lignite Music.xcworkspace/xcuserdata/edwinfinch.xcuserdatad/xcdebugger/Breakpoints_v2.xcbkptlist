@@ -420,12 +420,12 @@
                   moduleName = "Lignite Music"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/edwinfinch/ios-projects/Lignite%20Music/Lignite%20Music/LMBrowsingDetailView.m"
-                  timestampString = "515414380.504089"
+                  timestampString = "515414589.298203"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "701"
                   endingLineNumber = "701"
-                  offsetFromSymbolStart = "338">
+                  offsetFromSymbolStart = "320">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
@@ -435,12 +435,12 @@
                   moduleName = "Lignite Music"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/edwinfinch/ios-projects/Lignite%20Music/Lignite%20Music/LMBrowsingDetailView.m"
-                  timestampString = "515414380.505556"
+                  timestampString = "515414589.300648"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "701"
                   endingLineNumber = "701"
-                  offsetFromSymbolStart = "356">
+                  offsetFromSymbolStart = "336">
                </Location>
             </Locations>
          </BreakpointContent>

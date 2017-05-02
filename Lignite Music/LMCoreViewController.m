@@ -1055,7 +1055,7 @@ LMControlBarViewDelegate
 							[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 							[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 //							[self.buttonNavigationBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/1.0)];
-							[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:64];
+							[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
 						}];
 						[LMLayoutManager addNewPortraitConstraints:buttonNavigationBarPortraitConstraints];
 						
@@ -1064,11 +1064,11 @@ LMControlBarViewDelegate
 							[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
 							[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 //							[self.buttonNavigationBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(1.0/1.0)];
-							[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:64];
+							[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 						}];
 						[LMLayoutManager addNewLandscapeConstraints:buttonNavigationBarLandscapeConstraints];
 						
-						[self.navigationController.view insertSubview:self.landscapeNavigationBar aboveSubview:self.buttonNavigationBar];
+//						[self.navigationController.view insertSubview:self.landscapeNavigationBar aboveSubview:self.buttonNavigationBar];
 						
 						[self.musicPlayer addMusicDelegate:self];
 						
