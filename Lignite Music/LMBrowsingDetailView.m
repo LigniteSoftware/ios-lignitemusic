@@ -663,10 +663,10 @@
 	}];
 	[LMLayoutManager addNewLandscapeConstraints:collectionInfoViewLandscapeConstraints];
 	
-	collectionInfoView.layer.shadowColor = [UIColor blackColor].CGColor;
-	collectionInfoView.layer.shadowRadius = (self.layoutManager.isLandscape ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height)/35;
-	collectionInfoView.layer.shadowOffset = CGSizeMake(0, collectionInfoView.layer.shadowRadius/2);
-	collectionInfoView.layer.shadowOpacity = 0.10f;
+//	collectionInfoView.layer.shadowColor = [UIColor blackColor].CGColor;
+//	collectionInfoView.layer.shadowRadius = (self.layoutManager.isLandscape ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height)/35;
+//	collectionInfoView.layer.shadowOffset = CGSizeMake(0, collectionInfoView.layer.shadowRadius/2);
+//	collectionInfoView.layer.shadowOpacity = 0.10f;
 	
 	[collectionInfoView reloadData];
 	
