@@ -50,14 +50,25 @@
 
 @interface LMCollectionInfoView : UIView
 
+/**
+ The delegate for loading data.
+ */
 @property id<LMCollectionInfoViewDelegate> delegate;
 
+/**
+ The big list entry associated with this collection info view.
+ */
 @property LMBigListEntry *associatedBigListEntry;
 
 /**
  Whether or not to keep it in large mode. If YES, it will increase the size of the title over the contents below title. Default is NO.
  */
 @property BOOL largeMode;
+
+/**
+ The text alignment to use.
+ */
+@property NSTextAlignment textAlignment;
 
 /**
  Setup all of the views with the current collection as provided by the delegate.
