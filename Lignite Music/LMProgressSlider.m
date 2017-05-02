@@ -8,13 +8,13 @@
 
 #import <PureLayout/PureLayout.h>
 #import "LMProgressSlider.h"
-#import "LMColour.h"
-#import "LMLabel.h"
-#import "LMExtras.h"
 #import "LMMarqueeLabel.h"
 #import "NSTimer+Blocks.h"
+#import "LMColour.h"
+#import "LMExtras.h"
+#import "LMLabel.h"
 
-@interface LMProgressSlider()
+@interface LMProgressSlider()<LMLayoutChangeDelegate>
 
 /**
  The background to the background of the slider (lol), which is by default [UIColor clearColour] though can be changed in cases like the now playing screen.
@@ -90,6 +90,11 @@
  Whether or not the slider is shrunk.
  */
 @property BOOL sliderIsShrunk;
+
+/**
+ The layout manager.
+ */
+@property LMLayoutManager *layoutManager;
 
 @end
 
@@ -413,10 +418,21 @@
 	}
 }
 
+- (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		self.sliderBackgroundHeightConstraint.constant = self.frame.size.height;
+	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		
+	}];
+}
+
 - (void)layoutSubviews {
 	if(!self.didLayoutConstraints){
 		self.didLayoutConstraints = YES;
-				
+		
+		self.layoutManager = [LMLayoutManager sharedLayoutManager];
+		[self.layoutManager addDelegate:self];
+		
 		if(self.finalValue > 0){
 			self.widthIncrementPerTick = self.frame.size.width/self.finalValue;
 		}
