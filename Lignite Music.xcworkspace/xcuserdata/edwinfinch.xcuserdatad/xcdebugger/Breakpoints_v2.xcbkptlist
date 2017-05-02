@@ -420,7 +420,7 @@
                   moduleName = "Lignite Music"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/edwinfinch/ios-projects/Lignite%20Music/Lignite%20Music/LMBrowsingDetailView.m"
-                  timestampString = "515412010.700289"
+                  timestampString = "515413696.800732"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "701"
@@ -435,7 +435,7 @@
                   moduleName = "Lignite Music"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/edwinfinch/ios-projects/Lignite%20Music/Lignite%20Music/LMBrowsingDetailView.m"
-                  timestampString = "515412010.701586"
+                  timestampString = "515413696.80206"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "701"
@@ -474,6 +474,22 @@
             startingLineNumber = "713"
             endingLineNumber = "713"
             landmarkName = "-nextResponder"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Lignite Music/LMCreditsViewController.m"
+            timestampString = "515413696.746739"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "68"
+            endingLineNumber = "68"
+            landmarkName = "-scrollViewDidScroll:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

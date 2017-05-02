@@ -8,12 +8,14 @@
 
 #import <PureLayout/PureLayout.h>
 #import "LMCreditsViewController.h"
+#import "LMLayoutManager.h"
+#import "NSTimer+Blocks.h"
 #import "LMScrollView.h"
 #import "LMAppIcon.h"
 #import "LMColour.h"
 #import "LMExtras.h"
 
-@interface LMCreditsViewController ()
+@interface LMCreditsViewController ()<UIScrollViewDelegate, LMLayoutChangeDelegate>
 
 /**
  Whether or not constraints have been setup yet.
@@ -45,6 +47,11 @@
  */
 @property UIImageView *signaturesView;
 
+/**
+ The layout manager.
+ */
+@property LMLayoutManager *layoutManager;
+
 @end
 
 @implementation LMCreditsViewController
@@ -57,14 +64,34 @@
 	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://www.lignitemusic.com/licenses/"]];
 }
 
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+	scrollView.contentOffset = CGPointMake(0, scrollView.contentOffset.y);
+}
+
+- (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+	
+	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
+			[self.scrollView reload];
+			self.scrollView.delegate = self;
+		} repeats:NO];
+	}];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
 	
+	self.layoutManager = [LMLayoutManager sharedLayoutManager];
+	[self.layoutManager addDelegate:self];
+	
 	BOOL isLandscape = [LMLayoutManager sharedLayoutManager].isLandscape;
-	CGFloat properNumber = isLandscape ? WINDOW_FRAME.size.height : WINDOW_FRAME.size.width;
+	CGFloat mainDimension = isLandscape ? WINDOW_FRAME.size.height : WINDOW_FRAME.size.width;
 	
 	self.scrollView = [LMScrollView newAutoLayoutView];
 	self.scrollView.backgroundColor = [UIColor whiteColor];
+	self.scrollView.showsVerticalScrollIndicator = YES;
+	self.scrollView.delegate = self;
 	[self.view addSubview:self.scrollView];
 	
 	[self.scrollView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
@@ -88,9 +115,10 @@
 	[self.scrollView addSubview:self.philippAndEdwinView];
 	
 	[self.philippAndEdwinView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-	[self.philippAndEdwinView autoSetDimension:ALDimensionWidth toSize:properNumber];
+//	[self.philippAndEdwinView autoSetDimension:ALDimensionWidth toSize:mainDimension];
+	[self.philippAndEdwinView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.scrollView];
 	NSArray *philippAndEdwinViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-		[self.philippAndEdwinView autoSetDimension:ALDimensionHeight toSize:0.88*properNumber];
+		[self.philippAndEdwinView autoSetDimension:ALDimensionHeight toSize:0.88*mainDimension];
 	}];
 	[LMLayoutManager addNewPortraitConstraints:philippAndEdwinViewPortraitConstraints];
 	
@@ -113,34 +141,35 @@
 	
 	
 	self.thankYouLabel = [UILabel newAutoLayoutView];
-	self.thankYouLabel.font = [UIFont fontWithName:@"HoneyScript-SemiBold" size:(properNumber/414.0)*75.0f];
+	self.thankYouLabel.font = [UIFont fontWithName:@"HoneyScript-SemiBold" size:(mainDimension/414.0)*75.0f];
 	self.thankYouLabel.text = NSLocalizedString(@"ThankYou", nil);
 	self.thankYouLabel.textAlignment = NSTextAlignmentCenter;
 	[self.scrollView addSubview:self.thankYouLabel];
 	
 	[self.thankYouLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
-	[self.thankYouLabel autoSetDimension:ALDimensionWidth toSize:properNumber];
+//	[self.thankYouLabel autoSetDimension:ALDimensionWidth toSize:mainDimension];
+	[self.thankYouLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.scrollView];
 	NSArray *thankYouLabelPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-		[self.thankYouLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.philippAndEdwinView withOffset:-properNumber*0.10];
+		[self.thankYouLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.philippAndEdwinView withOffset:-mainDimension*0.10];
 	}];
 	[LMLayoutManager addNewPortraitConstraints:thankYouLabelPortraitConstraints];
 	
 	NSArray *thankYouLabelLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-		[self.thankYouLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.philippAndEdwinView withOffset:properNumber*0.10];
+		[self.thankYouLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.philippAndEdwinView withOffset:mainDimension*0.10];
 	}];
 	[LMLayoutManager addNewLandscapeConstraints:thankYouLabelLandscapeConstraints];
 	
 	
 	self.thanksForYourSupportLabel = [UILabel newAutoLayoutView];
-	self.thanksForYourSupportLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:(properNumber/414.0)*18.0f];
+	self.thanksForYourSupportLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:(mainDimension/414.0)*18.0f];
 	self.thanksForYourSupportLabel.text = NSLocalizedString(@"ThankYouDescription", nil);
 	self.thanksForYourSupportLabel.textAlignment = NSTextAlignmentLeft;
 	self.thanksForYourSupportLabel.numberOfLines = 0;
 	[self.scrollView addSubview:self.thanksForYourSupportLabel];
 	
 	[self.thanksForYourSupportLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
-	[self.thanksForYourSupportLabel autoSetDimension:ALDimensionWidth toSize:properNumber*0.9];
-	[self.thanksForYourSupportLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.thankYouLabel withOffset:properNumber*0.05];
+	[self.thanksForYourSupportLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.scrollView withMultiplier:0.9];
+	[self.thanksForYourSupportLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.thankYouLabel withOffset:mainDimension*0.05];
 	
 	
 	self.signaturesView = [UIImageView newAutoLayoutView];
@@ -149,10 +178,10 @@
 	[self.scrollView addSubview:self.signaturesView];
 	
 	[self.signaturesView autoAlignAxisToSuperviewAxis:ALAxisVertical];
-	[self.signaturesView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.thanksForYourSupportLabel withOffset:properNumber*0.05];
+	[self.signaturesView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.thanksForYourSupportLabel withOffset:mainDimension*0.05];
 	float scaleFactor = 0.75;
-	[self.signaturesView autoSetDimension:ALDimensionWidth toSize:properNumber*scaleFactor];
-	[self.signaturesView autoSetDimension:ALDimensionHeight toSize:properNumber*0.296*scaleFactor];
+	[self.signaturesView autoSetDimension:ALDimensionWidth toSize:mainDimension*scaleFactor];
+	[self.signaturesView autoSetDimension:ALDimensionHeight toSize:mainDimension*0.296*scaleFactor];
 	
 	
 	NSMutableArray *textLabelsArray = [NSMutableArray new];
@@ -342,7 +371,7 @@
 		NSString *text = NSLocalizedString([textKeys objectAtIndex:i], nil);
 		float fontSize = textFontSizes[i];
 		
-		float actualFontSize = (properNumber/414.0)*fontSize;
+		float actualFontSize = (mainDimension/414.0)*fontSize;
 		
 		BOOL textFontIsBold = textFontIsBoldOptions[i];
 		
@@ -353,9 +382,9 @@
 		textLabel.textAlignment = NSTextAlignmentLeft;
 		[self.scrollView addSubview:textLabel];
 		
-		[textLabel autoSetDimension:ALDimensionWidth toSize:properNumber*0.90];
+		[textLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.scrollView withMultiplier:0.9];
 		[textLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
-		[textLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:previousLabelToAttachTo withOffset:properNumber*(i == 0 ? 0.10 : (fontSize == 30.0 ? 0.075 : 0.035))];
+		[textLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:previousLabelToAttachTo withOffset:mainDimension*(i == 0 ? 0.10 : (fontSize == 30.0 ? 0.075 : 0.035))];
 		
 		[textLabelsArray addObject:textLabel];
 	}
@@ -373,7 +402,7 @@
 	[self.scrollView addSubview:creditsLinkButton];
 	
 	[creditsLinkButton autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:[textLabelsArray lastObject] withOffset:20];
-	[creditsLinkButton autoSetDimension:ALDimensionWidth toSize:properNumber * 0.9];
+	[creditsLinkButton autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.scrollView withMultiplier:0.9];
 	[creditsLinkButton autoAlignAxisToSuperviewAxis:ALAxisVertical];
 	[creditsLinkButton autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height/8.0];
 	
