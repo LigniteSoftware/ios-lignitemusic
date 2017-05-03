@@ -7,12 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LMTriangleMaskView.h"
 
 @interface LMTriangleView : UIView
 
 /**
- Whether or not the triangle is pointing upwards. Default is NO.
+ The triangle mask direction to apply.
  */
-@property BOOL pointingUpwards;
+@property LMTriangleMaskDirection maskDirection;
 
 @end

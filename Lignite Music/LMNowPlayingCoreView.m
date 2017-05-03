@@ -399,10 +399,8 @@
             tutorialView.boxAlignment = LMTutorialViewAlignmentCenter;
             tutorialView.arrowAlignment = LMTutorialViewAlignmentCenter;
             tutorialView.icon = [LMAppIcon imageForIcon:LMIconTutorialSwipe];
-            tutorialView.leadingLayoutConstraint = [tutorialView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-            [tutorialView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
-            [tutorialView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-            [tutorialView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+			
+			[tutorialView autoPinEdgesToSuperviewEdges];
             
             self.tutorialView = tutorialView;
         }

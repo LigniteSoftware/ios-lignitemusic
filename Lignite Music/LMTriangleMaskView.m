@@ -19,16 +19,28 @@
 
 - (UIBezierPath*)path {
 	UIBezierPath *path = [UIBezierPath new];
-    if(self.upwards){
-        [path moveToPoint:(CGPoint){0, self.frame.size.height}];
-        [path addLineToPoint:(CGPoint){self.frame.size.width/2, 0}];
-        [path addLineToPoint:(CGPoint){self.frame.size.width, self.frame.size.height}];
-    }
-    else{
-        [path moveToPoint:(CGPoint){0, 0}];
-        [path addLineToPoint:(CGPoint){self.frame.size.width/2, self.frame.size.height}];
-        [path addLineToPoint:(CGPoint){self.frame.size.width, 0}];
-    }
+	switch(self.maskDirection){
+		case LMTriangleMaskDirectionUpwards:
+			[path moveToPoint:(CGPoint){0, self.frame.size.height}];
+			[path addLineToPoint:(CGPoint){self.frame.size.width/2, 0}];
+			[path addLineToPoint:(CGPoint){self.frame.size.width, self.frame.size.height}];
+			break;
+		case LMTriangleMaskDirectionRight:
+			[path moveToPoint:(CGPoint){0, 0}];
+			[path addLineToPoint:(CGPoint){self.frame.size.width, self.frame.size.height/2}];
+			[path addLineToPoint:(CGPoint){0, self.frame.size.height}];
+			break;
+		case LMTriangleMaskDirectionDownwards:
+			[path moveToPoint:(CGPoint){0, 0}];
+			[path addLineToPoint:(CGPoint){self.frame.size.width/2, self.frame.size.height}];
+			[path addLineToPoint:(CGPoint){self.frame.size.width, 0}];
+			break;
+		case LMTriangleMaskDirectionLeft:
+			[path moveToPoint:(CGPoint){self.frame.size.width, 0}];
+			[path addLineToPoint:(CGPoint){0, self.frame.size.height/2}];
+			[path addLineToPoint:(CGPoint){self.frame.size.width, self.frame.size.height}];
+			break;
+	}
 	//	[path addLineToPoint:(CGPoint){0, 0}];
 	[path closePath];
 	

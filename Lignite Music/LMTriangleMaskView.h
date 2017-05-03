@@ -11,9 +11,24 @@
 @interface LMTriangleMaskView : UIView
 
 /**
- Whether or not to point the triangle upwards.
+ The direction in which the triangle mask should point.
+
+ - LMTriangleMaskDirectionUpwards: Tip pointing upwards.
+ - LMTriangleMaskDirectionRight: Tip pointing towards the right side.
+ - LMTriangleMaskDirectionDownwards: Tip pointing downwards.
+ - LMTriangleMaskDirectionLeft: Tip pointing left.
  */
-@property BOOL upwards;
+typedef NS_ENUM(NSInteger, LMTriangleMaskDirection) {
+	LMTriangleMaskDirectionUpwards = 0,
+	LMTriangleMaskDirectionRight,
+	LMTriangleMaskDirectionDownwards,
+	LMTriangleMaskDirectionLeft
+};
+
+/**
+ The triangle mask direction to apply.
+ */
+@property LMTriangleMaskDirection maskDirection;
 
 /**
  Setup the triangle mask view.

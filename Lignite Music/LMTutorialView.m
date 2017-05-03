@@ -7,13 +7,14 @@
 //
 
 #import <PureLayout/PureLayout.h>
+#import "LMLayoutManager.h"
 #import "LMTriangleView.h"
 #import "LMTutorialView.h"
 #import "LMColour.h"
 
 #define LMTutorialViewDontShowHintsKey @"LMTutorialViewDontShowHintsKey"
 
-@interface LMTutorialView()
+@interface LMTutorialView()<LMLayoutChangeDelegate>
 
 /**
  The title of this tutorial view.
@@ -80,6 +81,11 @@
  */
 @property NSString *key;
 
+/**
+ The layout manager.
+ */
+@property LMLayoutManager *layoutManager;
+
 @end
 
 @implementation LMTutorialView
@@ -106,17 +112,18 @@
  Closes the tutorial view in an animated fashion and automatically removes it from its superview.
  */
 - (void)close {
-    if(!self.leadingLayoutConstraint){
-        NSLog(@"\n\nWindows error! No leading constraint for tutorial %@", self.key);
-        return;
-    }
-    
     [UIView animateWithDuration:0.50 animations:^{
         self.backgroundBlurView.effect = nil;
         self.contentViewBackground.alpha = 0;
     } completion:^(BOOL finished) {
         if(finished){
             [self removeFromSuperview];
+			
+			for(UIView *subview in self.subviews){
+				[LMLayoutManager removeAllConstraintsRelatedToView:subview];
+			}
+			
+			[LMLayoutManager removeAllConstraintsRelatedToView:self];
             
             if(self.delegate){
                 if([self.delegate respondsToSelector:@selector(tutorialFinishedWithKey:)]){
@@ -156,12 +163,31 @@
     return YES;
 }
 
+- (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		for(UIView *subview in self.subviews){
+			[subview removeFromSuperview];
+			[LMLayoutManager removeAllConstraintsRelatedToView:subview];
+		}
+		
+		self.didLayoutConstraints = NO;
+		
+		[self setNeedsLayout];
+		[self layoutIfNeeded];
+	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		
+	}];
+}
+
 - (void)layoutSubviews {
     if(!self.didLayoutConstraints) {
         self.didLayoutConstraints = YES;
+		
+		self.layoutManager = [LMLayoutManager sharedLayoutManager];
+		[self.layoutManager addDelegate:self];
         
         
-        CGFloat screenSizeScaleFactor = self.frame.size.width/414.0;
+		CGFloat screenSizeScaleFactor = (self.layoutManager.isLandscape ? self.frame.size.height : self.frame.size.width)/414.0;
         
         
         self.backgroundColor = [UIColor clearColor];
@@ -197,17 +223,36 @@
             self.triangleView = [LMTriangleView newAutoLayoutView];
             self.triangleView.backgroundColor = [UIColor orangeColor];
             [self.contentViewBackground addSubview:self.triangleView];
-            
-            [self.triangleView autoAlignAxisToSuperviewAxis:ALAxisVertical];
-            if(self.arrowAlignment == LMTutorialViewAlignmentBottom){
-                [self.triangleView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.contentViewBackground];
-            }
-            else{
-                self.triangleView.pointingUpwards = YES;
-                [self.triangleView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.contentViewBackground];
-            }
-            [self.triangleView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.contentViewBackground withMultiplier:(2.0/10.0)];
-            [self.triangleView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.contentViewBackground withMultiplier:(1.0/10.0)];
+			
+			if(self.layoutManager.isLandscape){
+				[self.triangleView autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+				
+				if(self.arrowAlignment == LMTutorialViewAlignmentBottom){
+					self.triangleView.maskDirection = LMTriangleMaskDirectionRight;
+					[self.triangleView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.contentViewBackground];
+				}
+				else{
+					self.triangleView.maskDirection = LMTriangleMaskDirectionLeft;
+					[self.triangleView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.contentViewBackground];
+				}
+			}
+			else{
+				[self.triangleView autoAlignAxisToSuperviewAxis:ALAxisVertical];
+				
+				if(self.arrowAlignment == LMTutorialViewAlignmentBottom){
+					self.triangleView.maskDirection = LMTriangleMaskDirectionDownwards;
+					[self.triangleView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.contentViewBackground];
+				}
+				else{
+					self.triangleView.maskDirection = LMTriangleMaskDirectionUpwards;
+					[self.triangleView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.contentViewBackground];
+				}
+			}
+            [self.triangleView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth
+										   ofView:self.contentViewBackground withMultiplier:self.layoutManager.isLandscape ? (1.0/10.0) : (2.0/10.0)];
+			
+            [self.triangleView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth
+										   ofView:self.contentViewBackground withMultiplier:self.layoutManager.isLandscape ? (1.5/10.0) : (1.0/10.0)];
             
             [self insertSubview:self.contentViewBackground aboveSubview:self.triangleView];
         }
@@ -217,7 +262,7 @@
         [self.contentViewBackground addSubview:self.contentView];
         
         [self.contentView autoCenterInSuperview];
-        [self.contentView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.contentViewBackground withMultiplier:(9.0/10.0)];
+        [self.contentView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.contentViewBackground withMultiplier:(10.0/10.0)];
         [self.contentView autoPinEdgeToSuperviewEdge:ALEdgeTop];
         [self.contentView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
         
@@ -228,10 +273,10 @@
         self.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:30.0f * screenSizeScaleFactor];
         self.titleLabel.textAlignment = NSTextAlignmentLeft;
         [self.contentView addSubview:self.titleLabel];
-        
+		
+		[self.titleLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
         [self.titleLabel autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:10];
-        [self.titleLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-        [self.titleLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.titleLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.contentView withMultiplier:(9.0/10.0)];
         
         
         self.stopThesePopupsLabel = [UILabel newAutoLayoutView];
@@ -241,9 +286,9 @@
         self.stopThesePopupsLabel.textAlignment = NSTextAlignmentCenter;
         self.stopThesePopupsLabel.userInteractionEnabled = YES;
         [self.contentView addSubview:self.stopThesePopupsLabel];
-        
-        [self.stopThesePopupsLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-        [self.stopThesePopupsLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		
+		[self.stopThesePopupsLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
+		[self.stopThesePopupsLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.titleLabel];
         [self.stopThesePopupsLabel autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:10];
         
         UITapGestureRecognizer *stopTutorialsGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tappedStopTutorialsButton)];
@@ -258,9 +303,9 @@
         self.thanksForTheHintButton.textAlignment = NSTextAlignmentCenter;
         self.thanksForTheHintButton.userInteractionEnabled = YES;
         [self.contentView addSubview:self.thanksForTheHintButton];
-        
-        [self.thanksForTheHintButton autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-        [self.thanksForTheHintButton autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		
+		[self.thanksForTheHintButton autoAlignAxisToSuperviewAxis:ALAxisVertical];
+        [self.thanksForTheHintButton autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.titleLabel];
         [self.thanksForTheHintButton autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.stopThesePopupsLabel withOffset:-10];
         [self.thanksForTheHintButton autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.titleLabel withMultiplier:2.0];
         
@@ -276,7 +321,7 @@
             
             [self.iconView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.contentView withMultiplier:(1.0/4.0)];
             [self.iconView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.contentView withMultiplier:(1.0/4.0)];
-            [self.iconView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+			[self.iconView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.titleLabel];
             [self.iconView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.titleLabel withOffset:20];
         }
         
@@ -287,15 +332,16 @@
         self.descriptionLabel.textAlignment = NSTextAlignmentLeft;
         self.descriptionLabel.numberOfLines = 0;
         [self.contentView addSubview:self.descriptionLabel];
-        
+		
+//		[self.descriptionLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
         if(self.icon){
             [self.descriptionLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.iconView withOffset:15];
         }
         else{
-            [self.descriptionLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+            [self.descriptionLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.titleLabel];
         }
-        [self.descriptionLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-        [self.descriptionLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.titleLabel withOffset:20];
+		[self.descriptionLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.titleLabel];
+		[self.descriptionLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.titleLabel withOffset:20];
         [self.descriptionLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.thanksForTheHintButton withOffset:-20];
         
         [UIView animateWithDuration:0.5 animations:^{

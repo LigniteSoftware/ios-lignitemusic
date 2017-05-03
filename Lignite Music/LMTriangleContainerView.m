@@ -8,7 +8,6 @@
 
 #import <PureLayout/PureLayout.h>
 #import "LMTriangleContainerView.h"
-#import "LMTriangleMaskView.h"
 
 @interface LMTriangleContainerView()
 
@@ -25,7 +24,7 @@
 		self.backgroundColor = [UIColor clearColor];
 		
 		self.triangleMaskView = [LMTriangleMaskView newAutoLayoutView];
-        self.triangleMaskView.upwards = self.upwards;
+        self.triangleMaskView.maskDirection = self.maskDirection;
 		self.triangleMaskView.frame = self.frame;
 	
 		// make new layer to contain shadow and masked image

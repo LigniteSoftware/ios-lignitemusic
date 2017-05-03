@@ -29,7 +29,7 @@
 	else{
 		if(!self.triangleContainerView){
 			self.triangleContainerView = [LMTriangleContainerView newAutoLayoutView];
-            self.triangleContainerView.upwards = self.pointingUpwards;
+            self.triangleContainerView.maskDirection = self.maskDirection;
 			
 			[self addSubview:self.triangleContainerView];
 			

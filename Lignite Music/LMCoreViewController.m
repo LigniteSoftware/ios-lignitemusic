@@ -146,11 +146,22 @@ LMControlBarViewDelegate
                 tutorialView.boxAlignment = LMTutorialViewAlignmentBottom;
                 tutorialView.arrowAlignment = LMTutorialViewAlignmentBottom;
                 tutorialView.icon = [LMAppIcon imageForIcon:LMIconTutorialScroll];
-                tutorialView.leadingLayoutConstraint = [tutorialView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
                 tutorialView.delegate = self;
-                [tutorialView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
-                [tutorialView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-                [tutorialView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.buttonNavigationBar.miniPlayerCoreView];
+				
+				NSArray *tutorialViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+					[tutorialView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+					[tutorialView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
+					[tutorialView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+					[tutorialView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.buttonNavigationBar.miniPlayerCoreView];
+				}];
+				[LMLayoutManager addNewPortraitConstraints:tutorialViewPortraitConstraints];
+				
+				NSArray *tutorialViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+					[tutorialView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
+					[tutorialView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+					[tutorialView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.buttonNavigationBar.miniPlayerCoreView];
+				}];
+				[LMLayoutManager addNewLandscapeConstraints:tutorialViewLandscapeConstraints];
             }
         } repeats:NO];
     }
@@ -166,11 +177,22 @@ LMControlBarViewDelegate
                 tutorialView.boxAlignment = LMTutorialViewAlignmentTop;
                 tutorialView.arrowAlignment = LMTutorialViewAlignmentTop;
                 tutorialView.icon = [LMAppIcon imageForIcon:LMIconTutorialTap];
-                tutorialView.leadingLayoutConstraint = [tutorialView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
                 tutorialView.delegate = self;
-                [tutorialView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
-                [tutorialView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-                [tutorialView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.navigationBar];
+				
+				NSArray *tutorialViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+					[tutorialView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+					[tutorialView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
+					[tutorialView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+					[tutorialView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.navigationBar];
+				}];
+				[LMLayoutManager addNewPortraitConstraints:tutorialViewPortraitConstraints];
+				
+				NSArray *tutorialViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+					[tutorialView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
+					[tutorialView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+					[tutorialView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.landscapeNavigationBar];
+				}];
+				[LMLayoutManager addNewLandscapeConstraints:tutorialViewLandscapeConstraints];
             }
         } repeats:NO];
     }
@@ -1125,11 +1147,22 @@ LMControlBarViewDelegate
                                 tutorialView.boxAlignment = LMTutorialViewAlignmentBottom;
                                 tutorialView.arrowAlignment = LMTutorialViewAlignmentBottom;
 //                                tutorialView.icon = [LMAppIcon imageForIcon:LMIconLookAndFeel];
-                                tutorialView.leadingLayoutConstraint = [tutorialView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
                                 tutorialView.delegate = self;
-                                [tutorialView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
-                                [tutorialView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-                                [tutorialView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.buttonNavigationBar.browsingBar];
+								
+								NSArray *tutorialViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+									[tutorialView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+									[tutorialView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
+									[tutorialView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+									[tutorialView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.buttonNavigationBar.browsingBar];
+								}];
+								[LMLayoutManager addNewPortraitConstraints:tutorialViewPortraitConstraints];
+								
+								NSArray *tutorialViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+									[tutorialView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
+									[tutorialView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+									[tutorialView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.buttonNavigationBar.browsingBar];
+								}];
+								[LMLayoutManager addNewLandscapeConstraints:tutorialViewLandscapeConstraints];
                             }
                         } repeats:NO];
 						

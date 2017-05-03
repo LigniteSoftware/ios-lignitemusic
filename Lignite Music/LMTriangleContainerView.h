@@ -7,12 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LMTriangleMaskView.h"
 
 @interface LMTriangleContainerView : UIView
 
 /**
- Whether or not to point the triangle mask upwards on render.
+ The triangle mask direction to apply.
  */
-@property BOOL upwards;
+@property LMTriangleMaskDirection maskDirection;
 
 @end

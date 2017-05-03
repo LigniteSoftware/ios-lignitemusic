@@ -52,11 +52,6 @@ typedef enum {
 + (BOOL)tutorialShouldRunForKey:(NSString*)tutorialKey;
 
 /**
- The constraint which pins this tutorial view to the leading edge of the superview, for dismissal of tutorial.
- */
-@property NSLayoutConstraint *leadingLayoutConstraint;
-
-/**
  The alignment of the actual content box.
  */
 @property LMTutorialContentViewAlignment boxAlignment;
