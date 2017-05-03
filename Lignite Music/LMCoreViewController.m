@@ -875,12 +875,12 @@ LMControlBarViewDelegate
 	[self.splashImageView autoPinEdgesToSuperviewEdges];
     
     //If user is using an iPad
-    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad || [(NSString*)[UIDevice currentDevice].model hasPrefix:@"iPad"]){
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad || [(NSString*)[UIDevice currentDevice].model hasPrefix:@"iPad"] || true){
         LMAlertView *alertView = [LMAlertView newAutoLayoutView];
         alertView.title = NSLocalizedString(@"OhBoy", nil);
         alertView.body = NSLocalizedString(@"NoiPadSupport", nil);
-        alertView.alertOptionColours = @[];
-        alertView.alertOptionTitles = @[];
+		alertView.alertOptionColours = @[[LMColour ligniteRedColour], [LMColour darkLigniteRedColour], [UIColor blueColor], [UIColor magentaColor]];
+        alertView.alertOptionTitles = @[@"Hey", @"Fuck", @"Test", @"Fourth?"];
         [alertView launchOnView:self.view withCompletionHandler:nil];
         
         return;

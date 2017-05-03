@@ -7,10 +7,11 @@
 //
 
 #import <PureLayout/PureLayout.h>
+#import "LMLayoutManager.h"
 #import "LMAlertView.h"
 #import "LMColour.h"
 
-@interface LMAlertView()
+@interface LMAlertView()<LMLayoutChangeDelegate>
 
 /**
  The array of buttons in order from bottom to top.
@@ -22,7 +23,20 @@
  */
 @property NSLayoutConstraint *topConstraint;
 
+/**
+ The completion handler for when the option is selected. Stored from the initial load.
+ */
 @property void (^completionHandler)(NSUInteger optionSelected);
+
+/**
+ The layout manager.
+ */
+@property LMLayoutManager *layoutManager;
+
+/**
+ The title label, stored for rotation changes since I have to change its alignment >:(
+ */
+@property UILabel *titleLabel;
 
 @end
 
@@ -40,6 +54,14 @@
 	}
 }
 
+- (void)recursivelyRemoveSubviewsFromLayoutManagerForView:(UIView*)view {
+	[LMLayoutManager removeAllConstraintsRelatedToView:view];
+	
+	for(UIView *subview in view.subviews){
+		[self recursivelyRemoveSubviewsFromLayoutManagerForView:subview];
+	}
+}
+
 - (void)hideAlert {
 	[self.superview layoutIfNeeded];
 	
@@ -52,6 +74,8 @@
 						} completion:^(BOOL finished) {
 							if(finished){
 								[self removeFromSuperview];
+								
+								[self recursivelyRemoveSubviewsFromLayoutManagerForView:self];
 							}
 						}];
 }
@@ -68,8 +92,24 @@
 						} completion:nil];
 }
 
+- (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+	BOOL willBeLandscape = size.width > size.height;
+	
+	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		self.titleLabel.textAlignment = willBeLandscape ? NSTextAlignmentLeft : NSTextAlignmentCenter;
+	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		
+	}];
+}
+
 - (void)launchOnView:(UIView*)alertRootView withCompletionHandler:(void(^)(NSUInteger optionSelected))completionHandler {
 	NSLog(@"Frame %@", NSStringFromCGRect(alertRootView.frame));
+	
+	self.layoutManager = [LMLayoutManager sharedLayoutManager];
+	[self.layoutManager addDelegate:self];
+	
+	BOOL isLandscape = self.layoutManager.isLandscape;
+	CGFloat properDimension = (isLandscape ? alertRootView.frame.size.width : alertRootView.frame.size.height);
 	
 	self.backgroundColor = [UIColor whiteColor];
 	
@@ -92,29 +132,34 @@
 	[paddingView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(9.0/10.0)];
 	[paddingView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(9.0/10.0)];
 	
+	
 	UILabel *titleLabel = [UILabel newAutoLayoutView];
 	//	titleLabel.backgroundColor = [UIColor yellowColor];
 	titleLabel.numberOfLines = 0;
-	titleLabel.textAlignment = NSTextAlignmentCenter;
+	titleLabel.textAlignment = self.layoutManager.isLandscape ? NSTextAlignmentLeft : NSTextAlignmentCenter;
 	titleLabel.text = self.title;
-	titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:0.050 * alertRootView.frame.size.height];
+	titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:0.050 * properDimension];
 	[paddingView addSubview:titleLabel];
 	
 	[titleLabel autoPinEdgeToSuperviewEdge:ALEdgeTop];
 	[titleLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 	[titleLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 	
+	self.titleLabel = titleLabel;
+	
+	
 	UILabel *contentsLabel = [UILabel newAutoLayoutView];
 	//	contentsLabel.backgroundColor = [UIColor cyanColor];
 	contentsLabel.numberOfLines = 0;
 	contentsLabel.textAlignment = NSTextAlignmentLeft;
 	contentsLabel.text = self.body;
-	contentsLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:0.025 * alertRootView.frame.size.height];
+	contentsLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:0.025 * properDimension];
 	[paddingView addSubview:contentsLabel];
 	
 	[contentsLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:titleLabel withOffset:20];
 	[contentsLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 	[contentsLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+	
 	
 	for(int i = 0; i < self.alertOptionTitles.count; i++){
 		NSString *alertTitle = [self.alertOptionTitles objectAtIndex:i];
@@ -131,15 +176,36 @@
 		[optionButton.titleLabel setFont:[UIFont fontWithName:@"HelveticaNeue" size:20.0f]];
 		[paddingView addSubview:optionButton];
 		
-		[optionButton autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-		[optionButton autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-		if(isFirstButton){
+		NSArray *optionButtonPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+			[optionButton autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+			[optionButton autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+			if(isFirstButton){
+				[optionButton autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+			}
+			else{
+				[optionButton autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:[self.buttonsArray lastObject] withOffset:-10.0f];
+			}
+			[optionButton autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:alertRootView withMultiplier:(1.0/10.0)];
+		}];
+		[LMLayoutManager addNewPortraitConstraints:optionButtonPortraitConstraints];
+		
+		CGFloat landscapePadding = 15.0f;
+		
+		NSArray *optionButtonLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+			CGFloat paddingMultiplier = landscapePadding/alertRootView.frame.size.width;
+			CGFloat sizeMultiplier = (1.0/(float)self.alertOptionColours.count) - paddingMultiplier;
+			
+			[optionButton autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(1.0/8.0)];
 			[optionButton autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		}
-		else{
-			[optionButton autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:[self.buttonsArray objectAtIndex:i-1] withOffset:-10.0f];
-		}
-		[optionButton autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:alertRootView withMultiplier:(1.0/10.0)];
+			[optionButton autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:paddingView withMultiplier:sizeMultiplier].constant = -landscapePadding;
+			if(isFirstButton){
+				[optionButton autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+			}
+			else{
+				[optionButton autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:[self.buttonsArray lastObject]].constant = landscapePadding*2;
+			}
+		}];
+		[LMLayoutManager addNewLandscapeConstraints:optionButtonLandscapeConstraints];
 		
 		[self.buttonsArray addObject:optionButton];
 	}
