@@ -39,5 +39,6 @@ typedef NS_ENUM(NSInteger, LMLayoutClass) {
 + (void)addNewPortraitConstraints:(NSArray<NSLayoutConstraint*>*)constraintsArray;
 + (void)addNewLandscapeConstraints:(NSArray<NSLayoutConstraint*>*)constraintsArray;
 + (void)removeAllConstraintsRelatedToView:(UIView*)view;
++ (void)recursivelyRemoveAllConstraintsForViewAndItsSubviews:(UIView*)view;
 
 @end

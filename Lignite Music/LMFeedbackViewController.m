@@ -22,7 +22,7 @@
 #import "LMAppIcon.h"
 #import "LMColour.h"
 
-@interface LMFeedbackViewController () <UITextFieldDelegate, UITextViewDelegate, BSKeyboardControlsDelegate>
+@interface LMFeedbackViewController () <UITextFieldDelegate, UITextViewDelegate, BSKeyboardControlsDelegate, LMLayoutChangeDelegate>
 
 /**
  The root view so we can adjust for the keyboard.
@@ -385,6 +385,16 @@ NSString* deviceName(){
 	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://www.lignite.io/feedback/"]];
 }
 
+- (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		
+	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		[NSTimer scheduledTimerWithTimeInterval:0.25 block:^{
+			[self.scrollView reload];
+		} repeats:NO];
+	}];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
 	
@@ -398,8 +408,12 @@ NSString* deviceName(){
 												 name:UIKeyboardWillHideNotification
 											   object:nil];
 	
+	self.layoutManager = [LMLayoutManager sharedLayoutManager];
+	[self.layoutManager addDelegate:self];
+	
 	
 	self.rootView = [UIView newAutoLayoutView];
+	self.rootView.backgroundColor = [UIColor orangeColor];
 	[self.view addSubview:self.rootView];
 	
 	[self.rootView autoPinEdgeToSuperviewEdge:ALEdgeTop];
@@ -408,58 +422,120 @@ NSString* deviceName(){
 	self.rootViewHeightConstraint = [self.rootView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 	
 	
+	
 	self.bottomControlsBackgroundView = [UIView newAutoLayoutView];
 	self.bottomControlsBackgroundView.backgroundColor = [UIColor whiteColor];
 	[self.rootView addSubview:self.bottomControlsBackgroundView];
 	
-	[self.bottomControlsBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-	[self.bottomControlsBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	[self.bottomControlsBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-	[self.bottomControlsBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/8.0)];
+	NSArray *bottomControlsBackgroundViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.bottomControlsBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.bottomControlsBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.bottomControlsBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[self.bottomControlsBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/8.0)];
+	}];
+	[LMLayoutManager addNewPortraitConstraints:bottomControlsBackgroundViewPortraitConstraints];
+	
+	NSArray *bottomControlsBackgroundViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.bottomControlsBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+		[self.bottomControlsBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.bottomControlsBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[self.bottomControlsBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(1.0/8.0)];
+	}];
+	[LMLayoutManager addNewLandscapeConstraints:bottomControlsBackgroundViewLandscapeConstraints];
+	
 	
 	self.sendButtonView = [UIView newAutoLayoutView];
 	self.sendButtonView.backgroundColor = [LMColour ligniteRedColour];
 	[self.bottomControlsBackgroundView addSubview:self.sendButtonView];
 	
-	[self.sendButtonView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-	[self.sendButtonView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-	[self.sendButtonView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-	[self.sendButtonView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.bottomControlsBackgroundView withMultiplier:(1.0/2.0)].constant = -1;
+	NSArray *sendButtonViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.sendButtonView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.sendButtonView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+		[self.sendButtonView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[self.sendButtonView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.bottomControlsBackgroundView withMultiplier:(1.0/2.0)].constant = -1;
+	}];
+	[LMLayoutManager addNewPortraitConstraints:sendButtonViewPortraitConstraints];
+	
+	NSArray *sendButtonViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.sendButtonView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.sendButtonView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+		[self.sendButtonView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.sendButtonView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.bottomControlsBackgroundView withMultiplier:(1.0/2.0)].constant = -1;
+	}];
+	[LMLayoutManager addNewLandscapeConstraints:sendButtonViewLandscapeConstraints];
 	
 	UITapGestureRecognizer *sendButtonTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(sendFeedback)];
 	[self.sendButtonView addGestureRecognizer:sendButtonTap];
+	
+	
 	
 	UIImageView *sendButtonIcon = [UIImageView newAutoLayoutView];
 	sendButtonIcon.contentMode = UIViewContentModeScaleAspectFit;
 	sendButtonIcon.image = [LMAppIcon imageForIcon:LMIconPaperPlane];
 	[self.sendButtonView addSubview:sendButtonIcon];
 	
-	[sendButtonIcon autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-	[sendButtonIcon autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	[sendButtonIcon autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
-	[sendButtonIcon autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.bottomControlsBackgroundView withMultiplier:(1.0/3.0)];
+	NSArray *sendButtonIconPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[sendButtonIcon autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[sendButtonIcon autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[sendButtonIcon autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+		[sendButtonIcon autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.bottomControlsBackgroundView withMultiplier:(1.0/3.0)];
+	}];
+	[LMLayoutManager addNewPortraitConstraints:sendButtonIconPortraitConstraints];
+	
+	NSArray *sendButtonIconLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[sendButtonIcon autoPinEdgeToSuperviewEdge:ALEdgeTop];
+		[sendButtonIcon autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[sendButtonIcon autoAlignAxisToSuperviewAxis:ALAxisVertical];
+		[sendButtonIcon autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.bottomControlsBackgroundView withMultiplier:(1.0/3.0)];
+	}];
+	[LMLayoutManager addNewLandscapeConstraints:sendButtonIconLandscapeConstraints];
+	
 	
 	self.backButtonView = [UIView newAutoLayoutView];
 	self.backButtonView.backgroundColor = [LMColour ligniteRedColour];
 	[self.bottomControlsBackgroundView addSubview:self.backButtonView];
 	
-	[self.backButtonView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	[self.backButtonView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-	[self.backButtonView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-	[self.backButtonView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.bottomControlsBackgroundView withMultiplier:(1.0/2.0)].constant = -1;
+	NSArray *backButtonViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.backButtonView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.backButtonView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+		[self.backButtonView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[self.backButtonView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.bottomControlsBackgroundView withMultiplier:(1.0/2.0)].constant = -1;
+	}];
+	[LMLayoutManager addNewPortraitConstraints:backButtonViewPortraitConstraints];
+	
+	NSArray *backButtonViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.backButtonView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.backButtonView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.backButtonView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[self.backButtonView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.bottomControlsBackgroundView withMultiplier:(1.0/2.0)].constant = -1;
+	}];
+	[LMLayoutManager addNewLandscapeConstraints:backButtonViewLandscapeConstraints];
 	
 	UITapGestureRecognizer *backButtonTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(closeView)];
 	[self.backButtonView addGestureRecognizer:backButtonTap];
+	
+	
 	
 	UIImageView *backButtonIcon = [UIImageView newAutoLayoutView];
 	backButtonIcon.contentMode = UIViewContentModeScaleAspectFit;
 	backButtonIcon.image = [LMAppIcon imageForIcon:LMIconBack];
 	[self.backButtonView addSubview:backButtonIcon];
 	
-	[backButtonIcon autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-	[backButtonIcon autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	[backButtonIcon autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
-	[backButtonIcon autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.bottomControlsBackgroundView withMultiplier:(1.0/3.0)];
+	NSArray *backButtonIconPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[backButtonIcon autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[backButtonIcon autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[backButtonIcon autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+		[backButtonIcon autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.bottomControlsBackgroundView withMultiplier:(1.0/3.0)];
+	}];
+	[LMLayoutManager addNewPortraitConstraints:backButtonIconPortraitConstraints];
+	
+	NSArray *backButtonIconLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[backButtonIcon autoPinEdgeToSuperviewEdge:ALEdgeTop];
+		[backButtonIcon autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[backButtonIcon autoAlignAxisToSuperviewAxis:ALAxisVertical];
+		[backButtonIcon autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.bottomControlsBackgroundView withMultiplier:(1.0/3.0)];
+	}];
+	[LMLayoutManager addNewLandscapeConstraints:backButtonIconLandscapeConstraints];
 	
 	
 	self.scrollView = [LMScrollView newAutoLayoutView];
@@ -467,11 +543,23 @@ NSString* deviceName(){
 	self.scrollView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
 	[self.rootView addSubview:self.scrollView];
 	
-	[self.scrollView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-	[self.scrollView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	[self.scrollView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-	[self.scrollView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.bottomControlsBackgroundView];
-
+	NSArray *scrollViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.scrollView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.scrollView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.scrollView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+		[self.scrollView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.bottomControlsBackgroundView];
+	}];
+	[LMLayoutManager addNewPortraitConstraints:scrollViewPortraitConstraints];
+	
+	NSArray *scrollViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.scrollView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.scrollView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[self.scrollView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+		[self.scrollView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.bottomControlsBackgroundView];
+	}];
+	[LMLayoutManager addNewLandscapeConstraints:scrollViewLandscapeConstraints];
+	
+	
 	self.titleLabel = [UILabel newAutoLayoutView];
 	self.titleLabel.numberOfLines = 0;
 	self.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:20.0f];
@@ -482,6 +570,7 @@ NSString* deviceName(){
 	[self.titleLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:20];
 	[self.titleLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:20];
 	[self.titleLabel autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:20];
+	
 	
 	
 	self.descriptionLabel = [UILabel newAutoLayoutView];
@@ -607,6 +696,7 @@ NSString* deviceName(){
 	self.seeAllReportsLabel.userInteractionEnabled = YES;
 	[self.scrollView addSubview:self.seeAllReportsLabel];
 	
+	
 	UIView *lastView = [self.textEntryArray lastObject];
 	
 	[self.seeAllReportsLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:lastView withOffset:20];
@@ -654,7 +744,7 @@ NSString* deviceName(){
 }
 
 - (void)dealloc {
-	
+	[LMLayoutManager recursivelyRemoveAllConstraintsForViewAndItsSubviews:self.view];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {

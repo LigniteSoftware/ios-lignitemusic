@@ -71,6 +71,14 @@
 	}
 }
 
++ (void)recursivelyRemoveAllConstraintsForViewAndItsSubviews:(UIView*)view {	
+	[LMLayoutManager removeAllConstraintsRelatedToView:view];
+	
+	for(UIView *subview in view.subviews){
+		[self recursivelyRemoveAllConstraintsForViewAndItsSubviews:subview];
+	}
+}
+
 + (void)removeAllConstraintsRelatedToView:(UIView*)view {
 	LMLayoutManager *layoutManager = [LMLayoutManager sharedLayoutManager];
 	
