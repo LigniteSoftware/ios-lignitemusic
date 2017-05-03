@@ -100,7 +100,7 @@
 	CGFloat difference = fabs(scrollView.contentOffset.y-self.lastScrollingOffsetPoint.y);
 	if(difference > WINDOW_FRAME.size.height/4){
 		self.brokeScrollingThreshhold = YES;
-		[self.rootViewController.buttonNavigationBar minimize];
+		[self.rootViewController.buttonNavigationBar minimize:YES];
 	}
 	
 	[[APIdleManager sharedInstance] didReceiveInput];
@@ -216,7 +216,7 @@
 						[self.musicPlayer setNowPlayingCollection:trackCollection];
 						
 						[self.musicPlayer.navigationBar setSelectedTab:LMNavigationTabMiniplayer];
-						[self.musicPlayer.navigationBar maximize];
+						[self.musicPlayer.navigationBar maximize:NO];
 						
 						isPlayingMusic = YES;
 					}

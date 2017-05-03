@@ -91,13 +91,17 @@ typedef NS_ENUM(NSUInteger, LMNavigationTab) {
 
 /**
  Minimize the navigation bar down to its small size.
+
+ @param automatic Whether or not the minimize is being done automatically and not manually.
  */
-- (void)minimize;
+- (void)minimize:(BOOL)automatic;
 
 /**
  Maximize the navigation bar to its full size.
+
+ @param automatic Whether or not the maximize is being done automatically and not manually.
  */
-- (void)maximize;
+- (void)maximize:(BOOL)automatic;
 
 /**
  Set the tab that's selected.

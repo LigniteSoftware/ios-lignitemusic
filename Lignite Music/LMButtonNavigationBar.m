@@ -87,6 +87,11 @@
  */
 @property UIImageView *minimizeButtonIconImageView;
 
+/**
+ Whether or not the button navigation bar was automatically minimized. If so, automatic maximization is OK, otherwise, do not automatically maximize.
+ */
+@property BOOL wasAutomaticallyMinimized;
+
 @end
 
 @implementation LMButtonNavigationBar
@@ -225,13 +230,15 @@
 	}];
 }
 
-- (void)minimize {
+- (void)minimize:(BOOL)automatic {
     if(self.isMinimized){
         return;
     }
     
     self.isMinimized = YES;
     self.isCompletelyHidden = NO;
+	
+	self.wasAutomaticallyMinimized = automatic;
     
 	NSLog(@"Minimize");
 	
@@ -260,7 +267,11 @@
 	}];
 }
 
-- (void)maximize {
+- (void)maximize:(BOOL)automatic {
+	if(!self.wasAutomaticallyMinimized && self.isMinimized && automatic){
+		return;
+	}
+	
 	NSLog(@"Maximize");
 	
 	__weak id weakSelf = self;
@@ -287,6 +298,7 @@
 	
 	self.isMinimized = NO;
 	self.isCompletelyHidden = NO;
+	self.wasAutomaticallyMinimized = NO;
 	
 	
 	[self layoutIfNeeded];
@@ -361,7 +373,7 @@
 }
 
 - (void)clickedButton:(LMButton *)button {
-	[self maximize];
+	[self maximize:NO];
 	[self setSelectedTab:LMNavigationTabView];
 }
 
@@ -397,10 +409,10 @@
 		else if(self.isMinimized){
 			self.isMinimized = NO;
 			
-			[self minimize];
+			[self minimize:NO];
 		}
 		else{
-			[self maximize];
+			[self maximize:NO];
 		}
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		if(self.isCompletelyHidden){
@@ -423,7 +435,7 @@
 
 - (void)minimizeButtonTapped {
 	NSLog(@"ay boy");
-	self.isMinimized ? [self maximize] : [self minimize];
+	self.isMinimized ? [self maximize:NO] : [self minimize:NO];
 }
 
 - (void)layoutSubviews {

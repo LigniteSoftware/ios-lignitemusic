@@ -77,7 +77,7 @@
 				self.letterScrollView.adaptForWidth = !isLandscape;
 				[self.letterScrollView reload];
 			}
-		} repeats:NO];
+		} repeats:NO];
 	}];
 }
 

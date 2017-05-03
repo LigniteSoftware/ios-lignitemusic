@@ -211,7 +211,7 @@ LMControlBarViewDelegate
 //	NSLog(@"HEY! Got new track, title %@", newTrack.title);
     
     if(!self.buttonNavigationBar.isCompletelyHidden){
-        [self.buttonNavigationBar maximize];
+		[self.buttonNavigationBar maximize:YES];
         [self.buttonNavigationBar setSelectedTab:LMNavigationTabMiniplayer];
     }
 }
@@ -549,8 +549,8 @@ LMControlBarViewDelegate
 		self.settingsOpen--;
 	}
     if(self.settingsOpen == 0){
-        [self.buttonNavigationBar maximize];
-        
+		[self.buttonNavigationBar maximize:YES];
+		
         [self.settingsCheckTimer invalidate];
         self.settingsCheckTimer = nil;
     }
@@ -1153,7 +1153,7 @@ LMControlBarViewDelegate
 							
 //							[self.buttonNavigationBar minimize];
 							
-							[self.buttonNavigationBar setSelectedTab:LMNavigationTabBrowse];
+//							[self.buttonNavigationBar setSelectedTab:LMNavigationTabBrowse];
 							
 //							self.navigationController.view.hidden = YES;
 							

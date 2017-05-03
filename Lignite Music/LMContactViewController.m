@@ -135,7 +135,7 @@
 		
 		NSArray *contactButtonLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 			[contactButton autoAlignAxis:ALAxisVertical toSameAxisOfView:self.descriptionLabel];
-			[contactButton autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.descriptionLabel withMultiplier:(1.0/2.0)];
+			[contactButton autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.descriptionLabel withMultiplier:(1.0/1.0)];
 			[contactButton autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.view withMultiplier:(1.0/13.25)];
 			[contactButton autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:((i == 0) ? self.descriptionLabel : viewToPinTo) withOffset:(i == 0) ? 20 : 10];
 		}];
