@@ -1192,8 +1192,8 @@ LMControlBarViewDelegate
 							
 //							[self launchNowPlayingFromNavigationBar];
 							
-							LMFeedbackViewController *feedbackController = [LMFeedbackViewController new];
-							[self.navigationController presentViewController:feedbackController animated:YES completion:nil];
+//							LMFeedbackViewController *feedbackController = [LMFeedbackViewController new];
+//							[self.navigationController presentViewController:feedbackController animated:YES completion:nil];
 						} repeats:NO];
 						
 						
