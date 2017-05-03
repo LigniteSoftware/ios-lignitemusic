@@ -15,6 +15,7 @@
 #import "LMFeedbackViewController.h"
 #import "LMDebugViewController.h"
 #import "LMPaddedTextField.h"
+#import "LMLayoutManager.h"
 #import "NSTimer+Blocks.h"
 #import "LMScrollView.h"
 #import "LMSettings.h"
@@ -82,6 +83,11 @@
  Keyboard controls for forward/back/done.
  */
 @property BSKeyboardControls *keyboardControls;
+
+/**
+ The layout manager.
+ */
+@property LMLayoutManager *layoutManager;
 
 @end
 
@@ -647,6 +653,10 @@ NSString* deviceName(){
 //	} repeats:NO];
 }
 
+- (void)dealloc {
+	
+}
+
 - (void)viewDidDisappear:(BOOL)animated {
 	[self saveDetailsToStorage:YES];
 	
@@ -655,7 +665,6 @@ NSString* deviceName(){
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-
 }
 
 - (void)loadView {

@@ -201,6 +201,7 @@
     
     self.isMinimized = YES;
     self.isCompletelyHidden = YES;
+	self.wasAutomaticallyMinimized = YES;
 	
 	[self setButtonBarBottomConstraintConstant:WINDOW_FRAME.size.height completion:^(BOOL finished) {
 		LMButtonNavigationBar *strongSelf = weakSelf;

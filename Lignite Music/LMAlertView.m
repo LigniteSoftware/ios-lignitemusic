@@ -192,12 +192,12 @@
 		CGFloat landscapePadding = 15.0f;
 		
 		NSArray *optionButtonLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-			CGFloat paddingMultiplier = landscapePadding/alertRootView.frame.size.width;
+			CGFloat paddingMultiplier = landscapePadding/properDimension;
 			CGFloat sizeMultiplier = (1.0/(float)self.alertOptionColours.count) - paddingMultiplier;
 			
 			[optionButton autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(1.0/8.0)];
 			[optionButton autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-			[optionButton autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:paddingView withMultiplier:sizeMultiplier].constant = -landscapePadding;
+			[optionButton autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:paddingView withMultiplier:sizeMultiplier].constant = -landscapePadding*(i == self.alertOptionTitles.count-1);
 			if(isFirstButton){
 				[optionButton autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 			}
