@@ -142,6 +142,9 @@
 }
 
 + (BOOL)tutorialShouldRunForKey:(NSString*)tutorialKey {
+	return YES;
+	
+	
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     
     //If the user has disabled tutorials or the specific tutorial has already been done do not run that tutorial

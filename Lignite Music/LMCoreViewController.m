@@ -150,7 +150,7 @@ LMControlBarViewDelegate
                 tutorialView.delegate = self;
                 [tutorialView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
                 [tutorialView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-                [tutorialView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.buttonNavigationBar];
+                [tutorialView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.buttonNavigationBar.miniPlayerCoreView];
             }
         } repeats:NO];
     }
@@ -1129,7 +1129,7 @@ LMControlBarViewDelegate
                                 tutorialView.delegate = self;
                                 [tutorialView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
                                 [tutorialView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-                                [tutorialView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.buttonNavigationBar];
+                                [tutorialView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.buttonNavigationBar.browsingBar];
                             }
                         } repeats:NO];
 						
@@ -1147,7 +1147,7 @@ LMControlBarViewDelegate
 							
 //							self.landscapeNavigationBar.hidden = YES;
 							
-							[self.buttonNavigationBar setSelectedTab:LMNavigationTabMiniplayer];
+							[self.buttonNavigationBar setSelectedTab:LMNavigationTabBrowse];
 							
 //							self.buttonNavigationBar.hidden = YES;
 							

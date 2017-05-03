@@ -171,11 +171,21 @@
 }
 
 - (void)resetContentOffsetIfNeeded {
-	if(self.letterScrollView.contentOffset.x < 0){
-		[self.letterScrollView setContentOffset:CGPointMake(0, 0) animated:YES];
+	if(self.layoutManager.isLandscape){
+		if(self.letterScrollView.contentOffset.y < 0){
+			[self.letterScrollView setContentOffset:CGPointMake(0, 0) animated:YES];
+		}
+		else if(self.letterScrollView.contentOffset.y > self.letterScrollView.contentSize.height-self.letterScrollView.frame.size.height){
+			[self.letterScrollView setContentOffset:CGPointMake(0, self.letterScrollView.contentSize.height-self.letterScrollView.frame.size.height) animated:YES];
+		}
 	}
-	else if(self.letterScrollView.contentOffset.x > self.letterScrollView.contentSize.width-self.letterScrollView.frame.size.width){
-		[self.letterScrollView setContentOffset:CGPointMake(self.letterScrollView.contentSize.width-self.letterScrollView.frame.size.width, 0) animated:YES];
+	else{
+		if(self.letterScrollView.contentOffset.x < 0){
+			[self.letterScrollView setContentOffset:CGPointMake(0, 0) animated:YES];
+		}
+		else if(self.letterScrollView.contentOffset.x > self.letterScrollView.contentSize.width-self.letterScrollView.frame.size.width){
+			[self.letterScrollView setContentOffset:CGPointMake(self.letterScrollView.contentSize.width-self.letterScrollView.frame.size.width, 0) animated:YES];
+		}
 	}
 }
 

@@ -123,6 +123,8 @@
 	
 	[UIView animateWithDuration:0.5 animations:^{
 		[self layoutIfNeeded];
+	} completion:^(BOOL finished) {
+		[self.letterTabBar setLettersDictionary:self.letterTabBar.lettersDictionary];
 	}];
 }
 

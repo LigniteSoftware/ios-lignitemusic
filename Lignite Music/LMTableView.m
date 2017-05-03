@@ -239,10 +239,12 @@
 	if([self.title isEqualToString:@"SourceSelector"] && self.previousFrame.size.width > self.frame.size.width){
 		[self reloadData];
 	}
+	
+	static UIView *testView;
     
     if(self.contentSize.width > 0 && self.contentSize.height > 0 && !self.hasAddedBottomWhiteSpacer && self.addBottomWhiteSpace){
 //        NSLog(@"Adding this shit");
-        UIView *testView = [UIView new];
+        testView = [UIView new];
         testView.backgroundColor = [UIColor whiteColor];
         [self addSubview:testView];
     
@@ -255,7 +257,11 @@
         
         self.clipsToBounds = NO;
     }
-        
+	else if(self.hasAddedBottomWhiteSpacer && self.addBottomWhiteSpace){
+		CGRect testViewFrame = CGRectMake(0, self.contentSize.height, self.contentSize.width, self.contentSize.height);
+		testView.frame = testViewFrame;
+	}
+	
 	self.previousFrame = self.frame;
 }
 
