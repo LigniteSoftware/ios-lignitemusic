@@ -41,6 +41,20 @@
 	self.albumLabel.textAlignment = newTextAlignment;
 }
 
+- (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		for(UIView *subview in self.subviews){
+			[subview removeFromSuperview];
+		}
+		
+		self.didLayoutConstraints = NO;
+		[self setNeedsLayout];
+		[self layoutIfNeeded];
+	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		
+	}];
+}
+
 - (NSString*)titleText {
 	return _titleText;
 }

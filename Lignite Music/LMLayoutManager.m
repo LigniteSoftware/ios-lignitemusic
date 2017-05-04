@@ -80,8 +80,6 @@
 	[layoutManager.iPadConstraintsArray addObjectsFromArray:constraintsArray];
 	
 	if([LMLayoutManager isiPad]){
-		[NSLayoutConstraint activateConstraints:constraintsArray];
-		
 		NSMutableArray *constraintsToRemove = [NSMutableArray new];
 		for(NSLayoutConstraint *iPadConstraint in constraintsArray){
 			for(NSLayoutConstraint *portraitConstraint in layoutManager.portraitConstraintsArray){
@@ -93,6 +91,8 @@
 		
 		[NSLayoutConstraint deactivateConstraints:constraintsToRemove];
 		[layoutManager.portraitConstraintsArray removeObjectsInArray:constraintsToRemove];
+		
+		[NSLayoutConstraint activateConstraints:constraintsArray];
 	}
 }
 
@@ -123,6 +123,19 @@
 - (BOOL)isLandscape {
 	return [self currentLayoutClass] == LMLayoutClassLandscape;
 //	return self.size.width > self.size.height;
+}
+
++ (BOOL)isLandscape {
+	return [LMLayoutManager sharedLayoutManager].isLandscape;
+}
+
++ (BOOL)isLandscapeiPad {
+	LMLayoutManager *layoutManager = [LMLayoutManager sharedLayoutManager];
+	if(![LMLayoutManager isiPad]){
+		return NO;
+	}
+	
+	return layoutManager.size.width > layoutManager.size.height;
 }
 
 + (BOOL)isiPad {

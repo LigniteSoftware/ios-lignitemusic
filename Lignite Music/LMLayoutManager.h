@@ -32,6 +32,8 @@ typedef NS_ENUM(NSInteger, LMLayoutClass) {
 @property CGSize size;
 
 - (BOOL)isLandscape;
++ (BOOL)isLandscape;
++ (BOOL)isLandscapeiPad;
 + (BOOL)isiPad;
 + (LMLayoutManager*)sharedLayoutManager;
 - (void)addDelegate:(id<LMLayoutChangeDelegate>)delegate;

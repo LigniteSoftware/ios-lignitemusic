@@ -99,7 +99,8 @@
 	
 	if (self.window) {
 		[UIView animateWithDuration:0.3 animations:^{
-			self.heightGuideConstraint.constant = frame.size.height;
+#warning fix this
+//			self.heightGuideConstraint.constant = frame.size.height;
 			[self.contentView layoutIfNeeded];
 		}];
 		

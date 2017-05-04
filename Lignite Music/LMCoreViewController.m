@@ -1100,22 +1100,22 @@ LMControlBarViewDelegate
 						NSLog(@"Class %@", [self.navigationController.view class]);
 						
 						NSArray *buttonNavigationBarPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-							[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-							[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-							[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-//							[self.buttonNavigationBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/1.0)];
-							[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
+							[self.buttonNavigationBar autoPinEdgesToSuperviewEdges];
 						}];
 						[LMLayoutManager addNewPortraitConstraints:buttonNavigationBarPortraitConstraints];
 						
 						NSArray *buttonNavigationBarLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-							[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-							[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
-							[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-//							[self.buttonNavigationBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(1.0/1.0)];
-							[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+							[self.buttonNavigationBar autoPinEdgesToSuperviewEdges];
 						}];
 						[LMLayoutManager addNewLandscapeConstraints:buttonNavigationBarLandscapeConstraints];
+						
+						NSArray *buttonNavigationBariPadConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+							[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+							[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+							[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+							[self.buttonNavigationBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(2.0/3.0)];
+						}];
+						[LMLayoutManager addNewiPadConstraints:buttonNavigationBariPadConstraints];
 						
 //						[self.navigationController.view insertSubview:self.landscapeNavigationBar aboveSubview:self.buttonNavigationBar];
 						
@@ -1194,7 +1194,7 @@ LMControlBarViewDelegate
                         } repeats:NO];
 						
 						
-						[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
+						[NSTimer scheduledTimerWithTimeInterval:1.5 block:^{
 //							self.nowPlayingCoreView.hidden = YES;
 //							
 //							LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
