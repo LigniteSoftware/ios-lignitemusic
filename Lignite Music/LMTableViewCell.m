@@ -105,7 +105,7 @@
 		}];
 		
 	} else {
-		self.heightGuideConstraint.constant = frame.size.height;
+//		self.heightGuideConstraint.constant = frame.size.height;
 	}
 }
 

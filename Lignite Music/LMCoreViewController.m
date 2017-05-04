@@ -749,6 +749,9 @@ LMControlBarViewDelegate
 	[self.layoutManager rootViewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 	
 	BOOL willBeLandscape = size.width > size.height;
+	if([LMLayoutManager isiPad]){
+		willBeLandscape = NO;
+	}
 	
 	NSLog(@"Starting rotation");
 	
