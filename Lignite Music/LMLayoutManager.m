@@ -56,11 +56,10 @@
 + (void)addNewPortraitConstraints:(NSArray<NSLayoutConstraint*>*)constraintsArray {
 	LMLayoutManager *layoutManager = [LMLayoutManager sharedLayoutManager];
 	
-	for(NSLayoutConstraint *constraint in constraintsArray){
-		[layoutManager.portraitConstraintsArray addObject:constraint];
-	}
+	[layoutManager.portraitConstraintsArray addObjectsFromArray:constraintsArray];
+//	NSLog(@"%ld shits", layoutManager.portraitConstraintsArray.count);
 	
-	if([layoutManager currentLayoutClass] == LMLayoutClassPortrait){
+	if(![layoutManager isLandscape]){ //Add the constraints even if iPad. If iPad constraints are added later, these constraints are removed.
 		[NSLayoutConstraint activateConstraints:constraintsArray];
 	}
 }
@@ -68,9 +67,7 @@
 + (void)addNewLandscapeConstraints:(NSArray<NSLayoutConstraint*>*)constraintsArray {
 	LMLayoutManager *layoutManager = [LMLayoutManager sharedLayoutManager];
 	
-	for(NSLayoutConstraint *constraint in constraintsArray){
-		[layoutManager.landscapeConstraintsArray addObject:constraint];
-	}
+	[layoutManager.landscapeConstraintsArray addObjectsFromArray:constraintsArray];
 	
 	if([layoutManager isLandscape]){
 		[NSLayoutConstraint activateConstraints:constraintsArray];
@@ -80,12 +77,22 @@
 + (void)addNewiPadConstraints:(NSArray<NSLayoutConstraint*>*)constraintsArray {
 	LMLayoutManager *layoutManager = [LMLayoutManager sharedLayoutManager];
 	
-	for(NSLayoutConstraint *constraint in constraintsArray){
-		[layoutManager.iPadConstraintsArray addObject:constraint];
-	}
+	[layoutManager.iPadConstraintsArray addObjectsFromArray:constraintsArray];
 	
 	if([LMLayoutManager isiPad]){
 		[NSLayoutConstraint activateConstraints:constraintsArray];
+		
+		NSMutableArray *constraintsToRemove = [NSMutableArray new];
+		for(NSLayoutConstraint *iPadConstraint in constraintsArray){
+			for(NSLayoutConstraint *portraitConstraint in layoutManager.portraitConstraintsArray){
+				if([portraitConstraint.firstItem isEqual:iPadConstraint.firstItem]){
+					[constraintsToRemove addObject:portraitConstraint];
+				}
+			}
+		}
+		
+		[NSLayoutConstraint deactivateConstraints:constraintsToRemove];
+		[layoutManager.portraitConstraintsArray removeObjectsInArray:constraintsToRemove];
 	}
 }
 
@@ -171,7 +178,7 @@
 		
 		self.portraitConstraintsBeingUsedInPlaceOfMissingiPadConstraintsArray = portraitConstraintsToUseInPlaceOfMissingiPadConstraints;
 		
-		NSLog(@"%ld portrait in place constraints", (unsigned long)self.portraitConstraintsBeingUsedInPlaceOfMissingiPadConstraintsArray.count);
+		NSLog(@"%ld (of %ld) portrait in place constraints", (unsigned long)self.portraitConstraintsBeingUsedInPlaceOfMissingiPadConstraintsArray.count, (unsigned long)self.portraitConstraintsArray);
 		
 		[NSLayoutConstraint activateConstraints:self.iPadConstraintsArray];
 		[NSLayoutConstraint activateConstraints:self.portraitConstraintsBeingUsedInPlaceOfMissingiPadConstraintsArray];
