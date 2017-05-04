@@ -703,7 +703,16 @@ NSString* deviceName(){
 	[self.seeAllReportsLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:lastView];
 	[self.seeAllReportsLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:lastView];
 	[self.seeAllReportsLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
-	[self.seeAllReportsLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/11.0)];
+	
+	NSArray *seeAllReportsLabelPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.seeAllReportsLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/11.0)];
+	}];
+	[LMLayoutManager addNewPortraitConstraints:seeAllReportsLabelPortraitConstraints];
+	
+	NSArray *seeAllReportsLabelLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.seeAllReportsLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.view withMultiplier:(1.0/11.0)];
+	}];
+	[LMLayoutManager addNewLandscapeConstraints:seeAllReportsLabelLandscapeConstraints];
 	
 	UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(seeAllReportsTapped)];
 	[self.seeAllReportsLabel addGestureRecognizer:tapGesture];

@@ -102,8 +102,6 @@
 	}
 	self.rightTextLabel.text = @"";
 	
-	NSLog(@"%p Alignment %ld", self, (long)self.textAlignment);
-	
 	self.titleLabel.textAlignment = self.textAlignment;
 	self.leftTextLabel.textAlignment = self.textAlignment;
 	

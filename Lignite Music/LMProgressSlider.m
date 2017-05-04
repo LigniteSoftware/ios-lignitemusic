@@ -272,6 +272,17 @@
 		}
 	}
 	
+	NSLayoutConstraint *edgePinConstraint;
+	BOOL edgeIsTrailing = NO;
+	for(NSLayoutConstraint *constraint in self.constraints){
+		if(constraint.firstItem == textLabel
+		   && (constraint.firstAttribute == NSLayoutAttributeLeading || constraint.firstAttribute == NSLayoutAttributeTrailing)){
+			edgePinConstraint = constraint;
+			
+			edgeIsTrailing = constraint.firstAttribute == NSLayoutAttributeTrailing;
+		}
+	}
+	
 	if(!topConstraint){
 		NSLog(@"Top (%@) constraint not found!", topConstraint);
 		return;
@@ -292,6 +303,7 @@
 	} completion:nil];
 	
 	topConstraint.constant = shrunk ? (LMProgressSliderTopAndBottomLabelPadding) : (0);
+	edgePinConstraint.constant = shrunk ? 0 : (edgeIsTrailing ? -10 : 10);
 }
 
 - (void)setSliderAsShrunk:(BOOL)shrunk {
@@ -474,7 +486,7 @@
 		NSArray *leftTextBottomLabelPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 			[self.leftTextBottomLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self withOffset:10];
 			[self.leftTextBottomLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
-			[self.leftTextBottomLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.75];
+			[self.leftTextBottomLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.6];
 			[self.leftTextBottomLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(0.45)];
 		}];
 		[LMLayoutManager addNewPortraitConstraints:leftTextBottomLabelPortraitConstraints];
@@ -499,7 +511,7 @@
 		NSArray *rightTextBottomLabelPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 			[self.rightTextBottomLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self withOffset:-10];
 			[self.rightTextBottomLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
-			[self.rightTextBottomLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.75];
+			[self.rightTextBottomLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.6];
 			[self.rightTextBottomLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(0.45)];
 		}];
 		[LMLayoutManager addNewPortraitConstraints:rightTextBottomLabelPortraitConstraints];
@@ -516,13 +528,15 @@
 		
 		self.sliderBackgroundBackgroundView = [LMView newAutoLayoutView];
 		self.sliderBackgroundBackgroundView.backgroundColor = self.backgroundBackgroundColour;
+		self.sliderBackgroundBackgroundView.hidden = YES;
+//		self.sliderBackgroundBackgroundView.backgroundColor = [UIColor clearColor];
 		[self addSubview:self.sliderBackgroundBackgroundView];
 		
 		
 		self.sliderBackgroundView = [LMView newAutoLayoutView];
 		self.sliderBackgroundView.backgroundColor = [LMColour ligniteRedColour];
 		self.sliderBackgroundView.clipsToBounds = YES;
-		[self.sliderBackgroundBackgroundView addSubview:self.sliderBackgroundView];
+		[self addSubview:self.sliderBackgroundView];
 		
 		[self.sliderBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[self.sliderBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop];

@@ -393,8 +393,6 @@
 	creditsLinkButton.text = NSLocalizedString(@"CreditsLicenses", nil);
 	creditsLinkButton.textAlignment = NSTextAlignmentCenter;
 	creditsLinkButton.numberOfLines = 0;
-	creditsLinkButton.layer.masksToBounds = YES;
-	creditsLinkButton.layer.cornerRadius = 10.0;
 	creditsLinkButton.backgroundColor = [LMColour ligniteRedColour];
 	creditsLinkButton.textColor = [UIColor whiteColor];
 	creditsLinkButton.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:22.0f];

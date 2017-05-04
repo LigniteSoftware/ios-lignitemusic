@@ -641,15 +641,15 @@
 	}
 }
 
-- (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
-	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-		
-	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-		[NSTimer scheduledTimerWithTimeInterval:0.25 block:^{
-			self.progressSlider.autoShrink = size.height > size.width;
-		} repeats:NO];
-	}];
-}
+//- (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+//	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+//		
+//	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+//		[NSTimer scheduledTimerWithTimeInterval:0.25 block:^{
+//			self.progressSlider.autoShrink = size.height > size.width;
+//		} repeats:NO];
+//	}];
+//}
 
 - (void)layoutSubviews {
 	[super layoutSubviews];

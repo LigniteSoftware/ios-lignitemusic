@@ -70,8 +70,8 @@
 	[LMLayoutManager addNewPortraitConstraints:thankYouLabelPortraitConstraints];
 	
 	NSArray *thankYouLabelLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-		[self.thankYouLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withOffset:-84*2];
-		[self.thankYouLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:84];
+		[self.thankYouLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withOffset:(-104+(64/2))*2];
+		[self.thankYouLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:104];
 		[self.thankYouLabel autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:10];
 	}];
 	[LMLayoutManager addNewLandscapeConstraints:thankYouLabelLandscapeConstraints];
@@ -94,7 +94,7 @@
 	[LMLayoutManager addNewPortraitConstraints:descriptionLabelPortraitConstraints];
 	
 	NSArray *descriptionLabelLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-		[self.descriptionLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.thankYouLabel];
+		[self.descriptionLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.thankYouLabel withOffset:10];
 		[self.descriptionLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.thankYouLabel];
 		[self.descriptionLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.thankYouLabel];
 	}];
@@ -120,8 +120,6 @@
 		
 		LMView *contactButton = [LMView newAutoLayoutView];
 		contactButton.backgroundColor = [UIColor darkGrayColor];
-		contactButton.layer.cornerRadius = scaleFactorToUse/50;
-		contactButton.layer.masksToBounds = YES;
 		
 		[self.view addSubview:contactButton];
 		

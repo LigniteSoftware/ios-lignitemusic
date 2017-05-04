@@ -113,6 +113,10 @@
 - (void)setShowingLetterTabs:(BOOL)showingLetterTabs {
 	_showingLetterTabs = showingLetterTabs;
 	
+	if(!self.didLayoutConstraints){
+		return;
+	}
+	
 	BOOL isLandscape = [LMLayoutManager sharedLayoutManager].isLandscape;
 
 
@@ -140,6 +144,8 @@
 
 - (void)layoutSubviews {
 	if(!self.didLayoutConstraints){
+		self.showingLetterTabs = YES;
+		
 		self.didLayoutConstraints = YES;
 		
 		self.layoutManager = [LMLayoutManager sharedLayoutManager];
