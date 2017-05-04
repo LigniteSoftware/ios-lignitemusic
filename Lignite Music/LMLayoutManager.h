@@ -22,9 +22,9 @@
 @interface LMLayoutManager : NSObject
 
 typedef NS_ENUM(NSInteger, LMLayoutClass) {
-	LMLayoutClassAll        = 0,
-	LMLayoutClassPortrait   = 1,
-	LMLayoutClassLandscape  = 2,
+	LMLayoutClassPortrait   = 0,
+	LMLayoutClassLandscape  = 1,
+	LMLayoutClassiPad       = 2
 };
 
 @property (readonly) LMLayoutClass currentLayoutClass;
@@ -32,12 +32,14 @@ typedef NS_ENUM(NSInteger, LMLayoutClass) {
 @property CGSize size;
 
 - (BOOL)isLandscape;
++ (BOOL)isiPad;
 + (LMLayoutManager*)sharedLayoutManager;
 - (void)addDelegate:(id<LMLayoutChangeDelegate>)delegate;
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection;
 - (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator;
 + (void)addNewPortraitConstraints:(NSArray<NSLayoutConstraint*>*)constraintsArray;
 + (void)addNewLandscapeConstraints:(NSArray<NSLayoutConstraint*>*)constraintsArray;
++ (void)addNewiPadConstraints:(NSArray<NSLayoutConstraint*>*)constraintsArray;
 + (void)removeAllConstraintsRelatedToView:(UIView*)view;
 + (void)recursivelyRemoveAllConstraintsForViewAndItsSubviews:(UIView*)view;
 

@@ -199,8 +199,6 @@
 //		[contactStringLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:contactIconView withOffset:30];
 //		[contactStringLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:contactButton withOffset:-30];
 //		[contactStringLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
-		
-		[contactDetailsView endAddingNewConstraints];
 	}
 }
 

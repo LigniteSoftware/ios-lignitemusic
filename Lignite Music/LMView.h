@@ -18,10 +18,4 @@
  */
 @property BOOL didLayoutConstraints;
 
-@property LMLayoutClass settingLayoutClass;
-
-- (void)beginAddingNewPortraitConstraints;
-- (void)beginAddingNewLandscapeConstraints;
-- (void)endAddingNewConstraints;
-
 @end

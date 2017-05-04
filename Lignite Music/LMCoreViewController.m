@@ -828,6 +828,33 @@ LMControlBarViewDelegate
 	self.layoutManager.size = self.view.frame.size;
 	
 	
+	UIView *testView = [UIView newAutoLayoutView];
+	testView.backgroundColor = [UIColor orangeColor];
+	[self.view addSubview:testView];
+	
+	NSArray *testViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[testView autoPinEdgesToSuperviewEdges];
+	}];
+	[LMLayoutManager addNewPortraitConstraints:testViewPortraitConstraints];
+	
+	NSArray *testViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[testView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[testView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[testView autoCenterInSuperview];
+		[testView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:0.5];
+	}];
+	[LMLayoutManager addNewLandscapeConstraints:testViewLandscapeConstraints];
+	
+	NSArray *testViewiPadConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[testView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[testView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[testView autoCenterInSuperview];
+		[testView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:0.75];
+	}];
+	[LMLayoutManager addNewiPadConstraints:testViewiPadConstraints];
+	
+	return;
+	
 	
 //	LMButtonBar *buttonBar = [LMButtonBar newAutoLayoutView];
 //	buttonBar.amountOfButtons = 3;

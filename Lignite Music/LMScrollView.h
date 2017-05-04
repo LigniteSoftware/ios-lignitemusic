@@ -20,9 +20,5 @@
 
 - (void)reload;
 
-- (void)beginAddingNewPortraitConstraints;
-- (void)beginAddingNewLandscapeConstraints;
-- (void)endAddingNewConstraints;
-
 
 @end

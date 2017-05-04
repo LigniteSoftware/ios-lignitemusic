@@ -16,9 +16,14 @@
 @property NSMutableArray<id<LMLayoutChangeDelegate>> *delegates;
 
 /**
- The arrays of portrait and landscape constraints.
+ The arrays of constraints.
  */
-@property (strong) NSMutableArray<NSLayoutConstraint*> *portraitConstraintsArray, *landscapeConstraintsArray;
+@property (strong) NSMutableArray<NSLayoutConstraint*> *portraitConstraintsArray, *landscapeConstraintsArray, *iPadConstraintsArray;
+
+/**
+ The array of constraints in which are used for all views which don't have explicit iPad constraints applied to them.
+ */
+@property NSMutableArray *portraitConstraintsBeingUsedInPlaceOfMissingiPadConstraintsArray;
 
 @end
 
@@ -34,6 +39,7 @@
 		sharedLayoutManager = [self new];
 		sharedLayoutManager.portraitConstraintsArray = [NSMutableArray new];
 		sharedLayoutManager.landscapeConstraintsArray = [NSMutableArray new];
+		sharedLayoutManager.iPadConstraintsArray = [NSMutableArray new];
 	});
 	
 	return sharedLayoutManager;
@@ -54,7 +60,7 @@
 		[layoutManager.portraitConstraintsArray addObject:constraint];
 	}
 	
-	if(![layoutManager isLandscape]){
+	if([layoutManager currentLayoutClass] == LMLayoutClassPortrait){
 		[NSLayoutConstraint activateConstraints:constraintsArray];
 	}
 }
@@ -71,6 +77,18 @@
 	}
 }
 
++ (void)addNewiPadConstraints:(NSArray<NSLayoutConstraint*>*)constraintsArray {
+	LMLayoutManager *layoutManager = [LMLayoutManager sharedLayoutManager];
+	
+	for(NSLayoutConstraint *constraint in constraintsArray){
+		[layoutManager.iPadConstraintsArray addObject:constraint];
+	}
+	
+	if([LMLayoutManager isiPad]){
+		[NSLayoutConstraint activateConstraints:constraintsArray];
+	}
+}
+
 + (void)recursivelyRemoveAllConstraintsForViewAndItsSubviews:(UIView*)view {	
 	[LMLayoutManager removeAllConstraintsRelatedToView:view];
 	
@@ -82,7 +100,7 @@
 + (void)removeAllConstraintsRelatedToView:(UIView*)view {
 	LMLayoutManager *layoutManager = [LMLayoutManager sharedLayoutManager];
 	
-	NSArray<NSMutableArray*> *arraysToMutate = @[ layoutManager.portraitConstraintsArray, layoutManager.landscapeConstraintsArray ];
+	NSArray<NSMutableArray*> *arraysToMutate = @[ layoutManager.portraitConstraintsArray, layoutManager.landscapeConstraintsArray, layoutManager.iPadConstraintsArray ];
 	
 	for(NSMutableArray *mutatingArray in arraysToMutate){
 		NSMutableArray *oldConstraintsArray = [NSMutableArray arrayWithArray:mutatingArray];
@@ -100,14 +118,28 @@
 //	return self.size.width > self.size.height;
 }
 
++ (BOOL)isiPad {
+	LMLayoutManager *layoutManager = [LMLayoutManager sharedLayoutManager];
+	return [layoutManager currentLayoutClass] == LMLayoutClassiPad;
+}
+
 - (LMLayoutClass)currentLayoutClass {
 	NSAssert(!CGSizeEqualToSize(self.size, CGSizeZero), @"Trait collection is nil and therefore the current layout class cannot be accessed!");
 	
 //	NSLog(@"Shitpost %ld %ld", self.traitCollection.horizontalSizeClass, self.traitCollection.verticalSizeClass);
 	
-	return ((self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular)
-			|| self.traitCollection.horizontalSizeClass == self.traitCollection.verticalSizeClass)
-		? LMLayoutClassLandscape : LMLayoutClassPortrait;
+	if(self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular && self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassRegular){
+		
+		return LMLayoutClassiPad;
+	}
+	
+	if(   (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular)
+	   || (self.traitCollection.horizontalSizeClass == self.traitCollection.verticalSizeClass)) {
+		
+		return LMLayoutClassLandscape;
+	}
+	
+	return LMLayoutClassPortrait;
 }
 
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
@@ -117,10 +149,43 @@
 		}
 	}
 	
-	NSLog(@"Swapping out %ld/%ld constraints...", self.portraitConstraintsArray.count, self.landscapeConstraintsArray.count);
+	NSLog(@"Swapping out %ld/%ld/%ld constraints...", (unsigned long)self.portraitConstraintsArray.count, (unsigned long)self.landscapeConstraintsArray.count, (unsigned long)self.iPadConstraintsArray.count);
 	
-	[NSLayoutConstraint deactivateConstraints:self.isLandscape ? self.portraitConstraintsArray : self.landscapeConstraintsArray];
-	[NSLayoutConstraint activateConstraints:self.isLandscape ? self.landscapeConstraintsArray : self.portraitConstraintsArray];
+	if([LMLayoutManager isiPad]){
+		[NSLayoutConstraint deactivateConstraints:self.portraitConstraintsArray];
+		[NSLayoutConstraint deactivateConstraints:self.landscapeConstraintsArray];
+		
+		NSMutableArray<UIView*> *viewsWhichHaveiPadConstraints = [NSMutableArray new];
+		for(NSLayoutConstraint *constraint in self.iPadConstraintsArray){
+			if(![viewsWhichHaveiPadConstraints containsObject:constraint.firstItem]){
+				[viewsWhichHaveiPadConstraints addObject:constraint.firstItem];
+			}
+		}
+		
+		NSMutableArray *portraitConstraintsToUseInPlaceOfMissingiPadConstraints = [NSMutableArray new];
+		for(NSLayoutConstraint *constraint in self.portraitConstraintsArray){
+			if(![viewsWhichHaveiPadConstraints containsObject:constraint.firstItem]){
+				[portraitConstraintsToUseInPlaceOfMissingiPadConstraints addObject:constraint];
+			}
+		}
+		
+		self.portraitConstraintsBeingUsedInPlaceOfMissingiPadConstraintsArray = portraitConstraintsToUseInPlaceOfMissingiPadConstraints;
+		
+		NSLog(@"%ld portrait in place constraints", (unsigned long)self.portraitConstraintsBeingUsedInPlaceOfMissingiPadConstraintsArray.count);
+		
+		[NSLayoutConstraint activateConstraints:self.iPadConstraintsArray];
+		[NSLayoutConstraint activateConstraints:self.portraitConstraintsBeingUsedInPlaceOfMissingiPadConstraintsArray];
+	}
+	else{
+		if(self.portraitConstraintsBeingUsedInPlaceOfMissingiPadConstraintsArray){
+			[NSLayoutConstraint deactivateConstraints:self.portraitConstraintsBeingUsedInPlaceOfMissingiPadConstraintsArray];
+			[NSLayoutConstraint deactivateConstraints:self.iPadConstraintsArray];
+			
+			self.portraitConstraintsBeingUsedInPlaceOfMissingiPadConstraintsArray = nil;
+		}
+		[NSLayoutConstraint deactivateConstraints:self.isLandscape ? self.portraitConstraintsArray : self.landscapeConstraintsArray];
+		[NSLayoutConstraint activateConstraints:self.isLandscape ? self.landscapeConstraintsArray : self.portraitConstraintsArray];
+	}
 	
 	NSLog(@"Swapped, now animating.");
 }

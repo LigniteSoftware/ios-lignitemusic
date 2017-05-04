@@ -82,7 +82,7 @@
 }
 
 + (NSString*)currentAppVersion {
-	return @"1.0 RC";
+	return @"1.1 RC";
 }
 
 + (NSString*)appDebugInfoString {

@@ -50,17 +50,17 @@
 	[self layoutIfNeeded];
 }
 
-- (void)beginAddingNewPortraitConstraints {
-	self.settingLayoutClass = LMLayoutClassPortrait;
-}
-
-- (void)beginAddingNewLandscapeConstraints {
-	self.settingLayoutClass = LMLayoutClassLandscape;
-}
-
-- (void)endAddingNewConstraints {
-	self.settingLayoutClass = LMLayoutClassAll;
-}
+//- (void)beginAddingNewPortraitConstraints {
+//	self.settingLayoutClass = LMLayoutClassPortrait;
+//}
+//
+//- (void)beginAddingNewLandscapeConstraints {
+//	self.settingLayoutClass = LMLayoutClassLandscape;
+//}
+//
+//- (void)endAddingNewConstraints {
+//	self.settingLayoutClass = LMLayoutClassAll;
+//}
 
 - (instancetype)init {
 	self = [super init];
