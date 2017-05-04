@@ -478,6 +478,7 @@
 		self.browsingBar.layer.shadowOffset = CGSizeMake(0, 0);
 		self.browsingBar.layer.masksToBounds = NO;
 		self.browsingBar.layer.shadowRadius = 5;
+		self.browsingBar.clipsToBounds = YES;
 		[self addSubview:self.browsingBar];
 
 		
@@ -595,12 +596,19 @@
 		}];
 		[LMLayoutManager addNewLandscapeConstraints:buttonBarLandscapeConstraints];
 		
+		NSArray *buttonBariPadConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+			[self.buttonBar autoAlignAxisToSuperviewAxis:ALAxisVertical];
+			[self.buttonBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(2.0/3.0)];
+			[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+			[self.buttonBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.minimizeButton];
+		}];
+		[LMLayoutManager addNewiPadConstraints:buttonBariPadConstraints];
 		
 
 		NSArray *browsingBarPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 			[self.browsingBar autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.buttonBar];
-			[self.browsingBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-			[self.browsingBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+			[self.browsingBar autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.buttonBar];
+			[self.browsingBar autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.buttonBar];
 			[self.browsingBar autoSetDimension:ALDimensionHeight toSize:properNum/15.0];
 		}];
 		[LMLayoutManager addNewPortraitConstraints:browsingBarPortraitConstraints];
@@ -634,8 +642,8 @@
 		
 		NSArray *miniPlayerCoreViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 			[self.miniPlayerCoreView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.buttonBar];
-			[self.miniPlayerCoreView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-			[self.miniPlayerCoreView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+			[self.miniPlayerCoreView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.buttonBar];
+			[self.miniPlayerCoreView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.buttonBar];
 			[self.miniPlayerCoreView autoSetDimension:ALDimensionHeight toSize:properNum/5.0];
 		}];
 		[LMLayoutManager addNewPortraitConstraints:miniPlayerCoreViewPortraitConstraints];
@@ -652,8 +660,8 @@
 		
 		
 		NSArray *sourceSelectorPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-			[self.sourceSelector autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
-			[self.sourceSelector autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self];
+			[self.sourceSelector autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.buttonBar];
+			[self.sourceSelector autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.buttonBar];
 			[self.sourceSelector autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.buttonBar withOffset:20];
 			[self.sourceSelector autoSetDimension:ALDimensionHeight toSize:properNum-LMNavigationBarTabHeight];
 		}];

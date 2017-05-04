@@ -871,19 +871,19 @@
 	[LMLayoutManager addNewLandscapeConstraints:trackInfoViewLandscapeConstraints];
 
 	
-	self.shuffleModeBackgroundView = [LMView newAutoLayoutView];
-	self.repeatModeBackgroundView = [LMView newAutoLayoutView];
-	self.queueBackgroundView = [LMView newAutoLayoutView];
-	self.airplayBackgroundView = [LMView newAutoLayoutView];
+//	self.shuffleModeBackgroundView = [LMView newAutoLayoutView];
+//	self.repeatModeBackgroundView = [LMView newAutoLayoutView];
+//	self.queueBackgroundView = [LMView newAutoLayoutView];
+//	self.airplayBackgroundView = [LMView newAutoLayoutView];
 	
 	self.shuffleModeButton = [LMButton newAutoLayoutView];
 	self.repeatModeButton = [LMButton newAutoLayoutView];
 	self.queueButton = [LMButton newAutoLayoutView];
 	self.airplayButton = [LMButton newAutoLayoutView];
 	
-	NSArray *backgrounds = @[
-		self.shuffleModeBackgroundView, self.repeatModeBackgroundView, self.airplayBackgroundView, self.queueBackgroundView
-	];
+//	NSArray *backgrounds = @[
+//		self.shuffleModeBackgroundView, self.repeatModeBackgroundView, self.airplayBackgroundView, self.queueBackgroundView
+//	];
 	NSArray *buttons = @[
 		self.shuffleModeButton, self.repeatModeButton, self.airplayButton, self.queueButton
 	];
@@ -894,27 +894,35 @@
 	for(int i = 0; i < buttons.count; i++){
 		BOOL isFirst = (i == 0);
 		
-		LMView *background = [backgrounds objectAtIndex:i];
-		LMView *previousBackground = isFirst ? self.trackInfoView : [backgrounds objectAtIndex:i-1];
-		
+//		LMView *background = [backgrounds objectAtIndex:i];
+//		LMView *previousBackground = isFirst ? self.trackInfoView : [backgrounds objectAtIndex:i-1];
+//		
 //		background.backgroundColor = [UIColor colorWithRed:(0.2*i)+0.3 green:0 blue:0 alpha:1.0];
-		[self.paddingView addSubview:background];
-		
-		NSArray *backgroundPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-			[background autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.trackInfoView withOffset:-10];
-			[background autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.paddingView];
-			[background autoPinEdge:ALEdgeLeading toEdge:isFirst ? ALEdgeLeading : ALEdgeTrailing ofView:previousBackground];
-			[background autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.trackInfoView withMultiplier:(1.0/(float)buttons.count)];
-		}];
-		[LMLayoutManager addNewPortraitConstraints:backgroundPortraitConstraints];
-		
-		NSArray *backgroundLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-			[background autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.albumArtImageView];
-			[background autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.trackInfoView];
-			[background autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:isFirst ? self.albumArtImageView : previousBackground];
-			[background autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.trackInfoView withMultiplier:(1.0/(float)buttons.count)].constant = 40.0/(float)buttons.count;
-		}];
-		[LMLayoutManager addNewLandscapeConstraints:backgroundLandscapeConstraints];
+//		[self.paddingView addSubview:background];
+//		
+//		NSArray *backgroundPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+//			[background autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.trackInfoView withOffset:-10];
+//			[background autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.paddingView];
+//			[background autoPinEdge:ALEdgeLeading toEdge:isFirst ? ALEdgeLeading : ALEdgeTrailing ofView:previousBackground];
+//			[background autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.trackInfoView withMultiplier:(1.0/(float)buttons.count)];
+//		}];
+//		[LMLayoutManager addNewPortraitConstraints:backgroundPortraitConstraints];
+//		
+//		NSArray *backgroundLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+//			[background autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.albumArtImageView];
+//			[background autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.trackInfoView];
+//			[background autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:isFirst ? self.albumArtImageView : previousBackground];
+//			[background autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.trackInfoView withMultiplier:(1.0/(float)buttons.count)].constant = 40.0/(float)buttons.count;
+//		}];
+//		[LMLayoutManager addNewLandscapeConstraints:backgroundLandscapeConstraints];
+//		
+//		NSArray *backgroundiPadConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+//			[background autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.trackInfoView withOffset:-10];
+//			[background autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.paddingView];
+//			[background autoPinEdge:ALEdgeLeading toEdge:isFirst ? ALEdgeLeading : ALEdgeTrailing ofView:previousBackground];
+//			[background autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.trackInfoView withMultiplier:(1.0/(float)buttons.count)/1.75];
+//		}];
+//		[LMLayoutManager addNewiPadConstraints:backgroundiPadConstraints];
 		
 		
 		LMButton *button = [buttons objectAtIndex:i];
@@ -923,24 +931,13 @@
 		[button setupWithImageMultiplier:0.4];
 		[button setImage:[LMAppIcon imageForIcon:icons[i]]];
 		[button setColour:[LMColour fadedColour]];
-		[background addSubview:button];
+//		[background addSubview:button];
 
-//		[background beginAddingNewPortraitConstraints];
-//		[button autoAlignAxisToSuperviewAxis:ALAxisVertical];
-//		[button autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.mainView withOffset:-20];
-//		[button autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:background withMultiplier:0.6];
-//		[button autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:background];
-//		
-//		[background beginAddingNewLandscapeConstraints];
-//		[button autoAlignAxisToSuperviewAxis:ALAxisVertical];
-//		[button autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.progressSlider withOffset:-20];
-//		[button autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:background withMultiplier:0.6];
-//		[button autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:background];
 
-		[button autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:20];
-		[button autoAlignAxisToSuperviewAxis:ALAxisVertical];
-		[button autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:background withMultiplier:(6.0/10.0)];
-		[button autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:background];
+//		[button autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:20];
+//		[button autoAlignAxisToSuperviewAxis:ALAxisVertical];
+//		[button autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:background withMultiplier:(6.0/10.0)];
+//		[button autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:background];
 		
 //		[background endAddingNewConstraints];
 		
@@ -958,6 +955,33 @@
 			[self.queueButton addGestureRecognizer:queueOpenPanGesture];
 		}
 	}
+	
+	UIStackView *stackView = [UIStackView newAutoLayoutView];
+	stackView.backgroundColor = [UIColor blueColor];
+	stackView.axis = UILayoutConstraintAxisHorizontal;
+	stackView.distribution = UIStackViewDistributionFillEqually;
+	stackView.spacing = ((self.layoutManager.isLandscape ? self.frame.size.height : self.frame.size.width) * 0.75)/4/2;
+	[self.paddingView addSubview:stackView];
+	
+	[stackView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.paddingView withMultiplier:(1.0/8.0)];
+	[stackView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.trackInfoView withOffset:10];
+	[stackView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.trackInfoView withOffset:-10];
+	
+	NSArray *stackViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[stackView autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:15];
+	}];
+	[LMLayoutManager addNewPortraitConstraints:stackViewPortraitConstraints];
+	
+	NSArray *stackViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[stackView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.albumArtImageView];
+	}];
+	[LMLayoutManager addNewLandscapeConstraints:stackViewLandscapeConstraints];
+	
+	for(LMButton *button in buttons){
+		[stackView addArrangedSubview:button];
+	}
+	
+	
 	
 	
 	[self.shuffleModeButton setColour:self.musicPlayer.shuffleMode ? [[UIColor whiteColor] colorWithAlphaComponent:(8.0/10.0)] : [LMColour fadedColour]];
