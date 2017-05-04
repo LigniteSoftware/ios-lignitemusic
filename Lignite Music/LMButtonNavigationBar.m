@@ -252,6 +252,11 @@
 										if(!strongSelf){
 											return;
 										}
+										
+										if(finished) {
+											[strongSelf.delegate requiredHeightForNavigationBarChangedTo:self.minimizeButton.frame.size.height + 10
+																				   withAnimationDuration:0.10];
+										}
 									}];
 	
 	self.currentPoint = CGPointMake(self.originalPoint.x, self.originalPoint.y + self.buttonBarBottomConstraint.constant);
