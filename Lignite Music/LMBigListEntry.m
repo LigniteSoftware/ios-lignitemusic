@@ -9,6 +9,7 @@
 #import <PureLayout/PureLayout.h>
 #import "LMBigListEntry.h"
 #import "LMExtras.h"
+#import "LMTriangleView.h"
 
 @interface LMBigListEntry()
 
@@ -104,6 +105,18 @@
 	[self.collectionInfoView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 	
 	[self.collectionInfoView reloadData];
+	
+	
+//	LMTriangleView *testView = [LMTriangleView newAutoLayoutView];
+//	testView.backgroundColor = [UIColor orangeColor];
+//	testView.maskDirection = LMTriangleMaskDirectionUpwards;
+//	[self addSubview:testView];
+//	
+//	[testView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.collectionInfoView withOffset:-20];
+//	[testView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:0.5];
+//	[testView autoAlignAxisToSuperviewAxis:ALAxisVertical];
+//	[testView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.2];
+	
 
 	[self.entryDelegate sizeChangedToLargeSize:self.isLargeSize withHeight:[LMBigListEntry sizeForBigListEntryWhenOpened:self.isLargeSize forDelegate:self.entryDelegate] forBigListEntry:self];
 }

@@ -249,7 +249,7 @@
     
     NSTimeInterval endTime = [[NSDate new] timeIntervalSince1970];
     
-    NSLog(@"Converted covers (%ld) in %f seconds", collectionToIterate.count, endTime-startTime);
+//    NSLog(@"Converted covers (%ld) in %f seconds", collectionToIterate.count, endTime-startTime);
 	
 //	NSLog(@"fuck you %lu", (unsigned long)[albumIdsCountDictionary allKeys].count);
 	

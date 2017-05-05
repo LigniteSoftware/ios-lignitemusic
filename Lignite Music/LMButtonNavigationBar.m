@@ -446,9 +446,7 @@
 
 - (void)layoutSubviews {
 //	return;
-	
-	NSLog(@"New frame %@", NSStringFromCGRect(self.frame));
-	
+		
 	if(!self.didLayoutConstraints){
 		self.didLayoutConstraints = YES;
 		

@@ -655,7 +655,8 @@
 	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		[self setupiPadSpecificLayout];
 		
-//		self.buttonStackView.spacing = ((self.layoutManager.isLandscape || ![LMLayoutManager isLandscapeiPad]) ? self.frame.size.height : self.frame.size.width * ([LMLayoutManager isiPad] ? 0.40 : 0.75))/4/2;
+		self.buttonStackView.spacing = ((([LMLayoutManager isLandscapeiPad] || [LMLayoutManager isLandscape])
+										 ? self.frame.size.height : self.frame.size.width) * 0.9 * ([LMLayoutManager isiPad] ? 0.5 : 0.25))/4.0;
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		
 	}];
@@ -719,9 +720,7 @@
 	self.didLayoutConstraints = YES;
 	
 	[self.layoutManager addDelegate:self];
-	
-	NSLog(@"What the fuckkkkk!!!");
-	
+		
 	
 	self.mainView = [LMView newAutoLayoutView];
 	self.mainView.backgroundColor = [UIColor yellowColor];
@@ -898,7 +897,7 @@
 	self.buttonStackView.axis = UILayoutConstraintAxisHorizontal;
 	self.buttonStackView.distribution = UIStackViewDistributionFillEqually;
 	self.buttonStackView.spacing = ((([LMLayoutManager isLandscapeiPad] || [LMLayoutManager isLandscape])
-									 ? self.frame.size.height : self.frame.size.width) * 0.9 * 0.5)/4.0;
+									 ? self.frame.size.height : self.frame.size.width) * 0.9 * ([LMLayoutManager isiPad] ? 0.5 : 0.25))/4.0;
 	[self.paddingView addSubview:self.buttonStackView];
 	
 	

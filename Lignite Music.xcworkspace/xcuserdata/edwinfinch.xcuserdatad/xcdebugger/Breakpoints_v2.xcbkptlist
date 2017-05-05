@@ -90,11 +90,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMCoreViewController.m"
-            timestampString = "515609484.196864"
+            timestampString = "515684090.995668"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1240"
-            endingLineNumber = "1240"
+            startingLineNumber = "1254"
+            endingLineNumber = "1254"
             landmarkName = "-viewDidLoad"
             landmarkType = "7">
          </BreakpointContent>
@@ -186,11 +186,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMCoreViewController.m"
-            timestampString = "515609484.196864"
+            timestampString = "515684090.995668"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1097"
-            endingLineNumber = "1097"
+            startingLineNumber = "1111"
+            endingLineNumber = "1111"
             landmarkName = "-viewDidLoad"
             landmarkType = "7">
          </BreakpointContent>
@@ -218,11 +218,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMCoreViewController.m"
-            timestampString = "515609484.196864"
+            timestampString = "515684090.995668"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1096"
-            endingLineNumber = "1096"
+            startingLineNumber = "1110"
+            endingLineNumber = "1110"
             landmarkName = "-viewDidLoad"
             landmarkType = "7">
          </BreakpointContent>
@@ -507,6 +507,27 @@
             endingLineNumber = "135"
             landmarkName = "+isLandscapeiPad"
             landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.SymbolicBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            symbolName = "UICollectionViewFlowLayoutBreakForInvalidSizes"
+            moduleName = "">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "UICollectionViewFlowLayoutBreakForInvalidSizes"
+                  moduleName = "UIKit"
+                  usesParentBreakpointCondition = "Yes"
+                  offsetFromSymbolStart = "0">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

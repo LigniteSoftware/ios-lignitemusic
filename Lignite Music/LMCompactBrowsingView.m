@@ -14,6 +14,10 @@
 #import "LMLayoutManager.h"
 #import "LMBigListEntry.h"
 #import "LMAppIcon.h"
+#import "LMCollectionViewFlowLayout.h"
+
+
+#import "NSTimer+Blocks.h"
 
 @interface LMCompactBrowsingView()<UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, LMCollectionInfoViewDelegate, LMBigListEntryDelegate, LMLayoutChangeDelegate>
 
@@ -51,6 +55,8 @@
  The layout manager.
  */
 @property LMLayoutManager *layoutManager;
+
+@property BOOL testingShit;
 
 @end
 
@@ -300,7 +306,7 @@
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-	return self.musicTrackCollections.count;
+	return self.musicType == LMMusicTypeAlbums ? 5 : self.musicTrackCollections.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -309,35 +315,46 @@
 	cell.backgroundColor = [UIColor whiteColor];
 	
 	for(UIView *subview in cell.contentView.subviews){
+//		subview.hidden = YES;
 		[subview removeFromSuperview];
 	}
 	
-	LMBigListEntry *bigListEntry = [self.bigListEntries objectAtIndex:indexPath.row];
-	
-	[cell.contentView addSubview:bigListEntry];
-	[bigListEntry autoPinEdgesToSuperviewEdges];
-    [bigListEntry reloadData];
-	
+	if(indexPath.row == 3 && self.testingShit){
+		cell.backgroundColor = [UIColor blueColor];
+	}
+	else{
+		LMBigListEntry *bigListEntry = [self.bigListEntries objectAtIndex:indexPath.row];
+		
+		[cell.contentView addSubview:bigListEntry];
+		[bigListEntry autoPinEdgesToSuperviewEdges];
+		[bigListEntry reloadData];
+	}
+		
 	return cell;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
 	//	NSLog(@"Path %@", indexPath);
-	NSInteger factor = self.layoutManager.isLandscape ? 5 : 3;
-	
-	CGFloat sideLength = self.frame.size.width/factor;
-	
-	sideLength -= 15;
-	
-	CGFloat spacing = (self.frame.size.width-(sideLength*factor))/(factor+1);
-	
-//	NSLog(@"Fuck %f", spacing);
-	
-	UICollectionViewFlowLayout *flowLayout = (UICollectionViewFlowLayout*)collectionViewLayout;
-	flowLayout.sectionInset = UIEdgeInsetsMake(spacing, spacing, spacing, spacing);
-	flowLayout.minimumLineSpacing = spacing;
+	if(indexPath.row == 3 && self.testingShit){
+		return CGSizeMake(self.frame.size.width, self.frame.size.height/3.0);
+	}
+	else{
+		NSInteger factor = self.layoutManager.isLandscape ? 5 : 3;
 		
-	return CGSizeMake(sideLength, sideLength * (2.8/2.0));
+		CGFloat sideLength = self.frame.size.width/factor;
+		
+		sideLength -= 15;
+		
+		CGFloat spacing = (self.frame.size.width-(sideLength*factor))/(factor+1);
+		
+	//	NSLog(@"Fuck %f", spacing);
+		
+		LMCollectionViewFlowLayout *flowLayout = (LMCollectionViewFlowLayout*)collectionViewLayout;
+		flowLayout.sectionInset = UIEdgeInsetsMake(spacing, spacing, spacing, spacing);
+		flowLayout.minimumLineSpacing = spacing;
+			
+		return CGSizeMake(sideLength, sideLength * (2.8/2.0));
+	}
 }
 
 - (void)reloadContents {
@@ -400,11 +417,11 @@
 		self.layoutManager = [LMLayoutManager sharedLayoutManager];
 		[self.layoutManager addDelegate:self];
 		
-		UICollectionViewFlowLayout *fuck = [[UICollectionViewFlowLayout alloc]init];
+		LMCollectionViewFlowLayout *fuck = [[LMCollectionViewFlowLayout alloc]init];
 //		fuck.scrollDirection = UICollectionViewScrollDirectionHorizontal;
 		
-//		self.musicTrackCollections = [[LMMusicPlayer sharedMusicPlayer] queryCollectionsForMusicType:LMMusicTypeAlbums];
-//		self.musicType = LMMusicTypeAlbums;
+		self.musicTrackCollections = [[LMMusicPlayer sharedMusicPlayer] queryCollectionsForMusicType:LMMusicTypeAlbums];
+		self.musicType = LMMusicTypeAlbums;
 		
 		
 		self.collectionView = [[UICollectionView alloc]initWithFrame:CGRectZero collectionViewLayout:fuck];
@@ -430,9 +447,13 @@
 		
 		
 		self.backgroundColor = [UIColor whiteColor];
-		self.collectionView.backgroundColor = [UIColor whiteColor];
+		self.collectionView.backgroundColor = [UIColor magentaColor];
 		
 		[self.collectionView autoPinEdgesToSuperviewEdges];
+		
+		[NSTimer scheduledTimerWithTimeInterval:5.0 block:^{
+			[self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:0]];
+		} repeats:NO];
 	}
 }
 

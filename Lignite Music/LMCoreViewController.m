@@ -740,7 +740,12 @@ LMControlBarViewDelegate
 	self.layoutManager.traitCollection = self.traitCollection;
 	[self.layoutManager traitCollectionDidChange:previousTraitCollection];
 	
-	self.splashImageView.image = [UIImage imageNamed:[LMLayoutManager sharedLayoutManager].isLandscape ? @"splash_landscape_g.png" : @"splash_portrait_g.png"];
+	if([LMLayoutManager isiPad]){
+		self.splashImageView.image = [UIImage imageNamed:@"splash_ipad.png"];
+	}
+	else{
+		self.splashImageView.image = [UIImage imageNamed:[LMLayoutManager sharedLayoutManager].isLandscape ? @"splash_landscape_g.png" : @"splash_portrait_g.png"];
+	}
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
@@ -831,9 +836,13 @@ LMControlBarViewDelegate
 	self.layoutManager.size = self.view.frame.size;
 	
 	
-	UIView *testView = [UIView newAutoLayoutView];
+	LMCompactBrowsingView *testView = [LMCompactBrowsingView newAutoLayoutView];
 	testView.backgroundColor = [UIColor orangeColor];
 	[self.view addSubview:testView];
+	
+	[testView autoPinEdgesToSuperviewEdges];
+	
+	return;
 	
 //	NSArray *testViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 //		[testView autoPinEdgesToSuperviewEdges];
@@ -898,7 +907,12 @@ LMControlBarViewDelegate
 	
 	    
 	self.splashImageView = [UIImageView newAutoLayoutView];
-	self.splashImageView.image = [UIImage imageNamed:[LMLayoutManager sharedLayoutManager].isLandscape ? @"splash_landscape_g.png" : @"splash_portrait_g.png"];
+	if([LMLayoutManager isiPad]){
+		self.splashImageView.image = [UIImage imageNamed:@"splash_ipad.png"];
+	}
+	else{
+		self.splashImageView.image = [UIImage imageNamed:[LMLayoutManager sharedLayoutManager].isLandscape ? @"splash_landscape_g.png" : @"splash_portrait_g.png"];
+	}
 	self.splashImageView.contentMode = UIViewContentModeScaleAspectFill;
 	[self.view addSubview:self.splashImageView];
 	
@@ -1214,7 +1228,7 @@ LMControlBarViewDelegate
 							
 //							self.buttonNavigationBar.hidden = YES;
 							
-//							[self.buttonNavigationBar minimize];
+							[self.buttonNavigationBar minimize:NO];
 							
 //							[self.buttonNavigationBar setSelectedTab:LMNavigationTabBrowse];
 							
