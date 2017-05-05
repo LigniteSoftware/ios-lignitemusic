@@ -458,15 +458,20 @@
 		self.collectionView.backgroundColor = [UIColor magentaColor];
 		
 		[self.collectionView autoPinEdgesToSuperviewEdges];
-		
-		[NSTimer scheduledTimerWithTimeInterval:2.5 block:^{
-			[UIView animateWithDuration:2.0 animations:^{
-				[self.collectionView performBatchUpdates:^{
-					[self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:0]];
-				} completion:nil];
-			}];
-		} repeats:NO];
+
+		UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapTest)];
+		[self.collectionView addGestureRecognizer:tapGesture];
 	}
+}
+
+- (void)tapTest {
+	[UIView animateWithDuration:2.0 animations:^{
+		[self.collectionView performBatchUpdates:^{
+			LMCollectionViewFlowLayout *layout = (LMCollectionViewFlowLayout*)self.collectionView.collectionViewLayout;
+			layout.testingShit = !layout.testingShit;
+			[self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:0]];
+		} completion:nil];
+	}];
 }
 
 @end

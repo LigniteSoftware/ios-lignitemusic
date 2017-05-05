@@ -20,21 +20,33 @@
 - (UICollectionViewLayoutAttributes*)initialLayoutAttributesForAppearingItemAtIndexPath:(NSIndexPath *)itemIndexPath {
 	UICollectionViewLayoutAttributes *layoutAttributes = [self layoutAttributesForItemAtIndexPath:itemIndexPath];
 	
-	if(itemIndexPath.row > 11){
-//		layoutAttributes.frame = CGRectMake(layoutAttributes.frame.origin.x, layoutAttributes.frame.origin.y, layoutAttributes.frame.size.width, 0);
+	layoutAttributes.alpha = 1;
+	
+	if(itemIndexPath.row == 4){
+		layoutAttributes.frame = CGRectMake(layoutAttributes.frame.origin.x, layoutAttributes.frame.origin.y, layoutAttributes.frame.size.width, 0);
 	}
+	layoutAttributes.frame = [self frameForCellAtIndexPath:itemIndexPath testingShit:!self.testingShit];
 	
 	NSLog(@"Called!");
 	
 	return layoutAttributes;
 }
 
+- (UICollectionViewLayoutAttributes *)finalLayoutAttributesForDisappearingItemAtIndexPath:(NSIndexPath *)itemIndexPath {
+	return [self layoutAttributesForItemAtIndexPath:itemIndexPath];
+}
+
 //- (CGSize)collectionViewContentSize {
 //	return CGSizeMake(self.collectionView.frame.size.width, self.collectionView.frame.size.height * 1.50);
 //}
 
-- (CGRect)frameForCellAtIndexPath:(NSIndexPath*)indexPath {
+- (CGRect)frameForCellAtIndexPath:(NSIndexPath*)indexPath testingShit:(BOOL)testingShit {
 	NSInteger factor = 4; //How many items to display in one row
+	
+	BOOL isDetailViewRow = (indexPath.row == 4) && testingShit;
+	BOOL isBelowDetailViewRow = (indexPath.row > 4) && testingShit;
+	
+	NSInteger fixedIndexPathRow = isBelowDetailViewRow ? (indexPath.row-1) : indexPath.row;
 	
 	CGSize collectionViewSize = [self collectionViewContentSize]; //Get the current size of the collection view
 	CGFloat sideLength = collectionViewSize.width/factor; //Get the side length of one cell based on the factor provided
@@ -46,16 +58,27 @@
 	CGSize size = CGSizeMake(sideLength,
 								sideLength * (2.8/2.0)); //The height side length is greater than the width side length because of the album art
 	
-	CGPoint origin = CGPointMake(((indexPath.row % factor) * (size.width+spacing)) + spacing, //The column which the cell is in
-								 ((indexPath.row/factor) * (size.height+spacing)) + spacing); //The row
+	CGPoint origin = CGPointMake(((fixedIndexPathRow % factor) * (size.width+spacing)) + spacing, //The column which the cell is in
+								 ((fixedIndexPathRow/factor) * (size.height+spacing)) + spacing); //The row
 	
-	return CGRectMake(origin.x, origin.y, size.width, size.height); //Return the frame
+	if(isBelowDetailViewRow){
+		origin.y += (size.height*2) + spacing;
+	}
+	
+	CGRect itemFrame = CGRectMake(origin.x, origin.y, size.width, size.height); //Return the frame
+	
+	if(isDetailViewRow){
+		return CGRectMake(origin.x, origin.y, collectionViewSize.width-(origin.x * 2), size.height*2);
+	}
+	
+	return itemFrame;
 }
 
 - (UICollectionViewLayoutAttributes*)layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath {
 	UICollectionViewLayoutAttributes *attributes = [UICollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:indexPath];
 	
-	attributes.frame = [self frameForCellAtIndexPath:indexPath];
+	attributes.alpha = 1;
+	attributes.frame = [self frameForCellAtIndexPath:indexPath testingShit:self.testingShit];
 	
 	return attributes;
 }
@@ -67,7 +90,7 @@
 	BOOL foundFirstItem = NO;
 	for(NSInteger i = 0; i < numberOfItems; i++){
 		NSIndexPath *indexPathOfItem = [NSIndexPath indexPathForRow:i inSection:0];
-		CGRect frameOfItem = [self frameForCellAtIndexPath:indexPathOfItem];
+		CGRect frameOfItem = [self frameForCellAtIndexPath:indexPathOfItem testingShit:self.testingShit];
 		BOOL containsFrame = CGRectContainsRect(rect, frameOfItem);
 		BOOL containsOrigin = CGRectContainsPoint(rect, frameOfItem.origin);
 		if(containsFrame || containsOrigin){
