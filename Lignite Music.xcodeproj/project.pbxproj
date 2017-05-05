@@ -18,6 +18,10 @@
 		6A072C021E87E79C0092EA44 /* icon_pebbles.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A072BFC1E87E79C0092EA44 /* icon_pebbles.png */; };
 		6A0750721D5EAB8000BCBC9C /* aplite_colours.gif in Resources */ = {isa = PBXBuildFile; fileRef = 6A0750711D5EAB8000BCBC9C /* aplite_colours.gif */; };
 		6A0750741D5EC0C000BCBC9C /* never_forget.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A0750731D5EC0C000BCBC9C /* never_forget.png */; };
+		6A08AF021EBCC7F30069C9CC /* LMCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A08AF011EBCC7F30069C9CC /* LMCollectionViewCell.m */; };
+		6A08AF031EBCC7F30069C9CC /* LMCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A08AF011EBCC7F30069C9CC /* LMCollectionViewCell.m */; };
+		6A08AF071EBCD9950069C9CC /* LMCollectionViewDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A08AF061EBCD9950069C9CC /* LMCollectionViewDataSource.m */; };
+		6A08AF081EBCD9950069C9CC /* LMCollectionViewDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A08AF061EBCD9950069C9CC /* LMCollectionViewDataSource.m */; };
 		6A13A8011E011D19006A768B /* SLColorArt.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A13A7FC1E011D19006A768B /* SLColorArt.m */; };
 		6A13A8021E011D19006A768B /* UIImage+ColorArt.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A13A7FE1E011D19006A768B /* UIImage+ColorArt.m */; };
 		6A13A8031E011D19006A768B /* UIImage+Scale.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A13A8001E011D19006A768B /* UIImage+Scale.m */; };
@@ -393,6 +397,10 @@
 		6A072BFC1E87E79C0092EA44 /* icon_pebbles.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_pebbles.png; sourceTree = "<group>"; };
 		6A0750711D5EAB8000BCBC9C /* aplite_colours.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = aplite_colours.gif; sourceTree = "<group>"; };
 		6A0750731D5EC0C000BCBC9C /* never_forget.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = never_forget.png; sourceTree = "<group>"; };
+		6A08AF001EBCC7F30069C9CC /* LMCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMCollectionViewCell.h; sourceTree = "<group>"; };
+		6A08AF011EBCC7F30069C9CC /* LMCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMCollectionViewCell.m; sourceTree = "<group>"; };
+		6A08AF051EBCD9950069C9CC /* LMCollectionViewDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMCollectionViewDataSource.h; sourceTree = "<group>"; };
+		6A08AF061EBCD9950069C9CC /* LMCollectionViewDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMCollectionViewDataSource.m; sourceTree = "<group>"; };
 		6A106B121BC710D4003AE55A /* Lignite Music.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Lignite Music.entitlements"; sourceTree = "<group>"; };
 		6A13A7FB1E011D19006A768B /* SLColorArt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLColorArt.h; sourceTree = "<group>"; };
 		6A13A7FC1E011D19006A768B /* SLColorArt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLColorArt.m; sourceTree = "<group>"; };
@@ -800,6 +808,10 @@
 				6A23AF4D1E46254400A56F5F /* LMCompactBrowsingView.m */,
 				6A6D56DA1EBC979B00E96213 /* LMCollectionViewFlowLayout.h */,
 				6A6D56DB1EBC979B00E96213 /* LMCollectionViewFlowLayout.m */,
+				6A08AF001EBCC7F30069C9CC /* LMCollectionViewCell.h */,
+				6A08AF011EBCC7F30069C9CC /* LMCollectionViewCell.m */,
+				6A08AF051EBCD9950069C9CC /* LMCollectionViewDataSource.h */,
+				6A08AF061EBCD9950069C9CC /* LMCollectionViewDataSource.m */,
 			);
 			name = Core;
 			sourceTree = "<group>";
@@ -1769,6 +1781,7 @@
 				6AA5CB161E285C0A005F853F /* LMColour.m in Sources */,
 				6AA5CB171E285C0A005F853F /* LMAlertView.m in Sources */,
 				6AA5CB181E285C0A005F853F /* LMBigListEntry.m in Sources */,
+				6A08AF081EBCD9950069C9CC /* LMCollectionViewDataSource.m in Sources */,
 				6AA5CB1A1E285C0A005F853F /* LMAppIcon.m in Sources */,
 				6AA5CB1B1E285C0A005F853F /* main.m in Sources */,
 				6AA5CB1C1E285C0A005F853F /* LMContactViewController.m in Sources */,
@@ -1802,6 +1815,7 @@
 				6AA5CB351E285C0A005F853F /* LMSettingsViewController.m in Sources */,
 				6AD4B8A81E394A6700BE3177 /* LMButtonNavigationBar.m in Sources */,
 				6AA5CB361E285C0A005F853F /* LMDebugViewController.m in Sources */,
+				6A08AF031EBCC7F30069C9CC /* LMCollectionViewCell.m in Sources */,
 				6AA5CB371E285C0A005F853F /* LMGuideViewPagerController.m in Sources */,
 				6AA5CB381E285C0A005F853F /* LMSearch.m in Sources */,
 				6AA5CB391E285C0A005F853F /* LMNowPlayingView.m in Sources */,
@@ -1868,6 +1882,7 @@
 				6A6CCD5B1DB290FA006035C1 /* LMAppIcon.m in Sources */,
 				6A50AC911E891F3A005C7B3B /* LMTutorialView.m in Sources */,
 				6AEB9CFD1BACF60E00AD19FA /* main.m in Sources */,
+				6A08AF071EBCD9950069C9CC /* LMCollectionViewDataSource.m in Sources */,
 				6A759D591DEBF0470051E1A9 /* LMContactViewController.m in Sources */,
 				6A759D401DE8DDC50051E1A9 /* LMPebbleSettingsViewController.m in Sources */,
 				6A2A29C81DB1EAB6008E7792 /* LMCircleView.m in Sources */,
@@ -1890,6 +1905,7 @@
 				6A32A9E81DC654500056CC60 /* LMTriangleView.m in Sources */,
 				6AAA56081DF54D7800692CFB /* LMBrowsingBar.m in Sources */,
 				6A2A29C51DB1D89C008E7792 /* LMSourceSelectorView.m in Sources */,
+				6A08AF021EBCC7F30069C9CC /* LMCollectionViewCell.m in Sources */,
 				6A7115B71DCEE410006DE00F /* LMTableView.m in Sources */,
 				6AF9D5381DE13141006368B6 /* LMReachability.m in Sources */,
 				6A5257531DF1FC840040210D /* LMLetterTabBar.m in Sources */,

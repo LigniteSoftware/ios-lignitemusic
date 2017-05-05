@@ -15,6 +15,7 @@
 #import "LMBigListEntry.h"
 #import "LMAppIcon.h"
 #import "LMCollectionViewFlowLayout.h"
+#import "LMCollectionViewCell.h"
 
 
 #import "NSTimer+Blocks.h"
@@ -306,40 +307,46 @@
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-	return self.musicType == LMMusicTypeAlbums ? 5 : self.musicTrackCollections.count;
+	return self.musicType == LMMusicTypeAlbums ? 13 : self.musicTrackCollections.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-	UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cellIdentifier" forIndexPath:indexPath];
+	LMCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cellIdentifier" forIndexPath:indexPath];
 	
 	cell.backgroundColor = [UIColor whiteColor];
 	
-	for(UIView *subview in cell.contentView.subviews){
-//		subview.hidden = YES;
-		[subview removeFromSuperview];
+//	for(UIView *subview in cell.contentView.subviews){
+////		subview.hidden = YES;
+//		[subview removeFromSuperview];
+//	}
+	
+
+	if(cell.contentView.subviews.count == 0){
+		UIView *testingSubview = [UIView newAutoLayoutView];
+		testingSubview.backgroundColor = [UIColor blueColor];
+		[cell.contentView addSubview:testingSubview];
+		
+		[testingSubview autoCenterInSuperview];
+		[testingSubview autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:cell.contentView withMultiplier:0.5];
+		[testingSubview autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:cell.contentView withMultiplier:0.5];
+		
+//		LMBigListEntry *bigListEntry = [self.bigListEntries objectAtIndex:indexPath.row];
+//		
+//		[cell.contentView addSubview:bigListEntry];
+//		[bigListEntry autoPinEdgesToSuperviewEdges];
+//		[bigListEntry reloadData];
 	}
 	
-	if(indexPath.row == 3 && self.testingShit){
-		cell.backgroundColor = [UIColor blueColor];
-	}
-	else{
-		LMBigListEntry *bigListEntry = [self.bigListEntries objectAtIndex:indexPath.row];
-		
-		[cell.contentView addSubview:bigListEntry];
-		[bigListEntry autoPinEdgesToSuperviewEdges];
-		[bigListEntry reloadData];
-	}
-		
 	return cell;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-	//	NSLog(@"Path %@", indexPath);
+	NSLog(@"Path %@", indexPath);
 	if(indexPath.row == 3 && self.testingShit){
 		return CGSizeMake(self.frame.size.width, self.frame.size.height/3.0);
 	}
 	else{
-		NSInteger factor = self.layoutManager.isLandscape ? 5 : 3;
+		NSInteger factor = 6;// self.layoutManager.isLandscape ? 5 : 3;
 		
 		CGFloat sideLength = self.frame.size.width/factor;
 		
@@ -429,21 +436,22 @@
 		self.collectionView.delegate = self;
 		self.collectionView.dataSource = self;
         self.collectionView.contentInset = UIEdgeInsetsMake(0, 0, 100, 0);
-		[self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"cellIdentifier"];
+//		[self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"cellIdentifier"];
+		[self.collectionView registerClass:[LMCollectionViewCell class] forCellWithReuseIdentifier:@"cellIdentifier"];
 		[self addSubview:self.collectionView];
 		
 		
-		self.bigListEntries = [NSMutableArray new];
-		
-		for(int i = 0; i < [self collectionView:self.collectionView numberOfItemsInSection:0]; i++){
-			LMBigListEntry *bigListEntry = [LMBigListEntry newAutoLayoutView];
-			bigListEntry.infoDelegate = self;
-			bigListEntry.entryDelegate = self;
-			bigListEntry.collectionIndex = i;
-			[bigListEntry setup];
-			
-			[self.bigListEntries addObject:bigListEntry];
-		}
+//		self.bigListEntries = [NSMutableArray new];
+//		
+//		for(int i = 0; i < [self collectionView:self.collectionView numberOfItemsInSection:0]; i++){
+//			LMBigListEntry *bigListEntry = [LMBigListEntry newAutoLayoutView];
+//			bigListEntry.infoDelegate = self;
+//			bigListEntry.entryDelegate = self;
+//			bigListEntry.collectionIndex = i;
+//			[bigListEntry setup];
+//			
+//			[self.bigListEntries addObject:bigListEntry];
+//		}
 		
 		
 		self.backgroundColor = [UIColor whiteColor];
@@ -451,8 +459,12 @@
 		
 		[self.collectionView autoPinEdgesToSuperviewEdges];
 		
-		[NSTimer scheduledTimerWithTimeInterval:5.0 block:^{
-			[self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:0]];
+		[NSTimer scheduledTimerWithTimeInterval:2.5 block:^{
+			[UIView animateWithDuration:2.0 animations:^{
+				[self.collectionView performBatchUpdates:^{
+					[self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:0]];
+				} completion:nil];
+			}];
 		} repeats:NO];
 	}
 }
