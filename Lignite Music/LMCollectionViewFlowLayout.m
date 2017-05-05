@@ -53,6 +53,9 @@
 	else if(self.testingShit){
 		attributes.frame = [self frameForCellAtIndexPath:itemIndexPath testingShit:NO];
 	}
+	else if(!self.testingShit){
+		attributes.frame = [self frameForCellAtIndexPath:itemIndexPath testingShit:YES];
+	}
 	
 	return attributes;
 }
