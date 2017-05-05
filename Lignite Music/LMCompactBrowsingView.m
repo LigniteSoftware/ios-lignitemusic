@@ -19,6 +19,7 @@
 
 
 #import "NSTimer+Blocks.h"
+#import "LMColour.h"
 
 @interface LMCompactBrowsingView()<UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, LMCollectionInfoViewDelegate, LMBigListEntryDelegate, LMLayoutChangeDelegate>
 
@@ -307,7 +308,8 @@
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-	return self.musicType == LMMusicTypeAlbums ? 13 : self.musicTrackCollections.count;
+	return [(LMCollectionViewFlowLayout*)collectionView.collectionViewLayout testingShit] ? 14 : 13;
+//	return self.musicType == LMMusicTypeAlbums ? 13 : self.musicTrackCollections.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -320,10 +322,12 @@
 //		[subview removeFromSuperview];
 //	}
 	
+	LMCollectionViewFlowLayout *flowLayout = (LMCollectionViewFlowLayout*)collectionView.collectionViewLayout;
+	
 
 	if(cell.contentView.subviews.count == 0){
 		UIView *testingSubview = [UIView newAutoLayoutView];
-		testingSubview.backgroundColor = [UIColor blueColor];
+		testingSubview.backgroundColor = (flowLayout.testingShit && indexPath.row == 4) ? [UIColor purpleColor] : [LMColour randomColour];
 		[cell.contentView addSubview:testingSubview];
 		
 		[testingSubview autoCenterInSuperview];
@@ -338,30 +342,6 @@
 	}
 	
 	return cell;
-}
-
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-	NSLog(@"Path %@", indexPath);
-	if(indexPath.row == 3 && self.testingShit){
-		return CGSizeMake(self.frame.size.width, self.frame.size.height/3.0);
-	}
-	else{
-		NSInteger factor = 6;// self.layoutManager.isLandscape ? 5 : 3;
-		
-		CGFloat sideLength = self.frame.size.width/factor;
-		
-		sideLength -= 15;
-		
-		CGFloat spacing = (self.frame.size.width-(sideLength*factor))/(factor+1);
-		
-	//	NSLog(@"Fuck %f", spacing);
-		
-		LMCollectionViewFlowLayout *flowLayout = (LMCollectionViewFlowLayout*)collectionViewLayout;
-		flowLayout.sectionInset = UIEdgeInsetsMake(spacing, spacing, spacing, spacing);
-		flowLayout.minimumLineSpacing = spacing;
-			
-		return CGSizeMake(sideLength, sideLength * (2.8/2.0));
-	}
 }
 
 - (void)reloadContents {
@@ -469,7 +449,9 @@
 		[self.collectionView performBatchUpdates:^{
 			LMCollectionViewFlowLayout *layout = (LMCollectionViewFlowLayout*)self.collectionView.collectionViewLayout;
 			layout.testingShit = !layout.testingShit;
-			[self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:0]];
+			NSArray *items = @[ [NSIndexPath indexPathForRow:4 inSection:0] ];
+			layout.testingShit ? [self.collectionView insertItemsAtIndexPaths:items] : [self.collectionView deleteItemsAtIndexPaths:items];
+//			[self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:0]];
 		} completion:nil];
 	}];
 }

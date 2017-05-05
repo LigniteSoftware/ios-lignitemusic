@@ -22,18 +22,39 @@
 	
 	layoutAttributes.alpha = 1;
 	
-	if(itemIndexPath.row == 4){
-		layoutAttributes.frame = CGRectMake(layoutAttributes.frame.origin.x, layoutAttributes.frame.origin.y, layoutAttributes.frame.size.width, 0);
+	if(itemIndexPath.row == 4 && self.testingShit){
+		CGRect initialDetailViewFrame = [self frameForCellAtIndexPath:itemIndexPath testingShit:YES];
+		initialDetailViewFrame.size.height = 0;
+		
+		layoutAttributes.frame = initialDetailViewFrame;
 	}
-	layoutAttributes.frame = [self frameForCellAtIndexPath:itemIndexPath testingShit:!self.testingShit];
+	else if(!self.testingShit){
+		layoutAttributes.frame = [self frameForCellAtIndexPath:[NSIndexPath indexPathForRow:itemIndexPath.row+1 inSection:0] testingShit:YES];
+	}
 	
-	NSLog(@"Called!");
+
+	
+//	NSLog(@"Called!");
 	
 	return layoutAttributes;
 }
 
 - (UICollectionViewLayoutAttributes *)finalLayoutAttributesForDisappearingItemAtIndexPath:(NSIndexPath *)itemIndexPath {
-	return [self layoutAttributesForItemAtIndexPath:itemIndexPath];
+	UICollectionViewLayoutAttributes *attributes = [self layoutAttributesForItemAtIndexPath:itemIndexPath];
+	
+	NSLog(@"Disappearing %@", itemIndexPath);
+	
+	if(itemIndexPath.row == 4 && !self.testingShit){
+		CGRect initialDetailViewFrame = [self frameForCellAtIndexPath:itemIndexPath testingShit:YES];
+		initialDetailViewFrame.size.height = 0;
+		
+		attributes.frame = initialDetailViewFrame;
+	}
+	else if(self.testingShit){
+		attributes.frame = [self frameForCellAtIndexPath:itemIndexPath testingShit:NO];
+	}
+	
+	return attributes;
 }
 
 //- (CGSize)collectionViewContentSize {
@@ -46,7 +67,7 @@
 	BOOL isDetailViewRow = (indexPath.row == 4) && testingShit;
 	BOOL isBelowDetailViewRow = (indexPath.row > 4) && testingShit;
 	
-	NSInteger fixedIndexPathRow = isBelowDetailViewRow ? (indexPath.row-1) : indexPath.row;
+	NSInteger fixedIndexPathRow = (indexPath.row - isBelowDetailViewRow);
 	
 	CGSize collectionViewSize = [self collectionViewContentSize]; //Get the current size of the collection view
 	CGFloat sideLength = collectionViewSize.width/factor; //Get the side length of one cell based on the factor provided
