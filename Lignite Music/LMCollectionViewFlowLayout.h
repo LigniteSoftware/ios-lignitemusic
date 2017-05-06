@@ -8,8 +8,46 @@
 
 #import <UIKit/UIKit.h>
 
+#define LMNoDetailViewSelected -1
+
 @interface LMCollectionViewFlowLayout : UICollectionViewFlowLayout
 
-@property BOOL testingShit;
+/**
+ The display mode for the detail view.
+
+ - LMDetailViewDisplayModeNone: Do not display the detail view at all.
+ - LMDetailViewDisplayModeCurrentIndex: Display the detail view based off the current index.
+ - LMDetailViewDisplayModePreviousIndex: Display the detail view based off the previous index.
+ */
+typedef NS_ENUM(NSInteger, LMDetailViewDisplayMode) {
+	LMDetailViewDisplayModeNone = 0,
+	LMDetailViewDisplayModeCurrentIndex,
+	LMDetailViewDisplayModePreviousIndex
+};
+
+/**
+ The index of the current item which is displaying its detail view for its contents. If none set, a value of LMNoDetailViewSelected will be assigned.
+ */
+@property NSInteger indexOfItemDisplayingDetailView;
+
+/**
+ The index (row) in the layout which is displaying the detail view. Returns LMNoDetailViewSelected if no detail view is selected.
+ */
+@property (readonly) NSInteger indexOfDetailView;
+
+/**
+ The index of the previous item which was displaying its detail view for its contents. If none was ever set, a value of LMNoDetailViewSelected will be returned.
+ */
+@property NSInteger previousIndexOfItemDisplayingDetailView;
+
+/**
+ The previous index (row) in the layout which was displaying the detail view. Returns LMNoDetailViewSelected if no detail view was ever selected.
+ */
+@property (readonly) NSInteger previousIndexOfDetailView;
+
+/**
+ Whether or not the flow layout is displaying a detail view.
+ */
+@property (readonly) BOOL isDisplayingDetailView;
 
 @end

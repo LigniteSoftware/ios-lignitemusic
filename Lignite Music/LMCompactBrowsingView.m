@@ -308,7 +308,7 @@
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-	return [(LMCollectionViewFlowLayout*)collectionView.collectionViewLayout testingShit] ? 14 : 13;
+	return [(LMCollectionViewFlowLayout*)collectionView.collectionViewLayout isDisplayingDetailView] ? 14 : 13;
 //	return self.musicType == LMMusicTypeAlbums ? 13 : self.musicTrackCollections.count;
 }
 
@@ -327,7 +327,7 @@
 
 	if(cell.contentView.subviews.count == 0){
 		UIView *testingSubview = [UIView newAutoLayoutView];
-		testingSubview.backgroundColor = (flowLayout.testingShit && indexPath.row == 4) ? [UIColor purpleColor] : [LMColour randomColour];
+		testingSubview.backgroundColor = (indexPath.row == flowLayout.indexOfDetailView) ? [UIColor purpleColor] : [LMColour randomColour];
 		[cell.contentView addSubview:testingSubview];
 		
 		[testingSubview autoCenterInSuperview];
@@ -385,13 +385,13 @@
     }];
 }
 
-- (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
-	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-		[self.collectionView reloadData];
-	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-		//Nothin'
-	}];
-}
+//- (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+//	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+//		[self.collectionView reloadData];
+//	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+//		//Nothin'
+//	}];
+//}
 
 - (void)layoutSubviews {
 	[super layoutSubviews];
@@ -445,15 +445,9 @@
 }
 
 - (void)tapTest {
-	[UIView animateWithDuration:2.0 animations:^{
-		[self.collectionView performBatchUpdates:^{
-			LMCollectionViewFlowLayout *layout = (LMCollectionViewFlowLayout*)self.collectionView.collectionViewLayout;
-			layout.testingShit = !layout.testingShit;
-			NSArray *items = @[ [NSIndexPath indexPathForRow:4 inSection:0] ];
-			layout.testingShit ? [self.collectionView insertItemsAtIndexPaths:items] : [self.collectionView deleteItemsAtIndexPaths:items];
-//			[self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:0]];
-		} completion:nil];
-	}];
+	LMCollectionViewFlowLayout *layout = (LMCollectionViewFlowLayout*)self.collectionView.collectionViewLayout;
+
+	layout.indexOfItemDisplayingDetailView = layout.isDisplayingDetailView ? LMNoDetailViewSelected : 5;
 }
 
 @end

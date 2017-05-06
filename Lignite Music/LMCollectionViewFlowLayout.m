@@ -11,6 +11,51 @@
 
 @implementation LMCollectionViewFlowLayout
 
+@synthesize indexOfItemDisplayingDetailView = _indexOfItemDisplayingDetailView;
+@synthesize isDisplayingDetailView = _isDisplayingDetailView;
+@synthesize indexOfDetailView = _indexOfDetailView;
+
+- (BOOL)isDisplayingDetailView {
+	return self.indexOfItemDisplayingDetailView != LMNoDetailViewSelected;
+}
+
+- (LMDetailViewDisplayMode)detailViewDisplayMode {
+	return self.isDisplayingDetailView ? LMDetailViewDisplayModeCurrentIndex : LMDetailViewDisplayModeNone;
+}
+
+- (NSInteger)indexOfDetailViewForIndexOfItemDisplayingDetailView:(NSInteger)index {
+	if(index > LMNoDetailViewSelected){
+		return (index - (index % 4)) + 4;
+	}
+	return LMNoDetailViewSelected;
+}
+
+- (NSInteger)indexOfDetailView {
+	return [self indexOfDetailViewForIndexOfItemDisplayingDetailView:self.indexOfItemDisplayingDetailView];
+}
+
+- (NSInteger)previousIndexOfDetailView {
+	return [self indexOfDetailViewForIndexOfItemDisplayingDetailView:self.previousIndexOfItemDisplayingDetailView];
+}
+
+- (NSInteger)indexOfItemDisplayingDetailView {
+	return _indexOfItemDisplayingDetailView;
+}
+
+- (void)setIndexOfItemDisplayingDetailView:(NSInteger)indexOfItemDisplayingDetailView {
+	self.previousIndexOfItemDisplayingDetailView = _indexOfItemDisplayingDetailView;
+	
+	_indexOfItemDisplayingDetailView = indexOfItemDisplayingDetailView;
+	
+	NSArray *items = @[ [NSIndexPath indexPathForRow:self.isDisplayingDetailView ? self.indexOfDetailView : self.previousIndexOfDetailView inSection:0] ];
+	
+	[UIView animateWithDuration:2.0 animations:^{
+		[self.collectionView performBatchUpdates:^{
+			self.isDisplayingDetailView ? [self.collectionView insertItemsAtIndexPaths:items] : [self.collectionView deleteItemsAtIndexPaths:items];
+		} completion:nil];
+	}];
+}
+
 - (CGSize)collectionViewContentSize { //Workaround?
 	CGSize superSize = [super collectionViewContentSize];
 	CGRect frame = self.collectionView.frame;
@@ -22,14 +67,14 @@
 	
 	layoutAttributes.alpha = 1;
 	
-	if(itemIndexPath.row == 4 && self.testingShit){
-		CGRect initialDetailViewFrame = [self frameForCellAtIndexPath:itemIndexPath testingShit:YES];
+	if(itemIndexPath.row == self.indexOfDetailView){
+		CGRect initialDetailViewFrame = [self frameForCellAtIndexPath:itemIndexPath detailViewDisplayMode:LMDetailViewDisplayModeCurrentIndex];
 		initialDetailViewFrame.size.height = 0;
 		
 		layoutAttributes.frame = initialDetailViewFrame;
 	}
-	else if(!self.testingShit){
-		layoutAttributes.frame = [self frameForCellAtIndexPath:[NSIndexPath indexPathForRow:itemIndexPath.row+1 inSection:0] testingShit:YES];
+	else if(!self.isDisplayingDetailView){
+		layoutAttributes.frame = [self frameForCellAtIndexPath:[NSIndexPath indexPathForRow:itemIndexPath.row+1 inSection:0] detailViewDisplayMode:LMDetailViewDisplayModeCurrentIndex];
 	}
 	
 
@@ -44,17 +89,17 @@
 	
 	NSLog(@"Disappearing %@", itemIndexPath);
 	
-	if(itemIndexPath.row == 4 && !self.testingShit){
-		CGRect initialDetailViewFrame = [self frameForCellAtIndexPath:itemIndexPath testingShit:YES];
+	if(itemIndexPath.row == self.previousIndexOfDetailView){
+		CGRect initialDetailViewFrame = [self frameForCellAtIndexPath:itemIndexPath detailViewDisplayMode:LMDetailViewDisplayModePreviousIndex];
 		initialDetailViewFrame.size.height = 0;
 		
 		attributes.frame = initialDetailViewFrame;
 	}
-	else if(self.testingShit){
-		attributes.frame = [self frameForCellAtIndexPath:itemIndexPath testingShit:NO];
+	else if(self.isDisplayingDetailView){
+		attributes.frame = [self frameForCellAtIndexPath:itemIndexPath detailViewDisplayMode:LMDetailViewDisplayModeNone];
 	}
-	else if(!self.testingShit){
-		attributes.frame = [self frameForCellAtIndexPath:itemIndexPath testingShit:YES];
+	else if(!self.isDisplayingDetailView){
+		attributes.frame = [self frameForCellAtIndexPath:itemIndexPath detailViewDisplayMode:LMDetailViewDisplayModeCurrentIndex];
 	}
 	
 	return attributes;
@@ -64,18 +109,23 @@
 //	return CGSizeMake(self.collectionView.frame.size.width, self.collectionView.frame.size.height * 1.50);
 //}
 
-- (CGRect)frameForCellAtIndexPath:(NSIndexPath*)indexPath testingShit:(BOOL)testingShit {
+- (CGRect)frameForCellAtIndexPath:(NSIndexPath*)indexPath detailViewDisplayMode:(LMDetailViewDisplayMode)detailViewDisplayMode {
 	NSInteger factor = 4; //How many items to display in one row
 	
-	BOOL isDetailViewRow = (indexPath.row == 4) && testingShit;
-	BOOL isBelowDetailViewRow = (indexPath.row > 4) && testingShit;
+	NSLog(@"%@/%d/%d/%d", (self.isDisplayingDetailView ? @"showing" : @"not showing"), (int)self.indexOfItemDisplayingDetailView, (int)self.indexOfDetailView, 3 % 4);
+	
+	NSInteger detailViewIndexToUse = (detailViewDisplayMode == LMDetailViewDisplayModePreviousIndex) ? self.previousIndexOfDetailView : self.indexOfDetailView;
+	BOOL displayingDetailView = detailViewDisplayMode != LMDetailViewDisplayModeNone;
+	
+	BOOL isDetailViewRow = (indexPath.row == detailViewIndexToUse) && displayingDetailView;
+	BOOL isBelowDetailViewRow = (indexPath.row > detailViewIndexToUse) && displayingDetailView;
 	
 	NSInteger fixedIndexPathRow = (indexPath.row - isBelowDetailViewRow);
 	
 	CGSize collectionViewSize = [self collectionViewContentSize]; //Get the current size of the collection view
 	CGFloat sideLength = collectionViewSize.width/factor; //Get the side length of one cell based on the factor provided
 	
-	sideLength -= 15; //Remove 15px from it for spacing
+	sideLength -= 150; //Remove 15px from it for spacing
 	
 	CGFloat spacing = (collectionViewSize.width-(sideLength*factor))/(factor+1); //Calculate the amount of spacing total
 	
@@ -102,7 +152,7 @@
 	UICollectionViewLayoutAttributes *attributes = [UICollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:indexPath];
 	
 	attributes.alpha = 1;
-	attributes.frame = [self frameForCellAtIndexPath:indexPath testingShit:self.testingShit];
+	attributes.frame = [self frameForCellAtIndexPath:indexPath detailViewDisplayMode:self.detailViewDisplayMode];
 	
 	return attributes;
 }
@@ -114,7 +164,7 @@
 	BOOL foundFirstItem = NO;
 	for(NSInteger i = 0; i < numberOfItems; i++){
 		NSIndexPath *indexPathOfItem = [NSIndexPath indexPathForRow:i inSection:0];
-		CGRect frameOfItem = [self frameForCellAtIndexPath:indexPathOfItem testingShit:self.testingShit];
+		CGRect frameOfItem = [self frameForCellAtIndexPath:indexPathOfItem detailViewDisplayMode:self.detailViewDisplayMode];
 		BOOL containsFrame = CGRectContainsRect(rect, frameOfItem);
 		BOOL containsOrigin = CGRectContainsPoint(rect, frameOfItem.origin);
 		if(containsFrame || containsOrigin){
@@ -147,6 +197,14 @@
 		return YES;
 	}
 	return NO;
+}
+
+- (instancetype)init {
+	self = [super init];
+	if(self) {
+		self.indexOfItemDisplayingDetailView = LMNoDetailViewSelected;
+	}
+	return self;
 }
 
 @end
