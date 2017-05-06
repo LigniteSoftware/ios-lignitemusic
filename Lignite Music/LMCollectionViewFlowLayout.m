@@ -23,26 +23,19 @@
 	return self.isDisplayingDetailView ? LMDetailViewDisplayModeCurrentIndex : LMDetailViewDisplayModeNone;
 }
 
-- (NSInteger)indexOfDetailViewForIndexOfItemDisplayingDetailView:(NSInteger)index correctedForTotalNumberOfItems:(BOOL)corrected {
+- (NSInteger)indexOfDetailViewForIndexOfItemDisplayingDetailView:(NSInteger)index {
 	if(index > LMNoDetailViewSelected){
-		NSInteger indexOfDetailView = (index - (index % self.itemsPerRow)) + self.itemsPerRow;
-		NSInteger totalNumberOfItems = [self.collectionView.dataSource collectionView:self.collectionView numberOfItemsInSection:0];
-		
-		if((indexOfDetailView >= totalNumberOfItems) && corrected){
-			indexOfDetailView = totalNumberOfItems-1;
-		}
-		
-		return indexOfDetailView;
+		return (index - (index % self.itemsPerRow)) + self.itemsPerRow;
 	}
 	return LMNoDetailViewSelected;
 }
 
 - (NSInteger)indexOfDetailView {
-	return [self indexOfDetailViewForIndexOfItemDisplayingDetailView:self.indexOfItemDisplayingDetailView correctedForTotalNumberOfItems:YES];
+	return [self indexOfDetailViewForIndexOfItemDisplayingDetailView:self.indexOfItemDisplayingDetailView];
 }
 
 - (NSInteger)previousIndexOfDetailView {
-	return [self indexOfDetailViewForIndexOfItemDisplayingDetailView:self.previousIndexOfItemDisplayingDetailView correctedForTotalNumberOfItems:YES];
+	return [self indexOfDetailViewForIndexOfItemDisplayingDetailView:self.previousIndexOfItemDisplayingDetailView];
 }
 
 - (NSInteger)indexOfItemDisplayingDetailView {
@@ -55,8 +48,6 @@
 	_indexOfItemDisplayingDetailView = indexOfItemDisplayingDetailView;
 	
 	NSArray *items = @[ [NSIndexPath indexPathForRow:self.isDisplayingDetailView ? self.indexOfDetailView : self.previousIndexOfDetailView inSection:0] ];
-	
-	NSLog(@"%@", items);
 	
 	[UIView animateWithDuration:2.0 animations:^{
 		[self.collectionView performBatchUpdates:^{
@@ -120,31 +111,16 @@
 
 - (CGRect)frameForCellAtIndexPath:(NSIndexPath*)indexPath detailViewDisplayMode:(LMDetailViewDisplayMode)detailViewDisplayMode {
 	NSInteger factor = self.itemsPerRow; //How many items to display in one row
-
 	
-	NSInteger totalNumberOfItems = [self.collectionView.dataSource collectionView:self.collectionView numberOfItemsInSection:0];
-	NSInteger originalDetailViewIndex = (detailViewDisplayMode == LMDetailViewDisplayModePreviousIndex) ? self.previousIndexOfDetailView : self.indexOfDetailView;
-	NSInteger fixedDetailViewIndexToUse = originalDetailViewIndex;
+	NSLog(@"%@/%d/%d/%d", (self.isDisplayingDetailView ? @"showing" : @"not showing"), (int)self.indexOfItemDisplayingDetailView, (int)self.indexOfDetailView, 3 % self.itemsPerRow);
 	
-	if(fixedDetailViewIndexToUse == totalNumberOfItems-1){
-		fixedDetailViewIndexToUse = [self indexOfDetailViewForIndexOfItemDisplayingDetailView:fixedDetailViewIndexToUse correctedForTotalNumberOfItems:NO];
-	}
-
-	
+	NSInteger detailViewIndexToUse = (detailViewDisplayMode == LMDetailViewDisplayModePreviousIndex) ? self.previousIndexOfDetailView : self.indexOfDetailView;
 	BOOL displayingDetailView = detailViewDisplayMode != LMDetailViewDisplayModeNone;
 	
-	BOOL isDetailViewRow = (indexPath.row == originalDetailViewIndex) && displayingDetailView;
-	BOOL isBelowDetailViewRow = (indexPath.row > fixedDetailViewIndexToUse) && displayingDetailView;
-	
-	
-	NSLog(@"item %d/detail %d/original %d/fixed %d - %@/%@/%@", (int)self.indexOfItemDisplayingDetailView, (int)self.indexOfDetailView, originalDetailViewIndex, (int)fixedDetailViewIndexToUse, (displayingDetailView ? @"displaying" : @"not showing"), (isDetailViewRow ? @"is detail view row" : @"isn't detail view row"), (isBelowDetailViewRow ? @"is below detail view row" : @"isn't below detail view row"));
-	
+	BOOL isDetailViewRow = (indexPath.row == detailViewIndexToUse) && displayingDetailView;
+	BOOL isBelowDetailViewRow = (indexPath.row > detailViewIndexToUse) && displayingDetailView;
 	
 	NSInteger fixedIndexPathRow = (indexPath.row - isBelowDetailViewRow);
-	
-	if(isDetailViewRow){
-		fixedIndexPathRow = fixedDetailViewIndexToUse;
-	}
 	
 	CGSize collectionViewSize = [self collectionViewContentSize]; //Get the current size of the collection view
 	CGFloat sideLength = collectionViewSize.width/factor; //Get the side length of one cell based on the factor provided

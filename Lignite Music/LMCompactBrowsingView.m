@@ -451,7 +451,7 @@
 - (void)tapTest {
 	LMCollectionViewFlowLayout *layout = (LMCollectionViewFlowLayout*)self.collectionView.collectionViewLayout;
 
-	layout.indexOfItemDisplayingDetailView = layout.isDisplayingDetailView ? LMNoDetailViewSelected : 3;
+	layout.indexOfItemDisplayingDetailView = layout.isDisplayingDetailView ? LMNoDetailViewSelected : 2;
 }
 
 @end
