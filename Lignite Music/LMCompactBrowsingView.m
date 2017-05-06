@@ -308,8 +308,9 @@
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-	return [(LMCollectionViewFlowLayout*)collectionView.collectionViewLayout isDisplayingDetailView] ? 14 : 13;
-//	return self.musicType == LMMusicTypeAlbums ? 13 : self.musicTrackCollections.count;
+	LMCollectionViewFlowLayout *flowLayout = (LMCollectionViewFlowLayout*)collectionView.collectionViewLayout;
+//	return [(LMCollectionViewFlowLayout*)collectionView.collectionViewLayout isDisplayingDetailView] ? 14 : 13;
+	return flowLayout.isDisplayingDetailView ? (self.musicTrackCollections.count+1) : self.musicTrackCollections.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -326,19 +327,22 @@
 	
 
 	if(cell.contentView.subviews.count == 0){
-		UIView *testingSubview = [UIView newAutoLayoutView];
-		testingSubview.backgroundColor = (indexPath.row == flowLayout.indexOfDetailView) ? [UIColor purpleColor] : [LMColour randomColour];
-		[cell.contentView addSubview:testingSubview];
-		
-		[testingSubview autoCenterInSuperview];
-		[testingSubview autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:cell.contentView withMultiplier:0.5];
-		[testingSubview autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:cell.contentView withMultiplier:0.5];
-		
-//		LMBigListEntry *bigListEntry = [self.bigListEntries objectAtIndex:indexPath.row];
-//		
-//		[cell.contentView addSubview:bigListEntry];
-//		[bigListEntry autoPinEdgesToSuperviewEdges];
-//		[bigListEntry reloadData];
+		if(indexPath.row == flowLayout.indexOfDetailView){
+			UIView *testingSubview = [UIView newAutoLayoutView];
+			testingSubview.backgroundColor = (indexPath.row == flowLayout.indexOfDetailView) ? [UIColor purpleColor] : [LMColour randomColour];
+			[cell.contentView addSubview:testingSubview];
+			
+			[testingSubview autoCenterInSuperview];
+			[testingSubview autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:cell.contentView withMultiplier:0.5];
+			[testingSubview autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:cell.contentView withMultiplier:0.5];
+		}
+		else{
+			LMBigListEntry *bigListEntry = [self.bigListEntries objectAtIndex:indexPath.row];
+			
+			[cell.contentView addSubview:bigListEntry];
+			[bigListEntry autoPinEdgesToSuperviewEdges];
+			[bigListEntry reloadData];
+		}
 	}
 	
 	return cell;
@@ -447,7 +451,7 @@
 - (void)tapTest {
 	LMCollectionViewFlowLayout *layout = (LMCollectionViewFlowLayout*)self.collectionView.collectionViewLayout;
 
-	layout.indexOfItemDisplayingDetailView = layout.isDisplayingDetailView ? LMNoDetailViewSelected : 5;
+	layout.indexOfItemDisplayingDetailView = layout.isDisplayingDetailView ? LMNoDetailViewSelected : 3;
 }
 
 @end

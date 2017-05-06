@@ -50,4 +50,9 @@ typedef NS_ENUM(NSInteger, LMDetailViewDisplayMode) {
  */
 @property (readonly) BOOL isDisplayingDetailView;
 
+/**
+ The amount of items to display per row. Default is 3.
+ */
+@property NSInteger itemsPerRow;
+
 @end
