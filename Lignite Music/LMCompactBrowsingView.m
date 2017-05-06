@@ -308,9 +308,13 @@
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+	if(section == 1){
+		return self.musicTrackCollections.count;
+	}
+	
 	LMCollectionViewFlowLayout *flowLayout = (LMCollectionViewFlowLayout*)collectionView.collectionViewLayout;
-//	return [(LMCollectionViewFlowLayout*)collectionView.collectionViewLayout isDisplayingDetailView] ? 14 : 13;
-	return flowLayout.isDisplayingDetailView ? (self.musicTrackCollections.count+1) : self.musicTrackCollections.count;
+	NSLog(@"Shit %d/%d", flowLayout.isDisplayingDetailView, (int)flowLayout.amountOfOverflowingCellsForDetailView);
+	return flowLayout.isDisplayingDetailView ? (self.musicTrackCollections.count+flowLayout.amountOfOverflowingCellsForDetailView+1) : self.musicTrackCollections.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -318,10 +322,10 @@
 	
 	cell.backgroundColor = [UIColor whiteColor];
 	
-//	for(UIView *subview in cell.contentView.subviews){
-////		subview.hidden = YES;
-//		[subview removeFromSuperview];
-//	}
+	for(UIView *subview in cell.contentView.subviews){
+//		subview.hidden = YES;
+		[subview removeFromSuperview];
+	}
 	
 	LMCollectionViewFlowLayout *flowLayout = (LMCollectionViewFlowLayout*)collectionView.collectionViewLayout;
 	
@@ -329,18 +333,30 @@
 	if(cell.contentView.subviews.count == 0){
 		if(indexPath.row == flowLayout.indexOfDetailView){
 			UIView *testingSubview = [UIView newAutoLayoutView];
-			testingSubview.backgroundColor = (indexPath.row == flowLayout.indexOfDetailView) ? [UIColor purpleColor] : [LMColour randomColour];
+			testingSubview.backgroundColor = [LMColour randomColour];
 			[cell.contentView addSubview:testingSubview];
 			
 			[testingSubview autoCenterInSuperview];
 			[testingSubview autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:cell.contentView withMultiplier:0.5];
 			[testingSubview autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:cell.contentView withMultiplier:0.5];
 		}
+		else if(indexPath.row >= [self collectionView:self.collectionView numberOfItemsInSection:1] && flowLayout.isDisplayingDetailView){
+			cell.backgroundColor = [UIColor clearColor];
+//			UIView *testingSubview = [UIView newAutoLayoutView];
+//			testingSubview.backgroundColor = [UIColor magentaColor];
+//			[cell.contentView addSubview:testingSubview];
+//			
+//			[testingSubview autoCenterInSuperview];
+//			[testingSubview autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:cell.contentView withMultiplier:0.95];
+//			[testingSubview autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:cell.contentView withMultiplier:0.95];
+		}
 		else{
 			LMBigListEntry *bigListEntry = [self.bigListEntries objectAtIndex:indexPath.row];
-			
+			bigListEntry.infoDelegate = self;
+			bigListEntry.entryDelegate = self;
 			[cell.contentView addSubview:bigListEntry];
 			[bigListEntry autoPinEdgesToSuperviewEdges];
+			[bigListEntry setup];
 			[bigListEntry reloadData];
 		}
 	}
@@ -425,17 +441,17 @@
 		[self addSubview:self.collectionView];
 		
 		
-//		self.bigListEntries = [NSMutableArray new];
-//		
-//		for(int i = 0; i < [self collectionView:self.collectionView numberOfItemsInSection:0]; i++){
-//			LMBigListEntry *bigListEntry = [LMBigListEntry newAutoLayoutView];
-//			bigListEntry.infoDelegate = self;
-//			bigListEntry.entryDelegate = self;
-//			bigListEntry.collectionIndex = i;
-//			[bigListEntry setup];
-//			
-//			[self.bigListEntries addObject:bigListEntry];
-//		}
+		self.bigListEntries = [NSMutableArray new];
+		
+		for(int i = 0; i < [self collectionView:self.collectionView numberOfItemsInSection:0]; i++){
+			LMBigListEntry *bigListEntry = [LMBigListEntry newAutoLayoutView];
+			bigListEntry.infoDelegate = self;
+			bigListEntry.entryDelegate = self;
+			bigListEntry.collectionIndex = i;
+			[bigListEntry setup];
+			
+			[self.bigListEntries addObject:bigListEntry];
+		}
 		
 		
 		self.backgroundColor = [UIColor whiteColor];
@@ -451,7 +467,7 @@
 - (void)tapTest {
 	LMCollectionViewFlowLayout *layout = (LMCollectionViewFlowLayout*)self.collectionView.collectionViewLayout;
 
-	layout.indexOfItemDisplayingDetailView = layout.isDisplayingDetailView ? LMNoDetailViewSelected : 2;
+	layout.indexOfItemDisplayingDetailView = layout.isDisplayingDetailView ? LMNoDetailViewSelected : 3;
 }
 
 @end

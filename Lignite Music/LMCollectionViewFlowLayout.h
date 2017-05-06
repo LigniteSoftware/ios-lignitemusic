@@ -51,6 +51,11 @@ typedef NS_ENUM(NSInteger, LMDetailViewDisplayMode) {
 @property (readonly) BOOL isDisplayingDetailView;
 
 /**
+ The amount of cells which are overflowing cells to fit the detail view.
+ */
+@property (readonly) NSInteger amountOfOverflowingCellsForDetailView;
+
+/**
  The amount of items to display per row. Default is 3.
  */
 @property NSInteger itemsPerRow;
