@@ -485,6 +485,10 @@
 
 	BOOL displayNothing = (i == layout.indexOfItemDisplayingDetailView);
 	
+	if(!displayNothing){
+		LMMusicTrackCollection *trackCollection = [self.musicTrackCollections objectAtIndex:i];
+		layout.amountOfItemsInDetailView = trackCollection.count;
+	}
 	layout.indexOfItemDisplayingDetailView = displayNothing ? LMNoDetailViewSelected : i;
 }
 
