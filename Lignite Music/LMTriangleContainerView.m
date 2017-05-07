@@ -25,15 +25,19 @@
 		
 		self.triangleMaskView = [LMTriangleMaskView newAutoLayoutView];
         self.triangleMaskView.maskDirection = self.maskDirection;
+		self.triangleMaskView.triangleColour = self.triangleColour;
 		self.triangleMaskView.frame = self.frame;
+		
 	
 		// make new layer to contain shadow and masked image
 		CALayer* containerLayer = [CALayer layer];
-		containerLayer.shadowColor = [UIColor blackColor].CGColor;
-		containerLayer.shadowRadius = self.frame.size.height/8;
-		containerLayer.shadowOffset = CGSizeMake(0.0f, 0.0f);
-		containerLayer.shadowOpacity = 0.25f;
-		containerLayer.shadowPath = [self.triangleMaskView path].CGPath;
+//		if(self.outerShadows){
+//			containerLayer.shadowColor = [UIColor blackColor].CGColor;
+//			containerLayer.shadowRadius = self.frame.size.height/8;
+//			containerLayer.shadowOffset = CGSizeMake(0.0f, 0.0f);
+//			containerLayer.shadowOpacity = 0.25f;
+//			containerLayer.shadowPath = [self.triangleMaskView path].CGPath;
+//		}
 		containerLayer.backgroundColor = [UIColor clearColor].CGColor;
 		
 		// add masked image layer into container layer so that it's shadowed

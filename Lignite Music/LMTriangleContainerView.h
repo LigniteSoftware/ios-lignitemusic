@@ -16,4 +16,9 @@
  */
 @property LMTriangleMaskDirection maskDirection;
 
+/**
+ The colour of the triangle.
+ */
+@property UIColor *triangleColour;
+
 @end

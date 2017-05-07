@@ -16,7 +16,7 @@
 #import "LMAppIcon.h"
 #import "LMCollectionViewFlowLayout.h"
 #import "LMCollectionViewCell.h"
-
+#import "LMExpandableTrackListView.h"
 
 #import "NSTimer+Blocks.h"
 #import "LMColour.h"
@@ -325,7 +325,6 @@
 	cell.backgroundColor = [UIColor whiteColor];
 	
 	for(UIView *subview in cell.contentView.subviews){
-//		subview.hidden = YES;
 		[subview removeFromSuperview];
 	}
 	
@@ -334,13 +333,23 @@
 
 	if(cell.contentView.subviews.count == 0){
 		if(indexPath.row == flowLayout.indexOfDetailView){
-			UIView *testingSubview = [UIView newAutoLayoutView];
-			testingSubview.backgroundColor = [LMColour randomColour];
-			[cell.contentView addSubview:testingSubview];
+			LMExpandableTrackListView *detailView = [LMExpandableTrackListView newAutoLayoutView];
+			detailView.backgroundColor = [UIColor whiteColor];
+			detailView.musicTrackCollection = [self.musicTrackCollections objectAtIndex:flowLayout.indexOfItemDisplayingDetailView];
+			detailView.musicType = self.musicType;
+//			detailView.viewAssociated = [self collectionView:self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:flowLayout.indexOfItemDisplayingDetailView inSection:0]].contentView;
+			NSLog(@"Shitttt %@ %d", detailView.musicTrackCollection, (int)flowLayout.indexOfItemDisplayingDetailView);
+			[cell.contentView addSubview:detailView];
 			
-			[testingSubview autoCenterInSuperview];
-			[testingSubview autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:cell.contentView withMultiplier:0.5];
-			[testingSubview autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:cell.contentView withMultiplier:0.5];
+			[detailView autoPinEdgesToSuperviewEdges];
+			
+//			UIView *testingSubview = [UIView newAutoLayoutView];
+//			testingSubview.backgroundColor = [LMColour randomColour];
+//			[cell.contentView addSubview:testingSubview];
+//			
+//			[testingSubview autoCenterInSuperview];
+//			[testingSubview autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:cell.contentView withMultiplier:0.5];
+//			[testingSubview autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:cell.contentView withMultiplier:0.5];
 		}
 		else if(indexPath.row >= [self collectionView:self.collectionView numberOfItemsInSection:1] && flowLayout.isDisplayingDetailView){
 			cell.backgroundColor = [UIColor clearColor];
@@ -358,7 +367,6 @@
 			bigListEntry.entryDelegate = self;
 			[cell.contentView addSubview:bigListEntry];
 			[bigListEntry autoPinEdgesToSuperviewEdges];
-			[bigListEntry setup];
 			[bigListEntry reloadData];
 		}
 	}
@@ -457,7 +465,7 @@
 		
 		
 		self.backgroundColor = [UIColor whiteColor];
-		self.collectionView.backgroundColor = [UIColor magentaColor];
+		self.collectionView.backgroundColor = [UIColor whiteColor];
 		
 		[self.collectionView autoPinEdgesToSuperviewEdges];
 

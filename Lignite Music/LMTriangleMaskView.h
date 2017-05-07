@@ -31,6 +31,11 @@ typedef NS_ENUM(NSInteger, LMTriangleMaskDirection) {
 @property LMTriangleMaskDirection maskDirection;
 
 /**
+ The colour of the triangle.
+ */
+@property UIColor *triangleColour;
+
+/**
  Setup the triangle mask view.
  */
 - (void)setup;
