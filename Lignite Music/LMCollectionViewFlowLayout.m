@@ -8,6 +8,7 @@
 
 #import "LMCollectionViewFlowLayout.h"
 #import "LMExtras.h"
+#import "NSTimer+Blocks.h"
 
 @interface LMCollectionViewFlowLayout()
 
@@ -64,6 +65,12 @@
 }
 
 - (void)setIndexOfItemDisplayingDetailView:(NSInteger)indexOfItemDisplayingDetailView {
+	if(indexOfItemDisplayingDetailView > LMNoDetailViewSelected && self.indexOfItemDisplayingDetailView > LMNoDetailViewSelected){ //If there is already one selected and the user is selecting a new one (and not deselecting or closing), clear the previous one first & then set the other one in
+		[self setIndexOfItemDisplayingDetailView:LMNoDetailViewSelected];
+		[self setIndexOfItemDisplayingDetailView:indexOfItemDisplayingDetailView];
+		return;
+	}
+	
 	self.previousIndexOfItemDisplayingDetailView = _indexOfItemDisplayingDetailView;
 	self.previousAmountOfOverflowingCellsForDetailView = self.amountOfOverflowingCellsForDetailView;
 	
@@ -80,7 +87,7 @@
 	
 	NSLog(@"%d/%d/%d/%d %@", self.isDisplayingDetailView, (int)overflowCountToUse, (int)indexOfDetailViewToUse, (int)self.previousAmountOfOverflowingCellsForDetailView, items);
 	
-	[UIView animateWithDuration:2.0 animations:^{
+	[UIView animateWithDuration:0.25 animations:^{
 		[self.collectionView performBatchUpdates:^{
 			self.isDisplayingDetailView ? [self.collectionView insertItemsAtIndexPaths:items] : [self.collectionView deleteItemsAtIndexPaths:items];
 		} completion:nil];
@@ -176,13 +183,14 @@
 								 ((fixedIndexPathRow/factor) * (size.height+spacing)) + spacing); //The row
 	
 	if(isBelowDetailViewRow){
-		origin.y += (size.height*2) + spacing;
+		origin.x -= spacing;
+		origin.y += (size.height*1.5) + spacing;
 	}
 	
 	CGRect itemFrame = CGRectMake(origin.x, origin.y, size.width, size.height); //Return the frame
 	
 	if(isDetailViewRow){
-		return CGRectMake(origin.x, origin.y, collectionViewSize.width-(origin.x * 2), size.height*2);
+		return CGRectMake(origin.x - spacing, origin.y, collectionViewSize.width-(origin.x * 2)+(spacing * 2), size.height*1.5);
 	}
 	
 	return itemFrame;

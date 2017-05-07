@@ -295,6 +295,8 @@
 	self.rootViewController.currentDetailViewController = self.browsingDetailViewController;
 	
 	[self.rootViewController showViewController:self.browsingDetailViewController sender:self.rootViewController];
+	
+	[self tapTest:bigListEntry.collectionIndex];
 }
 
 - (void)contentViewDoubleTappedForBigListEntry:(LMBigListEntry *)bigListEntry {
@@ -459,15 +461,17 @@
 		
 		[self.collectionView autoPinEdgesToSuperviewEdges];
 
-		UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapTest)];
-		[self.collectionView addGestureRecognizer:tapGesture];
+//		UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapTest)];
+//		[self.collectionView addGestureRecognizer:tapGesture];
 	}
 }
 
-- (void)tapTest {
+- (void)tapTest:(NSInteger)i {
 	LMCollectionViewFlowLayout *layout = (LMCollectionViewFlowLayout*)self.collectionView.collectionViewLayout;
 
-	layout.indexOfItemDisplayingDetailView = layout.isDisplayingDetailView ? LMNoDetailViewSelected : 3;
+	BOOL displayNothing = (i == layout.indexOfItemDisplayingDetailView);
+	
+	layout.indexOfItemDisplayingDetailView = displayNothing ? LMNoDetailViewSelected : i;
 }
 
 @end
