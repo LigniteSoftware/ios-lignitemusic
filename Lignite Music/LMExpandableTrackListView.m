@@ -10,6 +10,7 @@
 
 #import "LMExpandableInnerShadowView.h"
 #import "LMExpandableTrackListView.h"
+#import "LMCollectionViewCell.h"
 #import "YIInnerShadowView.h"
 #import "LMTriangleView.h"
 #import "LMListEntry.h"
@@ -76,7 +77,6 @@
 		listEntry.associatedData = [self.musicTrackCollection.items objectAtIndex:fixedIndex];
 		listEntry.isLabelBased = (self.musicType == LMMusicTypeAlbums || self.musicType == LMMusicTypeCompilations);
 		[cell.contentView addSubview:listEntry];
-		[listEntry setup];
 		listEntry.backgroundColor = [LMColour superLightGrayColour];
 		
 		[listEntry autoPinEdgesToSuperviewEdges];
@@ -118,7 +118,12 @@
 - (void)layoutSubviews {
 	if(!self.didLayoutConstraints){
 		self.didLayoutConstraints = YES;
-		
+	
+//	for(UIView *subview in self.subviews){
+//		[subview removeFromSuperview];
+//		subview.hidden = YES;
+//	}
+	
 		self.clipsToBounds = NO;
 		
 		UICollectionViewFlowLayout *fuck = [[UICollectionViewFlowLayout alloc]init];
@@ -130,11 +135,12 @@
 		self.collectionView.dataSource = self;
 		self.collectionView.contentInset = UIEdgeInsetsMake(0, 0, 100, 0);
 		self.collectionView.backgroundColor = [LMColour superLightGrayColour];
-		[self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"cellIdentifier"];
+		[self.collectionView registerClass:[LMCollectionViewCell class] forCellWithReuseIdentifier:@"cellIdentifier"];
 		[self addSubview:self.collectionView];
 		
 		[self.collectionView autoPinEdgesToSuperviewEdges];
 //		self.collectionView.hidden = YES;
+		
 		
 		self.testView = [LMExpandableInnerShadowView newAutoLayoutView];
 		self.testView.backgroundColor = [UIColor clearColor];
@@ -143,26 +149,18 @@
 		[self addSubview:self.testView];
 		
 		[self.testView autoPinEdgesToSuperviewEdges];
+	}
+	else{
+		[self.collectionView reloadData];
+		[self.testView removeFromSuperview];
 		
+		self.testView = [LMExpandableInnerShadowView newAutoLayoutView];
+		self.testView.backgroundColor = [UIColor clearColor];
+		self.testView.userInteractionEnabled = NO;
+		self.testView.flowLayout = self.flowLayout;
+		[self addSubview:self.testView];
 		
-//		YIInnerShadowView *innerShadowView = [YIInnerShadowView newAutoLayoutView];
-//		innerShadowView.shadowRadius = 3.0;
-//		innerShadowView.shadowMask = YIInnerShadowMaskTop | YIInnerShadowMaskBottom;
-//		[self addSubview:innerShadowView];
-//		
-//		[innerShadowView autoPinEdgesToSuperviewEdges];
-//		
-//		
-//		self.testView = [LMTriangleView newAutoLayoutView];
-//		self.testView.maskDirection = LMTriangleMaskDirectionUpwards;
-//		self.testView.triangleColour = [UIColor clearColor];
-//		self.testView.outerShadows = NO;
-//		[self addSubview:self.testView];
-//		
-//		[self.testView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self withOffset:0];
-//		[self.testView autoAlignAxis:ALAxisVertical toSameAxisOfView:self];
-//		[self.testView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:0.15];
-//		[self.testView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.05];
+		[self.testView autoPinEdgesToSuperviewEdges];
 	}
 	
 	[super layoutSubviews];

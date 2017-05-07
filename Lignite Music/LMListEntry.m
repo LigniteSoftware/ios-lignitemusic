@@ -70,10 +70,6 @@
 	[self.delegate tappedListEntry:self];
 }
 
-- (void)setup {
-	
-}
-
 - (void)layoutSubviews {
 	[super layoutSubviews];
 	
@@ -81,7 +77,7 @@
 		return;
 	}
 	
-//	self.backgroundColor = [UIColor orangeColor];
+//	self.backgroundColor = [UIColor clearColor];
 	
 	self.setupConstraints = YES;
 	
@@ -103,7 +99,7 @@
 	self.contentView.clipsToBounds = NO;
 	self.contentView.layer.masksToBounds = NO;
 	self.contentView.layer.cornerRadius = 8;
-	self.contentView.backgroundColor = [UIColor orangeColor];
+	self.contentView.backgroundColor = [UIColor clearColor];
 	[self addSubview:self.contentView];
 	
 	[self.contentView autoCenterInSuperview];

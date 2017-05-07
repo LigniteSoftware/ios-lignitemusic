@@ -37,8 +37,6 @@
 
 - (void)changeHighlightStatus:(BOOL)highlighted animated:(BOOL)animated;
 
-- (void)setup;
-
 - (id)initWithDelegate:(id)delegate;
 
 /**

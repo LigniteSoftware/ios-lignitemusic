@@ -519,7 +519,6 @@
 									[self.specificTrackCollections objectAtIndex:i] :
 									[self.musicTrackCollection.items objectAtIndex:i];
 		listEntry.isLabelBased = (self.musicType == LMMusicTypeAlbums || self.musicType == LMMusicTypeCompilations);
-		[listEntry setup];
 		
 		[self.songEntries addObject:listEntry];
 	}

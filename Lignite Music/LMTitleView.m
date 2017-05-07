@@ -249,7 +249,6 @@
 			listEntry.collectionIndex = i;
 			listEntry.iPromiseIWillHaveAnIconForYouSoon = YES;
 			listEntry.alignIconToLeft = YES;
-			[listEntry setup];
 			[self.itemArray addObject:listEntry];
 			
 			//Quick hack to make sure that the items in the array are non nil

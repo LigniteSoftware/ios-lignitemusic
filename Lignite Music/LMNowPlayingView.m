@@ -489,7 +489,6 @@
 			listEntry.iconInsetMultiplier = (1.0/3.0);
 			listEntry.iconPaddingMultiplier = (3.0/4.0);
 			listEntry.invertIconOnHighlight = YES;
-			[listEntry setup];
 			[self.itemArray addObject:listEntry];
 		}
 	}
