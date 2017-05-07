@@ -139,6 +139,7 @@
 		self.testView = [LMExpandableInnerShadowView newAutoLayoutView];
 		self.testView.backgroundColor = [UIColor clearColor];
 		self.testView.userInteractionEnabled = NO;
+		self.testView.flowLayout = self.flowLayout;
 		[self addSubview:self.testView];
 		
 		[self.testView autoPinEdgesToSuperviewEdges];

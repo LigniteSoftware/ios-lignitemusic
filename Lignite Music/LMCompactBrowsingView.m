@@ -337,6 +337,7 @@
 			detailView.backgroundColor = [UIColor whiteColor];
 			detailView.musicTrackCollection = [self.musicTrackCollections objectAtIndex:flowLayout.indexOfItemDisplayingDetailView];
 			detailView.musicType = self.musicType;
+			detailView.flowLayout = flowLayout;
 //			detailView.viewAssociated = [self collectionView:self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:flowLayout.indexOfItemDisplayingDetailView inSection:0]].contentView;
 			NSLog(@"Shitttt %@ %d", detailView.musicTrackCollection, (int)flowLayout.indexOfItemDisplayingDetailView);
 			[cell.contentView addSubview:detailView];

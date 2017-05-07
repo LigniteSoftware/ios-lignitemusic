@@ -7,7 +7,13 @@
 //
 
 #import "LMView.h"
+#import "LMCollectionViewFlowLayout.h"
 
 @interface LMExpandableInnerShadowView : LMView
+
+/**
+ The flow layout used for calculations of moving the triangle.
+ */
+@property LMCollectionViewFlowLayout *flowLayout;
 
 @end

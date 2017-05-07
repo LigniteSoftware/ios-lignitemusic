@@ -31,9 +31,15 @@
 		self.testView.triangleColour = [LMColour superLightGrayColour];
 		[self addSubview:self.testView];
 		
+		CGFloat triangleWidthFactorial = 0.15;
+		CGFloat halfTriangleWidth = (self.frame.size.width*triangleWidthFactorial)/2;
+		
+		CGFloat widthPerItem = self.frame.size.width/self.flowLayout.itemsPerRow;
+		CGFloat column = self.flowLayout.indexOfItemDisplayingDetailView % self.flowLayout.itemsPerRow;
+		
 		[self.testView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self withOffset:0];
-		[self.testView autoAlignAxis:ALAxisVertical toSameAxisOfView:self];
-		[self.testView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:0.15];
+		[self.testView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self withOffset:(column * widthPerItem) + halfTriangleWidth + 15];
+		[self.testView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:triangleWidthFactorial];
 		[self.testView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.05];
 		
 		self.triangleInnerShadowView = [LMTriangleInnerShadowView newAutoLayoutView];
@@ -78,13 +84,15 @@
 - (UIBezierPath*)path {
 	UIBezierPath *path = [UIBezierPath new];
 	
-	[path moveToPoint:(CGPoint){self.frame.size.width/2, self.testView.frame.origin.y}];
-	[path addLineToPoint:(CGPoint){self.frame.size.width/2 + self.testView.frame.size.width/2, 0}];
+	CGFloat centerPoint = self.testView.frame.origin.x + self.testView.frame.size.width/2;
+	
+	[path moveToPoint:(CGPoint){centerPoint, self.testView.frame.origin.y}];
+	[path addLineToPoint:(CGPoint){centerPoint + self.testView.frame.size.width/2, 0}];
 	[path addLineToPoint:(CGPoint){self.frame.size.width + 10, 0}];
 	[path addLineToPoint:(CGPoint){self.frame.size.width + 10, self.frame.size.height}];
 	[path addLineToPoint:(CGPoint){-10, self.frame.size.height}];
 	[path addLineToPoint:(CGPoint){-10, 0}];
-	[path addLineToPoint:(CGPoint){self.frame.size.width/2 - self.testView.frame.size.width/2, 0}];
+	[path addLineToPoint:(CGPoint){centerPoint - self.testView.frame.size.width/2, 0}];
 
 	[path closePath];
 	

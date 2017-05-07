@@ -28,4 +28,9 @@
  */
 @property LMMusicTrackCollection *musicTrackCollection;
 
+/**
+ The flow layout associated.
+ */
+@property LMCollectionViewFlowLayout *flowLayout;
+
 @end

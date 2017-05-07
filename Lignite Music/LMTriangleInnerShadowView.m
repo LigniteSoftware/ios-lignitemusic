@@ -43,11 +43,6 @@
 	[path moveToPoint:(CGPoint){ self.frame.size.width/2, 0 }];
 	[path addLineToPoint:(CGPoint){ self.frame.size.width + 20, self.frame.size.height + 10 }];
 	[path addLineToPoint:(CGPoint){ -20, self.frame.size.height + 10}];
-//	[path addLineToPoint:(CGPoint){ self.frame.size.width/2, 0}];
-//	[path addLineToPoint:(CGPoint){ 0, -10}];
-//	[path addLineToPoint:(CGPoint){ 0, self.frame.size.height}];
-	//	[path addLineToPoint:(CGPoint){ -self.superview.frame.size.width/2, self.frame.size.height + 10 }];
-	//	[path addLineToPoint:(CGPoint){ self.frame.size.width, self.frame.size.height }];
 	
 	[path closePath];
 	
