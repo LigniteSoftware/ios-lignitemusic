@@ -10,11 +10,11 @@
 
 #import "LMExpandableInnerShadowView.h"
 #import "LMExpandableTrackListView.h"
-#import "LMCollectionViewCell.h"
 #import "YIInnerShadowView.h"
 #import "LMTriangleView.h"
 #import "LMListEntry.h"
 #import "LMColour.h"
+#import "LMExtras.h"
 
 @interface LMExpandableTrackListView()<UICollectionViewDelegate, UICollectionViewDataSource, LMListEntryDelegate>
 
@@ -25,6 +25,10 @@
 @implementation LMExpandableTrackListView
 
 @synthesize musicTrackCollection = _musicTrackCollection;
+
+- (NSInteger)numberOfColumns {
+	return fmax(1, WINDOW_FRAME.size.width/300.0f);
+}
 
 - (void)tappedListEntry:(LMListEntry*)entry {
 	NSLog(@"Tapped %d", (int)entry.collectionIndex);
@@ -61,15 +65,14 @@
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
 	UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cellIdentifier" forIndexPath:indexPath];
 	
-	cell.backgroundColor = [UIColor whiteColor];
+	cell.backgroundColor = [LMColour superLightGrayColour];
 	
 	for(UIView *subview in cell.contentView.subviews){
 		[subview removeFromSuperview];
 	}
 	
 	if(cell.contentView.subviews.count == 0){
-		NSInteger amountOfColumns = 2;
-		NSInteger fixedIndex = (indexPath.row/amountOfColumns) + ((indexPath.row % amountOfColumns)*([self collectionView:self.collectionView numberOfItemsInSection:0]/amountOfColumns));
+		NSInteger fixedIndex = (indexPath.row/self.numberOfColumns) + ((indexPath.row % self.numberOfColumns)*([self collectionView:self.collectionView numberOfItemsInSection:0]/self.numberOfColumns));
 		
 		LMListEntry *listEntry = [LMListEntry newAutoLayoutView];
 		listEntry.delegate = self;
@@ -110,9 +113,11 @@
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
+	
+	NSLog(@"%@", NSStringFromCGRect(WINDOW_FRAME));
 
 //	return CGSizeMake(self.frame.size.width, self.frame.size.height/[self collectionView:self.collectionView numberOfItemsInSection:0]);
-	return CGSizeMake(self.frame.size.width/2 - 20, 100);
+	return CGSizeMake(self.frame.size.width/self.numberOfColumns - 20, fmin(WINDOW_FRAME.size.height/8.0, 100));
 }
 
 - (void)layoutSubviews {
@@ -135,7 +140,7 @@
 		self.collectionView.dataSource = self;
 		self.collectionView.contentInset = UIEdgeInsetsMake(0, 0, 100, 0);
 		self.collectionView.backgroundColor = [LMColour superLightGrayColour];
-		[self.collectionView registerClass:[LMCollectionViewCell class] forCellWithReuseIdentifier:@"cellIdentifier"];
+		[self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"cellIdentifier"];
 		[self addSubview:self.collectionView];
 		
 		[self.collectionView autoPinEdgesToSuperviewEdges];

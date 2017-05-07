@@ -33,4 +33,9 @@
  */
 @property LMCollectionViewFlowLayout *flowLayout;
 
+/**
+ The number of columns which are being used.
+ */
+@property (readonly) NSInteger numberOfColumns;
+
 @end
