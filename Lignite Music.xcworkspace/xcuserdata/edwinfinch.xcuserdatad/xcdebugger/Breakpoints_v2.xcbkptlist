@@ -537,11 +537,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMCollectionViewFlowLayout.m"
-            timestampString = "515857700.177712"
+            timestampString = "515867424.801328"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "164"
-            endingLineNumber = "164"
+            startingLineNumber = "179"
+            endingLineNumber = "179"
             landmarkName = "-frameForCellAtIndexPath:detailViewDisplayMode:"
             landmarkType = "7">
          </BreakpointContent>
@@ -553,11 +553,11 @@
             ignoreCount = "5"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMCompactBrowsingView.m"
-            timestampString = "515848234.298755"
+            timestampString = "515866880.94159"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "366"
-            endingLineNumber = "366"
+            startingLineNumber = "371"
+            endingLineNumber = "371"
             landmarkName = "-collectionView:cellForItemAtIndexPath:"
             landmarkType = "7">
          </BreakpointContent>
@@ -569,13 +569,45 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMExpandableTrackListView.m"
-            timestampString = "515865027.263734"
+            timestampString = "515868419.713687"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "221"
-            endingLineNumber = "221"
+            startingLineNumber = "234"
+            endingLineNumber = "234"
             landmarkName = "@implementation LMExpandableTrackListView"
             landmarkType = "3">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Lignite Music/LMExpandableTrackListView.m"
+            timestampString = "515868419.713687"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "76"
+            endingLineNumber = "76"
+            landmarkName = "-collectionView:cellForItemAtIndexPath:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Lignite Music/LMCollectionViewFlowLayout.m"
+            timestampString = "515869331.404391"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "234"
+            endingLineNumber = "234"
+            landmarkName = "-indexPathsOfItemsInRect:"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

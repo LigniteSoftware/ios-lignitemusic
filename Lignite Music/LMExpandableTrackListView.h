@@ -31,11 +31,9 @@
 /**
  The flow layout associated.
  */
-@property LMCollectionViewFlowLayout *flowLayout;
+@property id flowLayout;
 
-/**
- The number of columns which are being used.
- */
-@property (readonly) NSInteger numberOfColumns;
++ (CGSize)currentItemSize;
++ (CGSize)sizeForAmountOfItems:(NSInteger)amountOfItems;
 
 @end

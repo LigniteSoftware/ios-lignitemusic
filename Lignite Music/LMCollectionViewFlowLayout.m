@@ -7,6 +7,7 @@
 //
 
 #import "LMCollectionViewFlowLayout.h"
+#import "LMExpandableTrackListView.h"
 #import "LMExtras.h"
 #import "NSTimer+Blocks.h"
 
@@ -95,9 +96,23 @@
 }
 
 - (CGSize)collectionViewContentSize { //Workaround?
-	CGSize superSize = [super collectionViewContentSize];
-	CGRect frame = self.collectionView.frame;
-	return CGSizeMake(fmaxf(superSize.width, CGRectGetWidth(frame)), fmaxf(superSize.height, CGRectGetHeight(frame)));
+	CGSize size = CGSizeMake(self.collectionView.frame.size.width, 0);
+
+	if(self.isDisplayingDetailView){
+		size.height += [LMExpandableTrackListView sizeForAmountOfItems:self.amountOfItemsInDetailView].height;
+	}
+	
+	NSInteger amountOfItems = [self.collectionView.dataSource collectionView:self.collectionView numberOfItemsInSection:1];
+	if(amountOfItems > 0){
+		size.height += ([self frameForCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] detailViewDisplayMode:LMDetailViewDisplayModeNone].size.height * amountOfItems)/self.itemsPerRow;
+		size.height += (amountOfItems/self.itemsPerRow)*15;
+	}
+	
+	return size;
+	
+//	CGSize superSize = [super collectionViewContentSize];
+//	CGRect frame = self.collectionView.frame;
+//	return CGSizeMake(fmaxf(superSize.width, CGRectGetWidth(frame)), fmaxf(superSize.height, CGRectGetHeight(frame)));
 }
 
 - (UICollectionViewLayoutAttributes*)initialLayoutAttributesForAppearingItemAtIndexPath:(NSIndexPath *)itemIndexPath {
@@ -169,7 +184,7 @@
 	
 	NSInteger fixedIndexPathRow = (indexPath.row - isBelowDetailViewRow);
 	
-	CGSize collectionViewSize = [self collectionViewContentSize]; //Get the current size of the collection view
+	CGSize collectionViewSize = self.collectionView.frame.size; //Get the current size of the collection view
 	CGFloat sideLength = collectionViewSize.width/factor; //Get the side length of one cell based on the factor provided
 	
 	sideLength -= 15; //Remove 15px from it for spacing
@@ -182,15 +197,16 @@
 	CGPoint origin = CGPointMake(((fixedIndexPathRow % factor) * (size.width+spacing)) + spacing, //The column which the cell is in
 								 ((fixedIndexPathRow/factor) * (size.height+spacing)) + spacing); //The row
 	
+	CGFloat detailViewHeight = ([LMExpandableTrackListView sizeForAmountOfItems:self.amountOfItemsInDetailView].height);
+	
 	if(isBelowDetailViewRow){
-		origin.x -= spacing;
-		origin.y += (size.height*1.5) + spacing;
+		origin.y += spacing + detailViewHeight;
 	}
 	
 	CGRect itemFrame = CGRectMake(origin.x, origin.y, size.width, size.height); //Return the frame
 	
 	if(isDetailViewRow){
-		return CGRectMake(origin.x - spacing, origin.y, collectionViewSize.width-(origin.x * 2)+(spacing * 2), size.height*1.5);
+		return CGRectMake(origin.x - spacing, origin.y, collectionViewSize.width-(origin.x * 2)+(spacing * 2), detailViewHeight);
 	}
 	
 	return itemFrame;
@@ -215,14 +231,19 @@
 		CGRect frameOfItem = [self frameForCellAtIndexPath:indexPathOfItem detailViewDisplayMode:self.detailViewDisplayMode];
 		BOOL containsFrame = CGRectContainsRect(rect, frameOfItem);
 		BOOL containsOrigin = CGRectContainsPoint(rect, frameOfItem.origin);
-		if(containsFrame || containsOrigin){
+		BOOL frameOfItemContainsFrameOfDetailView = CGRectContainsRect(frameOfItem, rect); //Detail view
+		BOOL framesIntersect = CGRectIntersectsRect(rect, frameOfItem) || CGRectIntersectsRect(frameOfItem, rect);
+
+		if(containsFrame || containsOrigin || frameOfItemContainsFrameOfDetailView || framesIntersect){
 			[indexPathsInRect addObject:indexPathOfItem];
 			foundFirstItem = YES;
 		}
-		if(!containsFrame && !containsOrigin && foundFirstItem){
+		if(!containsFrame && !containsOrigin && !frameOfItemContainsFrameOfDetailView && !framesIntersect && foundFirstItem){
 			break; //Stop it if it's already found a sequence of items, and then didn't find one, it won't be able to find anymore
 		}
 	}
+	
+//	NSLog(@"%@", indexPathsInRect);
 
 	return indexPathsInRect;
 }

@@ -11,6 +11,7 @@
 #import "LMExpandableInnerShadowView.h"
 #import "LMExpandableTrackListView.h"
 #import "YIInnerShadowView.h"
+#import "LMLayoutManager.h"
 #import "LMTriangleView.h"
 #import "LMListEntry.h"
 #import "LMColour.h"
@@ -26,8 +27,8 @@
 
 @synthesize musicTrackCollection = _musicTrackCollection;
 
-- (NSInteger)numberOfColumns {
-	return fmax(1, WINDOW_FRAME.size.width/300.0f);
++ (NSInteger)numberOfColumns {
+	return fmax(1.0, WINDOW_FRAME.size.width/300.0f);
 }
 
 - (void)tappedListEntry:(LMListEntry*)entry {
@@ -72,7 +73,7 @@
 	}
 	
 	if(cell.contentView.subviews.count == 0){
-		NSInteger fixedIndex = (indexPath.row/self.numberOfColumns) + ((indexPath.row % self.numberOfColumns)*([self collectionView:self.collectionView numberOfItemsInSection:0]/self.numberOfColumns));
+		NSInteger fixedIndex = (indexPath.row/[LMExpandableTrackListView numberOfColumns]) + ((indexPath.row % [LMExpandableTrackListView numberOfColumns])*([self collectionView:self.collectionView numberOfItemsInSection:0]/[LMExpandableTrackListView numberOfColumns]));
 		
 		LMListEntry *listEntry = [LMListEntry newAutoLayoutView];
 		listEntry.delegate = self;
@@ -112,12 +113,24 @@
 	return self.musicTrackCollection.count;
 }
 
++ (CGSize)currentItemSize {
+	return CGSizeMake(WINDOW_FRAME.size.width/[LMExpandableTrackListView numberOfColumns] - 20,
+					  fmin(([LMLayoutManager isLandscape] ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height)/8.0, 100));
+}
+
++ (CGSize)sizeForAmountOfItems:(NSInteger)amountOfItems {
+	CGSize size = CGSizeMake(WINDOW_FRAME.size.width, 0);
+	
+	size.height += amountOfItems * [LMExpandableTrackListView currentItemSize].height;
+	size.height += amountOfItems * 10; //Spacing
+	
+	return size;
+}
+
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
 	
-	NSLog(@"%@", NSStringFromCGRect(WINDOW_FRAME));
-
 //	return CGSizeMake(self.frame.size.width, self.frame.size.height/[self collectionView:self.collectionView numberOfItemsInSection:0]);
-	return CGSizeMake(self.frame.size.width/self.numberOfColumns - 20, fmin(WINDOW_FRAME.size.height/8.0, 100));
+	return [LMExpandableTrackListView currentItemSize];
 }
 
 - (void)layoutSubviews {

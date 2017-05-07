@@ -60,4 +60,9 @@ typedef NS_ENUM(NSInteger, LMDetailViewDisplayMode) {
  */
 @property NSInteger itemsPerRow;
 
+/**
+ The amount of items in the current detail view.
+ */
+@property NSInteger amountOfItemsInDetailView;
+
 @end

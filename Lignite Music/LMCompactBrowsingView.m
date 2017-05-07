@@ -333,11 +333,16 @@
 
 	if(cell.contentView.subviews.count == 0){
 		if(indexPath.row == flowLayout.indexOfDetailView){
+			LMMusicTrackCollection *trackCollection = [self.musicTrackCollections objectAtIndex:flowLayout.indexOfItemDisplayingDetailView];
+			
+			flowLayout.amountOfItemsInDetailView = trackCollection.count;
+			
 			LMExpandableTrackListView *detailView = [LMExpandableTrackListView newAutoLayoutView];
 			detailView.backgroundColor = [UIColor whiteColor];
-			detailView.musicTrackCollection = [self.musicTrackCollections objectAtIndex:flowLayout.indexOfItemDisplayingDetailView];
+			detailView.musicTrackCollection = trackCollection;
 			detailView.musicType = self.musicType;
 			detailView.flowLayout = flowLayout;
+			detailView.userInteractionEnabled = NO;
 //			detailView.viewAssociated = [self collectionView:self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:flowLayout.indexOfItemDisplayingDetailView inSection:0]].contentView;
 			NSLog(@"Shitttt %@ %d", detailView.musicTrackCollection, (int)flowLayout.indexOfItemDisplayingDetailView);
 			[cell.contentView addSubview:detailView];
