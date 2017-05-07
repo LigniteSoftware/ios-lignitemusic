@@ -120,9 +120,11 @@
 
 + (CGSize)sizeForAmountOfItems:(NSInteger)amountOfItems {
 	CGSize size = CGSizeMake(WINDOW_FRAME.size.width, 0);
+	NSInteger numberOfColumns = [LMExpandableTrackListView numberOfColumns];
 	
-	size.height += amountOfItems * [LMExpandableTrackListView currentItemSize].height;
-	size.height += amountOfItems * 10; //Spacing
+	size.height += (amountOfItems * [LMExpandableTrackListView currentItemSize].height)/numberOfColumns;
+	size.height += (amountOfItems * 10)/numberOfColumns; //Spacing
+	size.height += 10;
 	
 	return size;
 }

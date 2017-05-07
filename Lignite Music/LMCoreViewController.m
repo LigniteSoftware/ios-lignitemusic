@@ -836,13 +836,13 @@ LMControlBarViewDelegate
 	self.layoutManager.size = self.view.frame.size;
 	
 	
-	LMCompactBrowsingView *testView = [LMCompactBrowsingView newAutoLayoutView];
-	testView.backgroundColor = [UIColor orangeColor];
-	[self.view addSubview:testView];
-	
-	[testView autoPinEdgesToSuperviewEdges];
-	
-	return;
+//	LMCompactBrowsingView *testView = [LMCompactBrowsingView newAutoLayoutView];
+//	testView.backgroundColor = [UIColor orangeColor];
+//	[self.view addSubview:testView];
+//	
+//	[testView autoPinEdgesToSuperviewEdges];
+//	
+//	return;
 	
 //	NSArray *testViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 //		[testView autoPinEdgesToSuperviewEdges];

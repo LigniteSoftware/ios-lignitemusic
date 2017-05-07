@@ -282,19 +282,19 @@
 - (void)contentViewTappedForBigListEntry:(LMBigListEntry *)bigListEntry {
 	NSLog(@"Tapped %ld", bigListEntry.collectionIndex);
 	
-	LMBrowsingDetailView *browsingDetailView = [LMBrowsingDetailView newAutoLayoutView];
-	browsingDetailView.musicTrackCollection = [self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex];
-	browsingDetailView.musicType = self.musicType;
-	browsingDetailView.rootViewController = self.rootViewController;
-	
-	NSLog(@"Got count %ld", browsingDetailView.musicTrackCollection.trackCount);
-	
-	self.browsingDetailViewController = [LMBrowsingDetailViewController new];
-	self.browsingDetailViewController.browsingDetailView = browsingDetailView;
-	
-	self.rootViewController.currentDetailViewController = self.browsingDetailViewController;
-	
-	[self.rootViewController showViewController:self.browsingDetailViewController sender:self.rootViewController];
+//	LMBrowsingDetailView *browsingDetailView = [LMBrowsingDetailView newAutoLayoutView];
+//	browsingDetailView.musicTrackCollection = [self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex];
+//	browsingDetailView.musicType = self.musicType;
+//	browsingDetailView.rootViewController = self.rootViewController;
+//	
+//	NSLog(@"Got count %ld", browsingDetailView.musicTrackCollection.trackCount);
+//	
+//	self.browsingDetailViewController = [LMBrowsingDetailViewController new];
+//	self.browsingDetailViewController.browsingDetailView = browsingDetailView;
+//	
+//	self.rootViewController.currentDetailViewController = self.browsingDetailViewController;
+//	
+//	[self.rootViewController showViewController:self.browsingDetailViewController sender:self.rootViewController];
 	
 	[self tapTest:bigListEntry.collectionIndex];
 }

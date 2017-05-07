@@ -655,7 +655,7 @@
 		[self setupiPadSpecificLayout];
 		
 		self.buttonStackView.spacing = ((([LMLayoutManager isLandscapeiPad] || [LMLayoutManager isLandscape])
-										 ? self.frame.size.height : self.frame.size.width) * 0.9 * ([LMLayoutManager isiPad] ? 0.5 : 0.25))/4.0;
+										 ? self.frame.size.height : self.frame.size.width) * 0.9 * ([LMLayoutManager isiPad] ? 0.5 : 0.40))/4.0;
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		
 	}];
@@ -896,7 +896,7 @@
 	self.buttonStackView.axis = UILayoutConstraintAxisHorizontal;
 	self.buttonStackView.distribution = UIStackViewDistributionFillEqually;
 	self.buttonStackView.spacing = ((([LMLayoutManager isLandscapeiPad] || [LMLayoutManager isLandscape])
-									 ? self.frame.size.height : self.frame.size.width) * 0.9 * ([LMLayoutManager isiPad] ? 0.5 : 0.25))/4.0;
+									 ? self.frame.size.height : self.frame.size.width) * 0.9 * ([LMLayoutManager isiPad] ? 0.5 : 0.40))/4.0;
 	[self.paddingView addSubview:self.buttonStackView];
 	
 	

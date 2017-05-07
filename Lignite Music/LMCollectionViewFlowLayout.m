@@ -200,13 +200,13 @@
 	CGFloat detailViewHeight = ([LMExpandableTrackListView sizeForAmountOfItems:self.amountOfItemsInDetailView].height);
 	
 	if(isBelowDetailViewRow){
-		origin.y += spacing + detailViewHeight;
+		origin.y += (spacing*2) + detailViewHeight;
 	}
 	
 	CGRect itemFrame = CGRectMake(origin.x, origin.y, size.width, size.height); //Return the frame
 	
 	if(isDetailViewRow){
-		return CGRectMake(origin.x - spacing, origin.y, collectionViewSize.width-(origin.x * 2)+(spacing * 2), detailViewHeight);
+		return CGRectMake(origin.x - spacing, origin.y+spacing, collectionViewSize.width-(origin.x * 2)+(spacing * 2), detailViewHeight);
 	}
 	
 	return itemFrame;
