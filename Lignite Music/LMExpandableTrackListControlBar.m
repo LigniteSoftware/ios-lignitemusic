@@ -15,7 +15,7 @@
 #import "LMExtras.h"
 #import "LMColour.h"
 
-@interface LMExpandableTrackListControlBar()<LMControlBarViewDelegate>
+@interface LMExpandableTrackListControlBar()<LMControlBarViewDelegate, LMMusicPlayerDelegate>
 
 /**
  The music control bar.
@@ -32,11 +32,33 @@
  */
 @property UIImageView *closeButtonImageView;
 
+/**
+ The system music player.
+ */
+@property LMMusicPlayer *musicPlayer;
+
 @end
 
 @implementation LMExpandableTrackListControlBar
 
 @synthesize mode = _mode;
+
+
+- (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState {
+	[self.musicControlBar reloadHighlightedButtons];
+}
+
+- (void)musicTrackDidChange:(LMMusicTrack*)newTrack {
+	[self.musicControlBar reloadHighlightedButtons];
+}
+
+- (void)musicPlaybackModesDidChange:(LMMusicShuffleMode)shuffleMode repeatMode:(LMMusicRepeatMode)repeatMode {
+	[self.musicControlBar reloadHighlightedButtons];
+}
+
+- (void)musicLibraryDidChange {
+//	[self closeButtonTapped];
+}
 
 
 - (uint8_t)amountOfButtonsForControlBarView:(LMControlBarView*)controlBar {
@@ -46,7 +68,7 @@
 - (UIImage*)imageWithIndex:(uint8_t)index forControlBarView:(LMControlBarView*)controlBar {
 	switch(index){
 		case 0:{
-			BOOL isPlaying = YES; //[self.musicPlayer nowPlayingCollectionIsEqualTo:self.musicTrackCollection] && self.musicPlayer.playbackState == LMMusicPlaybackStatePlaying;
+			BOOL isPlaying = [self.musicPlayer nowPlayingCollectionIsEqualTo:self.musicTrackCollection] && self.musicPlayer.playbackState == LMMusicPlaybackStatePlaying;
 			
 			return [LMAppIcon invertImage:[LMAppIcon imageForIcon:isPlaying ? LMIconPause : LMIconPlay]];
 		}
@@ -61,13 +83,55 @@
 }
 
 - (BOOL)buttonHighlightedWithIndex:(uint8_t)index wasJustTapped:(BOOL)wasJustTapped forControlBar:(LMControlBarView*)controlBar {
-	return NO;
+	BOOL isPlayingMusic = (self.musicPlayer.playbackState == LMMusicPlaybackStatePlaying);
+	
+	switch(index) {
+		case 0:{ //Play button
+			LMMusicTrackCollection *trackCollection = self.musicTrackCollection;
+			if(wasJustTapped){
+				if(trackCollection.trackCount > 0){
+					if(![self.musicPlayer nowPlayingCollectionIsEqualTo:trackCollection]){
+						self.musicPlayer.autoPlay = YES;
+						[self.musicPlayer setNowPlayingCollection:trackCollection];
+						
+						[self.musicPlayer.navigationBar setSelectedTab:LMNavigationTabMiniplayer];
+						[self.musicPlayer.navigationBar maximize:NO];
+						
+						isPlayingMusic = YES;
+					}
+					else{
+						[self.musicPlayer invertPlaybackState];
+						isPlayingMusic = !isPlayingMusic;
+					}
+				}
+				return isPlayingMusic;
+			}
+			else{
+				return [self.musicPlayer nowPlayingCollectionIsEqualTo:trackCollection] && isPlayingMusic;
+			}
+		}
+		case 1: //Repeat button
+			if(wasJustTapped){
+				(self.musicPlayer.repeatMode == LMMusicRepeatModeAll)
+				? (self.musicPlayer.repeatMode = LMMusicRepeatModeNone)
+				: (self.musicPlayer.repeatMode = LMMusicRepeatModeAll);
+			}
+			NSLog(@"Repeat mode is %d", self.musicPlayer.repeatMode);
+			return (self.musicPlayer.repeatMode == LMMusicRepeatModeAll);
+		case 2: //Shuffle button
+			if(wasJustTapped){
+				self.musicPlayer.shuffleMode = !self.musicPlayer.shuffleMode;
+			}
+			NSLog(@"Shuffle mode is %d", self.musicPlayer.shuffleMode);
+			return (self.musicPlayer.shuffleMode == LMMusicShuffleModeOn);
+	}
+	return YES;
 }
 
 
 + (CGFloat)recommendedHeight {
 	if([LMLayoutManager isiPad]){
-		return ([LMLayoutManager isLandscape] ? WINDOW_FRAME.size.height : WINDOW_FRAME.size.width)/8.0;
+		return ([LMLayoutManager isLandscapeiPad] ? WINDOW_FRAME.size.height : WINDOW_FRAME.size.width)/8.0;
 	}
 	return ([LMLayoutManager isLandscape] ? WINDOW_FRAME.size.height : WINDOW_FRAME.size.width)/6.0;
 }
@@ -160,15 +224,16 @@
 		self.closeButtonImageView = [UIImageView newAutoLayoutView];
 		self.closeButtonImageView.contentMode = UIViewContentModeScaleAspectFit;
 		self.closeButtonImageView.backgroundColor = [UIColor clearColor];
-		self.closeButtonImageView.image = [LMAppIcon imageForIcon:LMIconXCross];
+		self.closeButtonImageView.image = [LMAppIcon invertImage:[LMAppIcon imageForIcon:LMIconXCross]];
 		[self.closeButtonBackgroundView addSubview:self.closeButtonImageView];
 		
 		
 		self.musicControlBar = [LMControlBarView newAutoLayoutView];
 		self.musicControlBar.delegate = self;
-		self.musicControlBar.backgroundColor = [UIColor blueColor];
 		[self addSubview:self.musicControlBar];
 		
+		
+		[self.musicPlayer addMusicDelegate:self];
 		
 		
 		[self reloadConstraints];
@@ -181,6 +246,7 @@
 	self = [super init];
 	if(self) {
 		self.mode = LMExpandableTrackListControlBarModeGeneralControl;
+		self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 	}
 	return self;
 }

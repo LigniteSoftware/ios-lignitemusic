@@ -169,6 +169,7 @@
 		
 		self.expandableTrackListControlBar = [LMExpandableTrackListControlBar newAutoLayoutView];
 		self.expandableTrackListControlBar.delegate = self;
+		self.expandableTrackListControlBar.musicTrackCollection = self.musicTrackCollection;
 		[self addSubview:self.expandableTrackListControlBar];
 		
 		[self.expandableTrackListControlBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];

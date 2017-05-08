@@ -85,7 +85,7 @@
 	//	[NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(invert) userInfo:nil repeats:YES];
 	//	
 		self.backgroundView = [UIView newAutoLayoutView];
-		self.backgroundView.backgroundColor = [LMColour lightGrayBackgroundColour];
+		self.backgroundView.backgroundColor = [LMColour controlBarGrayColour];
 		self.backgroundView.userInteractionEnabled = YES;
 		[self addSubview:self.backgroundView];
 		
