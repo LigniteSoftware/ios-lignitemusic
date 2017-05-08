@@ -443,8 +443,8 @@
 		LMCollectionViewFlowLayout *fuck = [[LMCollectionViewFlowLayout alloc]init];
 //		fuck.scrollDirection = UICollectionViewScrollDirectionHorizontal;
 		
-		self.musicTrackCollections = [[LMMusicPlayer sharedMusicPlayer] queryCollectionsForMusicType:LMMusicTypeAlbums];
-		self.musicType = LMMusicTypeAlbums;
+//		self.musicTrackCollections = [[LMMusicPlayer sharedMusicPlayer] queryCollectionsForMusicType:LMMusicTypeAlbums];
+//		self.musicType = LMMusicTypeAlbums;
 		
 		
 		self.collectionView = [[UICollectionView alloc]initWithFrame:CGRectZero collectionViewLayout:fuck];

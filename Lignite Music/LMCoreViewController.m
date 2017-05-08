@@ -44,6 +44,7 @@
 #import "LMMiniPlayerView.h"
 #import "LMTutorialView.h"
 #import "LMButtonBar.h"
+#import "LMExpandableTrackListControlBar.h"
 
 #ifdef SPOTIFY
 #import "Spotify.h"
@@ -823,7 +824,7 @@ LMControlBarViewDelegate
     // Do any additional setup after loading the view
 	
 	
-	self.view.backgroundColor = [UIColor lightGrayColor];
+	self.view.backgroundColor = [UIColor whiteColor];
 	
 	self.navigationController.navigationBarHidden = YES;
 	self.navigationController.interactivePopGestureRecognizer.delegate = self;
@@ -835,6 +836,18 @@ LMControlBarViewDelegate
 	self.layoutManager.traitCollection = self.traitCollection;
 	self.layoutManager.size = self.view.frame.size;
 	
+	
+	LMExpandableTrackListControlBar *testView = [LMExpandableTrackListControlBar newAutoLayoutView];
+	testView.backgroundColor = [UIColor orangeColor];
+	testView.mode = LMExpandableTrackListControlBarModeGeneralControl;
+	[self.view addSubview:testView];
+	
+	[testView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+	[testView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+	[testView autoCenterInSuperview];
+	[testView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/10.0)];
+	
+	return;
 	
 //	LMCompactBrowsingView *testView = [LMCompactBrowsingView newAutoLayoutView];
 //	testView.backgroundColor = [UIColor orangeColor];

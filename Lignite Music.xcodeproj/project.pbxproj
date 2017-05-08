@@ -28,6 +28,8 @@
 		6A08AF101EBF2A860069C9CC /* LMExpandableInnerShadowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A08AF0E1EBF2A860069C9CC /* LMExpandableInnerShadowView.m */; };
 		6A08AF131EBF30B00069C9CC /* LMTriangleInnerShadowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A08AF121EBF30B00069C9CC /* LMTriangleInnerShadowView.m */; };
 		6A08AF141EBF30B00069C9CC /* LMTriangleInnerShadowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A08AF121EBF30B00069C9CC /* LMTriangleInnerShadowView.m */; };
+		6A08AF1B1EC04AED0069C9CC /* LMExpandableTrackListControlBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A08AF1A1EC04AED0069C9CC /* LMExpandableTrackListControlBar.m */; };
+		6A08AF1C1EC04AED0069C9CC /* LMExpandableTrackListControlBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A08AF1A1EC04AED0069C9CC /* LMExpandableTrackListControlBar.m */; };
 		6A13A8011E011D19006A768B /* SLColorArt.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A13A7FC1E011D19006A768B /* SLColorArt.m */; };
 		6A13A8021E011D19006A768B /* UIImage+ColorArt.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A13A7FE1E011D19006A768B /* UIImage+ColorArt.m */; };
 		6A13A8031E011D19006A768B /* UIImage+Scale.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A13A8001E011D19006A768B /* UIImage+Scale.m */; };
@@ -413,6 +415,8 @@
 		6A08AF0E1EBF2A860069C9CC /* LMExpandableInnerShadowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMExpandableInnerShadowView.m; sourceTree = "<group>"; };
 		6A08AF111EBF30B00069C9CC /* LMTriangleInnerShadowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMTriangleInnerShadowView.h; sourceTree = "<group>"; };
 		6A08AF121EBF30B00069C9CC /* LMTriangleInnerShadowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMTriangleInnerShadowView.m; sourceTree = "<group>"; };
+		6A08AF191EC04AED0069C9CC /* LMExpandableTrackListControlBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMExpandableTrackListControlBar.h; sourceTree = "<group>"; };
+		6A08AF1A1EC04AED0069C9CC /* LMExpandableTrackListControlBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMExpandableTrackListControlBar.m; sourceTree = "<group>"; };
 		6A106B121BC710D4003AE55A /* Lignite Music.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Lignite Music.entitlements"; sourceTree = "<group>"; };
 		6A13A7FB1E011D19006A768B /* SLColorArt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLColorArt.h; sourceTree = "<group>"; };
 		6A13A7FC1E011D19006A768B /* SLColorArt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLColorArt.m; sourceTree = "<group>"; };
@@ -830,6 +834,8 @@
 				6A08AF0E1EBF2A860069C9CC /* LMExpandableInnerShadowView.m */,
 				6A08AF111EBF30B00069C9CC /* LMTriangleInnerShadowView.h */,
 				6A08AF121EBF30B00069C9CC /* LMTriangleInnerShadowView.m */,
+				6A08AF191EC04AED0069C9CC /* LMExpandableTrackListControlBar.h */,
+				6A08AF1A1EC04AED0069C9CC /* LMExpandableTrackListControlBar.m */,
 			);
 			name = Core;
 			sourceTree = "<group>";
@@ -1811,6 +1817,7 @@
 				6AA5CB211E285C0A005F853F /* LMScrollView.m in Sources */,
 				6AA5CB221E285C0A005F853F /* LMBackerLoginViewController.m in Sources */,
 				6AA5CB231E285C0A005F853F /* LMPaddedTextField.m in Sources */,
+				6A08AF1C1EC04AED0069C9CC /* LMExpandableTrackListControlBar.m in Sources */,
 				6AA5CB251E285C0A005F853F /* LMButton.m in Sources */,
 				6A94A7721EA79BB300319A38 /* LMLayoutManager.m in Sources */,
 				6A08AF0C1EBEEBD00069C9CC /* LMExpandableTrackListView.m in Sources */,
@@ -1937,6 +1944,7 @@
 				6A23AF4A1E454D1E00A56F5F /* LMNavigationBar.m in Sources */,
 				6AEF8C731DEF419D00D9A1BF /* LMDebugViewController.m in Sources */,
 				6A08AF131EBF30B00069C9CC /* LMTriangleInnerShadowView.m in Sources */,
+				6A08AF1B1EC04AED0069C9CC /* LMExpandableTrackListControlBar.m in Sources */,
 				6AFF01891DDD656E00F24D8E /* LMGuideViewPagerController.m in Sources */,
 				6A7565301DF7E38900A9EDD6 /* LMSearch.m in Sources */,
 				6AD226FC1DA4B7770056695A /* LMNowPlayingView.m in Sources */,

@@ -28,7 +28,7 @@
 }
 
 + (UIColor*)superLightGrayColour {
-	return [UIColor colorWithRed:0.97 green:0.97 blue:0.97 alpha:1.0];
+	return [UIColor colorWithRed:0.96 green:0.96 blue:0.96 alpha:1.0];
 }
 
 + (UIColor*)controlBarGrayColour {
