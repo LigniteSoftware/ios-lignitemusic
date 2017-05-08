@@ -134,11 +134,13 @@
 	size.height += (amountOfItems * [LMExpandableTrackListView currentItemSize].height)/numberOfColumns;
 	size.height += (amountOfItems * 10)/numberOfColumns; //Spacing
 	size.height += 10;
-	size.height += [LMExpandableTrackListControlBar recommendedHeight];
+//	size.height += [LMExpandableTrackListControlBar recommendedHeight];
 	
 	if(numberOfColumns % 2 == 0 && amountOfItems % 2 != 0){ //If the number of columns is even but the amount of actual items is uneven
 		size.height += [LMExpandableTrackListView currentItemSize].height;
 	}
+	
+//	size.height = 400;
 	
 	return size;
 }
@@ -185,8 +187,8 @@
 		self.collectionView.translatesAutoresizingMaskIntoConstraints = NO;
 		self.collectionView.delegate = self;
 		self.collectionView.dataSource = self;
-		self.collectionView.userInteractionEnabled = NO;
-		self.collectionView.contentInset = UIEdgeInsetsMake(0, 0, 100, 0);
+		self.collectionView.userInteractionEnabled = YES;
+		self.collectionView.contentInset = UIEdgeInsetsMake(0, 0, 10, 0);
 		self.collectionView.backgroundColor = [LMColour superLightGrayColour];
 		[self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"cellIdentifier"];
 		[self addSubview:self.collectionView];

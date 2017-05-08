@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LMMusicPlayer.h"
 
 #define LMNoDetailViewSelected -1
 
@@ -64,5 +65,10 @@ typedef NS_ENUM(NSInteger, LMDetailViewDisplayMode) {
  The amount of items in the current detail view.
  */
 @property NSInteger amountOfItemsInDetailView;
+
+/**
+ The music track collections associated with the currently displaying data.
+ */
+@property NSArray<LMMusicTrackCollection*> *musicTrackCollections;
 
 @end

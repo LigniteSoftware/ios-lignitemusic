@@ -11,6 +11,8 @@
 #import "LMExtras.h"
 #import "NSTimer+Blocks.h"
 
+#define SPACING_BETWEEN_ITEMS 15
+
 @interface LMCollectionViewFlowLayout()
 
 /**
@@ -105,7 +107,7 @@
 	NSInteger amountOfItems = [self.collectionView.dataSource collectionView:self.collectionView numberOfItemsInSection:1];
 	if(amountOfItems > 0){
 		size.height += ([self frameForCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] detailViewDisplayMode:LMDetailViewDisplayModeNone].size.height * amountOfItems)/self.itemsPerRow;
-		size.height += (amountOfItems/self.itemsPerRow)*15;
+		size.height += (amountOfItems/self.itemsPerRow)*SPACING_BETWEEN_ITEMS;
 	}
 	
 	return size;
@@ -187,7 +189,7 @@
 	CGSize collectionViewSize = self.collectionView.frame.size; //Get the current size of the collection view
 	CGFloat sideLength = collectionViewSize.width/factor; //Get the side length of one cell based on the factor provided
 	
-	sideLength -= 15; //Remove 15px from it for spacing
+	sideLength -= SPACING_BETWEEN_ITEMS; //Remove 15px from it for spacing
 	
 	CGFloat spacing = (collectionViewSize.width-(sideLength*factor))/(factor+1); //Calculate the amount of spacing total
 	
@@ -197,7 +199,20 @@
 	CGPoint origin = CGPointMake(((fixedIndexPathRow % factor) * (size.width+spacing)) + spacing, //The column which the cell is in
 								 ((fixedIndexPathRow/factor) * (size.height+spacing)) + spacing); //The row
 	
-	CGFloat detailViewHeight = ([LMExpandableTrackListView sizeForAmountOfItems:self.amountOfItemsInDetailView].height);
+	CGFloat detailViewHeight = 0;
+	
+	if(isDetailViewRow || isBelowDetailViewRow){
+		NSInteger indexToUseForAmountOfItems = self.isDisplayingDetailView ? self.indexOfItemDisplayingDetailView : self.previousIndexOfItemDisplayingDetailView;
+		NSLog(@"Amount %@ %ld", [self.musicTrackCollections objectAtIndex:indexToUseForAmountOfItems], [self.musicTrackCollections objectAtIndex:indexToUseForAmountOfItems].count);
+		CGFloat maximumDetailViewHeight = [LMExpandableTrackListView sizeForAmountOfItems:[self.musicTrackCollections objectAtIndex:indexToUseForAmountOfItems].count].height;
+		CGRect collectionViewFrame = self.collectionView.frame;
+		CGPoint collectionViewContentOffset = self.collectionView.contentOffset;
+		CGRect normalItemFrame = [self frameForCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] detailViewDisplayMode:LMDetailViewDisplayModeNone];
+		
+		detailViewHeight = (collectionViewFrame.size.height - normalItemFrame.size.height) - SPACING_BETWEEN_ITEMS - normalItemFrame.origin.y - 6; //I'm not going to pull my hair out trying to figure out where the 6 pixels actually comes from, sorry
+		
+		detailViewHeight = fmin(detailViewHeight, maximumDetailViewHeight);
+	}
 	
 	if(isBelowDetailViewRow){
 		origin.y += (spacing*2) + detailViewHeight;
@@ -206,6 +221,7 @@
 	CGRect itemFrame = CGRectMake(origin.x, origin.y, size.width, size.height); //Return the frame
 	
 	if(isDetailViewRow){
+		NSLog(@"\ncollframe %@ \n content offset %@ \n superviewframe %@ \n size of item %@", NSStringFromCGRect(self.collectionView.frame), NSStringFromCGPoint(self.collectionView.contentOffset), NSStringFromCGRect(self.collectionView.superview.frame), NSStringFromCGRect([self frameForCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] detailViewDisplayMode:LMDetailViewDisplayModeNone]));
 		return CGRectMake(origin.x - spacing, origin.y+spacing, collectionViewSize.width-(origin.x * 2)+(spacing * 2), detailViewHeight);
 	}
 	

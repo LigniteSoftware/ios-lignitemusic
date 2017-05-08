@@ -296,7 +296,16 @@
 //	
 //	[self.rootViewController showViewController:self.browsingDetailViewController sender:self.rootViewController];
 	
-	[self tapTest:bigListEntry.collectionIndex];
+//	[self tapTest:bigListEntry.collectionIndex];
+	
+	NSLog(@"Frame inside %@", NSStringFromCGRect(bigListEntry.superview.superview.frame));
+	
+	[UIView animateWithDuration:0.15 animations:^{
+		self.collectionView.contentOffset = CGPointMake(0, bigListEntry.superview.superview.frame.origin.y - 10);
+		[self layoutIfNeeded];
+	} completion:^(BOOL finished) {
+		[self tapTest:bigListEntry.collectionIndex];
+	}];
 }
 
 - (void)contentViewDoubleTappedForBigListEntry:(LMBigListEntry *)bigListEntry {
@@ -441,6 +450,7 @@
 		[self.layoutManager addDelegate:self];
 		
 		LMCollectionViewFlowLayout *fuck = [[LMCollectionViewFlowLayout alloc]init];
+		fuck.musicTrackCollections = self.musicTrackCollections;
 //		fuck.scrollDirection = UICollectionViewScrollDirectionHorizontal;
 		
 //		self.musicTrackCollections = [[LMMusicPlayer sharedMusicPlayer] queryCollectionsForMusicType:LMMusicTypeAlbums];
@@ -452,7 +462,6 @@
 		self.collectionView.delegate = self;
 		self.collectionView.dataSource = self;
         self.collectionView.contentInset = UIEdgeInsetsMake(0, 0, 100, 0);
-//		[self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"cellIdentifier"];
 		[self.collectionView registerClass:[LMCollectionViewCell class] forCellWithReuseIdentifier:@"cellIdentifier"];
 		[self addSubview:self.collectionView];
 		
