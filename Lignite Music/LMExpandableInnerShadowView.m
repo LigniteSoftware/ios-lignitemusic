@@ -41,10 +41,11 @@
 		[self.testView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self withOffset:(column * widthPerItem) + halfTriangleWidth + (15.0 * 1)];
 		[self.testView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:triangleWidthFactorial];
 //		[self.testView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.05];
-		[self.testView autoSetDimension:ALDimensionHeight toSize:30];
+		[self.testView autoSetDimension:ALDimensionHeight toSize:25];
 		
 		self.triangleInnerShadowView = [LMTriangleInnerShadowView newAutoLayoutView];
 		self.triangleInnerShadowView.backgroundColor = [UIColor clearColor];
+//		self.triangleInnerShadowView.hidden = YES;
 		[self addSubview:self.triangleInnerShadowView];
 		
 		[self.triangleInnerShadowView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.testView];

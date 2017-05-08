@@ -40,9 +40,14 @@
 - (UIBezierPath*)shadowpath {
 	UIBezierPath *path = [UIBezierPath new];
 	
+	NSLog(@"hey man %@", NSStringFromCGRect(self.frame));
+	
+	CGFloat amountToAddToHeight = 20.0f;
+	CGFloat amountToAddToWidth = ((self.frame.size.width/2)/self.frame.size.height) * amountToAddToHeight;
+	
 	[path moveToPoint:(CGPoint){ self.frame.size.width/2, 0 }];
-	[path addLineToPoint:(CGPoint){ self.frame.size.width + 20, self.frame.size.height + 10 }];
-	[path addLineToPoint:(CGPoint){ -20, self.frame.size.height + 10}];
+	[path addLineToPoint:(CGPoint){ self.frame.size.width + amountToAddToWidth, self.frame.size.height + amountToAddToHeight }];
+	[path addLineToPoint:(CGPoint){ -amountToAddToWidth, self.frame.size.height + amountToAddToHeight}];
 	
 	[path closePath];
 	
@@ -54,9 +59,7 @@
 	
 	NSLog(@"%@", NSStringFromCGRect(self.frame));
 	
-	if(true){
-		[self drawInnerShadowInContext:UIGraphicsGetCurrentContext() withPath:[self shadowpath].CGPath shadowColor:[UIColor lightGrayColor].CGColor offset:CGSizeMake(0, 0) blurRadius:10];
-	}
+	[self drawInnerShadowInContext:UIGraphicsGetCurrentContext() withPath:[self shadowpath].CGPath shadowColor:[UIColor lightGrayColor].CGColor offset:CGSizeMake(0, 0) blurRadius:10];
 }
 
 /*
