@@ -134,7 +134,7 @@
 	size.height += (amountOfItems * [LMExpandableTrackListView currentItemSize].height)/numberOfColumns;
 	size.height += (amountOfItems * 10)/numberOfColumns; //Spacing
 	size.height += 10;
-//	size.height += [LMExpandableTrackListControlBar recommendedHeight];
+	size.height += [LMExpandableTrackListControlBar recommendedHeight];
 	
 	if(numberOfColumns % 2 == 0 && amountOfItems % 2 != 0){ //If the number of columns is even but the amount of actual items is uneven
 		size.height += [LMExpandableTrackListView currentItemSize].height;

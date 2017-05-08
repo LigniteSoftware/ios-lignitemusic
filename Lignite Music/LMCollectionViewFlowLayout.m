@@ -68,6 +68,10 @@
 }
 
 - (void)setIndexOfItemDisplayingDetailView:(NSInteger)indexOfItemDisplayingDetailView {
+	if(self.indexOfItemDisplayingDetailView == LMNoDetailViewSelected && indexOfItemDisplayingDetailView == LMNoDetailViewSelected){
+		return;
+	}
+	
 	if(indexOfItemDisplayingDetailView > LMNoDetailViewSelected && self.indexOfItemDisplayingDetailView > LMNoDetailViewSelected){ //If there is already one selected and the user is selecting a new one (and not deselecting or closing), clear the previous one first & then set the other one in
 		[self setIndexOfItemDisplayingDetailView:LMNoDetailViewSelected];
 		[self setIndexOfItemDisplayingDetailView:indexOfItemDisplayingDetailView];
@@ -95,6 +99,8 @@
 			self.isDisplayingDetailView ? [self.collectionView insertItemsAtIndexPaths:items] : [self.collectionView deleteItemsAtIndexPaths:items];
 		} completion:nil];
 	}];
+	
+	self.collectionView.scrollEnabled = !self.isDisplayingDetailView;
 }
 
 - (CGSize)collectionViewContentSize { //Workaround?
@@ -203,10 +209,9 @@
 	
 	if(isDetailViewRow || isBelowDetailViewRow){
 		NSInteger indexToUseForAmountOfItems = self.isDisplayingDetailView ? self.indexOfItemDisplayingDetailView : self.previousIndexOfItemDisplayingDetailView;
-		NSLog(@"Amount %@ %ld", [self.musicTrackCollections objectAtIndex:indexToUseForAmountOfItems], [self.musicTrackCollections objectAtIndex:indexToUseForAmountOfItems].count);
+
 		CGFloat maximumDetailViewHeight = [LMExpandableTrackListView sizeForAmountOfItems:[self.musicTrackCollections objectAtIndex:indexToUseForAmountOfItems].count].height;
 		CGRect collectionViewFrame = self.collectionView.frame;
-		CGPoint collectionViewContentOffset = self.collectionView.contentOffset;
 		CGRect normalItemFrame = [self frameForCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] detailViewDisplayMode:LMDetailViewDisplayModeNone];
 		
 		detailViewHeight = (collectionViewFrame.size.height - normalItemFrame.size.height) - SPACING_BETWEEN_ITEMS - normalItemFrame.origin.y - 6; //I'm not going to pull my hair out trying to figure out where the 6 pixels actually comes from, sorry

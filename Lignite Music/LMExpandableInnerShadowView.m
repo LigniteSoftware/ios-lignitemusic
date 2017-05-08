@@ -15,7 +15,7 @@
 
 @interface LMExpandableInnerShadowView()
 
-@property LMTriangleView *testView;
+@property LMTriangleView *triangleView;
 @property LMTriangleInnerShadowView *triangleInnerShadowView;
 
 @end
@@ -26,10 +26,10 @@
 	if(!self.didLayoutConstraints){
 		self.didLayoutConstraints = YES;
 		
-		self.testView = [LMTriangleView newAutoLayoutView];
-		self.testView.maskDirection = LMTriangleMaskDirectionUpwards;
-		self.testView.triangleColour = [LMColour lightGrayBackgroundColour];
-		[self addSubview:self.testView];
+		self.triangleView = [LMTriangleView newAutoLayoutView];
+		self.triangleView.maskDirection = LMTriangleMaskDirectionUpwards;
+		self.triangleView.triangleColour = [LMColour lightGrayBackgroundColour];
+		[self addSubview:self.triangleView];
 		
 		CGFloat triangleWidthFactorial = 0.15;
 		CGFloat halfTriangleWidth = (self.frame.size.width*triangleWidthFactorial)/2;
@@ -37,21 +37,21 @@
 		CGFloat widthPerItem = self.frame.size.width/self.flowLayout.itemsPerRow;
 		CGFloat column = self.flowLayout.indexOfItemDisplayingDetailView % self.flowLayout.itemsPerRow;
 		
-		[self.testView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self withOffset:0];
-		[self.testView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self withOffset:(column * widthPerItem) + halfTriangleWidth + (15.0 * 1)];
-		[self.testView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:triangleWidthFactorial];
-//		[self.testView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.05];
-		[self.testView autoSetDimension:ALDimensionHeight toSize:25];
+		[self.triangleView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self withOffset:1];
+		[self.triangleView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self withOffset:(column * widthPerItem) + halfTriangleWidth + (15.0 * 1)];
+		[self.triangleView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:triangleWidthFactorial];
+//		[self.triangleView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.05];
+		[self.triangleView autoSetDimension:ALDimensionHeight toSize:25];
 		
 		self.triangleInnerShadowView = [LMTriangleInnerShadowView newAutoLayoutView];
 		self.triangleInnerShadowView.backgroundColor = [UIColor clearColor];
 //		self.triangleInnerShadowView.hidden = YES;
 		[self addSubview:self.triangleInnerShadowView];
 		
-		[self.triangleInnerShadowView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.testView];
-		[self.triangleInnerShadowView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.testView];
-		[self.triangleInnerShadowView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.testView];
-		[self.triangleInnerShadowView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.testView];
+		[self.triangleInnerShadowView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.triangleView];
+		[self.triangleInnerShadowView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.triangleView];
+		[self.triangleInnerShadowView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.triangleView];
+		[self.triangleInnerShadowView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.triangleView];
 	}
 	[super layoutSubviews];
 }
@@ -86,15 +86,15 @@
 - (UIBezierPath*)path {
 	UIBezierPath *path = [UIBezierPath new];
 	
-	CGFloat centerPoint = self.testView.frame.origin.x + self.testView.frame.size.width/2;
+	CGFloat centerPoint = self.triangleView.frame.origin.x + self.triangleView.frame.size.width/2;
 	
-	[path moveToPoint:(CGPoint){centerPoint, self.testView.frame.origin.y}];
-	[path addLineToPoint:(CGPoint){centerPoint + self.testView.frame.size.width/2, 0}];
+	[path moveToPoint:(CGPoint){centerPoint, self.triangleView.frame.origin.y}];
+	[path addLineToPoint:(CGPoint){centerPoint + self.triangleView.frame.size.width/2, 0}];
 	[path addLineToPoint:(CGPoint){self.frame.size.width + 10, 0}];
 	[path addLineToPoint:(CGPoint){self.frame.size.width + 10, self.frame.size.height}];
 	[path addLineToPoint:(CGPoint){-10, self.frame.size.height}];
 	[path addLineToPoint:(CGPoint){-10, 0}];
-	[path addLineToPoint:(CGPoint){centerPoint - self.testView.frame.size.width/2, 0}];
+	[path addLineToPoint:(CGPoint){centerPoint - self.triangleView.frame.size.width/2, 0}];
 
 	[path closePath];
 	
@@ -105,7 +105,7 @@
 - (void)drawRect:(CGRect)rect {
 	[super drawRect:rect];
 	
-	NSLog(@"test frame %@", NSStringFromCGRect(self.testView.frame));
+	NSLog(@"test frame %@", NSStringFromCGRect(self.triangleView.frame));
 	
 	
 	[self drawInnerShadowInContext:UIGraphicsGetCurrentContext() withPath:[self path].CGPath shadowColor:[UIColor lightGrayColor].CGColor offset:CGSizeMake(0, 0) blurRadius:10];

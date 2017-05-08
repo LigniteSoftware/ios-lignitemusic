@@ -300,12 +300,23 @@
 	
 	NSLog(@"Frame inside %@", NSStringFromCGRect(bigListEntry.superview.superview.frame));
 	
-	[UIView animateWithDuration:0.15 animations:^{
-		self.collectionView.contentOffset = CGPointMake(0, bigListEntry.superview.superview.frame.origin.y - 10);
-		[self layoutIfNeeded];
-	} completion:^(BOOL finished) {
-		[self tapTest:bigListEntry.collectionIndex];
-	}];
+	LMCollectionViewFlowLayout *flowLayout = (LMCollectionViewFlowLayout*)self.collectionView.collectionViewLayout;
+	
+	BOOL shouldOpenNewDetailView = (bigListEntry.collectionIndex != flowLayout.indexOfItemDisplayingDetailView);
+	BOOL detailViewNotCurrentlyOpen = (flowLayout.indexOfItemDisplayingDetailView == LMNoDetailViewSelected);
+	
+	flowLayout.indexOfItemDisplayingDetailView = LMNoDetailViewSelected;
+	
+	if(shouldOpenNewDetailView){
+		[NSTimer scheduledTimerWithTimeInterval:detailViewNotCurrentlyOpen ? 0.0 : 0.4 block:^{
+			[UIView animateWithDuration:0.15 animations:^{
+				self.collectionView.contentOffset = CGPointMake(0, bigListEntry.superview.superview.frame.origin.y - 10);
+				[self layoutIfNeeded];
+			} completion:^(BOOL finished) {
+				[self tapTest:bigListEntry.collectionIndex];
+			}];
+		} repeats:NO];
+	}
 }
 
 - (void)contentViewDoubleTappedForBigListEntry:(LMBigListEntry *)bigListEntry {
