@@ -33,7 +33,19 @@
  */
 @property id flowLayout;
 
+/**
+ The current size of an item inside of the actual list of tracks.
+
+ @return The size of an item.
+ */
 + (CGSize)currentItemSize;
+
+/**
+ The total size of the expandable track list view based on an amount of items. Includes all elements within.
+
+ @param amountOfItems The amount of items to calculate for.
+ @return The total size.
+ */
 + (CGSize)sizeForAmountOfItems:(NSInteger)amountOfItems;
 
 @end

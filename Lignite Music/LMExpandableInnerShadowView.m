@@ -28,7 +28,7 @@
 		
 		self.testView = [LMTriangleView newAutoLayoutView];
 		self.testView.maskDirection = LMTriangleMaskDirectionUpwards;
-		self.testView.triangleColour = [LMColour superLightGrayColour];
+		self.testView.triangleColour = [LMColour lightGrayBackgroundColour];
 		[self addSubview:self.testView];
 		
 		CGFloat triangleWidthFactorial = 0.15;

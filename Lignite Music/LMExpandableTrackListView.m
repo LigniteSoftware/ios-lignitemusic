@@ -8,6 +8,7 @@
 
 #import <PureLayout/PureLayout.h>
 
+#import "LMExpandableTrackListControlBar.h"
 #import "LMExpandableInnerShadowView.h"
 #import "LMExpandableTrackListView.h"
 #import "YIInnerShadowView.h"
@@ -17,9 +18,17 @@
 #import "LMColour.h"
 #import "LMExtras.h"
 
-@interface LMExpandableTrackListView()<UICollectionViewDelegate, UICollectionViewDataSource, LMListEntryDelegate>
+@interface LMExpandableTrackListView()<UICollectionViewDelegate, UICollectionViewDataSource, LMListEntryDelegate, LMExpandableTrackListControlBarDelegate>
 
-@property LMExpandableInnerShadowView *testView;
+/**
+ The control/navigation bar which goes above the view's collection view.
+ */
+@property LMExpandableTrackListControlBar *expandableTrackListControlBar;
+
+/**
+ The view which displays the inner shadow.
+ */
+@property LMExpandableInnerShadowView *innerShadowView;
 
 @end
 
@@ -125,6 +134,11 @@
 	size.height += (amountOfItems * [LMExpandableTrackListView currentItemSize].height)/numberOfColumns;
 	size.height += (amountOfItems * 10)/numberOfColumns; //Spacing
 	size.height += 10;
+	size.height += [LMExpandableTrackListControlBar recommendedHeight];
+	
+	if(numberOfColumns % 2 == 0 && amountOfItems % 2 != 0){ //If the number of columns is even but the amount of actual items is uneven
+		size.height += [LMExpandableTrackListView currentItemSize].height;
+	}
 	
 	return size;
 }
@@ -133,6 +147,12 @@
 	
 //	return CGSizeMake(self.frame.size.width, self.frame.size.height/[self collectionView:self.collectionView numberOfItemsInSection:0]);
 	return [LMExpandableTrackListView currentItemSize];
+}
+
+- (void)closeButtonTappedForExpandableTrackListControlBar:(LMExpandableTrackListControlBar *)controlBar {
+	NSLog(@"\"really?\"");
+	LMCollectionViewFlowLayout *flowLayout = (LMCollectionViewFlowLayout*)self.flowLayout;
+	flowLayout.indexOfItemDisplayingDetailView = LMNoDetailViewSelected;
 }
 
 - (void)layoutSubviews {
@@ -146,6 +166,17 @@
 	
 		self.clipsToBounds = NO;
 		
+		
+		self.expandableTrackListControlBar = [LMExpandableTrackListControlBar newAutoLayoutView];
+		self.expandableTrackListControlBar.delegate = self;
+		[self addSubview:self.expandableTrackListControlBar];
+		
+		[self.expandableTrackListControlBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.expandableTrackListControlBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
+		[self.expandableTrackListControlBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		
+		
+		
 		UICollectionViewFlowLayout *fuck = [[UICollectionViewFlowLayout alloc]init];
 		fuck.sectionInset = UIEdgeInsetsMake(10, 10, 10, 10);
 		
@@ -153,34 +184,38 @@
 		self.collectionView.translatesAutoresizingMaskIntoConstraints = NO;
 		self.collectionView.delegate = self;
 		self.collectionView.dataSource = self;
+		self.collectionView.userInteractionEnabled = NO;
 		self.collectionView.contentInset = UIEdgeInsetsMake(0, 0, 100, 0);
 		self.collectionView.backgroundColor = [LMColour superLightGrayColour];
 		[self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"cellIdentifier"];
 		[self addSubview:self.collectionView];
 		
-		[self.collectionView autoPinEdgesToSuperviewEdges];
+		[self.collectionView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.expandableTrackListControlBar];
+		[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 //		self.collectionView.hidden = YES;
 		
 		
-		self.testView = [LMExpandableInnerShadowView newAutoLayoutView];
-		self.testView.backgroundColor = [UIColor clearColor];
-		self.testView.userInteractionEnabled = NO;
-		self.testView.flowLayout = self.flowLayout;
-		[self addSubview:self.testView];
+		self.innerShadowView = [LMExpandableInnerShadowView newAutoLayoutView];
+		self.innerShadowView.backgroundColor = [UIColor clearColor];
+		self.innerShadowView.userInteractionEnabled = NO;
+		self.innerShadowView.flowLayout = self.flowLayout;
+		[self addSubview:self.innerShadowView];
 		
-		[self.testView autoPinEdgesToSuperviewEdges];
+		[self.innerShadowView autoPinEdgesToSuperviewEdges];
 	}
 	else{
 		[self.collectionView reloadData];
-		[self.testView removeFromSuperview];
+		[self.innerShadowView removeFromSuperview];
 		
-		self.testView = [LMExpandableInnerShadowView newAutoLayoutView];
-		self.testView.backgroundColor = [UIColor clearColor];
-		self.testView.userInteractionEnabled = NO;
-		self.testView.flowLayout = self.flowLayout;
-		[self addSubview:self.testView];
+		self.innerShadowView = [LMExpandableInnerShadowView newAutoLayoutView];
+		self.innerShadowView.backgroundColor = [UIColor clearColor];
+		self.innerShadowView.userInteractionEnabled = NO;
+		self.innerShadowView.flowLayout = self.flowLayout;
+		[self addSubview:self.innerShadowView];
 		
-		[self.testView autoPinEdgesToSuperviewEdges];
+		[self.innerShadowView autoPinEdgesToSuperviewEdges];
 	}
 	
 	[super layoutSubviews];
@@ -216,12 +251,12 @@
 //- (UIBezierPath*)path {
 //	UIBezierPath *path = [UIBezierPath new];
 //	[path moveToPoint:(CGPoint){self.frame.size.width/2, -self.frame.size.height*0.05}];
-//	[path addLineToPoint:(CGPoint){self.frame.size.width/2 + self.testView.frame.size.width/2, 0}];
+//	[path addLineToPoint:(CGPoint){self.frame.size.width/2 + self.innerShadowView.frame.size.width/2, 0}];
 //	[path addLineToPoint:(CGPoint){self.frame.size.width + 10, 0}];
 //	[path addLineToPoint:(CGPoint){self.frame.size.width + 10, self.frame.size.height}];
 //	[path addLineToPoint:(CGPoint){-10, self.frame.size.height}];
 //	[path addLineToPoint:(CGPoint){-10, 0}];
-//	[path addLineToPoint:(CGPoint){self.frame.size.width/2 - self.testView.frame.size.width/2, 0}];
+//	[path addLineToPoint:(CGPoint){self.frame.size.width/2 - self.innerShadowView.frame.size.width/2, 0}];
 //
 //	[path closePath];
 //	
@@ -232,7 +267,7 @@
 //- (void)drawRect:(CGRect)rect {
 //	[super drawRect:rect];
 //	
-//	NSLog(@"%@", NSStringFromCGRect(self.testView.frame));
+//	NSLog(@"%@", NSStringFromCGRect(self.innerShadowView.frame));
 //	
 //	[self drawInnerShadowInContext:UIGraphicsGetCurrentContext() withPath:[self path].CGPath shadowColor:[UIColor lightGrayColor].CGColor offset:CGSizeMake(0, 0) blurRadius:10];
 //}

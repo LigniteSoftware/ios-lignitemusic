@@ -45,4 +45,11 @@ typedef NS_ENUM(NSInteger, LMExpandableTrackListControlBarMode) {
  */
 @property LMExpandableTrackListControlBarMode mode;
 
+/**
+ The recommended height of any expandable track list control bar.
+
+ @return The recommended height in pixels.
+ */
++ (CGFloat)recommendedHeight;
+
 @end

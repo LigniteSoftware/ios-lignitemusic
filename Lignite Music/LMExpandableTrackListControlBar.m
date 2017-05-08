@@ -10,7 +10,9 @@
 
 #import "LMExpandableTrackListControlBar.h"
 #import "LMControlBarView.h"
+#import "LMLayoutManager.h"
 #import "LMAppIcon.h"
+#import "LMExtras.h"
 #import "LMColour.h"
 
 @interface LMExpandableTrackListControlBar()<LMControlBarViewDelegate>
@@ -44,7 +46,7 @@
 - (UIImage*)imageWithIndex:(uint8_t)index forControlBarView:(LMControlBarView*)controlBar {
 	switch(index){
 		case 0:{
-			BOOL isPlaying = NO; //[self.musicPlayer nowPlayingCollectionIsEqualTo:self.musicTrackCollection] && self.musicPlayer.playbackState == LMMusicPlaybackStatePlaying;
+			BOOL isPlaying = YES; //[self.musicPlayer nowPlayingCollectionIsEqualTo:self.musicTrackCollection] && self.musicPlayer.playbackState == LMMusicPlaybackStatePlaying;
 			
 			return [LMAppIcon invertImage:[LMAppIcon imageForIcon:isPlaying ? LMIconPause : LMIconPlay]];
 		}
@@ -63,8 +65,20 @@
 }
 
 
++ (CGFloat)recommendedHeight {
+	if([LMLayoutManager isiPad]){
+		return ([LMLayoutManager isLandscape] ? WINDOW_FRAME.size.height : WINDOW_FRAME.size.width)/8.0;
+	}
+	return ([LMLayoutManager isLandscape] ? WINDOW_FRAME.size.height : WINDOW_FRAME.size.width)/6.0;
+}
+
+
 - (void)reloadConstraints {
 	[NSLayoutConstraint deactivateConstraints:self.constraints];
+	
+	
+	[self autoSetDimension:ALDimensionHeight toSize:[LMExpandableTrackListControlBar recommendedHeight]];
+	
 	
 	[self.closeButtonImageView autoCenterInSuperview];
 	[self.closeButtonImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.closeButtonBackgroundView withMultiplier:(1.0/3.0)];

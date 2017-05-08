@@ -569,11 +569,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMExpandableTrackListView.m"
-            timestampString = "515873677.319901"
+            timestampString = "515934951.620866"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "236"
-            endingLineNumber = "236"
+            startingLineNumber = "271"
+            endingLineNumber = "271"
             landmarkName = "@implementation LMExpandableTrackListView"
             landmarkType = "3">
          </BreakpointContent>
@@ -585,11 +585,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMExpandableTrackListView.m"
-            timestampString = "515868419.713687"
+            timestampString = "515933147.448558"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "76"
-            endingLineNumber = "76"
+            startingLineNumber = "85"
+            endingLineNumber = "85"
             landmarkName = "-collectionView:cellForItemAtIndexPath:"
             landmarkType = "7">
          </BreakpointContent>

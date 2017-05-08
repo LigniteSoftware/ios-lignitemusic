@@ -837,17 +837,17 @@ LMControlBarViewDelegate
 	self.layoutManager.size = self.view.frame.size;
 	
 	
-	LMExpandableTrackListControlBar *testView = [LMExpandableTrackListControlBar newAutoLayoutView];
-	testView.backgroundColor = [UIColor orangeColor];
-	testView.mode = LMExpandableTrackListControlBarModeGeneralControl;
-	[self.view addSubview:testView];
-	
-	[testView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-	[testView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	[testView autoCenterInSuperview];
-	[testView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/10.0)];
-	
-	return;
+//	LMExpandableTrackListControlBar *testView = [LMExpandableTrackListControlBar newAutoLayoutView];
+//	testView.backgroundColor = [UIColor orangeColor];
+//	testView.mode = LMExpandableTrackListControlBarModeGeneralControl;
+//	[self.view addSubview:testView];
+//	
+//	[testView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+//	[testView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+//	[testView autoCenterInSuperview];
+//	[testView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/10.0)];
+//	
+//	return;
 	
 //	LMCompactBrowsingView *testView = [LMCompactBrowsingView newAutoLayoutView];
 //	testView.backgroundColor = [UIColor orangeColor];
