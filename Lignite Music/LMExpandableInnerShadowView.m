@@ -31,17 +31,17 @@
 		self.triangleView.triangleColour = [LMColour lightGrayBackgroundColour];
 		[self addSubview:self.triangleView];
 		
-		CGFloat triangleWidthFactorial = 0.15;
-		CGFloat halfTriangleWidth = (self.frame.size.width*triangleWidthFactorial)/2;
+		CGFloat triangleHeight = 25.0f;
+		CGFloat halfTriangleWidth = (triangleHeight);
 		
 		CGFloat widthPerItem = self.frame.size.width/self.flowLayout.itemsPerRow;
 		CGFloat column = self.flowLayout.indexOfItemDisplayingDetailView % self.flowLayout.itemsPerRow;
 		
 		[self.triangleView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self withOffset:1];
-		[self.triangleView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self withOffset:(column * widthPerItem) + halfTriangleWidth + (15.0 * 1)];
-		[self.triangleView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:triangleWidthFactorial];
+		[self.triangleView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self withOffset:(column * widthPerItem) + (widthPerItem/2.0) - halfTriangleWidth];
+		[self.triangleView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.triangleView withMultiplier:2.0];
 //		[self.triangleView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.05];
-		[self.triangleView autoSetDimension:ALDimensionHeight toSize:25];
+		[self.triangleView autoSetDimension:ALDimensionHeight toSize:triangleHeight];
 		
 		self.triangleInnerShadowView = [LMTriangleInnerShadowView newAutoLayoutView];
 		self.triangleInnerShadowView.backgroundColor = [UIColor clearColor];

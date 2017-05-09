@@ -81,8 +81,10 @@
 		[subview removeFromSuperview];
 	}
 	
+	LMCollectionViewFlowLayout *flowLayout = (LMCollectionViewFlowLayout*)self.collectionView.collectionViewLayout;
+	
 	if(cell.contentView.subviews.count == 0){
-		NSInteger fixedIndex = (indexPath.row/[LMExpandableTrackListView numberOfColumns]) + ((indexPath.row % [LMExpandableTrackListView numberOfColumns])*([self collectionView:self.collectionView numberOfItemsInSection:0]/[LMExpandableTrackListView numberOfColumns]));
+		NSInteger fixedIndex = indexPath.row; // (indexPath.row/[LMExpandableTrackListView numberOfColumns]) + ((indexPath.row % [LMExpandableTrackListView numberOfColumns])*([self collectionView:self.collectionView numberOfItemsInSection:0]/[LMExpandableTrackListView numberOfColumns]));
 		
 		LMListEntry *listEntry = [LMListEntry newAutoLayoutView];
 		listEntry.delegate = self;
@@ -93,6 +95,23 @@
 		listEntry.backgroundColor = [LMColour superLightGrayColour];
 		
 		[listEntry autoPinEdgesToSuperviewEdges];
+		
+		
+		BOOL isInLastRow = indexPath.row >= (self.musicTrackCollection.count-[LMExpandableTrackListView numberOfColumns]);
+		
+		if(!isInLastRow){
+			UIView *dividerView = [UIView newAutoLayoutView];
+			dividerView.backgroundColor = [UIColor colorWithRed:0.89 green:0.89 blue:0.89 alpha:1.0];
+			[listEntry addSubview:dividerView];
+			
+			[dividerView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+			[dividerView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+			[dividerView autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:-(flowLayout.sectionInset.bottom/2.0)];
+			[dividerView autoSetDimension:ALDimensionHeight toSize:1.0];
+		}
+		
+//		[dividerView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:listEntry];
+//		[dividerView autoPinEdge:ALT toEdge:<#(ALEdge)#> ofView:<#(nonnull UIView *)#>]
 		
 //		UILabel *testingLabel = [UILabel newAutoLayoutView];
 //		testingLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18.0f];

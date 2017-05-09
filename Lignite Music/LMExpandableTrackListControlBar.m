@@ -155,8 +155,8 @@
 	
 	
 	[self.musicControlBar autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
-	[self.musicControlBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(7.5/10.0)];
-	[self.musicControlBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(3.5/10.0)];
+	[self.musicControlBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(9.0/10.0)];
+	[self.musicControlBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(4.0/10.0)];
 
 	
 	switch(self.mode){

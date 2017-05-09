@@ -10,6 +10,7 @@
 #import "LMMusicPlayer.h"
 
 #define LMNoDetailViewSelected -1
+#define COMPACT_VIEW_SPACING_BETWEEN_ITEMS 15
 
 @interface LMCollectionViewFlowLayout : UICollectionViewFlowLayout
 

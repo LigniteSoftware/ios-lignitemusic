@@ -11,8 +11,6 @@
 #import "LMExtras.h"
 #import "NSTimer+Blocks.h"
 
-#define SPACING_BETWEEN_ITEMS 15
-
 @interface LMCollectionViewFlowLayout()
 
 /**
@@ -113,7 +111,7 @@
 	NSInteger amountOfItems = [self.collectionView.dataSource collectionView:self.collectionView numberOfItemsInSection:1];
 	if(amountOfItems > 0){
 		size.height += ([self frameForCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] detailViewDisplayMode:LMDetailViewDisplayModeNone].size.height * amountOfItems)/self.itemsPerRow;
-		size.height += (amountOfItems/self.itemsPerRow)*SPACING_BETWEEN_ITEMS;
+		size.height += (amountOfItems/self.itemsPerRow)*COMPACT_VIEW_SPACING_BETWEEN_ITEMS;
 	}
 	
 	return size;
@@ -195,7 +193,7 @@
 	CGSize collectionViewSize = self.collectionView.frame.size; //Get the current size of the collection view
 	CGFloat sideLength = collectionViewSize.width/factor; //Get the side length of one cell based on the factor provided
 	
-	sideLength -= SPACING_BETWEEN_ITEMS; //Remove 15px from it for spacing
+	sideLength -= COMPACT_VIEW_SPACING_BETWEEN_ITEMS; //Remove 15px from it for spacing
 	
 	CGFloat spacing = (collectionViewSize.width-(sideLength*factor))/(factor+1); //Calculate the amount of spacing total
 	
@@ -214,7 +212,7 @@
 		CGRect collectionViewFrame = self.collectionView.frame;
 		CGRect normalItemFrame = [self frameForCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] detailViewDisplayMode:LMDetailViewDisplayModeNone];
 		
-		detailViewHeight = (collectionViewFrame.size.height - normalItemFrame.size.height) - SPACING_BETWEEN_ITEMS - normalItemFrame.origin.y - 6; //I'm not going to pull my hair out trying to figure out where the 6 pixels actually comes from, sorry
+		detailViewHeight = (collectionViewFrame.size.height - normalItemFrame.size.height) - COMPACT_VIEW_SPACING_BETWEEN_ITEMS - normalItemFrame.origin.y - 6; //I'm not going to pull my hair out trying to figure out where the 6 pixels actually comes from, sorry
 		
 		detailViewHeight = fmin(detailViewHeight, maximumDetailViewHeight);
 	}

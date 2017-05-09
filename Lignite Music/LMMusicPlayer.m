@@ -1153,6 +1153,8 @@ BOOL shuffleForDebug = NO;
 	}
 	else if(self.playerType == LMMusicPlayerTypeAppleMusic){
 		[self.systemMusicPlayer play];
+		
+		NSLog(@"BPM %d", (int)self.systemMusicPlayer.nowPlayingItem.beatsPerMinute);
 	}
 #endif
 }
