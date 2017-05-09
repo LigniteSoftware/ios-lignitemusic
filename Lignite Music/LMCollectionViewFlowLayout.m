@@ -26,6 +26,11 @@
 @synthesize indexOfItemDisplayingDetailView = _indexOfItemDisplayingDetailView;
 @synthesize isDisplayingDetailView = _isDisplayingDetailView;
 @synthesize indexOfDetailView = _indexOfDetailView;
+@synthesize itemsPerRow = _itemsPerRow;
+
+- (NSInteger)itemsPerRow {
+	return [LMLayoutManager amountOfCollectionViewItemsPerRow];
+}
 
 - (BOOL)isDisplayingDetailView {
 	return self.indexOfItemDisplayingDetailView != LMNoDetailViewSelected;
@@ -183,10 +188,11 @@
 //	NSLog(@"%@/%d/%d/%d", (self.isDisplayingDetailView ? @"showing" : @"not showing"), (int)self.indexOfItemDisplayingDetailView, (int)self.indexOfDetailView, 3 % self.itemsPerRow);
 	
 	NSInteger detailViewIndexToUse = (detailViewDisplayMode == LMDetailViewDisplayModePreviousIndex) ? self.previousIndexOfDetailView : self.indexOfDetailView;
-	BOOL displayingDetailView = detailViewDisplayMode != LMDetailViewDisplayModeNone;
+	BOOL detailViewIndexIsNegative = detailViewIndexToUse < 0;
+	BOOL displayingDetailView = detailViewDisplayMode != LMDetailViewDisplayModeNone && !detailViewIndexIsNegative;
 	
-	BOOL isDetailViewRow = (indexPath.row == detailViewIndexToUse) && displayingDetailView;
-	BOOL isBelowDetailViewRow = (indexPath.row > detailViewIndexToUse) && displayingDetailView;
+	BOOL isDetailViewRow = (indexPath.row == detailViewIndexToUse) && displayingDetailView && !detailViewIndexIsNegative;
+	BOOL isBelowDetailViewRow = (indexPath.row > detailViewIndexToUse) && displayingDetailView && !detailViewIndexIsNegative;
 	
 	NSInteger fixedIndexPathRow = (indexPath.row - isBelowDetailViewRow);
 	
@@ -292,8 +298,6 @@
 	if(self) {
 		self.indexOfItemDisplayingDetailView = LMNoDetailViewSelected;
 		self.previousIndexOfItemDisplayingDetailView = LMNoDetailViewSelected;
-		
-		self.itemsPerRow = 3;
 	}
 	return self;
 }

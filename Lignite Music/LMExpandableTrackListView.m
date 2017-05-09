@@ -143,7 +143,7 @@
 
 + (CGSize)currentItemSize {
 	return CGSizeMake(WINDOW_FRAME.size.width/[LMExpandableTrackListView numberOfColumns] - 20,
-					  fmin(([LMLayoutManager isLandscape] ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height)/8.0, 100));
+					  fmin(([LMLayoutManager isLandscape] ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height)/8.0, 80));
 }
 
 + (CGSize)sizeForAmountOfItems:(NSInteger)amountOfItems {

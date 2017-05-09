@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
+#define LMCollectionViewItemsPerRowSettingsKey @"LMCollectionViewItemsPerRowSettingsKey"
+
 @class LMLayoutManager;
 
 @protocol LMLayoutChangeDelegate <NSObject>
@@ -27,6 +29,13 @@ typedef NS_ENUM(NSInteger, LMLayoutClass) {
 	LMLayoutClassiPad       = 2
 };
 
+typedef NS_ENUM(NSInteger, LMScreenSizeClass) {
+	LMScreenSizeClassPhone     = 0,
+	LMScreenSizeClassiPadMini  = 1,
+	LMScreenSizeClassiPadAir   = 2,
+	LMScreenSizeClassiPadPro   = 3
+};
+
 @property (readonly) LMLayoutClass currentLayoutClass;
 @property UITraitCollection *traitCollection;
 @property CGSize size;
@@ -35,6 +44,7 @@ typedef NS_ENUM(NSInteger, LMLayoutClass) {
 + (BOOL)isLandscape;
 + (BOOL)isLandscapeiPad;
 + (BOOL)isiPad;
++ (NSInteger)amountOfCollectionViewItemsPerRow;
 + (LMLayoutManager*)sharedLayoutManager;
 - (void)addDelegate:(id<LMLayoutChangeDelegate>)delegate;
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection;

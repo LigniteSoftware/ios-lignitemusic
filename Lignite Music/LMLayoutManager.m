@@ -6,6 +6,8 @@
 //  Copyright © 2017 Lignite. All rights reserved.
 //
 
+#import <sys/utsname.h>
+
 #import "LMLayoutManager.h"
 
 @interface LMLayoutManager()
@@ -141,6 +143,177 @@
 + (BOOL)isiPad {
 	LMLayoutManager *layoutManager = [LMLayoutManager sharedLayoutManager];
 	return [layoutManager currentLayoutClass] == LMLayoutClassiPad;
+}
+
++ (NSString*)deviceName {
+	struct utsname systemInfo;
+	uname(&systemInfo);
+	
+	return [NSString stringWithCString:systemInfo.machine
+							  encoding:NSUTF8StringEncoding];
+}
+
++ (LMScreenSizeClass)screenSizeClass {
+	NSString *deviceName = [LMLayoutManager deviceName];
+	
+	NSArray *iPadMiniDeviceNames = @[
+									 // iPad Mini
+									 @"iPad2,5", // - Wifi (model A1432)
+									 @"iPad2,6", // - Wifi + Cellular (model  A1454)
+									 @"iPad2,7", // - Wifi + Cellular (model  A1455)
+									 
+									 // iPad Mini 2
+									 @"iPad4,4", // - Wifi (model A1489)
+									 @"iPad4,5", // - Wifi + Cellular (model A1490)
+									 @"iPad4,6", // - Wifi + Cellular (model A1491)
+									 
+									 // iPad Mini 3
+									 @"iPad4,7", // - Wifi (model A1599)
+									 @"iPad4,8", // - Wifi + Cellular (model A1600)
+									 @"iPad4,9", // - Wifi + Cellular (model A1601)
+									 
+									 // iPad Mini 4
+									 @"iPad5,1", // - Wifi (model A1538)
+									 @"iPad5,2", // - Wifi + Cellular (model A1550)
+									 ];
+	
+	NSArray *iPadAirOrRegularDeviceNames = @[
+											 //iPad 2
+											 @"iPad2,1", // - Wifi (model A1395)
+											 @"iPad2,2", // - GSM (model A1396)
+											 @"iPad2,3", // - 3G (model A1397)
+											 @"iPad2,4", // - Wifi (model A1395)
+											 
+											 //iPad 3
+											 @"iPad3,1", // - Wifi (model A1416)
+											 @"iPad3,2", // - Wifi + Cellular (model  A1403)
+											 @"iPad3,3", // - Wifi + Cellular (model  A1430)
+											 
+											 //iPad 4
+											 @"iPad3,4", // - Wifi (model A1458)
+											 @"iPad3,5", // - Wifi + Cellular (model  A1459)
+											 @"iPad3,6", // - Wifi + Cellular (model  A1460)
+											 
+											 //iPad AIR
+											 @"iPad4,1", // - Wifi (model A1474)
+											 @"iPad4,2", // - Wifi + Cellular (model A1475)
+											 @"iPad4,3", // - Wifi + Cellular (model A1476)
+											 
+											 //iPad AIR 2
+											 @"iPad5,3", // - Wifi (model A1566)
+											 @"iPad5,4", // - Wifi + Cellular (model A1567)
+											 
+											 //iPad PRO 9.7"
+											 @"iPad6,7", // - Wifi (model A1584)
+											 @"iPad6,8", // - Wifi + Cellular (model A1652)
+									 ];
+	
+	NSArray *iPadProDeviceNames = @[
+									// iPad PRO 12.9"
+									@"iPad6,3", // - Wifi (model A1673)
+									@"iPad6,4", // - Wifi + Cellular (model A1674)
+									@"iPad6,4", // - Wifi + Cellular (model A1675)
+									 ];
+	
+	if([iPadMiniDeviceNames containsObject:deviceName]){
+		return LMScreenSizeClassiPadMini;
+	}
+	else if([iPadAirOrRegularDeviceNames containsObject:deviceName]){
+		return LMScreenSizeClassiPadAir;
+	}
+	else if([iPadProDeviceNames containsObject:deviceName]){
+		return LMScreenSizeClassiPadPro;
+	}
+	
+	return LMScreenSizeClassPhone;
+}
+
++ (NSInteger)amountOfCollectionViewItemsPerRow {
+//	LMLayoutManager *layoutManager = [LMLayoutManager sharedLayoutManager];
+	
+	BOOL columnLoverMode = NO;
+	BOOL isLandscape = [LMLayoutManager isLandscape] || [LMLayoutManager isLandscapeiPad];
+	NSInteger amountOfItems = 2;
+	
+	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+	if([userDefaults objectForKey:LMCollectionViewItemsPerRowSettingsKey]) {
+		columnLoverMode = [userDefaults integerForKey:LMCollectionViewItemsPerRowSettingsKey];
+	}
+	
+	LMScreenSizeClass screenSizeClass = [LMLayoutManager screenSizeClass];
+	
+	if(isLandscape){
+		if(columnLoverMode){
+			switch(screenSizeClass){
+				case LMScreenSizeClassPhone: {
+					return 5;
+				}
+				case LMScreenSizeClassiPadMini: {
+					return 6;
+				}
+				case LMScreenSizeClassiPadAir: {
+					return 9;
+				}
+				case LMScreenSizeClassiPadPro: {
+					return 11;
+				}
+			}
+		}
+		//Not column lover mode
+		else{
+			switch(screenSizeClass){
+				case LMScreenSizeClassPhone: {
+					return 4;
+				}
+				case LMScreenSizeClassiPadMini: {
+					return 5;
+				}
+				case LMScreenSizeClassiPadAir: {
+					return 8;
+				}
+				case LMScreenSizeClassiPadPro: {
+					return 10;
+				}
+			}
+		}
+	}
+	else{
+		if(columnLoverMode){
+			switch(screenSizeClass){
+				case LMScreenSizeClassPhone: {
+					return 3;
+				}
+				case LMScreenSizeClassiPadMini: {
+					return 5;
+				}
+				case LMScreenSizeClassiPadAir: {
+					return 7;
+				}
+				case LMScreenSizeClassiPadPro: {
+					return 9;
+				}
+			}
+		}
+		//Not column lover mode
+		else{
+			switch(screenSizeClass){
+				case LMScreenSizeClassPhone: {
+					return 2;
+				}
+				case LMScreenSizeClassiPadMini: {
+					return 4;
+				}
+				case LMScreenSizeClassiPadAir: {
+					return 6;
+				}
+				case LMScreenSizeClassiPadPro: {
+					return 8;
+				}
+			}
+		}
+	}
+	
+	return amountOfItems;
 }
 
 - (LMLayoutClass)currentLayoutClass {
