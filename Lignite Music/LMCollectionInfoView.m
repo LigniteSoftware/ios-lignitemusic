@@ -77,7 +77,7 @@
 		self.rightTextLabel.textAlignment = NSTextAlignmentLeft;
 		[self.bottomView addSubview:self.rightTextLabel];
 		
-		self.backgroundColor = [UIColor whiteColor];
+		self.backgroundColor = [UIColor clearColor];
 	}
 	else{
 		NSLog(@"Windows error creating LMCollectionInfoView");
