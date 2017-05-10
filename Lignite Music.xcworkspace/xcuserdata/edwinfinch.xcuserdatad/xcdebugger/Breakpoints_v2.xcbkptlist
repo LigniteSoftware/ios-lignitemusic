@@ -436,11 +436,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMLayoutManager.m"
-            timestampString = "516102026.960803"
+            timestampString = "516102675.472856"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "177"
-            endingLineNumber = "177"
+            startingLineNumber = "154"
+            endingLineNumber = "154"
             landmarkName = "+isLandscapeiPad"
             landmarkType = "7">
          </BreakpointContent>

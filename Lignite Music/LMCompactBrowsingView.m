@@ -441,13 +441,13 @@
     }];
 }
 
-//- (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
-//	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-//		[self.collectionView reloadData];
-//	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-//		//Nothin'
-//	}];
-//}
+- (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		[self.collectionView reloadData];
+	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		//Nothin'
+	}];
+}
 
 - (void)layoutSubviews {
 	[super layoutSubviews];
