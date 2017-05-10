@@ -10,6 +10,23 @@
 
 #import "LMLayoutManager.h"
 
+#import "LMMiniPlayerCoreView.h"
+#import "LMGuideViewPagerController.h"
+#import "LMGuideViewController.h"
+#import "LMTitleView.h"
+#import "LMButtonNavigationBar.h"
+#import "LMSourceSelectorView.h"
+#import "LMNowPlayingView.h"
+#import "LMSectionTableView.h"
+#import "LMSearchViewController.h"
+#import "LMTutorialView.h"
+#import "LMAlertView.h"
+#import "LMFeedbackViewController.h"
+#import "LMCreditsViewController.h"
+#import "LMTrackInfoView.h"
+#import "LMProgressSlider.h"
+#import "LMBrowsingDetailView.h"
+
 @interface LMLayoutManager()
 
 /**
@@ -343,7 +360,7 @@
 	}
 	
 	NSLog(@"Swapping out %ld/%ld/%ld constraints...", (unsigned long)self.portraitConstraintsArray.count, (unsigned long)self.landscapeConstraintsArray.count, (unsigned long)self.iPadConstraintsArray.count);
-	
+		
 	if([LMLayoutManager isiPad]){
 		[NSLayoutConstraint deactivateConstraints:self.portraitConstraintsArray];
 		[NSLayoutConstraint deactivateConstraints:self.landscapeConstraintsArray];
@@ -380,32 +397,30 @@
 		[NSLayoutConstraint activateConstraints:self.isLandscape ? self.landscapeConstraintsArray : self.portraitConstraintsArray];
 	}
 	
-	NSLog(@"Swapped, now animating.");
+	NSLog(@"Swapped constraints, now animating.");
 }
 
 - (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
 	self.size = size;
 	
+	//	NSArray *approvedClasses = @[
+	//								 [LMMiniPlayerCoreView class], [LMGuideViewPagerController class], [LMGuideViewController class], [LMTitleView class], [LMButtonNavigationBar class], [LMSourceSelectorView class], [LMNowPlayingView class], [LMSectionTableView class], [LMSearchViewController class], [LMLetterTabBar class], [LMTutorialView class], [LMAlertView class], [LMFeedbackViewController class], [LMCreditsViewController class], [LMBrowsingBar class], [LMTrackInfoView class],
+	//								 [LMProgressSlider class], [LMBrowsingDetailView class]
+	//								 ];
+	
 	for(id<LMLayoutChangeDelegate>delegate in self.delegates){
 		if([delegate respondsToSelector:@selector(rootViewWillTransitionToSize:withTransitionCoordinator:)]){
+			//			Class class = [delegate class];
+			//
+			//			if([approvedClasses containsObject:class]){
+			//				NSLog(@"%@ IS approved, pinging", [class description]);
 			[delegate rootViewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+			//			}
+			//			else{
+			//				NSLog(@"%@ is not an approved class for rotation", [class description]);
+			//			}
 		}
 	}
-	
-//	BOOL willBeLandscape = size.width > size.height;
-//	
-//	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-//		
-//		NSLog(@"Swapping out constraints...");
-//		
-//		[NSLayoutConstraint deactivateConstraints:willBeLandscape ? self.portraitConstraintsArray : self.landscapeConstraintsArray];
-//		[NSLayoutConstraint activateConstraints:willBeLandscape ? self.landscapeConstraintsArray : self.portraitConstraintsArray];
-//		
-//		NSLog(@"Swapped, now animating.");
-//		
-//	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-//		NSLog(@"Done.");
-//	}];
 }
 
 @end

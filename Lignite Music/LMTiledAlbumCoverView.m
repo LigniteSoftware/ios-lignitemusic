@@ -205,6 +205,8 @@
 						}
 					}
 				}
+				
+				operation = nil;
 			});
 			
 		}
@@ -218,8 +220,8 @@
 - (NSMutableDictionary*)uniqueAlbumsInCollection {
 	NSMutableDictionary *albumIdsCountDictionary = [NSMutableDictionary new];
 	
-    NSTimeInterval startTime = [[NSDate new] timeIntervalSince1970];
-    
+//    NSTimeInterval startTime = [[NSDate new] timeIntervalSince1970];
+	
 	LMMusicTrackCollection *collectionToIterate = self.musicCollection;
 	
 	for(int i = 0; i < collectionToIterate.count; i++){
@@ -247,7 +249,7 @@
         }
 	}
     
-    NSTimeInterval endTime = [[NSDate new] timeIntervalSince1970];
+//    NSTimeInterval endTime = [[NSDate new] timeIntervalSince1970];
     
 //    NSLog(@"Converted covers (%ld) in %f seconds", collectionToIterate.count, endTime-startTime);
 	

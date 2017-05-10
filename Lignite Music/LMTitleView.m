@@ -189,6 +189,8 @@
 			
 			[entry reloadContents];
 			
+			operation = nil;
+			
 			//	LMMusicTrack *track = [self.musicTitles.items objectAtIndex:entry.collectionIndex];
 			//	return [track albumArt];
 		});

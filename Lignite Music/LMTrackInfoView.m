@@ -111,8 +111,6 @@
 	if(!self.didLayoutConstraints){
 		self.didLayoutConstraints = YES;
 		
-		[self.layoutManager addDelegate:self];
-		
 		self.titleLabel = [MarqueeLabel newAutoLayoutView];
 		self.artistLabel = [MarqueeLabel newAutoLayoutView];
 		self.albumLabel = [MarqueeLabel newAutoLayoutView];
@@ -175,6 +173,7 @@
 	if(self){
 		self.textColour = [UIColor blackColor];
 		self.layoutManager = [LMLayoutManager sharedLayoutManager];
+		[self.layoutManager addDelegate:self];
 	}
 	return self;
 }

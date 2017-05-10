@@ -367,6 +367,8 @@
 				break;
 		}
 		completionHandler(image == nil);
+		
+		albumArtOperation = nil;
 	}];
 	
 	[self.operationQueue addOperation:albumArtOperation];

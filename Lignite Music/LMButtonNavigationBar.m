@@ -165,9 +165,7 @@
 
 - (void)setViewAttachedToButtonBar:(UIView *)viewAttachedToButtonBar {
 	UIView *previouslyAttachedView = self.viewAttachedToButtonBar;
-	
-	NSLog(@"Set view attached with class %@", [[viewAttachedToButtonBar class] description]);
-	
+		
 	BOOL isDecreasing = self.layoutManager.isLandscape ? (viewAttachedToButtonBar.frame.size.width < previouslyAttachedView.frame.size.width)
 		: (viewAttachedToButtonBar.frame.size.height < previouslyAttachedView.frame.size.height);
 	

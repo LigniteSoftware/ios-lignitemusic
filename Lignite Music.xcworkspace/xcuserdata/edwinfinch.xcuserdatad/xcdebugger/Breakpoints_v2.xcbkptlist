@@ -13,70 +13,6 @@
             timestampString = "515467393.620416"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "186"
-            endingLineNumber = "186"
-            landmarkName = "-setViewAttachedToButtonBar:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Lignite Music/LMButtonNavigationBar.m"
-            timestampString = "515467393.620416"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "187"
-            endingLineNumber = "187"
-            landmarkName = "-setViewAttachedToButtonBar:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Lignite Music/LMButtonNavigationBar.m"
-            timestampString = "515467393.620416"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "156"
-            endingLineNumber = "156"
-            landmarkName = "-topConstrantForView:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Lignite Music/LMButtonNavigationBar.m"
-            timestampString = "515467393.620416"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "153"
-            endingLineNumber = "153"
-            landmarkName = "-topConstrantForView:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Lignite Music/LMButtonNavigationBar.m"
-            timestampString = "515467393.620416"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
             startingLineNumber = "141"
             endingLineNumber = "141"
             landmarkName = "-setButtonBarBottomConstraintConstant:completion:"
@@ -90,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMCoreViewController.m"
-            timestampString = "515931156.540164"
+            timestampString = "516092546.388305"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1267"
-            endingLineNumber = "1267"
+            startingLineNumber = "1271"
+            endingLineNumber = "1271"
             landmarkName = "-viewDidLoad"
             landmarkType = "7">
          </BreakpointContent>
@@ -186,11 +122,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMCoreViewController.m"
-            timestampString = "515931156.540164"
+            timestampString = "516092546.388305"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1124"
-            endingLineNumber = "1124"
+            startingLineNumber = "1128"
+            endingLineNumber = "1128"
             landmarkName = "-viewDidLoad"
             landmarkType = "7">
          </BreakpointContent>
@@ -218,11 +154,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMCoreViewController.m"
-            timestampString = "515931156.540164"
+            timestampString = "516092546.388305"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1123"
-            endingLineNumber = "1123"
+            startingLineNumber = "1127"
+            endingLineNumber = "1127"
             landmarkName = "-viewDidLoad"
             landmarkType = "7">
          </BreakpointContent>
@@ -298,11 +234,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMButtonNavigationBar.m"
-            timestampString = "515564275.741477"
+            timestampString = "516092956.511982"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "281"
-            endingLineNumber = "281"
+            startingLineNumber = "279"
+            endingLineNumber = "279"
             landmarkName = "-maximize:"
             landmarkType = "7">
          </BreakpointContent>
@@ -314,11 +250,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMButtonNavigationBar.m"
-            timestampString = "515564275.741477"
+            timestampString = "516092956.511982"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "418"
-            endingLineNumber = "418"
+            startingLineNumber = "416"
+            endingLineNumber = "416"
             landmarkName = "-rootViewWillTransitionToSize:withTransitionCoordinator:"
             landmarkType = "7">
          </BreakpointContent>
@@ -330,11 +266,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMButtonNavigationBar.m"
-            timestampString = "515564275.741477"
+            timestampString = "516092956.511982"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "421"
-            endingLineNumber = "421"
+            startingLineNumber = "419"
+            endingLineNumber = "419"
             landmarkName = "-rootViewWillTransitionToSize:withTransitionCoordinator:"
             landmarkType = "7">
          </BreakpointContent>
@@ -388,11 +324,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMButtonNavigationBar.m"
-            timestampString = "515564275.741477"
+            timestampString = "516092956.511982"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "413"
-            endingLineNumber = "413"
+            startingLineNumber = "411"
+            endingLineNumber = "411"
             landmarkName = "-rootViewWillTransitionToSize:withTransitionCoordinator:"
             landmarkType = "7">
          </BreakpointContent>
@@ -500,11 +436,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMLayoutManager.m"
-            timestampString = "516043281.784486"
+            timestampString = "516102026.960803"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "137"
-            endingLineNumber = "137"
+            startingLineNumber = "177"
+            endingLineNumber = "177"
             landmarkName = "+isLandscapeiPad"
             landmarkType = "7">
          </BreakpointContent>

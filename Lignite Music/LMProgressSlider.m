@@ -307,7 +307,6 @@
 }
 
 - (void)setSliderAsShrunk:(BOOL)shrunk {
-	NSLog(@"Setting as shrunk %d", shrunk);
 	[self layoutIfNeeded];
 	
 	self.sliderIsShrunk = shrunk;

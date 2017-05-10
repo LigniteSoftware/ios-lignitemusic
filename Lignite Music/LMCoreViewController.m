@@ -750,9 +750,13 @@ LMControlBarViewDelegate
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
+//	return;
+	
 	[super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 	
 	[self.layoutManager rootViewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+	
+//	return;
 	
 	BOOL willBeLandscape = size.width > size.height;
 	if([LMLayoutManager isiPad]){

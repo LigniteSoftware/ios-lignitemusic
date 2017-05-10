@@ -86,6 +86,8 @@
 			}
 			
 			self.albumArtImageView.image = albumImage;
+			
+			operation = nil;
 		});
 	}];
 	

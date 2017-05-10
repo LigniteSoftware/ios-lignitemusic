@@ -242,6 +242,8 @@
 //			NSLog(@"Spook me solid");
 			
 			self.albumArtImageView.image = albumArt ? albumArt : [LMAppIcon imageForIcon:LMIconNoAlbumArt];
+			
+			operation = nil;
 		});
 	}];
 	
