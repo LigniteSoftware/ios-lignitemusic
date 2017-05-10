@@ -273,6 +273,11 @@
 	return indexPathsInRect;
 }
 
+//- (CGPoint)targetContentOffsetForProposedContentOffset:(CGPoint)proposedContentOffset {
+//	NSInteger page = ceil(proposedContentOffset.y / [self.collectionView frame].size.height);
+//	return CGPointMake(0, page * [self.collectionView frame].size.height);
+//}
+
 - (NSArray<__kindof UICollectionViewLayoutAttributes *> *)layoutAttributesForElementsInRect:(CGRect)rect {
 	NSMutableArray *layoutAttributes = [NSMutableArray new];
 	

@@ -442,10 +442,33 @@
 }
 
 - (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+	BOOL willBePortrait = size.height > size.width;
+	
+	CGRect visibleRect = (CGRect){.origin = self.collectionView.contentOffset, .size = self.collectionView.bounds.size};
+	CGPoint visiblePoint = CGPointMake(visibleRect.size.width/4.0, CGRectGetMidY(visibleRect));
+	__strong NSIndexPath *visibleIndexPath = [self.collectionView indexPathForItemAtPoint:visiblePoint];
+//	LMCollectionViewCell *topCell = visibleCells.count > 0 ? [visibleCells firstObject] : nil;
+	
+//	CGPoint offset = self.collectionView.contentOffset;
+//	CGFloat height = self.collectionView.bounds.size.width;
+//	
+//	NSInteger index = round(offset.y / height);
+//	index = index/2;
+//	CGPoint newOffset = CGPointMake(0, index * size.height);
+//	
+//	[self.collectionView setContentOffset:newOffset animated:NO];
+	
 	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+//		[self.collectionView scrollToItemAtIndexPath:visibleIndexPath atScrollPosition:UICollectionViewScrollPositionCenteredVertically animated:NO];
 		[self.collectionView reloadData];
+//		[self.collectionView setContentOffset:newOffset animated:NO];
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-		//Nothin'
+		[UIView animateWithDuration:0.25 animations:^{
+			[self.collectionView reloadData];
+			[self.collectionView scrollToItemAtIndexPath:visibleIndexPath atScrollPosition:UICollectionViewScrollPositionCenteredVertically animated:NO];
+			NSLog(@"Scrolling to %@", visibleIndexPath);
+//			[self.collectionView setContentOffset:CGPointMake(0, topCell.frame.origin.y - (COMPACT_VIEW_SPACING_BETWEEN_ITEMS/2)) animated:YES];
+		}];
 	}];
 }
 
