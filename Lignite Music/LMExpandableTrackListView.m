@@ -18,7 +18,7 @@
 #import "LMColour.h"
 #import "LMExtras.h"
 
-@interface LMExpandableTrackListView()<UICollectionViewDelegate, UICollectionViewDataSource, LMListEntryDelegate, LMExpandableTrackListControlBarDelegate>
+@interface LMExpandableTrackListView()<UICollectionViewDelegate, UICollectionViewDataSource, LMListEntryDelegate, LMExpandableTrackListControlBarDelegate, LMMusicPlayerDelegate>
 
 /**
  The control/navigation bar which goes above the view's collection view.
@@ -30,6 +30,16 @@
  */
 @property LMExpandableInnerShadowView *innerShadowView;
 
+/**
+ The music player.
+ */
+@property LMMusicPlayer *musicPlayer;
+
+/**
+ The currently highlighted entry.
+ */
+@property NSInteger currentlyHighlightedEntry;
+
 @end
 
 @implementation LMExpandableTrackListView
@@ -40,8 +50,90 @@
 	return fmax(1.0, WINDOW_FRAME.size.width/300.0f);
 }
 
+- (void)musicTrackDidChange:(LMMusicTrack *)newTrack {
+	LMListEntry *highlightedEntry = nil;
+	int newHighlightedIndex = -1;
+	//	if(self.specificTrackCollections){
+	//		int count = 0;
+	//		for(LMMusicTrackCollection *collection in self.specificTrackCollections){
+	//			for(LMMusicTrack *track in collection.items){
+	//				if(track.persistentID == newTrack.persistentID){
+	//					newHighlightedIndex = count;
+	//					NSLog(@"Found a match");
+	//				}
+	//			}
+	//			count++;
+	//		}
+	//	}
+	//	else{
+	for(int i = 0; i < self.musicTrackCollection.trackCount; i++){
+		LMMusicTrack *track = [self.musicTrackCollection.items objectAtIndex:i];
+		
+		if(track.persistentID == newTrack.persistentID){
+			newHighlightedIndex = i;
+		}
+	}
+	//	}
+	
+	highlightedEntry = [self listEntryForIndex:newHighlightedIndex];
+	
+	LMListEntry *previousHighlightedEntry = [self listEntryForIndex:self.currentlyHighlightedEntry];
+	if(![previousHighlightedEntry isEqual:highlightedEntry] || highlightedEntry == nil){
+		[previousHighlightedEntry changeHighlightStatus:NO animated:YES];
+		BOOL updateNowPlayingStatus = self.currentlyHighlightedEntry == -1;
+		self.currentlyHighlightedEntry = newHighlightedIndex;
+		if(updateNowPlayingStatus){
+			[self musicPlaybackStateDidChange:self.musicPlayer.playbackState];
+		}
+	}
+	
+	if(highlightedEntry){
+		[highlightedEntry changeHighlightStatus:YES animated:YES];
+	}
+}
+
+- (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState {
+	
+}
+
+- (LMListEntry*)listEntryForIndex:(NSInteger)index {
+	if(index == -1){
+		return nil;
+	}
+	
+	UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0]];
+	for(id subview in cell.contentView.subviews){
+		if([subview class] == [LMListEntry class]){
+			return subview;
+		}
+	}
+	return nil;
+}
+
 - (void)tappedListEntry:(LMListEntry*)entry {
 	NSLog(@"Tapped %d", (int)entry.collectionIndex);
+	
+	LMMusicTrack *track = [self.musicTrackCollection.items objectAtIndex:entry.collectionIndex];
+	
+	LMListEntry *previousHighlightedEntry = [self listEntryForIndex:self.currentlyHighlightedEntry];
+	if(previousHighlightedEntry){
+		[previousHighlightedEntry changeHighlightStatus:NO animated:YES];
+	}
+	
+	[entry changeHighlightStatus:YES animated:YES];
+	self.currentlyHighlightedEntry = entry.collectionIndex;
+	
+	if(self.musicPlayer.nowPlayingCollection != self.musicTrackCollection){
+#ifdef SPOTIFY
+		[self.musicPlayer pause];
+#else
+		[self.musicPlayer stop];
+#endif
+		[self.musicPlayer setNowPlayingCollection:self.musicTrackCollection];
+	}
+	self.musicPlayer.autoPlay = YES;
+	
+	[self.musicPlayer setNowPlayingTrack:track];
 }
 
 - (UIColor*)tapColourForListEntry:(LMListEntry*)entry {
@@ -101,6 +193,8 @@
 		
 		[listEntry autoPinEdgesToSuperviewEdges];
 		
+		[listEntry changeHighlightStatus:fixedIndex == self.currentlyHighlightedEntry animated:NO];
+		
 		
 		BOOL isInLastRow = indexPath.row >= (self.musicTrackCollection.count-[LMExpandableTrackListView numberOfColumns]);
 		
@@ -114,25 +208,6 @@
 			[dividerView autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:-(flowLayout.sectionInset.bottom/2.0)];
 			[dividerView autoSetDimension:ALDimensionHeight toSize:1.0];
 		}
-		
-//		[dividerView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:listEntry];
-//		[dividerView autoPinEdge:ALT toEdge:<#(ALEdge)#> ofView:<#(nonnull UIView *)#>]
-		
-//		UILabel *testingLabel = [UILabel newAutoLayoutView];
-//		testingLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18.0f];
-//		testingLabel.text = [NSString stringWithFormat:@"%zd (%zd - %zd)", fixedIndex, indexPath.section, indexPath.row];
-//		testingLabel.textAlignment = NSTextAlignmentCenter;
-//		[cell.contentView addSubview:testingLabel];
-//		
-//		[testingLabel autoPinEdgesToSuperviewEdges];
-		
-//		UIView *testingSubview = [UIView newAutoLayoutView];
-//		testingSubview.backgroundColor = [LMColour randomColour];
-//		[cell.contentView addSubview:testingSubview];
-//
-//		[testingSubview autoCenterInSuperview];
-//		[testingSubview autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:cell.contentView withMultiplier:0.5];
-//		[testingSubview autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:cell.contentView withMultiplier:0.5];
 	}
 	
 	return cell;
@@ -189,8 +264,15 @@
 //		[subview removeFromSuperview];
 //		subview.hidden = YES;
 //	}
+		
 	
 		self.clipsToBounds = NO;
+		
+		
+		self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
+		[self.musicPlayer addMusicDelegate:self];
+		
+		self.currentlyHighlightedEntry = -1;
 		
 		
 		self.expandableTrackListControlBar = [LMExpandableTrackListControlBar newAutoLayoutView];
@@ -231,6 +313,8 @@
 		[self addSubview:self.innerShadowView];
 		
 		[self.innerShadowView autoPinEdgesToSuperviewEdges];
+		
+		[self musicTrackDidChange:self.musicPlayer.nowPlayingTrack];
 	}
 	else{
 		[self.collectionView reloadData];
@@ -243,6 +327,8 @@
 		[self addSubview:self.innerShadowView];
 		
 		[self.innerShadowView autoPinEdgesToSuperviewEdges];
+		
+		[self musicTrackDidChange:self.musicPlayer.nowPlayingTrack];
 	}
 	
 	[super layoutSubviews];
