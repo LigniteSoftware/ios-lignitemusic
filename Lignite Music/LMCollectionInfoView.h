@@ -61,7 +61,7 @@
 @property LMBigListEntry *associatedBigListEntry;
 
 /**
- Whether or not to keep it in large mode. If YES, it will increase the size of the title over the contents below title. Default is NO.
+ Whether or not to keep it in large mode. If YES, it will increase the size of the title over the contents below title. Default is YES.
  */
 @property BOOL largeMode;
 

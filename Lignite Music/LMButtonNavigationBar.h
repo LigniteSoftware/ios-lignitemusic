@@ -39,6 +39,11 @@ typedef NS_ENUM(NSUInteger, LMNavigationTab) {
 };
 
 /**
+ The currently selected tab.
+ */
+@property LMNavigationTab currentlySelectedTab;
+
+/**
  The root view controller.
  */
 @property id rootViewController;

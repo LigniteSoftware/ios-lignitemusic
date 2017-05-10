@@ -35,6 +35,7 @@
 	self = [super init];
 	if(self) {
 		self.textAlignment = NSTextAlignmentCenter;
+		self.largeMode = YES;
 		
 		self.topView = [UIView newAutoLayoutView];
 //		self.topView.backgroundColor = [UIColor redColor];
@@ -118,7 +119,7 @@
 		[self.bottomView autoAlignAxisToSuperviewAxis:ALAxisVertical];
 		[self.bottomView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.topView];
 		[self.bottomView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.topView];
-		[self.bottomView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:self.largeMode ? (2.5/10.0) : (3.5/10.0)];
+		[self.bottomView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:self.largeMode ? (3.0/10.0) : (3.5/10.0)];
 		
 		[self.titleLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.topView withOffset:0];
 		[self.titleLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.topView withOffset:-0];

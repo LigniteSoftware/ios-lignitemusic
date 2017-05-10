@@ -115,13 +115,13 @@
 			[self addSubview:newBackgroundView];
 			
 			NSArray *newBackgroundViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-				[newBackgroundView autoPinEdge:ALEdgeLeading toEdge:isFirst ? ALEdgeLeading : ALEdgeTrailing ofView:previousView withOffset:1];
+				[newBackgroundView autoPinEdge:ALEdgeLeading toEdge:isFirst ? ALEdgeLeading : ALEdgeTrailing ofView:previousView withOffset:!isFirst];
 				[newBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 				[newBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 				[newBackgroundView autoMatchDimension:ALDimensionWidth
 										  toDimension:ALDimensionWidth
 											   ofView:self
-									   withMultiplier:(1.0/(CGFloat)self.amountOfButtons)];
+									   withMultiplier:(1.0/(CGFloat)self.amountOfButtons)].constant = (i == 1) ? -2 : 0;
 			}];
 			[LMLayoutManager addNewPortraitConstraints:newBackgroundViewPortraitConstraints];
 			

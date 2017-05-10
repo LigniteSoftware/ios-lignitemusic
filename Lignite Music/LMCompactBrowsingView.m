@@ -369,6 +369,9 @@
 			
 			[detailView autoPinEdgesToSuperviewEdges];
 			
+			
+			[self.rootViewController.buttonNavigationBar minimize:YES];
+			
 //			UIView *testingSubview = [UIView newAutoLayoutView];
 //			testingSubview.backgroundColor = [LMColour randomColour];
 //			[cell.contentView addSubview:testingSubview];

@@ -326,7 +326,7 @@ LMControlBarViewDelegate
 		return YES;
 	}
 	
-	return self.nowPlayingCoreView.isOpen || self.layoutManager.isLandscape;
+	return self.nowPlayingCoreView.isOpen || self.layoutManager.isLandscape || (![LMLayoutManager isiPad] && self.buttonNavigationBar.currentlySelectedTab == LMNavigationTabView);
 }
 
 - (UIStatusBarAnimation)preferredStatusBarUpdateAnimation {
@@ -1234,9 +1234,6 @@ LMControlBarViewDelegate
 //							LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
 //							settingsViewController.coreViewController = self;
 //							[self.navigationController pushViewController:settingsViewController animated:YES];
-//							
-//							//			[self.buttonNavigationBar.browsingBar setShowingLetterTabs:NO];
-//							
 //							[self pushItemOntoNavigationBarWithTitle:NSLocalizedString(@"Settings", nil) withNowPlayingButton:NO];
 							
 //							self.landscapeNavigationBar.hidden = YES;
@@ -1245,7 +1242,7 @@ LMControlBarViewDelegate
 							
 //							self.buttonNavigationBar.hidden = YES;
 							
-							[self.buttonNavigationBar minimize:NO];
+//							[self.buttonNavigationBar minimize:NO];
 							
 //							[self.buttonNavigationBar setSelectedTab:LMNavigationTabBrowse];
 							

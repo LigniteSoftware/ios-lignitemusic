@@ -59,7 +59,12 @@
 }
 
 - (UIImage*)iconForListEntry:(LMListEntry*)entry {
-	return nil;
+//	if(self.specificTrackCollections){
+//		LMMusicTrackCollection *collection = [self.specificTrackCollections objectAtIndex:entry.collectionIndex];
+//		return [collection.representativeItem albumArt];
+//	}
+	LMMusicTrack *track = [self.musicTrackCollection.items objectAtIndex:entry.collectionIndex];
+	return [track albumArt];
 }
 
 - (LMMusicTrackCollection*)musicTrackCollection {

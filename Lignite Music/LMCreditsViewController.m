@@ -140,6 +140,11 @@
 	//		[self.signaturesView autoSetDimension:ALDimensionHeight toSize:self.frame.size.width*0.296*scaleFactor];
 	
 	
+	if(mainDimension > 450){
+		mainDimension = 450;
+	}
+	
+	
 	self.thankYouLabel = [UILabel newAutoLayoutView];
 	self.thankYouLabel.font = [UIFont fontWithName:@"HoneyScript-SemiBold" size:(mainDimension/414.0)*75.0f];
 	self.thankYouLabel.text = NSLocalizedString(@"ThankYou", nil);

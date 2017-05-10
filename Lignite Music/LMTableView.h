@@ -119,6 +119,11 @@
 @property BOOL addBottomWhiteSpace;
 
 /**
+ The background colour to use for when an entry isn't highlighted. Default is whiteColour.
+ */
+@property UIColor *notHighlightedBackgroundColour;
+
+/**
  Reloads the subview data. Recalculates the amount of objects required, sets up the basic layout of the table view (ie. background colour) and tells delegate of new calculations.
  */
 - (void)reloadSubviewData;

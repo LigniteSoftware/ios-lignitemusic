@@ -218,7 +218,7 @@
 		CGRect collectionViewFrame = self.collectionView.frame;
 		CGRect normalItemFrame = [self frameForCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] detailViewDisplayMode:LMDetailViewDisplayModeNone];
 		
-		detailViewHeight = (collectionViewFrame.size.height - normalItemFrame.size.height) - COMPACT_VIEW_SPACING_BETWEEN_ITEMS - normalItemFrame.origin.y - 6; //I'm not going to pull my hair out trying to figure out where the 6 pixels actually comes from, sorry
+		detailViewHeight = (collectionViewFrame.size.height - normalItemFrame.size.height) - COMPACT_VIEW_SPACING_BETWEEN_ITEMS - normalItemFrame.origin.y - 1; //I'm not going to pull my hair out trying to figure out where the 6 pixels actually comes from, sorry
 		
 		detailViewHeight = fmin(detailViewHeight, maximumDetailViewHeight);
 	}

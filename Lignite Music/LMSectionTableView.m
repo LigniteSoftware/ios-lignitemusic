@@ -94,7 +94,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	NSUInteger rawRow = [self rawIndexForIndexPath:indexPath];
 	
-	NSString *cellIdentifier = [NSString stringWithFormat:@"%@Cell_%lu", self.title, rawRow % self.listEntryArray.count];
+	NSString *cellIdentifier = [NSString stringWithFormat:@"%@Cell_%u", self.title, (rawRow % self.listEntryArray.count)];
 	
 	LMTableViewCell *cell = (LMTableViewCell*)[tableView dequeueReusableCellWithIdentifier:cellIdentifier forIndexPath:indexPath];
 	
@@ -150,11 +150,19 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+	if([LMLayoutManager isiPad]){
+		return ([LMLayoutManager isLandscapeiPad] ? (WINDOW_FRAME.size.height) : (WINDOW_FRAME.size.width))/8.0;
+	}
 	return (self.layoutManager.isLandscape ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height)/8.0;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
 	CGFloat properNumber = (self.layoutManager.isLandscape ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height);
+	
+	if([LMLayoutManager isiPad]){
+		properNumber = ([LMLayoutManager isLandscapeiPad] ? (WINDOW_FRAME.size.height) : (WINDOW_FRAME.size.width));
+	}
+	
 	if(section == 0){
 		return properNumber/10.0 + properNumber/30.0;
 	}
@@ -191,8 +199,14 @@
 	view.icon = [self.contentsDelegate iconAtSection:section forSectionTableView:self];
 	
 	if(section == 0){
-		view.heightFactorial = ((self.layoutManager.isLandscape ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height)/10)
-								/ frame.size.height;
+		if([LMLayoutManager isiPad]){
+			view.heightFactorial = ([LMLayoutManager isLandscapeiPad] ? (WINDOW_FRAME.size.height) : (WINDOW_FRAME.size.width))/10.0;
+		}
+		else {
+			view.heightFactorial = ((self.layoutManager.isLandscape ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height)/10);
+		}
+		
+		view.heightFactorial = view.heightFactorial / frame.size.height;
 		view.title = @""; //self.title;
 		
 //		view.xIconTapSelector = @selector(tappedClose);

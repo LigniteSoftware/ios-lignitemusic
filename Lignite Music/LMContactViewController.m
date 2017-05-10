@@ -56,6 +56,10 @@
 	
 	CGFloat scaleFactorToUse = ([LMLayoutManager sharedLayoutManager].isLandscape ? WINDOW_FRAME.size.height : WINDOW_FRAME.size.width);
 	
+	if(scaleFactorToUse > 450){
+		scaleFactorToUse = 450;
+	}
+	
 	self.thankYouLabel = [UILabel newAutoLayoutView];
 	self.thankYouLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:(scaleFactorToUse/414.0)*45.0f];
 	self.thankYouLabel.text = NSLocalizedString(@"ContactHi", nil);

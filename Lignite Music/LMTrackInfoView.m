@@ -128,7 +128,7 @@
 	//	self.titleLabel.layoutMargins = UIEdgeInsetsMake(0, -4, 0, -4);
 		
 		const CGFloat heightMultipliers[] = {
-			(1.0/2.25), (1.0/4.0), (1.0/5.0)
+			(1.0/2.50), (1.0/4.0), (1.0/5.0)
 		};
 		NSArray *labels = @[
 			self.titleLabel, self.artistLabel, self.albumLabel
@@ -145,7 +145,7 @@
 			
 			label.fadeLength = 10;
 			label.leadingBuffer = 0;
-			label.trailingBuffer = label.leadingBuffer;
+			label.trailingBuffer = 20;
 			
 //			label.backgroundColor = [UIColor colorWithRed:(0.2*i)+0.3 green:0 blue:0 alpha:1.0];
 			label.font = [LMMarqueeLabel fontToFitHeight:self.frame.size.height*heightMultipliers[i]];
@@ -154,7 +154,7 @@
 			label.textColor = self.textColour;
 			[self addSubview:label];
 			
-			[label autoPinEdge:ALEdgeTop toEdge:isFirst ? ALEdgeTop : ALEdgeBottom ofView:isFirst ? self : previousLabel withOffset:isFirst ? -label.layoutMargins.top : 0];
+			[label autoPinEdge:ALEdgeTop toEdge:isFirst ? ALEdgeTop : ALEdgeBottom ofView:isFirst ? self : previousLabel withOffset:isFirst ? -label.layoutMargins.top : 2];
 			[label autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
 			[label autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self];
 			[label setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];

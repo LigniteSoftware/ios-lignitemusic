@@ -68,11 +68,6 @@
 @property LMLayoutManager *layoutManager;
 
 /**
- The currently selected tab.
- */
-@property LMNavigationTab currentlySelectedTab;
-
-/**
  The minimize button.
  */
 @property UIView *minimizeButton;
@@ -348,6 +343,11 @@
 	}
 	
 	[self.buttonBar setButtonAtIndex:tab highlighted:YES];
+	
+	LMCoreViewController *coreViewController = (LMCoreViewController*)self.rootViewController;
+	[UIView animateWithDuration:0.25 animations:^{
+		[coreViewController setNeedsStatusBarAppearanceUpdate];
+	}];
 }
 
 - (void)tappedButtonBarButtonAtIndex:(NSUInteger)index forButtonBar:(LMButtonBar *)buttonBar {
@@ -403,7 +403,7 @@
 			}
 		}
 		
-		self.minimizeButtonIconImageView.image = [LMAppIcon imageForIcon:willBeLandscape ? LMIcon3DotsHorizontal : LMIcon3DotsVertical];
+		self.minimizeButtonIconImageView.image = [LMAppIcon imageForIcon:(willBeLandscape || [LMLayoutManager isiPad]) ? LMIcon3DotsHorizontal : LMIcon3DotsVertical];
 		
 		if(self.isCompletelyHidden){
 			self.isCompletelyHidden = NO;
@@ -451,6 +451,13 @@
 		NSLog(@"Did layout constraints!");
 		
 		
+		self.layer.shadowOpacity = 0.25f;
+		self.layer.shadowOffset = CGSizeMake(0, 0);
+		self.layer.masksToBounds = NO;
+		self.layer.shadowRadius = 5;
+		self.clipsToBounds = NO;
+		
+		
 		self.layoutManager = [LMLayoutManager sharedLayoutManager];
 		[self.layoutManager addDelegate:self];
 		
@@ -481,20 +488,20 @@
 		self.miniPlayerCoreView.rootViewController = self.rootViewController;
 		[self addSubview:self.miniPlayerCoreView];
 		
-		UIView *shadowView = [UIView newAutoLayoutView];
-		shadowView.layer.shadowOpacity = 0.25f;
-		shadowView.layer.shadowOffset = CGSizeMake(0, 0);
-		shadowView.layer.masksToBounds = NO;
-		shadowView.layer.shadowRadius = 5;
-		shadowView.backgroundColor = [UIColor lightGrayColor];
-		[self addSubview:shadowView];
-		
-		[shadowView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.miniPlayerCoreView];
-		[shadowView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.miniPlayerCoreView];
-		[shadowView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.miniPlayerCoreView];
-		[shadowView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.miniPlayerCoreView];
-		
-		[self insertSubview:shadowView belowSubview:self.miniPlayerCoreView];
+//		UIView *shadowView = [UIView newAutoLayoutView];
+//		shadowView.layer.shadowOpacity = 0.25f;
+//		shadowView.layer.shadowOffset = CGSizeMake(0, 0);
+//		shadowView.layer.masksToBounds = NO;
+//		shadowView.layer.shadowRadius = 5;
+//		shadowView.backgroundColor = [UIColor lightGrayColor];
+//		[self addSubview:shadowView];
+//		
+//		[shadowView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.miniPlayerCoreView];
+//		[shadowView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.miniPlayerCoreView];
+//		[shadowView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.miniPlayerCoreView];
+//		[shadowView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.miniPlayerCoreView];
+//		
+//		[self insertSubview:shadowView belowSubview:self.miniPlayerCoreView];
 
 		
 		
@@ -550,7 +557,7 @@
 		
 		
 		self.minimizeButtonIconImageView = [UIImageView newAutoLayoutView];
-		self.minimizeButtonIconImageView.image = [LMAppIcon imageForIcon:self.layoutManager.isLandscape ? LMIcon3DotsHorizontal : LMIcon3DotsVertical];
+		self.minimizeButtonIconImageView.image = [LMAppIcon imageForIcon:(self.layoutManager.isLandscape || [LMLayoutManager isiPad]) ? LMIcon3DotsHorizontal : LMIcon3DotsVertical];
 		self.minimizeButtonIconImageView.contentMode = UIViewContentModeScaleAspectFit;
 		self.minimizeButtonIconImageView.userInteractionEnabled = NO;
 		[self.minimizeButton addSubview:self.minimizeButtonIconImageView];
@@ -593,10 +600,16 @@
 		[LMLayoutManager addNewLandscapeConstraints:buttonBarLandscapeConstraints];
 		
 		NSArray *buttonBariPadConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-			[self.buttonBar autoAlignAxisToSuperviewAxis:ALAxisVertical];
-			[self.buttonBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(2.0/3.0)];
-			[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-			[self.buttonBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.minimizeButton];
+			CGFloat buttonBarWidth = (2.0/3.0) * ([LMLayoutManager isLandscapeiPad] ? WINDOW_FRAME.size.height : WINDOW_FRAME.size.width);
+			if(buttonBarWidth > 500){
+				buttonBarWidth = 500;
+			}
+ 			[self.buttonBar autoAlignAxisToSuperviewAxis:ALAxisVertical];
+			[self.buttonBar autoSetDimension:ALDimensionWidth toSize:buttonBarWidth];
+//			[self.buttonBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(2.0/3.0)];
+//			[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+			[self.buttonBar autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.minimizeButton];
+			[self.buttonBar autoSetDimension:ALDimensionHeight toSize:properNum/8.0];
 		}];
 		[LMLayoutManager addNewiPadConstraints:buttonBariPadConstraints];
 		
@@ -643,6 +656,14 @@
 			[self.minimizeButton autoSetDimension:ALDimensionWidth toSize:properNum/8.0];
 		}];
 		[LMLayoutManager addNewLandscapeConstraints:minimizeButtonLandscapeConstraints];
+		
+		NSArray *minimizeButtoniPadConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+			[self.minimizeButton autoAlignAxisToSuperviewAxis:ALAxisVertical];
+			[self.minimizeButton autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.buttonBar];
+			[self.minimizeButton autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+			[self.minimizeButton autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.buttonBar withMultiplier:(1.0/4.0)];
+		}];
+		[LMLayoutManager addNewiPadConstraints:minimizeButtoniPadConstraints];
 		
 		
 		NSArray *miniPlayerCoreViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
@@ -695,6 +716,10 @@
 			[self.sourceSelector autoSetDimension:ALDimensionHeight toSize:properNum-LMNavigationBarTabHeight];
 		}];
 		[LMLayoutManager addNewiPadConstraints:sourceSelectoriPadConstraints];
+		
+		if([LMLayoutManager isiPad]){
+			[self insertSubview:self.minimizeButton aboveSubview:self.buttonBar];
+		}
 		
 		
 //		self.sourceSelector.hidden = YES;

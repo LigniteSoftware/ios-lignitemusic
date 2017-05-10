@@ -61,6 +61,7 @@
 		self.bottomSpacing = 0;
 		
 		self.dividerColour = [LMColour lightGrayBackgroundColour];
+		self.notHighlightedBackgroundColour = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.5];
 				
 		self.title = @"UnnamedLMTableView";
 	}
@@ -175,7 +176,7 @@
 	
 	lmCell.subview = newSubview;
 	lmCell.index = (int)indexPath.section;
-	lmCell.backgroundColour = (indexPath.section == 0 && self.firstEntryClear) ? [UIColor clearColor] : [UIColor whiteColor];
+	lmCell.backgroundColour = (indexPath.section == 0 && self.firstEntryClear) ? [UIColor clearColor] : self.notHighlightedBackgroundColour;
 	
 	if(!lmCell.didSetupConstraints){
 		lmCell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -183,7 +184,7 @@
 		[lmCell updateConstraintsIfNeeded];
 	}
 	else{
-		lmCell.backgroundColor = lmCell.backgroundColour ? lmCell.backgroundColour : [UIColor whiteColor]; //For the clear background colour required in detail view
+		lmCell.backgroundColor = lmCell.backgroundColour ? lmCell.backgroundColour : self.notHighlightedBackgroundColour; //For the clear background colour required in detail view
 	}
 }
 
@@ -196,7 +197,7 @@
 			cellSubview.backgroundColor = [UIColor colorWithRed:0.33 green:0.33 blue:0.33 alpha:0.15];
 		} completion:^(BOOL finished) {
 			[UIView animateWithDuration:0.75 animations:^{
-				cellSubview.backgroundColor = [UIColor whiteColor];
+				cellSubview.backgroundColor = self.notHighlightedBackgroundColour;
 			}];
 		}];
 	} repeats:NO];
@@ -245,7 +246,7 @@
     if(self.contentSize.width > 0 && self.contentSize.height > 0 && !self.hasAddedBottomWhiteSpacer && self.addBottomWhiteSpace){
 //        NSLog(@"Adding this shit");
         testView = [UIView new];
-        testView.backgroundColor = [UIColor whiteColor];
+        testView.backgroundColor = self.notHighlightedBackgroundColour;
         [self addSubview:testView];
     
         CGRect testViewFrame = CGRectMake(0, self.contentSize.height, self.contentSize.width, self.contentSize.height);
@@ -271,7 +272,7 @@
 - (UIView*)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
 	CGRect frame = CGRectMake(0, 0, self.frame.size.width, [self tableView:self heightForHeaderInSection:section]);
 	UIView *view = [[UIView alloc] initWithFrame:frame];
-	view.backgroundColor = [UIColor whiteColor];
+	view.backgroundColor = self.notHighlightedBackgroundColour;
 	
 	if(self.shouldUseDividers && ![self.dividerSectionsToIgnore containsObject:@(section)]){
 		uint8_t dividerHeight = 1;
