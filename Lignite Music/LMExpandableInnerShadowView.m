@@ -34,13 +34,9 @@
 		CGFloat triangleHeight = 25.0f;
 		CGFloat halfTriangleWidth = (triangleHeight);
 		
-		CGFloat widthPerItem = self.frame.size.width/self.flowLayout.itemsPerRow;
-		CGFloat column = self.flowLayout.indexOfItemDisplayingDetailView % self.flowLayout.itemsPerRow;
-		
 		[self.triangleView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self withOffset:1];
-		[self.triangleView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self withOffset:(column * widthPerItem) + (widthPerItem/2.0) - halfTriangleWidth];
+		[self.triangleView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self withOffset:self.flowLayout.frameOfItemDisplayingDetailView.origin.x + (self.flowLayout.frameOfItemDisplayingDetailView.size.width/2) - halfTriangleWidth];
 		[self.triangleView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.triangleView withMultiplier:2.0];
-//		[self.triangleView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.05];
 		[self.triangleView autoSetDimension:ALDimensionHeight toSize:triangleHeight];
 		
 		self.triangleInnerShadowView = [LMTriangleInnerShadowView newAutoLayoutView];

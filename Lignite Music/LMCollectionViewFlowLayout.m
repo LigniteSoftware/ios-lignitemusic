@@ -81,6 +81,10 @@
 		return;
 	}
 	
+	if(indexOfItemDisplayingDetailView == LMNoDetailViewSelected){
+		self.frameOfItemDisplayingDetailView = CGRectMake(-self.frameOfItemDisplayingDetailView.size.width, self.frameOfItemDisplayingDetailView.origin.y, 0, 0);
+	}
+	
 	self.previousIndexOfItemDisplayingDetailView = _indexOfItemDisplayingDetailView;
 	self.previousAmountOfOverflowingCellsForDetailView = self.amountOfOverflowingCellsForDetailView;
 	
@@ -199,6 +203,10 @@
 	CGSize collectionViewSize = self.collectionView.frame.size; //Get the current size of the collection view
 	CGFloat sideLength = collectionViewSize.width/factor; //Get the side length of one cell based on the factor provided
 	
+	if(![LMLayoutManager isiPad] && ![LMLayoutManager isLandscape]){
+		sideLength = collectionViewSize.height/[LMLayoutManager amountOfCollectionViewItemsPerRowForScreenSizeClass:LMScreenSizeClassPhone isLandscape:YES];
+	}
+	
 	sideLength -= COMPACT_VIEW_SPACING_BETWEEN_ITEMS; //Remove 15px from it for spacing
 	
 	CGFloat spacing = (collectionViewSize.width-(sideLength*factor))/(factor+1); //Calculate the amount of spacing total
@@ -206,8 +214,10 @@
 	CGSize size = CGSizeMake(sideLength,
 								sideLength * (2.8/2.0)); //The height side length is greater than the width side length because of the album art
 	
+	CGFloat spacingDividerFactor = (1+(![LMLayoutManager isLandscape] && ![LMLayoutManager isiPad]));
+	
 	CGPoint origin = CGPointMake(((fixedIndexPathRow % factor) * (size.width+spacing)) + spacing, //The column which the cell is in
-								 ((fixedIndexPathRow/factor) * (size.height+spacing)) + spacing); //The row
+								 ((fixedIndexPathRow/factor) * (size.height+(spacing/spacingDividerFactor))) + spacing/spacingDividerFactor); //The row
 	
 	CGFloat detailViewHeight = 0;
 	
@@ -229,9 +239,13 @@
 	
 	CGRect itemFrame = CGRectMake(origin.x, origin.y, size.width, size.height); //Return the frame
 	
+	if(self.indexOfItemDisplayingDetailView == indexPath.row){
+		self.frameOfItemDisplayingDetailView = itemFrame;
+	}
+	
 	if(isDetailViewRow){
 		NSLog(@"\ncollframe %@ \n content offset %@ \n superviewframe %@ \n size of item %@", NSStringFromCGRect(self.collectionView.frame), NSStringFromCGPoint(self.collectionView.contentOffset), NSStringFromCGRect(self.collectionView.superview.frame), NSStringFromCGRect([self frameForCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] detailViewDisplayMode:LMDetailViewDisplayModeNone]));
-		return CGRectMake(origin.x - spacing, origin.y+spacing, collectionViewSize.width-(origin.x * 2)+(spacing * 2), detailViewHeight);
+		return CGRectMake(origin.x - spacing, origin.y + spacing/4, collectionViewSize.width-(origin.x * 2)+(spacing * 2), detailViewHeight);
 	}
 	
 	return itemFrame;

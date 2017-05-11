@@ -55,6 +55,9 @@
 	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		
 		BOOL isLandscape = (size.width > size.height);
+		if([LMLayoutManager isiPad]){
+			isLandscape = NO;
+		}
 		
 		for(UILabel *label in self.letterViewsArray){
 			label.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:(isLandscape ? self.frame.size.width : self.frame.size.height
@@ -68,6 +71,9 @@
 		
 		[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
 			BOOL isLandscape = (size.width > size.height);
+			if([LMLayoutManager isiPad]){
+				isLandscape = NO;
+			}
 			
 			for(UILabel *label in self.letterViewsArray){
 				label.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:(isLandscape ? self.frame.size.width : self.frame.size.height

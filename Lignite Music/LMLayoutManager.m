@@ -245,19 +245,13 @@
 	return LMScreenSizeClassPhone;
 }
 
-+ (NSInteger)amountOfCollectionViewItemsPerRow {
-//	LMLayoutManager *layoutManager = [LMLayoutManager sharedLayoutManager];
-	
++ (NSInteger)amountOfCollectionViewItemsPerRowForScreenSizeClass:(LMScreenSizeClass)screenSizeClass isLandscape:(BOOL)isLandscape {
 	BOOL columnLoverMode = NO;
-	BOOL isLandscape = [LMLayoutManager isLandscape] || [LMLayoutManager isLandscapeiPad];
-	NSInteger amountOfItems = 2;
 	
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 	if([userDefaults objectForKey:LMCollectionViewItemsPerRowSettingsKey]) {
 		columnLoverMode = [userDefaults integerForKey:LMCollectionViewItemsPerRowSettingsKey];
 	}
-	
-	LMScreenSizeClass screenSizeClass = [LMLayoutManager screenSizeClass];
 	
 	if(isLandscape){
 		if(columnLoverMode){
@@ -329,8 +323,13 @@
 			}
 		}
 	}
+	return 2;
+}
+
++ (NSInteger)amountOfCollectionViewItemsPerRow {
+	BOOL isLandscape = [LMLayoutManager isLandscape] || [LMLayoutManager isLandscapeiPad];
 	
-	return amountOfItems;
+	return [LMLayoutManager amountOfCollectionViewItemsPerRowForScreenSizeClass:[LMLayoutManager screenSizeClass] isLandscape:isLandscape];
 }
 
 - (LMLayoutClass)currentLayoutClass {

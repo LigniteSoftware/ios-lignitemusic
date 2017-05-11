@@ -249,10 +249,10 @@ LMControlBarViewDelegate
 - (void)musicTrackDidChange:(LMMusicTrack *)newTrack {
 //	NSLog(@"HEY! Got new track, title %@", newTrack.title);
     
-    if(!self.buttonNavigationBar.isCompletelyHidden){
-		[self.buttonNavigationBar maximize:YES];
-        [self.buttonNavigationBar setSelectedTab:LMNavigationTabMiniplayer];
-    }
+//    if(!self.buttonNavigationBar.isCompletelyHidden){
+//		[self.buttonNavigationBar maximize:YES];
+//        [self.buttonNavigationBar setSelectedTab:LMNavigationTabMiniplayer];
+//    }
 }
 
 #ifndef SPOTIFY
@@ -457,7 +457,6 @@ LMControlBarViewDelegate
                 [[APIdleManager sharedInstance] didReceiveInput];
             } repeats:YES];
             
-			[self.buttonNavigationBar setSelectedTab:LMNavigationTabBrowse];
 			[self.buttonNavigationBar completelyHide];
 			
 			LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
@@ -507,15 +506,15 @@ LMControlBarViewDelegate
 //	NSLog(@"rHeight changed to %f", requiredHeight);
 
     
-    CGFloat bottomSpacing = requiredHeight + 10;
-    [self.compactView changeBottomSpacing:bottomSpacing];
-    self.titleView.songListTableView.bottomSpacing = bottomSpacing;
-    if(self.currentDetailViewController){
-        self.currentDetailViewController.browsingDetailView.tableView.bottomSpacing = bottomSpacing;
-        if(self.currentDetailViewController.nextDetailViewController){
-            self.currentDetailViewController.nextDetailViewController.browsingDetailView.tableView.bottomSpacing = bottomSpacing;
-        }
-    }
+//    CGFloat bottomSpacing = requiredHeight + 10;
+//    [self.compactView changeBottomSpacing:bottomSpacing];
+//    self.titleView.songListTableView.bottomSpacing = bottomSpacing;
+//    if(self.currentDetailViewController){
+//        self.currentDetailViewController.browsingDetailView.tableView.bottomSpacing = bottomSpacing;
+//        if(self.currentDetailViewController.nextDetailViewController){
+//            self.currentDetailViewController.nextDetailViewController.browsingDetailView.tableView.bottomSpacing = bottomSpacing;
+//        }
+//    }
 }
 
 - (void)launchOnboarding {

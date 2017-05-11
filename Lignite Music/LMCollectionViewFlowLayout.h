@@ -72,4 +72,9 @@ typedef NS_ENUM(NSInteger, LMDetailViewDisplayMode) {
  */
 @property NSArray<LMMusicTrackCollection*> *musicTrackCollections;
 
+/**
+ The frame of the current item displaying the detail view.
+ */
+@property CGRect frameOfItemDisplayingDetailView;
+
 @end

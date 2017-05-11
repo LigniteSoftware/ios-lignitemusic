@@ -87,6 +87,11 @@
  */
 @property BOOL wasAutomaticallyMinimized;
 
+/**
+ The frame of the button navigation bar without being modified by being completely hidden.
+ */
+@property CGRect unmodifiedFrame;
+
 @end
 
 @implementation LMButtonNavigationBar
@@ -217,7 +222,7 @@
 	
 	[self layoutIfNeeded];
 	
-	self.minimizeButtonBottomConstraint.constant = self.frame.size.height;
+	self.minimizeButtonBottomConstraint.constant = self.unmodifiedFrame.size.height;
 	
 	[UIView animateWithDuration:0.5 animations:^{
 		[self layoutIfNeeded];
@@ -335,7 +340,7 @@
 				}
 			}
 			
-			sizeConstraint.constant = self.layoutManager.isLandscape ? (self.frame.size.width-LMNavigationBarTabWidth) : (self.frame.size.height-LMNavigationBarTabHeight);
+			sizeConstraint.constant = self.layoutManager.isLandscape ? (self.unmodifiedFrame.size.width-LMNavigationBarTabWidth) : (self.unmodifiedFrame.size.height-LMNavigationBarTabHeight);
 			
 			[self setViewAttachedToButtonBar:self.sourceSelector];
 			break;
@@ -450,6 +455,8 @@
 		
 		NSLog(@"Did layout constraints!");
 		
+		self.unmodifiedFrame = self.frame;
+		
 		
 		self.layer.shadowOpacity = 0.25f;
 		self.layer.shadowOffset = CGSizeMake(0, 0);
@@ -472,16 +479,14 @@
 		
 		//Dont even tell me how bad this shit is
 		CGFloat properNum = self.layoutManager.isLandscape ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height;
+		if([LMLayoutManager isiPad]){
+			properNum = [LMLayoutManager isLandscapeiPad] ? WINDOW_FRAME.size.height : WINDOW_FRAME.size.width;
+		}
 		
 		
 		self.browsingBar = [LMBrowsingBar newAutoLayoutView];
 		self.browsingBar.searchBarDelegate = self;
 		self.browsingBar.letterTabDelegate = self.letterTabBarDelegate;
-		self.browsingBar.layer.shadowOpacity = 0.25f;
-		self.browsingBar.layer.shadowOffset = CGSizeMake(0, 0);
-		self.browsingBar.layer.masksToBounds = NO;
-		self.browsingBar.layer.shadowRadius = 5;
-		self.browsingBar.clipsToBounds = YES;
 		[self addSubview:self.browsingBar];
 
 		

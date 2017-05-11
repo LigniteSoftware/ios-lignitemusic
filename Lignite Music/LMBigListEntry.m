@@ -121,4 +121,10 @@
 	[self.entryDelegate sizeChangedToLargeSize:self.isLargeSize withHeight:[LMBigListEntry sizeForBigListEntryWhenOpened:self.isLargeSize forDelegate:self.entryDelegate] forBigListEntry:self];
 }
 
+- (void)layoutSubviews {
+	[super layoutSubviews];
+	
+	NSLog(@"%@ %@", NSStringFromCGRect(self.superview.superview.frame), [[self.superview.superview class] description]);
+}
+
 @end

@@ -45,6 +45,7 @@ typedef NS_ENUM(NSInteger, LMScreenSizeClass) {
 + (BOOL)isLandscapeiPad;
 + (BOOL)isiPad;
 + (NSInteger)amountOfCollectionViewItemsPerRow;
++ (NSInteger)amountOfCollectionViewItemsPerRowForScreenSizeClass:(LMScreenSizeClass)screenSizeClass isLandscape:(BOOL)isLandscape;
 + (LMLayoutManager*)sharedLayoutManager;
 - (void)addDelegate:(id<LMLayoutChangeDelegate>)delegate;
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection;
