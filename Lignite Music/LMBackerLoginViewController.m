@@ -231,7 +231,6 @@ NSString* backerDeviceName(){
 												@"password": @([passwordNumber integerValue]),
 												@"device": backerDeviceName()
 												 };
-			
 			NSLog(@"%@", loginDictionary);
 			
 			NSString *URLString = @"https://api.lignite.me:1212/login";

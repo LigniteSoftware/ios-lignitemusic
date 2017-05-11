@@ -149,6 +149,8 @@
 }
 
 + (BOOL)tutorialShouldRunForKey:(NSString*)tutorialKey {
+	return YES;
+	
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     
     //If the user has disabled tutorials or the specific tutorial has already been done do not run that tutorial
@@ -185,6 +187,10 @@
         
         
 		CGFloat screenSizeScaleFactor = (self.layoutManager.isLandscape ? self.frame.size.height : self.frame.size.width)/414.0;
+		
+		if(screenSizeScaleFactor > 1.0){
+			screenSizeScaleFactor = 1.0;
+		}
         
         
         self.backgroundColor = [UIColor clearColor];
@@ -192,6 +198,7 @@
         
         UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
         self.backgroundBlurView = [UIVisualEffectView newAutoLayoutView];
+		self.backgroundBlurView.hidden = ([self.key isEqualToString:LMTutorialKeyMiniPlayer] || [self.key isEqualToString:LMTutorialKeyBottomNavigation]);
         [self addSubview:self.backgroundBlurView];
         
         [self.backgroundBlurView autoPinEdgesToSuperviewEdges];
@@ -213,7 +220,7 @@
         else {
             [self.contentViewBackground autoPinEdgeToSuperviewEdge:(self.boxAlignment == LMTutorialViewAlignmentBottom) ? ALEdgeBottom : ALEdgeTop withInset:self.frame.size.height/8.0];
         }
-        [self.contentViewBackground autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(8.0/10.0)];
+		[self.contentViewBackground autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(([LMLayoutManager isiPad] ? ([LMLayoutManager isLandscapeiPad] ? 4.0 : 5.0) : 8.0)/10.0)];
         
         
         if(self.arrowAlignment != LMTutorialViewAlignmentCenter){
@@ -299,6 +306,9 @@
         self.thanksForTheHintButton.backgroundColor = [LMColour ligniteRedColour];
         self.thanksForTheHintButton.textAlignment = NSTextAlignmentCenter;
         self.thanksForTheHintButton.userInteractionEnabled = YES;
+		self.thanksForTheHintButton.layer.masksToBounds = NO;
+		self.thanksForTheHintButton.layer.cornerRadius = 8;
+		self.thanksForTheHintButton.clipsToBounds = YES;
         [self.contentView addSubview:self.thanksForTheHintButton];
 		
 		[self.thanksForTheHintButton autoAlignAxisToSuperviewAxis:ALAxisVertical];

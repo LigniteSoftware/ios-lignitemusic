@@ -62,7 +62,7 @@
 	//					NSLog(@"Found a match");
 	//				}
 	//			}
-	//			count++;
+	//			count++;  
 	//		}
 	//	}
 	//	else{
@@ -74,6 +74,7 @@
 		}
 	}
 	//	}
+	
 	
 	highlightedEntry = [self listEntryForIndex:newHighlightedIndex];
 	

@@ -101,6 +101,11 @@ LMControlBarViewDelegate
 
 @property UIImageView *splashImageView;
 
+/**
+ The view which goes in the background to blur out the rest of the app.
+ */
+@property UIVisualEffectView *backgroundBlurView;
+
 @end
 
 @implementation LMCoreViewController
@@ -131,7 +136,13 @@ LMControlBarViewDelegate
     self.view.userInteractionEnabled = YES;
     self.buttonNavigationBar.userInteractionEnabled = YES;
     self.navigationBar.userInteractionEnabled = YES;
-    
+	
+	[UIView animateWithDuration:0.5 animations:^{
+		self.backgroundBlurView.effect = nil;
+	} completion:^(BOOL finished) {
+		self.backgroundBlurView.hidden = YES;
+	}];
+	
     if([key isEqualToString:LMTutorialKeyBottomNavigation]){
         [self.buttonNavigationBar setSelectedTab:LMNavigationTabMiniplayer];
         
@@ -163,6 +174,11 @@ LMControlBarViewDelegate
 					[tutorialView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.buttonNavigationBar.miniPlayerCoreView];
 				}];
 				[LMLayoutManager addNewLandscapeConstraints:tutorialViewLandscapeConstraints];
+				
+				self.backgroundBlurView.hidden = NO;
+				[UIView animateWithDuration:0.5 animations:^{
+					self.backgroundBlurView.effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
+				}];
             }
         } repeats:NO];
     }
@@ -1200,6 +1216,16 @@ LMControlBarViewDelegate
                             if([LMTutorialView tutorialShouldRunForKey:LMTutorialKeyBottomNavigation]){
                                 self.view.userInteractionEnabled = NO;
                                 self.buttonNavigationBar.userInteractionEnabled = NO;
+								
+								
+								self.backgroundBlurView = [UIVisualEffectView newAutoLayoutView];
+								[self.navigationController.view addSubview:self.backgroundBlurView];
+								
+								[self.backgroundBlurView autoPinEdgesToSuperviewEdges];
+								
+								
+								[self.navigationController.view insertSubview:self.buttonNavigationBar aboveSubview:self.backgroundBlurView];
+								[self.navigationController.view insertSubview:self.nowPlayingCoreView aboveSubview:self.buttonNavigationBar];
                                 
                                 LMTutorialView *tutorialView = [[LMTutorialView alloc] initForAutoLayoutWithTitle:NSLocalizedString(@"TutorialMainNavigationTitle", nil)
                                                    description:NSLocalizedString(@"TutorialMainNavigationDescription", nil)
@@ -1224,11 +1250,15 @@ LMControlBarViewDelegate
 									[tutorialView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.buttonNavigationBar.browsingBar];
 								}];
 								[LMLayoutManager addNewLandscapeConstraints:tutorialViewLandscapeConstraints];
+								
+								[UIView animateWithDuration:0.5 animations:^{
+									self.backgroundBlurView.effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
+								}];
                             }
                         } repeats:NO];
 						
 						
-						[NSTimer scheduledTimerWithTimeInterval:1.5 block:^{
+						[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
 //							self.nowPlayingCoreView.hidden = YES;
 //							
 //							LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
