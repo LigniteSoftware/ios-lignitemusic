@@ -318,7 +318,9 @@
 
 - (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
 	BOOL willBeLandscape = size.width > size.height;
-	self.descriptionLabel.textAlignment = willBeLandscape ? NSTextAlignmentCenter : NSTextAlignmentLeft;
+	if(![LMLayoutManager isiPad]){
+		self.descriptionLabel.textAlignment = willBeLandscape ? NSTextAlignmentCenter : NSTextAlignmentLeft;
+	}
 }
 
 - (void)viewDidLoad {
@@ -417,7 +419,7 @@
 	self.descriptionLabel.numberOfLines = 0;
 //	self.descriptionLabel.backgroundColor = [UIColor yellowColor];
 	self.descriptionLabel.text = self.contentDescription;
-	self.descriptionLabel.textAlignment = self.layoutManager.isLandscape ? NSTextAlignmentCenter : NSTextAlignmentLeft;
+	self.descriptionLabel.textAlignment = (self.layoutManager.isLandscape || [LMLayoutManager isiPad]) ? NSTextAlignmentCenter : NSTextAlignmentLeft;
 	[self.contentView addSubview:self.descriptionLabel];
 	
 	

@@ -169,8 +169,9 @@
 		
 		UIButton *optionButton = [UIButton newAutoLayoutView];
 		optionButton.backgroundColor = alertColour;
-		optionButton.layer.cornerRadius = 0.0f;
+		optionButton.layer.cornerRadius = 8.0f;
 		optionButton.layer.masksToBounds = YES;
+		optionButton.clipsToBounds = YES;
 		[optionButton addTarget:self action:@selector(buttonTapped:) forControlEvents:UIControlEventTouchUpInside];
 		[optionButton setTitle:alertTitle forState:UIControlStateNormal];
 		[optionButton.titleLabel setFont:[UIFont fontWithName:@"HelveticaNeue" size:20.0f]];

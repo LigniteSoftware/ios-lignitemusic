@@ -499,7 +499,10 @@
 }
 
 - (float)heightAtIndex:(NSUInteger)index forTableView:(LMTableView *)tableView {
-	return ([LMLayoutManager sharedLayoutManager].isLandscape ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height)/8.0f;
+	if([LMLayoutManager isiPad]){
+		return ([LMLayoutManager isLandscapeiPad] ? WINDOW_FRAME.size.height : WINDOW_FRAME.size.width)/8.0f;
+	}
+	return ([LMLayoutManager isLandscape] ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height)/8.0f;
 }
 
 - (LMListEntry*)listEntryForIndex:(NSInteger)index {
@@ -744,7 +747,7 @@
 		[self.queueView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 		[self.queueView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 		[self.queueView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.mainView];
-		[self.queueView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(3.0/4.0)];
+		[self.queueView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:[LMLayoutManager isiPad] ? (2.0/4.0) : (3.0/4.0)];
 	}];
 	[LMLayoutManager addNewPortraitConstraints:queueViewPortraitConstraints];
 	

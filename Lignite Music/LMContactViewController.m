@@ -123,6 +123,9 @@
 		
 		
 		LMView *contactButton = [LMView newAutoLayoutView];
+		contactButton.layer.masksToBounds = YES;
+		contactButton.layer.cornerRadius = 8.0f;
+		contactButton.clipsToBounds = YES;
 		contactButton.backgroundColor = [UIColor darkGrayColor];
 		
 		[self.view addSubview:contactButton];

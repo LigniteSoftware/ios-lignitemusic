@@ -40,7 +40,9 @@
 
 - (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
 	BOOL willBeLandscape = size.width > size.height;
-	self.backgroundImageView.image = [UIImage imageNamed:willBeLandscape ? @"lignite_background_landscape.png" : @"lignite_background_portrait.png"];
+	if(![LMLayoutManager isiPad]){
+		self.backgroundImageView.image = [UIImage imageNamed:willBeLandscape ? @"lignite_background_landscape.png" : @"lignite_background_portrait.png"];
+	}
 }
 
 - (void)viewDidLoad {
@@ -143,8 +145,12 @@
 	[self.pageController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
 	
 	self.backgroundImageView = [UIImageView newAutoLayoutView];
-	self.backgroundImageView.contentMode = UIViewContentModeScaleAspectFit;
+	self.backgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
 	self.backgroundImageView.image = [UIImage imageNamed:self.layoutManager.isLandscape ? @"lignite_background_landscape.png" : @"lignite_background_portrait.png"];
+	self.backgroundImageView.clipsToBounds = YES;
+	if([LMLayoutManager isiPad]){
+		self.backgroundImageView.image = [UIImage imageNamed:@"lignite_background_ipad.png"];
+	}
 	[self.view addSubview:self.backgroundImageView];
 	
 	[self.backgroundImageView autoPinEdgesToSuperviewEdges];

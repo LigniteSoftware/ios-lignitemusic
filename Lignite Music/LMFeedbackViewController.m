@@ -637,7 +637,7 @@ NSString* deviceName(){
 			textView.backgroundColor = [UIColor colorWithRed:0.91 green:0.90 blue:0.91 alpha:1.0];
 			textView.clipsToBounds = YES;
 			textView.layer.masksToBounds = YES;
-			textView.layer.cornerRadius = 0;
+			textView.layer.cornerRadius = 8;
 			textView.delegate = self;
 			textView.text = [userDefaults objectForKey:[savedTextKeys objectAtIndex:i]];
 			[self.scrollView addSubview:textView];
@@ -660,7 +660,7 @@ NSString* deviceName(){
 			textField.backgroundColor = [UIColor colorWithRed:0.91 green:0.90 blue:0.91 alpha:1.0];
 			textField.clipsToBounds = YES;
 			textField.layer.masksToBounds = YES;
-			textField.layer.cornerRadius = 0;
+			textField.layer.cornerRadius = 8;
 			textField.text = [userDefaults objectForKey:[savedTextKeys objectAtIndex:i]];
 			[self.scrollView addSubview:textField];
 			
@@ -689,7 +689,8 @@ NSString* deviceName(){
 	self.seeAllReportsLabel.textAlignment = NSTextAlignmentCenter;
 	self.seeAllReportsLabel.numberOfLines = 0;
 	self.seeAllReportsLabel.layer.masksToBounds = YES;
-	self.seeAllReportsLabel.layer.cornerRadius = 0.0;
+	self.seeAllReportsLabel.layer.cornerRadius = 8.0;
+	self.seeAllReportsLabel.clipsToBounds = YES;
 	self.seeAllReportsLabel.backgroundColor = [LMColour ligniteRedColour];
 	self.seeAllReportsLabel.textColor = [UIColor whiteColor];
 	self.seeAllReportsLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:22.0f];

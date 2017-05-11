@@ -564,7 +564,7 @@
 		
 		[self.minimizeButtonIconImageView autoCenterInSuperview];
 		[self.minimizeButtonIconImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.minimizeButton withMultiplier:(4.0/10.0)];
-		[self.minimizeButtonIconImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.minimizeButton withMultiplier:(4.0/10.0)];
+		[self.minimizeButtonIconImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.minimizeButton withMultiplier:[LMLayoutManager isiPad] ? (2.0/10.0) : (4.0/10.0)];
 		
 		
 		self.buttonBar = [LMButtonBar newAutoLayoutView];
@@ -661,7 +661,7 @@
 			[self.minimizeButton autoAlignAxisToSuperviewAxis:ALAxisVertical];
 			[self.minimizeButton autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.buttonBar];
 			[self.minimizeButton autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-			[self.minimizeButton autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.buttonBar withMultiplier:(1.0/4.0)];
+			[self.minimizeButton autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.buttonBar withMultiplier:(2.0/4.0)];
 		}];
 		[LMLayoutManager addNewiPadConstraints:minimizeButtoniPadConstraints];
 		
