@@ -102,8 +102,28 @@
 - (NSLayoutConstraint*)bottomConstraintForView:(UIView*)view {
 	for(NSLayoutConstraint *constraint in self.constraints){
 		if(constraint.firstItem == view){
-			if((constraint.firstAttribute == NSLayoutAttributeBottom && !self.layoutManager.isLandscape) ||
-			   (constraint.firstAttribute == NSLayoutAttributeTrailing && self.layoutManager.isLandscape)){
+			if([LMLayoutManager isiPad]){
+				if((constraint.firstAttribute == NSLayoutAttributeBottom && !self.layoutManager.isLandscape) ||
+				   (constraint.firstAttribute == NSLayoutAttributeTrailing && self.layoutManager.isLandscape)){
+					return constraint;
+				}
+			}
+			else{ //View is not iPad and the view is the button bar
+				if((constraint.firstAttribute == NSLayoutAttributeTrailing && !self.layoutManager.isLandscape) ||
+				   (constraint.firstAttribute == NSLayoutAttributeTop && self.layoutManager.isLandscape)){
+					return constraint;
+				}
+			}
+		}
+	}
+	return nil;
+}
+
+- (NSLayoutConstraint*)otherConstraintForView:(UIView*)view  {
+	for(NSLayoutConstraint *constraint in self.constraints){
+		if(constraint.firstItem == view){
+			if((constraint.firstAttribute == NSLayoutAttributeLeading && !self.layoutManager.isLandscape) ||
+			   (constraint.firstAttribute == NSLayoutAttributeBottom && self.layoutManager.isLandscape)){
 				return constraint;
 			}
 		}
@@ -131,7 +151,22 @@
 - (void)setButtonBarBottomConstraintConstant:(NSInteger)constant completion:(void (^ __nullable)(BOOL finished))completion {
 	[self layoutIfNeeded];
 	
-	self.buttonBarBottomConstraint.constant = constant;
+	if(![LMLayoutManager isiPad]){
+		constant = [LMLayoutManager isLandscape] ? constant : -constant;
+		
+		NSLayoutConstraint *otherConstraint = [self otherConstraintForView:self.buttonBar];
+		otherConstraint.constant = (constant == 0) ? (constant = self.minimizeButton.frame.size.width) : constant;
+		
+		NSLayoutConstraint *attachedConstraint = [self otherConstraintForView:self.viewAttachedToButtonBar];
+		attachedConstraint.constant = constant;
+		
+		if([LMLayoutManager isLandscape]){
+			NSLayoutConstraint *attachedOtherConstraint = [self bottomConstraintForView:self.viewAttachedToButtonBar];
+			attachedOtherConstraint.constant = constant;
+		}
+	}
+	
+	self.buttonBarBottomConstraint.constant = (constant == 0) ? (-self.minimizeButton.frame.size.width*2) : constant;
 	
 	NSLog(@"Setting to %ld", constant);
 	
@@ -169,6 +204,9 @@
 	NSLayoutConstraint *previousViewTopConstraint = [self topConstrantForView:previouslyAttachedView];
 	NSLayoutConstraint *currentViewTopConstraint = [self topConstrantForView:viewAttachedToButtonBar];
 	
+	NSLayoutConstraint *previousViewOtherConstraint = [self otherConstraintForView:previouslyAttachedView];
+	NSLayoutConstraint *currentViewOtherConstraint = [self otherConstraintForView:viewAttachedToButtonBar];
+	
 	[self layoutIfNeeded];
 
 //    NSLog(@"Fuck you!!! lol %@", viewAttachedToButtonBar);
@@ -178,6 +216,11 @@
 	
 	previousViewTopConstraint.constant = self.layoutManager.isLandscape ? (previouslyAttachedView.frame.size.height*2) : self.buttonBar.frame.size.height;
 	currentViewTopConstraint.constant = self.layoutManager.isLandscape ? 0 : -viewAttachedToButtonBar.frame.size.height;
+	
+	if(![LMLayoutManager isiPad]){
+		previousViewOtherConstraint.constant = 0;
+		currentViewOtherConstraint.constant = 0;
+	}
 	
 	[UIView animateWithDuration:0.25 animations:^{
 		[self layoutIfNeeded];
@@ -238,8 +281,12 @@
 	
 	__weak id weakSelf = self;
 	
-	[self setButtonBarBottomConstraintConstant:self.buttonBar.frame.size.height
-                                             + self.viewAttachedToButtonBar.frame.size.height
+	CGFloat sizeToApply = self.buttonBar.frame.size.height + self.viewAttachedToButtonBar.frame.size.height;
+	if(![LMLayoutManager isiPad]){
+		sizeToApply = self.frame.size.width;
+	}
+	
+	[self setButtonBarBottomConstraintConstant:sizeToApply
 									completion:^(BOOL finished) {
 										LMButtonNavigationBar *strongSelf = weakSelf;
 										if(!strongSelf){
@@ -472,6 +519,9 @@
 		
 		//Dont even tell me how bad this shit is
 		CGFloat properNum = self.layoutManager.isLandscape ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height;
+		if([LMLayoutManager isiPad]){
+			properNum = [LMLayoutManager isLandscapeiPad] ? WINDOW_FRAME.size.height : WINDOW_FRAME.size.width;
+		}
 		
 		
 		self.browsingBar = [LMBrowsingBar newAutoLayoutView];
@@ -582,7 +632,8 @@
 //		[self.buttonBar autoPinEdgesToSuperviewEdges];
 		
 		NSArray *buttonBarPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-			[self.buttonBar autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.minimizeButton];
+//			[self.buttonBar autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.minimizeButton];
+			[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 			[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 			[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 			[self.buttonBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.minimizeButton];
@@ -717,9 +768,9 @@
 		}];
 		[LMLayoutManager addNewiPadConstraints:sourceSelectoriPadConstraints];
 		
-		if([LMLayoutManager isiPad]){
+//		if([LMLayoutManager isiPad]){
 			[self insertSubview:self.minimizeButton aboveSubview:self.buttonBar];
-		}
+//		}
 		
 		
 //		self.sourceSelector.hidden = YES;

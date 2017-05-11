@@ -767,8 +767,11 @@
 	self.queueTableView.subviewDataSource = self;
 	self.queueTableView.shouldUseDividers = YES;
 	self.queueTableView.title = @"QueueTableView";
-	self.queueTableView.bottomSpacing = 10;
+	self.queueTableView.bottomSpacing = 0;
 	self.queueTableView.notHighlightedBackgroundColour = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.5];
+	self.queueTableView.layer.masksToBounds = YES;
+	self.queueTableView.layer.cornerRadius = 8.0;
+	self.queueTableView.clipsToBounds = YES;
 	[self.queueView addSubview:self.queueTableView];
 	
 	//queueView constraints are setup in -setupiPadSpecificLayout
