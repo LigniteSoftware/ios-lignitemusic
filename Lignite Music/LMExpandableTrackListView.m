@@ -40,6 +40,11 @@
  */
 @property NSInteger currentlyHighlightedEntry;
 
+/**
+ The specific track collections associated with this browsing view. For example, an artist would have their albums within this array of collections.
+ */
+@property NSArray<LMMusicTrackCollection*>* specificTrackCollections;
+
 @end
 
 @implementation LMExpandableTrackListView
@@ -112,6 +117,13 @@
 }
 
 - (void)tappedListEntry:(LMListEntry*)entry {
+	if(self.specificTrackCollections){
+		LMMusicTrackCollection *collection = [self.specificTrackCollections objectAtIndex:entry.collectionIndex];
+
+		NSLog(@"Launch that bitch %@", collection);
+		return;
+	}
+	
 	NSLog(@"Tapped %d", (int)entry.collectionIndex);
 	
 	LMMusicTrack *track = [self.musicTrackCollection.items objectAtIndex:entry.collectionIndex];
@@ -258,6 +270,7 @@
 }
 
 - (void)layoutSubviews {
+	self.backgroundColor = [UIColor purpleColor];
 	if(!self.didLayoutConstraints){
 		self.didLayoutConstraints = YES;
 	
@@ -276,14 +289,34 @@
 		self.currentlyHighlightedEntry = -1;
 		
 		
+		
+		BOOL usingSpecificTrackCollections = (self.musicType != LMMusicTypePlaylists
+											  && self.musicType != LMMusicTypeCompilations
+											  && self.musicType != LMMusicTypeAlbums);
+		
+		if(usingSpecificTrackCollections){
+			self.specificTrackCollections = [self.musicPlayer collectionsForRepresentativeTrack:self.musicTrackCollection.representativeItem
+																				   forMusicType:self.musicType];
+		}
+		
+		
+		
 		self.expandableTrackListControlBar = [LMExpandableTrackListControlBar newAutoLayoutView];
 		self.expandableTrackListControlBar.delegate = self;
 		self.expandableTrackListControlBar.musicTrackCollection = self.musicTrackCollection;
+//		self.expandableTrackListControlBar.mode = LMExpandableTrackListControlBarModeControlWithAlbumDetail;
 		[self addSubview:self.expandableTrackListControlBar];
 		
 		[self.expandableTrackListControlBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[self.expandableTrackListControlBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
 		[self.expandableTrackListControlBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		
+		[NSTimer scheduledTimerWithTimeInterval:2.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
+			[UIView animateWithDuration:0.25 animations:^{
+				self.expandableTrackListControlBar.mode = LMExpandableTrackListControlBarModeControlWithAlbumDetail;
+				[self layoutIfNeeded];
+			}];
+		}];
 		
 		
 		

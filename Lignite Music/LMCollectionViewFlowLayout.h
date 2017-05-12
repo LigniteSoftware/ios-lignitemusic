@@ -10,7 +10,7 @@
 #import "LMMusicPlayer.h"
 
 #define LMNoDetailViewSelected -1
-#define COMPACT_VIEW_SPACING_BETWEEN_ITEMS 25
+#define COMPACT_VIEW_SPACING_BETWEEN_ITEMS 15
 
 @interface LMCollectionViewFlowLayout : UICollectionViewFlowLayout
 
@@ -76,5 +76,7 @@ typedef NS_ENUM(NSInteger, LMDetailViewDisplayMode) {
  The frame of the current item displaying the detail view.
  */
 @property CGRect frameOfItemDisplayingDetailView;
+
+@property BOOL test;
 
 @end

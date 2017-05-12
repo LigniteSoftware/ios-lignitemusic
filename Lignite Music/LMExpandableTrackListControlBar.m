@@ -43,6 +43,7 @@
 
 @synthesize mode = _mode;
 
+BOOL expandableTrackListControlBarIsInAlbumDetail = NO;
 
 - (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState {
 	[self.musicControlBar reloadHighlightedButtons];
@@ -133,7 +134,7 @@
 	if([LMLayoutManager isiPad]){
 		return ([LMLayoutManager isLandscapeiPad] ? WINDOW_FRAME.size.height : WINDOW_FRAME.size.width)/8.0;
 	}
-	return ([LMLayoutManager isLandscape] ? WINDOW_FRAME.size.height : WINDOW_FRAME.size.width)/6.0;
+	return (([LMLayoutManager isLandscape] ? WINDOW_FRAME.size.height : WINDOW_FRAME.size.width)/6.0) * (1 + expandableTrackListControlBarIsInAlbumDetail);
 }
 
 
@@ -149,6 +150,7 @@
 	[self.closeButtonImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.closeButtonBackgroundView withMultiplier:(1.0/3.0)];
 	
 	
+	[self.closeButtonBackgroundView autoPinEdgeToSuperviewMargin:ALEdgeTrailing];
 	[self.closeButtonBackgroundView autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
 	[self.closeButtonBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self];
 	[self.closeButtonBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self];
@@ -161,9 +163,6 @@
 	
 	switch(self.mode){
 		case LMExpandableTrackListControlBarModeGeneralControl: {
-
-			
-			[self.closeButtonBackgroundView autoPinEdgeToSuperviewMargin:ALEdgeTrailing];
 			
 			
 			[self.musicControlBar autoPinEdgeToSuperviewMargin:ALEdgeLeading].constant = 10;
@@ -174,7 +173,7 @@
 		case LMExpandableTrackListControlBarModeControlWithAlbumDetail: {
 			
 			
-			[self.musicControlBar autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.closeButtonImageView withOffset:0];
+			[self.musicControlBar autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.closeButtonImageView withOffset:-10];
 			
 			
 			NSLog(@"What");
@@ -190,9 +189,15 @@
 - (void)setMode:(LMExpandableTrackListControlBarMode)mode {
 	_mode = mode;
 	
+	expandableTrackListControlBarIsInAlbumDetail = (mode == LMExpandableTrackListControlBarModeControlWithAlbumDetail);
+	
 	if(self.didLayoutConstraints){
+		[self layoutIfNeeded];
+		
+		[self reloadConstraints];
+		
 		[UIView animateWithDuration:0.5 animations:^{
-			[self reloadConstraints];
+			[self layoutIfNeeded];
 		}];
 	}
 }
@@ -247,6 +252,8 @@
 	if(self) {
 		self.mode = LMExpandableTrackListControlBarModeGeneralControl;
 		self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
+		
+		expandableTrackListControlBarIsInAlbumDetail = NO;
 	}
 	return self;
 }

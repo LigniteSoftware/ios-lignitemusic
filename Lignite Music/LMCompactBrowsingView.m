@@ -370,6 +370,7 @@
 			[detailView autoPinEdgesToSuperviewEdges];
 			
 			
+			
 			[self.rootViewController.buttonNavigationBar minimize:YES];
 			
 //			UIView *testingSubview = [UIView newAutoLayoutView];
