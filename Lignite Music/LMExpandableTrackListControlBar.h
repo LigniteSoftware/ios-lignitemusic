@@ -21,6 +21,13 @@
  */
 - (void)closeButtonTappedForExpandableTrackListControlBar:(LMExpandableTrackListControlBar*)controlBar;
 
+/**
+ The back button on the control bar was tapped, the detail view should go back to its tile view of albums.
+ 
+ @param controlBar The control bar which was tapped.
+ */
+- (void)backButtonTappedForExpandableTrackListControlBar:(LMExpandableTrackListControlBar*)controlBar;
+
 @end
 
 @interface LMExpandableTrackListControlBar : LMView

@@ -11,11 +11,12 @@
 #import "LMExpandableTrackListControlBar.h"
 #import "LMControlBarView.h"
 #import "LMLayoutManager.h"
+#import "LMListEntry.h"
 #import "LMAppIcon.h"
 #import "LMExtras.h"
 #import "LMColour.h"
 
-@interface LMExpandableTrackListControlBar()<LMControlBarViewDelegate, LMMusicPlayerDelegate>
+@interface LMExpandableTrackListControlBar()<LMControlBarViewDelegate, LMMusicPlayerDelegate, LMListEntryDelegate>
 
 /**
  The music control bar.
@@ -33,9 +34,24 @@
 @property UIImageView *closeButtonImageView;
 
 /**
+ The background view for the back button.
+ */
+@property UIView *backButtonBackgroundView;
+
+/**
+ The image view for the back button (< symbol).
+ */
+@property UIImageView *backButtonImageView;
+
+/**
  The system music player.
  */
 @property LMMusicPlayer *musicPlayer;
+
+/**
+ A list entry for the specific album header since it already has the perfect layout for it.
+ */
+@property LMListEntry *specificAlbumHeader;
 
 @end
 
@@ -44,6 +60,26 @@
 @synthesize mode = _mode;
 
 BOOL expandableTrackListControlBarIsInAlbumDetail = NO;
+
+- (void)tappedListEntry:(LMListEntry*)entry{
+	//Do nothing
+}
+
+- (UIColor*)tapColourForListEntry:(LMListEntry*)entry {
+	return [UIColor clearColor];
+}
+
+- (NSString*)titleForListEntry:(LMListEntry*)entry {
+	return self.musicTrackCollection.representativeItem.albumTitle;
+}
+
+- (NSString*)subtitleForListEntry:(LMListEntry*)entry {
+	return self.musicTrackCollection.representativeItem.artist;
+}
+
+- (UIImage*)iconForListEntry:(LMListEntry*)entry {
+	return self.musicTrackCollection.representativeItem.albumArt;
+}
 
 - (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState {
 	[self.musicControlBar reloadHighlightedButtons];
@@ -134,7 +170,7 @@ BOOL expandableTrackListControlBarIsInAlbumDetail = NO;
 	if([LMLayoutManager isiPad]){
 		return ([LMLayoutManager isLandscapeiPad] ? WINDOW_FRAME.size.height : WINDOW_FRAME.size.width)/8.0;
 	}
-	return (([LMLayoutManager isLandscape] ? WINDOW_FRAME.size.height : WINDOW_FRAME.size.width)/6.0) * (1 + expandableTrackListControlBarIsInAlbumDetail);
+	return (([LMLayoutManager isLandscape] ? WINDOW_FRAME.size.height : WINDOW_FRAME.size.width)/6.0);
 }
 
 
@@ -144,40 +180,96 @@ BOOL expandableTrackListControlBarIsInAlbumDetail = NO;
 	
 	[self autoSetDimension:ALDimensionHeight toSize:[LMExpandableTrackListControlBar recommendedHeight]];
 	
-	
-	[self.closeButtonImageView autoCenterInSuperview];
-	[self.closeButtonImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.closeButtonBackgroundView withMultiplier:(1.0/3.0)];
-	[self.closeButtonImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.closeButtonBackgroundView withMultiplier:(1.0/3.0)];
-	
-	
 	[self.closeButtonBackgroundView autoPinEdgeToSuperviewMargin:ALEdgeTrailing];
 	[self.closeButtonBackgroundView autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
 	[self.closeButtonBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self];
 	[self.closeButtonBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self];
 	
+	[self.closeButtonImageView autoCenterInSuperview];
+	[self.closeButtonImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.closeButtonBackgroundView withMultiplier:(1.0/3.0)];
+	[self.closeButtonImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.closeButtonBackgroundView withMultiplier:(1.0/3.0)];
 	
-	[self.musicControlBar autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
-	[self.musicControlBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(9.0/10.0)];
-	[self.musicControlBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(4.0/10.0)];
+	[self.backButtonImageView autoCenterInSuperview];
+	[self.backButtonImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.closeButtonBackgroundView withMultiplier:(1.0/2.5)];
+	[self.backButtonImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.closeButtonBackgroundView withMultiplier:(1.0/2.5)];
+	
 
-	
-	switch(self.mode){
-		case LMExpandableTrackListControlBarModeGeneralControl: {
-			
-			
-			[self.musicControlBar autoPinEdgeToSuperviewMargin:ALEdgeLeading].constant = 10;
-			
-			
-			break;
+	if([LMLayoutManager isiPad]){
+		switch(self.mode){
+			case LMExpandableTrackListControlBarModeGeneralControl: {
+				
+				
+				[self.closeButtonBackgroundView autoPinEdgeToSuperviewMargin:ALEdgeTrailing];
+				[self.closeButtonBackgroundView autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+				[self.closeButtonBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self];
+				[self.closeButtonBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self];
+				
+				
+				[self.musicControlBar autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+				[self.musicControlBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(9.0/10.0)];
+				[self.musicControlBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(4.0/10.0)];
+				[self.musicControlBar autoPinEdgeToSuperviewMargin:ALEdgeLeading].constant = 10;
+				
+				
+				break;
+			}
+			case LMExpandableTrackListControlBarModeControlWithAlbumDetail: {
+				
+				[self.closeButtonBackgroundView autoPinEdgeToSuperviewMargin:ALEdgeTrailing];
+				[self.closeButtonBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+				[self.closeButtonBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(1.0/2.0)];
+				[self.closeButtonBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self withMultiplier:(1.0/2.0)];
+				
+				
+				[self.musicControlBar autoAlignAxisToSuperviewAxis:ALAxisVertical];
+				[self.musicControlBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(4.5/10.0)];
+				[self.musicControlBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(4.0/10.0)];
+				[self.musicControlBar autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.closeButtonImageView withOffset:-10];
+				
+				
+				NSLog(@"What");
+				break;
+			}
 		}
-		case LMExpandableTrackListControlBarModeControlWithAlbumDetail: {
-			
-			
-			[self.musicControlBar autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.closeButtonImageView withOffset:-10];
-			
-			
-			NSLog(@"What");
-			break;
+	}
+	else{
+		switch(self.mode){
+			case LMExpandableTrackListControlBarModeGeneralControl: {
+				
+				
+				[self.backButtonBackgroundView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self withOffset:-10];
+				[self.backButtonBackgroundView autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+				[self.backButtonBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self];
+				[self.backButtonBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self];
+				
+				
+				[self.musicControlBar autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+				[self.musicControlBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(9.0/10.0)];
+				[self.musicControlBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(4.0/10.0)];
+				[self.musicControlBar autoPinEdgeToSuperviewMargin:ALEdgeLeading].constant = 10;
+				
+				
+				break;
+			}
+			case LMExpandableTrackListControlBarModeControlWithAlbumDetail: {
+		
+				
+				[self.backButtonBackgroundView autoPinEdgeToSuperviewMargin:ALEdgeLeading];
+				[self.backButtonBackgroundView autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+				[self.backButtonBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self];
+				[self.backButtonBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self];
+				
+				
+				[self.musicControlBar autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.backButtonBackgroundView];
+				[self.musicControlBar autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.closeButtonBackgroundView];
+				[self.musicControlBar autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.closeButtonBackgroundView];
+				[self.musicControlBar autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.closeButtonBackgroundView];
+				[self.musicControlBar autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+//				[self.musicControlBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(9.0/10.0)];
+				
+				NSLog(@"What");
+				break;
+			}
 		}
 	}
 }
@@ -196,7 +288,7 @@ BOOL expandableTrackListControlBarIsInAlbumDetail = NO;
 		
 		[self reloadConstraints];
 		
-		[UIView animateWithDuration:0.5 animations:^{
+		[UIView animateWithDuration:0.25 animations:^{
 			[self layoutIfNeeded];
 		}];
 	}
@@ -207,6 +299,16 @@ BOOL expandableTrackListControlBarIsInAlbumDetail = NO;
 	
 	if([self.delegate respondsToSelector:@selector(closeButtonTappedForExpandableTrackListControlBar:)]){
 		[self.delegate closeButtonTappedForExpandableTrackListControlBar:self];
+	}
+}
+
+- (void)backButtonTapped {
+	NSLog(@"Back me");
+	
+	self.mode = LMExpandableTrackListControlBarModeGeneralControl;
+	
+	if([self.delegate respondsToSelector:@selector(backButtonTappedForExpandableTrackListControlBar:)]){
+		[self.delegate backButtonTappedForExpandableTrackListControlBar:self];
 	}
 }
 
@@ -231,6 +333,28 @@ BOOL expandableTrackListControlBarIsInAlbumDetail = NO;
 		self.closeButtonImageView.backgroundColor = [UIColor clearColor];
 		self.closeButtonImageView.image = [LMAppIcon invertImage:[LMAppIcon imageForIcon:LMIconXCross]];
 		[self.closeButtonBackgroundView addSubview:self.closeButtonImageView];
+		
+		
+		self.backButtonBackgroundView = [UIView newAutoLayoutView];
+		self.backButtonBackgroundView.backgroundColor = [UIColor clearColor];
+		[self addSubview:self.backButtonBackgroundView];
+		
+		UITapGestureRecognizer *backButtonTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(backButtonTapped)];
+		[self.backButtonBackgroundView addGestureRecognizer:backButtonTapGestureRecognizer];
+		
+		
+		self.backButtonImageView = [UIImageView newAutoLayoutView];
+		self.backButtonImageView.contentMode = UIViewContentModeScaleAspectFit;
+		self.backButtonImageView.backgroundColor = [UIColor clearColor];
+		self.backButtonImageView.image = [LMAppIcon imageForIcon:LMIconiOSBack];
+		[self.backButtonBackgroundView addSubview:self.backButtonImageView];
+		
+		
+		self.specificAlbumHeader = [[LMListEntry alloc]initWithDelegate:self];
+		self.specificAlbumHeader.collectionIndex = 0;
+		self.specificAlbumHeader.iPromiseIWillHaveAnIconForYouSoon = YES;
+		self.specificAlbumHeader.alignIconToLeft = YES;
+		[self addSubview:self.specificAlbumHeader];
 		
 		
 		self.musicControlBar = [LMControlBarView newAutoLayoutView];

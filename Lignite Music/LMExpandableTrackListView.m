@@ -45,6 +45,16 @@
  */
 @property NSArray<LMMusicTrackCollection*>* specificTrackCollections;
 
+/**
+ The tile view of albums used for displaying specific track collections.
+ */
+@property UIView *albumTileView;
+
+/**
+ The leading constraint for the album tile view. Its constant should be negative the frame's width if displaying the track list.
+ */
+@property NSLayoutConstraint *albumTileViewLeadingConstraint;
+
 @end
 
 @implementation LMExpandableTrackListView
@@ -269,8 +279,16 @@
 	flowLayout.indexOfItemDisplayingDetailView = LMNoDetailViewSelected;
 }
 
+- (void)backButtonTappedForExpandableTrackListControlBar:(LMExpandableTrackListControlBar *)controlBar {
+	NSLog(@"\"back?\"");
+	self.albumTileViewLeadingConstraint.constant = 0;
+	[UIView animateWithDuration:0.25 animations:^{
+		[self layoutIfNeeded];
+	}];
+}
+
 - (void)layoutSubviews {
-	self.backgroundColor = [UIColor purpleColor];
+	self.backgroundColor = [UIColor yellowColor];
 	if(!self.didLayoutConstraints){
 		self.didLayoutConstraints = YES;
 	
@@ -311,13 +329,20 @@
 		[self.expandableTrackListControlBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
 		[self.expandableTrackListControlBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 		
-		[NSTimer scheduledTimerWithTimeInterval:2.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
-			[UIView animateWithDuration:0.25 animations:^{
-				self.expandableTrackListControlBar.mode = LMExpandableTrackListControlBarModeControlWithAlbumDetail;
-				[self layoutIfNeeded];
-			}];
-		}];
 		
+		
+		self.albumTileView = [UIView newAutoLayoutView];
+		self.albumTileView.backgroundColor = [UIColor purpleColor];
+		[self addSubview:self.albumTileView];
+		
+		self.albumTileViewLeadingConstraint = [self.albumTileView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
+		[self.albumTileView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.expandableTrackListControlBar];
+		[self.albumTileView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
+		[self.albumTileView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
+		
+		if(!self.specificTrackCollections){
+			self.albumTileViewLeadingConstraint.constant = -self.frame.size.width;
+		}
 		
 		
 		UICollectionViewFlowLayout *fuck = [[UICollectionViewFlowLayout alloc]init];
@@ -333,10 +358,10 @@
 		[self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"cellIdentifier"];
 		[self addSubview:self.collectionView];
 		
-		[self.collectionView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.expandableTrackListControlBar];
-		[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-		[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-		[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[self.collectionView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.albumTileView];
+		[self.collectionView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.albumTileView];
+		[self.collectionView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.albumTileView];
+		[self.collectionView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.albumTileView];
 //		self.collectionView.hidden = YES;
 		
 		
@@ -349,6 +374,15 @@
 		[self.innerShadowView autoPinEdgesToSuperviewEdges];
 		
 		[self musicTrackDidChange:self.musicPlayer.nowPlayingTrack];
+		
+		
+//		[NSTimer scheduledTimerWithTimeInterval:1.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
+//			self.albumTileViewLeadingConstraint.constant = -self.frame.size.width;
+//			[UIView animateWithDuration:0.25 animations:^{
+//				self.expandableTrackListControlBar.mode = LMExpandableTrackListControlBarModeControlWithAlbumDetail;
+//				[self layoutIfNeeded];
+//			}];
+//		}];
 	}
 	else{
 		[self.collectionView reloadData];
