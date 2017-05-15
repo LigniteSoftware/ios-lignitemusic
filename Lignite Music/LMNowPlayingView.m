@@ -551,7 +551,6 @@
 }
 
 - (UIColor*)tapColourForListEntry:(LMListEntry*)entry {
-	NSLog(@"Returning for %d", (int)entry.collectionIndex);
 	return [LMColour ligniteRedColour];
 }
 
@@ -830,7 +829,7 @@
 	
 	[self.blurredBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.backgroundImageView];
 	[self.blurredBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.backgroundImageView];
-	[self.blurredBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+	[self.blurredBackgroundView autoCenterInSuperview];
 	
 	
 	

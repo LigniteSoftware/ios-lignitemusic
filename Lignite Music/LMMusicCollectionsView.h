@@ -9,6 +9,21 @@
 #import "LMView.h"
 #import "LMMusicPlayer.h"
 
+@class LMMusicCollectionsView;
+
+@protocol LMMusicCollectionsViewDelegate <NSObject>
+@required
+
+/**
+ A certain music collection was tapped at an index.
+
+ @param index The index of the music collection which was tapped.
+ @param collectionsView The collections view associated.
+ */
+- (void)musicCollectionTappedAtIndex:(NSInteger)index forMusicCollectionsView:(LMMusicCollectionsView*)collectionsView;
+
+@end
+
 @interface LMMusicCollectionsView : LMView
 
 /**
@@ -20,5 +35,10 @@
  The track collections for the music collections view to display.
  */
 @property NSArray<LMMusicTrackCollection*> *trackCollections;
+
+/**
+ The delegate.
+ */
+@property id<LMMusicCollectionsViewDelegate> delegate;
 
 @end

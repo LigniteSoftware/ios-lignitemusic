@@ -407,6 +407,7 @@ LMControlBarViewDelegate
 		case LMIconCompilations:
 		case LMIconAlbums: {
 			self.compactView.hidden = NO;
+			self.titleView.hidden = YES;
 			
 			LMMusicType associatedMusicType = LMMusicTypeAlbums;
 			

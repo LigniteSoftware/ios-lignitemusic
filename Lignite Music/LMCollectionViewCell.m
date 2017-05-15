@@ -11,8 +11,6 @@
 @implementation LMCollectionViewCell
 
 - (void)applyLayoutAttributes:(UICollectionViewLayoutAttributes *)layoutAttributes {
-	NSLog(@"Bitch");
-	
 	[super applyLayoutAttributes:layoutAttributes];
 	[self layoutIfNeeded];
 }

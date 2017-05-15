@@ -335,7 +335,6 @@
 	}
 	
 	LMCollectionViewFlowLayout *flowLayout = (LMCollectionViewFlowLayout*)collectionView.collectionViewLayout;
-	NSLog(@"Shit %d/%d", flowLayout.isDisplayingDetailView, (int)flowLayout.amountOfOverflowingCellsForDetailView);
 	return flowLayout.isDisplayingDetailView ? (self.musicTrackCollections.count+flowLayout.amountOfOverflowingCellsForDetailView+1) : self.musicTrackCollections.count;
 }
 
@@ -343,7 +342,7 @@
 	LMCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cellIdentifier" forIndexPath:indexPath];
 	
 	cell.backgroundColor = [UIColor whiteColor];
-	
+
 	for(UIView *subview in cell.contentView.subviews){
 		[subview removeFromSuperview];
 	}
