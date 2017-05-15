@@ -72,6 +72,8 @@
 		6A48A7421E202BBF003C86B6 /* splash_wings.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A48A7411E202BBF003C86B6 /* splash_wings.png */; };
 		6A4BAEEE1DC984EC000DF537 /* LMBigListEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A4BAEED1DC984EC000DF537 /* LMBigListEntry.m */; };
 		6A4BAEF21DC9C59B000DF537 /* LMTiledAlbumCoverView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A4BAEF11DC9C59B000DF537 /* LMTiledAlbumCoverView.m */; };
+		6A4D61B31EC63C7200A106F4 /* LMLetterLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A4D61B21EC63C7200A106F4 /* LMLetterLabel.m */; };
+		6A4D61B41EC63C7200A106F4 /* LMLetterLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A4D61B21EC63C7200A106F4 /* LMLetterLabel.m */; };
 		6A50AC911E891F3A005C7B3B /* LMTutorialView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A50AC901E891F3A005C7B3B /* LMTutorialView.m */; };
 		6A50AC921E891F3A005C7B3B /* LMTutorialView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A50AC901E891F3A005C7B3B /* LMTutorialView.m */; };
 		6A514E141CE9621B00AFB351 /* icon_dynamic_playlist.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A514E131CE9621B00AFB351 /* icon_dynamic_playlist.png */; };
@@ -486,6 +488,8 @@
 		6A4BAEED1DC984EC000DF537 /* LMBigListEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMBigListEntry.m; sourceTree = "<group>"; };
 		6A4BAEF01DC9C59B000DF537 /* LMTiledAlbumCoverView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMTiledAlbumCoverView.h; sourceTree = "<group>"; };
 		6A4BAEF11DC9C59B000DF537 /* LMTiledAlbumCoverView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMTiledAlbumCoverView.m; sourceTree = "<group>"; };
+		6A4D61B11EC63C7200A106F4 /* LMLetterLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMLetterLabel.h; sourceTree = "<group>"; };
+		6A4D61B21EC63C7200A106F4 /* LMLetterLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMLetterLabel.m; sourceTree = "<group>"; };
 		6A50AC8F1E891F3A005C7B3B /* LMTutorialView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMTutorialView.h; sourceTree = "<group>"; };
 		6A50AC901E891F3A005C7B3B /* LMTutorialView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMTutorialView.m; sourceTree = "<group>"; };
 		6A514E131CE9621B00AFB351 /* icon_dynamic_playlist.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_dynamic_playlist.png; sourceTree = "<group>"; };
@@ -952,6 +956,8 @@
 				6AAA56071DF54D7800692CFB /* LMBrowsingBar.m */,
 				6A5257511DF1FC840040210D /* LMLetterTabBar.h */,
 				6A5257521DF1FC840040210D /* LMLetterTabBar.m */,
+				6A4D61B11EC63C7200A106F4 /* LMLetterLabel.h */,
+				6A4D61B21EC63C7200A106F4 /* LMLetterLabel.m */,
 				6A75652E1DF7E38900A9EDD6 /* LMSearch.h */,
 				6A75652F1DF7E38900A9EDD6 /* LMSearch.m */,
 				6AAA55FF1DF407A800692CFB /* LMSearchBar.h */,
@@ -1853,6 +1859,7 @@
 				6AA5CB371E285C0A005F853F /* LMGuideViewPagerController.m in Sources */,
 				6AA5CB381E285C0A005F853F /* LMSearch.m in Sources */,
 				6AA5CB391E285C0A005F853F /* LMNowPlayingView.m in Sources */,
+				6A4D61B41EC63C7200A106F4 /* LMLetterLabel.m in Sources */,
 				6AA5CB3A1E285C0A005F853F /* LMPebbleManager.m in Sources */,
 				6AA5CB3B1E285C0A005F853F /* SLColorArt.m in Sources */,
 				6AA5CB3C1E285C0A005F853F /* LMProgressSlider.m in Sources */,
@@ -1963,6 +1970,7 @@
 				6A5168831E0899B100A6446F /* LMPurchaseViewController.m in Sources */,
 				6A08AF0B1EBEEBD00069C9CC /* LMExpandableTrackListView.m in Sources */,
 				6A2A29CB1DB1F1C3008E7792 /* LMSource.m in Sources */,
+				6A4D61B31EC63C7200A106F4 /* LMLetterLabel.m in Sources */,
 				6AC77A141DC42C5500BABBB3 /* LMControlBarView.m in Sources */,
 				6A8150DA1EAF6E7800F518C5 /* LMLandscapeNavigationBar.m in Sources */,
 				6A52574C1DF099480040210D /* LMView.m in Sources */,

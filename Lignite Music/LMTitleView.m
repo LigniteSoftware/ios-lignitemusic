@@ -50,6 +50,12 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     CGFloat difference = fabs(scrollView.contentOffset.y-self.lastScrollingOffsetPoint.y);
+	
+	CGFloat maxContentOffset = scrollView.contentSize.height - (scrollView.frame.size.height*1.5);
+	if(scrollView.contentOffset.y > maxContentOffset){
+		return; //Don't scroll at the end to prevent weird scrolling behaviour with resize of required button bar height
+	}
+	
     if(difference > WINDOW_FRAME.size.height/4){
         self.brokeScrollingThreshhold = YES;
 		[self.rootViewController.buttonNavigationBar minimize:YES];

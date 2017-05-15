@@ -656,6 +656,10 @@
 }
 
 - (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+	if(self.nowPlayingQueueOpen && [LMLayoutManager isiPad]){
+		[self setNowPlayingQueueOpen:NO animated:YES];
+	}
+	
 	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		[self setupiPadSpecificLayout];
 		

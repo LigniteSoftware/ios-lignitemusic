@@ -8,6 +8,7 @@
 
 #import <PureLayout/PureLayout.h>
 #import <ApIdleManager/APIdleManager.h>
+#import <MBProgressHUD/MBProgressHUD.h>
 
 #import "LMBrowsingDetailViewController.h"
 #import "LMGuideViewPagerController.h"
@@ -342,7 +343,7 @@ LMControlBarViewDelegate
 		return YES;
 	}
 	
-	return self.nowPlayingCoreView.isOpen || self.layoutManager.isLandscape || (![LMLayoutManager isiPad] && self.buttonNavigationBar.currentlySelectedTab == LMNavigationTabView);
+	return self.nowPlayingCoreView.isOpen || self.layoutManager.isLandscape || (![LMLayoutManager isiPad] && self.buttonNavigationBar.currentlySelectedTab == LMNavigationTabView && !self.buttonNavigationBar.isMinimized && !self.buttonNavigationBar.isCompletelyHidden);
 }
 
 - (UIStatusBarAnimation)preferredStatusBarUpdateAnimation {
@@ -506,9 +507,9 @@ LMControlBarViewDelegate
 //	NSLog(@"rHeight changed to %f", requiredHeight);
 
     
-//    CGFloat bottomSpacing = requiredHeight + 10;
-//    [self.compactView changeBottomSpacing:bottomSpacing];
-//    self.titleView.songListTableView.bottomSpacing = bottomSpacing;
+    CGFloat bottomSpacing = requiredHeight + 10;
+    [self.compactView changeBottomSpacing:bottomSpacing];
+    self.titleView.songListTableView.bottomSpacing = bottomSpacing;
 //    if(self.currentDetailViewController){
 //        self.currentDetailViewController.browsingDetailView.tableView.bottomSpacing = bottomSpacing;
 //        if(self.currentDetailViewController.nextDetailViewController){
@@ -568,6 +569,16 @@ LMControlBarViewDelegate
 }
 
 - (void)letterSelected:(NSString *)letter atIndex:(NSUInteger)index {
+	if([LMLayoutManager isiPad]){
+		MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+		
+		hud.mode = MBProgressHUDModeText;
+		hud.label.text = [NSString stringWithFormat:@"%@", letter];
+		hud.label.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:44.0f];
+		hud.userInteractionEnabled = NO;
+		
+		[hud hideAnimated:YES afterDelay:0.5f];
+	}
 	if([self.currentSource isEqual:self.titleView]){
 		[self.titleView scrollToTrackIndex:index == 0 ? 0 : index-1];
 	}

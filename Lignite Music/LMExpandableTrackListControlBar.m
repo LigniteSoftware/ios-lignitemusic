@@ -199,12 +199,19 @@ BOOL expandableTrackListControlBarIsInAlbumDetail = NO;
 			case LMExpandableTrackListControlBarModeGeneralControl: {
 				
 				
-				[self.closeButtonBackgroundView autoPinEdgeToSuperviewMargin:ALEdgeTrailing];
-				[self.closeButtonBackgroundView autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
-				[self.closeButtonBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self];
-				[self.closeButtonBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self];
+				[self.specificAlbumHeader autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self];
+				[self.specificAlbumHeader autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+				[self.specificAlbumHeader autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(4.0/10.0)];
+				[self.specificAlbumHeader autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.backButtonBackgroundView];
+				[self.specificAlbumHeader autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.backButtonBackgroundView];
 				
 				
+				[self.backButtonBackgroundView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self withOffset:-10];
+				[self.backButtonBackgroundView autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+				[self.backButtonBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self];
+				[self.backButtonBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self];
+				
+
 				[self.musicControlBar autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
 				[self.musicControlBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(9.0/10.0)];
 				[self.musicControlBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(4.0/10.0)];
@@ -214,15 +221,23 @@ BOOL expandableTrackListControlBarIsInAlbumDetail = NO;
 				break;
 			}
 			case LMExpandableTrackListControlBarModeControlWithAlbumDetail: {
+
 				
-				[self.closeButtonBackgroundView autoPinEdgeToSuperviewMargin:ALEdgeTrailing];
-				[self.closeButtonBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-				[self.closeButtonBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(1.0/2.0)];
-				[self.closeButtonBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self withMultiplier:(1.0/2.0)];
+				[self.backButtonBackgroundView autoPinEdgeToSuperviewMargin:ALEdgeLeading];
+				[self.backButtonBackgroundView autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+				[self.backButtonBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self];
+				[self.backButtonBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self];
 				
 				
-				[self.musicControlBar autoAlignAxisToSuperviewAxis:ALAxisVertical];
-				[self.musicControlBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(4.5/10.0)];
+				[self.specificAlbumHeader autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.backButtonImageView];
+				[self.specificAlbumHeader autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+				[self.specificAlbumHeader autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(5.0/10.0)];
+				[self.specificAlbumHeader autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.backButtonBackgroundView];
+				[self.specificAlbumHeader autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.backButtonBackgroundView];
+				
+				
+				[self.musicControlBar autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+				[self.musicControlBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(9.0/10.0)];
 				[self.musicControlBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(4.0/10.0)];
 				[self.musicControlBar autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.closeButtonImageView withOffset:-10];
 				

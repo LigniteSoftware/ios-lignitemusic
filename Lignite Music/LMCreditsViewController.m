@@ -402,6 +402,8 @@
 	creditsLinkButton.textColor = [UIColor whiteColor];
 	creditsLinkButton.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:22.0f];
 	creditsLinkButton.userInteractionEnabled = YES;
+	creditsLinkButton.layer.masksToBounds = YES;
+	creditsLinkButton.layer.cornerRadius = 8.0f;
 	[self.scrollView addSubview:creditsLinkButton];
 	
 	[creditsLinkButton autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:[textLabelsArray lastObject] withOffset:20];

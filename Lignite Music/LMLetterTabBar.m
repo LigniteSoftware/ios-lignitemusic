@@ -140,6 +140,10 @@
 }
 
 - (void)setLetterLabelLifted:(UILabel*)letterLabel withAnimationStyle:(LMLetterTabLiftAnimationStyle)animationStyle {
+//	if([LMLayoutManager isiPad]){
+//		return;
+//	}
+	
 	NSLayoutConstraint *centerYConstraint = nil;
 	
 	for(NSLayoutConstraint *constraint in self.letterScrollView.constraints){
@@ -340,6 +344,7 @@
 		[self.layoutManager addDelegate:self];
 		
 		self.layer.masksToBounds = NO;
+		self.clipsToBounds = [LMLayoutManager isiPad];
 		
 		self.backgroundColor = [UIColor whiteColor];
 		

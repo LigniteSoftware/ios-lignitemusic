@@ -125,6 +125,10 @@
 }
 
 - (CGFloat)maximizedHeight {
+	if([LMLayoutManager isiPad]){
+		return self.minimizeButton.frame.size.height + self.buttonBar.frame.size.height + self.viewAttachedToButtonBar.frame.size.height;
+	}
+	
 	if(self.layoutManager.isLandscape){
 		NSLog(@"Size is %f", self.buttonBar.frame.size.width + self.viewAttachedToButtonBar.frame.size.width);
 		return self.buttonBar.frame.size.width + self.viewAttachedToButtonBar.frame.size.width;
@@ -266,8 +270,10 @@
 	
 	self.minimizeButtonBottomConstraint.constant = 0;
 	
+	LMCoreViewController *coreViewController = (LMCoreViewController*)self.rootViewController;
 	[UIView animateWithDuration:0.5 animations:^{
 		[self layoutIfNeeded];
+		[coreViewController setNeedsStatusBarAppearanceUpdate];
 	}];
 }
 
@@ -309,8 +315,10 @@
 	
 	self.minimizeButtonBottomConstraint.constant = 0;
 	
+	LMCoreViewController *coreViewController = (LMCoreViewController*)self.rootViewController;
 	[UIView animateWithDuration:0.5 animations:^{
 		[self layoutIfNeeded];
+		[coreViewController setNeedsStatusBarAppearanceUpdate];
 	}];
 }
 

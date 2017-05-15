@@ -482,46 +482,25 @@
 		self.leftTextBottomLabel.textColor = [UIColor blackColor];
 		[self addSubview:self.leftTextBottomLabel];
 		
-		NSArray *leftTextBottomLabelPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-			[self.leftTextBottomLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self withOffset:10];
-			[self.leftTextBottomLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
-			[self.leftTextBottomLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.6];
-			[self.leftTextBottomLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(0.45)];
-		}];
-		[LMLayoutManager addNewPortraitConstraints:leftTextBottomLabelPortraitConstraints];
-
-		NSArray *leftTextBottomLabelLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-			[self.leftTextBottomLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self withOffset:10];
-			[self.leftTextBottomLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
-			[self.leftTextBottomLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.5];
-			[self.leftTextBottomLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(0.45)];
-		}];
-		[LMLayoutManager addNewLandscapeConstraints:leftTextBottomLabelLandscapeConstraints];
+		[self.leftTextBottomLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self withOffset:10];
+		[self.leftTextBottomLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+		[self.leftTextBottomLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:([LMLayoutManager isiPad] && self.nowPlayingView) ? 0.5 : 0.6];
+		[self.leftTextBottomLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:([LMLayoutManager isiPad] && self.nowPlayingView) ? 0.35 : 0.45];
 		
 		
 		
 		self.rightTextBottomLabel = [LMLabel newAutoLayoutView];
 		self.rightTextBottomLabel.text = self.rightText ? self.rightText : @"";
-		self.rightTextBottomLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:50];
+		self.rightTextBottomLabel.font = self.leftTextBottomLabel.font;
 		self.rightTextBottomLabel.textColor = [UIColor blackColor];
 		self.rightTextBottomLabel.textAlignment = NSTextAlignmentRight;
 		[self addSubview:self.rightTextBottomLabel];
 		
-		NSArray *rightTextBottomLabelPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-			[self.rightTextBottomLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self withOffset:-10];
-			[self.rightTextBottomLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
-			[self.rightTextBottomLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.6];
-			[self.rightTextBottomLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(0.45)];
-		}];
-		[LMLayoutManager addNewPortraitConstraints:rightTextBottomLabelPortraitConstraints];
-		
-		NSArray *rightTextBottomLabelLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-			[self.rightTextBottomLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self withOffset:-10];
-			[self.rightTextBottomLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
-			[self.rightTextBottomLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.5];
-			[self.rightTextBottomLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(0.45)];
-		}];
-		[LMLayoutManager addNewLandscapeConstraints:rightTextBottomLabelLandscapeConstraints];
+		[self.rightTextBottomLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self withOffset:-10];
+		[self.rightTextBottomLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+		[self.rightTextBottomLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.leftTextBottomLabel];
+		[self.rightTextBottomLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.leftTextBottomLabel];
+
 		
 
 		
@@ -564,7 +543,7 @@
 		
 		self.rightTextTopLabel = [LMLabel newAutoLayoutView];
 		self.rightTextTopLabel.text = self.rightTextBottomLabel.text;
-		self.rightTextTopLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:50];
+		self.rightTextTopLabel.font = self.leftTextBottomLabel.font;
 		self.rightTextTopLabel.textColor = [UIColor whiteColor];
 		self.rightTextTopLabel.textAlignment = NSTextAlignmentRight;
 		self.rightTextTopLabel.clipsToBounds = YES;
@@ -580,7 +559,7 @@
 		
 		self.leftTextTopLabel = [LMLabel newAutoLayoutView];
 		self.leftTextTopLabel.text = self.leftTextBottomLabel.text;
-		self.leftTextTopLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:50];
+		self.leftTextTopLabel.font = self.leftTextBottomLabel.font;
 		self.leftTextTopLabel.textColor = [UIColor whiteColor];
 		self.leftTextTopLabel.textAlignment = NSTextAlignmentLeft;
 		self.leftTextTopLabel.lineBreakMode = NSLineBreakByClipping;

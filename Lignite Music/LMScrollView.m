@@ -28,13 +28,12 @@
 		return;
 	}
 	
-	self.delegate = self;
-	
 	self.didSetupContentSize = YES;
 	
 	CGRect contentRect = CGRectZero;
 	for (UIView *view in self.subviews) {
-		if(([[[view class] description] isEqualToString:@"UILabel"] && self.adaptForWidth) || !self.adaptForWidth){
+		BOOL isLetterTabBar = ([[[view class] description] isEqualToString:@"UILabel"] && self.adaptForWidth);
+		if(isLetterTabBar || !self.adaptForWidth){
 			contentRect = CGRectUnion(contentRect, view.frame);
 		}
 	}
@@ -42,6 +41,9 @@
 	contentRect = CGRectMake(0, 0, self.adaptForWidth ? (contentRect.size.width+30) : self.frame.size.width, self.adaptForWidth ? self.frame.size.height : (contentRect.size.height+20));
 	
 	self.contentSize = contentRect.size;
+	
+	NSLog(@"Content size in the end %@", NSStringFromCGSize(self.contentSize));
+	
 }
 
 - (void)reload {

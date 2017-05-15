@@ -312,7 +312,7 @@
 		[self.thanksForTheHintButton autoAlignAxisToSuperviewAxis:ALAxisVertical];
         [self.thanksForTheHintButton autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.titleLabel];
         [self.thanksForTheHintButton autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.stopThesePopupsLabel withOffset:-10];
-        [self.thanksForTheHintButton autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.titleLabel withMultiplier:2.0];
+		[self.thanksForTheHintButton autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.titleLabel withMultiplier:[LMLayoutManager isiPad] ? 1.5 : 2.0];
         
         
         UITapGestureRecognizer *closeTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tappedCloseButton)];

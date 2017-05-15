@@ -422,6 +422,12 @@
         self.didJustScrollByLetter = NO;
         return;
     }
+	
+	CGFloat maxContentOffset = scrollView.contentSize.height - (scrollView.frame.size.height*1.5);
+	if(scrollView.contentOffset.y > maxContentOffset){
+		return; //Don't scroll at the end to prevent weird scrolling behaviour with resize of required button bar height
+	}
+	
 	CGFloat difference = fabs(scrollView.contentOffset.y-self.lastScrollingOffsetPoint.y);
 	if(difference > WINDOW_FRAME.size.height/4){
 		self.brokeScrollingThreshhold = YES;
@@ -440,6 +446,7 @@
 }
 
 - (void)changeBottomSpacing:(CGFloat)bottomSpacing {
+	NSLog(@"Setting bottom spacing %f", bottomSpacing);
     [UIView animateWithDuration:0.5 animations:^{
        self.collectionView.contentInset = UIEdgeInsetsMake(0, 0, bottomSpacing, 0);
     }];

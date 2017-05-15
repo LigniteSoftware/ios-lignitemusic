@@ -331,6 +331,11 @@
 //	[[Spotify sharedInstance] addDelegate:self];
 #endif
 	
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	[defaults setInteger:1 forKey:LMSettingsKeyLastOpenedSource];
+	[defaults synchronize];
+	
+	
 	self.layoutManager = [LMLayoutManager sharedLayoutManager];
 	[self.layoutManager addDelegate:self];
 	
@@ -355,7 +360,7 @@
 	self.finishedButton.backgroundColor = [LMColour ligniteRedColour];
 	self.finishedButton.titleLabel.textColor = [UIColor whiteColor];
 	self.finishedButton.layer.masksToBounds = YES;
-	self.finishedButton.layer.cornerRadius = 0;
+	self.finishedButton.layer.cornerRadius = 8.0;
 	[self.finishedButton.titleLabel setFont:[UIFont fontWithName:@"HelveticaNeue" size:18.0f]];
 	[self.finishedButton addTarget:self action:@selector(performOnboardingAction) forControlEvents:UIControlEventTouchUpInside];
 	[self.finishedButton setTitle:self.buttonTitle forState:UIControlStateNormal];
@@ -379,7 +384,7 @@
 		self.secondaryButton.backgroundColor = [LMColour ligniteRedColour];
 		self.secondaryButton.titleLabel.textColor = [UIColor whiteColor];
 		self.secondaryButton.layer.masksToBounds = YES;
-		self.secondaryButton.layer.cornerRadius = 0;
+		self.secondaryButton.layer.cornerRadius = 8;
 		[self.secondaryButton.titleLabel setFont:[UIFont fontWithName:@"HelveticaNeue" size:18.0f]];
 		[self.secondaryButton addTarget:self action:@selector(secondaryAction) forControlEvents:UIControlEventTouchUpInside];
 		[self.secondaryButton setTitle:NSLocalizedString(self.index == 2 ? @"GetSpotify" : @"KeepGoing", nil) forState:UIControlStateNormal];
@@ -441,7 +446,7 @@
     
     [self.buttonArea autoAlignAxisToSuperviewAxis:ALAxisVertical];
     [self.buttonArea autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-    [self.buttonArea autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/12.0)];
+	[self.buttonArea autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:[LMLayoutManager isiPad] ? (1.0/10.0) : (1.0/12.0)];
     [self.buttonArea autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(8.0/10.0)];
     
     [self.descriptionLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.buttonArea withOffset:-20];
