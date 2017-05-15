@@ -9,7 +9,6 @@
 #import <PureLayout/PureLayout.h>
 
 #import "LMExpandableTrackListControlBar.h"
-#import "LMControlBarView.h"
 #import "LMLayoutManager.h"
 #import "LMListEntry.h"
 #import "LMAppIcon.h"
@@ -17,11 +16,6 @@
 #import "LMColour.h"
 
 @interface LMExpandableTrackListControlBar()<LMControlBarViewDelegate, LMMusicPlayerDelegate, LMListEntryDelegate>
-
-/**
- The music control bar.
- */
-@property LMControlBarView *musicControlBar;
 
 /**
  The background view for the close button.

@@ -76,6 +76,10 @@
 		self.expandableTrackListControlBar.mode = showingSpecificTrackCollections ? LMExpandableTrackListControlBarModeControlWithAlbumDetail : LMExpandableTrackListControlBarModeGeneralControl;
 		[self layoutIfNeeded];
 	}];
+	
+	self.expandableTrackListControlBar.musicTrackCollection = showingSpecificTrackCollections ? self.musicTrackCollectionToUse : self.musicTrackCollection;
+	
+	[self.expandableTrackListControlBar.musicControlBar reloadHighlightedButtons];
 }
 
 - (LMMusicTrackCollection*)musicTrackCollectionToUse {
@@ -164,13 +168,6 @@
 }
 
 - (void)tappedListEntry:(LMListEntry*)entry {
-	if(self.specificTrackCollections){
-		LMMusicTrackCollection *collection = [self.specificTrackCollections objectAtIndex:entry.collectionIndex];
-
-		NSLog(@"Launch that bitch %@", collection);
-		return;
-	}
-	
 	NSLog(@"Tapped %d", (int)entry.collectionIndex);
 	
 	LMMusicTrack *track = [self.musicTrackCollectionToUse.items objectAtIndex:entry.collectionIndex];
