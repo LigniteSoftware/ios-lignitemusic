@@ -489,9 +489,6 @@
 		
 		self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 		
-		self.layoutManager = [LMLayoutManager sharedLayoutManager];
-		[self.layoutManager addDelegate:self];
-		
 		LMCollectionViewFlowLayout *fuck = [[LMCollectionViewFlowLayout alloc]init];
 		fuck.musicTrackCollections = self.musicTrackCollections;
 //		fuck.scrollDirection = UICollectionViewScrollDirectionHorizontal;
@@ -542,6 +539,15 @@
 		layout.amountOfItemsInDetailView = trackCollection.count;
 	}
 	layout.indexOfItemDisplayingDetailView = displayNothing ? LMNoDetailViewSelected : i;
+}
+
+- (instancetype)init {
+	self = [super init];
+	if(self) {
+		self.layoutManager = [LMLayoutManager sharedLayoutManager];
+		[self.layoutManager addDelegate:self];
+	}
+	return self;
 }
 
 @end

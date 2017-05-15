@@ -11,6 +11,7 @@
 #import "LMExpandableTrackListControlBar.h"
 #import "LMExpandableInnerShadowView.h"
 #import "LMExpandableTrackListView.h"
+#import "LMMusicCollectionsView.h"
 #import "YIInnerShadowView.h"
 #import "LMLayoutManager.h"
 #import "LMTriangleView.h"
@@ -50,7 +51,7 @@
 /**
  The tile view of albums used for displaying specific track collections.
  */
-@property UIView *albumTileView;
+@property LMMusicCollectionsView *albumTileView;
 
 /**
  The top constraint for the collection view. Its constant should be the frame's height if displaying the track list.
@@ -333,8 +334,9 @@
 		
 		
 		
-		self.albumTileView = [UIView newAutoLayoutView];
+		self.albumTileView = [LMMusicCollectionsView newAutoLayoutView];
 		self.albumTileView.backgroundColor = [UIColor purpleColor];
+		self.albumTileView.trackCollections = self.specificTrackCollections;
 		[self addSubview:self.albumTileView];
 		
 		[self.albumTileView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
