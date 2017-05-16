@@ -16,4 +16,9 @@
  */
 @property LMCollectionViewFlowLayout *flowLayout;
 
+/**
+ The frame of the item that the triangle is applied to. If different from the item frame, make sure to redraw the triangle.
+ */
+@property CGRect frameOfItemTriangleIsAppliedTo;
+
 @end

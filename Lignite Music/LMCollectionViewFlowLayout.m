@@ -180,12 +180,12 @@
 		
 		attributes.frame = initialDetailViewFrame;
 	}
-	else if(itemIndexPath.row == self.indexOfDetailView){
+	else if(itemIndexPath.row == self.indexOfDetailView && self.detailView.isChangingSize){
 //		attributes.alpha = 0;
 	}
 	else if(self.isDisplayingDetailView){
 		NSLog(@"Displaying detail view");
-		attributes.frame = [self frameForCellAtIndexPath:itemIndexPath detailViewDisplayMode:LMDetailViewDisplayModeNone];
+		attributes.frame = [self frameForCellAtIndexPath:itemIndexPath detailViewDisplayMode:self.detailView.isChangingSize ? LMDetailViewDisplayModeCurrentIndex : LMDetailViewDisplayModeNone];
 	}
 	else if(!self.isDisplayingDetailView){
 		NSLog(@"Not displaying detail view");

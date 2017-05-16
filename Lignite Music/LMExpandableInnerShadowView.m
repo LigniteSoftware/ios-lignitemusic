@@ -48,6 +48,8 @@
 		[self.triangleInnerShadowView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.triangleView];
 		[self.triangleInnerShadowView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.triangleView];
 		[self.triangleInnerShadowView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.triangleView];
+		
+		self.frameOfItemTriangleIsAppliedTo = self.flowLayout.frameOfItemDisplayingDetailView;
 	}
 	[super layoutSubviews];
 }

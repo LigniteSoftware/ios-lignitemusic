@@ -34,6 +34,11 @@
 @property id flowLayout;
 
 /**
+ Whether or not the view is currently changing in size.
+ */
+@property BOOL isChangingSize;
+
+/**
  Initializes the expandable track list view (for autolayout) with a certain music track collection for its layouting.
 
  @param musicTrackCollection The music track collection to associate with it.

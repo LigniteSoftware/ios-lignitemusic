@@ -85,12 +85,16 @@
 	
 	CGFloat animationTime = animated ? 0.25 : 0;
 	
+	self.isChangingSize = YES;
+	
 	self.albumTileViewLeadingConstraint.constant = showingSpecificTrackCollection ? -self.frame.size.width : 0;
 	[UIView animateWithDuration:animationTime animations:^{
 		self.expandableTrackListControlBar.mode = showingSpecificTrackCollection ? LMExpandableTrackListControlBarModeControlWithAlbumDetail : LMExpandableTrackListControlBarModeGeneralControl;
 		
 		[flowLayout.collectionView performBatchUpdates:nil completion:nil];
 		[self layoutIfNeeded];
+	} completion:^(BOOL finished) {
+		self.isChangingSize = NO;
 	}];
 	
 	self.expandableTrackListControlBar.musicTrackCollection = showingSpecificTrackCollection ? self.musicTrackCollectionToUse : self.musicTrackCollection;
@@ -436,20 +440,25 @@
 ////			[flowLayout.collectionView performBatchUpdates:nil completion:nil];
 //		} repeats:NO];
 	}
-//	else{
-//		[self.collectionView reloadData];
-//		[self.innerShadowView removeFromSuperview];
-//		
-//		self.innerShadowView = [LMExpandableInnerShadowView newAutoLayoutView];
-//		self.innerShadowView.backgroundColor = [UIColor clearColor];
-//		self.innerShadowView.userInteractionEnabled = NO;
-//		self.innerShadowView.flowLayout = self.flowLayout;
-//		[self addSubview:self.innerShadowView];
-//		
-//		[self.innerShadowView autoPinEdgesToSuperviewEdges];
-//		
-//		[self musicTrackDidChange:self.musicPlayer.nowPlayingTrack];
-//	}
+	else{
+		[self.collectionView reloadData];
+		
+		LMCollectionViewFlowLayout *flowLayout = self.flowLayout;
+		
+		if(!CGRectEqualToRect(self.innerShadowView.frameOfItemTriangleIsAppliedTo, flowLayout.frameOfItemDisplayingDetailView)){
+			[self.innerShadowView removeFromSuperview];
+			
+			self.innerShadowView = [LMExpandableInnerShadowView newAutoLayoutView];
+			self.innerShadowView.backgroundColor = [UIColor clearColor];
+			self.innerShadowView.userInteractionEnabled = NO;
+			self.innerShadowView.flowLayout = self.flowLayout;
+			[self addSubview:self.innerShadowView];
+			
+			[self.innerShadowView autoPinEdgesToSuperviewEdges];
+			
+			[self musicTrackDidChange:self.musicPlayer.nowPlayingTrack];
+		}
+	}
 	
 	[super layoutSubviews];
 }
