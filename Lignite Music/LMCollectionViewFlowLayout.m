@@ -149,7 +149,9 @@
 		NSLog(@"Is index of detail view");
 		
 		CGRect initialDetailViewFrame = [self frameForCellAtIndexPath:itemIndexPath detailViewDisplayMode:LMDetailViewDisplayModeCurrentIndex];
-		initialDetailViewFrame.size.height = 0;
+		if(self.detailView.frame.size.height == 0){
+			initialDetailViewFrame.size.height = 0;
+		}
 		
 		layoutAttributes.frame = initialDetailViewFrame;
 	}
@@ -179,7 +181,7 @@
 		attributes.frame = initialDetailViewFrame;
 	}
 	else if(itemIndexPath.row == self.indexOfDetailView){
-		attributes.alpha = 0;
+//		attributes.alpha = 0;
 	}
 	else if(self.isDisplayingDetailView){
 		NSLog(@"Displaying detail view");

@@ -83,7 +83,7 @@
 - (void)setShowingSpecificTrackCollection:(BOOL)showingSpecificTrackCollection animated:(BOOL)animated {
 	LMCollectionViewFlowLayout *flowLayout = self.flowLayout;
 	
-	CGFloat animationTime = 5.0; //animated ? 0.25 : 0;
+	CGFloat animationTime = animated ? 0.25 : 0;
 	
 	self.albumTileViewLeadingConstraint.constant = showingSpecificTrackCollection ? -self.frame.size.width : 0;
 	[UIView animateWithDuration:animationTime animations:^{
