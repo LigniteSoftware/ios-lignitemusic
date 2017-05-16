@@ -64,6 +64,23 @@
 
 @implementation LMCompactBrowsingView
 
+@synthesize musicType = _musicType;
+
+- (LMMusicType)musicType {
+	return _musicType;
+}
+
+- (void)setMusicType:(LMMusicType)musicType {
+	_musicType = musicType;
+	
+	if(!self.collectionView || !self.collectionView.collectionViewLayout){
+		NSLog(@"Wait");
+	}
+	
+	LMCollectionViewFlowLayout *flowLayout = (LMCollectionViewFlowLayout*)self.collectionView.collectionViewLayout;
+	flowLayout.musicType = musicType;
+}
+
 - (void)scrollViewToIndex:(NSUInteger)index {
 	NSLog(@"Scroll to %ld", index);
     self.didJustScrollByLetter = YES;
@@ -356,18 +373,14 @@
 			
 			flowLayout.amountOfItemsInDetailView = trackCollection.count;
 			
-			LMExpandableTrackListView *detailView = [LMExpandableTrackListView newAutoLayoutView];
-			detailView.backgroundColor = [UIColor whiteColor];
-			detailView.musicTrackCollection = trackCollection;
-			detailView.musicType = self.musicType;
-			detailView.flowLayout = flowLayout;
-			detailView.userInteractionEnabled = YES;
-//			detailView.viewAssociated = [self collectionView:self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:flowLayout.indexOfItemDisplayingDetailView inSection:0]].contentView;
-			NSLog(@"Shitttt %@ %d", detailView.musicTrackCollection, (int)flowLayout.indexOfItemDisplayingDetailView);
+			LMExpandableTrackListView *detailView = flowLayout.detailView;
 			[cell.contentView addSubview:detailView];
 			
 			[detailView autoPinEdgesToSuperviewEdges];
 			
+			
+			NSLog(@"Shitttt dawg %@ %d", detailView.musicTrackCollection, (int)flowLayout.indexOfItemDisplayingDetailView);
+		
 			
 			
 			[self.rootViewController.buttonNavigationBar minimize:YES];

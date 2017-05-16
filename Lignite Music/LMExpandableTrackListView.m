@@ -56,12 +56,17 @@
 /**
  The top constraint for the collection view. Its constant should be the frame's height if displaying the track list.
  */
-@property NSLayoutConstraint *collectionViewTopConstraint;
+@property NSLayoutConstraint *albumTileViewLeadingConstraint;
 
 /**
  The music track collection to use in loading data, as a specific track collection may have been set.
  */
 @property LMMusicTrackCollection *musicTrackCollectionToUse;
+
+/**
+ Whether or not the album tile view is being displayed.
+ */
+@property (readonly) BOOL showingAlbumTileView;
 
 @end
 
@@ -70,14 +75,25 @@
 @synthesize musicTrackCollection = _musicTrackCollection;
 @synthesize musicTrackCollectionToUse = _musicTrackCollectionToUse;
 
-- (void)setShowingSpecificTrackCollections:(BOOL)showingSpecificTrackCollections animated:(BOOL)animated {
-	self.collectionViewTopConstraint.constant = showingSpecificTrackCollections ? 0 : self.frame.size.height;
-	[UIView animateWithDuration:animated ? 0.25 : 0 animations:^{
-		self.expandableTrackListControlBar.mode = showingSpecificTrackCollections ? LMExpandableTrackListControlBarModeControlWithAlbumDetail : LMExpandableTrackListControlBarModeGeneralControl;
+- (BOOL)showingAlbumTileView {
+	return (self.expandableTrackListControlBar.mode == LMExpandableTrackListControlBarModeGeneralControl && self.specificTrackCollections)
+		|| (!self.expandableTrackListControlBar && self.specificTrackCollections); //The specific track collections have been prepped but the actual view just hasn't been lain out yet
+}
+
+- (void)setShowingSpecificTrackCollection:(BOOL)showingSpecificTrackCollection animated:(BOOL)animated {
+	LMCollectionViewFlowLayout *flowLayout = self.flowLayout;
+	
+	CGFloat animationTime = 5.0; //animated ? 0.25 : 0;
+	
+	self.albumTileViewLeadingConstraint.constant = showingSpecificTrackCollection ? -self.frame.size.width : 0;
+	[UIView animateWithDuration:animationTime animations:^{
+		self.expandableTrackListControlBar.mode = showingSpecificTrackCollection ? LMExpandableTrackListControlBarModeControlWithAlbumDetail : LMExpandableTrackListControlBarModeGeneralControl;
+		
+		[flowLayout.collectionView performBatchUpdates:nil completion:nil];
 		[self layoutIfNeeded];
 	}];
 	
-	self.expandableTrackListControlBar.musicTrackCollection = showingSpecificTrackCollections ? self.musicTrackCollectionToUse : self.musicTrackCollection;
+	self.expandableTrackListControlBar.musicTrackCollection = showingSpecificTrackCollection ? self.musicTrackCollectionToUse : self.musicTrackCollection;
 	
 	[self.expandableTrackListControlBar.musicControlBar reloadHighlightedButtons];
 }
@@ -95,7 +111,7 @@
 	
 	[self.collectionView reloadData];
 	
-	[self setShowingSpecificTrackCollections:YES animated:YES];
+	[self setShowingSpecificTrackCollection:YES animated:YES];
 }
 
 - (void)musicCollectionTappedAtIndex:(NSInteger)index forMusicCollectionsView:(LMMusicCollectionsView *)collectionsView {
@@ -278,33 +294,48 @@
 	return self.musicTrackCollectionToUse.count;
 }
 
-+ (CGSize)currentItemSize {
+- (CGSize)currentItemSize {
 	return CGSizeMake(WINDOW_FRAME.size.width/[LMExpandableTrackListView numberOfColumns] - 20,
 					  fmin(([LMLayoutManager isLandscape] ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height)/8.0, 80));
 }
 
-+ (CGSize)sizeForAmountOfItems:(NSInteger)amountOfItems {
+- (CGSize)totalSize {
 	CGSize size = CGSizeMake(WINDOW_FRAME.size.width, 0);
-	NSInteger numberOfColumns = [LMExpandableTrackListView numberOfColumns];
 	
-	size.height += (amountOfItems * [LMExpandableTrackListView currentItemSize].height)/numberOfColumns;
-	size.height += (amountOfItems * 10)/numberOfColumns; //Spacing
-	size.height += 10;
-	size.height += [LMExpandableTrackListControlBar recommendedHeight];
-	
-	if(numberOfColumns % 2 == 0 && amountOfItems % 2 != 0){ //If the number of columns is even but the amount of actual items is uneven
-		size.height += [LMExpandableTrackListView currentItemSize].height;
+	if(self.showingAlbumTileView){
+		NSInteger numberOfColumns = [LMExpandableTrackListView numberOfColumns];
+		NSInteger amountOfItems = self.specificTrackCollections.count;
+
+		size.height += (amountOfItems * [LMMusicCollectionsView itemSize].height)/numberOfColumns;
+		size.height += (amountOfItems * 50)/numberOfColumns; //Spacing
+		size.height += 50;
+		size.height += [LMExpandableTrackListControlBar recommendedHeight];
+		
+		if((numberOfColumns % 2 == 0 && amountOfItems % 2 != 0)){ //If the number of columns is even but the amount of actual items is uneven
+			size.height += [LMMusicCollectionsView itemSize].height;
+		}
 	}
-	
-//	size.height = 400;
-	
+	else{
+		NSInteger numberOfColumns = [LMExpandableTrackListView numberOfColumns];
+		NSInteger amountOfItems = self.musicTrackCollectionToUse.count;
+		
+		size.height += (amountOfItems * [self currentItemSize].height)/numberOfColumns;
+		size.height += (amountOfItems * 10)/numberOfColumns; //Spacing
+		size.height += 10;
+		size.height += [LMExpandableTrackListControlBar recommendedHeight];
+		
+		if(numberOfColumns % 2 == 0 && amountOfItems % 2 != 0){ //If the number of columns is even but the amount of actual items is uneven
+			size.height += [self currentItemSize].height;
+		}
+	}
+		
 	return size;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
 	
 //	return CGSizeMake(self.frame.size.width, self.frame.size.height/[self collectionView:self.collectionView numberOfItemsInSection:0]);
-	return [LMExpandableTrackListView currentItemSize];
+	return [self currentItemSize];
 }
 
 - (void)closeButtonTappedForExpandableTrackListControlBar:(LMExpandableTrackListControlBar *)controlBar {
@@ -315,7 +346,7 @@
 
 - (void)backButtonTappedForExpandableTrackListControlBar:(LMExpandableTrackListControlBar *)controlBar {
 	NSLog(@"\"back?\"");
-	[self setShowingSpecificTrackCollections:NO animated:YES];
+	[self setShowingSpecificTrackCollection:NO animated:YES];
 }
 
 - (void)layoutSubviews {
@@ -331,23 +362,6 @@
 		
 	
 		self.clipsToBounds = NO;
-		
-		
-		self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
-		[self.musicPlayer addMusicDelegate:self];
-		
-		self.currentlyHighlightedEntry = -1;
-		
-		
-		
-		BOOL usingSpecificTrackCollections = (self.musicType != LMMusicTypePlaylists
-											  && self.musicType != LMMusicTypeCompilations
-											  && self.musicType != LMMusicTypeAlbums);
-		
-		if(usingSpecificTrackCollections){
-			self.specificTrackCollections = [self.musicPlayer collectionsForRepresentativeTrack:self.musicTrackCollection.representativeItem
-																				   forMusicType:self.musicType];
-		}
 		
 		
 		self.expandableTrackListControlBar = [LMExpandableTrackListControlBar newAutoLayoutView];
@@ -368,10 +382,10 @@
 		self.albumTileView.delegate = self;
 		[self addSubview:self.albumTileView];
 		
-		[self.albumTileView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		self.albumTileViewLeadingConstraint = [self.albumTileView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[self.albumTileView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.expandableTrackListControlBar];
 		[self.albumTileView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		[self.albumTileView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.albumTileView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
 		
 		
 		UICollectionViewFlowLayout *fuck = [[UICollectionViewFlowLayout alloc]init];
@@ -387,14 +401,14 @@
 		[self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"cellIdentifier"];
 		[self addSubview:self.collectionView];
 		
-		self.collectionViewTopConstraint = [self.collectionView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.expandableTrackListControlBar];
-		[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-		[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-		[self.collectionView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.albumTileView];
+		[self.collectionView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.expandableTrackListControlBar];
+		[self.collectionView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.albumTileView];
+		[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[self.collectionView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.albumTileView];
 //		self.collectionView.hidden = YES;
 		
-		if(self.specificTrackCollections){
-			self.collectionViewTopConstraint.constant = self.frame.size.width*5;
+		if(!self.specificTrackCollections){
+			self.albumTileViewLeadingConstraint.constant = -self.frame.size.width;
 		}
 		
 		
@@ -409,88 +423,59 @@
 		[self musicTrackDidChange:self.musicPlayer.nowPlayingTrack];
 		
 //		[NSTimer scheduledTimerWithTimeInterval:1.0 block:^{
-//			self.collectionViewTopConstraint.constant = 0;
+//			LMCollectionViewFlowLayout *flowLayout = self.flowLayout;
+//			flowLayout.test = YES;
+//			
+//			[self setShowingSpecificTrackCollection:YES animated:NO];
+//			
 //			[UIView animateWithDuration:0.25 animations:^{
-//				self.expandableTrackListControlBar.mode = LMExpandableTrackListControlBarModeControlWithAlbumDetail;
-//				[self layoutIfNeeded];
+////				[flowLayout invalidateLayout];
+//				[flowLayout.collectionView performBatchUpdates:nil completion:nil];
 //			}];
+//			
+////			[flowLayout.collectionView performBatchUpdates:nil completion:nil];
 //		} repeats:NO];
 	}
-	else{
-		[self.collectionView reloadData];
-		[self.innerShadowView removeFromSuperview];
-		
-		self.innerShadowView = [LMExpandableInnerShadowView newAutoLayoutView];
-		self.innerShadowView.backgroundColor = [UIColor clearColor];
-		self.innerShadowView.userInteractionEnabled = NO;
-		self.innerShadowView.flowLayout = self.flowLayout;
-		[self addSubview:self.innerShadowView];
-		
-		[self.innerShadowView autoPinEdgesToSuperviewEdges];
-		
-		[self musicTrackDidChange:self.musicPlayer.nowPlayingTrack];
-	}
+//	else{
+//		[self.collectionView reloadData];
+//		[self.innerShadowView removeFromSuperview];
+//		
+//		self.innerShadowView = [LMExpandableInnerShadowView newAutoLayoutView];
+//		self.innerShadowView.backgroundColor = [UIColor clearColor];
+//		self.innerShadowView.userInteractionEnabled = NO;
+//		self.innerShadowView.flowLayout = self.flowLayout;
+//		[self addSubview:self.innerShadowView];
+//		
+//		[self.innerShadowView autoPinEdgesToSuperviewEdges];
+//		
+//		[self musicTrackDidChange:self.musicPlayer.nowPlayingTrack];
+//	}
 	
 	[super layoutSubviews];
 }
 
-//- (void)drawInnerShadowInContext:(CGContextRef)context
-//						withPath:(CGPathRef)path
-//					 shadowColor:(CGColorRef)shadowColor
-//						  offset:(CGSize)offset
-//					  blurRadius:(CGFloat)blurRadius {
-//	
-//	CGContextSaveGState(context);
-//	
-//	CGContextAddPath(context, path);
-//	CGContextClip(context);
-//	
-//	CGColorRef opaqueShadowColor = CGColorCreateCopyWithAlpha(shadowColor, 1.0);
-//	
-//	CGContextSetAlpha(context, CGColorGetAlpha(shadowColor));
-//	CGContextBeginTransparencyLayer(context, NULL);
-//	CGContextSetShadowWithColor(context, offset, blurRadius, opaqueShadowColor);
-//	CGContextSetBlendMode(context, kCGBlendModeSourceOut);
-//	CGContextSetFillColorWithColor(context, opaqueShadowColor);
-//	CGContextAddPath(context, path);
-//	CGContextFillPath(context);
-//	CGContextEndTransparencyLayer(context);
-//	
-//	CGContextRestoreGState(context);
-//	
-//	CGColorRelease(opaqueShadowColor);
-//}
-//
-//- (UIBezierPath*)path {
-//	UIBezierPath *path = [UIBezierPath new];
-//	[path moveToPoint:(CGPoint){self.frame.size.width/2, -self.frame.size.height*0.05}];
-//	[path addLineToPoint:(CGPoint){self.frame.size.width/2 + self.innerShadowView.frame.size.width/2, 0}];
-//	[path addLineToPoint:(CGPoint){self.frame.size.width + 10, 0}];
-//	[path addLineToPoint:(CGPoint){self.frame.size.width + 10, self.frame.size.height}];
-//	[path addLineToPoint:(CGPoint){-10, self.frame.size.height}];
-//	[path addLineToPoint:(CGPoint){-10, 0}];
-//	[path addLineToPoint:(CGPoint){self.frame.size.width/2 - self.innerShadowView.frame.size.width/2, 0}];
-//
-//	[path closePath];
-//	
-//	return path;
-//}
-//
-//
-//- (void)drawRect:(CGRect)rect {
-//	[super drawRect:rect];
-//	
-//	NSLog(@"%@", NSStringFromCGRect(self.innerShadowView.frame));
-//	
-//	[self drawInnerShadowInContext:UIGraphicsGetCurrentContext() withPath:[self path].CGPath shadowColor:[UIColor lightGrayColor].CGColor offset:CGSizeMake(0, 0) blurRadius:10];
-//}
-
-//- (instancetype)init {
-//	self = [super init];
-//	if(self) {
-//		
-//	}
-//	return self;
-//}
+- (instancetype)initWithMusicTrackCollection:(LMMusicTrackCollection*)musicTrackCollection {
+	self = [super initForAutoLayout];
+	if(self){
+		self.musicTrackCollection = musicTrackCollection;
+		
+		self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
+		[self.musicPlayer addMusicDelegate:self];
+		
+		self.currentlyHighlightedEntry = -1;
+		
+		
+		
+		BOOL usingSpecificTrackCollections = (self.musicType != LMMusicTypePlaylists
+											  && self.musicType != LMMusicTypeCompilations
+											  && self.musicType != LMMusicTypeAlbums);
+		
+		if(usingSpecificTrackCollections){
+			self.specificTrackCollections = [self.musicPlayer collectionsForRepresentativeTrack:self.musicTrackCollection.representativeItem
+																				   forMusicType:self.musicType];
+		}
+	}
+	return self;
+}
 
 @end

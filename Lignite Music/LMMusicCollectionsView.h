@@ -41,4 +41,11 @@
  */
 @property id<LMMusicCollectionsViewDelegate> delegate;
 
+/**
+ The size of an item within the music collection view, based off of current data from LMLayoutManager.
+
+ @return The size of an item.
+ */
++ (CGSize)itemSize;
+
 @end

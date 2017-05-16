@@ -6,8 +6,9 @@
 //  Copyright © 2017 Lignite. All rights reserved.
 //
 
+#import <PureLayout/PureLayout.h>
+
 #import "LMCollectionViewFlowLayout.h"
-#import "LMExpandableTrackListView.h"
 #import "LMExtras.h"
 #import "NSTimer+Blocks.h"
 
@@ -84,6 +85,15 @@
 	if(indexOfItemDisplayingDetailView == LMNoDetailViewSelected){
 		self.frameOfItemDisplayingDetailView = CGRectMake(-self.frameOfItemDisplayingDetailView.size.width, self.frameOfItemDisplayingDetailView.origin.y, 0, 0);
 	}
+	else{ //Setting new detail view open
+		LMExpandableTrackListView *detailView = [[LMExpandableTrackListView alloc] initWithMusicTrackCollection:[self.musicTrackCollections objectAtIndex:indexOfItemDisplayingDetailView]];
+		detailView.backgroundColor = [UIColor whiteColor];
+		detailView.musicType = self.musicType;
+		detailView.flowLayout = self;
+		detailView.userInteractionEnabled = YES;
+		
+		self.detailView = detailView;
+	}
 	
 	self.previousIndexOfItemDisplayingDetailView = _indexOfItemDisplayingDetailView;
 	self.previousAmountOfOverflowingCellsForDetailView = self.amountOfOverflowingCellsForDetailView;
@@ -107,14 +117,14 @@
 		} completion:nil];
 	}];
 	
-//	self.collectionView.scrollEnabled = !self.isDisplayingDetailView;
+	self.collectionView.scrollEnabled = !self.isDisplayingDetailView;
 }
 
-- (CGSize)collectionViewContentSize { //Workaround?
+- (CGSize)collectionViewContentSize {
 	CGSize size = CGSizeMake(self.collectionView.frame.size.width, 0);
 
 	if(self.isDisplayingDetailView){
-		size.height += [LMExpandableTrackListView sizeForAmountOfItems:self.amountOfItemsInDetailView].height;
+		size.height += [self.detailView totalSize].height;
 	}
 	
 	NSInteger amountOfItems = [self.collectionView.dataSource collectionView:self.collectionView numberOfItemsInSection:1];
@@ -133,8 +143,6 @@
 - (UICollectionViewLayoutAttributes*)initialLayoutAttributesForAppearingItemAtIndexPath:(NSIndexPath *)itemIndexPath {
 	UICollectionViewLayoutAttributes *layoutAttributes = [self layoutAttributesForItemAtIndexPath:itemIndexPath];
 	
-	layoutAttributes.alpha = 1;
-	
 	NSLog(@"Appearing %@", itemIndexPath);
 	
 	if(itemIndexPath.row == self.indexOfDetailView){
@@ -145,10 +153,10 @@
 		
 		layoutAttributes.frame = initialDetailViewFrame;
 	}
-	else if(!self.isDisplayingDetailView){
+	else {
 		NSLog(@"Is displaying detail view");
 		
-		layoutAttributes.frame = [self frameForCellAtIndexPath:[NSIndexPath indexPathForRow:itemIndexPath.row+1 inSection:0] detailViewDisplayMode:LMDetailViewDisplayModeCurrentIndex];
+		layoutAttributes.frame = [self frameForCellAtIndexPath:[NSIndexPath indexPathForRow:itemIndexPath.row inSection:0] detailViewDisplayMode:LMDetailViewDisplayModeCurrentIndex];
 	}
 	
 
@@ -170,13 +178,16 @@
 		
 		attributes.frame = initialDetailViewFrame;
 	}
+	else if(itemIndexPath.row == self.indexOfDetailView){
+		attributes.alpha = 0;
+	}
 	else if(self.isDisplayingDetailView){
 		NSLog(@"Displaying detail view");
 		attributes.frame = [self frameForCellAtIndexPath:itemIndexPath detailViewDisplayMode:LMDetailViewDisplayModeNone];
 	}
 	else if(!self.isDisplayingDetailView){
 		NSLog(@"Not displaying detail view");
-		attributes.frame = [self frameForCellAtIndexPath:itemIndexPath detailViewDisplayMode:LMDetailViewDisplayModeCurrentIndex];
+		attributes.frame = [self frameForCellAtIndexPath:[NSIndexPath indexPathForRow:itemIndexPath.row-1 inSection:0] detailViewDisplayMode:LMDetailViewDisplayModeCurrentIndex];
 	}
 	
 	return attributes;
@@ -224,21 +235,17 @@
 	if(isDetailViewRow || isBelowDetailViewRow){
 		NSInteger indexToUseForAmountOfItems = self.isDisplayingDetailView ? self.indexOfItemDisplayingDetailView : self.previousIndexOfItemDisplayingDetailView;
 
-		CGFloat maximumDetailViewHeight = [LMExpandableTrackListView sizeForAmountOfItems:[self.musicTrackCollections objectAtIndex:indexToUseForAmountOfItems].count].height;
+		CGFloat maximumDetailViewHeight = [self.detailView totalSize].height;
 		CGRect collectionViewFrame = self.collectionView.frame;
 		CGRect normalItemFrame = [self frameForCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] detailViewDisplayMode:LMDetailViewDisplayModeNone];
 		
 		detailViewHeight = (collectionViewFrame.size.height - normalItemFrame.size.height) - COMPACT_VIEW_SPACING_BETWEEN_ITEMS - normalItemFrame.origin.y + 5; //I'm not going to pull my hair out trying to figure out where the 5 pixels actually comes from, sorry
 		
 		detailViewHeight = fmin(detailViewHeight, maximumDetailViewHeight);
-		
-		if(self.test){
-			detailViewHeight = detailViewHeight/2;
-		}
 	}
 	
 	if(isBelowDetailViewRow){
-		origin.y += (spacing*2) + detailViewHeight;
+		origin.y += (spacing) + detailViewHeight;
 	}
 	
 	CGRect itemFrame = CGRectMake(origin.x, origin.y, size.width, size.height); //Return the frame

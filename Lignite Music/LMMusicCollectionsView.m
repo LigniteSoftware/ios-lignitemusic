@@ -11,6 +11,7 @@
 #import "LMMusicCollectionsView.h"
 #import "LMTiledAlbumCoverView.h"
 #import "LMCollectionViewCell.h"
+#import "NSTimer+Blocks.h"
 #import "LMBigListEntry.h"
 #import "LMColour.h"
 
@@ -133,10 +134,6 @@
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-	NSInteger shit = self.trackCollections.count;
-	if(shit < 1){
-		NSLog(@"Wwiait whatt");
-	}
 	return self.trackCollections.count;
 }
 
@@ -160,26 +157,31 @@
 	return cell;
 }
 
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-	//	NSLog(@"Path %@", indexPath);
-	NSInteger factor = [LMLayoutManager amountOfCollectionViewItemsPerRow] - 1;
-	if(factor < 2){
-		factor = 2;
-	}
++ (CGSize)itemSize {
+	NSInteger factor = [LMLayoutManager amountOfCollectionViewItemsPerRow];
 	
-	CGFloat sideLength = self.frame.size.width/factor;
+	CGFloat sideLength = WINDOW_FRAME.size.width/factor;
 	
 	sideLength -= 50;
 	
-	CGFloat spacing = (self.frame.size.width-(sideLength*factor))/(factor+1);
+	return CGSizeMake(sideLength, sideLength * (2.8/2.0));
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
 	
-	NSLog(@"Fuck %@", NSStringFromCGRect(self.frame));
+	NSInteger factor = [LMLayoutManager amountOfCollectionViewItemsPerRow];
+	
+	CGSize itemSize = [LMMusicCollectionsView itemSize];
+	
+	CGFloat sideLength = itemSize.width;
+	
+	CGFloat spacing = (self.frame.size.width-(sideLength*factor))/(factor+1);
 	
 	UICollectionViewFlowLayout *flowLayout = (UICollectionViewFlowLayout*)collectionViewLayout;
 	flowLayout.sectionInset = UIEdgeInsetsMake(spacing, spacing, spacing, spacing);
 	flowLayout.minimumLineSpacing = spacing;
 	
-	return CGSizeMake(sideLength, sideLength * (2.8/2.0));
+	return itemSize;
 }
 
 
@@ -216,9 +218,9 @@
 		
 		NSLog(@"The main man %@", NSStringFromCGRect(self.frame));
 		
-		[NSTimer scheduledTimerWithTimeInterval:0.1 repeats:NO block:^(NSTimer * _Nonnull timer) {
+		[NSTimer scheduledTimerWithTimeInterval:0.1 block:^{
 			[self.collectionView reloadData];
-		}];
+		} repeats:NO];
 	}
 	
 	[super layoutSubviews];

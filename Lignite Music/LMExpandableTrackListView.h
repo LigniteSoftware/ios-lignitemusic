@@ -34,18 +34,18 @@
 @property id flowLayout;
 
 /**
- The current size of an item inside of the actual list of tracks.
+ Initializes the expandable track list view (for autolayout) with a certain music track collection for its layouting.
 
- @return The size of an item.
+ @param musicTrackCollection The music track collection to associate with it.
+ @return The initialized LMExpandableTrackList view, ready for autolayout.
  */
-+ (CGSize)currentItemSize;
+- (instancetype)initWithMusicTrackCollection:(LMMusicTrackCollection*)musicTrackCollection;
 
 /**
- The total size of the expandable track list view based on an amount of items. Includes all elements within.
+ The total size of the expandable track list view based on what contents it currently wants to display. For example, if displaying the artist-album view, and then an album is tapped, this will change based on the amount of items within that it needs to display.
 
- @param amountOfItems The amount of items to calculate for.
- @return The total size.
+ @return The total size in width and height pixels.
  */
-+ (CGSize)sizeForAmountOfItems:(NSInteger)amountOfItems;
+- (CGSize)totalSize;
 
 @end
