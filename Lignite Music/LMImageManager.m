@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import <PureLayout/PureLayout.h>
-#import <Unirest/UNIRest.h>
 #import "LMImageManager.h"
 #import "LMColour.h"
 #import "LMAlertView.h"
@@ -400,141 +399,141 @@
     
     NSString *urlString = [NSString stringWithFormat:@"https://api.discogs.com/database/search?q=%@&type=%@", urlEncodedQueryString, typeString];
     
-    [[UNIRest get:^(UNISimpleRequest *request) {
-        [request setUrl:urlString];
-        [request setHeaders:headers];
-    }] asJsonAsync:^(UNIHTTPJsonResponse* response, NSError *error) {
-        // This is the asyncronous callback block
-        NSInteger code = response.code;
-        UNIJsonNode *body = response.body;
-        NSDictionary *searchJSONResult = body.JSONObject;
-        NSData *rawBody = response.rawBody;
-        
-        if(code != 200){
-            NSLog(@"There was an error downloading images for some reason %@.", [[NSString alloc] initWithData:rawBody encoding:NSUTF8StringEncoding]);
-            return;
-        }
-        
-        NSLog(@"First response shitpost %ld %@", code, [[NSString alloc] initWithData:rawBody encoding:NSUTF8StringEncoding]);
-        
-        NSArray *searchResultArray = [searchJSONResult objectForKey:@"results"];
-        NSDictionary *searchResultObject = nil;
-        
-        if(searchResultArray.count > 0){
-            searchResultObject = [searchResultArray objectAtIndex:0];
-        }
-        else{
-            NSLog(@"For some reason, there were no results. Going to reject and blacklist this one, boss.");
-                    
-            [self setMusicTrack:randomTrack asBlacklisted:YES forCategory:category];
-
-            return;
-        }
-        
-        NSLog(@"Got search result %@", [searchResultObject objectForKey:@"title"]);
-        
-        NSString *resourceURL = [searchResultObject objectForKey:@"resource_url"];
-        
-        NSLog(@"Artist url is %@", resourceURL);
-        
-        [[UNIRest get:^(UNISimpleRequest *request) {
-            [request setUrl:resourceURL];
-            [request setHeaders:headers];
-        }] asJsonAsync:^(UNIHTTPJsonResponse* response, NSError *error) {
-            // This is the asyncronous callback block
-            NSInteger code = response.code;
-            NSDictionary *responseHeaders = response.headers;
-            UNIJsonNode *body = response.body;
-            NSData *rawBody = response.rawBody;
-            
-            if(code != 200){
-                NSLog(@"There was an error trying to get the final result object, stopping");
-                return;
-            }
-            
-            NSLog(@"Second response shitpost %ld %@", code, [[NSString alloc] initWithData:rawBody encoding:NSUTF8StringEncoding]);
-            
-            
-            NSDictionary *finalResultJSONObject = body.JSONObject;
-            NSInteger amountOfCallsLeft = [[responseHeaders objectForKey:@"X-Discogs-Ratelimit-Remaining"] integerValue];
-            
-            self.lastReportedAmountOfAvailableAPICalls = amountOfCallsLeft;
-            self.timeOfLastReportedAmountOfAvailableAPICalls = [[NSDate date] timeIntervalSince1970];
-            
-            NSLog(@"Amount of calls left %ld", amountOfCallsLeft);
-            
-            NSArray *imagesObjectArray = [finalResultJSONObject objectForKey:@"images"];
-            
-            BOOL hasPrimaryImage = NO;
-            for(NSDictionary *imageObject in imagesObjectArray){
-                if([[imageObject objectForKey:@"type"] isEqualToString:@"primary"]){
-                    hasPrimaryImage = YES;
-                    break;
-                }
-            }
-            
-            for(NSDictionary *imageObject in imagesObjectArray){
-                NSString *imageType = [imageObject objectForKey:@"type"];
-                NSString *imageURL = [imageObject objectForKey:@"uri"];
-                //The image URL must exist and not be a blank string, and if the array has a primary image object, use that, otherwise use secondary
-                if(imageURL && ![imageURL isEqualToString:@""] && ((hasPrimaryImage && [imageType isEqualToString:@"primary"]) || !hasPrimaryImage)){
-                    NSLog(@"Downloading %@", imageURL);
-                    
-                    SDWebImageDownloader *downloader = [SDWebImageDownloader sharedDownloader];
-                    [downloader downloadImageWithURL:[NSURL URLWithString:imageURL]
-                                             options:kNilOptions
-                                            progress:^(NSInteger receivedSize, NSInteger expectedSize) {
-//                                                NSLog(@"%.02f%% complete", (float)receivedSize/(float)expectedSize * 100);
-                                            }
-                                           completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished) {
-                                               if(image && finished) {
-                                                   LMImageManagerConditionLevel currentConditionLevel = [self conditionLevelForDownloadingForCategory:category];
-                                                   
-                                                   if(currentConditionLevel == LMImageManagerConditionLevelOptimal){
-                                                       //Calculate which is smaller, between width/height
-                                                       BOOL widthIsSmaller = (image.size.width < image.size.height);
-                                                       //Figure out the smaller and larger size based off of that
-                                                       CGFloat smallerSize = widthIsSmaller ? image.size.width : image.size.height;
-                                                       CGFloat largerSize = widthIsSmaller ? image.size.height : image.size.width;
-                                                       //Figure out the CGPoint offset in that according axis to center it
-                                                       CGFloat offsetOriginPoint = (largerSize/2) - (smallerSize/2);
-                                                       //Create the point
-                                                       CGRect newCropRect = CGRectMake(widthIsSmaller ? 0 : offsetOriginPoint, widthIsSmaller ? offsetOriginPoint : 0, smallerSize, smallerSize);
-                                                       
-                                                       //Create the image
-                                                       CGImageRef imageRef = CGImageCreateWithImageInRect([image CGImage], newCropRect);
-                                                       UIImage *croppedImage = [UIImage imageWithCGImage:imageRef];
-                                                       CGImageRelease(imageRef);
-                                                       
-                                                       
-                                                       NSString *imageCacheKey = [self imageCacheKeyForMusicTrack:randomTrack forCategory:category];
-                                                       NSLog(@"Done, now storing to %@.", imageCacheKey);
-                                                       
-                                                       [[self imageCacheForCategory:category] storeImage:croppedImage forKey:imageCacheKey];
-                                                       
-                                                       [self notifyDelegatesOfCacheSizeChangeForCategory:category];
-                                                       [self notifyDelegatesOfImageCacheChangeForCategory:category];
-                                                       
-                                                       
-                                                       //                                                       NSLog(@"Done. Crop rect %@, new size %@.", NSStringFromCGRect(newCropRect), NSStringFromCGSize(croppedImage.size));
-                                                       //
-                                                       //                                                       dispatch_sync(dispatch_get_main_queue(), ^{
-                                                       //                                                           callback(croppedImage);
-                                                       //                                                       });
-                                                   }
-                                                   else{
-                                                       NSLog(@"Not storing, conditions aren't right.");
-                                                   }
-                                               }
-                                           }];
-                }
-            }
-            
-            //            NSLog(@"Shitpost %ld %@ %@", code, response.headers, [[NSString alloc] initWithData:rawBody encoding:NSUTF8StringEncoding]);
-        }];
-        
-        return;
-    }];
+//    [[UNIRest get:^(UNISimpleRequest *request) {
+//        [request setUrl:urlString];
+//        [request setHeaders:headers];
+//    }] asJsonAsync:^(UNIHTTPJsonResponse* response, NSError *error) {
+//        // This is the asyncronous callback block
+//        NSInteger code = response.code;
+//        UNIJsonNode *body = response.body;
+//        NSDictionary *searchJSONResult = body.JSONObject;
+//        NSData *rawBody = response.rawBody;
+//        
+//        if(code != 200){
+//            NSLog(@"There was an error downloading images for some reason %@.", [[NSString alloc] initWithData:rawBody encoding:NSUTF8StringEncoding]);
+//            return;
+//        }
+//        
+//        NSLog(@"First response shitpost %ld %@", code, [[NSString alloc] initWithData:rawBody encoding:NSUTF8StringEncoding]);
+//        
+//        NSArray *searchResultArray = [searchJSONResult objectForKey:@"results"];
+//        NSDictionary *searchResultObject = nil;
+//        
+//        if(searchResultArray.count > 0){
+//            searchResultObject = [searchResultArray objectAtIndex:0];
+//        }
+//        else{
+//            NSLog(@"For some reason, there were no results. Going to reject and blacklist this one, boss.");
+//                    
+//            [self setMusicTrack:randomTrack asBlacklisted:YES forCategory:category];
+//
+//            return;
+//        }
+//        
+//        NSLog(@"Got search result %@", [searchResultObject objectForKey:@"title"]);
+//        
+//        NSString *resourceURL = [searchResultObject objectForKey:@"resource_url"];
+//        
+//        NSLog(@"Artist url is %@", resourceURL);
+//        
+//        [[UNIRest get:^(UNISimpleRequest *request) {
+//            [request setUrl:resourceURL];
+//            [request setHeaders:headers];
+//        }] asJsonAsync:^(UNIHTTPJsonResponse* response, NSError *error) {
+//            // This is the asyncronous callback block
+//            NSInteger code = response.code;
+//            NSDictionary *responseHeaders = response.headers;
+//            UNIJsonNode *body = response.body;
+//            NSData *rawBody = response.rawBody;
+//            
+//            if(code != 200){
+//                NSLog(@"There was an error trying to get the final result object, stopping");
+//                return;
+//            }
+//            
+//            NSLog(@"Second response shitpost %ld %@", code, [[NSString alloc] initWithData:rawBody encoding:NSUTF8StringEncoding]);
+//            
+//            
+//            NSDictionary *finalResultJSONObject = body.JSONObject;
+//            NSInteger amountOfCallsLeft = [[responseHeaders objectForKey:@"X-Discogs-Ratelimit-Remaining"] integerValue];
+//            
+//            self.lastReportedAmountOfAvailableAPICalls = amountOfCallsLeft;
+//            self.timeOfLastReportedAmountOfAvailableAPICalls = [[NSDate date] timeIntervalSince1970];
+//            
+//            NSLog(@"Amount of calls left %ld", amountOfCallsLeft);
+//            
+//            NSArray *imagesObjectArray = [finalResultJSONObject objectForKey:@"images"];
+//            
+//            BOOL hasPrimaryImage = NO;
+//            for(NSDictionary *imageObject in imagesObjectArray){
+//                if([[imageObject objectForKey:@"type"] isEqualToString:@"primary"]){
+//                    hasPrimaryImage = YES;
+//                    break;
+//                }
+//            }
+//            
+//            for(NSDictionary *imageObject in imagesObjectArray){
+//                NSString *imageType = [imageObject objectForKey:@"type"];
+//                NSString *imageURL = [imageObject objectForKey:@"uri"];
+//                //The image URL must exist and not be a blank string, and if the array has a primary image object, use that, otherwise use secondary
+//                if(imageURL && ![imageURL isEqualToString:@""] && ((hasPrimaryImage && [imageType isEqualToString:@"primary"]) || !hasPrimaryImage)){
+//                    NSLog(@"Downloading %@", imageURL);
+//                    
+//                    SDWebImageDownloader *downloader = [SDWebImageDownloader sharedDownloader];
+//                    [downloader downloadImageWithURL:[NSURL URLWithString:imageURL]
+//                                             options:kNilOptions
+//                                            progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+////                                                NSLog(@"%.02f%% complete", (float)receivedSize/(float)expectedSize * 100);
+//                                            }
+//                                           completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished) {
+//                                               if(image && finished) {
+//                                                   LMImageManagerConditionLevel currentConditionLevel = [self conditionLevelForDownloadingForCategory:category];
+//                                                   
+//                                                   if(currentConditionLevel == LMImageManagerConditionLevelOptimal){
+//                                                       //Calculate which is smaller, between width/height
+//                                                       BOOL widthIsSmaller = (image.size.width < image.size.height);
+//                                                       //Figure out the smaller and larger size based off of that
+//                                                       CGFloat smallerSize = widthIsSmaller ? image.size.width : image.size.height;
+//                                                       CGFloat largerSize = widthIsSmaller ? image.size.height : image.size.width;
+//                                                       //Figure out the CGPoint offset in that according axis to center it
+//                                                       CGFloat offsetOriginPoint = (largerSize/2) - (smallerSize/2);
+//                                                       //Create the point
+//                                                       CGRect newCropRect = CGRectMake(widthIsSmaller ? 0 : offsetOriginPoint, widthIsSmaller ? offsetOriginPoint : 0, smallerSize, smallerSize);
+//                                                       
+//                                                       //Create the image
+//                                                       CGImageRef imageRef = CGImageCreateWithImageInRect([image CGImage], newCropRect);
+//                                                       UIImage *croppedImage = [UIImage imageWithCGImage:imageRef];
+//                                                       CGImageRelease(imageRef);
+//                                                       
+//                                                       
+//                                                       NSString *imageCacheKey = [self imageCacheKeyForMusicTrack:randomTrack forCategory:category];
+//                                                       NSLog(@"Done, now storing to %@.", imageCacheKey);
+//                                                       
+//                                                       [[self imageCacheForCategory:category] storeImage:croppedImage forKey:imageCacheKey];
+//                                                       
+//                                                       [self notifyDelegatesOfCacheSizeChangeForCategory:category];
+//                                                       [self notifyDelegatesOfImageCacheChangeForCategory:category];
+//                                                       
+//                                                       
+//                                                       //                                                       NSLog(@"Done. Crop rect %@, new size %@.", NSStringFromCGRect(newCropRect), NSStringFromCGSize(croppedImage.size));
+//                                                       //
+//                                                       //                                                       dispatch_sync(dispatch_get_main_queue(), ^{
+//                                                       //                                                           callback(croppedImage);
+//                                                       //                                                       });
+//                                                   }
+//                                                   else{
+//                                                       NSLog(@"Not storing, conditions aren't right.");
+//                                                   }
+//                                               }
+//                                           }];
+//                }
+//            }
+//            
+//            //            NSLog(@"Shitpost %ld %@ %@", code, response.headers, [[NSString alloc] initWithData:rawBody encoding:NSUTF8StringEncoding]);
+//        }];
+//        
+//        return;
+//    }];
 }
 
 - (UIImage*)imageForMusicTrack:(LMMusicTrack*)musicTrack withCategory:(LMImageManagerCategory)category {

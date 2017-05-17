@@ -6,9 +6,6 @@
 //  Copyright © 2016 Lignite. All rights reserved.
 //
 
-#import <SecureNSUserDefaults/NSUserDefaults+SecureAdditions.h>
-#import <MBProgressHUD/MBProgressHUD.h>
-#import <AFNetworking/AFNetworking.h>
 #import <PureLayout/PureLayout.h>
 
 #import "LMSettingsViewController.h"
@@ -22,6 +19,8 @@
 #import "LMLayoutManager.h"
 #import "NSTimer+Blocks.h"
 #import "LMImageManager.h"
+#import "MBProgressHUD.h"
+#import "AFNetworking.h"
 #import "LMAlertView.h"
 #import "LMSettings.h"
 #import "LMAnswers.h"

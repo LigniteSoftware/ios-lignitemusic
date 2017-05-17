@@ -6,7 +6,6 @@
 //  Copyright © 2016 Lignite. All rights reserved.
 //
 
-#import <SecureNSUserDefaults/NSUserDefaults+SecureAdditions.h>
 #import "LMPurchaseManager.h"
 #import "LMCoreViewController.h"
 #import "LMPurchaseViewController.h"
@@ -129,7 +128,7 @@
 
 	}
 	
-	[self.userDefaults setSecretBool:YES forKey:[self keyForProductIdentifier:productIdentifier]];
+//	[self.userDefaults setSecretBool:YES forKey:[self keyForProductIdentifier:productIdentifier]];
 }
 
 - (BOOL)userOwnsProductWithIdentifier:(LMPurchaseManagerProductIdentifier*)productIdentifier {
@@ -386,9 +385,9 @@
 	}
 	else{
 //		NSLog(@"Setting details to secret defaults %@. (%@, %d, %@)", self.userDefaults, email, (int)password, sessionToken);
-		[self.userDefaults setSecretObject:email forKey:LMPurchaseManagerKickstarterLoginCredentialEmail];
-		[self.userDefaults setSecretInteger:password forKey:LMPurchaseManagerKickstarterLoginCredentialPassword];
-		[self.userDefaults setSecretObject:sessionToken forKey:LMPurchaseManagerKickstarterLoginCredentialSessionToken];
+//		[self.userDefaults setSecretObject:email forKey:LMPurchaseManagerKickstarterLoginCredentialEmail];
+//		[self.userDefaults setSecretInteger:password forKey:LMPurchaseManagerKickstarterLoginCredentialPassword];
+//		[self.userDefaults setSecretObject:sessionToken forKey:LMPurchaseManagerKickstarterLoginCredentialSessionToken];
 	}
 	
 	[self.userDefaults synchronize];

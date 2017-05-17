@@ -4,20 +4,13 @@
 use_frameworks!
 
 def shared_pods
-    pod 'MarqueeLabel'
     pod 'PebbleKit'
     pod 'YYImage'
     pod 'ImageMagick', '6.8.8-9'
     pod 'PureLayout'
     pod 'SDWebImage', '~>3.8'
-    pod 'MBProgressHUD', '~> 1.0.0'
-    pod 'AFNetworking', '~> 3.0'
-    pod 'SecureNSUserDefaults', '~> 1.0.1'
     pod 'Fabric'
     pod 'Crashlytics'
-    pod 'BSKeyboardControls', '~> 2.2'
-    pod 'ApIdleManager'
-    pod 'Unirest'
 end
 
 target 'Lignite Music' do

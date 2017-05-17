@@ -6,13 +6,12 @@
 //  Copyright © 2017 Lignite. All rights reserved.
 //
 
-#import <ApIdleManager/APIdleManager.h>
 #import <PureLayout/PureLayout.h>
-#import "LMBrowsingDetailViewController.h"
 #import "LMTiledAlbumCoverView.h"
 #import "LMCompactBrowsingView.h"
 #import "LMLayoutManager.h"
 #import "LMBigListEntry.h"
+#import "APIdleManager.h"
 #import "LMAppIcon.h"
 #import "LMCollectionViewFlowLayout.h"
 #import "LMCollectionViewCell.h"
@@ -32,11 +31,6 @@
  The music player.
  */
 @property LMMusicPlayer *musicPlayer;
-
-/**
- The detail view controller for browsing in detail ;)
- */
-@property LMBrowsingDetailViewController *browsingDetailViewController;
 
 /**
  The last point in scrolling where the user stopped scrolling.

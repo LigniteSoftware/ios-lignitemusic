@@ -6,7 +6,6 @@
 //  Copyright © 2016 Lignite. All rights reserved.
 //
 
-#import <ApIdleManager/APIdleManager.h>
 #import <PureLayout/PureLayout.h>
 #import "LMLayoutManager.h"
 #import "LMTitleView.h"
@@ -14,6 +13,7 @@
 #import "LMColour.h"
 #import "LMOperationQueue.h"
 #import "LMMusicPlayer.h"
+#import "APIdleManager.h"
 #import "LMExtras.h"
 #import "Spotify.h"
 

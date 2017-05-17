@@ -6,7 +6,7 @@
 //  Copyright © 2016 Lignite. All rights reserved.
 //
 
-#import <MarqueeLabel/MarqueeLabel.h>
+#import "MarqueeLabel.h"
 
 @interface LMMarqueeLabel : MarqueeLabel
 

@@ -6,10 +6,9 @@
 //  Copyright © 2015 Lignite. All rights reserved.
 //
 
-#import <SecureNSUserDefaults/NSUserDefaults+SecureAdditions.h>
-#import <AFNetworking/AFNetworking.h>
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
+#import "AFNetworking.h"
 #import "LMAppDelegate.h"
 #import "LMMusicPlayer.h"
 #import "LMAppIcon.h"
@@ -126,9 +125,6 @@
 	
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 	
-	[userDefaults setSecret:@"efd07a3e-8af2-4b19-9198-c8c67cbe93ab"];
-	[userDefaults synchronize];
-	
     if([userDefaults objectForKey:LMSettingsKeyOnboardingComplete]){
         self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
     }
@@ -151,13 +147,19 @@
 	
 	[UIApplication sharedApplication].shortcutItems = nil;
 	
-	NSLog(@"Email %@", [userDefaults secretObjectForKey:LMPurchaseManagerKickstarterLoginCredentialEmail]);
+//	NSLog(@"Email %@", [userDefaults secretObjectForKey:LMPurchaseManagerKickstarterLoginCredentialEmail]);
 	
 	if([[LMPurchaseManager sharedPurchaseManager] appOwnershipStatus] == LMPurchaseManagerAppOwnershipStatusLoggedInAsBacker) {
+//		NSDictionary *checkDictionary = @{
+//										  @"email": [userDefaults secretObjectForKey:LMPurchaseManagerKickstarterLoginCredentialEmail],
+//										  @"password": @([userDefaults secretIntegerForKey:LMPurchaseManagerKickstarterLoginCredentialPassword]),
+//										  @"token": [userDefaults secretObjectForKey:LMPurchaseManagerKickstarterLoginCredentialSessionToken]
+//										  };
+
 		NSDictionary *checkDictionary = @{
-										  @"email": [userDefaults secretObjectForKey:LMPurchaseManagerKickstarterLoginCredentialEmail],
-										  @"password": @([userDefaults secretIntegerForKey:LMPurchaseManagerKickstarterLoginCredentialPassword]),
-										  @"token": [userDefaults secretObjectForKey:LMPurchaseManagerKickstarterLoginCredentialSessionToken]
+										  @"email":@"",
+										  @"password":@"",
+										  @"token":@""
 										  };
 		
 		NSLog(@"Checking with %@", checkDictionary);

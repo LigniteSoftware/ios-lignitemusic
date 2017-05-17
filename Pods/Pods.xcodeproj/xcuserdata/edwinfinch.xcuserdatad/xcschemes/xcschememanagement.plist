@@ -4,36 +4,6 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>AFNetworking.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>ApIdleManager.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>BSKeyboardControls.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>CocoaSecurity.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>MBProgressHUD.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>MarqueeLabel.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
 		<key>Pods-Lignite Music for Spotify.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -54,16 +24,6 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>SecureNSUserDefaults.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>Unirest.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
 		<key>YYImage.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -72,67 +32,27 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>1CE15060B0E33F7AE0A78865CFACF946</key>
+		<key>04CFC1D76EAF7D62F71673C4FFD1733C</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>3018611FAF688D4BB3CF955D223FF9E8</key>
+		<key>08999E830BD2D26CF25DBBC2CA1EC585</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>3E4E667818E671847DD140ADB9F20F53</key>
+		<key>7B21C0EE0538D67A119E3B100F7FAF87</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>41FA54D12162DAD51D02FC58A2CD5034</key>
+		<key>904D9EB6BBA3B20C249C64BDFC537FD2</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>606E12823CA0504674FB787D833FACB4</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>65ED1F3C19F6F494694B0E10003FBEDB</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>6D4E6ACE98223F0C02C3A3352ABF981F</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>9E367890011237AD3450A178A1C21E11</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>BFD84BFBC25910051A5E3A5EA6BEA05C</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>CF671F7E57B92905F1CC91D036D6B4A7</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>EB8BA554CBC1F234AEA8C7D65B5560E8</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>F9C07FBF7E74DB79D2FD312CECCDE5BB</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>FDB0BE27C97AAE642CD928C2275FD319</key>
+		<key>B44C50F921DFC988D8A09DE6C6BE781B</key>
 		<dict>
 			<key>primary</key>
 			<true/>

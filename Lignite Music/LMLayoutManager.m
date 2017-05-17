@@ -25,7 +25,6 @@
 #import "LMCreditsViewController.h"
 #import "LMTrackInfoView.h"
 #import "LMProgressSlider.h"
-#import "LMBrowsingDetailView.h"
 
 @interface LMLayoutManager()
 

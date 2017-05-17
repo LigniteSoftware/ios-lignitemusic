@@ -7,7 +7,7 @@
 //
 
 #import <PureLayout/PureLayout.h>
-#import <MBProgressHUD/MBProgressHUD.h>
+#import "MBProgressHUD.h"
 #import "LMPebbleSettingsView.h"
 #import "LMSectionTableView.h"
 #import "LMAppIcon.h"

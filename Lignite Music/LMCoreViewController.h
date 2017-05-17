@@ -12,11 +12,7 @@
 #import "LMLandscapeNavigationBar.h"
 #import "LMCoreNavigationController.h"
 
-@class LMBrowsingDetailViewController;
-
 @interface LMCoreViewController : UIViewController
-
-@property LMBrowsingDetailViewController *currentDetailViewController;
 
 @property LMNavigationBar *navigationBar;
 

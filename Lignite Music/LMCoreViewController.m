@@ -7,10 +7,7 @@
 //
 
 #import <PureLayout/PureLayout.h>
-#import <ApIdleManager/APIdleManager.h>
-#import <MBProgressHUD/MBProgressHUD.h>
 
-#import "LMBrowsingDetailViewController.h"
 #import "LMGuideViewPagerController.h"
 #import "LMSettingsViewController.h"
 #import "LMSearchViewController.h"
@@ -24,6 +21,8 @@
 #import "LMLayoutManager.h"
 #import "NSTimer+Blocks.h"
 #import "LMImageManager.h"
+#import "MBProgressHUD.h"
+#import "APIdleManager.h"
 #import "LMMusicPlayer.h"
 #import "LMAppDelegate.h"
 #import "LMSearchView.h"
@@ -382,14 +381,6 @@ LMControlBarViewDelegate
 }
 
 - (void)sourceSelected:(LMSource *)source {
-	if(self.currentDetailViewController){
-		[self.navigationBar popNavigationItemAnimated:NO];
-		if(self.navigationBar.items.count > 1){
-			[self.navigationBar popNavigationItemAnimated:NO];
-		}
-	}
-	
-	
 	if(!source.shouldNotHighlight){
 		[self.currentSource setHidden:YES];
 		[self.buttonNavigationBar setSelectedTab:LMNavigationTabBrowse];
@@ -486,7 +477,6 @@ LMControlBarViewDelegate
 - (void)viewDidAppear:(BOOL)animated {
 	[super viewDidAppear:animated];
 	
-	self.currentDetailViewController = nil;
 	self.searchViewController = nil;
 }
 
@@ -871,6 +861,8 @@ LMControlBarViewDelegate
 	self.layoutManager.traitCollection = self.traitCollection;
 	self.layoutManager.size = self.view.frame.size;
 	
+	
+	return;
 	
 //	LMExpandableTrackListControlBar *testView = [LMExpandableTrackListControlBar newAutoLayoutView];
 //	testView.backgroundColor = [UIColor orangeColor];
