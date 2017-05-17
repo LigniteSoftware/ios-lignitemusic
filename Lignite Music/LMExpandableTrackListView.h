@@ -42,9 +42,10 @@
  Initializes the expandable track list view (for autolayout) with a certain music track collection for its layouting.
 
  @param musicTrackCollection The music track collection to associate with it.
+ @param musicType The type of music associated.
  @return The initialized LMExpandableTrackList view, ready for autolayout.
  */
-- (instancetype)initWithMusicTrackCollection:(LMMusicTrackCollection*)musicTrackCollection;
+- (instancetype)initWithMusicTrackCollection:(LMMusicTrackCollection*)musicTrackCollection musicType:(LMMusicType)musicType;
 
 /**
  The total size of the expandable track list view based on what contents it currently wants to display. For example, if displaying the artist-album view, and then an album is tapped, this will change based on the amount of items within that it needs to display.

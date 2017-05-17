@@ -88,4 +88,9 @@ typedef NS_ENUM(NSInteger, LMDetailViewDisplayMode) {
  */
 @property LMExpandableTrackListView *detailView;
 
+/**
+ The size of a normal item.
+ */
+@property CGSize normalItemSize;
+
 @end

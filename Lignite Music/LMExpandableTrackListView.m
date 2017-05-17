@@ -306,33 +306,58 @@
 - (CGSize)totalSize {
 	CGSize size = CGSizeMake(WINDOW_FRAME.size.width, 0);
 	
+	CGSize normalItemSize;
+	NSInteger numberOfColumns = 0, amountOfItems = 0;
+	CGFloat spacing = 0;
+	BOOL fuck = YES;
+	
 	if(self.showingAlbumTileView){
-		NSInteger numberOfColumns = [LMExpandableTrackListView numberOfColumns];
-		NSInteger amountOfItems = self.specificTrackCollections.count;
-
-		size.height += (amountOfItems * [LMMusicCollectionsView itemSize].height)/numberOfColumns;
-		size.height += (amountOfItems * 50)/numberOfColumns; //Spacing
-		size.height += 50;
-		size.height += [LMExpandableTrackListControlBar recommendedHeight];
+		fuck = NO;
 		
-		if((numberOfColumns % 2 == 0 && amountOfItems % 2 != 0)){ //If the number of columns is even but the amount of actual items is uneven
-			size.height += [LMMusicCollectionsView itemSize].height;
+		self.albumTileView.flowLayout = self.flowLayout;
+		
+		numberOfColumns = [LMLayoutManager amountOfCollectionViewItemsPerRow];
+		
+		normalItemSize = [self.albumTileView normalItemSize];
+		
+		amountOfItems = self.specificTrackCollections.count;
+		
+		spacing = [self.albumTileView spacing];
+		
+		if(numberOfColumns > amountOfItems){
+			numberOfColumns = amountOfItems;
 		}
+
+		size.height += (amountOfItems * spacing)/numberOfColumns; //Spacing
+		size.height += spacing;
 	}
 	else{
-		NSInteger numberOfColumns = [LMExpandableTrackListView numberOfColumns];
-		NSInteger amountOfItems = self.musicTrackCollectionToUse.count;
+		numberOfColumns = [LMExpandableTrackListView numberOfColumns];
 		
-		size.height += (amountOfItems * [self currentItemSize].height)/numberOfColumns;
+		normalItemSize = [self currentItemSize];
+		
+		amountOfItems = self.musicTrackCollectionToUse.count;
+		
+		if(numberOfColumns > amountOfItems){
+			numberOfColumns = amountOfItems;
+		}
+		
 		size.height += (amountOfItems * 10)/numberOfColumns; //Spacing
 		size.height += 10;
-		size.height += [LMExpandableTrackListControlBar recommendedHeight];
-		
-		if(numberOfColumns % 2 == 0 && amountOfItems % 2 != 0){ //If the number of columns is even but the amount of actual items is uneven
-			size.height += [self currentItemSize].height;
-		}
 	}
-		
+	
+	NSLog(@"Initial %d spacing %f", (int)size.height, spacing);
+	
+	size.height += (amountOfItems * normalItemSize.height)/numberOfColumns;
+	NSLog(@"Adding amount now %d", (int)size.height);
+	size.height += [LMExpandableTrackListControlBar recommendedHeight];
+	NSLog(@"Adding recommended height now %d", (int)size.height);
+	
+	if(numberOfColumns % 2 == 0 && amountOfItems % 2 != 0 && amountOfItems > numberOfColumns){ //If the number of columns is even but the amount of actual items is uneven
+//		size.height += normalItemSize.height;
+		NSLog(@"Adding spacer because uneven now %d", (int)size.height);
+	}
+	
 	return size;
 }
 
@@ -380,10 +405,7 @@
 		
 		
 		
-		self.albumTileView = [LMMusicCollectionsView newAutoLayoutView];
-		self.albumTileView.backgroundColor = [UIColor purpleColor];
-		self.albumTileView.trackCollections = self.specificTrackCollections;
-		self.albumTileView.delegate = self;
+		//Album tile view is created in init
 		[self addSubview:self.albumTileView];
 		
 		self.albumTileViewLeadingConstraint = [self.albumTileView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
@@ -463,10 +485,11 @@
 	[super layoutSubviews];
 }
 
-- (instancetype)initWithMusicTrackCollection:(LMMusicTrackCollection*)musicTrackCollection {
+- (instancetype)initWithMusicTrackCollection:(LMMusicTrackCollection*)musicTrackCollection musicType:(LMMusicType)musicType {
 	self = [super initForAutoLayout];
 	if(self){
 		self.musicTrackCollection = musicTrackCollection;
+		self.musicType = musicType;
 		
 		self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 		[self.musicPlayer addMusicDelegate:self];
@@ -483,6 +506,12 @@
 			self.specificTrackCollections = [self.musicPlayer collectionsForRepresentativeTrack:self.musicTrackCollection.representativeItem
 																				   forMusicType:self.musicType];
 		}
+		
+		
+		self.albumTileView = [LMMusicCollectionsView newAutoLayoutView];
+		self.albumTileView.backgroundColor = [UIColor purpleColor];
+		self.albumTileView.trackCollections = self.specificTrackCollections;
+		self.albumTileView.delegate = self;
 	}
 	return self;
 }

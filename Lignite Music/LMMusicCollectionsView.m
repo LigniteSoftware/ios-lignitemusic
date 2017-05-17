@@ -157,25 +157,27 @@
 	return cell;
 }
 
-+ (CGSize)itemSize {
+- (CGSize)normalItemSize {
+	return self.flowLayout.normalItemSize;
+}
+
+- (CGFloat)spacing {
 	NSInteger factor = [LMLayoutManager amountOfCollectionViewItemsPerRow];
 	
-	CGFloat sideLength = WINDOW_FRAME.size.width/factor;
+	CGSize itemSize = [self normalItemSize];
 	
-	sideLength -= 50;
+	CGFloat sideLength = itemSize.width;
 	
-	return CGSizeMake(sideLength, sideLength * (2.8/2.0));
+	CGFloat spacing = (WINDOW_FRAME.size.width-(sideLength*factor))/(factor+1);
+	
+	return spacing;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
 	
-	NSInteger factor = [LMLayoutManager amountOfCollectionViewItemsPerRow];
+	CGSize itemSize = [self normalItemSize];
 	
-	CGSize itemSize = [LMMusicCollectionsView itemSize];
-	
-	CGFloat sideLength = itemSize.width;
-	
-	CGFloat spacing = (self.frame.size.width-(sideLength*factor))/(factor+1);
+	CGFloat spacing = [self spacing];
 	
 	UICollectionViewFlowLayout *flowLayout = (UICollectionViewFlowLayout*)collectionViewLayout;
 	flowLayout.sectionInset = UIEdgeInsetsMake(spacing, spacing, spacing, spacing);

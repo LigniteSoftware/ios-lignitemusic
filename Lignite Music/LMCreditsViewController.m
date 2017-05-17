@@ -33,6 +33,11 @@
 @property UIImageView *philippAndEdwinView;
 
 /**
+ The constraint of the height for the philippAndEdwinView.
+ */
+@property NSLayoutConstraint *philippAndEdwinViewHeightConstraint;
+
+/**
  The big "Thank you!" title label.
  */
 @property UILabel *thankYouLabel;
@@ -69,8 +74,10 @@
 }
 
 - (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
-	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+	BOOL willBeLandscapeAnyPlatform = size.width > size.height;
 	
+	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		self.philippAndEdwinViewHeightConstraint.constant = willBeLandscapeAnyPlatform ? 0 : WINDOW_FRAME.size.width*0.88;
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
 			[self.scrollView reload];
@@ -85,7 +92,7 @@
 	self.layoutManager = [LMLayoutManager sharedLayoutManager];
 	[self.layoutManager addDelegate:self];
 	
-	BOOL isLandscape = [LMLayoutManager sharedLayoutManager].isLandscape;
+	BOOL isLandscape = [LMLayoutManager isLandscape];
 	CGFloat mainDimension = isLandscape ? WINDOW_FRAME.size.height : WINDOW_FRAME.size.width;
 	
 	self.scrollView = [LMScrollView newAutoLayoutView];
@@ -117,15 +124,11 @@
 	[self.philippAndEdwinView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 //	[self.philippAndEdwinView autoSetDimension:ALDimensionWidth toSize:mainDimension];
 	[self.philippAndEdwinView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.scrollView];
-	NSArray *philippAndEdwinViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-		[self.philippAndEdwinView autoSetDimension:ALDimensionHeight toSize:0.88*mainDimension];
-	}];
-	[LMLayoutManager addNewPortraitConstraints:philippAndEdwinViewPortraitConstraints];
-	
-	NSArray *philippAndEdwinViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-		[self.philippAndEdwinView autoSetDimension:ALDimensionHeight toSize:0];
-	}];
-	[LMLayoutManager addNewLandscapeConstraints:philippAndEdwinViewLandscapeConstraints];
+	self.philippAndEdwinViewHeightConstraint = [self.philippAndEdwinView autoSetDimension:ALDimensionHeight toSize:0.88*mainDimension];
+
+	if([LMLayoutManager isLandscape] || [LMLayoutManager isLandscapeiPad]){
+		self.philippAndEdwinViewHeightConstraint.constant = 0;
+	}
 	
 	
 	//		self.signaturesView = [UIImageView newAutoLayoutView];

@@ -86,7 +86,7 @@
 		self.frameOfItemDisplayingDetailView = CGRectMake(-self.frameOfItemDisplayingDetailView.size.width, self.frameOfItemDisplayingDetailView.origin.y, 0, 0);
 	}
 	else{ //Setting new detail view open
-		LMExpandableTrackListView *detailView = [[LMExpandableTrackListView alloc] initWithMusicTrackCollection:[self.musicTrackCollections objectAtIndex:indexOfItemDisplayingDetailView]];
+		LMExpandableTrackListView *detailView = [[LMExpandableTrackListView alloc] initWithMusicTrackCollection:[self.musicTrackCollections objectAtIndex:indexOfItemDisplayingDetailView] musicType:self.musicType];
 		detailView.backgroundColor = [UIColor whiteColor];
 		detailView.musicType = self.musicType;
 		detailView.flowLayout = self;
@@ -235,8 +235,6 @@
 	CGFloat detailViewHeight = 0;
 	
 	if(isDetailViewRow || isBelowDetailViewRow){
-		NSInteger indexToUseForAmountOfItems = self.isDisplayingDetailView ? self.indexOfItemDisplayingDetailView : self.previousIndexOfItemDisplayingDetailView;
-
 		CGFloat maximumDetailViewHeight = [self.detailView totalSize].height;
 		CGRect collectionViewFrame = self.collectionView.frame;
 		CGRect normalItemFrame = [self frameForCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] detailViewDisplayMode:LMDetailViewDisplayModeNone];
@@ -254,6 +252,10 @@
 	
 	if(self.indexOfItemDisplayingDetailView == indexPath.row){
 		self.frameOfItemDisplayingDetailView = itemFrame;
+	}
+	
+	if(indexPath.row == 0){
+		self.normalItemSize = itemFrame.size;
 	}
 	
 	if(isDetailViewRow){

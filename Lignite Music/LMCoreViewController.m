@@ -720,7 +720,11 @@ LMControlBarViewDelegate
 		
 		[self.nowPlayingCoreView.superview layoutIfNeeded];
 		
-		if((-translation.y <= self.nowPlayingCoreView.frame.size.height/10.0)){
+		if(translation.y > self.nowPlayingCoreView.frame.size.height/10.0){			
+			if(translation.y > self.nowPlayingCoreView.frame.size.height/8.0){
+				[self.buttonNavigationBar minimize:NO];
+			}
+			
 			self.nowPlayingCoreView.topConstraint.constant = self.nowPlayingCoreView.frame.size.height;
 			
 			self.nowPlayingCoreView.isOpen = NO;

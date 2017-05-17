@@ -8,6 +8,7 @@
 
 #import "LMView.h"
 #import "LMMusicPlayer.h"
+#import "LMCollectionViewFlowLayout.h"
 
 @class LMMusicCollectionsView;
 
@@ -42,10 +43,17 @@
 @property id<LMMusicCollectionsViewDelegate> delegate;
 
 /**
+ The flow layout associated.
+ */
+@property LMCollectionViewFlowLayout *flowLayout;
+
+/**
  The size of an item within the music collection view, based off of current data from LMLayoutManager.
 
  @return The size of an item.
  */
-+ (CGSize)itemSize;
+- (CGSize)normalItemSize;
+
+- (CGFloat)spacing;
 
 @end
