@@ -145,7 +145,7 @@
 			
 			label.fadeLength = 10;
 			label.leadingBuffer = 0;
-			label.trailingBuffer = 20;
+			label.trailingBuffer = 50;
 			
 //			label.backgroundColor = [UIColor colorWithRed:(0.2*i)+0.3 green:0 blue:0 alpha:1.0];
 			label.font = [LMMarqueeLabel fontToFitHeight:self.frame.size.height*heightMultipliers[i]];

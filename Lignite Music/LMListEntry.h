@@ -100,6 +100,11 @@
 @property BOOL isLabelBased;
 
 /**
+ Stretch the whole thing across all available width, from edge to edge. Feeling edgy.
+ */
+@property BOOL stretchAcrossWidth;
+
+/**
  The delegate for the list entry.
  */
 @property id<LMListEntryDelegate> delegate;

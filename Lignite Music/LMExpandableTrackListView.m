@@ -265,6 +265,8 @@
 		listEntry.collectionIndex = fixedIndex;
 		listEntry.associatedData = [self.musicTrackCollectionToUse.items objectAtIndex:fixedIndex];
 		listEntry.isLabelBased = (self.musicType == LMMusicTypeAlbums || self.musicType == LMMusicTypeCompilations);
+		listEntry.alignIconToLeft = NO;
+		listEntry.stretchAcrossWidth = YES;
 		[cell.contentView addSubview:listEntry];
 		listEntry.backgroundColor = [LMColour superLightGrayColour];
 		
@@ -299,7 +301,7 @@
 }
 
 - (CGSize)currentItemSize {
-	return CGSizeMake(WINDOW_FRAME.size.width/[LMExpandableTrackListView numberOfColumns] - 20,
+	return CGSizeMake(WINDOW_FRAME.size.width/[LMExpandableTrackListView numberOfColumns]*0.90,
 					  fmin(([LMLayoutManager isLandscape] ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height)/8.0, 80));
 }
 

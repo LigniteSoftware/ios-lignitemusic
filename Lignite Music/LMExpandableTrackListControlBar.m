@@ -217,17 +217,17 @@ BOOL expandableTrackListControlBarIsInAlbumDetail = NO;
 			case LMExpandableTrackListControlBarModeControlWithAlbumDetail: {
 
 				
-				[self.backButtonBackgroundView autoPinEdgeToSuperviewMargin:ALEdgeLeading];
+				[self.backButtonBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 				[self.backButtonBackgroundView autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
 				[self.backButtonBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self];
 				[self.backButtonBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self];
 				
 				
-				[self.specificAlbumHeader autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.backButtonImageView];
+				[self.specificAlbumHeader autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.backButtonBackgroundView];
 				[self.specificAlbumHeader autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
-				[self.specificAlbumHeader autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(5.0/10.0)];
-				[self.specificAlbumHeader autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.backButtonBackgroundView];
-				[self.specificAlbumHeader autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.backButtonBackgroundView];
+				[self.specificAlbumHeader autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.musicControlBar withOffset:5];
+				[self.specificAlbumHeader autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.backButtonBackgroundView withOffset:10];
+				[self.specificAlbumHeader autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.backButtonBackgroundView withOffset:-10];
 				
 				
 				[self.musicControlBar autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
@@ -363,6 +363,7 @@ BOOL expandableTrackListControlBarIsInAlbumDetail = NO;
 		self.specificAlbumHeader.collectionIndex = 0;
 		self.specificAlbumHeader.iPromiseIWillHaveAnIconForYouSoon = YES;
 		self.specificAlbumHeader.alignIconToLeft = YES;
+		self.specificAlbumHeader.stretchAcrossWidth = YES;
 		[self addSubview:self.specificAlbumHeader];
 		
 		

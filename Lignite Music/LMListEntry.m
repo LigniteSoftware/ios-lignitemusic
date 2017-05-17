@@ -104,7 +104,7 @@
 	
 	[self.contentView autoCenterInSuperview];
 	[self.contentView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:self.contentViewHeightMultiplier];
-	[self.contentView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:0.9];
+	[self.contentView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:self.stretchAcrossWidth ? 1.0 : 0.9];
 	
 	UIImage *icon = [self.delegate iconForListEntry:self];
 	NSString *title = [self.delegate titleForListEntry:self];
@@ -125,7 +125,7 @@
 		self.iconBackgroundView.backgroundColor = [UIColor clearColor];
 		[self.contentView addSubview:self.iconBackgroundView];
 		
-		[self.iconBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:10];
+		[self.iconBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:self.stretchAcrossWidth ? 0 : 10];
 		[self.iconBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 		[self.iconBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 		[self.iconBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.contentView];
@@ -182,7 +182,7 @@
 		[self.contentView addSubview:self.titleLabel];
 		
 		NSLayoutConstraint *heightConstraint = [self.titleLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.contentView withMultiplier:(1.0f/3.0f)];
-		NSLayoutConstraint *leadingConstraint = [self.titleLabel autoPinEdge:ALEdgeLeading toEdge:willHaveAnIcon ? ALEdgeTrailing : ALEdgeLeading ofView:willHaveAnIcon ? self.iconBackgroundView : self.contentView withOffset:willHaveAnIcon ? (self.isLabelBased ? -20 : 10) : 10];
+		NSLayoutConstraint *leadingConstraint = [self.titleLabel autoPinEdge:ALEdgeLeading toEdge:willHaveAnIcon ? ALEdgeTrailing : ALEdgeLeading ofView:willHaveAnIcon ? self.iconBackgroundView : self.contentView withOffset:willHaveAnIcon ? (self.isLabelBased ? -20 : 4) : 10];
 		NSLayoutConstraint *trailingConstraint = [self.titleLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.contentView withOffset:-10.0];
 		NSLayoutConstraint *centerConstraint = [self.titleLabel autoAlignAxis:ALAxisHorizontal toSameAxisOfView:self.contentView];
 		

@@ -362,6 +362,19 @@
 	
 	self.originalPoint = CGPointZero;
 	
+	if(open){
+		NSInteger fixedIndex = self.loadedTrackIndex - 1;
+		CGFloat contentOffsetY = ([self heightAtIndex:0 forTableView:self.queueTableView] + [self spacingAtIndex:0 forTableView:self.queueTableView]) * fixedIndex;
+		CGFloat maxContentOffsetY = self.queueTableView.contentSize.height-self.queueTableView.frame.size.height - 10;
+		if(contentOffsetY > maxContentOffsetY){
+			contentOffsetY = maxContentOffsetY;
+		}
+		else if(contentOffsetY < 0){
+			contentOffsetY = 0;
+		}
+		self.queueTableView.contentOffset = CGPointMake(0, contentOffsetY);
+	}
+	
     [UIView animateWithDuration:animated ? 0.25 : 0.0 animations:^{
 		[self.queueButton setColour:open ? [[UIColor whiteColor] colorWithAlphaComponent:(8.0/10.0)] : [LMColour fadedColour]];
 		[self layoutIfNeeded];
@@ -488,9 +501,8 @@
 //            NSLog(@"Need to create %ld", i);
 			LMListEntry *listEntry = [[LMListEntry alloc]initWithDelegate:self];
 			listEntry.collectionIndex = i;
-			listEntry.iconInsetMultiplier = (1.0/3.0);
-			listEntry.iconPaddingMultiplier = (3.0/4.0);
-			listEntry.invertIconOnHighlight = YES;
+			listEntry.alignIconToLeft = YES;
+			listEntry.iPromiseIWillHaveAnIconForYouSoon = YES;
 			[self.itemArray addObject:listEntry];
 		}
 	}
@@ -500,9 +512,9 @@
 
 - (float)heightAtIndex:(NSUInteger)index forTableView:(LMTableView *)tableView {
 	if([LMLayoutManager isiPad]){
-		return ([LMLayoutManager isLandscapeiPad] ? WINDOW_FRAME.size.height : WINDOW_FRAME.size.width)/8.0f;
+		return ([LMLayoutManager isLandscapeiPad] ? WINDOW_FRAME.size.height : WINDOW_FRAME.size.width)/10.0f;
 	}
-	return ([LMLayoutManager isLandscape] ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height)/8.0f;
+	return ([LMLayoutManager isLandscape] ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height)/10.0f;
 }
 
 - (LMListEntry*)listEntryForIndex:(NSInteger)index {
@@ -565,7 +577,7 @@
 }
 
 - (UIImage*)iconForListEntry:(LMListEntry*)entry {
-	return nil;
+	return [[self.musicPlayer.nowPlayingCollection.items objectAtIndex:entry.collectionIndex] albumArt];
 }
 
 - (void)panNowPlayingDown:(UIPanGestureRecognizer *)recognizer {

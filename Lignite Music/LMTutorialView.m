@@ -210,13 +210,17 @@
         self.contentViewBackground.layer.shadowRadius = 15;
         self.contentViewBackground.alpha = 0;
         [self addSubview:self.contentViewBackground];
-        
-        [self.contentViewBackground autoAlignAxisToSuperviewAxis:ALAxisVertical];
+		
+		[self.contentViewBackground autoAlignAxisToSuperviewAxis:[LMLayoutManager isLandscape] ? ALAxisHorizontal : ALAxisVertical];
         if(self.boxAlignment == LMTutorialViewAlignmentCenter){
             [self.contentViewBackground autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
         }
         else {
-            [self.contentViewBackground autoPinEdgeToSuperviewEdge:(self.boxAlignment == LMTutorialViewAlignmentBottom) ? ALEdgeBottom : ALEdgeTop withInset:self.frame.size.height/8.0];
+			ALEdge alignment = (self.boxAlignment == LMTutorialViewAlignmentBottom) ? ALEdgeBottom : ALEdgeTop;
+			if([LMLayoutManager isLandscape]){
+				alignment = (self.boxAlignment == LMTutorialViewAlignmentBottom) ? ALEdgeTrailing : ALEdgeLeading;
+			}
+			[self.contentViewBackground autoPinEdgeToSuperviewEdge:alignment withInset:self.frame.size.height/([self.key isEqualToString:LMTutorialKeyTopBar] ? 12.0 : 8.0)];
         }
 		[self.contentViewBackground autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(([LMLayoutManager isiPad] ? ([LMLayoutManager isLandscapeiPad] ? 4.0 : 5.0) : 8.0)/10.0)];
         

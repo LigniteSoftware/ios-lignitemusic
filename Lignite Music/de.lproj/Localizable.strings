@@ -40,12 +40,12 @@
  */
 
 "StopShowingTheseHints" = "Diese Hinweise nicht mehr anzeigen";
-"OkThanksForTheHint" = "Ok, danke für den Hinweis";
+"OkThanksForTheHint" = "Ok, danke";
 
 "TutorialMainNavigationTitle" = "Die Hauptnavigation";
 "TutorialMainNavigationDescription" = "All die wichtigen Dinge an einem Ort.\n\nWechsle zwischen dem Durchsuchen-Tab, dem Mini Player & der Ansichtsauswahl, alles mit deinem Finger.";
 "TutorialMiniPlayerTitle" = "Mini Player";
-"TutorialMiniPlayerDescription" = "Tippe irgendwo auf den Mini Player, um die Musik zu pausieren/abzuspielen. Streiche links/rechts, um den Song zu wechseln oder nach oben, um zur Vollbildansicht zu gelangen.";
+"TutorialMiniPlayerDescription" = "Tippe irgendwo auf den Mini Player, um die Musik zu pausieren/abzuspielen oder streiche links/rechts, um den Song zu wechseln.";
 "TutorialTopBarTitle" = "Topbar";
 "TutorialTopBarDescription" = "Die Topbar, die dir die Navigation erleichtert.\n\nVerwende sie, um zurück zu navigieren oder tippe auf das Lignite Music Icon, um zur Vollbildansicht zu gelangen.";
 "TutorialFullScreenPlaybackTitle" = "Vollbildansicht";
