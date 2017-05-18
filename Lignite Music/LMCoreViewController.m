@@ -1153,19 +1153,19 @@ LMControlBarViewDelegate
 			
 			
 			[NSTimer scheduledTimerWithTimeInterval:1.0 block:^{
+				self.backgroundBlurView = [UIVisualEffectView newAutoLayoutView];
+				[self.navigationController.view addSubview:self.backgroundBlurView];
+				
+				[self.backgroundBlurView autoPinEdgesToSuperviewEdges];
+				
+				[self.navigationController.view insertSubview:self.buttonNavigationBar aboveSubview:self.backgroundBlurView];
+				[self.navigationController.view insertSubview:self.nowPlayingCoreView aboveSubview:self.buttonNavigationBar];
+
+				
 				if([LMTutorialView tutorialShouldRunForKey:LMTutorialKeyBottomNavigation]){
 					self.view.userInteractionEnabled = NO;
 					self.buttonNavigationBar.userInteractionEnabled = NO;
 					
-					
-					self.backgroundBlurView = [UIVisualEffectView newAutoLayoutView];
-					[self.navigationController.view addSubview:self.backgroundBlurView];
-					
-					[self.backgroundBlurView autoPinEdgesToSuperviewEdges];
-					
-					
-					[self.navigationController.view insertSubview:self.buttonNavigationBar aboveSubview:self.backgroundBlurView];
-					[self.navigationController.view insertSubview:self.nowPlayingCoreView aboveSubview:self.buttonNavigationBar];
 					
 					LMTutorialView *tutorialView = [[LMTutorialView alloc] initForAutoLayoutWithTitle:NSLocalizedString(@"TutorialMainNavigationTitle", nil)
 																						  description:NSLocalizedString(@"TutorialMainNavigationDescription", nil)
@@ -1194,6 +1194,16 @@ LMControlBarViewDelegate
 					[UIView animateWithDuration:0.5 animations:^{
 						self.backgroundBlurView.effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
 					}];
+				}
+				else{
+					NSArray *tutorialKeys = @[ LMTutorialKeyBottomNavigation, LMTutorialKeyMiniPlayer, LMTutorialKeyTopBar ];
+					for(NSInteger i = 0; i < tutorialKeys.count; i++){
+						NSString *key = tutorialKeys[i];
+						NSString *nextKey = (i+1 < tutorialKeys.count) ? tutorialKeys[i+1] : key;
+						if(![LMTutorialView tutorialShouldRunForKey:key] && [LMTutorialView tutorialShouldRunForKey:nextKey]){
+							[self tutorialFinishedWithKey:key];
+						}
+					}
 				}
 			} repeats:NO];
 			
