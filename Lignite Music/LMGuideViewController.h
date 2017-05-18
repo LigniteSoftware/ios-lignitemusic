@@ -14,6 +14,8 @@
 
 @property LMCoreViewController *coreViewController;
 
+@property LMGuideViewPagerController *rootViewPagerController;
+
 @property UIPageViewController *sourcePagerController;
 
 @property LMGuideViewController *nextViewController;

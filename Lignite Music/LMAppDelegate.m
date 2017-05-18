@@ -36,33 +36,6 @@
     return _musicPlayer;
 }
 
-- (void)application:(UIApplication *)application performActionForShortcutItem:(UIApplicationShortcutItem *)shortcutItem completionHandler:(void (^)(BOOL))completionHandler {
-	
-	NSLog(@"Allahu");
-	
-	int indexOfItem = -1;
-	NSArray<UIApplicationShortcutItem*>*shortcutItems = [UIApplication sharedApplication].shortcutItems;
-	for(int i = 0; i < shortcutItems.count; i++){
-		UIApplicationShortcutItem *item = [shortcutItems objectAtIndex:i];
-		if([item.type isEqualToString:shortcutItem.type]){
-			indexOfItem = i;
-		}
-	}
-	
-	if(indexOfItem > -1){
-		LMMusicPlayer *currentMusicPlayer = [LMMusicPlayer sharedMusicPlayer];
-		if(currentMusicPlayer.sourceSelector){
-			[currentMusicPlayer.sourceSelector setCurrentSourceWithIndex:indexOfItem];
-		}
-		else{
-			NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-			[defaults setInteger:indexOfItem forKey:LMSettingsKeyLastOpenedSource];
-		}
-	}
-	
-	completionHandler(YES);
-}
-
 #ifdef SPOTIFY
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
 	NSLog(@"Got a request for URL %@", url);
@@ -95,8 +68,16 @@
 }
 #endif
 
+- (BOOL)application:(UIApplication *)application willFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+	NSLog(@"[LMAppDelegate]: Will finish launching with launch options %@", launchOptions);
+	
+	return YES;
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-	NSLog(@"[LMAppDelegate]: Did finish launching with options.");
+	NSLog(@"[LMAppDelegate]: Did finish launching with options %@", launchOptions);
+	
+	NSTimeInterval delegateStartTime = [[NSDate new] timeIntervalSince1970];
 	
 #ifdef SPOTIFY
 	NSLog(@"You are running Lignite Music for Spotify! Woohoo!");
@@ -112,7 +93,7 @@
 	auth.sessionUserDefaultsKey = SpotifySessionUserDefaultsKey;
 #endif
 	
-	[[Fabric sharedSDK] setDebug:YES];
+	[[Fabric sharedSDK] setDebug:NO];
 	
 #ifdef DEBUG
 	NSLog(@"Setting to internal fabric.io organization.");
@@ -129,75 +110,24 @@
         self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
     }
 	
-//	NSLog(@"Actually finished");
+	NSTimeInterval delegateEndTime = [[NSDate new] timeIntervalSince1970];
+	NSLog(@"Loaded delegate in %f seconds.", delegateEndTime-delegateStartTime);
 	
-//	const int amountOfItems = 2;
-//	LMIcon icons[] = {
-//		LMIconAlbums, LMIconTitles
-//	};
-//	NSString *titles[] = {
-//		@"Albums", @"Titles"
-//	};
-//	NSMutableArray *shortcutItems = [NSMutableArray new];
-//	for(int i = 0; i < amountOfItems; i++){
-//		UIApplicationShortcutIcon *icon = [UIApplicationShortcutIcon iconWithTemplateImageName: [LMAppIcon filenameForIcon:icons[i]]]; // your customize icon
-//		UIApplicationShortcutItem *item = [[UIApplicationShortcutItem alloc]initWithType:titles[i] localizedTitle:NSLocalizedString(titles[i], nil) localizedSubtitle:nil icon:icon userInfo: nil];
-//		[shortcutItems addObject:item];
-//	}
-	
-	[UIApplication sharedApplication].shortcutItems = nil;
-	
-//	NSLog(@"Email %@", [userDefaults secretObjectForKey:LMPurchaseManagerKickstarterLoginCredentialEmail]);
-	
-	if([[LMPurchaseManager sharedPurchaseManager] appOwnershipStatus] == LMPurchaseManagerAppOwnershipStatusLoggedInAsBacker) {
-//		NSDictionary *checkDictionary = @{
-//										  @"email": [userDefaults secretObjectForKey:LMPurchaseManagerKickstarterLoginCredentialEmail],
-//										  @"password": @([userDefaults secretIntegerForKey:LMPurchaseManagerKickstarterLoginCredentialPassword]),
-//										  @"token": [userDefaults secretObjectForKey:LMPurchaseManagerKickstarterLoginCredentialSessionToken]
-//										  };
-
-		NSDictionary *checkDictionary = @{
-										  @"email":@"",
-										  @"password":@"",
-										  @"token":@""
-										  };
-		
-		NSLog(@"Checking with %@", checkDictionary);
-		
-		NSString *URLString = @"https://api.lignite.me:1212/check";
-		NSURLRequest *urlRequest = [[AFJSONRequestSerializer serializer] requestWithMethod:@"POST" URLString:URLString parameters:checkDictionary error:nil];
-		
-		NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-		AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:configuration];
-		
-		AFHTTPResponseSerializer *responseSerializer = manager.responseSerializer;
-		
-		responseSerializer.acceptableContentTypes = [responseSerializer.acceptableContentTypes setByAddingObject:@"text/plain"];
-		
-		NSURLSessionDataTask *dataTask = [manager dataTaskWithRequest:urlRequest completionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
-			if (error) {
-				NSLog(@"Error checking for validity %@", error);
-			}
-			else{
-				NSDictionary *jsonDictionary = responseObject;
-				
-				if([jsonDictionary objectForKey:@"error"]){
-					
-				}
-				else{
-					BOOL validSession = [[jsonDictionary objectForKey:@"validSession"] boolValue];
-					NSLog(@"Valid session %d", validSession);
-					
-					if(!validSession){
-						[[LMPurchaseManager sharedPurchaseManager] logoutBacker];
-					}
-				}
-			}
-		}];
-		[dataTask resume];
-	}
+	[NSTimer scheduledTimerWithTimeInterval:5.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
+		NSLog(@"Bye bye");
+	}];
 	
     return YES;
+}
+
+
+- (BOOL)application:(UIApplication *)application shouldSaveApplicationState:(NSCoder *)coder {
+	NSLog(@"See you later");
+	return YES;
+}
+
+- (BOOL)application:(UIApplication *)application shouldRestoreApplicationState:(NSCoder *)coder {
+	return YES;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {

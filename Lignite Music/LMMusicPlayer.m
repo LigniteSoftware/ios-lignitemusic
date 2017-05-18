@@ -276,6 +276,8 @@ MPMediaGrouping associatedMediaTypes[] = {
 - (instancetype)init {
 	self = [super init];
 	if(self){
+		NSTimeInterval musicPlayerLoadStartTime = [[NSDate new] timeIntervalSince1970];
+		
 		[self.systemMusicPlayer beginGeneratingPlaybackNotifications];
 		
 		MPMediaPropertyPredicate *predicate = [MPMediaPropertyPredicate predicateWithValue:@"MotherFuckingShitpost69"
@@ -294,8 +296,8 @@ MPMediaGrouping associatedMediaTypes[] = {
 		[self loadNowPlayingState];
 #endif
 		self.delegates = [NSMutableArray new];
-		self.delegatesSubscribedToCurrentPlaybackTimeChange = [[NSMutableArray alloc]init];
-		self.delegatesSubscribedToLibraryDidChange = [[NSMutableArray alloc]init];
+		self.delegatesSubscribedToCurrentPlaybackTimeChange = [NSMutableArray new];
+		self.delegatesSubscribedToLibraryDidChange = [NSMutableArray new];
         if(self.repeatMode == LMMusicRepeatModeDefault){
             self.repeatMode = LMMusicRepeatModeNone;
         }
@@ -340,27 +342,8 @@ MPMediaGrouping associatedMediaTypes[] = {
 		[mediaLibrary beginGeneratingLibraryChangeNotifications];
 #endif
 		
-		MPRemoteCommandCenter *commandCenter = [MPRemoteCommandCenter sharedCommandCenter];
-		[commandCenter.pauseCommand addTargetWithHandler:^MPRemoteCommandHandlerStatus(MPRemoteCommandEvent *event) {
-			[self pause];
-			return MPRemoteCommandHandlerStatusSuccess;
-		}];
-		[commandCenter.playCommand addTargetWithHandler:^MPRemoteCommandHandlerStatus(MPRemoteCommandEvent *event) {
-			[self play];
-			return MPRemoteCommandHandlerStatusSuccess;
-		}];
-		[commandCenter.nextTrackCommand addTargetWithHandler:^MPRemoteCommandHandlerStatus(MPRemoteCommandEvent *event) {
-			[self skipToNextTrack];
-			return MPRemoteCommandHandlerStatusSuccess;
-		}];
-		[commandCenter.previousTrackCommand addTargetWithHandler:^MPRemoteCommandHandlerStatus(MPRemoteCommandEvent *event) {
-			[self autoBackThrough];
-			return MPRemoteCommandHandlerStatusSuccess;
-		}];
-		
-		[commandCenter.changePlaybackPositionCommand addTarget:self action:@selector(handlePlaybackPositionChange:)];
-		
-		NSLog(@"Setup LMMusicPlayer.");
+		NSTimeInterval musicPlayerLoadEndTime = [[NSDate new] timeIntervalSince1970];
+		NSLog(@"Setup LMMusicPlayer in %f seconds.", (musicPlayerLoadEndTime-musicPlayerLoadStartTime));
 	}
 	else{
 		NSLog(@"Fatal error! Failed to create instance of LMMusicPlayer.");

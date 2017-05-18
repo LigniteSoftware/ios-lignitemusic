@@ -62,6 +62,8 @@
 
 - (void)threeBlindMice {
 	NSLog(@"Some called the three blind mice");
+
+	self.rootViewPagerController.currentPageNumber++;
 	
 	[self.sourcePagerController setViewControllers:@[self.nextViewController] direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:nil];
 }
@@ -75,7 +77,6 @@
 	[userDefaults setObject:@"tutorialVersion1" forKey:LMSettingsKeyOnboardingComplete];
 	[userDefaults synchronize];
 	
-	[self.coreViewController prepareToLoadView];
 	[[self presentingViewController] dismissViewControllerAnimated:YES completion:nil];
 }
 

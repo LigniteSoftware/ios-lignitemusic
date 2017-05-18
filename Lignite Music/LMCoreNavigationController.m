@@ -8,6 +8,8 @@
 
 #import <PureLayout/PureLayout.h>
 #import "LMCoreNavigationController.h"
+#import "LMCoreViewController.h"
+#import "LMSettings.h"
 
 @interface LMCoreNavigationController ()
 
@@ -15,6 +17,37 @@
 
 @implementation LMCoreNavigationController
 
+- (void)viewWillAppear:(BOOL)animated {
+	[super viewWillAppear:animated];
+	
+	UIViewController *fromViewController = [[[self navigationController] transitionCoordinator] viewControllerForKey:UITransitionContextFromViewControllerKey];
+	
+	if ([[self.navigationController viewControllers] containsObject:fromViewController])
+	{
+		NSLog(@"Being pushed");
+		//we're being pushed onto the nav controller stack.  Make sure to fetch data.
+	} else {
+		NSLog(@"Being revealed");
+		//Something is being popped and we are being revealed
+		
+		for(UIViewController *viewController in self.viewControllers){
+			NSLog(@"View controller %@", [viewController.class description]);
+			NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+			if(viewController.class == [LMCoreViewController class] && [userDefaults objectForKey:LMSettingsKeyOnboardingComplete]){
+				LMCoreViewController *coreViewController = (LMCoreViewController*)viewController;
+				[coreViewController prepareToLoadView];
+			}
+		}
+	}
+}
+
+//- (void)encodeRestorableStateWithCoder:(NSCoder *)coder {
+//	[super encodeRestorableStateWithCoder:coder];
+//}
+//
+//- (void)decodeRestorableStateWithCoder:(NSCoder *)coder {
+//	[super decodeRestorableStateWithCoder:coder];
+//}
 
 //- (instancetype)initWithCoder:(NSCoder *)aDecoder {
 //	self = [super initWithCoder:aDecoder];

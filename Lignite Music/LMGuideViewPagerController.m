@@ -13,7 +13,9 @@
 #import "LMLayoutManager.h"
 #import "LMColour.h"
 
-@interface LMGuideViewPagerController () <LMLayoutChangeDelegate>
+#define LMOnboardingViewControllerIndexKey @"LMOnboardingViewControllerIndexKey"
+
+@interface LMGuideViewPagerController () <LMLayoutChangeDelegate, UIViewControllerRestoration>
 
 @property NSArray *titleArray, *descriptionArray, *screenshotsArray, *buttonNamesArray;
 
@@ -26,6 +28,39 @@
 @end
 
 @implementation LMGuideViewPagerController
+
+- (instancetype)init {
+	self = [super init];
+	if(self) {
+		self.restorationIdentifier = @"LMOnboardingViewController";
+		self.restorationClass = [LMGuideViewPagerController class];
+	}
+	return self;
+}
+
++ (UIViewController*)viewControllerWithRestorationIdentifierPath:(NSArray *)identifierComponents
+														   coder:(NSCoder *)coder {
+	
+	NSInteger currentPageNumber = [coder decodeIntegerForKey:LMOnboardingViewControllerIndexKey];
+	
+	LMGuideViewPagerController *controller = [LMGuideViewPagerController new];
+	controller.guideMode = GuideModeOnboarding;
+	controller.currentPageNumber = currentPageNumber;
+	
+	NSLog(@"Path %@", identifierComponents);
+	
+	return controller;
+}
+
+- (void)encodeRestorableStateWithCoder:(NSCoder *)coder {
+	[coder encodeInteger:self.currentPageNumber forKey:LMOnboardingViewControllerIndexKey];
+	
+	[super encodeRestorableStateWithCoder:coder];
+}
+
+- (void)decodeRestorableStateWithCoder:(NSCoder *)coder {
+	[super decodeRestorableStateWithCoder:coder];
+}
 
 - (void)loadView {
 	[super loadView];
@@ -112,6 +147,8 @@
 #endif
 		}
 		case GuideModeMusicPermissionDenied: {
+			self.currentPageNumber = 0;
+			
 			self.titleArray = [[NSArray alloc]initWithObjects:
 							   @"OnboardingUserIsGutlessTitle"
 							   , nil];
@@ -138,7 +175,7 @@
 //	self.pageController.dataSource = self;
 	[[self.pageController view] setFrame:[[self view] bounds]];
 	
-	LMGuideViewController *initialViewController = [self viewControllerAtIndex:0];
+	LMGuideViewController *initialViewController = [self viewControllerAtIndex:self.currentPageNumber];
 	
 	NSArray *viewControllers = [NSArray arrayWithObject:initialViewController];
 	
@@ -184,6 +221,7 @@
 	childViewController.buttonTitle = NSLocalizedString([self.buttonNamesArray objectAtIndex:index], nil);
 	childViewController.sourcePagerController = self.pageController;
 	childViewController.coreViewController = self.coreViewController;
+	childViewController.rootViewPagerController = self;
 	
 	if(index < self.amountOfPages-1){
 		childViewController.nextViewController = [self viewControllerAtIndex:index+1];

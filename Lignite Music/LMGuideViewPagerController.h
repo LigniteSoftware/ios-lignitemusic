@@ -21,6 +21,7 @@ typedef enum {
 @property (strong, nonatomic) UIPageViewController *pageController;
 @property GuideMode guideMode;
 @property LMCoreViewController *coreViewController;
+@property NSInteger currentPageNumber;
 
 - (LMGuideViewController *)viewControllerAtIndex:(NSUInteger)index;
 
