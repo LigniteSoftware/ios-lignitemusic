@@ -16,4 +16,14 @@
  */
 @property UIView *viewToDisplayAlertsOn;
 
+/**
+ The lag delay in seconds. The default is 0.4;
+ */
+@property CGFloat lagDelayInSeconds;
+
+/**
+ Whether or not to display the lag label when a lag of lagDelayInSeconds occurs. Default is YES.
+ */
+@property BOOL enabled;
+
 @end

@@ -981,6 +981,7 @@ LMControlBarViewDelegate
 	
 	LMLagDetectionThread *lagThread = [LMLagDetectionThread new];
 	lagThread.viewToDisplayAlertsOn = self.navigationController.view;
+	lagThread.lagDelayInSeconds = 0.05;
 	[lagThread start];
 	
 	NSTimeInterval loadStartTime = [[NSDate new] timeIntervalSince1970];
@@ -1151,7 +1152,7 @@ LMControlBarViewDelegate
 		[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 		[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		[self.buttonNavigationBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(2.0/3.0)];
+		[self.buttonNavigationBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.navigationController.view withMultiplier:(2.0/3.0)];
 	}];
 	[LMLayoutManager addNewiPadConstraints:buttonNavigationBariPadConstraints];
 	
