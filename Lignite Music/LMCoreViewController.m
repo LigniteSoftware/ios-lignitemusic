@@ -34,6 +34,8 @@
 #import "LMExtras.h"
 #import "LMSource.h"
 
+#import "LMLagDetectionThread.h"
+
 #import "LMFeedbackViewController.h"
 #import "LMCreditsViewController.h"
 
@@ -976,6 +978,10 @@ LMControlBarViewDelegate
 	if(self.buttonNavigationBar){
 		return;
 	}
+	
+	LMLagDetectionThread *lagThread = [LMLagDetectionThread new];
+	lagThread.viewToDisplayAlertsOn = self.navigationController.view;
+	[lagThread start];
 	
 	NSTimeInterval loadStartTime = [[NSDate new] timeIntervalSince1970];
 			

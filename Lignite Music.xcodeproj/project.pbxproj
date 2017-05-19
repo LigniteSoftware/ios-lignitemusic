@@ -70,6 +70,8 @@
 		6A48A73F1E2024D1003C86B6 /* icon_no_cover_art_50.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A48A73D1E2024D1003C86B6 /* icon_no_cover_art_50.png */; };
 		6A48A7401E2024D1003C86B6 /* icon_no_cover_art_75.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A48A73E1E2024D1003C86B6 /* icon_no_cover_art_75.png */; };
 		6A48A7421E202BBF003C86B6 /* splash_wings.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A48A7411E202BBF003C86B6 /* splash_wings.png */; };
+		6A4901AA1ECF64CD00646799 /* LMLagDetectionThread.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A4901A91ECF64CD00646799 /* LMLagDetectionThread.m */; };
+		6A4901AB1ECF64CD00646799 /* LMLagDetectionThread.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A4901A91ECF64CD00646799 /* LMLagDetectionThread.m */; };
 		6A4BAEEE1DC984EC000DF537 /* LMBigListEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A4BAEED1DC984EC000DF537 /* LMBigListEntry.m */; };
 		6A4BAEF21DC9C59B000DF537 /* LMTiledAlbumCoverView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A4BAEF11DC9C59B000DF537 /* LMTiledAlbumCoverView.m */; };
 		6A4D61B31EC63C7200A106F4 /* LMLetterLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A4D61B21EC63C7200A106F4 /* LMLetterLabel.m */; };
@@ -495,6 +497,8 @@
 		6A48A73D1E2024D1003C86B6 /* icon_no_cover_art_50.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_no_cover_art_50.png; sourceTree = "<group>"; };
 		6A48A73E1E2024D1003C86B6 /* icon_no_cover_art_75.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_no_cover_art_75.png; sourceTree = "<group>"; };
 		6A48A7411E202BBF003C86B6 /* splash_wings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = splash_wings.png; sourceTree = "<group>"; };
+		6A4901A81ECF64CD00646799 /* LMLagDetectionThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMLagDetectionThread.h; sourceTree = "<group>"; };
+		6A4901A91ECF64CD00646799 /* LMLagDetectionThread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMLagDetectionThread.m; sourceTree = "<group>"; };
 		6A4BAEEC1DC984EC000DF537 /* LMBigListEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMBigListEntry.h; sourceTree = "<group>"; };
 		6A4BAEED1DC984EC000DF537 /* LMBigListEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMBigListEntry.m; sourceTree = "<group>"; };
 		6A4BAEF01DC9C59B000DF537 /* LMTiledAlbumCoverView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMTiledAlbumCoverView.h; sourceTree = "<group>"; };
@@ -864,6 +868,8 @@
 				6A08AF1A1EC04AED0069C9CC /* LMExpandableTrackListControlBar.m */,
 				6A08AF091EBEEBD00069C9CC /* LMExpandableTrackListView.h */,
 				6A08AF0A1EBEEBD00069C9CC /* LMExpandableTrackListView.m */,
+				6A4901A81ECF64CD00646799 /* LMLagDetectionThread.h */,
+				6A4901A91ECF64CD00646799 /* LMLagDetectionThread.m */,
 				6A4D61B51EC9BDF400A106F4 /* LMMusicCollectionsView.h */,
 				6A4D61B61EC9BDF400A106F4 /* LMMusicCollectionsView.m */,
 				6A08AF111EBF30B00069C9CC /* LMTriangleInnerShadowView.h */,
@@ -1874,6 +1880,7 @@
 				6AA5CB1D1E285C0A005F853F /* LMPebbleSettingsViewController.m in Sources */,
 				6AA5CB1E1E285C0A005F853F /* LMCircleView.m in Sources */,
 				6AA5CB1F1E285C0A005F853F /* YIInnerShadowView.m in Sources */,
+				6A4901AB1ECF64CD00646799 /* LMLagDetectionThread.m in Sources */,
 				6AA5CB201E285C0A005F853F /* UIImage+AverageColour.m in Sources */,
 				6A7E887A1ECCB80700E4B804 /* AFURLSessionManager.m in Sources */,
 				6AA5CB211E285C0A005F853F /* LMScrollView.m in Sources */,
@@ -2026,6 +2033,7 @@
 				6A514E191CEA15D900AFB351 /* LMSlider.m in Sources */,
 				6A5F43E21E09E003005E0075 /* LMAnswers.m in Sources */,
 				6A7E88731ECCB80700E4B804 /* AFSecurityPolicy.m in Sources */,
+				6A4901AA1ECF64CD00646799 /* LMLagDetectionThread.m in Sources */,
 				6A5168831E0899B100A6446F /* LMPurchaseViewController.m in Sources */,
 				6ADFFF7C1ECCC11D00E06FBF /* MarqueeLabel.m in Sources */,
 				6A08AF0B1EBEEBD00069C9CC /* LMExpandableTrackListView.m in Sources */,
