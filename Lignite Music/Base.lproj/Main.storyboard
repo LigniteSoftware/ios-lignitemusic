@@ -141,7 +141,7 @@
             <objects>
                 <navigationController storyboardIdentifier="PebbleSettingsController" id="X4f-vv-S1n" sceneMemberID="viewController">
                     <nil key="simulatedStatusBarMetrics"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="BPs-gI-G1O">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="BPs-gI-G1O">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -156,6 +156,7 @@
         <!--Shitpost-->
         <scene sceneID="d6d-d0-agb">
             <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="3Ac-GW-SfA" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController restorationIdentifier="CoreViewController" id="sDN-AI-0aL" customClass="LMCoreViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="So4-kd-Abd"/>
@@ -168,7 +169,6 @@
                     </view>
                     <navigationItem key="navigationItem" title="Shitpost" id="cDn-WD-vPl"/>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="3Ac-GW-SfA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3377" y="493"/>
         </scene>
@@ -176,7 +176,7 @@
         <scene sceneID="Sfb-7S-FxW">
             <objects>
                 <navigationController restorationIdentifier="CoreNavigationController" id="yTI-GW-5AF" customClass="LMCoreNavigationController" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="MrF-U5-YDZ">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="MrF-U5-YDZ">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>

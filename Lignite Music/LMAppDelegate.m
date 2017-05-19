@@ -71,6 +71,35 @@
 - (BOOL)application:(UIApplication *)application willFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 	NSLog(@"[LMAppDelegate]: Will finish launching with launch options %@", launchOptions);
 	
+	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+	if(![userDefaults objectForKey:LMSettingsKeyOnboardingComplete]){
+		NSLog(@"Launch onboarding...");
+	}
+	else{
+		[SKCloudServiceController requestAuthorization:^(SKCloudServiceAuthorizationStatus status) {
+			switch(status){
+				case SKCloudServiceAuthorizationStatusNotDetermined:
+				case SKCloudServiceAuthorizationStatusRestricted:
+				case SKCloudServiceAuthorizationStatusDenied: {
+					//Launch tutorial on how to fix
+//					dispatch_async(dispatch_get_main_queue(), ^{
+//						LMGuideViewPagerController *guideViewPager = [LMGuideViewPagerController new];
+//						guideViewPager.guideMode = GuideModeMusicPermissionDenied;
+//						[self presentViewController:guideViewPager animated:YES completion:nil];
+//					});
+					NSLog(@"Launch how to fix");
+					break;
+				}
+				case SKCloudServiceAuthorizationStatusAuthorized: {
+					NSLog(@"Push main view controller");
+					break;
+				}
+			}
+		}];
+	}
+	
+	NSLog(@"Exiting");
+	
 	return YES;
 }
 
@@ -112,10 +141,6 @@
 	
 	NSTimeInterval delegateEndTime = [[NSDate new] timeIntervalSince1970];
 	NSLog(@"Loaded delegate in %f seconds.", delegateEndTime-delegateStartTime);
-	
-	[NSTimer scheduledTimerWithTimeInterval:5.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
-		NSLog(@"Bye bye");
-	}];
 	
     return YES;
 }

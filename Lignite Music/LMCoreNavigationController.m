@@ -7,8 +7,10 @@
 //
 
 #import <PureLayout/PureLayout.h>
+
 #import "LMCoreNavigationController.h"
 #import "LMCoreViewController.h"
+#import "LMMusicPlayer.h"
 #import "LMSettings.h"
 
 @interface LMCoreNavigationController ()
@@ -20,16 +22,11 @@
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 	
+	NSLog(@"View will appear");
+	
 	UIViewController *fromViewController = [[[self navigationController] transitionCoordinator] viewControllerForKey:UITransitionContextFromViewControllerKey];
 	
-	if ([[self.navigationController viewControllers] containsObject:fromViewController])
-	{
-		NSLog(@"Being pushed");
-		//we're being pushed onto the nav controller stack.  Make sure to fetch data.
-	} else {
-		NSLog(@"Being revealed");
-		//Something is being popped and we are being revealed
-		
+	if (![[self.navigationController viewControllers] containsObject:fromViewController]){
 		for(UIViewController *viewController in self.viewControllers){
 			NSLog(@"View controller %@", [viewController.class description]);
 			NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];

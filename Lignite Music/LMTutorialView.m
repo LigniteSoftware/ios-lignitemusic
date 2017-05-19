@@ -150,9 +150,7 @@
 
 + (BOOL)tutorialShouldRunForKey:(NSString*)tutorialKey {	
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-	
-	NSLog(@"\nMate %d\n", [userDefaults boolForKey:LMTutorialViewDontShowHintsKey]);
-    
+	    
     //If the user has disabled tutorials or the specific tutorial has already been done do not run that tutorial
     if([userDefaults objectForKey:LMTutorialViewDontShowHintsKey] || [userDefaults objectForKey:tutorialKey]){
         return NO;

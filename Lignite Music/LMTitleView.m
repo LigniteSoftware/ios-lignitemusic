@@ -17,6 +17,8 @@
 #import "LMExtras.h"
 #import "Spotify.h"
 
+#define LMTitleViewTopTrackPersistentIDKey @"LMTitleViewTopTrackPersistentIDKey"
+
 @interface LMTitleView() <LMListEntryDelegate, LMTableViewSubviewDataSource, LMMusicPlayerDelegate, UITableViewDelegate, LMLayoutChangeDelegate>
 
 @property LMMusicPlayer *musicPlayer;
@@ -422,10 +424,50 @@
 	[self musicPlaybackStateDidChange:self.musicPlayer.playbackState];
 }
 
+- (void)encodeRestorableStateWithCoder:(NSCoder *)coder {
+	NSIndexPath *topIndexPath = [self.songListTableView indexPathForRowAtPoint:self.songListTableView.contentOffset];
+	
+	LMMusicTrack *topMusicTrack = [self.musicTitles.items objectAtIndex:topIndexPath.section];
+
+	[coder encodeInt64:topMusicTrack.persistentID forKey:LMTitleViewTopTrackPersistentIDKey];
+	
+	NSLog(@"Current index path %@ track %@", topIndexPath, topMusicTrack.title);
+	
+	[super encodeRestorableStateWithCoder:coder];
+}
+
+- (void)decodeRestorableStateWithCoder:(NSCoder *)coder {
+	NSLog(@"WHO DO YOU");
+	
+	MPMediaEntityPersistentID topTrackPersistentID = [coder decodeInt64ForKey:LMTitleViewTopTrackPersistentIDKey];
+	
+	NSLog(@"Hey %@ %llu", self.songListTableView, topTrackPersistentID);
+	
+	if(topTrackPersistentID != 0){
+		NSInteger trackIndex = -1;
+		for(NSInteger i = 0; i < self.musicTitles.count; i++){
+			LMMusicTrack *musicTrack = [self.musicTitles.items objectAtIndex:i];
+			if(musicTrack.persistentID == topTrackPersistentID){
+				trackIndex = i;
+				break;
+			}
+		}
+		
+		if(trackIndex > -1){
+			NSLog(@"HOly shit %d %@", (int)trackIndex, self.songListTableView);
+			
+			[self.songListTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:trackIndex] atScrollPosition:UITableViewScrollPositionMiddle animated:NO];
+		}
+	}
+	
+	[super decodeRestorableStateWithCoder:coder];
+}
+
 - (instancetype)init {
 	self = [super init];
 	if(self) {
 		self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
+		self.restorationIdentifier = @"LMTitleView";
 	}
 	else{
 		NSLog(@"Error creating LMTitleView");
