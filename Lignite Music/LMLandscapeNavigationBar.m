@@ -22,11 +22,6 @@
  */
 @property UIImageView *logoImageView;
 
-/**
- The current mode.
- */
-@property LMLandscapeNavigationBarMode mode;
-
 @end
 
 @implementation LMLandscapeNavigationBar
@@ -39,6 +34,10 @@
 
 - (void)setMode:(LMLandscapeNavigationBarMode)mode {
 	_mode = mode;
+	
+	if(!self.didLayoutConstraints){
+		return;
+	}
 	
 	[self.backButtonImageView removeConstraints:self.backButtonImageView.constraints];
 	[self.logoImageView removeConstraints:self.logoImageView.constraints];
@@ -125,7 +124,7 @@
 		[self.logoImageView addGestureRecognizer:logoImageViewTapGestureRecognizer];
 		
 		
-		[self setMode:LMLandscapeNavigationBarModeOnlyLogo];
+		[self setMode:self.mode];
 	}
 }
 

@@ -435,10 +435,6 @@
 		[self.collectionView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.albumTileView];
 //		self.collectionView.hidden = YES;
 		
-		if(!self.specificTrackCollections){
-			self.albumTileViewLeadingConstraint.constant = -self.frame.size.width;
-		}
-		
 		
 		self.innerShadowView = [LMExpandableInnerShadowView newAutoLayoutView];
 		self.innerShadowView.backgroundColor = [UIColor clearColor];
@@ -482,6 +478,10 @@
 			
 			[self musicTrackDidChange:self.musicPlayer.nowPlayingTrack];
 		}
+	}
+	
+	if(!self.specificTrackCollections){
+		self.albumTileViewLeadingConstraint.constant = -self.frame.size.width;
 	}
 	
 	[super layoutSubviews];

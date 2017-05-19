@@ -222,7 +222,7 @@
 	
 	[self layoutIfNeeded];
 	
-	self.minimizeButtonBottomConstraint.constant = self.unmodifiedFrame.size.height;
+	self.minimizeButtonBottomConstraint.constant = ([LMLayoutManager isLandscape] || [LMLayoutManager isLandscapeiPad]) ? self.unmodifiedFrame.size.width : self.unmodifiedFrame.size.height;
 	
 	[UIView animateWithDuration:0.5 animations:^{
 		[self layoutIfNeeded];

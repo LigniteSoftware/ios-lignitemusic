@@ -29,11 +29,9 @@ typedef NS_ENUM(NSInteger, LMLandscapeNavigationBarMode) {
 };
 
 /**
- Set the mode of the landscape navigation bar.
-
- @param mode The new mode to set.
+ The current mode.
  */
-- (void)setMode:(LMLandscapeNavigationBarMode)mode;
+@property LMLandscapeNavigationBarMode mode;
 
 /**
  The delegate for the button press events.

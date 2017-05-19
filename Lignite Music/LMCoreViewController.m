@@ -53,6 +53,9 @@
 //#define SKIP_ONBOARDING
 //#define SPEED_DEMON_MODE
 
+#define LMNavigationBarItemsKey @"LMNavigationBarItemsKey"
+#define LMNowPlayingWasOpen @"LMNowPlayingWasOpen"
+
 @import SDWebImage;
 @import StoreKit;
 
@@ -107,6 +110,8 @@ LMControlBarViewDelegate
 @property UIVisualEffectView *backgroundBlurView;
 
 @property NSArray<UINavigationItem*> *statePreservedNavigationBarItems;
+
+@property BOOL statePreservedNowPlayingWasOpen;
 
 @end
 
@@ -630,6 +635,7 @@ LMControlBarViewDelegate
 
 - (void)launchNowPlayingFromNavigationBar {
     if(!self.musicPlayer.nowPlayingTrack){
+		NSLog(@"Nothing's playing mate");
         return;
     }
     
@@ -857,15 +863,16 @@ LMControlBarViewDelegate
 - (void)encodeRestorableStateWithCoder:(NSCoder *)coder {
 	NSLog(@"What boi encoding %@", self.navigationBar.items);
 	
-	[coder encodeObject:self.navigationBar.items forKey:@"navbaritems"];
+	[coder encodeObject:self.navigationBar.items forKey:LMNavigationBarItemsKey];
+	[coder encodeBool:self.nowPlayingCoreView.isOpen forKey:LMNowPlayingWasOpen];
 	
 	[super encodeRestorableStateWithCoder:coder];
 }
 
 - (void)decodeRestorableStateWithCoder:(NSCoder *)coder {
-	NSLog(@"What boi!! got %@", [coder decodeObjectForKey:@"navbaritems"]);
+	NSLog(@"What boi!! got %@", [coder decodeObjectForKey:LMNavigationBarItemsKey]);
 	
-	NSArray *navigationBarItems = [coder decodeObjectForKey:@"navbaritems"];
+	NSArray *navigationBarItems = [coder decodeObjectForKey:LMNavigationBarItemsKey];
 	NSMutableArray *approvedNavigationBarItems = [NSMutableArray new];
 	[approvedNavigationBarItems addObject:[self nowPlayingNavigationItem]];
 	for(UINavigationItem *navigationItem in navigationBarItems){
@@ -878,6 +885,7 @@ LMControlBarViewDelegate
 	NSLog(@"Preserved %@", approvedNavigationBarItems);
 	
 	self.statePreservedNavigationBarItems = [NSArray arrayWithArray:approvedNavigationBarItems];
+	self.statePreservedNowPlayingWasOpen = [coder decodeBoolForKey:LMNowPlayingWasOpen];
 	
 	[super decodeRestorableStateWithCoder:coder];
 }
@@ -1039,6 +1047,7 @@ LMControlBarViewDelegate
 			
 			self.landscapeNavigationBar = [[LMLandscapeNavigationBar alloc] initWithFrame:CGRectMake(0, 0, 64.0, self.layoutManager.isLandscape ? self.view.frame.size.height : self.view.frame.size.width)];
 			self.landscapeNavigationBar.delegate = self;
+			self.landscapeNavigationBar.mode = (self.navigationBar.items.count > 1) ? LMLandscapeNavigationBarModeWithBackButton : LMLandscapeNavigationBarModeOnlyLogo;
 			[self.navigationController.view addSubview:self.landscapeNavigationBar];
 			
 			//						NSArray *landscapeNavigationBarLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
@@ -1242,7 +1251,7 @@ LMControlBarViewDelegate
 			} repeats:NO];
 			
 			
-			[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
+			[NSTimer scheduledTimerWithTimeInterval:0.25 block:^{
 				[self.buttonNavigationBar setSelectedTab:LMNavigationTabBrowse];
 				
 				if(self.statePreservedSettingsAlreadyOpen){
@@ -1250,6 +1259,11 @@ LMControlBarViewDelegate
 				}
 				if(self.navigationBar.items.count > 1){
 					[self.buttonNavigationBar completelyHide];
+				}
+				
+				if(self.statePreservedNowPlayingWasOpen){
+					[self launchNowPlayingFromNavigationBar];
+					self.statePreservedNowPlayingWasOpen = NO;
 				}
 			} repeats:NO];
 			
