@@ -445,7 +445,6 @@ LMControlBarViewDelegate
 			break;
 		}
 		case LMIconSettings: {
-			self.willOpenSettings = YES;
             self.settingsCheckTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 block:^{
                 [[APIdleManager sharedInstance] didReceiveInput];
             } repeats:YES];
@@ -453,12 +452,7 @@ LMControlBarViewDelegate
 			[self.buttonNavigationBar completelyHide];
 			
 			LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
-			settingsViewController.coreViewController = self;
 			[self.navigationController pushViewController:settingsViewController animated:YES];
-			
-//			[self.buttonNavigationBar.browsingBar setShowingLetterTabs:NO];
-			
-			[self pushItemOntoNavigationBarWithTitle:NSLocalizedString(@"Settings", nil) withNowPlayingButton:NO];
 			break;
 		}
 		case LMIconBug: {
@@ -471,6 +465,17 @@ LMControlBarViewDelegate
 		default:
 			NSLog(@"Unknown index of source %@.", source);
 			break;
+	}
+}
+
+- (void)prepareForOpenSettings {
+	if(!self.buttonNavigationBar){
+		self.statePreservedSettingsAlreadyOpen = YES;
+	}
+	else{
+		self.willOpenSettings = YES;
+		[self.buttonNavigationBar completelyHide];
+		[self pushItemOntoNavigationBarWithTitle:NSLocalizedString(@"Settings", nil) withNowPlayingButton:NO];
 	}
 }
 
@@ -1154,6 +1159,7 @@ LMControlBarViewDelegate
 			
 			[NSTimer scheduledTimerWithTimeInterval:1.0 block:^{
 				self.backgroundBlurView = [UIVisualEffectView newAutoLayoutView];
+				self.backgroundBlurView.userInteractionEnabled = NO;
 				[self.navigationController.view addSubview:self.backgroundBlurView];
 				
 				[self.backgroundBlurView autoPinEdgesToSuperviewEdges];
@@ -1209,29 +1215,11 @@ LMControlBarViewDelegate
 			
 			
 			[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
-				//							self.nowPlayingCoreView.hidden = YES;
-				//
-				//							LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
-				//							settingsViewController.coreViewController = self;
-				//							[self.navigationController pushViewController:settingsViewController animated:YES];
-				//							[self pushItemOntoNavigationBarWithTitle:NSLocalizedString(@"Settings", nil) withNowPlayingButton:NO];
-				
-				//							self.landscapeNavigationBar.hidden = YES;
-				
 				[self.buttonNavigationBar setSelectedTab:LMNavigationTabBrowse];
 				
-				//							self.buttonNavigationBar.hidden = YES;
-				
-				//							[self.buttonNavigationBar minimize:NO];
-				
-				//							[self.buttonNavigationBar setSelectedTab:LMNavigationTabBrowse];
-				
-				//							self.navigationController.view.hidden = YES;
-				
-				//							[self launchNowPlayingFromNavigationBar];
-				
-				//							LMFeedbackViewController *feedbackController = [LMFeedbackViewController new];
-				//							[self.navigationController presentViewController:feedbackController animated:YES completion:nil];
+				if(self.statePreservedSettingsAlreadyOpen){
+					[self prepareForOpenSettings];
+				}
 			} repeats:NO];
 			
 			

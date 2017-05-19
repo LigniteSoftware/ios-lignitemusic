@@ -7,9 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LMCoreViewController.h"
 
 @interface LMSettingsViewController : UIViewController
 
-@property UIViewController *coreViewController;
+@property LMCoreViewController *coreViewController;
 
 @end

@@ -12,7 +12,6 @@
 #import "LMContactViewController.h"
 #import "LMCreditsViewController.h"
 #import "LMDebugViewController.h"
-#import "LMCoreViewController.h"
 #import "LMSectionTableView.h"
 #import "LMPurchaseManager.h"
 #import "LMPebbleManager.h"
@@ -27,7 +26,7 @@
 #import "LMAppIcon.h"
 #import "LMColour.h"
 
-@interface LMSettingsViewController ()<LMSectionTableViewDelegate, LMImageManagerDelegate, LMPurchaseManagerDelegate>
+@interface LMSettingsViewController ()<LMSectionTableViewDelegate, LMImageManagerDelegate, LMPurchaseManagerDelegate, UIViewControllerRestoration>
 
 @property LMSectionTableView *sectionTableView;
 
@@ -42,6 +41,21 @@
 @end
 
 @implementation LMSettingsViewController
+
+- (instancetype)init {
+	self = [super init];
+	if(self) {
+		self.restorationIdentifier = [[LMSettingsViewController class] description];
+		self.restorationClass = [LMSettingsViewController class];
+	}
+	return self;
+}
+
++ (UIViewController*)viewControllerWithRestorationIdentifierPath:(NSArray *)identifierComponents
+														   coder:(NSCoder *)coder {
+		
+	return [LMSettingsViewController new];
+}
 
 - (void)appOwnershipStatusChanged:(LMPurchaseManagerAppOwnershipStatus)newOwnershipStatus {
 	[self.sectionTableView reloadData];
@@ -100,6 +114,19 @@
 }
 
 - (NSString*)titleForIndexPath:(NSIndexPath*)indexPath forSectionTableView:(LMSectionTableView*)sectionTableView {
+	if(self.navigationController.viewControllers.count > 0){
+		if(!self.coreViewController){
+			for(UIViewController *viewController in self.navigationController.viewControllers){
+				NSLog(@"Settings subviewcontroller %@", [[viewController class] description]);
+				if([viewController class] == [LMCoreViewController class]){
+					self.coreViewController = (LMCoreViewController*)viewController;
+					[self.coreViewController prepareForOpenSettings];
+				}
+			}
+			NSLog(@"%d subviewcontrollers", (int)self.navigationController.viewControllers.count);
+		}
+	}
+	
 	switch(indexPath.section+1){
 //		case 0:
 //			switch(indexPath.row){
@@ -662,6 +689,7 @@
 	self.sectionTableView.contentsDelegate = self;
 	self.sectionTableView.totalNumberOfSections = 3;
 	self.sectionTableView.title = NSLocalizedString(@"AppSettings", nil);
+	self.sectionTableView.restorationIdentifier = @"LMAppSettingsSectionTableView";
 	[self.view addSubview:self.sectionTableView];
 	
 	NSArray *sectionTableViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
