@@ -15,7 +15,9 @@
 #import "LMColour.h"
 #import "LMExtras.h"
 
-@interface LMCreditsViewController ()<UIScrollViewDelegate, LMLayoutChangeDelegate>
+#define LMCreditsScrollViewContentOffsetYKey @"LMCreditsScrollViewContentOffsetYKey"
+
+@interface LMCreditsViewController ()<UIScrollViewDelegate, LMLayoutChangeDelegate, UIViewControllerRestoration>
 
 /**
  Whether or not constraints have been setup yet.
@@ -57,9 +59,43 @@
  */
 @property LMLayoutManager *layoutManager;
 
+/**
+ The content offset for the Y axis of the scroll view that was preserved for state restoration.
+ */
+@property CGFloat preservedContentOffsetY;
+
 @end
 
 @implementation LMCreditsViewController
+
+- (instancetype)init {
+	self = [super init];
+	if(self) {
+		self.restorationIdentifier = [[LMCreditsViewController class] description];
+		self.restorationClass = [LMCreditsViewController class];
+	}
+	return self;
+}
+
++ (UIViewController*)viewControllerWithRestorationIdentifierPath:(NSArray *)identifierComponents coder:(NSCoder *)coder {
+	return [LMCreditsViewController new];
+}
+
+- (void)encodeRestorableStateWithCoder:(NSCoder *)coder {
+	[coder encodeFloat:self.scrollView.contentOffset.y forKey:LMCreditsScrollViewContentOffsetYKey];
+	
+	[super encodeRestorableStateWithCoder:coder];
+}
+
+- (void)decodeRestorableStateWithCoder:(NSCoder *)coder {
+	self.preservedContentOffsetY = [coder decodeFloatForKey:LMCreditsScrollViewContentOffsetYKey];
+	
+	self.scrollView.preservedContentOffset = CGPointMake(0, self.preservedContentOffsetY);
+	
+	NSLog(@"Good %@", NSStringFromCGPoint(self.scrollView.contentOffset));
+	
+	[super decodeRestorableStateWithCoder:coder];
+}
 
 - (BOOL)prefersStatusBarHidden {
 	return NO || [LMLayoutManager sharedLayoutManager].isLandscape;
@@ -99,6 +135,7 @@
 	self.scrollView.backgroundColor = [UIColor whiteColor];
 	self.scrollView.showsVerticalScrollIndicator = YES;
 	self.scrollView.delegate = self;
+	self.scrollView.restorationIdentifier = @"LMCreditsScrollView";
 	[self.view addSubview:self.scrollView];
 	
 	[self.scrollView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];

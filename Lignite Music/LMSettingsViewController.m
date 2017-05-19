@@ -51,9 +51,7 @@
 	return self;
 }
 
-+ (UIViewController*)viewControllerWithRestorationIdentifierPath:(NSArray *)identifierComponents
-														   coder:(NSCoder *)coder {
-		
++ (UIViewController*)viewControllerWithRestorationIdentifierPath:(NSArray *)identifierComponents coder:(NSCoder *)coder {
 	return [LMSettingsViewController new];
 }
 

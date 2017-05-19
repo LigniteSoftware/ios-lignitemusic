@@ -16,9 +16,14 @@
  */
 @property BOOL adaptForWidth;
 
-@property LMLayoutClass settingLayoutClass;
+/**
+ The content offset which was preserved.
+ */
+@property CGPoint preservedContentOffset;
 
+/**
+ Reload the size of the scroll view.
+ */
 - (void)reload;
-
 
 @end
