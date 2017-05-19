@@ -13,7 +13,7 @@
 #import "LMPebbleSettingsView.h"
 #import "LMLayoutManager.h"
 
-@interface LMPebbleSettingsViewController ()
+@interface LMPebbleSettingsViewController ()<UIViewControllerRestoration>
 
 @property NSLayoutConstraint *browsingDetailViewHeightConstraint;
 
@@ -22,6 +22,19 @@
 @end
 
 @implementation LMPebbleSettingsViewController
+
+- (instancetype)init {
+	self = [super init];
+	if(self) {
+		self.restorationIdentifier = [[LMPebbleSettingsViewController class] description];
+		self.restorationClass = [LMPebbleSettingsViewController class];
+	}
+	return self;
+}
+
++ (UIViewController*)viewControllerWithRestorationIdentifierPath:(NSArray *)identifierComponents coder:(NSCoder *)coder {
+	return [LMPebbleSettingsViewController new];
+}
 
 - (BOOL)prefersStatusBarHidden {
 	return ![LMSettings shouldShowStatusBar] || [LMLayoutManager sharedLayoutManager].isLandscape;

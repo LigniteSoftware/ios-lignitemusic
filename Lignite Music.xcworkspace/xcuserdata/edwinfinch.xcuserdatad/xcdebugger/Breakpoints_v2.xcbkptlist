@@ -244,11 +244,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMSettingsViewController.m"
-            timestampString = "516864396.638828"
+            timestampString = "516873989.830196"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "724"
-            endingLineNumber = "724"
+            startingLineNumber = "757"
+            endingLineNumber = "757"
             landmarkName = "-dealloc"
             landmarkType = "7">
          </BreakpointContent>

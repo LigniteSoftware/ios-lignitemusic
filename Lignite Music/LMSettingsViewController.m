@@ -26,6 +26,8 @@
 #import "LMAppIcon.h"
 #import "LMColour.h"
 
+#define LMIndexPathOfCurrentlyOpenAlertViewKey @"LMIndexPathOfCurrentlyOpenAlertViewKey"
+
 @interface LMSettingsViewController ()<LMSectionTableViewDelegate, LMImageManagerDelegate, LMPurchaseManagerDelegate, UIViewControllerRestoration>
 
 @property LMSectionTableView *sectionTableView;
@@ -37,6 +39,8 @@
 @property LMImageManager *imageManager;
 
 @property UIAlertController *pendingViewController;
+
+@property NSIndexPath *indexPathOfCurrentlyOpenAlertView;
 
 @end
 
@@ -53,6 +57,27 @@
 
 + (UIViewController*)viewControllerWithRestorationIdentifierPath:(NSArray *)identifierComponents coder:(NSCoder *)coder {
 	return [LMSettingsViewController new];
+}
+
+- (void)decodeRestorableStateWithCoder:(NSCoder *)coder {
+	self.indexPathOfCurrentlyOpenAlertView = [coder decodeObjectForKey:LMIndexPathOfCurrentlyOpenAlertViewKey];
+	
+	[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
+		if(self.indexPathOfCurrentlyOpenAlertView){
+			[self tappedIndexPath:self.indexPathOfCurrentlyOpenAlertView forSectionTableView:self.sectionTableView];
+			self.indexPathOfCurrentlyOpenAlertView = nil;
+		}
+	} repeats:NO];
+	
+	[super decodeRestorableStateWithCoder:coder];
+}
+
+- (void)encodeRestorableStateWithCoder:(NSCoder *)coder {
+	if(self.indexPathOfCurrentlyOpenAlertView){
+		[coder encodeObject:self.indexPathOfCurrentlyOpenAlertView forKey:LMIndexPathOfCurrentlyOpenAlertViewKey];
+	}
+	
+	[super encodeRestorableStateWithCoder:coder];
 }
 
 - (void)appOwnershipStatusChanged:(LMPurchaseManagerAppOwnershipStatus)newOwnershipStatus {
@@ -333,6 +358,7 @@
 				hud.customView = [[UIImageView alloc] initWithImage:image];
 				hud.square = YES;
 				hud.label.text = NSLocalizedString(@"ImagesDeleted", nil);
+				hud.userInteractionEnabled = NO;
 				
 				[hud hideAnimated:YES afterDelay:3.f];
 			}
@@ -349,6 +375,7 @@
 				hud.customView = [[UIImageView alloc] initWithImage:image];
 				hud.square = YES;
 				hud.label.text = NSLocalizedString(@"WillBeginDownloading", nil);
+				hud.userInteractionEnabled = NO;
 				
 				[hud hideAnimated:YES afterDelay:3.f];
 				
@@ -369,6 +396,8 @@
 		[self.imageManager setPermissionStatus:permissionStatus forCategory:category];
 		
 		[self.sectionTableView reloadData];
+		
+		self.indexPathOfCurrentlyOpenAlertView = nil;
 	}];
 }
 
@@ -405,6 +434,8 @@
 					break;
 				}
 			}
+			
+			self.indexPathOfCurrentlyOpenAlertView = indexPath;
 			break;
 		case 2:
 			switch(indexPath.row){
@@ -581,7 +612,11 @@
 						[userDefaults synchronize];
 						
 						[self.sectionTableView reloadData];
+						
+						self.indexPathOfCurrentlyOpenAlertView = nil;
 					}];
+					
+				self.indexPathOfCurrentlyOpenAlertView = indexPath;
 				}
 			}
 			break;
@@ -707,8 +742,6 @@
 	[LMLayoutManager addNewLandscapeConstraints:sectionTableViewLandscapeConstraints];
 	
 	[self.sectionTableView setup];
-	
-	
 	
 //	LMContactViewController *creditsViewController = [LMContactViewController new];
 //	[self.coreViewController.navigationController showViewController:creditsViewController sender:self];
