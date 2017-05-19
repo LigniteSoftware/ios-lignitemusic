@@ -106,6 +106,8 @@ LMControlBarViewDelegate
  */
 @property UIVisualEffectView *backgroundBlurView;
 
+@property NSArray<UINavigationItem*> *statePreservedNavigationBarItems;
+
 @end
 
 @implementation LMCoreViewController
@@ -475,7 +477,10 @@ LMControlBarViewDelegate
 	else{
 		self.willOpenSettings = YES;
 		[self.buttonNavigationBar completelyHide];
-		[self pushItemOntoNavigationBarWithTitle:NSLocalizedString(@"Settings", nil) withNowPlayingButton:NO];
+		if(!self.statePreservedSettingsAlreadyOpen && self.settingsOpen == 0){
+			[self pushItemOntoNavigationBarWithTitle:NSLocalizedString(@"Settings", nil) withNowPlayingButton:NO];
+		}
+		self.statePreservedSettingsAlreadyOpen = NO;
 	}
 }
 
@@ -850,17 +855,46 @@ LMControlBarViewDelegate
 }
 
 - (void)encodeRestorableStateWithCoder:(NSCoder *)coder {
-	NSLog(@"What boi");
+	NSLog(@"What boi encoding %@", self.navigationBar.items);
 	
-	[coder encodeBool:YES forKey:@"TEST"];
+	[coder encodeObject:self.navigationBar.items forKey:@"navbaritems"];
 	
 	[super encodeRestorableStateWithCoder:coder];
 }
 
 - (void)decodeRestorableStateWithCoder:(NSCoder *)coder {
-	NSLog(@"What boi!! got %d", [coder decodeBoolForKey:@"TEST"]);
+	NSLog(@"What boi!! got %@", [coder decodeObjectForKey:@"navbaritems"]);
+	
+	NSArray *navigationBarItems = [coder decodeObjectForKey:@"navbaritems"];
+	NSMutableArray *approvedNavigationBarItems = [NSMutableArray new];
+	[approvedNavigationBarItems addObject:[self nowPlayingNavigationItem]];
+	for(UINavigationItem *navigationItem in navigationBarItems){
+		if(navigationItem.title != nil){
+			[approvedNavigationBarItems addObject:navigationItem];
+		}
+		NSLog(@"Nav bar item '%@' '%@' %@", navigationItem.title, navigationItem.titleView, self.navigationBar);
+	}
+	
+	NSLog(@"Preserved %@", approvedNavigationBarItems);
+	
+	self.statePreservedNavigationBarItems = [NSArray arrayWithArray:approvedNavigationBarItems];
 	
 	[super decodeRestorableStateWithCoder:coder];
+}
+
+- (UINavigationItem*)nowPlayingNavigationItem {
+	UIImageView *titleImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
+	titleImageView.contentMode = UIViewContentModeScaleAspectFit;
+	titleImageView.image = [LMAppIcon imageForIcon:LMIconNoAlbumArt75Percent];
+	titleImageView.userInteractionEnabled = YES;
+	
+	UITapGestureRecognizer *nowPlayingTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(launchNowPlayingFromNavigationBar)];
+	[titleImageView addGestureRecognizer:nowPlayingTapGestureRecognizer];
+	
+	UINavigationItem *navigationItem = [[UINavigationItem alloc]initWithTitle:@""];
+	navigationItem.titleView = titleImageView;
+	
+	return navigationItem;
 }
 
 - (void)viewDidLoad {
@@ -991,20 +1025,14 @@ LMControlBarViewDelegate
 			self.navigationBar.layer.shadowOffset = CGSizeMake(0, self.navigationBar.layer.shadowRadius/2);
 			self.navigationBar.layer.shadowOpacity = 0.25f;
 			
-			UIView *titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
-			titleView.backgroundColor = [UIColor orangeColor];
-			
-			UIImageView *titleImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
-			titleImageView.contentMode = UIViewContentModeScaleAspectFit;
-			titleImageView.image = [LMAppIcon imageForIcon:LMIconNoAlbumArt75Percent];
-			titleImageView.userInteractionEnabled = YES;
-			
-			UITapGestureRecognizer *nowPlayingTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(launchNowPlayingFromNavigationBar)];
-			[titleImageView addGestureRecognizer:nowPlayingTapGestureRecognizer];
-			
-			UINavigationItem *navigationItem = [[UINavigationItem alloc]initWithTitle:@""];
-			navigationItem.titleView = titleImageView;
-			[self.navigationBar pushNavigationItem:navigationItem animated:YES];
+			if(self.statePreservedNavigationBarItems){
+				[self.navigationBar setItems:self.statePreservedNavigationBarItems];
+				self.settingsOpen = self.statePreservedNavigationBarItems.count-1;
+				self.statePreservedNavigationBarItems = nil;
+			}
+			else{
+				[self.navigationBar pushNavigationItem:[self nowPlayingNavigationItem] animated:YES];
+			}
 			
 			
 			
@@ -1219,6 +1247,9 @@ LMControlBarViewDelegate
 				
 				if(self.statePreservedSettingsAlreadyOpen){
 					[self prepareForOpenSettings];
+				}
+				if(self.navigationBar.items.count > 1){
+					[self.buttonNavigationBar completelyHide];
 				}
 			} repeats:NO];
 			
