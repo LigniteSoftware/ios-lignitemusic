@@ -13,7 +13,7 @@
 #import "LMAppIcon.h"
 #import "LMExtras.h"
 
-@interface LMContactViewController ()
+@interface LMContactViewController ()<UIViewControllerRestoration>
 
 @property UILabel *thankYouLabel;
 
@@ -23,6 +23,19 @@
 
 @implementation LMContactViewController
 @dynamic view;
+
+- (instancetype)init {
+	self = [super init];
+	if(self) {
+		self.restorationIdentifier = [[LMContactViewController class] description];
+		self.restorationClass = [LMContactViewController class];
+	}
+	return self;
+}
+
++ (UIViewController*)viewControllerWithRestorationIdentifierPath:(NSArray *)identifierComponents coder:(NSCoder *)coder {
+	return [LMContactViewController new];
+}
 
 - (void)sendEmail {
 	NSString *recipients = [NSString stringWithFormat:@"mailto:contact@lignite.io"];
