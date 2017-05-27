@@ -376,6 +376,9 @@
 		NSLog(@"Index of %ld", self.musicPlayer.indexOfNowPlayingTrack);
 		
 		[self loadMusicTracksBasedOffIndex:self.musicPlayer.indexOfNowPlayingTrack];
+
+		
+		[[(LMCoreViewController*)self.rootViewController loadingProgressHUD] hideAnimated:YES afterDelay:0.0f];
 	}
 }
 

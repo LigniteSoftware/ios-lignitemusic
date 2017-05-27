@@ -227,6 +227,10 @@
 	return musicTrack.artist;
 }
 
+- (NSString*)textForListEntry:(LMListEntry *)entry {
+	return [NSString stringWithFormat:@"%ld", (entry.collectionIndex + 1)];
+}
+
 - (UIImage*)iconForListEntry:(LMListEntry*)entry {
 //	if(self.specificTrackCollections){
 //		LMMusicTrackCollection *collection = [self.specificTrackCollections objectAtIndex:entry.collectionIndex];
@@ -251,13 +255,27 @@
 	
 	cell.backgroundColor = [LMColour superLightGrayColour];
 	
-	for(UIView *subview in cell.contentView.subviews){
-		[subview removeFromSuperview];
-	}
+//	for(UIView *subview in cell.contentView.subviews){
+//		[subview removeFromSuperview];
+//	}
 	
 	LMCollectionViewFlowLayout *flowLayout = (LMCollectionViewFlowLayout*)self.collectionView.collectionViewLayout;
 	
-	if(cell.contentView.subviews.count == 0){
+	if(cell.contentView.subviews.count > 0){
+		LMListEntry *listEntry = nil;
+		for(UIView *subview in cell.contentView.subviews){
+			if([subview class] == [LMListEntry class]) {
+				listEntry = (LMListEntry*)subview;
+				break;
+			}
+		}
+		
+		if(listEntry){
+			listEntry.collectionIndex = indexPath.row;
+			[listEntry reloadContents];
+		}
+	}
+	else {
 		NSInteger fixedIndex = indexPath.row; // (indexPath.row/[LMExpandableTrackListView numberOfColumns]) + ((indexPath.row % [LMExpandableTrackListView numberOfColumns])*([self collectionView:self.collectionView numberOfItemsInSection:0]/[LMExpandableTrackListView numberOfColumns]));
 		
 		LMListEntry *listEntry = [LMListEntry newAutoLayoutView];

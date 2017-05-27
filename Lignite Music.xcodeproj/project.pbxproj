@@ -72,10 +72,10 @@
 		6A48A7421E202BBF003C86B6 /* splash_wings.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A48A7411E202BBF003C86B6 /* splash_wings.png */; };
 		6A4901AA1ECF64CD00646799 /* LMLagDetectionThread.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A4901A91ECF64CD00646799 /* LMLagDetectionThread.m */; };
 		6A4901AB1ECF64CD00646799 /* LMLagDetectionThread.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A4901A91ECF64CD00646799 /* LMLagDetectionThread.m */; };
+		6A4901AE1ED1FA1400646799 /* LMPhoneLandscapeDetailView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A4901AD1ED1FA1400646799 /* LMPhoneLandscapeDetailView.m */; };
+		6A4901AF1ED1FA1400646799 /* LMPhoneLandscapeDetailView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A4901AD1ED1FA1400646799 /* LMPhoneLandscapeDetailView.m */; };
 		6A4BAEEE1DC984EC000DF537 /* LMBigListEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A4BAEED1DC984EC000DF537 /* LMBigListEntry.m */; };
 		6A4BAEF21DC9C59B000DF537 /* LMTiledAlbumCoverView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A4BAEF11DC9C59B000DF537 /* LMTiledAlbumCoverView.m */; };
-		6A4D61B31EC63C7200A106F4 /* LMLetterLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A4D61B21EC63C7200A106F4 /* LMLetterLabel.m */; };
-		6A4D61B41EC63C7200A106F4 /* LMLetterLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A4D61B21EC63C7200A106F4 /* LMLetterLabel.m */; };
 		6A4D61B71EC9BDF400A106F4 /* LMMusicCollectionsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A4D61B61EC9BDF400A106F4 /* LMMusicCollectionsView.m */; };
 		6A4D61B81EC9BDF400A106F4 /* LMMusicCollectionsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A4D61B61EC9BDF400A106F4 /* LMMusicCollectionsView.m */; };
 		6A50AC911E891F3A005C7B3B /* LMTutorialView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A50AC901E891F3A005C7B3B /* LMTutorialView.m */; };
@@ -499,12 +499,12 @@
 		6A48A7411E202BBF003C86B6 /* splash_wings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = splash_wings.png; sourceTree = "<group>"; };
 		6A4901A81ECF64CD00646799 /* LMLagDetectionThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMLagDetectionThread.h; sourceTree = "<group>"; };
 		6A4901A91ECF64CD00646799 /* LMLagDetectionThread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMLagDetectionThread.m; sourceTree = "<group>"; };
+		6A4901AC1ED1FA1400646799 /* LMPhoneLandscapeDetailView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMPhoneLandscapeDetailView.h; sourceTree = "<group>"; };
+		6A4901AD1ED1FA1400646799 /* LMPhoneLandscapeDetailView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMPhoneLandscapeDetailView.m; sourceTree = "<group>"; };
 		6A4BAEEC1DC984EC000DF537 /* LMBigListEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMBigListEntry.h; sourceTree = "<group>"; };
 		6A4BAEED1DC984EC000DF537 /* LMBigListEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMBigListEntry.m; sourceTree = "<group>"; };
 		6A4BAEF01DC9C59B000DF537 /* LMTiledAlbumCoverView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMTiledAlbumCoverView.h; sourceTree = "<group>"; };
 		6A4BAEF11DC9C59B000DF537 /* LMTiledAlbumCoverView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMTiledAlbumCoverView.m; sourceTree = "<group>"; };
-		6A4D61B11EC63C7200A106F4 /* LMLetterLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMLetterLabel.h; sourceTree = "<group>"; };
-		6A4D61B21EC63C7200A106F4 /* LMLetterLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMLetterLabel.m; sourceTree = "<group>"; };
 		6A4D61B51EC9BDF400A106F4 /* LMMusicCollectionsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMMusicCollectionsView.h; sourceTree = "<group>"; };
 		6A4D61B61EC9BDF400A106F4 /* LMMusicCollectionsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMMusicCollectionsView.m; sourceTree = "<group>"; };
 		6A50AC8F1E891F3A005C7B3B /* LMTutorialView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMTutorialView.h; sourceTree = "<group>"; };
@@ -872,6 +872,8 @@
 				6A4901A91ECF64CD00646799 /* LMLagDetectionThread.m */,
 				6A4D61B51EC9BDF400A106F4 /* LMMusicCollectionsView.h */,
 				6A4D61B61EC9BDF400A106F4 /* LMMusicCollectionsView.m */,
+				6A4901AC1ED1FA1400646799 /* LMPhoneLandscapeDetailView.h */,
+				6A4901AD1ED1FA1400646799 /* LMPhoneLandscapeDetailView.m */,
 				6A08AF111EBF30B00069C9CC /* LMTriangleInnerShadowView.h */,
 				6A08AF121EBF30B00069C9CC /* LMTriangleInnerShadowView.m */,
 			);
@@ -983,8 +985,6 @@
 				6AAA56071DF54D7800692CFB /* LMBrowsingBar.m */,
 				6A5257511DF1FC840040210D /* LMLetterTabBar.h */,
 				6A5257521DF1FC840040210D /* LMLetterTabBar.m */,
-				6A4D61B11EC63C7200A106F4 /* LMLetterLabel.h */,
-				6A4D61B21EC63C7200A106F4 /* LMLetterLabel.m */,
 				6A75652E1DF7E38900A9EDD6 /* LMSearch.h */,
 				6A75652F1DF7E38900A9EDD6 /* LMSearch.m */,
 				6AAA55FF1DF407A800692CFB /* LMSearchBar.h */,
@@ -1109,8 +1109,6 @@
 		6A7E88481ECCB7E700E4B804 /* AFNetworking */ = {
 			isa = PBXGroup;
 			children = (
-				6A82C1AA1ECCBF2D00DEFA56 /* APIdleManager.h */,
-				6A82C1AB1ECCBF2D00DEFA56 /* APIdleManager.m */,
 				6A7E88621ECCB80700E4B804 /* AFHTTPSessionManager.h */,
 				6A7E88631ECCB80700E4B804 /* AFHTTPSessionManager.m */,
 				6A7E88641ECCB80700E4B804 /* AFNetworking.h */,
@@ -1191,6 +1189,8 @@
 			isa = PBXGroup;
 			children = (
 				6A7E88481ECCB7E700E4B804 /* AFNetworking */,
+				6A82C1AA1ECCBF2D00DEFA56 /* APIdleManager.h */,
+				6A82C1AB1ECCBF2D00DEFA56 /* APIdleManager.m */,
 				6A2BA3C81ECCB29700D66105 /* BSKeyboardControls.h */,
 				6A2BA3C91ECCB29700D66105 /* BSKeyboardControls.m */,
 				6AF9D5331DE0F2AE006368B6 /* LMAlertView.h */,
@@ -1870,6 +1870,7 @@
 				6AA5CB151E285C0A005F853F /* LMGuideViewController.m in Sources */,
 				6AA5CB161E285C0A005F853F /* LMColour.m in Sources */,
 				6AA5CB171E285C0A005F853F /* LMAlertView.m in Sources */,
+				6A4901AF1ED1FA1400646799 /* LMPhoneLandscapeDetailView.m in Sources */,
 				6AA5CB181E285C0A005F853F /* LMBigListEntry.m in Sources */,
 				6A08AF081EBCD9950069C9CC /* LMCollectionViewDataSource.m in Sources */,
 				6AA5CB1A1E285C0A005F853F /* LMAppIcon.m in Sources */,
@@ -1917,7 +1918,6 @@
 				6AA5CB371E285C0A005F853F /* LMGuideViewPagerController.m in Sources */,
 				6AA5CB381E285C0A005F853F /* LMSearch.m in Sources */,
 				6AA5CB391E285C0A005F853F /* LMNowPlayingView.m in Sources */,
-				6A4D61B41EC63C7200A106F4 /* LMLetterLabel.m in Sources */,
 				6AA5CB3A1E285C0A005F853F /* LMPebbleManager.m in Sources */,
 				6AA5CB3B1E285C0A005F853F /* SLColorArt.m in Sources */,
 				6AA5CB3C1E285C0A005F853F /* LMProgressSlider.m in Sources */,
@@ -1998,6 +1998,7 @@
 				6AF751661E0454B50001E18B /* LMPaddedTextField.m in Sources */,
 				6A1AF0841E0341BC00F8934C /* MPMediaItem+LigniteImages.m in Sources */,
 				6A313C181BB59AE8002BBC33 /* LMButton.m in Sources */,
+				6A4901AE1ED1FA1400646799 /* LMPhoneLandscapeDetailView.m in Sources */,
 				6A23AF4E1E46254400A56F5F /* LMCompactBrowsingView.m in Sources */,
 				6AD480631DCAAF4D00DB891B /* LMCollectionInfoView.m in Sources */,
 				6AD226FF1DA4B8000056695A /* LMCoreViewController.m in Sources */,
@@ -2038,7 +2039,6 @@
 				6ADFFF7C1ECCC11D00E06FBF /* MarqueeLabel.m in Sources */,
 				6A08AF0B1EBEEBD00069C9CC /* LMExpandableTrackListView.m in Sources */,
 				6A2A29CB1DB1F1C3008E7792 /* LMSource.m in Sources */,
-				6A4D61B31EC63C7200A106F4 /* LMLetterLabel.m in Sources */,
 				6AC77A141DC42C5500BABBB3 /* LMControlBarView.m in Sources */,
 				6A8150DA1EAF6E7800F518C5 /* LMLandscapeNavigationBar.m in Sources */,
 				6A52574C1DF099480040210D /* LMView.m in Sources */,

@@ -114,6 +114,7 @@
 	
 	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		self.philippAndEdwinViewHeightConstraint.constant = willBeLandscapeAnyPlatform ? 0 : WINDOW_FRAME.size.width*0.88;
+		self.scrollView.contentInset = UIEdgeInsetsMake([LMLayoutManager isiPad] && [LMLayoutManager isLandscapeiPad] ? 70 : 0, 0, 0, 0);
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
 			[self.scrollView reload];
@@ -136,6 +137,7 @@
 	self.scrollView.showsVerticalScrollIndicator = YES;
 	self.scrollView.delegate = self;
 	self.scrollView.restorationIdentifier = @"LMCreditsScrollView";
+	self.scrollView.contentInset = UIEdgeInsetsMake([LMLayoutManager isiPad] && [LMLayoutManager isLandscapeiPad] ? 70 : 0, 0, 0, 0);
 	[self.view addSubview:self.scrollView];
 	
 	[self.scrollView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];

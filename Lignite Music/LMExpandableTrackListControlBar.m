@@ -326,7 +326,7 @@ BOOL expandableTrackListControlBarIsInAlbumDetail = NO;
 		self.didLayoutConstraints = YES;
 		
 		
-		self.backgroundColor = [LMColour lightGrayBackgroundColour];
+		self.backgroundColor = [LMColour controlBarGrayColour];
 		
 		
 		self.closeButtonBackgroundView = [UIView newAutoLayoutView];

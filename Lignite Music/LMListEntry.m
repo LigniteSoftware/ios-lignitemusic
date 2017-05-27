@@ -31,15 +31,15 @@
 	UIImage *icon = [self.delegate iconForListEntry:self];
 	NSString *title = [self.delegate titleForListEntry:self];
 	NSString *subtitle = [self.delegate subtitleForListEntry:self];
-	NSString *leftText;
+	NSString *leftText = @"";
 	if([self.delegate respondsToSelector:@selector(textForListEntry:)]){
 		leftText = [self.delegate textForListEntry:self];
 	}
 	
-	self.titleLabel.text = title;
+	self.titleLabel.text = title ? title : @"nil title";
 	self.subtitleLabel.text = subtitle ? subtitle : @"";
 	self.iconView.image = self.imageIsInverted ? [LMAppIcon invertImage:icon] : icon;
-	self.leftTextLabel.text = leftText;
+	self.leftTextLabel.text = leftText ? leftText : @"what";
 }
 
 - (void)changeHighlightStatus:(BOOL)highlighted animated:(BOOL)animated {
@@ -225,7 +225,7 @@
 	
 	if(self.isLabelBased){
 		[self.leftTextLabel autoAlignAxis:ALAxisHorizontal toSameAxisOfView:self.titleLabel];
-		[self.leftTextLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.titleLabel withMultiplier:(3.0/4.0)];
+		[self.leftTextLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.titleLabel withMultiplier:(4.0/4.0)];
 		[self.leftTextLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.titleLabel withOffset:-7.5];
 	}
 	

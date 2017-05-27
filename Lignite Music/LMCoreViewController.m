@@ -277,6 +277,8 @@ LMControlBarViewDelegate
 			return;
 		}
 		
+		NSLog(@"Beginning process of syncing new music.");
+		
 		LMCoreViewController *coreViewController = strongSelf;
 		
 		NSMutableArray *musicCollections = [NSMutableArray new];
@@ -595,6 +597,10 @@ LMControlBarViewDelegate
 	}
 }
 
+- (void)swipeDownGestureOccurredOnLetterTabBar {
+	[self.buttonNavigationBar minimize:NO];
+}
+
 - (UIBarPosition)positionForBar:(id<UIBarPositioning>)bar {
 //	NSLog(@"And it's getting to the point where even I have a problem with it");
 	return UIBarPositionTopAttached;
@@ -703,10 +709,6 @@ LMControlBarViewDelegate
 }
 
 - (void)panNowPlayingUp:(UIPanGestureRecognizer *)recognizer {
-    if(!self.musicPlayer.nowPlayingTrack){
-        return;
-    }
-    
 	CGPoint translation = [recognizer translationInView:recognizer.view];
 	
     NSLog(@"Dick is not a bone 哈哈哈");
@@ -719,14 +721,18 @@ LMControlBarViewDelegate
 	
     NSLog(@"%f to %f %@", translation.y, totalTranslation, NSStringFromCGPoint(self.currentPoint));
 	
-	self.nowPlayingCoreView.topConstraint.constant = self.nowPlayingCoreView.frame.size.height+translation.y;
-	
-	[self.nowPlayingCoreView.superview layoutIfNeeded];
-	
-	if(recognizer.state == UIGestureRecognizerStateEnded){
-		self.currentPoint = CGPointMake(self.currentPoint.x, self.originalPoint.y + totalTranslation);
+	if(self.musicPlayer.nowPlayingTrack){
+		self.nowPlayingCoreView.topConstraint.constant = self.nowPlayingCoreView.frame.size.height+translation.y;
 		
 		[self.nowPlayingCoreView.superview layoutIfNeeded];
+	}
+	
+	if(recognizer.state == UIGestureRecognizerStateEnded){
+		if(self.musicPlayer.nowPlayingTrack){
+			self.currentPoint = CGPointMake(self.currentPoint.x, self.originalPoint.y + totalTranslation);
+			
+			[self.nowPlayingCoreView.superview layoutIfNeeded];
+		}
 		
 		if(translation.y > self.nowPlayingCoreView.frame.size.height/10.0){			
 			if(translation.y > self.nowPlayingCoreView.frame.size.height/8.0){
@@ -737,7 +743,7 @@ LMControlBarViewDelegate
 			
 			self.nowPlayingCoreView.isOpen = NO;
 		}
-		else{
+		else if(self.musicPlayer.nowPlayingTrack) {
 			self.nowPlayingCoreView.topConstraint.constant = 0.0;
 			
 			self.nowPlayingCoreView.isOpen = YES;
@@ -923,10 +929,11 @@ LMControlBarViewDelegate
 		
 		self.loaded = NO;
 		
-		self.layoutManager = [LMLayoutManager sharedLayoutManager];
-		self.layoutManager.traitCollection = self.traitCollection;
-		self.layoutManager.size = self.view.frame.size;
-		
+		if(!self.layoutManager){
+			self.layoutManager = [LMLayoutManager sharedLayoutManager];
+			self.layoutManager.traitCollection = self.traitCollection;
+			self.layoutManager.size = self.view.frame.size;
+		}
 		
 #ifdef SPEED_DEMON_MODE
 		[UIView setAnimationsEnabled:NO];
@@ -936,6 +943,7 @@ LMControlBarViewDelegate
 		NSLog(@"Frame set %@", NSStringFromCGRect(self.view.frame));
 		
 		self.splashImageView = [UIImageView newAutoLayoutView];
+		self.splashImageView.backgroundColor = [UIColor orangeColor];
 		if([LMLayoutManager isiPad]){
 			self.splashImageView.image = [UIImage imageNamed:@"splash_ipad.png"];
 		}
@@ -968,9 +976,28 @@ LMControlBarViewDelegate
 
 	}
 	else{
-		NSLog(@"Launch main view controller contents");
-		
-		[self loadSubviews];
+		static dispatch_once_t mainSetupToken;
+		dispatch_once(&mainSetupToken, ^{
+			self.loadingProgressHUD = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+			
+			self.loadingProgressHUD.mode = MBProgressHUDModeIndeterminate;
+			self.loadingProgressHUD.label.text = @"Loading music...";
+			self.loadingProgressHUD.label.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18.0f];
+	//		self.loadingProgressHUD.progress = 0.1;
+			self.loadingProgressHUD.userInteractionEnabled = NO;
+			
+			dispatch_time_t changeLabelTime = dispatch_time(DISPATCH_TIME_NOW, 2.0 * NSEC_PER_SEC);
+			dispatch_after(changeLabelTime, dispatch_get_global_queue(NSQualityOfServiceUserInteractive, 0), ^{
+				self.loadingProgressHUD.label.text = @"Almost there...";
+			});
+			
+			NSLog(@"Launch main view controller contents");
+			[NSTimer scheduledTimerWithTimeInterval:0.05 block:^{
+				dispatch_async(dispatch_get_main_queue(), ^{
+					[self loadSubviews];
+				});
+			} repeats:NO];
+		});
 	}
 }
 
@@ -979,15 +1006,21 @@ LMControlBarViewDelegate
 		return;
 	}
 	
+	self.loadingProgressHUD.label.text = @"Loading interface...";
+	
+	if(!self.layoutManager){
+		self.layoutManager = [LMLayoutManager sharedLayoutManager];
+		self.layoutManager.traitCollection = self.traitCollection;
+		self.layoutManager.size = self.view.frame.size;
+	}
+	
 	LMLagDetectionThread *lagThread = [LMLagDetectionThread new];
 	lagThread.viewToDisplayAlertsOn = self.navigationController.view;
 	lagThread.lagDelayInSeconds = 0.05;
 	[lagThread start];
 	
 	NSTimeInterval loadStartTime = [[NSDate new] timeIntervalSince1970];
-			
-	NSTimeInterval startTime = [[NSDate new] timeIntervalSince1970];
-	
+				
 	NSArray *sourceTitles = @[
 							  @"Artists", @"Albums", @"Titles", @"Playlists", @"Genres", @"Compilations", @"Settings", @"ReportBugOrSendFeedback"
 							  ];
@@ -1078,7 +1111,6 @@ LMControlBarViewDelegate
 	//						self.navigationBar.frame = CGRectMake(0, 0, self.view.frame.size.width, self.navigationBar.hidden ? 0 : 64.0f);
 	self.landscapeNavigationBar.hidden = !self.layoutManager.isLandscape;
 	self.landscapeNavigationBar.layer.opacity = self.landscapeNavigationBar.hidden ? 0.0 : 1.0;
-	
 	
 	
 	
@@ -1182,10 +1214,6 @@ LMControlBarViewDelegate
 	imageManager.viewToDisplayAlertsOn = self.navigationController.view;
 	[imageManager addDelegate:self];
 	
-	
-	NSTimeInterval endTime = [[NSDate new] timeIntervalSince1970];
-	
-	NSLog(@"Took %f seconds.", (endTime-startTime));
 	
 	
 	self.loaded = YES;

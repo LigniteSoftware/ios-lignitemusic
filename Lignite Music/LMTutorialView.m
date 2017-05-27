@@ -213,14 +213,14 @@
 		
 		[self.contentViewBackground autoAlignAxisToSuperviewAxis:[LMLayoutManager isLandscape] ? ALAxisHorizontal : ALAxisVertical];
         if(self.boxAlignment == LMTutorialViewAlignmentCenter){
-            [self.contentViewBackground autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+            [self.contentViewBackground autoAlignAxisToSuperviewAxis:[LMLayoutManager isLandscape] ? ALAxisVertical : ALAxisHorizontal];
         }
         else {
 			ALEdge alignment = (self.boxAlignment == LMTutorialViewAlignmentBottom) ? ALEdgeBottom : ALEdgeTop;
 			if([LMLayoutManager isLandscape]){
 				alignment = (self.boxAlignment == LMTutorialViewAlignmentBottom) ? ALEdgeTrailing : ALEdgeLeading;
 			}
-			[self.contentViewBackground autoPinEdgeToSuperviewEdge:alignment withInset:self.frame.size.height/([self.key isEqualToString:LMTutorialKeyTopBar] ? 12.0 : 8.0)];
+			[self.contentViewBackground autoPinEdgeToSuperviewEdge:alignment withInset:self.frame.size.height/([self.key isEqualToString:LMTutorialKeyTopBar] ? ([LMLayoutManager isiPad] ? 12.0 : 6.0) : 8.0)];
         }
 		[self.contentViewBackground autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(([LMLayoutManager isiPad] ? ([LMLayoutManager isLandscapeiPad] ? 4.0 : 5.0) : 8.0)/10.0)];
         

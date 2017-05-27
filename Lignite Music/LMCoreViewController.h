@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MBProgressHUD.h"
 #import "LMNavigationBar.h"
 #import "LMButtonNavigationBar.h"
 #import "LMLandscapeNavigationBar.h"
@@ -19,6 +20,8 @@
 @property LMLandscapeNavigationBar *landscapeNavigationBar;
 
 @property LMCoreNavigationController *navigationController;
+
+@property MBProgressHUD *loadingProgressHUD;
 
 @property UINavigationItem *itemPopped;
 

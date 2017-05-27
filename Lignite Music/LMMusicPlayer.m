@@ -1289,7 +1289,8 @@ BOOL shuffleForDebug = NO;
 	self.musicWasUserSet = YES;
 	
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-	NSString *allPersistentIDsString = [userDefaults objectForKey:DEFAULTS_KEY_NOW_PLAYING_COLLECTION];
+	NSString *allPersistentIDsString = @"";
+//	NSString *allPersistentIDsString = [userDefaults objectForKey:DEFAULTS_KEY_NOW_PLAYING_COLLECTION];
 	
 	NSDictionary *nowPlayingTrackInfo = [userDefaults objectForKey:DEFAULTS_KEY_NOW_PLAYING_TRACK];
 	

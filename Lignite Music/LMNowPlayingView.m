@@ -362,7 +362,7 @@
 	
 	self.originalPoint = CGPointZero;
 	
-	if(open){
+	if(open && self.queueTableView.numberOfSections > 10){ //Ensure that the number of songs is greater than just a few
 		NSInteger fixedIndex = self.loadedTrackIndex - 1;
 		CGFloat contentOffsetY = ([self heightAtIndex:0 forTableView:self.queueTableView] + [self spacingAtIndex:0 forTableView:self.queueTableView]) * fixedIndex;
 		CGFloat maxContentOffsetY = self.queueTableView.contentSize.height-self.queueTableView.frame.size.height - 10;
@@ -573,7 +573,13 @@
 
 - (NSString*)subtitleForListEntry:(LMListEntry*)entry {
 //	return @"queue subtitle";
-	return [NSString stringWithFormat:@"%@", [LMNowPlayingView durationStringTotalPlaybackTime:[[self.musicPlayer.nowPlayingCollection.items objectAtIndex:entry.collectionIndex] playbackDuration]]];
+	LMMusicTrack *associatedTrack = [self.musicPlayer.nowPlayingCollection.items objectAtIndex:entry.collectionIndex];
+	
+	if(self.loadedTrack.artist){
+		return [NSString stringWithFormat:@"%@ - %@", [LMNowPlayingView durationStringTotalPlaybackTime:[associatedTrack playbackDuration]], associatedTrack.artist];
+	}
+	
+	return [NSString stringWithFormat:@"%@", [LMNowPlayingView durationStringTotalPlaybackTime:[associatedTrack playbackDuration]]];
 }
 
 - (UIImage*)iconForListEntry:(LMListEntry*)entry {
@@ -783,9 +789,10 @@
 	self.queueTableView.shouldUseDividers = YES;
 	self.queueTableView.title = @"QueueTableView";
 	self.queueTableView.bottomSpacing = 0;
-	self.queueTableView.notHighlightedBackgroundColour = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.5];
+	self.queueTableView.notHighlightedBackgroundColour = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.0];
 	self.queueTableView.layer.masksToBounds = YES;
 	self.queueTableView.layer.cornerRadius = 8.0;
+	self.queueTableView.backgroundColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.5]; //I wonder what this will do
 	self.queueTableView.clipsToBounds = YES;
 	[self.queueView addSubview:self.queueTableView];
 	

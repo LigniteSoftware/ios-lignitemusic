@@ -18,6 +18,11 @@
  */
 - (void)letterSelected:(NSString*)letter atIndex:(NSUInteger)index;
 
+/**
+ The swipe down gesture happened.
+ */
+- (void)swipeDownGestureOccurredOnLetterTabBar;
+
 @end
 
 typedef enum {

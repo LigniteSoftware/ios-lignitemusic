@@ -13,7 +13,7 @@
 #import "LMColour.h"
 #import "NSTimer+Blocks.h"
 
-@interface LMLetterTabBar()<UIGestureRecognizerDelegate, LMLayoutChangeDelegate>
+@interface LMLetterTabBar()<UIGestureRecognizerDelegate, LMLayoutChangeDelegate, UIScrollViewDelegate>
 
 /**
  The scroll view for the letter views.
@@ -236,6 +236,11 @@
 	}
 	else{
 		if(self.letterScrollView.scrollEnabled){
+			UIPanGestureRecognizer *recognizer = (UIPanGestureRecognizer*)panGestureRecognizer;
+			CGPoint translation = [recognizer translationInView:recognizer.view];
+			if(translation.y > self.frame.size.height*2){
+				[self.delegate swipeDownGestureOccurredOnLetterTabBar];
+			}
 			return;
 		}
 		
@@ -328,10 +333,10 @@
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
 	
-	//NSString *class = [[gestureRecognizer class] description];
-	//NSString *otherClass = [[otherGestureRecognizer class] description];
-	
-	//NSLog(@"%@ should work with %@?", class, otherClass);
+//	NSString *class = [[gestureRecognizer class] description];
+//	NSString *otherClass = [[otherGestureRecognizer class] description];
+//	
+//	NSLog(@"%@ should work with %@?", class, otherClass);
 	
     return YES;
 }
@@ -355,6 +360,7 @@
 		self.letterScrollView = [LMScrollView newAutoLayoutView];
 		self.letterScrollView.adaptForWidth = !self.layoutManager.isLandscape;
 //		self.letterScrollView.backgroundColor = [UIColor purpleColor];
+		self.letterScrollView.delegate = self;
 		self.letterScrollView.scrollEnabled = YES;
 		self.letterScrollView.layer.masksToBounds = NO;
 		self.letterScrollView.showsHorizontalScrollIndicator = NO;

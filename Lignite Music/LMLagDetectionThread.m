@@ -53,6 +53,7 @@
 		self.lagWarningLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:30.0f];
 		self.lagWarningLabel.userInteractionEnabled = NO;
 		self.lagWarningLabel.textAlignment = NSTextAlignmentCenter;
+		self.lagWarningLabel.hidden = YES;
 		
 		self.lagDelayInSeconds = 0.4;
 		self.enabled = YES;

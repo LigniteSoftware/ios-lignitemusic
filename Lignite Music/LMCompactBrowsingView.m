@@ -16,6 +16,7 @@
 #import "LMCollectionViewFlowLayout.h"
 #import "LMCollectionViewCell.h"
 #import "LMExpandableTrackListView.h"
+#import "LMPhoneLandscapeDetailView.h"
 
 #import "NSTimer+Blocks.h"
 #import "LMColour.h"
@@ -51,6 +52,11 @@
  The layout manager.
  */
 @property LMLayoutManager *layoutManager;
+
+/**
+ The phone's landscape detail view (I hate this issue).
+ */
+@property LMPhoneLandscapeDetailView *phoneLandscapeDetailView;
 
 @property BOOL testingShit;
 
@@ -307,7 +313,7 @@
 //	
 //	[self.rootViewController showViewController:self.browsingDetailViewController sender:self.rootViewController];
 	
-//	[self tapTest:bigListEntry.collectionIndex];
+//	[self tappedBigListEntryAtIndex:bigListEntry.collectionIndex];
 	
 	NSLog(@"Frame inside %@", NSStringFromCGRect(bigListEntry.superview.superview.frame));
 	
@@ -324,7 +330,7 @@
 				self.collectionView.contentOffset = CGPointMake(0, bigListEntry.superview.superview.frame.origin.y - 10);
 				[self layoutIfNeeded];
 			} completion:^(BOOL finished) {
-				[self tapTest:bigListEntry.collectionIndex];
+				[self tappedBigListEntryAtIndex:bigListEntry.collectionIndex];
 			}];
 		} repeats:NO];
 	}
@@ -351,14 +357,15 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
 	LMCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cellIdentifier" forIndexPath:indexPath];
+	LMCollectionViewFlowLayout *flowLayout = (LMCollectionViewFlowLayout*)collectionView.collectionViewLayout;
 	
 	cell.backgroundColor = [UIColor whiteColor];
 
-	for(UIView *subview in cell.contentView.subviews){
-		[subview removeFromSuperview];
-	}
-	
-	LMCollectionViewFlowLayout *flowLayout = (LMCollectionViewFlowLayout*)collectionView.collectionViewLayout;
+//	if(flowLayout.isDisplayingDetailView){
+		for(UIView *subview in cell.contentView.subviews){
+			[subview removeFromSuperview];
+		}
+//	}
 	
 
 	if(cell.contentView.subviews.count == 0){
@@ -378,24 +385,9 @@
 			
 			
 			[self.rootViewController.buttonNavigationBar minimize:YES];
-			
-//			UIView *testingSubview = [UIView newAutoLayoutView];
-//			testingSubview.backgroundColor = [LMColour randomColour];
-//			[cell.contentView addSubview:testingSubview];
-//			
-//			[testingSubview autoCenterInSuperview];
-//			[testingSubview autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:cell.contentView withMultiplier:0.5];
-//			[testingSubview autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:cell.contentView withMultiplier:0.5];
 		}
 		else if(indexPath.row >= [self collectionView:self.collectionView numberOfItemsInSection:1] && flowLayout.isDisplayingDetailView){
 			cell.backgroundColor = [UIColor clearColor];
-//			UIView *testingSubview = [UIView newAutoLayoutView];
-//			testingSubview.backgroundColor = [UIColor magentaColor];
-//			[cell.contentView addSubview:testingSubview];
-//			
-//			[testingSubview autoCenterInSuperview];
-//			[testingSubview autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:cell.contentView withMultiplier:0.95];
-//			[testingSubview autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:cell.contentView withMultiplier:0.95];
 		}
 		else{
 			LMBigListEntry *bigListEntry = [self.bigListEntries objectAtIndex:indexPath.row];
@@ -487,6 +479,18 @@
 	}];
 }
 
+- (void)setPhoneLandscapeViewDisplaying:(BOOL)displaying {
+	if(!self.phoneLandscapeDetailView){
+		self.phoneLandscapeDetailView = [LMPhoneLandscapeDetailView newAutoLayoutView];
+		[self addSubview:self.phoneLandscapeDetailView];
+		
+		[self.phoneLandscapeDetailView autoPinEdgesToSuperviewEdges];
+	}
+	
+	self.phoneLandscapeDetailView.alpha = displaying;
+	self.phoneLandscapeDetailView.userInteractionEnabled = displaying;
+}
+
 - (void)layoutSubviews {
 	[super layoutSubviews];
 	
@@ -530,13 +534,17 @@
 		self.collectionView.backgroundColor = [UIColor whiteColor];
 		
 		[self.collectionView autoPinEdgesToSuperviewEdges];
-
-//		UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapTest)];
-//		[self.collectionView addGestureRecognizer:tapGesture];
+		
+		
+		[NSTimer scheduledTimerWithTimeInterval:1.0 block:^{
+			if(![LMLayoutManager isiPad]){
+				[self setPhoneLandscapeViewDisplaying:NO];
+			}
+		} repeats:NO];
 	}
 }
 
-- (void)tapTest:(NSInteger)i {
+- (void)tappedBigListEntryAtIndex:(NSInteger)i {
 	LMCollectionViewFlowLayout *layout = (LMCollectionViewFlowLayout*)self.collectionView.collectionViewLayout;
 
 	BOOL displayNothing = (i == layout.indexOfItemDisplayingDetailView);
