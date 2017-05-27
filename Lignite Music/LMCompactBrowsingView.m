@@ -15,7 +15,7 @@
 #import "LMAppIcon.h"
 #import "LMCollectionViewFlowLayout.h"
 #import "LMCollectionViewCell.h"
-#import "LMExpandableTrackListView.h"
+#import "LMEmbeddedDetailView.h"
 #import "LMPhoneLandscapeDetailView.h"
 
 #import "NSTimer+Blocks.h"
@@ -374,7 +374,7 @@
 			
 			flowLayout.amountOfItemsInDetailView = trackCollection.count;
 			
-			LMExpandableTrackListView *detailView = flowLayout.detailView;
+			LMEmbeddedDetailView *detailView = flowLayout.detailView;
 			[cell.contentView addSubview:detailView];
 			
 			[detailView autoPinEdgesToSuperviewEdges];

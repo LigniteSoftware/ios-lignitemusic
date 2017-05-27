@@ -22,8 +22,8 @@
 		6A08AF031EBCC7F30069C9CC /* LMCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A08AF011EBCC7F30069C9CC /* LMCollectionViewCell.m */; };
 		6A08AF071EBCD9950069C9CC /* LMCollectionViewDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A08AF061EBCD9950069C9CC /* LMCollectionViewDataSource.m */; };
 		6A08AF081EBCD9950069C9CC /* LMCollectionViewDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A08AF061EBCD9950069C9CC /* LMCollectionViewDataSource.m */; };
-		6A08AF0B1EBEEBD00069C9CC /* LMExpandableTrackListView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A08AF0A1EBEEBD00069C9CC /* LMExpandableTrackListView.m */; };
-		6A08AF0C1EBEEBD00069C9CC /* LMExpandableTrackListView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A08AF0A1EBEEBD00069C9CC /* LMExpandableTrackListView.m */; };
+		6A08AF0B1EBEEBD00069C9CC /* LMEmbeddedDetailView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A08AF0A1EBEEBD00069C9CC /* LMEmbeddedDetailView.m */; };
+		6A08AF0C1EBEEBD00069C9CC /* LMEmbeddedDetailView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A08AF0A1EBEEBD00069C9CC /* LMEmbeddedDetailView.m */; };
 		6A08AF0F1EBF2A860069C9CC /* LMExpandableInnerShadowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A08AF0E1EBF2A860069C9CC /* LMExpandableInnerShadowView.m */; };
 		6A08AF101EBF2A860069C9CC /* LMExpandableInnerShadowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A08AF0E1EBF2A860069C9CC /* LMExpandableInnerShadowView.m */; };
 		6A08AF131EBF30B00069C9CC /* LMTriangleInnerShadowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A08AF121EBF30B00069C9CC /* LMTriangleInnerShadowView.m */; };
@@ -374,6 +374,8 @@
 		6ADA6CEB1DF84A8D0073D449 /* LMSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ADA6CEA1DF84A8D0073D449 /* LMSearchViewController.m */; };
 		6ADC48EF1DDF8C8000FE57F1 /* onboarding_library_access.png in Resources */ = {isa = PBXBuildFile; fileRef = 6ADC48ED1DDF8C8000FE57F1 /* onboarding_library_access.png */; };
 		6ADC48F01DDF8C8000FE57F1 /* onboarding_bluetooth.png in Resources */ = {isa = PBXBuildFile; fileRef = 6ADC48EE1DDF8C8000FE57F1 /* onboarding_bluetooth.png */; };
+		6ADCBA2F1ED9B76000CAD705 /* LMDetailView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ADCBA2E1ED9B76000CAD705 /* LMDetailView.m */; };
+		6ADCBA301ED9B76000CAD705 /* LMDetailView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ADCBA2E1ED9B76000CAD705 /* LMDetailView.m */; };
 		6ADDBD3D1DA29D3E00DB99EF /* LMShadowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ADDBD3C1DA29D3E00DB99EF /* LMShadowView.m */; };
 		6ADFFF781ECCC0B900E06FBF /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ADFFF771ECCC0B900E06FBF /* MBProgressHUD.m */; };
 		6ADFFF791ECCC0B900E06FBF /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ADFFF771ECCC0B900E06FBF /* MBProgressHUD.m */; };
@@ -426,8 +428,8 @@
 		6A08AF011EBCC7F30069C9CC /* LMCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMCollectionViewCell.m; sourceTree = "<group>"; };
 		6A08AF051EBCD9950069C9CC /* LMCollectionViewDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMCollectionViewDataSource.h; sourceTree = "<group>"; };
 		6A08AF061EBCD9950069C9CC /* LMCollectionViewDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMCollectionViewDataSource.m; sourceTree = "<group>"; };
-		6A08AF091EBEEBD00069C9CC /* LMExpandableTrackListView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMExpandableTrackListView.h; sourceTree = "<group>"; };
-		6A08AF0A1EBEEBD00069C9CC /* LMExpandableTrackListView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMExpandableTrackListView.m; sourceTree = "<group>"; };
+		6A08AF091EBEEBD00069C9CC /* LMEmbeddedDetailView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMEmbeddedDetailView.h; sourceTree = "<group>"; };
+		6A08AF0A1EBEEBD00069C9CC /* LMEmbeddedDetailView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMEmbeddedDetailView.m; sourceTree = "<group>"; };
 		6A08AF0D1EBF2A860069C9CC /* LMExpandableInnerShadowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMExpandableInnerShadowView.h; sourceTree = "<group>"; };
 		6A08AF0E1EBF2A860069C9CC /* LMExpandableInnerShadowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMExpandableInnerShadowView.m; sourceTree = "<group>"; };
 		6A08AF111EBF30B00069C9CC /* LMTriangleInnerShadowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMTriangleInnerShadowView.h; sourceTree = "<group>"; };
@@ -689,6 +691,8 @@
 		6ADA6CEA1DF84A8D0073D449 /* LMSearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMSearchViewController.m; sourceTree = "<group>"; };
 		6ADC48ED1DDF8C8000FE57F1 /* onboarding_library_access.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = onboarding_library_access.png; sourceTree = "<group>"; };
 		6ADC48EE1DDF8C8000FE57F1 /* onboarding_bluetooth.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = onboarding_bluetooth.png; sourceTree = "<group>"; };
+		6ADCBA2D1ED9B76000CAD705 /* LMDetailView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMDetailView.h; sourceTree = "<group>"; };
+		6ADCBA2E1ED9B76000CAD705 /* LMDetailView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMDetailView.m; sourceTree = "<group>"; };
 		6ADDBD3B1DA29D3E00DB99EF /* LMShadowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMShadowView.h; sourceTree = "<group>"; };
 		6ADDBD3C1DA29D3E00DB99EF /* LMShadowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMShadowView.m; sourceTree = "<group>"; };
 		6ADFFF761ECCC0B900E06FBF /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
@@ -862,12 +866,14 @@
 				6A072BEB1E87B9590092EA44 /* LMCoreNavigationController.m */,
 				6AD226FD1DA4B8000056695A /* LMCoreViewController.h */,
 				6AD226FE1DA4B8000056695A /* LMCoreViewController.m */,
+				6ADCBA2D1ED9B76000CAD705 /* LMDetailView.h */,
+				6ADCBA2E1ED9B76000CAD705 /* LMDetailView.m */,
+				6A08AF091EBEEBD00069C9CC /* LMEmbeddedDetailView.h */,
+				6A08AF0A1EBEEBD00069C9CC /* LMEmbeddedDetailView.m */,
 				6A08AF0D1EBF2A860069C9CC /* LMExpandableInnerShadowView.h */,
 				6A08AF0E1EBF2A860069C9CC /* LMExpandableInnerShadowView.m */,
 				6A08AF191EC04AED0069C9CC /* LMExpandableTrackListControlBar.h */,
 				6A08AF1A1EC04AED0069C9CC /* LMExpandableTrackListControlBar.m */,
-				6A08AF091EBEEBD00069C9CC /* LMExpandableTrackListView.h */,
-				6A08AF0A1EBEEBD00069C9CC /* LMExpandableTrackListView.m */,
 				6A4901A81ECF64CD00646799 /* LMLagDetectionThread.h */,
 				6A4901A91ECF64CD00646799 /* LMLagDetectionThread.m */,
 				6A4D61B51EC9BDF400A106F4 /* LMMusicCollectionsView.h */,
@@ -1875,6 +1881,7 @@
 				6A08AF081EBCD9950069C9CC /* LMCollectionViewDataSource.m in Sources */,
 				6AA5CB1A1E285C0A005F853F /* LMAppIcon.m in Sources */,
 				6AA5CB1B1E285C0A005F853F /* main.m in Sources */,
+				6ADCBA301ED9B76000CAD705 /* LMDetailView.m in Sources */,
 				6A7E88721ECCB80700E4B804 /* AFNetworkReachabilityManager.m in Sources */,
 				6AA5CB1C1E285C0A005F853F /* LMContactViewController.m in Sources */,
 				6A2316761E7B782900E6A7F7 /* LMMiniPlayerCoreView.m in Sources */,
@@ -1890,7 +1897,7 @@
 				6A08AF1C1EC04AED0069C9CC /* LMExpandableTrackListControlBar.m in Sources */,
 				6AA5CB251E285C0A005F853F /* LMButton.m in Sources */,
 				6A94A7721EA79BB300319A38 /* LMLayoutManager.m in Sources */,
-				6A08AF0C1EBEEBD00069C9CC /* LMExpandableTrackListView.m in Sources */,
+				6A08AF0C1EBEEBD00069C9CC /* LMEmbeddedDetailView.m in Sources */,
 				6AA5CB261E285C0A005F853F /* LMCollectionInfoView.m in Sources */,
 				6AA5CB271E285C0A005F853F /* LMCoreViewController.m in Sources */,
 				6A072BED1E87B95A0092EA44 /* LMCoreNavigationController.m in Sources */,
@@ -1947,6 +1954,7 @@
 				6AAD5A531E0C655A00D8B406 /* NSTimer+Blocks.m in Sources */,
 				6A13A8021E011D19006A768B /* UIImage+ColorArt.m in Sources */,
 				6A4BAEF21DC9C59B000DF537 /* LMTiledAlbumCoverView.m in Sources */,
+				6ADCBA2F1ED9B76000CAD705 /* LMDetailView.m in Sources */,
 				6A6351921D9D71D300498582 /* LMListEntry.m in Sources */,
 				6A7E88751ECCB80700E4B804 /* AFURLRequestSerialization.m in Sources */,
 				6AA4459C1D5AB264004C6739 /* LMPebbleSettingsView.m in Sources */,
@@ -2037,7 +2045,7 @@
 				6A4901AA1ECF64CD00646799 /* LMLagDetectionThread.m in Sources */,
 				6A5168831E0899B100A6446F /* LMPurchaseViewController.m in Sources */,
 				6ADFFF7C1ECCC11D00E06FBF /* MarqueeLabel.m in Sources */,
-				6A08AF0B1EBEEBD00069C9CC /* LMExpandableTrackListView.m in Sources */,
+				6A08AF0B1EBEEBD00069C9CC /* LMEmbeddedDetailView.m in Sources */,
 				6A2A29CB1DB1F1C3008E7792 /* LMSource.m in Sources */,
 				6AC77A141DC42C5500BABBB3 /* LMControlBarView.m in Sources */,
 				6A8150DA1EAF6E7800F518C5 /* LMLandscapeNavigationBar.m in Sources */,

@@ -86,7 +86,7 @@
 		self.frameOfItemDisplayingDetailView = CGRectMake(-self.frameOfItemDisplayingDetailView.size.width, self.frameOfItemDisplayingDetailView.origin.y, 0, 0);
 	}
 	else{ //Setting new detail view open
-		LMExpandableTrackListView *detailView = [[LMExpandableTrackListView alloc] initWithMusicTrackCollection:[self.musicTrackCollections objectAtIndex:indexOfItemDisplayingDetailView] musicType:self.musicType];
+		LMEmbeddedDetailView *detailView = [[LMEmbeddedDetailView alloc] initWithMusicTrackCollection:[self.musicTrackCollections objectAtIndex:indexOfItemDisplayingDetailView] musicType:self.musicType];
 		detailView.backgroundColor = [UIColor whiteColor];
 		detailView.musicType = self.musicType;
 		detailView.flowLayout = self;

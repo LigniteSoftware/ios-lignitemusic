@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "LMMusicPlayer.h"
-#import "LMExpandableTrackListView.h"
+#import "LMEmbeddedDetailView.h"
 
 #define LMNoDetailViewSelected -1
 #define COMPACT_VIEW_SPACING_BETWEEN_ITEMS 15
@@ -86,7 +86,7 @@ typedef NS_ENUM(NSInteger, LMDetailViewDisplayMode) {
 /**
  The detail view which is currently being displayed by the flow layout. Should be used for calculating all size related things to it.
  */
-@property LMExpandableTrackListView *detailView;
+@property LMEmbeddedDetailView *detailView;
 
 /**
  The size of a normal item.
