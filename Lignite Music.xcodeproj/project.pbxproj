@@ -358,6 +358,8 @@
 		6AC77A161DC42CF400BABBB3 /* icon_playlists.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AC77A151DC42CF400BABBB3 /* icon_playlists.png */; };
 		6ACB69AA1E87AE3A001A04B6 /* purchase_header.png in Resources */ = {isa = PBXBuildFile; fileRef = 6ACB69A91E87AE3A001A04B6 /* purchase_header.png */; };
 		6ACB69AB1E87AE3A001A04B6 /* purchase_header.png in Resources */ = {isa = PBXBuildFile; fileRef = 6ACB69A91E87AE3A001A04B6 /* purchase_header.png */; };
+		6ACD9C201EEBDE3700C53DB3 /* LMVerticalControlBarInnerShadowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ACD9C1F1EEBDE3700C53DB3 /* LMVerticalControlBarInnerShadowView.m */; };
+		6ACD9C211EEBDE3700C53DB3 /* LMVerticalControlBarInnerShadowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ACD9C1F1EEBDE3700C53DB3 /* LMVerticalControlBarInnerShadowView.m */; };
 		6ACED1081DB7BE1D006EACD2 /* icon_repeat_one.png in Resources */ = {isa = PBXBuildFile; fileRef = 6ACED1061DB7BE1D006EACD2 /* icon_repeat_one.png */; };
 		6ACED1091DB7BE1D006EACD2 /* icon_shuffle.png in Resources */ = {isa = PBXBuildFile; fileRef = 6ACED1071DB7BE1D006EACD2 /* icon_shuffle.png */; };
 		6ACFB9701E8CE103009811F0 /* icon_tutorial_scroll.png in Resources */ = {isa = PBXBuildFile; fileRef = 6ACFB96D1E8CE103009811F0 /* icon_tutorial_scroll.png */; };
@@ -674,6 +676,8 @@
 		6AC77A131DC42C5500BABBB3 /* LMControlBarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMControlBarView.m; sourceTree = "<group>"; };
 		6AC77A151DC42CF400BABBB3 /* icon_playlists.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_playlists.png; sourceTree = "<group>"; };
 		6ACB69A91E87AE3A001A04B6 /* purchase_header.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = purchase_header.png; sourceTree = "<group>"; };
+		6ACD9C1E1EEBDE3700C53DB3 /* LMVerticalControlBarInnerShadowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMVerticalControlBarInnerShadowView.h; sourceTree = "<group>"; };
+		6ACD9C1F1EEBDE3700C53DB3 /* LMVerticalControlBarInnerShadowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMVerticalControlBarInnerShadowView.m; sourceTree = "<group>"; };
 		6ACED1061DB7BE1D006EACD2 /* icon_repeat_one.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_repeat_one.png; sourceTree = "<group>"; };
 		6ACED1071DB7BE1D006EACD2 /* icon_shuffle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_shuffle.png; sourceTree = "<group>"; };
 		6ACFB96D1E8CE103009811F0 /* icon_tutorial_scroll.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_tutorial_scroll.png; sourceTree = "<group>"; };
@@ -872,6 +876,8 @@
 				6A08AF0A1EBEEBD00069C9CC /* LMEmbeddedDetailView.m */,
 				6A08AF0D1EBF2A860069C9CC /* LMExpandableInnerShadowView.h */,
 				6A08AF0E1EBF2A860069C9CC /* LMExpandableInnerShadowView.m */,
+				6ACD9C1E1EEBDE3700C53DB3 /* LMVerticalControlBarInnerShadowView.h */,
+				6ACD9C1F1EEBDE3700C53DB3 /* LMVerticalControlBarInnerShadowView.m */,
 				6A08AF191EC04AED0069C9CC /* LMExpandableTrackListControlBar.h */,
 				6A08AF1A1EC04AED0069C9CC /* LMExpandableTrackListControlBar.m */,
 				6A4901A81ECF64CD00646799 /* LMLagDetectionThread.h */,
@@ -1892,6 +1898,7 @@
 				6AA5CB201E285C0A005F853F /* UIImage+AverageColour.m in Sources */,
 				6A7E887A1ECCB80700E4B804 /* AFURLSessionManager.m in Sources */,
 				6AA5CB211E285C0A005F853F /* LMScrollView.m in Sources */,
+				6ACD9C211EEBDE3700C53DB3 /* LMVerticalControlBarInnerShadowView.m in Sources */,
 				6AA5CB221E285C0A005F853F /* LMBackerLoginViewController.m in Sources */,
 				6AA5CB231E285C0A005F853F /* LMPaddedTextField.m in Sources */,
 				6A08AF1C1EC04AED0069C9CC /* LMExpandableTrackListControlBar.m in Sources */,
@@ -2039,6 +2046,7 @@
 				6AC32B7B1DB6B57B0007C67E /* LMPebbleManager.m in Sources */,
 				6A13A8011E011D19006A768B /* SLColorArt.m in Sources */,
 				6A52574F1DF099720040210D /* LMProgressSlider.m in Sources */,
+				6ACD9C201EEBDE3700C53DB3 /* LMVerticalControlBarInnerShadowView.m in Sources */,
 				6A514E191CEA15D900AFB351 /* LMSlider.m in Sources */,
 				6A5F43E21E09E003005E0075 /* LMAnswers.m in Sources */,
 				6A7E88731ECCB80700E4B804 /* AFSecurityPolicy.m in Sources */,
