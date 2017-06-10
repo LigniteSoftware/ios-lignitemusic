@@ -369,7 +369,7 @@ MPMediaGrouping associatedMediaTypes[] = {
 #endif
 }
 
-+ (id)sharedMusicPlayer {
++ (LMMusicPlayer*)sharedMusicPlayer {
 //    return nil;
     
 	static LMMusicPlayer *sharedPlayer;

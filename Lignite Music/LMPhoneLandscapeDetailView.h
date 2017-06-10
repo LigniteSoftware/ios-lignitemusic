@@ -7,7 +7,18 @@
 //
 
 #import "LMView.h"
+#import "LMMusicPlayer.h"
 
 @interface LMPhoneLandscapeDetailView : LMView
+
+/**
+ The music type.
+ */
+@property LMMusicType musicType;
+
+/**
+ The collection of music tracks.
+ */
+@property LMMusicTrackCollection *musicTrackCollection;
 
 @end

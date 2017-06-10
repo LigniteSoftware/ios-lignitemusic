@@ -80,12 +80,10 @@
 		self.didLayoutConstraints = YES;
 		self.userInteractionEnabled = YES;
 		
-	//	self.backgroundColor = [UIColor blueColor];
+		BOOL isVertical = self.frame.size.height > self.frame.size.width;
 		
-	//	[NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(invert) userInfo:nil repeats:YES];
-	//	
 		self.backgroundView = [UIView newAutoLayoutView];
-		self.backgroundView.backgroundColor = [LMColour controlBarGrayColour];
+		self.backgroundView.backgroundColor = isVertical ? [LMColour verticalControlBarGrayColour] : [LMColour controlBarGrayColour];
 		self.backgroundView.userInteractionEnabled = YES;
 		[self addSubview:self.backgroundView];
 		
@@ -117,10 +115,18 @@
 			
 			BOOL isFirstBackground = (self.controlButtonViews.count == 0);
 			
-			[buttonAreaView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-			[buttonAreaView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-			[buttonAreaView autoPinEdge:ALEdgeLeading toEdge:isFirstBackground ? ALEdgeLeading : ALEdgeTrailing ofView:isFirstBackground ? self.buttonBackgroundView : lastBackgroundView];
-			[buttonAreaView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.buttonBackgroundView withMultiplier:(1.0/(float)amountOfItemsForControlBar)];
+			if(isVertical){
+				[buttonAreaView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+				[buttonAreaView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+				[buttonAreaView autoPinEdge:ALEdgeTop toEdge:isFirstBackground ? ALEdgeTop : ALEdgeBottom ofView:isFirstBackground ? self.buttonBackgroundView : lastBackgroundView];
+				[buttonAreaView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.buttonBackgroundView withMultiplier:(1.0/(float)amountOfItemsForControlBar)];
+			}
+			else{
+				[buttonAreaView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+				[buttonAreaView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+				[buttonAreaView autoPinEdge:ALEdgeLeading toEdge:isFirstBackground ? ALEdgeLeading : ALEdgeTrailing ofView:isFirstBackground ? self.buttonBackgroundView : lastBackgroundView];
+				[buttonAreaView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.buttonBackgroundView withMultiplier:(1.0/(float)amountOfItemsForControlBar)];
+			}
 			
 			UIView *buttonBackgroundView = [UIImageView newAutoLayoutView];
 			buttonBackgroundView.layer.masksToBounds = YES;

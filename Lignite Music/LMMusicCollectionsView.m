@@ -214,7 +214,7 @@
 			[self.bigListEntries addObject:bigListEntry];
 		}
 		
-		self.collectionView.backgroundColor = [LMColour superLightGrayColour];
+		self.collectionView.backgroundColor = [LMColour ligniteRedColour];
 		
 		[self.collectionView autoPinEdgesToSuperviewEdges];
 		

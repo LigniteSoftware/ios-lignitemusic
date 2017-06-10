@@ -46,6 +46,13 @@
 + (UIColor*)controlBarGrayColour;
 
 /**
+ The vertical control bar gray colour for when the control bar is used in landscape phone mode. God I hate all of these special views.
+
+ @return The darker control bar gray colour.
+ */
++ (UIColor*)verticalControlBarGrayColour;
+
+/**
  A 35% transparent white which is the background to the circular cover art, for example.
 
  @return The 35% transparent white.

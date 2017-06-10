@@ -65,6 +65,8 @@
 	
 	CGFloat animationTime = animated ? 0.25 : 0;
 	
+	self.albumTileView.hidden = NO;
+	
 	if(hasDelegate){
 		[self.delegate detailViewIsChangingSize:YES];
 	}
@@ -77,6 +79,7 @@
 		if(hasDelegate){
 			[self.delegate detailViewIsChangingSize:NO];
 		}
+		self.albumTileView.hidden = YES;
 	}];
 }
 
@@ -101,7 +104,7 @@
 }
 
 + (NSInteger)numberOfColumns {
-	return fmax(1.0, WINDOW_FRAME.size.width/300.0f);
+	return fmax(1.0, ([LMLayoutManager isLandscape] ? WINDOW_FRAME.size.height : WINDOW_FRAME.size.width)/300.0f);
 }
 
 - (void)musicTrackDidChange:(LMMusicTrack *)newTrack {
@@ -297,7 +300,7 @@
 }
 
 - (CGSize)currentItemSize {
-	return CGSizeMake(WINDOW_FRAME.size.width/[LMDetailView numberOfColumns]*0.90,
+	return CGSizeMake(self.frame.size.width/[LMDetailView numberOfColumns]*0.90,
 					  fmin(([LMLayoutManager isLandscape] ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height)/8.0, 80));
 }
 
@@ -370,6 +373,7 @@
 		self.didLayoutConstraints = YES;
 		
 		//Album tile view is created in init
+		self.albumTileView.flowLayout = self.flowLayout;
 		[self addSubview:self.albumTileView];
 		
 		self.albumTileViewLeadingConstraint = [self.albumTileView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
@@ -397,9 +401,13 @@
 		[self.collectionView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.albumTileView];
 		//		self.collectionView.hidden = YES;
 	}
+	else{
+		[self.collectionView reloadData];
+	}
 	
 	if(!self.specificTrackCollections){
 		self.albumTileViewLeadingConstraint.constant = -self.frame.size.width;
+		self.albumTileView.hidden = YES;
 	}
 	
 	[super layoutSubviews];

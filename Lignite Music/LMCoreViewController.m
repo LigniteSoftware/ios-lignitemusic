@@ -47,6 +47,7 @@
 #import "LMTutorialView.h"
 #import "LMButtonBar.h"
 #import "LMExpandableTrackListControlBar.h"
+#import "LMPhoneLandscapeDetailView.h"
 
 #ifdef SPOTIFY
 #import "Spotify.h"
@@ -1007,12 +1008,24 @@ LMControlBarViewDelegate
 	}
 	
 	self.loadingProgressHUD.label.text = @"Loading interface...";
+	self.loadingProgressHUD.hidden = YES;
 	
 	if(!self.layoutManager){
 		self.layoutManager = [LMLayoutManager sharedLayoutManager];
 		self.layoutManager.traitCollection = self.traitCollection;
 		self.layoutManager.size = self.view.frame.size;
 	}
+	
+	
+	LMPhoneLandscapeDetailView *phoneLandscapeDetailView = [LMPhoneLandscapeDetailView newAutoLayoutView];
+	[self.view addSubview:phoneLandscapeDetailView];
+	[phoneLandscapeDetailView autoPinEdgesToSuperviewEdges];
+	
+	phoneLandscapeDetailView.musicType = LMMusicTypeAlbums;
+	phoneLandscapeDetailView.musicTrackCollection = [[[LMMusicPlayer sharedMusicPlayer] queryCollectionsForMusicType:LMMusicTypeAlbums] objectAtIndex:0];
+	
+	
+	return;
 	
 	LMLagDetectionThread *lagThread = [LMLagDetectionThread new];
 	lagThread.viewToDisplayAlertsOn = self.navigationController.view;
@@ -1162,6 +1175,7 @@ LMControlBarViewDelegate
 	self.buttonNavigationBar.delegate = self;
 	self.buttonNavigationBar.searchBarDelegate = self;
 	self.buttonNavigationBar.letterTabBarDelegate = self;
+	self.buttonNavigationBar.hidden = YES;
 	[self.navigationController.view addSubview:self.buttonNavigationBar];
 	
 	//						self.navigationController.view.hidden = YES;

@@ -487,6 +487,9 @@
 		[self.phoneLandscapeDetailView autoPinEdgesToSuperviewEdges];
 	}
 	
+	self.phoneLandscapeDetailView.musicType = self.musicType;
+	self.phoneLandscapeDetailView.musicTrackCollection = [self.musicTrackCollections objectAtIndex:0];
+	
 	self.phoneLandscapeDetailView.alpha = displaying;
 	self.phoneLandscapeDetailView.userInteractionEnabled = displaying;
 }
@@ -538,7 +541,7 @@
 		
 		[NSTimer scheduledTimerWithTimeInterval:1.0 block:^{
 			if(![LMLayoutManager isiPad]){
-				[self setPhoneLandscapeViewDisplaying:NO];
+				[self setPhoneLandscapeViewDisplaying:YES];
 			}
 		} repeats:NO];
 	}

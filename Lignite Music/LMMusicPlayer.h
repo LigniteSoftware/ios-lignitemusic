@@ -196,7 +196,7 @@ typedef enum {
  
  @return The shared music player.
  */
-+ (id)sharedMusicPlayer;
++ (LMMusicPlayer*)sharedMusicPlayer;
 
 /**
  Prepare for release through ARC. Unhooks observers tied to state and track change notifications.
