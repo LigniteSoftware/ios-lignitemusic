@@ -21,4 +21,14 @@
  */
 @property LMMusicTrackCollection *musicTrackCollection;
 
+/**
+ The index.
+ */
+@property NSInteger index;
+
+/**
+ Reload the content of this landscape detail view.
+ */
+- (void)reloadContent;
+
 @end

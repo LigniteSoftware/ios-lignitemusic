@@ -37,7 +37,8 @@
 	
 	BOOL shouldHighlight = [self.delegate buttonHighlightedWithIndex:viewCheckingIndex wasJustTapped:wasJustTapped forControlBar:self];
 	[UIView animateWithDuration:0.3 animations:^{
-		viewChecking.backgroundColor = shouldHighlight ? [UIColor whiteColor] : [LMColour controlBarGrayColour];
+		BOOL isVertical = self.frame.size.height > self.frame.size.width;
+		viewChecking.backgroundColor = shouldHighlight ? [UIColor whiteColor] : (isVertical ? [LMColour verticalControlBarGrayColour] : [LMColour controlBarGrayColour]);
 	} completion:nil];
 
 	if(viewChecking.subviews.count > 0){

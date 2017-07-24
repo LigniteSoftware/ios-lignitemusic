@@ -238,7 +238,7 @@
 		if(self.letterScrollView.scrollEnabled){
 			UIPanGestureRecognizer *recognizer = (UIPanGestureRecognizer*)panGestureRecognizer;
 			CGPoint translation = [recognizer translationInView:recognizer.view];
-			if(translation.y > self.frame.size.height*2){
+			if(translation.y > self.frame.size.height){
 				[self.delegate swipeDownGestureOccurredOnLetterTabBar];
 			}
 			return;

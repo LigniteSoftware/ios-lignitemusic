@@ -275,6 +275,16 @@
 
 - (void)contentViewTappedForBigListEntry:(LMBigListEntry *)bigListEntry {
 	NSLog(@"Tapped");
+	
+//	self.alpha = 0;
+//	self.userInteractionEnabled = NO;
+}
+
+- (void)reloadContent {
+	[self.collectionInfoBigListEntry reloadData];
+	self.detailView.musicTrackCollection = self.musicTrackCollection;
+	[self.detailView.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UICollectionViewScrollPositionTop animated:NO];
+	[self.controlBar reloadHighlightedButtons];
 }
 
 - (void)layoutSubviews {
@@ -334,6 +344,7 @@
 		
 		
 		self.controlBarInnerShadowView = [LMVerticalControlBarInnerShadowView newAutoLayoutView];
+		self.controlBarInnerShadowView.userInteractionEnabled = NO;
 		[self addSubview:self.controlBarInnerShadowView];
 		
 		[self.controlBarInnerShadowView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.controlBar];

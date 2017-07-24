@@ -33,7 +33,6 @@
 
 + (UIColor*)controlBarGrayColour {
 	return [UIColor colorWithRed:0.93 green:0.93 blue:0.93 alpha:1.0];;
-//	return [UIColor colorWithRed:0.93 green:0.93 blue:0.93 alpha:1.0];
 }
 
 + (UIColor*)verticalControlBarGrayColour {

@@ -450,7 +450,9 @@
     }];
 }
 
-- (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {	
+- (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+	BOOL willBeLandscape = size.width > size.height;
+	
 	CGRect visibleRect = (CGRect){.origin = self.collectionView.contentOffset, .size = self.collectionView.bounds.size};
 	CGPoint visiblePoint = CGPointMake(visibleRect.size.width/4.0, CGRectGetMidY(visibleRect));
 	__strong NSIndexPath *visibleIndexPath = [self.collectionView indexPathForItemAtPoint:visiblePoint];
@@ -465,21 +467,51 @@
 //	
 //	[self.collectionView setContentOffset:newOffset animated:NO];
 	
+	__block BOOL shitpost = NO;
+	__block BOOL othershit = NO;
+	
 	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 //		[self.collectionView scrollToItemAtIndexPath:visibleIndexPath atScrollPosition:UICollectionViewScrollPositionCenteredVertically animated:NO];
 		[self.collectionView reloadData];
 //		[self.collectionView setContentOffset:newOffset animated:NO];
+		
+		LMCollectionViewFlowLayout *layout = (LMCollectionViewFlowLayout*)self.collectionView.collectionViewLayout;
+		
+		if([self phoneLandscapeViewIsDisplaying] && !willBeLandscape){
+			[self setPhoneLandscapeViewDisplaying:NO forIndex:-1];
+			shitpost = YES;
+		}
+		else if(![self phoneLandscapeViewIsDisplaying] && willBeLandscape && ![LMLayoutManager isiPad] && layout.indexOfItemDisplayingDetailView > LMNoDetailViewSelected){
+			[self setPhoneLandscapeViewDisplaying:YES forIndex:layout.indexOfItemDisplayingDetailView];
+		}
+		
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		[UIView animateWithDuration:0.25 animations:^{
-			[self.collectionView reloadData];
-			[self.collectionView scrollToItemAtIndexPath:visibleIndexPath atScrollPosition:UICollectionViewScrollPositionCenteredVertically animated:NO];
+			
 			NSLog(@"Scrolling to %@", visibleIndexPath);
+			
+			LMCollectionViewFlowLayout *layout = (LMCollectionViewFlowLayout*)self.collectionView.collectionViewLayout;
+			
+			if(othershit){
+				layout.indexOfItemDisplayingDetailView = LMNoDetailViewSelected;
+			}
+			else if(shitpost){
+				[self tappedBigListEntryAtIndex:self.phoneLandscapeDetailView.index];
+			}
+			else{
+				[self.collectionView reloadData];
+				[self.collectionView scrollToItemAtIndexPath:visibleIndexPath atScrollPosition:UICollectionViewScrollPositionCenteredVertically animated:NO];
+			}
 //			[self.collectionView setContentOffset:CGPointMake(0, topCell.frame.origin.y - (COMPACT_VIEW_SPACING_BETWEEN_ITEMS/2)) animated:YES];
 		}];
 	}];
 }
 
-- (void)setPhoneLandscapeViewDisplaying:(BOOL)displaying {
+- (BOOL)phoneLandscapeViewIsDisplaying {
+	return self.phoneLandscapeDetailView.alpha > 0;
+}
+
+- (void)setPhoneLandscapeViewDisplaying:(BOOL)displaying forIndex:(NSInteger)index {
 	if(!self.phoneLandscapeDetailView){
 		self.phoneLandscapeDetailView = [LMPhoneLandscapeDetailView newAutoLayoutView];
 		[self addSubview:self.phoneLandscapeDetailView];
@@ -487,11 +519,20 @@
 		[self.phoneLandscapeDetailView autoPinEdgesToSuperviewEdges];
 	}
 	
-	self.phoneLandscapeDetailView.musicType = self.musicType;
-	self.phoneLandscapeDetailView.musicTrackCollection = [self.musicTrackCollections objectAtIndex:0];
+	if(displaying){
+		self.phoneLandscapeDetailView.index = index;
+		self.phoneLandscapeDetailView.musicType = self.musicType;
+		self.phoneLandscapeDetailView.musicTrackCollection = [self.musicTrackCollections objectAtIndex:index];
+	}
 	
 	self.phoneLandscapeDetailView.alpha = displaying;
 	self.phoneLandscapeDetailView.userInteractionEnabled = displaying;
+	
+	self.rootViewController.landscapeNavigationBar.mode = displaying ? LMLandscapeNavigationBarModeWithBackButton : LMLandscapeNavigationBarModeOnlyLogo;
+	
+	[self.phoneLandscapeDetailView reloadContent];
+	
+	NSLog(@"Displaying %d", displaying);
 }
 
 - (void)layoutSubviews {
@@ -502,7 +543,7 @@
 		
 		self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 		
-		LMCollectionViewFlowLayout *fuck = [[LMCollectionViewFlowLayout alloc]init];
+		LMCollectionViewFlowLayout *fuck = [LMCollectionViewFlowLayout new];
 		fuck.musicTrackCollections = self.musicTrackCollections;
 		fuck.musicType = self.musicType;
 //		fuck.scrollDirection = UICollectionViewScrollDirectionHorizontal;
@@ -537,17 +578,15 @@
 		self.collectionView.backgroundColor = [UIColor whiteColor];
 		
 		[self.collectionView autoPinEdgesToSuperviewEdges];
-		
-		
-		[NSTimer scheduledTimerWithTimeInterval:1.0 block:^{
-			if(![LMLayoutManager isiPad]){
-				[self setPhoneLandscapeViewDisplaying:YES];
-			}
-		} repeats:NO];
 	}
 }
 
 - (void)tappedBigListEntryAtIndex:(NSInteger)i {
+	if([LMLayoutManager isLandscape]){
+		[self setPhoneLandscapeViewDisplaying:YES forIndex:i];
+		return;
+	}
+	
 	LMCollectionViewFlowLayout *layout = (LMCollectionViewFlowLayout*)self.collectionView.collectionViewLayout;
 
 	BOOL displayNothing = (i == layout.indexOfItemDisplayingDetailView);

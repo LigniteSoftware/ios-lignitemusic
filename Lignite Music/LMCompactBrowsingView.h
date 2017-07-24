@@ -58,4 +58,12 @@
  */
 - (void)changeBottomSpacing:(CGFloat)bottomSpacing;
 
+/**
+ Set whether or not the phone landscape view should display.
+
+ @param displaying Whether or not to display it.
+ @param index The index to display/not display it for. -1 is fine if not displaying.
+ */
+- (void)setPhoneLandscapeViewDisplaying:(BOOL)displaying forIndex:(NSInteger)index;
+
 @end

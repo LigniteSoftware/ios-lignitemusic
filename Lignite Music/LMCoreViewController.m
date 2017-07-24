@@ -853,6 +853,10 @@ LMControlBarViewDelegate
 		if(self.navigationBar.backItem){
 			[self.navigationBar popNavigationItemAnimated:NO];
 		}
+		else{
+			[self.compactView setPhoneLandscapeViewDisplaying:NO forIndex:-1];
+			self.landscapeNavigationBar.mode = LMLandscapeNavigationBarModeOnlyLogo;
+		}
 	}
 	else{
 		NSLog(@"Now playing nav bar please");
@@ -1017,15 +1021,15 @@ LMControlBarViewDelegate
 	}
 	
 	
-	LMPhoneLandscapeDetailView *phoneLandscapeDetailView = [LMPhoneLandscapeDetailView newAutoLayoutView];
-	[self.view addSubview:phoneLandscapeDetailView];
-	[phoneLandscapeDetailView autoPinEdgesToSuperviewEdges];
-	
-	phoneLandscapeDetailView.musicType = LMMusicTypeAlbums;
-	phoneLandscapeDetailView.musicTrackCollection = [[[LMMusicPlayer sharedMusicPlayer] queryCollectionsForMusicType:LMMusicTypeAlbums] objectAtIndex:0];
-	
-	
-	return;
+//	LMPhoneLandscapeDetailView *phoneLandscapeDetailView = [LMPhoneLandscapeDetailView newAutoLayoutView];
+//	[self.view addSubview:phoneLandscapeDetailView];
+//	[phoneLandscapeDetailView autoPinEdgesToSuperviewEdges];
+//	
+//	phoneLandscapeDetailView.musicType = LMMusicTypeAlbums;
+//	phoneLandscapeDetailView.musicTrackCollection = [[[LMMusicPlayer sharedMusicPlayer] queryCollectionsForMusicType:LMMusicTypeAlbums] objectAtIndex:0];
+//	
+//	
+//	return;
 	
 	LMLagDetectionThread *lagThread = [LMLagDetectionThread new];
 	lagThread.viewToDisplayAlertsOn = self.navigationController.view;
@@ -1175,7 +1179,7 @@ LMControlBarViewDelegate
 	self.buttonNavigationBar.delegate = self;
 	self.buttonNavigationBar.searchBarDelegate = self;
 	self.buttonNavigationBar.letterTabBarDelegate = self;
-	self.buttonNavigationBar.hidden = YES;
+//	self.buttonNavigationBar.hidden = YES;
 	[self.navigationController.view addSubview:self.buttonNavigationBar];
 	
 	//						self.navigationController.view.hidden = YES;
