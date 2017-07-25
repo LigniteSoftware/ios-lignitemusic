@@ -19,7 +19,7 @@
 #import "LMDetailView.h"
 #import "LMColour.h"
 
-@interface LMPhoneLandscapeDetailView()<LMCollectionInfoViewDelegate, LMBigListEntryDelegate, LMControlBarViewDelegate>
+@interface LMPhoneLandscapeDetailView()<LMCollectionInfoViewDelegate, LMBigListEntryDelegate, LMControlBarViewDelegate, LMMusicPlayerDelegate>
 
 /**
  The background view for the sidebar on the left which contains the control bar and collection info.
@@ -130,6 +130,18 @@
 			return (self.musicPlayer.shuffleMode == LMMusicShuffleModeOn);
 	}
 	return YES;
+}
+
+- (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState {
+	[self.controlBar reloadHighlightedButtons];
+}
+
+- (void)musicTrackDidChange:(LMMusicTrack*)newTrack {
+	[self.controlBar reloadHighlightedButtons];
+}
+
+- (void)musicPlaybackModesDidChange:(LMMusicShuffleMode)shuffleMode repeatMode:(LMMusicRepeatMode)repeatMode {
+	[self.controlBar reloadHighlightedButtons];
 }
 
 - (void)sizeChangedToLargeSize:(BOOL)largeSize withHeight:(float)newHeight forBigListEntry:(LMBigListEntry *)bigListEntry {
@@ -282,8 +294,13 @@
 
 - (void)reloadContent {
 	[self.collectionInfoBigListEntry reloadData];
+	
 	self.detailView.musicTrackCollection = self.musicTrackCollection;
 	[self.detailView.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UICollectionViewScrollPositionTop animated:NO];
+	
+	[self.detailView setNeedsLayout];
+	[self.detailView layoutIfNeeded];
+	
 	[self.controlBar reloadHighlightedButtons];
 }
 
@@ -362,6 +379,9 @@
 		[self.detailView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 		[self.detailView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.sidebarBackgroundView];
 //		[self.detailView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.sidebarBackgroundView];
+		
+		
+		[self.musicPlayer addMusicDelegate:self];
 	}
 }
 

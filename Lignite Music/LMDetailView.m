@@ -110,19 +110,6 @@
 - (void)musicTrackDidChange:(LMMusicTrack *)newTrack {
 	LMListEntry *highlightedEntry = nil;
 	int newHighlightedIndex = -1;
-	//	if(self.specificTrackCollections){
-	//		int count = 0;
-	//		for(LMMusicTrackCollection *collection in self.specificTrackCollections){
-	//			for(LMMusicTrack *track in collection.items){
-	//				if(track.persistentID == newTrack.persistentID){
-	//					newHighlightedIndex = count;
-	//					NSLog(@"Found a match");
-	//				}
-	//			}
-	//			count++;
-	//		}
-	//	}
-	//	else{
 	for(int i = 0; i < self.musicTrackCollectionToUse.trackCount; i++){
 		LMMusicTrack *track = [self.musicTrackCollectionToUse.items objectAtIndex:i];
 		
@@ -130,8 +117,6 @@
 			newHighlightedIndex = i;
 		}
 	}
-	//	}
-	
 	
 	highlightedEntry = [self listEntryForIndex:newHighlightedIndex];
 	
@@ -253,6 +238,7 @@
 		
 		if(listEntry){
 			listEntry.collectionIndex = indexPath.row;
+			[listEntry changeHighlightStatus:self.currentlyHighlightedEntry == listEntry.collectionIndex animated:NO];
 			[listEntry reloadContents];
 		}
 	}
@@ -400,9 +386,12 @@
 		[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 		[self.collectionView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.albumTileView];
 		//		self.collectionView.hidden = YES;
+		
+		[self.musicPlayer addMusicDelegate:self];
 	}
 	else{
 		[self.collectionView reloadData];
+		[self musicTrackDidChange:self.musicPlayer.nowPlayingTrack];
 	}
 	
 	if(!self.specificTrackCollections){
