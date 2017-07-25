@@ -43,11 +43,6 @@
  */
 @property LMMusicTrackCollection *musicTrackCollectionToUse;
 
-/**
- Whether or not the album tile view is being displayed.
- */
-@property (readonly) BOOL showingAlbumTileView;
-
 @end
 
 @implementation LMDetailView
@@ -56,7 +51,7 @@
 @synthesize musicTrackCollectionToUse = _musicTrackCollectionToUse;
 
 - (BOOL)showingAlbumTileView {
-	return NO; //The specific track collections have been prepped but the actual view just hasn't been lain out yet
+	return self.albumTileViewLeadingConstraint.constant == 0; //The specific track collections have been prepped but the actual view just hasn't been lain out yet
 }
 
 - (void)setShowingSpecificTrackCollection:(BOOL)showingSpecificTrackCollection animated:(BOOL)animated {
@@ -79,7 +74,7 @@
 		if(hasDelegate){
 			[self.delegate detailViewIsChangingSize:NO];
 		}
-		self.albumTileView.hidden = YES;
+		self.albumTileView.hidden = showingSpecificTrackCollection;
 	}];
 }
 

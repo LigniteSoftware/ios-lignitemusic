@@ -8,6 +8,7 @@
 
 #import "LMView.h"
 #import "LMMusicPlayer.h"
+#import "LMDetailView.h"
 
 @interface LMPhoneLandscapeDetailView : LMView
 
@@ -22,9 +23,19 @@
 @property LMMusicTrackCollection *musicTrackCollection;
 
 /**
+ The actual detail view for displaying shit.
+ */
+@property LMDetailView *detailView;
+
+/**
  The index.
  */
 @property NSInteger index;
+
+/**
+ I hate this issue
+ */
+@property id flowLayout;
 
 /**
  Reload the content of this landscape detail view.

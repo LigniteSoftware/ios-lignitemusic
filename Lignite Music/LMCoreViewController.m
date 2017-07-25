@@ -854,8 +854,7 @@ LMControlBarViewDelegate
 			[self.navigationBar popNavigationItemAnimated:NO];
 		}
 		else{
-			[self.compactView setPhoneLandscapeViewDisplaying:NO forIndex:-1];
-			self.landscapeNavigationBar.mode = LMLandscapeNavigationBarModeOnlyLogo;
+			[self.compactView backButtonPressed];
 		}
 	}
 	else{

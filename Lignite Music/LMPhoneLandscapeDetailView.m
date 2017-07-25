@@ -16,7 +16,6 @@
 #import "LMTriangleView.h"
 #import "LMBigListEntry.h"
 #import "LMMusicPlayer.h"
-#import "LMDetailView.h"
 #import "LMColour.h"
 
 @interface LMPhoneLandscapeDetailView()<LMCollectionInfoViewDelegate, LMBigListEntryDelegate, LMControlBarViewDelegate, LMMusicPlayerDelegate>
@@ -50,11 +49,6 @@
  The actual control bar.
  */
 @property LMControlBarView *controlBar;
-
-/**
- The actual detail view for displaying shit.
- */
-@property LMDetailView *detailView;
 
 /**
  The music player.
@@ -295,6 +289,7 @@
 - (void)reloadContent {
 	[self.collectionInfoBigListEntry reloadData];
 	
+	self.detailView.musicType = self.musicType;
 	self.detailView.musicTrackCollection = self.musicTrackCollection;
 	[self.detailView.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UICollectionViewScrollPositionTop animated:NO];
 	
@@ -313,6 +308,11 @@
 		self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 		
 		
+		UIView *topAndBottomCoverView = [UIView newAutoLayoutView]; //For the animation of the album tiles so it doesn't show on the top and bottom of sidebar background view
+		topAndBottomCoverView.backgroundColor = [UIColor whiteColor];
+		[self addSubview:topAndBottomCoverView];
+		
+		
 		self.sidebarBackgroundView = [UIView newAutoLayoutView];
 		self.sidebarBackgroundView.backgroundColor = [UIColor whiteColor];
 		[self addSubview:self.sidebarBackgroundView];
@@ -321,6 +321,12 @@
 		[self.sidebarBackgroundView autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
 		[self.sidebarBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(9.5/10.0)];
 		[self.sidebarBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(1.0/4.75)];
+		
+		
+		[topAndBottomCoverView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+		[topAndBottomCoverView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[topAndBottomCoverView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[topAndBottomCoverView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.sidebarBackgroundView];
 		
 		
 		self.collectionInfoBigListEntry = [LMBigListEntry newAutoLayoutView];
@@ -372,6 +378,7 @@
 		
 		self.detailView = [[LMDetailView alloc] initWithMusicTrackCollection:self.musicTrackCollection musicType:self.musicType];
 		self.detailView.backgroundColor = [UIColor blueColor];
+		self.detailView.flowLayout = self.flowLayout;
 		[self addSubview:self.detailView];
 		
 		[self.detailView autoPinEdgeToSuperviewEdge:ALEdgeTop];
@@ -379,6 +386,10 @@
 		[self.detailView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 		[self.detailView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.sidebarBackgroundView];
 //		[self.detailView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.sidebarBackgroundView];
+		
+		
+		[self insertSubview:topAndBottomCoverView aboveSubview:self.detailView];
+		[self insertSubview:self.sidebarBackgroundView aboveSubview:topAndBottomCoverView];
 		
 		
 		[self.musicPlayer addMusicDelegate:self];

@@ -51,6 +51,11 @@
 @property id flowLayout;
 
 /**
+ Whether or not the album tile view is being displayed.
+ */
+@property (readonly) BOOL showingAlbumTileView;
+
+/**
  Initializes the expandable track list view (for autolayout) with a certain music track collection for its layouting.
  
  @param musicTrackCollection The music track collection to associate with it.

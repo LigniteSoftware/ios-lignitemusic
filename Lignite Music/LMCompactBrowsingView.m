@@ -514,25 +514,45 @@
 - (void)setPhoneLandscapeViewDisplaying:(BOOL)displaying forIndex:(NSInteger)index {
 	if(!self.phoneLandscapeDetailView){
 		self.phoneLandscapeDetailView = [LMPhoneLandscapeDetailView newAutoLayoutView];
+		self.phoneLandscapeDetailView.alpha = 0;
 		[self addSubview:self.phoneLandscapeDetailView];
 		
 		[self.phoneLandscapeDetailView autoPinEdgesToSuperviewEdges];
 	}
 	
+	self.phoneLandscapeDetailView.flowLayout = self.collectionView.collectionViewLayout;
+	
 	if(displaying){
 		self.phoneLandscapeDetailView.index = index;
 		self.phoneLandscapeDetailView.musicType = self.musicType;
 		self.phoneLandscapeDetailView.musicTrackCollection = [self.musicTrackCollections objectAtIndex:index];
+		
+		[self.phoneLandscapeDetailView.detailView setShowingSpecificTrackCollection:NO animated:NO];
 	}
 	
-	self.phoneLandscapeDetailView.alpha = displaying;
-	self.phoneLandscapeDetailView.userInteractionEnabled = displaying;
+	[UIView animateWithDuration:0.25 animations:^{
+		self.phoneLandscapeDetailView.alpha = displaying;
+		self.phoneLandscapeDetailView.userInteractionEnabled = displaying;
+	} completion:^(BOOL finished) {
+		if(!displaying){
+			self.phoneLandscapeDetailView = nil;
+		}
+	}];
 	
 	self.rootViewController.landscapeNavigationBar.mode = displaying ? LMLandscapeNavigationBarModeWithBackButton : LMLandscapeNavigationBarModeOnlyLogo;
 	
 	[self.phoneLandscapeDetailView reloadContent];
 	
 	NSLog(@"Displaying %d", displaying);
+}
+
+- (void)backButtonPressed {
+	if(!self.phoneLandscapeDetailView.detailView.showingAlbumTileView){
+		[self.phoneLandscapeDetailView.detailView setShowingSpecificTrackCollection:NO animated:YES];
+	}
+	else{
+		[self setPhoneLandscapeViewDisplaying:NO forIndex:-1];
+	}
 }
 
 - (void)layoutSubviews {

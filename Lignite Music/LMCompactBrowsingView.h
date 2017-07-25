@@ -38,6 +38,11 @@
 - (void)reloadContents;
 
 /**
+ The back button on the navigation bar was pressed when in phone landscape detail view mode.
+ */
+- (void)backButtonPressed;
+
+/**
  Scroll the view to a certain index in its music track collection.
  
  @param index The index to scroll to.
