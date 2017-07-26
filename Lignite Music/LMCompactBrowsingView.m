@@ -380,7 +380,7 @@
 			[detailView autoPinEdgesToSuperviewEdges];
 			
 			
-			NSLog(@"Shitttt dawg %@ %d", detailView.musicTrackCollection, (int)flowLayout.indexOfItemDisplayingDetailView);
+			NSLog(@"Shitttt dawg %@ %d %@ %@ %@", detailView.musicTrackCollection, (int)flowLayout.indexOfItemDisplayingDetailView, NSStringFromCGRect(self.frame), NSStringFromCGRect(cell.frame), NSStringFromCGRect(cell.contentView.frame));
 		
 			
 			

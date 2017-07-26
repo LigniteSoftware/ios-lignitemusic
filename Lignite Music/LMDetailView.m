@@ -281,6 +281,7 @@
 }
 
 - (CGSize)currentItemSize {
+	NSLog(@"Number of columns %d", (int)[LMDetailView numberOfColumns]);
 	return CGSizeMake(self.frame.size.width/[LMDetailView numberOfColumns]*0.90,
 					  fmin(([LMLayoutManager isLandscape] ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height)/8.0, 80));
 }
@@ -339,19 +340,30 @@
 		NSLog(@"Adding spacer because uneven now %d", (int)size.height);
 	}
 	
+	NSLog(@"Total size %@", NSStringFromCGSize(size));
+	
 	return size;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
 	
 	//	return CGSizeMake(self.frame.size.width, self.frame.size.height/[self collectionView:self.collectionView numberOfItemsInSection:0]);
-	return [self currentItemSize];
+	
+	CGSize itemSize = [self currentItemSize];
+	
+	NSLog(@"Returning %@ (collection view size %@, album tile view frame %@, self frame %@)", NSStringFromCGSize(itemSize), NSStringFromCGRect(self.collectionView.frame), NSStringFromCGRect(self.albumTileView.frame), NSStringFromCGRect(self.frame));
+	LMCollectionViewFlowLayout *flowLayout = (LMCollectionViewFlowLayout*)self.collectionView.collectionViewLayout;
+	NSLog(@"Content inset %@ section inset %@", NSStringFromUIEdgeInsets(self.collectionView.contentInset), NSStringFromUIEdgeInsets(flowLayout.sectionInset));
+
+	
+	return itemSize;
 }
 
 
 - (void)layoutSubviews {
 	if(!self.didLayoutConstraints) {
 		self.didLayoutConstraints = YES;
+		
 		
 		//Album tile view is created in init
 		self.albumTileView.flowLayout = self.flowLayout;
@@ -361,6 +373,7 @@
 		[self.albumTileView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 		[self.albumTileView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 		[self.albumTileView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
+		
 		
 		
 		UICollectionViewFlowLayout *fuck = [[UICollectionViewFlowLayout alloc]init];

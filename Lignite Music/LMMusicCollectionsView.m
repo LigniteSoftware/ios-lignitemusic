@@ -134,13 +134,14 @@
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+	NSLog(@"count is %d", (int)self.trackCollections.count);
 	return self.trackCollections.count;
 }
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
 	LMCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"musicCollectionsViewIdentifier" forIndexPath:indexPath];
 	
-	cell.backgroundColor = [UIColor clearColor];
+	cell.backgroundColor = [UIColor orangeColor];
 	
 	for(UIView *subview in cell.contentView.subviews){
 		[subview removeFromSuperview];
@@ -158,6 +159,7 @@
 }
 
 - (CGSize)normalItemSize {
+	NSLog(@"Normal item size %@", NSStringFromCGSize(self.flowLayout.normalItemSize));
 	return self.flowLayout.normalItemSize;
 }
 
@@ -190,7 +192,7 @@
 - (void)layoutSubviews {
 	if(!self.didLayoutConstraints){
 		self.didLayoutConstraints = YES;
-		
+				
 		UICollectionViewFlowLayout *fuck = [[UICollectionViewFlowLayout alloc]init];
 		fuck.scrollDirection = UICollectionViewScrollDirectionVertical;
 		
@@ -214,7 +216,7 @@
 			[self.bigListEntries addObject:bigListEntry];
 		}
 		
-		self.collectionView.backgroundColor = [LMColour controlBarGrayColour];
+		self.collectionView.backgroundColor = [LMColour ligniteRedColour];
 		
 		[self.collectionView autoPinEdgesToSuperviewEdges];
 		

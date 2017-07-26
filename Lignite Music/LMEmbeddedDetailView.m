@@ -103,6 +103,9 @@
 		self.clipsToBounds = NO;
 		
 		
+		self.detailView.flowLayout = self.flowLayout;
+		
+		
 		self.expandableTrackListControlBar = [LMExpandableTrackListControlBar newAutoLayoutView];
 		self.expandableTrackListControlBar.delegate = self;
 		self.expandableTrackListControlBar.musicTrackCollection = self.musicTrackCollection;
@@ -114,6 +117,7 @@
 		[self.expandableTrackListControlBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 		
 		
+		
 		//Detail view is created in init
 		
 		[self.detailView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.expandableTrackListControlBar];
@@ -121,7 +125,7 @@
 		[self.detailView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 		[self.detailView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 		
-		
+						
 		
 		self.innerShadowView = [LMExpandableInnerShadowView newAutoLayoutView];
 		self.innerShadowView.backgroundColor = [UIColor clearColor];
@@ -166,6 +170,8 @@
 	}
 	
 	[super layoutSubviews];
+	
+	NSLog(@"My own frame %@", NSStringFromCGRect(self.frame));
 }
 
 - (instancetype)initWithMusicTrackCollection:(LMMusicTrackCollection*)musicTrackCollection musicType:(LMMusicType)musicType {
