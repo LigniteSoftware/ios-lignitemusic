@@ -141,7 +141,7 @@
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
 	LMCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"musicCollectionsViewIdentifier" forIndexPath:indexPath];
 	
-	cell.backgroundColor = [UIColor orangeColor];
+	cell.backgroundColor = [LMColour superLightGrayColour];
 	
 	for(UIView *subview in cell.contentView.subviews){
 		[subview removeFromSuperview];
@@ -159,7 +159,7 @@
 }
 
 - (CGSize)normalItemSize {
-	NSLog(@"Normal item size %@", NSStringFromCGSize(self.flowLayout.normalItemSize));
+	NSLog(@"Normal item size %@ compared to me %@", NSStringFromCGSize(self.flowLayout.normalItemSize), NSStringFromCGRect(self.collectionView.frame));
 	return self.flowLayout.normalItemSize;
 }
 
@@ -177,13 +177,25 @@
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
 	
+	UICollectionViewFlowLayout *flowLayout = (UICollectionViewFlowLayout*)collectionViewLayout;
+	
 	CGSize itemSize = [self normalItemSize];
 	
 	CGFloat spacing = [self spacing];
 	
-	UICollectionViewFlowLayout *flowLayout = (UICollectionViewFlowLayout*)collectionViewLayout;
+	CGFloat contentInsets = spacing*2;
+	
+	if(itemSize.width > (self.collectionView.frame.size.width-contentInsets)){
+		flowLayout.sectionInset = UIEdgeInsetsMake(0, 0, 0, 0);
+		return CGSizeMake(0, 0);
+	}
+	
 	flowLayout.sectionInset = UIEdgeInsetsMake(spacing, spacing, spacing, spacing);
 	flowLayout.minimumLineSpacing = spacing;
+	
+	NSLog(@"Returning size of %@ with a section inset %@ compared to %@ and spacing of %f", NSStringFromCGSize(itemSize), NSStringFromUIEdgeInsets(flowLayout.sectionInset), NSStringFromCGRect(self.collectionView.frame), spacing);
+	
+//	itemSize.width = itemSize.width-(spacing*2);
 	
 	return itemSize;
 }
@@ -192,7 +204,8 @@
 - (void)layoutSubviews {
 	if(!self.didLayoutConstraints){
 		self.didLayoutConstraints = YES;
-				
+		
+		
 		UICollectionViewFlowLayout *fuck = [[UICollectionViewFlowLayout alloc]init];
 		fuck.scrollDirection = UICollectionViewScrollDirectionVertical;
 		
@@ -203,6 +216,8 @@
 		self.collectionView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
 		[self.collectionView registerClass:[LMCollectionViewCell class] forCellWithReuseIdentifier:@"musicCollectionsViewIdentifier"];
 		[self addSubview:self.collectionView];
+		
+		NSLog(@"Collections %p flow %p", self.collectionView, fuck);
 		
 		self.bigListEntries = [NSMutableArray new];
 		
@@ -216,7 +231,7 @@
 			[self.bigListEntries addObject:bigListEntry];
 		}
 		
-		self.collectionView.backgroundColor = [LMColour ligniteRedColour];
+		self.collectionView.backgroundColor = [LMColour superLightGrayColour];
 		
 		[self.collectionView autoPinEdgesToSuperviewEdges];
 		

@@ -261,7 +261,7 @@
 	if(isDetailViewRow){
 		CGRect finalFrame = CGRectMake(origin.x - spacing, origin.y + spacing/4, collectionViewSize.width-(origin.x * 2)+(spacing * 2), detailViewHeight);
 		
-		NSLog(@"\ncollframe %@ \n content offset %@ \n superviewframe %@ \n size of item %@\nfinal frame %@", NSStringFromCGRect(self.collectionView.frame), NSStringFromCGPoint(self.collectionView.contentOffset), NSStringFromCGRect(self.collectionView.superview.frame), NSStringFromCGRect([self frameForCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] detailViewDisplayMode:LMDetailViewDisplayModeNone]), NSStringFromCGRect(finalFrame));
+//		NSLog(@"\ncollframe %@ \n content offset %@ \n superviewframe %@ \n size of item %@\nfinal frame %@", NSStringFromCGRect(self.collectionView.frame), NSStringFromCGPoint(self.collectionView.contentOffset), NSStringFromCGRect(self.collectionView.superview.frame), NSStringFromCGRect([self frameForCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] detailViewDisplayMode:LMDetailViewDisplayModeNone]), NSStringFromCGRect(finalFrame));
 		
 		return finalFrame;
 	}

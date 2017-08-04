@@ -346,7 +346,7 @@
 	return 1;
 }
 
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {	
 	if(section == 1){
 		return self.musicTrackCollections.count;
 	}
@@ -508,7 +508,7 @@
 }
 
 - (BOOL)phoneLandscapeViewIsDisplaying {
-	return self.phoneLandscapeDetailView.alpha > 0;
+	return self.phoneLandscapeDetailView;
 }
 
 - (void)setPhoneLandscapeViewDisplaying:(BOOL)displaying forIndex:(NSInteger)index {
@@ -579,6 +579,8 @@
         self.collectionView.contentInset = UIEdgeInsetsMake(0, 0, 100, 0);
 		[self.collectionView registerClass:[LMCollectionViewCell class] forCellWithReuseIdentifier:@"cellIdentifier"];
 		[self addSubview:self.collectionView];
+		
+		NSLog(@"Compact collection view %p", self.collectionView);
 		
 		
 		self.bigListEntries = [NSMutableArray new];

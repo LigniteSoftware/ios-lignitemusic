@@ -347,14 +347,19 @@
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
 	
-	//	return CGSizeMake(self.frame.size.width, self.frame.size.height/[self collectionView:self.collectionView numberOfItemsInSection:0]);
+	UICollectionViewFlowLayout *flowLayout = (UICollectionViewFlowLayout*)self.collectionView.collectionViewLayout;
 	
 	CGSize itemSize = [self currentItemSize];
 	
-	NSLog(@"Returning %@ (collection view size %@, album tile view frame %@, self frame %@)", NSStringFromCGSize(itemSize), NSStringFromCGRect(self.collectionView.frame), NSStringFromCGRect(self.albumTileView.frame), NSStringFromCGRect(self.frame));
-	LMCollectionViewFlowLayout *flowLayout = (LMCollectionViewFlowLayout*)self.collectionView.collectionViewLayout;
-	NSLog(@"Content inset %@ section inset %@", NSStringFromUIEdgeInsets(self.collectionView.contentInset), NSStringFromUIEdgeInsets(flowLayout.sectionInset));
-
+	CGFloat contentInsets = flowLayout.sectionInset.right + flowLayout.sectionInset.left;
+	
+	if(itemSize.width > (self.collectionView.frame.size.width-contentInsets)){
+		return CGSizeMake(0, 0);
+	}
+	
+	NSLog(@"Returning %@\ncollection view size %@\nsuperframe %@\nalbum tile view frame %@\nself frame %@", NSStringFromCGSize(itemSize), NSStringFromCGRect(self.collectionView.frame), NSStringFromCGRect(self.collectionView.superview.superview.frame), NSStringFromCGRect(self.albumTileView.frame), NSStringFromCGRect(self.frame));
+	
+	NSLog(@"Content inset %@\nsection inset %@", NSStringFromUIEdgeInsets(self.collectionView.contentInset), NSStringFromUIEdgeInsets(flowLayout.sectionInset));
 	
 	return itemSize;
 }
@@ -367,14 +372,15 @@
 		
 		//Album tile view is created in init
 		self.albumTileView.flowLayout = self.flowLayout;
+		self.albumTileView.backgroundColor = [UIColor purpleColor];
 		[self addSubview:self.albumTileView];
 		
 		self.albumTileViewLeadingConstraint = [self.albumTileView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[self.albumTileView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 		[self.albumTileView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 		[self.albumTileView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
-		
-		
+	
+				
 		
 		UICollectionViewFlowLayout *fuck = [[UICollectionViewFlowLayout alloc]init];
 		fuck.sectionInset = UIEdgeInsetsMake(10, 10, 10, 10);
@@ -396,6 +402,9 @@
 		//		self.collectionView.hidden = YES;
 		
 		[self.musicPlayer addMusicDelegate:self];
+		
+		
+		NSLog(@"Album tile view %p, collection view %p, flow layout %p", self.albumTileView.collectionView, self.collectionView, self.flowLayout);
 	}
 	else{
 		[self.collectionView reloadData];
