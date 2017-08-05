@@ -512,6 +512,9 @@
 }
 
 - (void)setPhoneLandscapeViewDisplaying:(BOOL)displaying forIndex:(NSInteger)index {
+	if([LMLayoutManager isiPad] || (!displaying && !self.phoneLandscapeDetailView)){
+		return;
+	}
 	if(!self.phoneLandscapeDetailView){
 		self.phoneLandscapeDetailView = [LMPhoneLandscapeDetailView newAutoLayoutView];
 		self.phoneLandscapeDetailView.alpha = 0;
@@ -547,7 +550,7 @@
 }
 
 - (void)backButtonPressed {
-	if(!self.phoneLandscapeDetailView.detailView.showingAlbumTileView){
+	if(!self.phoneLandscapeDetailView.detailView.showingAlbumTileView && (self.musicType == LMMusicTypeArtists || self.musicType == LMMusicTypeGenres)){
 		[self.phoneLandscapeDetailView.detailView setShowingSpecificTrackCollection:NO animated:YES];
 	}
 	else{

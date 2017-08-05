@@ -49,6 +49,8 @@
  */
 @property id<LMControlBarViewDelegate> delegate;
 
+@property BOOL verticalMode;
+
 @property NSInteger index;
 
 /**

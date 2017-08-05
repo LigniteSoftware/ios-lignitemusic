@@ -402,6 +402,8 @@ LMControlBarViewDelegate
 	
 	NSLog(@"New source %@", source.title);
 	
+	[self.compactView setPhoneLandscapeViewDisplaying:NO forIndex:-1];
+	
 	switch(source.sourceID){
 		case LMIconArtists:
 		case LMIconGenres:

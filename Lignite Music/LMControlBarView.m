@@ -37,8 +37,7 @@
 	
 	BOOL shouldHighlight = [self.delegate buttonHighlightedWithIndex:viewCheckingIndex wasJustTapped:wasJustTapped forControlBar:self];
 	[UIView animateWithDuration:0.3 animations:^{
-		BOOL isVertical = self.frame.size.height > self.frame.size.width;
-		viewChecking.backgroundColor = shouldHighlight ? [UIColor whiteColor] : (isVertical ? [LMColour verticalControlBarGrayColour] : [LMColour controlBarGrayColour]);
+		viewChecking.backgroundColor = shouldHighlight ? [UIColor whiteColor] : (self.verticalMode ? [LMColour verticalControlBarGrayColour] : [LMColour controlBarGrayColour]);
 	} completion:nil];
 
 	if(viewChecking.subviews.count > 0){
@@ -81,10 +80,8 @@
 		self.didLayoutConstraints = YES;
 		self.userInteractionEnabled = YES;
 		
-		BOOL isVertical = self.frame.size.height > self.frame.size.width;
-		
 		self.backgroundView = [UIView newAutoLayoutView];
-		self.backgroundView.backgroundColor = isVertical ? [LMColour verticalControlBarGrayColour] : [LMColour controlBarGrayColour];
+		self.backgroundView.backgroundColor = self.verticalMode ? [LMColour verticalControlBarGrayColour] : [LMColour controlBarGrayColour];
 		self.backgroundView.userInteractionEnabled = YES;
 		[self addSubview:self.backgroundView];
 		
@@ -116,7 +113,7 @@
 			
 			BOOL isFirstBackground = (self.controlButtonViews.count == 0);
 			
-			if(isVertical){
+			if(self.verticalMode){
 				[buttonAreaView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 				[buttonAreaView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 				[buttonAreaView autoPinEdge:ALEdgeTop toEdge:isFirstBackground ? ALEdgeTop : ALEdgeBottom ofView:isFirstBackground ? self.buttonBackgroundView : lastBackgroundView];

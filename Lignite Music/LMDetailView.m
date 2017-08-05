@@ -56,14 +56,13 @@
 
 - (void)setShowingSpecificTrackCollection:(BOOL)showingSpecificTrackCollection animated:(BOOL)animated {
 	LMCollectionViewFlowLayout *flowLayout = self.flowLayout;
-	BOOL hasDelegate = [self.delegate respondsToSelector:@selector(detailViewIsChangingSize:)];
 	
 	CGFloat animationTime = animated ? 0.25 : 0;
 	
 	self.albumTileView.hidden = NO;
 	
-	if(hasDelegate){
-		[self.delegate detailViewIsChangingSize:YES];
+	if([self.delegate respondsToSelector:@selector(detailViewIsShowingAlbumTileView:)]){
+		[self.delegate detailViewIsShowingAlbumTileView:!showingSpecificTrackCollection];
 	}
 	
 	self.albumTileViewLeadingConstraint.constant = showingSpecificTrackCollection ? -self.frame.size.width : 0;
@@ -71,9 +70,6 @@
 		[flowLayout.collectionView performBatchUpdates:nil completion:nil];
 		[self layoutIfNeeded];
 	} completion:^(BOOL finished) {
-		if(hasDelegate){
-			[self.delegate detailViewIsChangingSize:NO];
-		}
 		self.albumTileView.hidden = showingSpecificTrackCollection;
 	}];
 }

@@ -358,6 +358,7 @@
 		self.controlBar = [LMControlBarView newAutoLayoutView];
 		self.controlBar.delegate = self;
 		self.controlBar.clipsToBounds = NO;
+		self.controlBar.verticalMode = YES;
 		[self.sidebarBackgroundView addSubview:self.controlBar];
 		
 		[self.controlBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];

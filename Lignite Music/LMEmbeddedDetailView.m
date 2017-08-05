@@ -18,7 +18,7 @@
 #import "LMTriangleView.h"
 #import "LMDetailView.h"
 
-@interface LMEmbeddedDetailView()<LMExpandableTrackListControlBarDelegate>
+@interface LMEmbeddedDetailView()<LMExpandableTrackListControlBarDelegate, LMDetailViewDelegate>
 
 /**
  The control/navigation bar which goes above the view's collection view.
@@ -88,6 +88,10 @@
 	[self.detailView setShowingSpecificTrackCollection:NO animated:YES];
 }
 
+- (void)detailViewIsShowingAlbumTileView:(BOOL)showingAlbumTileView {
+	self.expandableTrackListControlBar.mode = !showingAlbumTileView ? LMExpandableTrackListControlBarModeControlWithAlbumDetail : LMExpandableTrackListControlBarModeGeneralControl;
+}
+
 - (void)layoutSubviews {
 	self.backgroundColor = [UIColor yellowColor];
 	
@@ -104,6 +108,7 @@
 		
 		
 		self.detailView.flowLayout = self.flowLayout;
+		self.detailView.delegate = self;
 		
 		
 		self.expandableTrackListControlBar = [LMExpandableTrackListControlBar newAutoLayoutView];

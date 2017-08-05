@@ -15,11 +15,11 @@
 @optional
 
 /**
- The detail view is changing in size, or it's not.
+ Whether or not the detail view is showing the album tile view. If this is called and the BOOL is false, that means the user has transitioned from the album tile view into a specific track collection.
 
- @param nowChangingSize Whether or not it's currently changing in size.
+ @param showingAlbumTileView Whether or not the album tile view is now showing.
  */
-- (void)detailViewIsChangingSize:(BOOL)nowChangingSize;
+- (void)detailViewIsShowingAlbumTileView:(BOOL)showingAlbumTileView;
 
 @end
 
