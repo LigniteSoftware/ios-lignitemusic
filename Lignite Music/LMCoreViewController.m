@@ -1319,6 +1319,10 @@ LMControlBarViewDelegate
 			[self launchNowPlayingFromNavigationBar];
 			self.statePreservedNowPlayingWasOpen = NO;
 		}
+		
+		
+//		LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
+//		[self.navigationController pushViewController:settingsViewController animated:YES];
 	} repeats:NO];
 	
 	
