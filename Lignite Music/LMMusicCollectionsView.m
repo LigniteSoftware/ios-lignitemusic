@@ -160,7 +160,12 @@
 
 - (CGSize)normalItemSize {
 	NSLog(@"Normal item size %@ compared to me %@", NSStringFromCGSize(self.flowLayout.normalItemSize), NSStringFromCGRect(self.collectionView.frame));
-	return self.flowLayout.normalItemSize;
+	
+	CGFloat scaleFactor = (7.0/8.0);
+	
+	CGSize scaledSize = CGSizeMake(self.flowLayout.normalItemSize.width*scaleFactor, self.flowLayout.normalItemSize.height*scaleFactor);
+	
+	return scaledSize;
 }
 
 - (CGFloat)spacing {
@@ -171,6 +176,8 @@
 	CGFloat sideLength = itemSize.width;
 	
 	CGFloat spacing = (WINDOW_FRAME.size.width-(sideLength*factor))/(factor+1);
+	
+	spacing = spacing * (3.0/6.0);
 	
 	return spacing;
 }

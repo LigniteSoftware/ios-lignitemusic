@@ -283,6 +283,8 @@
 }
 
 - (CGSize)totalSize {
+	NSLog(@"selfsize is %f", self.frame.size.width);
+	
 	CGSize size = CGSizeMake(WINDOW_FRAME.size.width, 0);
 	
 	CGSize normalItemSize;
