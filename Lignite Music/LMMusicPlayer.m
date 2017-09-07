@@ -1306,7 +1306,7 @@ BOOL shuffleForDebug = NO;
 	LMMusicTrack *nowPlayingTrack = nil;
 	
 	if(!allPersistentIDsString || !nowPlayingTrackInfo){
-		NSLog(@"Rejecting load");
+		NSLog(@"Rejecting load, '%@' '%@'", allPersistentIDsString, nowPlayingTrackInfo);
 		self.musicWasUserSet = NO;
 		return;
 	}
@@ -1324,21 +1324,27 @@ BOOL shuffleForDebug = NO;
 	for(NSString *persistentIDString in persistentIDsArray){
 		NSNumber *persistentID = [formatter numberFromString:persistentIDString];
 		
-		MPMediaPropertyPredicate *predicate = [MPMediaPropertyPredicate predicateWithValue:persistentID forProperty:MPMediaItemPropertyPersistentID];
-		
-		MPMediaQuery *mediaQuery = [[MPMediaQuery alloc] initWithFilterPredicates:[NSSet setWithObject:predicate]];
-		
-		NSArray *items = mediaQuery.items;
-		for(MPMediaItem *item in items){
-			itemCount++;
-			[nowPlayingArray addObject:item];
+		if(persistentID){
+			MPMediaPropertyPredicate *predicate = [MPMediaPropertyPredicate predicateWithValue:persistentID forProperty:MPMediaItemPropertyPersistentID];
 			
-			if([persistentID isEqual:nowPlayingTrackPersistentID]){
-				NSLog(@"This was the now playing track (below)");
-				nowPlayingTrack = item;
+			MPMediaQuery *mediaQuery = [[MPMediaQuery alloc] initWithFilterPredicates:[NSSet setWithObject:predicate]];
+			
+			NSArray *items = mediaQuery.items;
+			for(MPMediaItem *item in items){
+				itemCount++;
+				[nowPlayingArray addObject:item];
+				
+				if([persistentID isEqual:nowPlayingTrackPersistentID]){
+					NSLog(@"This was the now playing track (below)");
+					nowPlayingTrack = item;
+				}
+				
+	//			NSLog(@"Got item %@", item.title);
 			}
-			
-//			NSLog(@"Got item %@", item.title);
+		}
+		else{ //The saved collection is broken, don't load it
+			self.musicWasUserSet = NO;
+			return;
 		}
 	}
 	
