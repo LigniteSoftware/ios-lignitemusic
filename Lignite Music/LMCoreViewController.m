@@ -987,7 +987,7 @@ LMControlBarViewDelegate
 			self.loadingProgressHUD = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
 			
 			self.loadingProgressHUD.mode = MBProgressHUDModeIndeterminate;
-			self.loadingProgressHUD.label.text = @"Loading music...";
+			self.loadingProgressHUD.label.text = NSLocalizedString(@"LoadingMusic", nil); @"Loading music...";
 			self.loadingProgressHUD.label.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18.0f];
 	//		self.loadingProgressHUD.progress = 0.1;
 			self.loadingProgressHUD.userInteractionEnabled = NO;

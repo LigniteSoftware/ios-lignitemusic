@@ -39,6 +39,9 @@
  
  */
 
+"LoadingMusic" = "Musik wird geladen";
+"AlmostThere" = "Fast geschafft!";
+
 "StopShowingTheseHints" = "Diese Hinweise nicht mehr anzeigen";
 "OkThanksForTheHint" = "Ok, danke";
 

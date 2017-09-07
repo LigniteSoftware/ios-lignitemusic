@@ -46,7 +46,8 @@
  
  */
 
-
+"LoadingMusic" = "Loading music...";
+"AlmostThere" = "Almost there!";
 
 "StopShowingTheseHints" = "Stop showing these hints";
 "OkThanksForTheHint" = "Ok, thanks for the hint";
