@@ -7,6 +7,7 @@
 //
 
 #import "LMMusicPlayer.h"
+#import "NSTimer+Blocks.h"
 
 @import StoreKit;
 
@@ -1390,9 +1391,22 @@ BOOL shuffleForDebug = NO;
 - (void)reshuffleSortedCollection {
     NSMutableArray *shuffledArray = [NSMutableArray arrayWithArray:self.nowPlayingCollectionSorted.items];
     [self shuffleArray:shuffledArray];
-//    for(LMMusicTrack *track in shuffledArray){
-//        NSLog(@"Track %@", track.title);
-//    }
+	
+	if(self.nowPlayingTrack){
+		NSInteger indexOfNowPlayingTrackInShuffledArray = -1;
+		for(NSInteger i = 0; i < shuffledArray.count; i++){
+			LMMusicTrack *musicTrack = [shuffledArray objectAtIndex:i];
+			if(musicTrack.persistentID == self.nowPlayingTrack.persistentID){
+				indexOfNowPlayingTrackInShuffledArray = i;
+				break;
+			}
+		}
+		
+		if(indexOfNowPlayingTrackInShuffledArray > -1){
+			[shuffledArray exchangeObjectAtIndex:indexOfNowPlayingTrackInShuffledArray withObjectAtIndex:0];
+		}
+	}
+	
     self.nowPlayingCollectionShuffled = [MPMediaItemCollection collectionWithItems:shuffledArray];
 }
 
@@ -1533,15 +1547,6 @@ BOOL shuffleForDebug = NO;
 - (void)setShuffleMode:(LMMusicShuffleMode)shuffleMode {
 	_shuffleMode = shuffleMode;
 	
-#ifdef SPOTIFY
-	[self.spotifyPlayer setShuffle:(_shuffleMode == LMMusicShuffleModeOn) callback:^(NSError *error) {
-		if(error){
-			NSLog(@"Error settings shuffle: %@", error);
-			return;
-		}
-		NSLog(@"Success setting shuffle");
-	}];
-#else
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer || self.playerType == LMMusicPlayerTypeAppleMusic){
         if(!self.nowPlayingCollection){
             return;
@@ -1551,9 +1556,23 @@ BOOL shuffleForDebug = NO;
         }
         NSInteger previousIndexOfNowPlaying = self.indexOfNowPlayingTrack;
         [self.systemMusicPlayer setQueueWithItemCollection:self.nowPlayingCollection];
-        [self.systemMusicPlayer setNowPlayingItem:[self.nowPlayingCollection.items objectAtIndex:previousIndexOfNowPlaying]];
+		
+		if(shuffleMode != LMMusicShuffleModeOn){
+			NSInteger indexOfNowPlayingTrackInSortedArray = -1;
+			for(NSInteger i = 0; i < self.nowPlayingCollection.items.count; i++){
+				LMMusicTrack *musicTrack = [self.nowPlayingCollection.items objectAtIndex:i];
+				if(musicTrack.persistentID == self.nowPlayingTrack.persistentID){
+					CGFloat currentPlaybackTime = self.systemMusicPlayer.currentPlaybackTime;
+					[self.systemMusicPlayer setNowPlayingItem:musicTrack];
+					[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
+						self.systemMusicPlayer.currentPlaybackTime = currentPlaybackTime;
+						NSLog(@"Playback time is %f", currentPlaybackTime);
+					} repeats:NO];
+					break;
+				}
+			}
+		}
 	}
-#endif
 	
 	[self updatePlaybackModeDelegates];
 }

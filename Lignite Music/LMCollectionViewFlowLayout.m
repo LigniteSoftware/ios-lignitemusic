@@ -130,7 +130,7 @@
 	NSInteger amountOfItems = [self.collectionView.dataSource collectionView:self.collectionView numberOfItemsInSection:1];
 	if(amountOfItems > 0){
 		size.height += ([self frameForCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] detailViewDisplayMode:LMDetailViewDisplayModeNone].size.height * amountOfItems)/self.itemsPerRow;
-		size.height += (amountOfItems/self.itemsPerRow)*COMPACT_VIEW_SPACING_BETWEEN_ITEMS;
+		size.height += ((amountOfItems/self.itemsPerRow) + 5) * COMPACT_VIEW_SPACING_BETWEEN_ITEMS;
 	}
 	
 	return size;

@@ -141,20 +141,47 @@ BOOL expandableTrackListControlBarIsInAlbumDetail = NO;
 				return [self.musicPlayer nowPlayingCollectionIsEqualTo:trackCollection] && isPlayingMusic;
 			}
 		}
-		case 1: //Repeat button
+		case 1: { //Repeat button
 			if(wasJustTapped){
 				(self.musicPlayer.repeatMode == LMMusicRepeatModeAll)
 				? (self.musicPlayer.repeatMode = LMMusicRepeatModeNone)
 				: (self.musicPlayer.repeatMode = LMMusicRepeatModeAll);
 			}
-			NSLog(@"Repeat mode is %d", self.musicPlayer.repeatMode);
+			
 			return (self.musicPlayer.repeatMode == LMMusicRepeatModeAll);
-		case 2: //Shuffle button
+		}
+		case 2: { //Shuffle button
 			if(wasJustTapped){
 				self.musicPlayer.shuffleMode = !self.musicPlayer.shuffleMode;
+				
+				LMMusicTrackCollection *trackCollection = self.musicTrackCollection;
+				if(trackCollection.trackCount > 0){
+					self.musicPlayer.autoPlay = YES;
+					[self.musicPlayer setNowPlayingCollection:trackCollection];
+					
+					[self.musicPlayer.navigationBar setSelectedTab:LMNavigationTabMiniplayer];
+					[self.musicPlayer.navigationBar maximize:NO];
+					
+					isPlayingMusic = YES;
+				}
 			}
-			NSLog(@"Shuffle mode is %d", self.musicPlayer.shuffleMode);
+			
 			return (self.musicPlayer.shuffleMode == LMMusicShuffleModeOn);
+		}
+//		case 1: //Repeat button
+//			if(wasJustTapped){
+//				(self.musicPlayer.repeatMode == LMMusicRepeatModeAll)
+//				? (self.musicPlayer.repeatMode = LMMusicRepeatModeNone)
+//				: (self.musicPlayer.repeatMode = LMMusicRepeatModeAll);
+//			}
+//			NSLog(@"Repeat mode is %d", self.musicPlayer.repeatMode);
+//			return (self.musicPlayer.repeatMode == LMMusicRepeatModeAll);
+//		case 2: //Shuffle button
+//			if(wasJustTapped){
+//				self.musicPlayer.shuffleMode = !self.musicPlayer.shuffleMode;
+//			}
+//			NSLog(@"Shuffle mode is %d", self.musicPlayer.shuffleMode);
+//			return (self.musicPlayer.shuffleMode == LMMusicShuffleModeOn);
 	}
 	return YES;
 }

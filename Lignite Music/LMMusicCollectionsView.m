@@ -177,7 +177,9 @@
 	
 	CGFloat spacing = (WINDOW_FRAME.size.width-(sideLength*factor))/(factor+1);
 	
-	spacing = spacing * (3.0/6.0);
+	if([LMLayoutManager isLandscape]){
+		spacing = spacing * (1.0/2.0);
+	}
 	
 	return spacing;
 }
@@ -197,7 +199,7 @@
 		return CGSizeMake(0, 0);
 	}
 	
-	flowLayout.sectionInset = UIEdgeInsetsMake(spacing, spacing, spacing, spacing);
+	flowLayout.sectionInset = UIEdgeInsetsMake(spacing, [LMLayoutManager isLandscape] ? spacing*1.5 : spacing, spacing, [LMLayoutManager isLandscape] ? spacing*1.5 : spacing);
 	flowLayout.minimumLineSpacing = spacing;
 	
 	NSLog(@"Returning size of %@ with a section inset %@ compared to %@ and spacing of %f", NSStringFromCGSize(itemSize), NSStringFromUIEdgeInsets(flowLayout.sectionInset), NSStringFromCGRect(self.collectionView.frame), spacing);

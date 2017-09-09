@@ -359,7 +359,7 @@
 	LMCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cellIdentifier" forIndexPath:indexPath];
 	LMCollectionViewFlowLayout *flowLayout = (LMCollectionViewFlowLayout*)collectionView.collectionViewLayout;
 	
-	cell.backgroundColor = [UIColor whiteColor];
+	cell.backgroundColor = [UIColor clearColor];
 
 //	if(flowLayout.isDisplayingDetailView){
 		for(UIView *subview in cell.contentView.subviews){
