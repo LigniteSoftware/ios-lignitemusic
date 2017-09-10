@@ -1554,11 +1554,9 @@ BOOL shuffleForDebug = NO;
         if(shuffleMode == LMMusicShuffleModeOn){
             [self reshuffleSortedCollection];
         }
-        NSInteger previousIndexOfNowPlaying = self.indexOfNowPlayingTrack;
         [self.systemMusicPlayer setQueueWithItemCollection:self.nowPlayingCollection];
 		
 		if(shuffleMode != LMMusicShuffleModeOn){
-			NSInteger indexOfNowPlayingTrackInSortedArray = -1;
 			for(NSInteger i = 0; i < self.nowPlayingCollection.items.count; i++){
 				LMMusicTrack *musicTrack = [self.nowPlayingCollection.items objectAtIndex:i];
 				if(musicTrack.persistentID == self.nowPlayingTrack.persistentID){

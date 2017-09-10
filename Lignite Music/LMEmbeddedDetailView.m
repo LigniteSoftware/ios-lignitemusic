@@ -89,6 +89,8 @@
 }
 
 - (void)detailViewIsShowingAlbumTileView:(BOOL)showingAlbumTileView {
+	self.isChangingSize = YES;
+	
 	self.expandableTrackListControlBar.mode = !showingAlbumTileView ? LMExpandableTrackListControlBarModeControlWithAlbumDetail : LMExpandableTrackListControlBarModeGeneralControl;
 }
 
