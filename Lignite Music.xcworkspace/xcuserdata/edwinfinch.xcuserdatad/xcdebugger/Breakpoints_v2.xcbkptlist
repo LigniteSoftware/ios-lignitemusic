@@ -402,11 +402,11 @@
             ignoreCount = "5"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMCompactBrowsingView.m"
-            timestampString = "522783409.146593"
+            timestampString = "526770309.992041"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "393"
-            endingLineNumber = "393"
+            startingLineNumber = "398"
+            endingLineNumber = "398"
             landmarkName = "-collectionView:cellForItemAtIndexPath:"
             landmarkType = "7">
          </BreakpointContent>
@@ -580,11 +580,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMCompactBrowsingView.m"
-            timestampString = "517078857.449161"
+            timestampString = "526770309.992041"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "77"
-            endingLineNumber = "77"
+            startingLineNumber = "82"
+            endingLineNumber = "82"
             landmarkName = "-setMusicType:"
             landmarkType = "7">
          </BreakpointContent>
@@ -636,6 +636,22 @@
             moduleName = "">
             <Locations>
             </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Lignite Music/LMImageManager.m"
+            timestampString = "526793683.765239"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "562"
+            endingLineNumber = "562"
+            landmarkName = "-downloadNextImageInQueue"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "04CFC1D76EAF7D62F71673C4FFD1733C"
+               BlueprintIdentifier = "7CB65E17BB12E39D32860938D51949D3"
                BuildableName = "Pods_Lignite_Music.framework"
                BlueprintName = "Pods-Lignite Music"
                ReferencedContainer = "container:Pods.xcodeproj">
@@ -45,7 +45,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "04CFC1D76EAF7D62F71673C4FFD1733C"
+            BlueprintIdentifier = "7CB65E17BB12E39D32860938D51949D3"
             BuildableName = "Pods_Lignite_Music.framework"
             BlueprintName = "Pods-Lignite Music"
             ReferencedContainer = "container:Pods.xcodeproj">

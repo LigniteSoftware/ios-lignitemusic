@@ -58,6 +58,11 @@
  */
 @property LMPhoneLandscapeDetailView *phoneLandscapeDetailView;
 
+/**
+ The index of the currently open detail view for transitioning between landscape and portrait on iPhone.
+ */
+@property NSInteger indexOfCurrentlyOpenDetailView;
+
 @property BOOL testingShit;
 
 @end
@@ -467,22 +472,27 @@
 //	
 //	[self.collectionView setContentOffset:newOffset animated:NO];
 	
-	__block BOOL shitpost = NO;
-	__block BOOL othershit = NO;
+	__block BOOL transitioningFromLandscapeToPortrait = NO;
+	__block BOOL transitioningFromPortraitToLandscape = NO;
 	
 	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 //		[self.collectionView scrollToItemAtIndexPath:visibleIndexPath atScrollPosition:UICollectionViewScrollPositionCenteredVertically animated:NO];
 		[self.collectionView reloadData];
 //		[self.collectionView setContentOffset:newOffset animated:NO];
 		
-		LMCollectionViewFlowLayout *layout = (LMCollectionViewFlowLayout*)self.collectionView.collectionViewLayout;
-		
-		if([self phoneLandscapeViewIsDisplaying] && !willBeLandscape){
-			[self setPhoneLandscapeViewDisplaying:NO forIndex:-1];
-			shitpost = YES;
-		}
-		else if(![self phoneLandscapeViewIsDisplaying] && willBeLandscape && ![LMLayoutManager isiPad] && layout.indexOfItemDisplayingDetailView > LMNoDetailViewSelected){
-			[self setPhoneLandscapeViewDisplaying:YES forIndex:layout.indexOfItemDisplayingDetailView];
+		if(![LMLayoutManager isiPad]){
+			LMCollectionViewFlowLayout *layout = (LMCollectionViewFlowLayout*)self.collectionView.collectionViewLayout;
+			
+			if([self phoneLandscapeViewIsDisplaying] && !willBeLandscape){
+				[self setPhoneLandscapeViewDisplaying:NO forIndex:-1];
+				transitioningFromLandscapeToPortrait = YES;
+			}
+			else if(![self phoneLandscapeViewIsDisplaying] && willBeLandscape && ![LMLayoutManager isiPad] && layout.indexOfItemDisplayingDetailView > LMNoDetailViewSelected){
+				[self setPhoneLandscapeViewDisplaying:YES forIndex:layout.indexOfItemDisplayingDetailView];
+				self.indexOfCurrentlyOpenDetailView = layout.indexOfItemDisplayingDetailView;
+				
+				transitioningFromPortraitToLandscape = YES;
+			}
 		}
 		
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
@@ -490,17 +500,19 @@
 			
 			NSLog(@"Scrolling to %@", visibleIndexPath);
 			
+			if(![LMLayoutManager isiPad]){
 			LMCollectionViewFlowLayout *layout = (LMCollectionViewFlowLayout*)self.collectionView.collectionViewLayout;
 			
-			if(othershit){
-				layout.indexOfItemDisplayingDetailView = LMNoDetailViewSelected;
-			}
-			else if(shitpost){
-				[self tappedBigListEntryAtIndex:self.phoneLandscapeDetailView.index];
-			}
-			else{
-				[self.collectionView reloadData];
-				[self.collectionView scrollToItemAtIndexPath:visibleIndexPath atScrollPosition:UICollectionViewScrollPositionCenteredVertically animated:NO];
+				if(transitioningFromPortraitToLandscape){
+					layout.indexOfItemDisplayingDetailView = LMNoDetailViewSelected;
+				}
+				else if(transitioningFromLandscapeToPortrait){
+					[self tappedBigListEntryAtIndex:self.indexOfCurrentlyOpenDetailView];
+				}
+				else{
+					[self.collectionView reloadData];
+					[self.collectionView scrollToItemAtIndexPath:visibleIndexPath atScrollPosition:UICollectionViewScrollPositionCenteredVertically animated:NO];
+				}
 			}
 //			[self.collectionView setContentOffset:CGPointMake(0, topCell.frame.origin.y - (COMPACT_VIEW_SPACING_BETWEEN_ITEMS/2)) animated:YES];
 		}];
@@ -508,7 +520,7 @@
 }
 
 - (BOOL)phoneLandscapeViewIsDisplaying {
-	return self.phoneLandscapeDetailView;
+	return self.phoneLandscapeDetailView ? YES : NO;
 }
 
 - (void)setPhoneLandscapeViewDisplaying:(BOOL)displaying forIndex:(NSInteger)index {
@@ -526,6 +538,8 @@
 	self.phoneLandscapeDetailView.flowLayout = self.collectionView.collectionViewLayout;
 	
 	if(displaying){
+		self.indexOfCurrentlyOpenDetailView = index;
+		
 		self.phoneLandscapeDetailView.index = index;
 		self.phoneLandscapeDetailView.musicType = self.musicType;
 		self.phoneLandscapeDetailView.musicTrackCollection = [self.musicTrackCollections objectAtIndex:index];
@@ -555,6 +569,8 @@
 	}
 	else{
 		[self setPhoneLandscapeViewDisplaying:NO forIndex:-1];
+		
+		self.indexOfCurrentlyOpenDetailView = -1;
 	}
 }
 

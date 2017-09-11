@@ -11,6 +11,7 @@ def shared_pods
     pod 'SDWebImage', '~>3.8'
     pod 'Fabric'
     pod 'Crashlytics'
+    pod 'Unirest', '~> 1.1.4'
 end
 
 target 'Lignite Music' do
