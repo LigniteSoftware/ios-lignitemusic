@@ -283,8 +283,6 @@
 }
 
 - (CGSize)totalSize {
-	NSLog(@"selfsize is %f", self.frame.size.width);
-	
 	CGSize size = CGSizeMake(WINDOW_FRAME.size.width, 0);
 	
 	CGSize normalItemSize;
@@ -328,17 +326,17 @@
 	}
 	
 	
-	NSLog(@"Initial %d spacing %f", (int)size.height, spacing);
+//	NSLog(@"Initial %d spacing %f", (int)size.height, spacing);
 	
 	size.height += (amountOfItems * normalItemSize.height)/numberOfColumns;
-	NSLog(@"Adding amount now %d", (int)size.height);
+//	NSLog(@"Adding amount now %d", (int)size.height);
 	
 	if(numberOfColumns % 2 == 0 && amountOfItems % 2 != 0 && amountOfItems > numberOfColumns){ //If the number of columns is even but the amount of actual items is uneven
 		size.height += normalItemSize.height;
-		NSLog(@"Adding spacer because uneven now %d", (int)size.height);
+//		NSLog(@"Adding spacer because uneven now %d", (int)size.height);
 	}
 	
-	NSLog(@"Total size %@", NSStringFromCGSize(size));
+//	NSLog(@"Total size %@", NSStringFromCGSize(size));
 	
 	return size;
 }

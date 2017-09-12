@@ -116,6 +116,8 @@ LMControlBarViewDelegate
 
 @property BOOL statePreservedNowPlayingWasOpen;
 
+@property UIActivityIndicatorView *loadingActivityIndicator;
+
 @end
 
 @implementation LMCoreViewController
@@ -984,18 +986,29 @@ LMControlBarViewDelegate
 	else{
 		static dispatch_once_t mainSetupToken;
 		dispatch_once(&mainSetupToken, ^{
-			self.loadingProgressHUD = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+			self.loadingActivityIndicator = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+
+			[self.navigationController.view addSubview:self.loadingActivityIndicator];
 			
-			self.loadingProgressHUD.mode = MBProgressHUDModeIndeterminate;
-			self.loadingProgressHUD.label.text = NSLocalizedString(@"LoadingMusic", nil); @"Loading music...";
-			self.loadingProgressHUD.label.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18.0f];
-	//		self.loadingProgressHUD.progress = 0.1;
-			self.loadingProgressHUD.userInteractionEnabled = NO;
+			[self.loadingActivityIndicator autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+			[self.loadingActivityIndicator autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+			[self.loadingActivityIndicator autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+			[self.loadingActivityIndicator autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.navigationController.view withMultiplier:(1.0/3.0)];
 			
-			dispatch_time_t changeLabelTime = dispatch_time(DISPATCH_TIME_NOW, 2.0 * NSEC_PER_SEC);
-			dispatch_after(changeLabelTime, dispatch_get_global_queue(NSQualityOfServiceUserInteractive, 0), ^{
-				self.loadingProgressHUD.label.text = @"Almost there...";
-			});
+			[self.loadingActivityIndicator startAnimating];
+			
+//			self.loadingProgressHUD = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+//			
+//			self.loadingProgressHUD.mode = MBProgressHUDModeIndeterminate;
+//			self.loadingProgressHUD.label.text = NSLocalizedString(@"LoadingMusic", nil);
+//			self.loadingProgressHUD.label.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18.0f];
+//	//		self.loadingProgressHUD.progress = 0.1;
+//			self.loadingProgressHUD.userInteractionEnabled = NO;
+//			
+//			dispatch_time_t changeLabelTime = dispatch_time(DISPATCH_TIME_NOW, 2.0 * NSEC_PER_SEC);
+//			dispatch_after(changeLabelTime, dispatch_get_global_queue(NSQualityOfServiceUserInteractive, 0), ^{
+//				self.loadingProgressHUD.label.text = @"Almost there...";
+//			});
 			
 			NSLog(@"Launch main view controller contents");
 			[NSTimer scheduledTimerWithTimeInterval:0.05 block:^{
@@ -1013,7 +1026,9 @@ LMControlBarViewDelegate
 	}
 	
 	self.loadingProgressHUD.label.text = @"Loading interface...";
-	self.loadingProgressHUD.hidden = YES;
+//	self.loadingProgressHUD.hidden = YES;
+	
+	[self.loadingActivityIndicator stopAnimating];
 	
 	if(!self.layoutManager){
 		self.layoutManager = [LMLayoutManager sharedLayoutManager];

@@ -149,12 +149,12 @@
 		UIColor *topColour = lightTheme ? [UIColor whiteColor] : [UIColor blackColor];
 		
 		if(self.nowPlayingView){
-			bottomColour = lightTheme ? [UIColor whiteColor] : [UIColor blackColor];
+			bottomColour = lightTheme ? [UIColor blackColor] : [UIColor whiteColor];
 			topColour = lightTheme ? [UIColor whiteColor] : [UIColor blackColor];
 		}
 		
 		if(self.sliderIsShrunk){
-			bottomColour = topColour;
+//			bottomColour = topColour;
 		}
 		
 		[UIView transitionWithView:self.leftTextBottomLabel duration:0.25 options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
@@ -295,7 +295,7 @@
 //		topColour = lightTheme ? [UIColor blackColor] : [UIColor whiteColor];
 		
 		if(self.nowPlayingView){
-			textLabel.textColor = (self.lightTheme ? [UIColor whiteColor] : [UIColor blackColor]);
+			textLabel.textColor = (self.lightTheme ? [UIColor blackColor] : [UIColor whiteColor]);
 		}
 		else{
 			textLabel.textColor = ((shrunk ? !self.lightTheme : self.lightTheme) ? [UIColor blackColor] : [UIColor whiteColor]);

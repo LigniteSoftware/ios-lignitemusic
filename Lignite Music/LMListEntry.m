@@ -133,6 +133,8 @@
 		
 		self.iconView = [UIImageView newAutoLayoutView];
 		self.iconView.image = icon;
+		self.iconView.layer.masksToBounds = YES;
+		self.iconView.layer.cornerRadius = 6.0f;
 		[self.iconBackgroundView addSubview:self.iconView];
 		
 		if(self.alignIconToLeft){

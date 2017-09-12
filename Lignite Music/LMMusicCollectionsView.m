@@ -41,6 +41,8 @@
 	else{
 		LMTiledAlbumCoverView *tiledAlbumCover = [LMTiledAlbumCoverView newAutoLayoutView];
 		tiledAlbumCover.musicCollection = collection;
+		tiledAlbumCover.layer.masksToBounds = YES;
+		tiledAlbumCover.layer.cornerRadius = 6.0f;
 		return tiledAlbumCover;
 	}
 }
@@ -158,9 +160,7 @@
 	return cell;
 }
 
-- (CGSize)normalItemSize {
-	NSLog(@"Normal item size %@ compared to me %@", NSStringFromCGSize(self.flowLayout.normalItemSize), NSStringFromCGRect(self.collectionView.frame));
-	
+- (CGSize)normalItemSize {	
 	CGFloat scaleFactor = (7.0/8.0);
 	
 	CGSize scaledSize = CGSizeMake(self.flowLayout.normalItemSize.width*scaleFactor, self.flowLayout.normalItemSize.height*scaleFactor);

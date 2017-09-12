@@ -124,7 +124,7 @@
 - (void)layoutSubviews {
 	[super layoutSubviews];
 	
-	NSLog(@"%@ %@", NSStringFromCGRect(self.superview.superview.frame), [[self.superview.superview class] description]);
+//	NSLog(@"%@ %@", NSStringFromCGRect(self.superview.superview.frame), [[self.superview.superview class] description]);
 }
 
 @end

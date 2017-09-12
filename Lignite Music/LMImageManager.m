@@ -632,7 +632,7 @@
 }
 
 - (void)beginDownloadingImagesForCategory:(LMImageManagerCategory)category {
-	NSLog(@"[LMImageManager]: Will begin the process for downloading images for category %d.", category);
+	NSLog(@"[LMImageManager]: Will begin the process for downloading images r category %d.", category);
 	
 	NSArray *collectionsAssociated = (category == LMImageManagerCategoryArtistImages) ? self.artistsCollection : self.albumsCollection;
 	

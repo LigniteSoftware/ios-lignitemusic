@@ -117,7 +117,7 @@
 		} completion:nil];
 	}];
 	
-	self.collectionView.scrollEnabled = !self.isDisplayingDetailView;
+//	self.collectionView.scrollEnabled = !self.isDisplayingDetailView;
 }
 
 - (CGSize)collectionViewContentSize {
@@ -162,9 +162,6 @@
 	}
 	
 
-	
-//	NSLog(@"Called!");
-	
 	return layoutAttributes;
 }
 
@@ -181,7 +178,7 @@
 		attributes.frame = initialDetailViewFrame;
 	}
 	else if(itemIndexPath.row == self.indexOfDetailView && self.detailView.isChangingSize){
-//		attributes.alpha = 0;
+		attributes.alpha = 0;
 	}
 	else if(self.isDisplayingDetailView){
 		NSLog(@"Displaying detail view");

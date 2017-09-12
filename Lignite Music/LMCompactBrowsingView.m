@@ -174,6 +174,8 @@
                 //No need for prep since we're just gonna prep once
                 LMTiledAlbumCoverView *tiledAlbumCover = bigListEntry.contentView;
                 tiledAlbumCover.musicCollection = collection;
+				tiledAlbumCover.layer.cornerRadius = 6.0f;
+				tiledAlbumCover.layer.masksToBounds = YES;
                 return tiledAlbumCover;
             }
             default: {
@@ -195,6 +197,9 @@
                 imageView.layer.shadowOpacity = 0.25f;
                 UIImage *artistImage = [collection.representativeItem artistImage];
                 imageView.image = artistImage;
+				
+				imageView.layer.cornerRadius = 6.0f;
+				imageView.layer.masksToBounds = YES;
                 return imageView;
             }
             case LMMusicTypeAlbums:
