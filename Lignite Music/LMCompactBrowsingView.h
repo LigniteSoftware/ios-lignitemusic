@@ -71,4 +71,9 @@
  */
 - (void)setPhoneLandscapeViewDisplaying:(BOOL)displaying forIndex:(NSInteger)index;
 
+/**
+ Reload the data and invalidate the layouts at the same time, saving to make 2 calls at once.
+ */
+- (void)reloadDataAndInvalidateLayouts;
+
 @end

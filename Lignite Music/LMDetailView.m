@@ -86,6 +86,7 @@
 	_musicTrackCollectionToUse = musicTrackCollectionToUse;
 	
 	[self.collectionView reloadData];
+	[self.collectionView.collectionViewLayout invalidateLayout];
 	
 	[self setShowingSpecificTrackCollection:YES animated:YES];
 }
@@ -205,6 +206,7 @@
 	_musicTrackCollection = musicTrackCollection;
 	
 	[self.collectionView reloadData];
+	[self.collectionView.collectionViewLayout invalidateLayout];
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -404,6 +406,7 @@
 	}
 	else{
 		[self.collectionView reloadData];
+		[self.collectionView.collectionViewLayout invalidateLayout];
 		[self musicTrackDidChange:self.musicPlayer.nowPlayingTrack];
 	}
 	

@@ -43,7 +43,11 @@
 
 - (NSInteger)indexOfDetailViewForIndexOfItemDisplayingDetailView:(NSInteger)index {
 	if(index > LMNoDetailViewSelected){
-		return (index - (index % self.itemsPerRow)) + self.itemsPerRow;
+		NSInteger fixedIndex = (index - (index % self.itemsPerRow)) + self.itemsPerRow;
+		if(fixedIndex > self.musicTrackCollections.count-1){
+			return self.musicTrackCollections.count;
+		}
+		return fixedIndex;
 	}
 	return LMNoDetailViewSelected;
 }
@@ -64,7 +68,10 @@
 	NSInteger totalNumberOfItems = [self.collectionView.dataSource collectionView:self.collectionView numberOfItemsInSection:1];
 	NSInteger overflow = self.indexOfDetailView-totalNumberOfItems;
 	
-	if(overflow < 0){
+	NSLog(@"total %ld overflow %ld index %ld from %@", (long)totalNumberOfItems, (long)overflow, (long)self.indexOfDetailView, self.collectionView.dataSource);
+	
+	if(overflow < 0 || (overflow+self.indexOfDetailView-1 > totalNumberOfItems)){
+		NSLog(@"No fear, returning 0");
 		return 0;
 	}
 	
@@ -170,23 +177,26 @@
 	
 	NSLog(@"Disappearing %@", itemIndexPath);
 	
-	if(itemIndexPath.row == self.previousIndexOfDetailView){
+	if(itemIndexPath.row == self.previousIndexOfDetailView){ //Shrink the detail view to 0 in height
 		NSLog(@"Is previous index");
 		CGRect initialDetailViewFrame = [self frameForCellAtIndexPath:itemIndexPath detailViewDisplayMode:LMDetailViewDisplayModePreviousIndex];
 		initialDetailViewFrame.size.height = 0;
 		
 		attributes.frame = initialDetailViewFrame;
 	}
-	else if(itemIndexPath.row == self.indexOfDetailView && self.detailView.isChangingSize){
-		attributes.alpha = 0;
+	else if(itemIndexPath.row == self.indexOfDetailView && self.detailView.isChangingSize){ //Is transitioning from music collections view to specific collection
+//		attributes.alpha = 0;
 	}
-	else if(self.isDisplayingDetailView){
-		NSLog(@"Displaying detail view");
-		attributes.frame = [self frameForCellAtIndexPath:itemIndexPath detailViewDisplayMode:self.detailView.isChangingSize ? LMDetailViewDisplayModeCurrentIndex : LMDetailViewDisplayModeNone];
+	else if(self.isDisplayingDetailView){ //Is an actual item in the compact view and is transitioning along with the now-opening detail view
+		NSLog(@"Displaying detail view %@", itemIndexPath);
+		attributes.frame = [self frameForCellAtIndexPath:[NSIndexPath indexPathForRow:itemIndexPath.row inSection:0] detailViewDisplayMode:self.detailView.isChangingSize ? LMDetailViewDisplayModeCurrentIndex : LMDetailViewDisplayModeNone];
 	}
-	else if(!self.isDisplayingDetailView){
+	else if(!self.isDisplayingDetailView){ //Is an item in the compact view and is transitioning along with the now-closing detail view
 		NSLog(@"Not displaying detail view");
 		attributes.frame = [self frameForCellAtIndexPath:[NSIndexPath indexPathForRow:itemIndexPath.row-1 inSection:0] detailViewDisplayMode:LMDetailViewDisplayModeCurrentIndex];
+	}
+	else{
+		NSLog(@"Hey");
 	}
 	
 	return attributes;
@@ -258,7 +268,7 @@
 	if(isDetailViewRow){
 		CGRect finalFrame = CGRectMake(origin.x - spacing, origin.y + spacing/4, collectionViewSize.width-(origin.x * 2)+(spacing * 2), detailViewHeight);
 		
-//		NSLog(@"\ncollframe %@ \n content offset %@ \n superviewframe %@ \n size of item %@\nfinal frame %@", NSStringFromCGRect(self.collectionView.frame), NSStringFromCGPoint(self.collectionView.contentOffset), NSStringFromCGRect(self.collectionView.superview.frame), NSStringFromCGRect([self frameForCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] detailViewDisplayMode:LMDetailViewDisplayModeNone]), NSStringFromCGRect(finalFrame));
+		NSLog(@"\ncollframe %@ \n content offset %@ \n superviewframe %@ \n size of item %@\nfinal frame %@", NSStringFromCGRect(self.collectionView.frame), NSStringFromCGPoint(self.collectionView.contentOffset), NSStringFromCGRect(self.collectionView.superview.frame), NSStringFromCGRect([self frameForCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] detailViewDisplayMode:LMDetailViewDisplayModeNone]), NSStringFromCGRect(finalFrame));
 		
 		return finalFrame;
 	}
@@ -297,7 +307,7 @@
 		}
 	}
 	
-//	NSLog(@"%@", indexPathsInRect);
+	NSLog(@"%@ for %@ %lu items", indexPathsInRect, NSStringFromCGRect(rect), (unsigned long)self.musicTrackCollections.count);
 
 	return indexPathsInRect;
 }

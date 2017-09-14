@@ -248,6 +248,7 @@
 		
 		[NSTimer scheduledTimerWithTimeInterval:0.1 block:^{
 			[self.collectionView reloadData];
+			[self.collectionView.collectionViewLayout invalidateLayout];
 		} repeats:NO];
 	}
 	

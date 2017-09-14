@@ -138,7 +138,7 @@ LMControlBarViewDelegate
 - (void)cacheSizeChangedTo:(uint64_t)newCacheSize forCategory:(LMImageManagerCategory)category {
     if((category == LMImageManagerCategoryArtistImages && self.compactView.musicType == LMMusicTypeArtists)
     || (category == LMImageManagerCategoryAlbumImages && self.compactView.musicType == LMMusicTypeAlbums)){
-        [self.compactView.collectionView reloadData];
+        [self.compactView reloadDataAndInvalidateLayouts];
     }
 }
 

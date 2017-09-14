@@ -71,6 +71,11 @@
 
 @synthesize musicType = _musicType;
 
+- (void)reloadDataAndInvalidateLayouts {
+	[self.collectionView.collectionViewLayout invalidateLayout];
+	[self.collectionView reloadData];
+}
+
 - (LMMusicType)musicType {
 	return _musicType;
 }
@@ -87,7 +92,6 @@
 }
 
 - (void)scrollViewToIndex:(NSUInteger)index {
-	NSLog(@"Scroll to %ld", index);
     self.didJustScrollByLetter = YES;
 	[self layoutIfNeeded];
 	[self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredVertically animated:NO];
@@ -482,7 +486,7 @@
 	
 	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 //		[self.collectionView scrollToItemAtIndexPath:visibleIndexPath atScrollPosition:UICollectionViewScrollPositionCenteredVertically animated:NO];
-		[self.collectionView reloadData];
+		[self reloadDataAndInvalidateLayouts];
 //		[self.collectionView setContentOffset:newOffset animated:NO];
 		
 		if(![LMLayoutManager isiPad]){
@@ -515,7 +519,7 @@
 					[self tappedBigListEntryAtIndex:self.indexOfCurrentlyOpenDetailView];
 				}
 				else{
-					[self.collectionView reloadData];
+					[self reloadDataAndInvalidateLayouts];
 					[self.collectionView scrollToItemAtIndexPath:visibleIndexPath atScrollPosition:UICollectionViewScrollPositionCenteredVertically animated:NO];
 				}
 			}

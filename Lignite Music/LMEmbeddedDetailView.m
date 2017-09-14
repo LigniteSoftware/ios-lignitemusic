@@ -94,7 +94,7 @@
 	self.expandableTrackListControlBar.mode = !showingAlbumTileView ? LMExpandableTrackListControlBarModeControlWithAlbumDetail : LMExpandableTrackListControlBarModeGeneralControl;
 }
 
-- (void)layoutSubviews {
+- (void)layoutSubviews {	
 	self.backgroundColor = [UIColor yellowColor];
 	
 	if(!self.didLayoutConstraints){
