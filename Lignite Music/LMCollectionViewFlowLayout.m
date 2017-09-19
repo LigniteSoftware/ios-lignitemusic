@@ -218,7 +218,12 @@
 	BOOL isDetailViewRow = (indexPath.row == detailViewIndexToUse) && displayingDetailView && !detailViewIndexIsNegative;
 	BOOL isBelowDetailViewRow = (indexPath.row > detailViewIndexToUse) && displayingDetailView && !detailViewIndexIsNegative;
 	
-	NSInteger fixedIndexPathRow = (indexPath.row - isBelowDetailViewRow);
+	NSInteger amountOfItems = [self.collectionView numberOfItemsInSection:0];
+	NSInteger amountLeft = ((amountOfItems-1)-self.indexOfItemDisplayingDetailView-1);
+	NSInteger amountOfItemsInLastRow = (amountOfItems-1) % self.itemsPerRow;
+	NSInteger detailViewIsInLastRow = amountLeft-amountOfItemsInLastRow;
+	
+	NSInteger fixedIndexPathRow = (indexPath.row - isBelowDetailViewRow) + ((isDetailViewRow && detailViewIsInLastRow < 0) ? (self.itemsPerRow+detailViewIsInLastRow) : 0);
 	
 	CGSize collectionViewSize = self.collectionView.frame.size; //Get the current size of the collection view
 	CGFloat sideLength = collectionViewSize.width/factor; //Get the side length of one cell based on the factor provided
@@ -237,7 +242,7 @@
 	CGFloat spacingDividerFactor = (1+(![LMLayoutManager isLandscape] && ![LMLayoutManager isiPad]));
 	
 	CGPoint origin = CGPointMake(((fixedIndexPathRow % factor) * (size.width+spacing)) + spacing, //The column which the cell is in
-								 ((fixedIndexPathRow/factor) * (size.height+(spacing/spacingDividerFactor))) + spacing/spacingDividerFactor); //The row
+								 ((fixedIndexPathRow / factor) * (size.height+(spacing/spacingDividerFactor))) + spacing/spacingDividerFactor); //The row
 	
 	CGFloat detailViewHeight = 0;
 	
@@ -266,9 +271,11 @@
 	}
 	
 	if(isDetailViewRow){
-		CGRect finalFrame = CGRectMake(origin.x - spacing, origin.y + spacing/4, collectionViewSize.width-(origin.x * 2)+(spacing * 2), detailViewHeight);
+		CGRect finalFrame = CGRectMake(0, origin.y + spacing/4, collectionViewSize.width, detailViewHeight);
 		
 		NSLog(@"\ncollframe %@ \n content offset %@ \n superviewframe %@ \n size of item %@\nfinal frame %@", NSStringFromCGRect(self.collectionView.frame), NSStringFromCGPoint(self.collectionView.contentOffset), NSStringFromCGRect(self.collectionView.superview.frame), NSStringFromCGRect([self frameForCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] detailViewDisplayMode:LMDetailViewDisplayModeNone]), NSStringFromCGRect(finalFrame));
+		
+		NSLog(@"Amount left %ld-%ld-1 == %ld", amountOfItems-1, (long)self.indexOfItemDisplayingDetailView, (long)amountLeft);
 		
 		return finalFrame;
 	}

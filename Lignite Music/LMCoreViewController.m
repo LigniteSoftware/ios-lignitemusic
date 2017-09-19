@@ -1070,10 +1070,10 @@ LMControlBarViewDelegate
 //	
 //	return;
 	
-	LMLagDetectionThread *lagThread = [LMLagDetectionThread new];
-	lagThread.viewToDisplayAlertsOn = self.navigationController.view;
-	lagThread.lagDelayInSeconds = 0.05;
-	[lagThread start];
+//	LMLagDetectionThread *lagThread = [LMLagDetectionThread new];
+//	lagThread.viewToDisplayAlertsOn = self.navigationController.view;
+//	lagThread.lagDelayInSeconds = 0.05;
+//	[lagThread start];
 	
 	NSTimeInterval loadStartTime = [[NSDate new] timeIntervalSince1970];
 				
