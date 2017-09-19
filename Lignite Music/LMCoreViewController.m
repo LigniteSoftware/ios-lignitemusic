@@ -117,6 +117,7 @@ LMControlBarViewDelegate
 @property BOOL statePreservedNowPlayingWasOpen;
 
 @property UIActivityIndicatorView *loadingActivityIndicator;
+@property UILabel *loadingLabel;
 
 @end
 
@@ -997,6 +998,27 @@ LMControlBarViewDelegate
 			
 			[self.loadingActivityIndicator startAnimating];
 			
+			UIImageView *loadingIndicatorImageView = nil;
+			
+			for(UIView *subview in self.loadingActivityIndicator.subviews){
+				if([subview class] == [UIImageView class]){
+					loadingIndicatorImageView = (UIImageView*)subview;
+				}
+			}
+			
+			if(loadingIndicatorImageView){
+				self.loadingLabel = [UILabel newAutoLayoutView];
+				self.loadingLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:16.0f];
+				self.loadingLabel.text = NSLocalizedString(@"LoadingMusic", nil);
+				self.loadingLabel.textAlignment = NSTextAlignmentCenter;
+				self.loadingLabel.textColor = [UIColor blackColor];
+				[self.loadingActivityIndicator addSubview:self.loadingLabel];
+				
+				[self.loadingLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+				[self.loadingLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+				[self.loadingLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:loadingIndicatorImageView withOffset:10];
+			}
+			
 //			self.loadingProgressHUD = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
 //			
 //			self.loadingProgressHUD.mode = MBProgressHUDModeIndeterminate;
@@ -1024,11 +1046,12 @@ LMControlBarViewDelegate
 	if(self.buttonNavigationBar){
 		return;
 	}
+
 	
-	self.loadingProgressHUD.label.text = @"Loading interface...";
 //	self.loadingProgressHUD.hidden = YES;
 	
 	[self.loadingActivityIndicator stopAnimating];
+	self.loadingLabel.hidden = YES;
 	
 	if(!self.layoutManager){
 		self.layoutManager = [LMLayoutManager sharedLayoutManager];

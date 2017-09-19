@@ -880,6 +880,8 @@
 	
 	self.albumArtImageView = [UIImageView newAutoLayoutView];
 	//	self.albumArtImageView.backgroundColor = [UIColor orangeColor];
+	self.albumArtImageView.layer.masksToBounds = YES;
+	self.albumArtImageView.layer.cornerRadius = 8.0f;
 	[self.albumArtRootView addSubview:self.albumArtImageView];
 	
 	[self.albumArtImageView autoCenterInSuperview];
@@ -927,7 +929,7 @@
 	self.buttonStackView.axis = UILayoutConstraintAxisHorizontal;
 	self.buttonStackView.distribution = UIStackViewDistributionFillEqually;
 	self.buttonStackView.spacing = ((([LMLayoutManager isLandscapeiPad] || [LMLayoutManager isLandscape])
-									 ? self.frame.size.height : self.frame.size.width) * 0.9 * ([LMLayoutManager isiPad] ? 0.5 : 0.40))/4.0;
+									 ? self.frame.size.height : self.frame.size.width) * 0.9 * ([LMLayoutManager isiPad] ? 0.5 : 0.35))/4.0;
 	[self.paddingView addSubview:self.buttonStackView];
 	
 	
@@ -940,7 +942,7 @@
 	[LMLayoutManager addNewPortraitConstraints:stackViewPortraitConstraints];
 	
 	NSArray *stackViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-		[self.buttonStackView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.paddingView withMultiplier:(1.0/8.0)];
+		[self.buttonStackView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.paddingView withMultiplier:(1.5/8.0)];
 		[self.buttonStackView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.trackInfoView withOffset:10];
 		[self.buttonStackView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.trackInfoView withOffset:-10];
 		[self.buttonStackView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.albumArtImageView];
