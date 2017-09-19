@@ -231,13 +231,13 @@
 			
 			BOOL isLight = [averageColour isLight];
 			
-			self.progressSlider.sliderBackgroundView.backgroundColor = isLight ? [UIColor blackColor] : [UIColor whiteColor];
+			self.progressSlider.sliderBackgroundView.backgroundColor = averageColour;
 //			self.colourBackgroundView.backgroundColor = colorArt.backgroundColor;
 			
 			self.blurredBackgroundView.effect = [UIBlurEffect effectWithStyle:isLight ? UIBlurEffectStyleLight : UIBlurEffectStyleDark];
 			
 			self.trackInfoView.textColour = isLight ? [UIColor blackColor] : [UIColor whiteColor];
-			self.progressSlider.lightTheme = isLight;
+			self.progressSlider.lightTheme = !isLight;
 			
 //			NSLog(@"Spook me solid");
 			
