@@ -72,8 +72,8 @@
 @synthesize musicType = _musicType;
 
 - (void)reloadDataAndInvalidateLayouts {
-	[self.collectionView.collectionViewLayout invalidateLayout];
 	[self.collectionView reloadData];
+	[self.collectionView.collectionViewLayout invalidateLayout];
 }
 
 - (LMMusicType)musicType {
