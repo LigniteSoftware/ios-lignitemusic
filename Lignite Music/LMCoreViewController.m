@@ -793,10 +793,10 @@ LMControlBarViewDelegate
 	[self.layoutManager traitCollectionDidChange:previousTraitCollection];
 	
 	if([LMLayoutManager isiPad]){
-		self.splashImageView.image = [UIImage imageNamed:@"splash_ipad.png"];
+		self.splashImageView.image = [UIImage imageNamed:@"ipad_splashscreen_abbey.png"];
 	}
 	else{
-		self.splashImageView.image = [UIImage imageNamed:[LMLayoutManager sharedLayoutManager].isLandscape ? @"splash_landscape_g.png" : @"splash_portrait_g.png"];
+		self.splashImageView.image = [UIImage imageNamed:[LMLayoutManager sharedLayoutManager].isLandscape ? @"splash_landscape_abbey.png" : @"splash_portrait_abbey.png"];
 	}
 }
 
