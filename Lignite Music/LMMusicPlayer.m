@@ -687,6 +687,9 @@ BOOL shuffleForDebug = NO;
 }
 
 - (NSString*)firstLetterForString:(NSString*)string {
+	if(string == nil || string.length < 1){
+		return @"?";
+	}
 	return [[NSString stringWithFormat:@"%C", [string characterAtIndex:0]] uppercaseString];
 }
 

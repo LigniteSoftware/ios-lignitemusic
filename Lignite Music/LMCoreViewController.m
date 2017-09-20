@@ -1048,7 +1048,7 @@ LMControlBarViewDelegate
 	}
 
 	
-	return;
+//	return;
 	
 //	self.loadingProgressHUD.hidden = YES;
 	
