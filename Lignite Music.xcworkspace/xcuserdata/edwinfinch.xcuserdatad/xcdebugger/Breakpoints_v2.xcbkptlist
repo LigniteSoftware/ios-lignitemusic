@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMCoreViewController.m"
-            timestampString = "527474310.761318"
+            timestampString = "527610250.54957"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1385"
-            endingLineNumber = "1385">
+            startingLineNumber = "1387"
+            endingLineNumber = "1387">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
