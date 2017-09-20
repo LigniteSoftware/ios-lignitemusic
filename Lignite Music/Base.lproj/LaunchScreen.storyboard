@@ -21,9 +21,9 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="splash_portrait_abbey.png" translatesAutoresizingMaskIntoConstraints="NO" id="dMt-1e-8Ko">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="splash_portrait_abbey_fixed.png" translatesAutoresizingMaskIntoConstraints="NO" id="dMt-1e-8Ko">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
-                                <variation key="heightClass=compact-widthClass=regular" image="splash_landscape_abbey.png"/>
+                                <variation key="heightClass=compact-widthClass=regular" image="splash_landscape_abbey_fixed.png"/>
                                 <variation key="heightClass=regular-widthClass=regular" image="ipad_splashscreen_abbey.png"/>
                             </imageView>
                         </subviews>
@@ -45,7 +45,7 @@
     </scenes>
     <resources>
         <image name="ipad_splashscreen_abbey.png" width="2048" height="2048"/>
-        <image name="splash_landscape_abbey.png" width="1920" height="1080"/>
-        <image name="splash_portrait_abbey.png" width="1080" height="1920"/>
+        <image name="splash_landscape_abbey_fixed.png" width="1920" height="1080"/>
+        <image name="splash_portrait_abbey_fixed.png" width="1080" height="1920"/>
     </resources>
 </document>

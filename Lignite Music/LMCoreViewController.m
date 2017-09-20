@@ -796,7 +796,7 @@ LMControlBarViewDelegate
 		self.splashImageView.image = [UIImage imageNamed:@"ipad_splashscreen_abbey.png"];
 	}
 	else{
-		self.splashImageView.image = [UIImage imageNamed:[LMLayoutManager sharedLayoutManager].isLandscape ? @"splash_landscape_abbey.png" : @"splash_portrait_abbey.png"];
+		self.splashImageView.image = [UIImage imageNamed:[LMLayoutManager sharedLayoutManager].isLandscape ? @"splash_landscape_abbey_fixed.png" : @"splash_portrait_abbey_fixed.png"];
 	}
 }
 
@@ -994,7 +994,7 @@ LMControlBarViewDelegate
 			[self.loadingActivityIndicator autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 			[self.loadingActivityIndicator autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 			[self.loadingActivityIndicator autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-			[self.loadingActivityIndicator autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.navigationController.view withMultiplier:(1.0/3.0)];
+			[self.loadingActivityIndicator autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.navigationController.view withMultiplier:(1.0/2.0)];
 			
 			[self.loadingActivityIndicator startAnimating];
 			
