@@ -92,7 +92,8 @@
 
 @implementation MPMediaItem (LigniteImages)
 
-- (UIImage*)albumArt {	
+- (UIImage*)albumArt {
+	return [LMAppIcon imageForIcon:LMIconNoAlbumArt75Percent];
 	//Get the album artwork
 	UIImage *albumArtImage = [self uncorrectedAlbumArt];
 	
@@ -104,14 +105,16 @@
 	return albumArtImage;
 }
 
-- (UIImage*)uncorrectedAlbumArt {
+- (UIImage*)uncorrectedAlbumArt {	
 	LMMusicPlayerType currentPlayerType = [[LMMusicPlayer sharedMusicPlayer] playerType];
 	
 	if(currentPlayerType == LMMusicPlayerTypeSystemMusicPlayer || currentPlayerType == LMMusicPlayerTypeAppleMusic){
 		MPMediaItem *mediaItem = self;
 		
 		//Get the standard album artwork
-		UIImage *albumArtImage = [mediaItem.artwork imageWithSize:CGSizeMake(480, 480)];
+		NSLog(@"Getting artwork for %@", mediaItem.title);
+		UIImage *albumArtImage = [mediaItem.artwork imageWithSize:mediaItem.artwork.bounds.size];
+		NSLog(@"Got artwork for %@", mediaItem.title);
 		if(!albumArtImage){
 			//If not found search the image cache for it
 			albumArtImage = [[LMImageManager sharedImageManager] imageForMediaItem:self withCategory:LMImageManagerCategoryAlbumImages];

@@ -350,6 +350,7 @@
 
 - (void)imageNeedsDownloadingForMusicTrack:(LMMusicTrack*)representativeItem forCategory:(LMImageManagerCategory)category completion:(void(^)(BOOL needsDownloading))completionHandler {
 	
+	
 	__block NSBlockOperation *albumArtOperation = [NSBlockOperation blockOperationWithBlock:^{
 		//TODO: Fix this not being cancelled because of weak reference
 		if(albumArtOperation.isCancelled){
@@ -373,7 +374,7 @@
 }
 
 - (void)downloadImageForMusicTrack:(LMMusicTrack*)randomTrack forCategory:(LMImageManagerCategory)category {
-    
+	return;
 //    LMMusicTrack *randomTrack = nil;
 //    LMImageManagerCategory category = LMImageManagerCategoryArtistImages;
     
@@ -640,37 +641,41 @@
 	
 	[self.currentlyProcessingCategoryArray addObject:categoryNumber];
 	
-	NSLog(@"Processing %d.", category);
+	NSLog(@"Processing category %d (%ld items).", category, collectionsAssociated.count);
 	
 	for(int i = 0; i < collectionsAssociated.count; i++){
-		LMMusicTrackCollection *collection = [collectionsAssociated objectAtIndex:i];
-		LMMusicTrack *representativeTrack = collection.representativeItem;
-		
-		[self imageNeedsDownloadingForMusicTrack:representativeTrack
-									 forCategory:category
-									  completion:^(BOOL needsDownloading) {
-//										  NSLog(@"%d %@ needs downloading: %d", i, representativeTrack.albumTitle, needsDownloading);
-										  
-										  //If it needs downloading, is not already in queue, and is not on the blacklist
-										  if(needsDownloading
-//											 && ![self.trackDownloadQueue containsObject:representativeTrack]
-											 && ![self musicTrackIsOnBlacklist:representativeTrack forCategory:category])
-										  {
-											  if(representativeTrack != nil && categoryNumber != nil){
-												  [self.trackDownloadQueue addObject:representativeTrack];
-												  [self.categoryDownloadQueue addObject:categoryNumber];
+		[NSTimer scheduledTimerWithTimeInterval:0.03*i block:^{ //I have no clue why on iOS 11 there was a lockup, where when more than 60 asyncs were created requesting album art it would lock up. Fuck.
+			LMMusicTrackCollection *collection = [collectionsAssociated objectAtIndex:i];
+			LMMusicTrack *representativeTrack = collection.representativeItem;
+			
+			[self imageNeedsDownloadingForMusicTrack:representativeTrack
+										 forCategory:category
+										  completion:^(BOOL needsDownloading) {
+											  //										  NSLog(@"%d %@ needs downloading: %d", i, representativeTrack.albumTitle, needsDownloading);
+											  
+											  //If it needs downloading, is not already in queue, and is not on the blacklist
+											  if(needsDownloading
+												 //											 && ![self.trackDownloadQueue containsObject:representativeTrack]
+												 && ![self musicTrackIsOnBlacklist:representativeTrack forCategory:category])
+											  {
+												  if(representativeTrack != nil && categoryNumber != nil){
+													  [self.trackDownloadQueue addObject:representativeTrack];
+													  [self.categoryDownloadQueue addObject:categoryNumber];
+												  }
 											  }
-										  }
-										  
-										  //Since this should mean we're at least part way through the list (since it's asynchronus), we can know with fairly high confidence that there will be some items in the queue, so we can start downloading them since we don't actually start downloading instantly.
-										  if(i == collectionsAssociated.count-1 && !self.downloadingImages){
-											  [self downloadNextImageInQueue];
-										  }
-									  }];
+											  
+											  //Since this should mean we're at least part way through the list (since it's asynchronus), we can know with fairly high confidence that there will be some items in the queue, so we can start downloading them since we don't actually start downloading instantly.
+											  if(i == collectionsAssociated.count-1 && !self.downloadingImages){
+												  [self downloadNextImageInQueue];
+											  }
+										  }];
+		} repeats:NO];
 	}
 }
 
 - (void)downloadIfNeededForCategory:(LMImageManagerCategory)category {
+//	return;
+	
 	LMImageManagerConditionLevel currentConditionLevel = [self conditionLevelForDownloadingForCategory:category];
 	
 	if([self.currentlyProcessingCategoryArray containsObject:@(category)]){

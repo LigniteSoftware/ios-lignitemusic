@@ -94,7 +94,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	NSUInteger rawRow = [self rawIndexForIndexPath:indexPath];
 	
-	NSString *cellIdentifier = [NSString stringWithFormat:@"%@Cell_%u", self.title, (rawRow % self.listEntryArray.count)];
+	NSString *cellIdentifier = [NSString stringWithFormat:@"%@Cell_%ld", self.title, (rawRow % self.listEntryArray.count)];
 	
 	LMTableViewCell *cell = (LMTableViewCell*)[tableView dequeueReusableCellWithIdentifier:cellIdentifier forIndexPath:indexPath];
 	
