@@ -93,7 +93,6 @@
 @implementation MPMediaItem (LigniteImages)
 
 - (UIImage*)albumArt {
-	return [LMAppIcon imageForIcon:LMIconNoAlbumArt75Percent];
 	//Get the album artwork
 	UIImage *albumArtImage = [self uncorrectedAlbumArt];
 	

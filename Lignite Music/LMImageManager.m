@@ -374,7 +374,6 @@
 }
 
 - (void)downloadImageForMusicTrack:(LMMusicTrack*)randomTrack forCategory:(LMImageManagerCategory)category {
-	return;
 //    LMMusicTrack *randomTrack = nil;
 //    LMImageManagerCategory category = LMImageManagerCategoryArtistImages;
     
@@ -674,8 +673,6 @@
 }
 
 - (void)downloadIfNeededForCategory:(LMImageManagerCategory)category {
-//	return;
-	
 	LMImageManagerConditionLevel currentConditionLevel = [self conditionLevelForDownloadingForCategory:category];
 	
 	if([self.currentlyProcessingCategoryArray containsObject:@(category)]){

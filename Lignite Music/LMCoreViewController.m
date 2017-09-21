@@ -825,7 +825,7 @@ LMControlBarViewDelegate
 		self.navigationBar.layer.opacity = willBeLandscape ? 0.0 : 1.0;
 		self.landscapeNavigationBar.layer.opacity = !willBeLandscape ? 0.0 : 1.0;
 		
-		self.navigationBar.frame = CGRectMake(0, 0, size.width, willBeLandscape ? 0 : 64.0);
+		self.navigationBar.frame = CGRectMake(0, 20, size.width, willBeLandscape ? 0 : 64.0);
 		
 		self.nowPlayingCoreView.topConstraint.constant = self.nowPlayingCoreView.isOpen ? 0 : size.height;
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
@@ -1118,7 +1118,7 @@ LMControlBarViewDelegate
 	
 	
 	
-	self.navigationBar = [[LMNavigationBar alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 64.0f)];
+	self.navigationBar = [[LMNavigationBar alloc] initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, 64.0f)];
 	self.navigationBar.delegate = self;
 	[self.navigationController.view addSubview:self.navigationBar];
 	

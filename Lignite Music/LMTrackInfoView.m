@@ -9,6 +9,7 @@
 #import <PureLayout/PureLayout.h>
 #import "LMTrackInfoView.h"
 #import "LMLayoutManager.h"
+#import "NSTimer+Blocks.h"
 
 @interface LMTrackInfoView()<LMLayoutChangeDelegate>
 
@@ -41,15 +42,19 @@
 	self.albumLabel.textAlignment = newTextAlignment;
 }
 
+- (void)reload {
+	for(UIView *subview in self.subviews){
+		[subview removeFromSuperview];
+	}
+	
+	self.didLayoutConstraints = NO;
+	[self setNeedsLayout];
+	[self layoutIfNeeded];
+}
+
 - (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
 	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-		for(UIView *subview in self.subviews){
-			[subview removeFromSuperview];
-		}
-		
-		self.didLayoutConstraints = NO;
-		[self setNeedsLayout];
-		[self layoutIfNeeded];
+		[self reload];
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		
 	}];
@@ -148,11 +153,18 @@
 			label.trailingBuffer = 50;
 			
 //			label.backgroundColor = [UIColor colorWithRed:(0.2*i)+0.3 green:0 blue:0 alpha:1.0];
+//			NSLog(@"Frame %@ multiplier %f total %f", NSStringFromCGRect(self.frame), heightMultipliers[i], self.frame.size.height*heightMultipliers[i]);
 			label.font = [LMMarqueeLabel fontToFitHeight:self.frame.size.height*heightMultipliers[i]];
 			label.text = [texts objectAtIndex:i];
 			label.textAlignment = self.textAlignment;
 			label.textColor = self.textColour;
 			[self addSubview:label];
+			
+			if(self.frame.size.width == 0){
+				[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
+					[self reload];
+				} repeats:NO];
+			}
 			
 			[label autoPinEdge:ALEdgeTop toEdge:isFirst ? ALEdgeTop : ALEdgeBottom ofView:isFirst ? self : previousLabel withOffset:isFirst ? -label.layoutMargins.top : 2];
 			[label autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];

@@ -51,6 +51,22 @@
 
 @synthesize lettersDictionary = _lettersDictionary;
 
+- (void)reloadWithSize:(CGSize)size {
+	[NSTimer scheduledTimerWithTimeInterval:0.25 block:^{
+		BOOL isLandscape = (size.width > size.height);
+		if([LMLayoutManager isiPad]){
+			isLandscape = NO;
+		}
+		
+		for(UILabel *label in self.letterViewsArray){
+			label.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:(isLandscape ? self.frame.size.width : self.frame.size.height
+																		   )/2.25]; //.50 for W;
+			self.letterScrollView.adaptForWidth = !isLandscape;
+			[self.letterScrollView reload];
+		}
+	} repeats:NO];
+}
+
 - (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
 	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		
@@ -68,20 +84,8 @@
 		
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		//Nothing...
-		
-		[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
-			BOOL isLandscape = (size.width > size.height);
-			if([LMLayoutManager isiPad]){
-				isLandscape = NO;
-			}
-			
-			for(UILabel *label in self.letterViewsArray){
-				label.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:(isLandscape ? self.frame.size.width : self.frame.size.height
-																			   )/2.25]; //.50 for W;
-				self.letterScrollView.adaptForWidth = !isLandscape;
-				[self.letterScrollView reload];
-			}
-		} repeats:NO];
+	
+		[self reloadWithSize:size];
 	}];
 }
 
@@ -401,6 +405,11 @@
 			letterLabel.layer.masksToBounds = YES;
 			letterLabel.layer.cornerRadius = 3;
 			[self.letterScrollView addSubview:letterLabel];
+			
+			if(self.frame.size.width == 0 || self.frame.size.height == 0){
+				NSLog(@"Reloading.");
+				[self reloadWithSize:self.frame.size];
+			}
 
 			NSArray *letterLabelPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 				[letterLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
