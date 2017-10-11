@@ -7,11 +7,13 @@
 //
 
 #import <PureLayout/PureLayout.h>
+#import <MGSwipeTableCell/MGSwipeTableCell.h>
 #import "LMListEntry.h"
 #import "LMLabel.h"
 #import "LMAppIcon.h"
+#import "LMColour.h"
 
-@interface LMListEntry()
+@interface LMListEntry()<UIGestureRecognizerDelegate, MGSwipeTableCellDelegate>
 
 @property UIView *iconBackgroundView;
 @property UIImageView *iconView;
@@ -70,6 +72,54 @@
 	[self.delegate tappedListEntry:self];
 }
 
+#pragma mark Swipe Delegate
+
+- (BOOL)swipeTableCell:(MGSwipeTableCell*)cell canSwipe:(MGSwipeDirection)direction {
+	if(MGSwipeDirectionLeftToRight){
+		return NO;
+	}
+	return YES;
+}
+
+- (NSArray*)swipeTableCell:(MGSwipeTableCell*)cell swipeButtonsForDirection:(MGSwipeDirection)direction
+			 swipeSettings:(MGSwipeSettings*)swipeSettings expansionSettings:(MGSwipeExpansionSettings*)expansionSettings {
+	swipeSettings.transition = MGSwipeTransitionClipCenter;
+	swipeSettings.keepButtonsSwiped = YES;
+
+	expansionSettings.buttonIndex = 0;
+	expansionSettings.threshold = 1.5;
+	expansionSettings.expansionLayout = MGSwipeExpansionLayoutCenter;
+	expansionSettings.expansionColor = [UIColor colorWithRed:33/255.0 green:175/255.0 blue:67/255.0 alpha:1.0];
+	expansionSettings.triggerAnimation.easingFunction = MGSwipeEasingFunctionCubicOut;
+	expansionSettings.fillOnTrigger = NO;
+	
+	UIColor * color = [UIColor colorWithRed:47/255.0 green:47/255.0 blue:49/255.0 alpha:1.0];
+	UIFont * font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14.0f];
+	if (direction == MGSwipeDirectionRightToLeft){
+		MGSwipeButton * saveButton = [MGSwipeButton buttonWithTitle:@"Remove" backgroundColor:[UIColor redColor] padding:15 callback:^BOOL(MGSwipeTableCell *sender) {
+			NSLog(@"Save");
+			return YES; //don't autohide to improve delete animation
+		}];
+		saveButton.titleLabel.font = font;
+		return @[saveButton];
+	}
+	
+	return nil;
+	
+}
+
+- (void) swipeTableCell:(MGSwipeTableCell*) cell didChangeSwipeState:(MGSwipeState)state gestureIsActive:(BOOL)gestureIsActive {
+	NSString * str;
+	switch (state) {
+		case MGSwipeStateNone: str = @"None"; break;
+		case MGSwipeStateSwippingLeftToRight: str = @"SwippingLeftToRight"; break;
+		case MGSwipeStateSwippingRightToLeft: str = @"SwippingRightToLeft"; break;
+		case MGSwipeStateExpandingLeftToRight: str = @"ExpandingLeftToRight"; break;
+		case MGSwipeStateExpandingRightToLeft: str = @"ExpandingRightToLeft"; break;
+	}
+	NSLog(@"Swipe state: %@ ::: Gesture: %@", str, gestureIsActive ? @"Active" : @"Ended");
+}
+
 - (void)layoutSubviews {
 	[super layoutSubviews];
 	
@@ -77,7 +127,15 @@
 		return;
 	}
 	
-//	self.backgroundColor = [UIColor clearColor];
+	MGSwipeTableCell * cell = [[MGSwipeTableCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:[NSString stringWithFormat:@"test%d", rand()]];
+	
+	cell.backgroundColor = [UIColor clearColor];
+	cell.delegate = self; //optional
+	cell.clipsToBounds = YES;
+	
+	[self addSubview:cell];
+	[cell autoPinEdgesToSuperviewEdges];
+	
 	
 	self.setupConstraints = YES;
 	
@@ -99,8 +157,8 @@
 	self.contentView.clipsToBounds = NO;
 	self.contentView.layer.masksToBounds = NO;
 	self.contentView.layer.cornerRadius = 8;
-	self.contentView.backgroundColor = [UIColor clearColor];
-	[self addSubview:self.contentView];
+//	self.contentView.backgroundColor = [UIColor colorWithRed:0.5 green:0 blue:0 alpha:0.4];
+	[cell.contentView addSubview:self.contentView];
 	
 	[self.contentView autoCenterInSuperview];
 	[self.contentView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:self.contentViewHeightMultiplier];

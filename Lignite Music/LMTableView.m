@@ -156,7 +156,24 @@
 	}
 }
 
+//- (NSArray *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
+//
+//	UITableViewRowAction *moreAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleNormal title:@"Add to Queue" handler:^(UITableViewRowAction *action, NSIndexPath *indexPath){
+//		// maybe show an action sheet with more options
+//		NSLog(@"Tapped");
+//	}];
+//	moreAction.backgroundColor = [UIColor colorWithRed:0.00 green:0.60 blue:0.16 alpha:1.0];
+//
+//	return @[moreAction];
+//}
+//
+//- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+//
+//}
+
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+	NSLog(@"Reloading cell %d", (int)indexPath.section);
+	
 	LMTableViewCell *lmCell = (LMTableViewCell*)cell;
 	
 	id newSubview = [self.subviewDataSource subviewAtIndex:indexPath.section forTableView:self];

@@ -12,6 +12,7 @@ def shared_pods
     pod 'Fabric'
     pod 'Crashlytics'
     pod 'Unirest', '~> 1.1.4'
+    pod 'MGSwipeTableCell'
 end
 
 target 'Lignite Music' do

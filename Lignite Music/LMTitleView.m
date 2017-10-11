@@ -163,6 +163,12 @@
 }
 
 - (id)subviewAtIndex:(NSUInteger)index forTableView:(LMTableView *)tableView {
+//	UIView *testView = [UIView newAutoLayoutView];
+//	testView.backgroundColor = [LMColour randomColour];
+//	testView.userInteractionEnabled = NO;
+//	return testView;
+//	
+//	
 	LMListEntry *entry = [self.itemArray objectAtIndex:index % self.itemArray.count];
 	entry.collectionIndex = index;
 	entry.associatedData = [self.musicTitles.items objectAtIndex:index];
@@ -386,6 +392,10 @@
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		//Nothing, yet
 	}];
+}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
+	return YES;
 }
 
 - (void)setup {
