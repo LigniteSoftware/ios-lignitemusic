@@ -1380,6 +1380,26 @@ BOOL shuffleForDebug = NO;
 	[self setIndexOfNowPlayingTrack:indexOfNowPlayingTrack];
 }
 	
+- (void)addTrackToQueue:(LMMusicTrack*)trackToAdd {
+	BOOL usingShuffled = self.nowPlayingCollection == self.nowPlayingCollectionSorted;
+	
+	NSMutableArray *currentListOfSortedTracks = [NSMutableArray arrayWithArray:self.nowPlayingCollectionSorted.items];
+	[currentListOfSortedTracks insertObject:trackToAdd atIndex:self.indexOfNowPlayingTrack+1];
+	self.nowPlayingCollectionSorted = [[LMMusicTrackCollection alloc] initWithItems:[NSArray arrayWithArray:currentListOfSortedTracks]];
+	
+	NSMutableArray *currentListOfShuffledTracks = [NSMutableArray arrayWithArray:self.nowPlayingCollectionShuffled.items];
+	[currentListOfShuffledTracks insertObject:trackToAdd atIndex:self.indexOfNowPlayingTrack+1];
+	self.nowPlayingCollectionShuffled = [[LMMusicTrackCollection alloc] initWithItems:[NSArray arrayWithArray:currentListOfShuffledTracks]];
+	
+	[self.systemMusicPlayer setQueueWithItemCollection:self.nowPlayingCollection];
+	
+	for(id<LMMusicPlayerDelegate> delegate in self.delegates){
+		if([delegate respondsToSelector:@selector(trackAddedToQueue:)]){
+			[delegate trackAddedToQueue:trackToAdd];
+		}
+	}
+}
+	
 - (LMMusicTrackCollection*)nowPlayingCollection {
     if(self.shuffleMode == LMMusicShuffleModeOn){
         return self.nowPlayingCollectionShuffled;

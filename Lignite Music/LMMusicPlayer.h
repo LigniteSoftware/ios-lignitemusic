@@ -127,9 +127,28 @@ typedef enum {
  @param repeatMode The current repeat mode.
  */
 - (void)musicPlaybackModesDidChange:(LMMusicShuffleMode)shuffleMode repeatMode:(LMMusicRepeatMode)repeatMode;
+
+/**
+ A track was added to the queue.
+
+ @param trackAdded The track that was added.
+ */
+- (void)trackAddedToQueue:(LMMusicTrack*)trackAdded;
+
+/**
+ A track was removed from the queue.
+ 
+ @param trackAdded The track that was removed.
+ */
+- (void)trackRemovedFromQueue:(LMMusicTrack*)trackRemoved;
 @end
 
 @interface LMMusicPlayer : NSObject
+
+
+
+- (void)addTrackToQueue:(LMMusicTrack*)trackToAdd;
+
 
 /**
  The system music player.

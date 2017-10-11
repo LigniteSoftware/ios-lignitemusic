@@ -10,11 +10,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMCoreViewController.m"
-            timestampString = "529378330.717604"
+            timestampString = "529437065.340176"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1382"
-            endingLineNumber = "1382">
+            startingLineNumber = "1395"
+            endingLineNumber = "1395"
+            landmarkName = "-loadSubviews"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -24,7 +26,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMCoreViewController.m"
-            timestampString = "529378330.717672"
+            timestampString = "529437065.340254"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "136"
@@ -120,11 +122,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMCoreViewController.m"
-            timestampString = "529378330.71777"
+            timestampString = "529437065.340396"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "453"
-            endingLineNumber = "453"
+            startingLineNumber = "466"
+            endingLineNumber = "466"
             landmarkName = "-sourceSelected:"
             landmarkType = "7">
          </BreakpointContent>
@@ -136,12 +138,12 @@
             ignoreCount = "1"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMCoreViewController.m"
-            timestampString = "529378330.717815"
+            timestampString = "529437065.340456"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "400"
-            endingLineNumber = "400"
-            landmarkName = "-sourceSelected:"
+            startingLineNumber = "413"
+            endingLineNumber = "413"
+            landmarkName = "-logMusicTypeView:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -290,12 +292,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMCoreViewController.m"
-            timestampString = "529378330.717955"
+            timestampString = "529437065.34067"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "787"
-            endingLineNumber = "787"
-            landmarkName = "-nextResponder"
+            startingLineNumber = "800"
+            endingLineNumber = "800"
+            landmarkName = "-imageWithIndex:forControlBarView:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -635,6 +637,22 @@
             startingLineNumber = "562"
             endingLineNumber = "562"
             landmarkName = "-downloadNextImageInQueue"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Lignite Music/LMListEntry.m"
+            timestampString = "529437065.34102"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "310"
+            endingLineNumber = "310"
+            landmarkName = "-initWithDelegate:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

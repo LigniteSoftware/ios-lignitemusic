@@ -265,6 +265,22 @@
 			listEntry.collectionIndex = i;
 			listEntry.iPromiseIWillHaveAnIconForYouSoon = YES;
 			listEntry.alignIconToLeft = YES;
+			
+			UIColor *color = [UIColor colorWithRed:47/255.0 green:47/255.0 blue:49/255.0 alpha:1.0];
+			UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14.0f];
+			MGSwipeButton *saveButton = [MGSwipeButton buttonWithTitle:@"Queue" backgroundColor:color padding:15 callback:^BOOL(MGSwipeTableCell *sender) {
+				LMMusicTrack *trackToQueue = [self.musicTitles.items objectAtIndex:listEntry.collectionIndex];
+				
+				[self.musicPlayer addTrackToQueue:trackToQueue];
+				
+				NSLog(@"Queue %@", trackToQueue.title);
+				
+				return YES;
+			}];
+			saveButton.titleLabel.font = font;
+
+			listEntry.rightButtons = @[ saveButton ];
+						
 			[self.itemArray addObject:listEntry];
 			
 			//Quick hack to make sure that the items in the array are non nil

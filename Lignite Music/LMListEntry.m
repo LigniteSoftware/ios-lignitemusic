@@ -7,7 +7,6 @@
 //
 
 #import <PureLayout/PureLayout.h>
-#import <MGSwipeTableCell/MGSwipeTableCell.h>
 #import "LMListEntry.h"
 #import "LMLabel.h"
 #import "LMAppIcon.h"
@@ -93,15 +92,19 @@
 	expansionSettings.triggerAnimation.easingFunction = MGSwipeEasingFunctionCubicOut;
 	expansionSettings.fillOnTrigger = NO;
 	
-	UIColor * color = [UIColor colorWithRed:47/255.0 green:47/255.0 blue:49/255.0 alpha:1.0];
-	UIFont * font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14.0f];
 	if (direction == MGSwipeDirectionRightToLeft){
-		MGSwipeButton * saveButton = [MGSwipeButton buttonWithTitle:@"Remove" backgroundColor:[UIColor redColor] padding:15 callback:^BOOL(MGSwipeTableCell *sender) {
-			NSLog(@"Save");
-			return YES; //don't autohide to improve delete animation
-		}];
-		saveButton.titleLabel.font = font;
-		return @[saveButton];
+//		NSLog(@"Got %d rights\n%@", (int)self.rightButtons.count, self.rightButtons);
+		
+		return self.rightButtons;
+//		MGSwipeButton * saveButton = [MGSwipeButton buttonWithTitle:@"Remove" backgroundColor:[UIColor redColor] padding:15 callback:^BOOL(MGSwipeTableCell *sender) {
+//			NSLog(@"Save");
+//			return YES; //don't autohide to improve delete animation
+//		}];
+//		saveButton.titleLabel.font = font;
+//		return @[ saveButton ];
+	}
+	else{
+		return self.leftButtons;
 	}
 	
 	return nil;
@@ -300,6 +303,8 @@
 	//self.backgroundColor = [UIColor redColor];
 	if(self){
 		self.delegate = delegate;
+		self.rightButtons = @[];
+		self.leftButtons = @[];
 	}
 	else{
 		NSLog(@"Failed to create LMListEntry!");

@@ -7,7 +7,7 @@
 //
 
 #import <PureLayout/PureLayout.h>
-
+#import "MBProgressHUD.h"
 #import "LMDetailView.h"
 #import "LMMusicCollectionsView.h"
 
@@ -245,6 +245,24 @@
 		listEntry.isLabelBased = (self.musicType == LMMusicTypeAlbums || self.musicType == LMMusicTypeCompilations);
 		listEntry.alignIconToLeft = NO;
 		listEntry.stretchAcrossWidth = YES;
+		
+		
+		UIColor *color = [UIColor colorWithRed:47/255.0 green:47/255.0 blue:49/255.0 alpha:1.0];
+		UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14.0f];
+		MGSwipeButton *saveButton = [MGSwipeButton buttonWithTitle:@"Queue" backgroundColor:color padding:15 callback:^BOOL(MGSwipeTableCell *sender) {
+			LMMusicTrack *trackToQueue = [self.musicTrackCollection.items objectAtIndex:listEntry.collectionIndex];
+			
+			[self.musicPlayer addTrackToQueue:trackToQueue];
+			
+			NSLog(@"Queue %@", trackToQueue.title);
+			
+			return YES;
+		}];
+		saveButton.titleLabel.font = font;
+		
+		listEntry.rightButtons = @[ saveButton ];
+		
+		
 		[cell.contentView addSubview:listEntry];
 		listEntry.backgroundColor = [LMColour superLightGrayColour];
 		

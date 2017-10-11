@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MGSwipeTableCell/MGSwipeTableCell.h>
 #import "LMOperationQueue.h"
 
 @class LMListEntry;
@@ -108,5 +109,19 @@
  The delegate for the list entry.
  */
 @property id<LMListEntryDelegate> delegate;
+
+/**
+ The buttons that go to the left of the list entry, which when swiped from left to right on, are revealed.
+ 
+ Default is an empty array.
+ */
+@property NSArray<MGSwipeButton*>* leftButtons;
+
+/**
+ The buttons that go to the right of the list entry, which when swiped from right to left on, are revealed.
+ 
+ Default is an empty array.
+ */
+@property NSArray<MGSwipeButton*>* rightButtons;
 
 @end
