@@ -1381,17 +1381,27 @@ BOOL shuffleForDebug = NO;
 }
 	
 - (void)addTrackToQueue:(LMMusicTrack*)trackToAdd {
-	BOOL usingShuffled = self.nowPlayingCollection == self.nowPlayingCollectionSorted;
-	
-	NSMutableArray *currentListOfSortedTracks = [NSMutableArray arrayWithArray:self.nowPlayingCollectionSorted.items];
-	[currentListOfSortedTracks insertObject:trackToAdd atIndex:self.indexOfNowPlayingTrack+1];
-	self.nowPlayingCollectionSorted = [[LMMusicTrackCollection alloc] initWithItems:[NSArray arrayWithArray:currentListOfSortedTracks]];
-	
-	NSMutableArray *currentListOfShuffledTracks = [NSMutableArray arrayWithArray:self.nowPlayingCollectionShuffled.items];
-	[currentListOfShuffledTracks insertObject:trackToAdd atIndex:self.indexOfNowPlayingTrack+1];
-	self.nowPlayingCollectionShuffled = [[LMMusicTrackCollection alloc] initWithItems:[NSArray arrayWithArray:currentListOfShuffledTracks]];
-	
-	[self.systemMusicPlayer setQueueWithItemCollection:self.nowPlayingCollection];
+	BOOL isNewQueue = self.nowPlayingCollectionSorted.count == 0;
+	if(isNewQueue){
+		LMMusicTrackCollection *newQueue = [[LMMusicTrackCollection alloc]initWithItems:@[ trackToAdd ]];
+		LMMusicTrackCollection *newQueue1 = [[LMMusicTrackCollection alloc]initWithItems:@[ trackToAdd ]];
+		self.nowPlayingCollectionSorted = newQueue;
+		self.nowPlayingCollectionShuffled = newQueue1;
+	}
+	else{
+		NSMutableArray *currentListOfSortedTracks = [NSMutableArray arrayWithArray:self.nowPlayingCollectionSorted.items];
+		[currentListOfSortedTracks insertObject:trackToAdd atIndex:self.indexOfNowPlayingTrack+1];
+		self.nowPlayingCollectionSorted = [[LMMusicTrackCollection alloc] initWithItems:[NSArray arrayWithArray:currentListOfSortedTracks]];
+		
+		NSMutableArray *currentListOfShuffledTracks = [NSMutableArray arrayWithArray:self.nowPlayingCollectionShuffled.items];
+		[currentListOfShuffledTracks insertObject:trackToAdd atIndex:self.indexOfNowPlayingTrack+1];
+		self.nowPlayingCollectionShuffled = [[LMMusicTrackCollection alloc] initWithItems:[NSArray arrayWithArray:currentListOfShuffledTracks]];
+	}
+
+	if(isNewQueue){
+		[self setNowPlayingCollection:self.nowPlayingCollection];
+//		[self play];
+	}
 	
 	for(id<LMMusicPlayerDelegate> delegate in self.delegates){
 		if([delegate respondsToSelector:@selector(trackAddedToQueue:)]){
