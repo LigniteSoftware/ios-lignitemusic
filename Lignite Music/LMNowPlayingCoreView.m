@@ -78,7 +78,11 @@
     if(previousTrackIndex < 0){
         previousTrackIndex = self.musicPlayer.nowPlayingCollection.count-1;
     }
-    
+	
+	NSLog(@"indexes %d/%d/%d count %d", (int)previousTrackIndex, (int)indexOfCenter, (int)nextTrackIndex, (int)self.musicPlayer.nowPlayingCollection.count);
+	
+	NSLog(@"Spook");
+	
     [self.centerNowPlayingView changeMusicTrack:[self.musicPlayer.nowPlayingCollection.items objectAtIndex:indexOfCenter] withIndex:indexOfCenter];
     [self.leadingNowPlayingView changeMusicTrack:[self.musicPlayer.nowPlayingCollection.items objectAtIndex:nextTrackIndex]
                                        withIndex:nextTrackIndex];
@@ -87,6 +91,11 @@
 }
 
 - (void)trackAddedToQueue:(LMMusicTrack *)trackAdded {
+	NSInteger nowPlayingTrackIndex = self.musicPlayer.indexOfNowPlayingTrack;
+	[self loadMusicTracksBasedOffIndex:nowPlayingTrackIndex];
+}
+
+- (void)trackRemovedFromQueue:(LMMusicTrack *)trackRemoved {
 	NSInteger nowPlayingTrackIndex = self.musicPlayer.indexOfNowPlayingTrack;
 	[self loadMusicTracksBasedOffIndex:nowPlayingTrackIndex];
 }
@@ -124,6 +133,12 @@
         self.centerNowPlayingView = oldNowPlayings[0];
         self.leadingNowPlayingView = oldNowPlayings[1];
     }
+	
+	self.centerNowPlayingView.backgroundColor = [UIColor orangeColor];
+	self.trailingNowPlayingView.backgroundColor = [UIColor yellowColor];
+	self.leadingNowPlayingView.backgroundColor = [UIColor redColor];
+	
+	NSLog(@"Loaded tracks: %@/%@/%@", self.trailingNowPlayingView.loadedTrack.title, self.centerNowPlayingView.loadedTrack.title, self.leadingNowPlayingView.loadedTrack.title);
     
     [self addSubview:self.centerNowPlayingView];
     [self addSubview:self.leadingNowPlayingView];
@@ -377,6 +392,11 @@
         [self.leadingNowPlayingView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
         [self.leadingNowPlayingView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self];
         [self.leadingNowPlayingView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
+		
+		
+		self.centerNowPlayingView.backgroundColor = [UIColor orangeColor];
+		self.trailingNowPlayingView.backgroundColor = [UIColor yellowColor];
+		self.leadingNowPlayingView.backgroundColor = [UIColor redColor];
         
 
         

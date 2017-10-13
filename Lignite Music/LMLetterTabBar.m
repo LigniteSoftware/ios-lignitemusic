@@ -407,7 +407,7 @@
 			[self.letterScrollView addSubview:letterLabel];
 			
 			if(self.frame.size.width == 0 || self.frame.size.height == 0){
-				NSLog(@"Reloading.");
+//				NSLog(@"Reloading.");
 				[self reloadWithSize:self.frame.size];
 			}
 

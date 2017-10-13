@@ -80,35 +80,21 @@
 	return YES;
 }
 
-- (NSArray*)swipeTableCell:(MGSwipeTableCell*)cell swipeButtonsForDirection:(MGSwipeDirection)direction
-			 swipeSettings:(MGSwipeSettings*)swipeSettings expansionSettings:(MGSwipeExpansionSettings*)expansionSettings {
+- (NSArray*)swipeTableCell:(MGSwipeTableCell*)cell swipeButtonsForDirection:(MGSwipeDirection)direction swipeSettings:(MGSwipeSettings*)swipeSettings expansionSettings:(MGSwipeExpansionSettings*)expansionSettings {
+	
+	BOOL isRightToLeftSwipe = direction == MGSwipeDirectionRightToLeft;
+	
 	swipeSettings.transition = MGSwipeTransitionClipCenter;
 	swipeSettings.keepButtonsSwiped = YES;
 
 	expansionSettings.buttonIndex = 0;
 	expansionSettings.threshold = 1.5;
 	expansionSettings.expansionLayout = MGSwipeExpansionLayoutCenter;
-	expansionSettings.expansionColor = [UIColor colorWithRed:33/255.0 green:175/255.0 blue:67/255.0 alpha:1.0];
+	expansionSettings.expansionColor = isRightToLeftSwipe ? self.rightButtonExpansionColour : self.leftButtonExpansionColour;
 	expansionSettings.triggerAnimation.easingFunction = MGSwipeEasingFunctionCubicOut;
 	expansionSettings.fillOnTrigger = NO;
-	
-	if (direction == MGSwipeDirectionRightToLeft){
-//		NSLog(@"Got %d rights\n%@", (int)self.rightButtons.count, self.rightButtons);
-		
-		return self.rightButtons;
-//		MGSwipeButton * saveButton = [MGSwipeButton buttonWithTitle:@"Remove" backgroundColor:[UIColor redColor] padding:15 callback:^BOOL(MGSwipeTableCell *sender) {
-//			NSLog(@"Save");
-//			return YES; //don't autohide to improve delete animation
-//		}];
-//		saveButton.titleLabel.font = font;
-//		return @[ saveButton ];
-	}
-	else{
-		return self.leftButtons;
-	}
-	
-	return nil;
-	
+
+	return isRightToLeftSwipe ? self.rightButtons : self.leftButtons;
 }
 
 - (void) swipeTableCell:(MGSwipeTableCell*) cell didChangeSwipeState:(MGSwipeState)state gestureIsActive:(BOOL)gestureIsActive {
@@ -303,8 +289,12 @@
 	//self.backgroundColor = [UIColor redColor];
 	if(self){
 		self.delegate = delegate;
+		
 		self.rightButtons = @[];
 		self.leftButtons = @[];
+		
+		self.rightButtonExpansionColour = [UIColor colorWithRed:33/255.0 green:175/255.0 blue:67/255.0 alpha:1.0];
+		self.leftButtonExpansionColour = [UIColor colorWithRed:33/255.0 green:175/255.0 blue:67/255.0 alpha:1.0];
 	}
 	else{
 		NSLog(@"Failed to create LMListEntry!");

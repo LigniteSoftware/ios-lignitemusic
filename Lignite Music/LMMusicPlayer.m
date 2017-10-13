@@ -1410,6 +1410,29 @@ BOOL shuffleForDebug = NO;
 	}
 }
 	
+- (void)removeTrackFromQueue:(LMMusicTrack*)trackToRemove {
+	BOOL wasNowPlayingTrack = [self.nowPlayingTrack isEqual:trackToRemove];
+	
+	NSMutableArray *currentListOfSortedTracks = [NSMutableArray arrayWithArray:self.nowPlayingCollectionSorted.items];
+	NSMutableArray *currentListOfShuffledTracks = [NSMutableArray arrayWithArray:self.nowPlayingCollectionShuffled.items];
+	
+	[currentListOfSortedTracks removeObject:trackToRemove];
+	[currentListOfShuffledTracks removeObject:trackToRemove];
+	
+	self.nowPlayingCollectionSorted = [[LMMusicTrackCollection alloc]initWithItems:currentListOfSortedTracks];
+	self.nowPlayingCollectionShuffled = [[LMMusicTrackCollection alloc]initWithItems:currentListOfShuffledTracks];
+	
+	if(wasNowPlayingTrack){
+		[self setNowPlayingCollection:self.nowPlayingCollection];
+	}
+	
+	for(id<LMMusicPlayerDelegate> delegate in self.delegates){
+		if([delegate respondsToSelector:@selector(trackRemovedFromQueue:)]){
+			[delegate trackRemovedFromQueue:trackToRemove];
+		}
+	}
+}
+	
 - (LMMusicTrackCollection*)nowPlayingCollection {
     if(self.shuffleMode == LMMusicShuffleModeOn){
         return self.nowPlayingCollectionShuffled;

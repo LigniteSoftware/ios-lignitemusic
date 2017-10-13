@@ -111,9 +111,7 @@
 		MPMediaItem *mediaItem = self;
 		
 		//Get the standard album artwork
-		NSLog(@"Getting artwork for %@", mediaItem.title);
 		UIImage *albumArtImage = [mediaItem.artwork imageWithSize:mediaItem.artwork.bounds.size];
-		NSLog(@"Got artwork for %@", mediaItem.title);
 		if(!albumArtImage){
 			//If not found search the image cache for it
 			albumArtImage = [[LMImageManager sharedImageManager] imageForMediaItem:self withCategory:LMImageManagerCategoryAlbumImages];

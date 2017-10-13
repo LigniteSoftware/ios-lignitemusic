@@ -89,6 +89,10 @@
 	[self loadMusicTracksBasedOffIndex:self.musicPlayer.indexOfNowPlayingTrack];
 }
 
+- (void)trackRemovedFromQueue:(LMMusicTrack *)trackRemoved {
+	[self loadMusicTracksBasedOffIndex:self.musicPlayer.indexOfNowPlayingTrack];
+}
+
 - (void)musicTrackDidChange:(LMMusicTrack *)newTrack {
 	NSInteger nowPlayingTrackIndex = self.musicPlayer.indexOfNowPlayingTrack;
 	[self loadMusicTracksBasedOffIndex:nowPlayingTrackIndex];

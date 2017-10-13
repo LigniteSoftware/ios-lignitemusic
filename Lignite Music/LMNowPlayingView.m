@@ -489,6 +489,25 @@
 	self.nothingInQueueLabel.text = NSLocalizedString((self.musicPlayer.nowPlayingTrack && !self.musicPlayer.nowPlayingCollection) ? @"iOSNotProvidingQueue" : @"TheresNothingHere", nil);
 }
 
+- (void)trackRemovedFromQueue:(LMMusicTrack *)trackRemoved {
+	MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self animated:YES];
+	
+	hud.mode = MBProgressHUDModeCustomView;
+	UIImage *image = [[UIImage imageNamed:@"icon_checkmark.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+	hud.customView = [[UIImageView alloc] initWithImage:image];
+	hud.square = YES;
+	hud.userInteractionEnabled = NO;
+	hud.label.text = NSLocalizedString(@"Removed", nil);
+	
+	[hud hideAnimated:YES afterDelay:3.f];
+	
+//	self.queueTableView.totalAmountOfObjects = self.musicPlayer.nowPlayingCollection.count;
+//	[self.queueTableView reloadSubviewData];
+//	[self.queueTableView reloadData];
+
+//	[self changeMusicTrack:self.loadedTrack withIndex:self.loadedTrackIndex];
+}
+
 - (void)amountOfObjectsRequiredChangedTo:(NSUInteger)amountOfObjects forTableView:(LMTableView *)tableView {
 //	NSLog(@"Required! %d", (int)amountOfObjects);
 	
@@ -503,6 +522,40 @@
 			listEntry.collectionIndex = i;
 			listEntry.alignIconToLeft = YES;
 			listEntry.iPromiseIWillHaveAnIconForYouSoon = YES;
+			
+			UIColor *color = [UIColor colorWithRed:47/255.0 green:47/255.0 blue:49/255.0 alpha:1.0];
+			UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14.0f];
+			MGSwipeButton *saveButton = [MGSwipeButton buttonWithTitle:@"Remove" backgroundColor:color padding:15 callback:^BOOL(MGSwipeTableCell *sender) {
+				LMMusicTrack *trackToRemove = [self.musicPlayer.nowPlayingCollection.items objectAtIndex:listEntry.collectionIndex];
+				
+				[self.musicPlayer removeTrackFromQueue:trackToRemove];
+				
+				if(listEntry.collectionIndex == self.musicPlayer.indexOfNowPlayingTrack){
+					if(self.musicPlayer.nowPlayingCollection.items.count > 0){
+						NSInteger indexToUse = listEntry.collectionIndex;
+						if(indexToUse >= self.musicPlayer.nowPlayingCollection.items.count){
+							indexToUse = 0;
+						}
+						LMMusicTrack *newTrack = [self.musicPlayer.nowPlayingCollection.items objectAtIndex:indexToUse];
+						NSLog(@"New track %@", newTrack.title);
+						[self.musicPlayer setNowPlayingTrack:newTrack];
+						[self changeMusicTrack:newTrack withIndex:indexToUse];
+					}
+				}
+				
+				if(self.musicPlayer.nowPlayingCollection.items.count == 0){
+					NSLog(@"Close");
+				}
+				
+				NSLog(@"Remove %@", trackToRemove.title);
+				
+				return YES;
+			}];
+			saveButton.titleLabel.font = font;
+			
+			listEntry.rightButtons = @[ saveButton ];
+			listEntry.rightButtonExpansionColour = [UIColor colorWithRed:0.92 green:0.00 blue:0.00 alpha:1.0];
+			
 			[self.itemArray addObject:listEntry];
 		}
 	}
@@ -748,7 +801,7 @@
 		
 	
 	self.mainView = [LMView newAutoLayoutView];
-	self.mainView.backgroundColor = [UIColor yellowColor];
+//	self.mainView.backgroundColor = [UIColor yellowColor];
 	self.mainView.clipsToBounds = YES;
 	[self addSubview:self.mainView];
     
@@ -832,6 +885,7 @@
 	self.backgroundImageView = [UIImageView newAutoLayoutView];
 	self.backgroundImageView.image = [UIImage imageNamed:@"lignite_background_portrait.png"];
 	self.backgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
+	self.backgroundImageView.hidden = YES;
 	[self.mainView addSubview:self.backgroundImageView];
 	
 	[self.backgroundImageView autoCenterInSuperview];

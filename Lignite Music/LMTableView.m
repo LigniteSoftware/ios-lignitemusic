@@ -172,8 +172,6 @@
 //}
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-	NSLog(@"Reloading cell %d", (int)indexPath.section);
-	
 	LMTableViewCell *lmCell = (LMTableViewCell*)cell;
 	
 	id newSubview = [self.subviewDataSource subviewAtIndex:indexPath.section forTableView:self];

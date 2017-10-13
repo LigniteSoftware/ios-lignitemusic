@@ -148,6 +148,7 @@ typedef enum {
 
 
 - (void)addTrackToQueue:(LMMusicTrack*)trackToAdd;
+- (void)removeTrackFromQueue:(LMMusicTrack*)trackToRemove;
 
 
 /**

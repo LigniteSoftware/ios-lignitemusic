@@ -47,7 +47,7 @@
 		self.preservedContentOffset = CGPointZero;
 	}
 	
-	NSLog(@"Content size in the end %@ offset %@", NSStringFromCGSize(self.contentSize), NSStringFromCGPoint(self.preservedContentOffset));
+//	NSLog(@"Content size in the end %@ offset %@", NSStringFromCGSize(self.contentSize), NSStringFromCGPoint(self.preservedContentOffset));
 	
 }
 

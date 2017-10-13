@@ -124,4 +124,14 @@
  */
 @property NSArray<MGSwipeButton*>* rightButtons;
 
+/**
+ The expansion colour for the left button.
+ */
+@property UIColor* leftButtonExpansionColour;
+
+/**
+ The expansion colour for the right button.
+ */
+@property UIColor* rightButtonExpansionColour;
+
 @end
