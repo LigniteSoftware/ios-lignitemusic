@@ -54,6 +54,8 @@
 		self.delegate = self;
 		self.dataSource = self;
 		
+		self.longPressReorderEnabled = NO;
+		
 		self.totalAmountOfObjects = 0;
 		self.requiredAmountOfObjects = 0;
 		

@@ -7,6 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Lignite_Music-Swift.h"
+#import "DDTableView.h"
 
 @class LMTableView;
 
@@ -61,7 +63,7 @@
 
 @end
 
-@interface LMTableView : UITableView
+@interface LMTableView : DDTableView
 
 /**
  The amount of spacing you'd like between the bottom of the table view and the last entry in it. Default is 0.

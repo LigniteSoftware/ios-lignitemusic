@@ -117,6 +117,8 @@
 		6A7268211E163E8300FA01DB /* icon_triple_horizontal_dots.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A7268201E163E8300FA01DB /* icon_triple_horizontal_dots.png */; };
 		6A7268231E163F6400FA01DB /* icon_down_arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A7268221E163F6400FA01DB /* icon_down_arrow.png */; };
 		6A7268251E1640E700FA01DB /* icon_up_arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A7268241E1640E700FA01DB /* icon_up_arrow.png */; };
+		6A7274B01F93E9B000FC09B3 /* DDTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A7274AF1F93E9B000FC09B3 /* DDTableView.m */; };
+		6A7274B11F93E9B000FC09B3 /* DDTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A7274AF1F93E9B000FC09B3 /* DDTableView.m */; };
 		6A73CF5C1D4127C70097A400 /* LMPebbleImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A73CF5B1D4127C70097A400 /* LMPebbleImage.m */; };
 		6A73CF611D451BFA0097A400 /* LMPebbleMessageQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A73CF601D451BFA0097A400 /* LMPebbleMessageQueue.m */; };
 		6A7565301DF7E38900A9EDD6 /* LMSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A75652F1DF7E38900A9EDD6 /* LMSearch.m */; };
@@ -160,6 +162,8 @@
 		6A82C1AD1ECCBF2D00DEFA56 /* APIdleManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A82C1AB1ECCBF2D00DEFA56 /* APIdleManager.m */; };
 		6A838A951E07A8FF006E7DE0 /* LMPurchaseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A838A941E07A8FF006E7DE0 /* LMPurchaseManager.m */; };
 		6A838A971E07A9CF006E7DE0 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A838A961E07A9CF006E7DE0 /* StoreKit.framework */; };
+		6A88AA2C1F914EA0000F29DE /* LPRTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A88AA2B1F914E9F000F29DE /* LPRTableView.swift */; };
+		6A88AA2D1F914EA0000F29DE /* LPRTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A88AA2B1F914E9F000F29DE /* LPRTableView.swift */; };
 		6A8CF2B91DB4952A00777525 /* LMSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A8CF2B81DB4952A00777525 /* LMSettings.m */; };
 		6A94A7711EA79BB300319A38 /* LMLayoutManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A94A7701EA79BB300319A38 /* LMLayoutManager.m */; };
 		6A94A7721EA79BB300319A38 /* LMLayoutManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A94A7701EA79BB300319A38 /* LMLayoutManager.m */; };
@@ -562,6 +566,8 @@
 		6A7268201E163E8300FA01DB /* icon_triple_horizontal_dots.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_triple_horizontal_dots.png; sourceTree = "<group>"; };
 		6A7268221E163F6400FA01DB /* icon_down_arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_down_arrow.png; sourceTree = "<group>"; };
 		6A7268241E1640E700FA01DB /* icon_up_arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_up_arrow.png; sourceTree = "<group>"; };
+		6A7274AE1F93E9B000FC09B3 /* DDTableView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DDTableView.h; sourceTree = "<group>"; };
+		6A7274AF1F93E9B000FC09B3 /* DDTableView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DDTableView.m; sourceTree = "<group>"; };
 		6A73CF5A1D4127C70097A400 /* LMPebbleImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMPebbleImage.h; sourceTree = "<group>"; };
 		6A73CF5B1D4127C70097A400 /* LMPebbleImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMPebbleImage.m; sourceTree = "<group>"; };
 		6A73CF5F1D451BFA0097A400 /* LMPebbleMessageQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMPebbleMessageQueue.h; sourceTree = "<group>"; };
@@ -612,6 +618,9 @@
 		6A838A931E07A8FF006E7DE0 /* LMPurchaseManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMPurchaseManager.h; sourceTree = "<group>"; };
 		6A838A941E07A8FF006E7DE0 /* LMPurchaseManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMPurchaseManager.m; sourceTree = "<group>"; };
 		6A838A961E07A9CF006E7DE0 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		6A88AA291F914E9E000F29DE /* Lignite Music-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Lignite Music-Bridging-Header.h"; sourceTree = "<group>"; };
+		6A88AA2A1F914E9E000F29DE /* Lignite Music for Spotify-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Lignite Music for Spotify-Bridging-Header.h"; sourceTree = "<group>"; };
+		6A88AA2B1F914E9F000F29DE /* LPRTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LPRTableView.swift; sourceTree = "<group>"; };
 		6A8CF2B71DB4952A00777525 /* LMSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMSettings.h; sourceTree = "<group>"; };
 		6A8CF2B81DB4952A00777525 /* LMSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMSettings.m; sourceTree = "<group>"; };
 		6A94A76F1EA79BB300319A38 /* LMLayoutManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMLayoutManager.h; sourceTree = "<group>"; };
@@ -943,6 +952,8 @@
 				6A26B4691DE2D1A3008B5B69 /* LMSectionHeaderView.m */,
 				6AF9D5401DE251FD006368B6 /* LMSectionTableView.h */,
 				6AF9D5411DE251FD006368B6 /* LMSectionTableView.m */,
+				6A7274AE1F93E9B000FC09B3 /* DDTableView.h */,
+				6A7274AF1F93E9B000FC09B3 /* DDTableView.m */,
 				6A7115B51DCEE410006DE00F /* LMTableView.h */,
 				6A7115B61DCEE410006DE00F /* LMTableView.m */,
 				6AAF61161DA0B9C700971875 /* LMTableViewCell.h */,
@@ -1172,6 +1183,9 @@
 			children = (
 				6A94A76F1EA79BB300319A38 /* LMLayoutManager.h */,
 				6A94A7701EA79BB300319A38 /* LMLayoutManager.m */,
+				6A88AA2B1F914E9F000F29DE /* LPRTableView.swift */,
+				6A88AA291F914E9E000F29DE /* Lignite Music-Bridging-Header.h */,
+				6A88AA2A1F914E9E000F29DE /* Lignite Music for Spotify-Bridging-Header.h */,
 			);
 			name = Core;
 			sourceTree = "<group>";
@@ -1508,11 +1522,12 @@
 				TargetAttributes = {
 					6AA5CAED1E285C0A005F853F = {
 						DevelopmentTeam = FC8DY8T6N2;
+						LastSwiftMigration = 0900;
 					};
 					6AEB9CF71BACF60E00AD19FA = {
 						CreatedOnToolsVersion = 7.0;
 						DevelopmentTeam = FC8DY8T6N2;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0900;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.Push = {
@@ -1909,6 +1924,7 @@
 				6AA5CB001E285C0A005F853F /* LMBigListEntryTableView.m in Sources */,
 				6AA5CB031E285C0A005F853F /* LMSettingsSwitch.m in Sources */,
 				6AA5CB041E285C0A005F853F /* LMTriangleMaskView.m in Sources */,
+				6A88AA2D1F914EA0000F29DE /* LPRTableView.swift in Sources */,
 				6AA5CB051E285C0A005F853F /* LMButtonBar.m in Sources */,
 				6AA5CB061E285C0A005F853F /* LMTitleView.m in Sources */,
 				6AA5CB071E285C0A005F853F /* LMLabel.m in Sources */,
@@ -1967,6 +1983,7 @@
 				6AA5CB2F1E285C0A005F853F /* LMTableView.m in Sources */,
 				6AA5CB301E285C0A005F853F /* LMReachability.m in Sources */,
 				6A08AF141EBF30B00069C9CC /* LMTriangleInnerShadowView.m in Sources */,
+				6A7274B11F93E9B000FC09B3 /* DDTableView.m in Sources */,
 				6AA5CB311E285C0A005F853F /* LMLetterTabBar.m in Sources */,
 				6AA5CB321E285C0A005F853F /* LMOperationQueue.m in Sources */,
 				6AA5CB331E285C0A005F853F /* LMImageManager.m in Sources */,
@@ -2001,6 +2018,7 @@
 			files = (
 				6AA445A31D5AD7B0004C6739 /* LMSettingsLabel.m in Sources */,
 				6A32A9EC1DC68F440056CC60 /* LMTriangleContainerView.m in Sources */,
+				6A7274B01F93E9B000FC09B3 /* DDTableView.m in Sources */,
 				6A26B46A1DE2D1A3008B5B69 /* LMSectionHeaderView.m in Sources */,
 				6AD4B8A71E394A6700BE3177 /* LMButtonNavigationBar.m in Sources */,
 				6AF751631E0446D80001E18B /* LMFeedbackViewController.m in Sources */,
@@ -2085,6 +2103,7 @@
 				6A23AF4A1E454D1E00A56F5F /* LMNavigationBar.m in Sources */,
 				6AEF8C731DEF419D00D9A1BF /* LMDebugViewController.m in Sources */,
 				6A08AF131EBF30B00069C9CC /* LMTriangleInnerShadowView.m in Sources */,
+				6A88AA2C1F914EA0000F29DE /* LPRTableView.swift in Sources */,
 				6A08AF1B1EC04AED0069C9CC /* LMExpandableTrackListControlBar.m in Sources */,
 				6AFF01891DDD656E00F24D8E /* LMGuideViewPagerController.m in Sources */,
 				6A7565301DF7E38900A9EDD6 /* LMSearch.m in Sources */,
@@ -2193,6 +2212,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				STRIP_PNG_TEXT = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "Lignite Music/Lignite Music for Spotify-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -2240,6 +2260,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				STRIP_PNG_TEXT = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "Lignite Music/Lignite Music for Spotify-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -2368,6 +2389,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				STRIP_PNG_TEXT = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "Lignite Music/Lignite Music-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2409,6 +2431,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				STRIP_PNG_TEXT = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "Lignite Music/Lignite Music-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
