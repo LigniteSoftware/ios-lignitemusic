@@ -267,7 +267,7 @@ LMControlBarViewDelegate
 //        [self.buttonNavigationBar setSelectedTab:LMNavigationTabMiniplayer];
 //    }
 	
-	[self launchNowPlayingFromNavigationBar];
+//	[self launchNowPlayingFromNavigationBar];
 }
 
 - (void)trackAddedToQueue:(LMMusicTrack*)trackAdded {

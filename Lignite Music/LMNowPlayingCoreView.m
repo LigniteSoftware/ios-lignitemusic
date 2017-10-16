@@ -140,9 +140,9 @@
         self.leadingNowPlayingView = oldNowPlayings[1];
     }
 	
-	self.centerNowPlayingView.backgroundColor = [UIColor orangeColor];
-	self.trailingNowPlayingView.backgroundColor = [UIColor yellowColor];
-	self.leadingNowPlayingView.backgroundColor = [UIColor redColor];
+//	self.centerNowPlayingView.backgroundColor = [UIColor orangeColor];
+//	self.trailingNowPlayingView.backgroundColor = [UIColor yellowColor];
+//	self.leadingNowPlayingView.backgroundColor = [UIColor redColor];
 	
 	NSLog(@"Loaded tracks: %@/%@/%@", self.trailingNowPlayingView.loadedTrack.title, self.centerNowPlayingView.loadedTrack.title, self.leadingNowPlayingView.loadedTrack.title);
     
