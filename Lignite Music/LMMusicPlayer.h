@@ -141,6 +141,13 @@ typedef enum {
  @param trackAdded The track that was removed.
  */
 - (void)trackRemovedFromQueue:(LMMusicTrack*)trackRemoved;
+
+/**
+ A track was moved around the queue.
+
+ @param trackMoved The track that was moved.
+ */
+- (void)trackMovedInQueue:(LMMusicTrack*)trackMoved;
 @end
 
 @interface LMMusicPlayer : NSObject
@@ -149,6 +156,7 @@ typedef enum {
 
 - (void)addTrackToQueue:(LMMusicTrack*)trackToAdd;
 - (void)removeTrackFromQueue:(LMMusicTrack*)trackToRemove;
+- (void)moveTrackInQueueFromIndex:(NSInteger)oldIndex toIndex:(NSInteger)newIndex;
 
 
 /**

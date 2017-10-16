@@ -70,8 +70,10 @@
 	return self;
 }
 
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath {
-	NSLog(@"Move %@ to %@", sourceIndexPath, destinationIndexPath);
+- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath {	
+	if([self.longPressReorderDelegate respondsToSelector:@selector(tableView:moveRowAtIndexPath:toIndexPath:)]){
+		[self.longPressReorderDelegate tableView:tableView moveRowAtIndexPath:sourceIndexPath toIndexPath:destinationIndexPath];
+	}
 }
 
 - (NSUInteger)bottomSpacing {

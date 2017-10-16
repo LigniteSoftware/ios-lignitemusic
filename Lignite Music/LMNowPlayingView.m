@@ -8,6 +8,7 @@
 
 #import <PureLayout/PureLayout.h>
 #import "UIImage+AverageColour.h"
+#import "LMNowPlayingCoreView.h"
 #import "LMProgressSlider.h"
 #import "LMOperationQueue.h"
 #import "UIImage+ColorArt.h"
@@ -117,6 +118,8 @@
  The array of currently applied constraints which are special to iPad. Uninstall these before installing more.
  */
 @property NSArray *currentiPadSpecificConstraintsArray;
+
+@property NSTimeInterval lastTimeOfSwap;
 
 @end
 
@@ -324,10 +327,29 @@
 
 
 
+
+
 - (void)tableView:(UITableView*)tableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath {
 	NSLog(@"Move %@ to %@ from %p", sourceIndexPath, destinationIndexPath, tableView);
 	
+	if((([[NSDate new] timeIntervalSince1970] - self.lastTimeOfSwap)*1000) < 10){
+		NSLog(@"double up, rejecting");
+		return;
+	}
 	
+	LMListEntry *currentListEntry = [self.itemArray objectAtIndex:sourceIndexPath.section];
+	[self.itemArray removeObjectAtIndex:sourceIndexPath.section];
+	[self.itemArray insertObject:currentListEntry atIndex:destinationIndexPath.section];
+	
+	currentListEntry.collectionIndex = destinationIndexPath.section;
+	
+	[currentListEntry changeHighlightStatus:YES animated:YES];
+	
+	[self.musicPlayer moveTrackInQueueFromIndex:sourceIndexPath.section toIndex:destinationIndexPath.section];
+	
+	[currentListEntry reloadContents];
+	
+	self.lastTimeOfSwap = [[NSDate new] timeIntervalSince1970];
 }
 
 - (UITableViewCell*)tableView:(UITableView *)tableView draggingCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
@@ -340,11 +362,24 @@
 
 - (void)tableView:(UITableView *)tableView hideDraggingView:(UIView *)draggingView atIndexPath:(NSIndexPath *)indexPath {
 	NSLog(@"Hide dragging view at %@", indexPath);
+	
+	[NSTimer scheduledTimerWithTimeInterval:0.3 block:^{
+		LMNowPlayingCoreView *coreNowPlayingView = (LMNowPlayingCoreView*)self.nowPlayingCoreView;
+		[coreNowPlayingView musicTrackDidChange:nil];
+	} repeats:NO];
 }
 
 - (void)tableView:(UITableView *)tableView draggingGestureChanged:(UILongPressGestureRecognizer *)gesture {
 	
 }
+
+- (void)trackMovedInQueue:(LMMusicTrack *)trackMoved {
+	NSLog(@"%@ was moved, current index is %d", trackMoved.title, (int)self.musicPlayer.indexOfNowPlayingTrack);
+	
+//	[self.queueTableView reloadSubviewData];
+}
+
+
 
 
 
@@ -492,8 +527,6 @@
 	LMListEntry *entry = [self.itemArray objectAtIndex:index % self.itemArray.count];
 	entry.collectionIndex = index;
 	entry.associatedData = [self.musicPlayer.nowPlayingCollection.items objectAtIndex:index];
-	
-	NSLog(@"Collection index %d, current %d match? %d", (int)entry.collectionIndex, (int)self.currentlyHighlighted, ((self.currentlyHighlighted == entry.collectionIndex)));
 	
 	[entry changeHighlightStatus:(self.currentlyHighlighted == entry.collectionIndex) animated:NO];
 	
@@ -646,6 +679,7 @@
 
 - (NSString*)titleForListEntry:(LMListEntry*)entry {
 //	return @"queue title";
+//	return [NSString stringWithFormat:@"boiii %d", (int)entry.collectionIndex];
 	return [NSString stringWithFormat:@"%@", [[self.musicPlayer.nowPlayingCollection.items objectAtIndex:entry.collectionIndex] title]];
 }
 

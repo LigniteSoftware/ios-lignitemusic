@@ -12,7 +12,6 @@
 #import "LMCoreViewController.h"
 #import "LMTutorialView.h"
 #import "LMNowPlayingView.h"
-#import "LMMusicPlayer.h"
 
 @interface LMNowPlayingCoreView()<UIGestureRecognizerDelegate, LMMusicPlayerDelegate>
 
@@ -103,6 +102,13 @@
 - (void)musicTrackDidChange:(LMMusicTrack *)newTrack {
     NSInteger nowPlayingTrackIndex = self.musicPlayer.indexOfNowPlayingTrack;
     [self loadMusicTracksBasedOffIndex:nowPlayingTrackIndex];
+	
+	NSLog(@"Refresh core");
+}
+
+- (void)trackMovedInQueue:(LMMusicTrack *)trackMoved {
+//	NSInteger nowPlayingTrackIndex = self.musicPlayer.indexOfNowPlayingTrack;
+//	[self loadMusicTracksBasedOffIndex:nowPlayingTrackIndex];
 }
 
 - (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState {
@@ -397,7 +403,10 @@
 		self.centerNowPlayingView.backgroundColor = [UIColor orangeColor];
 		self.trailingNowPlayingView.backgroundColor = [UIColor yellowColor];
 		self.leadingNowPlayingView.backgroundColor = [UIColor redColor];
-        
+		
+		self.centerNowPlayingView.nowPlayingCoreView = self;
+		self.trailingNowPlayingView.nowPlayingCoreView = self;
+		self.leadingNowPlayingView.nowPlayingCoreView = self;
 
         
         UIPanGestureRecognizer *nowPlayingLeadingPanGesture =

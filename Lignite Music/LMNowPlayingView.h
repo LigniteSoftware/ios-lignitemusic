@@ -19,6 +19,11 @@
 @property LMCoreViewController *coreViewController;
 
 /**
+ The core now playing view which controls this subview.
+ */
+@property id nowPlayingCoreView;
+
+/**
  The constraint which pins this now playing view to the top of its superview. Should be used in the pan gesture transition from top to bottom.
  */
 @property NSLayoutConstraint *topConstraint;

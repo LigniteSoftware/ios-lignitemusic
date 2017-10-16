@@ -1115,6 +1115,40 @@ BOOL shuffleForDebug = NO;
 		}
 	}
 }
+
+- (void)logArray:(NSMutableArray*)array {
+	NSMutableString *string = [NSMutableString stringWithFormat:@""];
+	for(LMMusicTrack *track in array){
+		[string appendString:[NSString stringWithFormat:@"%@, ", track.title]];
+	}
+	NSLog(@"%@", string);
+}
+
+- (void)moveTrackInQueueFromIndex:(NSInteger)oldIndex toIndex:(NSInteger)newIndex {
+	NSMutableArray *moveArray = self.shuffleMode ? [NSMutableArray arrayWithArray:self.nowPlayingCollectionShuffled.items] : [NSMutableArray arrayWithArray:self.nowPlayingCollectionSorted.items];
+	
+	LMMusicTrack *currentMusicTrack = [moveArray objectAtIndex:oldIndex];
+	[moveArray removeObjectAtIndex:oldIndex];
+	[moveArray insertObject:currentMusicTrack atIndex:newIndex];
+	
+	if(self.shuffleMode){
+		self.nowPlayingCollectionShuffled = [[LMMusicTrackCollection alloc]initWithItems:moveArray];
+	}
+	else{
+		self.nowPlayingCollectionSorted = [[LMMusicTrackCollection alloc]initWithItems:moveArray];
+	}
+	
+//	[self setNowPlayingCollection:self.shuffleMode ? self.nowPlayingCollectionShuffled : self.nowPlayingCollectionSorted];
+	[self.systemMusicPlayer setQueueWithItemCollection:self.shuffleMode ? self.nowPlayingCollectionShuffled : self.nowPlayingCollectionSorted];
+	
+	self.indexOfNowPlayingTrack = [moveArray indexOfObject:self.nowPlayingTrack];
+	
+	for(id<LMMusicPlayerDelegate> delegate in self.delegates){
+		if([delegate respondsToSelector:@selector(trackMovedInQueue:)]){
+			[delegate trackMovedInQueue:currentMusicTrack];
+		}
+	}
+}
 	
 - (LMMusicTrackCollection*)nowPlayingCollection {
     if(self.shuffleMode == LMMusicShuffleModeOn){
