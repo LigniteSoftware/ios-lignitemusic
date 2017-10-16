@@ -23,7 +23,7 @@
 #import "LMColour.h"
 #import "LMButton.h"
 
-@interface LMNowPlayingView() <LMMusicPlayerDelegate, LMButtonDelegate, LMProgressSliderDelegate, LMTableViewSubviewDataSource, LMListEntryDelegate, LMLayoutChangeDelegate>
+@interface LMNowPlayingView() <LMMusicPlayerDelegate, LMButtonDelegate, LMProgressSliderDelegate, LMTableViewSubviewDataSource, LMListEntryDelegate, LMLayoutChangeDelegate, DDTableViewDelegate>
 
 @property LMMusicPlayer *musicPlayer;
 
@@ -185,7 +185,6 @@
 }
 
 - (void)musicPlaybackModesDidChange:(LMMusicShuffleMode)shuffleMode repeatMode:(LMMusicRepeatMode)repeatMode {
-	
 	[self updateMusicModeButtons];
 }
 
@@ -322,6 +321,32 @@
 		[highlightedEntry changeHighlightStatus:YES animated:YES];
 	}
 }
+
+
+
+- (void)tableView:(UITableView*)tableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath {
+	NSLog(@"Move %@ to %@ from %p", sourceIndexPath, destinationIndexPath, tableView);
+	
+	
+}
+
+- (UITableViewCell*)tableView:(UITableView *)tableView draggingCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
+	return cell;
+}
+
+- (void)tableView:(UITableView *)tableView showDraggingView:(UIView *)draggingView atIndexPath:(NSIndexPath *)indexPath {
+	NSLog(@"Show dragging view at %@", indexPath);
+}
+
+- (void)tableView:(UITableView *)tableView hideDraggingView:(UIView *)draggingView atIndexPath:(NSIndexPath *)indexPath {
+	NSLog(@"Hide dragging view at %@", indexPath);
+}
+
+- (void)tableView:(UITableView *)tableView draggingGestureChanged:(UILongPressGestureRecognizer *)gesture {
+	
+}
+
+
 
 - (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState {
 	
@@ -468,7 +493,7 @@
 	entry.collectionIndex = index;
 	entry.associatedData = [self.musicPlayer.nowPlayingCollection.items objectAtIndex:index];
 	
-//	NSLog(@"Collection index %d, current %d match? %d", (int)entry.collectionIndex, (int)self.currentlyHighlighted, ((self.currentlyHighlighted == entry.collectionIndex)));
+	NSLog(@"Collection index %d, current %d match? %d", (int)entry.collectionIndex, (int)self.currentlyHighlighted, ((self.currentlyHighlighted == entry.collectionIndex)));
 	
 	[entry changeHighlightStatus:(self.currentlyHighlighted == entry.collectionIndex) animated:NO];
 	
@@ -847,6 +872,7 @@
 	self.queueTableView.layer.cornerRadius = 8.0;
 	self.queueTableView.backgroundColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.5]; //I wonder what this will do
 	self.queueTableView.clipsToBounds = YES;
+	self.queueTableView.longPressReorderDelegate = self;
 	self.queueTableView.longPressReorderEnabled = YES;
 	[self.queueView addSubview:self.queueTableView];
 	
@@ -886,7 +912,6 @@
 	self.backgroundImageView = [UIImageView newAutoLayoutView];
 	self.backgroundImageView.image = [UIImage imageNamed:@"lignite_background_portrait.png"];
 	self.backgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
-	self.backgroundImageView.hidden = YES;
 	[self.mainView addSubview:self.backgroundImageView];
 	
 	[self.backgroundImageView autoCenterInSuperview];

@@ -11,29 +11,7 @@
 
 @import StoreKit;
 
-@interface LMMusicPlayer() <AVAudioPlayerDelegate
-#ifdef SPOTIFY
-, SPTAudioStreamingDelegate, SPTAudioStreamingDelegate, SPTAudioStreamingPlaybackDelegate
-#endif
-
->
-
-//All Spotify-only variables
-#ifdef SPOTIFY
-
-/**
- The Spotify audio player.
- */
-@property SPTAudioStreamingController *spotifyPlayer;
-
-/**
- The current playback time of the Spotify player, made into a variable since a delegate function provides the info.
- */
-@property NSTimeInterval spotifyPlayerCurrentPlaybackTime;
-
-#endif
-//End all Spotify-only variables
-
+@interface LMMusicPlayer() <AVAudioPlayerDelegate>
 
 /**
  The audio player. Is the actual controller of the system music player contents.
@@ -121,158 +99,12 @@ MPMediaGrouping associatedMediaTypes[] = {
 };
 
 - (MPMusicPlayerController*)systemMusicPlayer {
-#ifdef SPOTIFY
-	NSLog(@"!!!\n!!!\n!!! Someone called upon the system music player... Disappointing. !!!\n!!!\n!!!");
-	return nil;
-#else
 	return [MPMusicPlayerController systemMusicPlayer];
-#endif
 }
 
 - (void)setSystemMusicPlayer:(MPMusicPlayerController *)systemMusicPlayer {
 	//Do nothing
 }
-
-#ifdef SPOTIFY
-- (void)activateSpotifyPlayer {
-	NSLog(@"Attempting to activate Spotify audio player...");
-	
-	SPTAuth *authorization = [SPTAuth defaultInstance];
-	SPTSession *session = authorization.session;
-	if(!session.isValid){
-		NSLog(@"Session isn't valid, renewing session before activating audio player.");
-		[authorization renewSession:session callback:^(NSError *error, SPTSession *newSession) {
-			if(error){
-				NSLog(@"Error renewing session: %@", error);
-				return;
-			}
-			
-			authorization.session = newSession;
-			
-			[self activateSpotifyPlayer];
-		}];
-	}
-	else{
-		NSLog(@"Session valid. Now attempting to activate.");
-		
-		NSError *error = nil;
-		self.spotifyPlayer = [SPTAudioStreamingController sharedInstance];
-		if ([self.spotifyPlayer startWithClientId:authorization.clientID audioController:nil allowCaching:NO error:&error]) {
-			self.spotifyPlayer.delegate = self;
-			self.spotifyPlayer.playbackDelegate = self;
-//			self.player.diskCache = [[SPTDiskCache alloc] initWithCapacity:1024 * 1024 * 64];
-			[self.spotifyPlayer loginWithAccessToken:session.accessToken];
-		} else {
-			self.spotifyPlayer = nil;
-			
-			NSLog(@"Error activating Spotify audio player: %@", [error description]);
-		}
-	}
-}
-
-#pragma mark - Track Player Delegates
-
-- (void)audioStreaming:(SPTAudioStreamingController *)audioStreaming didReceiveMessage:(NSString *)message {
-	NSLog(@"!!!!!!!! Got a message from Spotify, holy fuck!!! %@", message);
-}
-
-- (void)audioStreaming:(SPTAudioStreamingController *)audioStreaming didChangePlaybackStatus:(BOOL)isPlaying {
-	NSLog(isPlaying ? @"Spotify is playing" : @"Spotify isn't playing");
-	if (isPlaying) {
-		[self activateAudioSession];
-	} else {
-		[self deactivateAudioSession];
-	}
-}
-
--(void)audioStreaming:(SPTAudioStreamingController *)audioStreaming didChangeMetadata:(SPTPlaybackMetadata *)metadata {
-	NSLog(@"Spotify metadata changed %@", metadata);
-}
-
--(void)audioStreaming:(SPTAudioStreamingController *)audioStreaming didReceivePlaybackEvent:(SpPlaybackEvent)event withName:(NSString *)name {
-	NSLog(@"didReceivePlaybackEvent: %zd %@", event, name);
-	NSLog(@"isPlaying=%d isRepeating=%d isShuffling=%d isActiveDevice=%d positionMs=%f",
-		  self.spotifyPlayer.playbackState.isPlaying,
-		  self.spotifyPlayer.playbackState.isRepeating,
-		  self.spotifyPlayer.playbackState.isShuffling,
-		  self.spotifyPlayer.playbackState.isActiveDevice,
-		  self.spotifyPlayer.playbackState.position);
-}
-
-- (void)audioStreamingDidLogout:(SPTAudioStreamingController *)audioStreaming {
-	NSLog(@"Logout of Spotify");
-}
-
-- (void)audioStreaming:(SPTAudioStreamingController *)audioStreaming didReceiveError:(NSError* )error {
-	NSLog(@"Spotify got an error, oh boy: %zd %@", error.code, error.localizedDescription);
-	
-//	if (error.code == SPErrorNeedsPremium) {
-//		UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Premium account required" message:@"Premium account is required to showcase application functionality. Please login using premium account." preferredStyle:UIAlertControllerStyleAlert];
-//		[alert addAction:[UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction* action){
-//			[self closeSession];
-//		}]];
-//		[self presentViewController:alert animated:YES completion:nil];
-//		
-//	}
-}
-
-- (void)audioStreaming:(SPTAudioStreamingController *)audioStreaming didChangePosition:(NSTimeInterval)position {
-	NSLog(@"Streaming changed position to %f", position);
-	
-	self.spotifyPlayerCurrentPlaybackTime = position;
-	
-	[self updateNowPlayingTimeDelegates];
-}
-
-- (void)audioStreaming:(SPTAudioStreamingController *)audioStreaming didStartPlayingTrack:(NSString *)trackUri {
-	NSLog(@"Starting %@", trackUri);
-	NSLog(@"Source %@", self.spotifyPlayer.metadata.currentTrack.playbackSourceUri);
-	// If context is a single track and the uri of the actual track being played is different
-	// than we can assume that relink has happended.
-	BOOL isRelinked = [self.spotifyPlayer.metadata.currentTrack.playbackSourceUri containsString:@"spotify:track"]
-	&& ![self.spotifyPlayer.metadata.currentTrack.playbackSourceUri isEqualToString:trackUri];
-	NSLog(@"Relinked %d", isRelinked);
-	
-	self.indexOfNowPlayingTrack = self.spotifyPlayer.metadata.currentTrack.indexInContext;
-	if(self.spotifyPlayerCurrentPlaybackTime != 0){
-		self.currentPlaybackTime = self.spotifyPlayerCurrentPlaybackTime;
-	}
-	
-	for(int i = 0; i < self.delegates.count; i++){
-		id delegate = [self.delegates objectAtIndex:i];
-		[delegate musicTrackDidChange:self.nowPlayingTrack];
-	}
-}
-
-- (void)audioStreaming:(SPTAudioStreamingController *)audioStreaming didStopPlayingTrack:(NSString *)trackUri {
-	NSLog(@"Finishing: %@", trackUri);
-}
-
-- (void)audioStreamingDidLogin:(SPTAudioStreamingController *)audioStreaming {
-	NSLog(@"Clear to play tunes.");
-	//    [self.player playSpotifyURI:@"spotify:user:spotify:playlist:2yLXxKhhziG2xzy7eyD4TD" startingWithIndex:0 startingWithPosition:10 callback:^(NSError *error) {
-	//        if (error != nil) {
-	//            NSLog(@"*** failed to play: %@", error);
-	//            return;
-	//        }
-	//    }];
-}
-
-#pragma mark - Audio Session
-
-- (void)activateAudioSession
-{
-	[[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback
-										   error:nil];
-	[[AVAudioSession sharedInstance] setActive:YES error:nil];
-}
-
-- (void)deactivateAudioSession
-{
-	[[AVAudioSession sharedInstance] setActive:NO error:nil];
-}
-
-#endif
 
 - (instancetype)init {
 	self = [super init];
@@ -289,13 +121,8 @@ MPMediaGrouping associatedMediaTypes[] = {
 		self.bullshitQuery = q;
 		
 		self.playerType = LMMusicPlayerTypeAppleMusic;
-#ifdef SPOTIFY
-		self.playerType = LMMusicPlayerTypeSpotify;
-		
-		[self activateSpotifyPlayer];
-#else
 		[self loadNowPlayingState];
-#endif
+
 		self.delegates = [NSMutableArray new];
 		self.delegatesSubscribedToCurrentPlaybackTimeChange = [NSMutableArray new];
 		self.delegatesSubscribedToLibraryDidChange = [NSMutableArray new];
@@ -320,7 +147,6 @@ MPMediaGrouping associatedMediaTypes[] = {
 		 name:AVAudioSessionRouteChangeNotification
 		 object:nil];
 		
-#ifndef SPOTIFY
 		[notificationCenter
 		 addObserver:self
 			selector:@selector(systemMusicPlayerTrackChanged:)
@@ -341,7 +167,6 @@ MPMediaGrouping associatedMediaTypes[] = {
 		
 		MPMediaLibrary *mediaLibrary = [MPMediaLibrary defaultMediaLibrary];
 		[mediaLibrary beginGeneratingLibraryChangeNotifications];
-#endif
 		
 		NSTimeInterval musicPlayerLoadEndTime = [[NSDate new] timeIntervalSince1970];
 		NSLog(@"Setup LMMusicPlayer in %f seconds.", (musicPlayerLoadEndTime-musicPlayerLoadStartTime));
@@ -355,7 +180,6 @@ MPMediaGrouping associatedMediaTypes[] = {
 - (void)deinit {
 	NSLog(@"Deinit on LMMusicPlayer called. Warning: Releasing notification center hooks to track playing changes!");
 	
-#ifndef SPOTIFY
 	[[NSNotificationCenter defaultCenter]
 	 removeObserver: self
 	 name:           MPMusicPlayerControllerNowPlayingItemDidChangeNotification
@@ -367,7 +191,6 @@ MPMediaGrouping associatedMediaTypes[] = {
 	 object:         self.systemMusicPlayer];
 	
 	[self.systemMusicPlayer endGeneratingPlaybackNotifications];
-#endif
 }
 
 + (LMMusicPlayer*)sharedMusicPlayer {
@@ -414,11 +237,7 @@ MPMediaGrouping associatedMediaTypes[] = {
 - (void)updateNowPlayingTimeDelegates {
 	for(int i = 0; i < self.delegatesSubscribedToCurrentPlaybackTimeChange.count; i++){
 		id<LMMusicPlayerDelegate> delegate = [self.delegatesSubscribedToCurrentPlaybackTimeChange objectAtIndex:i];
-#ifdef SPOTIFY
-		[delegate musicCurrentPlaybackTimeDidChange:self.spotifyPlayerCurrentPlaybackTime];
-#else
 		[delegate musicCurrentPlaybackTimeDidChange:self.currentPlaybackTime];
-#endif
 	}
 }
 
@@ -455,12 +274,10 @@ MPMediaGrouping associatedMediaTypes[] = {
 
 - (MPRemoteCommandHandlerStatus)handlePlaybackPositionChange:(MPChangePlaybackPositionCommandEvent*)positionEvent {
 	NSLog(@"New time %f", positionEvent.positionTime);
-#ifdef SPOTIFY
-	NSLog(@"Can't change time on Spotify yet");
-#else
+	
 	self.audioPlayer.currentTime = positionEvent.positionTime;
 	[self reloadInfoCenter:self.audioPlayer.isPlaying];
-#endif
+
 	return MPRemoteCommandHandlerStatusSuccess;
 }
 
@@ -642,7 +459,6 @@ MPMediaGrouping associatedMediaTypes[] = {
 	return NO;
 }
 
-#ifndef SPOTIFY
 - (void)mediaLibraryContentsChanged:(id)notification {
 	NSLog(@"Library changed, called by %@!!!", [[notification class] description]);
 	
@@ -650,7 +466,6 @@ MPMediaGrouping associatedMediaTypes[] = {
 		[[self.delegatesSubscribedToLibraryDidChange objectAtIndex:i] musicLibraryDidChange];
 	}
 }
-#endif
 
 - (void)addMusicDelegate:(id<LMMusicPlayerDelegate>)newDelegate {
 	[self.delegates addObject:newDelegate];
@@ -695,9 +510,6 @@ BOOL shuffleForDebug = NO;
 
 - (NSDictionary*)lettersAvailableDictionaryForMusicTrackCollectionArray:(NSArray<LMMusicTrackCollection*>*)collectionArray
 												withAssociatedMusicType:(LMMusicType)musicType {
-#ifdef SPOTIFY
-	return @{};
-#else
 	NSUInteger lastCollectionIndex = 0;
 	
 	NSMutableDictionary *lettersDictionary = [NSMutableDictionary new];
@@ -803,40 +615,9 @@ BOOL shuffleForDebug = NO;
 	}
 	
 	return [NSDictionary dictionaryWithDictionary:lettersDictionary];
-#endif
 }
 
 - (NSArray<LMMusicTrackCollection*>*)trackCollectionsForMediaQuery:(id)mediaQuery withMusicType:(LMMusicType)musicType {
-	
-#ifdef SPOTIFY
-	NSArray *sortedArray;
-	
-	sortedArray = [mediaQuery sortedArrayUsingComparator:^NSComparisonResult(NSDictionary *firstCollection, NSDictionary *secondCollection) {
-		
-		NSDictionary *first = [firstCollection representativeItem];
-		NSDictionary *second = [secondCollection representativeItem];
-		
-		NSString *firstTitle = [first albumTitle];
-		NSString *secondTitle = [second albumTitle];
-		
-		switch(musicType){
-			case LMMusicTypeArtists:
-				firstTitle = [first artist];
-				secondTitle = [second artist];
-				break;
-			case LMMusicTypeTitles:
-				firstTitle = [first title];
-				secondTitle = [second title];
-				break;
-			default:
-				break;
-		}
-		
-		return [firstTitle compare:secondTitle];
-	}];
-	
-	return sortedArray;
-#else
 	//	MPMediaGrouping associatedGrouping = associatedMediaTypes[musicType];
 	
 	NSMutableArray *collections =
@@ -909,28 +690,9 @@ BOOL shuffleForDebug = NO;
 //	NSLog(@"%ld before %ld after", [mediaQuery collections].count, [collections sortedArrayUsingDescriptors:@[albumSort]].count);
 	
 	return [collections sortedArrayUsingDescriptors:@[albumSort]];
-#endif
 }
 
 - (NSArray<LMMusicTrackCollection*>*)queryCollectionsForMusicType:(LMMusicType)musicType {
-#ifdef SPOTIFY
-	NSArray *queryArray = nil;
-	switch(musicType) {
-		case LMMusicTypeAlbums:
-			queryArray = [[LMSpotifyLibrary sharedLibrary] albums];
-			break;
-		case LMMusicTypeArtists:
-			queryArray = [[LMSpotifyLibrary sharedLibrary] artists];
-			break;
-		case LMMusicTypeTitles:
-			queryArray = [[LMSpotifyLibrary sharedLibrary] musicTracks];
-			break;
-		default:
-			NSLog(@"\n\nSpooked! Unknown shitpost\n\n");
-			break;
-	}
-	return [self trackCollectionsForMediaQuery:queryArray withMusicType:musicType];
-#else
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer || self.playerType == LMMusicPlayerTypeAppleMusic){
 		//		NSTimeInterval startingTime = [[NSDate date] timeIntervalSince1970];
 		//		NSLog(@"Querying items for LMMusicType %d...", musicType);
@@ -975,13 +737,9 @@ BOOL shuffleForDebug = NO;
 		return [self trackCollectionsForMediaQuery:query withMusicType:musicType];
 	}
 	return nil;
-#endif
 }
 
 - (NSArray<LMMusicTrackCollection*>*)collectionsForRepresentativeTrack:(LMMusicTrack*)representativeTrack forMusicType:(LMMusicType)musicType {
-#ifdef SPOTIFY
-	return @[];
-#else
 	MPMediaGrouping associatedGroupings[] = {
 		MPMediaGroupingAlbum, //Artists
 		MPMediaGroupingTitle, //Albums
@@ -1015,19 +773,9 @@ BOOL shuffleForDebug = NO;
 	[query addFilterPredicate:musicFilterPredicate];
 	
 	return [self trackCollectionsForMediaQuery:query withMusicType:musicType];
-#endif
 }
 
 - (void)skipToNextTrack {
-#ifdef SPOTIFY
-	[self.spotifyPlayer skipNext:^(NSError *error) {
-		if(error){
-			NSLog(@"Error skipping to next %@", error);
-			return;
-		}
-		NSLog(@"Good to go (skipped to next)");
-	}];
-#else
 	NSLog(@"Skip to next");
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer || self.playerType == LMMusicPlayerTypeAppleMusic){
 		if(self.repeatMode == LMMusicRepeatModeOne){
@@ -1040,7 +788,6 @@ BOOL shuffleForDebug = NO;
 			[self systemMusicPlayerTrackChanged:self];
 		}
 	}
-#endif
 }
 
 - (void)autoSkipAudioPlayer {
@@ -1063,11 +810,7 @@ BOOL shuffleForDebug = NO;
 }
 
 - (void)autoBackThrough {
-#ifdef SPOTIFY
-	if(self.spotifyPlayerCurrentPlaybackTime > 5){
-#else
 	if(self.currentPlaybackTime > 5){
-#endif
 		NSLog(@"Skipping to beginning");
 		[self skipToBeginning];
 	}
@@ -1082,19 +825,9 @@ BOOL shuffleForDebug = NO;
 }
 
 - (void)skipToPreviousItem {
-#ifdef SPOTIFY
-	[self.spotifyPlayer skipPrevious:^(NSError *error) {
-		if(error){
-			NSLog(@"Error skipping to previous %@", error);
-			return;
-		}
-		NSLog(@"Good to go (skipped to previous)");
-	}];
-#else
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer || self.playerType == LMMusicPlayerTypeAppleMusic){
 		[self.systemMusicPlayer skipToPreviousItem];
 	}
-#endif
 }
 
 - (void)autoPauseAudioPlayer {
@@ -1118,15 +851,6 @@ BOOL shuffleForDebug = NO;
 }
 
 - (void)play {
-#ifdef SPOTIFY
-	[self.spotifyPlayer setIsPlaying:YES callback:^(NSError *error) {
-		if(error){
-			NSLog(@"Error setting to playing %@", error);
-			return;
-		}
-		NSLog(@"Success playing Spotify player");
-	}];
-#else
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer){
 		[self changeMusicPlayerState:LMMusicPlaybackStatePlaying];
 		
@@ -1143,19 +867,9 @@ BOOL shuffleForDebug = NO;
 		
 		NSLog(@"BPM %d", (int)self.systemMusicPlayer.nowPlayingItem.beatsPerMinute);
 	}
-#endif
 }
 
 - (void)pause {
-#ifdef SPOTIFY
-	[self.spotifyPlayer setIsPlaying:NO callback:^(NSError *error) {
-		if(error){
-			NSLog(@"Error setting to paused %@", error);
-			return;
-		}
-		NSLog(@"Success pausing Spotify player");
-	}];
-#else
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer){
 		[self changeMusicPlayerState:LMMusicPlaybackStatePaused];
 		//[self.systemMusicPlayer pause];
@@ -1165,38 +879,18 @@ BOOL shuffleForDebug = NO;
 	else if(self.playerType == LMMusicPlayerTypeAppleMusic){
 		[self.systemMusicPlayer pause];
 	}
-#endif
 }
 
 - (void)stop {
-#ifdef SPOTIFY
-	NSError *error = nil;
-	[self.spotifyPlayer stopWithError:&error];
-	
-	if(error){
-		NSLog(@"Error in stopping player: %@", error);
-	}
-#else
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer){
 		[self.audioPlayer stop];
 	}
 	else if(self.playerType == LMMusicPlayerTypeAppleMusic){
 		[self.systemMusicPlayer stop];
 	}
-#endif
 }
 
 - (LMMusicPlaybackState)invertPlaybackState {
-#ifdef SPOTIFY
-	if(self.spotifyPlayer.playbackState.isPlaying){
-		[self pause];
-		return LMMusicPlaybackStatePaused;
-	}
-	else{
-		[self play];
-		return LMMusicPlaybackStatePlaying;
-	}
-#else
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer) {
 		switch(self.audioPlayer.isPlaying){
 			case LMMusicPlaybackStatePlaying:
@@ -1217,7 +911,6 @@ BOOL shuffleForDebug = NO;
 				return LMMusicPlaybackStatePlaying;
 		}
 	}
-#endif
 }
 
 - (BOOL)hasTrackLoaded {
@@ -1226,15 +919,6 @@ BOOL shuffleForDebug = NO;
 
 - (void)setNowPlayingTrack:(LMMusicTrack*)nowPlayingTrack {
 	self.musicWasUserSet = YES;
-#ifdef SPOTIFY
-	[self.spotifyPlayer playSpotifyURI:[nowPlayingTrack objectForKey:@"uri"] startingWithIndex:0 startingWithPosition:0 callback:^(NSError *playbackError) {
-		if(playbackError){
-			NSLog(@"Playback error %@", playbackError);
-			return;
-		}
-		NSLog(@"Playing!");
-	}];
-#else
 	for(int i = 0; i < self.nowPlayingCollection.count; i++){
 		LMMusicTrack *track = [self.nowPlayingCollection.items objectAtIndex:i];
 		if([nowPlayingTrack isEqual:track]){
@@ -1249,7 +933,6 @@ BOOL shuffleForDebug = NO;
 			[self.systemMusicPlayer setNowPlayingItem:associatedMediaItem];
 		}
 	}
-#endif
 	_nowPlayingTrack = nowPlayingTrack;
 }
 
@@ -1468,10 +1151,7 @@ BOOL shuffleForDebug = NO;
 
 - (void)setNowPlayingCollection:(LMMusicTrackCollection*)nowPlayingCollection {
 	self.musicWasUserSet = YES;
-#ifdef SPOTIFY
-	#warning Set this up too
-//	[self.spotifyPlayer ]
-#else
+
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer || self.playerType == LMMusicPlayerTypeAppleMusic){
         self.nowPlayingCollectionSorted = nowPlayingCollection;
         [self reshuffleSortedCollection];
@@ -1484,7 +1164,6 @@ BOOL shuffleForDebug = NO;
         [self.systemMusicPlayer setQueueWithItemCollection:self.nowPlayingCollection];
 		[self.systemMusicPlayer setNowPlayingItem:[[self.nowPlayingCollection items] objectAtIndex:0]];
 	}
-#endif
 }
 
 - (void)setPlayerType:(LMMusicPlayerType)playerType {
@@ -1500,9 +1179,6 @@ BOOL shuffleForDebug = NO;
 }
 
 + (LMMusicPlayerType)savedPlayerType {
-#ifdef SPOTIFY
-	return LMMusicPlayerTypeSpotify;
-#else
 	NSLog(@"\n\nSaved player type called.\n\n");
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	LMMusicPlayerType type = LMMusicPlayerTypeSystemMusicPlayer;
@@ -1510,19 +1186,9 @@ BOOL shuffleForDebug = NO;
 		type = (LMMusicPlayerType)[defaults integerForKey:DEFAULTS_KEY_PLAYER_TYPE];
 	}
 	return type;
-#endif
 }
 
 - (void)setCurrentPlaybackTime:(NSTimeInterval)currentPlaybackTime {
-#ifdef SPOTIFY
-	[self.spotifyPlayer seekTo:currentPlaybackTime callback:^(NSError *error) {
-		if(error){
-			NSLog(@"Error setting current playback time: %@", error);
-			return;
-		}
-		NSLog(@"Success setting current playback time");
-	}];
-#else
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer){
 		NSLog(@"Setting current playback time to %f", currentPlaybackTime);
 		
@@ -1540,13 +1206,9 @@ BOOL shuffleForDebug = NO;
 		
 		[self updateNowPlayingTimeDelegates];
 	}
-#endif
 }
 
 - (NSTimeInterval)currentPlaybackTime {
-#ifdef SPOTIY
-	return self.spotifyPlayerCurrentPlaybackTime;
-#else
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer && self.audioPlayer){
 		return self.audioPlayer.currentTime;
 	}
@@ -1554,7 +1216,6 @@ BOOL shuffleForDebug = NO;
 		return self.systemMusicPlayer.currentPlaybackTime;
 	}
 	return _currentPlaybackTime;
-#endif
 }
 	
 - (void)updatePlaybackModeDelegates {
@@ -1567,21 +1228,6 @@ BOOL shuffleForDebug = NO;
 
 - (void)setRepeatMode:(LMMusicRepeatMode)repeatMode {
 	_repeatMode = repeatMode;
-#ifdef SPOTIFY
-	SPTRepeatMode spotifyRepeatModes[4] = {
-		SPTRepeatOff,
-		SPTRepeatOff,
-		SPTRepeatContext,
-		SPTRepeatOne
-	};
-	[self.spotifyPlayer setRepeat:spotifyRepeatModes[repeatMode] callback:^(NSError *error) {
-		if(error){
-			NSLog(@"Error settings repeat: %@", error);
-			return;
-		}
-		NSLog(@"Success setting repeat");
-	}];
-#else
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer || self.playerType == LMMusicPlayerTypeAppleMusic){
 		MPMusicRepeatMode systemRepeatModes[4] = {
 			MPMusicRepeatModeNone,
@@ -1591,7 +1237,6 @@ BOOL shuffleForDebug = NO;
 		};
 		self.systemMusicPlayer.repeatMode = systemRepeatModes[repeatMode];
 	}
-#endif
 	
 	[self updatePlaybackModeDelegates];
 }

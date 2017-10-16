@@ -15,7 +15,6 @@
 #import "LMMusicPlayer.h"
 #import "APIdleManager.h"
 #import "LMExtras.h"
-#import "Spotify.h"
 
 #define LMTitleViewTopTrackPersistentIDKey @"LMTitleViewTopTrackPersistentIDKey"
 
@@ -29,9 +28,6 @@
 @property NSInteger currentlyHighlighted;
 
 @property LMOperationQueue *queue;
-
-
-@property SPTAudioStreamingController *player;
 
 
 /**
@@ -113,15 +109,6 @@
 }
 
 - (void)rebuildTrackCollection {
-#ifdef SPOTIFY
-	//get shit
-	NSArray *musicTracks = [[LMSpotifyLibrary sharedLibrary] musicTracks];
-	
-	NSLog(@"Got %ld music tracks.", musicTracks.count);
-	
-	self.musicTitles = @{ @"items": musicTracks };
-	self.songListTableView.totalAmountOfObjects = musicTracks.count;
-#else
 	MPMediaQuery *everything = [MPMediaQuery new];
 	MPMediaPropertyPredicate *musicFilterPredicate = [MPMediaPropertyPredicate predicateWithValue:[NSNumber numberWithInteger:MPMediaTypeMusic]
 																					  forProperty:MPMediaItemPropertyMediaType
@@ -151,7 +138,6 @@
 	
 	self.musicTitles = [MPMediaItemCollection collectionWithItems:[NSArray arrayWithArray:musicCollection]];
 	self.songListTableView.totalAmountOfObjects = self.musicTitles.count;
-#endif
 }
 
 - (void)musicLibraryDidChange {
@@ -331,14 +317,6 @@
 - (void)tappedListEntry:(LMListEntry*)entry{
 	
 	
-#ifdef SPOTIFY
-	NSLog(@"Fuck me %ld", entry.collectionIndex);
-	
-	LMMusicTrack *track = [self.musicTitles.items objectAtIndex:entry.collectionIndex];
-//	NSLog(@"Track %@", track.title);
-	
-	[self.musicPlayer setNowPlayingTrack:track];
-#else
 	LMMusicTrack *track = [self.musicTitles.items objectAtIndex:entry.collectionIndex];
 	
 //	NSLog(@"Tapped list entry with artist %@", self.albumCollection.representativeItem.artist);
@@ -352,11 +330,7 @@
 	self.currentlyHighlighted = entry.collectionIndex;
 	
 	if(self.musicPlayer.nowPlayingCollection != self.musicTitles){
-#ifdef SPOTIFY
-		[self.musicPlayer pause];
-#else
 		[self.musicPlayer stop];
-#endif
 		[self.musicPlayer setNowPlayingCollection:self.musicTitles];
 	}
 	self.musicPlayer.autoPlay = YES;
@@ -365,7 +339,6 @@
 	
 	[self.musicPlayer.navigationBar setSelectedTab:LMNavigationTabMiniplayer];
 	[self.musicPlayer.navigationBar maximize:NO];
-#endif
 }
 
 - (UIColor*)tapColourForListEntry:(LMListEntry*)entry {

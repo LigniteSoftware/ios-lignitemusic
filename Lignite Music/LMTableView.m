@@ -53,9 +53,7 @@
 		
 		self.delegate = self;
 		self.dataSource = self;
-		
-		self.longPressReorderEnabled = NO;
-		
+				
 		self.totalAmountOfObjects = 0;
 		self.requiredAmountOfObjects = 0;
 		
@@ -66,8 +64,14 @@
 		self.notHighlightedBackgroundColour = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.5];
 				
 		self.title = @"UnnamedLMTableView";
+		
+		self.longPressReorderEnabled = NO;
 	}
 	return self;
+}
+
+- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath {
+	NSLog(@"Move %@ to %@", sourceIndexPath, destinationIndexPath);
 }
 
 - (NSUInteger)bottomSpacing {
@@ -183,7 +187,9 @@
 //		NSLog(@"index %ld types %@ %@", indexPath.section, [[subview class] description], [[newSubview class] description]);
 		if(([subview class] == [UIView class]      && [newSubview class] == [LMListEntry class])
 		|| ([subview class] == [LMListEntry class] && [newSubview class] == [UIView class])){ //If there's a big list entry on top and we're replacing it with a list entry or vice versa, remove the old view from the superview and attach the new one
-			[subview removeFromSuperview];
+			if(!self.longPressReorderEnabled){
+				[subview removeFromSuperview];
+			}
 			
 			[lmCell.contentView addSubview:newSubview];
 						

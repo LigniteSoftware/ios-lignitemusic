@@ -57,10 +57,10 @@
 /**
  The delegate for long press reordering events.
  */
-@property id<DDTableViewDelegate> longPressReorderDelegate;
+@property id longPressReorderDelegate;
 
 /**
- Whether or not long-press to reorder is enabled. Default is NO.
+ Whether or not long-press to reorder is enabled. Default is YES.
  */
 @property BOOL longPressReorderEnabled;
 

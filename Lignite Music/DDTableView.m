@@ -81,6 +81,10 @@
 	
 	self.userInteractionEnabled = YES;
 	
+	self.estimatedRowHeight = 0;
+	self.estimatedSectionHeaderHeight = 0;
+	self.estimatedSectionFooterHeight = 0;
+	
 	NSLog(@"Initialized gesture: %d", self.longPressReorderEnabled);
 }
 
@@ -303,8 +307,10 @@
 		
 		[self beginUpdates];
 		[self moveRowAtIndexPath:currentLocationIndexPath toIndexPath:indexPath];
+		[self moveRowAtIndexPath:indexPath toIndexPath:currentLocationIndexPath];
 		if([self.dataSource respondsToSelector:@selector(tableView:moveRowAtIndexPath:toIndexPath:)]){
 			[self.dataSource tableView:self moveRowAtIndexPath:currentLocationIndexPath toIndexPath:indexPath];
+			[self.dataSource tableView:self moveRowAtIndexPath:indexPath toIndexPath:currentLocationIndexPath];
 		}
 		self.currentLocationIndexPath = indexPath;
 		[self endUpdates];
@@ -324,7 +330,7 @@
 		return;
 	}
 	
-	CGFloat yOffset = self.contentOffset.y + self.scrollRate * 10.0;
+	CGFloat yOffset = self.contentOffset.y + (self.scrollRate * 10.0);
 	CGPoint newOffset = CGPointMake(self.contentOffset.x, yOffset);
 	
 	UIEdgeInsets inset = self.contentInset;
@@ -342,6 +348,8 @@
 		newOffset.y = (self.contentSize.height + inset.bottom) - self.frame.size.height;
 	}
 	
+//	NSLog(@"Setting offset to %@", NSStringFromCGPoint(newOffset));
+	
 	self.contentOffset = newOffset;
 	
 	if(self.draggingView){
@@ -356,12 +364,15 @@
 	CGFloat bottomBound = self.contentSize.height - cellCenter;
 	
 	if(location.y < cellCenter){
+		NSLog(@"Cell center");
 		return cellCenter;
 	}
 	else if(location.y > bottomBound){
+		NSLog(@"Bottom bound");
 		return bottomBound;
 	}
 	
+//	NSLog(@"Y loc");
 	return location.y;
 }
 

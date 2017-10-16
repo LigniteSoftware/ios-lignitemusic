@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "Lignite_Music-Swift.h"
 #import "DDTableView.h"
 
 @class LMTableView;

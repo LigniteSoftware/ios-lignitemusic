@@ -223,7 +223,6 @@ typedef enum {
  */
 - (void)deinit;
 
-#ifndef SPOTIFY
 /**
  Prepare for app termination. The music player will transfer the contents of the now playing item to the system music player should it be using the system music player.
  */
@@ -233,7 +232,6 @@ typedef enum {
  Prepare for when the app is coming back into the foreground (being activated again).
  */
 - (void)prepareForActivation;
-#endif
 
 /**
  Adds an LMMusicPlayerDelegate to the list of delegates.
