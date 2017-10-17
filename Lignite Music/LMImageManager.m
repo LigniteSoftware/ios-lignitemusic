@@ -380,7 +380,21 @@
     BOOL isArtistCategory = (category == LMImageManagerCategoryArtistImages);
     
     NSString *typeString = isArtistCategory ? @"artist" : @"release";
-    NSString *queryString = isArtistCategory ? randomTrack.artist : randomTrack.albumTitle;
+	
+	NSMutableString *albumMutableQueryString = [NSMutableString new];
+	if(randomTrack.artist){
+		[albumMutableQueryString appendString:[NSString stringWithFormat:@"%@ ", randomTrack.artist]];
+	}
+	if(randomTrack.albumTitle){
+		[albumMutableQueryString appendString:randomTrack.albumTitle];
+	}
+	else{
+		albumMutableQueryString = nil;
+	}
+	
+	NSString *albumQueryString = albumMutableQueryString ? [NSString stringWithString:albumMutableQueryString] : nil;
+	
+    NSString *queryString = isArtistCategory ? randomTrack.artist : albumQueryString;
     //    typeString = @"artist";
     //    queryString = @"chiddy bang";
     if(!queryString){ //If the name doesn't exist, just reject it. Users gotta check their ID3 tags.
@@ -632,9 +646,7 @@
 }
 
 - (void)beginDownloadingImagesForCategory:(LMImageManagerCategory)category {
-	return;
-	
-	NSLog(@"[LMImageManager]: Will begin the process for downloading images r category %d.", category);
+	NSLog(@"[LMImageManager]: Will begin the process for downloading images for category %d.", category);
 	
 	NSArray *collectionsAssociated = (category == LMImageManagerCategoryArtistImages) ? self.artistsCollection : self.albumsCollection;
 	
