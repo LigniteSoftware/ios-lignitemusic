@@ -39,6 +39,9 @@
  
  */
 
+"TrackQueued" = "Song eingereiht";
+"TrackRemovedFromQueue" = "Aus der Liste entfernt";
+
 "LoadingMusic" = "Musik wird geladen";
 "AlmostThere" = "Fast geschafft!";
 

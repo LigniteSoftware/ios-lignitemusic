@@ -555,7 +555,7 @@
 	hud.customView = [[UIImageView alloc] initWithImage:image];
 	hud.square = YES;
 	hud.userInteractionEnabled = NO;
-	hud.label.text = NSLocalizedString(@"Removed", nil);
+	hud.label.text = NSLocalizedString(@"TrackRemovedFromQueue", nil);
 	
 	[hud hideAnimated:YES afterDelay:3.f];
 	
@@ -583,7 +583,7 @@
 			
 			UIColor *color = [UIColor colorWithRed:47/255.0 green:47/255.0 blue:49/255.0 alpha:1.0];
 			UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14.0f];
-			MGSwipeButton *saveButton = [MGSwipeButton buttonWithTitle:@"Remove" backgroundColor:color padding:15 callback:^BOOL(MGSwipeTableCell *sender) {
+			MGSwipeButton *saveButton = [MGSwipeButton buttonWithTitle:@"" icon:[LMAppIcon imageForIcon:LMIconRemoveFromQueue] backgroundColor:color padding:0 callback:^BOOL(MGSwipeTableCell *sender) {
 				LMMusicTrack *trackToRemove = [self.musicPlayer.nowPlayingCollection.items objectAtIndex:listEntry.collectionIndex];
 				
 				[self.musicPlayer removeTrackFromQueue:trackToRemove];
@@ -610,6 +610,9 @@
 				return YES;
 			}];
 			saveButton.titleLabel.font = font;
+			saveButton.titleLabel.hidden = YES;
+			saveButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
+			saveButton.imageEdgeInsets = UIEdgeInsetsMake(25, 0, 25, 0);
 			
 			listEntry.rightButtons = @[ saveButton ];
 			listEntry.rightButtonExpansionColour = [UIColor colorWithRed:0.92 green:0.00 blue:0.00 alpha:1.0];
@@ -625,7 +628,7 @@
 	if([LMLayoutManager isiPad]){
 		return ([LMLayoutManager isLandscapeiPad] ? WINDOW_FRAME.size.height : WINDOW_FRAME.size.width)/10.0f;
 	}
-	return ([LMLayoutManager isLandscape] ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height)/10.0f;
+	return ([LMLayoutManager isLandscape] ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height)/9.0f;
 }
 
 - (LMListEntry*)listEntryForIndex:(NSInteger)index {

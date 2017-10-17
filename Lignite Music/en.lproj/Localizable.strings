@@ -46,6 +46,9 @@
  
  */
 
+"TrackQueued" = "Track queued";
+"TrackRemovedFromQueue" = "Removed from queue";
+
 "LoadingMusic" = "Loading music...";
 "AlmostThere" = "Almost there!";
 

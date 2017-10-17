@@ -63,7 +63,9 @@ typedef enum {
     LMIconTutorialTap,
 	LMIconiOSBack,
 	LMIcon3DotsHorizontal,
-	LMIcon3DotsVertical
+	LMIcon3DotsVertical,
+	LMIconAddToQueue,
+	LMIconRemoveFromQueue
 } LMIcon;
 
 /**

@@ -249,7 +249,7 @@
 		
 		UIColor *color = [UIColor colorWithRed:47/255.0 green:47/255.0 blue:49/255.0 alpha:1.0];
 		UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14.0f];
-		MGSwipeButton *saveButton = [MGSwipeButton buttonWithTitle:@"Queue" backgroundColor:color padding:15 callback:^BOOL(MGSwipeTableCell *sender) {
+		MGSwipeButton *saveButton = [MGSwipeButton buttonWithTitle:@"" icon:[LMAppIcon imageForIcon:LMIconAddToQueue] backgroundColor:color padding:0 callback:^BOOL(MGSwipeTableCell *sender) {
 			LMMusicTrack *trackToQueue = [self.musicTrackCollection.items objectAtIndex:listEntry.collectionIndex];
 			
 			[self.musicPlayer addTrackToQueue:trackToQueue];
@@ -259,6 +259,9 @@
 			return YES;
 		}];
 		saveButton.titleLabel.font = font;
+		saveButton.titleLabel.hidden = YES;
+		saveButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
+		saveButton.imageEdgeInsets = UIEdgeInsetsMake(25, 0, 25, 0);
 		
 		listEntry.rightButtons = @[ saveButton ];
 		

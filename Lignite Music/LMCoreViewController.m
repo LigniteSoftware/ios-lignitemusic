@@ -278,7 +278,7 @@ LMControlBarViewDelegate
 	hud.customView = [[UIImageView alloc] initWithImage:image];
 	hud.square = YES;
 	hud.userInteractionEnabled = NO;
-	hud.label.text = NSLocalizedString(@"Queued", nil);
+	hud.label.text = NSLocalizedString(@"TrackQueued", nil);
 	
 	[hud hideAnimated:YES afterDelay:3.f];
 }
