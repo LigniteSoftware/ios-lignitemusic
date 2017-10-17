@@ -1006,10 +1006,18 @@ LMControlBarViewDelegate
 
 			[self.navigationController.view addSubview:self.loadingActivityIndicator];
 			
-			[self.loadingActivityIndicator autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:WINDOW_FRAME.size.height/([LMLayoutManager isLandscape] ? 1.5 : 2.0)];
-			[self.loadingActivityIndicator autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-			[self.loadingActivityIndicator autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-			[self.loadingActivityIndicator autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.navigationController.view withMultiplier:(1.0/4.0)];
+			if([LMLayoutManager isiPad]){
+				[self.loadingActivityIndicator autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:WINDOW_FRAME.size.height/([LMLayoutManager isLandscape] ? 1.5 : 2.0)];
+				[self.loadingActivityIndicator autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+				[self.loadingActivityIndicator autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+				[self.loadingActivityIndicator autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.navigationController.view withMultiplier:(2.0/4.0)];
+			}
+			else{
+				[self.loadingActivityIndicator autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:WINDOW_FRAME.size.height/([LMLayoutManager isLandscape] ? 1.5 : 2.0)];
+				[self.loadingActivityIndicator autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+				[self.loadingActivityIndicator autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+				[self.loadingActivityIndicator autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.navigationController.view withMultiplier:(1.0/4.0)];
+			}
 			
 			[self.loadingActivityIndicator startAnimating];
 			
