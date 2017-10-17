@@ -353,6 +353,7 @@
 }
 
 - (UITableViewCell*)tableView:(UITableView *)tableView draggingCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
+	cell.backgroundColor = [UIColor whiteColor];
 	return cell;
 }
 
