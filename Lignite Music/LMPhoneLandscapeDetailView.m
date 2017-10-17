@@ -119,8 +119,19 @@
 		case 2: //Shuffle button
 			if(wasJustTapped){
 				self.musicPlayer.shuffleMode = !self.musicPlayer.shuffleMode;
+				
+				LMMusicTrackCollection *trackCollection = self.musicTrackCollection;
+				if(trackCollection.trackCount > 0){
+					self.musicPlayer.autoPlay = YES;
+					[self.musicPlayer setNowPlayingCollection:trackCollection];
+					
+					[self.musicPlayer.navigationBar setSelectedTab:LMNavigationTabMiniplayer];
+					[self.musicPlayer.navigationBar maximize:NO];
+					
+					isPlayingMusic = YES;
+				}
 			}
-			NSLog(@"Shuffle mode is %d", self.musicPlayer.shuffleMode);
+			
 			return (self.musicPlayer.shuffleMode == LMMusicShuffleModeOn);
 	}
 	return YES;
