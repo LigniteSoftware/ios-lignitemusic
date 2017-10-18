@@ -136,7 +136,7 @@
 	UILabel *titleLabel = [UILabel newAutoLayoutView];
 	//	titleLabel.backgroundColor = [UIColor yellowColor];
 	titleLabel.numberOfLines = 0;
-	titleLabel.textAlignment = self.layoutManager.isLandscape ? NSTextAlignmentLeft : NSTextAlignmentCenter;
+	titleLabel.textAlignment = NSTextAlignmentLeft;
 	titleLabel.text = self.title;
 	titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:0.050 * properDimension];
 	[paddingView addSubview:titleLabel];

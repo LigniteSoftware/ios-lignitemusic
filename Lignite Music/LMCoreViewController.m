@@ -1203,9 +1203,12 @@ LMControlBarViewDelegate
 	[pebbleManager attachToViewController:self];
 	
 	
-	
-	
-	self.navigationBar = [[LMNavigationBar alloc] initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, 64.0f)];
+	if(@available(iOS 11, *)){
+		self.navigationBar = [[LMNavigationBar alloc] initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, 64.0f)];
+	}
+	else{
+		self.navigationBar = [[LMNavigationBar alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 64.0f)];
+	}
 	self.navigationBar.delegate = self;
 	[self.navigationController.view addSubview:self.navigationBar];
 	
@@ -1448,8 +1451,8 @@ LMControlBarViewDelegate
 		}
 		
 		
-		LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
-		[self.navigationController pushViewController:settingsViewController animated:YES];
+//		LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
+//		[self.navigationController pushViewController:settingsViewController animated:YES];
 	} repeats:NO];
 	
 	
