@@ -356,7 +356,11 @@
 	
 //	NSLog(@"Setting offset to %@", NSStringFromCGPoint(newOffset));
 	
-	self.contentOffset = newOffset;
+	if(self.contentSize.height-25 > self.frame.size.height){
+		self.contentOffset = newOffset;
+	}
+	
+	NSLog(@"%@ size %@ height %@ offset", NSStringFromCGSize(self.contentSize), NSStringFromCGRect(self.frame), NSStringFromCGPoint(self.contentOffset));
 	
 	if(self.draggingView){
 		if(self.visibleCells.count > 0){

@@ -599,11 +599,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/DDTableView.m"
-            timestampString = "529997651.81578"
+            timestampString = "530034030.139332"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "375"
-            endingLineNumber = "375"
+            startingLineNumber = "379"
+            endingLineNumber = "379"
             landmarkName = "-newYCenterForDraggingView:withLocation:"
             landmarkType = "7">
          </BreakpointContent>

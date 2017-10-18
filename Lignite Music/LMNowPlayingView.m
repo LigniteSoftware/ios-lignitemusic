@@ -912,6 +912,7 @@
 	self.queueTableView.layer.cornerRadius = 8.0;
 	self.queueTableView.backgroundColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.5]; //I wonder what this will do
 	self.queueTableView.clipsToBounds = YES;
+	self.queueTableView.alwaysBounceVertical = NO;
 	self.queueTableView.longPressReorderDelegate = self;
 	self.queueTableView.longPressReorderEnabled = YES;
 	[self.queueView addSubview:self.queueTableView];
