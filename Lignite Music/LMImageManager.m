@@ -23,7 +23,7 @@
 
  @return The estimated average.
  */
-#define AVERAGE_IMAGE_SIZE_IN_BYTES 215000
+#define AVERAGE_IMAGE_SIZE_IN_BYTES 110000
 
 /**
  The image manager's disk cache namespaces for storing images.
@@ -293,6 +293,11 @@
 	return [self sizeOfCacheForCategory:LMImageManagerCategoryAlbumImages] + [self sizeOfCacheForCategory:LMImageManagerCategoryArtistImages];
 }
 
+- (void)clearAllCaches {
+	[self clearCacheForCategory:LMImageManagerCategoryArtistImages];
+	[self clearCacheForCategory:LMImageManagerCategoryAlbumImages];
+}
+
 - (void)clearCacheForCategory:(LMImageManagerCategory)category {
 	SDImageCache *imageCache = [self imageCacheForCategory:category];
 	
@@ -460,8 +465,7 @@
             NSInteger code = response.code;
             NSDictionary *responseHeaders = response.headers;
             UNIJsonNode *body = response.body;
-            NSData *rawBody = response.rawBody;
-            
+			
             if(code != 200){
                 NSLog(@"There was an error trying to get the final result object, stopping");
                 return;
@@ -503,7 +507,7 @@
                                             }
                                            completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished) {
                                                if(image && finished) {
-                                                   LMImageManagerConditionLevel currentConditionLevel = [self conditionLevelForDownloadingForCategory:category];
+                                                   LMImageManagerConditionLevel currentConditionLevel = [self conditionLevelForDownloading];
                                                    
                                                    if(currentConditionLevel == LMImageManagerConditionLevelOptimal){
                                                        //Calculate which is smaller, between width/height
@@ -609,7 +613,7 @@
 		LMMusicTrack *musicTrack = [imageManager.trackDownloadQueue firstObject];
 		LMImageManagerCategory category = (LMImageManagerCategory)[[imageManager.categoryDownloadQueue firstObject] integerValue];
 		
-		LMImageManagerConditionLevel currentConditionLevel = [imageManager conditionLevelForDownloadingForCategory:category];
+		LMImageManagerConditionLevel currentConditionLevel = [imageManager conditionLevelForDownloading];
 		
 		if(currentConditionLevel != LMImageManagerConditionLevelOptimal){
 			[imageManager.trackDownloadQueue removeAllObjects];
@@ -686,25 +690,35 @@
 	}
 }
 
+- (void)notifyDelegatesOfConditionLevel:(LMImageManagerConditionLevel)conditionLevel {
+	for(id<LMImageManagerDelegate> delegate in self.delegates){
+		if([delegate respondsToSelector:@selector(imageDownloadConditionLevelChanged:)]){
+			[delegate imageDownloadConditionLevelChanged:conditionLevel];
+		}
+	}
+}
+
+- (void)downloadIfNeededForAllCategories {
+	[self downloadIfNeededForCategory:LMImageManagerCategoryArtistImages];
+	[self downloadIfNeededForCategory:LMImageManagerCategoryAlbumImages];
+}
+
 - (void)downloadIfNeededForCategory:(LMImageManagerCategory)category {
-	LMImageManagerConditionLevel currentConditionLevel = [self conditionLevelForDownloadingForCategory:category];
+	LMImageManagerConditionLevel currentConditionLevel = [self conditionLevelForDownloading];
 	
 	if([self.currentlyProcessingCategoryArray containsObject:@(category)]){
 		NSLog(@"Already processing %d, rejecting.", category);
 		return;
 	}
 	
+//	currentConditionLevel = LMImageManagerConditionLevelSuboptimal;
+	
 	switch(currentConditionLevel){
 		case LMImageManagerConditionLevelNever:
 			break;
 		case LMImageManagerConditionLevelSuboptimal: {
-			[self launchPermissionRequestOnView:self.viewToDisplayAlertsOn
-											forCategory:category
-								  withCompletionHandler:^(LMImageManagerPermissionStatus permissionStatus) {
-									  if(permissionStatus == LMImageManagerPermissionStatusAuthorized) {
-										  [self beginDownloadingImagesForCategory:category];
-									  }
-								  }];
+			//Put alert on navigation bar
+			[self notifyDelegatesOfConditionLevel:currentConditionLevel];
 			break;
 		}
 		case LMImageManagerConditionLevelOptimal:
@@ -771,39 +785,27 @@
  *
  */
 
-- (LMImageManagerConditionLevel)conditionLevelForDownloadingForCategory:(LMImageManagerCategory)category {
+- (LMImageManagerConditionLevel)conditionLevelForDownloading {
 	if(![self hasInternetConnection]){
 		return LMImageManagerConditionLevelNever;
 	}
 	
-	LMImageManagerPermissionStatus permissionStatusForCategory = [self permissionStatusForCategory:category];
+	LMImageManagerPermissionStatus permissionStatusForCategory = [self downloadPermissionStatus];
 		
 	switch(permissionStatusForCategory){
 		case LMImageManagerPermissionStatusDenied:
 			return LMImageManagerConditionLevelNever;
-			
 		case LMImageManagerPermissionStatusNotDetermined:
 		case LMImageManagerPermissionStatusAuthorized:
 			break;
 	}
 	
-	LMImageManagerPermissionStatus permissionStatusForLowStorage = [self permissionStatusForSpecialDownloadPermission:LMImageManagerSpecialDownloadPermissionLowStorage];
+	LMImageManagerPermissionStatus explicitPermissionStatus = [self explicitPermissionStatus];
 	
-	if([self storageSpaceLowForCategory:category]){
-		switch(permissionStatusForLowStorage) {
-			case LMImageManagerPermissionStatusNotDetermined:
-				return LMImageManagerConditionLevelSuboptimal;
-			case LMImageManagerPermissionStatusDenied:
-				return LMImageManagerConditionLevelNever;
-			case LMImageManagerPermissionStatusAuthorized:
-				break;
-		}
-	}
-	
-	LMImageManagerPermissionStatus permissionStatusForCellularData = [self permissionStatusForSpecialDownloadPermission:LMImageManagerSpecialDownloadPermissionCellularData];
-	
-	if([self isOnCellularData]){
-		switch(permissionStatusForCellularData) {
+	if([self storageSpaceLowForCategory:LMImageManagerCategoryAlbumImages]
+	   || [self storageSpaceLowForCategory:LMImageManagerCategoryArtistImages]
+	   || [self isOnCellularData]){
+		switch(explicitPermissionStatus) {
 			case LMImageManagerPermissionStatusNotDetermined:
 				return LMImageManagerConditionLevelSuboptimal;
 			case LMImageManagerPermissionStatusDenied:
@@ -814,45 +816,32 @@
 	}
 	
 	//Conditions are optimal and the user has not explicitly denied us from downloading the images, so set it to authorized
-	[self setPermissionStatus:LMImageManagerPermissionStatusAuthorized forCategory:category];
+	[self setDownloadPermissionStatus:LMImageManagerPermissionStatusAuthorized];
 	
 	return LMImageManagerConditionLevelOptimal;
 }
 
-/**
- Gets the key associated for an image permission. Should be used for NSUserDefaults and SDWebImage disk cache namespace.
-
- @param category The permission to get the key for.
- @return The category's key.
- */
-+ (NSString*)keyForPermission:(LMImageManagerCategory)category {
-	switch(category){
-		case LMImageManagerCategoryAlbumImages:
-			return @"LMImageManagerPermissionAlbumImages";
-		case LMImageManagerCategoryArtistImages:
-			return @"LMImageManagerPermissionArtistImages";
-	}
-}
-
-- (LMImageManagerPermissionStatus)permissionStatusForCategory:(LMImageManagerCategory)category {
+- (LMImageManagerPermissionStatus)downloadPermissionStatus {
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-	NSString *categoryKey = [LMImageManager keyForPermission:category];
-	
 	LMImageManagerPermissionStatus permissionStatus = LMImageManagerPermissionStatusNotDetermined;
 	
-	if([userDefaults objectForKey:categoryKey]){
-		permissionStatus = (LMImageManagerPermissionStatus)[userDefaults integerForKey:categoryKey];
+	if([userDefaults objectForKey:LMImageManagerDownloadPermissionKey]){
+		permissionStatus = (LMImageManagerPermissionStatus)[userDefaults integerForKey:LMImageManagerDownloadPermissionKey];
 	}
 	
 	return permissionStatus;
 }
 
-- (void)setPermissionStatus:(LMImageManagerPermissionStatus)status forCategory:(LMImageManagerCategory)category {
-	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-	NSString *permissionStatusKey = [LMImageManager keyForPermission:category];
+- (void)setDownloadPermissionStatus:(LMImageManagerPermissionStatus)status {
+	LMImageManagerPermissionStatus previousStatus = [self downloadPermissionStatus];
 	
-	[userDefaults setInteger:(NSInteger)status forKey:permissionStatusKey];
+	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+	[userDefaults setInteger:(NSInteger)status forKey:LMImageManagerDownloadPermissionKey];
 	[userDefaults synchronize];
+	
+	if(previousStatus != status){
+		[self notifyDelegatesOfConditionLevel:[self conditionLevelForDownloading]];
+	}
 }
 
 // http://stackoverflow.com/questions/5712527/how-to-detect-total-available-free-disk-space-on-the-iphone-ipad-device
@@ -920,8 +909,7 @@
 	BOOL hasInternetConnection = [self hasInternetConnection];
 	
 	if(hasInternetConnection){
-		[self downloadIfNeededForCategory:LMImageManagerCategoryArtistImages]; //Crash 3
-		[self downloadIfNeededForCategory:LMImageManagerCategoryAlbumImages];
+		[self downloadIfNeededForAllCategories];
 	}
 }
 
@@ -943,40 +931,26 @@
 	}
 }
 
-- (NSString*)storageKeyForSpecialDownloadPermission:(LMImageManagerSpecialDownloadPermission)specialDownloadPermission {
-	switch(specialDownloadPermission){
-		case LMImageManagerSpecialDownloadPermissionLowStorage:
-			return @"LMImageManagerSpecialDownloadPermissionLowStorage";
-		case LMImageManagerSpecialDownloadPermissionCellularData:
-			return @"LMImageManagerSpecialDownloadPermissionCellularData";
-	}
-}
-
-- (LMImageManagerPermissionStatus)permissionStatusForSpecialDownloadPermission:(LMImageManagerSpecialDownloadPermission)specialDownloadPermission {
-	NSString *downloadPermissionKey = [self storageKeyForSpecialDownloadPermission:specialDownloadPermission];
-	
+- (LMImageManagerPermissionStatus)explicitPermissionStatus {
 	LMImageManagerPermissionStatus permissionStatus = LMImageManagerPermissionStatusNotDetermined;
 	
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-	if([userDefaults objectForKey:downloadPermissionKey]){
-		permissionStatus = (LMImageManagerPermissionStatus)[userDefaults integerForKey:downloadPermissionKey];
+	if([userDefaults objectForKey:LMImageManagerExplicitPermissionKey]){
+		permissionStatus = (LMImageManagerPermissionStatus)[userDefaults integerForKey:LMImageManagerExplicitPermissionKey];
 	}
 	
 	return permissionStatus;
 }
 
-- (void)setPermissionStatus:(LMImageManagerPermissionStatus)permissionStatus forSpecialDownloadPermission:(LMImageManagerSpecialDownloadPermission)specialDownloadPermission {
-	
-	NSString *downloadPermissionKey = [self storageKeyForSpecialDownloadPermission:specialDownloadPermission];
-	
+- (void)setExplicitPermissionStatus:(LMImageManagerPermissionStatus)permissionStatus {
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-	[userDefaults setInteger:(NSInteger)permissionStatus forKey:downloadPermissionKey];
+	[userDefaults setInteger:(NSInteger)permissionStatus forKey:LMImageManagerExplicitPermissionKey];
 	[userDefaults synchronize];
 }
 
-- (NSString*)permissionRequestDescriptionStringForCategory:(LMImageManagerCategory)category {
-	BOOL storageSpaceLow = [self storageSpaceLowForCategory:category];
-	BOOL isOnCellularData = [self isOnCellularData];
+- (NSString*)permissionRequestDescriptionString {
+	BOOL storageSpaceLow = [self storageSpaceLowForCategory:LMImageManagerCategoryArtistImages] || [self storageSpaceLowForCategory:LMImageManagerCategoryAlbumImages];
+	BOOL isOnCellularData = [self isOnCellularData] || true;
 	
 	//Tells the user why the images won't automatically download
 	NSMutableString *problemsString = [NSMutableString stringWithString:@""];
@@ -991,47 +965,29 @@
 		[problemsString appendString:NSLocalizedString(@"YouAreOnData", nil)];
 	}
 	
-	//The string which describes which types of images are being downloaded
-	NSString *ofYourTypeString = @"";
-	switch(category){
-		case LMImageManagerCategoryAlbumImages:
-			ofYourTypeString = @"OfYourAlbums";
-			break;
-		case LMImageManagerCategoryArtistImages:
-			ofYourTypeString = @"OfYourArtists";
-			break;
-	}
-	
 	NSString *descriptionString = [NSString stringWithFormat:NSLocalizedString(@"ImagesDownloadWarningDescription", nil),
-								   NSLocalizedString(ofYourTypeString, nil),
+								   
 								   problemsString,
-								   (float)[self spaceRequiredForCategory:category]/1000000.0,
-								   storageSpaceLow ? [NSString stringWithFormat:NSLocalizedString(@"AboutXOfYourStorage", nil), ([self freeSpacePercentageUsedIfDownloadedCategory:category])*100.0] : @"",
+								   
+								   (float)([self spaceRequiredForCategory:LMImageManagerCategoryAlbumImages]+[self spaceRequiredForCategory:LMImageManagerCategoryArtistImages])/1000000.0,
+								   
+								   storageSpaceLow
+								    ? [NSString stringWithFormat:NSLocalizedString(@"AboutXOfYourStorage", nil), ([self freeSpacePercentageUsedIfDownloadedCategory:LMImageManagerCategoryAlbumImages] + [self freeSpacePercentageUsedIfDownloadedCategory:LMImageManagerCategoryArtistImages])*100.0]
+									: @"",
+								   
 								   NSLocalizedString(@"DownloadAnyway", nil),
+								   
 								   NSLocalizedString(@"DontDownload", nil)];
 	
 	return descriptionString;
 }
 
-- (void)launchPermissionRequestOnView:(UIView*)view forCategory:(LMImageManagerCategory)category withCompletionHandler:(void(^)(LMImageManagerPermissionStatus permissionStatus))completionHandler {
-	
-	NSString *titleString = @"";
-	switch(category){
-		case LMImageManagerCategoryAlbumImages:
-			titleString = @"AlbumImagesTitle";
-			break;
-		case LMImageManagerCategoryArtistImages:
-			titleString = @"ArtistImagesTitle";
-			break;
-	}
-	
-	BOOL storageSpaceLow = [self storageSpaceLowForCategory:category];
-	BOOL isOnCellularData = [self isOnCellularData];
+- (void)launchExplicitPermissionRequestOnView:(UIView*)view withCompletionHandler:(void(^)(LMImageManagerPermissionStatus permissionStatus))completionHandler {
 	
 	LMAlertView *alertView = [LMAlertView newAutoLayoutView];
 	
-	alertView.title = NSLocalizedString(titleString, nil);
-	alertView.body = [self permissionRequestDescriptionStringForCategory:category];
+	alertView.title = NSLocalizedString(@"ImagesDownloadWarningTitle", nil);
+	alertView.body = [self permissionRequestDescriptionString];
 	alertView.alertOptionColours = @[[LMColour darkLigniteRedColour], [LMColour ligniteRedColour]];
 	alertView.alertOptionTitles = @[NSLocalizedString(@"DontDownload", nil), NSLocalizedString(@"DownloadAnyway", nil)];
 	
@@ -1040,12 +996,9 @@
 		
 		completionHandler(permissionStatus);
 		
-		if(storageSpaceLow){
-			[self setPermissionStatus:permissionStatus forSpecialDownloadPermission:LMImageManagerSpecialDownloadPermissionLowStorage];
-		}
-		if(isOnCellularData){
-			[self setPermissionStatus:permissionStatus forSpecialDownloadPermission:LMImageManagerSpecialDownloadPermissionCellularData];
-		}
+		[self setExplicitPermissionStatus:permissionStatus];
+		
+		[self notifyDelegatesOfConditionLevel:[self conditionLevelForDownloading]];
 	}];
 }
 

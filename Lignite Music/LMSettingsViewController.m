@@ -160,9 +160,9 @@
 		case 1:
 			switch(indexPath.row){
 				case 0:
-					return NSLocalizedString(@"ArtistImagesTitle", nil);
+					return NSLocalizedString(@"ImagesDownloadWarningTitle", nil);
 				case 1:
-					return NSLocalizedString(@"AlbumImagesTitle", nil);
+					return NSLocalizedString(@"ExplicitImageDownloadingTitle", nil);
 //				case 2:
 //					return NSLocalizedString(@"HighQualityImagesTitle", nil);
 			}
@@ -214,14 +214,14 @@
 	return @"Unknown entry";
 }
 
-- (NSString*)subtitleForCategory:(LMImageManagerCategory)category {
-	LMImageManagerPermissionStatus artistImagesStatus = [self.imageManager permissionStatusForCategory:category];
+- (NSString*)subtitleForDownloadPermission {
+	LMImageManagerPermissionStatus artistImagesStatus = [self.imageManager downloadPermissionStatus];
 	
 	BOOL approved = (artistImagesStatus == LMImageManagerPermissionStatusAuthorized);
 	
 	NSString *approvedString = NSLocalizedString(approved ? @"LMImageManagerPermissionStatusAuthorized" : @"LMImageManagerPermissionStatusDenied", nil);
 	
-	NSString *takingUpString = [NSString stringWithFormat:NSLocalizedString(@"TakingUpXMB", nil), (float)[self.imageManager sizeOfCacheForCategory:category]/1000000];
+	NSString *takingUpString = [NSString stringWithFormat:NSLocalizedString(@"TakingUpXMB", nil), (float)[self.imageManager sizeOfAllCaches]/1000000];
 	
 	return [NSString stringWithString:[NSMutableString stringWithFormat:@"%@ - %@", takingUpString, approvedString]];
 }
@@ -239,10 +239,19 @@
 		case 1:
 			switch(indexPath.row){
 				case 0: {
-					return [self subtitleForCategory:LMImageManagerCategoryArtistImages];
+					return [self subtitleForDownloadPermission];
 				}
 				case 1: {
-					return [self subtitleForCategory:LMImageManagerCategoryAlbumImages];
+					LMImageManagerPermissionStatus explicitPermissionStatus = [self.imageManager explicitPermissionStatus];
+					switch(explicitPermissionStatus){
+						case LMImageManagerPermissionStatusDenied:
+							return NSLocalizedString(@"YouDeniedThis", nil);
+						case LMImageManagerPermissionStatusAuthorized:
+							return NSLocalizedString(@"YouAuthorizedThis", nil);
+						case LMImageManagerPermissionStatusNotDetermined:
+							return NSLocalizedString(@"YouHaventDeterminedThis", nil);
+					}
+					return @"fuck";
 				}
 //				case 2:
 //					return NSLocalizedString(@"HighQualityImagesDescription", nil);
@@ -292,26 +301,15 @@
 	[self.sectionTableView reloadData];
 }
 
-- (void)cacheAlertForCategory:(LMImageManagerCategory)category {
-	LMImageManagerPermissionStatus currentStatus = [self.imageManager permissionStatusForCategory:category];
+- (void)cacheAlert {
+	LMImageManagerPermissionStatus currentStatus = [self.imageManager downloadPermissionStatus];
 	
 	LMAlertView *alertView = [LMAlertView newAutoLayoutView];
-	NSString *titleKey = @"";
-	NSString *bodyKey = @"";
+	NSString *titleKey = @"ImagesDownloadWarningTitle";
 	NSString *youCanKey = @"";
 	NSString *enableButtonKey = @"";
 	NSString *disableButtonKey = @"";
 	NSString *currentStatusText = @"";
-	switch(category) {
-		case LMImageManagerCategoryAlbumImages:
-			titleKey = @"AlbumImagesTitle";
-			bodyKey = @"OfYourAlbums";
-			break;
-		case LMImageManagerCategoryArtistImages:
-			titleKey = @"ArtistImagesTitle";
-			bodyKey = @"OfYourArtists";
-			break;
-	}
 	switch(currentStatus){
 		case LMImageManagerPermissionStatusNotDetermined:
 		case LMImageManagerPermissionStatusDenied:
@@ -324,29 +322,25 @@
 			youCanKey = @"YouCanTurnOffTo";
 			enableButtonKey = @"KeepEnabled";
 			disableButtonKey = @"ClearCacheAndDisable";
-			currentStatusText = [NSString stringWithFormat:NSLocalizedString(@"UsingXOfYourStorage", nil), (float)[self.imageManager sizeOfCacheForCategory:category]/1000000];
+			currentStatusText = [NSString stringWithFormat:NSLocalizedString(@"UsingXOfYourStorage", nil), (float)[self.imageManager sizeOfAllCaches]/1000000];
 			break;
 	}
 	alertView.title = NSLocalizedString(titleKey, nil);
 	
-	alertView.body = [NSString stringWithFormat:NSLocalizedString(@"SettingImagesAlertDescription", nil), NSLocalizedString(bodyKey, nil), currentStatusText, NSLocalizedString(youCanKey, nil)];
+	alertView.body = [NSString stringWithFormat:NSLocalizedString(@"SettingImagesAlertDescription", nil), currentStatusText, NSLocalizedString(youCanKey, nil)];
 	
 	alertView.alertOptionTitles = @[NSLocalizedString(disableButtonKey, nil), NSLocalizedString(enableButtonKey, nil)];
 	alertView.alertOptionColours = @[[LMColour darkLigniteRedColour], [LMColour ligniteRedColour]];
 	
 	[alertView launchOnView:self.coreViewController.navigationController.view withCompletionHandler:^(NSUInteger optionSelected) {
 		//Reset the special permission statuses because the user's stance maybe different now and we'll have to recheck
-		[self.imageManager setPermissionStatus:LMImageManagerPermissionStatusNotDetermined
-			 forSpecialDownloadPermission:LMImageManagerSpecialDownloadPermissionLowStorage];
+		[self.imageManager setExplicitPermissionStatus:LMImageManagerPermissionStatusNotDetermined];
 		
-		[self.imageManager setPermissionStatus:LMImageManagerPermissionStatusNotDetermined
-			 forSpecialDownloadPermission:LMImageManagerSpecialDownloadPermissionCellularData];
-		
-		LMImageManagerPermissionStatus previousPermissionStatus = [self.imageManager permissionStatusForCategory:category];
+		LMImageManagerPermissionStatus previousPermissionStatus = [self.imageManager downloadPermissionStatus];
 		
 		//In the rare case that for some reason something was left behind in the cache, we want to make sure the disable button always clears it even if it's already disabled, just to make sure the user is happy.
 		if(optionSelected == 0){
-			[self.imageManager clearCacheForCategory:category];
+			[self.imageManager clearAllCaches];
 		}
 		
 		if(previousPermissionStatus != LMImageManagerPermissionStatusDenied){
@@ -366,7 +360,7 @@
 		
 		if(previousPermissionStatus == LMImageManagerPermissionStatusDenied) {
 			if(optionSelected == 1){
-				[self.imageManager clearCacheForCategory:category];
+				[self.imageManager clearAllCaches];
 				
 				MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
 				
@@ -379,7 +373,7 @@
 				
 				[hud hideAnimated:YES afterDelay:3.f];
 				
-				[self.imageManager downloadIfNeededForCategory:category];
+				[self.imageManager downloadIfNeededForAllCategories];
 			}
 		}
 		
@@ -393,7 +387,45 @@
 				break;
 		}
 		
-		[self.imageManager setPermissionStatus:permissionStatus forCategory:category];
+		[self.imageManager setDownloadPermissionStatus:permissionStatus];
+		
+		[self.sectionTableView reloadData];
+		
+		self.indexPathOfCurrentlyOpenAlertView = nil;
+	}];
+}
+
+- (void)explicitAlert {
+	LMAlertView *alertView = [LMAlertView newAutoLayoutView];
+	alertView.title = NSLocalizedString(@"ExplicitImageDownloadingTitle", nil);
+	
+	alertView.body = NSLocalizedString(@"ExplicitImageDownloadingBody", nil);
+	
+	alertView.alertOptionTitles = @[NSLocalizedString(@"Deny", nil), NSLocalizedString(@"Allow", nil)];
+	alertView.alertOptionColours = @[[LMColour darkLigniteRedColour], [LMColour ligniteRedColour]];
+	
+	[alertView launchOnView:self.coreViewController.navigationController.view withCompletionHandler:^(NSUInteger optionSelected) {
+		//Reset the special permission statuses because the user's stance maybe different now and we'll have to recheck
+		[self.imageManager setExplicitPermissionStatus:LMImageManagerPermissionStatusNotDetermined];
+	
+		if(optionSelected == 0){
+			//no
+		}
+		else{
+			//yes
+		}
+		
+		LMImageManagerPermissionStatus permissionStatus = LMImageManagerPermissionStatusNotDetermined;
+		switch(optionSelected){
+			case 0:
+				permissionStatus = LMImageManagerPermissionStatusDenied;
+				break;
+			case 1:
+				permissionStatus = LMImageManagerPermissionStatusAuthorized;
+				break;
+		}
+		
+		[self.imageManager setExplicitPermissionStatus:permissionStatus];
 		
 		[self.sectionTableView reloadData];
 		
@@ -426,11 +458,11 @@
 		case 1:
 			switch(indexPath.row){
 				case 0: {
-					[self cacheAlertForCategory:LMImageManagerCategoryArtistImages];
+					[self cacheAlert];
 					break;
 				}
 				case 1: {
-					[self cacheAlertForCategory:LMImageManagerCategoryAlbumImages];
+					[self explicitAlert];
 					break;
 				}
 			}

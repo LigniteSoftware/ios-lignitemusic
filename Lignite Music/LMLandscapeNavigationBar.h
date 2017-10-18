@@ -10,6 +10,12 @@
 
 @class LMLandscapeNavigationBar;
 
+typedef NS_ENUM(NSInteger, LMLandscapeNavigationBarButton) {
+	LMLandscapeNavigationBarButtonLogo = 0,
+	LMLandscapeNavigationBarButtonBack,
+	LMLandscapeNavigationBarButtonWarning
+};
+
 @protocol LMLandscapeNavigationBarDelegate <NSObject>
 
 /**
@@ -17,7 +23,7 @@
 
  @param backButtonPressed Whether or not the back button was pressed.
  */
-- (void)buttonTappedOnLandscapeNavigationBar:(BOOL)backButtonPressed;
+- (void)buttonTappedOnLandscapeNavigationBar:(LMLandscapeNavigationBarButton)buttonPressed;
 
 @end
 
@@ -37,5 +43,10 @@ typedef NS_ENUM(NSInteger, LMLandscapeNavigationBarMode) {
  The delegate for the button press events.
  */
 @property id<LMLandscapeNavigationBarDelegate> delegate;
+
+/**
+ Shows the warning button. If YES, a warning button will be displayed at the top of the bar if mode is LMLandscapeNavigationBarModeOnlyLogo, or in the middle if the mode is LMLandscapeNavigationBarModeWithBackButton.
+ */
+@property BOOL showWarningButton;
 
 @end

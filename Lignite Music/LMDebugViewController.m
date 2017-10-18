@@ -104,8 +104,7 @@
 	[debugString appendString:[NSString stringWithFormat:@"\nArtist cache: %lu", (unsigned long)[imageManager sizeOfCacheForCategory:LMImageManagerCategoryArtistImages]]];
 	[debugString appendString:[NSString stringWithFormat:@"\nAlbum cache: %lu", (unsigned long)[imageManager sizeOfCacheForCategory:LMImageManagerCategoryAlbumImages]]];
 	[debugString appendString:[NSString stringWithFormat:@"\nHigh quality images: %d", [defaults boolForKey:LMSettingsKeyHighQualityImages]]];
-	[debugString appendString:[NSString stringWithFormat:@"\nDownload on low storage: %d", [imageManager permissionStatusForSpecialDownloadPermission:LMImageManagerSpecialDownloadPermissionLowStorage]]];
-	[debugString appendString:[NSString stringWithFormat:@"\nDownload on cellular: %d", [imageManager permissionStatusForSpecialDownloadPermission:LMImageManagerSpecialDownloadPermissionCellularData]]];
+	[debugString appendString:[NSString stringWithFormat:@"\nExplicit download permission: %d", [imageManager explicitPermissionStatus]]];
 	[debugString appendString:[NSString stringWithFormat:@"\nInternet: %d", [LMDebugViewController hasInternetConnection]]];
 	[debugString appendString:[NSString stringWithFormat:@"\nCellular: %d", [LMDebugViewController isOnCellularData]]];
 	[debugString appendString:[NSString stringWithFormat:@"\n\nStatus bar: %d", [defaults boolForKey:LMSettingsKeyStatusBar]]];

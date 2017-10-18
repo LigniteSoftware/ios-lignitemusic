@@ -12,6 +12,9 @@
 #import "Spotify.h"
 #endif
 
+#define LMImageManagerDownloadPermissionKey @"LMImageManagerDownloadPermissionKey"
+#define LMImageManagerExplicitPermissionKey @"LMImageManagerExplicitPermissionKey"
+
 @class LMImageManager;
 
 /**
@@ -40,14 +43,6 @@ typedef enum {
 	LMImageManagerConditionLevelNever //There are conditions for downloading which either make it impossible (ie. no Internet connection) or the user has denied our request for downloading images. Images should never download under these conditions.
 } LMImageManagerConditionLevel;
 
-/**
- LMImageManagerSpecialDownloadPermission are special permissions which the user needs to explicitly grant for us to download images
- */
-typedef enum {
-	LMImageManagerSpecialDownloadPermissionLowStorage = 0,
-	LMImageManagerSpecialDownloadPermissionCellularData
-} LMImageManagerSpecialDownloadPermission;
-
 @protocol LMImageManagerDelegate <NSObject>
 @optional
 
@@ -65,6 +60,13 @@ typedef enum {
  @param category The category which had the change of images.
  */
 - (void)imageCacheChangedForCategory:(LMImageManagerCategory)category;
+
+/**
+ The condition level changed from its previous status.
+
+ @param newConditionLevel The new condition level.
+ */
+- (void)imageDownloadConditionLevelChanged:(LMImageManagerConditionLevel)newConditionLevel;
 
 @end
 
@@ -113,6 +115,11 @@ typedef enum {
 - (NSUInteger)sizeOfAllCaches;
 
 /**
+ Clears all caches.
+ */
+- (void)clearAllCaches;
+
+/**
  Clear the cache for a category of images.
 
  @param category The category to clear the cache of.
@@ -147,6 +154,11 @@ typedef enum {
 - (void)beginDownloadingImagesForCategory:(LMImageManagerCategory)category;
 
 /**
+ Download from all categories if needed.
+ */
+- (void)downloadIfNeededForAllCategories;
+
+/**
  Checks whether or not the user has authorized downloading, handles the according authorization and will begin downloading images if necessary.
 
  @param category The category to begin downloading for.
@@ -154,53 +166,48 @@ typedef enum {
 - (void)downloadIfNeededForCategory:(LMImageManagerCategory)category;
 
 /**
- Gets the current condition level of downloading a category of images.
+ Gets the current condition level of downloading.
 
- @param category The category of images to check.
  @return The current download condition level.
  */
-- (LMImageManagerConditionLevel)conditionLevelForDownloadingForCategory:(LMImageManagerCategory)category;
+- (LMImageManagerConditionLevel)conditionLevelForDownloading;
 
 /**
- Gets the permission status for a certain category.
+ Gets the download permission status.
 
- @param category The category to check.
  @return The status of that permission.
  */
-- (LMImageManagerPermissionStatus)permissionStatusForCategory:(LMImageManagerCategory)category;
+- (LMImageManagerPermissionStatus)downloadPermissionStatus;
 
 /**
- Sets the permission status for the associated category.
+ Sets the download permission status.
 
- @param status The new status of the permission to set.
- @param category The permission to set the status to.
+ @param status The new status of the download permission to set.
  */
-- (void)setPermissionStatus:(LMImageManagerPermissionStatus)status forCategory:(LMImageManagerCategory)category;
+- (void)setDownloadPermissionStatus:(LMImageManagerPermissionStatus)statusry;
 
 /**
- Gets the permission status for a certain special download permission.
+ Gets the permission status of whether or not the user is ok with downloading on cellular or low storage.
  
  @param specialDownloadPermission The special download permission to check.
- @return The permission status of that special download permission.
+ @return The permission status of whether or not the user is ok with downloading on cellular or low storage.
  */
-- (LMImageManagerPermissionStatus)permissionStatusForSpecialDownloadPermission:(LMImageManagerSpecialDownloadPermission)specialDownloadPermission;
+- (LMImageManagerPermissionStatus)explicitPermissionStatus;
 
 /**
- Sets the permission status for the associated special download permission.
+ Sets the permission status for the explicit permission, as described above.
 
- @param permissionStatus The new status of the permission to set.
- @param specialDownloadPermission The special download permission to set the status to.
+ @param permissionStatus The new status of the explicit permission to set.
  */
-- (void)setPermissionStatus:(LMImageManagerPermissionStatus)permissionStatus forSpecialDownloadPermission:(LMImageManagerSpecialDownloadPermission)specialDownloadPermission;
+- (void)setExplicitPermissionStatus:(LMImageManagerPermissionStatus)permissionStatus;
 
 /**
- Launch the permission request dialog on a UIView for a certain category. All saving of the permission status and dismissing of the created view is automatically handled.
+ Launch the explicit permission request dialog on a UIView. All saving of the explicit permission status and dismissing of the created view is automatically handled.
 
  @param view The view to launch the permission request on.
- @param category The category of permission to launch the request for.
  @param completionHandler The completion handler for when the user makes their decision.
  */
-- (void)launchPermissionRequestOnView:(UIView*)view forCategory:(LMImageManagerCategory)category withCompletionHandler:(void(^)(LMImageManagerPermissionStatus permissionStatus))completionHandler;
+- (void)launchExplicitPermissionRequestOnView:(UIView*)view withCompletionHandler:(void(^)(LMImageManagerPermissionStatus permissionStatus))completionHandler;
 
 
 

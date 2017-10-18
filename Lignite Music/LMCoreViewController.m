@@ -119,6 +119,8 @@ LMControlBarViewDelegate
 @property UIActivityIndicatorView *loadingActivityIndicator;
 @property UILabel *loadingLabel;
 
+@property UIButton *navigationBarWarningButton;
+
 @end
 
 @implementation LMCoreViewController
@@ -141,6 +143,62 @@ LMControlBarViewDelegate
     || (category == LMImageManagerCategoryAlbumImages && self.compactView.musicType == LMMusicTypeAlbums)){
         [self.compactView reloadDataAndInvalidateLayouts];
     }
+}
+
+- (void)warningBarButtonItemTapped {
+	NSLog(@"Tapped warning");
+	
+	[[LMImageManager sharedImageManager] launchExplicitPermissionRequestOnView:self.navigationController.view
+				  withCompletionHandler:^(LMImageManagerPermissionStatus permissionStatus) {
+					  if(permissionStatus == LMImageManagerPermissionStatusAuthorized) {
+						  NSLog(@"Cleared!");
+					  }
+				  }];
+}
+
+- (void)setWarningButtonShowing:(BOOL)showing {
+	//Set custom warning button onto navigationBar
+	if(!self.navigationBarWarningButton){
+		UIButton *iconWarningView = [UIButton newAutoLayoutView];
+		iconWarningView.imageView.contentMode = UIViewContentModeScaleAspectFit;
+		[iconWarningView setImage:[LMAppIcon imageForIcon:LMIconWarning] forState:UIControlStateNormal];
+		[iconWarningView addTarget:self action:@selector(warningBarButtonItemTapped) forControlEvents:UIControlEventTouchUpInside];
+		
+		[self.navigationBar addSubview:iconWarningView];
+		
+		[iconWarningView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:6.0f];
+		[iconWarningView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+		[iconWarningView autoSetDimension:ALDimensionHeight toSize:44.0f];
+		[iconWarningView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:iconWarningView];
+		
+		self.navigationBarWarningButton = iconWarningView;
+	}
+
+	self.navigationBarWarningButton.hidden = !showing;
+	
+	
+	//Set the landscape navigation bar to display the warning as well
+	self.landscapeNavigationBar.showWarningButton = showing;
+}
+
+- (void)imageDownloadConditionLevelChanged:(LMImageManagerConditionLevel)newConditionLevel {
+	switch(newConditionLevel){
+		case LMImageManagerConditionLevelOptimal: {
+			[self setWarningButtonShowing:NO];
+			NSLog(@"Optimal!");
+			break;
+		}
+		case LMImageManagerConditionLevelSuboptimal: {
+			[self setWarningButtonShowing:YES];
+			NSLog(@"Sub");
+			break;
+		}
+		case LMImageManagerConditionLevelNever: {
+			[self setWarningButtonShowing:NO];
+			NSLog(@"Never");
+			break;
+		}
+	}
 }
 
 - (void)tutorialFinishedWithKey:(NSString *)key {
@@ -864,23 +922,29 @@ LMControlBarViewDelegate
 	}];
 }
 
-- (void)buttonTappedOnLandscapeNavigationBar:(BOOL)backButtonPressed {
-	if(backButtonPressed){
-		NSLog(@"Go back");
-		
-//		[self.navigationController popViewControllerAnimated:YES];
-		
-		if(self.navigationBar.backItem){
-			[self.navigationBar popNavigationItemAnimated:NO];
+- (void)buttonTappedOnLandscapeNavigationBar:(LMLandscapeNavigationBarButton)buttonPressed {
+	switch(buttonPressed){
+		case LMLandscapeNavigationBarButtonBack: {
+			NSLog(@"Go back");
+			
+			if(self.navigationBar.backItem){
+				[self.navigationBar popNavigationItemAnimated:NO];
+			}
+			else{
+				[self.compactView backButtonPressed];
+			}
+			break;
 		}
-		else{
-			[self.compactView backButtonPressed];
+		case LMLandscapeNavigationBarButtonWarning: {
+			[self warningBarButtonItemTapped];
+			break;
 		}
-	}
-	else{
-		NSLog(@"Now playing nav bar please");
-		
-		[self launchNowPlayingFromNavigationBar];
+		case LMLandscapeNavigationBarButtonLogo: {
+			NSLog(@"Now playing nav bar please");
+			
+			[self launchNowPlayingFromNavigationBar];
+			break;
+		}
 	}
 }
 
@@ -1384,8 +1448,8 @@ LMControlBarViewDelegate
 		}
 		
 		
-//		LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
-//		[self.navigationController pushViewController:settingsViewController animated:YES];
+		LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
+		[self.navigationController pushViewController:settingsViewController animated:YES];
 	} repeats:NO];
 	
 	

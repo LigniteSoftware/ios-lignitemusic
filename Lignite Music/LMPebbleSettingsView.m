@@ -112,7 +112,7 @@
 - (NSString*)subtitleForCategory:(LMImageManagerCategory)category {
 	LMImageManager *imageManager = [LMImageManager sharedImageManager];
 	
-	LMImageManagerPermissionStatus artistImagesStatus = [imageManager permissionStatusForCategory:category];
+	LMImageManagerPermissionStatus artistImagesStatus = [imageManager downloadPermissionStatus];
 	
 	BOOL approved = (artistImagesStatus == LMImageManagerPermissionStatusAuthorized);
 	
@@ -168,7 +168,7 @@
 - (void)cacheAlertForCategory:(LMImageManagerCategory)category {
 	LMImageManager *imageManager = [LMImageManager sharedImageManager];
 	
-	LMImageManagerPermissionStatus currentStatus = [imageManager permissionStatusForCategory:category];
+	LMImageManagerPermissionStatus currentStatus = [imageManager downloadPermissionStatus];
 	
 	LMAlertView *alertView = [LMAlertView newAutoLayoutView];
 	NSString *titleKey = @"";
@@ -236,7 +236,7 @@
 				break;
 		}
 		
-		[imageManager setPermissionStatus:permissionStatus forCategory:category];
+		[imageManager setDownloadPermissionStatus:permissionStatus];
 		
 		[self.sectionTableView reloadData];
 	}];

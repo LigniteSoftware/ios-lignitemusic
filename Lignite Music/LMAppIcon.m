@@ -120,6 +120,9 @@
 			return @"icon_add_track_to_queue.png";
 		case LMIconRemoveFromQueue:
 			return @"icon_remove_track_from_queue.png";
+		case LMIconWarning:
+			return @"icon_warning.png";
+			break;
 	}
 }
 

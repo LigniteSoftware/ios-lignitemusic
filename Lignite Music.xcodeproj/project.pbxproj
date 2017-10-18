@@ -125,6 +125,7 @@
 		6A82C1AC1ECCBF2D00DEFA56 /* APIdleManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A82C1AB1ECCBF2D00DEFA56 /* APIdleManager.m */; };
 		6A82F9331F9661850050430E /* icon_add_track_to_queue.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A82F9311F9660340050430E /* icon_add_track_to_queue.png */; };
 		6A82F9341F96618D0050430E /* icon_remove_track_from_queue.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A82F9321F9660340050430E /* icon_remove_track_from_queue.png */; };
+		6A82F9361F9696B10050430E /* icon_warning.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A82F9351F9696670050430E /* icon_warning.png */; };
 		6A838A951E07A8FF006E7DE0 /* LMPurchaseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A838A941E07A8FF006E7DE0 /* LMPurchaseManager.m */; };
 		6A838A971E07A9CF006E7DE0 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A838A961E07A9CF006E7DE0 /* StoreKit.framework */; };
 		6A88AA2C1F914EA0000F29DE /* LPRTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A88AA2B1F914E9F000F29DE /* LPRTableView.swift */; };
@@ -409,6 +410,7 @@
 		6A82C1AB1ECCBF2D00DEFA56 /* APIdleManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APIdleManager.m; sourceTree = "<group>"; };
 		6A82F9311F9660340050430E /* icon_add_track_to_queue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_add_track_to_queue.png; sourceTree = "<group>"; };
 		6A82F9321F9660340050430E /* icon_remove_track_from_queue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_remove_track_from_queue.png; sourceTree = "<group>"; };
+		6A82F9351F9696670050430E /* icon_warning.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_warning.png; sourceTree = "<group>"; };
 		6A838A931E07A8FF006E7DE0 /* LMPurchaseManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMPurchaseManager.h; sourceTree = "<group>"; };
 		6A838A941E07A8FF006E7DE0 /* LMPurchaseManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMPurchaseManager.m; sourceTree = "<group>"; };
 		6A838A961E07A9CF006E7DE0 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
@@ -806,6 +808,7 @@
 				6A82F9321F9660340050430E /* icon_remove_track_from_queue.png */,
 				6AC77A151DC42CF400BABBB3 /* icon_playlists.png */,
 				6AC32B751DB53EB20007C67E /* icon_repeat_general.png */,
+				6A82F9351F9696670050430E /* icon_warning.png */,
 				6ACED1061DB7BE1D006EACD2 /* icon_repeat_one.png */,
 				6AAA56041DF5491B00692CFB /* icon_search.png */,
 				6AB12E9B1D57AD9800280383 /* icon_settings.png */,
@@ -1286,6 +1289,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6A82F9361F9696B10050430E /* icon_warning.png in Resources */,
 				6A82F9341F96618D0050430E /* icon_remove_track_from_queue.png in Resources */,
 				6A82F9331F9661850050430E /* icon_add_track_to_queue.png in Resources */,
 				6A072BFF1E87E79C0092EA44 /* icon_library_access.png in Resources */,
