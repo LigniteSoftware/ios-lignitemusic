@@ -191,7 +191,11 @@
 	}
 	else if(gesture.state == UIGestureRecognizerStateChanged){
 		if(self.draggingView){
-			self.draggingView.center = CGPointMake(self.center.x, [self newYCenterForDraggingView:self.draggingView withLocation:location]);
+			if(self.visibleCells.count < 1){
+				return;
+			}
+			self.draggingView.center = CGPointMake([self.visibleCells objectAtIndex:0].center.x, [self newYCenterForDraggingView:self.draggingView withLocation:location]);
+			NSLog(@"Center %@", NSStringFromCGPoint(self.draggingView.center));
 			if(location.y != self.previousGestureVerticalPosition){
 				if([self.longPressReorderDelegate respondsToSelector:@selector(tableView:draggingGestureChanged:)]){
 					[self.longPressReorderDelegate tableView:self draggingGestureChanged:gesture];
@@ -260,6 +264,8 @@
 				CGRect rect = [self rectForRowAtIndexPath:self.currentLocationIndexPath];
 				self.draggingView.transform = CGAffineTransformIdentity;
 				self.draggingView.frame = CGRectOffset(self.draggingView.bounds, rect.origin.x, rect.origin.y);
+				
+				NSLog(@"Center end %@", NSStringFromCGPoint(self.draggingView.center));
 			}
 		} completion:^(BOOL finished) {
 			if(self.draggingView){
@@ -353,7 +359,9 @@
 	self.contentOffset = newOffset;
 	
 	if(self.draggingView){
-		self.draggingView.center = CGPointMake(self.center.x, [self newYCenterForDraggingView:self.draggingView withLocation:location]);
+		if(self.visibleCells.count > 0){
+			self.draggingView.center = CGPointMake([self.visibleCells objectAtIndex:0].center.x, [self newYCenterForDraggingView:self.draggingView withLocation:location]);
+		}
 	}
 	
 	[self updateCurrentLocationForGesture:gesture];

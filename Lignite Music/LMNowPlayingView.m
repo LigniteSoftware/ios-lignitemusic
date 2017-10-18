@@ -353,7 +353,9 @@
 }
 
 - (UITableViewCell*)tableView:(UITableView *)tableView draggingCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
-	cell.backgroundColor = [UIColor whiteColor];
+	if(![LMLayoutManager isLandscapeiPad]){
+		cell.backgroundColor = [UIColor whiteColor];
+	}
 	return cell;
 }
 
