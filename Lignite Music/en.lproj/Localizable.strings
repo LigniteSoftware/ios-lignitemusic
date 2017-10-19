@@ -46,6 +46,10 @@
  
  */
 
+"PlaylistManagementUnderstandingTitle" = "How playlists are handled";
+"PlaylistManagementUnderstandingBody" = "Due to limitations of iOS, we unfortunately cannot sync the playlists you create and manage within Abbey with the built-in music app.\n\nPlaylists that are created, edited, and deleted within Abbey will not affect your playlists outside of the app in any way.\n\nPlease tap the confirmation button below if you understand.\n\nThank you.";
+"IUnderstand" = "I understand";
+
 "ExplicitImageDownloadingTitle" = "Cellular & low storage";
 
 "ExplicitImageDownloadingBody" = "Abbey downloads images of your artists and missing album covers automatically.\n\nHowever, we want your explicit permission to be allowed to download these images when you're on cellular data or low storage.\n\nDenying this will only allow image downloading on WiFi with plenty of storage.";

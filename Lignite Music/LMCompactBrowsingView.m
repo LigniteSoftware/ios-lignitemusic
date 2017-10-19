@@ -21,6 +21,8 @@
 #import "NSTimer+Blocks.h"
 #import "LMColour.h"
 
+#import "LMPlaylistManager.h"
+
 @interface LMCompactBrowsingView()<UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, LMCollectionInfoViewDelegate, LMBigListEntryDelegate, LMLayoutChangeDelegate>
 
 /**
@@ -63,7 +65,10 @@
  */
 @property NSInteger indexOfCurrentlyOpenDetailView;
 
-@property BOOL testingShit;
+/**
+ The playlist manager.
+ */
+@property LMPlaylistManager *playlistManager;
 
 @end
 
@@ -583,6 +588,17 @@
 	}
 }
 
+- (void)addPlaylistButtonTapped {
+	NSLog(@"Tapped");
+	
+	if(![self.playlistManager userUnderstandsPlaylistManagement]){
+		[self.playlistManager launchPlaylistManagementWarningOnView:self.rootViewController.navigationController.view];
+	}
+	else{
+		NSLog(@"New playlist");
+	}
+}
+
 - (void)layoutSubviews {
 	[super layoutSubviews];
 	
@@ -590,6 +606,7 @@
 		self.didLayoutConstraints = YES;
 		
 		self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
+		self.playlistManager = [LMPlaylistManager sharedPlaylistManager];
 		
 		LMCollectionViewFlowLayout *fuck = [LMCollectionViewFlowLayout new];
 		fuck.musicTrackCollections = self.musicTrackCollections;
@@ -626,6 +643,21 @@
 		
 		self.backgroundColor = [UIColor whiteColor];
 		self.collectionView.backgroundColor = [UIColor whiteColor];
+		
+		
+		UIView *addPlaylistButtonView = [UIView newAutoLayoutView];
+		addPlaylistButtonView.backgroundColor = [UIColor orangeColor];
+		addPlaylistButtonView.userInteractionEnabled = YES;
+		[self addSubview:addPlaylistButtonView];
+		
+		[addPlaylistButtonView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+		[addPlaylistButtonView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[addPlaylistButtonView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[addPlaylistButtonView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.15];
+		
+		UITapGestureRecognizer *playlistButtonTapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(addPlaylistButtonTapped)];
+		[addPlaylistButtonView addGestureRecognizer:playlistButtonTapGesture];
+		
 		
 		[self.collectionView autoPinEdgesToSuperviewEdges];
 	}
