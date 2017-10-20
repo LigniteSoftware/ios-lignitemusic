@@ -13,7 +13,7 @@
 
 @interface LMTitleView : UIView
 
-@property LMMusicTrackCollection *musicTitles;
+@property (readonly) LMMusicTrackCollection *musicTitles;
 
 - (void)setup;
 
@@ -38,5 +38,10 @@
 
 @property LMTableView *songListTableView;
 @property LMCoreViewController *rootViewController;
+
+/**
+ Whether or not to display favourites. NO for all titles.
+ */
+@property BOOL favourites;
 
 @end

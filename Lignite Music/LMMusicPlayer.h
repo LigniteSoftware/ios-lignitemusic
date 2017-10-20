@@ -49,7 +49,8 @@ typedef enum {
 	LMMusicTypePlaylists,
 	LMMusicTypeGenres,
 	LMMusicTypeComposers,
-	LMMusicTypeCompilations
+	LMMusicTypeCompilations,
+	LMMusicTypeFavourites
 } LMMusicType;
 
 /**
@@ -362,6 +363,13 @@ typedef enum {
  Load the now playing state from storage.
  */
 - (void)loadNowPlayingState;
+
+/**
+ The track collection of all of the user's favourite tracks.
+
+ @return The collection of favourites.
+ */
+- (LMMusicTrackCollection*)favouritesTrackCollection;
 
 /**
  Add a certain track to favourites.

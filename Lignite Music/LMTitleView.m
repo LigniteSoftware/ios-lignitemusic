@@ -42,9 +42,22 @@
 
 @property LMLayoutManager *layoutManager;
 
+@property LMMusicTrackCollection *allSongsTrackCollection;
+
+@property LMMusicTrackCollection *favouritesTrackCollection;
+
 @end
 
 @implementation LMTitleView
+
+@synthesize musicTitles = _musicTitles;
+
+- (LMMusicTrackCollection*)musicTitles {
+	if(self.favourites){
+		return self.favouritesTrackCollection;
+	}
+	return self.allSongsTrackCollection;
+}
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     CGFloat difference = fabs(scrollView.contentOffset.y-self.lastScrollingOffsetPoint.y);
@@ -110,10 +123,28 @@
 
 - (void)trackAddedToFavourites:(LMMusicTrack *)track {
 	[self.songListTableView reloadData];
+	
+	if(self.favourites){
+		[self rebuildTrackCollection];
+		[self.songListTableView reloadSubviewData];
+		[self.songListTableView reloadData];
+		
+		[self musicTrackDidChange:self.musicPlayer.nowPlayingTrack];
+	}
 }
 
 - (void)trackRemovedFromFavourites:(LMMusicTrack *)track {
 	[self.songListTableView reloadData];
+	
+	if(self.favourites){
+		[self rebuildTrackCollection];
+		[self.songListTableView reloadSubviewData];
+		[self.songListTableView reloadData];
+		
+		self.currentlyHighlighted = -1;
+		
+		[self musicTrackDidChange:self.musicPlayer.nowPlayingTrack];
+	}
 }
 
 - (void)rebuildTrackCollection {
@@ -136,6 +167,7 @@
 		[musicCollection addObject:musicTrack];
 	}
 	//Fix this you fucking idiot ^
+	// no
 	
 	NSString *sortKey = @"title";
 	NSSortDescriptor *albumSort = [NSSortDescriptor sortDescriptorWithKey:sortKey ascending:YES];
@@ -144,7 +176,10 @@
 	LMMusicTrackCollection *trackCollection = mediaCollection;
 	[musicTracks addObject:trackCollection];
 	
-	self.musicTitles = [MPMediaItemCollection collectionWithItems:[NSArray arrayWithArray:musicCollection]];
+	self.allSongsTrackCollection = [MPMediaItemCollection collectionWithItems:[NSArray arrayWithArray:musicCollection]];
+	
+	self.favouritesTrackCollection = [self.musicPlayer favouritesTrackCollection];
+	
 	self.songListTableView.totalAmountOfObjects = self.musicTitles.count;
 }
 

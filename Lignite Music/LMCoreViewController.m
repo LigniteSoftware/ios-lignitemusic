@@ -549,15 +549,45 @@ LMControlBarViewDelegate
 			break;
 		}
 		case LMIconTitles: {
+			BOOL requiresReload = self.titleView.favourites == YES;
+			
+			self.titleView.favourites = NO;
 			self.compactView.hidden = YES;
 			self.titleView.hidden = NO;
 			self.currentSource = self.titleView;
+			
+			if(requiresReload){
+				[self.titleView rebuildTrackCollection];
+				[self.titleView.songListTableView reloadSubviewData];
+				[self.titleView.songListTableView reloadData];
+			}
 			
 			self.buttonNavigationBar.browsingBar.letterTabBar.lettersDictionary =
 			[self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:@[self.titleView.musicTitles]
 															 withAssociatedMusicType:LMMusicTypeTitles];
 			
 			[self logMusicTypeView:LMMusicTypeTitles];
+			break;
+		}
+		case LMIconFavouriteBlack: {
+			BOOL requiresReload = self.titleView.favourites == NO;
+			
+			self.titleView.favourites = YES;
+			self.compactView.hidden = YES;
+			self.titleView.hidden = NO;
+			self.currentSource = self.titleView;
+			
+			if(requiresReload){
+				[self.titleView rebuildTrackCollection];
+				[self.titleView.songListTableView reloadSubviewData];
+				[self.titleView.songListTableView reloadData];
+			}
+			
+			self.buttonNavigationBar.browsingBar.letterTabBar.lettersDictionary =
+			[self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:@[self.titleView.musicTitles]
+															 withAssociatedMusicType:LMMusicTypeTitles];
+			
+			[self logMusicTypeView:LMMusicTypeFavourites];
 			break;
 		}
 		case LMIconSettings: {
@@ -1193,16 +1223,16 @@ LMControlBarViewDelegate
 	NSTimeInterval loadStartTime = [[NSDate new] timeIntervalSince1970];
 				
 	NSArray *sourceTitles = @[
-							  @"Artists", @"Albums", @"Titles", @"Playlists", @"Genres", @"Compilations", @"Settings", @"ReportBugOrSendFeedback"
+							  @"Artists", @"Albums", @"Titles", @"Playlists", @"Genres", @"Compilations", @"Favourites", @"Settings", @"ReportBugOrSendFeedback"
 							  ];
 	NSArray *sourceSubtitles = @[
-								 @"", @"", @"", @"", @"", @"", @"", @""
+								 @"", @"", @"", @"", @"", @"", @"", @"", @""
 								 ];
 	LMIcon sourceIcons[] = {
-		LMIconArtists, LMIconAlbums, LMIconTitles, LMIconPlaylists, LMIconGenres, LMIconCompilations, LMIconSettings, LMIconBug
+		LMIconArtists, LMIconAlbums, LMIconTitles, LMIconPlaylists, LMIconGenres, LMIconCompilations, LMIconFavouriteBlack, LMIconSettings, LMIconBug
 	};
 	BOOL notHighlight[] = {
-		NO, NO, NO, NO, NO, NO, YES, YES
+		NO, NO, NO, NO, NO, NO, NO, YES, YES
 	};
 	
 	

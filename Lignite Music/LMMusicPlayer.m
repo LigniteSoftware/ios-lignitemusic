@@ -1120,6 +1120,38 @@ BOOL shuffleForDebug = NO;
 	return [NSString stringWithFormat:@"favourite_%llu", track.persistentID];
 }
 
+- (LMMusicTrackCollection*)favouritesTrackCollection {
+	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+	
+	NSArray *allKeys = [userDefaults.dictionaryRepresentation allKeys];
+	NSMutableArray<LMMusicTrack*>* favouritesTracks = [NSMutableArray new];
+	for(NSString *key in allKeys){
+		if([key containsString:@"favourite_"]){
+			if([userDefaults boolForKey:key] == YES){ //Is a favourite
+				NSRange range = [key rangeOfString:@"favourite_"];
+				
+				NSString *persistentIDString = [key substringFromIndex:range.location + range.length];
+				
+				NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+				formatter.numberStyle = NSNumberFormatterDecimalStyle;
+				NSNumber *persistentIDNumber = [formatter numberFromString:persistentIDString];
+				
+				MPMediaPropertyPredicate *predicate = [MPMediaPropertyPredicate predicateWithValue:persistentIDNumber
+																				  forProperty:MPMediaItemPropertyPersistentID];
+				MPMediaQuery *query = [[MPMediaQuery alloc] init];
+				[query addFilterPredicate: predicate];
+				
+				[favouritesTracks addObjectsFromArray:query.items];
+			}
+		}
+	}
+	
+	NSLog(@"Got %ld favourites, the first being %@.", favouritesTracks.count, [favouritesTracks firstObject].title);
+	
+	return [[LMMusicTrackCollection alloc] initWithItems:favouritesTracks];
+	//return [[self queryCollectionsForMusicType:LMMusicTypeAlbums] firstObject];
+}
+
 - (void)addTrackToFavourites:(LMMusicTrack*)track {
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 	[userDefaults setBool:YES forKey:[self favouriteKeyForTrack:track]];
