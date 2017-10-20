@@ -99,10 +99,9 @@
 
 @property LMTrackInfoView *trackInfoView;
 
-@property BOOL loaded;
+//@property BOOL loaded;
 
-@property LMView *shuffleModeBackgroundView, *repeatModeBackgroundView, *queueBackgroundView, *airplayBackgroundView;
-@property LMButton *shuffleModeButton, *repeatModeButton, *queueButton, *airplayButton;
+@property LMButton *shuffleModeButton, *repeatModeButton, *queueButton, *airplayButton, *favouritesButton;
 
 @property LMProgressSlider *progressSlider;
 
@@ -120,6 +119,8 @@
 @property NSArray *currentiPadSpecificConstraintsArray;
 
 @property NSTimeInterval lastTimeOfSwap;
+
+@property UIImageView *favouriteHeartImageView;
 
 @end
 
@@ -323,10 +324,9 @@
 	if(highlightedEntry){
 		[highlightedEntry changeHighlightStatus:YES animated:YES];
 	}
+	
+	[self reloadFavouriteStatus];
 }
-
-
-
 
 
 - (void)tableView:(UITableView*)tableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath {
@@ -496,6 +496,9 @@
 			}
 		}
 	}
+	else if(button == self.favouritesButton){
+		[self changeFavouriteStatus];
+	}
 	
 	[self updateMusicModeButtons];
 }
@@ -625,6 +628,29 @@
 	}
 	
 	[self refreshNothingInQueueText];
+}
+
+- (void)reloadFavouriteStatus {
+	UIImage *favouritesImageToUse = [LMAppIcon imageForIcon:self.loadedTrack.isFavourite ? LMIconFavouriteRed : LMIconFavouriteBlack];
+	self.favouriteHeartImageView.image = favouritesImageToUse;
+	[self.favouritesButton setImage:favouritesImageToUse];
+}
+
+- (void)trackAddedToFavourites:(LMMusicTrack *)track {
+	[self reloadFavouriteStatus];
+}
+
+- (void)trackRemovedFromFavourites:(LMMusicTrack *)track {
+	[self reloadFavouriteStatus];
+}
+
+- (void)changeFavouriteStatus {
+	if(self.loadedTrack.isFavourite){
+		[self.musicPlayer removeTrackFromFavourites:self.loadedTrack];
+	}
+	else{
+		[self.musicPlayer addTrackToFavourites:self.loadedTrack];
+	}
 }
 
 - (float)heightAtIndex:(NSUInteger)index forTableView:(LMTableView *)tableView {
@@ -799,7 +825,7 @@
 		[self setupiPadSpecificLayout];
 		
 		self.buttonStackView.spacing = ((([LMLayoutManager isLandscapeiPad] || [LMLayoutManager isLandscape])
-										 ? self.frame.size.height : self.frame.size.width) * 0.9 * ([LMLayoutManager isiPad] ? 0.5 : 0.40))/4.0;
+										 ? self.frame.size.height : self.frame.size.width) * 0.9 * ([LMLayoutManager isiPad] ? ([LMLayoutManager isLandscapeiPad] ? 0.3 : 0.5) : 0.35))/4.0;
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		
 	}];
@@ -827,6 +853,8 @@
 		}
 		
 		self.queueButton.hidden = [LMLayoutManager isLandscapeiPad];
+		self.favouritesButton.hidden = !self.queueButton.hidden;
+		self.favouriteHeartImageView.hidden = self.queueButton.hidden;
 		
 		if(self.queueButton.hidden){ //Is iPad landscape
 			[self.mainView addSubview:self.queueTableView];
@@ -977,6 +1005,7 @@
 	self.repeatModeButton = [LMButton newAutoLayoutView];
 	self.queueButton = [LMButton newAutoLayoutView];
 	self.airplayButton = [LMButton newAutoLayoutView];
+	self.favouritesButton = [LMButton newAutoLayoutView];
 	
 	
 	
@@ -994,6 +1023,42 @@
 	self.trackInfoView.textAlignment = NSTextAlignmentCenter;
 	self.trackInfoView.textColour = [UIColor blackColor];
 	[self.paddingView addSubview:self.trackInfoView];
+	
+	
+	self.favouriteHeartImageView = [UIImageView newAutoLayoutView];
+	self.favouriteHeartImageView.contentMode = UIViewContentModeScaleAspectFit;
+	self.favouriteHeartImageView.image = [LMAppIcon imageForIcon:self.loadedTrack.isFavourite ? LMIconFavouriteRed : LMIconFavouriteBlack];
+	self.favouriteHeartImageView.hidden = [LMLayoutManager isLandscapeiPad];
+	self.favouriteHeartImageView.userInteractionEnabled = YES;
+	[self.paddingView addSubview:self.favouriteHeartImageView];
+	
+	UITapGestureRecognizer *favouriteHeartImageViewTapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(changeFavouriteStatus)];
+	[self.favouriteHeartImageView addGestureRecognizer:favouriteHeartImageViewTapGesture];
+	
+	NSArray *favouriteHeartImageViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.favouriteHeartImageView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.trackInfoView withOffset:-5];
+		[self.favouriteHeartImageView autoSetDimension:ALDimensionHeight toSize:25.0f];
+		[self.favouriteHeartImageView autoSetDimension:ALDimensionWidth toSize:50.0f];
+		[self.favouriteHeartImageView autoAlignAxis:ALAxisVertical toSameAxisOfView:self.trackInfoView];
+	}];
+	[LMLayoutManager addNewPortraitConstraints:favouriteHeartImageViewPortraitConstraints];
+	
+	NSArray *favouriteHeartImageViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.favouriteHeartImageView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.trackInfoView withOffset:-5];
+		[self.favouriteHeartImageView autoSetDimension:ALDimensionHeight toSize:35.0f];
+		[self.favouriteHeartImageView autoSetDimension:ALDimensionWidth toSize:35.0f];
+		[self.favouriteHeartImageView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.trackInfoView withOffset:0];
+	}];
+	[LMLayoutManager addNewLandscapeConstraints:favouriteHeartImageViewLandscapeConstraints];
+	
+	NSArray *avouriteHeartImageViewiPadConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.favouriteHeartImageView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.trackInfoView withOffset:-5];
+		[self.favouriteHeartImageView autoSetDimension:ALDimensionHeight toSize:40.0f];
+		[self.favouriteHeartImageView autoSetDimension:ALDimensionWidth toSize:80.0f];
+		[self.favouriteHeartImageView autoAlignAxis:ALAxisVertical toSameAxisOfView:self.trackInfoView];
+	}];
+	[LMLayoutManager addNewiPadConstraints:avouriteHeartImageViewiPadConstraints];
+	
 	
 	self.albumArtRootView = [LMView newAutoLayoutView];
 	self.albumArtRootView.backgroundColor = [UIColor clearColor];
@@ -1015,10 +1080,10 @@
 	
 	
 	NSArray *buttons = @[
-						 self.shuffleModeButton, self.repeatModeButton, self.airplayButton, self.queueButton
+						 self.shuffleModeButton, self.repeatModeButton, self.airplayButton, self.favouritesButton, self.queueButton
 						 ];
 	LMIcon icons[] = {
-		LMIconShuffle, LMIconRepeat, LMIconAirPlay, LMIconHamburger
+		LMIconShuffle, LMIconRepeat, LMIconAirPlay, LMIconFavouriteRed, LMIconHamburger
 	};
 	
 	for(int i = 0; i < buttons.count; i++){
@@ -1043,6 +1108,9 @@
 			UIPanGestureRecognizer *queueOpenPanGesture = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(panQueueClosed:)];
 			[self.queueButton addGestureRecognizer:queueOpenPanGesture];
 		}
+		else if(button == self.favouritesButton){
+			self.favouritesButton.hidden = ![LMLayoutManager isLandscapeiPad];
+		}
 	}
 	
 	self.buttonStackView = [UIStackView newAutoLayoutView];
@@ -1050,7 +1118,7 @@
 	self.buttonStackView.axis = UILayoutConstraintAxisHorizontal;
 	self.buttonStackView.distribution = UIStackViewDistributionFillEqually;
 	self.buttonStackView.spacing = ((([LMLayoutManager isLandscapeiPad] || [LMLayoutManager isLandscape])
-									 ? self.frame.size.height : self.frame.size.width) * 0.9 * ([LMLayoutManager isiPad] ? 0.5 : 0.35))/4.0;
+									 ? self.frame.size.height : self.frame.size.width) * 0.9 * ([LMLayoutManager isiPad] ? ([LMLayoutManager isLandscapeiPad] ? 0.3 : 0.5) : 0.35))/4.0;
 	[self.paddingView addSubview:self.buttonStackView];
 	
 	
@@ -1226,6 +1294,8 @@
 	for(AVAudioSessionPortDescription* outputPort in currentRoute.outputs){
 		[self musicOutputPortDidChange:outputPort];
 	}
+	
+	[self reloadFavouriteStatus];
 }
 
 - (instancetype)init {
