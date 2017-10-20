@@ -46,6 +46,8 @@
 
 @property LMMusicTrackCollection *favouritesTrackCollection;
 
+@property UILabel *noObjectsLabel;
+
 @end
 
 @implementation LMTitleView
@@ -183,6 +185,8 @@
 	self.favouritesTrackCollection = [self.musicPlayer favouritesTrackCollection];
 	
 	self.songListTableView.totalAmountOfObjects = self.musicTitles.count;
+	
+	self.noObjectsLabel.hidden = (self.musicTitles.count > 0);
 }
 
 - (void)musicLibraryDidChange {
@@ -484,17 +488,23 @@
 	
 	[self.songListTableView autoPinEdgesToSuperviewEdges];
 	
-	if(self.musicTitles.count == 0){
-		UILabel *noObjectsLabel = [UILabel newAutoLayoutView];
-		noObjectsLabel.numberOfLines = 0;
-		noObjectsLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:24.0f];
-		noObjectsLabel.text = NSLocalizedString(@"TheresNothingHere", nil);
-		noObjectsLabel.textAlignment = NSTextAlignmentCenter;
-		noObjectsLabel.backgroundColor = [UIColor whiteColor];
-		[self addSubview:noObjectsLabel];
-		
-		[noObjectsLabel autoPinEdgesToSuperviewMargins];
-	}
+	
+	self.noObjectsLabel = [UILabel newAutoLayoutView];
+	self.noObjectsLabel.numberOfLines = 0;
+	self.noObjectsLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:24.0f];
+	self.noObjectsLabel.text = NSLocalizedString(@"TheresNothingHere", nil);
+	self.noObjectsLabel.textAlignment = NSTextAlignmentCenter;
+	[self addSubview:self.noObjectsLabel];
+	
+	[self.noObjectsLabel autoPinEdgeToSuperviewMargin:ALEdgeLeading];
+	[self.noObjectsLabel autoPinEdgeToSuperviewMargin:ALEdgeTop];
+	[self.noObjectsLabel autoPinEdgeToSuperviewMargin:ALEdgeTrailing];
+	[self.noObjectsLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(3.0/4.0)];
+	
+	self.noObjectsLabel.hidden = (self.musicTitles.count > 0);
+	
+	
+	
 	
 	[self.songListTableView reloadSubviewData];
 		

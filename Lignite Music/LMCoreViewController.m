@@ -352,6 +352,14 @@ LMControlBarViewDelegate
 	hud.label.text = NSLocalizedString(@"Favourited", nil);
 	
 	[hud hideAnimated:YES afterDelay:3.f];
+	
+	if(self.titleView.favourites && (self.currentSource == self.titleView)){
+		[self.buttonNavigationBar.browsingBar setShowingLetterTabs:self.titleView.musicTitles.count > 0];
+		
+		self.buttonNavigationBar.browsingBar.letterTabBar.lettersDictionary =
+		[self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:@[self.titleView.musicTitles]
+														 withAssociatedMusicType:LMMusicTypeTitles];
+	}
 }
 
 - (void)trackRemovedFromFavourites:(LMMusicTrack *)track {
@@ -365,6 +373,14 @@ LMControlBarViewDelegate
 	hud.label.text = NSLocalizedString(@"Un-favourited", nil);
 	
 	[hud hideAnimated:YES afterDelay:3.f];
+	
+	if(self.titleView.favourites && (self.currentSource == self.titleView)){
+		[self.buttonNavigationBar.browsingBar setShowingLetterTabs:self.titleView.musicTitles.count > 0];
+		
+		self.buttonNavigationBar.browsingBar.letterTabBar.lettersDictionary =
+		[self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:@[self.titleView.musicTitles]
+														 withAssociatedMusicType:LMMusicTypeTitles];
+	}
 }
 
 #ifndef SPOTIFY
@@ -545,6 +561,8 @@ LMControlBarViewDelegate
 			
 			[self setupBrowsingViewWithMusicType:associatedMusicType];
 			
+			[self.buttonNavigationBar.browsingBar setShowingLetterTabs:self.compactView.musicTrackCollections.count > 0];
+			
 			self.currentSource = self.compactView;
 			break;
 		}
@@ -560,6 +578,8 @@ LMControlBarViewDelegate
 				[self.titleView rebuildTrackCollection];
 				[self.titleView.songListTableView reloadSubviewData];
 				[self.titleView.songListTableView reloadData];
+				
+				[self.buttonNavigationBar.browsingBar setShowingLetterTabs:self.titleView.musicTitles.count > 0];
 			}
 			
 			self.buttonNavigationBar.browsingBar.letterTabBar.lettersDictionary =
@@ -570,18 +590,16 @@ LMControlBarViewDelegate
 			break;
 		}
 		case LMIconFavouriteBlackFilled: {
-			BOOL requiresReload = self.titleView.favourites == NO;
-			
 			self.titleView.favourites = YES;
 			self.compactView.hidden = YES;
 			self.titleView.hidden = NO;
 			self.currentSource = self.titleView;
 			
-			if(requiresReload){
-				[self.titleView rebuildTrackCollection];
-				[self.titleView.songListTableView reloadSubviewData];
-				[self.titleView.songListTableView reloadData];
-			}
+			[self.titleView rebuildTrackCollection];
+			[self.titleView.songListTableView reloadSubviewData];
+			[self.titleView.songListTableView reloadData];
+			
+			[self.buttonNavigationBar.browsingBar setShowingLetterTabs:self.titleView.musicTitles.count > 0];
 			
 			self.buttonNavigationBar.browsingBar.letterTabBar.lettersDictionary =
 			[self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:@[self.titleView.musicTitles]
@@ -1223,13 +1241,13 @@ LMControlBarViewDelegate
 	NSTimeInterval loadStartTime = [[NSDate new] timeIntervalSince1970];
 				
 	NSArray *sourceTitles = @[
-							  @"Artists", @"Albums", @"Titles", @"Playlists", @"Genres", @"Compilations", @"Favourites", @"Settings", @"ReportBugOrSendFeedback"
+							  @"Favourites", @"Artists", @"Albums", @"Titles", @"Playlists", @"Genres", @"Compilations", @"Settings", @"ReportBugOrSendFeedback"
 							  ];
 	NSArray *sourceSubtitles = @[
 								 @"", @"", @"", @"", @"", @"", @"", @"", @""
 								 ];
 	LMIcon sourceIcons[] = {
-		LMIconArtists, LMIconAlbums, LMIconTitles, LMIconPlaylists, LMIconGenres, LMIconCompilations, LMIconFavouriteBlackFilled, LMIconSettings, LMIconBug
+		LMIconFavouriteBlackFilled, LMIconArtists, LMIconAlbums, LMIconTitles, LMIconPlaylists, LMIconGenres, LMIconCompilations, LMIconSettings, LMIconBug
 	};
 	BOOL notHighlight[] = {
 		NO, NO, NO, NO, NO, NO, NO, YES, YES
@@ -1506,6 +1524,9 @@ LMControlBarViewDelegate
 			self.statePreservedNowPlayingWasOpen = NO;
 		}
 		
+		if(self.titleView.favourites && (self.currentSource == self.titleView)){
+			[self.buttonNavigationBar.browsingBar setShowingLetterTabs:self.titleView.musicTitles.count > 0];
+		}
 		
 //		LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
 //		[self.navigationController pushViewController:settingsViewController animated:YES];

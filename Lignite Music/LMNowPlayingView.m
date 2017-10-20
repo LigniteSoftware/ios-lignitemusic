@@ -242,6 +242,8 @@
 			self.trackInfoView.textColour = isLight ? [UIColor blackColor] : [UIColor whiteColor];
 			self.progressSlider.lightTheme = !isLight;
 			
+			[self reloadFavouriteStatus];
+			
 //			NSLog(@"Spook me solid");
 			
 			self.albumArtImageView.image = albumArt ? albumArt : [LMAppIcon imageForIcon:LMIconNoAlbumArt];
@@ -631,7 +633,7 @@
 }
 
 - (void)reloadFavouriteStatus {
-	UIImage *favouritesImageToUse = [LMAppIcon imageForIcon:self.loadedTrack.isFavourite ? LMIconFavouriteRedFilled : LMIconFavouriteRedOutline];
+	UIImage *favouritesImageToUse = [LMAppIcon imageForIcon:self.loadedTrack.isFavourite ? LMIconFavouriteRedFilled : (self.progressSlider.lightTheme ? LMIconFavouriteWhiteOutline : LMIconFavouriteBlackOutline)];
 	self.favouriteHeartImageView.image = favouritesImageToUse;
 	[self.favouritesButton setImage:favouritesImageToUse];
 }

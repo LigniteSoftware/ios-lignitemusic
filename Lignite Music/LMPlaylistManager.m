@@ -40,6 +40,7 @@
 }
 
 - (BOOL)userUnderstandsPlaylistManagement {
+	return false;
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 	if([userDefaults objectForKey:LMUserUnderstandsPlaylistManagementKey]){
 		return [userDefaults boolForKey:LMUserUnderstandsPlaylistManagementKey];
