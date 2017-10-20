@@ -41,6 +41,8 @@
 
 "NoTracksInFavourites" = "Du hast noch keine Favoriten definiert. Streiche einfach auf einem beliebigen Song von links nach rechts, um sie in dieser Liste aufzunehmen.";
 
+"Favourites" = "Favoriten";
+
 "Favourited" = "Hinzugefügt";
 "Unfavourited" = "Entfernt";
 
@@ -50,7 +52,7 @@
 
 "ExplicitImageDownloadingTitle" = "Mobil & wenig Speicher";
 
-"ExplicitImageDownloadingBody" = "Abbey lädt automatisch Bilder deiner Künstler und fehlende Albencovers herunter. Wir brauchen deine explizite Zustimmung, dass wir diese Bilder auch herunterladen dürfen, wenn du unterwegs bist oder nur noch wenig Speicherplatz auf deinem Gerät hast. Fehlt diese Bewilligung deinerseits, werden die Bilder ausschliesslich bei einer WiFi-Verbindung und genügend Speicherplatz ausgeführt.";
+"ExplicitImageDownloadingBody" = "Abbey lädt automatisch Bilder deiner Künstler und fehlende Albencovers herunter.\n\nWir brauchen deine explizite Zustimmung, dass wir diese Bilder auch herunterladen dürfen, wenn du unterwegs bist oder nur noch wenig Speicherplatz auf deinem Gerät hast.\n\nFehlt diese Bewilligung deinerseits, werden die Bilder ausschliesslich bei einer WiFi-Verbindung und genügend Speicherplatz ausgeführt.";
 
 "Allow" = "Bewilligen";
 "Deny" = "Ablehnen";

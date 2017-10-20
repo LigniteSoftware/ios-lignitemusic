@@ -48,6 +48,8 @@
 
 "NoTracksInFavourites" = "You haven't favourited anything. Swipe from left to right on any track throughout the app to add it to your favourites.";
 
+"Favourites" = "Favourites";
+
 "Favourited" = "Favourited";
 "Unfavourited" = "Un-favourited";
 
@@ -546,4 +548,3 @@
  * Thank you.
  *
  */
-
