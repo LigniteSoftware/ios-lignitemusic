@@ -122,13 +122,30 @@
 			return @"icon_remove_track_from_queue.png";
 		case LMIconWarning:
 			return @"icon_warning.png";
-		case LMIconFavouriteRed:
+		case LMIconFavouriteHUD:
+			return @"icon_favourite_hud.png";
+		case LMIconFavouriteRedFilled:
 			return @"icon_favourite_red.png";
-		case LMIconFavouriteWhite:
+		case LMIconFavouriteWhiteFilled:
 			return @"icon_favourite_white.png";
-		case LMIconFavouriteBlack:
+		case LMIconFavouriteBlackFilled:
 			return @"icon_favourite_black.png";
+		case LMIconFavouriteRedOutline:
+			return @"icon_favourite_outlined_red.png";
+		case LMIconFavouriteWhiteOutline:
+			return @"icon_favourite_outlined_white.png";
+		case LMIconFavouriteBlackOutline:
+			return @"icon_favourite_outlined_black.png";
+		case LMIconUnfavouriteHUD:
+			return @"icon_unfavourite_hud.png";
+		case LMIconUnfavouriteRed:
+			return @"icon_unfavourite_red.png";
+		case LMIconUnfavouriteWhite:
+			return @"icon_unfavourite_white.png";
+		case LMIconUnfavouriteBlack:
+			return @"icon_unfavourite_black.png";
 	}
+	return @"icon_bug.png";
 }
 
 + (UIImage*)imageForIcon:(LMIcon)icon {

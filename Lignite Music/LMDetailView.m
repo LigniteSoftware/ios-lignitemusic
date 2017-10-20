@@ -242,7 +242,7 @@
 		if(listEntry){
 			listEntry.leftButtonExpansionColour = track.isFavourite ? [LMColour ligniteRedColour] : [LMColour successGreenColour];
 			listEntry.collectionIndex = indexPath.row;
-			[[listEntry.leftButtons firstObject] setImage:track.isFavourite ? [LMAppIcon invertImage:[LMAppIcon imageForIcon:LMIconBug]] : [LMAppIcon imageForIcon:LMIconFavouriteWhite] forState:UIControlStateNormal];
+			[[listEntry.leftButtons firstObject] setImage:track.isFavourite ? [LMAppIcon imageForIcon:LMIconUnfavouriteWhite] : [LMAppIcon imageForIcon:LMIconFavouriteWhiteFilled] forState:UIControlStateNormal];
 			[listEntry changeHighlightStatus:self.currentlyHighlightedEntry == listEntry.collectionIndex animated:NO];
 			[listEntry reloadContents];
 		}
@@ -277,7 +277,7 @@
 		
 		listEntry.rightButtons = @[ saveButton ];
 		
-		MGSwipeButton *favouriteButton = [MGSwipeButton buttonWithTitle:@"" icon:track.isFavourite ? [LMAppIcon imageForIcon:LMIconBug] : [LMAppIcon imageForIcon:LMIconFavouriteWhite] backgroundColor:color padding:0 callback:^BOOL(MGSwipeTableCell *sender) {
+		MGSwipeButton *favouriteButton = [MGSwipeButton buttonWithTitle:@"" icon:track.isFavourite ? [LMAppIcon imageForIcon:LMIconUnfavouriteWhite] : [LMAppIcon imageForIcon:LMIconFavouriteWhiteFilled] backgroundColor:color padding:0 callback:^BOOL(MGSwipeTableCell *sender) {
 			LMMusicTrack *track = [self.musicTrackCollection.items objectAtIndex:listEntry.collectionIndex];
 			
 			if(track.isFavourite){

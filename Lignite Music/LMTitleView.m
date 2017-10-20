@@ -129,6 +129,8 @@
 		[self.songListTableView reloadSubviewData];
 		[self.songListTableView reloadData];
 		
+		self.currentlyHighlighted = -1;
+		
 		[self musicTrackDidChange:self.musicPlayer.nowPlayingTrack];
 	}
 }
@@ -242,11 +244,11 @@
 	LMMusicTrack *track = [self.musicTitles.items objectAtIndex:entry.collectionIndex];
 	if(track.isFavourite){
 		entry.leftButtonExpansionColour = [LMColour ligniteRedColour];
-		[[entry.leftButtons firstObject] setImage:[LMAppIcon invertImage:[LMAppIcon imageForIcon:LMIconBug]] forState:UIControlStateNormal];
+		[[entry.leftButtons firstObject] setImage:[LMAppIcon imageForIcon:LMIconUnfavouriteWhite] forState:UIControlStateNormal];
 	}
 	else{
 		entry.leftButtonExpansionColour = [LMColour successGreenColour];
-		[[entry.leftButtons firstObject] setImage:[LMAppIcon imageForIcon:LMIconFavouriteWhite] forState:UIControlStateNormal];
+		[[entry.leftButtons firstObject] setImage:[LMAppIcon imageForIcon:LMIconFavouriteWhiteFilled] forState:UIControlStateNormal];
 	}
 	
 	[entry.queue addOperation:operation];
@@ -323,7 +325,7 @@
 
 			listEntry.rightButtons = @[ saveButton ];
 			
-			MGSwipeButton *favouriteButton = [MGSwipeButton buttonWithTitle:@"" icon:[LMAppIcon imageForIcon:LMIconFavouriteWhite] backgroundColor:color padding:0 callback:^BOOL(MGSwipeTableCell *sender) {
+			MGSwipeButton *favouriteButton = [MGSwipeButton buttonWithTitle:@"" icon:[LMAppIcon imageForIcon:LMIconFavouriteWhiteFilled] backgroundColor:color padding:0 callback:^BOOL(MGSwipeTableCell *sender) {
 				LMMusicTrack *track = [self.musicTitles.items objectAtIndex:listEntry.collectionIndex];
 				
 				if(track.isFavourite){

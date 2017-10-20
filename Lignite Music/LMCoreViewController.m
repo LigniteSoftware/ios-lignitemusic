@@ -358,7 +358,7 @@ LMControlBarViewDelegate
 	MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
 	
 	hud.mode = MBProgressHUDModeCustomView;
-	UIImage *image = [[UIImage imageNamed:@"icon_favourite_hud.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+	UIImage *image = [[UIImage imageNamed:@"icon_unfavourite_hud.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
 	hud.customView = [[UIImageView alloc] initWithImage:image];
 	hud.square = YES;
 	hud.userInteractionEnabled = NO;
@@ -569,7 +569,7 @@ LMControlBarViewDelegate
 			[self logMusicTypeView:LMMusicTypeTitles];
 			break;
 		}
-		case LMIconFavouriteBlack: {
+		case LMIconFavouriteBlackFilled: {
 			BOOL requiresReload = self.titleView.favourites == NO;
 			
 			self.titleView.favourites = YES;
@@ -1229,7 +1229,7 @@ LMControlBarViewDelegate
 								 @"", @"", @"", @"", @"", @"", @"", @"", @""
 								 ];
 	LMIcon sourceIcons[] = {
-		LMIconArtists, LMIconAlbums, LMIconTitles, LMIconPlaylists, LMIconGenres, LMIconCompilations, LMIconFavouriteBlack, LMIconSettings, LMIconBug
+		LMIconArtists, LMIconAlbums, LMIconTitles, LMIconPlaylists, LMIconGenres, LMIconCompilations, LMIconFavouriteBlackFilled, LMIconSettings, LMIconBug
 	};
 	BOOL notHighlight[] = {
 		NO, NO, NO, NO, NO, NO, NO, YES, YES

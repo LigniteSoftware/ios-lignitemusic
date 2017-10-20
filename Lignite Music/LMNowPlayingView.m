@@ -631,7 +631,7 @@
 }
 
 - (void)reloadFavouriteStatus {
-	UIImage *favouritesImageToUse = [LMAppIcon imageForIcon:self.loadedTrack.isFavourite ? LMIconFavouriteRed : LMIconFavouriteBlack];
+	UIImage *favouritesImageToUse = [LMAppIcon imageForIcon:self.loadedTrack.isFavourite ? LMIconFavouriteRedFilled : LMIconFavouriteRedOutline];
 	self.favouriteHeartImageView.image = favouritesImageToUse;
 	[self.favouritesButton setImage:favouritesImageToUse];
 }
@@ -1027,7 +1027,7 @@
 	
 	self.favouriteHeartImageView = [UIImageView newAutoLayoutView];
 	self.favouriteHeartImageView.contentMode = UIViewContentModeScaleAspectFit;
-	self.favouriteHeartImageView.image = [LMAppIcon imageForIcon:self.loadedTrack.isFavourite ? LMIconFavouriteRed : LMIconFavouriteBlack];
+	self.favouriteHeartImageView.image = [LMAppIcon imageForIcon:self.loadedTrack.isFavourite ? LMIconFavouriteRedFilled : LMIconFavouriteRedOutline];
 	self.favouriteHeartImageView.hidden = [LMLayoutManager isLandscapeiPad];
 	self.favouriteHeartImageView.userInteractionEnabled = YES;
 	[self.paddingView addSubview:self.favouriteHeartImageView];
@@ -1083,7 +1083,7 @@
 						 self.shuffleModeButton, self.repeatModeButton, self.airplayButton, self.favouritesButton, self.queueButton
 						 ];
 	LMIcon icons[] = {
-		LMIconShuffle, LMIconRepeat, LMIconAirPlay, LMIconFavouriteRed, LMIconHamburger
+		LMIconShuffle, LMIconRepeat, LMIconAirPlay, LMIconFavouriteRedOutline, LMIconHamburger
 	};
 	
 	for(int i = 0; i < buttons.count; i++){

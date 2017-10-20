@@ -67,9 +67,17 @@ typedef enum {
 	LMIconAddToQueue,
 	LMIconRemoveFromQueue,
 	LMIconWarning,
-	LMIconFavouriteRed,
-	LMIconFavouriteWhite,
-	LMIconFavouriteBlack
+	LMIconFavouriteHUD,
+	LMIconFavouriteRedFilled,
+	LMIconFavouriteWhiteFilled,
+	LMIconFavouriteBlackFilled,
+	LMIconFavouriteRedOutline,
+	LMIconFavouriteWhiteOutline,
+	LMIconFavouriteBlackOutline,
+	LMIconUnfavouriteHUD,
+	LMIconUnfavouriteRed,
+	LMIconUnfavouriteWhite,
+	LMIconUnfavouriteBlack
 } LMIcon;
 
 /**
