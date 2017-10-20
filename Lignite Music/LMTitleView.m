@@ -187,6 +187,7 @@
 	self.songListTableView.totalAmountOfObjects = self.musicTitles.count;
 	
 	self.noObjectsLabel.hidden = (self.musicTitles.count > 0);
+	self.noObjectsLabel.text = NSLocalizedString(self.favourites ? @"NoTracksInFavourites" : @"TheresNothingHere", nil);
 }
 
 - (void)musicLibraryDidChange {
@@ -492,7 +493,7 @@
 	self.noObjectsLabel = [UILabel newAutoLayoutView];
 	self.noObjectsLabel.numberOfLines = 0;
 	self.noObjectsLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:24.0f];
-	self.noObjectsLabel.text = NSLocalizedString(@"TheresNothingHere", nil);
+	self.noObjectsLabel.text = NSLocalizedString(self.favourites ? @"NoTracksInFavourites" : @"TheresNothingHere", nil);
 	self.noObjectsLabel.textAlignment = NSTextAlignmentCenter;
 	[self addSubview:self.noObjectsLabel];
 	

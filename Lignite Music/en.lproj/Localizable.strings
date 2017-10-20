@@ -46,6 +46,11 @@
  
  */
 
+"NoTracksInFavourites" = "You haven't favourited anything. Swipe from left to right on any track throughout the app to add it to your favourites.";
+
+"Favourited" = "Favourited";
+"Unfavourited" = "Un-favourited";
+
 "PlaylistManagementUnderstandingTitle" = "How playlists are handled";
 "PlaylistManagementUnderstandingBody" = "Due to limitations of iOS, we unfortunately cannot sync the playlists you create and manage within Abbey with the built-in music app.\n\nPlaylists that are created, edited, and deleted within Abbey will not affect your playlists outside of the app in any way.\n\nPlease tap the confirmation button below if you understand.\n\nThank you.";
 "IUnderstand" = "I understand";

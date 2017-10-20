@@ -384,6 +384,16 @@
 //	[self.queueTableView reloadSubviewData];
 }
 
+- (void)trackAddedToFavourites:(LMMusicTrack *)track {
+	[self.queueTableView reloadData];
+	[self reloadFavouriteStatus];
+}
+
+- (void)trackRemovedFromFavourites:(LMMusicTrack *)track {
+	[self.queueTableView reloadData];
+	[self reloadFavouriteStatus];
+}
+
 
 
 
@@ -542,6 +552,16 @@
 //		entry.backgroundColor = [UIColor cyanColor];
 //	}
 	
+	LMMusicTrack *track = [self.musicPlayer.nowPlayingCollection.items objectAtIndex:index];
+	if(track.isFavourite){
+		entry.leftButtonExpansionColour = [LMColour ligniteRedColour];
+		[[entry.leftButtons firstObject] setImage:[LMAppIcon imageForIcon:LMIconUnfavouriteWhite] forState:UIControlStateNormal];
+	}
+	else{
+		entry.leftButtonExpansionColour = [LMColour successGreenColour];
+		[[entry.leftButtons firstObject] setImage:[LMAppIcon imageForIcon:LMIconFavouriteWhiteFilled] forState:UIControlStateNormal];
+	}
+	
 	[entry reloadContents];
 	return entry;
 }
@@ -625,6 +645,29 @@
 			listEntry.rightButtons = @[ saveButton ];
 			listEntry.rightButtonExpansionColour = [UIColor colorWithRed:0.92 green:0.00 blue:0.00 alpha:1.0];
 			
+			
+			MGSwipeButton *favouriteButton = [MGSwipeButton buttonWithTitle:@"" icon:[LMAppIcon imageForIcon:LMIconFavouriteWhiteFilled] backgroundColor:color padding:0 callback:^BOOL(MGSwipeTableCell *sender) {
+				LMMusicTrack *track = [self.musicPlayer.nowPlayingCollection.items objectAtIndex:listEntry.collectionIndex];
+				
+				if(track.isFavourite){
+					[self.musicPlayer removeTrackFromFavourites:track];
+				}
+				else{
+					[self.musicPlayer addTrackToFavourites:track];
+				}
+				
+				NSLog(@"Favourite %@", track.title);
+				
+				return YES;
+			}];
+			favouriteButton.titleLabel.font = font;
+			favouriteButton.titleLabel.hidden = YES;
+			favouriteButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
+			favouriteButton.imageEdgeInsets = UIEdgeInsetsMake(25, 0, 25, 0);
+			
+			listEntry.leftButtons = @[ favouriteButton ];
+			listEntry.leftButtonExpansionColour = [LMColour successGreenColour];
+			
 			[self.itemArray addObject:listEntry];
 		}
 	}
@@ -636,14 +679,6 @@
 	UIImage *favouritesImageToUse = [LMAppIcon imageForIcon:self.loadedTrack.isFavourite ? LMIconFavouriteRedFilled : (self.progressSlider.lightTheme ? LMIconFavouriteWhiteOutline : LMIconFavouriteBlackOutline)];
 	self.favouriteHeartImageView.image = favouritesImageToUse;
 	[self.favouritesButton setImage:favouritesImageToUse];
-}
-
-- (void)trackAddedToFavourites:(LMMusicTrack *)track {
-	[self reloadFavouriteStatus];
-}
-
-- (void)trackRemovedFromFavourites:(LMMusicTrack *)track {
-	[self reloadFavouriteStatus];
 }
 
 - (void)changeFavouriteStatus {

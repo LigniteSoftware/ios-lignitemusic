@@ -39,6 +39,11 @@
  
  */
 
+"NoTracksInFavourites" = "Du hast noch keine Favoriten definiert. Streiche einfach auf einem beliebigen Song von links nach rechts, um sie in dieser Liste aufzunehmen";
+
+"Favourited" = "Hinzugefügt";
+"Unfavourited" = "Entfernt";
+
 "PlaylistManagementUnderstandingTitle" = "Handhabung Wiedergabelisten";
 "PlaylistManagementUnderstandingBody" = "Aufgrund Limitation von iOS können innerhalb von Abbey erstellte Wiedergabelisten nicht mit der Standard Musik App synchronisiert werden.\n\nWiedergabelisten, welche innerhalb Abbey erstellt, bearbeitet oder gelöscht werden, haben keinen Einfluss auf Wiedergabelisten ausserhalb dieser App.\n\nTippe bitte auf den Bestätigungsbutton unterhalb, um dies zu akzeptieren.\n\nVielen Dank!";
 "IUnderstand" = "Ich verstehe";

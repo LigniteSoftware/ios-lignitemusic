@@ -370,7 +370,7 @@ LMControlBarViewDelegate
 	hud.customView = [[UIImageView alloc] initWithImage:image];
 	hud.square = YES;
 	hud.userInteractionEnabled = NO;
-	hud.label.text = NSLocalizedString(@"Un-favourited", nil);
+	hud.label.text = NSLocalizedString(@"Unfavourited", nil);
 	
 	[hud hideAnimated:YES afterDelay:3.f];
 	
