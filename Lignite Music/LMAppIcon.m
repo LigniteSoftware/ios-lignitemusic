@@ -122,7 +122,12 @@
 			return @"icon_remove_track_from_queue.png";
 		case LMIconWarning:
 			return @"icon_warning.png";
-			break;
+		case LMIconFavouriteRed:
+			return @"icon_favourite_red.png";
+		case LMIconFavouriteWhite:
+			return @"icon_favourite_white.png";
+		case LMIconFavouriteBlack:
+			return @"icon_favourite_black.png";
 	}
 }
 

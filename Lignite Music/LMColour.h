@@ -18,6 +18,13 @@
 + (UIColor*)ligniteRedColour;
 
 /**
+ A darker green colour idicating success or action of positivity.
+
+ @return Success green colour.
+ */
++ (UIColor*)successGreenColour;
+
+/**
  The classic "Lignite Red" colour, though half transparent.
 
  @return The semi transparent Lignite Red colour.

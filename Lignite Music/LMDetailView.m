@@ -131,6 +131,14 @@
 	
 }
 
+- (void)trackAddedToFavourites:(LMMusicTrack *)track {
+	[self.collectionView reloadData];
+}
+
+- (void)trackRemovedFromFavourites:(LMMusicTrack *)track {
+	[self.collectionView reloadData];
+}
+
 - (LMListEntry*)listEntryForIndex:(NSInteger)index {
 	if(index == -1){
 		return nil;
@@ -186,7 +194,7 @@
 }
 
 - (NSString*)textForListEntry:(LMListEntry *)entry {
-	return [NSString stringWithFormat:@"%d", (entry.collectionIndex + 1)];
+	return [NSString stringWithFormat:@"%ld", (entry.collectionIndex + 1)];
 }
 
 - (UIImage*)iconForListEntry:(LMListEntry*)entry {
@@ -220,6 +228,8 @@
 	
 	LMCollectionViewFlowLayout *flowLayout = (LMCollectionViewFlowLayout*)self.collectionView.collectionViewLayout;
 	
+	LMMusicTrack *track = [self.musicTrackCollection.items objectAtIndex:indexPath.row];
+	
 	if(cell.contentView.subviews.count > 0){
 		LMListEntry *listEntry = nil;
 		for(UIView *subview in cell.contentView.subviews){
@@ -230,7 +240,9 @@
 		}
 		
 		if(listEntry){
+			listEntry.leftButtonExpansionColour = track.isFavourite ? [LMColour ligniteRedColour] : [LMColour successGreenColour];
 			listEntry.collectionIndex = indexPath.row;
+			[[listEntry.leftButtons firstObject] setImage:track.isFavourite ? [LMAppIcon invertImage:[LMAppIcon imageForIcon:LMIconBug]] : [LMAppIcon imageForIcon:LMIconFavouriteWhite] forState:UIControlStateNormal];
 			[listEntry changeHighlightStatus:self.currentlyHighlightedEntry == listEntry.collectionIndex animated:NO];
 			[listEntry reloadContents];
 		}
@@ -264,6 +276,28 @@
 		saveButton.imageEdgeInsets = UIEdgeInsetsMake(25, 0, 25, 0);
 		
 		listEntry.rightButtons = @[ saveButton ];
+		
+		MGSwipeButton *favouriteButton = [MGSwipeButton buttonWithTitle:@"" icon:track.isFavourite ? [LMAppIcon imageForIcon:LMIconBug] : [LMAppIcon imageForIcon:LMIconFavouriteWhite] backgroundColor:color padding:0 callback:^BOOL(MGSwipeTableCell *sender) {
+			LMMusicTrack *track = [self.musicTrackCollection.items objectAtIndex:listEntry.collectionIndex];
+			
+			if(track.isFavourite){
+				[self.musicPlayer removeTrackFromFavourites:track];
+			}
+			else{
+				[self.musicPlayer addTrackToFavourites:track];
+			}
+			
+			NSLog(@"Favourite %@", track.title);
+			
+			return YES;
+		}];
+		favouriteButton.titleLabel.font = font;
+		favouriteButton.titleLabel.hidden = YES;
+		favouriteButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
+		favouriteButton.imageEdgeInsets = UIEdgeInsetsMake(25, 0, 25, 0);
+		
+		listEntry.leftButtons = @[ favouriteButton ];
+		listEntry.leftButtonExpansionColour = track.isFavourite ? [LMColour ligniteRedColour] : [LMColour successGreenColour];
 		
 		
 		[cell.contentView addSubview:listEntry];

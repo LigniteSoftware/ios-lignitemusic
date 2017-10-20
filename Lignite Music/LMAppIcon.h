@@ -66,7 +66,10 @@ typedef enum {
 	LMIcon3DotsVertical,
 	LMIconAddToQueue,
 	LMIconRemoveFromQueue,
-	LMIconWarning
+	LMIconWarning,
+	LMIconFavouriteRed,
+	LMIconFavouriteWhite,
+	LMIconFavouriteBlack
 } LMIcon;
 
 /**

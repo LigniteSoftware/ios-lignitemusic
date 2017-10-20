@@ -1116,6 +1116,34 @@ BOOL shuffleForDebug = NO;
 	}
 }
 
+- (NSString*)favouriteKeyForTrack:(LMMusicTrack*)track {
+	return [NSString stringWithFormat:@"favourite_%llu", track.persistentID];
+}
+
+- (void)addTrackToFavourites:(LMMusicTrack*)track {
+	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+	[userDefaults setBool:YES forKey:[self favouriteKeyForTrack:track]];
+	[userDefaults synchronize];
+	
+	for(id<LMMusicPlayerDelegate> delegate in self.delegates){
+		if([delegate respondsToSelector:@selector(trackAddedToFavourites:)]){
+			[delegate trackAddedToFavourites:track];
+		}
+	}
+}
+
+- (void)removeTrackFromFavourites:(LMMusicTrack*)track {
+	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+	[userDefaults setBool:NO forKey:[self favouriteKeyForTrack:track]];
+	[userDefaults synchronize];
+	
+	for(id<LMMusicPlayerDelegate> delegate in self.delegates){
+		if([delegate respondsToSelector:@selector(trackRemovedFromFavourites:)]){
+			[delegate trackRemovedFromFavourites:track];
+		}
+	}
+}
+
 - (void)logArray:(NSMutableArray*)array {
 	NSMutableString *string = [NSMutableString stringWithFormat:@""];
 	for(LMMusicTrack *track in array){

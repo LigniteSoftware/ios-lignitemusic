@@ -341,6 +341,32 @@ LMControlBarViewDelegate
 	[hud hideAnimated:YES afterDelay:3.f];
 }
 
+- (void)trackAddedToFavourites:(LMMusicTrack *)track {
+	MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+	
+	hud.mode = MBProgressHUDModeCustomView;
+	UIImage *image = [[UIImage imageNamed:@"icon_favourite_hud.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+	hud.customView = [[UIImageView alloc] initWithImage:image];
+	hud.square = YES;
+	hud.userInteractionEnabled = NO;
+	hud.label.text = NSLocalizedString(@"Favourited", nil);
+	
+	[hud hideAnimated:YES afterDelay:3.f];
+}
+
+- (void)trackRemovedFromFavourites:(LMMusicTrack *)track {
+	MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+	
+	hud.mode = MBProgressHUDModeCustomView;
+	UIImage *image = [[UIImage imageNamed:@"icon_favourite_hud.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+	hud.customView = [[UIImageView alloc] initWithImage:image];
+	hud.square = YES;
+	hud.userInteractionEnabled = NO;
+	hud.label.text = NSLocalizedString(@"Un-favourited", nil);
+	
+	[hud hideAnimated:YES afterDelay:3.f];
+}
+
 #ifndef SPOTIFY
 - (void)musicLibraryDidChange {
 	NSLog(@"Changed library for core");

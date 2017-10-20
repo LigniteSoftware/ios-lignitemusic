@@ -148,6 +148,20 @@ typedef enum {
  @param trackMoved The track that was moved.
  */
 - (void)trackMovedInQueue:(LMMusicTrack*)trackMoved;
+
+/**
+ A track was added to favourites.
+
+ @param track The track that was added to favourites.
+ */
+- (void)trackAddedToFavourites:(LMMusicTrack*)track;
+
+/**
+ A track was removed from favourites.
+ 
+ @param track The track that was removed from favourites.
+ */
+- (void)trackRemovedFromFavourites:(LMMusicTrack*)track;
 @end
 
 @interface LMMusicPlayer : NSObject
@@ -348,6 +362,20 @@ typedef enum {
  Load the now playing state from storage.
  */
 - (void)loadNowPlayingState;
+
+/**
+ Add a certain track to favourites.
+
+ @param track The track to add to favourites.
+ */
+- (void)addTrackToFavourites:(LMMusicTrack*)track;
+
+/**
+ Removes a certain track from favourites.
+
+ @param track The track to remove from favourites.
+ */
+- (void)removeTrackFromFavourites:(LMMusicTrack*)track;
 
 /**
  Gets the currently saved LMMusicPlayerType through NSUserDefaults. Returns LMMusicPlayerTypeSystemMusicPlayer if the entry doesn't exist in NSUserDefaults.

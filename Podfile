@@ -1,4 +1,4 @@
-# Uncomment this line to define a global platform for your project
+#Uncomment this line to define a global platform for your project
 # platform :ios, '6.0'
 
 use_frameworks!
@@ -17,9 +17,4 @@ end
 
 target 'Lignite Music' do
     shared_pods
-end
-
-target 'Lignite Music for Spotify' do
-    shared_pods
-    pod 'couchbase-lite-ios', '~> 1.3.1'
 end

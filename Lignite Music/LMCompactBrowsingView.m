@@ -70,6 +70,21 @@
  */
 @property LMPlaylistManager *playlistManager;
 
+/**
+ The view containing the playlist modification and creation buttons.
+ */
+@property UIView *playlistModificationButtonView;
+
+/**
+ The button that goes on the left of the two buttons for playlist creation and modification.
+ */
+@property UIView *playlistButtonLeft;
+
+/**
+ The button that goes on the right of the two buttons for playlist creation and modification.
+ */
+@property UIView *playlistButtonRight;
+
 @end
 
 @implementation LMCompactBrowsingView
@@ -645,18 +660,28 @@
 		self.collectionView.backgroundColor = [UIColor whiteColor];
 		
 		
-		UIView *addPlaylistButtonView = [UIView newAutoLayoutView];
-		addPlaylistButtonView.backgroundColor = [UIColor orangeColor];
-		addPlaylistButtonView.userInteractionEnabled = YES;
-		[self addSubview:addPlaylistButtonView];
 		
-		[addPlaylistButtonView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-		[addPlaylistButtonView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-		[addPlaylistButtonView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-		[addPlaylistButtonView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.15];
-		
-		UITapGestureRecognizer *playlistButtonTapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(addPlaylistButtonTapped)];
-		[addPlaylistButtonView addGestureRecognizer:playlistButtonTapGesture];
+//		self.playlistModificationButtonView = [UIView newAutoLayoutView];
+//		self.playlistModificationButtonView.backgroundColor = [UIColor lightGrayColor];
+//		self.playlistModificationButtonView.userInteractionEnabled = YES;
+//		[self addSubview:self.playlistModificationButtonView];
+//
+//		[self.playlistModificationButtonView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+//		[self.playlistModificationButtonView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:30];
+//		[self.playlistModificationButtonView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:30];
+//		[self.playlistModificationButtonView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.15];
+//
+//		UITapGestureRecognizer *playlistButtonTapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(addPlaylistButtonTapped)];
+//		[self.playlistModificationButtonView addGestureRecognizer:playlistButtonTapGesture];
+//
+//		self.playlistButtonLeft = [UIView newAutoLayoutView];
+//		self.playlistButtonLeft.backgroundColor = [LMColour ligniteRedColour];
+//		[self.playlistModificationButtonView addSubview:self.playlistButtonLeft];
+//
+//		[self.playlistButtonLeft autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+//		[self.playlistButtonLeft autoPinEdgeToSuperviewEdge:ALEdgeTop];
+//		[self.playlistButtonLeft autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+//		[self.playlistButtonLeft autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.playlistModificationButtonView withMultiplier:(1.0/2.0)];
 		
 		
 		[self.collectionView autoPinEdgesToSuperviewEdges];

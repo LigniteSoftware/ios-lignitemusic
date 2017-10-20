@@ -108,6 +108,14 @@
 	
 }
 
+- (void)trackAddedToFavourites:(LMMusicTrack *)track {
+	[self.songListTableView reloadData];
+}
+
+- (void)trackRemovedFromFavourites:(LMMusicTrack *)track {
+	[self.songListTableView reloadData];
+}
+
 - (void)rebuildTrackCollection {
 	MPMediaQuery *everything = [MPMediaQuery new];
 	MPMediaPropertyPredicate *musicFilterPredicate = [MPMediaPropertyPredicate predicateWithValue:[NSNumber numberWithInteger:MPMediaTypeMusic]
@@ -196,6 +204,16 @@
 		});
 	}];
 	
+	LMMusicTrack *track = [self.musicTitles.items objectAtIndex:entry.collectionIndex];
+	if(track.isFavourite){
+		entry.leftButtonExpansionColour = [LMColour ligniteRedColour];
+		[[entry.leftButtons firstObject] setImage:[LMAppIcon invertImage:[LMAppIcon imageForIcon:LMIconBug]] forState:UIControlStateNormal];
+	}
+	else{
+		entry.leftButtonExpansionColour = [LMColour successGreenColour];
+		[[entry.leftButtons firstObject] setImage:[LMAppIcon imageForIcon:LMIconFavouriteWhite] forState:UIControlStateNormal];
+	}
+	
 	[entry.queue addOperation:operation];
 	
 	[entry changeHighlightStatus:self.currentlyHighlighted == entry.collectionIndex animated:NO];
@@ -269,6 +287,28 @@
 			saveButton.imageEdgeInsets = UIEdgeInsetsMake(25, 0, 25, 0);
 
 			listEntry.rightButtons = @[ saveButton ];
+			
+			MGSwipeButton *favouriteButton = [MGSwipeButton buttonWithTitle:@"" icon:[LMAppIcon imageForIcon:LMIconFavouriteWhite] backgroundColor:color padding:0 callback:^BOOL(MGSwipeTableCell *sender) {
+				LMMusicTrack *track = [self.musicTitles.items objectAtIndex:listEntry.collectionIndex];
+				
+				if(track.isFavourite){
+					[self.musicPlayer removeTrackFromFavourites:track];
+				}
+				else{
+					[self.musicPlayer addTrackToFavourites:track];
+				}
+				
+				NSLog(@"Favourite %@", track.title);
+				
+				return YES;
+			}];
+			favouriteButton.titleLabel.font = font;
+			favouriteButton.titleLabel.hidden = YES;
+			favouriteButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
+			favouriteButton.imageEdgeInsets = UIEdgeInsetsMake(25, 0, 25, 0);
+			
+			listEntry.leftButtons = @[ favouriteButton ];
+			listEntry.leftButtonExpansionColour = [LMColour successGreenColour];
 						
 			[self.itemArray addObject:listEntry];
 			
