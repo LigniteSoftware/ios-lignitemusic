@@ -78,8 +78,6 @@
 "TutorialFullScreenPlaybackDescription" = "Du kannst deine Musikwiedergabe hier genau wie beim Mini Player steuern. 1x irgendwo tippen pausiert die Wiedergabe, nach links oder rechts streichen wechselt zwischen den Songs und nach unten streichen bringt dich zurück zu deiner Musikbibliothek.\n\nEin Tippen auf das Icon unten rechts zeigt dir die kommenden Songs an.";
 
 
-"NoiPadSupport" = "Sorry, Abbey unterstützt iPad in Zukunft, zurzeit jedoch noch nicht.\n\nStatt dir eine fehlerbehaftete Version auf dem iPad zu präsentieren, belassen wir es hierbei. Wir überlassen die Entscheidung dir, ob du die App zwischenzeitlich von deinem iPad deinstallieren willst oder nicht..\n\nWir werden eine allfällige iPad-Version via Kickstarter ankündigen.\n\nVielen Dank für dein Verständnis.";
-
 "TapViewAgainToOpenSourceSelector" = "Ansicht-Tab antippen, um die Liste erneut anzuzeigen";
 
 "CreditsLicenses" = "Lizenzlinks"; //Links to licenses, such as library licenses and icon licenses.
@@ -398,6 +396,8 @@
 "ArtistImagesTitle" = "Künstler Fotos";
 "AlbumImagesTitle" = "Fehlendes Albumcover";
 
+"ImagesDownloadWarningTitle" = "Herunterladen von Bildern";
+
 "ImagesDownloadWarningDescription" = "Abbey lädt Bilder von deinen Künstlern sowie fehlende Albencovers automatisch herunter.\n\Uns ist jedoch aufgefallen, dass, %@.\n\nEs sollte nicht mehr als ~%.02f MB an Bildern zum Herunterladen sein%@.\n\nWenn du auf '%@' tippst, werden wir sie trotzdem herunterladen.\n\nFalls du andernfalls auf %@' tippst, kannst du deine Meinung später in den Einstellungen jederzeit wieder ändern.";
 
 "AboutXOfYourStorage" = " (ungefähr %.02f%% deines noch verfügbaren Speicherplatzes)"; //The space in front of the first bracket is important, as it will be inserted after the "[...] take about %.02fMB to download the images%@." (goes where the %@ is in there). If your language does not need the space feel free to take it out.
@@ -425,7 +425,7 @@
 "Enabled" = "Aktiviert";
 "KeepEnabled" = "Aktiviert lassen";
 
-"SettingImagesAlertDescription" = "Wir laden Fotos herunter %@.\n\n%@\n\n%@";
+"SettingImagesAlertDescription" = "Abbey lädt Bilder von deinen Künstlern sowie fehlende Albencovers automatisch herunter.\n\n%@\n\n%@";
 "YouCurrentlyHaveThisFeatureOff" = "Dieses Feature ist zurzeit ausgeschaltet.";
 "YouCanTurnOffTo" = "Du kannst diese Fotos löschen und dieses Feature deaktivieren, um Speicherplatz und Datenvolumen zu sparen.\n\nFalls du dich dafür entscheidest, werden wir keine Fotos herunterladen, bis du es wieder aktivierst.";
 "YouCanTurnOnTo" = "Du kannst dieses Feature aktivieren, um eine visuell viel schönere Übersicht zu erhalten.\n\nWir werden die Fotos herunterladen, sobald du dich in einem WiFi befindest und genug Speicherplatz zur Verfügung hast. Sollte einer der beiden Voraussetzungen nicht erfüllt sein, werden wir dich entsprechend fragen, wie du weiterfahren möchtest.";
