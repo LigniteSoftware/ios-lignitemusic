@@ -144,6 +144,10 @@
 			return @"icon_unfavourite_white.png";
 		case LMIconUnfavouriteBlack:
 			return @"icon_unfavourite_black.png";
+		case LMIconEdit:
+			return @"icon_edit_white.png";
+		case LMIconAdd:
+			return @"icon_plus_white.png";
 	}
 	return @"icon_bug.png";
 }

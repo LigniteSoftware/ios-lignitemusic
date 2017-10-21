@@ -24,7 +24,7 @@
 
 /* Begin playlist management understanding code */
 
-- (void)launchPlaylistManagementWarningOnView:(UIView*)view {
+- (void)launchPlaylistManagementWarningOnView:(UIView*)view withCompletionHandler:(void(^)())completionHandler {
 	LMAlertView *alertView = [LMAlertView newAutoLayoutView];
 	
 	alertView.title = NSLocalizedString(@"PlaylistManagementUnderstandingTitle", nil);
@@ -35,12 +35,13 @@
 	[alertView launchOnView:view withCompletionHandler:^(NSUInteger optionSelected) {
 		[self setUserUnderstandsPlaylistManagement:YES];
 		
+		completionHandler();
+		
 		NSLog(@"Cool, launch playlist creator");
 	}];
 }
 
 - (BOOL)userUnderstandsPlaylistManagement {
-	return false;
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 	if([userDefaults objectForKey:LMUserUnderstandsPlaylistManagementKey]){
 		return [userDefaults boolForKey:LMUserUnderstandsPlaylistManagementKey];

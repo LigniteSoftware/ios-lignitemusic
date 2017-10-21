@@ -18,7 +18,7 @@
 }
 
 + (UIColor*)successGreenColour {
-	return [UIColor colorWithRed:47/255.0 green:47/255.0 blue:49/255.0 alpha:1.0];
+	return [UIColor colorWithRed:33/255.0 green:175/255.0 blue:67/255.0 alpha:1.0];
 }
 
 + (UIColor*)semiTransparentLigniteRedColour {

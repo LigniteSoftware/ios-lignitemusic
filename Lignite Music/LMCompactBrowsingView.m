@@ -480,7 +480,7 @@
 - (void)changeBottomSpacing:(CGFloat)bottomSpacing {
 	NSLog(@"Setting bottom spacing %f", bottomSpacing);
     [UIView animateWithDuration:0.5 animations:^{
-       self.collectionView.contentInset = UIEdgeInsetsMake(0, 0, bottomSpacing, 0);
+       self.collectionView.contentInset = UIEdgeInsetsMake(100, 0, bottomSpacing, 0);
     }];
 }
 
@@ -603,15 +603,46 @@
 	}
 }
 
-- (void)addPlaylistButtonTapped {
-	NSLog(@"Tapped");
-	
+- (void)addPlaylistButtonTapped {	
 	if(![self.playlistManager userUnderstandsPlaylistManagement]){
-		[self.playlistManager launchPlaylistManagementWarningOnView:self.rootViewController.navigationController.view];
+		[self.playlistManager launchPlaylistManagementWarningOnView:self.rootViewController.navigationController.view withCompletionHandler:^{
+			[self addPlaylistButtonTapped];
+		}];
 	}
 	else{
 		NSLog(@"New playlist");
 	}
+}
+
+- (void)editPlaylistButtonTapped {
+	if(![self.playlistManager userUnderstandsPlaylistManagement]){
+		[self.playlistManager launchPlaylistManagementWarningOnView:self.rootViewController.navigationController.view withCompletionHandler:^{
+			[self editPlaylistButtonTapped];
+		}];
+	}
+	else{
+		NSLog(@"Edit playlist");
+	}
+}
+
+- (UIView *)roundCornersOnView:(UIView *)view onTopLeft:(BOOL)tl topRight:(BOOL)tr bottomLeft:(BOOL)bl bottomRight:(BOOL)br radius:(float)radius {
+	
+	if (tl || tr || bl || br) {
+		UIRectCorner corner = 0;
+		if (tl) {corner = corner | UIRectCornerTopLeft;}
+		if (tr) {corner = corner | UIRectCornerTopRight;}
+		if (bl) {corner = corner | UIRectCornerBottomLeft;}
+		if (br) {corner = corner | UIRectCornerBottomRight;}
+		
+		UIView *roundedView = view;
+		UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:roundedView.bounds byRoundingCorners:corner cornerRadii:CGSizeMake(radius, radius)];
+		CAShapeLayer *maskLayer = [CAShapeLayer layer];
+		maskLayer.frame = roundedView.bounds;
+		maskLayer.path = maskPath.CGPath;
+		roundedView.layer.mask = maskLayer;
+		return roundedView;
+	}
+	return view;
 }
 
 - (void)layoutSubviews {
@@ -636,7 +667,7 @@
 		self.collectionView.translatesAutoresizingMaskIntoConstraints = NO;
 		self.collectionView.delegate = self;
 		self.collectionView.dataSource = self;
-        self.collectionView.contentInset = UIEdgeInsetsMake(0, 0, 100, 0);
+        self.collectionView.contentInset = UIEdgeInsetsMake(100, 0, 100, 0);
 		[self.collectionView registerClass:[LMCollectionViewCell class] forCellWithReuseIdentifier:@"cellIdentifier"];
 		[self addSubview:self.collectionView];
 		
@@ -658,33 +689,88 @@
 		
 		self.backgroundColor = [UIColor whiteColor];
 		self.collectionView.backgroundColor = [UIColor whiteColor];
-		
-		
-		
-//		self.playlistModificationButtonView = [UIView newAutoLayoutView];
-//		self.playlistModificationButtonView.backgroundColor = [UIColor lightGrayColor];
-//		self.playlistModificationButtonView.userInteractionEnabled = YES;
-//		[self addSubview:self.playlistModificationButtonView];
-//
-//		[self.playlistModificationButtonView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-//		[self.playlistModificationButtonView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:30];
-//		[self.playlistModificationButtonView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:30];
-//		[self.playlistModificationButtonView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.15];
-//
-//		UITapGestureRecognizer *playlistButtonTapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(addPlaylistButtonTapped)];
-//		[self.playlistModificationButtonView addGestureRecognizer:playlistButtonTapGesture];
-//
-//		self.playlistButtonLeft = [UIView newAutoLayoutView];
-//		self.playlistButtonLeft.backgroundColor = [LMColour ligniteRedColour];
-//		[self.playlistModificationButtonView addSubview:self.playlistButtonLeft];
-//
-//		[self.playlistButtonLeft autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-//		[self.playlistButtonLeft autoPinEdgeToSuperviewEdge:ALEdgeTop];
-//		[self.playlistButtonLeft autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-//		[self.playlistButtonLeft autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.playlistModificationButtonView withMultiplier:(1.0/2.0)];
-		
-		
 		[self.collectionView autoPinEdgesToSuperviewEdges];
+		
+		
+		
+		
+		self.playlistModificationButtonView = [UIView newAutoLayoutView];
+		self.playlistModificationButtonView.backgroundColor = [UIColor whiteColor];
+		self.playlistModificationButtonView.userInteractionEnabled = YES;
+		self.playlistModificationButtonView.layer.masksToBounds = YES;
+		self.playlistModificationButtonView.layer.cornerRadius = 8.0f;
+		[self addSubview:self.playlistModificationButtonView];
+
+		[self.playlistModificationButtonView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:16];
+		[self.playlistModificationButtonView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:30];
+		[self.playlistModificationButtonView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:30];
+		[self.playlistModificationButtonView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.125];
+
+
+		self.playlistButtonLeft = [UIView newAutoLayoutView];
+		self.playlistButtonLeft.backgroundColor = [LMColour ligniteRedColour];
+		[self.playlistModificationButtonView addSubview:self.playlistButtonLeft];
+
+		[self.playlistButtonLeft autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.playlistButtonLeft autoPinEdgeToSuperviewEdge:ALEdgeTop];
+		[self.playlistButtonLeft autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[self.playlistButtonLeft autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.playlistModificationButtonView withMultiplier:(1.0/2.0)].constant = -1;
+		
+		
+		self.playlistButtonRight = [UIView newAutoLayoutView];
+		self.playlistButtonRight.backgroundColor = [LMColour ligniteRedColour];
+		[self.playlistModificationButtonView addSubview:self.playlistButtonRight];
+		
+		[self.playlistButtonRight autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.playlistButtonRight autoPinEdgeToSuperviewEdge:ALEdgeTop];
+		[self.playlistButtonRight autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[self.playlistButtonRight autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.playlistModificationButtonView withMultiplier:(1.0/2.0)].constant = -1;
+		
+		
+		UITapGestureRecognizer *addPlaylistButtonTapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(addPlaylistButtonTapped)];
+		[self.playlistButtonLeft addGestureRecognizer:addPlaylistButtonTapGesture];
+		
+		UITapGestureRecognizer *editPlaylistsButtonTapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(editPlaylistButtonTapped)];
+		[self.playlistButtonRight addGestureRecognizer:editPlaylistsButtonTapGesture];
+		
+		NSArray *views = @[ self.playlistButtonLeft, self.playlistButtonRight ];
+		NSArray *texts = @[ @"Create", @"Edit" ];
+		NSArray *icons = @[ [LMAppIcon imageForIcon:LMIconAdd], [LMAppIcon imageForIcon:LMIconEdit] ];
+		for(NSInteger i = 0; i < views.count; i++){
+			UIView *view = [views objectAtIndex:i];
+			NSString *text = NSLocalizedString([texts objectAtIndex:i], nil);
+			UIImage *icon = [icons objectAtIndex:i];
+			
+			
+			UIView *backgroundView = [UIView newAutoLayoutView];
+			[view addSubview:backgroundView];
+			
+			[backgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:view withMultiplier:(1.0/3.5)];
+			[backgroundView autoCenterInSuperview];
+			
+			
+			UIImageView *iconView = [UIImageView newAutoLayoutView];
+			iconView.image = icon;
+			iconView.contentMode = UIViewContentModeScaleAspectFit;
+			[backgroundView addSubview:iconView];
+			
+			[iconView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+			[iconView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+			[iconView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+			[iconView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:backgroundView];
+			
+			
+			UILabel *labelView = [UILabel newAutoLayoutView];
+			labelView.text = text;
+			labelView.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18.0f];
+			labelView.textColor = [UIColor whiteColor];
+			[backgroundView addSubview:labelView];
+			
+			[labelView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:iconView withOffset:10.0f];
+			[labelView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+			[labelView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+			[labelView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		}
 	}
 }
 

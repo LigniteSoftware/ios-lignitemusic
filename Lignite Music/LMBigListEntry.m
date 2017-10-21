@@ -15,7 +15,6 @@
 
 @property UIView *contentSubviewBackgroundView;
 
-
 @property NSLayoutConstraint* controlBarViewHeightConstraint;
 
 @end

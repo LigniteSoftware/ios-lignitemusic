@@ -154,6 +154,8 @@
 		6AA445A01D5AD6AB004C6739 /* LMSettingsSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AA4459F1D5AD6AB004C6739 /* LMSettingsSwitch.m */; };
 		6AA445A31D5AD7B0004C6739 /* LMSettingsLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AA445A21D5AD7B0004C6739 /* LMSettingsLabel.m */; };
 		6AA473631BC7103B0066D47E /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AA473621BC7103B0066D47E /* CoreMotion.framework */; };
+		6AA76AC61F9AD8770007531C /* icon_edit_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AA76AC41F9AD8690007531C /* icon_edit_white.png */; };
+		6AA76AC71F9AD87C0007531C /* icon_plus_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AA76AC51F9AD8690007531C /* icon_plus_white.png */; };
 		6AAA56011DF407A800692CFB /* LMSearchBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AAA56001DF407A800692CFB /* LMSearchBar.m */; };
 		6AAA56031DF5459A00692CFB /* icon_x_cross.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AAA56021DF5459A00692CFB /* icon_x_cross.png */; };
 		6AAA56051DF5491C00692CFB /* icon_search.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AAA56041DF5491B00692CFB /* icon_search.png */; };
@@ -464,6 +466,8 @@
 		6AA473621BC7103B0066D47E /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		6AA473641BC710460066D47E /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		6AA5CB9F1E285C0B005F853F /* LigniteMusicForSpotify-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "LigniteMusicForSpotify-Info.plist"; path = "/Users/edwinfinch/ios-projects/Lignite Music/LigniteMusicForSpotify-Info.plist"; sourceTree = "<absolute>"; };
+		6AA76AC41F9AD8690007531C /* icon_edit_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_edit_white.png; sourceTree = "<group>"; };
+		6AA76AC51F9AD8690007531C /* icon_plus_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_plus_white.png; sourceTree = "<group>"; };
 		6AAA55FF1DF407A800692CFB /* LMSearchBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMSearchBar.h; sourceTree = "<group>"; };
 		6AAA56001DF407A800692CFB /* LMSearchBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMSearchBar.m; sourceTree = "<group>"; };
 		6AAA56021DF5459A00692CFB /* icon_x_cross.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_x_cross.png; sourceTree = "<group>"; };
@@ -791,6 +795,8 @@
 		6A66C76C1CDA1B4E009019CF /* Icons */ = {
 			isa = PBXGroup;
 			children = (
+				6AA76AC41F9AD8690007531C /* icon_edit_white.png */,
+				6AA76AC51F9AD8690007531C /* icon_plus_white.png */,
 				6A98CBCB1EB4E9BF003B8B8E /* icon_3_dots_horizontal.png */,
 				6A98CBCC1EB4E9BF003B8B8E /* icon_3_dots_vertical.png */,
 				6AAA56091DF553AF00692CFB /* icon_a_to_z.png */,
@@ -1327,6 +1333,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6AA76AC71F9AD87C0007531C /* icon_plus_white.png in Resources */,
+				6AA76AC61F9AD8770007531C /* icon_edit_white.png in Resources */,
 				6A25F7B21F99B75700CC8082 /* icon_favourite_outlined_black.png in Resources */,
 				6A25F7B31F99B75700CC8082 /* icon_favourite_outlined_red.png in Resources */,
 				6A25F7B41F99B75700CC8082 /* icon_favourite_outlined_white.png in Resources */,

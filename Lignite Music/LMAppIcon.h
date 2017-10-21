@@ -77,7 +77,9 @@ typedef enum {
 	LMIconUnfavouriteHUD,
 	LMIconUnfavouriteRed,
 	LMIconUnfavouriteWhite,
-	LMIconUnfavouriteBlack
+	LMIconUnfavouriteBlack,
+	LMIconEdit,
+	LMIconAdd
 } LMIcon;
 
 /**

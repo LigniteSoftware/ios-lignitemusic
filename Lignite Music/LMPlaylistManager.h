@@ -17,8 +17,9 @@
  Launches the LMAlertView for getting the user's understanding about how playlists are handled within the app.
 
  @param view The view to launch the playlist management alert on.
+ @param completionHandler The completion handler which will be called when the user taps "I understand"
  */
-- (void)launchPlaylistManagementWarningOnView:(UIView*)view;
+- (void)launchPlaylistManagementWarningOnView:(UIView*)view withCompletionHandler:(void(^)())completionHandler;
 
 
 /**
