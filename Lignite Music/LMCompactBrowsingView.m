@@ -76,6 +76,11 @@
 @property UIView *playlistModificationButtonView;
 
 /**
+ The height constraint for the playlist modification button.
+ */
+@property NSLayoutConstraint *playlistModificationButtonViewHeightConstraint;
+
+/**
  The button that goes on the left of the two buttons for playlist creation and modification.
  */
 @property UIView *playlistButtonLeft;
@@ -450,6 +455,25 @@
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+	if(self.musicType == LMMusicTypePlaylists){
+		if((scrollView.contentOffset.y > WINDOW_FRAME.size.height/12.0) && self.playlistModificationButtonViewHeightConstraint.constant >= 0){
+			NSLog(@"negative %f", self.playlistModificationButtonViewHeightConstraint.constant);
+			[self layoutIfNeeded];
+			self.playlistModificationButtonViewHeightConstraint.constant = -(self.playlistModificationButtonView.frame.size.height/2.5);
+			[UIView animateWithDuration:0.3 animations:^{
+				[self layoutIfNeeded];
+			}];
+		}
+		else if((scrollView.contentOffset.y < WINDOW_FRAME.size.height/12.0) && self.playlistModificationButtonViewHeightConstraint.constant < 0){
+			NSLog(@"positive %f", self.playlistModificationButtonViewHeightConstraint.constant);
+			[self layoutIfNeeded];
+			self.playlistModificationButtonViewHeightConstraint.constant = 0;
+			[UIView animateWithDuration:0.3 animations:^{
+				[self layoutIfNeeded];
+			}];
+		}
+	}
+	
     if(self.didJustScrollByLetter){
         self.didJustScrollByLetter = NO;
         return;
@@ -480,7 +504,7 @@
 - (void)changeBottomSpacing:(CGFloat)bottomSpacing {
 	NSLog(@"Setting bottom spacing %f", bottomSpacing);
     [UIView animateWithDuration:0.5 animations:^{
-       self.collectionView.contentInset = UIEdgeInsetsMake(100, 0, bottomSpacing, 0);
+       self.collectionView.contentInset = UIEdgeInsetsMake(self.musicType == LMMusicTypePlaylists ? 100 : 0, 0, bottomSpacing, 0);
     }];
 }
 
@@ -671,7 +695,7 @@
 		self.collectionView.translatesAutoresizingMaskIntoConstraints = NO;
 		self.collectionView.delegate = self;
 		self.collectionView.dataSource = self;
-        self.collectionView.contentInset = UIEdgeInsetsMake(100, 0, 100, 0);
+		self.collectionView.contentInset = UIEdgeInsetsMake(self.musicType == LMMusicTypePlaylists ? 100 : 0, 0, 100, 0);
 		[self.collectionView registerClass:[LMCollectionViewCell class] forCellWithReuseIdentifier:@"cellIdentifier"];
 		[self addSubview:self.collectionView];
 		
@@ -703,12 +727,13 @@
 		self.playlistModificationButtonView.userInteractionEnabled = YES;
 		self.playlistModificationButtonView.layer.masksToBounds = YES;
 		self.playlistModificationButtonView.layer.cornerRadius = 8.0f;
+		self.playlistModificationButtonView.hidden = !(self.musicType == LMMusicTypePlaylists);
 		[self addSubview:self.playlistModificationButtonView];
 
 		[self.playlistModificationButtonView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:16];
 		[self.playlistModificationButtonView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:30];
 		[self.playlistModificationButtonView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:30];
-		[self.playlistModificationButtonView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.125];
+		self.playlistModificationButtonViewHeightConstraint = [self.playlistModificationButtonView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.125];
 
 
 		self.playlistButtonLeft = [UIView newAutoLayoutView];
