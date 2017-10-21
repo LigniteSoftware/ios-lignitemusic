@@ -198,8 +198,8 @@
                 //No need for prep since we're just gonna prep once
                 LMTiledAlbumCoverView *tiledAlbumCover = bigListEntry.contentView;
                 tiledAlbumCover.musicCollection = collection;
-				tiledAlbumCover.layer.cornerRadius = 6.0f;
-				tiledAlbumCover.layer.masksToBounds = YES;
+//				tiledAlbumCover.layer.cornerRadius = 6.0f;
+//				tiledAlbumCover.layer.masksToBounds = YES;
                 return tiledAlbumCover;
             }
             default: {
@@ -622,6 +622,10 @@
 	}
 	else{
 		NSLog(@"Edit playlist");
+		
+		for(LMBigListEntry *bigListEntry in self.bigListEntries){
+			bigListEntry.editing = !bigListEntry.editing;
+		}
 	}
 }
 

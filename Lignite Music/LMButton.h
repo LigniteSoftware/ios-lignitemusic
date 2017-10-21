@@ -20,6 +20,7 @@
 
 @property (nonatomic, assign) id <LMButtonDelegate> delegate;
 @property BOOL heightIsSmaller;
+@property BOOL roundedCorners;
 
 - (void)setImage:(UIImage*)newImage;
 - (UIColor*)getColor:(LMButton*)button;

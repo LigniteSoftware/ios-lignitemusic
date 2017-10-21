@@ -10,6 +10,8 @@
 #import "LMBigListEntry.h"
 #import "LMExtras.h"
 #import "LMTriangleView.h"
+#import "LMColour.h"
+#import "LMButton.h"
 
 @interface LMBigListEntry()
 
@@ -17,9 +19,51 @@
 
 @property NSLayoutConstraint* controlBarViewHeightConstraint;
 
+/**
+ The background view for the tap to edit feature, when enabled.
+ */
+@property UIView *tapToEditBackgroundView;
+
+/**
+ The tap to delete view.
+ */
+@property UIView *tapToDeleteView;
+
 @end
 
 @implementation LMBigListEntry
+
+@synthesize editing = _editing;
+
+- (BOOL)editing {
+	return _editing;
+}
+
+- (void)setEditing:(BOOL)editing {
+	_editing = editing;
+	
+//	[self.contentView addSubview:self.tapToEditBackgroundView];
+//	[self.contentView bringSubviewToFront:self.tapToEditBackgroundView];
+	
+	[UIView animateWithDuration:0.3 animations:^{
+		if(editing){
+			self.tapToEditBackgroundView.hidden = NO;
+		}
+		self.tapToEditBackgroundView.alpha = editing;
+	} completion:^(BOOL finished) {
+		if(finished){
+			self.tapToEditBackgroundView.hidden = !editing;
+		}
+	}];
+}
+
+- (void)editViewTapped {
+	NSLog(@"Edit tapped");
+}
+
+- (void)deleteViewTapped {
+	NSLog(@"Delete tapped");
+}
 
 - (instancetype)init {
 	self = [super init];
@@ -69,7 +113,7 @@
 
 //	self.backgroundColor = [UIColor orangeColor];
  
-	UIView *contentView = self.contentView;
+	UIView *contentView = (UIView*)self.contentView;
 //	contentView.layer.shadowColor = [UIColor blackColor].CGColor;
 //	contentView.layer.shadowRadius = WINDOW_FRAME.size.width/45;
 //	contentView.layer.shadowOffset = CGSizeMake(0, contentView.layer.shadowRadius/2);
@@ -118,6 +162,56 @@
 	
 
 	[self.entryDelegate sizeChangedToLargeSize:self.isLargeSize withHeight:[LMBigListEntry sizeForBigListEntryWhenOpened:self.isLargeSize forDelegate:self.entryDelegate] forBigListEntry:self];
+	
+	
+	self.tapToEditBackgroundView = [UIView newAutoLayoutView];
+	self.tapToEditBackgroundView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:(3.0/5.0)];
+	self.tapToEditBackgroundView.alpha = self.editing;
+	self.tapToEditBackgroundView.hidden = !self.editing;
+	self.tapToEditBackgroundView.layer.masksToBounds = YES;
+	self.tapToEditBackgroundView.layer.cornerRadius = 8.0f;
+	self.tapToEditBackgroundView.userInteractionEnabled = YES;
+	[contentView addSubview:self.tapToEditBackgroundView];
+	
+	[self.tapToEditBackgroundView autoPinEdgesToSuperviewEdges];
+	
+	UITapGestureRecognizer *editTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(editViewTapped)];
+	[self.tapToEditBackgroundView addGestureRecognizer:editTapGestureRecognizer];
+	
+	UILabel *tapToEditLabel = [UILabel newAutoLayoutView];
+	tapToEditLabel.text = NSLocalizedString(@"TapToEdit", nil);
+	tapToEditLabel.textColor = [UIColor whiteColor];
+	tapToEditLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:20.0f];
+	tapToEditLabel.textAlignment = NSTextAlignmentCenter;
+	[self.tapToEditBackgroundView addSubview:tapToEditLabel];
+	
+	[tapToEditLabel autoPinEdgeToSuperviewEdge:ALEdgeTop];
+	[tapToEditLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+	[tapToEditLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+	[tapToEditLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:contentView withMultiplier:(2.0/3.0)];
+	
+	
+	self.tapToDeleteView = [UIView newAutoLayoutView];
+	self.tapToDeleteView.backgroundColor = [LMColour ligniteRedColour];
+	[self.tapToEditBackgroundView addSubview:self.tapToDeleteView];
+	
+	[self.tapToDeleteView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+	[self.tapToDeleteView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+	[self.tapToDeleteView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+	[self.tapToDeleteView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:tapToEditLabel];
+	
+	
+	UIImageView *deleteIconImageView = [UIImageView newAutoLayoutView];
+	deleteIconImageView.image = [LMAppIcon imageForIcon:LMIconXCross];
+	deleteIconImageView.contentMode = UIViewContentModeScaleAspectFit;
+	[self.tapToDeleteView addSubview:deleteIconImageView];
+	
+	[deleteIconImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.tapToDeleteView withMultiplier:(1.0/3.0)];
+	[deleteIconImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.tapToDeleteView withMultiplier:(1.0/3.0)];
+	[deleteIconImageView autoCenterInSuperview];
+	
+	UITapGestureRecognizer *deleteTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(deleteViewTapped)];
+	[self.tapToDeleteView addGestureRecognizer:deleteTapGestureRecognizer];
 }
 
 - (void)layoutSubviews {

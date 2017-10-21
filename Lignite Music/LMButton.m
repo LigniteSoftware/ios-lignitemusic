@@ -24,7 +24,7 @@
 }
 
 - (void)layoutSubviews {
-	self.imageBackgroundView.layer.cornerRadius = self.frame.size.width/2;
+	self.imageBackgroundView.layer.cornerRadius = self.roundedCorners ? self.frame.size.width/2 : 6;
 	self.imageBackgroundView.layer.masksToBounds = YES;
 	self.imageBackgroundView.clipsToBounds = YES;
 	

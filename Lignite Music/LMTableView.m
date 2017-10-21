@@ -181,9 +181,7 @@
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
 	LMTableViewCell *lmCell = (LMTableViewCell*)cell;
-	
-	NSLog(@"Will display %@", indexPath);
-	
+		
 	id newSubview = [self.subviewDataSource subviewAtIndex:indexPath.section forTableView:self];
 	
 	for(int i = 0; i < lmCell.contentView.subviews.count; i++){

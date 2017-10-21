@@ -16,6 +16,11 @@
 
 @property UIView *rootView;
 
+/**
+ The tap to edit view, if it exists. This should be brought in front of any other views.
+ */
+@property UIView *tapToEditView;
+
 @property NSMutableArray *tilesArray;
 @property NSMutableArray *bigTileArray;
 
@@ -351,7 +356,21 @@
 				tiledAlbumCoverView.rootView.layer.shadowRadius = WINDOW_FRAME.size.width/45 / 3;
 				tiledAlbumCoverView.rootView.layer.shadowOffset = CGSizeMake(0, tiledAlbumCoverView.rootView.layer.shadowRadius/2);
 				tiledAlbumCoverView.rootView.layer.shadowOpacity = 0.25f;
+				tiledAlbumCoverView.clipsToBounds = YES;
+				tiledAlbumCoverView.layer.masksToBounds = YES;
+				tiledAlbumCoverView.layer.cornerRadius = 8.0f;
 				[tiledAlbumCoverView addSubview:tiledAlbumCoverView.rootView];
+				
+				for(UIView *subview in tiledAlbumCoverView.subviews){
+					NSLog(@"Subview %@", subview);
+					if(subview != tiledAlbumCoverView.rootView){
+						NSLog(@"Is edit view");
+						tiledAlbumCoverView.tapToEditView = subview;
+					}
+				}
+				if(tiledAlbumCoverView.tapToEditView){
+					[tiledAlbumCoverView bringSubviewToFront:tiledAlbumCoverView.tapToEditView];
+				}
 				
 				CGSize rootViewSize = CGSizeMake(amountOfTilesX*sideLength, amountOfTilesY*sideLength);
 				CGPoint rootViewPosition = CGPointMake((tiledAlbumCoverView.frame.size.width-rootViewSize.width)/2, (tiledAlbumCoverView.frame.size.height-rootViewSize.height)/2);

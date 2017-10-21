@@ -97,10 +97,18 @@
 @property id contentView;
 
 /**
+ Whether or not the big list entry is in "editing mode", where it shows a "tap to edit" message overtop and a delete button.
+ */
+@property BOOL editing;
+
+/**
  Reload the data of the big list entry.
  */
 - (void)reloadData;
 
+/**
+ Setup the big list entry.
+ */
 - (void)setup;
 
 @end
