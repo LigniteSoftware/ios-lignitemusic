@@ -46,6 +46,9 @@
  
  */
 
+"NewPlaylist" = "New playlist";
+"TapToAddAnImage" = "Add an image";
+
 "NoTracksInFavourites" = "You haven't favourited anything. Swipe from left to right on any track throughout the app to add it to your favourites.";
 
 "TapToEdit" = "Tap to edit";

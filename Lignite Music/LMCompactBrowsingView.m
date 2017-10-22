@@ -466,7 +466,7 @@
 		}
 		else if((scrollView.contentOffset.y < WINDOW_FRAME.size.height/12.0) && self.playlistModificationButtonViewHeightConstraint.constant < 0){
 			NSLog(@"positive %f", self.playlistModificationButtonViewHeightConstraint.constant);
-			[self layoutIfNeeded];
+			[self layoutIfNeeded]; 
 			self.playlistModificationButtonViewHeightConstraint.constant = 0;
 			[UIView animateWithDuration:0.3 animations:^{
 				[self layoutIfNeeded];

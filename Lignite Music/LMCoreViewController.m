@@ -48,6 +48,7 @@
 #import "LMButtonBar.h"
 #import "LMExpandableTrackListControlBar.h"
 #import "LMPhoneLandscapeDetailView.h"
+#import "LMPlaylistEditorViewController.h"
 
 #ifdef SPOTIFY
 #import "Spotify.h"
@@ -1510,6 +1511,11 @@ LMControlBarViewDelegate
 	
 	
 	[NSTimer scheduledTimerWithTimeInterval:0.25 block:^{
+		LMPlaylistEditorViewController *playlistViewController = [LMPlaylistEditorViewController new];
+		[self.navigationController pushViewController:playlistViewController animated:YES];
+		
+		[self pushItemOntoNavigationBarWithTitle:NSLocalizedString(@"NewPlaylist", nil) withNowPlayingButton:NO];
+		
 		[self.buttonNavigationBar setSelectedTab:LMNavigationTabBrowse];
 		
 		if(self.statePreservedSettingsAlreadyOpen){
