@@ -1511,18 +1511,17 @@ LMControlBarViewDelegate
 	
 	
 	[NSTimer scheduledTimerWithTimeInterval:0.25 block:^{
-		LMPlaylistEditorViewController *playlistViewController = [LMPlaylistEditorViewController new];
-		LMPlaylist *playlist = [LMPlaylist new];
-		playlist.title = @"Nice meme";
-		playlist.image = [LMAppIcon imageForIcon:LMIconBug];
+//		LMPlaylistEditorViewController *playlistViewController = [LMPlaylistEditorViewController new];
+//		LMPlaylist *playlist = [LMPlaylist new];
+//		playlist.title = @"Nice meme";
+//		playlist.image = [LMAppIcon imageForIcon:LMIconBug];
 //		playlist.trackCollection = [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeAlbums].firstObject;
-		playlist.trackCollection = [[LMMusicTrackCollection alloc]initWithItems:@[]];
-		playlistViewController.playlist = playlist;
-		[self.navigationController pushViewController:playlistViewController animated:YES];
+////		playlist.trackCollection = [[LMMusicTrackCollection alloc]initWithItems:@[]];
+//		playlistViewController.playlist = playlist;
+//		[self.navigationController pushViewController:playlistViewController animated:YES];
+//		[self pushItemOntoNavigationBarWithTitle:NSLocalizedString(@"NewPlaylist", nil) withNowPlayingButton:NO];
 		
-		[self pushItemOntoNavigationBarWithTitle:NSLocalizedString(@"NewPlaylist", nil) withNowPlayingButton:NO];
-		
-		[self.buttonNavigationBar setSelectedTab:LMNavigationTabBrowse];
+		[self.buttonNavigationBar setSelectedTab:LMNavigationTabView];
 		
 		if(self.statePreservedSettingsAlreadyOpen){
 			[self prepareForOpenSettings];

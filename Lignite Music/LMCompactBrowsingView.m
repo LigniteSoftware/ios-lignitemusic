@@ -90,6 +90,11 @@
  */
 @property UIView *playlistButtonRight;
 
+/**
+ Whether or not the compact view is currently in playlist editing mode.
+ */
+@property BOOL editing;
+
 @end
 
 @implementation LMCompactBrowsingView
@@ -650,6 +655,44 @@
 		for(LMBigListEntry *bigListEntry in self.bigListEntries){
 			bigListEntry.editing = !bigListEntry.editing;
 		}
+		self.editing = !self.editing;
+		
+		[self.playlistModificationButtonView layoutIfNeeded];
+		
+		for(NSLayoutConstraint *constraint in self.playlistModificationButtonView.constraints){
+			if(constraint.firstItem == self.playlistButtonRight){
+				[self.playlistModificationButtonView removeConstraint:constraint];
+			}
+		}
+		if(self.editing){
+			[self.playlistButtonRight autoPinEdgesToSuperviewEdges];
+		}
+		else{
+			[self.playlistButtonRight autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+			[self.playlistButtonRight autoPinEdgeToSuperviewEdge:ALEdgeTop];
+			[self.playlistButtonRight autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+			[self.playlistButtonRight autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.playlistModificationButtonView withMultiplier:(1.0/2.0)].constant = -1;
+		}
+		
+		UIImageView *iconView = nil;
+		UILabel *label = nil;
+		UIView *backgroundView = [self.playlistButtonRight.subviews firstObject]; //The background view contains the icon and label
+		
+		for(id subview in backgroundView.subviews){
+			if([subview class] == [UIImageView class]){
+				iconView = subview;
+			}
+			else{
+				label = subview;
+			}
+		}
+		
+		iconView.image = [LMAppIcon imageForIcon:self.editing ? LMIconWhiteCheckmark : LMIconEdit];
+		label.text = NSLocalizedString(self.editing ? @"Done" : @"Edit", nil);
+		
+		[UIView animateWithDuration:0.3 animations:^{
+			[self.playlistModificationButtonView layoutIfNeeded];
+		}];
 	}
 }
 

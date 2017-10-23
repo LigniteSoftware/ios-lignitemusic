@@ -14,6 +14,11 @@
 
 @protocol LMSourceDelegate <NSObject>
 
+/**
+ A source was selected.
+
+ @param source The source that was selected.
+ */
 - (void)sourceSelected:(LMSource*)source;
 
 @end

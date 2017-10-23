@@ -12,66 +12,78 @@
 #import "LMButton.h"
 #import "LMCircleView.h"
 #import "LMLabel.h"
-#import "LMTableView.h"
 #import "LMListEntry.h"
 #import "LMColour.h"
 #import "LMExtras.h"
 #import "LMSettings.h"
 
-@interface LMSourceSelectorView() <LMTableViewSubviewDataSource, LMListEntryDelegate, LMLayoutChangeDelegate>
+@interface LMSourceSelectorView() <LMListEntryDelegate, LMLayoutChangeDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
-@property LMTableView *viewsTableView;
-@property NSMutableArray *itemArray;
+/**
+ The collection view which displays the contents.
+ */
+@property UICollectionView *collectionView;
 
+/**
+ The array of list entries which go on the collection view.
+ */
+@property NSMutableArray *listEntryArray;
+
+/**
+ The currently highlighted big list entry.
+ */
 @property NSInteger currentlyHighlighted;
 
+/**
+ The layout manager.
+ */
 @property LMLayoutManager *layoutManager;
 
 @end
 
 @implementation LMSourceSelectorView
 
-- (id)subviewAtIndex:(NSUInteger)index forTableView:(LMTableView *)tableView {
-	LMListEntry *entry = [self.itemArray objectAtIndex:index % self.itemArray.count];
-	entry.collectionIndex = index;
-	entry.associatedData = [self.sources objectAtIndex:index];
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
 	
-	[entry changeHighlightStatus:self.currentlyHighlighted == entry.collectionIndex animated:NO];
+	if([LMLayoutManager isLandscape]){
+		return CGSizeMake(((WINDOW_FRAME.size.width-(WINDOW_FRAME.size.width/8.0f) /* Size of the navigation bar */)/2) - 40, WINDOW_FRAME.size.width/8.0f);
+	}
 	
-	[entry reloadContents];
-	return entry;
+	return CGSizeMake(WINDOW_FRAME.size.width - 40, WINDOW_FRAME.size.height/8.0f);
 }
 
-- (void)amountOfObjectsRequiredChangedTo:(NSUInteger)amountOfObjects forTableView:(LMTableView *)tableView {
-	if(!self.itemArray){
-		self.itemArray = [NSMutableArray new];
-		for(int i = 0; i < amountOfObjects; i++){
-			LMListEntry *listEntry = [[LMListEntry alloc]initWithDelegate:self];
-			listEntry.collectionIndex = i;
-			listEntry.iconInsetMultiplier = (1.0/3.0);
-			listEntry.iconPaddingMultiplier = (3.0/4.0);
-			listEntry.invertIconOnHighlight = YES;
-			[self.itemArray addObject:listEntry];
-		}
-		
-		NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
-		NSInteger lastSourceOpened = 0;
-		if([settings objectForKey:LMSettingsKeyLastOpenedSource]){
-			lastSourceOpened = [settings integerForKey:LMSettingsKeyLastOpenedSource];
-		}
-		
-		if(lastSourceOpened >= self.itemArray.count){
-			return;
-		}
-		[self tappedListEntry:[self.itemArray objectAtIndex:lastSourceOpened]];
-	}
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionView *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section {
+	return 10;
 }
 
-- (float)heightAtIndex:(NSUInteger)index forTableView:(LMTableView *)tableView {
-	if([LMLayoutManager isiPad]){
-		return ([LMLayoutManager isLandscapeiPad] ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height)/10.0f;
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+	return self.sources.count;
+}
+
+// The cell that is returned must be retrieved from a call to -dequeueReusableCellWithReuseIdentifier:forIndexPath:
+- (UICollectionViewCell*)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+	UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"sourceSelectorCellIdentifier" forIndexPath:indexPath];
+	
+	for(UIView *subview in cell.contentView.subviews){
+		[subview removeFromSuperview];
 	}
-	return (self.layoutManager.isLandscape ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height)/8.0f;
+	
+	LMListEntry *listEntry = [self.listEntryArray objectAtIndex:indexPath.row];
+	[cell addSubview:listEntry];
+	[listEntry autoPinEdgesToSuperviewEdges];
+	
+	if(indexPath.row < [self collectionView:self.collectionView numberOfItemsInSection:0]-1){
+		UIView *lineView = [UIView newAutoLayoutView];
+		lineView.backgroundColor = [LMColour controlBarGrayColour];
+		[cell addSubview:lineView];
+		
+		[lineView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:listEntry withOffset:[self collectionView:self.collectionView layout:self.collectionView.collectionViewLayout minimumLineSpacingForSectionAtIndex:0]/2.0f];
+		[lineView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:listEntry];
+		[lineView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:listEntry];
+		[lineView autoSetDimension:ALDimensionHeight toSize:1.0f];
+	}
+	
+	return cell;
 }
 
 - (LMListEntry*)listEntryForIndex:(NSInteger)index {
@@ -80,8 +92,8 @@
 	}
 	
 	LMListEntry *entry = nil;
-	for(int i = 0; i < self.itemArray.count; i++){
-		LMListEntry *indexEntry = [self.itemArray objectAtIndex:i];
+	for(int i = 0; i < self.listEntryArray.count; i++){
+		LMListEntry *indexEntry = [self.listEntryArray objectAtIndex:i];
 		if(indexEntry.collectionIndex == index){
 			entry = indexEntry;
 			break;
@@ -92,18 +104,14 @@
 
 - (int)indexOfListEntry:(LMListEntry*)entry {
 	int indexOfEntry = -1;
-	for(int i = 0; i < self.itemArray.count; i++){
-		LMListEntry *subviewEntry = (LMListEntry*)[self.itemArray objectAtIndex:i];
+	for(int i = 0; i < self.listEntryArray.count; i++){
+		LMListEntry *subviewEntry = (LMListEntry*)[self.listEntryArray objectAtIndex:i];
 		if([entry isEqual:subviewEntry]){
 			indexOfEntry = i;
 			break;
 		}
 	}
 	return indexOfEntry;
-}
-
-- (float)spacingAtIndex:(NSUInteger)index forTableView:(LMTableView *)tableView {
-	return 10;
 }
 
 - (void)setCurrentSourceWithIndex:(NSInteger)index {
@@ -153,7 +161,7 @@
 
 - (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
 	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-		[self.viewsTableView reloadData];
+		//Reload collection view
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		
 	}];
@@ -166,25 +174,45 @@
 	self.backgroundColor = [UIColor whiteColor];
 	self.currentlyHighlighted = -1;
 	
-	self.viewsTableView = [LMTableView newAutoLayoutView];
-	self.viewsTableView.totalAmountOfObjects = self.sources.count;
-	self.viewsTableView.subviewDataSource = self;
-	self.viewsTableView.shouldUseDividers = YES;
-	self.viewsTableView.title = @"SourceSelector";
-	self.viewsTableView.bottomSpacing = 10;
-	[self addSubview:self.viewsTableView];
+	UICollectionViewFlowLayout *flowLayout = [UICollectionViewFlowLayout new];
 	
-	[self.viewsTableView autoPinEdgesToSuperviewEdges];
+	self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:flowLayout];
+	self.collectionView.translatesAutoresizingMaskIntoConstraints = NO;
+	self.collectionView.delegate = self;
+	self.collectionView.dataSource = self;
+	self.collectionView.contentInset = UIEdgeInsetsMake(20, 20, 20, 20);
+	[self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"sourceSelectorCellIdentifier"];
+	[self addSubview:self.collectionView];
 	
-	[self.viewsTableView reloadSubviewData];
+	self.listEntryArray = [NSMutableArray new];
+	
+	for(int i = 0; i < [self collectionView:self.collectionView numberOfItemsInSection:0]; i++){
+		LMListEntry *listEntry = [LMListEntry newAutoLayoutView];
+		listEntry.delegate = self;
+		listEntry.collectionIndex = i;
+		listEntry.iconInsetMultiplier = (1.0/3.0);
+		listEntry.iconPaddingMultiplier = (3.0/4.0);
+		listEntry.invertIconOnHighlight = YES;
+		listEntry.stretchAcrossWidth = YES;
+		
+		[self.listEntryArray addObject:listEntry];
+	}
+	
+	NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
+	NSInteger lastSourceOpened = 0;
+	if([settings objectForKey:LMSettingsKeyLastOpenedSource]){
+		lastSourceOpened = [settings integerForKey:LMSettingsKeyLastOpenedSource];
+	}
+	
+	if(lastSourceOpened >= self.listEntryArray.count){
+		return;
+	}
+	[self tappedListEntry:[self.listEntryArray objectAtIndex:lastSourceOpened]];
+	
+	
+	self.backgroundColor = [UIColor whiteColor];
+	self.collectionView.backgroundColor = [UIColor whiteColor];
+	[self.collectionView autoPinEdgesToSuperviewEdges];
 }
-
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
-}
-*/
 
 @end

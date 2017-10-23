@@ -46,6 +46,8 @@
  
  */
 
+"Create" = "Create";
+"Edit" = "Edit";
 "NewPlaylist" = "New playlist";
 "TapToAddAnImage" = "Add an image";
 "SetupPlaylistPhoto" = "Setup playlist photo";
