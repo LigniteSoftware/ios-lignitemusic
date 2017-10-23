@@ -65,28 +65,22 @@
 	[picker dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (BOOL)startMediaBrowserFromViewController:(UIViewController*)controller usingDelegate:(id <UIImagePickerControllerDelegate,  UINavigationControllerDelegate>)delegate withSourceType:(UIImagePickerControllerSourceType)sourceType {
+- (BOOL)startMediaBrowserUsingDelegate:(id <UIImagePickerControllerDelegate,  UINavigationControllerDelegate>)delegate withSourceType:(UIImagePickerControllerSourceType)sourceType {
 	
-	if (([UIImagePickerController isSourceTypeAvailable:
-		  UIImagePickerControllerSourceTypePhotoLibrary] == NO)
-		|| (delegate == nil)
-		|| (controller == nil))
+	if (([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary] == NO)
+		|| (delegate == nil))
 		return NO;
 	
 	UIImagePickerController *mediaUI = [[UIImagePickerController alloc] init];
 	mediaUI.sourceType = sourceType;
 	
-	// Displays saved pictures and movies, if both are available, from the
-	// Camera Roll album.
-	mediaUI.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType: UIImagePickerControllerSourceTypeSavedPhotosAlbum];
-	
-	// Hides the controls for moving & scaling pictures, or for
-	// trimming movies. To instead show the controls, use YES.
 	mediaUI.allowsEditing = YES;
 	
 	mediaUI.delegate = delegate;
 	
-	[controller presentViewController:mediaUI animated:YES completion:nil];
+	if(self.delegate){
+		[self.delegate imagePickerView:self wantsToPresentViewController:mediaUI];
+	}
 	return YES;
 }
 
@@ -120,13 +114,13 @@
 	UIAlertAction* choosePhotoAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"ChoosePhoto", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
 		  NSLog(@"Choose photo");
 		
-		  [self startMediaBrowserFromViewController:self.window.rootViewController usingDelegate:self withSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
+		  [self startMediaBrowserUsingDelegate:self withSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
 	  }];
 	
 	UIAlertAction* takePhotoAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"TakePhoto", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
 		  NSLog(@"Take photo");
 		
-		[self startMediaBrowserFromViewController:self.window.rootViewController usingDelegate:self withSourceType:UIImagePickerControllerSourceTypeCamera];
+		[self startMediaBrowserUsingDelegate:self withSourceType:UIImagePickerControllerSourceTypeCamera];
 	  }];
 	
 	UIAlertAction* editPhotoAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"EditPhoto", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
@@ -135,7 +129,9 @@
 		RSKImageCropViewController *imageCropVC = [[RSKImageCropViewController alloc] initWithImage:self.image cropMode:RSKImageCropModeSquare];
 		imageCropVC.delegate = self;
 		self.viewController = imageCropVC;
-		[(LMCoreNavigationController*)self.window.rootViewController presentViewController:imageCropVC animated:YES completion:nil];
+		if(self.delegate){
+			[self.delegate imagePickerView:self wantsToPresentViewController:imageCropVC];
+		}
 	}];
 	
 	UIAlertAction* deletePhotoAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"DeletePhoto", nil) style:UIAlertActionStyleDestructive handler:^(UIAlertAction * action) {
@@ -163,7 +159,9 @@
 	
 	[alert addAction:cancelAction];
 	
-	[self.window.rootViewController presentViewController:alert animated:YES completion:nil];
+	if(self.delegate){
+		[self.delegate imagePickerView:self wantsToPresentViewController:alert];
+	}
 }
 
 - (void)layoutSubviews {

@@ -16,7 +16,7 @@
 #import "LMListEntry.h"
 #import "LMMusicPlayer.h"
 
-@interface LMPlaylistEditorViewController()<LMTableViewSubviewDataSource, LMListEntryDelegate, DDTableViewDelegate>
+@interface LMPlaylistEditorViewController()<LMTableViewSubviewDataSource, LMListEntryDelegate, DDTableViewDelegate, LMImagePickerViewDelegate>
 
 /**
  The music player.
@@ -229,12 +229,41 @@
 
 /* End songs list table view code */
 
+/* Begin image picker code */
+
+- (void)imagePickerView:(LMImagePickerView *)imagePickerView wantsToPresentViewController:(UIViewController *)viewController {
+	[self presentViewController:viewController animated:YES completion:nil];
+}
+
+- (void)imagePickerView:(LMImagePickerView *)imagePickerView didFinishPickingImage:(UIImage *)image {
+	self.playlist.image = image;
+}
+
+- (void)imagePickerView:(LMImagePickerView *)imagePickerView deletedImage:(UIImage *)image {
+	self.playlist.image = nil;
+}
+
+/* End image picker code */
+
 /* Begin other code */
+
+- (void)cancelPlaylistEditing {
+	[self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)savePlaylistEditing {
+	NSLog(@"Save playlist");
+	
+	[self cancelPlaylistEditing];
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
 	
-	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithTitle:@"Test" style:UIBarButtonItemStyleDone target:self action:nil];
+	self.title = NSLocalizedString(self.playlist ? @"EditingPlaylist" : @"NewPlaylist", nil);
+	
+	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithTitle:NSLocalizedString(@"Cancel", nil) style:UIBarButtonItemStylePlain target:self action:@selector(cancelPlaylistEditing)];
+	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithTitle:NSLocalizedString(@"Save", nil) style:UIBarButtonItemStyleDone target:self action:@selector(savePlaylistEditing)];
 	
 	
 	self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
@@ -242,6 +271,7 @@
 	
 	self.imagePickerView = [LMImagePickerView newAutoLayoutView];
 	self.imagePickerView.image = self.playlist ? self.playlist.image : nil;
+	self.imagePickerView.delegate = self;
 	[self.view addSubview:self.imagePickerView];
 	
 	[self.imagePickerView autoPinEdgeToSuperviewMargin:ALEdgeLeading];

@@ -15,6 +15,14 @@
 @required
 
 /**
+ The image picker wants to present a view controller and is asking kindly (with manners) to do so.
+
+ @param imagePickerView The image picker that wants to present the view controller.
+ @param viewController The view controller to be presented.
+ */
+- (void)imagePickerView:(LMImagePickerView*)imagePickerView wantsToPresentViewController:(UIViewController*)viewController;
+
+/**
  The image picker has a new image picked, or the image that was already picked was edited.
 
  @param imagePickerView The image picker view that has the image that was changed.
