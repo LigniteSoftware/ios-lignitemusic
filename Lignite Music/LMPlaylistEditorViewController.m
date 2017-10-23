@@ -53,6 +53,11 @@
  */
 @property NSTimeInterval lastTimeOfSwap;
 
+/**
+ The label for when there are no songs in the table view.
+ */
+@property UILabel *noSongsInSongTableViewLabel;
+
 @end
 
 @implementation LMPlaylistEditorViewController
@@ -129,6 +134,8 @@
 }
 
 - (void)amountOfObjectsRequiredChangedTo:(NSUInteger)amountOfObjects forTableView:(LMTableView*)tableView {
+	self.noSongsInSongTableViewLabel.hidden = self.songListTableView.totalAmountOfObjects > 0;
+	
 	if(!self.bigListEntryArray){
 		self.bigListEntryArray = [NSMutableArray new];
 	}
@@ -143,9 +150,21 @@
 			UIColor *color = [UIColor colorWithRed:47/255.0 green:47/255.0 blue:49/255.0 alpha:1.0];
 			UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14.0f];
 			MGSwipeButton *saveButton = [MGSwipeButton buttonWithTitle:@"" icon:[LMAppIcon imageForIcon:LMIconRemoveFromQueue] backgroundColor:color padding:0 callback:^BOOL(MGSwipeTableCell *sender) {
-//				LMMusicTrack *trackToRemove = [self.musicPlayer.nowPlayingCollection.items objectAtIndex:listEntry.collectionIndex];
+				LMMusicTrack *trackToRemove = [self.playlist.trackCollection.items objectAtIndex:listEntry.collectionIndex];
 				
-//				NSLog(@"Remove %@", trackToRemove.title);
+				NSLog(@"Remove %@", trackToRemove.title);
+				
+				NSMutableArray *mutableTrackList = [NSMutableArray arrayWithArray:self.playlist.trackCollection.items];
+				
+				[mutableTrackList removeObjectAtIndex:listEntry.collectionIndex];
+				
+				self.playlist.trackCollection = [[LMMusicTrackCollection alloc]initWithItems:mutableTrackList];
+				
+				self.songListTableView.totalAmountOfObjects = self.playlist.trackCollection.count;
+//				[self.songListTableView reloadSubviewData];
+				[self.songListTableView reloadData];
+				
+				self.noSongsInSongTableViewLabel.hidden = self.songListTableView.totalAmountOfObjects > 0;
 				
 				return YES;
 			}];
@@ -312,6 +331,19 @@
 	[self.songListTableView autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:20];
 	
 	[self.songListTableView reloadSubviewData];
+	
+	
+	self.noSongsInSongTableViewLabel = [UILabel newAutoLayoutView];
+	self.noSongsInSongTableViewLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:20.0f];
+	self.noSongsInSongTableViewLabel.text = NSLocalizedString(@"NoSongsInPlaylistBuilder", nil);
+	self.noSongsInSongTableViewLabel.textColor = [UIColor blackColor];
+	self.noSongsInSongTableViewLabel.hidden = self.songListTableView.totalAmountOfObjects > 0;
+	self.noSongsInSongTableViewLabel.textAlignment = NSTextAlignmentCenter;
+	self.noSongsInSongTableViewLabel.numberOfLines = 0;
+	[self.songListTableView addSubview:self.noSongsInSongTableViewLabel];
+	
+	[self.noSongsInSongTableViewLabel autoPinEdgesToSuperviewEdges];
+	[self.noSongsInSongTableViewLabel autoCenterInSuperview];
 }
 
 - (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event {

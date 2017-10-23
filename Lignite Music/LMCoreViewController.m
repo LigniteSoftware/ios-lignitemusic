@@ -1515,7 +1515,8 @@ LMControlBarViewDelegate
 		LMPlaylist *playlist = [LMPlaylist new];
 		playlist.title = @"Nice meme";
 		playlist.image = [LMAppIcon imageForIcon:LMIconBug];
-		playlist.trackCollection = [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeAlbums].firstObject;
+//		playlist.trackCollection = [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeAlbums].firstObject;
+		playlist.trackCollection = [[LMMusicTrackCollection alloc]initWithItems:@[]];
 		playlistViewController.playlist = playlist;
 		[self.navigationController pushViewController:playlistViewController animated:YES];
 		

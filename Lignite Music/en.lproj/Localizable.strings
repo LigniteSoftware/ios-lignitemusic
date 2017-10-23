@@ -55,6 +55,7 @@
 "DeletePhoto" = "Delete photo";
 "Cancel" = "Cancel";
 "AddSongs" = "Add songs";
+"NoSongsInPlaylistBuilder" = "There are no songs in this playlist yet.\n\nStart adding songs by tapping the 'Add songs' button above.";
 
 "YourPlaylistTitle" = "Headbangers";
 
