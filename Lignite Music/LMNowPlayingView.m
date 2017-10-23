@@ -984,8 +984,6 @@
 	
 	//queueView constraints are setup in -setupiPadSpecificLayout
 	
-	
-	
 	self.nothingInQueueTitleLabel = [UILabel newAutoLayoutView];
 	self.nothingInQueueTitleLabel.numberOfLines = 0;
 	self.nothingInQueueTitleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:22.0f];
@@ -1187,7 +1185,7 @@
 		[self.buttonStackView addArrangedSubview:button];
 	}
 	
-	
+//
 //	self.colourBackgroundView = [UIView newAutoLayoutView];
 //	self.colourBackgroundView.backgroundColor = [UIColor whiteColor];
 //	[self.blurredBackgroundView addSubview:self.colourBackgroundView];

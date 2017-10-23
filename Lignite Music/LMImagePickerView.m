@@ -185,7 +185,7 @@
 		whiteFillView.backgroundColor = [UIColor whiteColor];
 		[self.imageBackgroundView addSubview:whiteFillView];
 		
-		CGFloat whiteFillPadding = 5.0f;
+		CGFloat whiteFillPadding = 4.0f;
 		[whiteFillView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:whiteFillPadding];
 		[whiteFillView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:whiteFillPadding];
 		[whiteFillView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:whiteFillPadding];
@@ -211,7 +211,7 @@
 		UILabel *addImageLabel = [UILabel newAutoLayoutView];
 		addImageLabel.text = NSLocalizedString(@"TapToAddAnImage", nil);
 		addImageLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:14.0f];
-		addImageLabel.textColor = [LMColour controlBarGrayColour];
+		addImageLabel.textColor = self.imageBackgroundView.backgroundColor;
 		addImageLabel.textAlignment = NSTextAlignmentCenter;
 		addImageLabel.numberOfLines = 2;
 		[descriptionContentView addSubview:addImageLabel];
@@ -224,6 +224,7 @@
 		
 		self.imageView = [UIImageView newAutoLayoutView];
 		self.imageView.contentMode = UIViewContentModeScaleAspectFit;
+		self.imageView.image = self.image;
 		[self addSubview:self.imageView];
 		
 		[self.imageView autoPinEdgesToSuperviewEdges];

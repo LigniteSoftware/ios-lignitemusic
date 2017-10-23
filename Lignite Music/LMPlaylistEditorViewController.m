@@ -11,8 +11,17 @@
 #import "LMColour.h"
 #import "LMAppIcon.h"
 #import "LMImagePickerView.h"
+#import "LMTableView.h"
+#import "LMExtras.h"
+#import "LMListEntry.h"
+#import "LMMusicPlayer.h"
 
-@interface LMPlaylistEditorViewController ()
+@interface LMPlaylistEditorViewController()<LMTableViewSubviewDataSource, LMListEntryDelegate, DDTableViewDelegate>
+
+/**
+ The music player.
+ */
+@property LMMusicPlayer *musicPlayer;
 
 /**  
  The image picker view.
@@ -29,17 +38,179 @@
  */
 @property UIView *addSongsButtonView;
 
+/**
+ The song list table view.
+ */
+@property LMTableView *songListTableView;
+
+/**
+ The items array for the now playing queue.
+ */
+@property NSMutableArray *bigListEntryArray;
+
+/**
+ The last time items in the song list were swapped.
+ */
+@property NSTimeInterval lastTimeOfSwap;
+
 @end
 
 @implementation LMPlaylistEditorViewController
+
+/* Begin adding songs code */
 
 - (void)addSongsButtonTapped {
 	NSLog(@"Add songs...");
 }
 
-- (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event {
-	[self.titleTextField resignFirstResponder];
+/* End adding songs code */
+
+/* Begin songs list table view code */
+
+- (void)tappedListEntry:(LMListEntry*)entry {
+	NSLog(@"Tapped %p", entry);
 }
+
+- (UIColor*)tapColourForListEntry:(LMListEntry*)entry {
+	return [UIColor blackColor];
+}
+
+- (NSString*)titleForListEntry:(LMListEntry*)entry {
+	NSString *title = [self.playlist.trackCollection.items objectAtIndex:entry.collectionIndex].title;
+	return title ? title : NSLocalizedString(@"UnknownTitle", nil);
+}
+
+- (NSString*)subtitleForListEntry:(LMListEntry*)entry {
+	NSString *artist = [self.playlist.trackCollection.items objectAtIndex:entry.collectionIndex].artist;
+	NSString *albumTitle =  [self.playlist.trackCollection.items objectAtIndex:entry.collectionIndex].albumTitle;
+	
+	if(artist && albumTitle){
+		return [NSString stringWithFormat:@"%@ - %@", artist, albumTitle];
+	}
+	else if((artist && !albumTitle) || (!artist && albumTitle)){
+		if(artist){
+			return artist;
+		}
+		else{
+			return albumTitle;
+		}
+	}
+	else{ //No artist and no album title
+		return NSLocalizedString(@"UnknownArtist", nil);
+	}
+}
+
+- (UIImage*)iconForListEntry:(LMListEntry*)entry {
+	UIImage *icon = [self.playlist.trackCollection.items objectAtIndex:entry.collectionIndex].albumArt;
+	return icon;
+}
+
+- (id)subviewAtIndex:(NSUInteger)index forTableView:(LMTableView*)tableView {
+	LMListEntry *entry = [self.bigListEntryArray objectAtIndex:index % self.bigListEntryArray.count];
+	entry.collectionIndex = index;
+	
+	//	if((self.currentlyHighlighted == entry.collectionIndex) ){
+	//		entry.backgroundColor = [UIColor cyanColor];
+	//	}
+	
+	[entry reloadContents];
+	return entry;
+}
+
+- (float)heightAtIndex:(NSUInteger)index forTableView:(LMTableView*)tableView {
+	if([LMLayoutManager isiPad]){
+		return ([LMLayoutManager isLandscapeiPad] ? WINDOW_FRAME.size.height : WINDOW_FRAME.size.width)/10.0f;
+	}
+	return ([LMLayoutManager isLandscape] ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height)/9.0f;
+}
+
+- (float)spacingAtIndex:(NSUInteger)index forTableView:(LMTableView*)tableView {
+	return 10;
+}
+
+- (void)amountOfObjectsRequiredChangedTo:(NSUInteger)amountOfObjects forTableView:(LMTableView*)tableView {
+	if(!self.bigListEntryArray){
+		self.bigListEntryArray = [NSMutableArray new];
+	}
+	
+	if(self.bigListEntryArray.count < amountOfObjects){
+		for(NSUInteger i = self.bigListEntryArray.count; i < amountOfObjects; i++){
+			LMListEntry *listEntry = [[LMListEntry alloc]initWithDelegate:self];
+			listEntry.collectionIndex = i;
+			listEntry.alignIconToLeft = YES;
+			listEntry.iPromiseIWillHaveAnIconForYouSoon = YES;
+			
+			UIColor *color = [UIColor colorWithRed:47/255.0 green:47/255.0 blue:49/255.0 alpha:1.0];
+			UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14.0f];
+			MGSwipeButton *saveButton = [MGSwipeButton buttonWithTitle:@"" icon:[LMAppIcon imageForIcon:LMIconRemoveFromQueue] backgroundColor:color padding:0 callback:^BOOL(MGSwipeTableCell *sender) {
+//				LMMusicTrack *trackToRemove = [self.musicPlayer.nowPlayingCollection.items objectAtIndex:listEntry.collectionIndex];
+				
+//				NSLog(@"Remove %@", trackToRemove.title);
+				
+				return YES;
+			}];
+			saveButton.titleLabel.font = font;
+			saveButton.titleLabel.hidden = YES;
+			saveButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
+			saveButton.imageEdgeInsets = UIEdgeInsetsMake(25, 0, 25, 0);
+			
+			listEntry.rightButtons = @[ saveButton ];
+			listEntry.rightButtonExpansionColour = [UIColor colorWithRed:0.92 green:0.00 blue:0.00 alpha:1.0];
+			
+			[self.bigListEntryArray addObject:listEntry];
+		}
+	}
+}
+
+- (void)tableView:(UITableView*)tableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath {
+	NSLog(@"Move %@ to %@ from %p", sourceIndexPath, destinationIndexPath, tableView);
+	
+	if((([[NSDate new] timeIntervalSince1970] - self.lastTimeOfSwap)*1000) < 10){
+		NSLog(@"double up, rejecting");
+		return;
+	}
+
+	LMMusicTrack *currentMusicTrack = [self.playlist.trackCollection.items objectAtIndex:sourceIndexPath.section];
+
+	NSMutableArray *mutableTrackList = [NSMutableArray arrayWithArray:self.playlist.trackCollection.items];
+	
+	[mutableTrackList removeObjectAtIndex:sourceIndexPath.section];
+	[mutableTrackList insertObject:currentMusicTrack atIndex:destinationIndexPath.section];
+	
+	self.playlist.trackCollection = [[LMMusicTrackCollection alloc]initWithItems:mutableTrackList];
+	
+
+//	for(LMListEntry *listEntry in self.bigListEntryArray){
+//		[listEntry reloadContents];
+//	}
+	
+//	[currentListEntry reloadContents];
+
+	self.lastTimeOfSwap = [[NSDate new] timeIntervalSince1970];
+}
+
+- (UITableViewCell*)tableView:(UITableView *)tableView draggingCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
+	if(![LMLayoutManager isLandscapeiPad]){
+		cell.backgroundColor = [UIColor whiteColor];
+	}
+	return cell;
+}
+
+- (void)tableView:(UITableView *)tableView showDraggingView:(UIView *)draggingView atIndexPath:(NSIndexPath *)indexPath {
+	NSLog(@"Show dragging view at %@", indexPath);
+}
+
+- (void)tableView:(UITableView *)tableView hideDraggingView:(UIView *)draggingView atIndexPath:(NSIndexPath *)indexPath {
+	NSLog(@"Hide dragging view at %@", indexPath);
+}
+
+- (void)tableView:(UITableView *)tableView draggingGestureChanged:(UILongPressGestureRecognizer *)gesture {
+	
+}
+
+/* End songs list table view code */
+
+/* Begin other code */
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -47,7 +218,11 @@
 	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithTitle:@"Test" style:UIBarButtonItemStyleDone target:self action:nil];
 	
 	
+	self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
+	
+	
 	self.imagePickerView = [LMImagePickerView newAutoLayoutView];
+	self.imagePickerView.image = self.playlist ? self.playlist.image : nil;
 	[self.view addSubview:self.imagePickerView];
 	
 	[self.imagePickerView autoPinEdgeToSuperviewMargin:ALEdgeLeading];
@@ -58,6 +233,7 @@
 	
 	self.titleTextField = [UITextField newAutoLayoutView];
 	self.titleTextField.placeholder = NSLocalizedString(@"YourPlaylistTitle", nil);
+	self.titleTextField.text = self.playlist ? self.playlist.title : nil;
 	[self.view addSubview:self.titleTextField];
 	
 	[self.titleTextField autoPinEdgeToSuperviewMargin:ALEdgeTrailing];
@@ -88,9 +264,6 @@
 	UITapGestureRecognizer *addSongsButtonTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(addSongsButtonTapped)];
 	[self.addSongsButtonView addGestureRecognizer:addSongsButtonTapGestureRecognizer];
 	
-	NSString *text = NSLocalizedString(@"AddSongs", nil);
-	UIImage *icon = [LMAppIcon imageForIcon:LMIconAdd];
-	
 	UIView *backgroundView = [UIView newAutoLayoutView];
 	[self.addSongsButtonView addSubview:backgroundView];
 	
@@ -98,7 +271,7 @@
 	[backgroundView autoCenterInSuperview];
 	
 	UIImageView *iconView = [UIImageView newAutoLayoutView];
-	iconView.image = icon;
+	iconView.image = [LMAppIcon imageForIcon:LMIconAdd];
 	iconView.contentMode = UIViewContentModeScaleAspectFit;
 	[backgroundView addSubview:iconView];
 	
@@ -108,7 +281,7 @@
 	[iconView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:backgroundView];
 	
 	UILabel *labelView = [UILabel newAutoLayoutView];
-	labelView.text = text;
+	labelView.text = NSLocalizedString(@"AddSongs", nil);
 	labelView.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18.0f];
 	labelView.textColor = [UIColor whiteColor];
 	[backgroundView addSubview:labelView];
@@ -117,6 +290,32 @@
 	[labelView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 	[labelView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 	[labelView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+	
+	
+	self.songListTableView = [LMTableView newAutoLayoutView];
+	self.songListTableView.totalAmountOfObjects = self.playlist ? self.playlist.trackCollection.count : 20;
+	self.songListTableView.subviewDataSource = self;
+	self.songListTableView.shouldUseDividers = YES;
+	self.songListTableView.title = @"SongListTableView";
+	self.songListTableView.bottomSpacing = 0;
+	self.songListTableView.notHighlightedBackgroundColour = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.0];
+	self.songListTableView.backgroundColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.5]; //I wonder what this will do
+	self.songListTableView.clipsToBounds = YES;
+	self.songListTableView.alwaysBounceVertical = NO;
+	self.songListTableView.longPressReorderDelegate = self;
+	self.songListTableView.longPressReorderEnabled = YES;
+	[self.view addSubview:self.songListTableView];
+	
+	[self.songListTableView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.imagePickerView withOffset:15];
+	[self.songListTableView autoPinEdgeToSuperviewMargin:ALEdgeLeading];
+	[self.songListTableView autoPinEdgeToSuperviewMargin:ALEdgeTrailing];
+	[self.songListTableView autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:20];
+	
+	[self.songListTableView reloadSubviewData];
+}
+
+- (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event {
+	[self.titleTextField resignFirstResponder];
 }
 
 - (void)loadView {
@@ -127,5 +326,7 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }
+
+/* End other code */
 
 @end

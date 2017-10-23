@@ -21,6 +21,13 @@
 
 @synthesize userUnderstandsPlaylistManagement = _userUnderstandsPlaylistManagement;
 
+/* Begin internal playlist management code */
+
+- (NSArray<LMPlaylist*>*)playlists {
+	return @[  ];
+}
+
+/* End internal playlist management code */
 
 /* Begin playlist management understanding code */
 

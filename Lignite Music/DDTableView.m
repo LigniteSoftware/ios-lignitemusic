@@ -195,7 +195,7 @@
 				return;
 			}
 			self.draggingView.center = CGPointMake([self.visibleCells objectAtIndex:0].center.x, [self newYCenterForDraggingView:self.draggingView withLocation:location]);
-			NSLog(@"Center %@", NSStringFromCGPoint(self.draggingView.center));
+
 			if(location.y != self.previousGestureVerticalPosition){
 				if([self.longPressReorderDelegate respondsToSelector:@selector(tableView:draggingGestureChanged:)]){
 					[self.longPressReorderDelegate tableView:self draggingGestureChanged:gesture];
@@ -359,8 +359,6 @@
 	if(self.contentSize.height-25 > self.frame.size.height){
 		self.contentOffset = newOffset;
 	}
-	
-	NSLog(@"%@ size %@ height %@ offset", NSStringFromCGSize(self.contentSize), NSStringFromCGRect(self.frame), NSStringFromCGPoint(self.contentOffset));
 	
 	if(self.draggingView){
 		if(self.visibleCells.count > 0){

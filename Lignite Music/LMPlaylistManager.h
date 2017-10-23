@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "LMMusicPlayer.h"
+#import "LMPlaylist.h"
 
 #define LMUserUnderstandsPlaylistManagementKey @"LMUserUnderstandsPlaylistManagementKey"
 
@@ -21,6 +22,12 @@
  */
 - (void)launchPlaylistManagementWarningOnView:(UIView*)view withCompletionHandler:(void(^)())completionHandler;
 
+/**
+ Gets an array of all of the user's current playlists.
+
+ @return The user's playlists.
+ */
+- (NSArray<LMPlaylist*>*)playlists;
 
 /**
  Returns the shared playlist manager.
@@ -28,8 +35,6 @@
  @return The playlist manager.
  */
 + (LMPlaylistManager*)sharedPlaylistManager;
-
-
 
 /**
  If YES, the user has seen and clicked "I understand" on a popup that states playlists are managed within the app & do not get exported to the default music app due to API limitations.

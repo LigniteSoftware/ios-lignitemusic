@@ -7,7 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LMPlaylistManager.h"
 
 @interface LMPlaylistEditorViewController : UIViewController
+
+/**
+ The playlist that is being edited/created by the playlist editor. Set this before load to automatically populate all fields with a playlist for editing.
+ */
+@property LMPlaylist *playlist;
 
 @end
