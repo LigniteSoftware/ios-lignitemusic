@@ -1,4 +1,4 @@
-#Uncomment this line to define a global platform for your project
+#uncomment this line to define a global platform for your project
 # platform :ios, '6.0'
 
 use_frameworks!
@@ -13,6 +13,7 @@ def shared_pods
     pod 'Crashlytics'
     pod 'Unirest', '~> 1.1.4'
     pod 'MGSwipeTableCell'
+    pod 'RSKImageCropper'
 end
 
 target 'Lignite Music' do

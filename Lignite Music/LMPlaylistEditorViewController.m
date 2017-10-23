@@ -14,7 +14,7 @@
 
 @interface LMPlaylistEditorViewController ()
 
-/**
+/**  
  The image picker view.
  */
 @property LMImagePickerView *imagePickerView;

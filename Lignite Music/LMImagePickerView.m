@@ -7,23 +7,69 @@
 //
 
 #import <PureLayout/PureLayout.h>
+#import <RSKImageCropper/RSKImageCropper.h>
 #import "LMImagePickerView.h"
+#import "LMCoreNavigationController.h"
 #import "LMColour.h"
 #import "LMAppIcon.h"
 
-@interface LMImagePickerView()
+@interface LMImagePickerView()<RSKImageCropViewControllerDelegate>
 
 /**
  The background view to the image, which simply has the gray outline if no image is present and contains the contents of the box within itself.
  */
 @property UIView *imageBackgroundView;
 
+/**
+ The actual image view which the image is placed on.
+ */
+@property UIImageView *imageView;
+
+@property RSKImageCropViewController *viewController;
+
 @end
 
 @implementation LMImagePickerView
 
+// Crop image has been canceled.
+- (void)imageCropViewControllerDidCancelCrop:(RSKImageCropViewController *)controller {
+	[self.viewController dismissViewControllerAnimated:YES completion:nil];
+}
+
+// The original image has been cropped.
+- (void)imageCropViewController:(RSKImageCropViewController *)controller didCropImage:(UIImage *)croppedImage usingCropRect:(CGRect)cropRect {
+	
+	self.imageView.image = croppedImage;
+	[self.viewController dismissViewControllerAnimated:YES completion:nil];
+	NSLog(@"Pop no rotation");
+}
+
+// The original image has been cropped. Additionally provides a rotation angle used to produce image.
+- (void)imageCropViewController:(RSKImageCropViewController *)controller didCropImage:(UIImage *)croppedImage usingCropRect:(CGRect)cropRect rotationAngle:(CGFloat)rotationAngle {
+	
+	self.imageView.image = croppedImage;
+	[self.viewController dismissViewControllerAnimated:YES completion:nil];
+	
+	NSLog(@"Pop rotation");
+}
+
+// The original image will be cropped.
+- (void)imageCropViewController:(RSKImageCropViewController *)controller willCropImage:(UIImage *)originalImage {
+	// Use when `applyMaskToCroppedImage` set to YES.
+//	[SVProgressHUD show];
+	NSLog(@"Progress");
+}
+
 - (void)tappedImageSelector {
-	NSLog(@"Tapped the image selector");
+	NSLog(@"Tapped the image selector %@", self.window.rootViewController);
+
+	UIImage *image = [UIImage imageNamed:@"purchase_header.png"];
+	RSKImageCropViewController *imageCropVC = [[RSKImageCropViewController alloc] initWithImage:image cropMode:RSKImageCropModeSquare];
+	imageCropVC.delegate = self;
+	self.viewController = imageCropVC;
+	[(LMCoreNavigationController*)self.window.rootViewController presentViewController:imageCropVC animated:YES completion:nil];
+//
+//	[self.window.rootViewController.navigationController push]
 }
 
 - (void)layoutSubviews {
@@ -80,6 +126,13 @@
 		[addImageLabel autoPinEdgeToSuperviewMargin:ALEdgeLeading];
 		[addImageLabel autoPinEdgeToSuperviewMargin:ALEdgeTrailing];
 		[addImageLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:plusIconImageView withOffset:6.0f];
+		
+		
+		self.imageView = [UIImageView newAutoLayoutView];
+		self.imageView.contentMode = UIViewContentModeScaleAspectFit;
+		[self addSubview:self.imageView];
+		
+		[self.imageView autoPinEdgesToSuperviewEdges];
 	}
 }
 

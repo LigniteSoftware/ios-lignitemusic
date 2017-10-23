@@ -49,6 +49,8 @@
 	<string>NSAppleMusicUsageDescription</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>NSBluetoothPeripheralUsageDescription</string>
+	<key>NSCameraUsageDescription</key>
+	<string>NSCameraUsageDescription</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>HoneyScript-Light.ttf</string>

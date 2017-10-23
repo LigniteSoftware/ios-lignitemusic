@@ -335,7 +335,7 @@
  4.2. Otherwise they can skip it and it will go to the next slide
  5. Thank you screen/end of onboarding
  */
-"OnboardingWelcomeTitle" = "Welcome to Lignite Music";
+"OnboardingWelcomeTitle" = "Welcome to Abbey";
 "OnboardingWelcomeDescription" = "We're hoping to bring you the ultimate music player experience.\n\nWe're going to run through a few quick steps to get you up and running.";
 
 //"OnboardingKickstarterLoginTitle" = "Are you a Kickstarter backer?";
