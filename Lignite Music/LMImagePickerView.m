@@ -13,7 +13,7 @@
 #import "LMColour.h"
 #import "LMAppIcon.h"
 
-@interface LMImagePickerView()<RSKImageCropViewControllerDelegate>
+@interface LMImagePickerView()<RSKImageCropViewControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
 /**
  The background view to the image, which simply has the gray outline if no image is present and contains the contents of the box within itself.
@@ -60,14 +60,58 @@
 	NSLog(@"Progress");
 }
 
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
+	NSLog(@"Finished with info %@", info);
+	
+	
+	[picker dismissViewControllerAnimated:YES completion:^{
+		RSKImageCropViewController *imageCropVC = [[RSKImageCropViewController alloc] initWithImage:[info objectForKey:@"UIImagePickerControllerOriginalImage"] cropMode:RSKImageCropModeSquare];
+		imageCropVC.delegate = self;
+		self.viewController = imageCropVC;
+		[(LMCoreNavigationController*)self.window.rootViewController presentViewController:imageCropVC animated:YES completion:nil];
+	}];
+}
+
+- (BOOL) startMediaBrowserFromViewController: (UIViewController*) controller
+							   usingDelegate: (id <UIImagePickerControllerDelegate,
+											   UINavigationControllerDelegate>) delegate {
+	
+	if (([UIImagePickerController isSourceTypeAvailable:
+		  UIImagePickerControllerSourceTypeSavedPhotosAlbum] == NO)
+		|| (delegate == nil)
+		|| (controller == nil))
+		return NO;
+	
+	UIImagePickerController *mediaUI = [[UIImagePickerController alloc] init];
+	mediaUI.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+	
+	// Displays saved pictures and movies, if both are available, from the
+	// Camera Roll album.
+	mediaUI.mediaTypes =
+	[UIImagePickerController availableMediaTypesForSourceType:
+	 UIImagePickerControllerSourceTypeSavedPhotosAlbum];
+	
+	// Hides the controls for moving & scaling pictures, or for
+	// trimming movies. To instead show the controls, use YES.
+	mediaUI.allowsEditing = NO;
+	
+	mediaUI.delegate = delegate;
+	
+	[controller presentViewController:mediaUI animated:YES completion:nil];
+	return YES;
+}
+
+
 - (void)tappedImageSelector {
 	NSLog(@"Tapped the image selector %@", self.window.rootViewController);
 
-	UIImage *image = [UIImage imageNamed:@"purchase_header.png"];
-	RSKImageCropViewController *imageCropVC = [[RSKImageCropViewController alloc] initWithImage:image cropMode:RSKImageCropModeSquare];
-	imageCropVC.delegate = self;
-	self.viewController = imageCropVC;
-	[(LMCoreNavigationController*)self.window.rootViewController presentViewController:imageCropVC animated:YES completion:nil];
+	[self startMediaBrowserFromViewController:self.window.rootViewController usingDelegate:self];
+	
+//	UIImage *image = [UIImage imageNamed:@"purchase_header.png"];
+//	RSKImageCropViewController *imageCropVC = [[RSKImageCropViewController alloc] initWithImage:image cropMode:RSKImageCropModeSquare];
+//	imageCropVC.delegate = self;
+//	self.viewController = imageCropVC;
+//	[(LMCoreNavigationController*)self.window.rootViewController presentViewController:imageCropVC animated:YES completion:nil];
 //
 //	[self.window.rootViewController.navigationController push]
 }
