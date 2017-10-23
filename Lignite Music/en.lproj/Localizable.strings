@@ -48,6 +48,12 @@
 
 "NewPlaylist" = "New playlist";
 "TapToAddAnImage" = "Add an image";
+"SetupPlaylistPhoto" = "Setup playlist photo";
+"ChoosePhoto" = "Choose photo";
+"TakePhoto" = "Take photo";
+"EditPhoto" = "Edit photo";
+"DeletePhoto" = "Delete photo";
+"Cancel" = "Cancel";
 
 "NoTracksInFavourites" = "You haven't favourited anything. Swipe from left to right on any track throughout the app to add it to your favourites.";
 

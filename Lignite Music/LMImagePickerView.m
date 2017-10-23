@@ -31,69 +31,74 @@
 
 @implementation LMImagePickerView
 
-// Crop image has been canceled.
+/* Begin crop-related functions */
+
 - (void)imageCropViewControllerDidCancelCrop:(RSKImageCropViewController *)controller {
 	[self.viewController dismissViewControllerAnimated:YES completion:nil];
 }
 
-// The original image has been cropped.
 - (void)imageCropViewController:(RSKImageCropViewController *)controller didCropImage:(UIImage *)croppedImage usingCropRect:(CGRect)cropRect {
 	
-	self.imageView.image = croppedImage;
+	[self setNewImage:croppedImage];
+	
 	[self.viewController dismissViewControllerAnimated:YES completion:nil];
-	NSLog(@"Pop no rotation");
 }
 
-// The original image has been cropped. Additionally provides a rotation angle used to produce image.
 - (void)imageCropViewController:(RSKImageCropViewController *)controller didCropImage:(UIImage *)croppedImage usingCropRect:(CGRect)cropRect rotationAngle:(CGFloat)rotationAngle {
 	
-	self.imageView.image = croppedImage;
-	[self.viewController dismissViewControllerAnimated:YES completion:nil];
+	[self setNewImage:croppedImage];
 	
-	NSLog(@"Pop rotation");
+	[self.viewController dismissViewControllerAnimated:YES completion:nil];
 }
 
-// The original image will be cropped.
 - (void)imageCropViewController:(RSKImageCropViewController *)controller willCropImage:(UIImage *)originalImage {
-	// Use when `applyMaskToCroppedImage` set to YES.
-//	[SVProgressHUD show];
 	NSLog(@"Progress");
 }
 
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
-	NSLog(@"Finished with info %@", info);
+/* End crop-related functions */
+
+/* Begin image picker functions */
+
+- (void)setNewImage:(UIImage *)image {
+	UIImage *previousImage = self.image;
 	
+	self.image = image;
+	self.imageView.image = image;
 	
-	[picker dismissViewControllerAnimated:YES completion:^{
-		RSKImageCropViewController *imageCropVC = [[RSKImageCropViewController alloc] initWithImage:[info objectForKey:@"UIImagePickerControllerOriginalImage"] cropMode:RSKImageCropModeSquare];
-		imageCropVC.delegate = self;
-		self.viewController = imageCropVC;
-		[(LMCoreNavigationController*)self.window.rootViewController presentViewController:imageCropVC animated:YES completion:nil];
-	}];
+	if(self.delegate){
+		if(image == nil){
+			[self.delegate imagePickerView:self deletedImage:previousImage];
+		}
+		else{
+			[self.delegate imagePickerView:self didFinishPickingImage:self.image];
+		}
+	}
 }
 
-- (BOOL) startMediaBrowserFromViewController: (UIViewController*) controller
-							   usingDelegate: (id <UIImagePickerControllerDelegate,
-											   UINavigationControllerDelegate>) delegate {
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
+	[self setNewImage:[info objectForKey:@"UIImagePickerControllerEditedImage"]];
+	
+	[picker dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (BOOL)startMediaBrowserFromViewController:(UIViewController*)controller usingDelegate:(id <UIImagePickerControllerDelegate,  UINavigationControllerDelegate>)delegate withSourceType:(UIImagePickerControllerSourceType)sourceType {
 	
 	if (([UIImagePickerController isSourceTypeAvailable:
-		  UIImagePickerControllerSourceTypeSavedPhotosAlbum] == NO)
+		  UIImagePickerControllerSourceTypePhotoLibrary] == NO)
 		|| (delegate == nil)
 		|| (controller == nil))
 		return NO;
 	
 	UIImagePickerController *mediaUI = [[UIImagePickerController alloc] init];
-	mediaUI.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+	mediaUI.sourceType = sourceType;
 	
 	// Displays saved pictures and movies, if both are available, from the
 	// Camera Roll album.
-	mediaUI.mediaTypes =
-	[UIImagePickerController availableMediaTypesForSourceType:
-	 UIImagePickerControllerSourceTypeSavedPhotosAlbum];
+	mediaUI.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType: UIImagePickerControllerSourceTypeSavedPhotosAlbum];
 	
 	// Hides the controls for moving & scaling pictures, or for
 	// trimming movies. To instead show the controls, use YES.
-	mediaUI.allowsEditing = NO;
+	mediaUI.allowsEditing = YES;
 	
 	mediaUI.delegate = delegate;
 	
@@ -101,11 +106,65 @@
 	return YES;
 }
 
+/* End image picker functions */
+
 
 - (void)tappedImageSelector {
 	NSLog(@"Tapped the image selector %@", self.window.rootViewController);
 
-	[self startMediaBrowserFromViewController:self.window.rootViewController usingDelegate:self];
+	UIAlertController* alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"SetupPlaylistPhoto", nil)
+																   message:nil
+															preferredStyle:UIAlertControllerStyleActionSheet];
+	
+	UIAlertAction* choosePhotoAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"ChoosePhoto", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
+		  NSLog(@"Choose photo");
+		
+		  [self startMediaBrowserFromViewController:self.window.rootViewController usingDelegate:self withSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
+	  }];
+	
+	UIAlertAction* takePhotoAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"TakePhoto", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
+		  NSLog(@"Take photo");
+		
+		[self startMediaBrowserFromViewController:self.window.rootViewController usingDelegate:self withSourceType:UIImagePickerControllerSourceTypeCamera];
+	  }];
+	
+	UIAlertAction* editPhotoAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"EditPhoto", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
+		NSLog(@"Edit photo");
+		
+		RSKImageCropViewController *imageCropVC = [[RSKImageCropViewController alloc] initWithImage:self.image cropMode:RSKImageCropModeSquare];
+		imageCropVC.delegate = self;
+		self.viewController = imageCropVC;
+		[(LMCoreNavigationController*)self.window.rootViewController presentViewController:imageCropVC animated:YES completion:nil];
+	}];
+	
+	UIAlertAction* deletePhotoAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"DeletePhoto", nil) style:UIAlertActionStyleDestructive handler:^(UIAlertAction * action) {
+		NSLog(@"Delete photo");
+		
+		UIImage *image = self.image;
+		
+		self.imageView.image = nil;
+		self.image = nil;
+		
+		if(self.delegate){
+			[self.delegate imagePickerView:self deletedImage:image];
+		}
+	}];
+	
+	UIAlertAction* cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * action) {}];
+	
+	[alert addAction:choosePhotoAction];
+	[alert addAction:takePhotoAction];
+	
+	if(self.image){
+		[alert addAction:editPhotoAction];
+		[alert addAction:deletePhotoAction];
+	}
+	
+	[alert addAction:cancelAction];
+	
+	[self.window.rootViewController presentViewController:alert animated:YES completion:nil];
+	
+//	[self startMediaBrowserFromViewController:self.window.rootViewController usingDelegate:self];
 	
 //	UIImage *image = [UIImage imageNamed:@"purchase_header.png"];
 //	RSKImageCropViewController *imageCropVC = [[RSKImageCropViewController alloc] initWithImage:image cropMode:RSKImageCropModeSquare];
