@@ -59,22 +59,6 @@
 
 /* Begin image picker functions */
 
-- (void)setNewImage:(UIImage *)image {
-	UIImage *previousImage = self.image;
-	
-	self.image = image;
-	self.imageView.image = image;
-	
-	if(self.delegate){
-		if(image == nil){
-			[self.delegate imagePickerView:self deletedImage:previousImage];
-		}
-		else{
-			[self.delegate imagePickerView:self didFinishPickingImage:self.image];
-		}
-	}
-}
-
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
 	[self setNewImage:[info objectForKey:@"UIImagePickerControllerEditedImage"]];
 	
@@ -108,6 +92,23 @@
 
 /* End image picker functions */
 
+/* Begin other image-picker related functions */
+
+- (void)setNewImage:(UIImage *)image {
+	UIImage *previousImage = self.image;
+	
+	self.image = image;
+	self.imageView.image = image;
+	
+	if(self.delegate){
+		if(image == nil){
+			[self.delegate imagePickerView:self deletedImage:previousImage];
+		}
+		else{
+			[self.delegate imagePickerView:self didFinishPickingImage:self.image];
+		}
+	}
+}
 
 - (void)tappedImageSelector {
 	NSLog(@"Tapped the image selector %@", self.window.rootViewController);
@@ -163,16 +164,6 @@
 	[alert addAction:cancelAction];
 	
 	[self.window.rootViewController presentViewController:alert animated:YES completion:nil];
-	
-//	[self startMediaBrowserFromViewController:self.window.rootViewController usingDelegate:self];
-	
-//	UIImage *image = [UIImage imageNamed:@"purchase_header.png"];
-//	RSKImageCropViewController *imageCropVC = [[RSKImageCropViewController alloc] initWithImage:image cropMode:RSKImageCropModeSquare];
-//	imageCropVC.delegate = self;
-//	self.viewController = imageCropVC;
-//	[(LMCoreNavigationController*)self.window.rootViewController presentViewController:imageCropVC animated:YES completion:nil];
-//
-//	[self.window.rootViewController.navigationController push]
 }
 
 - (void)layoutSubviews {
@@ -239,12 +230,6 @@
 	}
 }
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
-}
-*/
+/* End other image-picker related functions */
 
 @end
