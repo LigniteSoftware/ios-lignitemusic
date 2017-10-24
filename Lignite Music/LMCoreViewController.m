@@ -442,9 +442,6 @@ LMControlBarViewDelegate
 }
 
 - (void)setupBrowsingViewWithMusicType:(LMMusicType)musicType {
-#ifdef SPOTIFY
-	self.browsingView.musicTrackCollections = [self.musicPlayer queryCollectionsForMusicType:musicType];
-#else
 	if(self.musicCollectionsArray){
 		NSLog(@"Loading music from cache.");
 		self.compactView.musicTrackCollections = [self.musicCollectionsArray objectAtIndex:musicType];
@@ -453,7 +450,7 @@ LMControlBarViewDelegate
 		NSLog(@"Loading music directly.");
 		self.compactView.musicTrackCollections = [self.musicPlayer queryCollectionsForMusicType:musicType];
 	}
-#endif
+
 	self.compactView.musicType = musicType;
 	
 	[self.compactView reloadContents];

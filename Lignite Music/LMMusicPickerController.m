@@ -14,6 +14,11 @@
 @interface LMMusicPickerController ()<LMSourceDelegate>
 
 /**
+ The music player.
+ */
+@property LMMusicPlayer *musicPlayer;
+
+/**
  The view selector for the user to choose which view they want to take music from.
  */
 @property LMSourceSelectorView *viewSelector;
@@ -79,12 +84,14 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
 	
 	self.title = NSLocalizedString(@"SelectSongs", nil);
 	
 	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithTitle:NSLocalizedString(@"Cancel", nil) style:UIBarButtonItemStylePlain target:self action:@selector(cancelSongSelection)];
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithTitle:NSLocalizedString(@"Done", nil) style:UIBarButtonItemStyleDone target:self action:@selector(saveSongSelection)];
+	
+	
+	self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 	
 	
 	UILabel *selectSourceTitleLabel = [UILabel newAutoLayoutView];

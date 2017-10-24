@@ -34,4 +34,19 @@ typedef NS_ENUM(NSInteger, LMTrackPickerDepthLevel){
  */
 @property LMMusicType musicType;
 
+/**
+ The music type of the track picker which presented this track picker.
+ */
+@property LMMusicType previousMusicType;
+
+/**
+ The track collections for this picker.
+ */
+@property NSArray<LMMusicTrackCollection*> *trackCollections;
+
+/**
+ The track collection for favourites and titles.
+ */
+@property (readonly) LMMusicTrackCollection *titleTrackCollection;
+
 @end

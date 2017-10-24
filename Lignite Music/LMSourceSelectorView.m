@@ -125,7 +125,9 @@
 			[previousHighlightedEntry changeHighlightStatus:NO animated:YES];
 		}
 		
-		[entry changeHighlightStatus:YES animated:YES];
+		if(self.mainSourceSelector){
+			[entry changeHighlightStatus:YES animated:YES];
+		}
 		self.currentlyHighlighted = index;
 		
 		if(self.mainSourceSelector){

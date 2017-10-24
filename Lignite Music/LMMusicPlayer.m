@@ -645,6 +645,8 @@ BOOL shuffleForDebug = NO;
 		case LMMusicTypeGenres:
 			sortKey = @"representativeItem.genre";
 			break;
+		case LMMusicTypeFavourites:
+			return @[ [self favouritesTrackCollection] ];
 	}
 	
 	//	sortKey = @"representativeItem";
@@ -693,6 +695,9 @@ BOOL shuffleForDebug = NO;
 }
 
 - (NSArray<LMMusicTrackCollection*>*)queryCollectionsForMusicType:(LMMusicType)musicType {
+	if(musicType == LMMusicTypeFavourites){
+		return @[ [self favouritesTrackCollection] ];
+	}
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer || self.playerType == LMMusicPlayerTypeAppleMusic){
 		//		NSTimeInterval startingTime = [[NSDate date] timeIntervalSince1970];
 		//		NSLog(@"Querying items for LMMusicType %d...", musicType);
