@@ -18,6 +18,11 @@
 @property NSArray<LMSource*> *sources;
 
 /**
+ Whether or not this source selector is the main one which goes in the button bar. Default is NO. If YES, the source selector will save to storage and remember its place for future use.
+ */
+@property BOOL mainSourceSelector;
+
+/**
  Setup the source selector and its constraints.
  */
 - (void)setup;

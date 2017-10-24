@@ -122,6 +122,8 @@
 		6A759D5D1DEBF4580051E1A9 /* HoneyScript-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6A759D5C1DEBF4560051E1A9 /* HoneyScript-SemiBold.ttf */; };
 		6A76ECA71E1A081200424AC5 /* icon_no_cover_art.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A76ECA61E1A081200424AC5 /* icon_no_cover_art.png */; };
 		6A78E6791F9E44E500B7E369 /* LMPlaylist.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A78E6781F9E44E500B7E369 /* LMPlaylist.m */; };
+		6A78E67C1F9EC74100B7E369 /* LMMusicPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A78E67B1F9EC74100B7E369 /* LMMusicPickerController.m */; };
+		6A78E6801F9EF13500B7E369 /* LMTrackPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A78E67F1F9EF13500B7E369 /* LMTrackPickerController.m */; };
 		6A7C62F51DA93F6100B025BA /* LMColour.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A7C62F41DA93F6100B025BA /* LMColour.m */; };
 		6A7DF11A1DB112140077B979 /* LMMiniPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A7DF1191DB112140077B979 /* LMMiniPlayerView.m */; };
 		6A7DF1241DB12C860077B979 /* LMTitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A7DF1231DB12C860077B979 /* LMTitleView.m */; };
@@ -415,6 +417,10 @@
 		6A76ECA61E1A081200424AC5 /* icon_no_cover_art.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_no_cover_art.png; sourceTree = "<group>"; };
 		6A78E6771F9E44E500B7E369 /* LMPlaylist.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMPlaylist.h; sourceTree = "<group>"; };
 		6A78E6781F9E44E500B7E369 /* LMPlaylist.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMPlaylist.m; sourceTree = "<group>"; };
+		6A78E67A1F9EC74100B7E369 /* LMMusicPickerController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMMusicPickerController.h; sourceTree = "<group>"; };
+		6A78E67B1F9EC74100B7E369 /* LMMusicPickerController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMMusicPickerController.m; sourceTree = "<group>"; };
+		6A78E67E1F9EF13500B7E369 /* LMTrackPickerController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMTrackPickerController.h; sourceTree = "<group>"; };
+		6A78E67F1F9EF13500B7E369 /* LMTrackPickerController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMTrackPickerController.m; sourceTree = "<group>"; };
 		6A7C62F31DA93F6100B025BA /* LMColour.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMColour.h; sourceTree = "<group>"; };
 		6A7C62F41DA93F6100B025BA /* LMColour.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMColour.m; sourceTree = "<group>"; };
 		6A7DF1181DB112140077B979 /* LMMiniPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMMiniPlayerView.h; sourceTree = "<group>"; };
@@ -905,6 +911,17 @@
 			name = Pebble;
 			sourceTree = "<group>";
 		};
+		6A78E67D1F9EC74700B7E369 /* MusicPicker */ = {
+			isa = PBXGroup;
+			children = (
+				6A78E67A1F9EC74100B7E369 /* LMMusicPickerController.h */,
+				6A78E67B1F9EC74100B7E369 /* LMMusicPickerController.m */,
+				6A78E67E1F9EF13500B7E369 /* LMTrackPickerController.h */,
+				6A78E67F1F9EF13500B7E369 /* LMTrackPickerController.m */,
+			);
+			name = MusicPicker;
+			sourceTree = "<group>";
+		};
 		6A7C78121F2658B0004A621D /* CompactView */ = {
 			isa = PBXGroup;
 			children = (
@@ -1100,6 +1117,7 @@
 				6AE9E6EA1F9C5AC30077B15E /* LMPlaylistEditorViewController.m */,
 				6A70B7F51F9826D600E2CC9E /* LMPlaylistManager.h */,
 				6A70B7F61F9826D600E2CC9E /* LMPlaylistManager.m */,
+				6A78E67D1F9EC74700B7E369 /* MusicPicker */,
 			);
 			name = Playlists;
 			sourceTree = "<group>";
@@ -1575,10 +1593,12 @@
 				6AEB9D001BACF60E00AD19FA /* LMAppDelegate.m in Sources */,
 				6A32113E1DA727960060DD07 /* LMTrackDurationView.m in Sources */,
 				6AAF61181DA0B9C800971875 /* LMTableViewCell.m in Sources */,
+				6A78E6801F9EF13500B7E369 /* LMTrackPickerController.m in Sources */,
 				6A6F4B631DC5D4EB00BD01C2 /* YIInnerShadowLayer.m in Sources */,
 				6A7DF11A1DB112140077B979 /* LMMiniPlayerView.m in Sources */,
 				6A73CF611D451BFA0097A400 /* LMPebbleMessageQueue.m in Sources */,
 				6AE9E6EB1F9C5AC30077B15E /* LMPlaylistEditorViewController.m in Sources */,
+				6A78E67C1F9EC74100B7E369 /* LMMusicPickerController.m in Sources */,
 				6A8CF2B91DB4952A00777525 /* LMSettings.m in Sources */,
 				6A94A7711EA79BB300319A38 /* LMLayoutManager.m in Sources */,
 				6A838A951E07A8FF006E7DE0 /* LMPurchaseManager.m in Sources */,

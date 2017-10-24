@@ -59,11 +59,13 @@
 "Cancel" = "Cancel";
 "Save" = "Save";
 "AddSongs" = "Add songs";
+"SelectSongs" = "Select songs";
 "NoSongsInPlaylistBuilder" = "There are no songs in this playlist yet.\n\nStart adding songs by tapping the 'Add songs' button above.";
+"SelectASource" = "Please select where to get music from";
 
 "YourPlaylistTitle" = "Headbangers";
 
-"NoTracksInFavourites" = "You haven't favourited anything. Swipe from left to right on any track throughout the app to add it to your favourites.";
+"NoTracksInFavourites" = "You haven't favourited anything.\n\nSwipe from left to right on any track throughout the app to add it to your favourites.";
 
 "TapToEdit" = "Tap to edit";
 

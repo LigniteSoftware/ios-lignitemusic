@@ -15,6 +15,7 @@
 #import "LMExtras.h"
 #import "LMListEntry.h"
 #import "LMMusicPlayer.h"
+#import "LMMusicPickerController.h"
 
 @interface LMPlaylistEditorViewController()<LMTableViewSubviewDataSource, LMListEntryDelegate, DDTableViewDelegate, LMImagePickerViewDelegate>
 
@@ -66,6 +67,10 @@
 
 - (void)addSongsButtonTapped {
 	NSLog(@"Add songs...");
+	
+	LMMusicPickerController *musicPicker = [LMMusicPickerController new];
+	UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:musicPicker];
+	[self presentViewController:navigation animated:YES completion:nil];
 }
 
 /* End adding songs code */

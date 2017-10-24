@@ -128,9 +128,11 @@
 		[entry changeHighlightStatus:YES animated:YES];
 		self.currentlyHighlighted = index;
 		
-		NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-		[defaults setInteger:index forKey:LMSettingsKeyLastOpenedSource];
-		[defaults synchronize];
+		if(self.mainSourceSelector){
+			NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+			[defaults setInteger:index forKey:LMSettingsKeyLastOpenedSource];
+			[defaults synchronize];
+		}
 	}
 	
 	[source.delegate sourceSelected:source];
@@ -198,16 +200,18 @@
 		[self.listEntryArray addObject:listEntry];
 	}
 	
-	NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
-	NSInteger lastSourceOpened = 0;
-	if([settings objectForKey:LMSettingsKeyLastOpenedSource]){
-		lastSourceOpened = [settings integerForKey:LMSettingsKeyLastOpenedSource];
+	if(self.mainSourceSelector){
+		NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
+		NSInteger lastSourceOpened = 0;
+		if([settings objectForKey:LMSettingsKeyLastOpenedSource]){
+			lastSourceOpened = [settings integerForKey:LMSettingsKeyLastOpenedSource];
+		}
+		
+		if(lastSourceOpened >= self.listEntryArray.count){
+			return;
+		}
+		[self tappedListEntry:[self.listEntryArray objectAtIndex:lastSourceOpened]];
 	}
-	
-	if(lastSourceOpened >= self.listEntryArray.count){
-		return;
-	}
-	[self tappedListEntry:[self.listEntryArray objectAtIndex:lastSourceOpened]];
 	
 	
 	self.backgroundColor = [UIColor whiteColor];
