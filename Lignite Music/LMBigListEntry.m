@@ -59,10 +59,18 @@
 
 - (void)editViewTapped {
 	NSLog(@"Edit tapped");
+	
+	if([self.entryDelegate respondsToSelector:@selector(editTappedForBigListEntry:)]){
+		[self.entryDelegate editTappedForBigListEntry:self];
+	}
 }
 
 - (void)deleteViewTapped {
 	NSLog(@"Delete tapped");
+	
+	if([self.entryDelegate respondsToSelector:@selector(deleteTappedForBigListEntry:)]){
+		[self.entryDelegate deleteTappedForBigListEntry:self];
+	}
 }
 
 - (instancetype)init {

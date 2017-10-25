@@ -24,6 +24,11 @@
  */
 @property LMMusicPlayer *musicPlayer;
 
+/**
+ The playlist manager.
+ */
+@property LMPlaylistManager *playlistManager;
+
 /**  
  The image picker view.
  */
@@ -270,12 +275,24 @@
 
 - (void)cancelPlaylistEditing {
 	[self dismissViewControllerAnimated:YES completion:nil];
+	
+	if([self.delegate respondsToSelector:@selector(playlistEditorViewControllerDidCancel:)]){
+		[self.delegate playlistEditorViewControllerDidCancel:self];
+	}
 }
 
 - (void)savePlaylistEditing {
 	NSLog(@"Save playlist");
 	
-	[self cancelPlaylistEditing];
+	self.playlist.title = self.titleTextField.text;
+	
+	[self dismissViewControllerAnimated:YES completion:nil];
+	
+	[self.playlistManager savePlaylist:self.playlist];
+	
+	if([self.delegate respondsToSelector:@selector(playlistEditorViewController:didSaveWithPlaylist:)]){
+		[self.delegate playlistEditorViewController:self didSaveWithPlaylist:self.playlist];
+	}
 }
 
 - (void)viewDidLoad {
@@ -288,6 +305,7 @@
 	
 	
 	self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
+	self.playlistManager = [LMPlaylistManager sharedPlaylistManager];
 	
 	
 	self.imagePickerView = [LMImagePickerView newAutoLayoutView];

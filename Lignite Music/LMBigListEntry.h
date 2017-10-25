@@ -57,6 +57,20 @@
  */
 - (void)contentViewDoubleTappedForBigListEntry:(LMBigListEntry*)bigListEntry;
 
+/**
+ The edit button was tapped on a big list entry.
+
+ @param bigListEntry The big list entry whose edit button was tapped.
+ */
+- (void)editTappedForBigListEntry:(LMBigListEntry*)bigListEntry;
+
+/**
+ The delete button was tapped on a big list entry.
+ 
+ @param bigListEntry The big list entry whose delete button was tapped.
+ */
+- (void)deleteTappedForBigListEntry:(LMBigListEntry*)bigListEntry;
+
 /*
  * Quick Copy Paste
  *
@@ -66,6 +80,10 @@
  - (void)sizeChangedToLargeSize:(BOOL)largeSize withHeight:(float)newHeight forBigListEntry:(LMBigListEntry*)bigListEntry;
  
  - (void)contentViewTappedForBigListEntry:(LMBigListEntry*)bigListEntry;
+ - (void)contentViewDoubleTappedForBigListEntry:(LMBigListEntry*)bigListEntry;
+ 
+ - (void)editTappedForBigListEntry:(LMBigListEntry*)bigListEntry;
+ - (void)deleteTappedForBigListEntry:(LMBigListEntry*)bigListEntry;
  */
 
 @end

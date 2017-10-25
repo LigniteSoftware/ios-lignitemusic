@@ -63,6 +63,8 @@
 	}
 	playlist.trackCollection = [[LMMusicTrackCollection alloc]initWithItems:trackMutableArray];
 	
+	playlist.image = [self.imageCache imageFromDiskCacheForKey:[NSString stringWithFormat:@"%lld", playlist.persistentID]];
+	
 	return playlist;
 }
 
@@ -80,7 +82,7 @@
 	[mutableDictionary setObject:[NSArray arrayWithArray:songPersistentIDArray] forKey:@"trackCollectionPersistentIDs"];
 	
 	if(playlist.image){
-		[self.imageCache storeImage:playlist.image forKey:[NSString stringWithFormat:@"%@-image", [self storageKeyForPlaylist:playlist]]];
+		[self.imageCache storeImage:playlist.image forKey:[NSString stringWithFormat:@"%lld", playlist.persistentID]];
 	}
 	
 	return [NSDictionary dictionaryWithDictionary:mutableDictionary];
@@ -96,6 +98,9 @@
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 	[userDefaults setObject:[self playlistDictionaryForPlaylist:playlist]
 					 forKey:[self storageKeyForPlaylist:playlist]];
+	if(!playlist.image){
+		[self.imageCache removeImageForKey:[NSString stringWithFormat:@"%lld", playlist.persistentID]];
+	}
 	[userDefaults synchronize];
 	
 	//Tell someone the playlists updated

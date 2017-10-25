@@ -36,6 +36,13 @@
 + (LMPlaylistManager*)sharedPlaylistManager;
 
 /**
+ Saves a playlist to storage.
+
+ @param playlist The playlist to save.
+ */
+- (void)savePlaylist:(LMPlaylist*)playlist;
+
+/**
  The array of all of the user's current playlists.
  */
 @property NSArray<LMPlaylist*>* playlists;
