@@ -25,6 +25,11 @@
  */
 @property SDImageCache *imageCache;
 
+/**
+ An array of persistent IDs representing playlists that used to be system playlists, that were deleted by the user. This array is used to prevent the readding of those playlists to the app upon playlist manager initialization.
+ */
+@property NSArray<NSNumber*> *deletedSystemPlaylistPersistentIDs;
+
 @end
 
 @implementation LMPlaylistManager
@@ -106,6 +111,21 @@
 	//Tell someone the playlists updated
 }
 
+- (void)deletePlaylist:(LMPlaylist*)playlist {
+	NSLog(@"Deleting playlist with title %@ and persistent ID of %llu", playlist.title, playlist.persistentID);
+	
+	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+	if(playlist.systemPersistentID > 0){
+		[userDefaults setBool:YES forKey:[NSString stringWithFormat:@"deletedSystemPlaylist_%lld", playlist.systemPersistentID]];
+	}
+	[userDefaults removeObjectForKey:[self storageKeyForPlaylist:playlist]];
+	[userDefaults synchronize];
+	
+	NSMutableArray *mutablePlaylistArray = [[NSMutableArray alloc]initWithArray:self.playlists];
+	[mutablePlaylistArray removeObject:playlist];
+	self.playlists = [NSArray arrayWithArray:mutablePlaylistArray];
+}
+
 - (void)loadPlaylists {
 	NSMutableArray *playlistsMutableArray = [NSMutableArray new];
 	
@@ -131,6 +151,8 @@
 }
 
 - (void)internalizeSystemPlaylists {
+	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+	
 	MPMediaQuery *everyonesPlaylistsQuery = [MPMediaQuery playlistsQuery];
 	NSArray *systemPlaylists = [everyonesPlaylistsQuery collections];
 	
@@ -140,7 +162,7 @@
 		NSLog(@"%lld: %@", systemPlaylist.persistentID, [systemPlaylist valueForProperty:MPMediaPlaylistPropertyName]);
 		
 		if(attribute != MPMediaPlaylistAttributeSmart && attribute != MPMediaPlaylistAttributeGenius){ //We don't fuck with these
-			if(![self playlistExistsWithSystemPersistentID:systemPlaylist.persistentID]){
+			if(![self playlistExistsWithSystemPersistentID:systemPlaylist.persistentID] && [userDefaults objectForKey:[NSString stringWithFormat:@"deletedSystemPlaylist_%lld", systemPlaylist.persistentID]]){
 				LMPlaylist *lignitePlaylist = [[LMPlaylist alloc]init];
 				lignitePlaylist.title = systemPlaylist.name;
 				lignitePlaylist.persistentID = random();

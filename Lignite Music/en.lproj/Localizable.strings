@@ -46,7 +46,10 @@
  
  */
 
+"DeletePlaylistTitle" = "Delete playlist?";
+"DeletePlaylistDescription" = "Are you sure you want to delete the playlist '%@'?\n\nThis action is not reversable."; //%@ is the name of the playlist.
 "Create" = "Create";
+"Delete" = "Delete";
 "Edit" = "Edit";
 "EditingPlaylist" = "Editing playlist";
 "NewPlaylist" = "New playlist";

@@ -728,7 +728,37 @@
 }
 
 - (void)deleteTappedForBigListEntry:(LMBigListEntry*)bigListEntry {
+	LMPlaylist *playlist = [self.playlistManager.playlists objectAtIndex:bigListEntry.collectionIndex];
 	
+	UIAlertController *alert = [UIAlertController
+								alertControllerWithTitle:NSLocalizedString(@"DeletePlaylistTitle", nil)
+								message:[NSString stringWithFormat:NSLocalizedString(@"DeletePlaylistDescription", nil), playlist.title]
+								preferredStyle:UIAlertControllerStyleAlert];
+	
+	UIAlertAction *yesButton = [UIAlertAction
+								actionWithTitle:NSLocalizedString(@"Delete", nil)
+								style:UIAlertActionStyleDestructive
+								handler:^(UIAlertAction *action) {
+									[self.playlistManager deletePlaylist:playlist];
+									
+									LMCollectionViewFlowLayout *flowLayout = (LMCollectionViewFlowLayout*)self.collectionView.collectionViewLayout;
+									
+									flowLayout.musicTrackCollections = self.playlistManager.playlistTrackCollections;
+									
+									[self.collectionView reloadData];
+								}];
+	
+	UIAlertAction *nopeButton = [UIAlertAction
+								 actionWithTitle:NSLocalizedString(@"Cancel", nil)
+								 style:UIAlertActionStyleCancel
+								 handler:^(UIAlertAction *action) {
+									 //Dismissed
+								 }];
+	
+	[alert addAction:yesButton];
+	[alert addAction:nopeButton];
+	
+	[self.rootViewController presentViewController:alert animated:YES completion:nil];
 }
 
 - (void)editPlaylistButtonTapped {

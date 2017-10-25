@@ -43,6 +43,13 @@
 - (void)savePlaylist:(LMPlaylist*)playlist;
 
 /**
+ Deletes a playlist from the device. If it is a system playlist, it prevents it from reentering the user's Lignite playlists.
+
+ @param playlist The playlist to delete.
+ */
+- (void)deletePlaylist:(LMPlaylist*)playlist;
+
+/**
  The array of all of the user's current playlists.
  */
 @property NSArray<LMPlaylist*>* playlists;
