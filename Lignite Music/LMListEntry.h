@@ -30,6 +30,14 @@
  */
 - (NSString*)textForListEntry:(LMListEntry*)entry;
 
+/**
+ If responded to by the delegate, this function will be called upon to return a view which will add that subview provided to the right of the list entry. Any text will be automatically pinned to the leading edge of the view to ensure proper wrapping. Views returned by this function should realize the list entry only provides 1/10th of its space.
+
+ @param entry The entry for the view.
+ @return The view that the delegate wants to add to the right of the entry.
+ */
+- (UIView*)rightViewForListEntry:(LMListEntry*)entry;
+
 @end
 
 @interface LMListEntry : UIView

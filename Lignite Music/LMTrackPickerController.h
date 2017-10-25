@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "LMMusicPlayer.h"
+#import "LMMusicPickerController.h"
 
 @interface LMTrackPickerController : UIViewController
 
@@ -48,5 +49,15 @@ typedef NS_ENUM(NSInteger, LMTrackPickerDepthLevel){
  The track collection for favourites and titles.
  */
 @property (readonly) LMMusicTrackCollection *titleTrackCollection;
+
+/**
+ The track collection of songs that have been selected by the user for this music picker.
+ */
+@property (readonly) LMMusicTrackCollection *selectedTrackCollection;
+
+/**
+ The source music picker controller that contains the original selected track collection. Called upon to modify the selected tracks.
+ */
+@property LMMusicPickerController *sourceMusicPickerController;
 
 @end

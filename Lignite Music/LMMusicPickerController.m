@@ -27,6 +27,30 @@
 
 @implementation LMMusicPickerController
 
+- (void)setTrack:(LMMusicTrack*)track asSelected:(BOOL)selected {
+	NSMutableArray *mutableTrackCollection = [[NSMutableArray alloc] initWithArray:self.trackCollection.items];
+	
+	if(selected){
+		[mutableTrackCollection addObject:track];
+	}
+	else{
+		LMMusicTrack *trackToRemove = nil;
+		
+		for(LMMusicTrack *collectionTrack in mutableTrackCollection){
+			if(collectionTrack.persistentID == track.persistentID){
+				trackToRemove = collectionTrack;
+				break;
+			}
+		}
+		
+		if(trackToRemove){
+			[mutableTrackCollection removeObject:trackToRemove];
+		}
+	}
+	
+	self.trackCollection = [[LMMusicTrackCollection alloc]initWithItems:mutableTrackCollection];
+}
+
 - (void)sourceSelected:(LMSource*)source {
 	NSLog(@"Source selected %@", source.title);
 	
@@ -66,6 +90,7 @@
 	}
 	
 	trackPickerController.title = source.title;
+	trackPickerController.sourceMusicPickerController = self;
 	
 	[self showViewController:trackPickerController sender:nil];
 }
@@ -85,13 +110,17 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 	
-	self.title = NSLocalizedString(@"SelectSongs", nil);
+	self.title = NSLocalizedString(@"Source", nil);
 	
 	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithTitle:NSLocalizedString(@"Cancel", nil) style:UIBarButtonItemStylePlain target:self action:@selector(cancelSongSelection)];
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithTitle:NSLocalizedString(@"Done", nil) style:UIBarButtonItemStyleDone target:self action:@selector(saveSongSelection)];
 	
 	
 	self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
+	
+	if(!self.trackCollection){
+		self.trackCollection = [[LMMusicTrackCollection alloc]initWithItems:@[]];
+	}
 	
 	
 	UILabel *selectSourceTitleLabel = [UILabel newAutoLayoutView];

@@ -10,6 +10,5 @@
 
 @interface LMCircleView : UIView
 
-@property float shadowRadius;
-
 @end
+

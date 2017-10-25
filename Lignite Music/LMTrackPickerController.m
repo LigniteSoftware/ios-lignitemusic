@@ -10,6 +10,7 @@
 #import "LMTrackPickerController.h"
 #import "LMColour.h"
 #import "LMListEntry.h"
+#import "LMCircleView.h"
 
 @interface LMTrackPickerController ()<UICollectionViewDelegate, UICollectionViewDataSource, LMListEntryDelegate>
 
@@ -33,6 +34,7 @@
 @implementation LMTrackPickerController
 
 @synthesize titleTrackCollection = _titleTrackCollection;
+@synthesize selectedTrackCollection = _selectedTrackCollection;
 
 - (LMMusicTrackCollection*)titleTrackCollection {
 	if(self.trackCollections.count > 0){
@@ -41,11 +43,21 @@
 	return nil;
 }
 
+- (LMMusicTrackCollection*)selectedTrackCollection {
+	return self.sourceMusicPickerController.trackCollection;
+}
+
 - (void)tappedListEntry:(LMListEntry*)entry{
 	NSLog(@"Tapped %p", entry);
 	
 	if(self.depthLevel == LMTrackPickerDepthLevelSongs){
 		NSLog(@"Pick song");
+		
+		LMMusicTrack *track = [self.titleTrackCollection.items objectAtIndex:entry.collectionIndex];
+		
+		[self.sourceMusicPickerController setTrack:track asSelected:![self.selectedTrackCollection.items containsObject:track]];
+		
+		[entry reloadContents];
 		return;
 	}
 	
@@ -103,8 +115,50 @@
 	
 	trackPickerController.title = title;
 	trackPickerController.trackCollections = trackCollections;
+	trackPickerController.sourceMusicPickerController = self.sourceMusicPickerController;
 	
 	[self showViewController:trackPickerController sender:nil];
+}
+
+- (UIView*)rightViewForListEntry:(LMListEntry *)entry {
+	if(self.depthLevel == LMTrackPickerDepthLevelSongs){
+		UIView *checkmarkPaddedView = [UIView newAutoLayoutView];
+		
+		LMCircleView *checkmarkView = [LMCircleView newAutoLayoutView];
+		checkmarkView.backgroundColor = [self.selectedTrackCollection.items containsObject:[self.titleTrackCollection.items objectAtIndex:entry.collectionIndex]] ? [LMColour ligniteRedColour] : [UIColor whiteColor];
+		
+		[checkmarkPaddedView addSubview:checkmarkView];
+		
+		[checkmarkView autoCenterInSuperview];
+		[checkmarkView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:checkmarkPaddedView withMultiplier:(3.0/4.0)];
+		[checkmarkView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:checkmarkPaddedView withMultiplier:(3.0/4.0)];
+		
+		
+		UIImageView *checkmarkImageView = [UIImageView newAutoLayoutView];
+		checkmarkImageView.contentMode = UIViewContentModeScaleAspectFit;
+		checkmarkImageView.image = [LMAppIcon imageForIcon:LMIconWhiteCheckmark];
+		[checkmarkView addSubview:checkmarkImageView];
+		
+		[checkmarkImageView autoCenterInSuperview];
+		[checkmarkImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:checkmarkPaddedView withMultiplier:(3.0/8.0)];
+		[checkmarkImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:checkmarkPaddedView withMultiplier:(3.0/8.0)];
+		
+		return checkmarkPaddedView;
+	}
+	
+	UIView *arrowIconPaddedView = [UIView newAutoLayoutView];
+	
+	UIImageView *arrowIconView = [UIImageView newAutoLayoutView];
+	arrowIconView.contentMode = UIViewContentModeScaleAspectFit;
+	arrowIconView.image = [LMAppIcon imageForIcon:LMIconForwardArrow];
+	
+	[arrowIconPaddedView addSubview:arrowIconView];
+	
+	[arrowIconView autoCenterInSuperview];
+	[arrowIconView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:arrowIconPaddedView withMultiplier:(5.0/8.0)];
+	[arrowIconView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:arrowIconPaddedView];
+	
+	return arrowIconPaddedView;
 }
 
 - (UIColor*)tapColourForListEntry:(LMListEntry*)entry {

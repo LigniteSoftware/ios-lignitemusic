@@ -60,6 +60,7 @@
 "Save" = "Save";
 "AddSongs" = "Add songs";
 "SelectSongs" = "Select songs";
+"Source" = "Source";
 "NoSongsInPlaylistBuilder" = "There are no songs in this playlist yet.\n\nStart adding songs by tapping the 'Add songs' button above.";
 "SelectASource" = "Please select where to get music from";
 

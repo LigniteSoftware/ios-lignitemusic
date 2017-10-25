@@ -24,6 +24,11 @@
 
 @property BOOL setupConstraints;
 
+/**
+ The background view to the view that will go on the right if the delegate responds to the corresponding function.
+ */
+@property UIView *rightViewBackgroundView;
+
 @end
 
 @implementation LMListEntry
@@ -41,6 +46,16 @@
 	self.subtitleLabel.text = subtitle ? subtitle : @"";
 	self.iconView.image = self.imageIsInverted ? [LMAppIcon invertImage:icon] : icon;
 	self.leftTextLabel.text = leftText ? leftText : @"what";
+	
+	if([self.delegate respondsToSelector:@selector(rightViewForListEntry:)]){
+		for(UIView *subview in self.rightViewBackgroundView.subviews){
+			[subview removeFromSuperview];
+		}
+		
+		UIView *rightView = [self.delegate rightViewForListEntry:self];
+		[self.rightViewBackgroundView addSubview:rightView];
+		[rightView autoPinEdgesToSuperviewEdges];
+	}
 }
 
 - (void)changeHighlightStatus:(BOOL)highlighted animated:(BOOL)animated {
@@ -142,6 +157,23 @@
 		self.iconPaddingMultiplier = 0.75;
 	}
 	
+	BOOL containsRightView = [self.delegate respondsToSelector:@selector(rightViewForListEntry:)];
+	
+	if(containsRightView){
+		self.rightViewBackgroundView = [UIView newAutoLayoutView];
+		[cell.contentView addSubview:self.rightViewBackgroundView];
+		
+		[self.rightViewBackgroundView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self];
+		[self.rightViewBackgroundView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self];
+		[self.rightViewBackgroundView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
+		[self.rightViewBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(1.0/10.0)];
+		
+		UIView *rightView = [self.delegate rightViewForListEntry:self];
+		
+		[self.rightViewBackgroundView addSubview:rightView];
+		[rightView autoPinEdgesToSuperviewEdges];
+	}
+	
 	self.contentView = [UIView newAutoLayoutView];
 	self.contentView.clipsToBounds = NO;
 	self.contentView.layer.masksToBounds = NO;
@@ -149,9 +181,18 @@
 //	self.contentView.backgroundColor = [UIColor colorWithRed:0.5 green:0 blue:0 alpha:0.4];
 	[cell.contentView addSubview:self.contentView];
 	
-	[self.contentView autoCenterInSuperview];
-	[self.contentView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:self.contentViewHeightMultiplier];
-	[self.contentView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:self.stretchAcrossWidth ? 1.0 : 0.9];
+	if(containsRightView){
+		[self.contentView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.contentView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:self.contentViewHeightMultiplier];
+		[self.contentView autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+		
+		[self.contentView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.rightViewBackgroundView];
+	}
+	else{
+		[self.contentView autoCenterInSuperview];
+		[self.contentView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:self.contentViewHeightMultiplier];
+		[self.contentView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:self.stretchAcrossWidth ? 1.0 : 0.9];
+	}
 	
 	UIImage *icon = [self.delegate iconForListEntry:self];
 	NSString *title = [self.delegate titleForListEntry:self];
@@ -175,8 +216,8 @@
 		[self.iconBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:self.stretchAcrossWidth ? 0 : 10];
 		[self.iconBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 		[self.iconBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		[self.iconBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.contentView];
 		[self.iconBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.contentView withMultiplier:self.iconPaddingMultiplier];
+		[self.iconBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.contentView];
 		
 		self.iconView = [UIImageView newAutoLayoutView];
 		self.iconView.image = icon;
@@ -279,7 +320,7 @@
 	}
 	
 	UITapGestureRecognizer *tappedViewRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tappedView)];
-	[self.contentView addGestureRecognizer:tappedViewRecognizer];
+	[self addGestureRecognizer:tappedViewRecognizer];
 	
 	[self changeHighlightStatus:self.highlighted animated:NO];
 }
