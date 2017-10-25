@@ -501,6 +501,9 @@ LMControlBarViewDelegate
 		case LMMusicTypeTitles:
 			viewName = @"Title";
 			break;
+		case LMMusicTypeFavourites:
+			viewName = @"Favourites";
+			break;
 	}
 	[LMAnswers logContentViewWithName:[NSString stringWithFormat:@"%@ View", viewName]
 						  contentType:@"Browsing View"
@@ -1382,7 +1385,7 @@ LMControlBarViewDelegate
 	self.buttonNavigationBar.delegate = self;
 	self.buttonNavigationBar.searchBarDelegate = self;
 	self.buttonNavigationBar.letterTabBarDelegate = self;
-//	self.buttonNavigationBar.hidden = YES;
+	self.buttonNavigationBar.hidden = YES;
 	[self.navigationController.view addSubview:self.buttonNavigationBar];
 	
 	//						self.navigationController.view.hidden = YES;
@@ -1508,17 +1511,17 @@ LMControlBarViewDelegate
 	
 	
 	[NSTimer scheduledTimerWithTimeInterval:0.25 block:^{
-		LMPlaylistEditorViewController *playlistViewController = [LMPlaylistEditorViewController new];
-		LMPlaylist *playlist = [LMPlaylist new];
-		playlist.title = @"Nice meme";
-		playlist.image = [LMAppIcon imageForIcon:LMIconBug];
-		playlist.trackCollection = [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeAlbums].firstObject;
-//		playlist.trackCollection = [[LMMusicTrackCollection alloc]initWithItems:@[]];
-		playlistViewController.playlist = playlist;
-		UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:playlistViewController];
-		[self presentViewController:navigation animated:YES completion:^{
-			
-		}];
+//		LMPlaylistEditorViewController *playlistViewController = [LMPlaylistEditorViewController new];
+//		LMPlaylist *playlist = [LMPlaylist new];
+//		playlist.title = @"Nice meme";
+//		playlist.image = [LMAppIcon imageForIcon:LMIconBug];
+//		playlist.trackCollection = [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeAlbums].firstObject;
+////		playlist.trackCollection = [[LMMusicTrackCollection alloc]initWithItems:@[]];
+//		playlistViewController.playlist = playlist;
+//		UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:playlistViewController];
+//		[self presentViewController:navigation animated:YES completion:^{
+//			
+//		}];
 //		[self pushItemOntoNavigationBarWithTitle:NSLocalizedString(@"NewPlaylist", nil) withNowPlayingButton:NO];
 				
 		[self.buttonNavigationBar setSelectedTab:LMNavigationTabMiniplayer];

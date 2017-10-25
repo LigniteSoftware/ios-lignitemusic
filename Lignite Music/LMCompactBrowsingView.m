@@ -132,6 +132,9 @@
 	
 	for(NSUInteger i = 0; i < self.musicTrackCollections.count; i++){
 		LMMusicTrackCollection *trackCollection = [self.musicTrackCollections objectAtIndex:i];
+		if(self.musicType == LMMusicTypePlaylists){
+			trackCollection = [self.playlistManager.playlists objectAtIndex:i].trackCollection;
+		}
 		LMMusicTrack *representativeTrack = [trackCollection representativeItem];
 		
 		switch(self.musicType) {
@@ -192,6 +195,12 @@
 - (id)contentSubviewForBigListEntry:(LMBigListEntry*)bigListEntry {
 	LMMusicTrackCollection *collection = [self musicTrackCollectionForBigListEntry:bigListEntry];
 	
+	LMPlaylist *playlist = nil;
+	if(self.musicType == LMMusicTypePlaylists){
+		playlist = [self.playlistManager.playlists objectAtIndex:bigListEntry.collectionIndex];
+		collection = playlist.trackCollection;
+	}
+	
     if(bigListEntry.contentView){
         switch(self.musicType){
             case LMMusicTypeComposers:
@@ -201,10 +210,36 @@
                 imageView.image = artistImage;
                 return imageView;
             }
+			case LMMusicTypePlaylists:{
+				UIView *properSubview = nil;
+				
+				LMTiledAlbumCoverView *tiledAlbumCover = nil;
+				for(UIView *subview in [bigListEntry.contentView subviews]){
+					NSLog(@"Subview %@", [subview class]);
+					if([subview class] == [LMTiledAlbumCoverView class]){
+						tiledAlbumCover = (LMTiledAlbumCoverView*)subview;
+					}
+				}
+				
+				if(playlist.image || (playlist.trackCollection.count == 0)){
+					UIImageView *imageView = bigListEntry.contentView;
+					imageView.image = playlist.image;
+					if(!playlist.image){
+						imageView.image = [LMAppIcon imageForIcon:LMIconNoAlbumArt75Percent];
+					}
+					properSubview = imageView;
+					
+					tiledAlbumCover.hidden = YES;
+				}
+				else{
+					tiledAlbumCover.musicCollection = collection;
+				}
+				
+				return properSubview;
+			}
             case LMMusicTypeAlbums:
             case LMMusicTypeCompilations:
-            case LMMusicTypeGenres:
-            case LMMusicTypePlaylists: {
+            case LMMusicTypeGenres:{
                 //No need for prep since we're just gonna prep once
                 LMTiledAlbumCoverView *tiledAlbumCover = bigListEntry.contentView;
                 tiledAlbumCover.musicCollection = collection;
@@ -236,10 +271,29 @@
 				imageView.layer.masksToBounds = YES;
                 return imageView;
             }
+			case LMMusicTypePlaylists: {
+				UIImageView *imageView = [UIImageView newAutoLayoutView];
+				imageView.contentMode = UIViewContentModeScaleAspectFit;
+				imageView.layer.shadowColor = [UIColor blackColor].CGColor;
+				imageView.layer.shadowRadius = WINDOW_FRAME.size.width/45;
+				imageView.layer.shadowOffset = CGSizeMake(0, imageView.layer.shadowRadius/2);
+				imageView.layer.shadowOpacity = 0.25f;
+				imageView.image = playlist.image ? playlist.image : [LMAppIcon imageForIcon:LMIconNoAlbumArt75Percent];
+				
+				imageView.layer.cornerRadius = 6.0f;
+				imageView.layer.masksToBounds = YES;
+				
+				LMTiledAlbumCoverView *tiledAlbumCover = [LMTiledAlbumCoverView newAutoLayoutView];
+				
+				[imageView addSubview:tiledAlbumCover];
+				
+				[tiledAlbumCover autoPinEdgesToSuperviewEdges];
+				
+				return imageView;
+			}
             case LMMusicTypeAlbums:
             case LMMusicTypeCompilations:
-            case LMMusicTypeGenres:
-            case LMMusicTypePlaylists: {
+            case LMMusicTypeGenres:{
                 //No need for prep since we're just gonna prep once
                 LMTiledAlbumCoverView *tiledAlbumCover = [LMTiledAlbumCoverView newAutoLayoutView];
                 tiledAlbumCover.musicCollection = collection;
@@ -267,6 +321,10 @@
 	
 	LMMusicTrackCollection *collection = [self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex];
 	
+	if(self.musicType == LMMusicTypePlaylists){
+		collection = [self.playlistManager.playlists objectAtIndex:bigListEntry.collectionIndex].trackCollection;
+	}
+	
 	switch(self.musicType){
 		case LMMusicTypeGenres: {
 			return collection.representativeItem.genre ? collection.representativeItem.genre : NSLocalizedString(@"UnknownGenre", nil);
@@ -275,7 +333,7 @@
 			return [collection titleForMusicType:LMMusicTypeCompilations];
 		}
 		case LMMusicTypePlaylists:{
-			return [collection titleForMusicType:LMMusicTypePlaylists];
+			return [self.playlistManager.playlists objectAtIndex:bigListEntry.collectionIndex].title;
 		}
 		case LMMusicTypeAlbums: {
 			return collection.representativeItem.albumTitle ? collection.representativeItem.albumTitle : NSLocalizedString(@"UnknownAlbum", nil);
@@ -296,6 +354,10 @@
 	LMBigListEntry *bigListEntry = infoView.associatedBigListEntry;
 	
 	LMMusicTrackCollection *collection = [self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex];
+	
+	if(self.musicType == LMMusicTypePlaylists){
+		collection = [self.playlistManager.playlists objectAtIndex:bigListEntry.collectionIndex].trackCollection;
+	}
 	
 	switch(self.musicType){
 		case LMMusicTypeComposers:
@@ -390,13 +452,14 @@
 	return 1;
 }
 
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {	
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+	NSInteger fixedCount = self.musicType == LMMusicTypePlaylists ? self.playlistManager.playlists.count : self.musicTrackCollections.count;
 	if(section == 1){
-		return self.musicTrackCollections.count;
+		return fixedCount;
 	}
 	
 	LMCollectionViewFlowLayout *flowLayout = (LMCollectionViewFlowLayout*)collectionView.collectionViewLayout;
-	return flowLayout.isDisplayingDetailView ? (self.musicTrackCollections.count+flowLayout.amountOfOverflowingCellsForDetailView+1) : self.musicTrackCollections.count;
+	return flowLayout.isDisplayingDetailView ? (fixedCount+flowLayout.amountOfOverflowingCellsForDetailView+1) : fixedCount;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -727,6 +790,9 @@
 		
 		LMCollectionViewFlowLayout *fuck = [LMCollectionViewFlowLayout new];
 		fuck.musicTrackCollections = self.musicTrackCollections;
+		if(self.musicType == LMMusicTypePlaylists){
+			fuck.musicTrackCollections = self.playlistManager.playlistTrackCollections;
+		}
 		fuck.musicType = self.musicType;
 //		fuck.scrollDirection = UICollectionViewScrollDirectionHorizontal;
 		

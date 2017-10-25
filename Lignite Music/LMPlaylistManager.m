@@ -30,8 +30,17 @@
 @implementation LMPlaylistManager
 
 @synthesize userUnderstandsPlaylistManagement = _userUnderstandsPlaylistManagement;
+@synthesize playlistTrackCollections = _playlistTrackCollections;
 
 /* Begin internal playlist management code */
+
+- (NSArray<LMMusicTrackCollection*>*)playlistTrackCollections {
+	NSMutableArray *musicTrackCollectionsArray = [NSMutableArray new];
+	for(LMPlaylist *playlist in self.playlists){
+		[musicTrackCollectionsArray addObject:playlist.trackCollection];
+	}
+	return [NSArray arrayWithArray:musicTrackCollectionsArray];
+}
 
 - (LMPlaylist*)playlistForPlaylistDictionary:(NSDictionary*)playlistDictionary {
 	LMPlaylist *playlist = [LMPlaylist new];
@@ -52,6 +61,7 @@
 		
 		NSLog(@"%@ Got %@", playlist.title, query.items.firstObject.title);
 	}
+	playlist.trackCollection = [[LMMusicTrackCollection alloc]initWithItems:trackMutableArray];
 	
 	return playlist;
 }

@@ -41,6 +41,11 @@
 @property NSArray<LMPlaylist*>* playlists;
 
 /**
+ The track collections from the playlists.
+ */
+@property (readonly) NSArray<LMMusicTrackCollection*>* playlistTrackCollections;
+
+/**
  If YES, the user has seen and clicked "I understand" on a popup that states playlists are managed within the app & do not get exported to the default music app due to API limitations.
  */
 @property BOOL userUnderstandsPlaylistManagement;
