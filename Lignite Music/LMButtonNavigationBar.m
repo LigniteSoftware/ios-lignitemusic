@@ -344,7 +344,9 @@
 				}
 			}
 			
-			sizeConstraint.constant = self.layoutManager.isLandscape ? (self.unmodifiedFrame.size.width-LMNavigationBarTabWidth) : (self.unmodifiedFrame.size.height-LMNavigationBarTabHeight);
+//			sizeConstraint.constant = self.layoutManager.isLandscape ? (self.unmodifiedFrame.size.height-LMNavigationBarTabWidth) : (self.unmodifiedFrame.size.width-LMNavigationBarTabHeight);
+			
+			// ^ this was causing the source selector to have the incorrect size on rotation due to frame not adapting to rotation changes in time
 			
 			[self setViewAttachedToButtonBar:self.sourceSelector];
 			break;
@@ -701,13 +703,13 @@
 		}];
 		[LMLayoutManager addNewiPadConstraints:miniPlayerCoreViewiPadConstraints];
 		
-		
+		CGFloat sourceSelectorProperSize = properNum-(self.layoutManager.isLandscape ? LMNavigationBarTabWidth : LMNavigationBarTabHeight);
 		
 		NSArray *sourceSelectorPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 			[self.sourceSelector autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.minimizeButton];
 			[self.sourceSelector autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.buttonBar];
 			[self.sourceSelector autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.buttonBar withOffset:20];
-			[self.sourceSelector autoSetDimension:ALDimensionHeight toSize:properNum-LMNavigationBarTabHeight];
+			[self.sourceSelector autoSetDimension:ALDimensionHeight toSize:sourceSelectorProperSize];
 		}];
 		[LMLayoutManager addNewPortraitConstraints:sourceSelectorPortraitConstraints];
 		
@@ -715,7 +717,7 @@
 			[self.sourceSelector autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.buttonBar withOffset:properNum];
 			[self.sourceSelector autoPinEdgeToSuperviewEdge:ALEdgeTop];
 			[self.sourceSelector autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-			[self.sourceSelector autoSetDimension:ALDimensionWidth toSize:properNum-LMNavigationBarTabWidth];
+			[self.sourceSelector autoSetDimension:ALDimensionWidth toSize:sourceSelectorProperSize];
 		}];
 		[LMLayoutManager addNewLandscapeConstraints:sourceSelectorLandscapeConstraints];
 		

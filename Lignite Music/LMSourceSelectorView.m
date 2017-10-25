@@ -69,7 +69,7 @@
 	}
 	
 	LMListEntry *listEntry = [self.listEntryArray objectAtIndex:indexPath.row];
-	[cell addSubview:listEntry];
+	[cell.contentView addSubview:listEntry];
 	[listEntry autoPinEdgesToSuperviewEdges];
 	
 	if(indexPath.row < [self collectionView:self.collectionView numberOfItemsInSection:0]-1){
@@ -166,8 +166,9 @@
 - (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
 	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		//Reload collection view
+		[self.collectionView reloadData];
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-		
+		[self.collectionView reloadData];
 	}];
 }
 
