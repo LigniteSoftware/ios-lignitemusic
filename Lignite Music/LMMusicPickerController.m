@@ -99,12 +99,20 @@
 	NSLog(@"Cancel song selection");
 	
 	[self dismissViewControllerAnimated:YES completion:nil];
+	
+	if([self.delegate respondsToSelector:@selector(musicPickerDidCancelPickingMusic:)]){
+		[self.delegate musicPickerDidCancelPickingMusic:self];
+	}
 }
 
 - (void)saveSongSelection {
 	NSLog(@"Save song selection");
 	
 	[self dismissViewControllerAnimated:YES completion:nil];
+	
+	if([self.delegate respondsToSelector:@selector(musicPicker:didFinishPickingMusicWithTrackCollection:)]){
+		[self.delegate musicPicker:self didFinishPickingMusicWithTrackCollection:self.trackCollection];
+	}
 }
 
 - (void)viewDidLoad {

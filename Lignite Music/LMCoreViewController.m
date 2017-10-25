@@ -1520,8 +1520,8 @@ LMControlBarViewDelegate
 			
 		}];
 //		[self pushItemOntoNavigationBarWithTitle:NSLocalizedString(@"NewPlaylist", nil) withNowPlayingButton:NO];
-		
-		[self.buttonNavigationBar setSelectedTab:LMNavigationTabView];
+				
+		[self.buttonNavigationBar setSelectedTab:LMNavigationTabMiniplayer];
 		
 		if(self.statePreservedSettingsAlreadyOpen){
 			[self prepareForOpenSettings];

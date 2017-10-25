@@ -11,7 +11,7 @@
 
 @class LMMusicPickerController;
 
-@protocol LMMusicPickerDelegate
+@protocol LMMusicPickerDelegate <NSObject>
 @optional
 
 /**
@@ -41,6 +41,16 @@
  @param selected Whether or not the track is selected.
  */
 - (void)setTrack:(LMMusicTrack*)track asSelected:(BOOL)selected;
+
+/**
+ Cancel the music picker.
+ */
+- (void)cancelSongSelection;
+
+/**
+ Finish picking music, and provide the trackCollection to the delegate.
+ */
+- (void)saveSongSelection;
 
 
 /**

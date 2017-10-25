@@ -28,8 +28,13 @@
 @property LMMusicTrackCollection *trackCollection;
 
 /**
- The persistent ID of the playlist from before it was ported to Lignite Music.
+ The persistent ID for the Lignite playlist, which has nothing to do with the system.
  */
-@property MPMediaEntityPersistentID internalPersistentID;
+@property MPMediaEntityPersistentID persistentID;
+
+/**
+ The persistent ID of the playlist from before it was ported to Lignite Music. Will equal 0 if it was not ported and was user created.
+ */
+@property MPMediaEntityPersistentID systemPersistentID;
 
 @end

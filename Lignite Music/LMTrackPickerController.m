@@ -263,7 +263,7 @@
 	return CGSizeMake(WINDOW_FRAME.size.width - 40, WINDOW_FRAME.size.height/8.0f);
 }
 
-- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionView *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section {
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 	return 10;
 }
 
@@ -306,6 +306,8 @@
 	NSLog(@"Done");
 	
 	[self dismissViewControllerAnimated:YES completion:nil];
+	
+	[self.sourceMusicPickerController saveSongSelection];
 }
 
 - (void)viewDidLoad {

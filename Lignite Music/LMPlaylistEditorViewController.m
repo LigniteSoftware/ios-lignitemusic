@@ -17,7 +17,7 @@
 #import "LMMusicPlayer.h"
 #import "LMMusicPickerController.h"
 
-@interface LMPlaylistEditorViewController()<LMTableViewSubviewDataSource, LMListEntryDelegate, DDTableViewDelegate, LMImagePickerViewDelegate>
+@interface LMPlaylistEditorViewController()<LMTableViewSubviewDataSource, LMListEntryDelegate, DDTableViewDelegate, LMImagePickerViewDelegate, LMMusicPickerDelegate>
 
 /**
  The music player.
@@ -65,10 +65,26 @@
 
 /* Begin adding songs code */
 
+- (void)musicPicker:(LMMusicPickerController *)musicPicker didFinishPickingMusicWithTrackCollection:(LMMusicTrackCollection *)trackCollection {
+	
+	NSLog(@"Finished!");
+	
+	self.playlist.trackCollection = trackCollection;
+	
+	self.songListTableView.totalAmountOfObjects = self.playlist.trackCollection.count;
+	[self.songListTableView reloadData];
+}
+
+- (void)musicPickerDidCancelPickingMusic:(LMMusicPickerController *)musicPicker {
+	NSLog(@"Cancelled");
+}
+
 - (void)addSongsButtonTapped {
 	NSLog(@"Add songs...");
 	
 	LMMusicPickerController *musicPicker = [LMMusicPickerController new];
+	musicPicker.delegate = self;
+	musicPicker.trackCollection = self.playlist.trackCollection;
 	UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:musicPicker];
 	[self presentViewController:navigation animated:YES completion:nil];
 }
