@@ -42,7 +42,7 @@
 - (NSArray<LMMusicTrackCollection*>*)playlistTrackCollections {
 	NSMutableArray *musicTrackCollectionsArray = [NSMutableArray new];
 	for(LMPlaylist *playlist in self.playlists){
-		[musicTrackCollectionsArray addObject:playlist.trackCollection];
+		[musicTrackCollectionsArray addObject:playlist.trackCollection ? playlist.trackCollection : [[LMMusicTrackCollection alloc]initWithItems:@[]]];
 	}
 	return [NSArray arrayWithArray:musicTrackCollectionsArray];
 }
@@ -98,6 +98,17 @@
 }
 
 - (void)savePlaylist:(LMPlaylist*)playlist {
+	if(playlist.persistentID == 0){
+		NSLog(@"Warning: playlist persistent ID was 0!");
+		playlist.persistentID = random();
+	}
+	
+	if(![self.playlists containsObject:playlist]){
+		NSMutableArray *mutablePlaylistArray = [[NSMutableArray alloc]initWithArray:self.playlists];
+		[mutablePlaylistArray addObject:playlist];
+		self.playlists = [NSArray arrayWithArray:mutablePlaylistArray];
+	}
+	
 	NSLog(@"Saving playlist with title %@ persistentID %llu", playlist.title, playlist.persistentID);
 	
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
@@ -162,7 +173,7 @@
 		NSLog(@"%lld: %@", systemPlaylist.persistentID, [systemPlaylist valueForProperty:MPMediaPlaylistPropertyName]);
 		
 		if(attribute != MPMediaPlaylistAttributeSmart && attribute != MPMediaPlaylistAttributeGenius){ //We don't fuck with these
-			if(![self playlistExistsWithSystemPersistentID:systemPlaylist.persistentID] && [userDefaults objectForKey:[NSString stringWithFormat:@"deletedSystemPlaylist_%lld", systemPlaylist.persistentID]]){
+			if(![self playlistExistsWithSystemPersistentID:systemPlaylist.persistentID] && ![userDefaults objectForKey:[NSString stringWithFormat:@"deletedSystemPlaylist_%lld", systemPlaylist.persistentID]]){
 				LMPlaylist *lignitePlaylist = [[LMPlaylist alloc]init];
 				lignitePlaylist.title = systemPlaylist.name;
 				lignitePlaylist.persistentID = random();

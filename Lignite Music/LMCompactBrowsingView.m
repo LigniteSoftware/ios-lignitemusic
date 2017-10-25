@@ -704,6 +704,14 @@
 	}
 	else{
 		NSLog(@"New playlist");
+		
+		LMPlaylistEditorViewController *playlistViewController = [LMPlaylistEditorViewController new];
+		playlistViewController.playlist = [LMPlaylist new];
+		playlistViewController.delegate = self;
+		UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:playlistViewController];
+		[self.rootViewController presentViewController:navigation animated:YES completion:^{
+			NSLog(@"Launched creator");
+		}];
 	}
 }
 
@@ -711,7 +719,19 @@
 	
 	LMCollectionViewFlowLayout *flowLayout = (LMCollectionViewFlowLayout*)self.collectionView.collectionViewLayout;
 	
+	BOOL isNewPlaylist = flowLayout.musicTrackCollections.count != self.playlistManager.playlistTrackCollections.count;
+	
 	flowLayout.musicTrackCollections = self.playlistManager.playlistTrackCollections;
+	
+	if(isNewPlaylist){
+		LMBigListEntry *bigListEntry = [LMBigListEntry newAutoLayoutView];
+		bigListEntry.infoDelegate = self;
+		bigListEntry.entryDelegate = self;
+		bigListEntry.collectionIndex = self.bigListEntries.count;
+		[bigListEntry setup];
+			
+		[self.bigListEntries addObject:bigListEntry];
+	}
 	
 	[self.collectionView reloadData];
 }
@@ -744,6 +764,8 @@
 									LMCollectionViewFlowLayout *flowLayout = (LMCollectionViewFlowLayout*)self.collectionView.collectionViewLayout;
 									
 									flowLayout.musicTrackCollections = self.playlistManager.playlistTrackCollections;
+									
+									[self.bigListEntries removeLastObject];
 									
 									[self.collectionView reloadData];
 								}];

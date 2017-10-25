@@ -77,6 +77,7 @@
 	self.playlist.trackCollection = trackCollection;
 	
 	self.songListTableView.totalAmountOfObjects = self.playlist.trackCollection.count;
+	[self.songListTableView reloadSubviewData];
 	[self.songListTableView reloadData];
 }
 
