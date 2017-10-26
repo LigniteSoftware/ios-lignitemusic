@@ -17,7 +17,7 @@
 #import "LMMusicPlayer.h"
 #import "LMMusicPickerController.h"
 
-@interface LMPlaylistEditorViewController()<LMTableViewSubviewDataSource, LMListEntryDelegate, DDTableViewDelegate, LMImagePickerViewDelegate, LMMusicPickerDelegate>
+@interface LMPlaylistEditorViewController()<LMTableViewSubviewDataSource, LMListEntryDelegate, DDTableViewDelegate, LMImagePickerViewDelegate, LMMusicPickerDelegate, LMLayoutChangeDelegate>
 
 /**
  The music player.
@@ -28,6 +28,11 @@
  The playlist manager.
  */
 @property LMPlaylistManager *playlistManager;
+
+/**
+ The layout manager.
+ */
+@property LMLayoutManager *layoutManager;
 
 /**  
  The image picker view.
@@ -172,6 +177,7 @@
 			LMListEntry *listEntry = [[LMListEntry alloc]initWithDelegate:self];
 			listEntry.collectionIndex = i;
 			listEntry.alignIconToLeft = YES;
+			listEntry.stretchAcrossWidth = YES;
 			listEntry.iPromiseIWillHaveAnIconForYouSoon = YES;
 			
 			UIColor *color = [UIColor colorWithRed:47/255.0 green:47/255.0 blue:49/255.0 alpha:1.0];
@@ -296,6 +302,16 @@
 	}
 }
 
+- (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
+	BOOL willBeLandscape = (size.width > size.height);
+	
+	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		[self.songListTableView reloadData];
+	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		[self.songListTableView reloadData];
+	}];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
 	
@@ -312,6 +328,8 @@
 	
 	self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 	self.playlistManager = [LMPlaylistManager sharedPlaylistManager];
+	self.layoutManager = [LMLayoutManager sharedLayoutManager];
+	[self.layoutManager addDelegate:self];
 	
 	
 	self.imagePickerView = [LMImagePickerView newAutoLayoutView];
@@ -319,20 +337,54 @@
 	self.imagePickerView.delegate = self;
 	[self.view addSubview:self.imagePickerView];
 	
-	[self.imagePickerView autoPinEdgeToSuperviewMargin:ALEdgeLeading];
-	[self.imagePickerView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:88];
-	[self.imagePickerView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(3.5/10.0)];
-	[self.imagePickerView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.imagePickerView];
+	NSArray *imagePickerViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.imagePickerView autoPinEdgeToSuperviewMargin:ALEdgeLeading];
+		[self.imagePickerView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:88];
+		[self.imagePickerView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(3.5/10.0)];
+		[self.imagePickerView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.imagePickerView];
+	}];
+	[LMLayoutManager addNewPortraitConstraints:imagePickerViewPortraitConstraints];
 	
+	NSArray *imagePickerViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.imagePickerView autoPinEdgeToSuperviewMargin:ALEdgeLeading];
+		[self.imagePickerView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:68];
+		[self.imagePickerView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(3.0/20.0)];
+		[self.imagePickerView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.imagePickerView];
+	}];
+	[LMLayoutManager addNewLandscapeConstraints:imagePickerViewLandscapeConstraints];
+		
 	
 	self.titleTextField = [UITextField newAutoLayoutView];
 	self.titleTextField.placeholder = NSLocalizedString(@"YourPlaylistTitle", nil);
 	self.titleTextField.text = self.playlist ? self.playlist.title : nil;
 	[self.view addSubview:self.titleTextField];
 	
-	[self.titleTextField autoPinEdgeToSuperviewMargin:ALEdgeTrailing];
-	[self.titleTextField autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.imagePickerView];
-	[self.titleTextField autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.imagePickerView withOffset:15];
+	NSArray *titleTextFieldPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.titleTextField autoPinEdgeToSuperviewMargin:ALEdgeTrailing];
+		[self.titleTextField autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.imagePickerView];
+		[self.titleTextField autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.imagePickerView withOffset:15];
+	}];
+	[LMLayoutManager addNewPortraitConstraints:titleTextFieldPortraitConstraints];
+	
+	NSArray *titleTextFieldLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.titleTextField autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.imagePickerView];
+		[self.titleTextField autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.imagePickerView withOffset:15];
+	}];
+	
+	NSLayoutConstraint *trailingPinnedToCenterVerticalAxisConstraint
+     = [NSLayoutConstraint constraintWithItem:self.titleTextField
+									attribute:NSLayoutAttributeTrailing
+									relatedBy:NSLayoutRelationEqual
+									   toItem:self.view
+									attribute:NSLayoutAttributeCenterX
+								   multiplier:1.0
+									 constant:0.0];
+	
+	NSMutableArray *mutableTextViewLandscapeConstraintsArray = [NSMutableArray arrayWithArray:titleTextFieldLandscapeConstraints];
+	[mutableTextViewLandscapeConstraintsArray addObject:trailingPinnedToCenterVerticalAxisConstraint];
+	titleTextFieldLandscapeConstraints = [NSArray arrayWithArray:mutableTextViewLandscapeConstraintsArray];
+	
+	[LMLayoutManager addNewLandscapeConstraints:titleTextFieldLandscapeConstraints];
 	
 	UIView *textFieldLineView = [UIView newAutoLayoutView];
 	textFieldLineView.backgroundColor = [UIColor grayColor];
@@ -381,9 +433,9 @@
 	[backgroundView addSubview:labelView];
 	
 	[labelView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:iconView withOffset:12.0f];
-	[labelView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+	[labelView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:-5];
 	[labelView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	[labelView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+	[labelView autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:-5];
 	
 	
 	self.songListTableView = [LMTableView newAutoLayoutView];
@@ -403,8 +455,7 @@
 	[self.songListTableView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.imagePickerView withOffset:15];
 	[self.songListTableView autoPinEdgeToSuperviewMargin:ALEdgeLeading];
 	[self.songListTableView autoPinEdgeToSuperviewMargin:ALEdgeTrailing];
-	[self.songListTableView autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:20];
-	
+	[self.songListTableView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 	[self.songListTableView reloadSubviewData];
 	
 	

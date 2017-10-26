@@ -16,7 +16,19 @@
 @protocol LMLayoutChangeDelegate <NSObject>
 @optional
 
+/**
+ The trait collection changed.
+
+ @param previousTraitCollection The trait collection that dominated before the change.
+ */
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection;
+
+/**
+ The window view will transition to its new size due to rotation.
+
+ @param size The new size of the window.
+ @param coordinator The coordinator that is coordinating coordinations of coordinate cordinaldordinals.
+ */
 - (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator;
 
 @end
