@@ -190,16 +190,23 @@
 }
 
 - (LMMusicTrackCollection*)musicTrackCollectionForBigListEntry:(LMBigListEntry*)bigListEntry {
+	if(self.musicType == LMMusicTypePlaylists){
+		LMPlaylist *playlist = [self.playlistManager.playlists objectAtIndex:bigListEntry.collectionIndex];
+		return playlist.trackCollection;
+	}
 	return [self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex];
 }
 
 - (id)contentSubviewForBigListEntry:(LMBigListEntry*)bigListEntry {
-	LMMusicTrackCollection *collection = [self musicTrackCollectionForBigListEntry:bigListEntry];
+	LMMusicTrackCollection *collection = nil;
 	
 	LMPlaylist *playlist = nil;
 	if(self.musicType == LMMusicTypePlaylists){
 		playlist = [self.playlistManager.playlists objectAtIndex:bigListEntry.collectionIndex];
 		collection = playlist.trackCollection;
+	}
+	else {
+		[self musicTrackCollectionForBigListEntry:bigListEntry];
 	}
 	
     if(bigListEntry.contentView){
@@ -320,10 +327,13 @@
 - (NSString*)titleForInfoView:(LMCollectionInfoView*)infoView {
 	LMBigListEntry *bigListEntry = infoView.associatedBigListEntry;
 	
-	LMMusicTrackCollection *collection = [self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex];
+	LMMusicTrackCollection *collection = nil;
 	
 	if(self.musicType == LMMusicTypePlaylists){
 		collection = [self.playlistManager.playlists objectAtIndex:bigListEntry.collectionIndex].trackCollection;
+	}
+	else{
+		collection = [self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex];
 	}
 	
 	switch(self.musicType){
@@ -354,10 +364,13 @@
 - (NSString*)leftTextForInfoView:(LMCollectionInfoView*)infoView {
 	LMBigListEntry *bigListEntry = infoView.associatedBigListEntry;
 	
-	LMMusicTrackCollection *collection = [self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex];
+	LMMusicTrackCollection *collection = nil;
 	
 	if(self.musicType == LMMusicTypePlaylists){
 		collection = [self.playlistManager.playlists objectAtIndex:bigListEntry.collectionIndex].trackCollection;
+	}
+	else{
+		collection = [self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex];
 	}
 	
 	switch(self.musicType){

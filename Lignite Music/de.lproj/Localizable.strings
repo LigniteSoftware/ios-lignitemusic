@@ -39,6 +39,29 @@
  
  */
 
+"DeletePlaylistTitle" = "Delete playlist?";
+"DeletePlaylistDescription" = "Are you sure you want to delete the playlist '%@'?\n\nThis action is not reversable."; //%@ is the name of the playlist.
+"Create" = "Create";
+"Delete" = "Delete";
+"Edit" = "Edit";
+"EditingPlaylist" = "Editing playlist";
+"NewPlaylist" = "New playlist";
+"TapToAddAnImage" = "Add an image";
+"SetupPlaylistPhoto" = "Setup playlist photo";
+"ChoosePhoto" = "Choose photo";
+"TakePhoto" = "Take photo";
+"EditPhoto" = "Edit photo";
+"DeletePhoto" = "Delete photo";
+"Cancel" = "Cancel";
+"Save" = "Save";
+"AddSongs" = "Add songs";
+"SelectSongs" = "Select songs";
+"Source" = "Source";
+"NoSongsInPlaylistBuilder" = "There are no songs in this playlist yet.\n\nStart adding songs by tapping the 'Add songs' button above.";
+"SelectASource" = "Please select where to get music from";
+
+"YourPlaylistTitle" = "Headbangers";
+
 "NoTracksInFavourites" = "Du hast noch keine Favoriten definiert. Streiche einfach auf einem beliebigen Song von links nach rechts, um sie in dieser Liste aufzunehmen.";
 
 "Favourites" = "Favoriten";

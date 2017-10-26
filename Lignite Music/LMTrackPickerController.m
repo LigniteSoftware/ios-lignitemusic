@@ -12,12 +12,17 @@
 #import "LMListEntry.h"
 #import "LMCircleView.h"
 
-@interface LMTrackPickerController ()<UICollectionViewDelegate, UICollectionViewDataSource, LMListEntryDelegate>
+@interface LMTrackPickerController ()<UICollectionViewDelegate, UICollectionViewDataSource, LMListEntryDelegate, LMLayoutChangeDelegate>
 
 /**
  The music player.
  */
 @property LMMusicPlayer *musicPlayer;
+
+/**
+ The layout manager.
+ */
+@property LMLayoutManager *layoutManager;
 
 /**
  The collection view that will display the contents provided.
@@ -260,7 +265,16 @@
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
 	
-	return CGSizeMake(WINDOW_FRAME.size.width - 40, WINDOW_FRAME.size.height/8.0f);
+	CGFloat height = 0.0;
+	
+	if([LMLayoutManager isiPad]){
+		height = ([LMLayoutManager isLandscapeiPad] ? WINDOW_FRAME.size.height : WINDOW_FRAME.size.width)/10.0f;
+	}
+	else{
+		height = ([LMLayoutManager isLandscape] ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height)/9.0f;
+	}
+	
+	return CGSizeMake(WINDOW_FRAME.size.width - 40, height);
 }
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section {
@@ -310,6 +324,14 @@
 	[self.sourceMusicPickerController saveSongSelection];
 }
 
+- (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
+	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		[self.collectionView reloadData];
+	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		[self.collectionView reloadData];
+	}];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
 	
@@ -320,6 +342,9 @@
 	if(!self.trackCollections){
 		self.trackCollections = [self.musicPlayer queryCollectionsForMusicType:self.musicType];
 	}
+	
+	self.layoutManager = [LMLayoutManager sharedLayoutManager];
+	[self.layoutManager addDelegate:self];
 	
 	
 	UICollectionViewFlowLayout *flowLayout = [UICollectionViewFlowLayout new];

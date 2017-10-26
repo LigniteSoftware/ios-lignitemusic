@@ -302,9 +302,7 @@
 	}
 }
 
-- (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
-	BOOL willBeLandscape = (size.width > size.height);
-	
+- (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator	{
 	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		[self.songListTableView reloadData];
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
