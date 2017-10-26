@@ -13,7 +13,9 @@
 typedef NS_ENUM(NSInteger, LMLandscapeNavigationBarButton) {
 	LMLandscapeNavigationBarButtonLogo = 0,
 	LMLandscapeNavigationBarButtonBack,
-	LMLandscapeNavigationBarButtonWarning
+	LMLandscapeNavigationBarButtonWarning,
+	LMLandscapeNavigationBarButtonCreate,
+	LMLandscapeNavigationBarButtonEdit
 };
 
 @protocol LMLandscapeNavigationBarDelegate <NSObject>
@@ -29,9 +31,17 @@ typedef NS_ENUM(NSInteger, LMLandscapeNavigationBarButton) {
 
 @interface LMLandscapeNavigationBar : LMView
 
+/**
+ The navigation bar mode, which affects the layout of the navigation bar.
+
+ - LMLandscapeNavigationBarModeOnlyLogo: Only the logo in the center of the nav bar. Warning button on top if applicable.
+ - LMLandscapeNavigationBarModeWithBackButton: Places a back button on the top of the bar, with the now playing Lignite button going to the bottom. Warning button goes in the center, if applicable.
+ - LMLandscapeNavigationBarModePlaylistView: A + button for create at the top, an edit button below that, and the Lignite icon at the bottom. Warning button above the Lignite icon if visible.
+ */
 typedef NS_ENUM(NSInteger, LMLandscapeNavigationBarMode) {
 	LMLandscapeNavigationBarModeOnlyLogo = 0,
-	LMLandscapeNavigationBarModeWithBackButton
+	LMLandscapeNavigationBarModeWithBackButton,
+	LMLandscapeNavigationBarModePlaylistView
 };
 
 /**

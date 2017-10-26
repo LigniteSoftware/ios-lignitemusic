@@ -305,6 +305,11 @@
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithTitle:NSLocalizedString(@"Save", nil) style:UIBarButtonItemStyleDone target:self action:@selector(savePlaylistEditing)];
 	
 	
+	if(!self.playlist){
+		self.playlist = [LMPlaylist new];
+	}
+	
+	
 	self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 	self.playlistManager = [LMPlaylistManager sharedPlaylistManager];
 	

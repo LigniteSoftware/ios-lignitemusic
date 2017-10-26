@@ -27,6 +27,21 @@
  */
 @property UIImageView *warningImageView;
 
+/**
+ The image view for the create button.
+ */
+@property UIImageView *createImageView;
+
+/**
+ The image view for the edit button.
+ */
+@property UIImageView *editImageView;
+
+/**
+ If the mode is LMLandscapeNavigationBarModePlaylistView, and the user taps the edit button, this will switch to YES and the create button will become the cancel button. Once the create button is then tapped, this will be set to NO and the button configuration will be restored.
+ */
+@property BOOL isEditing;
+
 @end
 
 @implementation LMLandscapeNavigationBar
@@ -62,6 +77,9 @@
 	[self layoutIfNeeded];
 	
 	self.warningImageView.hidden = !self.showWarningButton;
+	
+	self.createImageView.hidden = self.mode != LMLandscapeNavigationBarModePlaylistView;
+	self.editImageView.hidden = self.createImageView.hidden;
 	
 	switch(mode){
 		case LMLandscapeNavigationBarModeOnlyLogo: {
@@ -109,6 +127,31 @@
 			[self.logoImageView setContentCompressionResistancePriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
 			break;
 		}
+		case LMLandscapeNavigationBarModePlaylistView: {
+			self.isEditing = NO;
+			self.createImageView.image = [LMAppIcon invertImage:[LMAppIcon imageForIcon:LMIconAdd]];
+			
+			[self.createImageView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:18];
+			[self.createImageView autoAlignAxisToSuperviewAxis:ALAxisVertical];
+			[self.createImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(3.0/6.0)];
+			[self.createImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.createImageView];
+			
+			[self.editImageView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.createImageView withOffset:24];
+			[self.editImageView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.createImageView];
+			[self.editImageView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.createImageView];
+			[self.editImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.createImageView];
+			
+			[self.warningImageView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.logoImageView];
+			[self.warningImageView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.logoImageView];
+			[self.warningImageView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.logoImageView];
+			[self.warningImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.logoImageView];
+			
+			[self.logoImageView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+			[self.logoImageView autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:2];
+			[self.logoImageView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+			[self.logoImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self];
+			break;
+		}
 	}
 	
 	[UIView animateWithDuration:0.25 animations:^{
@@ -122,6 +165,25 @@
 	}
 	else if(gestureRecognizer.view == self.logoImageView){
 		[self.delegate buttonTappedOnLandscapeNavigationBar:LMLandscapeNavigationBarButtonLogo];
+	}
+	else if(gestureRecognizer.view == self.createImageView){
+		if(self.isEditing){
+			self.createImageView.image = [LMAppIcon invertImage:[LMAppIcon imageForIcon:LMIconAdd]];
+			self.editImageView.hidden = NO;
+			self.isEditing = NO;
+			
+			[self.delegate buttonTappedOnLandscapeNavigationBar:LMLandscapeNavigationBarButtonEdit]; //To inverse editing mode
+		}
+		else{
+			[self.delegate buttonTappedOnLandscapeNavigationBar:LMLandscapeNavigationBarButtonCreate];
+		}
+	}
+	else if(gestureRecognizer.view == self.editImageView){
+		self.createImageView.image = [LMAppIcon invertImage:[LMAppIcon imageForIcon:LMIconXCross]];
+		self.editImageView.hidden = YES;
+		self.isEditing = YES;
+		
+		[self.delegate buttonTappedOnLandscapeNavigationBar:LMLandscapeNavigationBarButtonEdit];
 	}
 	else{
 		[self.delegate buttonTappedOnLandscapeNavigationBar:LMLandscapeNavigationBarButtonWarning];
@@ -174,6 +236,28 @@
 		
 		UITapGestureRecognizer *warningImageViewTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tappedButton:)];
 		[self.warningImageView addGestureRecognizer:warningImageViewTapGestureRecognizer];
+		
+		
+		self.createImageView = [UIImageView new];
+		self.createImageView.contentMode = UIViewContentModeScaleAspectFit;
+		self.createImageView.image = [LMAppIcon invertImage:[LMAppIcon imageForIcon:LMIconAdd]];
+		self.createImageView.clipsToBounds = YES;
+		self.createImageView.userInteractionEnabled = YES;
+		[self addSubview:self.createImageView];
+		
+		UITapGestureRecognizer *createImageViewTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tappedButton:)];
+		[self.createImageView addGestureRecognizer:createImageViewTapGestureRecognizer];
+		
+		
+		self.editImageView = [UIImageView new];
+		self.editImageView.contentMode = UIViewContentModeScaleAspectFit;
+		self.editImageView.image = [LMAppIcon invertImage:[LMAppIcon imageForIcon:LMIconEdit]];
+		self.editImageView.clipsToBounds = YES;
+		self.editImageView.userInteractionEnabled = YES;
+		[self addSubview:self.editImageView];
+		
+		UITapGestureRecognizer *editImageViewTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tappedButton:)];
+		[self.editImageView addGestureRecognizer:editImageViewTapGestureRecognizer];
 		
 		
 		[self setMode:self.mode];

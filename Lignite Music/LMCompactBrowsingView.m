@@ -573,7 +573,7 @@
 - (void)changeBottomSpacing:(CGFloat)bottomSpacing {
 	NSLog(@"Setting bottom spacing %f", bottomSpacing);
     [UIView animateWithDuration:0.5 animations:^{
-       self.collectionView.contentInset = UIEdgeInsetsMake(self.musicType == LMMusicTypePlaylists ? 100 : 0, 0, bottomSpacing, 0);
+       self.collectionView.contentInset = UIEdgeInsetsMake((self.musicType == LMMusicTypePlaylists && !self.layoutManager.isLandscape) ? 100 : 0, 0, 100, 0);
     }];
 }
 
@@ -616,6 +616,9 @@
 				transitioningFromPortraitToLandscape = YES;
 			}
 		}
+		
+		self.playlistModificationButtonView.hidden = (self.musicType == LMMusicTypePlaylists && willBeLandscape);
+		self.collectionView.contentInset = UIEdgeInsetsMake((self.musicType == LMMusicTypePlaylists && !willBeLandscape) ? 100 : 0, 0, 100, 0);
 		
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		[UIView animateWithDuration:0.25 animations:^{
@@ -706,7 +709,6 @@
 		NSLog(@"New playlist");
 		
 		LMPlaylistEditorViewController *playlistViewController = [LMPlaylistEditorViewController new];
-		playlistViewController.playlist = [LMPlaylist new];
 		playlistViewController.delegate = self;
 		UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:playlistViewController];
 		[self.rootViewController presentViewController:navigation animated:YES completion:^{
@@ -881,7 +883,7 @@
 		self.collectionView.translatesAutoresizingMaskIntoConstraints = NO;
 		self.collectionView.delegate = self;
 		self.collectionView.dataSource = self;
-		self.collectionView.contentInset = UIEdgeInsetsMake(self.musicType == LMMusicTypePlaylists ? 100 : 0, 0, 100, 0);
+		self.collectionView.contentInset = UIEdgeInsetsMake((self.musicType == LMMusicTypePlaylists && !self.layoutManager.isLandscape) ? 100 : 0, 0, 100, 0);
 		[self.collectionView registerClass:[LMCollectionViewCell class] forCellWithReuseIdentifier:@"cellIdentifier"];
 		[self addSubview:self.collectionView];
 		
@@ -913,7 +915,7 @@
 		self.playlistModificationButtonView.userInteractionEnabled = YES;
 		self.playlistModificationButtonView.layer.masksToBounds = YES;
 		self.playlistModificationButtonView.layer.cornerRadius = 8.0f;
-		self.playlistModificationButtonView.hidden = !(self.musicType == LMMusicTypePlaylists);
+		self.playlistModificationButtonView.hidden = !(self.musicType == LMMusicTypePlaylists && !self.layoutManager.isLandscape);
 		[self addSubview:self.playlistModificationButtonView];
 
 		[self.playlistModificationButtonView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:16];

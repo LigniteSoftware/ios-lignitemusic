@@ -43,6 +43,16 @@
 - (void)backButtonPressed;
 
 /**
+ The plus button was tapped, indicating the user wants to create a new playlist.
+ */
+- (void)addPlaylistButtonTapped;
+
+/**
+ The edit button was tapped, indicating the user wants to enter editing mode.
+ */
+- (void)editPlaylistButtonTapped;
+
+/**
  Scroll the view to a certain index in its music track collection.
  
  @param index The index to scroll to.

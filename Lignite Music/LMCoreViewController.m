@@ -122,6 +122,8 @@ LMControlBarViewDelegate
 
 @property UIButton *navigationBarWarningButton;
 
+@property LMMusicType musicType;
+
 @end
 
 @implementation LMCoreViewController
@@ -556,6 +558,8 @@ LMControlBarViewDelegate
 					break;
 			}
 			
+			self.musicType = associatedMusicType;
+			
 			[self logMusicTypeView:associatedMusicType];
 			
 			NSLog(@"Type %d", associatedMusicType);
@@ -569,6 +573,8 @@ LMControlBarViewDelegate
 		}
 		case LMIconTitles: {
 			BOOL requiresReload = self.titleView.favourites == YES;
+			
+			self.musicType = LMMusicTypeTitles;
 			
 			self.titleView.favourites = NO;
 			self.compactView.hidden = YES;
@@ -595,6 +601,8 @@ LMControlBarViewDelegate
 			self.compactView.hidden = YES;
 			self.titleView.hidden = NO;
 			self.currentSource = self.titleView;
+			
+			self.musicType = LMMusicTypeFavourites;
 			
 			[self.titleView rebuildTrackCollection];
 			[self.titleView.songListTableView reloadSubviewData];
@@ -631,6 +639,8 @@ LMControlBarViewDelegate
 			NSLog(@"Unknown index of source %@.", source);
 			break;
 	}
+	
+	[self.landscapeNavigationBar setMode:self.musicType == LMMusicTypePlaylists ? LMLandscapeNavigationBarModePlaylistView : LMLandscapeNavigationBarModeOnlyLogo];
 }
 
 - (void)prepareForOpenSettings {
@@ -664,7 +674,7 @@ LMControlBarViewDelegate
 	[super viewWillAppear:animated];
 	
 	[self.buttonNavigationBar.browsingBar setShowingLetterTabs:YES];
-	[self.landscapeNavigationBar setMode:LMLandscapeNavigationBarModeOnlyLogo];
+	[self.landscapeNavigationBar setMode:self.musicType == LMMusicTypePlaylists ? LMLandscapeNavigationBarModePlaylistView : LMLandscapeNavigationBarModeOnlyLogo];
 }
 
 - (void)requiredHeightForNavigationBarChangedTo:(CGFloat)requiredHeight withAnimationDuration:(CGFloat)animationDuration {
@@ -1020,6 +1030,14 @@ LMControlBarViewDelegate
 			[self launchNowPlayingFromNavigationBar];
 			break;
 		}
+		case LMLandscapeNavigationBarButtonCreate: {
+			[self.compactView addPlaylistButtonTapped];
+			break;
+		}
+		case LMLandscapeNavigationBarButtonEdit: {
+			[self.compactView editPlaylistButtonTapped];
+			break;
+		}
 	}
 }
 
@@ -1310,7 +1328,10 @@ LMControlBarViewDelegate
 	
 	self.landscapeNavigationBar = [[LMLandscapeNavigationBar alloc] initWithFrame:CGRectMake(0, 0, 64.0, self.layoutManager.isLandscape ? self.view.frame.size.height : self.view.frame.size.width)];
 	self.landscapeNavigationBar.delegate = self;
-	self.landscapeNavigationBar.mode = (self.navigationBar.items.count > 1) ? LMLandscapeNavigationBarModeWithBackButton : LMLandscapeNavigationBarModeOnlyLogo;
+	self.landscapeNavigationBar.mode = (self.navigationBar.items.count > 1)
+	? LMLandscapeNavigationBarModeWithBackButton
+	: LMLandscapeNavigationBarModeOnlyLogo;
+//	self.landscapeNavigationBar.mode = LMLandscapeNavigationBarModePlaylistView;
 	[self.navigationController.view addSubview:self.landscapeNavigationBar];
 	
 	//						NSArray *landscapeNavigationBarLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{

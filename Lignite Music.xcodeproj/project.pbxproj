@@ -810,8 +810,6 @@
 		6A66C76C1CDA1B4E009019CF /* Icons */ = {
 			isa = PBXGroup;
 			children = (
-				6AA76AC41F9AD8690007531C /* icon_edit_white.png */,
-				6AA76AC51F9AD8690007531C /* icon_plus_white.png */,
 				6A98CBCB1EB4E9BF003B8B8E /* icon_3_dots_horizontal.png */,
 				6A98CBCC1EB4E9BF003B8B8E /* icon_3_dots_vertical.png */,
 				6AAA56091DF553AF00692CFB /* icon_a_to_z.png */,
@@ -831,6 +829,7 @@
 				6A7268221E163F6400FA01DB /* icon_down_arrow.png */,
 				6A26B46F1DE40824008B5B69 /* icon_download.png */,
 				6A514E131CE9621B00AFB351 /* icon_dynamic_playlist.png */,
+				6AA76AC41F9AD8690007531C /* icon_edit_white.png */,
 				6A25F7A51F99223B00CC8082 /* icon_favourite_black.png */,
 				6A25F7A91F99709200CC8082 /* icon_favourite_hud.png */,
 				6A25F7AC1F99B42D00CC8082 /* icon_favourite_outlined_black.png */,
@@ -859,6 +858,7 @@
 				6A072BFC1E87E79C0092EA44 /* icon_pebbles.png */,
 				6AEB9D321BAD812700AD19FA /* icon_play.png */,
 				6AC77A151DC42CF400BABBB3 /* icon_playlists.png */,
+				6AA76AC51F9AD8690007531C /* icon_plus_white.png */,
 				6A82F9321F9660340050430E /* icon_remove_track_from_queue.png */,
 				6AC32B751DB53EB20007C67E /* icon_repeat_general.png */,
 				6ACED1061DB7BE1D006EACD2 /* icon_repeat_one.png */,
