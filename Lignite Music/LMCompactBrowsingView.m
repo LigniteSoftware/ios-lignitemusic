@@ -491,7 +491,13 @@
 
 	if(cell.contentView.subviews.count == 0){
 		if(indexPath.row == flowLayout.indexOfDetailView){
-			LMMusicTrackCollection *trackCollection = [self.musicTrackCollections objectAtIndex:flowLayout.indexOfItemDisplayingDetailView];
+			LMMusicTrackCollection *trackCollection = nil;
+			if(self.musicType == LMMusicTypePlaylists){
+				trackCollection = [self.playlistManager.playlists objectAtIndex:flowLayout.indexOfItemDisplayingDetailView].trackCollection;
+			}
+			else{
+				trackCollection = [self.musicTrackCollections objectAtIndex:flowLayout.indexOfItemDisplayingDetailView];
+			}
 			
 			flowLayout.amountOfItemsInDetailView = trackCollection.count;
 			
@@ -680,7 +686,12 @@
 		
 		self.phoneLandscapeDetailView.index = index;
 		self.phoneLandscapeDetailView.musicType = self.musicType;
-		self.phoneLandscapeDetailView.musicTrackCollection = [self.musicTrackCollections objectAtIndex:index];
+		if(self.musicType == LMMusicTypePlaylists){
+			self.phoneLandscapeDetailView.musicTrackCollection = [self.playlistManager.playlists objectAtIndex:index].trackCollection;
+		}
+		else{
+			self.phoneLandscapeDetailView.musicTrackCollection = [self.musicTrackCollections objectAtIndex:index];
+		}
 		
 		[self.phoneLandscapeDetailView.detailView setShowingSpecificTrackCollection:NO animated:NO];
 	}
@@ -1015,7 +1026,13 @@
 	BOOL displayNothing = (i == layout.indexOfItemDisplayingDetailView);
 	
 	if(!displayNothing){
-		LMMusicTrackCollection *trackCollection = [self.musicTrackCollections objectAtIndex:i];
+		LMMusicTrackCollection *trackCollection = nil;
+		if(self.musicType == LMMusicTypePlaylists){
+			trackCollection = [self.playlistManager.playlists objectAtIndex:i].trackCollection;
+		}
+		else{
+			trackCollection = [self.musicTrackCollections objectAtIndex:i];
+		}
 		layout.amountOfItemsInDetailView = trackCollection.count;
 	}
 	layout.indexOfItemDisplayingDetailView = displayNothing ? LMNoDetailViewSelected : i;
