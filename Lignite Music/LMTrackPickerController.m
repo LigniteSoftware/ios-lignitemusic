@@ -414,7 +414,12 @@
 		NSLog(@"%d results.", (int)searchResultsMutableArray.count);
 	}
 	
-	self.letterTabBar.lettersDictionary = [self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:self.displayingTrackCollections withAssociatedMusicType:self.musicType];
+	self.letterTabBar.lettersDictionary = [self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:
+										   self.musicType == LMMusicTypeTitles
+										   ? @[self.displayingTitleTrackCollection]
+										  : self.displayingTrackCollections
+									   
+																						   withAssociatedMusicType:self.musicType];
 	
 	for(NSInteger i = 0; i < searchResultsMutableArray.count; i++){
 		[[self.listEntryArray objectAtIndex:i] reloadContents];

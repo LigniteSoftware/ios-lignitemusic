@@ -647,6 +647,7 @@
 		}
 		
 		self.playlistModificationButtonView.hidden = (self.musicType == LMMusicTypePlaylists && willBeLandscape);
+		self.playlistModificationButtonBackgroundView.hidden = (self.musicType == LMMusicTypePlaylists && willBeLandscape);
 		self.collectionView.contentInset = UIEdgeInsetsMake((self.musicType == LMMusicTypePlaylists && !willBeLandscape) ? 60 : 0, 0, 100, 0);
 		
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
@@ -952,6 +953,7 @@
 		
 		self.playlistModificationButtonBackgroundView = [UIView newAutoLayoutView];
 		self.playlistModificationButtonBackgroundView.backgroundColor = [UIColor whiteColor];
+		self.playlistModificationButtonBackgroundView.hidden = !(self.musicType == LMMusicTypePlaylists && !self.layoutManager.isLandscape);
 		[self addSubview:self.playlistModificationButtonBackgroundView];
 		
 		[self.playlistModificationButtonBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop];
