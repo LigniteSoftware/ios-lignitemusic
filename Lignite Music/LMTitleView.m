@@ -157,28 +157,12 @@
 																					  forProperty:MPMediaItemPropertyMediaType
 																				   comparisonType:MPMediaPredicateComparisonEqualTo];
 	[everything addFilterPredicate:musicFilterPredicate];
-
-	NSArray *songs = [everything items];
 	
-	//Why the fuck do you do this? \/
-	MPMediaItemCollection *mediaCollection = [MPMediaItemCollection collectionWithItems:songs];
-	NSMutableArray* musicTracks = [[NSMutableArray alloc]init];
-	
-	NSMutableArray *musicCollection = [[NSMutableArray alloc]init];
-	for(int itemIndex = 0; itemIndex < mediaCollection.items.count; itemIndex++){
-		MPMediaItem *musicItem = [mediaCollection.items objectAtIndex:itemIndex];
-		LMMusicTrack *musicTrack = musicItem;
-		[musicCollection addObject:musicTrack];
-	}
-	//Fix this you fucking idiot ^
-	// no
+	NSMutableArray *musicCollection = [[NSMutableArray alloc]initWithArray:[everything items]];
 	
 	NSString *sortKey = @"title";
 	NSSortDescriptor *albumSort = [NSSortDescriptor sortDescriptorWithKey:sortKey ascending:YES];
 	musicCollection = [NSMutableArray arrayWithArray:[musicCollection sortedArrayUsingDescriptors:@[albumSort]]];
-	
-	LMMusicTrackCollection *trackCollection = mediaCollection;
-	[musicTracks addObject:trackCollection];
 	
 	self.allSongsTrackCollection = [MPMediaItemCollection collectionWithItems:[NSArray arrayWithArray:musicCollection]];
 	

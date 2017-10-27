@@ -553,8 +553,10 @@ BOOL shuffleForDebug = NO;
 						trackLetter = [self firstLetterForString:musicTrack.albumTitle];
 					}
 					break;
+				case LMMusicTypeFavourites:
 				case LMMusicTypeTitles:
 					if(musicTrack.title){
+						NSLog(@"%@ %lu %lu", musicTrack.title, collectionIndex, lastCollectionIndex);
 						trackLetter = [self firstLetterForString:musicTrack.title];
 					}
 					break;

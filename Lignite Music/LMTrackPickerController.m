@@ -11,8 +11,9 @@
 #import "LMColour.h"
 #import "LMListEntry.h"
 #import "LMCircleView.h"
+#import "LMLetterTabBar.h"
 
-@interface LMTrackPickerController ()<UICollectionViewDelegate, UICollectionViewDataSource, LMListEntryDelegate, LMLayoutChangeDelegate, UISearchBarDelegate>
+@interface LMTrackPickerController ()<UICollectionViewDelegate, UICollectionViewDataSource, LMListEntryDelegate, LMLayoutChangeDelegate, UISearchBarDelegate, LMLetterTabDelegate>
 
 /**
  The music player.
@@ -48,6 +49,11 @@
  The title collections that the are the result of the user's search result, nil if no search is taking place.
  */
 @property LMMusicTrackCollection *searchResultTitleTrackCollection;
+
+/**
+ The letter tab bar.
+ */
+@property LMLetterTabBar *letterTabBar;
 
 @end
 
@@ -360,6 +366,8 @@
 		
 		[self.collectionView reloadData];
 		
+		self.letterTabBar.lettersDictionary = [self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:self.trackCollections withAssociatedMusicType:self.musicType];
+		
 		for(LMListEntry *listEntry in self.listEntryArray){
 			[listEntry reloadContents];
 		}
@@ -406,12 +414,22 @@
 		NSLog(@"%d results.", (int)searchResultsMutableArray.count);
 	}
 	
+	self.letterTabBar.lettersDictionary = [self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:self.displayingTrackCollections withAssociatedMusicType:self.musicType];
+	
 	for(NSInteger i = 0; i < searchResultsMutableArray.count; i++){
 		[[self.listEntryArray objectAtIndex:i] reloadContents];
 	}
 	
 	[self.collectionView reloadData];
 }
+
+- (void)letterSelected:(NSString*)letter atIndex:(NSUInteger)index {
+	NSLog(@"Letter selected: %@/%lu", letter, index);
+	
+	[self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UICollectionViewScrollPositionTop animated:NO];
+}
+
+- (void)swipeDownGestureOccurredOnLetterTabBar { } //Nothing, for now
 
 - (void)saveSongSelection {
 	NSLog(@"Done");
@@ -441,7 +459,24 @@
 	
 	self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 	if(!self.trackCollections){
-		self.trackCollections = [self.musicPlayer queryCollectionsForMusicType:self.musicType];
+		if(self.musicType == LMMusicTypeTitles){
+			MPMediaQuery *everything = [MPMediaQuery new];
+			MPMediaPropertyPredicate *musicFilterPredicate = [MPMediaPropertyPredicate predicateWithValue:[NSNumber numberWithInteger:MPMediaTypeMusic]
+																							  forProperty:MPMediaItemPropertyMediaType
+																						   comparisonType:MPMediaPredicateComparisonEqualTo];
+			[everything addFilterPredicate:musicFilterPredicate];
+			
+			NSMutableArray *musicCollection = [[NSMutableArray alloc]initWithArray:[everything items]];
+			
+			NSString *sortKey = @"title";
+			NSSortDescriptor *albumSort = [NSSortDescriptor sortDescriptorWithKey:sortKey ascending:YES];
+			musicCollection = [NSMutableArray arrayWithArray:[musicCollection sortedArrayUsingDescriptors:@[albumSort]]];
+			
+			self.trackCollections = @[[MPMediaItemCollection collectionWithItems:[NSArray arrayWithArray:musicCollection]]];
+		}
+		else{
+			self.trackCollections = [self.musicPlayer queryCollectionsForMusicType:self.musicType];
+		}
 	}
 	
 	self.layoutManager = [LMLayoutManager sharedLayoutManager];
@@ -458,6 +493,17 @@
 	[self.searchBar autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:64];
 	
 	
+	self.letterTabBar = [LMLetterTabBar new];
+	self.letterTabBar.delegate = self;
+	self.letterTabBar.lettersDictionary = [self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:self.trackCollections withAssociatedMusicType:self.musicType];
+	[self.view addSubview:self.letterTabBar];
+	
+	[self.letterTabBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+	[self.letterTabBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+	[self.letterTabBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+	[self.letterTabBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/15.0)];
+	
+	
 	UICollectionViewFlowLayout *flowLayout = [UICollectionViewFlowLayout new];
 	
 	self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:flowLayout];
@@ -471,8 +517,11 @@
 	self.collectionView.backgroundColor = [UIColor whiteColor];
 	[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 	[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+	[self.collectionView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.letterTabBar];
 	[self.collectionView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.searchBar];
+	
+	
+	[self.view bringSubviewToFront:self.letterTabBar];
 	
 	
 	self.listEntryArray = [NSMutableArray new];
