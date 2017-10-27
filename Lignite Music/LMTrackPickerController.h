@@ -56,6 +56,16 @@ typedef NS_ENUM(NSInteger, LMTrackPickerDepthLevel){
 @property (readonly) LMMusicTrackCollection *selectedTrackCollection;
 
 /**
+ The track collections that the picker should display. This changes based on whether or not the user is searching.
+ */
+@property (readonly) NSArray<LMMusicTrackCollection*> *displayingTrackCollections;
+
+/**
+ The title collections that the picker should display. This changes based on whether or not the user is searching.
+ */
+@property (readonly) LMMusicTrackCollection *displayingTitleTrackCollection;
+
+/**
  The source music picker controller that contains the original selected track collection. Called upon to modify the selected tracks.
  */
 @property LMMusicPickerController *sourceMusicPickerController;

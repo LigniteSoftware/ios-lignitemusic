@@ -12,7 +12,7 @@
 #import "LMListEntry.h"
 #import "LMCircleView.h"
 
-@interface LMTrackPickerController ()<UICollectionViewDelegate, UICollectionViewDataSource, LMListEntryDelegate, LMLayoutChangeDelegate>
+@interface LMTrackPickerController ()<UICollectionViewDelegate, UICollectionViewDataSource, LMListEntryDelegate, LMLayoutChangeDelegate, UISearchBarDelegate>
 
 /**
  The music player.
@@ -25,6 +25,11 @@
 @property LMLayoutManager *layoutManager;
 
 /**
+ The search bar.
+ */
+@property UISearchBar *searchBar;
+
+/**
  The collection view that will display the contents provided.
  */
 @property UICollectionView *collectionView;
@@ -32,7 +37,17 @@
 /**
  The array of list entries which go on the collection view.
  */
-@property NSMutableArray *listEntryArray;
+@property NSMutableArray<LMListEntry*> *listEntryArray;
+
+/**
+ The track collections that the are the result of the user's search result, nil if no search is taking place.
+ */
+@property NSArray<LMMusicTrackCollection*> *searchResultTrackCollections;
+
+/**
+ The title collections that the are the result of the user's search result, nil if no search is taking place.
+ */
+@property LMMusicTrackCollection *searchResultTitleTrackCollection;
 
 @end
 
@@ -40,6 +55,26 @@
 
 @synthesize titleTrackCollection = _titleTrackCollection;
 @synthesize selectedTrackCollection = _selectedTrackCollection;
+@synthesize displayingTrackCollections = _displayingTrackCollections;
+@synthesize displayingTitleTrackCollection = _displayingTitleTrackCollection;
+
+- (BOOL)isSearching {
+	return (self.searchResultTitleTrackCollection || self.searchResultTrackCollections);
+}
+
+- (NSArray<LMMusicTrackCollection*>*)displayingTrackCollections {
+	if(!self.isSearching){
+		return self.trackCollections;
+	}
+	return self.searchResultTrackCollections;
+}
+
+- (LMMusicTrackCollection*)displayingTitleTrackCollection {
+	if(!self.isSearching){
+		return self.titleTrackCollection;
+	}
+	return self.searchResultTitleTrackCollection;
+}
 
 - (LMMusicTrackCollection*)titleTrackCollection {
 	if(self.trackCollections.count > 0){
@@ -58,7 +93,7 @@
 	if(self.depthLevel == LMTrackPickerDepthLevelSongs){
 		NSLog(@"Pick song");
 		
-		LMMusicTrack *track = [self.titleTrackCollection.items objectAtIndex:entry.collectionIndex];
+		LMMusicTrack *track = [self.displayingTitleTrackCollection.items objectAtIndex:entry.collectionIndex];
 		
 		[self.sourceMusicPickerController setTrack:track asSelected:![self.selectedTrackCollection.items containsObject:track]];
 		
@@ -70,12 +105,12 @@
 	
 	NSString *title = nil;
 	
-	LMMusicTrack *representativeItem = [self.trackCollections objectAtIndex:entry.collectionIndex].representativeItem;
+	LMMusicTrack *representativeItem = [self.displayingTrackCollections objectAtIndex:entry.collectionIndex].representativeItem;
 	NSLog(@"Representative %@", representativeItem.albumTitle);
 	NSArray<LMMusicTrackCollection*> *trackCollections = [self.musicPlayer collectionsForRepresentativeTrack:representativeItem forMusicType:self.musicType];
 	
 	if(self.depthLevel == LMTrackPickerDepthLevelAlbums){
-		trackCollections = @[ [self.trackCollections objectAtIndex:entry.collectionIndex] ];
+		trackCollections = @[ [self.displayingTrackCollections objectAtIndex:entry.collectionIndex] ];
 	}
 	
 	switch(self.musicType){
@@ -130,7 +165,7 @@
 		UIView *checkmarkPaddedView = [UIView newAutoLayoutView];
 		
 		LMCircleView *checkmarkView = [LMCircleView newAutoLayoutView];
-		checkmarkView.backgroundColor = [self.selectedTrackCollection.items containsObject:[self.titleTrackCollection.items objectAtIndex:entry.collectionIndex]] ? [LMColour ligniteRedColour] : [UIColor whiteColor];
+		checkmarkView.backgroundColor = [self.selectedTrackCollection.items containsObject:[self.displayingTitleTrackCollection.items objectAtIndex:entry.collectionIndex]] ? [LMColour ligniteRedColour] : [UIColor whiteColor];
 		
 		[checkmarkPaddedView addSubview:checkmarkView];
 		
@@ -171,12 +206,12 @@
 }
 
 - (NSString*)titleForListEntry:(LMListEntry*)entry {
-	LMMusicTrackCollection *collection = (self.depthLevel == LMTrackPickerDepthLevelSongs) ? nil : [self.trackCollections objectAtIndex:entry.collectionIndex];
+	LMMusicTrackCollection *collection = (self.depthLevel == LMTrackPickerDepthLevelSongs) ? nil : [self.displayingTrackCollections objectAtIndex:entry.collectionIndex];
 	
 	switch(self.musicType){
 		case LMMusicTypeFavourites:
 		case LMMusicTypeTitles:
-			return [self.titleTrackCollection.items objectAtIndex:entry.collectionIndex].title;
+			return [self.displayingTitleTrackCollection.items objectAtIndex:entry.collectionIndex].title;
 		case LMMusicTypeGenres: {
 			return collection.representativeItem.genre ? collection.representativeItem.genre : NSLocalizedString(@"UnknownGenre", nil);
 		}
@@ -196,12 +231,12 @@
 }
 
 - (NSString*)subtitleForListEntry:(LMListEntry*)entry {
-	LMMusicTrackCollection *collection = (self.depthLevel == LMTrackPickerDepthLevelSongs) ? nil : [self.trackCollections objectAtIndex:entry.collectionIndex];
+	LMMusicTrackCollection *collection = (self.depthLevel == LMTrackPickerDepthLevelSongs) ? nil : [self.displayingTrackCollections objectAtIndex:entry.collectionIndex];
 	
 	switch(self.musicType){
 		case LMMusicTypeFavourites:
 		case LMMusicTypeTitles:
-			return [self.titleTrackCollection.items objectAtIndex:entry.collectionIndex].artist;
+			return [self.displayingTitleTrackCollection.items objectAtIndex:entry.collectionIndex].artist;
 		case LMMusicTypeComposers:
 		case LMMusicTypeArtists: {
 			BOOL usingSpecificTrackCollections = (self.musicType != LMMusicTypePlaylists
@@ -237,7 +272,7 @@
 }
 
 - (UIImage*)iconForListEntry:(LMListEntry*)entry {
-	LMMusicTrackCollection *collection = (self.depthLevel == LMTrackPickerDepthLevelSongs) ? nil : [self.trackCollections objectAtIndex:entry.collectionIndex];
+	LMMusicTrackCollection *collection = (self.depthLevel == LMTrackPickerDepthLevelSongs) ? nil : [self.displayingTrackCollections objectAtIndex:entry.collectionIndex];
 	
 	switch(self.musicType){
 		case LMMusicTypeComposers:
@@ -252,10 +287,10 @@
 		}
 		case LMMusicTypeFavourites:
 		case LMMusicTypeTitles:
-			if(self.titleTrackCollection.count == 0){
+			if(self.displayingTitleTrackCollection.count == 0){
 				return nil;
 			}
-			return [self.titleTrackCollection.items objectAtIndex:entry.collectionIndex].albumArt;
+			return [self.displayingTitleTrackCollection.items objectAtIndex:entry.collectionIndex].albumArt;
 		default: {
 			NSLog(@"Windows fucking error!");
 			return nil;
@@ -283,9 +318,9 @@
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
 	if(self.depthLevel == LMTrackPickerDepthLevelSongs){
-		return self.titleTrackCollection.count;
+		return self.displayingTitleTrackCollection.count;
 	}
-	return self.trackCollections.count;
+	return self.displayingTrackCollections.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -316,6 +351,68 @@
 	return cell;
 }
 
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
+	NSLog(@"Changed to '%@'", searchText);
+	
+	if([searchText isEqualToString:@""]){
+		self.searchResultTrackCollections = nil;
+		self.searchResultTitleTrackCollection = nil;
+		
+		[self.collectionView reloadData];
+		
+		for(LMListEntry *listEntry in self.listEntryArray){
+			[listEntry reloadContents];
+		}
+		return;
+	}
+	
+	NSString *searchProperty = MPMediaItemPropertyTitle;
+	
+	switch(self.depthLevel){
+		case LMTrackPickerDepthLevelSongs:
+			searchProperty = MPMediaItemPropertyTitle;
+			break;
+		case LMTrackPickerDepthLevelAlbums:
+			searchProperty = MPMediaItemPropertyAlbumTitle;
+			break;
+		case LMTrackPickerDepthLevelArtists:
+			searchProperty = MPMediaItemPropertyArtist;
+			break;
+	}
+	
+	NSMutableArray *searchResultsMutableArray = [NSMutableArray new];
+	if(self.depthLevel == LMTrackPickerDepthLevelSongs){
+		for(LMMusicTrack *track in self.titleTrackCollection.items){
+			NSString *trackValue = [track valueForProperty:searchProperty];
+			if([trackValue.lowercaseString containsString:searchText.lowercaseString]){
+				[searchResultsMutableArray addObject:track];
+			}
+		}
+		
+		self.searchResultTitleTrackCollection = [[LMMusicTrackCollection alloc]initWithItems:[NSArray arrayWithArray:searchResultsMutableArray]];
+		
+		NSLog(@"%d results.", (int)searchResultsMutableArray.count);
+	}
+	else{
+		for(LMMusicTrackCollection *collection in self.trackCollections){
+			NSString *trackValue = [collection.representativeItem valueForProperty:searchProperty];
+			if([trackValue.lowercaseString containsString:searchText.lowercaseString]){
+				[searchResultsMutableArray addObject:collection];
+			}
+		}
+		
+		self.searchResultTrackCollections = [NSArray arrayWithArray:searchResultsMutableArray];
+		
+		NSLog(@"%d results.", (int)searchResultsMutableArray.count);
+	}
+	
+	for(NSInteger i = 0; i < searchResultsMutableArray.count; i++){
+		[[self.listEntryArray objectAtIndex:i] reloadContents];
+	}
+	
+	[self.collectionView reloadData];
+}
+
 - (void)saveSongSelection {
 	NSLog(@"Done");
 	
@@ -330,6 +427,10 @@
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		[self.collectionView reloadData];
 	}];
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {	
+	[self.searchBar resignFirstResponder];
 }
 
 - (void)viewDidLoad {
@@ -347,6 +448,16 @@
 	[self.layoutManager addDelegate:self];
 	
 	
+	self.searchBar = [UISearchBar newAutoLayoutView];
+	self.searchBar.placeholder = [NSString stringWithFormat:NSLocalizedString(@"SearchType", nil), self.title.lowercaseString];
+	self.searchBar.delegate = self;
+	[self.view addSubview:self.searchBar];
+	
+	[self.searchBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+	[self.searchBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+	[self.searchBar autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:64];
+	
+	
 	UICollectionViewFlowLayout *flowLayout = [UICollectionViewFlowLayout new];
 	
 	self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:flowLayout];
@@ -358,7 +469,10 @@
 	[self.view addSubview:self.collectionView];
 	
 	self.collectionView.backgroundColor = [UIColor whiteColor];
-	[self.collectionView autoPinEdgesToSuperviewEdges];
+	[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+	[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+	[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+	[self.collectionView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.searchBar];
 	
 	
 	self.listEntryArray = [NSMutableArray new];

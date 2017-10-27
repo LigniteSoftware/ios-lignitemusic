@@ -47,7 +47,7 @@
 	self.iconView.image = self.imageIsInverted ? [LMAppIcon invertImage:icon] : icon;
 	self.leftTextLabel.text = leftText ? leftText : @"what";
 	
-	if([self.delegate respondsToSelector:@selector(rightViewForListEntry:)]){
+	if([self.delegate respondsToSelector:@selector(rightViewForListEntry:)] && self.rightViewBackgroundView){
 		for(UIView *subview in self.rightViewBackgroundView.subviews){
 			[subview removeFromSuperview];
 		}

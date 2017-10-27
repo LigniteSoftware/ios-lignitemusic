@@ -61,6 +61,7 @@
 "SelectASource" = "Wähle bitte deine gewünschte Ansicht";
 "TapToEdit" = "Tippen um zu bearbeiten";
 "YourPlaylistTitle" = "Titel deiner Playlist";
+"SearchType" = "Suche nach %@";
 
 "NoTracksInFavourites" = "Du hast noch keine Favoriten definiert. Streiche einfach auf einem beliebigen Song von links nach rechts, um sie in dieser Liste aufzunehmen.";
 
