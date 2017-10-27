@@ -355,6 +355,7 @@
 	self.titleTextField = [UITextField newAutoLayoutView];
 	self.titleTextField.placeholder = NSLocalizedString(@"YourPlaylistTitle", nil);
 	self.titleTextField.text = self.playlist ? self.playlist.title : nil;
+	self.titleTextField.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:19.0f];
 	[self.view addSubview:self.titleTextField];
 	
 	NSArray *titleTextFieldPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
@@ -403,7 +404,7 @@
 	[self.addSongsButtonView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.titleTextField];
 	[self.addSongsButtonView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.titleTextField];
 	[self.addSongsButtonView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.imagePickerView];
-	[self.addSongsButtonView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.imagePickerView withMultiplier:(2.0/3.0)];
+	[self.addSongsButtonView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.imagePickerView withMultiplier:(1.0/3.0)];
 	
 	UITapGestureRecognizer *addSongsButtonTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(addSongsButtonTapped)];
 	[self.addSongsButtonView addGestureRecognizer:addSongsButtonTapGestureRecognizer];
@@ -458,11 +459,11 @@
 	
 	
 	self.noSongsInSongTableViewLabel = [UILabel newAutoLayoutView];
-	self.noSongsInSongTableViewLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:20.0f];
+	self.noSongsInSongTableViewLabel.font = self.titleTextField.font;
 	self.noSongsInSongTableViewLabel.text = NSLocalizedString(@"NoSongsInPlaylistBuilder", nil);
 	self.noSongsInSongTableViewLabel.textColor = [UIColor blackColor];
 	self.noSongsInSongTableViewLabel.hidden = self.songListTableView.totalAmountOfObjects > 0;
-	self.noSongsInSongTableViewLabel.textAlignment = NSTextAlignmentCenter;
+	self.noSongsInSongTableViewLabel.textAlignment = NSTextAlignmentLeft;
 	self.noSongsInSongTableViewLabel.numberOfLines = 0;
 	[self.songListTableView addSubview:self.noSongsInSongTableViewLabel];
 	

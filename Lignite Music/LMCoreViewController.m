@@ -983,7 +983,12 @@ LMControlBarViewDelegate
 		self.navigationBar.layer.opacity = willBeLandscape ? 0.0 : 1.0;
 		self.landscapeNavigationBar.layer.opacity = !willBeLandscape ? 0.0 : 1.0;
 		
-		self.navigationBar.frame = CGRectMake(0, 20, size.width, willBeLandscape ? 0 : 64.0);
+		if(@available(iOS 11, *)){
+			self.navigationBar.frame = CGRectMake(0, 20, size.width, willBeLandscape ? 0 : 64.0);
+		}
+		else{
+			self.navigationBar.frame = CGRectMake(0, 0, size.width, willBeLandscape ? 0 : 64.0);
+		}
 		
 		self.nowPlayingCoreView.topConstraint.constant = self.nowPlayingCoreView.isOpen ? 0 : size.height;
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {

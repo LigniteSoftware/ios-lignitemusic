@@ -9,6 +9,7 @@
 #import "LMView.h"
 #import "LMMusicPlayer.h"
 #import "LMDetailView.h"
+#import "LMPlaylistManager.h"
 
 @interface LMPhoneLandscapeDetailView : LMView
 
@@ -21,6 +22,11 @@
  The collection of music tracks.
  */
 @property LMMusicTrackCollection *musicTrackCollection;
+
+/**
+ The playlist associated with this landscape detail view if the music type is LMMusicTypePlaylists.
+ */
+@property LMPlaylist *playlist;
 
 /**
  The actual detail view for displaying shit.

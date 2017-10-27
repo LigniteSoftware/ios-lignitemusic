@@ -82,6 +82,11 @@
 @property NSLayoutConstraint *playlistModificationButtonViewHeightConstraint;
 
 /**
+ The background view for the playlist modification button.
+ */
+@property UIView *playlistModificationButtonBackgroundView;
+
+/**
  The button that goes on the left of the two buttons for playlist creation and modification.
  */
 @property UIView *playlistButtonLeft;
@@ -206,23 +211,27 @@
 		collection = playlist.trackCollection;
 	}
 	else {
-		[self musicTrackCollectionForBigListEntry:bigListEntry];
+		collection = [self musicTrackCollectionForBigListEntry:bigListEntry];
 	}
 	
     if(bigListEntry.contentView){
         switch(self.musicType){
             case LMMusicTypeComposers:
             case LMMusicTypeArtists: {
-                UIImageView *imageView = bigListEntry.contentView;
+				UIView *shadowBackgroundView = bigListEntry.contentView;
+				
+				UIImageView *imageView = shadowBackgroundView.subviews.firstObject;
+				
                 UIImage *artistImage = [collection.representativeItem artistImage];
                 imageView.image = artistImage;
-                return imageView;
+
+				return shadowBackgroundView;
             }
 			case LMMusicTypePlaylists:{
-				UIView *properSubview = nil;
+				UIImageView *rootImageView = [bigListEntry.contentView subviews].firstObject;
 				
 				LMTiledAlbumCoverView *tiledAlbumCover = nil;
-				for(UIView *subview in [bigListEntry.contentView subviews]){
+				for(UIView *subview in [rootImageView subviews]){
 					NSLog(@"Subview %@", [subview class]);
 					if([subview class] == [LMTiledAlbumCoverView class]){
 						tiledAlbumCover = (LMTiledAlbumCoverView*)subview;
@@ -232,28 +241,27 @@
 				tiledAlbumCover.hidden = playlist.image ? YES : NO;
 				
 				if(playlist.image || (playlist.trackCollection.count == 0)){
-					UIImageView *imageView = bigListEntry.contentView;
-					imageView.image = playlist.image;
+					rootImageView.image = rootImageView.image;
 					if(!playlist.image){
-						imageView.image = [LMAppIcon imageForIcon:LMIconNoAlbumArt75Percent];
+						rootImageView.image = [LMAppIcon imageForIcon:LMIconNoAlbumArt75Percent];
 					}
-					properSubview = imageView;
 				}
 				else{
 					tiledAlbumCover.musicCollection = collection;
 				}
 				
-				return properSubview;
+				return bigListEntry.contentView;
 			}
             case LMMusicTypeAlbums:
             case LMMusicTypeCompilations:
             case LMMusicTypeGenres:{
                 //No need for prep since we're just gonna prep once
-                LMTiledAlbumCoverView *tiledAlbumCover = bigListEntry.contentView;
+				UIView *shadowView = bigListEntry.contentView;
+				
+                LMTiledAlbumCoverView *tiledAlbumCover = [shadowView subviews].firstObject;
                 tiledAlbumCover.musicCollection = collection;
-//				tiledAlbumCover.layer.cornerRadius = 6.0f;
-//				tiledAlbumCover.layer.masksToBounds = YES;
-                return tiledAlbumCover;
+				
+                return shadowView;
             }
             default: {
                 NSLog(@"Windows fucking error!");
@@ -265,31 +273,41 @@
         switch(self.musicType){
             case LMMusicTypeComposers:
             case LMMusicTypeArtists: {
-                UIImageView *imageView = [UIImageView newAutoLayoutView];
-                //			imageView.image = [[self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex].representativeItem artistImage];
-                imageView.contentMode = UIViewContentModeScaleAspectFit;
-                imageView.layer.shadowColor = [UIColor blackColor].CGColor;
-                imageView.layer.shadowRadius = WINDOW_FRAME.size.width/45;
-                imageView.layer.shadowOffset = CGSizeMake(0, imageView.layer.shadowRadius/2);
-                imageView.layer.shadowOpacity = 0.25f;
-                UIImage *artistImage = [collection.representativeItem artistImage];
-                imageView.image = artistImage;
+				UIView *shadowBackgroundView = [UIView newAutoLayoutView];
+				shadowBackgroundView.backgroundColor = [UIColor clearColor];
+				shadowBackgroundView.layer.shadowColor = [UIColor blackColor].CGColor;
+				shadowBackgroundView.layer.shadowRadius = WINDOW_FRAME.size.width/45;
+				shadowBackgroundView.layer.shadowOffset = CGSizeMake(0, shadowBackgroundView.layer.shadowRadius/2);
+				shadowBackgroundView.layer.shadowOpacity = 0.25f;
 				
+                UIImageView *imageView = [UIImageView newAutoLayoutView];
+                imageView.contentMode = UIViewContentModeScaleAspectFit;
 				imageView.layer.cornerRadius = 6.0f;
 				imageView.layer.masksToBounds = YES;
-                return imageView;
+				imageView.image = [collection.representativeItem artistImage];
+				
+				[shadowBackgroundView addSubview:imageView];
+				[imageView autoPinEdgesToSuperviewEdges];
+				
+                return shadowBackgroundView;
             }
 			case LMMusicTypePlaylists: {
+				UIView *shadowBackgroundView = [UIView newAutoLayoutView];
+				shadowBackgroundView.backgroundColor = [UIColor clearColor];
+				shadowBackgroundView.layer.shadowColor = [UIColor blackColor].CGColor;
+				shadowBackgroundView.layer.shadowRadius = WINDOW_FRAME.size.width/45;
+				shadowBackgroundView.layer.shadowOffset = CGSizeMake(0, shadowBackgroundView.layer.shadowRadius/2);
+				shadowBackgroundView.layer.shadowOpacity = 0.25f;
+				
 				UIImageView *imageView = [UIImageView newAutoLayoutView];
 				imageView.contentMode = UIViewContentModeScaleAspectFit;
-				imageView.layer.shadowColor = [UIColor blackColor].CGColor;
-				imageView.layer.shadowRadius = WINDOW_FRAME.size.width/45;
-				imageView.layer.shadowOffset = CGSizeMake(0, imageView.layer.shadowRadius/2);
-				imageView.layer.shadowOpacity = 0.25f;
 				imageView.image = playlist.image ? playlist.image : [LMAppIcon imageForIcon:LMIconNoAlbumArt75Percent];
 				
 				imageView.layer.cornerRadius = 6.0f;
 				imageView.layer.masksToBounds = YES;
+				
+				[shadowBackgroundView addSubview:imageView];
+				[imageView autoPinEdgesToSuperviewEdges];
 				
 				LMTiledAlbumCoverView *tiledAlbumCover = [LMTiledAlbumCoverView newAutoLayoutView];
 				
@@ -297,15 +315,26 @@
 				
 				[tiledAlbumCover autoPinEdgesToSuperviewEdges];
 				
-				return imageView;
+				return shadowBackgroundView;
 			}
             case LMMusicTypeAlbums:
             case LMMusicTypeCompilations:
             case LMMusicTypeGenres:{
-                //No need for prep since we're just gonna prep once
-                LMTiledAlbumCoverView *tiledAlbumCover = [LMTiledAlbumCoverView newAutoLayoutView];
-                tiledAlbumCover.musicCollection = collection;
-                return tiledAlbumCover;
+				UIView *shadowBackgroundView = [UIView newAutoLayoutView];
+				shadowBackgroundView.backgroundColor = [UIColor clearColor];
+				shadowBackgroundView.layer.shadowColor = [UIColor blackColor].CGColor;
+				shadowBackgroundView.layer.shadowRadius = WINDOW_FRAME.size.width/45;
+				shadowBackgroundView.layer.shadowOffset = CGSizeMake(0, shadowBackgroundView.layer.shadowRadius/2);
+				shadowBackgroundView.layer.shadowOpacity = 0.25f;
+				
+				//No need for prep since we're just gonna prep once
+				LMTiledAlbumCoverView *tiledAlbumCover = [LMTiledAlbumCoverView new];
+				tiledAlbumCover.musicCollection = collection;
+				
+				[shadowBackgroundView addSubview:tiledAlbumCover];
+				[tiledAlbumCover autoPinEdgesToSuperviewEdges];
+				
+                return shadowBackgroundView;
             }
             default: {
                 NSLog(@"Windows fucking error!");
@@ -543,25 +572,6 @@
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-	if(self.musicType == LMMusicTypePlaylists){
-		if((scrollView.contentOffset.y > WINDOW_FRAME.size.height/12.0) && self.playlistModificationButtonViewHeightConstraint.constant >= 0){
-			NSLog(@"negative %f", self.playlistModificationButtonViewHeightConstraint.constant);
-			[self layoutIfNeeded];
-			self.playlistModificationButtonViewHeightConstraint.constant = -(self.playlistModificationButtonView.frame.size.height/2.5);
-			[UIView animateWithDuration:0.3 animations:^{
-				[self layoutIfNeeded];
-			}];
-		}
-		else if((scrollView.contentOffset.y < WINDOW_FRAME.size.height/12.0) && self.playlistModificationButtonViewHeightConstraint.constant < 0){
-			NSLog(@"positive %f", self.playlistModificationButtonViewHeightConstraint.constant);
-			[self layoutIfNeeded]; 
-			self.playlistModificationButtonViewHeightConstraint.constant = 0;
-			[UIView animateWithDuration:0.3 animations:^{
-				[self layoutIfNeeded];
-			}];
-		}
-	}
-	
     if(self.didJustScrollByLetter){
         self.didJustScrollByLetter = NO;
         return;
@@ -592,7 +602,7 @@
 - (void)changeBottomSpacing:(CGFloat)bottomSpacing {
 	NSLog(@"Setting bottom spacing %f", bottomSpacing);
     [UIView animateWithDuration:0.5 animations:^{
-       self.collectionView.contentInset = UIEdgeInsetsMake((self.musicType == LMMusicTypePlaylists && !self.layoutManager.isLandscape) ? 100 : 0, 0, 100, 0);
+       self.collectionView.contentInset = UIEdgeInsetsMake((self.musicType == LMMusicTypePlaylists && !self.layoutManager.isLandscape) ? 60 : 0, 0, 100, 0);
     }];
 }
 
@@ -637,7 +647,7 @@
 		}
 		
 		self.playlistModificationButtonView.hidden = (self.musicType == LMMusicTypePlaylists && willBeLandscape);
-		self.collectionView.contentInset = UIEdgeInsetsMake((self.musicType == LMMusicTypePlaylists && !willBeLandscape) ? 100 : 0, 0, 100, 0);
+		self.collectionView.contentInset = UIEdgeInsetsMake((self.musicType == LMMusicTypePlaylists && !willBeLandscape) ? 60 : 0, 0, 100, 0);
 		
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		[UIView animateWithDuration:0.25 animations:^{
@@ -687,7 +697,9 @@
 		self.phoneLandscapeDetailView.index = index;
 		self.phoneLandscapeDetailView.musicType = self.musicType;
 		if(self.musicType == LMMusicTypePlaylists){
-			self.phoneLandscapeDetailView.musicTrackCollection = [self.playlistManager.playlists objectAtIndex:index].trackCollection;
+			LMPlaylist *playlist = [self.playlistManager.playlists objectAtIndex:index];
+			self.phoneLandscapeDetailView.musicTrackCollection = playlist.trackCollection;
+			self.phoneLandscapeDetailView.playlist = playlist;
 		}
 		else{
 			self.phoneLandscapeDetailView.musicTrackCollection = [self.musicTrackCollections objectAtIndex:index];
@@ -705,7 +717,9 @@
 		}
 	}];
 	
-	self.rootViewController.landscapeNavigationBar.mode = displaying ? LMLandscapeNavigationBarModeWithBackButton : LMLandscapeNavigationBarModeOnlyLogo;
+	self.rootViewController.landscapeNavigationBar.mode = displaying
+	? LMLandscapeNavigationBarModeWithBackButton
+	: (self.musicType == LMMusicTypePlaylists ? LMLandscapeNavigationBarModePlaylistView : LMLandscapeNavigationBarModeOnlyLogo);
 	
 	[self.phoneLandscapeDetailView reloadContent];
 	
@@ -818,6 +832,11 @@
 	else{
 		NSLog(@"Edit playlist");
 		
+		
+		LMCollectionViewFlowLayout *flowLayout = (LMCollectionViewFlowLayout*)self.collectionView.collectionViewLayout;
+		
+		flowLayout.indexOfItemDisplayingDetailView = LMNoDetailViewSelected;
+		
 		for(LMBigListEntry *bigListEntry in self.bigListEntries){
 			bigListEntry.editing = !bigListEntry.editing;
 		}
@@ -907,7 +926,7 @@
 		self.collectionView.translatesAutoresizingMaskIntoConstraints = NO;
 		self.collectionView.delegate = self;
 		self.collectionView.dataSource = self;
-		self.collectionView.contentInset = UIEdgeInsetsMake((self.musicType == LMMusicTypePlaylists && !self.layoutManager.isLandscape) ? 100 : 0, 0, 100, 0);
+		self.collectionView.contentInset = UIEdgeInsetsMake((self.musicType == LMMusicTypePlaylists && !self.layoutManager.isLandscape) ? 60 : 0, 0, 100, 0);
 		[self.collectionView registerClass:[LMCollectionViewCell class] forCellWithReuseIdentifier:@"cellIdentifier"];
 		[self addSubview:self.collectionView];
 		
@@ -931,7 +950,13 @@
 		self.collectionView.backgroundColor = [UIColor whiteColor];
 		[self.collectionView autoPinEdgesToSuperviewEdges];
 		
+		self.playlistModificationButtonBackgroundView = [UIView newAutoLayoutView];
+		self.playlistModificationButtonBackgroundView.backgroundColor = [UIColor whiteColor];
+		[self addSubview:self.playlistModificationButtonBackgroundView];
 		
+		[self.playlistModificationButtonBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+		[self.playlistModificationButtonBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.playlistModificationButtonBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 		
 		
 		self.playlistModificationButtonView = [UIView newAutoLayoutView];
@@ -943,9 +968,12 @@
 		[self addSubview:self.playlistModificationButtonView];
 
 		[self.playlistModificationButtonView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:16];
-		[self.playlistModificationButtonView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:30];
-		[self.playlistModificationButtonView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:30];
-		self.playlistModificationButtonViewHeightConstraint = [self.playlistModificationButtonView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.125];
+		[self.playlistModificationButtonView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:35];
+		[self.playlistModificationButtonView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:35];
+		self.playlistModificationButtonViewHeightConstraint = [self.playlistModificationButtonView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.125/1.80];
+		
+		
+		[self.playlistModificationButtonBackgroundView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.playlistModificationButtonView withOffset:15];
 
 
 		self.playlistButtonLeft = [UIView newAutoLayoutView];
@@ -1008,9 +1036,9 @@
 			[backgroundView addSubview:labelView];
 			
 			[labelView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:iconView withOffset:10.0f];
-			[labelView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+			[labelView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:-5];
 			[labelView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-			[labelView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+			[labelView autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:-5];
 		}
 	}
 }

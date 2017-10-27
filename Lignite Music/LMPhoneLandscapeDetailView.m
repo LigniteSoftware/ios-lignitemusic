@@ -158,27 +158,36 @@
 	
 	if(bigListEntry.contentView){
 		switch(self.musicType){
-			case LMMusicTypeComposers:
-			case LMMusicTypeArtists: {
-				UIImageView *imageView = bigListEntry.contentView;
-				UIImage *artistImage = [collection.representativeItem artistImage];
-				imageView.image = artistImage;
-				return imageView;
-			}
-			case LMMusicTypeAlbums:
-			case LMMusicTypeCompilations:
-			case LMMusicTypeGenres:
-			case LMMusicTypePlaylists: {
-				//No need for prep since we're just gonna prep once
-				LMTiledAlbumCoverView *tiledAlbumCover = bigListEntry.contentView;
-				tiledAlbumCover.musicCollection = collection;
-				return tiledAlbumCover;
+			case LMMusicTypePlaylists:{
+				UIImageView *rootImageView = bigListEntry.contentView;
+				
+				LMTiledAlbumCoverView *tiledAlbumCover = nil;
+				for(UIView *subview in [rootImageView subviews]){
+					NSLog(@"Subview %@", [subview class]);
+					if([subview class] == [LMTiledAlbumCoverView class]){
+						tiledAlbumCover = (LMTiledAlbumCoverView*)subview;
+					}
+				}
+				
+				tiledAlbumCover.hidden = self.playlist.image ? YES : NO;
+				
+				if(self.playlist.image || (self.playlist.trackCollection.count == 0)){
+					rootImageView.image = rootImageView.image;
+					if(!self.playlist.image){
+						rootImageView.image = [LMAppIcon imageForIcon:LMIconNoAlbumArt75Percent];
+					}
+				}
+				else{
+					tiledAlbumCover.musicCollection = collection;
+				}
+				
+				return bigListEntry.contentView;
 			}
 			default: {
-				NSLog(@"Windows fucking error!");
-				return nil;
+				
 			}
 		}
+		return bigListEntry.contentView;
 	}
 	else{
 		switch(self.musicType){
@@ -195,10 +204,31 @@
 				imageView.image = artistImage;
 				return imageView;
 			}
+			case LMMusicTypePlaylists: {
+				UIImageView *imageView = [UIImageView newAutoLayoutView];
+				imageView.contentMode = UIViewContentModeScaleAspectFit;
+				imageView.image = self.playlist.image ? self.playlist.image : [LMAppIcon imageForIcon:LMIconNoAlbumArt75Percent];
+				
+				imageView.layer.cornerRadius = 6.0f;
+				imageView.layer.masksToBounds = YES;
+				
+				LMTiledAlbumCoverView *tiledAlbumCover = [LMTiledAlbumCoverView newAutoLayoutView];
+				
+				tiledAlbumCover.musicCollection = self.playlist.trackCollection;
+				
+				[imageView addSubview:tiledAlbumCover];
+				
+				[tiledAlbumCover autoPinEdgesToSuperviewEdges];
+				
+				tiledAlbumCover.hidden = self.playlist.image ? YES : NO;
+				
+				NSLog(@"Hidden %d", tiledAlbumCover.hidden);
+				
+				return imageView;
+			}
 			case LMMusicTypeAlbums:
 			case LMMusicTypeCompilations:
-			case LMMusicTypeGenres:
-			case LMMusicTypePlaylists: {
+			case LMMusicTypeGenres:{
 				//No need for prep since we're just gonna prep once
 				LMTiledAlbumCoverView *tiledAlbumCover = [LMTiledAlbumCoverView newAutoLayoutView];
 				tiledAlbumCover.musicCollection = collection;
@@ -227,7 +257,7 @@
 			return [collection titleForMusicType:LMMusicTypeCompilations];
 		}
 		case LMMusicTypePlaylists:{
-			return [collection titleForMusicType:LMMusicTypePlaylists];
+			return self.playlist.title;
 		}
 		case LMMusicTypeAlbums: {
 			return collection.representativeItem.albumTitle ? collection.representativeItem.albumTitle : NSLocalizedString(@"UnknownAlbum", nil);

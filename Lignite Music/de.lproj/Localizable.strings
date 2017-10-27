@@ -39,28 +39,28 @@
  
  */
 
-"DeletePlaylistTitle" = "Delete playlist?";
-"DeletePlaylistDescription" = "Are you sure you want to delete the playlist '%@'?\n\nThis action is not reversable."; //%@ is the name of the playlist.
-"Create" = "Create";
-"Delete" = "Delete";
-"Edit" = "Edit";
-"EditingPlaylist" = "Editing playlist";
-"NewPlaylist" = "New playlist";
-"TapToAddAnImage" = "Add an image";
-"SetupPlaylistPhoto" = "Setup playlist photo";
-"ChoosePhoto" = "Choose photo";
-"TakePhoto" = "Take photo";
-"EditPhoto" = "Edit photo";
-"DeletePhoto" = "Delete photo";
-"Cancel" = "Cancel";
-"Save" = "Save";
-"AddSongs" = "Add songs";
-"SelectSongs" = "Select songs";
-"Source" = "Source";
-"NoSongsInPlaylistBuilder" = "There are no songs in this playlist yet.\n\nStart adding songs by tapping the 'Add songs' button above.";
-"SelectASource" = "Please select where to get music from";
-
-"YourPlaylistTitle" = "Headbangers";
+"DeletePlaylistTitle" = "Wiedergabeliste löschen?";
+"DeletePlaylistDescription" = "Bist du sicher, dass du die Wiedergabeliste '%@' löschen möchtest?\n\nDiese Aktion kann nicht rückgängig gemacht werden."; //%@ is the name of the playlist.
+"Create" = "Erstellen";
+"Delete" = "Löschen";
+"Edit" = "Bearbeiten";
+"EditingPlaylist" = "Wiedergabeliste bearbeiten";
+"NewPlaylist" = "Neue Wiedergabeliste";
+"TapToAddAnImage" = "Bild hinzufügen";
+"SetupPlaylistPhoto" = "Bild für Wiedergabeliste hinzufügen";
+"ChoosePhoto" = "Bild auswählen";
+"TakePhoto" = "Foto aufnehmen";
+"EditPhoto" = "Bild bearbeiten";
+"DeletePhoto" = "Bild löschen";
+"Cancel" = "Abbrechen";
+"Save" = "Speichern";
+"AddSongs" = "Lieder hinzufügen";
+"SelectSongs" = "Lieder auswählen";
+"Source" = "Quelle";
+"NoSongsInPlaylistBuilder" = "Es befinden sich noch keine Lieder in dieser Wiedergabeliste.\n\nFüge welche hinzu indem du oben auf den 'Lieder hinzufügen'-Button tippst.";
+"SelectASource" = "Wähle bitte deine gewünschte Ansicht";
+"TapToEdit" = "Tippen um zu bearbeiten";
+"YourPlaylistTitle" = "Titel deiner Playlist";
 
 "NoTracksInFavourites" = "Du hast noch keine Favoriten definiert. Streiche einfach auf einem beliebigen Song von links nach rechts, um sie in dieser Liste aufzunehmen.";
 
