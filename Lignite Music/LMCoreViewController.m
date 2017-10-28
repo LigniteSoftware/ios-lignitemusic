@@ -1537,17 +1537,17 @@ LMControlBarViewDelegate
 	
 	
 	[NSTimer scheduledTimerWithTimeInterval:0.25 block:^{
-//		LMPlaylistEditorViewController *playlistViewController = [LMPlaylistEditorViewController new];
-//		LMPlaylist *playlist = [LMPlaylist new];
-//		playlist.title = @"Nice meme";
-//		playlist.image = [LMAppIcon imageForIcon:LMIconBug];
-//		playlist.trackCollection = [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeAlbums].firstObject;
-////		playlist.trackCollection = [[LMMusicTrackCollection alloc]initWithItems:@[]];
-//		playlistViewController.playlist = playlist;
-//		UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:playlistViewController];
-//		[self presentViewController:navigation animated:YES completion:^{
-//			
-//		}];
+		LMPlaylistEditorViewController *playlistViewController = [LMPlaylistEditorViewController new];
+		LMPlaylist *playlist = [LMPlaylist new];
+		playlist.title = @"Nice meme";
+		playlist.image = [LMAppIcon imageForIcon:LMIconBug];
+		playlist.trackCollection = [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeAlbums].firstObject;
+//		playlist.trackCollection = [[LMMusicTrackCollection alloc]initWithItems:@[]];
+		playlistViewController.playlist = playlist;
+		UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:playlistViewController];
+		[self presentViewController:navigation animated:YES completion:^{
+			
+		}];
 
 		
 		[self.buttonNavigationBar setSelectedTab:LMNavigationTabMiniplayer];

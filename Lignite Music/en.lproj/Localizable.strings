@@ -75,6 +75,9 @@
 "XSongsSingle" = "%ld song"; //1 song
 "NoSongsYet" = "No songs, yet";
 
+"SelectAll" = "Select all"; //As in "select all songs"
+"DeselectAll" = "Deselect all"; //Deselect all songs
+
 "YourPlaylistTitle" = "Headbangers";
 
 "NoTracksInFavourites" = "You haven't favourited anything.\n\nSwipe from left to right on any track throughout the app to add it to your favourites.";

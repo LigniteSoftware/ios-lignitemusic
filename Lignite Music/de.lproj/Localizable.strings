@@ -63,6 +63,10 @@
 "YourPlaylistTitle" = "Titel deiner Playlist";
 "SearchType" = "Suche nach %@";
 
+"XSongs" = "%ld Lieder"; //Multiple songs
+"XSongsSingle" = "%ld Lied"; //1 song
+"NoSongsYet" = "Noch keine Lieder, sorry";
+
 "NoTracksInFavourites" = "Du hast noch keine Favoriten definiert. Streiche einfach auf einem beliebigen Song von links nach rechts, um sie in dieser Liste aufzunehmen.";
 
 "Favourites" = "Favoriten";

@@ -55,10 +55,26 @@
  */
 @property LMLetterTabBar *letterTabBar;
 
+/**
+ The "Select all" list entry that goes at the top of and track picker with a depthLevel of LMTrackPickerDepthLevelSongs.
+ */
+@property LMListEntry *selectAllListEntry;
+
+/**
+ Whether or not this is the song depth, basically.
+ */
+@property (readonly) BOOL isTitles;
+
+/**
+ Whether or not all tracks in the picker are selected.
+ */
+@property (readonly) BOOL allTracksSelected;
+
 @end
 
 @implementation LMTrackPickerController
 
+@synthesize isTitles = _isTitles;
 @synthesize titleTrackCollection = _titleTrackCollection;
 @synthesize selectedTrackCollection = _selectedTrackCollection;
 @synthesize displayingTrackCollections = _displayingTrackCollections;
@@ -93,17 +109,56 @@
 	return self.sourceMusicPickerController.trackCollection;
 }
 
+- (BOOL)isTitles {
+	return self.depthLevel == LMTrackPickerDepthLevelSongs;
+}
+
+- (BOOL)allTracksSelected {
+	BOOL allTracksSelected = YES;
+	
+	for(NSInteger i = 0; i < self.titleTrackCollection.count; i++){
+		LMMusicTrack *track = [self.displayingTitleTrackCollection.items objectAtIndex:i];
+		if(![self.selectedTrackCollection.items containsObject:track]){
+			allTracksSelected = NO;
+			break;
+		}
+	}
+	
+	return allTracksSelected;
+}
+
 - (void)tappedListEntry:(LMListEntry*)entry{
 	NSLog(@"Tapped %p", entry);
+	
+	if(self.depthLevel == LMTrackPickerDepthLevelSongs && entry == self.selectAllListEntry){
+		NSLog(@"Select all");
+		
+		BOOL allTracksSelected = self.allTracksSelected;
+		
+		for(NSInteger i = 0; i < self.titleTrackCollection.count; i++){
+			LMMusicTrack *track = [self.displayingTitleTrackCollection.items objectAtIndex:i];
+			LMListEntry *songEntry = [self.listEntryArray objectAtIndex:i];
+			
+			[self.sourceMusicPickerController setTrack:track asSelected:!allTracksSelected];
+			
+			[songEntry reloadContents];
+		}
+		
+		[entry reloadContents];
+		
+		return;
+	}
 	
 	if(self.depthLevel == LMTrackPickerDepthLevelSongs){
 		NSLog(@"Pick song");
 		
-		LMMusicTrack *track = [self.displayingTitleTrackCollection.items objectAtIndex:entry.collectionIndex];
+		LMMusicTrack *track = [self.displayingTitleTrackCollection.items objectAtIndex:entry.collectionIndex-self.isTitles];
 		
 		[self.sourceMusicPickerController setTrack:track asSelected:![self.selectedTrackCollection.items containsObject:track]];
 		
 		[entry reloadContents];
+		
+		[self.selectAllListEntry reloadContents];
 		return;
 	}
 	
@@ -111,12 +166,12 @@
 	
 	NSString *title = nil;
 	
-	LMMusicTrack *representativeItem = [self.displayingTrackCollections objectAtIndex:entry.collectionIndex].representativeItem;
+	LMMusicTrack *representativeItem = [self.displayingTrackCollections objectAtIndex:entry.collectionIndex-self.isTitles].representativeItem;
 	NSLog(@"Representative %@", representativeItem.albumTitle);
 	NSArray<LMMusicTrackCollection*> *trackCollections = [self.musicPlayer collectionsForRepresentativeTrack:representativeItem forMusicType:self.musicType];
 	
 	if(self.depthLevel == LMTrackPickerDepthLevelAlbums){
-		trackCollections = @[ [self.displayingTrackCollections objectAtIndex:entry.collectionIndex] ];
+		trackCollections = @[ [self.displayingTrackCollections objectAtIndex:entry.collectionIndex-self.isTitles] ];
 	}
 	
 	switch(self.musicType){
@@ -168,10 +223,19 @@
 
 - (UIView*)rightViewForListEntry:(LMListEntry *)entry {
 	if(self.depthLevel == LMTrackPickerDepthLevelSongs){
+		BOOL selected = NO;
+		if(entry.collectionIndex == -1){
+			selected = self.allTracksSelected;
+		}
+		else{
+			selected = [self.selectedTrackCollection.items containsObject:[self.displayingTitleTrackCollection.items objectAtIndex:entry.collectionIndex-self.isTitles]];
+		}
+		
+		
 		UIView *checkmarkPaddedView = [UIView newAutoLayoutView];
 		
 		LMCircleView *checkmarkView = [LMCircleView newAutoLayoutView];
-		checkmarkView.backgroundColor = [self.selectedTrackCollection.items containsObject:[self.displayingTitleTrackCollection.items objectAtIndex:entry.collectionIndex]] ? [LMColour ligniteRedColour] : [LMColour lightGrayBackgroundColour];
+		checkmarkView.backgroundColor = selected ? [LMColour ligniteRedColour] : [LMColour lightGrayBackgroundColour];
 		
 		[checkmarkPaddedView addSubview:checkmarkView];
 		
@@ -182,7 +246,7 @@
 		
 		
 		LMCircleView *checkmarkFillView = [LMCircleView newAutoLayoutView];
-		checkmarkFillView.backgroundColor = [self.selectedTrackCollection.items containsObject:[self.displayingTitleTrackCollection.items objectAtIndex:entry.collectionIndex]] ? [LMColour ligniteRedColour] : [UIColor whiteColor];
+		checkmarkFillView.backgroundColor = selected ? [LMColour ligniteRedColour] : [UIColor whiteColor];
 		
 		[checkmarkView addSubview:checkmarkFillView];
 		
@@ -223,12 +287,16 @@
 }
 
 - (NSString*)titleForListEntry:(LMListEntry*)entry {
-	LMMusicTrackCollection *collection = (self.depthLevel == LMTrackPickerDepthLevelSongs) ? nil : [self.displayingTrackCollections objectAtIndex:entry.collectionIndex];
+	if(self.depthLevel == LMTrackPickerDepthLevelSongs && entry.collectionIndex == -1){
+		return NSLocalizedString(self.allTracksSelected ? @"DeselectAll" : @"SelectAll", nil);
+	}
+	
+	LMMusicTrackCollection *collection = (self.depthLevel == LMTrackPickerDepthLevelSongs) ? nil : [self.displayingTrackCollections objectAtIndex:entry.collectionIndex-self.isTitles];
 	
 	switch(self.musicType){
 		case LMMusicTypeFavourites:
 		case LMMusicTypeTitles:
-			return [self.displayingTitleTrackCollection.items objectAtIndex:entry.collectionIndex].title;
+			return [self.displayingTitleTrackCollection.items objectAtIndex:entry.collectionIndex-self.isTitles].title;
 		case LMMusicTypeGenres: {
 			return collection.representativeItem.genre ? collection.representativeItem.genre : NSLocalizedString(@"UnknownGenre", nil);
 		}
@@ -248,12 +316,16 @@
 }
 
 - (NSString*)subtitleForListEntry:(LMListEntry*)entry {
-	LMMusicTrackCollection *collection = (self.depthLevel == LMTrackPickerDepthLevelSongs) ? nil : [self.displayingTrackCollections objectAtIndex:entry.collectionIndex];
+	if(self.depthLevel == LMTrackPickerDepthLevelSongs && entry.collectionIndex == -1){
+		return nil;
+	}
+	
+	LMMusicTrackCollection *collection = (self.depthLevel == LMTrackPickerDepthLevelSongs) ? nil : [self.displayingTrackCollections objectAtIndex:entry.collectionIndex-self.isTitles];
 	
 	switch(self.musicType){
 		case LMMusicTypeFavourites:
 		case LMMusicTypeTitles:
-			return [self.displayingTitleTrackCollection.items objectAtIndex:entry.collectionIndex].artist;
+			return [self.displayingTitleTrackCollection.items objectAtIndex:entry.collectionIndex-self.isTitles].artist;
 		case LMMusicTypeComposers:
 		case LMMusicTypeArtists: {
 			BOOL usingSpecificTrackCollections = (self.musicType != LMMusicTypePlaylists
@@ -289,7 +361,11 @@
 }
 
 - (UIImage*)iconForListEntry:(LMListEntry*)entry {
-	LMMusicTrackCollection *collection = (self.depthLevel == LMTrackPickerDepthLevelSongs) ? nil : [self.displayingTrackCollections objectAtIndex:entry.collectionIndex];
+	if(self.depthLevel == LMTrackPickerDepthLevelSongs && entry.collectionIndex == -1){
+		return nil;
+	}
+	
+	LMMusicTrackCollection *collection = (self.depthLevel == LMTrackPickerDepthLevelSongs) ? nil : [self.displayingTrackCollections objectAtIndex:entry.collectionIndex-self.isTitles];
 	
 	switch(self.musicType){
 		case LMMusicTypeComposers:
@@ -307,7 +383,7 @@
 			if(self.displayingTitleTrackCollection.count == 0){
 				return nil;
 			}
-			return [self.displayingTitleTrackCollection.items objectAtIndex:entry.collectionIndex].albumArt;
+			return [self.displayingTitleTrackCollection.items objectAtIndex:entry.collectionIndex-self.isTitles].albumArt;
 		default: {
 			NSLog(@"Windows fucking error!");
 			return nil;
@@ -335,7 +411,7 @@
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
 	if(self.depthLevel == LMTrackPickerDepthLevelSongs){
-		return self.displayingTitleTrackCollection.count;
+		return self.displayingTitleTrackCollection.count + 1;
 	}
 	return self.displayingTrackCollections.count;
 }
@@ -347,10 +423,19 @@
 		[subview removeFromSuperview];
 	}
 	
-	LMListEntry *listEntry = [self.listEntryArray objectAtIndex:indexPath.row];
-	listEntry.collectionIndex = indexPath.row;
-	[cell.contentView addSubview:listEntry];
-	[listEntry autoPinEdgesToSuperviewEdges];
+	LMListEntry *listEntry = nil;
+	if(self.depthLevel == LMTrackPickerDepthLevelSongs && indexPath.row == 0){
+		listEntry = self.selectAllListEntry;
+		listEntry.collectionIndex = -1;
+		[cell.contentView addSubview:listEntry];
+		[listEntry autoPinEdgesToSuperviewEdges];
+	}
+	else{
+		listEntry = [self.listEntryArray objectAtIndex:indexPath.row-self.isTitles];
+		listEntry.collectionIndex = indexPath.row;
+		[cell.contentView addSubview:listEntry];
+		[listEntry autoPinEdgesToSuperviewEdges];
+	}
 	
 	if(indexPath.row < [self collectionView:self.collectionView numberOfItemsInSection:0]-1){
 		UIView *lineView = [UIView newAutoLayoutView];
@@ -557,6 +642,15 @@
 	}];
 	[LMLayoutManager addNewLandscapeConstraints:letterTabBarLandscapeConstraints];
 	
+	
+	if(self.depthLevel == LMTrackPickerDepthLevelSongs){
+		self.selectAllListEntry = [LMListEntry new];
+		self.selectAllListEntry.delegate = self;
+		self.selectAllListEntry.collectionIndex = -1;
+		self.selectAllListEntry.invertIconOnHighlight = YES;
+	}
+	
+	
 	UICollectionViewFlowLayout *flowLayout = [UICollectionViewFlowLayout new];
 	
 	self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:flowLayout];
@@ -588,9 +682,11 @@
 	[self.view bringSubviewToFront:self.letterTabBar];
 	
 	
+	NSLog(@"%d", self.isTitles);
+	
 	self.listEntryArray = [NSMutableArray new];
 	
-	for(int i = 0; i < [self collectionView:self.collectionView numberOfItemsInSection:0]; i++){
+	for(int i = self.isTitles ? 1 : 0; i < [self collectionView:self.collectionView numberOfItemsInSection:0]; i++){
 		LMListEntry *listEntry = [LMListEntry newAutoLayoutView];
 		listEntry.delegate = self;
 		listEntry.collectionIndex = i;
