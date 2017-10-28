@@ -154,7 +154,7 @@
 		}
 	}
 	
-	[UIView animateWithDuration:0.25 animations:^{
+	[UIView animateWithDuration:0.0 animations:^{
 		[self layoutIfNeeded];
 	}];
 }
@@ -179,7 +179,7 @@
 		}
 	}
 	else if(gestureRecognizer.view == self.editImageView){
-		self.createImageView.image = [LMAppIcon invertImage:[LMAppIcon imageForIcon:LMIconXCross]];
+		self.createImageView.image = [LMAppIcon invertImage:[LMAppIcon imageForIcon:LMIconWhiteCheckmark]];
 		self.editImageView.hidden = YES;
 		self.isEditing = YES;
 		

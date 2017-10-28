@@ -90,6 +90,11 @@
 @property BOOL shouldUseDividers;
 
 /**
+ Whether or not to stretch the dividers across the whole width. Default is NO, which results in a 90% stretch.
+ */
+@property BOOL fullDividers;
+
+/**
  Whether or not the first entry in the table view should have a clear background colour. YES for views such as the detail view. Default is NO.
  */
 @property BOOL firstEntryClear;

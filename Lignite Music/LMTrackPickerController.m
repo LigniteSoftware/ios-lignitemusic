@@ -171,13 +171,24 @@
 		UIView *checkmarkPaddedView = [UIView newAutoLayoutView];
 		
 		LMCircleView *checkmarkView = [LMCircleView newAutoLayoutView];
-		checkmarkView.backgroundColor = [self.selectedTrackCollection.items containsObject:[self.displayingTitleTrackCollection.items objectAtIndex:entry.collectionIndex]] ? [LMColour ligniteRedColour] : [UIColor whiteColor];
+		checkmarkView.backgroundColor = [self.selectedTrackCollection.items containsObject:[self.displayingTitleTrackCollection.items objectAtIndex:entry.collectionIndex]] ? [LMColour ligniteRedColour] : [LMColour lightGrayBackgroundColour];
 		
 		[checkmarkPaddedView addSubview:checkmarkView];
+		
 		
 		[checkmarkView autoCenterInSuperview];
 		[checkmarkView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:checkmarkPaddedView withMultiplier:(3.0/4.0)];
 		[checkmarkView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:checkmarkPaddedView withMultiplier:(3.0/4.0)];
+		
+		
+		LMCircleView *checkmarkFillView = [LMCircleView newAutoLayoutView];
+		checkmarkFillView.backgroundColor = [self.selectedTrackCollection.items containsObject:[self.displayingTitleTrackCollection.items objectAtIndex:entry.collectionIndex]] ? [LMColour ligniteRedColour] : [UIColor whiteColor];
+		
+		[checkmarkView addSubview:checkmarkFillView];
+		
+		[checkmarkFillView autoCenterInSuperview];
+		[checkmarkFillView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:checkmarkView withMultiplier:(9.0/10.0)];
+		[checkmarkFillView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:checkmarkView withMultiplier:(9.0/10.0)];
 		
 		
 		UIImageView *checkmarkImageView = [UIImageView newAutoLayoutView];
@@ -186,8 +197,8 @@
 		[checkmarkView addSubview:checkmarkImageView];
 		
 		[checkmarkImageView autoCenterInSuperview];
-		[checkmarkImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:checkmarkPaddedView withMultiplier:(3.0/8.0)];
-		[checkmarkImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:checkmarkPaddedView withMultiplier:(3.0/8.0)];
+		[checkmarkImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:checkmarkView withMultiplier:(3.0/8.0)];
+		[checkmarkImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:checkmarkView withMultiplier:(3.0/8.0)];
 		
 		return checkmarkPaddedView;
 	}
@@ -357,6 +368,14 @@
 	return cell;
 }
 
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
+	[self.searchBar resignFirstResponder];
+}
+
+- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
+	[self.searchBar resignFirstResponder];
+}
+
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
 	NSLog(@"Changed to '%@'", searchText);
 	
@@ -391,8 +410,12 @@
 	NSMutableArray *searchResultsMutableArray = [NSMutableArray new];
 	if(self.depthLevel == LMTrackPickerDepthLevelSongs){
 		for(LMMusicTrack *track in self.titleTrackCollection.items){
+			NSString *trackArtistValue = [track valueForProperty:MPMediaItemPropertyArtist];
 			NSString *trackValue = [track valueForProperty:searchProperty];
 			if([trackValue.lowercaseString containsString:searchText.lowercaseString]){
+				[searchResultsMutableArray addObject:track];
+			}
+			else if([trackArtistValue.lowercaseString containsString:searchText.lowercaseString]){
 				[searchResultsMutableArray addObject:track];
 			}
 		}
@@ -406,6 +429,12 @@
 			NSString *trackValue = [collection.representativeItem valueForProperty:searchProperty];
 			if([trackValue.lowercaseString containsString:searchText.lowercaseString]){
 				[searchResultsMutableArray addObject:collection];
+			}
+			else if(self.depthLevel != LMTrackPickerDepthLevelArtists){
+				NSString *trackArtistValue = [collection.representativeItem valueForProperty:MPMediaItemPropertyArtist];
+				if([trackArtistValue.lowercaseString containsString:searchText.lowercaseString]){
+					[searchResultsMutableArray addObject:collection];
+				}
 			}
 		}
 		
@@ -489,25 +518,44 @@
 	
 	
 	self.searchBar = [UISearchBar newAutoLayoutView];
-	self.searchBar.placeholder = [NSString stringWithFormat:NSLocalizedString(@"SearchType", nil), self.title.lowercaseString];
+	self.searchBar.placeholder = [NSString stringWithFormat:NSLocalizedString(@"SearchType", nil), self.title];
 	self.searchBar.delegate = self;
 	[self.view addSubview:self.searchBar];
 	
-	[self.searchBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-	[self.searchBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	[self.searchBar autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:64];
+	NSArray *searchBarPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.searchBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.searchBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.searchBar autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:64];
+	}];
+	[LMLayoutManager addNewPortraitConstraints:searchBarPortraitConstraints];
 	
+	NSArray *searchBarLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.searchBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.searchBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.searchBar autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:44];
+	}];
+	[LMLayoutManager addNewLandscapeConstraints:searchBarLandscapeConstraints];
 	
 	self.letterTabBar = [LMLetterTabBar new];
 	self.letterTabBar.delegate = self;
 	self.letterTabBar.lettersDictionary = [self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:self.trackCollections withAssociatedMusicType:self.musicType];
 	[self.view addSubview:self.letterTabBar];
 	
-	[self.letterTabBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-	[self.letterTabBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-	[self.letterTabBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	[self.letterTabBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/15.0)];
+	NSArray *letterTabBarPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.letterTabBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[self.letterTabBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.letterTabBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.letterTabBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/15.0)];
+	}];
+	[LMLayoutManager addNewPortraitConstraints:letterTabBarPortraitConstraints];
 	
+	NSArray *letterTabBarLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.letterTabBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.letterTabBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(1.0/15.0)];
+		[self.letterTabBar autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:44];
+		[self.letterTabBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+	}];
+	[LMLayoutManager addNewLandscapeConstraints:letterTabBarLandscapeConstraints];
 	
 	UICollectionViewFlowLayout *flowLayout = [UICollectionViewFlowLayout new];
 	
@@ -520,10 +568,21 @@
 	[self.view addSubview:self.collectionView];
 	
 	self.collectionView.backgroundColor = [UIColor whiteColor];
-	[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-	[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	[self.collectionView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.letterTabBar];
-	[self.collectionView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.searchBar];
+	NSArray *collectionViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.collectionView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.letterTabBar];
+		[self.collectionView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.searchBar];
+	}];
+	[LMLayoutManager addNewPortraitConstraints:collectionViewPortraitConstraints];
+	
+	NSArray *collectionViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+		[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.collectionView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.letterTabBar];
+	}];
+	[LMLayoutManager addNewLandscapeConstraints:collectionViewLandscapeConstraints];
 	
 	
 	[self.view bringSubviewToFront:self.letterTabBar];
@@ -538,7 +597,7 @@
 //		listEntry.iconInsetMultiplier = (1.0/3.0);
 //		listEntry.iconPaddingMultiplier = (3.0/4.0);
 		listEntry.invertIconOnHighlight = YES;
-		listEntry.stretchAcrossWidth = YES;
+//		listEntry.stretchAcrossWidth = YES;
 		listEntry.iPromiseIWillHaveAnIconForYouSoon = YES;
 		
 		[self.listEntryArray addObject:listEntry];

@@ -11,6 +11,7 @@
 #import "LMTiledAlbumCoverView.h"
 #import "LMOperationQueue.h"
 #import "LMExtras.h"
+#import "LMEditView.h"
 
 @interface LMTiledAlbumCoverView()
 
@@ -363,13 +364,21 @@
 				
 				for(UIView *subview in tiledAlbumCoverView.subviews){
 					NSLog(@"Subview %@", subview);
-					if(subview != tiledAlbumCoverView.rootView){
+					if([subview class] == [LMEditView class]){
 						NSLog(@"Is edit view");
 						tiledAlbumCoverView.tapToEditView = subview;
+						break;
 					}
 				}
 				if(tiledAlbumCoverView.tapToEditView){
+					BOOL wasHidden = tiledAlbumCoverView.tapToEditView.hidden;
+					
+					NSLog(@"Was hidden %d", wasHidden);
+					
 					[tiledAlbumCoverView bringSubviewToFront:tiledAlbumCoverView.tapToEditView];
+					
+					NSLog(@"Is hidden %d", tiledAlbumCoverView.tapToEditView.hidden);
+//					tiledAlbumCoverView.tapToEditView.hidden = YES;
 				}
 				
 				CGSize rootViewSize = CGSizeMake(amountOfTilesX*sideLength, amountOfTilesY*sideLength);

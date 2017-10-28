@@ -170,6 +170,9 @@
 		
 		self.userInteractionEnabled = YES;
 		
+		self.layer.masksToBounds = YES;
+		self.layer.cornerRadius = 8.0f;
+		
 		UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tappedImageSelector)];
 		[self addGestureRecognizer:tapGestureRecognizer];
 		
@@ -181,6 +184,8 @@
 		
 		UIView *whiteFillView = [UIView newAutoLayoutView];
 		whiteFillView.backgroundColor = [UIColor whiteColor];
+		whiteFillView.layer.masksToBounds = YES;
+		whiteFillView.layer.cornerRadius = 8.0f;
 		[self.imageBackgroundView addSubview:whiteFillView];
 		
 		CGFloat whiteFillPadding = 4.0f;
@@ -199,6 +204,8 @@
 		UIImageView *plusIconImageView = [UIImageView newAutoLayoutView];
 		plusIconImageView.image = [LMAppIcon invertImage:[LMAppIcon imageForIcon:LMIconAdd]];
 		plusIconImageView.contentMode = UIViewContentModeScaleAspectFit;
+		plusIconImageView.image = [plusIconImageView.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+		[plusIconImageView setTintColor:self.imageBackgroundView.backgroundColor];
 		[descriptionContentView addSubview:plusIconImageView];
 		
 		[plusIconImageView autoPinEdgeToSuperviewEdge:ALEdgeTop];

@@ -69,6 +69,11 @@
  */
 @property UILabel *noSongsInSongTableViewLabel;
 
+/**
+ The song count label.
+ */
+@property UILabel *songCountLabel;
+
 @end
 
 @implementation LMPlaylistEditorViewController
@@ -84,6 +89,10 @@
 	self.songListTableView.totalAmountOfObjects = self.playlist.trackCollection.count;
 	[self.songListTableView reloadSubviewData];
 	[self.songListTableView reloadData];
+	
+	self.songCountLabel.text = self.playlist.trackCollection.count == 0
+	? NSLocalizedString(@"NoSongsYet", nil)
+	: [NSString stringWithFormat:NSLocalizedString(self.playlist.trackCollection.count == 1 ? @"XSongsSingle" : @"XSongs", nil), self.playlist.trackCollection.count];
 }
 
 - (void)musicPickerDidCancelPickingMusic:(LMMusicPickerController *)musicPicker {
@@ -356,6 +365,7 @@
 	self.titleTextField.placeholder = NSLocalizedString(@"YourPlaylistTitle", nil);
 	self.titleTextField.text = self.playlist ? self.playlist.title : nil;
 	self.titleTextField.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:19.0f];
+	self.titleTextField.autocapitalizationType = UITextAutocapitalizationTypeWords;
 	[self.view addSubview:self.titleTextField];
 	
 	NSArray *titleTextFieldPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
@@ -395,6 +405,19 @@
 	[textFieldLineView autoSetDimension:ALDimensionHeight toSize:1.0f];
 	
 	
+	self.songCountLabel = [UILabel newAutoLayoutView];
+	self.songCountLabel.text = self.playlist.trackCollection.count == 0
+		? NSLocalizedString(@"NoSongsYet", nil)
+	: [NSString stringWithFormat:NSLocalizedString(self.playlist.trackCollection.count == 1 ? @"XSongsSingle" : @"XSongs", nil), self.playlist.trackCollection.count];
+	self.songCountLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18.0f];
+	self.songCountLabel.textColor = [UIColor blackColor];
+	[self.view addSubview:self.songCountLabel];
+	
+	[self.songCountLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:textFieldLineView withOffset:6.0f];
+	[self.songCountLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:textFieldLineView];
+	[self.songCountLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:textFieldLineView];
+	
+	
 	self.addSongsButtonView = [UIView newAutoLayoutView];
 	self.addSongsButtonView.backgroundColor = [LMColour ligniteRedColour];
 	self.addSongsButtonView.layer.cornerRadius = 8.0f;
@@ -404,7 +427,7 @@
 	[self.addSongsButtonView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.titleTextField];
 	[self.addSongsButtonView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.titleTextField];
 	[self.addSongsButtonView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.imagePickerView];
-	[self.addSongsButtonView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.imagePickerView withMultiplier:(1.0/3.0)];
+	[self.addSongsButtonView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.imagePickerView withMultiplier:(1.2/3.0)];
 	
 	UITapGestureRecognizer *addSongsButtonTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(addSongsButtonTapped)];
 	[self.addSongsButtonView addGestureRecognizer:addSongsButtonTapGestureRecognizer];
@@ -432,15 +455,16 @@
 	[backgroundView addSubview:labelView];
 	
 	[labelView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:iconView withOffset:12.0f];
-	[labelView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:-5];
+	[labelView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:-10];
 	[labelView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	[labelView autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:-5];
+	[labelView autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:-10];
 	
 	
 	self.songListTableView = [LMTableView newAutoLayoutView];
 	self.songListTableView.totalAmountOfObjects = self.playlist ? self.playlist.trackCollection.count : 20;
 	self.songListTableView.subviewDataSource = self;
 	self.songListTableView.shouldUseDividers = YES;
+	self.songListTableView.fullDividers = YES;
 	self.songListTableView.title = @"SongListTableView";
 	self.songListTableView.bottomSpacing = 0;
 	self.songListTableView.notHighlightedBackgroundColour = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.0];
@@ -465,10 +489,12 @@
 	self.noSongsInSongTableViewLabel.hidden = self.songListTableView.totalAmountOfObjects > 0;
 	self.noSongsInSongTableViewLabel.textAlignment = NSTextAlignmentLeft;
 	self.noSongsInSongTableViewLabel.numberOfLines = 0;
-	[self.songListTableView addSubview:self.noSongsInSongTableViewLabel];
+	[self.view addSubview:self.noSongsInSongTableViewLabel];
 	
-	[self.noSongsInSongTableViewLabel autoPinEdgesToSuperviewEdges];
-	[self.noSongsInSongTableViewLabel autoCenterInSuperview];
+	[self.noSongsInSongTableViewLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.imagePickerView];
+	[self.noSongsInSongTableViewLabel autoPinEdgeToSuperviewMargin:ALEdgeLeading];
+	[self.noSongsInSongTableViewLabel autoPinEdgeToSuperviewMargin:ALEdgeTrailing];
+	[self.noSongsInSongTableViewLabel autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 }
 
 - (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event {

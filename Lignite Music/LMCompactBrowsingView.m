@@ -261,6 +261,10 @@
                 LMTiledAlbumCoverView *tiledAlbumCover = [shadowView subviews].firstObject;
                 tiledAlbumCover.musicCollection = collection;
 				
+				for(UIView *subview in shadowView.subviews){
+					NSLog(@"Subview %@", subview);
+				}
+				
                 return shadowView;
             }
             default: {
@@ -646,8 +650,8 @@
 			}
 		}
 		
-		self.playlistModificationButtonView.hidden = (self.musicType == LMMusicTypePlaylists && willBeLandscape);
-		self.playlistModificationButtonBackgroundView.hidden = (self.musicType == LMMusicTypePlaylists && willBeLandscape);
+		self.playlistModificationButtonView.hidden = (self.musicType == LMMusicTypePlaylists && willBeLandscape) || self.musicType != LMMusicTypePlaylists;
+		self.playlistModificationButtonBackgroundView.hidden = self.playlistModificationButtonView.hidden;
 		self.collectionView.contentInset = UIEdgeInsetsMake((self.musicType == LMMusicTypePlaylists && !willBeLandscape) ? 60 : 0, 0, 100, 0);
 		
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
@@ -656,7 +660,7 @@
 			NSLog(@"Scrolling to %@", visibleIndexPath);
 			
 			if(![LMLayoutManager isiPad]){
-			LMCollectionViewFlowLayout *layout = (LMCollectionViewFlowLayout*)self.collectionView.collectionViewLayout;
+				LMCollectionViewFlowLayout *layout = (LMCollectionViewFlowLayout*)self.collectionView.collectionViewLayout;
 			
 				if(transitioningFromPortraitToLandscape){
 					layout.indexOfItemDisplayingDetailView = LMNoDetailViewSelected;
@@ -1016,7 +1020,7 @@
 			UIView *backgroundView = [UIView newAutoLayoutView];
 			[view addSubview:backgroundView];
 			
-			[backgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:view withMultiplier:(1.0/3.5)];
+			[backgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:view withMultiplier:(1.6/3.5)];
 			[backgroundView autoCenterInSuperview];
 			
 			

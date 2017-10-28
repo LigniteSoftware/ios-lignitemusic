@@ -12,6 +12,7 @@
 #import "LMTriangleView.h"
 #import "LMColour.h"
 #import "LMButton.h"
+#import "LMEditView.h"
 
 @interface LMBigListEntry()
 
@@ -22,7 +23,7 @@
 /**
  The background view for the tap to edit feature, when enabled.
  */
-@property UIView *tapToEditBackgroundView;
+@property LMEditView *tapToEditBackgroundView;
 
 /**
  The tap to delete view.
@@ -172,14 +173,19 @@
 	[self.entryDelegate sizeChangedToLargeSize:self.isLargeSize withHeight:[LMBigListEntry sizeForBigListEntryWhenOpened:self.isLargeSize forDelegate:self.entryDelegate] forBigListEntry:self];
 	
 	
-	self.tapToEditBackgroundView = [UIView newAutoLayoutView];
+	self.tapToEditBackgroundView = [LMEditView newAutoLayoutView];
 	self.tapToEditBackgroundView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:(3.0/5.0)];
 	self.tapToEditBackgroundView.alpha = self.editing;
-	self.tapToEditBackgroundView.hidden = !self.editing;
+	
+//	self.tapToEditBackgroundView.hidden = YES;
 	self.tapToEditBackgroundView.layer.masksToBounds = YES;
 	self.tapToEditBackgroundView.layer.cornerRadius = 8.0f;
 	self.tapToEditBackgroundView.userInteractionEnabled = YES;
 	[contentView addSubview:self.tapToEditBackgroundView];
+	
+	self.tapToEditBackgroundView.hidden = !self.editing;
+	
+	NSLog(@"ttebv %p", self.tapToEditBackgroundView);
 	
 	[self.tapToEditBackgroundView autoPinEdgesToSuperviewEdges];
 	
@@ -191,6 +197,7 @@
 	tapToEditLabel.textColor = [UIColor whiteColor];
 	tapToEditLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:20.0f];
 	tapToEditLabel.textAlignment = NSTextAlignmentCenter;
+	tapToEditLabel.numberOfLines = 0;
 	[self.tapToEditBackgroundView addSubview:tapToEditLabel];
 	
 	[tapToEditLabel autoPinEdgeToSuperviewEdge:ALEdgeTop];

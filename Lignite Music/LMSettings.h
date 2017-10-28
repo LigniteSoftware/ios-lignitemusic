@@ -15,6 +15,7 @@
 #define LMSettingsKeyStatusBar @"LMSettingsKeyStatusBar"
 #define LMSettingsKeyHighQualityImages @"LMSettingsKeyHighQualityImages"
 #define LMSettingsKeyOptOutOfTracking @"LMSettingsKeyOptOutOfTracking"
+#define LMSettingsKeyScrollingText @"LMSettingsKeyScrollingText"
 
 #define LMFeedbackKeyName @"LMFeedbackKeyName"
 #define LMFeedbackKeyEmail @"LMFeedbackKeyEmail"
@@ -34,5 +35,12 @@
  @return Whether or not the user has opted out.
  */
 + (BOOL)userHasOptedOutOfTracking;
+
+/**
+ Whether or not to allow scrolling text for longer pieces of text in now playing or mini player.
+
+ @return YES for scrolling text, NO to disable.
+ */
++ (BOOL)scrollingText;
 
 @end

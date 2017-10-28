@@ -89,6 +89,7 @@
 		6A555BB01DA168860078C9FC /* LMOperationQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A555BAF1DA168860078C9FC /* LMOperationQueue.m */; };
 		6A5821021DADE54400A4FAB1 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A5821011DADE54400A4FAB1 /* AVFoundation.framework */; };
 		6A5821041DAF312C00A4FAB1 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A5821031DAF312C00A4FAB1 /* AudioToolbox.framework */; };
+		6A58AADC1FA3EB1C005D7C5A /* LMEditView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A58AADB1FA3EB1C005D7C5A /* LMEditView.m */; };
 		6A59A5181DE6D76E00B346AC /* icon_arrow_forward.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A59A5171DE6D76E00B346AC /* icon_arrow_forward.png */; };
 		6A59A51B1DE7B08B00B346AC /* LMSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A59A51A1DE7B08B00B346AC /* LMSettingsViewController.m */; };
 		6A5F43E21E09E003005E0075 /* LMAnswers.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A5F43E11E09E003005E0075 /* LMAnswers.m */; };
@@ -365,6 +366,8 @@
 		6A555BAF1DA168860078C9FC /* LMOperationQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMOperationQueue.m; sourceTree = "<group>"; };
 		6A5821011DADE54400A4FAB1 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		6A5821031DAF312C00A4FAB1 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		6A58AADA1FA3EB1C005D7C5A /* LMEditView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMEditView.h; sourceTree = "<group>"; };
+		6A58AADB1FA3EB1C005D7C5A /* LMEditView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMEditView.m; sourceTree = "<group>"; };
 		6A59A5171DE6D76E00B346AC /* icon_arrow_forward.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_arrow_forward.png; sourceTree = "<group>"; };
 		6A59A5191DE7B08B00B346AC /* LMSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMSettingsViewController.h; sourceTree = "<group>"; };
 		6A59A51A1DE7B08B00B346AC /* LMSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMSettingsViewController.m; sourceTree = "<group>"; };
@@ -784,6 +787,8 @@
 				6AC77A131DC42C5500BABBB3 /* LMControlBarView.m */,
 				6A4BAEF01DC9C59B000DF537 /* LMTiledAlbumCoverView.h */,
 				6A4BAEF11DC9C59B000DF537 /* LMTiledAlbumCoverView.m */,
+				6A58AADA1FA3EB1C005D7C5A /* LMEditView.h */,
+				6A58AADB1FA3EB1C005D7C5A /* LMEditView.m */,
 			);
 			name = BigListSubviews;
 			sourceTree = "<group>";
@@ -1648,6 +1653,7 @@
 				6A08AF021EBCC7F30069C9CC /* LMCollectionViewCell.m in Sources */,
 				6A7115B71DCEE410006DE00F /* LMTableView.m in Sources */,
 				6AF9D5381DE13141006368B6 /* LMReachability.m in Sources */,
+				6A58AADC1FA3EB1C005D7C5A /* LMEditView.m in Sources */,
 				6A5257531DF1FC840040210D /* LMLetterTabBar.m in Sources */,
 				6A555BB01DA168860078C9FC /* LMOperationQueue.m in Sources */,
 				6AF9D5321DE0B73D006368B6 /* LMImageManager.m in Sources */,

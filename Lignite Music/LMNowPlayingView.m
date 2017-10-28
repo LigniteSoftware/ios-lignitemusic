@@ -1124,6 +1124,7 @@
 	for(int i = 0; i < buttons.count; i++){
 		LMButton *button = [buttons objectAtIndex:i];
 		button.userInteractionEnabled = YES;
+		button.roundedCorners = YES;
 		[button setDelegate:self];
 		[button setupWithImageMultiplier:0.4];
 		[button setImage:[LMAppIcon imageForIcon:icons[i]]];
@@ -1153,14 +1154,22 @@
 	self.buttonStackView.axis = UILayoutConstraintAxisHorizontal;
 	self.buttonStackView.distribution = UIStackViewDistributionFillEqually;
 	self.buttonStackView.spacing = ((([LMLayoutManager isLandscapeiPad] || [LMLayoutManager isLandscape])
-									 ? self.frame.size.height : self.frame.size.width) * 0.9 * ([LMLayoutManager isiPad] ? ([LMLayoutManager isLandscapeiPad] ? 0.3 : 0.5) : 0.35))/5.5;
+									 ? self.frame.size.height
+									 : self.frame.size.width) //Is it landscape on any device? If so, use the frame's width
+									* 0.9 //Multiply that by 0.9
+									* ([LMLayoutManager isiPad]
+									   ? ([LMLayoutManager isLandscapeiPad]
+										  ? 0.3
+										  : 0.5) //Is landscape iPad? Use 0.3, otherwise, use 0.5
+									   : 0.40))/5.5; //Otherwise, if it's not iPad, use 0.35 and divide the total result by 5.5
+	
 	[self.paddingView addSubview:self.buttonStackView];
 	
 	
 	NSArray *stackViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 		[self.buttonStackView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.paddingView withMultiplier:(1.0/8.0)];
-		[self.buttonStackView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.trackInfoView];
-		[self.buttonStackView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.trackInfoView];
+		[self.buttonStackView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.albumArtImageView];
+		[self.buttonStackView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.albumArtImageView];
 		[self.buttonStackView autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:15];
 	}];
 	[LMLayoutManager addNewPortraitConstraints:stackViewPortraitConstraints];

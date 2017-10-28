@@ -136,7 +136,7 @@
 	self.titleLabel.textAlignment = NSTextAlignmentCenter;
 	[self.scrollView addSubview:self.titleLabel];
 	
-	[self.titleLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.scrollView withOffset:30];
+	[self.titleLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.scrollView withOffset:88];
 	[self.titleLabel autoSetDimension:ALDimensionWidth toSize:self.view.frame.size.width];
 	
 	
@@ -184,7 +184,7 @@
 	
 	[hangOnImage autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:self.view.frame.size.width/5.0];
 	[hangOnImage autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:self.view.frame.size.width/5.0];
-	[hangOnImage autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:self.view.frame.size.height/4.0];
+	[hangOnImage autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:88];
 	[hangOnImage autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/3.0)];
 	
 	UILabel *hangOnLabel = [UILabel newAutoLayoutView];

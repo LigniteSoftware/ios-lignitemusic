@@ -36,4 +36,16 @@
 	return settingEnabled;
 }
 
++ (BOOL)scrollingText {
+	BOOL settingEnabled = NO;
+	
+	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+	
+	if([userDefaults objectForKey:LMSettingsKeyScrollingText]){
+		settingEnabled = [[NSUserDefaults standardUserDefaults] integerForKey:LMSettingsKeyScrollingText];
+	}
+	
+	return settingEnabled;
+}
+
 @end

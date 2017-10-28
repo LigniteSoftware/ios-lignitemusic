@@ -10,6 +10,7 @@
 #import "LMTrackInfoView.h"
 #import "LMLayoutManager.h"
 #import "NSTimer+Blocks.h"
+#import "LMSettings.h"
 
 @interface LMTrackInfoView()<LMLayoutChangeDelegate>
 
@@ -158,6 +159,7 @@
 			label.text = [texts objectAtIndex:i];
 			label.textAlignment = self.textAlignment;
 			label.textColor = self.textColour;
+			label.labelize = ![LMSettings scrollingText];
 			[self addSubview:label];
 			
 			if(self.frame.size.width == 0){
@@ -178,6 +180,23 @@
 	}
 		
 	[super layoutSubviews];
+	
+	[NSTimer scheduledTimerWithTimeInterval:5.0 block:^{
+		BOOL labelize = ![LMSettings scrollingText];
+		
+		if(labelize == self.titleLabel.labelize){
+			return;
+		}
+		
+		NSArray *slabels = @[
+							self.titleLabel, self.artistLabel, self.albumLabel
+							];
+		
+		for(int i = 0; i < 3; i++){
+			MarqueeLabel *label = [slabels objectAtIndex:i];
+			label.labelize = labelize;
+		}
+	} repeats:YES];
 }
 
 - (instancetype)init {
