@@ -11,6 +11,7 @@
 #import "LMSourceSelectorView.h"
 #import "LMTrackPickerController.h"
 #import "LMDynamicSearchView.h"
+#import "LMPlaylist.h"
 
 @interface LMMusicPickerController ()<LMSourceDelegate, UISearchBarDelegate, LMDynamicSearchViewDelegate, LMSourceSelectorDelegate>
 
@@ -126,6 +127,57 @@
 	}
 }
 
+- (void)searchViewEntryWasTappedWithData:(id)musicData forMusicType:(LMMusicType)musicType {
+	LMMusicTrackCollection *collection = (LMMusicTrackCollection*)musicData;
+	
+	NSLog(@"Collection tapped with album %@", collection.representativeItem.albumTitle);
+	
+	LMTrackPickerController *trackPickerController = [LMTrackPickerController new];
+	
+	switch(musicType){
+		case LMMusicTypeFavourites:{
+			trackPickerController.musicType = LMMusicTypeFavourites;
+			trackPickerController.depthLevel = LMTrackPickerDepthLevelSongs;
+			break;
+		}
+		case LMMusicTypeArtists:{
+			trackPickerController.musicType = LMMusicTypeArtists;
+			trackPickerController.depthLevel = LMTrackPickerDepthLevelArtists;
+			break;
+		}
+		case LMMusicTypeAlbums:{
+			trackPickerController.musicType = LMMusicTypeAlbums;
+			trackPickerController.depthLevel = LMTrackPickerDepthLevelAlbums;
+			break;
+		}
+		case LMMusicTypeTitles:{
+			trackPickerController.musicType = LMMusicTypeTitles;
+			trackPickerController.depthLevel = LMTrackPickerDepthLevelSongs;
+			break;
+		}
+		case LMMusicTypeGenres:{
+			trackPickerController.musicType = LMMusicTypeGenres;
+			trackPickerController.depthLevel = LMTrackPickerDepthLevelArtists;
+			break;
+		}
+		case LMMusicTypeCompilations:{
+			trackPickerController.musicType = LMMusicTypeCompilations;
+			trackPickerController.depthLevel = LMTrackPickerDepthLevelAlbums;
+			break;
+		}
+		default:{
+			NSAssert(false, @"This music type (%d) is not supported yet, sorry.", musicType);
+			break;
+		}
+	}
+	
+	trackPickerController.title = NSLocalizedString(@"SearchResult", nil);
+	trackPickerController.highlightedData = (LMMusicTrack*)collection.representativeItem;
+	trackPickerController.sourceMusicPickerController = self;
+	
+	[self showViewController:trackPickerController sender:nil];
+}
+
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
 	self.searchView.hidden = (!searchText || [searchText isEqualToString:@""]);
 	
@@ -239,6 +291,7 @@
 	
 	
 	self.searchView = [LMDynamicSearchView newAutoLayoutView];
+	self.searchView.delegate = self;
 	self.searchView.hidden = YES;
 	
 	NSMutableArray<LMMusicTrackCollection*> *titlesCollection = [NSMutableArray new];
@@ -252,23 +305,20 @@
 	NSLog(@"Count %d/%d", (int)allTitles.count, (int)titlesCollection.count);
 	
 	self.searchView.searchableTrackCollections = @[
-												   @[],
 												   [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeFavourites],
-												   [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeCompilations],
+												   [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeArtists],
+												   [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeAlbums],
+												   [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeTitles],
 												   [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeGenres],
-												   [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeArtists], [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeAlbums],
-													   [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeTitles],
-													   [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeComposers]
+												   [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeCompilations]
 												   ];
 	self.searchView.searchableMusicTypes = @[
-											 @(LMMusicTypePlaylists),
 											 @(LMMusicTypeFavourites),
-											 @(LMMusicTypeCompilations),
-											 @(LMMusicTypeGenres),
 											 @(LMMusicTypeArtists),
 											 @(LMMusicTypeAlbums),
 											 @(LMMusicTypeTitles),
-											 @(LMMusicTypeComposers)
+											 @(LMMusicTypeGenres),
+											 @(LMMusicTypeCompilations)
 											 ];
 	//Set collections and musictypes
 	[self.view addSubview:self.searchView];

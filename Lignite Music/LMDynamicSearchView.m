@@ -200,39 +200,22 @@
 }
 
 - (void)tappedIndexPath:(NSIndexPath*)indexPath forSectionTableView:(LMSectionTableView*)sectionTableView {
-	NSLog(@"Tapped %d.%d", (int)indexPath.section, (int)indexPath.row);
-	
 	LMMusicType musicType = (LMMusicType)[[self.searchResultsMusicTypes objectAtIndex:indexPath.section] unsignedIntegerValue];
 
 	NSArray<LMMusicTrackCollection*>* collections = [self.searchResultsTrackCollections objectAtIndex:indexPath.section];
 	MPMediaItemCollection *collection = (musicType == LMMusicTypePlaylists) ? nil : [collections objectAtIndex:indexPath.row];
-	MPMediaItem *representativeItem = [collection representativeItem];
 	
-//	switch(musicType){
-//		case LMMusicTypeAlbums:
-//			[self.searchSelectedDelegate searchEntryTappedWithPersistentID:representativeItem.albumPersistentID withMusicType:LMMusicTypeAlbums];
-//			break;
-//		case LMMusicTypeComposers:
-//			[self.searchSelectedDelegate searchEntryTappedWithPersistentID:representativeItem.composerPersistentID withMusicType:LMMusicTypeComposers];
-//			break;
-//		case LMMusicTypePlaylists:
-//			[self.searchSelectedDelegate searchEntryTappedWithPersistentID:collection.persistentID withMusicType:LMMusicTypePlaylists];
-//			break;
-//		case LMMusicTypeArtists:
-//			[self.searchSelectedDelegate searchEntryTappedWithPersistentID:representativeItem.artistPersistentID withMusicType:LMMusicTypeArtists];
-//			break;
-//		case LMMusicTypeGenres:
-//			[self.searchSelectedDelegate searchEntryTappedWithPersistentID:representativeItem.genrePersistentID withMusicType:LMMusicTypeGenres];
-//			break;
-//		case LMMusicTypeTitles:
-//			[self.searchSelectedDelegate searchEntryTappedWithPersistentID:representativeItem.persistentID withMusicType:LMMusicTypeTitles];
-//			break;
-//		case LMMusicTypeFavourites:
-//			NSAssert(true, @"Unsure what to do sorry");
-//			break;
-//	}
-
-	NSLog(@"%d items for %d", (int)collection.count, musicType);
+	if([self.delegate respondsToSelector:@selector(searchViewEntryWasTappedWithData:forMusicType:)]){
+		if(musicType == LMMusicTypePlaylists){
+			LMPlaylist *playlist = [self.searchResultsPlaylistsArray objectAtIndex:indexPath.section];
+			[self.delegate searchViewEntryWasTappedWithData:playlist forMusicType:musicType];
+		}
+		else{
+			[self.delegate searchViewEntryWasTappedWithData:collection forMusicType:musicType];
+		}
+	}
+	
+	NSLog(@"Tapped %d.%d", (int)indexPath.section, (int)indexPath.row);
 }
 
 /* End tableview-related code */

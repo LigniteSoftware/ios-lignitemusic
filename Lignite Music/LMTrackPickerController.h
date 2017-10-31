@@ -46,6 +46,13 @@ typedef NS_ENUM(NSInteger, LMTrackPickerDepthLevel){
 @property NSArray<LMMusicTrackCollection*> *trackCollections;
 
 /**
+ Set this data before displaying to automatically scroll to and highlight an entry in the track picker.
+ 
+ The picker will figure out for itself how the data should be handled and will scroll to the according position automatically.
+ */
+@property id highlightedData;
+
+/**
  The track collection for favourites and titles.
  */
 @property (readonly) LMMusicTrackCollection *titleTrackCollection;

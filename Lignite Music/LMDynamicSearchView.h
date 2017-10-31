@@ -21,6 +21,14 @@
  */
 - (void)searchViewWasInteractedWith:(LMDynamicSearchView*)searchView;
 
+/**
+ A search view entry was tapped.
+
+ @param musicData The music data associated with the tapped entry. This is by default a single LMMusicTrackCollection, unless the musicType is LMMusicTypePlaylists, then it is an LMPlaylist.
+ @param musicType The music type that the tapped entry was under, section-wise.
+ */
+- (void)searchViewEntryWasTappedWithData:(id)musicData forMusicType:(LMMusicType)musicType;
+
 @end
 
 @interface LMDynamicSearchView : LMView

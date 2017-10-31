@@ -12,6 +12,8 @@
 #import "LMListEntry.h"
 #import "LMCircleView.h"
 #import "LMLetterTabBar.h"
+#import "NSTimer+Blocks.h"
+#import "LMPlaylist.h"
 
 @interface LMTrackPickerController ()<UICollectionViewDelegate, UICollectionViewDataSource, LMListEntryDelegate, LMLayoutChangeDelegate, UISearchBarDelegate, LMLetterTabDelegate>
 
@@ -570,6 +572,20 @@
 	[self.searchBar resignFirstResponder];
 }
 
+- (void)focusEntryAtRow:(NSUInteger)row {
+	UIView *cellSubview = [self.listEntryArray objectAtIndex:row];
+	
+	[NSTimer scheduledTimerWithTimeInterval:0.5 block:^() {
+		[UIView animateWithDuration:0.75 animations:^{
+			cellSubview.backgroundColor = [UIColor colorWithRed:0.33 green:0.33 blue:0.33 alpha:0.15];
+		} completion:^(BOOL finished) {
+			[UIView animateWithDuration:0.75 animations:^{
+				cellSubview.backgroundColor = [UIColor whiteColor];
+			}];
+		}];
+	} repeats:NO];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
 	
@@ -698,6 +714,88 @@
 		
 		[self.listEntryArray addObject:listEntry];
 	}
+	
+	[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
+		if(self.highlightedData){
+			switch(self.musicType){
+				case LMMusicTypePlaylists:{
+					NSAssert(false, @"Playlists are not supported in the track picker, sorry.");
+					break;
+				}
+				case LMMusicTypeFavourites:
+				case LMMusicTypeTitles:{
+					LMMusicTrack *musicTrack = (LMMusicTrack*)self.highlightedData;
+					
+					NSInteger index = NSNotFound;
+					
+					for(NSInteger i = 0; i < self.titleTrackCollection.count; i++){
+						LMMusicTrack *titleTrack = [self.titleTrackCollection.items objectAtIndex:i];
+						if(titleTrack.persistentID == musicTrack.persistentID){
+							index = i;
+							break;
+						}
+					}
+					
+					if(index != NSNotFound){
+						[self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UICollectionViewScrollPositionTop animated:YES];
+						
+						[self focusEntryAtRow:index];
+					}
+					
+					break;
+				}
+				case LMMusicTypeArtists:
+				case LMMusicTypeCompilations:
+				case LMMusicTypeGenres:
+				case LMMusicTypeAlbums:
+				case LMMusicTypeComposers:{
+					LMMusicTrackCollection *dataTrackCollection = (LMMusicTrackCollection*)self.highlightedData;
+					
+					NSInteger index = NSNotFound;
+					
+					for(NSInteger i = 0; i < self.trackCollections.count; i++){
+						LMMusicTrackCollection *collection = [self.trackCollections objectAtIndex:i];
+						LMMusicTrack *representativeTrack = collection.representativeItem;
+						
+						NSString *property = nil;
+						switch(self.musicType){
+							case LMMusicTypeArtists:
+								property = MPMediaItemPropertyArtistPersistentID;
+								break;
+							case LMMusicTypeGenres:
+								property = MPMediaItemPropertyGenrePersistentID;
+								break;
+							case LMMusicTypeComposers:
+								property = MPMediaItemPropertyComposerPersistentID;
+								break;
+							case LMMusicTypeCompilations:
+							case LMMusicTypeAlbums:
+							default:
+								property = MPMediaItemPropertyAlbumPersistentID;
+								break;
+						}
+						
+						MPMediaEntityPersistentID dataPersistentID = [[dataTrackCollection.representativeItem valueForProperty:property] unsignedLongLongValue];
+						
+						MPMediaEntityPersistentID trackPersistentID = [[representativeTrack valueForProperty:property] unsignedLongLongValue];
+						
+						if(dataPersistentID == trackPersistentID){
+							index = i;
+							break;
+						}
+					}
+					
+					if(index != NSNotFound){
+						[self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UICollectionViewScrollPositionTop animated:YES];
+						
+						[self focusEntryAtRow:index];
+					}
+					
+					break;
+				}
+			}
+		}
+	} repeats:NO];
 }
 
 - (void)didReceiveMemoryWarning {
