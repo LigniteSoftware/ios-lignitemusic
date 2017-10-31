@@ -130,6 +130,11 @@
 - (void)searchView:(LMDynamicSearchView *)searchView entryWasSetAsSelected:(BOOL)selected withData:(id)musicData forMusicType:(LMMusicType)musicType {
 	
 	NSLog(@"Selected %d", selected);
+	
+	LMMusicTrackCollection *collection = (LMMusicTrackCollection*)musicData;
+	if(self.trackCollection){
+		[self setTrack:collection.representativeItem asSelected:selected];
+	}
 }
 
 - (void)searchViewEntryWasTappedWithData:(id)musicData forMusicType:(LMMusicType)musicType {
@@ -139,35 +144,43 @@
 	
 	LMTrackPickerController *trackPickerController = [LMTrackPickerController new];
 	
+	NSArray<LMMusicTrackCollection*> *trackCollections = [self.musicPlayer collectionsForRepresentativeTrack:collection.representativeItem forMusicType:musicType];
+	
 	switch(musicType){
 		case LMMusicTypeFavourites:{
 			trackPickerController.musicType = LMMusicTypeFavourites;
 			trackPickerController.depthLevel = LMTrackPickerDepthLevelSongs;
+			trackPickerController.title = NSLocalizedString(@"Favourites", nil);
 			break;
 		}
 		case LMMusicTypeArtists:{
-			trackPickerController.musicType = LMMusicTypeArtists;
-			trackPickerController.depthLevel = LMTrackPickerDepthLevelArtists;
+			trackPickerController.musicType = LMMusicTypeAlbums;
+			trackPickerController.depthLevel = LMTrackPickerDepthLevelAlbums;
+			trackPickerController.title = collection.representativeItem.artist;
 			break;
 		}
 		case LMMusicTypeAlbums:{
 			trackPickerController.musicType = LMMusicTypeAlbums;
 			trackPickerController.depthLevel = LMTrackPickerDepthLevelAlbums;
+			trackPickerController.title = collection.representativeItem.albumTitle;
 			break;
 		}
 		case LMMusicTypeTitles:{
 			trackPickerController.musicType = LMMusicTypeTitles;
 			trackPickerController.depthLevel = LMTrackPickerDepthLevelSongs;
+			trackPickerController.title = NSLocalizedString(@"Titles", nil);
 			break;
 		}
 		case LMMusicTypeGenres:{
 			trackPickerController.musicType = LMMusicTypeGenres;
 			trackPickerController.depthLevel = LMTrackPickerDepthLevelArtists;
+			trackPickerController.title = collection.representativeItem.genre;
 			break;
 		}
 		case LMMusicTypeCompilations:{
 			trackPickerController.musicType = LMMusicTypeCompilations;
 			trackPickerController.depthLevel = LMTrackPickerDepthLevelAlbums;
+			trackPickerController.title = collection.representativeItem.albumTitle;
 			break;
 		}
 		default:{
@@ -176,8 +189,10 @@
 		}
 	}
 	
-	trackPickerController.title = NSLocalizedString(@"SearchResult", nil);
-	trackPickerController.highlightedData = (LMMusicTrack*)collection.representativeItem;
+	if(trackPickerController.depthLevel == LMTrackPickerDepthLevelSongs){
+		trackPickerController.highlightedData = (LMMusicTrack*)collection.representativeItem;
+	}
+	trackPickerController.trackCollections = trackCollections;
 	trackPickerController.sourceMusicPickerController = self;
 	
 	[self showViewController:trackPickerController sender:nil];
@@ -297,23 +312,10 @@
 	
 	self.searchView = [LMDynamicSearchView newAutoLayoutView];
 	self.searchView.delegate = self;
-	self.searchView.selectionMode = LMSearchViewEntrySelectionModeAll;
+	self.searchView.selectionMode = LMSearchViewEntrySelectionModeTitlesAndFavourites;
 	self.searchView.hidden = YES;
 	
-	NSMutableArray<LMMusicTrackCollection*> *titlesCollection = [NSMutableArray new];
-	NSArray *allTitles = [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeTitles];
-	for(LMMusicTrackCollection *collection in allTitles){
-		for(LMMusicTrack *track in collection.items){
-			[titlesCollection addObject:[[LMMusicTrackCollection alloc] initWithItems:@[ track ]]];
-		}
-	}
-	
-	NSLog(@"Count %d/%d", (int)allTitles.count, (int)titlesCollection.count);
-	
 	self.searchView.searchableTrackCollections = @[
-												   @[],
-												   [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeComposers],
-												   
 												   [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeFavourites],
 												   [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeArtists],
 												   [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeAlbums],
@@ -322,9 +324,6 @@
 												   [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeCompilations]
 												   ];
 	self.searchView.searchableMusicTypes = @[
-											 @(LMMusicTypePlaylists),
-											 @(LMMusicTypeComposers),
-											 
 											 @(LMMusicTypeFavourites),
 											 @(LMMusicTypeArtists),
 											 @(LMMusicTypeAlbums),
@@ -332,6 +331,11 @@
 											 @(LMMusicTypeGenres),
 											 @(LMMusicTypeCompilations)
 											 ];
+	
+	for(LMMusicTrack *track in self.trackCollection.items){
+		[self.searchView setData:[[LMMusicTrackCollection alloc] initWithItems:@[ track ]] asSelected:YES forMusicType:LMMusicTypeTitles];
+	}
+	
 	//Set collections and musictypes
 	[self.view addSubview:self.searchView];
 	

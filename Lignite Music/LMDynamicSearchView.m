@@ -421,9 +421,11 @@
 		[self.selectedTrackCollectionsData addObject:dictionary];
 	}
 	
-	[self.sectionTableView reloadData];
-	
-	[self.delegate searchView:self entryWasSetAsSelected:selected withData:data forMusicType:musicType];
+	if(self.didLayoutConstraints){
+		[self.sectionTableView reloadData];
+		
+		[self.delegate searchView:self entryWasSetAsSelected:selected withData:data forMusicType:musicType];
+	} //Otherwise, it's just data being set from init
 }
 
 /* End tableview-related code */
@@ -570,8 +572,6 @@
 	if(!self.didLayoutConstraints){
 		self.didLayoutConstraints = YES;
 		
-		self.selectedTrackCollectionsData = [NSMutableArray new];
-		
 		//Check for instances the array containing LMMusicTypeTitles or LMMusicTypeFavourites which have all of their songs packed into one LMMusicTrackCollection at the front of the array, and fix them.
 		NSUInteger indexOfTitles = [self.searchableMusicTypes indexOfObject:@(LMMusicTypeTitles)];
 		NSUInteger indexOfFavourites = [self.searchableMusicTypes indexOfObject:@(LMMusicTypeFavourites)];
@@ -638,6 +638,7 @@
 	self = [super init];
 	if(self){
 		self.selectionMode = LMSearchViewEntrySelectionModeNoSelection;
+		self.selectedTrackCollectionsData = [NSMutableArray new];
 	}
 	return self;
 }

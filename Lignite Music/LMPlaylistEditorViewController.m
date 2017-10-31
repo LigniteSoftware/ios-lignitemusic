@@ -208,6 +208,10 @@
 				
 				self.noSongsInSongTableViewLabel.hidden = self.songListTableView.totalAmountOfObjects > 0;
 				
+				self.songCountLabel.text = self.playlist.trackCollection.count == 0
+				? NSLocalizedString(@"NoSongsYet", nil)
+				: [NSString stringWithFormat:NSLocalizedString(self.playlist.trackCollection.count == 1 ? @"XSongsSingle" : @"XSongs", nil), self.playlist.trackCollection.count];
+				
 				return YES;
 			}];
 			saveButton.titleLabel.font = font;

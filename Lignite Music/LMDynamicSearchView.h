@@ -56,6 +56,8 @@ typedef NS_ENUM(NSInteger, LMSearchViewEntrySelectionMode){
 	LMSearchViewEntrySelectionModeAll
 };
 
+- (void)setData:(id)data asSelected:(BOOL)selected forMusicType:(LMMusicType)musicType;
+
 /**
  The selection mode for the search view. Default is LMSearchViewEntrySelectionModeNoSelection.
  */
