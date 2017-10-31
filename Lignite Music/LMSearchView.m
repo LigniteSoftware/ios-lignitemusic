@@ -158,7 +158,7 @@
 			NSMutableArray *actualResultsArray = [NSMutableArray arrayWithArray:resultsArray];
 			[actualResultsArray removeObjectAtIndex:0];
 			
-			NSLog(@"Search results grouping %@", self.searchResultsGroupingArray);
+			NSLog(@"Search results grouping %@", searchView.searchResultsGroupingArray);
 			
 			searchView.searchResultsArray = actualResultsArray;
 			searchView.sectionTableView.totalNumberOfSections = searchView.searchResultsArray.count;
@@ -175,7 +175,7 @@
 				[searchView.sectionTableView registerCellIdentifiers];
 			}
 			
-			self.welcomeToSearchBackgroundView.hidden = !(searchView.searchResultsArray.count == 0);
+			searchView.welcomeToSearchBackgroundView.hidden = !(searchView.searchResultsArray.count == 0);
 			
 			searchView.hasSearched = YES;
 			[searchView.sectionTableView reloadData];

@@ -43,6 +43,12 @@
 
 @implementation LMSourceSelectorView
 
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+	if([self.delegate respondsToSelector:@selector(sourceSelectorDidScroll:)]){
+		[self.delegate sourceSelectorDidScroll:self];
+	}
+}
+
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
 	
 	if([LMLayoutManager isLandscape]){

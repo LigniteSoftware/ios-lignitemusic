@@ -10,7 +10,26 @@
 #import "LMSource.h"
 #import "LMView.h"
 
+@class LMSourceSelectorView;
+
+@protocol LMSourceSelectorDelegate<NSObject>
+@optional
+
+/**
+ The source selector was scrolled. This is used for search cases where if the user interacts with the screen before a search, the keyboard should resign.
+
+ @param sourceSelector The source selector that was scrolled.
+ */
+- (void)sourceSelectorDidScroll:(LMSourceSelectorView*)sourceSelector;
+
+@end
+
 @interface LMSourceSelectorView : LMView
+
+/**
+ The delegate.
+ */
+@property id<LMSourceSelectorDelegate> delegate;
 
 /**
  The array of sources to expose to the user.

@@ -11,6 +11,7 @@
 @class LMSectionTableView;
 
 @protocol LMSectionTableViewDelegate <NSObject>
+@required
 
 /**
  Gets an icon for a section header.

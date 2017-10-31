@@ -70,13 +70,14 @@
 "NoSongsInPlaylistBuilder" = "Holy cow, there aren't any songs here yet!\n\nStart adding songs by tapping the 'Add songs' button above. Get on it!";
 "SelectASource" = "Please select where to get music from";
 "SearchType" = "Search %@";
+"SearchAllMusic" = "Search all your music";
 
 "XSongs" = "%ld songs"; //Multiple songs
 "XSongsSingle" = "%ld song"; //1 song
 "NoSongsYet" = "No songs, yet";
 
-"SelectAll" = "Select all"; //As in "select all songs"
-"DeselectAll" = "Deselect all"; //Deselect all songs
+"SelectAll" = "Select all tracks";
+"DeselectAll" = "Deselect all tracks";
 
 "YourPlaylistTitle" = "Headbangers";
 
