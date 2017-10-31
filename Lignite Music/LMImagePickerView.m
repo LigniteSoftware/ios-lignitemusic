@@ -111,6 +111,9 @@
 																   message:nil
 															preferredStyle:UIAlertControllerStyleActionSheet];
 	
+	alert.popoverPresentationController.sourceView = self;
+	alert.popoverPresentationController.sourceRect = self.frame;
+	
 	UIAlertAction* choosePhotoAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"ChoosePhoto", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
 		  NSLog(@"Choose photo");
 		

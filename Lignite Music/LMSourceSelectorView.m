@@ -51,6 +51,10 @@
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
 	
+	if([LMLayoutManager isiPad]){
+		return CGSizeMake(self.frame.size.width - 40, ([LMLayoutManager isLandscapeiPad] ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height)/10.0f);
+	}
+	
 	if([LMLayoutManager isLandscape]){
 		return CGSizeMake(((WINDOW_FRAME.size.width-(WINDOW_FRAME.size.width/8.0f) /* Size of the navigation bar */)/2) - 40, WINDOW_FRAME.size.width/8.0f);
 	}

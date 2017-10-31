@@ -606,7 +606,12 @@
 - (void)changeBottomSpacing:(CGFloat)bottomSpacing {
 	NSLog(@"Setting bottom spacing %f", bottomSpacing);
     [UIView animateWithDuration:0.5 animations:^{
-       self.collectionView.contentInset = UIEdgeInsetsMake((self.musicType == LMMusicTypePlaylists && !self.layoutManager.isLandscape) ? 60 : 0, 0, 100, 0);
+		BOOL isPlaylists = self.musicType == LMMusicTypePlaylists;
+		NSInteger topInset = (isPlaylists && !self.layoutManager.isLandscape) ? 60 : 0;
+		if([LMLayoutManager isiPad] && isPlaylists){
+			topInset = 100;
+		}
+       self.collectionView.contentInset = UIEdgeInsetsMake(topInset, 0, 100, 0);
     }];
 }
 
@@ -650,7 +655,12 @@
 			}
 		}
 		
-		self.playlistModificationButtonView.hidden = (self.musicType == LMMusicTypePlaylists && willBeLandscape) || self.musicType != LMMusicTypePlaylists;
+		BOOL isPlaylists = self.musicType == LMMusicTypePlaylists;
+		
+		self.playlistModificationButtonView.hidden = (isPlaylists && willBeLandscape) || !isPlaylists;
+		if([LMLayoutManager isiPad] && isPlaylists){
+			self.playlistModificationButtonView.hidden = NO;
+		}
 		self.playlistModificationButtonBackgroundView.hidden = self.playlistModificationButtonView.hidden;
 		self.collectionView.contentInset = UIEdgeInsetsMake((self.musicType == LMMusicTypePlaylists && !willBeLandscape) ? 60 : 0, 0, 100, 0);
 		
@@ -831,6 +841,7 @@
 - (void)editPlaylistButtonTapped {
 	if(![self.playlistManager userUnderstandsPlaylistManagement]){
 		[self.playlistManager launchPlaylistManagementWarningOnView:self.rootViewController.navigationController.view withCompletionHandler:^{
+			
 			[self editPlaylistButtonTapped];
 		}];
 	}

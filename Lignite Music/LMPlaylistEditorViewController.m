@@ -428,10 +428,21 @@
 	self.addSongsButtonView.layer.masksToBounds = YES;
 	[self.view addSubview:self.addSongsButtonView];
 	
-	[self.addSongsButtonView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.titleTextField];
-	[self.addSongsButtonView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.titleTextField];
-	[self.addSongsButtonView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.imagePickerView];
-	[self.addSongsButtonView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.imagePickerView withMultiplier:(1.2/3.0)];
+	NSArray *addSongsButtonViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.addSongsButtonView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.titleTextField];
+		[self.addSongsButtonView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.titleTextField];
+		[self.addSongsButtonView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.imagePickerView];
+		[self.addSongsButtonView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.imagePickerView withMultiplier:(1.2/3.0)];
+	}];
+	[LMLayoutManager addNewPortraitConstraints:addSongsButtonViewPortraitConstraints];
+	
+	NSArray *addSongsButtonViewiPadConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.addSongsButtonView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.titleTextField];
+		[self.addSongsButtonView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.songCountLabel withOffset:14];
+		[self.addSongsButtonView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.imagePickerView withMultiplier:(0.8/3.0)];
+		[self.addSongsButtonView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(1.0/3.0)];
+	}];
+	[LMLayoutManager addNewiPadConstraints:addSongsButtonViewiPadConstraints];
 	
 	UITapGestureRecognizer *addSongsButtonTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(addSongsButtonTapped)];
 	[self.addSongsButtonView addGestureRecognizer:addSongsButtonTapGestureRecognizer];
