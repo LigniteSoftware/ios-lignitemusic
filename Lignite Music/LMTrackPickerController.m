@@ -719,6 +719,7 @@
 		if(self.highlightedData){
 			switch(self.musicType){
 				case LMMusicTypePlaylists:{
+//					LMPlaylist *playlist = (LMPlaylist*)self.highlightedData;
 					NSAssert(false, @"Playlists are not supported in the track picker, sorry.");
 					break;
 				}

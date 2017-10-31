@@ -70,6 +70,13 @@
 	return nil;
 }
 
+- (UIView*)rightViewForListEntry:(LMListEntry*)entry {
+	if([self.contentsDelegate respondsToSelector:@selector(rightViewForIndexPath:forSectionTableView:)]){
+		return [self.contentsDelegate rightViewForIndexPath:entry.indexPath forSectionTableView:self];
+	}
+	return nil;
+}
+
 - (instancetype)init {
 	self = [super initWithFrame:CGRectMake(0, 0, 0, 0) style:UITableViewStyleGrouped];
 	if(self){
@@ -138,6 +145,9 @@
 					[accessorySubview autoCenterInSuperview];
 					[accessorySubview autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:accessoryView withMultiplier:(1.0/2.0)];
 					[accessorySubview autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:accessoryView withMultiplier:(1.0/2.0)];
+				}
+				else if([accessorySubviewClass isEqualToString:@"UIView"]){
+					[accessorySubview autoPinEdgesToSuperviewEdges];
 				}
 				else{
 					NSLog(@"[%@]: Unknown class %@ for accessory.", self.title, accessorySubviewClass);
@@ -247,6 +257,7 @@
 		LMListEntry *listEntry = [LMListEntry newAutoLayoutView];
 		listEntry.delegate = self;
 		listEntry.contentViewHeightMultiplier = 0.875;
+		listEntry.stretchAcrossWidth = NO;
 		
 		[self.listEntryArray addObject:listEntry];
 	}

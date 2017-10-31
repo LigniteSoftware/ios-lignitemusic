@@ -158,12 +158,15 @@
 	}
 	
 	BOOL containsRightView = [self.delegate respondsToSelector:@selector(rightViewForListEntry:)];
+	if(containsRightView){
+		containsRightView = ([self.delegate rightViewForListEntry:self] == nil) ? NO : YES;
+	}
 	
 	if(containsRightView){
 		self.rightViewBackgroundView = [UIView newAutoLayoutView];
 		[cell.contentView addSubview:self.rightViewBackgroundView];
 		
-		[self.rightViewBackgroundView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self];
+		[self.rightViewBackgroundView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self withOffset:-(self.stretchAcrossWidth ? 0 : 15)];
 		[self.rightViewBackgroundView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self];
 		[self.rightViewBackgroundView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
 		[self.rightViewBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self withMultiplier:(1.0/2.2)];

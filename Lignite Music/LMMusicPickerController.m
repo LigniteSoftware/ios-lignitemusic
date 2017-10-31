@@ -127,6 +127,11 @@
 	}
 }
 
+- (void)searchView:(LMDynamicSearchView *)searchView entryWasSetAsSelected:(BOOL)selected withData:(id)musicData forMusicType:(LMMusicType)musicType {
+	
+	NSLog(@"Selected %d", selected);
+}
+
 - (void)searchViewEntryWasTappedWithData:(id)musicData forMusicType:(LMMusicType)musicType {
 	LMMusicTrackCollection *collection = (LMMusicTrackCollection*)musicData;
 	
@@ -292,6 +297,7 @@
 	
 	self.searchView = [LMDynamicSearchView newAutoLayoutView];
 	self.searchView.delegate = self;
+	self.searchView.selectionMode = LMSearchViewEntrySelectionModeAll;
 	self.searchView.hidden = YES;
 	
 	NSMutableArray<LMMusicTrackCollection*> *titlesCollection = [NSMutableArray new];
@@ -305,6 +311,9 @@
 	NSLog(@"Count %d/%d", (int)allTitles.count, (int)titlesCollection.count);
 	
 	self.searchView.searchableTrackCollections = @[
+												   @[],
+												   [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeComposers],
+												   
 												   [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeFavourites],
 												   [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeArtists],
 												   [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeAlbums],
@@ -313,6 +322,9 @@
 												   [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeCompilations]
 												   ];
 	self.searchView.searchableMusicTypes = @[
+											 @(LMMusicTypePlaylists),
+											 @(LMMusicTypeComposers),
+											 
 											 @(LMMusicTypeFavourites),
 											 @(LMMusicTypeArtists),
 											 @(LMMusicTypeAlbums),

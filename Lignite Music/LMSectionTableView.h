@@ -87,6 +87,8 @@
 - (UIImage*)iconForIndexPath:(NSIndexPath*)indexPath forSectionTableView:(LMSectionTableView*)sectionTableView;
 - (void)tappedIndexPath:(NSIndexPath*)indexPath forSectionTableView:(LMSectionTableView*)sectionTableView;
  
+- (UIView*)rightViewForIndexPath:(NSIndexPath*)indexPath forSectionTableView:(LMSectionTableView*)sectionTableView;
+ 
  */
 
 @optional
@@ -100,6 +102,14 @@
  */
 - (id)accessoryViewForIndexPath:(NSIndexPath*)indexPath forSectionTableView:(LMSectionTableView*)sectionTableView;
 
+/**
+ Gets the right side view for the list entry at a certain index.
+ 
+ @param indexPath The index path to return the view for.
+ @param sectionTableView The section table which has the entry that wants the right view.
+ @return The view for the entry.
+ */
+- (UIView*)rightViewForIndexPath:(NSIndexPath*)indexPath forSectionTableView:(LMSectionTableView*)sectionTableView;
 
 /**
  The close button was tapped.

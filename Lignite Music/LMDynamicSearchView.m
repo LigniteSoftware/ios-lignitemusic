@@ -10,6 +10,8 @@
 #import "LMDynamicSearchView.h"
 #import "LMSectionTableView.h"
 #import "LMPlaylistManager.h"
+#import "LMCircleView.h"
+#import "LMColour.h"
 
 @interface LMDynamicSearchView()<LMSectionTableViewDelegate>
 
@@ -32,6 +34,18 @@
  The search results for playlists, if playlists were included in the searchable music types.
  */
 @property NSArray<LMPlaylist*> *searchResultsPlaylistsArray;
+
+/**
+ An array of dictionaries containing info on the track collections which were selected by the user if the selection mode was a selectable mode.
+ 
+ Dictionary format:
+ {
+ @"trackCollection":<LMMusicTrackCollection*>, //Is empty if it's a playlist
+ @"musicType":<NSNumber<LMMusicType*>*>,
+ @"playlist":<LMPlaylist*> //Only if the musicType is LMMusicTypePlaylists
+ }
+ */
+@property NSMutableArray<NSDictionary*> *selectedTrackCollectionsData;
 
 @end
 
@@ -199,13 +213,71 @@
 	return image;
 }
 
+- (NSInteger)indexPathOfSelectedTrackCollectionWithData:(id)data forMusicType:(LMMusicType)selectedMusicType {
+	for(NSInteger i = 0; i < self.selectedTrackCollectionsData.count; i++){
+		NSDictionary *trackDictionary = [self.selectedTrackCollectionsData objectAtIndex:i];
+		
+		LMMusicTrackCollection *collection = [trackDictionary objectForKey:@"trackCollection"];
+		LMMusicType musicType = (LMMusicType)[[trackDictionary objectForKey:@"musicType"] integerValue];
+		LMPlaylist *playlist = (musicType == LMMusicTypePlaylists) ? [trackDictionary objectForKey:@"playlist"] : nil;
+		
+		BOOL isPlaylist = (selectedMusicType == LMMusicTypePlaylists);
+		LMMusicTrackCollection *selectedCollection = isPlaylist ? nil : (LMMusicTrackCollection*)data;
+		LMPlaylist *selectedPlaylist = isPlaylist ? (LMPlaylist*)data : nil;
+		
+		if(isPlaylist){
+			if(selectedPlaylist.persistentID == playlist.persistentID){
+				return i;
+			}
+		}
+		else if(musicType == LMMusicTypeTitles || selectedMusicType == LMMusicTypeFavourites){
+			if((selectedCollection.representativeItem.persistentID == collection.representativeItem.persistentID)){
+				return i;
+			}
+		}
+		else{
+			MPMediaEntityPersistentID collectionPersistentID = (MPMediaEntityPersistentID)[collection.representativeItem valueForProperty:[self propertyStringForMusicType:musicType]];
+			MPMediaEntityPersistentID selectedPersistentID = (MPMediaEntityPersistentID)[selectedCollection.representativeItem valueForProperty:[self propertyStringForMusicType:selectedMusicType]];
+			
+			if(collectionPersistentID == selectedPersistentID){
+				return i;
+			}
+		}
+	}
+	
+	return NSNotFound;
+}
+
 - (void)tappedIndexPath:(NSIndexPath*)indexPath forSectionTableView:(LMSectionTableView*)sectionTableView {
 	LMMusicType musicType = (LMMusicType)[[self.searchResultsMusicTypes objectAtIndex:indexPath.section] unsignedIntegerValue];
 
 	NSArray<LMMusicTrackCollection*>* collections = [self.searchResultsTrackCollections objectAtIndex:indexPath.section];
 	MPMediaItemCollection *collection = (musicType == LMMusicTypePlaylists) ? nil : [collections objectAtIndex:indexPath.row];
 	
-	if([self.delegate respondsToSelector:@selector(searchViewEntryWasTappedWithData:forMusicType:)]){
+	BOOL notifyOfTap = NO;
+	
+	switch(self.selectionMode){
+		case LMSearchViewEntrySelectionModeNoSelection: {
+			notifyOfTap = YES;
+			break;
+		}
+		case LMSearchViewEntrySelectionModeTitlesAndFavourites: {
+			switch(musicType){
+				case LMMusicTypeFavourites:
+				case LMMusicTypeTitles:
+					break;
+				default:
+					notifyOfTap = YES;
+					break;
+			}
+			break;
+		}
+		case LMSearchViewEntrySelectionModeAll: {
+			break;
+		}
+	}
+	
+	if([self.delegate respondsToSelector:@selector(searchViewEntryWasTappedWithData:forMusicType:)] && notifyOfTap){
 		if(musicType == LMMusicTypePlaylists){
 			LMPlaylist *playlist = [self.searchResultsPlaylistsArray objectAtIndex:indexPath.section];
 			[self.delegate searchViewEntryWasTappedWithData:playlist forMusicType:musicType];
@@ -214,8 +286,144 @@
 			[self.delegate searchViewEntryWasTappedWithData:collection forMusicType:musicType];
 		}
 	}
+	else if([self.delegate respondsToSelector:@selector(searchView:entryWasSetAsSelected:withData:forMusicType:)] && !notifyOfTap){
+		if(musicType == LMMusicTypePlaylists){
+			LMPlaylist *playlist = [self.searchResultsPlaylistsArray objectAtIndex:indexPath.section];
+			NSInteger indexOfSelectedCollection = [self indexPathOfSelectedTrackCollectionWithData:playlist forMusicType:musicType];
+			[self setData:playlist asSelected:indexOfSelectedCollection == NSNotFound forMusicType:musicType];
+		}
+		else{
+			NSInteger indexOfSelectedCollection = [self indexPathOfSelectedTrackCollectionWithData:collection forMusicType:musicType];
+			[self setData:collection asSelected:indexOfSelectedCollection == NSNotFound forMusicType:musicType];
+		}
+	}
 	
-	NSLog(@"Tapped %d.%d", (int)indexPath.section, (int)indexPath.row);
+	NSLog(@"Tapped %d.%d, %d", (int)indexPath.section, (int)indexPath.row, (int)self.selectedTrackCollectionsData.count);
+}
+
+- (UIView*)checkmarkViewSelected:(BOOL)selected {
+	UIView *checkmarkPaddedView = [UIView newAutoLayoutView];
+	
+	LMCircleView *checkmarkView = [LMCircleView newAutoLayoutView];
+	checkmarkView.backgroundColor = selected ? [LMColour ligniteRedColour] : [LMColour lightGrayBackgroundColour];
+	
+	[checkmarkPaddedView addSubview:checkmarkView];
+	
+	
+	[checkmarkView autoCenterInSuperview];
+	[checkmarkView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:checkmarkPaddedView withMultiplier:(3.0/4.0)];
+	[checkmarkView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:checkmarkPaddedView withMultiplier:(3.0/4.0)];
+	
+	
+	LMCircleView *checkmarkFillView = [LMCircleView newAutoLayoutView];
+	checkmarkFillView.backgroundColor = selected ? [LMColour ligniteRedColour] : [UIColor whiteColor];
+	
+	[checkmarkView addSubview:checkmarkFillView];
+	
+	[checkmarkFillView autoCenterInSuperview];
+	[checkmarkFillView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:checkmarkView withMultiplier:(9.0/10.0)];
+	[checkmarkFillView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:checkmarkView withMultiplier:(9.0/10.0)];
+	
+	
+	UIImageView *checkmarkImageView = [UIImageView newAutoLayoutView];
+	checkmarkImageView.contentMode = UIViewContentModeScaleAspectFit;
+	checkmarkImageView.image = [LMAppIcon imageForIcon:LMIconWhiteCheckmark];
+	[checkmarkView addSubview:checkmarkImageView];
+	
+	[checkmarkImageView autoCenterInSuperview];
+	[checkmarkImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:checkmarkView withMultiplier:(3.0/8.0)];
+	[checkmarkImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:checkmarkView withMultiplier:(3.0/8.0)];
+	
+	return checkmarkPaddedView;
+}
+
+- (UIView*)arrowView {
+	UIView *arrowIconPaddedView = [UIView newAutoLayoutView];
+	
+	UIImageView *arrowIconView = [UIImageView newAutoLayoutView];
+	arrowIconView.contentMode = UIViewContentModeScaleAspectFit;
+	arrowIconView.image = [LMAppIcon imageForIcon:LMIconForwardArrow];
+	
+	[arrowIconPaddedView addSubview:arrowIconView];
+	
+	[arrowIconView autoCenterInSuperview];
+	[arrowIconView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:arrowIconPaddedView withMultiplier:(3.0/8.0)];
+	[arrowIconView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:arrowIconPaddedView];
+	
+	return arrowIconView;
+}
+
+- (UIView*)rightViewForIndexPath:(NSIndexPath*)indexPath forSectionTableView:(LMSectionTableView*)sectionTableView {
+	UIView *rightViewBackgroundView = [UIView newAutoLayoutView];
+	rightViewBackgroundView.backgroundColor = [UIColor greenColor];
+	
+	LMMusicType musicType = (LMMusicType)[[self.searchResultsMusicTypes objectAtIndex:indexPath.section] unsignedIntegerValue];
+	NSArray<LMMusicTrackCollection*>* collections = [self.searchResultsTrackCollections objectAtIndex:indexPath.section];
+	MPMediaItemCollection *collection = (musicType == LMMusicTypePlaylists) ? nil : [collections objectAtIndex:indexPath.row];
+	
+	switch(self.selectionMode){
+		case LMSearchViewEntrySelectionModeNoSelection: {
+			return [self arrowView];
+		}
+		case LMSearchViewEntrySelectionModeTitlesAndFavourites: {
+			switch(musicType){
+				case LMMusicTypeTitles:
+				case LMMusicTypeFavourites: {
+					BOOL selected = [self indexPathOfSelectedTrackCollectionWithData:collection forMusicType:musicType] != NSNotFound;
+					return [self checkmarkViewSelected:selected];
+				}
+				default: {
+					return [self arrowView];
+				}
+			}
+			break;
+		}
+		case LMSearchViewEntrySelectionModeAll: {
+			BOOL selected = NO;
+			if(musicType == LMMusicTypePlaylists){
+				LMPlaylist *playlist = [self.searchResultsPlaylistsArray objectAtIndex:indexPath.row];
+				selected = [self indexPathOfSelectedTrackCollectionWithData:playlist forMusicType:musicType] != NSNotFound;
+			}
+			else{
+				selected = [self indexPathOfSelectedTrackCollectionWithData:collection forMusicType:musicType] != NSNotFound;
+			}
+			return [self checkmarkViewSelected:selected];
+		}
+	}
+	
+	return rightViewBackgroundView;
+}
+
+- (void)setData:(id)data asSelected:(BOOL)selected forMusicType:(LMMusicType)musicType {
+	NSInteger indexOfSelectedCollection = [self indexPathOfSelectedTrackCollectionWithData:data forMusicType:musicType];
+	
+	if(!selected){
+		[self.selectedTrackCollectionsData removeObjectAtIndex:indexOfSelectedCollection];
+	}
+	else{
+		BOOL isPlaylist = (musicType == LMMusicTypePlaylists);
+		
+		NSDictionary *dictionary = nil;
+		if(isPlaylist){
+			dictionary = @{
+						   @"trackCollection":[[LMMusicTrackCollection alloc] initWithItems:@[]],
+						   @"musicType":@(musicType),
+						   @"playlist":data
+						   };
+		}
+		else{
+			dictionary = @{
+						   @"trackCollection":data,
+						   @"musicType":@(musicType)
+						   };
+		}
+		
+		[self.selectedTrackCollectionsData addObject:dictionary];
+	}
+	
+	[self.sectionTableView reloadData];
+	
+	[self.delegate searchView:self entryWasSetAsSelected:selected withData:data forMusicType:musicType];
 }
 
 /* End tableview-related code */
@@ -362,6 +570,8 @@
 	if(!self.didLayoutConstraints){
 		self.didLayoutConstraints = YES;
 		
+		self.selectedTrackCollectionsData = [NSMutableArray new];
+		
 		//Check for instances the array containing LMMusicTypeTitles or LMMusicTypeFavourites which have all of their songs packed into one LMMusicTrackCollection at the front of the array, and fix them.
 		NSUInteger indexOfTitles = [self.searchableMusicTypes indexOfObject:@(LMMusicTypeTitles)];
 		NSUInteger indexOfFavourites = [self.searchableMusicTypes indexOfObject:@(LMMusicTypeFavourites)];
@@ -422,6 +632,14 @@
 	}
 	
 	[super layoutSubviews];
+}
+
+- (instancetype)init {
+	self = [super init];
+	if(self){
+		self.selectionMode = LMSearchViewEntrySelectionModeNoSelection;
+	}
+	return self;
 }
 
 /* End initialization and layouting */
