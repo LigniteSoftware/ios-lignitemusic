@@ -7,6 +7,7 @@
 //
 
 #import <PureLayout/PureLayout.h>
+#import "MBProgressHUD.h"
 #import "LMTrackPickerController.h"
 #import "LMColour.h"
 #import "LMListEntry.h"
@@ -60,18 +61,23 @@
 /**
  Whether or not this is the song depth, basically.
  */
-@property (readonly) BOOL isTitles;
+@property (readonly) BOOL entriesAreSelectable;
 
 /**
  Whether or not all tracks in the picker are selected.
  */
 @property (readonly) BOOL allEntriesSelected;
 
+/**
+ The loading progress HUD for time consuming tasks.
+ */
+@property MBProgressHUD *loadingProgressHUD;
+
 @end
 
 @implementation LMTrackPickerController
 
-@synthesize isTitles = _isTitles;
+@synthesize entriesAreSelectable = _entriesAreSelectable;
 @synthesize selectedTrackCollections = _selectedTrackCollections;
 @synthesize displayingTrackCollections = _displayingTrackCollections;
 
@@ -90,8 +96,8 @@
 	return self.sourceMusicPickerController.trackCollections;
 }
 
-- (BOOL)isTitles {
-	return self.depthLevel == LMTrackPickerDepthLevelSongs;
+- (BOOL)entriesAreSelectable {
+	return (self.depthLevel == LMTrackPickerDepthLevelSongs) || (self.selectionMode == LMMusicPickerSelectionModeAllCollections);
 }
 
 - (BOOL)allEntriesSelected {
@@ -109,27 +115,55 @@
 	
 	if(self.selectAllListEntry && entry == self.selectAllListEntry){
 		NSLog(@"Select all");
-
+		
 		BOOL allEntriesSelected = self.allEntriesSelected;
+		
+		self.loadingProgressHUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+		
+		self.loadingProgressHUD.mode = MBProgressHUDModeIndeterminate;
+		self.loadingProgressHUD.label.text = NSLocalizedString(allEntriesSelected ? @"DeselectingAll" : @"SelectingAll", nil);
+		self.loadingProgressHUD.label.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18.0f];
+		self.loadingProgressHUD.userInteractionEnabled = NO;
 
-		for(NSInteger i = 0; i < self.displayingTrackCollections.count; i++){
-			LMMusicTrackCollection *trackCollection = [self.displayingTrackCollections objectAtIndex:i];
-			LMListEntry *songEntry = [self.listEntryArray objectAtIndex:i];
-
-			[self.sourceMusicPickerController setCollection:trackCollection asSelected:!allEntriesSelected forMusicType:self.musicType];
-
-			[songEntry reloadContents];
-		}
-
-		[entry reloadContents];
+		__weak id weakSelf = self;
+		
+		dispatch_async(dispatch_get_global_queue(NSQualityOfServiceUserInitiated, 0), ^{
+			id strongSelf = weakSelf;
+			
+			if(!strongSelf){
+				return;
+			}
+			
+			LMTrackPickerController *trackPicker = strongSelf;
+			
+			BOOL allEntriesSelected = trackPicker.allEntriesSelected;
+			
+			for(NSInteger i = 0; i < trackPicker.displayingTrackCollections.count; i++){
+				LMMusicTrackCollection *trackCollection = [trackPicker.displayingTrackCollections objectAtIndex:i];
+				
+				[trackPicker.sourceMusicPickerController setCollection:trackCollection asSelected:!allEntriesSelected forMusicType:trackPicker.musicType];
+			}
+			
+			dispatch_async(dispatch_get_main_queue(), ^{
+				for(NSInteger i = 0; i < trackPicker.displayingTrackCollections.count; i++){
+					LMListEntry *songEntry = [trackPicker.listEntryArray objectAtIndex:i];
+					
+					[songEntry reloadContents];
+				}
+				
+				[trackPicker.selectAllListEntry reloadContents];
+				
+				[self.loadingProgressHUD hideAnimated:YES afterDelay:0.0f];
+			});
+		});
 
 		return;
 	}
 
-	if(self.depthLevel == LMTrackPickerDepthLevelSongs){
+	if(self.entriesAreSelectable){
 		NSLog(@"Pick song");
 
-		LMMusicTrackCollection *trackCollection = [self.displayingTrackCollections objectAtIndex:entry.collectionIndex-self.isTitles];
+		LMMusicTrackCollection *trackCollection = [self.displayingTrackCollections objectAtIndex:entry.collectionIndex-self.entriesAreSelectable];
 
 		[self.sourceMusicPickerController setCollection:trackCollection asSelected:![self trackCollectionIsSelected:trackCollection] forMusicType:self.musicType];
 
@@ -143,12 +177,12 @@
 	
 	NSString *title = nil;
 	
-	LMMusicTrack *representativeItem = [self.displayingTrackCollections objectAtIndex:entry.collectionIndex-self.isTitles].representativeItem;
+	LMMusicTrack *representativeItem = [self.displayingTrackCollections objectAtIndex:entry.collectionIndex-self.entriesAreSelectable].representativeItem;
 	NSLog(@"Representative %@", representativeItem.albumTitle);
 	NSArray<LMMusicTrackCollection*> *trackCollections = [self.musicPlayer collectionsForRepresentativeTrack:representativeItem forMusicType:self.musicType];
 	
 	if(self.depthLevel == LMTrackPickerDepthLevelAlbums){
-		trackCollections = @[ [self.displayingTrackCollections objectAtIndex:entry.collectionIndex-self.isTitles] ];
+		trackCollections = @[ [self.displayingTrackCollections objectAtIndex:entry.collectionIndex-self.entriesAreSelectable] ];
 	}
 	
 	switch(self.musicType){
@@ -252,6 +286,7 @@
 
 - (BOOL)trackCollectionIsSelected:(LMMusicTrackCollection*)trackCollection {
 	for(LMMusicTrackCollection *selectedTrackCollection in self.selectedTrackCollections){
+		NSLog(@"Collection count %d %lld", (int)trackCollection.count, trackCollection.representativeItem.genrePersistentID);
 		if([LMMusicPlayer trackCollection:trackCollection isEqualToOtherTrackCollection:selectedTrackCollection]){
 			return YES;
 		}
@@ -262,7 +297,7 @@
 
 - (UIView*)rightViewForListEntry:(LMListEntry *)entry {
 
-	if(self.depthLevel == LMTrackPickerDepthLevelSongs){
+	if(self.entriesAreSelectable){
 		BOOL selected = NO;
 		if(entry.collectionIndex == -1){
 			selected = self.allEntriesSelected;
@@ -298,12 +333,12 @@
 		return NSLocalizedString(self.allEntriesSelected ? @"DeselectAll" : @"SelectAll", nil);
 	}
 	
-	LMMusicTrackCollection *collection = (self.depthLevel == LMTrackPickerDepthLevelSongs) ? nil : [self.displayingTrackCollections objectAtIndex:entry.collectionIndex-self.isTitles];
+	LMMusicTrackCollection *collection = [self.displayingTrackCollections objectAtIndex:entry.collectionIndex-self.entriesAreSelectable];
 	
 	switch(self.musicType){
 		case LMMusicTypeFavourites:
 		case LMMusicTypeTitles:
-			return [self.displayingTrackCollections objectAtIndex:entry.collectionIndex-self.isTitles].representativeItem.title;
+			return collection.representativeItem.title;
 		case LMMusicTypeGenres: {
 			return collection.representativeItem.genre ? collection.representativeItem.genre : NSLocalizedString(@"UnknownGenre", nil);
 		}
@@ -327,12 +362,12 @@
 		return nil;
 	}
 	
-	LMMusicTrackCollection *collection = (self.depthLevel == LMTrackPickerDepthLevelSongs) ? nil : [self.displayingTrackCollections objectAtIndex:entry.collectionIndex-self.isTitles];
+	LMMusicTrackCollection *collection = [self.displayingTrackCollections objectAtIndex:entry.collectionIndex-self.entriesAreSelectable];
 	
 	switch(self.musicType){
 		case LMMusicTypeFavourites:
 		case LMMusicTypeTitles:
-			return [self.displayingTrackCollections objectAtIndex:entry.collectionIndex-self.isTitles].representativeItem.artist;
+			return collection.representativeItem.artist;
 		case LMMusicTypeComposers:
 		case LMMusicTypeArtists: {
 			BOOL usingSpecificTrackCollections = (self.musicType != LMMusicTypePlaylists
@@ -372,7 +407,7 @@
 		return nil;
 	}
 	
-	LMMusicTrackCollection *collection = (self.depthLevel == LMTrackPickerDepthLevelSongs) ? nil : [self.displayingTrackCollections objectAtIndex:entry.collectionIndex-self.isTitles];
+	LMMusicTrackCollection *collection = [self.displayingTrackCollections objectAtIndex:entry.collectionIndex-self.entriesAreSelectable];
 	
 	switch(self.musicType){
 		case LMMusicTypeComposers:
@@ -390,7 +425,7 @@
 			if(self.displayingTrackCollections.count == 0){
 				return nil;
 			}
-			return [self.displayingTrackCollections objectAtIndex:entry.collectionIndex-self.isTitles].representativeItem.albumArt;
+			return collection.representativeItem.albumArt;
 		default: {
 			NSLog(@"Windows fucking error!");
 			return nil;
@@ -438,7 +473,7 @@
 		[listEntry autoPinEdgesToSuperviewEdges];
 	}
 	else{
-		listEntry = [self.listEntryArray objectAtIndex:indexPath.row-self.isTitles];
+		listEntry = [self.listEntryArray objectAtIndex:indexPath.row-self.entriesAreSelectable];
 		listEntry.collectionIndex = indexPath.row;
 		[cell.contentView addSubview:listEntry];
 		[listEntry autoPinEdgesToSuperviewEdges];
@@ -658,7 +693,7 @@
 	[LMLayoutManager addNewLandscapeConstraints:letterTabBarLandscapeConstraints];
 	
 	
-	if(self.depthLevel == LMTrackPickerDepthLevelSongs || self.selectionMode == LMMusicPickerSelectionModeAllCollections){
+	if(self.entriesAreSelectable){
 		self.selectAllListEntry = [LMListEntry new];
 		self.selectAllListEntry.delegate = self;
 		self.selectAllListEntry.collectionIndex = -1;
@@ -698,11 +733,11 @@
 	[self.view bringSubviewToFront:self.letterTabBar];
 	
 	
-	NSLog(@"%d", self.isTitles);
+	NSLog(@"%d", self.entriesAreSelectable);
 	
 	self.listEntryArray = [NSMutableArray new];
 	
-	for(int i = self.isTitles ? 1 : 0; i < [self collectionView:self.collectionView numberOfItemsInSection:0]; i++){
+	for(int i = self.entriesAreSelectable ? 1 : 0; i < [self collectionView:self.collectionView numberOfItemsInSection:0]; i++){
 		LMListEntry *listEntry = [LMListEntry newAutoLayoutView];
 		listEntry.delegate = self;
 		listEntry.collectionIndex = i;

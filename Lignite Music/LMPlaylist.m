@@ -14,6 +14,24 @@
 
 @implementation LMPlaylist
 
+@synthesize trackCollection = _trackCollection;
 
+- (LMMusicTrackCollection*)trackCollection {
+	if(self.enhanced){
+		return [[LMMusicTrackCollection alloc]initWithItems:@[]];
+	}
+	
+	return _trackCollection;
+}
+
+- (void)setTrackCollection:(LMMusicTrackCollection *)trackCollection {
+	_trackCollection = trackCollection;
+}
+
+- (void)regenerateEnhancedPlaylist {
+	NSAssert(self.enhanced, @"Attempt to regenerate a playlist that's not enhanced.");
+	
+	NSLog(@"Regenerate me");
+}
 
 @end

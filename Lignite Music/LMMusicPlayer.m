@@ -534,14 +534,47 @@ BOOL shuffleForDebug = NO;
 	
 	for(NSInteger i = 0; i < trackCollection.count; i++){
 		LMMusicTrack *track = [trackCollection.items objectAtIndex:i];
-		LMMusicTrack *otherTrack = [otherTrackCollection.items objectAtIndex:i];
 		
-		if(track.persistentID != otherTrack.persistentID){
+		BOOL containsOtherTrack = NO;
+		
+		for(LMMusicTrack *otherTrack in otherTrackCollection.items){
+			if(track.persistentID == otherTrack.persistentID){
+				containsOtherTrack = YES;
+				break;
+			}
+		}
+		
+		if(!containsOtherTrack){
 			return NO;
 		}
 	}
 	
 	return YES;
+}
+
++ (NSString*)persistentIDPropertyStringForMusicType:(LMMusicType)musicType {
+	switch(musicType){
+		case LMMusicTypeFavourites:
+		case LMMusicTypeTitles:
+			return MPMediaItemPropertyPersistentID;
+		case LMMusicTypeComposers:
+			return MPMediaItemPropertyComposerPersistentID;
+		case LMMusicTypeAlbums:
+		case LMMusicTypeCompilations:
+			return MPMediaItemPropertyAlbumPersistentID;
+		case LMMusicTypeArtists:
+			return MPMediaItemPropertyArtistPersistentID;
+		case LMMusicTypeGenres:
+			return MPMediaItemPropertyGenrePersistentID;
+		default:
+			NSAssert(true, @"This music type (%d) is not supported", musicType);
+			return @"";
+	}
+}
+
++ (MPMediaEntityPersistentID)persistentIDForMusicTrackCollection:(LMMusicTrackCollection*)trackCollection withMusicType:(LMMusicType)musicType {
+	
+	return [[trackCollection.representativeItem valueForProperty:[LMMusicPlayer persistentIDPropertyStringForMusicType:musicType]] longLongValue];
 }
 
 - (NSDictionary*)lettersAvailableDictionaryForMusicTrackCollectionArray:(NSArray<LMMusicTrackCollection*>*)collectionArray
@@ -780,6 +813,44 @@ BOOL shuffleForDebug = NO;
 		return [self trackCollectionsForMediaQuery:query withMusicType:musicType];
 	}
 	return nil;
+}
+
+- (NSArray<LMMusicTrackCollection*>*)collectionsForPersistentID:(MPMediaEntityPersistentID)persistentID forMusicType:(LMMusicType)musicType {
+	
+	NSAssert(musicType != LMMusicTypeFavourites, @"Cannot query favourites, sorry");
+	
+	MPMediaGrouping associatedGroupings[] = {
+		MPMediaGroupingAlbum, //Artists
+		MPMediaGroupingAlbum, //Albums
+		MPMediaGroupingTitle, //Titles
+		MPMediaGroupingTitle, //Playlists
+		MPMediaGroupingAlbum, //Genres
+		MPMediaGroupingAlbum, //Composers
+		MPMediaGroupingAlbum  //Compilations
+	};
+	
+	NSArray<NSString*> *associatedPersistentIDProperties = @[
+															 MPMediaItemPropertyArtistPersistentID,   //Artists
+															 MPMediaItemPropertyAlbumPersistentID,    //Albums
+															 MPMediaItemPropertyPersistentID,         //Titles
+															 MPMediaPlaylistPropertyName,             //Playlists
+															 MPMediaItemPropertyGenrePersistentID,    //Genres
+															 MPMediaItemPropertyComposerPersistentID, //Composers
+															 MPMediaItemPropertyIsCompilation         //Compilations
+															 ];
+	
+	NSString *associatedProperty = [associatedPersistentIDProperties objectAtIndex:musicType];
+	
+	MPMediaQuery *query = nil;
+	
+	query = [MPMediaQuery new];
+	query.groupingType = associatedGroupings[musicType];
+	
+	MPMediaPropertyPredicate *musicFilterPredicate = [MPMediaPropertyPredicate predicateWithValue:@(persistentID)
+																					  forProperty:associatedProperty comparisonType:MPMediaPredicateComparisonEqualTo];
+	[query addFilterPredicate:musicFilterPredicate];
+	
+	return [self trackCollectionsForMediaQuery:query withMusicType:musicType];
 }
 
 - (NSArray<LMMusicTrackCollection*>*)collectionsForRepresentativeTrack:(LMMusicTrack*)representativeTrack forMusicType:(LMMusicType)musicType {

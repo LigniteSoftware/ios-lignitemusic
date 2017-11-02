@@ -44,13 +44,13 @@ typedef enum {
  */
 typedef enum {
 	LMMusicTypeArtists = 0,
-	LMMusicTypeAlbums,
-	LMMusicTypeTitles,
-	LMMusicTypePlaylists,
-	LMMusicTypeGenres,
-	LMMusicTypeComposers,
-	LMMusicTypeCompilations,
-	LMMusicTypeFavourites
+	LMMusicTypeAlbums, //1
+	LMMusicTypeTitles, //2
+	LMMusicTypePlaylists,//3
+	LMMusicTypeGenres, //4
+	LMMusicTypeComposers, //5
+	LMMusicTypeCompilations, //6
+	LMMusicTypeFavourites //7
 } LMMusicType;
 
 /**
@@ -306,6 +306,23 @@ typedef enum {
 + (BOOL)trackCollection:(LMMusicTrackCollection*)trackCollection isEqualToOtherTrackCollection:(LMMusicTrackCollection*)otherTrackCollection;
 
 /**
+ Returns a persistent ID property string for a certain music type.
+
+ @param musicType The music type to get the persistent ID property string for.
+ @return The property string.
+ */
++ (NSString*)persistentIDPropertyStringForMusicType:(LMMusicType)musicType;
+
+/**
+ Gets a persistent ID of a music track collection's representative item based off of a music type.
+
+ @param trackCollection The track collection to get the persistent ID for.
+ @param musicType The music type.
+ @return The persistent ID.
+ */
++ (MPMediaEntityPersistentID)persistentIDForMusicTrackCollection:(LMMusicTrackCollection*)trackCollection withMusicType:(LMMusicType)musicType;
+
+/**
  Gets the track collections for a media query with a certain music type.
  
  @param mediaQuery The media query to convert.
@@ -322,6 +339,7 @@ typedef enum {
  @return The grouped collections.
  */
 - (NSArray<LMMusicTrackCollection*>*)collectionsForRepresentativeTrack:(LMMusicTrack*)representativeTrack forMusicType:(LMMusicType)musicType;
+- (NSArray<LMMusicTrackCollection*>*)collectionsForPersistentID:(MPMediaEntityPersistentID)persistentID forMusicType:(LMMusicType)musicType; //Does the same but just with a persistent ID.
 
 /**
  Finds collections of music based off of the type provided.

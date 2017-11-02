@@ -17,24 +17,62 @@
  */
 @property UIView *paddingView;
 
+/**
+ Whether or not the warning view is showing.
+ */
+@property BOOL showing;
+
+/**
+ The previous offset.
+ */
+@property CGFloat previousOffset;
+
 @end
 
 @implementation LMBoxWarningView
 
 - (void)hide {
+	if(!self.showing){
+		return;
+	}
+	
 	[self.superview layoutIfNeeded];
 	
+	self.previousOffset = self.topToSuperviewConstraint.constant;
 	self.topToSuperviewConstraint.constant = -self.frame.size.height;
 	
 	[UIView animateWithDuration:0.3 animations:^{
 		[self.superview layoutIfNeeded];
 		self.alpha = 0;
 	}];
+	
+	self.showing = NO;
+}
+
+- (void)show {
+	if(self.showing || !self.didLayoutConstraints){
+		return;
+	}
+	
+	[self.superview layoutIfNeeded];
+	
+	self.topToSuperviewConstraint.constant = self.previousOffset;
+	
+	[UIView animateWithDuration:0.3 animations:^{
+		[self.superview layoutIfNeeded];
+		self.alpha = 1;
+	}];
+	
+	self.showing = YES;
 }
 
 - (void)layoutSubviews {
 	if(!self.didLayoutConstraints){
 		self.didLayoutConstraints = YES;
+		
+		
+		self.previousOffset = self.topToSuperviewConstraint.constant;
+		self.showing = YES;
 		
 		
 		self.layer.masksToBounds = YES;
@@ -74,6 +112,8 @@
 		[self.subtitleLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 		[self.subtitleLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.titleLabel withOffset:8];
 		[self.subtitleLabel autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		
+		self.showing = YES;
 	}
 	
 	[super layoutSubviews];

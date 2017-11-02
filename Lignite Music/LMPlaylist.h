@@ -23,6 +23,16 @@
 @property UIImage *image;
 
 /**
+ Whether or not the playlist is enhanced.
+ */
+@property BOOL enhanced;
+
+/**
+ The conditions dictionary for the enhanced playlist.
+ */
+@property NSDictionary *enhancedConditionsDictionary;
+
+/**
  The collection of tracks associated with this playlist.
  */
 @property LMMusicTrackCollection *trackCollection;
@@ -36,5 +46,10 @@
  The persistent ID of the playlist from before it was ported to Lignite Music. Will equal 0 if it was not ported and was user created.
  */
 @property MPMediaEntityPersistentID systemPersistentID;
+
+/**
+ Regenerates the playlist, if enhanced, based on the conditions provided.
+ */
+- (void)regenerateEnhancedPlaylist;
 
 @end

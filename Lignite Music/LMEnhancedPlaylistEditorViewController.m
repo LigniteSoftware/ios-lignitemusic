@@ -16,7 +16,6 @@
 #import "LMExtras.h"
 #import "LMListEntry.h"
 #import "LMMusicPlayer.h"
-#import "LMPlaylistManager.h"
 #import "LMBoxWarningView.h"
 #import "LMMusicPickerController.h"
 
@@ -97,6 +96,16 @@
  */
 @property LMMusicPickerController *conditionsMusicPickerController;
 
+/**
+ If the conditions music picker is picking for music the user wants to hear.
+ */
+@property BOOL isPickingWantToHear;
+
+/**
+ The playlist that this enhanced playlist editor is handling.
+ */
+@property LMPlaylist *playlist;
+
 @end
 
 @implementation LMEnhancedPlaylistEditorViewController
@@ -108,11 +117,11 @@
 }
 
 - (void)imagePickerView:(LMImagePickerView *)imagePickerView didFinishPickingImage:(UIImage *)image {
-//	self.playlist.image = image;
+	self.playlist.image = image;
 }
 
 - (void)imagePickerView:(LMImagePickerView *)imagePickerView deletedImage:(UIImage *)image {
-//	self.playlist.image = nil;
+	self.playlist.image = nil;
 }
 
 /* End image picker code */
@@ -132,40 +141,136 @@
 	
 	[self dismissViewControllerAnimated:YES completion:nil];
 	
-//	if([self.delegate respondsToSelector:@selector(playlistEditorViewControllerDidCancel:)]){
-//		[self.delegate playlistEditorViewControllerDidCancel:self];
-//	}
+	if([self.delegate respondsToSelector:@selector(enhancedPlaylistEditorViewControllerDidCancel:)]){
+		[self.delegate enhancedPlaylistEditorViewControllerDidCancel:self];
+	}
 }
 
 - (void)savePlaylistEditing {
 	NSLog(@"Save enhanced playlist");
 	
-//	self.playlist.title = self.titleTextField.text;
+	self.playlist.title = self.titleTextField.text;
 	
 	[self dismissViewControllerAnimated:YES completion:nil];
 	
-//	[self.playlistManager savePlaylist:self.playlist];
-//
-//	if([self.delegate respondsToSelector:@selector(playlistEditorViewController:didSaveWithPlaylist:)]){
-//		[self.delegate playlistEditorViewController:self didSaveWithPlaylist:self.playlist];
-//	}
+	[self.playlistManager savePlaylist:self.playlist];
+
+	NSLog(@"Saved.");
+	
+	if([self.delegate respondsToSelector:@selector(enhancedPlaylistEditorViewController:didSaveWithPlaylist:)]){
+		[self.delegate enhancedPlaylistEditorViewController:self didSaveWithPlaylist:self.playlist];
+	}
+}
+
+- (void)musicPicker:(LMMusicPickerController*)musicPicker didFinishPickingMusicWithTrackCollections:(NSArray<LMMusicTrackCollection*>*)trackCollections {
+	
+	NSLog(@"Finished with %d collections and %d music types", (int)trackCollections.count, (int)musicPicker.musicTypes.count);
+	
+	NSMutableDictionary *mutableEnhancedConditionsDictionary = [NSMutableDictionary new];
+	if(self.playlist.enhancedConditionsDictionary){
+		mutableEnhancedConditionsDictionary = [NSMutableDictionary dictionaryWithDictionary:self.playlist.enhancedConditionsDictionary];
+	}
+	
+	NSMutableArray *persistentIDArray = [NSMutableArray new];
+	for(NSInteger i = 0; i < musicPicker.trackCollections.count; i++){
+		LMMusicTrackCollection *trackCollection = [musicPicker.trackCollections objectAtIndex:i];
+		LMMusicType musicType = (LMMusicType)[[musicPicker.musicTypes objectAtIndex:i] integerValue];
+		
+		[persistentIDArray addObject:
+		 @([LMMusicPlayer persistentIDForMusicTrackCollection:trackCollection withMusicType:musicType])
+		 ];
+	}
+	
+	NSDictionary *toHearDictionary = @{
+									   LMEnhancedPlaylistPersistentIDsKey: [NSArray arrayWithArray:persistentIDArray],
+									   LMEnhancedPlaylistMusicTypesKey: musicPicker.musicTypes
+									   };
+	
+	[mutableEnhancedConditionsDictionary setObject:toHearDictionary forKey:self.isPickingWantToHear ? LMEnhancedPlaylistWantToHearKey : LMEnhancedPlaylistDontWantToHearKey];
+	
+	self.playlist.enhancedConditionsDictionary = [NSDictionary dictionaryWithDictionary:mutableEnhancedConditionsDictionary];
+	
+	NSLog(@"Mutable enhanced %@", self.playlist.enhancedConditionsDictionary);
+	
+	if(trackCollections.count > 0){
+		[self.warningBoxView hide];
+	}
+	
+	[self reloadConditionsLabelAndWarningBox];
 }
 
 - (void)addConditionsButtonTapped:(UITapGestureRecognizer*)tapGestureRecognizer {
-	if(tapGestureRecognizer.view == self.wantToHearAddSongsButtonView){
-		NSLog(@"Do want to hear");
-	}
-	else { //Don't want to hear add songs button tapped
-		NSLog(@"Don't want to hear");
-	}
+	self.isPickingWantToHear = (tapGestureRecognizer.view == self.wantToHearAddSongsButtonView);
+
 	
 	self.conditionsMusicPickerController = [LMMusicPickerController new];
 	self.conditionsMusicPickerController.delegate = self;
 	self.conditionsMusicPickerController.selectionMode = LMMusicPickerSelectionModeAllCollections;
-//	self.conditionsMusicPickerController.trackCollection = self.playlist.trackCollection;
+	
+	
+	NSMutableArray *musicTrackCollectionsMutableArray = [NSMutableArray new];
+	
+	NSDictionary *toHearDictionary =  [self.playlist.enhancedConditionsDictionary objectForKey:self.isPickingWantToHear ? LMEnhancedPlaylistWantToHearKey : LMEnhancedPlaylistDontWantToHearKey];
+	
+	NSArray *persistentIDsArray = [toHearDictionary objectForKey:LMEnhancedPlaylistPersistentIDsKey];
+	NSArray *musicTypesArray = [toHearDictionary objectForKey:LMEnhancedPlaylistMusicTypesKey];
+	
+	for(NSInteger i = 0; i < persistentIDsArray.count; i++){
+		MPMediaEntityPersistentID persistentID = [[persistentIDsArray objectAtIndex:i] longLongValue];
+		LMMusicType musicType = (LMMusicType)[[musicTypesArray objectAtIndex:i] integerValue];
+		
+		NSArray<LMMusicTrackCollection*> *trackCollections = [self.musicPlayer collectionsForPersistentID:persistentID forMusicType:musicType];
+		
+		NSLog(@"%d items, first having %d for %lld", (int)trackCollections.count, (int)trackCollections.firstObject.count, persistentID);
+		
+		[musicTrackCollectionsMutableArray addObject:trackCollections.firstObject];
+	}
+
+	self.conditionsMusicPickerController.trackCollections = [NSArray arrayWithArray:musicTrackCollectionsMutableArray];
+	self.conditionsMusicPickerController.musicTypes = musicTypesArray;
+	
+	for(LMMusicTrackCollection *collection in musicTrackCollectionsMutableArray){
+		NSLog(@"Collection with %d items", (int)collection.count);
+	}
+	
+
 	UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:self.conditionsMusicPickerController];
 	[self presentViewController:navigation animated:YES completion:nil];
 	
+}
+
+- (void)tappedShuffleAllLabel {
+	[self.shuffleAllCheckbox setOn:!self.shuffleAllCheckbox.on animated:YES];
+}
+
+- (void)reloadConditionsLabelAndWarningBox {
+	NSArray *wantToHearPersistentIDsArray = [[self.playlist.enhancedConditionsDictionary objectForKey:LMEnhancedPlaylistWantToHearKey] objectForKey:LMEnhancedPlaylistPersistentIDsKey];
+	NSArray *dontWantToHearPersistentIDsArray = [[self.playlist.enhancedConditionsDictionary objectForKey:LMEnhancedPlaylistDontWantToHearKey] objectForKey:LMEnhancedPlaylistPersistentIDsKey];
+	
+	NSInteger numberOfConditions = (wantToHearPersistentIDsArray.count + dontWantToHearPersistentIDsArray.count);
+	
+	if(numberOfConditions == 0){
+		self.songCountLabel.text = NSLocalizedString(@"NoConditionsYet", nil);
+	}
+	else if(numberOfConditions == 1){
+		self.songCountLabel.text = NSLocalizedString(@"OneCondition", nil);
+	}
+	else{
+		self.songCountLabel.text = [NSString stringWithFormat:NSLocalizedString(@"XConditions", nil), numberOfConditions];
+	}
+	
+	if(numberOfConditions == 0){
+		self.warningBoxView.titleLabel.text = NSLocalizedString(@"EnhancedPlaylistNoConditionsTitle", nil);
+		self.warningBoxView.subtitleLabel.text = NSLocalizedString(@"EnhancedPlaylistNoConditionsDescription", nil);
+		
+		[self.warningBoxView show];
+	}
+	else if(wantToHearPersistentIDsArray.count == 0 && dontWantToHearPersistentIDsArray.count > 0){
+		self.warningBoxView.titleLabel.text = NSLocalizedString(@"EnhancedPlaylistNoWantsTitle", nil);
+		self.warningBoxView.subtitleLabel.text = NSLocalizedString(@"EnhancedPlaylistNoWantsDescription", nil);
+		
+		[self.warningBoxView show];
+	}
 }
 
 /* Begin initialization code */
@@ -183,6 +288,13 @@
 	self.playlistManager = [LMPlaylistManager sharedPlaylistManager];
 	self.layoutManager = [LMLayoutManager sharedLayoutManager];
 	[self.layoutManager addDelegate:self];
+	
+	
+	if(!self.playlist){
+		self.playlist = [LMPlaylist new];
+		self.playlist.enhanced = YES;
+		self.playlist.enhancedConditionsDictionary = [NSDictionary new];
+	}
 	
 	
 	self.warningBoxView = [LMBoxWarningView newAutoLayoutView];
@@ -261,9 +373,6 @@
 	
 	self.songCountLabel = [UILabel newAutoLayoutView];
 	self.songCountLabel.text = @"nice work";
-//	self.songCountLabel.text = self.playlist.trackCollection.count == 0
-//	? NSLocalizedString(@"NoSongsYet", nil)
-//	: [NSString stringWithFormat:NSLocalizedString(self.playlist.trackCollection.count == 1 ? @"XSongsSingle" : @"XSongs", nil), self.playlist.trackCollection.count];
 	self.songCountLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18.0f];
 	self.songCountLabel.textColor = [UIColor blackColor];
 	[self.view addSubview:self.songCountLabel];
@@ -293,10 +402,14 @@
 	shuffleAllLabel.text = NSLocalizedString(@"ShuffleAll", nil);
 	shuffleAllLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:16.0f];
 	shuffleAllLabel.textColor = [UIColor blackColor];
+	shuffleAllLabel.userInteractionEnabled = YES;
 	[self.view addSubview:shuffleAllLabel];
 	
 	[shuffleAllLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.shuffleAllCheckbox withOffset:10];
 	[shuffleAllLabel autoAlignAxis:ALAxisHorizontal toSameAxisOfView:self.shuffleAllCheckbox];
+	
+	UITapGestureRecognizer *shuffleAllTextTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tappedShuffleAllLabel)];
+	[shuffleAllLabel addGestureRecognizer:shuffleAllTextTapGestureRecognizer];
 	
 	
 	self.wantToHearBackgroundView = [UIView newAutoLayoutView];
@@ -386,6 +499,8 @@
 	[self.dontWantToHearLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 	[self.dontWantToHearLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
 	[self.dontWantToHearLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.dontWantToHearAddSongsButtonView];
+	
+	[self reloadConditionsLabelAndWarningBox];
 }
 
 - (void)loadView {

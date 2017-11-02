@@ -30,4 +30,9 @@
  */
 - (void)hide;
 
+/**
+ Shows the warning view.
+ */
+- (void)show;
+
 @end

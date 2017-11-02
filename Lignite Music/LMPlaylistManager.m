@@ -69,6 +69,11 @@
 	playlist.trackCollection = [[LMMusicTrackCollection alloc]initWithItems:trackMutableArray];
 	
 	playlist.image = [self.imageCache imageFromDiskCacheForKey:[NSString stringWithFormat:@"%lld", playlist.persistentID]];
+	playlist.enhancedConditionsDictionary = [playlistDictionary objectForKey:@"enhancedConditionsDictionary"];
+	if(playlist.enhancedConditionsDictionary){
+		playlist.enhanced = YES;
+		[playlist regenerateEnhancedPlaylist];
+	}
 	
 	return playlist;
 }
@@ -88,6 +93,9 @@
 	
 	if(playlist.image){
 		[self.imageCache storeImage:playlist.image forKey:[NSString stringWithFormat:@"%lld", playlist.persistentID]];
+	}
+	if(playlist.enhanced && playlist.enhancedConditionsDictionary){
+		[mutableDictionary setObject:playlist.enhancedConditionsDictionary forKey:@"enhancedConditionsDictionary"];
 	}
 	
 	return [NSDictionary dictionaryWithDictionary:mutableDictionary];

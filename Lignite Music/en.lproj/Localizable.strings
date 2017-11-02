@@ -53,7 +53,13 @@
 "ShuffleAll" = "Shuffle all";
 "WantToHearTitle" = "I want to hear";
 "DontWantToHearTitle" = "I don't want to hear";
-
+"SelectingAll" = "Selecting all...";
+"DeselectingAll" = "Deselecting all...";
+"XConditions" = "%d conditions"; //Conditions ie. "3 conditions for generating the user's playlist"
+"NoConditionsYet" = "No conditions yet";
+"OneCondition" = "1 condition";
+"EnhancedPlaylistNoWantsTitle" = "No 'I want to hear' conditions";
+"EnhancedPlaylistNoWantsDescription" = "You told us what you don't want to hear, but we don't know what you do want to hear!\n\nPlease tap the + button beside the 'I want to hear' section to add some conditions of what you want to hear.";
 
 "ScrollingTextTitle" = "Scrolling text";
 "ScrollingTextDescription" = "In now-playing and miniplayer";
