@@ -46,6 +46,15 @@
  
  */
 
+
+"EnhancedPlaylist" = "Enhanced Playlist";
+"EnhancedPlaylistNoConditionsTitle" = "No conditions set";
+"EnhancedPlaylistNoConditionsDescription" = "Add conditions for how you want your playlist below by tapping one of the + buttons.\n\nTap 'Save' when you're done and we'll build the playlist for you.";
+"ShuffleAll" = "Shuffle all";
+"WantToHearTitle" = "I want to hear";
+"DontWantToHearTitle" = "I don't want to hear";
+
+
 "ScrollingTextTitle" = "Scrolling text";
 "ScrollingTextDescription" = "In now-playing and miniplayer";
 
@@ -76,8 +85,8 @@
 "XSongsSingle" = "%ld song"; //1 song
 "NoSongsYet" = "No songs, yet";
 
-"SelectAll" = "Select all tracks";
-"DeselectAll" = "Deselect all tracks";
+"SelectAll" = "Select all";
+"DeselectAll" = "Deselect all";
 
 "YourPlaylistTitle" = "Headbangers";
 

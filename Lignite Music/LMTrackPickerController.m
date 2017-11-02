@@ -48,11 +48,6 @@
 @property NSArray<LMMusicTrackCollection*> *searchResultTrackCollections;
 
 /**
- The title collections that the are the result of the user's search result, nil if no search is taking place.
- */
-@property LMMusicTrackCollection *searchResultTitleTrackCollection;
-
-/**
  The letter tab bar.
  */
 @property LMLetterTabBar *letterTabBar;
@@ -70,20 +65,18 @@
 /**
  Whether or not all tracks in the picker are selected.
  */
-@property (readonly) BOOL allTracksSelected;
+@property (readonly) BOOL allEntriesSelected;
 
 @end
 
 @implementation LMTrackPickerController
 
 @synthesize isTitles = _isTitles;
-@synthesize titleTrackCollection = _titleTrackCollection;
-@synthesize selectedTrackCollection = _selectedTrackCollection;
+@synthesize selectedTrackCollections = _selectedTrackCollections;
 @synthesize displayingTrackCollections = _displayingTrackCollections;
-@synthesize displayingTitleTrackCollection = _displayingTitleTrackCollection;
 
 - (BOOL)isSearching {
-	return (self.searchResultTitleTrackCollection || self.searchResultTrackCollections);
+	return (self.searchResultTrackCollections != nil);
 }
 
 - (NSArray<LMMusicTrackCollection*>*)displayingTrackCollections {
@@ -93,73 +86,55 @@
 	return self.searchResultTrackCollections;
 }
 
-- (LMMusicTrackCollection*)displayingTitleTrackCollection {
-	if(!self.isSearching){
-		return self.titleTrackCollection;
-	}
-	return self.searchResultTitleTrackCollection;
-}
-
-- (LMMusicTrackCollection*)titleTrackCollection {
-	if(self.trackCollections.count > 0){
-		return [self.trackCollections objectAtIndex:0];
-	}
-	return nil;
-}
-
-- (LMMusicTrackCollection*)selectedTrackCollection {
-	return self.sourceMusicPickerController.trackCollection;
+- (NSArray<LMMusicTrackCollection*>*)selectedTrackCollections {
+	return self.sourceMusicPickerController.trackCollections;
 }
 
 - (BOOL)isTitles {
 	return self.depthLevel == LMTrackPickerDepthLevelSongs;
 }
 
-- (BOOL)allTracksSelected {
-	BOOL allTracksSelected = YES;
-	
-	for(NSInteger i = 0; i < self.titleTrackCollection.count; i++){
-		LMMusicTrack *track = [self.displayingTitleTrackCollection.items objectAtIndex:i];
-		if(![self.selectedTrackCollection.items containsObject:track]){
-			allTracksSelected = NO;
-			break;
+- (BOOL)allEntriesSelected {
+	for(NSInteger i = 0; i < self.displayingTrackCollections.count; i++){
+		LMMusicTrackCollection *trackCollection = [self.displayingTrackCollections objectAtIndex:i];
+		if(![self trackCollectionIsSelected:trackCollection]){
+			return NO;
 		}
 	}
-	
-	return allTracksSelected;
+	return YES;
 }
 
 - (void)tappedListEntry:(LMListEntry*)entry{
 	NSLog(@"Tapped %p", entry);
 	
-	if(self.depthLevel == LMTrackPickerDepthLevelSongs && entry == self.selectAllListEntry){
+	if(self.selectAllListEntry && entry == self.selectAllListEntry){
 		NSLog(@"Select all");
-		
-		BOOL allTracksSelected = self.allTracksSelected;
-		
-		for(NSInteger i = 0; i < self.titleTrackCollection.count; i++){
-			LMMusicTrack *track = [self.displayingTitleTrackCollection.items objectAtIndex:i];
+
+		BOOL allEntriesSelected = self.allEntriesSelected;
+
+		for(NSInteger i = 0; i < self.displayingTrackCollections.count; i++){
+			LMMusicTrackCollection *trackCollection = [self.displayingTrackCollections objectAtIndex:i];
 			LMListEntry *songEntry = [self.listEntryArray objectAtIndex:i];
-			
-			[self.sourceMusicPickerController setTrack:track asSelected:!allTracksSelected];
-			
+
+			[self.sourceMusicPickerController setCollection:trackCollection asSelected:!allEntriesSelected forMusicType:self.musicType];
+
 			[songEntry reloadContents];
 		}
-		
+
 		[entry reloadContents];
-		
+
 		return;
 	}
-	
+
 	if(self.depthLevel == LMTrackPickerDepthLevelSongs){
 		NSLog(@"Pick song");
-		
-		LMMusicTrack *track = [self.displayingTitleTrackCollection.items objectAtIndex:entry.collectionIndex-self.isTitles];
-		
-		[self.sourceMusicPickerController setTrack:track asSelected:![self.selectedTrackCollection.items containsObject:track]];
-		
+
+		LMMusicTrackCollection *trackCollection = [self.displayingTrackCollections objectAtIndex:entry.collectionIndex-self.isTitles];
+
+		[self.sourceMusicPickerController setCollection:trackCollection asSelected:![self trackCollectionIsSelected:trackCollection] forMusicType:self.musicType];
+
 		[entry reloadContents];
-		
+
 		[self.selectAllListEntry reloadContents];
 		return;
 	}
@@ -223,52 +198,43 @@
 	[self showViewController:trackPickerController sender:nil];
 }
 
-- (UIView*)rightViewForListEntry:(LMListEntry *)entry {
-	if(self.depthLevel == LMTrackPickerDepthLevelSongs){
-		BOOL selected = NO;
-		if(entry.collectionIndex == -1){
-			selected = self.allTracksSelected;
-		}
-		else{
-			selected = [self.selectedTrackCollection.items containsObject:[self.displayingTitleTrackCollection.items objectAtIndex:entry.collectionIndex-self.isTitles]];
-		}
-		
-		
-		UIView *checkmarkPaddedView = [UIView newAutoLayoutView];
-		
-		LMCircleView *checkmarkView = [LMCircleView newAutoLayoutView];
-		checkmarkView.backgroundColor = selected ? [LMColour ligniteRedColour] : [LMColour lightGrayBackgroundColour];
-		
-		[checkmarkPaddedView addSubview:checkmarkView];
-		
-		
-		[checkmarkView autoCenterInSuperview];
-		[checkmarkView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:checkmarkPaddedView withMultiplier:(3.0/4.0)];
-		[checkmarkView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:checkmarkPaddedView withMultiplier:(3.0/4.0)];
-		
-		
-		LMCircleView *checkmarkFillView = [LMCircleView newAutoLayoutView];
-		checkmarkFillView.backgroundColor = selected ? [LMColour ligniteRedColour] : [UIColor whiteColor];
-		
-		[checkmarkView addSubview:checkmarkFillView];
-		
-		[checkmarkFillView autoCenterInSuperview];
-		[checkmarkFillView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:checkmarkView withMultiplier:(9.0/10.0)];
-		[checkmarkFillView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:checkmarkView withMultiplier:(9.0/10.0)];
-		
-		
-		UIImageView *checkmarkImageView = [UIImageView newAutoLayoutView];
-		checkmarkImageView.contentMode = UIViewContentModeScaleAspectFit;
-		checkmarkImageView.image = [LMAppIcon imageForIcon:LMIconWhiteCheckmark];
-		[checkmarkView addSubview:checkmarkImageView];
-		
-		[checkmarkImageView autoCenterInSuperview];
-		[checkmarkImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:checkmarkView withMultiplier:(3.0/8.0)];
-		[checkmarkImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:checkmarkView withMultiplier:(3.0/8.0)];
-		
-		return checkmarkPaddedView;
-	}
+- (UIView*)checkmarkViewSelected:(BOOL)selected {
+	UIView *checkmarkPaddedView = [UIView newAutoLayoutView];
 	
+	LMCircleView *checkmarkView = [LMCircleView newAutoLayoutView];
+	checkmarkView.backgroundColor = selected ? [LMColour ligniteRedColour] : [LMColour lightGrayBackgroundColour];
+	
+	[checkmarkPaddedView addSubview:checkmarkView];
+	
+	
+	[checkmarkView autoCenterInSuperview];
+	[checkmarkView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:checkmarkPaddedView withMultiplier:(3.0/4.0)];
+	[checkmarkView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:checkmarkPaddedView withMultiplier:(3.0/4.0)];
+	
+	
+	LMCircleView *checkmarkFillView = [LMCircleView newAutoLayoutView];
+	checkmarkFillView.backgroundColor = selected ? [LMColour ligniteRedColour] : [UIColor whiteColor];
+	
+	[checkmarkView addSubview:checkmarkFillView];
+	
+	[checkmarkFillView autoCenterInSuperview];
+	[checkmarkFillView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:checkmarkView withMultiplier:(9.0/10.0)];
+	[checkmarkFillView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:checkmarkView withMultiplier:(9.0/10.0)];
+	
+	
+	UIImageView *checkmarkImageView = [UIImageView newAutoLayoutView];
+	checkmarkImageView.contentMode = UIViewContentModeScaleAspectFit;
+	checkmarkImageView.image = [LMAppIcon imageForIcon:LMIconWhiteCheckmark];
+	[checkmarkView addSubview:checkmarkImageView];
+	
+	[checkmarkImageView autoCenterInSuperview];
+	[checkmarkImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:checkmarkView withMultiplier:(3.0/8.0)];
+	[checkmarkImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:checkmarkView withMultiplier:(3.0/8.0)];
+	
+	return checkmarkPaddedView;
+}
+
+- (UIView*)arrowView {
 	UIView *arrowIconPaddedView = [UIView newAutoLayoutView];
 	
 	UIImageView *arrowIconView = [UIImageView newAutoLayoutView];
@@ -278,10 +244,49 @@
 	[arrowIconPaddedView addSubview:arrowIconView];
 	
 	[arrowIconView autoCenterInSuperview];
-	[arrowIconView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:arrowIconPaddedView withMultiplier:(5.0/8.0)];
+	[arrowIconView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:arrowIconPaddedView withMultiplier:(3.0/8.0)];
 	[arrowIconView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:arrowIconPaddedView];
 	
-	return arrowIconPaddedView;
+	return arrowIconView;
+}
+
+- (BOOL)trackCollectionIsSelected:(LMMusicTrackCollection*)trackCollection {
+	for(LMMusicTrackCollection *selectedTrackCollection in self.selectedTrackCollections){
+		if([LMMusicPlayer trackCollection:trackCollection isEqualToOtherTrackCollection:selectedTrackCollection]){
+			return YES;
+		}
+	}
+	
+	return NO;
+}
+
+- (UIView*)rightViewForListEntry:(LMListEntry *)entry {
+
+	if(self.depthLevel == LMTrackPickerDepthLevelSongs){
+		BOOL selected = NO;
+		if(entry.collectionIndex == -1){
+			selected = self.allEntriesSelected;
+		}
+		else{
+			selected = [self trackCollectionIsSelected:[self.displayingTrackCollections objectAtIndex:entry.collectionIndex-1]];
+		}
+		
+		return [self checkmarkViewSelected:selected];
+	}
+	
+	return [self arrowView];
+
+//		case LMMusicPickerSelectionModeAllCollections:{
+//			BOOL selected = NO;
+//			if(entry.collectionIndex == -1){
+//				selected = self.allEntriesSelected;
+//			}
+//			else{
+//				selected = [self.selectedTrackCollections containsObject:[self.displayingTrackCollections objectAtIndex:entry.collectionIndex]];
+//			}
+//
+//			return [self checkmarkViewSelected:selected];
+
 }
 
 - (UIColor*)tapColourForListEntry:(LMListEntry*)entry {
@@ -289,8 +294,8 @@
 }
 
 - (NSString*)titleForListEntry:(LMListEntry*)entry {
-	if(self.depthLevel == LMTrackPickerDepthLevelSongs && entry.collectionIndex == -1){
-		return NSLocalizedString(self.allTracksSelected ? @"DeselectAll" : @"SelectAll", nil);
+	if(self.selectAllListEntry && entry.collectionIndex == -1){
+		return NSLocalizedString(self.allEntriesSelected ? @"DeselectAll" : @"SelectAll", nil);
 	}
 	
 	LMMusicTrackCollection *collection = (self.depthLevel == LMTrackPickerDepthLevelSongs) ? nil : [self.displayingTrackCollections objectAtIndex:entry.collectionIndex-self.isTitles];
@@ -298,7 +303,7 @@
 	switch(self.musicType){
 		case LMMusicTypeFavourites:
 		case LMMusicTypeTitles:
-			return [self.displayingTitleTrackCollection.items objectAtIndex:entry.collectionIndex-self.isTitles].title;
+			return [self.displayingTrackCollections objectAtIndex:entry.collectionIndex-self.isTitles].representativeItem.title;
 		case LMMusicTypeGenres: {
 			return collection.representativeItem.genre ? collection.representativeItem.genre : NSLocalizedString(@"UnknownGenre", nil);
 		}
@@ -318,7 +323,7 @@
 }
 
 - (NSString*)subtitleForListEntry:(LMListEntry*)entry {
-	if(self.depthLevel == LMTrackPickerDepthLevelSongs && entry.collectionIndex == -1){
+	if(self.selectAllListEntry && entry.collectionIndex == -1){
 		return nil;
 	}
 	
@@ -327,7 +332,7 @@
 	switch(self.musicType){
 		case LMMusicTypeFavourites:
 		case LMMusicTypeTitles:
-			return [self.displayingTitleTrackCollection.items objectAtIndex:entry.collectionIndex-self.isTitles].artist;
+			return [self.displayingTrackCollections objectAtIndex:entry.collectionIndex-self.isTitles].representativeItem.artist;
 		case LMMusicTypeComposers:
 		case LMMusicTypeArtists: {
 			BOOL usingSpecificTrackCollections = (self.musicType != LMMusicTypePlaylists
@@ -363,7 +368,7 @@
 }
 
 - (UIImage*)iconForListEntry:(LMListEntry*)entry {
-	if(self.depthLevel == LMTrackPickerDepthLevelSongs && entry.collectionIndex == -1){
+	if(self.selectAllListEntry && entry.collectionIndex == -1){
 		return nil;
 	}
 	
@@ -382,10 +387,10 @@
 		}
 		case LMMusicTypeFavourites:
 		case LMMusicTypeTitles:
-			if(self.displayingTitleTrackCollection.count == 0){
+			if(self.displayingTrackCollections.count == 0){
 				return nil;
 			}
-			return [self.displayingTitleTrackCollection.items objectAtIndex:entry.collectionIndex-self.isTitles].albumArt;
+			return [self.displayingTrackCollections objectAtIndex:entry.collectionIndex-self.isTitles].representativeItem.albumArt;
 		default: {
 			NSLog(@"Windows fucking error!");
 			return nil;
@@ -412,8 +417,8 @@
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-	if(self.depthLevel == LMTrackPickerDepthLevelSongs){
-		return self.displayingTitleTrackCollection.count + 1;
+	if(self.selectAllListEntry){
+		return self.displayingTrackCollections.count + 1;
 	}
 	return self.displayingTrackCollections.count;
 }
@@ -426,7 +431,7 @@
 	}
 	
 	LMListEntry *listEntry = nil;
-	if(self.depthLevel == LMTrackPickerDepthLevelSongs && indexPath.row == 0){
+	if(self.selectAllListEntry && indexPath.row == 0){
 		listEntry = self.selectAllListEntry;
 		listEntry.collectionIndex = -1;
 		[cell.contentView addSubview:listEntry];
@@ -468,7 +473,6 @@
 	
 	if([searchText isEqualToString:@""]){
 		self.searchResultTrackCollections = nil;
-		self.searchResultTitleTrackCollection = nil;
 		
 		[self.collectionView reloadData];
 		
@@ -477,6 +481,8 @@
 		for(LMListEntry *listEntry in self.listEntryArray){
 			[listEntry reloadContents];
 		}
+		
+		[self.selectAllListEntry reloadContents];
 		return;
 	}
 	
@@ -495,51 +501,39 @@
 	}
 	
 	NSMutableArray *searchResultsMutableArray = [NSMutableArray new];
-	if(self.depthLevel == LMTrackPickerDepthLevelSongs){
-		for(LMMusicTrack *track in self.titleTrackCollection.items){
-			NSString *trackArtistValue = [track valueForProperty:MPMediaItemPropertyArtist];
-			NSString *trackValue = [track valueForProperty:searchProperty];
-			if([trackValue.lowercaseString containsString:searchText.lowercaseString]){
-				[searchResultsMutableArray addObject:track];
-			}
-			else if([trackArtistValue.lowercaseString containsString:searchText.lowercaseString]){
-				[searchResultsMutableArray addObject:track];
-			}
+
+	for(LMMusicTrackCollection *collection in self.trackCollections){
+		NSString *trackValue = [collection.representativeItem valueForProperty:searchProperty];
+		if([trackValue.lowercaseString containsString:searchText.lowercaseString]){
+			[searchResultsMutableArray addObject:collection];
 		}
-		
-		self.searchResultTitleTrackCollection = [[LMMusicTrackCollection alloc]initWithItems:[NSArray arrayWithArray:searchResultsMutableArray]];
-		
-		NSLog(@"%d results.", (int)searchResultsMutableArray.count);
-	}
-	else{
-		for(LMMusicTrackCollection *collection in self.trackCollections){
-			NSString *trackValue = [collection.representativeItem valueForProperty:searchProperty];
-			if([trackValue.lowercaseString containsString:searchText.lowercaseString]){
+		else if(self.depthLevel != LMTrackPickerDepthLevelArtists){
+			NSString *trackArtistValue = [collection.representativeItem valueForProperty:MPMediaItemPropertyArtist];
+			if([trackArtistValue.lowercaseString containsString:searchText.lowercaseString]){
 				[searchResultsMutableArray addObject:collection];
 			}
-			else if(self.depthLevel != LMTrackPickerDepthLevelArtists){
-				NSString *trackArtistValue = [collection.representativeItem valueForProperty:MPMediaItemPropertyArtist];
-				if([trackArtistValue.lowercaseString containsString:searchText.lowercaseString]){
-					[searchResultsMutableArray addObject:collection];
-				}
-			}
 		}
-		
-		self.searchResultTrackCollections = [NSArray arrayWithArray:searchResultsMutableArray];
-		
-		NSLog(@"%d results.", (int)searchResultsMutableArray.count);
+	}
+	
+	self.searchResultTrackCollections = [NSArray arrayWithArray:searchResultsMutableArray];
+	
+	NSLog(@"%d results.", (int)searchResultsMutableArray.count);
+	
+	NSArray *fixedTrackCollectionsArray = self.displayingTrackCollections;
+	
+	if(self.depthLevel == LMTrackPickerDepthLevelSongs){
+		fixedTrackCollectionsArray = @[ [LMMusicPlayer trackCollectionForArrayOfTrackCollections:self.displayingTrackCollections] ];
 	}
 	
 	self.letterTabBar.lettersDictionary = [self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:
-										   self.musicType == LMMusicTypeTitles
-										   ? @[self.displayingTitleTrackCollection]
-										  : self.displayingTrackCollections
-									   
+										   fixedTrackCollectionsArray
 																						   withAssociatedMusicType:self.musicType];
 	
 	for(NSInteger i = 0; i < searchResultsMutableArray.count; i++){
 		[[self.listEntryArray objectAtIndex:i] reloadContents];
 	}
+	
+	[self.selectAllListEntry reloadContents];
 	
 	[self.collectionView reloadData];
 }
@@ -614,6 +608,11 @@
 		}
 	}
 	
+	//Reorganize bunched up tracks in one collection into an array of collections
+	if(self.depthLevel == LMTrackPickerDepthLevelSongs && self.trackCollections.count == 1){
+		self.trackCollections = [LMMusicPlayer arrayOfTrackCollectionsForMusicTrackCollection:self.trackCollections.firstObject];
+	}
+	
 	self.layoutManager = [LMLayoutManager sharedLayoutManager];
 	[self.layoutManager addDelegate:self];
 	
@@ -659,7 +658,7 @@
 	[LMLayoutManager addNewLandscapeConstraints:letterTabBarLandscapeConstraints];
 	
 	
-	if(self.depthLevel == LMTrackPickerDepthLevelSongs){
+	if(self.depthLevel == LMTrackPickerDepthLevelSongs || self.selectionMode == LMMusicPickerSelectionModeAllCollections){
 		self.selectAllListEntry = [LMListEntry new];
 		self.selectAllListEntry.delegate = self;
 		self.selectAllListEntry.collectionIndex = -1;
@@ -674,6 +673,7 @@
 	self.collectionView.delegate = self;
 	self.collectionView.dataSource = self;
 	self.collectionView.contentInset = UIEdgeInsetsMake(20, 20, 20, 20);
+	self.collectionView.allowsSelection = NO;
 	[self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"trackPickerCellIdentifier"];
 	[self.view addSubview:self.collectionView];
 	
@@ -729,8 +729,8 @@
 					
 					NSInteger index = NSNotFound;
 					
-					for(NSInteger i = 0; i < self.titleTrackCollection.count; i++){
-						LMMusicTrack *titleTrack = [self.titleTrackCollection.items objectAtIndex:i];
+					for(NSInteger i = 0; i < self.displayingTrackCollections.count; i++){
+						LMMusicTrack *titleTrack = [self.displayingTrackCollections objectAtIndex:i].representativeItem;
 						if(titleTrack.persistentID == musicTrack.persistentID){
 							index = i;
 							break;
@@ -806,6 +806,14 @@
 - (void)loadView {
 	self.view = [UIView new];
 	self.view.backgroundColor = [UIColor whiteColor];
+}
+
+- (instancetype)init {
+	self = [super init];
+	if(self){
+		self.selectionMode = LMMusicPickerSelectionModeOnlyTracks;
+	}
+	return self;
 }
 
 @end

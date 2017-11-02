@@ -46,7 +46,7 @@
 /**
  How to go about what happens when an entry is tapped. Selected in this context refers to the action of the entry being added to a specifically selected array of track collections, which are provided to the delegate for use of which the delegate decides.
 
- - LMSearchViewEntrySelectionModeNoSelection: No entry has the ability to be selected.
+ - LMSearchViewEntrySelectionModeNoSelection: No entry has the ability to be selected. All results will call upon the delegate's searchViewEntryWasTappedWithData:forMusicType: definition.
  - LMSearchViewEntrySelectionModeTitlesAndFavourites: Only titles and favourites may be selected.
  - LMSearchViewEntrySelectionModeAll: All entries may be selected.
  */
@@ -55,8 +55,6 @@ typedef NS_ENUM(NSInteger, LMSearchViewEntrySelectionMode){
 	LMSearchViewEntrySelectionModeTitlesAndFavourites,
 	LMSearchViewEntrySelectionModeAll
 };
-
-- (void)setData:(id)data asSelected:(BOOL)selected forMusicType:(LMMusicType)musicType;
 
 /**
  The selection mode for the search view. Default is LMSearchViewEntrySelectionModeNoSelection.

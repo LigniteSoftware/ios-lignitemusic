@@ -281,6 +281,31 @@ typedef enum {
 												withAssociatedMusicType:(LMMusicType)musicType;
 
 /**
+ Converts a single track collection into an array of track collections. Helpful for unifying titles and favourites across the app.
+ 
+ @param collection The collection to convert into an array of collections.
+ @return An array of track collections, each of which have one item in them.
+ */
++ (NSArray<LMMusicTrackCollection*>*)arrayOfTrackCollectionsForMusicTrackCollection:(LMMusicTrackCollection*)collection;
+
+/**
+ Condenses an array of track collections down into a single track collection which contains all songs from the track collections inside of the array of track collections.
+ 
+ @param arrayOfTrackCollections The array of track collections to compile into a track collection.
+ @return A single track collection containing all songs from the track collections in the array.
+ */
++ (LMMusicTrackCollection*)trackCollectionForArrayOfTrackCollections:(NSArray<LMMusicTrackCollection*>*)arrayOfTrackCollections;
+
+/**
+ Compares two track collections against one another for equality.
+ 
+ @param trackCollection The first track collection.
+ @param otherTrackCollection The other track collection.
+ @return Whether or not they equal in contents.
+ */
++ (BOOL)trackCollection:(LMMusicTrackCollection*)trackCollection isEqualToOtherTrackCollection:(LMMusicTrackCollection*)otherTrackCollection;
+
+/**
  Gets the track collections for a media query with a certain music type.
  
  @param mediaQuery The media query to convert.

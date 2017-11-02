@@ -26,6 +26,11 @@ typedef NS_ENUM(NSInteger, LMTrackPickerDepthLevel){
 };
 
 /**
+ The selection mode for this track picker. Default is LMMusicPickerSelectionModeOnlyTracks.
+ */
+@property LMMusicPickerSelectionMode selectionMode;
+
+/**
  The depth level this track picker.
  */
 @property LMTrackPickerDepthLevel depthLevel;
@@ -46,31 +51,21 @@ typedef NS_ENUM(NSInteger, LMTrackPickerDepthLevel){
 @property NSArray<LMMusicTrackCollection*> *trackCollections;
 
 /**
- Set this data before displaying to automatically scroll to and highlight an entry in the track picker.
- 
- The picker will figure out for itself how the data should be handled and will scroll to the according position automatically.
- */
-@property id highlightedData;
-
-/**
- The track collection for favourites and titles.
- */
-@property (readonly) LMMusicTrackCollection *titleTrackCollection;
-
-/**
- The track collection of songs that have been selected by the user for this music picker.
- */
-@property (readonly) LMMusicTrackCollection *selectedTrackCollection;
-
-/**
  The track collections that the picker should display. This changes based on whether or not the user is searching.
  */
 @property (readonly) NSArray<LMMusicTrackCollection*> *displayingTrackCollections;
 
 /**
- The title collections that the picker should display. This changes based on whether or not the user is searching.
+ The track collections which have been selected, if this track picker has its selectionMode set to LMMusicPickerSelectionModeAll.
  */
-@property (readonly) LMMusicTrackCollection *displayingTitleTrackCollection;
+@property (readonly) NSArray<LMMusicTrackCollection*> *selectedTrackCollections;
+
+/**
+ Set this data before displaying to automatically scroll to and highlight an entry in the track picker.
+ 
+ The picker will figure out for itself how the data should be handled and will scroll to the according position automatically.
+ */
+@property id highlightedData;
 
 /**
  The source music picker controller that contains the original selected track collection. Called upon to modify the selected tracks.

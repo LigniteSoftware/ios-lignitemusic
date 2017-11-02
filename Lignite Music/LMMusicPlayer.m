@@ -508,6 +508,42 @@ BOOL shuffleForDebug = NO;
 	return [[NSString stringWithFormat:@"%C", [string characterAtIndex:0]] uppercaseString];
 }
 
++ (NSArray<LMMusicTrackCollection*>*)arrayOfTrackCollectionsForMusicTrackCollection:(LMMusicTrackCollection*)collection {
+	NSMutableArray *trackCollectionsArray = [NSMutableArray new];
+	for(LMMusicTrack *track in collection.items){
+		[trackCollectionsArray addObject:[[LMMusicTrackCollection alloc] initWithItems:@[ track ]]];
+	}
+	return [NSArray arrayWithArray:trackCollectionsArray];
+}
+
++ (LMMusicTrackCollection*)trackCollectionForArrayOfTrackCollections:(NSArray<LMMusicTrackCollection*>*)arrayOfTrackCollections {
+	NSMutableArray *trackCollectionsArray = [NSMutableArray new];
+	for(LMMusicTrackCollection *trackCollection in arrayOfTrackCollections){
+		for(LMMusicTrack *track in trackCollection.items){
+			[trackCollectionsArray addObject:track];
+		}
+	}
+	return [[LMMusicTrackCollection alloc] initWithItems:[NSArray arrayWithArray:trackCollectionsArray]];
+}
+
++ (BOOL)trackCollection:(LMMusicTrackCollection*)trackCollection isEqualToOtherTrackCollection:(LMMusicTrackCollection*)otherTrackCollection {
+	
+	if(trackCollection.count != otherTrackCollection.count){
+		return NO;
+	}
+	
+	for(NSInteger i = 0; i < trackCollection.count; i++){
+		LMMusicTrack *track = [trackCollection.items objectAtIndex:i];
+		LMMusicTrack *otherTrack = [otherTrackCollection.items objectAtIndex:i];
+		
+		if(track.persistentID != otherTrack.persistentID){
+			return NO;
+		}
+	}
+	
+	return YES;
+}
+
 - (NSDictionary*)lettersAvailableDictionaryForMusicTrackCollectionArray:(NSArray<LMMusicTrackCollection*>*)collectionArray
 												withAssociatedMusicType:(LMMusicType)musicType {
 	NSUInteger lastCollectionIndex = 0;

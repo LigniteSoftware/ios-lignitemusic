@@ -39,28 +39,47 @@
 
 @implementation LMMusicPickerController
 
-- (void)setTrack:(LMMusicTrack*)track asSelected:(BOOL)selected {
-	NSMutableArray *mutableTrackCollection = [[NSMutableArray alloc] initWithArray:self.trackCollection.items];
+- (BOOL)trackCollectionIsSelected:(LMMusicTrackCollection*)trackCollection {
+	for(LMMusicTrackCollection *selectedTrackCollection in self.trackCollections){
+		if([LMMusicPlayer trackCollection:trackCollection isEqualToOtherTrackCollection:selectedTrackCollection]){
+			return YES;
+		}
+	}
+	
+	return NO;
+}
+
+- (void)setCollection:(LMMusicTrackCollection*)collection asSelected:(BOOL)selected forMusicType:(LMMusicType)musicType {
+	NSMutableArray *mutableTrackCollections = [[NSMutableArray alloc] initWithArray:self.trackCollections];
+	NSMutableArray *mutableMusicTypes = [[NSMutableArray alloc]initWithArray:self.musicTypes];
 	
 	if(selected){
-		[mutableTrackCollection addObject:track];
+		if(![self trackCollectionIsSelected:collection]){ //Prevent collection from being added more than once
+			[mutableTrackCollections addObject:collection];
+			[mutableMusicTypes addObject:@(musicType)];
+		}
 	}
 	else{
-		LMMusicTrack *trackToRemove = nil;
+		NSInteger indexToRemove = NSNotFound;
 		
-		for(LMMusicTrack *collectionTrack in mutableTrackCollection){
-			if(collectionTrack.persistentID == track.persistentID){
-				trackToRemove = collectionTrack;
+		for(NSInteger i = 0; i < mutableTrackCollections.count; i++){
+			LMMusicTrackCollection *trackCollection = [mutableTrackCollections objectAtIndex:i];
+			LMMusicType trackCollectionMusicType = (LMMusicType)[[mutableMusicTypes objectAtIndex:i] integerValue];
+			
+			if([LMMusicPlayer trackCollection:trackCollection isEqualToOtherTrackCollection:collection] && trackCollectionMusicType == musicType){
+				indexToRemove = i;
 				break;
 			}
 		}
 		
-		if(trackToRemove){
-			[mutableTrackCollection removeObject:trackToRemove];
+		if(indexToRemove != NSNotFound){
+			[mutableTrackCollections removeObjectAtIndex:indexToRemove];
+			[mutableMusicTypes removeObjectAtIndex:indexToRemove];
 		}
 	}
 	
-	self.trackCollection = [[LMMusicTrackCollection alloc]initWithItems:mutableTrackCollection];
+	self.trackCollections = [NSArray arrayWithArray:mutableTrackCollections];
+	self.musicTypes = [NSArray arrayWithArray:mutableMusicTypes];
 }
 
 - (void)sourceSelected:(LMSource*)source {
@@ -103,6 +122,7 @@
 	
 	trackPickerController.title = source.title;
 	trackPickerController.sourceMusicPickerController = self;
+	trackPickerController.selectionMode = self.selectionMode;
 	
 	[self showViewController:trackPickerController sender:nil];
 }
@@ -122,8 +142,8 @@
 	
 	[self dismissViewControllerAnimated:YES completion:nil];
 	
-	if([self.delegate respondsToSelector:@selector(musicPicker:didFinishPickingMusicWithTrackCollection:)]){
-		[self.delegate musicPicker:self didFinishPickingMusicWithTrackCollection:self.trackCollection];
+	if([self.delegate respondsToSelector:@selector(musicPicker:didFinishPickingMusicWithTrackCollections:)]){
+		[self.delegate musicPicker:self didFinishPickingMusicWithTrackCollections:self.trackCollections];
 	}
 }
 
@@ -132,8 +152,8 @@
 	NSLog(@"Selected %d", selected);
 	
 	LMMusicTrackCollection *collection = (LMMusicTrackCollection*)musicData;
-	if(self.trackCollection){
-		[self setTrack:collection.representativeItem asSelected:selected];
+	if(self.trackCollections){
+		[self setCollection:collection asSelected:selected forMusicType:musicType];
 	}
 }
 
@@ -194,6 +214,7 @@
 	}
 	trackPickerController.trackCollections = trackCollections;
 	trackPickerController.sourceMusicPickerController = self;
+	trackPickerController.selectionMode = self.selectionMode;
 	
 	[self showViewController:trackPickerController sender:nil];
 }
@@ -233,8 +254,15 @@
 	
 	self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 	
-	if(!self.trackCollection){
-		self.trackCollection = [[LMMusicTrackCollection alloc]initWithItems:@[]];
+	if(!self.trackCollections){
+		self.trackCollections = @[];
+	}
+	
+	if(self.trackCollections && !self.musicTypes){
+		NSMutableArray *musicTypesMutableArray = [NSMutableArray new];
+		for(NSInteger i = 0; i < self.trackCollections.count; i++){
+			[musicTypesMutableArray addObject:@(LMMusicTypeTitles)];
+		}
 	}
 	
 	
@@ -312,7 +340,14 @@
 	
 	self.searchView = [LMDynamicSearchView newAutoLayoutView];
 	self.searchView.delegate = self;
-	self.searchView.selectionMode = LMSearchViewEntrySelectionModeTitlesAndFavourites;
+	switch(self.selectionMode){
+		case LMMusicPickerSelectionModeOnlyTracks:
+			self.searchView.selectionMode = LMSearchViewEntrySelectionModeTitlesAndFavourites;
+			break;
+		case LMMusicPickerSelectionModeAllCollections:
+			self.searchView.selectionMode = LMSearchViewEntrySelectionModeAll;
+			break;
+	}
 	self.searchView.hidden = YES;
 	
 	self.searchView.searchableTrackCollections = @[
@@ -332,8 +367,8 @@
 											 @(LMMusicTypeCompilations)
 											 ];
 	
-	for(LMMusicTrack *track in self.trackCollection.items){
-		[self.searchView setData:[[LMMusicTrackCollection alloc] initWithItems:@[ track ]] asSelected:YES forMusicType:LMMusicTypeTitles];
+	for(LMMusicTrackCollection *trackCollection in self.trackCollections){
+		[self.searchView setData:trackCollection asSelected:YES forMusicType:LMMusicTypeTitles];
 	}
 	
 	//Set collections and musictypes
@@ -353,6 +388,17 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (instancetype)init {
+	self = [super init];
+	if(self){
+		self.selectionMode = LMMusicPickerSelectionModeOnlyTracks;
+		
+		self.trackCollections = [NSArray new];
+		self.musicTypes = [NSArray new];
+	}
+	return self;
 }
 
 @end

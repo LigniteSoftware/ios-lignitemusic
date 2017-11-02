@@ -14,6 +14,7 @@ def shared_pods
     pod 'Unirest', '~> 1.1.4'
     pod 'MGSwipeTableCell'
     pod 'RSKImageCropper'
+    pod 'BEMCheckBox'
 end
 
 target 'Lignite Music' do

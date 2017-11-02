@@ -80,11 +80,11 @@
 
 /* Begin adding songs code */
 
-- (void)musicPicker:(LMMusicPickerController *)musicPicker didFinishPickingMusicWithTrackCollection:(LMMusicTrackCollection *)trackCollection {
+- (void)musicPicker:(LMMusicPickerController *)musicPicker didFinishPickingMusicWithTrackCollections:(NSArray<LMMusicTrackCollection *> *)trackCollections {
 	
 	NSLog(@"Finished!");
 	
-	self.playlist.trackCollection = trackCollection;
+	self.playlist.trackCollection = [LMMusicPlayer trackCollectionForArrayOfTrackCollections:trackCollections];
 	
 	self.songListTableView.totalAmountOfObjects = self.playlist.trackCollection.count;
 	[self.songListTableView reloadSubviewData];
@@ -104,7 +104,7 @@
 	
 	LMMusicPickerController *musicPicker = [LMMusicPickerController new];
 	musicPicker.delegate = self;
-	musicPicker.trackCollection = self.playlist.trackCollection;
+	musicPicker.trackCollections = [LMMusicPlayer arrayOfTrackCollectionsForMusicTrackCollection:self.playlist.trackCollection];
 	UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:musicPicker];
 	[self presentViewController:navigation animated:YES completion:nil];
 }

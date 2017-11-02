@@ -42,6 +42,9 @@ typedef MPMediaItemCollection LMMusicTrackCollection;
  */
 - (NSUInteger)numberOfAlbums;
 
+/**
+ The number of tracks in this track collection.
+ */
 @property (readonly) NSInteger trackCount;
 
 @end
