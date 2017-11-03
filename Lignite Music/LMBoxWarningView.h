@@ -31,6 +31,11 @@
 @property BOOL showing;
 
 /**
+ Whether to hide the box when it's first being layed out or not.
+ */
+@property BOOL hideOnLayout;
+
+/**
  Hide the warning view.
  */
 - (void)hide;
@@ -39,5 +44,10 @@
  Shows the warning view.
  */
 - (void)show;
+
+/**
+ Reload.
+ */
+- (void)reload;
 
 @end

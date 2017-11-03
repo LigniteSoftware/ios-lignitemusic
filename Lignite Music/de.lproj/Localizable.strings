@@ -39,6 +39,24 @@
  
  */
 
+"EnhancedPlaylistTitle" = "Erweiterte Wiedergabeliste";
+"EnhancedPlaylistNoConditionsTitle" = "Keine Bedingungen vorhanden";
+"EnhancedPlaylistNoConditionsDescription" = "Füge neue Bedingungen für deine Wiedergabeliste hinzu indem du auf einen der '+'-Buttons tippst.";
+"ShuffleAll" = "Alles gemischt wiedergegeben";
+"WantToHearTitle" = "Ich möchte gerne hiervon hören";
+"DontWantToHearTitle" = "Hiervon möchte ich nichts hören";
+"SelectingAll" = "Alle auswählen";
+"DeselectingAll" = "Alles abwählen";
+"XConditions" = "%d Bedingungen"; //Conditions ie. "3 conditions for generating the user's playlist"
+"NoConditionsYet" = "Es wurden noch keine Bedingung erstellt.";
+"OneCondition" = "1 Bedingung";
+"EnhancedPlaylistNoWantsTitle" = "Es wurde noch keine 'Ich möchte gerne hiervon hören'-Bedingung erstellt";
+"EnhancedPlaylistNoWantsDescription" = "Füge bitte mind. eine Bedingung in der Spalte ‚Ich möchte gerne hiervon hören’ ein.";
+"WhichTypeOfPlaylist" = "Welche Art von Wiedergabeliste möchtest du erstellen?";
+"EnhancedPlaylist" = "Erweiterte Wiedergabeliste";
+"RegularPlaylist" = "Normale Wiedergabeliste";
+
+
 "DeletePlaylistTitle" = "Wiedergabeliste löschen?";
 "DeletePlaylistDescription" = "Bist du sicher, dass du die Wiedergabeliste '%@' löschen möchtest?\n\nDiese Aktion kann nicht rückgängig gemacht werden."; //%@ is the name of the playlist.
 "Create" = "Erstellen";

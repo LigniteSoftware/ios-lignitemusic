@@ -46,6 +46,27 @@
  
  */
 
+
+"EnhancedPlaylistTitle" = "Enhanced Playlist";
+"EnhancedPlaylistNoConditionsTitle" = "No conditions set";
+"EnhancedPlaylistNoConditionsDescription" = "Add conditions for how you want your playlist below by tapping one of the + buttons, and tap 'Save' when you're done.";
+"ShuffleAll" = "Shuffle all";
+"WantToHearTitle" = "I want to hear from";
+"DontWantToHearTitle" = "I don't want to hear from";
+"SelectingAll" = "Selecting all...";
+"DeselectingAll" = "Deselecting all...";
+"XConditions" = "%d conditions"; //Conditions ie. "3 conditions for generating the user's playlist"
+"NoConditionsYet" = "No conditions yet";
+"OneCondition" = "1 condition";
+"EnhancedPlaylistNoWantsTitle" = "No 'I want to hear' conditions";
+"EnhancedPlaylistNoWantsDescription" = "Please tap the + button beside the 'I want to hear' section to add some conditions of what you want to hear, so we know what music to pick from.";
+"WhichTypeOfPlaylist" = "Which type of playlist do you want to create?";
+"EnhancedPlaylist" = "Enhanced playlist";
+"RegularPlaylist" = "Normal playlist";
+
+"ScrollingTextTitle" = "Scrolling text";
+"ScrollingTextDescription" = "In now-playing and miniplayer";
+
 "DeletePlaylistTitle" = "Delete playlist?";
 "DeletePlaylistDescription" = "Are you sure you want to delete the playlist '%@'?\n\nThis action is not reversable."; //%@ is the name of the playlist.
 "Create" = "Create";
@@ -64,8 +85,17 @@
 "AddSongs" = "Add songs";
 "SelectSongs" = "Select songs";
 "Source" = "Source";
-"NoSongsInPlaylistBuilder" = "There are no songs in this playlist yet.\n\nStart adding songs by tapping the 'Add songs' button above.";
+"NoSongsInPlaylistBuilder" = "Holy cow, there aren't any songs here yet!\n\nStart adding songs by tapping the 'Add songs' button above. Get on it!";
 "SelectASource" = "Please select where to get music from";
+"SearchType" = "Search %@";
+"SearchAllMusic" = "Search all your music";
+
+"XSongs" = "%ld songs"; //Multiple songs
+"XSongsSingle" = "%ld song"; //1 song
+"NoSongsYet" = "No songs, yet";
+
+"SelectAll" = "Select all";
+"DeselectAll" = "Deselect all";
 
 "YourPlaylistTitle" = "Headbangers";
 

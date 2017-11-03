@@ -762,12 +762,42 @@
 	else{
 		NSLog(@"New playlist");
 		
-		LMPlaylistEditorViewController *playlistViewController = [LMPlaylistEditorViewController new];
-		playlistViewController.delegate = self;
-		UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:playlistViewController];
-		[self.rootViewController presentViewController:navigation animated:YES completion:^{
-			NSLog(@"Launched creator");
+		UIAlertController* alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"WhichTypeOfPlaylist", nil)
+																	   message:nil
+																preferredStyle:UIAlertControllerStyleActionSheet];
+		
+		alert.popoverPresentationController.sourceView = self.playlistButtonLeft;
+		alert.popoverPresentationController.sourceRect = self.playlistButtonLeft.frame;
+		
+		UIAlertAction* enhancedPlaylistAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"EnhancedPlaylist", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
+			NSLog(@"Enhanced playlist create");
+			
+			LMEnhancedPlaylistEditorViewController *enhancedPlaylistViewController = [LMEnhancedPlaylistEditorViewController new];
+			enhancedPlaylistViewController.delegate = self;
+			UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:enhancedPlaylistViewController];
+			[self.rootViewController presentViewController:navigation animated:YES completion:^{
+				NSLog(@"Launched enhanced creator");
+			}];
 		}];
+		
+		UIAlertAction* regularPlaylistAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"RegularPlaylist", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
+			NSLog(@"Regular playlist create");
+			
+			LMPlaylistEditorViewController *playlistViewController = [LMPlaylistEditorViewController new];
+			playlistViewController.delegate = self;
+			UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:playlistViewController];
+			[self.rootViewController presentViewController:navigation animated:YES completion:^{
+				NSLog(@"Launched creator");
+			}];
+		}];
+		
+		UIAlertAction* cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * action) {}];
+		
+		[alert addAction:enhancedPlaylistAction];
+		[alert addAction:regularPlaylistAction];
+		[alert addAction:cancelAction];
+		
+		[self.rootViewController presentViewController:alert animated:YES completion:nil];
 	}
 }
 

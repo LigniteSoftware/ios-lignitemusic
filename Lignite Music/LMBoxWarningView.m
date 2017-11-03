@@ -62,6 +62,10 @@
 	self.showing = YES;
 }
 
+- (void)reload {
+	self.topToSuperviewConstraint.constant = -self.frame.size.height;
+}
+
 - (void)layoutSubviews {
 	if(!self.didLayoutConstraints){
 		self.didLayoutConstraints = YES;
@@ -109,9 +113,9 @@
 		[self.subtitleLabel autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 	}
 	else{
-		if(!self.showing){
-			self.showing = YES;
+		if(self.hideOnLayout){
 			[self hide];
+			self.hideOnLayout = NO;
 		}
 	}
 	

@@ -129,10 +129,22 @@
 
 
 - (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator	{
+	
+	BOOL willBeLandscape = size.width > size.height;
 	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-//		[self.songListTableView reloadData];
+		[self.conditionsCollectionView reloadData];
+		
+		if(willBeLandscape && self.warningBoxView.topToSuperviewConstraint.constant > 0){
+			self.warningBoxView.topToSuperviewConstraint.constant = 64.0f;
+		}
+		else if(!willBeLandscape && self.warningBoxView.topToSuperviewConstraint.constant > 0){
+			self.warningBoxView.topToSuperviewConstraint.constant = 84.0f;
+		}
+		else if(!self.warningBoxView.showing){
+			self.warningBoxView.topToSuperviewConstraint.constant = -self.warningBoxView.frame.size.height + (willBeLandscape ? 44 : 64);
+		}
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-//		[self.songListTableView reloadData];
+		[self.conditionsCollectionView reloadData];
 	}];
 }
 
@@ -339,11 +351,13 @@
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
 	
+	CGFloat dimensionToUse = [LMLayoutManager isLandscape] ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height;
+	
 	if([self indexPathIsWantToHear:indexPath] || [self indexPathIsDontWantToHear:indexPath]){
-		return CGSizeMake(self.conditionsCollectionView.frame.size.width, WINDOW_FRAME.size.height/16.0f);
+		return CGSizeMake(self.conditionsCollectionView.frame.size.width, dimensionToUse/16.0f);
 	}
 	
-	return CGSizeMake(self.conditionsCollectionView.frame.size.width, WINDOW_FRAME.size.height/9.0f);
+	return CGSizeMake(self.conditionsCollectionView.frame.size.width, dimensionToUse/9.0f);
 }
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionView *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section {
@@ -531,7 +545,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-	self.title = NSLocalizedString(@"EnhancedPlaylist", nil);
+	self.title = NSLocalizedString(@"EnhancedPlaylistTitle", nil);
 	
 	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithTitle:NSLocalizedString(@"Cancel", nil) style:UIBarButtonItemStylePlain target:self action:@selector(cancelPlaylistEditing)];
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithTitle:NSLocalizedString(@"Save", nil) style:UIBarButtonItemStyleDone target:self action:@selector(savePlaylistEditing)];
@@ -553,12 +567,12 @@
 	
 	
 	self.warningBoxView = [LMBoxWarningView newAutoLayoutView];
-	self.warningBoxView.showing = newPlaylist;
+	self.warningBoxView.hideOnLayout = !newPlaylist;
 	[self.view addSubview:self.warningBoxView];
 	
 	[self.warningBoxView autoPinEdgeToSuperviewMargin:ALEdgeLeading];
 	[self.warningBoxView autoPinEdgeToSuperviewMargin:ALEdgeTrailing];
-	self.warningBoxView.topToSuperviewConstraint = [self.warningBoxView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:84];
+	self.warningBoxView.topToSuperviewConstraint = [self.warningBoxView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:[LMLayoutManager isLandscape] ? 64 : 84];
 	
 	
 	self.imagePickerView = [LMImagePickerView newAutoLayoutView];
@@ -590,32 +604,32 @@
 	self.titleTextField.autocapitalizationType = UITextAutocapitalizationTypeWords;
 	[self.view addSubview:self.titleTextField];
 	
-	NSArray *titleTextFieldPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+//	NSArray *titleTextFieldPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 		[self.titleTextField autoPinEdgeToSuperviewMargin:ALEdgeTrailing];
 		[self.titleTextField autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.imagePickerView];
 		[self.titleTextField autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.imagePickerView withOffset:15];
-	}];
-	[LMLayoutManager addNewPortraitConstraints:titleTextFieldPortraitConstraints];
+//	}];
+//	[LMLayoutManager addNewPortraitConstraints:titleTextFieldPortraitConstraints];
 	
-	NSArray *titleTextFieldLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-		[self.titleTextField autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.imagePickerView];
-		[self.titleTextField autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.imagePickerView withOffset:15];
-	}];
-	
-	NSLayoutConstraint *trailingPinnedToCenterVerticalAxisConstraint
-	= [NSLayoutConstraint constraintWithItem:self.titleTextField
-								   attribute:NSLayoutAttributeTrailing
-								   relatedBy:NSLayoutRelationEqual
-									  toItem:self.view
-								   attribute:NSLayoutAttributeCenterX
-								  multiplier:1.0
-									constant:0.0];
-	
-	NSMutableArray *mutableTextViewLandscapeConstraintsArray = [NSMutableArray arrayWithArray:titleTextFieldLandscapeConstraints];
-	[mutableTextViewLandscapeConstraintsArray addObject:trailingPinnedToCenterVerticalAxisConstraint];
-	titleTextFieldLandscapeConstraints = [NSArray arrayWithArray:mutableTextViewLandscapeConstraintsArray];
-	
-	[LMLayoutManager addNewLandscapeConstraints:titleTextFieldLandscapeConstraints];
+//	NSArray *titleTextFieldLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+//		[self.titleTextField autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.imagePickerView];
+//		[self.titleTextField autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.imagePickerView withOffset:15];
+//	}];
+//
+//	NSLayoutConstraint *trailingPinnedToCenterVerticalAxisConstraint
+//	= [NSLayoutConstraint constraintWithItem:self.titleTextField
+//								   attribute:NSLayoutAttributeTrailing
+//								   relatedBy:NSLayoutRelationEqual
+//									  toItem:self.view
+//								   attribute:NSLayoutAttributeCenterX
+//								  multiplier:1.0
+//									constant:0.0];
+//
+//	NSMutableArray *mutableTextViewLandscapeConstraintsArray = [NSMutableArray arrayWithArray:titleTextFieldLandscapeConstraints];
+//	[mutableTextViewLandscapeConstraintsArray addObject:trailingPinnedToCenterVerticalAxisConstraint];
+//	titleTextFieldLandscapeConstraints = [NSArray arrayWithArray:mutableTextViewLandscapeConstraintsArray];
+//
+//	[LMLayoutManager addNewLandscapeConstraints:titleTextFieldLandscapeConstraints];
 	
 	UIView *textFieldLineView = [UIView newAutoLayoutView];
 	textFieldLineView.backgroundColor = [UIColor grayColor];

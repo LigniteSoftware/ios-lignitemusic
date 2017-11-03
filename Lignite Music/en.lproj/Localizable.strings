@@ -47,9 +47,9 @@
  */
 
 
-"EnhancedPlaylist" = "Enhanced Playlist";
+"EnhancedPlaylistTitle" = "Enhanced Playlist";
 "EnhancedPlaylistNoConditionsTitle" = "No conditions set";
-"EnhancedPlaylistNoConditionsDescription" = "Add conditions for how you want your playlist below by tapping one of the + buttons.\n\nTap 'Save' when you're done and we'll build the playlist for you.";
+"EnhancedPlaylistNoConditionsDescription" = "Add conditions for how you want your playlist below by tapping one of the + buttons, and tap 'Save' when you're done.";
 "ShuffleAll" = "Shuffle all";
 "WantToHearTitle" = "I want to hear from";
 "DontWantToHearTitle" = "I don't want to hear from";
@@ -59,7 +59,10 @@
 "NoConditionsYet" = "No conditions yet";
 "OneCondition" = "1 condition";
 "EnhancedPlaylistNoWantsTitle" = "No 'I want to hear' conditions";
-"EnhancedPlaylistNoWantsDescription" = "You told us what you don't want to hear, but we don't know what you do want to hear!\n\nPlease tap the + button beside the 'I want to hear' section to add some conditions of what you want to hear.";
+"EnhancedPlaylistNoWantsDescription" = "Please tap the + button beside the 'I want to hear' section to add some conditions of what you want to hear, so we know what music to pick from.";
+"WhichTypeOfPlaylist" = "Which type of playlist do you want to create?";
+"EnhancedPlaylist" = "Enhanced playlist";
+"RegularPlaylist" = "Normal playlist";
 
 "ScrollingTextTitle" = "Scrolling text";
 "ScrollingTextDescription" = "In now-playing and miniplayer";
