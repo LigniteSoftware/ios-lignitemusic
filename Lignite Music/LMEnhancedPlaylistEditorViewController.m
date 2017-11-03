@@ -18,8 +18,9 @@
 #import "LMMusicPlayer.h"
 #import "LMBoxWarningView.h"
 #import "LMMusicPickerController.h"
+#import "LMScrollView.h"
 
-@interface LMEnhancedPlaylistEditorViewController ()<LMLayoutChangeDelegate, LMImagePickerViewDelegate, LMMusicPickerDelegate>
+@interface LMEnhancedPlaylistEditorViewController ()<LMLayoutChangeDelegate, LMImagePickerViewDelegate, LMMusicPickerDelegate, BEMCheckBoxDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, LMListEntryDelegate>
 
 /**
  The music player.
@@ -62,6 +63,11 @@
 @property BEMCheckBox *shuffleAllCheckbox;
 
 /**
+ The collection view for conditions of want to listen to and don't want to listen to.
+ */
+@property UICollectionView *conditionsCollectionView;
+
+/**
  The background view to the "want to hear" section
  */
 @property UIView *wantToHearBackgroundView;
@@ -100,11 +106,6 @@
  If the conditions music picker is picking for music the user wants to hear.
  */
 @property BOOL isPickingWantToHear;
-
-/**
- The playlist that this enhanced playlist editor is handling.
- */
-@property LMPlaylist *playlist;
 
 @end
 
@@ -150,6 +151,8 @@
 	NSLog(@"Save enhanced playlist");
 	
 	self.playlist.title = self.titleTextField.text;
+	
+	[self.playlist regenerateEnhancedPlaylist];
 	
 	[self dismissViewControllerAnimated:YES completion:nil];
 	
@@ -197,6 +200,7 @@
 	}
 	
 	[self reloadConditionsLabelAndWarningBox];
+	[self.conditionsCollectionView reloadData];
 }
 
 - (void)addConditionsButtonTapped:(UITapGestureRecognizer*)tapGestureRecognizer {
@@ -207,31 +211,12 @@
 	self.conditionsMusicPickerController.delegate = self;
 	self.conditionsMusicPickerController.selectionMode = LMMusicPickerSelectionModeAllCollections;
 	
+	self.conditionsMusicPickerController.trackCollections = self.isPickingWantToHear ? [self.playlist wantToHearTrackCollections] : [self.playlist dontWantToHearTrackCollections];
+	self.conditionsMusicPickerController.musicTypes = self.isPickingWantToHear ? [self.playlist wantToHearMusicTypes] : [self.playlist dontWantToHearMusicTypes];
 	
-	NSMutableArray *musicTrackCollectionsMutableArray = [NSMutableArray new];
-	
-	NSDictionary *toHearDictionary =  [self.playlist.enhancedConditionsDictionary objectForKey:self.isPickingWantToHear ? LMEnhancedPlaylistWantToHearKey : LMEnhancedPlaylistDontWantToHearKey];
-	
-	NSArray *persistentIDsArray = [toHearDictionary objectForKey:LMEnhancedPlaylistPersistentIDsKey];
-	NSArray *musicTypesArray = [toHearDictionary objectForKey:LMEnhancedPlaylistMusicTypesKey];
-	
-	for(NSInteger i = 0; i < persistentIDsArray.count; i++){
-		MPMediaEntityPersistentID persistentID = [[persistentIDsArray objectAtIndex:i] longLongValue];
-		LMMusicType musicType = (LMMusicType)[[musicTypesArray objectAtIndex:i] integerValue];
-		
-		NSArray<LMMusicTrackCollection*> *trackCollections = [self.musicPlayer collectionsForPersistentID:persistentID forMusicType:musicType];
-		
-		NSLog(@"%d items, first having %d for %lld", (int)trackCollections.count, (int)trackCollections.firstObject.count, persistentID);
-		
-		[musicTrackCollectionsMutableArray addObject:trackCollections.firstObject];
-	}
-
-	self.conditionsMusicPickerController.trackCollections = [NSArray arrayWithArray:musicTrackCollectionsMutableArray];
-	self.conditionsMusicPickerController.musicTypes = musicTypesArray;
-	
-	for(LMMusicTrackCollection *collection in musicTrackCollectionsMutableArray){
-		NSLog(@"Collection with %d items", (int)collection.count);
-	}
+//	for(LMMusicTrackCollection *collection in musicTrackCollectionsMutableArray){
+//		NSLog(@"Collection with %d items", (int)collection.count);
+//	}
 	
 
 	UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:self.conditionsMusicPickerController];
@@ -241,6 +226,12 @@
 
 - (void)tappedShuffleAllLabel {
 	[self.shuffleAllCheckbox setOn:!self.shuffleAllCheckbox.on animated:YES];
+	
+	self.playlist.enhancedShuffleAll = self.shuffleAllCheckbox.enabled;
+}
+
+- (void)didTapCheckBox:(BEMCheckBox*)checkBox {
+	self.playlist.enhancedShuffleAll = checkBox.enabled;
 }
 
 - (void)reloadConditionsLabelAndWarningBox {
@@ -264,13 +255,275 @@
 		self.warningBoxView.subtitleLabel.text = NSLocalizedString(@"EnhancedPlaylistNoConditionsDescription", nil);
 		
 		[self.warningBoxView show];
+		self.navigationItem.rightBarButtonItem.enabled = NO;
 	}
 	else if(wantToHearPersistentIDsArray.count == 0 && dontWantToHearPersistentIDsArray.count > 0){
 		self.warningBoxView.titleLabel.text = NSLocalizedString(@"EnhancedPlaylistNoWantsTitle", nil);
 		self.warningBoxView.subtitleLabel.text = NSLocalizedString(@"EnhancedPlaylistNoWantsDescription", nil);
 		
 		[self.warningBoxView show];
+		self.navigationItem.rightBarButtonItem.enabled = NO;
 	}
+	else{
+		self.navigationItem.rightBarButtonItem.enabled = YES;
+	}
+}
+
+/* Begin collection view code */
+
+- (BOOL)indexPathIsWantToHear:(NSIndexPath*)indexPath {
+	if(indexPath.section == 0 && indexPath.row == 0){
+		return YES;
+	}
+	return NO;
+}
+
+- (BOOL)indexPathIsDontWantToHear:(NSIndexPath*)indexPath {
+	if(indexPath.section == 1 && indexPath.row == 0){
+		return YES;
+	}
+	return NO;
+}
+
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
+	return 2; //I want to hear, and I don't want to hear
+}
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+	return (section == 0 ? [self.playlist wantToHearTrackCollections].count : [self.playlist dontWantToHearTrackCollections].count) + 1;
+}
+
+- (UICollectionViewCell*)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+
+	UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"ConditionsCollectionViewCellIdentifier" forIndexPath:indexPath];
+	
+	cell.contentView.backgroundColor = [UIColor whiteColor];
+	
+	for(UIView *subview in cell.contentView.subviews){
+		[subview removeFromSuperview];
+	}
+	
+	if([self indexPathIsWantToHear:indexPath]){
+		[cell.contentView addSubview:self.wantToHearBackgroundView];
+		
+		[self.wantToHearBackgroundView autoPinEdgesToSuperviewEdges];
+	}
+	else if([self indexPathIsDontWantToHear:indexPath]){
+		[cell.contentView addSubview:self.dontWantToHearBackgroundView];
+		
+		[self.dontWantToHearBackgroundView autoPinEdgesToSuperviewEdges];
+	}
+	else{
+		LMListEntry *listEntry = [LMListEntry newAutoLayoutView];
+		listEntry.delegate = self;
+		listEntry.indexPath = indexPath;
+		listEntry.iconInsetMultiplier = (1.0/3.0);
+		listEntry.iconPaddingMultiplier = (3.0/4.0);
+		listEntry.stretchAcrossWidth = YES;
+		listEntry.iPromiseIWillHaveAnIconForYouSoon = YES;
+		
+		[cell.contentView addSubview:listEntry];
+		
+		[listEntry autoPinEdgesToSuperviewEdges];
+		
+//		listEntry.keepTextColoursTheSame = YES;
+//		[listEntry changeHighlightStatus:YES animated:NO];
+		
+		cell.contentView.layer.masksToBounds = YES;
+		cell.contentView.layer.cornerRadius = 6.0f;
+		cell.contentView.backgroundColor = [LMColour controlBarGrayColour];
+	}
+	
+	return cell;
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
+	
+	if([self indexPathIsWantToHear:indexPath] || [self indexPathIsDontWantToHear:indexPath]){
+		return CGSizeMake(self.conditionsCollectionView.frame.size.width, WINDOW_FRAME.size.height/16.0f);
+	}
+	
+	return CGSizeMake(self.conditionsCollectionView.frame.size.width, WINDOW_FRAME.size.height/9.0f);
+}
+
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionView *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section {
+	return 10;
+}
+
+/* End collection view code */
+
+- (NSString*)titlePropertyStringForMusicType:(LMMusicType)musicType {
+	switch(musicType){
+		case LMMusicTypeFavourites:
+		case LMMusicTypeTitles:
+			return MPMediaItemPropertyTitle;
+		case LMMusicTypeComposers:
+			return MPMediaItemPropertyComposer;
+		case LMMusicTypeAlbums:
+		case LMMusicTypeCompilations:
+			return MPMediaItemPropertyAlbumTitle;
+		case LMMusicTypeArtists:
+			return MPMediaItemPropertyArtist;
+		case LMMusicTypeGenres:
+			return MPMediaItemPropertyGenre;
+		default:
+			NSAssert(true, @"This music type (%d) is not yet supported", musicType);
+			return @"";
+	}
+}
+
+- (void)tappedListEntry:(LMListEntry*)entry {
+	NSLog(@"Tapped %@", entry);
+}
+
+- (UIColor*)tapColourForListEntry:(LMListEntry*)entry {
+	return [LMColour controlBarGrayColour];
+}
+
+- (NSString*)titleForListEntry:(LMListEntry*)entry {
+	BOOL isWantToHear = (entry.indexPath.section == 0);
+	
+	LMMusicType musicType = (LMMusicType)[[(isWantToHear ? [self.playlist wantToHearMusicTypes] : [self.playlist dontWantToHearMusicTypes]) objectAtIndex:entry.indexPath.row - 1] integerValue];
+	LMMusicTrackCollection *collection = [(isWantToHear ? [self.playlist wantToHearTrackCollections] : [self.playlist dontWantToHearTrackCollections]) objectAtIndex:entry.indexPath.row - 1];
+	
+	NSLog(@"Value for %@ '%@'/'%@'/'%@'", collection.representativeItem, collection.representativeItem.genre, [collection.representativeItem valueForProperty:[self titlePropertyStringForMusicType:musicType]], collection.representativeItem.artist);
+	
+	return [collection.representativeItem valueForProperty:[self titlePropertyStringForMusicType:musicType]];
+}
+
+- (NSString*)subtitleForListEntry:(LMListEntry*)entry {
+	BOOL isWantToHear = (entry.indexPath.section == 0);
+	
+	LMMusicType musicType = (LMMusicType)[[(isWantToHear ? [self.playlist wantToHearMusicTypes] : [self.playlist dontWantToHearMusicTypes]) objectAtIndex:entry.indexPath.row - 1] integerValue];
+	LMMusicTrackCollection *collection = [(isWantToHear ? [self.playlist wantToHearTrackCollections] : [self.playlist dontWantToHearTrackCollections]) objectAtIndex:entry.indexPath.row - 1];
+	
+	switch(musicType){
+		case LMMusicTypeFavourites:
+		case LMMusicTypeTitles:
+			return collection.representativeItem.artist;
+		case LMMusicTypeComposers:
+		case LMMusicTypeArtists: {
+			BOOL usingSpecificTrackCollections = (musicType != LMMusicTypePlaylists
+												  && musicType != LMMusicTypeCompilations
+												  && musicType != LMMusicTypeAlbums);
+			
+			if(usingSpecificTrackCollections){
+				//Fixes for compilations
+				NSUInteger albums = [self.musicPlayer collectionsForRepresentativeTrack:collection.representativeItem
+																		   forMusicType:musicType].count;
+				return [NSString stringWithFormat:@"%lu %@", (unsigned long)albums, NSLocalizedString(albums == 1 ? @"AlbumInline" : @"AlbumsInline", nil)];
+			}
+			else{
+				return [NSString stringWithFormat:@"%lu %@", (unsigned long)collection.numberOfAlbums, NSLocalizedString(collection.numberOfAlbums == 1 ? @"AlbumInline" : @"AlbumsInline", nil)];
+			}
+		}
+		case LMMusicTypeGenres:
+		case LMMusicTypePlaylists:
+		{
+			return [NSString stringWithFormat:@"%ld %@", (unsigned long)collection.trackCount, NSLocalizedString(collection.trackCount == 1 ? @"Song" : @"Songs", nil)];
+		}
+		case LMMusicTypeCompilations:
+		case LMMusicTypeAlbums: {
+			if(collection.variousArtists){
+				return NSLocalizedString(@"Various", nil);
+			}
+			return collection.representativeItem.artist ? collection.representativeItem.artist : NSLocalizedString(@"UnknownArtist", nil);
+		}
+		default: {
+			return nil;
+		}
+	}
+}
+
+- (UIImage*)iconForListEntry:(LMListEntry*)entry {
+	BOOL isWantToHear = (entry.indexPath.section == 0);
+	
+	LMMusicType musicType = (LMMusicType)[[(isWantToHear ? [self.playlist wantToHearMusicTypes] : [self.playlist dontWantToHearMusicTypes]) objectAtIndex:entry.indexPath.row - 1] integerValue];
+	LMMusicTrackCollection *collection = [(isWantToHear ? [self.playlist wantToHearTrackCollections] : [self.playlist dontWantToHearTrackCollections]) objectAtIndex:entry.indexPath.row - 1];
+	
+	switch(musicType){
+		case LMMusicTypeFavourites:
+		case LMMusicTypeTitles:
+			return [LMAppIcon imageForIcon:LMIconTitles];
+		case LMMusicTypeComposers:{
+			return [LMAppIcon imageForIcon:LMIconComposers];
+		}
+		case LMMusicTypeArtists: {
+			return [LMAppIcon imageForIcon:LMIconArtists];
+		}
+		case LMMusicTypeGenres:{
+			return [LMAppIcon imageForIcon:LMIconGenres];
+		}
+		case LMMusicTypePlaylists:
+		{
+			return [LMAppIcon imageForIcon:LMIconPlaylists];
+		}
+		case LMMusicTypeCompilations:{
+			return [LMAppIcon imageForIcon:LMIconCompilations];
+		}
+		case LMMusicTypeAlbums: {
+			return [LMAppIcon imageForIcon:LMIconAlbums];
+		}
+	}
+	
+	return [LMAppIcon imageForIcon:LMIconBug];
+}
+
+- (void)deleteEntryWithIndexPath:(NSIndexPath*)indexPath {
+	BOOL isWantToHear = (indexPath.section == 0);
+	
+	NSMutableArray *persistentIDsMutableArray = [[NSMutableArray alloc] initWithArray:isWantToHear ? self.playlist.wantToHearPersistentIDs : self.playlist.dontWantToHearPersistentIDs];
+	[persistentIDsMutableArray removeObjectAtIndex:indexPath.row-1];
+	
+	NSMutableArray *musicTypesMutableArray = [[NSMutableArray alloc]initWithArray:isWantToHear ? self.playlist.wantToHearMusicTypes : self.playlist.dontWantToHearMusicTypes];
+	[musicTypesMutableArray removeObjectAtIndex:indexPath.row-1];
+	
+	NSMutableDictionary *mutableConditionsDictionary = [NSMutableDictionary dictionaryWithDictionary:self.playlist.enhancedConditionsDictionary];
+	
+	NSString *sectionKey = isWantToHear ? LMEnhancedPlaylistWantToHearKey : LMEnhancedPlaylistDontWantToHearKey;
+	
+	[mutableConditionsDictionary removeObjectForKey:sectionKey];
+	[mutableConditionsDictionary setObject:@{
+											 LMEnhancedPlaylistPersistentIDsKey: [NSArray arrayWithArray:persistentIDsMutableArray],
+											 LMEnhancedPlaylistMusicTypesKey: [NSArray arrayWithArray:musicTypesMutableArray]
+											 } forKey:sectionKey];
+	
+	self.playlist.enhancedConditionsDictionary = [NSDictionary dictionaryWithDictionary:mutableConditionsDictionary];
+	
+	[self reloadConditionsLabelAndWarningBox];
+	[self.conditionsCollectionView reloadData];
+}
+
+- (void)tappedXCross:(UITapGestureRecognizer*)tapGestureRecognizer {
+	UIView *view = tapGestureRecognizer.view.superview;
+	while(view){
+		if([view class] == [LMListEntry class]){
+			LMListEntry *listEntry = (LMListEntry*)view;
+			[self deleteEntryWithIndexPath:listEntry.indexPath];
+			break;
+		}
+		view = view.superview;
+	}
+}
+
+- (UIView*)rightViewForListEntry:(LMListEntry*)entry {
+	UIView *arrowIconPaddedView = [UIView newAutoLayoutView];
+	
+	UIImageView *arrowIconView = [UIImageView newAutoLayoutView];
+	arrowIconView.contentMode = UIViewContentModeScaleAspectFit;
+	arrowIconView.image = [LMAppIcon invertImage:[LMAppIcon imageForIcon:LMIconXCross]];
+	
+	[arrowIconPaddedView addSubview:arrowIconView];
+	
+	[arrowIconView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:-4];
+	[arrowIconView autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+	[arrowIconView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:arrowIconPaddedView withMultiplier:(5.0/8.0)];
+	[arrowIconView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:arrowIconPaddedView];
+	
+	UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tappedXCross:)];
+	[arrowIconPaddedView addGestureRecognizer:tapGestureRecognizer];
+	
+	return arrowIconPaddedView;
 }
 
 /* Begin initialization code */
@@ -290,14 +543,17 @@
 	[self.layoutManager addDelegate:self];
 	
 	
+	BOOL newPlaylist = NO;
 	if(!self.playlist){
 		self.playlist = [LMPlaylist new];
 		self.playlist.enhanced = YES;
 		self.playlist.enhancedConditionsDictionary = [NSDictionary new];
+		newPlaylist = YES;
 	}
 	
 	
 	self.warningBoxView = [LMBoxWarningView newAutoLayoutView];
+	self.warningBoxView.showing = newPlaylist;
 	[self.view addSubview:self.warningBoxView];
 	
 	[self.warningBoxView autoPinEdgeToSuperviewMargin:ALEdgeLeading];
@@ -306,7 +562,7 @@
 	
 	
 	self.imagePickerView = [LMImagePickerView newAutoLayoutView];
-//	self.imagePickerView.image = self.playlist ? self.playlist.image : nil;
+	self.imagePickerView.image = self.playlist ? self.playlist.image : nil;
 	self.imagePickerView.delegate = self;
 	[self.view addSubview:self.imagePickerView];
 	
@@ -329,7 +585,7 @@
 	
 	self.titleTextField = [UITextField newAutoLayoutView];
 	self.titleTextField.placeholder = NSLocalizedString(@"YourPlaylistTitle", nil);
-//	self.titleTextField.text = self.playlist ? self.playlist.title : nil;
+	self.titleTextField.text = self.playlist ? self.playlist.title : nil;
 	self.titleTextField.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:19.0f];
 	self.titleTextField.autocapitalizationType = UITextAutocapitalizationTypeWords;
 	[self.view addSubview:self.titleTextField];
@@ -384,6 +640,7 @@
 	
 	
 	self.shuffleAllCheckbox = [BEMCheckBox newAutoLayoutView];
+	self.shuffleAllCheckbox.delegate = self;
 	self.shuffleAllCheckbox.boxType = BEMBoxTypeSquare;
 	self.shuffleAllCheckbox.tintColor = [LMColour controlBarGrayColour];
 	self.shuffleAllCheckbox.onFillColor = [LMColour ligniteRedColour];
@@ -412,12 +669,26 @@
 	[shuffleAllLabel addGestureRecognizer:shuffleAllTextTapGestureRecognizer];
 	
 	
-	self.wantToHearBackgroundView = [UIView newAutoLayoutView];
-	[self.view addSubview:self.wantToHearBackgroundView];
+	UICollectionViewFlowLayout *flowLayout = [UICollectionViewFlowLayout new];
+	flowLayout.sectionInset = UIEdgeInsetsMake(10, 0, 10, 0);
 	
-	[self.wantToHearBackgroundView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.imagePickerView withOffset:22];
-	[self.wantToHearBackgroundView autoPinEdgeToSuperviewMargin:ALEdgeLeading];
-	[self.wantToHearBackgroundView autoPinEdgeToSuperviewMargin:ALEdgeTrailing];
+	self.conditionsCollectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:flowLayout];
+	self.conditionsCollectionView.translatesAutoresizingMaskIntoConstraints = NO;
+	self.conditionsCollectionView.delegate = self;
+	self.conditionsCollectionView.dataSource = self;
+	self.conditionsCollectionView.allowsSelection = NO;
+	[self.conditionsCollectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"ConditionsCollectionViewCellIdentifier"];
+	self.conditionsCollectionView.backgroundColor = [UIColor whiteColor];
+	[self.view addSubview:self.conditionsCollectionView];
+	
+	[self.conditionsCollectionView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.imagePickerView withOffset:22];
+	[self.conditionsCollectionView autoPinEdgeToSuperviewMargin:ALEdgeLeading];
+	[self.conditionsCollectionView autoPinEdgeToSuperviewMargin:ALEdgeTrailing];
+	[self.conditionsCollectionView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+	
+	
+	self.wantToHearBackgroundView = [UIView newAutoLayoutView];
+	
 	
 	self.wantToHearAddSongsButtonView = [UIView newAutoLayoutView];
 	self.wantToHearAddSongsButtonView.backgroundColor = [LMColour darkGrayColour];
@@ -431,7 +702,6 @@
 	[self.wantToHearAddSongsButtonView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 	[self.wantToHearAddSongsButtonView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 	[self.wantToHearAddSongsButtonView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-	[self.wantToHearAddSongsButtonView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(2.0/40.0)];
 	[self.wantToHearAddSongsButtonView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.wantToHearAddSongsButtonView];
 	
 	UIImageView *addSongsIconImageView = [UIImageView newAutoLayoutView];
@@ -456,13 +726,7 @@
 	[self.wantToHearLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.wantToHearAddSongsButtonView];
 	
 	
-	
 	self.dontWantToHearBackgroundView = [UIView newAutoLayoutView];
-	[self.view addSubview:self.dontWantToHearBackgroundView];
-	
-	[self.dontWantToHearBackgroundView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.wantToHearBackgroundView withOffset:22];
-	[self.dontWantToHearBackgroundView autoPinEdgeToSuperviewMargin:ALEdgeLeading];
-	[self.dontWantToHearBackgroundView autoPinEdgeToSuperviewMargin:ALEdgeTrailing];
 	
 	self.dontWantToHearAddSongsButtonView = [UIView newAutoLayoutView];
 	self.dontWantToHearAddSongsButtonView.backgroundColor = [LMColour darkGrayColour];
@@ -476,7 +740,6 @@
 	[self.dontWantToHearAddSongsButtonView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 	[self.dontWantToHearAddSongsButtonView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 	[self.dontWantToHearAddSongsButtonView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-	[self.dontWantToHearAddSongsButtonView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(2.0/40.0)];
 	[self.dontWantToHearAddSongsButtonView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.dontWantToHearAddSongsButtonView];
 	
 	UIImageView *addSongsDontWantIconImageView = [UIImageView newAutoLayoutView];
@@ -486,7 +749,7 @@
 	
 	[addSongsDontWantIconImageView autoCenterInSuperview];
 	[addSongsDontWantIconImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.dontWantToHearAddSongsButtonView withMultiplier:(5.0/10.0)];
-	[addSongsDontWantIconImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:addSongsIconImageView];
+	[addSongsDontWantIconImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:addSongsDontWantIconImageView];
 	
 	
 	self.dontWantToHearLabel = [UILabel newAutoLayoutView];

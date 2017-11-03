@@ -10,6 +10,12 @@
 #import <UIKit/UIKit.h>
 #import "LMMusicPlayer.h"
 
+#define LMEnhancedPlaylistPersistentIDsKey @"persistentIDs"
+#define LMEnhancedPlaylistMusicTypesKey @"musicTypes"
+
+#define LMEnhancedPlaylistWantToHearKey @"wantToHear"
+#define LMEnhancedPlaylistDontWantToHearKey @"dontWantToHear"
+
 @interface LMPlaylist : NSObject
 
 /**
@@ -28,9 +34,46 @@
 @property BOOL enhanced;
 
 /**
+ Whether or not to shuffle all in an enhanced playlist. If NO, the playlist will be built in order of the conditions the user set.
+ */
+@property BOOL enhancedShuffleAll;
+
+/**
  The conditions dictionary for the enhanced playlist.
  */
 @property NSDictionary *enhancedConditionsDictionary;
+
+
+/**
+ The music types of the want to hear section, parsed directly from the dictionary if the playlist is enhanced.
+ */
+@property (readonly) NSArray<NSNumber*> *wantToHearMusicTypes;
+
+/**
+ The persistent IDs of the want to hear section, parsed directly from the dictionary if the playlist is enhanced.
+ */
+@property (readonly) NSArray<NSNumber*> *wantToHearPersistentIDs;
+
+/**
+ The track collections of the want to hear conditions parsed directly from the dictionary.
+ */
+@property (readonly) NSArray<LMMusicTrackCollection*> *wantToHearTrackCollections;
+
+/**
+ The music types of the want to hear section, parsed directly from the dictionary if the playlist is enhanced.
+ */
+@property (readonly) NSArray<NSNumber*> *dontWantToHearMusicTypes;
+
+/**
+ The persistent IDs of the want to hear section, parsed directly from the dictionary if the playlist is enhanced.
+ */
+@property (readonly) NSArray<NSNumber*> *dontWantToHearPersistentIDs;
+
+/**
+ The track collections of the want to hear conditions parsed directly from the dictionary.
+ */
+@property (readonly) NSArray<LMMusicTrackCollection*> *dontWantToHearTrackCollections;
+
 
 /**
  The collection of tracks associated with this playlist.

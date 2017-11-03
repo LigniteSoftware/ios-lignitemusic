@@ -54,26 +54,29 @@
 	playlist.systemPersistentID = [[playlistDictionary objectForKey:@"systemPersistentID"] longLongValue];
 	playlist.persistentID = [[playlistDictionary objectForKey:@"persistentID"] longLongValue];
 	
-	NSMutableArray *trackMutableArray = [NSMutableArray new];
-	NSArray *trackPersistentIDArray = [playlistDictionary objectForKey:@"trackCollectionPersistentIDs"];
-	for(NSNumber *trackPersistentIDNumber in trackPersistentIDArray){
-		MPMediaPropertyPredicate *predicate = [MPMediaPropertyPredicate predicateWithValue:trackPersistentIDNumber
-																			   forProperty:MPMediaItemPropertyPersistentID];
-		MPMediaQuery *query = [[MPMediaQuery alloc] init];
-		[query addFilterPredicate: predicate];
-		
-		[trackMutableArray addObjectsFromArray:query.items];
-		
-		NSLog(@"%@ Got %@", playlist.title, query.items.firstObject.title);
-	}
-	playlist.trackCollection = [[LMMusicTrackCollection alloc]initWithItems:trackMutableArray];
-	
-	playlist.image = [self.imageCache imageFromDiskCacheForKey:[NSString stringWithFormat:@"%lld", playlist.persistentID]];
 	playlist.enhancedConditionsDictionary = [playlistDictionary objectForKey:@"enhancedConditionsDictionary"];
 	if(playlist.enhancedConditionsDictionary){
 		playlist.enhanced = YES;
 		[playlist regenerateEnhancedPlaylist];
 	}
+	
+	if(!playlist.enhanced){
+		NSMutableArray *trackMutableArray = [NSMutableArray new];
+		NSArray *trackPersistentIDArray = [playlistDictionary objectForKey:@"trackCollectionPersistentIDs"];
+		for(NSNumber *trackPersistentIDNumber in trackPersistentIDArray){
+			MPMediaPropertyPredicate *predicate = [MPMediaPropertyPredicate predicateWithValue:trackPersistentIDNumber
+																				   forProperty:MPMediaItemPropertyPersistentID];
+			MPMediaQuery *query = [[MPMediaQuery alloc] init];
+			[query addFilterPredicate: predicate];
+			
+			[trackMutableArray addObjectsFromArray:query.items];
+			
+			NSLog(@"%@ Got %@", playlist.title, query.items.firstObject.title);
+		}
+		playlist.trackCollection = [[LMMusicTrackCollection alloc]initWithItems:trackMutableArray];
+	}
+	
+	playlist.image = [self.imageCache imageFromDiskCacheForKey:[NSString stringWithFormat:@"%lld", playlist.persistentID]];
 	
 	return playlist;
 }
@@ -82,8 +85,10 @@
 	NSMutableDictionary *mutableDictionary = [NSMutableDictionary new];
 	
 	NSMutableArray *songPersistentIDArray = [NSMutableArray new];
-	for(LMMusicTrack *track in playlist.trackCollection.items){
-		[songPersistentIDArray addObject:@(track.persistentID)];
+	if(!playlist.enhanced){
+		for(LMMusicTrack *track in playlist.trackCollection.items){
+			[songPersistentIDArray addObject:@(track.persistentID)];
+		}
 	}
 	
 	[mutableDictionary setObject:playlist.title forKey:@"title"];

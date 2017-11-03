@@ -1232,8 +1232,14 @@ LMControlBarViewDelegate
 	if(self.buttonNavigationBar){
 		return;
 	}
-
 	
+//	LMEnhancedPlaylistEditorViewController *enhancedPlaylistViewController = [LMEnhancedPlaylistEditorViewController new];
+//	UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:enhancedPlaylistViewController];
+//	[self presentViewController:navigation animated:YES completion:^{
+//		
+//	}];
+//
+//	
 //	return;
 	
 //	self.loadingProgressHUD.hidden = YES;

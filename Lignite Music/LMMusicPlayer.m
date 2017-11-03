@@ -820,11 +820,11 @@ BOOL shuffleForDebug = NO;
 	NSAssert(musicType != LMMusicTypeFavourites, @"Cannot query favourites, sorry");
 	
 	MPMediaGrouping associatedGroupings[] = {
-		MPMediaGroupingAlbum, //Artists
+		MPMediaGroupingArtist, //Artists
 		MPMediaGroupingAlbum, //Albums
 		MPMediaGroupingTitle, //Titles
 		MPMediaGroupingTitle, //Playlists
-		MPMediaGroupingAlbum, //Genres
+		MPMediaGroupingGenre, //Genres
 		MPMediaGroupingAlbum, //Composers
 		MPMediaGroupingAlbum  //Compilations
 	};
@@ -836,7 +836,7 @@ BOOL shuffleForDebug = NO;
 															 MPMediaPlaylistPropertyName,             //Playlists
 															 MPMediaItemPropertyGenrePersistentID,    //Genres
 															 MPMediaItemPropertyComposerPersistentID, //Composers
-															 MPMediaItemPropertyIsCompilation         //Compilations
+															 MPMediaItemPropertyAlbumPersistentID     //Compilations
 															 ];
 	
 	NSString *associatedProperty = [associatedPersistentIDProperties objectAtIndex:musicType];

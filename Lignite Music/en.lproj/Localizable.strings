@@ -51,8 +51,8 @@
 "EnhancedPlaylistNoConditionsTitle" = "No conditions set";
 "EnhancedPlaylistNoConditionsDescription" = "Add conditions for how you want your playlist below by tapping one of the + buttons.\n\nTap 'Save' when you're done and we'll build the playlist for you.";
 "ShuffleAll" = "Shuffle all";
-"WantToHearTitle" = "I want to hear";
-"DontWantToHearTitle" = "I don't want to hear";
+"WantToHearTitle" = "I want to hear from";
+"DontWantToHearTitle" = "I don't want to hear from";
 "SelectingAll" = "Selecting all...";
 "DeselectingAll" = "Deselecting all...";
 "XConditions" = "%d conditions"; //Conditions ie. "3 conditions for generating the user's playlist"

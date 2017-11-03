@@ -9,6 +9,7 @@
 #import <PureLayout/PureLayout.h>
 #import "LMBoxWarningView.h"
 #import "LMColour.h"
+#import "LMExtras.h"
 
 @interface LMBoxWarningView()
 
@@ -16,11 +17,6 @@
  The view's padding.
  */
 @property UIView *paddingView;
-
-/**
- Whether or not the warning view is showing.
- */
-@property BOOL showing;
 
 /**
  The previous offset.
@@ -72,7 +68,6 @@
 		
 		
 		self.previousOffset = self.topToSuperviewConstraint.constant;
-		self.showing = YES;
 		
 		
 		self.layer.masksToBounds = YES;
@@ -112,11 +107,23 @@
 		[self.subtitleLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 		[self.subtitleLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.titleLabel withOffset:8];
 		[self.subtitleLabel autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		
-		self.showing = YES;
+	}
+	else{
+		if(!self.showing){
+			self.showing = YES;
+			[self hide];
+		}
 	}
 	
 	[super layoutSubviews];
+}
+
+- (instancetype)init {
+	self = [super init];
+	if(self){
+		self.showing = YES;
+	}
+	return self;
 }
 
 @end

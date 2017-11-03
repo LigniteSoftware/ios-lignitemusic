@@ -18,13 +18,14 @@
 #import "LMEmbeddedDetailView.h"
 #import "LMPhoneLandscapeDetailView.h"
 #import "LMPlaylistEditorViewController.h"
+#import "LMEnhancedPlaylistEditorViewController.h"
 
 #import "NSTimer+Blocks.h"
 #import "LMColour.h"
 
 #import "LMPlaylistManager.h"
 
-@interface LMCompactBrowsingView()<UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, LMCollectionInfoViewDelegate, LMBigListEntryDelegate, LMLayoutChangeDelegate, LMPlaylistEditorDelegate>
+@interface LMCompactBrowsingView()<UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, LMCollectionInfoViewDelegate, LMBigListEntryDelegate, LMLayoutChangeDelegate, LMPlaylistEditorDelegate, LMEnhancedPlaylistEditorDelegate>
 
 /**
  The big list entries that are used in the compact view.
@@ -241,7 +242,7 @@
 				tiledAlbumCover.hidden = playlist.image ? YES : NO;
 				
 				if(playlist.image || (playlist.trackCollection.count == 0)){
-					rootImageView.image = rootImageView.image;
+					rootImageView.image = playlist.image;
 					if(!playlist.image){
 						rootImageView.image = [LMAppIcon imageForIcon:LMIconNoAlbumArt75Percent];
 					}
@@ -791,15 +792,58 @@
 	[self.collectionView reloadData];
 }
 
+- (void)enhancedPlaylistEditorViewController:(LMEnhancedPlaylistEditorViewController*)enhancedEditorViewController didSaveWithPlaylist:(LMPlaylist*)playlist {
+	
+	NSLog(@"Saved playlist");
+	
+	LMCollectionViewFlowLayout *flowLayout = (LMCollectionViewFlowLayout*)self.collectionView.collectionViewLayout;
+	
+	BOOL isNewPlaylist = flowLayout.musicTrackCollections.count != self.playlistManager.playlistTrackCollections.count;
+	
+	flowLayout.musicTrackCollections = self.playlistManager.playlistTrackCollections;
+	
+	if(isNewPlaylist){
+		LMBigListEntry *bigListEntry = [LMBigListEntry newAutoLayoutView];
+		bigListEntry.infoDelegate = self;
+		bigListEntry.entryDelegate = self;
+		bigListEntry.collectionIndex = self.bigListEntries.count;
+		[bigListEntry setup];
+		
+		[self.bigListEntries addObject:bigListEntry];
+	}
+	
+	for(LMBigListEntry *bigListEntry in self.bigListEntries){
+		[bigListEntry reloadData];
+	}
+	
+	[self.collectionView reloadData];
+}
+
+- (void)enhancedPlaylistEditorViewControllerDidCancel:(LMEnhancedPlaylistEditorViewController*)enhancedEditorViewController {
+	NSLog(@"Cancelled enhanced");
+}
+
 - (void)editTappedForBigListEntry:(LMBigListEntry*)bigListEntry {
-	LMPlaylistEditorViewController *playlistViewController = [LMPlaylistEditorViewController new];
 	LMPlaylist *playlist = [self.playlistManager.playlists objectAtIndex:bigListEntry.collectionIndex];
-	playlistViewController.playlist = playlist;
-	playlistViewController.delegate = self;
-	UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:playlistViewController];
-	[self.rootViewController presentViewController:navigation animated:YES completion:^{
-		NSLog(@"Launched editor");
-	}];
+	
+	if(playlist.enhanced){
+		LMEnhancedPlaylistEditorViewController *enhancedPlaylistViewController = [LMEnhancedPlaylistEditorViewController new];
+		enhancedPlaylistViewController.playlist = playlist;
+		enhancedPlaylistViewController.delegate = self;
+		UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:enhancedPlaylistViewController];
+		[self.rootViewController presentViewController:navigation animated:YES completion:^{
+			NSLog(@"Launched enhanced editor");
+		}];
+	}
+	else{
+		LMPlaylistEditorViewController *playlistViewController = [LMPlaylistEditorViewController new];
+		playlistViewController.playlist = playlist;
+		playlistViewController.delegate = self;
+		UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:playlistViewController];
+		[self.rootViewController presentViewController:navigation animated:YES completion:^{
+			NSLog(@"Launched editor");
+		}];
+	}
 }
 
 - (void)deleteTappedForBigListEntry:(LMBigListEntry*)bigListEntry {

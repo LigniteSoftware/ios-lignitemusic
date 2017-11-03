@@ -20,6 +20,29 @@
 - (NSString*)subtitleForListEntry:(LMListEntry*)entry;
 - (UIImage*)iconForListEntry:(LMListEntry*)entry;
 
+/*
+ - (void)tappedListEntry:(LMListEntry*)entry {
+ NSLog(@"Tapped %@", entry);
+ }
+ 
+ - (UIColor*)tapColourForListEntry:(LMListEntry*)entry {
+ return [UIColor redColor];
+ }
+ 
+ - (NSString*)titleForListEntry:(LMListEntry*)entry {
+ return @"Tytle";
+ }
+ 
+ - (NSString*)subtitleForListEntry:(LMListEntry*)entry {
+ return @"Subtitle";
+ }
+ 
+ - (UIImage*)iconForListEntry:(LMListEntry*)entry {
+ return [LMAppIcon imageForIcon:LMIconBug];
+ }
+
+ */
+
 @optional
 
 /**
@@ -52,6 +75,11 @@
  Don't fuck with this unless you know what you're doing boss
  */
 @property UIView *contentView;
+
+/**
+ Keep the text colours the same on highlight. Defaults to NO.
+ */
+@property BOOL keepTextColoursTheSame;
 
 /**
  The multiplier of how much to inset the icon within its background view. For example, 0.5 would inset the icon half way into the background view, centered. Default after setup: 0.8

@@ -26,6 +26,11 @@
 @property UILabel *subtitleLabel;
 
 /**
+ Whether or not the warning view is showing.
+ */
+@property BOOL showing;
+
+/**
  Hide the warning view.
  */
 - (void)hide;

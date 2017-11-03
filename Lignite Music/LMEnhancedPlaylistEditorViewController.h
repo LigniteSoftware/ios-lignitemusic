@@ -9,12 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "LMPlaylistManager.h"
 
-#define LMEnhancedPlaylistPersistentIDsKey @"persistentIDs"
-#define LMEnhancedPlaylistMusicTypesKey @"musicTypes"
-
-#define LMEnhancedPlaylistWantToHearKey @"wantToHear"
-#define LMEnhancedPlaylistDontWantToHearKey @"dontWantToHear"
-
 @class LMEnhancedPlaylistEditorViewController;
 
 @protocol LMEnhancedPlaylistEditorDelegate<NSObject>
@@ -42,5 +36,10 @@
  The delegate.
  */
 @property id<LMEnhancedPlaylistEditorDelegate> delegate;
+
+/**
+ The playlist that this enhanced playlist editor is handling.
+ */
+@property LMPlaylist *playlist;
 
 @end

@@ -110,7 +110,7 @@
 	return YES;
 }
 
-- (void)tappedListEntry:(LMListEntry*)entry{
+- (void)tappedListEntry:(LMListEntry*)entry {
 	NSLog(@"Tapped %p", entry);
 	
 	if(self.selectAllListEntry && entry == self.selectAllListEntry){
