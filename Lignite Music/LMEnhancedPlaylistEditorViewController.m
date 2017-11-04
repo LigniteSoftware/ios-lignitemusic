@@ -19,6 +19,8 @@
 #import "LMBoxWarningView.h"
 #import "LMMusicPickerController.h"
 #import "LMScrollView.h"
+#import "LMEnhancedPlaylistCollectionViewFlowLayout.h"
+#import "NSTimer+Blocks.h"
 
 @interface LMEnhancedPlaylistEditorViewController ()<LMLayoutChangeDelegate, LMImagePickerViewDelegate, LMMusicPickerDelegate, BEMCheckBoxDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, LMListEntryDelegate>
 
@@ -135,16 +137,24 @@
 		[self.conditionsCollectionView reloadData];
 		
 		if(willBeLandscape && self.warningBoxView.topToSuperviewConstraint.constant > 0){
-			self.warningBoxView.topToSuperviewConstraint.constant = 64.0f;
+			[self.warningBoxView show];
+			self.warningBoxView.topToSuperviewConstraint.constant = [LMLayoutManager isiPad] ? 84.0f : 64.0f;
+			
+			NSLog(@"Frame %@", NSStringFromCGRect(WINDOW_FRAME));
 		}
 		else if(!willBeLandscape && self.warningBoxView.topToSuperviewConstraint.constant > 0){
+			[self.warningBoxView show];
 			self.warningBoxView.topToSuperviewConstraint.constant = 84.0f;
 		}
-		else if(!self.warningBoxView.showing){
+		else if(!self.warningBoxView.showing){ //Hide it boi
 			self.warningBoxView.topToSuperviewConstraint.constant = -self.warningBoxView.frame.size.height + (willBeLandscape ? 44 : 64);
 		}
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		[self.conditionsCollectionView reloadData];
+		
+		if(WINDOW_FRAME.size.height < 340){ //Tiny landscape
+			[self.warningBoxView hide];
+		}
 	}];
 }
 
@@ -349,16 +359,26 @@
 	return cell;
 }
 
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-	
-	CGFloat dimensionToUse = [LMLayoutManager isLandscape] ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height;
-	
-	if([self indexPathIsWantToHear:indexPath] || [self indexPathIsDontWantToHear:indexPath]){
-		return CGSizeMake(self.conditionsCollectionView.frame.size.width, dimensionToUse/16.0f);
-	}
-	
-	return CGSizeMake(self.conditionsCollectionView.frame.size.width, dimensionToUse/9.0f);
-}
+//- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
+//
+//	CGFloat dimensionToUse = [LMLayoutManager isLandscape] ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height;
+//
+//	CGSize size = CGSizeMake(0, 0);
+//
+//	if([self indexPathIsWantToHear:indexPath] || [self indexPathIsDontWantToHear:indexPath]){
+//		size = CGSizeMake(self.conditionsCollectionView.frame.size.width, dimensionToUse/16.0f);
+//	}
+//	else{
+//		size = CGSizeMake(self.conditionsCollectionView.frame.size.width, dimensionToUse/9.0f);
+//	}
+//
+//	if([LMLayoutManager isiPad]){
+//		size.width = size.width/2;
+//		size.width -= 40;
+//	}
+//
+//	return size;
+//}
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionView *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 	return 10;
@@ -596,6 +616,14 @@
 	}];
 	[LMLayoutManager addNewLandscapeConstraints:imagePickerViewLandscapeConstraints];
 	
+	NSArray *imagePickerViewiPadConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.imagePickerView autoPinEdgeToSuperviewMargin:ALEdgeLeading];
+		[self.imagePickerView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.warningBoxView withOffset:18];
+		[self.imagePickerView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(5.0/20.0)];
+		[self.imagePickerView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.imagePickerView];
+	}];
+	[LMLayoutManager addNewiPadConstraints:imagePickerViewiPadConstraints];
+	
 	
 	self.titleTextField = [UITextField newAutoLayoutView];
 	self.titleTextField.placeholder = NSLocalizedString(@"YourPlaylistTitle", nil);
@@ -683,8 +711,8 @@
 	[shuffleAllLabel addGestureRecognizer:shuffleAllTextTapGestureRecognizer];
 	
 	
-	UICollectionViewFlowLayout *flowLayout = [UICollectionViewFlowLayout new];
-	flowLayout.sectionInset = UIEdgeInsetsMake(10, 0, 10, 0);
+	LMEnhancedPlaylistCollectionViewFlowLayout *flowLayout = [LMEnhancedPlaylistCollectionViewFlowLayout new];
+	flowLayout.sectionInset = UIEdgeInsetsMake(10, 10, 10, 10);
 	
 	self.conditionsCollectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:flowLayout];
 	self.conditionsCollectionView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -778,6 +806,12 @@
 	[self.dontWantToHearLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.dontWantToHearAddSongsButtonView];
 	
 	[self reloadConditionsLabelAndWarningBox];
+	
+	[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
+		if(WINDOW_FRAME.size.height < 340){
+			[self.warningBoxView hide];
+		}
+	} repeats:NO];
 }
 
 - (void)loadView {
