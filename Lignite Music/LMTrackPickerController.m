@@ -73,6 +73,11 @@
  */
 @property MBProgressHUD *loadingProgressHUD;
 
+/**
+ The label for when there's no songs.
+ */
+@property UILabel *noSongsInSongTableViewLabel;
+
 @end
 
 @implementation LMTrackPickerController
@@ -278,7 +283,7 @@
 	[arrowIconPaddedView addSubview:arrowIconView];
 	
 	[arrowIconView autoCenterInSuperview];
-	[arrowIconView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:arrowIconPaddedView withMultiplier:(3.0/8.0)];
+	[arrowIconView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:arrowIconPaddedView withMultiplier:(2.0/8.0)];
 	[arrowIconView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:arrowIconPaddedView];
 	
 	return arrowIconView;
@@ -518,6 +523,7 @@
 		}
 		
 		[self.selectAllListEntry reloadContents];
+		[self reloadNoSongsLabel];
 		return;
 	}
 	
@@ -571,6 +577,8 @@
 	[self.selectAllListEntry reloadContents];
 	
 	[self.collectionView reloadData];
+	
+	[self reloadNoSongsLabel];
 }
 
 - (void)letterSelected:(NSString*)letter atIndex:(NSUInteger)index {
@@ -580,6 +588,10 @@
 }
 
 - (void)swipeDownGestureOccurredOnLetterTabBar { } //Nothing, for now
+
+- (void)reloadNoSongsLabel {
+	self.noSongsInSongTableViewLabel.hidden = self.displayingTrackCollections.count > 0;
+}
 
 - (void)saveSongSelection {
 	NSLog(@"Done");
@@ -698,6 +710,7 @@
 		self.selectAllListEntry.delegate = self;
 		self.selectAllListEntry.collectionIndex = -1;
 		self.selectAllListEntry.invertIconOnHighlight = YES;
+		self.selectAllListEntry.roundedCorners = NO;
 	}
 	
 	
@@ -707,7 +720,7 @@
 	self.collectionView.translatesAutoresizingMaskIntoConstraints = NO;
 	self.collectionView.delegate = self;
 	self.collectionView.dataSource = self;
-	self.collectionView.contentInset = UIEdgeInsetsMake(20, 20, 20, 20);
+	self.collectionView.contentInset = UIEdgeInsetsMake(20, 10, 20, 10);
 	self.collectionView.allowsSelection = NO;
 	[self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"trackPickerCellIdentifier"];
 	[self.view addSubview:self.collectionView];
@@ -746,9 +759,28 @@
 		listEntry.invertIconOnHighlight = YES;
 //		listEntry.stretchAcrossWidth = YES;
 		listEntry.iPromiseIWillHaveAnIconForYouSoon = YES;
+		listEntry.roundedCorners = NO;
 		
 		[self.listEntryArray addObject:listEntry];
 	}
+	
+	
+	self.noSongsInSongTableViewLabel = [UILabel newAutoLayoutView];
+	self.noSongsInSongTableViewLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:20.0f];
+	self.noSongsInSongTableViewLabel.text = NSLocalizedString(@"TheresNothingHere", nil);
+	self.noSongsInSongTableViewLabel.textColor = [UIColor blackColor];
+	self.noSongsInSongTableViewLabel.hidden = self.displayingTrackCollections.count > 0;
+	self.noSongsInSongTableViewLabel.textAlignment = NSTextAlignmentLeft;
+	self.noSongsInSongTableViewLabel.numberOfLines = 0;
+	self.noSongsInSongTableViewLabel.userInteractionEnabled = YES;
+	self.noSongsInSongTableViewLabel.backgroundColor = [UIColor whiteColor];
+	[self.view addSubview:self.noSongsInSongTableViewLabel];
+	
+	[self.noSongsInSongTableViewLabel autoPinEdgeToSuperviewMargin:ALEdgeLeading];
+	[self.noSongsInSongTableViewLabel autoPinEdgeToSuperviewMargin:ALEdgeTrailing];
+	[self.noSongsInSongTableViewLabel autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+	[self.noSongsInSongTableViewLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.searchBar];
+	
 	
 	[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
 		if(self.highlightedData){
@@ -832,6 +864,8 @@
 			}
 		}
 	} repeats:NO];
+	
+	[self reloadNoSongsLabel];
 }
 
 - (void)didReceiveMemoryWarning {

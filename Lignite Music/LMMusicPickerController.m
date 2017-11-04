@@ -66,6 +66,10 @@
 			LMMusicTrackCollection *trackCollection = [mutableTrackCollections objectAtIndex:i];
 			LMMusicType trackCollectionMusicType = (LMMusicType)[[mutableMusicTypes objectAtIndex:i] integerValue];
 			
+			if(trackCollectionMusicType == LMMusicTypeFavourites){
+				trackCollectionMusicType = LMMusicTypeTitles;
+			}
+			
 			if([LMMusicPlayer trackCollection:trackCollection isEqualToOtherTrackCollection:collection] && trackCollectionMusicType == musicType){
 				indexToRemove = i;
 				break;

@@ -209,6 +209,7 @@
 		listEntry.iconPaddingMultiplier = (3.0/4.0);
 		listEntry.invertIconOnHighlight = YES;
 		listEntry.stretchAcrossWidth = YES;
+		listEntry.roundedCorners = NO;
 		
 		[self.listEntryArray addObject:listEntry];
 	}

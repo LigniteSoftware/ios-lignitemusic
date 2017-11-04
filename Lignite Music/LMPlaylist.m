@@ -54,6 +54,10 @@
 		MPMediaEntityPersistentID persistentID = [[persistentIDsArray objectAtIndex:i] longLongValue];
 		LMMusicType musicType = (LMMusicType)[[musicTypesArray objectAtIndex:i] integerValue];
 		
+		if(musicType == LMMusicTypeFavourites){
+			musicType = LMMusicTypeTitles;
+		}
+		
 		NSArray<LMMusicTrackCollection*> *trackCollections = [[LMMusicPlayer sharedMusicPlayer] collectionsForPersistentID:persistentID forMusicType:musicType];
 		
 		NSLog(@"Collections %d", (int)trackCollections.count);
@@ -83,6 +87,10 @@
 	for(NSInteger i = 0; i < persistentIDsArray.count; i++){
 		MPMediaEntityPersistentID persistentID = [[persistentIDsArray objectAtIndex:i] longLongValue];
 		LMMusicType musicType = (LMMusicType)[[musicTypesArray objectAtIndex:i] integerValue];
+		
+		if(musicType == LMMusicTypeFavourites){
+			musicType = LMMusicTypeTitles;
+		}
 		
 		NSArray<LMMusicTrackCollection*> *trackCollections = [[LMMusicPlayer sharedMusicPlayer] collectionsForPersistentID:persistentID forMusicType:musicType];
 		

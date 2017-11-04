@@ -226,7 +226,7 @@
 		
 		self.iconView = [UIImageView newAutoLayoutView];
 		self.iconView.image = icon;
-		self.iconView.layer.masksToBounds = YES;
+		self.iconView.layer.masksToBounds = self.roundedCorners;
 		self.iconView.layer.cornerRadius = 6.0f;
 		[self.iconBackgroundView addSubview:self.iconView];
 		
@@ -341,6 +341,8 @@
 		
 		self.rightButtonExpansionColour = [UIColor colorWithRed:33/255.0 green:175/255.0 blue:67/255.0 alpha:1.0];
 		self.leftButtonExpansionColour = [UIColor colorWithRed:33/255.0 green:175/255.0 blue:67/255.0 alpha:1.0];
+		
+		self.roundedCorners = YES;
 	}
 	else{
 		NSLog(@"Failed to create LMListEntry!");

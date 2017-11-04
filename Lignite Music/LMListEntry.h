@@ -170,4 +170,9 @@
  */
 @property UIColor* rightButtonExpansionColour;
 
+/**
+ Whether or not to round the corners on the icon. Default is YES.
+ */
+@property BOOL roundedCorners;
+
 @end

@@ -17,7 +17,7 @@
 #import "LMMusicPlayer.h"
 #import "LMMusicPickerController.h"
 
-@interface LMPlaylistEditorViewController()<LMTableViewSubviewDataSource, LMListEntryDelegate, DDTableViewDelegate, LMImagePickerViewDelegate, LMMusicPickerDelegate, LMLayoutChangeDelegate>
+@interface LMPlaylistEditorViewController()<LMTableViewSubviewDataSource, LMListEntryDelegate, DDTableViewDelegate, LMImagePickerViewDelegate, LMMusicPickerDelegate, LMLayoutChangeDelegate, UITextFieldDelegate>
 
 /**
  The music player.
@@ -331,6 +331,15 @@
 	self.navigationItem.rightBarButtonItem.enabled = !(self.playlist.trackCollection.count == 0);
 }
 
+- (void)closeKeyboard {
+	[self.titleTextField resignFirstResponder];
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+	[self closeKeyboard];
+	return YES;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
 	
@@ -386,6 +395,8 @@
 	self.titleTextField.text = self.playlist ? self.playlist.title : nil;
 	self.titleTextField.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:19.0f];
 	self.titleTextField.autocapitalizationType = UITextAutocapitalizationTypeWords;
+	self.titleTextField.returnKeyType = UIReturnKeyDone;
+	self.titleTextField.delegate = self;
 	[self.view addSubview:self.titleTextField];
 	
 	NSArray *titleTextFieldPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
@@ -432,6 +443,7 @@
 	: [NSString stringWithFormat:NSLocalizedString(self.playlist.trackCollection.count == 1 ? @"XSongsSingle" : @"XSongs", nil), self.playlist.trackCollection.count];
 	self.songCountLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18.0f];
 	self.songCountLabel.textColor = [UIColor blackColor];
+	self.songCountLabel.numberOfLines = 0;
 	[self.view addSubview:self.songCountLabel];
 	
 	[self.songCountLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:textFieldLineView withOffset:6.0f];
@@ -529,11 +541,15 @@
 	self.noSongsInSongTableViewLabel.hidden = self.songListTableView.totalAmountOfObjects > 0;
 	self.noSongsInSongTableViewLabel.textAlignment = NSTextAlignmentLeft;
 	self.noSongsInSongTableViewLabel.numberOfLines = 0;
+	self.noSongsInSongTableViewLabel.userInteractionEnabled = YES;
 	[self.view addSubview:self.noSongsInSongTableViewLabel];
 	
 	[self.noSongsInSongTableViewLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.imagePickerView withOffset:15];
 	[self.noSongsInSongTableViewLabel autoPinEdgeToSuperviewMargin:ALEdgeLeading];
 	[self.noSongsInSongTableViewLabel autoPinEdgeToSuperviewMargin:ALEdgeTrailing];
+	
+	UITapGestureRecognizer *closeKeyboardTapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(closeKeyboard)];
+	[self.noSongsInSongTableViewLabel addGestureRecognizer:closeKeyboardTapGesture];
 	
 	[self reloadSaveButton];
 }

@@ -22,7 +22,7 @@
 #import "LMEnhancedPlaylistCollectionViewFlowLayout.h"
 #import "NSTimer+Blocks.h"
 
-@interface LMEnhancedPlaylistEditorViewController ()<LMLayoutChangeDelegate, LMImagePickerViewDelegate, LMMusicPickerDelegate, BEMCheckBoxDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, LMListEntryDelegate>
+@interface LMEnhancedPlaylistEditorViewController ()<LMLayoutChangeDelegate, LMImagePickerViewDelegate, LMMusicPickerDelegate, BEMCheckBoxDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, LMListEntryDelegate, UITextFieldDelegate>
 
 /**
  The music player.
@@ -201,6 +201,10 @@
 		LMMusicTrackCollection *trackCollection = [musicPicker.trackCollections objectAtIndex:i];
 		LMMusicType musicType = (LMMusicType)[[musicPicker.musicTypes objectAtIndex:i] integerValue];
 		
+		if(musicType == LMMusicTypeFavourites){
+			musicType = LMMusicTypeTitles;
+		}
+		
 		[persistentIDArray addObject:
 		 @([LMMusicPlayer persistentIDForMusicTrackCollection:trackCollection withMusicType:musicType])
 		 ];
@@ -343,6 +347,7 @@
 		listEntry.iconPaddingMultiplier = (3.0/4.0);
 		listEntry.stretchAcrossWidth = YES;
 		listEntry.iPromiseIWillHaveAnIconForYouSoon = YES;
+		listEntry.roundedCorners = NO;
 		
 		[cell.contentView addSubview:listEntry];
 		
@@ -560,6 +565,15 @@
 	return arrowIconPaddedView;
 }
 
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+	[textField resignFirstResponder];
+	return YES;
+}
+
+- (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event {
+	[self.titleTextField resignFirstResponder];
+}
+
 /* Begin initialization code */
 
 - (void)viewDidLoad {
@@ -630,6 +644,8 @@
 	self.titleTextField.text = self.playlist ? self.playlist.title : nil;
 	self.titleTextField.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:19.0f];
 	self.titleTextField.autocapitalizationType = UITextAutocapitalizationTypeWords;
+	self.titleTextField.returnKeyType = UIReturnKeyDone;
+	self.titleTextField.delegate = self;
 	[self.view addSubview:self.titleTextField];
 	
 //	NSArray *titleTextFieldPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
@@ -673,6 +689,7 @@
 	self.songCountLabel.text = @"nice work";
 	self.songCountLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18.0f];
 	self.songCountLabel.textColor = [UIColor blackColor];
+	self.songCountLabel.numberOfLines = 0;
 	[self.view addSubview:self.songCountLabel];
 	
 	[self.songCountLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:textFieldLineView withOffset:6.0f];

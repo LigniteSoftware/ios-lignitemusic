@@ -90,7 +90,7 @@
 		
 		self.titleLabel = [UILabel newAutoLayoutView];
 		self.titleLabel.text = NSLocalizedString(@"EnhancedPlaylistNoConditionsTitle", nil);
-		self.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:20.0f];
+		self.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:18.0f];
 		self.titleLabel.textColor = [UIColor blackColor];
 		self.titleLabel.numberOfLines = 0;
 		[self.paddingView addSubview:self.titleLabel];
@@ -102,7 +102,7 @@
 		
 		self.subtitleLabel = [UILabel newAutoLayoutView];
 		self.subtitleLabel.text = NSLocalizedString(@"EnhancedPlaylistNoConditionsDescription", nil);
-		self.subtitleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18.0f];
+		self.subtitleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:16.0f];
 		self.subtitleLabel.textColor = [UIColor blackColor];
 		self.subtitleLabel.numberOfLines = 0;
 		[self.paddingView addSubview:self.subtitleLabel];
