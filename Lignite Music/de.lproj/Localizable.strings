@@ -77,7 +77,7 @@
 "Source" = "Quelle";
 "NoSongsInPlaylistBuilder" = "Es befinden sich noch keine Lieder in dieser Wiedergabeliste.\n\nFüge welche hinzu indem du oben auf den 'Lieder hinzufügen'-Button tippst.";
 "SelectASource" = "Wähle bitte deine gewünschte Ansicht";
-"TapToEdit" = "Tippen um zu bearbeiten";
+"TapToEdit" = "Bearbeiten";
 "YourPlaylistTitle" = "Titel deiner Playlist";
 "SearchType" = "Suche nach %@";
 
@@ -276,8 +276,8 @@
  
  the %@ after the DurationOfDuration strings is the total duration of the song playing. Time formats are automatically 0 padded.
  */
-"LongSongDurationOfDuration" = "%02i:%02d:%02d of %@";
-"ShortSongDurationOfDuration" = "%02d:%02d of %@";
+"LongSongDurationOfDuration" = "%02i:%02d:%02d von %@";
+"ShortSongDurationOfDuration" = "%02d:%02d von %@";
 "LongSongDuration" = "%02i:%02d:%02d";
 "ShortSongDuration" = "%02d:%02d";
 "BlankDuration" = "--:--";

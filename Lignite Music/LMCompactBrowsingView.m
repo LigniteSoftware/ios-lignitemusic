@@ -481,7 +481,13 @@
 	if(shouldOpenNewDetailView){
 		[NSTimer scheduledTimerWithTimeInterval:detailViewNotCurrentlyOpen ? 0.0 : 0.4 block:^{
 			[UIView animateWithDuration:0.15 animations:^{
-				self.collectionView.contentOffset = CGPointMake(0, bigListEntry.superview.superview.frame.origin.y - 10);
+				CGFloat contentOffsetY = bigListEntry.superview.superview.frame.origin.y - 10;
+				
+				if(self.musicType == LMMusicTypePlaylists){
+					contentOffsetY -= self.playlistModificationButtonView.frame.size.height + 20;
+				}
+				
+				self.collectionView.contentOffset = CGPointMake(0, contentOffsetY);
 				[self layoutIfNeeded];
 			} completion:^(BOOL finished) {
 				[self tappedBigListEntryAtIndex:bigListEntry.collectionIndex];

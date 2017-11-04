@@ -191,7 +191,7 @@
 		whiteFillView.layer.cornerRadius = 8.0f;
 		[self.imageBackgroundView addSubview:whiteFillView];
 		
-		CGFloat whiteFillPadding = 4.0f;
+		CGFloat whiteFillPadding = 2.0f;
 		[whiteFillView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:whiteFillPadding];
 		[whiteFillView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:whiteFillPadding];
 		[whiteFillView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:whiteFillPadding];

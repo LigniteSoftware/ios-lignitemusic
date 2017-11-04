@@ -93,6 +93,8 @@
 	self.songCountLabel.text = self.playlist.trackCollection.count == 0
 	? NSLocalizedString(@"NoSongsYet", nil)
 	: [NSString stringWithFormat:NSLocalizedString(self.playlist.trackCollection.count == 1 ? @"XSongsSingle" : @"XSongs", nil), self.playlist.trackCollection.count];
+	
+	[self reloadSaveButton];
 }
 
 - (void)musicPickerDidCancelPickingMusic:(LMMusicPickerController *)musicPicker {
@@ -212,6 +214,8 @@
 				? NSLocalizedString(@"NoSongsYet", nil)
 				: [NSString stringWithFormat:NSLocalizedString(self.playlist.trackCollection.count == 1 ? @"XSongsSingle" : @"XSongs", nil), self.playlist.trackCollection.count];
 				
+				[self reloadSaveButton];
+				
 				return YES;
 			}];
 			saveButton.titleLabel.font = font;
@@ -323,6 +327,10 @@
 	}];
 }
 
+- (void)reloadSaveButton {
+	self.navigationItem.rightBarButtonItem.enabled = !(self.playlist.trackCollection.count == 0);
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
 	
@@ -359,7 +367,7 @@
 	NSArray *imagePickerViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 		[self.imagePickerView autoPinEdgeToSuperviewMargin:ALEdgeLeading];
 		[self.imagePickerView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:68];
-		[self.imagePickerView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(3.0/20.0)];
+		[self.imagePickerView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(3.5/20.0)];
 		[self.imagePickerView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.imagePickerView];
 	}];
 	[LMLayoutManager addNewLandscapeConstraints:imagePickerViewLandscapeConstraints];
@@ -382,21 +390,22 @@
 	NSArray *titleTextFieldLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 		[self.titleTextField autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.imagePickerView];
 		[self.titleTextField autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.imagePickerView withOffset:15];
+		[self.titleTextField autoPinEdgeToSuperviewMargin:ALEdgeTrailing];
 	}];
-	
-	NSLayoutConstraint *trailingPinnedToCenterVerticalAxisConstraint
-     = [NSLayoutConstraint constraintWithItem:self.titleTextField
-									attribute:NSLayoutAttributeTrailing
-									relatedBy:NSLayoutRelationEqual
-									   toItem:self.view
-									attribute:NSLayoutAttributeCenterX
-								   multiplier:1.0
-									 constant:0.0];
-	
-	NSMutableArray *mutableTextViewLandscapeConstraintsArray = [NSMutableArray arrayWithArray:titleTextFieldLandscapeConstraints];
-	[mutableTextViewLandscapeConstraintsArray addObject:trailingPinnedToCenterVerticalAxisConstraint];
-	titleTextFieldLandscapeConstraints = [NSArray arrayWithArray:mutableTextViewLandscapeConstraintsArray];
-	
+//
+//	NSLayoutConstraint *trailingPinnedToCenterVerticalAxisConstraint
+//     = [NSLayoutConstraint constraintWithItem:self.titleTextField
+//									attribute:NSLayoutAttributeTrailing
+//									relatedBy:NSLayoutRelationEqual
+//									   toItem:self.view
+//									attribute:NSLayoutAttributeCenterX
+//								   multiplier:1.0
+//									 constant:0.0];
+//
+//	NSMutableArray *mutableTextViewLandscapeConstraintsArray = [NSMutableArray arrayWithArray:titleTextFieldLandscapeConstraints];
+//	[mutableTextViewLandscapeConstraintsArray addObject:trailingPinnedToCenterVerticalAxisConstraint];
+//	titleTextFieldLandscapeConstraints = [NSArray arrayWithArray:mutableTextViewLandscapeConstraintsArray];
+//
 	[LMLayoutManager addNewLandscapeConstraints:titleTextFieldLandscapeConstraints];
 	
 	UIView *textFieldLineView = [UIView newAutoLayoutView];
@@ -435,6 +444,14 @@
 		[self.addSongsButtonView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.imagePickerView withMultiplier:(1.2/3.0)];
 	}];
 	[LMLayoutManager addNewPortraitConstraints:addSongsButtonViewPortraitConstraints];
+	
+	NSArray *addSongsButtonViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.addSongsButtonView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.titleTextField];
+		[self.addSongsButtonView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.titleTextField];
+		[self.addSongsButtonView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.imagePickerView];
+		[self.addSongsButtonView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.imagePickerView withMultiplier:(1.2/3.0)];
+	}];
+	[LMLayoutManager addNewLandscapeConstraints:addSongsButtonViewLandscapeConstraints];
 	
 	NSArray *addSongsButtonViewiPadConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 		[self.addSongsButtonView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.titleTextField];
@@ -506,10 +523,11 @@
 	self.noSongsInSongTableViewLabel.numberOfLines = 0;
 	[self.view addSubview:self.noSongsInSongTableViewLabel];
 	
-	[self.noSongsInSongTableViewLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.imagePickerView];
+	[self.noSongsInSongTableViewLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.imagePickerView withOffset:15];
 	[self.noSongsInSongTableViewLabel autoPinEdgeToSuperviewMargin:ALEdgeLeading];
 	[self.noSongsInSongTableViewLabel autoPinEdgeToSuperviewMargin:ALEdgeTrailing];
-	[self.noSongsInSongTableViewLabel autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+	
+	[self reloadSaveButton];
 }
 
 - (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event {
