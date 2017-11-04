@@ -138,7 +138,11 @@
 	titleLabel.numberOfLines = 0;
 	titleLabel.textAlignment = NSTextAlignmentLeft;
 	titleLabel.text = self.title;
-	titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:0.050 * properDimension];
+	CGFloat titleSize = 0.050 * properDimension;
+	if(titleSize > 32){
+		titleSize = 32;
+	}
+	titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:titleSize];
 	[paddingView addSubview:titleLabel];
 	
 	[titleLabel autoPinEdgeToSuperviewEdge:ALEdgeTop];
@@ -153,7 +157,11 @@
 	contentsLabel.numberOfLines = 0;
 	contentsLabel.textAlignment = NSTextAlignmentLeft;
 	contentsLabel.text = self.body;
-	contentsLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:0.025 * properDimension];
+	CGFloat descriptionSize = 0.025 * properDimension;
+	if(descriptionSize > 26){
+		descriptionSize = 26;
+	}
+	contentsLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:descriptionSize];
 	[paddingView addSubview:contentsLabel];
 	
 	[contentsLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:titleLabel withOffset:20];

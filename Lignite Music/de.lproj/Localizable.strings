@@ -47,6 +47,8 @@
 "DontWantToHearTitle" = "Hiervon möchte ich nichts hören";
 "SelectingAll" = "Alle auswählen";
 "DeselectingAll" = "Alles abwählen";
+"SelectAll" = "Select all";
+"DeselectAll" = "Alle demarkieren";
 "XConditions" = "%d Bedingungen"; //Conditions ie. "3 conditions for generating the user's playlist"
 "NoConditionsYet" = "Es wurden noch keine Bedingung erstellt.";
 "OneCondition" = "1 Bedingung";
@@ -55,6 +57,8 @@
 "WhichTypeOfPlaylist" = "Welche Art von Wiedergabeliste möchtest du erstellen?";
 "EnhancedPlaylist" = "Erweiterte Wiedergabeliste";
 "RegularPlaylist" = "Normale Wiedergabeliste";
+"SearchAllMusic" = "In gesamter Musikbibliothek suchen";
+"Done" = "Fertig";
 
 
 "DeletePlaylistTitle" = "Wiedergabeliste löschen?";

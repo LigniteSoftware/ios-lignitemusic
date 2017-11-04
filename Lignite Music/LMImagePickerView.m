@@ -60,9 +60,14 @@
 /* Begin image picker functions */
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
-	[self setNewImage:[info objectForKey:@"UIImagePickerControllerEditedImage"]];
-	
 	[picker dismissViewControllerAnimated:YES completion:nil];
+	
+	RSKImageCropViewController *imageCropVC = [[RSKImageCropViewController alloc] initWithImage:[info objectForKey:@"UIImagePickerControllerOriginalImage"] cropMode:RSKImageCropModeSquare];
+	imageCropVC.delegate = self;
+	self.viewController = imageCropVC;
+	if(self.delegate){
+		[self.delegate imagePickerView:self wantsToPresentViewController:imageCropVC];
+	}
 }
 
 - (BOOL)startMediaBrowserUsingDelegate:(id <UIImagePickerControllerDelegate,  UINavigationControllerDelegate>)delegate withSourceType:(UIImagePickerControllerSourceType)sourceType {
@@ -74,7 +79,7 @@
 	UIImagePickerController *mediaUI = [[UIImagePickerController alloc] init];
 	mediaUI.sourceType = sourceType;
 	
-	mediaUI.allowsEditing = YES;
+	mediaUI.allowsEditing = NO;
 	
 	mediaUI.delegate = delegate;
 	

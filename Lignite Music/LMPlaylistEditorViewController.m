@@ -371,6 +371,14 @@
 		[self.imagePickerView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.imagePickerView];
 	}];
 	[LMLayoutManager addNewLandscapeConstraints:imagePickerViewLandscapeConstraints];
+	
+	NSArray *imagePickerViewiPadConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.imagePickerView autoPinEdgeToSuperviewMargin:ALEdgeLeading];
+		[self.imagePickerView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:88];
+		[self.imagePickerView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(5.0/20.0)];
+		[self.imagePickerView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.imagePickerView];
+	}];
+	[LMLayoutManager addNewiPadConstraints:imagePickerViewiPadConstraints];
 		
 	
 	self.titleTextField = [UITextField newAutoLayoutView];
@@ -455,7 +463,7 @@
 	
 	NSArray *addSongsButtonViewiPadConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 		[self.addSongsButtonView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.titleTextField];
-		[self.addSongsButtonView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.songCountLabel withOffset:14];
+		[self.addSongsButtonView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.songCountLabel withOffset:22];
 		[self.addSongsButtonView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.imagePickerView withMultiplier:(0.8/3.0)];
 		[self.addSongsButtonView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(1.0/3.0)];
 	}];

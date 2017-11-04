@@ -1064,11 +1064,22 @@
 		self.playlistModificationButtonView.hidden = !(self.musicType == LMMusicTypePlaylists && !self.layoutManager.isLandscape);
 		[self addSubview:self.playlistModificationButtonView];
 
-		[self.playlistModificationButtonView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:16];
-		[self.playlistModificationButtonView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:35];
-		[self.playlistModificationButtonView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:35];
-		self.playlistModificationButtonViewHeightConstraint = [self.playlistModificationButtonView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.125/1.80];
+		NSArray *playlistModificationButtonViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+			[self.playlistModificationButtonView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:16];
+			[self.playlistModificationButtonView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:35];
+			[self.playlistModificationButtonView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:35];
+		}];
+		[LMLayoutManager addNewPortraitConstraints:playlistModificationButtonViewPortraitConstraints];
 		
+		NSArray *playlistModificationButtonViewiPadConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+			[self.playlistModificationButtonView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:16];
+			[self.playlistModificationButtonView autoAlignAxisToSuperviewAxis:ALAxisVertical];
+			[self.playlistModificationButtonView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(1.0/2.0)];
+		}];
+		[LMLayoutManager addNewiPadConstraints:playlistModificationButtonViewiPadConstraints];
+		
+		
+		self.playlistModificationButtonViewHeightConstraint = [self.playlistModificationButtonView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.125/1.80];
 		
 		[self.playlistModificationButtonBackgroundView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.playlistModificationButtonView withOffset:15];
 
