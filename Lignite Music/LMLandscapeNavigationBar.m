@@ -159,6 +159,19 @@
 	}];
 }
 
+- (void)setEditing:(BOOL)editing {
+	if(!editing){
+		self.createImageView.image = [LMAppIcon invertImage:[LMAppIcon imageForIcon:LMIconAdd]];
+		self.editImageView.hidden = NO;
+		self.isEditing = NO;
+	}
+	else{
+		self.createImageView.image = [LMAppIcon invertImage:[LMAppIcon imageForIcon:LMIconWhiteCheckmark]];
+		self.editImageView.hidden = YES;
+		self.isEditing = YES;
+	}
+}
+
 - (void)tappedButton:(UIGestureRecognizer*)gestureRecognizer {
 	if(gestureRecognizer.view == self.backButtonImageView){
 		[self.delegate buttonTappedOnLandscapeNavigationBar:LMLandscapeNavigationBarButtonBack];
@@ -168,9 +181,7 @@
 	}
 	else if(gestureRecognizer.view == self.createImageView){
 		if(self.isEditing){
-			self.createImageView.image = [LMAppIcon invertImage:[LMAppIcon imageForIcon:LMIconAdd]];
-			self.editImageView.hidden = NO;
-			self.isEditing = NO;
+			[self setEditing:NO];
 			
 			[self.delegate buttonTappedOnLandscapeNavigationBar:LMLandscapeNavigationBarButtonEdit]; //To inverse editing mode
 		}
@@ -179,9 +190,7 @@
 		}
 	}
 	else if(gestureRecognizer.view == self.editImageView){
-		self.createImageView.image = [LMAppIcon invertImage:[LMAppIcon imageForIcon:LMIconWhiteCheckmark]];
-		self.editImageView.hidden = YES;
-		self.isEditing = YES;
+		[self setEditing:YES];
 		
 		[self.delegate buttonTappedOnLandscapeNavigationBar:LMLandscapeNavigationBarButtonEdit];
 	}

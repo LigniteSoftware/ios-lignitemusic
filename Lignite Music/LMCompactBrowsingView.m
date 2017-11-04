@@ -981,6 +981,9 @@
 		[UIView animateWithDuration:0.3 animations:^{
 			[self.playlistModificationButtonView layoutIfNeeded];
 		}];
+		
+		
+		[self.rootViewController.landscapeNavigationBar setEditing:self.editing];
 	}
 }
 

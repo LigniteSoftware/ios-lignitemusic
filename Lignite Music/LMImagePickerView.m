@@ -64,6 +64,7 @@
 	
 	RSKImageCropViewController *imageCropVC = [[RSKImageCropViewController alloc] initWithImage:[info objectForKey:@"UIImagePickerControllerOriginalImage"] cropMode:RSKImageCropModeSquare];
 	imageCropVC.delegate = self;
+	imageCropVC.avoidEmptySpaceAroundImage = YES;
 	self.viewController = imageCropVC;
 	if(self.delegate){
 		[self.delegate imagePickerView:self wantsToPresentViewController:imageCropVC];
@@ -136,6 +137,7 @@
 		
 		RSKImageCropViewController *imageCropVC = [[RSKImageCropViewController alloc] initWithImage:self.image cropMode:RSKImageCropModeSquare];
 		imageCropVC.delegate = self;
+		imageCropVC.avoidEmptySpaceAroundImage = YES;
 		self.viewController = imageCropVC;
 		if(self.delegate){
 			[self.delegate imagePickerView:self wantsToPresentViewController:imageCropVC];

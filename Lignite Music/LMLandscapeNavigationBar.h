@@ -59,4 +59,11 @@ typedef NS_ENUM(NSInteger, LMLandscapeNavigationBarMode) {
  */
 @property BOOL showWarningButton;
 
+/**
+ Sets editing button and shit.
+
+ @param editing Editing or not.
+ */
+- (void)setEditing:(BOOL)editing;
+
 @end
