@@ -384,7 +384,7 @@
 	NSArray *imagePickerViewiPadConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 		[self.imagePickerView autoPinEdgeToSuperviewMargin:ALEdgeLeading];
 		[self.imagePickerView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:88];
-		[self.imagePickerView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(5.0/20.0)];
+		[self.imagePickerView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(4.0/20.0)];
 		[self.imagePickerView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.imagePickerView];
 	}];
 	[LMLayoutManager addNewiPadConstraints:imagePickerViewiPadConstraints];

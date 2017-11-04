@@ -862,7 +862,14 @@
 		[self setupiPadSpecificLayout];
 		
 		self.buttonStackView.spacing = ((([LMLayoutManager isLandscapeiPad] || [LMLayoutManager isLandscape])
-										 ? self.frame.size.height : self.frame.size.width) * 0.9 * ([LMLayoutManager isiPad] ? ([LMLayoutManager isLandscapeiPad] ? 0.3 : 0.5) : 0.35))/4.0;
+										 ? self.frame.size.height
+										 : self.frame.size.width) //Is it landscape on any device? If so, use the frame's width
+										* 0.9 //Multiply that by 0.9
+										* ([LMLayoutManager isiPad]
+										   ? ([LMLayoutManager isLandscapeiPad]
+											  ? 0.2
+											  : 0.4) //Is landscape iPad? Use 0.35, otherwise, use 0.55
+										   : 0.40))/5.5; //Otherwise, if it's not iPad, use 0.40 and divide the total result by 5.5
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		
 	}];
@@ -1159,9 +1166,9 @@
 									* 0.9 //Multiply that by 0.9
 									* ([LMLayoutManager isiPad]
 									   ? ([LMLayoutManager isLandscapeiPad]
-										  ? 0.3
-										  : 0.5) //Is landscape iPad? Use 0.3, otherwise, use 0.5
-									   : 0.40))/5.5; //Otherwise, if it's not iPad, use 0.35 and divide the total result by 5.5
+										  ? 0.2
+										  : 0.4) //Is landscape iPad? Use 0.35, otherwise, use 0.55
+									   : 0.40))/5.5; //Otherwise, if it's not iPad, use 0.40 and divide the total result by 5.5
 	
 	[self.paddingView addSubview:self.buttonStackView];
 	

@@ -711,6 +711,8 @@
 		self.selectAllListEntry.collectionIndex = -1;
 		self.selectAllListEntry.invertIconOnHighlight = YES;
 		self.selectAllListEntry.roundedCorners = NO;
+		self.selectAllListEntry.stretchAcrossWidth = YES;
+		self.selectAllListEntry.alignIconToLeft = YES;
 	}
 	
 	
@@ -757,9 +759,10 @@
 //		listEntry.iconInsetMultiplier = (1.0/3.0);
 //		listEntry.iconPaddingMultiplier = (3.0/4.0);
 		listEntry.invertIconOnHighlight = YES;
-//		listEntry.stretchAcrossWidth = YES;
+		listEntry.stretchAcrossWidth = YES;
 		listEntry.iPromiseIWillHaveAnIconForYouSoon = YES;
 		listEntry.roundedCorners = NO;
+		listEntry.alignIconToLeft = YES;
 		
 		[self.listEntryArray addObject:listEntry];
 	}

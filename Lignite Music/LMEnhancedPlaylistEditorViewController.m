@@ -633,7 +633,7 @@
 	NSArray *imagePickerViewiPadConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 		[self.imagePickerView autoPinEdgeToSuperviewMargin:ALEdgeLeading];
 		[self.imagePickerView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.warningBoxView withOffset:18];
-		[self.imagePickerView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(5.0/20.0)];
+		[self.imagePickerView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(4.0/20.0)];
 		[self.imagePickerView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.imagePickerView];
 	}];
 	[LMLayoutManager addNewiPadConstraints:imagePickerViewiPadConstraints];
@@ -729,7 +729,7 @@
 	
 	
 	LMEnhancedPlaylistCollectionViewFlowLayout *flowLayout = [LMEnhancedPlaylistCollectionViewFlowLayout new];
-	flowLayout.sectionInset = UIEdgeInsetsMake(10, 10, 10, 10);
+	flowLayout.sectionInset = UIEdgeInsetsMake(10, 10, 0, 10);
 	
 	self.conditionsCollectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:flowLayout];
 	self.conditionsCollectionView.translatesAutoresizingMaskIntoConstraints = NO;

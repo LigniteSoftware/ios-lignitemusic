@@ -290,17 +290,6 @@
 	[LMLayoutManager addNewLandscapeConstraints:searchBarLandscapeConstraints];
 	
 	
-	UILabel *selectSourceTitleLabel = [UILabel newAutoLayoutView];
-	selectSourceTitleLabel.text = NSLocalizedString(@"SelectASource", nil);
-	selectSourceTitleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:18.0f];
-	selectSourceTitleLabel.textColor = [UIColor blackColor];
-	[self.view addSubview:selectSourceTitleLabel];
-	
-	[selectSourceTitleLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.searchBar withOffset:14];
-	[selectSourceTitleLabel autoPinEdgeToSuperviewMargin:ALEdgeLeading];
-	[selectSourceTitleLabel autoPinEdgeToSuperviewMargin:ALEdgeTrailing];
-	
-	
 	NSArray *sourceTitles = @[
 							  @"Favourites", @"Artists", @"Albums", @"Titles", @"Genres", @"Compilations"
 							  ];
@@ -337,7 +326,7 @@
 	[self.viewSelector autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 	[self.viewSelector autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 	[self.viewSelector autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	[self.viewSelector autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:selectSourceTitleLabel];
+	[self.viewSelector autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.searchBar];
 	
 	[self.viewSelector setup];
 	

@@ -33,7 +33,7 @@
 		if(indexPath.section == 1 && indexPath.row == 0){
 			CGRect rectOfLastItemInFirstSection = [self frameForCellAtIndexPath:[NSIndexPath indexPathForRow:[self.collectionView.dataSource collectionView:self.collectionView numberOfItemsInSection:0] inSection:0]];
 			
-			coordinates.y += rectOfLastItemInFirstSection.origin.y;
+			coordinates.y += rectOfLastItemInFirstSection.origin.y + 20;
 		}
 	}
 	

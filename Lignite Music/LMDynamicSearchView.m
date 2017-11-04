@@ -622,6 +622,7 @@
 		self.sectionTableView.totalNumberOfSections = 1;
 		self.sectionTableView.title = @"SearchView";
 		self.sectionTableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
+		self.sectionTableView.allowsSelection = NO;
 		[self addSubview:self.sectionTableView];
 
 		NSLog(@"section %@", self.sectionTableView);
