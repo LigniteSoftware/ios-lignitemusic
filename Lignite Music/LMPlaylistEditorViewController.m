@@ -16,6 +16,7 @@
 #import "LMListEntry.h"
 #import "LMMusicPlayer.h"
 #import "LMMusicPickerController.h"
+#import "NSTimer+Blocks.h"
 
 @interface LMPlaylistEditorViewController()<LMTableViewSubviewDataSource, LMListEntryDelegate, DDTableViewDelegate, LMImagePickerViewDelegate, LMMusicPickerDelegate, LMLayoutChangeDelegate, UITextFieldDelegate>
 
@@ -328,7 +329,7 @@
 }
 
 - (void)reloadSaveButton {
-	self.navigationItem.rightBarButtonItem.enabled = !(self.playlist.trackCollection.count == 0);
+	self.navigationItem.rightBarButtonItem.enabled = !(self.playlist.trackCollection.count == 0) && (self.titleTextField.text.length > 0);
 }
 
 - (void)closeKeyboard {
@@ -337,6 +338,16 @@
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
 	[self closeKeyboard];
+	return YES;
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+	[NSTimer scheduledTimerWithTimeInterval:0.25 block:^{
+		[self reloadSaveButton];
+	} repeats:NO];
+	
+	[self reloadSaveButton];
+	
 	return YES;
 }
 
@@ -476,7 +487,7 @@
 	NSArray *addSongsButtonViewiPadConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 		[self.addSongsButtonView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.titleTextField];
 		[self.addSongsButtonView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.songCountLabel withOffset:22];
-		[self.addSongsButtonView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.imagePickerView withMultiplier:(0.8/3.0)];
+		[self.addSongsButtonView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.imagePickerView withMultiplier:(1.2/3.0)];
 		[self.addSongsButtonView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(1.0/3.0)];
 	}];
 	[LMLayoutManager addNewiPadConstraints:addSongsButtonViewiPadConstraints];

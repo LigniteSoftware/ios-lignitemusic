@@ -109,6 +109,11 @@
  */
 @property BOOL isPickingWantToHear;
 
+/**
+ The top constraint for the image picker so we can readjust based on whether or not to show a warning box warning.
+ */
+@property NSLayoutConstraint *imagePickerTopConstraint;
+
 @end
 
 @implementation LMEnhancedPlaylistEditorViewController
@@ -129,32 +134,32 @@
 
 /* End image picker code */
 
+- (void)reloadImagePickerTopConstraint {
+	[self.imagePickerTopConstraint autoRemove];
+	
+	if(self.warningBoxView.showing){
+		self.imagePickerTopConstraint = [self.imagePickerView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.warningBoxView withOffset:18];
+	}
+	else{
+		self.imagePickerTopConstraint = [self.imagePickerView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.warningBoxView];
+	}
+	
+	[self.view layoutIfNeeded];
+}
 
 - (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator	{
 	
 	BOOL willBeLandscape = size.width > size.height;
 	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		[self.conditionsCollectionView reloadData];
-		
-		if(willBeLandscape && self.warningBoxView.topToSuperviewConstraint.constant > 0){
-			[self.warningBoxView show];
-			self.warningBoxView.topToSuperviewConstraint.constant = [LMLayoutManager isiPad] ? 84.0f : 64.0f;
-			
-			NSLog(@"Frame %@", NSStringFromCGRect(WINDOW_FRAME));
-		}
-		else if(!willBeLandscape && self.warningBoxView.topToSuperviewConstraint.constant > 0){
-			[self.warningBoxView show];
-			self.warningBoxView.topToSuperviewConstraint.constant = 84.0f;
-		}
-		else if(!self.warningBoxView.showing){ //Hide it boi
-			self.warningBoxView.topToSuperviewConstraint.constant = -self.warningBoxView.frame.size.height + (willBeLandscape ? 44 : 64);
-		}
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		[self.conditionsCollectionView reloadData];
 		
-		if(WINDOW_FRAME.size.height < 340){ //Tiny landscape
-			[self.warningBoxView hide];
-		}
+//		if(WINDOW_FRAME.size.height < 340){ //Tiny landscape
+//			[self.warningBoxView hide];
+//			
+//			[self reloadImagePickerTopConstraint];
+//		}
 	}];
 }
 
@@ -223,6 +228,7 @@
 	
 	if(trackCollections.count > 0){
 		[self.warningBoxView hide];
+		[self reloadImagePickerTopConstraint];
 	}
 	
 	[self reloadConditionsLabelAndWarningBox];
@@ -281,18 +287,24 @@
 		self.warningBoxView.subtitleLabel.text = NSLocalizedString(@"EnhancedPlaylistNoConditionsDescription", nil);
 		
 		[self.warningBoxView show];
-		self.navigationItem.rightBarButtonItem.enabled = NO;
 	}
 	else if(wantToHearPersistentIDsArray.count == 0 && dontWantToHearPersistentIDsArray.count > 0){
 		self.warningBoxView.titleLabel.text = NSLocalizedString(@"EnhancedPlaylistNoWantsTitle", nil);
 		self.warningBoxView.subtitleLabel.text = NSLocalizedString(@"EnhancedPlaylistNoWantsDescription", nil);
 		
 		[self.warningBoxView show];
-		self.navigationItem.rightBarButtonItem.enabled = NO;
+	}
+	else if(self.titleTextField.text.length == 0 || !self.titleTextField.text){
+		self.warningBoxView.titleLabel.text = NSLocalizedString(@"NoTitleTitle", nil);
+		self.warningBoxView.subtitleLabel.text = NSLocalizedString(@"NoTitleDescription", nil);
+		
+		[self.warningBoxView show];
 	}
 	else{
-		self.navigationItem.rightBarButtonItem.enabled = YES;
+		[self.warningBoxView hide];
 	}
+	[self reloadSaveButton];
+	[self reloadImagePickerTopConstraint];
 }
 
 /* Begin collection view code */
@@ -574,6 +586,37 @@
 	[self.titleTextField resignFirstResponder];
 }
 
+- (void)reloadSaveButton {
+	NSArray *wantToHearPersistentIDsArray = [[self.playlist.enhancedConditionsDictionary objectForKey:LMEnhancedPlaylistWantToHearKey] objectForKey:LMEnhancedPlaylistPersistentIDsKey];
+	NSArray *dontWantToHearPersistentIDsArray = [[self.playlist.enhancedConditionsDictionary objectForKey:LMEnhancedPlaylistDontWantToHearKey] objectForKey:LMEnhancedPlaylistPersistentIDsKey];
+	
+	NSInteger numberOfConditions = (wantToHearPersistentIDsArray.count + dontWantToHearPersistentIDsArray.count);
+	
+	if(numberOfConditions == 0){
+		self.navigationItem.rightBarButtonItem.enabled = NO;
+	}
+	else if(wantToHearPersistentIDsArray.count == 0 && dontWantToHearPersistentIDsArray.count > 0){
+		self.navigationItem.rightBarButtonItem.enabled = NO;
+	}
+	else if(self.titleTextField.text.length == 0 || !self.titleTextField.text){
+		self.navigationItem.rightBarButtonItem.enabled = NO;
+	}
+	else{
+		self.navigationItem.rightBarButtonItem.enabled = YES;
+	}
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+	[NSTimer scheduledTimerWithTimeInterval:0.25 block:^{
+		[self reloadSaveButton];
+		[self reloadConditionsLabelAndWarningBox];
+	} repeats:NO];
+	
+	[self reloadSaveButton];
+	
+	return YES;
+}
+
 /* Begin initialization code */
 
 - (void)viewDidLoad {
@@ -604,10 +647,48 @@
 	self.warningBoxView.hideOnLayout = !newPlaylist;
 	[self.view addSubview:self.warningBoxView];
 	
+//	[self.warningBoxView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.navigationController.navigationBar];
 	[self.warningBoxView autoPinEdgeToSuperviewMargin:ALEdgeLeading];
 	[self.warningBoxView autoPinEdgeToSuperviewMargin:ALEdgeTrailing];
-	self.warningBoxView.topToSuperviewConstraint = [self.warningBoxView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:[LMLayoutManager isLandscape] ? 64 : 84];
+	if(@available(iOS 11, *)){
+		[self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.warningBoxView
+									 attribute:NSLayoutAttributeTop
+									 relatedBy:NSLayoutRelationEqual
+										toItem:self.view.safeAreaLayoutGuide
+									 attribute:NSLayoutAttributeTop
+									multiplier:1.0f
+									  constant:20.0f]];
+	}
+	else{
+		[self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.warningBoxView
+															  attribute:NSLayoutAttributeTop
+															  relatedBy:NSLayoutRelationEqual
+																 toItem:self.topLayoutGuide
+															  attribute:NSLayoutAttributeBottom
+															 multiplier:1.0f
+															   constant:20.0f]];
+	}
+//	[self.warningBoxView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:self.view.safeAreaLayoutGuide.topAnchor];
 	
+	
+	/*
+	 
+	 if #available(iOS 11, *) {
+	 let guide = view.safeAreaLayoutGuide
+	 NSLayoutConstraint.activate([
+	 greenView.topAnchor.constraintEqualToSystemSpacingBelow(guide.topAnchor, multiplier: 1.0),
+	 guide.bottomAnchor.constraintEqualToSystemSpacingBelow(greenView.bottomAnchor, multiplier: 1.0)
+	 ])
+	 
+	 } else {
+	 let standardSpacing: CGFloat = 8.0
+	 NSLayoutConstraint.activate([
+	 greenView.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: standardSpacing),
+	 bottomLayoutGuide.topAnchor.constraint(equalTo: greenView.bottomAnchor, constant: standardSpacing)
+	 ])
+	 }
+	 
+	 */
 	
 	self.imagePickerView = [LMImagePickerView newAutoLayoutView];
 	self.imagePickerView.image = self.playlist ? self.playlist.image : nil;
@@ -616,7 +697,6 @@
 	
 	NSArray *imagePickerViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 		[self.imagePickerView autoPinEdgeToSuperviewMargin:ALEdgeLeading];
-		[self.imagePickerView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.warningBoxView withOffset:18];
 		[self.imagePickerView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(3.5/10.0)];
 		[self.imagePickerView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.imagePickerView];
 	}];
@@ -624,7 +704,6 @@
 	
 	NSArray *imagePickerViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 		[self.imagePickerView autoPinEdgeToSuperviewMargin:ALEdgeLeading];
-		[self.imagePickerView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.warningBoxView withOffset:18];
 		[self.imagePickerView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(3.0/20.0)];
 		[self.imagePickerView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.imagePickerView];
 	}];
@@ -632,11 +711,12 @@
 	
 	NSArray *imagePickerViewiPadConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 		[self.imagePickerView autoPinEdgeToSuperviewMargin:ALEdgeLeading];
-		[self.imagePickerView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.warningBoxView withOffset:18];
 		[self.imagePickerView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(4.0/20.0)];
 		[self.imagePickerView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.imagePickerView];
 	}];
 	[LMLayoutManager addNewiPadConstraints:imagePickerViewiPadConstraints];
+	
+	self.imagePickerTopConstraint = [self.imagePickerView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.warningBoxView withOffset:18];
 	
 	
 	self.titleTextField = [UITextField newAutoLayoutView];
@@ -825,9 +905,10 @@
 	[self reloadConditionsLabelAndWarningBox];
 	
 	[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
-		if(WINDOW_FRAME.size.height < 340){
-			[self.warningBoxView hide];
-		}
+//		if(WINDOW_FRAME.size.height < 340){
+//			[self.warningBoxView hide];
+//			[self reloadImagePickerTopConstraint];
+//		}
 	} repeats:NO];
 }
 

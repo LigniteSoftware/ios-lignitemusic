@@ -63,6 +63,8 @@
 "WhichTypeOfPlaylist" = "Which type of playlist do you want to create?";
 "EnhancedPlaylist" = "Enhanced playlist";
 "RegularPlaylist" = "Normal playlist";
+"NoTitleTitle" = "No title";
+"NoTitleDescription" = "Please enter a title below to be able to save your playlist.";
 
 "ScrollingTextTitle" = "Scrolling text";
 "ScrollingTextDescription" = "In now-playing and miniplayer";

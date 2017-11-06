@@ -201,7 +201,9 @@
     self.isCompletelyHidden = YES;
 	self.wasAutomaticallyMinimized = YES;
 	
-	[self setButtonBarBottomConstraintConstant:WINDOW_FRAME.size.height completion:^(BOOL finished) {
+	CGFloat dimensionToUse = MAX(WINDOW_FRAME.size.width, WINDOW_FRAME.size.height);
+	
+	[self setButtonBarBottomConstraintConstant:dimensionToUse completion:^(BOOL finished) {
 		LMButtonNavigationBar *strongSelf = weakSelf;
 		if(!strongSelf){
 			return;
@@ -215,7 +217,7 @@
 		}
 	}];
 	
-	self.currentPoint = CGPointMake(self.originalPoint.x, self.originalPoint.y + self.frame.size.height);
+	self.currentPoint = CGPointMake(self.originalPoint.x, self.originalPoint.y + dimensionToUse);
 	
 	self.heightBeforeAdjustingToScrollPosition = -1;
 	

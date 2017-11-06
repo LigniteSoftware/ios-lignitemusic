@@ -127,7 +127,7 @@
 			
 			
 			NSArray *newBackgroundViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-				[newBackgroundView autoPinEdge:ALEdgeTop toEdge:isFirst ? ALEdgeTop : ALEdgeBottom ofView:previousView withOffset:!isFirst];
+				[newBackgroundView autoPinEdge:ALEdgeBottom toEdge:isFirst ? ALEdgeBottom : ALEdgeTop ofView:previousView withOffset:-1];
 				[newBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 				[newBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 				[newBackgroundView autoMatchDimension:ALDimensionHeight

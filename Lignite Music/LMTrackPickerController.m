@@ -761,8 +761,8 @@
 		listEntry.invertIconOnHighlight = YES;
 		listEntry.stretchAcrossWidth = YES;
 		listEntry.iPromiseIWillHaveAnIconForYouSoon = YES;
-		listEntry.roundedCorners = NO;
 		listEntry.alignIconToLeft = YES;
+		listEntry.roundedCorners = YES;
 		
 		[self.listEntryArray addObject:listEntry];
 	}
@@ -781,8 +781,8 @@
 	
 	[self.noSongsInSongTableViewLabel autoPinEdgeToSuperviewMargin:ALEdgeLeading];
 	[self.noSongsInSongTableViewLabel autoPinEdgeToSuperviewMargin:ALEdgeTrailing];
-	[self.noSongsInSongTableViewLabel autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-	[self.noSongsInSongTableViewLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.searchBar];
+//	[self.noSongsInSongTableViewLabel autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+	[self.noSongsInSongTableViewLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.searchBar withOffset:20];
 	
 	
 	[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{

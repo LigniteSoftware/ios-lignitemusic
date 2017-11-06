@@ -51,8 +51,8 @@
 "EnhancedPlaylistNoConditionsTitle" = "No conditions set";
 "EnhancedPlaylistNoConditionsDescription" = "Add conditions for how you want your playlist below by tapping one of the + buttons, and tap 'Save' when you're done.";
 "ShuffleAll" = "Shuffle all";
-"WantToHearTitle" = "I want to hear from";
-"DontWantToHearTitle" = "I don't want to hear from";
+"WantToHearTitle" = "I want to hear";
+"DontWantToHearTitle" = "I don't want to hear";
 "SelectingAll" = "Selecting all...";
 "DeselectingAll" = "Deselecting all...";
 "XConditions" = "%d conditions"; //Conditions ie. "3 conditions for generating the user's playlist"
@@ -63,6 +63,8 @@
 "WhichTypeOfPlaylist" = "Which type of playlist do you want to create?";
 "EnhancedPlaylist" = "Enhanced playlist";
 "RegularPlaylist" = "Normal playlist";
+"NoTitleTitle" = "No title";
+"NoTitleDescription" = "You haven't set a title yet.\n\nPlease enter a title below to be able to save your playlist.";
 
 "ScrollingTextTitle" = "Scrolling text";
 "ScrollingTextDescription" = "In now-playing and miniplayer";
@@ -603,4 +605,3 @@
  * Thank you.
  *
  */
-

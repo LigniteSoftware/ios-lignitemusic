@@ -295,6 +295,7 @@
 			listEntry.collectionIndex = i;
 			listEntry.iPromiseIWillHaveAnIconForYouSoon = YES;
 			listEntry.alignIconToLeft = YES;
+			listEntry.stretchAcrossWidth = YES;
 			
 			UIColor *color = [UIColor colorWithRed:47/255.0 green:47/255.0 blue:49/255.0 alpha:1.0];
 			UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14.0f];
@@ -345,6 +346,9 @@
 }
 
 - (float)heightAtIndex:(NSUInteger)index forTableView:(LMTableView *)tableView {
+	if([LMLayoutManager isiPad]){
+		return [LMLayoutManager isLandscapeiPad] ? WINDOW_FRAME.size.width/12.0f : WINDOW_FRAME.size.height/12.0f;
+	}
 	return self.layoutManager.isLandscape ? WINDOW_FRAME.size.width/8.0 : WINDOW_FRAME.size.height/8.0;
 }
 
@@ -466,12 +470,16 @@
 	self.songListTableView.totalAmountOfObjects = self.musicTitles.trackCount;
 	self.songListTableView.subviewDataSource = self;
 	self.songListTableView.shouldUseDividers = YES;
-	self.songListTableView.averageCellHeight = (WINDOW_FRAME.size.height/10);
+	self.songListTableView.averageCellHeight = [LMLayoutManager isiPad] ? (WINDOW_FRAME.size.height/14.0f) : (WINDOW_FRAME.size.height/10);
 	self.songListTableView.bottomSpacing = (WINDOW_FRAME.size.height/3.0);
     self.songListTableView.secondaryDelegate = self;
+	self.songListTableView.fullDividers = YES;
 	[self addSubview:self.songListTableView];
 	
-	[self.songListTableView autoPinEdgesToSuperviewEdges];
+	[self.songListTableView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:20];
+	[self.songListTableView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:20];
+	[self.songListTableView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+	[self.songListTableView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 	
 	
 	self.noObjectsLabel = [UILabel newAutoLayoutView];
@@ -481,9 +489,9 @@
 	self.noObjectsLabel.textAlignment = NSTextAlignmentCenter;
 	[self addSubview:self.noObjectsLabel];
 	
-	[self.noObjectsLabel autoPinEdgeToSuperviewMargin:ALEdgeLeading];
+	[self.noObjectsLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:[LMLayoutManager isiPad] ? 100 : 20];
 	[self.noObjectsLabel autoPinEdgeToSuperviewMargin:ALEdgeTop];
-	[self.noObjectsLabel autoPinEdgeToSuperviewMargin:ALEdgeTrailing];
+	[self.noObjectsLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:[LMLayoutManager isiPad] ? 100 : 20];
 	[self.noObjectsLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(3.0/4.0)];
 	
 	self.noObjectsLabel.hidden = (self.musicTitles.count > 0);

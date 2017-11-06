@@ -335,7 +335,16 @@
 	//self.backgroundColor = [UIColor redColor];
 	if(self){
 		self.delegate = delegate;
-		
+	}
+	else{
+		NSLog(@"Failed to create LMListEntry!");
+	}
+	return self;
+}
+
+- (instancetype)init {
+	self = [super init];
+	if(self){
 		self.rightButtons = @[];
 		self.leftButtons = @[];
 		
@@ -343,9 +352,6 @@
 		self.leftButtonExpansionColour = [UIColor colorWithRed:33/255.0 green:175/255.0 blue:67/255.0 alpha:1.0];
 		
 		self.roundedCorners = YES;
-	}
-	else{
-		NSLog(@"Failed to create LMListEntry!");
 	}
 	return self;
 }

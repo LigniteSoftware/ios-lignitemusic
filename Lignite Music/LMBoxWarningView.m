@@ -32,13 +32,7 @@
 		return;
 	}
 	
-	[self.superview layoutIfNeeded];
-	
-	self.previousOffset = self.topToSuperviewConstraint.constant;
-	self.topToSuperviewConstraint.constant = -self.frame.size.height;
-	
 	[UIView animateWithDuration:0.3 animations:^{
-		[self.superview layoutIfNeeded];
 		self.alpha = 0;
 	}];
 	
@@ -50,29 +44,18 @@
 		return;
 	}
 	
-	[self.superview layoutIfNeeded];
-	
-	self.topToSuperviewConstraint.constant = self.previousOffset;
-	
 	[UIView animateWithDuration:0.3 animations:^{
-		[self.superview layoutIfNeeded];
 		self.alpha = 1;
 	}];
 	
 	self.showing = YES;
 }
 
-- (void)reload {
-	self.topToSuperviewConstraint.constant = -self.frame.size.height;
-}
-
 - (void)layoutSubviews {
 	if(!self.didLayoutConstraints){
 		self.didLayoutConstraints = YES;
 		
-		
-		self.previousOffset = self.topToSuperviewConstraint.constant;
-		
+				
 		
 		self.layer.masksToBounds = YES;
 		self.layer.cornerRadius = 6.0f;
