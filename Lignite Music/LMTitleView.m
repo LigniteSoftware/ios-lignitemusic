@@ -23,7 +23,8 @@
 @property LMMusicPlayer *musicPlayer;
 
 @property NSMutableArray *itemArray;
-@property NSMutableArray *itemIconArray;
+//@property NSMutableArray *itemIconArray;
+//^ just retarded dude lol
 
 @property NSInteger currentlyHighlighted;
 
@@ -203,12 +204,12 @@
 		LMMusicTrack *track = [self.musicTitles.items objectAtIndex:entry.collectionIndex];
 		UIImage *albumArt = [track albumArt];
 		
-		NSInteger indexToInsert = (index % self.itemArray.count);
-		
-		if(self.itemIconArray.count < indexToInsert){
-			[self.itemIconArray removeObjectAtIndex:indexToInsert];
-		}
-		[self.itemIconArray insertObject:albumArt ? albumArt : [LMAppIcon imageForIcon:LMIconAlbums] atIndex:indexToInsert];
+//		NSInteger indexToInsert = (index % self.itemArray.count);
+//
+//		if(self.itemIconArray.count < indexToInsert){
+//			[self.itemIconArray removeObjectAtIndex:indexToInsert];
+//		}
+//		[self.itemIconArray insertObject:albumArt ? albumArt : [LMAppIcon imageForIcon:LMIconAlbums] atIndex:indexToInsert];
 		
 		entry.invertIconOnHighlight = albumArt == nil;
 		
@@ -253,6 +254,10 @@
 	[self.songListTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:index]
 								  atScrollPosition:UITableViewScrollPositionTop
 										  animated:NO];
+	
+	for(LMListEntry *listEntry in self.itemArray){
+		[listEntry reloadContents];
+	}
 }
 
 - (void)scrollToTrackWithPersistentID:(LMMusicTrackPersistentID)persistentID {
@@ -289,7 +294,7 @@
 - (void)amountOfObjectsRequiredChangedTo:(NSUInteger)amountOfObjects forTableView:(LMTableView *)tableView {
 	if(!self.itemArray){
 		self.itemArray = [NSMutableArray new];
-		self.itemIconArray = [NSMutableArray new];
+//		self.itemIconArray = [NSMutableArray new];
 		for(int i = 0; i < amountOfObjects; i++){
 			LMListEntry *listEntry = [[LMListEntry alloc]initWithDelegate:self];
 			listEntry.collectionIndex = i;
@@ -340,7 +345,7 @@
 			[self.itemArray addObject:listEntry];
 			
 			//Quick hack to make sure that the items in the array are non nil
-			[self.itemIconArray addObject:@""];
+//			[self.itemIconArray addObject:@""];
 		}
 	}
 }
@@ -436,16 +441,19 @@
 }
 
 - (UIImage*)iconForListEntry:(LMListEntry*)entry {
-	NSInteger actualIndex = entry.collectionIndex % self.itemArray.count;
+//	NSInteger actualIndex = entry.collectionIndex % self.itemArray.count;
+//
+//	if(self.itemIconArray.count < 9){
+//		return nil;
+//	}
+//	if([[self.itemIconArray objectAtIndex:actualIndex] isEqual:@""]){
+//		return nil;
+//	}
+//	UIImage *image = [self.itemIconArray objectAtIndex:actualIndex];
+
+	return [self.musicTitles.items objectAtIndex:entry.collectionIndex].albumArt;
 	
-	if(self.itemIconArray.count < 9){
-		return nil;
-	}
-	if([[self.itemIconArray objectAtIndex:actualIndex] isEqual:@""]){
-		return nil;
-	}
-	UIImage *image = [self.itemIconArray objectAtIndex:actualIndex];
-	return image;
+//	return image;
 }
 
 - (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
@@ -484,15 +492,15 @@
 	
 	self.noObjectsLabel = [UILabel newAutoLayoutView];
 	self.noObjectsLabel.numberOfLines = 0;
-	self.noObjectsLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:24.0f];
+	self.noObjectsLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:20.0f];
 	self.noObjectsLabel.text = NSLocalizedString(self.favourites ? @"NoTracksInFavourites" : @"TheresNothingHere", nil);
 	self.noObjectsLabel.textAlignment = NSTextAlignmentCenter;
 	[self addSubview:self.noObjectsLabel];
 	
 	[self.noObjectsLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:[LMLayoutManager isiPad] ? 100 : 20];
-	[self.noObjectsLabel autoPinEdgeToSuperviewMargin:ALEdgeTop];
+	[self.noObjectsLabel autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:20];
 	[self.noObjectsLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:[LMLayoutManager isiPad] ? 100 : 20];
-	[self.noObjectsLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(3.0/4.0)];
+//	[self.noObjectsLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(3.0/4.0)];
 	
 	self.noObjectsLabel.hidden = (self.musicTitles.count > 0);
 	

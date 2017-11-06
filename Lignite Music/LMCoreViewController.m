@@ -1556,11 +1556,11 @@ LMControlBarViewDelegate
 //		}];
 		
 		
-//		LMEnhancedPlaylistEditorViewController *enhancedPlaylistViewController = [LMEnhancedPlaylistEditorViewController new];
-//		UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:enhancedPlaylistViewController];
-//		[self presentViewController:navigation animated:YES completion:^{
-//
-//		}];
+		LMEnhancedPlaylistEditorViewController *enhancedPlaylistViewController = [LMEnhancedPlaylistEditorViewController new];
+		UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:enhancedPlaylistViewController];
+		[self presentViewController:navigation animated:YES completion:^{
+
+		}];
 
 		
 		[self.buttonNavigationBar setSelectedTab:LMNavigationTabMiniplayer];

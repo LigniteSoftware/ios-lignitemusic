@@ -452,7 +452,7 @@
 	self.songCountLabel.text = self.playlist.trackCollection.count == 0
 		? NSLocalizedString(@"NoSongsYet", nil)
 	: [NSString stringWithFormat:NSLocalizedString(self.playlist.trackCollection.count == 1 ? @"XSongsSingle" : @"XSongs", nil), self.playlist.trackCollection.count];
-	self.songCountLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18.0f];
+	self.songCountLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:[LMLayoutManager isExtraSmall] ? 14.0f : 18.0f];
 	self.songCountLabel.textColor = [UIColor blackColor];
 	self.songCountLabel.numberOfLines = 0;
 	[self.view addSubview:self.songCountLabel];
@@ -513,7 +513,7 @@
 	
 	UILabel *labelView = [UILabel newAutoLayoutView];
 	labelView.text = NSLocalizedString(@"AddSongs", nil);
-	labelView.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18.0f];
+	labelView.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:[LMLayoutManager isExtraSmall] ? 14.0f : 18.0f];
 	labelView.textColor = [UIColor whiteColor];
 	[backgroundView addSubview:labelView];
 	

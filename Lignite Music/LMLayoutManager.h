@@ -53,6 +53,7 @@ typedef NS_ENUM(NSInteger, LMScreenSizeClass) {
 @property CGSize size;
 
 - (BOOL)isLandscape;
++ (BOOL)isExtraSmall;
 + (BOOL)isLandscape;
 + (BOOL)isLandscapeiPad;
 + (BOOL)isiPad;

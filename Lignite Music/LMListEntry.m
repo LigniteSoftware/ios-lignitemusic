@@ -19,6 +19,8 @@
 @property LMLabel *leftTextLabel;
 @property LMLabel *titleLabel, *subtitleLabel;
 
+@property UIView *textView;
+
 @property BOOL highlighted;
 @property BOOL imageIsInverted;
 
@@ -267,6 +269,15 @@
 	}
 	
 	
+	self.textView = [UIView newAutoLayoutView];
+//	self.textView.backgroundColor = [UIColor orangeColor];
+	[self.contentView addSubview:self.textView];
+	
+	[self.textView autoPinEdge:ALEdgeLeading toEdge:willHaveAnIcon ? ALEdgeTrailing : ALEdgeLeading ofView:willHaveAnIcon ? self.iconBackgroundView : self.contentView withOffset:willHaveAnIcon ? (self.isLabelBased ? -20 : 4) : 10];
+	[self.textView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+	[self.textView autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+	
+	
 	NSMutableArray *titleConstraints = [[NSMutableArray alloc]init];
 	
 	self.titleLabel = [LMLabel newAutoLayoutView];
@@ -274,12 +285,12 @@
 	self.titleLabel.text = title;
 	self.titleLabel.textColor = [UIColor blackColor];
 	if(title){
-		[self.contentView addSubview:self.titleLabel];
+		[self.textView addSubview:self.titleLabel];
 		
 		NSLayoutConstraint *heightConstraint = [self.titleLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.contentView withMultiplier:(1.0f/3.0f)];
-		NSLayoutConstraint *leadingConstraint = [self.titleLabel autoPinEdge:ALEdgeLeading toEdge:willHaveAnIcon ? ALEdgeTrailing : ALEdgeLeading ofView:willHaveAnIcon ? self.iconBackgroundView : self.contentView withOffset:willHaveAnIcon ? (self.isLabelBased ? -20 : 4) : 10];
-		NSLayoutConstraint *trailingConstraint = [self.titleLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.contentView withOffset:-10.0];
-		NSLayoutConstraint *centerConstraint = [self.titleLabel autoAlignAxis:ALAxisHorizontal toSameAxisOfView:self.contentView];
+		NSLayoutConstraint *leadingConstraint = [self.titleLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		NSLayoutConstraint *trailingConstraint = [self.titleLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.textView withOffset:-10.0];
+		NSLayoutConstraint *centerConstraint = [self.titleLabel autoAlignAxis:ALAxisHorizontal toSameAxisOfView:self.textView];
 		
 		[titleConstraints addObject:heightConstraint];
 		[titleConstraints addObject:leadingConstraint];
@@ -292,27 +303,28 @@
 	self.subtitleLabel.text = subtitle ? subtitle : @"";
 	self.subtitleLabel.textColor = [UIColor blackColor];
 	if(subtitle){
-		[self.contentView addSubview:self.subtitleLabel];
+		[self.textView addSubview:self.subtitleLabel];
 		
 		[self.subtitleLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.contentView withMultiplier:(1.0f/4.0f)];
 		[self.subtitleLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.titleLabel];
 		[self.subtitleLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.titleLabel];
 		[self.subtitleLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.titleLabel];
+		[self.subtitleLabel autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 		
 		for(int i = 0; i < titleConstraints.count; i++){
 			NSLayoutConstraint *constraint = [titleConstraints objectAtIndex:i];
 			if(constraint.firstAttribute == NSLayoutAttributeCenterY){
 				[titleConstraints removeObject:constraint];
-				[self.contentView removeConstraint:constraint];
+				[self.textView removeConstraint:constraint];
 				break;
 			}
 		}
 				
 		NSLayoutConstraint *titleTopConstraint = [NSLayoutConstraint constraintWithItem:self.titleLabel
-																			  attribute:NSLayoutAttributeBottom
+																			  attribute:NSLayoutAttributeTop
 																			  relatedBy:NSLayoutRelationEqual
-																				 toItem:self.contentView
-																			  attribute:NSLayoutAttributeCenterY
+																				 toItem:self.textView
+																			  attribute:NSLayoutAttributeTop
 																			 multiplier:1.0
 																			   constant:0];
 		[self.contentView addConstraint:titleTopConstraint];

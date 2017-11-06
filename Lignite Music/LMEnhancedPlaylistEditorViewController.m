@@ -181,9 +181,9 @@
 	
 	[self.playlist regenerateEnhancedPlaylist];
 	
-	[self dismissViewControllerAnimated:YES completion:nil];
-	
 	[self.playlistManager savePlaylist:self.playlist];
+	
+	[self dismissViewControllerAnimated:YES completion:nil];
 
 	NSLog(@"Saved.");
 	
@@ -767,7 +767,7 @@
 	
 	self.songCountLabel = [UILabel newAutoLayoutView];
 	self.songCountLabel.text = @"nice work";
-	self.songCountLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18.0f];
+	self.songCountLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:[LMLayoutManager isExtraSmall] ? 14.0f : 18.0f];
 	self.songCountLabel.textColor = [UIColor blackColor];
 	self.songCountLabel.numberOfLines = 0;
 	[self.view addSubview:self.songCountLabel];
@@ -855,7 +855,7 @@
 	
 	self.wantToHearLabel = [UILabel newAutoLayoutView];
 	self.wantToHearLabel.text = NSLocalizedString(@"WantToHearTitle", nil);
-	self.wantToHearLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:22.0f];
+	self.wantToHearLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:[LMLayoutManager isExtraSmall] ? 18.0f : 22.0f];
 	self.wantToHearLabel.textColor = [UIColor blackColor];
 	self.wantToHearLabel.textAlignment = NSTextAlignmentLeft;
 	[self.wantToHearBackgroundView addSubview:self.wantToHearLabel];
@@ -893,7 +893,7 @@
 	
 	self.dontWantToHearLabel = [UILabel newAutoLayoutView];
 	self.dontWantToHearLabel.text = NSLocalizedString(@"DontWantToHearTitle", nil);
-	self.dontWantToHearLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:22.0f];
+	self.dontWantToHearLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:[LMLayoutManager isExtraSmall] ? 18.0f : 22.0f];
 	self.dontWantToHearLabel.textColor = [UIColor blackColor];
 	self.dontWantToHearLabel.textAlignment = NSTextAlignmentLeft;
 	[self.dontWantToHearBackgroundView addSubview:self.dontWantToHearLabel];

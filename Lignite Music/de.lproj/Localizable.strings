@@ -42,7 +42,7 @@
 "EnhancedPlaylistTitle" = "Erweiterte Wiedergabeliste";
 "EnhancedPlaylistNoConditionsTitle" = "Keine Bedingungen vorhanden";
 "EnhancedPlaylistNoConditionsDescription" = "Füge neue Bedingungen für deine Wiedergabeliste hinzu indem du auf einen der '+'-Buttons tippst.";
-"ShuffleAll" = "Gemischte Wiedergabe";
+"ShuffleAll" = "Gem. Wiedergabe";
 "WantToHearTitle" = "Hören möchte ich:";
 "DontWantToHearTitle" = "Nicht hören möchte ich:";
 "SelectingAll" = "Alle auswählen";
@@ -50,7 +50,7 @@
 "SelectAll" = "Alle(s) auswählen";
 "DeselectAll" = "Alle(s) abwählen";
 "XConditions" = "%d Bedingungen"; //Conditions ie. "3 conditions for generating the user's playlist"
-"NoConditionsYet" = "Es wurden noch keine Bedingung erstellt.";
+"NoConditionsYet" = "Noch keine Bedingungen vorhanden";
 "OneCondition" = "1 Bedingung";
 "EnhancedPlaylistNoWantsTitle" = "Es wurde noch keine 'Hören möchte ich:'-Bedingung erstellt";
 "EnhancedPlaylistNoWantsDescription" = "Füge bitte mind. eine Bedingung in der Spalte ‚Hören möchte ich:’ ein.";
@@ -59,6 +59,8 @@
 "RegularPlaylist" = "Normale Wiedergabeliste";
 "SearchAllMusic" = "In gesamter Musikbibliothek suchen";
 "Done" = "Fertig";
+"NoTitleTitle" = "Kein Titel";
+"NoTitleDescription" = "Gebe der untenstehenden Liste bitte einen Titel damit du sie speichern kannst.";
 
 "ScrollingTextTitle" = "Scrollender Text";
 "ScrollingTextDescription" = "In der Vollbildwiedergabe und dem Mini-Player";
@@ -85,14 +87,14 @@
 "NoSongsInPlaylistBuilder" = "Es befinden sich noch keine Lieder in dieser Wiedergabeliste.\n\nFüge welche hinzu indem du oben auf den 'Lieder hinzufügen'-Button tippst.";
 "SelectASource" = "Wähle bitte deine gewünschte Ansicht";
 "TapToEdit" = "Bearbeiten";
-"YourPlaylistTitle" = "Titel deiner Playlist";
+"YourPlaylistTitle" = "Titel Wiedergabeliste";
 "SearchType" = "Suche nach %@";
 
 "XSongs" = "%ld Lieder"; //Multiple songs
 "XSongsSingle" = "%ld Lied"; //1 song
-"NoSongsYet" = "Noch keine Lieder, sorry";
+"NoSongsYet" = "Noch keine Lieder";
 
-"NoTracksInFavourites" = "Du hast noch keine Favoriten definiert. Streiche einfach auf einem beliebigen Song von links nach rechts, um sie in dieser Liste aufzunehmen.";
+"NoTracksInFavourites" = "Du hast noch keine Favoriten definiert.\n\nStreiche einfach auf einem beliebigen Song von links nach rechts, um sie in dieser Liste aufzunehmen.";
 
 "Favourites" = "Favoriten";
 

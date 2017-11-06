@@ -143,6 +143,12 @@
 //	return self.size.width > self.size.height;
 }
 
++ (BOOL)isExtraSmall {
+	LMLayoutManager *layoutManager = [LMLayoutManager sharedLayoutManager];
+	
+	return MIN(layoutManager.size.width, layoutManager.size.height) < 340;
+}
+
 + (BOOL)isLandscape {
 	return [LMLayoutManager sharedLayoutManager].isLandscape;
 }

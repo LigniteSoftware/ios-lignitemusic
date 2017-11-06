@@ -836,6 +836,10 @@
 		[self.bigListEntries addObject:bigListEntry];
 	}
 	
+	for(LMBigListEntry *bigListEntry in self.bigListEntries){
+		[bigListEntry reloadData];
+	}
+	
 	[self.collectionView reloadData];
 }
 
@@ -1155,10 +1159,9 @@
 			[iconView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 			[iconView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:backgroundView];
 			
-			
 			UILabel *labelView = [UILabel newAutoLayoutView];
 			labelView.text = text;
-			labelView.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18.0f];
+			labelView.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:[LMLayoutManager isExtraSmall] ? 14.0f : 18.0f];
 			labelView.textColor = [UIColor whiteColor];
 			[backgroundView addSubview:labelView];
 			
