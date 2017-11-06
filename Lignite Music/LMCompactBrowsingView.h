@@ -33,6 +33,11 @@
 @property UICollectionView *collectionView;
 
 /**
+ Whether or not the compact view is currently in playlist editing mode.
+ */
+@property BOOL editing;
+
+/**
  Reload the contents of the view after changing the music type and music track collections.
  */
 - (void)reloadContents;

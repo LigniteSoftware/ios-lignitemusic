@@ -134,7 +134,7 @@
 	[contentView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:contentViewWidthFactorial];
 //	[contentView autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height*contentViewHeightFactorial];
 	
-	[contentView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self];
+	[contentView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.contentView];
 
 	UITapGestureRecognizer *contentDoubleTapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(doubleTappedContentView:)];
 	contentDoubleTapGesture.numberOfTapsRequired = 2;

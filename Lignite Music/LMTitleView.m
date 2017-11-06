@@ -492,9 +492,9 @@
 	
 	self.noObjectsLabel = [UILabel newAutoLayoutView];
 	self.noObjectsLabel.numberOfLines = 0;
-	self.noObjectsLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:20.0f];
+	self.noObjectsLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:[LMLayoutManager isExtraSmall] ? 16.0f : 18.0f];
 	self.noObjectsLabel.text = NSLocalizedString(self.favourites ? @"NoTracksInFavourites" : @"TheresNothingHere", nil);
-	self.noObjectsLabel.textAlignment = NSTextAlignmentCenter;
+	self.noObjectsLabel.textAlignment = NSTextAlignmentLeft;
 	[self addSubview:self.noObjectsLabel];
 	
 	[self.noObjectsLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:[LMLayoutManager isiPad] ? 100 : 20];

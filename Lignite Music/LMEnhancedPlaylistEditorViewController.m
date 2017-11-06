@@ -22,7 +22,7 @@
 #import "LMEnhancedPlaylistCollectionViewFlowLayout.h"
 #import "NSTimer+Blocks.h"
 
-@interface LMEnhancedPlaylistEditorViewController ()<LMLayoutChangeDelegate, LMImagePickerViewDelegate, LMMusicPickerDelegate, BEMCheckBoxDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, LMListEntryDelegate, UITextFieldDelegate>
+@interface LMEnhancedPlaylistEditorViewController ()<LMLayoutChangeDelegate, LMImagePickerViewDelegate, LMMusicPickerDelegate, BEMCheckBoxDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, LMListEntryDelegate, UITextFieldDelegate, LMBoxWarningViewDelegate>
 
 /**
  The music player.
@@ -617,6 +617,10 @@
 	return YES;
 }
 
+- (void)boxWarningViewWasForceClosed:(LMBoxWarningView *)boxWarningView {
+	[self reloadImagePickerTopConstraint];
+}
+
 /* Begin initialization code */
 
 - (void)viewDidLoad {
@@ -645,6 +649,7 @@
 	
 	self.warningBoxView = [LMBoxWarningView newAutoLayoutView];
 	self.warningBoxView.hideOnLayout = !newPlaylist;
+	self.warningBoxView.delegate = self;
 	[self.view addSubview:self.warningBoxView];
 	
 //	[self.warningBoxView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.navigationController.navigationBar];

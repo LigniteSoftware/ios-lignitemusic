@@ -8,7 +8,25 @@
 
 #import "LMView.h"
 
+@class LMBoxWarningView;
+
+@protocol LMBoxWarningViewDelegate<NSObject>
+
+/**
+ The user tapped the X on the box warning view, force closing it.
+
+ @param boxWarningView The box warning view that was forced close.
+ */
+- (void)boxWarningViewWasForceClosed:(LMBoxWarningView*)boxWarningView;
+
+@end
+
 @interface LMBoxWarningView : LMView
+
+/**
+ The delegate.
+ */
+@property id<LMBoxWarningViewDelegate> delegate;
 
 /**
  The title's label.

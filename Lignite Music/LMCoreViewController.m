@@ -676,6 +676,9 @@ LMControlBarViewDelegate
 	
 	[self.buttonNavigationBar.browsingBar setShowingLetterTabs:YES];
 	[self.landscapeNavigationBar setMode:self.musicType == LMMusicTypePlaylists ? LMLandscapeNavigationBarModePlaylistView : LMLandscapeNavigationBarModeOnlyLogo];
+	if(self.musicType == LMMusicTypePlaylists){
+		[self.landscapeNavigationBar setEditing:self.compactView.editing];
+	}
 }
 
 - (void)requiredHeightForNavigationBarChangedTo:(CGFloat)requiredHeight withAnimationDuration:(CGFloat)animationDuration {
@@ -1556,11 +1559,11 @@ LMControlBarViewDelegate
 //		}];
 		
 		
-		LMEnhancedPlaylistEditorViewController *enhancedPlaylistViewController = [LMEnhancedPlaylistEditorViewController new];
-		UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:enhancedPlaylistViewController];
-		[self presentViewController:navigation animated:YES completion:^{
-
-		}];
+//		LMEnhancedPlaylistEditorViewController *enhancedPlaylistViewController = [LMEnhancedPlaylistEditorViewController new];
+//		UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:enhancedPlaylistViewController];
+//		[self presentViewController:navigation animated:YES completion:^{
+//
+//		}];
 
 		
 		[self.buttonNavigationBar setSelectedTab:LMNavigationTabMiniplayer];

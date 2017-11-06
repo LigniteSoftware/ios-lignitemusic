@@ -97,11 +97,6 @@
  */
 @property UIView *playlistButtonRight;
 
-/**
- Whether or not the compact view is currently in playlist editing mode.
- */
-@property BOOL editing;
-
 @end
 
 @implementation LMCompactBrowsingView

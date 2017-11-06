@@ -378,7 +378,6 @@
 	
 	NSArray *imagePickerViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 		[self.imagePickerView autoPinEdgeToSuperviewMargin:ALEdgeLeading];
-		[self.imagePickerView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:88];
 		[self.imagePickerView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(3.5/10.0)];
 		[self.imagePickerView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.imagePickerView];
 	}];
@@ -386,7 +385,6 @@
 	
 	NSArray *imagePickerViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 		[self.imagePickerView autoPinEdgeToSuperviewMargin:ALEdgeLeading];
-		[self.imagePickerView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:68];
 		[self.imagePickerView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(3.5/20.0)];
 		[self.imagePickerView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.imagePickerView];
 	}];
@@ -394,11 +392,29 @@
 	
 	NSArray *imagePickerViewiPadConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 		[self.imagePickerView autoPinEdgeToSuperviewMargin:ALEdgeLeading];
-		[self.imagePickerView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:88];
 		[self.imagePickerView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(4.0/20.0)];
 		[self.imagePickerView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.imagePickerView];
 	}];
 	[LMLayoutManager addNewiPadConstraints:imagePickerViewiPadConstraints];
+	
+	if(@available(iOS 11, *)){
+		[self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.imagePickerView
+															  attribute:NSLayoutAttributeTop
+															  relatedBy:NSLayoutRelationEqual
+																 toItem:self.view.safeAreaLayoutGuide
+															  attribute:NSLayoutAttributeTop
+															 multiplier:1.0f
+															   constant:20.0f]];
+	}
+	else{
+		[self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.imagePickerView
+															  attribute:NSLayoutAttributeTop
+															  relatedBy:NSLayoutRelationEqual
+																 toItem:self.topLayoutGuide
+															  attribute:NSLayoutAttributeBottom
+															 multiplier:1.0f
+															   constant:20.0f]];
+	}
 		
 	
 	self.titleTextField = [UITextField newAutoLayoutView];
