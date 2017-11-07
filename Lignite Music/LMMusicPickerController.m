@@ -278,16 +278,33 @@
 	NSArray *searchBarPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 		[self.searchBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[self.searchBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-		[self.searchBar autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:64];
 	}];
 	[LMLayoutManager addNewPortraitConstraints:searchBarPortraitConstraints];
 	
 	NSArray *searchBarLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 		[self.searchBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[self.searchBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-		[self.searchBar autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:44];
 	}];
 	[LMLayoutManager addNewLandscapeConstraints:searchBarLandscapeConstraints];
+	
+	if(@available(iOS 11, *)){
+		[self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.searchBar
+															  attribute:NSLayoutAttributeTop
+															  relatedBy:NSLayoutRelationEqual
+																 toItem:self.view.safeAreaLayoutGuide
+															  attribute:NSLayoutAttributeTop
+															 multiplier:1.0f
+															   constant:0.0f]];
+	}
+	else{
+		[self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.searchBar
+															  attribute:NSLayoutAttributeTop
+															  relatedBy:NSLayoutRelationEqual
+																 toItem:self.topLayoutGuide
+															  attribute:NSLayoutAttributeBottom
+															 multiplier:1.0f
+															   constant:0.0f]];
+	}
 	
 	
 	NSArray *sourceTitles = @[

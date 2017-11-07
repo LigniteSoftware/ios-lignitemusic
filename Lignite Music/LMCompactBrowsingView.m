@@ -345,7 +345,7 @@
 }
 
 - (float)contentSubviewFactorial:(BOOL)height forBigListEntry:(LMBigListEntry *)bigListEntry {
-	return height ? 0.1 : 1.0;
+	return height ? 0.1 : ([LMLayoutManager isExtraSmall] ? 0.9 : 1.0);
 }
 
 - (void)sizeChangedToLargeSize:(BOOL)largeSize withHeight:(float)newHeight forBigListEntry:(LMBigListEntry*)bigListEntry {

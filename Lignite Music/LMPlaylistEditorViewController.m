@@ -562,7 +562,7 @@
 	
 	
 	self.noSongsInSongTableViewLabel = [UILabel newAutoLayoutView];
-	self.noSongsInSongTableViewLabel.font = self.titleTextField.font;
+	self.noSongsInSongTableViewLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:[LMLayoutManager isExtraSmall] ? 16.0f : 18.0f];
 	self.noSongsInSongTableViewLabel.text = NSLocalizedString(@"NoSongsInPlaylistBuilder", nil);
 	self.noSongsInSongTableViewLabel.textColor = [UIColor blackColor];
 	self.noSongsInSongTableViewLabel.hidden = self.songListTableView.totalAmountOfObjects > 0;

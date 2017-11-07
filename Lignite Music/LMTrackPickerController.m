@@ -449,7 +449,13 @@
 		height = ([LMLayoutManager isLandscape] ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height)/9.0f;
 	}
 	
-	return CGSizeMake(WINDOW_FRAME.size.width - 40, height);
+	CGSize size = CGSizeMake(WINDOW_FRAME.size.width - 40, height);
+	
+	if([LMLayoutManager isLandscape]){
+		size.width -= 40;
+	}
+	
+	return size;
 }
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section {
@@ -591,6 +597,7 @@
 
 - (void)reloadNoSongsLabel {
 	self.noSongsInSongTableViewLabel.hidden = self.displayingTrackCollections.count > 0;
+	self.collectionView.hidden = self.displayingTrackCollections.count == 0;
 }
 
 - (void)saveSongSelection {
@@ -664,24 +671,6 @@
 	[self.layoutManager addDelegate:self];
 	
 	
-	self.searchBar = [UISearchBar newAutoLayoutView];
-	self.searchBar.placeholder = [NSString stringWithFormat:NSLocalizedString(@"SearchType", nil), self.title];
-	self.searchBar.delegate = self;
-	[self.view addSubview:self.searchBar];
-	
-	NSArray *searchBarPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-		[self.searchBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-		[self.searchBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-		[self.searchBar autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:64];
-	}];
-	[LMLayoutManager addNewPortraitConstraints:searchBarPortraitConstraints];
-	
-	NSArray *searchBarLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-		[self.searchBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-		[self.searchBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-		[self.searchBar autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:44];
-	}];
-	[LMLayoutManager addNewLandscapeConstraints:searchBarLandscapeConstraints];
 	
 	self.letterTabBar = [LMLetterTabBar new];
 	self.letterTabBar.delegate = self;
@@ -704,6 +693,43 @@
 	}];
 	[LMLayoutManager addNewLandscapeConstraints:letterTabBarLandscapeConstraints];
 	
+	
+	
+	self.searchBar = [UISearchBar newAutoLayoutView];
+	self.searchBar.placeholder = [NSString stringWithFormat:NSLocalizedString(@"SearchType", nil), self.title];
+	self.searchBar.delegate = self;
+	[self.view addSubview:self.searchBar];
+	
+	NSArray *searchBarPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.searchBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.searchBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+	}];
+	[LMLayoutManager addNewPortraitConstraints:searchBarPortraitConstraints];
+	
+	NSArray *searchBarLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.searchBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.searchBar autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.letterTabBar];
+	}];
+	[LMLayoutManager addNewLandscapeConstraints:searchBarLandscapeConstraints];
+	
+	if(@available(iOS 11, *)){
+		[self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.searchBar
+															  attribute:NSLayoutAttributeTop
+															  relatedBy:NSLayoutRelationEqual
+																 toItem:self.view.safeAreaLayoutGuide
+															  attribute:NSLayoutAttributeTop
+															 multiplier:1.0f
+															   constant:0.0f]];
+	}
+	else{
+		[self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.searchBar
+															  attribute:NSLayoutAttributeTop
+															  relatedBy:NSLayoutRelationEqual
+																 toItem:self.topLayoutGuide
+															  attribute:NSLayoutAttributeBottom
+															 multiplier:1.0f
+															   constant:0.0f]];
+	}
 	
 	if(self.entriesAreSelectable){
 		self.selectAllListEntry = [LMListEntry new];
@@ -737,9 +763,9 @@
 	[LMLayoutManager addNewPortraitConstraints:collectionViewPortraitConstraints];
 	
 	NSArray *collectionViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-		[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+		[self.collectionView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.searchBar];
 		[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.collectionView autoPinEdgeToSuperviewMargin:ALEdgeLeading];
 		[self.collectionView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.letterTabBar];
 	}];
 	[LMLayoutManager addNewLandscapeConstraints:collectionViewLandscapeConstraints];
@@ -769,7 +795,7 @@
 	
 	
 	self.noSongsInSongTableViewLabel = [UILabel newAutoLayoutView];
-	self.noSongsInSongTableViewLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:20.0f];
+	self.noSongsInSongTableViewLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:[LMLayoutManager isExtraSmall] ? 16.0f : 18.0f];
 	self.noSongsInSongTableViewLabel.text = NSLocalizedString(@"TheresNothingHere", nil);
 	self.noSongsInSongTableViewLabel.textColor = [UIColor blackColor];
 	self.noSongsInSongTableViewLabel.hidden = self.displayingTrackCollections.count > 0;

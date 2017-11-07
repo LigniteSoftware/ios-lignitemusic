@@ -128,7 +128,7 @@
 		
 		[self.subtitleLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[self.subtitleLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-		[self.subtitleLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.xCrossImageView withOffset:8];
+		[self.subtitleLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.titleLabel withOffset:12];
 		[self.subtitleLabel autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 	}
 	else{
