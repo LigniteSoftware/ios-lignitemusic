@@ -476,9 +476,9 @@
 	if(shouldOpenNewDetailView){
 		[NSTimer scheduledTimerWithTimeInterval:detailViewNotCurrentlyOpen ? 0.0 : 0.4 block:^{
 			[UIView animateWithDuration:0.15 animations:^{
-				CGFloat contentOffsetY = bigListEntry.superview.superview.frame.origin.y - 10;
+				CGFloat contentOffsetY = bigListEntry.superview.superview.frame.origin.y - 20;
 				
-				if(self.musicType == LMMusicTypePlaylists){
+				if(self.musicType == LMMusicTypePlaylists && ![LMLayoutManager isLandscape]){
 					contentOffsetY -= self.playlistModificationButtonView.frame.size.height + 20;
 				}
 				

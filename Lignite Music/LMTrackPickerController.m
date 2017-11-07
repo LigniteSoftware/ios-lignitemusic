@@ -670,28 +670,7 @@
 	self.layoutManager = [LMLayoutManager sharedLayoutManager];
 	[self.layoutManager addDelegate:self];
 	
-	
-	
-	self.letterTabBar = [LMLetterTabBar new];
-	self.letterTabBar.delegate = self;
-	self.letterTabBar.lettersDictionary = [self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:self.trackCollections withAssociatedMusicType:self.musicType];
-	[self.view addSubview:self.letterTabBar];
-	
-	NSArray *letterTabBarPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-		[self.letterTabBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		[self.letterTabBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-		[self.letterTabBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-		[self.letterTabBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/15.0)];
-	}];
-	[LMLayoutManager addNewPortraitConstraints:letterTabBarPortraitConstraints];
-	
-	NSArray *letterTabBarLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-		[self.letterTabBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-		[self.letterTabBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(1.0/15.0)];
-		[self.letterTabBar autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:44];
-		[self.letterTabBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-	}];
-	[LMLayoutManager addNewLandscapeConstraints:letterTabBarLandscapeConstraints];
+
 	
 	
 	
@@ -708,7 +687,8 @@
 	
 	NSArray *searchBarLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 		[self.searchBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-		[self.searchBar autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.letterTabBar];
+		[self.searchBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+//		[self.searchBar autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.letterTabBar];
 	}];
 	[LMLayoutManager addNewLandscapeConstraints:searchBarLandscapeConstraints];
 	
@@ -730,6 +710,30 @@
 															 multiplier:1.0f
 															   constant:0.0f]];
 	}
+	
+	
+	self.letterTabBar = [LMLetterTabBar new];
+	self.letterTabBar.delegate = self;
+	self.letterTabBar.lettersDictionary = [self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:self.trackCollections withAssociatedMusicType:self.musicType];
+	[self.view addSubview:self.letterTabBar];
+	
+	NSArray *letterTabBarPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.letterTabBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[self.letterTabBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.letterTabBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.letterTabBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/15.0)];
+	}];
+	[LMLayoutManager addNewPortraitConstraints:letterTabBarPortraitConstraints];
+	
+	NSArray *letterTabBarLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.letterTabBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.letterTabBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(1.0/15.0)];
+		[self.letterTabBar autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.searchBar withOffset:64];
+		[self.letterTabBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+	}];
+	[LMLayoutManager addNewLandscapeConstraints:letterTabBarLandscapeConstraints];
+
+	
 	
 	if(self.entriesAreSelectable){
 		self.selectAllListEntry = [LMListEntry new];
@@ -895,6 +899,8 @@
 	} repeats:NO];
 	
 	[self reloadNoSongsLabel];
+	
+	[self.view bringSubviewToFront:self.searchBar];
 }
 
 - (void)didReceiveMemoryWarning {

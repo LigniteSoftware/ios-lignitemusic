@@ -119,7 +119,7 @@
 		[self.bottomView autoAlignAxisToSuperviewAxis:ALAxisVertical];
 		[self.bottomView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.topView];
 		[self.bottomView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.topView];
-		[self.bottomView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:self.largeMode ? (3.2/10.0) : (3.5/10.0)];
+		[self.bottomView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:self.largeMode ? (3.5/10.0) : (3.5/10.0)];
 		
 		[self.titleLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.topView withOffset:0];
 		[self.titleLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.topView withOffset:-0];

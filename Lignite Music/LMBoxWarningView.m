@@ -86,10 +86,14 @@
 		self.paddingView = [UIView newAutoLayoutView];
 		[self addSubview:self.paddingView];
 		
+		CGFloat padding = 5.0f;
+		
 		[self.paddingView autoCenterInSuperview];
-		[self.paddingView autoPinEdgeToSuperviewMargin:ALEdgeTop];
-		[self.paddingView autoPinEdgeToSuperviewMargin:ALEdgeBottom];
-		[self.paddingView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(9.0/10.0)];
+		[self.paddingView autoPinEdgeToSuperviewMargin:ALEdgeTop].constant = padding;
+		[self.paddingView autoPinEdgeToSuperviewMargin:ALEdgeBottom].constant = -padding;
+		[self.paddingView autoPinEdgeToSuperviewMargin:ALEdgeTrailing].constant = -padding;
+		[self.paddingView autoPinEdgeToSuperviewMargin:ALEdgeLeading].constant = padding;
+		//		[self.paddingView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(9.0/10.0)];
 		
 		
 		self.xCrossImageView = [UIImageView newAutoLayoutView];
@@ -100,7 +104,7 @@
 		
 		[self.xCrossImageView autoSetDimension:ALDimensionWidth toSize:20.0f];
 		[self.xCrossImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.xCrossImageView];
-		[self.xCrossImageView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:4];
+		[self.xCrossImageView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 		[self.xCrossImageView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 		
 		UITapGestureRecognizer *xCrossTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(xCrossTapped)];
