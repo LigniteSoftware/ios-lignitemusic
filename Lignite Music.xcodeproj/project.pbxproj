@@ -65,6 +65,7 @@
 		6A37B1D11FB2BE7F00934A75 /* chidster.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A37B1CD1FB2BE7E00934A75 /* chidster.png */; };
 		6A37B1D21FB2BE7F00934A75 /* chidster.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A37B1CD1FB2BE7E00934A75 /* chidster.png */; };
 		6A37B1D31FB2BE7F00934A75 /* chidster.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A37B1CD1FB2BE7E00934A75 /* chidster.png */; };
+		6A37B1D71FB378BC00934A75 /* LMAppleWatchBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A37B1D61FB378BC00934A75 /* LMAppleWatchBridge.m */; };
 		6A4157CD1E04669E00D09D4B /* icon_back.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A4157CC1E04669E00D09D4B /* icon_back.png */; };
 		6A43BCE71DDFA471009FB0E9 /* tutorial_now_playing.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A43BCE61DDFA471009FB0E9 /* tutorial_now_playing.png */; };
 		6A43BCE91DDFA66B009FB0E9 /* onboarding_us.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A43BCE81DDFA66B009FB0E9 /* onboarding_us.png */; };
@@ -388,6 +389,8 @@
 		6A37B1C91FB2761D00934A75 /* LMWProgressSliderInfo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMWProgressSliderInfo.m; sourceTree = "<group>"; };
 		6A37B1CC1FB2BE7E00934A75 /* newfave.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = newfave.png; sourceTree = "<group>"; };
 		6A37B1CD1FB2BE7E00934A75 /* chidster.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chidster.png; sourceTree = "<group>"; };
+		6A37B1D51FB378BC00934A75 /* LMAppleWatchBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMAppleWatchBridge.h; sourceTree = "<group>"; };
+		6A37B1D61FB378BC00934A75 /* LMAppleWatchBridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMAppleWatchBridge.m; sourceTree = "<group>"; };
 		6A4157CC1E04669E00D09D4B /* icon_back.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_back.png; sourceTree = "<group>"; };
 		6A43BCE61DDFA471009FB0E9 /* tutorial_now_playing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tutorial_now_playing.png; sourceTree = "<group>"; };
 		6A43BCE81DDFA66B009FB0E9 /* onboarding_us.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = onboarding_us.png; sourceTree = "<group>"; };
@@ -873,6 +876,15 @@
 			name = TableView;
 			sourceTree = "<group>";
 		};
+		6A37B1D41FB3785200934A75 /* Watch */ = {
+			isa = PBXGroup;
+			children = (
+				6A37B1D51FB378BC00934A75 /* LMAppleWatchBridge.h */,
+				6A37B1D61FB378BC00934A75 /* LMAppleWatchBridge.m */,
+			);
+			name = Watch;
+			sourceTree = "<group>";
+		};
 		6A4BAEEF1DC9C572000DF537 /* BigListSubviews */ = {
 			isa = PBXGroup;
 			children = (
@@ -1310,6 +1322,7 @@
 				6AAF610A1DA0195900971875 /* Strings */,
 				6A32A9F21DC69BC60056CC60 /* TableView */,
 				6ABF6A861CF37A19003E4EFA /* Utilities */,
+				6A37B1D41FB3785200934A75 /* Watch */,
 			);
 			path = "Lignite Music";
 			sourceTree = "<group>";
@@ -1869,6 +1882,7 @@
 				6A23AF4E1E46254400A56F5F /* LMCompactBrowsingView.m in Sources */,
 				6AD480631DCAAF4D00DB891B /* LMCollectionInfoView.m in Sources */,
 				6AD226FF1DA4B8000056695A /* LMCoreViewController.m in Sources */,
+				6A37B1D71FB378BC00934A75 /* LMAppleWatchBridge.m in Sources */,
 				6A3211441DA73EC90060DD07 /* LMMarqueeLabel.m in Sources */,
 				6AAA56011DF407A800692CFB /* LMSearchBar.m in Sources */,
 				6A072BEC1E87B95A0092EA44 /* LMCoreNavigationController.m in Sources */,
