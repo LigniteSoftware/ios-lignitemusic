@@ -23,7 +23,7 @@
 
 - (void)progressSliderWithInfo:(LMWProgressSliderInfo *)progressSliderInfo slidToNewPositionWithPercentage:(CGFloat)percentage {
 	
-	[self.testLabel setText:[NSString stringWithFormat:@"%.02f", percentage]];
+	[self.titleLabel setText:[NSString stringWithFormat:@"%.02f", percentage]];
 }
 
 - (IBAction)progressPanGesture:(WKPanGestureRecognizer*)panGestureRecognizer {

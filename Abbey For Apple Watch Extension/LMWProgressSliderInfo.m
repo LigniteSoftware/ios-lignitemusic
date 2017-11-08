@@ -55,9 +55,14 @@
 - (void)setWidthOfSlider:(CGFloat)width animated:(BOOL)animated {
 	self.size = CGSizeMake(width, self.size.height);
 	
-	[self.interfaceController animateWithDuration:animated ? 0.5 : 0 animations:^{
+	if(animated){
+		[self.interfaceController animateWithDuration:0.5 animations:^{
+			[self.progressBar setWidth:width];
+		}];
+	}
+	else{
 		[self.progressBar setWidth:width];
-	}];
+	}
 }
 
 - (void)setIsShrunk:(BOOL)isShrunk {

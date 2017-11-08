@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="13529" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AgC-eL-Hgc">
-    <device id="watch38" orientation="portrait">
+    <device id="watch42" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -8,48 +8,85 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="13507"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="HelveticaNeueLights.ttc">
+            <string>HelveticaNeue-Light</string>
+        </array>
+    </customFonts>
     <scenes>
         <!--Interface Controller-->
         <scene sceneID="aou-V4-d1y">
             <objects>
                 <controller id="AgC-eL-Hgc" customClass="InterfaceController">
                     <items>
-                        <group width="1" height="0.20000000000000001" alignment="left" radius="0.0" spacing="0.0" id="Hbh-8q-bB0" userLabel="Slider Group">
+                        <group width="1" height="1" alignment="left" layout="overlap" spacing="0.0" id="PEh-FC-AVI" userLabel="Root Container">
                             <items>
-                                <group width="1" height="0.29999999999999999" alignment="left" verticalAlignment="bottom" spacing="0.0" id="Blj-jY-PsE" userLabel="Progress Bar Container">
+                                <imageView width="1" height="0.80000000000000004" alignment="left" image="chidster" contentMode="scaleAspectFill" id="BvG-LR-NtJ"/>
+                                <group width="1" height="0.34999999999999998" alignment="left" verticalAlignment="bottom" layout="vertical" spacing="0.0" id="Ki4-AN-XF7" userLabel="Track Info Container">
                                     <items>
-                                        <group width="50" height="1" alignment="left" id="uNo-TJ-D5i" userLabel="Progress Bar">
+                                        <group width="1" height="0.40000000000000002" alignment="left" layout="vertical" radius="0.0" spacing="0.0" id="Hbh-8q-bB0" userLabel="Slider Group">
                                             <items>
-                                                <group width="8" height="1" alignment="right" id="uQ8-tD-yad" userLabel="Grabber">
-                                                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                <group width="1" height="0.29999999999999999" alignment="left" verticalAlignment="bottom" spacing="0.0" id="Blj-jY-PsE" userLabel="Progress Bar Container">
+                                                    <items>
+                                                        <group width="50" height="1" alignment="left" id="uNo-TJ-D5i" userLabel="Progress Bar">
+                                                            <items>
+                                                                <group width="8" height="1" alignment="right" id="uQ8-tD-yad" userLabel="Grabber">
+                                                                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                                </group>
+                                                            </items>
+                                                            <color key="backgroundColor" red="0.95194083452224731" green="0.15837645530700684" blue="0.096465460956096649" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        </group>
+                                                    </items>
+                                                    <color key="backgroundColor" white="0.69891183040000004" alpha="1" colorSpace="calibratedWhite"/>
                                                 </group>
                                             </items>
-                                            <color key="backgroundColor" red="0.95194083452224731" green="0.15837645530700684" blue="0.096465460956096649" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <gestureRecognizers>
+                                                <panGestureRecognizer id="nfH-8U-vdJ">
+                                                    <connections>
+                                                        <action selector="progressPanGesture:" destination="AgC-eL-Hgc" id="uxa-Ja-QIr"/>
+                                                    </connections>
+                                                </panGestureRecognizer>
+                                            </gestureRecognizers>
+                                            <color key="backgroundColor" white="0.69891183035714288" alpha="0.0" colorSpace="calibratedWhite"/>
+                                            <edgeInsets key="margins" left="0.0" right="0.0" top="0.0" bottom="0.0"/>
+                                        </group>
+                                        <group width="1" height="0.59999999999999998" alignment="left" spacing="0.0" id="j6H-mZ-SBl" userLabel="Track Info Group">
+                                            <items>
+                                                <group width="0.25" height="1" alignment="left" spacing="0.0" id="kIh-u5-dMv" userLabel="Control Button Group">
+                                                    <items>
+                                                        <imageView width="0.65000000000000002" height="0.65000000000000002" alignment="center" verticalAlignment="center" image="newfave" contentMode="scaleAspectFit" id="mBZ-WZ-8K5"/>
+                                                    </items>
+                                                </group>
+                                                <group width="0.75" alignment="left" verticalAlignment="center" layout="vertical" spacing="0.0" id="QiB-hQ-eoa" userLabel="Info Text Group">
+                                                    <items>
+                                                        <label width="136" alignment="left" text="Label" id="b8p-RV-XJb" userLabel="Title Label">
+                                                            <fontDescription key="font" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="16"/>
+                                                        </label>
+                                                        <label width="1" alignment="left" text="Subtitle" id="Nya-mZ-DzX" userLabel="Subtitle Label">
+                                                            <fontDescription key="font" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="10"/>
+                                                        </label>
+                                                    </items>
+                                                </group>
+                                            </items>
+                                            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         </group>
                                     </items>
-                                    <color key="backgroundColor" white="0.69891183040000004" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
                                 </group>
                             </items>
-                            <gestureRecognizers>
-                                <panGestureRecognizer id="nfH-8U-vdJ">
-                                    <connections>
-                                        <action selector="progressPanGesture:" destination="AgC-eL-Hgc" id="uxa-Ja-QIr"/>
-                                    </connections>
-                                </panGestureRecognizer>
-                            </gestureRecognizers>
-                            <color key="backgroundColor" white="0.69891183035714288" alpha="0.0" colorSpace="calibratedWhite"/>
                             <edgeInsets key="margins" left="0.0" right="0.0" top="0.0" bottom="0.0"/>
                         </group>
-                        <label width="136" alignment="left" text="Label" id="b8p-RV-XJb"/>
                     </items>
                     <connections>
+                        <outlet property="albumArtImage" destination="BvG-LR-NtJ" id="3iq-sp-HTY"/>
                         <outlet property="progressBarContainer" destination="Blj-jY-PsE" id="a3o-Ns-Dqi"/>
                         <outlet property="progressBarGroup" destination="uNo-TJ-D5i" id="xz0-Yd-k3P"/>
-                        <outlet property="testLabel" destination="b8p-RV-XJb" id="ivD-2g-AaF"/>
+                        <outlet property="subtitleLabel" destination="Nya-mZ-DzX" id="byw-Qx-j2B"/>
+                        <outlet property="titleLabel" destination="b8p-RV-XJb" id="sDJ-oz-eRn"/>
                     </connections>
                 </controller>
             </objects>
-            <point key="canvasLocation" x="220" y="345"/>
+            <point key="canvasLocation" x="219.69230769230771" y="344.79487179487182"/>
         </scene>
         <!--Static Notification Interface Controller-->
         <scene sceneID="AEw-b0-oYE">
