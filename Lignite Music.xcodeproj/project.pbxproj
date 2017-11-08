@@ -58,6 +58,7 @@
 		6A32A9E81DC654500056CC60 /* LMTriangleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A32A9E71DC654500056CC60 /* LMTriangleView.m */; };
 		6A32A9EC1DC68F440056CC60 /* LMTriangleContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A32A9EB1DC68F440056CC60 /* LMTriangleContainerView.m */; };
 		6A32A9EF1DC6906D0056CC60 /* LMTriangleMaskView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A32A9EE1DC6906D0056CC60 /* LMTriangleMaskView.m */; };
+		6A37B1CA1FB2761D00934A75 /* LMWProgressSliderInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A37B1C91FB2761D00934A75 /* LMWProgressSliderInfo.m */; };
 		6A4157CD1E04669E00D09D4B /* icon_back.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A4157CC1E04669E00D09D4B /* icon_back.png */; };
 		6A43BCE71DDFA471009FB0E9 /* tutorial_now_playing.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A43BCE61DDFA471009FB0E9 /* tutorial_now_playing.png */; };
 		6A43BCE91DDFA66B009FB0E9 /* onboarding_us.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A43BCE81DDFA66B009FB0E9 /* onboarding_us.png */; };
@@ -198,6 +199,17 @@
 		6ADC48EF1DDF8C8000FE57F1 /* onboarding_library_access.png in Resources */ = {isa = PBXBuildFile; fileRef = 6ADC48ED1DDF8C8000FE57F1 /* onboarding_library_access.png */; };
 		6ADC48F01DDF8C8000FE57F1 /* onboarding_bluetooth.png in Resources */ = {isa = PBXBuildFile; fileRef = 6ADC48EE1DDF8C8000FE57F1 /* onboarding_bluetooth.png */; };
 		6ADCBA2F1ED9B76000CAD705 /* LMDetailView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ADCBA2E1ED9B76000CAD705 /* LMDetailView.m */; };
+		6ADCE2021FB262B800BE0BBB /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6ADCE2001FB262B800BE0BBB /* Interface.storyboard */; };
+		6ADCE2041FB262B800BE0BBB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6ADCE2031FB262B800BE0BBB /* Assets.xcassets */; };
+		6ADCE20B1FB262B800BE0BBB /* Abbey For Apple Watch Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 6ADCE20A1FB262B800BE0BBB /* Abbey For Apple Watch Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		6ADCE2111FB262B800BE0BBB /* InterfaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ADCE2101FB262B800BE0BBB /* InterfaceController.m */; };
+		6ADCE2141FB262B800BE0BBB /* ExtensionDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ADCE2131FB262B800BE0BBB /* ExtensionDelegate.m */; };
+		6ADCE2171FB262B800BE0BBB /* NotificationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ADCE2161FB262B800BE0BBB /* NotificationController.m */; };
+		6ADCE21A1FB262B800BE0BBB /* ComplicationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ADCE2191FB262B800BE0BBB /* ComplicationController.m */; };
+		6ADCE21C1FB262B800BE0BBB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6ADCE21B1FB262B800BE0BBB /* Assets.xcassets */; };
+		6ADCE2211FB262B800BE0BBB /* Abbey For Apple Watch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 6ADCE1FE1FB262B800BE0BBB /* Abbey For Apple Watch.app */; };
+		6ADCE22C1FB267FC00BE0BBB /* chiddy.png in Resources */ = {isa = PBXBuildFile; fileRef = 6ADCE22A1FB267FC00BE0BBB /* chiddy.png */; };
+		6ADCE22D1FB267FC00BE0BBB /* red.png in Resources */ = {isa = PBXBuildFile; fileRef = 6ADCE22B1FB267FC00BE0BBB /* red.png */; };
 		6ADDBD3D1DA29D3E00DB99EF /* LMShadowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ADDBD3C1DA29D3E00DB99EF /* LMShadowView.m */; };
 		6ADFFF781ECCC0B900E06FBF /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ADFFF771ECCC0B900E06FBF /* MBProgressHUD.m */; };
 		6ADFFF7C1ECCC11D00E06FBF /* MarqueeLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ADFFF7B1ECCC11D00E06FBF /* MarqueeLabel.m */; };
@@ -235,6 +247,48 @@
 		6AFF01A81DDED15100F24D8E /* onboarding_gutless_user.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AFF01A71DDED15100F24D8E /* onboarding_gutless_user.png */; };
 		957F3E1F9B7281591E9E88BC /* Pods_Lignite_Music.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50AA3F2AD5E6CE2B672C8B09 /* Pods_Lignite_Music.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		6ADCE20C1FB262B800BE0BBB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6AEB9CF01BACF60E00AD19FA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6ADCE2091FB262B800BE0BBB;
+			remoteInfo = "Abbey For Apple Watch Extension";
+		};
+		6ADCE21F1FB262B800BE0BBB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6AEB9CF01BACF60E00AD19FA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6ADCE1FD1FB262B800BE0BBB;
+			remoteInfo = "Abbey For Apple Watch";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		6ADCE2251FB262B800BE0BBB /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				6ADCE20B1FB262B800BE0BBB /* Abbey For Apple Watch Extension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6ADCE2291FB262B800BE0BBB /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				6ADCE2211FB262B800BE0BBB /* Abbey For Apple Watch.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		3C009873236EF4158CF9CA1F /* Pods-Lignite Music for Spotify.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lignite Music for Spotify.release.xcconfig"; path = "Pods/Target Support Files/Pods-Lignite Music for Spotify/Pods-Lignite Music for Spotify.release.xcconfig"; sourceTree = "<group>"; };
@@ -326,6 +380,8 @@
 		6A32A9ED1DC6906D0056CC60 /* LMTriangleMaskView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMTriangleMaskView.h; sourceTree = "<group>"; };
 		6A32A9EE1DC6906D0056CC60 /* LMTriangleMaskView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMTriangleMaskView.m; sourceTree = "<group>"; };
 		6A32A9F01DC695020056CC60 /* main.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = main.h; sourceTree = "<group>"; };
+		6A37B1C81FB2761D00934A75 /* LMWProgressSliderInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMWProgressSliderInfo.h; sourceTree = "<group>"; };
+		6A37B1C91FB2761D00934A75 /* LMWProgressSliderInfo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMWProgressSliderInfo.m; sourceTree = "<group>"; };
 		6A4157CC1E04669E00D09D4B /* icon_back.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_back.png; sourceTree = "<group>"; };
 		6A43BCE61DDFA471009FB0E9 /* tutorial_now_playing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tutorial_now_playing.png; sourceTree = "<group>"; };
 		6A43BCE81DDFA66B009FB0E9 /* onboarding_us.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = onboarding_us.png; sourceTree = "<group>"; };
@@ -545,6 +601,24 @@
 		6ADC48EE1DDF8C8000FE57F1 /* onboarding_bluetooth.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = onboarding_bluetooth.png; sourceTree = "<group>"; };
 		6ADCBA2D1ED9B76000CAD705 /* LMDetailView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMDetailView.h; sourceTree = "<group>"; };
 		6ADCBA2E1ED9B76000CAD705 /* LMDetailView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMDetailView.m; sourceTree = "<group>"; };
+		6ADCE1FE1FB262B800BE0BBB /* Abbey For Apple Watch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Abbey For Apple Watch.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6ADCE2011FB262B800BE0BBB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
+		6ADCE2031FB262B800BE0BBB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		6ADCE2051FB262B800BE0BBB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6ADCE20A1FB262B800BE0BBB /* Abbey For Apple Watch Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Abbey For Apple Watch Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6ADCE20F1FB262B800BE0BBB /* InterfaceController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InterfaceController.h; sourceTree = "<group>"; };
+		6ADCE2101FB262B800BE0BBB /* InterfaceController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InterfaceController.m; sourceTree = "<group>"; };
+		6ADCE2121FB262B800BE0BBB /* ExtensionDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ExtensionDelegate.h; sourceTree = "<group>"; };
+		6ADCE2131FB262B800BE0BBB /* ExtensionDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ExtensionDelegate.m; sourceTree = "<group>"; };
+		6ADCE2151FB262B800BE0BBB /* NotificationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NotificationController.h; sourceTree = "<group>"; };
+		6ADCE2161FB262B800BE0BBB /* NotificationController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NotificationController.m; sourceTree = "<group>"; };
+		6ADCE2181FB262B800BE0BBB /* ComplicationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ComplicationController.h; sourceTree = "<group>"; };
+		6ADCE2191FB262B800BE0BBB /* ComplicationController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ComplicationController.m; sourceTree = "<group>"; };
+		6ADCE21B1FB262B800BE0BBB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		6ADCE21D1FB262B800BE0BBB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6ADCE21E1FB262B800BE0BBB /* PushNotificationPayload.apns */ = {isa = PBXFileReference; lastKnownFileType = text; path = PushNotificationPayload.apns; sourceTree = "<group>"; };
+		6ADCE22A1FB267FC00BE0BBB /* chiddy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chiddy.png; sourceTree = "<group>"; };
+		6ADCE22B1FB267FC00BE0BBB /* red.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = red.png; sourceTree = "<group>"; };
 		6ADDBD3B1DA29D3E00DB99EF /* LMShadowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMShadowView.h; sourceTree = "<group>"; };
 		6ADDBD3C1DA29D3E00DB99EF /* LMShadowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMShadowView.m; sourceTree = "<group>"; };
 		6ADFFF761ECCC0B900E06FBF /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
@@ -611,6 +685,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		6ADCE2071FB262B800BE0BBB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		6AEB9CF51BACF60E00AD19FA /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1125,6 +1206,38 @@
 			name = Music;
 			sourceTree = "<group>";
 		};
+		6ADCE1FF1FB262B800BE0BBB /* Abbey For Apple Watch */ = {
+			isa = PBXGroup;
+			children = (
+				6ADCE2001FB262B800BE0BBB /* Interface.storyboard */,
+				6ADCE2031FB262B800BE0BBB /* Assets.xcassets */,
+				6ADCE2051FB262B800BE0BBB /* Info.plist */,
+			);
+			path = "Abbey For Apple Watch";
+			sourceTree = "<group>";
+		};
+		6ADCE20E1FB262B800BE0BBB /* Abbey For Apple Watch Extension */ = {
+			isa = PBXGroup;
+			children = (
+				6ADCE20F1FB262B800BE0BBB /* InterfaceController.h */,
+				6ADCE2101FB262B800BE0BBB /* InterfaceController.m */,
+				6A37B1C81FB2761D00934A75 /* LMWProgressSliderInfo.h */,
+				6A37B1C91FB2761D00934A75 /* LMWProgressSliderInfo.m */,
+				6ADCE2121FB262B800BE0BBB /* ExtensionDelegate.h */,
+				6ADCE2131FB262B800BE0BBB /* ExtensionDelegate.m */,
+				6ADCE2151FB262B800BE0BBB /* NotificationController.h */,
+				6ADCE2161FB262B800BE0BBB /* NotificationController.m */,
+				6ADCE2181FB262B800BE0BBB /* ComplicationController.h */,
+				6ADCE2191FB262B800BE0BBB /* ComplicationController.m */,
+				6ADCE22A1FB267FC00BE0BBB /* chiddy.png */,
+				6ADCE22B1FB267FC00BE0BBB /* red.png */,
+				6ADCE21B1FB262B800BE0BBB /* Assets.xcassets */,
+				6ADCE21D1FB262B800BE0BBB /* Info.plist */,
+				6ADCE21E1FB262B800BE0BBB /* PushNotificationPayload.apns */,
+			);
+			path = "Abbey For Apple Watch Extension";
+			sourceTree = "<group>";
+		};
 		6AE9E6E81F9C5A750077B15E /* Playlists */ = {
 			isa = PBXGroup;
 			children = (
@@ -1153,6 +1266,8 @@
 				6AEB9CFA1BACF60E00AD19FA /* Lignite Music */,
 				6AEB9D141BACF60F00AD19FA /* Lignite MusicTests */,
 				6AEB9D1F1BACF60F00AD19FA /* Lignite MusicUITests */,
+				6ADCE1FF1FB262B800BE0BBB /* Abbey For Apple Watch */,
+				6ADCE20E1FB262B800BE0BBB /* Abbey For Apple Watch Extension */,
 				6AEB9CF91BACF60E00AD19FA /* Products */,
 				EEE9F5AA536DDB5B28CE09F9 /* Frameworks */,
 				88366BCA106EFEBEDF47DFA0 /* Pods */,
@@ -1163,6 +1278,8 @@
 			isa = PBXGroup;
 			children = (
 				6AEB9CF81BACF60E00AD19FA /* Lignite Music.app */,
+				6ADCE1FE1FB262B800BE0BBB /* Abbey For Apple Watch.app */,
+				6ADCE20A1FB262B800BE0BBB /* Abbey For Apple Watch Extension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1332,6 +1449,40 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		6ADCE1FD1FB262B800BE0BBB /* Abbey For Apple Watch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6ADCE2261FB262B800BE0BBB /* Build configuration list for PBXNativeTarget "Abbey For Apple Watch" */;
+			buildPhases = (
+				6ADCE1FC1FB262B800BE0BBB /* Resources */,
+				6ADCE2251FB262B800BE0BBB /* Embed App Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				6ADCE20D1FB262B800BE0BBB /* PBXTargetDependency */,
+			);
+			name = "Abbey For Apple Watch";
+			productName = "Abbey For Apple Watch";
+			productReference = 6ADCE1FE1FB262B800BE0BBB /* Abbey For Apple Watch.app */;
+			productType = "com.apple.product-type.application.watchapp2";
+		};
+		6ADCE2091FB262B800BE0BBB /* Abbey For Apple Watch Extension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6ADCE2221FB262B800BE0BBB /* Build configuration list for PBXNativeTarget "Abbey For Apple Watch Extension" */;
+			buildPhases = (
+				6ADCE2061FB262B800BE0BBB /* Sources */,
+				6ADCE2071FB262B800BE0BBB /* Frameworks */,
+				6ADCE2081FB262B800BE0BBB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Abbey For Apple Watch Extension";
+			productName = "Abbey For Apple Watch Extension";
+			productReference = 6ADCE20A1FB262B800BE0BBB /* Abbey For Apple Watch Extension.appex */;
+			productType = "com.apple.product-type.watchkit2-extension";
+		};
 		6AEB9CF71BACF60E00AD19FA /* Lignite Music */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 6AEB9D251BACF60F00AD19FA /* Build configuration list for PBXNativeTarget "Lignite Music" */;
@@ -1343,10 +1494,12 @@
 				33E11C0464958C7B098CDE2D /* [CP] Embed Pods Frameworks */,
 				D083EC8A2EC9BA4BD0DF3154 /* [CP] Copy Pods Resources */,
 				6A5F43DF1E0994BF005E0075 /* ShellScript */,
+				6ADCE2291FB262B800BE0BBB /* Embed Watch Content */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				6ADCE2201FB262B800BE0BBB /* PBXTargetDependency */,
 			);
 			name = "Lignite Music";
 			productName = "Lignite Music";
@@ -1362,6 +1515,16 @@
 				LastUpgradeCheck = 0900;
 				ORGANIZATIONNAME = Lignite;
 				TargetAttributes = {
+					6ADCE1FD1FB262B800BE0BBB = {
+						CreatedOnToolsVersion = 9.1;
+						DevelopmentTeam = FC8DY8T6N2;
+						ProvisioningStyle = Automatic;
+					};
+					6ADCE2091FB262B800BE0BBB = {
+						CreatedOnToolsVersion = 9.1;
+						DevelopmentTeam = FC8DY8T6N2;
+						ProvisioningStyle = Automatic;
+					};
 					6AEB9CF71BACF60E00AD19FA = {
 						CreatedOnToolsVersion = 7.0;
 						DevelopmentTeam = FC8DY8T6N2;
@@ -1390,11 +1553,32 @@
 			projectRoot = "";
 			targets = (
 				6AEB9CF71BACF60E00AD19FA /* Lignite Music */,
+				6ADCE1FD1FB262B800BE0BBB /* Abbey For Apple Watch */,
+				6ADCE2091FB262B800BE0BBB /* Abbey For Apple Watch Extension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		6ADCE1FC1FB262B800BE0BBB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6ADCE2041FB262B800BE0BBB /* Assets.xcassets in Resources */,
+				6ADCE2021FB262B800BE0BBB /* Interface.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6ADCE2081FB262B800BE0BBB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6ADCE22C1FB267FC00BE0BBB /* chiddy.png in Resources */,
+				6ADCE21C1FB262B800BE0BBB /* Assets.xcassets in Resources */,
+				6ADCE22D1FB267FC00BE0BBB /* red.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		6AEB9CF61BACF60E00AD19FA /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1586,6 +1770,18 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		6ADCE2061FB262B800BE0BBB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6A37B1CA1FB2761D00934A75 /* LMWProgressSliderInfo.m in Sources */,
+				6ADCE2141FB262B800BE0BBB /* ExtensionDelegate.m in Sources */,
+				6ADCE21A1FB262B800BE0BBB /* ComplicationController.m in Sources */,
+				6ADCE2111FB262B800BE0BBB /* InterfaceController.m in Sources */,
+				6ADCE2171FB262B800BE0BBB /* NotificationController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		6AEB9CF41BACF60E00AD19FA /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1715,6 +1911,19 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		6ADCE20D1FB262B800BE0BBB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 6ADCE2091FB262B800BE0BBB /* Abbey For Apple Watch Extension */;
+			targetProxy = 6ADCE20C1FB262B800BE0BBB /* PBXContainerItemProxy */;
+		};
+		6ADCE2201FB262B800BE0BBB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 6ADCE1FD1FB262B800BE0BBB /* Abbey For Apple Watch */;
+			targetProxy = 6ADCE21F1FB262B800BE0BBB /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin PBXVariantGroup section */
 		6AAF610F1DA0286F00971875 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
@@ -1724,6 +1933,14 @@
 				6AAF61111DA028C200971875 /* de */,
 			);
 			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		6ADCE2001FB262B800BE0BBB /* Interface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6ADCE2011FB262B800BE0BBB /* Base */,
+			);
+			name = Interface.storyboard;
 			sourceTree = "<group>";
 		};
 		6AEB9D041BACF60E00AD19FA /* Main.storyboard */ = {
@@ -1756,6 +1973,102 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		6ADCE2231FB262B800BE0BBB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = FC8DY8T6N2;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = "Abbey For Apple Watch Extension/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = lignite.io.music.watchkitapp.watchkitextension;
+				PRODUCT_NAME = "${TARGET_NAME}";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 4.1;
+			};
+			name = Debug;
+		};
+		6ADCE2241FB262B800BE0BBB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = FC8DY8T6N2;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = "Abbey For Apple Watch Extension/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = lignite.io.music.watchkitapp.watchkitextension;
+				PRODUCT_NAME = "${TARGET_NAME}";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 4.1;
+			};
+			name = Release;
+		};
+		6ADCE2271FB262B800BE0BBB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = FC8DY8T6N2;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				IBSC_MODULE = Abbey_For_Apple_Watch_Extension;
+				INFOPLIST_FILE = "Abbey For Apple Watch/Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = lignite.io.music.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 4.1;
+			};
+			name = Debug;
+		};
+		6ADCE2281FB262B800BE0BBB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = FC8DY8T6N2;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				IBSC_MODULE = Abbey_For_Apple_Watch_Extension;
+				INFOPLIST_FILE = "Abbey For Apple Watch/Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = lignite.io.music.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 4.1;
+			};
+			name = Release;
+		};
 		6AEB9D231BACF60F00AD19FA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1945,6 +2258,24 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		6ADCE2221FB262B800BE0BBB /* Build configuration list for PBXNativeTarget "Abbey For Apple Watch Extension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6ADCE2231FB262B800BE0BBB /* Debug */,
+				6ADCE2241FB262B800BE0BBB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6ADCE2261FB262B800BE0BBB /* Build configuration list for PBXNativeTarget "Abbey For Apple Watch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6ADCE2271FB262B800BE0BBB /* Debug */,
+				6ADCE2281FB262B800BE0BBB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		6AEB9CF31BACF60E00AD19FA /* Build configuration list for PBXProject "Lignite Music" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
