@@ -149,7 +149,7 @@
 
 - (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator	{
 	
-	BOOL willBeLandscape = size.width > size.height;
+//	BOOL willBeLandscape = size.width > size.height;
 	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		[self.conditionsCollectionView reloadData];
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
@@ -490,7 +490,7 @@
 	BOOL isWantToHear = (entry.indexPath.section == 0);
 	
 	LMMusicType musicType = (LMMusicType)[[(isWantToHear ? [self.playlist wantToHearMusicTypes] : [self.playlist dontWantToHearMusicTypes]) objectAtIndex:entry.indexPath.row - 1] integerValue];
-	LMMusicTrackCollection *collection = [(isWantToHear ? [self.playlist wantToHearTrackCollections] : [self.playlist dontWantToHearTrackCollections]) objectAtIndex:entry.indexPath.row - 1];
+//	LMMusicTrackCollection *collection = [(isWantToHear ? [self.playlist wantToHearTrackCollections] : [self.playlist dontWantToHearTrackCollections]) objectAtIndex:entry.indexPath.row - 1];
 	
 	switch(musicType){
 		case LMMusicTypeFavourites:
