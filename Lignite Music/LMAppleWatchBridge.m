@@ -211,6 +211,31 @@
 		
 		replyHandler(@{ @"sent":@"pimp" });
 	}
+	else if([key isEqualToString:LMAppleWatchControlKeyPlayPause]){
+		[self.musicPlayer invertPlaybackState];
+	}
+	else if([key isEqualToString:LMAppleWatchControlKeyNextTrack]){
+		[self.musicPlayer skipToNextTrack];
+	}
+	else if([key isEqualToString:LMAppleWatchControlKeyPreviousTrack]){
+		[self.musicPlayer skipToPreviousItem];
+	}
+	else if([key isEqualToString:LMAppleWatchControlKeyFavouriteUnfavourite]){
+		dispatch_async(dispatch_get_main_queue(), ^{
+			if(self.musicPlayer.nowPlayingTrack.isFavourite){
+				[self.musicPlayer removeTrackFromFavourites:self.musicPlayer.nowPlayingTrack];
+			}
+			else{
+				[self.musicPlayer addTrackToFavourites:self.musicPlayer.nowPlayingTrack];
+			}
+		});
+	}
+	else if([key isEqualToString:LMAppleWatchControlKeyCurrentPlaybackTime]){
+		dispatch_async(dispatch_get_main_queue(), ^{
+			NSInteger currentPlaybackTime = [[message objectForKey:LMAppleWatchControlKeyCurrentPlaybackTime] integerValue];
+			[self.musicPlayer setCurrentPlaybackTime:(NSTimeInterval)currentPlaybackTime];
+		});
+	}
 }
 
 - (void)session:(WCSession *)session activationDidCompleteWithState:(WCSessionActivationState)activationState error:(nullable NSError *)error {

@@ -101,7 +101,12 @@
 
 
 - (void)progressSliderWithInfo:(LMWProgressSliderInfo *)progressSliderInfo slidToNewPositionWithPercentage:(CGFloat)percentage {
+	
+	NSInteger newPlaybackTime = (NSInteger)((CGFloat)self.companionBridge.nowPlayingInfo.playbackDuration * percentage);
+	
+	self.companionBridge.nowPlayingInfo.currentPlaybackTime = newPlaybackTime;
 
+	[self.companionBridge setCurrentPlaybackTime:newPlaybackTime];
 }
 
 - (IBAction)progressPanGesture:(WKPanGestureRecognizer*)panGestureRecognizer {
@@ -110,6 +115,22 @@
 	}
 	
 	[self.progressSliderInfo handleProgressPanGesture:panGestureRecognizer];
+}
+
+- (IBAction)playPauseTapGestureRecognizerTapped:(WKTapGestureRecognizer*)tapGestureRecognizer {
+	[self.companionBridge sendMusicControlMessageToPhoneWithKey:LMAppleWatchControlKeyPlayPause];
+}
+
+- (IBAction)favouritesImageTapGestureRecognizerTapped:(WKTapGestureRecognizer*)tapGestureRecognizer {
+	[self.companionBridge sendMusicControlMessageToPhoneWithKey:LMAppleWatchControlKeyFavouriteUnfavourite];
+}
+
+- (IBAction)nextSongGestureSwiped:(WKSwipeGestureRecognizer*)swipeGestureRecognizer {
+	[self.companionBridge sendMusicControlMessageToPhoneWithKey:LMAppleWatchControlKeyNextTrack];
+}
+
+- (IBAction)previousSongGestureSwiped:(WKSwipeGestureRecognizer*)swipeGestureRecognizer {
+	[self.companionBridge sendMusicControlMessageToPhoneWithKey:LMAppleWatchControlKeyPreviousTrack];
 }
 
 

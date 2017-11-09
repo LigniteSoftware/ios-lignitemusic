@@ -45,6 +45,17 @@
 //The now playing info is what's being transmitted.
 #define LMAppleWatchCommunicationKeyNowPlayingInfo @"LMAppleWatchCommunicationKeyNowPlayingInfo"
 
+//Invert the play/pause status from whatever it is now.
+#define LMAppleWatchControlKeyPlayPause @"LMAppleWatchControlKeyPlayPause"
+//Skip to the next track in the queue.
+#define LMAppleWatchControlKeyNextTrack @"LMAppleWatchControlKeyNextTrack"
+//Go back to the previous track in the queue.
+#define LMAppleWatchControlKeyPreviousTrack @"LMAppleWatchControlKeyPreviousTrack"
+//Invert the favourite status of this track.
+#define LMAppleWatchControlKeyFavouriteUnfavourite @"LMAppleWatchControlKeyFavouriteUnfavourite"
+//The current playback time. NEEDS to be sent along with a key:value pair of LMAppleWatchControlKeyCurrentPlaybackTime:<NSNumber*>playbackTime.
+#define LMAppleWatchControlKeyCurrentPlaybackTime @"LMAppleWatchControlKeyCurrentPlaybackTime"
+
 @protocol LMWCompanionBridgeDelegate<NSObject>
 @optional
 
@@ -111,5 +122,19 @@
  Sends a ping to the companion asking for the latest and greatest now playing info.
  */
 - (void)askCompanionForNowPlayingTrackInfo;
+
+/**
+ Sends a control message to the companion for doing actions such as changing the song. Automatically handles resending in the case of disconnection.
+
+ @param key The communication key to send to the phone.
+ */
+- (void)sendMusicControlMessageToPhoneWithKey:(NSString*)key;
+
+/**
+ Sets the current playback time by sending a message with the set time to the phone.
+
+ @param currentPlaybackTime The current playback time to set.
+ */
+- (void)setCurrentPlaybackTime:(NSInteger)currentPlaybackTime;
 
 @end

@@ -130,9 +130,54 @@
 		}];
 	}
 	else{
-		[NSTimer scheduledTimerWithTimeInterval:0.5 repeats:NO block:^(NSTimer * _Nonnull timer) {
-			[self askCompanionForNowPlayingTrackInfo];
-		}];
+		dispatch_async(dispatch_get_main_queue(), ^{
+			[NSTimer scheduledTimerWithTimeInterval:0.5 repeats:NO block:^(NSTimer * _Nonnull timer) {
+				[self askCompanionForNowPlayingTrackInfo];
+			}];
+		});
+	}
+}
+
+- (void)sendMusicControlMessageToPhoneWithKey:(NSString*)key {
+	if(self.session.reachable){
+		[self.session sendMessage:@{ LMAppleWatchCommunicationKey:key }
+					 replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
+						NSLog(@"Got reply %@", replyMessage);
+					 }
+					 errorHandler:^(NSError * _Nonnull error) {
+						NSLog(@"Error %@", error);
+					 }
+		];
+	}
+	else{
+		dispatch_async(dispatch_get_main_queue(), ^{
+			[NSTimer scheduledTimerWithTimeInterval:0.5 repeats:NO block:^(NSTimer * _Nonnull timer) {
+				[self sendMusicControlMessageToPhoneWithKey:key];
+			}];
+		});
+	}
+}
+
+- (void)setCurrentPlaybackTime:(NSInteger)currentPlaybackTime {
+	if(self.session.reachable){
+		[self.session sendMessage:@{
+									LMAppleWatchCommunicationKey:LMAppleWatchControlKeyCurrentPlaybackTime,
+									LMAppleWatchControlKeyCurrentPlaybackTime:@(currentPlaybackTime)
+									 }
+					 replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
+						 NSLog(@"Got reply %@", replyMessage);
+					 }
+					 errorHandler:^(NSError * _Nonnull error) {
+						 NSLog(@"Error %@", error);
+					 }
+		 ];
+	}
+	else{
+		dispatch_async(dispatch_get_main_queue(), ^{
+			[NSTimer scheduledTimerWithTimeInterval:0.5 repeats:NO block:^(NSTimer * _Nonnull timer) {
+				[self setCurrentPlaybackTime:currentPlaybackTime];
+			}];
+		});
 	}
 }
 

@@ -43,6 +43,17 @@
 //The now playing info is what's being transmitted.
 #define LMAppleWatchCommunicationKeyNowPlayingInfo @"LMAppleWatchCommunicationKeyNowPlayingInfo"
 
+//Invert the play/pause status from whatever it is now.
+#define LMAppleWatchControlKeyPlayPause @"LMAppleWatchControlKeyPlayPause"
+//Skip to the next track in the queue.
+#define LMAppleWatchControlKeyNextTrack @"LMAppleWatchControlKeyNextTrack"
+//Go back to the previous track in the queue.
+#define LMAppleWatchControlKeyPreviousTrack @"LMAppleWatchControlKeyPreviousTrack"
+//Invert the favourite status of this track.
+#define LMAppleWatchControlKeyFavouriteUnfavourite @"LMAppleWatchControlKeyFavouriteUnfavourite"
+//The current playback time. Comes with a key:value pair of LMAppleWatchControlKeyCurrentPlaybackTime:<NSNumber*>playbackTime.
+#define LMAppleWatchControlKeyCurrentPlaybackTime @"LMAppleWatchControlKeyCurrentPlaybackTime"
+
 @interface LMAppleWatchBridge : NSObject
 
 /**

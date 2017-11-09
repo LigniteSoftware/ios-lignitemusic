@@ -49,6 +49,34 @@
 - (IBAction)progressPanGesture:(WKPanGestureRecognizer*)panGestureRecognizer;
 
 /**
+ The play/pause tap gesture recognizer was tapped.
+
+ @param tapGestureRecognizer The tap gesture recognizer.
+ */
+- (IBAction)playPauseTapGestureRecognizerTapped:(WKTapGestureRecognizer*)tapGestureRecognizer;
+
+/**
+ The favourites icon tap gesture recognizer was tapped.
+ 
+ @param tapGestureRecognizer The tap gesture recognizer.
+ */
+- (IBAction)favouritesImageTapGestureRecognizerTapped:(WKTapGestureRecognizer*)tapGestureRecognizer;
+
+/**
+ The next song gesture was swiped.
+
+ @param swipeGestureRecognizer The swipe gesture recognizer.
+ */
+- (IBAction)nextSongGestureSwiped:(WKSwipeGestureRecognizer*)swipeGestureRecognizer;
+
+/**
+ The previous song gesture was swiped.
+ 
+ @param swipeGestureRecognizer The swipe gesture recognizer.
+ */
+- (IBAction)previousSongGestureSwiped:(WKSwipeGestureRecognizer*)swipeGestureRecognizer;
+
+/**
  Writes a string to the title label.
 
  @param debugMessage The debug message to write.

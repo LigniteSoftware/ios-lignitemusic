@@ -21,7 +21,25 @@
                     <items>
                         <group width="1" height="1" alignment="left" layout="overlap" spacing="0.0" id="PEh-FC-AVI" userLabel="Root Container">
                             <items>
-                                <imageView width="1" height="0.80000000000000004" alignment="left" image="watch_no_cover_art" contentMode="scaleAspectFill" id="BvG-LR-NtJ"/>
+                                <imageView width="1" height="0.80000000000000004" alignment="left" image="watch_no_cover_art" contentMode="scaleAspectFill" id="BvG-LR-NtJ">
+                                    <gestureRecognizers>
+                                        <tapGestureRecognizer id="Olc-7y-bvq" userLabel="Play/Pause Tap Gesture">
+                                            <connections>
+                                                <action selector="playPauseTapGestureRecognizerTapped:" destination="AgC-eL-Hgc" id="2XN-qz-00r"/>
+                                            </connections>
+                                        </tapGestureRecognizer>
+                                        <swipeGestureRecognizer direction="2" id="TI0-zd-hfB" userLabel="Next Song Gesture">
+                                            <connections>
+                                                <action selector="nextSongGestureSwiped:" destination="AgC-eL-Hgc" id="Idi-Da-Z0F"/>
+                                            </connections>
+                                        </swipeGestureRecognizer>
+                                        <swipeGestureRecognizer id="zFD-q4-uBh" userLabel="Previous Song Gesture">
+                                            <connections>
+                                                <action selector="previousSongGestureSwiped:" destination="AgC-eL-Hgc" id="ifP-rJ-pfB"/>
+                                            </connections>
+                                        </swipeGestureRecognizer>
+                                    </gestureRecognizers>
+                                </imageView>
                                 <group width="1" height="0.34999999999999998" alignment="left" verticalAlignment="bottom" layout="vertical" spacing="0.0" id="Ki4-AN-XF7" userLabel="Track Info Container">
                                     <items>
                                         <group width="1" height="0.40000000000000002" alignment="left" layout="vertical" radius="0.0" spacing="0.0" id="Hbh-8q-bB0" userLabel="Slider Group">
@@ -54,7 +72,15 @@
                                             <items>
                                                 <group width="0.25" height="1" alignment="left" spacing="0.0" id="kIh-u5-dMv" userLabel="Control Button Group">
                                                     <items>
-                                                        <imageView width="0.65000000000000002" height="0.65000000000000002" alignment="center" verticalAlignment="center" image="icon_unfavourite_white" contentMode="scaleAspectFit" id="mBZ-WZ-8K5"/>
+                                                        <imageView width="0.65000000000000002" height="0.65000000000000002" alignment="center" verticalAlignment="center" image="icon_unfavourite_white" contentMode="scaleAspectFit" id="mBZ-WZ-8K5">
+                                                            <gestureRecognizers>
+                                                                <tapGestureRecognizer id="8Ub-kY-ela" userLabel="Tap Gesture">
+                                                                    <connections>
+                                                                        <action selector="favouritesImageTapGestureRecognizerTapped:" destination="AgC-eL-Hgc" id="8cv-d6-Nr3"/>
+                                                                    </connections>
+                                                                </tapGestureRecognizer>
+                                                            </gestureRecognizers>
+                                                        </imageView>
                                                     </items>
                                                 </group>
                                                 <group width="0.75" alignment="left" verticalAlignment="center" layout="vertical" spacing="0.0" id="QiB-hQ-eoa" userLabel="Info Text Group">

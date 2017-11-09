@@ -41,6 +41,11 @@
  */
 @property (readonly) CGFloat grabberWidth;
 
+/**
+ Whether or not the user is interacting. If YES, all setPercentage:animated: calls will be ignored.
+ */
+@property BOOL userIsInteracting;
+
 @end
 
 @implementation LMWProgressSliderInfo
@@ -66,6 +71,10 @@
 }
 
 - (void)setPercentage:(CGFloat)percentage animated:(BOOL)animated {
+	if(self.userIsInteracting){
+		return;
+	}
+	
 	[self setWidthOfSlider:self.interfaceController.contentFrame.size.width * percentage
 				  animated:animated];
 }
@@ -83,18 +92,14 @@
 	return _isShrunk;
 }
 
-- (void)handleProgressPanGesture:(WKPanGestureRecognizer*)panGestureRecognizer {
-//	[self.testLabel setText:[NSString stringWithFormat:@"%p", panGestureRecognizer]];
-	
-	//	self.userIsInteracting = YES;
+- (void)handleProgressPanGesture:(WKPanGestureRecognizer*)panGestureRecognizer {	
+	self.userIsInteracting = YES;
 	
 	if(self.isShrunk){
 		[self setIsShrunk:NO];
 	}
 	
 	CGPoint rawTranslatedPoint = panGestureRecognizer.translationInObject;
-	
-	//	NSLog(@"%@", NSStringFromCGPoint(rawTranslatedPoint));
 	
 	CGPoint translatedPoint = rawTranslatedPoint;
 	
@@ -110,8 +115,6 @@
 		
 		didBeginSlidingFromRight = (firstX > self.interfaceController.contentFrame.size.width-capFactor);
 		didBeginSlidingFromLeft = (firstX < self.size.width+capFactor);
-		
-//		[self.testLabel setText:[NSString stringWithFormat:@"%d/%d", didBeginSlidingFromLeft, didBeginSlidingFromRight]];
 	}
 	
 	translatedPoint = CGPointMake(firstX+translatedPoint.x, 0);
@@ -125,76 +128,46 @@
 	
 	if(translatedPoint.x > capFactorRightSideWidth && !didBeginSlidingFromRight){
 		translatedPoint.x += capFactorRightPercentage * fabs(translatedPoint.x);
-		
-//		[self.testLabel setText:@"1"];
 	}
 	else if(translatedPoint.x < capFactor && !didBeginSlidingFromLeft){
 		translatedPoint.x -= capFactorLeftPercentage*capFactor;
-		
-//		[self.testLabel setText:@"2"];
 	}
 	
 	if(translatedPoint.x > capFactor){
 		didBeginSlidingFromLeft = NO;
-		
-//		[self.testLabel setText:@"3"];
 	}
 	
 	if(translatedPoint.x < capFactorRightSideWidth){
 		didBeginSlidingFromRight = NO;
-		
-//		[self.testLabel setText:@"4"];
 	}
 	
 	if(translatedPoint.x > self.interfaceController.contentFrame.size.width){
 		translatedPoint.x = self.interfaceController.contentFrame.size.width;
-		
-//		[self.testLabel setText:@"5"];
 	}
 	else if(translatedPoint.x < self.grabberWidth){
 		translatedPoint.x = self.grabberWidth;
-		
-//		[self.testLabel setText:@"6"];
 	}
 	
 	[self setWidthOfSlider:translatedPoint.x animated:NO];
 	
-	//	if(!self.animating){
-	//		[self layoutIfNeeded];
-	//	}
-	//	self.sliderBackgroundWidthConstraint.constant = translatedPoint.x;
-	//	[self reloadTextHighlightingConstants];
-	//	if(!self.animating){
-	//		[self layoutIfNeeded];
-	//	}
-	//
 	if(panGestureRecognizer.state == WKGestureRecognizerStateEnded){
 		didBeginSlidingFromLeft = NO;
 		didBeginSlidingFromRight = NO;
 		
-//		[self.testLabel setText:@"Ended"];
-		//		self.userIsInteracting = NO;
+		self.userIsInteracting = NO;
 		
-		//		self.lastTimeSlid = [[NSDate date] timeIntervalSince1970];
-		//
-		//		if(self.autoShrink){
-		//			[self.autoShrinkTimer invalidate];
-		//
-		//			self.autoShrinkTimer = [NSTimer scheduledTimerWithTimeInterval:1.0
-		//																	target:self
-		//																  selector:@selector(autoShrinkSlider)
-		//																  userInfo:nil
-		//																   repeats:NO];
-		//		}
+		dispatch_async(dispatch_get_main_queue(), ^{
+			[NSTimer scheduledTimerWithTimeInterval:1.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
+				[self setIsShrunk:YES];
+			}];
+		});
 		
-		[self setIsShrunk:YES];
-	}
-	
 		if(self.delegate){
 			CGFloat percentageTowards = (self.size.width-self.grabberWidth)/(self.interfaceController.contentFrame.size.width-self.grabberWidth);
-	
+			
 			[self.delegate progressSliderWithInfo:self slidToNewPositionWithPercentage:percentageTowards];
 		}
+	}
 }
 
 - (instancetype)initWithProgressBarGroup:(WKInterfaceGroup*)progressBarGroup inContainer:(WKInterfaceGroup *)containerGroup onInterfaceController:(WKInterfaceController *)interfaceController {
