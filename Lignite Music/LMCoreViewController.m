@@ -50,7 +50,7 @@
 #import "LMPhoneLandscapeDetailView.h"
 #import "LMPlaylistEditorViewController.h"
 #import "LMEnhancedPlaylistEditorViewController.h"
-#import <WatchConnectivity/WatchConnectivity.h>
+#import "LMAppleWatchBridge.h"
 
 #ifdef SPOTIFY
 #import "Spotify.h"
@@ -68,8 +68,7 @@
 @interface LMCoreViewController () <LMMusicPlayerDelegate, LMSourceDelegate, UIGestureRecognizerDelegate, LMSearchBarDelegate, LMLetterTabDelegate, LMSearchSelectedDelegate, LMPurchaseManagerDelegate, LMButtonNavigationBarDelegate, UINavigationBarDelegate, UINavigationControllerDelegate,
 LMTutorialViewDelegate, LMImageManagerDelegate, LMLandscapeNavigationBarDelegate,
 
-LMControlBarViewDelegate,
-WCSessionDelegate
+LMControlBarViewDelegate
 >
 
 @property LMMusicPlayer *musicPlayer;
@@ -1233,19 +1232,6 @@ WCSessionDelegate
 	}
 }
 
-- (void)session:(WCSession *)session activationDidCompleteWithState:(WCSessionActivationState)activationState error:(nullable NSError *)error {
-	
-	NSLog(@"Connected %d with error %@", (int)activationState, error.description);
-}
-
-- (void)sessionDidBecomeInactive:(WCSession *)session {
-	NSLog(@"Session became inactive");
-}
-
-- (void)sessionDidDeactivate:(WCSession *)session {
-	NSLog(@"Session did deactivate");
-}
-
 - (void)loadSubviews {
 	if(self.buttonNavigationBar){
 		return;
@@ -1270,34 +1256,6 @@ WCSessionDelegate
 		self.layoutManager.traitCollection = self.traitCollection;
 		self.layoutManager.size = self.view.frame.size;
 	}
-	
-	
-	if ([WCSession isSupported]) {
-		WCSession* session = [WCSession defaultSession];
-		session.delegate = self;
-		[session activateSession];
-		
-		[NSTimer scheduledTimerWithTimeInterval:1.0 repeats:YES block:^(NSTimer * _Nonnull timer) {
-			NSLog(@"Click");
-			
-			WCSession* session = [WCSession defaultSession];
-			if(session.reachable){
-				NSLog(@"Sending!");
-				[session sendMessage:@{ @"title":[NSString stringWithFormat:@"%ld", random()] } replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
-				
-					NSLog(@"Got reply message %@", replyMessage);
-					
-				} errorHandler:^(NSError * _Nonnull error) {
-					
-					NSLog(@"Sent with error %@", error);
-				}];
-			}
-			else{
-				NSLog(@"Not reachable :(");
-			}
-		}];
-	}
-	
 	
 //	LMPhoneLandscapeDetailView *phoneLandscapeDetailView = [LMPhoneLandscapeDetailView newAutoLayoutView];
 //	[self.view addSubview:phoneLandscapeDetailView];

@@ -54,7 +54,7 @@
                                             <items>
                                                 <group width="0.25" height="1" alignment="left" spacing="0.0" id="kIh-u5-dMv" userLabel="Control Button Group">
                                                     <items>
-                                                        <imageView width="0.65000000000000002" height="0.65000000000000002" alignment="center" verticalAlignment="center" image="newfave" contentMode="scaleAspectFit" id="mBZ-WZ-8K5"/>
+                                                        <imageView width="0.65000000000000002" height="0.65000000000000002" alignment="center" verticalAlignment="center" image="icon_favourite_red" contentMode="scaleAspectFit" id="mBZ-WZ-8K5"/>
                                                     </items>
                                                 </group>
                                                 <group width="0.75" alignment="left" verticalAlignment="center" layout="vertical" spacing="0.0" id="QiB-hQ-eoa" userLabel="Info Text Group">
@@ -79,6 +79,7 @@
                     </items>
                     <connections>
                         <outlet property="albumArtImage" destination="BvG-LR-NtJ" id="3iq-sp-HTY"/>
+                        <outlet property="favouriteImage" destination="mBZ-WZ-8K5" id="y5I-T5-xeO"/>
                         <outlet property="progressBarContainer" destination="Blj-jY-PsE" id="a3o-Ns-Dqi"/>
                         <outlet property="progressBarGroup" destination="uNo-TJ-D5i" id="xz0-Yd-k3P"/>
                         <outlet property="subtitleLabel" destination="Nya-mZ-DzX" id="byw-Qx-j2B"/>

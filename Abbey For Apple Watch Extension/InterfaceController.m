@@ -9,41 +9,46 @@
 #import <WatchConnectivity/WatchConnectivity.h>
 #import "InterfaceController.h"
 #import "LMWProgressSliderInfo.h"
+#import "LMWCompanionBridge.h"
 
-@interface InterfaceController ()<LMWProgressSliderDelegate, WCSessionDelegate>
+@interface InterfaceController ()<LMWProgressSliderDelegate, LMWCompanionBridgeDelegate>
 
 /**
  The info object for the progress slider.
  */
 @property LMWProgressSliderInfo *progressSliderInfo;
 
+/**
+ The bridge for the companion.
+ */
+@property LMWCompanionBridge *companionBridge;
+
 @end
 
 
 @implementation InterfaceController
 
-- (void)session:(WCSession *)session activationDidCompleteWithState:(WCSessionActivationState)activationState error:(nullable NSError *)error {
 
-	[self.titleLabel setText:[NSString stringWithFormat:@"%d", activationState]];
-	[self.subtitleLabel setText:error.description];
+- (void)debug:(NSString*)debugMessage {
+	[self.titleLabel setText:debugMessage];
 }
 
-- (void)session:(WCSession *)session didReceiveMessage:(NSDictionary<NSString *, id> *)message {
-	[self.titleLabel setText:[message objectForKey:@"title"]];
+- (void)companionDebug:(NSString *)debug {
+	[self debug:debug];
 }
 
-/** Called on the delegate of the receiver when the sender sends a message that expects a reply. Will be called on startup if the incoming message caused the receiver to launch. */
-- (void)session:(WCSession *)session didReceiveMessage:(NSDictionary<NSString *, id> *)message replyHandler:(void(^)(NSDictionary<NSString *, id> *replyMessage))replyHandler {
-	
-	[self.titleLabel setText:[message objectForKey:@"title"]];
-	
-	replyHandler(@{ @"whats":@"up" });
+
+- (void)musicTrackDidChange:(LMWMusicTrackInfo *)musicTrackInfo {
+	[self.titleLabel setText:musicTrackInfo.title];
+	[self.subtitleLabel setText:musicTrackInfo.subtitle];
+	[self.albumArtImage setImage:musicTrackInfo.albumArt];
+	[self.favouriteImage setImage:musicTrackInfo.isFavourite ? [UIImage imageNamed:@"icon_favourite_red.png"] : [UIImage imageNamed:@"icon_favourite_outlined_white.png"]];
 }
 
-- (void)session:(WCSession *)session didReceiveMessageData:(NSData *)messageData {
-	NSDictionary *myDictionary = (NSDictionary*)[NSKeyedUnarchiver unarchiveObjectWithData:messageData];
-	[self.titleLabel setText:[myDictionary objectForKey:@"title"]];
+- (void)albumArtDidChange:(UIImage*)albumArt {
+	[self.albumArtImage setImage:albumArt];
 }
+
 
 - (void)progressSliderWithInfo:(LMWProgressSliderInfo *)progressSliderInfo slidToNewPositionWithPercentage:(CGFloat)percentage {
 	[self.titleLabel setText:[NSString stringWithFormat:@"%.02f", percentage]];
@@ -53,24 +58,31 @@
 	[self.progressSliderInfo handleProgressPanGesture:panGestureRecognizer];
 }
 
+
+
 - (void)awakeWithContext:(id)context {
     [super awakeWithContext:context];
 	[self setTitle:@"Abbey"];
-	
-	if ([WCSession isSupported]) {
-		WCSession* session = [WCSession defaultSession];
-		session.delegate = self;
-		[session activateSession];
-	}
 	
 	self.progressSliderInfo = [[LMWProgressSliderInfo alloc] initWithProgressBarGroup:self.progressBarGroup
 																		  inContainer:self.progressBarContainer
 																onInterfaceController:self];
 	self.progressSliderInfo.delegate = self;
+	
+	
+	self.companionBridge = [LMWCompanionBridge sharedCompanionBridge];
+	[self.companionBridge addDelegate:self];
 }
 
 - (void)willActivate {
     [super willActivate];
+	
+	[self.titleLabel setText:@"Will activate"];
+	
+	[NSTimer scheduledTimerWithTimeInterval:1.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
+		[self.companionBridge askCompanionForNowPlayingTrackInfo];
+		[self debug:@"asking"];
+	}];
 }
 
 - (void)didDeactivate {

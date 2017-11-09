@@ -1,12 +1,13 @@
 //
-//  LMAppleWatchBridge.h
-//  Lignite Music
+//  LMWCompanionBridge.h
+//  Abbey For Apple Watch Extension
 //
 //  Created by Edwin Finch on 11/8/17.
 //  Copyright © 2017 Lignite. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
+#import "LMWMusicTrackInfo.h"
 
 //The title of the track. Is an NSString.
 #define LMAppleWatchMusicTrackInfoKeyTitle @"LMAppleWatchMusicTrackInfoKeyTitle"
@@ -23,38 +24,65 @@
 //The current playback time of the music track. Is an NSInteger wrapped in an NSNumber.
 #define LMAppleWatchMusicTrackInfoKeyCurrentPlaybackTime @"LMAppleWatchMusicTrackInfoKeyCurrentPlaybackTime"
 
+
 //The key to be used as the key for defining which type of data is being transmitted.
 #define LMAppleWatchCommunicationKey @"LMAppleWatchCommunicationKey"
 //The now playing track is what's being transmitted.
 #define LMAppleWatchCommunicationKeyNowPlayingTrack @"LMAppleWatchCommunicationKeyNowPlayingTrack"
 
-@interface LMAppleWatchBridge : NSObject
+@protocol LMWCompanionBridgeDelegate<NSObject>
+@optional
 
 /**
- The type of info that the Apple Watch either wants or is being sent.
+ The music track changed, as per the phone's request. Delegate should update UI accordingly.
 
- - LMAppleWatchMusicInfoTypeAll: All of the possible data types.
- - LMAppleWatchMusicInfoTypeTrack: The track info (title, subtitle, and now playing time progress).
- - LMAppleWatchMusicInfoTypeAlbumArt: The album art of the currently playing track. 
+ @param musicTrackInfo The new music track.
  */
-typedef NS_ENUM(NSInteger, LMAppleWatchMusicInfoType){
-	LMAppleWatchMusicInfoTypeAll = 0,
-	LMAppleWatchMusicInfoTypeTrack,
-	LMAppleWatchMusicInfoTypeAlbumArt
-};
-
-- (void)test;
+- (void)musicTrackDidChange:(LMWMusicTrackInfo*)musicTrackInfo;
 
 /**
- Returns the single instance of the shared Apple Watch bridge.
+ The album art changed for the now playing track.
 
- @return The Apple Watch bridge.
+ @param albumArt The new album art.
  */
-+ (LMAppleWatchBridge*)sharedAppleWatchBridge;
+- (void)albumArtDidChange:(UIImage*)albumArt;
+
+
+
+- (void)companionDebug:(NSString*)debug;
+
+
+
+@end
+
+@interface LMWCompanionBridge : NSObject
+
+
 
 /**
- Tells the watch bridge to send the now playing track info to the watch to display on the main interface. This automatically handles whether or not the watch is connected and any errors associated with sending the data.
+ The companion bridge which is shared across the watch.
+
+ @return The companion bridge.
  */
-- (void)sendNowPlayingTrackInfoToWatch;
++ (LMWCompanionBridge*)sharedCompanionBridge;
+
+/**
+ Adds a delegate to the list of delegates.
+
+ @param delegate The delegate to add.
+ */
+- (void)addDelegate:(id<LMWCompanionBridgeDelegate>)delegate;
+
+/**
+ Removes a delegate to the list of delegates.
+ 
+ @param delegate The delegate to remove.
+ */
+- (void)removeDelegate:(id<LMWCompanionBridgeDelegate>)delegate;
+
+/**
+ Sends a ping to the companion asking for the latest and greatest now playing info.
+ */
+- (void)askCompanionForNowPlayingTrackInfo;
 
 @end

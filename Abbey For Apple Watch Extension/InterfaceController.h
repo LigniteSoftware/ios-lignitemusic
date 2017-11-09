@@ -27,6 +27,11 @@
 @property IBOutlet WKInterfaceImage *albumArtImage;
 
 /**
+ The image for the favourites heart.
+ */
+@property IBOutlet WKInterfaceImage *favouriteImage;
+
+/**
  The group of the actual progress bar which is coloured red and contains the white grabber. Linked through an IBOutlet to provide to our LMWProgressSliderInfo instance, so it can handle the sizing to display progress.
  */
 @property IBOutlet WKInterfaceGroup *progressBarGroup;
@@ -42,5 +47,12 @@
  @param panGestureRecognizer The pan gesture object.
  */
 - (IBAction)progressPanGesture:(WKPanGestureRecognizer*)panGestureRecognizer;
+
+/**
+ Writes a string to the title label.
+
+ @param debugMessage The debug message to write.
+ */
+- (void)debug:(NSString*)debugMessage;
 
 @end

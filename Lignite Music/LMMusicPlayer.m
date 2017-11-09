@@ -8,6 +8,7 @@
 
 #import "LMMusicPlayer.h"
 #import "NSTimer+Blocks.h"
+#import "LMAppleWatchBridge.h"
 
 @import StoreKit;
 
@@ -75,6 +76,11 @@
  The now playing collection which is shuffled.
  */
 @property LMMusicTrackCollection *nowPlayingCollectionShuffled;
+
+/**
+ The Apple Watch bridge for managing communication with a paired Apple Watch.
+ */
+@property LMAppleWatchBridge *watchBridge;
 
 @end
 
@@ -167,6 +173,11 @@ MPMediaGrouping associatedMediaTypes[] = {
 		
 		MPMediaLibrary *mediaLibrary = [MPMediaLibrary defaultMediaLibrary];
 		[mediaLibrary beginGeneratingLibraryChangeNotifications];
+		
+		
+		self.watchBridge = [LMAppleWatchBridge sharedAppleWatchBridge];
+		[self.watchBridge test];
+		
 		
 		NSTimeInterval musicPlayerLoadEndTime = [[NSDate new] timeIntervalSince1970];
 		NSLog(@"Setup LMMusicPlayer in %f seconds.", (musicPlayerLoadEndTime-musicPlayerLoadStartTime));
@@ -369,6 +380,8 @@ MPMediaGrouping associatedMediaTypes[] = {
 	}
 	
 	[self reloadInfoCenter:autoPlay];
+	
+	[self.watchBridge sendNowPlayingTrackInfoToWatch];
 }
 
 - (void)systemMusicPlayerStateChanged:(id)sender {
@@ -1276,6 +1289,8 @@ BOOL shuffleForDebug = NO;
 			[delegate trackAddedToFavourites:track];
 		}
 	}
+	
+	[self.watchBridge sendNowPlayingTrackInfoToWatch];
 }
 
 - (void)removeTrackFromFavourites:(LMMusicTrack*)track {
@@ -1288,6 +1303,8 @@ BOOL shuffleForDebug = NO;
 			[delegate trackRemovedFromFavourites:track];
 		}
 	}
+	
+	[self.watchBridge sendNowPlayingTrackInfoToWatch];
 }
 
 - (void)logArray:(NSMutableArray*)array {
