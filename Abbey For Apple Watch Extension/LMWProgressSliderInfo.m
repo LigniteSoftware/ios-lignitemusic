@@ -65,6 +65,11 @@
 	}
 }
 
+- (void)setPercentage:(CGFloat)percentage animated:(BOOL)animated {
+	[self setWidthOfSlider:self.interfaceController.contentFrame.size.width * percentage
+				  animated:animated];
+}
+
 - (void)setIsShrunk:(BOOL)isShrunk {
 	_isShrunk = isShrunk;
 	

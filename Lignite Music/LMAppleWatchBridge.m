@@ -123,41 +123,78 @@
 	
 	NSLog(@"Image is %lu bytes with a compression factor of %f.", imageData.length, compressionFactor);
 	
-	[self.session sendMessageData:imageData replyHandler:/*^(NSData * _Nonnull replyMessageData) {
-														  
-														  NSLog(@"Reply got");
-														  }*/nil errorHandler:^(NSError * _Nonnull error) {
+	if(self.session.reachable){
+		[self.session sendMessageData:imageData replyHandler:/*^(NSData * _Nonnull replyMessageData) {
 															  
-															  NSLog(@"Error sending %@", error);
-														  }];
+															  NSLog(@"Reply got");
+															  }*/nil errorHandler:^(NSError * _Nonnull error) {
+																  
+																  NSLog(@"Error sending %@", error);
+															  }];
+	}
 }
 
-- (void)sendNowPlayingTrackInfoToWatch {
+- (void)sendNowPlayingTrackToWatch {
 	LMMusicTrack *nowPlayingTrack = self.musicPlayer.nowPlayingTrack;
 	
 	BOOL albumArtIsTheSame = (self.previousNowPlayingTrackSent.persistentID == nowPlayingTrack.persistentID)
 	|| (self.previousNowPlayingTrackSent.albumPersistentID == nowPlayingTrack.albumPersistentID);
 	
 	if(self.session.reachable){
-		NSDictionary *nowPlayingDictionary = @{
-											   LMAppleWatchCommunicationKey: LMAppleWatchCommunicationKeyNowPlayingTrack,
-											   
-											   LMAppleWatchCommunicationKeyNowPlayingTrack:[self dictionaryForMusicTrack:nowPlayingTrack]
-											   };
+		if(self.musicPlayer.nowPlayingTrack){
+			NSDictionary *nowPlayingTrackDictionary = @{
+												   LMAppleWatchCommunicationKey: LMAppleWatchCommunicationKeyNowPlayingTrack,
+												   
+												   LMAppleWatchCommunicationKeyNowPlayingTrack:[self dictionaryForMusicTrack:nowPlayingTrack]
+												   };
 
-		[self.session sendMessage:nowPlayingDictionary
+			[self.session sendMessage:nowPlayingTrackDictionary
+						 replyHandler:nil/* ^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
+							 NSLog(@"Got a reply: %@", replyMessage);
+						 }*/
+						 errorHandler:^(NSError * _Nonnull error) {
+							 NSLog(@"Error sending now playing track: %@", error);
+						 }];
+			
+			if(!albumArtIsTheSame){
+				[self sendNowPlayingAlbumArtToWatch];
+			}
+			
+			self.previousNowPlayingTrackSent = nowPlayingTrack;
+			
+			[self sendNowPlayingInfoToWatch];
+		}
+		else{
+			[self.session sendMessage:@{ LMAppleWatchCommunicationKey:LMAppleWatchCommunicationKeyNoTrackPlaying } replyHandler:nil errorHandler:^(NSError * _Nonnull error) {
+				NSLog(@"Error sending no track currently playing: %@", error);
+			}];
+		}
+	}
+}
+
+- (void)sendNowPlayingInfoToWatch {
+	NSDictionary *nowPlayingInfoDictionary = @{
+											   LMAppleWatchNowPlayingInfoKeyIsPlaying: @(self.musicPlayer.playbackState == LMMusicPlaybackStatePlaying),
+											   LMAppleWatchNowPlayingInfoKeyRepeatMode: @(self.musicPlayer.repeatMode),
+											   LMAppleWatchNowPlayingInfoKeyShuffleMode: @(self.musicPlayer.shuffleMode),
+											   LMAppleWatchNowPlayingInfoKeyPlaybackDuration: @(self.musicPlayer.nowPlayingTrack.playbackDuration),
+											   LMAppleWatchNowPlayingInfoKeyCurrentPlaybackTime: @(self.musicPlayer.currentPlaybackTime)
+											   };
+	
+	NSDictionary *messageDictionary = @{
+										   LMAppleWatchCommunicationKey: LMAppleWatchCommunicationKeyNowPlayingInfo,
+										   
+										   LMAppleWatchCommunicationKeyNowPlayingInfo:nowPlayingInfoDictionary
+										   };
+	
+	if(self.session.reachable){
+		[self.session sendMessage:messageDictionary
 					 replyHandler:nil/* ^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
-						 NSLog(@"Got a reply: %@", replyMessage);
-					 }*/
+									  NSLog(@"Got a reply: %@", replyMessage);
+									  }*/
 					 errorHandler:^(NSError * _Nonnull error) {
 						 NSLog(@"Error sending now playing track: %@", error);
 					 }];
-		
-		if(!albumArtIsTheSame){
-			[self sendNowPlayingAlbumArtToWatch];
-		}
-		
-		self.previousNowPlayingTrackSent = nowPlayingTrack;
 	}
 }
 
@@ -170,7 +207,7 @@
 	NSString *key = [message objectForKey:LMAppleWatchCommunicationKey];
 	
 	if([key isEqualToString:LMAppleWatchCommunicationKeyNowPlayingTrack]){
-		[self sendNowPlayingTrackInfoToWatch];
+		[self sendNowPlayingTrackToWatch];
 		
 		replyHandler(@{ @"sent":@"pimp" });
 	}

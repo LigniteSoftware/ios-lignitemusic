@@ -381,7 +381,7 @@ MPMediaGrouping associatedMediaTypes[] = {
 	
 	[self reloadInfoCenter:autoPlay];
 	
-	[self.watchBridge sendNowPlayingTrackInfoToWatch];
+	[self.watchBridge sendNowPlayingTrackToWatch];
 }
 
 - (void)systemMusicPlayerStateChanged:(id)sender {
@@ -412,6 +412,8 @@ MPMediaGrouping associatedMediaTypes[] = {
 		id delegate = [self.delegates objectAtIndex:i];
 		[delegate musicPlaybackStateDidChange:self.playbackState];
 	}
+	
+	[self.watchBridge sendNowPlayingInfoToWatch];
 }
 
 - (void)changeMusicPlayerState:(LMMusicPlaybackState)newState {
@@ -436,6 +438,8 @@ MPMediaGrouping associatedMediaTypes[] = {
 		id delegate = [self.delegates objectAtIndex:i];
 		[delegate musicPlaybackStateDidChange:self.playbackState];
 	}
+	
+	[self.watchBridge sendNowPlayingInfoToWatch];
 }
 
 - (void)audioRouteChanged:(id)notification {
@@ -1290,7 +1294,7 @@ BOOL shuffleForDebug = NO;
 		}
 	}
 	
-	[self.watchBridge sendNowPlayingTrackInfoToWatch];
+	[self.watchBridge sendNowPlayingTrackToWatch];
 }
 
 - (void)removeTrackFromFavourites:(LMMusicTrack*)track {
@@ -1304,7 +1308,7 @@ BOOL shuffleForDebug = NO;
 		}
 	}
 	
-	[self.watchBridge sendNowPlayingTrackInfoToWatch];
+	[self.watchBridge sendNowPlayingTrackToWatch];
 }
 
 - (void)logArray:(NSMutableArray*)array {
@@ -1431,6 +1435,8 @@ BOOL shuffleForDebug = NO;
 		
 		[self updateNowPlayingTimeDelegates];
 	}
+	
+	[self.watchBridge sendNowPlayingInfoToWatch];
 }
 
 - (NSTimeInterval)currentPlaybackTime {
@@ -1449,6 +1455,8 @@ BOOL shuffleForDebug = NO;
 			[delegate musicPlaybackModesDidChange:self.shuffleMode repeatMode:self.repeatMode];
 		}
 	}
+	
+	[self.watchBridge sendNowPlayingInfoToWatch];
 }
 
 - (void)setRepeatMode:(LMMusicRepeatMode)repeatMode {

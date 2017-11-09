@@ -21,14 +21,14 @@
                     <items>
                         <group width="1" height="1" alignment="left" layout="overlap" spacing="0.0" id="PEh-FC-AVI" userLabel="Root Container">
                             <items>
-                                <imageView width="1" height="0.80000000000000004" alignment="left" image="chidster" contentMode="scaleAspectFill" id="BvG-LR-NtJ"/>
+                                <imageView width="1" height="0.80000000000000004" alignment="left" image="watch_no_cover_art" contentMode="scaleAspectFill" id="BvG-LR-NtJ"/>
                                 <group width="1" height="0.34999999999999998" alignment="left" verticalAlignment="bottom" layout="vertical" spacing="0.0" id="Ki4-AN-XF7" userLabel="Track Info Container">
                                     <items>
                                         <group width="1" height="0.40000000000000002" alignment="left" layout="vertical" radius="0.0" spacing="0.0" id="Hbh-8q-bB0" userLabel="Slider Group">
                                             <items>
                                                 <group width="1" height="0.29999999999999999" alignment="left" verticalAlignment="bottom" spacing="0.0" id="Blj-jY-PsE" userLabel="Progress Bar Container">
                                                     <items>
-                                                        <group width="50" height="1" alignment="left" id="uNo-TJ-D5i" userLabel="Progress Bar">
+                                                        <group width="8" height="1" alignment="left" id="uNo-TJ-D5i" userLabel="Progress Bar">
                                                             <items>
                                                                 <group width="8" height="1" alignment="right" id="uQ8-tD-yad" userLabel="Grabber">
                                                                     <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -54,15 +54,15 @@
                                             <items>
                                                 <group width="0.25" height="1" alignment="left" spacing="0.0" id="kIh-u5-dMv" userLabel="Control Button Group">
                                                     <items>
-                                                        <imageView width="0.65000000000000002" height="0.65000000000000002" alignment="center" verticalAlignment="center" image="icon_favourite_red" contentMode="scaleAspectFit" id="mBZ-WZ-8K5"/>
+                                                        <imageView width="0.65000000000000002" height="0.65000000000000002" alignment="center" verticalAlignment="center" image="icon_unfavourite_white" contentMode="scaleAspectFit" id="mBZ-WZ-8K5"/>
                                                     </items>
                                                 </group>
                                                 <group width="0.75" alignment="left" verticalAlignment="center" layout="vertical" spacing="0.0" id="QiB-hQ-eoa" userLabel="Info Text Group">
                                                     <items>
-                                                        <label width="136" alignment="left" text="Label" id="b8p-RV-XJb" userLabel="Title Label">
+                                                        <label width="136" alignment="left" text="Loading" id="b8p-RV-XJb" userLabel="Title Label">
                                                             <fontDescription key="font" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="16"/>
                                                         </label>
-                                                        <label width="1" alignment="left" text="Subtitle" id="Nya-mZ-DzX" userLabel="Subtitle Label">
+                                                        <label width="1" alignment="left" text="Please wait" id="Nya-mZ-DzX" userLabel="Subtitle Label">
                                                             <fontDescription key="font" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="10"/>
                                                         </label>
                                                     </items>

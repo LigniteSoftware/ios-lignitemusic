@@ -23,10 +23,25 @@
 //The current playback time of the music track. Is an NSInteger wrapped in an NSNumber.
 #define LMAppleWatchMusicTrackInfoKeyCurrentPlaybackTime @"LMAppleWatchMusicTrackInfoKeyCurrentPlaybackTime"
 
+//Whether or not the now playing track is playing. BOOL as NSNumber.
+#define LMAppleWatchNowPlayingInfoKeyIsPlaying @"LMAppleWatchNowPlayingInfoKeyIsPlaying"
+//The current repeat mode. NSInteger as NSNumber.
+#define LMAppleWatchNowPlayingInfoKeyRepeatMode @"LMAppleWatchNowPlayingInfoKeyRepeatMode"
+//The current shuffle mode. NSInteger as NSNumber.
+#define LMAppleWatchNowPlayingInfoKeyShuffleMode @"LMAppleWatchNowPlayingInfoKeyShuffleMode"
+//The track playback duration in seconds. NSInteger as NSNumber.
+#define LMAppleWatchNowPlayingInfoKeyPlaybackDuration @"LMAppleWatchNowPlayingInfoKeyPlaybackDuration"
+//The track's current playback time. NSInteger as NSNumber.
+#define LMAppleWatchNowPlayingInfoKeyCurrentPlaybackTime @"LMAppleWatchNowPlayingInfoKeyCurrentPlaybackTime"
+
 //The key to be used as the key for defining which type of data is being transmitted.
 #define LMAppleWatchCommunicationKey @"LMAppleWatchCommunicationKey"
 //The now playing track is what's being transmitted.
 #define LMAppleWatchCommunicationKeyNowPlayingTrack @"LMAppleWatchCommunicationKeyNowPlayingTrack"
+//Nothing is playing.
+#define LMAppleWatchCommunicationKeyNoTrackPlaying @"LMAppleWatchCommunicationKeyNoTrackPlaying"
+//The now playing info is what's being transmitted.
+#define LMAppleWatchCommunicationKeyNowPlayingInfo @"LMAppleWatchCommunicationKeyNowPlayingInfo"
 
 @interface LMAppleWatchBridge : NSObject
 
@@ -55,6 +70,11 @@ typedef NS_ENUM(NSInteger, LMAppleWatchMusicInfoType){
 /**
  Tells the watch bridge to send the now playing track info to the watch to display on the main interface. This automatically handles whether or not the watch is connected and any errors associated with sending the data.
  */
-- (void)sendNowPlayingTrackInfoToWatch;
+- (void)sendNowPlayingTrackToWatch;
+
+/**
+ Tells the watch bridge to send the now playing info to the watch. Now playing info contains information on whether or not the music is playing, the playback time, etc. This automatically handles whether or not the watch is connected and any errors associated with sending the data.
+ */
+- (void)sendNowPlayingInfoToWatch;
 
 @end

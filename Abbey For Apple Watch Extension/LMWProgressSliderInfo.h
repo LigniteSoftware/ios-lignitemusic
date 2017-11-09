@@ -48,4 +48,12 @@
  */
 - (void)handleProgressPanGesture:(WKPanGestureRecognizer*)panGestureRecognizer;
 
+/**
+ Set the percentage progress of the slider.
+
+ @param percentage The percentage to set.
+ @param animated Whether or not to animate the change.
+ */
+- (void)setPercentage:(CGFloat)percentage animated:(BOOL)animated;
+
 @end

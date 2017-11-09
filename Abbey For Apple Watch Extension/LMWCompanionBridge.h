@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "LMWMusicTrackInfo.h"
+#import "LMWNowPlayingInfo.h"
 
 //The title of the track. Is an NSString.
 #define LMAppleWatchMusicTrackInfoKeyTitle @"LMAppleWatchMusicTrackInfoKeyTitle"
@@ -24,11 +25,25 @@
 //The current playback time of the music track. Is an NSInteger wrapped in an NSNumber.
 #define LMAppleWatchMusicTrackInfoKeyCurrentPlaybackTime @"LMAppleWatchMusicTrackInfoKeyCurrentPlaybackTime"
 
+//Whether or not the now playing track is playing. BOOL as NSNumber.
+#define LMAppleWatchNowPlayingInfoKeyIsPlaying @"LMAppleWatchNowPlayingInfoKeyIsPlaying"
+//The current repeat mode. NSInteger as NSNumber.
+#define LMAppleWatchNowPlayingInfoKeyRepeatMode @"LMAppleWatchNowPlayingInfoKeyRepeatMode"
+//The current shuffle mode. NSInteger as NSNumber.
+#define LMAppleWatchNowPlayingInfoKeyShuffleMode @"LMAppleWatchNowPlayingInfoKeyShuffleMode"
+//The track playback duration in seconds. NSInteger as NSNumber.
+#define LMAppleWatchNowPlayingInfoKeyPlaybackDuration @"LMAppleWatchNowPlayingInfoKeyPlaybackDuration"
+//The track's current playback time. NSInteger as NSNumber.
+#define LMAppleWatchNowPlayingInfoKeyCurrentPlaybackTime @"LMAppleWatchNowPlayingInfoKeyCurrentPlaybackTime"
 
 //The key to be used as the key for defining which type of data is being transmitted.
 #define LMAppleWatchCommunicationKey @"LMAppleWatchCommunicationKey"
 //The now playing track is what's being transmitted.
 #define LMAppleWatchCommunicationKeyNowPlayingTrack @"LMAppleWatchCommunicationKeyNowPlayingTrack"
+//Nothing is playing.
+#define LMAppleWatchCommunicationKeyNoTrackPlaying @"LMAppleWatchCommunicationKeyNoTrackPlaying"
+//The now playing info is what's being transmitted.
+#define LMAppleWatchCommunicationKeyNowPlayingInfo @"LMAppleWatchCommunicationKeyNowPlayingInfo"
 
 @protocol LMWCompanionBridgeDelegate<NSObject>
 @optional
@@ -47,6 +62,13 @@
  */
 - (void)albumArtDidChange:(UIImage*)albumArt;
 
+/**
+ The now playing info changed. Delegate should update UI accordingly.
+
+ @param nowPlayingInfo The new now playing info.
+ */
+- (void)nowPlayingInfoDidChange:(LMWNowPlayingInfo*)nowPlayingInfo;
+
 
 
 - (void)companionDebug:(NSString*)debug;
@@ -57,6 +79,11 @@
 
 @interface LMWCompanionBridge : NSObject
 
+
+/**
+ The info of now playing on the phone. If nothing is playing, nowPlayingTrack will be nil.
+ */
+@property LMWNowPlayingInfo *nowPlayingInfo;
 
 
 /**

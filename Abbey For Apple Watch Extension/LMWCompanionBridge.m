@@ -21,11 +21,6 @@
  */
 @property NSMutableArray<id<LMWCompanionBridgeDelegate>> *delegates;
 
-/**
- The now playing track.
- */
-@property LMWMusicTrackInfo *nowPlayingTrack;
-
 @end
 
 @implementation LMWCompanionBridge
@@ -55,26 +50,44 @@
 	if([key isEqualToString:LMAppleWatchCommunicationKeyNowPlayingTrack]){
 		NSDictionary *trackDictionary = [message objectForKey:LMAppleWatchCommunicationKeyNowPlayingTrack];
 		
-		UIImage *previousAlbumArt = self.nowPlayingTrack.albumArt;
-		
-		LMWMusicTrackInfo *trackInfo = [LMWMusicTrackInfo new];
-		trackInfo.title = [trackDictionary objectForKey:LMAppleWatchMusicTrackInfoKeyTitle];
-		trackInfo.subtitle = [trackDictionary objectForKey:LMAppleWatchMusicTrackInfoKeySubtitle];
-		trackInfo.isFavourite = [[trackDictionary objectForKey:LMAppleWatchMusicTrackInfoKeyIsFavourite] boolValue];
-		trackInfo.playbackDuration = [[trackDictionary objectForKey:LMAppleWatchMusicTrackInfoKeyPlaybackDuration] integerValue];
-		trackInfo.persistentID = [[trackDictionary objectForKey:LMAppleWatchMusicTrackInfoKeyPersistentID] longLongValue];
-		trackInfo.albumPersistentID = [[trackDictionary objectForKey:LMAppleWatchMusicTrackInfoKeyAlbumPersistentID] longLongValue];
-		
-		if(trackInfo.persistentID == self.nowPlayingTrack.persistentID
-		   || trackInfo.albumPersistentID == self.nowPlayingTrack.albumPersistentID){
-			trackInfo.albumArt = previousAlbumArt;
+		if(!self.nowPlayingInfo.nowPlayingTrack){
+			self.nowPlayingInfo.nowPlayingTrack = [LMWMusicTrackInfo new];
 		}
 		
-		self.nowPlayingTrack = trackInfo;
+		self.nowPlayingInfo.nowPlayingTrack.title = [trackDictionary objectForKey:LMAppleWatchMusicTrackInfoKeyTitle];
+		self.nowPlayingInfo.nowPlayingTrack.subtitle = [trackDictionary objectForKey:LMAppleWatchMusicTrackInfoKeySubtitle];
+		self.nowPlayingInfo.nowPlayingTrack.isFavourite = [[trackDictionary objectForKey:LMAppleWatchMusicTrackInfoKeyIsFavourite] boolValue];
+		self.nowPlayingInfo.nowPlayingTrack.playbackDuration = [[trackDictionary objectForKey:LMAppleWatchMusicTrackInfoKeyPlaybackDuration] integerValue];
+		self.nowPlayingInfo.nowPlayingTrack.persistentID = [[trackDictionary objectForKey:LMAppleWatchMusicTrackInfoKeyPersistentID] longLongValue];
+		self.nowPlayingInfo.nowPlayingTrack.albumPersistentID = [[trackDictionary objectForKey:LMAppleWatchMusicTrackInfoKeyAlbumPersistentID] longLongValue];
 		
 		for(id<LMWCompanionBridgeDelegate> delegate in self.delegates){
 			if([delegate respondsToSelector:@selector(musicTrackDidChange:)]){
-				[delegate musicTrackDidChange:trackInfo];
+				[delegate musicTrackDidChange:self.nowPlayingInfo.nowPlayingTrack];
+			}
+		}
+	}
+	else if([key isEqualToString:LMAppleWatchCommunicationKeyNowPlayingInfo]){
+		NSDictionary *infoDictionary = [message objectForKey:LMAppleWatchCommunicationKeyNowPlayingInfo];
+		
+		self.nowPlayingInfo.playing = [[infoDictionary objectForKey:LMAppleWatchNowPlayingInfoKeyIsPlaying] boolValue];
+		self.nowPlayingInfo.repeatMode = (LMMusicRepeatMode)[[infoDictionary objectForKey:LMAppleWatchNowPlayingInfoKeyRepeatMode] integerValue];
+		self.nowPlayingInfo.shuffleMode = (LMMusicShuffleMode)[[infoDictionary objectForKey:LMAppleWatchNowPlayingInfoKeyShuffleMode] integerValue];
+		self.nowPlayingInfo.playbackDuration = [[infoDictionary objectForKey:LMAppleWatchNowPlayingInfoKeyPlaybackDuration] integerValue];
+		self.nowPlayingInfo.currentPlaybackTime = [[infoDictionary objectForKey:LMAppleWatchNowPlayingInfoKeyCurrentPlaybackTime] integerValue];
+		
+		for(id<LMWCompanionBridgeDelegate> delegate in self.delegates){
+			if([delegate respondsToSelector:@selector(nowPlayingInfoDidChange:)]){
+				[delegate nowPlayingInfoDidChange:self.nowPlayingInfo];
+			}
+		}
+	}
+	else if([key isEqualToString:LMAppleWatchCommunicationKeyNoTrackPlaying]){
+		self.nowPlayingInfo.nowPlayingTrack = nil;
+		
+		for(id<LMWCompanionBridgeDelegate> delegate in self.delegates){
+			if([delegate respondsToSelector:@selector(musicTrackDidChange:)]){
+				[delegate musicTrackDidChange:nil];
 			}
 		}
 	}
@@ -92,7 +105,7 @@
 - (void)session:(WCSession *)session didReceiveMessageData:(NSData *)messageData {
 	UIImage *image = [UIImage imageWithData:messageData];
 	
-	self.nowPlayingTrack.albumArt = image;
+	self.nowPlayingInfo.nowPlayingTrack.albumArt = image;
 	
 	for(id<LMWCompanionBridgeDelegate> delegate in self.delegates){
 		if([delegate respondsToSelector:@selector(albumArtDidChange:)]){
@@ -117,10 +130,8 @@
 		}];
 	}
 	else{
-		[self debug:@"not yet"];
 		[NSTimer scheduledTimerWithTimeInterval:0.5 repeats:NO block:^(NSTimer * _Nonnull timer) {
 			[self askCompanionForNowPlayingTrackInfo];
-			[self debug:@"again"];
 		}];
 	}
 }
@@ -128,11 +139,6 @@
 
 - (void)addDelegate:(id<LMWCompanionBridgeDelegate>)delegate {
 	[self.delegates addObject:delegate];
-	
-	LMWMusicTrackInfo *trackInfo = [[LMWMusicTrackInfo alloc]init];
-	trackInfo.title = @"delegate added";
-	trackInfo.subtitle = [NSString stringWithFormat:@"%p", delegate];
-	[delegate musicTrackDidChange:trackInfo];
 }
 
 - (void)removeDelegate:(id<LMWCompanionBridgeDelegate>)delegateToRemove {
@@ -146,6 +152,7 @@
 	dispatch_once(&token, ^{
 		sharedCompanionBridge = [self new];
 		sharedCompanionBridge.delegates = [NSMutableArray new];
+		sharedCompanionBridge.nowPlayingInfo = [LMWNowPlayingInfo new];
 		
 		if ([WCSession isSupported]) {
 			sharedCompanionBridge.session = [WCSession defaultSession];

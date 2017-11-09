@@ -74,6 +74,10 @@
 		6A37B1E81FB3D53100934A75 /* icon_no_cover_art_75.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A48A73E1E2024D1003C86B6 /* icon_no_cover_art_75.png */; };
 		6A37B1ED1FB3D68A00934A75 /* watch_no_cover_art.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A37B1EC1FB3D68A00934A75 /* watch_no_cover_art.png */; };
 		6A37B1EE1FB3D68A00934A75 /* watch_no_cover_art.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A37B1EC1FB3D68A00934A75 /* watch_no_cover_art.png */; };
+		6A37B1F11FB3F11100934A75 /* LMWNowPlayingInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A37B1F01FB3F11100934A75 /* LMWNowPlayingInfo.m */; };
+		6A37B1F41FB414CB00934A75 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6A37B1F61FB414CB00934A75 /* Localizable.strings */; };
+		6A37B1F81FB4161200934A75 /* icon_unfavourite_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A37B1F71FB4161200934A75 /* icon_unfavourite_white.png */; };
+		6A37B1F91FB4161200934A75 /* icon_unfavourite_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A37B1F71FB4161200934A75 /* icon_unfavourite_white.png */; };
 		6A4157CD1E04669E00D09D4B /* icon_back.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A4157CC1E04669E00D09D4B /* icon_back.png */; };
 		6A43BCE71DDFA471009FB0E9 /* tutorial_now_playing.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A43BCE61DDFA471009FB0E9 /* tutorial_now_playing.png */; };
 		6A43BCE91DDFA66B009FB0E9 /* onboarding_us.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A43BCE81DDFA66B009FB0E9 /* onboarding_us.png */; };
@@ -404,6 +408,10 @@
 		6A37B1DC1FB39ECB00934A75 /* LMWMusicTrackInfo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMWMusicTrackInfo.m; sourceTree = "<group>"; };
 		6A37B1E11FB3AC7300934A75 /* icon_favourite_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_favourite_white.png; sourceTree = "<group>"; };
 		6A37B1EC1FB3D68A00934A75 /* watch_no_cover_art.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = watch_no_cover_art.png; sourceTree = "<group>"; };
+		6A37B1EF1FB3F11100934A75 /* LMWNowPlayingInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMWNowPlayingInfo.h; sourceTree = "<group>"; };
+		6A37B1F01FB3F11100934A75 /* LMWNowPlayingInfo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMWNowPlayingInfo.m; sourceTree = "<group>"; };
+		6A37B1F51FB414CB00934A75 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		6A37B1F71FB4161200934A75 /* icon_unfavourite_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon_unfavourite_white.png; path = "Lignite Music/icon_unfavourite_white.png"; sourceTree = SOURCE_ROOT; };
 		6A4157CC1E04669E00D09D4B /* icon_back.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_back.png; sourceTree = "<group>"; };
 		6A43BCE61DDFA471009FB0E9 /* tutorial_now_playing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tutorial_now_playing.png; sourceTree = "<group>"; };
 		6A43BCE81DDFA66B009FB0E9 /* onboarding_us.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = onboarding_us.png; sourceTree = "<group>"; };
@@ -1257,6 +1265,8 @@
 				6A37B1D91FB39DE300934A75 /* LMWCompanionBridge.m */,
 				6A37B1DB1FB39ECB00934A75 /* LMWMusicTrackInfo.h */,
 				6A37B1DC1FB39ECB00934A75 /* LMWMusicTrackInfo.m */,
+				6A37B1EF1FB3F11100934A75 /* LMWNowPlayingInfo.h */,
+				6A37B1F01FB3F11100934A75 /* LMWNowPlayingInfo.m */,
 				6ADCE2121FB262B800BE0BBB /* ExtensionDelegate.h */,
 				6ADCE2131FB262B800BE0BBB /* ExtensionDelegate.m */,
 				6ADCE2151FB262B800BE0BBB /* NotificationController.h */,
@@ -1265,9 +1275,11 @@
 				6ADCE2191FB262B800BE0BBB /* ComplicationController.m */,
 				6A37B1CD1FB2BE7E00934A75 /* chidster.png */,
 				6A37B1EC1FB3D68A00934A75 /* watch_no_cover_art.png */,
+				6A37B1F71FB4161200934A75 /* icon_unfavourite_white.png */,
 				6ADCE21B1FB262B800BE0BBB /* Assets.xcassets */,
 				6ADCE21D1FB262B800BE0BBB /* Info.plist */,
 				6ADCE21E1FB262B800BE0BBB /* PushNotificationPayload.apns */,
+				6A37B1F61FB414CB00934A75 /* Localizable.strings */,
 			);
 			path = "Abbey For Apple Watch Extension";
 			sourceTree = "<group>";
@@ -1604,6 +1616,7 @@
 				6A37B1E31FB3AC7B00934A75 /* icon_favourite_outlined_white.png in Resources */,
 				6A37B1E51FB3AC8400934A75 /* icon_favourite_red.png in Resources */,
 				6A37B1D21FB2BE7F00934A75 /* chidster.png in Resources */,
+				6A37B1F81FB4161200934A75 /* icon_unfavourite_white.png in Resources */,
 				6ADCE2021FB262B800BE0BBB /* Interface.storyboard in Resources */,
 				6A37B1E71FB3D53000934A75 /* icon_no_cover_art_75.png in Resources */,
 			);
@@ -1616,7 +1629,9 @@
 				6A37B1E81FB3D53100934A75 /* icon_no_cover_art_75.png in Resources */,
 				6A37B1E61FB3AC8400934A75 /* icon_favourite_red.png in Resources */,
 				6A37B1EE1FB3D68A00934A75 /* watch_no_cover_art.png in Resources */,
+				6A37B1F41FB414CB00934A75 /* Localizable.strings in Resources */,
 				6A37B1E41FB3AC7C00934A75 /* icon_favourite_outlined_white.png in Resources */,
+				6A37B1F91FB4161200934A75 /* icon_unfavourite_white.png in Resources */,
 				6A37B1D31FB2BE7F00934A75 /* chidster.png in Resources */,
 				6ADCE21C1FB262B800BE0BBB /* Assets.xcassets in Resources */,
 			);
@@ -1821,6 +1836,7 @@
 			files = (
 				6A37B1CA1FB2761D00934A75 /* LMWProgressSliderInfo.m in Sources */,
 				6ADCE2141FB262B800BE0BBB /* ExtensionDelegate.m in Sources */,
+				6A37B1F11FB3F11100934A75 /* LMWNowPlayingInfo.m in Sources */,
 				6ADCE21A1FB262B800BE0BBB /* ComplicationController.m in Sources */,
 				6A37B1DD1FB39ECB00934A75 /* LMWMusicTrackInfo.m in Sources */,
 				6ADCE2111FB262B800BE0BBB /* InterfaceController.m in Sources */,
@@ -1973,6 +1989,14 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		6A37B1F61FB414CB00934A75 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6A37B1F51FB414CB00934A75 /* en */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
 		6AAF610F1DA0286F00971875 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
