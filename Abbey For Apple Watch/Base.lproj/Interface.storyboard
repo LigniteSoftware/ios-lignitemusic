@@ -46,13 +46,13 @@
                                             <items>
                                                 <group width="1" height="0.29999999999999999" alignment="left" verticalAlignment="bottom" spacing="0.0" id="Blj-jY-PsE" userLabel="Progress Bar Container">
                                                     <items>
-                                                        <group width="8" height="1" alignment="left" id="uNo-TJ-D5i" userLabel="Progress Bar">
+                                                        <group width="13" height="1" alignment="left" id="uNo-TJ-D5i" userLabel="Progress Bar">
                                                             <items>
                                                                 <group width="8" height="1" alignment="right" id="uQ8-tD-yad" userLabel="Grabber">
                                                                     <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                                 </group>
                                                             </items>
-                                                            <color key="backgroundColor" red="0.95194083452224731" green="0.15837645530700684" blue="0.096465460956096649" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <color key="backgroundColor" red="0.86179965431920169" green="0.13971404521203609" blue="0.091269756831538817" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         </group>
                                                     </items>
                                                     <color key="backgroundColor" white="0.69891183040000004" alpha="1" colorSpace="calibratedWhite"/>
