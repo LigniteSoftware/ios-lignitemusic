@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <WatchKit/WatchKit.h>
 
-@interface LWMMusicTrackInfoRowController : NSObject
+@interface LMWMusicTrackInfoRowController : NSObject
 
 /**
  The title of the track info row.

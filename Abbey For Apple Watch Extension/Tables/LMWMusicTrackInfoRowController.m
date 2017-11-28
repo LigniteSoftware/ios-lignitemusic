@@ -6,8 +6,8 @@
 //  Copyright © 2017 Lignite. All rights reserved.
 //
 
-#import "LWMMusicTrackInfoRowController.h"
+#import "LMWMusicTrackInfoRowController.h"
 
-@implementation LWMMusicTrackInfoRowController
+@implementation LMWMusicTrackInfoRowController
 
 @end

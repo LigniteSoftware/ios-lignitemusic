@@ -13,3 +13,15 @@
 "UpNext" = "Up next";
 
 "HangOn" = "Hang on...";
+
+"Favourites" = "Favourites";
+"Albums" = "Albums";
+"AlbumsInline" = "albums";
+"Titles" = "Titles"; //Individual songs
+"Artists" = "Artists";
+"Playlists" = "Playlists";
+"Composers" = "Composers";
+"Genres" = "Genres";
+"Compilations" = "Compilations";
+
+"Library" = "Library"; //As in the user's music library. Please keep this short - it needs to fit within one line on the top of the Apple Watch window.

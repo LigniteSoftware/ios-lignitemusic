@@ -16,7 +16,7 @@
         <!--Main Interface Controller-->
         <scene sceneID="aou-V4-d1y">
             <objects>
-                <controller id="AgC-eL-Hgc" customClass="LWMMainInterfaceController">
+                <controller id="AgC-eL-Hgc" customClass="LMWMainInterfaceController">
                     <items>
                         <group width="1" alignment="left" layout="vertical" radius="0.0" spacing="0.0" id="HiP-Qn-bsy" userLabel="Extra Controls Container">
                             <items>
@@ -107,6 +107,7 @@
                                             </group>
                                             <connections>
                                                 <action selector="browseLibraryButtonSelector:" destination="AgC-eL-Hgc" id="FCg-0d-V1y"/>
+                                                <segue destination="eJJ-55-8iY" kind="push" id="VNe-aV-hIa"/>
                                             </connections>
                                         </button>
                                     </items>
@@ -119,7 +120,7 @@
                                 </group>
                                 <table alignment="left" verticalAlignment="bottom" spacing="4" id="uiW-bf-OGD">
                                     <items>
-                                        <tableRow identifier="QueueTrackRow" id="Nl8-7d-Hqy" customClass="LWMMusicTrackInfoRowController">
+                                        <tableRow identifier="QueueTrackRow" id="Nl8-7d-Hqy" customClass="LMWMusicTrackInfoRowController">
                                             <group key="rootItem" width="1" alignment="left" spacing="0.0" id="5mD-MZ-z7S" userLabel="Root Group">
                                                 <items>
                                                     <group width="1" height="0.80000000000000004" alignment="center" verticalAlignment="center" spacing="4" id="J5b-XM-LlF" userLabel="Contents Group">
@@ -251,6 +252,47 @@
             </objects>
             <point key="canvasLocation" x="219.69230769230771" y="344.79487179487182"/>
         </scene>
+        <!--Music Types Interface Controller-->
+        <scene sceneID="Gji-UM-a3H">
+            <objects>
+                <controller id="eJJ-55-8iY" userLabel="Music Types Interface Controller" customClass="LMWMusicTypeTableInterfaceController">
+                    <items>
+                        <table alignment="left" id="qP9-Mb-Ha9" userLabel="Music Types Table">
+                            <items>
+                                <tableRow identifier="MusicTypeRow" id="C4a-1R-QHF" userLabel="MusicTypeRow" customClass="LMWMusicTypeRowController">
+                                    <group key="rootItem" width="1" alignment="left" id="S2s-p6-z5B" userLabel="Root Group">
+                                        <items>
+                                            <group width="1" height="0.80000000000000004" alignment="center" verticalAlignment="center" spacing="4" id="PV4-43-uZZ" userLabel="Contents Group">
+                                                <items>
+                                                    <imageView width="0.20000000000000001" height="0.59999999999999998" alignment="left" verticalAlignment="center" image="icon_albums" contentMode="scaleAspectFit" id="Xjp-fd-2y2" userLabel="Icon"/>
+                                                    <group width="0.80000000000000004" height="1" alignment="left" verticalAlignment="center" layout="vertical" spacing="0.0" id="Kh4-4z-NsB" userLabel="Title Group">
+                                                        <items>
+                                                            <label alignment="left" verticalAlignment="center" text="Loading..." textAlignment="left" id="vgT-Ov-CG2">
+                                                                <color key="textColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                                <fontDescription key="font" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="16"/>
+                                                            </label>
+                                                        </items>
+                                                    </group>
+                                                </items>
+                                            </group>
+                                        </items>
+                                        <color key="backgroundColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </group>
+                                    <connections>
+                                        <outlet property="icon" destination="Xjp-fd-2y2" id="h96-9p-0pJ"/>
+                                        <outlet property="titleLabel" destination="vgT-Ov-CG2" id="bEf-5s-774"/>
+                                    </connections>
+                                </tableRow>
+                            </items>
+                        </table>
+                    </items>
+                    <connections>
+                        <outlet property="musicTypesTable" destination="qP9-Mb-Ha9" id="c1e-8u-L9e"/>
+                    </connections>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="467" y="286"/>
+        </scene>
         <!--Static Notification Interface Controller-->
         <scene sceneID="AEw-b0-oYE">
             <objects>
@@ -265,14 +307,14 @@
                     </connections>
                 </notificationController>
             </objects>
-            <point key="canvasLocation" x="220" y="643"/>
+            <point key="canvasLocation" x="219" y="820"/>
         </scene>
         <!--Notification Controller-->
         <scene sceneID="ZPc-GJ-vnh">
             <objects>
                 <controller id="4sK-HA-Art" customClass="NotificationController"/>
             </objects>
-            <point key="canvasLocation" x="468" y="643"/>
+            <point key="canvasLocation" x="466" y="820"/>
         </scene>
     </scenes>
 </document>

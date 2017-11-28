@@ -9,7 +9,7 @@
 #import <WatchKit/WatchKit.h>
 #import <Foundation/Foundation.h>
 
-@interface LWMMainInterfaceController : WKInterfaceController
+@interface LMWMainInterfaceController : WKInterfaceController
 
 /**
  The title label.

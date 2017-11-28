@@ -7,12 +7,12 @@
 //
 
 #import <WatchConnectivity/WatchConnectivity.h>
-#import "LWMMainInterfaceController.h"
+#import "LMWMainInterfaceController.h"
 #import "LMWProgressSliderInfo.h"
 #import "LMWCompanionBridge.h"
-#import "LWMMusicTrackInfoRowController.h"
+#import "LMWMusicTrackInfoRowController.h"
 
-@interface LWMMainInterfaceController ()<LMWProgressSliderDelegate, LMWCompanionBridgeDelegate>
+@interface LMWMainInterfaceController ()<LMWProgressSliderDelegate, LMWCompanionBridgeDelegate>
 
 /**
  The info object for the progress slider.
@@ -37,7 +37,7 @@
 @end
 
 
-@implementation LWMMainInterfaceController
+@implementation LMWMainInterfaceController
 
 
 - (void)debug:(NSString*)debugMessage {
@@ -56,6 +56,7 @@
 		[self.albumArtImage setImage:[UIImage imageNamed:@"watch_no_cover_art.png"]];
 		[self.favouriteImage setImage:[UIImage imageNamed:@"icon_unfavourite_white.png"]];
 		[self.progressSliderInfo setPercentage:0.0 animated:YES];
+		[self configureTableWithData:@[]];
 	}
 	else{
 		[self.titleLabel setText:musicTrackInfo.title];
@@ -184,7 +185,7 @@
 	
 	[self.queueTable setNumberOfRows:[musicTrackInfoObjects count] withRowType:@"QueueTrackRow"];
 	for (NSInteger i = 0; i < self.queueTable.numberOfRows; i++) {
-		LWMMusicTrackInfoRowController *row = [self.queueTable rowControllerAtIndex:i];
+		LMWMusicTrackInfoRowController *row = [self.queueTable rowControllerAtIndex:i];
 
 		LMWMusicTrackInfo *trackInfo = [musicTrackInfoObjects objectAtIndex:i];
 		
@@ -200,7 +201,7 @@
 		return;
 	}
 	
-	LWMMusicTrackInfoRowController *row = [self.queueTable rowControllerAtIndex:rowIndex];
+	LMWMusicTrackInfoRowController *row = [self.queueTable rowControllerAtIndex:rowIndex];
 	
 	if(rowIndex < self.companionBridge.nowPlayingInfo.nextUpTracksArray.count){
 		self.alreadyTappedUpNextEntry = YES;
