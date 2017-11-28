@@ -1,8 +1,8 @@
 PODS:
   - BEMCheckBox (1.4.1)
-  - Crashlytics (3.8.6):
-    - Fabric (~> 1.6.3)
-  - Fabric (1.6.13)
+  - Crashlytics (3.9.3):
+    - Fabric (~> 1.7.2)
+  - Fabric (1.7.2)
   - ImageMagick (6.8.8-9):
     - ImageMagick/jpeg (= 6.8.8-9)
     - ImageMagick/png (= 6.8.8-9)
@@ -39,8 +39,8 @@ DEPENDENCIES:
 
 SPEC CHECKSUMS:
   BEMCheckBox: 5ba6e37ade3d3657b36caecc35c8b75c6c2b1a4e
-  Crashlytics: 95d05f4e4c19a771250c4bd9ce344d996de32bbf
-  Fabric: 2fb5676bc811af011a04513451f463dac6803206
+  Crashlytics: dbb07d01876c171c5ccbdf7826410380189e452c
+  Fabric: 9cd6a848efcf1b8b07497e0b6a2e7d336353ba15
   ImageMagick: e8c089d133679d505c98dc97f3dc5be0e706e1df
   MGSwipeTableCell: 19a1d65dcc1ceaea42eb44bb2adae32101904514
   PebbleKit: 4af7a5f57522cbd371f1798e6dd80bd21ac9d46f

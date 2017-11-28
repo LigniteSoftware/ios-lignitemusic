@@ -472,6 +472,8 @@
 	[UIView animateWithDuration:0.25 animations:^{
 		[self.repeatModeButton setColour:(self.musicPlayer.repeatMode != LMMusicRepeatModeNone) ? [[UIColor whiteColor] colorWithAlphaComponent:(8.0/10.0)] : [LMColour fadedColour]];
 	}];
+	
+	[self updateRepeatButtonImage];
 }
 
 - (void)clickedButton:(LMButton *)button {

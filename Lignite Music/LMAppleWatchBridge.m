@@ -211,31 +211,46 @@
 		
 		replyHandler(@{ @"sent":@"pimp" });
 	}
-	else if([key isEqualToString:LMAppleWatchControlKeyPlayPause]){
-		[self.musicPlayer invertPlaybackState];
-	}
-	else if([key isEqualToString:LMAppleWatchControlKeyNextTrack]){
-		[self.musicPlayer skipToNextTrack];
-	}
-	else if([key isEqualToString:LMAppleWatchControlKeyPreviousTrack]){
-		[self.musicPlayer skipToPreviousItem];
-	}
-	else if([key isEqualToString:LMAppleWatchControlKeyFavouriteUnfavourite]){
-		dispatch_async(dispatch_get_main_queue(), ^{
+	
+	dispatch_async(dispatch_get_main_queue(), ^{
+		if([key isEqualToString:LMAppleWatchControlKeyPlayPause]){
+			[self.musicPlayer invertPlaybackState];
+		}
+		else if([key isEqualToString:LMAppleWatchControlKeyNextTrack]){
+			[self.musicPlayer skipToNextTrack];
+		}
+		else if([key isEqualToString:LMAppleWatchControlKeyPreviousTrack]){
+			[self.musicPlayer skipToPreviousItem];
+		}
+		else if([key isEqualToString:LMAppleWatchControlKeyFavouriteUnfavourite]){
 			if(self.musicPlayer.nowPlayingTrack.isFavourite){
 				[self.musicPlayer removeTrackFromFavourites:self.musicPlayer.nowPlayingTrack];
 			}
 			else{
 				[self.musicPlayer addTrackToFavourites:self.musicPlayer.nowPlayingTrack];
 			}
-		});
-	}
-	else if([key isEqualToString:LMAppleWatchControlKeyCurrentPlaybackTime]){
-		dispatch_async(dispatch_get_main_queue(), ^{
+		}
+		else if([key isEqualToString:LMAppleWatchControlKeyInvertShuffleMode]){
+			self.musicPlayer.shuffleMode = !self.musicPlayer.shuffleMode;
+		}
+		else if([key isEqualToString:LMAppleWatchControlKeyNextRepeatMode]){
+			LMMusicRepeatMode newRepeatMode = self.musicPlayer.repeatMode;
+			if(self.musicPlayer.repeatMode == LMMusicRepeatModeNone){
+				newRepeatMode = LMMusicRepeatModeAll;
+			}
+			else if(self.musicPlayer.repeatMode == LMMusicRepeatModeAll){
+				newRepeatMode = LMMusicRepeatModeOne;
+			}
+			else{
+				newRepeatMode = LMMusicRepeatModeNone;
+			}
+			self.musicPlayer.repeatMode = newRepeatMode;
+		}
+		else if([key isEqualToString:LMAppleWatchControlKeyCurrentPlaybackTime]){
 			NSInteger currentPlaybackTime = [[message objectForKey:LMAppleWatchControlKeyCurrentPlaybackTime] integerValue];
 			[self.musicPlayer setCurrentPlaybackTime:(NSTimeInterval)currentPlaybackTime];
-		});
-	}
+		}
+	});
 }
 
 - (void)session:(WCSession *)session activationDidCompleteWithState:(WCSessionActivationState)activationState error:(nullable NSError *)error {

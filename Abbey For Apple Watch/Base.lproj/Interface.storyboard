@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="13529" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AgC-eL-Hgc">
+<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="13529" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AgC-eL-Hgc" pageOrientation="vertical">
     <device id="watch42" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <deployment identifier="watchOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="13507"/>
     </dependencies>
@@ -14,14 +13,109 @@
         </array>
     </customFonts>
     <scenes>
-        <!--Interface Controller-->
+        <!--Main Interface Controller-->
         <scene sceneID="aou-V4-d1y">
             <objects>
-                <controller id="AgC-eL-Hgc" customClass="InterfaceController">
+                <controller id="AgC-eL-Hgc" customClass="LWMMainInterfaceController">
                     <items>
-                        <group width="1" height="1" alignment="left" layout="overlap" spacing="0.0" id="PEh-FC-AVI" userLabel="Root Container">
+                        <group width="1" alignment="left" layout="vertical" radius="0.0" spacing="0.0" id="HiP-Qn-bsy" userLabel="Extra Controls Container">
                             <items>
-                                <imageView width="1" height="0.80000000000000004" alignment="left" image="watch_no_cover_art" contentMode="scaleAspectFill" id="BvG-LR-NtJ">
+                                <group width="1" height="45" alignment="left" spacing="0.0" id="yep-wT-H1e" userLabel="Control Buttons">
+                                    <items>
+                                        <group width="0.33000000000000002" height="1" alignment="center" spacing="0.0" id="kIh-u5-dMv" userLabel="Favourite Button">
+                                            <items>
+                                                <imageView width="0.5" height="0.5" alignment="center" verticalAlignment="center" image="icon_unfavourite_white" contentMode="scaleAspectFit" id="mBZ-WZ-8K5"/>
+                                            </items>
+                                            <gestureRecognizers>
+                                                <tapGestureRecognizer id="8Ub-kY-ela" userLabel="Tap Gesture">
+                                                    <connections>
+                                                        <action selector="favouritesImageTapGestureRecognizerTapped:" destination="AgC-eL-Hgc" id="8cv-d6-Nr3"/>
+                                                    </connections>
+                                                </tapGestureRecognizer>
+                                            </gestureRecognizers>
+                                            <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
+                                        </group>
+                                        <group width="0.33000000000000002" height="1" alignment="left" id="Av1-qP-Qoq" userLabel="Shuffle Button">
+                                            <items>
+                                                <group width="1" height="0.80000000000000004" alignment="center" verticalAlignment="center" radius="6" id="pab-4t-Bto" userLabel="Highlight Group">
+                                                    <items>
+                                                        <imageView width="0.5" height="0.5" alignment="center" verticalAlignment="center" image="icon_shuffle_white" contentMode="scaleAspectFit" id="eA6-nf-rez" userLabel="Shuffle Image"/>
+                                                    </items>
+                                                    <color key="backgroundColor" red="0.89803921568627454" green="0.14901960784313725" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                </group>
+                                            </items>
+                                            <gestureRecognizers>
+                                                <tapGestureRecognizer id="v8s-kr-0Hm" userLabel="Tap Gesture">
+                                                    <connections>
+                                                        <action selector="shuffleImageTapGestureRecognizerTapped:" destination="AgC-eL-Hgc" id="WPI-9v-Fkp"/>
+                                                    </connections>
+                                                </tapGestureRecognizer>
+                                            </gestureRecognizers>
+                                            <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
+                                        </group>
+                                        <group width="0.33000000000000002" height="1" alignment="right" id="SUR-zS-GWY" userLabel="Repeat Button">
+                                            <items>
+                                                <group width="1" height="0.80000000000000004" alignment="center" verticalAlignment="center" radius="6" id="1mY-xN-fwZ" userLabel="Highlight Group">
+                                                    <items>
+                                                        <imageView width="0.5" height="0.5" alignment="center" verticalAlignment="center" image="icon_repeat_general_white" contentMode="scaleAspectFit" id="vM2-g7-imk" userLabel="Repeat Image"/>
+                                                    </items>
+                                                    <color key="backgroundColor" red="0.8980392157" green="0.14901960780000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                </group>
+                                            </items>
+                                            <gestureRecognizers>
+                                                <tapGestureRecognizer id="A6j-9j-XPs" userLabel="Tap Gesture">
+                                                    <connections>
+                                                        <action selector="repeatImageTapGestureRecognizerTapped:" destination="AgC-eL-Hgc" id="JvV-NX-RY2"/>
+                                                    </connections>
+                                                </tapGestureRecognizer>
+                                            </gestureRecognizers>
+                                            <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
+                                        </group>
+                                    </items>
+                                    <color key="backgroundColor" white="0.66666666669999997" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </group>
+                                <table alignment="left" verticalAlignment="bottom" spacing="4" id="uiW-bf-OGD">
+                                    <items>
+                                        <tableRow identifier="QueueTrackRow" id="Nl8-7d-Hqy" customClass="LWMMusicTrackInfoRowController">
+                                            <group key="rootItem" width="1" alignment="left" spacing="0.0" id="5mD-MZ-z7S" userLabel="Root Group">
+                                                <items>
+                                                    <group width="1" height="0.80000000000000004" alignment="center" verticalAlignment="center" spacing="4" id="J5b-XM-LlF" userLabel="Contents Group">
+                                                        <items>
+                                                            <group width="0.20000000000000001" alignment="left" verticalAlignment="center" id="pyZ-7z-qaH" userLabel="Icon Group">
+                                                                <items>
+                                                                    <imageView width="0.90000000000000002" height="0.90000000000000002" alignment="left" verticalAlignment="center" image="chidster" contentMode="scaleAspectFit" id="Dkn-o4-uGB"/>
+                                                                </items>
+                                                            </group>
+                                                            <group width="0.80000000000000004" height="1" alignment="left" verticalAlignment="center" layout="vertical" spacing="0.0" id="Bzn-h9-bOw" userLabel="Text">
+                                                                <items>
+                                                                    <label alignment="left" text="Title" textAlignment="left" id="4L1-Gk-I7z">
+                                                                        <color key="textColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                                        <fontDescription key="font" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="16"/>
+                                                                    </label>
+                                                                    <label alignment="left" text="Subtitle" textAlignment="left" id="GDj-u4-GwG">
+                                                                        <color key="textColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                                        <fontDescription key="font" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="10"/>
+                                                                    </label>
+                                                                </items>
+                                                            </group>
+                                                        </items>
+                                                    </group>
+                                                </items>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            </group>
+                                            <connections>
+                                                <outlet property="subtitleLabel" destination="GDj-u4-GwG" id="Obx-6j-ute"/>
+                                                <outlet property="titleLabel" destination="4L1-Gk-I7z" id="bQa-wm-9nn"/>
+                                            </connections>
+                                        </tableRow>
+                                    </items>
+                                </table>
+                            </items>
+                            <edgeInsets key="margins" left="0.0" right="0.0" top="0.0" bottom="0.0"/>
+                        </group>
+                        <group width="1" height="1" alignment="left" layout="overlap" spacing="0.0" id="PEh-FC-AVI" userLabel="Now Playing Container">
+                            <items>
+                                <imageView width="1" height="0.80000000000000004" alignment="center" image="watch_no_cover_art" contentMode="scaleAspectFill" id="BvG-LR-NtJ">
                                     <gestureRecognizers>
                                         <tapGestureRecognizer id="Olc-7y-bvq" userLabel="Play/Pause Tap Gesture">
                                             <connections>
@@ -40,13 +134,13 @@
                                         </swipeGestureRecognizer>
                                     </gestureRecognizers>
                                 </imageView>
-                                <group width="1" height="0.34999999999999998" alignment="left" verticalAlignment="bottom" layout="vertical" spacing="0.0" id="Ki4-AN-XF7" userLabel="Track Info Container">
+                                <group width="1" height="0.34999999999999998" alignment="center" verticalAlignment="bottom" layout="vertical" spacing="0.0" id="Ki4-AN-XF7" userLabel="Track Info Container">
                                     <items>
                                         <group width="1" height="0.40000000000000002" alignment="left" layout="vertical" radius="0.0" spacing="0.0" id="Hbh-8q-bB0" userLabel="Slider Group">
                                             <items>
                                                 <group width="1" height="0.29999999999999999" alignment="left" verticalAlignment="bottom" spacing="0.0" id="Blj-jY-PsE" userLabel="Progress Bar Container">
                                                     <items>
-                                                        <group width="13" height="1" alignment="left" id="uNo-TJ-D5i" userLabel="Progress Bar">
+                                                        <group width="8" height="1" alignment="left" id="uNo-TJ-D5i" userLabel="Progress Bar">
                                                             <items>
                                                                 <group width="8" height="1" alignment="right" id="uQ8-tD-yad" userLabel="Grabber">
                                                                     <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -70,31 +164,19 @@
                                         </group>
                                         <group width="1" height="0.59999999999999998" alignment="left" spacing="0.0" id="j6H-mZ-SBl" userLabel="Track Info Group">
                                             <items>
-                                                <group width="0.25" height="1" alignment="left" spacing="0.0" id="kIh-u5-dMv" userLabel="Control Button Group">
+                                                <group width="1" alignment="left" verticalAlignment="center" layout="vertical" spacing="0.0" id="QiB-hQ-eoa" userLabel="Info Text Group">
                                                     <items>
-                                                        <imageView width="0.65000000000000002" height="0.65000000000000002" alignment="center" verticalAlignment="center" image="icon_unfavourite_white" contentMode="scaleAspectFit" id="mBZ-WZ-8K5">
-                                                            <gestureRecognizers>
-                                                                <tapGestureRecognizer id="8Ub-kY-ela" userLabel="Tap Gesture">
-                                                                    <connections>
-                                                                        <action selector="favouritesImageTapGestureRecognizerTapped:" destination="AgC-eL-Hgc" id="8cv-d6-Nr3"/>
-                                                                    </connections>
-                                                                </tapGestureRecognizer>
-                                                            </gestureRecognizers>
-                                                        </imageView>
-                                                    </items>
-                                                </group>
-                                                <group width="0.75" alignment="left" verticalAlignment="center" layout="vertical" spacing="0.0" id="QiB-hQ-eoa" userLabel="Info Text Group">
-                                                    <items>
-                                                        <label width="136" alignment="left" text="Loading" id="b8p-RV-XJb" userLabel="Title Label">
+                                                        <label width="1" alignment="left" text="Loading a good meme please wait" textAlignment="center" id="b8p-RV-XJb" userLabel="Title Label">
                                                             <fontDescription key="font" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="16"/>
                                                         </label>
-                                                        <label width="1" alignment="left" text="Please wait" id="Nya-mZ-DzX" userLabel="Subtitle Label">
+                                                        <label width="1" alignment="left" text="Please wait" textAlignment="center" id="Nya-mZ-DzX" userLabel="Subtitle Label">
                                                             <fontDescription key="font" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="10"/>
                                                         </label>
                                                     </items>
                                                 </group>
                                             </items>
                                             <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <edgeInsets key="margins" left="4" right="4" top="0.0" bottom="0.0"/>
                                         </group>
                                     </items>
                                     <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
@@ -108,6 +190,11 @@
                         <outlet property="favouriteImage" destination="mBZ-WZ-8K5" id="y5I-T5-xeO"/>
                         <outlet property="progressBarContainer" destination="Blj-jY-PsE" id="a3o-Ns-Dqi"/>
                         <outlet property="progressBarGroup" destination="uNo-TJ-D5i" id="xz0-Yd-k3P"/>
+                        <outlet property="queueTable" destination="uiW-bf-OGD" id="SCh-kk-QAn"/>
+                        <outlet property="repeatButtonGroup" destination="1mY-xN-fwZ" id="ykx-Vc-Pog"/>
+                        <outlet property="repeatImage" destination="vM2-g7-imk" id="zSr-9X-RKx"/>
+                        <outlet property="shuffleButtonGroup" destination="pab-4t-Bto" id="Q9n-4H-ZvR"/>
+                        <outlet property="shuffleImage" destination="eA6-nf-rez" id="Dfd-DW-Gxq"/>
                         <outlet property="subtitleLabel" destination="Nya-mZ-DzX" id="byw-Qx-j2B"/>
                         <outlet property="titleLabel" destination="b8p-RV-XJb" id="sDJ-oz-eRn"/>
                     </connections>
