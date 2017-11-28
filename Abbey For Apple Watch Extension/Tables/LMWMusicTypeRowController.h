@@ -21,4 +21,9 @@
  */
 @property IBOutlet WKInterfaceImage *icon;
 
+/**
+ The dictionary of info on the music type.
+ */
+@property NSDictionary *musicTypeDictionary;
+
 @end

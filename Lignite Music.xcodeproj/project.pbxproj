@@ -221,6 +221,9 @@
 		6ACB12D51FCDC29100C11F11 /* icon_favourite_black.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A25F7A51F99223B00CC8082 /* icon_favourite_black.png */; };
 		6ACB12D81FCDC47200C11F11 /* LMWMusicTypeRowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ACB12D71FCDC47200C11F11 /* LMWMusicTypeRowController.m */; };
 		6ACB12DB1FCDC55E00C11F11 /* LMWMusicTypeTableInterfaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ACB12DA1FCDC55E00C11F11 /* LMWMusicTypeTableInterfaceController.m */; };
+		6ACB12E01FCDD65500C11F11 /* LoadingIcon in Resources */ = {isa = PBXBuildFile; fileRef = 6ACB12DF1FCDD65500C11F11 /* LoadingIcon */; };
+		6ACB12E31FCDDF3500C11F11 /* LMWMusicBrowsingInterfaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ACB12E21FCDDF3500C11F11 /* LMWMusicBrowsingInterfaceController.m */; };
+		6ACB12E61FCDE91700C11F11 /* LMWMusicBrowsingRowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ACB12E51FCDE91700C11F11 /* LMWMusicBrowsingRowController.m */; };
 		6ACB69AA1E87AE3A001A04B6 /* purchase_header.png in Resources */ = {isa = PBXBuildFile; fileRef = 6ACB69A91E87AE3A001A04B6 /* purchase_header.png */; };
 		6ACD9C201EEBDE3700C53DB3 /* LMVerticalControlBarInnerShadowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ACD9C1F1EEBDE3700C53DB3 /* LMVerticalControlBarInnerShadowView.m */; };
 		6ACED1081DB7BE1D006EACD2 /* icon_repeat_one.png in Resources */ = {isa = PBXBuildFile; fileRef = 6ACED1061DB7BE1D006EACD2 /* icon_repeat_one.png */; };
@@ -649,6 +652,11 @@
 		6ACB12D71FCDC47200C11F11 /* LMWMusicTypeRowController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMWMusicTypeRowController.m; sourceTree = "<group>"; };
 		6ACB12D91FCDC55E00C11F11 /* LMWMusicTypeTableInterfaceController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMWMusicTypeTableInterfaceController.h; sourceTree = "<group>"; };
 		6ACB12DA1FCDC55E00C11F11 /* LMWMusicTypeTableInterfaceController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMWMusicTypeTableInterfaceController.m; sourceTree = "<group>"; };
+		6ACB12DF1FCDD65500C11F11 /* LoadingIcon */ = {isa = PBXFileReference; lastKnownFileType = folder; path = LoadingIcon; sourceTree = "<group>"; };
+		6ACB12E11FCDDF3500C11F11 /* LMWMusicBrowsingInterfaceController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMWMusicBrowsingInterfaceController.h; sourceTree = "<group>"; };
+		6ACB12E21FCDDF3500C11F11 /* LMWMusicBrowsingInterfaceController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMWMusicBrowsingInterfaceController.m; sourceTree = "<group>"; };
+		6ACB12E41FCDE91700C11F11 /* LMWMusicBrowsingRowController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMWMusicBrowsingRowController.h; sourceTree = "<group>"; };
+		6ACB12E51FCDE91700C11F11 /* LMWMusicBrowsingRowController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMWMusicBrowsingRowController.m; sourceTree = "<group>"; };
 		6ACB69A91E87AE3A001A04B6 /* purchase_header.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = purchase_header.png; sourceTree = "<group>"; };
 		6ACD9C1E1EEBDE3700C53DB3 /* LMVerticalControlBarInnerShadowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMVerticalControlBarInnerShadowView.h; sourceTree = "<group>"; };
 		6ACD9C1F1EEBDE3700C53DB3 /* LMVerticalControlBarInnerShadowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMVerticalControlBarInnerShadowView.m; sourceTree = "<group>"; };
@@ -1305,6 +1313,8 @@
 				6ADB70D61FCD330A00412225 /* Controls */,
 				6ADCE20F1FB262B800BE0BBB /* LMWMainInterfaceController.h */,
 				6ADCE2101FB262B800BE0BBB /* LMWMainInterfaceController.m */,
+				6ACB12E11FCDDF3500C11F11 /* LMWMusicBrowsingInterfaceController.h */,
+				6ACB12E21FCDDF3500C11F11 /* LMWMusicBrowsingInterfaceController.m */,
 				6ACB12D91FCDC55E00C11F11 /* LMWMusicTypeTableInterfaceController.h */,
 				6ACB12DA1FCDC55E00C11F11 /* LMWMusicTypeTableInterfaceController.m */,
 			);
@@ -1353,6 +1363,8 @@
 				6A1794A81FB4B34200A6C857 /* LMWMusicTrackInfoRowController.m */,
 				6ACB12D61FCDC47200C11F11 /* LMWMusicTypeRowController.h */,
 				6ACB12D71FCDC47200C11F11 /* LMWMusicTypeRowController.m */,
+				6ACB12E41FCDE91700C11F11 /* LMWMusicBrowsingRowController.h */,
+				6ACB12E51FCDE91700C11F11 /* LMWMusicBrowsingRowController.m */,
 			);
 			path = Tables;
 			sourceTree = "<group>";
@@ -1389,6 +1401,7 @@
 			children = (
 				6ADCE2001FB262B800BE0BBB /* Interface.storyboard */,
 				6ADCE2031FB262B800BE0BBB /* Assets.xcassets */,
+				6ACB12DF1FCDD65500C11F11 /* LoadingIcon */,
 				6ADCE2051FB262B800BE0BBB /* Info.plist */,
 			);
 			path = "Abbey For Apple Watch";
@@ -1735,6 +1748,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6ACB12C81FCDC28A00C11F11 /* icon_compilations.png in Resources */,
+				6ACB12E01FCDD65500C11F11 /* LoadingIcon in Resources */,
 				6ACB12CC1FCDC28A00C11F11 /* icon_titles.png in Resources */,
 				6ADB70BA1FCCBD3C00412225 /* icon_repeat_one.png in Resources */,
 				6A37B1ED1FB3D68A00934A75 /* watch_no_cover_art.png in Resources */,
@@ -1995,7 +2009,9 @@
 				6A37B1CA1FB2761D00934A75 /* LMWProgressSliderInfo.m in Sources */,
 				6ACB12DB1FCDC55E00C11F11 /* LMWMusicTypeTableInterfaceController.m in Sources */,
 				6ADCE2141FB262B800BE0BBB /* ExtensionDelegate.m in Sources */,
+				6ACB12E61FCDE91700C11F11 /* LMWMusicBrowsingRowController.m in Sources */,
 				6A37B1F11FB3F11100934A75 /* LMWNowPlayingInfo.m in Sources */,
+				6ACB12E31FCDDF3500C11F11 /* LMWMusicBrowsingInterfaceController.m in Sources */,
 				6ADCE21A1FB262B800BE0BBB /* ComplicationController.m in Sources */,
 				6ACB12D81FCDC47200C11F11 /* LMWMusicTypeRowController.m in Sources */,
 				6A37B1DD1FB39ECB00934A75 /* LMWMusicTrackInfo.m in Sources */,

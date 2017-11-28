@@ -17,6 +17,20 @@
 typedef uint64_t MPMediaEntityPersistentID;
 
 /**
+ LMMusicType is the type of music, for example, albums. This type is usually used within queries for music.
+ */
+typedef enum {
+	LMMusicTypeArtists = 0,
+	LMMusicTypeAlbums, //1
+	LMMusicTypeTitles, //2
+	LMMusicTypePlaylists,//3
+	LMMusicTypeGenres, //4
+	LMMusicTypeComposers, //5
+	LMMusicTypeCompilations, //6
+	LMMusicTypeFavourites //7
+} LMMusicType;
+
+/**
  The album art of the music track.
  */
 @property UIImage *albumArt;

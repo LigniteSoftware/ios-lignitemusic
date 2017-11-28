@@ -197,6 +197,18 @@
 	}
 }
 
+- (void)requestTracksWithEntryInfo:(LMWMusicTrackInfo*)entryInfo replyHandler:(nullable void (^)(NSDictionary<NSString *, id> *replyMessage))replyHandler errorHandler:(nullable void (^)(NSError *error))errorHandler {
+	
+	if(self.session.reachable){
+		[self.session sendMessage:@{
+									LMAppleWatchCommunicationKey: LMAppleWatchCommunicationKeyMusicBrowsingEntries,
+									
+									}
+					 replyHandler:replyHandler
+					 errorHandler:errorHandler];
+	}
+}
+
 - (void)setCurrentPlaybackTime:(NSInteger)currentPlaybackTime {
 	if(self.session.reachable){
 		[self.session sendMessage:@{
