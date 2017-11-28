@@ -231,6 +231,9 @@
 		6ADB70C81FCCBDDE00412225 /* icon_shuffle_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 6ADB70C11FCCBDDE00412225 /* icon_shuffle_white.png */; };
 		6ADB70C91FCCBDDE00412225 /* icon_shuffle_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 6ADB70C11FCCBDDE00412225 /* icon_shuffle_white.png */; };
 		6ADB70CA1FCCBDDE00412225 /* icon_shuffle_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 6ADB70C11FCCBDDE00412225 /* icon_shuffle_white.png */; };
+		6ADB70CC1FCCF0F600412225 /* icon_browse_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 6ADB70CB1FCCF0F500412225 /* icon_browse_white.png */; };
+		6ADB70CD1FCCF0F600412225 /* icon_browse_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 6ADB70CB1FCCF0F500412225 /* icon_browse_white.png */; };
+		6ADB70CE1FCCF0F600412225 /* icon_browse_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 6ADB70CB1FCCF0F500412225 /* icon_browse_white.png */; };
 		6ADC48EF1DDF8C8000FE57F1 /* onboarding_library_access.png in Resources */ = {isa = PBXBuildFile; fileRef = 6ADC48ED1DDF8C8000FE57F1 /* onboarding_library_access.png */; };
 		6ADC48F01DDF8C8000FE57F1 /* onboarding_bluetooth.png in Resources */ = {isa = PBXBuildFile; fileRef = 6ADC48EE1DDF8C8000FE57F1 /* onboarding_bluetooth.png */; };
 		6ADCBA2F1ED9B76000CAD705 /* LMDetailView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ADCBA2E1ED9B76000CAD705 /* LMDetailView.m */; };
@@ -648,6 +651,7 @@
 		6ADB70BF1FCCBDDD00412225 /* icon_repeat_general_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_repeat_general_white.png; sourceTree = "<group>"; };
 		6ADB70C01FCCBDDD00412225 /* icon_repeat_one_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_repeat_one_white.png; sourceTree = "<group>"; };
 		6ADB70C11FCCBDDE00412225 /* icon_shuffle_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_shuffle_white.png; sourceTree = "<group>"; };
+		6ADB70CB1FCCF0F500412225 /* icon_browse_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_browse_white.png; sourceTree = "<group>"; };
 		6ADC48ED1DDF8C8000FE57F1 /* onboarding_library_access.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = onboarding_library_access.png; sourceTree = "<group>"; };
 		6ADC48EE1DDF8C8000FE57F1 /* onboarding_bluetooth.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = onboarding_bluetooth.png; sourceTree = "<group>"; };
 		6ADCBA2D1ED9B76000CAD705 /* LMDetailView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMDetailView.h; sourceTree = "<group>"; };
@@ -987,6 +991,7 @@
 				6A6C186C1DE0014A00D651E1 /* icon_artists.png */,
 				6A4157CC1E04669E00D09D4B /* icon_back.png */,
 				6AF2C9421DDA16CC005E4643 /* icon_browse.png */,
+				6ADB70CB1FCCF0F500412225 /* icon_browse_white.png */,
 				6AC32B7C1DB6CD950007C67E /* icon_bug.png */,
 				6A5168911E08F4C800A6446F /* icon_buy.png */,
 				6A63D16E1DE41FD000EABA53 /* icon_checkmark.png */,
@@ -1654,6 +1659,7 @@
 				6A37B1E31FB3AC7B00934A75 /* icon_favourite_outlined_white.png in Resources */,
 				6A37B1E51FB3AC8400934A75 /* icon_favourite_red.png in Resources */,
 				6ADB70C31FCCBDDE00412225 /* icon_repeat_general_white.png in Resources */,
+				6ADB70CD1FCCF0F600412225 /* icon_browse_white.png in Resources */,
 				6A37B1D21FB2BE7F00934A75 /* chidster.png in Resources */,
 				6A37B1F81FB4161200934A75 /* icon_unfavourite_white.png in Resources */,
 				6ADB70BB1FCCBD3C00412225 /* icon_shuffle.png in Resources */,
@@ -1675,6 +1681,7 @@
 				6A37B1EE1FB3D68A00934A75 /* watch_no_cover_art.png in Resources */,
 				6A37B1F41FB414CB00934A75 /* Localizable.strings in Resources */,
 				6ADB70C41FCCBDDE00412225 /* icon_repeat_general_white.png in Resources */,
+				6ADB70CE1FCCF0F600412225 /* icon_browse_white.png in Resources */,
 				6A37B1E41FB3AC7C00934A75 /* icon_favourite_outlined_white.png in Resources */,
 				6A37B1F91FB4161200934A75 /* icon_unfavourite_white.png in Resources */,
 				6ADB70BE1FCCBD3D00412225 /* icon_shuffle.png in Resources */,
@@ -1755,6 +1762,7 @@
 				6A6C186D1DE0014A00D651E1 /* icon_artists.png in Resources */,
 				6AF3AD9C1E0A7C7D00D8E8F1 /* onboarding_kickstarter.png in Resources */,
 				6A5168961E09002800A6446F /* icon_green_checkmark.png in Resources */,
+				6ADB70CC1FCCF0F600412225 /* icon_browse_white.png in Resources */,
 				6A514E141CE9621B00AFB351 /* icon_dynamic_playlist.png in Resources */,
 				6A759D511DEA40230051E1A9 /* icon_twitter.png in Resources */,
 				6AC77A161DC42CF400BABBB3 /* icon_playlists.png in Resources */,

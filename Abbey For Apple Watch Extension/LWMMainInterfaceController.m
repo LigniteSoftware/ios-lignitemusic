@@ -29,6 +29,11 @@
  */
 @property NSTimer *progressBarUpdateTimer;
 
+/**
+ User has tapped an up next entry, and the watch is waiting for a reply from the phone. Prevents multiple sending of the same message because of an impatient user.
+ */
+@property BOOL alreadyTappedUpNextEntry;
+
 @end
 
 
@@ -102,9 +107,11 @@
 			}
 			[self.repeatImage setImage:newRepeatImage];
 			
-			[self.repeatButtonGroup setBackgroundColor:(nowPlayingInfo.repeatMode != LMMusicRepeatModeNone) ? [UIColor redColor] : [UIColor blackColor]];
-			
-			[self.shuffleButtonGroup setBackgroundColor:(nowPlayingInfo.shuffleMode) ? [UIColor redColor] : [UIColor blackColor]];
+			[self animateWithDuration:0.4 animations:^{
+				[self.repeatButtonGroup setBackgroundColor:(nowPlayingInfo.repeatMode != LMMusicRepeatModeNone) ? [UIColor redColor] : [UIColor blackColor]];
+				
+				[self.shuffleButtonGroup setBackgroundColor:(nowPlayingInfo.shuffleMode) ? [UIColor redColor] : [UIColor blackColor]];
+			}];
 		});
 	}
 	else{
@@ -140,16 +147,20 @@
 	[self.companionBridge sendMusicControlMessageToPhoneWithKey:LMAppleWatchControlKeyPlayPause];
 }
 
-- (IBAction)favouritesImageTapGestureRecognizerTapped:(WKTapGestureRecognizer*)tapGestureRecognizer {
+- (IBAction)favouriteButtonSelector:(id)sender {
 	[self.companionBridge sendMusicControlMessageToPhoneWithKey:LMAppleWatchControlKeyFavouriteUnfavourite];
 }
 
-- (IBAction)shuffleImageTapGestureRecognizerTapped:(WKTapGestureRecognizer*)tapGestureRecognizer {
+- (IBAction)shuffleButtonSelector:(id)sender {
 	[self.companionBridge sendMusicControlMessageToPhoneWithKey:LMAppleWatchControlKeyInvertShuffleMode];
 }
 
-- (IBAction)repeatImageTapGestureRecognizerTapped:(WKTapGestureRecognizer*)tapGestureRecognizer {
+- (IBAction)repeatButtonSelector:(id)sender {
 	[self.companionBridge sendMusicControlMessageToPhoneWithKey:LMAppleWatchControlKeyNextRepeatMode];
+}
+
+- (IBAction)browseLibraryButtonSelector:(id)sender {
+	NSLog(@"Browse library");
 }
 
 - (IBAction)nextSongGestureSwiped:(WKSwipeGestureRecognizer*)swipeGestureRecognizer {
@@ -161,23 +172,45 @@
 }
 
 
+- (void)nowPlayingUpNextDidChange:(NSArray<LMWMusicTrackInfo*>*)upNextTracks {
+	self.alreadyTappedUpNextEntry = NO;
+	
+	[self configureTableWithData:upNextTracks];
+}
 
-- (void)configureTableWithData:(NSArray*)dataObjects {
-	[self.queueTable setNumberOfRows:[dataObjects count] withRowType:@"QueueTrackRow"];
+
+- (void)configureTableWithData:(NSArray<LMWMusicTrackInfo*>*)musicTrackInfoObjects {
+	[self.upNextLabel setText:NSLocalizedString((musicTrackInfoObjects.count == 0) ? @"NothingUpNext" : @"UpNext", nil)];
+	
+	[self.queueTable setNumberOfRows:[musicTrackInfoObjects count] withRowType:@"QueueTrackRow"];
 	for (NSInteger i = 0; i < self.queueTable.numberOfRows; i++) {
 		LWMMusicTrackInfoRowController *row = [self.queueTable rowControllerAtIndex:i];
-//		MyDataObject* dataObj = [dataObjects objectAtIndex:i];
-		NSString *string = [dataObjects objectAtIndex:i];
+
+		LMWMusicTrackInfo *trackInfo = [musicTrackInfoObjects objectAtIndex:i];
 		
-		[row.titleLabel setText:string];
-		[row.subtitleLabel setText:@"Chiddy Bang"];
+		[row.number setText:[NSString stringWithFormat:@"%d", (int)(i+1)]];
+		
+		[row.titleLabel setText:trackInfo.title];
+		[row.subtitleLabel setText:trackInfo.subtitle];
 	}
 }
 
 - (void)table:(WKInterfaceTable *)table didSelectRowAtIndex:(NSInteger)rowIndex {
+	if(self.alreadyTappedUpNextEntry){
+		return;
+	}
+	
 	LWMMusicTrackInfoRowController *row = [self.queueTable rowControllerAtIndex:rowIndex];
 	
-	[row.titleLabel setText:@"tapped"];
+	if(rowIndex < self.companionBridge.nowPlayingInfo.nextUpTracksArray.count){
+		self.alreadyTappedUpNextEntry = YES;
+		
+		LMWMusicTrackInfo *musicTrackInfo = [self.companionBridge.nowPlayingInfo.nextUpTracksArray objectAtIndex:rowIndex];
+		
+		[row.subtitleLabel setText:NSLocalizedString(@"HangOn", nil)];
+		
+		[self.companionBridge setUpNextTrack:musicTrackInfo.indexInCollection];
+	}
 }
 
 
@@ -195,7 +228,7 @@
 	[self.companionBridge addDelegate:self];
 	
 	
-	[self configureTableWithData:@[ @"Intro", @"Breakfast", @"Handclaps & Guitars", @"Mind Your Manners", @"Ray Charles", @"Does She Love Me?" ]];
+	[self configureTableWithData:@[]];
 }
 
 - (void)willActivate {

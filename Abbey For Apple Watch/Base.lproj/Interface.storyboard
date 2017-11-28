@@ -24,55 +24,98 @@
                                     <items>
                                         <group width="0.33000000000000002" height="1" alignment="center" spacing="0.0" id="kIh-u5-dMv" userLabel="Favourite Button">
                                             <items>
-                                                <imageView width="0.5" height="0.5" alignment="center" verticalAlignment="center" image="icon_unfavourite_white" contentMode="scaleAspectFit" id="mBZ-WZ-8K5"/>
-                                            </items>
-                                            <gestureRecognizers>
-                                                <tapGestureRecognizer id="8Ub-kY-ela" userLabel="Tap Gesture">
+                                                <button alignment="center" verticalAlignment="center" id="U08-TL-cw6">
+                                                    <group key="contentGroup" width="1" height="1" alignment="left" id="R2W-Un-21k">
+                                                        <items>
+                                                            <imageView width="0.5" height="0.5" alignment="center" verticalAlignment="center" image="icon_unfavourite_white" contentMode="scaleAspectFit" id="mBZ-WZ-8K5"/>
+                                                        </items>
+                                                    </group>
                                                     <connections>
-                                                        <action selector="favouritesImageTapGestureRecognizerTapped:" destination="AgC-eL-Hgc" id="8cv-d6-Nr3"/>
+                                                        <action selector="favouriteButtonSelector:" destination="AgC-eL-Hgc" id="F43-R3-Bqu"/>
                                                     </connections>
-                                                </tapGestureRecognizer>
-                                            </gestureRecognizers>
+                                                </button>
+                                            </items>
                                             <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
                                         </group>
                                         <group width="0.33000000000000002" height="1" alignment="left" id="Av1-qP-Qoq" userLabel="Shuffle Button">
                                             <items>
-                                                <group width="1" height="0.80000000000000004" alignment="center" verticalAlignment="center" radius="6" id="pab-4t-Bto" userLabel="Highlight Group">
-                                                    <items>
-                                                        <imageView width="0.5" height="0.5" alignment="center" verticalAlignment="center" image="icon_shuffle_white" contentMode="scaleAspectFit" id="eA6-nf-rez" userLabel="Shuffle Image"/>
-                                                    </items>
-                                                    <color key="backgroundColor" red="0.89803921568627454" green="0.14901960784313725" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                </group>
-                                            </items>
-                                            <gestureRecognizers>
-                                                <tapGestureRecognizer id="v8s-kr-0Hm" userLabel="Tap Gesture">
+                                                <button alignment="center" verticalAlignment="center" id="OHn-yL-o2l">
+                                                    <group key="contentGroup" width="1" alignment="left" id="9Fs-fH-ye2" userLabel="Button Group">
+                                                        <items>
+                                                            <group width="1" height="0.90000000000000002" alignment="center" verticalAlignment="center" radius="6" id="pab-4t-Bto" userLabel="Highlight Group">
+                                                                <items>
+                                                                    <imageView width="0.5" height="0.5" alignment="center" verticalAlignment="center" image="icon_shuffle_white" contentMode="scaleAspectFit" id="eA6-nf-rez" userLabel="Shuffle Image"/>
+                                                                </items>
+                                                                <color key="backgroundColor" red="0.89803921568627454" green="0.14901960784313725" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            </group>
+                                                        </items>
+                                                    </group>
                                                     <connections>
-                                                        <action selector="shuffleImageTapGestureRecognizerTapped:" destination="AgC-eL-Hgc" id="WPI-9v-Fkp"/>
+                                                        <action selector="shuffleButtonSelector:" destination="AgC-eL-Hgc" id="zx7-Ff-oms"/>
                                                     </connections>
-                                                </tapGestureRecognizer>
-                                            </gestureRecognizers>
+                                                </button>
+                                            </items>
                                             <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
                                         </group>
                                         <group width="0.33000000000000002" height="1" alignment="right" id="SUR-zS-GWY" userLabel="Repeat Button">
                                             <items>
-                                                <group width="1" height="0.80000000000000004" alignment="center" verticalAlignment="center" radius="6" id="1mY-xN-fwZ" userLabel="Highlight Group">
-                                                    <items>
-                                                        <imageView width="0.5" height="0.5" alignment="center" verticalAlignment="center" image="icon_repeat_general_white" contentMode="scaleAspectFit" id="vM2-g7-imk" userLabel="Repeat Image"/>
-                                                    </items>
-                                                    <color key="backgroundColor" red="0.8980392157" green="0.14901960780000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                </group>
-                                            </items>
-                                            <gestureRecognizers>
-                                                <tapGestureRecognizer id="A6j-9j-XPs" userLabel="Tap Gesture">
+                                                <button alignment="center" verticalAlignment="center" id="bfm-gS-TMV">
+                                                    <group key="contentGroup" width="1" alignment="left" id="QtR-Qp-KQ2" userLabel="Button Group">
+                                                        <items>
+                                                            <group width="1" height="0.90000000000000002" alignment="center" verticalAlignment="center" radius="6" id="1mY-xN-fwZ" userLabel="Highlight Group">
+                                                                <items>
+                                                                    <imageView width="0.5" height="0.5" alignment="center" verticalAlignment="center" image="icon_repeat_general_white" contentMode="scaleAspectFit" id="vM2-g7-imk" userLabel="Repeat Image"/>
+                                                                </items>
+                                                                <color key="backgroundColor" red="0.8980392157" green="0.14901960780000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            </group>
+                                                        </items>
+                                                    </group>
                                                     <connections>
-                                                        <action selector="repeatImageTapGestureRecognizerTapped:" destination="AgC-eL-Hgc" id="JvV-NX-RY2"/>
+                                                        <action selector="repeatButtonSelector:" destination="AgC-eL-Hgc" id="xsI-cI-3FO"/>
                                                     </connections>
-                                                </tapGestureRecognizer>
-                                            </gestureRecognizers>
+                                                </button>
+                                            </items>
                                             <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
                                         </group>
                                     </items>
                                     <color key="backgroundColor" white="0.66666666669999997" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </group>
+                                <group width="1" height="45" alignment="left" id="BNS-mP-B5d" userLabel="Browse Library Group">
+                                    <items>
+                                        <button alignment="left" verticalAlignment="center" id="r3M-S1-Kl4" userLabel="Browse Library Button">
+                                            <group key="contentGroup" width="1" alignment="left" id="3JY-YY-Fti" userLabel="Button Group">
+                                                <items>
+                                                    <group width="0.90000000000000002" height="0.80000000000000004" alignment="center" verticalAlignment="center" spacing="4" id="lZj-EU-bOY" userLabel="Contents Group">
+                                                        <items>
+                                                            <group width="0.20000000000000001" alignment="left" verticalAlignment="center" id="Xbx-cA-fyR" userLabel="Icon Group">
+                                                                <items>
+                                                                    <imageView width="0.90000000000000002" height="0.90000000000000002" alignment="left" verticalAlignment="center" image="icon_browse_white" contentMode="scaleAspectFit" id="AJH-WT-kRT"/>
+                                                                </items>
+                                                            </group>
+                                                            <group width="0.80000000000000004" height="1" alignment="left" verticalAlignment="center" layout="vertical" spacing="0.0" id="yhC-4w-bQA" userLabel="Text">
+                                                                <items>
+                                                                    <label alignment="left" verticalAlignment="center" text="Browse Library" textAlignment="left" id="cEl-sZ-3f8">
+                                                                        <color key="textColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                        <fontDescription key="font" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="15"/>
+                                                                    </label>
+                                                                </items>
+                                                            </group>
+                                                        </items>
+                                                    </group>
+                                                </items>
+                                                <color key="backgroundColor" red="0.8980392157" green="0.14901960780000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            </group>
+                                            <connections>
+                                                <action selector="browseLibraryButtonSelector:" destination="AgC-eL-Hgc" id="FCg-0d-V1y"/>
+                                            </connections>
+                                        </button>
+                                    </items>
+                                </group>
+                                <group width="1" height="4" alignment="left" id="kKS-lp-0B9" userLabel="Spacer"/>
+                                <group width="1" height="24" alignment="left" id="fhF-NP-chM" userLabel="Up Next Label Group">
+                                    <items>
+                                        <label height="1" alignment="left" text="Nothing up next" id="ytY-SD-41d"/>
+                                    </items>
                                 </group>
                                 <table alignment="left" verticalAlignment="bottom" spacing="4" id="uiW-bf-OGD">
                                     <items>
@@ -81,18 +124,21 @@
                                                 <items>
                                                     <group width="1" height="0.80000000000000004" alignment="center" verticalAlignment="center" spacing="4" id="J5b-XM-LlF" userLabel="Contents Group">
                                                         <items>
-                                                            <group width="0.20000000000000001" alignment="left" verticalAlignment="center" id="pyZ-7z-qaH" userLabel="Icon Group">
+                                                            <group width="0.10000000000000001" height="0.90000000000000002" alignment="left" verticalAlignment="center" radius="6" spacing="0.0" id="pyZ-7z-qaH" userLabel="Number Group">
                                                                 <items>
-                                                                    <imageView width="0.90000000000000002" height="0.90000000000000002" alignment="left" verticalAlignment="center" image="chidster" contentMode="scaleAspectFit" id="Dkn-o4-uGB"/>
+                                                                    <label width="1" height="15" alignment="center" text="?" textAlignment="center" id="Tjh-GK-7ys" userLabel="Number Label">
+                                                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                                        <fontDescription key="font" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="16"/>
+                                                                    </label>
                                                                 </items>
                                                             </group>
                                                             <group width="0.80000000000000004" height="1" alignment="left" verticalAlignment="center" layout="vertical" spacing="0.0" id="Bzn-h9-bOw" userLabel="Text">
                                                                 <items>
-                                                                    <label alignment="left" text="Title" textAlignment="left" id="4L1-Gk-I7z">
+                                                                    <label alignment="left" text="Loading..." textAlignment="left" id="4L1-Gk-I7z">
                                                                         <color key="textColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                                                         <fontDescription key="font" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="16"/>
                                                                     </label>
-                                                                    <label alignment="left" text="Subtitle" textAlignment="left" id="GDj-u4-GwG">
+                                                                    <label alignment="left" text="Hang on a sec" textAlignment="left" id="GDj-u4-GwG">
                                                                         <color key="textColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                                                         <fontDescription key="font" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="10"/>
                                                                     </label>
@@ -104,6 +150,7 @@
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             </group>
                                             <connections>
+                                                <outlet property="number" destination="Tjh-GK-7ys" id="oU6-n4-JMd"/>
                                                 <outlet property="subtitleLabel" destination="GDj-u4-GwG" id="Obx-6j-ute"/>
                                                 <outlet property="titleLabel" destination="4L1-Gk-I7z" id="bQa-wm-9nn"/>
                                             </connections>
@@ -197,6 +244,8 @@
                         <outlet property="shuffleImage" destination="eA6-nf-rez" id="Dfd-DW-Gxq"/>
                         <outlet property="subtitleLabel" destination="Nya-mZ-DzX" id="byw-Qx-j2B"/>
                         <outlet property="titleLabel" destination="b8p-RV-XJb" id="sDJ-oz-eRn"/>
+                        <outlet property="upNextGroup" destination="fhF-NP-chM" id="q2m-gq-mYK"/>
+                        <outlet property="upNextLabel" destination="ytY-SD-41d" id="bpp-Rd-sgT"/>
                     </connections>
                 </controller>
             </objects>

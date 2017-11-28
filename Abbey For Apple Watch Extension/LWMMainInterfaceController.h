@@ -62,6 +62,16 @@
 @property IBOutlet WKInterfaceGroup *progressBarContainer;
 
 /**
+ The group for the up next label.
+ */
+@property IBOutlet WKInterfaceGroup *upNextGroup;
+
+/**
+ The up next label.
+ */
+@property IBOutlet WKInterfaceLabel *upNextLabel;
+
+/**
  The now playing queue table.
  */
 @property IBOutlet WKInterfaceTable *queueTable;
@@ -81,25 +91,32 @@
 - (IBAction)playPauseTapGestureRecognizerTapped:(WKTapGestureRecognizer*)tapGestureRecognizer;
 
 /**
- The favourites icon tap gesture recognizer was tapped.
+ The favourites button's "tap handler".
  
- @param tapGestureRecognizer The tap gesture recognizer.
+ @param sender The sender of the action.
  */
-- (IBAction)favouritesImageTapGestureRecognizerTapped:(WKTapGestureRecognizer*)tapGestureRecognizer;
+- (IBAction)favouriteButtonSelector:(id)sender;
 
 /**
- The shuffle icon tap gesture recognizer was tapped.
- 
- @param tapGestureRecognizer The tap gesture recognizer.
+ The shuffle button's "tap handler".
+
+ @param sender The sender of the action.
  */
-- (IBAction)shuffleImageTapGestureRecognizerTapped:(WKTapGestureRecognizer*)tapGestureRecognizer;
+- (IBAction)shuffleButtonSelector:(id)sender;
 
 /**
- The repeat icon tap gesture recognizer was tapped.
+ The repeat button's "tap handler".
  
- @param tapGestureRecognizer The tap gesture recognizer.
+ @param sender The sender of the action.
  */
-- (IBAction)repeatImageTapGestureRecognizerTapped:(WKTapGestureRecognizer*)tapGestureRecognizer;
+- (IBAction)repeatButtonSelector:(id)sender;
+
+/**
+ The browse library button's "tap handler".
+ 
+ @param sender The sender of the action.
+ */
+- (IBAction)browseLibraryButtonSelector:(id)sender;
 
 /**
  The next song gesture was swiped.

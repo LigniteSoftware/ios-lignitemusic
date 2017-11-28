@@ -42,6 +42,8 @@
 #define LMAppleWatchCommunicationKeyNoTrackPlaying @"LMAppleWatchCommunicationKeyNoTrackPlaying"
 //The now playing info is what's being transmitted.
 #define LMAppleWatchCommunicationKeyNowPlayingInfo @"LMAppleWatchCommunicationKeyNowPlayingInfo"
+//The next 5 items of the now playing queue
+#define LMAppleWatchCommunicationKeyUpNextOnNowPlayingQueue @"LMAppleWatchCommunicationKeyUpNextOnNowPlayingQueue"
 
 //Invert the play/pause status from whatever it is now.
 #define LMAppleWatchControlKeyPlayPause @"LMAppleWatchControlKeyPlayPause"
@@ -55,6 +57,8 @@
 #define LMAppleWatchControlKeyInvertShuffleMode @"LMAppleWatchControlKeyInvertShuffleMode"
 //Switches the repeat mode to the next repeat mode.
 #define LMAppleWatchControlKeyNextRepeatMode @"LMAppleWatchControlKeyNextRepeatMode"
+//Changes the now playing queue track based off of one of the "up next" tracks.
+#define LMAppleWatchControlKeyUpNextTrackSelected @"LMAppleWatchControlKeyUpNextTrackSelected"
 //The current playback time. NEEDS to be sent along with a key:value pair of LMAppleWatchControlKeyCurrentPlaybackTime:<NSNumber*>playbackTime.
 #define LMAppleWatchControlKeyCurrentPlaybackTime @"LMAppleWatchControlKeyCurrentPlaybackTime"
 
@@ -91,5 +95,10 @@ typedef NS_ENUM(NSInteger, LMAppleWatchMusicInfoType){
  Tells the watch bridge to send the now playing info to the watch. Now playing info contains information on whether or not the music is playing, the playback time, etc. This automatically handles whether or not the watch is connected and any errors associated with sending the data.
  */
 - (void)sendNowPlayingInfoToWatch;
+
+/**
+ Tells the watch bridge to send the "next up" tracks to the watch. Next up tracks are a small number of tracks which proceed the track currently playing. Next up is only sent if the watch is connected and there are items after the now playing track in queue.
+ */
+- (void)sendUpNextToWatch;
 
 @end

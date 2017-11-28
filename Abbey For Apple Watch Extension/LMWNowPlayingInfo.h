@@ -61,4 +61,9 @@ typedef NS_ENUM(NSInteger, LMMusicShuffleMode) {
  */
 @property LMWMusicTrackInfo *nowPlayingTrack;
 
+/**
+ The array of next up tracks which proceed the now playing track.
+ */
+@property NSArray<LMWMusicTrackInfo*> *nextUpTracksArray;
+
 @end

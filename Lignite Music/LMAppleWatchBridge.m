@@ -141,7 +141,13 @@
 	|| (self.previousNowPlayingTrackSent.albumPersistentID == nowPlayingTrack.albumPersistentID);
 	
 	if(self.session.reachable){
-		if(self.musicPlayer.nowPlayingTrack){
+		if(nowPlayingTrack){
+			if(self.previousNowPlayingTrackSent.persistentID == nowPlayingTrack.persistentID){
+				NSLog(@"Same same, rejecting");
+				return;
+			}
+			self.previousNowPlayingTrackSent = nowPlayingTrack;
+			
 			NSDictionary *nowPlayingTrackDictionary = @{
 												   LMAppleWatchCommunicationKey: LMAppleWatchCommunicationKeyNowPlayingTrack,
 												   
@@ -160,9 +166,8 @@
 				[self sendNowPlayingAlbumArtToWatch];
 			}
 			
-			self.previousNowPlayingTrackSent = nowPlayingTrack;
-			
 			[self sendNowPlayingInfoToWatch];
+			[self sendUpNextToWatch];
 		}
 		else{
 			[self.session sendMessage:@{ LMAppleWatchCommunicationKey:LMAppleWatchCommunicationKeyNoTrackPlaying } replyHandler:nil errorHandler:^(NSError * _Nonnull error) {
@@ -194,6 +199,46 @@
 									  }*/
 					 errorHandler:^(NSError * _Nonnull error) {
 						 NSLog(@"Error sending now playing track: %@", error);
+					 }];
+	}
+}
+
+- (void)sendUpNextToWatch {
+	if(self.session.reachable){
+		LMMusicTrackCollection *nowPlayingQueue = self.musicPlayer.nowPlayingCollection;
+		if(!nowPlayingQueue || nowPlayingQueue.count == 0 || nowPlayingQueue.count == 1){
+			NSLog(@"Now playing queue doesn't exist or has no or 1 song in it, rejecting");
+			return;
+		}
+		
+		NSMutableArray *upNextMutableArray = [NSMutableArray new];
+		NSInteger indexOfNowPlayingTrack = self.musicPlayer.indexOfNowPlayingTrack;
+		
+		NSArray *tracksRemainingAfterNowPlayingTrack = [nowPlayingQueue.items subarrayWithRange:NSMakeRange(indexOfNowPlayingTrack + 1, MIN(nowPlayingQueue.count-indexOfNowPlayingTrack-1, 5))];
+	
+		for(LMMusicTrack *track in tracksRemainingAfterNowPlayingTrack){
+			NSDictionary *trackInfoDictionary = @{
+												  @"title": track.title,
+												  @"subtitle": track.artist ? track.artist : NSLocalizedString(@"UnknownArtist", nil),
+												  @"persistentID": @(track.persistentID),
+												  @"indexInCollection": @([nowPlayingQueue.items indexOfObject:track])
+												  };
+			[upNextMutableArray addObject:trackInfoDictionary];
+		}
+		
+		NSLog(@"Got %d tracks up next", tracksRemainingAfterNowPlayingTrack.count);
+		
+		
+		
+		[self.session sendMessage:@{
+									LMAppleWatchCommunicationKey: LMAppleWatchCommunicationKeyUpNextOnNowPlayingQueue,
+									LMAppleWatchCommunicationKeyUpNextOnNowPlayingQueue: [NSArray arrayWithArray:upNextMutableArray]
+									}
+					 replyHandler:nil/* ^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
+									  NSLog(@"Got a reply: %@", replyMessage);
+									  }*/
+					 errorHandler:^(NSError * _Nonnull error) {
+						 NSLog(@"Error sending up next: %@", error);
 					 }];
 	}
 }
@@ -245,6 +290,11 @@
 				newRepeatMode = LMMusicRepeatModeNone;
 			}
 			self.musicPlayer.repeatMode = newRepeatMode;
+		}
+		else if([key isEqualToString:LMAppleWatchControlKeyUpNextTrackSelected]){
+			NSInteger nowPlayingQueueIndex = [[message objectForKey:LMAppleWatchControlKeyUpNextTrackSelected] integerValue];
+			LMMusicTrack *trackSelected = [self.musicPlayer.nowPlayingCollection.items objectAtIndex:nowPlayingQueueIndex];
+			[self.musicPlayer setNowPlayingTrack:trackSelected];
 		}
 		else if([key isEqualToString:LMAppleWatchControlKeyCurrentPlaybackTime]){
 			NSInteger currentPlaybackTime = [[message objectForKey:LMAppleWatchControlKeyCurrentPlaybackTime] integerValue];

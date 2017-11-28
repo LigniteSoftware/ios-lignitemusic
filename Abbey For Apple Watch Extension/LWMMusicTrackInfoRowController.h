@@ -11,8 +11,19 @@
 
 @interface LWMMusicTrackInfoRowController : NSObject
 
+/**
+ The title of the track info row.
+ */
 @property IBOutlet WKInterfaceLabel *titleLabel;
 
+/**
+ The subtitle of the track info row.
+ */
 @property IBOutlet WKInterfaceLabel *subtitleLabel;
+
+/**
+ The number of the track info row.
+ */
+@property IBOutlet WKInterfaceLabel *number;
 
 @end

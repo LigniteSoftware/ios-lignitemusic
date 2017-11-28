@@ -44,6 +44,8 @@
 #define LMAppleWatchCommunicationKeyNoTrackPlaying @"LMAppleWatchCommunicationKeyNoTrackPlaying"
 //The now playing info is what's being transmitted.
 #define LMAppleWatchCommunicationKeyNowPlayingInfo @"LMAppleWatchCommunicationKeyNowPlayingInfo"
+//The next 5 items of the now playing queue
+#define LMAppleWatchCommunicationKeyUpNextOnNowPlayingQueue @"LMAppleWatchCommunicationKeyUpNextOnNowPlayingQueue"
 
 //Invert the play/pause status from whatever it is now.
 #define LMAppleWatchControlKeyPlayPause @"LMAppleWatchControlKeyPlayPause"
@@ -57,6 +59,8 @@
 #define LMAppleWatchControlKeyInvertShuffleMode @"LMAppleWatchControlKeyInvertShuffleMode"
 //Switches the repeat mode to the next repeat mode.
 #define LMAppleWatchControlKeyNextRepeatMode @"LMAppleWatchControlKeyNextRepeatMode"
+//Changes the now playing queue track based off of one of the "up next" tracks.
+#define LMAppleWatchControlKeyUpNextTrackSelected @"LMAppleWatchControlKeyUpNextTrackSelected"
 //The current playback time. NEEDS to be sent along with a key:value pair of LMAppleWatchControlKeyCurrentPlaybackTime:<NSNumber*>playbackTime.
 #define LMAppleWatchControlKeyCurrentPlaybackTime @"LMAppleWatchControlKeyCurrentPlaybackTime"
 
@@ -84,11 +88,19 @@
  */
 - (void)nowPlayingInfoDidChange:(LMWNowPlayingInfo*)nowPlayingInfo;
 
+/**
+ The now playing queue up next changed.
 
+ @param upNextTracks The tracks which are up next.
+ */
+- (void)nowPlayingUpNextDidChange:(NSArray<LMWMusicTrackInfo*>*)upNextTracks;
 
+/**
+ Asks the delegate to display a debug message, if possible.
+
+ @param debug The debug message to display.
+ */
 - (void)companionDebug:(NSString*)debug;
-
-
 
 @end
 
@@ -133,6 +145,13 @@
  @param key The communication key to send to the phone.
  */
 - (void)sendMusicControlMessageToPhoneWithKey:(NSString*)key;
+
+/**
+ Sets the now playing track based off the next up/now playing queue, from an index provided by a track displayed in the up next section. Confusing, eh?
+
+ @param indexOfNextUpTrackSelected The index of the track in the now playing queue, from up next.
+ */
+- (void)setUpNextTrack:(NSInteger)indexOfNextUpTrackSelected;
 
 /**
  Sets the current playback time by sending a message with the set time to the phone.

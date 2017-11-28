@@ -1222,6 +1222,8 @@ BOOL shuffleForDebug = NO;
 			[delegate trackAddedToQueue:trackToAdd];
 		}
 	}
+	
+	[self.watchBridge sendUpNextToWatch];
 }
 	
 - (void)removeTrackFromQueue:(LMMusicTrack*)trackToRemove {
@@ -1245,6 +1247,8 @@ BOOL shuffleForDebug = NO;
 			[delegate trackRemovedFromQueue:trackToRemove];
 		}
 	}
+	
+	[self.watchBridge sendUpNextToWatch];
 }
 
 - (NSString*)favouriteKeyForTrack:(LMMusicTrack*)track {

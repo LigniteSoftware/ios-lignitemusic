@@ -33,4 +33,12 @@
 	self.storedAlbumArt = albumArt;
 }
 
+- (instancetype)init {
+	self = [super init];
+	if(self){
+		self.indexInCollection = -1;
+	}
+	return self;
+}
+
 @end

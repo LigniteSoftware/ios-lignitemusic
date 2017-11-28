@@ -11,6 +11,9 @@
 
 @interface LMWMusicTrackInfo : NSObject
 
+/**
+ The standard for persistent IDs
+ */
 typedef uint64_t MPMediaEntityPersistentID;
 
 /**
@@ -47,5 +50,10 @@ typedef uint64_t MPMediaEntityPersistentID;
  The persistent ID of the album associated with this track.
  */
 @property MPMediaEntityPersistentID albumPersistentID;
+
+/**
+ The index of this track in the collection its associated with, if any. -1 if not associated with a collection.
+ */
+@property NSInteger indexInCollection;
 
 @end

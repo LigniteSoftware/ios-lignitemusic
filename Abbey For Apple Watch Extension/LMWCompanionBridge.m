@@ -91,6 +91,29 @@
 			}
 		}
 	}
+	else if([key isEqualToString:LMAppleWatchCommunicationKeyUpNextOnNowPlayingQueue]){
+		NSArray *tracksArray = [message objectForKey:LMAppleWatchCommunicationKeyUpNextOnNowPlayingQueue];
+		
+		NSMutableArray<LMWMusicTrackInfo*> *tracksInfoArray = [NSMutableArray new];
+		for(NSDictionary *trackInfoDictionary in tracksArray){
+			LMWMusicTrackInfo *trackInfo = [LMWMusicTrackInfo new];
+			trackInfo.title = [trackInfoDictionary objectForKey:@"title"];
+			trackInfo.subtitle = [trackInfoDictionary objectForKey:@"subtitle"];
+			trackInfo.persistentID = [[trackInfoDictionary objectForKey:@"persistentID"] longLongValue];
+			trackInfo.indexInCollection = [[trackInfoDictionary objectForKey:@"indexInCollection"] integerValue];
+			[tracksInfoArray addObject:trackInfo];
+		}
+		
+		NSArray<LMWMusicTrackInfo*>* finalTracksInfoArray = [NSArray arrayWithArray:tracksInfoArray];
+		
+		self.nowPlayingInfo.nextUpTracksArray = finalTracksInfoArray;
+		
+		for(id<LMWCompanionBridgeDelegate> delegate in self.delegates){
+			if([delegate respondsToSelector:@selector(nowPlayingUpNextDidChange:)]){
+				[delegate nowPlayingUpNextDidChange:finalTracksInfoArray];
+			}
+		}
+	}
 }
 
 /** Called on the delegate of the receiver when the sender sends a message that expects a reply. Will be called on startup if the incoming message caused the receiver to launch. */
@@ -155,6 +178,22 @@
 				[self sendMusicControlMessageToPhoneWithKey:key];
 			}];
 		});
+	}
+}
+
+- (void)setUpNextTrack:(NSInteger)indexOfNextUpTrackSelected {
+	if(self.session.reachable){
+		[self.session sendMessage:@{
+									LMAppleWatchCommunicationKey:LMAppleWatchControlKeyUpNextTrackSelected,
+									LMAppleWatchControlKeyUpNextTrackSelected: @(indexOfNextUpTrackSelected)
+									}
+					 replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
+						 NSLog(@"Got reply %@", replyMessage);
+					 }
+					 errorHandler:^(NSError * _Nonnull error) {
+						 NSLog(@"Error %@", error);
+					 }
+		 ];
 	}
 }
 
