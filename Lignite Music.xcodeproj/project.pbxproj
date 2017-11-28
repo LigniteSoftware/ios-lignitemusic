@@ -77,8 +77,6 @@
 		6A37B1EE1FB3D68A00934A75 /* watch_no_cover_art.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A37B1EC1FB3D68A00934A75 /* watch_no_cover_art.png */; };
 		6A37B1F11FB3F11100934A75 /* LMWNowPlayingInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A37B1F01FB3F11100934A75 /* LMWNowPlayingInfo.m */; };
 		6A37B1F41FB414CB00934A75 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6A37B1F61FB414CB00934A75 /* Localizable.strings */; };
-		6A37B1F81FB4161200934A75 /* icon_unfavourite_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A37B1F71FB4161200934A75 /* icon_unfavourite_white.png */; };
-		6A37B1F91FB4161200934A75 /* icon_unfavourite_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A37B1F71FB4161200934A75 /* icon_unfavourite_white.png */; };
 		6A4157CD1E04669E00D09D4B /* icon_back.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A4157CC1E04669E00D09D4B /* icon_back.png */; };
 		6A43BCE71DDFA471009FB0E9 /* tutorial_now_playing.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A43BCE61DDFA471009FB0E9 /* tutorial_now_playing.png */; };
 		6A43BCE91DDFA66B009FB0E9 /* onboarding_us.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A43BCE81DDFA66B009FB0E9 /* onboarding_us.png */; };
@@ -432,7 +430,6 @@
 		6A37B1EF1FB3F11100934A75 /* LMWNowPlayingInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMWNowPlayingInfo.h; sourceTree = "<group>"; };
 		6A37B1F01FB3F11100934A75 /* LMWNowPlayingInfo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMWNowPlayingInfo.m; sourceTree = "<group>"; };
 		6A37B1F51FB414CB00934A75 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		6A37B1F71FB4161200934A75 /* icon_unfavourite_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon_unfavourite_white.png; path = "Lignite Music/icon_unfavourite_white.png"; sourceTree = SOURCE_ROOT; };
 		6A4157CC1E04669E00D09D4B /* icon_back.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_back.png; sourceTree = "<group>"; };
 		6A43BCE61DDFA471009FB0E9 /* tutorial_now_playing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tutorial_now_playing.png; sourceTree = "<group>"; };
 		6A43BCE81DDFA66B009FB0E9 /* onboarding_us.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = onboarding_us.png; sourceTree = "<group>"; };
@@ -706,7 +703,6 @@
 		6AF2C9411DDA16CC005E4643 /* icon_source.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_source.png; sourceTree = "<group>"; };
 		6AF2C9421DDA16CC005E4643 /* icon_browse.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_browse.png; sourceTree = "<group>"; };
 		6AF3AD9B1E0A7C7D00D8E8F1 /* onboarding_kickstarter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = onboarding_kickstarter.png; sourceTree = "<group>"; };
-		6AF571FE1BC714DF009993E0 /* PebbleKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = PebbleKit.framework; sourceTree = "<group>"; };
 		6AF751611E0446D70001E18B /* LMFeedbackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMFeedbackViewController.h; sourceTree = "<group>"; };
 		6AF751621E0446D80001E18B /* LMFeedbackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMFeedbackViewController.m; sourceTree = "<group>"; };
 		6AF751641E0454B50001E18B /* LMPaddedTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMPaddedTextField.h; sourceTree = "<group>"; };
@@ -734,7 +730,6 @@
 		6AFF019D1DDE7D2D00F24D8E /* tutorial_bottom_tabs.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tutorial_bottom_tabs.png; sourceTree = "<group>"; };
 		6AFF01A71DDED15100F24D8E /* onboarding_gutless_user.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = onboarding_gutless_user.png; sourceTree = "<group>"; };
 		8FBC9717282C4F0D39EA52C6 /* Pods-Lignite Music.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lignite Music.release.xcconfig"; path = "Pods/Target Support Files/Pods-Lignite Music/Pods-Lignite Music.release.xcconfig"; sourceTree = "<group>"; };
-		BDA8BF18ADBB227AD91C5334 /* Pods_Lignite_Music_for_Spotify.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Lignite_Music_for_Spotify.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1280,6 +1275,87 @@
 			name = Music;
 			sourceTree = "<group>";
 		};
+		6ADB70D01FCD327000412225 /* Interface */ = {
+			isa = PBXGroup;
+			children = (
+				6ADB70D61FCD330A00412225 /* Controls */,
+				6ADCE20F1FB262B800BE0BBB /* LWMMainInterfaceController.h */,
+				6ADCE2101FB262B800BE0BBB /* LWMMainInterfaceController.m */,
+			);
+			path = Interface;
+			sourceTree = "<group>";
+		};
+		6ADB70D11FCD32B700412225 /* Music */ = {
+			isa = PBXGroup;
+			children = (
+				6A37B1DB1FB39ECB00934A75 /* LMWMusicTrackInfo.h */,
+				6A37B1DC1FB39ECB00934A75 /* LMWMusicTrackInfo.m */,
+				6A37B1EF1FB3F11100934A75 /* LMWNowPlayingInfo.h */,
+				6A37B1F01FB3F11100934A75 /* LMWNowPlayingInfo.m */,
+			);
+			path = Music;
+			sourceTree = "<group>";
+		};
+		6ADB70D21FCD32CE00412225 /* Other */ = {
+			isa = PBXGroup;
+			children = (
+				6ADCE2181FB262B800BE0BBB /* ComplicationController.h */,
+				6ADCE2191FB262B800BE0BBB /* ComplicationController.m */,
+				6ADCE2121FB262B800BE0BBB /* ExtensionDelegate.h */,
+				6ADCE2131FB262B800BE0BBB /* ExtensionDelegate.m */,
+				6ADCE21D1FB262B800BE0BBB /* Info.plist */,
+				6ADCE2151FB262B800BE0BBB /* NotificationController.h */,
+				6ADCE2161FB262B800BE0BBB /* NotificationController.m */,
+			);
+			path = Other;
+			sourceTree = "<group>";
+		};
+		6ADB70D31FCD32DE00412225 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				6ADCE21B1FB262B800BE0BBB /* Assets.xcassets */,
+				6A37B1CD1FB2BE7E00934A75 /* chidster.png */,
+				6A37B1EC1FB3D68A00934A75 /* watch_no_cover_art.png */,
+			);
+			path = Images;
+			sourceTree = "<group>";
+		};
+		6ADB70D41FCD32EC00412225 /* Tables */ = {
+			isa = PBXGroup;
+			children = (
+				6A1794A71FB4B34200A6C857 /* LWMMusicTrackInfoRowController.h */,
+				6A1794A81FB4B34200A6C857 /* LWMMusicTrackInfoRowController.m */,
+			);
+			path = Tables;
+			sourceTree = "<group>";
+		};
+		6ADB70D51FCD32F900412225 /* Communications */ = {
+			isa = PBXGroup;
+			children = (
+				6A37B1D81FB39DE300934A75 /* LMWCompanionBridge.h */,
+				6A37B1D91FB39DE300934A75 /* LMWCompanionBridge.m */,
+			);
+			path = Communications;
+			sourceTree = "<group>";
+		};
+		6ADB70D61FCD330A00412225 /* Controls */ = {
+			isa = PBXGroup;
+			children = (
+				6A37B1C81FB2761D00934A75 /* LMWProgressSliderInfo.h */,
+				6A37B1C91FB2761D00934A75 /* LMWProgressSliderInfo.m */,
+			);
+			path = Controls;
+			sourceTree = "<group>";
+		};
+		6ADB70D71FCD331C00412225 /* Strings */ = {
+			isa = PBXGroup;
+			children = (
+				6ADCE21E1FB262B800BE0BBB /* PushNotificationPayload.apns */,
+				6A37B1F61FB414CB00934A75 /* Localizable.strings */,
+			);
+			path = Strings;
+			sourceTree = "<group>";
+		};
 		6ADCE1FF1FB262B800BE0BBB /* Abbey For Apple Watch */ = {
 			isa = PBXGroup;
 			children = (
@@ -1293,31 +1369,13 @@
 		6ADCE20E1FB262B800BE0BBB /* Abbey For Apple Watch Extension */ = {
 			isa = PBXGroup;
 			children = (
-				6ADCE20F1FB262B800BE0BBB /* LWMMainInterfaceController.h */,
-				6ADCE2101FB262B800BE0BBB /* LWMMainInterfaceController.m */,
-				6A37B1C81FB2761D00934A75 /* LMWProgressSliderInfo.h */,
-				6A37B1C91FB2761D00934A75 /* LMWProgressSliderInfo.m */,
-				6A37B1D81FB39DE300934A75 /* LMWCompanionBridge.h */,
-				6A37B1D91FB39DE300934A75 /* LMWCompanionBridge.m */,
-				6A37B1DB1FB39ECB00934A75 /* LMWMusicTrackInfo.h */,
-				6A37B1DC1FB39ECB00934A75 /* LMWMusicTrackInfo.m */,
-				6A37B1EF1FB3F11100934A75 /* LMWNowPlayingInfo.h */,
-				6A37B1F01FB3F11100934A75 /* LMWNowPlayingInfo.m */,
-				6A1794A71FB4B34200A6C857 /* LWMMusicTrackInfoRowController.h */,
-				6A1794A81FB4B34200A6C857 /* LWMMusicTrackInfoRowController.m */,
-				6ADCE2121FB262B800BE0BBB /* ExtensionDelegate.h */,
-				6ADCE2131FB262B800BE0BBB /* ExtensionDelegate.m */,
-				6ADCE2151FB262B800BE0BBB /* NotificationController.h */,
-				6ADCE2161FB262B800BE0BBB /* NotificationController.m */,
-				6ADCE2181FB262B800BE0BBB /* ComplicationController.h */,
-				6ADCE2191FB262B800BE0BBB /* ComplicationController.m */,
-				6A37B1CD1FB2BE7E00934A75 /* chidster.png */,
-				6A37B1EC1FB3D68A00934A75 /* watch_no_cover_art.png */,
-				6A37B1F71FB4161200934A75 /* icon_unfavourite_white.png */,
-				6ADCE21B1FB262B800BE0BBB /* Assets.xcassets */,
-				6ADCE21D1FB262B800BE0BBB /* Info.plist */,
-				6ADCE21E1FB262B800BE0BBB /* PushNotificationPayload.apns */,
-				6A37B1F61FB414CB00934A75 /* Localizable.strings */,
+				6ADB70D51FCD32F900412225 /* Communications */,
+				6ADB70D31FCD32DE00412225 /* Images */,
+				6ADB70D01FCD327000412225 /* Interface */,
+				6ADB70D11FCD32B700412225 /* Music */,
+				6ADB70D21FCD32CE00412225 /* Other */,
+				6ADB70D71FCD331C00412225 /* Strings */,
+				6ADB70D41FCD32EC00412225 /* Tables */,
 			);
 			path = "Abbey For Apple Watch Extension";
 			sourceTree = "<group>";
@@ -1520,13 +1578,11 @@
 				6A5821031DAF312C00A4FAB1 /* AudioToolbox.framework */,
 				6A5821011DADE54400A4FAB1 /* AVFoundation.framework */,
 				6A2566F21D4089E8004EDE41 /* MediaPlayer.framework */,
-				6AF571FE1BC714DF009993E0 /* PebbleKit.framework */,
 				6AA473641BC710460066D47E /* MessageUI.framework */,
 				6AA473621BC7103B0066D47E /* CoreMotion.framework */,
 				6AA473601BC710320066D47E /* CoreBluetooth.framework */,
 				6AA4735E1BC70FBA0066D47E /* ExternalAccessory.framework */,
 				50AA3F2AD5E6CE2B672C8B09 /* Pods_Lignite_Music.framework */,
-				BDA8BF18ADBB227AD91C5334 /* Pods_Lignite_Music_for_Spotify.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1661,7 +1717,6 @@
 				6ADB70C31FCCBDDE00412225 /* icon_repeat_general_white.png in Resources */,
 				6ADB70CD1FCCF0F600412225 /* icon_browse_white.png in Resources */,
 				6A37B1D21FB2BE7F00934A75 /* chidster.png in Resources */,
-				6A37B1F81FB4161200934A75 /* icon_unfavourite_white.png in Resources */,
 				6ADB70BB1FCCBD3C00412225 /* icon_shuffle.png in Resources */,
 				6ADCE2021FB262B800BE0BBB /* Interface.storyboard in Resources */,
 				6A37B1E71FB3D53000934A75 /* icon_no_cover_art_75.png in Resources */,
@@ -1683,7 +1738,6 @@
 				6ADB70C41FCCBDDE00412225 /* icon_repeat_general_white.png in Resources */,
 				6ADB70CE1FCCF0F600412225 /* icon_browse_white.png in Resources */,
 				6A37B1E41FB3AC7C00934A75 /* icon_favourite_outlined_white.png in Resources */,
-				6A37B1F91FB4161200934A75 /* icon_unfavourite_white.png in Resources */,
 				6ADB70BE1FCCBD3D00412225 /* icon_shuffle.png in Resources */,
 				6A37B1D31FB2BE7F00934A75 /* chidster.png in Resources */,
 				6ADCE21C1FB262B800BE0BBB /* Assets.xcassets in Resources */,
