@@ -247,7 +247,8 @@
 	
 }
 
-- (void)session:(WCSession *)session didReceiveMessage:(NSDictionary<NSString *, id> *)message replyHandler:(void(^)(NSDictionary<NSString *, id> *replyMessage))replyHandler {
+- (void)session:(WCSession *)session didReceiveMessage:(NSDictionary<NSString *, id> *)message
+   replyHandler:(void(^)(NSDictionary<NSString *, id> *replyMessage))replyHandler {
 	
 	NSString *key = [message objectForKey:LMAppleWatchCommunicationKey];
 	
@@ -255,6 +256,39 @@
 		[self sendNowPlayingTrackToWatch];
 		
 		replyHandler(@{ @"sent":@"pimp" });
+	}
+	else if([key isEqualToString:LMAppleWatchCommunicationKeyMusicBrowsingEntries]){
+		LMMusicType musicType = (LMMusicType)[[message objectForKey:LMAppleWatchBrowsingKeyMusicType] integerValue];
+		MPMediaEntityPersistentID persistentID = (MPMediaEntityPersistentID)[[message objectForKey:LMAppleWatchBrowsingKeyPersistentID] integerValue];
+		NSInteger currentIndex = [[message objectForKey:LMAppleWatchBrowsingKeyCurrentIndex] integerValue];
+		
+		BOOL isBeginningOfBrowse = (persistentID == 0 && currentIndex == -1);
+		
+		NSLog(@"Got a request for music tracks. Is beginning? %d", isBeginningOfBrowse);
+		if(isBeginningOfBrowse){
+			NSArray<LMMusicTrackCollection*> *trackCollections = [self.musicPlayer queryCollectionsForMusicType:musicType];
+			NSMutableArray *resultsArray = [NSMutableArray new];
+			
+			for(NSInteger i = 0; i < 15; i++){
+				LMMusicTrackCollection *collection = [trackCollections objectAtIndex:i];
+				LMMusicTrack *representativeTrack = collection.representativeItem;
+				
+				[resultsArray addObject:@{
+										  LMAppleWatchBrowsingKeyPersistentID: @(representativeTrack.albumPersistentID),
+										  LMAppleWatchBrowsingKeyEntryTitle: representativeTrack.albumTitle,
+										  LMAppleWatchBrowsingKeyEntrySubtitle: representativeTrack.artist
+										  }];
+			}
+			
+			NSLog(@"Results %@", resultsArray);
+			
+			replyHandler(@{
+						   @"results": resultsArray
+						   });
+		}
+		else{
+			NSAssert(false, @"fuck");
+		}
 	}
 	
 	dispatch_async(dispatch_get_main_queue(), ^{

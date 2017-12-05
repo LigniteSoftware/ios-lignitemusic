@@ -197,13 +197,32 @@
 	}
 }
 
-- (void)requestTracksWithEntryInfo:(LMWMusicTrackInfo*)entryInfo replyHandler:(nullable void (^)(NSDictionary<NSString *, id> *replyMessage))replyHandler errorHandler:(nullable void (^)(NSError *error))errorHandler {
+- (void)requestTracksWithEntryInfo:(LMWMusicTrackInfo*)entryInfo
+					  forMusicType:(LMMusicType)musicType
+					  replyHandler:(nullable void (^)(NSDictionary<NSString *, id> *replyMessage))replyHandler
+					  errorHandler:(nullable void (^)(NSError *error))errorHandler {
+	
 	
 	if(self.session.reachable){
-		[self.session sendMessage:@{
-									LMAppleWatchCommunicationKey: LMAppleWatchCommunicationKeyMusicBrowsingEntries,
-									
-									}
+		NSDictionary *messageDictionary = nil;
+		if(entryInfo == nil){
+			messageDictionary = @{
+								  LMAppleWatchCommunicationKey: LMAppleWatchCommunicationKeyMusicBrowsingEntries,
+								  LMAppleWatchBrowsingKeyMusicType: @(musicType),
+								  LMAppleWatchBrowsingKeyPersistentID: @(0),
+								  LMAppleWatchBrowsingKeyCurrentIndex: @(-1)
+								  };
+		}
+		else{
+			messageDictionary = @{
+								  LMAppleWatchCommunicationKey: LMAppleWatchCommunicationKeyMusicBrowsingEntries,
+								  LMAppleWatchBrowsingKeyMusicType: @(musicType),
+								  LMAppleWatchBrowsingKeyPersistentID: @(entryInfo.persistentID),
+								  LMAppleWatchBrowsingKeyCurrentIndex: @(entryInfo.indexInCollection)
+								  };
+		}
+		
+		[self.session sendMessage:messageDictionary
 					 replyHandler:replyHandler
 					 errorHandler:errorHandler];
 	}

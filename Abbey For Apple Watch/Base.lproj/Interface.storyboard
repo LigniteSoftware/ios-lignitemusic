@@ -293,30 +293,26 @@
             </objects>
             <point key="canvasLocation" x="467" y="286"/>
         </scene>
-        <!--Music Browsing Interface Controller-->
-        <scene sceneID="gEJ-KV-0b0">
+        <!--BrowsingController-->
+        <scene sceneID="Bso-pT-oIj">
             <objects>
-                <controller identifier="MusicBrowsingController" id="Tl1-YP-ocb" userLabel="Music Browsing Interface Controller" customClass="LMWMusicBrowsingInterfaceController">
+                <controller identifier="BrowsingController" id="CGK-8v-yuA" customClass="LMWBrowsingInterfaceController">
                     <items>
-                        <table alignment="left" id="EdK-WK-sVd" userLabel="Music Browsing Table">
+                        <table alignment="left" id="UAD-Dx-Zq5" userLabel="Browsing Table">
                             <items>
-                                <tableRow identifier="MusicBrowsingRow" id="0u0-qc-L12" userLabel="MusicBrowsingRow" customClass="LMWMusicBrowsingRowController">
-                                    <group key="rootItem" width="1" alignment="left" id="XEz-Rj-bn6" userLabel="Root Group">
+                                <tableRow identifier="BrowseRow" id="IQs-6B-QbG" userLabel="BrowseRow" customClass="LMWMusicBrowsingRowController">
+                                    <group key="rootItem" width="1" alignment="left" id="deG-7C-9jx" userLabel="Root Group">
                                         <items>
-                                            <group width="1" height="0.80000000000000004" alignment="center" verticalAlignment="center" spacing="4" id="9JO-15-hta" userLabel="Contents Group">
+                                            <group width="1" height="0.80000000000000004" alignment="center" verticalAlignment="center" spacing="4" id="TLN-RC-Nde" userLabel="Contents Group">
                                                 <items>
-                                                    <group width="0.20000000000000001" height="0.90000000000000002" alignment="left" verticalAlignment="center" radius="6" id="yqd-tD-8Km" userLabel="Icon Group">
+                                                    <imageView width="0.20000000000000001" height="0.59999999999999998" alignment="left" verticalAlignment="center" image="icon_albums" contentMode="scaleAspectFit" id="BvS-Ij-LdI" userLabel="Icon"/>
+                                                    <group width="0.80000000000000004" height="1" alignment="left" verticalAlignment="center" layout="vertical" spacing="0.0" id="BNI-85-r36" userLabel="Text">
                                                         <items>
-                                                            <imageView width="1" height="1" alignment="left" verticalAlignment="center" image="chidster" contentMode="scaleAspectFit" id="qtH-zX-hhy" userLabel="Icon"/>
-                                                        </items>
-                                                    </group>
-                                                    <group width="0.80000000000000004" height="1" alignment="left" verticalAlignment="center" layout="vertical" spacing="0.0" id="2eb-vd-jIA" userLabel="Text">
-                                                        <items>
-                                                            <label alignment="left" text="Loading..." textAlignment="left" id="crE-k1-PqL">
+                                                            <label alignment="left" text="Loading..." textAlignment="left" id="PJU-M6-YfY">
                                                                 <color key="textColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                                                 <fontDescription key="font" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="16"/>
                                                             </label>
-                                                            <label alignment="left" text="Hang on a sec" textAlignment="left" id="jwW-X8-22E">
+                                                            <label alignment="left" text="Hang on a sec" textAlignment="left" id="hqo-EE-d3B">
                                                                 <color key="textColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                                                 <fontDescription key="font" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="10"/>
                                                             </label>
@@ -328,21 +324,29 @@
                                         <color key="backgroundColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </group>
                                     <connections>
-                                        <outlet property="icon" destination="qtH-zX-hhy" id="DF6-iP-Ulz"/>
-                                        <outlet property="subtitleLabel" destination="jwW-X8-22E" id="afe-Iy-E0K"/>
-                                        <outlet property="titleLabel" destination="crE-k1-PqL" id="GGq-kL-WpY"/>
+                                        <outlet property="icon" destination="BvS-Ij-LdI" id="cwW-my-ccL"/>
+                                        <outlet property="subtitleLabel" destination="hqo-EE-d3B" id="A4R-uo-xJo"/>
+                                        <outlet property="titleLabel" destination="PJU-M6-YfY" id="qXi-xR-hwE"/>
                                     </connections>
                                 </tableRow>
                             </items>
                         </table>
-                        <imageView alignment="center" verticalAlignment="center" image="Activity1" id="1eJ-7K-ABa"/>
+                        <group width="0.90000000000000002" alignment="center" verticalAlignment="center" layout="vertical" spacing="6" id="10s-Zo-K7a">
+                            <items>
+                                <imageView alignment="center" verticalAlignment="center" image="Activity1" id="9YA-kF-pjn"/>
+                                <label alignment="center" verticalAlignment="bottom" text="Hang on..." id="oGO-fC-HF1"/>
+                            </items>
+                        </group>
                     </items>
                     <connections>
-                        <outlet property="loadingIcon" destination="1eJ-7K-ABa" id="BRa-E0-HIw"/>
+                        <outlet property="browsingTable" destination="UAD-Dx-Zq5" id="ulp-Vo-j0V"/>
+                        <outlet property="loadingGroup" destination="10s-Zo-K7a" id="djU-No-JEf"/>
+                        <outlet property="loadingImage" destination="9YA-kF-pjn" id="P1Y-Th-TsX"/>
+                        <outlet property="loadingLabel" destination="oGO-fC-HF1" id="7I4-bJ-lCu"/>
                     </connections>
                 </controller>
             </objects>
-            <point key="canvasLocation" x="702" y="286"/>
+            <point key="canvasLocation" x="725" y="286"/>
         </scene>
         <!--Static Notification Interface Controller-->
         <scene sceneID="AEw-b0-oYE">

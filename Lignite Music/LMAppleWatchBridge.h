@@ -44,6 +44,21 @@
 #define LMAppleWatchCommunicationKeyNowPlayingInfo @"LMAppleWatchCommunicationKeyNowPlayingInfo"
 //The next 5 items of the now playing queue
 #define LMAppleWatchCommunicationKeyUpNextOnNowPlayingQueue @"LMAppleWatchCommunicationKeyUpNextOnNowPlayingQueue"
+//The watch is requesting music tracks or entries in music browsing.
+#define LMAppleWatchCommunicationKeyMusicBrowsingEntries @"LMAppleWatchCommunicationKeyMusicBrowsingEntries"
+
+//The key for the music type when the communication key is LMAppleWatchCommunicationKeyMusicBrowsingEntries.
+#define LMAppleWatchBrowsingKeyMusicType @"LMAppleWatchBrowsingKeyMusicType"
+//The key for the persistent ID (used as a source of data) when the communication key is LMAppleWatchCommunicationKeyMusicBrowsingEntries.
+#define LMAppleWatchBrowsingKeyPersistentID @"LMAppleWatchBrowsingKeyPersistentID"
+//The key for the current index in browsing when the communication key is LMAppleWatchCommunicationKeyMusicBrowsingEntries.
+#define LMAppleWatchBrowsingKeyCurrentIndex @"LMAppleWatchBrowsingKeyCurrentIndex"
+
+//The keys for the properties which go in a music track/music browsing entry.
+#define LMAppleWatchBrowsingKeyEntryPersistentID @"LMAppleWatchBrowsingKeyEntryPersistentID"
+#define LMAppleWatchBrowsingKeyEntryTitle @"LMAppleWatchBrowsingKeyEntryTitle"
+#define LMAppleWatchBrowsingKeyEntrySubtitle @"LMAppleWatchBrowsingKeyEntrySubtitle"
+#define LMAppleWatchBrowsingKeyEntryIcon @"LMAppleWatchBrowsingKeyEntryIcon"
 
 //Invert the play/pause status from whatever it is now.
 #define LMAppleWatchControlKeyPlayPause @"LMAppleWatchControlKeyPlayPause"

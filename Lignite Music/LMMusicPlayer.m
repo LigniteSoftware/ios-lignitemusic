@@ -832,7 +832,8 @@ BOOL shuffleForDebug = NO;
 	return nil;
 }
 
-- (NSArray<LMMusicTrackCollection*>*)collectionsForPersistentID:(MPMediaEntityPersistentID)persistentID forMusicType:(LMMusicType)musicType {
+- (NSArray<LMMusicTrackCollection*>*)collectionsForPersistentID:(MPMediaEntityPersistentID)persistentID
+												   forMusicType:(LMMusicType)musicType {
 	
 	NSAssert(musicType != LMMusicTypeFavourites, @"Cannot query favourites, sorry");
 	

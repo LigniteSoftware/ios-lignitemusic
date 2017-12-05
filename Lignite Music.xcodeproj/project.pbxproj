@@ -57,6 +57,7 @@
 		6A32A9E81DC654500056CC60 /* LMTriangleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A32A9E71DC654500056CC60 /* LMTriangleView.m */; };
 		6A32A9EC1DC68F440056CC60 /* LMTriangleContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A32A9EB1DC68F440056CC60 /* LMTriangleContainerView.m */; };
 		6A32A9EF1DC6906D0056CC60 /* LMTriangleMaskView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A32A9EE1DC6906D0056CC60 /* LMTriangleMaskView.m */; };
+		6A339FC21FD66FAC00B1A447 /* LMWBrowsingInterfaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A339FC11FD66FAC00B1A447 /* LMWBrowsingInterfaceController.m */; };
 		6A37B1CA1FB2761D00934A75 /* LMWProgressSliderInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A37B1C91FB2761D00934A75 /* LMWProgressSliderInfo.m */; };
 		6A37B1D11FB2BE7F00934A75 /* chidster.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A37B1CD1FB2BE7E00934A75 /* chidster.png */; };
 		6A37B1D21FB2BE7F00934A75 /* chidster.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A37B1CD1FB2BE7E00934A75 /* chidster.png */; };
@@ -221,8 +222,6 @@
 		6ACB12D51FCDC29100C11F11 /* icon_favourite_black.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A25F7A51F99223B00CC8082 /* icon_favourite_black.png */; };
 		6ACB12D81FCDC47200C11F11 /* LMWMusicTypeRowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ACB12D71FCDC47200C11F11 /* LMWMusicTypeRowController.m */; };
 		6ACB12DB1FCDC55E00C11F11 /* LMWMusicTypeTableInterfaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ACB12DA1FCDC55E00C11F11 /* LMWMusicTypeTableInterfaceController.m */; };
-		6ACB12E01FCDD65500C11F11 /* LoadingIcon in Resources */ = {isa = PBXBuildFile; fileRef = 6ACB12DF1FCDD65500C11F11 /* LoadingIcon */; };
-		6ACB12E31FCDDF3500C11F11 /* LMWMusicBrowsingInterfaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ACB12E21FCDDF3500C11F11 /* LMWMusicBrowsingInterfaceController.m */; };
 		6ACB12E61FCDE91700C11F11 /* LMWMusicBrowsingRowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ACB12E51FCDE91700C11F11 /* LMWMusicBrowsingRowController.m */; };
 		6ACB69AA1E87AE3A001A04B6 /* purchase_header.png in Resources */ = {isa = PBXBuildFile; fileRef = 6ACB69A91E87AE3A001A04B6 /* purchase_header.png */; };
 		6ACD9C201EEBDE3700C53DB3 /* LMVerticalControlBarInnerShadowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ACD9C1F1EEBDE3700C53DB3 /* LMVerticalControlBarInnerShadowView.m */; };
@@ -438,6 +437,8 @@
 		6A32A9ED1DC6906D0056CC60 /* LMTriangleMaskView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMTriangleMaskView.h; sourceTree = "<group>"; };
 		6A32A9EE1DC6906D0056CC60 /* LMTriangleMaskView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMTriangleMaskView.m; sourceTree = "<group>"; };
 		6A32A9F01DC695020056CC60 /* main.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = main.h; sourceTree = "<group>"; };
+		6A339FC01FD66FAC00B1A447 /* LMWBrowsingInterfaceController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMWBrowsingInterfaceController.h; sourceTree = "<group>"; };
+		6A339FC11FD66FAC00B1A447 /* LMWBrowsingInterfaceController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMWBrowsingInterfaceController.m; sourceTree = "<group>"; };
 		6A37B1C81FB2761D00934A75 /* LMWProgressSliderInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMWProgressSliderInfo.h; sourceTree = "<group>"; };
 		6A37B1C91FB2761D00934A75 /* LMWProgressSliderInfo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMWProgressSliderInfo.m; sourceTree = "<group>"; };
 		6A37B1CD1FB2BE7E00934A75 /* chidster.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chidster.png; sourceTree = "<group>"; };
@@ -633,6 +634,7 @@
 		6AB1046E1E56616700213396 /* LMMusicPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMMusicPlayer.h; sourceTree = "<group>"; };
 		6AB1046F1E56616700213396 /* LMMusicPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMMusicPlayer.m; sourceTree = "<group>"; };
 		6AB12E9B1D57AD9800280383 /* icon_settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_settings.png; sourceTree = "<group>"; };
+		6ABB265A1FD64CDB009697C5 /* Abbey For Apple Watch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Abbey For Apple Watch.entitlements"; sourceTree = "<group>"; };
 		6ABF31A51FCDB70200B3D06D /* icon_unfavourite_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_unfavourite_white.png; sourceTree = "<group>"; };
 		6ABF6A801CF374F7003E4EFA /* UIImage+AverageColour.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+AverageColour.h"; sourceTree = "<group>"; };
 		6ABF6A811CF374F7003E4EFA /* UIImage+AverageColour.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+AverageColour.m"; sourceTree = "<group>"; };
@@ -652,9 +654,6 @@
 		6ACB12D71FCDC47200C11F11 /* LMWMusicTypeRowController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMWMusicTypeRowController.m; sourceTree = "<group>"; };
 		6ACB12D91FCDC55E00C11F11 /* LMWMusicTypeTableInterfaceController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMWMusicTypeTableInterfaceController.h; sourceTree = "<group>"; };
 		6ACB12DA1FCDC55E00C11F11 /* LMWMusicTypeTableInterfaceController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMWMusicTypeTableInterfaceController.m; sourceTree = "<group>"; };
-		6ACB12DF1FCDD65500C11F11 /* LoadingIcon */ = {isa = PBXFileReference; lastKnownFileType = folder; path = LoadingIcon; sourceTree = "<group>"; };
-		6ACB12E11FCDDF3500C11F11 /* LMWMusicBrowsingInterfaceController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMWMusicBrowsingInterfaceController.h; sourceTree = "<group>"; };
-		6ACB12E21FCDDF3500C11F11 /* LMWMusicBrowsingInterfaceController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMWMusicBrowsingInterfaceController.m; sourceTree = "<group>"; };
 		6ACB12E41FCDE91700C11F11 /* LMWMusicBrowsingRowController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMWMusicBrowsingRowController.h; sourceTree = "<group>"; };
 		6ACB12E51FCDE91700C11F11 /* LMWMusicBrowsingRowController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMWMusicBrowsingRowController.m; sourceTree = "<group>"; };
 		6ACB69A91E87AE3A001A04B6 /* purchase_header.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = purchase_header.png; sourceTree = "<group>"; };
@@ -1313,8 +1312,8 @@
 				6ADB70D61FCD330A00412225 /* Controls */,
 				6ADCE20F1FB262B800BE0BBB /* LMWMainInterfaceController.h */,
 				6ADCE2101FB262B800BE0BBB /* LMWMainInterfaceController.m */,
-				6ACB12E11FCDDF3500C11F11 /* LMWMusicBrowsingInterfaceController.h */,
-				6ACB12E21FCDDF3500C11F11 /* LMWMusicBrowsingInterfaceController.m */,
+				6A339FC01FD66FAC00B1A447 /* LMWBrowsingInterfaceController.h */,
+				6A339FC11FD66FAC00B1A447 /* LMWBrowsingInterfaceController.m */,
 				6ACB12D91FCDC55E00C11F11 /* LMWMusicTypeTableInterfaceController.h */,
 				6ACB12DA1FCDC55E00C11F11 /* LMWMusicTypeTableInterfaceController.m */,
 			);
@@ -1399,9 +1398,9 @@
 		6ADCE1FF1FB262B800BE0BBB /* Abbey For Apple Watch */ = {
 			isa = PBXGroup;
 			children = (
+				6ABB265A1FD64CDB009697C5 /* Abbey For Apple Watch.entitlements */,
 				6ADCE2001FB262B800BE0BBB /* Interface.storyboard */,
 				6ADCE2031FB262B800BE0BBB /* Assets.xcassets */,
-				6ACB12DF1FCDD65500C11F11 /* LoadingIcon */,
 				6ADCE2051FB262B800BE0BBB /* Info.plist */,
 			);
 			path = "Abbey For Apple Watch";
@@ -1702,6 +1701,11 @@
 						CreatedOnToolsVersion = 9.1;
 						DevelopmentTeam = FC8DY8T6N2;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 0;
+							};
+						};
 					};
 					6ADCE2091FB262B800BE0BBB = {
 						CreatedOnToolsVersion = 9.1;
@@ -1748,7 +1752,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				6ACB12C81FCDC28A00C11F11 /* icon_compilations.png in Resources */,
-				6ACB12E01FCDD65500C11F11 /* LoadingIcon in Resources */,
 				6ACB12CC1FCDC28A00C11F11 /* icon_titles.png in Resources */,
 				6ADB70BA1FCCBD3C00412225 /* icon_repeat_one.png in Resources */,
 				6A37B1ED1FB3D68A00934A75 /* watch_no_cover_art.png in Resources */,
@@ -2005,13 +2008,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6A339FC21FD66FAC00B1A447 /* LMWBrowsingInterfaceController.m in Sources */,
 				6ABF31A91FCDBA1B00B3D06D /* LMWMusicTrackInfoRowController.m in Sources */,
 				6A37B1CA1FB2761D00934A75 /* LMWProgressSliderInfo.m in Sources */,
 				6ACB12DB1FCDC55E00C11F11 /* LMWMusicTypeTableInterfaceController.m in Sources */,
 				6ADCE2141FB262B800BE0BBB /* ExtensionDelegate.m in Sources */,
 				6ACB12E61FCDE91700C11F11 /* LMWMusicBrowsingRowController.m in Sources */,
 				6A37B1F11FB3F11100934A75 /* LMWNowPlayingInfo.m in Sources */,
-				6ACB12E31FCDDF3500C11F11 /* LMWMusicBrowsingInterfaceController.m in Sources */,
 				6ADCE21A1FB262B800BE0BBB /* ComplicationController.m in Sources */,
 				6ACB12D81FCDC47200C11F11 /* LMWMusicTypeRowController.m in Sources */,
 				6A37B1DD1FB39ECB00934A75 /* LMWMusicTrackInfo.m in Sources */,

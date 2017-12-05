@@ -49,7 +49,18 @@
 //The watch is requesting music tracks or entries in music browsing.
 #define LMAppleWatchCommunicationKeyMusicBrowsingEntries @"LMAppleWatchCommunicationKeyMusicBrowsingEntries"
 
+//The key for the music type when the communication key is LMAppleWatchCommunicationKeyMusicBrowsingEntries.
+#define LMAppleWatchBrowsingKeyMusicType @"LMAppleWatchBrowsingKeyMusicType"
+//The key for the persistent ID (used as a source of data) when the communication key is LMAppleWatchCommunicationKeyMusicBrowsingEntries.
+#define LMAppleWatchBrowsingKeyPersistentID @"LMAppleWatchBrowsingKeyPersistentID"
+//The key for the current index in browsing when the communication key is LMAppleWatchCommunicationKeyMusicBrowsingEntries.
+#define LMAppleWatchBrowsingKeyCurrentIndex @"LMAppleWatchBrowsingKeyCurrentIndex"
 
+//The keys for the properties which go in a music track/music browsing entry.
+#define LMAppleWatchBrowsingKeyEntryPersistentID @"LMAppleWatchBrowsingKeyEntryPersistentID"
+#define LMAppleWatchBrowsingKeyEntryTitle @"LMAppleWatchBrowsingKeyEntryTitle"
+#define LMAppleWatchBrowsingKeyEntrySubtitle @"LMAppleWatchBrowsingKeyEntrySubtitle"
+#define LMAppleWatchBrowsingKeyEntryIcon @"LMAppleWatchBrowsingKeyEntryIcon"
 
 //Invert the play/pause status from whatever it is now.
 #define LMAppleWatchControlKeyPlayPause @"LMAppleWatchControlKeyPlayPause"
@@ -156,6 +167,19 @@
  @param indexOfNextUpTrackSelected The index of the track in the now playing queue, from up next.
  */
 - (void)setUpNextTrack:(NSInteger)indexOfNextUpTrackSelected;
+
+/**
+ Requests a list of tracks from the phone based off a browsing entry and music type. If beginning to browse, set entryInfo to nil.
+
+ @param entryInfo The info of the entry which was tapped on, or was most recent in the list.
+ @param musicType The music type associated.
+ @param replyHandler The reply handler, which will receive the results.
+ @param errorHandler The error handler in case something goes wrong.
+ */
+- (void)requestTracksWithEntryInfo:(nullable LMWMusicTrackInfo*)entryInfo
+					  forMusicType:(LMMusicType)musicType
+					  replyHandler:(nullable void (^)(NSDictionary<NSString *, id> *replyMessage))replyHandler
+					  errorHandler:(nullable void (^)(NSError *error))errorHandler;
 
 /**
  Sets the current playback time by sending a message with the set time to the phone.
