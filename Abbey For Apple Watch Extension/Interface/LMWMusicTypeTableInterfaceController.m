@@ -77,6 +77,9 @@
 			
 			row.musicTypeDictionary = musicTypeInfo;
 		}
+		
+		[self.loadingImage stopAnimating];
+		[self.loadingGroup setHidden:YES];
 	});
 }
 
@@ -84,6 +87,13 @@
 	[super awakeWithContext:context];
 	
 	[self setTitle:NSLocalizedString(@"Library", nil)];
+	
+	[self.loadingLabel setText:NSLocalizedString(@"HangOn", nil)];
+	
+	[self.loadingImage setImageNamed:@"Activity"];
+	[self.loadingImage startAnimatingWithImagesInRange:NSMakeRange(0, 30)
+											  duration:1.0
+										   repeatCount:0];
 
 	[self setupMusicTypesTable];
 }

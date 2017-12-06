@@ -264,31 +264,63 @@
 		
 		BOOL isBeginningOfBrowse = (persistentID == 0 && currentIndex == -1);
 		
+		if(currentIndex == -1){
+			currentIndex = 0;
+		}
+		
 		NSLog(@"Got a request for music tracks. Is beginning? %d", isBeginningOfBrowse);
-		if(isBeginningOfBrowse){
-			NSArray<LMMusicTrackCollection*> *trackCollections = [self.musicPlayer queryCollectionsForMusicType:musicType];
-			NSMutableArray *resultsArray = [NSMutableArray new];
+
+		NSArray<LMMusicTrackCollection*> *trackCollections = [self.musicPlayer queryCollectionsForMusicType:musicType];
+		NSMutableArray *resultsArray = [NSMutableArray new];
+	
+		NSInteger maximumIndex = currentIndex+MIN(15, trackCollections.count-currentIndex);
+		//If there's only a few items left, might as well add them to  the current page instead of making the user go to another page for them
+		if((trackCollections.count-maximumIndex <= 5) && (trackCollections.count-maximumIndex > 0)){
+			maximumIndex = trackCollections.count - 1;
+		}
+	
+		for(NSInteger i = currentIndex; i < maximumIndex; i++){
+			LMMusicTrackCollection *collection = [trackCollections objectAtIndex:i];
+			LMMusicTrack *representativeTrack = collection.representativeItem;
 			
-			for(NSInteger i = 0; i < 15; i++){
-				LMMusicTrackCollection *collection = [trackCollections objectAtIndex:i];
-				LMMusicTrack *representativeTrack = collection.representativeItem;
-				
-				[resultsArray addObject:@{
-										  LMAppleWatchBrowsingKeyPersistentID: @(representativeTrack.albumPersistentID),
-										  LMAppleWatchBrowsingKeyEntryTitle: representativeTrack.albumTitle,
-										  LMAppleWatchBrowsingKeyEntrySubtitle: representativeTrack.artist
-										  }];
+			NSString *title = NSLocalizedString(@"UnknownTitle", nil);
+			NSString *subtitle = NSLocalizedString(@"UnknownArtist", nil);
+			
+			switch(musicType){
+				case LMMusicTypeCompilations:
+				case LMMusicTypeAlbums:
+					title = representativeTrack.albumTitle ? representativeTrack.albumTitle : NSLocalizedString(@"UnknownAlbum", nil);
+					subtitle = representativeTrack.albumArtist ? representativeTrack.albumArtist : NSLocalizedString(@"UnknownArtist", nil);
+					break;
+				case LMMusicTypeComposers:
+				case LMMusicTypeArtists:
+					title = representativeTrack.artist ? representativeTrack.artist : NSLocalizedString(@"UnknownArtist", nil);
+					subtitle = [NSString stringWithFormat:@"%lu %@", (unsigned long)collection.numberOfAlbums, NSLocalizedString(collection.numberOfAlbums == 1 ? @"AlbumInline" : @"AlbumsInline", nil)];
+					break;
+				case LMMusicTypePlaylists:
+					title = @"Error";
+					subtitle = [NSString stringWithFormat:@"%ld %@", (unsigned long)collection.trackCount, NSLocalizedString(collection.trackCount == 1 ? @"Song" : @"Songs", nil)];
+				default:
+					break;
 			}
 			
-			NSLog(@"Results %@", resultsArray);
-			
-			replyHandler(@{
-						   @"results": resultsArray
-						   });
+			[resultsArray addObject:@{
+									  LMAppleWatchBrowsingKeyEntryPersistentID: @(representativeTrack.albumPersistentID),
+									  LMAppleWatchBrowsingKeyEntryTitle: title,
+									  LMAppleWatchBrowsingKeyEntrySubtitle: subtitle
+									  }];
 		}
-		else{
-			NSAssert(false, @"fuck");
-		}
+		
+		
+		BOOL isEndOfList = (maximumIndex == trackCollections.count);
+		
+		NSLog(@"Results %@\n%d %d/%d", resultsArray, isEndOfList, (int)maximumIndex, (int)trackCollections.count);
+		
+		replyHandler(@{
+					   @"results": resultsArray,
+					   LMAppleWatchBrowsingKeyIsEndOfList: @(isEndOfList),
+					   LMAppleWatchBrowsingKeyRemainingEntries: @(trackCollections.count-maximumIndex)
+					   });
 	}
 	
 	dispatch_async(dispatch_get_main_queue(), ^{

@@ -12,9 +12,17 @@
 "NothingUpNext" = "Nothing up next";
 "UpNext" = "Up next";
 
+"NextPage" = "Next page";
+"XLeft" = "%ld left"; //X number of tracks or entries left in the view the user is browsing. For example, if they're browsing their titles, and have already been through 30 (and they have 100 total) it would say 70 left.
+
+"ShuffleAll" = "Shuffle all";
+"XTracks" = "%ld tracks"; //Multiple songs
+"XTrack" = "%ld track"; //One song
+
 "HangOn" = "Hang on...";
 "AlmostThere" = "Almost there...";
 "Shuffling" = "Shuffling...";
+"GettingNextTracks" = "Getting next tracks...";
 
 "Favourites" = "Favourites";
 "Albums" = "Albums";

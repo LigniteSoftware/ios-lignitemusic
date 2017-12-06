@@ -285,8 +285,17 @@
                                 </tableRow>
                             </items>
                         </table>
+                        <group width="0.90000000000000002" alignment="center" verticalAlignment="center" layout="vertical" spacing="6" id="STG-kv-h4h">
+                            <items>
+                                <imageView alignment="center" verticalAlignment="center" image="Activity1" id="TwC-Lv-eSS"/>
+                                <label alignment="center" verticalAlignment="bottom" text="Hang on..." textAlignment="center" numberOfLines="0" id="Vj0-AH-6GB"/>
+                            </items>
+                        </group>
                     </items>
                     <connections>
+                        <outlet property="loadingGroup" destination="STG-kv-h4h" id="a2u-fX-haW"/>
+                        <outlet property="loadingImage" destination="TwC-Lv-eSS" id="aZa-l7-uD4"/>
+                        <outlet property="loadingLabel" destination="Vj0-AH-6GB" id="VpB-GJ-10g"/>
                         <outlet property="musicTypesTable" destination="qP9-Mb-Ha9" id="c1e-8u-L9e"/>
                     </connections>
                 </controller>
@@ -334,7 +343,7 @@
                         <group width="0.90000000000000002" alignment="center" verticalAlignment="center" layout="vertical" spacing="6" id="10s-Zo-K7a">
                             <items>
                                 <imageView alignment="center" verticalAlignment="center" image="Activity1" id="9YA-kF-pjn"/>
-                                <label alignment="center" verticalAlignment="bottom" text="Hang on..." id="oGO-fC-HF1"/>
+                                <label alignment="center" verticalAlignment="bottom" text="Hang on..." textAlignment="center" numberOfLines="0" id="oGO-fC-HF1"/>
                             </items>
                         </group>
                     </items>

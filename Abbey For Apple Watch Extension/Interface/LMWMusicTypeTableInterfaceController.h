@@ -11,6 +11,21 @@
 @interface LMWMusicTypeTableInterfaceController : WKInterfaceController
 
 /**
+ The group for loading image and label.
+ */
+@property IBOutlet WKInterfaceGroup *loadingGroup;
+
+/**
+ The loading image.
+ */
+@property IBOutlet WKInterfaceImage *loadingImage;
+
+/**
+ The label for loading.
+ */
+@property IBOutlet WKInterfaceLabel *loadingLabel;
+
+/**
  The music types table.
  */
 @property IBOutlet WKInterfaceTable *musicTypesTable;
