@@ -607,7 +607,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMImageManager.m"
-            timestampString = "534295705.597197"
+            timestampString = "534296564.049728"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "580"
@@ -895,11 +895,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMAppleWatchBridge.m"
-            timestampString = "534295705.598118"
+            timestampString = "534296564.050256"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "296"
-            endingLineNumber = "296"
+            startingLineNumber = "300"
+            endingLineNumber = "300"
             landmarkName = "-session:didReceiveMessage:replyHandler:"
             landmarkType = "7">
          </BreakpointContent>

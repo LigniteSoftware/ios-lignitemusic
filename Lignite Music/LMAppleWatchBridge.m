@@ -276,6 +276,10 @@
 		NSLog(@"Got a request for music tracks. Is beginning? %d", isBeginningOfBrowse);
 
 		NSArray<LMMusicTrackCollection*> *trackCollections = [self.musicPlayer queryCollectionsForMusicType:musicType];
+		if(musicType == LMMusicTypeTitles){
+			trackCollections = [LMMusicPlayer
+								arrayOfTrackCollectionsForMusicTrackCollection:trackCollections.firstObject];
+		}
 		NSMutableArray *resultsArray = [NSMutableArray new];
 	
 		NSInteger maximumIndex = currentIndex + MIN(MAXIMUM_NUMBER_OF_ITEMS_IN_LIST, trackCollections.count-currentIndex);
@@ -302,6 +306,10 @@
 			NSLog(@"Size %d", (int)iconData.length);
 			
 			switch(musicType){
+				case LMMusicTypeTitles:
+					title = representativeTrack.title ? representativeTrack.title : NSLocalizedString(@"UnknownTitle", nil);
+					subtitle = representativeTrack.artist ? representativeTrack.artist : NSLocalizedString(@"UnknownArtist", nil);
+					break;
 				case LMMusicTypeCompilations:
 				case LMMusicTypeAlbums:
 					title = representativeTrack.albumTitle ? representativeTrack.albumTitle : NSLocalizedString(@"UnknownAlbum", nil);
