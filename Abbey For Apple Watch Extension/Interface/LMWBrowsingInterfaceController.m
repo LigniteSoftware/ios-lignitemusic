@@ -150,6 +150,7 @@
 
 			[row.titleLabel setText:entryInfo.title];
 			[row.subtitleLabel setText:entryInfo.subtitle];
+			[row.icon setImage:entryInfo.albumArtNotCropped];
 
 			row.associatedInfo = entryInfo;
 		}
@@ -168,6 +169,14 @@
 		entry.subtitle = [resultDictionary objectForKey:LMAppleWatchBrowsingKeyEntrySubtitle];
 		entry.persistentID = (MPMediaEntityPersistentID)[[resultDictionary objectForKey:LMAppleWatchBrowsingKeyEntryPersistentID] longLongValue];
 		entry.indexInCollection = i + self.previousIndex;
+		
+		UIImage *icon = nil;
+		id iconData = [resultDictionary objectForKey:LMAppleWatchBrowsingKeyEntryIcon];
+		if(iconData){
+			icon = [UIImage imageWithData:iconData];
+			entry.albumArt = icon;
+		}
+		
 		[tableEntriesMutableArray addObject:entry];
 	}
 	

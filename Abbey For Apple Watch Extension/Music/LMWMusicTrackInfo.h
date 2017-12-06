@@ -36,6 +36,11 @@ typedef enum {
 @property UIImage *albumArt;
 
 /**
+ Album art which is not modified by any internal rendering/managment. If no album art exists, Lignite Music's logo will be returned.
+ */
+@property (readonly) UIImage *albumArtNotCropped;
+
+/**
  The title of the music track.
  */
 @property NSString *title;

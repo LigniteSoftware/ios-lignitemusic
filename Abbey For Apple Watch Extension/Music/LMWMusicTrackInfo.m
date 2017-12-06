@@ -21,6 +21,14 @@
 
 @synthesize albumArt = _albumArt;
 
+- (UIImage*)albumArtNotCropped {
+	if(self.storedAlbumArt){
+		return self.storedAlbumArt;
+	}
+	
+	return [UIImage imageNamed:@"watch_no_cover_art_not_cropped.png"];
+}
+
 - (UIImage*)albumArt {
 	if(self.storedAlbumArt){
 		return self.storedAlbumArt;

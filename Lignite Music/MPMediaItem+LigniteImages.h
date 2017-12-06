@@ -21,21 +21,28 @@ typedef MPMediaEntityPersistentID LMMusicTrackPersistentID;
  
  @return The album art.
  */
-- (UIImage*)albumArt;
+- (nonnull UIImage*)albumArt;
 
 /**
  Gets the album art for a track if it exists in either the track itself or in image cache. Otherwise it returns nil.
  
  @return The album art, if it exists.
  */
-- (UIImage*)uncorrectedAlbumArt;
+- (nullable UIImage*)uncorrectedAlbumArt;
 
 /**
  Gets the artist image associated with this track. The artist image is stored within the LMImageManager cache and is nil if the artist image has not been downloaded or could not be found.
  
  @return The artist image.
  */
-- (UIImage*)artistImage;
+- (nonnull UIImage*)artistImage;
+
+/**
+ Gets the uncorrected artist image, meaning that if the artist image doesn't exist, nil is returned. Use the standard -artistImage if you want to always have an image returned to you.
+
+ @return The artist image if it exists, nil if not.
+ */
+- (nullable UIImage*)uncorrectedArtistImage;
 
 /**
  Whether or not the track is a favourite of the user.

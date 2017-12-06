@@ -314,7 +314,11 @@
                                         <items>
                                             <group width="1" height="0.80000000000000004" alignment="center" verticalAlignment="center" spacing="4" id="TLN-RC-Nde" userLabel="Contents Group">
                                                 <items>
-                                                    <imageView width="0.20000000000000001" height="0.59999999999999998" alignment="left" verticalAlignment="center" image="icon_albums" contentMode="scaleAspectFit" id="BvS-Ij-LdI" userLabel="Icon"/>
+                                                    <group width="0.19" height="0.80000000000000004" alignment="left" verticalAlignment="center" radius="4" id="Rd3-8q-yva" userLabel="Icon Group">
+                                                        <items>
+                                                            <imageView width="1" height="1" alignment="center" verticalAlignment="center" image="chidster" contentMode="scaleAspectFit" id="BvS-Ij-LdI" userLabel="Icon"/>
+                                                        </items>
+                                                    </group>
                                                     <group width="0.80000000000000004" height="1" alignment="left" verticalAlignment="center" layout="vertical" spacing="0.0" id="BNI-85-r36" userLabel="Text">
                                                         <items>
                                                             <label alignment="left" text="Loading..." textAlignment="left" id="PJU-M6-YfY">

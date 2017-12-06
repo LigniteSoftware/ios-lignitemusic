@@ -12,7 +12,7 @@
 
 @implementation MPMediaItem (LigniteImages)
 
-- (UIImage*)albumArt {
+- (nonnull UIImage*)albumArt {
 	//Get the album artwork
 	UIImage *albumArtImage = [self uncorrectedAlbumArt];
 	
@@ -24,7 +24,7 @@
 	return albumArtImage;
 }
 
-- (UIImage*)uncorrectedAlbumArt {	
+- (nullable UIImage*)uncorrectedAlbumArt {
 	LMMusicPlayerType currentPlayerType = [[LMMusicPlayer sharedMusicPlayer] playerType];
 	
 	if(currentPlayerType == LMMusicPlayerTypeSystemMusicPlayer || currentPlayerType == LMMusicPlayerTypeAppleMusic){
@@ -45,22 +45,30 @@
 	return nil;
 }
 
-- (UIImage*)artistImage {
+- (nullable UIImage*)uncorrectedArtistImage {
 	LMMusicPlayerType currentPlayerType = [[LMMusicPlayer sharedMusicPlayer] playerType];
 	
 	if(currentPlayerType == LMMusicPlayerTypeSystemMusicPlayer || currentPlayerType == LMMusicPlayerTypeAppleMusic){
 		UIImage *artistImage = [[LMImageManager sharedImageManager] imageForMediaItem:self withCategory:LMImageManagerCategoryArtistImages];
 		
-		if(!artistImage) {
-			artistImage = [LMAppIcon imageForIcon:LMIconNoAlbumArt75Percent];
+		if(artistImage) {
+			return artistImage;
 		}
-		
-		return artistImage;
 	}
 	
-	NSLog(@"Warning: Artist image not found for track %@.", self.title);
+//	NSLog(@"Warning: Artist image not found for track %@.", self.title);
 	
 	return nil;
+}
+
+- (nonnull UIImage*)artistImage {
+	UIImage *artistImage = [self uncorrectedArtistImage];
+
+	if(!artistImage){
+		artistImage = [LMAppIcon imageForIcon:LMIconNoAlbumArt75Percent];
+	}
+	
+	return artistImage;
 }
 
 - (BOOL)isFavourite {

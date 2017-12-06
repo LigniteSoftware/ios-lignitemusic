@@ -221,7 +221,7 @@
 												  @"title": track.title,
 												  @"subtitle": track.artist ? track.artist : NSLocalizedString(@"UnknownArtist", nil),
 												  @"persistentID": @(track.persistentID),
-												  @"indexInCollection": @([nowPlayingQueue.items indexOfObject:track])
+												  @"indexInCollection": @([nowPlayingQueue.items indexOfObject:track]),
 												  };
 			[upNextMutableArray addObject:trackInfoDictionary];
 		}
@@ -264,7 +264,7 @@
 		
 		BOOL isBeginningOfBrowse = (persistentID == 0 && currentIndex == -1);
 		
-		NSInteger MAXIMUM_NUMBER_OF_ITEMS_IN_LIST = 20;
+		NSInteger MAXIMUM_NUMBER_OF_ITEMS_IN_LIST = 15;
 		
 		if(currentIndex == -1){ //First page
 			currentIndex = 0;
@@ -291,6 +291,16 @@
 			NSString *title = NSLocalizedString(@"UnknownTitle", nil);
 			NSString *subtitle = NSLocalizedString(@"UnknownArtist", nil);
 			
+			UIImage *imageToUse = representativeTrack.albumArt;
+			if(musicType == LMMusicTypeArtists || musicType == LMMusicTypeComposers){
+				imageToUse = representativeTrack.uncorrectedArtistImage;
+			}
+			
+			UIImage *resizedImage = [self resizeImage:imageToUse toSize:CGSizeMake(64, 64)];
+			NSData *iconData = resizedImage ? UIImageJPEGRepresentation(resizedImage, 0.5) : nil;
+			
+			NSLog(@"Size %d", (int)iconData.length);
+			
 			switch(musicType){
 				case LMMusicTypeCompilations:
 				case LMMusicTypeAlbums:
@@ -309,7 +319,14 @@
 					break;
 			}
 			
-			[resultsArray addObject:@{
+			[resultsArray addObject:iconData
+								   ? @{
+									 LMAppleWatchBrowsingKeyEntryPersistentID: @(representativeTrack.albumPersistentID),
+									 LMAppleWatchBrowsingKeyEntryTitle: title,
+									 LMAppleWatchBrowsingKeyEntrySubtitle: subtitle,
+									 LMAppleWatchBrowsingKeyEntryIcon: iconData
+									 }
+								   : @{
 									  LMAppleWatchBrowsingKeyEntryPersistentID: @(representativeTrack.albumPersistentID),
 									  LMAppleWatchBrowsingKeyEntryTitle: title,
 									  LMAppleWatchBrowsingKeyEntrySubtitle: subtitle
