@@ -30,13 +30,53 @@
 @property BOOL setupAnimation;
 @property NSInteger previousIndex;
 
-@property BOOL isBeginningOfList;
-@property BOOL isEndOfList;
-@property NSInteger remainingEntries;
+@property NSInteger indexOfFinalPage;
+@property (readonly) BOOL isBeginningOfList;
+@property (readonly) BOOL isEndOfList;
+
+@property NSInteger indexOfCurrentPage;
+@property NSMutableArray<NSArray<LMWMusicTrackInfo*>*> *pages;
+
+@property NSInteger amountOfUncachedEntries;
+@property (readonly) NSInteger amountOfEntriesAheadOfCurrentPage;
 
 @end
 
 @implementation LMWBrowsingInterfaceController
+
+- (BOOL)isBeginningOfList {
+	return (self.indexOfCurrentPage == 0);
+}
+
+- (BOOL)isEndOfList {
+	if(self.indexOfFinalPage == -1){
+		return NO;
+	}
+	return (self.indexOfCurrentPage == self.indexOfFinalPage);
+}
+
+- (NSInteger)amountOfEntriesAheadOfCurrentPage {
+	if(self.indexOfFinalPage == -1){ //Index of last page has not been determined
+		NSInteger amountOfEntriesAhead = 0;
+		NSInteger amountOfPagesAheadToCount = ((self.pages.count - 1) - self.indexOfCurrentPage);
+		for(NSInteger i = 0; i < amountOfPagesAheadToCount; i++){
+			amountOfEntriesAhead += [self.pages objectAtIndex:(self.indexOfCurrentPage + i + 1)].count;
+		}
+		amountOfEntriesAhead += self.amountOfUncachedEntries;
+		return amountOfEntriesAhead;
+	}
+	
+	if(self.indexOfCurrentPage == self.indexOfFinalPage){ //Index of last page has been determined
+		return 0;
+	}
+	
+	NSInteger amountOfEntriesAhead = 0;
+	NSInteger amountOfPagesAheadToCount = (self.indexOfFinalPage - self.indexOfCurrentPage);
+	for(NSInteger i = 0; i < amountOfPagesAheadToCount; i++){
+		amountOfEntriesAhead += [self.pages objectAtIndex:(self.indexOfCurrentPage + i + 1)].count;
+	}
+	return amountOfEntriesAhead;
+}
 
 - (void)setLoading:(BOOL)loading withLabel:(NSString*)label {
 	[self.loadingGroup setHidden:!loading];
@@ -74,29 +114,39 @@
 		self.tableEntries = tableEntriesArray;
 		
 		NSInteger totalNumberOfRows = tableEntriesArray.count;
-		totalNumberOfRows += 1 + (!self.isEndOfList);
+		totalNumberOfRows += (!self.isBeginningOfList) + (!self.isEndOfList);
 		
 		[self.browsingTable setNumberOfRows:totalNumberOfRows withRowType:@"BrowseRow"];
 		
-		
-		LMWMusicBrowsingRowController *playAllRow = [self.browsingTable rowControllerAtIndex:0];
-		[playAllRow.titleLabel setText:NSLocalizedString(@"ShuffleAll", nil)];
-		[playAllRow.subtitleLabel setText:NSLocalizedString(@"69 tracks", nil)];
-		[playAllRow.icon setImage:[UIImage imageNamed:@"icon_shuffle.png"]];
+		if(!self.isBeginningOfList){
+			LMWMusicBrowsingRowController *previousTracksRow = [self.browsingTable rowControllerAtIndex:0];
+			[previousTracksRow.titleLabel setText:NSLocalizedString(@"PreviousPage", nil)];
+			
+			[previousTracksRow.subtitleLabel setText:
+			 [NSString stringWithFormat:
+			  NSLocalizedString(@"LastX", nil), [self.pages objectAtIndex:self.indexOfCurrentPage - 1].count]
+			 ];
+			
+			[previousTracksRow.icon setImage:[UIImage imageNamed:@"icon_left_arrow.png"]];
+			
+			previousTracksRow.isPreviousButton = YES;
+		}
 		
 		if(!self.isEndOfList){
-			LMWMusicBrowsingRowController *nextTracksRow = [self.browsingTable rowControllerAtIndex:tableEntriesArray.count + 1];
+			LMWMusicBrowsingRowController *nextTracksRow = [self.browsingTable rowControllerAtIndex:tableEntriesArray.count + (!self.isBeginningOfList)];
 			[nextTracksRow.titleLabel setText:NSLocalizedString(@"NextPage", nil)];
-			[nextTracksRow.subtitleLabel setText:[NSString stringWithFormat:NSLocalizedString(@"XLeft", nil), self.remainingEntries]];
-			[nextTracksRow.icon setImage:[UIImage imageNamed:@"icon_shuffle.png"]];
+			[nextTracksRow.subtitleLabel setText:[NSString stringWithFormat:NSLocalizedString(@"XLeft", nil), self.amountOfEntriesAheadOfCurrentPage]];
+			[nextTracksRow.icon setImage:[UIImage imageNamed:@"icon_right_arrow.png"]];
+			
+			nextTracksRow.isNextButton = YES;
 		}
 		
 		
 		
-		for (NSInteger i = 1; i < (tableEntriesArray.count + 1); i++) {
+		for (NSInteger i = (!self.isBeginningOfList); i < (tableEntriesArray.count + (!self.isBeginningOfList)); i++) {
 			LMWMusicBrowsingRowController *row = [self.browsingTable rowControllerAtIndex:i];
 
-			LMWMusicTrackInfo *entryInfo = [tableEntriesArray objectAtIndex:i - 1];
+			LMWMusicTrackInfo *entryInfo = [tableEntriesArray objectAtIndex:i - (!self.isBeginningOfList)];
 
 			[row.titleLabel setText:entryInfo.title];
 			[row.subtitleLabel setText:entryInfo.subtitle];
@@ -125,40 +175,64 @@
 }
 
 - (void)handleTracksRequestWithReplyDictionary:(NSDictionary*)replyDictionary {
-	self.isEndOfList = [[replyDictionary objectForKey:LMAppleWatchBrowsingKeyIsEndOfList] boolValue];
-	self.remainingEntries = [[replyDictionary objectForKey:LMAppleWatchBrowsingKeyRemainingEntries] integerValue];
+	BOOL isEndOfList = [[replyDictionary objectForKey:LMAppleWatchBrowsingKeyIsEndOfList] boolValue];
+	if(isEndOfList){
+		self.indexOfFinalPage = self.indexOfCurrentPage;
+	}
+	
+	self.amountOfUncachedEntries = [[replyDictionary objectForKey:LMAppleWatchBrowsingKeyRemainingEntries] integerValue];
 	
 	NSArray<LMWMusicTrackInfo*> *tableEntriesArray = [self tableEntriesForResultsArray:[replyDictionary objectForKey:@"results"]];
 	[self reloadBrowsingTableWithEntries:tableEntriesArray];
+	
+	[self.pages addObject:tableEntriesArray];
 }
 
 - (void)table:(WKInterfaceTable *)table didSelectRowAtIndex:(NSInteger)rowIndex {
 	LMWMusicBrowsingRowController *row = [self.browsingTable rowControllerAtIndex:rowIndex];
 	
-	if(rowIndex == 0){
-		[self setLoading:YES withLabel:NSLocalizedString(@"GettingNextTracks", nil)];
+	if(row.isNextButton){
+		[self setLoading:YES withLabel:NSLocalizedString(@"GettingNext", nil)];
 		
 		self.previousIndex = self.tableEntries.lastObject.indexInCollection;
 		
-		[self.companionBridge requestTracksWithEntryInfo:self.tableEntries.lastObject
-											forMusicType:self.musicType
-											replyHandler:^(NSDictionary<NSString *,id> *replyMessage) {
-												[self handleTracksRequestWithReplyDictionary:replyMessage];
-											}
-											errorHandler:^(NSError *error) {
-												NSLog(@"Error: %@", error);
-											}];
-		
-//		[self setLoading:YES withLabel:NSLocalizedString(@"Shuffling", nil)];
-		//Send shuffle command, and then...
-//		[self popToRootController];
+		if(self.indexOfCurrentPage < (self.pages.count - 1)){ //Already cached
+			self.indexOfCurrentPage++;
+			
+			[self reloadBrowsingTableWithEntries:[self.pages objectAtIndex:self.indexOfCurrentPage]];
+		}
+		else{ //Get next page from phone
+			[self.companionBridge requestTracksWithEntryInfo:self.tableEntries.lastObject
+												forMusicType:self.musicType
+												replyHandler:^(NSDictionary<NSString *,id> *replyMessage) {
+													self.indexOfCurrentPage++;
+													
+													[self handleTracksRequestWithReplyDictionary:replyMessage];
+												}
+												errorHandler:^(NSError *error) {
+													NSLog(@"Error: %@", error);
+												}];
+		}
 	}
-	else if(rowIndex == (self.tableEntries.count + 1)){
+	else if(row.isPreviousButton){
+		self.indexOfCurrentPage--;
+		
 		[self setLoading:YES];
+		
+		[self reloadBrowsingTableWithEntries:[self.pages objectAtIndex:self.indexOfCurrentPage]];
+	}
+	else if(row.isShuffleAllButton){
+		//		[self setLoading:YES withLabel:NSLocalizedString(@"Shuffling", nil)];
+		//Send shuffle command, and then...
+		//		[self popToRootController];
 	}
 }
 
 - (void)awakeWithContext:(id)context {
+	self.pages = [NSMutableArray new];
+	self.indexOfCurrentPage = 0;
+	self.indexOfFinalPage = -1;
+	
 	NSDictionary *dictionaryContext = (NSDictionary*)context;
 	
 	self.musicType = (LMMusicType)[[dictionaryContext objectForKey:@"musicType"] integerValue];

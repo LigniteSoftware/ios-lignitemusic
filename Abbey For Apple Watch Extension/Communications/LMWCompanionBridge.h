@@ -64,6 +64,8 @@
 
 //Whether or not the list of entries has reached the end of the complete list.
 #define LMAppleWatchBrowsingKeyIsEndOfList @"LMAppleWatchBrowsingKeyIsEndOfList"
+//Whether or not it's the beginning of the list.
+#define LMAppleWatchBrowsingKeyIsBeginningOfList @"LMAppleWatchBrowsingKeyIsBeginningOfList"
 //The amount of entries remaining after the list that's being sent.
 #define LMAppleWatchBrowsingKeyRemainingEntries @"LMAppleWatchBrowsingKeyRemainingEntries"
 

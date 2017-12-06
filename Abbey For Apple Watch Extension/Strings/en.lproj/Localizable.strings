@@ -12,8 +12,12 @@
 "NothingUpNext" = "Nothing up next";
 "UpNext" = "Up next";
 
+"PreviousPage" = "Previous page";
 "NextPage" = "Next page";
-"XLeft" = "%ld left"; //X number of tracks or entries left in the view the user is browsing. For example, if they're browsing their titles, and have already been through 30 (and they have 100 total) it would say 70 left.
+
+"XLeft" = "%ld left"; //X number of tracks or entries left in the view the user is browsing. For example, if they're browsing their titles, and have already been through 30 (and they have 100 total) it would say 70 left. X will never be 1.
+
+"LastX" = "Last %d entries"; //X number of tracks or entries that are in the previous page. If the user goes to the next page and wants to go back, there's an entry with the title "Previous page" that subtitles "Last X", meaning last X songs or entries which are before the page the user is currently on. X will never be 1.
 
 "ShuffleAll" = "Shuffle all";
 "XTracks" = "%ld tracks"; //Multiple songs
@@ -22,7 +26,7 @@
 "HangOn" = "Hang on...";
 "AlmostThere" = "Almost there...";
 "Shuffling" = "Shuffling...";
-"GettingNextTracks" = "Getting next tracks...";
+"GettingNext" = "Getting next page...";
 
 "Favourites" = "Favourites";
 "Albums" = "Albums";

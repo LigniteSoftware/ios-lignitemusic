@@ -264,8 +264,13 @@
 		
 		BOOL isBeginningOfBrowse = (persistentID == 0 && currentIndex == -1);
 		
-		if(currentIndex == -1){
+		NSInteger MAXIMUM_NUMBER_OF_ITEMS_IN_LIST = 20;
+		
+		if(currentIndex == -1){ //First page
 			currentIndex = 0;
+		}
+		else{
+			currentIndex += (currentIndex/MAXIMUM_NUMBER_OF_ITEMS_IN_LIST) + 1;
 		}
 		
 		NSLog(@"Got a request for music tracks. Is beginning? %d", isBeginningOfBrowse);
@@ -273,10 +278,10 @@
 		NSArray<LMMusicTrackCollection*> *trackCollections = [self.musicPlayer queryCollectionsForMusicType:musicType];
 		NSMutableArray *resultsArray = [NSMutableArray new];
 	
-		NSInteger maximumIndex = currentIndex+MIN(15, trackCollections.count-currentIndex);
+		NSInteger maximumIndex = currentIndex + MIN(MAXIMUM_NUMBER_OF_ITEMS_IN_LIST, trackCollections.count-currentIndex);
 		//If there's only a few items left, might as well add them to  the current page instead of making the user go to another page for them
-		if((trackCollections.count-maximumIndex <= 5) && (trackCollections.count-maximumIndex > 0)){
-			maximumIndex = trackCollections.count - 1;
+		if(((trackCollections.count-maximumIndex) <= 5) && ((trackCollections.count-maximumIndex) > 0)){
+			maximumIndex = trackCollections.count;
 		}
 	
 		for(NSInteger i = currentIndex; i < maximumIndex; i++){
@@ -318,8 +323,9 @@
 		
 		replyHandler(@{
 					   @"results": resultsArray,
+					   LMAppleWatchBrowsingKeyIsBeginningOfList: @(isBeginningOfBrowse),
 					   LMAppleWatchBrowsingKeyIsEndOfList: @(isEndOfList),
-					   LMAppleWatchBrowsingKeyRemainingEntries: @(trackCollections.count-maximumIndex)
+					   LMAppleWatchBrowsingKeyRemainingEntries: @(trackCollections.count - maximumIndex)
 					   });
 	}
 	

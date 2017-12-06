@@ -32,4 +32,19 @@
  */
 @property LMWMusicTrackInfo *associatedInfo;
 
+/**
+ Whether or not this row is for viewing next tracks.
+ */
+@property BOOL isNextButton;
+
+/**
+ Whether or not this row is for viewing previous tracks.
+ */
+@property BOOL isPreviousButton;
+
+/**
+ Whether or not this row is the button that'll let the user shuffle all the tracks in the list.
+ */
+@property BOOL isShuffleAllButton;
+
 @end
