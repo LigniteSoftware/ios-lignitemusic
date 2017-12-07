@@ -66,6 +66,8 @@
 #define LMAppleWatchBrowsingKeyIsBeginningOfList @"LMAppleWatchBrowsingKeyIsBeginningOfList"
 //The amount of entries remaining after the list that's being sent.
 #define LMAppleWatchBrowsingKeyRemainingEntries @"LMAppleWatchBrowsingKeyRemainingEntries"
+//The total amount of entries.
+#define LMAppleWatchBrowsingKeyTotalNumberOfEntries @"LMAppleWatchBrowsingKeyTotalNumberOfEntries"
 
 //Invert the play/pause status from whatever it is now.
 #define LMAppleWatchControlKeyPlayPause @"LMAppleWatchControlKeyPlayPause"

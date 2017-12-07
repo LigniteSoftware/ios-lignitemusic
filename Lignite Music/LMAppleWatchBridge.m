@@ -263,26 +263,55 @@
 		MPMediaEntityPersistentID persistentID = (MPMediaEntityPersistentID)[[message objectForKey:LMAppleWatchBrowsingKeyPersistentID] integerValue];
 		NSInteger currentIndex = [[message objectForKey:LMAppleWatchBrowsingKeyCurrentIndex] integerValue];
 		
-		BOOL isBeginningOfBrowse = (persistentID == 0 && currentIndex == -1);
+		BOOL isInitialBrowsePage = (persistentID == 0);
+		BOOL isFirstPage = NO;
 		
 		NSInteger MAXIMUM_NUMBER_OF_ITEMS_IN_LIST = 15;
 		
 		if(currentIndex == -1){ //First page
+			isFirstPage = YES;
 			currentIndex = 0;
 		}
 		else{
 			currentIndex += (currentIndex/MAXIMUM_NUMBER_OF_ITEMS_IN_LIST) + 1;
 		}
 		
-		NSLog(@"Got a request for music tracks. Is beginning? %d", isBeginningOfBrowse);
+		NSLog(@"Got a request for music tracks. Is beginning? %d", isInitialBrowsePage);
 
-		NSArray<LMMusicTrackCollection*> *trackCollections = [self.musicPlayer queryCollectionsForMusicType:musicType];
+		NSArray<LMMusicTrackCollection*> *trackCollections = nil;
+		
+		if(isInitialBrowsePage){
+			trackCollections = [self.musicPlayer queryCollectionsForMusicType:musicType];
+		}
+		else{
+			trackCollections = [self.musicPlayer collectionsForPersistentID:persistentID forMusicType:musicType];
+			trackCollections = [LMMusicPlayer arrayOfTrackCollectionsForMusicTrackCollection:trackCollections.firstObject];
+			
+			LMMusicType entryMusicType = LMMusicTypeTitles;
+			switch(musicType){
+				case LMMusicTypeTitles:
+				case LMMusicTypeFavourites:
+					//Play track
+					break;
+				case LMMusicTypePlaylists:
+				case LMMusicTypeAlbums:
+				case LMMusicTypeCompilations:
+					entryMusicType = LMMusicTypeTitles;
+					break;
+				case LMMusicTypeGenres:
+				case LMMusicTypeArtists:
+				case LMMusicTypeComposers:
+					entryMusicType = LMMusicTypeAlbums;
+					break;
+			}
+			musicType = entryMusicType;
+		}
 		
 		NSArray<LMPlaylist*>* playlists = nil;
 		
 		NSInteger count = trackCollections.count;
 		
-		if(musicType == LMMusicTypeTitles || musicType == LMMusicTypeFavourites){
+		if((musicType == LMMusicTypeTitles || musicType == LMMusicTypeFavourites) && isInitialBrowsePage){
 			trackCollections = [LMMusicPlayer
 								arrayOfTrackCollectionsForMusicTrackCollection:trackCollections.firstObject];
 			
@@ -383,9 +412,10 @@
 		
 		replyHandler(@{
 					   @"results": resultsArray,
-					   LMAppleWatchBrowsingKeyIsBeginningOfList: @(isBeginningOfBrowse),
+					   LMAppleWatchBrowsingKeyIsBeginningOfList: @(isFirstPage),
 					   LMAppleWatchBrowsingKeyIsEndOfList: @(isEndOfList),
-					   LMAppleWatchBrowsingKeyRemainingEntries: @(count - maximumIndex)
+					   LMAppleWatchBrowsingKeyRemainingEntries: @(count - maximumIndex),
+					   LMAppleWatchBrowsingKeyTotalNumberOfEntries: @(count)
 					   });
 	}
 	

@@ -26,6 +26,9 @@
  The music type associated with this browse window.
  */
 @property LMMusicType musicType;
+@property LMMusicType previousMusicType;
+
+@property LMWMusicTrackInfo *entryInfo;
 
 @property BOOL setupAnimation;
 @property NSInteger previousIndex;
@@ -37,6 +40,7 @@
 @property NSInteger indexOfCurrentPage;
 @property NSMutableArray<NSArray<LMWMusicTrackInfo*>*> *pages;
 
+@property NSInteger totalNumberOfEntries;
 @property NSInteger amountOfUncachedEntries;
 @property (readonly) NSInteger amountOfEntriesAheadOfCurrentPage;
 
@@ -111,10 +115,14 @@
 	[self.loadingLabel setText:NSLocalizedString(@"AlmostThere", nil)];
 	
 	dispatch_async(dispatch_get_main_queue(), ^{
+		//Shuffle button only displays if titles or favourites are being displayed, and the list is longer than one track long.
+		BOOL allowsShuffleAll = (self.musicType == LMMusicTypeTitles || self.musicType == LMMusicTypeFavourites)
+			&& (self.pages.firstObject.count > 1);
+		
 		self.tableEntries = tableEntriesArray;
 		
 		NSInteger totalNumberOfRows = tableEntriesArray.count;
-		totalNumberOfRows += (!self.isBeginningOfList) + (!self.isEndOfList);
+		totalNumberOfRows += (!self.isBeginningOfList) + (!self.isEndOfList) + allowsShuffleAll;
 		
 		[self.browsingTable setNumberOfRows:totalNumberOfRows withRowType:@"BrowseRow"];
 		
@@ -132,8 +140,26 @@
 			previousTracksRow.isPreviousButton = YES;
 		}
 		
+		if(allowsShuffleAll){
+			LMWMusicBrowsingRowController *shuffleAllTracksRow = [self.browsingTable rowControllerAtIndex:!self.isBeginningOfList];
+			[shuffleAllTracksRow.titleLabel setText:NSLocalizedString(@"ShuffleAll", nil)];
+			
+			[shuffleAllTracksRow.subtitleLabel setText:
+			 [NSString stringWithFormat:
+			  NSLocalizedString((self.totalNumberOfEntries == 1) ? @"XTrack" : @"XTracks", nil), self.totalNumberOfEntries]
+			 ];
+			
+			[shuffleAllTracksRow.icon setImage:[UIImage imageNamed:@"icon_shuffle.png"]];
+			
+			shuffleAllTracksRow.isShuffleAllButton = YES;
+		}
+		
+		NSInteger entriesOffset = (!self.isBeginningOfList + allowsShuffleAll);
+		
 		if(!self.isEndOfList){
-			LMWMusicBrowsingRowController *nextTracksRow = [self.browsingTable rowControllerAtIndex:tableEntriesArray.count + (!self.isBeginningOfList)];
+			LMWMusicBrowsingRowController *nextTracksRow =
+				[self.browsingTable rowControllerAtIndex:tableEntriesArray.count + entriesOffset];
+			
 			[nextTracksRow.titleLabel setText:NSLocalizedString(@"NextPage", nil)];
 			[nextTracksRow.subtitleLabel setText:[NSString stringWithFormat:NSLocalizedString(@"XLeft", nil), self.amountOfEntriesAheadOfCurrentPage]];
 			[nextTracksRow.icon setImage:[UIImage imageNamed:@"icon_right_arrow.png"]];
@@ -143,14 +169,14 @@
 		
 		
 		if(self.tableEntries.count == 0){
-			[self.loadingImage setImage:[UIImage imageNamed:@"sad_face.png"]];
+			[self.loadingImage setImage:[UIImage imageNamed:@"apple_watch_sad.png"]];
 			[self.loadingLabel setText:NSLocalizedString(@"NothingHere", nil)];
 		}
 		else{
-			for (NSInteger i = (!self.isBeginningOfList); i < (tableEntriesArray.count + (!self.isBeginningOfList)); i++) {
+			for (NSInteger i = entriesOffset; i < (tableEntriesArray.count + entriesOffset); i++) {
 				LMWMusicBrowsingRowController *row = [self.browsingTable rowControllerAtIndex:i];
 
-				LMWMusicTrackInfo *entryInfo = [tableEntriesArray objectAtIndex:i - (!self.isBeginningOfList)];
+				LMWMusicTrackInfo *entryInfo = [tableEntriesArray objectAtIndex:i - entriesOffset];
 
 				[row.titleLabel setText:entryInfo.title];
 				[row.subtitleLabel setText:entryInfo.subtitle];
@@ -190,6 +216,9 @@
 
 - (void)handleTracksRequestWithReplyDictionary:(NSDictionary*)replyDictionary {
 	BOOL isEndOfList = [[replyDictionary objectForKey:LMAppleWatchBrowsingKeyIsEndOfList] boolValue];
+	
+	self.totalNumberOfEntries = [[replyDictionary objectForKey:LMAppleWatchBrowsingKeyTotalNumberOfEntries] integerValue];
+	
 	if(isEndOfList){
 		self.indexOfFinalPage = self.indexOfCurrentPage;
 	}
@@ -197,9 +226,8 @@
 	self.amountOfUncachedEntries = [[replyDictionary objectForKey:LMAppleWatchBrowsingKeyRemainingEntries] integerValue];
 	
 	NSArray<LMWMusicTrackInfo*> *tableEntriesArray = [self tableEntriesForResultsArray:[replyDictionary objectForKey:@"results"]];
-	[self reloadBrowsingTableWithEntries:tableEntriesArray];
-	
 	[self.pages addObject:tableEntriesArray];
+	[self reloadBrowsingTableWithEntries:tableEntriesArray];
 }
 
 - (void)table:(WKInterfaceTable *)table didSelectRowAtIndex:(NSInteger)rowIndex {
@@ -216,8 +244,13 @@
 			[self reloadBrowsingTableWithEntries:[self.pages objectAtIndex:self.indexOfCurrentPage]];
 		}
 		else{ //Get next page from phone
-			[self.companionBridge requestTracksWithEntryInfo:self.tableEntries.lastObject
-												forMusicType:self.musicType
+			
+			if(self.entryInfo){
+				self.entryInfo.indexInCollection = self.tableEntries.lastObject.indexInCollection;
+			}
+			
+			[self.companionBridge requestTracksWithEntryInfo:self.entryInfo ? self.entryInfo : self.tableEntries.lastObject
+												forMusicType:self.entryInfo ? self.previousMusicType : self.musicType
 												replyHandler:^(NSDictionary<NSString *,id> *replyMessage) {
 													self.indexOfCurrentPage++;
 													
@@ -236,9 +269,22 @@
 		[self reloadBrowsingTableWithEntries:[self.pages objectAtIndex:self.indexOfCurrentPage]];
 	}
 	else if(row.isShuffleAllButton){
-		//		[self setLoading:YES withLabel:NSLocalizedString(@"Shuffling", nil)];
-		//Send shuffle command, and then...
-		//		[self popToRootController];
+		[self setLoading:YES withLabel:NSLocalizedString(@"Shuffling", nil)];
+		
+		//and then...
+		//[self popToRootController];
+	}
+	else{ //An actual entry :O
+		LMWMusicTrackInfo *entryInfo = [self.tableEntries objectAtIndex:rowIndex];
+		entryInfo.indexInCollection = -1;
+		
+		[self pushControllerWithName:@"BrowsingController" context:@{
+																	 @"title": entryInfo.title,
+																	 @"musicType": @(self.musicType),
+																	 @"lastIndex": @(0),
+																	 @"persistentID": @(entryInfo.persistentID),
+																	 @"entryInfo": entryInfo
+																	 }];
 	}
 }
 
@@ -249,7 +295,32 @@
 	
 	NSDictionary *dictionaryContext = (NSDictionary*)context;
 	
-	self.musicType = (LMMusicType)[[dictionaryContext objectForKey:@"musicType"] integerValue];
+	self.previousMusicType = (LMMusicType)[[dictionaryContext objectForKey:@"musicType"] integerValue];
+	self.entryInfo = (LMWMusicTrackInfo*)[dictionaryContext objectForKey:@"entryInfo"];
+	
+	if(self.entryInfo){
+		LMMusicType currentMusicType = LMMusicTypeTitles;
+		switch(self.previousMusicType){
+			case LMMusicTypeTitles:
+			case LMMusicTypeFavourites:
+				//Play track
+				break;
+			case LMMusicTypePlaylists:
+			case LMMusicTypeAlbums:
+			case LMMusicTypeCompilations:
+				currentMusicType = LMMusicTypeTitles;
+				break;
+			case LMMusicTypeGenres:
+			case LMMusicTypeArtists:
+			case LMMusicTypeComposers:
+				currentMusicType = LMMusicTypeAlbums;
+				break;
+		}
+		self.musicType = currentMusicType;
+	}
+	else{
+		self.musicType = self.previousMusicType;
+	}
 	
 	[self setTitle:[dictionaryContext objectForKey:@"title"]];
 	
@@ -261,8 +332,8 @@
 	
 	
 	self.companionBridge = [LMWCompanionBridge sharedCompanionBridge];
-	[self.companionBridge requestTracksWithEntryInfo:nil
-										forMusicType:self.musicType
+	[self.companionBridge requestTracksWithEntryInfo:self.entryInfo
+										forMusicType:self.previousMusicType
 										replyHandler:^(NSDictionary<NSString *,id> *replyMessage) {
 											NSLog(@"Got reply: %@", replyMessage);
 											

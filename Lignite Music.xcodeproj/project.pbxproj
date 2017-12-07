@@ -67,9 +67,9 @@
 		6A339FD01FD8AB3C00B1A447 /* watch_no_cover_art_not_cropped.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A339FCF1FD8AB3C00B1A447 /* watch_no_cover_art_not_cropped.png */; };
 		6A339FD11FD8AB3C00B1A447 /* watch_no_cover_art_not_cropped.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A339FCF1FD8AB3C00B1A447 /* watch_no_cover_art_not_cropped.png */; };
 		6A339FD21FD8AB3C00B1A447 /* watch_no_cover_art_not_cropped.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A339FCF1FD8AB3C00B1A447 /* watch_no_cover_art_not_cropped.png */; };
-		6A339FE41FD8D73100B1A447 /* sad_face.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A339FE31FD8D73000B1A447 /* sad_face.png */; };
-		6A339FE51FD8D73100B1A447 /* sad_face.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A339FE31FD8D73000B1A447 /* sad_face.png */; };
-		6A339FE61FD8D73100B1A447 /* sad_face.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A339FE31FD8D73000B1A447 /* sad_face.png */; };
+		6A339FF01FD90DE300B1A447 /* apple_watch_sad.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A339FEF1FD90DE300B1A447 /* apple_watch_sad.png */; };
+		6A339FF11FD90DE300B1A447 /* apple_watch_sad.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A339FEF1FD90DE300B1A447 /* apple_watch_sad.png */; };
+		6A339FF21FD90DE300B1A447 /* apple_watch_sad.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A339FEF1FD90DE300B1A447 /* apple_watch_sad.png */; };
 		6A37B1CA1FB2761D00934A75 /* LMWProgressSliderInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A37B1C91FB2761D00934A75 /* LMWProgressSliderInfo.m */; };
 		6A37B1D11FB2BE7F00934A75 /* chidster.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A37B1CD1FB2BE7E00934A75 /* chidster.png */; };
 		6A37B1D21FB2BE7F00934A75 /* chidster.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A37B1CD1FB2BE7E00934A75 /* chidster.png */; };
@@ -454,7 +454,7 @@
 		6A339FC31FD853F400B1A447 /* icon_left_arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_left_arrow.png; sourceTree = "<group>"; };
 		6A339FC41FD853F500B1A447 /* icon_right_arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_right_arrow.png; sourceTree = "<group>"; };
 		6A339FCF1FD8AB3C00B1A447 /* watch_no_cover_art_not_cropped.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = watch_no_cover_art_not_cropped.png; sourceTree = "<group>"; };
-		6A339FE31FD8D73000B1A447 /* sad_face.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sad_face.png; sourceTree = "<group>"; };
+		6A339FEF1FD90DE300B1A447 /* apple_watch_sad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = apple_watch_sad.png; sourceTree = "<group>"; };
 		6A37B1C81FB2761D00934A75 /* LMWProgressSliderInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMWProgressSliderInfo.h; sourceTree = "<group>"; };
 		6A37B1C91FB2761D00934A75 /* LMWProgressSliderInfo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMWProgressSliderInfo.m; sourceTree = "<group>"; };
 		6A37B1CD1FB2BE7E00934A75 /* chidster.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chidster.png; sourceTree = "<group>"; };
@@ -1368,7 +1368,7 @@
 			children = (
 				6ADCE21B1FB262B800BE0BBB /* Assets.xcassets */,
 				6A37B1CD1FB2BE7E00934A75 /* chidster.png */,
-				6A339FE31FD8D73000B1A447 /* sad_face.png */,
+				6A339FEF1FD90DE300B1A447 /* apple_watch_sad.png */,
 				6A37B1EC1FB3D68A00934A75 /* watch_no_cover_art.png */,
 				6A339FCF1FD8AB3C00B1A447 /* watch_no_cover_art_not_cropped.png */,
 			);
@@ -1775,11 +1775,11 @@
 				6ACB12C81FCDC28A00C11F11 /* icon_compilations.png in Resources */,
 				6ACB12CC1FCDC28A00C11F11 /* icon_titles.png in Resources */,
 				6ADB70BA1FCCBD3C00412225 /* icon_repeat_one.png in Resources */,
-				6A339FE51FD8D73100B1A447 /* sad_face.png in Resources */,
 				6A37B1ED1FB3D68A00934A75 /* watch_no_cover_art.png in Resources */,
 				6ABF31A71FCDB70300B3D06D /* icon_unfavourite_white.png in Resources */,
 				6ADB70C91FCCBDDE00412225 /* icon_shuffle_white.png in Resources */,
 				6ADCE2041FB262B800BE0BBB /* Assets.xcassets in Resources */,
+				6A339FF11FD90DE300B1A447 /* apple_watch_sad.png in Resources */,
 				6ADB70B91FCCBD3C00412225 /* icon_repeat_general.png in Resources */,
 				6ACB12C91FCDC28A00C11F11 /* icon_composers.png in Resources */,
 				6ACB12C71FCDC28A00C11F11 /* icon_artists.png in Resources */,
@@ -1809,11 +1809,11 @@
 				6ACB12CF1FCDC28B00C11F11 /* icon_compilations.png in Resources */,
 				6ACB12D31FCDC28B00C11F11 /* icon_titles.png in Resources */,
 				6ADB70BD1FCCBD3D00412225 /* icon_repeat_one.png in Resources */,
-				6A339FE61FD8D73100B1A447 /* sad_face.png in Resources */,
 				6A37B1E81FB3D53100934A75 /* icon_no_cover_art_75.png in Resources */,
 				6ABF31A81FCDB70300B3D06D /* icon_unfavourite_white.png in Resources */,
 				6ADB70CA1FCCBDDE00412225 /* icon_shuffle_white.png in Resources */,
 				6A37B1E61FB3AC8400934A75 /* icon_favourite_red.png in Resources */,
+				6A339FF21FD90DE300B1A447 /* apple_watch_sad.png in Resources */,
 				6ADB70BC1FCCBD3D00412225 /* icon_repeat_general.png in Resources */,
 				6ACB12D01FCDC28B00C11F11 /* icon_composers.png in Resources */,
 				6ACB12CE1FCDC28B00C11F11 /* icon_artists.png in Resources */,
@@ -1888,7 +1888,6 @@
 				6A759D421DE8EB0E0051E1A9 /* icon_functionality.png in Resources */,
 				6A7268211E163E8300FA01DB /* icon_triple_horizontal_dots.png in Resources */,
 				6AC32B771DB53EB20007C67E /* icon_repeat_general.png in Resources */,
-				6A339FE41FD8D73100B1A447 /* sad_face.png in Resources */,
 				6A9C053B1DB4441200713D1C /* icon_albums.png in Resources */,
 				6AC32B7D1DB6CD950007C67E /* icon_bug.png in Resources */,
 				6AF2C9441DDA16CC005E4643 /* icon_browse.png in Resources */,
@@ -1903,6 +1902,7 @@
 				6A759D5B1DEBF4210051E1A9 /* HoneyScript-Light.ttf in Resources */,
 				6A26B46C1DE4074E008B5B69 /* icon_look_and_feel.png in Resources */,
 				6AEB9D361BAD812700AD19FA /* icon_play.png in Resources */,
+				6A339FF01FD90DE300B1A447 /* apple_watch_sad.png in Resources */,
 				6AEB9D081BACF60E00AD19FA /* Assets.xcassets in Resources */,
 				6AEB9D061BACF60E00AD19FA /* Main.storyboard in Resources */,
 				6AFF01A81DDED15100F24D8E /* onboarding_gutless_user.png in Resources */,
