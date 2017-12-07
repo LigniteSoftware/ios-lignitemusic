@@ -19,6 +19,8 @@
 
 "LastX" = "Last %d entries"; //X number of tracks or entries that are in the previous page. If the user goes to the next page and wants to go back, there's an entry with the title "Previous page" that subtitles "Last X", meaning last X songs or entries which are before the page the user is currently on. X will never be 1.
 
+"NothingHere" = "There's nothing here, sorry";
+
 "ShuffleAll" = "Shuffle all";
 "XTracks" = "%ld tracks"; //Multiple songs
 "XTrack" = "%ld track"; //One song

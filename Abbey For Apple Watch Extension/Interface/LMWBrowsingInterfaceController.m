@@ -142,20 +142,25 @@
 		}
 		
 		
-		
-		for (NSInteger i = (!self.isBeginningOfList); i < (tableEntriesArray.count + (!self.isBeginningOfList)); i++) {
-			LMWMusicBrowsingRowController *row = [self.browsingTable rowControllerAtIndex:i];
-
-			LMWMusicTrackInfo *entryInfo = [tableEntriesArray objectAtIndex:i - (!self.isBeginningOfList)];
-
-			[row.titleLabel setText:entryInfo.title];
-			[row.subtitleLabel setText:entryInfo.subtitle];
-			[row.icon setImage:entryInfo.albumArtNotCropped];
-
-			row.associatedInfo = entryInfo;
+		if(self.tableEntries.count == 0){
+			[self.loadingImage setImage:[UIImage imageNamed:@"sad_face.png"]];
+			[self.loadingLabel setText:NSLocalizedString(@"NothingHere", nil)];
 		}
-		
-		[self setLoading:NO];
+		else{
+			for (NSInteger i = (!self.isBeginningOfList); i < (tableEntriesArray.count + (!self.isBeginningOfList)); i++) {
+				LMWMusicBrowsingRowController *row = [self.browsingTable rowControllerAtIndex:i];
+
+				LMWMusicTrackInfo *entryInfo = [tableEntriesArray objectAtIndex:i - (!self.isBeginningOfList)];
+
+				[row.titleLabel setText:entryInfo.title];
+				[row.subtitleLabel setText:entryInfo.subtitle];
+				[row.icon setImage:entryInfo.albumArtNotCropped];
+
+				row.associatedInfo = entryInfo;
+			}
+			
+			[self setLoading:NO];
+		}
 	});
 }
 

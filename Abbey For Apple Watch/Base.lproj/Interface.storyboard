@@ -287,7 +287,7 @@
                         </table>
                         <group width="0.90000000000000002" alignment="center" verticalAlignment="center" layout="vertical" spacing="6" id="STG-kv-h4h">
                             <items>
-                                <imageView alignment="center" verticalAlignment="center" image="Activity1" id="TwC-Lv-eSS"/>
+                                <imageView width="30" height="30" alignment="center" verticalAlignment="center" image="Activity1" id="TwC-Lv-eSS"/>
                                 <label alignment="center" verticalAlignment="bottom" text="Hang on..." textAlignment="center" numberOfLines="0" id="Vj0-AH-6GB"/>
                             </items>
                         </group>
@@ -346,7 +346,7 @@
                         </table>
                         <group width="0.90000000000000002" alignment="center" verticalAlignment="center" layout="vertical" spacing="6" id="10s-Zo-K7a">
                             <items>
-                                <imageView alignment="center" verticalAlignment="center" image="Activity1" id="9YA-kF-pjn"/>
+                                <imageView width="30" height="30" alignment="center" verticalAlignment="center" image="Activity1" id="9YA-kF-pjn"/>
                                 <label alignment="center" verticalAlignment="bottom" text="Hang on..." textAlignment="center" numberOfLines="0" id="oGO-fC-HF1"/>
                             </items>
                         </group>

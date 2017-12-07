@@ -8,6 +8,7 @@
 
 #import <WatchConnectivity/WatchConnectivity.h>
 #import "LMAppleWatchBridge.h"
+#import "LMPlaylistManager.h"
 #import "LMMusicPlayer.h"
 
 @interface LMAppleWatchBridge()<WCSessionDelegate>
@@ -276,28 +277,57 @@
 		NSLog(@"Got a request for music tracks. Is beginning? %d", isBeginningOfBrowse);
 
 		NSArray<LMMusicTrackCollection*> *trackCollections = [self.musicPlayer queryCollectionsForMusicType:musicType];
-		if(musicType == LMMusicTypeTitles){
+		
+		NSArray<LMPlaylist*>* playlists = nil;
+		
+		NSInteger count = trackCollections.count;
+		
+		if(musicType == LMMusicTypeTitles || musicType == LMMusicTypeFavourites){
 			trackCollections = [LMMusicPlayer
 								arrayOfTrackCollectionsForMusicTrackCollection:trackCollections.firstObject];
+			
+			count = trackCollections.count;
 		}
+		else if(musicType == LMMusicTypePlaylists){
+			playlists = [[LMPlaylistManager sharedPlaylistManager] playlists];
+			
+			count = playlists.count;
+		}
+		
+		
 		NSMutableArray *resultsArray = [NSMutableArray new];
 	
-		NSInteger maximumIndex = currentIndex + MIN(MAXIMUM_NUMBER_OF_ITEMS_IN_LIST, trackCollections.count-currentIndex);
+		NSInteger maximumIndex = currentIndex + MIN(MAXIMUM_NUMBER_OF_ITEMS_IN_LIST, count-currentIndex);
 		//If there's only a few items left, might as well add them to  the current page instead of making the user go to another page for them
-		if(((trackCollections.count-maximumIndex) <= 5) && ((trackCollections.count-maximumIndex) > 0)){
-			maximumIndex = trackCollections.count;
+		if(((count-maximumIndex) <= 5) && ((count-maximumIndex) > 0)){
+			maximumIndex = count;
 		}
 	
 		for(NSInteger i = currentIndex; i < maximumIndex; i++){
-			LMMusicTrackCollection *collection = [trackCollections objectAtIndex:i];
-			LMMusicTrack *representativeTrack = collection.representativeItem;
+			LMPlaylist *playlist = nil;
+			
+			LMMusicTrackCollection *collection = nil;
+			LMMusicTrack *representativeTrack = nil;
+			
+			if(musicType == LMMusicTypePlaylists){
+				playlist = [playlists objectAtIndex:i];
+				collection = playlist.trackCollection;
+				representativeTrack = playlist.trackCollection.representativeItem;
+			}
+			else{
+				collection = [trackCollections objectAtIndex:i];
+				representativeTrack = collection.representativeItem;
+			}
 			
 			NSString *title = NSLocalizedString(@"UnknownTitle", nil);
 			NSString *subtitle = NSLocalizedString(@"UnknownArtist", nil);
 			
-			UIImage *imageToUse = representativeTrack.albumArt;
+			UIImage *imageToUse = representativeTrack.uncorrectedAlbumArt;
 			if(musicType == LMMusicTypeArtists || musicType == LMMusicTypeComposers){
 				imageToUse = representativeTrack.uncorrectedArtistImage;
+			}
+			else if(musicType == LMMusicTypePlaylists){
+				imageToUse = playlist.image ? playlist.image : representativeTrack.uncorrectedAlbumArt;
 			}
 			
 			UIImage *resizedImage = [self resizeImage:imageToUse toSize:CGSizeMake(64, 64)];
@@ -307,6 +337,7 @@
 			
 			switch(musicType){
 				case LMMusicTypeTitles:
+				case LMMusicTypeFavourites:
 					title = representativeTrack.title ? representativeTrack.title : NSLocalizedString(@"UnknownTitle", nil);
 					subtitle = representativeTrack.artist ? representativeTrack.artist : NSLocalizedString(@"UnknownArtist", nil);
 					break;
@@ -320,8 +351,12 @@
 					title = representativeTrack.artist ? representativeTrack.artist : NSLocalizedString(@"UnknownArtist", nil);
 					subtitle = [NSString stringWithFormat:@"%lu %@", (unsigned long)collection.numberOfAlbums, NSLocalizedString(collection.numberOfAlbums == 1 ? @"AlbumInline" : @"AlbumsInline", nil)];
 					break;
+				case LMMusicTypeGenres:
+					title = representativeTrack.genre ? representativeTrack.genre : NSLocalizedString(@"UnknownGenre", nil);
+					subtitle = [NSString stringWithFormat:@"%ld %@", (unsigned long)collection.trackCount, NSLocalizedString(collection.trackCount == 1 ? @"Song" : @"Songs", nil)];
+					break;
 				case LMMusicTypePlaylists:
-					title = @"Error";
+					title = playlist.title;
 					subtitle = [NSString stringWithFormat:@"%ld %@", (unsigned long)collection.trackCount, NSLocalizedString(collection.trackCount == 1 ? @"Song" : @"Songs", nil)];
 				default:
 					break;
@@ -342,15 +377,15 @@
 		}
 		
 		
-		BOOL isEndOfList = (maximumIndex == trackCollections.count);
+		BOOL isEndOfList = (maximumIndex == count);
 		
-		NSLog(@"Results %@\n%d %d/%d", resultsArray, isEndOfList, (int)maximumIndex, (int)trackCollections.count);
+		NSLog(@"Results %@\n%d %d/%d", resultsArray, isEndOfList, (int)maximumIndex, (int)count);
 		
 		replyHandler(@{
 					   @"results": resultsArray,
 					   LMAppleWatchBrowsingKeyIsBeginningOfList: @(isBeginningOfBrowse),
 					   LMAppleWatchBrowsingKeyIsEndOfList: @(isEndOfList),
-					   LMAppleWatchBrowsingKeyRemainingEntries: @(trackCollections.count - maximumIndex)
+					   LMAppleWatchBrowsingKeyRemainingEntries: @(count - maximumIndex)
 					   });
 	}
 	
