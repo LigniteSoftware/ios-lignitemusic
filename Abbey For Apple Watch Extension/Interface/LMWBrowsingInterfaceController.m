@@ -292,8 +292,16 @@
 	else if(row.isShuffleAllButton){
 		[self setLoading:YES withLabel:NSLocalizedString(@"Shuffling", nil)];
 		
-		//and then...
-		//[self popToRootController];
+		[self.companionBridge shuffleTracksWithSelectedIndexes:self.selectedIndexes
+											   withPageIndexes:self.pageIndexes
+												 forMusicTypes:self.musicTypes
+											 withPersistentIDs:self.persistentIDs
+												  replyHandler:^(NSDictionary<NSString *,id> *replyMessage) {
+													  [self popToRootController];
+												  }
+												  errorHandler:^(NSError *error) {
+													  NSLog(@"Error: %@", error);
+												  }];
 	}
 	else{ //An actual entry :O
 		LMWMusicTrackInfo *entryInfo = [self.tableEntries objectAtIndex:rowIndex-self.entriesOffset];

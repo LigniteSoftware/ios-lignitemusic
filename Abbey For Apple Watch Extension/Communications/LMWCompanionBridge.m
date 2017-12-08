@@ -220,6 +220,29 @@
 	}
 }
 
+- (void)shuffleTracksWithSelectedIndexes:(NSArray<NSNumber*>*)selectedIndexes
+						 withPageIndexes:(NSArray<NSNumber*>*)pageIndexes
+						   forMusicTypes:(NSArray<NSNumber*>*)musicTypes
+					   withPersistentIDs:(NSArray<NSNumber*>*)persistentIDs
+							replyHandler:(nullable void (^)(NSDictionary<NSString *, id> *replyMessage))replyHandler
+							errorHandler:(nullable void (^)(NSError *error))errorHandler {
+	
+	
+	if(self.session.reachable){
+		NSDictionary *messageDictionary = @{
+											LMAppleWatchCommunicationKey: LMAppleWatchCommunicationKeyBrowsingShuffleAll,
+											LMAppleWatchBrowsingKeyMusicTypes: musicTypes,
+											LMAppleWatchBrowsingKeyPersistentIDs: persistentIDs,
+											LMAppleWatchBrowsingKeySelectedIndexes: selectedIndexes,
+											LMAppleWatchBrowsingKeyPageIndexes: pageIndexes
+											};
+		
+		[self.session sendMessage:messageDictionary
+					 replyHandler:replyHandler
+					 errorHandler:errorHandler];
+	}
+}
+
 - (void)setCurrentPlaybackTime:(NSInteger)currentPlaybackTime {
 	if(self.session.reachable){
 		[self.session sendMessage:@{

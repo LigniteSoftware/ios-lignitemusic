@@ -48,6 +48,8 @@
 #define LMAppleWatchCommunicationKeyUpNextOnNowPlayingQueue @"LMAppleWatchCommunicationKeyUpNextOnNowPlayingQueue"
 //The watch is requesting music tracks or entries in music browsing.
 #define LMAppleWatchCommunicationKeyMusicBrowsingEntries @"LMAppleWatchCommunicationKeyMusicBrowsingEntries"
+//The user wants to shuffle all tracks within the currently viewable browse level.
+#define LMAppleWatchCommunicationKeyBrowsingShuffleAll @"LMAppleWatchCommunicationKeyBrowsingShuffleAll"
 
 //The key for the music types when the communication key is LMAppleWatchCommunicationKeyMusicBrowsingEntries. Music types is plural because it's an array of music types which define the structure of windows that the user has been presented in their current browsing session.
 #define LMAppleWatchBrowsingKeyMusicTypes @"LMAppleWatchBrowsingKeyMusicTypes"
@@ -180,7 +182,7 @@
 - (void)setUpNextTrack:(NSInteger)indexOfNextUpTrackSelected;
 
 /**
- Requests a list of tracks from the phone based off a browsing entry and music type. If beginning to browse, set entryInfo to nil.
+ Requests a list of tracks from the phone based on current browsing info.
 
  @param selectedIndexes The indexes that have been selected by the user. First page should have an index of -1.
  @param pageIndexes The indexes of the pages of each level of browsing.
@@ -195,6 +197,24 @@
 					   withPersistentIDs:(NSArray<NSNumber*>*)persistentIDs
 							replyHandler:(nullable void (^)(NSDictionary<NSString *, id> *replyMessage))replyHandler
 							errorHandler:(nullable void (^)(NSError *error))errorHandler;
+
+/**
+ Shuffles a list of tracks from the phone based on current browsing info.
+ 
+ @param selectedIndexes The indexes that have been selected by the user. First page should have an index of -1.
+ @param pageIndexes The indexes of the pages of each level of browsing.
+ @param musicTypes The tree of music types associated with the current browsing session.
+ @param persistentIDs The tree of persistent IDs associated with the current browsing session.
+ @param replyHandler The reply handler, which will receive the results.
+ @param errorHandler The error handler in case something goes wrong.
+ */
+- (void)shuffleTracksWithSelectedIndexes:(NSArray<NSNumber*>*)selectedIndexes
+						 withPageIndexes:(NSArray<NSNumber*>*)pageIndexes
+						   forMusicTypes:(NSArray<NSNumber*>*)musicTypes
+					   withPersistentIDs:(NSArray<NSNumber*>*)persistentIDs
+							replyHandler:(nullable void (^)(NSDictionary<NSString *, id> *replyMessage))replyHandler
+							errorHandler:(nullable void (^)(NSError *error))errorHandler;
+
 
 /**
  Sets the current playback time by sending a message with the set time to the phone.
