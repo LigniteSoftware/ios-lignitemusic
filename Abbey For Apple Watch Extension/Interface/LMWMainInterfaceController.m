@@ -50,29 +50,35 @@
 
 
 - (void)musicTrackDidChange:(LMWMusicTrackInfo *)musicTrackInfo {
-	if(musicTrackInfo == nil){
-		[self.titleLabel setText:NSLocalizedString(@"NothingPlaying", nil)];
-		[self.subtitleLabel setText:nil];
-		[self.albumArtImage setImage:[UIImage imageNamed:@"watch_no_cover_art.png"]];
-		[self.favouriteImage setImage:[UIImage imageNamed:@"icon_unfavourite_white.png"]];
-		[self.progressSliderInfo setPercentage:0.0 animated:YES];
-		[self configureTableWithData:@[]];
-	}
-	else{
-		[self.titleLabel setText:musicTrackInfo.title];
-		[self.subtitleLabel setText:musicTrackInfo.subtitle];
-		[self.albumArtImage setImage:musicTrackInfo.albumArt];
-		[self.favouriteImage setImage:musicTrackInfo.isFavourite ? [UIImage imageNamed:@"icon_favourite_red.png"] : [UIImage imageNamed:@"icon_favourite_outlined_white.png"]];
-	}
+	dispatch_async(dispatch_get_main_queue(), ^{
+		if(musicTrackInfo == nil){
+			[self.titleLabel setText:NSLocalizedString(@"NothingPlaying", nil)];
+			[self.subtitleLabel setText:nil];
+			[self.albumArtImage setImage:[UIImage imageNamed:@"watch_no_cover_art.png"]];
+			[self.favouriteImage setImage:[UIImage imageNamed:@"icon_unfavourite_white.png"]];
+			[self.progressSliderInfo setPercentage:0.0 animated:YES];
+			[self configureTableWithData:@[]];
+		}
+		else{
+			[self.titleLabel setText:musicTrackInfo.title];
+			[self.subtitleLabel setText:musicTrackInfo.subtitle];
+			[self.albumArtImage setImage:musicTrackInfo.albumArt];
+			[self.favouriteImage setImage:musicTrackInfo.isFavourite ? [UIImage imageNamed:@"icon_favourite_red.png"] : [UIImage imageNamed:@"icon_favourite_outlined_white.png"]];
+		}
+	});
 }
 
 - (void)albumArtDidChange:(UIImage*)albumArt {
-	[self.albumArtImage setImage:albumArt];
+	dispatch_async(dispatch_get_main_queue(), ^{
+		[self.albumArtImage setImage:albumArt];
+	});
 }
 
 - (void)updateProgressBar {
-	[self.progressSliderInfo setPercentage:((CGFloat)self.companionBridge.nowPlayingInfo.currentPlaybackTime/(CGFloat)self.companionBridge.nowPlayingInfo.playbackDuration)
+	dispatch_async(dispatch_get_main_queue(), ^{
+		[self.progressSliderInfo setPercentage:((CGFloat)self.companionBridge.nowPlayingInfo.currentPlaybackTime/(CGFloat)self.companionBridge.nowPlayingInfo.playbackDuration)
 								  animated:YES];
+	});
 }
 
 - (void)nowPlayingInfoDidChange:(LMWNowPlayingInfo *)nowPlayingInfo {
@@ -108,6 +114,8 @@
 			}
 			[self.repeatImage setImage:newRepeatImage];
 			
+			[self.shuffleImage setImageNamed:@"icon_shuffle_white.png"];
+			
 			[self animateWithDuration:0.4 animations:^{
 				[self.repeatButtonGroup setBackgroundColor:(nowPlayingInfo.repeatMode != LMMusicRepeatModeNone) ? [UIColor redColor] : [UIColor blackColor]];
 				
@@ -121,8 +129,8 @@
 	}
 }
 
-- (void)displayAsLoading {
-	[self.titleLabel setText:NSLocalizedString(@"Loading", nil)];
+- (void)displayAsUpdating {
+	[self.titleLabel setText:NSLocalizedString(@"Updating", nil)];
 	[self.subtitleLabel setText:nil];
 }
 
@@ -149,14 +157,35 @@
 }
 
 - (IBAction)favouriteButtonSelector:(id)sender {
+	dispatch_async(dispatch_get_main_queue(), ^{
+		[self.favouriteImage setImageNamed:@"Activity"];
+		[self.favouriteImage startAnimatingWithImagesInRange:NSMakeRange(0, 30)
+												  duration:1.0
+											   repeatCount:0];
+	});
+	
 	[self.companionBridge sendMusicControlMessageToPhoneWithKey:LMAppleWatchControlKeyFavouriteUnfavourite];
 }
 
 - (IBAction)shuffleButtonSelector:(id)sender {
+	dispatch_async(dispatch_get_main_queue(), ^{
+		[self.shuffleImage setImageNamed:@"Activity"];
+		[self.shuffleImage startAnimatingWithImagesInRange:NSMakeRange(0, 30)
+												  duration:1.0
+											   repeatCount:0];
+	});
+	
 	[self.companionBridge sendMusicControlMessageToPhoneWithKey:LMAppleWatchControlKeyInvertShuffleMode];
 }
 
 - (IBAction)repeatButtonSelector:(id)sender {
+	dispatch_async(dispatch_get_main_queue(), ^{
+		[self.repeatImage setImageNamed:@"Activity"];
+		[self.repeatImage startAnimatingWithImagesInRange:NSMakeRange(0, 30)
+													duration:1.0
+												 repeatCount:0];
+	});
+	
 	[self.companionBridge sendMusicControlMessageToPhoneWithKey:LMAppleWatchControlKeyNextRepeatMode];
 }
 
@@ -181,19 +210,26 @@
 
 
 - (void)configureTableWithData:(NSArray<LMWMusicTrackInfo*>*)musicTrackInfoObjects {
-	[self.upNextLabel setText:NSLocalizedString((musicTrackInfoObjects.count == 0) ? @"NothingUpNext" : @"UpNext", nil)];
-	
-	[self.queueTable setNumberOfRows:[musicTrackInfoObjects count] withRowType:@"QueueTrackRow"];
-	for (NSInteger i = 0; i < self.queueTable.numberOfRows; i++) {
-		LMWMusicTrackInfoRowController *row = [self.queueTable rowControllerAtIndex:i];
-
-		LMWMusicTrackInfo *trackInfo = [musicTrackInfoObjects objectAtIndex:i];
-		
-		[row.number setText:[NSString stringWithFormat:@"%d", (int)(i+1)]];
-		
-		[row.titleLabel setText:trackInfo.title];
-		[row.subtitleLabel setText:trackInfo.subtitle];
+	if(musicTrackInfoObjects.count != 0){
+		[self.upNextLabel setText:NSLocalizedString(@"Updating", nil)];
 	}
+//	[self.queueTable setNumberOfRows:0 withRowType:@"QueueTrackRow"];
+	
+	dispatch_async(dispatch_get_main_queue(), ^{
+		[self.upNextLabel setText:NSLocalizedString((musicTrackInfoObjects.count == 0) ? @"NothingUpNext" : @"UpNext", nil)];
+		
+		[self.queueTable setNumberOfRows:[musicTrackInfoObjects count] withRowType:@"QueueTrackRow"];
+		for (NSInteger i = 0; i < self.queueTable.numberOfRows; i++) {
+			LMWMusicTrackInfoRowController *row = [self.queueTable rowControllerAtIndex:i];
+
+			LMWMusicTrackInfo *trackInfo = [musicTrackInfoObjects objectAtIndex:i];
+			
+			[row.number setText:[NSString stringWithFormat:@"%d", (int)(i+1)]];
+			
+			[row.titleLabel setText:trackInfo.title];
+			[row.subtitleLabel setText:trackInfo.subtitle];
+		}
+	});
 }
 
 - (void)table:(WKInterfaceTable *)table didSelectRowAtIndex:(NSInteger)rowIndex {
@@ -208,7 +244,10 @@
 		
 		LMWMusicTrackInfo *musicTrackInfo = [self.companionBridge.nowPlayingInfo.nextUpTracksArray objectAtIndex:rowIndex];
 		
-		[row.subtitleLabel setText:NSLocalizedString(@"HangOn", nil)];
+//		[self.upNextLabel setText:NSLocalizedString(@"Playing", nil)];
+//		[self.queueTable setNumberOfRows:0 withRowType:@"QueueTrackRow"];
+		
+		[row.subtitleLabel setText:NSLocalizedString(@"Playing", nil)];
 		
 		[self.companionBridge setUpNextTrack:musicTrackInfo.indexInCollection];
 	}
@@ -240,7 +279,7 @@
 	
 	[NSTimer scheduledTimerWithTimeInterval:0.5 repeats:NO block:^(NSTimer * _Nonnull timer) {
 		[self.companionBridge askCompanionForNowPlayingTrackInfo];
-		[self displayAsLoading];
+		[self displayAsUpdating];
 	}];
 }
 

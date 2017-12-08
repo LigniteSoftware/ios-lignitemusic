@@ -235,14 +235,14 @@
                     </items>
                     <connections>
                         <outlet property="albumArtImage" destination="BvG-LR-NtJ" id="3iq-sp-HTY"/>
-                        <outlet property="favouriteImage" destination="mBZ-WZ-8K5" id="y5I-T5-xeO"/>
+                        <outlet property="favouriteImage" destination="mBZ-WZ-8K5" id="AXj-Ya-CLf"/>
                         <outlet property="progressBarContainer" destination="Blj-jY-PsE" id="a3o-Ns-Dqi"/>
                         <outlet property="progressBarGroup" destination="uNo-TJ-D5i" id="xz0-Yd-k3P"/>
                         <outlet property="queueTable" destination="uiW-bf-OGD" id="SCh-kk-QAn"/>
                         <outlet property="repeatButtonGroup" destination="1mY-xN-fwZ" id="ykx-Vc-Pog"/>
-                        <outlet property="repeatImage" destination="vM2-g7-imk" id="zSr-9X-RKx"/>
+                        <outlet property="repeatImage" destination="vM2-g7-imk" id="DZ8-sW-WJM"/>
                         <outlet property="shuffleButtonGroup" destination="pab-4t-Bto" id="Q9n-4H-ZvR"/>
-                        <outlet property="shuffleImage" destination="eA6-nf-rez" id="Dfd-DW-Gxq"/>
+                        <outlet property="shuffleImage" destination="eA6-nf-rez" id="Ud0-JE-dke"/>
                         <outlet property="subtitleLabel" destination="Nya-mZ-DzX" id="byw-Qx-j2B"/>
                         <outlet property="titleLabel" destination="b8p-RV-XJb" id="sDJ-oz-eRn"/>
                         <outlet property="upNextGroup" destination="fhF-NP-chM" id="q2m-gq-mYK"/>

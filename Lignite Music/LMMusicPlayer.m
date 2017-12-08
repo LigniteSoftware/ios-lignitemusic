@@ -448,20 +448,22 @@ MPMediaGrouping associatedMediaTypes[] = {
 	NSLog(@"Audio route changed %@", info);
 	
 	AVAudioSessionRouteChangeReason changeReason = [[info objectForKey:AVAudioSessionRouteChangeReasonKey] integerValue];
-	if(changeReason == 2){ //Audio jack removed or BT headset removed
-		[self pause];
-	}
-	
-	AVAudioSession* audioSession = [AVAudioSession sharedInstance];
-	AVAudioSessionRouteDescription* currentRoute = audioSession.currentRoute;
-	for(AVAudioSessionPortDescription* outputPort in currentRoute.outputs){
-		for(NSInteger i = 0; i < self.delegates.count; i++){
-			id<LMMusicPlayerDelegate> delegate = [self.delegates objectAtIndex:i];
-			if([delegate respondsToSelector:@selector(musicOutputPortDidChange:)]){
-				[delegate musicOutputPortDidChange:outputPort];
+	dispatch_async(dispatch_get_main_queue(), ^{
+		if(changeReason == 2){ //Audio jack removed or BT headset removed
+			[self pause];
+		}
+		
+		AVAudioSession* audioSession = [AVAudioSession sharedInstance];
+		AVAudioSessionRouteDescription* currentRoute = audioSession.currentRoute;
+		for(AVAudioSessionPortDescription* outputPort in currentRoute.outputs){
+			for(NSInteger i = 0; i < self.delegates.count; i++){
+				id<LMMusicPlayerDelegate> delegate = [self.delegates objectAtIndex:i];
+				if([delegate respondsToSelector:@selector(musicOutputPortDidChange:)]){
+					[delegate musicOutputPortDidChange:outputPort];
+				}
 			}
 		}
-	}
+	});
 }
 
 + (BOOL)outputPortIsWireless:(AVAudioSessionPortDescription *)outputPort {
@@ -1338,7 +1340,7 @@ BOOL shuffleForDebug = NO;
 		}
 	}
 	
-	[self.watchBridge sendNowPlayingTrackToWatch];
+	[self.watchBridge sendNowPlayingTrackToWatch:YES];
 }
 
 - (void)removeTrackFromFavourites:(LMMusicTrack*)track {
@@ -1352,7 +1354,7 @@ BOOL shuffleForDebug = NO;
 		}
 	}
 	
-	[self.watchBridge sendNowPlayingTrackToWatch];
+	[self.watchBridge sendNowPlayingTrackToWatch:YES];
 }
 
 - (void)logArray:(NSMutableArray*)array {
@@ -1548,6 +1550,9 @@ BOOL shuffleForDebug = NO;
 				}
 			}
 		}
+		
+		NSUInteger indexOfNowPlayingTrack = [self.nowPlayingCollection.items indexOfObject:self.systemMusicPlayer.nowPlayingItem];
+		self.indexOfNowPlayingTrack = indexOfNowPlayingTrack;
 	}
 	
 	[self updatePlaybackModeDelegates];

@@ -136,6 +136,10 @@
 }
 
 - (void)sendNowPlayingTrackToWatch {
+	[self sendNowPlayingTrackToWatch:NO];
+}
+
+- (void)sendNowPlayingTrackToWatch:(BOOL)overrideDoubleSending {
 	LMMusicTrack *nowPlayingTrack = self.musicPlayer.nowPlayingTrack;
 	
 	BOOL albumArtIsTheSame = (self.previousNowPlayingTrackSent.persistentID == nowPlayingTrack.persistentID)
@@ -143,7 +147,7 @@
 	
 	if(self.session.reachable){
 		if(nowPlayingTrack){
-			if(self.previousNowPlayingTrackSent.persistentID == nowPlayingTrack.persistentID){
+			if((self.previousNowPlayingTrackSent.persistentID == nowPlayingTrack.persistentID) && !overrideDoubleSending){
 				NSLog(@"Same same, rejecting");
 				return;
 			}
@@ -167,8 +171,10 @@
 				[self sendNowPlayingAlbumArtToWatch];
 			}
 			
-			[self sendNowPlayingInfoToWatch];
-			[self sendUpNextToWatch];
+//			if(!overrideDoubleSending){
+				[self sendNowPlayingInfoToWatch];
+				[self sendUpNextToWatch];
+//			}
 		}
 		else{
 			[self.session sendMessage:@{ LMAppleWatchCommunicationKey:LMAppleWatchCommunicationKeyNoTrackPlaying } replyHandler:nil errorHandler:^(NSError * _Nonnull error) {
@@ -296,7 +302,7 @@
 	NSString *key = [message objectForKey:LMAppleWatchCommunicationKey];
 	
 	if([key isEqualToString:LMAppleWatchCommunicationKeyNowPlayingTrack]){
-		[self sendNowPlayingTrackToWatch];
+		[self sendNowPlayingTrackToWatch:YES];
 		
 		replyHandler(@{ @"sent":@"lordknows" });
 	}
@@ -459,6 +465,7 @@
 		}
 		else if([key isEqualToString:LMAppleWatchControlKeyInvertShuffleMode]){
 			self.musicPlayer.shuffleMode = !self.musicPlayer.shuffleMode;
+			[self sendUpNextToWatch];
 		}
 		else if([key isEqualToString:LMAppleWatchControlKeyNextRepeatMode]){
 			LMMusicRepeatMode newRepeatMode = self.musicPlayer.repeatMode;

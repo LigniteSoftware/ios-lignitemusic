@@ -126,6 +126,7 @@ typedef NS_ENUM(NSInteger, LMAppleWatchMusicInfoType){
  Tells the watch bridge to send the now playing info to the watch. Now playing info contains information on whether or not the music is playing, the playback time, etc. This automatically handles whether or not the watch is connected and any errors associated with sending the data.
  */
 - (void)sendNowPlayingInfoToWatch;
+- (void)sendNowPlayingTrackToWatch:(BOOL)overrideDoubleSending; //Same as above, but if overrideDoubleSending is set to YES, double sending prevention will be ignored.
 
 /**
  Tells the watch bridge to send the "next up" tracks to the watch. Next up tracks are a small number of tracks which proceed the track currently playing. Next up is only sent if the watch is connected and there are items after the now playing track in queue.

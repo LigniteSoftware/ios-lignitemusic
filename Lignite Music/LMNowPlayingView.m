@@ -190,6 +190,9 @@
 
 - (void)musicPlaybackModesDidChange:(LMMusicShuffleMode)shuffleMode repeatMode:(LMMusicRepeatMode)repeatMode {
 	[self updateMusicModeButtons];
+	
+	[self.queueTableView reloadSubviewData];
+	[self.queueTableView reloadData];
 }
 
 - (void)musicTrackDidChange:(LMMusicTrack *)newTrack {
