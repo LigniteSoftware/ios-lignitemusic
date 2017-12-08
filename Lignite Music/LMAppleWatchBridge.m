@@ -207,28 +207,29 @@
 - (void)sendUpNextToWatch {
 	if(self.session.reachable){
 		LMMusicTrackCollection *nowPlayingQueue = self.musicPlayer.nowPlayingCollection;
-		if(!nowPlayingQueue || nowPlayingQueue.count == 0 || nowPlayingQueue.count == 1){
-			NSLog(@"Now playing queue doesn't exist or has no or 1 song in it, rejecting");
+		if(!nowPlayingQueue){
+			NSLog(@"Now playing queue doesn't exist, rejecting");
 			return;
 		}
 		
 		NSMutableArray *upNextMutableArray = [NSMutableArray new];
 		NSInteger indexOfNowPlayingTrack = self.musicPlayer.indexOfNowPlayingTrack;
 		
-		NSArray *tracksRemainingAfterNowPlayingTrack = [nowPlayingQueue.items subarrayWithRange:NSMakeRange(indexOfNowPlayingTrack + 1, MIN(nowPlayingQueue.count-indexOfNowPlayingTrack-1, 5))];
-	
-		for(LMMusicTrack *track in tracksRemainingAfterNowPlayingTrack){
-			NSDictionary *trackInfoDictionary = @{
-												  @"title": track.title,
-												  @"subtitle": track.artist ? track.artist : NSLocalizedString(@"UnknownArtist", nil),
-												  @"persistentID": @(track.persistentID),
-												  @"indexInCollection": @([nowPlayingQueue.items indexOfObject:track]),
-												  };
-			[upNextMutableArray addObject:trackInfoDictionary];
+		if(!(nowPlayingQueue.count == 0 || nowPlayingQueue.count == 1)){
+			NSArray *tracksRemainingAfterNowPlayingTrack = [nowPlayingQueue.items subarrayWithRange:NSMakeRange(indexOfNowPlayingTrack + 1, MIN(nowPlayingQueue.count-indexOfNowPlayingTrack-1, 5))];
+		
+			for(LMMusicTrack *track in tracksRemainingAfterNowPlayingTrack){
+				NSDictionary *trackInfoDictionary = @{
+													  @"title": track.title,
+													  @"subtitle": track.artist ? track.artist : NSLocalizedString(@"UnknownArtist", nil),
+													  @"persistentID": @(track.persistentID),
+													  @"indexInCollection": @([nowPlayingQueue.items indexOfObject:track]),
+													  };
+				[upNextMutableArray addObject:trackInfoDictionary];
+			}
+			
+			NSLog(@"Got %d tracks up next", tracksRemainingAfterNowPlayingTrack.count);
 		}
-		
-		NSLog(@"Got %d tracks up next", tracksRemainingAfterNowPlayingTrack.count);
-		
 		
 		
 		[self.session sendMessage:@{
@@ -437,15 +438,6 @@
 					   LMAppleWatchBrowsingKeyTotalNumberOfEntries: @(count)
 					   });
 	}
-	else if([key isEqualToString:LMAppleWatchCommunicationKeyBrowsingShuffleAll]){
-		LMMusicTrackCollection *collectionToShuffle = [self trackCollectionsForBrowsingDictionary:message].firstObject;
-
-		self.musicPlayer.shuffleMode = LMMusicShuffleModeOn;
-		[self.musicPlayer setNowPlayingCollection:collectionToShuffle];
-		[self.musicPlayer play];
-		
-		replyHandler(@{ @"success": @(YES) });
-	}
 	
 	dispatch_async(dispatch_get_main_queue(), ^{
 		if([key isEqualToString:LMAppleWatchControlKeyPlayPause]){
@@ -483,12 +475,42 @@
 		}
 		else if([key isEqualToString:LMAppleWatchControlKeyUpNextTrackSelected]){
 			NSInteger nowPlayingQueueIndex = [[message objectForKey:LMAppleWatchControlKeyUpNextTrackSelected] integerValue];
-			LMMusicTrack *trackSelected = [self.musicPlayer.nowPlayingCollection.items objectAtIndex:nowPlayingQueueIndex];
-			[self.musicPlayer setNowPlayingTrack:trackSelected];
+			if(nowPlayingQueueIndex >= self.musicPlayer.nowPlayingCollection.items.count){ //Up next is out of sync
+				[self sendUpNextToWatch];
+			}
+			else{
+				LMMusicTrack *trackSelected = [self.musicPlayer.nowPlayingCollection.items objectAtIndex:nowPlayingQueueIndex];
+				[self.musicPlayer setNowPlayingTrack:trackSelected];
+			}
 		}
 		else if([key isEqualToString:LMAppleWatchControlKeyCurrentPlaybackTime]){
 			NSInteger currentPlaybackTime = [[message objectForKey:LMAppleWatchControlKeyCurrentPlaybackTime] integerValue];
 			[self.musicPlayer setCurrentPlaybackTime:(NSTimeInterval)currentPlaybackTime];
+		}
+		else if([key isEqualToString:LMAppleWatchCommunicationKeyBrowsingShuffleAll]){
+			LMMusicTrackCollection *collectionToShuffle = [self trackCollectionsForBrowsingDictionary:message].firstObject;
+			
+			self.musicPlayer.shuffleMode = LMMusicShuffleModeOn;
+			[self.musicPlayer setNowPlayingCollection:collectionToShuffle];
+			[self.musicPlayer play];
+			
+			replyHandler(@{ @"success": @(YES) });
+		}
+		else if([key isEqualToString:LMAppleWatchCommunicationKeyBrowsingPlayIndividualTrack]){
+			LMMusicTrackCollection *collectionToPlay = [self trackCollectionsForBrowsingDictionary:message].firstObject;
+			
+			MPMediaEntityPersistentID persistentIDOfSpecificTrack = (MPMediaEntityPersistentID)[[[message objectForKey:LMAppleWatchBrowsingKeyPersistentIDs] lastObject] longLongValue];
+			
+			[self.musicPlayer setNowPlayingCollection:collectionToPlay];
+			for(LMMusicTrack *track in self.musicPlayer.nowPlayingCollection.items){
+				if(track.persistentID == persistentIDOfSpecificTrack){
+					[self.musicPlayer setNowPlayingTrack:track];
+					break;
+				}
+			}
+			[self.musicPlayer play];
+			
+			replyHandler(@{ @"success": @(YES) });
 		}
 	});
 }

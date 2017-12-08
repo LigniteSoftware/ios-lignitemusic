@@ -303,6 +303,26 @@
 													  NSLog(@"Error: %@", error);
 												  }];
 	}
+	else if(self.musicType == LMMusicTypeTitles){
+		[self setLoading:YES withLabel:NSLocalizedString(@"Playing", nil)];
+		
+		NSInteger indexOfTableEntryTappedInCollection = rowIndex - self.entriesOffset;
+		
+		MPMediaEntityPersistentID persistentID = [self.tableEntries objectAtIndex:indexOfTableEntryTappedInCollection].persistentID;
+		
+		[self.persistentIDs addObject:@(persistentID)];
+		
+		[self.companionBridge playSpecificTrackWithSelectedIndexes:self.selectedIndexes
+												   withPageIndexes:self.pageIndexes
+													 forMusicTypes:self.musicTypes
+												 withPersistentIDs:self.persistentIDs
+													  replyHandler:^(NSDictionary<NSString *,id> *replyMessage) {
+														  [self popToRootController];
+													  }
+													  errorHandler:^(NSError *error) {
+														  NSLog(@"Error: %@", error);
+													  }];
+	}
 	else{ //An actual entry :O
 		LMWMusicTrackInfo *entryInfo = [self.tableEntries objectAtIndex:rowIndex-self.entriesOffset];
 //		entryInfo.indexInCollection = -1;

@@ -48,6 +48,9 @@
 #define LMAppleWatchCommunicationKeyMusicBrowsingEntries @"LMAppleWatchCommunicationKeyMusicBrowsingEntries"
 //The user wants to shuffle all tracks within the currently viewable browse level.
 #define LMAppleWatchCommunicationKeyBrowsingShuffleAll @"LMAppleWatchCommunicationKeyBrowsingShuffleAll"
+//The user wants to play a certain track from a collection.
+#define LMAppleWatchCommunicationKeyBrowsingPlayIndividualTrack @"LMAppleWatchCommunicationKeyBrowsingPlayIndividualTrack"
+
 
 //The key for the music types when the communication key is LMAppleWatchCommunicationKeyMusicBrowsingEntries. Music types is plural because it's an array of music types which define the structure of windows that the user has been presented in their current browsing session.
 #define LMAppleWatchBrowsingKeyMusicTypes @"LMAppleWatchBrowsingKeyMusicTypes"
