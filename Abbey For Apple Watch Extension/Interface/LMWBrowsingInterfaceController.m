@@ -25,8 +25,12 @@
 /**
  The music type associated with this browse window.
  */
-@property LMMusicType musicType;
-@property LMMusicType previousMusicType;
+@property (readonly) LMMusicType musicType;
+@property NSMutableArray<NSNumber*> *musicTypes;
+
+@property NSMutableArray<NSNumber*> *selectedIndexes;
+@property NSMutableArray<NSNumber*> *pageIndexes;
+@property NSMutableArray<NSNumber*> *persistentIDs;
 
 @property LMWMusicTrackInfo *entryInfo;
 
@@ -44,9 +48,17 @@
 @property NSInteger amountOfUncachedEntries;
 @property (readonly) NSInteger amountOfEntriesAheadOfCurrentPage;
 
+@property NSInteger entriesOffset;
+
 @end
 
 @implementation LMWBrowsingInterfaceController
+
+@synthesize musicType = _musicType;
+
+- (LMMusicType)musicType {
+	return (LMMusicType)[self.musicTypes.lastObject integerValue];
+}
 
 - (BOOL)isBeginningOfList {
 	return (self.indexOfCurrentPage == 0);
@@ -154,11 +166,11 @@
 			shuffleAllTracksRow.isShuffleAllButton = YES;
 		}
 		
-		NSInteger entriesOffset = (!self.isBeginningOfList + allowsShuffleAll);
+		self.entriesOffset = (!self.isBeginningOfList + allowsShuffleAll);
 		
 		if(!self.isEndOfList){
 			LMWMusicBrowsingRowController *nextTracksRow =
-				[self.browsingTable rowControllerAtIndex:tableEntriesArray.count + entriesOffset];
+				[self.browsingTable rowControllerAtIndex:tableEntriesArray.count + self.entriesOffset];
 			
 			[nextTracksRow.titleLabel setText:NSLocalizedString(@"NextPage", nil)];
 			[nextTracksRow.subtitleLabel setText:[NSString stringWithFormat:NSLocalizedString(@"XLeft", nil), self.amountOfEntriesAheadOfCurrentPage]];
@@ -173,10 +185,10 @@
 			[self.loadingLabel setText:NSLocalizedString(@"NothingHere", nil)];
 		}
 		else{
-			for (NSInteger i = entriesOffset; i < (tableEntriesArray.count + entriesOffset); i++) {
+			for (NSInteger i = self.entriesOffset; i < (tableEntriesArray.count + self.entriesOffset); i++) {
 				LMWMusicBrowsingRowController *row = [self.browsingTable rowControllerAtIndex:i];
 
-				LMWMusicTrackInfo *entryInfo = [tableEntriesArray objectAtIndex:i - entriesOffset];
+				LMWMusicTrackInfo *entryInfo = [tableEntriesArray objectAtIndex:i - self.entriesOffset];
 
 				[row.titleLabel setText:entryInfo.title];
 				[row.subtitleLabel setText:entryInfo.subtitle];
@@ -199,7 +211,9 @@
 		entry.title = [resultDictionary objectForKey:LMAppleWatchBrowsingKeyEntryTitle];
 		entry.subtitle = [resultDictionary objectForKey:LMAppleWatchBrowsingKeyEntrySubtitle];
 		entry.persistentID = (MPMediaEntityPersistentID)[[resultDictionary objectForKey:LMAppleWatchBrowsingKeyEntryPersistentID] longLongValue];
-		entry.indexInCollection = i + self.previousIndex;
+		entry.indexInCollection = i + self.previousIndex + (self.previousIndex > 0);
+		
+//		entry.title = [NSString stringWithFormat:@"%d - %@", (int)entry.indexInCollection, [resultDictionary objectForKey:LMAppleWatchBrowsingKeyEntryPersistentID]];
 		
 		UIImage *icon = nil;
 		id iconData = [resultDictionary objectForKey:LMAppleWatchBrowsingKeyEntryIcon];
@@ -245,20 +259,27 @@
 		}
 		else{ //Get next page from phone
 			
-			if(self.entryInfo){
-				self.entryInfo.indexInCollection = self.tableEntries.lastObject.indexInCollection;
-			}
+//			if(self.entryInfo){
+//				self.entryInfo.indexInCollection = self.tableEntries.lastObject.indexInCollection;
+//			}
 			
-			[self.companionBridge requestTracksWithEntryInfo:self.entryInfo ? self.entryInfo : self.tableEntries.lastObject
-												forMusicType:self.entryInfo ? self.previousMusicType : self.musicType
-												replyHandler:^(NSDictionary<NSString *,id> *replyMessage) {
-													self.indexOfCurrentPage++;
-													
-													[self handleTracksRequestWithReplyDictionary:replyMessage];
-												}
-												errorHandler:^(NSError *error) {
+//			[self.selectedIndexes addObject:@(self.entryInfo.indexInCollection)];
+			
+			self.indexOfCurrentPage++;
+			
+			[self.pageIndexes removeLastObject];
+			[self.pageIndexes addObject:@(self.indexOfCurrentPage)];
+			
+			[self.companionBridge requestTracksWithSelectedIndexes:self.selectedIndexes
+												   withPageIndexes:self.pageIndexes
+													 forMusicTypes:self.musicTypes
+												 withPersistentIDs:self.persistentIDs
+													  replyHandler:^(NSDictionary<NSString *,id> *replyMessage) {
+														  [self handleTracksRequestWithReplyDictionary:replyMessage];
+													  }
+													  errorHandler:^(NSError *error) {
 													NSLog(@"Error: %@", error);
-												}];
+													  }];
 		}
 	}
 	else if(row.isPreviousButton){
@@ -275,14 +296,14 @@
 		//[self popToRootController];
 	}
 	else{ //An actual entry :O
-		LMWMusicTrackInfo *entryInfo = [self.tableEntries objectAtIndex:rowIndex];
-		entryInfo.indexInCollection = -1;
+		LMWMusicTrackInfo *entryInfo = [self.tableEntries objectAtIndex:rowIndex-self.entriesOffset];
+//		entryInfo.indexInCollection = -1;
 		
 		[self pushControllerWithName:@"BrowsingController" context:@{
 																	 @"title": entryInfo.title,
-																	 @"musicType": @(self.musicType),
-																	 @"lastIndex": @(0),
-																	 @"persistentID": @(entryInfo.persistentID),
+																	 @"musicTypes": self.musicTypes,
+																	 @"selectedIndexes": self.selectedIndexes,
+																	 @"persistentIDs": self.persistentIDs,
 																	 @"entryInfo": entryInfo
 																	 }];
 	}
@@ -290,17 +311,25 @@
 
 - (void)awakeWithContext:(id)context {
 	self.pages = [NSMutableArray new];
+	
 	self.indexOfCurrentPage = 0;
 	self.indexOfFinalPage = -1;
 	
 	NSDictionary *dictionaryContext = (NSDictionary*)context;
 	
-	self.previousMusicType = (LMMusicType)[[dictionaryContext objectForKey:@"musicType"] integerValue];
+	self.musicTypes = [NSMutableArray arrayWithArray:[dictionaryContext objectForKey:@"musicTypes"]];
+	self.persistentIDs = [NSMutableArray arrayWithArray:[dictionaryContext objectForKey:@"persistentIDs"]];
+	self.selectedIndexes = [NSMutableArray arrayWithArray:[dictionaryContext objectForKey:@"selectedIndexes"]];
+	self.pageIndexes = [NSMutableArray arrayWithArray:[dictionaryContext objectForKey:@"pageIndexes"]];
+	if(!self.selectedIndexes){
+		self.selectedIndexes = [NSMutableArray new];
+	}
+	
 	self.entryInfo = (LMWMusicTrackInfo*)[dictionaryContext objectForKey:@"entryInfo"];
 	
 	if(self.entryInfo){
 		LMMusicType currentMusicType = LMMusicTypeTitles;
-		switch(self.previousMusicType){
+		switch(((LMMusicType) self.musicTypes.lastObject.integerValue)){
 			case LMMusicTypeTitles:
 			case LMMusicTypeFavourites:
 				//Play track
@@ -316,11 +345,16 @@
 				currentMusicType = LMMusicTypeAlbums;
 				break;
 		}
-		self.musicType = currentMusicType;
+		[self.persistentIDs addObject:@(self.entryInfo.persistentID)];
+		[self.musicTypes addObject:@(currentMusicType)];
+		[self.selectedIndexes addObject:@(self.entryInfo.indexInCollection)];
 	}
 	else{
-		self.musicType = self.previousMusicType;
+		[self.persistentIDs addObject:@(0)];
+		[self.selectedIndexes addObject:@(-1)];
 	}
+	
+	[self.pageIndexes addObject:@(0)];
 	
 	[self setTitle:[dictionaryContext objectForKey:@"title"]];
 	
@@ -332,16 +366,18 @@
 	
 	
 	self.companionBridge = [LMWCompanionBridge sharedCompanionBridge];
-	[self.companionBridge requestTracksWithEntryInfo:self.entryInfo
-										forMusicType:self.previousMusicType
-										replyHandler:^(NSDictionary<NSString *,id> *replyMessage) {
+	[self.companionBridge requestTracksWithSelectedIndexes:self.selectedIndexes
+										   withPageIndexes:self.pageIndexes
+											 forMusicTypes:self.musicTypes
+										 withPersistentIDs:self.persistentIDs
+											  replyHandler:^(NSDictionary<NSString *,id> *replyMessage) {
 											NSLog(@"Got reply: %@", replyMessage);
 											
 											[self handleTracksRequestWithReplyDictionary:replyMessage];
-										}
-										errorHandler:^(NSError *error) {
+											  }
+											 errorHandler:^(NSError *error) {
 											NSLog(@"Error getting tracks: %@", error);
-										}];
+											 }];
 }
 
 @end

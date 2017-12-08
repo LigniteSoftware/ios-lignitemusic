@@ -340,6 +340,8 @@ typedef enum {
  */
 - (NSArray<LMMusicTrackCollection*>*)collectionsForRepresentativeTrack:(LMMusicTrack*)representativeTrack forMusicType:(LMMusicType)musicType;
 - (NSArray<LMMusicTrackCollection*>*)collectionsForPersistentID:(MPMediaEntityPersistentID)persistentID forMusicType:(LMMusicType)musicType; //Does the same but just with a persistent ID.
+- (NSArray<LMMusicTrackCollection*>*)collectionsForWatchForPersistentID:(MPMediaEntityPersistentID)persistentID
+														   forMusicType:(LMMusicType)musicType; //Does the same but is for Apple Watch's tree based browsing
 
 /**
  Finds collections of music based off of the type provided.

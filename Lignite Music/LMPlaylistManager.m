@@ -47,6 +47,18 @@
 	return [NSArray arrayWithArray:musicTrackCollectionsArray];
 }
 
+- (LMPlaylist*)playlistForPersistentID:(long long)persistentID {
+	NSArray<LMPlaylist*> *playlists = [self playlists];
+	
+	for(LMPlaylist *playlist in playlists){
+		if(playlist.persistentID == persistentID){
+			return playlist;
+		}
+	}
+	
+	return nil;
+}
+
 - (LMPlaylist*)playlistForPlaylistDictionary:(NSDictionary*)playlistDictionary {
 	LMPlaylist *playlist = [LMPlaylist new];
 	

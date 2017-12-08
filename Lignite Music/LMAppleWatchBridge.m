@@ -259,59 +259,100 @@
 		replyHandler(@{ @"sent":@"pimp" });
 	}
 	else if([key isEqualToString:LMAppleWatchCommunicationKeyMusicBrowsingEntries]){
-		LMMusicType musicType = (LMMusicType)[[message objectForKey:LMAppleWatchBrowsingKeyMusicType] integerValue];
-		MPMediaEntityPersistentID persistentID = (MPMediaEntityPersistentID)[[message objectForKey:LMAppleWatchBrowsingKeyPersistentID] integerValue];
-		NSInteger currentIndex = [[message objectForKey:LMAppleWatchBrowsingKeyCurrentIndex] integerValue];
+		NSArray<NSNumber*> *musicTypes = [message objectForKey:LMAppleWatchBrowsingKeyMusicTypes];
+		LMMusicType musicType = (LMMusicType)musicTypes.firstObject.integerValue;
 		
-		BOOL isInitialBrowsePage = (persistentID == 0);
-		BOOL isFirstPage = NO;
+		NSArray<NSNumber*> *persistentIDs = [message objectForKey:LMAppleWatchBrowsingKeyPersistentIDs];
+		MPMediaEntityPersistentID persistentID = (MPMediaEntityPersistentID)persistentIDs.lastObject.longLongValue;
+		
+		NSArray<NSNumber*> *selectedIndexes = [message objectForKey:LMAppleWatchBrowsingKeySelectedIndexes];
+//		NSInteger selectedIndex = selectedIndexes.lastObject.integerValue;
+		
+		NSArray<NSNumber*> *pageIndexes = [message objectForKey:LMAppleWatchBrowsingKeyPageIndexes];
+		NSInteger pageIndex = pageIndexes.lastObject.integerValue;
+		
+		BOOL isInitialBrowsePage = (musicTypes.count == 1);
+		BOOL isFirstPage = (pageIndex == 0);
 		
 		NSInteger MAXIMUM_NUMBER_OF_ITEMS_IN_LIST = 15;
 		
-		if(currentIndex == -1){ //First page
-			isFirstPage = YES;
-			currentIndex = 0;
-		}
-		else{
-			currentIndex += (currentIndex/MAXIMUM_NUMBER_OF_ITEMS_IN_LIST) + 1;
-		}
-		
 		NSLog(@"Got a request for music tracks. Is beginning? %d", isInitialBrowsePage);
 
-		NSArray<LMMusicTrackCollection*> *trackCollections = nil;
+		NSArray<LMMusicTrackCollection*> *trackCollections = [self.musicPlayer queryCollectionsForMusicType:(LMMusicType)musicTypes.firstObject.integerValue];
 		
-		if(isInitialBrowsePage){
-			trackCollections = [self.musicPlayer queryCollectionsForMusicType:musicType];
-		}
-		else{
-			trackCollections = [self.musicPlayer collectionsForPersistentID:persistentID forMusicType:musicType];
-			trackCollections = [LMMusicPlayer arrayOfTrackCollectionsForMusicTrackCollection:trackCollections.firstObject];
-			
-			LMMusicType entryMusicType = LMMusicTypeTitles;
-			switch(musicType){
-				case LMMusicTypeTitles:
-				case LMMusicTypeFavourites:
-					//Play track
-					break;
-				case LMMusicTypePlaylists:
-				case LMMusicTypeAlbums:
-				case LMMusicTypeCompilations:
-					entryMusicType = LMMusicTypeTitles;
-					break;
-				case LMMusicTypeGenres:
-				case LMMusicTypeArtists:
-				case LMMusicTypeComposers:
-					entryMusicType = LMMusicTypeAlbums;
-					break;
+		if(!isInitialBrowsePage){
+			for(NSInteger i = 1; i < selectedIndexes.count; i++){
+//				NSInteger selectedIndex = [[selectedIndexes objectAtIndex:i] integerValue];
+				if(i == 1){
+					LMMusicType subMusicType = (LMMusicType)[[musicTypes objectAtIndex:i - 1] integerValue];
+					MPMediaEntityPersistentID subPersistentID = (MPMediaEntityPersistentID)[[persistentIDs objectAtIndex:i] longLongValue];
+					
+	//				LMMusicTrackCollection *trackCollection = [trackCollections objectAtIndex:selectedIndex];
+	//				trackCollections = @[ [trackCollections objectAtIndex:selectedIndex] ];
+	//				NSLog(@"%p with %d items", trackCollection, (int)trackCollection.count);
+					if(subMusicType == LMMusicTypePlaylists){
+						LMPlaylist *playlist = [[LMPlaylistManager sharedPlaylistManager] playlistForPersistentID:subPersistentID];
+						trackCollections = @[ playlist.trackCollection ];
+					}
+					else{
+						trackCollections = [self.musicPlayer collectionsForWatchForPersistentID:subPersistentID
+																			   forMusicType:subMusicType];
+					}
+				
+//					trackCollections = [LMMusicPlayer arrayOfTrackCollectionsForMusicTrackCollection:trackCollections.firstObject];
+					NSLog(@"Got track collections count %d from %@ %@ comp to %@ %@", (int)trackCollections.count, trackCollections.firstObject.representativeItem.artist, trackCollections.firstObject.representativeItem.title, trackCollections.firstObject.items.firstObject.artist, trackCollections.firstObject.items.firstObject.title);
+				
+				}
+				else if(i == 2){
+					MPMediaEntityPersistentID selectedAlbumPersistentID = [[persistentIDs objectAtIndex:i] longLongValue];
+//					LMMusicTrackCollection *selectedAlbumCollection = nil;
+					for(LMMusicTrackCollection *trackCollection in trackCollections){
+						if(trackCollection.representativeItem.albumPersistentID == selectedAlbumPersistentID){
+							trackCollections = @[ trackCollection ];
+						}
+					}
+//					trackCollections = [LMMusicPlayer arrayOfTrackCollectionsForMusicTrackCollection:[trackCollections objectAtIndex:selectedIndex]];
+				}
+				else{
+					NSAssert(false, @"NSInteger i can't be past two when tree searching, sorry");
+				}
 			}
-			musicType = entryMusicType;
+			
+//			trackCollections = [self.musicPlayer collectionsForPersistentID:persistentID forMusicType:musicType];
+//			if(trackCollections.count > 0){
+//				trackCollections = [LMMusicPlayer arrayOfTrackCollectionsForMusicTrackCollection:trackCollections.firstObject];
+//				
+//				trackCollections = [self.musicPlayer collectionsForRepresentativeTrack:trackCollections.firstObject.representativeItem forMusicType:musicType];
+//			}
+//			else{
+//				NSLog(@"Fuck");
+//			}
+			
+//			LMMusicType entryMusicType = LMMusicTypeTitles;
+//			switch(musicType){
+//				case LMMusicTypeTitles:
+//				case LMMusicTypeFavourites:
+//					//Play track
+//					break;
+//				case LMMusicTypePlaylists:
+//				case LMMusicTypeAlbums:
+//				case LMMusicTypeCompilations:
+//					entryMusicType = LMMusicTypeTitles;
+//					break;
+//				case LMMusicTypeGenres:
+//				case LMMusicTypeArtists:
+//				case LMMusicTypeComposers:
+//					entryMusicType = LMMusicTypeAlbums;
+//					break;
+//			}
+			musicType = (LMMusicType)musicTypes.lastObject.integerValue;
 		}
 		
 		NSArray<LMPlaylist*>* playlists = nil;
 		
 		NSInteger count = trackCollections.count;
 		
-		if((musicType == LMMusicTypeTitles || musicType == LMMusicTypeFavourites) && isInitialBrowsePage){
+		if((musicType == LMMusicTypeTitles || musicType == LMMusicTypeFavourites)){
 			trackCollections = [LMMusicPlayer
 								arrayOfTrackCollectionsForMusicTrackCollection:trackCollections.firstObject];
 			
@@ -325,14 +366,16 @@
 		
 		
 		NSMutableArray *resultsArray = [NSMutableArray new];
+		
+		NSInteger topOfPageIndex = pageIndex * MAXIMUM_NUMBER_OF_ITEMS_IN_LIST;
 	
-		NSInteger maximumIndex = currentIndex + MIN(MAXIMUM_NUMBER_OF_ITEMS_IN_LIST, count-currentIndex);
+		NSInteger maximumIndex = topOfPageIndex + MIN(MAXIMUM_NUMBER_OF_ITEMS_IN_LIST, count - topOfPageIndex);
 		//If there's only a few items left, might as well add them to  the current page instead of making the user go to another page for them
 		if(((count-maximumIndex) <= 5) && ((count-maximumIndex) > 0)){
 			maximumIndex = count;
 		}
 	
-		for(NSInteger i = currentIndex; i < maximumIndex; i++){
+		for(NSInteger i = topOfPageIndex; i < maximumIndex; i++){
 			LMPlaylist *playlist = nil;
 			
 			LMMusicTrackCollection *collection = nil;
@@ -346,10 +389,12 @@
 			else{
 				collection = [trackCollections objectAtIndex:i];
 				representativeTrack = collection.representativeItem;
+				NSLog(@"Rep track %d/%@\n%lld", (int)i, representativeTrack.artist, representativeTrack.artistPersistentID);
 			}
 			
 			NSString *title = NSLocalizedString(@"UnknownTitle", nil);
 			NSString *subtitle = NSLocalizedString(@"UnknownArtist", nil);
+			MPMediaEntityPersistentID newPersistentID = representativeTrack.albumPersistentID;
 			
 			UIImage *imageToUse = representativeTrack.uncorrectedAlbumArt;
 			if(musicType == LMMusicTypeArtists || musicType == LMMusicTypeComposers){
@@ -362,44 +407,56 @@
 			UIImage *resizedImage = [self resizeImage:imageToUse toSize:CGSizeMake(64, 64)];
 			NSData *iconData = resizedImage ? UIImageJPEGRepresentation(resizedImage, 0.5) : nil;
 			
-			NSLog(@"Size %d", (int)iconData.length);
+//			NSLog(@"Size %d", (int)iconData.length);
 			
 			switch(musicType){
 				case LMMusicTypeTitles:
 				case LMMusicTypeFavourites:
 					title = representativeTrack.title ? representativeTrack.title : NSLocalizedString(@"UnknownTitle", nil);
 					subtitle = representativeTrack.artist ? representativeTrack.artist : NSLocalizedString(@"UnknownArtist", nil);
+					newPersistentID = representativeTrack.persistentID;
 					break;
 				case LMMusicTypeCompilations:
 				case LMMusicTypeAlbums:
 					title = representativeTrack.albumTitle ? representativeTrack.albumTitle : NSLocalizedString(@"UnknownAlbum", nil);
 					subtitle = representativeTrack.albumArtist ? representativeTrack.albumArtist : NSLocalizedString(@"UnknownArtist", nil);
+					newPersistentID = representativeTrack.albumPersistentID;
 					break;
 				case LMMusicTypeComposers:
+					title = representativeTrack.artist ? representativeTrack.artist : NSLocalizedString(@"UnknownComposer", nil);
+					subtitle = [NSString stringWithFormat:@"%lu %@", (unsigned long)collection.numberOfAlbums, NSLocalizedString(collection.numberOfAlbums == 1 ? @"AlbumInline" : @"AlbumsInline", nil)];
+					newPersistentID = representativeTrack.composerPersistentID;
+					break;
 				case LMMusicTypeArtists:
 					title = representativeTrack.artist ? representativeTrack.artist : NSLocalizedString(@"UnknownArtist", nil);
 					subtitle = [NSString stringWithFormat:@"%lu %@", (unsigned long)collection.numberOfAlbums, NSLocalizedString(collection.numberOfAlbums == 1 ? @"AlbumInline" : @"AlbumsInline", nil)];
+					newPersistentID = representativeTrack.artistPersistentID;
 					break;
 				case LMMusicTypeGenres:
 					title = representativeTrack.genre ? representativeTrack.genre : NSLocalizedString(@"UnknownGenre", nil);
 					subtitle = [NSString stringWithFormat:@"%ld %@", (unsigned long)collection.trackCount, NSLocalizedString(collection.trackCount == 1 ? @"Song" : @"Songs", nil)];
+					newPersistentID = representativeTrack.genrePersistentID;
 					break;
 				case LMMusicTypePlaylists:
 					title = playlist.title;
 					subtitle = [NSString stringWithFormat:@"%ld %@", (unsigned long)collection.trackCount, NSLocalizedString(collection.trackCount == 1 ? @"Song" : @"Songs", nil)];
+					newPersistentID = playlist.persistentID;
+					break;
 				default:
 					break;
 			}
 			
+//			subtitle = [NSString stringWithFormat:@"%@", @(newPersistentID)];
+			
 			[resultsArray addObject:iconData
 								   ? @{
-									 LMAppleWatchBrowsingKeyEntryPersistentID: @(representativeTrack.albumPersistentID),
+									 LMAppleWatchBrowsingKeyEntryPersistentID: @(newPersistentID),
 									 LMAppleWatchBrowsingKeyEntryTitle: title,
 									 LMAppleWatchBrowsingKeyEntrySubtitle: subtitle,
 									 LMAppleWatchBrowsingKeyEntryIcon: iconData
 									 }
 								   : @{
-									  LMAppleWatchBrowsingKeyEntryPersistentID: @(representativeTrack.albumPersistentID),
+									  LMAppleWatchBrowsingKeyEntryPersistentID: @(newPersistentID),
 									  LMAppleWatchBrowsingKeyEntryTitle: title,
 									  LMAppleWatchBrowsingKeyEntrySubtitle: subtitle
 									  }];
@@ -408,7 +465,7 @@
 		
 		BOOL isEndOfList = (maximumIndex == count);
 		
-		NSLog(@"Results %@\n%d %d/%d", resultsArray, isEndOfList, (int)maximumIndex, (int)count);
+		NSLog(@"Results initial%d first%d end%d max%d/count%d", isInitialBrowsePage, isFirstPage, isEndOfList, (int)maximumIndex, (int)count);
 		
 		replyHandler(@{
 					   @"results": resultsArray,

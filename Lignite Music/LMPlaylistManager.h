@@ -50,6 +50,14 @@
 - (void)deletePlaylist:(LMPlaylist*)playlist;
 
 /**
+ Gets a playlist based off it's Lignite persistent ID (NOT the persistent ID that the system originally gave it).
+
+ @param persistentID The Lignite persistent ID of the playlist to fetch.
+ @return The playlist, nil if it couldn't be found.
+ */
+- (LMPlaylist*)playlistForPersistentID:(long long)persistentID;
+
+/**
  The array of all of the user's current playlists.
  */
 @property NSArray<LMPlaylist*>* playlists;

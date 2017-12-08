@@ -47,12 +47,14 @@
 //The watch is requesting music tracks or entries in music browsing.
 #define LMAppleWatchCommunicationKeyMusicBrowsingEntries @"LMAppleWatchCommunicationKeyMusicBrowsingEntries"
 
-//The key for the music type when the communication key is LMAppleWatchCommunicationKeyMusicBrowsingEntries.
-#define LMAppleWatchBrowsingKeyMusicType @"LMAppleWatchBrowsingKeyMusicType"
-//The key for the persistent ID (used as a source of data) when the communication key is LMAppleWatchCommunicationKeyMusicBrowsingEntries.
-#define LMAppleWatchBrowsingKeyPersistentID @"LMAppleWatchBrowsingKeyPersistentID"
-//The key for the current index in browsing when the communication key is LMAppleWatchCommunicationKeyMusicBrowsingEntries.
-#define LMAppleWatchBrowsingKeyCurrentIndex @"LMAppleWatchBrowsingKeyCurrentIndex"
+//The key for the music types when the communication key is LMAppleWatchCommunicationKeyMusicBrowsingEntries. Music types is plural because it's an array of music types which define the structure of windows that the user has been presented in their current browsing session.
+#define LMAppleWatchBrowsingKeyMusicTypes @"LMAppleWatchBrowsingKeyMusicTypes"
+//The key for the persistent IDs, used as a source of data.
+#define LMAppleWatchBrowsingKeyPersistentIDs @"LMAppleWatchBrowsingKeyPersistentIDs"
+//The key for the user's selected indexes in browsing. First page index will always be -1.
+#define LMAppleWatchBrowsingKeySelectedIndexes @"LMAppleWatchBrowsingKeySelectedIndexes"
+//The key for the user's page indexes in browsing.
+#define LMAppleWatchBrowsingKeyPageIndexes @"LMAppleWatchBrowsingKeyPageIndexes"
 
 //The keys for the properties which go in a music track/music browsing entry.
 #define LMAppleWatchBrowsingKeyEntryPersistentID @"LMAppleWatchBrowsingKeyEntryPersistentID"

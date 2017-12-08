@@ -871,6 +871,45 @@ BOOL shuffleForDebug = NO;
 	return [self trackCollectionsForMediaQuery:query withMusicType:musicType];
 }
 
+- (NSArray<LMMusicTrackCollection*>*)collectionsForWatchForPersistentID:(MPMediaEntityPersistentID)persistentID
+														   forMusicType:(LMMusicType)musicType {
+	
+	NSAssert(musicType != LMMusicTypeFavourites, @"Cannot query favourites, sorry");
+	
+	MPMediaGrouping associatedGroupings[] = {
+		MPMediaGroupingAlbum, //Artists
+		MPMediaGroupingAlbum, //Albums
+		MPMediaGroupingTitle, //Titles
+		MPMediaGroupingTitle, //Playlists
+		MPMediaGroupingAlbum, //Genres
+		MPMediaGroupingAlbum, //Composers
+		MPMediaGroupingAlbum  //Compilations
+	};
+	
+	NSArray<NSString*> *associatedPersistentIDProperties = @[
+															 MPMediaItemPropertyArtistPersistentID,   //Artists
+															 MPMediaItemPropertyAlbumPersistentID,    //Albums
+															 MPMediaItemPropertyPersistentID,         //Titles
+															 MPMediaPlaylistPropertyName,             //Playlists
+															 MPMediaItemPropertyGenrePersistentID,    //Genres
+															 MPMediaItemPropertyComposerPersistentID, //Composers
+															 MPMediaItemPropertyAlbumPersistentID     //Compilations
+															 ];
+	
+	NSString *associatedProperty = [associatedPersistentIDProperties objectAtIndex:musicType];
+	
+	MPMediaQuery *query = nil;
+	
+	query = [MPMediaQuery new];
+	query.groupingType = associatedGroupings[musicType];
+	
+	MPMediaPropertyPredicate *musicFilterPredicate = [MPMediaPropertyPredicate predicateWithValue:@(persistentID)
+																					  forProperty:associatedProperty comparisonType:MPMediaPredicateComparisonEqualTo];
+	[query addFilterPredicate:musicFilterPredicate];
+	
+	return [self trackCollectionsForMediaQuery:query withMusicType:musicType];
+}
+
 - (NSArray<LMMusicTrackCollection*>*)collectionsForRepresentativeTrack:(LMMusicTrack*)representativeTrack forMusicType:(LMMusicType)musicType {
 	MPMediaGrouping associatedGroupings[] = {
 		MPMediaGroupingAlbum, //Artists

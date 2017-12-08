@@ -20,7 +20,7 @@
 	
 	[self pushControllerWithName:@"BrowsingController" context:@{
 																	  @"title": NSLocalizedString([row.musicTypeDictionary objectForKey:@"title"], nil),
-																	  @"musicType": [row.musicTypeDictionary objectForKey:@"type"],
+																	  @"musicTypes": @[ [row.musicTypeDictionary objectForKey:@"type"] ],
 																	  @"lastIndex": @(0),
 																	  @"persistentID": @(0)
 																	  //entryInfo is nil because it's the start of the list
