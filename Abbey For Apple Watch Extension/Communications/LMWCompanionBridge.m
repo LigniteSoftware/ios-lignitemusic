@@ -75,6 +75,7 @@
 		self.nowPlayingInfo.shuffleMode = (LMMusicShuffleMode)[[infoDictionary objectForKey:LMAppleWatchNowPlayingInfoKeyShuffleMode] integerValue];
 		self.nowPlayingInfo.playbackDuration = [[infoDictionary objectForKey:LMAppleWatchNowPlayingInfoKeyPlaybackDuration] integerValue];
 		self.nowPlayingInfo.currentPlaybackTime = [[infoDictionary objectForKey:LMAppleWatchNowPlayingInfoKeyCurrentPlaybackTime] integerValue];
+		self.nowPlayingInfo.volume = [[infoDictionary objectForKey:LMAppleWatchNowPlayingInfoKeyVolume] floatValue];
 		
 		for(id<LMWCompanionBridgeDelegate> delegate in self.delegates){
 			if([delegate respondsToSelector:@selector(nowPlayingInfoDidChange:)]){

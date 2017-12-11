@@ -47,6 +47,11 @@ typedef NS_ENUM(NSInteger, LMMusicShuffleMode) {
 @property NSInteger currentPlaybackTime;
 
 /**
+ The volume level, from 0.0 to 1.0.
+ */
+@property CGFloat volume;
+
+/**
  The current repeat mode.
  */
 @property LMMusicRepeatMode repeatMode;

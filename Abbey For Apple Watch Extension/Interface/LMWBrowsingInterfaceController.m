@@ -303,7 +303,7 @@
 													  NSLog(@"Error: %@", error);
 												  }];
 	}
-	else if(self.musicType == LMMusicTypeTitles){
+	else if(self.musicType == LMMusicTypeTitles || self.musicType == LMMusicTypeFavourites){
 		[self setLoading:YES withLabel:NSLocalizedString(@"Playing", nil)];
 		
 		NSInteger indexOfTableEntryTappedInCollection = rowIndex - self.entriesOffset;

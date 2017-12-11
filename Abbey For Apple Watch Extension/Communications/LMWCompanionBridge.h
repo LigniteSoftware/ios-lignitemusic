@@ -35,6 +35,8 @@
 #define LMAppleWatchNowPlayingInfoKeyPlaybackDuration @"LMAppleWatchNowPlayingInfoKeyPlaybackDuration"
 //The track's current playback time. NSInteger as NSNumber.
 #define LMAppleWatchNowPlayingInfoKeyCurrentPlaybackTime @"LMAppleWatchNowPlayingInfoKeyCurrentPlaybackTime"
+//The phone's volume, from 0.0 to 1.0.
+#define LMAppleWatchNowPlayingInfoKeyVolume @"LMAppleWatchNowPlayingInfoKeyVolume"
 
 //The key to be used as the key for defining which type of data is being transmitted.
 #define LMAppleWatchCommunicationKey @"LMAppleWatchCommunicationKey"
@@ -93,6 +95,10 @@
 #define LMAppleWatchControlKeyUpNextTrackSelected @"LMAppleWatchControlKeyUpNextTrackSelected"
 //The current playback time. NEEDS to be sent along with a key:value pair of LMAppleWatchControlKeyCurrentPlaybackTime:<NSNumber*>playbackTime.
 #define LMAppleWatchControlKeyCurrentPlaybackTime @"LMAppleWatchControlKeyCurrentPlaybackTime"
+//Volume up.
+#define LMAppleWatchControlKeyVolumeUp @"LMAppleWatchControlKeyVolumeUp"
+//Volume down.
+#define LMAppleWatchControlKeyVolumeDown @"LMAppleWatchControlKeyVolumeDown"
 
 @protocol LMWCompanionBridgeDelegate<NSObject>
 @optional

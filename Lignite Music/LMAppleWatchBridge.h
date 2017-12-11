@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 //The title of the track. Is an NSString.
 #define LMAppleWatchMusicTrackInfoKeyTitle @"LMAppleWatchMusicTrackInfoKeyTitle"
@@ -33,6 +34,8 @@
 #define LMAppleWatchNowPlayingInfoKeyPlaybackDuration @"LMAppleWatchNowPlayingInfoKeyPlaybackDuration"
 //The track's current playback time. NSInteger as NSNumber.
 #define LMAppleWatchNowPlayingInfoKeyCurrentPlaybackTime @"LMAppleWatchNowPlayingInfoKeyCurrentPlaybackTime"
+//The phone's volume, from 0.0 to 1.0.
+#define LMAppleWatchNowPlayingInfoKeyVolume @"LMAppleWatchNowPlayingInfoKeyVolume"
 
 //The key to be used as the key for defining which type of data is being transmitted.
 #define LMAppleWatchCommunicationKey @"LMAppleWatchCommunicationKey"
@@ -92,6 +95,10 @@
 #define LMAppleWatchControlKeyUpNextTrackSelected @"LMAppleWatchControlKeyUpNextTrackSelected"
 //The current playback time. NEEDS to be sent along with a key:value pair of LMAppleWatchControlKeyCurrentPlaybackTime:<NSNumber*>playbackTime.
 #define LMAppleWatchControlKeyCurrentPlaybackTime @"LMAppleWatchControlKeyCurrentPlaybackTime"
+//Volume up.
+#define LMAppleWatchControlKeyVolumeUp @"LMAppleWatchControlKeyVolumeUp"
+//Volume down.
+#define LMAppleWatchControlKeyVolumeDown @"LMAppleWatchControlKeyVolumeDown"
 
 @interface LMAppleWatchBridge : NSObject
 
@@ -116,6 +123,13 @@ typedef NS_ENUM(NSInteger, LMAppleWatchMusicInfoType){
  @return The Apple Watch bridge.
  */
 + (LMAppleWatchBridge*)sharedAppleWatchBridge;
+
+/**
+ Attaches volume events to a certain view controller.
+
+ @param viewController The view controller to attach volume events to.
+ */
+- (void)attachToViewController:(UIViewController*)viewController;
 
 /**
  Tells the watch bridge to send the now playing track info to the watch to display on the main interface. This automatically handles whether or not the watch is connected and any errors associated with sending the data.

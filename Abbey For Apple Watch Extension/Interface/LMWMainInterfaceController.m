@@ -20,6 +20,11 @@
 @property LMWProgressSliderInfo *progressSliderInfo;
 
 /**
+ The info object for the volume progress bar.
+ */
+@property LMWProgressSliderInfo *volumeProgressInfo;
+
+/**
  The bridge for the companion.
  */
 @property LMWCompanionBridge *companionBridge;
@@ -115,6 +120,14 @@
 			[self.repeatImage setImage:newRepeatImage];
 			
 			[self.shuffleImage setImageNamed:@"icon_shuffle_white.png"];
+			[self.nextTrackImage setImageNamed:@"next_track.png"];
+			[self.previousTrackImage setImageNamed:@"previous_track.png"];
+//			[self.volumeUpImage setImageNamed:@"icon_plus_white.png"];
+//			[self.volumeDownImage setImageNamed:@"icon_minus.png"];
+			
+			[self.volumeProgressInfo setPercentage:nowPlayingInfo.volume animated:YES];
+			
+//			[self.titleLabel setText:[NSString stringWithFormat:@"%.02f", nowPlayingInfo.volume]];
 			
 			[self animateWithDuration:0.4 animations:^{
 				[self.repeatButtonGroup setBackgroundColor:(nowPlayingInfo.repeatMode != LMMusicRepeatModeNone) ? [UIColor redColor] : [UIColor blackColor]];
@@ -127,6 +140,10 @@
 		[self.progressBarUpdateTimer invalidate];
 		self.progressBarUpdateTimer = nil;
 	}
+	
+	dispatch_async(dispatch_get_main_queue(), ^{
+		[self.playPauseImage setImageNamed:nowPlayingInfo.playing ? @"icon_pause.png" : @"icon_play.png"];
+	});
 }
 
 - (void)displayAsUpdating {
@@ -135,13 +152,17 @@
 }
 
 
-- (void)progressSliderWithInfo:(LMWProgressSliderInfo *)progressSliderInfo slidToNewPositionWithPercentage:(CGFloat)percentage {
-	
-	NSInteger newPlaybackTime = (NSInteger)((CGFloat)self.companionBridge.nowPlayingInfo.playbackDuration * percentage);
-	
-	self.companionBridge.nowPlayingInfo.currentPlaybackTime = newPlaybackTime;
+- (void)progressSliderWithInfo:(LMWProgressSliderInfo*)progressSliderInfo slidToNewPositionWithPercentage:(CGFloat)percentage {
+	if(progressSliderInfo == self.progressSliderInfo){
+		NSInteger newPlaybackTime = (NSInteger)((CGFloat)self.companionBridge.nowPlayingInfo.playbackDuration * percentage);
+		
+		self.companionBridge.nowPlayingInfo.currentPlaybackTime = newPlaybackTime;
 
-	[self.companionBridge setCurrentPlaybackTime:newPlaybackTime];
+		[self.companionBridge setCurrentPlaybackTime:newPlaybackTime];
+	}
+	else{
+		[self debug:[NSString stringWithFormat:@"%.02f", percentage]];
+	}
 }
 
 - (IBAction)progressPanGesture:(WKPanGestureRecognizer*)panGestureRecognizer {
@@ -152,39 +173,29 @@
 	[self.progressSliderInfo handleProgressPanGesture:panGestureRecognizer];
 }
 
-- (IBAction)playPauseTapGestureRecognizerTapped:(WKTapGestureRecognizer*)tapGestureRecognizer {
-	[self.companionBridge sendMusicControlMessageToPhoneWithKey:LMAppleWatchControlKeyPlayPause];
+- (void)showLoadingIconOnInterfaceImage:(WKInterfaceImage*)interfaceImage {
+	dispatch_async(dispatch_get_main_queue(), ^{
+		[interfaceImage setImageNamed:@"Activity"];
+		[interfaceImage startAnimatingWithImagesInRange:NSMakeRange(0, 30)
+													duration:1.0
+												 repeatCount:0];
+	});
 }
 
 - (IBAction)favouriteButtonSelector:(id)sender {
-	dispatch_async(dispatch_get_main_queue(), ^{
-		[self.favouriteImage setImageNamed:@"Activity"];
-		[self.favouriteImage startAnimatingWithImagesInRange:NSMakeRange(0, 30)
-												  duration:1.0
-											   repeatCount:0];
-	});
+	[self showLoadingIconOnInterfaceImage:self.favouriteImage];
 	
 	[self.companionBridge sendMusicControlMessageToPhoneWithKey:LMAppleWatchControlKeyFavouriteUnfavourite];
 }
 
 - (IBAction)shuffleButtonSelector:(id)sender {
-	dispatch_async(dispatch_get_main_queue(), ^{
-		[self.shuffleImage setImageNamed:@"Activity"];
-		[self.shuffleImage startAnimatingWithImagesInRange:NSMakeRange(0, 30)
-												  duration:1.0
-											   repeatCount:0];
-	});
+	[self showLoadingIconOnInterfaceImage:self.shuffleImage];
 	
 	[self.companionBridge sendMusicControlMessageToPhoneWithKey:LMAppleWatchControlKeyInvertShuffleMode];
 }
 
 - (IBAction)repeatButtonSelector:(id)sender {
-	dispatch_async(dispatch_get_main_queue(), ^{
-		[self.repeatImage setImageNamed:@"Activity"];
-		[self.repeatImage startAnimatingWithImagesInRange:NSMakeRange(0, 30)
-													duration:1.0
-												 repeatCount:0];
-	});
+	[self showLoadingIconOnInterfaceImage:self.repeatImage];
 	
 	[self.companionBridge sendMusicControlMessageToPhoneWithKey:LMAppleWatchControlKeyNextRepeatMode];
 }
@@ -193,12 +204,34 @@
 	NSLog(@"Browse library");
 }
 
-- (IBAction)nextSongGestureSwiped:(WKSwipeGestureRecognizer*)swipeGestureRecognizer {
+- (IBAction)nextTrackButtonSelector:(id)sender {
+	[self showLoadingIconOnInterfaceImage:self.nextTrackImage];
+	
 	[self.companionBridge sendMusicControlMessageToPhoneWithKey:LMAppleWatchControlKeyNextTrack];
 }
 
-- (IBAction)previousSongGestureSwiped:(WKSwipeGestureRecognizer*)swipeGestureRecognizer {
+- (IBAction)previousTrackButtonSelector:(id)sender {
+	[self showLoadingIconOnInterfaceImage:self.previousTrackImage];
+	
 	[self.companionBridge sendMusicControlMessageToPhoneWithKey:LMAppleWatchControlKeyPreviousTrack];
+}
+
+- (IBAction)playPauseButtonSelector:(id)sender {
+	[self showLoadingIconOnInterfaceImage:self.playPauseImage];
+	
+	[self.companionBridge sendMusicControlMessageToPhoneWithKey:LMAppleWatchControlKeyPlayPause];
+}
+
+- (IBAction)volumeDownButtonSelector:(id)sender {
+//	[self showLoadingIconOnInterfaceImage:self.volumeDownImage];
+	
+	[self.companionBridge sendMusicControlMessageToPhoneWithKey:LMAppleWatchControlKeyVolumeDown];
+}
+
+- (IBAction)volumeUpButtonSelector:(id)sender {
+//	[self showLoadingIconOnInterfaceImage:self.volumeUpImage];
+	
+	[self.companionBridge sendMusicControlMessageToPhoneWithKey:LMAppleWatchControlKeyVolumeUp];
 }
 
 
@@ -264,8 +297,18 @@
 	self.progressSliderInfo.delegate = self;
 	
 	
+	self.volumeProgressInfo = [[LMWProgressSliderInfo alloc] initWithProgressBarGroup:self.volumeBarGroup
+																		  inContainer:nil
+																onInterfaceController:self];
+	self.volumeProgressInfo.delegate = self;
+	self.volumeProgressInfo.width = self.contentFrame.size.width * 0.33;
+	
+	
 	self.companionBridge = [LMWCompanionBridge sharedCompanionBridge];
 	[self.companionBridge addDelegate:self];
+	
+	
+	[self displayAsUpdating];
 	
 	
 	[self configureTableWithData:@[]];
@@ -279,7 +322,9 @@
 	
 	[NSTimer scheduledTimerWithTimeInterval:0.5 repeats:NO block:^(NSTimer * _Nonnull timer) {
 		[self.companionBridge askCompanionForNowPlayingTrackInfo];
-		[self displayAsUpdating];
+//		[NSTimer scheduledTimerWithTimeInterval:5.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
+//			[self displayAsUpdating];
+//		}];
 	}];
 }
 

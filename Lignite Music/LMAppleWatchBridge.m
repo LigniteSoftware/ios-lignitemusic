@@ -28,6 +28,10 @@
  */
 @property LMMusicTrack *previousNowPlayingTrackSent;
 
+//For volume control
+@property MPVolumeView *volumeView;
+@property UISlider *volumeViewSlider;
+
 @end
 
 @implementation LMAppleWatchBridge
@@ -185,29 +189,32 @@
 }
 
 - (void)sendNowPlayingInfoToWatch {
-	NSDictionary *nowPlayingInfoDictionary = @{
-											   LMAppleWatchNowPlayingInfoKeyIsPlaying: @(self.musicPlayer.playbackState == LMMusicPlaybackStatePlaying),
-											   LMAppleWatchNowPlayingInfoKeyRepeatMode: @(self.musicPlayer.repeatMode),
-											   LMAppleWatchNowPlayingInfoKeyShuffleMode: @(self.musicPlayer.shuffleMode),
-											   LMAppleWatchNowPlayingInfoKeyPlaybackDuration: @(self.musicPlayer.nowPlayingTrack.playbackDuration),
-											   LMAppleWatchNowPlayingInfoKeyCurrentPlaybackTime: @(self.musicPlayer.currentPlaybackTime)
-											   };
-	
-	NSDictionary *messageDictionary = @{
-										   LMAppleWatchCommunicationKey: LMAppleWatchCommunicationKeyNowPlayingInfo,
-										   
-										   LMAppleWatchCommunicationKeyNowPlayingInfo:nowPlayingInfoDictionary
-										   };
-	
-	if(self.session.reachable){
-		[self.session sendMessage:messageDictionary
-					 replyHandler:nil/* ^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
-									  NSLog(@"Got a reply: %@", replyMessage);
-									  }*/
-					 errorHandler:^(NSError * _Nonnull error) {
-						 NSLog(@"Error sending now playing track: %@", error);
-					 }];
-	}
+	dispatch_async(dispatch_get_main_queue(), ^{
+		NSDictionary *nowPlayingInfoDictionary = @{
+												   LMAppleWatchNowPlayingInfoKeyIsPlaying: @(self.musicPlayer.playbackState == LMMusicPlaybackStatePlaying),
+												   LMAppleWatchNowPlayingInfoKeyRepeatMode: @(self.musicPlayer.repeatMode),
+												   LMAppleWatchNowPlayingInfoKeyShuffleMode: @(self.musicPlayer.shuffleMode),
+												   LMAppleWatchNowPlayingInfoKeyPlaybackDuration: @(self.musicPlayer.nowPlayingTrack.playbackDuration),
+												   LMAppleWatchNowPlayingInfoKeyCurrentPlaybackTime: @(self.musicPlayer.currentPlaybackTime),
+												   LMAppleWatchNowPlayingInfoKeyVolume: @(self.volumeViewSlider.value)
+												   };
+		
+		NSDictionary *messageDictionary = @{
+											LMAppleWatchCommunicationKey: LMAppleWatchCommunicationKeyNowPlayingInfo,
+											
+											LMAppleWatchCommunicationKeyNowPlayingInfo:nowPlayingInfoDictionary
+											};
+		
+		if(self.session.reachable){
+			[self.session sendMessage:messageDictionary
+						 replyHandler:nil/* ^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
+										  NSLog(@"Got a reply: %@", replyMessage);
+										  }*/
+						 errorHandler:^(NSError * _Nonnull error) {
+							 NSLog(@"Error sending now playing track: %@", error);
+						 }];
+		}
+	});
 }
 
 - (void)sendUpNextToWatch {
@@ -451,9 +458,11 @@
 		}
 		else if([key isEqualToString:LMAppleWatchControlKeyNextTrack]){
 			[self.musicPlayer skipToNextTrack];
+			[self.musicPlayer play];
 		}
 		else if([key isEqualToString:LMAppleWatchControlKeyPreviousTrack]){
 			[self.musicPlayer skipToPreviousItem];
+			[self.musicPlayer play];
 		}
 		else if([key isEqualToString:LMAppleWatchControlKeyFavouriteUnfavourite]){
 			if(self.musicPlayer.nowPlayingTrack.isFavourite){
@@ -519,6 +528,18 @@
 			
 			replyHandler(@{ @"success": @(YES) });
 		}
+		else if([key isEqualToString:LMAppleWatchControlKeyVolumeUp]){
+			[self.volumeViewSlider setValue:self.volumeViewSlider.value + 0.0625 animated:YES];
+			[self.volumeViewSlider sendActionsForControlEvents:UIControlEventTouchUpInside];
+			
+			[self sendNowPlayingInfoToWatch];
+		}
+		else if([key isEqualToString:LMAppleWatchControlKeyVolumeDown]){
+			[self.volumeViewSlider setValue:self.volumeViewSlider.value - 0.0625 animated:YES];
+			[self.volumeViewSlider sendActionsForControlEvents:UIControlEventTouchUpInside];
+			
+			[self sendNowPlayingInfoToWatch];
+		}
 	});
 }
 
@@ -533,6 +554,30 @@
 
 - (void)sessionDidDeactivate:(WCSession *)session {
 	NSLog(@"Session did deactivate");
+}
+
+- (void)handleVolumeChanged:(id)sender{
+		NSLog(@"%s - %f", __PRETTY_FUNCTION__, self.volumeViewSlider.value);
+	
+	[self sendNowPlayingInfoToWatch];
+}
+
+- (void)attachToViewController:(UIViewController*)viewController {
+	self.volumeView = [[MPVolumeView alloc] init];
+	self.volumeView.showsRouteButton = NO;
+	self.volumeView.showsVolumeSlider = NO;
+	[viewController.view addSubview:self.volumeView];
+	
+	//find the volumeSlider
+	self.volumeViewSlider = nil;
+	for (UIView *view in [self.volumeView subviews]){
+		if ([view.class.description isEqualToString:@"MPVolumeSlider"]){
+			self.volumeViewSlider = (UISlider*)view;
+			break;
+		}
+	}
+	
+	[self.volumeViewSlider addTarget:self action:@selector(handleVolumeChanged:) forControlEvents:UIControlEventValueChanged];
 }
 
 + (LMAppleWatchBridge*)sharedAppleWatchBridge {

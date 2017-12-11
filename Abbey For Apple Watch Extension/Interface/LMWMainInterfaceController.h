@@ -42,6 +42,36 @@
 @property IBOutlet WKInterfaceImage *repeatImage;
 
 /**
+ The image for the play/pause button.
+ */
+@property IBOutlet WKInterfaceImage *playPauseImage;
+
+/**
+ The image for the next track button.
+ */
+@property IBOutlet WKInterfaceImage *nextTrackImage;
+
+/**
+ The image for the previous track button.
+ */
+@property IBOutlet WKInterfaceImage *previousTrackImage;
+
+/**
+ The image for the volume down button.
+ */
+@property IBOutlet WKInterfaceImage *volumeDownImage;
+
+/**
+ The image for the volume up button.
+ */
+@property IBOutlet WKInterfaceImage *volumeUpImage;
+
+/**
+ The group of the volume bar which is coloured red and displays the phone's volume level. Linked through an IBOutlet to provide to our LMWProgressSliderInfo instance, so it can handle the sizing to display progress.
+ */
+@property IBOutlet WKInterfaceGroup *volumeBarGroup;
+
+/**
  The group for the shuffle button which is highlighted when the shuffle mode is active.
  */
 @property IBOutlet WKInterfaceGroup *shuffleButtonGroup;
@@ -84,13 +114,6 @@
 - (IBAction)progressPanGesture:(WKPanGestureRecognizer*)panGestureRecognizer;
 
 /**
- The play/pause tap gesture recognizer was tapped.
-
- @param tapGestureRecognizer The tap gesture recognizer.
- */
-- (IBAction)playPauseTapGestureRecognizerTapped:(WKTapGestureRecognizer*)tapGestureRecognizer;
-
-/**
  The favourites button's "tap handler".
  
  @param sender The sender of the action.
@@ -118,19 +141,11 @@
  */
 - (IBAction)browseLibraryButtonSelector:(id)sender;
 
-/**
- The next song gesture was swiped.
-
- @param swipeGestureRecognizer The swipe gesture recognizer.
- */
-- (IBAction)nextSongGestureSwiped:(WKSwipeGestureRecognizer*)swipeGestureRecognizer;
-
-/**
- The previous song gesture was swiped.
- 
- @param swipeGestureRecognizer The swipe gesture recognizer.
- */
-- (IBAction)previousSongGestureSwiped:(WKSwipeGestureRecognizer*)swipeGestureRecognizer;
+- (IBAction)nextTrackButtonSelector:(id)sender;
+- (IBAction)previousTrackButtonSelector:(id)sender;
+- (IBAction)playPauseButtonSelector:(id)sender;
+- (IBAction)volumeDownButtonSelector:(id)sender;
+- (IBAction)volumeUpButtonSelector:(id)sender;
 
 /**
  Writes a string to the title label.

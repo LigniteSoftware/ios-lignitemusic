@@ -30,6 +30,11 @@
  */
 @property id<LMWProgressSliderDelegate> delegate;
 
+/**
+ The width of the progress slider. The default is the width of the interfaceController's frame.
+ */
+@property CGFloat width;
+
 
 /**
  Initialize the progress slider info with a certain size.
@@ -39,7 +44,9 @@
  @param interfaceController The interface controller that contains the progress bar.
  @return The initialized progress slider info object.
  */
-- (instancetype)initWithProgressBarGroup:(WKInterfaceGroup*)progressBarGroup inContainer:(WKInterfaceGroup*)containerGroup onInterfaceController:(WKInterfaceController*)interfaceController;
+- (instancetype)initWithProgressBarGroup:(WKInterfaceGroup*)progressBarGroup
+							 inContainer:(WKInterfaceGroup*)containerGroup
+				   onInterfaceController:(WKInterfaceController*)interfaceController;
 
 /**
  Handles the actual gesture, coming in from the interface controller that has the root group connected through an IBOutlet.

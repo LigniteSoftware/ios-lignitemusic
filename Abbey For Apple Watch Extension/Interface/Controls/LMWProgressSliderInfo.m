@@ -75,7 +75,7 @@
 		return;
 	}
 	
-	[self setWidthOfSlider:self.interfaceController.contentFrame.size.width * percentage
+	[self setWidthOfSlider:self.width * percentage
 				  animated:animated];
 }
 
@@ -170,7 +170,10 @@
 	}
 }
 
-- (instancetype)initWithProgressBarGroup:(WKInterfaceGroup*)progressBarGroup inContainer:(WKInterfaceGroup *)containerGroup onInterfaceController:(WKInterfaceController *)interfaceController {
+- (instancetype)initWithProgressBarGroup:(WKInterfaceGroup*)progressBarGroup
+							 inContainer:(WKInterfaceGroup*)containerGroup
+				   onInterfaceController:(WKInterfaceController*)interfaceController {
+	
 	self = [super init];
 	if(self){
 		self.progressBar = progressBarGroup;
@@ -178,7 +181,9 @@
 		self.interfaceController = interfaceController;
 		self.isShrunk = YES;
 		
-		self.size = CGSizeMake(0, 20);
+		self.width = self.interfaceController.contentFrame.size.width;
+		
+		self.size = CGSizeMake(0, 14);
 	}
 	return self;
 }

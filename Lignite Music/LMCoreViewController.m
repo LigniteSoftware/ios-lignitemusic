@@ -1310,6 +1310,9 @@ LMControlBarViewDelegate
 	LMPebbleManager *pebbleManager = [LMPebbleManager sharedPebbleManager];
 	[pebbleManager attachToViewController:self];
 	
+	LMAppleWatchBridge *appleWatchBridge = [LMAppleWatchBridge sharedAppleWatchBridge];
+	[appleWatchBridge attachToViewController:self];
+	
 	
 	if(@available(iOS 11, *)){
 		self.navigationBar = [[LMNavigationBar alloc] initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, 64.0f)];

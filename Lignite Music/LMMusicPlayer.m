@@ -1389,6 +1389,8 @@ BOOL shuffleForDebug = NO;
 			[delegate trackMovedInQueue:currentMusicTrack];
 		}
 	}
+	
+	[self.watchBridge sendUpNextToWatch];
 }
 	
 - (LMMusicTrackCollection*)nowPlayingCollection {
