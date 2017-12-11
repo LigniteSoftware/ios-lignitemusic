@@ -455,14 +455,27 @@
 	dispatch_async(dispatch_get_main_queue(), ^{
 		if([key isEqualToString:LMAppleWatchControlKeyPlayPause]){
 			[self.musicPlayer invertPlaybackState];
+			
+			replyHandler(@{
+						   LMAppleWatchCommandSuccess: @(YES),
+						   LMAppleWatchNowPlayingInfoKeyIsPlaying: @(self.musicPlayer.playbackState == LMMusicPlaybackStatePlaying)
+						   });
 		}
 		else if([key isEqualToString:LMAppleWatchControlKeyNextTrack]){
 			[self.musicPlayer skipToNextTrack];
 			[self.musicPlayer play];
+			
+			replyHandler(@{
+						   LMAppleWatchCommandSuccess: @(YES)
+						   });
 		}
 		else if([key isEqualToString:LMAppleWatchControlKeyPreviousTrack]){
 			[self.musicPlayer skipToPreviousItem];
 			[self.musicPlayer play];
+			
+			replyHandler(@{
+						   LMAppleWatchCommandSuccess: @(YES)
+						   });
 		}
 		else if([key isEqualToString:LMAppleWatchControlKeyFavouriteUnfavourite]){
 			if(self.musicPlayer.nowPlayingTrack.isFavourite){
@@ -471,10 +484,19 @@
 			else{
 				[self.musicPlayer addTrackToFavourites:self.musicPlayer.nowPlayingTrack];
 			}
+			
+			replyHandler(@{
+						   LMAppleWatchCommandSuccess: @(YES),
+						   LMAppleWatchMusicTrackInfoKeyIsFavourite: @(self.musicPlayer.nowPlayingTrack.isFavourite)
+						   });
 		}
 		else if([key isEqualToString:LMAppleWatchControlKeyInvertShuffleMode]){
 			self.musicPlayer.shuffleMode = !self.musicPlayer.shuffleMode;
-			[self sendUpNextToWatch];
+
+			replyHandler(@{
+						   LMAppleWatchCommandSuccess: @(YES),
+						   LMAppleWatchNowPlayingInfoKeyShuffleMode: @(self.musicPlayer.shuffleMode)
+						   });
 		}
 		else if([key isEqualToString:LMAppleWatchControlKeyNextRepeatMode]){
 			LMMusicRepeatMode newRepeatMode = self.musicPlayer.repeatMode;
@@ -488,6 +510,11 @@
 				newRepeatMode = LMMusicRepeatModeNone;
 			}
 			self.musicPlayer.repeatMode = newRepeatMode;
+			
+			replyHandler(@{
+						   LMAppleWatchCommandSuccess: @(YES),
+						   LMAppleWatchNowPlayingInfoKeyRepeatMode: @(self.musicPlayer.repeatMode)
+						   });
 		}
 		else if([key isEqualToString:LMAppleWatchControlKeyUpNextTrackSelected]){
 			NSInteger nowPlayingQueueIndex = [[message objectForKey:LMAppleWatchControlKeyUpNextTrackSelected] integerValue];
@@ -532,13 +559,19 @@
 			[self.volumeViewSlider setValue:self.volumeViewSlider.value + 0.0625 animated:YES];
 			[self.volumeViewSlider sendActionsForControlEvents:UIControlEventTouchUpInside];
 			
-			[self sendNowPlayingInfoToWatch];
+			replyHandler(@{
+						   LMAppleWatchCommandSuccess: @(YES),
+						   LMAppleWatchNowPlayingInfoKeyVolume: @(self.volumeViewSlider.value)
+						   });
 		}
 		else if([key isEqualToString:LMAppleWatchControlKeyVolumeDown]){
 			[self.volumeViewSlider setValue:self.volumeViewSlider.value - 0.0625 animated:YES];
 			[self.volumeViewSlider sendActionsForControlEvents:UIControlEventTouchUpInside];
 			
-			[self sendNowPlayingInfoToWatch];
+			replyHandler(@{
+						   LMAppleWatchCommandSuccess: @(YES),
+						   LMAppleWatchNowPlayingInfoKeyVolume: @(self.volumeViewSlider.value)
+						   });
 		}
 	});
 }
@@ -559,7 +592,7 @@
 - (void)handleVolumeChanged:(id)sender{
 		NSLog(@"%s - %f", __PRETTY_FUNCTION__, self.volumeViewSlider.value);
 	
-	[self sendNowPlayingInfoToWatch];
+//	[self sendNowPlayingInfoToWatch];
 }
 
 - (void)attachToViewController:(UIViewController*)viewController {

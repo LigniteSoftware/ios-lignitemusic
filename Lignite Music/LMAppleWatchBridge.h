@@ -100,6 +100,9 @@
 //Volume down.
 #define LMAppleWatchControlKeyVolumeDown @"LMAppleWatchControlKeyVolumeDown"
 
+//A BOOL of whether or not the command sent was a success.
+#define LMAppleWatchCommandSuccess @"LMAppleWatchCommandSuccess"
+
 @interface LMAppleWatchBridge : NSObject
 
 /**

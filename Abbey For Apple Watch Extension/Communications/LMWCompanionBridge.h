@@ -100,6 +100,9 @@
 //Volume down.
 #define LMAppleWatchControlKeyVolumeDown @"LMAppleWatchControlKeyVolumeDown"
 
+//A BOOL of whether or not the command sent was a success.
+#define LMAppleWatchCommandSuccess @"LMAppleWatchCommandSuccess"
+
 @protocol LMWCompanionBridgeDelegate<NSObject>
 @optional
 
@@ -157,6 +160,13 @@
 + (LMWCompanionBridge*)sharedCompanionBridge;
 
 /**
+ Whether or not the watch is connected to the phone and the phone is reachable for live messaging.
+
+ @return YES if the phone is connected and reachable, NO otherwise.
+ */
+- (BOOL)connected;
+
+/**
  Adds a delegate to the list of delegates.
 
  @param delegate The delegate to add.
@@ -176,11 +186,15 @@
 - (void)askCompanionForNowPlayingTrackInfo;
 
 /**
- Sends a control message to the companion for doing actions such as changing the song. Automatically handles resending in the case of disconnection.
+ Sends a control message to the companion for doing actions such as changing the song. Automatically handles resending in the case of disconnection. Both handlers are always called on the main queue for thread safety.
 
  @param key The communication key to send to the phone.
+ @param successHandler The success handler for when the command was sent and the phone has processed it. The response dictionary is the reply dictionary from the phone.
+ @param errorHandler The error handler for when the command could not reach the phone (code 503) or another error occurred.
  */
-- (void)sendMusicControlMessageToPhoneWithKey:(NSString*)key;
+- (void)sendMusicControlMessageToPhoneWithKey:(NSString*)key
+							   successHandler:(nullable void (^)(NSDictionary *response))successHandler
+								 errorHandler:(nullable void (^)(NSError *error))errorHandler;
 
 /**
  Sets the now playing track based off the next up/now playing queue, from an index provided by a track displayed in the up next section. Confusing, eh?

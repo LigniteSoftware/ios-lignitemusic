@@ -55,6 +55,7 @@
 
 
 - (void)musicTrackDidChange:(LMWMusicTrackInfo *)musicTrackInfo {
+	//Track info is already set within the companion
 	dispatch_async(dispatch_get_main_queue(), ^{
 		if(musicTrackInfo == nil){
 			[self.titleLabel setText:NSLocalizedString(@"NothingPlaying", nil)];
@@ -68,7 +69,7 @@
 			[self.titleLabel setText:musicTrackInfo.title];
 			[self.subtitleLabel setText:musicTrackInfo.subtitle];
 			[self.albumArtImage setImage:musicTrackInfo.albumArt];
-			[self.favouriteImage setImage:musicTrackInfo.isFavourite ? [UIImage imageNamed:@"icon_favourite_red.png"] : [UIImage imageNamed:@"icon_favourite_outlined_white.png"]];
+			[self reloadFavouriteButton];
 		}
 	});
 }
@@ -79,18 +80,54 @@
 	});
 }
 
-- (void)updateProgressBar {
+- (void)reloadTrackProgressBar {
 	dispatch_async(dispatch_get_main_queue(), ^{
 		[self.progressSliderInfo setPercentage:((CGFloat)self.companionBridge.nowPlayingInfo.currentPlaybackTime/(CGFloat)self.companionBridge.nowPlayingInfo.playbackDuration)
 								  animated:YES];
 	});
 }
 
+- (void)reloadShuffleButton {
+	[self animateWithDuration:0.4 animations:^{
+		[self.shuffleButtonGroup setBackgroundColor:self.companionBridge.nowPlayingInfo.shuffleMode ? [UIColor redColor] : [UIColor blackColor]];
+	}];
+	
+	[self.shuffleImage setImageNamed:@"icon_shuffle_white.png"];
+}
+
+- (void)reloadFavouriteButton {
+	[self.favouriteImage setImage:self.companionBridge.nowPlayingInfo.nowPlayingTrack.isFavourite ? [UIImage imageNamed:@"icon_favourite_red.png"] : [UIImage imageNamed:@"icon_favourite_outlined_white.png"]];
+}
+
+- (void)reloadRepeatButton {
+	UIImage *newRepeatImage = nil;
+	switch(self.companionBridge.nowPlayingInfo.repeatMode){
+		case LMMusicRepeatModeDefault:
+		case LMMusicRepeatModeNone:
+		case LMMusicRepeatModeAll:
+			newRepeatImage = [UIImage imageNamed:@"icon_repeat_general_white.png"];
+			break;
+		case LMMusicRepeatModeOne:
+			newRepeatImage = [UIImage imageNamed:@"icon_repeat_one_white.png"];
+			break;
+			
+	}
+	[self.repeatImage setImage:newRepeatImage];
+	
+	[self animateWithDuration:0.4 animations:^{
+		[self.repeatButtonGroup setBackgroundColor:(self.companionBridge.nowPlayingInfo.repeatMode != LMMusicRepeatModeNone) ? [UIColor redColor] : [UIColor blackColor]];
+	}];
+}
+
+- (void)reloadPlayPauseButton {
+	[self.playPauseImage setImageNamed:self.companionBridge.nowPlayingInfo.playing ? @"icon_pause.png" : @"icon_play.png"];
+}
+
+- (void)reloadVolumeProgressBar {
+	[self.volumeProgressInfo setPercentage:self.companionBridge.nowPlayingInfo.volume animated:YES];
+}
+
 - (void)nowPlayingInfoDidChange:(LMWNowPlayingInfo *)nowPlayingInfo {
-//	[self debug:[NSString stringWithFormat:@"%d/%d", (int)nowPlayingInfo.currentPlaybackTime, (int)nowPlayingInfo.playbackDuration]];
-	
-	[self updateProgressBar];
-	
 	if(nowPlayingInfo.playing){
 		dispatch_async(dispatch_get_main_queue(), ^{
 			if(self.progressBarUpdateTimer){
@@ -102,38 +139,16 @@
 																			block:
 												^(NSTimer * _Nonnull timer) {
 													self.companionBridge.nowPlayingInfo.currentPlaybackTime++;
-													[self updateProgressBar];
+													[self reloadTrackProgressBar];
 												}];
 			
-			UIImage *newRepeatImage = nil;
-			switch(nowPlayingInfo.repeatMode){
-				case LMMusicRepeatModeDefault:
-				case LMMusicRepeatModeNone:
-				case LMMusicRepeatModeAll:
-					newRepeatImage = [UIImage imageNamed:@"icon_repeat_general_white.png"];
-					break;
-				case LMMusicRepeatModeOne:
-					newRepeatImage = [UIImage imageNamed:@"icon_repeat_one_white.png"];
-					break;
-					
-			}
-			[self.repeatImage setImage:newRepeatImage];
+			[self reloadShuffleButton];
+			[self reloadRepeatButton];
 			
-			[self.shuffleImage setImageNamed:@"icon_shuffle_white.png"];
+			[self reloadVolumeProgressBar];
+			
 			[self.nextTrackImage setImageNamed:@"next_track.png"];
 			[self.previousTrackImage setImageNamed:@"previous_track.png"];
-//			[self.volumeUpImage setImageNamed:@"icon_plus_white.png"];
-//			[self.volumeDownImage setImageNamed:@"icon_minus.png"];
-			
-			[self.volumeProgressInfo setPercentage:nowPlayingInfo.volume animated:YES];
-			
-//			[self.titleLabel setText:[NSString stringWithFormat:@"%.02f", nowPlayingInfo.volume]];
-			
-			[self animateWithDuration:0.4 animations:^{
-				[self.repeatButtonGroup setBackgroundColor:(nowPlayingInfo.repeatMode != LMMusicRepeatModeNone) ? [UIColor redColor] : [UIColor blackColor]];
-				
-				[self.shuffleButtonGroup setBackgroundColor:(nowPlayingInfo.shuffleMode) ? [UIColor redColor] : [UIColor blackColor]];
-			}];
 		});
 	}
 	else{
@@ -142,7 +157,8 @@
 	}
 	
 	dispatch_async(dispatch_get_main_queue(), ^{
-		[self.playPauseImage setImageNamed:nowPlayingInfo.playing ? @"icon_pause.png" : @"icon_play.png"];
+		[self reloadTrackProgressBar];
+		[self reloadPlayPauseButton];
 	});
 }
 
@@ -182,22 +198,87 @@
 	});
 }
 
+- (void)presentPhoneNotRespondingControllerWithHandler:(WKAlertActionHandler)handler {
+	WKAlertAction *okayAction = [WKAlertAction actionWithTitle:NSLocalizedString(@"DarnOkay", nil)
+														 style:WKAlertActionStyleDefault
+													   handler:handler];
+	
+	[self presentAlertControllerWithTitle:NSLocalizedString(@"OhBoy", nil)
+								  message:NSLocalizedString(@"PhoneDidNotReplyToCommandError", nil)
+						   preferredStyle:WKAlertControllerStyleAlert actions:@[ okayAction ]];
+}
+
+- (void)presentUnknownErrorControllerWithError:(NSError*)error handler:(WKAlertActionHandler)handler {
+	WKAlertAction *okayAction = [WKAlertAction actionWithTitle:NSLocalizedString(@"DarnOkay", nil)
+														 style:WKAlertActionStyleDefault
+													   handler:handler];
+	
+	NSString *localizedAlertString = [NSString stringWithFormat:NSLocalizedString(@"UnknownErrorAlert", nil), error.code, error.localizedDescription];
+	
+	[self presentAlertControllerWithTitle:NSLocalizedString(@"OhBoy", nil)
+								  message:localizedAlertString
+						   preferredStyle:WKAlertControllerStyleAlert actions:@[ okayAction ]];
+}
+
+- (void)handleConnectionError:(NSError*)error withHandler:(WKAlertActionHandler)handler {
+	if(error.code == 503 || error.code == 7017){
+		[self presentPhoneNotRespondingControllerWithHandler:handler];
+	}
+	else{
+		[self presentUnknownErrorControllerWithError:error handler:handler];
+	}
+}
+
 - (IBAction)favouriteButtonSelector:(id)sender {
 	[self showLoadingIconOnInterfaceImage:self.favouriteImage];
 	
-	[self.companionBridge sendMusicControlMessageToPhoneWithKey:LMAppleWatchControlKeyFavouriteUnfavourite];
+	[self.companionBridge sendMusicControlMessageToPhoneWithKey:LMAppleWatchControlKeyFavouriteUnfavourite
+												 successHandler:^(NSDictionary *response) {
+													 BOOL isFavourite = [[response objectForKey:LMAppleWatchMusicTrackInfoKeyIsFavourite] boolValue];
+													 
+													 self.companionBridge.nowPlayingInfo.nowPlayingTrack.isFavourite = isFavourite;
+													 
+													 [self reloadFavouriteButton];
+													 
+												 } errorHandler:^(NSError *error) {
+													 [self handleConnectionError:error withHandler:^{
+														 [self reloadFavouriteButton];
+													 }];
+												 }];
 }
 
 - (IBAction)shuffleButtonSelector:(id)sender {
 	[self showLoadingIconOnInterfaceImage:self.shuffleImage];
 	
-	[self.companionBridge sendMusicControlMessageToPhoneWithKey:LMAppleWatchControlKeyInvertShuffleMode];
+	[self.companionBridge sendMusicControlMessageToPhoneWithKey:LMAppleWatchControlKeyInvertShuffleMode
+												 successHandler:^(NSDictionary *response) {
+													 BOOL isShuffling = [[response objectForKey:LMAppleWatchNowPlayingInfoKeyShuffleMode] boolValue];
+													 
+													 self.companionBridge.nowPlayingInfo.shuffleMode = isShuffling;
+													 
+													 [self reloadShuffleButton];
+												 } errorHandler:^(NSError *error) {
+													 [self handleConnectionError:error withHandler:^{
+														 [self reloadShuffleButton];
+													 }];
+												 }];
 }
 
 - (IBAction)repeatButtonSelector:(id)sender {
 	[self showLoadingIconOnInterfaceImage:self.repeatImage];
 	
-	[self.companionBridge sendMusicControlMessageToPhoneWithKey:LMAppleWatchControlKeyNextRepeatMode];
+	[self.companionBridge sendMusicControlMessageToPhoneWithKey:LMAppleWatchControlKeyNextRepeatMode
+												 successHandler:^(NSDictionary *response) {
+													 LMMusicRepeatMode repeatMode = (LMMusicRepeatMode)[[response objectForKey:LMAppleWatchNowPlayingInfoKeyRepeatMode] integerValue];
+													 
+													 self.companionBridge.nowPlayingInfo.repeatMode = repeatMode;
+													 
+													 [self reloadRepeatButton];
+												 } errorHandler:^(NSError *error) {
+													 [self handleConnectionError:error withHandler:^{
+														 [self reloadRepeatButton];
+													 }];
+												 }];
 }
 
 - (IBAction)browseLibraryButtonSelector:(id)sender {
@@ -207,31 +288,78 @@
 - (IBAction)nextTrackButtonSelector:(id)sender {
 	[self showLoadingIconOnInterfaceImage:self.nextTrackImage];
 	
-	[self.companionBridge sendMusicControlMessageToPhoneWithKey:LMAppleWatchControlKeyNextTrack];
+	[self.companionBridge sendMusicControlMessageToPhoneWithKey:LMAppleWatchControlKeyNextTrack
+												 successHandler:^(NSDictionary *response) {
+													 [self.nextTrackImage setImageNamed:@"next_track.png"];
+												 } errorHandler:^(NSError *error) {
+													 [self handleConnectionError:error withHandler:^{
+														 [self.nextTrackImage setImageNamed:@"next_track.png"];
+													 }];
+												 }];
 }
 
 - (IBAction)previousTrackButtonSelector:(id)sender {
 	[self showLoadingIconOnInterfaceImage:self.previousTrackImage];
 	
-	[self.companionBridge sendMusicControlMessageToPhoneWithKey:LMAppleWatchControlKeyPreviousTrack];
+	[self.companionBridge sendMusicControlMessageToPhoneWithKey:LMAppleWatchControlKeyPreviousTrack
+												 successHandler:^(NSDictionary *response) {
+													 [self.previousTrackImage setImageNamed:@"previous_track.png"];
+												 } errorHandler:^(NSError *error) {
+													 [self handleConnectionError:error withHandler:^{
+														 [self.previousTrackImage setImageNamed:@"previous_track.png"];
+													 }];
+												 }];
 }
 
 - (IBAction)playPauseButtonSelector:(id)sender {
 	[self showLoadingIconOnInterfaceImage:self.playPauseImage];
 	
-	[self.companionBridge sendMusicControlMessageToPhoneWithKey:LMAppleWatchControlKeyPlayPause];
+	[self.companionBridge sendMusicControlMessageToPhoneWithKey:LMAppleWatchControlKeyPreviousTrack
+												 successHandler:^(NSDictionary *response) {
+													 BOOL isPlaying = [[response objectForKey:LMAppleWatchNowPlayingInfoKeyIsPlaying] boolValue];
+													 
+													 self.companionBridge.nowPlayingInfo.playing = isPlaying;
+													 
+													 [self reloadPlayPauseButton];
+												 } errorHandler:^(NSError *error) {
+													 [self handleConnectionError:error withHandler:^{
+														 [self reloadPlayPauseButton];
+													 }];
+												 }];
 }
 
 - (IBAction)volumeDownButtonSelector:(id)sender {
 //	[self showLoadingIconOnInterfaceImage:self.volumeDownImage];
 	
-	[self.companionBridge sendMusicControlMessageToPhoneWithKey:LMAppleWatchControlKeyVolumeDown];
+	[self.companionBridge sendMusicControlMessageToPhoneWithKey:LMAppleWatchControlKeyVolumeDown
+												 successHandler:^(NSDictionary *response) {
+													 CGFloat newVolume = [[response objectForKey:LMAppleWatchNowPlayingInfoKeyVolume] floatValue];
+													 
+													 self.companionBridge.nowPlayingInfo.volume = newVolume;
+													 
+													 [self reloadVolumeProgressBar];
+												 } errorHandler:^(NSError *error) {
+													 [self handleConnectionError:error withHandler:nil];
+												 }];
+	
+//	[self.companionBridge sendMusicControlMessageToPhoneWithKey:LMAppleWatchControlKeyVolumeDown];
 }
 
 - (IBAction)volumeUpButtonSelector:(id)sender {
 //	[self showLoadingIconOnInterfaceImage:self.volumeUpImage];
 	
-	[self.companionBridge sendMusicControlMessageToPhoneWithKey:LMAppleWatchControlKeyVolumeUp];
+	[self.companionBridge sendMusicControlMessageToPhoneWithKey:LMAppleWatchControlKeyVolumeUp
+												 successHandler:^(NSDictionary *response) {
+													 CGFloat newVolume = [[response objectForKey:LMAppleWatchNowPlayingInfoKeyVolume] floatValue];
+													 
+													 self.companionBridge.nowPlayingInfo.volume = newVolume;
+													 
+													 [self reloadVolumeProgressBar];
+												 } errorHandler:^(NSError *error) {
+													 [self handleConnectionError:error withHandler:nil];
+												 }];
+	
+//	[self.companionBridge sendMusicControlMessageToPhoneWithKey:LMAppleWatchControlKeyVolumeUp];
 }
 
 

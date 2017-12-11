@@ -1338,9 +1338,7 @@ BOOL shuffleForDebug = NO;
 		if([delegate respondsToSelector:@selector(trackAddedToFavourites:)]){
 			[delegate trackAddedToFavourites:track];
 		}
-	}
-	
-	[self.watchBridge sendNowPlayingTrackToWatch:YES];
+	}	
 }
 
 - (void)removeTrackFromFavourites:(LMMusicTrack*)track {
@@ -1352,9 +1350,7 @@ BOOL shuffleForDebug = NO;
 		if([delegate respondsToSelector:@selector(trackRemovedFromFavourites:)]){
 			[delegate trackRemovedFromFavourites:track];
 		}
-	}
-	
-	[self.watchBridge sendNowPlayingTrackToWatch:YES];
+	}	
 }
 
 - (void)logArray:(NSMutableArray*)array {
@@ -1503,8 +1499,6 @@ BOOL shuffleForDebug = NO;
 			[delegate musicPlaybackModesDidChange:self.shuffleMode repeatMode:self.repeatMode];
 		}
 	}
-	
-	[self.watchBridge sendNowPlayingInfoToWatch];
 }
 
 - (void)setRepeatMode:(LMMusicRepeatMode)repeatMode {

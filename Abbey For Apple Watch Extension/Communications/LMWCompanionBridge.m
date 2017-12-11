@@ -25,6 +25,11 @@
 
 @implementation LMWCompanionBridge
 
+//Don't forget to add iPhone unlock warning && activation state shit
+- (BOOL)connected {
+	return self.session.reachable;
+}
+
 - (void)debug:(NSString*)debug {
 	for(id<LMWCompanionBridgeDelegate> delegate in self.delegates){
 		if([delegate respondsToSelector:@selector(companionDebug:)]){
@@ -162,22 +167,31 @@
 	}
 }
 
-- (void)sendMusicControlMessageToPhoneWithKey:(NSString*)key {
+- (void)sendMusicControlMessageToPhoneWithKey:(NSString*)key
+							   successHandler:(nullable void (^)(NSDictionary *response))successHandler
+								 errorHandler:(nullable void (^)(NSError *error))errorHandler {
+	
 	if(self.session.reachable){
 		[self.session sendMessage:@{ LMAppleWatchCommunicationKey:key }
 					 replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
-						NSLog(@"Got reply %@", replyMessage);
+						 dispatch_async(dispatch_get_main_queue(), ^{
+							successHandler(replyMessage);
+						 });
 					 }
 					 errorHandler:^(NSError * _Nonnull error) {
-						NSLog(@"Error %@", error);
+						 dispatch_async(dispatch_get_main_queue(), ^{
+							 errorHandler(error);
+						 });
 					 }
-		];
+		 ];
 	}
 	else{
 		dispatch_async(dispatch_get_main_queue(), ^{
-			[NSTimer scheduledTimerWithTimeInterval:0.5 repeats:NO block:^(NSTimer * _Nonnull timer) {
-				[self sendMusicControlMessageToPhoneWithKey:key];
-			}];
+			NSError *notRespondingError = [NSError errorWithDomain:@"The phone is not responding"
+															  code:503
+														  userInfo:nil];
+			
+			errorHandler(notRespondingError);
 		});
 	}
 }
