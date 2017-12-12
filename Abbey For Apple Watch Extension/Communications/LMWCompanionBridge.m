@@ -219,12 +219,17 @@
 			}
 		}];
 	}
-	else{
+	else if(attempts < 3){
+		attempts++;
+		
 		dispatch_async(dispatch_get_main_queue(), ^{
 			[NSTimer scheduledTimerWithTimeInterval:0.5 repeats:NO block:^(NSTimer * _Nonnull timer) {
 				[self askCompanionForNowPlayingTrackInfo];
 			}];
 		});
+	}
+	else if(attempts >= 3){
+		attempts = 0;
 	}
 }
 
@@ -277,9 +282,11 @@
 						 withPageIndexes:(NSArray<NSNumber*>*)pageIndexes
 						   forMusicTypes:(NSArray<NSNumber*>*)musicTypes
 					   withPersistentIDs:(NSArray<NSNumber*>*)persistentIDs
-							replyHandler:(nullable void (^)(NSDictionary<NSString *, id> *replyMessage))replyHandler
-							errorHandler:(nullable void (^)(NSError *error))errorHandler {
+							replyHandler:(nonnull void (^)(NSDictionary<NSString *, id> *replyMessage))replyHandler
+							errorHandler:(nonnull void (^)(NSError *error))errorHandler {
 	
+	
+	static int attempts = 0;
 	
 	if(self.session.reachable){
 		NSDictionary *messageDictionary = @{
@@ -289,10 +296,51 @@
 											LMAppleWatchBrowsingKeySelectedIndexes: selectedIndexes,
 											LMAppleWatchBrowsingKeyPageIndexes: pageIndexes
 											};
-	
+		
 		[self.session sendMessage:messageDictionary
-					 replyHandler:replyHandler
-					 errorHandler:errorHandler];
+					 replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
+						 attempts = 0;
+						 replyHandler(replyMessage);
+						 NSLog(@"Noice");
+					 } errorHandler:^(NSError * _Nonnull error) {
+						 attempts++;
+						 if(attempts < 3){
+							 NSLog(@"Error fetching. Trying again: %@", error);
+							 
+							 [self requestTracksWithSelectedIndexes:selectedIndexes
+													withPageIndexes:pageIndexes
+													  forMusicTypes:musicTypes
+												  withPersistentIDs:persistentIDs
+													   replyHandler:replyHandler
+													   errorHandler:errorHandler];
+						 }
+						 else{
+							 attempts = 0;
+							 errorHandler(error);
+							 
+							 NSLog(@"Errors are too much, sorry %@", error);
+						 }
+					 }];
+	}
+	else if(attempts < 3){
+		attempts++;
+		
+		[NSTimer scheduledTimerWithTimeInterval:1.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
+			[self requestTracksWithSelectedIndexes:selectedIndexes
+								   withPageIndexes:pageIndexes
+									 forMusicTypes:musicTypes
+								 withPersistentIDs:persistentIDs
+									  replyHandler:replyHandler
+									  errorHandler:errorHandler];
+		}];
+	}
+	else if(attempts >= 3){
+		NSError *notReplyingError = [NSError errorWithDomain:@"Phone isn't replying"
+														code:503
+													userInfo:nil];
+		errorHandler(notReplyingError);
+		
+		attempts = 0;
 	}
 }
 
@@ -300,9 +348,10 @@
 						 withPageIndexes:(NSArray<NSNumber*>*)pageIndexes
 						   forMusicTypes:(NSArray<NSNumber*>*)musicTypes
 					   withPersistentIDs:(NSArray<NSNumber*>*)persistentIDs
-							replyHandler:(nullable void (^)(NSDictionary<NSString *, id> *replyMessage))replyHandler
-							errorHandler:(nullable void (^)(NSError *error))errorHandler {
+							replyHandler:(nonnull void (^)(NSDictionary<NSString *, id> *replyMessage))replyHandler
+							errorHandler:(nonnull void (^)(NSError *error))errorHandler {
 	
+	static int attempts = 0;
 	
 	if(self.session.reachable){
 		NSDictionary *messageDictionary = @{
@@ -314,8 +363,44 @@
 											};
 		
 		[self.session sendMessage:messageDictionary
-					 replyHandler:replyHandler
-					 errorHandler:errorHandler];
+					 replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
+						 attempts = 0;
+						 replyHandler(replyMessage);
+					 } errorHandler:^(NSError * _Nonnull error) {
+						 attempts++;
+						 if(attempts < 3){
+							 [self shuffleTracksWithSelectedIndexes:selectedIndexes
+													withPageIndexes:pageIndexes
+													  forMusicTypes:musicTypes
+												  withPersistentIDs:persistentIDs
+													   replyHandler:replyHandler
+													   errorHandler:errorHandler];
+						 }
+						 else{
+							 attempts = 0;
+							 errorHandler(error);
+						 }
+					 }];
+	}
+	else if(attempts < 3){
+		attempts++;
+		
+		[NSTimer scheduledTimerWithTimeInterval:1.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
+			[self shuffleTracksWithSelectedIndexes:selectedIndexes
+								   withPageIndexes:pageIndexes
+									 forMusicTypes:musicTypes
+								 withPersistentIDs:persistentIDs
+									  replyHandler:replyHandler
+									  errorHandler:errorHandler];
+		}];
+	}
+	else if(attempts >= 3){
+		NSError *notReplyingError = [NSError errorWithDomain:@"Phone isn't replying"
+														code:503
+													userInfo:nil];
+		errorHandler(notReplyingError);
+		
+		attempts = 0;
 	}
 }
 
@@ -323,9 +408,11 @@
 							 withPageIndexes:(NSArray<NSNumber*>*)pageIndexes
 							   forMusicTypes:(NSArray<NSNumber*>*)musicTypes
 						   withPersistentIDs:(NSArray<NSNumber*>*)persistentIDs
-								replyHandler:(nullable void (^)(NSDictionary<NSString *, id> *replyMessage))replyHandler
-								errorHandler:(nullable void (^)(NSError *error))errorHandler {
+								replyHandler:(nonnull void (^)(NSDictionary<NSString *, id> *replyMessage))replyHandler
+								errorHandler:(nonnull void (^)(NSError *error))errorHandler {
 	
+	
+	static int attempts = 0;
 	
 	if(self.session.reachable){
 		NSDictionary *messageDictionary = @{
@@ -339,6 +426,47 @@
 		[self.session sendMessage:messageDictionary
 					 replyHandler:replyHandler
 					 errorHandler:errorHandler];
+	}
+	else if(attempts < 3){
+		attempts++;
+		
+		[NSTimer scheduledTimerWithTimeInterval:1.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
+			[self playSpecificTrackWithSelectedIndexes:selectedIndexes
+								   withPageIndexes:pageIndexes
+									 forMusicTypes:musicTypes
+								 withPersistentIDs:persistentIDs
+									  replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
+										  attempts = 0;
+										  replyHandler(replyMessage);
+										  NSLog(@"Noice");
+									  } errorHandler:^(NSError * _Nonnull error) {
+										  attempts++;
+										  if(attempts < 3){
+											  NSLog(@"Error fetching. Trying again: %@", error);
+											  
+											  [self playSpecificTrackWithSelectedIndexes:selectedIndexes
+																	 withPageIndexes:pageIndexes
+																	   forMusicTypes:musicTypes
+																   withPersistentIDs:persistentIDs
+																		replyHandler:replyHandler
+																		errorHandler:errorHandler];
+										  }
+										  else{
+											  attempts = 0;
+											  errorHandler(error);
+											  
+											  NSLog(@"Errors are too much, sorry %@", error);
+										  }
+									  }];
+		}];
+	}
+	else if(attempts >= 3){
+		NSError *notReplyingError = [NSError errorWithDomain:@"Phone isn't replying"
+														code:503
+													userInfo:nil];
+		errorHandler(notReplyingError);
+		
+		attempts = 0;
 	}
 }
 

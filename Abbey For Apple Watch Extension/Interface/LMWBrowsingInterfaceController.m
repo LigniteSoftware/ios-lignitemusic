@@ -161,7 +161,7 @@
 			  NSLocalizedString((self.totalNumberOfEntries == 1) ? @"XTrack" : @"XTracks", nil), self.totalNumberOfEntries]
 			 ];
 			
-			[shuffleAllTracksRow.icon setImage:[UIImage imageNamed:@"icon_shuffle.png"]];
+			[shuffleAllTracksRow.icon setImage:[UIImage imageNamed:@"icon_shuffle_white.png"]];
 			
 			shuffleAllTracksRow.isShuffleAllButton = YES;
 		}
@@ -244,6 +244,19 @@
 	[self reloadBrowsingTableWithEntries:tableEntriesArray];
 }
 
+- (void)handleLoadingError:(NSError*)error {
+	dispatch_async(dispatch_get_main_queue(), ^{
+		[self.loadingImage setImage:[UIImage imageNamed:@"apple_watch_sad.png"]];
+		
+		if(error.code == 503 || error.code == 7007){
+			[self.loadingLabel setText:NSLocalizedString(@"PhoneNotConnected", nil)];
+		}
+		else{
+			[self.loadingLabel setText:[NSString stringWithFormat:NSLocalizedString(@"UnknownErrorX", nil), error.code]];
+		}
+	});
+}
+
 - (void)table:(WKInterfaceTable *)table didSelectRowAtIndex:(NSInteger)rowIndex {
 	LMWMusicBrowsingRowController *row = [self.browsingTable rowControllerAtIndex:rowIndex];
 	
@@ -278,7 +291,8 @@
 														  [self handleTracksRequestWithReplyDictionary:replyMessage];
 													  }
 													  errorHandler:^(NSError *error) {
-													NSLog(@"Error: %@", error);
+														NSLog(@"Error: %@", error);
+														  [self handleLoadingError:error];
 													  }];
 		}
 	}
@@ -301,6 +315,8 @@
 												  }
 												  errorHandler:^(NSError *error) {
 													  NSLog(@"Error: %@", error);
+													  [self handleLoadingError:error];
+													  
 												  }];
 	}
 	else if(self.musicType == LMMusicTypeTitles || self.musicType == LMMusicTypeFavourites){
@@ -321,6 +337,7 @@
 													  }
 													  errorHandler:^(NSError *error) {
 														  NSLog(@"Error: %@", error);
+														  [self handleLoadingError:error];
 													  }];
 	}
 	else{ //An actual entry :O
@@ -399,12 +416,13 @@
 											 forMusicTypes:self.musicTypes
 										 withPersistentIDs:self.persistentIDs
 											  replyHandler:^(NSDictionary<NSString *,id> *replyMessage) {
-											NSLog(@"Got reply: %@", replyMessage);
-											
-											[self handleTracksRequestWithReplyDictionary:replyMessage];
+												NSLog(@"Got reply: %@", replyMessage);
+												
+												[self handleTracksRequestWithReplyDictionary:replyMessage];
 											  }
 											 errorHandler:^(NSError *error) {
-											NSLog(@"Error getting tracks: %@", error);
+												 NSLog(@"Error getting initial tracks %@", error);
+												 [self handleLoadingError:error];
 											 }];
 }
 

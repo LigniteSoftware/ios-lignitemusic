@@ -251,8 +251,8 @@
 						 withPageIndexes:(NSArray<NSNumber*>* _Nonnull)pageIndexes
 						   forMusicTypes:(NSArray<NSNumber*>* _Nonnull)musicTypes
 					   withPersistentIDs:(NSArray<NSNumber*>* _Nonnull)persistentIDs
-							replyHandler:(nullable void (^)(NSDictionary<NSString *, id> * _Nonnull replyMessage))replyHandler
-							errorHandler:(nullable void (^)(NSError * _Nonnull error))errorHandler;
+							replyHandler:(nonnull void (^)(NSDictionary<NSString *, id> * _Nonnull replyMessage))replyHandler
+							errorHandler:(nonnull void (^)(NSError * _Nonnull error))errorHandler;
 
 /**
  Shuffles a list of tracks from the phone based on current browsing info.
@@ -268,8 +268,8 @@
 						 withPageIndexes:(NSArray<NSNumber*>* _Nonnull)pageIndexes
 						   forMusicTypes:(NSArray<NSNumber*>* _Nonnull)musicTypes
 					   withPersistentIDs:(NSArray<NSNumber*>* _Nonnull)persistentIDs
-							replyHandler:(nullable void (^)(NSDictionary<NSString *, id> * _Nonnull replyMessage))replyHandler
-							errorHandler:(nullable void (^)(NSError * _Nonnull error))errorHandler;
+							replyHandler:(nonnull void (^)(NSDictionary<NSString *, id> * _Nonnull replyMessage))replyHandler
+							errorHandler:(nonnull void (^)(NSError * _Nonnull error))errorHandler;
 
 /**
  Plays a specific track from a list of tracks from the phone based on current browsing info.
@@ -285,7 +285,7 @@
 							 withPageIndexes:(NSArray<NSNumber*>* _Nonnull)pageIndexes
 							   forMusicTypes:(NSArray<NSNumber*>* _Nonnull)musicTypes
 						   withPersistentIDs:(NSArray<NSNumber*>* _Nonnull)persistentIDs
-								replyHandler:(nullable void (^)(NSDictionary<NSString *, id> * _Nonnull replyMessage))replyHandler
-								errorHandler:(nullable void (^)(NSError * _Nonnull error))errorHandler;
+								replyHandler:(nonnull void (^)(NSDictionary<NSString *, id> * _Nonnull replyMessage))replyHandler
+								errorHandler:(nonnull void (^)(NSError * _Nonnull error))errorHandler;
 
 @end

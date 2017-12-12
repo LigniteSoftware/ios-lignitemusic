@@ -31,37 +31,37 @@
 	dispatch_async(dispatch_get_main_queue(), ^{
 		NSArray *musicTypesArray = @[
 									 @{
-										 @"icon": @"icon_favourite_black.png",
+										 @"icon": @"icon_favourite_white.png",
 										 @"title": @"Favourites",
 										 @"type": @(LMMusicTypeFavourites)
 										 },
 									 @{
-										 @"icon": @"icon_artists.png",
+										 @"icon": @"icon_artists_white.png",
 										 @"title": @"Artists",
 										 @"type": @(LMMusicTypeArtists)
 										 },
 									 @{
-										 @"icon": @"icon_albums.png",
+										 @"icon": @"icon_albums_white.png",
 										 @"title": @"Albums",
 										 @"type": @(LMMusicTypeAlbums)
 										 },
 									 @{
-										 @"icon": @"icon_titles.png",
+										 @"icon": @"icon_titles_white.png",
 										 @"title": @"Titles",
 										 @"type": @(LMMusicTypeTitles)
 										 },
 									 @{
-										 @"icon": @"icon_playlists.png",
+										 @"icon": @"icon_playlists_white.png",
 										 @"title": @"Playlists",
 										 @"type": @(LMMusicTypePlaylists)
 										 },
 									 @{
-										 @"icon": @"icon_genres.png",
+										 @"icon": @"icon_genres_white.png",
 										 @"title": @"Genres",
 										 @"type": @(LMMusicTypeGenres)
 										 },
 									 @{
-										 @"icon": @"icon_compilations.png",
+										 @"icon": @"icon_compilations_white.png",
 										 @"title": @"Compilations",
 										 @"type": @(LMMusicTypeCompilations)
 										 }

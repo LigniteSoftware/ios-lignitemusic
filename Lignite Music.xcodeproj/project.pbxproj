@@ -127,6 +127,22 @@
 		6A5168941E08F4C800A6446F /* icon_kickstarter.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A5168921E08F4C800A6446F /* icon_kickstarter.png */; };
 		6A5168961E09002800A6446F /* icon_green_checkmark.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A5168951E09002800A6446F /* icon_green_checkmark.png */; };
 		6A5168A31E09166000A6446F /* icon_white_checkmark.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A5168A21E09166000A6446F /* icon_white_checkmark.png */; };
+		6A5201211FE0915A00535846 /* icon_albums_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A52011A1FE0915800535846 /* icon_albums_white.png */; };
+		6A5201221FE0915A00535846 /* icon_albums_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A52011A1FE0915800535846 /* icon_albums_white.png */; };
+		6A5201231FE0915A00535846 /* icon_titles_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A52011B1FE0915800535846 /* icon_titles_white.png */; };
+		6A5201241FE0915A00535846 /* icon_titles_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A52011B1FE0915800535846 /* icon_titles_white.png */; };
+		6A5201251FE0915A00535846 /* icon_genres_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A52011C1FE0915900535846 /* icon_genres_white.png */; };
+		6A5201261FE0915A00535846 /* icon_genres_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A52011C1FE0915900535846 /* icon_genres_white.png */; };
+		6A5201271FE0915A00535846 /* icon_composers_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A52011D1FE0915900535846 /* icon_composers_white.png */; };
+		6A5201281FE0915A00535846 /* icon_composers_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A52011D1FE0915900535846 /* icon_composers_white.png */; };
+		6A5201291FE0915A00535846 /* icon_artists_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A52011E1FE0915900535846 /* icon_artists_white.png */; };
+		6A52012A1FE0915A00535846 /* icon_artists_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A52011E1FE0915900535846 /* icon_artists_white.png */; };
+		6A52012B1FE0915A00535846 /* icon_compilations_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A52011F1FE0915900535846 /* icon_compilations_white.png */; };
+		6A52012C1FE0915A00535846 /* icon_compilations_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A52011F1FE0915900535846 /* icon_compilations_white.png */; };
+		6A52012D1FE0915A00535846 /* icon_playlists_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A5201201FE0915A00535846 /* icon_playlists_white.png */; };
+		6A52012E1FE0915A00535846 /* icon_playlists_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A5201201FE0915A00535846 /* icon_playlists_white.png */; };
+		6A5201311FE091D800535846 /* icon_favourite_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A25F7A31F99223B00CC8082 /* icon_favourite_white.png */; };
+		6A5201321FE091D800535846 /* icon_favourite_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A25F7A31F99223B00CC8082 /* icon_favourite_white.png */; };
 		6A52574C1DF099480040210D /* LMView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A52574B1DF099480040210D /* LMView.m */; };
 		6A52574F1DF099720040210D /* LMProgressSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A52574E1DF099720040210D /* LMProgressSlider.m */; };
 		6A5257531DF1FC840040210D /* LMLetterTabBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A5257521DF1FC840040210D /* LMLetterTabBar.m */; };
@@ -517,6 +533,13 @@
 		6A5168921E08F4C800A6446F /* icon_kickstarter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_kickstarter.png; sourceTree = "<group>"; };
 		6A5168951E09002800A6446F /* icon_green_checkmark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_green_checkmark.png; sourceTree = "<group>"; };
 		6A5168A21E09166000A6446F /* icon_white_checkmark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_white_checkmark.png; sourceTree = "<group>"; };
+		6A52011A1FE0915800535846 /* icon_albums_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_albums_white.png; sourceTree = "<group>"; };
+		6A52011B1FE0915800535846 /* icon_titles_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_titles_white.png; sourceTree = "<group>"; };
+		6A52011C1FE0915900535846 /* icon_genres_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_genres_white.png; sourceTree = "<group>"; };
+		6A52011D1FE0915900535846 /* icon_composers_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_composers_white.png; sourceTree = "<group>"; };
+		6A52011E1FE0915900535846 /* icon_artists_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_artists_white.png; sourceTree = "<group>"; };
+		6A52011F1FE0915900535846 /* icon_compilations_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_compilations_white.png; sourceTree = "<group>"; };
+		6A5201201FE0915A00535846 /* icon_playlists_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_playlists_white.png; sourceTree = "<group>"; };
 		6A52574A1DF099480040210D /* LMView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMView.h; sourceTree = "<group>"; };
 		6A52574B1DF099480040210D /* LMView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMView.m; sourceTree = "<group>"; };
 		6A52574D1DF099720040210D /* LMProgressSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMProgressSlider.h; sourceTree = "<group>"; };
@@ -1014,6 +1037,27 @@
 			name = BigListSubviews;
 			sourceTree = "<group>";
 		};
+		6A5201301FE0916900535846 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				6A37B1CD1FB2BE7E00934A75 /* chidster.png */,
+				6A339FEF1FD90DE300B1A447 /* apple_watch_sad.png */,
+				6A37B1EC1FB3D68A00934A75 /* watch_no_cover_art.png */,
+				6A339FCF1FD8AB3C00B1A447 /* watch_no_cover_art_not_cropped.png */,
+				6A339FFB1FDB67B800B1A447 /* next_track.png */,
+				6A339FFC1FDB67B900B1A447 /* previous_track.png */,
+				6A33A0031FDB681700B1A447 /* icon_minus.png */,
+				6A52011A1FE0915800535846 /* icon_albums_white.png */,
+				6A52011E1FE0915900535846 /* icon_artists_white.png */,
+				6A52011F1FE0915900535846 /* icon_compilations_white.png */,
+				6A52011D1FE0915900535846 /* icon_composers_white.png */,
+				6A52011C1FE0915900535846 /* icon_genres_white.png */,
+				6A5201201FE0915A00535846 /* icon_playlists_white.png */,
+				6A52011B1FE0915800535846 /* icon_titles_white.png */,
+			);
+			path = Images;
+			sourceTree = "<group>";
+		};
 		6A5257501DF1FC650040210D /* Search */ = {
 			isa = PBXGroup;
 			children = (
@@ -1368,14 +1412,8 @@
 		6ADB70D31FCD32DE00412225 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				6A5201301FE0916900535846 /* Images */,
 				6ADCE21B1FB262B800BE0BBB /* Assets.xcassets */,
-				6A37B1CD1FB2BE7E00934A75 /* chidster.png */,
-				6A339FEF1FD90DE300B1A447 /* apple_watch_sad.png */,
-				6A37B1EC1FB3D68A00934A75 /* watch_no_cover_art.png */,
-				6A339FCF1FD8AB3C00B1A447 /* watch_no_cover_art_not_cropped.png */,
-				6A339FFB1FDB67B800B1A447 /* next_track.png */,
-				6A339FFC1FDB67B900B1A447 /* previous_track.png */,
-				6A33A0031FDB681700B1A447 /* icon_minus.png */,
 			);
 			path = Images;
 			sourceTree = "<group>";
@@ -1780,6 +1818,7 @@
 				6ACB12C81FCDC28A00C11F11 /* icon_compilations.png in Resources */,
 				6A33A0011FDB67BA00B1A447 /* previous_track.png in Resources */,
 				6ACB12CC1FCDC28A00C11F11 /* icon_titles.png in Resources */,
+				6A5201271FE0915A00535846 /* icon_composers_white.png in Resources */,
 				6ADB70BA1FCCBD3C00412225 /* icon_repeat_one.png in Resources */,
 				6A33A00B1FDCC77100B1A447 /* icon_pause.png in Resources */,
 				6A33A0051FDB681800B1A447 /* icon_minus.png in Resources */,
@@ -1790,22 +1829,29 @@
 				6A33A0071FDB692300B1A447 /* icon_play.png in Resources */,
 				6A339FF11FD90DE300B1A447 /* apple_watch_sad.png in Resources */,
 				6ADB70B91FCCBD3C00412225 /* icon_repeat_general.png in Resources */,
+				6A5201231FE0915A00535846 /* icon_titles_white.png in Resources */,
 				6ACB12C91FCDC28A00C11F11 /* icon_composers.png in Resources */,
 				6ACB12C71FCDC28A00C11F11 /* icon_artists.png in Resources */,
 				6A339FFE1FDB67BA00B1A447 /* next_track.png in Resources */,
 				6ADB70C61FCCBDDE00412225 /* icon_repeat_one_white.png in Resources */,
 				6A339FC61FD853F500B1A447 /* icon_left_arrow.png in Resources */,
+				6A52012B1FE0915A00535846 /* icon_compilations_white.png in Resources */,
 				6A33A0081FDB692300B1A447 /* icon_plus_white.png in Resources */,
 				6A37B1E31FB3AC7B00934A75 /* icon_favourite_outlined_white.png in Resources */,
+				6A52012D1FE0915A00535846 /* icon_playlists_white.png in Resources */,
+				6A5201291FE0915A00535846 /* icon_artists_white.png in Resources */,
 				6A37B1E51FB3AC8400934A75 /* icon_favourite_red.png in Resources */,
 				6ADB70C31FCCBDDE00412225 /* icon_repeat_general_white.png in Resources */,
 				6A339FC91FD853F500B1A447 /* icon_right_arrow.png in Resources */,
 				6ADB70CD1FCCF0F600412225 /* icon_browse_white.png in Resources */,
+				6A5201311FE091D800535846 /* icon_favourite_white.png in Resources */,
 				6ACB12CA1FCDC28A00C11F11 /* icon_genres.png in Resources */,
 				6A37B1D21FB2BE7F00934A75 /* chidster.png in Resources */,
+				6A5201251FE0915A00535846 /* icon_genres_white.png in Resources */,
 				6ADB70BB1FCCBD3C00412225 /* icon_shuffle.png in Resources */,
 				6ACB12CB1FCDC28A00C11F11 /* icon_playlists.png in Resources */,
 				6ADCE2021FB262B800BE0BBB /* Interface.storyboard in Resources */,
+				6A5201211FE0915A00535846 /* icon_albums_white.png in Resources */,
 				6ACB12D41FCDC29100C11F11 /* icon_favourite_black.png in Resources */,
 				6ACB12C61FCDC28A00C11F11 /* icon_albums.png in Resources */,
 				6A37B1E71FB3D53000934A75 /* icon_no_cover_art_75.png in Resources */,
@@ -1820,6 +1866,7 @@
 				6ACB12CF1FCDC28B00C11F11 /* icon_compilations.png in Resources */,
 				6A33A0021FDB67BA00B1A447 /* previous_track.png in Resources */,
 				6ACB12D31FCDC28B00C11F11 /* icon_titles.png in Resources */,
+				6A5201281FE0915A00535846 /* icon_composers_white.png in Resources */,
 				6ADB70BD1FCCBD3D00412225 /* icon_repeat_one.png in Resources */,
 				6A33A00C1FDCC77200B1A447 /* icon_pause.png in Resources */,
 				6A33A0061FDB681800B1A447 /* icon_minus.png in Resources */,
@@ -1830,22 +1877,29 @@
 				6A33A0091FDB692400B1A447 /* icon_play.png in Resources */,
 				6A339FF21FD90DE300B1A447 /* apple_watch_sad.png in Resources */,
 				6ADB70BC1FCCBD3D00412225 /* icon_repeat_general.png in Resources */,
+				6A5201241FE0915A00535846 /* icon_titles_white.png in Resources */,
 				6ACB12D01FCDC28B00C11F11 /* icon_composers.png in Resources */,
 				6ACB12CE1FCDC28B00C11F11 /* icon_artists.png in Resources */,
 				6A339FFF1FDB67BA00B1A447 /* next_track.png in Resources */,
 				6ADB70C71FCCBDDE00412225 /* icon_repeat_one_white.png in Resources */,
 				6A339FC71FD853F500B1A447 /* icon_left_arrow.png in Resources */,
+				6A52012C1FE0915A00535846 /* icon_compilations_white.png in Resources */,
 				6A33A00A1FDB692400B1A447 /* icon_plus_white.png in Resources */,
 				6A37B1EE1FB3D68A00934A75 /* watch_no_cover_art.png in Resources */,
+				6A52012E1FE0915A00535846 /* icon_playlists_white.png in Resources */,
+				6A52012A1FE0915A00535846 /* icon_artists_white.png in Resources */,
 				6A37B1F41FB414CB00934A75 /* Localizable.strings in Resources */,
 				6ADB70C41FCCBDDE00412225 /* icon_repeat_general_white.png in Resources */,
 				6A339FCA1FD853F500B1A447 /* icon_right_arrow.png in Resources */,
 				6ADB70CE1FCCF0F600412225 /* icon_browse_white.png in Resources */,
+				6A5201321FE091D800535846 /* icon_favourite_white.png in Resources */,
 				6ACB12D11FCDC28B00C11F11 /* icon_genres.png in Resources */,
 				6A37B1E41FB3AC7C00934A75 /* icon_favourite_outlined_white.png in Resources */,
+				6A5201261FE0915A00535846 /* icon_genres_white.png in Resources */,
 				6ADB70BE1FCCBD3D00412225 /* icon_shuffle.png in Resources */,
 				6ACB12D21FCDC28B00C11F11 /* icon_playlists.png in Resources */,
 				6A37B1D31FB2BE7F00934A75 /* chidster.png in Resources */,
+				6A5201221FE0915A00535846 /* icon_albums_white.png in Resources */,
 				6ACB12D51FCDC29100C11F11 /* icon_favourite_black.png in Resources */,
 				6ACB12CD1FCDC28B00C11F11 /* icon_albums.png in Resources */,
 				6ADCE21C1FB262B800BE0BBB /* Assets.xcassets in Resources */,

@@ -11,6 +11,8 @@
 "Loading" = "Loading...";
 
 "WaitingForPhone" = "Waiting for your phone to connect...";
+"PhoneNotConnected" = "Your phone's not connected, sorry.\n\nPlease reconnect, go back, and try again.";
+"UnknownErrorX" = "Unknown error %d, sorry.";
 
 "NothingUpNext" = "Nothing up next";
 "UpNext" = "Up next";
