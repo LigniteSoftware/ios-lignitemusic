@@ -495,7 +495,12 @@
 		[self setError:nil];
 	}
 	else{
-		[self setError:NSLocalizedString(@"WaitingForPhone", nil)];
+		if(self.companionBridge.requiresUnlock){
+			[self setError:NSLocalizedString(@"UserMustUnlockiPhone", nil)];
+		}
+		else{
+			[self setError:NSLocalizedString(@"WaitingForPhone", nil)];
+		}
 	}
 }
 

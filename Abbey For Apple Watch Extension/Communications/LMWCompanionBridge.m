@@ -25,7 +25,10 @@
 
 @implementation LMWCompanionBridge
 
-//Don't forget to add iPhone unlock warning && activation state shit
+- (BOOL)requiresUnlock {
+	return self.session.iOSDeviceNeedsUnlockAfterRebootForReachability;
+}
+
 - (BOOL)connected {
 	return self.session.reachable;
 }

@@ -12,6 +12,7 @@
 
 "WaitingForPhone" = "Waiting for your phone to connect...";
 "PhoneNotConnected" = "Your phone's not connected, sorry.\n\nPlease reconnect, go back, and try again.";
+"UserMustUnlockiPhone" = "Please unlock your iPhone to continue.";
 "UnknownErrorX" = "Unknown error %d, sorry.";
 
 "NothingUpNext" = "Nothing up next";

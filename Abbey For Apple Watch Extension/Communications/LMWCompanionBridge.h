@@ -190,6 +190,13 @@
 - (BOOL)connected;
 
 /**
+ One of the potential reasons for watch not connecting could be that the iPhone was just rebooted, and the iOS device must be unlocked first.
+
+ @return Whether or not the iOS device needs to be unlocked to continue.
+ */
+- (BOOL)requiresUnlock;
+
+/**
  Adds a delegate to the list of delegates.
 
  @param delegate The delegate to add.
