@@ -548,7 +548,7 @@
 	[self pushCurrentStateToWatch];
 }
 
-- (void)musicCurrentPlaybackTimeDidChange:(NSTimeInterval)newPlaybackTime {
+- (void)musicCurrentPlaybackTimeDidChange:(NSTimeInterval)newPlaybackTime userModified:(BOOL)userModified {
 	[self pushCurrentStateToWatch];
 }
 

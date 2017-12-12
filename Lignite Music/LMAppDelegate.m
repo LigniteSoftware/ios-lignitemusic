@@ -7,13 +7,14 @@
 //
 
 #import <Fabric/Fabric.h>
+#import <StoreKit/StoreKit.h>
 #import <Crashlytics/Crashlytics.h>
+
 #import "AFNetworking.h"
 #import "LMAppDelegate.h"
 #import "LMMusicPlayer.h"
 #import "LMAppIcon.h"
 #import "LMSettings.h"
-#import "LMPurchaseManager.h"
 
 #ifdef SPOTIFY
 #import "Spotify.h"

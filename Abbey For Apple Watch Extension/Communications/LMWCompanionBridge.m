@@ -78,7 +78,6 @@
 		self.nowPlayingInfo.playing = [[infoDictionary objectForKey:LMAppleWatchNowPlayingInfoKeyIsPlaying] boolValue];
 		self.nowPlayingInfo.repeatMode = (LMMusicRepeatMode)[[infoDictionary objectForKey:LMAppleWatchNowPlayingInfoKeyRepeatMode] integerValue];
 		self.nowPlayingInfo.shuffleMode = (LMMusicShuffleMode)[[infoDictionary objectForKey:LMAppleWatchNowPlayingInfoKeyShuffleMode] integerValue];
-		self.nowPlayingInfo.playbackDuration = [[infoDictionary objectForKey:LMAppleWatchNowPlayingInfoKeyPlaybackDuration] integerValue];
 		self.nowPlayingInfo.currentPlaybackTime = [[infoDictionary objectForKey:LMAppleWatchNowPlayingInfoKeyCurrentPlaybackTime] integerValue];
 		self.nowPlayingInfo.volume = [[infoDictionary objectForKey:LMAppleWatchNowPlayingInfoKeyVolume] floatValue];
 		
@@ -119,6 +118,43 @@
 				[delegate nowPlayingUpNextDidChange:finalTracksInfoArray];
 			}
 		}
+	}
+	//A property of the now playing track was updated.
+	else if([key isEqualToString:LMAppleWatchCommunicationKeyNowPlayingTrackUpdate]){
+		NSString *trackKey = [message objectForKey:LMAppleWatchCommunicationKeyNowPlayingTrackUpdate];
+		if([trackKey isEqualToString:LMAppleWatchMusicTrackInfoKeyIsFavourite]){
+			self.nowPlayingInfo.nowPlayingTrack.isFavourite = [[message objectForKey:trackKey] boolValue];
+			
+			dispatch_async(dispatch_get_main_queue(), ^{
+				for(id<LMWCompanionBridgeDelegate> delegate in self.delegates){
+					if([delegate respondsToSelector:@selector(nowPlayingTrackUpdate:forKey:)]){
+						[delegate nowPlayingTrackUpdate:self.nowPlayingInfo.nowPlayingTrack forKey:trackKey];
+					}
+				}
+			});
+		}
+	}
+	//A property of the now playing info was updated.
+	else if([key isEqualToString:LMAppleWatchCommunicationKeyNowPlayingInfoUpdate]){
+		NSString *infoKey = [message objectForKey:LMAppleWatchCommunicationKeyNowPlayingInfoUpdate];
+		if([infoKey isEqualToString:LMAppleWatchNowPlayingInfoKeyIsPlaying]){
+			self.nowPlayingInfo.playing = [[message objectForKey:infoKey] boolValue];
+		}
+		else if([infoKey isEqualToString:LMAppleWatchNowPlayingInfoKeyCurrentPlaybackTime]){
+			self.nowPlayingInfo.nowPlayingTrack.playbackDuration = [[message objectForKey:LMAppleWatchMusicTrackInfoKeyPlaybackDuration] integerValue];
+			self.nowPlayingInfo.currentPlaybackTime = [[message objectForKey:infoKey] integerValue];
+		}
+		else if([infoKey isEqualToString:LMAppleWatchNowPlayingInfoKeyVolume]){
+			self.nowPlayingInfo.volume = [[message objectForKey:LMAppleWatchNowPlayingInfoKeyVolume] floatValue];
+		}
+		
+		dispatch_async(dispatch_get_main_queue(), ^{
+			for(id<LMWCompanionBridgeDelegate> delegate in self.delegates){
+				if([delegate respondsToSelector:@selector(nowPlayingInfoUpdate:forKey:)]){
+					[delegate nowPlayingInfoUpdate:self.nowPlayingInfo forKey:infoKey];
+				}
+			}
+		});
 	}
 }
 
@@ -281,25 +317,34 @@
 	}
 }
 
-- (void)setCurrentPlaybackTime:(NSInteger)currentPlaybackTime {
+- (void)setCurrentPlaybackTime:(NSInteger)currentPlaybackTime
+				successHandler:(nullable void (^)(NSDictionary *response))successHandler
+				  errorHandler:(nullable void (^)(NSError *error))errorHandler {
+	
 	if(self.session.reachable){
 		[self.session sendMessage:@{
 									LMAppleWatchCommunicationKey:LMAppleWatchControlKeyCurrentPlaybackTime,
 									LMAppleWatchControlKeyCurrentPlaybackTime:@(currentPlaybackTime)
 									 }
 					 replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
-						 NSLog(@"Got reply %@", replyMessage);
+						 dispatch_async(dispatch_get_main_queue(), ^{
+							 successHandler(replyMessage);
+						 });
 					 }
 					 errorHandler:^(NSError * _Nonnull error) {
-						 NSLog(@"Error %@", error);
+						 dispatch_async(dispatch_get_main_queue(), ^{
+							 errorHandler(error);
+						 });
 					 }
 		 ];
 	}
 	else{
 		dispatch_async(dispatch_get_main_queue(), ^{
-			[NSTimer scheduledTimerWithTimeInterval:0.5 repeats:NO block:^(NSTimer * _Nonnull timer) {
-				[self setCurrentPlaybackTime:currentPlaybackTime];
-			}];
+			NSError *notRespondingError = [NSError errorWithDomain:@"The phone is not responding"
+															  code:503
+														  userInfo:nil];
+			
+			errorHandler(notRespondingError);
 		});
 	}
 }

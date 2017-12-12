@@ -11,7 +11,7 @@
 #import "LMPlaylistManager.h"
 #import "LMMusicPlayer.h"
 
-@interface LMAppleWatchBridge()<WCSessionDelegate>
+@interface LMAppleWatchBridge()<WCSessionDelegate, LMMusicPlayerDelegate>
 
 /**
  The watch connectivity session.
@@ -21,7 +21,7 @@
 /**
  The music player.
  */
-@property (readonly) LMMusicPlayer *musicPlayer;
+@property LMMusicPlayer *musicPlayer;
 
 /**
  The last track that was sent. Stored to prevent double sending to conserve data transfer.
@@ -38,8 +38,74 @@
 
 @synthesize musicPlayer = _musicPlayer;
 
-- (LMMusicPlayer*)musicPlayer {
-	return [LMMusicPlayer sharedMusicPlayer];
+- (void)musicTrackDidChange:(LMMusicTrack*)newTrack {
+	[self sendNowPlayingTrackToWatch];
+}
+
+- (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState {
+	if(self.connected){
+		[self.session sendMessage:@{
+									LMAppleWatchCommunicationKey: LMAppleWatchCommunicationKeyNowPlayingInfoUpdate,
+									LMAppleWatchCommunicationKeyNowPlayingInfoUpdate: LMAppleWatchNowPlayingInfoKeyIsPlaying,
+									LMAppleWatchNowPlayingInfoKeyIsPlaying: @(newState == LMMusicPlaybackStatePlaying)
+									}
+					 replyHandler:nil
+					 errorHandler:nil];
+	}
+}
+
+- (void)musicCurrentPlaybackTimeDidChange:(NSTimeInterval)newPlaybackTime userModified:(BOOL)userModified {
+	if(self.connected && userModified){
+		[self.session sendMessage:@{
+									LMAppleWatchCommunicationKey: LMAppleWatchCommunicationKeyNowPlayingInfoUpdate,
+									LMAppleWatchCommunicationKeyNowPlayingInfoUpdate: LMAppleWatchNowPlayingInfoKeyCurrentPlaybackTime,
+									LMAppleWatchNowPlayingInfoKeyCurrentPlaybackTime: @(newPlaybackTime),
+									LMAppleWatchMusicTrackInfoKeyPlaybackDuration: @(self.musicPlayer.nowPlayingTrack.playbackDuration)
+									}
+					 replyHandler:nil
+					 errorHandler:nil];
+	}
+}
+
+- (void)musicLibraryDidChange {
+	//What should we do, doc?
+}
+
+- (void)musicPlaybackModesDidChange:(LMMusicShuffleMode)shuffleMode repeatMode:(LMMusicRepeatMode)repeatMode {
+	
+}
+
+- (void)trackAddedToQueue:(LMMusicTrack*)trackAdded {
+	[self sendUpNextToWatch];
+}
+
+- (void)trackRemovedFromQueue:(LMMusicTrack*)trackRemoved {
+	[self sendUpNextToWatch];
+}
+
+- (void)trackMovedInQueue:(LMMusicTrack*)trackMoved {
+	[self sendUpNextToWatch];
+}
+
+- (void)trackAddedToFavourites:(LMMusicTrack*)track {
+	if(self.connected){
+		[self.session sendMessage:@{
+									LMAppleWatchCommunicationKey:LMAppleWatchCommunicationKeyNowPlayingTrackUpdate,
+									LMAppleWatchCommunicationKeyNowPlayingTrackUpdate: LMAppleWatchMusicTrackInfoKeyIsFavourite,
+									LMAppleWatchMusicTrackInfoKeyIsFavourite: @(track.isFavourite)
+									}
+					 replyHandler:nil
+					 errorHandler:nil
+		 ];
+	}
+}
+
+- (void)trackRemovedFromFavourites:(LMMusicTrack*)track {
+	
+}
+
+- (BOOL)connected {
+	return self.session.reachable;
 }
 
 - (NSDictionary*)dictionaryForMusicTrack:(LMMusicTrack*)musicTrack {
@@ -57,9 +123,6 @@
 	
 	[mutableMusicTrackDictionary setObject:@(musicTrack.playbackDuration)
 									forKey:LMAppleWatchMusicTrackInfoKeyPlaybackDuration];
-	
-	[mutableMusicTrackDictionary setObject:@(self.musicPlayer.currentPlaybackTime)
-									forKey:LMAppleWatchMusicTrackInfoKeyCurrentPlaybackTime];
 	
 	[mutableMusicTrackDictionary setObject:@(musicTrack.isFavourite)
 									forKey:LMAppleWatchMusicTrackInfoKeyIsFavourite];
@@ -128,7 +191,7 @@
 	
 	NSLog(@"Image is %lu bytes with a compression factor of %f.", imageData.length, compressionFactor);
 	
-	if(self.session.reachable){
+	if(self.connected){
 		[self.session sendMessageData:imageData replyHandler:/*^(NSData * _Nonnull replyMessageData) {
 															  
 															  NSLog(@"Reply got");
@@ -149,7 +212,7 @@
 	BOOL albumArtIsTheSame = (self.previousNowPlayingTrackSent.persistentID == nowPlayingTrack.persistentID)
 	|| (self.previousNowPlayingTrackSent.albumPersistentID == nowPlayingTrack.albumPersistentID);
 	
-	if(self.session.reachable){
+	if(self.connected){
 		if(nowPlayingTrack){
 			if((self.previousNowPlayingTrackSent.persistentID == nowPlayingTrack.persistentID) && !overrideDoubleSending){
 				NSLog(@"Same same, rejecting");
@@ -181,9 +244,12 @@
 //			}
 		}
 		else{
-			[self.session sendMessage:@{ LMAppleWatchCommunicationKey:LMAppleWatchCommunicationKeyNoTrackPlaying } replyHandler:nil errorHandler:^(NSError * _Nonnull error) {
-				NSLog(@"Error sending no track currently playing: %@", error);
-			}];
+			[self.session sendMessage:@{ LMAppleWatchCommunicationKey:LMAppleWatchCommunicationKeyNoTrackPlaying }
+						 replyHandler:nil
+						 errorHandler:^(NSError * _Nonnull error) {
+							 NSLog(@"Error sending no track currently playing: %@", error);
+						 }
+			 ];
 		}
 	}
 }
@@ -194,7 +260,6 @@
 												   LMAppleWatchNowPlayingInfoKeyIsPlaying: @(self.musicPlayer.playbackState == LMMusicPlaybackStatePlaying),
 												   LMAppleWatchNowPlayingInfoKeyRepeatMode: @(self.musicPlayer.repeatMode),
 												   LMAppleWatchNowPlayingInfoKeyShuffleMode: @(self.musicPlayer.shuffleMode),
-												   LMAppleWatchNowPlayingInfoKeyPlaybackDuration: @(self.musicPlayer.nowPlayingTrack.playbackDuration),
 												   LMAppleWatchNowPlayingInfoKeyCurrentPlaybackTime: @(self.musicPlayer.currentPlaybackTime),
 												   LMAppleWatchNowPlayingInfoKeyVolume: @(self.volumeViewSlider.value)
 												   };
@@ -205,7 +270,7 @@
 											LMAppleWatchCommunicationKeyNowPlayingInfo:nowPlayingInfoDictionary
 											};
 		
-		if(self.session.reachable){
+		if(self.connected){
 			[self.session sendMessage:messageDictionary
 						 replyHandler:nil/* ^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
 										  NSLog(@"Got a reply: %@", replyMessage);
@@ -218,7 +283,7 @@
 }
 
 - (void)sendUpNextToWatch {
-	if(self.session.reachable){
+	if(self.connected){
 		LMMusicTrackCollection *nowPlayingQueue = self.musicPlayer.nowPlayingCollection;
 		if(!nowPlayingQueue){
 			NSLog(@"Now playing queue doesn't exist, rejecting");
@@ -241,7 +306,7 @@
 				[upNextMutableArray addObject:trackInfoDictionary];
 			}
 			
-			NSLog(@"Got %d tracks up next", tracksRemainingAfterNowPlayingTrack.count);
+			NSLog(@"Got %d tracks up next", (int)tracksRemainingAfterNowPlayingTrack.count);
 		}
 		
 		
@@ -529,6 +594,10 @@
 		else if([key isEqualToString:LMAppleWatchControlKeyCurrentPlaybackTime]){
 			NSInteger currentPlaybackTime = [[message objectForKey:LMAppleWatchControlKeyCurrentPlaybackTime] integerValue];
 			[self.musicPlayer setCurrentPlaybackTime:(NSTimeInterval)currentPlaybackTime];
+			
+			replyHandler(@{
+						   LMAppleWatchCommandSuccess: @(YES)
+						   });
 		}
 		else if([key isEqualToString:LMAppleWatchCommunicationKeyBrowsingShuffleAll]){
 			LMMusicTrackCollection *collectionToShuffle = [self trackCollectionsForBrowsingDictionary:message].firstObject;
@@ -590,7 +659,21 @@
 }
 
 - (void)handleVolumeChanged:(id)sender{
-		NSLog(@"%s - %f", __PRETTY_FUNCTION__, self.volumeViewSlider.value);
+	NSLog(@"Volume: %f%%", self.volumeViewSlider.value * 100);
+	
+	
+	if(self.connected){
+		dispatch_async(dispatch_get_main_queue(), ^{
+			[self.session sendMessage:@{
+										LMAppleWatchCommunicationKey:LMAppleWatchCommunicationKeyNowPlayingInfoUpdate,
+										LMAppleWatchCommunicationKeyNowPlayingInfoUpdate: LMAppleWatchNowPlayingInfoKeyVolume,
+										LMAppleWatchNowPlayingInfoKeyVolume: @(self.volumeViewSlider.value)
+										}
+						 replyHandler:nil
+						 errorHandler:nil
+			 ];
+		});
+	}
 	
 //	[self sendNowPlayingInfoToWatch];
 }
@@ -623,55 +706,12 @@
 			sharedAppleWatchBridge.session = [WCSession defaultSession];
 			sharedAppleWatchBridge.session.delegate = sharedAppleWatchBridge;
 			[sharedAppleWatchBridge.session activateSession];
+			
+			sharedAppleWatchBridge.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
+			[sharedAppleWatchBridge.musicPlayer addMusicDelegate:sharedAppleWatchBridge];
 		}
 	});
 	return sharedAppleWatchBridge;
-}
-
-BOOL done = NO;
-
-- (void)test {
-	return;
-	
-	if ([WCSession isSupported]) {
-		[NSTimer scheduledTimerWithTimeInterval:1.0 repeats:YES block:^(NSTimer * _Nonnull timer) {
-			if(self.session.reachable){
-				if(done){
-					return;
-				}
-				done = YES;
-				
-				NSLog(@"Sending!");
-				
-//				[self.session sendMessage:@{ @"title":[NSString stringWithFormat:@"%ld", random()] } replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
-//
-//					NSLog(@"Got reply message %@", replyMessage);
-//
-//				} errorHandler:^(NSError * _Nonnull error) {
-//
-//					NSLog(@"Sent with error %@", error);
-//				}];
-				
-				UIImage *image = [[[LMMusicPlayer sharedMusicPlayer] queryCollectionsForMusicType:LMMusicTypeAlbums] firstObject].representativeItem.albumArt;
-
-				NSData *imageData = UIImageJPEGRepresentation(image, 0.1);
-				
-				NSLog(@"Image is %lu bytes.", imageData.length);
-				
-				[self.session sendMessageData:imageData replyHandler:/*^(NSData * _Nonnull replyMessageData) {
-					
-					NSLog(@"Reply got");
-				}*/nil errorHandler:^(NSError * _Nonnull error) {
-					
-					NSLog(@"Error sending %@", error);
-				}];
-			
-			}
-			else{
-				NSLog(@"Not reachable :(");
-			}
-		}];
-	}
 }
 
 @end

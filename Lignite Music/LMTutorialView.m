@@ -152,15 +152,15 @@
 	return NO;
 #warning tutorial is disabled bitch
 	
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-	    
-    //If the user has disabled tutorials or the specific tutorial has already been done do not run that tutorial
-    if([userDefaults objectForKey:LMTutorialViewDontShowHintsKey] || [userDefaults objectForKey:tutorialKey]){
-        return NO;
-    }
-    
-    //Otherwise, go for it!
-    return YES;
+//    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+//	    
+//    //If the user has disabled tutorials or the specific tutorial has already been done do not run that tutorial
+//    if([userDefaults objectForKey:LMTutorialViewDontShowHintsKey] || [userDefaults objectForKey:tutorialKey]){
+//        return NO;
+//    }
+//    
+//    //Otherwise, go for it!
+//    return YES;
 }
 
 - (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {

@@ -22,8 +22,6 @@
 #define LMAppleWatchMusicTrackInfoKeyAlbumPersistentID @"LMAppleWatchMusicTrackInfoKeyAlbumPersistentID"
 //The total playback duration of the music track. Is an NSInteger wrapped in an NSNumber.
 #define LMAppleWatchMusicTrackInfoKeyPlaybackDuration @"LMAppleWatchMusicTrackInfoKeyPlaybackDuration"
-//The current playback time of the music track. Is an NSInteger wrapped in an NSNumber.
-#define LMAppleWatchMusicTrackInfoKeyCurrentPlaybackTime @"LMAppleWatchMusicTrackInfoKeyCurrentPlaybackTime"
 
 //Whether or not the now playing track is playing. BOOL as NSNumber.
 #define LMAppleWatchNowPlayingInfoKeyIsPlaying @"LMAppleWatchNowPlayingInfoKeyIsPlaying"
@@ -31,8 +29,6 @@
 #define LMAppleWatchNowPlayingInfoKeyRepeatMode @"LMAppleWatchNowPlayingInfoKeyRepeatMode"
 //The current shuffle mode. NSInteger as NSNumber.
 #define LMAppleWatchNowPlayingInfoKeyShuffleMode @"LMAppleWatchNowPlayingInfoKeyShuffleMode"
-//The track playback duration in seconds. NSInteger as NSNumber.
-#define LMAppleWatchNowPlayingInfoKeyPlaybackDuration @"LMAppleWatchNowPlayingInfoKeyPlaybackDuration"
 //The track's current playback time. NSInteger as NSNumber.
 #define LMAppleWatchNowPlayingInfoKeyCurrentPlaybackTime @"LMAppleWatchNowPlayingInfoKeyCurrentPlaybackTime"
 //The phone's volume, from 0.0 to 1.0.
@@ -54,6 +50,10 @@
 #define LMAppleWatchCommunicationKeyBrowsingShuffleAll @"LMAppleWatchCommunicationKeyBrowsingShuffleAll"
 //The user wants to play a certain track from a collection.
 #define LMAppleWatchCommunicationKeyBrowsingPlayIndividualTrack @"LMAppleWatchCommunicationKeyBrowsingPlayIndividualTrack"
+//A property of the track changed on the phone. Message should contain a key of LMAppleWatchCommunicationKeyNowPlayingTrackUpdate with a value of the LMAppleWatchMusicTrackInfoKey that was changed, along with that associated LMAppleWatchMusicTrackInfoKey as a key with a value of the new property.
+#define LMAppleWatchCommunicationKeyNowPlayingTrackUpdate @"LMAppleWatchCommunicationKeyNowPlayingTrackUpdate"
+//A property of the now playing info changed on the phone. Message should contain a key of LMAppleWatchCommunicationKeyNowPlayingInfoUpdate with a value of the LMAppleWatchNowPlayingInfoKey that was changed, along with that associated LMAppleWatchNowPlayingInfoKey as a key with a value of the new property.
+#define LMAppleWatchCommunicationKeyNowPlayingInfoUpdate @"LMAppleWatchCommunicationKeyNowPlayingInfoUpdate"
 
 //The key for the music types when the communication key is LMAppleWatchCommunicationKeyMusicBrowsingEntries. Music types is plural because it's an array of music types which define the structure of windows that the user has been presented in their current browsing session.
 #define LMAppleWatchBrowsingKeyMusicTypes @"LMAppleWatchBrowsingKeyMusicTypes"
@@ -111,35 +111,51 @@
 
  @param musicTrackInfo The new music track.
  */
-- (void)musicTrackDidChange:(LMWMusicTrackInfo*)musicTrackInfo;
+- (void)musicTrackDidChange:(LMWMusicTrackInfo* _Nullable)musicTrackInfo;
 
 /**
  The album art changed for the now playing track.
 
  @param albumArt The new album art.
  */
-- (void)albumArtDidChange:(UIImage*)albumArt;
+- (void)albumArtDidChange:(UIImage* _Nullable)albumArt;
 
 /**
  The now playing info changed. Delegate should update UI accordingly.
 
  @param nowPlayingInfo The new now playing info.
  */
-- (void)nowPlayingInfoDidChange:(LMWNowPlayingInfo*)nowPlayingInfo;
+- (void)nowPlayingInfoDidChange:(LMWNowPlayingInfo* _Nonnull)nowPlayingInfo;
 
 /**
  The now playing queue up next changed.
 
  @param upNextTracks The tracks which are up next.
  */
-- (void)nowPlayingUpNextDidChange:(NSArray<LMWMusicTrackInfo*>*)upNextTracks;
+- (void)nowPlayingUpNextDidChange:(NSArray<LMWMusicTrackInfo*>* _Nonnull)upNextTracks;
+
+/**
+ An update was made to the now playing track for a certain LMAppleWatchMusicTrackInfoKey.
+
+ @param nowPlayingTrack The now playing track that was updated.
+ @param key The key.
+ */
+- (void)nowPlayingTrackUpdate:(LMWMusicTrackInfo* _Nonnull)nowPlayingTrack forKey:(NSString* _Nonnull)key;
+
+/**
+ An update was made to the now playing info for a certain LMAppleWatchNowPlayingInfoKey.
+ 
+ @param nowPlayingInfo The now playing info that was updated.
+ @param key The key.
+ */
+- (void)nowPlayingInfoUpdate:(LMWNowPlayingInfo* _Nonnull)nowPlayingInfo forKey:(NSString* _Nonnull)key;
 
 /**
  Asks the delegate to display a debug message, if possible.
 
  @param debug The debug message to display.
  */
-- (void)companionDebug:(NSString*)debug;
+- (void)companionDebug:(NSString* _Nullable)debug;
 
 @end
 
@@ -149,7 +165,7 @@
 /**
  The info of now playing on the phone. If nothing is playing, nowPlayingTrack will be nil.
  */
-@property LMWNowPlayingInfo *nowPlayingInfo;
+@property LMWNowPlayingInfo * _Nonnull nowPlayingInfo;
 
 
 /**
@@ -157,7 +173,7 @@
 
  @return The companion bridge.
  */
-+ (LMWCompanionBridge*)sharedCompanionBridge;
++ (LMWCompanionBridge* _Nonnull)sharedCompanionBridge;
 
 /**
  Whether or not the watch is connected to the phone and the phone is reachable for live messaging.
@@ -171,14 +187,14 @@
 
  @param delegate The delegate to add.
  */
-- (void)addDelegate:(id<LMWCompanionBridgeDelegate>)delegate;
+- (void)addDelegate:(id<LMWCompanionBridgeDelegate> _Nonnull)delegate;
 
 /**
  Removes a delegate to the list of delegates.
  
  @param delegate The delegate to remove.
  */
-- (void)removeDelegate:(id<LMWCompanionBridgeDelegate>)delegate;
+- (void)removeDelegate:(id <LMWCompanionBridgeDelegate> _Nonnull)delegate;
 
 /**
  Sends a ping to the companion asking for the latest and greatest now playing info.
@@ -192,9 +208,20 @@
  @param successHandler The success handler for when the command was sent and the phone has processed it. The response dictionary is the reply dictionary from the phone.
  @param errorHandler The error handler for when the command could not reach the phone (code 503) or another error occurred.
  */
-- (void)sendMusicControlMessageToPhoneWithKey:(NSString*)key
-							   successHandler:(nullable void (^)(NSDictionary *response))successHandler
-								 errorHandler:(nullable void (^)(NSError *error))errorHandler;
+- (void)sendMusicControlMessageToPhoneWithKey:(NSString* _Nonnull)key
+							   successHandler:(nullable void (^)(NSDictionary * _Nonnull response))successHandler
+								 errorHandler:(nullable void (^)(NSError * _Nonnull error))errorHandler;
+
+/**
+ Sets the current playback time by sending a message with the set time to the phone.
+ 
+ @param currentPlaybackTime The current playback time to set.
+ @param successHandler The handler for when the command was sent successfully and the phone replied.
+ @param errorHandler The handler for when the playback time change message could not be sent.
+ */
+- (void)setCurrentPlaybackTime:(NSInteger)currentPlaybackTime
+				successHandler:(nullable void (^)(NSDictionary * _Nonnull response))successHandler
+				  errorHandler:(nullable void (^)(NSError * _Nonnull error))errorHandler;
 
 /**
  Sets the now playing track based off the next up/now playing queue, from an index provided by a track displayed in the up next section. Confusing, eh?
@@ -213,12 +240,12 @@
  @param replyHandler The reply handler, which will receive the results.
  @param errorHandler The error handler in case something goes wrong.
  */
-- (void)requestTracksWithSelectedIndexes:(NSArray<NSNumber*>*)selectedIndexes
-						 withPageIndexes:(NSArray<NSNumber*>*)pageIndexes
-						   forMusicTypes:(NSArray<NSNumber*>*)musicTypes
-					   withPersistentIDs:(NSArray<NSNumber*>*)persistentIDs
-							replyHandler:(nullable void (^)(NSDictionary<NSString *, id> *replyMessage))replyHandler
-							errorHandler:(nullable void (^)(NSError *error))errorHandler;
+- (void)requestTracksWithSelectedIndexes:(NSArray<NSNumber*>* _Nonnull)selectedIndexes
+						 withPageIndexes:(NSArray<NSNumber*>* _Nonnull)pageIndexes
+						   forMusicTypes:(NSArray<NSNumber*>* _Nonnull)musicTypes
+					   withPersistentIDs:(NSArray<NSNumber*>* _Nonnull)persistentIDs
+							replyHandler:(nullable void (^)(NSDictionary<NSString *, id> * _Nonnull replyMessage))replyHandler
+							errorHandler:(nullable void (^)(NSError * _Nonnull error))errorHandler;
 
 /**
  Shuffles a list of tracks from the phone based on current browsing info.
@@ -230,12 +257,12 @@
  @param replyHandler The reply handler, which will receive the results.
  @param errorHandler The error handler in case something goes wrong.
  */
-- (void)shuffleTracksWithSelectedIndexes:(NSArray<NSNumber*>*)selectedIndexes
-						 withPageIndexes:(NSArray<NSNumber*>*)pageIndexes
-						   forMusicTypes:(NSArray<NSNumber*>*)musicTypes
-					   withPersistentIDs:(NSArray<NSNumber*>*)persistentIDs
-							replyHandler:(nullable void (^)(NSDictionary<NSString *, id> *replyMessage))replyHandler
-							errorHandler:(nullable void (^)(NSError *error))errorHandler;
+- (void)shuffleTracksWithSelectedIndexes:(NSArray<NSNumber*>* _Nonnull)selectedIndexes
+						 withPageIndexes:(NSArray<NSNumber*>* _Nonnull)pageIndexes
+						   forMusicTypes:(NSArray<NSNumber*>* _Nonnull)musicTypes
+					   withPersistentIDs:(NSArray<NSNumber*>* _Nonnull)persistentIDs
+							replyHandler:(nullable void (^)(NSDictionary<NSString *, id> * _Nonnull replyMessage))replyHandler
+							errorHandler:(nullable void (^)(NSError * _Nonnull error))errorHandler;
 
 /**
  Plays a specific track from a list of tracks from the phone based on current browsing info.
@@ -247,18 +274,11 @@
  @param replyHandler The reply handler, which will receive the results.
  @param errorHandler The error handler in case something goes wrong.
  */
-- (void)playSpecificTrackWithSelectedIndexes:(NSArray<NSNumber*>*)selectedIndexes
-							 withPageIndexes:(NSArray<NSNumber*>*)pageIndexes
-							   forMusicTypes:(NSArray<NSNumber*>*)musicTypes
-						   withPersistentIDs:(NSArray<NSNumber*>*)persistentIDs
-								replyHandler:(nullable void (^)(NSDictionary<NSString *, id> *replyMessage))replyHandler
-								errorHandler:(nullable void (^)(NSError *error))errorHandler;
-
-/**
- Sets the current playback time by sending a message with the set time to the phone.
-
- @param currentPlaybackTime The current playback time to set.
- */
-- (void)setCurrentPlaybackTime:(NSInteger)currentPlaybackTime;
+- (void)playSpecificTrackWithSelectedIndexes:(NSArray<NSNumber*>* _Nonnull)selectedIndexes
+							 withPageIndexes:(NSArray<NSNumber*>* _Nonnull)pageIndexes
+							   forMusicTypes:(NSArray<NSNumber*>* _Nonnull)musicTypes
+						   withPersistentIDs:(NSArray<NSNumber*>* _Nonnull)persistentIDs
+								replyHandler:(nullable void (^)(NSDictionary<NSString *, id> * _Nonnull replyMessage))replyHandler
+								errorHandler:(nullable void (^)(NSError * _Nonnull error))errorHandler;
 
 @end

@@ -106,8 +106,9 @@ typedef enum {
  Is called when the current playback time of the song changes.
  
  @param newPlaybackTime The new playback time.
+ @param userModified Whether or not the playback was user modified or was automatically updated by the system.
  */
-- (void)musicCurrentPlaybackTimeDidChange:(NSTimeInterval)newPlaybackTime;
+- (void)musicCurrentPlaybackTimeDidChange:(NSTimeInterval)newPlaybackTime userModified:(BOOL)userModified;
 
 /**
  The music library did change. When this is called, the object subscribed to this method should reload any media collections or queries it has and redraw any according layers.

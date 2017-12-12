@@ -21,8 +21,6 @@
 #define LMAppleWatchMusicTrackInfoKeyAlbumPersistentID @"LMAppleWatchMusicTrackInfoKeyAlbumPersistentID"
 //The total playback duration of the music track. Is an NSInteger wrapped in an NSNumber.
 #define LMAppleWatchMusicTrackInfoKeyPlaybackDuration @"LMAppleWatchMusicTrackInfoKeyPlaybackDuration"
-//The current playback time of the music track. Is an NSInteger wrapped in an NSNumber.
-#define LMAppleWatchMusicTrackInfoKeyCurrentPlaybackTime @"LMAppleWatchMusicTrackInfoKeyCurrentPlaybackTime"
 
 //Whether or not the now playing track is playing. BOOL as NSNumber.
 #define LMAppleWatchNowPlayingInfoKeyIsPlaying @"LMAppleWatchNowPlayingInfoKeyIsPlaying"
@@ -30,8 +28,6 @@
 #define LMAppleWatchNowPlayingInfoKeyRepeatMode @"LMAppleWatchNowPlayingInfoKeyRepeatMode"
 //The current shuffle mode. NSInteger as NSNumber.
 #define LMAppleWatchNowPlayingInfoKeyShuffleMode @"LMAppleWatchNowPlayingInfoKeyShuffleMode"
-//The track playback duration in seconds. NSInteger as NSNumber.
-#define LMAppleWatchNowPlayingInfoKeyPlaybackDuration @"LMAppleWatchNowPlayingInfoKeyPlaybackDuration"
 //The track's current playback time. NSInteger as NSNumber.
 #define LMAppleWatchNowPlayingInfoKeyCurrentPlaybackTime @"LMAppleWatchNowPlayingInfoKeyCurrentPlaybackTime"
 //The phone's volume, from 0.0 to 1.0.
@@ -53,6 +49,11 @@
 #define LMAppleWatchCommunicationKeyBrowsingShuffleAll @"LMAppleWatchCommunicationKeyBrowsingShuffleAll"
 //The user wants to play a certain track from a collection.
 #define LMAppleWatchCommunicationKeyBrowsingPlayIndividualTrack @"LMAppleWatchCommunicationKeyBrowsingPlayIndividualTrack"
+//A property of the track changed on the phone. Message should contain a key of LMAppleWatchCommunicationKeyNowPlayingTrackUpdate with a value of the LMAppleWatchMusicTrackInfoKey that was changed, along with that associated LMAppleWatchMusicTrackInfoKey as a key with a value of the new property.
+#define LMAppleWatchCommunicationKeyNowPlayingTrackUpdate @"LMAppleWatchCommunicationKeyNowPlayingTrackUpdate"
+//A property of the now playing info changed on the phone. Message should contain a key of LMAppleWatchCommunicationKeyNowPlayingInfoUpdate with a value of the LMAppleWatchNowPlayingInfoKey that was changed, along with that associated LMAppleWatchNowPlayingInfoKey as a key with a value of the new property.
+#define LMAppleWatchCommunicationKeyNowPlayingInfoUpdate @"LMAppleWatchCommunicationKeyNowPlayingInfoUpdate"
+
 
 
 //The key for the music types when the communication key is LMAppleWatchCommunicationKeyMusicBrowsingEntries. Music types is plural because it's an array of music types which define the structure of windows that the user has been presented in their current browsing session.
@@ -118,14 +119,19 @@ typedef NS_ENUM(NSInteger, LMAppleWatchMusicInfoType){
 	LMAppleWatchMusicInfoTypeAlbumArt
 };
 
-- (void)test;
-
 /**
  Returns the single instance of the shared Apple Watch bridge.
 
  @return The Apple Watch bridge.
  */
 + (LMAppleWatchBridge*)sharedAppleWatchBridge;
+
+/**
+ Whether or not the watch is connected to the phone and the watchapp is reachable for live messaging.
+
+ @return YES if watch is reachable, NO otherwise.
+ */
+- (BOOL)connected;
 
 /**
  Attaches volume events to a certain view controller.

@@ -16,7 +16,6 @@
 #import "LMCoreViewController.h"
 #import "LMNowPlayingCoreView.h"
 #import "LMNowPlayingCoreView.h"
-#import "LMPurchaseManager.h"
 #import "UIColor+isLight.h"
 #import "LMLayoutManager.h"
 #import "NSTimer+Blocks.h"
@@ -65,7 +64,7 @@
 @import SDWebImage;
 @import StoreKit;
 
-@interface LMCoreViewController () <LMMusicPlayerDelegate, LMSourceDelegate, UIGestureRecognizerDelegate, LMSearchBarDelegate, LMLetterTabDelegate, LMSearchSelectedDelegate, LMPurchaseManagerDelegate, LMButtonNavigationBarDelegate, UINavigationBarDelegate, UINavigationControllerDelegate,
+@interface LMCoreViewController () <LMMusicPlayerDelegate, LMSourceDelegate, UIGestureRecognizerDelegate, LMSearchBarDelegate, LMLetterTabDelegate, LMSearchSelectedDelegate, LMButtonNavigationBarDelegate, UINavigationBarDelegate, UINavigationControllerDelegate,
 LMTutorialViewDelegate, LMImageManagerDelegate, LMLandscapeNavigationBarDelegate,
 
 LMControlBarViewDelegate
@@ -95,8 +94,6 @@ LMControlBarViewDelegate
 @property NSTimeInterval syncTimeStamp;
 
 @property BOOL loaded;
-
-@property LMPurchaseManager *purchaseManager;
 
 @property CGPoint originalPoint, currentPoint;
 
@@ -294,28 +291,6 @@ LMControlBarViewDelegate
         [self.nowPlayingCoreView.tutorialView removeFromSuperview];
         self.nowPlayingCoreView.tutorialView = nil;
     }
-}
-
-- (void)appOwnershipStatusChanged:(LMPurchaseManagerAppOwnershipStatus)newOwnershipStatus {
-	NSLog(@"The app ownership status changed:");
-	switch(newOwnershipStatus){
-		case LMPurchaseManagerAppOwnershipStatusInTrial:
-			NSLog(@"The user is currently in trial.");
-			break;
-		case LMPurchaseManagerAppOwnershipStatusTrialExpired: {
-			NSLog(@"The user's trial has expired.");
-			[NSTimer scheduledTimerWithTimeInterval:3.0 block:^() {
-				[self.purchaseManager showPurchaseViewControllerOnViewController:self.navigationController present:YES];
-			} repeats:NO];
-			break;
-		}
-		case LMPurchaseManagerAppOwnershipStatusPurchased:
-			NSLog(@"The user purchased the app.");
-			break;
-		case LMPurchaseManagerAppOwnershipStatusLoggedInAsBacker:
-			NSLog(@"The user is logged in as a backer.");
-			break;
-	}
 }
 
 - (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState {
@@ -1304,8 +1279,6 @@ LMControlBarViewDelegate
 	self.sourcesForSourceSelector = [NSArray arrayWithArray:sources];
 	
 	self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
-	self.purchaseManager = [LMPurchaseManager sharedPurchaseManager];
-	[self.purchaseManager addDelegate:self];
 	
 	LMPebbleManager *pebbleManager = [LMPebbleManager sharedPebbleManager];
 	[pebbleManager attachToViewController:self];

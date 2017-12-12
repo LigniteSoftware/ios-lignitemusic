@@ -82,9 +82,33 @@
 
 - (void)reloadTrackProgressBar {
 	dispatch_async(dispatch_get_main_queue(), ^{
-		[self.progressSliderInfo setPercentage:((CGFloat)self.companionBridge.nowPlayingInfo.currentPlaybackTime/(CGFloat)self.companionBridge.nowPlayingInfo.playbackDuration)
+		if(self.companionBridge.nowPlayingInfo.nowPlayingTrack.playbackDuration == 0){
+			[self.progressSliderInfo setPercentage:0
+										  animated:YES];
+		}
+		else{
+			[self.progressSliderInfo setPercentage:((CGFloat)self.companionBridge.nowPlayingInfo.currentPlaybackTime/(CGFloat)self.companionBridge.nowPlayingInfo.nowPlayingTrack.playbackDuration)
 								  animated:YES];
+		}
 	});
+	
+	if(self.companionBridge.nowPlayingInfo.playing){
+		if(self.progressBarUpdateTimer){
+			[self.progressBarUpdateTimer invalidate];
+		}
+		
+		self.progressBarUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:1.00
+																	  repeats:YES
+																		block:
+									   ^(NSTimer * _Nonnull timer) {
+										   self.companionBridge.nowPlayingInfo.currentPlaybackTime++;
+										   [self reloadTrackProgressBar];
+									   }];
+	}
+	else{
+		[self.progressBarUpdateTimer invalidate];
+		self.progressBarUpdateTimer = nil;
+	}
 }
 
 - (void)reloadShuffleButton {
@@ -130,17 +154,7 @@
 - (void)nowPlayingInfoDidChange:(LMWNowPlayingInfo *)nowPlayingInfo {
 	if(nowPlayingInfo.playing){
 		dispatch_async(dispatch_get_main_queue(), ^{
-			if(self.progressBarUpdateTimer){
-				[self.progressBarUpdateTimer invalidate];
-			}
-			
-			self.progressBarUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:1.00
-																		  repeats:YES
-																			block:
-												^(NSTimer * _Nonnull timer) {
-													self.companionBridge.nowPlayingInfo.currentPlaybackTime++;
-													[self reloadTrackProgressBar];
-												}];
+			[self reloadTrackProgressBar];
 			
 			[self reloadShuffleButton];
 			[self reloadRepeatButton];
@@ -151,10 +165,6 @@
 			[self.previousTrackImage setImageNamed:@"previous_track.png"];
 		});
 	}
-	else{
-		[self.progressBarUpdateTimer invalidate];
-		self.progressBarUpdateTimer = nil;
-	}
 	
 	dispatch_async(dispatch_get_main_queue(), ^{
 		[self reloadTrackProgressBar];
@@ -162,19 +172,51 @@
 	});
 }
 
+- (void)nowPlayingTrackUpdate:(LMWMusicTrackInfo *)nowPlayingTrack forKey:(NSString*)key {
+	if([key isEqualToString:LMAppleWatchMusicTrackInfoKeyIsFavourite]){
+		[self reloadFavouriteButton];
+	}
+}
+
+- (void)nowPlayingInfoUpdate:(LMWNowPlayingInfo *)nowPlayingInfo forKey:(NSString*)key {
+	if([key isEqualToString:LMAppleWatchNowPlayingInfoKeyIsPlaying]){
+		[self reloadPlayPauseButton];
+		[self reloadTrackProgressBar];
+	}
+	else if([key isEqualToString:LMAppleWatchNowPlayingInfoKeyCurrentPlaybackTime]){
+		[self reloadTrackProgressBar];
+	}
+	else if([key isEqualToString:LMAppleWatchNowPlayingInfoKeyVolume]){
+		[self reloadVolumeProgressBar];
+	}
+}
+
 - (void)displayAsUpdating {
-	[self.titleLabel setText:NSLocalizedString(@"Updating", nil)];
-	[self.subtitleLabel setText:nil];
+	[self.subtitleLabel setText:NSLocalizedString(@"Updating", nil)];
+//	[self.subtitleLabel setText:nil];
 }
 
 
 - (void)progressSliderWithInfo:(LMWProgressSliderInfo*)progressSliderInfo slidToNewPositionWithPercentage:(CGFloat)percentage {
 	if(progressSliderInfo == self.progressSliderInfo){
-		NSInteger newPlaybackTime = (NSInteger)((CGFloat)self.companionBridge.nowPlayingInfo.playbackDuration * percentage);
+		NSInteger newPlaybackTime = (NSInteger)((CGFloat)self.companionBridge.nowPlayingInfo.nowPlayingTrack.playbackDuration * percentage);
 		
 		self.companionBridge.nowPlayingInfo.currentPlaybackTime = newPlaybackTime;
 
-		[self.companionBridge setCurrentPlaybackTime:newPlaybackTime];
+		__weak id weakSelf = self;
+		
+		[self.companionBridge setCurrentPlaybackTime:newPlaybackTime
+									  successHandler:^(NSDictionary *response) {
+										  
+									  } errorHandler:^(NSError *error) {
+										  id strongSelf = weakSelf;
+										  
+										  if (!strongSelf) {
+											  return;
+										  }
+										  
+										  [strongSelf handleConnectionError:error withHandler:nil];
+									  }];
 	}
 	else{
 		[self debug:[NSString stringWithFormat:@"%.02f", percentage]];
@@ -220,12 +262,45 @@
 						   preferredStyle:WKAlertControllerStyleAlert actions:@[ okayAction ]];
 }
 
+- (void)presentUserTriedThatTooMuchControllerWithHandler:(WKAlertActionHandler)handler {
+	WKAlertAction *okayAction = [WKAlertAction actionWithTitle:NSLocalizedString(@"DarnOkay", nil)
+														 style:WKAlertActionStyleDefault
+													   handler:handler];
+	
+	NSString *localizedAlertString = [NSString stringWithFormat:NSLocalizedString(@"TryingThatTooMuch", nil)];
+	
+	[self presentAlertControllerWithTitle:NSLocalizedString(@"OhBoy", nil)
+								  message:localizedAlertString
+						   preferredStyle:WKAlertControllerStyleAlert actions:@[ okayAction ]];
+}
+
 - (void)handleConnectionError:(NSError*)error withHandler:(WKAlertActionHandler)handler {
 	if(error.code == 503 || error.code == 7017){
-		[self presentPhoneNotRespondingControllerWithHandler:handler];
+		[self presentPhoneNotRespondingControllerWithHandler:^{
+			dispatch_async(dispatch_get_main_queue(), ^{
+				if(handler){
+					handler();
+				}
+			});
+		}];
+	}
+	else if(error.code == 7007){ //User is trying too much and their watch wasn't able to detect reachability properly
+		[self presentUserTriedThatTooMuchControllerWithHandler:^{
+			dispatch_async(dispatch_get_main_queue(), ^{
+				if(handler){
+					handler();
+				}
+			});
+		}];
 	}
 	else{
-		[self presentUnknownErrorControllerWithError:error handler:handler];
+		[self presentUnknownErrorControllerWithError:error handler:^{
+			dispatch_async(dispatch_get_main_queue(), ^{
+				if(handler){
+					handler();
+				}
+			});
+		}];
 	}
 }
 
@@ -314,7 +389,7 @@
 - (IBAction)playPauseButtonSelector:(id)sender {
 	[self showLoadingIconOnInterfaceImage:self.playPauseImage];
 	
-	[self.companionBridge sendMusicControlMessageToPhoneWithKey:LMAppleWatchControlKeyPreviousTrack
+	[self.companionBridge sendMusicControlMessageToPhoneWithKey:LMAppleWatchControlKeyPlayPause
 												 successHandler:^(NSDictionary *response) {
 													 BOOL isPlaying = [[response objectForKey:LMAppleWatchNowPlayingInfoKeyIsPlaying] boolValue];
 													 
@@ -451,7 +526,7 @@
 	[NSTimer scheduledTimerWithTimeInterval:0.5 repeats:NO block:^(NSTimer * _Nonnull timer) {
 		[self.companionBridge askCompanionForNowPlayingTrackInfo];
 //		[NSTimer scheduledTimerWithTimeInterval:5.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
-//			[self displayAsUpdating];
+			[self displayAsUpdating];
 //		}];
 	}];
 }

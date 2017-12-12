@@ -141,7 +141,7 @@
 	}
 }
 
-- (void)musicCurrentPlaybackTimeDidChange:(NSTimeInterval)newPlaybackTime {
+- (void)musicCurrentPlaybackTimeDidChange:(NSTimeInterval)newPlaybackTime userModified:(BOOL)userModified {
 	if(self.musicPlayer.nowPlayingTrack.persistentID != self.loadedTrack.persistentID){
 		return;
 	}

@@ -8,7 +8,6 @@
 
 #import "LMMusicPlayer.h"
 #import "NSTimer+Blocks.h"
-#import "LMAppleWatchBridge.h"
 
 @import StoreKit;
 
@@ -23,12 +22,6 @@
  The delegates associated with the music player. As described in LMMusicPlayerDelegate.
  */
 @property NSMutableArray *delegates;
-
-/**
- What a long variable name, I get it. This array contains all of the delegates which is a fan of knowing when the playback time changes. Tbh, I find it easier and cleaner to do this than to create a structure or enum or associated data type, etc.
- */
-@property NSMutableArray *delegatesSubscribedToCurrentPlaybackTimeChange;
-@property NSMutableArray *delegatesSubscribedToLibraryDidChange;
 
 /**
  The timer for detecting changes in the current playback time.
@@ -76,11 +69,6 @@
  The now playing collection which is shuffled.
  */
 @property LMMusicTrackCollection *nowPlayingCollectionShuffled;
-
-/**
- The Apple Watch bridge for managing communication with a paired Apple Watch.
- */
-@property LMAppleWatchBridge *watchBridge;
 
 @end
 
@@ -130,9 +118,8 @@ MPMediaGrouping associatedMediaTypes[] = {
 		[self loadNowPlayingState];
 
 		self.delegates = [NSMutableArray new];
-		self.delegatesSubscribedToCurrentPlaybackTimeChange = [NSMutableArray new];
-		self.delegatesSubscribedToLibraryDidChange = [NSMutableArray new];
-        if(self.repeatMode == LMMusicRepeatModeDefault){
+
+		if(self.repeatMode == LMMusicRepeatModeDefault){
             self.repeatMode = LMMusicRepeatModeNone;
         }
         self.systemMusicPlayer.shuffleMode = MPMusicShuffleModeOff;
@@ -173,10 +160,6 @@ MPMediaGrouping associatedMediaTypes[] = {
 		
 		MPMediaLibrary *mediaLibrary = [MPMediaLibrary defaultMediaLibrary];
 		[mediaLibrary beginGeneratingLibraryChangeNotifications];
-		
-		
-		self.watchBridge = [LMAppleWatchBridge sharedAppleWatchBridge];
-		[self.watchBridge test];
 		
 		
 		NSTimeInterval musicPlayerLoadEndTime = [[NSDate new] timeIntervalSince1970];
@@ -245,16 +228,17 @@ MPMediaGrouping associatedMediaTypes[] = {
 	}
 }
 
-- (void)updateNowPlayingTimeDelegates {
-	for(int i = 0; i < self.delegatesSubscribedToCurrentPlaybackTimeChange.count; i++){
-		id<LMMusicPlayerDelegate> delegate = [self.delegatesSubscribedToCurrentPlaybackTimeChange objectAtIndex:i];
-		[delegate musicCurrentPlaybackTimeDidChange:self.currentPlaybackTime];
+- (void)updateNowPlayingTimeDelegates:(BOOL)userModified {
+	for(id<LMMusicPlayerDelegate> delegate in self.delegates){
+		if([delegate respondsToSelector:@selector(musicCurrentPlaybackTimeDidChange:userModified:)]){
+			[delegate musicCurrentPlaybackTimeDidChange:self.currentPlaybackTime userModified:userModified];
+		}
 	}
 }
 
 - (void)currentPlaybackTimeChangeTimerCallback:(NSTimer*)timer {
 	if(floorf(self.currentPlaybackTime) != floorf(self.previousPlaybackTime)){
-		[self updateNowPlayingTimeDelegates];
+		[self updateNowPlayingTimeDelegates:NO];
 	}
 	
 	if(![self.currentPlaybackTimeChangeTimer isValid] || !self.currentPlaybackTimeChangeTimer){
@@ -380,8 +364,6 @@ MPMediaGrouping associatedMediaTypes[] = {
 	}
 	
 	[self reloadInfoCenter:autoPlay];
-	
-	[self.watchBridge sendNowPlayingTrackToWatch];
 }
 
 - (void)systemMusicPlayerStateChanged:(id)sender {
@@ -412,8 +394,6 @@ MPMediaGrouping associatedMediaTypes[] = {
 		id delegate = [self.delegates objectAtIndex:i];
 		[delegate musicPlaybackStateDidChange:self.playbackState];
 	}
-	
-	[self.watchBridge sendNowPlayingInfoToWatch];
 }
 
 - (void)changeMusicPlayerState:(LMMusicPlaybackState)newState {
@@ -438,8 +418,6 @@ MPMediaGrouping associatedMediaTypes[] = {
 		id delegate = [self.delegates objectAtIndex:i];
 		[delegate musicPlaybackStateDidChange:self.playbackState];
 	}
-	
-	[self.watchBridge sendNowPlayingInfoToWatch];
 }
 
 - (void)audioRouteChanged:(id)notification {
@@ -481,29 +459,19 @@ MPMediaGrouping associatedMediaTypes[] = {
 - (void)mediaLibraryContentsChanged:(id)notification {
 	NSLog(@"Library changed, called by %@!!!", [[notification class] description]);
 	
-	for(int i = 0; i < self.delegatesSubscribedToLibraryDidChange.count; i++){
-		[[self.delegatesSubscribedToLibraryDidChange objectAtIndex:i] musicLibraryDidChange];
+	for(id<LMMusicPlayerDelegate> delegate in self.delegates){
+		if([delegate respondsToSelector:@selector(musicLibraryDidChange)]){
+			[delegate musicLibraryDidChange];
+		}
 	}
 }
 
 - (void)addMusicDelegate:(id<LMMusicPlayerDelegate>)newDelegate {
 	[self.delegates addObject:newDelegate];
-	if([newDelegate respondsToSelector:@selector(musicCurrentPlaybackTimeDidChange:)]){
-		[self.delegatesSubscribedToCurrentPlaybackTimeChange addObject:newDelegate];
-	}
-	if([newDelegate respondsToSelector:@selector(musicLibraryDidChange)]){
-		[self.delegatesSubscribedToLibraryDidChange addObject:newDelegate];
-	}
 }
 
 - (void)removeMusicDelegate:(id<LMMusicPlayerDelegate>)delegateToRemove {
 	[self.delegates removeObject:delegateToRemove];
-	if([delegateToRemove respondsToSelector:@selector(musicCurrentPlaybackTimeDidChange:)]){
-		[self.delegatesSubscribedToCurrentPlaybackTimeChange removeObject:delegateToRemove];
-	}
-	if([delegateToRemove respondsToSelector:@selector(musicLibraryDidChange)]){
-		[self.delegatesSubscribedToLibraryDidChange removeObject:delegateToRemove];
-	}
 }
 
 BOOL shuffleForDebug = NO;
@@ -1264,8 +1232,6 @@ BOOL shuffleForDebug = NO;
 			[delegate trackAddedToQueue:trackToAdd];
 		}
 	}
-	
-	[self.watchBridge sendUpNextToWatch];
 }
 	
 - (void)removeTrackFromQueue:(LMMusicTrack*)trackToRemove {
@@ -1289,8 +1255,6 @@ BOOL shuffleForDebug = NO;
 			[delegate trackRemovedFromQueue:trackToRemove];
 		}
 	}
-	
-	[self.watchBridge sendUpNextToWatch];
 }
 
 - (NSString*)favouriteKeyForTrack:(LMMusicTrack*)track {
@@ -1385,8 +1349,6 @@ BOOL shuffleForDebug = NO;
 			[delegate trackMovedInQueue:currentMusicTrack];
 		}
 	}
-	
-	[self.watchBridge sendUpNextToWatch];
 }
 	
 - (LMMusicTrackCollection*)nowPlayingCollection {
@@ -1462,25 +1424,10 @@ BOOL shuffleForDebug = NO;
 }
 
 - (void)setCurrentPlaybackTime:(NSTimeInterval)currentPlaybackTime {
-	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer){
-		NSLog(@"Setting current playback time to %f", currentPlaybackTime);
-		
-		self.audioPlayer.currentTime = currentPlaybackTime;
-		
-		_currentPlaybackTime = currentPlaybackTime;
-		
-		[self updateNowPlayingTimeDelegates];
-		
-		[self reloadInfoCenter:self.audioPlayer.isPlaying];
-	}
-	else if(self.playerType == LMMusicPlayerTypeAppleMusic){
-		self.systemMusicPlayer.currentPlaybackTime = currentPlaybackTime;
-		_currentPlaybackTime = currentPlaybackTime;
-		
-		[self updateNowPlayingTimeDelegates];
-	}
+	self.systemMusicPlayer.currentPlaybackTime = currentPlaybackTime;
+	_currentPlaybackTime = currentPlaybackTime;
 	
-	[self.watchBridge sendNowPlayingInfoToWatch];
+	[self updateNowPlayingTimeDelegates:YES];
 }
 
 - (NSTimeInterval)currentPlaybackTime {

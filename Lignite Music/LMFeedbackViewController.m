@@ -197,6 +197,77 @@ NSString* deviceName(){
 	[userDefaults synchronize];
 }
 
+- (void)dataTaskCompletionHandler:(NSURLResponse*)response error:(NSError*)error feedback:(NSDictionary*)feedback {
+	if (error) {
+		NSLog(@"Error sending feedback: %@", error);
+		
+		[self dismissViewControllerAnimated:YES completion:^{
+			UIAlertController *alert = [UIAlertController
+										alertControllerWithTitle:NSLocalizedString(@"CantSendFeedback", nil)
+										message:NSLocalizedString(@"CantSendFeedbackDescription", nil)
+										preferredStyle:UIAlertControllerStyleAlert];
+			
+			UIAlertAction *yesButton = [UIAlertAction
+										actionWithTitle:NSLocalizedString(@"ContactUs", nil)
+										style:UIAlertActionStyleDefault
+										handler:^(UIAlertAction *action) {
+											dispatch_async(dispatch_get_main_queue(), ^{
+												NSString *errorString = [NSString stringWithFormat:@"Hey guys,\n\nI'm trying to send by feedback and it's not working!\n\nThe error says '%@'.\n\nMy feedback was going to be\n%@.\n\nThanks!", error, feedback];
+												
+												NSString *recipients = [NSString stringWithFormat:@"mailto:contact@lignite.io?subject=%@&body=%@",
+																		[@"Lignite Music can't send feedback" stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]],
+																		[errorString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]]];
+												//															recipients = [recipients stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
+												NSLog(@"Can open %@ %d", recipients, [[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:recipients]]);
+												
+												[[UIApplication sharedApplication] openURL:[NSURL URLWithString:recipients] options:@{} completionHandler:^(BOOL success) {
+													NSLog(@"Done %d", success);
+													
+													if(success){
+														[[self.textEntryArray objectAtIndex:2] setText:@""];
+														[[self.textEntryArray objectAtIndex:3] setText:@""];
+													}
+												}];
+											});
+										}];
+			
+			UIAlertAction *nopeButton = [UIAlertAction
+										 actionWithTitle:NSLocalizedString(@"DoNothing", nil)
+										 style:UIAlertActionStyleCancel
+										 handler:^(UIAlertAction *action) {
+											 
+										 }];
+			
+			[alert addAction:yesButton];
+			[alert addAction:nopeButton];
+			
+			[self presentViewController:alert animated:YES completion:nil];
+		}];
+	}
+	else {
+//		NSLog(@"%@ %@", response, responseObject);
+		
+		[self dismissViewControllerAnimated:YES completion:^{
+			MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+			
+			hud.mode = MBProgressHUDModeCustomView;
+			UIImage *image = [[UIImage imageNamed:@"icon_checkmark.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+			hud.customView = [[UIImageView alloc] initWithImage:image];
+			hud.square = YES;
+			hud.label.text = NSLocalizedString(@"ThanksForSubmitting", nil);
+			
+			[hud hideAnimated:YES afterDelay:2.0f];
+			
+			[NSTimer scheduledTimerWithTimeInterval:2.25 block:^() {
+				[[self.textEntryArray objectAtIndex:2] setText:@""];
+				[[self.textEntryArray objectAtIndex:3] setText:@""];
+				
+				[self closeView];
+			} repeats:NO];
+		}];
+	}
+}
+
 - (void)sendFeedback {
 	NSLog(@"Check and send feedback");
 	
@@ -303,75 +374,16 @@ NSString* deviceName(){
 			
 			responseSerializer.acceptableContentTypes = [responseSerializer.acceptableContentTypes setByAddingObject:@"text/plain"];
 			
-			NSURLSessionDataTask *dataTask = [manager dataTaskWithRequest:urlRequest completionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
-				if (error) {
-					NSLog(@"Error sending feedback: %@", error);
-					
-					[self dismissViewControllerAnimated:YES completion:^{
-						UIAlertController *alert = [UIAlertController
-													alertControllerWithTitle:NSLocalizedString(@"CantSendFeedback", nil)
-													message:NSLocalizedString(@"CantSendFeedbackDescription", nil)
-													preferredStyle:UIAlertControllerStyleAlert];
-						
-						UIAlertAction *yesButton = [UIAlertAction
-													actionWithTitle:NSLocalizedString(@"ContactUs", nil)
-													style:UIAlertActionStyleDefault
-													handler:^(UIAlertAction *action) {
-														dispatch_async(dispatch_get_main_queue(), ^{
-															NSString *errorString = [NSString stringWithFormat:@"Hey guys,\n\nI'm trying to send by feedback and it's not working!\n\nThe error says '%@'.\n\nMy feedback was going to be\n%@.\n\nThanks!", error, feedbackDictionary];
-															
-															NSString *recipients = [NSString stringWithFormat:@"mailto:contact@lignite.io?subject=%@&body=%@",
-																					[@"Lignite Music can't send feedback" stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]],
-																					[errorString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]]];
-															//															recipients = [recipients stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
-															NSLog(@"Can open %@ %d", recipients, [[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:recipients]]);
-															
-															[[UIApplication sharedApplication] openURL:[NSURL URLWithString:recipients] options:@{} completionHandler:^(BOOL success) {
-																NSLog(@"Done %d", success);
-																
-																if(success){
-																	[[self.textEntryArray objectAtIndex:2] setText:@""];
-																	[[self.textEntryArray objectAtIndex:3] setText:@""];
-																}
-															}];
-														});
-													}];
-						
-						UIAlertAction *nopeButton = [UIAlertAction
-													 actionWithTitle:NSLocalizedString(@"DoNothing", nil)
-													 style:UIAlertActionStyleCancel
-													 handler:^(UIAlertAction *action) {
-														 
-													 }];
-						
-						[alert addAction:yesButton];
-						[alert addAction:nopeButton];
-						
-						[self presentViewController:alert animated:YES completion:nil];
-					}];
-				} else {
-					NSLog(@"%@ %@", response, responseObject);
-					
-					[self dismissViewControllerAnimated:YES completion:^{
-						MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-						
-						hud.mode = MBProgressHUDModeCustomView;
-						UIImage *image = [[UIImage imageNamed:@"icon_checkmark.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-						hud.customView = [[UIImageView alloc] initWithImage:image];
-						hud.square = YES;
-						hud.label.text = NSLocalizedString(@"ThanksForSubmitting", nil);
-						
-						[hud hideAnimated:YES afterDelay:2.0f];
-						
-						[NSTimer scheduledTimerWithTimeInterval:2.25 block:^() {
-							[[self.textEntryArray objectAtIndex:2] setText:@""];
-							[[self.textEntryArray objectAtIndex:3] setText:@""];
-							
-							[self closeView];
-						} repeats:NO];
-					}];
-				}
-			}];
+			NSURLSessionDataTask *dataTask = [manager dataTaskWithRequest:urlRequest
+														   uploadProgress:nil
+														 downloadProgress:^(NSProgress * _Nonnull downloadProgress) {
+															 //Progress
+														 } completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
+
+															 [self dataTaskCompletionHandler:response
+																					   error:error
+																					feedback:feedbackDictionary];
+														 }];
 			[dataTask resume];
 		} repeats:NO];
 	}

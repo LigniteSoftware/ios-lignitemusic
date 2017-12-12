@@ -37,12 +37,7 @@ typedef NS_ENUM(NSInteger, LMMusicShuffleMode) {
 @property BOOL playing;
 
 /**
- The duration of the now playing song in seconds.
- */
-@property NSInteger playbackDuration;
-
-/**
- The current point in time that the playback is at.
+ The current point in time that the playback is at. Playback duration can be found within the music track.
  */
 @property NSInteger currentPlaybackTime;
 
