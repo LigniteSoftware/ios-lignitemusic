@@ -107,6 +107,36 @@
 @property IBOutlet WKInterfaceTable *queueTable;
 
 /**
+ The group for the nothing playing display.
+ */
+@property IBOutlet WKInterfaceGroup *nothingPlayingGroup;
+
+/**
+ The label for when nothing's playing.
+ */
+@property IBOutlet WKInterfaceLabel *nothingPlayingLabel;
+
+/**
+ The group for displaying errors to the user.
+ */
+@property IBOutlet WKInterfaceGroup *errorGroup;
+
+/**
+ The label for displaying errors to the user.
+ */
+@property IBOutlet WKInterfaceLabel *errorLabel;
+
+/**
+ The group for the now playing screen.
+ */
+@property IBOutlet WKInterfaceGroup *nowPlayingGroup;
+
+/**
+ The group for extra music controls.
+ */
+@property IBOutlet WKInterfaceGroup *extraControlsGroup;
+
+/**
  The pan gesture changed for the progress bar. Should be passed right away to the LMWProgressSliderInfo instance.
 
  @param panGestureRecognizer The pan gesture object.

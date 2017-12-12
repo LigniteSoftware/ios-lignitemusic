@@ -151,6 +151,13 @@
 - (void)nowPlayingInfoUpdate:(LMWNowPlayingInfo* _Nonnull)nowPlayingInfo forKey:(NSString* _Nonnull)key;
 
 /**
+ The companion's connection status changed. If connected, messaging is possible.
+
+ @param connected Whether or not the companion is connected.
+ */
+- (void)companionConnectionStatusChanged:(BOOL)connected;
+
+/**
  Asks the delegate to display a debug message, if possible.
 
  @param debug The debug message to display.

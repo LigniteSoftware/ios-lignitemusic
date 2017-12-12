@@ -101,7 +101,16 @@
 }
 
 - (void)trackRemovedFromFavourites:(LMMusicTrack*)track {
-	
+	if(self.connected){
+		[self.session sendMessage:@{
+									LMAppleWatchCommunicationKey:LMAppleWatchCommunicationKeyNowPlayingTrackUpdate,
+									LMAppleWatchCommunicationKeyNowPlayingTrackUpdate: LMAppleWatchMusicTrackInfoKeyIsFavourite,
+									LMAppleWatchMusicTrackInfoKeyIsFavourite: @(track.isFavourite)
+									}
+					 replyHandler:nil
+					 errorHandler:nil
+		 ];
+	}
 }
 
 - (BOOL)connected {

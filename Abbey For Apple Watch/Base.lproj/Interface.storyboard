@@ -4,6 +4,7 @@
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
+        <deployment identifier="watchOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="13507"/>
     </dependencies>
@@ -18,7 +19,56 @@
             <objects>
                 <controller id="AgC-eL-Hgc" customClass="LMWMainInterfaceController">
                     <items>
-                        <group width="1" height="1" alignment="left" layout="overlap" radius="0.0" spacing="0.0" id="PEh-FC-AVI" userLabel="Now Playing Container">
+                        <group width="1" alignment="left" verticalAlignment="center" layout="vertical" id="ia3-Z8-5no" userLabel="Error Container">
+                            <items>
+                                <label alignment="center" verticalAlignment="center" text="Nothing's playing right now, sorry." textAlignment="center" numberOfLines="0" id="B7E-bZ-Bdm"/>
+                                <imageView width="0.59999999999999998" height="0.40000000000000002" alignment="center" image="watch_no_cover_art_not_cropped" contentMode="scaleAspectFit" id="S7q-Tl-cOr"/>
+                            </items>
+                        </group>
+                        <group width="1" height="1" alignment="center" verticalAlignment="center" hidden="YES" layout="vertical" spacing="4" id="BKQ-1f-mP3" userLabel="Nothing Playing Container">
+                            <items>
+                                <imageView width="0.59999999999999998" height="0.40000000000000002" alignment="center" image="watch_no_cover_art_not_cropped" contentMode="scaleAspectFit" id="TqO-uK-WJf"/>
+                                <group width="1" height="4" alignment="left" id="PTs-lQ-xe7" userLabel="Spacer">
+                                    <variation key="device=watch38mm" height="2"/>
+                                </group>
+                                <label alignment="center" verticalAlignment="center" text="Nothing's playing right now, sorry." textAlignment="center" numberOfLines="0" id="Abv-IS-kMO"/>
+                                <group width="1" height="45" alignment="left" verticalAlignment="bottom" id="UcY-jQ-p1f" userLabel="Browse Library Group">
+                                    <items>
+                                        <button alignment="left" verticalAlignment="center" id="njR-QM-g7R" userLabel="Browse Library Button">
+                                            <group key="contentGroup" width="1" alignment="left" id="Ev5-wl-Xoq" userLabel="Button Group">
+                                                <items>
+                                                    <group width="0.90000000000000002" height="0.80000000000000004" alignment="center" verticalAlignment="center" spacing="4" id="RU0-a6-Rfe" userLabel="Contents Group">
+                                                        <items>
+                                                            <group width="0.20000000000000001" alignment="left" verticalAlignment="center" id="XAE-op-0vo" userLabel="Icon Group">
+                                                                <items>
+                                                                    <imageView width="0.90000000000000002" height="0.90000000000000002" alignment="left" verticalAlignment="center" image="icon_browse_white" contentMode="scaleAspectFit" id="OgQ-Gr-Ixd"/>
+                                                                </items>
+                                                            </group>
+                                                            <group width="0.80000000000000004" height="1" alignment="left" verticalAlignment="center" layout="vertical" spacing="0.0" id="NhI-Ps-vrv" userLabel="Text">
+                                                                <items>
+                                                                    <label alignment="left" verticalAlignment="center" text="Browse Library" textAlignment="left" id="H3T-KI-72q">
+                                                                        <color key="textColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                        <fontDescription key="font" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="15"/>
+                                                                        <variation key="device=watch38mm">
+                                                                            <fontDescription key="font" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="13"/>
+                                                                        </variation>
+                                                                    </label>
+                                                                </items>
+                                                            </group>
+                                                        </items>
+                                                    </group>
+                                                </items>
+                                                <color key="backgroundColor" red="0.8980392157" green="0.14901960780000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            </group>
+                                            <connections>
+                                                <segue destination="eJJ-55-8iY" kind="push" id="myE-hT-Oh5"/>
+                                            </connections>
+                                        </button>
+                                    </items>
+                                </group>
+                            </items>
+                        </group>
+                        <group width="1" height="1" alignment="left" hidden="YES" layout="overlap" radius="0.0" spacing="0.0" id="PEh-FC-AVI" userLabel="Now Playing Container">
                             <items>
                                 <imageView width="1" height="0.80000000000000004" alignment="center" image="chidster" contentMode="scaleAspectFill" id="BvG-LR-NtJ"/>
                                 <group width="1" height="0.80000000000000004" alignment="left" layout="vertical" spacing="0.0" id="3a1-Uj-z8o" userLabel="Control Group">
@@ -242,6 +292,9 @@
                                                                     <label alignment="left" verticalAlignment="center" text="Browse Library" textAlignment="left" id="cEl-sZ-3f8">
                                                                         <color key="textColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                         <fontDescription key="font" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="15"/>
+                                                                        <variation key="device=watch38mm">
+                                                                            <fontDescription key="font" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="13"/>
+                                                                        </variation>
                                                                     </label>
                                                                 </items>
                                                             </group>
@@ -309,8 +362,14 @@
                     </items>
                     <connections>
                         <outlet property="albumArtImage" destination="BvG-LR-NtJ" id="3iq-sp-HTY"/>
+                        <outlet property="errorGroup" destination="ia3-Z8-5no" id="z8V-xy-Jh0"/>
+                        <outlet property="errorLabel" destination="B7E-bZ-Bdm" id="ybm-7J-r0e"/>
+                        <outlet property="extraControlsGroup" destination="HiP-Qn-bsy" id="rNx-ni-fCw"/>
                         <outlet property="favouriteImage" destination="mBZ-WZ-8K5" id="AXj-Ya-CLf"/>
                         <outlet property="nextTrackImage" destination="PTD-XQ-p6R" id="Thc-QV-X2g"/>
+                        <outlet property="nothingPlayingGroup" destination="BKQ-1f-mP3" id="ewr-iO-Aq2"/>
+                        <outlet property="nothingPlayingLabel" destination="Abv-IS-kMO" id="UXS-c3-FeG"/>
+                        <outlet property="nowPlayingGroup" destination="PEh-FC-AVI" id="SOV-9u-cyb"/>
                         <outlet property="playPauseImage" destination="5W3-rZ-RmV" id="dnP-2B-Nl4"/>
                         <outlet property="previousTrackImage" destination="gJY-dC-Qdh" id="EKt-ow-9iH"/>
                         <outlet property="progressBarContainer" destination="Blj-jY-PsE" id="a3o-Ns-Dqi"/>
@@ -465,4 +524,7 @@
             <point key="canvasLocation" x="466" y="820"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="myE-hT-Oh5"/>
+    </inferredMetricsTieBreakers>
 </document>

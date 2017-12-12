@@ -7,7 +7,10 @@
 */
 
 "NothingPlaying" = "Nothing's playing";
+"NothingPlayingFullText" = "Nothing's playing right now, sorry.";
 "Loading" = "Loading...";
+
+"WaitingForPhone" = "Waiting for your phone to connect...";
 
 "NothingUpNext" = "Nothing up next";
 "UpNext" = "Up next";

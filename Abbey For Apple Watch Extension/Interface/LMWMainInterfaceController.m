@@ -71,6 +71,8 @@
 			[self.albumArtImage setImage:musicTrackInfo.albumArt];
 			[self reloadFavouriteButton];
 		}
+		
+		[self setNothingPlaying:musicTrackInfo == nil];
 	});
 }
 
@@ -489,6 +491,43 @@
 	}
 }
 
+- (void)companionConnectionStatusChanged:(BOOL)connected {
+	if(connected){
+		[self setError:nil];
+	}
+	else{
+		[self setError:NSLocalizedString(@"WaitingForPhone", nil)];
+	}
+}
+
+- (void)setError:(NSString*)error {
+	BOOL hideContents = error ? YES : NO;
+	
+	[self.nowPlayingGroup setHidden:hideContents];
+	[self.extraControlsGroup setHidden:hideContents];
+	
+	if(error){
+		[self.nothingPlayingGroup setHidden:YES];
+	}
+	else{
+		[self setNothingPlaying:(self.companionBridge.nowPlayingInfo.nowPlayingTrack ? NO : YES )];
+	}
+	
+	[self.errorGroup setHidden:!hideContents];
+	
+	if(error){
+		[self.errorLabel setText:error];
+	}
+}
+
+- (void)setNothingPlaying:(BOOL)nothingPlaying {
+	[self.nothingPlayingGroup setHidden:!nothingPlaying];
+	[self.nothingPlayingLabel setHidden:!nothingPlaying];
+	
+	[self.errorGroup setHidden:YES];
+	[self.nowPlayingGroup setHidden:nothingPlaying];
+	[self.extraControlsGroup setHidden:nothingPlaying];
+}
 
 - (void)awakeWithContext:(id)context {
     [super awakeWithContext:context];
@@ -513,6 +552,18 @@
 	
 	[self displayAsUpdating];
 	
+	[self.nothingPlayingGroup setHidden:NO];
+	[self.nothingPlayingLabel setText:NSLocalizedString(@"NothingPlayingFullText", nil)];
+	
+	[self companionConnectionStatusChanged:self.companionBridge.connected];
+	
+	[NSTimer scheduledTimerWithTimeInterval:2.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
+		[self companionConnectionStatusChanged:self.companionBridge.connected];
+		
+		[NSTimer scheduledTimerWithTimeInterval:3.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
+			[self companionConnectionStatusChanged:self.companionBridge.connected];
+		}];
+	}];
 	
 	[self configureTableWithData:@[]];
 }
@@ -524,10 +575,17 @@
 	self.progressBarUpdateTimer = nil;
 	
 	[NSTimer scheduledTimerWithTimeInterval:0.5 repeats:NO block:^(NSTimer * _Nonnull timer) {
-		[self.companionBridge askCompanionForNowPlayingTrackInfo];
-//		[NSTimer scheduledTimerWithTimeInterval:5.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
+		if(!self.companionBridge.connected){
+			[self companionConnectionStatusChanged:self.companionBridge.connected];
+			
+			[self.companionBridge askCompanionForNowPlayingTrackInfo];
+		}
+		else{
+			[self.companionBridge askCompanionForNowPlayingTrackInfo];
 			[self displayAsUpdating];
-//		}];
+			
+			[self setNothingPlaying:YES];
+		}
 	}];
 }
 

@@ -30,6 +30,16 @@
 	return self.session.reachable;
 }
 
+- (void)sessionReachabilityDidChange:(WCSession *)session {
+	dispatch_async(dispatch_get_main_queue(), ^{
+		for(id<LMWCompanionBridgeDelegate> delegate in self.delegates){
+			if([delegate respondsToSelector:@selector(companionConnectionStatusChanged:)]){
+				[delegate companionConnectionStatusChanged:self.connected];
+			}
+		}
+	});
+}
+
 - (void)debug:(NSString*)debug {
 	for(id<LMWCompanionBridgeDelegate> delegate in self.delegates){
 		if([delegate respondsToSelector:@selector(companionDebug:)]){

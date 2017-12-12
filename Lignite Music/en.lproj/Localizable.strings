@@ -361,7 +361,7 @@
 "UnknownSection" = "Unknown Section";
 
 /* When no music is playing */
-"NoMusic" = "No Music";
+"NoMusic" = "Nothing's playing";
 "NoMusicDescription" = "Start music on your watch or phone";
 
 /* 
