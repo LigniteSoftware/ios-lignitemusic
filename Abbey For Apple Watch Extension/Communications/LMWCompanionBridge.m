@@ -157,6 +157,10 @@
 		else if([infoKey isEqualToString:LMAppleWatchNowPlayingInfoKeyVolume]){
 			self.nowPlayingInfo.volume = [[message objectForKey:LMAppleWatchNowPlayingInfoKeyVolume] floatValue];
 		}
+		else if([infoKey isEqualToString:LMAppleWatchNowPlayingInfoKeyShuffleMode]){
+			self.nowPlayingInfo.shuffleMode = [[message objectForKey:LMAppleWatchNowPlayingInfoKeyShuffleMode] integerValue];
+			self.nowPlayingInfo.repeatMode = [[message objectForKey:LMAppleWatchNowPlayingInfoKeyRepeatMode] integerValue];
+		}
 		
 		dispatch_async(dispatch_get_main_queue(), ^{
 			for(id<LMWCompanionBridgeDelegate> delegate in self.delegates){
@@ -197,11 +201,22 @@
 
 
 - (void)askCompanionForNowPlayingTrackInfo {
+	static int attempts = 0;
+	
 	if(self.session.reachable){
 		[self.session sendMessage:@{ LMAppleWatchCommunicationKey:LMAppleWatchCommunicationKeyNowPlayingTrack } replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
 			NSLog(@"Got reply %@", replyMessage);
+			attempts = 0;
 		} errorHandler:^(NSError * _Nonnull error) {
-			NSLog(@"Error %@", error);
+			NSLog(@"Error getting companion info %@", error);
+			attempts++;
+			if(attempts < 3){
+				NSLog(@"Trying again...");
+				[self askCompanionForNowPlayingTrackInfo]; //Keep trying lol
+			}
+			else{
+				attempts = 0;
+			}
 		}];
 	}
 	else{

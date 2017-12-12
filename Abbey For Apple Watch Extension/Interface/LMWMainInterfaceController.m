@@ -154,22 +154,17 @@
 }
 
 - (void)nowPlayingInfoDidChange:(LMWNowPlayingInfo *)nowPlayingInfo {
-	if(nowPlayingInfo.playing){
-		dispatch_async(dispatch_get_main_queue(), ^{
-			[self reloadTrackProgressBar];
-			
-			[self reloadShuffleButton];
-			[self reloadRepeatButton];
-			
-			[self reloadVolumeProgressBar];
-			
-			[self.nextTrackImage setImageNamed:@"next_track.png"];
-			[self.previousTrackImage setImageNamed:@"previous_track.png"];
-		});
-	}
-	
 	dispatch_async(dispatch_get_main_queue(), ^{
 		[self reloadTrackProgressBar];
+		
+		[self reloadShuffleButton];
+		[self reloadRepeatButton];
+		
+		[self reloadVolumeProgressBar];
+		
+		[self.nextTrackImage setImageNamed:@"next_track.png"];
+		[self.previousTrackImage setImageNamed:@"previous_track.png"];
+		
 		[self reloadPlayPauseButton];
 	});
 }
@@ -190,6 +185,10 @@
 	}
 	else if([key isEqualToString:LMAppleWatchNowPlayingInfoKeyVolume]){
 		[self reloadVolumeProgressBar];
+	}
+	else if([key isEqualToString:LMAppleWatchNowPlayingInfoKeyShuffleMode]){
+		[self reloadShuffleButton];
+		[self reloadRepeatButton];
 	}
 }
 
@@ -574,18 +573,18 @@
 	[self.progressBarUpdateTimer invalidate];
 	self.progressBarUpdateTimer = nil;
 	
+	if(!self.companionBridge.connected){
+		[self companionConnectionStatusChanged:self.companionBridge.connected];
+		
+		[self.companionBridge askCompanionForNowPlayingTrackInfo];
+	}
+	else if(!self.companionBridge.nowPlayingInfo.nowPlayingTrack){
+		[self setNothingPlaying:YES];
+	}
+	
 	[NSTimer scheduledTimerWithTimeInterval:0.5 repeats:NO block:^(NSTimer * _Nonnull timer) {
-		if(!self.companionBridge.connected){
-			[self companionConnectionStatusChanged:self.companionBridge.connected];
-			
-			[self.companionBridge askCompanionForNowPlayingTrackInfo];
-		}
-		else{
-			[self.companionBridge askCompanionForNowPlayingTrackInfo];
-			[self displayAsUpdating];
-			
-			[self setNothingPlaying:YES];
-		}
+		[self.companionBridge askCompanionForNowPlayingTrackInfo];
+		[self displayAsUpdating];
 	}];
 }
 

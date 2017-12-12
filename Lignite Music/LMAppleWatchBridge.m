@@ -72,7 +72,17 @@
 }
 
 - (void)musicPlaybackModesDidChange:(LMMusicShuffleMode)shuffleMode repeatMode:(LMMusicRepeatMode)repeatMode {
-	
+	if(self.connected){
+		[self.session sendMessage:@{
+									LMAppleWatchCommunicationKey:LMAppleWatchCommunicationKeyNowPlayingInfoUpdate,
+									LMAppleWatchCommunicationKeyNowPlayingInfoUpdate: LMAppleWatchNowPlayingInfoKeyShuffleMode,
+									LMAppleWatchNowPlayingInfoKeyShuffleMode: @(shuffleMode),
+									LMAppleWatchNowPlayingInfoKeyRepeatMode: @(repeatMode)
+									}
+					 replyHandler:nil
+					 errorHandler:nil
+		 ];
+	}
 }
 
 - (void)trackAddedToQueue:(LMMusicTrack*)trackAdded {
@@ -442,7 +452,6 @@
 			else{
 				collection = [trackCollections objectAtIndex:i];
 				representativeTrack = collection.representativeItem;
-				NSLog(@"Rep track %d/%@\n%lld", (int)i, representativeTrack.artist, representativeTrack.artistPersistentID);
 			}
 			
 			NSString *title = NSLocalizedString(@"UnknownTitle", nil);
