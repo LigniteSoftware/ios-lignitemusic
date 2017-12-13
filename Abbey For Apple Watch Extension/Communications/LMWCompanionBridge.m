@@ -33,6 +33,63 @@
 	return self.session.reachable;
 }
 
++ (CGFloat)colourComponentFrom:(NSString *)string start:(NSUInteger)start length:(NSUInteger)length {
+	NSString *substring = [string substringWithRange: NSMakeRange(start, length)];
+	
+	NSString *fullHex = (length == 2) ? substring : [NSString stringWithFormat:@"%@%@", substring, substring];
+	unsigned hexComponent;
+	[[NSScanner scannerWithString: fullHex] scanHexInt: &hexComponent];
+	
+	return hexComponent / 255.0;
+}
+
++ (UIColor*)colourWithHexString:(NSString*)hexString {
+	NSString *colourString = [[hexString stringByReplacingOccurrencesOfString:@"#" withString:@""] uppercaseString];
+	
+	CGFloat alpha, red, blue, green;
+	
+	switch([colourString length]){
+		case 3: //#RGB
+			alpha = 1.0f;
+			red   = [self colourComponentFrom:colourString start:0 length:1];
+			green = [self colourComponentFrom:colourString start:1 length:1];
+			blue  = [self colourComponentFrom:colourString start:2 length:1];
+			break;
+		case 4: //#ARGB
+			alpha = [self colourComponentFrom:colourString start:0 length:1];
+			red   = [self colourComponentFrom:colourString start:1 length:1];
+			green = [self colourComponentFrom:colourString start:2 length:1];
+			blue  = [self colourComponentFrom:colourString start:3 length:1];
+			break;
+		case 6: //#RRGGBB
+			alpha = 1.0f;
+			red   = [self colourComponentFrom:colourString start:0 length:2];
+			green = [self colourComponentFrom:colourString start:2 length:2];
+			blue  = [self colourComponentFrom:colourString start:4 length:2];
+			break;
+		case 8: //#AARRGGBB
+			alpha = [self colourComponentFrom:colourString start:0 length:2];
+			red   = [self colourComponentFrom:colourString start:2 length:2];
+			green = [self colourComponentFrom:colourString start:4 length:2];
+			blue  = [self colourComponentFrom:colourString start:6 length:2];
+			break;
+		default:
+			[NSException raise:@"Invalid color value" format:@"Color value %@ is invalid. It should be a hex value of the form #RBG, #ARGB, #RRGGBB, or #AARRGGBB", hexString];
+			break;
+	}
+	
+	return [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
+}
+
+- (UIColor*)phoneThemeMainColour {
+	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+	
+	NSString *storedHexString = [userDefaults objectForKey:LMAppleWatchNowPlayingInfoKeyTheme];
+	NSString *mainColourHexString = storedHexString ? storedHexString : @"E82824";
+	
+	return [LMWCompanionBridge colourWithHexString:mainColourHexString];
+}
+
 - (void)sessionReachabilityDidChange:(WCSession *)session {
 	dispatch_async(dispatch_get_main_queue(), ^{
 		for(id<LMWCompanionBridgeDelegate> delegate in self.delegates){
@@ -94,6 +151,10 @@
 		self.nowPlayingInfo.currentPlaybackTime = [[infoDictionary objectForKey:LMAppleWatchNowPlayingInfoKeyCurrentPlaybackTime] integerValue];
 		self.nowPlayingInfo.volume = [[infoDictionary objectForKey:LMAppleWatchNowPlayingInfoKeyVolume] floatValue];
 		
+		NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+		[userDefaults setObject:[infoDictionary objectForKey:LMAppleWatchNowPlayingInfoKeyTheme]
+						 forKey:LMAppleWatchNowPlayingInfoKeyTheme];
+		
 		for(id<LMWCompanionBridgeDelegate> delegate in self.delegates){
 			if([delegate respondsToSelector:@selector(nowPlayingInfoDidChange:)]){
 				[delegate nowPlayingInfoDidChange:self.nowPlayingInfo];
@@ -101,6 +162,10 @@
 		}
 	}
 	else if([key isEqualToString:LMAppleWatchCommunicationKeyNoTrackPlaying]){
+		NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+		[userDefaults setObject:[message objectForKey:LMAppleWatchNowPlayingInfoKeyTheme]
+						 forKey:LMAppleWatchNowPlayingInfoKeyTheme];
+		
 		self.nowPlayingInfo.nowPlayingTrack = nil;
 		
 		for(id<LMWCompanionBridgeDelegate> delegate in self.delegates){
@@ -163,6 +228,11 @@
 		else if([infoKey isEqualToString:LMAppleWatchNowPlayingInfoKeyShuffleMode]){
 			self.nowPlayingInfo.shuffleMode = [[message objectForKey:LMAppleWatchNowPlayingInfoKeyShuffleMode] integerValue];
 			self.nowPlayingInfo.repeatMode = [[message objectForKey:LMAppleWatchNowPlayingInfoKeyRepeatMode] integerValue];
+		}
+		else if([infoKey isEqualToString:LMAppleWatchNowPlayingInfoKeyTheme]){
+			NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+			[userDefaults setObject:[message objectForKey:LMAppleWatchNowPlayingInfoKeyTheme]
+							 forKey:LMAppleWatchNowPlayingInfoKeyTheme];
 		}
 		
 		dispatch_async(dispatch_get_main_queue(), ^{

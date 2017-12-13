@@ -361,11 +361,13 @@
                     </items>
                     <connections>
                         <outlet property="albumArtImage" destination="BvG-LR-NtJ" id="3iq-sp-HTY"/>
+                        <outlet property="browseButtonBackgroundGroup" destination="3JY-YY-Fti" id="Nb6-CZ-KOY"/>
                         <outlet property="errorGroup" destination="ia3-Z8-5no" id="z8V-xy-Jh0"/>
                         <outlet property="errorLabel" destination="B7E-bZ-Bdm" id="ybm-7J-r0e"/>
                         <outlet property="extraControlsGroup" destination="HiP-Qn-bsy" id="rNx-ni-fCw"/>
                         <outlet property="favouriteImage" destination="mBZ-WZ-8K5" id="AXj-Ya-CLf"/>
                         <outlet property="nextTrackImage" destination="PTD-XQ-p6R" id="Thc-QV-X2g"/>
+                        <outlet property="nothingPlayingBrowseButtonBackgroundGroup" destination="Ev5-wl-Xoq" id="lyD-9J-Zja"/>
                         <outlet property="nothingPlayingGroup" destination="BKQ-1f-mP3" id="ewr-iO-Aq2"/>
                         <outlet property="nothingPlayingLabel" destination="Abv-IS-kMO" id="UXS-c3-FeG"/>
                         <outlet property="nowPlayingGroup" destination="PEh-FC-AVI" id="SOV-9u-cyb"/>

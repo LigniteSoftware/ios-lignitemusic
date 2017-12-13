@@ -10,8 +10,9 @@
 #import "LMAppleWatchBridge.h"
 #import "LMPlaylistManager.h"
 #import "LMMusicPlayer.h"
+#import "LMThemeEngine.h"
 
-@interface LMAppleWatchBridge()<WCSessionDelegate, LMMusicPlayerDelegate>
+@interface LMAppleWatchBridge()<WCSessionDelegate, LMMusicPlayerDelegate, LMThemeEngineDelegate>
 
 /**
  The watch connectivity session.
@@ -120,6 +121,18 @@
 					 replyHandler:nil
 					 errorHandler:nil
 		 ];
+	}
+}
+
+- (void)themeChanged:(LMTheme)theme {
+	if(self.connected){
+		[self.session sendMessage:@{
+									LMAppleWatchCommunicationKey: LMAppleWatchCommunicationKeyNowPlayingInfoUpdate,
+									LMAppleWatchCommunicationKeyNowPlayingInfoUpdate: LMAppleWatchNowPlayingInfoKeyTheme,
+									LMAppleWatchNowPlayingInfoKeyTheme: [LMThemeEngine mainColourHexStringForTheme:theme]
+									}
+					 replyHandler:nil
+					 errorHandler:nil];
 	}
 }
 
@@ -241,7 +254,7 @@
 			
 			NSDictionary *nowPlayingTrackDictionary = @{
 												   LMAppleWatchCommunicationKey: LMAppleWatchCommunicationKeyNowPlayingTrack,
-												   
+												   LMAppleWatchNowPlayingInfoKeyTheme: [LMThemeEngine mainColourHexStringForTheme:LMThemeEngine.currentTheme],
 												   LMAppleWatchCommunicationKeyNowPlayingTrack:[self dictionaryForMusicTrack:nowPlayingTrack]
 												   };
 
@@ -263,7 +276,10 @@
 //			}
 		}
 		else{
-			[self.session sendMessage:@{ LMAppleWatchCommunicationKey:LMAppleWatchCommunicationKeyNoTrackPlaying }
+			[self.session sendMessage:@{
+										LMAppleWatchCommunicationKey:LMAppleWatchCommunicationKeyNoTrackPlaying,
+										LMAppleWatchNowPlayingInfoKeyTheme: [LMThemeEngine mainColourHexStringForTheme:LMThemeEngine.currentTheme]
+										}
 						 replyHandler:nil
 						 errorHandler:^(NSError * _Nonnull error) {
 							 NSLog(@"Error sending no track currently playing: %@", error);
@@ -280,12 +296,12 @@
 												   LMAppleWatchNowPlayingInfoKeyRepeatMode: @(self.musicPlayer.repeatMode),
 												   LMAppleWatchNowPlayingInfoKeyShuffleMode: @(self.musicPlayer.shuffleMode),
 												   LMAppleWatchNowPlayingInfoKeyCurrentPlaybackTime: @(self.musicPlayer.currentPlaybackTime),
-												   LMAppleWatchNowPlayingInfoKeyVolume: @(self.volumeViewSlider.value)
+												   LMAppleWatchNowPlayingInfoKeyVolume: @(self.volumeViewSlider.value),
+												   LMAppleWatchNowPlayingInfoKeyTheme: [LMThemeEngine mainColourHexStringForTheme:LMThemeEngine.currentTheme]
 												   };
 		
 		NSDictionary *messageDictionary = @{
 											LMAppleWatchCommunicationKey: LMAppleWatchCommunicationKeyNowPlayingInfo,
-											
 											LMAppleWatchCommunicationKeyNowPlayingInfo:nowPlayingInfoDictionary
 											};
 		
@@ -727,6 +743,8 @@
 			
 			sharedAppleWatchBridge.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 			[sharedAppleWatchBridge.musicPlayer addMusicDelegate:sharedAppleWatchBridge];
+			
+			[[LMThemeEngine sharedThemeEngine] addDelegate:sharedAppleWatchBridge];
 		}
 	});
 	return sharedAppleWatchBridge;

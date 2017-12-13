@@ -137,6 +137,16 @@
 @property IBOutlet WKInterfaceGroup *extraControlsGroup;
 
 /**
+ The group for the browse button's background which contains its colour.
+ */
+@property IBOutlet WKInterfaceGroup *browseButtonBackgroundGroup;
+
+/**
+ The group for the browse button's background which contains its colour.
+ */
+@property IBOutlet WKInterfaceGroup *nothingPlayingBrowseButtonBackgroundGroup;
+
+/**
  The pan gesture changed for the progress bar. Should be passed right away to the LMWProgressSliderInfo instance.
 
  @param panGestureRecognizer The pan gesture object.

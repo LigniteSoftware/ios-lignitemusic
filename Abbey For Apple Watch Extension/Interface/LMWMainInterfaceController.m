@@ -73,6 +73,8 @@
 		}
 		
 		[self setNothingPlaying:musicTrackInfo == nil];
+		
+		[self reloadThemedElements];
 	});
 }
 
@@ -115,7 +117,7 @@
 
 - (void)reloadShuffleButton {
 	[self animateWithDuration:0.4 animations:^{
-		[self.shuffleButtonGroup setBackgroundColor:self.companionBridge.nowPlayingInfo.shuffleMode ? [UIColor redColor] : [UIColor blackColor]];
+		[self.shuffleButtonGroup setBackgroundColor:self.companionBridge.nowPlayingInfo.shuffleMode ? self.companionBridge.phoneThemeMainColour : [UIColor blackColor]];
 	}];
 	
 	[self.shuffleImage setImageNamed:@"icon_shuffle_white.png"];
@@ -141,7 +143,7 @@
 	[self.repeatImage setImage:newRepeatImage];
 	
 	[self animateWithDuration:0.4 animations:^{
-		[self.repeatButtonGroup setBackgroundColor:(self.companionBridge.nowPlayingInfo.repeatMode != LMMusicRepeatModeNone) ? [UIColor redColor] : [UIColor blackColor]];
+		[self.repeatButtonGroup setBackgroundColor:(self.companionBridge.nowPlayingInfo.repeatMode != LMMusicRepeatModeNone) ? self.companionBridge.phoneThemeMainColour : [UIColor blackColor]];
 	}];
 }
 
@@ -153,12 +155,25 @@
 	[self.volumeProgressInfo setPercentage:self.companionBridge.nowPlayingInfo.volume animated:YES];
 }
 
+- (void)reloadThemedElements {
+	[self.browseButtonBackgroundGroup setBackgroundColor:self.companionBridge.phoneThemeMainColour];
+	[self.nothingPlayingBrowseButtonBackgroundGroup setBackgroundColor:self.companionBridge.phoneThemeMainColour];
+	
+	[self.volumeBarGroup setBackgroundColor:self.companionBridge.phoneThemeMainColour];
+	[self.progressBarGroup setBackgroundColor:self.companionBridge.phoneThemeMainColour];
+	
+	[self reloadShuffleButton];
+	[self reloadRepeatButton];
+}
+
 - (void)nowPlayingInfoDidChange:(LMWNowPlayingInfo *)nowPlayingInfo {
 	dispatch_async(dispatch_get_main_queue(), ^{
 		[self reloadTrackProgressBar];
 		
-		[self reloadShuffleButton];
-		[self reloadRepeatButton];
+//		[self reloadShuffleButton];
+//		[self reloadRepeatButton];
+		
+		[self reloadThemedElements];
 		
 		[self reloadVolumeProgressBar];
 		
@@ -189,6 +204,9 @@
 	else if([key isEqualToString:LMAppleWatchNowPlayingInfoKeyShuffleMode]){
 		[self reloadShuffleButton];
 		[self reloadRepeatButton];
+	}
+	else if([key isEqualToString:LMAppleWatchNowPlayingInfoKeyTheme]){
+		[self reloadThemedElements];
 	}
 }
 
@@ -570,6 +588,8 @@
 	}];
 	
 	[self configureTableWithData:@[]];
+	
+	[self reloadThemedElements];
 }
 
 - (void)willActivate {

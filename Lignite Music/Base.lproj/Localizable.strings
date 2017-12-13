@@ -596,6 +596,23 @@
 "RankLigniteSupporterPeople" = "Nathanail Georgiou, Alexander Nilsen, G Di Giovanni, Kurt Alke, Michal Broska, Kristof Verpoorten (sup dude), Josh Snyder, \"the player formerly known as mousecop\"";
 
 
+//DO NOT TRANSLATE THESE!
+"LMThemeKeyDefault_Title" = "Lignite Red";
+"LMThemeKeyRoyallyBlued_Title" = "Royally Blued";
+"LMThemeKeyBombasticBlue_Title" = "Bombastic Blue";
+"LMThemeKeyMorpheus_Title" = "Morpheus";
+"LMThemeKeyBackgroundNoise_Title" = "Background Noise";
+"LMThemeKeyBritishRacingGreen_Title" = "British Racing";
+
+"LMThemeKeyDefault_Creator" = "Lignite";
+"LMThemeKeyRoyallyBlued_Creator" = "Dave P.";
+"LMThemeKeyBombasticBlue_Creator" = "Nick Bomba";
+"LMThemeKeyMorpheus_Creator" = "RJ";
+"LMThemeKeyBackgroundNoise_Creator" = "NefCanuck";
+"LMThemeKeyBritishRacingGreen_Creator" = "Backer #222";
+//DO NOT TRANSLATE THESE!
+
+
 /*
  *
  * Important!

@@ -66,7 +66,7 @@
 			break;
 	}
 	
-	return [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
+	return (LMColour*)[UIColor colorWithRed:red green:green blue:blue alpha:alpha];
 }
 
 + (CGFloat)colourComponentFrom:(NSString *)string start:(NSUInteger)start length:(NSUInteger)length {

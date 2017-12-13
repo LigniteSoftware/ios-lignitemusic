@@ -33,6 +33,8 @@
 #define LMAppleWatchNowPlayingInfoKeyCurrentPlaybackTime @"LMAppleWatchNowPlayingInfoKeyCurrentPlaybackTime"
 //The phone's volume, from 0.0 to 1.0.
 #define LMAppleWatchNowPlayingInfoKeyVolume @"LMAppleWatchNowPlayingInfoKeyVolume"
+//The user's selected theme colour.
+#define LMAppleWatchNowPlayingInfoKeyTheme @"LMAppleWatchNowPlayingInfoKeyTheme"
 
 //The key to be used as the key for defining which type of data is being transmitted.
 #define LMAppleWatchCommunicationKey @"LMAppleWatchCommunicationKey"
@@ -195,6 +197,13 @@
  @return Whether or not the iOS device needs to be unlocked to continue.
  */
 - (BOOL)requiresUnlock;
+
+/**
+ The main colour of the phone's theme. By default, this will return Lignite red.
+
+ @return The main theme colour.
+ */
+- (UIColor * _Nonnull)phoneThemeMainColour;
 
 /**
  Adds a delegate to the list of delegates.

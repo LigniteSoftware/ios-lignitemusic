@@ -74,12 +74,20 @@ typedef NS_ENUM(NSInteger, LMTheme) {
 + (LMColour * _Nonnull)mainColourForTheme:(LMTheme)theme;
 
 /**
+ Returns the hex string associated with a certain theme's main colour. String does not contain a hashtag.
+
+ @param theme The theme to get the hex string for.
+ @return The hex string, without a hashtag.
+ */
++ (NSString * _Nonnull)mainColourHexStringForTheme:(LMTheme)theme;
+
+/**
  Gets a key for a theme. The key is used for identifiers such as images or strings.
 
  @param theme The theme to get the key for.
  @return The key.
  */
-- (NSString*)keyForTheme:(LMTheme)theme;
+- (NSString * _Nonnull)keyForTheme:(LMTheme)theme;
 
 /**
  Adds a delegate to the theme engines's list of delegates.
