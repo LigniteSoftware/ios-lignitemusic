@@ -339,6 +339,10 @@
 														 [self reloadFavouriteButton];
 													 }];
 												 }];
+	
+//	WKInterfaceDevice.currentDevice().[play(.success)
+	
+	[[WKInterfaceDevice currentDevice] playHaptic:WKHapticTypeClick];
 }
 
 - (IBAction)shuffleButtonSelector:(id)sender {
@@ -356,6 +360,8 @@
 														 [self reloadShuffleButton];
 													 }];
 												 }];
+	
+	[[WKInterfaceDevice currentDevice] playHaptic:WKHapticTypeClick];
 }
 
 - (IBAction)repeatButtonSelector:(id)sender {
@@ -373,6 +379,8 @@
 														 [self reloadRepeatButton];
 													 }];
 												 }];
+	
+	[[WKInterfaceDevice currentDevice] playHaptic:WKHapticTypeClick];
 }
 
 - (IBAction)browseLibraryButtonSelector:(id)sender {
@@ -390,6 +398,8 @@
 														 [self.nextTrackImage setImageNamed:@"next_track.png"];
 													 }];
 												 }];
+	
+	[[WKInterfaceDevice currentDevice] playHaptic:WKHapticTypeClick];
 }
 
 - (IBAction)previousTrackButtonSelector:(id)sender {
@@ -403,6 +413,8 @@
 														 [self.previousTrackImage setImageNamed:@"previous_track.png"];
 													 }];
 												 }];
+	
+	[[WKInterfaceDevice currentDevice] playHaptic:WKHapticTypeClick];
 }
 
 - (IBAction)playPauseButtonSelector:(id)sender {
@@ -420,6 +432,8 @@
 														 [self reloadPlayPauseButton];
 													 }];
 												 }];
+	
+	[[WKInterfaceDevice currentDevice] playHaptic:WKHapticTypeClick];
 }
 
 - (IBAction)volumeDownButtonSelector:(id)sender {
@@ -435,6 +449,8 @@
 												 } errorHandler:^(NSError *error) {
 													 [self handleConnectionError:error withHandler:nil];
 												 }];
+	
+	[[WKInterfaceDevice currentDevice] playHaptic:WKHapticTypeClick];
 	
 //	[self.companionBridge sendMusicControlMessageToPhoneWithKey:LMAppleWatchControlKeyVolumeDown];
 }
@@ -452,6 +468,8 @@
 												 } errorHandler:^(NSError *error) {
 													 [self handleConnectionError:error withHandler:nil];
 												 }];
+	
+	[[WKInterfaceDevice currentDevice] playHaptic:WKHapticTypeClick];
 	
 //	[self.companionBridge sendMusicControlMessageToPhoneWithKey:LMAppleWatchControlKeyVolumeUp];
 }

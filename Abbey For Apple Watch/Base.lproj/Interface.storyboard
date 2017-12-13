@@ -404,7 +404,7 @@
                                         <items>
                                             <group width="1" height="0.80000000000000004" alignment="center" verticalAlignment="center" spacing="4" id="PV4-43-uZZ" userLabel="Contents Group">
                                                 <items>
-                                                    <imageView width="0.20000000000000001" height="0.59999999999999998" alignment="left" verticalAlignment="center" image="icon_right_arrow" contentMode="scaleAspectFit" id="Xjp-fd-2y2" userLabel="Icon"/>
+                                                    <imageView width="0.20000000000000001" height="0.59999999999999998" alignment="left" verticalAlignment="center" image="icon_albums_white" contentMode="scaleAspectFit" id="Xjp-fd-2y2" userLabel="Icon"/>
                                                     <group width="0.80000000000000004" height="1" alignment="left" verticalAlignment="center" layout="vertical" spacing="0.0" id="Kh4-4z-NsB" userLabel="Title Group">
                                                         <items>
                                                             <label alignment="left" verticalAlignment="center" text="Loading..." textAlignment="left" id="vgT-Ov-CG2">
@@ -453,12 +453,12 @@
                                         <items>
                                             <group width="1" height="0.80000000000000004" alignment="center" verticalAlignment="center" spacing="5" id="TLN-RC-Nde" userLabel="Contents Group">
                                                 <items>
-                                                    <group width="0.20000000000000001" height="0.84999999999999998" alignment="left" verticalAlignment="center" radius="4" id="Rd3-8q-yva" userLabel="Icon Group">
+                                                    <group width="0.19" height="0.80000000000000004" alignment="left" verticalAlignment="center" radius="4" id="Rd3-8q-yva" userLabel="Icon Group">
                                                         <items>
                                                             <imageView width="1" height="1" alignment="center" verticalAlignment="center" image="chidster" contentMode="scaleAspectFit" id="BvS-Ij-LdI" userLabel="Icon"/>
                                                         </items>
                                                     </group>
-                                                    <group width="0.80000000000000004" height="1" alignment="left" verticalAlignment="center" layout="vertical" spacing="0.0" id="BNI-85-r36" userLabel="Text">
+                                                    <group width="0.80000000000000004" height="0.98999999999999999" alignment="left" verticalAlignment="center" layout="vertical" spacing="0.0" id="BNI-85-r36" userLabel="Text">
                                                         <items>
                                                             <label alignment="left" text="Loading..." textAlignment="left" id="PJU-M6-YfY">
                                                                 <color key="textColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -466,7 +466,7 @@
                                                             </label>
                                                             <label alignment="left" text="Hang on a sec" textAlignment="left" id="hqo-EE-d3B">
                                                                 <color key="textColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                <fontDescription key="font" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="10"/>
+                                                                <fontDescription key="font" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="9"/>
                                                             </label>
                                                         </items>
                                                     </group>

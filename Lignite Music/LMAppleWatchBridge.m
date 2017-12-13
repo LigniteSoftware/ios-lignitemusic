@@ -241,8 +241,9 @@
 - (void)sendNowPlayingTrackToWatch:(BOOL)overrideDoubleSending {
 	LMMusicTrack *nowPlayingTrack = self.musicPlayer.nowPlayingTrack;
 	
+	//It's the same if the track is the same or if the album & artist has not changed
 	BOOL albumArtIsTheSame = (self.previousNowPlayingTrackSent.persistentID == nowPlayingTrack.persistentID)
-	|| (self.previousNowPlayingTrackSent.albumPersistentID == nowPlayingTrack.albumPersistentID);
+	|| ((self.previousNowPlayingTrackSent.albumPersistentID == nowPlayingTrack.albumPersistentID) && (self.previousNowPlayingTrackSent.albumArtistPersistentID == nowPlayingTrack.albumArtistPersistentID));
 	
 	if(self.connected){
 		if(nowPlayingTrack){

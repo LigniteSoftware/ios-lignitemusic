@@ -50,6 +50,10 @@
 
 @property NSInteger entriesOffset;
 
+@property BOOL displayingError;
+@property BOOL loaded;
+@property NSTimer *connectionCheckTimer;
+
 @end
 
 @implementation LMWBrowsingInterfaceController
@@ -120,6 +124,7 @@
 }
 
 - (void)setLoading:(BOOL)loading {
+	self.loaded = !loading;
 	[self setLoading:loading withLabel:NSLocalizedString(@"HangOn", nil)];
 }
 
@@ -229,6 +234,8 @@
 }
 
 - (void)handleTracksRequestWithReplyDictionary:(NSDictionary*)replyDictionary {
+	self.loaded = YES;
+	
 	BOOL isEndOfList = [[replyDictionary objectForKey:LMAppleWatchBrowsingKeyIsEndOfList] boolValue];
 	
 	self.totalNumberOfEntries = [[replyDictionary objectForKey:LMAppleWatchBrowsingKeyTotalNumberOfEntries] integerValue];
@@ -245,6 +252,12 @@
 }
 
 - (void)handleLoadingError:(NSError*)error {
+	if(self.displayingError){
+		return;
+	}
+	
+	self.displayingError = YES;
+	
 	dispatch_async(dispatch_get_main_queue(), ^{
 		[self.loadingImage setImage:[UIImage imageNamed:@"apple_watch_sad.png"]];
 		
@@ -254,6 +267,8 @@
 		else{
 			[self.loadingLabel setText:[NSString stringWithFormat:NSLocalizedString(@"UnknownErrorX", nil), error.code]];
 		}
+		
+		[[WKInterfaceDevice currentDevice] playHaptic:WKHapticTypeFailure];
 	});
 }
 
@@ -261,6 +276,8 @@
 	LMWMusicBrowsingRowController *row = [self.browsingTable rowControllerAtIndex:rowIndex];
 	
 	if(row.isNextButton){
+		[self startConnectionTimer];
+		
 		[self setLoading:YES withLabel:NSLocalizedString(@"GettingNext", nil)];
 		
 		self.previousIndex = self.tableEntries.lastObject.indexInCollection;
@@ -304,6 +321,8 @@
 		[self reloadBrowsingTableWithEntries:[self.pages objectAtIndex:self.indexOfCurrentPage]];
 	}
 	else if(row.isShuffleAllButton){
+		[self startConnectionTimer];
+		
 		[self setLoading:YES withLabel:NSLocalizedString(@"Shuffling", nil)];
 		
 		[self.companionBridge shuffleTracksWithSelectedIndexes:self.selectedIndexes
@@ -311,15 +330,20 @@
 												 forMusicTypes:self.musicTypes
 											 withPersistentIDs:self.persistentIDs
 												  replyHandler:^(NSDictionary<NSString *,id> *replyMessage) {
+													  [[WKInterfaceDevice currentDevice] playHaptic:WKHapticTypeSuccess];
+													  
+													  self.loaded = YES;
+													  
 													  [self popToRootController];
 												  }
 												  errorHandler:^(NSError *error) {
 													  NSLog(@"Error: %@", error);
 													  [self handleLoadingError:error];
-													  
 												  }];
 	}
 	else if(self.musicType == LMMusicTypeTitles || self.musicType == LMMusicTypeFavourites){
+		[self startConnectionTimer];
+		
 		[self setLoading:YES withLabel:NSLocalizedString(@"Playing", nil)];
 		
 		NSInteger indexOfTableEntryTappedInCollection = rowIndex - self.entriesOffset;
@@ -333,6 +357,10 @@
 													 forMusicTypes:self.musicTypes
 												 withPersistentIDs:self.persistentIDs
 													  replyHandler:^(NSDictionary<NSString *,id> *replyMessage) {
+														  [[WKInterfaceDevice currentDevice] playHaptic:WKHapticTypeSuccess];
+														  
+														  self.loaded = YES;
+														  
 														  [self popToRootController];
 													  }
 													  errorHandler:^(NSError *error) {
@@ -352,6 +380,28 @@
 																	 @"entryInfo": entryInfo
 																	 }];
 	}
+}
+
+- (void)startConnectionTimer {
+	if(self.connectionCheckTimer){
+		[self.connectionCheckTimer invalidate];
+	}
+	
+	self.connectionCheckTimer =
+		[NSTimer scheduledTimerWithTimeInterval:1.0
+										repeats:YES
+										  block:^(NSTimer * _Nonnull timer) {
+											  if(!self.companionBridge.connected && !self.loaded){
+												  NSError *notReplyingError = [NSError errorWithDomain:@"Phone disconnected during transfer"
+																						 code:503
+																					 userInfo:nil];
+									 
+												  [self handleLoadingError:notReplyingError];
+											  }
+											  else if(self.companionBridge.connected && self.loaded){
+												  [self.connectionCheckTimer invalidate];
+											  }
+											}];
 }
 
 - (void)awakeWithContext:(id)context {
@@ -409,6 +459,7 @@
 	
 	[self setLoading:YES];
 	
+	[self startConnectionTimer];
 	
 	self.companionBridge = [LMWCompanionBridge sharedCompanionBridge];
 	[self.companionBridge requestTracksWithSelectedIndexes:self.selectedIndexes
