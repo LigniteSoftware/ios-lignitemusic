@@ -97,6 +97,20 @@
 + (UIColor*)randomColour;
 
 /**
+ #FFFFFF.
+
+ @return White.
+ */
++ (LMColour*)whiteColour;
+
+/**
+ Clear colour, 100% transparency. In both ways unlike Ajit Pai.
+
+ @return The clear colour.
+ */
++ (LMColour*)clearColour;
+
+/**
  Fetches a colour with different RGBA values.
 
  @param red Red value, from 0.0 to 1.0.

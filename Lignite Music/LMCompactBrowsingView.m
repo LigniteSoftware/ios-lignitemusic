@@ -19,13 +19,14 @@
 #import "LMPhoneLandscapeDetailView.h"
 #import "LMPlaylistEditorViewController.h"
 #import "LMEnhancedPlaylistEditorViewController.h"
+#import "LMThemeEngine.h"
 
 #import "NSTimer+Blocks.h"
 #import "LMColour.h"
 
 #import "LMPlaylistManager.h"
 
-@interface LMCompactBrowsingView()<UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, LMCollectionInfoViewDelegate, LMBigListEntryDelegate, LMLayoutChangeDelegate, LMPlaylistEditorDelegate, LMEnhancedPlaylistEditorDelegate>
+@interface LMCompactBrowsingView()<UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, LMCollectionInfoViewDelegate, LMBigListEntryDelegate, LMLayoutChangeDelegate, LMPlaylistEditorDelegate, LMEnhancedPlaylistEditorDelegate, LMThemeEngineDelegate>
 
 /**
  The big list entries that are used in the compact view.
@@ -441,7 +442,7 @@
 	return nil;
 }
 
-- (UIImage*)centerImageForInfoView:(LMCollectionInfoView*)infoView {
+- (UIImage*)centreImageForInfoView:(LMCollectionInfoView*)infoView {
 	return nil;
 }
 
@@ -1010,6 +1011,11 @@
 	return view;
 }
 
+- (void)themeChanged:(LMTheme)theme {
+	self.playlistButtonLeft.backgroundColor = [LMColour mainColour];
+	self.playlistButtonRight.backgroundColor = [LMColour mainColour];
+}
+
 - (void)layoutSubviews {
 	[super layoutSubviews];
 	
@@ -1018,6 +1024,8 @@
 		
 		self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 		self.playlistManager = [LMPlaylistManager sharedPlaylistManager];
+		
+		[[LMThemeEngine sharedThemeEngine] addDelegate:self];
 		
 		LMCollectionViewFlowLayout *fuck = [LMCollectionViewFlowLayout new];
 		fuck.musicTrackCollections = self.musicTrackCollections;

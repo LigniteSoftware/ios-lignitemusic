@@ -13,8 +13,9 @@
 #import "LMColour.h"
 #import "LMButton.h"
 #import "LMEditView.h"
+#import "LMThemeEngine.h"
 
-@interface LMBigListEntry()
+@interface LMBigListEntry()<LMThemeEngineDelegate>
 
 @property UIView *contentSubviewBackgroundView;
 
@@ -106,7 +107,13 @@
 	}
 }
 
+- (void)themeChanged:(LMTheme)theme {
+	self.tapToDeleteView.backgroundColor = [LMColour mainColour];
+}
+
 - (void)setup {
+	[[LMThemeEngine sharedThemeEngine] addDelegate:self];
+	
 	self.contentView = [self.entryDelegate contentSubviewForBigListEntry:self];
 
 //	self.contentView = [UIView newAutoLayoutView];
@@ -234,6 +241,12 @@
 	[super layoutSubviews];
 	
 //	NSLog(@"%@ %@", NSStringFromCGRect(self.superview.superview.frame), [[self.superview.superview class] description]);
+}
+
+- (void)removeFromSuperview {
+	[super removeFromSuperview];
+	
+	[[LMThemeEngine sharedThemeEngine] removeDelegate:self];
 }
 
 @end

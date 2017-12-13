@@ -1,0 +1,57 @@
+/*
+ Localizable.strings
+ Lignite Music
+ 
+ Created by Edwin Finch on 11/8/17.
+ Copyright © 2017 Lignite. All rights reserved.
+ */
+
+"NothingPlaying" = "Es wird nichts wiedergegeben";
+"NothingPlayingFullText" = "Es wird nichts wiedergegeben, sorry.";
+"Loading" = "Laden...";
+
+"WaitingForPhone" = "Auf die Verbindung zum iPhone warten...";
+"PhoneNotConnected" = "Dein iPhone ist nicht verbunden, sorry.\n\nVerbinde es, gehe zurück und versuche es erneut.";
+"UserMustUnlockiPhone" = "Entsperre dein iPhone um fortzufahren.";
+"UnknownErrorX" = "Unbekannter Fehler %d, sorry.";
+
+"NothingUpNext" = "Keine anstehenden Titel";
+"UpNext" = "Nächste Titel";
+
+"PreviousPage" = "Vorherige Seite";
+"NextPage" = "Nächste Seite";
+
+"XLeft" = "%ld übrig"; //X number of tracks or entries left in the view the user is browsing. For example, if they're browsing their titles, and have already been through 30 (and they have 100 total) it would say 70 left. X will never be 1.
+
+"LastX" = "Letzte %d Einträge"; //X number of tracks or entries that are in the previous page. If the user goes to the next page and wants to go back, there's an entry with the title "Previous page" that subtitles "Last X", meaning last X songs or entries which are before the page the user is currently on. X will never be 1.
+
+"NothingHere" = "Hier gibts nichts zu sehen, sorry";
+
+"ShuffleAll" = "Alles zufällig wiedergeben";
+"XTracks" = "%ld Titel"; //Multiple songs
+"XTrack" = "%ld Titel"; //One song
+
+"HangOn" = "Moment, bitte...";
+"AlmostThere" = "Fast geschafft...";
+"Shuffling" = "Wird durcheinander gemischt...";
+"Playing" = "Abspielen...";
+"GettingNext" = "Nächste Seite wird geladen...";
+"Updating" = "Aktualisieren...";
+
+"Favourites" = "Favoriten";
+"Albums" = "Alben";
+"AlbumsInline" = "Alben";
+"Titles" = "Titel"; //Individual songs
+"Artists" = "Künstler";
+"Playlists" = "Wiedergabelisten";
+"Composers" = "Komponisten";
+"Genres" = "Genres";
+"Compilations" = "Kompilationen";
+
+"Library" = "Sammlung"; //As in the user's music library. Please keep this short - it needs to fit within one line on the top of the Apple Watch window.
+
+"OhBoy" = "Ups"; //As in "oh boy, that sucks" for error titles
+"DarnOkay" = "Okay"; //Better than an "Okay" button
+"PhoneDidNotReplyToCommandError" = "Dein iPhone scheint nicht zu antworten.\n\nBist du sicher, dass es mit deiner Apple Watch verbunden und dass Abbey eingerichtet ist?\n\nVersuche es bitte noch einmal.\n\nSollte dieses Problem weiterhin bestehen, melde dich bitte unter contact@lignite.io bei uns.";
+"UnknownErrorAlert" = "Ups, irgendwas ist schief gelaufen, sorry.\n\nDeine Apple Watch hat uns einen unbekannten Fehler mit dem Code %ld:\n\n'%@' gemeldet.\n\nVersuche es bitte erneut.\n\nSollte dieses Problem weiterhin bestehen, melde dich bitte unter contact@lignite.io bei uns.";
+"TryingThatTooMuch" = "Achtung, du hast es zu oft versucht.\n\nHalte sich bitte ein bisschen zurück, deine Apple Watch ist nicht so performant.";

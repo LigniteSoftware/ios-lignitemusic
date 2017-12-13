@@ -11,8 +11,9 @@
 #import "LMButtonBar.h"
 #import "LMColour.h"
 #import "LMAppIcon.h"
+#import "LMThemeEngine.h"
 
-@interface LMButtonBar()<LMLayoutChangeDelegate>
+@interface LMButtonBar()<LMLayoutChangeDelegate, LMThemeEngineDelegate>
 
 /**
  The views for the background of all of the buttons.
@@ -67,7 +68,7 @@
 
 - (void)setBackgroundView:(LMView*)backgroundView inverted:(BOOL)inverted {
 	[self invertIconForButtonBackgroundView:backgroundView];
-	[self setBackgroundColourForButtonBackgroundView:backgroundView toColour:inverted ? [UIColor whiteColor] : [LMColour mainColour] animated:YES];
+	[self setBackgroundColourForButtonBackgroundView:backgroundView toColour:inverted ? [LMColour whiteColour] : [LMColour mainColour] animated:YES];
 }
 
 - (void)setButtonAtIndex:(NSInteger)index highlighted:(BOOL)highlight {
@@ -93,6 +94,14 @@
 	}
 }
 
+- (void)themeChanged:(LMTheme)theme {
+	for(LMView *backgroundView in self.buttonsArray){
+		if(![backgroundView.backgroundColor isEqual:[LMColour whiteColour]]){
+			backgroundView.backgroundColor = [LMThemeEngine mainColourForTheme:theme];
+		}
+	}
+}
+
 - (void)layoutSubviews {
 	NSLog(@"Dig %p frame %@", self, NSStringFromCGRect(self.frame));
 	
@@ -101,7 +110,7 @@
 	if(!self.didLayoutConstraints) {
 		self.didLayoutConstraints = YES;
 		
-		self.backgroundColor = [UIColor whiteColor];
+		self.backgroundColor = [LMColour whiteColour];
 		
 		self.buttonsArray = [NSMutableArray new];
 		self.currentlyHighlightedButtonsArray = [NSMutableArray new];
@@ -173,6 +182,8 @@
 			}];
 			[LMLayoutManager addNewLandscapeConstraints:sendButtonIconLandscapeConstraints];
 		}
+		
+		[[LMThemeEngine sharedThemeEngine] addDelegate:self];
 	}
 	
 	[super layoutSubviews];

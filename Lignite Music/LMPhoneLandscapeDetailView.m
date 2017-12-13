@@ -316,7 +316,7 @@
 	return nil;
 }
 
-- (UIImage*)centerImageForInfoView:(LMCollectionInfoView*)infoView {
+- (UIImage*)centreImageForInfoView:(LMCollectionInfoView*)infoView {
 	return nil;
 }
 

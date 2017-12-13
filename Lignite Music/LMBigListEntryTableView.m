@@ -98,7 +98,7 @@
 	return [self.delegate rightTextForBigListEntry:[self bigListEntryForCollectionInfoView:infoView]];
 }
 
-- (UIImage*)centerImageForInfoView:(LMCollectionInfoView*)infoView {
+- (UIImage*)centreImageForInfoView:(LMCollectionInfoView*)infoView {
 	return [self.delegate centerImageForBigListEntry:[self bigListEntryForCollectionInfoView:infoView]];
 }
 

@@ -52,11 +52,34 @@ typedef NS_ENUM(NSInteger, LMTheme) {
 + (LMTheme)currentTheme;
 
 /**
+ Selects the user's current theme & notifys delegates of the change.
+
+ @param theme The new theme to select.
+ */
+- (void)selectTheme:(LMTheme)theme;
+
+/**
  Gets the main colour of the theme. This should only be called from within LMColour.
 
  @return The theme's main colour.
  */
 + (LMColour * _Nonnull)mainColour;
+
+/**
+ Gets a main colour for a certain theme.
+
+ @param theme The theme to get the main colour for.
+ @return The colour.
+ */
++ (LMColour * _Nonnull)mainColourForTheme:(LMTheme)theme;
+
+/**
+ Gets a key for a theme. The key is used for identifiers such as images or strings.
+
+ @param theme The theme to get the key for.
+ @return The key.
+ */
+- (NSString*)keyForTheme:(LMTheme)theme;
 
 /**
  Adds a delegate to the theme engines's list of delegates.

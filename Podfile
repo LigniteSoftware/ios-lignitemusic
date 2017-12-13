@@ -15,6 +15,7 @@ def shared_pods
     pod 'MGSwipeTableCell'
     pod 'RSKImageCropper'
     pod 'BEMCheckBox'
+    pod 'PeekPop', '~> 1.0'
 end
 
 target 'Lignite Music' do

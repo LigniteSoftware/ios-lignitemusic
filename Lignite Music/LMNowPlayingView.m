@@ -17,6 +17,7 @@
 #import "UIColor+isLight.h"
 #import "NSTimer+Blocks.h"
 #import "LMMusicPlayer.h"
+#import "LMThemeEngine.h"
 #import "LMListEntry.h"
 #import "LMTableView.h"
 #import "LMAppIcon.h"
@@ -24,7 +25,7 @@
 #import "LMColour.h"
 #import "LMButton.h"
 
-@interface LMNowPlayingView() <LMMusicPlayerDelegate, LMButtonDelegate, LMProgressSliderDelegate, LMTableViewSubviewDataSource, LMListEntryDelegate, LMLayoutChangeDelegate, DDTableViewDelegate>
+@interface LMNowPlayingView() <LMMusicPlayerDelegate, LMButtonDelegate, LMProgressSliderDelegate, LMTableViewSubviewDataSource, LMListEntryDelegate, LMLayoutChangeDelegate, DDTableViewDelegate, LMThemeEngineDelegate>
 
 @property LMMusicPlayer *musicPlayer;
 
@@ -931,6 +932,13 @@
 	[self.queueTableView reloadSubviewData];
 }
 
+- (void)themeChanged:(LMTheme)theme {
+	if(self.musicPlayer.indexOfNowPlayingTrack < self.musicPlayer.nowPlayingCollection.count){
+		LMListEntry *highlightedEntry = [self.itemArray objectAtIndex:self.musicPlayer.indexOfNowPlayingTrack];
+		[highlightedEntry reloadContents];
+	}
+}
+
 - (void)layoutSubviews {
 	[super layoutSubviews];
 
@@ -940,6 +948,8 @@
 	self.didLayoutConstraints = YES;
 	
 	[self.layoutManager addDelegate:self];
+	
+	[[LMThemeEngine sharedThemeEngine] addDelegate:self];
 		
 	
 	self.mainView = [LMView newAutoLayoutView];

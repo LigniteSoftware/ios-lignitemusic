@@ -12,6 +12,7 @@
 #import "LMCoreViewController.h"
 #import "LMLayoutManager.h"
 #import "NSTimer+Blocks.h"
+#import "LMThemeEngine.h"
 #import "LMMusicPlayer.h"
 #import "LMButtonBar.h"
 #import "LMAppIcon.h"
@@ -20,7 +21,7 @@
 #import "LMLabel.h"
 
 @interface LMButtonNavigationBar()<UIGestureRecognizerDelegate,
-							 LMButtonBarDelegate, LMButtonDelegate, LMSearchBarDelegate, LMLayoutChangeDelegate>
+							 LMButtonBarDelegate, LMButtonDelegate, LMSearchBarDelegate, LMLayoutChangeDelegate, LMThemeEngineDelegate>
 
 /**
  The music player.
@@ -455,6 +456,10 @@
 	self.isMinimized ? [self maximize:NO] : [self minimize:NO];
 }
 
+- (void)themeChanged:(LMTheme)theme {
+	self.minimizeButton.backgroundColor = [LMColour mainColour];
+}
+
 - (void)layoutSubviews {
 //	return;
 		
@@ -475,6 +480,8 @@
 		
 		self.layoutManager = [LMLayoutManager sharedLayoutManager];
 		[self.layoutManager addDelegate:self];
+		
+		[[LMThemeEngine sharedThemeEngine] addDelegate:self];
 		
 		
 		self.backgroundColor = [UIColor clearColor];
@@ -735,7 +742,6 @@
 			[self insertSubview:self.minimizeButton aboveSubview:self.buttonBar];
 		}
 		
-		
 //		self.sourceSelector.hidden = YES;
 	}
 }
@@ -748,13 +754,5 @@
 	}
 	return self;
 }
-
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
-}
-*/
 
 @end

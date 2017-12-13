@@ -9,11 +9,12 @@
 #import <PureLayout/PureLayout.h>
 #import "LMLayoutManager.h"
 #import "NSTimer+Blocks.h"
+#import "LMThemeEngine.h"
 #import "LMBrowsingBar.h"
 #import "LMAppIcon.h"
 #import "LMColour.h"
 
-@interface LMBrowsingBar()<LMLayoutChangeDelegate>
+@interface LMBrowsingBar()<LMLayoutChangeDelegate, LMThemeEngineDelegate>
 
 /**
  The background view for the toggle button.
@@ -142,6 +143,10 @@
 	}];
 }
 
+- (void)themeChanged:(LMTheme)theme {
+	self.toggleButtonBackgroundView.backgroundColor = [LMColour mainColour];
+}
+
 - (void)layoutSubviews {
 	if(!self.didLayoutConstraints){
 		self.showingLetterTabs = YES;
@@ -150,6 +155,8 @@
 		
 		self.layoutManager = [LMLayoutManager sharedLayoutManager];
 		[self.layoutManager addDelegate:self];
+		
+		[[LMThemeEngine sharedThemeEngine] addDelegate:self];
 
 		
 		self.toggleButtonBackgroundView = [LMView newAutoLayoutView];
@@ -207,7 +214,6 @@
 		}];
 		[LMLayoutManager addNewLandscapeConstraints:letterTabBarLandscapeConstraints];
 		
-			
 		
 		[self bringSubviewToFront:self.toggleButtonBackgroundView];
 	}

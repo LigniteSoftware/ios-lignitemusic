@@ -14,6 +14,7 @@ PODS:
   - ImageMagick/wand (6.8.8-9)
   - MGSwipeTableCell (1.6.1)
   - PebbleKit (4.0.0)
+  - PeekPop (1.0.0)
   - PureLayout (3.0.2)
   - RSKImageCropper (1.6.3)
   - SDWebImage (3.8.2):
@@ -31,6 +32,7 @@ DEPENDENCIES:
   - ImageMagick (= 6.8.8-9)
   - MGSwipeTableCell
   - PebbleKit
+  - PeekPop (~> 1.0)
   - PureLayout
   - RSKImageCropper
   - SDWebImage (~> 3.8)
@@ -44,12 +46,13 @@ SPEC CHECKSUMS:
   ImageMagick: e8c089d133679d505c98dc97f3dc5be0e706e1df
   MGSwipeTableCell: 19a1d65dcc1ceaea42eb44bb2adae32101904514
   PebbleKit: 4af7a5f57522cbd371f1798e6dd80bd21ac9d46f
+  PeekPop: dcac0f339476b99eb50f8e3bc584f332c744ecf1
   PureLayout: 4d550abe49a94f24c2808b9b95db9131685fe4cd
   RSKImageCropper: 356e36fc58c57c371b5d8b23d603936d6a73df6c
   SDWebImage: 098e97e6176540799c27e804c96653ee0833d13c
   Unirest: 5e4d93eaf32463bf619a4ecd3bbc8c32acf21eac
   YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
 
-PODFILE CHECKSUM: f0ef4a5098b01b38769843999d7ff35fbe960131
+PODFILE CHECKSUM: a72343d38fe594713eec37822c363e0c99dd40a8
 
 COCOAPODS: 1.3.1

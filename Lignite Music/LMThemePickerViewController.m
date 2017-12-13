@@ -7,20 +7,35 @@
 //
 
 #import <PureLayout/PureLayout.h>
+#import <PeekPop/PeekPop.h>
+@import PeekPop;
+
 #import "LMThemePickerViewController.h"
+#import "LMViewController.h"
 #import "LMThemeEngine.h"
 #import "LMThemeView.h"
 
-@interface LMThemePickerViewController()<UICollectionViewDelegate, UICollectionViewDataSource>
+@interface LMThemePickerViewController()<UICollectionViewDelegate, UICollectionViewDataSource, LMThemeViewDelegate, PeekPopPreviewingDelegate>
 
 /**
  The collection view which displays the selection of themes.
  */
 @property UICollectionView *collectionView;
 
+/**
+ For 3D touch.
+ */
+@property PeekPop *peekPop;
+
 @end
 
 @implementation LMThemePickerViewController
+
+- (void)themeView:(LMThemeView*)themeView selectedTheme:(LMTheme)theme {
+	[[LMThemeEngine sharedThemeEngine] selectTheme:theme];
+	
+	NSLog(@"Theme selected %ld", (long)theme);
+}
 
 - (CGSize)collectionView:(UICollectionView*)collectionView
 				  layout:(UICollectionViewLayout*)collectionViewLayout
@@ -34,7 +49,7 @@
 }
 
 - (NSInteger)collectionView:(UICollectionView*)collectionView numberOfItemsInSection:(NSInteger)section {
-	return 5;
+	return 6;
 }
 
 - (__kindof UICollectionViewCell*)collectionView:(UICollectionView*)collectionView
@@ -43,7 +58,12 @@
 	UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"ThemeCollectionViewIdentifier" forIndexPath:indexPath];
 //	UICollectionViewFlowLayout *flowLayout = (UICollectionViewFlowLayout*)collectionView.collectionViewLayout;
 	
+	cell.backgroundColor = [LMColour clearColour];
+	cell.contentView.backgroundColor = [LMColour clearColour];
+	
 	LMThemeView *themeView = [LMThemeView newAutoLayoutView];
+	themeView.theme = (LMTheme)indexPath.row;
+	themeView.delegate = self;
 	[cell.contentView addSubview:themeView];
 	
 	[themeView autoPinEdgesToSuperviewEdges];
@@ -53,11 +73,60 @@
 	return cell;
 }
 
+- (UIViewController*)previewingContext:(PreviewingContext *)previewingContext
+			 viewControllerForLocation:(CGPoint)location {
+	
+	NSIndexPath *cellIndexPath = [self.collectionView indexPathForItemAtPoint:location];
+	UICollectionViewCell *cell = [self collectionView:self.collectionView cellForItemAtIndexPath:cellIndexPath];
+	LMThemeView *themeView = nil;
+	for(UIView *subview in cell.contentView.subviews){
+		if([subview class] == [LMThemeView class]){
+			themeView = (LMThemeView*)subview;
+			break;
+		}
+	}
+	
+	UICollectionViewLayoutAttributes *layoutAttributes = [self.collectionView layoutAttributesForItemAtIndexPath:cellIndexPath];
+	if(layoutAttributes){
+		previewingContext.sourceRect = layoutAttributes.frame;
+	}
+	
+
+	
+	LMViewController *imagePreviewViewController = [LMViewController new];
+	imagePreviewViewController.view = [UIView new];
+	imagePreviewViewController.view.backgroundColor = [LMColour whiteColour];
+	imagePreviewViewController.context = themeView;
+	
+	UIImageView *screenshotView = [UIImageView newAutoLayoutView];
+	screenshotView.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png", themeView.themeKey]];
+	screenshotView.contentMode = UIViewContentModeScaleAspectFit;
+	[imagePreviewViewController.view addSubview:screenshotView];
+	
+	[screenshotView autoPinEdgesToSuperviewEdges];
+	
+	return imagePreviewViewController;
+}
+
+- (void)previewingContext:(PreviewingContext *)previewingContext
+	 commitViewController:(UIViewController *)viewControllerToCommit {
+	
+	LMViewController *viewController = (LMViewController*)viewControllerToCommit;
+	LMThemeView *themeView = (LMThemeView*)viewController.context;
+	
+	[[LMThemeEngine sharedThemeEngine] selectTheme:themeView.theme];
+	
+	NSLog(@"COMMIT %p!!!", viewControllerToCommit);
+	
+//	[self.navigationController pushViewController:viewControllerToCommit animated:YES];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
+	
 
 	UICollectionViewFlowLayout *flowLayout = [UICollectionViewFlowLayout new];
-	flowLayout.sectionInset = UIEdgeInsetsMake(0, 0, 20, 0);
+	flowLayout.sectionInset = UIEdgeInsetsMake(20, 0, 20, 0);
 	
 	self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:flowLayout];
 	self.collectionView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -72,7 +141,7 @@
 	[self.collectionView autoPinEdgeToSuperviewMargin:ALEdgeTrailing];
 	[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 	
-	[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:84.0f];
+	[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:64.0f];
 	
 //	if(@available(iOS 11, *)){
 //		[self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.collectionView
@@ -92,6 +161,10 @@
 //															 multiplier:1.0f
 //															   constant:0.0f]];
 //	}
+	
+	self.peekPop = [[PeekPop alloc] initWithViewController:self];
+	PreviewingContext *previewingContext = [self.peekPop registerForPreviewingWithDelegate:self sourceView:self.collectionView];
+	NSLog(@"Previewing context %p", previewingContext);
 }
 
 - (void)didReceiveMemoryWarning {

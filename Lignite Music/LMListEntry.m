@@ -58,6 +58,8 @@
 		[self.rightViewBackgroundView addSubview:rightView];
 		[rightView autoPinEdgesToSuperviewEdges];
 	}
+	
+	[self changeHighlightStatus:self.highlighted animated:NO];
 }
 
 - (void)changeHighlightStatus:(BOOL)highlighted animated:(BOOL)animated {

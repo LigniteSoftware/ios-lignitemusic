@@ -39,12 +39,12 @@
 - (NSString*)rightTextForInfoView:(LMCollectionInfoView*)infoView;
 
 /**
- The center image for the info view. The text aligns to each side of this. If nil, and right text exists, a line will be drawn with a UILabel.
+ The centre image for the info view. The text aligns to each side of this. If nil, and right text exists, a line will be drawn with a UILabel.
 
  @param infoView The info view.
  @return The image which to put in.
  */
-- (UIImage*)centerImageForInfoView:(LMCollectionInfoView*)infoView;
+- (UIImage*)centreImageForInfoView:(LMCollectionInfoView*)infoView;
 
 @end
 

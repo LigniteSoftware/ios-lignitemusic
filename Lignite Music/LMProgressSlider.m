@@ -10,11 +10,12 @@
 #import "LMProgressSlider.h"
 #import "LMMarqueeLabel.h"
 #import "NSTimer+Blocks.h"
+#import "LMThemeEngine.h"
 #import "LMColour.h"
 #import "LMExtras.h"
 #import "LMLabel.h"
 
-@interface LMProgressSlider()<LMLayoutChangeDelegate>
+@interface LMProgressSlider()<LMLayoutChangeDelegate, LMThemeEngineDelegate>
 
 /**
  The background to the background of the slider (lol), which is by default [UIColor clearColour] though can be changed in cases like the now playing screen.
@@ -456,12 +457,20 @@
 	}];
 }
 
+- (void)themeChanged:(LMTheme)theme {
+	if(!self.nowPlayingView){
+		self.sliderBackgroundView.backgroundColor = [LMColour mainColour];
+	}
+}
+
 - (void)layoutSubviews {
 	if(!self.didLayoutConstraints){
 		self.didLayoutConstraints = YES;
 		
 		self.layoutManager = [LMLayoutManager sharedLayoutManager];
 		[self.layoutManager addDelegate:self];
+		
+		[[LMThemeEngine sharedThemeEngine] addDelegate:self];
 		
 		if(self.finalValue > 0){
 			self.widthIncrementPerTick = self.frame.size.width/self.finalValue;

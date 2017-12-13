@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "6403C7FAD83A0D9D9EDD72F113F96DCC"
+               BlueprintIdentifier = "8894B92C8FA9F3F3616C013AFE15D3B4"
                BuildableName = "Unirest.framework"
                BlueprintName = "Unirest"
                ReferencedContainer = "container:Pods.xcodeproj">
@@ -47,7 +47,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "6403C7FAD83A0D9D9EDD72F113F96DCC"
+            BlueprintIdentifier = "8894B92C8FA9F3F3616C013AFE15D3B4"
             BuildableName = "Unirest.framework"
             BlueprintName = "Unirest"
             ReferencedContainer = "container:Pods.xcodeproj">

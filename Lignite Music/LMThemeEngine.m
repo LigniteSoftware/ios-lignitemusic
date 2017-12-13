@@ -47,6 +47,18 @@
 	else if([key isEqualToString:LMThemeKeyRoyallyBlued]){
 		return LMThemeRoyallyBlued;
 	}
+	else if([key isEqualToString:LMThemeKeyBombasticBlue]){
+		return LMThemeBombasticBlue;
+	}
+	else if([key isEqualToString:LMThemeKeyMorpheus]){
+		return LMThemeMorpheus;
+	}
+	else if([key isEqualToString:LMThemeKeyBackgroundNoise]){
+		return LMThemeBackgroundNoise;
+	}
+	else if([key isEqualToString:LMThemeKeyBritishRacingGreen]){
+		return LMThemeBritishRacingGreen;
+	}
 	
 	return LMThemeDefault;
 }
@@ -85,9 +97,13 @@
 	}
 }
 
++ (LMColour*)mainColourForTheme:(LMTheme)theme {
+	return [LMColour colourWithHexString:[LMThemeEngine mainColourHexStringForTheme:theme]];
+}
+
 + (LMTheme)currentTheme {
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-	LMTheme userTheme = LMThemeBackgroundNoise;
+	LMTheme userTheme = LMThemeDefault;
 	
 	NSString *savedThemeKey = [userDefaults objectForKey:LMThemeEngineUserThemeKey];
 	if(savedThemeKey){

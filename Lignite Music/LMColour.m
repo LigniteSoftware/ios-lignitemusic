@@ -83,6 +83,14 @@
 	return (LMColour*)[UIColor colorWithRed:red green:green blue:blue alpha:alpha];
 }
 
++ (LMColour*)whiteColour {
+	return (LMColour*)[UIColor whiteColor];
+}
+
++ (LMColour*)clearColour {
+	return (LMColour*)[UIColor clearColor];
+}
+
 + (UIColor*)mainColour {
 	return [LMThemeEngine mainColour];
 }

@@ -16,8 +16,9 @@
 #import "LMColour.h"
 #import "LMExtras.h"
 #import "LMSettings.h"
+#import "LMThemeEngine.h"
 
-@interface LMSourceSelectorView() <LMListEntryDelegate, LMLayoutChangeDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
+@interface LMSourceSelectorView() <LMListEntryDelegate, LMLayoutChangeDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, LMThemeEngineDelegate>
 
 /**
  The collection view which displays the contents.
@@ -182,9 +183,16 @@
 	}];
 }
 
+- (void)themeChanged:(LMTheme)theme {
+	LMListEntry *listEntry = [self.listEntryArray objectAtIndex:self.currentlyHighlighted];
+	[listEntry reloadContents];
+}
+
 - (void)setup {
 	self.layoutManager = [LMLayoutManager sharedLayoutManager];
 	[self.layoutManager addDelegate:self];
+	
+	[[LMThemeEngine sharedThemeEngine] addDelegate:self];
 	
 	self.backgroundColor = [UIColor whiteColor];
 	self.currentlyHighlighted = -1;
@@ -231,6 +239,12 @@
 	self.backgroundColor = [UIColor whiteColor];
 	self.collectionView.backgroundColor = [UIColor whiteColor];
 	[self.collectionView autoPinEdgesToSuperviewEdges];
+}
+
+- (void)removeFromSuperview {
+	[super removeFromSuperview];
+	
+	[[LMThemeEngine sharedThemeEngine] removeDelegate:self];
 }
 
 @end

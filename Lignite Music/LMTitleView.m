@@ -15,10 +15,11 @@
 #import "LMMusicPlayer.h"
 #import "APIdleManager.h"
 #import "LMExtras.h"
+#import "LMThemeEngine.h"
 
 #define LMTitleViewTopTrackPersistentIDKey @"LMTitleViewTopTrackPersistentIDKey"
 
-@interface LMTitleView() <LMListEntryDelegate, LMTableViewSubviewDataSource, LMMusicPlayerDelegate, UITableViewDelegate, LMLayoutChangeDelegate>
+@interface LMTitleView() <LMListEntryDelegate, LMTableViewSubviewDataSource, LMMusicPlayerDelegate, UITableViewDelegate, LMLayoutChangeDelegate, LMThemeEngineDelegate>
 
 @property LMMusicPlayer *musicPlayer;
 
@@ -468,11 +469,19 @@
 	return YES;
 }
 
+- (void)themeChanged:(LMTheme)theme {
+	if(self.musicPlayer.nowPlayingTrack){
+		[self musicTrackDidChange:self.musicPlayer.nowPlayingTrack];
+	}
+}
+
 - (void)setup {
 	[self rebuildTrackCollection];
 	
 	self.layoutManager = [LMLayoutManager sharedLayoutManager];
 	[self.layoutManager addDelegate:self];
+	
+	[[LMThemeEngine sharedThemeEngine] addDelegate:self];
 		
 	self.songListTableView = [LMTableView newAutoLayoutView];
 	self.songListTableView.totalAmountOfObjects = self.musicTitles.trackCount;
