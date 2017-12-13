@@ -153,7 +153,7 @@
 
 		
 		self.toggleButtonBackgroundView = [LMView newAutoLayoutView];
-		self.toggleButtonBackgroundView.backgroundColor = [LMColour ligniteRedColour];
+		self.toggleButtonBackgroundView.backgroundColor = [LMColour mainColour];
 		[self addSubview:self.toggleButtonBackgroundView];
 		
 		NSArray *toggleButtonBackgroundViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{

@@ -126,7 +126,7 @@
 	
 		
 		self.clearTextButtonBackgroundView = [UIView newAutoLayoutView];
-		self.clearTextButtonBackgroundView.backgroundColor = [LMColour ligniteRedColour];
+		self.clearTextButtonBackgroundView.backgroundColor = [LMColour mainColour];
 		[self addSubview:self.clearTextButtonBackgroundView];
 		
 		[self.clearTextButtonBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];

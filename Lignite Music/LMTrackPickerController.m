@@ -241,7 +241,7 @@
 	UIView *checkmarkPaddedView = [UIView newAutoLayoutView];
 	
 	LMCircleView *checkmarkView = [LMCircleView newAutoLayoutView];
-	checkmarkView.backgroundColor = selected ? [LMColour ligniteRedColour] : [LMColour lightGrayBackgroundColour];
+	checkmarkView.backgroundColor = selected ? [LMColour mainColour] : [LMColour lightGrayBackgroundColour];
 	
 	[checkmarkPaddedView addSubview:checkmarkView];
 	
@@ -252,7 +252,7 @@
 	
 	
 	LMCircleView *checkmarkFillView = [LMCircleView newAutoLayoutView];
-	checkmarkFillView.backgroundColor = selected ? [LMColour ligniteRedColour] : [UIColor whiteColor];
+	checkmarkFillView.backgroundColor = selected ? [LMColour mainColour] : [UIColor whiteColor];
 	
 	[checkmarkView addSubview:checkmarkFillView];
 	
@@ -330,7 +330,7 @@
 }
 
 - (UIColor*)tapColourForListEntry:(LMListEntry*)entry {
-	return [LMColour ligniteRedColour];
+	return [LMColour mainColour];
 }
 
 - (NSString*)titleForListEntry:(LMListEntry*)entry {

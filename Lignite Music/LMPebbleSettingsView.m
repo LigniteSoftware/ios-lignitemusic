@@ -207,7 +207,7 @@
 	alertView.body = [NSString stringWithFormat:NSLocalizedString(@"SettingImagesAlertDescription", nil), NSLocalizedString(bodyKey, nil), currentStatusText, NSLocalizedString(youCanKey, nil)];
 	
 	alertView.alertOptionTitles = @[NSLocalizedString(disableButtonKey, nil), NSLocalizedString(enableButtonKey, nil)];
-	alertView.alertOptionColours = @[[LMColour darkLigniteRedColour], [LMColour ligniteRedColour]];
+	alertView.alertOptionColours = @[[LMColour darkLigniteRedColour], [LMColour mainColour]];
 	
 	[alertView launchOnView:self withCompletionHandler:^(NSUInteger optionSelected) {
 //		NSLog(@"Selected %d", (int)optionSelected);

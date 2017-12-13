@@ -8,13 +8,16 @@
 
 #import <UIKit/UIKit.h>
 #import "LMColour.h"
+#import "LMThemeEngine.h"
 
 @implementation LMColour
 
-+ (UIColor*)ligniteRedColour {
-//	return [UIColor colorWithRed:0.33 green:0.33 blue:0.33 alpha:1.0];
-//	return [UIColor colorWithRed:1.00 green:0.33 blue:0.00 alpha:1.0];
-	return [UIColor colorWithRed:0.69 green:0.16 blue:0.15 alpha:1.0];
++ (LMColour*)colourWithRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue alpha:(CGFloat)alpha {
+	return (LMColour*)[UIColor colorWithRed:red green:green blue:blue alpha:alpha];
+}
+
++ (UIColor*)mainColour {
+	return [LMThemeEngine mainColour];
 }
 
 + (UIColor*)successGreenColour {
@@ -24,7 +27,7 @@
 + (UIColor*)semiTransparentLigniteRedColour {
 //	return [UIColor colorWithRed:0.69 green:0.16 blue:0.15 alpha:0.75];
 	
-	return [LMColour ligniteRedColour]; //Temporary fix because Philipp wants to try it
+	return [LMColour mainColour]; //Temporary fix because Philipp wants to try it
 }
 
 + (UIColor*)darkLigniteRedColour {

@@ -479,7 +479,7 @@
 	
 	
 	self.addSongsButtonView = [UIView newAutoLayoutView];
-	self.addSongsButtonView.backgroundColor = [LMColour ligniteRedColour];
+	self.addSongsButtonView.backgroundColor = [LMColour mainColour];
 	self.addSongsButtonView.layer.cornerRadius = 8.0f;
 	self.addSongsButtonView.layer.masksToBounds = YES;
 	[self.view addSubview:self.addSongsButtonView];

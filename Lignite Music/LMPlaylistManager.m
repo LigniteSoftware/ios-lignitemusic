@@ -219,7 +219,7 @@
 	
 	alertView.title = NSLocalizedString(@"PlaylistManagementUnderstandingTitle", nil);
 	alertView.body = NSLocalizedString(@"PlaylistManagementUnderstandingBody", nil);
-	alertView.alertOptionColours = @[ [LMColour ligniteRedColour] ];
+	alertView.alertOptionColours = @[ [LMColour mainColour] ];
 	alertView.alertOptionTitles = @[ NSLocalizedString(@"IUnderstand", nil) ];
 	
 	[alertView launchOnView:view withCompletionHandler:^(NSUInteger optionSelected) {

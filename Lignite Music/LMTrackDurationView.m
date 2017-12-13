@@ -56,7 +56,7 @@
 	self.seekSlider.translatesAutoresizingMaskIntoConstraints = NO;
 	self.seekSlider.continuous = YES;
 //	self.seekSlider.backgroundColor = [UIColor blueColor];
-	self.seekSlider.tintColor = [LMColour ligniteRedColour];
+	self.seekSlider.tintColor = [LMColour mainColour];
 	[self addSubview:self.seekSlider];
 	
 	[self.seekSlider addTarget:self action:@selector(touchIn) forControlEvents:UIControlEventTouchDown];

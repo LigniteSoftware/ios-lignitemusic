@@ -180,7 +180,7 @@
 }
 
 - (UIColor*)tapColourForListEntry:(LMListEntry*)entry {
-	return [LMColour ligniteRedColour];
+	return [LMColour mainColour];
 }
 
 - (NSString*)titleForListEntry:(LMListEntry*)entry {
@@ -240,7 +240,7 @@
 		}
 		
 		if(listEntry){
-			listEntry.leftButtonExpansionColour = track.isFavourite ? [LMColour ligniteRedColour] : [LMColour successGreenColour];
+			listEntry.leftButtonExpansionColour = track.isFavourite ? [LMColour mainColour] : [LMColour successGreenColour];
 			listEntry.collectionIndex = indexPath.row;
 			[[listEntry.leftButtons firstObject] setImage:track.isFavourite ? [LMAppIcon imageForIcon:LMIconUnfavouriteWhite] : [LMAppIcon imageForIcon:LMIconFavouriteWhiteFilled] forState:UIControlStateNormal];
 			[listEntry changeHighlightStatus:self.currentlyHighlightedEntry == listEntry.collectionIndex animated:NO];
@@ -297,7 +297,7 @@
 		favouriteButton.imageEdgeInsets = UIEdgeInsetsMake(25, 0, 25, 0);
 		
 		listEntry.leftButtons = @[ favouriteButton ];
-		listEntry.leftButtonExpansionColour = track.isFavourite ? [LMColour ligniteRedColour] : [LMColour successGreenColour];
+		listEntry.leftButtonExpansionColour = track.isFavourite ? [LMColour mainColour] : [LMColour successGreenColour];
 		
 		
 		[cell.contentView addSubview:listEntry];

@@ -787,9 +787,9 @@
 	self.shuffleAllCheckbox.delegate = self;
 	self.shuffleAllCheckbox.boxType = BEMBoxTypeSquare;
 	self.shuffleAllCheckbox.tintColor = [LMColour controlBarGrayColour];
-	self.shuffleAllCheckbox.onFillColor = [LMColour ligniteRedColour];
+	self.shuffleAllCheckbox.onFillColor = [LMColour mainColour];
 	self.shuffleAllCheckbox.onCheckColor = [UIColor whiteColor];
-	self.shuffleAllCheckbox.onTintColor = [LMColour ligniteRedColour];
+	self.shuffleAllCheckbox.onTintColor = [LMColour mainColour];
 	self.shuffleAllCheckbox.onAnimationType = BEMAnimationTypeFill;
 	self.shuffleAllCheckbox.offAnimationType = BEMAnimationTypeFill;
 	[self.view addSubview:self.shuffleAllCheckbox];

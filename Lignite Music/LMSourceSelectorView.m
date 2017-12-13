@@ -155,7 +155,7 @@
 }
 
 - (UIColor*)tapColourForListEntry:(LMListEntry*)entry {
-	return [LMColour ligniteRedColour];
+	return [LMColour mainColour];
 }
 
 - (NSString*)titleForListEntry:(LMListEntry*)entry {

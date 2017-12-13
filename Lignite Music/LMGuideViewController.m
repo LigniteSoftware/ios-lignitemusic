@@ -357,7 +357,7 @@
 	[self.contentView addSubview:self.buttonArea];
 	
 	self.finishedButton = [UIButton newAutoLayoutView];
-	self.finishedButton.backgroundColor = [LMColour ligniteRedColour];
+	self.finishedButton.backgroundColor = [LMColour mainColour];
 	self.finishedButton.titleLabel.textColor = [UIColor whiteColor];
 	self.finishedButton.layer.masksToBounds = YES;
 	self.finishedButton.layer.cornerRadius = 8.0;
@@ -381,7 +381,7 @@
 		[firstButtonArea autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.buttonArea withMultiplier:(1.0/2.25)];
 		
 		self.secondaryButton = [UIButton newAutoLayoutView];
-		self.secondaryButton.backgroundColor = [LMColour ligniteRedColour];
+		self.secondaryButton.backgroundColor = [LMColour mainColour];
 		self.secondaryButton.titleLabel.textColor = [UIColor whiteColor];
 		self.secondaryButton.layer.masksToBounds = YES;
 		self.secondaryButton.layer.cornerRadius = 8;

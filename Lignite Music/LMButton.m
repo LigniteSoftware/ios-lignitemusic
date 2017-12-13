@@ -39,7 +39,7 @@
 	
 	self.imageBackgroundView = [UIView new];
 	self.imageBackgroundView.translatesAutoresizingMaskIntoConstraints = NO;
-	self.imageBackgroundView.backgroundColor = [LMColour ligniteRedColour];
+	self.imageBackgroundView.backgroundColor = [LMColour mainColour];
 	[self addSubview:self.imageBackgroundView];
 	
 	[self.imageBackgroundView autoAlignAxisToSuperviewAxis:ALAxisVertical];

@@ -308,7 +308,7 @@
         self.thanksForTheHintButton.text = NSLocalizedString(@"OkThanksForTheHint", nil);
         self.thanksForTheHintButton.textColor = [UIColor whiteColor];
         self.thanksForTheHintButton.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:24.0f * screenSizeScaleFactor];
-        self.thanksForTheHintButton.backgroundColor = [LMColour ligniteRedColour];
+        self.thanksForTheHintButton.backgroundColor = [LMColour mainColour];
         self.thanksForTheHintButton.textAlignment = NSTextAlignmentCenter;
         self.thanksForTheHintButton.userInteractionEnabled = YES;
 		self.thanksForTheHintButton.layer.masksToBounds = NO;

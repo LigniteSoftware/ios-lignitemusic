@@ -146,7 +146,7 @@
 	self.toClipboardButton.numberOfLines = 0;
 	self.toClipboardButton.layer.masksToBounds = YES;
 	self.toClipboardButton.layer.cornerRadius = 10.0;
-	self.toClipboardButton.backgroundColor = [LMColour ligniteRedColour];
+	self.toClipboardButton.backgroundColor = [LMColour mainColour];
 	self.toClipboardButton.textColor = [UIColor whiteColor];
 	self.toClipboardButton.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:22.0f];
 	self.toClipboardButton.userInteractionEnabled = YES;

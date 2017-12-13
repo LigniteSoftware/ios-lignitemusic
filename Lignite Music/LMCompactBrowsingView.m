@@ -1103,7 +1103,7 @@
 
 
 		self.playlistButtonLeft = [UIView newAutoLayoutView];
-		self.playlistButtonLeft.backgroundColor = [LMColour ligniteRedColour];
+		self.playlistButtonLeft.backgroundColor = [LMColour mainColour];
 		[self.playlistModificationButtonView addSubview:self.playlistButtonLeft];
 
 		[self.playlistButtonLeft autoPinEdgeToSuperviewEdge:ALEdgeLeading];
@@ -1113,7 +1113,7 @@
 		
 		
 		self.playlistButtonRight = [UIView newAutoLayoutView];
-		self.playlistButtonRight.backgroundColor = [LMColour ligniteRedColour];
+		self.playlistButtonRight.backgroundColor = [LMColour mainColour];
 		[self.playlistModificationButtonView addSubview:self.playlistButtonRight];
 		
 		[self.playlistButtonRight autoPinEdgeToSuperviewEdge:ALEdgeTrailing];

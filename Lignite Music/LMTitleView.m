@@ -233,7 +233,7 @@
 	
 	LMMusicTrack *track = [self.musicTitles.items objectAtIndex:entry.collectionIndex];
 	if(track.isFavourite){
-		entry.leftButtonExpansionColour = [LMColour ligniteRedColour];
+		entry.leftButtonExpansionColour = [LMColour mainColour];
 		[[entry.leftButtons firstObject] setImage:[LMAppIcon imageForIcon:LMIconUnfavouriteWhite] forState:UIControlStateNormal];
 	}
 	else{
@@ -420,7 +420,7 @@
 }
 
 - (UIColor*)tapColourForListEntry:(LMListEntry*)entry {
-	return [LMColour ligniteRedColour];
+	return [LMColour mainColour];
 }
 
 - (NSString*)titleForListEntry:(LMListEntry*)entry {

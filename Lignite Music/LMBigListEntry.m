@@ -208,7 +208,7 @@
 	
 	
 	self.tapToDeleteView = [UIView newAutoLayoutView];
-	self.tapToDeleteView.backgroundColor = [LMColour ligniteRedColour];
+	self.tapToDeleteView.backgroundColor = [LMColour mainColour];
 	[self.tapToEditBackgroundView addSubview:self.tapToDeleteView];
 	
 	[self.tapToDeleteView autoPinEdgeToSuperviewEdge:ALEdgeBottom];

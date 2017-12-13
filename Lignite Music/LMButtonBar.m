@@ -67,7 +67,7 @@
 
 - (void)setBackgroundView:(LMView*)backgroundView inverted:(BOOL)inverted {
 	[self invertIconForButtonBackgroundView:backgroundView];
-	[self setBackgroundColourForButtonBackgroundView:backgroundView toColour:inverted ? [UIColor whiteColor] : [LMColour ligniteRedColour] animated:YES];
+	[self setBackgroundColourForButtonBackgroundView:backgroundView toColour:inverted ? [UIColor whiteColor] : [LMColour mainColour] animated:YES];
 }
 
 - (void)setButtonAtIndex:(NSInteger)index highlighted:(BOOL)highlight {
@@ -111,7 +111,7 @@
 			LMView *previousView = isFirst ? self : [self.buttonsArray lastObject];
 			
 			LMView *newBackgroundView = [LMView newAutoLayoutView];
-			newBackgroundView.backgroundColor = [LMColour ligniteRedColour];
+			newBackgroundView.backgroundColor = [LMColour mainColour];
 			[self addSubview:newBackgroundView];
 			
 			NSArray *newBackgroundViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{

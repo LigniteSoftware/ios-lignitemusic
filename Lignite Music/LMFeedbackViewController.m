@@ -457,7 +457,7 @@ NSString* deviceName(){
 	
 	
 	self.sendButtonView = [UIView newAutoLayoutView];
-	self.sendButtonView.backgroundColor = [LMColour ligniteRedColour];
+	self.sendButtonView.backgroundColor = [LMColour mainColour];
 	[self.bottomControlsBackgroundView addSubview:self.sendButtonView];
 	
 	NSArray *sendButtonViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
@@ -504,7 +504,7 @@ NSString* deviceName(){
 	
 	
 	self.backButtonView = [UIView newAutoLayoutView];
-	self.backButtonView.backgroundColor = [LMColour ligniteRedColour];
+	self.backButtonView.backgroundColor = [LMColour mainColour];
 	[self.bottomControlsBackgroundView addSubview:self.backButtonView];
 	
 	NSArray *backButtonViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
@@ -703,7 +703,7 @@ NSString* deviceName(){
 	self.seeAllReportsLabel.layer.masksToBounds = YES;
 	self.seeAllReportsLabel.layer.cornerRadius = 8.0;
 	self.seeAllReportsLabel.clipsToBounds = YES;
-	self.seeAllReportsLabel.backgroundColor = [LMColour ligniteRedColour];
+	self.seeAllReportsLabel.backgroundColor = [LMColour mainColour];
 	self.seeAllReportsLabel.textColor = [UIColor whiteColor];
 	self.seeAllReportsLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:22.0f];
 	self.seeAllReportsLabel.userInteractionEnabled = YES;

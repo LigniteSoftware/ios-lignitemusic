@@ -440,7 +440,7 @@
 	creditsLinkButton.text = NSLocalizedString(@"CreditsLicenses", nil);
 	creditsLinkButton.textAlignment = NSTextAlignmentCenter;
 	creditsLinkButton.numberOfLines = 0;
-	creditsLinkButton.backgroundColor = [LMColour ligniteRedColour];
+	creditsLinkButton.backgroundColor = [LMColour mainColour];
 	creditsLinkButton.textColor = [UIColor whiteColor];
 	creditsLinkButton.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:22.0f];
 	creditsLinkButton.userInteractionEnabled = YES;

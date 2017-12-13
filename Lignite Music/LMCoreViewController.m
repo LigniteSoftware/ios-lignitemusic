@@ -1560,8 +1560,8 @@ LMControlBarViewDelegate
 			[self.buttonNavigationBar.browsingBar setShowingLetterTabs:self.titleView.musicTitles.count > 0];
 		}
 		
-//		LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
-//		[self.navigationController pushViewController:settingsViewController animated:YES];
+		LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
+		[self.navigationController pushViewController:settingsViewController animated:YES];
 	} repeats:NO];
 	
 	

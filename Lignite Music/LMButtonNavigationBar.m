@@ -562,7 +562,7 @@
 		
 		
 		self.minimizeButton = [UIView newAutoLayoutView];
-		self.minimizeButton.backgroundColor = [LMColour ligniteRedColour];
+		self.minimizeButton.backgroundColor = [LMColour mainColour];
 		self.minimizeButton.userInteractionEnabled = YES;
 		[self addSubview:self.minimizeButton];
 		

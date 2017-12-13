@@ -512,7 +512,7 @@
 		
 		
 		self.sliderBackgroundView = [LMView newAutoLayoutView];
-		self.sliderBackgroundView.backgroundColor = [LMColour ligniteRedColour];
+		self.sliderBackgroundView.backgroundColor = [LMColour mainColour];
 		self.sliderBackgroundView.clipsToBounds = YES;
 		[self addSubview:self.sliderBackgroundView];
 		

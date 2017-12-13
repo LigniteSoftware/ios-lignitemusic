@@ -7,15 +7,16 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
-@interface LMColour : NSObject
+@interface LMColour : UIColor
 
 /**
  The classic "Lignite Red" colour. It's a slightly darker red, just the right amount. Not harsh on the eyes and not evil :)
 
  @return The Lignite Red colour.
  */
-+ (UIColor*)ligniteRedColour;
++ (UIColor*)mainColour;
 
 /**
  A darker green colour idicating success or action of positivity.
@@ -93,5 +94,16 @@
  @return The random colour.
  */
 + (UIColor*)randomColour;
+
+/**
+ Fetches a colour with different RGBA values.
+
+ @param red Red value, from 0.0 to 1.0.
+ @param green Green value, from 0.0 to 1.0.
+ @param blue Blue value, from 0.0 to 1.0.
+ @param alpha Alpha/transparency value, from 0.0 to 1.0.
+ @return The colour.
+ */
++ (LMColour*)colourWithRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue alpha:(CGFloat)alpha;
 
 @end
