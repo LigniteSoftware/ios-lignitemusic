@@ -8,6 +8,7 @@
 
 #import <PureLayout/PureLayout.h>
 
+#import "LMThemePickerViewController.h"
 #import "LMSettingsViewController.h"
 #import "LMContactViewController.h"
 #import "LMCreditsViewController.h"
@@ -17,6 +18,7 @@
 #import "LMLayoutManager.h"
 #import "NSTimer+Blocks.h"
 #import "LMImageManager.h"
+#import "LMThemeEngine.h"
 #import "MBProgressHUD.h"
 #import "AFNetworking.h"
 #import "LMAlertView.h"
@@ -27,7 +29,7 @@
 
 #define LMIndexPathOfCurrentlyOpenAlertViewKey @"LMIndexPathOfCurrentlyOpenAlertViewKey"
 
-@interface LMSettingsViewController ()<LMSectionTableViewDelegate, LMImageManagerDelegate, UIViewControllerRestoration>
+@interface LMSettingsViewController ()<LMSectionTableViewDelegate, LMImageManagerDelegate, UIViewControllerRestoration, LMThemeEngineDelegate>
 
 @property LMSectionTableView *sectionTableView;
 
@@ -112,7 +114,7 @@
 - (NSUInteger)numberOfRowsForSection:(NSUInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView {	
 	switch(section){
 		case 0:
-			return 1;
+			return 2;
 		case 1:
 			return 2;
 		case 2:
@@ -142,6 +144,8 @@
 			switch(indexPath.row){
 				case 0:
 					return NSLocalizedString(@"ScrollingTextTitle", nil);
+				case 1:
+					return NSLocalizedString(@"Theme", nil);
 			}
 			break;
 		case 1:
@@ -194,6 +198,10 @@
 			switch(indexPath.row){
 				case 0:
 					return NSLocalizedString(@"ScrollingTextDescription", nil);
+				case 1: {
+					NSString *themeTitleKey = [NSString stringWithFormat:@"%@_Title", [[LMThemeEngine sharedThemeEngine] keyForTheme:LMThemeEngine.currentTheme]];
+					return NSLocalizedString(themeTitleKey, nil);
+				}
 			}
 			break;
 		case 1:
@@ -386,7 +394,7 @@
 		case 0:
 			switch(indexPath.row){
 				case 0:
-					NSLog(@"Status bar");
+					NSLog(@"secret taps");
 					self.debugTapCount++;
 					if(self.debugTapCount > 5){
 						NSLog(@"Hey boi");
@@ -401,6 +409,15 @@
 						} repeats:NO];
 					}
 					break;
+				case 1: {
+					LMThemePickerViewController *themePicker = [LMThemePickerViewController new];
+					[self.navigationController pushViewController:themePicker animated:YES];
+					
+					[(LMCoreViewController*)self.coreViewController pushItemOntoNavigationBarWithTitle:NSLocalizedString(@"Theme", nil) withNowPlayingButton:NO];
+					
+					[LMAnswers logCustomEventWithName:@"Viewed Themes" customAttributes:nil];
+					break;
+				}
 			}
 			break;
 		case 1:
@@ -510,9 +527,11 @@
 		
 		switch(indexPath.section){
 			case 0:
-				[switchView addTarget:self action:@selector(didChangeScrollingTextSwitchView:) forControlEvents:UIControlEventValueChanged];
-				
-				settingsKey = LMSettingsKeyScrollingText;
+				if(indexPath.row == 0){
+					[switchView addTarget:self action:@selector(didChangeScrollingTextSwitchView:) forControlEvents:UIControlEventValueChanged];
+					
+					settingsKey = LMSettingsKeyScrollingText;
+				}
 				break;
 //			case 1:
 //				[switchView addTarget:self action:@selector(didChangeHighestResolutionSwitchView:) forControlEvents:UIControlEventValueChanged];
@@ -554,11 +573,17 @@
 	self.view.backgroundColor = [UIColor whiteColor];
 }
 
+- (void)themeChanged:(LMTheme)theme {
+	[self.sectionTableView reloadData];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
 	
 	self.imageManager = [LMImageManager sharedImageManager];
 	[self.imageManager addDelegate:self];
+	
+	[[LMThemeEngine sharedThemeEngine] addDelegate:self];
 	
 	self.sectionTableView = [LMSectionTableView newAutoLayoutView];
 	self.sectionTableView.contentsDelegate = self;

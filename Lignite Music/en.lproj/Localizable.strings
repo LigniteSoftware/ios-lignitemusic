@@ -46,6 +46,8 @@
  
  */
 
+"Theme" = "Theme"; //The theme of the app, aka colour scheme
+
 "NothingPlaying" = "Nothing playing";
 
 "EnhancedPlaylistTitle" = "Enhanced Playlist";
