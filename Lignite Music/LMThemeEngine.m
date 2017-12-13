@@ -44,8 +44,8 @@
 	if([key isEqualToString:LMThemeKeyDefault]){
 		return LMThemeDefault;
 	}
-	else if([key isEqualToString:LMThemeKeyEdwinOrange]){
-		return LMThemeEdwinOrange;
+	else if([key isEqualToString:LMThemeKeyRoyallyBlued]){
+		return LMThemeRoyallyBlued;
 	}
 	
 	return LMThemeDefault;
@@ -55,14 +55,39 @@
 	switch(theme){
 		case LMThemeDefault:
 			return LMThemeKeyDefault;
-		case LMThemeEdwinOrange:
-			return LMThemeKeyEdwinOrange;
+		case LMThemeRoyallyBlued:
+			return LMThemeKeyRoyallyBlued;
+		case LMThemeBombasticBlue:
+			return LMThemeKeyBombasticBlue;
+		case LMThemeMorpheus:
+			return LMThemeKeyMorpheus;
+		case LMThemeBackgroundNoise:
+			return LMThemeKeyBackgroundNoise;
+		case LMThemeBritishRacingGreen:
+			return LMThemeKeyBritishRacingGreen;
+	}
+}
+
++ (NSString*)mainColourHexStringForTheme:(LMTheme)theme {
+	switch(theme){
+		case LMThemeDefault:
+			return @"E82824";
+		case LMThemeRoyallyBlued:
+			return @"4169E1";
+		case LMThemeBombasticBlue:
+			return @"001DBD";
+		case LMThemeMorpheus:
+			return @"27911A";
+		case LMThemeBackgroundNoise:
+			return @"399DC6";
+		case LMThemeBritishRacingGreen:
+			return @"004225";
 	}
 }
 
 + (LMTheme)currentTheme {
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-	LMTheme userTheme = LMThemeEdwinOrange;
+	LMTheme userTheme = LMThemeBackgroundNoise;
 	
 	NSString *savedThemeKey = [userDefaults objectForKey:LMThemeEngineUserThemeKey];
 	if(savedThemeKey){
@@ -75,12 +100,7 @@
 + (LMColour*)mainColour {
 	LMTheme theme = [LMThemeEngine currentTheme];
 
-	switch(theme){
-		case LMThemeDefault:
-			return [LMColour colourWithRed:0.69 green:0.16 blue:0.15 alpha:1.0];
-		case LMThemeEdwinOrange:
-			return (LMColour*)[UIColor orangeColor];
-	}
+	return [LMColour colourWithHexString:[LMThemeEngine mainColourHexStringForTheme:theme]];
 }
 
 + (LMThemeEngine * _Nonnull)sharedThemeEngine {

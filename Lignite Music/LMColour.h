@@ -12,11 +12,26 @@
 @interface LMColour : UIColor
 
 /**
- The classic "Lignite Red" colour. It's a slightly darker red, just the right amount. Not harsh on the eyes and not evil :)
+ The main theme colour, selected by the user. See LMThemeEngine for more details.
 
- @return The Lignite Red colour.
+ @return The main theme colour.
  */
 + (UIColor*)mainColour;
+
+/**
+ The main theme colour with brightness reduced.
+ 
+ @return The darkened main theme colour.
+ */
++ (UIColor*)mainColourDark;
+
+/**
+ Gets a colour from a HEX string of 3, 4, 6 or 8 characters. Throws an exception if an invalid string is inputted.
+
+ @param hexString The HEX string to get the colour from.
+ @return The colour.
+ */
++ (LMColour*)colourWithHexString:(NSString*)hexString;
 
 /**
  A darker green colour idicating success or action of positivity.
@@ -24,20 +39,6 @@
  @return Success green colour.
  */
 + (UIColor*)successGreenColour;
-
-/**
- The classic "Lignite Red" colour, though half transparent.
-
- @return The semi transparent Lignite Red colour.
- */
-+ (UIColor*)semiTransparentLigniteRedColour;
-
-/**
- Dark Lignite Red colour is basically a brown colour. It should be used for denying related tasks.
-
- @return The dark Lignite Red colour.
- */
-+ (UIColor*)darkLigniteRedColour;
 
 /**
  A super duper light gray colour. Used in section table views.

@@ -988,7 +988,7 @@
 	
 	alertView.title = NSLocalizedString(@"ImagesDownloadWarningTitle", nil);
 	alertView.body = [self permissionRequestDescriptionString];
-	alertView.alertOptionColours = @[[LMColour darkLigniteRedColour], [LMColour mainColour]];
+	alertView.alertOptionColours = @[[LMColour mainColourDark], [LMColour mainColour]];
 	alertView.alertOptionTitles = @[NSLocalizedString(@"DontDownload", nil), NSLocalizedString(@"DownloadAnyway", nil)];
 	
 	[alertView launchOnView:view withCompletionHandler:^(NSUInteger optionSelected) {

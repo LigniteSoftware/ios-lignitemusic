@@ -14,12 +14,20 @@
 
 
 typedef NS_ENUM(NSInteger, LMTheme) {
-	LMThemeDefault = 0, //Classic "Lignite Red",
-	LMThemeEdwinOrange = 1,
+	LMThemeDefault = 0, //Classic "Lignite Red".
+	LMThemeRoyallyBlued = 1, //A dark blue colour by peddledave@gmail.com.
+	LMThemeBombasticBlue = 2, //A dark shade of blue by nbomba@nycap.rr.com.
+	LMThemeMorpheus = 3, //An "in the middle" shade of green from The Matrix by regester8@hotmail.com.
+	LMThemeBackgroundNoise = 4, //A shade of teal by amslerd@sympatico.ca.
+	LMThemeBritishRacingGreen = 5 //A dark shade of green by thomas.kupper@gmail.com.
 };
 
 #define LMThemeKeyDefault @"LMThemeKeyDefault"
-#define LMThemeKeyEdwinOrange @"LMThemeKeyEdwinOrange"
+#define LMThemeKeyRoyallyBlued @"LMThemeKeyRoyallyBlued"
+#define LMThemeKeyBombasticBlue @"LMThemeKeyBombasticBlue"
+#define LMThemeKeyMorpheus @"LMThemeKeyMorpheus"
+#define LMThemeKeyBackgroundNoise @"LMThemeKeyBackgroundNoise"
+#define LMThemeKeyBritishRacingGreen @"LMThemeKeyBritishRacingGreen"
 
 
 @protocol LMThemeEngineDelegate <NSObject>

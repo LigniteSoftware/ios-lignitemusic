@@ -278,7 +278,7 @@
 	alertView.body = [NSString stringWithFormat:NSLocalizedString(@"SettingImagesAlertDescription", nil), currentStatusText, NSLocalizedString(youCanKey, nil)];
 	
 	alertView.alertOptionTitles = @[NSLocalizedString(disableButtonKey, nil), NSLocalizedString(enableButtonKey, nil)];
-	alertView.alertOptionColours = @[[LMColour darkLigniteRedColour], [LMColour mainColour]];
+	alertView.alertOptionColours = @[[LMColour mainColourDark], [LMColour mainColour]];
 	
 	[alertView launchOnView:self.coreViewController.navigationController.view withCompletionHandler:^(NSUInteger optionSelected) {
 		//Reset the special permission statuses because the user's stance maybe different now and we'll have to recheck
@@ -350,7 +350,7 @@
 	alertView.body = NSLocalizedString(@"ExplicitImageDownloadingBody", nil);
 	
 	alertView.alertOptionTitles = @[NSLocalizedString(@"Deny", nil), NSLocalizedString(@"Allow", nil)];
-	alertView.alertOptionColours = @[[LMColour darkLigniteRedColour], [LMColour mainColour]];
+	alertView.alertOptionColours = @[[LMColour mainColourDark], [LMColour mainColour]];
 	
 	[alertView launchOnView:self.coreViewController.navigationController.view withCompletionHandler:^(NSUInteger optionSelected) {
 		//Reset the special permission statuses because the user's stance maybe different now and we'll have to recheck
@@ -462,7 +462,7 @@
 					
 					alertView.title = NSLocalizedString(@"UsageData", nil);
 					alertView.body = NSLocalizedString(@"UsageDataDescription", nil);
-					alertView.alertOptionColours = @[[LMColour darkLigniteRedColour], [LMColour mainColour]];
+					alertView.alertOptionColours = @[[LMColour mainColourDark], [LMColour mainColour]];
 					alertView.alertOptionTitles = @[NSLocalizedString(@"OptionOptOut", nil), NSLocalizedString(@"OptionOptIn", nil)];
 					
 					[alertView launchOnView:self.coreViewController.navigationController.view withCompletionHandler:^(NSUInteger optionSelected) {

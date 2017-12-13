@@ -50,6 +50,7 @@
 #import "LMPlaylistEditorViewController.h"
 #import "LMEnhancedPlaylistEditorViewController.h"
 #import "LMAppleWatchBridge.h"
+#import "LMThemePickerViewController.h"
 
 #ifdef SPOTIFY
 #import "Spotify.h"
@@ -1397,7 +1398,7 @@ LMControlBarViewDelegate
 	self.buttonNavigationBar.delegate = self;
 	self.buttonNavigationBar.searchBarDelegate = self;
 	self.buttonNavigationBar.letterTabBarDelegate = self;
-//	self.buttonNavigationBar.hidden = YES;
+	self.buttonNavigationBar.hidden = YES;
 	[self.navigationController.view addSubview:self.buttonNavigationBar];
 	
 	//						self.navigationController.view.hidden = YES;
@@ -1560,8 +1561,11 @@ LMControlBarViewDelegate
 			[self.buttonNavigationBar.browsingBar setShowingLetterTabs:self.titleView.musicTitles.count > 0];
 		}
 		
-		LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
-		[self.navigationController pushViewController:settingsViewController animated:YES];
+//		LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
+//		[self.navigationController pushViewController:settingsViewController animated:YES];
+		
+		LMThemePickerViewController *themePicker = [LMThemePickerViewController new];
+		[self.navigationController pushViewController:themePicker animated:YES];
 	} repeats:NO];
 	
 	
