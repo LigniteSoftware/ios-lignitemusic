@@ -138,7 +138,7 @@
 	
 
 	UICollectionViewFlowLayout *flowLayout = [UICollectionViewFlowLayout new];
-	flowLayout.sectionInset = UIEdgeInsetsMake(20, 0, 20, 0);
+	flowLayout.sectionInset = UIEdgeInsetsMake(LMLayoutManager.isExtraSmall ? 5.0f : 5.0f, 0, 20, 0);
 	
 	self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:flowLayout];
 	self.collectionView.translatesAutoresizingMaskIntoConstraints = NO;

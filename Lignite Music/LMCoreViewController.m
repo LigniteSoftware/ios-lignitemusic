@@ -1564,8 +1564,8 @@ LMControlBarViewDelegate
 //		LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
 //		[self.navigationController pushViewController:settingsViewController animated:YES];
 		
-		LMThemePickerViewController *themePicker = [LMThemePickerViewController new];
-		[self.navigationController pushViewController:themePicker animated:YES];
+//		LMThemePickerViewController *themePicker = [LMThemePickerViewController new];
+//		[self.navigationController pushViewController:themePicker animated:YES];
 	} repeats:NO];
 	
 	
