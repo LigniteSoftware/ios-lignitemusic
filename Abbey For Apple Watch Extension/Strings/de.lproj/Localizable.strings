@@ -6,6 +6,8 @@
  Copyright © 2017 Lignite. All rights reserved.
  */
 
+"BrowseLibrary" = "Durchsuchen";
+
 "NothingPlaying" = "Es wird nichts wiedergegeben";
 "NothingPlayingFullText" = "Es wird nichts wiedergegeben, sorry.";
 "Loading" = "Laden...";

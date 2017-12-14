@@ -243,7 +243,7 @@
 	
 	//It's the same if the track is the same or if the album & artist has not changed
 	BOOL albumArtIsTheSame = (self.previousNowPlayingTrackSent.persistentID == nowPlayingTrack.persistentID)
-	|| ((self.previousNowPlayingTrackSent.albumPersistentID == nowPlayingTrack.albumPersistentID) && (self.previousNowPlayingTrackSent.albumArtistPersistentID == nowPlayingTrack.albumArtistPersistentID));
+	|| ((self.previousNowPlayingTrackSent.albumPersistentID == nowPlayingTrack.albumPersistentID) && (self.previousNowPlayingTrackSent.artistPersistentID == nowPlayingTrack.artistPersistentID));
 	
 	if(self.connected){
 		if(nowPlayingTrack){

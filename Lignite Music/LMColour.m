@@ -87,6 +87,10 @@
 	return (LMColour*)[UIColor whiteColor];
 }
 
++ (LMColour*)blackColour {
+	return (LMColour*)[UIColor blackColor];
+}
+
 + (LMColour*)clearColour {
 	return (LMColour*)[UIColor clearColor];
 }

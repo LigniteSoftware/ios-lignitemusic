@@ -6,6 +6,8 @@
   Copyright © 2017 Lignite. All rights reserved.
 */
 
+"BrowseLibrary" = "Browse Library";
+
 "NothingPlaying" = "Nothing's playing";
 "NothingPlayingFullText" = "Nothing's playing right now, sorry.";
 "Loading" = "Loading...";

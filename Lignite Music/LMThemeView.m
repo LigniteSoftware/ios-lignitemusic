@@ -19,6 +19,11 @@
 @property UIImageView *imageView;
 
 /**
+ The border for the image view.
+ */
+@property UIView *imageBorderView;
+
+/**
  The background view of the image, so we can centre it between the top of the view and the top of the info view.
  */
 @property UIView *imageViewBackgroundView;
@@ -29,9 +34,24 @@
 @property NSLayoutConstraint *imageViewLayoutConstraint;
 
 /**
+ The constraint for the image view's border width.
+ */
+@property NSLayoutConstraint *imageBorderWidthConstraint;
+
+/**
+ The constraint for the image view's border height.
+ */
+@property NSLayoutConstraint *imageBorderHeightConstraint;
+
+/**
  The info view for the name and creator of the theme.
  */
 @property LMCollectionInfoView *infoView;
+
+///**
+// The background view for the "selected" indicator.
+// */
+//@property UIView *selectedLabelBackgroundView;
 
 @end
 
@@ -82,19 +102,23 @@
 	[self layoutIfNeeded];
 	
 	[self.imageViewLayoutConstraint autoRemove];
+	[self.imageBorderWidthConstraint autoRemove];
+	[self.imageBorderHeightConstraint autoRemove];
 	
 	BOOL isSelected = (self.theme == theme);
 	
 	self.imageViewLayoutConstraint = [self.imageView autoMatchDimension:ALDimensionHeight
 															toDimension:ALDimensionHeight
 																 ofView:self.imageViewBackgroundView
-														 withMultiplier:isSelected ? (10.0/10.0) : (9.0/10.0)];
+														 withMultiplier:isSelected ? (8.5/10.0) : (7.0/10.0)];
+	
+	self.imageBorderHeightConstraint = [self.imageBorderView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.imageView withMultiplier:isSelected ? (11.0/10.0) : (10.5/10.0)];
+	
+	self.imageBorderWidthConstraint = [self.imageBorderView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.imageView withMultiplier:isSelected ? (10.0/10.0) : ((9.5/10.0) * 0.8)];
 	
 	[UIView animateWithDuration:0.2 animations:^{
-		self.imageView.layer.shadowOpacity = isSelected ? 0.4f : 0.25f;
-		self.imageView.layer.shadowRadius = isSelected ? 7 : 5;
-		
 		[self layoutIfNeeded];
+		[self.imageViewBackgroundView layoutIfNeeded];
 	}];
 }
 
@@ -105,6 +129,7 @@
 		self.didLayoutConstraints = YES;
 		
 		self.backgroundColor = [LMColour clearColour];
+		self.clipsToBounds = NO;
 		
 		
 		[[LMThemeEngine sharedThemeEngine] addDelegate:self];
@@ -126,6 +151,7 @@
 		
 		self.imageViewBackgroundView = [UIView newAutoLayoutView];
 		self.imageViewBackgroundView.backgroundColor = [LMColour clearColor];
+		self.imageViewBackgroundView.clipsToBounds = NO;
 		[self addSubview:self.imageViewBackgroundView];
 		
 		[self.imageViewBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop];
@@ -134,23 +160,40 @@
 		[self.imageViewBackgroundView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.infoView];
 		
 		
+		self.imageBorderView = [UIView newAutoLayoutView];
+		self.imageBorderView.backgroundColor = [LMThemeEngine mainColourForTheme:self.theme];
+		self.imageBorderView.clipsToBounds = NO;
+		[self.imageViewBackgroundView addSubview:self.imageBorderView];
+		
+		
 		self.imageView = [UIImageView newAutoLayoutView];
-		self.imageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png", self.themeKey]];
 		self.imageView.contentMode = UIViewContentModeScaleAspectFit;
+		self.imageView.clipsToBounds = NO;
 		[self.imageViewBackgroundView addSubview:self.imageView];
 		
-		self.imageView.layer.shadowRadius = isSelected ? 7 : 5;
-		self.imageView.layer.shadowOffset = CGSizeMake(0, self.imageView.layer.shadowRadius/2);
-		self.imageView.layer.shadowOpacity = isSelected ? 0.4f : 0.25f;
+		UIImage *image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png", self.themeKey]];
+		[self.imageView setImage:image];
+		
+		CGFloat widthMultiplier = image.size.width / image.size.height;
 		
 		[self.imageView autoCenterInSuperview];
-		[self.imageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.imageViewBackgroundView];
+		[self.imageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.imageViewBackgroundView withMultiplier:widthMultiplier];
 		self.imageViewLayoutConstraint = [self.imageView autoMatchDimension:ALDimensionHeight
 																toDimension:ALDimensionHeight
 																	 ofView:self.imageViewBackgroundView
-															 withMultiplier:isSelected ? (10.0/10.0) : (9.0/10.0)];
+															 withMultiplier:isSelected ? (8.5/10.0) : (7.0/10.0)];
 
 		[self.infoView reloadData];
+		
+		self.imageBorderView.layer.shadowRadius = isSelected ? 7 : 5;
+		self.imageBorderView.layer.shadowOffset = CGSizeMake(0, self.imageBorderView.layer.shadowRadius/2);
+		self.imageBorderView.layer.shadowOpacity = isSelected ? 0.5f : 0.15f;
+		
+		[self.imageBorderView autoCenterInSuperview];
+		
+		self.imageBorderHeightConstraint = [self.imageBorderView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.imageView withMultiplier:isSelected ? (11.0/10.0) : (10.5/10.0)];
+		
+		self.imageBorderWidthConstraint = [self.imageBorderView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.imageView withMultiplier:isSelected ? (10.0/10.0) : ((9.5/10.0) * 0.8)];
 		
 		
 		self.userInteractionEnabled = YES;

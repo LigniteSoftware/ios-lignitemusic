@@ -605,6 +605,9 @@
 		}];
 	}];
 	
+	[self.browseLibraryLabel setText:NSLocalizedString(@"BrowseLibrary", nil)];
+	[self.nothingPlayingBrowseLibraryLabel setText:NSLocalizedString(@"BrowseLibrary", nil)];
+	
 	[self configureTableWithData:@[]];
 	
 	[self reloadThemedElements];

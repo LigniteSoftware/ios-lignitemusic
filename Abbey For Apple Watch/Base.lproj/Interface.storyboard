@@ -68,7 +68,7 @@
                                 </group>
                             </items>
                         </group>
-                        <group width="1" height="1" alignment="left" hidden="YES" layout="overlap" radius="0.0" spacing="0.0" id="PEh-FC-AVI" userLabel="Now Playing Container">
+                        <group width="1" height="1" alignment="left" layout="overlap" radius="0.0" spacing="0.0" id="PEh-FC-AVI" userLabel="Now Playing Container">
                             <items>
                                 <imageView width="1" height="0.80000000000000004" alignment="center" image="chidster" contentMode="scaleAspectFill" id="BvG-LR-NtJ"/>
                                 <group width="1" height="0.80000000000000004" alignment="left" layout="vertical" spacing="0.0" id="3a1-Uj-z8o" userLabel="Control Group">
@@ -191,7 +191,7 @@
                                             <color key="backgroundColor" white="0.69891183035714288" alpha="0.0" colorSpace="calibratedWhite"/>
                                             <edgeInsets key="margins" left="0.0" right="0.0" top="0.0" bottom="0.0"/>
                                         </group>
-                                        <group width="1" height="0.59999999999999998" alignment="left" spacing="0.0" id="j6H-mZ-SBl" userLabel="Track Info Group">
+                                        <group width="1" height="0.59999999999999998" heightAdjustment="1" alignment="left" spacing="0.0" id="j6H-mZ-SBl" userLabel="Track Info Group">
                                             <items>
                                                 <group width="1" alignment="left" verticalAlignment="center" layout="vertical" spacing="0.0" id="QiB-hQ-eoa" userLabel="Info Text Group">
                                                     <items>
@@ -213,7 +213,7 @@
                             </items>
                             <edgeInsets key="margins" left="0.0" right="0.0" top="0.0" bottom="0.0"/>
                         </group>
-                        <group width="1" alignment="left" layout="vertical" radius="0.0" spacing="0.0" id="HiP-Qn-bsy" userLabel="Extra Controls Container">
+                        <group width="1" alignment="left" hidden="YES" layout="vertical" radius="0.0" spacing="0.0" id="HiP-Qn-bsy" userLabel="Extra Controls Container">
                             <items>
                                 <group width="1" height="45" alignment="left" spacing="0.0" id="yep-wT-H1e" userLabel="Control Buttons">
                                     <items>
@@ -362,12 +362,14 @@
                     <connections>
                         <outlet property="albumArtImage" destination="BvG-LR-NtJ" id="3iq-sp-HTY"/>
                         <outlet property="browseButtonBackgroundGroup" destination="3JY-YY-Fti" id="Nb6-CZ-KOY"/>
+                        <outlet property="browseLibraryLabel" destination="cEl-sZ-3f8" id="35p-W0-Wb7"/>
                         <outlet property="errorGroup" destination="ia3-Z8-5no" id="z8V-xy-Jh0"/>
                         <outlet property="errorLabel" destination="B7E-bZ-Bdm" id="ybm-7J-r0e"/>
                         <outlet property="extraControlsGroup" destination="HiP-Qn-bsy" id="rNx-ni-fCw"/>
                         <outlet property="favouriteImage" destination="mBZ-WZ-8K5" id="AXj-Ya-CLf"/>
                         <outlet property="nextTrackImage" destination="PTD-XQ-p6R" id="Thc-QV-X2g"/>
                         <outlet property="nothingPlayingBrowseButtonBackgroundGroup" destination="Ev5-wl-Xoq" id="lyD-9J-Zja"/>
+                        <outlet property="nothingPlayingBrowseLibraryLabel" destination="H3T-KI-72q" id="JGq-FB-XXX"/>
                         <outlet property="nothingPlayingGroup" destination="BKQ-1f-mP3" id="ewr-iO-Aq2"/>
                         <outlet property="nothingPlayingLabel" destination="Abv-IS-kMO" id="UXS-c3-FeG"/>
                         <outlet property="nowPlayingGroup" destination="PEh-FC-AVI" id="SOV-9u-cyb"/>

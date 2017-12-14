@@ -104,6 +104,13 @@
 + (LMColour*)whiteColour;
 
 /**
+ #000000.
+ 
+ @return Black.
+ */
++ (LMColour*)blackColour;
+
+/**
  Clear colour, 100% transparency. In both ways unlike Ajit Pai.
 
  @return The clear colour.

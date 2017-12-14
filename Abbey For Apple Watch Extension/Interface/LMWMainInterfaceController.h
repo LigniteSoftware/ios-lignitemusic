@@ -142,9 +142,19 @@
 @property IBOutlet WKInterfaceGroup *browseButtonBackgroundGroup;
 
 /**
+ The label for the browse library button.
+ */
+@property IBOutlet WKInterfaceLabel *browseLibraryLabel;
+
+/**
  The group for the browse button's background which contains its colour.
  */
 @property IBOutlet WKInterfaceGroup *nothingPlayingBrowseButtonBackgroundGroup;
+
+/**
+ The label for the nothing playing browse library button.
+ */
+@property IBOutlet WKInterfaceLabel *nothingPlayingBrowseLibraryLabel;
 
 /**
  The pan gesture changed for the progress bar. Should be passed right away to the LMWProgressSliderInfo instance.
