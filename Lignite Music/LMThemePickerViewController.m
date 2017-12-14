@@ -46,6 +46,9 @@
 	if([LMLayoutManager isiPad]){
 		width = self.collectionView.frame.size.width / 4.0;
 	}
+	else if([LMLayoutManager isLandscape]){
+		width = self.collectionView.frame.size.height / 2.0;
+	}
 	
 	width -= 10;
 	CGFloat height = width * 1.8;
@@ -65,6 +68,10 @@
 	
 	cell.backgroundColor = [LMColour clearColour];
 	cell.contentView.backgroundColor = [LMColour clearColour];
+	
+	for(UIView *subview in cell.contentView.subviews){
+		[subview removeFromSuperview];
+	}
 	
 	LMThemeView *themeView = [LMThemeView newAutoLayoutView];
 	themeView.theme = (LMTheme)indexPath.row;
@@ -142,11 +149,20 @@
 	self.collectionView.backgroundColor = [UIColor whiteColor];
 	[self.view addSubview:self.collectionView];
 	
-	[self.collectionView autoPinEdgeToSuperviewMargin:ALEdgeLeading];
 	[self.collectionView autoPinEdgeToSuperviewMargin:ALEdgeTrailing];
 	[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 	
-	[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:64.0f];
+	NSArray *collectionViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.collectionView autoPinEdgeToSuperviewMargin:ALEdgeLeading];
+		[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:64.0f];
+	}];
+	[LMLayoutManager addNewPortraitConstraints:collectionViewPortraitConstraints];
+	
+	NSArray *scrollViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:64];
+		[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+	}];
+	[LMLayoutManager addNewLandscapeConstraints:scrollViewLandscapeConstraints];
 	
 //	if(@available(iOS 11, *)){
 //		[self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.collectionView

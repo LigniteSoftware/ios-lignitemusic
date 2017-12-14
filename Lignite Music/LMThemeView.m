@@ -112,9 +112,9 @@
 																 ofView:self.imageViewBackgroundView
 														 withMultiplier:isSelected ? (8.5/10.0) : (7.0/10.0)];
 	
-	self.imageBorderHeightConstraint = [self.imageBorderView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.imageView withMultiplier:isSelected ? (11.0/10.0) : (10.3/10.0)];
+	self.imageBorderHeightConstraint = [self.imageBorderView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.imageView withMultiplier:isSelected ? (10.7/10.0) : (10.4/10.0)];
 	
-	self.imageBorderWidthConstraint = [self.imageBorderView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.imageView withMultiplier:isSelected ? (10.0/10.0) : ((9.3/10.0) * 0.8)];
+	self.imageBorderWidthConstraint = [self.imageBorderView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.imageView withMultiplier:isSelected ? (9.7/10.0) : ((9.3/10.0) * 0.8)];
 	
 	[UIView animateWithDuration:0.2 animations:^{
 		[self layoutIfNeeded];
@@ -209,9 +209,9 @@
 		
 		[self.imageBorderView autoCenterInSuperview];
 		
-		self.imageBorderHeightConstraint = [self.imageBorderView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.imageView withMultiplier:isSelected ? (11.0/10.0) : (10.4/10.0)];
+		self.imageBorderHeightConstraint = [self.imageBorderView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.imageView withMultiplier:isSelected ? (10.7/10.0) : (10.4/10.0)];
 		
-		self.imageBorderWidthConstraint = [self.imageBorderView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.imageView withMultiplier:isSelected ? (10.0/10.0) : ((9.3/10.0) * 0.8)];
+		self.imageBorderWidthConstraint = [self.imageBorderView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.imageView withMultiplier:isSelected ? (9.7/10.0) : ((9.3/10.0) * 0.8)];
 		
 		
 		self.userInteractionEnabled = YES;
