@@ -154,6 +154,8 @@
 			
 			[previousTracksRow.icon setImage:[UIImage imageNamed:@"icon_left_arrow.png"]];
 			
+			[previousTracksRow.icon setWidth:18.0f];
+			
 			previousTracksRow.isPreviousButton = YES;
 		}
 		
@@ -168,6 +170,8 @@
 			
 			[shuffleAllTracksRow.icon setImage:[UIImage imageNamed:@"icon_shuffle_white.png"]];
 			
+			[shuffleAllTracksRow.icon setWidth:18.0f];
+			
 			shuffleAllTracksRow.isShuffleAllButton = YES;
 		}
 		
@@ -180,6 +184,8 @@
 			[nextTracksRow.titleLabel setText:NSLocalizedString(@"NextPage", nil)];
 			[nextTracksRow.subtitleLabel setText:[NSString stringWithFormat:NSLocalizedString(@"XLeft", nil), self.amountOfEntriesAheadOfCurrentPage]];
 			[nextTracksRow.icon setImage:[UIImage imageNamed:@"icon_right_arrow.png"]];
+			
+			[nextTracksRow.icon setWidth:18.0f];
 			
 			nextTracksRow.isNextButton = YES;
 		}

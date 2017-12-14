@@ -313,7 +313,7 @@
                                 <group width="1" height="4" alignment="left" id="kKS-lp-0B9" userLabel="Spacer"/>
                                 <group width="1" height="30" alignment="left" layout="vertical" spacing="2" id="fhF-NP-chM" userLabel="Up Next Label Group">
                                     <items>
-                                        <label height="1" alignment="center" text="Nothing up next" textAlignment="center" id="ytY-SD-41d"/>
+                                        <label height="1" alignment="left" text="Nothing up next" textAlignment="center" id="ytY-SD-41d"/>
                                     </items>
                                 </group>
                                 <table alignment="left" verticalAlignment="bottom" spacing="4" id="uiW-bf-OGD">
@@ -457,7 +457,7 @@
                                                 <items>
                                                     <group width="0.19" height="0.80000000000000004" alignment="left" verticalAlignment="center" radius="4" id="Rd3-8q-yva" userLabel="Icon Group">
                                                         <items>
-                                                            <imageView width="1" height="1" alignment="center" verticalAlignment="center" image="chidster" contentMode="scaleAspectFit" id="BvS-Ij-LdI" userLabel="Icon"/>
+                                                            <imageView width="100" height="1" alignment="center" verticalAlignment="center" image="chidster" contentMode="scaleAspectFit" id="BvS-Ij-LdI" userLabel="Icon"/>
                                                         </items>
                                                     </group>
                                                     <group width="0.80000000000000004" height="0.98999999999999999" alignment="left" verticalAlignment="center" layout="vertical" spacing="0.0" id="BNI-85-r36" userLabel="Text">
