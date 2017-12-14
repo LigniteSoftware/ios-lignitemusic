@@ -112,14 +112,31 @@
 																 ofView:self.imageViewBackgroundView
 														 withMultiplier:isSelected ? (8.5/10.0) : (7.0/10.0)];
 	
-	self.imageBorderHeightConstraint = [self.imageBorderView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.imageView withMultiplier:isSelected ? (11.0/10.0) : (10.5/10.0)];
+	self.imageBorderHeightConstraint = [self.imageBorderView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.imageView withMultiplier:isSelected ? (11.0/10.0) : (10.3/10.0)];
 	
-	self.imageBorderWidthConstraint = [self.imageBorderView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.imageView withMultiplier:isSelected ? (10.0/10.0) : ((9.5/10.0) * 0.8)];
+	self.imageBorderWidthConstraint = [self.imageBorderView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.imageView withMultiplier:isSelected ? (10.0/10.0) : ((9.3/10.0) * 0.8)];
 	
 	[UIView animateWithDuration:0.2 animations:^{
 		[self layoutIfNeeded];
 		[self.imageViewBackgroundView layoutIfNeeded];
 	}];
+}
+
+- (UIImage*)roundedImage:(UIImage*)image {
+	UIImage *roundedImage = image;
+	
+	CGRect frame = CGRectMake(0, 0, image.size.width, image.size.height);
+	
+	UIGraphicsBeginImageContextWithOptions(frame.size, false, 1);
+	
+	[[UIBezierPath bezierPathWithRoundedRect:frame cornerRadius:36.0f] addClip];
+	[image drawInRect:frame];
+	
+	roundedImage = UIGraphicsGetImageFromCurrentImageContext();
+	
+	UIGraphicsEndImageContext();
+	
+	return roundedImage;
 }
 
 - (void)layoutSubviews {
@@ -168,10 +185,10 @@
 		
 		self.imageView = [UIImageView newAutoLayoutView];
 		self.imageView.contentMode = UIViewContentModeScaleAspectFit;
-		self.imageView.clipsToBounds = NO;
+		self.imageView.clipsToBounds = YES;
 		[self.imageViewBackgroundView addSubview:self.imageView];
 		
-		UIImage *image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png", self.themeKey]];
+		UIImage *image = [self roundedImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@.png", self.themeKey]]];
 		[self.imageView setImage:image];
 		
 		CGFloat widthMultiplier = image.size.width / image.size.height;
@@ -188,12 +205,13 @@
 		self.imageBorderView.layer.shadowRadius = isSelected ? 7 : 5;
 		self.imageBorderView.layer.shadowOffset = CGSizeMake(0, self.imageBorderView.layer.shadowRadius/2);
 		self.imageBorderView.layer.shadowOpacity = isSelected ? 0.5f : 0.15f;
+		self.imageBorderView.layer.cornerRadius = 6.0f;
 		
 		[self.imageBorderView autoCenterInSuperview];
 		
-		self.imageBorderHeightConstraint = [self.imageBorderView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.imageView withMultiplier:isSelected ? (11.0/10.0) : (10.5/10.0)];
+		self.imageBorderHeightConstraint = [self.imageBorderView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.imageView withMultiplier:isSelected ? (11.0/10.0) : (10.4/10.0)];
 		
-		self.imageBorderWidthConstraint = [self.imageBorderView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.imageView withMultiplier:isSelected ? (10.0/10.0) : ((9.5/10.0) * 0.8)];
+		self.imageBorderWidthConstraint = [self.imageBorderView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.imageView withMultiplier:isSelected ? (10.0/10.0) : ((9.3/10.0) * 0.8)];
 		
 		
 		self.userInteractionEnabled = YES;

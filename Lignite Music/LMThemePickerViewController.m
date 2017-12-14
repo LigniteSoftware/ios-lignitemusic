@@ -42,6 +42,11 @@
   sizeForItemAtIndexPath:(NSIndexPath*)indexPath {
 	
 	CGFloat width = self.collectionView.frame.size.width/2.0;
+	
+	if([LMLayoutManager isiPad]){
+		width = self.collectionView.frame.size.width / 4.0;
+	}
+	
 	width -= 10;
 	CGFloat height = width * 1.8;
 	
