@@ -653,6 +653,7 @@ LMControlBarViewDelegate
 	
 	[self.buttonNavigationBar.browsingBar setShowingLetterTabs:YES];
 	[self.landscapeNavigationBar setMode:self.musicType == LMMusicTypePlaylists ? LMLandscapeNavigationBarModePlaylistView : LMLandscapeNavigationBarModeOnlyLogo];
+	
 	if(self.musicType == LMMusicTypePlaylists){
 		[self.landscapeNavigationBar setEditing:self.compactView.editing];
 	}
@@ -1292,6 +1293,16 @@ LMControlBarViewDelegate
 	
 	if(@available(iOS 11, *)){
 		self.navigationBar = [[LMNavigationBar alloc] initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, 64.0f)];
+		
+		//Themeing? Bet you wish you didn't make it this way ;)
+		UIView *statusBarCover = [UIView newAutoLayoutView];
+		statusBarCover.backgroundColor = [LMColour whiteColour];
+		[self.navigationBar addSubview:statusBarCover];
+		
+		[statusBarCover autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[statusBarCover autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:-20.0f];
+		[statusBarCover autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[statusBarCover autoSetDimension:ALDimensionHeight toSize:20.0f];
 	}
 	else{
 		self.navigationBar = [[LMNavigationBar alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 64.0f)];
@@ -1316,7 +1327,6 @@ LMControlBarViewDelegate
 	else{
 		[self.navigationBar pushNavigationItem:[self nowPlayingNavigationItem] animated:YES];
 	}
-	
 	
 	
 	
