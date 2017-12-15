@@ -382,7 +382,7 @@
  5. Thank you screen/end of onboarding
  */
 "OnboardingWelcomeTitle" = "Willkommen bei Abbey";
-"OnboardingWelcomeDescription" = "Wir haben hart dafür gearbeitet, dir das ultimative Musikerlebnis zu ermöglichen.\n\nUm dies sicherzustellen, gehen wir mit dir ein paar wenige Schritte durch, damit alles korrekt aufgesetzt werden kann.";
+"OnboardingWelcomeDescription" = "Wir hoffen, dir das ultimative Musik Erlebnis bieten zu können.\n\nWir benötigen dazu bloss die nachfolgende Bewilligung und bitten dich, diese zu akzeptieren.";
 
 //"OnboardingKickstarterLoginTitle" = "Bist du ein Kickstarter backer?";
 //"OnboardingKickstarterLoginDescription" = "Abbey wurde durch 339 tolle Backer auf Kickstarter zur Realität.\n\nFalls du einer von ihnen bist, kannst du die App durch das Einloggen zur Vollversion freischalten.\n\nAndernfalls kannst du eine 3-tägige, voll funktionale Demo-Version starten!";

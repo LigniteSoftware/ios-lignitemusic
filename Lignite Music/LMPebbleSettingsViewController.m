@@ -51,6 +51,7 @@
 	
 	self.settingsView = [LMPebbleSettingsView newAutoLayoutView];
 	self.settingsView.messageQueue = self.messageQueue;
+	self.settingsView.coreViewController = self;
 	[self.view addSubview:self.settingsView];
 	
 	NSArray *settingsViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{

@@ -29,6 +29,8 @@
 
 @implementation LMSectionTableView
 
+@synthesize totalNumberOfSections = _totalNumberOfSections;
+
 - (NSUInteger)rawIndexForIndexPath:(NSIndexPath*)indexPath {
 	NSInteger section = indexPath.section;
 	NSInteger row = indexPath.row;
@@ -75,21 +77,6 @@
 		return [self.contentsDelegate rightViewForIndexPath:entry.indexPath forSectionTableView:self];
 	}
 	return nil;
-}
-
-- (instancetype)init {
-	self = [super initWithFrame:CGRectMake(0, 0, 0, 0) style:UITableViewStyleGrouped];
-	if(self){
-		self.backgroundColor = [UIColor whiteColor];
-//		self.separatorColor = [LMColour superLightGrayColour];
-		self.alwaysBounceVertical = YES;
-		
-		self.delegate = self;
-		self.dataSource = self;
-	
-		self.title = @"SectionTableView";
-	}
-	return self;
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -234,6 +221,18 @@
 	self.hasRegisteredCellIdentifiers = YES;
 }
 
+- (void)setTotalNumberOfSections:(NSUInteger)totalNumberOfSections {
+	_totalNumberOfSections = totalNumberOfSections;
+	
+	if(self.listEntryArray){ //Setup has completed
+		[self registerCellIdentifiers];
+	}
+}
+
+- (NSUInteger)totalNumberOfSections {
+	return _totalNumberOfSections;
+}
+
 - (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
 	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		[self reloadData];
@@ -263,6 +262,21 @@
 	}
 	
 	[self registerCellIdentifiers];
+}
+
+- (instancetype)init {
+	self = [super initWithFrame:CGRectMake(0, 0, 0, 0) style:UITableViewStyleGrouped];
+	if(self){
+		self.backgroundColor = [UIColor whiteColor];
+		//		self.separatorColor = [LMColour superLightGrayColour];
+		self.alwaysBounceVertical = YES;
+		
+		self.delegate = self;
+		self.dataSource = self;
+		
+		self.title = @"SectionTableView";
+	}
+	return self;
 }
 
 @end

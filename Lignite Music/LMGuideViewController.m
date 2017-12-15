@@ -155,7 +155,8 @@
 										}
 										
 										[self.finishedButton setTitle:NSLocalizedString(@"GoodToGo", nil) forState:UIControlStateNormal];
-										[NSTimer scheduledTimerWithTimeInterval:1.00 target:self selector:@selector(threeBlindMice) userInfo:nil repeats:NO];
+//										[NSTimer scheduledTimerWithTimeInterval:1.00 target:self selector:@selector(threeBlindMice) userInfo:nil repeats:NO];
+										[NSTimer scheduledTimerWithTimeInterval:1.00 target:self selector:@selector(completeTutorial) userInfo:nil repeats:NO];
 									});
 								}];
 								
@@ -462,10 +463,10 @@
 
     if(self.screenshotImage){
         [self.screenshotView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.contentView];
-        [self.screenshotView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.titleLabel];
+        [self.screenshotView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.titleLabel withOffset:-15];
         [self.screenshotView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.titleLabel];
         [self.screenshotView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.titleLabel];
-        [self.screenshotView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/3.0)];
+        [self.screenshotView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/4.0)];
     }
     
 	[self.contentView insertSubview:self.titleLabel aboveSubview:self.screenshotView];

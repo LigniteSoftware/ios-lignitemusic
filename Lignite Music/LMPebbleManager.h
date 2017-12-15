@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "LMPebbleMessageQueue.h"
 
+#define LMPebbleManagerKeyUserEnabled @"LMPebbleManagerKeyUserEnabled"
 
 @class LMMusicPlayer;
 
@@ -95,6 +96,18 @@ typedef enum {
  @return The shared Pebble manager.
  */
 + (id)sharedPebbleManager;
+
+/**
+ Runs the Pebble service if it's enabled by the user.
+ */
+- (void)runPebbleServiceIfEnabled;
+
+/**
+ Whether or not the Pebble service has been enabled by the user.
+
+ @return YES if they intentionally checked the "enabled" box in settings and passed the popup dialogue.
+ */
++ (BOOL)pebbleServiceHasBeenEnabledByUser;
 
 /**
  Set the manager's music player. Only needs to be set once, and should be called from within LMMusicPlayer's Singleton creation dispatch.

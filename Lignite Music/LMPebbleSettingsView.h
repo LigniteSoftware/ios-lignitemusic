@@ -13,4 +13,6 @@
 
 @property LMPebbleMessageQueue *messageQueue;
 
+@property UIViewController *coreViewController;
+
 @end

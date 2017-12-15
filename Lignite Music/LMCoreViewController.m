@@ -1281,8 +1281,10 @@ LMControlBarViewDelegate
 	
 	self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 	
+	
 	LMPebbleManager *pebbleManager = [LMPebbleManager sharedPebbleManager];
 	[pebbleManager attachToViewController:self];
+	
 	
 	LMAppleWatchBridge *appleWatchBridge = [LMAppleWatchBridge sharedAppleWatchBridge];
 	[appleWatchBridge attachToViewController:self];
@@ -1561,8 +1563,8 @@ LMControlBarViewDelegate
 			[self.buttonNavigationBar.browsingBar setShowingLetterTabs:self.titleView.musicTitles.count > 0];
 		}
 		
-//		LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
-//		[self.navigationController pushViewController:settingsViewController animated:YES];
+		LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
+		[self.navigationController pushViewController:settingsViewController animated:YES];
 		
 //		LMThemePickerViewController *themePicker = [LMThemePickerViewController new];
 //		[self.navigationController pushViewController:themePicker animated:YES];

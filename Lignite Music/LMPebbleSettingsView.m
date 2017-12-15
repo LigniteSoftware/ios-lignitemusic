@@ -38,13 +38,11 @@
 - (UIImage*)iconAtSection:(NSUInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView {
 	switch(section){
 		case 0:
-			return [LMAppIcon imageForIcon:LMIconLookAndFeel];
-		case 1:
-			return [LMAppIcon imageForIcon:LMIconFunctionality];
-		case 2:
 			return [LMAppIcon imageForIcon:LMIconPebbles];
-		case 3:
-			return [LMAppIcon imageForIcon:LMIconAbout];
+		case 1:
+			return [LMAppIcon imageForIcon:LMIconLookAndFeel];
+		case 2:
+			return [LMAppIcon imageForIcon:LMIconFunctionality];
 	}
 	return [LMAppIcon imageForIcon:LMIconBug];
 }
@@ -52,8 +50,10 @@
 - (NSString*)titleAtSection:(NSUInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView {
 	switch(section){
 		case 0:
-			return NSLocalizedString(@"LookAndFeel", nil);
+			return NSLocalizedString(@"Pebble", nil);
 		case 1:
+			return NSLocalizedString(@"LookAndFeel", nil);
+		case 2:
 			return NSLocalizedString(@"Functionality", nil);
 	}
 	return @"Unknown section";
@@ -62,7 +62,7 @@
 - (NSUInteger)numberOfRowsForSection:(NSUInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView {
 	switch(section){
 		case 0:
-			return 2;
+			return [LMPebbleManager pebbleServiceHasBeenEnabledByUser] ? 2 : 1;
 		case 1:
 			return 2;
 		case 2:
@@ -78,31 +78,25 @@
 		case 0:
 			switch(indexPath.row){
 				case 0:
-					return NSLocalizedString(@"ArtistLabel", nil);
+					return NSLocalizedString(@"EnablePebbleTitle", nil);
 				case 1:
-					return NSLocalizedString(@"DisplayTime", nil);
+					return NSLocalizedString(@"InstallPebbleApp", nil);
 			}
 			break;
 		case 1:
 			switch(indexPath.row){
 				case 0:
-					return NSLocalizedString(@"BatterySaver", nil);
+					return NSLocalizedString(@"ArtistLabel", nil);
 				case 1:
-					return NSLocalizedString(@"PebbleStyleControls", nil);
+					return NSLocalizedString(@"DisplayTime", nil);
 			}
 			break;
 		case 2:
 			switch(indexPath.row){
 				case 0:
-					return NSLocalizedString(@"InstallPebbleApp", nil);
+					return NSLocalizedString(@"BatterySaver", nil);
 				case 1:
-					return NSLocalizedString(@"PebbleSettings", nil);
-			}
-			break;
-		case 3:
-			switch(indexPath.row){
-				case 0:
-					return NSLocalizedString(@"Credits", nil);
+					return NSLocalizedString(@"PebbleStyleControls", nil);
 			}
 			break;
 	}
@@ -128,33 +122,24 @@
 		case 0:
 			switch(indexPath.row){
 				case 0:
+					return nil;
+				case 1:
+					return nil;
+			}
+		case 1:
+			switch(indexPath.row){
+				case 0:
 					return NSLocalizedString(@"ArtistLabelDescription", nil);
 				case 1:
 					return NSLocalizedString(@"DisplayTimeDescription", nil);
 			}
 			break;
-		case 1:
+		case 2:
 			switch(indexPath.row){
 				case 0:
 					return NSLocalizedString(@"BatterySaverDescription", nil);
 				case 1:
 					return NSLocalizedString(@"PebbleStyleControlsDescription", nil);
-			}
-			break;
-		case 2:
-			switch(indexPath.row){
-				case 0: {
-					return nil;
-				}
-				case 1: {
-					return nil;
-				}
-			}
-			break;
-		case 3:
-			switch(indexPath.row){
-				case 0:
-					return NSLocalizedString(@"CreditsMore", nil);
 			}
 			break;
 	}
@@ -165,135 +150,27 @@
 	return nil;
 }
 
-- (void)cacheAlertForCategory:(LMImageManagerCategory)category {
-	LMImageManager *imageManager = [LMImageManager sharedImageManager];
-	
-	LMImageManagerPermissionStatus currentStatus = [imageManager downloadPermissionStatus];
-	
-	LMAlertView *alertView = [LMAlertView newAutoLayoutView];
-	NSString *titleKey = @"";
-	NSString *bodyKey = @"";
-	NSString *youCanKey = @"";
-	NSString *enableButtonKey = @"";
-	NSString *disableButtonKey = @"";
-	NSString *currentStatusText = @"";
-	switch(category) {
-		case LMImageManagerCategoryAlbumImages:
-			titleKey = @"AlbumImagesTitle";
-			bodyKey = @"OfYourAlbums";
-			break;
-		case LMImageManagerCategoryArtistImages:
-			titleKey = @"ArtistImagesTitle";
-			bodyKey = @"OfYourArtists";
-			break;
-	}
-	switch(currentStatus){
-		case LMImageManagerPermissionStatusNotDetermined:
-		case LMImageManagerPermissionStatusDenied:
-			youCanKey = @"YouCanTurnOnTo";
-			enableButtonKey = @"Enable";
-			disableButtonKey = @"KeepDisabled";
-			currentStatusText = NSLocalizedString(@"YouCurrentlyHaveThisFeatureOff", nil);
-			break;
-		case LMImageManagerPermissionStatusAuthorized:
-			youCanKey = @"YouCanTurnOffTo";
-			enableButtonKey = @"KeepEnabled";
-			disableButtonKey = @"ClearCacheAndDisable";
-			currentStatusText = [NSString stringWithFormat:NSLocalizedString(@"UsingXOfYourStorage", nil), (float)[imageManager sizeOfCacheForCategory:category]/1000000];
-			break;
-	}
-	alertView.title = NSLocalizedString(titleKey, nil);
-	
-	alertView.body = [NSString stringWithFormat:NSLocalizedString(@"SettingImagesAlertDescription", nil), NSLocalizedString(bodyKey, nil), currentStatusText, NSLocalizedString(youCanKey, nil)];
-	
-	alertView.alertOptionTitles = @[NSLocalizedString(disableButtonKey, nil), NSLocalizedString(enableButtonKey, nil)];
-	alertView.alertOptionColours = @[[LMColour mainColourDark], [LMColour mainColour]];
-	
-	[alertView launchOnView:self withCompletionHandler:^(NSUInteger optionSelected) {
-//		NSLog(@"Selected %d", (int)optionSelected);
-		
-		if(optionSelected == 0){
-			[imageManager clearCacheForCategory:category];
-			
-			MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self animated:YES];
-			
-			hud.mode = MBProgressHUDModeCustomView;
-			UIImage *image = [[UIImage imageNamed:@"icon_checkmark.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-			hud.customView = [[UIImageView alloc] initWithImage:image];
-			hud.square = YES;
-			hud.label.text = NSLocalizedString(@"ImagesDeleted", nil);
-			
-			[hud hideAnimated:YES afterDelay:3.f];
-		}
-		
-		LMImageManagerPermissionStatus permissionStatus = LMImageManagerPermissionStatusNotDetermined;
-		switch(optionSelected){
-			case 0:
-				permissionStatus = LMImageManagerPermissionStatusDenied;
-				break;
-			case 1:
-				permissionStatus = LMImageManagerPermissionStatusAuthorized;
-				break;
-		}
-		
-		[imageManager setDownloadPermissionStatus:permissionStatus];
-		
-		[self.sectionTableView reloadData];
-	}];
-}
-
 - (void)tappedIndexPath:(NSIndexPath*)indexPath forSectionTableView:(LMSectionTableView*)sectionTableView {
 	switch(indexPath.section){
 		case 0:
 			switch(indexPath.row){
-					//				case 0:
-					//					NSLog(@"Pick theme");
-					//					break;
 				case 0:
-					NSLog(@"Status bar");
+					NSLog(@"setup");
 					break;
-			}
-			break;
-		case 1:
-			switch(indexPath.row){
-				case 0: {
-					[self cacheAlertForCategory:LMImageManagerCategoryArtistImages];
-					NSLog(@"Artist alert");
-					break;
-				}
-				case 1: {
-					[self cacheAlertForCategory:LMImageManagerCategoryAlbumImages];
-					NSLog(@"Album alert");
-					break;
-				}
-				case 2:
-					NSLog(@"Image cache size alert");
-					break;
-			}
-			break;
-		case 2:
-			switch(indexPath.row){
-				case 0: {
+				case 1:
+					NSLog(@"install");
 					NSURL *pebbleURL = [NSURL URLWithString:@"pebble://appstore/579c3ee922f599cf7e0001ea"];
 					NSURL *pebbleWebURL = [NSURL URLWithString:@"http://apps.getpebble.com/en_US/application/579c3ee922f599cf7e0001ea"];
 					BOOL canOpenPebbleURL = [[UIApplication sharedApplication] canOpenURL:pebbleURL];
 					[[UIApplication sharedApplication] openURL:canOpenPebbleURL ? pebbleURL : pebbleWebURL];
 					break;
-				}
-				case 1: {
-					NSLog(@"Pebble settings");
-					LMPebbleManager *pebbleManager = [LMPebbleManager sharedPebbleManager];
-					[pebbleManager showSettings];
-					break;
-				}
 			}
 			break;
-		case 3:
-			switch(indexPath.row){
-				case 0:
-					NSLog(@"Credits");
-					break;
-			}
+		case 1:
+			NSLog(@"Do nothing 1");
+			break;
+		case 2:
+			NSLog(@"Do nothing 2");
 			break;
 	}
 }
@@ -301,61 +178,110 @@
 - (void)changeSwitch:(id)theSwitch {
 	LMSettingsSwitch *changedSwitch = (LMSettingsSwitch*)theSwitch;
 	
-	self.messageQueue = [[LMPebbleManager sharedPebbleManager] messageQueue];
-	
-	if(self.messageQueue){
-		NSNumber *key = [self.settingsMapping objectForKey:changedSwitch.switchID];
-		[self.messageQueue enqueue:@{key:[NSNumber numberWithBool:changedSwitch.on]}];
+	if([changedSwitch.switchID isEqualToString:LMPebbleManagerKeyUserEnabled]){
+		if(changedSwitch.on){
+			LMAlertView *alertView = [LMAlertView newAutoLayoutView];
+			
+			alertView.title = NSLocalizedString(@"EnablePebbleTitle", nil);
+			alertView.body = NSLocalizedString(@"EnablePebbleDescription", nil);
+			alertView.alertOptionColours = @[[LMColour mainColourDark], [LMColour mainColour]];
+			alertView.alertOptionTitles = @[NSLocalizedString(@"PebbleDisable", nil), NSLocalizedString(@"PebbleEnable", nil)];
+			
+			[alertView launchOnView:self.coreViewController.navigationController.view
+			  withCompletionHandler:^(NSUInteger optionSelected) {
+				  BOOL enabledPebble = (optionSelected == 1);
+				  
+				  changedSwitch.on = enabledPebble;
+				
+				  NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+
+				  [userDefaults setBool:enabledPebble forKey:LMPebbleManagerKeyUserEnabled];
+				  
+				  self.sectionTableView.totalNumberOfSections = enabledPebble ? 3 : 1;
+				
+				  [self.sectionTableView reloadData];
+				  
+				  [[LMPebbleManager sharedPebbleManager] runPebbleServiceIfEnabled];
+			}];
+		}
+		else{
+			NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+			[userDefaults setBool:NO forKey:LMPebbleManagerKeyUserEnabled];
+			
+			self.sectionTableView.totalNumberOfSections = 1;
+			
+			[self.sectionTableView reloadData];
+		}
+	}
+	else{
+		self.messageQueue = [[LMPebbleManager sharedPebbleManager] messageQueue];
 		
-		NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-		[defaults setBool:changedSwitch.on forKey:changedSwitch.switchID];
-		[defaults synchronize];
+		if(self.messageQueue){
+			NSNumber *key = [self.settingsMapping objectForKey:changedSwitch.switchID];
+			[self.messageQueue enqueue:@{key:[NSNumber numberWithBool:changedSwitch.on]}];
+			
+			NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+			[defaults setBool:changedSwitch.on forKey:changedSwitch.switchID];
+			[defaults synchronize];
+		}
 	}
 }
 
 - (id)accessoryViewForIndexPath:(NSIndexPath *)indexPath forSectionTableView:(LMSectionTableView *)sectionTableView {
-//	if(indexPath.section == 0){
-		LMSettingsSwitch *switchView = [LMSettingsSwitch newAutoLayoutView];
+	LMSettingsSwitch *switchView = [LMSettingsSwitch newAutoLayoutView];
+
+	switch(indexPath.section){
+		case 0:
+			switch(indexPath.row){
+				case 0:
+					switchView.switchID = LMPebbleManagerKeyUserEnabled;
+					break;
+				case 1:
+					switchView = nil;
+					break;
+			}
+			break;
+		case 1:
+			switch(indexPath.row){
+				case 0:
+					switchView.switchID = @"pebble_artist_label";
+					break;
+				case 1:
+					switchView.switchID = @"pebble_show_time";
+					break;
+			}
+			break;
+		case 2:
+			switch(indexPath.row){
+				case 0:
+					switchView.switchID = @"pebble_battery_saver";
+					break;
+				case 1:
+					switchView.switchID = @"pebble_style_controls";
+					break;
+			}
+			break;
+	}
 	
-		switch(indexPath.section){
-			case 0:
-				switch(indexPath.row){
-					case 0:
-						switchView.switchID = @"pebble_artist_label";
-						break;
-					case 1:
-						switchView.switchID = @"pebble_show_time";
-						break;
-				}
-				break;
-			case 1:
-				switch(indexPath.row){
-					case 0:
-						switchView.switchID = @"pebble_battery_saver";
-						break;
-					case 1:
-						switchView.switchID = @"pebble_style_controls";
-						break;
-				}
-				break;
-		}
-	
+	if(switchView){
 		[switchView addTarget:self action:@selector(changeSwitch:) forControlEvents:UIControlEventValueChanged];
 		
 		NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 
-	if([defaults objectForKey:switchView.switchID]){
+		if([defaults objectForKey:switchView.switchID]){
 			switchView.on = [defaults boolForKey:switchView.switchID];
 		}
 		else{
 			switchView.on = [[self.defaultsMapping objectForKey:switchView.switchID] isEqualToValue:@(1)];
 		}
-	
+		
 		return switchView;
-//	}
-//	UIImageView *imageView = [UIImageView newAutoLayoutView];
-//	imageView.image = [LMAppIcon imageForIcon:LMIconForwardArrow];
-//	return imageView;
+	}
+	else{
+		UIImageView *imageView = [UIImageView newAutoLayoutView];
+		imageView.image = [LMAppIcon imageForIcon:LMIconForwardArrow];
+		return imageView;
+	}
 }
 
 - (void)layoutSubviews {
@@ -364,7 +290,7 @@
 		
 		self.sectionTableView = [LMSectionTableView newAutoLayoutView];
 		self.sectionTableView.contentsDelegate = self;
-		self.sectionTableView.totalNumberOfSections = 2;
+		self.sectionTableView.totalNumberOfSections = [LMPebbleManager pebbleServiceHasBeenEnabledByUser] ? 3 : 1;
 		self.sectionTableView.title = NSLocalizedString(@"AppSettings", nil);
 		[self addSubview:self.sectionTableView];
 		

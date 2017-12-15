@@ -113,7 +113,7 @@
 //		NSLog(@"Got item %@: %d", [[[queue items] objectAtIndex:i]valueForProperty:MPMediaItemPropertyTitle], i);
 //	}
 	NSLog(@"track %@", track.title);
-	[self.musicPlayer stop];
+//	[self.musicPlayer stop];
 
 	[self.musicPlayer setNowPlayingCollection:trackCollection];
 	if(trackPlayMode == TrackPlayModeShuffleAll){
@@ -552,11 +552,6 @@
 	[self pushCurrentStateToWatch];
 }
 
-- (void)setManagerMusicPlayer:(LMMusicPlayer*)musicPlayer {
-	self.musicPlayer = musicPlayer;
-	[self.musicPlayer addMusicDelegate:self];
-}
-
 - (void)handleVolumeChanged:(id)sender{
 //	NSLog(@"%s - %f", __PRETTY_FUNCTION__, self.volumeViewSlider.value);
 }
@@ -595,6 +590,7 @@
 //		}];
 		
 		LMPebbleSettingsViewController *settingsViewController = [LMPebbleSettingsViewController new];
+//		settingsViewController.
 		[self.rootViewController.navigationController showViewController:settingsViewController sender:self];
 	}
 	else{
@@ -602,9 +598,17 @@
 	}
 }
 
-- (instancetype)init {
-	self = [super init];
-	if(self){
++ (BOOL)pebbleServiceHasBeenEnabledByUser {
+	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+	BOOL enabled = NO;
+	if([userDefaults objectForKey:LMPebbleManagerKeyUserEnabled]){
+		enabled = [userDefaults boolForKey:LMPebbleManagerKeyUserEnabled];
+	}
+	return enabled;
+}
+
+- (void)runPebbleServiceIfEnabled {
+	if([LMPebbleManager pebbleServiceHasBeenEnabledByUser]){
 		self.central = [PBPebbleCentral defaultCentral];
 		self.central.delegate = self;
 		self.central.appUUID = [[NSUUID alloc] initWithUUIDString:@"edf76057-f3ef-4de6-b841-cb9532a81a5a"];
@@ -613,9 +617,16 @@
 		
 		self.messageQueue = [LMPebbleMessageQueue new];
 	}
+}
+
+- (instancetype)init {
+	self = [super init];
+	if(self){
+		[self runPebbleServiceIfEnabled];
+	}
 	else{
 		NSLog(@"Error creating Pebble manager!");
-	}
+	} 
 	return self;
 }
 
@@ -624,6 +635,8 @@
 	static dispatch_once_t token;
 	dispatch_once(&token, ^{
 		sharedPebbleManager = [[self alloc] init];
+		sharedPebbleManager.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
+		[sharedPebbleManager.musicPlayer addMusicDelegate:sharedPebbleManager];
 	});
 	return sharedPebbleManager;
 }

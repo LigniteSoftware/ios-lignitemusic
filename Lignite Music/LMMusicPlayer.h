@@ -454,9 +454,4 @@ typedef enum {
  */
 + (BOOL)outputPortIsWireless:(AVAudioSessionPortDescription*)outputPort;
 
-/**
- The pebbleManager manages the connection between the phone and the Pebble. It is directly linked to the music player to ensure that new data is pushed directly to the watch without a view or view controller required.
- */
-@property LMPebbleManager *pebbleManager;
-
 @end

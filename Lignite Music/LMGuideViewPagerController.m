@@ -88,63 +88,35 @@
 
 	switch(self.guideMode){
 		case GuideModeOnboarding: {
-#ifdef SPOTIFY
-			self.titleArray = [[NSArray alloc]initWithObjects:
-							   @"OnboardingWelcomeTitle",
-//							   @"OnboardingKickstarterLoginTitle",
-							   @"OnboardingSpotifyLoginTitle"
-							   , nil];
-			
-			self.descriptionArray = [[NSArray alloc]initWithObjects:
-									 @"OnboardingWelcomeDescription",
-//									 @"OnboardingKickstarterLoginDescription",
-									 @"OnboardingSpotifyLoginDescription"
-							   , nil];
-			
-			self.screenshotsArray = [[NSArray alloc]initWithObjects:
-									 @"icon_no_cover_art_75.png",
-//									 @"onboarding_kickstarter.png",
-									 @"icon_no_cover_art_75.png"
-									 , nil];
-			
-			self.buttonNamesArray = [[NSArray alloc]initWithObjects:
-									 @"LetsGo",
-//									 @"LogMeIn",
-									 @"LogMeIn"
-							   , nil];
-			
-			break;
-#else
 			self.titleArray = [[NSArray alloc]initWithObjects:
 							   @"OnboardingWelcomeTitle",
 //							   @"OnboardingKickstarterLoginTitle",
 							   @"OnboardingMusicPermissionTitle",
-							   @"OnboardingPebblePermissionTitle"
-							   , nil];
+//							   @"OnboardingPebblePermissionTitle"
+							    nil];
 	
 			self.descriptionArray = [[NSArray alloc]initWithObjects:
 									 @"OnboardingWelcomeDescription",
 //									 @"OnboardingKickstarterLoginDescription",
 									 @"OnboardingMusicPermissionDescription",
-									 @"OnboardingPebblePermissionDescription"
-							   , nil];
+//									 @"OnboardingPebblePermissionDescription"
+							    nil];
 			
 			self.screenshotsArray = [[NSArray alloc]initWithObjects:
 									 @"icon_no_cover_art_75.png",
 //									 @"icon_kickstarter_bw.png",
 									 @"icon_library_access.png",
-									 @"icon_pebbles.png"
-									 , nil];
+//									 @"icon_pebbles.png"
+									  nil];
 			
 			self.buttonNamesArray = [[NSArray alloc]initWithObjects:
 									 @"LetsGo",
 //									 @"LogMeIn",
-									 @"HitMeWithIt",
-									 @"SoundsGood"
-							   , nil];
+//									 @"HitMeWithIt",
+									 @"SoundsGood",
+							    nil];
 			
 			break;
-#endif
 		}
 		case GuideModeMusicPermissionDenied: {
 			self.currentPageNumber = 0;

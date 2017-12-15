@@ -81,6 +81,7 @@
 @synthesize repeatMode = _repeatMode;
 @synthesize shuffleMode = _shuffleMode;
 @synthesize systemMusicPlayer = _systemMusicPlayer;
+@synthesize playbackState = _playbackState;
 
 MPMediaGrouping associatedMediaTypes[] = {
 	MPMediaGroupingArtist,
@@ -194,10 +195,19 @@ MPMediaGrouping associatedMediaTypes[] = {
 	static dispatch_once_t token;
 	dispatch_once(&token, ^{
 		sharedPlayer = [self new];
-		sharedPlayer.pebbleManager = [LMPebbleManager sharedPebbleManager];
-		[sharedPlayer.pebbleManager setManagerMusicPlayer:sharedPlayer];
 	});
 	return sharedPlayer;
+}
+
+- (LMMusicPlaybackState)playbackState {
+	return _playbackState;
+}
+
+- (void)setPlaybackState:(LMMusicPlaybackState)playbackState {
+	if(playbackState == LMMusicPlaybackStateStopped){
+		playbackState = LMMusicPlaybackStatePaused;
+	}
+	_playbackState = playbackState;
 }
 
 - (void)prepareForTermination {
@@ -1005,6 +1015,7 @@ BOOL shuffleForDebug = NO;
 	}
 	else if(self.playerType == LMMusicPlayerTypeAppleMusic){
 		[self.systemMusicPlayer play];
+//		[self changeMusicPlayerState:LMMusicPlaybackStatePlaying];
 		
 		NSLog(@"BPM %d", (int)self.systemMusicPlayer.nowPlayingItem.beatsPerMinute);
 	}
@@ -1019,6 +1030,7 @@ BOOL shuffleForDebug = NO;
 	}
 	else if(self.playerType == LMMusicPlayerTypeAppleMusic){
 		[self.systemMusicPlayer pause];
+//		[self changeMusicPlayerState:LMMusicPlaybackStatePaused];
 	}
 }
 
