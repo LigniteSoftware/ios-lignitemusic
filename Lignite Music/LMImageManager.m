@@ -552,7 +552,7 @@
 				}
 			}
 			else{
-				NSLog(@"No results were found. I have to blacklist this track, sorry.");
+				NSLog(@"Even though the data was there, images were not. I have to blacklist this track, sorry.");
 				[self setMusicTrack:randomTrack asBlacklisted:YES forCategory:category];
 			}
             

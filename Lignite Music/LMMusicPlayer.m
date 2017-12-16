@@ -560,7 +560,7 @@ BOOL shuffleForDebug = NO;
 		case LMMusicTypeCompilations:
 			return MPMediaItemPropertyAlbumPersistentID;
 		case LMMusicTypeArtists:
-			return MPMediaItemPropertyArtistPersistentID;
+			return MPMediaItemPropertyAlbumArtistPersistentID;
 		case LMMusicTypeGenres:
 			return MPMediaItemPropertyGenrePersistentID;
 		default:
@@ -781,7 +781,7 @@ BOOL shuffleForDebug = NO;
 		else{
 			switch(associatedGrouping){
 				case MPMediaGroupingArtist:
-					query = [MPMediaQuery artistsQuery];
+					query = [MPMediaQuery albumsQuery];
 					break;
 				case MPMediaGroupingAlbum:
 					query = [MPMediaQuery albumsQuery];
@@ -828,7 +828,7 @@ BOOL shuffleForDebug = NO;
 	};
 	
 	NSArray<NSString*> *associatedPersistentIDProperties = @[
-															 MPMediaItemPropertyArtistPersistentID,   //Artists
+															 MPMediaItemPropertyAlbumArtistPersistentID,   //Artists
 															 MPMediaItemPropertyAlbumPersistentID,    //Albums
 															 MPMediaItemPropertyPersistentID,         //Titles
 															 MPMediaPlaylistPropertyName,             //Playlists
@@ -867,7 +867,7 @@ BOOL shuffleForDebug = NO;
 	};
 	
 	NSArray<NSString*> *associatedPersistentIDProperties = @[
-															 MPMediaItemPropertyArtistPersistentID,   //Artists
+															 MPMediaItemPropertyAlbumArtistPersistentID,   //Artists
 															 MPMediaItemPropertyAlbumPersistentID,    //Albums
 															 MPMediaItemPropertyPersistentID,         //Titles
 															 MPMediaPlaylistPropertyName,             //Playlists
@@ -902,7 +902,7 @@ BOOL shuffleForDebug = NO;
 	};
 	
 	NSArray<NSString*> *associatedPersistentIDProperties = @[
-															 MPMediaItemPropertyArtistPersistentID,   //Artists
+															 MPMediaItemPropertyAlbumArtistPersistentID,   //Artists
 															 MPMediaItemPropertyAlbumPersistentID,    //Albums
 															 MPMediaItemPropertyPersistentID,         //Titles
 															 MPMediaPlaylistPropertyName,             //Playlists

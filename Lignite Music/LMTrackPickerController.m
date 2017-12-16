@@ -861,7 +861,7 @@
 						NSString *property = nil;
 						switch(self.musicType){
 							case LMMusicTypeArtists:
-								property = MPMediaItemPropertyArtistPersistentID;
+								property = MPMediaItemPropertyAlbumArtistPersistentID;
 								break;
 							case LMMusicTypeGenres:
 								property = MPMediaItemPropertyGenrePersistentID;
