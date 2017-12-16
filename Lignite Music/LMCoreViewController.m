@@ -126,6 +126,8 @@ LMControlBarViewDelegate
 @property NSInteger previouslyOpenedDetailViewIndex;
 @property MPMediaEntityPersistentID previousTitleViewTopPersistentID;
 
+@property MBProgressHUD *loadingProgressHUD;
+
 @end
 
 @implementation LMCoreViewController
@@ -991,7 +993,7 @@ LMControlBarViewDelegate
 	
 	LMCoreViewControllerRestorationState newRestorationState = LMCoreViewControllerRestorationStateBrowsing;
 	
-	if(self.navigationController.viewControllers.count > 1){
+	if(self.navigationController.viewControllers.count > 1 || (self.view.window == nil)){
 		newRestorationState = LMCoreViewControllerRestorationStateOutOfView;
 	}
 	else if(self.nowPlayingCoreView.isOpen){
@@ -1129,19 +1131,6 @@ LMControlBarViewDelegate
 	else{
 		static dispatch_once_t mainSetupToken;
 		dispatch_once(&mainSetupToken, ^{
-//			self.loadingProgressHUD = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
-//			
-//			self.loadingProgressHUD.mode = MBProgressHUDModeIndeterminate;
-//			self.loadingProgressHUD.label.text = NSLocalizedString(@"LoadingMusic", nil);
-//			self.loadingProgressHUD.label.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18.0f];
-//	//		self.loadingProgressHUD.progress = 0.1;
-//			self.loadingProgressHUD.userInteractionEnabled = NO;
-//			
-//			dispatch_time_t changeLabelTime = dispatch_time(DISPATCH_TIME_NOW, 2.0 * NSEC_PER_SEC);
-//			dispatch_after(changeLabelTime, dispatch_get_global_queue(NSQualityOfServiceUserInteractive, 0), ^{
-//				self.loadingProgressHUD.label.text = @"Almost there...";
-//			});
-			
 			NSLog(@"Launch main view controller contents");
 			[NSTimer scheduledTimerWithTimeInterval:0.1 block:^{
 				if(!(self.restorationState == LMCoreViewControllerRestorationStateOutOfView)){
@@ -1185,6 +1174,18 @@ LMControlBarViewDelegate
 						[self.loadingLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:loadingIndicatorImageView withOffset:10];
 					}
 				}
+				else {
+					UIView *viewToAddTo = self.navigationController.view;
+					if(self.pendingStateRestoredPlaylistEditor){
+						viewToAddTo = self.pendingStateRestoredPlaylistEditor.navigationController.view;
+					}
+					self.loadingProgressHUD = [MBProgressHUD showHUDAddedTo:viewToAddTo animated:YES];
+					
+					self.loadingProgressHUD.mode = MBProgressHUDModeIndeterminate;
+					self.loadingProgressHUD.label.text = NSLocalizedString(@"HangOn", nil);
+					self.loadingProgressHUD.label.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18.0f];
+					self.loadingProgressHUD.userInteractionEnabled = NO;
+				}
 				
 				[NSTimer scheduledTimerWithTimeInterval:0.05 block:^{
 					dispatch_async(dispatch_get_main_queue(), ^{
@@ -1215,7 +1216,7 @@ LMControlBarViewDelegate
 //	
 //	return;
 	
-//	self.loadingProgressHUD.hidden = YES;
+	self.loadingProgressHUD.hidden = YES;
 	
 	[self.loadingActivityIndicator stopAnimating];
 	self.loadingLabel.hidden = YES;
@@ -1601,3 +1602,4 @@ LMControlBarViewDelegate
 }
 
 @end
+

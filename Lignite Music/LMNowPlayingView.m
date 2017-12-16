@@ -18,6 +18,7 @@
 #import "NSTimer+Blocks.h"
 #import "LMMusicPlayer.h"
 #import "LMThemeEngine.h"
+#import "MBProgressHUD.h"
 #import "LMListEntry.h"
 #import "LMTableView.h"
 #import "LMAppIcon.h"
