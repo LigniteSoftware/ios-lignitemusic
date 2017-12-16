@@ -15,7 +15,7 @@
 
 @property (readonly) LMMusicTrackCollection *musicTitles;
 
-- (void)setup;
+- (void)setup; //throwback
 
 /**
  Scrolls to an index of a track.
@@ -36,7 +36,21 @@
  */
 - (void)rebuildTrackCollection;
 
+/**
+ The persistent ID of the track which is currently at the top of the title view, used for state restoration.
+
+ @return The persistent ID.
+ */
+- (MPMediaEntityPersistentID)topTrackPersistentID;
+
+/**
+ The table view that displays the song.
+ */
 @property LMTableView *songListTableView;
+
+/**
+ The title view's root view controller.
+ */
 @property LMCoreViewController *rootViewController;
 
 /**

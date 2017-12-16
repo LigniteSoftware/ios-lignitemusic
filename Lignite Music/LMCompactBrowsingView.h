@@ -38,6 +38,11 @@
 @property BOOL editing;
 
 /**
+ The index of the currently open detail view for transitioning between landscape and portrait on iPhone.
+ */
+@property NSInteger indexOfCurrentlyOpenDetailView;
+
+/**
  Reload the contents of the view after changing the music type and music track collections.
  */
 - (void)reloadContents;
@@ -63,6 +68,13 @@
  @param index The index to scroll to.
  */
 - (void)scrollViewToIndex:(NSUInteger)index;
+
+/**
+ Performs the opening or closing of a detail view for a certain index, based on whether or not it's already open.
+
+ @param i The index of the detail view to open/close.
+ */
+- (void)tappedBigListEntryAtIndex:(NSInteger)i;
 
 /**
  Scroll to the position in the list with that persistent ID.

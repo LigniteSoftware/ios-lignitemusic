@@ -545,50 +545,45 @@
 	[self musicPlaybackStateDidChange:self.musicPlayer.playbackState];
 }
 
-- (void)encodeRestorableStateWithCoder:(NSCoder *)coder {
+- (MPMediaEntityPersistentID)topTrackPersistentID {
 	NSIndexPath *topIndexPath = [self.songListTableView indexPathForRowAtPoint:self.songListTableView.contentOffset];
 	
 	LMMusicTrack *topMusicTrack = [self.musicTitles.items objectAtIndex:topIndexPath.section];
-
-	[coder encodeInt64:topMusicTrack.persistentID forKey:LMTitleViewTopTrackPersistentIDKey];
 	
-	NSLog(@"Current index path %@ track %@", topIndexPath, topMusicTrack.title);
-	
-	[super encodeRestorableStateWithCoder:coder];
+	return topMusicTrack.persistentID;
 }
 
-- (void)decodeRestorableStateWithCoder:(NSCoder *)coder {
-	NSLog(@"WHO DO YOU");
-	
-	MPMediaEntityPersistentID topTrackPersistentID = [coder decodeInt64ForKey:LMTitleViewTopTrackPersistentIDKey];
-	
-	NSLog(@"Hey %@ %llu", self.songListTableView, topTrackPersistentID);
-	
-	if(topTrackPersistentID != 0){
-		NSInteger trackIndex = -1;
-		for(NSInteger i = 0; i < self.musicTitles.count; i++){
-			LMMusicTrack *musicTrack = [self.musicTitles.items objectAtIndex:i];
-			if(musicTrack.persistentID == topTrackPersistentID){
-				trackIndex = i;
-				break;
-			}
-		}
-		
-		if(trackIndex > -1){
-			NSLog(@"HOly shit %d %@", (int)trackIndex, self.songListTableView);
-			
-			[self.songListTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:trackIndex] atScrollPosition:UITableViewScrollPositionMiddle animated:NO];
-		}
-	}
-	
-	[super decodeRestorableStateWithCoder:coder];
-}
+//- (void)encodeRestorableStateWithCoder:(NSCoder *)coder {
+//	[super encodeRestorableStateWithCoder:coder];
+//	
+//	NSIndexPath *topIndexPath = [self.songListTableView indexPathForRowAtPoint:self.songListTableView.contentOffset];
+//
+//	LMMusicTrack *topMusicTrack = [self.musicTitles.items objectAtIndex:topIndexPath.section];
+//
+//	[coder encodeInt64:topMusicTrack.persistentID forKey:LMTitleViewTopTrackPersistentIDKey];
+//
+//	NSLog(@"Current index path %@ track %@", topIndexPath, topMusicTrack.title);
+//}
+//
+//- (void)decodeRestorableStateWithCoder:(NSCoder *)coder {
+//	[super decodeRestorableStateWithCoder:coder];
+//
+//	NSLog(@"WHO DO YOU");
+//
+//	MPMediaEntityPersistentID topTrackPersistentID = [coder decodeInt64ForKey:LMTitleViewTopTrackPersistentIDKey];
+//
+//	[self scrollToTrackWithPersistentID:topTrackPersistentID];
+//}
+
+//- (NSString*)restorationIdentifier {
+//	return @"LMTitleView";
+//}
 
 - (instancetype)init {
 	self = [super init];
 	if(self) {
+//		self.restorationIdentifier = @"LMTitleView";
 		self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
-		self.restorationIdentifier = @"LMTitleView";
 	}
 	else{
 		NSLog(@"Error creating LMTitleView");

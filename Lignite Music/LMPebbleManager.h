@@ -110,13 +110,6 @@ typedef enum {
 + (BOOL)pebbleServiceHasBeenEnabledByUser;
 
 /**
- Set the manager's music player. Only needs to be set once, and should be called from within LMMusicPlayer's Singleton creation dispatch.
-
- @param musicPlayer The music player to set.
- */
-- (void)setManagerMusicPlayer:(LMMusicPlayer*)musicPlayer;
-
-/**
  Attaches the Pebble manager to a view controller. When called with a non-nil view controller, a volume control is added to that view controller's view to allow volume control on Pebble. It also uses the associated UIStoryBoard to get the settings view controller.
  
  @param viewControllerToAttachTo The view controller to attach to.

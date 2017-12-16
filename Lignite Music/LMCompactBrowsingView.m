@@ -64,11 +64,6 @@
 @property LMPhoneLandscapeDetailView *phoneLandscapeDetailView;
 
 /**
- The index of the currently open detail view for transitioning between landscape and portrait on iPhone.
- */
-@property NSInteger indexOfCurrentlyOpenDetailView;
-
-/**
  The playlist manager.
  */
 @property LMPlaylistManager *playlistManager;
@@ -1191,6 +1186,8 @@
 }
 
 - (void)tappedBigListEntryAtIndex:(NSInteger)i {
+	self.indexOfCurrentlyOpenDetailView = i;
+	
 	if([LMLayoutManager isLandscape]){
 		[self setPhoneLandscapeViewDisplaying:YES forIndex:i];
 		return;
@@ -1210,6 +1207,9 @@
 		}
 		layout.amountOfItemsInDetailView = trackCollection.count;
 	}
+	else{
+		self.indexOfCurrentlyOpenDetailView = LMNoDetailViewSelected;
+	}
 	layout.indexOfItemDisplayingDetailView = displayNothing ? LMNoDetailViewSelected : i;
 }
 
@@ -1218,6 +1218,8 @@
 	if(self) {
 		self.layoutManager = [LMLayoutManager sharedLayoutManager];
 		[self.layoutManager addDelegate:self];
+		
+		self.indexOfCurrentlyOpenDetailView = LMNoDetailViewSelected;
 	}
 	return self;
 }

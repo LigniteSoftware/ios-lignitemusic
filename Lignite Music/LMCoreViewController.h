@@ -12,29 +12,35 @@
 #import "LMLandscapeNavigationBar.h"
 #import "LMCoreNavigationController.h"
 
+typedef NS_ENUM(NSInteger, LMCoreViewControllerRestorationState){
+	LMCoreViewControllerRestorationStateNotRestored = 0,
+	LMCoreViewControllerRestorationStateBrowsing,
+	LMCoreViewControllerRestorationStateNowPlaying,
+	LMCoreViewControllerRestorationStateOutOfView
+};
+
 @interface LMCoreViewController : UIViewController
 
-@property LMLandscapeNavigationBar *landscapeNavigationBar;
+/**
+ Handles the logic for the gesture associated with the now playing view.
 
-@property MBProgressHUD *loadingProgressHUD;
-
-@property UINavigationItem *itemPopped;
-
+ @param recognizer The gesture recognizer.
+ */
+- (void)panNowPlayingUp:(UIPanGestureRecognizer *)recognizer;
 
 /**
- The state preserved had the settings already open. Completely hide navigation bar and push settings navigation bar item onto stack when view loads if YES.
+ Prepares the core view controller for loading.
  */
-@property BOOL statePreservedSettingsAlreadyOpen;
-
-- (void)prepareForOpenSettings;
-
-- (void)panNowPlayingUp:(UIPanGestureRecognizer *)recognizer;
+- (void)prepareToLoadView;
 
 /**
  The navigation bar that goes at the bottom.
  */
 @property LMButtonNavigationBar *buttonNavigationBar;
 
-- (void)prepareToLoadView;
+/**
+ The landscape navigation bar for landscape mode.
+ */
+@property LMLandscapeNavigationBar *landscapeNavigationBar;
 
 @end

@@ -59,8 +59,11 @@
 //#define SKIP_ONBOARDING
 //#define SPEED_DEMON_MODE
 
-#define LMNavigationBarItemsKey @"LMNavigationBarItemsKey"
-#define LMNowPlayingWasOpen @"LMNowPlayingWasOpen"
+#define LMCoreViewControllerRestorationStateKey @"LMCoreViewControllerRestorationStateKey"
+#define LMCoreViewControllerStateRestoredNavigationTabKey @"LMCoreViewControllerStateRestoredNavigationTabKey"
+#define LMCoreViewControllerStateRestoredNavigationBarWasMinimizedKey @"LMCoreViewControllerStateRestoredNavigationBarWasMinimizedKey"
+#define LMCoreViewControllerStateRestoredPreviouslyOpenedDetailViewIndex @"LMCoreViewControllerStateRestoredPreviouslyOpenedDetailViewIndex"
+#define LMCoreViewControllerStateRestoredTitleViewTopPersistentID @"LMCoreViewControllerStateRestoredTitleViewTopPersistentID"
 
 @import SDWebImage;
 @import StoreKit;
@@ -112,10 +115,6 @@ LMControlBarViewDelegate
  */
 @property UIVisualEffectView *backgroundBlurView;
 
-@property NSArray<UINavigationItem*> *statePreservedNavigationBarItems;
-
-@property BOOL statePreservedNowPlayingWasOpen;
-
 @property UIActivityIndicatorView *loadingActivityIndicator;
 @property UILabel *loadingLabel;
 
@@ -123,7 +122,11 @@ LMControlBarViewDelegate
 
 @property LMMusicType musicType;
 
-@property BOOL stateRestored;
+@property LMCoreViewControllerRestorationState restorationState;
+@property LMNavigationTab stateRestoredNavigationTab;
+@property BOOL stateRestoredNavigationBarWasMinimized;
+@property NSInteger previouslyOpenedDetailViewIndex;
+@property MPMediaEntityPersistentID previousTitleViewTopPersistentID;
 
 @end
 
@@ -616,17 +619,6 @@ LMControlBarViewDelegate
 	[self.landscapeNavigationBar setMode:self.musicType == LMMusicTypePlaylists ? LMLandscapeNavigationBarModePlaylistView : LMLandscapeNavigationBarModeOnlyLogo];
 }
 
-- (void)prepareForOpenSettings {
-	if(!self.buttonNavigationBar){
-		self.statePreservedSettingsAlreadyOpen = YES;
-	}
-	else{
-		self.willOpenSettings = YES;
-		[self.buttonNavigationBar completelyHide];
-		self.statePreservedSettingsAlreadyOpen = NO;
-	}
-}
-
 - (void)viewWillDisappear:(BOOL)animated {
 	[super viewWillDisappear:animated];
 	
@@ -784,17 +776,15 @@ LMControlBarViewDelegate
 
 	[self.navigationController popViewControllerAnimated:YES];
 
-	self.itemPopped = nil;
-
 	return YES;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
 	[self.buttonNavigationBar maximize:YES];
 	
-	if(self.stateRestored){
+//	if(self.restorationState){
 		[self.compactView reloadContents];
-	}
+//	}
 }
 
 - (void)launchNowPlayingFromNavigationBar {
@@ -938,7 +928,7 @@ LMControlBarViewDelegate
 //			self.navigationController.navigationBar.frame = CGRectMake(0, 0, size.width, willBeLandscape ? 0 : 64.0);
 //		}
 		
-		self.nowPlayingCoreView.topConstraint.constant = self.nowPlayingCoreView.isOpen ? 0 : size.height;
+		self.nowPlayingCoreView.topConstraint.constant = self.nowPlayingCoreView.isOpen ? 0 : (size.height*1.25);
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
 		NSLog(@"Rotated");
 		
@@ -995,37 +985,47 @@ LMControlBarViewDelegate
 }
 
 - (void)encodeRestorableStateWithCoder:(NSCoder *)coder {
-	NSLog(@"What boi encoding restore state");
+	[super encodeRestorableStateWithCoder:coder];
+	
+	NSLog(@"What boi encoding restore state %d", (int)self.compactView.indexOfCurrentlyOpenDetailView);
 	
 //	[coder encodeObject:self.navigationController.navigationBar.items forKey:LMNavigationBarItemsKey];
-	[coder encodeBool:self.nowPlayingCoreView.isOpen forKey:LMNowPlayingWasOpen];
 	
-	[super encodeRestorableStateWithCoder:coder];
+	LMCoreViewControllerRestorationState newRestorationState = LMCoreViewControllerRestorationStateBrowsing;
+	
+	if(self.navigationController.viewControllers.count > 1){
+		newRestorationState = LMCoreViewControllerRestorationStateOutOfView;
+	}
+	else if(self.nowPlayingCoreView.isOpen){
+		newRestorationState = LMCoreViewControllerRestorationStateNowPlaying;
+	}
+	
+	[coder encodeInteger:newRestorationState forKey:LMCoreViewControllerRestorationStateKey];
+	[coder encodeInteger:self.buttonNavigationBar.currentlySelectedTab forKey:LMCoreViewControllerStateRestoredNavigationTabKey];
+	[coder encodeBool:self.buttonNavigationBar.isMinimized forKey:LMCoreViewControllerStateRestoredNavigationBarWasMinimizedKey];
+	[coder encodeInteger:self.compactView.indexOfCurrentlyOpenDetailView
+				  forKey:LMCoreViewControllerStateRestoredPreviouslyOpenedDetailViewIndex];
+	[coder encodeInteger:[self.titleView topTrackPersistentID] forKey:LMCoreViewControllerStateRestoredTitleViewTopPersistentID];
 }
 
 - (void)decodeRestorableStateWithCoder:(NSCoder *)coder {
-	NSLog(@"What boi!! got %@", [coder decodeObjectForKey:LMNowPlayingWasOpen]);
-	
-	self.stateRestored = YES;
-	
-	[self.navigationController setNavigationBarHidden:NO];
-	
-//	NSArray *navigationBarItems = [coder decodeObjectForKey:LMNavigationBarItemsKey];
-//	NSMutableArray *approvedNavigationBarItems = [NSMutableArray new];
-////	[approvedNavigationBarItems addObject:[self nowPlayingNavigationItem]];
-//	for(UINavigationItem *navigationItem in navigationBarItems){
-//		if(navigationItem.title != nil){
-//			[approvedNavigationBarItems addObject:navigationItem];
-//		}
-//		NSLog(@"Nav bar item '%@' '%@' %@", navigationItem.title, navigationItem.titleView, self.navigationController.navigationBar);
-//	}
-//	
-//	NSLog(@"Preserved %@", approvedNavigationBarItems);
-//	
-//	self.statePreservedNavigationBarItems = [NSArray arrayWithArray:approvedNavigationBarItems];
-//	self.statePreservedNowPlayingWasOpen = [coder decodeBoolForKey:LMNowPlayingWasOpen];
-	
 	[super decodeRestorableStateWithCoder:coder];
+	
+	NSLog(@"What boi!! got %@", [coder decodeObjectForKey:LMCoreViewControllerRestorationStateKey]);
+	
+	LMCoreViewControllerRestorationState newRestorationState = [coder decodeIntegerForKey:LMCoreViewControllerRestorationStateKey];
+	LMNavigationTab navigationTab = [coder decodeIntegerForKey:LMCoreViewControllerStateRestoredNavigationTabKey];
+	BOOL navigationBarWasMinimized = [coder decodeBoolForKey:LMCoreViewControllerStateRestoredNavigationBarWasMinimizedKey];
+	NSInteger previouslyOpenedDetailViewIndex = [coder decodeIntegerForKey:LMCoreViewControllerStateRestoredPreviouslyOpenedDetailViewIndex];
+	MPMediaEntityPersistentID titleViewTopPersistentID = [coder decodeIntegerForKey:LMCoreViewControllerStateRestoredTitleViewTopPersistentID];
+	
+	self.restorationState = newRestorationState;
+	self.stateRestoredNavigationTab = navigationTab;
+	self.stateRestoredNavigationBarWasMinimized = navigationBarWasMinimized;
+	self.previouslyOpenedDetailViewIndex = previouslyOpenedDetailViewIndex;
+	self.previousTitleViewTopPersistentID = titleViewTopPersistentID;
+	
+	[self.navigationController setNavigationBarHidden:!(self.restorationState == LMCoreViewControllerRestorationStateOutOfView)];
 }
 
 - (UINavigationItem*)navigationItem {
@@ -1076,9 +1076,10 @@ LMControlBarViewDelegate
 		self.navigationController.navigationBar.layer.shadowOffset = CGSizeMake(0, self.navigationController.navigationBar.layer.shadowRadius/2);
 		self.navigationController.navigationBar.layer.shadowOpacity = 0.25f;
 		
-		[self.navigationController setNavigationBarHidden:!self.stateRestored];
+		[self.navigationController setNavigationBarHidden:!(self.restorationState == LMCoreViewControllerRestorationStateOutOfView)];
 		
 		self.loaded = NO;
+		self.previouslyOpenedDetailViewIndex = -1;
 		
 		if(!self.layoutManager){
 			self.layoutManager = [LMLayoutManager sharedLayoutManager];
@@ -1145,7 +1146,7 @@ LMControlBarViewDelegate
 			
 			NSLog(@"Launch main view controller contents");
 			[NSTimer scheduledTimerWithTimeInterval:0.1 block:^{
-				if(!self.stateRestored){
+				if(!(self.restorationState == LMCoreViewControllerRestorationStateOutOfView)){
 					self.loadingActivityIndicator = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
 					
 					[self.navigationController.view addSubview:self.loadingActivityIndicator];
@@ -1314,7 +1315,7 @@ LMControlBarViewDelegate
 	
 	
 	
-	self.landscapeNavigationBar = [[LMLandscapeNavigationBar alloc] initWithFrame:CGRectMake(0, 0, 64.0, self.layoutManager.isLandscape ? self.view.frame.size.height : self.view.frame.size.width)];
+	self.landscapeNavigationBar = [[LMLandscapeNavigationBar alloc] initWithFrame:CGRectMake(0, 0, 64.0, self.layoutManager.isLandscape ? (self.view.frame.size.height + self.navigationController.navigationBar.frame.size.height) : self.view.frame.size.width)];
 	self.landscapeNavigationBar.delegate = self;
 	self.landscapeNavigationBar.mode = (self.navigationController.navigationBar.items.count > 1)
 	? LMLandscapeNavigationBarModeWithBackButton
@@ -1539,22 +1540,36 @@ LMControlBarViewDelegate
 //		}];
 
 		
-		[self.buttonNavigationBar setSelectedTab:LMNavigationTabMiniplayer];
-		
-		if(self.statePreservedSettingsAlreadyOpen){
-			[self prepareForOpenSettings];
+		if(self.restorationState != LMCoreViewControllerRestorationStateNotRestored){
+			[self.buttonNavigationBar setSelectedTab:self.stateRestoredNavigationTab];
 		}
+		else{
+			[self.buttonNavigationBar setSelectedTab:LMNavigationTabMiniplayer];
+		}
+		
+		if(self.stateRestoredNavigationBarWasMinimized){
+			[self.buttonNavigationBar minimize:NO];
+		}
+		
 		if(self.navigationController.navigationBar.items.count > 1){
 			[self.buttonNavigationBar completelyHide];
 		}
 		
-		if(self.statePreservedNowPlayingWasOpen){
+		if(self.restorationState == LMCoreViewControllerRestorationStateNowPlaying){
 			[self launchNowPlayingFromNavigationBar];
-			self.statePreservedNowPlayingWasOpen = NO;
+		}
+		
+		if(self.previousTitleViewTopPersistentID > 0){
+			[self.titleView scrollToTrackWithPersistentID:self.previousTitleViewTopPersistentID];
 		}
 		
 		if(self.titleView.favourites && (self.currentSource == self.titleView)){
 			[self.buttonNavigationBar.browsingBar setShowingLetterTabs:self.titleView.musicTitles.count > 0];
+		}
+		
+		if(self.previouslyOpenedDetailViewIndex > -1 && self.previouslyOpenedDetailViewIndex < self.compactView.musicTrackCollections.count){
+			[self.compactView scrollViewToIndex:self.previouslyOpenedDetailViewIndex];
+			[self.compactView tappedBigListEntryAtIndex:self.previouslyOpenedDetailViewIndex];
 		}
 		
 //		LMSettingsViewController *settingsViewController = [LMSettingsViewController new];

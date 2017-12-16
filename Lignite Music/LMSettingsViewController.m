@@ -140,7 +140,6 @@
 				NSLog(@"Settings subviewcontroller %@", [[viewController class] description]);
 				if([viewController class] == [LMCoreViewController class]){
 					self.coreViewController = (LMCoreViewController*)viewController;
-					[self.coreViewController prepareForOpenSettings];
 				}
 			}
 			NSLog(@"%d subviewcontrollers", (int)self.navigationController.viewControllers.count);
