@@ -123,6 +123,8 @@ LMControlBarViewDelegate
 
 @property LMMusicType musicType;
 
+@property BOOL stateRestored;
+
 @end
 
 @implementation LMCoreViewController
@@ -789,6 +791,10 @@ LMControlBarViewDelegate
 
 - (void)viewDidAppear:(BOOL)animated {
 	[self.buttonNavigationBar maximize:YES];
+	
+	if(self.stateRestored){
+		[self.compactView reloadContents];
+	}
 }
 
 - (void)launchNowPlayingFromNavigationBar {
@@ -989,30 +995,34 @@ LMControlBarViewDelegate
 }
 
 - (void)encodeRestorableStateWithCoder:(NSCoder *)coder {
-	NSLog(@"What boi encoding %@", self.navigationController.navigationBar.items);
+	NSLog(@"What boi encoding restore state");
 	
-	[coder encodeObject:self.navigationController.navigationBar.items forKey:LMNavigationBarItemsKey];
+//	[coder encodeObject:self.navigationController.navigationBar.items forKey:LMNavigationBarItemsKey];
 	[coder encodeBool:self.nowPlayingCoreView.isOpen forKey:LMNowPlayingWasOpen];
 	
 	[super encodeRestorableStateWithCoder:coder];
 }
 
 - (void)decodeRestorableStateWithCoder:(NSCoder *)coder {
-	NSLog(@"What boi!! got %@", [coder decodeObjectForKey:LMNavigationBarItemsKey]);
+	NSLog(@"What boi!! got %@", [coder decodeObjectForKey:LMNowPlayingWasOpen]);
 	
-	NSArray *navigationBarItems = [coder decodeObjectForKey:LMNavigationBarItemsKey];
-	NSMutableArray *approvedNavigationBarItems = [NSMutableArray new];
-//	[approvedNavigationBarItems addObject:[self nowPlayingNavigationItem]];
-	for(UINavigationItem *navigationItem in navigationBarItems){
-		if(navigationItem.title != nil){
-			[approvedNavigationBarItems addObject:navigationItem];
-		}
-		NSLog(@"Nav bar item '%@' '%@' %@", navigationItem.title, navigationItem.titleView, self.navigationController.navigationBar);
-	}
+	self.stateRestored = YES;
 	
-	NSLog(@"Preserved %@", approvedNavigationBarItems);
+	[self.navigationController setNavigationBarHidden:NO];
 	
-	self.statePreservedNavigationBarItems = [NSArray arrayWithArray:approvedNavigationBarItems];
+//	NSArray *navigationBarItems = [coder decodeObjectForKey:LMNavigationBarItemsKey];
+//	NSMutableArray *approvedNavigationBarItems = [NSMutableArray new];
+////	[approvedNavigationBarItems addObject:[self nowPlayingNavigationItem]];
+//	for(UINavigationItem *navigationItem in navigationBarItems){
+//		if(navigationItem.title != nil){
+//			[approvedNavigationBarItems addObject:navigationItem];
+//		}
+//		NSLog(@"Nav bar item '%@' '%@' %@", navigationItem.title, navigationItem.titleView, self.navigationController.navigationBar);
+//	}
+//	
+//	NSLog(@"Preserved %@", approvedNavigationBarItems);
+//	
+//	self.statePreservedNavigationBarItems = [NSArray arrayWithArray:approvedNavigationBarItems];
 //	self.statePreservedNowPlayingWasOpen = [coder decodeBoolForKey:LMNowPlayingWasOpen];
 	
 	[super decodeRestorableStateWithCoder:coder];
@@ -1046,13 +1056,34 @@ LMControlBarViewDelegate
 	dispatch_once(&basicSetupToken, ^{
 		self.view.backgroundColor = [UIColor whiteColor];
 		
-		[self.navigationController setNavigationBarHidden:YES];
+		//Themeing? Bet you wish you didn't make it this way ;)  - Past Edwin, Dec. 15th 2017
+		UIView *statusBarCover = [UIView newAutoLayoutView];
+		statusBarCover.backgroundColor = [LMColour whiteColour];
+		[self.navigationController.navigationBar addSubview:statusBarCover];
+		
+		[statusBarCover autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[statusBarCover autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:-20.0f];
+		[statusBarCover autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[statusBarCover autoSetDimension:ALDimensionHeight toSize:20.0f];
+		
+		
+		self.navigationController.navigationBar.barTintColor = [UIColor whiteColor];
+		self.navigationController.navigationBar.tintColor = [UIColor blackColor];
+		self.navigationController.navigationBar.translucent = NO;
+		
+		self.navigationController.navigationBar.layer.shadowColor = [UIColor blackColor].CGColor;
+		self.navigationController.navigationBar.layer.shadowRadius = WINDOW_FRAME.size.width / 45 / 2;
+		self.navigationController.navigationBar.layer.shadowOffset = CGSizeMake(0, self.navigationController.navigationBar.layer.shadowRadius/2);
+		self.navigationController.navigationBar.layer.shadowOpacity = 0.25f;
+		
+		[self.navigationController setNavigationBarHidden:!self.stateRestored];
 		
 		self.loaded = NO;
 		
 		if(!self.layoutManager){
 			self.layoutManager = [LMLayoutManager sharedLayoutManager];
 			self.layoutManager.traitCollection = self.traitCollection;
+			NSLog(@"Trait collection %@ %ld", self.traitCollection, (long)self.traitCollection.horizontalSizeClass);
 			self.layoutManager.size = self.view.frame.size;
 		}
 		
@@ -1099,46 +1130,6 @@ LMControlBarViewDelegate
 	else{
 		static dispatch_once_t mainSetupToken;
 		dispatch_once(&mainSetupToken, ^{
-			self.loadingActivityIndicator = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-
-			[self.navigationController.view addSubview:self.loadingActivityIndicator];
-			
-			if([LMLayoutManager isiPad]){
-				[self.loadingActivityIndicator autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:WINDOW_FRAME.size.height/([LMLayoutManager isLandscape] ? 1.5 : 2.0)];
-				[self.loadingActivityIndicator autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-				[self.loadingActivityIndicator autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-				[self.loadingActivityIndicator autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.navigationController.view withMultiplier:(2.0/4.0)];
-			}
-			else{
-				[self.loadingActivityIndicator autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:WINDOW_FRAME.size.height/([LMLayoutManager isLandscape] ? 1.5 : 2.0)];
-				[self.loadingActivityIndicator autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-				[self.loadingActivityIndicator autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-				[self.loadingActivityIndicator autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.navigationController.view withMultiplier:(1.0/4.0)];
-			}
-			
-			[self.loadingActivityIndicator startAnimating];
-			
-			UIImageView *loadingIndicatorImageView = nil;
-			
-			for(UIView *subview in self.loadingActivityIndicator.subviews){
-				if([subview class] == [UIImageView class]){
-					loadingIndicatorImageView = (UIImageView*)subview;
-				}
-			}
-			
-			if(loadingIndicatorImageView){
-				self.loadingLabel = [UILabel newAutoLayoutView];
-				self.loadingLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:16.0f];
-				self.loadingLabel.text = NSLocalizedString(@"LoadingMusic", nil);
-				self.loadingLabel.textAlignment = NSTextAlignmentCenter;
-				self.loadingLabel.textColor = [UIColor blackColor];
-				[self.loadingActivityIndicator addSubview:self.loadingLabel];
-				
-				[self.loadingLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-				[self.loadingLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-				[self.loadingLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:loadingIndicatorImageView withOffset:10];
-			}
-			
 //			self.loadingProgressHUD = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
 //			
 //			self.loadingProgressHUD.mode = MBProgressHUDModeIndeterminate;
@@ -1153,10 +1144,54 @@ LMControlBarViewDelegate
 //			});
 			
 			NSLog(@"Launch main view controller contents");
-			[NSTimer scheduledTimerWithTimeInterval:0.05 block:^{
-				dispatch_async(dispatch_get_main_queue(), ^{
-					[self loadSubviews];
-				});
+			[NSTimer scheduledTimerWithTimeInterval:0.1 block:^{
+				if(!self.stateRestored){
+					self.loadingActivityIndicator = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+					
+					[self.navigationController.view addSubview:self.loadingActivityIndicator];
+					
+					if([LMLayoutManager isiPad]){
+						[self.loadingActivityIndicator autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:WINDOW_FRAME.size.height/([LMLayoutManager isLandscape] ? 1.5 : 2.0)];
+						[self.loadingActivityIndicator autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+						[self.loadingActivityIndicator autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+						[self.loadingActivityIndicator autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.navigationController.view withMultiplier:(2.0/4.0)];
+					}
+					else{
+						[self.loadingActivityIndicator autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:WINDOW_FRAME.size.height/([LMLayoutManager isLandscape] ? 1.5 : 2.0)];
+						[self.loadingActivityIndicator autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+						[self.loadingActivityIndicator autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+						[self.loadingActivityIndicator autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.navigationController.view withMultiplier:(1.0/4.0)];
+					}
+					
+					[self.loadingActivityIndicator startAnimating];
+					
+					UIImageView *loadingIndicatorImageView = nil;
+					
+					for(UIView *subview in self.loadingActivityIndicator.subviews){
+						if([subview class] == [UIImageView class]){
+							loadingIndicatorImageView = (UIImageView*)subview;
+						}
+					}
+					
+					if(loadingIndicatorImageView){
+						self.loadingLabel = [UILabel newAutoLayoutView];
+						self.loadingLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:16.0f];
+						self.loadingLabel.text = NSLocalizedString(@"LoadingMusic", nil);
+						self.loadingLabel.textAlignment = NSTextAlignmentCenter;
+						self.loadingLabel.textColor = [UIColor blackColor];
+						[self.loadingActivityIndicator addSubview:self.loadingLabel];
+						
+						[self.loadingLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+						[self.loadingLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+						[self.loadingLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:loadingIndicatorImageView withOffset:10];
+					}
+				}
+				
+				[NSTimer scheduledTimerWithTimeInterval:0.05 block:^{
+					dispatch_async(dispatch_get_main_queue(), ^{
+						[self loadSubviews];
+					});
+				} repeats:NO];
 			} repeats:NO];
 		});
 	}
@@ -1266,28 +1301,7 @@ LMControlBarViewDelegate
 //		self.navigationController.navigationBar.prefersLargeTitles = NO;
 //
 //
-	
-	//Themeing? Bet you wish you didn't make it this way ;)  - Past Edwin, Dec. 15th 2017
-	UIView *statusBarCover = [UIView newAutoLayoutView];
-	statusBarCover.backgroundColor = [LMColour whiteColour];
-	[self.navigationController.navigationBar addSubview:statusBarCover];
 
-	[statusBarCover autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-	[statusBarCover autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:-20.0f];
-	[statusBarCover autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	[statusBarCover autoSetDimension:ALDimensionHeight toSize:20.0f];
-	
-//	self.navigationController.navigationBar.delegate = self;
-//	[self.navigationController.view addSubview:self.navigationController.navigationBar];
-	
-	self.navigationController.navigationBar.barTintColor = [UIColor whiteColor];
-	self.navigationController.navigationBar.tintColor = [UIColor blackColor];
-	self.navigationController.navigationBar.translucent = NO;
-	
-	self.navigationController.navigationBar.layer.shadowColor = [UIColor blackColor].CGColor;
-	self.navigationController.navigationBar.layer.shadowRadius = WINDOW_FRAME.size.width / 45 / 2;
-	self.navigationController.navigationBar.layer.shadowOffset = CGSizeMake(0, self.navigationController.navigationBar.layer.shadowRadius/2);
-	self.navigationController.navigationBar.layer.shadowOpacity = 0.25f;
 	
 //	if(self.statePreservedNavigationBarItems){
 //		[self.navigationController.navigationBar setItems:self.statePreservedNavigationBarItems];

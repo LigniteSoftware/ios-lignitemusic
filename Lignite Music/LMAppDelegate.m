@@ -16,12 +16,11 @@
 #import "LMAppIcon.h"
 #import "LMSettings.h"
 
-#ifdef SPOTIFY
-#import "Spotify.h"
-#endif
-
 @interface LMAppDelegate ()
 
+/**
+ The delegate's music player.
+ */
 @property (nonatomic) LMMusicPlayer *musicPlayer;
 
 @end
@@ -37,38 +36,6 @@
     return _musicPlayer;
 }
 
-#ifdef SPOTIFY
-- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
-	NSLog(@"Got a request for URL %@", url);
-	
-	SPTAuth *auth = [SPTAuth defaultInstance];
-	
-	SPTAuthCallback authCallback = ^(NSError *error, SPTSession *session) {
-		// This is the callback that'll be triggered when auth is completed (or fails).
-		
-		if (error) {
-			NSLog(@"*** Auth error: %@", error);
-		} else {
-			auth.session = session;
-			NSLog(@"Authenticated");
-		}
-		[[Spotify sharedInstance] sessionUpdated];
-	};
-	
-	/*
-	 Handle the callback from the authentication service. -[SPAuth -canHandleURL:]
-	 helps us filter out URLs that aren't authentication URLs (i.e., URLs you use elsewhere in your application).
-	 */
-	
-	if ([auth canHandleURL:url]) {
-		[auth handleAuthCallbackWithTriggeredAuthURL:url callback:authCallback];
-		return YES;
-	}
-	
-	return NO;
-}
-#endif
-
 - (BOOL)application:(UIApplication *)application willFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 	NSLog(@"[LMAppDelegate]: Will finish launching with launch options %@", launchOptions);
 	
@@ -82,12 +49,6 @@
 				case SKCloudServiceAuthorizationStatusNotDetermined:
 				case SKCloudServiceAuthorizationStatusRestricted:
 				case SKCloudServiceAuthorizationStatusDenied: {
-					//Launch tutorial on how to fix
-//					dispatch_async(dispatch_get_main_queue(), ^{
-//						LMGuideViewPagerController *guideViewPager = [LMGuideViewPagerController new];
-//						guideViewPager.guideMode = GuideModeMusicPermissionDenied;
-//						[self presentViewController:guideViewPager animated:YES completion:nil];
-//					});
 					NSLog(@"Launch how to fix");
 					break;
 				}
@@ -108,20 +69,6 @@
 	NSLog(@"[LMAppDelegate]: Did finish launching with options %@", launchOptions);
 	
 	NSTimeInterval delegateStartTime = [[NSDate new] timeIntervalSince1970];
-	
-#ifdef SPOTIFY
-	NSLog(@"You are running Lignite Music for Spotify! Woohoo!");
-	
-	SPTAuth *auth = [SPTAuth defaultInstance];
-	
-	NSLog(@"Auth %@", auth.session);
-	auth.clientID = SpotifyClientID;
-	auth.requestedScopes = @[SPTAuthStreamingScope, SPTAuthUserLibraryReadScope];
-	auth.redirectURL = [NSURL URLWithString:SpotifyCallbackURL];
-	auth.tokenSwapURL = [NSURL URLWithString:SpotifyTokenSwapServiceURL];
-	auth.tokenRefreshURL = [NSURL URLWithString:SpotifyTokenRefreshServiceURL];
-	auth.sessionUserDefaultsKey = SpotifySessionUserDefaultsKey;
-#endif
 	
 	[[Fabric sharedSDK] setDebug:NO];
 	
@@ -149,11 +96,12 @@
 
 - (BOOL)application:(UIApplication *)application shouldSaveApplicationState:(NSCoder *)coder {
 	NSLog(@"See you later");
-	return NO;
+	return YES;
 }
 
 - (BOOL)application:(UIApplication *)application shouldRestoreApplicationState:(NSCoder *)coder {
-	return NO;
+	NSLog(@"Restoring application state");
+	return YES;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
@@ -178,10 +126,7 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     NSLog(@"[LMAppDelegate]: Will become active.");
-	
-#ifndef SPOTIFY
-	[self.musicPlayer prepareForActivation];
-#endif
+
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
 }
 
@@ -191,10 +136,6 @@
 //	NSLog(@"Setting %@", self.musicPlayer.nowPlayingTrack.title);
 	
 	[self.musicPlayer saveNowPlayingState];
-	
-#ifndef SPOTIFY
-	[self.musicPlayer prepareForTermination];
-#endif
 	
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }

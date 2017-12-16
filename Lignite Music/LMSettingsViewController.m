@@ -582,6 +582,12 @@
 	
 	[[LMThemeEngine sharedThemeEngine] addDelegate:self];
 	
+	LMLayoutManager *layoutManager = [LMLayoutManager sharedLayoutManager];
+	if(!layoutManager.traitCollection){
+		layoutManager.traitCollection = self.traitCollection;
+		layoutManager.size = self.view.frame.size;
+	}
+	
 	self.sectionTableView = [LMSectionTableView newAutoLayoutView];
 	self.sectionTableView.contentsDelegate = self;
 	self.sectionTableView.totalNumberOfSections = 4;

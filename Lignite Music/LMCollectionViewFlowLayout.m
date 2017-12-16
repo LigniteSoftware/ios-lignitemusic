@@ -314,7 +314,7 @@
 		}
 	}
 	
-	NSLog(@"%@ for %@ %lu items", indexPathsInRect, NSStringFromCGRect(rect), (unsigned long)self.musicTrackCollections.count);
+//	NSLog(@"%@ for %@ %lu items", indexPathsInRect, NSStringFromCGRect(rect), (unsigned long)self.musicTrackCollections.count);
 
 	return indexPathsInRect;
 }

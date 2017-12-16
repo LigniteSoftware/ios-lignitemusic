@@ -416,7 +416,7 @@
 	LMIcon icons[] = {
 		LMIconRepeat, LMIconRepeat, LMIconRepeat, LMIconRepeatOne
 	};
-	NSLog(@"Repeat mode %d", self.musicPlayer.repeatMode);
+//	NSLog(@"Repeat mode %d", self.musicPlayer.repeatMode);
 	UIImage *icon = [LMAppIcon imageForIcon:icons[self.musicPlayer.repeatMode]];
 	[self.repeatModeButton setImage:icon];
 }

@@ -828,7 +828,7 @@ BOOL shuffleForDebug = NO;
 	};
 	
 	NSArray<NSString*> *associatedPersistentIDProperties = @[
-															 MPMediaItemPropertyAlbumArtistPersistentID,   //Artists
+															 MPMediaItemPropertyArtistPersistentID,   //Artists
 															 MPMediaItemPropertyAlbumPersistentID,    //Albums
 															 MPMediaItemPropertyPersistentID,         //Titles
 															 MPMediaPlaylistPropertyName,             //Playlists
@@ -867,7 +867,7 @@ BOOL shuffleForDebug = NO;
 	};
 	
 	NSArray<NSString*> *associatedPersistentIDProperties = @[
-															 MPMediaItemPropertyAlbumArtistPersistentID,   //Artists
+															 MPMediaItemPropertyArtistPersistentID,   //Artists
 															 MPMediaItemPropertyAlbumPersistentID,    //Albums
 															 MPMediaItemPropertyPersistentID,         //Titles
 															 MPMediaPlaylistPropertyName,             //Playlists
@@ -902,7 +902,7 @@ BOOL shuffleForDebug = NO;
 	};
 	
 	NSArray<NSString*> *associatedPersistentIDProperties = @[
-															 MPMediaItemPropertyAlbumArtistPersistentID,   //Artists
+															 MPMediaItemPropertyArtistPersistentID,   //Artists
 															 MPMediaItemPropertyAlbumPersistentID,    //Albums
 															 MPMediaItemPropertyPersistentID,         //Titles
 															 MPMediaPlaylistPropertyName,             //Playlists

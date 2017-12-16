@@ -338,7 +338,8 @@
 }
 
 - (LMLayoutClass)currentLayoutClass {
-	NSAssert(!CGSizeEqualToSize(self.size, CGSizeZero), @"Trait collection is nil and therefore the current layout class cannot be accessed!");
+	NSAssert(!CGSizeEqualToSize(self.size, CGSizeZero), @"Size is CGSizeZero, which makes it impossible to run the layout manager, sorry.");
+	NSAssert(self.traitCollection, @"Trait collection is nil and therefore the current layout class cannot be accessed!");
 	
 //	NSLog(@"Shitpost %ld %ld", self.traitCollection.horizontalSizeClass, self.traitCollection.verticalSizeClass);
 	
