@@ -145,16 +145,16 @@
 		6A5201361FE0C4D200535846 /* LMThemeEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A5201351FE0C4D200535846 /* LMThemeEngine.m */; };
 		6A5201391FE0E51700535846 /* LMThemePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A5201381FE0E51700535846 /* LMThemePickerViewController.m */; };
 		6A52013C1FE0F3C100535846 /* LMThemeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A52013B1FE0F3C100535846 /* LMThemeView.m */; };
-		6A5201451FE17C8100535846 /* LMThemeKeyBombasticBlue.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A52013F1FE17C8000535846 /* LMThemeKeyBombasticBlue.png */; };
-		6A5201461FE17C8100535846 /* LMThemeKeyBritishRacingGreen.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A5201401FE17C8000535846 /* LMThemeKeyBritishRacingGreen.png */; };
-		6A5201471FE17C8100535846 /* LMThemeKeyDefault.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A5201411FE17C8000535846 /* LMThemeKeyDefault.png */; };
-		6A5201481FE17C8100535846 /* LMThemeKeyMorpheus.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A5201421FE17C8000535846 /* LMThemeKeyMorpheus.png */; };
-		6A5201491FE17C8100535846 /* LMThemeKeyRoyallyBlued.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A5201431FE17C8000535846 /* LMThemeKeyRoyallyBlued.png */; };
-		6A52014A1FE17C8100535846 /* LMThemeKeyBackgroundNoise.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A5201441FE17C8100535846 /* LMThemeKeyBackgroundNoise.png */; };
 		6A52574C1DF099480040210D /* LMView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A52574B1DF099480040210D /* LMView.m */; };
 		6A52574F1DF099720040210D /* LMProgressSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A52574E1DF099720040210D /* LMProgressSlider.m */; };
 		6A5257531DF1FC840040210D /* LMLetterTabBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A5257521DF1FC840040210D /* LMLetterTabBar.m */; };
 		6A5365E01FE47F93008B8FAE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6A5365DF1FE47F93008B8FAE /* Main.storyboard */; };
+		6A5365E61FE4AFD0008B8FAE /* LMThemeKeyRoyallyBlued.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A5365E51FE4AFCF008B8FAE /* LMThemeKeyRoyallyBlued.png */; };
+		6A5365E81FE4B0F3008B8FAE /* LMThemeKeyDefault.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A5365E71FE4B0F3008B8FAE /* LMThemeKeyDefault.png */; };
+		6A5365F51FE4B1CC008B8FAE /* LMThemeKeyBombasticBlue.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A5365F11FE4B1CA008B8FAE /* LMThemeKeyBombasticBlue.png */; };
+		6A5365F61FE4B1CC008B8FAE /* LMThemeKeyBritishRacingGreen.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A5365F21FE4B1CB008B8FAE /* LMThemeKeyBritishRacingGreen.png */; };
+		6A5365F71FE4B1CC008B8FAE /* LMThemeKeyMorpheus.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A5365F31FE4B1CB008B8FAE /* LMThemeKeyMorpheus.png */; };
+		6A5365F81FE4B1CC008B8FAE /* LMThemeKeyBackgroundNoise.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A5365F41FE4B1CB008B8FAE /* LMThemeKeyBackgroundNoise.png */; };
 		6A555BB01DA168860078C9FC /* LMOperationQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A555BAF1DA168860078C9FC /* LMOperationQueue.m */; };
 		6A5821021DADE54400A4FAB1 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A5821011DADE54400A4FAB1 /* AVFoundation.framework */; };
 		6A5821041DAF312C00A4FAB1 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A5821031DAF312C00A4FAB1 /* AudioToolbox.framework */; };
@@ -553,12 +553,6 @@
 		6A52013A1FE0F3C100535846 /* LMThemeView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMThemeView.h; sourceTree = "<group>"; };
 		6A52013B1FE0F3C100535846 /* LMThemeView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMThemeView.m; sourceTree = "<group>"; };
 		6A52013D1FE1788400535846 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
-		6A52013F1FE17C8000535846 /* LMThemeKeyBombasticBlue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LMThemeKeyBombasticBlue.png; sourceTree = "<group>"; };
-		6A5201401FE17C8000535846 /* LMThemeKeyBritishRacingGreen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LMThemeKeyBritishRacingGreen.png; sourceTree = "<group>"; };
-		6A5201411FE17C8000535846 /* LMThemeKeyDefault.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LMThemeKeyDefault.png; sourceTree = "<group>"; };
-		6A5201421FE17C8000535846 /* LMThemeKeyMorpheus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LMThemeKeyMorpheus.png; sourceTree = "<group>"; };
-		6A5201431FE17C8000535846 /* LMThemeKeyRoyallyBlued.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LMThemeKeyRoyallyBlued.png; sourceTree = "<group>"; };
-		6A5201441FE17C8100535846 /* LMThemeKeyBackgroundNoise.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LMThemeKeyBackgroundNoise.png; sourceTree = "<group>"; };
 		6A52574A1DF099480040210D /* LMView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMView.h; sourceTree = "<group>"; };
 		6A52574B1DF099480040210D /* LMView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMView.m; sourceTree = "<group>"; };
 		6A52574D1DF099720040210D /* LMProgressSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMProgressSlider.h; sourceTree = "<group>"; };
@@ -566,6 +560,12 @@
 		6A5257511DF1FC840040210D /* LMLetterTabBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMLetterTabBar.h; sourceTree = "<group>"; };
 		6A5257521DF1FC840040210D /* LMLetterTabBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMLetterTabBar.m; sourceTree = "<group>"; };
 		6A5365DF1FE47F93008B8FAE /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		6A5365E51FE4AFCF008B8FAE /* LMThemeKeyRoyallyBlued.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LMThemeKeyRoyallyBlued.png; sourceTree = "<group>"; };
+		6A5365E71FE4B0F3008B8FAE /* LMThemeKeyDefault.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LMThemeKeyDefault.png; sourceTree = "<group>"; };
+		6A5365F11FE4B1CA008B8FAE /* LMThemeKeyBombasticBlue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LMThemeKeyBombasticBlue.png; sourceTree = "<group>"; };
+		6A5365F21FE4B1CB008B8FAE /* LMThemeKeyBritishRacingGreen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LMThemeKeyBritishRacingGreen.png; sourceTree = "<group>"; };
+		6A5365F31FE4B1CB008B8FAE /* LMThemeKeyMorpheus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LMThemeKeyMorpheus.png; sourceTree = "<group>"; };
+		6A5365F41FE4B1CB008B8FAE /* LMThemeKeyBackgroundNoise.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LMThemeKeyBackgroundNoise.png; sourceTree = "<group>"; };
 		6A555BAE1DA168860078C9FC /* LMOperationQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMOperationQueue.h; sourceTree = "<group>"; };
 		6A555BAF1DA168860078C9FC /* LMOperationQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMOperationQueue.m; sourceTree = "<group>"; };
 		6A5821011DADE54400A4FAB1 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -1098,12 +1098,12 @@
 		6A52013E1FE17C6E00535846 /* Themes */ = {
 			isa = PBXGroup;
 			children = (
-				6A5201441FE17C8100535846 /* LMThemeKeyBackgroundNoise.png */,
-				6A52013F1FE17C8000535846 /* LMThemeKeyBombasticBlue.png */,
-				6A5201401FE17C8000535846 /* LMThemeKeyBritishRacingGreen.png */,
-				6A5201411FE17C8000535846 /* LMThemeKeyDefault.png */,
-				6A5201421FE17C8000535846 /* LMThemeKeyMorpheus.png */,
-				6A5201431FE17C8000535846 /* LMThemeKeyRoyallyBlued.png */,
+				6A5365E71FE4B0F3008B8FAE /* LMThemeKeyDefault.png */,
+				6A5365E51FE4AFCF008B8FAE /* LMThemeKeyRoyallyBlued.png */,
+				6A5365F41FE4B1CB008B8FAE /* LMThemeKeyBackgroundNoise.png */,
+				6A5365F11FE4B1CA008B8FAE /* LMThemeKeyBombasticBlue.png */,
+				6A5365F21FE4B1CB008B8FAE /* LMThemeKeyBritishRacingGreen.png */,
+				6A5365F31FE4B1CB008B8FAE /* LMThemeKeyMorpheus.png */,
 			);
 			name = Themes;
 			sourceTree = "<group>";
@@ -1955,6 +1955,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6A5365E61FE4AFD0008B8FAE /* LMThemeKeyRoyallyBlued.png in Resources */,
 				6AA76AC71F9AD87C0007531C /* icon_plus_white.png in Resources */,
 				6AA76AC61F9AD8770007531C /* icon_edit_white.png in Resources */,
 				6A25F7B21F99B75700CC8082 /* icon_favourite_outlined_black.png in Resources */,
@@ -1963,7 +1964,6 @@
 				6A25F7B51F99B75700CC8082 /* icon_unfavourite_black.png in Resources */,
 				6A25F7B61F99B75700CC8082 /* icon_unfavourite_hud.png in Resources */,
 				6A25F7B71F99B75700CC8082 /* icon_unfavourite_red.png in Resources */,
-				6A5201461FE17C8100535846 /* LMThemeKeyBritishRacingGreen.png in Resources */,
 				6A25F7AA1F9970A100CC8082 /* icon_favourite_hud.png in Resources */,
 				6A25F7A61F99229400CC8082 /* icon_favourite_black.png in Resources */,
 				6A25F7A71F99229400CC8082 /* icon_favourite_red.png in Resources */,
@@ -1996,11 +1996,11 @@
 				6A339FC51FD853F500B1A447 /* icon_left_arrow.png in Resources */,
 				6A26B4701DE40824008B5B69 /* icon_download.png in Resources */,
 				6A43BCE91DDFA66B009FB0E9 /* onboarding_us.png in Resources */,
+				6A5365F51FE4B1CC008B8FAE /* LMThemeKeyBombasticBlue.png in Resources */,
 				6AF2C9431DDA16CC005E4643 /* icon_source.png in Resources */,
 				6A759D521DEA40230051E1A9 /* icon_link.png in Resources */,
 				6AB12E9C1D57AD9800280383 /* icon_settings.png in Resources */,
 				6ADB70C21FCCBDDE00412225 /* icon_repeat_general_white.png in Resources */,
-				6A5201471FE17C8100535846 /* LMThemeKeyDefault.png in Resources */,
 				6A8150DD1EAF70C300F518C5 /* icon_ios_back.png in Resources */,
 				6A072BFD1E87E79C0092EA44 /* icon_kickstarter_bw.png in Resources */,
 				6A7268231E163F6400FA01DB /* icon_down_arrow.png in Resources */,
@@ -2011,17 +2011,19 @@
 				6A5365E01FE47F93008B8FAE /* Main.storyboard in Resources */,
 				6A9C053B1DB4441200713D1C /* icon_albums.png in Resources */,
 				6AC32B7D1DB6CD950007C67E /* icon_bug.png in Resources */,
+				6A5365F61FE4B1CC008B8FAE /* LMThemeKeyBritishRacingGreen.png in Resources */,
 				6AF2C9441DDA16CC005E4643 /* icon_browse.png in Resources */,
 				6ACED1091DB7BE1D006EACD2 /* icon_shuffle.png in Resources */,
 				6ACED1081DB7BE1D006EACD2 /* icon_repeat_one.png in Resources */,
 				6A5168A31E09166000A6446F /* icon_white_checkmark.png in Resources */,
 				6A1AF0891E03BC1000F8934C /* icon_airplay.png in Resources */,
+				6A5365E81FE4B0F3008B8FAE /* LMThemeKeyDefault.png in Resources */,
 				6ACFB9701E8CE103009811F0 /* icon_tutorial_scroll.png in Resources */,
 				6A0750741D5EC0C000BCBC9C /* never_forget.png in Resources */,
 				6AFF01911DDD6B1A00F24D8E /* onboarding_pebble.png in Resources */,
+				6A5365F71FE4B1CC008B8FAE /* LMThemeKeyMorpheus.png in Resources */,
 				6A759D5B1DEBF4210051E1A9 /* HoneyScript-Light.ttf in Resources */,
 				6A26B46C1DE4074E008B5B69 /* icon_look_and_feel.png in Resources */,
-				6A5201481FE17C8100535846 /* LMThemeKeyMorpheus.png in Resources */,
 				6AEB9D361BAD812700AD19FA /* icon_play.png in Resources */,
 				6A339FF01FD90DE300B1A447 /* apple_watch_sad.png in Resources */,
 				6AEB9D081BACF60E00AD19FA /* Assets.xcassets in Resources */,
@@ -2045,14 +2047,13 @@
 				6A37B1D11FB2BE7F00934A75 /* chidster.png in Resources */,
 				6A7268251E1640E700FA01DB /* icon_up_arrow.png in Resources */,
 				6A33A0001FDB67BA00B1A447 /* previous_track.png in Resources */,
-				6A5201451FE17C8100535846 /* LMThemeKeyBombasticBlue.png in Resources */,
 				6A5168891E08A53000A6446F /* lignite_background_portrait.png in Resources */,
 				6A98CBD21EB50FDC003B8B8E /* lignite_background_landscape.png in Resources */,
 				6AAA56031DF5459A00692CFB /* icon_x_cross.png in Resources */,
 				6A48A73C1E1F5EC1003C86B6 /* icon_no_search_results.png in Resources */,
 				6A5168941E08F4C800A6446F /* icon_kickstarter.png in Resources */,
+				6A5365F81FE4B1CC008B8FAE /* LMThemeKeyBackgroundNoise.png in Resources */,
 				6A76ECA71E1A081200424AC5 /* icon_no_cover_art.png in Resources */,
-				6A52014A1FE17C8100535846 /* LMThemeKeyBackgroundNoise.png in Resources */,
 				6ADB70C81FCCBDDE00412225 /* icon_shuffle_white.png in Resources */,
 				6A63D16F1DE41FD000EABA53 /* icon_checkmark.png in Resources */,
 				6A43BCE71DDFA471009FB0E9 /* tutorial_now_playing.png in Resources */,
@@ -2061,7 +2062,6 @@
 				6AFF019F1DDE7D2D00F24D8E /* tutorial_pebble.png in Resources */,
 				6A47100D1F7236850009DE0E /* splash_landscape_abbey_fixed.png in Resources */,
 				6A9C053C1DB4441200713D1C /* icon_compilations.png in Resources */,
-				6A5201491FE17C8100535846 /* LMThemeKeyRoyallyBlued.png in Resources */,
 				6ADC48F01DDF8C8000FE57F1 /* onboarding_bluetooth.png in Resources */,
 				6A59A5181DE6D76E00B346AC /* icon_arrow_forward.png in Resources */,
 				6A98CBCD1EB4E9BF003B8B8E /* icon_3_dots_horizontal.png in Resources */,

@@ -203,7 +203,7 @@
 	self.collectionView.translatesAutoresizingMaskIntoConstraints = NO;
 	self.collectionView.delegate = self;
 	self.collectionView.dataSource = self;
-	self.collectionView.contentInset = UIEdgeInsetsMake(5, 20, 20, 20);
+	self.collectionView.contentInset = UIEdgeInsetsMake(10, 20, 20, 20);
 	[self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"sourceSelectorCellIdentifier"];
 	[self addSubview:self.collectionView];
 	

@@ -136,6 +136,8 @@
 	
 	[[LMThemeEngine sharedThemeEngine] selectTheme:themeView.theme];
 	
+	[self.navigationController popToRootViewControllerAnimated:NO];
+	
 	NSLog(@"COMMIT %p!!!", viewControllerToCommit);
 	
 //	[self.navigationController pushViewController:viewControllerToCommit animated:YES];
