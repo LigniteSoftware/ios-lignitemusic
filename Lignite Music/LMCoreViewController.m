@@ -102,7 +102,6 @@ LMControlBarViewDelegate
 
 @property NSInteger settingsOpen;
 @property BOOL willOpenSettings;
-@property NSTimer *settingsCheckTimer; //for activity checks
 
 @property LMLayoutManager *layoutManager;
 
@@ -594,17 +593,9 @@ LMControlBarViewDelegate
 			break;
 		}
 		case LMIconSettings: {
-            self.settingsCheckTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 block:^{
-                [[APIdleManager sharedInstance] didReceiveInput];
-            } repeats:YES];
-            
 			[self.buttonNavigationBar completelyHide];
 			
-//			LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
-//			[self.navigationController pushViewController:settingsViewController animated:YES];
-			
-			UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-			LMSettingsViewController *settingsViewController = (LMSettingsViewController*)[storyboard instantiateViewControllerWithIdentifier:@"LMSettingsViewController"];
+			LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
 			[self.navigationController pushViewController:settingsViewController animated:YES];
 			break;
 		}
@@ -773,9 +764,6 @@ LMControlBarViewDelegate
     if(self.settingsOpen == 0){
 		[self.buttonNavigationBar maximize:YES];
 		
-        [self.settingsCheckTimer invalidate];
-        self.settingsCheckTimer = nil;
-		
 		[self.navigationController popViewControllerAnimated:YES];
     }
 }
@@ -799,15 +787,9 @@ LMControlBarViewDelegate
 	return YES;
 }
 
-- (void)handlePopGesture:(UIGestureRecognizer *)gesture{
-//	if(self.navigationController.topViewController == self){
-	NSLog(@"State %d", gesture.state);
-		if(gesture.state == UIGestureRecognizerStateEnded){
-			[self.navigationController popViewControllerAnimated:YES];
-		}
-//	}
+- (void)viewDidAppear:(BOOL)animated {
+	[self.buttonNavigationBar maximize:YES];
 }
-
 
 - (void)launchNowPlayingFromNavigationBar {
     if(!self.musicPlayer.nowPlayingTrack){
@@ -1440,7 +1422,7 @@ LMControlBarViewDelegate
 	[self.nowPlayingCoreView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 	[self.nowPlayingCoreView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.navigationController.view];
 	self.nowPlayingCoreView.topConstraint =
-	[self.nowPlayingCoreView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:self.view.frame.size.height];
+	[self.nowPlayingCoreView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:self.view.frame.size.height * 1.25];
 	
 	
 	
@@ -1561,8 +1543,8 @@ LMControlBarViewDelegate
 			[self.buttonNavigationBar.browsingBar setShowingLetterTabs:self.titleView.musicTitles.count > 0];
 		}
 		
-		LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
-		[self.navigationController pushViewController:settingsViewController animated:YES];
+//		LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
+//		[self.navigationController pushViewController:settingsViewController animated:YES];
 		
 //		LMThemePickerViewController *themePicker = [LMThemePickerViewController new];
 //		[self.navigationController pushViewController:themePicker animated:YES];
