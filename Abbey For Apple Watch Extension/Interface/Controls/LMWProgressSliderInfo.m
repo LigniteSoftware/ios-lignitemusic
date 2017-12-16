@@ -83,7 +83,7 @@
 	_isShrunk = isShrunk;
 	
 	[self.interfaceController animateWithDuration:0.2 animations:^{
-		[self.container setRelativeHeight:isShrunk ? 0.4 : 1.0
+		[self.container setRelativeHeight:isShrunk ? 1.0 : 1.0
 						   withAdjustment:0];
 	}];
 }
@@ -183,7 +183,7 @@
 		
 		self.width = self.interfaceController.contentFrame.size.width;
 		
-		self.size = CGSizeMake(0, 14);
+		self.size = CGSizeMake(0, 24);
 	}
 	return self;
 }

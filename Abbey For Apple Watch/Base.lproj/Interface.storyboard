@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="13529" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AgC-eL-Hgc" pageOrientation="vertical">
+<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="13771" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AgC-eL-Hgc" pageOrientation="vertical">
     <device id="watch42" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="watchOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="13507"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="13756"/>
     </dependencies>
     <customFonts key="customFonts">
         <array key="HelveticaNeueLights.ttc">
@@ -68,106 +68,124 @@
                                 </group>
                             </items>
                         </group>
-                        <group width="1" height="1" alignment="left" hidden="YES" layout="overlap" radius="0.0" spacing="0.0" id="PEh-FC-AVI" userLabel="Now Playing Container">
+                        <group width="1" height="1" alignment="left" layout="overlap" radius="0.0" spacing="0.0" id="PEh-FC-AVI" userLabel="Now Playing Container">
                             <items>
-                                <imageView width="1" height="0.80000000000000004" alignment="center" image="chidster" contentMode="scaleAspectFill" id="BvG-LR-NtJ"/>
-                                <group width="1" height="0.80000000000000004" alignment="left" layout="vertical" spacing="0.0" id="3a1-Uj-z8o" userLabel="Control Group">
+                                <group width="1" height="0.92000000000000004" alignment="left" layout="overlap" id="btL-zD-wF6" userLabel="Album Art Group">
                                     <items>
-                                        <group width="1" height="0.46000000000000002" alignment="left" id="SNd-YI-g8I" userLabel="Volume Control Group">
+                                        <imageView width="1" height="1" alignment="center" image="chidster" contentMode="scaleAspectFit" id="BvG-LR-NtJ"/>
+                                        <group width="1" height="1" alignment="left" layout="vertical" id="hiK-mT-9JS" userLabel="Fade Cover">
                                             <items>
-                                                <group width="0.34000000000000002" alignment="left" id="98h-55-kRm" userLabel="Minus Button Group">
+                                                <group width="1" height="0.34999999999999998" alignment="left" id="SNd-YI-g8I" userLabel="Volume Control Group">
                                                     <items>
-                                                        <button alignment="left" verticalAlignment="center" id="VvH-06-SyF" userLabel="Minus Button">
-                                                            <group key="contentGroup" width="1" height="1" alignment="left" id="5nN-yV-Aoj" userLabel="Root Group">
-                                                                <items>
-                                                                    <imageView width="0.29999999999999999" alignment="center" verticalAlignment="center" image="icon_minus" contentMode="scaleAspectFit" id="z0d-6f-G9A"/>
-                                                                </items>
-                                                            </group>
-                                                            <connections>
-                                                                <action selector="volumeDownButtonSelector:" destination="AgC-eL-Hgc" id="4rn-xF-FQw"/>
-                                                            </connections>
-                                                        </button>
-                                                    </items>
-                                                </group>
-                                                <group width="0.33000000000000002" height="0.070000000000000007" alignment="left" verticalAlignment="center" layout="vertical" radius="2" spacing="2" id="FNL-ol-UuQ" userLabel="Progress Bar Group">
-                                                    <items>
-                                                        <group width="0.5" height="1" alignment="left" id="dae-Kl-vGN">
-                                                            <color key="backgroundColor" red="0.90980392156862744" green="0.15686274509803921" blue="0.14117647058823529" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <group width="0.34000000000000002" alignment="left" id="98h-55-kRm" userLabel="Minus Button Group">
+                                                            <items>
+                                                                <button alignment="left" verticalAlignment="center" id="VvH-06-SyF" userLabel="Minus Button">
+                                                                    <group key="contentGroup" width="1" height="1" alignment="left" id="5nN-yV-Aoj" userLabel="Root Group">
+                                                                        <items>
+                                                                            <imageView width="0.29999999999999999" alignment="center" verticalAlignment="center" image="icon_minus" contentMode="scaleAspectFit" id="z0d-6f-G9A"/>
+                                                                        </items>
+                                                                    </group>
+                                                                    <connections>
+                                                                        <action selector="volumeDownButtonSelector:" destination="AgC-eL-Hgc" id="4rn-xF-FQw"/>
+                                                                    </connections>
+                                                                </button>
+                                                            </items>
+                                                        </group>
+                                                        <group width="0.33000000000000002" height="0.070000000000000007" alignment="left" verticalAlignment="center" layout="vertical" radius="2" spacing="2" id="FNL-ol-UuQ" userLabel="Progress Bar Group">
+                                                            <items>
+                                                                <group width="0.5" height="1" alignment="left" id="dae-Kl-vGN">
+                                                                    <color key="backgroundColor" red="0.90980392156862744" green="0.15686274509803921" blue="0.14117647058823529" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                </group>
+                                                            </items>
+                                                            <color key="backgroundColor" red="0.69803921568627447" green="0.69803921568627447" blue="0.69803921568627447" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        </group>
+                                                        <group width="0.33000000000000002" alignment="left" id="cV0-kR-6I5" userLabel="Plus Button Group">
+                                                            <items>
+                                                                <button alignment="left" verticalAlignment="center" id="nIt-lQ-DhM" userLabel="Plus Button">
+                                                                    <group key="contentGroup" width="1" height="1" alignment="left" id="MAh-PU-Jwg" userLabel="Root Group">
+                                                                        <items>
+                                                                            <imageView width="0.29999999999999999" alignment="center" verticalAlignment="center" image="icon_plus_white" contentMode="scaleAspectFit" id="1Iu-6T-F4g"/>
+                                                                        </items>
+                                                                    </group>
+                                                                    <connections>
+                                                                        <action selector="volumeUpButtonSelector:" destination="AgC-eL-Hgc" id="lxO-ql-rme"/>
+                                                                    </connections>
+                                                                </button>
+                                                            </items>
                                                         </group>
                                                     </items>
-                                                    <color key="backgroundColor" red="0.69803921568627447" green="0.69803921568627447" blue="0.69803921568627447" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 </group>
-                                                <group width="0.33000000000000002" alignment="left" id="cV0-kR-6I5" userLabel="Plus Button Group">
+                                                <group width="1" height="0.27000000000000002" alignment="left" id="HuZ-ym-It4" userLabel="Track Control Group">
                                                     <items>
-                                                        <button alignment="left" verticalAlignment="center" id="nIt-lQ-DhM" userLabel="Plus Button">
-                                                            <group key="contentGroup" width="1" height="1" alignment="left" id="MAh-PU-Jwg" userLabel="Root Group">
-                                                                <items>
-                                                                    <imageView width="0.29999999999999999" alignment="center" verticalAlignment="center" image="icon_plus_white" contentMode="scaleAspectFit" id="1Iu-6T-F4g"/>
-                                                                </items>
-                                                            </group>
-                                                            <connections>
-                                                                <action selector="volumeUpButtonSelector:" destination="AgC-eL-Hgc" id="lxO-ql-rme"/>
-                                                            </connections>
-                                                        </button>
+                                                        <group width="0.34000000000000002" alignment="left" id="7Cp-aj-dId" userLabel="Previous Track Group">
+                                                            <items>
+                                                                <button alignment="left" verticalAlignment="center" id="8k1-cZ-Crf" userLabel="Previous Track Button">
+                                                                    <group key="contentGroup" width="1" height="1" alignment="left" id="Ecx-UA-sXd" userLabel="Root Group">
+                                                                        <items>
+                                                                            <imageView width="0.29999999999999999" alignment="center" verticalAlignment="center" image="previous_track" contentMode="scaleAspectFit" id="gJY-dC-Qdh"/>
+                                                                        </items>
+                                                                    </group>
+                                                                    <connections>
+                                                                        <action selector="previousTrackButtonSelector:" destination="AgC-eL-Hgc" id="Cyt-8u-ek7"/>
+                                                                    </connections>
+                                                                </button>
+                                                            </items>
+                                                        </group>
+                                                        <group width="0.34000000000000002" alignment="left" id="Sii-u1-zML" userLabel="Play/Pause Group">
+                                                            <items>
+                                                                <button alignment="left" verticalAlignment="center" id="Wto-Dz-JuL" userLabel="Play/Pause Button">
+                                                                    <group key="contentGroup" width="1" height="1" alignment="left" id="PvR-xf-gM7" userLabel="Root Group">
+                                                                        <items>
+                                                                            <imageView width="0.29999999999999999" alignment="center" verticalAlignment="center" image="icon_play" contentMode="scaleAspectFit" id="5W3-rZ-RmV"/>
+                                                                        </items>
+                                                                    </group>
+                                                                    <connections>
+                                                                        <action selector="playPauseButtonSelector:" destination="AgC-eL-Hgc" id="pnG-LN-1Jf"/>
+                                                                    </connections>
+                                                                </button>
+                                                            </items>
+                                                        </group>
+                                                        <group width="0.34000000000000002" alignment="left" id="a3T-tO-7Ei" userLabel="Next Track Group">
+                                                            <items>
+                                                                <button alignment="left" verticalAlignment="center" id="Wro-dr-oj4" userLabel="Next Track Button">
+                                                                    <group key="contentGroup" width="1" height="1" alignment="left" id="t2z-df-FB6" userLabel="Root Group">
+                                                                        <items>
+                                                                            <imageView width="0.29999999999999999" alignment="center" verticalAlignment="center" image="next_track" contentMode="scaleAspectFit" id="PTD-XQ-p6R"/>
+                                                                        </items>
+                                                                    </group>
+                                                                    <connections>
+                                                                        <action selector="nextTrackButtonSelector:" destination="AgC-eL-Hgc" id="X26-Td-J7n"/>
+                                                                    </connections>
+                                                                </button>
+                                                            </items>
+                                                        </group>
                                                     </items>
+                                                </group>
+                                                <group width="1" height="0.29999999999999999" heightAdjustment="1" alignment="left" verticalAlignment="center" spacing="0.0" id="j6H-mZ-SBl" userLabel="Track Info Group">
+                                                    <items>
+                                                        <group width="1" alignment="left" verticalAlignment="center" layout="vertical" spacing="0.0" id="QiB-hQ-eoa" userLabel="Info Text Group">
+                                                            <items>
+                                                                <label width="1" alignment="left" text="Abbey" textAlignment="center" id="b8p-RV-XJb" userLabel="Title Label">
+                                                                    <fontDescription key="font" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="16"/>
+                                                                </label>
+                                                                <label width="1" alignment="left" text="Please wait" textAlignment="center" id="Nya-mZ-DzX" userLabel="Subtitle Label">
+                                                                    <fontDescription key="font" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="10"/>
+                                                                </label>
+                                                            </items>
+                                                        </group>
+                                                    </items>
+                                                    <edgeInsets key="margins" left="4" right="4" top="0.0" bottom="0.0"/>
                                                 </group>
                                             </items>
                                             <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
                                         </group>
-                                        <group width="1" height="0.5" alignment="left" id="HuZ-ym-It4" userLabel="Track Control Group">
-                                            <items>
-                                                <group width="0.34000000000000002" alignment="left" id="7Cp-aj-dId" userLabel="Previous Track Group">
-                                                    <items>
-                                                        <button alignment="left" verticalAlignment="center" id="8k1-cZ-Crf" userLabel="Previous Track Button">
-                                                            <group key="contentGroup" width="1" height="1" alignment="left" id="Ecx-UA-sXd" userLabel="Root Group">
-                                                                <items>
-                                                                    <imageView width="0.29999999999999999" alignment="center" verticalAlignment="center" image="previous_track" contentMode="scaleAspectFit" id="gJY-dC-Qdh"/>
-                                                                </items>
-                                                            </group>
-                                                            <connections>
-                                                                <action selector="previousTrackButtonSelector:" destination="AgC-eL-Hgc" id="Cyt-8u-ek7"/>
-                                                            </connections>
-                                                        </button>
-                                                    </items>
-                                                </group>
-                                                <group width="0.34000000000000002" alignment="left" id="Sii-u1-zML" userLabel="Play/Pause Group">
-                                                    <items>
-                                                        <button alignment="left" verticalAlignment="center" id="Wto-Dz-JuL" userLabel="Play/Pause Button">
-                                                            <group key="contentGroup" width="1" height="1" alignment="left" id="PvR-xf-gM7" userLabel="Root Group">
-                                                                <items>
-                                                                    <imageView width="0.29999999999999999" alignment="center" verticalAlignment="center" image="icon_play" contentMode="scaleAspectFit" id="5W3-rZ-RmV"/>
-                                                                </items>
-                                                            </group>
-                                                            <connections>
-                                                                <action selector="playPauseButtonSelector:" destination="AgC-eL-Hgc" id="pnG-LN-1Jf"/>
-                                                            </connections>
-                                                        </button>
-                                                    </items>
-                                                </group>
-                                                <group width="0.34000000000000002" alignment="left" id="a3T-tO-7Ei" userLabel="Next Track Group">
-                                                    <items>
-                                                        <button alignment="left" verticalAlignment="center" id="Wro-dr-oj4" userLabel="Next Track Button">
-                                                            <group key="contentGroup" width="1" height="1" alignment="left" id="t2z-df-FB6" userLabel="Root Group">
-                                                                <items>
-                                                                    <imageView width="0.29999999999999999" alignment="center" verticalAlignment="center" image="next_track" contentMode="scaleAspectFit" id="PTD-XQ-p6R"/>
-                                                                </items>
-                                                            </group>
-                                                            <connections>
-                                                                <action selector="nextTrackButtonSelector:" destination="AgC-eL-Hgc" id="X26-Td-J7n"/>
-                                                            </connections>
-                                                        </button>
-                                                    </items>
-                                                </group>
-                                            </items>
-                                            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.51113013698630139" colorSpace="custom" customColorSpace="sRGB"/>
-                                        </group>
                                     </items>
                                 </group>
-                                <group width="1" height="0.34999999999999998" alignment="center" verticalAlignment="bottom" layout="vertical" spacing="0.0" id="Ki4-AN-XF7" userLabel="Track Info Container">
+                                <group width="1" height="0.12" alignment="center" verticalAlignment="bottom" layout="vertical" spacing="0.0" id="Ki4-AN-XF7" userLabel="Track Info Container">
                                     <items>
-                                        <group width="1" height="0.40000000000000002" alignment="left" layout="vertical" radius="0.0" spacing="0.0" id="Hbh-8q-bB0" userLabel="Slider Group">
+                                        <group width="1" height="1" alignment="left" verticalAlignment="bottom" layout="vertical" radius="0.0" spacing="0.0" id="Hbh-8q-bB0" userLabel="Slider Group">
                                             <items>
-                                                <group width="1" height="0.20000000000000001" alignment="left" verticalAlignment="bottom" spacing="0.0" id="Blj-jY-PsE" userLabel="Progress Bar Container">
+                                                <group width="1" height="1" alignment="left" verticalAlignment="bottom" spacing="0.0" id="Blj-jY-PsE" userLabel="Progress Bar Container">
                                                     <items>
                                                         <group width="8" height="1" alignment="left" id="uNo-TJ-D5i" userLabel="Progress Bar">
                                                             <items>
@@ -191,29 +209,12 @@
                                             <color key="backgroundColor" white="0.69891183035714288" alpha="0.0" colorSpace="calibratedWhite"/>
                                             <edgeInsets key="margins" left="0.0" right="0.0" top="0.0" bottom="0.0"/>
                                         </group>
-                                        <group width="1" height="0.59999999999999998" heightAdjustment="1" alignment="left" spacing="0.0" id="j6H-mZ-SBl" userLabel="Track Info Group">
-                                            <items>
-                                                <group width="1" alignment="left" verticalAlignment="center" layout="vertical" spacing="0.0" id="QiB-hQ-eoa" userLabel="Info Text Group">
-                                                    <items>
-                                                        <label width="1" alignment="left" text="Abbey" textAlignment="center" id="b8p-RV-XJb" userLabel="Title Label">
-                                                            <fontDescription key="font" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="16"/>
-                                                        </label>
-                                                        <label width="1" alignment="left" text="Please wait" textAlignment="center" id="Nya-mZ-DzX" userLabel="Subtitle Label">
-                                                            <fontDescription key="font" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="10"/>
-                                                        </label>
-                                                    </items>
-                                                </group>
-                                            </items>
-                                            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                            <edgeInsets key="margins" left="4" right="4" top="0.0" bottom="0.0"/>
-                                        </group>
                                     </items>
-                                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
                                 </group>
                             </items>
                             <edgeInsets key="margins" left="0.0" right="0.0" top="0.0" bottom="0.0"/>
                         </group>
-                        <group width="1" alignment="left" layout="vertical" radius="0.0" spacing="0.0" id="HiP-Qn-bsy" userLabel="Extra Controls Container">
+                        <group width="1" alignment="left" hidden="YES" layout="vertical" radius="0.0" spacing="0.0" id="HiP-Qn-bsy" userLabel="Extra Controls Container">
                             <items>
                                 <group width="1" height="45" alignment="left" spacing="0.0" id="yep-wT-H1e" userLabel="Control Buttons">
                                     <items>
