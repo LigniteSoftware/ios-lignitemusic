@@ -16,9 +16,14 @@
 #import "LMListEntry.h"
 #import "LMMusicPlayer.h"
 #import "LMMusicPickerController.h"
+#import "LMMusicPickerNavigationController.h"
 #import "NSTimer+Blocks.h"
+#import "LMCoreNavigationController.h"
+#import "LMCoreViewController.h"
 
-@interface LMPlaylistEditorViewController()<LMTableViewSubviewDataSource, LMListEntryDelegate, DDTableViewDelegate, LMImagePickerViewDelegate, LMMusicPickerDelegate, LMLayoutChangeDelegate, UITextFieldDelegate>
+#define LMPlaylistEditorRestorationKeyPlaylistDictionary @"LMPlaylistEditorRestorationKeyPlaylistDictionary"
+
+@interface LMPlaylistEditorViewController()<LMTableViewSubviewDataSource, LMListEntryDelegate, DDTableViewDelegate, LMImagePickerViewDelegate, LMMusicPickerDelegate, LMLayoutChangeDelegate, UITextFieldDelegate, UIViewControllerRestoration>
 
 /**
  The music player.
@@ -108,7 +113,9 @@
 	LMMusicPickerController *musicPicker = [LMMusicPickerController new];
 	musicPicker.delegate = self;
 	musicPicker.trackCollections = [LMMusicPlayer arrayOfTrackCollectionsForMusicTrackCollection:self.playlist.trackCollection];
-	UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:musicPicker];
+	
+	LMMusicPickerNavigationController *navigation = [[LMMusicPickerNavigationController alloc] initWithRootViewController:musicPicker];
+	
 	[self presentViewController:navigation animated:YES completion:nil];
 }
 
@@ -343,6 +350,7 @@
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
 	[NSTimer scheduledTimerWithTimeInterval:0.25 block:^{
+		self.playlist.title = self.titleTextField.text;
 		[self reloadSaveButton];
 	} repeats:NO];
 	
@@ -351,8 +359,26 @@
 	return YES;
 }
 
+- (void)reloadContents {
+	self.titleTextField.text = self.playlist ? self.playlist.title : nil;
+	
+	self.imagePickerView.image = self.playlist ? self.playlist.image : nil;
+	
+	[self reloadSaveButton];
+	
+	self.songListTableView.totalAmountOfObjects = self.playlist.trackCollection.count;
+	[self.songListTableView reloadSubviewData];
+	[self.songListTableView reloadData];
+	
+	self.songCountLabel.text = self.playlist.trackCollection.count == 0
+	? NSLocalizedString(@"NoSongsYet", nil)
+	: [NSString stringWithFormat:NSLocalizedString(self.playlist.trackCollection.count == 1 ? @"XSongsSingle" : @"XSongs", nil), self.playlist.trackCollection.count];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
+	
+//	NSLog(@"%@", self.navigationController.navigationController);
 	
 	self.title = NSLocalizedString(self.playlist ? @"EditingPlaylist" : @"NewPlaylist", nil);
 	
@@ -592,6 +618,55 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
+}
+
+- (void)encodeRestorableStateWithCoder:(NSCoder *)coder {
+	[super encodeWithCoder:coder];
+	
+	[coder encodeInteger:69 forKey:@"playlisttest"];
+	
+	[coder encodeObject:self.playlist.dictionaryRepresentation forKey:LMPlaylistEditorRestorationKeyPlaylistDictionary];
+}
+
+- (void)decodeRestorableStateWithCoder:(NSCoder *)coder {
+	[super decodeRestorableStateWithCoder:coder];
+	
+	NSLog(@"Got playlisttest %d", (int)[coder decodeIntegerForKey:@"playlisttest"]);
+	
+	NSDictionary *playlistDictionary = [coder decodeObjectForKey:LMPlaylistEditorRestorationKeyPlaylistDictionary];
+	if(playlistDictionary){
+		self.playlist = [[LMPlaylistManager sharedPlaylistManager] playlistForPlaylistDictionary:playlistDictionary];
+		[self reloadContents];
+	}
+}
+
++ (nullable UIViewController *) viewControllerWithRestorationIdentifierPath:(NSArray *)identifierComponents coder:(NSCoder *)coder {
+	NSLog(@"playlist editor path %@", identifierComponents);
+	
+	LMCoreNavigationController *coreNavigationController = (LMCoreNavigationController*)[[[[UIApplication sharedApplication] windows] firstObject] rootViewController];
+	
+	NSLog(@"%@", coreNavigationController.viewControllers.firstObject);
+	
+	LMPlaylistEditorViewController *playlistEditor = [LMPlaylistEditorViewController new];
+	
+//	LMCoreNavigationController *coreNavigationController = [[[[UIApplication sharedApplication] windows] firstObject] rootViewController];
+	
+	LMCoreViewController *coreViewController = coreNavigationController.viewControllers.firstObject;
+	
+	coreViewController.pendingStateRestoredPlaylistEditor = playlistEditor;
+	
+	NSLog(@"%@", coreViewController.view);
+	
+	return playlistEditor;
+}
+
+- (instancetype)init {
+	self = [super init];
+	if(self){
+		self.restorationIdentifier = [[self class] description];
+		self.restorationClass = [self class];
+	}
+	return self;
 }
 
 /* End other code */

@@ -915,7 +915,7 @@
 - (instancetype)init {
 	self = [super init];
 	if(self){
-		self.selectionMode = LMMusicPickerSelectionModeOnlyTracks;
+		self.selectionMode = LMMusicPickerSelectionModeOnlyTracks;		
 	}
 	return self;
 }

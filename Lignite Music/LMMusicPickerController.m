@@ -12,8 +12,9 @@
 #import "LMTrackPickerController.h"
 #import "LMDynamicSearchView.h"
 #import "LMPlaylist.h"
+#import "LMCoreNavigationController.h"
 
-@interface LMMusicPickerController ()<LMSourceDelegate, UISearchBarDelegate, LMDynamicSearchViewDelegate, LMSourceSelectorDelegate>
+@interface LMMusicPickerController ()<LMSourceDelegate, UISearchBarDelegate, LMDynamicSearchViewDelegate, LMSourceSelectorDelegate, UIViewControllerRestoration>
 
 /**
  The music player.
@@ -400,6 +401,24 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)encodeRestorableStateWithCoder:(NSCoder *)coder {
+	NSLog(@"encode self.navcon %@", self.navigationController);
+	
+	[super encodeRestorableStateWithCoder:coder];
+}
+
+- (void)decodeRestorableStateWithCoder:(NSCoder *)coder {
+	NSLog(@"self.navcon %@", self.navigationController);
+	
+	[super decodeRestorableStateWithCoder:coder];
+}
+
++ (nullable UIViewController *) viewControllerWithRestorationIdentifierPath:(NSArray *)identifierComponents coder:(NSCoder *)coder {
+	NSLog(@"%@", identifierComponents);
+	
+	return [LMMusicPickerController new];
+}
+
 - (instancetype)init {
 	self = [super init];
 	if(self){
@@ -407,6 +426,9 @@
 		
 		self.trackCollections = [NSArray new];
 		self.musicTypes = [NSArray new];
+		
+		self.restorationIdentifier = [[self class] description];
+		self.restorationClass = [self class];
 	}
 	return self;
 }

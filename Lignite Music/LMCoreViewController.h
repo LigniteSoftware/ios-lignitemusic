@@ -8,9 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import "MBProgressHUD.h"
+#import "LMCompactBrowsingView.h"
 #import "LMButtonNavigationBar.h"
 #import "LMLandscapeNavigationBar.h"
 #import "LMCoreNavigationController.h"
+#import "LMPlaylistEditorViewController.h"
 
 typedef NS_ENUM(NSInteger, LMCoreViewControllerRestorationState){
 	LMCoreViewControllerRestorationStateNotRestored = 0,
@@ -42,5 +44,15 @@ typedef NS_ENUM(NSInteger, LMCoreViewControllerRestorationState){
  The landscape navigation bar for landscape mode.
  */
 @property LMLandscapeNavigationBar *landscapeNavigationBar;
+
+/**
+ The compact/main browsing view.
+ */
+@property LMCompactBrowsingView *compactView;
+
+/**
+ If state restoration contains a playlist editor, that playlist editor will sit here pending for an attachment to compactView (which will have to be created).
+ */
+@property LMPlaylistEditorViewController *pendingStateRestoredPlaylistEditor;
 
 @end

@@ -101,8 +101,6 @@ LMControlBarViewDelegate
 
 @property CGPoint originalPoint, currentPoint;
 
-@property LMCompactBrowsingView *compactView;
-
 @property NSInteger settingsOpen;
 @property BOOL willOpenSettings;
 
@@ -1351,6 +1349,10 @@ LMControlBarViewDelegate
 	self.compactView = [LMCompactBrowsingView newAutoLayoutView];
 	self.compactView.rootViewController = self;
 	[self.view addSubview:self.compactView];
+	
+	if(self.pendingStateRestoredPlaylistEditor){
+		self.pendingStateRestoredPlaylistEditor.delegate = self.compactView;
+	}
 	
 	NSArray *compactViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 		[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeTop];

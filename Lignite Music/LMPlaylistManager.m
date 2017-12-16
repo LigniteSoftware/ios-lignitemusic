@@ -83,7 +83,7 @@
 			
 			[trackMutableArray addObjectsFromArray:query.items];
 			
-			NSLog(@"%@ Got %@", playlist.title, query.items.firstObject.title);
+//			NSLog(@"%@ Got %@", playlist.title, query.items.firstObject.title);
 		}
 		playlist.trackCollection = [[LMMusicTrackCollection alloc]initWithItems:trackMutableArray];
 	}
@@ -111,6 +111,7 @@
 	if(playlist.image){
 		[self.imageCache storeImage:playlist.image forKey:[NSString stringWithFormat:@"%lld", playlist.persistentID]];
 	}
+	
 	if(playlist.enhanced && playlist.enhancedConditionsDictionary){
 		[mutableDictionary setObject:playlist.enhancedConditionsDictionary forKey:@"enhancedConditionsDictionary"];
 	}
@@ -195,7 +196,7 @@
 	for(MPMediaPlaylist *systemPlaylist in systemPlaylists) {
 		MPMediaPlaylistAttribute attribute = systemPlaylist.playlistAttributes;
 		
-		NSLog(@"%lld: %@", systemPlaylist.persistentID, [systemPlaylist valueForProperty:MPMediaPlaylistPropertyName]);
+//		NSLog(@"%lld: %@", systemPlaylist.persistentID, [systemPlaylist valueForProperty:MPMediaPlaylistPropertyName]);
 		
 		if(attribute != MPMediaPlaylistAttributeSmart && attribute != MPMediaPlaylistAttributeGenius){ //We don't fuck with these
 			if(![self playlistExistsWithSystemPersistentID:systemPlaylist.persistentID] && ![userDefaults objectForKey:[NSString stringWithFormat:@"deletedSystemPlaylist_%lld", systemPlaylist.persistentID]]){

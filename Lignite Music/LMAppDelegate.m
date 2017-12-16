@@ -93,6 +93,13 @@
     return YES;
 }
 
+- (UIViewController*)application:(UIApplication *)application viewControllerWithRestorationIdentifierPath:(NSArray *)identifierComponents coder:(NSCoder *)coder {
+	
+	NSLog(@"Gotem %@", identifierComponents);
+	
+	return nil;
+}
+
 
 - (BOOL)application:(UIApplication *)application shouldSaveApplicationState:(NSCoder *)coder {
 	NSLog(@"See you later");

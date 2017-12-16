@@ -8,9 +8,9 @@
 
 #import "LMView.h"
 #import "LMMusicPlayer.h"
-#import "LMCoreViewController.h"
+#import "LMPlaylistEditorViewController.h"
 
-@interface LMCompactBrowsingView : LMView
+@interface LMCompactBrowsingView : LMView <LMPlaylistEditorDelegate>
 
 /**
  The music track collections associated with this compact browsing view. For every collection there will be an entry.
@@ -25,7 +25,12 @@
 /**
  The root/source view controller.
  */
-@property LMCoreViewController *rootViewController;
+@property id rootViewController;
+
+///**
+// If state restoration contained a playlist editor, that playlist editor will sit here pending for an attachment, so that delegate callbacks will be managed properly.
+// */
+//@property LMPlaylistEditorViewController *pendingStateRestoredPlaylistEditor;
 
 /**
  The actual collection view for displaying collections in a compact method.

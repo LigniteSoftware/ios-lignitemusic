@@ -17,16 +17,17 @@
 #import "LMCollectionViewCell.h"
 #import "LMEmbeddedDetailView.h"
 #import "LMPhoneLandscapeDetailView.h"
-#import "LMPlaylistEditorViewController.h"
 #import "LMEnhancedPlaylistEditorViewController.h"
+#import "LMPlaylistNavigationController.h"
 #import "LMThemeEngine.h"
+#import "LMCoreViewController.h"
 
 #import "NSTimer+Blocks.h"
 #import "LMColour.h"
 
 #import "LMPlaylistManager.h"
 
-@interface LMCompactBrowsingView()<UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, LMCollectionInfoViewDelegate, LMBigListEntryDelegate, LMLayoutChangeDelegate, LMPlaylistEditorDelegate, LMEnhancedPlaylistEditorDelegate, LMThemeEngineDelegate>
+@interface LMCompactBrowsingView()<UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, LMCollectionInfoViewDelegate, LMBigListEntryDelegate, LMLayoutChangeDelegate, LMEnhancedPlaylistEditorDelegate, LMThemeEngineDelegate>
 
 /**
  The big list entries that are used in the compact view.
@@ -93,11 +94,21 @@
  */
 @property UIView *playlistButtonRight;
 
+/**
+ The core view controller.
+ */
+@property (readonly) LMCoreViewController *coreViewController;
+
 @end
 
 @implementation LMCompactBrowsingView
 
 @synthesize musicType = _musicType;
+@synthesize coreViewController = _coreViewController;
+
+- (LMCoreViewController*)coreViewController {
+	return (LMCoreViewController*)self.rootViewController;
+}
 
 - (void)reloadDataAndInvalidateLayouts {
 	[self.collectionView reloadData];
@@ -447,16 +458,16 @@
 //	LMBrowsingDetailView *browsingDetailView = [LMBrowsingDetailView newAutoLayoutView];
 //	browsingDetailView.musicTrackCollection = [self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex];
 //	browsingDetailView.musicType = self.musicType;
-//	browsingDetailView.rootViewController = self.rootViewController;
+//	browsingDetailView.coreViewController = self.coreViewController;
 //	
 //	NSLog(@"Got count %ld", browsingDetailView.musicTrackCollection.trackCount);
 //	
 //	self.browsingDetailViewController = [LMBrowsingDetailViewController new];
 //	self.browsingDetailViewController.browsingDetailView = browsingDetailView;
 //	
-//	self.rootViewController.currentDetailViewController = self.browsingDetailViewController;
+//	self.coreViewController.currentDetailViewController = self.browsingDetailViewController;
 //	
-//	[self.rootViewController showViewController:self.browsingDetailViewController sender:self.rootViewController];
+//	[self.coreViewController showViewController:self.browsingDetailViewController sender:self.coreViewController];
 	
 //	[self tappedBigListEntryAtIndex:bigListEntry.collectionIndex];
 	
@@ -542,7 +553,7 @@
 		
 			
 			
-			[self.rootViewController.buttonNavigationBar minimize:YES];
+			[self.coreViewController.buttonNavigationBar minimize:YES];
 		}
 		else if(indexPath.row >= [self collectionView:self.collectionView numberOfItemsInSection:1] && flowLayout.isDisplayingDetailView){
 			cell.backgroundColor = [UIColor clearColor];
@@ -579,7 +590,7 @@
 		return;
 	}
 	
-	self.rootViewController.buttonNavigationBar.currentlyScrolling = YES;
+	self.coreViewController.buttonNavigationBar.currentlyScrolling = YES;
 	
 	CGFloat difference = fabs(scrollView.contentOffset.y-self.lastScrollingOffsetPoint.y);
 	
@@ -590,8 +601,8 @@
 	
 	if(difference > WINDOW_FRAME.size.height/4){
 		self.brokeScrollingThreshhold = YES;
-		if(!self.rootViewController.buttonNavigationBar.userMaximizedDuringScrollDeceleration){
-			[self.rootViewController.buttonNavigationBar minimize:YES];
+		if(!self.coreViewController.buttonNavigationBar.userMaximizedDuringScrollDeceleration){
+			[self.coreViewController.buttonNavigationBar minimize:YES];
 		}
 	}
 	
@@ -600,7 +611,7 @@
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
 	if(self.brokeScrollingThreshhold){
-		//[self.rootViewController.buttonNavigationBar minimize];
+		//[self.coreViewController.buttonNavigationBar minimize];
 	}
 	self.brokeScrollingThreshhold = NO;
 	self.lastScrollingOffsetPoint = scrollView.contentOffset;
@@ -611,8 +622,8 @@
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
 	NSLog(@"Ended decelerating");
 	
-	self.rootViewController.buttonNavigationBar.currentlyScrolling = NO;
-	self.rootViewController.buttonNavigationBar.userMaximizedDuringScrollDeceleration = NO;
+	self.coreViewController.buttonNavigationBar.currentlyScrolling = NO;
+	self.coreViewController.buttonNavigationBar.userMaximizedDuringScrollDeceleration = NO;
 }
 
 - (void)changeBottomSpacing:(CGFloat)bottomSpacing {
@@ -748,7 +759,7 @@
 		}
 	}];
 	
-	self.rootViewController.landscapeNavigationBar.mode = displaying
+	self.coreViewController.landscapeNavigationBar.mode = displaying
 	? LMLandscapeNavigationBarModeWithBackButton
 	: (self.musicType == LMMusicTypePlaylists ? LMLandscapeNavigationBarModePlaylistView : LMLandscapeNavigationBarModeOnlyLogo);
 	
@@ -770,7 +781,7 @@
 
 - (void)addPlaylistButtonTapped {	
 	if(![self.playlistManager userUnderstandsPlaylistManagement]){
-		[self.playlistManager launchPlaylistManagementWarningOnView:self.rootViewController.navigationController.view withCompletionHandler:^{
+		[self.playlistManager launchPlaylistManagementWarningOnView:self.coreViewController.navigationController.view withCompletionHandler:^{
 			[self addPlaylistButtonTapped];
 		}];
 	}
@@ -790,7 +801,7 @@
 			LMEnhancedPlaylistEditorViewController *enhancedPlaylistViewController = [LMEnhancedPlaylistEditorViewController new];
 			enhancedPlaylistViewController.delegate = self;
 			UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:enhancedPlaylistViewController];
-			[self.rootViewController presentViewController:navigation animated:YES completion:^{
+			[self.coreViewController presentViewController:navigation animated:YES completion:^{
 				NSLog(@"Launched enhanced creator");
 			}];
 		}];
@@ -800,9 +811,13 @@
 
 			LMPlaylistEditorViewController *playlistViewController = [LMPlaylistEditorViewController new];
 			playlistViewController.delegate = self;
-			UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:playlistViewController];
-			[self.rootViewController presentViewController:navigation animated:YES completion:^{
-				NSLog(@"Launched creator");
+			
+			LMPlaylistNavigationController *navigation = [[LMPlaylistNavigationController alloc] initWithRootViewController:playlistViewController];
+			
+			NSLog(@"Created %@", navigation);
+			[self.coreViewController.navigationController presentViewController:navigation animated:YES completion:^{
+				NSLog(@"Launched creator %@/%@/%@", self.coreViewController.navigationController.viewControllers, self.coreViewController.childViewControllers, self.coreViewController.presentedViewController);
+				NSLog(@"Sweet");
 			}];
 		}];
 
@@ -812,12 +827,12 @@
 		[alert addAction:regularPlaylistAction];
 		[alert addAction:cancelAction];
 
-		[self.rootViewController presentViewController:alert animated:YES completion:nil];
+		[self.coreViewController presentViewController:alert animated:YES completion:nil];
 		
 //		LMPlaylistEditorViewController *playlistViewController = [LMPlaylistEditorViewController new];
 //		playlistViewController.delegate = self;
-//		UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:playlistViewController];
-//		[self.rootViewController presentViewController:navigation animated:YES completion:^{
+//		UINavigationController *navigation = [[UINavigationController alloc] initWithcoreViewController:playlistViewController];
+//		[self.coreViewController presentViewController:navigation animated:YES completion:^{
 //			NSLog(@"Launched creator");
 //		}];
 	}
@@ -887,7 +902,7 @@
 		enhancedPlaylistViewController.playlist = playlist;
 		enhancedPlaylistViewController.delegate = self;
 		UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:enhancedPlaylistViewController];
-		[self.rootViewController presentViewController:navigation animated:YES completion:^{
+		[self.coreViewController presentViewController:navigation animated:YES completion:^{
 			NSLog(@"Launched enhanced editor");
 		}];
 	}
@@ -896,7 +911,7 @@
 		playlistViewController.playlist = playlist;
 		playlistViewController.delegate = self;
 		UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:playlistViewController];
-		[self.rootViewController presentViewController:navigation animated:YES completion:^{
+		[self.coreViewController presentViewController:navigation animated:YES completion:^{
 			NSLog(@"Launched editor");
 		}];
 	}
@@ -935,12 +950,12 @@
 	[alert addAction:yesButton];
 	[alert addAction:nopeButton];
 	
-	[self.rootViewController presentViewController:alert animated:YES completion:nil];
+	[self.coreViewController presentViewController:alert animated:YES completion:nil];
 }
 
 - (void)editPlaylistButtonTapped {
 	if(![self.playlistManager userUnderstandsPlaylistManagement]){
-		[self.playlistManager launchPlaylistManagementWarningOnView:self.rootViewController.navigationController.view withCompletionHandler:^{
+		[self.playlistManager launchPlaylistManagementWarningOnView:self.coreViewController.navigationController.view withCompletionHandler:^{
 			
 			[self editPlaylistButtonTapped];
 		}];
@@ -996,7 +1011,7 @@
 		}];
 		
 		
-		[self.rootViewController.landscapeNavigationBar setEditing:self.editing];
+		[self.coreViewController.landscapeNavigationBar setEditing:self.editing];
 	}
 }
 

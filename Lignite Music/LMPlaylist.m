@@ -8,6 +8,7 @@
 
 #import "LMPlaylist.h"
 #import "LMMusicPlayer.h"
+#import "LMPlaylistManager.h"
 
 @interface LMPlaylist()
 
@@ -27,6 +28,10 @@
 @synthesize dontWantToHearMusicTypes = _dontWantToHearMusicTypes;
 @synthesize dontWantToHearPersistentIDs = _dontWantToHearPersistentIDs;
 @synthesize dontWantToHearTrackCollections = _dontWantToHearTrackCollections;
+
+- (NSDictionary*)dictionaryRepresentation {
+	return [[LMPlaylistManager sharedPlaylistManager] playlistDictionaryForPlaylist:self];
+}
 
 - (NSDictionary*)wantToHearDictionary {
 	return [self.enhancedConditionsDictionary objectForKey:LMEnhancedPlaylistWantToHearKey];
@@ -153,6 +158,15 @@
 	}
 	
 	self.cachedEnhancedCollection = [[LMMusicTrackCollection alloc] initWithItems:finalTracksMutableArray];
+}
+
+- (instancetype)init {
+	self = [super init];
+	if(self){
+		self.persistentID = random();
+		self.title = @"";
+	}
+	return self;
 }
 
 @end

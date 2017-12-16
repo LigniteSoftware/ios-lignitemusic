@@ -95,4 +95,11 @@
  */
 - (void)regenerateEnhancedPlaylist;
 
+/**
+ Gets a dictionary representation of the playlist.
+
+ @return The dictionary representation of tracks within the playlist.
+ */
+- (NSDictionary*)dictionaryRepresentation;
+
 @end

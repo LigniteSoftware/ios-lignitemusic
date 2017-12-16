@@ -58,6 +58,22 @@
 - (LMPlaylist*)playlistForPersistentID:(long long)persistentID;
 
 /**
+ Returns a playlist's dictionary based off its songs.
+
+ @param playlist The playlist to get the dictionary for.
+ @return The dictionary.
+ */
+- (NSDictionary*)playlistDictionaryForPlaylist:(LMPlaylist*)playlist;
+
+/**
+ Converts a playlist dictionary into an actual playlist.
+
+ @param playlistDictionary The playlist dictionary to convert.
+ @return The playlist, prebuilt.
+ */
+- (LMPlaylist*)playlistForPlaylistDictionary:(NSDictionary*)playlistDictionary;
+
+/**
  The array of all of the user's current playlists.
  */
 @property NSArray<LMPlaylist*>* playlists;
