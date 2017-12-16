@@ -579,20 +579,25 @@
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    if(self.didJustScrollByLetter){
-        self.didJustScrollByLetter = NO;
-        return;
-    }
+	if(self.didJustScrollByLetter){
+		self.didJustScrollByLetter = NO;
+		return;
+	}
+	
+	self.rootViewController.buttonNavigationBar.currentlyScrolling = YES;
+	
+	CGFloat difference = fabs(scrollView.contentOffset.y-self.lastScrollingOffsetPoint.y);
 	
 	CGFloat maxContentOffset = scrollView.contentSize.height - (scrollView.frame.size.height*1.5);
 	if(scrollView.contentOffset.y > maxContentOffset){
 		return; //Don't scroll at the end to prevent weird scrolling behaviour with resize of required button bar height
 	}
 	
-	CGFloat difference = fabs(scrollView.contentOffset.y-self.lastScrollingOffsetPoint.y);
 	if(difference > WINDOW_FRAME.size.height/4){
 		self.brokeScrollingThreshhold = YES;
-		[self.rootViewController.buttonNavigationBar minimize:YES];
+		if(!self.rootViewController.buttonNavigationBar.userMaximizedDuringScrollDeceleration){
+			[self.rootViewController.buttonNavigationBar minimize:YES];
+		}
 	}
 	
 	[[APIdleManager sharedInstance] didReceiveInput];
@@ -600,10 +605,19 @@
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
 	if(self.brokeScrollingThreshhold){
-//		[self.rootViewController.buttonNavigationBar minimize];
+		//[self.rootViewController.buttonNavigationBar minimize];
 	}
 	self.brokeScrollingThreshhold = NO;
 	self.lastScrollingOffsetPoint = scrollView.contentOffset;
+	
+	NSLog(@"Finished dragging");
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+	NSLog(@"Ended decelerating");
+	
+	self.rootViewController.buttonNavigationBar.currentlyScrolling = NO;
+	self.rootViewController.buttonNavigationBar.userMaximizedDuringScrollDeceleration = NO;
 }
 
 - (void)changeBottomSpacing:(CGFloat)bottomSpacing {

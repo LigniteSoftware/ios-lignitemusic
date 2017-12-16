@@ -88,6 +88,8 @@ typedef NS_ENUM(NSUInteger, LMNavigationTab) {
  */
 @property BOOL isMinimized;
 @property BOOL isCompletelyHidden;
+@property BOOL currentlyScrolling;
+@property BOOL userMaximizedDuringScrollDeceleration;
 
 /**
  Completely hide the navigation button bar from the view. Minimize or maximize will need to be called to bring it back.

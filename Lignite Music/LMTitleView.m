@@ -50,6 +50,8 @@
 
 @property UILabel *noObjectsLabel;
 
+@property BOOL didJustScrollByLetter;
+
 @end
 
 @implementation LMTitleView
@@ -64,6 +66,13 @@
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+	if(self.didJustScrollByLetter){
+		self.didJustScrollByLetter = NO;
+		return;
+	}
+	
+	self.rootViewController.buttonNavigationBar.currentlyScrolling = YES;
+	
     CGFloat difference = fabs(scrollView.contentOffset.y-self.lastScrollingOffsetPoint.y);
 	
 	CGFloat maxContentOffset = scrollView.contentSize.height - (scrollView.frame.size.height*1.5);
@@ -73,7 +82,9 @@
 	
     if(difference > WINDOW_FRAME.size.height/4){
         self.brokeScrollingThreshhold = YES;
-		[self.rootViewController.buttonNavigationBar minimize:YES];
+		if(!self.rootViewController.buttonNavigationBar.userMaximizedDuringScrollDeceleration){
+			[self.rootViewController.buttonNavigationBar minimize:YES];
+		}
     }
 	
 	[[APIdleManager sharedInstance] didReceiveInput];
@@ -85,6 +96,15 @@
     }
     self.brokeScrollingThreshhold = NO;
     self.lastScrollingOffsetPoint = scrollView.contentOffset;
+	
+	NSLog(@"Finished dragging");
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+	NSLog(@"Ended decelerating");
+	
+	self.rootViewController.buttonNavigationBar.currentlyScrolling = NO;
+	self.rootViewController.buttonNavigationBar.userMaximizedDuringScrollDeceleration = NO;
 }
 
 - (void)musicTrackDidChange:(LMMusicTrack *)newTrack {
@@ -252,6 +272,8 @@
 }
 
 - (void)scrollToTrackIndex:(NSUInteger)index {
+	self.didJustScrollByLetter = YES;
+	
 	[self.songListTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:index]
 								  atScrollPosition:UITableViewScrollPositionTop
 										  animated:NO];

@@ -281,6 +281,10 @@
 	
 	NSLog(@"Maximize");
 	
+	if(!automatic && self.currentlyScrolling){
+		self.userMaximizedDuringScrollDeceleration = YES;
+	}
+	
 	__weak id weakSelf = self;
 	
 	[self setButtonBarBottomConstraintConstant:0 completion:^(BOOL finished) {
