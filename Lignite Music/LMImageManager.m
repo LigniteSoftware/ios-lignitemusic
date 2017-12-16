@@ -491,64 +491,70 @@
                     break;
                 }
             }
-            
-            for(NSDictionary *imageObject in imagesObjectArray){
-                NSString *imageType = [imageObject objectForKey:@"type"];
-                NSString *imageURL = [imageObject objectForKey:@"uri"];
-                //The image URL must exist and not be a blank string, and if the array has a primary image object, use that, otherwise use secondary
-                if(imageURL && ![imageURL isEqualToString:@""] && ((hasPrimaryImage && [imageType isEqualToString:@"primary"]) || !hasPrimaryImage)){
-                    NSLog(@"Downloading %@", imageURL);
-                    
-                    SDWebImageDownloader *downloader = [SDWebImageDownloader sharedDownloader];
-                    [downloader downloadImageWithURL:[NSURL URLWithString:imageURL]
-                                             options:kNilOptions
-                                            progress:^(NSInteger receivedSize, NSInteger expectedSize) {
-//                                                NSLog(@"%.02f%% complete", (float)receivedSize/(float)expectedSize * 100);
-                                            }
-                                           completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished) {
-                                               if(image && finished) {
-                                                   LMImageManagerConditionLevel currentConditionLevel = [self conditionLevelForDownloading];
-                                                   
-                                                   if(currentConditionLevel == LMImageManagerConditionLevelOptimal){
-                                                       //Calculate which is smaller, between width/height
-                                                       BOOL widthIsSmaller = (image.size.width < image.size.height);
-                                                       //Figure out the smaller and larger size based off of that
-                                                       CGFloat smallerSize = widthIsSmaller ? image.size.width : image.size.height;
-                                                       CGFloat largerSize = widthIsSmaller ? image.size.height : image.size.width;
-                                                       //Figure out the CGPoint offset in that according axis to center it
-                                                       CGFloat offsetOriginPoint = (largerSize/2) - (smallerSize/2);
-                                                       //Create the point
-                                                       CGRect newCropRect = CGRectMake(widthIsSmaller ? 0 : offsetOriginPoint, widthIsSmaller ? offsetOriginPoint : 0, smallerSize, smallerSize);
-                                                       
-                                                       //Create the image
-                                                       CGImageRef imageRef = CGImageCreateWithImageInRect([image CGImage], newCropRect);
-                                                       UIImage *croppedImage = [UIImage imageWithCGImage:imageRef];
-                                                       CGImageRelease(imageRef);
-                                                       
-                                                       
-                                                       NSString *imageCacheKey = [self imageCacheKeyForMusicTrack:randomTrack forCategory:category];
-                                                       NSLog(@"Done, now storing to %@.", imageCacheKey);
-                                                       
-                                                       [[self imageCacheForCategory:category] storeImage:croppedImage forKey:imageCacheKey];
-                                                       
-                                                       [self notifyDelegatesOfCacheSizeChangeForCategory:category];
-                                                       [self notifyDelegatesOfImageCacheChangeForCategory:category];
-                                                       
-                                                       
-                                                       //                                                       NSLog(@"Done. Crop rect %@, new size %@.", NSStringFromCGRect(newCropRect), NSStringFromCGSize(croppedImage.size));
-                                                       //
-                                                       //                                                       dispatch_sync(dispatch_get_main_queue(), ^{
-                                                       //                                                           callback(croppedImage);
-                                                       //                                                       });
-                                                   }
-                                                   else{
-                                                       NSLog(@"Not storing, conditions aren't right.");
-                                                   }
-                                               }
-                                           }];
-					break;
-                }
-            }
+			
+			if(imagesObjectArray){
+				for(NSDictionary *imageObject in imagesObjectArray){
+					NSString *imageType = [imageObject objectForKey:@"type"];
+					NSString *imageURL = [imageObject objectForKey:@"uri"];
+					//The image URL must exist and not be a blank string, and if the array has a primary image object, use that, otherwise use secondary
+					if(imageURL && ![imageURL isEqualToString:@""] && ((hasPrimaryImage && [imageType isEqualToString:@"primary"]) || !hasPrimaryImage)){
+						NSLog(@"Downloading %@", imageURL);
+						
+						SDWebImageDownloader *downloader = [SDWebImageDownloader sharedDownloader];
+						[downloader downloadImageWithURL:[NSURL URLWithString:imageURL]
+												 options:kNilOptions
+												progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+		//                                                NSLog(@"%.02f%% complete", (float)receivedSize/(float)expectedSize * 100);
+												}
+											   completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished) {
+												   if(image && finished) {
+													   LMImageManagerConditionLevel currentConditionLevel = [self conditionLevelForDownloading];
+													   
+													   if(currentConditionLevel == LMImageManagerConditionLevelOptimal){
+														   //Calculate which is smaller, between width/height
+														   BOOL widthIsSmaller = (image.size.width < image.size.height);
+														   //Figure out the smaller and larger size based off of that
+														   CGFloat smallerSize = widthIsSmaller ? image.size.width : image.size.height;
+														   CGFloat largerSize = widthIsSmaller ? image.size.height : image.size.width;
+														   //Figure out the CGPoint offset in that according axis to center it
+														   CGFloat offsetOriginPoint = (largerSize/2) - (smallerSize/2);
+														   //Create the point
+														   CGRect newCropRect = CGRectMake(widthIsSmaller ? 0 : offsetOriginPoint, widthIsSmaller ? offsetOriginPoint : 0, smallerSize, smallerSize);
+														   
+														   //Create the image
+														   CGImageRef imageRef = CGImageCreateWithImageInRect([image CGImage], newCropRect);
+														   UIImage *croppedImage = [UIImage imageWithCGImage:imageRef];
+														   CGImageRelease(imageRef);
+														   
+														   
+														   NSString *imageCacheKey = [self imageCacheKeyForMusicTrack:randomTrack forCategory:category];
+														   NSLog(@"Done, now storing to %@.", imageCacheKey);
+														   
+														   [[self imageCacheForCategory:category] storeImage:croppedImage forKey:imageCacheKey];
+														   
+														   [self notifyDelegatesOfCacheSizeChangeForCategory:category];
+														   [self notifyDelegatesOfImageCacheChangeForCategory:category];
+														   
+														   
+														   //                                                       NSLog(@"Done. Crop rect %@, new size %@.", NSStringFromCGRect(newCropRect), NSStringFromCGSize(croppedImage.size));
+														   //
+														   //                                                       dispatch_sync(dispatch_get_main_queue(), ^{
+														   //                                                           callback(croppedImage);
+														   //                                                       });
+													   }
+													   else{
+														   NSLog(@"Not storing, conditions aren't right.");
+													   }
+												   }
+											   }];
+						break;
+					}
+				}
+			}
+			else{
+				NSLog(@"No results were found. I have to blacklist this track, sorry.");
+				[self setMusicTrack:randomTrack asBlacklisted:YES forCategory:category];
+			}
             
             //            NSLog(@"Shitpost %ld %@ %@", code, response.headers, [[NSString alloc] initWithData:rawBody encoding:NSUTF8StringEncoding]);
         }];
@@ -616,6 +622,8 @@
 		LMImageManagerConditionLevel currentConditionLevel = [imageManager conditionLevelForDownloading];
 		
 		if(currentConditionLevel != LMImageManagerConditionLevelOptimal){
+			self.downloadingImages = NO;
+			
 			[imageManager.trackDownloadQueue removeAllObjects];
 			[imageManager.categoryDownloadQueue removeAllObjects];
 			
@@ -675,7 +683,6 @@
 											  
 											  //If it needs downloading, is not already in queue, and is not on the blacklist
 											  if(needsDownloading
-												 //											 && ![self.trackDownloadQueue containsObject:representativeTrack]
 												 && ![self musicTrackIsOnBlacklist:representativeTrack forCategory:category])
 											  {
 												  if(representativeTrack != nil && categoryNumber != nil){

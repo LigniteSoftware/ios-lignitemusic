@@ -297,6 +297,18 @@
 		
 		LMImageManagerPermissionStatus previousPermissionStatus = [self.imageManager downloadPermissionStatus];
 		
+		LMImageManagerPermissionStatus permissionStatus = LMImageManagerPermissionStatusNotDetermined;
+		switch(optionSelected){
+			case 0:
+				permissionStatus = LMImageManagerPermissionStatusDenied;
+				break;
+			case 1:
+				permissionStatus = LMImageManagerPermissionStatusAuthorized;
+				break;
+		}
+		
+		[self.imageManager setDownloadPermissionStatus:permissionStatus];
+		
 		//In the rare case that for some reason something was left behind in the cache, we want to make sure the disable button always clears it even if it's already disabled, just to make sure the user is happy.
 		if(optionSelected == 0){
 			[self.imageManager clearAllCaches];
@@ -335,18 +347,6 @@
 				[self.imageManager downloadIfNeededForAllCategories];
 			}
 		}
-		
-		LMImageManagerPermissionStatus permissionStatus = LMImageManagerPermissionStatusNotDetermined;
-		switch(optionSelected){
-			case 0:
-				permissionStatus = LMImageManagerPermissionStatusDenied;
-				break;
-			case 1:
-				permissionStatus = LMImageManagerPermissionStatusAuthorized;
-				break;
-		}
-		
-		[self.imageManager setDownloadPermissionStatus:permissionStatus];
 		
 		[self.sectionTableView reloadData];
 		
