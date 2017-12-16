@@ -77,6 +77,14 @@
 	return self;
 }
 
+- (UINavigationItem*)navigationItem {
+	UINavigationItem *navigationItem = [super navigationItem];
+	
+	navigationItem.title = NSLocalizedString(@"Credits", nil);
+	
+	return navigationItem;
+}
+
 + (UIViewController*)viewControllerWithRestorationIdentifierPath:(NSArray *)identifierComponents coder:(NSCoder *)coder {
 	return [LMCreditsViewController new];
 }
@@ -144,7 +152,7 @@
 	[self.scrollView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 	NSArray *scrollViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 		[self.scrollView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-		[self.scrollView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:44];
+		[self.scrollView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 	}];
 	[LMLayoutManager addNewPortraitConstraints:scrollViewPortraitConstraints];
 	

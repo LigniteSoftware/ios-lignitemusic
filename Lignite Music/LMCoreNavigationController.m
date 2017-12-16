@@ -13,7 +13,7 @@
 #import "LMMusicPlayer.h"
 #import "LMSettings.h"
 
-@interface LMCoreNavigationController ()
+@interface LMCoreNavigationController ()<UINavigationControllerDelegate, UINavigationBarDelegate>
 
 @end
 
@@ -21,11 +21,16 @@
 
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
+
+	NSLog(@"View will appear %@", self.interactivePopGestureRecognizer.delegate);
+
+//	self.delegate = self;
+//	self.navigationBar.delegate = self;
 	
-	NSLog(@"View will appear");
+	
 	
 	UIViewController *fromViewController = [[[self navigationController] transitionCoordinator] viewControllerForKey:UITransitionContextFromViewControllerKey];
-	
+
 	if (![[self.navigationController viewControllers] containsObject:fromViewController]){
 		for(UIViewController *viewController in self.viewControllers){
 			NSLog(@"View controller %@", [viewController.class description]);
@@ -36,6 +41,7 @@
 			}
 		}
 	}
+
 }
 
 //- (void)encodeRestorableStateWithCoder:(NSCoder *)coder {

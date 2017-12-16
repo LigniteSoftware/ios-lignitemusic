@@ -7,26 +7,35 @@
  */
 
 /*
+ 
  Hello, and thanks for translating Abbey!
  
- Please read the following notes thoroughly.
+ Please read the following notes *thoroughly*. You only have to read them once. If your translations show that you haven't read this (multiple mistakes, bad translations, app crashes using them frequently), we unfortunately may have to remove you from the translation team. Therefore it is important you read the following :)
+ 
+ 0. In general it is a good idea when translating to keep strings equal to or lesser than the length of their English counterparts. All strings have been visually prepared so they fit the app. Long strings will often cause visual troubles throughout the app.
  
  1. The following characters in between quotes must be left in exact format and must not be deleted, changed or
  modified in any other way:
-	"\n", "%02i", "%d", "%lu", "%@"
+ "\n", "%02i", "%d", "%lu", "%@", "%%", "%f", "%.02f", "%.03f"
  Any string in the above list with a percentage (%) symbol I will now reference as "formatters".
  
  2. Any character mentioned in point 1 that is in a string will have data injected into it. If there are more than
  one formatter, that means that data is inserted in that order. When you change strings with formatters, please do not
  change the order of the formatters or remove formatters. The order of which the data is inserted into these strings is
  static. If your language *absolutely requires* a different order, please contact us directly.
- rg
+ 
  3. If you are confused about a string, look at its key first. It may help clarify.
  If still you have any questions about translating Abbey please let us know. You should not feel uncertain
  what a strinhg is doing, and if you are, just let us know and we'll clarify. Now that you've read this far,
  please send us a picture of a walrus so we know you did. Yes, seriously.
  
+ 4. The following words/terms should *never* be translated into your language for legal reasons:
+ "Lignite Music", "Lignite", "Pebble", "Apple Music", "Spotify", "Abbey"
+ 
+ If you need to clarify the above in your language, for example "Pebble" needs to be the equivalent of "Pebble Smartwatch" in your language to make sure the idea is clear, it's ok to add words for clarity if necessary and you don't change the legal name. To demonstrate as an example if you needed this, in simplified Chinese, you would write "Pebble 智能手表".
+ 
  Thanks, and have fun!
+ 
  */
 
 
@@ -219,7 +228,7 @@
 
 "Privacy" = "Privatsphäre"; //App privacy, for things like analytics tracking
 "UsageData" = "Nutzungsdaten & Statistiken";
-"UsageDataDescription" = "Wir sammeln Daten, um zu sehen, wie unsere App genutzt wird und wie wir sie besser für dich machen können.\n\nFalls du kein Kickstarter Backer bist, werden keinerlei persönliche Daten über dich gespeichert.\n\nFalls du ein Kickstarter Backer bist, wird einzig und alleine deine Mailadresse gespeichert, welche wir jedoch bereits haben, da du uns ja unterstützt hast.\n\nSolltest du dich vom Statistik-Feature abmelden, werden keinerlei Daten mehr gesammelt.";
+"UsageDataDescription" = "Wir sammeln eine minime Anzahl Daten, damit wir Abbe weiter verbessern können.\n\nDie gesammelten Daten sind zu 100% anonym und du kannst dadurch nicht identifiziert werden.\n\nSolltest du dich dazu entschliessen, diese Funktion zu deaktivieren, wird dieser gesamte Prozess umgehend gestoppt und keine weiteren Daten gesammelt.";
 "OptionOptIn" = "Anmelden (Opt-in)";
 "OptionOptOut" = "Abmelden (Opt-out)";
 "OptedOut" = "Du hast dich abgemeldet";

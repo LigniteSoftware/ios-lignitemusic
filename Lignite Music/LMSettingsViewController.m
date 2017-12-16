@@ -54,6 +54,14 @@
 	return self;
 }
 
+- (UINavigationItem*)navigationItem {
+	UINavigationItem *navigationItem = [super navigationItem];
+	
+	navigationItem.title = NSLocalizedString(@"Settings", nil);
+	
+	return navigationItem;
+}
+
 + (UIViewController*)viewControllerWithRestorationIdentifierPath:(NSArray *)identifierComponents coder:(NSCoder *)coder {
 	return [LMSettingsViewController new];
 }
@@ -120,7 +128,7 @@
 		case 2:
 			return 1;
 		case 3:
-			return 3;
+			return 2;
 	}
 	return 0;
 }
@@ -406,10 +414,9 @@
 					break;
 				case 1: {
 					LMThemePickerViewController *themePicker = [LMThemePickerViewController new];
+//					themePicker.navigationItem = [[UINavigationItem alloc]initWithTitle:@"test"];
 					[self.navigationController pushViewController:themePicker animated:YES];
-					
-					[(LMCoreViewController*)self.coreViewController pushItemOntoNavigationBarWithTitle:NSLocalizedString(@"Theme", nil) withNowPlayingButton:NO];
-					
+										
 					[LMAnswers logCustomEventWithName:@"Viewed Themes" customAttributes:nil];
 					break;
 				}
@@ -443,8 +450,6 @@
 				case 0: {
 					LMPebbleManager *pebbleManager = [LMPebbleManager sharedPebbleManager];
 					[pebbleManager showSettings];
-					
-					[(LMCoreViewController*)self.coreViewController pushItemOntoNavigationBarWithTitle:NSLocalizedString(@"PebbleSettings", nil) withNowPlayingButton:NO];
 					break;
 				}
 			}
@@ -453,17 +458,14 @@
 			switch(indexPath.row){
 				case 0:{
 					LMCreditsViewController *creditsViewController = [LMCreditsViewController new];
-					[self.coreViewController.navigationController showViewController:creditsViewController sender:self];
-					[(LMCoreViewController*)self.coreViewController pushItemOntoNavigationBarWithTitle:NSLocalizedString(@"Credits", nil) withNowPlayingButton:NO];
+					[self.navigationController showViewController:creditsViewController sender:self];
 					
 					[LMAnswers logCustomEventWithName:@"Viewed Credits" customAttributes:nil];
 					break;
 				}
 				case 1: {
 					LMContactViewController *contactViewController = [LMContactViewController new];
-					[self.coreViewController.navigationController showViewController:contactViewController sender:self];
-//					[(LMCoreViewController*)self.coreViewController setStatusBarBlurHidden:YES];
-					[(LMCoreViewController*)self.coreViewController pushItemOntoNavigationBarWithTitle:NSLocalizedString(@"ContactUs", nil) withNowPlayingButton:NO];
+					[self.navigationController showViewController:contactViewController sender:self];
                     
 					
 					[LMAnswers logCustomEventWithName:@"Viewed Contact Us Screen" customAttributes:nil];
@@ -563,10 +565,10 @@
 	return UIStatusBarAnimationSlide;
 }
 
-- (void)loadView {
-	self.view = [UIView new];
-	self.view.backgroundColor = [UIColor whiteColor];
-}
+//- (void)loadView {
+//	self.view = [UIView new];
+//	self.view.backgroundColor = [UIColor whiteColor];
+//}
 
 - (void)themeChanged:(LMTheme)theme {
 	[self.sectionTableView reloadData];
@@ -591,7 +593,7 @@
 		[self.sectionTableView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[self.sectionTableView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 		[self.sectionTableView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		[self.sectionTableView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:44];
+		[self.sectionTableView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 	}];
 	[LMLayoutManager addNewPortraitConstraints:sectionTableViewPortraitConstraints];
 	
@@ -607,7 +609,6 @@
 	
 //	LMContactViewController *creditsViewController = [LMContactViewController new];
 //	[self.coreViewController.navigationController showViewController:creditsViewController sender:self];
-//	[(LMCoreViewController*)self.coreViewController pushItemOntoNavigationBarWithTitle:NSLocalizedString(@"Credits", nil) withNowPlayingButton:NO];
 }
 
 - (void)dealloc {

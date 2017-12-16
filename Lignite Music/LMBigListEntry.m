@@ -192,9 +192,7 @@
 	[contentView addSubview:self.tapToEditBackgroundView];
 	
 	self.tapToEditBackgroundView.hidden = !self.editing;
-	
-	NSLog(@"ttebv %p", self.tapToEditBackgroundView);
-	
+		
 	[self.tapToEditBackgroundView autoPinEdgesToSuperviewEdges];
 	
 	UITapGestureRecognizer *editTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(editViewTapped)];

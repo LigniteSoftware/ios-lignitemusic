@@ -33,6 +33,14 @@
 	return self;
 }
 
+- (UINavigationItem*)navigationItem {
+	UINavigationItem *navigationItem = [super navigationItem];
+	
+	navigationItem.title = NSLocalizedString(@"ContactUs", nil);
+	
+	return navigationItem;
+}
+
 + (UIViewController*)viewControllerWithRestorationIdentifierPath:(NSArray *)identifierComponents coder:(NSCoder *)coder {
 	return [LMContactViewController new];
 }
@@ -82,7 +90,7 @@
 	NSArray *thankYouLabelPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 		[self.thankYouLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
 		[self.thankYouLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(9.0/10.0)];
-		[self.thankYouLabel autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:84];
+		[self.thankYouLabel autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:20];
 	}];
 	[LMLayoutManager addNewPortraitConstraints:thankYouLabelPortraitConstraints];
 	

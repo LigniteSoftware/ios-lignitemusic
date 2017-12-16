@@ -23,6 +23,14 @@
 
 @implementation LMPebbleSettingsViewController
 
+- (UINavigationItem*)navigationItem {
+	UINavigationItem *navigationItem = [super navigationItem];
+	
+	navigationItem.title = NSLocalizedString(@"PebbleSettings", nil);
+	
+	return navigationItem;
+}
+
 - (instancetype)init {
 	self = [super init];
 	if(self) {
@@ -58,7 +66,7 @@
 		[self.settingsView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[self.settingsView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 		[self.settingsView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		[self.settingsView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:44];
+		[self.settingsView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 	}];
 	[LMLayoutManager addNewPortraitConstraints:settingsViewPortraitConstraints];
 	

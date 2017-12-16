@@ -184,7 +184,7 @@
 	
 	[hangOnImage autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:self.view.frame.size.width/5.0];
 	[hangOnImage autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:self.view.frame.size.width/5.0];
-	[hangOnImage autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:88];
+	[hangOnImage autoPinEdgeToSuperviewEdge:ALEdgeTop];
 	[hangOnImage autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:(1.0/3.0)];
 	
 	UILabel *hangOnLabel = [UILabel newAutoLayoutView];

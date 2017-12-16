@@ -31,6 +31,14 @@
 
 @implementation LMThemePickerViewController
 
+- (UINavigationItem*)navigationItem {
+	UINavigationItem *navigationItem = [super navigationItem];
+	
+	navigationItem.title = NSLocalizedString(@"Theme", nil);
+	
+	return navigationItem;
+}
+
 - (void)themeView:(LMThemeView*)themeView selectedTheme:(LMTheme)theme {
 	[[LMThemeEngine sharedThemeEngine] selectTheme:theme];
 	
@@ -154,7 +162,7 @@
 	
 	NSArray *collectionViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 		[self.collectionView autoPinEdgeToSuperviewMargin:ALEdgeLeading];
-		[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:64.0f];
+		[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 	}];
 	[LMLayoutManager addNewPortraitConstraints:collectionViewPortraitConstraints];
 	

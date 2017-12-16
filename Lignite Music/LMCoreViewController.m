@@ -128,8 +128,6 @@ LMControlBarViewDelegate
 
 @implementation LMCoreViewController
 
-@dynamic navigationController;
-
 //- (NSLayoutConstraint*)buttonNavigationBarHeightConstraint {
 //	for(NSLayoutConstraint *constraint in self.buttonNavigationBar.constraints){
 //		if(constraint.firstItem == self.buttonNavigationBar && (constraint.firstAttribute == NSLayoutAttributeWidth || constraint.firstAttribute == NSLayoutAttributeHeight)){
@@ -167,7 +165,7 @@ LMControlBarViewDelegate
 		[iconWarningView setImage:[LMAppIcon imageForIcon:LMIconWarning] forState:UIControlStateNormal];
 		[iconWarningView addTarget:self action:@selector(warningBarButtonItemTapped) forControlEvents:UIControlEventTouchUpInside];
 		
-		[self.navigationBar addSubview:iconWarningView];
+		[self.navigationController.navigationBar addSubview:iconWarningView];
 		
 		[iconWarningView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:6.0f];
 		[iconWarningView autoPinEdgeToSuperviewEdge:ALEdgeTop];
@@ -209,7 +207,7 @@ LMControlBarViewDelegate
     
     self.view.userInteractionEnabled = YES;
     self.buttonNavigationBar.userInteractionEnabled = YES;
-    self.navigationBar.userInteractionEnabled = YES;
+    self.navigationController.navigationBar.userInteractionEnabled = YES;
 	
 	[UIView animateWithDuration:0.5 animations:^{
 		self.backgroundBlurView.effect = nil;
@@ -259,7 +257,7 @@ LMControlBarViewDelegate
     else if([key isEqualToString:LMTutorialKeyMiniPlayer]){
         [NSTimer scheduledTimerWithTimeInterval:1.0 block:^{
             if([LMTutorialView tutorialShouldRunForKey:LMTutorialKeyTopBar]){
-                self.navigationBar.userInteractionEnabled = NO;
+                self.navigationController.navigationBar.userInteractionEnabled = NO;
                 
                 LMTutorialView *tutorialView = [[LMTutorialView alloc] initForAutoLayoutWithTitle:NSLocalizedString(@"TutorialTopBarTitle", nil)
                                                                                       description:NSLocalizedString(@"TutorialTopBarDescription", nil)
@@ -274,7 +272,7 @@ LMControlBarViewDelegate
 					[tutorialView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 					[tutorialView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
 					[tutorialView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-					[tutorialView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.navigationBar];
+					[tutorialView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.navigationController.navigationBar];
 				}];
 				[LMLayoutManager addNewPortraitConstraints:tutorialViewPortraitConstraints];
 				
@@ -602,7 +600,11 @@ LMControlBarViewDelegate
             
 			[self.buttonNavigationBar completelyHide];
 			
-			LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
+//			LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
+//			[self.navigationController pushViewController:settingsViewController animated:YES];
+			
+			UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+			LMSettingsViewController *settingsViewController = (LMSettingsViewController*)[storyboard instantiateViewControllerWithIdentifier:@"LMSettingsViewController"];
 			[self.navigationController pushViewController:settingsViewController animated:YES];
 			break;
 		}
@@ -628,17 +630,8 @@ LMControlBarViewDelegate
 	else{
 		self.willOpenSettings = YES;
 		[self.buttonNavigationBar completelyHide];
-		if(!self.statePreservedSettingsAlreadyOpen && self.settingsOpen == 0){
-			[self pushItemOntoNavigationBarWithTitle:NSLocalizedString(@"Settings", nil) withNowPlayingButton:NO];
-		}
 		self.statePreservedSettingsAlreadyOpen = NO;
 	}
-}
-
-- (void)viewDidAppear:(BOOL)animated {
-	[super viewDidAppear:animated];
-	
-	self.searchViewController = nil;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -651,12 +644,31 @@ LMControlBarViewDelegate
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 	
+	id<UIViewControllerTransitionCoordinator> tc = self.transitionCoordinator;
+	if (tc && [tc initiallyInteractive]) {
+		[tc notifyWhenInteractionEndsUsingBlock:
+		 ^(id<UIViewControllerTransitionCoordinatorContext> context) {
+			 if ([context isCancelled]) {
+				 NSLog(@"User cancelled swipe gesture");
+			 } else { // not cancelled, do it
+//				 [self.navigationController.navigationBar popNavigationItemAnimated:YES];
+				 [NSTimer scheduledTimerWithTimeInterval:5.0 block:^{
+					 [self.navigationController popToRootViewControllerAnimated:YES];
+				 } repeats:NO];
+			 }
+		 }];
+	} else { // not interactive, do it
+		[self.navigationController popViewControllerAnimated:YES];
+	}
+	
 	[self.buttonNavigationBar.browsingBar setShowingLetterTabs:YES];
 	[self.landscapeNavigationBar setMode:self.musicType == LMMusicTypePlaylists ? LMLandscapeNavigationBarModePlaylistView : LMLandscapeNavigationBarModeOnlyLogo];
 	
 	if(self.musicType == LMMusicTypePlaylists){
 		[self.landscapeNavigationBar setEditing:self.compactView.editing];
 	}
+	
+	self.searchViewController = nil;
 }
 
 - (void)requiredHeightForNavigationBarChangedTo:(CGFloat)requiredHeight withAnimationDuration:(CGFloat)animationDuration {
@@ -686,11 +698,12 @@ LMControlBarViewDelegate
 	[NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(viewDidLoad) userInfo:nil repeats:NO];
 }
 
-//http://stackoverflow.com/questions/18946302/uinavigationcontroller-interactive-pop-gesture-not-working
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+// http://stackoverflow.com/questions/18946302/uinavigationcontroller-interactive-pop-gesture-not-working
+//- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
 //	NSLog(@"%@ work with %@", [[gestureRecognizer class] description], [[otherGestureRecognizer class]description]);
-	return [otherGestureRecognizer class] != [UIPanGestureRecognizer class];
-}
+//	return [otherGestureRecognizer class] != [UIPanGestureRecognizer class];
+////	return YES;
+//}
 
 - (void)searchTermChangedTo:(NSString *)searchTerm {
 	NSLog(@"Changed to %@", searchTerm);
@@ -762,6 +775,8 @@ LMControlBarViewDelegate
 		
         [self.settingsCheckTimer invalidate];
         self.settingsCheckTimer = nil;
+		
+		[self.navigationController popViewControllerAnimated:YES];
     }
 }
 
@@ -776,16 +791,23 @@ LMControlBarViewDelegate
 
 - (BOOL)navigationBar:(UINavigationBar *)navigationBar shouldPopItem:(UINavigationItem *)item {
 	NSLog(@"Pop? %@", item);
-	
-	if(![item isEqual:self.itemPopped]){ //Pressed back instead of swipped back
-		NSLog(@"Dismissing shit too");
-		[self.navigationController popViewControllerAnimated:YES];
-	}
-	
+
+	[self.navigationController popViewControllerAnimated:YES];
+
 	self.itemPopped = nil;
-		
+
 	return YES;
 }
+
+- (void)handlePopGesture:(UIGestureRecognizer *)gesture{
+//	if(self.navigationController.topViewController == self){
+	NSLog(@"State %d", gesture.state);
+		if(gesture.state == UIGestureRecognizerStateEnded){
+			[self.navigationController popViewControllerAnimated:YES];
+		}
+//	}
+}
+
 
 - (void)launchNowPlayingFromNavigationBar {
     if(!self.musicPlayer.nowPlayingTrack){
@@ -806,50 +828,6 @@ LMControlBarViewDelegate
 			[UIView animateWithDuration:0.25 animations:^{
 				[self setNeedsStatusBarAppearanceUpdate];
 			}];
-		}
-	}];
-}
-
-- (void)pushItemOntoNavigationBarWithTitle:(NSString*)title withNowPlayingButton:(BOOL)nowPlayingButton {
-	UINavigationItem *navigationItem = [[UINavigationItem alloc]initWithTitle:title];
-	
-	if(nowPlayingButton){
-		UIImageView *titleImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
-		titleImageView.contentMode = UIViewContentModeScaleAspectFit;
-		titleImageView.image = [LMAppIcon imageForIcon:LMIconNoAlbumArt75Percent];
-		titleImageView.userInteractionEnabled = YES;
-		
-		UITapGestureRecognizer *nowPlayingTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(launchNowPlayingFromNavigationBar)];
-		[titleImageView addGestureRecognizer:nowPlayingTapGestureRecognizer];
-		
-		UIBarButtonItem *barButtonItem = [[UIBarButtonItem alloc]initWithCustomView:titleImageView];
-		
-		navigationItem.rightBarButtonItem = barButtonItem;
-	}
-    
-//    if([title isEqualToString:@""]){
-//        [self.navigationController.view layoutIfNeeded];
-//        
-////        self.statusBarBlurViewTopConstraint.constant = -20 - self.navigationBar.frame.size.height - 15;
-//        
-//        [UIView animateWithDuration:0.5 animations:^{
-//            [self.navigationController.view layoutIfNeeded];
-//        }];
-//    }
-	
-	[self.navigationBar pushNavigationItem:navigationItem animated:YES];
-}
-
-- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated
-{
-	//Check if swipe gesture backward went through or not, if it did, pop the nav item
-	id<UIViewControllerTransitionCoordinator> tc = navigationController.topViewController.transitionCoordinator;
-	[tc notifyWhenInteractionEndsUsingBlock:^(id<UIViewControllerTransitionCoordinatorContext> context) {
-		if(![context isCancelled]){
-			NSLog(@"Shit");
-			self.itemPopped = self.navigationBar.topItem;
-			[self.navigationBar popNavigationItemAnimated:YES];
-			NSLog(@"Is this anybody's water? %@", self.itemPopped);
 		}
 	}];
 }
@@ -959,18 +937,18 @@ LMControlBarViewDelegate
 	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
 		NSLog(@"Rotating");
 		
-		self.navigationBar.hidden = NO;
+		[self.navigationController setNavigationBarHidden:NO];
 		self.landscapeNavigationBar.hidden = NO;
 		
-		self.navigationBar.layer.opacity = willBeLandscape ? 0.0 : 1.0;
+		self.navigationController.navigationBar.layer.opacity = willBeLandscape ? 0.0 : 1.0;
 		self.landscapeNavigationBar.layer.opacity = !willBeLandscape ? 0.0 : 1.0;
 		
-		if(@available(iOS 11, *)){
-			self.navigationBar.frame = CGRectMake(0, 20, size.width, willBeLandscape ? 0 : 64.0);
-		}
-		else{
-			self.navigationBar.frame = CGRectMake(0, 0, size.width, willBeLandscape ? 0 : 64.0);
-		}
+//		if(@available(iOS 11, *)){
+//			self.navigationController.navigationBar.frame = CGRectMake(0, 20, size.width, willBeLandscape ? 0 : 64.0);
+//		}
+//		else{
+//			self.navigationController.navigationBar.frame = CGRectMake(0, 0, size.width, willBeLandscape ? 0 : 64.0);
+//		}
 		
 		self.nowPlayingCoreView.topConstraint.constant = self.nowPlayingCoreView.isOpen ? 0 : size.height;
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
@@ -982,7 +960,7 @@ LMControlBarViewDelegate
 		
 		self.layoutManager.size = self.view.frame.size;
 				
-		self.navigationBar.hidden = willBeLandscape;
+		[self.navigationController setNavigationBarHidden:willBeLandscape];
 		self.landscapeNavigationBar.hidden = !willBeLandscape;
 		
 		
@@ -999,8 +977,8 @@ LMControlBarViewDelegate
 		case LMLandscapeNavigationBarButtonBack: {
 			NSLog(@"Go back");
 			
-			if(self.navigationBar.backItem){
-				[self.navigationBar popNavigationItemAnimated:NO];
+			if(self.navigationController.navigationBar.backItem){
+				[self.navigationController popViewControllerAnimated:YES];
 			}
 			else{
 				[self.compactView backButtonPressed];
@@ -1028,18 +1006,10 @@ LMControlBarViewDelegate
 	}
 }
 
-- (void)handlePopGesture:(UIGestureRecognizer *)gesture{
-	if(self.navigationController.topViewController == self){
-		if(gesture.state == UIGestureRecognizerStateEnded){
-			[self.navigationBar popNavigationItemAnimated:YES];
-		}
-	}
-}
-
 - (void)encodeRestorableStateWithCoder:(NSCoder *)coder {
-	NSLog(@"What boi encoding %@", self.navigationBar.items);
+	NSLog(@"What boi encoding %@", self.navigationController.navigationBar.items);
 	
-	[coder encodeObject:self.navigationBar.items forKey:LMNavigationBarItemsKey];
+	[coder encodeObject:self.navigationController.navigationBar.items forKey:LMNavigationBarItemsKey];
 	[coder encodeBool:self.nowPlayingCoreView.isOpen forKey:LMNowPlayingWasOpen];
 	
 	[super encodeRestorableStateWithCoder:coder];
@@ -1050,12 +1020,12 @@ LMControlBarViewDelegate
 	
 	NSArray *navigationBarItems = [coder decodeObjectForKey:LMNavigationBarItemsKey];
 	NSMutableArray *approvedNavigationBarItems = [NSMutableArray new];
-	[approvedNavigationBarItems addObject:[self nowPlayingNavigationItem]];
+//	[approvedNavigationBarItems addObject:[self nowPlayingNavigationItem]];
 	for(UINavigationItem *navigationItem in navigationBarItems){
 		if(navigationItem.title != nil){
 			[approvedNavigationBarItems addObject:navigationItem];
 		}
-		NSLog(@"Nav bar item '%@' '%@' %@", navigationItem.title, navigationItem.titleView, self.navigationBar);
+		NSLog(@"Nav bar item '%@' '%@' %@", navigationItem.title, navigationItem.titleView, self.navigationController.navigationBar);
 	}
 	
 	NSLog(@"Preserved %@", approvedNavigationBarItems);
@@ -1066,17 +1036,19 @@ LMControlBarViewDelegate
 	[super decodeRestorableStateWithCoder:coder];
 }
 
-- (UINavigationItem*)nowPlayingNavigationItem {
+- (UINavigationItem*)navigationItem {
 	UIImageView *titleImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
 	titleImageView.contentMode = UIViewContentModeScaleAspectFit;
 	titleImageView.image = [LMAppIcon imageForIcon:LMIconNoAlbumArt75Percent];
 	titleImageView.userInteractionEnabled = YES;
-	
+
 	UITapGestureRecognizer *nowPlayingTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(launchNowPlayingFromNavigationBar)];
 	[titleImageView addGestureRecognizer:nowPlayingTapGestureRecognizer];
-	
+
 	UINavigationItem *navigationItem = [[UINavigationItem alloc]initWithTitle:@""];
 	navigationItem.titleView = titleImageView;
+
+//	UINavigationItem *navigationItem = [[UINavigationItem alloc]initWithTitle:@"fuck"];
 	
 	return navigationItem;
 }
@@ -1086,14 +1058,13 @@ LMControlBarViewDelegate
     // Do any additional setup after loading the view
 	
 	NSLog(@"View did load core");
+
 	
 	static dispatch_once_t basicSetupToken;
 	dispatch_once(&basicSetupToken, ^{
 		self.view.backgroundColor = [UIColor whiteColor];
 		
-		self.navigationController.navigationBarHidden = YES;
-		self.navigationController.interactivePopGestureRecognizer.delegate = self;
-		[self.navigationController.interactivePopGestureRecognizer addTarget:self action:@selector(handlePopGesture:)];
+		[self.navigationController setNavigationBarHidden:YES];
 		
 		self.loaded = NO;
 		
@@ -1210,6 +1181,11 @@ LMControlBarViewDelegate
 }
 
 - (void)loadSubviews {
+//	[self.navigationController setNavigationBarHidden:NO animated:YES];
+//
+//	LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
+//	[self.navigationController pushViewController:settingsViewController animated:YES];
+	
 	if(self.buttonNavigationBar){
 		return;
 	}
@@ -1291,48 +1267,60 @@ LMControlBarViewDelegate
 	[appleWatchBridge attachToViewController:self];
 	
 	
-	if(@available(iOS 11, *)){
-		self.navigationBar = [[LMNavigationBar alloc] initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, 64.0f)];
-		
-		//Themeing? Bet you wish you didn't make it this way ;)
-		UIView *statusBarCover = [UIView newAutoLayoutView];
-		statusBarCover.backgroundColor = [LMColour whiteColour];
-		[self.navigationBar addSubview:statusBarCover];
-		
-		[statusBarCover autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-		[statusBarCover autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:-20.0f];
-		[statusBarCover autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-		[statusBarCover autoSetDimension:ALDimensionHeight toSize:20.0f];
-	}
-	else{
-		self.navigationBar = [[LMNavigationBar alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 64.0f)];
-	}
-	self.navigationBar.delegate = self;
-	[self.navigationController.view addSubview:self.navigationBar];
+//		self.navigationController.navigationBar = [LMNavigationBar newAutoLayoutView];
+//		[self.navigationController.view addSubview:self.navigationController.navigationBar];
+//
+//		[self.navigationController.navigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+//		[self.navigationController.navigationBar autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:20];
+//		[self.navigationController.navigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+//		[self.navigationController.navigationBar autoSetDimension:ALDimensionHeight toSize:64.0f];
 	
-	self.navigationBar.barTintColor = [UIColor whiteColor];
-	self.navigationBar.tintColor = [UIColor blackColor];
-	self.navigationBar.translucent = NO;
+	NSLog(@"Fuck %@ %@", [self.navigationController class], self.navigationController.navigationBar);
 	
-	self.navigationBar.layer.shadowColor = [UIColor blackColor].CGColor;
-	self.navigationBar.layer.shadowRadius = WINDOW_FRAME.size.width / 45 / 2;
-	self.navigationBar.layer.shadowOffset = CGSizeMake(0, self.navigationBar.layer.shadowRadius/2);
-	self.navigationBar.layer.shadowOpacity = 0.25f;
+	[self.navigationController setNavigationBarHidden:NO];
+	[self.navigationController.navigationBar setBackgroundColor:[UIColor whiteColor]];
 	
-	if(self.statePreservedNavigationBarItems){
-		[self.navigationBar setItems:self.statePreservedNavigationBarItems];
-		self.settingsOpen = self.statePreservedNavigationBarItems.count-1;
-		self.statePreservedNavigationBarItems = nil;
-	}
-	else{
-		[self.navigationBar pushNavigationItem:[self nowPlayingNavigationItem] animated:YES];
-	}
+//		self.navigationController.navigationBar = [[LMNavigationBar alloc] initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, 64.0f)];
+//		self.navigationController.navigationBar.prefersLargeTitles = NO;
+//
+//
+	
+	//Themeing? Bet you wish you didn't make it this way ;)  - Past Edwin, Dec. 15th 2017
+	UIView *statusBarCover = [UIView newAutoLayoutView];
+	statusBarCover.backgroundColor = [LMColour whiteColour];
+	[self.navigationController.navigationBar addSubview:statusBarCover];
+
+	[statusBarCover autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+	[statusBarCover autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:-20.0f];
+	[statusBarCover autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+	[statusBarCover autoSetDimension:ALDimensionHeight toSize:20.0f];
+	
+//	self.navigationController.navigationBar.delegate = self;
+//	[self.navigationController.view addSubview:self.navigationController.navigationBar];
+	
+	self.navigationController.navigationBar.barTintColor = [UIColor whiteColor];
+	self.navigationController.navigationBar.tintColor = [UIColor blackColor];
+	self.navigationController.navigationBar.translucent = NO;
+	
+	self.navigationController.navigationBar.layer.shadowColor = [UIColor blackColor].CGColor;
+	self.navigationController.navigationBar.layer.shadowRadius = WINDOW_FRAME.size.width / 45 / 2;
+	self.navigationController.navigationBar.layer.shadowOffset = CGSizeMake(0, self.navigationController.navigationBar.layer.shadowRadius/2);
+	self.navigationController.navigationBar.layer.shadowOpacity = 0.25f;
+	
+//	if(self.statePreservedNavigationBarItems){
+//		[self.navigationController.navigationBar setItems:self.statePreservedNavigationBarItems];
+//		self.settingsOpen = self.statePreservedNavigationBarItems.count-1;
+//		self.statePreservedNavigationBarItems = nil;
+//	}
+//	else{
+//		[self.navigationController.navigationBar pushNavigationItem:[self nowPlayingNavigationItem] animated:YES];
+//	}
 	
 	
 	
 	self.landscapeNavigationBar = [[LMLandscapeNavigationBar alloc] initWithFrame:CGRectMake(0, 0, 64.0, self.layoutManager.isLandscape ? self.view.frame.size.height : self.view.frame.size.width)];
 	self.landscapeNavigationBar.delegate = self;
-	self.landscapeNavigationBar.mode = (self.navigationBar.items.count > 1)
+	self.landscapeNavigationBar.mode = (self.navigationController.navigationBar.items.count > 1)
 	? LMLandscapeNavigationBarModeWithBackButton
 	: LMLandscapeNavigationBarModeOnlyLogo;
 //	self.landscapeNavigationBar.mode = LMLandscapeNavigationBarModePlaylistView;
@@ -1350,13 +1338,13 @@ LMControlBarViewDelegate
 	
 	self.landscapeNavigationBar.layer.shadowColor = [UIColor blackColor].CGColor;
 	self.landscapeNavigationBar.layer.shadowRadius = WINDOW_FRAME.size.width / 45 / 2;
-	self.landscapeNavigationBar.layer.shadowOffset = CGSizeMake(0, self.navigationBar.layer.shadowRadius/2);
+	self.landscapeNavigationBar.layer.shadowOffset = CGSizeMake(0, self.navigationController.navigationBar.layer.shadowRadius/2);
 	self.landscapeNavigationBar.layer.shadowOpacity = 0.25f;
 	
 	
-	self.navigationBar.hidden = self.layoutManager.isLandscape;
-	self.navigationBar.layer.opacity = self.navigationBar.hidden ? 0.0 : 1.0;
-	//						self.navigationBar.frame = CGRectMake(0, 0, self.view.frame.size.width, self.navigationBar.hidden ? 0 : 64.0f);
+	[self.navigationController setNavigationBarHidden:self.layoutManager.isLandscape];
+	self.navigationController.navigationBar.layer.opacity = self.navigationController.navigationBar.hidden ? 0.0 : 1.0;
+	//						self.navigationController.navigationBar.frame = CGRectMake(0, 0, self.view.frame.size.width, self.navigationController.navigationBar.hidden ? 0 : 64.0f);
 	self.landscapeNavigationBar.hidden = !self.layoutManager.isLandscape;
 	self.landscapeNavigationBar.layer.opacity = self.landscapeNavigationBar.hidden ? 0.0 : 1.0;
 	
@@ -1368,7 +1356,7 @@ LMControlBarViewDelegate
 	[self.view addSubview:self.compactView];
 	
 	NSArray *compactViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-		[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:64];
+		[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 		[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 		[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
@@ -1560,7 +1548,7 @@ LMControlBarViewDelegate
 		if(self.statePreservedSettingsAlreadyOpen){
 			[self prepareForOpenSettings];
 		}
-		if(self.navigationBar.items.count > 1){
+		if(self.navigationController.navigationBar.items.count > 1){
 			[self.buttonNavigationBar completelyHide];
 		}
 		
@@ -1578,6 +1566,12 @@ LMControlBarViewDelegate
 		
 //		LMThemePickerViewController *themePicker = [LMThemePickerViewController new];
 //		[self.navigationController pushViewController:themePicker animated:YES];
+		
+//		UIViewController *controller = [
+		
+//		UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+//		LMSettingsViewController *settingsViewController = (LMSettingsViewController*)[storyboard instantiateViewControllerWithIdentifier:@"LMSettingsViewController"];
+//		[self.navigationController pushViewController:settingsViewController animated:YES];
 	} repeats:NO];
 	
 	

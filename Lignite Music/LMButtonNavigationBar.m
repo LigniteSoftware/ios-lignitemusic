@@ -209,9 +209,7 @@
 		if(!strongSelf){
 			return;
 		}
-		
-		NSLog(@"Looter in a riot");
-		
+				
 		if(finished) {
 			[strongSelf.delegate requiredHeightForNavigationBarChangedTo:0
 												   withAnimationDuration:0.10];

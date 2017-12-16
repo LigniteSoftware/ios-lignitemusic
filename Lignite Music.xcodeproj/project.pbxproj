@@ -28,7 +28,6 @@
 		6A1B4D141FAD1609009EC449 /* LMEnhancedPlaylistCollectionViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A1B4D131FAD1609009EC449 /* LMEnhancedPlaylistCollectionViewFlowLayout.m */; };
 		6A1FB9CC1D9AE76A00890BF3 /* LMLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A1FB9CB1D9AE76A00890BF3 /* LMLabel.m */; };
 		6A2316751E7B782900E6A7F7 /* LMMiniPlayerCoreView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A2316741E7B782900E6A7F7 /* LMMiniPlayerCoreView.m */; };
-		6A23AF4A1E454D1E00A56F5F /* LMNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A23AF491E454D1E00A56F5F /* LMNavigationBar.m */; };
 		6A23AF4E1E46254400A56F5F /* LMCompactBrowsingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A23AF4D1E46254400A56F5F /* LMCompactBrowsingView.m */; };
 		6A2566F31D4089E8004EDE41 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A2566F21D4089E8004EDE41 /* MediaPlayer.framework */; };
 		6A25F7A61F99229400CC8082 /* icon_favourite_black.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A25F7A51F99223B00CC8082 /* icon_favourite_black.png */; };
@@ -155,6 +154,7 @@
 		6A52574C1DF099480040210D /* LMView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A52574B1DF099480040210D /* LMView.m */; };
 		6A52574F1DF099720040210D /* LMProgressSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A52574E1DF099720040210D /* LMProgressSlider.m */; };
 		6A5257531DF1FC840040210D /* LMLetterTabBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A5257521DF1FC840040210D /* LMLetterTabBar.m */; };
+		6A5365E01FE47F93008B8FAE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6A5365DF1FE47F93008B8FAE /* Main.storyboard */; };
 		6A555BB01DA168860078C9FC /* LMOperationQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A555BAF1DA168860078C9FC /* LMOperationQueue.m */; };
 		6A5821021DADE54400A4FAB1 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A5821011DADE54400A4FAB1 /* AVFoundation.framework */; };
 		6A5821041DAF312C00A4FAB1 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A5821031DAF312C00A4FAB1 /* AudioToolbox.framework */; };
@@ -324,7 +324,6 @@
 		6AE9E6EE1F9C667C0077B15E /* LMImagePickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AE9E6ED1F9C667C0077B15E /* LMImagePickerView.m */; };
 		6AEB9CFD1BACF60E00AD19FA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AEB9CFC1BACF60E00AD19FA /* main.m */; };
 		6AEB9D001BACF60E00AD19FA /* LMAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AEB9CFF1BACF60E00AD19FA /* LMAppDelegate.m */; };
-		6AEB9D061BACF60E00AD19FA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6AEB9D041BACF60E00AD19FA /* Main.storyboard */; };
 		6AEB9D081BACF60E00AD19FA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6AEB9D071BACF60E00AD19FA /* Assets.xcassets */; };
 		6AEB9D0B1BACF60E00AD19FA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6AEB9D091BACF60E00AD19FA /* LaunchScreen.storyboard */; };
 		6AEB9D351BAD812700AD19FA /* icon_pause.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AEB9D311BAD812700AD19FA /* icon_pause.png */; };
@@ -440,8 +439,6 @@
 		6A1FB9CB1D9AE76A00890BF3 /* LMLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMLabel.m; sourceTree = "<group>"; };
 		6A2316731E7B782900E6A7F7 /* LMMiniPlayerCoreView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMMiniPlayerCoreView.h; sourceTree = "<group>"; };
 		6A2316741E7B782900E6A7F7 /* LMMiniPlayerCoreView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMMiniPlayerCoreView.m; sourceTree = "<group>"; };
-		6A23AF481E454D1E00A56F5F /* LMNavigationBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMNavigationBar.h; sourceTree = "<group>"; };
-		6A23AF491E454D1E00A56F5F /* LMNavigationBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMNavigationBar.m; sourceTree = "<group>"; };
 		6A23AF4C1E46254400A56F5F /* LMCompactBrowsingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMCompactBrowsingView.h; sourceTree = "<group>"; };
 		6A23AF4D1E46254400A56F5F /* LMCompactBrowsingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMCompactBrowsingView.m; sourceTree = "<group>"; };
 		6A2566F21D4089E8004EDE41 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
@@ -568,6 +565,7 @@
 		6A52574E1DF099720040210D /* LMProgressSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMProgressSlider.m; sourceTree = "<group>"; };
 		6A5257511DF1FC840040210D /* LMLetterTabBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMLetterTabBar.h; sourceTree = "<group>"; };
 		6A5257521DF1FC840040210D /* LMLetterTabBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMLetterTabBar.m; sourceTree = "<group>"; };
+		6A5365DF1FE47F93008B8FAE /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		6A555BAE1DA168860078C9FC /* LMOperationQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMOperationQueue.h; sourceTree = "<group>"; };
 		6A555BAF1DA168860078C9FC /* LMOperationQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMOperationQueue.m; sourceTree = "<group>"; };
 		6A5821011DADE54400A4FAB1 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -788,7 +786,6 @@
 		6AEB9CFC1BACF60E00AD19FA /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		6AEB9CFE1BACF60E00AD19FA /* LMAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMAppDelegate.h; sourceTree = "<group>"; };
 		6AEB9CFF1BACF60E00AD19FA /* LMAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMAppDelegate.m; sourceTree = "<group>"; };
-		6AEB9D051BACF60E00AD19FA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		6AEB9D071BACF60E00AD19FA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6AEB9D0A1BACF60E00AD19FA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		6AEB9D0C1BACF60E00AD19FA /* LigniteMusic.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = LigniteMusic.plist; sourceTree = "<group>"; };
@@ -942,8 +939,8 @@
 		6A1FB9C31D99C8C900890BF3 /* Storyboards */ = {
 			isa = PBXGroup;
 			children = (
-				6AEB9D041BACF60E00AD19FA /* Main.storyboard */,
 				6AEB9D091BACF60E00AD19FA /* LaunchScreen.storyboard */,
+				6A5365DF1FE47F93008B8FAE /* Main.storyboard */,
 			);
 			name = Storyboards;
 			sourceTree = "<group>";
@@ -1301,8 +1298,6 @@
 				6A2316741E7B782900E6A7F7 /* LMMiniPlayerCoreView.m */,
 				6A7DF1181DB112140077B979 /* LMMiniPlayerView.h */,
 				6A7DF1191DB112140077B979 /* LMMiniPlayerView.m */,
-				6A23AF481E454D1E00A56F5F /* LMNavigationBar.h */,
-				6A23AF491E454D1E00A56F5F /* LMNavigationBar.m */,
 				6A8150D81EAF6E7800F518C5 /* LMLandscapeNavigationBar.h */,
 				6A8150D91EAF6E7800F518C5 /* LMLandscapeNavigationBar.m */,
 				6A2A29C91DB1F1C3008E7792 /* LMSource.h */,
@@ -2013,6 +2008,7 @@
 				6A759D421DE8EB0E0051E1A9 /* icon_functionality.png in Resources */,
 				6A7268211E163E8300FA01DB /* icon_triple_horizontal_dots.png in Resources */,
 				6AC32B771DB53EB20007C67E /* icon_repeat_general.png in Resources */,
+				6A5365E01FE47F93008B8FAE /* Main.storyboard in Resources */,
 				6A9C053B1DB4441200713D1C /* icon_albums.png in Resources */,
 				6AC32B7D1DB6CD950007C67E /* icon_bug.png in Resources */,
 				6AF2C9441DDA16CC005E4643 /* icon_browse.png in Resources */,
@@ -2029,7 +2025,6 @@
 				6AEB9D361BAD812700AD19FA /* icon_play.png in Resources */,
 				6A339FF01FD90DE300B1A447 /* apple_watch_sad.png in Resources */,
 				6AEB9D081BACF60E00AD19FA /* Assets.xcassets in Resources */,
-				6AEB9D061BACF60E00AD19FA /* Main.storyboard in Resources */,
 				6AFF01A81DDED15100F24D8E /* onboarding_gutless_user.png in Resources */,
 				6A6C186D1DE0014A00D651E1 /* icon_artists.png in Resources */,
 				6A339FD01FD8AB3C00B1A447 /* watch_no_cover_art_not_cropped.png in Resources */,
@@ -2287,7 +2282,6 @@
 				6AF9D5321DE0B73D006368B6 /* LMImageManager.m in Sources */,
 				6AAA560D1DF631EC00692CFB /* LMSearchView.m in Sources */,
 				6A59A51B1DE7B08B00B346AC /* LMSettingsViewController.m in Sources */,
-				6A23AF4A1E454D1E00A56F5F /* LMNavigationBar.m in Sources */,
 				6AE579031FA924330076CB2E /* LMEnhancedPlaylistEditorViewController.m in Sources */,
 				6AEF8C731DEF419D00D9A1BF /* LMDebugViewController.m in Sources */,
 				6A08AF131EBF30B00069C9CC /* LMTriangleInnerShadowView.m in Sources */,
@@ -2356,14 +2350,6 @@
 				6ADCE2011FB262B800BE0BBB /* Base */,
 			);
 			name = Interface.storyboard;
-			sourceTree = "<group>";
-		};
-		6AEB9D041BACF60E00AD19FA /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				6AEB9D051BACF60E00AD19FA /* Base */,
-			);
-			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
 		6AEB9D091BACF60E00AD19FA /* LaunchScreen.storyboard */ = {

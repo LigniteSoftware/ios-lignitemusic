@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="NiE-EP-9Bi">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Test-->
+        <scene sceneID="SCV-Hc-Ss9">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Znh-nW-NyN" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <navigationController title="Test" id="NiE-EP-9Bi" customClass="LMCoreNavigationController" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="Gz4-32-8Ey">
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="p5Z-Wf-hp1" kind="relationship" relationship="rootViewController" id="rAC-xP-8I3"/>
+                    </connections>
+                </navigationController>
+            </objects>
+            <point key="canvasLocation" x="-1066" y="118"/>
+        </scene>
+        <!--Core View Controller-->
+        <scene sceneID="Ee6-EY-HsH">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="S8E-gy-awb" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewController id="p5Z-Wf-hp1" customClass="LMCoreViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="v2i-R3-c3I">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="nTd-NY-0tk"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="PDl-VG-3D6"/>
+                </viewController>
+            </objects>
+            <point key="canvasLocation" x="-234" y="117"/>
+        </scene>
+        <!--Settings View Controller-->
+        <scene sceneID="lIg-BS-0g4">
+            <objects>
+                <viewController storyboardIdentifier="LMSettingsViewController" id="J5h-1G-OIf" customClass="LMSettingsViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="xRS-oi-xaR">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text=":(" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jm5-WQ-0lH">
+                                <rect key="frame" x="166" y="312" width="42" height="86"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="uYJ-DR-mkd"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="WrQ-oa-sn4" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-549.60000000000002" y="902.69865067466276"/>
+        </scene>
+    </scenes>
+</document>
