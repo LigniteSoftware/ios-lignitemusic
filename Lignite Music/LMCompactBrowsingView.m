@@ -98,6 +98,11 @@
  */
 @property (readonly) LMCoreViewController *coreViewController;
 
+/**
+ For when there's no entries.
+ */
+@property UILabel *noObjectsLabel;
+
 @end
 
 @implementation LMCompactBrowsingView
@@ -1209,6 +1214,24 @@
 			[labelView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 			[labelView autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:-5];
 		}
+		
+		
+		self.noObjectsLabel = [UILabel newAutoLayoutView];
+		self.noObjectsLabel.numberOfLines = 0;
+		self.noObjectsLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:[LMLayoutManager isExtraSmall] ? 16.0f : 18.0f];
+		self.noObjectsLabel.text = NSLocalizedString(isPlaylists ? @"NoPlaylists" : @"TheresNothingHere", nil);
+		self.noObjectsLabel.textAlignment = NSTextAlignmentLeft;
+		[self addSubview:self.noObjectsLabel];
+		
+		[self.noObjectsLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:[LMLayoutManager isiPad] ? 100 : 20];
+		[self.noObjectsLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:[LMLayoutManager isiPad] ? 100 : 20];
+		[self.noObjectsLabel autoPinEdge:ALEdgeTop
+								  toEdge:isPlaylists ? ALEdgeBottom : ALEdgeTop
+								  ofView:isPlaylists ? self.playlistModificationButtonBackgroundView : self
+							  withOffset:isPlaylists ? 16 : 24];
+		//	[self.noObjectsLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(3.0/4.0)];
+		
+		self.noObjectsLabel.hidden = (self.musicTrackCollections.count > 0);
 	}
 }
 
