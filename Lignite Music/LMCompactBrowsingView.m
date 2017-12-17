@@ -17,8 +17,7 @@
 #import "LMCollectionViewCell.h"
 #import "LMEmbeddedDetailView.h"
 #import "LMPhoneLandscapeDetailView.h"
-#import "LMPlaylistNavigationController.h"
-#import "LMEnhancedPlaylistNavigationController.h"
+#import "LMRestorableNavigationController.h"
 #import "LMThemeEngine.h"
 #import "LMCoreViewController.h"
 
@@ -808,7 +807,7 @@
 			LMEnhancedPlaylistEditorViewController *enhancedPlaylistViewController = [LMEnhancedPlaylistEditorViewController new];
 			enhancedPlaylistViewController.delegate = self;
 			
-			LMEnhancedPlaylistNavigationController *navigation = [[LMEnhancedPlaylistNavigationController alloc] initWithRootViewController:enhancedPlaylistViewController];
+			LMRestorableNavigationController *navigation = [[LMRestorableNavigationController alloc] initWithRootViewController:enhancedPlaylistViewController];
 			
 			[self.coreViewController presentViewController:navigation animated:YES completion:^{
 				NSLog(@"Launched enhanced creator");
@@ -821,7 +820,7 @@
 			LMPlaylistEditorViewController *playlistViewController = [LMPlaylistEditorViewController new];
 			playlistViewController.delegate = self;
 			
-			LMPlaylistNavigationController *navigation = [[LMPlaylistNavigationController alloc] initWithRootViewController:playlistViewController];
+			LMRestorableNavigationController *navigation = [[LMRestorableNavigationController alloc] initWithRootViewController:playlistViewController];
 			
 			NSLog(@"Created %@", navigation);
 			[self.coreViewController.navigationController presentViewController:navigation animated:YES completion:^{

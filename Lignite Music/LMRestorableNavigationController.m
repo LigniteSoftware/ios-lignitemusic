@@ -1,5 +1,5 @@
 //
-//  LMPlaylistNavigationController.m
+//  LMRestorableNavigationController.m
 //  Lignite Music
 //
 //  Created by Edwin Finch on 12/16/17.
@@ -9,11 +9,25 @@
 #import "LMRestorableNavigationController.h"
 #import "LMPlaylistEditorViewController.h"
 
+#define LMRestorableNavigationControllerRestorationKeyNavigationBarHidden @"LMRestorableNavigationControllerRestorationKeyNavigationBarHidden"
+
 @interface LMRestorableNavigationController() <UIViewControllerRestoration>
 
 @end
 
 @implementation LMRestorableNavigationController
+
+- (void)decodeRestorableStateWithCoder:(NSCoder *)coder {
+	[super decodeRestorableStateWithCoder:coder];
+	
+	[self setNavigationBarHidden:[coder decodeBoolForKey:LMRestorableNavigationControllerRestorationKeyNavigationBarHidden]];
+}
+
+- (void)encodeRestorableStateWithCoder:(NSCoder *)coder {
+	[super encodeRestorableStateWithCoder:coder];
+	
+	[coder encodeBool:self.navigationBarHidden forKey:LMRestorableNavigationControllerRestorationKeyNavigationBarHidden];
+}
 
 - (instancetype)initWithRootViewController:(UIViewController *)rootViewController {
 	self = [super initWithRootViewController:rootViewController];
@@ -36,7 +50,13 @@
 + (nullable UIViewController*)viewControllerWithRestorationIdentifierPath:(NSArray*)identifierComponents coder:(NSCoder*)coder {
 	NSLog(@"Restorable nav controller path %@", identifierComponents);
 	
-	return [self new];
+	LMRestorableNavigationController *restorableNavigationController = [self new];
+	
+	[restorableNavigationController setNavigationBarHidden:YES];
+	
+	return restorableNavigationController;
 }
 
 @end
+
+

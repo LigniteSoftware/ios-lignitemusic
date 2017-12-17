@@ -11,6 +11,7 @@
 
 #import "LMFeedbackViewController.h"
 #import "LMDebugViewController.h"
+#import "LMCoreViewController.h"
 #import "BSKeyboardControls.h"
 #import "LMPaddedTextField.h"
 #import "LMLayoutManager.h"
@@ -22,7 +23,12 @@
 #import "LMAppIcon.h"
 #import "LMColour.h"
 
-@interface LMFeedbackViewController () <UITextFieldDelegate, UITextViewDelegate, BSKeyboardControlsDelegate, LMLayoutChangeDelegate>
+#define LMFeedbackViewControllerRestorationKeyName @"LMFeedbackViewControllerRestorationKeyName"
+#define LMFeedbackViewControllerRestorationKeyEmail @"LMFeedbackViewControllerRestorationKeyEmail"
+#define LMFeedbackViewControllerRestorationKeyQuickSummary @"LMFeedbackViewControllerRestorationKeyQuickSummary"
+#define LMFeedbackViewControllerRestorationKeyDetailedReport @"LMFeedbackViewControllerRestorationKeyDetailedReport"
+
+@interface LMFeedbackViewController () <UITextFieldDelegate, UITextViewDelegate, BSKeyboardControlsDelegate, LMLayoutChangeDelegate, UIViewControllerRestoration>
 
 /**
  The root view so we can adjust for the keyboard.
@@ -845,6 +851,55 @@ NSString* deviceName(){
 	self.view = [UIView new];
 	
 	self.view.backgroundColor = [UIColor whiteColor];
+}
+
+- (void)decodeRestorableStateWithCoder:(NSCoder *)coder {
+	[super decodeRestorableStateWithCoder:coder];
+	
+	NSString *nameText = [coder decodeObjectForKey:LMFeedbackViewControllerRestorationKeyName];
+	UITextField *nameField = [self.textEntryArray objectAtIndex:0];
+	nameField.text = nameText;
+	
+	NSString *emailText = [coder decodeObjectForKey:LMFeedbackViewControllerRestorationKeyEmail];
+	UITextField *emailField = [self.textEntryArray objectAtIndex:1];
+	emailField.text = emailText;
+	
+	NSString *quickSummaryText = [coder decodeObjectForKey:LMFeedbackViewControllerRestorationKeyQuickSummary];
+	UITextField *quickSummaryField = [self.textEntryArray objectAtIndex:2];
+	quickSummaryField.text = quickSummaryText;
+	
+	NSString *detailedReportText = [coder decodeObjectForKey:LMFeedbackViewControllerRestorationKeyDetailedReport];
+	UITextView *detailedReportField = [self.textEntryArray objectAtIndex:3];
+	detailedReportField.text = detailedReportText;
+}
+
+- (void)encodeRestorableStateWithCoder:(NSCoder *)coder {
+	[super encodeRestorableStateWithCoder:coder];
+	
+	[coder encodeObject:[[self.textEntryArray objectAtIndex:0] text] forKey:LMFeedbackViewControllerRestorationKeyName];
+	[coder encodeObject:[[self.textEntryArray objectAtIndex:1] text] forKey:LMFeedbackViewControllerRestorationKeyEmail];
+	[coder encodeObject:[[self.textEntryArray objectAtIndex:2] text] forKey:LMFeedbackViewControllerRestorationKeyQuickSummary];
+	[coder encodeObject:[[self.textEntryArray objectAtIndex:3] text] forKey:LMFeedbackViewControllerRestorationKeyDetailedReport];
+}
+
++ (nullable UIViewController*) viewControllerWithRestorationIdentifierPath:(NSArray *)identifierComponents coder:(NSCoder *)coder {
+	LMFeedbackViewController *feedbackViewController = [self new];
+	
+	LMCoreNavigationController *coreNavigationController = (LMCoreNavigationController*)[[[[UIApplication sharedApplication] windows] firstObject] rootViewController];
+	
+	LMCoreViewController *coreViewController = coreNavigationController.viewControllers.firstObject;
+	coreViewController.pendingFeedbackViewController = feedbackViewController;
+	
+	return feedbackViewController;
+}
+
+- (instancetype)init {
+	self = [super init];
+	if(self){
+		self.restorationIdentifier = [[self class] description];
+		self.restorationClass = [self class];
+	}
+	return self;
 }
 
 @end

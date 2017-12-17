@@ -10,6 +10,7 @@
 #import "LMCompactBrowsingView.h"
 #import "LMButtonNavigationBar.h"
 #import "LMLandscapeNavigationBar.h"
+#import "LMFeedbackViewController.h"
 #import "LMCoreNavigationController.h"
 #import "LMPlaylistEditorViewController.h"
 
@@ -54,5 +55,6 @@ typedef NS_ENUM(NSInteger, LMCoreViewControllerRestorationState){
  */
 @property LMPlaylistEditorViewController *pendingStateRestoredPlaylistEditor;
 @property LMEnhancedPlaylistEditorViewController *pendingStateRestoredEnhancedPlaylistEditor; //Same as above but for enhanced playlists.
+@property LMFeedbackViewController *pendingFeedbackViewController;
 
 @end

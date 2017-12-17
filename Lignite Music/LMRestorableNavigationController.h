@@ -1,5 +1,5 @@
 //
-//  LMEnhancedPlaylistNavigationController.h
+//  LMRestorableNavigationController.h
 //  Lignite Music
 //
 //  Created by Edwin Finch on 12/16/17.
@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface LMEnhancedPlaylistNavigationController : UINavigationController
+@interface LMRestorableNavigationController : UINavigationController
 
 @end

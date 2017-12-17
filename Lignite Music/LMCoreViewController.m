@@ -37,6 +37,7 @@
 #import "LMLagDetectionThread.h"
 
 #import "LMFeedbackViewController.h"
+#import "LMRestorableNavigationController.h"
 #import "LMCreditsViewController.h"
 
 #import "LMProgressSlider.h"
@@ -613,10 +614,10 @@ LMControlBarViewDelegate
 			
 			LMFeedbackViewController *feedbackController = [LMFeedbackViewController new];
 			
-//			UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:feedbackController];
-//			[navigation setNavigationBarHidden:YES];
+			LMRestorableNavigationController *navigation = [[LMRestorableNavigationController alloc] initWithRootViewController:feedbackController];
+			[navigation setNavigationBarHidden:YES];
 			
-			[self.navigationController presentViewController:feedbackController animated:YES completion:nil];
+			[self.navigationController presentViewController:navigation animated:YES completion:nil];
 			NSLog(@"Debug menu");
 			break;
 		}
@@ -1190,6 +1191,9 @@ LMControlBarViewDelegate
 					}
 					else if(self.pendingStateRestoredEnhancedPlaylistEditor){
 						viewToAddTo = self.pendingStateRestoredEnhancedPlaylistEditor.navigationController.view;
+					}
+					else if(self.pendingFeedbackViewController){
+						viewToAddTo = self.pendingFeedbackViewController.navigationController.view;
 					}
 					else{
 						NSLog(@"[Warning] Defaulting addition of progress hud to the root navigation controller");
