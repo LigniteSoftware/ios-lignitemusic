@@ -382,10 +382,7 @@
 }
 
 - (float)heightAtIndex:(NSUInteger)index forTableView:(LMTableView *)tableView {
-	if([LMLayoutManager isiPad]){
-		return [LMLayoutManager isLandscapeiPad] ? WINDOW_FRAME.size.width/12.0f : WINDOW_FRAME.size.height/12.0f;
-	}
-	return self.layoutManager.isLandscape ? WINDOW_FRAME.size.width/8.0 : WINDOW_FRAME.size.height/8.0;
+	return LMLayoutManager.standardListEntryHeight;
 }
 
 - (LMListEntry*)listEntryForIndex:(NSInteger)index {

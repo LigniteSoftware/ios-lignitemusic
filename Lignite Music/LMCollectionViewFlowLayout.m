@@ -234,6 +234,10 @@
 	
 	sideLength -= COMPACT_VIEW_SPACING_BETWEEN_ITEMS; //Remove 15px from it for spacing
 	
+	if([LMLayoutManager isiPhoneX]){
+		sideLength -= 24;
+	}
+	
 	CGFloat spacing = (collectionViewSize.width-(sideLength*factor))/(factor+1); //Calculate the amount of spacing total
 	
 	CGSize size = CGSizeMake(sideLength,

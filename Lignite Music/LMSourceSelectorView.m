@@ -53,14 +53,14 @@
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
 	
 	if([LMLayoutManager isiPad]){
-		return CGSizeMake(self.frame.size.width - 40, ([LMLayoutManager isLandscapeiPad] ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height)/10.0f);
+		return CGSizeMake(self.frame.size.width - 40, ([LMLayoutManager isLandscapeiPad] ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height)/LMLayoutManager.listEntryHeightFactorial);
 	}
 	
 	if([LMLayoutManager isLandscape]){
-		return CGSizeMake(((WINDOW_FRAME.size.width-(WINDOW_FRAME.size.width/8.0f) /* Size of the navigation bar */)/2) - 40, WINDOW_FRAME.size.width/8.0f);
+		return CGSizeMake(((WINDOW_FRAME.size.width-(WINDOW_FRAME.size.width/LMLayoutManager.listEntryHeightFactorial) /* Size of the navigation bar */)/2) - 40, WINDOW_FRAME.size.width/LMLayoutManager.listEntryHeightFactorial);
 	}
 	
-	return CGSizeMake(WINDOW_FRAME.size.width - 40, WINDOW_FRAME.size.height/8.0f);
+	return CGSizeMake(WINDOW_FRAME.size.width - 40, WINDOW_FRAME.size.height/LMLayoutManager.listEntryHeightFactorial);
 }
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionView *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section {

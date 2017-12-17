@@ -23,7 +23,7 @@
 /**
  The miniplayer which goes in the middle.
  */
-@property LMMiniPlayerView *centerMiniPlayerView;
+@property LMMiniPlayerView *centreMiniPlayerView;
 
 /**
  The miniplayer which goes in the front.
@@ -78,7 +78,7 @@
 		previousTrackIndex = self.musicPlayer.nowPlayingCollection.count-1;
 	}
 	
-	[self.centerMiniPlayerView changeMusicTrack:[self.musicPlayer.nowPlayingCollection.items objectAtIndex:indexOfCenter] withIndex:indexOfCenter];
+	[self.centreMiniPlayerView changeMusicTrack:[self.musicPlayer.nowPlayingCollection.items objectAtIndex:indexOfCenter] withIndex:indexOfCenter];
 	[self.leadingMiniPlayerView changeMusicTrack:[self.musicPlayer.nowPlayingCollection.items objectAtIndex:nextTrackIndex]
 									   withIndex:nextTrackIndex];
 	[self.trailingMiniPlayerView changeMusicTrack:[self.musicPlayer.nowPlayingCollection.items objectAtIndex:previousTrackIndex]
@@ -104,49 +104,49 @@
 
 - (void)skipTracks {
 //	self.skipToNextTrackOnTimerFire ? [self.musicPlayer skipToNextTrack] : [self.musicPlayer skipToPreviousItem];
-	[self.musicPlayer setNowPlayingTrack:self.centerMiniPlayerView.loadedTrack];
+	[self.musicPlayer setNowPlayingTrack:self.centreMiniPlayerView.loadedTrack];
 }
 
 - (void)rebuildConstraints:(BOOL)leadingIsCenter {
-	NSArray *oldMiniPlayers = @[ self.trailingMiniPlayerView, self.centerMiniPlayerView, self.leadingMiniPlayerView ];
+	NSArray *oldMiniPlayers = @[ self.trailingMiniPlayerView, self.centreMiniPlayerView, self.leadingMiniPlayerView ];
 	
-	[self.centerMiniPlayerView removeFromSuperview];
+	[self.centreMiniPlayerView removeFromSuperview];
 	[self.leadingMiniPlayerView removeFromSuperview];
 	[self.trailingMiniPlayerView removeFromSuperview];
 	
 	// [ 0 1 2 ] swipe -> 0 [ 1 2 * ] convert -> [ 1 2 0 ]
 	if(leadingIsCenter){
 		self.trailingMiniPlayerView = oldMiniPlayers[1];
-		self.centerMiniPlayerView = oldMiniPlayers[2];
+		self.centreMiniPlayerView = oldMiniPlayers[2];
 		self.leadingMiniPlayerView = oldMiniPlayers[0];
 	}
 	// [ 0 1 2 ] swipe -> [ * 0 1 ] 2 convert -> [ 2 0 1 ]
 	else{
 		self.trailingMiniPlayerView = oldMiniPlayers[2];
-		self.centerMiniPlayerView = oldMiniPlayers[0];
+		self.centreMiniPlayerView = oldMiniPlayers[0];
 		self.leadingMiniPlayerView = oldMiniPlayers[1];
 	}
 	
-	[self addSubview:self.centerMiniPlayerView];
+	[self addSubview:self.centreMiniPlayerView];
 	[self addSubview:self.leadingMiniPlayerView];
 	[self addSubview:self.trailingMiniPlayerView];
 	
-	self.miniPlayerLeadingConstraint = [self.centerMiniPlayerView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
-	[self.centerMiniPlayerView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
-	[self.centerMiniPlayerView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self];
-	[self.centerMiniPlayerView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
+	self.miniPlayerLeadingConstraint = [self.centreMiniPlayerView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
+	[self.centreMiniPlayerView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
+	[self.centreMiniPlayerView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self];
+	[self.centreMiniPlayerView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
 	
-	[self.otherConstraints addObject:[self.trailingMiniPlayerView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.centerMiniPlayerView]];
+	[self.otherConstraints addObject:[self.trailingMiniPlayerView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.centreMiniPlayerView]];
 	[self.trailingMiniPlayerView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
 	[self.trailingMiniPlayerView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self];
 	[self.trailingMiniPlayerView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
 	
-	[self.otherConstraints addObject:[self.leadingMiniPlayerView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.centerMiniPlayerView]];
+	[self.otherConstraints addObject:[self.leadingMiniPlayerView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.centreMiniPlayerView]];
 	[self.leadingMiniPlayerView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
 	[self.leadingMiniPlayerView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self];
 	[self.leadingMiniPlayerView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
 	
-	[self loadMusicTracksBasedOffIndex:self.centerMiniPlayerView.loadedTrackIndex];
+	[self loadMusicTracksBasedOffIndex:self.centreMiniPlayerView.loadedTrackIndex];
 	
 	[self layoutIfNeeded];
 	
@@ -219,13 +219,13 @@
             
             CGFloat totalTranslation = translation.x;
             
-            CGFloat newAlpha = 1.0 - fabs(totalTranslation)/(self.centerMiniPlayerView.frame.size.width/2);
+            CGFloat newAlpha = 1.0 - fabs(totalTranslation)/(self.centreMiniPlayerView.frame.size.width/2);
             
             if(newAlpha < 0){
                 newAlpha = 0;
             }
             
-            self.centerMiniPlayerView.alpha = newAlpha;
+            self.centreMiniPlayerView.alpha = newAlpha;
             self.leadingMiniPlayerView.alpha = 1.0 - newAlpha;
             self.trailingMiniPlayerView.alpha = self.leadingMiniPlayerView.alpha;
             
@@ -264,12 +264,12 @@
                 
                 [UIView animateWithDuration:0.15 animations:^{
                     if(rebuildConstraints){
-                        self.centerMiniPlayerView.alpha = 0;
+                        self.centreMiniPlayerView.alpha = 0;
                         self.leadingMiniPlayerView.alpha = nextSong ? 1 : 0;
                         self.trailingMiniPlayerView.alpha = nextSong ? 0 : 1;
                     }
                     else{
-                        self.centerMiniPlayerView.alpha = 1;
+                        self.centreMiniPlayerView.alpha = 1;
                         self.leadingMiniPlayerView.alpha = 0;
                         self.trailingMiniPlayerView.alpha = 0;
                     }
@@ -319,29 +319,29 @@
 		self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 		[self.musicPlayer addMusicDelegate:self];
 		
-		self.centerMiniPlayerView = [LMMiniPlayerView newAutoLayoutView];
+		self.centreMiniPlayerView = [LMMiniPlayerView newAutoLayoutView];
 //		self.centerMiniPlayerView.backgroundColor = [UIColor orangeColor];
-		[self addSubview:self.centerMiniPlayerView];
+		[self addSubview:self.centreMiniPlayerView];
 		
-		self.miniPlayerLeadingConstraint = [self.centerMiniPlayerView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
-		[self.centerMiniPlayerView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
-		[self.centerMiniPlayerView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self];
-		[self.centerMiniPlayerView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
+		self.miniPlayerLeadingConstraint = [self.centreMiniPlayerView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
+		[self.centreMiniPlayerView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
+		[self.centreMiniPlayerView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self];
+		[self.centreMiniPlayerView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
 		
-		[self.centerMiniPlayerView setup];
+		[self.centreMiniPlayerView setup];
 		
 		UIPanGestureRecognizer *miniPlayerPanGesture =
 		[[UIPanGestureRecognizer alloc] initWithTarget:self
 												action:@selector(panMiniPlayer:)];
 		miniPlayerPanGesture.delegate = self;
-		[self.centerMiniPlayerView addGestureRecognizer:miniPlayerPanGesture];
+		[self.centreMiniPlayerView addGestureRecognizer:miniPlayerPanGesture];
 		
 		
 		self.trailingMiniPlayerView = [LMMiniPlayerView newAutoLayoutView];
 //		self.trailingMiniPlayerView.backgroundColor = [UIColor yellowColor];
 		[self addSubview:self.trailingMiniPlayerView];
 		
-		[self.otherConstraints addObject:[self.trailingMiniPlayerView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.centerMiniPlayerView]];
+		[self.otherConstraints addObject:[self.trailingMiniPlayerView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.centreMiniPlayerView]];
 		[self.trailingMiniPlayerView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
 		[self.trailingMiniPlayerView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self];
 		[self.trailingMiniPlayerView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
@@ -359,7 +359,7 @@
 //		self.leadingMiniPlayerView.backgroundColor = [UIColor redColor];
 		[self addSubview:self.leadingMiniPlayerView];
 		
-		[self.otherConstraints addObject:[self.leadingMiniPlayerView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.centerMiniPlayerView]];
+		[self.otherConstraints addObject:[self.leadingMiniPlayerView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.centreMiniPlayerView]];
 		[self.leadingMiniPlayerView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
 		[self.leadingMiniPlayerView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self];
 		[self.leadingMiniPlayerView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
@@ -377,7 +377,7 @@
 //			
 //		}
 		
-		self.centerMiniPlayerView.clipsToBounds = YES;
+		self.centreMiniPlayerView.clipsToBounds = YES;
 		self.leadingMiniPlayerView.clipsToBounds = YES;
 		self.trailingMiniPlayerView.clipsToBounds = YES;
 		

@@ -361,7 +361,7 @@
 		[self.sidebarBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[self.sidebarBackgroundView autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
 		[self.sidebarBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(9.5/10.0)];
-		[self.sidebarBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(1.0/4.75)];
+		[self.sidebarBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:[LMLayoutManager isiPhoneX] ? (1.0/5.25) : (1.0/4.75)];
 		
 		
 		[topAndBottomCoverView autoPinEdgeToSuperviewEdge:ALEdgeTop];

@@ -189,7 +189,7 @@ BOOL expandableTrackListControlBarIsInAlbumDetail = NO;
 
 + (CGFloat)recommendedHeight {
 	if([LMLayoutManager isiPad]){
-		return ([LMLayoutManager isLandscapeiPad] ? WINDOW_FRAME.size.height : WINDOW_FRAME.size.width)/8.0;
+		return ([LMLayoutManager isLandscapeiPad] ? WINDOW_FRAME.size.height : WINDOW_FRAME.size.width)/8.1;
 	}
 	return (([LMLayoutManager isLandscape] ? WINDOW_FRAME.size.height : WINDOW_FRAME.size.width)/6.0);
 }

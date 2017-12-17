@@ -336,7 +336,7 @@
 - (CGSize)currentItemSize {
 //	NSLog(@"Number of columns %d", (int)[LMDetailView numberOfColumns]);
 	return CGSizeMake(self.frame.size.width/[LMDetailView numberOfColumns]*0.90,
-					  fmin(([LMLayoutManager isLandscape] ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height)/8.0, 80));
+					  fmin(LMLayoutManager.standardListEntryHeight, 80));
 }
 
 - (CGSize)totalSize {

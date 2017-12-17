@@ -6,6 +6,8 @@
 //  Copyright © 2016 Lignite. All rights reserved.
 //
 
+#import <TargetConditionals.h>
+
 #import "LMMusicPlayer.h"
 #import "NSTimer+Blocks.h"
 #import "LMPlaylist.h"
@@ -96,7 +98,11 @@ MPMediaGrouping associatedMediaTypes[] = {
 };
 
 - (MPMusicPlayerController*)systemMusicPlayer {
+#if TARGET_IPHONE_SIMULATOR
+	return [MPMusicPlayerController applicationMusicPlayer];
+#else
 	return [MPMusicPlayerController systemMusicPlayer];
+#endif
 }
 
 - (void)setSystemMusicPlayer:(MPMusicPlayerController *)systemMusicPlayer {
@@ -354,7 +360,9 @@ MPMediaGrouping associatedMediaTypes[] = {
 //	NSLog(@"System music changed %@", self.systemMusicPlayer.nowPlayingItem);
 	
 	LMMusicTrack *newTrack = self.systemMusicPlayer.nowPlayingItem;
-	self.nowPlayingTrack = newTrack;
+	if(self.nowPlayingTrack != newTrack && newTrack != nil){
+		self.nowPlayingTrack = newTrack;
+	}
 	self.indexOfNowPlayingTrack = self.systemMusicPlayer.indexOfNowPlayingItem;
 	if(self.systemMusicPlayer.currentPlaybackTime != 0){
 		self.currentPlaybackTime = self.systemMusicPlayer.currentPlaybackTime;
@@ -1096,7 +1104,12 @@ BOOL shuffleForDebug = NO;
 			[self.systemMusicPlayer setNowPlayingItem:associatedMediaItem];
 		}
 	}
+	
 	_nowPlayingTrack = nowPlayingTrack;
+	
+#if TARGET_IPHONE_SIMULATOR
+	[self systemMusicPlayerTrackChanged:nowPlayingTrack];
+#endif
 }
 
 - (LMMusicTrack*)nowPlayingTrack {    

@@ -37,7 +37,7 @@
 }
 
 + (BOOL)scrollingText {
-	BOOL settingEnabled = NO;
+	BOOL settingEnabled = YES;
 	
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 	

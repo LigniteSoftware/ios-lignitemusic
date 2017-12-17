@@ -94,7 +94,7 @@
 @implementation LMFeedbackViewController
 
 - (BOOL)prefersStatusBarHidden {
-	return YES;
+	return NO;
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
@@ -425,13 +425,64 @@ NSString* deviceName(){
 	
 	
 	self.rootView = [UIView newAutoLayoutView];
-	self.rootView.backgroundColor = [UIColor orangeColor];
+	self.rootView.backgroundColor = [UIColor whiteColor];
 	[self.view addSubview:self.rootView];
 	
-	[self.rootView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-	[self.rootView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+//	[self.rootView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+//	[self.rootView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 	[self.rootView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 	self.rootViewHeightConstraint = [self.rootView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+	
+	if(@available(iOS 11, *)){
+		[self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.rootView
+															  attribute:NSLayoutAttributeTop
+															  relatedBy:NSLayoutRelationEqual
+																 toItem:self.view.safeAreaLayoutGuide
+															  attribute:NSLayoutAttributeTop
+															 multiplier:1.0f
+															   constant:0.0f]];
+		
+		[self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.rootView
+															  attribute:NSLayoutAttributeLeading
+															  relatedBy:NSLayoutRelationEqual
+																 toItem:self.view.safeAreaLayoutGuide
+															  attribute:NSLayoutAttributeLeading
+															 multiplier:1.0f
+															   constant:0.0f]];
+		
+//		[self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.rootView
+//															  attribute:NSLayoutAttributeTrailing
+//															  relatedBy:NSLayoutRelationEqual
+//																 toItem:self.view.safeAreaLayoutGuide
+//															  attribute:NSLayoutAttributeTrailing
+//															 multiplier:1.0f
+//															   constant:0.0f]];
+	}
+	else{
+		[self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.rootView
+															  attribute:NSLayoutAttributeTop
+															  relatedBy:NSLayoutRelationEqual
+																 toItem:self.topLayoutGuide
+															  attribute:NSLayoutAttributeBottom
+															 multiplier:1.0f
+															   constant:0.0f]];
+		
+		[self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.rootView
+															  attribute:NSLayoutAttributeLeading
+															  relatedBy:NSLayoutRelationEqual
+																 toItem:self.topLayoutGuide
+															  attribute:NSLayoutAttributeLeading
+															 multiplier:1.0f
+															   constant:0.0f]];
+		
+//		[self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.rootView
+//															  attribute:NSLayoutAttributeTrailing
+//															  relatedBy:NSLayoutRelationEqual
+//																 toItem:self.topLayoutGuide
+//															  attribute:NSLayoutAttributeTrailing
+//															 multiplier:1.0f
+//															   constant:0.0f]];
+	}
 	
 	
 	
@@ -451,7 +502,7 @@ NSString* deviceName(){
 		[self.bottomControlsBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 		[self.bottomControlsBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 		[self.bottomControlsBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		[self.bottomControlsBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:(1.0/8.0)];
+		[self.bottomControlsBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:[LMLayoutManager isiPhoneX] ? (1.5/8.0) : (1.0/8.0)];
 	}];
 	[LMLayoutManager addNewLandscapeConstraints:bottomControlsBackgroundViewLandscapeConstraints];
 	
@@ -548,6 +599,17 @@ NSString* deviceName(){
 		[backButtonIcon autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.bottomControlsBackgroundView withMultiplier:(1.0/3.0)];
 	}];
 	[LMLayoutManager addNewLandscapeConstraints:backButtonIconLandscapeConstraints];
+	
+	
+	
+	UIView *belowButtonsCover = [UIView newAutoLayoutView];
+	belowButtonsCover.backgroundColor = [LMColour mainColour];
+	[self.view addSubview:belowButtonsCover];
+	
+	[belowButtonsCover autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.backButtonView];
+	[belowButtonsCover autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+	[belowButtonsCover autoPinEdgeToSuperviewEdge:ALEdgeTop];
+	[belowButtonsCover autoSetDimension:ALDimensionWidth toSize:69];
 	
 	
 	self.scrollView = [LMScrollView newAutoLayoutView];

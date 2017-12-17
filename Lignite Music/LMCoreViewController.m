@@ -609,7 +609,13 @@ LMControlBarViewDelegate
 		}
 		case LMIconBug: {
 //			[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://www.lignite.io/feedback/"]];
+			
+			
 			LMFeedbackViewController *feedbackController = [LMFeedbackViewController new];
+			
+//			UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:feedbackController];
+//			[navigation setNavigationBarHidden:YES];
+			
 			[self.navigationController presentViewController:feedbackController animated:YES completion:nil];
 			NSLog(@"Debug menu");
 			break;
@@ -1290,6 +1296,7 @@ LMControlBarViewDelegate
 	
 	self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 	
+	[[LMThemeEngine sharedThemeEngine] addDelegate:self];
 	
 	LMPebbleManager *pebbleManager = [LMPebbleManager sharedPebbleManager];
 	[pebbleManager attachToViewController:self];
@@ -1443,12 +1450,12 @@ LMControlBarViewDelegate
 		[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 		[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
-		if([LMLayoutManager isiPhoneX]){
-			[self.buttonNavigationBar autoPinEdgeToSuperviewMargin:ALEdgeBottom];
-		}
-		else{
+//		if([LMLayoutManager isiPhoneX]){
+//			[self.buttonNavigationBar autoPinEdgeToSuperviewMargin:ALEdgeBottom];
+//		}
+//		else{
 			[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		}
+//		}
 	}];
 	[LMLayoutManager addNewLandscapeConstraints:buttonNavigationBarLandscapeConstraints];
 	
@@ -1468,13 +1475,17 @@ LMControlBarViewDelegate
 	
 	if([LMLayoutManager isiPhoneX]){
 		self.buttonNavigationBarBottomCoverView = [UIView newAutoLayoutView];
-		self.buttonNavigationBarBottomCoverView.backgroundColor = [LMThemeEngine mainColour];
+		self.buttonNavigationBarBottomCoverView.backgroundColor = [LMColour mainColour];
 		[self.navigationController.view addSubview:self.buttonNavigationBarBottomCoverView];
 		
-		[self.buttonNavigationBarBottomCoverView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-		[self.buttonNavigationBarBottomCoverView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-		[self.buttonNavigationBarBottomCoverView autoSetDimension:ALDimensionHeight toSize:69];
-		[self.buttonNavigationBarBottomCoverView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.buttonNavigationBar];
+		
+//		NSArray *buttonNavigationBarBottomCoverViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+			[self.buttonNavigationBarBottomCoverView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+			[self.buttonNavigationBarBottomCoverView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+			[self.buttonNavigationBarBottomCoverView autoSetDimension:ALDimensionHeight toSize:69];
+			[self.buttonNavigationBarBottomCoverView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.buttonNavigationBar];
+//		}];
+//		[LMLayoutManager addNewPortraitConstraints:buttonNavigationBarBottomCoverViewPortraitConstraints];
 	}
 	
 	

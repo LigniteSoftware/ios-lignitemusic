@@ -147,10 +147,7 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-	if([LMLayoutManager isiPad]){
-		return ([LMLayoutManager isLandscapeiPad] ? (WINDOW_FRAME.size.height) : (WINDOW_FRAME.size.width))/8.0;
-	}
-	return (self.layoutManager.isLandscape ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height)/8.0;
+	return LMLayoutManager.standardListEntryHeight;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
@@ -160,10 +157,12 @@
 		properNumber = ([LMLayoutManager isLandscapeiPad] ? (WINDOW_FRAME.size.height) : (WINDOW_FRAME.size.width));
 	}
 	
+	CGFloat divisionFactorial = ([LMLayoutManager isiPhoneX] ? 14.0 : 10.0);
+	
 	if(section == 0){
-		return properNumber/10.0 + properNumber/30.0;
+		return properNumber/divisionFactorial + properNumber/30.0;
 	}
-	return properNumber/10.0;
+	return properNumber/divisionFactorial;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -195,12 +194,14 @@
 	view.sectionHeaderTitle = [self.contentsDelegate titleAtSection:section forSectionTableView:self];
 	view.icon = [self.contentsDelegate iconAtSection:section forSectionTableView:self];
 	
+	CGFloat divisionFactorial = ([LMLayoutManager isiPhoneX] ? 14.0 : 10.0);
+	
 	if(section == 0){
 		if([LMLayoutManager isiPad]){
-			view.heightFactorial = ([LMLayoutManager isLandscapeiPad] ? (WINDOW_FRAME.size.height) : (WINDOW_FRAME.size.width))/10.0;
+			view.heightFactorial = ([LMLayoutManager isLandscapeiPad] ? (WINDOW_FRAME.size.height) : (WINDOW_FRAME.size.width))/divisionFactorial;
 		}
 		else {
-			view.heightFactorial = ((self.layoutManager.isLandscape ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height)/10);
+			view.heightFactorial = ((self.layoutManager.isLandscape ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height)/divisionFactorial);
 		}
 		
 		view.heightFactorial = view.heightFactorial / frame.size.height;

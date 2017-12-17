@@ -171,6 +171,22 @@
 	return (MAX(WINDOW_FRAME.size.width, WINDOW_FRAME.size.height) == 812) && ![LMLayoutManager isiPad];
 }
 
++ (CGFloat)listEntryHeightFactorial {
+	if([self isiPhoneX]){
+		return 10.0f;
+	}
+	else if([self isiPad]){
+		return 12.0f;
+	}
+	
+	return 8.0f;
+}
+
++ (CGFloat)standardListEntryHeight {
+	CGFloat properDimension = ([self isLandscape] || [self isLandscapeiPad]) ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height;
+	return properDimension/[self listEntryHeightFactorial];
+}
+
 + (NSString*)deviceName {
 	struct utsname systemInfo;
 	uname(&systemInfo);

@@ -440,14 +440,7 @@
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
 	
-	CGFloat height = 0.0;
-	
-	if([LMLayoutManager isiPad]){
-		height = ([LMLayoutManager isLandscapeiPad] ? WINDOW_FRAME.size.height : WINDOW_FRAME.size.width)/10.0f;
-	}
-	else{
-		height = ([LMLayoutManager isLandscape] ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height)/9.0f;
-	}
+	CGFloat height = LMLayoutManager.standardListEntryHeight;
 	
 	CGSize size = CGSizeMake(WINDOW_FRAME.size.width - 40, height);
 	
