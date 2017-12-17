@@ -101,10 +101,17 @@
 
 - (void)reloadSubviewData {
 	self.hasRegisteredCellIdentifiers = NO;
+	
+//	NSAssert(self.averageCellHeight > 0, @"Average cell height is not set, sorry");
 
 	self.requiredAmountOfObjects = (WINDOW_FRAME.size.height/self.averageCellHeight);
 	
-	if(self.requiredAmountOfObjects > self.totalAmountOfObjects){
+	NSLog(@"%d %@", (int)self.requiredAmountOfObjects, NSStringFromCGRect(WINDOW_FRAME));
+	
+	if(self.averageCellHeight == 0){
+		self.requiredAmountOfObjects = self.totalAmountOfObjects;
+	}
+	else if(self.requiredAmountOfObjects > self.totalAmountOfObjects){
 		self.requiredAmountOfObjects = self.totalAmountOfObjects;
 	}
 	

@@ -559,6 +559,10 @@
 - (MPMediaEntityPersistentID)topTrackPersistentID {
 	NSIndexPath *topIndexPath = [self.songListTableView indexPathForRowAtPoint:self.songListTableView.contentOffset];
 	
+	if(!topIndexPath || (topIndexPath.section >= self.musicTitles.count)){
+		return 0;
+	}
+	
 	LMMusicTrack *topMusicTrack = [self.musicTitles.items objectAtIndex:topIndexPath.section];
 	
 	return topMusicTrack.persistentID;
