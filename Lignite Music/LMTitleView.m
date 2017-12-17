@@ -446,12 +446,20 @@
 }
 
 - (NSString*)titleForListEntry:(LMListEntry*)entry {
+	if(entry.collectionIndex >= self.musicTitles.items.count){
+		return @"Error";
+	}
+	
 	LMMusicTrack *track = [self.musicTitles.items objectAtIndex:entry.collectionIndex];
 	
 	return track.title;
 }
 
 - (NSString*)subtitleForListEntry:(LMListEntry*)entry {
+	if(entry.collectionIndex >= self.musicTitles.items.count){
+		return @"Please email contact@lignite.io";
+	}
+	
 	LMMusicTrack *track = [self.musicTitles.items objectAtIndex:entry.collectionIndex];
 	
 	NSString *subtitle = [NSString stringWithFormat:@"%@", track.artist ? track.artist : NSLocalizedString(@"UnknownArtist", nil)];
@@ -463,6 +471,10 @@
 }
 
 - (UIImage*)iconForListEntry:(LMListEntry*)entry {
+	if(entry.collectionIndex >= self.musicTitles.items.count){
+		return [UIImage imageNamed:@"icon_bug.png"];
+	}
+	
 //	NSInteger actualIndex = entry.collectionIndex % self.itemArray.count;
 //
 //	if(self.itemIconArray.count < 9){
