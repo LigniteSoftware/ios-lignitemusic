@@ -329,6 +329,10 @@
 	[self setSliderAsShrunk:YES];
 }
 
+- (void)reload {
+	[self setSliderAsShrunk:NO];
+}
+
 - (void)reloadTextHighlightingConstants {
 	CGFloat topLeftLabelWidth = self.sliderBackgroundWidthConstraint.constant-10;
 	

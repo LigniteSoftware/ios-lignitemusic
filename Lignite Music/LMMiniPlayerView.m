@@ -55,7 +55,7 @@
 }
 
 - (void)musicTrackDidChange:(LMMusicTrack *)newTrack {
-	
+	[self.progressSlider reload];
 }
 
 - (void)changeMusicTrack:(LMMusicTrack *)newTrack withIndex:(NSInteger)index {

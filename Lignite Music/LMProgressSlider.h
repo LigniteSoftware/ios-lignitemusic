@@ -85,4 +85,9 @@
  */
 - (void)reset;
 
+/**
+ Reloads the progress slider to fix height glitches.
+ */
+- (void)reload;
+
 @end
