@@ -20,6 +20,7 @@
 #import "LMLayoutManager.h"
 #import "NSTimer+Blocks.h"
 #import "LMImageManager.h"
+#import "LMThemeEngine.h"
 #import "MBProgressHUD.h"
 #import "APIdleManager.h"
 #import "LMMusicPlayer.h"
@@ -69,7 +70,7 @@
 @import StoreKit;
 
 @interface LMCoreViewController () <LMMusicPlayerDelegate, LMSourceDelegate, UIGestureRecognizerDelegate, LMSearchBarDelegate, LMLetterTabDelegate, LMSearchSelectedDelegate, LMButtonNavigationBarDelegate, UINavigationBarDelegate, UINavigationControllerDelegate,
-LMTutorialViewDelegate, LMImageManagerDelegate, LMLandscapeNavigationBarDelegate,
+LMTutorialViewDelegate, LMImageManagerDelegate, LMLandscapeNavigationBarDelegate, LMThemeEngineDelegate,
 
 LMControlBarViewDelegate
 >
@@ -127,6 +128,8 @@ LMControlBarViewDelegate
 @property MPMediaEntityPersistentID previousTitleViewTopPersistentID;
 
 @property MBProgressHUD *loadingProgressHUD;
+
+@property UIView *buttonNavigationBarBottomCoverView;
 
 @end
 
@@ -1203,6 +1206,12 @@ LMControlBarViewDelegate
 	}
 }
 
+- (void)themeChanged:(LMTheme)theme {
+	if([LMLayoutManager isiPhoneX]){
+		self.buttonNavigationBarBottomCoverView.backgroundColor = [LMThemeEngine mainColour];
+	}
+}
+
 - (void)loadSubviews {
 //	[self.navigationController setNavigationBarHidden:NO animated:YES];
 //
@@ -1418,14 +1427,31 @@ LMControlBarViewDelegate
 	NSLog(@"Class %@", [self.navigationController.view class]);
 	
 	NSArray *buttonNavigationBarPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-		[self.buttonNavigationBar autoPinEdgesToSuperviewEdges];
+		[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
+		if([LMLayoutManager isiPhoneX]){
+			[self.buttonNavigationBar autoPinEdgeToSuperviewMargin:ALEdgeBottom];
+		}
+		else{
+			[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		}
 	}];
 	[LMLayoutManager addNewPortraitConstraints:buttonNavigationBarPortraitConstraints];
 	
 	NSArray *buttonNavigationBarLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-		[self.buttonNavigationBar autoPinEdgesToSuperviewEdges];
+		[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
+		if([LMLayoutManager isiPhoneX]){
+			[self.buttonNavigationBar autoPinEdgeToSuperviewMargin:ALEdgeBottom];
+		}
+		else{
+			[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		}
 	}];
 	[LMLayoutManager addNewLandscapeConstraints:buttonNavigationBarLandscapeConstraints];
+	
 	
 	NSArray *buttonNavigationBariPadConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 		[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
@@ -1439,6 +1465,17 @@ LMControlBarViewDelegate
 	
 	[self.musicPlayer addMusicDelegate:self];
 	
+	
+	if([LMLayoutManager isiPhoneX]){
+		self.buttonNavigationBarBottomCoverView = [UIView newAutoLayoutView];
+		self.buttonNavigationBarBottomCoverView.backgroundColor = [LMThemeEngine mainColour];
+		[self.navigationController.view addSubview:self.buttonNavigationBarBottomCoverView];
+		
+		[self.buttonNavigationBarBottomCoverView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.buttonNavigationBarBottomCoverView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.buttonNavigationBarBottomCoverView autoSetDimension:ALDimensionHeight toSize:69];
+		[self.buttonNavigationBarBottomCoverView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.buttonNavigationBar];
+	}
 	
 	
 	
@@ -1484,6 +1521,7 @@ LMControlBarViewDelegate
 		[self.backgroundBlurView autoPinEdgesToSuperviewEdges];
 		
 		[self.navigationController.view insertSubview:self.buttonNavigationBar aboveSubview:self.backgroundBlurView];
+		[self.navigationController.view insertSubview:self.buttonNavigationBarBottomCoverView aboveSubview:self.buttonNavigationBar];
 		[self.navigationController.view insertSubview:self.nowPlayingCoreView aboveSubview:self.buttonNavigationBar];
 
 		

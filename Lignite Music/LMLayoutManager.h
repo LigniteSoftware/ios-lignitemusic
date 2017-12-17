@@ -57,6 +57,7 @@ typedef NS_ENUM(NSInteger, LMScreenSizeClass) {
 + (BOOL)isLandscape;
 + (BOOL)isLandscapeiPad;
 + (BOOL)isiPad;
++ (BOOL)isiPhoneX;
 + (NSInteger)amountOfCollectionViewItemsPerRow;
 + (NSInteger)amountOfCollectionViewItemsPerRowForScreenSizeClass:(LMScreenSizeClass)screenSizeClass isLandscape:(BOOL)isLandscape;
 + (LMLayoutManager*)sharedLayoutManager;

@@ -635,6 +635,9 @@
 		if([LMLayoutManager isiPad] && isPlaylists){
 			topInset = 100;
 		}
+		else if([LMLayoutManager isiPhoneX] && isPlaylists){
+			topInset = 80;
+		}
        self.collectionView.contentInset = UIEdgeInsetsMake(topInset, 0, 100, 0);
     }];
 }
@@ -689,6 +692,9 @@
 		NSInteger topInset = (isPlaylists && !self.layoutManager.isLandscape) ? 60 : (self.layoutManager.isLandscape ? 0 : 20);
 		if([LMLayoutManager isiPad] && isPlaylists){
 			topInset = 100;
+		}
+		else if([LMLayoutManager isiPhoneX] && isPlaylists){
+			topInset = 80;
 		}
 		self.collectionView.contentInset = UIEdgeInsetsMake(topInset, 0, 100, 0);
 		
@@ -1075,6 +1081,9 @@
 		NSInteger topInset = (isPlaylists && !self.layoutManager.isLandscape) ? 60 : (self.layoutManager.isLandscape ? 0 : 20);
 		if([LMLayoutManager isiPad] && isPlaylists){
 			topInset = 100;
+		}
+		else if([LMLayoutManager isiPhoneX] && isPlaylists){
+			topInset = 80;
 		}
 		self.collectionView.contentInset = UIEdgeInsetsMake(topInset, 0, 100, 0);
 		[self.collectionView registerClass:[LMCollectionViewCell class] forCellWithReuseIdentifier:@"cellIdentifier"];

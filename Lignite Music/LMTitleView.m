@@ -210,7 +210,12 @@
 //	testView.userInteractionEnabled = NO;
 //	return testView;
 //	
-//	
+//
+	
+	if(index >= self.musicTitles.count){
+		return nil;
+	}
+	
 	LMListEntry *entry = [self.itemArray objectAtIndex:index % self.itemArray.count];
 	entry.collectionIndex = index;
 	entry.associatedData = [self.musicTitles.items objectAtIndex:index];
@@ -272,6 +277,10 @@
 }
 
 - (void)scrollToTrackIndex:(NSUInteger)index {
+	if(index >= self.musicTitles.count){
+		return;
+	}
+	
 	self.didJustScrollByLetter = YES;
 	
 	[self.songListTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:index]

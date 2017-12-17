@@ -167,6 +167,10 @@
 	return [layoutManager currentLayoutClass] == LMLayoutClassiPad;
 }
 
++ (BOOL)isiPhoneX {
+	return (MAX(WINDOW_FRAME.size.width, WINDOW_FRAME.size.height) == 812) && ![LMLayoutManager isiPad];
+}
+
 + (NSString*)deviceName {
 	struct utsname systemInfo;
 	uname(&systemInfo);
