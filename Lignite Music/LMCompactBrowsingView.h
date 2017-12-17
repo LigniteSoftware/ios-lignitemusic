@@ -9,8 +9,9 @@
 #import "LMView.h"
 #import "LMMusicPlayer.h"
 #import "LMPlaylistEditorViewController.h"
+#import "LMEnhancedPlaylistEditorViewController.h"
 
-@interface LMCompactBrowsingView : LMView <LMPlaylistEditorDelegate>
+@interface LMCompactBrowsingView : LMView <LMPlaylistEditorDelegate, LMEnhancedPlaylistEditorDelegate>
 
 /**
  The music track collections associated with this compact browsing view. For every collection there will be an entry.

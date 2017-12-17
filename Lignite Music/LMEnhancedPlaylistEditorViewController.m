@@ -21,8 +21,12 @@
 #import "LMScrollView.h"
 #import "LMEnhancedPlaylistCollectionViewFlowLayout.h"
 #import "NSTimer+Blocks.h"
+#import "LMCoreNavigationController.h"
+#import "LMCoreViewController.h"
 
-@interface LMEnhancedPlaylistEditorViewController ()<LMLayoutChangeDelegate, LMImagePickerViewDelegate, LMMusicPickerDelegate, BEMCheckBoxDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, LMListEntryDelegate, UITextFieldDelegate, LMBoxWarningViewDelegate>
+#define LMEnhancedPlaylistEditorRestorationKeyPlaylistDictionary @"LMEnhancedPlaylistEditorRestorationKeyPlaylistDictionary"
+
+@interface LMEnhancedPlaylistEditorViewController ()<LMLayoutChangeDelegate, LMImagePickerViewDelegate, LMMusicPickerDelegate, BEMCheckBoxDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, LMListEntryDelegate, UITextFieldDelegate, LMBoxWarningViewDelegate, UIViewControllerRestoration>
 
 /**
  The music player.
@@ -610,6 +614,7 @@
 	[NSTimer scheduledTimerWithTimeInterval:0.25 block:^{
 		[self reloadSaveButton];
 		[self reloadConditionsLabelAndWarningBox];
+		self.playlist.title = self.titleTextField.text;
 	} repeats:NO];
 	
 	[self reloadSaveButton];
@@ -622,6 +627,48 @@
 }
 
 /* Begin initialization code */
+
+- (void)encodeRestorableStateWithCoder:(NSCoder *)coder {
+	[super encodeWithCoder:coder];
+	
+	NSDictionary *playlistDictionary = self.playlist.dictionaryRepresentation;
+	[coder encodeObject:playlistDictionary forKey:LMEnhancedPlaylistEditorRestorationKeyPlaylistDictionary];
+}
+
+- (void)decodeRestorableStateWithCoder:(NSCoder *)coder {
+	[super decodeRestorableStateWithCoder:coder];
+	
+	NSLog(@"Got encoded playlist for restoration");
+	
+	NSDictionary *playlistDictionary = [coder decodeObjectForKey:LMEnhancedPlaylistEditorRestorationKeyPlaylistDictionary];
+	if(playlistDictionary){
+		self.playlist = [[LMPlaylistManager sharedPlaylistManager] playlistForPlaylistDictionary:playlistDictionary];
+		[self reloadContents];
+	}
+}
+
++ (nullable UIViewController *) viewControllerWithRestorationIdentifierPath:(NSArray *)identifierComponents coder:(NSCoder *)coder {
+	LMCoreNavigationController *coreNavigationController = (LMCoreNavigationController*)[[[[UIApplication sharedApplication] windows] firstObject] rootViewController];
+	
+	LMEnhancedPlaylistEditorViewController *enhancedPlaylistEditor = [LMEnhancedPlaylistEditorViewController new];
+	
+	LMCoreViewController *coreViewController = coreNavigationController.viewControllers.firstObject;
+	coreViewController.pendingStateRestoredEnhancedPlaylistEditor = enhancedPlaylistEditor;
+	
+	return enhancedPlaylistEditor;
+}
+
+- (void)reloadContents {
+	self.titleTextField.text = self.playlist ? self.playlist.title : nil;
+	
+	self.imagePickerView.image = self.playlist ? self.playlist.image : nil;
+	
+	[self reloadSaveButton];
+	
+	[self.conditionsCollectionView reloadData];
+	
+	[self reloadConditionsLabelAndWarningBox];
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -924,6 +971,15 @@
 
 - (void)didReceiveMemoryWarning {
 	[super didReceiveMemoryWarning];
+}
+
+- (instancetype)init {
+	self = [super init];
+	if(self){
+		self.restorationIdentifier = [[self class] description];
+		self.restorationClass = [self class];
+	}
+	return self;
 }
 
 /* End initialization code */

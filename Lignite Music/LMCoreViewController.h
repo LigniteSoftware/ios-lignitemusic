@@ -53,5 +53,6 @@ typedef NS_ENUM(NSInteger, LMCoreViewControllerRestorationState){
  If state restoration contains a playlist editor, that playlist editor will sit here pending for an attachment to compactView (which will have to be created).
  */
 @property LMPlaylistEditorViewController *pendingStateRestoredPlaylistEditor;
+@property LMEnhancedPlaylistEditorViewController *pendingStateRestoredEnhancedPlaylistEditor; //Same as above but for enhanced playlists.
 
 @end

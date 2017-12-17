@@ -334,7 +334,7 @@
 }
 
 - (CGSize)currentItemSize {
-	NSLog(@"Number of columns %d", (int)[LMDetailView numberOfColumns]);
+//	NSLog(@"Number of columns %d", (int)[LMDetailView numberOfColumns]);
 	return CGSizeMake(self.frame.size.width/[LMDetailView numberOfColumns]*0.90,
 					  fmin(([LMLayoutManager isLandscape] ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height)/8.0, 80));
 }
@@ -410,9 +410,9 @@
 		return CGSizeMake(0, 0);
 	}
 	
-	NSLog(@"Returning %@\ncollection view size %@\nsuperframe %@\nalbum tile view frame %@\nself frame %@", NSStringFromCGSize(itemSize), NSStringFromCGRect(self.collectionView.frame), NSStringFromCGRect(self.collectionView.superview.superview.frame), NSStringFromCGRect(self.albumTileView.frame), NSStringFromCGRect(self.frame));
+//	NSLog(@"Returning %@\ncollection view size %@\nsuperframe %@\nalbum tile view frame %@\nself frame %@", NSStringFromCGSize(itemSize), NSStringFromCGRect(self.collectionView.frame), NSStringFromCGRect(self.collectionView.superview.superview.frame), NSStringFromCGRect(self.albumTileView.frame), NSStringFromCGRect(self.frame));
 	
-	NSLog(@"Content inset %@\nsection inset %@", NSStringFromUIEdgeInsets(self.collectionView.contentInset), NSStringFromUIEdgeInsets(flowLayout.sectionInset));
+//	NSLog(@"Content inset %@\nsection inset %@", NSStringFromUIEdgeInsets(self.collectionView.contentInset), NSStringFromUIEdgeInsets(flowLayout.sectionInset));
 	
 	return itemSize;
 }

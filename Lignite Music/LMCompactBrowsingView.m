@@ -17,8 +17,8 @@
 #import "LMCollectionViewCell.h"
 #import "LMEmbeddedDetailView.h"
 #import "LMPhoneLandscapeDetailView.h"
-#import "LMEnhancedPlaylistEditorViewController.h"
 #import "LMPlaylistNavigationController.h"
+#import "LMEnhancedPlaylistNavigationController.h"
 #import "LMThemeEngine.h"
 #import "LMCoreViewController.h"
 
@@ -27,7 +27,7 @@
 
 #import "LMPlaylistManager.h"
 
-@interface LMCompactBrowsingView()<UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, LMCollectionInfoViewDelegate, LMBigListEntryDelegate, LMLayoutChangeDelegate, LMEnhancedPlaylistEditorDelegate, LMThemeEngineDelegate>
+@interface LMCompactBrowsingView()<UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, LMCollectionInfoViewDelegate, LMBigListEntryDelegate, LMLayoutChangeDelegate, LMThemeEngineDelegate> //LMEnhancedPlaylistEditorDelegate and LMPlaylistEditorDelegate are defined in the associated .h file.
 
 /**
  The big list entries that are used in the compact view.
@@ -510,11 +510,12 @@
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
 	NSInteger fixedCount = self.musicType == LMMusicTypePlaylists ? self.playlistManager.playlists.count : self.musicTrackCollections.count;
-	if(section == 1){
+	if(section == 1){ //When the section == 1, the amount of overflowing cells ie being checked so the raw amount of items in the compact view (before detail view) should be returned.
 		return fixedCount;
 	}
-	
+
 	LMCollectionViewFlowLayout *flowLayout = (LMCollectionViewFlowLayout*)collectionView.collectionViewLayout;
+	NSLog(@"isDisplayingDetailView: %d/fixedCount: %d/amountOfOverflowingCellsForDetailView: %d", flowLayout.isDisplayingDetailView, (int)fixedCount, (int)flowLayout.amountOfOverflowingCellsForDetailView);
 	return flowLayout.isDisplayingDetailView ? (fixedCount+flowLayout.amountOfOverflowingCellsForDetailView+1) : fixedCount;
 }
 
@@ -800,7 +801,9 @@
 
 			LMEnhancedPlaylistEditorViewController *enhancedPlaylistViewController = [LMEnhancedPlaylistEditorViewController new];
 			enhancedPlaylistViewController.delegate = self;
-			UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:enhancedPlaylistViewController];
+			
+			LMEnhancedPlaylistNavigationController *navigation = [[LMEnhancedPlaylistNavigationController alloc] initWithRootViewController:enhancedPlaylistViewController];
+			
 			[self.coreViewController presentViewController:navigation animated:YES completion:^{
 				NSLog(@"Launched enhanced creator");
 			}];
@@ -1064,6 +1067,7 @@
 		
 		
 		self.collectionView = [[UICollectionView alloc]initWithFrame:CGRectZero collectionViewLayout:fuck];
+		self.collectionView.prefetchingEnabled = NO;
 		self.collectionView.translatesAutoresizingMaskIntoConstraints = NO;
 		self.collectionView.delegate = self;
 		self.collectionView.dataSource = self;

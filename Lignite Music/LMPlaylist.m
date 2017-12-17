@@ -6,6 +6,8 @@
 //  Copyright © 2017 Lignite. All rights reserved.
 //
 
+#include <stdlib.h>
+
 #import "LMPlaylist.h"
 #import "LMMusicPlayer.h"
 #import "LMPlaylistManager.h"
@@ -64,13 +66,13 @@
 		}
 		
 		NSArray<LMMusicTrackCollection*> *trackCollections = [[LMMusicPlayer sharedMusicPlayer] collectionsForPersistentID:persistentID forMusicType:musicType];
-		
-		NSLog(@"Collections %d", (int)trackCollections.count);
-		
+				
 		if(trackCollections.firstObject){
 			[musicTrackCollectionsMutableArray addObject:trackCollections.firstObject];
 		}
 	}
+	
+	NSLog(@"Returning %d wanted items", (int)musicTrackCollectionsMutableArray.count);
 	
 	return [NSArray arrayWithArray:musicTrackCollectionsMutableArray];
 }
@@ -103,6 +105,8 @@
 			[musicTrackCollectionsMutableArray addObject:trackCollections.firstObject];
 		}
 	}
+	
+	NSLog(@"Returning %d UNWANTED items", (int)musicTrackCollectionsMutableArray.count);
 	
 	return [NSArray arrayWithArray:musicTrackCollectionsMutableArray];
 }
@@ -163,7 +167,9 @@
 - (instancetype)init {
 	self = [super init];
 	if(self){
-		self.persistentID = random();
+		while(self.persistentID == 0){
+			self.persistentID = arc4random() % 133769420;
+		}
 		self.title = @"";
 	}
 	return self;

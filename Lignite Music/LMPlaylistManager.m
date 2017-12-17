@@ -81,9 +81,7 @@
 			MPMediaQuery *query = [[MPMediaQuery alloc] init];
 			[query addFilterPredicate: predicate];
 			
-			[trackMutableArray addObjectsFromArray:query.items];
-			
-//			NSLog(@"%@ Got %@", playlist.title, query.items.firstObject.title);
+			[trackMutableArray addObjectsFromArray:query.items];			
 		}
 		playlist.trackCollection = [[LMMusicTrackCollection alloc]initWithItems:trackMutableArray];
 	}

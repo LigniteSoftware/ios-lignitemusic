@@ -623,15 +623,13 @@
 - (void)encodeRestorableStateWithCoder:(NSCoder *)coder {
 	[super encodeWithCoder:coder];
 	
-	[coder encodeInteger:69 forKey:@"playlisttest"];
-	
 	[coder encodeObject:self.playlist.dictionaryRepresentation forKey:LMPlaylistEditorRestorationKeyPlaylistDictionary];
 }
 
 - (void)decodeRestorableStateWithCoder:(NSCoder *)coder {
 	[super decodeRestorableStateWithCoder:coder];
 	
-	NSLog(@"Got playlisttest %d", (int)[coder decodeIntegerForKey:@"playlisttest"]);
+	NSLog(@"Got encoded playlist for restoration");
 	
 	NSDictionary *playlistDictionary = [coder decodeObjectForKey:LMPlaylistEditorRestorationKeyPlaylistDictionary];
 	if(playlistDictionary){
@@ -641,21 +639,12 @@
 }
 
 + (nullable UIViewController *) viewControllerWithRestorationIdentifierPath:(NSArray *)identifierComponents coder:(NSCoder *)coder {
-	NSLog(@"playlist editor path %@", identifierComponents);
-	
 	LMCoreNavigationController *coreNavigationController = (LMCoreNavigationController*)[[[[UIApplication sharedApplication] windows] firstObject] rootViewController];
-	
-	NSLog(@"%@", coreNavigationController.viewControllers.firstObject);
 	
 	LMPlaylistEditorViewController *playlistEditor = [LMPlaylistEditorViewController new];
 	
-//	LMCoreNavigationController *coreNavigationController = [[[[UIApplication sharedApplication] windows] firstObject] rootViewController];
-	
 	LMCoreViewController *coreViewController = coreNavigationController.viewControllers.firstObject;
-	
 	coreViewController.pendingStateRestoredPlaylistEditor = playlistEditor;
-	
-	NSLog(@"%@", coreViewController.view);
 	
 	return playlistEditor;
 }

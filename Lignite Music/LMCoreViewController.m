@@ -1179,6 +1179,12 @@ LMControlBarViewDelegate
 					if(self.pendingStateRestoredPlaylistEditor){
 						viewToAddTo = self.pendingStateRestoredPlaylistEditor.navigationController.view;
 					}
+					else if(self.pendingStateRestoredEnhancedPlaylistEditor){
+						viewToAddTo = self.pendingStateRestoredEnhancedPlaylistEditor.navigationController.view;
+					}
+					else{
+						NSLog(@"[Warning] Defaulting addition of progress hud to the root navigation controller");
+					}
 					self.loadingProgressHUD = [MBProgressHUD showHUDAddedTo:viewToAddTo animated:YES];
 					
 					self.loadingProgressHUD.mode = MBProgressHUDModeIndeterminate;
@@ -1353,6 +1359,10 @@ LMControlBarViewDelegate
 	
 	if(self.pendingStateRestoredPlaylistEditor){
 		self.pendingStateRestoredPlaylistEditor.delegate = self.compactView;
+	}
+	
+	if(self.pendingStateRestoredEnhancedPlaylistEditor){
+		self.pendingStateRestoredEnhancedPlaylistEditor.delegate = self.compactView;
 	}
 	
 	NSArray *compactViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
@@ -1572,7 +1582,11 @@ LMControlBarViewDelegate
 		
 		if(self.previouslyOpenedDetailViewIndex > -1 && self.previouslyOpenedDetailViewIndex < self.compactView.musicTrackCollections.count){
 			[self.compactView scrollViewToIndex:self.previouslyOpenedDetailViewIndex];
-			[self.compactView tappedBigListEntryAtIndex:self.previouslyOpenedDetailViewIndex];
+			NSInteger rowLimit = [LMLayoutManager amountOfCollectionViewItemsPerRowForScreenSizeClass:LMScreenSizeClassPhone isLandscape:NO];
+			if(![LMLayoutManager isLandscape] && (self.previouslyOpenedDetailViewIndex < self.compactView.musicTrackCollections.count - rowLimit)){
+#warning this is a temporay fix for a crash that occurs if a detail view is open on the last row. at the time I do not have the time or the fucks to give to fix this so I will fix it later, hopefully.
+				[self.compactView tappedBigListEntryAtIndex:self.previouslyOpenedDetailViewIndex];
+			}
 		}
 		
 //		LMSettingsViewController *settingsViewController = [LMSettingsViewController new];

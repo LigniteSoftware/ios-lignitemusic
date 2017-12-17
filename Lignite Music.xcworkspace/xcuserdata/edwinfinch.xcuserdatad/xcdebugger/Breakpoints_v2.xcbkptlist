@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMCoreViewController.m"
-            timestampString = "535159690.673636"
+            timestampString = "535177505.276115"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1606"
-            endingLineNumber = "1606"
+            startingLineNumber = "1614"
+            endingLineNumber = "1614"
             landmarkName = "-didReceiveMemoryWarning"
             landmarkType = "7">
          </BreakpointContent>
@@ -26,7 +26,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMCoreViewController.m"
-            timestampString = "535159690.674286"
+            timestampString = "535177505.276428"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "143"
@@ -106,7 +106,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMCoreViewController.m"
-            timestampString = "535159690.674591"
+            timestampString = "535177505.276567"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "551"
@@ -122,7 +122,7 @@
             ignoreCount = "1"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMCoreViewController.m"
-            timestampString = "535159690.674828"
+            timestampString = "535177505.276641"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "494"
@@ -252,7 +252,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMCoreViewController.m"
-            timestampString = "535159690.675156"
+            timestampString = "535177505.276818"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "880"
@@ -348,11 +348,11 @@
             ignoreCount = "5"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMCompactBrowsingView.m"
-            timestampString = "535159690.675476"
+            timestampString = "535177505.277045"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "558"
-            endingLineNumber = "558"
+            startingLineNumber = "559"
+            endingLineNumber = "559"
             landmarkName = "-collectionView:cellForItemAtIndexPath:"
             landmarkType = "7">
          </BreakpointContent>
@@ -364,7 +364,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMCollectionViewFlowLayout.m"
-            timestampString = "535143764.450792"
+            timestampString = "535177505.277307"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "305"
@@ -380,7 +380,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMCollectionViewFlowLayout.m"
-            timestampString = "535143764.450974"
+            timestampString = "535177505.277561"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "280"
@@ -591,7 +591,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMTrackPickerController.m"
-            timestampString = "535159690.6758"
+            timestampString = "535177505.277806"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "436"
@@ -607,11 +607,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMPlaylistManager.m"
-            timestampString = "535159690.675988"
+            timestampString = "535177505.278023"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "156"
-            endingLineNumber = "156"
+            startingLineNumber = "154"
+            endingLineNumber = "154"
             landmarkName = "-deletePlaylist:"
             landmarkType = "7">
          </BreakpointContent>
@@ -655,7 +655,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMCompactBrowsingView.m"
-            timestampString = "535159690.676202"
+            timestampString = "535177505.27826"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "347"
@@ -671,7 +671,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMCompactBrowsingView.m"
-            timestampString = "535159690.676253"
+            timestampString = "535177505.278322"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "231"
@@ -687,7 +687,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMCompactBrowsingView.m"
-            timestampString = "535159690.676298"
+            timestampString = "535177505.278378"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "249"
@@ -719,7 +719,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMCompactBrowsingView.m"
-            timestampString = "535159690.676359"
+            timestampString = "535177505.278453"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "341"
@@ -735,7 +735,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMCompactBrowsingView.m"
-            timestampString = "535159690.676403"
+            timestampString = "535177505.27851"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "234"
@@ -751,7 +751,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMCompactBrowsingView.m"
-            timestampString = "535159690.676446"
+            timestampString = "535177505.278565"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "271"
@@ -767,7 +767,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMCompactBrowsingView.m"
-            timestampString = "535159690.676487"
+            timestampString = "535177505.278617"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "250"
@@ -783,7 +783,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMTrackPickerController.m"
-            timestampString = "535159690.676528"
+            timestampString = "535177505.278672"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "788"
@@ -815,11 +815,11 @@
             ignoreCount = "1"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMEnhancedPlaylistEditorViewController.m"
-            timestampString = "534873556.901578"
+            timestampString = "535177505.278737"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "254"
-            endingLineNumber = "254"
+            startingLineNumber = "258"
+            endingLineNumber = "258"
             landmarkName = "-addConditionsButtonTapped:"
             landmarkType = "7">
          </BreakpointContent>
@@ -831,11 +831,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMPlaylist.m"
-            timestampString = "535159690.676605"
+            timestampString = "535177505.279254"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "113"
-            endingLineNumber = "113"
+            startingLineNumber = "117"
+            endingLineNumber = "117"
             landmarkName = "-trackCollection"
             landmarkType = "7">
          </BreakpointContent>
@@ -943,11 +943,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMMusicPlayer.m"
-            timestampString = "535143764.452876"
+            timestampString = "535177505.279798"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1006"
-            endingLineNumber = "1006"
+            startingLineNumber = "1016"
+            endingLineNumber = "1016"
             landmarkName = "-play"
             landmarkType = "7">
          </BreakpointContent>
@@ -998,7 +998,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMMusicPickerController.m"
-            timestampString = "535159690.676887"
+            timestampString = "535177505.279976"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "413"
@@ -1014,7 +1014,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMMusicPickerController.m"
-            timestampString = "535159690.677085"
+            timestampString = "535177505.280158"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "419"
@@ -1030,11 +1030,123 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMCoreViewController.m"
-            timestampString = "535159690.677137"
+            timestampString = "535177505.28021"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1012"
             endingLineNumber = "1012"
+            landmarkName = "-decodeRestorableStateWithCoder:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Lignite Music/LMPlaylist.m"
+            timestampString = "535177505.280293"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "77"
+            endingLineNumber = "77"
+            landmarkName = "-wantToHearTrackCollections"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Lignite Music/LMEnhancedPlaylistEditorViewController.m"
+            timestampString = "535177505.2806"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "151"
+            endingLineNumber = "151"
+            landmarkName = "-reloadImagePickerTopConstraint"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Lignite Music/LMMusicPlayer.m"
+            timestampString = "535177505.280823"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "803"
+            endingLineNumber = "803"
+            landmarkName = "-queryCollectionsForMusicType:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Lignite Music/LMCompactBrowsingView.m"
+            timestampString = "535177505.280869"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "519"
+            endingLineNumber = "519"
+            landmarkName = "-collectionView:numberOfItemsInSection:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Lignite Music/LMCollectionViewFlowLayout.m"
+            timestampString = "535177505.280915"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "78"
+            endingLineNumber = "78"
+            landmarkName = "-amountOfOverflowingCellsForDetailView"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Lignite Music/LMEnhancedPlaylistEditorViewController.m"
+            timestampString = "535177505.280962"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "635"
+            endingLineNumber = "635"
+            landmarkName = "-encodeRestorableStateWithCoder:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Lignite Music/LMEnhancedPlaylistEditorViewController.m"
+            timestampString = "535177505.28118"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "645"
+            endingLineNumber = "645"
             landmarkName = "-decodeRestorableStateWithCoder:"
             landmarkType = "7">
          </BreakpointContent>

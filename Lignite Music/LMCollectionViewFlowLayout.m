@@ -65,7 +65,7 @@
 }
 
 - (NSInteger)amountOfOverflowingCellsForDetailView {
-	NSInteger totalNumberOfItems = [self.collectionView.dataSource collectionView:self.collectionView numberOfItemsInSection:1];
+	NSInteger totalNumberOfItems = [self.collectionView.dataSource collectionView:self.collectionView numberOfItemsInSection:1]; //Section 1 returns the amount of items without the detail view
 	NSInteger overflow = self.indexOfDetailView-totalNumberOfItems;
 	
 	NSLog(@"total %ld overflow %ld index %ld from %@", (long)totalNumberOfItems, (long)overflow, (long)self.indexOfDetailView, self.collectionView.dataSource);

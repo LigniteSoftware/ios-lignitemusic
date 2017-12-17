@@ -59,7 +59,7 @@ typedef NS_ENUM(NSInteger, LMDetailViewDisplayMode) {
 @property (readonly) NSInteger amountOfOverflowingCellsForDetailView;
 
 /**
- The amount of items to display per row. Default is 3.
+ The amount of items to display per row. Default is based on device and orientation.
  */
 @property (readonly) NSInteger itemsPerRow;
 

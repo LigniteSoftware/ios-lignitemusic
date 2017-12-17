@@ -8,6 +8,8 @@
 
 #import "LMMusicPlayer.h"
 #import "NSTimer+Blocks.h"
+#import "LMPlaylist.h"
+#import "LMPlaylistManager.h"
 
 @import StoreKit;
 
@@ -560,7 +562,7 @@ BOOL shuffleForDebug = NO;
 		case LMMusicTypeCompilations:
 			return MPMediaItemPropertyAlbumPersistentID;
 		case LMMusicTypeArtists:
-			return MPMediaItemPropertyAlbumArtistPersistentID;
+			return MPMediaItemPropertyArtistPersistentID;
 		case LMMusicTypeGenres:
 			return MPMediaItemPropertyGenrePersistentID;
 		default:
@@ -766,6 +768,14 @@ BOOL shuffleForDebug = NO;
 	if(musicType == LMMusicTypeFavourites){
 		return @[ [self favouritesTrackCollection] ];
 	}
+	else if(musicType == LMMusicTypePlaylists){
+		NSMutableArray *playlistsMutableArray = [NSMutableArray new];
+		for(LMPlaylist *playlist in [[LMPlaylistManager sharedPlaylistManager] playlists]){
+			[playlistsMutableArray addObject:playlist.trackCollection];
+		}
+		return [NSArray arrayWithArray:playlistsMutableArray];
+	}
+	
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer || self.playerType == LMMusicPlayerTypeAppleMusic){
 		//		NSTimeInterval startingTime = [[NSDate date] timeIntervalSince1970];
 		//		NSLog(@"Querying items for LMMusicType %d...", musicType);

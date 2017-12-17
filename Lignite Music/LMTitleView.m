@@ -307,11 +307,10 @@
 	//Fix index for adjustment
 	index = (index == 0) ? 0 : (index-2);
 	
-	[self.songListTableView focusCellAtIndex:index];
-	
-//	[self.bigListEntryTableView focusBigListEntryAtIndex:index];
-	
-	[self scrollToTrackIndex:index];
+	if(index > -1){
+		[self.songListTableView focusCellAtIndex:index];
+		[self scrollToTrackIndex:index];
+	}
 }
 
 - (void)amountOfObjectsRequiredChangedTo:(NSUInteger)amountOfObjects forTableView:(LMTableView *)tableView {
