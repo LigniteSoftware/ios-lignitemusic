@@ -1271,6 +1271,9 @@ BOOL shuffleForDebug = NO;
 	if(wasNowPlayingTrack){
 		[self setNowPlayingCollection:self.nowPlayingCollection];
 	}
+	else{
+		self.indexOfNowPlayingTrack = [self.nowPlayingCollection.items indexOfObject:self.nowPlayingTrack];
+	}
 	
 	for(id<LMMusicPlayerDelegate> delegate in self.delegates){
 		if([delegate respondsToSelector:@selector(trackRemovedFromQueue:)]){
