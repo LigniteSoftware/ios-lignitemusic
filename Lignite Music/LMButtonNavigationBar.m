@@ -101,7 +101,9 @@
 /**
  The constraint which pins the iPhone X's home bar bottom cover to the bottom of the root view.
  */
+
 @property NSLayoutConstraint *iPhoneXBottomCoverConstraint;
+@property NSLayoutConstraint *minimizeButtonIconWidthConstraint;
 
 @end
 
@@ -458,6 +460,22 @@
 	}];
 }
 
+- (void)notchPositionChanged:(LMNotchPosition)notchPosition {
+	BOOL adjustForTheFuckingNotch = (notchPosition == LMNotchPositionRight);
+	
+	self.minimizeButtonIconWidthConstraint.constant = adjustForTheFuckingNotch ? -30.0f : 0.0f;
+	
+	self.buttonBar.adjustForTheFuckingNotch = adjustForTheFuckingNotch;
+	
+	NSLog(@"Fuckem %@", self.minimizeButton.constraints);
+	
+	for(NSLayoutConstraint *constraint in self.minimizeButton.constraints){
+		if(constraint.firstAttribute == NSLayoutAttributeWidth && constraint.firstItem == self.minimizeButton){
+			constraint.constant = WINDOW_FRAME.size.width/(adjustForTheFuckingNotch ? 7.0 : 8.0);
+		}
+	}
+}
+
 - (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
 	for(UIView *view in self.subviews){
 		CGPoint locationInView = [view convertPoint:point fromView:self];
@@ -610,6 +628,14 @@
 
 		
 		
+		BOOL notched = NO;
+		if([LMLayoutManager isiPhoneX]){
+			LMNotchPosition notchPosition = [LMLayoutManager notchPosition];
+			if(notchPosition == LMNotchPositionRight){
+				notched = YES; //get fucking notched son
+			}
+		}
+		
 		self.minimizeButton = [UIView newAutoLayoutView];
 		self.minimizeButton.backgroundColor = [LMColour mainColour];
 		self.minimizeButton.userInteractionEnabled = YES;
@@ -625,8 +651,9 @@
 		self.minimizeButtonIconImageView.userInteractionEnabled = NO;
 		[self.minimizeButton addSubview:self.minimizeButtonIconImageView];
 		
-		[self.minimizeButtonIconImageView autoCentreInSuperview];
-		[self.minimizeButtonIconImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.minimizeButton withMultiplier:(4.0/10.0)];
+		[self.minimizeButtonIconImageView autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+		[self.minimizeButtonIconImageView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		self.minimizeButtonIconWidthConstraint = [self.minimizeButtonIconImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.minimizeButton withOffset:notched ? -30 : 0];
 		[self.minimizeButtonIconImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.minimizeButton withMultiplier:[LMLayoutManager isiPad] ? (2.0/10.0) : (4.0/10.0)];
 		
 		
@@ -637,6 +664,7 @@
 		self.buttonBar.buttonIconsToInvertArray = @[ @(LMNavigationTabBrowse), @(LMNavigationTabView) ];
 		self.buttonBar.delegate = self;
 		self.buttonBar.backgroundColor = [UIColor whiteColor];
+		self.buttonBar.adjustForTheFuckingNotch = notched;
 		[self addSubview:self.buttonBar];
 		
 		
@@ -716,11 +744,16 @@
 		}];
 		[LMLayoutManager addNewPortraitConstraints:minimizeButtonPortraitConstraints];
 		
+		CGFloat minimizeButtonLandscapeWidthFactorial = 8.0f;
+		if(notched){
+			minimizeButtonLandscapeWidthFactorial = 7.0f;
+		}
+		
 		NSArray *minimizeButtonLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 			[self.minimizeButton autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 			[self.minimizeButton autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 			[self.minimizeButton autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.browsingBar];
-			[self.minimizeButton autoSetDimension:ALDimensionWidth toSize:properDimension/7.0];
+			[self.minimizeButton autoSetDimension:ALDimensionWidth toSize:properDimension/minimizeButtonLandscapeWidthFactorial];
 		}];
 		[LMLayoutManager addNewLandscapeConstraints:minimizeButtonLandscapeConstraints];
 		

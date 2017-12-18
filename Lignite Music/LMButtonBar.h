@@ -50,6 +50,11 @@
 @property id<LMButtonBarDelegate> delegate;
 
 /**
+ Whether or not to shift all icons by 30px to adjust for the notch on devices like the iPhone X.
+ */
+@property BOOL adjustForTheFuckingNotch;
+
+/**
  Gets the view of a background of a button for a certain index.
 
  @param index The index of the background to get.

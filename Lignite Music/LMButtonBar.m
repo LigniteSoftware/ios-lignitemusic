@@ -29,6 +29,33 @@
 
 @implementation LMButtonBar
 
+@synthesize adjustForTheFuckingNotch = _adjustForTheFuckingNotch;
+
+- (void)setAdjustForTheFuckingNotch:(BOOL)adjustForTheFuckingNotch {
+	_adjustForTheFuckingNotch = adjustForTheFuckingNotch;
+	
+	if(!self.buttonsArray){ //Not initialized
+		return;
+	}
+	
+	for(LMView *view in self.buttonsArray){ //For every actual button view (that can be tapped)
+		for(UIView *subview in view.subviews){ //Search its subviews (there should only be one)
+			if([subview class] == [UIImageView class]){ //Make sure it's an image view
+				for(NSLayoutConstraint *constraint in view.constraints){ //Check the button view's constraints
+					if(constraint.firstItem == subview && constraint.firstAttribute == NSLayoutAttributeWidth){ //Check for the width constraint of the image view
+						
+						constraint.constant = adjustForTheFuckingNotch ? -30.0f : 0;
+					}
+				}
+			}
+		}
+	}
+}
+
+- (BOOL)adjustForTheFuckingNotch {
+	return _adjustForTheFuckingNotch;
+}
+
 //- (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
 //	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 //		for(UIView *subview in self.subviews){
@@ -179,12 +206,14 @@
 				[buttonIcon autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:newBackgroundView withMultiplier:[[self.buttonScaleFactorsArray objectAtIndex:i] floatValue]];
 				[buttonIcon autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 				[buttonIcon autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
-				[buttonIcon autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:newBackgroundView withOffset:-30];
+				[buttonIcon autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:newBackgroundView withOffset:0];
 			}];
 			[LMLayoutManager addNewLandscapeConstraints:buttonIconLandscapeConstraints];
 		}
 		
 		[[LMThemeEngine sharedThemeEngine] addDelegate:self];
+		
+		[self setAdjustForTheFuckingNotch:self.adjustForTheFuckingNotch];
 	}
 	
 	[super layoutSubviews];
