@@ -198,7 +198,7 @@
 		[self.contentView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.rightViewBackgroundView];
 	}
 	else{
-		[self.contentView autoCenterInSuperview];
+		[self.contentView autoCentreInSuperview];
 		[self.contentView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:self.contentViewHeightMultiplier];
 		[self.contentView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:self.stretchAcrossWidth ? 1.0 : 0.9];
 	}
@@ -239,7 +239,7 @@
 			[self.iconView autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
 		}
 		else{
-			[self.iconView autoCenterInSuperview];
+			[self.iconView autoCentreInSuperview];
 		}
 			
 		[self.iconView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.iconBackgroundView withMultiplier:self.iconInsetMultiplier];

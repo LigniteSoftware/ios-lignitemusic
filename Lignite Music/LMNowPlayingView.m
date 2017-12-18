@@ -894,7 +894,7 @@
 			[self.queueView addSubview:self.queueTableView];
 			[self.queueTableView autoPinEdgesToSuperviewEdges];
 			
-			[self.paddingView autoCenterInSuperview];
+			[self.paddingView autoCentreInSuperview];
 			[self.paddingView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withOffset:-paddingViewPadding];
 			[self.paddingView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withOffset:-paddingViewPadding];
 			return;
@@ -921,7 +921,7 @@
 			[self.queueView addSubview:self.queueTableView];
 			[self.queueTableView autoPinEdgesToSuperviewEdges];
 			
-			[self.paddingView autoCenterInSuperview];
+			[self.paddingView autoCentreInSuperview];
 			[self.paddingView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withOffset:-paddingViewPadding];
 			[self.paddingView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withOffset:-paddingViewPadding];
 		}
@@ -1038,7 +1038,7 @@
 	self.backgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
 	[self.mainView addSubview:self.backgroundImageView];
 	
-	[self.backgroundImageView autoCenterInSuperview];
+	[self.backgroundImageView autoCentreInSuperview];
 	[self.backgroundImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:1.1];
 	[self.backgroundImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:1.1];
 	
@@ -1052,7 +1052,7 @@
 	
 	[self.blurredBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.backgroundImageView];
 	[self.blurredBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.backgroundImageView];
-	[self.blurredBackgroundView autoCenterInSuperview];
+	[self.blurredBackgroundView autoCentreInSuperview];
 	
 	
 	
@@ -1125,7 +1125,7 @@
 	self.albumArtImageView.layer.cornerRadius = 8.0f;
 	[self.albumArtRootView addSubview:self.albumArtImageView];
 	
-	[self.albumArtImageView autoCenterInSuperview];
+	[self.albumArtImageView autoCentreInSuperview];
 	[self.albumArtImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.albumArtRootView];
 	[self.albumArtImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.albumArtRootView];
 	

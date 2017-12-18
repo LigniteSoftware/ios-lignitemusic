@@ -55,7 +55,7 @@
 //	self.imageView.backgroundColor = [UIColor orangeColor];
 	[self.imageBackgroundView addSubview:self.imageView];
 	
-	[self.imageView autoCenterInSuperview];
+	[self.imageView autoCentreInSuperview];
 	[self.imageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.imageBackgroundView withMultiplier:imageMultiplier];
 	[self.imageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.imageBackgroundView withMultiplier:imageMultiplier];
 	

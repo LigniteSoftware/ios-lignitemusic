@@ -15,7 +15,7 @@
 #import "LMThemeEngine.h"
 #import "LMThemeView.h"
 
-@interface LMThemePickerViewController()<UICollectionViewDelegate, UICollectionViewDataSource, LMThemeViewDelegate, PeekPopPreviewingDelegate>
+@interface LMThemePickerViewController()<UICollectionViewDelegate, UICollectionViewDataSource, LMThemeViewDelegate, PeekPopPreviewingDelegate, LMLayoutChangeDelegate>
 
 /**
  The collection view which displays the selection of themes.
@@ -55,17 +55,17 @@
 		width = self.collectionView.frame.size.width / 4.0;
 	}
 	else if([LMLayoutManager isLandscape]){
-		width = self.collectionView.frame.size.height / 2.0;
+		width = self.collectionView.frame.size.height / ([LMLayoutManager isiPhoneX] ? 2.25 : 2.0);
 	}
 	
-	width -= 10;
+	width -= (20);
 	CGFloat height = width * 1.8;
 	
 	return CGSizeMake(width, height);
 }
 
 - (NSInteger)collectionView:(UICollectionView*)collectionView numberOfItemsInSection:(NSInteger)section {
-	return 6;
+	return 7;
 }
 
 - (__kindof UICollectionViewCell*)collectionView:(UICollectionView*)collectionView
@@ -143,12 +143,23 @@
 //	[self.navigationController pushViewController:viewControllerToCommit animated:YES];
 }
 
+- (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		[self.collectionView reloadData];
+	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		[self.collectionView reloadData];
+	}];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
 	
+	
+	[[LMLayoutManager sharedLayoutManager] addDelegate:self];
+	
 
 	UICollectionViewFlowLayout *flowLayout = [UICollectionViewFlowLayout new];
-	flowLayout.sectionInset = UIEdgeInsetsMake(LMLayoutManager.isExtraSmall ? 5.0f : 5.0f, 0, 20, 0);
+	flowLayout.sectionInset = UIEdgeInsetsMake(LMLayoutManager.isExtraSmall ? 5.0f : 5.0f, 14, 20, 14);
 	
 	self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:flowLayout];
 	self.collectionView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -159,11 +170,12 @@
 	self.collectionView.backgroundColor = [UIColor whiteColor];
 	[self.view addSubview:self.collectionView];
 	
-	[self.collectionView autoPinEdgeToSuperviewMargin:ALEdgeTrailing];
+
+	[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 	[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 	
 	NSArray *collectionViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-		[self.collectionView autoPinEdgeToSuperviewMargin:ALEdgeLeading];
+		[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 	}];
 	[LMLayoutManager addNewPortraitConstraints:collectionViewPortraitConstraints];
@@ -205,6 +217,10 @@
 - (void)loadView {
 	self.view = [UIView new];
 	self.view.backgroundColor = [UIColor whiteColor];
+}
+
+- (void)dealloc {
+	
 }
 
 @end

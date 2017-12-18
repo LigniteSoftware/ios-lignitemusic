@@ -38,6 +38,11 @@
  */
 @property UILabel *titleLabel;
 
+/**
+ The view which this alert is attached to.
+ */
+@property UIView *viewAttachedTo;
+
 @end
 
 @implementation LMAlertView
@@ -98,7 +103,7 @@
 	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		self.titleLabel.textAlignment = willBeLandscape ? NSTextAlignmentLeft : NSTextAlignmentCenter;
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-		
+		[self.viewAttachedTo bringSubviewToFront:self];
 	}];
 }
 
@@ -117,6 +122,8 @@
 	
 	self.buttonsArray = [NSMutableArray new];
 	
+	self.viewAttachedTo = alertRootView;
+	
 	[alertRootView addSubview:self];
 	
 	[self autoPinEdgeToSuperviewEdge:ALEdgeLeading];
@@ -128,7 +135,7 @@
 	//	paddingView.backgroundColor = [UIColor orangeColor];
 	[self addSubview:paddingView];
 	
-	[paddingView autoCenterInSuperview];
+	[paddingView autoCentreInSuperview];
 	[paddingView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(9.0/10.0)];
 	[paddingView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(9.0/10.0)];
 	

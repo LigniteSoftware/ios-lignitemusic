@@ -19,7 +19,8 @@ typedef NS_ENUM(NSInteger, LMTheme) {
 	LMThemeBombasticBlue = 2, //A dark shade of blue by nbomba@nycap.rr.com.
 	LMThemeMorpheus = 3, //An "in the middle" shade of green from The Matrix by regester8@hotmail.com.
 	LMThemeBackgroundNoise = 4, //A shade of teal by amslerd@sympatico.ca.
-	LMThemeBritishRacingGreen = 5 //A dark shade of green by thomas.kupper@gmail.com.
+	LMThemeBritishRacingGreen = 5, //A dark shade of green by thomas.kupper@gmail.com.,
+	LMThemeDVaPink = 6 //A nice pink based on the Overwatch character, by Josh Arnott.
 };
 
 #define LMThemeKeyDefault @"LMThemeKeyDefault"
@@ -28,7 +29,7 @@ typedef NS_ENUM(NSInteger, LMTheme) {
 #define LMThemeKeyMorpheus @"LMThemeKeyMorpheus"
 #define LMThemeKeyBackgroundNoise @"LMThemeKeyBackgroundNoise"
 #define LMThemeKeyBritishRacingGreen @"LMThemeKeyBritishRacingGreen"
-
+#define LMThemeKeyDVaPink @"LMThemeKeyDVaPink"
 
 @protocol LMThemeEngineDelegate <NSObject>
 

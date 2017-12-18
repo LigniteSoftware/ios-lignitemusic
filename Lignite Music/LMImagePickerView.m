@@ -207,7 +207,7 @@
 		UIView *descriptionContentView = [UIView newAutoLayoutView];
 		[whiteFillView addSubview:descriptionContentView];
 		
-		[descriptionContentView autoCenterInSuperview];
+		[descriptionContentView autoCentreInSuperview];
 		[descriptionContentView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[descriptionContentView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 		

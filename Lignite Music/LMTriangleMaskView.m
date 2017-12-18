@@ -74,7 +74,7 @@
 
 - (void)setup {
 	if(!self.hasSetConstraints){
-		[self autoCenterInSuperview];
+		[self autoCentreInSuperview];
 		[self autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.superview];
 		[self autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.superview];
 		

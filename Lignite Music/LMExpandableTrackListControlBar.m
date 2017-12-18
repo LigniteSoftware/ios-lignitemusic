@@ -206,11 +206,11 @@ BOOL expandableTrackListControlBarIsInAlbumDetail = NO;
 	[self.closeButtonBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self];
 	[self.closeButtonBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self];
 	
-	[self.closeButtonImageView autoCenterInSuperview];
+	[self.closeButtonImageView autoCentreInSuperview];
 	[self.closeButtonImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.closeButtonBackgroundView withMultiplier:(1.0/3.0)];
 	[self.closeButtonImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.closeButtonBackgroundView withMultiplier:(1.0/3.0)];
 	
-	[self.backButtonImageView autoCenterInSuperview];
+	[self.backButtonImageView autoCentreInSuperview];
 	[self.backButtonImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.closeButtonBackgroundView withMultiplier:(1.0/2.5)];
 	[self.backButtonImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.closeButtonBackgroundView withMultiplier:(1.0/2.5)];
 	

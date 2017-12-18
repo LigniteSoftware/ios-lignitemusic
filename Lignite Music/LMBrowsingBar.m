@@ -189,7 +189,7 @@
 		self.toggleButtonImageView.contentMode = UIViewContentModeScaleAspectFit;
 		[self.toggleButtonBackgroundView addSubview:self.toggleButtonImageView];
 		
-		[self.toggleButtonImageView autoCenterInSuperview];
+		[self.toggleButtonImageView autoCentreInSuperview];
 		[self.toggleButtonImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.toggleButtonBackgroundView withMultiplier:(1.0/2.0)];
 		[self.toggleButtonImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.toggleButtonBackgroundView withMultiplier:(1.0/2.0)];
 		

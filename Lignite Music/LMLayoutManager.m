@@ -171,9 +171,25 @@
 	return (MAX(WINDOW_FRAME.size.width, WINDOW_FRAME.size.height) == 812) && ![LMLayoutManager isiPad];
 }
 
++ (BOOL)iPhoneXNotchIsOnTheLeftSide {
+	if(![self isiPhoneX] || ![self isLandscape]){
+		return NO;
+	}
+	
+	return [[UIDevice currentDevice] orientation] == UIDeviceOrientationLandscapeLeft;
+}
+
++ (BOOL)iPhoneXNotchIsOnTheRightSide {
+	if(![self isiPhoneX] || ![self isLandscape]){
+		return NO;
+	}
+	
+	return [[UIDevice currentDevice] orientation] == UIDeviceOrientationLandscapeRight;
+}
+
 + (CGFloat)listEntryHeightFactorial {
 	if([self isiPhoneX]){
-		return 10.0f;
+		return 11.0f;
 	}
 	else if([self isiPad]){
 		return 12.0f;
@@ -377,10 +393,34 @@
 	return LMLayoutClassPortrait;
 }
 
++ (LMNotchPosition)notchPosition {
+	NSAssert([self isiPhoneX], @"Attempt to get the notch position on a device which doesn't have a notch, gutless piece of shit.");
+	
+	LMNotchPosition notchPosition = LMNotchPositionTop;
+	
+	if([self iPhoneXNotchIsOnTheLeftSide]){
+		notchPosition = LMNotchPositionLeft;
+	}
+	if([self iPhoneXNotchIsOnTheRightSide]){
+		notchPosition = LMNotchPositionRight;
+	}
+	
+	return notchPosition;
+}
+
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
-	for(id<LMLayoutChangeDelegate>delegate in self.delegates){
-		if([delegate respondsToSelector:@selector(traitCollectionDidChange:)]){
+	for(id<LMLayoutChangeDelegate> delegate in self.delegates){
+		if([delegate respondsToSelector:@selector(traitCollectionDidChange:)] && ([delegate class] != [LMCoreViewController class])){
 			[delegate traitCollectionDidChange:previousTraitCollection];
+		}
+	}
+	
+	if([LMLayoutManager isiPhoneX]){
+		LMNotchPosition newNotchPosition = [LMLayoutManager notchPosition];
+		for(id<LMLayoutChangeDelegate> delegate in self.delegates){
+			if([delegate respondsToSelector:@selector(notchPositionChanged:)]){
+				[delegate notchPositionChanged:newNotchPosition];
+			}
 		}
 	}
 	

@@ -88,7 +88,7 @@
 		
 		CGFloat padding = 5.0f;
 		
-		[self.paddingView autoCenterInSuperview];
+		[self.paddingView autoCentreInSuperview];
 		[self.paddingView autoPinEdgeToSuperviewMargin:ALEdgeTop].constant = padding;
 		[self.paddingView autoPinEdgeToSuperviewMargin:ALEdgeBottom].constant = -padding;
 		[self.paddingView autoPinEdgeToSuperviewMargin:ALEdgeTrailing].constant = -padding;

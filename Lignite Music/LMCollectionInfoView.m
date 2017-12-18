@@ -163,7 +163,7 @@
 		
 //		self.leftTextLabel.textAlignment = NSTextAlignmentCenter;
 	
-		[self.leftTextLabel autoCenterInSuperview];
+		[self.leftTextLabel autoCentreInSuperview];
 		[self.leftTextLabel autoPinEdgesToSuperviewEdges];
 //	}
 }

@@ -640,7 +640,7 @@
 			topInset = 100;
 		}
 		else if([LMLayoutManager isiPhoneX] && isPlaylists){
-			topInset = 80;
+			topInset = self.layoutManager.isLandscape ? 0 : 80;
 		}
        self.collectionView.contentInset = UIEdgeInsetsMake(topInset, 0, 100, 0);
     }];
@@ -698,7 +698,7 @@
 			topInset = 100;
 		}
 		else if([LMLayoutManager isiPhoneX] && isPlaylists){
-			topInset = 80;
+			topInset = self.layoutManager.isLandscape ? 0 : 80;
 		}
 		self.collectionView.contentInset = UIEdgeInsetsMake(topInset, 0, 100, 0);
 		
@@ -1087,7 +1087,7 @@
 			topInset = 100;
 		}
 		else if([LMLayoutManager isiPhoneX] && isPlaylists){
-			topInset = 80;
+			topInset = self.layoutManager.isLandscape ? 0 : 80;
 		}
 		self.collectionView.contentInset = UIEdgeInsetsMake(topInset, 0, 100, 0);
 		[self.collectionView registerClass:[LMCollectionViewCell class] forCellWithReuseIdentifier:@"cellIdentifier"];
@@ -1190,7 +1190,7 @@
 			[view addSubview:backgroundView];
 			
 			[backgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:view withMultiplier:(1.6/3.5)];
-			[backgroundView autoCenterInSuperview];
+			[backgroundView autoCentreInSuperview];
 			
 			
 			UIImageView *iconView = [UIImageView newAutoLayoutView];

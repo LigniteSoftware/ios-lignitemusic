@@ -128,7 +128,7 @@
 		self.sectionHeaderIconImageView.image = self.icon;
 		[self.sectionHeaderIconImageBackgroundView addSubview:self.sectionHeaderIconImageView];
 		
-		[self.sectionHeaderIconImageView autoCenterInSuperview];
+		[self.sectionHeaderIconImageView autoCentreInSuperview];
 		[self.sectionHeaderIconImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.sectionHeaderBackgroundView withMultiplier:(2.0/4.0)];
 		[self.sectionHeaderIconImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.sectionHeaderBackgroundView withMultiplier:(2.0/4.0)];
 		

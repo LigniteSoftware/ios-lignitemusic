@@ -190,7 +190,7 @@
 	self.albumArtImageView = [UIImageView newAutoLayoutView];
 	[self.albumArtImageBackgroundView addSubview:self.albumArtImageView];
 	
-	[self.albumArtImageView autoCenterInSuperview];
+	[self.albumArtImageView autoCentreInSuperview];
 	[self.albumArtImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.albumArtImageBackgroundView withMultiplier:(8.0/10.0)];
 	[self.albumArtImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.albumArtImageBackgroundView withMultiplier:(8.0/10.0)];
 	

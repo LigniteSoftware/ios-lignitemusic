@@ -83,6 +83,8 @@
 //	LMTableViewCell *lmCell = (LMTableViewCell*)cell;
 	
 	//prepare shit
+	
+	cell.backgroundColor = [LMColour superLightGreyColour];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -92,7 +94,9 @@
 	
 	LMTableViewCell *cell = (LMTableViewCell*)[tableView dequeueReusableCellWithIdentifier:cellIdentifier forIndexPath:indexPath];
 	
-	cell.contentView.backgroundColor = [LMColour superLightGrayColour];
+	cell.backgroundColor = [UIColor blueColor];
+	
+	cell.contentView.backgroundColor = [LMColour superLightGreyColour];
 		
 	LMListEntry *subview = [self.listEntryArray objectAtIndex:rawRow % self.listEntryArray.count];
 	subview.indexPath = indexPath;
@@ -116,7 +120,11 @@
 //				accessoryView.backgroundColor = [LMColour randomColour];
 				[cell.contentView addSubview:accessoryView];
 				
-				float padding = 0.06*WINDOW_FRAME.size.width;
+				float padding = 0.06*([LMLayoutManager isLandscape] ? WINDOW_FRAME.size.height : WINDOW_FRAME.size.width);
+				
+				if([LMLayoutManager isiPhoneX]){
+					padding = ([LMLayoutManager notchPosition] == LMNotchPositionLeft) ? 16 : 4;
+				}
 				
 				[accessoryView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:cell.contentView withOffset:-padding];
 				[accessoryView autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
@@ -126,10 +134,10 @@
 				[accessoryView addSubview:accessorySubview];
 				
 				if([accessorySubviewClass isEqualToString:@"UISwitch"] || [accessorySubviewClass isEqualToString:@"LMSettingsSwitch"]){
-					[accessorySubview autoCenterInSuperview];
+					[accessorySubview autoCentreInSuperview];
 				}
 				else if([accessorySubviewClass isEqualToString:@"UIImageView"]){
-					[accessorySubview autoCenterInSuperview];
+					[accessorySubview autoCentreInSuperview];
 					[accessorySubview autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:accessoryView withMultiplier:(1.0/2.0)];
 					[accessorySubview autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:accessoryView withMultiplier:(1.0/2.0)];
 				}

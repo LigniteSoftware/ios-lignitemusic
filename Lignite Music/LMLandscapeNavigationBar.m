@@ -13,6 +13,11 @@
 @interface LMLandscapeNavigationBar()
 
 /**
+ The background view is the view which actually contains the navigation bar's contents. It is pinned to the trailing edge of self. The rest of self, from leading of self to leading of navigationBarBackgroundView is white.
+ */
+@property UIView *navigationBarBackgroundView;
+
+/**
  The back button image view.
  */
 @property UIImageView *backButtonImageView;
@@ -21,11 +26,6 @@
  The logo image view.
  */
 @property UIImageView *logoImageView;
-
-/**
- The image view for the warning button.
- */
-@property UIImageView *warningImageView;
 
 /**
  The image view for the create button.
@@ -47,17 +47,6 @@
 @implementation LMLandscapeNavigationBar
 
 @synthesize mode = _mode;
-@synthesize showWarningButton = _showWarningButton;
-
-- (BOOL)showWarningButton {
-	return _showWarningButton;
-}
-
-- (void)setShowWarningButton:(BOOL)showWarningButton {
-	_showWarningButton = showWarningButton;
-
-	[self setMode:self.mode];
-}
 
 - (LMLandscapeNavigationBarMode)mode {
 	return _mode;
@@ -72,11 +61,12 @@
 	
 	[self.backButtonImageView removeConstraints:self.backButtonImageView.constraints];
 	[self.logoImageView removeConstraints:self.logoImageView.constraints];
-	[self removeConstraints:self.constraints];
+	NSLog(@"%@", self.navigationBarBackgroundView.constraints);
+	[self.navigationBarBackgroundView removeConstraints:self.navigationBarBackgroundView.constraints];
 	
-	[self layoutIfNeeded];
+	[self.navigationBarBackgroundView autoSetDimension:ALDimensionWidth toSize:64.0f];
 	
-	self.warningImageView.hidden = !self.showWarningButton;
+	[self.navigationBarBackgroundView layoutIfNeeded];
 	
 	self.createImageView.hidden = self.mode != LMLandscapeNavigationBarModePlaylistView;
 	self.editImageView.hidden = self.createImageView.hidden;
@@ -85,43 +75,26 @@
 		case LMLandscapeNavigationBarModeOnlyLogo: {
 			self.backButtonImageView.hidden = YES;
 			
-			[self.logoImageView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-			[self.logoImageView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-			[self.logoImageView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-			[self.logoImageView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-			
-			
-			[self.warningImageView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-			[self.warningImageView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-			[self.warningImageView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-			[self.warningImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self];
+			[self.logoImageView autoPinEdgesToSuperviewEdges];
 			break;
 		}
 		case LMLandscapeNavigationBarModeWithBackButton: {
 			self.backButtonImageView.hidden = NO;
 			
 			[self.backButtonImageView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-			[self.backButtonImageView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:10];
+			[self.backButtonImageView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:20];
 			[self.backButtonImageView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-			[self.backButtonImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self withMultiplier:0.75];
+			[self.backButtonImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.navigationBarBackgroundView withMultiplier:0.75];
 			
 			[self.backButtonImageView setContentCompressionResistancePriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisVertical];
 			[self.backButtonImageView setContentCompressionResistancePriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
 			
 			
-			[self.warningImageView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.backButtonImageView];
-			[self.warningImageView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.logoImageView];
-			[self.warningImageView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-			[self.warningImageView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-			
-			[self.warningImageView setContentCompressionResistancePriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisVertical];
-			[self.warningImageView setContentCompressionResistancePriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
-			
 			
 			[self.logoImageView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-			[self.logoImageView autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:2];
+			[self.logoImageView autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:10];
 			[self.logoImageView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-			[self.logoImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self];
+			[self.logoImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.navigationBarBackgroundView];
 			
 			[self.logoImageView setContentCompressionResistancePriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisVertical];
 			[self.logoImageView setContentCompressionResistancePriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
@@ -133,29 +106,24 @@
 			
 			[self.createImageView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:18];
 			[self.createImageView autoAlignAxisToSuperviewAxis:ALAxisVertical];
-			[self.createImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(3.0/6.0)];
+			[self.createImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.navigationBarBackgroundView withMultiplier:(3.0/6.0)];
 			[self.createImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.createImageView];
 			
 			[self.editImageView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.createImageView withOffset:24];
 			[self.editImageView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.createImageView];
 			[self.editImageView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.createImageView];
 			[self.editImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.createImageView];
-			
-			[self.warningImageView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.logoImageView];
-			[self.warningImageView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.logoImageView];
-			[self.warningImageView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.logoImageView];
-			[self.warningImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.logoImageView];
-			
+
 			[self.logoImageView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 			[self.logoImageView autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:2];
 			[self.logoImageView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-			[self.logoImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self];
+			[self.logoImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.navigationBarBackgroundView];
 			break;
 		}
 	}
 	
 	[UIView animateWithDuration:0.0 animations:^{
-		[self layoutIfNeeded];
+		[self.navigationBarBackgroundView layoutIfNeeded];
 	}];
 }
 
@@ -195,7 +163,7 @@
 		[self.delegate buttonTappedOnLandscapeNavigationBar:LMLandscapeNavigationBarButtonEdit];
 	}
 	else{
-		[self.delegate buttonTappedOnLandscapeNavigationBar:LMLandscapeNavigationBarButtonWarning];
+		NSAssert(false, @"Unknown landscape navigation bar view tapped");
 	}
 }
 
@@ -207,68 +175,67 @@
 		self.backgroundColor = [UIColor whiteColor];
 		
 		
-		[self setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
-		[self setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+		self.navigationBarBackgroundView = [UIView newAutoLayoutView];
+		self.navigationBarBackgroundView.backgroundColor = [UIColor clearColor];
+		[self addSubview:self.navigationBarBackgroundView];
+		
+		[self.navigationBarBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+		[self.navigationBarBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[self.navigationBarBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.navigationBarBackgroundView autoSetDimension:ALDimensionWidth toSize:64.0f];
 		
 		
-		self.backgroundColor = [UIColor whiteColor];
+		
+//		[self.navigationBarBackgroundView setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
+//		[self.navigationBarBackgroundView setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+
+
 		self.userInteractionEnabled = YES;
-		
-		self.backButtonImageView = [UIImageView new];
+
+		self.backButtonImageView = [UIImageView newAutoLayoutView];
 		self.backButtonImageView.contentMode = UIViewContentModeScaleAspectFit;
 		self.backButtonImageView.image = [LMAppIcon imageForIcon:LMIconiOSBack];
 		self.backButtonImageView.clipsToBounds = YES;
 		self.backButtonImageView.userInteractionEnabled = YES;
-		[self addSubview:self.backButtonImageView];
-		
+		[self.navigationBarBackgroundView addSubview:self.backButtonImageView];
+
 		UITapGestureRecognizer *backButtonTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tappedButton:)];
 		[self.backButtonImageView addGestureRecognizer:backButtonTapGestureRecognizer];
-		
-		
-		self.logoImageView = [UIImageView new];
+
+
+		self.logoImageView = [UIImageView newAutoLayoutView];
 		self.logoImageView.contentMode = UIViewContentModeScaleAspectFit;
 		self.logoImageView.image = [LMAppIcon imageForIcon:LMIconNoAlbumArt75Percent];
 		self.logoImageView.clipsToBounds = YES;
 		self.logoImageView.userInteractionEnabled = YES;
-		[self addSubview:self.logoImageView];
-		
+		[self.navigationBarBackgroundView addSubview:self.logoImageView];
+
 		UITapGestureRecognizer *logoImageViewTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tappedButton:)];
 		[self.logoImageView addGestureRecognizer:logoImageViewTapGestureRecognizer];
-		
-		
-		self.warningImageView = [UIImageView new];
-		self.warningImageView.contentMode = UIViewContentModeScaleAspectFit;
-		self.warningImageView.image = [LMAppIcon imageForIcon:LMIconWarning];
-		self.warningImageView.clipsToBounds = YES;
-		self.warningImageView.userInteractionEnabled = YES;
-		[self addSubview:self.warningImageView];
-		
-		UITapGestureRecognizer *warningImageViewTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tappedButton:)];
-		[self.warningImageView addGestureRecognizer:warningImageViewTapGestureRecognizer];
-		
-		
-		self.createImageView = [UIImageView new];
+
+
+		self.createImageView = [UIImageView newAutoLayoutView];
 		self.createImageView.contentMode = UIViewContentModeScaleAspectFit;
 		self.createImageView.image = [LMAppIcon invertImage:[LMAppIcon imageForIcon:LMIconAdd]];
 		self.createImageView.clipsToBounds = YES;
 		self.createImageView.userInteractionEnabled = YES;
-		[self addSubview:self.createImageView];
-		
+		[self.navigationBarBackgroundView addSubview:self.createImageView];
+
 		UITapGestureRecognizer *createImageViewTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tappedButton:)];
 		[self.createImageView addGestureRecognizer:createImageViewTapGestureRecognizer];
-		
-		
-		self.editImageView = [UIImageView new];
+
+
+		self.editImageView = [UIImageView newAutoLayoutView];
 		self.editImageView.contentMode = UIViewContentModeScaleAspectFit;
 		self.editImageView.image = [LMAppIcon invertImage:[LMAppIcon imageForIcon:LMIconEdit]];
 		self.editImageView.clipsToBounds = YES;
 		self.editImageView.userInteractionEnabled = YES;
-		[self addSubview:self.editImageView];
-		
+		[self.navigationBarBackgroundView addSubview:self.editImageView];
+
 		UITapGestureRecognizer *editImageViewTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tappedButton:)];
 		[self.editImageView addGestureRecognizer:editImageViewTapGestureRecognizer];
-		
-		
+
+
 		[self setMode:self.mode];
 	}
 }

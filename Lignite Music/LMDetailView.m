@@ -220,7 +220,7 @@
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
 	UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cellIdentifier" forIndexPath:indexPath];
 	
-	cell.backgroundColor = [LMColour superLightGrayColour];
+	cell.backgroundColor = [LMColour superLightGreyColour];
 	
 	//	for(UIView *subview in cell.contentView.subviews){
 	//		[subview removeFromSuperview];
@@ -301,7 +301,7 @@
 		
 		
 		[cell.contentView addSubview:listEntry];
-		listEntry.backgroundColor = [LMColour superLightGrayColour];
+		listEntry.backgroundColor = [LMColour superLightGreyColour];
 		
 		[listEntry autoPinEdgesToSuperviewEdges];
 		
@@ -444,7 +444,7 @@
 		self.collectionView.dataSource = self;
 		self.collectionView.userInteractionEnabled = YES;
 		self.collectionView.contentInset = UIEdgeInsetsMake(0, 0, 10, 0);
-		self.collectionView.backgroundColor = [LMColour superLightGrayColour];
+		self.collectionView.backgroundColor = [LMColour superLightGreyColour];
 		[self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"cellIdentifier"];
 		[self addSubview:self.collectionView];
 		

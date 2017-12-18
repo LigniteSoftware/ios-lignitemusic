@@ -143,7 +143,7 @@
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
 	LMCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"musicCollectionsViewIdentifier" forIndexPath:indexPath];
 	
-	cell.backgroundColor = [LMColour superLightGrayColour];
+	cell.backgroundColor = [LMColour superLightGreyColour];
 	
 	for(UIView *subview in cell.contentView.subviews){
 		[subview removeFromSuperview];
@@ -240,7 +240,7 @@
 			[self.bigListEntries addObject:bigListEntry];
 		}
 		
-		self.collectionView.backgroundColor = [LMColour superLightGrayColour];
+		self.collectionView.backgroundColor = [LMColour superLightGreyColour];
 		
 		[self.collectionView autoPinEdgesToSuperviewEdges];
 		

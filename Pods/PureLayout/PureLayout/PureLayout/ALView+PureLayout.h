@@ -54,7 +54,7 @@ PL__ASSUME_NONNULL_BEGIN
 #pragma mark Center & Align in Superview
 
 /** Centers the view in its superview. */
-- (PL__NSArray_of(NSLayoutConstraint *) *)autoCenterInSuperview;
+- (PL__NSArray_of(NSLayoutConstraint *) *)autoCentreInSuperview;
 
 /** Aligns the view to the same axis of its superview. */
 - (NSLayoutConstraint *)autoAlignAxisToSuperviewAxis:(ALAxis)axis;

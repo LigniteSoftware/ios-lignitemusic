@@ -193,7 +193,7 @@
 		
 		CGFloat widthMultiplier = image.size.width / image.size.height;
 		
-		[self.imageView autoCenterInSuperview];
+		[self.imageView autoCentreInSuperview];
 		[self.imageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.imageViewBackgroundView withMultiplier:widthMultiplier];
 		self.imageViewLayoutConstraint = [self.imageView autoMatchDimension:ALDimensionHeight
 																toDimension:ALDimensionHeight
@@ -207,7 +207,7 @@
 		self.imageBorderView.layer.shadowOpacity = isSelected ? 0.5f : 0.15f;
 		self.imageBorderView.layer.cornerRadius = 6.0f;
 		
-		[self.imageBorderView autoCenterInSuperview];
+		[self.imageBorderView autoCentreInSuperview];
 		
 		self.imageBorderHeightConstraint = [self.imageBorderView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.imageView withMultiplier:isSelected ? (10.7/10.0) : (10.4/10.0)];
 		

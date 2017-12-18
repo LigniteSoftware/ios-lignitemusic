@@ -48,6 +48,13 @@
  
  */
 
+"NoPlaylists" = "Ups, du hast noch keine Wiedergabeliste erstellt!\n\nErstelle eine neue Liste durch das Tippen auf den entsprechenden Button oben.";
+
+"EnablePebbleTitle" = "Pebble Zugriff gewähren";
+"EnablePebbleDescription" = "Als wir mit der Programmierung von Abbey in 2016 begonnen haben, war eine Pebble App zur Steuerung von Abbey ein Teil unserer App. Damals war leider niemandem bewusst, dass es Pebble per Ende Jahr nicht mehr geben würde. Wir haben uns dazu entschieden, den Pebble-Teil für alle Pebblers beizubehalten.\n\nNichtsdestotrotz gewähren wir hierfür keinen weiteren offiziellen Support. Die Pebble App wird nicht mehr weiterentwickelt und allfällige Fehler nicht mehr behoben.\n\nABBEY'S PEBBLE APP FUNKTIONIERT UNTER UMSTÄNDEN GAR NICHT.\n\nTippe bitte unten auf 'Pebble Unterstützung aktivieren' falls du dies verstanden hast und es trotzdem nutzen möchtest.";
+"PebbleEnable" = "Pebble Unterstützung aktivieren";
+"PebbleDisable" = "Abbrechen";
+
 "Theme" = "Farbmotiv";
 "Selected" = "Ausgewählt";
 
@@ -157,7 +164,7 @@
 "View" = "Anzeige"; //The view the user is on, ie. "Album view". Is used as a singular word, though.
 
 
-"TheresNothingHere" = "Gehen Sie bitte weiter, hier gibt es nichts zu sehen!"; //Nothing for a certain view (ie. no compilations)
+"TheresNothingHere" = "Oh je, auf deinem Gerät ist noch gar keine Musik vorhanden!\n\nSynchronisiere deine Musik via iTunes, um diese Meldung verschwinden zu lassen."; //Nothing for a certain view (ie. no compilations)
 "iOSNotProvidingQueue" = "iOS teilt uns die als nächstes abzuspielenden Songs nicht mit.\n\nStarte die Wiedergabe von dieser App, um diese Liste automatisch füllen zu lassen.";
 "NothingInQueue" = "Keine Songs in der Liste";
 
@@ -496,7 +503,7 @@
 
 "SettingImagesAlertDescription" = "Abbey lädt Bilder von deinen Künstlern sowie fehlende Albencovers automatisch herunter.\n\n%@\n\n%@";
 "YouCurrentlyHaveThisFeatureOff" = "Dieses Feature ist zurzeit ausgeschaltet.";
-"YouCanTurnOffTo" = "Du kannst diese Fotos löschen und dieses Feature deaktivieren, um Speicherplatz und Datenvolumen zu sparen.\n\nFalls du dich dafür entscheidest, werden wir keine Fotos herunterladen, bis du es wieder aktivierst.";
+"YouCanTurnOffTo" = "Diese Bilder kannst du löschen um Speicherplatz und Datenvolumen zu sparen. Solltest du deine Meinung ändern, kannst du dies jederzeit in den Einstellungen tun.";
 "YouCanTurnOnTo" = "Du kannst dieses Feature aktivieren, um eine visuell viel schönere Übersicht zu erhalten.\n\nWir werden die Fotos herunterladen, sobald du dich in einem WiFi befindest und genug Speicherplatz zur Verfügung hast. Sollte einer der beiden Voraussetzungen nicht erfüllt sein, werden wir dich entsprechend fragen, wie du weiterfahren möchtest.";
 
 "ImagesDeleted" = "Fotos gelöscht";

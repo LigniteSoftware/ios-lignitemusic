@@ -159,28 +159,29 @@
 			
 			
 			
-			UIImageView *sendButtonIcon = [UIImageView newAutoLayoutView];
-			sendButtonIcon.contentMode = UIViewContentModeScaleAspectFit;
-			sendButtonIcon.image = [LMAppIcon imageForIcon:(LMIcon)[[self.buttonIconsArray objectAtIndex:i] unsignedIntegerValue]];
+			UIImageView *buttonIcon = [UIImageView newAutoLayoutView];
+			buttonIcon.contentMode = UIViewContentModeScaleAspectFit;
+			buttonIcon.image = [LMAppIcon imageForIcon:(LMIcon)[[self.buttonIconsArray objectAtIndex:i] unsignedIntegerValue]];
 			if([self.buttonIconsToInvertArray containsObject:@(i)]){
-				sendButtonIcon.image = [LMAppIcon invertImage:sendButtonIcon.image];
+				buttonIcon.image = [LMAppIcon invertImage:buttonIcon.image];
 			}
 //			sendButtonIcon.backgroundColor = [UIColor orangeColor];
-			[newBackgroundView addSubview:sendButtonIcon];
+			[newBackgroundView addSubview:buttonIcon];
 			
-			NSArray *sendButtonIconPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-				[sendButtonIcon autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:newBackgroundView];
-				[sendButtonIcon autoCenterInSuperview];
-				[sendButtonIcon autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:newBackgroundView withMultiplier:[[self.buttonScaleFactorsArray objectAtIndex:i] floatValue]];
+			NSArray *buttonIconPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+				[buttonIcon autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:newBackgroundView];
+				[buttonIcon autoCentreInSuperview];
+				[buttonIcon autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:newBackgroundView withMultiplier:[[self.buttonScaleFactorsArray objectAtIndex:i] floatValue]];
 			}];
-			[LMLayoutManager addNewPortraitConstraints:sendButtonIconPortraitConstraints];
+			[LMLayoutManager addNewPortraitConstraints:buttonIconPortraitConstraints];
 			
-			NSArray *sendButtonIconLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-				[sendButtonIcon autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:newBackgroundView withMultiplier:[[self.buttonScaleFactorsArray objectAtIndex:i] floatValue]];
-				[sendButtonIcon autoCenterInSuperview];
-				[sendButtonIcon autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:newBackgroundView];
+			NSArray *buttonIconLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+				[buttonIcon autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:newBackgroundView withMultiplier:[[self.buttonScaleFactorsArray objectAtIndex:i] floatValue]];
+				[buttonIcon autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+				[buttonIcon autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+				[buttonIcon autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:newBackgroundView withOffset:-30];
 			}];
-			[LMLayoutManager addNewLandscapeConstraints:sendButtonIconLandscapeConstraints];
+			[LMLayoutManager addNewLandscapeConstraints:buttonIconLandscapeConstraints];
 		}
 		
 		[[LMThemeEngine sharedThemeEngine] addDelegate:self];

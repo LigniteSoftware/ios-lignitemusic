@@ -98,7 +98,7 @@
 		[self.buttonBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[self.buttonBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 		[self.buttonBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.backgroundView withMultiplier:(9.0/10.0)];
-		[self.buttonBackgroundView autoCenterInSuperview];
+		[self.buttonBackgroundView autoCentreInSuperview];
 		
 		uint8_t amountOfItemsForControlBar = [self.delegate amountOfButtonsForControlBarView:self];
 		for(int i = 0; i < amountOfItemsForControlBar; i++){
@@ -132,7 +132,7 @@
 			buttonBackgroundView.userInteractionEnabled = YES;
 			[buttonAreaView addSubview:buttonBackgroundView];
 			
-			[buttonBackgroundView autoCenterInSuperview];
+			[buttonBackgroundView autoCentreInSuperview];
 			[buttonBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:buttonAreaView withMultiplier:0.7];
 			[buttonBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:buttonAreaView withMultiplier:0.7];
 			
@@ -144,7 +144,7 @@
 			buttonImageView.image = [self.delegate imageWithIndex:i forControlBarView:self];
 			[buttonBackgroundView addSubview:buttonImageView];
 			
-			[buttonImageView autoCenterInSuperview];
+			[buttonImageView autoCentreInSuperview];
 			[buttonImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:buttonBackgroundView withMultiplier:0.60];
 			[buttonImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:buttonBackgroundView withMultiplier:0.60];
 			

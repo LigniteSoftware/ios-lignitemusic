@@ -270,7 +270,7 @@
         self.contentView.backgroundColor = [UIColor whiteColor];
         [self.contentViewBackground addSubview:self.contentView];
         
-        [self.contentView autoCenterInSuperview];
+        [self.contentView autoCentreInSuperview];
         [self.contentView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.contentViewBackground withMultiplier:(10.0/10.0)];
         [self.contentView autoPinEdgeToSuperviewEdge:ALEdgeTop];
         [self.contentView autoPinEdgeToSuperviewEdge:ALEdgeBottom];

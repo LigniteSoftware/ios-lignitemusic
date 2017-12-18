@@ -900,7 +900,7 @@
 	addSongsIconImageView.image = [LMAppIcon imageForIcon:LMIconAdd];
 	[self.wantToHearAddSongsButtonView addSubview:addSongsIconImageView];
 	
-	[addSongsIconImageView autoCenterInSuperview];
+	[addSongsIconImageView autoCentreInSuperview];
 	[addSongsIconImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.wantToHearAddSongsButtonView withMultiplier:(5.0/10.0)];
 	[addSongsIconImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:addSongsIconImageView];
 	
@@ -938,7 +938,7 @@
 	addSongsDontWantIconImageView.image = [LMAppIcon imageForIcon:LMIconAdd];
 	[self.dontWantToHearAddSongsButtonView addSubview:addSongsDontWantIconImageView];
 	
-	[addSongsDontWantIconImageView autoCenterInSuperview];
+	[addSongsDontWantIconImageView autoCentreInSuperview];
 	[addSongsDontWantIconImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.dontWantToHearAddSongsButtonView withMultiplier:(5.0/10.0)];
 	[addSongsDontWantIconImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:addSongsDontWantIconImageView];
 	

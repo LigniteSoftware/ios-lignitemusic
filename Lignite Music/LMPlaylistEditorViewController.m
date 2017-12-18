@@ -538,7 +538,7 @@
 	[self.addSongsButtonView addSubview:backgroundView];
 	
 	[backgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.addSongsButtonView withMultiplier:(1.0/4.0)];
-	[backgroundView autoCenterInSuperview];
+	[backgroundView autoCentreInSuperview];
 	
 	UIImageView *iconView = [UIImageView newAutoLayoutView];
 	iconView.image = [LMAppIcon imageForIcon:LMIconAdd];

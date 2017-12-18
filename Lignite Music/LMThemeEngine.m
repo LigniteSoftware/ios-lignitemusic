@@ -59,6 +59,9 @@
 	else if([key isEqualToString:LMThemeKeyBritishRacingGreen]){
 		return LMThemeBritishRacingGreen;
 	}
+	else if([key isEqualToString:LMThemeKeyDVaPink]){
+		return LMThemeDVaPink;
+	}
 	
 	return LMThemeDefault;
 }
@@ -77,6 +80,8 @@
 			return LMThemeKeyBackgroundNoise;
 		case LMThemeBritishRacingGreen:
 			return LMThemeKeyBritishRacingGreen;
+		case LMThemeDVaPink:
+			return LMThemeKeyDVaPink;
 	}
 }
 
@@ -94,6 +99,8 @@
 			return @"399DC6";
 		case LMThemeBritishRacingGreen:
 			return @"004225";
+		case LMThemeDVaPink:
+			return @"E94392";
 	}
 }
 

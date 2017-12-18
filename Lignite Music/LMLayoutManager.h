@@ -13,6 +13,49 @@
 
 @class LMLayoutManager;
 
+/**
+ The layout class of the device defines what kind of layout applies to this device. iPad only has one layout class.
+
+ - LMLayoutClassPortrait: Handheld, portrait.
+ - LMLayoutClassLandscape: Handheld, landscape.
+ - LMLayoutClassiPad: iPad, both orientations.
+ */
+typedef NS_ENUM(NSInteger, LMLayoutClass) {
+	LMLayoutClassPortrait   = 0,
+	LMLayoutClassLandscape  = 1,
+	LMLayoutClassiPad       = 2
+};
+
+/**
+ The screen size class for specifying exactly the kind of layout that should be applied.
+
+ - LMScreenSizeClassPhone: A phone or iPod.
+ - LMScreenSizeClassiPadMini: An iPad Mini.
+ - LMScreenSizeClassiPadAir: An iPad Air/normal sized iPad of 25cm.
+ - LMScreenSizeClassiPadPro: An iPad pro, 33cm.
+ */
+typedef NS_ENUM(NSInteger, LMScreenSizeClass) {
+	LMScreenSizeClassPhone     = 0,
+	LMScreenSizeClassiPadMini  = 1,
+	LMScreenSizeClassiPadAir   = 2,
+	LMScreenSizeClassiPadPro   = 3
+};
+
+/**
+ If the device is one with a notch, such as the iPhone X, LMNotchPosition is the position of the notch relative to the current screen orientation.
+
+ - LMNotchPositionTop: The top of the screen.
+ - LMNotchPositionLeft: The left side of the screen.
+ - LMNotchPositionRight: The right side of the screen.
+ - LMNotchPositionBottom: The bottom of the screen.
+ */
+typedef NS_ENUM(NSInteger, LMNotchPosition) {
+	LMNotchPositionTop    = 0,
+	LMNotchPositionLeft   = 1,
+	LMNotchPositionRight  = 2,
+	LMNotchPositionBottom = 3
+};
+
 @protocol LMLayoutChangeDelegate <NSObject>
 @optional
 
@@ -31,22 +74,16 @@
  */
 - (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator;
 
+/**
+ The notch position changed. This will only ever be called if the device has a notch (such as the iPhone X).
+
+ @param notchPosition The new notch position, relative to the new orientation.
+ */
+- (void)notchPositionChanged:(LMNotchPosition)notchPosition;
+
 @end
 
 @interface LMLayoutManager : NSObject
-
-typedef NS_ENUM(NSInteger, LMLayoutClass) {
-	LMLayoutClassPortrait   = 0,
-	LMLayoutClassLandscape  = 1,
-	LMLayoutClassiPad       = 2
-};
-
-typedef NS_ENUM(NSInteger, LMScreenSizeClass) {
-	LMScreenSizeClassPhone     = 0,
-	LMScreenSizeClassiPadMini  = 1,
-	LMScreenSizeClassiPadAir   = 2,
-	LMScreenSizeClassiPadPro   = 3
-};
 
 @property (readonly) LMLayoutClass currentLayoutClass;
 @property UITraitCollection *traitCollection;
@@ -58,6 +95,7 @@ typedef NS_ENUM(NSInteger, LMScreenSizeClass) {
 + (BOOL)isLandscapeiPad;
 + (BOOL)isiPad;
 + (BOOL)isiPhoneX;
++ (LMNotchPosition)notchPosition;
 + (CGFloat)listEntryHeightFactorial;
 + (CGFloat)standardListEntryHeight;
 + (NSInteger)amountOfCollectionViewItemsPerRow;

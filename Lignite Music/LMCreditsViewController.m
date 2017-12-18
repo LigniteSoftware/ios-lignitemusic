@@ -459,7 +459,7 @@
 	[creditsLinkButton autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:[textLabelsArray lastObject] withOffset:20];
 	[creditsLinkButton autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.scrollView withMultiplier:0.9];
 	[creditsLinkButton autoAlignAxisToSuperviewAxis:ALAxisVertical];
-	[creditsLinkButton autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height/8.0];
+	[creditsLinkButton autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height/LMLayoutManager.listEntryHeightFactorial];
 	
 	UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(creditLinks)];
 	[creditsLinkButton addGestureRecognizer:tapGesture];

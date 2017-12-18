@@ -143,7 +143,7 @@
 		self.clearTextButtonImageView.contentMode = UIViewContentModeScaleAspectFit;
 		[self.clearTextButtonBackgroundView addSubview:self.clearTextButtonImageView];
 		
-		[self.clearTextButtonImageView autoCenterInSuperview];
+		[self.clearTextButtonImageView autoCentreInSuperview];
 		[self.clearTextButtonImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.clearTextButtonBackgroundView withMultiplier:(1.0/2.0)];
 		[self.clearTextButtonImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.clearTextButtonBackgroundView withMultiplier:(1.0/2.0)];
 		

@@ -400,9 +400,13 @@
         [self.leadingNowPlayingView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
 		
 		
-		self.centerNowPlayingView.backgroundColor = [UIColor orangeColor];
-		self.trailingNowPlayingView.backgroundColor = [UIColor yellowColor];
-		self.leadingNowPlayingView.backgroundColor = [UIColor redColor];
+//		self.centerNowPlayingView.backgroundColor = [UIColor orangeColor];
+//		self.trailingNowPlayingView.backgroundColor = [UIColor yellowColor];
+//		self.leadingNowPlayingView.backgroundColor = [UIColor redColor];
+
+		self.centerNowPlayingView.backgroundColor = [UIColor whiteColor];
+		self.trailingNowPlayingView.backgroundColor = [UIColor whiteColor];
+		self.leadingNowPlayingView.backgroundColor = [UIColor whiteColor];
 		
 		self.centerNowPlayingView.nowPlayingCoreView = self;
 		self.trailingNowPlayingView.nowPlayingCoreView = self;

@@ -306,6 +306,7 @@
 		6ADB70CE1FCCF0F600412225 /* icon_browse_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 6ADB70CB1FCCF0F500412225 /* icon_browse_white.png */; };
 		6ADC48EF1DDF8C8000FE57F1 /* onboarding_library_access.png in Resources */ = {isa = PBXBuildFile; fileRef = 6ADC48ED1DDF8C8000FE57F1 /* onboarding_library_access.png */; };
 		6ADC48F01DDF8C8000FE57F1 /* onboarding_bluetooth.png in Resources */ = {isa = PBXBuildFile; fileRef = 6ADC48EE1DDF8C8000FE57F1 /* onboarding_bluetooth.png */; };
+		6ADC9E821FE776E400A72861 /* LMThemeKeyDVaPink.png in Resources */ = {isa = PBXBuildFile; fileRef = 6ADC9E811FE776E300A72861 /* LMThemeKeyDVaPink.png */; };
 		6ADCBA2F1ED9B76000CAD705 /* LMDetailView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ADCBA2E1ED9B76000CAD705 /* LMDetailView.m */; };
 		6ADCE2021FB262B800BE0BBB /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6ADCE2001FB262B800BE0BBB /* Interface.storyboard */; };
 		6ADCE2041FB262B800BE0BBB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6ADCE2031FB262B800BE0BBB /* Assets.xcassets */; };
@@ -755,6 +756,7 @@
 		6ADB70CB1FCCF0F500412225 /* icon_browse_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_browse_white.png; sourceTree = "<group>"; };
 		6ADC48ED1DDF8C8000FE57F1 /* onboarding_library_access.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = onboarding_library_access.png; sourceTree = "<group>"; };
 		6ADC48EE1DDF8C8000FE57F1 /* onboarding_bluetooth.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = onboarding_bluetooth.png; sourceTree = "<group>"; };
+		6ADC9E811FE776E300A72861 /* LMThemeKeyDVaPink.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LMThemeKeyDVaPink.png; sourceTree = "<group>"; };
 		6ADCBA2D1ED9B76000CAD705 /* LMDetailView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMDetailView.h; sourceTree = "<group>"; };
 		6ADCBA2E1ED9B76000CAD705 /* LMDetailView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMDetailView.m; sourceTree = "<group>"; };
 		6ADCE1FE1FB262B800BE0BBB /* Abbey For Apple Watch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Abbey For Apple Watch.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1110,6 +1112,7 @@
 				6A5365F11FE4B1CA008B8FAE /* LMThemeKeyBombasticBlue.png */,
 				6A5365F21FE4B1CB008B8FAE /* LMThemeKeyBritishRacingGreen.png */,
 				6A5365F31FE4B1CB008B8FAE /* LMThemeKeyMorpheus.png */,
+				6ADC9E811FE776E300A72861 /* LMThemeKeyDVaPink.png */,
 			);
 			name = Themes;
 			sourceTree = "<group>";
@@ -2051,6 +2054,7 @@
 				6A072C011E87E79C0092EA44 /* icon_pebbles.png in Resources */,
 				6A47100F1F7236850009DE0E /* splash_portrait_abbey_fixed.png in Resources */,
 				6A759D531DEA40230051E1A9 /* icon_paper_plane.png in Resources */,
+				6ADC9E821FE776E400A72861 /* LMThemeKeyDVaPink.png in Resources */,
 				6AC066F11DFF5253008A6FCA /* icon_grab_rectangle.png in Resources */,
 				6AEB9D351BAD812700AD19FA /* icon_pause.png in Resources */,
 				6A26B4741DE409C8008B5B69 /* icon_about.png in Resources */,

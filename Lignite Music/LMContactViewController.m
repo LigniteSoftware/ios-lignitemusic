@@ -189,7 +189,7 @@
 		//			contactDetailsView.backgroundColor = [UIColor orangeColor];
 		[contactButton addSubview:contactDetailsView];
 		
-		[contactDetailsView autoCenterInSuperview];
+		[contactDetailsView autoCentreInSuperview];
 		[contactDetailsView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:contactButton withMultiplier:(3.0/4.0)];
 		[contactDetailsView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:contactButton];
 		

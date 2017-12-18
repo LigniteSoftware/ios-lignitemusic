@@ -229,7 +229,7 @@
 	
 	[deleteIconImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.tapToDeleteView withMultiplier:(1.0/3.0)];
 	[deleteIconImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.tapToDeleteView withMultiplier:(1.0/3.0)];
-	[deleteIconImageView autoCenterInSuperview];
+	[deleteIconImageView autoCentreInSuperview];
 	
 	UITapGestureRecognizer *deleteTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(deleteViewTapped)];
 	[self.tapToDeleteView addGestureRecognizer:deleteTapGestureRecognizer];

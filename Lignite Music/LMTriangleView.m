@@ -52,7 +52,7 @@
 			
 			[self addSubview:self.triangleContainerView];
 			
-			[self.triangleContainerView autoCenterInSuperview];
+			[self.triangleContainerView autoCentreInSuperview];
 			[self.triangleContainerView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
 			[self.triangleContainerView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self];
 		}

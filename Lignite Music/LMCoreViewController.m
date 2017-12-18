@@ -71,7 +71,7 @@
 @import StoreKit;
 
 @interface LMCoreViewController () <LMMusicPlayerDelegate, LMSourceDelegate, UIGestureRecognizerDelegate, LMSearchBarDelegate, LMLetterTabDelegate, LMSearchSelectedDelegate, LMButtonNavigationBarDelegate, UINavigationBarDelegate, UINavigationControllerDelegate,
-LMTutorialViewDelegate, LMImageManagerDelegate, LMLandscapeNavigationBarDelegate, LMThemeEngineDelegate,
+LMTutorialViewDelegate, LMImageManagerDelegate, LMLandscapeNavigationBarDelegate, LMThemeEngineDelegate, LMLayoutChangeDelegate,
 
 LMControlBarViewDelegate
 >
@@ -118,8 +118,6 @@ LMControlBarViewDelegate
 @property UIActivityIndicatorView *loadingActivityIndicator;
 @property UILabel *loadingLabel;
 
-@property UIButton *navigationBarWarningButton;
-
 @property LMMusicType musicType;
 
 @property LMCoreViewControllerRestorationState restorationState;
@@ -127,6 +125,7 @@ LMControlBarViewDelegate
 @property BOOL stateRestoredNavigationBarWasMinimized;
 @property NSInteger previouslyOpenedDetailViewIndex;
 @property MPMediaEntityPersistentID previousTitleViewTopPersistentID;
+@property BOOL restorationStateHasReloadedContents;
 
 @property MBProgressHUD *loadingProgressHUD;
 
@@ -154,61 +153,57 @@ LMControlBarViewDelegate
     }
 }
 
-- (void)warningBarButtonItemTapped {
-	NSLog(@"Tapped warning");
-	
-	[[LMImageManager sharedImageManager] launchExplicitPermissionRequestOnView:self.navigationController.view
-				  withCompletionHandler:^(LMImageManagerPermissionStatus permissionStatus) {
-					  if(permissionStatus == LMImageManagerPermissionStatusAuthorized) {
-						  NSLog(@"Cleared!");
-					  }
-				  }];
-}
+//- (void)warningBarButtonItemTapped {
+//	NSLog(@"Tapped warning");
+//
+//	[[LMImageManager sharedImageManager] launchExplicitPermissionRequestOnView:self.navigationController.view
+//				  withCompletionHandler:^(LMImageManagerPermissionStatus permissionStatus) {
+//					  if(permissionStatus == LMImageManagerPermissionStatusAuthorized) {
+//						  NSLog(@"Cleared!");
+//					  }
+//				  }];
+//}
 
-- (void)setWarningButtonShowing:(BOOL)showing {
-	//Set custom warning button onto navigationBar
-	if(!self.navigationBarWarningButton){
-		UIButton *iconWarningView = [UIButton newAutoLayoutView];
-		iconWarningView.imageView.contentMode = UIViewContentModeScaleAspectFit;
-		[iconWarningView setImage:[LMAppIcon imageForIcon:LMIconWarning] forState:UIControlStateNormal];
-		[iconWarningView addTarget:self action:@selector(warningBarButtonItemTapped) forControlEvents:UIControlEventTouchUpInside];
-		
-		[self.navigationController.navigationBar addSubview:iconWarningView];
-		
-		[iconWarningView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:6.0f];
-		[iconWarningView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-		[iconWarningView autoSetDimension:ALDimensionHeight toSize:44.0f];
-		[iconWarningView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:iconWarningView];
-		
-		self.navigationBarWarningButton = iconWarningView;
-	}
+//- (void)setWarningButtonShowing:(BOOL)showing {
+//	//Set custom warning button onto navigationBar
+//	if(!self.navigationBarWarningButton){
+//		UIButton *iconWarningView = [UIButton newAutoLayoutView];
+//		iconWarningView.imageView.contentMode = UIViewContentModeScaleAspectFit;
+//		[iconWarningView setImage:[LMAppIcon imageForIcon:LMIconWarning] forState:UIControlStateNormal];
+//		[iconWarningView addTarget:self action:@selector(warningBarButtonItemTapped) forControlEvents:UIControlEventTouchUpInside];
+//
+//		[self.navigationController.navigationBar addSubview:iconWarningView];
+//
+//		[iconWarningView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:6.0f];
+//		[iconWarningView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+//		[iconWarningView autoSetDimension:ALDimensionHeight toSize:44.0f];
+//		[iconWarningView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:iconWarningView];
+//
+//		self.navigationBarWarningButton = iconWarningView;
+//	}
+//
+//	self.navigationBarWarningButton.hidden = !showing;
+//}
 
-	self.navigationBarWarningButton.hidden = !showing;
-	
-	
-	//Set the landscape navigation bar to display the warning as well
-	self.landscapeNavigationBar.showWarningButton = showing;
-}
-
-- (void)imageDownloadConditionLevelChanged:(LMImageManagerConditionLevel)newConditionLevel {
-	switch(newConditionLevel){
-		case LMImageManagerConditionLevelOptimal: {
-			[self setWarningButtonShowing:NO];
-			NSLog(@"Optimal!");
-			break;
-		}
-		case LMImageManagerConditionLevelSuboptimal: {
-			[self setWarningButtonShowing:YES];
-			NSLog(@"Sub");
-			break;
-		}
-		case LMImageManagerConditionLevelNever: {
-			[self setWarningButtonShowing:NO];
-			NSLog(@"Never");
-			break;
-		}
-	}
-}
+//- (void)imageDownloadConditionLevelChanged:(LMImageManagerConditionLevel)newConditionLevel {
+//	switch(newConditionLevel){
+//		case LMImageManagerConditionLevelOptimal: {
+//			[self setWarningButtonShowing:NO];
+//			NSLog(@"Optimal!");
+//			break;
+//		}
+//		case LMImageManagerConditionLevelSuboptimal: {
+//			[self setWarningButtonShowing:YES];
+//			NSLog(@"Sub");
+//			break;
+//		}
+//		case LMImageManagerConditionLevelNever: {
+//			[self setWarningButtonShowing:NO];
+//			NSLog(@"Never");
+//			break;
+//		}
+//	}
+//}
 
 - (void)tutorialFinishedWithKey:(NSString *)key {
     NSLog(@"Tutorial %@ finished, start another?", key);
@@ -792,9 +787,11 @@ LMControlBarViewDelegate
 - (void)viewDidAppear:(BOOL)animated {
 	[self.buttonNavigationBar maximize:YES];
 	
-//	if(self.restorationState){
+	if(!self.restorationStateHasReloadedContents && self.restorationState == LMCoreViewControllerRestorationStateOutOfView){ //For when the view is out of view during state restoration
 		[self.compactView reloadContents];
-//	}
+		
+		self.restorationStateHasReloadedContents = YES;
+	}
 }
 
 - (void)launchNowPlayingFromNavigationBar {
@@ -938,7 +935,7 @@ LMControlBarViewDelegate
 //			self.navigationController.navigationBar.frame = CGRectMake(0, 0, size.width, willBeLandscape ? 0 : 64.0);
 //		}
 		
-		self.nowPlayingCoreView.topConstraint.constant = self.nowPlayingCoreView.isOpen ? 0 : (size.height*1.25);
+		self.nowPlayingCoreView.topConstraint.constant = self.nowPlayingCoreView.isOpen ? 0 : (size.height*1.50);
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
 		NSLog(@"Rotated");
 		
@@ -951,6 +948,10 @@ LMControlBarViewDelegate
 		[self.navigationController setNavigationBarHidden:willBeLandscape];
 		self.landscapeNavigationBar.hidden = !willBeLandscape;
 		
+		if([LMLayoutManager isiPhoneX]){
+			self.landscapeNavigationBar.frame = CGRectMake(0, 0, ([LMLayoutManager notchPosition] == LMNotchPositionLeft) ? 94.0 : 64.0, self.layoutManager.isLandscape ? (self.view.frame.size.height + self.navigationController.navigationBar.frame.size.height) : self.view.frame.size.width);
+		}
+		
 		
 		[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
 			[UIView animateWithDuration:0.25 animations:^{
@@ -960,21 +961,19 @@ LMControlBarViewDelegate
 	}];
 }
 
+
+
 - (void)buttonTappedOnLandscapeNavigationBar:(LMLandscapeNavigationBarButton)buttonPressed {
 	switch(buttonPressed){
 		case LMLandscapeNavigationBarButtonBack: {
 			NSLog(@"Go back");
 			
-			if(self.navigationController.navigationBar.backItem){
+			if(!self.view.window){
 				[self.navigationController popViewControllerAnimated:YES];
 			}
 			else{
 				[self.compactView backButtonPressed];
 			}
-			break;
-		}
-		case LMLandscapeNavigationBarButtonWarning: {
-			[self warningBarButtonItemTapped];
 			break;
 		}
 		case LMLandscapeNavigationBarButtonLogo: {
@@ -1039,7 +1038,7 @@ LMControlBarViewDelegate
 }
 
 - (UINavigationItem*)navigationItem {
-	UIImageView *titleImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
+	UIImageView *titleImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 64, 64)];
 	titleImageView.contentMode = UIViewContentModeScaleAspectFit;
 	titleImageView.image = [LMAppIcon imageForIcon:LMIconNoAlbumArt75Percent];
 	titleImageView.userInteractionEnabled = YES;
@@ -1049,8 +1048,6 @@ LMControlBarViewDelegate
 
 	UINavigationItem *navigationItem = [[UINavigationItem alloc]initWithTitle:@""];
 	navigationItem.titleView = titleImageView;
-
-//	UINavigationItem *navigationItem = [[UINavigationItem alloc]initWithTitle:@"fuck"];
 	
 	return navigationItem;
 }
@@ -1222,6 +1219,39 @@ LMControlBarViewDelegate
 	}
 }
 
+- (void)notchPositionChanged:(LMNotchPosition)notchPosition {
+//	switch(notchPosition){
+//		case LMNotchPositionRight:
+//			break;
+//		default:
+//			break;
+//	}
+	
+	CGFloat landscapeNavigationBarWidth = (notchPosition == LMNotchPositionLeft) ? 94.0f : 64.0f;
+	
+	if(notchPosition == LMNotchPositionTop || notchPosition == LMNotchPositionBottom){
+		landscapeNavigationBarWidth = 0;
+	}
+	
+	for(NSLayoutConstraint *constraint in self.landscapeNavigationBar.constraints){
+		NSLog(@"Constraint %@", constraint);
+		if(constraint.firstAttribute == NSLayoutAttributeWidth
+		   && constraint.firstItem == self.landscapeNavigationBar
+		   && !constraint.secondItem){
+			[self.landscapeNavigationBar removeConstraint:constraint];
+		}
+	}
+	[self.landscapeNavigationBar autoSetDimension:ALDimensionWidth toSize:landscapeNavigationBarWidth];
+	
+	for(NSLayoutConstraint *constraint in self.view.constraints){
+		if(constraint.firstItem == self.compactView
+		   && constraint.firstAttribute == NSLayoutAttributeLeading
+		   && constraint.secondAttribute == NSLayoutAttributeLeading){
+			constraint.constant = landscapeNavigationBarWidth;
+		}
+	}
+}
+
 - (void)loadSubviews {
 //	[self.navigationController setNavigationBarHidden:NO animated:YES];
 //
@@ -1251,6 +1281,8 @@ LMControlBarViewDelegate
 		self.layoutManager.traitCollection = self.traitCollection;
 		self.layoutManager.size = self.view.frame.size;
 	}
+	
+	[self.layoutManager addDelegate:self];
 	
 //	LMPhoneLandscapeDetailView *phoneLandscapeDetailView = [LMPhoneLandscapeDetailView newAutoLayoutView];
 //	[self.view addSubview:phoneLandscapeDetailView];
@@ -1340,28 +1372,30 @@ LMControlBarViewDelegate
 	
 	
 	
-	self.landscapeNavigationBar = [[LMLandscapeNavigationBar alloc] initWithFrame:CGRectMake(0, 0, 64.0, self.layoutManager.isLandscape ? (self.view.frame.size.height + self.navigationController.navigationBar.frame.size.height) : self.view.frame.size.width)];
+	CGFloat landscapeNavigationBarWidth = 64.0f;
+	if([LMLayoutManager isiPhoneX]){
+		landscapeNavigationBarWidth = ([LMLayoutManager notchPosition] == LMNotchPositionLeft) ? 94.0f : 64.0f;
+	}
+	
+	self.landscapeNavigationBar = [LMLandscapeNavigationBar newAutoLayoutView];
 	self.landscapeNavigationBar.delegate = self;
 	self.landscapeNavigationBar.mode = (self.navigationController.navigationBar.items.count > 1)
 	? LMLandscapeNavigationBarModeWithBackButton
 	: LMLandscapeNavigationBarModeOnlyLogo;
 //	self.landscapeNavigationBar.mode = LMLandscapeNavigationBarModePlaylistView;
 	[self.navigationController.view addSubview:self.landscapeNavigationBar];
-	
-	//						NSArray *landscapeNavigationBarLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-	//							[self.landscapeNavigationBar autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
-	//							[self.landscapeNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-	//							[self.landscapeNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
-	//							[self.landscapeNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-	//						[self.landscapeNavigationBar addConstraint:[NSLayoutConstraint constraintWithItem:self.landscapeNavigationBar attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:0.0 constant:64.0f]];
-	//							[self.landscapeNavigationBar autoSetDimension:ALDimensionWidth toSize:64.0f];
-	//						}];
-	//						[LMLayoutManager addNewLandscapeConstraints:landscapeNavigationBarLandscapeConstraints];
+
+	[self.landscapeNavigationBar autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+	[self.landscapeNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+	[self.landscapeNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
+	[self.landscapeNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+	[self.landscapeNavigationBar autoSetDimension:ALDimensionWidth toSize:landscapeNavigationBarWidth];
 	
 	self.landscapeNavigationBar.layer.shadowColor = [UIColor blackColor].CGColor;
 	self.landscapeNavigationBar.layer.shadowRadius = WINDOW_FRAME.size.width / 45 / 2;
 	self.landscapeNavigationBar.layer.shadowOffset = CGSizeMake(0, self.navigationController.navigationBar.layer.shadowRadius/2);
 	self.landscapeNavigationBar.layer.shadowOpacity = 0.25f;
+	
 	
 	
 	[self.navigationController setNavigationBarHidden:self.layoutManager.isLandscape];
@@ -1394,7 +1428,7 @@ LMControlBarViewDelegate
 	[LMLayoutManager addNewPortraitConstraints:compactViewPortraitConstraints];
 	
 	NSArray *compactViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-		[self.compactView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.view withOffset:self.landscapeNavigationBar.frame.size.width];
+		[self.compactView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.view withOffset:landscapeNavigationBarWidth];
 		[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 		[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 		[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
@@ -1441,12 +1475,7 @@ LMControlBarViewDelegate
 		[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 		[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
-		if([LMLayoutManager isiPhoneX]){
-			[self.buttonNavigationBar autoPinEdgeToSuperviewMargin:ALEdgeBottom];
-		}
-		else{
-			[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		}
+		[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 	}];
 	[LMLayoutManager addNewPortraitConstraints:buttonNavigationBarPortraitConstraints];
 	
@@ -1454,12 +1483,7 @@ LMControlBarViewDelegate
 		[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 		[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
-//		if([LMLayoutManager isiPhoneX]){
-//			[self.buttonNavigationBar autoPinEdgeToSuperviewMargin:ALEdgeBottom];
-//		}
-//		else{
-			[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-//		}
+		[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 	}];
 	[LMLayoutManager addNewLandscapeConstraints:buttonNavigationBarLandscapeConstraints];
 	
@@ -1477,20 +1501,20 @@ LMControlBarViewDelegate
 	[self.musicPlayer addMusicDelegate:self];
 	
 	
-	if([LMLayoutManager isiPhoneX]){
-		self.buttonNavigationBarBottomCoverView = [UIView newAutoLayoutView];
-		self.buttonNavigationBarBottomCoverView.backgroundColor = [LMColour mainColour];
-		[self.navigationController.view addSubview:self.buttonNavigationBarBottomCoverView];
-		
-		
-//		NSArray *buttonNavigationBarBottomCoverViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-			[self.buttonNavigationBarBottomCoverView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-			[self.buttonNavigationBarBottomCoverView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-			[self.buttonNavigationBarBottomCoverView autoSetDimension:ALDimensionHeight toSize:69];
-			[self.buttonNavigationBarBottomCoverView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.buttonNavigationBar];
-//		}];
-//		[LMLayoutManager addNewPortraitConstraints:buttonNavigationBarBottomCoverViewPortraitConstraints];
-	}
+//	if([LMLayoutManager isiPhoneX]){
+//		self.buttonNavigationBarBottomCoverView = [UIView newAutoLayoutView];
+//		self.buttonNavigationBarBottomCoverView.backgroundColor = [LMColour mainColour];
+//		[self.navigationController.view addSubview:self.buttonNavigationBarBottomCoverView];
+//
+//
+////		NSArray *buttonNavigationBarBottomCoverViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+//			[self.buttonNavigationBarBottomCoverView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+//			[self.buttonNavigationBarBottomCoverView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+//			[self.buttonNavigationBarBottomCoverView autoSetDimension:ALDimensionHeight toSize:69];
+//			[self.buttonNavigationBarBottomCoverView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.buttonNavigationBar];
+////		}];
+////		[LMLayoutManager addNewPortraitConstraints:buttonNavigationBarBottomCoverViewPortraitConstraints];
+//	}
 	
 	
 	
@@ -1502,7 +1526,7 @@ LMControlBarViewDelegate
 	[self.nowPlayingCoreView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 	[self.nowPlayingCoreView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.navigationController.view];
 	self.nowPlayingCoreView.topConstraint =
-	[self.nowPlayingCoreView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:self.view.frame.size.height * 1.25];
+	[self.nowPlayingCoreView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:self.view.frame.size.height * 1.5];
 	
 	
 	

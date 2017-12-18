@@ -310,7 +310,7 @@
 	[checkmarkPaddedView addSubview:checkmarkView];
 	
 	
-	[checkmarkView autoCenterInSuperview];
+	[checkmarkView autoCentreInSuperview];
 	[checkmarkView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:checkmarkPaddedView withMultiplier:(3.0/4.0)];
 	[checkmarkView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:checkmarkPaddedView withMultiplier:(3.0/4.0)];
 	
@@ -320,7 +320,7 @@
 	
 	[checkmarkView addSubview:checkmarkFillView];
 	
-	[checkmarkFillView autoCenterInSuperview];
+	[checkmarkFillView autoCentreInSuperview];
 	[checkmarkFillView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:checkmarkView withMultiplier:(9.0/10.0)];
 	[checkmarkFillView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:checkmarkView withMultiplier:(9.0/10.0)];
 	
@@ -330,7 +330,7 @@
 	checkmarkImageView.image = [LMAppIcon imageForIcon:LMIconWhiteCheckmark];
 	[checkmarkView addSubview:checkmarkImageView];
 	
-	[checkmarkImageView autoCenterInSuperview];
+	[checkmarkImageView autoCentreInSuperview];
 	[checkmarkImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:checkmarkView withMultiplier:(3.0/8.0)];
 	[checkmarkImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:checkmarkView withMultiplier:(3.0/8.0)];
 	
@@ -346,7 +346,7 @@
 	
 	[arrowIconPaddedView addSubview:arrowIconView];
 	
-	[arrowIconView autoCenterInSuperview];
+	[arrowIconView autoCentreInSuperview];
 	[arrowIconView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:arrowIconPaddedView withMultiplier:(3.0/8.0)];
 	[arrowIconView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:arrowIconPaddedView];
 	

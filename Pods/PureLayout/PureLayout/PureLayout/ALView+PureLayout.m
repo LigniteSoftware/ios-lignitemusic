@@ -78,7 +78,7 @@
  
  @return An array of constraints added.
  */
-- (PL__NSArray_of(NSLayoutConstraint *) *)autoCenterInSuperview
+- (PL__NSArray_of(NSLayoutConstraint *) *)autoCentreInSuperview 
 {
     __NSMutableArray_of(NSLayoutConstraint *) *constraints = [NSMutableArray new];
     [constraints addObject:[self autoAlignAxisToSuperviewAxis:ALAxisHorizontal]];

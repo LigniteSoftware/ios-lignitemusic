@@ -45,7 +45,7 @@
 
  @return The super light gray.
  */
-+ (UIColor*)superLightGrayColour;
++ (UIColor*)superLightGreyColour;
 
 /**
  The light gray for the control bar in detail view.
