@@ -58,13 +58,18 @@
 			isLandscape = NO;
 		}
 		
+		CGFloat fontSize = (isLandscape ? size.width : size.height)/2.25;
+		
 		for(UILabel *label in self.letterViewsArray){
-			label.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:(isLandscape ? self.frame.size.width : self.frame.size.height
-																		   )/2.25]; //.50 for W;
+			label.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:fontSize]; //.50 for W;
 			self.letterScrollView.adaptForWidth = !isLandscape;
 			[self.letterScrollView reload];
 		}
 	} repeats:NO];
+}
+
+- (void)reloadLayout {
+	[self reloadWithSize:self.frame.size];
 }
 
 - (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {

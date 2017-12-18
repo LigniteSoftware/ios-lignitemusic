@@ -221,6 +221,10 @@
 	
 	CGFloat dimensionToUse = MAX(WINDOW_FRAME.size.width, WINDOW_FRAME.size.height);
 	
+	if([LMLayoutManager isiPhoneX]){
+		dimensionToUse += 50;
+	}
+	
 	[self setButtonBarBottomConstraintConstant:dimensionToUse completion:^(BOOL finished) {
 		LMButtonNavigationBar *strongSelf = weakSelf;
 		if(!strongSelf){
@@ -489,6 +493,10 @@
 - (void)minimizeButtonTapped {
 	NSLog(@"ay boy");
 	self.isMinimized ? [self maximize:NO] : [self minimize:NO];
+}
+
+- (void)reloadLayout {
+	[self.browsingBar.letterTabBar reloadLayout];
 }
 
 - (void)themeChanged:(LMTheme)theme {

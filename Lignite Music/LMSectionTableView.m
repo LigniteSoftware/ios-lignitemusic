@@ -16,6 +16,7 @@
 #import "LMColour.h"
 #import "LMExtras.h"
 #import "LMLabel.h"
+#import "LMView.h"
 
 @interface LMSectionTableView()<UITableViewDelegate, UITableViewDataSource, LMListEntryDelegate, LMLayoutChangeDelegate>
 
@@ -116,14 +117,24 @@
 				NSString *accessorySubviewClass = [[accessorySubview class] description];
 //				BOOL shouldHangRight = ![accessorySubviewClass isEqualToString:@"UISwitch"];
 				
-				UIView *accessoryView = [UIView newAutoLayoutView];
+				LMView *accessoryView = [LMView newAutoLayoutView];
+				accessoryView.identifier = @"accessoryView";
 //				accessoryView.backgroundColor = [LMColour randomColour];
 				[cell.contentView addSubview:accessoryView];
 				
 				float padding = 0.06*([LMLayoutManager isLandscape] ? WINDOW_FRAME.size.height : WINDOW_FRAME.size.width);
 				
 				if([LMLayoutManager isiPhoneX]){
-					padding = ([LMLayoutManager notchPosition] == LMNotchPositionLeft) ? 16 : 4;
+					switch([LMLayoutManager notchPosition]){
+						case LMNotchPositionRight:
+							padding = 16;
+							break;
+						case LMNotchPositionLeft:
+							padding = 0;
+							break;
+						default:
+							break;
+					}
 				}
 				
 				[accessoryView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:cell.contentView withOffset:-padding];
@@ -146,6 +157,41 @@
 				}
 				else{
 					NSLog(@"[%@]: Unknown class %@ for accessory.", self.title, accessorySubviewClass);
+				}
+			}
+		}
+	}
+	else{
+		for(UIView *view in cell.contentView.subviews){
+			if([view class] == [LMView class]){
+				LMView *lmView = (LMView*)view;
+				if([lmView.identifier isEqualToString:@"accessoryView"]){
+					for(NSLayoutConstraint *contentViewConstraint in cell.contentView.constraints){
+						NSLog(@"%@", contentViewConstraint);
+						if(contentViewConstraint.firstItem == lmView
+						   && contentViewConstraint.firstAttribute == NSLayoutAttributeTrailing
+						   && contentViewConstraint.secondAttribute == NSLayoutAttributeTrailing){
+							
+							float padding = ([LMLayoutManager isiPhoneX] ? 0.04 : 0.06)*([LMLayoutManager isLandscape] ? WINDOW_FRAME.size.height : WINDOW_FRAME.size.width);
+							
+							if([LMLayoutManager isiPhoneX]){
+								NSLog(@"Notch position %d", (int)LMLayoutManager.notchPosition);
+								switch([LMLayoutManager notchPosition]){
+									case LMNotchPositionRight:
+										padding = 16;
+										break;
+									case LMNotchPositionLeft:
+										padding = 0;
+										break;
+									default:
+										break;
+								}
+							}
+							contentViewConstraint.constant = -padding;
+							
+							[cell.contentView layoutIfNeeded];
+						}
+					}
 				}
 			}
 		}

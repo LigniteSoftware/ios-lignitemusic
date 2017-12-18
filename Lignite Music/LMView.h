@@ -18,4 +18,9 @@
  */
 @property BOOL didLayoutConstraints;
 
+/**
+ The identifier, if the using object wants to use one, otherwise it's nil.
+ */
+@property NSString *identifier;
+
 @end

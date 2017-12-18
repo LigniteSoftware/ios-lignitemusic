@@ -13,11 +13,13 @@
 #import "LMAppIcon.h"
 #import "LMExtras.h"
 
-@interface LMContactViewController ()<UIViewControllerRestoration>
+@interface LMContactViewController ()<UIViewControllerRestoration, LMLayoutChangeDelegate>
 
 @property UILabel *thankYouLabel;
 
 @property UILabel *descriptionLabel;
+
+@property LMLayoutManager *layoutManager;
 
 @end
 
@@ -69,6 +71,12 @@
 	return NO || [LMLayoutManager sharedLayoutManager].isLandscape;
 }
 
+- (void)notchPositionChanged:(LMNotchPosition)notchPosition {
+	[NSTimer scheduledTimerWithTimeInterval:0.50 repeats:NO block:^(NSTimer * _Nonnull timer) {
+		[self.layoutManager adjustRootViewSubviewsForLandscapeNavigationBar:self.view withAdditionalOffset:30];
+	}];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -80,6 +88,9 @@
 	if(scaleFactorToUse > 450){
 		scaleFactorToUse = 450;
 	}
+	
+	self.layoutManager = [LMLayoutManager sharedLayoutManager];
+	[self.layoutManager addDelegate:self];
 	
 	self.thankYouLabel = [UILabel newAutoLayoutView];
 	self.thankYouLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:(scaleFactorToUse/414.0)*45.0f];
@@ -95,7 +106,7 @@
 	[LMLayoutManager addNewPortraitConstraints:thankYouLabelPortraitConstraints];
 	
 	NSArray *thankYouLabelLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-		[self.thankYouLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withOffset:(-104+(64/2))*2];
+		[self.thankYouLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withOffset:(-114+(64/2))*2];
 		[self.thankYouLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:104];
 		[self.thankYouLabel autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:10];
 	}];
@@ -227,6 +238,10 @@
 //		[contactStringLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:contactIconView withOffset:30];
 //		[contactStringLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:contactButton withOffset:-30];
 //		[contactStringLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+	}
+	
+	if([LMLayoutManager isiPhoneX]){
+		[self notchPositionChanged:LMLayoutManager.notchPosition];
 	}
 }
 

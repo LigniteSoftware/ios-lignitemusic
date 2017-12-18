@@ -43,4 +43,9 @@ typedef enum {
  */
 @property id<LMLetterTabDelegate> delegate;
 
+/**
+ Reloads the layout.
+ */
+- (void)reloadLayout;
+
 @end

@@ -117,6 +117,10 @@
 	scrollView.contentOffset = CGPointMake(0, scrollView.contentOffset.y);
 }
 
+- (void)notchPositionChanged:(LMNotchPosition)notchPosition {
+	[self.layoutManager adjustRootViewSubviewsForLandscapeNavigationBar:self.view];
+}
+
 - (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
 	BOOL willBeLandscapeAnyPlatform = size.width > size.height;
 	
@@ -125,6 +129,10 @@
 		self.scrollView.contentInset = UIEdgeInsetsMake([LMLayoutManager isiPad] && [LMLayoutManager isLandscapeiPad] ? 70 : 0, 0, 0, 0);
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
+			if([LMLayoutManager isiPhoneX]){
+				[self notchPositionChanged:LMLayoutManager.notchPosition];
+			}
+			
 			[self.scrollView reload];
 			self.scrollView.delegate = self;
 		} repeats:NO];
@@ -464,7 +472,9 @@
 	UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(creditLinks)];
 	[creditsLinkButton addGestureRecognizer:tapGesture];
 	
-    // Do any additional setup after loading the view.
+	if([LMLayoutManager isiPhoneX]){
+		[self notchPositionChanged:LMLayoutManager.notchPosition];
+	}
 }
 
 - (void)dealloc {

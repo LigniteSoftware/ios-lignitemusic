@@ -131,9 +131,26 @@ LMControlBarViewDelegate
 
 @property UIView *buttonNavigationBarBottomCoverView;
 
+@property BOOL orientationChangedOutsideOfView;
+@property (readonly) BOOL requiresRefresh;
+
 @end
 
 @implementation LMCoreViewController
+
+- (BOOL)requiresRefresh {
+	if(!self.restorationStateHasReloadedContents && self.restorationState == LMCoreViewControllerRestorationStateOutOfView){
+		self.restorationStateHasReloadedContents = YES;
+		return YES;
+	}
+	
+	if(self.orientationChangedOutsideOfView){
+		self.orientationChangedOutsideOfView = NO;
+		return YES;
+	}
+	
+	return NO;
+}
 
 //- (NSLayoutConstraint*)buttonNavigationBarHeightConstraint {
 //	for(NSLayoutConstraint *constraint in self.buttonNavigationBar.constraints){
@@ -445,13 +462,15 @@ LMControlBarViewDelegate
 	NSLog(@"Setup letters dictionary");
 }
 
-- (BOOL)prefersStatusBarHidden {
+- (BOOL)prefersStatusBarHidden {	
 	if(!self.loaded){
 		NSLog(@"Loading");
 		return YES;
 	}
 	
-	return self.nowPlayingCoreView.isOpen || self.layoutManager.isLandscape || (![LMLayoutManager isiPad] && self.buttonNavigationBar.currentlySelectedTab == LMNavigationTabView && !self.buttonNavigationBar.isMinimized && !self.buttonNavigationBar.isCompletelyHidden);
+	return self.nowPlayingCoreView.isOpen //If now playing is open, hide it
+		|| self.layoutManager.isLandscape //If the device is landscape, hide it
+		|| (![LMLayoutManager isiPad] && ![LMLayoutManager isiPhoneX] && self.buttonNavigationBar.currentlySelectedTab == LMNavigationTabView && !self.buttonNavigationBar.isMinimized && !self.buttonNavigationBar.isCompletelyHidden); //If the view tab is open and the whole thing isn't minimized (doesn't apply to iPad as iPad has compact button navigation bar, also doesn't apply to iPhone X because it has the infamous notch)
 }
 
 - (UIStatusBarAnimation)preferredStatusBarUpdateAnimation {
@@ -634,23 +653,6 @@ LMControlBarViewDelegate
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 	
-	id<UIViewControllerTransitionCoordinator> tc = self.transitionCoordinator;
-	if (tc && [tc initiallyInteractive]) {
-		[tc notifyWhenInteractionEndsUsingBlock:
-		 ^(id<UIViewControllerTransitionCoordinatorContext> context) {
-			 if ([context isCancelled]) {
-				 NSLog(@"User cancelled swipe gesture");
-			 } else { // not cancelled, do it
-//				 [self.navigationController.navigationBar popNavigationItemAnimated:YES];
-				 [NSTimer scheduledTimerWithTimeInterval:5.0 block:^{
-					 [self.navigationController popToRootViewControllerAnimated:YES];
-				 } repeats:NO];
-			 }
-		 }];
-	} else { // not interactive, do it
-		[self.navigationController popViewControllerAnimated:YES];
-	}
-	
 	[self.buttonNavigationBar.browsingBar setShowingLetterTabs:YES];
 	[self.landscapeNavigationBar setMode:self.musicType == LMMusicTypePlaylists ? LMLandscapeNavigationBarModePlaylistView : LMLandscapeNavigationBarModeOnlyLogo];
 	
@@ -787,10 +789,17 @@ LMControlBarViewDelegate
 - (void)viewDidAppear:(BOOL)animated {
 	[self.buttonNavigationBar maximize:YES];
 	
-	if(!self.restorationStateHasReloadedContents && self.restorationState == LMCoreViewControllerRestorationStateOutOfView){ //For when the view is out of view during state restoration
+	if(self.requiresRefresh){ //For when the view is out of view during state restoration
 		[self.compactView reloadContents];
+		[self.titleView.songListTableView reloadData];
+		[self.buttonNavigationBar reloadLayout];
 		
-		self.restorationStateHasReloadedContents = YES;
+		if([LMLayoutManager isiPhoneX]){
+			[self notchPositionChanged:LMLayoutManager.notchPosition];
+		}
+		
+		[self.navigationController.view bringSubviewToFront:self.buttonNavigationBar];
+		[self.navigationController.view bringSubviewToFront:self.nowPlayingCoreView];
 	}
 }
 
@@ -857,6 +866,8 @@ LMControlBarViewDelegate
 			
 			self.nowPlayingCoreView.isOpen = YES;
 		}
+		
+		NSLog(@"Is open %d", self.nowPlayingCoreView.isOpen);
 		
 		[UIView animateWithDuration:0.25 animations:^{
 			[self.nowPlayingCoreView.superview layoutIfNeeded];
@@ -951,6 +962,13 @@ LMControlBarViewDelegate
 		if([LMLayoutManager isiPhoneX]){
 			self.landscapeNavigationBar.frame = CGRectMake(0, 0, ([LMLayoutManager notchPosition] == LMNotchPositionLeft) ? 94.0 : 64.0, self.layoutManager.isLandscape ? (self.view.frame.size.height + self.navigationController.navigationBar.frame.size.height) : self.view.frame.size.width);
 		}
+		
+		if(!self.view.window){
+			self.orientationChangedOutsideOfView = YES;
+		}
+		
+		[self.navigationController.view bringSubviewToFront:self.buttonNavigationBar];
+		[self.navigationController.view bringSubviewToFront:self.nowPlayingCoreView];
 		
 		
 		[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
@@ -1220,13 +1238,6 @@ LMControlBarViewDelegate
 }
 
 - (void)notchPositionChanged:(LMNotchPosition)notchPosition {
-//	switch(notchPosition){
-//		case LMNotchPositionRight:
-//			break;
-//		default:
-//			break;
-//	}
-	
 	CGFloat landscapeNavigationBarWidth = (notchPosition == LMNotchPositionLeft) ? 94.0f : 64.0f;
 	
 	if(notchPosition == LMNotchPositionTop || notchPosition == LMNotchPositionBottom){

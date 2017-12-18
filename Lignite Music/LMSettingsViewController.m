@@ -29,7 +29,7 @@
 
 #define LMIndexPathOfCurrentlyOpenAlertViewKey @"LMIndexPathOfCurrentlyOpenAlertViewKey"
 
-@interface LMSettingsViewController ()<LMSectionTableViewDelegate, LMImageManagerDelegate, UIViewControllerRestoration, LMThemeEngineDelegate>
+@interface LMSettingsViewController ()<LMSectionTableViewDelegate, LMImageManagerDelegate, UIViewControllerRestoration, LMThemeEngineDelegate, LMLayoutChangeDelegate>
 
 @property LMSectionTableView *sectionTableView;
 
@@ -40,6 +40,8 @@
 @property UIAlertController *pendingViewController;
 
 @property NSIndexPath *indexPathOfCurrentlyOpenAlertView;
+
+@property LMLayoutManager *layoutManager;
 
 @end
 
@@ -557,17 +559,30 @@
 - (BOOL)prefersStatusBarHidden {
 	BOOL shouldShowStatusBar = [LMSettings shouldShowStatusBar];
 		
-	return !shouldShowStatusBar || [LMLayoutManager sharedLayoutManager].isLandscape;
+	return !shouldShowStatusBar || self.layoutManager.isLandscape;
 }
 
 - (UIStatusBarAnimation)preferredStatusBarUpdateAnimation {
 	return UIStatusBarAnimationSlide;
 }
 
-//- (void)loadView {
-//	self.view = [UIView new];
-//	self.view.backgroundColor = [UIColor whiteColor];
-//}
+- (void)notchPositionChanged:(LMNotchPosition)notchPosition {
+	[self.layoutManager adjustRootViewSubviewsForLandscapeNavigationBar:self.view];
+}
+
+- (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+	if(![LMLayoutManager isiPhoneX]){
+		return;
+	}
+	
+	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		//Nothing, right now.
+	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		[NSTimer scheduledTimerWithTimeInterval:0.25 block:^{
+			[self notchPositionChanged:LMLayoutManager.notchPosition];
+		} repeats:NO];
+	}];
+}
 
 - (void)themeChanged:(LMTheme)theme {
 	[self.sectionTableView reloadData];
@@ -579,12 +594,14 @@
 	self.imageManager = [LMImageManager sharedImageManager];
 	[self.imageManager addDelegate:self];
 	
+	self.layoutManager = [LMLayoutManager sharedLayoutManager];
+	[self.layoutManager addDelegate:self];
+	
 	[[LMThemeEngine sharedThemeEngine] addDelegate:self];
 	
-	LMLayoutManager *layoutManager = [LMLayoutManager sharedLayoutManager];
-	if(!layoutManager.traitCollection){
-		layoutManager.traitCollection = self.traitCollection;
-		layoutManager.size = self.view.frame.size;
+	if(!self.layoutManager.traitCollection){
+		self.layoutManager.traitCollection = self.traitCollection;
+		self.layoutManager.size = self.view.frame.size;
 	}
 	
 	self.sectionTableView = [LMSectionTableView newAutoLayoutView];
@@ -611,6 +628,10 @@
 	[LMLayoutManager addNewLandscapeConstraints:sectionTableViewLandscapeConstraints];
 	
 	[self.sectionTableView setup];
+	
+	if([LMLayoutManager isiPhoneX]){
+		[self notchPositionChanged:LMLayoutManager.notchPosition];
+	}
 	
 //	LMContactViewController *creditsViewController = [LMContactViewController new];
 //	[self.coreViewController.navigationController showViewController:creditsViewController sender:self];

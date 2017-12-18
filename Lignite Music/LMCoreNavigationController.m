@@ -19,6 +19,19 @@
 
 @implementation LMCoreNavigationController
 
+- (LMCoreViewController*)coreViewController {
+	for(UIViewController *controller in self.viewControllers){
+		if([controller class] == [LMCoreViewController class]){
+			return (LMCoreViewController*)controller;
+		}
+	}
+	return nil;
+}
+
+- (BOOL)prefersStatusBarHidden {
+	return [self.coreViewController prefersStatusBarHidden];
+}
+
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 

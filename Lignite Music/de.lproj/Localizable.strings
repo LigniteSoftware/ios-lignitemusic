@@ -51,7 +51,7 @@
 "NoPlaylists" = "Ups, du hast noch keine Wiedergabeliste erstellt!\n\nErstelle eine neue Liste durch das Tippen auf den entsprechenden Button oben.";
 
 "EnablePebbleTitle" = "Pebble Zugriff gewähren";
-"EnablePebbleDescription" = "Als wir mit der Programmierung von Abbey in 2016 begonnen haben, war eine Pebble App zur Steuerung von Abbey ein Teil unserer App. Damals war leider niemandem bewusst, dass es Pebble per Ende Jahr nicht mehr geben würde. Wir haben uns dazu entschieden, den Pebble-Teil für alle Pebblers beizubehalten.\n\nNichtsdestotrotz gewähren wir hierfür keinen weiteren offiziellen Support. Die Pebble App wird nicht mehr weiterentwickelt und allfällige Fehler nicht mehr behoben.\n\nABBEY'S PEBBLE APP FUNKTIONIERT UNTER UMSTÄNDEN GAR NICHT.\n\nTippe bitte unten auf 'Pebble Unterstützung aktivieren' falls du dies verstanden hast und es trotzdem nutzen möchtest.";
+"EnablePebbleDescription" = "Wir haben eine Pebble App für Abbey programmiert aber Pebble gibt es leider mittlerweile nicht mehr. Nichtsdestotrotz haben wir die App für alle Pebbler unter euch beibehalten.\n\nDies bedeutet jedoch auch, dass wir Pebble offiziell nicht mehr unterstützen. DIE PEBBLE FUNKTIONALITÄT FUNKTIONERT UNTER UMSTÄNDEN GAR NICHT MEHR.\n\nFahre bitte nur fort, wenn du dies akzeptierst.";
 "PebbleEnable" = "Pebble Unterstützung aktivieren";
 "PebbleDisable" = "Abbrechen";
 
@@ -414,7 +414,7 @@
 
 //The user is gutless most likely because they did not take the time to read the dialog and simply clicked deny. However, we understand shit happens and they might have slipped or something.
 "OnboardingUserIsGutlessTitle" = "Ähm, wo ist die Musik?";
-"OnboardingUserIsGutlessDescription" = "Irgendwo während der Einrichtung wurde unserer App der Zugriff auf deine Musiksammlung verwehrt. Aber hey, keine Sorge, das ist schnell behoben.\n\n1. Öffne die Einstellungen deines iPhonesGo to your iPhone's settings app\n2. Scrolle runter, bis du den Eintrag 'Abbey' findest und öffne ihn\n3. Stelle sicher, dass der Eintrag 'Mediathek' aktiviert ist\n\n Öffne die Abbey App erneut und das Problem sollte behoben sein!"; //Please ensure for this translation that the language used in guiding the users through the iOS settings menu *exactly matches* the actual settings menu in that language.
+"OnboardingUserIsGutlessDescription" = "Irgendwo während der Einrichtung wurde unserer App der Zugriff auf deine Musiksammlung verwehrt. Aber hey, keine Sorge, das ist schnell behoben.\n\n1. Öffne die Einstellungen deines iPhones\n2. Scrolle runter, bis du den Eintrag 'Abbey' findest und öffne ihn\n3. Stelle sicher, dass der Eintrag 'Mediathek' aktiviert ist\n\n Öffne die Abbey App erneut und das Problem sollte behoben sein!"; //Please ensure for this translation that the language used in guiding the users through the iOS settings menu *exactly matches* the actual settings menu in that language.
 
 "StillCantAccessMusicTitle" = "Wir haben noch immer ein Problem";
 "StillCantAccessMusicDescription" = "Leider können wir deine Musik noch immer nicht auslesen obwohl du vermutlich die zuvor beschriebenen Schritte durchgeführt hast.\n\nEs tut uns sehr leid, dass es nicht so reibungslos wie erhofft geklappt hat. Leider sind wir nicht sicher, was genau schief gelaufen ist.\n\nTippe bitte auf den 'Kontaktiere uns' Button unten, um direkt mit uns in Kontakt zu treten. Wir werden dich bestimmt zum Fliegen bringen.\n\nVielen Dank."; //Please ensure the 'Contact Us' in quotes is the same as the ContactUs string in this file

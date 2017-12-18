@@ -96,6 +96,8 @@ typedef NS_ENUM(NSInteger, LMNotchPosition) {
 + (BOOL)isiPad;
 + (BOOL)isiPhoneX;
 + (LMNotchPosition)notchPosition;
+- (void)adjustRootViewSubviewsForLandscapeNavigationBar:(UIView*)rootView;
+- (void)adjustRootViewSubviewsForLandscapeNavigationBar:(UIView*)rootView withAdditionalOffset:(CGFloat)additionalOffset;
 + (CGFloat)listEntryHeightFactorial;
 + (CGFloat)standardListEntryHeight;
 + (NSInteger)amountOfCollectionViewItemsPerRow;

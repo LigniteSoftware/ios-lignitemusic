@@ -124,4 +124,9 @@ typedef NS_ENUM(NSUInteger, LMNavigationTab) {
  */
 - (void)setCurrentSourceIcon:(UIImage*)icon;
 
+/**
+ Reloads the layout of itself.
+ */
+- (void)reloadLayout;
+
 @end

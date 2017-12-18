@@ -189,7 +189,7 @@
 
 + (CGFloat)listEntryHeightFactorial {
 	if([self isiPhoneX]){
-		return 11.0f;
+		return 10.5f;
 	}
 	else if([self isiPad]){
 		return 12.0f;
@@ -393,6 +393,31 @@
 	return LMLayoutClassPortrait;
 }
 
+- (void)adjustRootViewSubviewsForLandscapeNavigationBar:(UIView*)rootView {
+	[self adjustRootViewSubviewsForLandscapeNavigationBar:rootView withAdditionalOffset:0];
+}
+
+- (void)adjustRootViewSubviewsForLandscapeNavigationBar:(UIView*)rootView withAdditionalOffset:(CGFloat)additionalOffset {
+	LMNotchPosition notchPosition = [LMLayoutManager notchPosition];
+	
+	NSLog(@"Damn %@", rootView.constraints);
+	
+	for(NSLayoutConstraint *constraint in rootView.constraints){
+		if((constraint.firstAttribute == NSLayoutAttributeLeading)
+		   && (constraint.secondAttribute == NSLayoutAttributeLeading || constraint.secondAttribute == NSLayoutAttributeLeadingMargin)
+		   && (constraint.secondItem == rootView)){
+			
+			if([LMLayoutManager isLandscape] && constraint.constant > 0){ //Portrait constraints have a constant of 0
+				constraint.constant = 64.0f + ((notchPosition == LMNotchPositionLeft) ? 30.0f : 0.0f) + additionalOffset;
+				
+				NSLog(@"Constraint after %d now %@/%f", (int)notchPosition, constraint, constraint.constant);
+				
+				[rootView layoutSubviews];
+			}
+		}
+	}
+}
+
 + (LMNotchPosition)notchPosition {
 	NSAssert([self isiPhoneX], @"Attempt to get the notch position on a device which doesn't have a notch, gutless piece of shit.");
 	
@@ -465,7 +490,7 @@
 	NSLog(@"Swapped constraints, now animating.");
 }
 
-- (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
+- (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>) coordinator {
 	self.size = size;
 	
 	//	NSArray *approvedClasses = @[

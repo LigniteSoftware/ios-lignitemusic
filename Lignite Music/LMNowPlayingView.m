@@ -865,15 +865,7 @@
 	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		[self setupiPadSpecificLayout];
 		
-		self.buttonStackView.spacing = ((([LMLayoutManager isLandscapeiPad] || [LMLayoutManager isLandscape])
-										 ? self.frame.size.height
-										 : self.frame.size.width) //Is it landscape on any device? If so, use the frame's width
-										* 0.9 //Multiply that by 0.9
-										* ([LMLayoutManager isiPad]
-										   ? ([LMLayoutManager isLandscapeiPad]
-											  ? 0.2
-											  : 0.4) //Is landscape iPad? Use 0.35, otherwise, use 0.55
-										   : 0.40))/5.5; //Otherwise, if it's not iPad, use 0.40 and divide the total result by 5.5
+		self.buttonStackView.spacing = [self buttonStackSpacing];
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		
 	}];
@@ -935,6 +927,19 @@
 		LMListEntry *highlightedEntry = [self.itemArray objectAtIndex:self.musicPlayer.indexOfNowPlayingTrack];
 		[highlightedEntry reloadContents];
 	}
+}
+
+//I hate this code so much
+- (CGFloat)buttonStackSpacing {
+	return ((([LMLayoutManager isLandscapeiPad] || [LMLayoutManager isLandscape])
+			 ? self.frame.size.height
+			 : self.frame.size.width) //Is it landscape on any device? If so, use the frame's width
+			* 0.9 //Multiply that by 0.9
+			* ([LMLayoutManager isiPad]
+			   ? ([LMLayoutManager isLandscapeiPad]
+				  ? 0.2
+				  : 0.4) //Is landscape iPad? Use 0.4, otherwise, use what's below
+			   : 0.40))/([LMLayoutManager isiPhoneX] ? ([LMLayoutManager isLandscape] ? 3.5 : 5.5) : 5.5); //Otherwise, if it's not iPad, use 0.40 and divide the total result by this shit
 }
 
 - (void)layoutSubviews {
@@ -1173,15 +1178,8 @@
 	self.buttonStackView.backgroundColor = [UIColor blueColor];
 	self.buttonStackView.axis = UILayoutConstraintAxisHorizontal;
 	self.buttonStackView.distribution = UIStackViewDistributionFillEqually;
-	self.buttonStackView.spacing = ((([LMLayoutManager isLandscapeiPad] || [LMLayoutManager isLandscape])
-									 ? self.frame.size.height
-									 : self.frame.size.width) //Is it landscape on any device? If so, use the frame's width
-									* 0.9 //Multiply that by 0.9
-									* ([LMLayoutManager isiPad]
-									   ? ([LMLayoutManager isLandscapeiPad]
-										  ? 0.2
-										  : 0.4) //Is landscape iPad? Use 0.35, otherwise, use 0.55
-									   : 0.40))/5.5; //Otherwise, if it's not iPad, use 0.40 and divide the total result by 5.5
+	//I hate this spacing code
+	self.buttonStackView.spacing = [self buttonStackSpacing];
 	
 	[self.paddingView addSubview:self.buttonStackView];
 	
@@ -1241,15 +1239,17 @@
 		[self.albumArtRootView autoAlignAxis:ALAxisVertical toSameAxisOfView:self.paddingView];
 		[self.albumArtRootView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.paddingView];
 		[self.albumArtRootView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.paddingView];
-		[self.albumArtRootView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.paddingView];
+		[self.albumArtRootView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.paddingView withOffset:[LMLayoutManager isiPhoneX] ? 30.0f : 0];
 		[self.albumArtRootView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.paddingView];
 	}];
 	[LMLayoutManager addNewPortraitConstraints:albumArtRootViewPortraitConstraints];
 	
 	NSArray *albumArtRootViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 		[self.albumArtRootView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-		[self.albumArtRootView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-		[self.albumArtRootView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.progressSlider withOffset:-paddingViewPadding/2];
+		[self.albumArtRootView autoPinEdgeToSuperviewEdge:ALEdgeLeading
+												withInset:([LMLayoutManager isiPhoneX] ? paddingViewPadding : 0)];
+		[self.albumArtRootView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.progressSlider
+								withOffset:-paddingViewPadding/2];
 		[self.albumArtRootView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.albumArtRootView];
 	}];
 	[LMLayoutManager addNewLandscapeConstraints:albumArtRootViewLandscapeConstraints];
@@ -1276,8 +1276,8 @@
 
 	NSArray *progressSliderLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 		[self.progressSlider autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		[self.progressSlider autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-		[self.progressSlider autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.progressSlider autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.albumArtImageView];
+		[self.progressSlider autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.trackInfoView];
 		[self.progressSlider autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(1.0/12.0)];
 	}];
 	[LMLayoutManager addNewLandscapeConstraints:progressSliderLandscapeConstraints];
@@ -1305,7 +1305,7 @@
 	NSArray *trackInfoViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 		[self.trackInfoView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.paddingView withOffset:20];
 		[self.trackInfoView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.albumArtRootView withOffset:20];
-		[self.trackInfoView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.paddingView withOffset:-20];
+		[self.trackInfoView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.paddingView withOffset:-(20 + ([LMLayoutManager isiPhoneX] ? 10 : 0))];
 		[self.trackInfoView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.paddingView withMultiplier:(1.0/6.0)];
 	}];
 	[LMLayoutManager addNewLandscapeConstraints:trackInfoViewLandscapeConstraints];

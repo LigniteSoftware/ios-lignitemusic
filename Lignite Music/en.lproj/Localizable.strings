@@ -49,7 +49,7 @@
 "NoPlaylists" = "Oh boy, you don't have any playlists yet!\n\nCreate a new playlist by tapping the 'Create' button above.";
 
 "EnablePebbleTitle" = "Allow Pebble access";
-"EnablePebbleDescription" = "We created a Pebble app for Abbey in 2016, not knowing that Pebble would go out of business. We decided to keep Pebble functionality within Abbey for any remaining Pebblers.\n\nHowever, we no longer officially support Pebble. We will not be updating our Pebble app going forward and any bugs that may arise will not be fixed.\n\nABBEY'S PEBBLE FUNCTIONALITY MAY NOT WORK AT ALL.\n\nPlease use the 'Enable Pebble Support' button below if you understand and still wish to continue.";
+"EnablePebbleDescription" = "We created a Pebble app for Abbey, but Pebble went out of business. We have kept Pebble within Abbey for any remaining Pebblers.\n\nHowever, we no longer officially support Pebble. PEBBLE FUNCTIONALITY MAY NOT WORK AT ALL.\n\nPlease only continue if you accept that Pebble for Abbey may not work.";
 "PebbleEnable" = "Enable Pebble Support";
 "PebbleDisable" = "Cancel";
 
