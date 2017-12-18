@@ -17,8 +17,9 @@
 #import "LMSettings.h"
 #import "LMPebbleManager.h"
 #import "LMSettingsSwitch.h"
+#import "LMLayoutManager.h"
 
-@interface LMPebbleSettingsView()<LMSectionTableViewDelegate>
+@interface LMPebbleSettingsView()<LMSectionTableViewDelegate, LMLayoutChangeDelegate>
 
 @property LMSectionTableView *sectionTableView;
 
@@ -26,6 +27,8 @@
 
 @property NSDictionary *settingsMapping;
 @property NSDictionary *defaultsMapping;
+
+@property LMLayoutManager *layoutManager;
 
 @end
 
@@ -284,14 +287,25 @@
 	}
 }
 
+- (void)notchPositionChanged:(LMNotchPosition)notchPosition {
+	[NSTimer scheduledTimerWithTimeInterval:0.50 repeats:NO block:^(NSTimer * _Nonnull timer) {
+		[self.layoutManager adjustRootViewSubviewsForLandscapeNavigationBar:self withAdditionalOffset:-64.0f];
+	}];
+}
+
 - (void)layoutSubviews {
 	if(!self.hasPreparedSubviews){
 		self.hasPreparedSubviews = YES;
 		
+		
+		self.layoutManager = [LMLayoutManager sharedLayoutManager];
+		[self.layoutManager addDelegate:self];
+		
+		
 		self.sectionTableView = [LMSectionTableView newAutoLayoutView];
 		self.sectionTableView.contentsDelegate = self;
 		self.sectionTableView.totalNumberOfSections = [LMPebbleManager pebbleServiceHasBeenEnabledByUser] ? 3 : 1;
-		self.sectionTableView.title = NSLocalizedString(@"AppSettings", nil);
+		self.sectionTableView.title = NSLocalizedString(@"PebbleSettings", nil);
 		[self addSubview:self.sectionTableView];
 		
 		NSLog(@"section %@", self.sectionTableView);
@@ -299,6 +313,10 @@
 		[self.sectionTableView autoPinEdgesToSuperviewEdges];
 		
 		[self.sectionTableView setup];
+		
+		if([LMLayoutManager isiPhoneX]){
+			[self notchPositionChanged:LMLayoutManager.notchPosition];
+		}
 	}
 }
 

@@ -12,8 +12,10 @@
 
 #import "LMThemePickerViewController.h"
 #import "LMViewController.h"
+#import "NSTimer+Blocks.h"
 #import "LMThemeEngine.h"
 #import "LMThemeView.h"
+
 
 @interface LMThemePickerViewController()<UICollectionViewDelegate, UICollectionViewDataSource, LMThemeViewDelegate, PeekPopPreviewingDelegate, LMLayoutChangeDelegate>
 
@@ -26,6 +28,11 @@
  For 3D touch.
  */
 @property PeekPop *peekPop;
+
+/**
+ The layout manager.
+ */
+@property LMLayoutManager *layoutManager;
 
 @end
 
@@ -146,16 +153,34 @@
 - (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
 	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		[self.collectionView reloadData];
-	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-		[self.collectionView reloadData];
+	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context){
+		[NSTimer scheduledTimerWithTimeInterval:0.25 block:^{
+			[self.collectionView reloadData];
+			
+			if([LMLayoutManager isiPhoneX]){
+				[self notchPositionChanged:LMLayoutManager.notchPosition];
+			}
+		} repeats:NO];
 	}];
+}
+
+- (void)notchPositionChanged:(LMNotchPosition)notchPosition {
+	[self.layoutManager adjustRootViewSubviewsForLandscapeNavigationBar:self.view];
+	
+	UICollectionViewFlowLayout *flowLayout = (UICollectionViewFlowLayout*)self.collectionView.collectionViewLayout;
+	flowLayout.sectionInset
+		= UIEdgeInsetsMake(LMLayoutManager.isExtraSmall ? 5.0f : 5.0f,
+						   14.0f,
+						   20.0f,
+						   (notchPosition == LMNotchPositionRight) ? 44 : 14);
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
 	
 	
-	[[LMLayoutManager sharedLayoutManager] addDelegate:self];
+	self.layoutManager = [LMLayoutManager sharedLayoutManager];
+	[self.layoutManager addDelegate:self];
 	
 
 	UICollectionViewFlowLayout *flowLayout = [UICollectionViewFlowLayout new];
@@ -208,6 +233,10 @@
 	self.peekPop = [[PeekPop alloc] initWithViewController:self];
 	PreviewingContext *previewingContext = [self.peekPop registerForPreviewingWithDelegate:self sourceView:self.collectionView];
 	NSLog(@"Previewing context %p", previewingContext);
+	
+	if([LMLayoutManager isiPhoneX]){
+		[self notchPositionChanged:LMLayoutManager.notchPosition];
+	}
 }
 
 - (void)didReceiveMemoryWarning {

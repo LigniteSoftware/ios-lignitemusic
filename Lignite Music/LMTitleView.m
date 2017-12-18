@@ -526,7 +526,7 @@
 	self.songListTableView.totalAmountOfObjects = self.musicTitles.trackCount;
 	self.songListTableView.subviewDataSource = self;
 	self.songListTableView.shouldUseDividers = YES;
-	self.songListTableView.averageCellHeight = [LMLayoutManager isiPad] ? (WINDOW_FRAME.size.height/14.0f) : (WINDOW_FRAME.size.height/10);
+	self.songListTableView.averageCellHeight = [LMLayoutManager standardListEntryHeight] * (7.5/10.0);
 	self.songListTableView.bottomSpacing = (WINDOW_FRAME.size.height/3.0);
     self.songListTableView.secondaryDelegate = self;
 	self.songListTableView.fullDividers = YES;

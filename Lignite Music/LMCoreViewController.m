@@ -1557,7 +1557,7 @@ LMControlBarViewDelegate
 	}];
 	
 	[APIdleManager sharedInstance].onTimeout = ^(void){
-		if(self.musicPlayer.playbackState == LMMusicPlaybackStatePlaying){
+		if(self.musicPlayer.playbackState == LMMusicPlaybackStatePlaying && self.view.window){
 			[self launchNowPlayingFromNavigationBar];
 		}
 	};

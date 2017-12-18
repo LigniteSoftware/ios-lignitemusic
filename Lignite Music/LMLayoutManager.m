@@ -199,7 +199,7 @@
 }
 
 + (CGFloat)standardListEntryHeight {
-	CGFloat properDimension = ([self isLandscape] || [self isLandscapeiPad]) ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height;
+	CGFloat properDimension = MAX(WINDOW_FRAME.size.width, WINDOW_FRAME.size.height);
 	return properDimension/[self listEntryHeightFactorial];
 }
 
@@ -407,13 +407,16 @@
 		   && (constraint.secondAttribute == NSLayoutAttributeLeading || constraint.secondAttribute == NSLayoutAttributeLeadingMargin)
 		   && (constraint.secondItem == rootView)){
 			
-			if([LMLayoutManager isLandscape] && constraint.constant > 0){ //Portrait constraints have a constant of 0
+			if([LMLayoutManager isLandscape]){ //Portrait constraints have a constant of 0
 				constraint.constant = 64.0f + ((notchPosition == LMNotchPositionLeft) ? 30.0f : 0.0f) + additionalOffset;
 				
 				NSLog(@"Constraint after %d now %@/%f", (int)notchPosition, constraint, constraint.constant);
-				
-				[rootView layoutSubviews];
 			}
+			else{
+				constraint.constant = 0.0f;
+			}
+			
+			[rootView layoutSubviews];
 		}
 	}
 }
