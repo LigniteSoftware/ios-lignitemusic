@@ -47,6 +47,7 @@
  */
 
 "DownloadingImages" = "Downloading artist images, %ld left.";
+"DownloadImagesOnDataWarning" = "Tap here to download artist images.";
 
 "NoPlaylists" = "Oh boy, you don't have any playlists yet!\n\nCreate a new playlist by tapping the 'Create' button above.";
 

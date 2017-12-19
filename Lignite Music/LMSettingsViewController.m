@@ -262,135 +262,57 @@
 }
 
 - (void)cacheAlert {
-	LMImageManagerPermissionStatus currentStatus = [self.imageManager downloadPermissionStatus];
+	LMImageManagerPermissionStatus previousPermissionStatus = [self.imageManager downloadPermissionStatus];
 	
-	LMAlertView *alertView = [LMAlertView newAutoLayoutView];
-	NSString *titleKey = @"ImagesDownloadWarningTitle";
-	NSString *youCanKey = @"";
-	NSString *enableButtonKey = @"";
-	NSString *disableButtonKey = @"";
-	NSString *currentStatusText = @"";
-	switch(currentStatus){
-		case LMImageManagerPermissionStatusNotDetermined:
-		case LMImageManagerPermissionStatusDenied:
-			youCanKey = @"YouCanTurnOnTo";
-			enableButtonKey = @"Enable";
-			disableButtonKey = @"KeepDisabled";
-			currentStatusText = NSLocalizedString(@"YouCurrentlyHaveThisFeatureOff", nil);
-			break;
-		case LMImageManagerPermissionStatusAuthorized:
-			youCanKey = @"YouCanTurnOffTo";
-			enableButtonKey = @"KeepEnabled";
-			disableButtonKey = @"ClearCacheAndDisable";
-			currentStatusText = [NSString stringWithFormat:NSLocalizedString(@"UsingXOfYourStorage", nil), (float)[self.imageManager sizeOfAllCaches]/1000000];
-			break;
-	}
-	alertView.title = NSLocalizedString(titleKey, nil);
-	
-	alertView.body = [NSString stringWithFormat:NSLocalizedString(@"SettingImagesAlertDescription", nil), currentStatusText, NSLocalizedString(youCanKey, nil)];
-	
-	alertView.alertOptionTitles = @[NSLocalizedString(disableButtonKey, nil), NSLocalizedString(enableButtonKey, nil)];
-	alertView.alertOptionColours = @[[LMColour mainColourDark], [LMColour mainColour]];
-	
-	[alertView launchOnView:self.coreViewController.navigationController.view withCompletionHandler:^(NSUInteger optionSelected) {
-		//Reset the special permission statuses because the user's stance maybe different now and we'll have to recheck
-		[self.imageManager setExplicitPermissionStatus:LMImageManagerPermissionStatusNotDetermined];
-		
-		LMImageManagerPermissionStatus previousPermissionStatus = [self.imageManager downloadPermissionStatus];
-		
-		LMImageManagerPermissionStatus permissionStatus = LMImageManagerPermissionStatusNotDetermined;
-		switch(optionSelected){
-			case 0:
-				permissionStatus = LMImageManagerPermissionStatusDenied;
-				break;
-			case 1:
-				permissionStatus = LMImageManagerPermissionStatusAuthorized;
-				break;
-		}
-		
-		[self.imageManager setDownloadPermissionStatus:permissionStatus];
-		
-		//In the rare case that for some reason something was left behind in the cache, we want to make sure the disable button always clears it even if it's already disabled, just to make sure the user is happy.
-		if(optionSelected == 0){
-			[self.imageManager clearAllCaches];
-		}
-		
-		if(previousPermissionStatus != LMImageManagerPermissionStatusDenied){
-			if(optionSelected == 0){
-				MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-				
-				hud.mode = MBProgressHUDModeCustomView;
-				UIImage *image = [[UIImage imageNamed:@"icon_checkmark.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-				hud.customView = [[UIImageView alloc] initWithImage:image];
-				hud.square = YES;
-				hud.label.text = NSLocalizedString(@"ImagesDeleted", nil);
-				hud.userInteractionEnabled = NO;
-				
-				[hud hideAnimated:YES afterDelay:3.f];
-			}
-		}
-		
-		if(previousPermissionStatus == LMImageManagerPermissionStatusDenied) {
-			if(optionSelected == 1){
-				[self.imageManager clearAllCaches];
-				
-				MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-				
-				hud.mode = MBProgressHUDModeCustomView;
-				UIImage *image = [[UIImage imageNamed:@"icon_checkmark.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-				hud.customView = [[UIImageView alloc] initWithImage:image];
-				hud.square = YES;
-				hud.label.text = NSLocalizedString(@"WillBeginDownloading", nil);
-				hud.userInteractionEnabled = NO;
-				
-				[hud hideAnimated:YES afterDelay:3.f];
-				
-				[self.imageManager downloadIfNeededForAllCategories];
-			}
-		}
-		
-		[self.sectionTableView reloadData];
-		
-		self.indexPathOfCurrentlyOpenAlertView = nil;
-	}];
+	[self.imageManager displayDownloadingAuthorizationAlertOnView:self.navigationController.view
+											withCompletionHandler:^(BOOL authorized) {
+												if(previousPermissionStatus != LMImageManagerPermissionStatusDenied){
+													if(!authorized){
+														MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+														
+														hud.mode = MBProgressHUDModeCustomView;
+														UIImage *image = [[UIImage imageNamed:@"icon_checkmark.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+														hud.customView = [[UIImageView alloc] initWithImage:image];
+														hud.square = YES;
+														hud.label.text = NSLocalizedString(@"ImagesDeleted", nil);
+														hud.userInteractionEnabled = NO;
+														
+														[hud hideAnimated:YES afterDelay:3.f];
+													}
+												}
+												
+												if(previousPermissionStatus == LMImageManagerPermissionStatusDenied) {
+													if(authorized){
+														[self.imageManager clearAllCaches];
+														
+														MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+														
+														hud.mode = MBProgressHUDModeCustomView;
+														UIImage *image = [[UIImage imageNamed:@"icon_checkmark.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+														hud.customView = [[UIImageView alloc] initWithImage:image];
+														hud.square = YES;
+														hud.label.text = NSLocalizedString(@"WillBeginDownloading", nil);
+														hud.userInteractionEnabled = NO;
+														
+														[hud hideAnimated:YES afterDelay:3.f];
+														
+														[self.imageManager downloadIfNeededForAllCategories];
+													}
+												}
+												
+												[self.sectionTableView reloadData];
+												
+												self.indexPathOfCurrentlyOpenAlertView = nil;
+											}];
 }
 
 - (void)explicitAlert {
-	LMAlertView *alertView = [LMAlertView newAutoLayoutView];
-	alertView.title = NSLocalizedString(@"ExplicitImageDownloadingTitle", nil);
-	
-	alertView.body = NSLocalizedString(@"ExplicitImageDownloadingBody", nil);
-	
-	alertView.alertOptionTitles = @[NSLocalizedString(@"Deny", nil), NSLocalizedString(@"Allow", nil)];
-	alertView.alertOptionColours = @[[LMColour mainColourDark], [LMColour mainColour]];
-	
-	[alertView launchOnView:self.coreViewController.navigationController.view withCompletionHandler:^(NSUInteger optionSelected) {
-		//Reset the special permission statuses because the user's stance maybe different now and we'll have to recheck
-		[self.imageManager setExplicitPermissionStatus:LMImageManagerPermissionStatusNotDetermined];
-	
-		if(optionSelected == 0){
-			//no
-		}
-		else{
-			//yes
-		}
-		
-		LMImageManagerPermissionStatus permissionStatus = LMImageManagerPermissionStatusNotDetermined;
-		switch(optionSelected){
-			case 0:
-				permissionStatus = LMImageManagerPermissionStatusDenied;
-				break;
-			case 1:
-				permissionStatus = LMImageManagerPermissionStatusAuthorized;
-				break;
-		}
-		
-		[self.imageManager setExplicitPermissionStatus:permissionStatus];
-		
-		[self.sectionTableView reloadData];
-		
-		self.indexPathOfCurrentlyOpenAlertView = nil;
-	}];
+	[self.imageManager displayDataAndStorageExplicitPermissionAlertOnView:self.navigationController.view
+													withCompletionHandler:^(BOOL authorized) {
+														[self.sectionTableView reloadData];
+														
+														self.indexPathOfCurrentlyOpenAlertView = nil;
+													}];
 }
 
 - (void)tappedIndexPath:(NSIndexPath*)indexPath forSectionTableView:(LMSectionTableView*)sectionTableView {

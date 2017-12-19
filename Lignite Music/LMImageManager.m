@@ -70,7 +70,7 @@
  */
 #define LMLastFMItemsPerPageLimit 10
 
-@interface LMImageManager()
+@interface LMImageManager() <LMWarningDelegate>
 
 /**
  The system music player.
@@ -220,6 +220,7 @@
 		sharedImageManager = [self new];
 		sharedImageManager.warningManager = [LMWarningManager sharedWarningManager];
 		sharedImageManager.downloadProgressWarning = [LMWarning warningWithText:@"Searching..." priority:LMWarningPriorityLow];
+		sharedImageManager.downloadProgressWarning.delegate = sharedImageManager;
 	});
 	return sharedImageManager;
 }
@@ -373,7 +374,16 @@
 				image = [[LMImageManager sharedImageManager] imageForMusicTrack:representativeItem withCategory:LMImageManagerCategoryArtistImages];
 				break;
 		}
-		completionHandler(image == nil);
+		
+		BOOL imageExists = image ? YES : NO;
+		
+		if([[LMImageManager sharedImageManager] downloadPermissionStatus] == LMImageManagerPermissionStatusDenied){
+			completionHandler(NO);
+			albumArtOperation = nil;
+			return;
+		}
+		
+		completionHandler(!imageExists);
 		
 		albumArtOperation = nil;
 	}];
@@ -586,6 +596,9 @@
     if(timeDifference < 70 && self.lastReportedAmountOfAvailableAPICalls < 20){
         NSLog(@"We're close to hitting the limit of API calls, let's back that tush up.");
         [NSTimer scheduledTimerWithTimeInterval:30 block:^{
+			self.lastReportedAmountOfAvailableAPICalls = 30;
+			self.timeOfLastReportedAmountOfAvailableAPICalls = 0;
+			
             [self downloadNextImageInQueue];
         } repeats:NO];
         return;
@@ -635,8 +648,8 @@
 			
 			self.downloadingImages = NO;
 			
-			[imageManager.trackDownloadQueue removeAllObjects];
-			[imageManager.categoryDownloadQueue removeAllObjects];
+//			[imageManager.trackDownloadQueue removeAllObjects];
+//			[imageManager.categoryDownloadQueue removeAllObjects];
 			
 			dispatch_async(dispatch_get_main_queue(), ^{
 				[imageManager downloadIfNeededForCategory:category];
@@ -691,6 +704,18 @@
 	
 	NSLog(@"Processing category %d (%ld items).", category, collectionsAssociated.count);
 	
+	if(self.trackDownloadQueue.count > 0){ //Already processed queue, resume downloads
+		dispatch_async(dispatch_get_main_queue(), ^{
+			self.downloadProgressWarning.text = [NSString stringWithFormat:NSLocalizedString(@"DownloadingImages", nil), self.trackDownloadQueue.count];
+			[self.warningManager addWarning:self.downloadProgressWarning];
+		});
+		
+		if(!self.downloadingImages){ //Only restart once
+			[self downloadNextImageInQueue];
+		}
+		return;
+	}
+	
 //	int countUsing = (int)MIN(10, collectionsAssociated.count);
 	int countUsing = (int)collectionsAssociated.count;
 	
@@ -702,6 +727,11 @@
 			[self imageNeedsDownloadingForMusicTrack:representativeTrack
 										 forCategory:category
 										  completion:^(BOOL needsDownloading) {
+											  if([self downloadPermissionStatus] == LMImageManagerPermissionStatusDenied){
+												  [self.trackDownloadQueue removeAllObjects];
+												  [self.categoryDownloadQueue removeAllObjects];
+												  return;
+											  }
 											  //										  NSLog(@"%d %@ needs downloading: %d", i, representativeTrack.albumTitle, needsDownloading);
 											  
 											  //If it needs downloading, is not already in queue, and is not on the blacklist
@@ -750,14 +780,15 @@
 		case LMImageManagerConditionLevelNever:
 			break;
 		case LMImageManagerConditionLevelSuboptimal: {
-			//Put alert on navigation bar
-			[self notifyDelegatesOfConditionLevel:currentConditionLevel];
+			//This level will put an alert on the system warning bar (core view controller handles it)
 			break;
 		}
 		case LMImageManagerConditionLevelOptimal:
 			[self beginDownloadingImagesForCategory:category];
 			break;
 	}
+	
+	[self notifyDelegatesOfConditionLevel:currentConditionLevel];
 }
 
 - (BOOL)musicTrackIsOnBlacklist:(LMMusicTrack*)musicTrack forCategory:(LMImageManagerCategory)category {
@@ -921,6 +952,8 @@
 }
 
 - (BOOL)isOnCellularData {
+//	return YES;
+	
 	LMReachability *reachability = [LMReachability reachabilityForInternetConnection];
 	[reachability startNotifier];
 	
@@ -1013,6 +1046,115 @@
 								   NSLocalizedString(@"DontDownload", nil)];
 	
 	return descriptionString;
+}
+
+- (void)displayDownloadingAuthorizationAlertOnView:(UIView*)view
+							 withCompletionHandler:(void(^)(BOOL authorized))completionHandler {
+	
+	LMImageManagerPermissionStatus currentStatus = [self downloadPermissionStatus];
+	
+	LMAlertView *alertView = [LMAlertView newAutoLayoutView];
+	NSString *titleKey = @"ImagesDownloadWarningTitle";
+	NSString *youCanKey = @"";
+	NSString *enableButtonKey = @"";
+	NSString *disableButtonKey = @"";
+	NSString *currentStatusText = @"";
+	switch(currentStatus){
+		case LMImageManagerPermissionStatusNotDetermined:
+		case LMImageManagerPermissionStatusDenied:
+			youCanKey = @"YouCanTurnOnTo";
+			enableButtonKey = @"Enable";
+			disableButtonKey = @"KeepDisabled";
+			currentStatusText = NSLocalizedString(@"YouCurrentlyHaveThisFeatureOff", nil);
+			break;
+		case LMImageManagerPermissionStatusAuthorized:
+			youCanKey = @"YouCanTurnOffTo";
+			enableButtonKey = @"KeepEnabled";
+			disableButtonKey = @"ClearCacheAndDisable";
+			currentStatusText = [NSString stringWithFormat:NSLocalizedString(@"UsingXOfYourStorage", nil), (float)[self sizeOfAllCaches]/1000000];
+			break;
+	}
+	alertView.title = NSLocalizedString(titleKey, nil);
+	
+	alertView.body = [NSString stringWithFormat:NSLocalizedString(@"SettingImagesAlertDescription", nil), currentStatusText, NSLocalizedString(youCanKey, nil)];
+	
+	alertView.alertOptionTitles = @[NSLocalizedString(disableButtonKey, nil), NSLocalizedString(enableButtonKey, nil)];
+	alertView.alertOptionColours = @[[LMColour mainColourDark], [LMColour mainColour]];
+	
+	[alertView launchOnView:view withCompletionHandler:^(NSUInteger optionSelected) {
+		//Reset the special permission statuses because the user's stance maybe different now and we'll have to recheck
+		[self setExplicitPermissionStatus:LMImageManagerPermissionStatusNotDetermined];
+		
+		LMImageManagerPermissionStatus permissionStatus = LMImageManagerPermissionStatusNotDetermined;
+		switch(optionSelected){
+			case 0:
+				permissionStatus = LMImageManagerPermissionStatusDenied;
+				break;
+			case 1:
+				permissionStatus = LMImageManagerPermissionStatusAuthorized;
+				break;
+		}
+		
+		[self setDownloadPermissionStatus:permissionStatus];
+		
+		//In the rare case that for some reason something was left behind in the cache, we want to make sure the disable button always clears it even if it's already disabled, just to make sure the user is happy.
+		if(optionSelected == 0){
+			[self clearAllCaches];
+			
+			//Also, clear the queue in case anything was left there.
+			[self.trackDownloadQueue removeAllObjects];
+			[self.categoryDownloadQueue removeAllObjects];
+		}
+		
+		if(completionHandler){
+			completionHandler(optionSelected == 1);
+		}
+	}];
+}
+
+- (void)displayDataAndStorageExplicitPermissionAlertOnView:(UIView*)view
+									 withCompletionHandler:(void(^)(BOOL authorized))completionHandler {
+	
+	LMAlertView *alertView = [LMAlertView newAutoLayoutView];
+	alertView.title = NSLocalizedString(@"ExplicitImageDownloadingTitle", nil);
+	
+	alertView.body = NSLocalizedString(@"ExplicitImageDownloadingBody", nil);
+	
+	alertView.alertOptionTitles = @[NSLocalizedString(@"Deny", nil), NSLocalizedString(@"Allow", nil)];
+	alertView.alertOptionColours = @[[LMColour mainColourDark], [LMColour mainColour]];
+	
+	[alertView launchOnView:view withCompletionHandler:^(NSUInteger optionSelected) {
+		//Reset the special permission statuses because the user's stance maybe different now and we'll have to recheck
+		[self setExplicitPermissionStatus:LMImageManagerPermissionStatusNotDetermined];
+		
+		LMImageManagerPermissionStatus permissionStatus = LMImageManagerPermissionStatusNotDetermined;
+		switch(optionSelected){
+			case 0:
+				permissionStatus = LMImageManagerPermissionStatusDenied;
+				break;
+			case 1:
+				permissionStatus = LMImageManagerPermissionStatusAuthorized;
+				break;
+		}
+		
+		[self setExplicitPermissionStatus:permissionStatus];
+		
+		if(completionHandler){
+			completionHandler(optionSelected == 1);
+		}
+	}];
+}
+
+- (void)warningTapped:(LMWarning*)warning {
+	if(warning == self.downloadProgressWarning){
+		[self displayDownloadingAuthorizationAlertOnView:self.viewToDisplayAlertsOn
+								   withCompletionHandler:^(BOOL authorized) {
+									   NSLog(@"Authorized %d", authorized);
+									   if(!authorized){
+										   [self.warningManager removeWarning:self.downloadProgressWarning];
+									   }
+								   }];
+	}
 }
 
 - (void)launchExplicitPermissionRequestOnView:(UIView*)view withCompletionHandler:(void(^)(LMImageManagerPermissionStatus permissionStatus))completionHandler {

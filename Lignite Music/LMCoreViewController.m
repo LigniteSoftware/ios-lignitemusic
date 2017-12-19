@@ -72,7 +72,7 @@
 @import StoreKit;
 
 @interface LMCoreViewController () <LMMusicPlayerDelegate, LMSourceDelegate, UIGestureRecognizerDelegate, LMSearchBarDelegate, LMLetterTabDelegate, LMSearchSelectedDelegate, LMButtonNavigationBarDelegate, UINavigationBarDelegate, UINavigationControllerDelegate,
-LMTutorialViewDelegate, LMImageManagerDelegate, LMLandscapeNavigationBarDelegate, LMThemeEngineDelegate, LMLayoutChangeDelegate,
+LMTutorialViewDelegate, LMImageManagerDelegate, LMLandscapeNavigationBarDelegate, LMThemeEngineDelegate, LMLayoutChangeDelegate, LMWarningDelegate,
 
 LMControlBarViewDelegate
 >
@@ -136,6 +136,7 @@ LMControlBarViewDelegate
 @property (readonly) BOOL requiresRefresh;
 
 @property LMWarningManager *warningManager;
+@property LMWarning *downloadImagesOnDataOrLowStorageWarning;
 
 @end
 
@@ -205,25 +206,30 @@ LMControlBarViewDelegate
 //	self.navigationBarWarningButton.hidden = !showing;
 //}
 
-//- (void)imageDownloadConditionLevelChanged:(LMImageManagerConditionLevel)newConditionLevel {
-//	switch(newConditionLevel){
-//		case LMImageManagerConditionLevelOptimal: {
+- (void)imageDownloadConditionLevelChanged:(LMImageManagerConditionLevel)newConditionLevel {
+	switch(newConditionLevel){
+		case LMImageManagerConditionLevelOptimal: {
 //			[self setWarningButtonShowing:NO];
-//			NSLog(@"Optimal!");
-//			break;
-//		}
-//		case LMImageManagerConditionLevelSuboptimal: {
+			NSLog(@"Optimal!");
+			
+			[self.warningManager removeWarning:self.downloadImagesOnDataOrLowStorageWarning];
+			break;
+		}
+		case LMImageManagerConditionLevelSuboptimal: {
 //			[self setWarningButtonShowing:YES];
-//			NSLog(@"Sub");
-//			break;
-//		}
-//		case LMImageManagerConditionLevelNever: {
+			NSLog(@"Sub");
+			
+			[self.warningManager addWarning:self.downloadImagesOnDataOrLowStorageWarning];
+			
+			break;
+		}
+		case LMImageManagerConditionLevelNever: {
 //			[self setWarningButtonShowing:NO];
-//			NSLog(@"Never");
-//			break;
-//		}
-//	}
-//}
+			NSLog(@"Never");
+			break;
+		}
+	}
+}
 
 - (void)tutorialFinishedWithKey:(NSString *)key {
     NSLog(@"Tutorial %@ finished, start another?", key);
@@ -1266,6 +1272,17 @@ LMControlBarViewDelegate
 	}
 }
 
+- (void)warningTapped:(LMWarning*)warning {
+	if(warning == self.downloadImagesOnDataOrLowStorageWarning){
+		[[LMImageManager sharedImageManager] displayDataAndStorageExplicitPermissionAlertOnView:self.navigationController.view
+																		  withCompletionHandler:^(BOOL authorized) {
+																			  NSLog(@"Authorized: %d", authorized);
+																			  [self.warningManager removeWarning:self.downloadImagesOnDataOrLowStorageWarning];
+																			  [[LMImageManager sharedImageManager] downloadIfNeededForAllCategories];
+																		  }];
+	}
+}
+
 - (void)loadSubviews {
 //	[self.navigationController setNavigationBarHidden:NO animated:YES];
 //
@@ -1426,6 +1443,9 @@ LMControlBarViewDelegate
 	[self.warningManager.warningBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
 	[self.warningManager.warningBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 	[self.warningManager.warningBar autoSetDimension:ALDimensionHeight toSize:0.0f];
+	
+	self.downloadImagesOnDataOrLowStorageWarning = [LMWarning warningWithText:NSLocalizedString(@"DownloadImagesOnDataWarning", nil) priority:LMWarningPriorityHigh];
+	self.downloadImagesOnDataOrLowStorageWarning.delegate = self;
 	
 	
 	

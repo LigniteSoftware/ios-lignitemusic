@@ -83,9 +83,21 @@
 	}];
 }
 
+- (void)tapped {
+	if(self.displayingWarning.delegate){
+		[self.displayingWarning.delegate warningTapped:self.displayingWarning];
+	}
+}
+
 - (void)layoutSubviews {
 	if(!self.didLayoutConstraints){
 		self.didLayoutConstraints = YES;
+		
+		self.userInteractionEnabled = YES;
+		
+		UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapped)];
+		[self addGestureRecognizer:tapGesture];
+		
 		if(self.displayingWarning){
 			self.backgroundColor = self.displayingWarning.colour;
 		}

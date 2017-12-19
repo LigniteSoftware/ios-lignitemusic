@@ -23,7 +23,25 @@ typedef NS_ENUM(NSInteger, LMWarningPriority){
 	LMWarningPrioritySevere
 };
 
+@class LMWarning;
+
+@protocol LMWarningDelegate <NSObject>
+
+/**
+ A warning was tapped by the user.
+
+ @param warning The warning that was tapped.
+ */
+- (void)warningTapped:(LMWarning*)warning;
+
+@end
+
 @interface LMWarning : NSObject
+
+/**
+ The delegate.
+ */
+@property id<LMWarningDelegate> delegate;
 
 /**
  The text of the warning which will display inside of the warning bar.a
