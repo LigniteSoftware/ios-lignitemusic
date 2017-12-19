@@ -47,6 +47,11 @@
  */
 @property NSMutableArray<NSDictionary*> *selectedTrackCollectionsData;
 
+/**
+ The label that is displayed when there are no search results.
+ */
+@property UILabel *noResultsLabel;
+
 @end
 
 @implementation LMDynamicSearchView
@@ -73,7 +78,7 @@
 	}
 }
 
-- (UIImage*)iconAtSection:(NSUInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView {
+- (UIImage*)iconAtSection:(NSInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView {
 	if([self noResults]){
 		return nil;
 	}
@@ -102,7 +107,7 @@
 	}
 }
 
-- (NSString*)titleAtSection:(NSUInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView {
+- (NSString*)titleAtSection:(NSInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView {
 	if([self noResults]){
 		return @"";
 	}
@@ -133,8 +138,12 @@
 	}
 }
 
-- (NSUInteger)numberOfRowsForSection:(NSUInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView {
-	if([self noResults]){
+- (NSUInteger)numberOfRowsForSection:(NSInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView {
+	if([self noResults] || section == -1){
+		return 0;
+	}
+	
+	if(section >= self.searchResultsMusicTypes.count){
 		return 0;
 	}
 	
@@ -436,7 +445,7 @@
 	if(!self.searchResultsTrackCollections || !self.searchResultsMusicTypes){
 		return YES;
 	}
-	if(self.searchableTrackCollections.count == 0){
+	if(self.searchableTrackCollections.count == 0 || self.searchResultsMusicTypes.count == 0 || self.searchResultsTrackCollections.count == 0){
 		return YES;
 	}
 	return NO;
@@ -561,6 +570,8 @@
 	
 	[self.sectionTableView reloadData];
 	
+	self.noResultsLabel.hidden = ![self noResults];
+	
 	//Search complete, papa bless!
 }
 
@@ -630,6 +641,23 @@
 		[self.sectionTableView autoPinEdgesToSuperviewEdges];
 
 		[self.sectionTableView setup];
+		
+		
+		
+		self.noResultsLabel = [UILabel newAutoLayoutView];
+		self.noResultsLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:[LMLayoutManager isExtraSmall] ? 16.0f : 20.0f];
+		self.noResultsLabel.text = NSLocalizedString(@"NoSearchResults", nil);
+		self.noResultsLabel.textColor = [UIColor blackColor];
+		self.noResultsLabel.hidden = [self noResults];
+		self.noResultsLabel.textAlignment = NSTextAlignmentLeft;
+		self.noResultsLabel.numberOfLines = 0;
+		self.noResultsLabel.userInteractionEnabled = YES;
+		self.noResultsLabel.backgroundColor = [UIColor whiteColor];
+		[self addSubview:self.noResultsLabel];
+		
+		[self.noResultsLabel autoPinEdgeToSuperviewMargin:ALEdgeLeading];
+		[self.noResultsLabel autoPinEdgeToSuperviewMargin:ALEdgeTrailing];
+		[self.noResultsLabel autoPinEdgeToSuperviewMargin:ALEdgeTop];
 	}
 	
 	[super layoutSubviews];

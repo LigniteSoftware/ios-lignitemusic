@@ -20,7 +20,7 @@
  @param sectionTableView The associated table view.
  @return The icon.
  */
-- (UIImage*)iconAtSection:(NSUInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView;
+- (UIImage*)iconAtSection:(NSInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView;
 
 /**
  Gets a title for a section header.
@@ -29,7 +29,7 @@
  @param sectionTableView The associated table view.
  @return The title.
  */
-- (NSString*)titleAtSection:(NSUInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView;
+- (NSString*)titleAtSection:(NSInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView;
 
 /**
  Gets the number of rows of items per a section.
@@ -38,7 +38,7 @@
  @param sectionTableView The associated table view.
  @return The number of rows for that section.
  */
-- (NSUInteger)numberOfRowsForSection:(NSUInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView;
+- (NSUInteger)numberOfRowsForSection:(NSInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView;
 
 /**
  Gets a title for a certain index path.

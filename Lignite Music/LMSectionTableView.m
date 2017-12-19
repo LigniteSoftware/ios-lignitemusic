@@ -268,6 +268,11 @@
 }
 
 - (void)registerCellIdentifiers {
+	if(self.totalNumberOfSections <= 0){
+		self.hasRegisteredCellIdentifiers = YES;
+		return;
+	}
+	
 	int totalRows = (int)[self rawIndexForIndexPath:[NSIndexPath indexPathForRow:[self.contentsDelegate numberOfRowsForSection:self.totalNumberOfSections-1 forSectionTableView:self] inSection:self.totalNumberOfSections-1]];
 	
 	for(int i = 0; i < totalRows; i++){

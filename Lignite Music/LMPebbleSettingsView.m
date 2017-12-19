@@ -38,7 +38,7 @@
 	[(UINavigationController*)self.window.rootViewController popViewControllerAnimated:YES];
 }
 
-- (UIImage*)iconAtSection:(NSUInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView {
+- (UIImage*)iconAtSection:(NSInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView {
 	switch(section){
 		case 0:
 			return [LMAppIcon imageForIcon:LMIconPebbles];
@@ -50,7 +50,7 @@
 	return [LMAppIcon imageForIcon:LMIconBug];
 }
 
-- (NSString*)titleAtSection:(NSUInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView {
+- (NSString*)titleAtSection:(NSInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView {
 	switch(section){
 		case 0:
 			return NSLocalizedString(@"Pebble", nil);
@@ -62,7 +62,7 @@
 	return @"Unknown section";
 }
 
-- (NSUInteger)numberOfRowsForSection:(NSUInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView {
+- (NSUInteger)numberOfRowsForSection:(NSInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView {
 	switch(section){
 		case 0:
 			return [LMPebbleManager pebbleServiceHasBeenEnabledByUser] ? 2 : 1;

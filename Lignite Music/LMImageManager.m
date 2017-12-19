@@ -691,8 +691,8 @@
 }
 
 - (void)beginDownloadingImagesForCategory:(LMImageManagerCategory)category {
-//	return;
-//#warning image downloading is disabled
+	return;
+#warning image downloading is disabled
 	
 	NSLog(@"[LMImageManager]: Will begin the process for downloading images for category %d.", category);
 	
@@ -1138,6 +1138,10 @@
 		}
 		
 		[self setExplicitPermissionStatus:permissionStatus];
+		
+		[self notifyDelegatesOfConditionLevel:self.conditionLevelForDownloading];
+		
+		[self downloadIfNeededForAllCategories];
 		
 		if(completionHandler){
 			completionHandler(optionSelected == 1);

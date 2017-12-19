@@ -734,7 +734,9 @@
 	[self.view addSubview:self.letterTabBar];
 	
 	NSArray *letterTabBarPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-		[self.letterTabBar autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:iPhoneXBottomCoverView];
+		[self.letterTabBar autoPinEdge:ALEdgeBottom
+								toEdge:([LMLayoutManager isiPhoneX] ? ALEdgeTop : ALEdgeBottom)
+								ofView:([LMLayoutManager isiPhoneX] ? iPhoneXBottomCoverView : self.view)];
 		[self.letterTabBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[self.letterTabBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 		[self.letterTabBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:[LMLayoutManager isiPhoneX] ? (1.0/20.0) : (1.0/15.0)];
@@ -743,7 +745,10 @@
 	
 	NSArray *letterTabBarLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 		[self.letterTabBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-		[self.letterTabBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:[LMLayoutManager isiPhoneX] ? (1.0/20.0) : (1.0/15.0)];
+		[self.letterTabBar autoMatchDimension:ALDimensionWidth
+								  toDimension:ALDimensionWidth
+									   ofView:self.view
+							   withMultiplier:[LMLayoutManager isiPhoneX] ? (1.0/20.0) : (1.0/15.0)];
 		[self.letterTabBar autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.searchBar withOffset:64];
 		[self.letterTabBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 	}];

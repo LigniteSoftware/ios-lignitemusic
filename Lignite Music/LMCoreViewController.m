@@ -1254,7 +1254,6 @@ LMControlBarViewDelegate
 	}
 	
 	for(NSLayoutConstraint *constraint in self.landscapeNavigationBar.constraints){
-		NSLog(@"Constraint %@", constraint);
 		if(constraint.firstAttribute == NSLayoutAttributeWidth
 		   && constraint.firstItem == self.landscapeNavigationBar
 		   && !constraint.secondItem){

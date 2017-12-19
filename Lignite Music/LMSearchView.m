@@ -183,7 +183,7 @@
 	});
 }
 
-- (UIImage*)iconAtSection:(NSUInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView {
+- (UIImage*)iconAtSection:(NSInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView {
 	if([self noResults]){
 		return nil;
 	}
@@ -208,7 +208,7 @@
 	}
 }
 
-- (NSString*)titleAtSection:(NSUInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView {
+- (NSString*)titleAtSection:(NSInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView {
 	if([self noResults]){
 		return @"";
 	}
@@ -237,7 +237,7 @@
 	return [self.associatedProperties objectAtIndex:section];
 }
 
-- (NSUInteger)numberOfRowsForSection:(NSUInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView {
+- (NSUInteger)numberOfRowsForSection:(NSInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView {
 	if([self noResults]){
 		return 0;
 	}

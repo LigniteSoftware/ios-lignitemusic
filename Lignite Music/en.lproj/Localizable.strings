@@ -166,7 +166,7 @@
 "TapViewAgainToOpenSourceSelector" = "Tap view button again to open view selector";
 
 "CreditsLicenses" = "License links"; //Links to licenses, such as library licenses and icon licenses.
-"NoSearchResults" = "No results";
+"NoSearchResults" = "There were no results for your search, sorry.";
 "WelcomeToSearch" = "Welcome to search";
 "Browse" = "Browse"; //Like: "To browse music"
 "Miniplayer" = "Miniplayer"; //The miniature music player

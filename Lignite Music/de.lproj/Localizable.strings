@@ -157,7 +157,7 @@
 "TapViewAgainToOpenSourceSelector" = "Ansicht-Tab antippen, um die Liste erneut anzuzeigen";
 
 "CreditsLicenses" = "Lizenzlinks"; //Links to licenses, such as library licenses and icon licenses.
-"NoSearchResults" = "Keine Suchergebnisse";
+"NoSearchResults" = "Die Suche ergab keine Treffer, sorry.";
 "WelcomeToSearch" = "Tippe bitte untenstehend deinen gewünschten Suchbegriff ein";
 "Browse" = "Durchsuchen"; //Like: "To browse music"
 "Miniplayer" = "Miniplayer"; //The miniature music player
