@@ -88,13 +88,14 @@
 @synthesize playbackState = _playbackState;
 
 MPMediaGrouping associatedMediaTypes[] = {
+	MPMediaGroupingTitle, //Favourites
 	MPMediaGroupingArtist,
 	MPMediaGroupingAlbum,
 	MPMediaGroupingTitle,
 	MPMediaGroupingPlaylist,
 	MPMediaGroupingGenre,
-	MPMediaGroupingComposer,
-	MPMediaGroupingAlbum //Compilations, actually. The queries adjust for this.
+	MPMediaGroupingAlbum, //Compilations, actually. Queries will adjust for this.
+	MPMediaGroupingComposer
 };
 
 - (MPMusicPlayerController*)systemMusicPlayer {
@@ -750,10 +751,13 @@ BOOL shuffleForDebug = NO;
 	
 	NSMutableArray *fixedCollections = [NSMutableArray arrayWithArray:[collections sortedArrayUsingDescriptors:@[albumSort]]];
 	
+	int i = 0;
 	for(LMMusicTrackCollection *collection in fixedCollections){
+		NSLog(@"Checking collection %d of %d", i, (int)collection.count);
 		if(collection.count == 0){
 			[collections removeObject:collection];
 		}
+		i++;
 	}
 	
 	//		NSTimeInterval endingTime = [[NSDate date] timeIntervalSince1970];
@@ -836,23 +840,25 @@ BOOL shuffleForDebug = NO;
 	NSAssert(musicType != LMMusicTypeFavourites, @"Cannot query favourites, sorry");
 	
 	MPMediaGrouping associatedGroupings[] = {
+		MPMediaGroupingTitle,  //Favourites
 		MPMediaGroupingArtist, //Artists
-		MPMediaGroupingAlbum, //Albums
-		MPMediaGroupingTitle, //Titles
-		MPMediaGroupingTitle, //Playlists
-		MPMediaGroupingGenre, //Genres
-		MPMediaGroupingAlbum, //Composers
-		MPMediaGroupingAlbum  //Compilations
+		MPMediaGroupingAlbum,  //Albums
+		MPMediaGroupingTitle,  //Titles
+		MPMediaGroupingTitle,  //Playlists
+		MPMediaGroupingGenre,  //Genres
+		MPMediaGroupingAlbum,  //Compilations
+		MPMediaGroupingAlbum   //Composers
 	};
 	
 	NSArray<NSString*> *associatedPersistentIDProperties = @[
+															 MPMediaItemPropertyPersistentID, 		  //Favourites
 															 MPMediaItemPropertyArtistPersistentID,   //Artists
 															 MPMediaItemPropertyAlbumPersistentID,    //Albums
 															 MPMediaItemPropertyPersistentID,         //Titles
 															 MPMediaPlaylistPropertyName,             //Playlists
 															 MPMediaItemPropertyGenrePersistentID,    //Genres
-															 MPMediaItemPropertyComposerPersistentID, //Composers
-															 MPMediaItemPropertyAlbumPersistentID     //Compilations
+															 MPMediaItemPropertyAlbumPersistentID,    //Compilations
+															 MPMediaItemPropertyComposerPersistentID  //Composers
 															 ];
 	
 	NSString *associatedProperty = [associatedPersistentIDProperties objectAtIndex:musicType];
@@ -875,23 +881,25 @@ BOOL shuffleForDebug = NO;
 	NSAssert(musicType != LMMusicTypeFavourites, @"Cannot query favourites, sorry");
 	
 	MPMediaGrouping associatedGroupings[] = {
-		MPMediaGroupingAlbum, //Artists
-		MPMediaGroupingAlbum, //Albums
-		MPMediaGroupingTitle, //Titles
-		MPMediaGroupingTitle, //Playlists
-		MPMediaGroupingAlbum, //Genres
-		MPMediaGroupingAlbum, //Composers
-		MPMediaGroupingAlbum  //Compilations
+		MPMediaGroupingTitle,  //Favourites
+		MPMediaGroupingArtist, //Artists
+		MPMediaGroupingAlbum,  //Albums
+		MPMediaGroupingTitle,  //Titles
+		MPMediaGroupingTitle,  //Playlists
+		MPMediaGroupingGenre,  //Genres
+		MPMediaGroupingAlbum,  //Compilations
+		MPMediaGroupingAlbum   //Composers
 	};
 	
 	NSArray<NSString*> *associatedPersistentIDProperties = @[
+															 MPMediaItemPropertyPersistentID, 		  //Favourites
 															 MPMediaItemPropertyArtistPersistentID,   //Artists
 															 MPMediaItemPropertyAlbumPersistentID,    //Albums
 															 MPMediaItemPropertyPersistentID,         //Titles
 															 MPMediaPlaylistPropertyName,             //Playlists
 															 MPMediaItemPropertyGenrePersistentID,    //Genres
-															 MPMediaItemPropertyComposerPersistentID, //Composers
-															 MPMediaItemPropertyAlbumPersistentID     //Compilations
+															 MPMediaItemPropertyAlbumPersistentID,    //Compilations
+															 MPMediaItemPropertyComposerPersistentID  //Composers
 															 ];
 	
 	NSString *associatedProperty = [associatedPersistentIDProperties objectAtIndex:musicType];
@@ -910,23 +918,25 @@ BOOL shuffleForDebug = NO;
 
 - (NSArray<LMMusicTrackCollection*>*)collectionsForRepresentativeTrack:(LMMusicTrack*)representativeTrack forMusicType:(LMMusicType)musicType {
 	MPMediaGrouping associatedGroupings[] = {
-		MPMediaGroupingAlbum, //Artists
-		MPMediaGroupingTitle, //Albums
-		MPMediaGroupingTitle, //Titles
-		MPMediaGroupingTitle, //Playlists
-		MPMediaGroupingAlbum, //Genres
-		MPMediaGroupingAlbum, //Composers
-		MPMediaGroupingTitle  //Compilations
+		MPMediaGroupingTitle,  //Favourites
+		MPMediaGroupingArtist, //Artists
+		MPMediaGroupingAlbum,  //Albums
+		MPMediaGroupingTitle,  //Titles
+		MPMediaGroupingTitle,  //Playlists
+		MPMediaGroupingGenre,  //Genres
+		MPMediaGroupingAlbum,  //Compilations
+		MPMediaGroupingAlbum   //Composers
 	};
 	
 	NSArray<NSString*> *associatedPersistentIDProperties = @[
+															 MPMediaItemPropertyPersistentID, 		  //Favourites
 															 MPMediaItemPropertyArtistPersistentID,   //Artists
 															 MPMediaItemPropertyAlbumPersistentID,    //Albums
 															 MPMediaItemPropertyPersistentID,         //Titles
 															 MPMediaPlaylistPropertyName,             //Playlists
 															 MPMediaItemPropertyGenrePersistentID,    //Genres
-															 MPMediaItemPropertyComposerPersistentID, //Composers
-															 MPMediaItemPropertyIsCompilation         //Compilations
+															 MPMediaItemPropertyAlbumPersistentID,    //Compilations
+															 MPMediaItemPropertyComposerPersistentID  //Composers
 															 ];
 	
 	NSString *associatedProperty = [associatedPersistentIDProperties objectAtIndex:musicType];

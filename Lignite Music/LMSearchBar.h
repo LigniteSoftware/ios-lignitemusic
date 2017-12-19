@@ -23,7 +23,7 @@
  @param opened Whether or not the dialog is open.
  @param keyboardHeight The height of the keyboard taking up room on screen.
  */
-- (void)searchDialogOpened:(BOOL)opened withKeyboardHeight:(CGFloat)keyboardHeight;
+- (void)searchDialogueOpened:(BOOL)opened withKeyboardHeight:(CGFloat)keyboardHeight;
 
 @end
 

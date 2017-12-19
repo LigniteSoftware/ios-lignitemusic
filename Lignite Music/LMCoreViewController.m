@@ -25,7 +25,6 @@
 #import "APIdleManager.h"
 #import "LMMusicPlayer.h"
 #import "LMAppDelegate.h"
-#import "LMSearchView.h"
 #import "LMAlertView.h"
 #import "LMTitleView.h"
 #import "LMSettings.h"
@@ -71,7 +70,7 @@
 @import SDWebImage;
 @import StoreKit;
 
-@interface LMCoreViewController () <LMMusicPlayerDelegate, LMSourceDelegate, UIGestureRecognizerDelegate, LMSearchBarDelegate, LMLetterTabDelegate, LMSearchSelectedDelegate, LMButtonNavigationBarDelegate, UINavigationBarDelegate, UINavigationControllerDelegate,
+@interface LMCoreViewController () <LMMusicPlayerDelegate, LMSourceDelegate, UIGestureRecognizerDelegate, LMSearchBarDelegate, LMLetterTabDelegate, LMSearchViewControllerResultDelegate, LMButtonNavigationBarDelegate, UINavigationBarDelegate, UINavigationControllerDelegate,
 LMTutorialViewDelegate, LMImageManagerDelegate, LMLandscapeNavigationBarDelegate, LMThemeEngineDelegate, LMLayoutChangeDelegate, LMWarningDelegate,
 
 LMControlBarViewDelegate
@@ -391,7 +390,6 @@ LMControlBarViewDelegate
 	}
 }
 
-#ifndef SPOTIFY
 - (void)musicLibraryDidChange {
 	NSLog(@"Changed library for core");
 	
@@ -437,7 +435,6 @@ LMControlBarViewDelegate
 		});
 	});
 }
-#endif
 
 - (void)reloadCurrentBrowsingView {
 	if(self.currentSource == self.titleView){
@@ -710,19 +707,19 @@ LMControlBarViewDelegate
 	NSLog(@"Changed to %@", searchTerm);
 }
 
-- (void)searchDialogOpened:(BOOL)opened withKeyboardHeight:(CGFloat)keyboardHeight {
+- (void)searchDialogueOpened:(BOOL)opened withKeyboardHeight:(CGFloat)keyboardHeight {
 	NSLog(@"Search was opened: %d", opened);
 	
 	if(!self.searchViewController){
 //		[self attachBrowsingAssistantToView:self.view];
 		
 		self.searchViewController = [LMSearchViewController new];
-		self.searchViewController.searchSelectedDelegate = self;
+		self.searchViewController.delegate = self;
 		[self.navigationController presentViewController:self.searchViewController animated:YES completion:nil];
 	}
 }
 
-- (void)searchEntryTappedWithPersistentID:(LMMusicTrackPersistentID)persistentID withMusicType:(LMMusicType)musicType {
+- (void)searchEntryTappedWithPersistentID:(MPMediaEntityPersistentID)persistentID forMusicType:(LMMusicType)musicType; {
 	NSLog(@"Tapped %lld for type %d.", persistentID, musicType);
 	
 	[self sourceSelected:[self.sourcesForSourceSelector objectAtIndex:musicType]];

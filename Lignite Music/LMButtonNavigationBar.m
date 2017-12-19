@@ -422,8 +422,8 @@
 	[self.searchBarDelegate searchTermChangedTo:searchTerm];
 }
 
-- (void)searchDialogOpened:(BOOL)opened withKeyboardHeight:(CGFloat)keyboardHeight {
-	[self.searchBarDelegate searchDialogOpened:opened withKeyboardHeight:keyboardHeight];
+- (void)searchDialogueOpened:(BOOL)opened withKeyboardHeight:(CGFloat)keyboardHeight {
+	[self.searchBarDelegate searchDialogueOpened:opened withKeyboardHeight:keyboardHeight];
 }
 
 - (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {

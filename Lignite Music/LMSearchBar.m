@@ -71,11 +71,11 @@
 	
 	CGRect keyboardFrame = [value CGRectValue];
 		
-	[self.delegate searchDialogOpened:YES withKeyboardHeight:keyboardFrame.size.height];
+	[self.delegate searchDialogueOpened:YES withKeyboardHeight:keyboardFrame.size.height];
 }
 
 - (void)keyboardWillHide:(NSNotification*)notification {
-	[self.delegate searchDialogOpened:NO withKeyboardHeight:0.0];
+	[self.delegate searchDialogueOpened:NO withKeyboardHeight:0.0];
 }
 
 //- (void)textFieldDidBeginEditing:(UITextField *)textField {
@@ -98,7 +98,7 @@
 }
 
 - (void)dismissKeyboard {
-	[self.delegate searchDialogOpened:NO withKeyboardHeight:0.0];
+	[self.delegate searchDialogueOpened:NO withKeyboardHeight:0.0];
 	[self endEditing:YES];
 }
 

@@ -143,51 +143,66 @@
 - (void)scrollToItemWithPersistentID:(LMMusicTrackPersistentID)persistentID {
 	NSInteger index = -1;
 	
-	for(NSUInteger i = 0; i < self.musicTrackCollections.count; i++){
-		LMMusicTrackCollection *trackCollection = [self.musicTrackCollections objectAtIndex:i];
-		if(self.musicType == LMMusicTypePlaylists){
-			trackCollection = [self.playlistManager.playlists objectAtIndex:i].trackCollection;
-		}
-		LMMusicTrack *representativeTrack = [trackCollection representativeItem];
+	if(self.musicType == LMMusicTypePlaylists){
+		LMPlaylistManager *playlistManager = [LMPlaylistManager sharedPlaylistManager];
 		
-		switch(self.musicType) {
-			case LMMusicTypeAlbums:
-				if(persistentID == representativeTrack.albumPersistentID){
-					index = i;
-				}
-				break;
-			case LMMusicTypeArtists:
-				if(persistentID == representativeTrack.artistPersistentID){
-					index = i;
-				}
-				break;
-			case LMMusicTypeComposers:
-				if(persistentID == representativeTrack.composerPersistentID){
-					index = i;
-				}
-				break;
-			case LMMusicTypeGenres:
-				if(persistentID == representativeTrack.genrePersistentID){
-					index = i;
-				}
-				break;
-			case LMMusicTypePlaylists:
-				if(persistentID == trackCollection.persistentID){
-					index = i;
-				}
-				break;
-			case LMMusicTypeCompilations:
-				if(persistentID == trackCollection.persistentID){
-					index = i;
-				}
-				break;
-			default:
-				NSLog(@"Unsupported search result in browsing view.");
-				break;
-		}
+		NSArray<LMPlaylist*> *playlists = playlistManager.playlists;
 		
-		if(index != -1){
-			break;
+		for(NSInteger i = 0; i < playlists.count; i++){
+			LMPlaylist *playlist = [playlists objectAtIndex:i];
+			if(playlist.persistentID == persistentID){
+				index = i;
+				break;
+			}
+		}
+	}
+	else{
+		for(NSUInteger i = 0; i < self.musicTrackCollections.count; i++){
+			LMMusicTrackCollection *trackCollection = [self.musicTrackCollections objectAtIndex:i];
+			if(self.musicType == LMMusicTypePlaylists){
+				trackCollection = [self.playlistManager.playlists objectAtIndex:i].trackCollection;
+			}
+			LMMusicTrack *representativeTrack = [trackCollection representativeItem];
+			
+			switch(self.musicType) {
+				case LMMusicTypeAlbums:
+					if(persistentID == representativeTrack.albumPersistentID){
+						index = i;
+					}
+					break;
+				case LMMusicTypeArtists:
+					if(persistentID == representativeTrack.artistPersistentID){
+						index = i;
+					}
+					break;
+				case LMMusicTypeComposers:
+					if(persistentID == representativeTrack.composerPersistentID){
+						index = i;
+					}
+					break;
+				case LMMusicTypeGenres:
+					if(persistentID == representativeTrack.genrePersistentID){
+						index = i;
+					}
+					break;
+				case LMMusicTypePlaylists:
+					if(persistentID == trackCollection.persistentID){
+						index = i;
+					}
+					break;
+				case LMMusicTypeCompilations:
+					if(persistentID == trackCollection.persistentID){
+						index = i;
+					}
+					break;
+				default:
+					NSLog(@"Unsupported search result in browsing view.");
+					break;
+			}
+			
+			if(index != -1){
+				break;
+			}
 		}
 	}
 	

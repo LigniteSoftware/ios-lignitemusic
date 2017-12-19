@@ -214,9 +214,14 @@
 	UIImage *image = (musicType == LMMusicTypeArtists || musicType == LMMusicTypeComposers)
 		? [representativeTrack artistImage]
 		: [representativeTrack albumArt];
+	
+	if(musicType == LMMusicTypePlaylists){
+		LMPlaylist *playlist = [self.searchResultsPlaylistsArray objectAtIndex:indexPath.row];
+		image = playlist.image;
+	}
 
 	if(!image){
-		image = [LMAppIcon imageForIcon:LMIconNoAlbumArt];
+		image = [LMAppIcon imageForIcon:LMIconNoAlbumArt75Percent];
 	}
 
 	return image;
@@ -288,7 +293,7 @@
 	
 	if([self.delegate respondsToSelector:@selector(searchViewEntryWasTappedWithData:forMusicType:)] && notifyOfTap){
 		if(musicType == LMMusicTypePlaylists){
-			LMPlaylist *playlist = [self.searchResultsPlaylistsArray objectAtIndex:indexPath.section];
+			LMPlaylist *playlist = [self.searchResultsPlaylistsArray objectAtIndex:indexPath.row];
 			[self.delegate searchViewEntryWasTappedWithData:playlist forMusicType:musicType];
 		}
 		else{
@@ -356,10 +361,10 @@
 	[arrowIconPaddedView addSubview:arrowIconView];
 	
 	[arrowIconView autoCentreInSuperview];
-	[arrowIconView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:arrowIconPaddedView withMultiplier:(3.0/8.0)];
+	[arrowIconView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:arrowIconPaddedView withMultiplier:(5.0/8.0)];
 	[arrowIconView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:arrowIconPaddedView];
 	
-	return arrowIconView;
+	return arrowIconPaddedView;
 }
 
 - (UIView*)rightViewForIndexPath:(NSIndexPath*)indexPath forSectionTableView:(LMSectionTableView*)sectionTableView {

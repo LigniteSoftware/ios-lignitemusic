@@ -92,7 +92,7 @@
 	_keyboardIsShowing = keyboardIsShowing;
 	
 	if(self.searchBarDelegate){
-		[self.searchBarDelegate searchDialogOpened:YES withKeyboardHeight:0];
+		[self.searchBarDelegate searchDialogueOpened:YES withKeyboardHeight:0];
 	}
 }
 

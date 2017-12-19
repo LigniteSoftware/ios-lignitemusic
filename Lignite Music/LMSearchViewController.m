@@ -8,12 +8,14 @@
 
 #import <PureLayout/PureLayout.h>
 #import "LMSearchViewController.h"
+#import "LMPlaylistManager.h"
 #import "LMLayoutManager.h"
 #import "NSTimer+Blocks.h"
+#import "LMMusicPlayer.h"
 #import "LMSearchBar.h"
 #import "LMSettings.h"
 
-@interface LMSearchViewController () <LMSearchBarDelegate, LMSearchSelectedDelegate, LMLayoutChangeDelegate>
+@interface LMSearchViewController () <LMSearchBarDelegate, LMDynamicSearchViewDelegate, LMLayoutChangeDelegate>
 
 /**
  The search bar for user input.
@@ -28,7 +30,7 @@
 /**
  The actual search view where the magic happens.
  */
-@property LMSearchView *searchView;
+@property LMDynamicSearchView *searchView;
 
 /**
  The background view to the status bar.
@@ -45,6 +47,11 @@
  */
 @property NSString *currentSearchTerm;
 
+/**
+ The music player.
+ */
+@property LMMusicPlayer *musicPlayer;
+
 @end
 
 @implementation LMSearchViewController
@@ -53,19 +60,62 @@
 	return [LMLayoutManager sharedLayoutManager].isLandscape;
 }
 
-- (void)searchEntryTappedWithPersistentID:(LMMusicTrackPersistentID)persistentID withMusicType:(LMMusicType)musicType {
-	[self.searchSelectedDelegate searchEntryTappedWithPersistentID:persistentID withMusicType:musicType];
+- (void)searchViewWasInteractedWith:(LMDynamicSearchView*)searchView {
+	NSLog(@"Interacted");
+}
+
+/**
+ A search view entry was tapped.
+ 
+ @param musicData The music data associated with the tapped entry. This is by default a single LMMusicTrackCollection, unless the musicType is LMMusicTypePlaylists, then it is an LMPlaylist.
+ @param musicType The music type that the tapped entry was under, section-wise.
+ */
+- (void)searchViewEntryWasTappedWithData:(id)musicData forMusicType:(LMMusicType)musicType {
+	NSLog(@"Tapped %@ for %d", musicData, musicType);
 	
-	NSLog(@"Dismiss");
+	LMMusicTrackCollection *trackCollection = nil;
+	LMPlaylist *playlist = nil;
+	if(musicType != LMMusicTypePlaylists){
+		trackCollection = (LMMusicTrackCollection*)musicData;
+	}
+	else{
+		playlist = (LMPlaylist*)musicData;
+	}
+	
+	MPMediaEntityPersistentID persistentID = 0;
+	switch(musicType){
+		case LMMusicTypeAlbums:
+		case LMMusicTypeCompilations:
+			persistentID = trackCollection.representativeItem.albumPersistentID;
+			break;
+		case LMMusicTypeArtists:
+			persistentID = trackCollection.representativeItem.artistPersistentID;
+			break;
+		case LMMusicTypeTitles:
+		case LMMusicTypeFavourites:
+			persistentID = trackCollection.representativeItem.persistentID;
+			break;
+		case LMMusicTypePlaylists:
+			persistentID = playlist.persistentID;
+			break;
+		case LMMusicTypeGenres:
+			persistentID = trackCollection.representativeItem.genrePersistentID;
+			break;
+		case LMMusicTypeComposers:
+			persistentID = trackCollection.representativeItem.composerPersistentID;
+			break;
+	}
+	
+	[self.delegate searchEntryTappedWithPersistentID:persistentID forMusicType:musicType];
 }
 
 - (void)searchTermChangedTo:(NSString *)searchTerm {
 	self.currentSearchTerm = searchTerm;
 	
-	[self.searchView searchTermChangedTo:searchTerm];
+	[self.searchView searchForString:searchTerm];
 }
 
-- (void)searchDialogOpened:(BOOL)opened withKeyboardHeight:(CGFloat)keyboardHeight {
+- (void)searchDialogueOpened:(BOOL)opened withKeyboardHeight:(CGFloat)keyboardHeight {
 	[self.view layoutIfNeeded];
 	
 	self.searchBarBottomConstraint.constant = -keyboardHeight;
@@ -79,15 +129,17 @@
 	self.statusBarBackgroundView.hidden = size.width > size.height; //Will be landscape
 	
 	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-		[self.searchView searchTermChangedTo:self.currentSearchTerm];
+		[self.searchView searchForString:self.currentSearchTerm];
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-		[self.searchView searchTermChangedTo:self.currentSearchTerm];
+		[self.searchView searchForString:self.currentSearchTerm];
 	}];
 }
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
 	// Do any additional setup after loading the view.
+	
+	self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 	
 	self.layoutManager = [LMLayoutManager sharedLayoutManager];
 	[self.layoutManager addDelegate:self];
@@ -114,8 +166,28 @@
 	[LMLayoutManager addNewLandscapeConstraints:searchBarLandscapeConstraints];
 	
 	
-	self.searchView = [LMSearchView newAutoLayoutView];
-	self.searchView.searchSelectedDelegate = self;
+	self.searchView = [LMDynamicSearchView newAutoLayoutView];
+	self.searchView.delegate = self;
+	
+	self.searchView.searchableTrackCollections = @[
+												   [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeFavourites],
+												   [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeArtists],
+												   [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeAlbums],
+												   [self.musicPlayer queryCollectionsForMusicType:LMMusicTypePlaylists],
+												   [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeTitles],
+												   [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeGenres],
+												   [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeCompilations]
+												   ];
+	self.searchView.searchableMusicTypes = @[
+											 @(LMMusicTypeFavourites),
+											 @(LMMusicTypeArtists),
+											 @(LMMusicTypeAlbums),
+											 @(LMMusicTypePlaylists),
+											 @(LMMusicTypeTitles),
+											 @(LMMusicTypeGenres),
+											 @(LMMusicTypeCompilations)
+											 ];
+	
 	[self.view addSubview:self.searchView];
 	
 	[self.searchView autoPinEdgeToSuperviewEdge:ALEdgeLeading];

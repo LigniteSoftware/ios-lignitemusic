@@ -234,7 +234,6 @@
 		6AAA56051DF5491C00692CFB /* icon_search.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AAA56041DF5491B00692CFB /* icon_search.png */; };
 		6AAA56081DF54D7800692CFB /* LMBrowsingBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AAA56071DF54D7800692CFB /* LMBrowsingBar.m */; };
 		6AAA560A1DF553AF00692CFB /* icon_a_to_z.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AAA56091DF553AF00692CFB /* icon_a_to_z.png */; };
-		6AAA560D1DF631EC00692CFB /* LMSearchView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AAA560C1DF631EC00692CFB /* LMSearchView.m */; };
 		6AAD5A531E0C655A00D8B406 /* NSTimer+Blocks.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AAD5A521E0C655A00D8B406 /* NSTimer+Blocks.m */; };
 		6AAF610D1DA0286F00971875 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6AAF610F1DA0286F00971875 /* Localizable.strings */; };
 		6AAF61181DA0B9C800971875 /* LMTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AAF61171DA0B9C700971875 /* LMTableViewCell.m */; };
@@ -699,8 +698,6 @@
 		6AAA56061DF54D7800692CFB /* LMBrowsingBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMBrowsingBar.h; sourceTree = "<group>"; };
 		6AAA56071DF54D7800692CFB /* LMBrowsingBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMBrowsingBar.m; sourceTree = "<group>"; };
 		6AAA56091DF553AF00692CFB /* icon_a_to_z.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_a_to_z.png; sourceTree = "<group>"; };
-		6AAA560B1DF631EC00692CFB /* LMSearchView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMSearchView.h; sourceTree = "<group>"; };
-		6AAA560C1DF631EC00692CFB /* LMSearchView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMSearchView.m; sourceTree = "<group>"; };
 		6AAD5A511E0C655A00D8B406 /* NSTimer+Blocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSTimer+Blocks.h"; sourceTree = "<group>"; };
 		6AAD5A521E0C655A00D8B406 /* NSTimer+Blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSTimer+Blocks.m"; sourceTree = "<group>"; };
 		6AAF610E1DA0286F00971875 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1138,8 +1135,6 @@
 				6A75652F1DF7E38900A9EDD6 /* LMSearch.m */,
 				6AAA55FF1DF407A800692CFB /* LMSearchBar.h */,
 				6AAA56001DF407A800692CFB /* LMSearchBar.m */,
-				6AAA560B1DF631EC00692CFB /* LMSearchView.h */,
-				6AAA560C1DF631EC00692CFB /* LMSearchView.m */,
 				6AD690F91FA76FDA00F20BEC /* LMDynamicSearchView.h */,
 				6AD690FA1FA76FDA00F20BEC /* LMDynamicSearchView.m */,
 				6ADA6CE91DF84A8D0073D449 /* LMSearchViewController.h */,
@@ -2321,7 +2316,6 @@
 				6A5257531DF1FC840040210D /* LMLetterTabBar.m in Sources */,
 				6A555BB01DA168860078C9FC /* LMOperationQueue.m in Sources */,
 				6AF9D5321DE0B73D006368B6 /* LMImageManager.m in Sources */,
-				6AAA560D1DF631EC00692CFB /* LMSearchView.m in Sources */,
 				6A59A51B1DE7B08B00B346AC /* LMSettingsViewController.m in Sources */,
 				6AE579031FA924330076CB2E /* LMEnhancedPlaylistEditorViewController.m in Sources */,
 				6AEF8C731DEF419D00D9A1BF /* LMDebugViewController.m in Sources */,
