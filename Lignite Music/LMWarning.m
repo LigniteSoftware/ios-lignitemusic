@@ -13,6 +13,8 @@
 
 - (LMColour*)colour {
 	switch(self.priority){
+		case LMWarningPrioritySuccess:
+			return (LMColour*)[UIColor colorWithRed:0.00 green:0.69 blue:0.27 alpha:1.0];;
 		case LMWarningPriorityLow:
 			return (LMColour*)[LMColour superLightGreyColour];
 		case LMWarningPriorityHigh:

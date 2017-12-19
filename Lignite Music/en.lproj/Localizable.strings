@@ -47,6 +47,7 @@
  */
 
 "SyncingLibrary" = "Your music library is currently syncing.";
+"LibraryFinishedSyncing" = "Your music library has been synced.";
 
 "DownloadingImages" = "Downloading artist images, %ld left.";
 "DownloadImagesOnDataWarning" = "Tap here to download artist images.";

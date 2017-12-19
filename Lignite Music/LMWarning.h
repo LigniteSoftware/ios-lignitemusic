@@ -18,7 +18,8 @@
  - LMWarningPrioritySevere: The priority is severe and the app is having trouble handling its emotions without the user's input. This priority is twice as large as a normal warning and is always Lignite Red.
  */
 typedef NS_ENUM(NSInteger, LMWarningPriority){
-	LMWarningPriorityLow = 0,
+	LMWarningPrioritySuccess = 0,
+	LMWarningPriorityLow,
 	LMWarningPriorityHigh,
 	LMWarningPrioritySevere
 };

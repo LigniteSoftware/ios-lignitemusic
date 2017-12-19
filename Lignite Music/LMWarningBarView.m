@@ -33,6 +33,7 @@
 		return 0.0f;
 	}
 	switch(self.displayingWarning.priority){
+		case LMWarningPrioritySuccess:
 		case LMWarningPriorityLow:
 		case LMWarningPriorityHigh:
 			return 16.0f;

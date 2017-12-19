@@ -138,6 +138,8 @@ LMControlBarViewDelegate
 @property LMWarning *downloadImagesOnDataOrLowStorageWarning;
 @property LMWarning *librarySyncingWarning;
 
+@property LMSource *selectedSource;
+
 @end
 
 @implementation LMCoreViewController
@@ -162,9 +164,24 @@ LMControlBarViewDelegate
 		[self.warningManager addWarning:self.librarySyncingWarning];
 	}
 	else if(finished){
+		if(self.musicPlayer.nowPlayingCollection.count == 0){
+			[self dismissNowPlaying];
+			[self.musicPlayer pause];
+			self.musicPlayer.nowPlayingTrack = nil;
+		}
+		
 		[self.warningManager removeWarning:self.librarySyncingWarning];
 		
+		[self sourceSelected:self.selectedSource];
+		
 		self.librarySyncingWarning = nil;
+		
+		LMWarning *libraryFinishedWarning = [LMWarning warningWithText:NSLocalizedString(@"LibraryFinishedSyncing", nil) priority:LMWarningPrioritySuccess];
+		[self.warningManager addWarning:libraryFinishedWarning];
+		
+		[NSTimer scheduledTimerWithTimeInterval:5.0 block:^{
+			[self.warningManager removeWarning:libraryFinishedWarning];
+		} repeats:NO];
 	}
 }
 
@@ -531,6 +548,8 @@ LMControlBarViewDelegate
 }
 
 - (void)sourceSelected:(LMSource *)source {
+	self.selectedSource = source;
+	
 	if(!source.shouldNotHighlight){
 		[self.currentSource setHidden:YES];
 		[self.buttonNavigationBar setSelectedTab:LMNavigationTabBrowse];
@@ -834,6 +853,24 @@ LMControlBarViewDelegate
 	
 	self.nowPlayingCoreView.isOpen = YES;
 
+	[UIView animateWithDuration:0.25 animations:^{
+		[self.nowPlayingCoreView.superview layoutIfNeeded];
+	} completion:^(BOOL finished) {
+		if(finished){
+			[UIView animateWithDuration:0.25 animations:^{
+				[self setNeedsStatusBarAppearanceUpdate];
+			}];
+		}
+	}];
+}
+
+- (void)dismissNowPlaying {
+	[self.nowPlayingCoreView.superview layoutIfNeeded];
+	
+	self.nowPlayingCoreView.topConstraint.constant = MAX(WINDOW_FRAME.size.width, WINDOW_FRAME.size.height) * 1.50f;
+	
+	self.nowPlayingCoreView.isOpen = NO;
+	
 	[UIView animateWithDuration:0.25 animations:^{
 		[self.nowPlayingCoreView.superview layoutIfNeeded];
 	} completion:^(BOOL finished) {

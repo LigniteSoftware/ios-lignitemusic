@@ -290,7 +290,7 @@ MPMediaGrouping associatedMediaTypes[] = {
 	NSLog(@"New time %f", positionEvent.positionTime);
 	
 	self.audioPlayer.currentTime = positionEvent.positionTime;
-	[self reloadInfoCenter:self.audioPlayer.isPlaying];
+	[self reloadInfoCentre:self.audioPlayer.isPlaying];
 
 	return MPRemoteCommandHandlerStatusSuccess;
 }
@@ -326,12 +326,12 @@ MPMediaGrouping associatedMediaTypes[] = {
 	});
 }
 
-- (void)reloadInfoCenter:(BOOL)isPlaying {
+- (void)reloadInfoCentre:(BOOL)isPlaying {
 	if(![self hasTrackLoaded]){
 		return;
 	}
 	
-	MPNowPlayingInfoCenter *infoCenter = [MPNowPlayingInfoCenter defaultCenter];
+	MPNowPlayingInfoCenter *infoCentre = [MPNowPlayingInfoCenter defaultCenter];
 	
 	NSMutableDictionary *newInfo = [[NSMutableDictionary alloc]init];
 	[newInfo setObject:self.nowPlayingTrack.title ? self.nowPlayingTrack.title : NSLocalizedString(@"UnknownTitle", nil) forKey:MPMediaItemPropertyTitle];
@@ -346,7 +346,7 @@ MPMediaGrouping associatedMediaTypes[] = {
 	
 	//	NSLog(@"Allahu is playing %d: %@", self.audioPlayer.isPlaying, newInfo);
 	
-	infoCenter.nowPlayingInfo = newInfo;
+	infoCentre.nowPlayingInfo = newInfo;
 }
 
 - (void)systemMusicPlayerTrackChanged:(id)sender {
@@ -384,7 +384,7 @@ MPMediaGrouping associatedMediaTypes[] = {
 		self.autoPlay = NO;
 	}
 	
-	[self reloadInfoCenter:autoPlay];
+	[self reloadInfoCentre:autoPlay];
 }
 
 - (void)systemMusicPlayerStateChanged:(id)sender {
@@ -1039,7 +1039,7 @@ BOOL shuffleForDebug = NO;
 		
 		[player.audioPlayer pause];
 		
-		[self reloadInfoCenter:NO];
+		[self reloadInfoCentre:NO];
 	});
 }
 
@@ -1051,7 +1051,7 @@ BOOL shuffleForDebug = NO;
 		NSLog(@"Playing");
 		[self.audioPlayer setVolume:1 fadeDuration:0.25];
 		[self.audioPlayer play];
-		[self reloadInfoCenter:YES];
+		[self reloadInfoCentre:YES];
 		
 		NSLog(@"Done");
 	}
@@ -1130,6 +1130,15 @@ BOOL shuffleForDebug = NO;
 	}
 	
 	_nowPlayingTrack = nowPlayingTrack;
+	
+	if(nowPlayingTrack == nil){
+		for(int i = 0; i < self.delegates.count; i++){
+			id delegate = [self.delegates objectAtIndex:i];
+			[delegate musicTrackDidChange:self.nowPlayingTrack];
+		}
+		
+		[self reloadInfoCentre:NO];
+	}
 	
 #if TARGET_IPHONE_SIMULATOR
 	[self systemMusicPlayerTrackChanged:nowPlayingTrack];

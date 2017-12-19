@@ -549,6 +549,11 @@
 
 
 - (id)subviewAtIndex:(NSUInteger)index forTableView:(LMTableView *)tableView {
+	if(index >= self.musicPlayer.nowPlayingCollection.items.count){
+		[self.coreViewController dismissNowPlaying];
+		return nil;
+	}
+	
 	LMListEntry *entry = [self.itemArray objectAtIndex:index % self.itemArray.count];
 	entry.collectionIndex = index;
 	entry.associatedData = [self.musicPlayer.nowPlayingCollection.items objectAtIndex:index];
@@ -741,6 +746,11 @@
 	[entry changeHighlightStatus:YES animated:YES];
 	
 	self.currentlyHighlighted = entry.collectionIndex;
+	
+	if(entry.collectionIndex >= self.musicPlayer.nowPlayingCollection.count){
+		[self.queueTableView reloadData];
+		return;
+	}
 	
 	[self.musicPlayer setNowPlayingTrack:[self.musicPlayer.nowPlayingCollection.items objectAtIndex:entry.collectionIndex]];
 	[self.musicPlayer play];

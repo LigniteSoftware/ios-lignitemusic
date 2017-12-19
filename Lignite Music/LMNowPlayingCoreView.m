@@ -23,7 +23,7 @@
 /**
  The NowPlaying which goes in the middle.
  */
-@property LMNowPlayingView *centerNowPlayingView;
+@property LMNowPlayingView *centreNowPlayingView;
 
 /**
  The NowPlaying which goes in the front.
@@ -65,6 +65,13 @@
 @implementation LMNowPlayingCoreView
 
 - (void)loadMusicTracksBasedOffIndex:(NSInteger)indexOfCenter {
+	if(self.musicPlayer.nowPlayingCollection.count == 0){
+		[self.centreNowPlayingView changeMusicTrack:nil withIndex:-1];
+		[self.leadingNowPlayingView changeMusicTrack:nil withIndex:-1];
+		[self.trailingNowPlayingView changeMusicTrack:nil withIndex:-1];
+		return;
+	}
+	
     if(indexOfCenter >= self.musicPlayer.nowPlayingCollection.items.count){
         indexOfCenter = 0;
     }
@@ -82,7 +89,7 @@
 	
 	NSLog(@"Spook");
 	
-    [self.centerNowPlayingView changeMusicTrack:[self.musicPlayer.nowPlayingCollection.items objectAtIndex:indexOfCenter] withIndex:indexOfCenter];
+    [self.centreNowPlayingView changeMusicTrack:[self.musicPlayer.nowPlayingCollection.items objectAtIndex:indexOfCenter] withIndex:indexOfCenter];
     [self.leadingNowPlayingView changeMusicTrack:[self.musicPlayer.nowPlayingCollection.items objectAtIndex:nextTrackIndex]
                                        withIndex:nextTrackIndex];
     [self.trailingNowPlayingView changeMusicTrack:[self.musicPlayer.nowPlayingCollection.items objectAtIndex:previousTrackIndex]
@@ -117,26 +124,26 @@
 
 - (void)skipTracks {
     //	self.skipToNextTrackOnTimerFire ? [self.musicPlayer skipToNextTrack] : [self.musicPlayer skipToPreviousItem];
-    [self.musicPlayer setNowPlayingTrack:self.centerNowPlayingView.loadedTrack];
+    [self.musicPlayer setNowPlayingTrack:self.centreNowPlayingView.loadedTrack];
 }
 
 - (void)rebuildConstraints:(BOOL)leadingIsCenter {
-    NSArray *oldNowPlayings = @[ self.trailingNowPlayingView, self.centerNowPlayingView, self.leadingNowPlayingView ];
+    NSArray *oldNowPlayings = @[ self.trailingNowPlayingView, self.centreNowPlayingView, self.leadingNowPlayingView ];
     
-    [self.centerNowPlayingView removeFromSuperview];
+    [self.centreNowPlayingView removeFromSuperview];
     [self.leadingNowPlayingView removeFromSuperview];
     [self.trailingNowPlayingView removeFromSuperview];
     
     // [ 0 1 2 ] swipe -> 0 [ 1 2 * ] convert -> [ 1 2 0 ]
     if(leadingIsCenter){
         self.trailingNowPlayingView = oldNowPlayings[1];
-        self.centerNowPlayingView = oldNowPlayings[2];
+        self.centreNowPlayingView = oldNowPlayings[2];
         self.leadingNowPlayingView = oldNowPlayings[0];
     }
     // [ 0 1 2 ] swipe -> [ * 0 1 ] 2 convert -> [ 2 0 1 ]
     else{
         self.trailingNowPlayingView = oldNowPlayings[2];
-        self.centerNowPlayingView = oldNowPlayings[0];
+        self.centreNowPlayingView = oldNowPlayings[0];
         self.leadingNowPlayingView = oldNowPlayings[1];
     }
 	
@@ -144,28 +151,28 @@
 //	self.trailingNowPlayingView.backgroundColor = [UIColor yellowColor];
 //	self.leadingNowPlayingView.backgroundColor = [UIColor redColor];
 	
-	NSLog(@"Loaded tracks: %@/%@/%@", self.trailingNowPlayingView.loadedTrack.title, self.centerNowPlayingView.loadedTrack.title, self.leadingNowPlayingView.loadedTrack.title);
+	NSLog(@"Loaded tracks: %@/%@/%@", self.trailingNowPlayingView.loadedTrack.title, self.centreNowPlayingView.loadedTrack.title, self.leadingNowPlayingView.loadedTrack.title);
     
-    [self addSubview:self.centerNowPlayingView];
+    [self addSubview:self.centreNowPlayingView];
     [self addSubview:self.leadingNowPlayingView];
     [self addSubview:self.trailingNowPlayingView];
     
-    self.nowPlayingLeadingConstraint = [self.centerNowPlayingView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
-    [self.centerNowPlayingView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
-    [self.centerNowPlayingView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self];
-    [self.centerNowPlayingView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
+    self.nowPlayingLeadingConstraint = [self.centreNowPlayingView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
+    [self.centreNowPlayingView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
+    [self.centreNowPlayingView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self];
+    [self.centreNowPlayingView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
     
-    [self.otherConstraints addObject:[self.trailingNowPlayingView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.centerNowPlayingView]];
+    [self.otherConstraints addObject:[self.trailingNowPlayingView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.centreNowPlayingView]];
     [self.trailingNowPlayingView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
     [self.trailingNowPlayingView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self];
     [self.trailingNowPlayingView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
     
-    [self.otherConstraints addObject:[self.leadingNowPlayingView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.centerNowPlayingView]];
+    [self.otherConstraints addObject:[self.leadingNowPlayingView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.centreNowPlayingView]];
     [self.leadingNowPlayingView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
     [self.leadingNowPlayingView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self];
     [self.leadingNowPlayingView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
     
-    [self loadMusicTracksBasedOffIndex:self.centerNowPlayingView.loadedTrackIndex];
+    [self loadMusicTracksBasedOffIndex:self.centreNowPlayingView.loadedTrackIndex];
     
     [self layoutIfNeeded];
     
@@ -352,22 +359,22 @@
         self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
         [self.musicPlayer addMusicDelegate:self];
         
-        self.centerNowPlayingView = [LMNowPlayingView newAutoLayoutView];
+        self.centreNowPlayingView = [LMNowPlayingView newAutoLayoutView];
         //		self.centerNowPlayingView.backgroundColor = [UIColor orangeColor];
-        self.centerNowPlayingView.coreViewController = (LMCoreViewController*)self.rootViewController;
-        [self addSubview:self.centerNowPlayingView];
+        self.centreNowPlayingView.coreViewController = (LMCoreViewController*)self.rootViewController;
+        [self addSubview:self.centreNowPlayingView];
         
-        self.nowPlayingLeadingConstraint = [self.centerNowPlayingView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
-        [self.centerNowPlayingView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
-        [self.centerNowPlayingView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self];
-        [self.centerNowPlayingView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
+        self.nowPlayingLeadingConstraint = [self.centreNowPlayingView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
+        [self.centreNowPlayingView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
+        [self.centreNowPlayingView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self];
+        [self.centreNowPlayingView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
         
         
         UIPanGestureRecognizer *nowPlayingPanGesture =
         [[UIPanGestureRecognizer alloc] initWithTarget:self
                                                 action:@selector(panNowPlaying:)];
         nowPlayingPanGesture.delegate = self;
-        [self.centerNowPlayingView addGestureRecognizer:nowPlayingPanGesture];
+        [self.centreNowPlayingView addGestureRecognizer:nowPlayingPanGesture];
         
         
         self.trailingNowPlayingView = [LMNowPlayingView newAutoLayoutView];
@@ -375,7 +382,7 @@
         self.trailingNowPlayingView.coreViewController = (LMCoreViewController*)self.rootViewController;
         [self addSubview:self.trailingNowPlayingView];
         
-        [self.otherConstraints addObject:[self.trailingNowPlayingView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.centerNowPlayingView]];
+        [self.otherConstraints addObject:[self.trailingNowPlayingView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.centreNowPlayingView]];
         [self.trailingNowPlayingView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
         [self.trailingNowPlayingView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self];
         [self.trailingNowPlayingView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
@@ -394,7 +401,7 @@
         self.leadingNowPlayingView.coreViewController = (LMCoreViewController*)self.rootViewController;
         [self addSubview:self.leadingNowPlayingView];
         
-        [self.otherConstraints addObject:[self.leadingNowPlayingView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.centerNowPlayingView]];
+        [self.otherConstraints addObject:[self.leadingNowPlayingView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.centreNowPlayingView]];
         [self.leadingNowPlayingView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
         [self.leadingNowPlayingView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self];
         [self.leadingNowPlayingView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
@@ -404,11 +411,11 @@
 //		self.trailingNowPlayingView.backgroundColor = [UIColor yellowColor];
 //		self.leadingNowPlayingView.backgroundColor = [UIColor redColor];
 
-		self.centerNowPlayingView.backgroundColor = [UIColor whiteColor];
+		self.centreNowPlayingView.backgroundColor = [UIColor whiteColor];
 		self.trailingNowPlayingView.backgroundColor = [UIColor whiteColor];
 		self.leadingNowPlayingView.backgroundColor = [UIColor whiteColor];
 		
-		self.centerNowPlayingView.nowPlayingCoreView = self;
+		self.centreNowPlayingView.nowPlayingCoreView = self;
 		self.trailingNowPlayingView.nowPlayingCoreView = self;
 		self.leadingNowPlayingView.nowPlayingCoreView = self;
 

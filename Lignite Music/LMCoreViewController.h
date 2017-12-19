@@ -36,6 +36,11 @@ typedef NS_ENUM(NSInteger, LMCoreViewControllerRestorationState){
 - (void)prepareToLoadView;
 
 /**
+ Dismisses the now playing view.
+ */
+- (void)dismissNowPlaying;
+
+/**
  The navigation bar that goes at the bottom.
  */
 @property LMButtonNavigationBar *buttonNavigationBar;
