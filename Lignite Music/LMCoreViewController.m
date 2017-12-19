@@ -172,7 +172,9 @@ LMControlBarViewDelegate
 		
 		[self.warningManager removeWarning:self.librarySyncingWarning];
 		
-		[self sourceSelected:self.selectedSource];
+		if((self.selectedSource.lmIcon != LMIconSettings) && (self.selectedSource.lmIcon != LMIconBug)){
+			[self sourceSelected:self.selectedSource];
+		}
 		
 		self.librarySyncingWarning = nil;
 		
@@ -548,7 +550,9 @@ LMControlBarViewDelegate
 }
 
 - (void)sourceSelected:(LMSource *)source {
-	self.selectedSource = source;
+	if(source.lmIcon != LMIconSettings && source.lmIcon != LMIconBug){
+		self.selectedSource = source;
+	}
 	
 	if(!source.shouldNotHighlight){
 		[self.currentSource setHidden:YES];

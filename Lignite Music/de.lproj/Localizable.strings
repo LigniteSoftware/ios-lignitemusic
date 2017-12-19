@@ -48,6 +48,9 @@
  
  */
 
+"SyncingLibrary" = "Deine Musiksammlung wird gerade synchronisiert.";
+"LibraryFinishedSyncing" = "Deine Musiksammlung wurde synchronisiert.";
+
 "DownloadingImages" = "Herunterladen von Künstler Fotos, %ld übrig.";
 "DownloadImagesOnDataWarning" = "Hier tippen, um Künstler Fotos herunterzuladen.";
 

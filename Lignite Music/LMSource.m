@@ -17,6 +17,8 @@
 	newSource.subtitle = subtitle;
 	newSource.icon = [LMAppIcon imageForIcon:icon];
 	
+	newSource.lmIcon = icon;
+	
 	return newSource;
 	
 }

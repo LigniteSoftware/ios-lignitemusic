@@ -54,6 +54,11 @@
 @property UIImage *icon;
 
 /**
+ The Lignite icon.
+ */
+@property LMIcon lmIcon;
+
+/**
  The source's ID.
  */
 @property uint8_t sourceID;
