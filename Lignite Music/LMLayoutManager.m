@@ -195,7 +195,7 @@
 		return 12.0f;
 	}
 	
-	return 8.0f;
+	return 9.0f;
 }
 
 + (CGFloat)standardListEntryHeight {

@@ -497,6 +497,8 @@ MPMediaGrouping associatedMediaTypes[] = {
 	self.libraryChangeTimer = [NSTimer scheduledTimerWithTimeInterval:5.0f block:^{
 		NSLog(@"Done syncing library");
 		
+		[[LMPlaylistManager sharedPlaylistManager] reloadPlaylists];
+		
 		[self notifyLibraryChangeDelegatesOfLibraryChange:YES];
 	} repeats:NO];
 }

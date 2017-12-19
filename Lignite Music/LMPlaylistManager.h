@@ -29,6 +29,11 @@
 - (void)internalizeSystemPlaylists;
 
 /**
+ Reloads all the playlist's contents.
+ */
+- (void)reloadPlaylists;
+
+/**
  Returns the shared playlist manager.
 
  @return The playlist manager.

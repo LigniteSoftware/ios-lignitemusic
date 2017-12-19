@@ -161,7 +161,7 @@
 	self.playlists = [NSArray arrayWithArray:mutablePlaylistArray];
 }
 
-- (void)loadPlaylists {
+- (void)reloadPlaylists {
 	NSMutableArray *playlistsMutableArray = [NSMutableArray new];
 	
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
@@ -255,7 +255,7 @@
 	self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 	self.imageCache = [[SDImageCache alloc] initWithNamespace:LMPlaylistManagerImageCacheNamespaceKey];
 	
-	[self loadPlaylists];
+	[self reloadPlaylists];
 
 	[self internalizeSystemPlaylists];
 	
