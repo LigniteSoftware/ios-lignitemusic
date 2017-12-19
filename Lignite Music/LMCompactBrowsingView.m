@@ -519,7 +519,7 @@
 	}
 
 	LMCollectionViewFlowLayout *flowLayout = (LMCollectionViewFlowLayout*)collectionView.collectionViewLayout;
-	NSLog(@"isDisplayingDetailView: %d/fixedCount: %d/amountOfOverflowingCellsForDetailView: %d", flowLayout.isDisplayingDetailView, (int)fixedCount, (int)flowLayout.amountOfOverflowingCellsForDetailView);
+//	NSLog(@"isDisplayingDetailView: %d/fixedCount: %d/amountOfOverflowingCellsForDetailView: %d", flowLayout.isDisplayingDetailView, (int)fixedCount, (int)flowLayout.amountOfOverflowingCellsForDetailView);
 	return flowLayout.isDisplayingDetailView ? (fixedCount+flowLayout.amountOfOverflowingCellsForDetailView+1) : fixedCount;
 }
 

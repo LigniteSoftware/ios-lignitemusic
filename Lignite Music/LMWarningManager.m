@@ -33,6 +33,11 @@
 }
 
 - (void)addWarning:(LMWarning*)warning {
+	if([self.warningsArray containsObject:warning]){
+		[self reloadWarningBar];
+		return;
+	}
+	
 	[self.warningsArray addObject:warning];
 	
 	[self reloadWarningBar];

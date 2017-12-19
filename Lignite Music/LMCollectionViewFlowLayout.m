@@ -68,10 +68,10 @@
 	NSInteger totalNumberOfItems = [self.collectionView.dataSource collectionView:self.collectionView numberOfItemsInSection:1]; //Section 1 returns the amount of items without the detail view
 	NSInteger overflow = self.indexOfDetailView-totalNumberOfItems;
 	
-	NSLog(@"total %ld overflow %ld index %ld from %@", (long)totalNumberOfItems, (long)overflow, (long)self.indexOfDetailView, self.collectionView.dataSource);
+//	NSLog(@"total %ld overflow %ld index %ld from %@", (long)totalNumberOfItems, (long)overflow, (long)self.indexOfDetailView, self.collectionView.dataSource);
 	
 	if(overflow < 0 || (overflow+self.indexOfDetailView-1 > totalNumberOfItems)){
-		NSLog(@"No fear, returning 0");
+//		NSLog(@"No fear, returning 0");
 		return 0;
 	}
 	

@@ -16,6 +16,7 @@
 #import "LMMusicPlayer.h"
 #import "LMSettings.h"
 #import "NSTimer+Blocks.h"
+#import "LMWarningManager.h"
 @import SDWebImage;
 
 /**
@@ -146,6 +147,16 @@
  */
 @property BOOL downloadingImages;
 
+/**
+ The warning manager for displaying progress of downloads.
+ */
+@property LMWarningManager *warningManager;
+
+/**
+ The warning for the download progress for the warning bar.
+ */
+@property LMWarning *downloadProgressWarning;
+
 @end
 
 @implementation LMImageManager
@@ -207,6 +218,8 @@
 	static dispatch_once_t token;
 	dispatch_once(&token, ^{
 		sharedImageManager = [self new];
+		sharedImageManager.warningManager = [LMWarningManager sharedWarningManager];
+		sharedImageManager.downloadProgressWarning = [LMWarning warningWithText:@"Searching..." priority:LMWarningPriorityLow];
 	});
 	return sharedImageManager;
 }
@@ -251,16 +264,6 @@
 
 - (BOOL)highQualityImages {
     return NO;
-    
-//	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-//	
-//	BOOL highQuality = NO;
-//	
-//	if([userDefaults objectForKey:LMSettingsKeyHighQualityImages]){
-//		highQuality = [userDefaults boolForKey:LMSettingsKeyHighQualityImages];
-//	}
-//	
-//	return highQuality;
 }
 
 - (void)highQualityImagesOptionDidChange {
@@ -610,9 +613,13 @@
 			return;
 		}
 		
-		if(imageManager.trackDownloadQueue.count < 1){
+		if(imageManager.trackDownloadQueue.count < 1){ //Complete :)
 			[imageManager.currentlyProcessingCategoryArray removeObject:@(LMImageManagerCategoryAlbumImages)];
 			[imageManager.currentlyProcessingCategoryArray removeObject:@(LMImageManagerCategoryArtistImages)];
+			
+			dispatch_async(dispatch_get_main_queue(), ^{
+				[self.warningManager removeWarning:self.downloadProgressWarning];
+			});
 			return;
 		}
 		
@@ -622,6 +629,10 @@
 		LMImageManagerConditionLevel currentConditionLevel = [imageManager conditionLevelForDownloading];
 		
 		if(currentConditionLevel != LMImageManagerConditionLevelOptimal){
+			dispatch_async(dispatch_get_main_queue(), ^{
+				[self.warningManager removeWarning:self.downloadProgressWarning];
+			});
+			
 			self.downloadingImages = NO;
 			
 			[imageManager.trackDownloadQueue removeAllObjects];
@@ -635,6 +646,11 @@
 			return;
 		}
 		
+		dispatch_async(dispatch_get_main_queue(), ^{
+			self.downloadProgressWarning.text = [NSString stringWithFormat:NSLocalizedString(@"DownloadingImages", nil), self.trackDownloadQueue.count];
+			[self.warningManager addWarning:self.downloadProgressWarning];
+		});
+
 		if(imageManager.trackDownloadQueue.count > 0){
 			[imageManager.trackDownloadQueue removeObjectAtIndex:0];
 		}
@@ -651,6 +667,10 @@
 		}
 		else{
 			self.downloadingImages = NO;
+			
+			dispatch_async(dispatch_get_main_queue(), ^{
+				[self.warningManager removeWarning:self.downloadProgressWarning];
+			});
 		}
 		
 		imageManager.lastImageDownloadTime = currentDownloadTime;
@@ -658,8 +678,8 @@
 }
 
 - (void)beginDownloadingImagesForCategory:(LMImageManagerCategory)category {
-	return;
-#warning image downloading is disabled
+//	return;
+//#warning image downloading is disabled
 	
 	NSLog(@"[LMImageManager]: Will begin the process for downloading images for category %d.", category);
 	
@@ -671,8 +691,11 @@
 	
 	NSLog(@"Processing category %d (%ld items).", category, collectionsAssociated.count);
 	
-	for(int i = 0; i < collectionsAssociated.count; i++){
-		[NSTimer scheduledTimerWithTimeInterval:0.03*i block:^{ //I have no clue why on iOS 11 there was a lockup, where when more than 60 asyncs were created requesting album art it would lock up. Fuck.
+//	int countUsing = (int)MIN(10, collectionsAssociated.count);
+	int countUsing = (int)collectionsAssociated.count;
+	
+	for(int i = 0; i < countUsing; i++){
+		[NSTimer scheduledTimerWithTimeInterval:0.05*i block:^{ //I have no clue why on iOS 11 there was a lockup, where when more than 60 asyncs were created requesting album art it would lock up. Fuck.
 			LMMusicTrackCollection *collection = [collectionsAssociated objectAtIndex:i];
 			LMMusicTrack *representativeTrack = collection.representativeItem;
 			
@@ -692,7 +715,7 @@
 											  }
 											  
 											  //Since this should mean we're at least part way through the list (since it's asynchronus), we can know with fairly high confidence that there will be some items in the queue, so we can start downloading them since we don't actually start downloading instantly.
-											  if(i == collectionsAssociated.count-1 && !self.downloadingImages){
+											  if(i == countUsing-1 && !self.downloadingImages){
 												  [self downloadNextImageInQueue];
 											  }
 										  }];
