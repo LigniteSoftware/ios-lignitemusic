@@ -305,7 +305,7 @@
 	UIView *checkmarkPaddedView = [UIView newAutoLayoutView];
 	
 	LMCircleView *checkmarkView = [LMCircleView newAutoLayoutView];
-	checkmarkView.backgroundColor = selected ? [LMColour mainColour] : [LMColour lightGrayBackgroundColour];
+	checkmarkView.backgroundColor = selected ? [LMColour mainColour] : [LMColour lightGreyBackgroundColour];
 	
 	[checkmarkPaddedView addSubview:checkmarkView];
 	

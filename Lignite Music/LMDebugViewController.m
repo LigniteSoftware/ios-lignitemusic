@@ -136,7 +136,7 @@
 	self.titleLabel.textAlignment = NSTextAlignmentCenter;
 	[self.scrollView addSubview:self.titleLabel];
 	
-	[self.titleLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.scrollView withOffset:88];
+	[self.titleLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.scrollView withOffset:14];
 	[self.titleLabel autoSetDimension:ALDimensionWidth toSize:self.view.frame.size.width];
 	
 	

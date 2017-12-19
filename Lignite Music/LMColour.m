@@ -116,14 +116,14 @@
 }
 
 + (UIColor*)verticalControlBarGrayColour {
-	return [LMColour lightGrayBackgroundColour];
+	return [LMColour lightGreyBackgroundColour];
 }
 
 + (UIColor*)fadedColour {
 	return [UIColor colorWithRed:1.00 green: 1.00 blue: 1.00 alpha: 0.35];
 }
 
-+ (UIColor*)lightGrayBackgroundColour {
++ (UIColor*)lightGreyBackgroundColour {
 	return [UIColor colorWithRed:0.79 green:0.79 blue:0.79 alpha:1.0];
 }
 

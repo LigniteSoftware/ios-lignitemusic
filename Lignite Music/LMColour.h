@@ -73,7 +73,7 @@
 
  @return The light gray.
  */
-+ (UIColor*)lightGrayBackgroundColour;
++ (UIColor*)lightGreyBackgroundColour;
 
 /**
  The dark gray colour currently used within the search bar.

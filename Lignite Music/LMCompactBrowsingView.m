@@ -1077,7 +1077,6 @@
 		
 		
 		self.collectionView = [[UICollectionView alloc]initWithFrame:CGRectZero collectionViewLayout:fuck];
-		self.collectionView.prefetchingEnabled = NO;
 		self.collectionView.translatesAutoresizingMaskIntoConstraints = NO;
 		self.collectionView.delegate = self;
 		self.collectionView.dataSource = self;

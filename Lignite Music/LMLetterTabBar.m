@@ -52,13 +52,22 @@
 @synthesize lettersDictionary = _lettersDictionary;
 
 - (void)reloadWithSize:(CGSize)size {
+	if(size.height == 0 || size.width == 0){
+		
+	}
 	[NSTimer scheduledTimerWithTimeInterval:0.25 block:^{
 		BOOL isLandscape = (size.width > size.height);
 		if([LMLayoutManager isiPad]){
 			isLandscape = NO;
 		}
 		
-		CGFloat fontSize = (isLandscape ? size.width : size.height)/2.25;
+		CGFloat fontSize = (MIN(size.width, size.height))/2.25;
+		
+		if(fontSize < 5){
+			fontSize = 20;
+		}
+		
+		NSLog(@"Fontsize %f to %@", fontSize, NSStringFromCGSize(size));
 		
 		for(UILabel *label in self.letterViewsArray){
 			label.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:fontSize]; //.50 for W;
@@ -75,22 +84,21 @@
 - (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
 	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		
-		BOOL isLandscape = (size.width > size.height);
-		if([LMLayoutManager isiPad]){
-			isLandscape = NO;
-		}
+//		BOOL isLandscape = (size.width > size.height);
+//		if([LMLayoutManager isiPad]){
+//			isLandscape = NO;
+//		}
 		
-		for(UILabel *label in self.letterViewsArray){
-			label.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:(isLandscape ? self.frame.size.width : self.frame.size.height
-																		   )/2.25]; //.50 for W;
-			self.letterScrollView.adaptForWidth = !isLandscape;
+//		for(UILabel *label in self.letterViewsArray){
+//			label.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:(isLandscape ? self.frame.size.width : self.frame.size.height)/2.25]; //.50 for W;
+//			self.letterScrollView.adaptForWidth = !isLandscape;
 			[self.letterScrollView reload];
-		}
+//		}
 		
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		//Nothing...
 	
-		[self reloadWithSize:size];
+		[self reloadWithSize:self.frame.size];
 	}];
 }
 

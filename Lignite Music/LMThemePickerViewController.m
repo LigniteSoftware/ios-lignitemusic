@@ -165,12 +165,12 @@
 }
 
 - (void)notchPositionChanged:(LMNotchPosition)notchPosition {
-	[self.layoutManager adjustRootViewSubviewsForLandscapeNavigationBar:self.view];
+//	[self.layoutManager adjustRootViewSubviewsForLandscapeNavigationBar:self.view];
 	
 	UICollectionViewFlowLayout *flowLayout = (UICollectionViewFlowLayout*)self.collectionView.collectionViewLayout;
 	flowLayout.sectionInset
 		= UIEdgeInsetsMake(LMLayoutManager.isExtraSmall ? 5.0f : 5.0f,
-						   14.0f,
+						   (notchPosition == LMNotchPositionLeft) ? 44 : 14.0f,
 						   20.0f,
 						   (notchPosition == LMNotchPositionRight) ? 44 : 14);
 }

@@ -53,6 +53,7 @@
 #import "LMEnhancedPlaylistEditorViewController.h"
 #import "LMAppleWatchBridge.h"
 #import "LMThemePickerViewController.h"
+#import "LMWarningManager.h"
 
 #ifdef SPOTIFY
 #import "Spotify.h"
@@ -133,6 +134,8 @@ LMControlBarViewDelegate
 
 @property BOOL orientationChangedOutsideOfView;
 @property (readonly) BOOL requiresRefresh;
+
+@property LMWarningManager *warningManager;
 
 @end
 
@@ -1056,7 +1059,7 @@ LMControlBarViewDelegate
 }
 
 - (UINavigationItem*)navigationItem {
-	UIImageView *titleImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 64, 64)];
+	UIImageView *titleImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
 	titleImageView.contentMode = UIViewContentModeScaleAspectFit;
 	titleImageView.image = [LMAppIcon imageForIcon:LMIconNoAlbumArt75Percent];
 	titleImageView.userInteractionEnabled = YES;
@@ -1416,6 +1419,14 @@ LMControlBarViewDelegate
 	self.landscapeNavigationBar.layer.opacity = self.landscapeNavigationBar.hidden ? 0.0 : 1.0;
 	
 	
+	self.warningManager = [LMWarningManager sharedWarningManager];
+	[self.view addSubview:self.warningManager.warningBar];
+	
+	[self.warningManager.warningBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+	[self.warningManager.warningBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
+	[self.warningManager.warningBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+	[self.warningManager.warningBar autoSetDimension:ALDimensionHeight toSize:0.0f];
+	
 	
 	
 	self.compactView = [LMCompactBrowsingView newAutoLayoutView];
@@ -1430,8 +1441,9 @@ LMControlBarViewDelegate
 		self.pendingStateRestoredEnhancedPlaylistEditor.delegate = self.compactView;
 	}
 	
+	[self.compactView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.warningManager.warningBar];
+	
 	NSArray *compactViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-		[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 		[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 		[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
@@ -1440,7 +1452,6 @@ LMControlBarViewDelegate
 	
 	NSArray *compactViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 		[self.compactView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.view withOffset:landscapeNavigationBarWidth];
-		[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 		[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 		[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 	}];

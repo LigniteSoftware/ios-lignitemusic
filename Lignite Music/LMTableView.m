@@ -60,7 +60,7 @@
 		self.dividerSectionsToIgnore = @[ @(0) ];
 		self.bottomSpacing = 0;
 		
-		self.dividerColour = [LMColour lightGrayBackgroundColour];
+		self.dividerColour = [LMColour lightGreyBackgroundColour];
 		self.notHighlightedBackgroundColour = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.5];
 				
 		self.title = @"UnnamedLMTableView";
