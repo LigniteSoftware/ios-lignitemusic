@@ -55,7 +55,7 @@
 @property MPMediaQuery *bullshitQuery;
 
 /**
- It seems that sometimes even though the library change notification fires, the library is not updated. This will be called half a second after the final library change (or if a track is slow to sync that) to fire all delegates to ensure that data is properly synced.
+ Because library changes come in quick bursts, this timer waits for the bursts to finish and then calls any delegates which are registered for library change notifications.
  */
 @property NSTimer *libraryChangeTimer;
 
@@ -477,14 +477,28 @@ MPMediaGrouping associatedMediaTypes[] = {
 	return NO;
 }
 
-- (void)mediaLibraryContentsChanged:(id)notification {
-	NSLog(@"Library changed, called by %@!!!", [[notification class] description]);
-	
+- (void)notifyLibraryChangeDelegatesOfLibraryChange:(BOOL)finished {
 	for(id<LMMusicPlayerDelegate> delegate in self.delegates){
-		if([delegate respondsToSelector:@selector(musicLibraryDidChange)]){
-			[delegate musicLibraryDidChange];
+		if([delegate respondsToSelector:@selector(musicLibraryChanged:)]){
+			[delegate musicLibraryChanged:finished];
 		}
 	}
+}
+
+- (void)mediaLibraryContentsChanged:(id)notification {
+	NSLog(@"Library changed");
+	
+	if(self.libraryChangeTimer){
+		[self.libraryChangeTimer invalidate];
+	}
+	
+	[self notifyLibraryChangeDelegatesOfLibraryChange:NO];
+	
+	self.libraryChangeTimer = [NSTimer scheduledTimerWithTimeInterval:5.0f block:^{
+		NSLog(@"Done syncing library");
+		
+		[self notifyLibraryChangeDelegatesOfLibraryChange:YES];
+	} repeats:NO];
 }
 
 - (void)addMusicDelegate:(id<LMMusicPlayerDelegate>)newDelegate {
@@ -751,9 +765,9 @@ BOOL shuffleForDebug = NO;
 	
 	NSMutableArray *fixedCollections = [NSMutableArray arrayWithArray:[collections sortedArrayUsingDescriptors:@[albumSort]]];
 	
-	int i = 0;
+	int i = 0; //for debugging
 	for(LMMusicTrackCollection *collection in fixedCollections){
-		NSLog(@"Checking collection %d of %d", i, (int)collection.count);
+//		NSLog(@"Checking collection %d of %d", i, (int)collection.count);
 		if(collection.count == 0){
 			[collections removeObject:collection];
 		}

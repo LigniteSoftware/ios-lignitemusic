@@ -111,9 +111,11 @@ typedef enum {
 - (void)musicCurrentPlaybackTimeDidChange:(NSTimeInterval)newPlaybackTime userModified:(BOOL)userModified;
 
 /**
- The music library did change. When this is called, the object subscribed to this method should reload any media collections or queries it has and redraw any according layers.
+ The music library changed.
+ 
+ @param finished Whether or not the sync has complete. If finished, views should resync music collections and reload their collections.
  */
-- (void)musicLibraryDidChange;
+- (void)musicLibraryChanged:(BOOL)finished;
 
 /**
  The output port of the music changed.

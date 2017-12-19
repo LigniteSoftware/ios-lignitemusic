@@ -46,6 +46,8 @@
  
  */
 
+"SyncingLibrary" = "Your music library is currently syncing.";
+
 "DownloadingImages" = "Downloading artist images, %ld left.";
 "DownloadImagesOnDataWarning" = "Tap here to download artist images.";
 

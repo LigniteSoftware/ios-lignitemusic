@@ -295,8 +295,8 @@
 			
 			tiledAlbumCoverView.uniqueAlbumCoversDictionary = [tiledAlbumCoverView uniqueAlbumsInCollection];
 			
-            NSLog(@"Got %ld tiled covers", tiledAlbumCoverView.uniqueAlbumCoversDictionary.count);
-            
+//            NSLog(@"Got %ld tiled covers", tiledAlbumCoverView.uniqueAlbumCoversDictionary.count);
+			
 			if(![generationKey isEqualToString:tiledAlbumCoverView.generationKey]){
 				NSLog(@"Outdated, rejecting %@", generationKey);
 				return;
@@ -363,7 +363,7 @@
 				[tiledAlbumCoverView addSubview:tiledAlbumCoverView.rootView];
 				
 				for(UIView *subview in tiledAlbumCoverView.subviews){
-					NSLog(@"Subview %@", subview);
+//					NSLog(@"Subview %@", subview);
 					if([subview class] == [LMEditView class]){
 						NSLog(@"Is edit view");
 						tiledAlbumCoverView.tapToEditView = subview;

@@ -163,7 +163,7 @@
 				
 				LMTiledAlbumCoverView *tiledAlbumCover = nil;
 				for(UIView *subview in [rootImageView subviews]){
-					NSLog(@"Subview %@", [subview class]);
+//					NSLog(@"Subview %@", [subview class]);
 					if([subview class] == [LMTiledAlbumCoverView class]){
 						tiledAlbumCover = (LMTiledAlbumCoverView*)subview;
 					}

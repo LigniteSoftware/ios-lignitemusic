@@ -48,6 +48,9 @@
  
  */
 
+"DownloadingImages" = "Herunterladen von Künstler Fotos, %ld übrig.";
+"DownloadImagesOnDataWarning" = "Hier tippen, um Künstler Fotos herunterzuladen.";
+
 "NoPlaylists" = "Ups, du hast noch keine Wiedergabeliste erstellt!\n\nErstelle eine neue Liste durch das Tippen auf den entsprechenden Button oben.";
 
 "EnablePebbleTitle" = "Pebble Zugriff gewähren";

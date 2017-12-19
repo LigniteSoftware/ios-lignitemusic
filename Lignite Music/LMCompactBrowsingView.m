@@ -254,7 +254,7 @@
 				
 				LMTiledAlbumCoverView *tiledAlbumCover = nil;
 				for(UIView *subview in [rootImageView subviews]){
-					NSLog(@"Subview %@", [subview class]);
+//					NSLog(@"Subview %@", [subview class]);
 					if([subview class] == [LMTiledAlbumCoverView class]){
 						tiledAlbumCover = (LMTiledAlbumCoverView*)subview;
 					}
@@ -283,9 +283,9 @@
                 LMTiledAlbumCoverView *tiledAlbumCover = [shadowView subviews].firstObject;
                 tiledAlbumCover.musicCollection = collection;
 				
-				for(UIView *subview in shadowView.subviews){
-					NSLog(@"Subview %@", subview);
-				}
+//				for(UIView *subview in shadowView.subviews){
+//					NSLog(@"Subview %@", subview);
+//				}
 				
                 return shadowView;
             }

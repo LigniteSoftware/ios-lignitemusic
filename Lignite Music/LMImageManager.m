@@ -631,7 +631,7 @@
 			[imageManager.currentlyProcessingCategoryArray removeObject:@(LMImageManagerCategoryArtistImages)];
 			
 			dispatch_async(dispatch_get_main_queue(), ^{
-				[self.warningManager removeWarning:self.downloadProgressWarning];
+				[imageManager.warningManager removeWarning:imageManager.downloadProgressWarning];
 			});
 			return;
 		}
@@ -643,10 +643,10 @@
 		
 		if(currentConditionLevel != LMImageManagerConditionLevelOptimal){
 			dispatch_async(dispatch_get_main_queue(), ^{
-				[self.warningManager removeWarning:self.downloadProgressWarning];
+				[imageManager.warningManager removeWarning:imageManager.downloadProgressWarning];
 			});
 			
-			self.downloadingImages = NO;
+			imageManager.downloadingImages = NO;
 			
 //			[imageManager.trackDownloadQueue removeAllObjects];
 //			[imageManager.categoryDownloadQueue removeAllObjects];
@@ -660,8 +660,8 @@
 		}
 		
 		dispatch_async(dispatch_get_main_queue(), ^{
-			self.downloadProgressWarning.text = [NSString stringWithFormat:NSLocalizedString(@"DownloadingImages", nil), self.trackDownloadQueue.count];
-			[self.warningManager addWarning:self.downloadProgressWarning];
+			imageManager.downloadProgressWarning.text = [NSString stringWithFormat:NSLocalizedString(@"DownloadingImages", nil), imageManager.trackDownloadQueue.count];
+			[imageManager.warningManager addWarning:imageManager.downloadProgressWarning];
 		});
 
 		if(imageManager.trackDownloadQueue.count > 0){
@@ -679,10 +679,10 @@
 			[imageManager downloadNextImageInQueue];
 		}
 		else{
-			self.downloadingImages = NO;
+			imageManager.downloadingImages = NO;
 			
 			dispatch_async(dispatch_get_main_queue(), ^{
-				[self.warningManager removeWarning:self.downloadProgressWarning];
+				[imageManager.warningManager removeWarning:imageManager.downloadProgressWarning];
 			});
 		}
 		

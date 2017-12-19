@@ -167,7 +167,7 @@
 				LMView *lmView = (LMView*)view;
 				if([lmView.identifier isEqualToString:@"accessoryView"]){
 					for(NSLayoutConstraint *contentViewConstraint in cell.contentView.constraints){
-						NSLog(@"%@", contentViewConstraint);
+//						NSLog(@"%@", contentViewConstraint);
 						if(contentViewConstraint.firstItem == lmView
 						   && contentViewConstraint.firstAttribute == NSLayoutAttributeTrailing
 						   && contentViewConstraint.secondAttribute == NSLayoutAttributeTrailing){

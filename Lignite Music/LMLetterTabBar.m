@@ -67,7 +67,7 @@
 			fontSize = 20;
 		}
 		
-		NSLog(@"Fontsize %f to %@", fontSize, NSStringFromCGSize(size));
+//		NSLog(@"Fontsize %f to %@", fontSize, NSStringFromCGSize(size));
 		
 		for(UILabel *label in self.letterViewsArray){
 			label.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:fontSize]; //.50 for W;

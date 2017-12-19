@@ -136,6 +136,7 @@ LMControlBarViewDelegate
 
 @property LMWarningManager *warningManager;
 @property LMWarning *downloadImagesOnDataOrLowStorageWarning;
+@property LMWarning *librarySyncingWarning;
 
 @end
 
@@ -153,6 +154,18 @@ LMControlBarViewDelegate
 	}
 	
 	return NO;
+}
+
+- (void)musicLibraryChanged:(BOOL)finished {
+	if(!finished && !self.librarySyncingWarning){
+		self.librarySyncingWarning = [LMWarning warningWithText:NSLocalizedString(@"SyncingLibrary", nil) priority:LMWarningPriorityHigh];
+		[self.warningManager addWarning:self.librarySyncingWarning];
+	}
+	else if(finished){
+		[self.warningManager removeWarning:self.librarySyncingWarning];
+		
+		self.librarySyncingWarning = nil;
+	}
 }
 
 //- (NSLayoutConstraint*)buttonNavigationBarHeightConstraint {
