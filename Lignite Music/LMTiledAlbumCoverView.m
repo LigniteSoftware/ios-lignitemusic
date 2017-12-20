@@ -303,7 +303,7 @@
 			}
 			
 			dispatch_async(dispatch_get_main_queue(), ^{
-				float amountOfTiles = tiledAlbumCoverView.uniqueAlbumCoversDictionary.count - (tiledAlbumCoverView.uniqueAlbumCoversDictionary.count % 4); //Round the number off to a multiple of four
+				CGFloat amountOfTiles = tiledAlbumCoverView.uniqueAlbumCoversDictionary.count - (tiledAlbumCoverView.uniqueAlbumCoversDictionary.count % 4); //Round the number off to a multiple of four
 				if(amountOfTiles < 4){
 					amountOfTiles = 4;
 				}
@@ -312,22 +312,22 @@
 				
 				tiledAlbumCoverView.amountOfAlbumsShowing = amountOfTiles;
 				
-				float smallerDimension = MIN(tiledAlbumCoverView.frame.size.width, tiledAlbumCoverView.frame.size.height);
-				float largerDimension = MAX(tiledAlbumCoverView.frame.size.width, tiledAlbumCoverView.frame.size.height);
-				float differencePercentage = smallerDimension/largerDimension;
+				CGFloat smallerDimension = MIN(tiledAlbumCoverView.frame.size.width, tiledAlbumCoverView.frame.size.height);
+				CGFloat largerDimension = MAX(tiledAlbumCoverView.frame.size.width, tiledAlbumCoverView.frame.size.height);
+				CGFloat differencePercentage = smallerDimension/largerDimension;
 				BOOL maintainSquare = differencePercentage > 0.75;
 				//		BOOL smallerDimensionIsWidth = (smallerDimension == tiledAlbumCoverView.frame.size.width);
 				
-				float widthToUse = maintainSquare ? smallerDimension : tiledAlbumCoverView.frame.size.width;
-				float heightToUse = maintainSquare ? smallerDimension : tiledAlbumCoverView.frame.size.height;
+				CGFloat widthToUse = maintainSquare ? smallerDimension : tiledAlbumCoverView.frame.size.width;
+				CGFloat heightToUse = maintainSquare ? smallerDimension : tiledAlbumCoverView.frame.size.height;
 				
 //				if(maintainSquare){
 //					largerDimension = smallerDimension;
 //				}
 				
-				float areaTotal = widthToUse * heightToUse;
-				float areaPerTile = areaTotal/amountOfTiles;
-				float sideLength = sqrtf(areaPerTile);
+				CGFloat areaTotal = widthToUse * heightToUse;
+				CGFloat areaPerTile = areaTotal/amountOfTiles;
+				CGFloat sideLength = sqrtf(areaPerTile);
 				
 				int amountOfTilesX = (int)floorf(widthToUse/sideLength);
 				int amountOfTilesY = (int)floorf(heightToUse/sideLength);
@@ -397,7 +397,7 @@
 						//				NSLog(@"Index of tile %d Column %d Row %d", tileIndex, x, y);
 						
 						UIImageView *testView = [UIImageView new];
-						testView.backgroundColor = [UIColor whiteColor]; //[UIColor colorWithRed:0.2*((float)(arc4random_uniform(5))+1.0) green:0.2*((float)(arc4random_uniform(5))+1.0) blue:0.2*((float)(arc4random_uniform(5))+1.0) alpha:1.0];
+						testView.backgroundColor = [UIColor whiteColor]; //[UIColor colorWithRed:0.2*((CGFloat)(arc4random_uniform(5))+1.0) green:0.2*((CGFloat)(arc4random_uniform(5))+1.0) blue:0.2*((CGFloat)(arc4random_uniform(5))+1.0) alpha:1.0];
 						//				testView.image = [LMAppIcon imageForIcon:LMIconNoAlbumArt];
 						testView.contentMode = UIViewContentModeScaleAspectFit;
 						[tiledAlbumCoverView.rootView addSubview:testView];
@@ -478,7 +478,7 @@
 								UIImageView *topLeftCornerView = [tiledAlbumCoverView.tilesArray objectAtIndex:finalIndex];
 								
 								UIImageView *bigTileView = [UIImageView new];
-								bigTileView.backgroundColor = [UIColor whiteColor]; //[UIColor colorWithRed:0.2*((float)(arc4random_uniform(5))+1.0) green:0.2*((float)(arc4random_uniform(5))+1.0) blue:0.2*((float)(arc4random_uniform(5))+1.0) alpha:1.0];
+								bigTileView.backgroundColor = [UIColor whiteColor]; //[UIColor colorWithRed:0.2*((CGFloat)(arc4random_uniform(5))+1.0) green:0.2*((CGFloat)(arc4random_uniform(5))+1.0) blue:0.2*((CGFloat)(arc4random_uniform(5))+1.0) alpha:1.0];
 								[tiledAlbumCoverView.rootView addSubview:bigTileView];
 								
 								CGSize bigTileViewSize = CGSizeMake(tileSize.height*2, tileSize.height*2);

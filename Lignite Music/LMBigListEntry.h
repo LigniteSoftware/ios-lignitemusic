@@ -30,7 +30,7 @@
  @param bigListEntry The big list entry.
  @return The content factorial.
  */
-- (float)contentSubviewFactorial:(BOOL)height forBigListEntry:(LMBigListEntry*)bigListEntry;
+- (CGFloat)contentSubviewFactorial:(BOOL)height forBigListEntry:(LMBigListEntry*)bigListEntry;
 
 /**
  Is called when the size to the big list entry changes. This should only happen when the UIControlBarView changes its size in portrait.
@@ -39,7 +39,7 @@
  @param withHeight The new height of the big list entry.
  @param bigListEntry The big list entry.
  */
-- (void)sizeChangedToLargeSize:(BOOL)largeSize withHeight:(float)newHeight forBigListEntry:(LMBigListEntry*)bigListEntry;
+- (void)sizeChangedToLargeSize:(BOOL)largeSize withHeight:(CGFloat)newHeight forBigListEntry:(LMBigListEntry*)bigListEntry;
 
 @optional
 
@@ -76,8 +76,8 @@
  *
  
  - (id)contentSubviewForBigListEntry:(LMBigListEntry*)bigListEntry;
- - (float)contentSubviewFactorial:(BOOL)height forBigListEntry:(LMBigListEntry*)bigListEntry;
- - (void)sizeChangedToLargeSize:(BOOL)largeSize withHeight:(float)newHeight forBigListEntry:(LMBigListEntry*)bigListEntry;
+ - (CGFloat)contentSubviewFactorial:(BOOL)height forBigListEntry:(LMBigListEntry*)bigListEntry;
+ - (void)sizeChangedToLargeSize:(BOOL)largeSize withHeight:(CGFloat)newHeight forBigListEntry:(LMBigListEntry*)bigListEntry;
  
  - (void)contentViewTappedForBigListEntry:(LMBigListEntry*)bigListEntry;
  - (void)contentViewDoubleTappedForBigListEntry:(LMBigListEntry*)bigListEntry;

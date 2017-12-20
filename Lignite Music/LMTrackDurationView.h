@@ -15,7 +15,7 @@
 
 @protocol LMTrackDurationDelegate <NSObject>
 
-- (void)seekSliderValueChanged:(float)newValue isFinal:(BOOL)isFinal;
+- (void)seekSliderValueChanged:(CGFloat)newValue isFinal:(BOOL)isFinal;
 
 @end
 

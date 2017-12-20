@@ -117,13 +117,13 @@
 				[buttonAreaView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 				[buttonAreaView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 				[buttonAreaView autoPinEdge:ALEdgeTop toEdge:isFirstBackground ? ALEdgeTop : ALEdgeBottom ofView:isFirstBackground ? self.buttonBackgroundView : lastBackgroundView];
-				[buttonAreaView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.buttonBackgroundView withMultiplier:(1.0/(float)amountOfItemsForControlBar)];
+				[buttonAreaView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.buttonBackgroundView withMultiplier:(1.0/(CGFloat)amountOfItemsForControlBar)];
 			}
 			else{
 				[buttonAreaView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 				[buttonAreaView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 				[buttonAreaView autoPinEdge:ALEdgeLeading toEdge:isFirstBackground ? ALEdgeLeading : ALEdgeTrailing ofView:isFirstBackground ? self.buttonBackgroundView : lastBackgroundView];
-				[buttonAreaView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.buttonBackgroundView withMultiplier:(1.0/(float)amountOfItemsForControlBar)];
+				[buttonAreaView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.buttonBackgroundView withMultiplier:(1.0/(CGFloat)amountOfItemsForControlBar)];
 			}
 			
 			UIView *buttonBackgroundView = [UIImageView newAutoLayoutView];

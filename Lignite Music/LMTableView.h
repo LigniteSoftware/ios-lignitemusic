@@ -32,7 +32,7 @@
  @param tableView The table view which is requesting the height.
  @return The height.
  */
-- (float)heightAtIndex:(NSUInteger)index forTableView:(LMTableView*)tableView;
+- (CGFloat)heightAtIndex:(NSUInteger)index forTableView:(LMTableView*)tableView;
 
 /**
  Gets the spacing at a certain index for the table view.
@@ -41,7 +41,7 @@
  @param tableView The table view which is requesting the spacing.
  @return The spacing.
  */
-- (float)spacingAtIndex:(NSUInteger)index forTableView:(LMTableView*)tableView;
+- (CGFloat)spacingAtIndex:(NSUInteger)index forTableView:(LMTableView*)tableView;
 
 /**
  Tells the delegate the amount of objects which are required for the table view. This will only be called upon when the amount of objects changes. The delegate should reload associated data and be prepared to pass new subviews in through subviewAtIndex:.
@@ -55,8 +55,8 @@
  * Quick copy and paste
  *
 - (id)subviewAtIndex:(NSUInteger)index forTableView:(LMTableView*)tableView;
-- (float)heightAtIndex:(NSUInteger)index forTableView:(LMTableView*)tableView;
-- (float)spacingAtIndex:(NSUInteger)index forTableView:(LMTableView*)tableView;
+- (CGFloat)heightAtIndex:(NSUInteger)index forTableView:(LMTableView*)tableView;
+- (CGFloat)spacingAtIndex:(NSUInteger)index forTableView:(LMTableView*)tableView;
 - (void)amountOfObjectsRequiredChangedTo:(NSUInteger)amountOfObjects forTableView:(LMTableView*)tableView;
  */
 
@@ -77,7 +77,7 @@
 /**
  The average height of a cell. This will be used to calculate the amount of objects which are required for the table view. Must be set before any generation occurs.
  */
-@property float averageCellHeight;
+@property CGFloat averageCellHeight;
 
 /**
  The total amount of objects which this table view will be required to display. This will be used for the count of the amount of cells being displayed and other data. Must be set before any generation occurs.

@@ -360,7 +360,7 @@
 }
 
 - (void)session:(WCSession *)session didReceiveMessage:(NSDictionary<NSString *, id> *)message {
-	
+	NSLog(@"[LMAppleWatchBridge]: Unexpectedly got message: %@", message);
 }
 
 - (NSArray<LMMusicTrackCollection*>*)trackCollectionsForBrowsingDictionary:(NSDictionary*)browsingDictionary {
@@ -732,6 +732,9 @@
 }
 
 + (LMAppleWatchBridge*)sharedAppleWatchBridge {
+#warning apple watch is disabled
+	return nil;
+	
 	static LMAppleWatchBridge *sharedAppleWatchBridge;
 	static dispatch_once_t token;
 	dispatch_once(&token, ^{

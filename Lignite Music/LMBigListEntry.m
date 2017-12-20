@@ -83,7 +83,7 @@
 	return self;
 }
 
-+ (float)sizeForBigListEntryWhenOpened:(BOOL)opened forDelegate:(id<LMBigListEntryDelegate>)delegate {
++ (CGFloat)sizeForBigListEntryWhenOpened:(BOOL)opened forDelegate:(id<LMBigListEntryDelegate>)delegate {
 	float contentViewHeightFactorial = [delegate contentSubviewFactorial:YES forBigListEntry:nil];
 	float infoViewHeightFactorial = (1.0/9.0);
 	

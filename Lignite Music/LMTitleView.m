@@ -381,7 +381,7 @@
 	}
 }
 
-- (float)heightAtIndex:(NSUInteger)index forTableView:(LMTableView *)tableView {
+- (CGFloat)heightAtIndex:(NSUInteger)index forTableView:(LMTableView *)tableView {
 	return LMLayoutManager.standardListEntryHeight;
 }
 
@@ -413,7 +413,7 @@
 	return indexOfEntry;
 }
 
-- (float)spacingAtIndex:(NSUInteger)index forTableView:(LMTableView *)tableView {
+- (CGFloat)spacingAtIndex:(NSUInteger)index forTableView:(LMTableView *)tableView {
 	if(index == 0){
 		return 10;
 	}

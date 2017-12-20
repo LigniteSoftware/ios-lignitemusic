@@ -213,7 +213,10 @@
 	
 	[self.queue cancelAllOperations];
 	
-	BOOL noTrackPlaying = ![self.musicPlayer hasTrackLoaded];
+//	return;
+	
+	BOOL noTrackPlaying = newTrack == nil;
+	
 	
 	__block NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
 		UIImage *albumArt = [newTrack albumArt];
@@ -298,41 +301,46 @@
     [self.progressSlider reset];
     self.progressSlider.value = timeToUse;
 	
-	self.queueTableView.totalAmountOfObjects = self.musicPlayer.nowPlayingCollection.count;
-	[self.queueTableView reloadSubviewData];
-    [self.queueTableView reloadData];
-	
-	LMListEntry *highlightedEntry = nil;
-	int newHighlightedIndex = -1;
-	for(int i = 0; i < self.musicPlayer.nowPlayingCollection.count; i++){
-		LMMusicTrack *track = [self.musicPlayer.nowPlayingCollection.items objectAtIndex:i];
-		LMListEntry *entry = [self listEntryForIndex:i];
-		LMMusicTrack *entryTrack = entry.associatedData;
-		
-		if(entryTrack.persistentID == newTrack.persistentID){
-			highlightedEntry = entry;
-		}
-		
-		if(track.persistentID == newTrack.persistentID){
-			newHighlightedIndex = i;
-		}
-	}
-	
-//	NSLog(@"New highlighted %d previous %ld", newHighlightedIndex, (long)self.currentlyHighlighted);
-	
-	LMListEntry *previousHighlightedEntry = [self listEntryForIndex:self.currentlyHighlighted];
-	
-	self.currentlyHighlighted = newHighlightedIndex;
-	
-	if(![previousHighlightedEntry isEqual:highlightedEntry] || highlightedEntry == nil){
-		[previousHighlightedEntry changeHighlightStatus:NO animated:YES];
-	}
-	
-	if(highlightedEntry){
-		[highlightedEntry changeHighlightStatus:YES animated:YES];
-	}
-	
 	[self reloadFavouriteStatus];
+	
+#warning here it is :(
+	if(self.isUserFacing){
+		self.queueTableView.totalAmountOfObjects = self.musicPlayer.nowPlayingCollection.count;
+		[self.queueTableView reloadSubviewData];
+		[self.queueTableView reloadData];
+		
+		LMListEntry *highlightedEntry = nil;
+		int newHighlightedIndex = -1;
+		for(int i = 0; i < self.musicPlayer.nowPlayingCollection.count; i++){
+			LMMusicTrack *track = [self.musicPlayer.nowPlayingCollection.items objectAtIndex:i];
+			LMListEntry *entry = [self listEntryForIndex:i];
+			LMMusicTrack *entryTrack = entry.associatedData;
+			
+			if(entryTrack.persistentID == newTrack.persistentID && track.persistentID == newTrack.persistentID){
+				highlightedEntry = entry;
+				newHighlightedIndex = i;
+				break;
+			}
+			
+	//		if(track.persistentID == newTrack.persistentID){
+	//			newHighlightedIndex = i;
+	//		}
+		}
+		
+	//	NSLog(@"New highlighted %d previous %ld", newHighlightedIndex, (long)self.currentlyHighlighted);
+		
+		LMListEntry *previousHighlightedEntry = [self listEntryForIndex:self.currentlyHighlighted];
+		
+		self.currentlyHighlighted = newHighlightedIndex;
+		
+		if(![previousHighlightedEntry isEqual:highlightedEntry] || highlightedEntry == nil){
+			[previousHighlightedEntry changeHighlightStatus:NO animated:YES];
+		}
+		
+		if(highlightedEntry){
+			[highlightedEntry changeHighlightStatus:YES animated:YES];
+		}
+	}
 }
 
 
@@ -607,6 +615,8 @@
 }
 
 - (void)amountOfObjectsRequiredChangedTo:(NSUInteger)amountOfObjects forTableView:(LMTableView *)tableView {
+//	return;
+	
 //	NSLog(@"Required! %d", (int)amountOfObjects);
 	
     if(!self.itemArray){
@@ -702,7 +712,7 @@
 	}
 }
 
-- (float)heightAtIndex:(NSUInteger)index forTableView:(LMTableView *)tableView {
+- (CGFloat)heightAtIndex:(NSUInteger)index forTableView:(LMTableView *)tableView {
 	return LMLayoutManager.standardListEntryHeight;
 }
 
@@ -734,7 +744,7 @@
 	return indexOfEntry;
 }
 
-- (float)spacingAtIndex:(NSUInteger)index forTableView:(LMTableView *)tableView {
+- (CGFloat)spacingAtIndex:(NSUInteger)index forTableView:(LMTableView *)tableView {
 	return 10;
 }
 
@@ -1003,6 +1013,7 @@
 	
 	self.queueTableView = [LMTableView newAutoLayoutView];
 	self.queueTableView.totalAmountOfObjects = self.musicPlayer.nowPlayingCollection.count;
+	self.queueTableView.averageCellHeight = [LMLayoutManager standardListEntryHeight] * 0.70;
 	self.queueTableView.subviewDataSource = self;
 	self.queueTableView.shouldUseDividers = YES;
 	self.queueTableView.title = @"QueueTableView";

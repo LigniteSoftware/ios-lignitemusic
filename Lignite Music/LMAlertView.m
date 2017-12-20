@@ -209,7 +209,7 @@
 		
 		NSArray *optionButtonLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 			CGFloat paddingMultiplier = landscapePadding/properDimension;
-			CGFloat sizeMultiplier = (1.0/(float)self.alertOptionColours.count) - paddingMultiplier;
+			CGFloat sizeMultiplier = (1.0/(CGFloat)self.alertOptionColours.count) - paddingMultiplier;
 			
 			[optionButton autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(1.0/8.0)];
 			[optionButton autoPinEdgeToSuperviewEdge:ALEdgeBottom];

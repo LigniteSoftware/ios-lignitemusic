@@ -27,7 +27,7 @@
 
 @implementation LMBigListEntryTableView
 
-- (void)sizeChangedToLargeSize:(BOOL)largeSize withHeight:(float)newHeight forBigListEntry:(LMBigListEntry *)bigListEntry {
+- (void)sizeChangedToLargeSize:(BOOL)largeSize withHeight:(CGFloat)newHeight forBigListEntry:(LMBigListEntry *)bigListEntry {
 	
 }
 
@@ -66,11 +66,11 @@
 	return bigListEntry;
 }
 
-- (float)heightAtIndex:(NSUInteger)index forTableView:(LMTableView*)tableView {
+- (CGFloat)heightAtIndex:(NSUInteger)index forTableView:(LMTableView*)tableView {
 	return index == self.currentlyOpenedIndex ? self.largeSize : self.normalSize;
 }
 
-- (float)spacingAtIndex:(NSUInteger)index forTableView:(LMTableView*)tableView {
+- (CGFloat)spacingAtIndex:(NSUInteger)index forTableView:(LMTableView*)tableView {
 	return index == 0 ? 40 : 20;
 }
 
@@ -82,7 +82,7 @@
 	return contentSubview;
 }
 
-- (float)contentSubviewFactorial:(BOOL)height forBigListEntry:(LMBigListEntry *)bigListEntry {
+- (CGFloat)contentSubviewFactorial:(BOOL)height forBigListEntry:(LMBigListEntry *)bigListEntry {
 	return [self.delegate contentSubviewFactorial:height forBigListEntry:bigListEntry];
 }
 

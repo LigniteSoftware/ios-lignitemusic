@@ -173,11 +173,11 @@
 	return entry;
 }
 
-- (float)heightAtIndex:(NSUInteger)index forTableView:(LMTableView*)tableView {
+- (CGFloat)heightAtIndex:(NSUInteger)index forTableView:(LMTableView*)tableView {
 	return LMLayoutManager.standardListEntryHeight;
 }
 
-- (float)spacingAtIndex:(NSUInteger)index forTableView:(LMTableView*)tableView {
+- (CGFloat)spacingAtIndex:(NSUInteger)index forTableView:(LMTableView*)tableView {
 	return 10;
 }
 

@@ -370,11 +370,11 @@
     }
 }
 
-- (float)contentSubviewFactorial:(BOOL)height forBigListEntry:(LMBigListEntry *)bigListEntry {
+- (CGFloat)contentSubviewFactorial:(BOOL)height forBigListEntry:(LMBigListEntry *)bigListEntry {
 	return height ? 0.1 : ([LMLayoutManager isExtraSmall] ? 0.9 : 1.0);
 }
 
-- (void)sizeChangedToLargeSize:(BOOL)largeSize withHeight:(float)newHeight forBigListEntry:(LMBigListEntry*)bigListEntry {
+- (void)sizeChangedToLargeSize:(BOOL)largeSize withHeight:(CGFloat)newHeight forBigListEntry:(LMBigListEntry*)bigListEntry {
 	//If the new size is large/opened
 //	NSLog(@"%@ changed large", bigListEntry);
 }
@@ -1043,7 +1043,7 @@
 	}
 }
 
-- (UIView *)roundCornersOnView:(UIView *)view onTopLeft:(BOOL)tl topRight:(BOOL)tr bottomLeft:(BOOL)bl bottomRight:(BOOL)br radius:(float)radius {
+- (UIView *)roundCornersOnView:(UIView *)view onTopLeft:(BOOL)tl topRight:(BOOL)tr bottomLeft:(BOOL)bl bottomRight:(BOOL)br radius:(CGFloat)radius {
 	
 	if (tl || tr || bl || br) {
 		UIRectCorner corner = 0;

@@ -149,7 +149,7 @@
 	[self.controlBar reloadHighlightedButtons];
 }
 
-- (void)sizeChangedToLargeSize:(BOOL)largeSize withHeight:(float)newHeight forBigListEntry:(LMBigListEntry *)bigListEntry {
+- (void)sizeChangedToLargeSize:(BOOL)largeSize withHeight:(CGFloat)newHeight forBigListEntry:(LMBigListEntry *)bigListEntry {
 	NSLog(@"Size changed");
 }
 
@@ -242,7 +242,7 @@
 	}
 }
 
-- (float)contentSubviewFactorial:(BOOL)height forBigListEntry:(LMBigListEntry *)bigListEntry {
+- (CGFloat)contentSubviewFactorial:(BOOL)height forBigListEntry:(LMBigListEntry *)bigListEntry {
 	return height ? 0.1 : 1.0;
 }
 

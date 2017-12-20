@@ -709,7 +709,7 @@ static const CGFloat MBDefaultDetailsLabelFontSize = 12.f;
     }
 }
 
-- (void)setProgress:(float)progress {
+- (void)setProgress:(CGFloat)progress {
     if (progress != _progress) {
         _progress = progress;
         UIView *indicator = self.indicator;
@@ -853,7 +853,7 @@ static const CGFloat MBDefaultDetailsLabelFontSize = 12.f;
 
 #pragma mark - Properties
 
-- (void)setProgress:(float)progress {
+- (void)setProgress:(CGFloat)progress {
     if (progress != _progress) {
         _progress = progress;
         [self setNeedsDisplay];
@@ -890,8 +890,8 @@ static const CGFloat MBDefaultDetailsLabelFontSize = 12.f;
         processBackgroundPath.lineCapStyle = kCGLineCapButt;
         CGPoint center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
         CGFloat radius = (self.bounds.size.width - lineWidth)/2;
-        CGFloat startAngle = - ((float)M_PI / 2); // 90 degrees
-        CGFloat endAngle = (2 * (float)M_PI) + startAngle;
+        CGFloat startAngle = - ((CGFloat)M_PI / 2); // 90 degrees
+        CGFloat endAngle = (2 * (CGFloat)M_PI) + startAngle;
         [processBackgroundPath addArcWithCenter:center radius:radius startAngle:startAngle endAngle:endAngle clockwise:YES];
         [_backgroundTintColor set];
         [processBackgroundPath stroke];
@@ -899,7 +899,7 @@ static const CGFloat MBDefaultDetailsLabelFontSize = 12.f;
         UIBezierPath *processPath = [UIBezierPath bezierPath];
         processPath.lineCapStyle = isPreiOS7 ? kCGLineCapRound : kCGLineCapSquare;
         processPath.lineWidth = lineWidth;
-        endAngle = (self.progress * 2 * (float)M_PI) + startAngle;
+        endAngle = (self.progress * 2 * (CGFloat)M_PI) + startAngle;
         [processPath addArcWithCenter:center radius:radius startAngle:startAngle endAngle:endAngle clockwise:YES];
         [_progressTintColor set];
         [processPath stroke];
@@ -917,11 +917,11 @@ static const CGFloat MBDefaultDetailsLabelFontSize = 12.f;
         }
         CGContextStrokeEllipseInRect(context, circleRect);
         // 90 degrees
-        CGFloat startAngle = - ((float)M_PI / 2.f);
+        CGFloat startAngle = - ((CGFloat)M_PI / 2.f);
         // Draw progress
         if (isPreiOS7) {
             CGFloat radius = (CGRectGetWidth(self.bounds) / 2.f) - lineWidth;
-            CGFloat endAngle = (self.progress * 2.f * (float)M_PI) + startAngle;
+            CGFloat endAngle = (self.progress * 2.f * (CGFloat)M_PI) + startAngle;
             [_progressTintColor setFill];
             CGContextMoveToPoint(context, center.x, center.y);
             CGContextAddArc(context, center.x, center.y, radius, startAngle, endAngle, 0);
@@ -932,7 +932,7 @@ static const CGFloat MBDefaultDetailsLabelFontSize = 12.f;
             processPath.lineCapStyle = kCGLineCapButt;
             processPath.lineWidth = lineWidth * 2.f;
             CGFloat radius = (CGRectGetWidth(self.bounds) / 2.f) - (processPath.lineWidth / 2.f);
-            CGFloat endAngle = (self.progress * 2.f * (float)M_PI) + startAngle;
+            CGFloat endAngle = (self.progress * 2.f * (CGFloat)M_PI) + startAngle;
             [processPath addArcWithCenter:center radius:radius startAngle:startAngle endAngle:endAngle clockwise:YES];
             // Ensure that we don't get color overlaping when _progressTintColor alpha < 1.f.
             CGContextSetBlendMode(context, kCGBlendModeCopy);
@@ -975,7 +975,7 @@ static const CGFloat MBDefaultDetailsLabelFontSize = 12.f;
 
 #pragma mark - Properties
 
-- (void)setProgress:(float)progress {
+- (void)setProgress:(CGFloat)progress {
     if (progress != _progress) {
         _progress = progress;
         [self setNeedsDisplay];

@@ -33,7 +33,7 @@
  See LMBigListEntryDelegate for more info on these delegate functions.
  */
 - (id)contentSubviewForBigListEntry:(LMBigListEntry*)bigListEntry;
-- (float)contentSubviewFactorial:(BOOL)height forBigListEntry:(LMBigListEntry *)bigListEntry;
+- (CGFloat)contentSubviewFactorial:(BOOL)height forBigListEntry:(LMBigListEntry *)bigListEntry;
 
 /**
  Asks the delegate to prepare a content subview for an associated big list entry.

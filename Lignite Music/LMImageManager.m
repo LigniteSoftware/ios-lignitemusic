@@ -517,7 +517,7 @@
 						[downloader downloadImageWithURL:[NSURL URLWithString:imageURL]
 												 options:kNilOptions
 												progress:^(NSInteger receivedSize, NSInteger expectedSize) {
-		//                                                NSLog(@"%.02f%% complete", (float)receivedSize/(float)expectedSize * 100);
+		//                                                NSLog(@"%.02f%% complete", (CGFloat)receivedSize/(CGFloat)expectedSize * 100);
 												}
 											   completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished) {
 												   if(image && finished) {
@@ -940,11 +940,11 @@
 	return [self itemCountForCategory:category]*AVERAGE_IMAGE_SIZE_IN_BYTES*([self highQualityImages] ? 10 : 1);
 }
 
-- (float)freeSpacePercentageUsedIfDownloadedCategory:(LMImageManagerCategory)category {
+- (CGFloat)freeSpacePercentageUsedIfDownloadedCategory:(LMImageManagerCategory)category {
 	uint64_t freeSpace = [LMImageManager diskBytesFree];
 	uint64_t spaceRequired = [self spaceRequiredForCategory:category];
 	
-	return ((float)spaceRequired)/((float)freeSpace);
+	return ((CGFloat)spaceRequired)/((CGFloat)freeSpace);
 }
 
 - (BOOL)storageSpaceLowForCategory:(LMImageManagerCategory)category {
@@ -1035,7 +1035,7 @@
 								   
 								   problemsString,
 								   
-								   (float)([self spaceRequiredForCategory:LMImageManagerCategoryAlbumImages]+[self spaceRequiredForCategory:LMImageManagerCategoryArtistImages])/1000000.0,
+								   (CGFloat)([self spaceRequiredForCategory:LMImageManagerCategoryAlbumImages]+[self spaceRequiredForCategory:LMImageManagerCategoryArtistImages])/1000000.0,
 								   
 								   storageSpaceLow
 								    ? [NSString stringWithFormat:NSLocalizedString(@"AboutXOfYourStorage", nil), ([self freeSpacePercentageUsedIfDownloadedCategory:LMImageManagerCategoryAlbumImages] + [self freeSpacePercentageUsedIfDownloadedCategory:LMImageManagerCategoryArtistImages])*100.0]
@@ -1071,7 +1071,7 @@
 			youCanKey = @"YouCanTurnOffTo";
 			enableButtonKey = @"KeepEnabled";
 			disableButtonKey = @"ClearCacheAndDisable";
-			currentStatusText = [NSString stringWithFormat:NSLocalizedString(@"UsingXOfYourStorage", nil), (float)[self sizeOfAllCaches]/1000000];
+			currentStatusText = [NSString stringWithFormat:NSLocalizedString(@"UsingXOfYourStorage", nil), (CGFloat)[self sizeOfAllCaches]/1000000];
 			break;
 	}
 	alertView.title = NSLocalizedString(titleKey, nil);

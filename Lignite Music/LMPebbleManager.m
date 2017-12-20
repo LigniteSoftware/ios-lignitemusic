@@ -421,7 +421,9 @@
 
 - (void)sendCurrentStateToWatch {
 	//NSLog(@"Hi");
+	
 	uint16_t current_time = (uint16_t)self.musicPlayer.currentPlaybackTime;
+	
 	uint16_t total_time = (uint16_t)self.musicPlayer.nowPlayingTrack.playbackDuration;
 	uint8_t metadata[] = {
 		[self.musicPlayer playbackState],
@@ -549,7 +551,7 @@
 }
 
 - (void)musicCurrentPlaybackTimeDidChange:(NSTimeInterval)newPlaybackTime userModified:(BOOL)userModified {
-	[self pushCurrentStateToWatch];
+//	[self pushCurrentStateToWatch];
 }
 
 - (void)handleVolumeChanged:(id)sender{

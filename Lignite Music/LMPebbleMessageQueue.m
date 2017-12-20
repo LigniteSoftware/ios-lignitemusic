@@ -21,7 +21,7 @@
 
 - (void)enqueue:(NSDictionary *)message {
     if(!self.watch) {
-        //NSLog(@"No watch; discarding message.");
+        NSLog(@"No watch; discarding message.");
         return;
     }
     if(!message) return;

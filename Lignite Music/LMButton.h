@@ -25,6 +25,6 @@
 - (void)setImage:(UIImage*)newImage;
 - (UIColor*)getColor:(LMButton*)button;
 - (void)setColour:(UIColor*)newColour;
-- (void)setupWithImageMultiplier:(float)imageMultiplier;
+- (void)setupWithImageMultiplier:(CGFloat)imageMultiplier;
 
 @end

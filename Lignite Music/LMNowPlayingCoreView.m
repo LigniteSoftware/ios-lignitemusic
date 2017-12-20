@@ -85,9 +85,9 @@
         previousTrackIndex = self.musicPlayer.nowPlayingCollection.count-1;
     }
 	
-	NSLog(@"indexes %d/%d/%d count %d", (int)previousTrackIndex, (int)indexOfCenter, (int)nextTrackIndex, (int)self.musicPlayer.nowPlayingCollection.count);
+//	NSLog(@"indexes %d/%d/%d count %d", (int)previousTrackIndex, (int)indexOfCenter, (int)nextTrackIndex, (int)self.musicPlayer.nowPlayingCollection.count);
 	
-	NSLog(@"Spook");
+//	NSLog(@"Spook");
 	
     [self.centreNowPlayingView changeMusicTrack:[self.musicPlayer.nowPlayingCollection.items objectAtIndex:indexOfCenter] withIndex:indexOfCenter];
     [self.leadingNowPlayingView changeMusicTrack:[self.musicPlayer.nowPlayingCollection.items objectAtIndex:nextTrackIndex]
@@ -110,7 +110,7 @@
     NSInteger nowPlayingTrackIndex = self.musicPlayer.indexOfNowPlayingTrack;
     [self loadMusicTracksBasedOffIndex:nowPlayingTrackIndex];
 	
-	NSLog(@"Refresh core");
+//	NSLog(@"Refresh core");
 }
 
 - (void)trackMovedInQueue:(LMMusicTrack *)trackMoved {
@@ -150,6 +150,10 @@
 //	self.centerNowPlayingView.backgroundColor = [UIColor orangeColor];
 //	self.trailingNowPlayingView.backgroundColor = [UIColor yellowColor];
 //	self.leadingNowPlayingView.backgroundColor = [UIColor redColor];
+	
+	self.centreNowPlayingView.isUserFacing = YES;
+	self.trailingNowPlayingView.isUserFacing = NO;
+	self.leadingNowPlayingView.isUserFacing = NO;
 	
 	NSLog(@"Loaded tracks: %@/%@/%@", self.trailingNowPlayingView.loadedTrack.title, self.centreNowPlayingView.loadedTrack.title, self.leadingNowPlayingView.loadedTrack.title);
     
@@ -418,6 +422,10 @@
 		self.centreNowPlayingView.nowPlayingCoreView = self;
 		self.trailingNowPlayingView.nowPlayingCoreView = self;
 		self.leadingNowPlayingView.nowPlayingCoreView = self;
+		
+		self.centreNowPlayingView.isUserFacing = YES;
+		self.trailingNowPlayingView.isUserFacing = NO;
+		self.leadingNowPlayingView.isUserFacing = NO;
 
         
         UIPanGestureRecognizer *nowPlayingLeadingPanGesture =

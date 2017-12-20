@@ -34,7 +34,7 @@
 /*
  Sets the view up with all required constraints.
  */
-- (void)setupWithImageMultiplier:(float)imageMultiplier {
+- (void)setupWithImageMultiplier:(CGFloat)imageMultiplier {
 //    self.backgroundColor = [UIColor blueColor];
 	
 	self.imageBackgroundView = [UIView new];
