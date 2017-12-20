@@ -815,7 +815,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMAppleWatchBridge.m"
-            timestampString = "535474357.564886"
+            timestampString = "535477687.137032"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "622"
@@ -831,7 +831,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMAppleWatchBridge.m"
-            timestampString = "535474357.564932"
+            timestampString = "535477687.137367"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "325"
@@ -863,7 +863,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Abbey For Apple Watch Extension/Interface/LMWMainInterfaceController.m"
-            timestampString = "535475817.646935"
+            timestampString = "535478352.868874"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "531"
@@ -879,7 +879,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Abbey For Apple Watch Extension/Interface/LMWMainInterfaceController.m"
-            timestampString = "535475817.647267"
+            timestampString = "535478352.869222"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "535"
@@ -1302,12 +1302,28 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMAppleWatchBridge.m"
-            timestampString = "535474357.565795"
+            timestampString = "535477687.138487"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "363"
             endingLineNumber = "363"
             landmarkName = "-session:didReceiveMessage:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Lignite Music/LMMusicPlayer.m"
+            timestampString = "535478352.869751"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1314"
+            endingLineNumber = "1314"
+            landmarkName = "-loadNowPlayingState"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

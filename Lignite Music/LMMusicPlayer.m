@@ -137,8 +137,8 @@ MPMediaGrouping associatedMediaTypes[] = {
 		
 		self.autoPlay = (self.systemMusicPlayer.playbackState == MPMusicPlaybackStatePlaying);
 		
-		[[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
-		[[AVAudioSession sharedInstance] setActive:YES error:nil];
+//		[[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
+//		[[AVAudioSession sharedInstance] setActive:YES error:nil];
 		
 		[[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
 		
@@ -1232,19 +1232,24 @@ BOOL shuffleForDebug = NO;
 	self.musicWasUserSet = YES;
 	
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-//	NSString *allPersistentIDsString = @"";
-		NSString *allPersistentIDsString = [userDefaults objectForKey:DEFAULTS_KEY_NOW_PLAYING_COLLECTION];
 	
+//	NSString *allPersistentIDsString = nil;
+	NSString *allPersistentIDsString = [userDefaults objectForKey:DEFAULTS_KEY_NOW_PLAYING_COLLECTION];
 	NSDictionary *nowPlayingTrackInfo = [userDefaults objectForKey:DEFAULTS_KEY_NOW_PLAYING_TRACK];
 	
 	NSLog(@"Got info %@", nowPlayingTrackInfo);
 	
-	NSNumber *nowPlayingTrackPersistentID = [nowPlayingTrackInfo objectForKey:@"persistentID"];
-	NSNumber *nowPlayingTrackPlaybackTime = [nowPlayingTrackInfo objectForKey:@"playbackTime"];
-	NSNumber *shuffleMode = [nowPlayingTrackInfo objectForKey:@"shuffleMode"];
-	NSNumber *repeatMode = [nowPlayingTrackInfo objectForKey:@"repeatMode"];
-	LMMusicShuffleMode nowPlayingShuffleMode = ([shuffleMode integerValue] == 1) ? LMMusicShuffleModeOn : LMMusicShuffleModeOff;
-	LMMusicRepeatMode nowPlayingRepeatMode = (LMMusicRepeatMode)[repeatMode integerValue];
+	LMMusicTrack *systemNowPlayingTrack = self.systemMusicPlayer.nowPlayingItem;
+	MPMediaEntityPersistentID systemNowPlayingPersistentID = systemNowPlayingTrack.persistentID;
+	BOOL preservedQueueContainsSystemNowPlayingTrack = NO;
+	NSTimeInterval playbackTime = self.systemMusicPlayer.currentPlaybackTime;
+	
+	NSNumber *preservedNowPlayingTrackPersistentID = [nowPlayingTrackInfo objectForKey:@"persistentID"];
+	NSNumber *preservedNowPlayingTrackPlaybackTime = [nowPlayingTrackInfo objectForKey:@"playbackTime"];
+	NSNumber *preservedShuffleMode = [nowPlayingTrackInfo objectForKey:@"shuffleMode"];
+	NSNumber *preservedRepeatMode = [nowPlayingTrackInfo objectForKey:@"repeatMode"];
+	LMMusicShuffleMode nowPlayingShuffleMode = ([preservedShuffleMode integerValue] == 1) ? LMMusicShuffleModeOn : LMMusicShuffleModeOff;
+	LMMusicRepeatMode nowPlayingRepeatMode = (LMMusicRepeatMode)[preservedRepeatMode integerValue];
 	NSLog(@"shuffle mode %d repeat %d", nowPlayingShuffleMode, nowPlayingRepeatMode);
 	LMMusicTrack *nowPlayingTrack = nil;
 	
@@ -1252,6 +1257,10 @@ BOOL shuffleForDebug = NO;
 		NSLog(@"Rejecting load, '%@' '%@'", allPersistentIDsString, nowPlayingTrackInfo);
 		self.musicWasUserSet = NO;
 		return;
+	}
+	
+	if(!systemNowPlayingTrack){
+		playbackTime = [preservedNowPlayingTrackPlaybackTime integerValue];
 	}
 	
 	NSArray *persistentIDsArray = [allPersistentIDsString componentsSeparatedByString:@","];
@@ -1277,9 +1286,17 @@ BOOL shuffleForDebug = NO;
 				itemCount++;
 				[nowPlayingArray addObject:item];
 				
-				if([persistentID isEqual:nowPlayingTrackPersistentID]){
-					NSLog(@"This was the now playing track (below)");
+				if([persistentID isEqual:preservedNowPlayingTrackPersistentID]){
+					NSLog(@"This was the now playing track: %@ (below)", item.title);
+//					nowPlayingTrack = item;
+				}
+				
+				if(persistentID.longLongValue == systemNowPlayingPersistentID){
+					preservedQueueContainsSystemNowPlayingTrack = YES;
+					
 					nowPlayingTrack = item;
+					
+					NSLog(@"Got system track from queue: %@", item.title);
 				}
 				
 				//			NSLog(@"Got item %@", item.title);
@@ -1289,6 +1306,12 @@ BOOL shuffleForDebug = NO;
 			self.musicWasUserSet = NO;
 			return;
 		}
+	}
+	
+	if(!preservedQueueContainsSystemNowPlayingTrack){
+		NSLog(@"The preserved queue does not contain the now playing track. I'm going to dump it all, sorry.");
+		[self stop];
+		return;
 	}
 	
 	NSTimeInterval endTime = [[NSDate new]timeIntervalSince1970];
@@ -1304,18 +1327,18 @@ BOOL shuffleForDebug = NO;
 	if(!nowPlayingTrack){
 		nowPlayingTrack = [oldNowPlayingCollection.items objectAtIndex:0];
 	}
-	if(!nowPlayingTrackPlaybackTime){
-		nowPlayingTrackPlaybackTime = @(0);
+	if(!preservedNowPlayingTrackPlaybackTime){
+		preservedNowPlayingTrackPlaybackTime = @(0);
 	}
 	
 	NSUInteger indexOfNowPlayingTrack = [oldNowPlayingCollection.items indexOfObject:nowPlayingTrack];
 	
-	NSLog(@"The previous playing track was %@ with playback time %ld, it's position was %ld", nowPlayingTrack.title, [nowPlayingTrackPlaybackTime integerValue], indexOfNowPlayingTrack);
+	NSLog(@"The previous playing track was %@ with playback time %ld, it's position was %ld", nowPlayingTrack.title, [preservedNowPlayingTrackPlaybackTime integerValue], indexOfNowPlayingTrack);
 	
 	[self setNowPlayingTrack:nowPlayingTrack];
-	if(nowPlayingShuffleMode != LMMusicShuffleModeOn){
-		[self setCurrentPlaybackTime:[nowPlayingTrackPlaybackTime integerValue]];
-	}
+//	if(nowPlayingShuffleMode != LMMusicShuffleModeOn){
+		[self setCurrentPlaybackTime:playbackTime];
+//	}
 	[self setIndexOfNowPlayingTrack:indexOfNowPlayingTrack];
 }
 
