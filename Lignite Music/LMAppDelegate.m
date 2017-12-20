@@ -69,7 +69,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 	NSLog(@"[LMAppDelegate]: Did finish launching with options %@", launchOptions);
 	
-	[LMAppleWatchBridge sharedAppleWatchBridge]; //This will activate the WCSession if it is supported.
+//	[LMAppleWatchBridge sharedAppleWatchBridge]; //This will activate the WCSession if it is supported.
 	
 	NSTimeInterval delegateStartTime = [[NSDate new] timeIntervalSince1970];
 	
