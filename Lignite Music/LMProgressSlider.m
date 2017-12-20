@@ -212,6 +212,9 @@
 		[self reloadTextHighlightingConstants];
 		[self animate];
 	}
+	else{
+		NSLog(@"What");
+	}
 }
 
 - (CGFloat)value {
@@ -255,7 +258,7 @@
 	return NO;
 }
 
-- (void)reset {
+- (void)resetToZero {
 	if(self.userIsInteracting){
 		return;
 	}
@@ -532,6 +535,7 @@
 		[self.sliderBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[self.sliderBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 		self.sliderBackgroundHeightConstraint = [self.sliderBackgroundView autoSetDimension:ALDimensionHeight toSize:self.frame.size.height];
+		NSLog(@"Frame %@", NSStringFromCGRect(self.frame));
 		self.sliderBackgroundWidthConstraint = [self.sliderBackgroundView autoSetDimension:ALDimensionWidth toSize:(self.widthIncrementPerTick*self.value) + (self.frame.size.width*(1.0/40.0))];
 		
 		[self.sliderBackgroundBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop];
@@ -587,8 +591,10 @@
 		
 		[self setSliderAsShrunk:self.autoShrink];
 		
-		[NSTimer scheduledTimerWithTimeInterval:0.5 block:^() {
+		[NSTimer scheduledTimerWithTimeInterval:1.0 block:^() {
+			NSLog(@"No you said it, %@", NSStringFromCGRect(self.frame));
 			self.value = self.value;
+			[self setSliderAsShrunk:self.autoShrink];
 		} repeats:NO];
 	}
 	[super layoutSubviews];

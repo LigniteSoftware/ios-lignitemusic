@@ -24,6 +24,11 @@
  */
 @property LMLayoutManager *layoutManager;
 
+/**
+ Whether or not the info view did its initial reload, which is sometimes required when first laying out as font sizes get fucked up.
+ */
+@property BOOL didInitialReload;
+
 @end
 
 @implementation LMTrackInfoView
@@ -156,17 +161,23 @@
 //			label.backgroundColor = [UIColor colorWithRed:(0.2*i)+0.3 green:0 blue:0 alpha:1.0];
 //			NSLog(@"Frame %@ multiplier %f total %f", NSStringFromCGRect(self.frame), heightMultipliers[i], self.frame.size.height*heightMultipliers[i]);
 			label.font = [LMMarqueeLabel fontToFitHeight:self.frame.size.height*heightMultipliers[i]];
+//			label.font = [UIFont fontWithName:label.font.fontName size:label.font.pointSize/3.0];
 			label.text = [texts objectAtIndex:i];
 			label.textAlignment = self.textAlignment;
 			label.textColor = self.textColour;
 			label.labelize = ![LMSettings scrollingText];
 			[self addSubview:label];
 			
-			if(self.frame.size.width == 0){
-				[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
+			if(self.frame.size.width == 0 || !self.didInitialReload){
+				[NSTimer scheduledTimerWithTimeInterval:0.25 block:^{
 					[self reload];
 				} repeats:NO];
+				
+				self.didInitialReload = YES;
 			}
+//			else{
+//				NSLog(@"Building for frame %@. Fontsize %f. Miniplayer %d.", NSStringFromCGRect(self.frame), label.font.pointSize, self.miniplayer);
+//			}
 			
 			[label autoPinEdge:ALEdgeTop toEdge:isFirst ? ALEdgeTop : ALEdgeBottom ofView:isFirst ? self : previousLabel withOffset:isFirst ? -label.layoutMargins.top : 2];
 			[label autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];

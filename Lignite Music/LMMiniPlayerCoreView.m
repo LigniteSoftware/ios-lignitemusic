@@ -134,6 +134,10 @@
 		self.leadingMiniPlayerView = oldMiniPlayers[1];
 	}
 	
+	self.centreMiniPlayerView.isUserFacing = YES;
+	self.trailingMiniPlayerView.isUserFacing = NO;
+	self.leadingMiniPlayerView.isUserFacing = NO;
+	
 	[self addSubview:self.centreMiniPlayerView];
 	[self addSubview:self.leadingMiniPlayerView];
 	[self addSubview:self.trailingMiniPlayerView];
@@ -387,6 +391,10 @@
 		self.centreMiniPlayerView.clipsToBounds = YES;
 		self.leadingMiniPlayerView.clipsToBounds = YES;
 		self.trailingMiniPlayerView.clipsToBounds = YES;
+		
+		self.centreMiniPlayerView.isUserFacing = YES;
+		self.trailingMiniPlayerView.isUserFacing = NO;
+		self.leadingMiniPlayerView.isUserFacing = NO;
 		
 		NSLog(@"Index of %ld", self.musicPlayer.indexOfNowPlayingTrack);
 		

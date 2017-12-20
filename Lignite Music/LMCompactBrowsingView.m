@@ -573,7 +573,7 @@
 		
 			
 			
-			[self.coreViewController.buttonNavigationBar minimize:YES];
+//			[self.coreViewController.buttonNavigationBar minimize:YES];
 		}
 		else if(indexPath.row >= [self collectionView:self.collectionView numberOfItemsInSection:1] && flowLayout.isDisplayingDetailView){
 			cell.backgroundColor = [UIColor clearColor];

@@ -845,7 +845,7 @@ LMControlBarViewDelegate
 	}
 }
 
-- (void)launchNowPlayingFromNavigationBar {
+- (void)launchNowPlaying {
     if(!self.musicPlayer.nowPlayingTrack){
 		NSLog(@"Nothing's playing mate");
         return;
@@ -1057,7 +1057,7 @@ LMControlBarViewDelegate
 		case LMLandscapeNavigationBarButtonLogo: {
 			NSLog(@"Now playing nav bar please");
 			
-			[self launchNowPlayingFromNavigationBar];
+			[self launchNowPlaying];
 			break;
 		}
 		case LMLandscapeNavigationBarButtonCreate: {
@@ -1121,7 +1121,7 @@ LMControlBarViewDelegate
 	titleImageView.image = [LMAppIcon imageForIcon:LMIconNoAlbumArt75Percent];
 	titleImageView.userInteractionEnabled = YES;
 
-	UITapGestureRecognizer *nowPlayingTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(launchNowPlayingFromNavigationBar)];
+	UITapGestureRecognizer *nowPlayingTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(launchNowPlaying)];
 	[titleImageView addGestureRecognizer:nowPlayingTapGestureRecognizer];
 
 	UINavigationItem *navigationItem = [[UINavigationItem alloc]initWithTitle:@""];
@@ -1639,7 +1639,7 @@ LMControlBarViewDelegate
 	
 	[APIdleManager sharedInstance].onTimeout = ^(void){
 		if(self.musicPlayer.playbackState == LMMusicPlaybackStatePlaying && self.view.window){
-			[self launchNowPlayingFromNavigationBar];
+			[self launchNowPlaying];
 		}
 	};
 	
@@ -1729,6 +1729,7 @@ LMControlBarViewDelegate
 			[self.buttonNavigationBar setSelectedTab:LMNavigationTabMiniplayer];
 		}
 		
+#warning autominimize is disabled
 		if(self.stateRestoredNavigationBarWasMinimized){
 			[self.buttonNavigationBar minimize:NO];
 		}
@@ -1738,7 +1739,7 @@ LMControlBarViewDelegate
 		}
 		
 		if(self.restorationState == LMCoreViewControllerRestorationStateNowPlaying){
-			[self launchNowPlayingFromNavigationBar];
+			[self launchNowPlaying];
 		}
 		
 		if(self.previousTitleViewTopPersistentID > 0){
@@ -1757,6 +1758,8 @@ LMControlBarViewDelegate
 				[self.compactView tappedBigListEntryAtIndex:self.previouslyOpenedDetailViewIndex];
 			}
 		}
+		
+//		[self launchNowPlaying];
 		
 //		LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
 //		[self.navigationController pushViewController:settingsViewController animated:YES];

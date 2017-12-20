@@ -23,6 +23,11 @@
 @property NSInteger loadedTrackIndex;
 
 /**
+ Whether or not this miniplayer is user facing (is the centre miniplayer).
+ */
+@property BOOL isUserFacing;
+
+/**
  Change the music track that's associated with this miniplayer.
 
  @param newTrack The new track to set.

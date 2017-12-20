@@ -1343,7 +1343,7 @@ BOOL shuffleForDebug = NO;
 	NSLog(@"Got the queue from storage successfully with %d items. The now playing track is: %@.", (int)oldNowPlayingCollection.count, nowPlayingTrack.title);
 	
 	[self restoreNowPlayingCollection:oldNowPlayingCollection nowPlayingTrack:nowPlayingTrack playbackTime:playbackTime];
-	[self setIndexOfNowPlayingTrack:nowPlayingTrack];
+	[self setIndexOfNowPlayingTrack:indexOfNowPlayingTrack];
 }
 
 - (void)addTrackToQueue:(LMMusicTrack*)trackToAdd {

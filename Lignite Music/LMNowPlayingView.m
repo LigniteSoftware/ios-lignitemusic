@@ -298,7 +298,7 @@
     
     self.progressSlider.rightText = [LMNowPlayingView durationStringTotalPlaybackTime:newTrack.playbackDuration];
     [self updateSongDurationLabelWithPlaybackTime:timeToUse];
-    [self.progressSlider reset];
+    [self.progressSlider resetToZero];
     self.progressSlider.value = timeToUse;
 	
 	[self reloadFavouriteStatus];
@@ -1381,6 +1381,10 @@
 	}
 	
 	[self reloadFavouriteStatus];
+	
+	[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
+		[self changeMusicTrack:self.loadedTrack withIndex:self.loadedTrackIndex];
+	} repeats:NO];
 }
 
 - (instancetype)init {

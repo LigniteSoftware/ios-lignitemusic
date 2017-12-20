@@ -13,6 +13,7 @@
 #import "LMOperationQueue.h"
 #import "LMNowPlayingView.h"
 #import "LMProgressSlider.h"
+#import "NSTimer+Blocks.h"
 
 @interface  LMMiniPlayerView()<LMMusicPlayerDelegate, LMProgressSliderDelegate>
 
@@ -120,7 +121,7 @@
 	
 	self.progressSlider.rightText = [LMNowPlayingView durationStringTotalPlaybackTime:newTrack.playbackDuration];
 	[self updateSongDurationLabelWithPlaybackTime:0];
-	[self.progressSlider reset];
+	[self.progressSlider resetToZero];
 }
 
 - (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState {
@@ -233,9 +234,9 @@
 	
 	self.progressSlider = [LMProgressSlider newAutoLayoutView];
 	self.progressSlider.backgroundColor = [UIColor colorWithRed:0.82 green:0.82 blue:0.82 alpha:0.25];
-	self.progressSlider.finalValue = 0;
+	self.progressSlider.finalValue = self.isUserFacing ? self.musicPlayer.nowPlayingTrack.playbackDuration : 0;
 	self.progressSlider.delegate = self;
-	self.progressSlider.value = 0;
+	self.progressSlider.value = self.isUserFacing ? self.musicPlayer.currentPlaybackTime : 0;
 	self.progressSlider.lightTheme = YES;
 	[self.trackInfoAndDurationBackgroundView addSubview:self.progressSlider];
 	
@@ -263,6 +264,11 @@
 	[self.musicPlayer addMusicDelegate:self];
 	
 	NSLog(@"Setup miniplayer");
+	
+	[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
+		[self.progressSlider setValue:self.musicPlayer.currentPlaybackTime];
+		[self progressSliderValueChanged:self.musicPlayer.currentPlaybackTime isFinal:NO];
+	} repeats:NO];
 }
 
 - (instancetype)init {
