@@ -900,11 +900,11 @@ BOOL shuffleForDebug = NO;
 	
 	MPMediaGrouping associatedGroupings[] = {
 		MPMediaGroupingTitle,  //Favourites
-		MPMediaGroupingArtist, //Artists
+		MPMediaGroupingAlbum,  //Artists
 		MPMediaGroupingAlbum,  //Albums
 		MPMediaGroupingTitle,  //Titles
 		MPMediaGroupingTitle,  //Playlists
-		MPMediaGroupingGenre,  //Genres
+		MPMediaGroupingAlbum,  //Genres
 		MPMediaGroupingAlbum,  //Compilations
 		MPMediaGroupingAlbum   //Composers
 	};
@@ -941,11 +941,11 @@ BOOL shuffleForDebug = NO;
 	
 	MPMediaGrouping associatedGroupings[] = {
 		MPMediaGroupingTitle,  //Favourites
-		MPMediaGroupingArtist, //Artists
+		MPMediaGroupingAlbum,  //Artists
 		MPMediaGroupingAlbum,  //Albums
 		MPMediaGroupingTitle,  //Titles
 		MPMediaGroupingTitle,  //Playlists
-		MPMediaGroupingGenre,  //Genres
+		MPMediaGroupingAlbum,  //Genres
 		MPMediaGroupingAlbum,  //Compilations
 		MPMediaGroupingAlbum   //Composers
 	};
@@ -978,11 +978,11 @@ BOOL shuffleForDebug = NO;
 - (NSArray<LMMusicTrackCollection*>*)collectionsForRepresentativeTrack:(LMMusicTrack*)representativeTrack forMusicType:(LMMusicType)musicType {
 	MPMediaGrouping associatedGroupings[] = {
 		MPMediaGroupingTitle,  //Favourites
-		MPMediaGroupingArtist, //Artists
+		MPMediaGroupingAlbum,  //Artists
 		MPMediaGroupingAlbum,  //Albums
 		MPMediaGroupingTitle,  //Titles
 		MPMediaGroupingTitle,  //Playlists
-		MPMediaGroupingGenre,  //Genres
+		MPMediaGroupingAlbum,  //Genres
 		MPMediaGroupingAlbum,  //Compilations
 		MPMediaGroupingAlbum   //Composers
 	};
