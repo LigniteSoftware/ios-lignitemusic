@@ -354,6 +354,19 @@ LMControlBarViewDelegate
 
 - (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState {
 //	NSLog(@"Got new playback state %d", newState);
+	BOOL isPlaying = (newState == LMMusicPlaybackStatePlaying);
+	
+	MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+	
+	hud.mode = MBProgressHUDModeCustomView;
+	UIImage *image = [[UIImage imageNamed:isPlaying ? @"icon_play.png" : @"icon_pause.png"]
+					  imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+	hud.customView = [[UIImageView alloc] initWithImage:image];
+	hud.square = YES;
+	hud.userInteractionEnabled = NO;
+//	hud.label.text = NSLocalizedString(isPlaying ? @"Playing" : @"Paused", nil);
+	
+	[hud hideAnimated:YES afterDelay:1.5f];
 }
 
 - (void)musicTrackDidChange:(LMMusicTrack *)newTrack {

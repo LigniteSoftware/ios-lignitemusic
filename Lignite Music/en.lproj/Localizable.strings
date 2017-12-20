@@ -46,6 +46,9 @@
  
  */
 
+"Playing" = "Playing"; //Playing music
+"Paused" = "Paused"; //Music is paused
+
 "SyncingLibrary" = "Your music library is currently syncing.";
 "LibraryFinishedSyncing" = "Your music library has been synced.";
 
