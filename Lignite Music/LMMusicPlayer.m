@@ -557,14 +557,32 @@ MPMediaGrouping associatedMediaTypes[] = {
 
 BOOL shuffleForDebug = NO;
 
-- (void)shuffleArray:(NSMutableArray*)array {
+- (void)shuffleArrayOfTracks:(NSMutableArray<LMMusicTrack*>*)array {
 	NSUInteger count = [array count];
 	if(count < 1){
 		return;
 	}
+	
 	for(NSUInteger i = 0; i < count - 1; ++i) {
 		NSInteger remainingCount = count - i;
 		NSInteger exchangeIndex = i + arc4random_uniform((u_int32_t)remainingCount);
+		
+		LMMusicTrack *firstTrack = [array objectAtIndex:i];
+		LMMusicTrack *otherTrack = [array objectAtIndex:exchangeIndex];
+		int triesToMakeQuoteOnQuoteRandom = 0;
+		while((firstTrack.artistPersistentID == otherTrack.artistPersistentID)
+			  	&& triesToMakeQuoteOnQuoteRandom < 10){
+
+			exchangeIndex = i + arc4random_uniform((u_int32_t)remainingCount);
+			otherTrack = [array objectAtIndex:exchangeIndex];
+
+			triesToMakeQuoteOnQuoteRandom++;
+		}
+
+		if(triesToMakeQuoteOnQuoteRandom > 0){
+			NSLog(@"- Shuffled -\n%@/%@\n%@/%@", firstTrack.artist, otherTrack.artist, firstTrack.albumTitle, otherTrack.albumTitle);
+		}
+		
 		[array exchangeObjectAtIndex:i withObjectAtIndex:exchangeIndex];
 	}
 }
@@ -824,7 +842,7 @@ BOOL shuffleForDebug = NO;
 	
 	if(shuffleForDebug){
 		NSLog(@"--- Warning: Query is being automatically shuffled. ---");
-		[self shuffleArray:collections];
+//		[self shuffleArray:collections];
 	}
 	
 	//		NSLog(@"[LMMusicPlayer]: Took %f seconds to complete query.", endingTime-startingTime);
@@ -1509,7 +1527,16 @@ BOOL shuffleForDebug = NO;
 
 - (void)reshuffleSortedCollection {
 	NSMutableArray *shuffledArray = [NSMutableArray arrayWithArray:self.nowPlayingCollectionSorted.items];
-	[self shuffleArray:shuffledArray];
+//	if(@available(iOS 10, *)){
+////		NSArray *array = nil;
+//		shuffledArray = [NSMutableArray arrayWithArray:[self.nowPlayingCollectionSorted.items sortedArrayUsingComparator:^NSComparisonResult(LMMusicTrack* obj1, LMMusicTrack* obj2) {
+//
+//			return (obj1.albumPersistentID != obj2.albumPersistentID) && (obj1.artistPersistentID != obj2.artistPersistentID);
+//		}]];
+//	}
+//	else{
+		[self shuffleArrayOfTracks:shuffledArray];
+//	}
 	
 	if(self.nowPlayingTrack){
 		NSInteger indexOfNowPlayingTrackInShuffledArray = -1;
