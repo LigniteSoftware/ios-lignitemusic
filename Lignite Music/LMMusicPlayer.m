@@ -564,17 +564,28 @@ BOOL shuffleForDebug = NO;
 	}
 	
 	for(NSUInteger i = 0; i < count - 1; ++i) {
-		NSInteger remainingCount = count - i;
-		NSInteger exchangeIndex = i + arc4random_uniform((u_int32_t)remainingCount);
+//		NSInteger remainingCount = count - i;
+		NSInteger exchangeIndex = arc4random_uniform((u_int32_t)count);
 		
 		LMMusicTrack *firstTrack = [array objectAtIndex:i];
 		LMMusicTrack *otherTrack = [array objectAtIndex:exchangeIndex];
+		LMMusicTrack *trackInFrontOfOtherTrack =
+			[array objectAtIndex:((exchangeIndex + 1) >= count) ? 0 : (exchangeIndex + 1)];
+		LMMusicTrack *trackBehindOfOtherTrack =
+			[array objectAtIndex:((exchangeIndex - 1) < 0) ? (count - 1) : (exchangeIndex - 1)];
+		
 		int triesToMakeQuoteOnQuoteRandom = 0;
-		while((firstTrack.artistPersistentID == otherTrack.artistPersistentID)
+		while(((firstTrack.artistPersistentID == trackInFrontOfOtherTrack.artistPersistentID)
+			  || (firstTrack.artistPersistentID == trackBehindOfOtherTrack.artistPersistentID))
 			  	&& triesToMakeQuoteOnQuoteRandom < 10){
 
-			exchangeIndex = i + arc4random_uniform((u_int32_t)remainingCount);
-			otherTrack = [array objectAtIndex:exchangeIndex];
+			exchangeIndex = arc4random_uniform((u_int32_t)count);
+//			otherTrack = [array objectAtIndex:exchangeIndex];
+			
+			trackInFrontOfOtherTrack =
+				[array objectAtIndex:((exchangeIndex + 1) >= count) ? 0 : (exchangeIndex + 1)];
+			trackBehindOfOtherTrack =
+				[array objectAtIndex:((exchangeIndex - 1) < 0) ? (count - 1) : (exchangeIndex - 1)];
 
 			triesToMakeQuoteOnQuoteRandom++;
 		}

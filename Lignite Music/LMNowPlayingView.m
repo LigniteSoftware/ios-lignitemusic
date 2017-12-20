@@ -458,9 +458,15 @@
 			contentOffsetY = maxContentOffsetY;
 		}
 		else if(contentOffsetY < 0){
+			NSLog(@"Current content offset %@", NSStringFromCGPoint(self.queueTableView.contentOffset));
 			contentOffsetY = 0;
 		}
+		if(contentOffsetY == 0){
+			contentOffsetY = 100; //For some reason a content offset below 100 puts a whitespace up top
+		}
+		NSLog(@"Setting content offset to %@", NSStringFromCGPoint(CGPointMake(0, contentOffsetY)));
 		self.queueTableView.contentOffset = CGPointMake(0, contentOffsetY);
+//		[self.queueTableView scrollRectToVisible:CGRectMake(0, contentOffsetY, self.queueTableView.frame.size.width, self.queueTableView.frame.size.height) animated:YES];
 	}
 	
     [UIView animateWithDuration:animated ? 0.25 : 0.0 animations:^{
