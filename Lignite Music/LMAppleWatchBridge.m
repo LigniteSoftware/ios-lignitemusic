@@ -731,10 +731,7 @@
 	[self.volumeViewSlider addTarget:self action:@selector(handleVolumeChanged:) forControlEvents:UIControlEventValueChanged];
 }
 
-+ (LMAppleWatchBridge*)sharedAppleWatchBridge {
-#warning apple watch is disabled
-	return nil;
-	
++ (LMAppleWatchBridge*)sharedAppleWatchBridge {	
 	static LMAppleWatchBridge *sharedAppleWatchBridge;
 	static dispatch_once_t token;
 	dispatch_once(&token, ^{

@@ -1200,6 +1200,8 @@ BOOL shuffleForDebug = NO;
 		return;
 	}
 	
+	NSLog(@"Saving now playing state...");
+	
 	//Save the now playing collection to storage
 	NSMutableString *persistentIDString = [NSMutableString new];
 	for(LMMusicTrack *track in self.nowPlayingCollectionSorted.items) {
@@ -1230,8 +1232,8 @@ BOOL shuffleForDebug = NO;
 	self.musicWasUserSet = YES;
 	
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-	NSString *allPersistentIDsString = @"";
-	//	NSString *allPersistentIDsString = [userDefaults objectForKey:DEFAULTS_KEY_NOW_PLAYING_COLLECTION];
+//	NSString *allPersistentIDsString = @"";
+		NSString *allPersistentIDsString = [userDefaults objectForKey:DEFAULTS_KEY_NOW_PLAYING_COLLECTION];
 	
 	NSDictionary *nowPlayingTrackInfo = [userDefaults objectForKey:DEFAULTS_KEY_NOW_PLAYING_TRACK];
 	

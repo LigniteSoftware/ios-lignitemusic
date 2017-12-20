@@ -15,6 +15,7 @@
 #import "LMMusicPlayer.h"
 #import "LMAppIcon.h"
 #import "LMSettings.h"
+#import "LMAppleWatchBridge.h"
 
 @interface LMAppDelegate ()
 
@@ -67,6 +68,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 	NSLog(@"[LMAppDelegate]: Did finish launching with options %@", launchOptions);
+	
+	[LMAppleWatchBridge sharedAppleWatchBridge]; //This will activate the WCSession if it is supported.
 	
 	NSTimeInterval delegateStartTime = [[NSDate new] timeIntervalSince1970];
 	

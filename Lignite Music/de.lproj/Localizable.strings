@@ -119,7 +119,7 @@
 "XSongsSingle" = "%ld Lied"; //1 song
 "NoSongsYet" = "Noch keine Lieder";
 
-"NoTracksInFavourites" = "Du hast noch keine Favoriten definiert.\n\nStreiche einfach auf einem beliebigen Song von links nach rechts, um sie in dieser Liste aufzunehmen.";
+"NoTracksInFavourites" = "Du hast noch keine Favoriten definiert.\n\nStreiche einfach auf einem beliebigen Song von links nach rechts, um ihn in dieser Liste aufzunehmen.";
 
 "Favourites" = "Favoriten";
 

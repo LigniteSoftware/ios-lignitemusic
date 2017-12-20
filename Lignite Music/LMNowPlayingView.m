@@ -1013,7 +1013,7 @@
 	
 	self.queueTableView = [LMTableView newAutoLayoutView];
 	self.queueTableView.totalAmountOfObjects = self.musicPlayer.nowPlayingCollection.count;
-	self.queueTableView.averageCellHeight = [LMLayoutManager standardListEntryHeight] * 0.70;
+//	self.queueTableView.averageCellHeight = [LMLayoutManager standardListEntryHeight] * 0.70;
 	self.queueTableView.subviewDataSource = self;
 	self.queueTableView.shouldUseDividers = YES;
 	self.queueTableView.title = @"QueueTableView";
