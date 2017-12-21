@@ -12,6 +12,7 @@
 #import "NSTimer+Blocks.h"
 #import "LMPlaylist.h"
 #import "LMPlaylistManager.h"
+#import "LMSettings.h"
 
 @import StoreKit;
 
@@ -197,8 +198,8 @@ MPMediaGrouping associatedMediaTypes[] = {
 	[self.systemMusicPlayer endGeneratingPlaybackNotifications];
 }
 
-+ (LMMusicPlayer*)sharedMusicPlayer {
-	//    return nil;
++ (LMMusicPlayer*)sharedMusicPlayer {	
+	NSAssert([self onboardingComplete], @"Onboarding isn't complete.");
 	
 	static LMMusicPlayer *sharedPlayer;
 	static dispatch_once_t token;
@@ -206,6 +207,12 @@ MPMediaGrouping associatedMediaTypes[] = {
 		sharedPlayer = [self new];
 	});
 	return sharedPlayer;
+}
+
++ (BOOL)onboardingComplete {
+	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+	
+	return [userDefaults objectForKey:LMSettingsKeyOnboardingComplete] ? YES : NO;
 }
 
 - (LMMusicPlaybackState)playbackState {

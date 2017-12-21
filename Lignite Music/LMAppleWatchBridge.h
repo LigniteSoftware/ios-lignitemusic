@@ -55,6 +55,8 @@
 #define LMAppleWatchCommunicationKeyNowPlayingTrackUpdate @"LMAppleWatchCommunicationKeyNowPlayingTrackUpdate"
 //A property of the now playing info changed on the phone. Message should contain a key of LMAppleWatchCommunicationKeyNowPlayingInfoUpdate with a value of the LMAppleWatchNowPlayingInfoKey that was changed, along with that associated LMAppleWatchNowPlayingInfoKey as a key with a value of the new property.
 #define LMAppleWatchCommunicationKeyNowPlayingInfoUpdate @"LMAppleWatchCommunicationKeyNowPlayingInfoUpdate"
+//Whether or not onboarding is complete.
+#define LMAppleWatchCommunicationKeyOnboardingComplete @"LMAppleWatchCommunicationKeyOnboardingComplete"
 
 
 
@@ -141,6 +143,11 @@ typedef NS_ENUM(NSInteger, LMAppleWatchMusicInfoType){
  @param viewController The view controller to attach volume events to.
  */
 - (void)attachToViewController:(UIViewController*)viewController;
+
+/**
+ Sends the watch the current onboarding status.
+ */
+- (void)sendOnboardingStatusToWatch;
 
 /**
  Tells the watch bridge to send the now playing track info to the watch to display on the main interface. This automatically handles whether or not the watch is connected and any errors associated with sending the data.

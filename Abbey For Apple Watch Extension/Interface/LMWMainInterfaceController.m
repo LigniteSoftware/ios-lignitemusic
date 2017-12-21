@@ -55,6 +55,10 @@
 
 
 - (void)musicTrackDidChange:(LMWMusicTrackInfo *)musicTrackInfo {
+	if(![self.companionBridge onboardingComplete]){
+		return;
+	}
+	
 	//Track info is already set within the companion
 	dispatch_async(dispatch_get_main_queue(), ^{
 		if(musicTrackInfo == nil){
@@ -79,9 +83,7 @@
 }
 
 - (void)albumArtDidChange:(UIImage*)albumArt {
-	dispatch_async(dispatch_get_main_queue(), ^{
-		[self.albumArtImage setImage:albumArt];
-	});
+	[self.albumArtImage setImage:albumArt];
 }
 
 - (void)reloadTrackProgressBar {
@@ -527,6 +529,7 @@
 }
 
 - (void)companionConnectionStatusChanged:(BOOL)connected {
+	NSLog(@"Connection status changed %d", connected);
 	if(connected){
 		[self setError:nil];
 	}
@@ -540,7 +543,21 @@
 	}
 }
 
+- (void)onboardingCompleteStatusChanged:(BOOL)onboardingComplete {
+	NSLog(@"Onboarding status changed %d", onboardingComplete);
+	if(onboardingComplete){
+		[self setError:nil];
+	}
+	else{
+		[self setError:NSLocalizedString(@"WaitingForOnboarding", nil)];
+	}
+}
+
 - (void)setError:(NSString*)error {
+	if(![self.companionBridge onboardingComplete]){
+		error = NSLocalizedString(@"WaitingForOnboarding", nil);
+	}
+	
 	BOOL hideContents = error ? YES : NO;
 	
 	[self.nowPlayingGroup setHidden:hideContents];
@@ -561,6 +578,11 @@
 }
 
 - (void)setNothingPlaying:(BOOL)nothingPlaying {
+	if(![self.companionBridge onboardingComplete]){
+		[self setError:NSLocalizedString(@"WaitingForOnboarding", nil)];
+		return;
+	}
+	
 	[self.nothingPlayingGroup setHidden:!nothingPlaying];
 	[self.nothingPlayingLabel setHidden:!nothingPlaying];
 	

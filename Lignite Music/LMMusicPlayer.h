@@ -245,6 +245,13 @@ typedef enum {
 + (LMMusicPlayer*)sharedMusicPlayer;
 
 /**
+ Whether or not the user has completed onboarding. If not, the sharedMusicPlayer singleton instance should not be initialized.
+
+ @return Whether or not onboarding is complete.
+ */
++ (BOOL)onboardingComplete;
+
+/**
  Prepare for release through ARC. Unhooks observers tied to state and track change notifications.
  */
 - (void)deinit;

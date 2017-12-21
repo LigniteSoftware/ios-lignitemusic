@@ -9,6 +9,7 @@
 #import <WatchConnectivity/WatchConnectivity.h>
 #import "LMAppleWatchBridge.h"
 #import "LMPlaylistManager.h"
+#import "NSTimer+Blocks.h"
 #import "LMMusicPlayer.h"
 #import "LMThemeEngine.h"
 
@@ -38,6 +39,23 @@
 @implementation LMAppleWatchBridge
 
 @synthesize musicPlayer = _musicPlayer;
+
+- (LMMusicPlayer*)musicPlayer {
+	static BOOL hasRegisteredAsMusicPlayerDelegate;
+	
+	if(LMMusicPlayer.onboardingComplete && !hasRegisteredAsMusicPlayerDelegate){
+		_musicPlayer = [LMMusicPlayer sharedMusicPlayer];
+		[_musicPlayer addMusicDelegate:self];
+		
+		hasRegisteredAsMusicPlayerDelegate = YES;
+	}
+	
+	return _musicPlayer;
+}
+
+- (void)setMusicPlayer:(LMMusicPlayer *)musicPlayer {
+	_musicPlayer = musicPlayer;
+}
 
 - (void)musicTrackDidChange:(LMMusicTrack*)newTrack {
 	[self sendNowPlayingTrackToWatch];
@@ -137,7 +155,7 @@
 }
 
 - (BOOL)connected {
-	return self.session.reachable;
+	return self.session.reachable && LMMusicPlayer.onboardingComplete;
 }
 
 - (NSDictionary*)dictionaryForMusicTrack:(LMMusicTrack*)musicTrack {
@@ -231,6 +249,21 @@
 																  
 																  NSLog(@"Error sending %@", error);
 															  }];
+	}
+}
+
+- (void)sendOnboardingStatusToWatch {
+	if(self.connected){
+		[self.session sendMessage:@{ 
+									LMAppleWatchCommunicationKey: LMAppleWatchCommunicationKeyOnboardingComplete,
+									LMAppleWatchCommunicationKeyOnboardingComplete: @(LMMusicPlayer.onboardingComplete)
+									}
+					 replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
+						 NSLog(@"Got reply %@", replyMessage);
+					 }
+					 errorHandler:^(NSError * _Nonnull error) {
+						 NSLog(@"Error sending onboarding status: %@", error);
+					 }];
 	}
 }
 
@@ -410,9 +443,11 @@
 	NSString *key = [message objectForKey:LMAppleWatchCommunicationKey];
 	
 	if([key isEqualToString:LMAppleWatchCommunicationKeyNowPlayingTrack]){
-		[self sendNowPlayingTrackToWatch:YES];
+		replyHandler(@{ LMAppleWatchCommunicationKeyOnboardingComplete:@(LMMusicPlayer.onboardingComplete) });
 		
-		replyHandler(@{ @"sent":@"lordknows" });
+		if(LMMusicPlayer.onboardingComplete){
+			[self sendNowPlayingTrackToWatch:YES];
+		}
 	}
 	else if([key isEqualToString:LMAppleWatchCommunicationKeyMusicBrowsingEntries]){
 		NSArray<NSNumber*> *musicTypes = [message objectForKey:LMAppleWatchBrowsingKeyMusicTypes];
@@ -732,11 +767,9 @@
 }
 
 + (LMAppleWatchBridge*)sharedAppleWatchBridge {
-#warning apple watch is disabled
-	return nil;
-	
 	static LMAppleWatchBridge *sharedAppleWatchBridge;
 	static dispatch_once_t token;
+	
 	dispatch_once(&token, ^{
 		sharedAppleWatchBridge = [self new];
 		
@@ -745,12 +778,10 @@
 			sharedAppleWatchBridge.session.delegate = sharedAppleWatchBridge;
 			[sharedAppleWatchBridge.session activateSession];
 			
-			sharedAppleWatchBridge.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
-			[sharedAppleWatchBridge.musicPlayer addMusicDelegate:sharedAppleWatchBridge];
-			
 			[[LMThemeEngine sharedThemeEngine] addDelegate:sharedAppleWatchBridge];
 		}
 	});
+	
 	return sharedAppleWatchBridge;
 }
 

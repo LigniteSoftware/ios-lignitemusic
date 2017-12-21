@@ -21,6 +21,11 @@
  */
 @property NSMutableArray<id<LMWCompanionBridgeDelegate>> *delegates;
 
+/**
+ Whether or not the delegates have already been notified about the current onboarding status.
+ */
+@property BOOL alreadyNotifiedDelegatesOfOnBoarding;
+
 @end
 
 @implementation LMWCompanionBridge
@@ -83,10 +88,10 @@
 
 - (UIColor*)phoneThemeMainColour {
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-	
+
 	NSString *storedHexString = [userDefaults objectForKey:LMAppleWatchNowPlayingInfoKeyTheme];
 	NSString *mainColourHexString = storedHexString ? storedHexString : @"E82824";
-	
+
 	return [LMWCompanionBridge colourWithHexString:mainColourHexString];
 }
 
@@ -116,7 +121,10 @@
 
 
 - (void)session:(WCSession *)session didReceiveMessage:(NSDictionary<NSString *, id> *)message {
+	NSLog(@"Got message");
 	NSString *key = [message objectForKey:LMAppleWatchCommunicationKey];
+	
+	NSLog(@"Key is %@", key);
 	
 	if(!key){ //There MUST be a key contained in the dictionary.
 		return;
@@ -214,7 +222,9 @@
 	}
 	//A property of the now playing info was updated.
 	else if([key isEqualToString:LMAppleWatchCommunicationKeyNowPlayingInfoUpdate]){
+		NSLog(@"Info update. %@", message);
 		NSString *infoKey = [message objectForKey:LMAppleWatchCommunicationKeyNowPlayingInfoUpdate];
+		NSLog(@"Key for info update %@ - info %@", infoKey, self.nowPlayingInfo);
 		if([infoKey isEqualToString:LMAppleWatchNowPlayingInfoKeyIsPlaying]){
 			self.nowPlayingInfo.playing = [[message objectForKey:infoKey] boolValue];
 		}
@@ -236,13 +246,42 @@
 		}
 		
 		dispatch_async(dispatch_get_main_queue(), ^{
+			NSLog(@"Notifying delegates of info update");
 			for(id<LMWCompanionBridgeDelegate> delegate in self.delegates){
 				if([delegate respondsToSelector:@selector(nowPlayingInfoUpdate:forKey:)]){
+					NSLog(@"Notifying %@", delegate);
 					[delegate nowPlayingInfoUpdate:self.nowPlayingInfo forKey:infoKey];
 				}
 			}
+			NSLog(@"Done notifying");
 		});
 	}
+//	else if([key isEqualToString:LMAppleWatchCommunicationKeyOnboardingComplete]){
+//		NSLog(@"Checking");
+//
+//		BOOL newOnboardingStatus = [message objectForKey:LMAppleWatchCommunicationKeyOnboardingComplete];
+//
+//		NSLog(@"Got new onboarding status: %d", newOnboardingStatus);
+//
+//		[[NSUserDefaults standardUserDefaults] setBool:newOnboardingStatus
+//												forKey:LMAppleWatchCommunicationKeyOnboardingComplete];
+//
+//		NSLog(@"Onboarding set.");
+//
+//		self.hasAlreadyNotifiedDelegatesOfOnboardingOnce = YES;
+//
+//		NSLog(@"Notifying delegates...");
+//
+//		dispatch_async(dispatch_get_main_queue(), ^{
+//			for(id<LMWCompanionBridgeDelegate> delegate in self.delegates){
+//				if([delegate respondsToSelector:@selector(onboardingCompleteStatusChanged:)]){
+//					[delegate onboardingCompleteStatusChanged:newOnboardingStatus];
+//				}
+//			}
+//
+//			NSLog(@"Delegates called.");
+//		});
+//	}
 }
 
 /** Called on the delegate of the receiver when the sender sends a message that expects a reply. Will be called on startup if the incoming message caused the receiver to launch. */
@@ -250,35 +289,113 @@
 	
 //	[self.titleLabel setText:[message objectForKey:@"title"]];
 	
-	replyHandler(@{ @"whats":@"up" });
+	NSLog(@"Got reply handler based message %@", message);
+	
+	NSString *key = [message objectForKey:LMAppleWatchCommunicationKey];
+	
+	NSLog(@"Reply based key is %@", key);
+	
+	if(!key){ //There MUST be a key contained in the dictionary.
+		return;
+	}
+	
+	if([key isEqualToString:LMAppleWatchCommunicationKeyOnboardingComplete]){
+		NSLog(@"Checking");
+		
+		BOOL newOnboardingStatus = [message objectForKey:LMAppleWatchCommunicationKeyOnboardingComplete];
+		
+		NSLog(@"Got new onboarding status: %d", newOnboardingStatus);
+		
+		[[NSUserDefaults standardUserDefaults] setBool:newOnboardingStatus
+												forKey:LMAppleWatchCommunicationKeyOnboardingComplete];
+		
+		NSLog(@"Onboarding set.");
+		
+		self.alreadyNotifiedDelegatesOfOnBoarding = YES;
+		
+		NSLog(@"Notifying delegates...");
+		
+		dispatch_async(dispatch_get_main_queue(), ^{
+			for(id<LMWCompanionBridgeDelegate> delegate in self.delegates){
+				if([delegate respondsToSelector:@selector(onboardingCompleteStatusChanged:)]){
+					[delegate onboardingCompleteStatusChanged:newOnboardingStatus];
+				}
+			}
+			
+			NSLog(@"Delegates called.");
+		});
+	}
+	
+	replyHandler(@{
+				   key: @"thanks"
+				   });
 }
 
 
 - (void)session:(WCSession *)session didReceiveMessageData:(NSData *)messageData {
+	NSLog(@"Got message data");
+	
 	UIImage *image = [UIImage imageWithData:messageData];
 	
 	self.nowPlayingInfo.nowPlayingTrack.albumArt = image;
 	
-	for(id<LMWCompanionBridgeDelegate> delegate in self.delegates){
-		if([delegate respondsToSelector:@selector(albumArtDidChange:)]){
-			[delegate albumArtDidChange:image];
+	dispatch_async(dispatch_get_main_queue(), ^{
+		for(id<LMWCompanionBridgeDelegate> delegate in self.delegates){
+			if([delegate respondsToSelector:@selector(albumArtDidChange:)]){
+				[delegate albumArtDidChange:image];
+			}
 		}
-	}
+	});
+	
+	NSLog(@"Finished with message data");
 }
 
 - (void)session:(WCSession *)session didReceiveMessageData:(NSData *)messageData replyHandler:(void (^)(NSData * _Nonnull))replyHandler {
+	
+	NSLog(@"Got message data with reply handler %@", messageData);
 	
 //	UIImage *image = [UIImage imageWithData:messageData];
 //	[self.albumArtImage setImage:image];
 }
 
 
+- (BOOL)onboardingComplete {
+	return [[NSUserDefaults standardUserDefaults] boolForKey:LMAppleWatchCommunicationKeyOnboardingComplete];
+}
+
+
 - (void)askCompanionForNowPlayingTrackInfo {
+//	return;
+	
 	static int attempts = 0;
+	
+	NSLog(@"Askign companion for now playing track info");
 	
 	if(self.session.reachable){
 		[self.session sendMessage:@{ LMAppleWatchCommunicationKey:LMAppleWatchCommunicationKeyNowPlayingTrack } replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
-			NSLog(@"Got reply %@", replyMessage);
+			NSLog(@"Got companion reply %@", replyMessage);
+			
+			BOOL newOnboardingStatus = [[replyMessage objectForKey:LMAppleWatchCommunicationKeyOnboardingComplete] boolValue];
+			BOOL previousOnboardingStatus = [self onboardingComplete];
+			BOOL onboardingStatusChanged = (newOnboardingStatus != previousOnboardingStatus);
+
+			//The reply will always contain whether or not onboarding has been completed.
+			[[NSUserDefaults standardUserDefaults] setBool:newOnboardingStatus
+													forKey:LMAppleWatchCommunicationKeyOnboardingComplete];
+
+
+			if(onboardingStatusChanged || !self.alreadyNotifiedDelegatesOfOnBoarding){
+				dispatch_async(dispatch_get_main_queue(), ^{
+					for(id<LMWCompanionBridgeDelegate> delegate in self.delegates){
+						if([delegate respondsToSelector:@selector(onboardingCompleteStatusChanged:)]){
+							[delegate onboardingCompleteStatusChanged:newOnboardingStatus];
+						}
+					}
+				});
+				
+				self.alreadyNotifiedDelegatesOfOnBoarding = YES;
+			}
+			
 			attempts = 0;
 		} errorHandler:^(NSError * _Nonnull error) {
 			NSLog(@"Error getting companion info %@", error);
@@ -342,7 +459,7 @@
 									LMAppleWatchControlKeyUpNextTrackSelected: @(indexOfNextUpTrackSelected)
 									}
 					 replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
-						 NSLog(@"Got reply %@", replyMessage);
+						 NSLog(@"Got up next reply %@", replyMessage);
 					 }
 					 errorHandler:^(NSError * _Nonnull error) {
 						 NSLog(@"Error %@", error);

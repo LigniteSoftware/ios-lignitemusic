@@ -1207,9 +1207,11 @@ LMControlBarViewDelegate
 		[self.splashImageView autoPinEdgesToSuperviewEdges];
 	});
 	
-	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-	if(![userDefaults objectForKey:LMSettingsKeyOnboardingComplete]){
+	
+	if(!LMMusicPlayer.onboardingComplete){
 		NSLog(@"Launching onboarding...");
+		
+		[[MPMusicPlayerController systemMusicPlayer] stop];
 		
 		[NSTimer scheduledTimerWithTimeInterval:0.25 block:^{
 			[self launchOnboarding];
@@ -1230,6 +1232,9 @@ LMControlBarViewDelegate
 		static dispatch_once_t mainSetupToken;
 		dispatch_once(&mainSetupToken, ^{
 			NSLog(@"Launch main view controller contents");
+			
+			[[LMAppleWatchBridge sharedAppleWatchBridge] sendOnboardingStatusToWatch];
+			
 			[NSTimer scheduledTimerWithTimeInterval:0.1 block:^{
 				if(!(self.restorationState == LMCoreViewControllerRestorationStateOutOfView)){
 					self.loadingActivityIndicator = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
@@ -1296,6 +1301,8 @@ LMControlBarViewDelegate
 				
 				[NSTimer scheduledTimerWithTimeInterval:0.05 block:^{
 					dispatch_async(dispatch_get_main_queue(), ^{
+				
+						
 						[self loadSubviews];
 					});
 				} repeats:NO];

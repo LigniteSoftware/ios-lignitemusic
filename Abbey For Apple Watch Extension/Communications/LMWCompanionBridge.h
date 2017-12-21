@@ -56,6 +56,8 @@
 #define LMAppleWatchCommunicationKeyNowPlayingTrackUpdate @"LMAppleWatchCommunicationKeyNowPlayingTrackUpdate"
 //A property of the now playing info changed on the phone. Message should contain a key of LMAppleWatchCommunicationKeyNowPlayingInfoUpdate with a value of the LMAppleWatchNowPlayingInfoKey that was changed, along with that associated LMAppleWatchNowPlayingInfoKey as a key with a value of the new property.
 #define LMAppleWatchCommunicationKeyNowPlayingInfoUpdate @"LMAppleWatchCommunicationKeyNowPlayingInfoUpdate"
+//Whether or not onboarding is complete.
+#define LMAppleWatchCommunicationKeyOnboardingComplete @"LMAppleWatchCommunicationKeyOnboardingComplete"
 
 //The key for the music types when the communication key is LMAppleWatchCommunicationKeyMusicBrowsingEntries. Music types is plural because it's an array of music types which define the structure of windows that the user has been presented in their current browsing session.
 #define LMAppleWatchBrowsingKeyMusicTypes @"LMAppleWatchBrowsingKeyMusicTypes"
@@ -160,6 +162,13 @@
 - (void)companionConnectionStatusChanged:(BOOL)connected;
 
 /**
+ The status of whether or not the user has completed onboarding has changed.
+
+ @param onboardingComplete Whether or not the user has completed onboarding.
+ */
+- (void)onboardingCompleteStatusChanged:(BOOL)onboardingComplete;
+
+/**
  Asks the delegate to display a debug message, if possible.
 
  @param debug The debug message to display.
@@ -197,6 +206,13 @@
  @return Whether or not the iOS device needs to be unlocked to continue.
  */
 - (BOOL)requiresUnlock;
+
+/**
+ Whether or not the user has completed onboarding on the companion app. If not complete, the Apple Watch extension will not work, sorry.
+
+ @return YES if the user completed onboarding, otherwise, NO.
+ */
+- (BOOL)onboardingComplete;
 
 /**
  The main colour of the phone's theme. By default, this will return Lignite red.

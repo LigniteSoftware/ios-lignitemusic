@@ -6,6 +6,8 @@
   Copyright © 2017 Lignite. All rights reserved.
 */
 
+"WaitingForOnboarding" = "Please complete onboarding on the phone app.";
+
 "BrowseLibrary" = "Browse Library";
 
 "NothingPlaying" = "Nothing's playing";
