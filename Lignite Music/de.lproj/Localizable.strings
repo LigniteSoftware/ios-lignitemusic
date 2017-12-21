@@ -48,6 +48,12 @@
  
  */
 
+"NowPlayingKeepScreenOnTitle" = "Displayverhalten bei Wiedergabe";
+"NowPlayingKeepScreenOnSubtitle" = "Display während Wiedergabe nicht ausschalten";
+
+"Playing" = "Wiedergabe läuft"; //Playing music
+"Paused" = "Wiedergabe pausiert"; //Music is paused
+
 "SyncingLibrary" = "Deine Musiksammlung wird gerade synchronisiert.";
 "LibraryFinishedSyncing" = "Deine Musiksammlung wurde synchronisiert.";
 
@@ -285,7 +291,7 @@
 "Lists" = "Listen";
 "Composers" = "Komponisten";
 "Genres" = "Genres";
-"Compilations" = "Compilations";
+"Compilations" = "Kompilationen";
 
 "UnknownTitle" = "Unbekannter Titel";
 "UnknownArtist" = "Unbekannter Künstler";

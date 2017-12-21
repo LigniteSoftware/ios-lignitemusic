@@ -105,6 +105,11 @@
 @property NSLayoutConstraint *iPhoneXBottomCoverConstraint;
 @property NSLayoutConstraint *minimizeButtonIconWidthConstraint;
 
+/**
+ For the fucking status bar.
+ */
+@property UIView *iPhoneXStatusBarCoverView;
+
 @end
 
 @implementation LMButtonNavigationBar
@@ -824,6 +829,17 @@
 			[self.sourceSelector autoSetDimension:ALDimensionHeight toSize:properDimension-LMNavigationBarTabHeight];
 		}];
 		[LMLayoutManager addNewiPadConstraints:sourceSelectoriPadConstraints];
+		
+		if([LMLayoutManager isiPhoneX]){
+			self.iPhoneXStatusBarCoverView = [UIView newAutoLayoutView];
+			self.iPhoneXStatusBarCoverView.backgroundColor = [UIColor whiteColor];
+			[self.sourceSelector addSubview:self.iPhoneXStatusBarCoverView];
+			
+			[self.iPhoneXStatusBarCoverView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+			[self.iPhoneXStatusBarCoverView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+			[self.iPhoneXStatusBarCoverView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+			[self.iPhoneXStatusBarCoverView autoSetDimension:ALDimensionHeight toSize:64.0f];
+		}
 		
 		if([LMLayoutManager isiPad]){
 			[self insertSubview:self.minimizeButton aboveSubview:self.buttonBar];

@@ -140,6 +140,8 @@ LMControlBarViewDelegate
 
 @property LMSource *selectedSource;
 
+//@property UIView *iPhoneXStatusBarCoverView;
+
 @end
 
 @implementation LMCoreViewController
@@ -854,6 +856,9 @@ LMControlBarViewDelegate
 		}
 		
 		[self.navigationController.view bringSubviewToFront:self.buttonNavigationBar];
+//		if([LMLayoutManager isiPhoneX]){
+//			[self.navigationController.view bringSubviewToFront:self.iPhoneXStatusBarCoverView];
+//		}
 		[self.navigationController.view bringSubviewToFront:self.nowPlayingCoreView];
 	}
 }
@@ -1041,6 +1046,9 @@ LMControlBarViewDelegate
 		}
 		
 		[self.navigationController.view bringSubviewToFront:self.buttonNavigationBar];
+//		if([LMLayoutManager isiPhoneX]){
+//			[self.navigationController.view bringSubviewToFront:self.iPhoneXStatusBarCoverView];
+//		}
 		[self.navigationController.view bringSubviewToFront:self.nowPlayingCoreView];
 		
 		
@@ -1635,6 +1643,18 @@ LMControlBarViewDelegate
 	//						[self.navigationController.view insertSubview:self.landscapeNavigationBar aboveSubview:self.buttonNavigationBar];
 	
 	[self.musicPlayer addMusicDelegate:self];
+	
+	
+//	if([LMLayoutManager isiPhoneX]){
+//		self.iPhoneXStatusBarCoverView = [UIView newAutoLayoutView];
+//		self.iPhoneXStatusBarCoverView.backgroundColor = [UIColor blueColor];
+//		[self.navigationController.view addSubview:self.iPhoneXStatusBarCoverView];
+//
+//		[self.iPhoneXStatusBarCoverView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+//		[self.iPhoneXStatusBarCoverView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+//		[self.iPhoneXStatusBarCoverView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+//		[self.iPhoneXStatusBarCoverView autoSetDimension:ALDimensionHeight toSize:44.0f];
+//	}
 	
 	
 //	if([LMLayoutManager isiPhoneX]){
