@@ -56,6 +56,6 @@
 
 "OhBoy" = "Ups"; //As in "oh boy, that sucks" for error titles
 "DarnOkay" = "Okay"; //Better than an "Okay" button
-"PhoneDidNotReplyToCommandError" = "Dein iPhone scheint nicht zu antworten.\n\nBist du sicher, dass es mit deiner Apple Watch verbunden und dass Abbey eingerichtet ist?\n\nVersuche es bitte noch einmal.\n\nSollte dieses Problem weiterhin bestehen, melde dich bitte unter contact@lignite.io bei uns.";
+"PhoneDidNotReplyToCommandError" = "Dein iPhone scheint nicht zu antworten.\n\nBist du sicher, dass es mit deiner Apple Watch verbunden und dass Lignite eingerichtet ist?\n\nVersuche es bitte noch einmal.\n\nSollte dieses Problem weiterhin bestehen, melde dich bitte unter contact@lignite.io bei uns.";
 "UnknownErrorAlert" = "Ups, irgendwas ist schief gelaufen, sorry.\n\nDeine Apple Watch hat uns einen unbekannten Fehler mit dem Code %ld:\n\n'%@' gemeldet.\n\nVersuche es bitte erneut.\n\nSollte dieses Problem weiterhin bestehen, melde dich bitte unter contact@lignite.io bei uns.";
 "TryingThatTooMuch" = "Achtung, du hast es zu oft versucht.\n\nHalte sich bitte ein bisschen zurück, deine Apple Watch ist nicht so performant.";

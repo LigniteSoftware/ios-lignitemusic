@@ -1,6 +1,6 @@
 /*
   Localizable.strings
-  Abbey
+  Lignite Music
 
   Created by Edwin Finch on 10/1/16.
   Copyright © 2016 Lignite. All rights reserved.
@@ -8,7 +8,7 @@
 
 /*
  
- Hello, and thanks for translating Abbey!
+ Hello, and thanks for translating Lignite Music!
  
  Please read the following notes *thoroughly*. You only have to read them once. If your translations show that you haven't read this (multiple mistakes, bad translations, app crashes using them frequently), we unfortunately may have to remove you from the translation team. Therefore it is important you read the following :)
  
@@ -25,12 +25,12 @@
  static. If your language *absolutely requires* a different order, please contact us directly.
  
  3. If you are confused about a string, look at its key first. It may help clarify. 
- If still you have any questions about translating Abbey please let us know. You should not feel uncertain
+ If still you have any questions about translating Lignite Music please let us know. You should not feel uncertain
  what a strinhg is doing, and if you are, just let us know and we'll clarify. Now that you've read this far, 
  please send us a picture of a walrus so we know you did. Yes, seriously.
  
  4. The following words/terms should *never* be translated into your language for legal reasons:
-	"Lignite Music", "Lignite", "Pebble", "Apple Music", "Spotify", "Abbey"
+	"Lignite Music", "Lignite", "Pebble", "Apple Music", "Spotify", "Lignite Music"
 	
 	If you need to clarify the above in your language, for example "Pebble" needs to be the equivalent of "Pebble Smartwatch" in your language to make sure the idea is clear, it's ok to add words for clarity if necessary and you don't change the legal name. To demonstrate as an example if you needed this, in simplified Chinese, you would write "Pebble 智能手表".
  
@@ -61,7 +61,7 @@
 "NoPlaylists" = "Oh boy, you don't have any playlists yet!\n\nCreate a new playlist by tapping the 'Create' button above.";
 
 "EnablePebbleTitle" = "Allow Pebble access";
-"EnablePebbleDescription" = "We created a Pebble app for Abbey, but Pebble went out of business. We have kept Pebble within Abbey for any remaining Pebblers.\n\nHowever, we no longer officially support Pebble. PEBBLE FUNCTIONALITY MAY NOT WORK AT ALL.\n\nPlease only continue if you accept that Pebble for Abbey may not work.";
+"EnablePebbleDescription" = "We created a Pebble app for Lignite Music, but Pebble went out of business. We have kept Pebble within Lignite Music for any remaining Pebblers.\n\nHowever, we no longer officially support Pebble. PEBBLE FUNCTIONALITY MAY NOT WORK AT ALL.\n\nPlease only continue if you accept that Pebble for Lignite Music may not work.";
 "PebbleEnable" = "Enable Pebble Support";
 "PebbleDisable" = "Cancel";
 
@@ -133,12 +133,12 @@
 "Unfavourited" = "Un-favourited";
 
 "PlaylistManagementUnderstandingTitle" = "How playlists are handled";
-"PlaylistManagementUnderstandingBody" = "Due to limitations of iOS, we unfortunately cannot sync the playlists you create and manage within Abbey with the built-in music app.\n\nPlaylists that are created, edited, and deleted within Abbey will not affect your playlists outside of the app in any way.\n\nPlease tap the confirmation button below if you understand.\n\nThank you.";
+"PlaylistManagementUnderstandingBody" = "Due to limitations of iOS, we unfortunately cannot sync the playlists you create and manage within Lignite Music with the built-in music app.\n\nPlaylists that are created, edited, and deleted within Lignite Music will not affect your playlists outside of the app in any way.\n\nPlease tap the confirmation button below if you understand.\n\nThank you.";
 "IUnderstand" = "I understand";
 
 "ExplicitImageDownloadingTitle" = "Cellular & low storage";
 
-"ExplicitImageDownloadingBody" = "Abbey downloads images of your artists and missing album covers automatically.\n\nHowever, we want your explicit permission to be allowed to download these images when you're on cellular data or low storage.\n\nDenying this will only allow image downloading on WiFi with plenty of storage.";
+"ExplicitImageDownloadingBody" = "Lignite Music downloads images of your artists and missing album covers automatically.\n\nHowever, we want your explicit permission to be allowed to download these images when you're on cellular data or low storage.\n\nDenying this will only allow image downloading on WiFi with plenty of storage.";
 
 "Allow" = "Allow";
 "Deny" = "Deny";
@@ -161,12 +161,12 @@
 "TutorialMiniPlayerTitle" = "Mini player";
 "TutorialMiniPlayerDescription" = "Tap anywhere on the mini player to play/pause your music, or swipe left/right to go between your songs, and swipe up to reveal full-screen playback.";
 "TutorialTopBarTitle" = "Top bar";
-"TutorialTopBarDescription" = "The top bar, to make navigation even easier.\n\nUse it to navigate back throughout pages, or tap the Abbey icon to reveal full-screen playback.";
+"TutorialTopBarDescription" = "The top bar, to make navigation even easier.\n\nUse it to navigate back throughout pages, or tap the Lignite Music icon to reveal full-screen playback.";
 "TutorialFullScreenPlaybackTitle" = "Full-screen playback";
 "TutorialFullScreenPlaybackDescription" = "Same gestures as the mini player. Tap anywhere to pause, swipe left/right to navigate through tunes, and drag it down to go back to browsing.\n\nAs well, you can see what's coming up next by tapping the bottom right icon.";
 
 
-"NoiPadSupport" = "Sorry, Abbey doesn't currently support iPad, but we will support it in the future.\n\nInstead of putting you into a potentially buggy app, we will just leave you here. Please feel free to uninstall the app from your iPad.\n\nWe will announce via Kickstarter when we add iPad support.\n\nThank you for your understanding.";
+"NoiPadSupport" = "Sorry, Lignite Music doesn't currently support iPad, but we will support it in the future.\n\nInstead of putting you into a potentially buggy app, we will just leave you here. Please feel free to uninstall the app from your iPad.\n\nWe will announce via Kickstarter when we add iPad support.\n\nThank you for your understanding.";
 
 "OnboardingSpotifyLoginTitle" = "Spotify";
 "OnboardingSpotifyLoginDescription" = "Our app is all about playing your Spotify music.\n\nIf you could please login, our app will use your Spotify account to bring you music awesomeness. If you don't have Spotify, feel free to get it using the button below.";
@@ -183,7 +183,7 @@
 
 
 "TheresNothingHere" = "Oh boy, you don't have any music here!\n\nSync your music from iTunes to begin."; //Nothing for a certain view (ie. no compilations)
-"iOSNotProvidingQueue" = "iOS isn't telling us what's up next.\n\nStart new music from within Abbey to see what's next here.";
+"iOSNotProvidingQueue" = "iOS isn't telling us what's up next.\n\nStart new music from within Lignite Music to see what's next here.";
 "NothingInQueue" = "Nothing in queue";
 
 
@@ -217,7 +217,7 @@
 "OptionOptIn" = "Opt-in";
 "OptionOptOut" = "Opt-out";
 "OptedOut" = "You have opted-out";
-"OptedIn" = "Thanks for making Abbey better!";
+"OptedIn" = "Thanks for making Lignite Music better!";
 
 /*
  
@@ -347,7 +347,7 @@
  After confirming, the user then will get a popup from iOS (which we have no control over) asking them if Lignite Music
  has permission to use Bluetooth. */
 "PebbleConnectionRequestTitle" = "Pebble Connection";
-"PebbleConnectionRequestDescription" = "iOS is about to ask for your permission to use Bluetooth devices. Please allow the permission as we use it to communicate with Abbey watchapps.";
+"PebbleConnectionRequestDescription" = "iOS is about to ask for your permission to use Bluetooth devices. Please allow the permission as we use it to communicate with Lignite Music watchapps.";
 
 /*
  Onboarding
@@ -364,22 +364,22 @@
  4.2. Otherwise they can skip it and it will go to the next slide
  5. Thank you screen/end of onboarding
  */
-"OnboardingWelcomeTitle" = "Welcome to Abbey";
+"OnboardingWelcomeTitle" = "Welcome to Lignite Music";
 "OnboardingWelcomeDescription" = "We're hoping to bring you the ultimate music player experience.\n\nWe just need you to accept one permission to bring your music experience to life.";
 
 "OnboardingMusicPermissionTitle" = "We need your music so you can jam!";
-"OnboardingMusicPermissionDescription" = "Once clicking the button below, you will be asked to grant permission to Abbey for access to your music library.\n\nPlease accept this permission so we can get you one step closer to rockin' out!";
+"OnboardingMusicPermissionDescription" = "Once clicking the button below, you will be asked to grant permission to Lignite Music for access to your music library.\n\nPlease accept this permission so we can get you one step closer to rockin' out!";
 
 //The user is gutless most likely because they did not take the time to read the dialog and simply clicked deny. However, we understand shit happens and they might have slipped or something.
 "OnboardingUserIsGutlessTitle" = "Music, please? :(";
-"OnboardingUserIsGutlessDescription" = "Somewhere along the way the music permission for Abbey was denied. Don't worry, it's easy to fix.\n\n1. Go to your iPhone's settings app\n2. Find the 'Abbey' entry near the bottom and go into it\n3. Make sure the 'Media Library' toggle is turned on\n\nOnce that's done, reopen Abbey and you should be set!"; //Please ensure for this translation that the language used in guiding the users through the iOS settings menu *exactly matches* the actual settings menu in that language.
+"OnboardingUserIsGutlessDescription" = "Somewhere along the way the music permission for Lignite Music was denied. Don't worry, it's easy to fix.\n\n1. Go to your iPhone's settings app\n2. Find the 'Lignite Music' entry near the bottom and go into it\n3. Make sure the 'Media Library' toggle is turned on\n\nOnce that's done, reopen Lignite Music and you should be set!"; //Please ensure for this translation that the language used in guiding the users through the iOS settings menu *exactly matches* the actual settings menu in that language.
 
 "StillCantAccessMusicTitle" = "We are still having trouble.";
 "StillCantAccessMusicDescription" = "We still can't access your music for some reason even though you've probably tried what we asked.\n\nWe're really sorry that this has not gone smoothly, we are not sure what is going wrong.\n\nPlease click the 'Contact Us' button below you can reach out to us directly. We will be sure to get you sorted out one way or another.\n\nThank you."; //Please ensure the 'Contact Us' in quotes is the same as the ContactUs string in this file
 "ContactUs" = "Contact us";
 "DoNothing" = "Do nothing"; //Instead of contacting us
 
-"OnboardingThanksTitle" = "We hope you enjoy Abbey!";
+"OnboardingThanksTitle" = "We hope you enjoy Lignite Music!";
 "OnboardingThanksDescription" = "We are a two geek team: designer and developer.\n\nWe love making apps that are beautiful and functional and we hope you enjoy it as much as we enjoyed making it!";
 
 /* Tutorial */
@@ -406,7 +406,7 @@
 "ImagesDownloadWarningTitle" = "Image downloading";
 
 //See comment below this string for how it will be formatted
-"ImagesDownloadWarningDescription" = "Abbey downloads images of your artists and missing album covers automatically.\n\nHowever, we noticed that %@.\n\nIt shouldn't take more than ~%.02f MB to download the images%@.\n\nIf you tap '%@', we will download them anyway.\n\nOtherwise, if you tap '%@', you can always change your mind later in settings.";
+"ImagesDownloadWarningDescription" = "Lignite Music downloads images of your artists and missing album covers automatically.\n\nHowever, we noticed that %@.\n\nIt shouldn't take more than ~%.02f MB to download the images%@.\n\nIf you tap '%@', we will download them anyway.\n\nOtherwise, if you tap '%@', you can always change your mind later in settings.";
 
 /*
  What is inserted into "ImagesDownloadWarningDescription", in order of formatters:
@@ -442,10 +442,10 @@
 "Enabled" = "Enabled";
 "KeepEnabled" = "Keep enabled";
 
-"SettingImagesAlertDescription" = "Abbey downloads images of your artists and missing album covers automatically.\n\n%@\n\n%@";
+"SettingImagesAlertDescription" = "Lignite Music downloads images of your artists and missing album covers automatically.\n\n%@\n\n%@";
 "YouCurrentlyHaveThisFeatureOff" = "Turned off.";
 "YouCanTurnOffTo" = "You can delete these images and turn this feature off to save storage and bandwidth. You can always change your mind in settings.";
-"YouCanTurnOnTo" = "You can turn this feature on to bring the most beauty to Abbey.\n\nWe will download images on WiFi and when you have enough storage, and will ask you what to do if either of those don't happen.";
+"YouCanTurnOnTo" = "You can turn this feature on to bring the most beauty to Lignite Music.\n\nWe will download images on WiFi and when you have enough storage, and will ask you what to do if either of those don't happen.";
 
 "ImagesDeleted" = "Images deleted";
 "WillBeginDownloading" = "Will download";
@@ -485,7 +485,7 @@
 "ImageAPIDescription" = "We want to give a big shoutout to Discogs's absolutely breathtaking API and community.\n\nWe use it for its images of artists and images of missing cover art and it works like a charm! It has a nice rate limit, many functions, and an excellent community.";
 
 "OpenSourceLibraries" = "Open Source Libraries";
-"OpenSourceLibrariesLicensing" = "Abbey is built off of many powerful open source libraries.\n\nBig thanks to the original authors and all who contributed to their development!";
+"OpenSourceLibrariesLicensing" = "Lignite Music is built off of many powerful open source libraries.\n\nBig thanks to the original authors and all who contributed to their development!";
 
 "LibraryYYImage" = "YYImage - ibireme";
 "LibraryYYImageDescription" = "YYImage is a powerful image framework which lets you encode/decode many types of images.";
@@ -518,7 +518,7 @@
 /* Contact */
 "ContactUs" = "Contact us";
 "ContactHi" = "Hi!";
-"ContactDescription" = "We hope you enjoy Abbey as much as we enjoyed bringing it to life.\n\nPlease feel free to contact us for any reason, we'd love to hear from you!";
+"ContactDescription" = "We hope you enjoy Lignite Music as much as we enjoyed bringing it to life.\n\nPlease feel free to contact us for any reason, we'd love to hear from you!";
 "ContactThanks" = "Thanks very much for your support and best regards from the both of us!";
 
 
@@ -547,7 +547,7 @@
 "RankSuperSupporters" = "Super Supporters";
 "RankSuperSupportersPeople" = "Nicholas Bomba, Senpai_Son, Mike Coogan, Daniel Amsler, Dave Peddle, Tim Parker-Smith, Robert ReGester, Nathan Ellingson, Vivek Correia";
 
-"RankLigniteMusicInfluencers" = "Abbey Influencers";
+"RankLigniteMusicInfluencers" = "Lignite Music Influencers";
 "RankLigniteMusicInfluencersPeople" = "Halina Kaja Mydin, Sandra Wälli, Dirk Stoesser, Xenophys, Mathew Reiss, Monika, TokyoMike, Craig Paterson, Michael Jones, Michele De Paola, Donald D. Parker, Faye Salwin, Crayden Arcand, Michael McAuliffe, Elliot Chase, Giroux, Cyril Marques, K Everett, Richard Rochester, Michael, David Snell, Trang To, Maikel Bennebroek, Marc Roberts, Garrett Brusewitz, R LeRoy Kenyon II, Daniel Kremer, Sarah Baskerville, Matthias Lamm, Sean DeArras, David Gölzhäuser, Cory Gaetz, Rainer Windgassen, Amy, JDZ, Ronald Sutton, Terrill, Homero Padilla Cano, Stephen Africa Moore, Ionut Catalin Bolea, Garcy, Alex Lanigan, Derviş Murat Akbaba, John James Dooley, Steven Brunwasser, William Featherstone, Emmanuelle V, Mark Russell, Fl4v1en, Jennifer Graham, NEXUM, Mahmoud Shihab, Scott Friedman, Alvaro Farfan, Prasert Laosaengpha, Erich Zirnhelt, Haid Christoph, Flavio Tischhauser, Jeff Husson, Beat Jost, Jordan Thurston, Jonathan Higgins, Scott Seyforth, Yoga Nandiwardhana, Dennis Bray, Brian, eme assiak, Mike Tamis, Robert Dyson, Sarah Heile, JayC, James J McMullen, Justin Matlock, Peter Lönnebring, Renaldo McGee, Jean-Marc Bélanger";
 
 "RankBetaAccess" = "Beta Access Backers";

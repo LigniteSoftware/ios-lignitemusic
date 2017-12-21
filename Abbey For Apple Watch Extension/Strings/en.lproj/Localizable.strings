@@ -56,6 +56,6 @@
 
 "OhBoy" = "Oh boy"; //As in "oh boy, that sucks" for error titles
 "DarnOkay" = "Darn, okay"; //Better than an "Okay" button
-"PhoneDidNotReplyToCommandError" = "It seems that your phone is not replying.\n\nAre you sure your phone is connected, and Abbey is setup?\n\nPlease try your command again.\n\nIf this issue persists please contact us at contact@lignite.io.";
+"PhoneDidNotReplyToCommandError" = "It seems that your phone is not replying.\n\nAre you sure your phone is connected, and Lignite is setup?\n\nPlease try your command again.\n\nIf this issue persists please contact us at contact@lignite.io.";
 "UnknownErrorAlert" = "Oops, something went wrong along the way, sorry.\n\nYour watch has given us an unknown error with code %ld:\n\n'%@'\n\nPlease try what you were doing again.\n\nIf this issue persists please contact us at contact@lignite.io.";
 "TryingThatTooMuch" = "Whoops, you're trying that too much.\n\nPlease slow it down and try again, your watch is only so fast.";

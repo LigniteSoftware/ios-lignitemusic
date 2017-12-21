@@ -593,7 +593,7 @@
 
 - (void)awakeWithContext:(id)context {
     [super awakeWithContext:context];
-	[self setTitle:@"Abbey"];
+	[self setTitle:@"Lignite"];
 	
 	self.progressSliderInfo = [[LMWProgressSliderInfo alloc] initWithProgressBarGroup:self.progressBarGroup
 																		  inContainer:self.progressBarContainer
