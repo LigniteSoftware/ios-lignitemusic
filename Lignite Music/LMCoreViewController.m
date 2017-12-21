@@ -521,6 +521,8 @@ LMControlBarViewDelegate
 		return YES;
 	}
 	
+	NSLog(@"now playing open %d", self.nowPlayingCoreView.isOpen);
+	
 	return self.nowPlayingCoreView.isOpen //If now playing is open, hide it
 		|| self.layoutManager.isLandscape //If the device is landscape, hide it
 		|| (![LMLayoutManager isiPad] && ![LMLayoutManager isiPhoneX] && self.buttonNavigationBar.currentlySelectedTab == LMNavigationTabView && !self.buttonNavigationBar.isMinimized && !self.buttonNavigationBar.isCompletelyHidden); //If the view tab is open and the whole thing isn't minimized (doesn't apply to iPad as iPad has compact button navigation bar, also doesn't apply to iPhone X because it has the infamous notch)
@@ -1804,7 +1806,6 @@ LMControlBarViewDelegate
 		
 		if(self.restorationState == LMCoreViewControllerRestorationStateNowPlaying){
 			[self launchNowPlaying];
-			self.nowPlayingCoreView.isOpen = YES;
 		}
 		
 		if(self.previousTitleViewTopPersistentID > 0){

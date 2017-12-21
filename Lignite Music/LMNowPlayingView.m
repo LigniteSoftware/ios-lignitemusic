@@ -302,6 +302,8 @@
     [self.progressSlider resetToZero];
     self.progressSlider.value = timeToUse;
 	
+	NSLog(@"Loading track %@ is centre %d", self.loadedTrack.title, self.isUserFacing);
+	
 	[self reloadFavouriteStatus];
 	
 #warning here it is :(
@@ -319,13 +321,11 @@
 			
 			if(entryTrack.persistentID == newTrack.persistentID && track.persistentID == newTrack.persistentID){
 				highlightedEntry = entry;
-				newHighlightedIndex = i;
-				break;
 			}
 			
-	//		if(track.persistentID == newTrack.persistentID){
-	//			newHighlightedIndex = i;
-	//		}
+			if(track.persistentID == newTrack.persistentID){
+				newHighlightedIndex = i;
+			}
 		}
 		
 	//	NSLog(@"New highlighted %d previous %ld", newHighlightedIndex, (long)self.currentlyHighlighted);
