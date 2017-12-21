@@ -165,7 +165,7 @@
                                                     <items>
                                                         <group width="1" alignment="left" verticalAlignment="center" layout="vertical" spacing="0.0" id="QiB-hQ-eoa" userLabel="Info Text Group">
                                                             <items>
-                                                                <label width="1" alignment="left" text="Abbey" textAlignment="center" id="b8p-RV-XJb" userLabel="Title Label">
+                                                                <label width="1" alignment="left" text="Lignite Music" textAlignment="center" id="b8p-RV-XJb" userLabel="Title Label">
                                                                     <fontDescription key="font" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="16"/>
                                                                 </label>
                                                                 <label width="1" alignment="left" text="Please wait" textAlignment="center" id="Nya-mZ-DzX" userLabel="Subtitle Label">
@@ -185,7 +185,7 @@
                                     <items>
                                         <group width="1" height="1" alignment="left" verticalAlignment="bottom" layout="vertical" radius="0.0" spacing="0.0" id="Hbh-8q-bB0" userLabel="Slider Group">
                                             <items>
-                                                <group width="1" height="0.29999999999999999" alignment="left" verticalAlignment="center" spacing="0.0" id="Blj-jY-PsE" userLabel="Progress Bar Container">
+                                                <group width="1" height="1" alignment="left" verticalAlignment="bottom" radius="2" spacing="0.0" id="Blj-jY-PsE" userLabel="Progress Bar Container">
                                                     <items>
                                                         <group width="8" height="1" alignment="left" id="uNo-TJ-D5i" userLabel="Progress Bar">
                                                             <items>

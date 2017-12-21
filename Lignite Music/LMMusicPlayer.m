@@ -368,7 +368,7 @@ MPMediaGrouping associatedMediaTypes[] = {
 	infoCentre.nowPlayingInfo = newInfo;
 }
 
-#warning track change
+//#warning track change
 - (void)systemMusicPlayerTrackChanged:(id)sender {
 	CFAbsoluteTime startTimeInSeconds = CFAbsoluteTimeGetCurrent();
 	NSLog(@"System track changed! %@ Updating...", [NSThread isMainThread] ? @"On the main thread." : @"NOT ON THE MAIN THREAD!");

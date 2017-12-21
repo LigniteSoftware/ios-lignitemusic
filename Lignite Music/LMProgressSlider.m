@@ -474,6 +474,9 @@
 	if(!self.didLayoutConstraints){
 		self.didLayoutConstraints = YES;
 		
+		self.layer.masksToBounds = YES;
+		self.layer.cornerRadius = 4.0f;
+		
 		self.layoutManager = [LMLayoutManager sharedLayoutManager];
 		[self.layoutManager addDelegate:self];
 		
@@ -530,6 +533,8 @@
 		self.sliderBackgroundView = [LMView newAutoLayoutView];
 		self.sliderBackgroundView.backgroundColor = [LMColour mainColour];
 		self.sliderBackgroundView.clipsToBounds = YES;
+		self.sliderBackgroundView.layer.masksToBounds = YES;
+		self.sliderBackgroundView.layer.cornerRadius = 4.0f;
 		[self addSubview:self.sliderBackgroundView];
 		
 		[self.sliderBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];

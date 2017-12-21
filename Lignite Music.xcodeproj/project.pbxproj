@@ -236,6 +236,8 @@
 		6AAE6FB11FEB97F000CE97C1 /* splash_landscape_2018.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AAE6FAE1FEB97EF00CE97C1 /* splash_landscape_2018.png */; };
 		6AAE6FB21FEB97F000CE97C1 /* splash_portrait_2018.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AAE6FAF1FEB97EF00CE97C1 /* splash_portrait_2018.png */; };
 		6AAE6FB31FEB97F000CE97C1 /* splash_ipad_2018.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AAE6FB01FEB97EF00CE97C1 /* splash_ipad_2018.png */; };
+		6AAE6FB61FEBA26600CE97C1 /* icon_pause_padded.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AAE6FB41FEBA26500CE97C1 /* icon_pause_padded.png */; };
+		6AAE6FB71FEBA26600CE97C1 /* icon_play_padded.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AAE6FB51FEBA26600CE97C1 /* icon_play_padded.png */; };
 		6AAF610D1DA0286F00971875 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6AAF610F1DA0286F00971875 /* Localizable.strings */; };
 		6AAF61181DA0B9C800971875 /* LMTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AAF61171DA0B9C700971875 /* LMTableViewCell.m */; };
 		6AB104701E56616700213396 /* LMMusicPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AB1046F1E56616700213396 /* LMMusicPlayer.m */; };
@@ -702,6 +704,8 @@
 		6AAE6FAE1FEB97EF00CE97C1 /* splash_landscape_2018.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = splash_landscape_2018.png; sourceTree = "<group>"; };
 		6AAE6FAF1FEB97EF00CE97C1 /* splash_portrait_2018.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = splash_portrait_2018.png; sourceTree = "<group>"; };
 		6AAE6FB01FEB97EF00CE97C1 /* splash_ipad_2018.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = splash_ipad_2018.png; sourceTree = "<group>"; };
+		6AAE6FB41FEBA26500CE97C1 /* icon_pause_padded.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_pause_padded.png; sourceTree = "<group>"; };
+		6AAE6FB51FEBA26600CE97C1 /* icon_play_padded.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_play_padded.png; sourceTree = "<group>"; };
 		6AAF610E1DA0286F00971875 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6AAF61101DA028AE00971875 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6AAF61111DA028C200971875 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1210,6 +1214,8 @@
 				6AEB9D311BAD812700AD19FA /* icon_pause.png */,
 				6A072BFC1E87E79C0092EA44 /* icon_pebbles.png */,
 				6AEB9D321BAD812700AD19FA /* icon_play.png */,
+				6AAE6FB41FEBA26500CE97C1 /* icon_pause_padded.png */,
+				6AAE6FB51FEBA26600CE97C1 /* icon_play_padded.png */,
 				6AC77A151DC42CF400BABBB3 /* icon_playlists.png */,
 				6AA76AC51F9AD8690007531C /* icon_plus_white.png */,
 				6A82F9321F9660340050430E /* icon_remove_track_from_queue.png */,
@@ -2031,6 +2037,7 @@
 				6A2DE0D51DF6927C00BAAAB3 /* icon_composers.png in Resources */,
 				6A0750721D5EAB8000BCBC9C /* aplite_colours.gif in Resources */,
 				6ADB70C51FCCBDDE00412225 /* icon_repeat_one_white.png in Resources */,
+				6AAE6FB71FEBA26600CE97C1 /* icon_play_padded.png in Resources */,
 				6AAA560A1DF553AF00692CFB /* icon_a_to_z.png in Resources */,
 				6A5168931E08F4C800A6446F /* icon_buy.png in Resources */,
 				6ACFB9721E8CE103009811F0 /* icon_tutorial_swipe.png in Resources */,
@@ -2092,6 +2099,7 @@
 				6A5168891E08A53000A6446F /* lignite_background_portrait.png in Resources */,
 				6A98CBD21EB50FDC003B8B8E /* lignite_background_landscape.png in Resources */,
 				6AAA56031DF5459A00692CFB /* icon_x_cross.png in Resources */,
+				6AAE6FB61FEBA26600CE97C1 /* icon_pause_padded.png in Resources */,
 				6A48A73C1E1F5EC1003C86B6 /* icon_no_search_results.png in Resources */,
 				6A5168941E08F4C800A6446F /* icon_kickstarter.png in Resources */,
 				6AAE6FB31FEB97F000CE97C1 /* splash_ipad_2018.png in Resources */,

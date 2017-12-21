@@ -189,6 +189,8 @@
 	
 	
 	self.albumArtImageView = [UIImageView newAutoLayoutView];
+	self.albumArtImageView.layer.masksToBounds = YES;
+	self.albumArtImageView.layer.cornerRadius = 6.0f;
 	[self.albumArtImageBackgroundView addSubview:self.albumArtImageView];
 	
 	[self.albumArtImageView autoCentreInSuperview];
