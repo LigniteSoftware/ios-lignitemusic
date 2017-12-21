@@ -7,6 +7,7 @@
 //
 
 #import "LMThemeEngine.h"
+#import "LMAnswers.h"
 
 @interface LMThemeEngine()
 
@@ -30,6 +31,11 @@
 			[delegate themeChanged:theme];
 		}
 	}
+	
+	NSString *themeStringKey = [NSString stringWithFormat:@"%@_Title", [self keyForTheme:theme]];
+	[LMAnswers logCustomEventWithName:@"Theme Selected" customAttributes:@{
+																		    @"Name": NSLocalizedString(themeStringKey, nil)
+																		   }];
 }
 
 - (void)addDelegate:(id<LMThemeEngineDelegate> _Nonnull)delegate {

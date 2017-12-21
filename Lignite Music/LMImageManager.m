@@ -17,6 +17,7 @@
 #import "LMSettings.h"
 #import "NSTimer+Blocks.h"
 #import "LMWarningManager.h"
+#import "LMAnswers.h"
 @import SDWebImage;
 
 /**
@@ -1106,6 +1107,10 @@
 			[self.categoryDownloadQueue removeAllObjects];
 		}
 		
+		[LMAnswers logCustomEventWithName:@"Image Download Alert Choice" customAttributes:@{
+																							@"Disabled": @(optionSelected == 0)
+																							}];
+		
 		if(completionHandler){
 			completionHandler(optionSelected == 1);
 		}
@@ -1142,6 +1147,10 @@
 		[self notifyDelegatesOfConditionLevel:self.conditionLevelForDownloading];
 		
 		[self downloadIfNeededForAllCategories];
+		
+		[LMAnswers logCustomEventWithName:@"Data and Low Storage Choice" customAttributes:@{
+																							@"Disabled": @(optionSelected == 0)
+																							}];
 		
 		if(completionHandler){
 			completionHandler(optionSelected == 1);

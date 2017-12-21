@@ -21,6 +21,7 @@
 #import "MBProgressHUD.h"
 #import "LMListEntry.h"
 #import "LMTableView.h"
+#import "LMSettings.h"
 #import "LMAppIcon.h"
 #import "LMExtras.h"
 #import "LMColour.h"

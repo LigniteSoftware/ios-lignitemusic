@@ -23,6 +23,7 @@
 #import "NSTimer+Blocks.h"
 #import "LMCoreNavigationController.h"
 #import "LMCoreViewController.h"
+#import "LMAnswers.h"
 
 #define LMEnhancedPlaylistEditorRestorationKeyPlaylistDictionary @"LMEnhancedPlaylistEditorRestorationKeyPlaylistDictionary"
 
@@ -118,6 +119,11 @@
  */
 @property NSLayoutConstraint *imagePickerTopConstraint;
 
+/**
+ Whether or not this was a new playlist being created. NO if it was just an old one being edited.
+ */
+@property BOOL newPlaylist;
+
 @end
 
 @implementation LMEnhancedPlaylistEditorViewController
@@ -194,6 +200,16 @@
 	if([self.delegate respondsToSelector:@selector(enhancedPlaylistEditorViewController:didSaveWithPlaylist:)]){
 		[self.delegate enhancedPlaylistEditorViewController:self didSaveWithPlaylist:self.playlist];
 	}
+	
+	dispatch_async(dispatch_get_global_queue(NSQualityOfServiceBackground, 0), ^{
+		if(self.newPlaylist){
+			[LMAnswers logCustomEventWithName:@"Enhanced Playlist Created" customAttributes:@{
+																							@"Want To Hear Condition Count": @(self.playlist.wantToHearTrackCollections.count),
+																							@"Don't Want To Hear Condition Count": @(self.playlist.dontWantToHearTrackCollections.count),
+																							@"Has Custom Image": @(self.playlist.image ? YES : NO)
+																							}];
+		}
+	});
 }
 
 - (void)musicPicker:(LMMusicPickerController*)musicPicker didFinishPickingMusicWithTrackCollections:(NSArray<LMMusicTrackCollection*>*)trackCollections {
@@ -685,17 +701,16 @@
 	[self.layoutManager addDelegate:self];
 	
 	
-	BOOL newPlaylist = NO;
 	if(!self.playlist){
 		self.playlist = [LMPlaylist new];
 		self.playlist.enhanced = YES;
 		self.playlist.enhancedConditionsDictionary = [NSDictionary new];
-		newPlaylist = YES;
+		self.newPlaylist = YES;
 	}
 	
 	
 	self.warningBoxView = [LMBoxWarningView newAutoLayoutView];
-	self.warningBoxView.hideOnLayout = !newPlaylist;
+	self.warningBoxView.hideOnLayout = !self.newPlaylist;
 	self.warningBoxView.delegate = self;
 	[self.view addSubview:self.warningBoxView];
 	

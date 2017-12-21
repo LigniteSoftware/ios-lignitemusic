@@ -16,6 +16,7 @@
 #define LMSettingsKeyHighQualityImages @"LMSettingsKeyHighQualityImages"
 #define LMSettingsKeyOptOutOfTracking @"LMSettingsKeyOptOutOfTracking"
 #define LMSettingsKeyScrollingText @"LMSettingsKeyScrollingText"
+#define LMSettingsKeyDisableScreenTimeoutOnNowPlaying @"LMSettingsKeyDisableScreenTimeoutOnNowPlaying"
 
 #define LMFeedbackKeyName @"LMFeedbackKeyName"
 #define LMFeedbackKeyEmail @"LMFeedbackKeyEmail"
@@ -42,5 +43,12 @@
  @return YES for scrolling text, NO to disable.
  */
 + (BOOL)scrollingText;
+
+/**
+ Whether or not the device should let the system timeout the screen (as per their system setting) when the now playing screen is open. Default is NO, the screen should NOT timeout, the screen should stay on when now playing is open.
+
+ @return YES if the screen should timeout, NO if it should stay awake for as long as now playing is open.
+ */
++ (BOOL)screenShouldTimeoutWhenNowPlayingIsOpen;
 
 @end

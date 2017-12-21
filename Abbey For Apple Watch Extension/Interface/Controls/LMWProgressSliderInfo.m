@@ -83,7 +83,7 @@
 	_isShrunk = isShrunk;
 	
 	[self.interfaceController animateWithDuration:0.2 animations:^{
-		[self.container setRelativeHeight:isShrunk ? 1.0 : 1.0
+		[self.container setRelativeHeight:isShrunk ? 0.3 : 1.0
 						   withAdjustment:0];
 	}];
 }

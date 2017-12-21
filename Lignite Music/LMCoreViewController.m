@@ -1433,6 +1433,30 @@ LMControlBarViewDelegate
 	
 	self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 	
+	dispatch_async(dispatch_get_global_queue(NSQualityOfServiceBackground, 0), ^{
+		NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+		if(![userDefaults objectForKey:@"libraryChecked"]){
+			NSInteger titlesCount = [[self.musicPlayer queryCollectionsForMusicType:LMMusicTypeTitles] firstObject].count;
+			NSInteger artistsCount = [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeArtists].count;
+			NSInteger albumsCount = [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeArtists].count;
+			NSInteger genresCount = [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeGenres].count;
+			NSInteger playlistsCount = [self.musicPlayer queryCollectionsForMusicType:LMMusicTypePlaylists].count;
+			NSInteger compilationsCount = [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeCompilations].count;
+			
+			NSDictionary *attributesDictionary = @{
+												   @"Tracks": @(titlesCount),
+												   @"Artists": @(artistsCount),
+												   @"Albums": @(albumsCount),
+												   @"Genres": @(genresCount),
+												   @"Playlists": @(playlistsCount),
+												   @"Compilations": @(compilationsCount)
+												   };
+			
+			[LMAnswers logCustomEventWithName:@"Library Information" customAttributes:attributesDictionary];
+			[userDefaults setObject:@"checked" forKey:@"libraryChecked"];
+		}
+	});
+	
 	[[LMThemeEngine sharedThemeEngine] addDelegate:self];
 	
 	LMPebbleManager *pebbleManager = [LMPebbleManager sharedPebbleManager];
@@ -1760,6 +1784,7 @@ LMControlBarViewDelegate
 		
 		if(self.restorationState == LMCoreViewControllerRestorationStateNowPlaying){
 			[self launchNowPlaying];
+			self.nowPlayingCoreView.isOpen = YES;
 		}
 		
 		if(self.previousTitleViewTopPersistentID > 0){

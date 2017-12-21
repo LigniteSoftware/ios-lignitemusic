@@ -235,6 +235,7 @@
 		6AAA56081DF54D7800692CFB /* LMBrowsingBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AAA56071DF54D7800692CFB /* LMBrowsingBar.m */; };
 		6AAA560A1DF553AF00692CFB /* icon_a_to_z.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AAA56091DF553AF00692CFB /* icon_a_to_z.png */; };
 		6AAD5A531E0C655A00D8B406 /* NSTimer+Blocks.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AAD5A521E0C655A00D8B406 /* NSTimer+Blocks.m */; };
+		6AAE6FAC1FEB8F6900CE97C1 /* no_library_access.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AAE6FAB1FEB8F6900CE97C1 /* no_library_access.png */; };
 		6AAF610D1DA0286F00971875 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6AAF610F1DA0286F00971875 /* Localizable.strings */; };
 		6AAF61181DA0B9C800971875 /* LMTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AAF61171DA0B9C700971875 /* LMTableViewCell.m */; };
 		6AB104701E56616700213396 /* LMMusicPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AB1046F1E56616700213396 /* LMMusicPlayer.m */; };
@@ -700,6 +701,7 @@
 		6AAA56091DF553AF00692CFB /* icon_a_to_z.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_a_to_z.png; sourceTree = "<group>"; };
 		6AAD5A511E0C655A00D8B406 /* NSTimer+Blocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSTimer+Blocks.h"; sourceTree = "<group>"; };
 		6AAD5A521E0C655A00D8B406 /* NSTimer+Blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSTimer+Blocks.m"; sourceTree = "<group>"; };
+		6AAE6FAB1FEB8F6900CE97C1 /* no_library_access.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = no_library_access.png; sourceTree = "<group>"; };
 		6AAF610E1DA0286F00971875 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6AAF61101DA028AE00971875 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6AAF61111DA028C200971875 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1254,6 +1256,7 @@
 				6A4710021F71C5B50009DE0E /* ipad_splashscreen_abbey.png */,
 				6A47100B1F7236850009DE0E /* splash_landscape_abbey_fixed.png */,
 				6A47100C1F7236850009DE0E /* splash_portrait_abbey_fixed.png */,
+				6AAE6FAB1FEB8F6900CE97C1 /* no_library_access.png */,
 			);
 			name = Other;
 			sourceTree = "<group>";
@@ -2084,6 +2087,7 @@
 				6AAA56031DF5459A00692CFB /* icon_x_cross.png in Resources */,
 				6A48A73C1E1F5EC1003C86B6 /* icon_no_search_results.png in Resources */,
 				6A5168941E08F4C800A6446F /* icon_kickstarter.png in Resources */,
+				6AAE6FAC1FEB8F6900CE97C1 /* no_library_access.png in Resources */,
 				6A5365F81FE4B1CC008B8FAE /* LMThemeKeyBackgroundNoise.png in Resources */,
 				6A76ECA71E1A081200424AC5 /* icon_no_cover_art.png in Resources */,
 				6ADB70C81FCCBDDE00412225 /* icon_shuffle_white.png in Resources */,

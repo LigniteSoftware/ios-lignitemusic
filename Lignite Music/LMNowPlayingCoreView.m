@@ -10,8 +10,9 @@
 #import "LMButtonNavigationBar.h"
 #import "LMNowPlayingCoreView.h"
 #import "LMCoreViewController.h"
-#import "LMTutorialView.h"
 #import "LMNowPlayingView.h"
+#import "LMTutorialView.h"
+#import "LMSettings.h"
 
 @interface LMNowPlayingCoreView()<UIGestureRecognizerDelegate, LMMusicPlayerDelegate>
 
@@ -63,6 +64,19 @@
 @end
 
 @implementation LMNowPlayingCoreView
+
+@synthesize isOpen = _isOpen;
+
+- (BOOL)isOpen {
+	return _isOpen;
+}
+
+- (void)setIsOpen:(BOOL)isOpen {
+	_isOpen = isOpen;
+	
+	BOOL disableIdleTimer = (isOpen && ![LMSettings screenShouldTimeoutWhenNowPlayingIsOpen]);
+	[UIApplication sharedApplication].idleTimerDisabled = disableIdleTimer;
+}
 
 - (void)loadMusicTracksBasedOffIndex:(NSInteger)indexOfCenter {
 	if(self.musicPlayer.nowPlayingCollection.count == 0){

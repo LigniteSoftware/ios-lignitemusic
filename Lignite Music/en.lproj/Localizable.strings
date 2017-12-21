@@ -46,6 +46,9 @@
  
  */
 
+"NowPlayingKeepScreenOnTitle" = "Now playing always on";
+"NowPlayingKeepScreenOnSubtitle" = "Keep screen on while now playing is open";
+
 "Playing" = "Playing"; //Playing music
 "Paused" = "Paused"; //Music is paused
 

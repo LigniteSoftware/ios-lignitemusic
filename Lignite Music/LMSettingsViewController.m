@@ -93,7 +93,7 @@
 	[(UINavigationController*)self.view.window.rootViewController popViewControllerAnimated:YES];
 }
 
-- (UIImage*)iconAtSection:(NSUInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView {	
+- (UIImage*)iconAtSection:(NSInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView {
 	switch(section){
 		case 0:
 			return [LMAppIcon imageForIcon:LMIconLookAndFeel];
@@ -107,7 +107,7 @@
 	return [LMAppIcon imageForIcon:LMIconBug];
 }
 
-- (NSString*)titleAtSection:(NSUInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView {
+- (NSString*)titleAtSection:(NSInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView {
 	switch(section){
 		case 0:
 			return NSLocalizedString(@"LookAndFeel", nil);
@@ -121,10 +121,10 @@
 	return @"Unknown section";
 }
 
-- (NSUInteger)numberOfRowsForSection:(NSUInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView {	
+- (NSUInteger)numberOfRowsForSection:(NSInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView {
 	switch(section){
 		case 0:
-			return 2;
+			return 3;
 		case 1:
 			return 2;
 		case 2:
@@ -155,6 +155,8 @@
 					return NSLocalizedString(@"ScrollingTextTitle", nil);
 				case 1:
 					return NSLocalizedString(@"Theme", nil);
+				case 2:
+					return NSLocalizedString(@"NowPlayingKeepScreenOnTitle", nil);
 			}
 			break;
 		case 1:
@@ -209,6 +211,8 @@
 					NSString *themeTitleKey = [NSString stringWithFormat:@"%@_Title", [[LMThemeEngine sharedThemeEngine] keyForTheme:LMThemeEngine.currentTheme]];
 					return NSLocalizedString(themeTitleKey, nil);
 				}
+				case 2:
+					return NSLocalizedString(@"NowPlayingKeepScreenOnSubtitle", nil);
 			}
 			break;
 		case 1:
@@ -423,7 +427,8 @@
 						self.indexPathOfCurrentlyOpenAlertView = nil;
 					}];
 					
-				self.indexPathOfCurrentlyOpenAlertView = indexPath;
+					self.indexPathOfCurrentlyOpenAlertView = indexPath;
+					break;
 				}
 			}
 			break;
@@ -435,11 +440,26 @@
 	
 	[userDefaults setBool:switchView.on forKey:LMSettingsKeyScrollingText];
 	[userDefaults synchronize];
+	
+	[LMAnswers logCustomEventWithName:@"Scrolling Text" customAttributes:@{
+																		   @"Disabled": @(!switchView.on)
+																		  }];
+}
+
+- (void)didChangeScreenTimeoutOnNowPlayingSwitchView:(UISwitch*)switchView {
+	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+	
+	[userDefaults setBool:switchView.on forKey:LMSettingsKeyDisableScreenTimeoutOnNowPlaying];
+	[userDefaults synchronize];
+	
+	[LMAnswers logCustomEventWithName:@"Disabled Now Playing Screen Timeout" customAttributes:@{
+																								@"Disabled": @(switchView.on)
+																								}];
 }
 
 - (id)accessoryViewForIndexPath:(NSIndexPath *)indexPath forSectionTableView:(LMSectionTableView *)sectionTableView {
 //	if(indexPath.section == 0 || (indexPath.section == 1 && indexPath.row == 2)){
-	if((indexPath.section == 0 && indexPath.row == 0)){
+	if((indexPath.section == 0 && indexPath.row != 1)){
 		UISwitch *switchView = [UISwitch newAutoLayoutView];
 		
 		NSString *settingsKey = @"";
@@ -450,7 +470,14 @@
 				if(indexPath.row == 0){
 					[switchView addTarget:self action:@selector(didChangeScrollingTextSwitchView:) forControlEvents:UIControlEventValueChanged];
 					
+					enabled = YES; //Default
 					settingsKey = LMSettingsKeyScrollingText;
+				}
+				else if(indexPath.row == 2){
+					[switchView addTarget:self action:@selector(didChangeScreenTimeoutOnNowPlayingSwitchView:) forControlEvents:UIControlEventValueChanged];
+					
+					enabled = NO; //Default
+					settingsKey = LMSettingsKeyDisableScreenTimeoutOnNowPlaying;
 				}
 				break;
 //			case 1:
@@ -465,7 +492,7 @@
 		NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 		
 		if([userDefaults objectForKey:settingsKey]){
-			enabled = [userDefaults integerForKey:settingsKey];
+			enabled = [userDefaults boolForKey:settingsKey];
 		}
 		
 		switchView.on = enabled;

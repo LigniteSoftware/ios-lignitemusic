@@ -20,6 +20,7 @@
 #import "NSTimer+Blocks.h"
 #import "LMCoreNavigationController.h"
 #import "LMCoreViewController.h"
+#import "LMAnswers.h"
 
 #define LMPlaylistEditorRestorationKeyPlaylistDictionary @"LMPlaylistEditorRestorationKeyPlaylistDictionary"
 
@@ -79,6 +80,11 @@
  The song count label.
  */
 @property UILabel *songCountLabel;
+
+/**
+ Whether or not this was a new playlist being created. NO if it was just an old one being edited.
+ */
+@property BOOL newPlaylist;
 
 @end
 
@@ -322,6 +328,15 @@
 	if([self.delegate respondsToSelector:@selector(playlistEditorViewController:didSaveWithPlaylist:)]){
 		[self.delegate playlistEditorViewController:self didSaveWithPlaylist:self.playlist];
 	}
+	
+	dispatch_async(dispatch_get_global_queue(NSQualityOfServiceBackground, 0), ^{
+		if(self.newPlaylist){
+			[LMAnswers logCustomEventWithName:@"Normal Playlist Created" customAttributes:@{
+																					@"Track Count": @(self.playlist.trackCollection.count),
+																					@"Has Custom Image": @(self.playlist.image ? YES : NO)
+																					}];
+		}
+	});
 }
 
 - (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator	{
@@ -384,6 +399,7 @@
 	
 	
 	if(!self.playlist){
+		self.newPlaylist = YES;
 		self.playlist = [LMPlaylist new];
 	}
 	

@@ -181,11 +181,11 @@
                                         </group>
                                     </items>
                                 </group>
-                                <group width="1" height="0.12" alignment="center" verticalAlignment="bottom" layout="vertical" spacing="0.0" id="Ki4-AN-XF7" userLabel="Track Info Container">
+                                <group width="1" height="0.10000000000000001" alignment="center" verticalAlignment="bottom" layout="vertical" spacing="0.0" id="Ki4-AN-XF7" userLabel="Track Info Container">
                                     <items>
                                         <group width="1" height="1" alignment="left" verticalAlignment="bottom" layout="vertical" radius="0.0" spacing="0.0" id="Hbh-8q-bB0" userLabel="Slider Group">
                                             <items>
-                                                <group width="1" height="1" alignment="left" verticalAlignment="bottom" spacing="0.0" id="Blj-jY-PsE" userLabel="Progress Bar Container">
+                                                <group width="1" height="0.29999999999999999" alignment="left" verticalAlignment="center" spacing="0.0" id="Blj-jY-PsE" userLabel="Progress Bar Container">
                                                     <items>
                                                         <group width="8" height="1" alignment="left" id="uNo-TJ-D5i" userLabel="Progress Bar">
                                                             <items>

@@ -18,6 +18,7 @@
 #import "LMPebbleManager.h"
 #import "LMSettingsSwitch.h"
 #import "LMLayoutManager.h"
+#import "LMAnswers.h"
 
 @interface LMPebbleSettingsView()<LMSectionTableViewDelegate, LMLayoutChangeDelegate>
 
@@ -205,6 +206,10 @@
 				  [self.sectionTableView reloadData];
 				  
 				  [[LMPebbleManager sharedPebbleManager] runPebbleServiceIfEnabled];
+				  
+				  if(enabledPebble){
+					  [LMAnswers logCustomEventWithName:@"Enabled Pebble" customAttributes:nil];
+				  }
 			}];
 		}
 		else{

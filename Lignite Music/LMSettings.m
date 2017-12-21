@@ -42,10 +42,22 @@
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 	
 	if([userDefaults objectForKey:LMSettingsKeyScrollingText]){
-		settingEnabled = [[NSUserDefaults standardUserDefaults] integerForKey:LMSettingsKeyScrollingText];
+		settingEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:LMSettingsKeyScrollingText];
 	}
 	
 	return settingEnabled;
+}
+
++ (BOOL)screenShouldTimeoutWhenNowPlayingIsOpen {
+	BOOL settingEnabled = NO;
+	
+	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+	
+	if([userDefaults objectForKey:LMSettingsKeyDisableScreenTimeoutOnNowPlaying]){
+		settingEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:LMSettingsKeyDisableScreenTimeoutOnNowPlaying];
+	}
+	
+	return !settingEnabled;
 }
 
 @end

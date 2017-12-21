@@ -12,6 +12,7 @@
 #import "NSTimer+Blocks.h"
 #import "LMMusicPlayer.h"
 #import "LMThemeEngine.h"
+#import "LMAnswers.h"
 
 @interface LMAppleWatchBridge()<WCSessionDelegate, LMMusicPlayerDelegate, LMThemeEngineDelegate>
 
@@ -444,6 +445,12 @@
 	
 	if([key isEqualToString:LMAppleWatchCommunicationKeyNowPlayingTrack]){
 		replyHandler(@{ LMAppleWatchCommunicationKeyOnboardingComplete:@(LMMusicPlayer.onboardingComplete) });
+		
+		NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+		if(![userDefaults objectForKey:@"hasUsedAppleWatchApp"]){
+			[LMAnswers logCustomEventWithName:@"Using Apple Watch App" customAttributes:nil];
+			[userDefaults setObject:@"yeah. hey btw why the are you reading the nsuserdefaults plist. email edwin@lignite.io for a free prize." forKey:@"hasUsedAppleWatchApp"];
+		}
 		
 		if(LMMusicPlayer.onboardingComplete){
 			[self sendNowPlayingTrackToWatch:YES];
