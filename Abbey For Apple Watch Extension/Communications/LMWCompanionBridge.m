@@ -335,6 +335,14 @@
 - (void)session:(WCSession *)session didReceiveMessageData:(NSData *)messageData {
 	NSLog(@"Got message data");
 	
+	
+//	NSLog(@"Finished with message data");
+}
+
+- (void)session:(WCSession *)session didReceiveMessageData:(NSData *)messageData replyHandler:(void (^)(NSData * _Nonnull))replyHandler {
+	
+	NSLog(@"Got message data with reply handler");
+	
 	UIImage *image = [UIImage imageWithData:messageData];
 	
 	self.nowPlayingInfo.nowPlayingTrack.albumArt = image;
@@ -347,12 +355,7 @@
 		}
 	});
 	
-	NSLog(@"Finished with message data");
-}
-
-- (void)session:(WCSession *)session didReceiveMessageData:(NSData *)messageData replyHandler:(void (^)(NSData * _Nonnull))replyHandler {
-	
-	NSLog(@"Got message data with reply handler %@", messageData);
+	replyHandler([NSKeyedArchiver archivedDataWithRootObject:@"thanks"]);
 	
 //	UIImage *image = [UIImage imageWithData:messageData];
 //	[self.albumArtImage setImage:image];

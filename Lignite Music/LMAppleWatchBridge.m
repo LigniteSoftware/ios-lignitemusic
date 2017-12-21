@@ -31,6 +31,11 @@
  */
 @property LMMusicTrack *previousNowPlayingTrackSent;
 
+/**
+ The track of the previous sent album art.
+ */
+@property LMMusicTrack *previousTrackOfAlbumArtSent;
+
 //For volume control
 @property MPVolumeView *volumeView;
 @property UISlider *volumeViewSlider;
@@ -234,7 +239,17 @@
 }
 
 - (void)sendNowPlayingAlbumArtToWatch {
-	UIImage *image = self.musicPlayer.nowPlayingTrack.albumArt;
+	LMMusicTrack *nowPlayingTrack = self.musicPlayer.nowPlayingTrack;
+	
+	//It's the same if the track is the same or if the album & artist has not changed
+	BOOL albumArtIsTheSame = (self.previousTrackOfAlbumArtSent.persistentID == nowPlayingTrack.persistentID)
+	|| ((self.previousTrackOfAlbumArtSent.albumPersistentID == nowPlayingTrack.albumPersistentID) && (self.previousTrackOfAlbumArtSent.artistPersistentID == nowPlayingTrack.artistPersistentID));
+	
+	if(albumArtIsTheSame){
+		return;
+	}
+	
+	UIImage *image = nowPlayingTrack.albumArt;
 	
 	CGFloat compressionFactor = 1.0;
 	
@@ -243,13 +258,14 @@
 	NSLog(@"Image is %lu bytes with a compression factor of %f.", imageData.length, compressionFactor);
 	
 	if(self.connected){
-		[self.session sendMessageData:imageData replyHandler:/*^(NSData * _Nonnull replyMessageData) {
-															  
-															  NSLog(@"Reply got");
-															  }*/nil errorHandler:^(NSError * _Nonnull error) {
-																  
-																  NSLog(@"Error sending %@", error);
-															  }];
+		[self.session sendMessageData:imageData
+						 replyHandler:^(NSData * _Nonnull replyMessageData) {
+							NSLog(@"Reply got, the watch sucessfully got the image!");
+							self.previousTrackOfAlbumArtSent = self.musicPlayer.nowPlayingTrack;
+						 }
+						 errorHandler:^(NSError * _Nonnull error) {
+							NSLog(@"Error sending %@", error);
+						 }];
 	}
 }
 
@@ -275,10 +291,6 @@
 - (void)sendNowPlayingTrackToWatch:(BOOL)overrideDoubleSending {
 	LMMusicTrack *nowPlayingTrack = self.musicPlayer.nowPlayingTrack;
 	
-	//It's the same if the track is the same or if the album & artist has not changed
-	BOOL albumArtIsTheSame = (self.previousNowPlayingTrackSent.persistentID == nowPlayingTrack.persistentID)
-	|| ((self.previousNowPlayingTrackSent.albumPersistentID == nowPlayingTrack.albumPersistentID) && (self.previousNowPlayingTrackSent.artistPersistentID == nowPlayingTrack.artistPersistentID));
-	
 	if(self.connected){
 		if(nowPlayingTrack){
 			if((self.previousNowPlayingTrackSent.persistentID == nowPlayingTrack.persistentID) && !overrideDoubleSending){
@@ -301,9 +313,9 @@
 							 NSLog(@"Error sending now playing track: %@", error);
 						 }];
 			
-			if(!albumArtIsTheSame){
+//			if(!albumArtIsTheSame){
 				[self sendNowPlayingAlbumArtToWatch];
-			}
+//			}
 			
 //			if(!overrideDoubleSending){
 				[self sendNowPlayingInfoToWatch];
