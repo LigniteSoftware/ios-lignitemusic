@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="13771" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AgC-eL-Hgc" pageOrientation="vertical">
-    <device id="watch42" orientation="portrait">
+    <device id="watch38" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -25,13 +25,20 @@
                                 <imageView width="0.59999999999999998" height="0.40000000000000002" alignment="center" image="watch_no_cover_art_not_cropped" contentMode="scaleAspectFit" id="S7q-Tl-cOr"/>
                             </items>
                         </group>
-                        <group width="1" height="1" alignment="center" verticalAlignment="center" hidden="YES" layout="vertical" spacing="4" id="BKQ-1f-mP3" userLabel="Nothing Playing Container">
+                        <group width="1" height="1" alignment="center" verticalAlignment="center" layout="vertical" spacing="4" id="BKQ-1f-mP3" userLabel="Nothing Playing Container">
                             <items>
-                                <imageView width="0.59999999999999998" height="0.40000000000000002" alignment="center" image="watch_no_cover_art_not_cropped" contentMode="scaleAspectFit" id="TqO-uK-WJf"/>
+                                <imageView width="0.59999999999999998" height="0.40000000000000002" alignment="center" image="watch_no_cover_art_not_cropped" contentMode="scaleAspectFit" id="TqO-uK-WJf">
+                                    <variation key="device=watch38mm" height="0.37"/>
+                                </imageView>
                                 <group width="1" height="4" alignment="left" id="PTs-lQ-xe7" userLabel="Spacer">
                                     <variation key="device=watch38mm" height="2"/>
                                 </group>
-                                <label alignment="center" verticalAlignment="center" text="Nothing's playing right now, sorry." textAlignment="center" numberOfLines="0" id="Abv-IS-kMO"/>
+                                <label alignment="center" verticalAlignment="center" text="Nothing's playing right now, sorry." textAlignment="center" numberOfLines="0" id="Abv-IS-kMO">
+                                    <fontDescription key="font" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="14"/>
+                                    <variation key="device=watch38mm">
+                                        <fontDescription key="font" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="14"/>
+                                    </variation>
+                                </label>
                                 <group width="1" height="45" alignment="left" verticalAlignment="bottom" id="UcY-jQ-p1f" userLabel="Browse Library Group">
                                     <items>
                                         <button alignment="left" verticalAlignment="center" id="njR-QM-g7R" userLabel="Browse Library Button">
@@ -65,10 +72,11 @@
                                             </connections>
                                         </button>
                                     </items>
+                                    <variation key="device=watch38mm" height="38"/>
                                 </group>
                             </items>
                         </group>
-                        <group width="1" height="1" alignment="left" layout="overlap" radius="0.0" spacing="0.0" id="PEh-FC-AVI" userLabel="Now Playing Container">
+                        <group width="1" height="1" alignment="left" hidden="YES" layout="overlap" radius="0.0" spacing="0.0" id="PEh-FC-AVI" userLabel="Now Playing Container">
                             <items>
                                 <group width="1" height="0.92000000000000004" alignment="left" layout="overlap" id="btL-zD-wF6" userLabel="Album Art Group">
                                     <items>

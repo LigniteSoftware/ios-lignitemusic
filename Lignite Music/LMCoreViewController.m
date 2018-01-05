@@ -1795,7 +1795,6 @@ LMControlBarViewDelegate
 			[self.buttonNavigationBar setSelectedTab:LMNavigationTabMiniplayer];
 		}
 		
-#warning autominimize is disabled
 		if(self.stateRestoredNavigationBarWasMinimized){
 			[self.buttonNavigationBar minimize:NO];
 		}

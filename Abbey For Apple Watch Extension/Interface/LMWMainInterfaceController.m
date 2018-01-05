@@ -653,6 +653,13 @@
 	[NSTimer scheduledTimerWithTimeInterval:0.5 repeats:NO block:^(NSTimer * _Nonnull timer) {
 		[self.companionBridge askCompanionForNowPlayingTrackInfo];
 		[self displayAsUpdating];
+		
+//		LMWMusicTrackInfo *testTrackInfo = [LMWMusicTrackInfo new];
+//		testTrackInfo.title = @"title";
+//		testTrackInfo.subtitle = @"subtitle";
+//		testTrackInfo.albumArt = [UIImage imageNamed:@"chidster.png"];
+//		self.companionBridge.nowPlayingInfo.nowPlayingTrack = testTrackInfo;
+//		[self musicTrackDidChange:testTrackInfo];
 	}];
 }
 

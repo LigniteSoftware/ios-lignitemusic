@@ -143,27 +143,27 @@ MPMediaGrouping associatedMediaTypes[] = {
 		
 		[[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
 		
-		NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
+		NSNotificationCenter *notificationCentre = [NSNotificationCenter defaultCenter];
 		
-		[notificationCenter
+		[notificationCentre
 		 addObserver:self
 		 selector:@selector(audioRouteChanged:)
 		 name:AVAudioSessionRouteChangeNotification
 		 object:nil];
 		
-		[notificationCenter
+		[notificationCentre
 		 addObserver:self
 		 selector:@selector(systemMusicPlayerTrackChanged:)
 		 name:MPMusicPlayerControllerNowPlayingItemDidChangeNotification
 		 object:self.systemMusicPlayer];
 		
-		[notificationCenter
+		[notificationCentre
 		 addObserver:self
 		 selector:@selector(systemMusicPlayerStateChanged:)
 		 name:MPMusicPlayerControllerPlaybackStateDidChangeNotification
 		 object:self.systemMusicPlayer];
 		
-		[notificationCenter
+		[notificationCentre
 		 addObserver:self
 		 selector:@selector(mediaLibraryContentsChanged:)
 		 name:MPMediaLibraryDidChangeNotification
