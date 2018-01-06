@@ -86,8 +86,9 @@
  Scroll to the position in the list with that persistent ID.
  
  @param persistentID The persistent ID to scroll to.
+ @return The index of the item that was scrolled to. -1 if no item could be found with that persistent ID.
  */
-- (void)scrollToItemWithPersistentID:(LMMusicTrackPersistentID)persistentID;
+- (NSInteger)scrollToItemWithPersistentID:(LMMusicTrackPersistentID)persistentID;
 
 /**
  Change the bottom spacing of the compact view, for when changes to the button bar occur.

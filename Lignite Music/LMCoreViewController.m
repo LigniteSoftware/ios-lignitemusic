@@ -22,8 +22,8 @@
 #import "LMImageManager.h"
 #import "LMThemeEngine.h"
 #import "MBProgressHUD.h"
-#import "APIdleManager.h"
 #import "LMMusicPlayer.h"
+#import "LMApplication.h"
 #import "LMAppDelegate.h"
 #import "LMAlertView.h"
 #import "LMTitleView.h"
@@ -71,7 +71,7 @@
 @import StoreKit;
 
 @interface LMCoreViewController () <LMMusicPlayerDelegate, LMSourceDelegate, UIGestureRecognizerDelegate, LMSearchBarDelegate, LMLetterTabDelegate, LMSearchViewControllerResultDelegate, LMButtonNavigationBarDelegate, UINavigationBarDelegate, UINavigationControllerDelegate,
-LMTutorialViewDelegate, LMImageManagerDelegate, LMLandscapeNavigationBarDelegate, LMThemeEngineDelegate, LMLayoutChangeDelegate, LMWarningDelegate,
+LMTutorialViewDelegate, LMImageManagerDelegate, LMLandscapeNavigationBarDelegate, LMThemeEngineDelegate, LMLayoutChangeDelegate, LMWarningDelegate, LMApplicationIdleDelegate,
 
 LMControlBarViewDelegate
 >
@@ -128,6 +128,7 @@ LMControlBarViewDelegate
 @property BOOL restorationStateHasReloadedContents;
 
 @property MBProgressHUD *loadingProgressHUD;
+@property MBProgressHUD *playPauseStatusHUD;
 
 @property UIView *buttonNavigationBarBottomCoverView;
 
@@ -358,17 +359,21 @@ LMControlBarViewDelegate
 //	NSLog(@"Got new playback state %d", newState);
 	BOOL isPlaying = (newState == LMMusicPlaybackStatePlaying);
 	
-	MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+	if(self.playPauseStatusHUD){
+		[self.playPauseStatusHUD hideAnimated:YES];
+	}
+		
+	self.playPauseStatusHUD = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
 	
-	hud.mode = MBProgressHUDModeCustomView;
+	self.playPauseStatusHUD.mode = MBProgressHUDModeCustomView;
 	UIImage *image = [[UIImage imageNamed:isPlaying ? @"icon_play_padded.png" : @"icon_pause_padded.png"]
 					  imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-	hud.customView = [[UIImageView alloc] initWithImage:image];
-	hud.square = YES;
-	hud.userInteractionEnabled = NO;
-	hud.label.text = NSLocalizedString(isPlaying ? @"Playing" : @"Paused", nil);
+	self.playPauseStatusHUD.customView = [[UIImageView alloc] initWithImage:image];
+	self.playPauseStatusHUD.square = YES;
+	self.playPauseStatusHUD.userInteractionEnabled = NO;
+	self.playPauseStatusHUD.label.text = NSLocalizedString(isPlaying ? @"Playing" : @"Paused", nil);
 	
-	[hud hideAnimated:YES afterDelay:1.5f];
+	[self.playPauseStatusHUD hideAnimated:YES afterDelay:1.5f];	
 }
 
 - (void)musicTrackDidChange:(LMMusicTrack *)newTrack {
@@ -782,7 +787,10 @@ LMControlBarViewDelegate
 	}
 	else{
 		LMCompactBrowsingView *compactView = self.currentSource;
-		[compactView scrollToItemWithPersistentID:persistentID];
+		NSInteger indexScrolledTo = [compactView scrollToItemWithPersistentID:persistentID];
+		if(indexScrolledTo > -1){
+			[self.compactView tappedBigListEntryAtIndex:indexScrolledTo];
+		}
 	}
 	
 	[self.navigationController dismissViewControllerAnimated:YES completion:nil];
@@ -975,11 +983,6 @@ LMControlBarViewDelegate
 
 - (void)sizeChangedTo:(CGSize)newSize forControlBarView:(LMControlBarView *)controlBar {
 	NSLog(@"Changed to %@", NSStringFromCGSize(newSize));
-}
-
-- (UIResponder*)nextResponder {
-    [[APIdleManager sharedInstance] didReceiveInput];
-    return [super nextResponder];
 }
 
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
@@ -1363,6 +1366,12 @@ LMControlBarViewDelegate
 	}
 }
 
+- (void)userInteractionBecameIdle {
+	if(self.musicPlayer.playbackState == LMMusicPlaybackStatePlaying && self.view.window){
+		[self launchNowPlaying];
+	}
+}
+
 - (void)loadSubviews {
 //	[self.navigationController setNavigationBarHidden:NO animated:YES];
 //
@@ -1688,7 +1697,9 @@ LMControlBarViewDelegate
 	
 	
 	
-	
+	LMApplication *application = (LMApplication*)[UIApplication sharedApplication];
+	application.coreViewController = self;
+	[application addDelegate:self];
 	
 	
 	LMImageManager *imageManager = [LMImageManager sharedImageManager];
@@ -1702,13 +1713,6 @@ LMControlBarViewDelegate
 	[UIView animateWithDuration:0.25 animations:^{
 		[self setNeedsStatusBarAppearanceUpdate];
 	}];
-	
-	[APIdleManager sharedInstance].onTimeout = ^(void){
-		if(self.musicPlayer.playbackState == LMMusicPlaybackStatePlaying && self.view.window){
-			[self launchNowPlaying];
-		}
-	};
-	
 	
 	[NSTimer scheduledTimerWithTimeInterval:1.0 block:^{
 		self.backgroundBlurView = [UIVisualEffectView newAutoLayoutView];

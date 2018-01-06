@@ -10,8 +10,9 @@
 #import "MBProgressHUD.h"
 #import "LMDetailView.h"
 #import "LMMusicCollectionsView.h"
+#import "LMApplication.h"
 
-@interface LMDetailView()<UICollectionViewDelegate, UICollectionViewDataSource, LMListEntryDelegate, LMMusicPlayerDelegate, LMMusicCollectionsViewDelegate>
+@interface LMDetailView()<UICollectionViewDelegate, UICollectionViewDataSource, LMListEntryDelegate, LMMusicPlayerDelegate, LMMusicCollectionsViewDelegate, UIScrollViewDelegate>
 
 /**
  The music player.
@@ -43,12 +44,62 @@
  */
 @property LMMusicTrackCollection *musicTrackCollectionToUse;
 
+/**
+ The last point in scrolling where the user stopped scrolling.
+ */
+@property CGPoint lastScrollingOffsetPoint;
+
+/**
+ Whether or not the scrolling that the user did broke the treshhold for minimizing the bottom button bar.
+ */
+@property BOOL brokeScrollingThreshhold;
+
 @end
 
 @implementation LMDetailView
 
 @synthesize musicTrackCollection = _musicTrackCollection;
 @synthesize musicTrackCollectionToUse = _musicTrackCollectionToUse;
+
+- (LMCoreViewController*)rootViewController {
+	LMApplication *application = (LMApplication*)[UIApplication sharedApplication];
+	return application.coreViewController;
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+	self.rootViewController.buttonNavigationBar.currentlyScrolling = YES;
+
+	CGFloat difference = fabs(scrollView.contentOffset.y-self.lastScrollingOffsetPoint.y);
+
+	CGFloat maxContentOffset = scrollView.contentSize.height - (scrollView.frame.size.height*1.5);
+	if(scrollView.contentOffset.y > maxContentOffset){
+		return; //Don't scroll at the end to prevent weird scrolling behaviour with resize of required button bar height
+	}
+
+	if(difference > WINDOW_FRAME.size.height/10){
+		self.brokeScrollingThreshhold = YES;
+		if(!self.rootViewController.buttonNavigationBar.userMaximizedDuringScrollDeceleration){
+			[self.rootViewController.buttonNavigationBar minimize:YES];
+		}
+	}
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+	if(self.brokeScrollingThreshhold){
+		//[self.rootViewController.buttonNavigationBar minimize];
+	}
+	self.brokeScrollingThreshhold = NO;
+	self.lastScrollingOffsetPoint = scrollView.contentOffset;
+	
+	NSLog(@"Finished dragging");
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+	NSLog(@"Ended decelerating");
+	
+	self.rootViewController.buttonNavigationBar.currentlyScrolling = NO;
+	self.rootViewController.buttonNavigationBar.userMaximizedDuringScrollDeceleration = NO;
+}
 
 - (BOOL)showingAlbumTileView {
 	return self.albumTileViewLeadingConstraint.constant == 0; //The specific track collections have been prepped but the actual view just hasn't been lain out yet
@@ -499,6 +550,8 @@
 		self.albumTileView.backgroundColor = [UIColor purpleColor];
 		self.albumTileView.trackCollections = self.specificTrackCollections;
 		self.albumTileView.delegate = self;
+		
+		[self rootViewController].buttonNavigationBar.userMaximizedDuringScrollDeceleration = NO;
 	}
 	return self;
 }

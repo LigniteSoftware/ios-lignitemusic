@@ -197,6 +197,7 @@
 		self.backButtonImageView.image = [LMAppIcon imageForIcon:LMIconiOSBack];
 		self.backButtonImageView.clipsToBounds = YES;
 		self.backButtonImageView.userInteractionEnabled = YES;
+		self.backButtonImageView.hidden = YES;
 		[self.navigationBarBackgroundView addSubview:self.backButtonImageView];
 
 		UITapGestureRecognizer *backButtonTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tappedButton:)];

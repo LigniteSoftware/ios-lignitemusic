@@ -206,7 +206,6 @@
 		6A8150DA1EAF6E7800F518C5 /* LMLandscapeNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A8150D91EAF6E7800F518C5 /* LMLandscapeNavigationBar.m */; };
 		6A8150DD1EAF70C300F518C5 /* icon_ios_back.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A8150DC1EAF70C300F518C5 /* icon_ios_back.png */; };
 		6A8190BE1DDD3B5B00DBFE85 /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AA4735E1BC70FBA0066D47E /* ExternalAccessory.framework */; };
-		6A82C1AC1ECCBF2D00DEFA56 /* APIdleManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A82C1AB1ECCBF2D00DEFA56 /* APIdleManager.m */; };
 		6A82F9331F9661850050430E /* icon_add_track_to_queue.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A82F9311F9660340050430E /* icon_add_track_to_queue.png */; };
 		6A82F9341F96618D0050430E /* icon_remove_track_from_queue.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A82F9321F9660340050430E /* icon_remove_track_from_queue.png */; };
 		6A82F9361F9696B10050430E /* icon_warning.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A82F9351F9696670050430E /* icon_warning.png */; };
@@ -291,6 +290,7 @@
 		6AD5A3561FE6E14F00B7E567 /* LMRestorableNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AD5A3551FE6E14F00B7E567 /* LMRestorableNavigationController.m */; };
 		6AD690FB1FA76FDA00F20BEC /* LMDynamicSearchView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AD690FA1FA76FDA00F20BEC /* LMDynamicSearchView.m */; };
 		6ADA6CEB1DF84A8D0073D449 /* LMSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ADA6CEA1DF84A8D0073D449 /* LMSearchViewController.m */; };
+		6ADA8CE2200038E00021E929 /* LMApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ADA8CE1200038E00021E929 /* LMApplication.m */; };
 		6ADB70B91FCCBD3C00412225 /* icon_repeat_general.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AC32B751DB53EB20007C67E /* icon_repeat_general.png */; };
 		6ADB70BA1FCCBD3C00412225 /* icon_repeat_one.png in Resources */ = {isa = PBXBuildFile; fileRef = 6ACED1061DB7BE1D006EACD2 /* icon_repeat_one.png */; };
 		6ADB70BB1FCCBD3C00412225 /* icon_shuffle.png in Resources */ = {isa = PBXBuildFile; fileRef = 6ACED1071DB7BE1D006EACD2 /* icon_shuffle.png */; };
@@ -660,8 +660,6 @@
 		6A8150D81EAF6E7800F518C5 /* LMLandscapeNavigationBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMLandscapeNavigationBar.h; sourceTree = "<group>"; };
 		6A8150D91EAF6E7800F518C5 /* LMLandscapeNavigationBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMLandscapeNavigationBar.m; sourceTree = "<group>"; };
 		6A8150DC1EAF70C300F518C5 /* icon_ios_back.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_ios_back.png; sourceTree = "<group>"; };
-		6A82C1AA1ECCBF2D00DEFA56 /* APIdleManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APIdleManager.h; sourceTree = "<group>"; };
-		6A82C1AB1ECCBF2D00DEFA56 /* APIdleManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APIdleManager.m; sourceTree = "<group>"; };
 		6A82F9311F9660340050430E /* icon_add_track_to_queue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_add_track_to_queue.png; sourceTree = "<group>"; };
 		6A82F9321F9660340050430E /* icon_remove_track_from_queue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_remove_track_from_queue.png; sourceTree = "<group>"; };
 		6A82F9351F9696670050430E /* icon_warning.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_warning.png; sourceTree = "<group>"; };
@@ -762,6 +760,8 @@
 		6AD690FA1FA76FDA00F20BEC /* LMDynamicSearchView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMDynamicSearchView.m; sourceTree = "<group>"; };
 		6ADA6CE91DF84A8D0073D449 /* LMSearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMSearchViewController.h; sourceTree = "<group>"; };
 		6ADA6CEA1DF84A8D0073D449 /* LMSearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMSearchViewController.m; sourceTree = "<group>"; };
+		6ADA8CE0200038E00021E929 /* LMApplication.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMApplication.h; sourceTree = "<group>"; };
+		6ADA8CE1200038E00021E929 /* LMApplication.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMApplication.m; sourceTree = "<group>"; };
 		6ADB70BF1FCCBDDD00412225 /* icon_repeat_general_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_repeat_general_white.png; sourceTree = "<group>"; };
 		6ADB70C01FCCBDDD00412225 /* icon_repeat_one_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_repeat_one_white.png; sourceTree = "<group>"; };
 		6ADB70C11FCCBDDE00412225 /* icon_shuffle_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_shuffle_white.png; sourceTree = "<group>"; };
@@ -946,12 +946,15 @@
 			children = (
 				6AEB9CFE1BACF60E00AD19FA /* LMAppDelegate.h */,
 				6AEB9CFF1BACF60E00AD19FA /* LMAppDelegate.m */,
+				6ADA8CE0200038E00021E929 /* LMApplication.h */,
+				6ADA8CE1200038E00021E929 /* LMApplication.m */,
 				6A072BEA1E87B9590092EA44 /* LMCoreNavigationController.h */,
 				6A072BEB1E87B9590092EA44 /* LMCoreNavigationController.m */,
 				6AD226FD1DA4B8000056695A /* LMCoreViewController.h */,
 				6AD226FE1DA4B8000056695A /* LMCoreViewController.m */,
 				6A4901A81ECF64CD00646799 /* LMLagDetectionThread.h */,
 				6A4901A91ECF64CD00646799 /* LMLagDetectionThread.m */,
+				6AEB9CFB1BACF60E00AD19FA /* Supporting Files */,
 				6A60272A1FE8990C002F3E93 /* Warnings */,
 			);
 			name = Core;
@@ -976,7 +979,6 @@
 				6AEB9D0C1BACF60E00AD19FA /* LigniteMusic.plist */,
 				6AA5CB9F1E285C0B005F853F /* LigniteMusicForSpotify-Info.plist */,
 				6A106B121BC710D4003AE55A /* Lignite Music.entitlements */,
-				6AEB9CFB1BACF60E00AD19FA /* Supporting Files */,
 			);
 			name = Other;
 			sourceTree = "<group>";
@@ -1409,8 +1411,6 @@
 			isa = PBXGroup;
 			children = (
 				6A7E88481ECCB7E700E4B804 /* AFNetworking */,
-				6A82C1AA1ECCBF2D00DEFA56 /* APIdleManager.h */,
-				6A82C1AB1ECCBF2D00DEFA56 /* APIdleManager.m */,
 				6A2BA3C81ECCB29700D66105 /* BSKeyboardControls.h */,
 				6A2BA3C91ECCB29700D66105 /* BSKeyboardControls.m */,
 				6AF9D5331DE0F2AE006368B6 /* LMAlertView.h */,
@@ -2289,6 +2289,7 @@
 				6ADDBD3D1DA29D3E00DB99EF /* LMShadowView.m in Sources */,
 				6AFF01881DDD656E00F24D8E /* LMGuideViewController.m in Sources */,
 				6A70B7F71F9826D600E2CC9E /* LMPlaylistManager.m in Sources */,
+				6ADA8CE2200038E00021E929 /* LMApplication.m in Sources */,
 				6A165DE11E86B2A3007817A3 /* LMNowPlayingCoreView.m in Sources */,
 				6A7C62F51DA93F6100B025BA /* LMColour.m in Sources */,
 				6A4D61B71EC9BDF400A106F4 /* LMMusicCollectionsView.m in Sources */,
@@ -2312,7 +2313,6 @@
 				6ABF6A821CF374F7003E4EFA /* UIImage+AverageColour.m in Sources */,
 				6A759D481DE96B9A0051E1A9 /* LMScrollView.m in Sources */,
 				6AB104701E56616700213396 /* LMMusicPlayer.m in Sources */,
-				6A82C1AC1ECCBF2D00DEFA56 /* APIdleManager.m in Sources */,
 				6AF751661E0454B50001E18B /* LMPaddedTextField.m in Sources */,
 				6A1AF0841E0341BC00F8934C /* MPMediaItem+LigniteImages.m in Sources */,
 				6A313C181BB59AE8002BBC33 /* LMButton.m in Sources */,

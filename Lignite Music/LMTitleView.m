@@ -13,7 +13,6 @@
 #import "LMColour.h"
 #import "LMOperationQueue.h"
 #import "LMMusicPlayer.h"
-#import "APIdleManager.h"
 #import "LMExtras.h"
 #import "LMThemeEngine.h"
 
@@ -85,9 +84,7 @@
 		if(!self.rootViewController.buttonNavigationBar.userMaximizedDuringScrollDeceleration){
 			[self.rootViewController.buttonNavigationBar minimize:YES];
 		}
-    }
-	
-	[[APIdleManager sharedInstance] didReceiveInput];
+    }	
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {

@@ -11,7 +11,6 @@
 #import "LMCompactBrowsingView.h"
 #import "LMLayoutManager.h"
 #import "LMBigListEntry.h"
-#import "APIdleManager.h"
 #import "LMAppIcon.h"
 #import "LMCollectionViewFlowLayout.h"
 #import "LMCollectionViewCell.h"
@@ -140,7 +139,7 @@
 	[self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredVertically animated:NO];
 }
 
-- (void)scrollToItemWithPersistentID:(LMMusicTrackPersistentID)persistentID {
+- (NSInteger)scrollToItemWithPersistentID:(LMMusicTrackPersistentID)persistentID {
 	NSInteger index = -1;
 	
 	if(self.musicType == LMMusicTypePlaylists){
@@ -214,6 +213,8 @@
 //	[self.bigListEntryTableView focusBigListEntryAtIndex:index];
 	
 	[self scrollViewToIndex:index];
+	
+	return index;
 }
 
 - (LMMusicTrackCollection*)musicTrackCollectionForBigListEntry:(LMBigListEntry*)bigListEntry {
@@ -625,8 +626,6 @@
 			[self.coreViewController.buttonNavigationBar minimize:YES];
 		}
 	}
-	
-	[[APIdleManager sharedInstance] didReceiveInput];
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
