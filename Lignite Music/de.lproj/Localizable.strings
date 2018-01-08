@@ -48,6 +48,13 @@
  
  */
 
+"iOS_11_2_LagTitle" = "iOS Music Framework Fehler";
+"iOS_11_2_LagDescription" = "Dein Gerät läuft unter iOS %@ welche einen durch Apple verursachten Fehler enthält. Dieser Fehler verursacht eine starke Verzögerung beim Verwenden des iOS Music Frameworks welches unsere wie auch jede andere Drittanbieter-App verwendet.\n\nAufgrund diesem durch Apple verursachten Fehler kann es zu erheblichen Verzögerungen beim Benutzen dieser App kommen.\n\nWir haben leider absolut keinen Einfluss darauf und sind darauf angewiesen, dass Apple dieses Problem möglichst zeitnah behebt.\n\nWir entschuldigen uns für die Unannehmlichkeiten.";
+"iOS_11_2_LagCheckboxConfirmationText" = "Ich bin mir bewusst, dass jegliche Verzögerung in Lignite Music auf dem oben genannten, durch Apple verursachten Problem beruht und Lignite darauf keinerlei Einfluss hat.";
+"Continue" = "Fortfahren";
+"PleaseAcceptTheCheckbox" = "Akzeptiere bitte das Markierungsfeld";
+"TapHereForMoreInformation" = "Für weitere Informationen hier tippen";
+
 "NowPlayingKeepScreenOnTitle" = "Displayverhalten bei Wiedergabe";
 "NowPlayingKeepScreenOnSubtitle" = "Display während Wiedergabe nicht ausschalten";
 
@@ -63,7 +70,8 @@
 "NoPlaylists" = "Ups, du hast noch keine Wiedergabeliste erstellt!\n\nErstelle eine neue Liste durch das Tippen auf den entsprechenden Button oben.";
 
 "EnablePebbleTitle" = "Pebble Zugriff gewähren";
-"EnablePebbleDescription" = "Wir haben eine Pebble App für Lignite Music programmiert aber Pebble gibt es leider mittlerweile nicht mehr. Nichtsdestotrotz haben wir die App für alle Pebbler unter euch beibehalten.\n\nDies bedeutet jedoch auch, dass wir Pebble offiziell nicht mehr unterstützen. DIE PEBBLE FUNKTIONALITÄT FUNKTIONERT UNTER UMSTÄNDEN GAR NICHT MEHR.\n\nFahre bitte nur fort, wenn du dies akzeptierst.";
+"EnablePebbleDescription" = "Wir haben zu Beginn von Lignite Music eine Pebble Companion App kreiert. Leider aber gibt es Pebble mittlerweile nicht mehr.\n\nWir haben uns entschieden, die App für die verbleibenden Pebbler unter euch beizubehalten.\n\nTrotz alledem unterstützen wir diese Anbindung nicht mehr. Jegliche Pebble-bezogene Funktionalität wird „as is“ angeboten und funktioniert unter Umständen nicht mehr.";
+"PebbleUnderstandingCheckboxText" = "Ich verstehe, dass Lignite diese Companion App zwar weiterhin anbieten, jedoch keinen Pebble-Support mehr leisten wird.";
 "PebbleEnable" = "Pebble Unterstützung aktivieren";
 "PebbleDisable" = "Abbrechen";
 

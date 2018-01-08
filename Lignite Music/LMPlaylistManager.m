@@ -213,18 +213,23 @@
 
 /* Begin playlist management understanding code */
 
-- (void)launchPlaylistManagementWarningOnView:(UIView*)view withCompletionHandler:(void(^)(void))completionHandler {
+- (void)launchPlaylistManagementWarningWithCompletionHandler:(void(^)(void))completionHandler {
 	LMAlertViewController *alertViewController = [LMAlertViewController new];
 	alertViewController.titleText = NSLocalizedString(@"PlaylistManagementUnderstandingTitle", nil);
 	alertViewController.bodyText = NSLocalizedString(@"PlaylistManagementUnderstandingBody", nil);
-	alertViewController.alertOptionColours = @[ [LMColour mainColour] ];
-	alertViewController.alertOptionTitles = @[ NSLocalizedString(@"IUnderstand", nil) ];
+	alertViewController.checkboxText = NSLocalizedString(@"PlaylistManagementUnderstandingConfirmationCheckboxText", nil);
+	alertViewController.checkboxMoreInformationText = NSLocalizedString(@"TapHereForMoreInformation", nil);
+	alertViewController.checkboxMoreInformationLink = @"https://www.LigniteMusic.com/playlist_limitations";
+	alertViewController.alertOptionColours = @[ [LMColour mainColourDark], [LMColour mainColour] ];
+	alertViewController.alertOptionTitles = @[ NSLocalizedString(@"Cancel", nil), NSLocalizedString(@"Continue", nil) ];
 	alertViewController.completionHandler = ^(NSUInteger optionSelected, BOOL checkboxChecked) {
-		[self setUserUnderstandsPlaylistManagement:YES];
-		
-		completionHandler();
-		
-		NSLog(@"Cool, launch playlist creator");
+		if(checkboxChecked){
+			[self setUserUnderstandsPlaylistManagement:YES];
+			
+			completionHandler();
+			
+			NSLog(@"Cool, launch playlist creator");
+		}
 	};
 	[self.navigationController presentViewController:alertViewController
 											animated:YES

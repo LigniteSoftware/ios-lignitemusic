@@ -30,7 +30,7 @@
  please send us a picture of a walrus so we know you did. Yes, seriously.
  
  4. The following words/terms should *never* be translated into your language for legal reasons:
-	"Lignite Music", "Lignite", "Pebble", "Apple Music", "Spotify", "Lignite Music"
+	"Lignite Music", "Lignite", "Pebble", "Apple Music", "Spotify", "Lignite Music", "Apple", "iTunes"
 	
 	If you need to clarify the above in your language, for example "Pebble" needs to be the equivalent of "Pebble Smartwatch" in your language to make sure the idea is clear, it's ok to add words for clarity if necessary and you don't change the legal name. To demonstrate as an example if you needed this, in simplified Chinese, you would write "Pebble 智能手表".
  
@@ -50,7 +50,7 @@
 "DownloadingStopped" = "Downloading stopped.";
 
 "iOS_11_2_LagTitle" = "iOS Music Framework Lag";
-"iOS_11_2_LagDescription" = "Your device is running iOS %@ which has a bug created by Apple that causes the music framework that Lignite uses to be very laggy.\n\nAs a result of this bug created by Apple, long periods of \"freezing\" may occur throughout our app.\n\nThere is nothing that we at Lignite can do about the lag except wait for Apple to fix the bug that they have created.\n\nWe apologize for the inconvenience.";
+"iOS_11_2_LagDescription" = "Your device is running iOS %@ which contains a bug created by Apple that causes the music framework that Lignite uses to be very laggy.\n\nAs a result of this bug created by Apple, long periods of \"freezing\" may occur throughout our app.\n\nThere is nothing that we at Lignite can do about the lag except wait for Apple to fix the bug that they have created.\n\nWe apologize for the inconvenience.";
 "iOS_11_2_LagCheckboxConfirmationText" = "I understand that any lag/freezing in Lignite Music is due to a bug created by Apple and that Lignite can do nothing to fix this bug.";
 "Continue" = "Continue";
 "PleaseAcceptTheCheckbox" = "Please accept the checkbox";
@@ -144,7 +144,8 @@
 "Unfavourited" = "Un-favourited";
 
 "PlaylistManagementUnderstandingTitle" = "How playlists are handled";
-"PlaylistManagementUnderstandingBody" = "Due to limitations of iOS, we unfortunately cannot sync the playlists you create and manage within Lignite Music with the built-in music app.\n\nPlaylists that are created, edited, and deleted within Lignite Music will not affect your playlists outside of the app in any way.\n\nPlease tap the confirmation button below if you understand.\n\nThank you.";
+"PlaylistManagementUnderstandingBody" = "Due to limitations of iOS, we unfortunately cannot sync playlists created inside of Lignite Music anywhere else.\n\nThis means that playlists created within Lignite Music will not sync with iTunes or any other outside service.";
+"PlaylistManagementUnderstandingConfirmationCheckboxText" = "I understand that due to a limitation imposed by Apple that Lignite Music playlists will not sync anywhere outside of Lignite Music.";
 "IUnderstand" = "I understand";
 
 "ExplicitImageDownloadingTitle" = "Cellular & low storage";

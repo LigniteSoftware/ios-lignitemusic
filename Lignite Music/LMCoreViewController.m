@@ -1838,6 +1838,7 @@ LMControlBarViewDelegate
 			[self.buttonNavigationBar.browsingBar setShowingLetterTabs:self.titleView.musicTitles.count > 0];
 		}
 		
+		
 #warning this is disabled
 #warning fix mismatch of amount of items with previously selected index crash
 //		if(self.previouslyOpenedDetailViewIndex > -1 && self.previouslyOpenedDetailViewIndex < self.compactView.musicTrackCollections.count){
@@ -1849,20 +1850,6 @@ LMControlBarViewDelegate
 //			}
 //		}
 		
-//		[self launchNowPlaying];
-		
-//		LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
-//		[self.navigationController pushViewController:settingsViewController animated:YES];
-		
-//		LMThemePickerViewController *themePicker = [LMThemePickerViewController new];
-//		[self.navigationController pushViewController:themePicker animated:YES];
-		
-//		UIViewController *controller = [
-		
-//		UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-//		LMSettingsViewController *settingsViewController = (LMSettingsViewController*)[storyboard instantiateViewControllerWithIdentifier:@"LMSettingsViewController"];
-//		[self.navigationController pushViewController:settingsViewController animated:YES];
-	
 		NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 		NSString *iOSVersionString = [[UIDevice currentDevice] systemVersion];
 		if([iOSVersionString containsString:@"11.2"] && ![userDefaults objectForKey:LMiOS_11_2_LagUnderstandingConfirmationKey]){
@@ -1887,6 +1874,28 @@ LMControlBarViewDelegate
 		}
 		
 		[self asyncReloadCachedMusicTrackCollections];
+		
+		/*
+		 *
+		 * Test area
+		 *
+		 */
+		
+//		[self launchNowPlaying];
+		
+//		LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
+//		[self.navigationController pushViewController:settingsViewController animated:YES];
+		
+//		LMThemePickerViewController *themePicker = [LMThemePickerViewController new];
+//		[self.navigationController pushViewController:themePicker animated:YES];
+		
+//		UIViewController *controller = [
+		
+//		UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+//		LMSettingsViewController *settingsViewController = (LMSettingsViewController*)[storyboard instantiateViewControllerWithIdentifier:@"LMSettingsViewController"];
+//		[self.navigationController pushViewController:settingsViewController animated:YES];
+		
+		[playlistManager setUserUnderstandsPlaylistManagement:NO];
 	} repeats:NO];
 	
 	

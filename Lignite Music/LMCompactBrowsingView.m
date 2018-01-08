@@ -808,8 +808,10 @@
 
 - (void)addPlaylistButtonTapped {	
 	if(![self.playlistManager userUnderstandsPlaylistManagement]){
-		[self.playlistManager launchPlaylistManagementWarningOnView:self.coreViewController.navigationController.view withCompletionHandler:^{
-			[self addPlaylistButtonTapped];
+		[self.playlistManager launchPlaylistManagementWarningWithCompletionHandler:^{
+			[NSTimer scheduledTimerWithTimeInterval:0.25 block:^{
+				[self addPlaylistButtonTapped];
+			} repeats:NO];
 		}];
 	}
 	else{
@@ -880,8 +882,7 @@
 		bigListEntry.infoDelegate = self;
 		bigListEntry.entryDelegate = self;
 		bigListEntry.collectionIndex = self.bigListEntries.count;
-		[bigListEntry setup];
-			
+		
 		[self.bigListEntries addObject:bigListEntry];
 	}
 	
@@ -907,7 +908,6 @@
 		bigListEntry.infoDelegate = self;
 		bigListEntry.entryDelegate = self;
 		bigListEntry.collectionIndex = self.bigListEntries.count;
-		[bigListEntry setup];
 		
 		[self.bigListEntries addObject:bigListEntry];
 	}
@@ -984,8 +984,7 @@
 
 - (void)editPlaylistButtonTapped {
 	if(![self.playlistManager userUnderstandsPlaylistManagement]){
-		[self.playlistManager launchPlaylistManagementWarningOnView:self.coreViewController.navigationController.view withCompletionHandler:^{
-			
+		[self.playlistManager launchPlaylistManagementWarningWithCompletionHandler:^{
 			[self editPlaylistButtonTapped];
 		}];
 	}

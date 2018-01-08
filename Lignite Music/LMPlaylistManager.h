@@ -18,10 +18,9 @@
 /**
  Launches the LMAlertView for getting the user's understanding about how playlists are handled within the app.
 
- @param view The view to launch the playlist management alert on.
- @param completionHandler The completion handler which will be called when the user taps "I understand"
+ @param completionHandler The completion handler which will be called when the user taps "I understand".
  */
-- (void)launchPlaylistManagementWarningOnView:(UIView*)view withCompletionHandler:(void(^)(void))completionHandler;
+- (void)launchPlaylistManagementWarningWithCompletionHandler:(void(^)(void))completionHandler;
 
 /**
  Checks whether or not there are system playlists that need converting to the LMPlaylist format. If there are, it automatically converts them and includes them in the array stack.
