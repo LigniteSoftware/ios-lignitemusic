@@ -112,131 +112,141 @@
 }
 
 - (void)setup {
-	[[LMThemeEngine sharedThemeEngine] addDelegate:self];
+	[self layoutSubviews];
 	
-	self.contentView = [self.entryDelegate contentSubviewForBigListEntry:self];
-
-//	self.contentView = [UIView newAutoLayoutView];
-//	[self.contentView setBackgroundColor:[UIColor greenColor]];
-
-	float contentViewHeightFactorial = [self.entryDelegate contentSubviewFactorial:YES forBigListEntry:self];
-	float contentViewWidthFactorial = [self.entryDelegate contentSubviewFactorial:NO forBigListEntry:self];
-
-	if(contentViewHeightFactorial == 0.0){
-		NSLog(@"Rejecting, gutless piece of shit.");
-		return;
+	for(int i = 0; i < 5; i++){
+		NSLog(@"[Deprecated Warning] You have called `setup` on a big list entry - this is deprecated in favour of the system handling layoutSubviews when required.");
 	}
-
-//	self.backgroundColor = [UIColor orangeColor];
- 
-	UIView *contentView = (UIView*)self.contentView;
-//	contentView.layer.shadowColor = [UIColor blackColor].CGColor;
-//	contentView.layer.shadowRadius = WINDOW_FRAME.size.width/45;
-//	contentView.layer.shadowOffset = CGSizeMake(0, contentView.layer.shadowRadius/2);
-//	contentView.layer.shadowOpacity = 0.5f;
-	[self addSubview:contentView];
-	
-	[contentView autoAlignAxisToSuperviewAxis:ALAxisVertical];
-	[contentView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-	[contentView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:contentViewWidthFactorial];
-//	[contentView autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height*contentViewHeightFactorial];
-	
-	[contentView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.contentView];
-
-	UITapGestureRecognizer *contentDoubleTapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(doubleTappedContentView:)];
-	contentDoubleTapGesture.numberOfTapsRequired = 2;
-	[contentView addGestureRecognizer:contentDoubleTapGesture];
-	
-	UITapGestureRecognizer *contentTapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tappedContentView:)];
-	[contentView addGestureRecognizer:contentTapGesture];
-//	[contentTapGesture requireGestureRecognizerToFail:contentDoubleTapGesture];
-	contentView.userInteractionEnabled = YES;
-
-	
-	self.collectionInfoView = [LMCollectionInfoView newAutoLayoutView];
-	self.collectionInfoView.delegate = self.infoDelegate;
-	self.collectionInfoView.associatedBigListEntry = self;
-	self.collectionInfoView.largeMode = YES;
-	[self addSubview:self.collectionInfoView];
-	
-	[self.collectionInfoView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:-7.5];
-	[self.collectionInfoView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:-7.5];
-	[self.collectionInfoView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:contentView];
-	[self.collectionInfoView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-	
-	[self.collectionInfoView reloadData];
-	
-	
-//	LMTriangleView *testView = [LMTriangleView newAutoLayoutView];
-//	testView.backgroundColor = [UIColor orangeColor];
-//	testView.maskDirection = LMTriangleMaskDirectionUpwards;
-//	[self addSubview:testView];
-//	
-//	[testView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.collectionInfoView withOffset:-20];
-//	[testView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:0.5];
-//	[testView autoAlignAxisToSuperviewAxis:ALAxisVertical];
-//	[testView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.2];
-	
-
-	[self.entryDelegate sizeChangedToLargeSize:self.isLargeSize withHeight:[LMBigListEntry sizeForBigListEntryWhenOpened:self.isLargeSize forDelegate:self.entryDelegate] forBigListEntry:self];
-	
-	
-	self.tapToEditBackgroundView = [LMEditView newAutoLayoutView];
-	self.tapToEditBackgroundView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:(3.0/5.0)];
-	self.tapToEditBackgroundView.alpha = self.editing;
-	
-//	self.tapToEditBackgroundView.hidden = YES;
-	self.tapToEditBackgroundView.layer.masksToBounds = YES;
-	self.tapToEditBackgroundView.layer.cornerRadius = 8.0f;
-	self.tapToEditBackgroundView.userInteractionEnabled = YES;
-	[contentView addSubview:self.tapToEditBackgroundView];
-	
-	self.tapToEditBackgroundView.hidden = !self.editing;
-		
-	[self.tapToEditBackgroundView autoPinEdgesToSuperviewEdges];
-	
-	UITapGestureRecognizer *editTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(editViewTapped)];
-	[self.tapToEditBackgroundView addGestureRecognizer:editTapGestureRecognizer];
-	
-	UILabel *tapToEditLabel = [UILabel newAutoLayoutView];
-	tapToEditLabel.text = NSLocalizedString(@"TapToEdit", nil);
-	tapToEditLabel.textColor = [UIColor whiteColor];
-	tapToEditLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:20.0f];
-	tapToEditLabel.textAlignment = NSTextAlignmentCenter;
-	tapToEditLabel.numberOfLines = 0;
-	[self.tapToEditBackgroundView addSubview:tapToEditLabel];
-	
-	[tapToEditLabel autoPinEdgeToSuperviewEdge:ALEdgeTop];
-	[tapToEditLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-	[tapToEditLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	[tapToEditLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:contentView withMultiplier:(2.0/3.0)];
-	
-	
-	self.tapToDeleteView = [UIView newAutoLayoutView];
-	self.tapToDeleteView.backgroundColor = [LMColour mainColour];
-	[self.tapToEditBackgroundView addSubview:self.tapToDeleteView];
-	
-	[self.tapToDeleteView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-	[self.tapToDeleteView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-	[self.tapToDeleteView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	[self.tapToDeleteView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:tapToEditLabel];
-	
-	
-	UIImageView *deleteIconImageView = [UIImageView newAutoLayoutView];
-	deleteIconImageView.image = [LMAppIcon imageForIcon:LMIconXCross];
-	deleteIconImageView.contentMode = UIViewContentModeScaleAspectFit;
-	[self.tapToDeleteView addSubview:deleteIconImageView];
-	
-	[deleteIconImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.tapToDeleteView withMultiplier:(1.0/3.0)];
-	[deleteIconImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.tapToDeleteView withMultiplier:(1.0/3.0)];
-	[deleteIconImageView autoCentreInSuperview];
-	
-	UITapGestureRecognizer *deleteTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(deleteViewTapped)];
-	[self.tapToDeleteView addGestureRecognizer:deleteTapGestureRecognizer];
 }
 
 - (void)layoutSubviews {
 	[super layoutSubviews];
+	
+	if(!self.didLayoutConstraints){
+		self.didLayoutConstraints = YES;
+		
+		[[LMThemeEngine sharedThemeEngine] addDelegate:self];
+		
+		self.contentView = [self.entryDelegate contentSubviewForBigListEntry:self];
+		
+		//	self.contentView = [UIView newAutoLayoutView];
+		//	[self.contentView setBackgroundColor:[UIColor greenColor]];
+		
+		float contentViewHeightFactorial = [self.entryDelegate contentSubviewFactorial:YES forBigListEntry:self];
+		float contentViewWidthFactorial = [self.entryDelegate contentSubviewFactorial:NO forBigListEntry:self];
+		
+		if(contentViewHeightFactorial == 0.0){
+			NSLog(@"Rejecting, gutless piece of shit.");
+			return;
+		}
+		
+		//	self.backgroundColor = [UIColor orangeColor];
+		
+		UIView *contentView = (UIView*)self.contentView;
+		//	contentView.layer.shadowColor = [UIColor blackColor].CGColor;
+		//	contentView.layer.shadowRadius = WINDOW_FRAME.size.width/45;
+		//	contentView.layer.shadowOffset = CGSizeMake(0, contentView.layer.shadowRadius/2);
+		//	contentView.layer.shadowOpacity = 0.5f;
+		[self addSubview:contentView];
+		
+		[contentView autoAlignAxisToSuperviewAxis:ALAxisVertical];
+		[contentView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+		[contentView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:contentViewWidthFactorial];
+		//	[contentView autoSetDimension:ALDimensionHeight toSize:WINDOW_FRAME.size.height*contentViewHeightFactorial];
+		
+		[contentView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.contentView];
+		
+		UITapGestureRecognizer *contentDoubleTapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(doubleTappedContentView:)];
+		contentDoubleTapGesture.numberOfTapsRequired = 2;
+		[contentView addGestureRecognizer:contentDoubleTapGesture];
+		
+		UITapGestureRecognizer *contentTapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tappedContentView:)];
+		[contentView addGestureRecognizer:contentTapGesture];
+		//	[contentTapGesture requireGestureRecognizerToFail:contentDoubleTapGesture];
+		contentView.userInteractionEnabled = YES;
+		
+		
+		self.collectionInfoView = [LMCollectionInfoView newAutoLayoutView];
+		self.collectionInfoView.delegate = self.infoDelegate;
+		self.collectionInfoView.associatedBigListEntry = self;
+		self.collectionInfoView.largeMode = YES;
+		[self addSubview:self.collectionInfoView];
+		
+		[self.collectionInfoView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:-7.5];
+		[self.collectionInfoView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:-7.5];
+		[self.collectionInfoView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:contentView];
+		[self.collectionInfoView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		
+		[self.collectionInfoView reloadData];
+		
+		
+		//	LMTriangleView *testView = [LMTriangleView newAutoLayoutView];
+		//	testView.backgroundColor = [UIColor orangeColor];
+		//	testView.maskDirection = LMTriangleMaskDirectionUpwards;
+		//	[self addSubview:testView];
+		//
+		//	[testView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.collectionInfoView withOffset:-20];
+		//	[testView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:0.5];
+		//	[testView autoAlignAxisToSuperviewAxis:ALAxisVertical];
+		//	[testView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.2];
+		
+		
+		[self.entryDelegate sizeChangedToLargeSize:self.isLargeSize withHeight:[LMBigListEntry sizeForBigListEntryWhenOpened:self.isLargeSize forDelegate:self.entryDelegate] forBigListEntry:self];
+		
+		
+		self.tapToEditBackgroundView = [LMEditView newAutoLayoutView];
+		self.tapToEditBackgroundView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:(3.0/5.0)];
+		self.tapToEditBackgroundView.alpha = self.editing;
+		
+		//	self.tapToEditBackgroundView.hidden = YES;
+		self.tapToEditBackgroundView.layer.masksToBounds = YES;
+		self.tapToEditBackgroundView.layer.cornerRadius = 8.0f;
+		self.tapToEditBackgroundView.userInteractionEnabled = YES;
+		[contentView addSubview:self.tapToEditBackgroundView];
+		
+		self.tapToEditBackgroundView.hidden = !self.editing;
+		
+		[self.tapToEditBackgroundView autoPinEdgesToSuperviewEdges];
+		
+		UITapGestureRecognizer *editTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(editViewTapped)];
+		[self.tapToEditBackgroundView addGestureRecognizer:editTapGestureRecognizer];
+		
+		UILabel *tapToEditLabel = [UILabel newAutoLayoutView];
+		tapToEditLabel.text = NSLocalizedString(@"TapToEdit", nil);
+		tapToEditLabel.textColor = [UIColor whiteColor];
+		tapToEditLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:20.0f];
+		tapToEditLabel.textAlignment = NSTextAlignmentCenter;
+		tapToEditLabel.numberOfLines = 0;
+		[self.tapToEditBackgroundView addSubview:tapToEditLabel];
+		
+		[tapToEditLabel autoPinEdgeToSuperviewEdge:ALEdgeTop];
+		[tapToEditLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[tapToEditLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[tapToEditLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:contentView withMultiplier:(2.0/3.0)];
+		
+		
+		self.tapToDeleteView = [UIView newAutoLayoutView];
+		self.tapToDeleteView.backgroundColor = [LMColour mainColour];
+		[self.tapToEditBackgroundView addSubview:self.tapToDeleteView];
+		
+		[self.tapToDeleteView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[self.tapToDeleteView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.tapToDeleteView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.tapToDeleteView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:tapToEditLabel];
+		
+		
+		UIImageView *deleteIconImageView = [UIImageView newAutoLayoutView];
+		deleteIconImageView.image = [LMAppIcon imageForIcon:LMIconXCross];
+		deleteIconImageView.contentMode = UIViewContentModeScaleAspectFit;
+		[self.tapToDeleteView addSubview:deleteIconImageView];
+		
+		[deleteIconImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.tapToDeleteView withMultiplier:(1.0/3.0)];
+		[deleteIconImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.tapToDeleteView withMultiplier:(1.0/3.0)];
+		[deleteIconImageView autoCentreInSuperview];
+		
+		UITapGestureRecognizer *deleteTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(deleteViewTapped)];
+		[self.tapToDeleteView addGestureRecognizer:deleteTapGestureRecognizer];
+	}
 	
 //	NSLog(@"%@ %@", NSStringFromCGRect(self.superview.superview.frame), [[self.superview.superview class] description]);
 }

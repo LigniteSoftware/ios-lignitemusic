@@ -92,10 +92,6 @@
 	}
 }
 
-- (void)musicLibraryDidChange {
-	//What should we do, doc?
-}
-
 - (void)musicPlaybackModesDidChange:(LMMusicShuffleMode)shuffleMode repeatMode:(LMMusicRepeatMode)repeatMode {
 	if(self.connected){
 		[self.session sendMessage:@{

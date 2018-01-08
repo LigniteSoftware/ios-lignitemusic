@@ -87,10 +87,6 @@ BOOL expandableTrackListControlBarIsInAlbumDetail = NO;
 	[self.musicControlBar reloadHighlightedButtons];
 }
 
-- (void)musicLibraryDidChange {
-//	[self closeButtonTapped];
-}
-
 
 - (uint8_t)amountOfButtonsForControlBarView:(LMControlBarView*)controlBar {
 	return 3;
@@ -263,7 +259,7 @@ BOOL expandableTrackListControlBarIsInAlbumDetail = NO;
 				[self.musicControlBar autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.closeButtonImageView withOffset:-10];
 				
 				
-				NSLog(@"What");
+//				NSLog(@"What");
 				break;
 			}
 		}
@@ -303,7 +299,7 @@ BOOL expandableTrackListControlBarIsInAlbumDetail = NO;
 				[self.musicControlBar autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
 //				[self.musicControlBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(9.0/10.0)];
 				
-				NSLog(@"What");
+//				NSLog(@"What");
 				break;
 			}
 		}

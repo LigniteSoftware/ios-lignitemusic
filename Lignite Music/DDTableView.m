@@ -85,7 +85,7 @@
 	self.estimatedSectionHeaderHeight = 0;
 	self.estimatedSectionFooterHeight = 0;
 	
-	NSLog(@"Initialized gesture: %d", self.longPressReorderEnabled);
+//	NSLog(@"Initialized gesture: %d", self.longPressReorderEnabled);
 }
 
 /* End initialization overrides. */

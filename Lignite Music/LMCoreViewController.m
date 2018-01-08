@@ -92,7 +92,7 @@ LMControlBarViewDelegate
 
 @property LMSearchViewController *searchViewController;
 
-@property NSArray *musicCollectionsArray;
+@property NSArray *cachedMusicTrackCollections;
 
 /**
  The time stamp for syncing.
@@ -167,6 +167,8 @@ LMControlBarViewDelegate
 		[self.warningManager addWarning:self.librarySyncingWarning];
 	}
 	else if(finished){
+		[self asyncReloadCachedMusicTrackCollections];
+
 		if(self.musicPlayer.nowPlayingCollection.count == 0){
 			[self dismissNowPlaying];
 			[self.musicPlayer pause];
@@ -442,12 +444,12 @@ LMControlBarViewDelegate
 	}
 }
 
-- (void)musicLibraryDidChange {
-	NSLog(@"Changed library for core");
-	
+- (void)asyncReloadCachedMusicTrackCollections {
 	__weak id weakSelf = self;
 	
-	dispatch_async(dispatch_get_global_queue(NSQualityOfServiceUserInitiated, 0), ^{
+	self.cachedMusicTrackCollections = nil;
+	
+	dispatch_async(dispatch_get_global_queue(NSQualityOfServiceBackground, 0), ^{
 		id strongSelf = weakSelf;
 		
 		if(!strongSelf){
@@ -464,27 +466,24 @@ LMControlBarViewDelegate
 		
 		coreViewController.syncTimeStamp = startTime;
 		
-		for(int i = 0; i <= LMMusicTypeCompilations; i++){
+		for(int i = 0; i <= LMMusicTypeComposers; i++){
 			if(coreViewController.syncTimeStamp != startTime){
 				NSLog(@"Abandoning this thread, another sync notification has come in.");
 				return;
 			}
 			
 			LMMusicType musicType = i;
-			NSLog(@"Loading %d", musicType);
+//			NSLog(@"Loading %d", musicType);
 			NSArray *shitpost = [coreViewController.musicPlayer queryCollectionsForMusicType:musicType];
 			[musicCollections addObject:shitpost];
 		}
 		
-		coreViewController.musicCollectionsArray = [NSArray arrayWithArray:musicCollections];
+		coreViewController.cachedMusicTrackCollections = [NSArray arrayWithArray:musicCollections];
 		
 		NSTimeInterval endTime = [[NSDate new] timeIntervalSince1970];
 		
 		NSLog(@"Took %f seconds to complete sync.", endTime-startTime);
-		
-		dispatch_async(dispatch_get_main_queue(), ^{
-			[coreViewController reloadCurrentBrowsingView];
-		});
+		NSLog(@"Cached collections now ready.");
 	});
 }
 
@@ -498,9 +497,9 @@ LMControlBarViewDelegate
 }
 
 - (void)setupBrowsingViewWithMusicType:(LMMusicType)musicType {
-	if(self.musicCollectionsArray){
+	if(self.cachedMusicTrackCollections){
 		NSLog(@"Loading music from cache.");
-		self.compactView.musicTrackCollections = [self.musicCollectionsArray objectAtIndex:musicType];
+		self.compactView.musicTrackCollections = [self.cachedMusicTrackCollections objectAtIndex:musicType];
 	}
 	else{
 		NSLog(@"Loading music directly.");
@@ -526,7 +525,7 @@ LMControlBarViewDelegate
 		return YES;
 	}
 	
-	NSLog(@"now playing open %d", self.nowPlayingCoreView.isOpen);
+//	NSLog(@"now playing open %d", self.nowPlayingCoreView.isOpen);
 	
 	return self.nowPlayingCoreView.isOpen //If now playing is open, hide it
 		|| self.layoutManager.isLandscape //If the device is landscape, hide it
@@ -1839,14 +1838,16 @@ LMControlBarViewDelegate
 			[self.buttonNavigationBar.browsingBar setShowingLetterTabs:self.titleView.musicTitles.count > 0];
 		}
 		
-		if(self.previouslyOpenedDetailViewIndex > -1 && self.previouslyOpenedDetailViewIndex < self.compactView.musicTrackCollections.count){
-			[self.compactView scrollViewToIndex:self.previouslyOpenedDetailViewIndex];
-			NSInteger rowLimit = [LMLayoutManager amountOfCollectionViewItemsPerRowForScreenSizeClass:LMScreenSizeClassPhone isLandscape:NO];
-			if(![LMLayoutManager isLandscape] && (self.previouslyOpenedDetailViewIndex < self.compactView.musicTrackCollections.count - rowLimit)){
-#warning this is a temporay fix for a crash that occurs if a detail view is open on the last row. at the time I do not have the time or the fucks to give to fix this so I will fix it later, hopefully.
-				[self.compactView tappedBigListEntryAtIndex:self.previouslyOpenedDetailViewIndex];
-			}
-		}
+#warning this is disabled
+#warning fix mismatch of amount of items with previously selected index crash
+//		if(self.previouslyOpenedDetailViewIndex > -1 && self.previouslyOpenedDetailViewIndex < self.compactView.musicTrackCollections.count){
+//			[self.compactView scrollViewToIndex:self.previouslyOpenedDetailViewIndex];
+//			NSInteger rowLimit = [LMLayoutManager amountOfCollectionViewItemsPerRowForScreenSizeClass:LMScreenSizeClassPhone isLandscape:NO];
+//			if(![LMLayoutManager isLandscape] && (self.previouslyOpenedDetailViewIndex < self.compactView.musicTrackCollections.count - rowLimit)){
+//#warning this is a temporay fix for a crash that occurs if a detail view is open on the last row. at the time I do not have the time or the fucks to give to fix this so I will fix it later, hopefully.
+//				[self.compactView tappedBigListEntryAtIndex:self.previouslyOpenedDetailViewIndex];
+//			}
+//		}
 		
 //		[self launchNowPlaying];
 		
@@ -1884,18 +1885,8 @@ LMControlBarViewDelegate
 													animated:YES
 												  completion:nil];
 		}
-				
-//		LMAlertView *alertView = [LMAlertView newAutoLayoutView];
-//
-//		alertView.title = NSLocalizedString(@"iOS_11_2_LagTitle", nil);
-//		alertView.body = NSLocalizedString(@"iOS_11_2_LagDescription", nil);
-//		alertView.alertOptionColours = @[ [LMColour mainColour] ];
-//		alertView.alertOptionTitles = @[ NSLocalizedString(@"IUnderstand", nil) ];
-//
-//		[alertView launchOnView:self.navigationController.view
-//		  withCompletionHandler:^(NSUInteger optionSelected) {
-//			NSLog(@"Cool %d", optionSelected);
-//		}];
+		
+		[self asyncReloadCachedMusicTrackCollections];
 	} repeats:NO];
 	
 	

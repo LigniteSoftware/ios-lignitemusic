@@ -10,6 +10,7 @@
 #import "LMCollectionInfoView.h"
 #import "LMControlBarView.h"
 #import "LMOperationQueue.h"
+#import "LMView.h"
 
 @class LMBigListEntry;
 
@@ -88,7 +89,7 @@
 
 @end
 
-@interface LMBigListEntry : UIView
+@interface LMBigListEntry : LMView
 
 @property id<LMBigListEntryDelegate> entryDelegate;
 @property id<LMCollectionInfoViewDelegate> infoDelegate;
@@ -127,6 +128,6 @@
 /**
  Setup the big list entry.
  */
-- (void)setup;
+- (void)setup DEPRECATED_ATTRIBUTE;
 
 @end

@@ -529,6 +529,8 @@
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+//	return MIN(self.musicTrackCollections.count, 20);
+	
 	NSInteger fixedCount = self.musicType == LMMusicTypePlaylists ? self.playlistManager.playlists.count : self.musicTrackCollections.count;
 	if(section == 1){ //When the section == 1, the amount of overflowing cells ie being checked so the raw amount of items in the compact view (before detail view) should be returned.
 		return fixedCount;
@@ -1111,15 +1113,22 @@
 		
 		self.bigListEntries = [NSMutableArray new];
 		
-		for(int i = 0; i < [self collectionView:self.collectionView numberOfItemsInSection:0]; i++){
+		CFTimeInterval startTime = CFAbsoluteTimeGetCurrent();
+		
+		NSInteger amountOfItems = [self collectionView:self.collectionView numberOfItemsInSection:0];
+		for(int i = 0; i < amountOfItems; i++){
 			LMBigListEntry *bigListEntry = [LMBigListEntry newAutoLayoutView];
 			bigListEntry.infoDelegate = self;
 			bigListEntry.entryDelegate = self;
 			bigListEntry.collectionIndex = i;
-			[bigListEntry setup];
+//			[bigListEntry setup];
 			
 			[self.bigListEntries addObject:bigListEntry];
 		}
+		
+		CFTimeInterval endTime = CFAbsoluteTimeGetCurrent();
+		CFTimeInterval amountOfTimeInSeconds = (endTime-startTime);
+		NSLog(@"Took %f seconds to load %d items (~%fms per item).", amountOfTimeInSeconds, (int)amountOfItems, ((amountOfTimeInSeconds/(CGFloat)amountOfItems) * 1000));
 		
 		
 		self.backgroundColor = [UIColor whiteColor];

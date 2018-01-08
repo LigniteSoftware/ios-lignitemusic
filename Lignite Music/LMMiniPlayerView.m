@@ -265,7 +265,7 @@
 	
 	[self.musicPlayer addMusicDelegate:self];
 	
-	NSLog(@"Setup miniplayer");
+//	NSLog(@"Setup miniplayer");
 	
 	[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
 		[self.progressSlider setValue:self.musicPlayer.currentPlaybackTime];

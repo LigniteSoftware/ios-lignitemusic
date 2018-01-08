@@ -193,6 +193,7 @@
 	self.noObjectsLabel.text = NSLocalizedString(self.favourites ? @"NoTracksInFavourites" : @"TheresNothingHere", nil);
 }
 
+#warning deprecated son
 - (void)musicLibraryDidChange {
 	[self rebuildTrackCollection];
 	
