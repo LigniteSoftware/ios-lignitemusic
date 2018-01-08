@@ -261,7 +261,7 @@
 					}
 				}
 				
-				tiledAlbumCover.hidden = playlist.image ? YES : NO;
+				tiledAlbumCover.hidden = (playlist.image || (playlist.trackCollection.count == 0)) ? YES : NO;
 				
 				if(playlist.image || (playlist.trackCollection.count == 0)){
 					rootImageView.image = playlist.image;
@@ -341,6 +341,11 @@
 				[imageView addSubview:tiledAlbumCover];
 				
 				[tiledAlbumCover autoPinEdgesToSuperviewEdges];
+				
+				tiledAlbumCover.hidden = (playlist.image || (playlist.trackCollection.count == 0)) ? YES : NO;
+				if(!tiledAlbumCover.hidden){
+					tiledAlbumCover.musicCollection = playlist.trackCollection;
+				}
 				
 				return shadowBackgroundView;
 			}
@@ -990,7 +995,6 @@
 	}
 	else{
 		NSLog(@"Edit playlist");
-		
 		
 		LMCollectionViewFlowLayout *flowLayout = (LMCollectionViewFlowLayout*)self.collectionView.collectionViewLayout;
 		
