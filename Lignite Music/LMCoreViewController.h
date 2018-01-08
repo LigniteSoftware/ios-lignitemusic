@@ -14,6 +14,8 @@
 #import "LMCoreNavigationController.h"
 #import "LMPlaylistEditorViewController.h"
 
+#define LMiOS_11_2_LagUnderstandingConfirmationKey @"LMiOS_11_2_LagUnderstandingConfirmationKey"
+
 typedef NS_ENUM(NSInteger, LMCoreViewControllerRestorationState){
 	LMCoreViewControllerRestorationStateNotRestored = 0,
 	LMCoreViewControllerRestorationStateBrowsing,

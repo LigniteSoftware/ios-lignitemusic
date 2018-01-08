@@ -1843,20 +1843,28 @@ LMControlBarViewDelegate
 //		LMSettingsViewController *settingsViewController = (LMSettingsViewController*)[storyboard instantiateViewControllerWithIdentifier:@"LMSettingsViewController"];
 //		[self.navigationController pushViewController:settingsViewController animated:YES];
 	
-		LMAlertViewController *alertViewController = [LMAlertViewController new];
-		alertViewController.titleText = NSLocalizedString(@"iOS_11_2_LagTitle", nil);
-		alertViewController.bodyText = [NSString stringWithFormat:NSLocalizedString(@"iOS_11_2_LagDescription", nil), [[UIDevice currentDevice] systemVersion]];
-		alertViewController.checkboxText = NSLocalizedString(@"iOS_11_2_LagCheckboxConfirmationText", nil);
-		alertViewController.checkboxMoreInformationText = NSLocalizedString(@"TapHereForMoreInformation", nil);
-		alertViewController.checkboxMoreInformationLink = @"https://www.LigniteMusic.com/ios_11.2_lag";
-		alertViewController.alertOptionColours = @[ [LMColour mainColour] ];
-		alertViewController.alertOptionTitles = @[ NSLocalizedString(@"Continue", nil) ];
-		alertViewController.completionHandler = ^(NSUInteger optionSelected, BOOL checkboxChecked) {
-			NSLog(@"Cool %lu checked %d", (unsigned long)optionSelected, checkboxChecked);
-		};
-		[self.navigationController presentViewController:alertViewController
-												animated:YES
-											  completion:nil];
+		NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+		NSString *iOSVersionString = [[UIDevice currentDevice] systemVersion];
+		if([iOSVersionString containsString:@"11.2"] && ![userDefaults objectForKey:LMiOS_11_2_LagUnderstandingConfirmationKey]){
+			LMAlertViewController *alertViewController = [LMAlertViewController new];
+			alertViewController.titleText = NSLocalizedString(@"iOS_11_2_LagTitle", nil);
+			alertViewController.bodyText = [NSString stringWithFormat:NSLocalizedString(@"iOS_11_2_LagDescription", nil), iOSVersionString];
+			alertViewController.checkboxText = NSLocalizedString(@"iOS_11_2_LagCheckboxConfirmationText", nil);
+			alertViewController.checkboxMoreInformationText = NSLocalizedString(@"TapHereForMoreInformation", nil);
+			alertViewController.checkboxMoreInformationLink = @"https://www.LigniteMusic.com/ios_11.2_lag";
+			alertViewController.alertOptionColours = @[ [LMColour mainColour] ];
+			alertViewController.alertOptionTitles = @[ NSLocalizedString(@"Continue", nil) ];
+			alertViewController.completionHandler = ^(NSUInteger optionSelected, BOOL checkboxChecked) {
+				if(checkboxChecked){
+					[userDefaults setObject:iOSVersionString forKey:LMiOS_11_2_LagUnderstandingConfirmationKey];
+					
+					NSLog(@"iOS 11.2 lag understood by user");
+				}
+			};
+			[self.navigationController presentViewController:alertViewController
+													animated:YES
+												  completion:nil];
+		}
 		
 //		LMAlertView *alertView = [LMAlertView newAutoLayoutView];
 //
