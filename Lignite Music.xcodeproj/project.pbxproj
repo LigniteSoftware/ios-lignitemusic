@@ -47,6 +47,7 @@
 		6A2A29C51DB1D89C008E7792 /* LMSourceSelectorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A2A29C41DB1D89C008E7792 /* LMSourceSelectorView.m */; };
 		6A2A29CB1DB1F1C3008E7792 /* LMSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A2A29CA1DB1F1C3008E7792 /* LMSource.m */; };
 		6A2BA3CA1ECCB29700D66105 /* BSKeyboardControls.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A2BA3C91ECCB29700D66105 /* BSKeyboardControls.m */; };
+		6A2C751E2001757B007888C8 /* LMAlertViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A2C751D2001757B007888C8 /* LMAlertViewController.m */; };
 		6A2DE0D51DF6927C00BAAAB3 /* icon_composers.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A2DE0D41DF6927C00BAAAB3 /* icon_composers.png */; };
 		6A313C181BB59AE8002BBC33 /* LMButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A313C171BB59AE8002BBC33 /* LMButton.m */; };
 		6A32113E1DA727960060DD07 /* LMTrackDurationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A32113D1DA727960060DD07 /* LMTrackDurationView.m */; };
@@ -471,6 +472,8 @@
 		6A2A29CA1DB1F1C3008E7792 /* LMSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMSource.m; sourceTree = "<group>"; };
 		6A2BA3C81ECCB29700D66105 /* BSKeyboardControls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSKeyboardControls.h; sourceTree = "<group>"; };
 		6A2BA3C91ECCB29700D66105 /* BSKeyboardControls.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BSKeyboardControls.m; sourceTree = "<group>"; };
+		6A2C751C2001757B007888C8 /* LMAlertViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMAlertViewController.h; sourceTree = "<group>"; };
+		6A2C751D2001757B007888C8 /* LMAlertViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMAlertViewController.m; sourceTree = "<group>"; };
 		6A2DE0D41DF6927C00BAAAB3 /* icon_composers.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_composers.png; sourceTree = "<group>"; };
 		6A2DEF301E0CB6FB00FD9444 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		6A313C131BB44A8F002BBC33 /* LMExtras.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMExtras.h; sourceTree = "<group>"; };
@@ -1415,6 +1418,8 @@
 				6A2BA3C91ECCB29700D66105 /* BSKeyboardControls.m */,
 				6AF9D5331DE0F2AE006368B6 /* LMAlertView.h */,
 				6AF9D5341DE0F2AE006368B6 /* LMAlertView.m */,
+				6A2C751C2001757B007888C8 /* LMAlertViewController.h */,
+				6A2C751D2001757B007888C8 /* LMAlertViewController.m */,
 				6A313C131BB44A8F002BBC33 /* LMExtras.h */,
 				6AF9D5301DE0B73D006368B6 /* LMImageManager.h */,
 				6AF9D5311DE0B73D006368B6 /* LMImageManager.m */,
@@ -2343,6 +2348,7 @@
 				6AEF8C731DEF419D00D9A1BF /* LMDebugViewController.m in Sources */,
 				6A08AF131EBF30B00069C9CC /* LMTriangleInnerShadowView.m in Sources */,
 				6A08AF1B1EC04AED0069C9CC /* LMExpandableTrackListControlBar.m in Sources */,
+				6A2C751E2001757B007888C8 /* LMAlertViewController.m in Sources */,
 				6AD690FB1FA76FDA00F20BEC /* LMDynamicSearchView.m in Sources */,
 				6AFF01891DDD656E00F24D8E /* LMGuideViewPagerController.m in Sources */,
 				6A7565301DF7E38900A9EDD6 /* LMSearch.m in Sources */,

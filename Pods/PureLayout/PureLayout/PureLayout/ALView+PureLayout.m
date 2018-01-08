@@ -74,7 +74,7 @@
 #pragma mark Center in Superview
 
 /**
- Centers the view in its superview.
+ Centres the view in its superview.
  
  @return An array of constraints added.
  */

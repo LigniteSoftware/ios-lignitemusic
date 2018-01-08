@@ -53,6 +53,7 @@
 #import "LMAppleWatchBridge.h"
 #import "LMThemePickerViewController.h"
 #import "LMWarningManager.h"
+#import "LMAlertViewController.h"
 
 #ifdef SPOTIFY
 #import "Spotify.h"
@@ -1841,6 +1842,33 @@ LMControlBarViewDelegate
 //		UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
 //		LMSettingsViewController *settingsViewController = (LMSettingsViewController*)[storyboard instantiateViewControllerWithIdentifier:@"LMSettingsViewController"];
 //		[self.navigationController pushViewController:settingsViewController animated:YES];
+	
+		LMAlertViewController *alertViewController = [LMAlertViewController new];
+		alertViewController.titleText = NSLocalizedString(@"iOS_11_2_LagTitle", nil);
+		alertViewController.bodyText = [NSString stringWithFormat:NSLocalizedString(@"iOS_11_2_LagDescription", nil), [[UIDevice currentDevice] systemVersion]];
+		alertViewController.checkboxText = NSLocalizedString(@"iOS_11_2_LagCheckboxConfirmationText", nil);
+		alertViewController.checkboxMoreInformationText = NSLocalizedString(@"TapHereForMoreInformation", nil);
+		alertViewController.checkboxMoreInformationLink = @"https://www.LigniteMusic.com/ios_11.2_lag";
+		alertViewController.alertOptionColours = @[ [LMColour mainColour] ];
+		alertViewController.alertOptionTitles = @[ NSLocalizedString(@"Continue", nil) ];
+		alertViewController.completionHandler = ^(NSUInteger optionSelected, BOOL checkboxChecked) {
+			NSLog(@"Cool %lu checked %d", (unsigned long)optionSelected, checkboxChecked);
+		};
+		[self.navigationController presentViewController:alertViewController
+												animated:YES
+											  completion:nil];
+		
+//		LMAlertView *alertView = [LMAlertView newAutoLayoutView];
+//
+//		alertView.title = NSLocalizedString(@"iOS_11_2_LagTitle", nil);
+//		alertView.body = NSLocalizedString(@"iOS_11_2_LagDescription", nil);
+//		alertView.alertOptionColours = @[ [LMColour mainColour] ];
+//		alertView.alertOptionTitles = @[ NSLocalizedString(@"IUnderstand", nil) ];
+//
+//		[alertView launchOnView:self.navigationController.view
+//		  withCompletionHandler:^(NSUInteger optionSelected) {
+//			NSLog(@"Cool %d", optionSelected);
+//		}];
 	} repeats:NO];
 	
 	
