@@ -12,7 +12,7 @@
 #import "LMSectionTableView.h"
 #import "LMAppIcon.h"
 #import "LMImageManager.h"
-#import "LMAlertView.h"
+#import "LMAlertViewController.h"
 #import "LMColour.h"
 #import "LMSettings.h"
 #import "LMPebbleManager.h"
@@ -184,33 +184,36 @@
 	
 	if([changedSwitch.switchID isEqualToString:LMPebbleManagerKeyUserEnabled]){
 		if(changedSwitch.on){
-			LMAlertView *alertView = [LMAlertView newAutoLayoutView];
-			
-			alertView.title = NSLocalizedString(@"EnablePebbleTitle", nil);
-			alertView.body = NSLocalizedString(@"EnablePebbleDescription", nil);
-			alertView.alertOptionColours = @[[LMColour mainColourDark], [LMColour mainColour]];
-			alertView.alertOptionTitles = @[NSLocalizedString(@"PebbleDisable", nil), NSLocalizedString(@"PebbleEnable", nil)];
-			
-			[alertView launchOnView:self.coreViewController.navigationController.view
-			  withCompletionHandler:^(NSUInteger optionSelected) {
-				  BOOL enabledPebble = (optionSelected == 1);
-				  
-				  changedSwitch.on = enabledPebble;
+			LMAlertViewController *alertViewController = [LMAlertViewController new];
+			alertViewController.titleText = NSLocalizedString(@"EnablePebbleTitle", nil);
+			alertViewController.bodyText = NSLocalizedString(@"EnablePebbleDescription", nil);
+			alertViewController.checkboxText = NSLocalizedString(@"PebbleUnderstandingCheckboxText", nil);
+			alertViewController.checkboxMoreInformationText = NSLocalizedString(@"TapHereForMoreInformation", nil);
+			alertViewController.checkboxMoreInformationLink = @"https://www.LigniteMusic.com/pebble_support";
+			alertViewController.alertOptionColours = @[[LMColour mainColourDark], [LMColour mainColour]];
+			alertViewController.alertOptionTitles = @[ NSLocalizedString(@"PebbleDisable", nil), NSLocalizedString(@"PebbleEnable", nil) ];
+			alertViewController.completionHandler = ^(NSUInteger optionSelected, BOOL checkboxChecked) {
+				BOOL enabledPebble = (optionSelected == 1);
 				
-				  NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-
-				  [userDefaults setBool:enabledPebble forKey:LMPebbleManagerKeyUserEnabled];
-				  
-				  self.sectionTableView.totalNumberOfSections = enabledPebble ? 3 : 1;
+				changedSwitch.on = enabledPebble;
 				
-				  [self.sectionTableView reloadData];
-				  
-				  [[LMPebbleManager sharedPebbleManager] runPebbleServiceIfEnabled];
-				  
-				  if(enabledPebble){
-					  [LMAnswers logCustomEventWithName:@"Enabled Pebble" customAttributes:nil];
-				  }
-			}];
+				NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+				
+				[userDefaults setBool:enabledPebble forKey:LMPebbleManagerKeyUserEnabled];
+				
+				self.sectionTableView.totalNumberOfSections = enabledPebble ? 3 : 1;
+				
+				[self.sectionTableView reloadData];
+				
+				[[LMPebbleManager sharedPebbleManager] runPebbleServiceIfEnabled];
+				
+				if(enabledPebble){
+					[LMAnswers logCustomEventWithName:@"Enabled Pebble" customAttributes:nil];
+				}
+			};
+			[self.coreViewController.navigationController presentViewController:alertViewController
+																	   animated:YES
+																	 completion:nil];
 		}
 		else{
 			NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];

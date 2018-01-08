@@ -20,7 +20,6 @@
 #import "LMSectionTableView.h"
 #import "LMSearchViewController.h"
 #import "LMTutorialView.h"
-#import "LMAlertView.h"
 #import "LMFeedbackViewController.h"
 #import "LMCreditsViewController.h"
 #import "LMTrackInfoView.h"

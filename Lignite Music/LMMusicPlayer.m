@@ -842,7 +842,16 @@ BOOL shuffleForDebug = NO;
 		}];
 	}
 	else{
-		albumSort = [NSSortDescriptor sortDescriptorWithKey:sortKey ascending:YES];
+//		albumSort = [NSSortDescriptor sortDescriptorWithKey:sortKey ascending:YES];
+		albumSort = [NSSortDescriptor sortDescriptorWithKey:sortKey
+												  ascending:YES
+												 comparator:^NSComparisonResult(NSString *  _Nonnull obj1, NSString *  _Nonnull obj2) {
+									
+													 NSString *cleanString1 = [obj1 stringByReplacingOccurrencesOfString:@"the " withString:@"" options:NSCaseInsensitiveSearch range:NSMakeRange(0, [obj1 length])];
+													 NSString *cleanString2 = [obj2 stringByReplacingOccurrencesOfString:@"the " withString:@"" options:NSCaseInsensitiveSearch range:NSMakeRange(0, [obj2 length])];
+
+													 return [cleanString1 compare:cleanString2 options:NSCaseInsensitiveSearch];
+												 }];
 	}
 	
 	NSMutableArray *fixedCollections = [NSMutableArray arrayWithArray:[collections sortedArrayUsingDescriptors:@[albumSort]]];

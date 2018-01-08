@@ -344,7 +344,6 @@
 		6AF751631E0446D80001E18B /* LMFeedbackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AF751621E0446D80001E18B /* LMFeedbackViewController.m */; };
 		6AF751661E0454B50001E18B /* LMPaddedTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AF751651E0454B50001E18B /* LMPaddedTextField.m */; };
 		6AF9D5321DE0B73D006368B6 /* LMImageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AF9D5311DE0B73D006368B6 /* LMImageManager.m */; };
-		6AF9D5351DE0F2AE006368B6 /* LMAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AF9D5341DE0F2AE006368B6 /* LMAlertView.m */; };
 		6AF9D5381DE13141006368B6 /* LMReachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AF9D5371DE13141006368B6 /* LMReachability.m */; };
 		6AF9D53E1DE244B4006368B6 /* icon_miniplayer.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AF9D53D1DE244B4006368B6 /* icon_miniplayer.png */; };
 		6AF9D5421DE251FD006368B6 /* LMSectionTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AF9D5411DE251FD006368B6 /* LMSectionTableView.m */; };
@@ -829,8 +828,6 @@
 		6AF751651E0454B50001E18B /* LMPaddedTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMPaddedTextField.m; sourceTree = "<group>"; };
 		6AF9D5301DE0B73D006368B6 /* LMImageManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMImageManager.h; sourceTree = "<group>"; };
 		6AF9D5311DE0B73D006368B6 /* LMImageManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMImageManager.m; sourceTree = "<group>"; };
-		6AF9D5331DE0F2AE006368B6 /* LMAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMAlertView.h; sourceTree = "<group>"; };
-		6AF9D5341DE0F2AE006368B6 /* LMAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMAlertView.m; sourceTree = "<group>"; };
 		6AF9D5361DE13141006368B6 /* LMReachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMReachability.h; sourceTree = "<group>"; };
 		6AF9D5371DE13141006368B6 /* LMReachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMReachability.m; sourceTree = "<group>"; };
 		6AF9D53D1DE244B4006368B6 /* icon_miniplayer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_miniplayer.png; sourceTree = "<group>"; };
@@ -1416,8 +1413,6 @@
 				6A7E88481ECCB7E700E4B804 /* AFNetworking */,
 				6A2BA3C81ECCB29700D66105 /* BSKeyboardControls.h */,
 				6A2BA3C91ECCB29700D66105 /* BSKeyboardControls.m */,
-				6AF9D5331DE0F2AE006368B6 /* LMAlertView.h */,
-				6AF9D5341DE0F2AE006368B6 /* LMAlertView.m */,
 				6A2C751C2001757B007888C8 /* LMAlertViewController.h */,
 				6A2C751D2001757B007888C8 /* LMAlertViewController.m */,
 				6A313C131BB44A8F002BBC33 /* LMExtras.h */,
@@ -2299,7 +2294,6 @@
 				6A7C62F51DA93F6100B025BA /* LMColour.m in Sources */,
 				6A4D61B71EC9BDF400A106F4 /* LMMusicCollectionsView.m in Sources */,
 				6ADFFF781ECCC0B900E06FBF /* MBProgressHUD.m in Sources */,
-				6AF9D5351DE0F2AE006368B6 /* LMAlertView.m in Sources */,
 				6A4BAEEE1DC984EC000DF537 /* LMBigListEntry.m in Sources */,
 				6A7E88791ECCB80700E4B804 /* AFURLSessionManager.m in Sources */,
 				6A7E88711ECCB80700E4B804 /* AFNetworkReachabilityManager.m in Sources */,

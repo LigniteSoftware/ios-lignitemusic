@@ -202,35 +202,23 @@ typedef enum {
 - (void)setExplicitPermissionStatus:(LMImageManagerPermissionStatus)permissionStatus;
 
 /**
- Launch the explicit permission request dialog on a UIView. All saving of the explicit permission status and dismissing of the created view is automatically handled.
+ Displays the main authorization alert/request. Completion handler returns a BOOL which declares whether or not the user authorized the images (there is no option to cancel the dialogue, it's yes or no).
 
- @param view The view to launch the permission request on.
- @param completionHandler The completion handler for when the user makes their decision.
- */
-- (void)launchExplicitPermissionRequestOnView:(UIView*)view withCompletionHandler:(void(^)(LMImageManagerPermissionStatus permissionStatus))completionHandler DEPRECATED_ATTRIBUTE;
-
-/**
- Displays the main authorization alert/request on a certain view. Returns a BOOL which declares whether or not the user authorized the images (there is no cancel).
-
- @param view The view to add the alert to.
  @param completionHandler The completion handler to call when the user has made their decision.
  */
-- (void)displayDownloadingAuthorizationAlertOnView:(UIView*)view
-							 withCompletionHandler:(void(^)(BOOL authorized))completionHandler;
+- (void)displayDownloadingAuthorizationAlertWithCompletionHandler:(void(^)(BOOL authorized))completionHandler;
 
 /**
- Displays the an alert/request for the user's explicit permission to download under suboptimal conditions on a certain view. Returns a BOOL which declares whether or not the user authorized it.
+ Displays the an alert/request for the user's explicit permission to download under suboptimal conditions. Completion handler returns a BOOL which declares whether or not the user authorized it.
  
- @param view The view to add the alert to.
  @param completionHandler The completion handler to call when the user has made their decision.
  */
-- (void)displayDataAndStorageExplicitPermissionAlertOnView:(UIView*)view
-									 withCompletionHandler:(void(^)(BOOL authorized))completionHandler;
+- (void)displayDataAndStorageExplicitPermissionAlertWithCompletionHandler:(void(^)(BOOL authorized))completionHandler;
 
 
 /**
  The view of which to place alerts on top of.
  */
-@property UIView *viewToDisplayAlertsOn;
+@property UIViewController *navigationController;
 
 @end

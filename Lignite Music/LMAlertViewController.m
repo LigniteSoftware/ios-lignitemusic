@@ -36,6 +36,11 @@
  */
 @property UITextView *bodyTextView;
 
+/**
+ Feedback generator for haptic feedback.
+ */
+@property id feedbackGenerator;
+
 @end
 
 @implementation LMAlertViewController
@@ -46,11 +51,15 @@
 	UIColor *alertColour = checkBox.on ? [self.alertOptionColours lastObject] : [UIColor lightGrayColor];
 	UIButton *button = [self.buttonsArray lastObject];
 	
-	[button setTitle:NSLocalizedString(checkBox.on ? @"Continue" : @"PleaseAcceptTheCheckbox", nil) forState:UIControlStateNormal];
+	[button setTitle:NSLocalizedString(checkBox.on ? [self.alertOptionTitles lastObject] : @"PleaseAcceptTheCheckbox", nil) forState:UIControlStateNormal];
 	
 	[UIView animateWithDuration:0.4 animations:^{
 		button.backgroundColor = alertColour;
 	}];
+	
+	[self hapticFeedbackSetup];
+	[self hapticFeedbackSelectionChanged];
+	[self hapticFeedbackFinalize];
 }
 
 - (void)tappedConfirmationLabel {
@@ -93,6 +102,31 @@
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		[self.bodyTextView setContentOffset:CGPointZero];
 	}];
+}
+
+- (void)hapticFeedbackSetup {
+	if(@available(iOS 10, *)){
+		UISelectionFeedbackGenerator *feedbackGenerator = [[UISelectionFeedbackGenerator alloc] init];
+		[feedbackGenerator prepare];
+		
+		self.feedbackGenerator = feedbackGenerator;
+	}
+}
+
+- (void)hapticFeedbackSelectionChanged {
+	if(@available(iOS 10, *)){
+		if(self.feedbackGenerator){
+			UISelectionFeedbackGenerator *feedbackGenerator = self.feedbackGenerator;
+			[feedbackGenerator selectionChanged];
+			[feedbackGenerator prepare];
+		}
+	}
+}
+
+- (void)hapticFeedbackFinalize {
+	if(@available(iOS 10, *)){
+		self.feedbackGenerator = nil;
+	}
 }
 
 - (void)viewDidLoad {

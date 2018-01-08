@@ -46,6 +46,9 @@
  
  */
 
+"Authorized" = "Authorized";
+"DownloadingStopped" = "Downloading stopped.";
+
 "iOS_11_2_LagTitle" = "iOS Music Framework Lag";
 "iOS_11_2_LagDescription" = "Your device is running iOS %@ which has a bug created by Apple that causes the music framework that Lignite uses to be very laggy.\n\nAs a result of this bug created by Apple, long periods of \"freezing\" may occur throughout our app.\n\nThere is nothing that we at Lignite can do about the lag except wait for Apple to fix the bug that they have created.\n\nWe apologize for the inconvenience.";
 "iOS_11_2_LagCheckboxConfirmationText" = "I understand that any lag/freezing in Lignite Music is due to a bug created by Apple and that Lignite can do nothing to fix this bug.";
@@ -68,7 +71,8 @@
 "NoPlaylists" = "Oh boy, you don't have any playlists yet!\n\nCreate a new playlist by tapping the 'Create' button above.";
 
 "EnablePebbleTitle" = "Allow Pebble access";
-"EnablePebbleDescription" = "We created a Pebble app for Lignite Music, but Pebble went out of business. We have kept Pebble within Lignite Music for any remaining Pebblers.\n\nHowever, we no longer officially support Pebble. PEBBLE FUNCTIONALITY MAY NOT WORK AT ALL.\n\nPlease only continue if you accept that Pebble for Lignite Music may not work.";
+"EnablePebbleDescription" = "We created a Pebble app for Lignite Music, but unfortunately Pebble went out of business.\n\nWe have kept Pebble support within Lignite Music for any remaining Pebblers.\n\nDespite this, we no longer officially support Pebble. Any Pebble-related functionality is provided as-is and may not work at all.";
+"PebbleUnderstandingCheckboxText" = "I understand that Pebble support is deprecated and that Lignite will not provide support for anything Pebble related.";
 "PebbleEnable" = "Enable Pebble Support";
 "PebbleDisable" = "Cancel";
 

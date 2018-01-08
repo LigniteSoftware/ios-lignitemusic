@@ -12,6 +12,7 @@
 #import "LMSettingsViewController.h"
 #import "LMContactViewController.h"
 #import "LMCreditsViewController.h"
+#import "LMAlertViewController.h"
 #import "LMDebugViewController.h"
 #import "LMSectionTableView.h"
 #import "LMPebbleManager.h"
@@ -21,7 +22,6 @@
 #import "LMThemeEngine.h"
 #import "MBProgressHUD.h"
 #import "AFNetworking.h"
-#import "LMAlertView.h"
 #import "LMSettings.h"
 #import "LMAnswers.h"
 #import "LMAppIcon.h"
@@ -268,8 +268,7 @@
 - (void)cacheAlert {
 	LMImageManagerPermissionStatus previousPermissionStatus = [self.imageManager downloadPermissionStatus];
 	
-	[self.imageManager displayDownloadingAuthorizationAlertOnView:self.navigationController.view
-											withCompletionHandler:^(BOOL authorized) {
+	[self.imageManager displayDownloadingAuthorizationAlertWithCompletionHandler:^(BOOL authorized) {
 												if(previousPermissionStatus != LMImageManagerPermissionStatusDenied){
 													if(!authorized){
 														MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -311,8 +310,7 @@
 }
 
 - (void)explicitAlert {
-	[self.imageManager displayDataAndStorageExplicitPermissionAlertOnView:self.navigationController.view
-													withCompletionHandler:^(BOOL authorized) {
+	[self.imageManager displayDataAndStorageExplicitPermissionAlertWithCompletionHandler:^(BOOL authorized) {
 														[self.sectionTableView reloadData];
 														
 														self.indexPathOfCurrentlyOpenAlertView = nil;
@@ -399,14 +397,12 @@
 					break;
 				}
 				case 2: {
-					LMAlertView *alertView = [LMAlertView newAutoLayoutView];
-					
-					alertView.title = NSLocalizedString(@"UsageData", nil);
-					alertView.body = NSLocalizedString(@"UsageDataDescription", nil);
-					alertView.alertOptionColours = @[[LMColour mainColourDark], [LMColour mainColour]];
-					alertView.alertOptionTitles = @[NSLocalizedString(@"OptionOptOut", nil), NSLocalizedString(@"OptionOptIn", nil)];
-					
-					[alertView launchOnView:self.coreViewController.navigationController.view withCompletionHandler:^(NSUInteger optionSelected) {
+					LMAlertViewController *alertViewController = [LMAlertViewController new];
+					alertViewController.titleText = NSLocalizedString(@"UsageData", nil);
+					alertViewController.bodyText = NSLocalizedString(@"UsageDataDescription", nil);
+					alertViewController.alertOptionColours = @[[LMColour mainColourDark], [LMColour mainColour]];
+					alertViewController.alertOptionTitles = @[NSLocalizedString(@"OptionOptOut", nil), NSLocalizedString(@"OptionOptIn", nil)];
+					alertViewController.completionHandler = ^(NSUInteger optionSelected, BOOL checkboxChecked) {
 						BOOL optedOut = (optionSelected == 0);
 						
 						NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
@@ -425,7 +421,10 @@
 						[self.sectionTableView reloadData];
 						
 						self.indexPathOfCurrentlyOpenAlertView = nil;
-					}];
+					};
+					[self.coreViewController.navigationController presentViewController:alertViewController
+																			   animated:YES
+																			 completion:nil];
 					
 					self.indexPathOfCurrentlyOpenAlertView = indexPath;
 					break;

@@ -9,9 +9,10 @@
 #import <UIKit/UIKit.h>
 #import <PureLayout/PureLayout.h>
 #import <Unirest/UNIRest.h>
+#import "MBProgressHUD.h"
 #import "LMImageManager.h"
 #import "LMColour.h"
-#import "LMAlertView.h"
+#import "LMAlertViewController.h"
 #import "LMReachability.h"
 #import "LMMusicPlayer.h"
 #import "LMSettings.h"
@@ -1049,12 +1050,9 @@
 	return descriptionString;
 }
 
-- (void)displayDownloadingAuthorizationAlertOnView:(UIView*)view
-							 withCompletionHandler:(void(^)(BOOL authorized))completionHandler {
-	
+- (void)displayDownloadingAuthorizationAlertWithCompletionHandler:(void(^)(BOOL authorized))completionHandler; {
 	LMImageManagerPermissionStatus currentStatus = [self downloadPermissionStatus];
 	
-	LMAlertView *alertView = [LMAlertView newAutoLayoutView];
 	NSString *titleKey = @"ImagesDownloadWarningTitle";
 	NSString *youCanKey = @"";
 	NSString *enableButtonKey = @"";
@@ -1075,14 +1073,14 @@
 			currentStatusText = [NSString stringWithFormat:NSLocalizedString(@"UsingXOfYourStorage", nil), (CGFloat)[self sizeOfAllCaches]/1000000];
 			break;
 	}
-	alertView.title = NSLocalizedString(titleKey, nil);
 	
-	alertView.body = [NSString stringWithFormat:NSLocalizedString(@"SettingImagesAlertDescription", nil), currentStatusText, NSLocalizedString(youCanKey, nil)];
 	
-	alertView.alertOptionTitles = @[NSLocalizedString(disableButtonKey, nil), NSLocalizedString(enableButtonKey, nil)];
-	alertView.alertOptionColours = @[[LMColour mainColourDark], [LMColour mainColour]];
-	
-	[alertView launchOnView:view withCompletionHandler:^(NSUInteger optionSelected) {
+	LMAlertViewController *alertViewController = [LMAlertViewController new];
+	alertViewController.titleText = NSLocalizedString(titleKey, nil);
+	alertViewController.bodyText = [NSString stringWithFormat:NSLocalizedString(@"SettingImagesAlertDescription", nil), currentStatusText, NSLocalizedString(youCanKey, nil)];
+	alertViewController.alertOptionColours = @[[LMColour mainColourDark], [LMColour mainColour]];
+	alertViewController.alertOptionTitles = @[NSLocalizedString(disableButtonKey, nil), NSLocalizedString(enableButtonKey, nil)];
+	alertViewController.completionHandler = ^(NSUInteger optionSelected, BOOL checkboxChecked) {
 		//Reset the special permission statuses because the user's stance maybe different now and we'll have to recheck
 		[self setExplicitPermissionStatus:LMImageManagerPermissionStatusNotDetermined];
 		
@@ -1114,21 +1112,19 @@
 		if(completionHandler){
 			completionHandler(optionSelected == 1);
 		}
-	}];
+	};
+	[self.navigationController presentViewController:alertViewController
+											animated:YES
+										  completion:nil];
 }
 
-- (void)displayDataAndStorageExplicitPermissionAlertOnView:(UIView*)view
-									 withCompletionHandler:(void(^)(BOOL authorized))completionHandler {
-	
-	LMAlertView *alertView = [LMAlertView newAutoLayoutView];
-	alertView.title = NSLocalizedString(@"ExplicitImageDownloadingTitle", nil);
-	
-	alertView.body = NSLocalizedString(@"ExplicitImageDownloadingBody", nil);
-	
-	alertView.alertOptionTitles = @[NSLocalizedString(@"Deny", nil), NSLocalizedString(@"Allow", nil)];
-	alertView.alertOptionColours = @[[LMColour mainColourDark], [LMColour mainColour]];
-	
-	[alertView launchOnView:view withCompletionHandler:^(NSUInteger optionSelected) {
+- (void)displayDataAndStorageExplicitPermissionAlertWithCompletionHandler:(void(^)(BOOL authorized))completionHandler {
+	LMAlertViewController *alertViewController = [LMAlertViewController new];
+	alertViewController.titleText = NSLocalizedString(@"ExplicitImageDownloadingTitle", nil);
+	alertViewController.bodyText = NSLocalizedString(@"ExplicitImageDownloadingBody", nil);
+	alertViewController.alertOptionColours = @[[LMColour mainColourDark], [LMColour mainColour]];
+	alertViewController.alertOptionTitles = @[NSLocalizedString(@"Deny", nil), NSLocalizedString(@"Allow", nil)];
+	alertViewController.completionHandler = ^(NSUInteger optionSelected, BOOL checkboxChecked) {
 		//Reset the special permission statuses because the user's stance maybe different now and we'll have to recheck
 		[self setExplicitPermissionStatus:LMImageManagerPermissionStatusNotDetermined];
 		
@@ -1155,39 +1151,33 @@
 		if(completionHandler){
 			completionHandler(optionSelected == 1);
 		}
-	}];
+	};
+	[self.navigationController presentViewController:alertViewController
+															   animated:YES
+															 completion:nil];
 }
 
 - (void)warningTapped:(LMWarning*)warning {
 	if(warning == self.downloadProgressWarning){
-		[self displayDownloadingAuthorizationAlertOnView:self.viewToDisplayAlertsOn
-								   withCompletionHandler:^(BOOL authorized) {
-									   NSLog(@"Authorized %d", authorized);
-									   if(!authorized){
-										   [self.warningManager removeWarning:self.downloadProgressWarning];
-									   }
-								   }];
+		[self displayDownloadingAuthorizationAlertWithCompletionHandler:
+		 ^(BOOL authorized) {
+		    NSLog(@"Authorized download warning %d", authorized);
+		    if(!authorized){
+			    [self.warningManager removeWarning:self.downloadProgressWarning];
+		    }
+			
+			MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+			
+			hud.mode = MBProgressHUDModeCustomView;
+			UIImage *image = [[UIImage imageNamed:@"icon_checkmark.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+			hud.customView = [[UIImageView alloc] initWithImage:image];
+			hud.square = YES;
+			hud.label.text = NSLocalizedString(authorized ? @"WillBeginDownloading" : @"ImagesDeleted", nil);
+			hud.userInteractionEnabled = NO;
+			
+			[hud hideAnimated:YES afterDelay:3.f];
+		}];
 	}
-}
-
-- (void)launchExplicitPermissionRequestOnView:(UIView*)view withCompletionHandler:(void(^)(LMImageManagerPermissionStatus permissionStatus))completionHandler {
-	
-	LMAlertView *alertView = [LMAlertView newAutoLayoutView];
-	
-	alertView.title = NSLocalizedString(@"ImagesDownloadWarningTitle", nil);
-	alertView.body = [self permissionRequestDescriptionString];
-	alertView.alertOptionColours = @[[LMColour mainColourDark], [LMColour mainColour]];
-	alertView.alertOptionTitles = @[NSLocalizedString(@"DontDownload", nil), NSLocalizedString(@"DownloadAnyway", nil)];
-	
-	[alertView launchOnView:view withCompletionHandler:^(NSUInteger optionSelected) {
-		LMImageManagerPermissionStatus permissionStatus = (optionSelected == 1) ? LMImageManagerPermissionStatusAuthorized : LMImageManagerPermissionStatusDenied;
-		
-		completionHandler(permissionStatus);
-		
-		[self setExplicitPermissionStatus:permissionStatus];
-		
-		[self notifyDelegatesOfConditionLevel:[self conditionLevelForDownloading]];
-	}];
 }
 
 /**

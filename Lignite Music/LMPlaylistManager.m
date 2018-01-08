@@ -9,7 +9,7 @@
 #import <PureLayout/PureLayout.h>
 #import "LMPlaylistManager.h"
 #import "NSTimer+Blocks.h"
-#import "LMAlertView.h"
+#import "LMAlertViewController.h"
 #import "LMColour.h"
 @import SDWebImage;
 
@@ -214,20 +214,21 @@
 /* Begin playlist management understanding code */
 
 - (void)launchPlaylistManagementWarningOnView:(UIView*)view withCompletionHandler:(void(^)(void))completionHandler {
-	LMAlertView *alertView = [LMAlertView newAutoLayoutView];
-	
-	alertView.title = NSLocalizedString(@"PlaylistManagementUnderstandingTitle", nil);
-	alertView.body = NSLocalizedString(@"PlaylistManagementUnderstandingBody", nil);
-	alertView.alertOptionColours = @[ [LMColour mainColour] ];
-	alertView.alertOptionTitles = @[ NSLocalizedString(@"IUnderstand", nil) ];
-	
-	[alertView launchOnView:view withCompletionHandler:^(NSUInteger optionSelected) {
+	LMAlertViewController *alertViewController = [LMAlertViewController new];
+	alertViewController.titleText = NSLocalizedString(@"PlaylistManagementUnderstandingTitle", nil);
+	alertViewController.bodyText = NSLocalizedString(@"PlaylistManagementUnderstandingBody", nil);
+	alertViewController.alertOptionColours = @[ [LMColour mainColour] ];
+	alertViewController.alertOptionTitles = @[ NSLocalizedString(@"IUnderstand", nil) ];
+	alertViewController.completionHandler = ^(NSUInteger optionSelected, BOOL checkboxChecked) {
 		[self setUserUnderstandsPlaylistManagement:YES];
 		
 		completionHandler();
 		
 		NSLog(@"Cool, launch playlist creator");
-	}];
+	};
+	[self.navigationController presentViewController:alertViewController
+											animated:YES
+										  completion:nil];
 }
 
 - (BOOL)userUnderstandsPlaylistManagement {

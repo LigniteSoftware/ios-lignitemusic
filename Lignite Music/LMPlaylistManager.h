@@ -89,6 +89,11 @@
 @property (readonly) NSArray<LMMusicTrackCollection*>* playlistTrackCollections;
 
 /**
+ The navigation controller to display alerts on.
+ */
+@property UINavigationController *navigationController;
+
+/**
  If YES, the user has seen and clicked "I understand" on a popup that states playlists are managed within the app & do not get exported to the default music app due to API limitations.
  */
 @property BOOL userUnderstandsPlaylistManagement;

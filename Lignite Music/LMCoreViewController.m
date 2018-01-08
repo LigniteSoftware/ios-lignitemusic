@@ -25,7 +25,6 @@
 #import "LMMusicPlayer.h"
 #import "LMApplication.h"
 #import "LMAppDelegate.h"
-#import "LMAlertView.h"
 #import "LMTitleView.h"
 #import "LMSettings.h"
 #import "LMAnswers.h"
@@ -1358,12 +1357,28 @@ LMControlBarViewDelegate
 
 - (void)warningTapped:(LMWarning*)warning {
 	if(warning == self.downloadImagesOnDataOrLowStorageWarning){
-		[[LMImageManager sharedImageManager] displayDataAndStorageExplicitPermissionAlertOnView:self.navigationController.view
-																		  withCompletionHandler:^(BOOL authorized) {
-																			  NSLog(@"Authorized: %d", authorized);
-																			  [self.warningManager removeWarning:self.downloadImagesOnDataOrLowStorageWarning];
-																			  [[LMImageManager sharedImageManager] downloadIfNeededForAllCategories];
-																		  }];
+		[[LMImageManager sharedImageManager] displayDataAndStorageExplicitPermissionAlertWithCompletionHandler:
+		 ^(BOOL authorized) {
+			NSLog(@"Authorized: %d", authorized);
+			
+			if(!authorized){
+				[[LMImageManager sharedImageManager] clearAllCaches];
+			}
+			
+			MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+			
+			hud.mode = MBProgressHUDModeCustomView;
+			UIImage *image = [[UIImage imageNamed:@"icon_checkmark.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+			hud.customView = [[UIImageView alloc] initWithImage:image];
+			hud.square = YES;
+			hud.label.text = NSLocalizedString(authorized ? @"Authorized" : @"DownloadingStopped", nil);
+			hud.userInteractionEnabled = NO;
+			
+			[hud hideAnimated:YES afterDelay:3.f];
+			
+		    [self.warningManager removeWarning:self.downloadImagesOnDataOrLowStorageWarning];
+		    [[LMImageManager sharedImageManager] downloadIfNeededForAllCategories];
+		}];
 	}
 }
 
@@ -1704,8 +1719,12 @@ LMControlBarViewDelegate
 	
 	
 	LMImageManager *imageManager = [LMImageManager sharedImageManager];
-	imageManager.viewToDisplayAlertsOn = self.navigationController.view;
+	imageManager.navigationController = self.navigationController;
 	[imageManager addDelegate:self];
+	
+	
+	LMPlaylistManager *playlistManager = [LMPlaylistManager sharedPlaylistManager];
+	playlistManager.navigationController = self.navigationController;
 	
 	
 	
@@ -1865,7 +1884,7 @@ LMControlBarViewDelegate
 													animated:YES
 												  completion:nil];
 		}
-		
+				
 //		LMAlertView *alertView = [LMAlertView newAutoLayoutView];
 //
 //		alertView.title = NSLocalizedString(@"iOS_11_2_LagTitle", nil);
