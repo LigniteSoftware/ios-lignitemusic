@@ -34,7 +34,8 @@
 
 @implementation LMPlaylistManager
 
-@synthesize userUnderstandsPlaylistManagement = _userUnderstandsPlaylistManagement;
+@synthesize userUnderstandsPlaylistCreation = _userUnderstandsPlaylistCreation;
+@synthesize userUnderstandsPlaylistEditing = _userUnderstandsPlaylistEditing;
 @synthesize playlistTrackCollections = _playlistTrackCollections;
 
 /* Begin internal playlist management code */
@@ -64,6 +65,7 @@
 	
 	playlist.title = [playlistDictionary objectForKey:@"title"];
 	playlist.systemPersistentID = [[playlistDictionary objectForKey:@"systemPersistentID"] longLongValue];
+	playlist.userPortedToLignitePlaylist = [[playlistDictionary objectForKey:@"portedToLignitePlaylist"] boolValue];
 	playlist.persistentID = [[playlistDictionary objectForKey:@"persistentID"] longLongValue];
 	
 	playlist.enhancedConditionsDictionary = [playlistDictionary objectForKey:@"enhancedConditionsDictionary"];
@@ -103,6 +105,7 @@
 	
 	[mutableDictionary setObject:playlist.title forKey:@"title"];
 	[mutableDictionary setObject:@(playlist.systemPersistentID) forKey:@"systemPersistentID"];
+	[mutableDictionary setObject:@(playlist.userPortedToLignitePlaylist) forKey:@"portedToLignitePlaylist"];
 	[mutableDictionary setObject:@(playlist.persistentID) forKey:@"persistentID"];
 	[mutableDictionary setObject:[NSArray arrayWithArray:songPersistentIDArray] forKey:@"trackCollectionPersistentIDs"];
 	
@@ -164,6 +167,10 @@
 - (void)reloadPlaylists {
 	NSMutableArray *playlistsMutableArray = [NSMutableArray new];
 	
+	if(self.playlists){ //Has already loaded once, internalizing will not overwrite anything with this catch.
+		[self internalizeSystemPlaylists];
+	}
+		
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 	NSArray *allKeys = [userDefaults dictionaryRepresentation].allKeys;
 	for(NSString *key in allKeys){
@@ -176,13 +183,13 @@
 	self.playlists = [NSArray arrayWithArray:playlistsMutableArray];
 }
 
-- (BOOL)playlistExistsWithSystemPersistentID:(MPMediaEntityPersistentID)persistentID {
+- (LMPlaylist*)playlistForSystemPersistentID:(MPMediaEntityPersistentID)persistentID {
 	for(LMPlaylist *playlist in self.playlists){
 		if(playlist.systemPersistentID == persistentID){
-			return YES;
+			return playlist;
 		}
 	}
-	return NO;
+	return nil;
 }
 
 - (void)internalizeSystemPlaylists {
@@ -197,13 +204,18 @@
 //		NSLog(@"%lld: %@", systemPlaylist.persistentID, [systemPlaylist valueForProperty:MPMediaPlaylistPropertyName]);
 		
 		if(attribute != MPMediaPlaylistAttributeSmart && attribute != MPMediaPlaylistAttributeGenius){ //We don't fuck with these
-			if(![self playlistExistsWithSystemPersistentID:systemPlaylist.persistentID] && ![userDefaults objectForKey:[NSString stringWithFormat:@"deletedSystemPlaylist_%lld", systemPlaylist.persistentID]]){
+			LMPlaylist* playlistWithSystemPersistentID = [self playlistForSystemPersistentID:systemPlaylist.persistentID];
+			if(!playlistWithSystemPersistentID && ![userDefaults objectForKey:[NSString stringWithFormat:@"deletedSystemPlaylist_%lld", systemPlaylist.persistentID]]){
 				LMPlaylist *lignitePlaylist = [[LMPlaylist alloc]init];
 				lignitePlaylist.title = systemPlaylist.name;
 				lignitePlaylist.persistentID = random();
 				lignitePlaylist.systemPersistentID = systemPlaylist.persistentID;
 				lignitePlaylist.trackCollection = [[LMMusicTrackCollection alloc] initWithItems:systemPlaylist.items];
 				[self savePlaylist:lignitePlaylist];
+			}
+			else if(playlistWithSystemPersistentID && !playlistWithSystemPersistentID.userPortedToLignitePlaylist){
+				playlistWithSystemPersistentID.trackCollection = [[LMMusicTrackCollection alloc] initWithItems:systemPlaylist.items];
+				[self savePlaylist:playlistWithSystemPersistentID];
 			}
 		}
 	}
@@ -221,10 +233,10 @@
 	alertViewController.checkboxMoreInformationText = NSLocalizedString(@"TapHereForMoreInformation", nil);
 	alertViewController.checkboxMoreInformationLink = @"https://www.LigniteMusic.com/playlist_limitations";
 	alertViewController.alertOptionColours = @[ [LMColour mainColourDark], [LMColour mainColour] ];
-	alertViewController.alertOptionTitles = @[ NSLocalizedString(@"Cancel", nil), NSLocalizedString(@"Continue", nil) ];
+	alertViewController.alertOptionTitles = @[ NSLocalizedString(@"Cancel", nil), NSLocalizedString(@"CreatePlaylist", nil) ];
 	alertViewController.completionHandler = ^(NSUInteger optionSelected, BOOL checkboxChecked) {
 		if(checkboxChecked){
-			[self setUserUnderstandsPlaylistManagement:YES];
+			[self setUserUnderstandsPlaylistCreation:YES];
 			
 			completionHandler();
 			
@@ -236,17 +248,54 @@
 										  completion:nil];
 }
 
-- (BOOL)userUnderstandsPlaylistManagement {
+- (void)launchPlaylistEditingWarningWithCompletionHandler:(void(^)(void))completionHandler {
+	LMAlertViewController *alertViewController = [LMAlertViewController new];
+	alertViewController.titleText = NSLocalizedString(@"ConvertPlaylistTitle", nil);
+	alertViewController.bodyText = NSLocalizedString(@"ConvertPlaylistBody", nil);
+	alertViewController.checkboxText = NSLocalizedString(@"ConvertPlaylistCheckboxText", nil);
+	alertViewController.checkboxMoreInformationText = NSLocalizedString(@"TapHereForMoreInformation", nil);
+	alertViewController.checkboxMoreInformationLink = @"https://www.LigniteMusic.com/playlist_limitations";
+	alertViewController.alertOptionColours = @[ [LMColour mainColourDark], [LMColour mainColour] ];
+	alertViewController.alertOptionTitles = @[ NSLocalizedString(@"Cancel", nil), NSLocalizedString(@"StartEditing", nil) ];
+	alertViewController.completionHandler = ^(NSUInteger optionSelected, BOOL checkboxChecked) {
+		if(checkboxChecked){
+			[self setUserUnderstandsPlaylistEditing:YES];
+			
+			completionHandler();
+			
+			NSLog(@"Cool, launch playlist editor for playlist");
+		}
+	};
+	[self.navigationController presentViewController:alertViewController
+											animated:YES
+										  completion:nil];
+}
+
+- (BOOL)userUnderstandsPlaylistCreation {
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-	if([userDefaults objectForKey:LMUserUnderstandsPlaylistManagementKey]){
-		return [userDefaults boolForKey:LMUserUnderstandsPlaylistManagementKey];
+	if([userDefaults objectForKey:LMUserUnderstandsPlaylistCreationKey]){
+		return [userDefaults boolForKey:LMUserUnderstandsPlaylistCreationKey];
 	}
 	return NO;
 }
 
-- (void)setUserUnderstandsPlaylistManagement:(BOOL)userUnderstandsPlaylistManagement {
+- (void)setUserUnderstandsPlaylistCreation:(BOOL)userUnderstands {
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-	[userDefaults setBool:userUnderstandsPlaylistManagement forKey:LMUserUnderstandsPlaylistManagementKey];
+	[userDefaults setBool:userUnderstands forKey:LMUserUnderstandsPlaylistCreationKey];
+	[userDefaults synchronize];
+}
+
+- (BOOL)userUnderstandsPlaylistEditing {
+	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+	if([userDefaults objectForKey:LMUserUnderstandsPlaylistEditingKey]){
+		return [userDefaults boolForKey:LMUserUnderstandsPlaylistEditingKey];
+	}
+	return NO;
+}
+
+- (void)setUserUnderstandsPlaylistEditing:(BOOL)userUnderstands {
+	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+	[userDefaults setBool:userUnderstands forKey:LMUserUnderstandsPlaylistEditingKey];
 	[userDefaults synchronize];
 }
 

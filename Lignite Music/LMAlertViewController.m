@@ -78,7 +78,9 @@
 	for(int i = 0; i < self.buttonsArray.count; i++){
 		UIButton *aButton = [self.buttonsArray objectAtIndex:i];
 		if([aButton isEqual:buttonTapped]){
-			if(self.checkboxText && !self.confirmationCheckbox.on && (i == (self.buttonsArray.count - 1))){
+			BOOL isLastButton = (i == (self.buttonsArray.count - 1));
+								 
+			if(self.checkboxText && !self.confirmationCheckbox.on && isLastButton){
 				CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
 				[animation setDuration:0.35];
 				[animation setRepeatCount:2];
@@ -90,7 +92,7 @@
 				return;
 			}
 			
-			self.completionHandler(i, self.confirmationCheckbox ? self.confirmationCheckbox.on : NO);
+			self.completionHandler(i, self.confirmationCheckbox ? (self.confirmationCheckbox.on && isLastButton) : NO);
 			[self dismissViewControllerAnimated:YES completion:nil];
 			break;
 		}

@@ -50,7 +50,7 @@
  The completion handler for when the option is selected. Stored from the initial load.
  
  @param optionSelected What option was selected, 0 being the first button associated with the first values in alertOptionTitles & alertOptionColours.
- @param checkboxChecked If checkboxText is defined, this will be a YES or NO on whether or not the user has checked the verification checkbox.
+ @param checkboxChecked If checkboxText is defined, this will be a YES or NO on whether or not the user has checked the verification checkbox and pressed the continue button.
  */
 @property void (^completionHandler)(NSUInteger optionSelected, BOOL checkboxChecked);
 

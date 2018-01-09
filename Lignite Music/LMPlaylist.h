@@ -91,6 +91,11 @@
 @property MPMediaEntityPersistentID systemPersistentID;
 
 /**
+ If the user wants to edit a playlist, they must first accept an agreement of understanding that they won't be able to sync their playlist with iTunes or any other outside source. This variable will be YES if this playlist is a system playlist (systemPersistentID > 0) and the user understands & accepts that they want to convert this system playlist into a Lignite playlist. If this is done, the playlist will no longer be syncable with iTunes or external sources.
+ */
+@property BOOL userPortedToLignitePlaylist;
+
+/**
  Regenerates the playlist, if enhanced, based on the conditions provided.
  */
 - (void)regenerateEnhancedPlaylist;

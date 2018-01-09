@@ -812,7 +812,7 @@
 }
 
 - (void)addPlaylistButtonTapped {	
-	if(![self.playlistManager userUnderstandsPlaylistManagement]){
+	if(!self.playlistManager.userUnderstandsPlaylistCreation){
 		[self.playlistManager launchPlaylistManagementWarningWithCompletionHandler:^{
 			[NSTimer scheduledTimerWithTimeInterval:0.25 block:^{
 				[self addPlaylistButtonTapped];
@@ -931,6 +931,10 @@
 - (void)editTappedForBigListEntry:(LMBigListEntry*)bigListEntry {
 	LMPlaylist *playlist = [self.playlistManager.playlists objectAtIndex:bigListEntry.collectionIndex];
 	
+	if(playlist.systemPersistentID > 0){
+		playlist.userPortedToLignitePlaylist = YES;
+	}
+	
 	if(playlist.enhanced){
 		LMEnhancedPlaylistEditorViewController *enhancedPlaylistViewController = [LMEnhancedPlaylistEditorViewController new];
 		enhancedPlaylistViewController.playlist = playlist;
@@ -988,63 +992,66 @@
 }
 
 - (void)editPlaylistButtonTapped {
-	if(![self.playlistManager userUnderstandsPlaylistManagement]){
-		[self.playlistManager launchPlaylistManagementWarningWithCompletionHandler:^{
-			[self editPlaylistButtonTapped];
-		}];
+	if(!self.playlistManager.userUnderstandsPlaylistEditing){
+		[self.playlistManager launchPlaylistEditingWarningWithCompletionHandler:^{
+													[NSTimer scheduledTimerWithTimeInterval:0.25 block:^{
+														[self editPlaylistButtonTapped];
+													} repeats:NO];
+												}];
+		
+		return;
+	}
+	
+	NSLog(@"Edit playlist");
+	
+	LMCollectionViewFlowLayout *flowLayout = (LMCollectionViewFlowLayout*)self.collectionView.collectionViewLayout;
+	
+	flowLayout.indexOfItemDisplayingDetailView = LMNoDetailViewSelected;
+	
+	for(LMBigListEntry *bigListEntry in self.bigListEntries){
+		bigListEntry.editing = !bigListEntry.editing;
+	}
+	self.editing = !self.editing;
+	
+	[self.playlistModificationButtonView layoutIfNeeded];
+	
+	for(NSLayoutConstraint *constraint in self.playlistModificationButtonView.constraints){
+		if(constraint.firstItem == self.playlistButtonRight){
+			[self.playlistModificationButtonView removeConstraint:constraint];
+		}
+	}
+	if(self.editing){
+		[self.playlistButtonRight autoPinEdgesToSuperviewEdges];
 	}
 	else{
-		NSLog(@"Edit playlist");
-		
-		LMCollectionViewFlowLayout *flowLayout = (LMCollectionViewFlowLayout*)self.collectionView.collectionViewLayout;
-		
-		flowLayout.indexOfItemDisplayingDetailView = LMNoDetailViewSelected;
-		
-		for(LMBigListEntry *bigListEntry in self.bigListEntries){
-			bigListEntry.editing = !bigListEntry.editing;
-		}
-		self.editing = !self.editing;
-		
-		[self.playlistModificationButtonView layoutIfNeeded];
-		
-		for(NSLayoutConstraint *constraint in self.playlistModificationButtonView.constraints){
-			if(constraint.firstItem == self.playlistButtonRight){
-				[self.playlistModificationButtonView removeConstraint:constraint];
-			}
-		}
-		if(self.editing){
-			[self.playlistButtonRight autoPinEdgesToSuperviewEdges];
+		[self.playlistButtonRight autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.playlistButtonRight autoPinEdgeToSuperviewEdge:ALEdgeTop];
+		[self.playlistButtonRight autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[self.playlistButtonRight autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.playlistModificationButtonView withMultiplier:(1.0/2.0)].constant = -1;
+	}
+	
+	UIImageView *iconView = nil;
+	UILabel *label = nil;
+	UIView *backgroundView = [self.playlistButtonRight.subviews firstObject]; //The background view contains the icon and label
+	
+	for(id subview in backgroundView.subviews){
+		if([subview class] == [UIImageView class]){
+			iconView = subview;
 		}
 		else{
-			[self.playlistButtonRight autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-			[self.playlistButtonRight autoPinEdgeToSuperviewEdge:ALEdgeTop];
-			[self.playlistButtonRight autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-			[self.playlistButtonRight autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.playlistModificationButtonView withMultiplier:(1.0/2.0)].constant = -1;
+			label = subview;
 		}
-		
-		UIImageView *iconView = nil;
-		UILabel *label = nil;
-		UIView *backgroundView = [self.playlistButtonRight.subviews firstObject]; //The background view contains the icon and label
-		
-		for(id subview in backgroundView.subviews){
-			if([subview class] == [UIImageView class]){
-				iconView = subview;
-			}
-			else{
-				label = subview;
-			}
-		}
-		
-		iconView.image = [LMAppIcon imageForIcon:self.editing ? LMIconWhiteCheckmark : LMIconEdit];
-		label.text = NSLocalizedString(self.editing ? @"Done" : @"Edit", nil);
-		
-		[UIView animateWithDuration:0.3 animations:^{
-			[self.playlistModificationButtonView layoutIfNeeded];
-		}];
-		
-		
-		[self.coreViewController.landscapeNavigationBar setEditing:self.editing];
 	}
+	
+	iconView.image = [LMAppIcon imageForIcon:self.editing ? LMIconWhiteCheckmark : LMIconEdit];
+	label.text = NSLocalizedString(self.editing ? @"Done" : @"Edit", nil);
+	
+	[UIView animateWithDuration:0.3 animations:^{
+		[self.playlistModificationButtonView layoutIfNeeded];
+	}];
+	
+	
+	[self.coreViewController.landscapeNavigationBar setEditing:self.editing];
 }
 
 - (UIView *)roundCornersOnView:(UIView *)view onTopLeft:(BOOL)tl topRight:(BOOL)tr bottomLeft:(BOOL)bl bottomRight:(BOOL)br radius:(CGFloat)radius {

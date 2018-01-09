@@ -1895,7 +1895,8 @@ LMControlBarViewDelegate
 //		LMSettingsViewController *settingsViewController = (LMSettingsViewController*)[storyboard instantiateViewControllerWithIdentifier:@"LMSettingsViewController"];
 //		[self.navigationController pushViewController:settingsViewController animated:YES];
 		
-		[playlistManager setUserUnderstandsPlaylistManagement:NO];
+//		[playlistManager setUserUnderstandsPlaylistCreation:NO];
+//		[playlistManager setUserUnderstandsPlaylistEditing:NO];
 	} repeats:NO];
 	
 	

@@ -141,7 +141,8 @@
 "Unfavourited" = "Entfernt";
 
 "PlaylistManagementUnderstandingTitle" = "Handhabung Wiedergabelisten";
-"PlaylistManagementUnderstandingBody" = "Aufgrund Limitation von iOS können innerhalb von Lignite Music erstellte Wiedergabelisten nicht mit der Standard Musik App synchronisiert werden.\n\nWiedergabelisten, welche innerhalb Lignite Music erstellt, bearbeitet oder gelöscht werden, haben keinen Einfluss auf Wiedergabelisten ausserhalb dieser App.\n\nTippe bitte auf den Bestätigungsbutton unterhalb, um dies zu akzeptieren.\n\nVielen Dank!";
+"PlaylistManagementUnderstandingBody" = "Aufgrund von iOS Limitationen können Wiedergabelisten, die innerhalb von Lignite Music erstellt wurden, nirgendwo sonst synchronisiert werden.\n\nDies bedeutet, dass innerhalb Lignite Music erstellte Wiedergabelisten nicht in iTunes oder anderen Apps sichtbar / synchroninisiert werden.";
+"PlaylistManagementUnderstandingConfirmationCheckboxText" = "Mir ist bewusst, dass ich aufgrund einer durch Apple eingeführten Einschränkung die hier erstellten Wiedergabelisten nirgendwo sonst synchronisieren kann.";
 "IUnderstand" = "Ich verstehe";
 
 "ExplicitImageDownloadingTitle" = "Mobil & wenig Speicher";

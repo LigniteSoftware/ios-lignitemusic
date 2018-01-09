@@ -10,17 +10,25 @@
 #import "LMMusicPlayer.h"
 #import "LMPlaylist.h"
 
-#define LMUserUnderstandsPlaylistManagementKey @"LMUserUnderstandsPlaylistManagementKey"
+#define LMUserUnderstandsPlaylistCreationKey @"LMUserUnderstandsPlaylistManagementKey"
+#define LMUserUnderstandsPlaylistEditingKey @"LMUserUnderstandsPlaylistEditingKey"
 #define LMPlaylistManagerImageCacheNamespaceKey @"LMPlaylistManagerImageCacheNamespaceKey"
 
 @interface LMPlaylistManager : NSObject
 
 /**
- Launches the LMAlertView for getting the user's understanding about how playlists are handled within the app.
+ Launches the warning popup for getting the user's understanding about how created playlists are handled.
 
  @param completionHandler The completion handler which will be called when the user taps "I understand".
  */
 - (void)launchPlaylistManagementWarningWithCompletionHandler:(void(^)(void))completionHandler;
+
+/**
+ Launches the warning popup for getting the user's understanding about how edited playlists are handled.
+
+ @param completionHandler The completion handler for when the user understands and accepts.
+ */
+- (void)launchPlaylistEditingWarningWithCompletionHandler:(void(^)(void))completionHandler;
 
 /**
  Checks whether or not there are system playlists that need converting to the LMPlaylist format. If there are, it automatically converts them and includes them in the array stack.
@@ -93,8 +101,13 @@
 @property UINavigationController *navigationController;
 
 /**
- If YES, the user has seen and clicked "I understand" on a popup that states playlists are managed within the app & do not get exported to the default music app due to API limitations.
+ If YES, the user has seen and verified their understanding on a popup that states playlists are created within the app & do not get exported to the default music app due to API limitations.
  */
-@property BOOL userUnderstandsPlaylistManagement;
+@property BOOL userUnderstandsPlaylistCreation;
+
+/**
+ If YES, the user has seen and verified their understanding on a popup that states playlists are edited within the app, and that if they edit any previously-created playlists, they will stop being syncable with iTunes.
+ */
+@property BOOL userUnderstandsPlaylistEditing;
 
 @end
