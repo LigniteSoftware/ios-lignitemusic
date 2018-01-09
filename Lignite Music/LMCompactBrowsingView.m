@@ -1100,6 +1100,9 @@
 		
 		self.collectionView = [[UICollectionView alloc]initWithFrame:CGRectZero collectionViewLayout:fuck];
 		self.collectionView.translatesAutoresizingMaskIntoConstraints = NO;
+		self.collectionView.scrollEnabled = YES;
+		self.collectionView.alwaysBounceVertical = YES;
+		self.collectionView.bounces = YES;
 		self.collectionView.delegate = self;
 		self.collectionView.dataSource = self;
 		BOOL isPlaylists = (self.musicType == LMMusicTypePlaylists);
@@ -1240,7 +1243,7 @@
 			[labelView autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:-5];
 		}
 		
-		
+				
 		
 		self.backgroundColor = [UIColor whiteColor];
 		self.collectionView.backgroundColor = [UIColor whiteColor];

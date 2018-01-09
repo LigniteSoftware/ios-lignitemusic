@@ -209,11 +209,13 @@
 - (CGRect)frameForCellAtIndexPath:(NSIndexPath*)indexPath detailViewDisplayMode:(LMDetailViewDisplayMode)detailViewDisplayMode {
 	NSInteger factor = self.itemsPerRow; //How many items to display in one row
 	
-//	NSLog(@"%@/%d/%d/%d", (self.isDisplayingDetailView ? @"showing" : @"not showing"), (int)self.indexOfItemDisplayingDetailView, (int)self.indexOfDetailView, 3 % self.itemsPerRow);
+//	NSLog(@"\n = %@ = \n itemDisplayingIndex %d \n indexOfDetailView %d \n itemsPerRow %d", (self.isDisplayingDetailView ? @"showing detail view" : @"not showing detail view"), (int)self.indexOfItemDisplayingDetailView, (int)self.indexOfDetailView, (int)self.itemsPerRow);
+	
+//	NSLog(@"Display mode is %d", (int)detailViewDisplayMode);
 	
 	NSInteger detailViewIndexToUse = (detailViewDisplayMode == LMDetailViewDisplayModePreviousIndex) ? self.previousIndexOfDetailView : self.indexOfDetailView;
-	BOOL detailViewIndexIsNegative = detailViewIndexToUse < 0;
-	BOOL displayingDetailView = detailViewDisplayMode != LMDetailViewDisplayModeNone && !detailViewIndexIsNegative;
+	BOOL detailViewIndexIsNegative = (detailViewIndexToUse < 0);
+	BOOL displayingDetailView = (detailViewDisplayMode != LMDetailViewDisplayModeNone) && !detailViewIndexIsNegative;
 	
 	BOOL isDetailViewRow = (indexPath.row == detailViewIndexToUse) && displayingDetailView && !detailViewIndexIsNegative;
 	BOOL isBelowDetailViewRow = (indexPath.row > detailViewIndexToUse) && displayingDetailView && !detailViewIndexIsNegative;
@@ -248,6 +250,8 @@
 	CGPoint origin = CGPointMake(((fixedIndexPathRow % factor) * (size.width+spacing)) + spacing, //The column which the cell is in
 								 ((fixedIndexPathRow / factor) * (size.height+(spacing/spacingDividerFactor))) + spacing/spacingDividerFactor); //The row
 	
+	NSLog(@"%@: %@: %@ (%@)", (isDetailViewRow ? @"Detail" : (isBelowDetailViewRow ? @"Below" : (displayingDetailView ? @"Above" : @"None"))), indexPath, NSStringFromCGPoint(origin), [[[self.musicTrackCollections objectAtIndex:(fixedIndexPathRow > -1) ? fixedIndexPathRow : 0] representativeItem] albumTitle]);
+	
 	CGFloat detailViewHeight = 0;
 	
 	if(isDetailViewRow || isBelowDetailViewRow){
@@ -258,6 +262,8 @@
 		detailViewHeight = (collectionViewFrame.size.height - normalItemFrame.size.height) - COMPACT_VIEW_SPACING_BETWEEN_ITEMS - normalItemFrame.origin.y + 5; //I'm not going to pull my hair out trying to figure out where the 5 pixels actually comes from, sorry
 		
 		detailViewHeight -= 15;
+		
+		detailViewHeight -= 100;
 		
 		detailViewHeight = fmin(detailViewHeight, maximumDetailViewHeight);
 	}
