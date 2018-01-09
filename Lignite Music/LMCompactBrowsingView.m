@@ -510,9 +510,9 @@
 			[UIView animateWithDuration:0.15 animations:^{
 				CGFloat contentOffsetY = bigListEntry.superview.superview.frame.origin.y - 20;
 				
-				if(self.musicType == LMMusicTypePlaylists && ![LMLayoutManager isLandscape]){
-					contentOffsetY -= self.playlistModificationButtonView.frame.size.height + 20;
-				}
+//				if(self.musicType == LMMusicTypePlaylists && ![LMLayoutManager isLandscape]){
+//					contentOffsetY -= self.playlistModificationButtonView.frame.size.height + 20;
+//				}
 				
 				self.collectionView.contentOffset = CGPointMake(0, contentOffsetY);
 				[self layoutIfNeeded];
@@ -655,15 +655,15 @@
 - (void)changeBottomSpacing:(CGFloat)bottomSpacing {
 	NSLog(@"Setting bottom spacing %f", bottomSpacing);
     [UIView animateWithDuration:0.5 animations:^{
-		BOOL isPlaylists = self.musicType == LMMusicTypePlaylists;
-		NSInteger topInset = (isPlaylists && !self.layoutManager.isLandscape) ? 60 : (self.layoutManager.isLandscape ? 0 : 20);
-		if([LMLayoutManager isiPad] && isPlaylists){
-			topInset = 100;
-		}
-		else if([LMLayoutManager isiPhoneX] && isPlaylists){
-			topInset = self.layoutManager.isLandscape ? 0 : 80;
-		}
-       self.collectionView.contentInset = UIEdgeInsetsMake(topInset, 0, 100, 0);
+//		BOOL isPlaylists = self.musicType == LMMusicTypePlaylists;
+//		NSInteger topInset = (isPlaylists && !self.layoutManager.isLandscape) ? 60 : (self.layoutManager.isLandscape ? 0 : 20);
+//		if([LMLayoutManager isiPad] && isPlaylists){
+//			topInset = 100;
+//		}
+//		else if([LMLayoutManager isiPhoneX] && isPlaylists){
+//			topInset = self.layoutManager.isLandscape ? 0 : 80;
+//		}
+//       self.collectionView.contentInset = UIEdgeInsetsMake(topInset, 0, 100, 0);
     }];
 }
 
@@ -714,14 +714,14 @@
 			self.playlistModificationButtonView.hidden = NO;
 		}
 		self.playlistModificationButtonBackgroundView.hidden = self.playlistModificationButtonView.hidden;
-		NSInteger topInset = (isPlaylists && !self.layoutManager.isLandscape) ? 60 : (self.layoutManager.isLandscape ? 0 : 20);
-		if([LMLayoutManager isiPad] && isPlaylists){
-			topInset = 100;
-		}
-		else if([LMLayoutManager isiPhoneX] && isPlaylists){
-			topInset = self.layoutManager.isLandscape ? 0 : 80;
-		}
-		self.collectionView.contentInset = UIEdgeInsetsMake(topInset, 0, 100, 0);
+//		NSInteger topInset = (isPlaylists && !self.layoutManager.isLandscape) ? 60 : (self.layoutManager.isLandscape ? 0 : 20);
+//		if([LMLayoutManager isiPad] && isPlaylists){
+//			topInset = 100;
+//		}
+//		else if([LMLayoutManager isiPhoneX] && isPlaylists){
+//			topInset = self.layoutManager.isLandscape ? 0 : 80;
+//		}
+//		self.collectionView.contentInset = UIEdgeInsetsMake(topInset, 0, 100, 0);
 		
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		[UIView animateWithDuration:0.25 animations:^{
@@ -1107,14 +1107,14 @@
 		self.collectionView.delegate = self;
 		self.collectionView.dataSource = self;
 		BOOL isPlaylists = (self.musicType == LMMusicTypePlaylists);
-		NSInteger topInset = (isPlaylists && !self.layoutManager.isLandscape) ? 60 : (self.layoutManager.isLandscape ? 0 : 20);
-		if([LMLayoutManager isiPad] && isPlaylists){
-			topInset = 100;
-		}
-		else if([LMLayoutManager isiPhoneX] && isPlaylists){
-			topInset = self.layoutManager.isLandscape ? 0 : 80;
-		}
-		self.collectionView.contentInset = UIEdgeInsetsMake(topInset, 0, 100, 0);
+//		NSInteger topInset = (isPlaylists && !self.layoutManager.isLandscape) ? 60 : (self.layoutManager.isLandscape ? 0 : 20);
+//		if([LMLayoutManager isiPad] && isPlaylists){
+//			topInset = 100;
+//		}
+//		else if([LMLayoutManager isiPhoneX] && isPlaylists){
+//			topInset = self.layoutManager.isLandscape ? 0 : 80;
+//		}
+		self.collectionView.contentInset = UIEdgeInsetsMake(0, 0, 150, 0);
 		[self.collectionView registerClass:[LMCollectionViewCell class] forCellWithReuseIdentifier:@"cellIdentifier"];
 		[self addSubview:self.collectionView];
 		
@@ -1141,9 +1141,6 @@
 		NSLog(@"Took %f seconds to load %d items (~%fms per item).", amountOfTimeInSeconds, (int)amountOfItems, ((amountOfTimeInSeconds/(CGFloat)amountOfItems) * 1000));
 		
 		
-		self.backgroundColor = [UIColor whiteColor];
-		self.collectionView.backgroundColor = [UIColor whiteColor];
-		[self.collectionView autoPinEdgesToSuperviewEdges];
 		
 		self.playlistModificationButtonBackgroundView = [UIView newAutoLayoutView];
 		self.playlistModificationButtonBackgroundView.backgroundColor = [UIColor whiteColor];
@@ -1162,7 +1159,7 @@
 		self.playlistModificationButtonView.layer.cornerRadius = 8.0f;
 		self.playlistModificationButtonView.hidden = !(self.musicType == LMMusicTypePlaylists && !self.layoutManager.isLandscape);
 		[self addSubview:self.playlistModificationButtonView];
-
+		
 		NSArray *playlistModificationButtonViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 			[self.playlistModificationButtonView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:16];
 			[self.playlistModificationButtonView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:35];
@@ -1181,12 +1178,12 @@
 		self.playlistModificationButtonViewHeightConstraint = [self.playlistModificationButtonView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.125/1.80];
 		
 		[self.playlistModificationButtonBackgroundView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.playlistModificationButtonView withOffset:15];
-
-
+		
+		
 		self.playlistButtonLeft = [UIView newAutoLayoutView];
 		self.playlistButtonLeft.backgroundColor = [LMColour mainColour];
 		[self.playlistModificationButtonView addSubview:self.playlistButtonLeft];
-
+		
 		[self.playlistButtonLeft autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[self.playlistButtonLeft autoPinEdgeToSuperviewEdge:ALEdgeTop];
 		[self.playlistButtonLeft autoPinEdgeToSuperviewEdge:ALEdgeBottom];
@@ -1246,6 +1243,17 @@
 			[labelView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 			[labelView autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:-5];
 		}
+		
+		
+		
+		self.backgroundColor = [UIColor whiteColor];
+		self.collectionView.backgroundColor = [UIColor whiteColor];
+		[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[self.collectionView autoPinEdge:ALEdgeTop
+								  toEdge:isPlaylists ? ALEdgeBottom : ALEdgeTop
+								  ofView:isPlaylists ? self.playlistModificationButtonBackgroundView : self];
 		
 		
 		self.noObjectsLabel = [UILabel newAutoLayoutView];

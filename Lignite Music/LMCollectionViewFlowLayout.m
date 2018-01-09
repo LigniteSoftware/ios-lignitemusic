@@ -257,6 +257,8 @@
 		
 		detailViewHeight = (collectionViewFrame.size.height - normalItemFrame.size.height) - COMPACT_VIEW_SPACING_BETWEEN_ITEMS - normalItemFrame.origin.y + 5; //I'm not going to pull my hair out trying to figure out where the 5 pixels actually comes from, sorry
 		
+		detailViewHeight -= 15;
+		
 		detailViewHeight = fmin(detailViewHeight, maximumDetailViewHeight);
 	}
 	
@@ -283,7 +285,7 @@
 		
 		return finalFrame;
 	}
-		
+	
 	return itemFrame;
 }
 
