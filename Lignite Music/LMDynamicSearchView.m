@@ -48,9 +48,25 @@
 @property NSMutableArray<NSDictionary*> *selectedTrackCollectionsData;
 
 /**
- The label that is displayed when there are no search results.
+ The background view for the content of the ri-dic-u-lous welcome to search screen.
  */
-@property UILabel *noResultsLabel;
+@property UIView *welcomeToSearchContentBackgroundView;
+
+/**
+ The label for the insane welcome to search screen.
+ */
+@property UILabel *welcomeToSearchLabel;
+
+/**
+ Ugh, I hate this stupid welcome to search screen.
+ */
+@property UIView *welcomeToSearchImageBackgroundView;
+
+/**
+ The image view for the search icon for the annoying welcome to search screen.
+ */
+@property UIImageView *welcomeToSearchImageView;
+
 
 @end
 
@@ -575,7 +591,10 @@
 	
 	[self.sectionTableView reloadData];
 	
-	self.noResultsLabel.hidden = ![self noResults];
+	BOOL blankSearch = [searchText isEqualToString:@""] || (searchText == nil);
+	self.welcomeToSearchContentBackgroundView.hidden = ![self noResults];
+	self.welcomeToSearchLabel.text = NSLocalizedString(blankSearch ? @"WelcomeToSearch" : @"NoSearchResults", nil);
+	self.welcomeToSearchImageView.image = blankSearch ? [LMAppIcon invertImage:[LMAppIcon imageForIcon:LMIconSearch]] : [LMAppIcon imageForIcon:LMIconNoSearchResults];
 	
 	//Search complete, papa bless!
 }
@@ -649,20 +668,47 @@
 		
 		
 		
-		self.noResultsLabel = [UILabel newAutoLayoutView];
-		self.noResultsLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:[LMLayoutManager isExtraSmall] ? 16.0f : 20.0f];
-		self.noResultsLabel.text = NSLocalizedString(@"NoSearchResults", nil);
-		self.noResultsLabel.textColor = [UIColor blackColor];
-		self.noResultsLabel.hidden = [self noResults];
-		self.noResultsLabel.textAlignment = NSTextAlignmentLeft;
-		self.noResultsLabel.numberOfLines = 0;
-		self.noResultsLabel.userInteractionEnabled = YES;
-		self.noResultsLabel.backgroundColor = [UIColor whiteColor];
-		[self addSubview:self.noResultsLabel];
+		self.welcomeToSearchContentBackgroundView = [UIView newAutoLayoutView];
+//				self.welcomeToSearchContentBackgroundView.backgroundColor = [UIColor magentaColor];
+		[self addSubview:self.welcomeToSearchContentBackgroundView];
 		
-		[self.noResultsLabel autoPinEdgeToSuperviewMargin:ALEdgeLeading];
-		[self.noResultsLabel autoPinEdgeToSuperviewMargin:ALEdgeTrailing];
-		[self.noResultsLabel autoPinEdgeToSuperviewMargin:ALEdgeTop];
+		[self.welcomeToSearchContentBackgroundView autoCentreInSuperview];
+		[self.welcomeToSearchContentBackgroundView autoPinEdgeToSuperviewMargin:ALEdgeLeading];
+		[self.welcomeToSearchContentBackgroundView autoPinEdgeToSuperviewMargin:ALEdgeTrailing];
+		
+		
+		self.welcomeToSearchImageBackgroundView = [UIView newAutoLayoutView];
+//				self.welcomeToSearchImageBackgroundView.backgroundColor = [UIColor yellowColor];
+		[self.welcomeToSearchContentBackgroundView addSubview:self.welcomeToSearchImageBackgroundView];
+		
+		[self.welcomeToSearchImageBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.welcomeToSearchImageBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.welcomeToSearchImageBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+//		[self.welcomeToSearchImageBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(1.75/10.0)];
+		[self.welcomeToSearchImageBackgroundView autoSetDimension:ALDimensionHeight toSize:75.0f];
+		
+		
+		self.welcomeToSearchImageView = [UIImageView newAutoLayoutView];
+//				self.welcomeToSearchImageView.backgroundColor = [UIColor orangeColor];
+		self.welcomeToSearchImageView.image = [LMAppIcon invertImage:[LMAppIcon imageForIcon:LMIconSearch]];
+		self.welcomeToSearchImageView.contentMode = UIViewContentModeScaleAspectFit;
+		[self.welcomeToSearchImageBackgroundView addSubview:self.welcomeToSearchImageView];
+		
+		[self.welcomeToSearchImageView autoPinEdgesToSuperviewEdges];
+		
+		
+		self.welcomeToSearchLabel = [UILabel newAutoLayoutView];
+		self.welcomeToSearchLabel.numberOfLines = 0;
+		self.welcomeToSearchLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:22.0f];
+		self.welcomeToSearchLabel.text = NSLocalizedString(@"WelcomeToSearch", nil);
+		self.welcomeToSearchLabel.textAlignment = NSTextAlignmentCenter;
+		[self.welcomeToSearchContentBackgroundView addSubview:self.welcomeToSearchLabel];
+		
+		
+		[self.welcomeToSearchLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.welcomeToSearchLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.welcomeToSearchLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.welcomeToSearchImageBackgroundView withOffset:20.0f];
+		[self.welcomeToSearchLabel autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 	}
 	
 	[super layoutSubviews];

@@ -510,10 +510,6 @@
 			[UIView animateWithDuration:0.15 animations:^{
 				CGFloat contentOffsetY = bigListEntry.superview.superview.frame.origin.y - 20;
 				
-//				if(self.musicType == LMMusicTypePlaylists && ![LMLayoutManager isLandscape]){
-//					contentOffsetY -= self.playlistModificationButtonView.frame.size.height + 20;
-//				}
-				
 				self.collectionView.contentOffset = CGPointMake(0, contentOffsetY);
 				[self layoutIfNeeded];
 			} completion:^(BOOL finished) {

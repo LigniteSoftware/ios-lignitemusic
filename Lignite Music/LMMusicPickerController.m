@@ -36,6 +36,11 @@
  */
 @property LMDynamicSearchView *searchView;
 
+/**
+ The bottom constraint of the search view for keyboard adjustments.
+ */
+@property NSLayoutConstraint *searchViewBottomConstraint;
+
 @end
 
 @implementation LMMusicPickerController
@@ -248,6 +253,32 @@
 	[self.searchBar resignFirstResponder];
 }
 
+- (void)adaptBottomConstraintForKeyboardWithNotification:(NSNotification*)notification hidden:(BOOL)keyboardHidden {
+	NSDictionary *info  = notification.userInfo;
+	NSValue *value = [info objectForKey:UIKeyboardFrameEndUserInfoKey];
+	
+	CGRect rawFrame = [value CGRectValue];
+	CGRect keyboardFrame = [self.view convertRect:rawFrame fromView:nil];
+	
+	CGFloat keyboardHeight = keyboardHidden ? 0.0f : keyboardFrame.size.height;
+	
+	[self.view layoutIfNeeded];
+	
+	self.searchViewBottomConstraint.constant = -keyboardHeight;
+	
+	[UIView animateWithDuration:0.4 animations:^{
+		[self.view layoutIfNeeded];
+	}];
+}
+
+- (void)keyboardWillHide:(NSNotification*)notification {
+	[self adaptBottomConstraintForKeyboardWithNotification:notification hidden:YES];
+}
+
+- (void)keyboardWillShow:(NSNotification*)notification {
+	[self adaptBottomConstraintForKeyboardWithNotification:notification hidden:NO];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
 	
@@ -385,10 +416,14 @@
 	//Set collections and musictypes
 	[self.view addSubview:self.searchView];
 	
-	[self.searchView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+	self.searchViewBottomConstraint = [self.searchView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 	[self.searchView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 	[self.searchView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 	[self.searchView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.searchBar];
+	
+	NSNotificationCenter *centre = [NSNotificationCenter defaultCenter];
+	[centre addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+	[centre addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 }
 
 - (void)loadView {
