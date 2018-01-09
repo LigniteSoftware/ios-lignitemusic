@@ -333,7 +333,7 @@
 #endif
 	
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	[defaults setInteger:1 forKey:LMSettingsKeyLastOpenedSource];
+	[defaults setInteger:LMMusicTypeAlbums forKey:LMSettingsKeyLastOpenedSource];
 	[defaults synchronize];
 	
 	

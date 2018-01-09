@@ -685,7 +685,7 @@
 		[self.welcomeToSearchImageBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 		[self.welcomeToSearchImageBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 //		[self.welcomeToSearchImageBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(1.75/10.0)];
-		[self.welcomeToSearchImageBackgroundView autoSetDimension:ALDimensionHeight toSize:75.0f];
+		[self.welcomeToSearchImageBackgroundView autoSetDimension:ALDimensionHeight toSize:70.0f];
 		
 		
 		self.welcomeToSearchImageView = [UIImageView newAutoLayoutView];

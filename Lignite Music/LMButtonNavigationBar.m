@@ -601,7 +601,7 @@
 		self.sourceSelector = [LMSourceSelectorView newAutoLayoutView];
 		self.sourceSelector.backgroundColor = [UIColor redColor];
 		self.sourceSelector.sources = self.sourcesForSourceSelector;
-		self.sourceSelector.mainSourceSelector = YES;
+		self.sourceSelector.isMainSourceSelector = YES;
 		[self addSubview:self.sourceSelector];
 
 		self.musicPlayer.sourceSelector = self.sourceSelector;

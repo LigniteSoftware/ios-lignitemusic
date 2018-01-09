@@ -17,6 +17,7 @@
 #import "LMExtras.h"
 #import "LMSettings.h"
 #import "LMThemeEngine.h"
+#import "LMMusicPlayer.h"
 
 @interface LMSourceSelectorView() <LMListEntryDelegate, LMLayoutChangeDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, LMThemeEngineDelegate>
 
@@ -136,12 +137,12 @@
 			[previousHighlightedEntry changeHighlightStatus:NO animated:YES];
 		}
 		
-		if(self.mainSourceSelector){
+		if(self.isMainSourceSelector){
 			[entry changeHighlightStatus:YES animated:YES];
 		}
 		self.currentlyHighlighted = index;
 		
-		if(self.mainSourceSelector){
+		if(self.isMainSourceSelector){
 			NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 			[defaults setInteger:index forKey:LMSettingsKeyLastOpenedSource];
 			[defaults synchronize];
@@ -181,7 +182,7 @@
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		[self.collectionView reloadData];
 		
-		self.collectionView.contentInset = UIEdgeInsetsMake(([LMLayoutManager isiPhoneX] && ![LMLayoutManager isLandscape] && self.mainSourceSelector) ? 30 : 10, 20, 20, 20);
+		self.collectionView.contentInset = UIEdgeInsetsMake(([LMLayoutManager isiPhoneX] && ![LMLayoutManager isLandscape] && self.isMainSourceSelector) ? 30 : 10, 20, 20, 20);
 	}];
 }
 
@@ -205,7 +206,7 @@
 	self.collectionView.translatesAutoresizingMaskIntoConstraints = NO;
 	self.collectionView.delegate = self;
 	self.collectionView.dataSource = self;
-	self.collectionView.contentInset = UIEdgeInsetsMake(([LMLayoutManager isiPhoneX] && ![LMLayoutManager isLandscape] && self.mainSourceSelector) ? 30 : 10, 20, 20, 20);
+	self.collectionView.contentInset = UIEdgeInsetsMake(([LMLayoutManager isiPhoneX] && ![LMLayoutManager isLandscape] && self.isMainSourceSelector) ? 30 : 10, 20, 20, 20);
 	[self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"sourceSelectorCellIdentifier"];
 	[self addSubview:self.collectionView];
 	
@@ -224,10 +225,11 @@
 		[self.listEntryArray addObject:listEntry];
 	}
 	
-	if(self.mainSourceSelector){
+	if(self.isMainSourceSelector){
 		NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
-		NSInteger lastSourceOpened = 0;
+		NSInteger lastSourceOpened = LMMusicTypeAlbums;
 		if([settings objectForKey:LMSettingsKeyLastOpenedSource]){
+			NSLog(@"Stored %@", [settings objectForKey:LMSettingsKeyLastOpenedSource]);
 			lastSourceOpened = [settings integerForKey:LMSettingsKeyLastOpenedSource];
 		}
 		
