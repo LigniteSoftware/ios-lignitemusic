@@ -162,8 +162,8 @@
 	titleLabel.textAlignment = NSTextAlignmentLeft;
 	titleLabel.text = self.titleText;
 	CGFloat titleSize = 0.050 * properDimension;
-	if(titleSize > 32){
-		titleSize = 32;
+	if(titleSize > 30){
+		titleSize = 30;
 	}
 	titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:titleSize];
 	[paddingView addSubview:titleLabel];
@@ -179,8 +179,8 @@
 	self.bodyTextView.text = self.bodyText;
 //	self.bodyTextView.text = [NSString stringWithFormat:@"%@ %@ %@", self.bodyText, self.bodyText, self.bodyText];
 	CGFloat descriptionSize = 0.025 * properDimension;
-	if(descriptionSize > 26){
-		descriptionSize = 26;
+	if(descriptionSize > 19){
+		descriptionSize = 19;
 	}
 	self.bodyTextView.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:descriptionSize];
 	self.bodyTextView.editable = NO;

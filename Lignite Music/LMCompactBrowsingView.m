@@ -1166,8 +1166,8 @@
 		
 		NSArray *playlistModificationButtonViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 			[self.playlistModificationButtonView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:16];
-			[self.playlistModificationButtonView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:35];
-			[self.playlistModificationButtonView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:35];
+			[self.playlistModificationButtonView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:34];
+			[self.playlistModificationButtonView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:34];
 		}];
 		[LMLayoutManager addNewPortraitConstraints:playlistModificationButtonViewPortraitConstraints];
 		

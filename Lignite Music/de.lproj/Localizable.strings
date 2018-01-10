@@ -14,23 +14,23 @@
  
  0. In general it is a good idea when translating to keep strings equal to or lesser than the length of their English counterparts. All strings have been visually prepared so they fit the app. Long strings will often cause visual troubles throughout the app.
  
- 1. The following characters in between quotes must be left in exact format and must not be deleted, changed or
+ 1. The following characters in between quotes must be left in exact format and must not be deleted, changed or 
  modified in any other way:
  "\n", "%02i", "%d", "%lu", "%@", "%%", "%f", "%.02f", "%.03f"
  Any string in the above list with a percentage (%) symbol I will now reference as "formatters".
  
  2. Any character mentioned in point 1 that is in a string will have data injected into it. If there are more than
  one formatter, that means that data is inserted in that order. When you change strings with formatters, please do not
- change the order of the formatters or remove formatters. The order of which the data is inserted into these strings is
+ change the order of the formatters or remove formatters. The order of which the data is inserted into these strings is 
  static. If your language *absolutely requires* a different order, please contact us directly.
  
- 3. If you are confused about a string, look at its key first. It may help clarify.
+ 3. If you are confused about a string, look at its key first. It may help clarify. 
  If still you have any questions about translating Lignite Music please let us know. You should not feel uncertain
- what a strinhg is doing, and if you are, just let us know and we'll clarify. Now that you've read this far,
+ what a strinhg is doing, and if you are, just let us know and we'll clarify. Now that you've read this far, 
  please send us a picture of a walrus so we know you did. Yes, seriously.
  
  4. The following words/terms should *never* be translated into your language for legal reasons:
- "Lignite Music", "Lignite", "Pebble", "Apple Music", "Spotify", "Lignite Music"
+ "Lignite Music", "Lignite", "Pebble", "Apple Music", "Spotify", "Lignite Music", "Apple", "iTunes"
  
  If you need to clarify the above in your language, for example "Pebble" needs to be the equivalent of "Pebble Smartwatch" in your language to make sure the idea is clear, it's ok to add words for clarity if necessary and you don't change the legal name. To demonstrate as an example if you needed this, in simplified Chinese, you would write "Pebble 智能手表".
  
@@ -48,12 +48,23 @@
  
  */
 
+"NowPlayingButtonHint" = "Tippe auf dieses Icon wenn die Musik spielt, um die Wiedergabeanzeige zu öffnen.";
+
+"ConvertPlaylistTitle" = "Wiedergabeliste Bearbeitung";
+"ConvertPlaylistBody" = "Sobald eine Wiedergabeliste innerhalb von Lignite Music bearbeitet wurde, kann sie nicht mehr mit iTunes oder anderen externen Diensten synchronisiert werden.\n\nHierbei handelt es sich um eine Einschränkung seitens Apple und wir haben keinerlei Kontrolle darüber.\n\nDa wir dich nicht nerven möchten, siehst du diese Warnung bloss einmal.";
+"ConvertPlaylistCheckboxText" = "Mir ist bewusst, dass hier bearbeitete Wiedergabelisten anschliessend – aufgrund Einschränkungen seitens Apple – nicht mehr synchronisiert werden können.";
+"StartEditing" = "Bearbeitung starten";
+"CreatePlaylist" = "Wiedergabeliste erstellen";
+
+"Authorized" = "Authorisiert";
+"DownloadingStopped" = "Herunterladen gestoppt.";
+
 "iOS_11_2_LagTitle" = "iOS Music Framework Fehler";
-"iOS_11_2_LagDescription" = "Dein Gerät läuft unter iOS %@ welche einen durch Apple verursachten Fehler enthält. Dieser Fehler verursacht eine starke Verzögerung beim Verwenden des iOS Music Frameworks welches unsere wie auch jede andere Drittanbieter-App verwendet.\n\nAufgrund diesem durch Apple verursachten Fehler kann es zu erheblichen Verzögerungen beim Benutzen dieser App kommen.\n\nWir haben leider absolut keinen Einfluss darauf und sind darauf angewiesen, dass Apple dieses Problem möglichst zeitnah behebt.\n\nWir entschuldigen uns für die Unannehmlichkeiten.";
+"iOS_11_2_LagDescription" = "Dein Gerät läuft mit iOS-Version %@ welche einen durch Apple verursachten Fehler aufweist, was dazu führt, dass unsere App u. U. sehr langsam läuft.\n\nUns sind diesbezüglich leider die Hände gebunden und wir können nur darauf warten bis der Fehler durch Apple behoben wird.";
 "iOS_11_2_LagCheckboxConfirmationText" = "Ich bin mir bewusst, dass jegliche Verzögerung in Lignite Music auf dem oben genannten, durch Apple verursachten Problem beruht und Lignite darauf keinerlei Einfluss hat.";
 "Continue" = "Fortfahren";
-"PleaseAcceptTheCheckbox" = "Akzeptiere bitte das Markierungsfeld";
-"TapHereForMoreInformation" = "Für weitere Informationen hier tippen";
+"PleaseAcceptTheCheckbox" = "Akzeptiere bitte die Checkbox";
+"TapHereForMoreInformation" = "Für weitere Informationen hier tippen (Englisch)";
 
 "NowPlayingKeepScreenOnTitle" = "Displayverhalten bei Wiedergabe";
 "NowPlayingKeepScreenOnSubtitle" = "Display während Wiedergabe nicht ausschalten";
@@ -435,7 +446,7 @@
 
 //The user is gutless most likely because they did not take the time to read the dialog and simply clicked deny. However, we understand shit happens and they might have slipped or something.
 "OnboardingUserIsGutlessTitle" = "Ähm, wo ist die Musik?";
-"OnboardingUserIsGutlessDescription" = "Irgendwo während der Einrichtung wurde unserer App der Zugriff auf deine Musiksammlung verwehrt. Aber hey, keine Sorge, das ist schnell behoben.\n\n1. Öffne die Einstellungen deines iPhones\n2. Scrolle runter, bis du den Eintrag 'Lignite Music' findest und öffne ihn\n3. Stelle sicher, dass der Eintrag 'Mediathek' aktiviert ist\n\n Öffne die Lignite Music App erneut und das Problem sollte behoben sein!"; //Please ensure for this translation that the language used in guiding the users through the iOS settings menu *exactly matches* the actual settings menu in that language.
+"OnboardingUserIsGutlessDescription" = "Irgendwo während der Einrichtung wurde unserer App der Zugriff auf deine Musiksammlung verwehrt. Aber hey, keine Sorge, das ist schnell behoben.\n\n1. Öffne die Einstellungen deines iPhones\n2. Scrolle runter, bis du den Eintrag 'Lignite Music' findest und öffne ihn\n3. Stelle sicher, dass der Eintrag 'Mediathek' aktiviert ist\n\nÖffne die Lignite Music App erneut und das Problem sollte behoben sein!"; //Please ensure for this translation that the language used in guiding the users through the iOS settings menu *exactly matches* the actual settings menu in that language.
 
 "StillCantAccessMusicTitle" = "Wir haben noch immer ein Problem";
 "StillCantAccessMusicDescription" = "Leider können wir deine Musik noch immer nicht auslesen obwohl du vermutlich die zuvor beschriebenen Schritte durchgeführt hast.\n\nEs tut uns sehr leid, dass es nicht so reibungslos wie erhofft geklappt hat. Leider sind wir nicht sicher, was genau schief gelaufen ist.\n\nTippe bitte auf den 'Kontaktiere uns' Button unten, um direkt mit uns in Kontakt zu treten. Wir werden dich bestimmt zum Fliegen bringen.\n\nVielen Dank."; //Please ensure the 'Contact Us' in quotes is the same as the ContactUs string in this file
