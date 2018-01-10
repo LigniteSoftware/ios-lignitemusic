@@ -131,7 +131,8 @@
 	CGSize size = CGSizeMake(self.collectionView.frame.size.width, 0);
 
 	if(self.isDisplayingDetailView){
-		size.height += [self.detailView totalSize].height;
+		size.height += [self frameForCellAtIndexPath:[NSIndexPath indexPathForRow:self.indexOfDetailView inSection:0]
+							   detailViewDisplayMode:LMDetailViewDisplayModeCurrentIndex].size.height;
 	}
 	
 	NSInteger amountOfItems = [self.collectionView.dataSource collectionView:self.collectionView numberOfItemsInSection:1];

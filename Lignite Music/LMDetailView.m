@@ -390,17 +390,15 @@
 					  fmin(LMLayoutManager.standardListEntryHeight, 80));
 }
 
+//Of the detail view if it was based on amount of tracks and not available screen space
 - (CGSize)totalSize {
 	CGSize size = CGSizeMake(WINDOW_FRAME.size.width, 0);
 	
 	CGSize normalItemSize;
 	NSInteger numberOfColumns = 0, amountOfItems = 0;
 	CGFloat spacing = 0;
-	BOOL fuck = YES;
 	
 	if(self.showingAlbumTileView){
-		fuck = NO;
-		
 		self.albumTileView.flowLayout = self.flowLayout;
 		
 		numberOfColumns = [LMLayoutManager amountOfCollectionViewItemsPerRow];

@@ -228,7 +228,7 @@
 - (id)contentSubviewForBigListEntry:(LMBigListEntry*)bigListEntry {
 	LMMusicTrackCollection *collection = nil;
 	
-	NSLog(@"biglist %d deview %d", (int)bigListEntry.collectionIndex, (int)self.indexOfCurrentlyOpenDetailView);
+//	NSLog(@"biglist %d deview %d", (int)bigListEntry.collectionIndex, (int)self.indexOfCurrentlyOpenDetailView);
 	
 	LMPlaylist *playlist = nil;
 	if(self.musicType == LMMusicTypePlaylists){
