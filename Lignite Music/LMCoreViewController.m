@@ -1673,7 +1673,7 @@ LMControlBarViewDelegate
 	self.buttonNavigationBar.delegate = self;
 	self.buttonNavigationBar.searchBarDelegate = self;
 	self.buttonNavigationBar.letterTabBarDelegate = self;
-//	self.buttonNavigationBar.hidden = YES;
+	self.buttonNavigationBar.hidden = YES;
 	[self.navigationController.view addSubview:self.buttonNavigationBar];
 	
 	//						self.navigationController.view.hidden = YES;

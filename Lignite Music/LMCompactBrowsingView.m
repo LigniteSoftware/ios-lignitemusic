@@ -228,6 +228,8 @@
 - (id)contentSubviewForBigListEntry:(LMBigListEntry*)bigListEntry {
 	LMMusicTrackCollection *collection = nil;
 	
+	NSLog(@"biglist %d deview %d", (int)bigListEntry.collectionIndex, (int)self.indexOfCurrentlyOpenDetailView);
+	
 	LMPlaylist *playlist = nil;
 	if(self.musicType == LMMusicTypePlaylists){
 		playlist = [self.playlistManager.playlists objectAtIndex:bigListEntry.collectionIndex];
@@ -583,7 +585,9 @@
 			cell.backgroundColor = [UIColor clearColor];
 		}
 		else{
-			LMBigListEntry *bigListEntry = [self.bigListEntries objectAtIndex:indexPath.row];
+			BOOL isBelowDetailViewRow = (indexPath.row > flowLayout.indexOfDetailView) && (flowLayout.indexOfDetailView > -1);
+			
+			LMBigListEntry *bigListEntry = [self.bigListEntries objectAtIndex:indexPath.row - isBelowDetailViewRow];
 			bigListEntry.infoDelegate = self;
 			bigListEntry.entryDelegate = self;
 			[cell.contentView addSubview:bigListEntry];

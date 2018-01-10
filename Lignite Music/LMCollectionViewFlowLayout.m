@@ -223,9 +223,13 @@
 	NSInteger amountOfItems = [self.collectionView numberOfItemsInSection:0];
 	NSInteger amountLeft = ((amountOfItems-1)-self.indexOfItemDisplayingDetailView-1);
 	NSInteger amountOfItemsInLastRow = (amountOfItems-1) % self.itemsPerRow;
-	NSInteger detailViewIsInLastRow = amountLeft-amountOfItemsInLastRow;
+	NSInteger amountOfItemsAfterDetailView = amountLeft-amountOfItemsInLastRow;
 	
-	NSInteger fixedIndexPathRow = (indexPath.row - isBelowDetailViewRow) + ((isDetailViewRow && detailViewIsInLastRow < 0) ? (self.itemsPerRow+detailViewIsInLastRow) : 0);
+	NSInteger fixedIndexPathRow = (indexPath.row - isBelowDetailViewRow) + ((isDetailViewRow && amountOfItemsAfterDetailView < 0) ? (self.itemsPerRow+amountOfItemsAfterDetailView) : 0);
+	
+	if(isBelowDetailViewRow){
+		NSLog(@"Fuck %d/%d %d %@", (int)indexPath.row, (int)fixedIndexPathRow, (int)detailViewIndexToUse, [[[self.musicTrackCollections objectAtIndex:(fixedIndexPathRow > -1) ? fixedIndexPathRow : 0] representativeItem] albumTitle]);
+	}
 	
 	CGSize collectionViewSize = self.collectionView.frame.size; //Get the current size of the collection view
 	CGFloat sideLength = collectionViewSize.width/factor; //Get the side length of one cell based on the factor provided
@@ -251,7 +255,7 @@
 								 ((fixedIndexPathRow / factor) * (size.height+(spacing/spacingDividerFactor))) + spacing/spacingDividerFactor); //The row
 
 	if(indexPath.row != 0){
-		NSLog(@"%@: %d to %d: %@ (%@)", (isDetailViewRow ? @"Detail" : (isBelowDetailViewRow ? @"Below" : (displayingDetailView ? @"Above" : @"None"))), (int)indexPath.row, (int)fixedIndexPathRow, NSStringFromCGPoint(origin), [[[self.musicTrackCollections objectAtIndex:(fixedIndexPathRow > -1) ? fixedIndexPathRow : 0] representativeItem] albumTitle]);
+//		NSLog(@"%d - %@: %d to %d: %@ (%@)", (int)detailViewDisplayMode, (isDetailViewRow ? @"Detail" : (isBelowDetailViewRow ? @"Below" : (displayingDetailView ? @"Above" : @"None"))), (int)indexPath.row, (int)fixedIndexPathRow, NSStringFromCGPoint(origin), [[[self.musicTrackCollections objectAtIndex:(fixedIndexPathRow > -1) ? fixedIndexPathRow : 0] representativeItem] albumTitle]);
 	}
 		
 	CGFloat detailViewHeight = 0;
@@ -265,7 +269,7 @@
 		
 		detailViewHeight -= 15;
 		
-		detailViewHeight -= 100;
+//		detailViewHeight -= 224;
 		
 		detailViewHeight = fmin(detailViewHeight, maximumDetailViewHeight);
 	}
