@@ -331,6 +331,7 @@
 		6AE579061FA935060076CB2E /* LMBoxWarningView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AE579051FA935060076CB2E /* LMBoxWarningView.m */; };
 		6AE9E6EB1F9C5AC30077B15E /* LMPlaylistEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AE9E6EA1F9C5AC30077B15E /* LMPlaylistEditorViewController.m */; };
 		6AE9E6EE1F9C667C0077B15E /* LMImagePickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AE9E6ED1F9C667C0077B15E /* LMImagePickerView.m */; };
+		6AEA5458200584A20071ACD4 /* Popover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AEA5457200584A20071ACD4 /* Popover.swift */; };
 		6AEB9CFD1BACF60E00AD19FA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AEB9CFC1BACF60E00AD19FA /* main.m */; };
 		6AEB9D001BACF60E00AD19FA /* LMAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AEB9CFF1BACF60E00AD19FA /* LMAppDelegate.m */; };
 		6AEB9D081BACF60E00AD19FA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6AEB9D071BACF60E00AD19FA /* Assets.xcassets */; };
@@ -804,6 +805,7 @@
 		6AE9E6EA1F9C5AC30077B15E /* LMPlaylistEditorViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMPlaylistEditorViewController.m; sourceTree = "<group>"; };
 		6AE9E6EC1F9C667C0077B15E /* LMImagePickerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMImagePickerView.h; sourceTree = "<group>"; };
 		6AE9E6ED1F9C667C0077B15E /* LMImagePickerView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMImagePickerView.m; sourceTree = "<group>"; };
+		6AEA5457200584A20071ACD4 /* Popover.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Popover.swift; sourceTree = "<group>"; };
 		6AEB9CF81BACF60E00AD19FA /* Lignite Music.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Lignite Music.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6AEB9CFC1BACF60E00AD19FA /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		6AEB9CFE1BACF60E00AD19FA /* LMAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMAppDelegate.h; sourceTree = "<group>"; };
@@ -1351,6 +1353,7 @@
 		6A7E88481ECCB7E700E4B804 /* AFNetworking */ = {
 			isa = PBXGroup;
 			children = (
+				6AEA5457200584A20071ACD4 /* Popover.swift */,
 				6A7E88621ECCB80700E4B804 /* AFHTTPSessionManager.h */,
 				6A7E88631ECCB80700E4B804 /* AFHTTPSessionManager.m */,
 				6A7E88641ECCB80700E4B804 /* AFNetworking.h */,
@@ -2272,6 +2275,7 @@
 				6A78E6791F9E44E500B7E369 /* LMPlaylist.m in Sources */,
 				6A5168901E08E96600A6446F /* LMButtonBar.m in Sources */,
 				6A7DF1241DB12C860077B979 /* LMTitleView.m in Sources */,
+				6AEA5458200584A20071ACD4 /* Popover.swift in Sources */,
 				6A1FB9CC1D9AE76A00890BF3 /* LMLabel.m in Sources */,
 				6AEB9D001BACF60E00AD19FA /* LMAppDelegate.m in Sources */,
 				6A32113E1DA727960060DD07 /* LMTrackDurationView.m in Sources */,
@@ -2644,6 +2648,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COMPRESS_PNG_FILES = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = FC8DY8T6N2;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2687,6 +2692,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COMPRESS_PNG_FILES = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = FC8DY8T6N2;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (

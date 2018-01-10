@@ -249,9 +249,11 @@
 	
 	CGPoint origin = CGPointMake(((fixedIndexPathRow % factor) * (size.width+spacing)) + spacing, //The column which the cell is in
 								 ((fixedIndexPathRow / factor) * (size.height+(spacing/spacingDividerFactor))) + spacing/spacingDividerFactor); //The row
-	
-	NSLog(@"%@: %@: %@ (%@)", (isDetailViewRow ? @"Detail" : (isBelowDetailViewRow ? @"Below" : (displayingDetailView ? @"Above" : @"None"))), indexPath, NSStringFromCGPoint(origin), [[[self.musicTrackCollections objectAtIndex:(fixedIndexPathRow > -1) ? fixedIndexPathRow : 0] representativeItem] albumTitle]);
-	
+
+	if(indexPath.row != 0){
+		NSLog(@"%@: %d to %d: %@ (%@)", (isDetailViewRow ? @"Detail" : (isBelowDetailViewRow ? @"Below" : (displayingDetailView ? @"Above" : @"None"))), (int)indexPath.row, (int)fixedIndexPathRow, NSStringFromCGPoint(origin), [[[self.musicTrackCollections objectAtIndex:(fixedIndexPathRow > -1) ? fixedIndexPathRow : 0] representativeItem] albumTitle]);
+	}
+		
 	CGFloat detailViewHeight = 0;
 	
 	if(isDetailViewRow || isBelowDetailViewRow){

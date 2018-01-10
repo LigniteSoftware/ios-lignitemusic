@@ -53,6 +53,9 @@
 #import "LMThemePickerViewController.h"
 #import "LMWarningManager.h"
 #import "LMAlertViewController.h"
+#import "Lignite_Music-Swift.h"
+//#import "Lignite Music-Bridging-Header.h"
+//#import "Popover-Swift.h"
 
 #ifdef SPOTIFY
 #import "Spotify.h"
@@ -140,6 +143,8 @@ LMControlBarViewDelegate
 @property LMWarning *librarySyncingWarning;
 
 @property LMSource *selectedSource;
+
+@property Popover *nowPlayingHintPopover;
 
 //@property UIView *iPhoneXStatusBarCoverView;
 
@@ -875,6 +880,40 @@ LMControlBarViewDelegate
 - (void)launchNowPlaying {
     if(!self.musicPlayer.nowPlayingTrack){
 		NSLog(@"Nothing's playing mate");
+		
+		CGPoint startPoint = CGPointZero;
+		CGRect aViewFrame = CGRectZero;
+		if(LMLayoutManager.isLandscape){
+			startPoint = CGPointMake(self.landscapeNavigationBar.frame.size.width / 2.0,
+									 (self.landscapeNavigationBar.frame.size.height / 2.0) + 34);
+			
+			aViewFrame = CGRectMake(0, 0, self.view.frame.size.height - startPoint.x, 80);
+		}
+		else{
+			startPoint = CGPointMake(self.view.frame.size.width / 2.0,
+									 self.navigationController.navigationBar.frame.size.height + self.navigationController.navigationBar.frame.origin.y + 4);;
+			
+			aViewFrame = CGRectMake(0, 0, self.view.frame.size.width - 40, 80);
+		}
+		UIView *aView = [[UIView alloc]initWithFrame:aViewFrame];
+		
+		UILabel *hintLabel = [UILabel newAutoLayoutView];
+		hintLabel.text = NSLocalizedString(@"NowPlayingButtonHint", nil);
+		hintLabel.textAlignment = NSTextAlignmentCenter;
+		hintLabel.numberOfLines = 0;
+		hintLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:16.0f];
+		[aView addSubview:hintLabel];
+		
+		[hintLabel autoPinEdgeToSuperviewMargin:ALEdgeLeading];
+		[hintLabel autoPinEdgeToSuperviewMargin:ALEdgeTrailing];
+		[hintLabel autoPinEdgeToSuperviewMargin:ALEdgeBottom];
+		[hintLabel autoPinEdgeToSuperviewMargin:ALEdgeTop].constant = 6;
+		
+		Popover *popover = [Popover new];
+		[popover show:aView point:startPoint];
+		
+		self.nowPlayingHintPopover = popover;
+		
         return;
     }
     
@@ -1029,6 +1068,8 @@ LMControlBarViewDelegate
 //		}
 		
 		self.nowPlayingCoreView.topConstraint.constant = self.nowPlayingCoreView.isOpen ? 0 : (size.height*1.50);
+		
+		[self.nowPlayingHintPopover dismiss];
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
 		NSLog(@"Rotated");
 		

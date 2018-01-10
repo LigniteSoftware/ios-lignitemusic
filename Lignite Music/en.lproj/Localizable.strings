@@ -46,6 +46,8 @@
  
  */
 
+"NowPlayingButtonHint" = "Tap this icon when music is playing to open the now-playing window.";
+
 "ConvertPlaylistTitle" = "Playlist editing";
 "ConvertPlaylistBody" = "Once a playlist is edited within Lignite Music, that playlist will not be able to sync with iTunes or any other outside source.\n\nThis is because of limitations created by Apple, which we unfortunately have no control over.\n\nWe don't want to pester you, so will only warn you about this once.";
 "ConvertPlaylistCheckboxText" = "I understand that due to Apple's limitations, playlists I edit in Lignite Music will not sync with iTunes or any other outside source.";

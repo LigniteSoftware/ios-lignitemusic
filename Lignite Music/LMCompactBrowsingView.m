@@ -1101,6 +1101,7 @@
 		self.collectionView = [[UICollectionView alloc]initWithFrame:CGRectZero collectionViewLayout:fuck];
 		self.collectionView.translatesAutoresizingMaskIntoConstraints = NO;
 		self.collectionView.scrollEnabled = YES;
+		//Force scrolling
 		self.collectionView.alwaysBounceVertical = YES;
 		self.collectionView.bounces = YES;
 		self.collectionView.delegate = self;
