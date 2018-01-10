@@ -28,8 +28,16 @@
  Scroll to a track with its persistent ID.
 
  @param persistentID The persistent ID of the track to scroll to.
+ @return The index that was scrolled to, -1 if it couldn't be found.
  */
-- (void)scrollToTrackWithPersistentID:(LMMusicTrackPersistentID)persistentID;
+- (NSInteger)scrollToTrackWithPersistentID:(LMMusicTrackPersistentID)persistentID;
+
+/**
+ Simulates a user tap at a certain index. Great for automatically playing music.
+
+ @param index The index to tap.
+ */
+- (void)tapEntryAtIndex:(NSInteger)index;
 
 /**
  Rebuild the track collection of the title view.

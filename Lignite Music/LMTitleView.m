@@ -290,7 +290,7 @@
 	}
 }
 
-- (void)scrollToTrackWithPersistentID:(LMMusicTrackPersistentID)persistentID {
+- (NSInteger)scrollToTrackWithPersistentID:(LMMusicTrackPersistentID)persistentID {
 	NSInteger index = -1;
 	
 	for(NSUInteger i = 0; i < self.musicTitles.count; i++){
@@ -312,12 +312,15 @@
 	[self.songListTableView focusCellAtIndex:index];
 	
 	//Fix index for adjustment
+	NSInteger properIndex = index;
 	index = (index == 0) ? 0 : (index-2);
 	
 	if(index > -1){
 		[self.songListTableView focusCellAtIndex:index];
 		[self scrollToTrackIndex:index];
 	}
+	
+	return properIndex;
 }
 
 - (void)amountOfObjectsRequiredChangedTo:(NSUInteger)amountOfObjects forTableView:(LMTableView *)tableView {
@@ -418,9 +421,7 @@
 	return 10; //TODO: Fix this
 }
 
-- (void)tappedListEntry:(LMListEntry*)entry{
-	
-	
+- (void)tappedListEntry:(LMListEntry*)entry {
 	LMMusicTrack *track = [self.musicTitles.items objectAtIndex:entry.collectionIndex];
 	
 //	NSLog(@"Tapped list entry with artist %@", self.albumCollection.representativeItem.artist);
@@ -443,6 +444,13 @@
 	
 	[self.musicPlayer.navigationBar setSelectedTab:LMNavigationTabMiniplayer];
 	[self.musicPlayer.navigationBar maximize:NO];
+}
+
+- (void)tapEntryAtIndex:(NSInteger)index {
+	LMListEntry *entry = [self listEntryForIndex:index];
+	if(entry){
+		[self tappedListEntry:entry];
+	}
 }
 
 - (UIColor*)tapColourForListEntry:(LMListEntry*)entry {

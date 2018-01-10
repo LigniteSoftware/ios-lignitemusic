@@ -787,7 +787,12 @@ LMControlBarViewDelegate
 	[self sourceSelected:[self.sourcesForSourceSelector objectAtIndex:musicType]];
 	
 	if([self.currentSource isEqual:self.titleView]){
-		[self.titleView scrollToTrackWithPersistentID:persistentID];
+		NSInteger index = [self.titleView scrollToTrackWithPersistentID:persistentID];
+		if(index > -1){
+			[NSTimer scheduledTimerWithTimeInterval:0.60 block:^{
+				[self.titleView tapEntryAtIndex:index];
+			} repeats:NO];
+		}
 	}
 	else{
 		LMCompactBrowsingView *compactView = self.currentSource;

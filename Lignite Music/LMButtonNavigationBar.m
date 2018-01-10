@@ -838,7 +838,16 @@
 			[self.iPhoneXStatusBarCoverView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 			[self.iPhoneXStatusBarCoverView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 			[self.iPhoneXStatusBarCoverView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-			[self.iPhoneXStatusBarCoverView autoSetDimension:ALDimensionHeight toSize:64.0f];
+			
+			NSArray *iPhoneXStatusBarCoverViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+				[self.iPhoneXStatusBarCoverView autoSetDimension:ALDimensionHeight toSize:64.0f];
+			}];
+			[LMLayoutManager addNewPortraitConstraints:iPhoneXStatusBarCoverViewPortraitConstraints];
+			
+			NSArray *iPhoneXStatusBarCoverViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+				[self.iPhoneXStatusBarCoverView autoSetDimension:ALDimensionHeight toSize:0.0f];
+			}];
+			[LMLayoutManager addNewLandscapeConstraints:iPhoneXStatusBarCoverViewLandscapeConstraints];
 		}
 		
 		if([LMLayoutManager isiPad]){
