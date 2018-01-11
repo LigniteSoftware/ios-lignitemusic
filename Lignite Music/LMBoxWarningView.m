@@ -80,7 +80,7 @@
 		
 		self.layer.masksToBounds = YES;
 		self.layer.cornerRadius = 6.0f;
-		self.backgroundColor = [LMColour controlBarGrayColour];
+		self.backgroundColor = [LMColour controlBarGreyColour];
 		
 		
 		self.paddingView = [UIView newAutoLayoutView];

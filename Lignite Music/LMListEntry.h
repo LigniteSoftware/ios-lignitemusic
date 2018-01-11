@@ -97,6 +97,11 @@
 @property float contentViewHeightMultiplier;
 
 /**
+ The title label's height multiplier, default is (1.0/3.0).
+ */
+@property float titleLabelHeightMultipler;
+
+/**
  The index of this LMListEntry in the collection its associated with.
  */
 @property NSInteger collectionIndex;

@@ -187,7 +187,7 @@
 		[self addGestureRecognizer:tapGestureRecognizer];
 		
 		self.imageBackgroundView = [UIView newAutoLayoutView];
-		self.imageBackgroundView.backgroundColor = [LMColour controlBarGrayColour];
+		self.imageBackgroundView.backgroundColor = [LMColour controlBarGreyColour];
 		[self addSubview:self.imageBackgroundView];
 		
 		[self.imageBackgroundView autoPinEdgesToSuperviewEdges];

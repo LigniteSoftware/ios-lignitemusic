@@ -52,7 +52,7 @@
  
  @return The light gray.
  */
-+ (UIColor*)controlBarGrayColour;
++ (UIColor*)controlBarGreyColour;
 
 /**
  The vertical control bar gray colour for when the control bar is used in landscape phone mode. God I hate all of these special views.

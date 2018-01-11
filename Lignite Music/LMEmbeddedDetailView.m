@@ -113,24 +113,26 @@
 		self.detailView.delegate = self;
 		
 		
-		self.expandableTrackListControlBar = [LMExpandableTrackListControlBar newAutoLayoutView];
-		self.expandableTrackListControlBar.delegate = self;
-		self.expandableTrackListControlBar.musicTrackCollection = self.musicTrackCollection;
-//		self.expandableTrackListControlBar.mode = LMExpandableTrackListControlBarModeControlWithAlbumDetail;
-		[self addSubview:self.expandableTrackListControlBar];
-		
-		[self.expandableTrackListControlBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-		[self.expandableTrackListControlBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
-		[self.expandableTrackListControlBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+//		self.expandableTrackListControlBar = [LMExpandableTrackListControlBar newAutoLayoutView];
+//		self.expandableTrackListControlBar.delegate = self;
+//		self.expandableTrackListControlBar.musicTrackCollection = self.musicTrackCollection;
+////		self.expandableTrackListControlBar.mode = LMExpandableTrackListControlBarModeControlWithAlbumDetail;
+//		[self addSubview:self.expandableTrackListControlBar];
+//
+//		[self.expandableTrackListControlBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+//		[self.expandableTrackListControlBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
+//		[self.expandableTrackListControlBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 		
 		
 		
 		//Detail view is created in init
 		
-		[self.detailView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.expandableTrackListControlBar];
-		[self.detailView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-		[self.detailView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-		[self.detailView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[self.detailView autoPinEdgesToSuperviewEdges];
+		
+//		[self.detailView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.expandableTrackListControlBar];
+//		[self.detailView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+//		[self.detailView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+//		[self.detailView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 		
 						
 		

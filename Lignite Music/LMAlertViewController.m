@@ -265,7 +265,7 @@
 		self.confirmationCheckbox = [BEMCheckBox newAutoLayoutView];
 		self.confirmationCheckbox.delegate = self;
 		self.confirmationCheckbox.boxType = BEMBoxTypeSquare;
-		self.confirmationCheckbox.tintColor = [LMColour controlBarGrayColour];
+		self.confirmationCheckbox.tintColor = [LMColour controlBarGreyColour];
 		self.confirmationCheckbox.onFillColor = [LMColour mainColour];
 		self.confirmationCheckbox.onCheckColor = [UIColor whiteColor];
 		self.confirmationCheckbox.onTintColor = [LMColour mainColour];

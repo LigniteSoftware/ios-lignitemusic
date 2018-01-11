@@ -111,7 +111,7 @@
 	return [UIColor colorWithRed:0.96 green:0.96 blue:0.96 alpha:1.0];
 }
 
-+ (UIColor*)controlBarGrayColour {
++ (UIColor*)controlBarGreyColour {
 	return [UIColor colorWithRed:0.90 green:0.90 blue:0.90 alpha:1.0];;
 }
 

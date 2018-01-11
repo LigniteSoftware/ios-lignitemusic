@@ -37,7 +37,7 @@
 	
 	BOOL shouldHighlight = [self.delegate buttonHighlightedWithIndex:viewCheckingIndex wasJustTapped:wasJustTapped forControlBar:self];
 	[UIView animateWithDuration:0.3 animations:^{
-		viewChecking.backgroundColor = shouldHighlight ? [UIColor whiteColor] : (self.verticalMode ? [LMColour verticalControlBarGrayColour] : [LMColour controlBarGrayColour]);
+		viewChecking.backgroundColor = shouldHighlight ? [UIColor whiteColor] : (self.verticalMode ? [LMColour verticalControlBarGrayColour] : [LMColour controlBarGreyColour]);
 	} completion:nil];
 
 	if(viewChecking.subviews.count > 0){
@@ -81,7 +81,7 @@
 		self.userInteractionEnabled = YES;
 		
 		self.backgroundView = [UIView newAutoLayoutView];
-		self.backgroundView.backgroundColor = self.verticalMode ? [LMColour verticalControlBarGrayColour] : [LMColour controlBarGrayColour];
+		self.backgroundView.backgroundColor = self.verticalMode ? [LMColour verticalControlBarGrayColour] : [LMColour controlBarGreyColour];
 		self.backgroundView.userInteractionEnabled = YES;
 		[self addSubview:self.backgroundView];
 		

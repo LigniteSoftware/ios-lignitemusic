@@ -485,7 +485,7 @@
 	
 	if(indexPath.row < [self collectionView:self.collectionView numberOfItemsInSection:0]-1){
 		UIView *lineView = [UIView newAutoLayoutView];
-		lineView.backgroundColor = [LMColour controlBarGrayColour];
+		lineView.backgroundColor = [LMColour controlBarGreyColour];
 		[cell addSubview:lineView];
 		
 		[lineView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:listEntry withOffset:[self collectionView:self.collectionView layout:self.collectionView.collectionViewLayout minimumLineSpacingForSectionAtIndex:0]/2.0f];

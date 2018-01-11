@@ -26,21 +26,23 @@
 	if(!self.didLayoutConstraints){
 		self.didLayoutConstraints = YES;
 		
+//		self.backgroundColor = [LMColour clearColour];
+		
 		self.triangleView = [LMTriangleView newAutoLayoutView];
 		self.triangleView.maskDirection = LMTriangleMaskDirectionUpwards;
-		self.triangleView.triangleColour = [LMColour controlBarGrayColour];
+		self.triangleView.triangleColour = [LMColour superLightGreyColour];
 		[self addSubview:self.triangleView];
 		
 		CGFloat triangleHeight = 25.0f;
 		CGFloat halfTriangleWidth = (triangleHeight);
 		
-		[self.triangleView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self withOffset:1];
+		[self.triangleView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self withOffset:0];
 		[self.triangleView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self withOffset:self.flowLayout.frameOfItemDisplayingDetailView.origin.x + (self.flowLayout.frameOfItemDisplayingDetailView.size.width/2) - halfTriangleWidth];
 		[self.triangleView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.triangleView withMultiplier:2.0];
 		[self.triangleView autoSetDimension:ALDimensionHeight toSize:triangleHeight];
 		
 		self.triangleInnerShadowView = [LMTriangleInnerShadowView newAutoLayoutView];
-		self.triangleInnerShadowView.backgroundColor = [UIColor clearColor];
+		self.triangleInnerShadowView.backgroundColor = [LMColour clearColour];
 //		self.triangleInnerShadowView.hidden = YES;
 		[self addSubview:self.triangleInnerShadowView];
 		

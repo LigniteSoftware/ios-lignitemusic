@@ -390,7 +390,7 @@
 		
 		cell.contentView.layer.masksToBounds = YES;
 		cell.contentView.layer.cornerRadius = 6.0f;
-		cell.contentView.backgroundColor = [LMColour controlBarGrayColour];
+		cell.contentView.backgroundColor = [LMColour controlBarGreyColour];
 	}
 	
 	return cell;
@@ -448,7 +448,7 @@
 }
 
 - (UIColor*)tapColourForListEntry:(LMListEntry*)entry {
-	return [LMColour controlBarGrayColour];
+	return [LMColour controlBarGreyColour];
 }
 
 - (NSString*)titleForListEntry:(LMListEntry*)entry {
@@ -848,7 +848,7 @@
 	self.shuffleAllCheckbox = [BEMCheckBox newAutoLayoutView];
 	self.shuffleAllCheckbox.delegate = self;
 	self.shuffleAllCheckbox.boxType = BEMBoxTypeSquare;
-	self.shuffleAllCheckbox.tintColor = [LMColour controlBarGrayColour];
+	self.shuffleAllCheckbox.tintColor = [LMColour controlBarGreyColour];
 	self.shuffleAllCheckbox.onFillColor = [LMColour mainColour];
 	self.shuffleAllCheckbox.onCheckColor = [UIColor whiteColor];
 	self.shuffleAllCheckbox.onTintColor = [LMColour mainColour];

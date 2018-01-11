@@ -158,6 +158,9 @@
 	if(self.contentViewHeightMultiplier < 0.01){
 		self.contentViewHeightMultiplier = 0.95;
 	}
+	if(self.titleLabelHeightMultipler < 0.01){
+		self.titleLabelHeightMultipler = (1.0/3.0);
+	}
 	
 	if(self.isLabelBased){
 		self.iconPaddingMultiplier = 0.75;
@@ -289,15 +292,15 @@
 	if(title){
 		[self.textView addSubview:self.titleLabel];
 		
-		NSLayoutConstraint *heightConstraint = [self.titleLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.contentView withMultiplier:(1.0f/3.0f)];
+		NSLayoutConstraint *heightConstraint = [self.titleLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.contentView withMultiplier:self.titleLabelHeightMultipler];
 		NSLayoutConstraint *leadingConstraint = [self.titleLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		NSLayoutConstraint *trailingConstraint = [self.titleLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.textView withOffset:-10.0];
-		NSLayoutConstraint *centerConstraint = [self.titleLabel autoAlignAxis:ALAxisHorizontal toSameAxisOfView:self.textView];
+		NSLayoutConstraint *centreConstraint = [self.titleLabel autoAlignAxis:ALAxisHorizontal toSameAxisOfView:self.textView];
 		
 		[titleConstraints addObject:heightConstraint];
 		[titleConstraints addObject:leadingConstraint];
 		[titleConstraints addObject:trailingConstraint];
-		[titleConstraints addObject:centerConstraint];
+		[titleConstraints addObject:centreConstraint];
 	}
 	
 	self.subtitleLabel = [LMLabel newAutoLayoutView];
