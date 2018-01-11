@@ -12,7 +12,7 @@
 #import "LMMusicCollectionsView.h"
 #import "LMApplication.h"
 
-@interface LMDetailView()<UICollectionViewDelegate, UICollectionViewDataSource, LMListEntryDelegate, LMMusicPlayerDelegate, LMMusicCollectionsViewDelegate, UIScrollViewDelegate>
+@interface LMDetailView()<UICollectionViewDelegate, UICollectionViewDataSource, LMListEntryDelegate, LMMusicPlayerDelegate, LMMusicCollectionsViewDelegate, UIScrollViewDelegate, LMLayoutChangeDelegate>
 
 /**
  The music player.
@@ -40,11 +40,6 @@
 @property NSLayoutConstraint *albumTileViewLeadingConstraint;
 
 /**
- The music track collection to use in loading data, as a specific track collection may have been set.
- */
-@property LMMusicTrackCollection *musicTrackCollectionToUse;
-
-/**
  The last point in scrolling where the user stopped scrolling.
  */
 @property CGPoint lastScrollingOffsetPoint;
@@ -59,7 +54,7 @@
 @implementation LMDetailView
 
 @synthesize musicTrackCollection = _musicTrackCollection;
-@synthesize musicTrackCollectionToUse = _musicTrackCollectionToUse;
+@synthesize musicTrackCollectionToUseForSpecificTrackCollection = _musicTrackCollectionToUseForSpecificTrackCollection;
 
 - (LMCoreViewController*)rootViewController {
 	LMApplication *application = (LMApplication*)[UIApplication sharedApplication];
@@ -125,16 +120,16 @@
 	}];
 }
 
-- (LMMusicTrackCollection*)musicTrackCollectionToUse {
-	if(_musicTrackCollectionToUse){
-		return _musicTrackCollectionToUse;
+- (LMMusicTrackCollection*)musicTrackCollectionToUseForSpecificTrackCollection {
+	if(_musicTrackCollectionToUseForSpecificTrackCollection){
+		return _musicTrackCollectionToUseForSpecificTrackCollection;
 	}
 	
 	return _musicTrackCollection;
 }
 
-- (void)setMusicTrackCollectionToUse:(LMMusicTrackCollection *)musicTrackCollectionToUse {
-	_musicTrackCollectionToUse = musicTrackCollectionToUse;
+- (void)setMusicTrackCollectionToUseForSpecificTrackCollection:(LMMusicTrackCollection *)musicTrackCollectionToUse {
+	_musicTrackCollectionToUseForSpecificTrackCollection = musicTrackCollectionToUse;
 	
 	[self.collectionView reloadData];
 	[self.collectionView.collectionViewLayout invalidateLayout];
@@ -143,7 +138,7 @@
 }
 
 - (void)musicCollectionTappedAtIndex:(NSInteger)index forMusicCollectionsView:(LMMusicCollectionsView *)collectionsView {
-	self.musicTrackCollectionToUse = [self.specificTrackCollections objectAtIndex:index];
+	self.musicTrackCollectionToUseForSpecificTrackCollection = [self.specificTrackCollections objectAtIndex:index];
 }
 
 + (NSInteger)numberOfColumns {
@@ -153,8 +148,8 @@
 - (void)musicTrackDidChange:(LMMusicTrack *)newTrack {
 	LMListEntry *highlightedEntry = nil;
 	int newHighlightedIndex = -1;
-	for(int i = 0; i < self.musicTrackCollectionToUse.trackCount; i++){
-		LMMusicTrack *track = [self.musicTrackCollectionToUse.items objectAtIndex:i];
+	for(int i = 0; i < self.musicTrackCollectionToUseForSpecificTrackCollection.trackCount; i++){
+		LMMusicTrack *track = [self.musicTrackCollectionToUseForSpecificTrackCollection.items objectAtIndex:i];
 		
 		if(track.persistentID == newTrack.persistentID){
 			newHighlightedIndex = i;
@@ -206,17 +201,7 @@
 
 - (void)tappedListEntry:(LMListEntry*)entry {
 	NSLog(@"Tapped %d", (int)entry.collectionIndex);
-	
-	if(entry.collectionIndex == LMDetailViewShuffleButtonCollectionIndex){
-		[self.musicPlayer setShuffleMode:LMMusicShuffleModeOn];
-		[self.musicPlayer setNowPlayingCollection:self.musicTrackCollectionToUse];
-		[self.musicPlayer play];
-		
-		NSLog(@"Shuffle");
-		return;
-	}
-	
-	LMMusicTrack *track = [self.musicTrackCollectionToUse.items objectAtIndex:entry.collectionIndex];
+	LMMusicTrack *track = [self.musicTrackCollectionToUseForSpecificTrackCollection.items objectAtIndex:entry.collectionIndex];
 	
 	LMListEntry *previousHighlightedEntry = [self listEntryForIndex:self.currentlyHighlightedEntry];
 	if(previousHighlightedEntry){
@@ -226,10 +211,10 @@
 	[entry changeHighlightStatus:YES animated:YES];
 	self.currentlyHighlightedEntry = entry.collectionIndex;
 	
-	if(self.musicPlayer.nowPlayingCollection != self.musicTrackCollectionToUse){
+	if(self.musicPlayer.nowPlayingCollection != self.musicTrackCollectionToUseForSpecificTrackCollection){
 		[self.musicPlayer stop];
 
-		[self.musicPlayer setNowPlayingCollection:self.musicTrackCollectionToUse];
+		[self.musicPlayer setNowPlayingCollection:self.musicTrackCollectionToUseForSpecificTrackCollection];
 	}
 	self.musicPlayer.autoPlay = YES;
 	
@@ -237,49 +222,29 @@
 }
 
 - (UIColor*)tapColourForListEntry:(LMListEntry*)entry {
-	if(entry.collectionIndex == LMDetailViewShuffleButtonCollectionIndex){
-		return [LMColour controlBarGreyColour];
-	}
-	
 	return [LMColour mainColour];
 }
 
 - (NSString*)titleForListEntry:(LMListEntry*)entry {
-	if(entry.collectionIndex == LMDetailViewShuffleButtonCollectionIndex){
-		return NSLocalizedString(@"ShufflePlay", nil);
-	}
-	
-	LMMusicTrack *musicTrack = [self.musicTrackCollectionToUse.items objectAtIndex:entry.collectionIndex];
+	LMMusicTrack *musicTrack = [self.musicTrackCollectionToUseForSpecificTrackCollection.items objectAtIndex:entry.collectionIndex];
 	return musicTrack.title;
 }
 
 - (NSString*)subtitleForListEntry:(LMListEntry*)entry {
-	if(entry.collectionIndex == LMDetailViewShuffleButtonCollectionIndex){
-		return nil;
-	}
-	
-	LMMusicTrack *musicTrack = [self.musicTrackCollectionToUse.items objectAtIndex:entry.collectionIndex];
+	LMMusicTrack *musicTrack = [self.musicTrackCollectionToUseForSpecificTrackCollection.items objectAtIndex:entry.collectionIndex];
 	return musicTrack.artist;
 }
 
 - (NSString*)textForListEntry:(LMListEntry *)entry {
-	if(entry.collectionIndex == LMDetailViewShuffleButtonCollectionIndex){
-		return nil;
-	}
-	
 	return [NSString stringWithFormat:@"%ld", (entry.collectionIndex + 1)];
 }
 
 - (UIImage*)iconForListEntry:(LMListEntry*)entry {
-	if(entry.collectionIndex == LMDetailViewShuffleButtonCollectionIndex){
-		return [LMAppIcon imageForIcon:LMIconShuffle];
-	}
-	
 	//	if(self.specificTrackCollections){
 	//		LMMusicTrackCollection *collection = [self.specificTrackCollections objectAtIndex:entry.collectionIndex];
 	//		return [collection.representativeItem albumArt];
 	//	}
-	LMMusicTrack *track = [self.musicTrackCollectionToUse.items objectAtIndex:entry.collectionIndex];
+	LMMusicTrack *track = [self.musicTrackCollectionToUseForSpecificTrackCollection.items objectAtIndex:entry.collectionIndex];
 	return [track albumArt];
 }
 
@@ -305,15 +270,11 @@
 	
 	LMCollectionViewFlowLayout *flowLayout = (LMCollectionViewFlowLayout*)self.collectionView.collectionViewLayout;
 	
-	NSInteger indexAdjustedForShuffleButton =
-		(indexPath.row == 0) ? LMDetailViewShuffleButtonCollectionIndex : (indexPath.row - 1);
-	BOOL isShuffleButton = (indexPath.row == 0);
+	NSInteger indexAdjustedForShuffleButton = indexPath.row;
+//	BOOL isShuffleButton = (indexPath.row == 0);
 	
-	LMMusicTrack *track = nil;
-	if(!isShuffleButton){
-		track = [self.musicTrackCollection.items objectAtIndex:indexAdjustedForShuffleButton];
-	}
-		
+	LMMusicTrack *track = [self.musicTrackCollection.items objectAtIndex:indexAdjustedForShuffleButton];
+	
 	if(cell.contentView.subviews.count > 0){
 		LMListEntry *listEntry = nil;
 		for(UIView *subview in cell.contentView.subviews){
@@ -324,25 +285,13 @@
 		}
 		
 		if(listEntry){
-			
-			//If the already displaying list entry is a shuffle button and the new list entry to display is not, reload it from scratch. This also happens if the list entry is not a shuffle button and the new list entry to display is.
-			if(((listEntry.collectionIndex == LMDetailViewShuffleButtonCollectionIndex) && !isShuffleButton)
-			   || ((listEntry.collectionIndex != LMDetailViewShuffleButtonCollectionIndex) && isShuffleButton)){
-				
-				[listEntry removeFromSuperview];
-				
-				return [self collectionView:collectionView cellForItemAtIndexPath:indexPath];
-			}
-			
 			listEntry.collectionIndex = indexAdjustedForShuffleButton;
 			
-			if(!isShuffleButton){
-				listEntry.leftButtonExpansionColour = track.isFavourite ? [LMColour mainColour] : [LMColour successGreenColour];
-				
-				[[listEntry.leftButtons firstObject] setImage:track.isFavourite ? [LMAppIcon imageForIcon:LMIconUnfavouriteWhite] : [LMAppIcon imageForIcon:LMIconFavouriteWhiteFilled] forState:UIControlStateNormal];
-			}
-				
-			[listEntry changeHighlightStatus:isShuffleButton || (self.currentlyHighlightedEntry == listEntry.collectionIndex) animated:NO];
+			listEntry.leftButtonExpansionColour = track.isFavourite ? [LMColour mainColour] : [LMColour successGreenColour];
+			
+			[[listEntry.leftButtons firstObject] setImage:track.isFavourite ? [LMAppIcon imageForIcon:LMIconUnfavouriteWhite] : [LMAppIcon imageForIcon:LMIconFavouriteWhiteFilled] forState:UIControlStateNormal];
+			
+			[listEntry changeHighlightStatus:(self.currentlyHighlightedEntry == listEntry.collectionIndex) animated:NO];
 			[listEntry reloadContents];
 		}
 	}
@@ -352,80 +301,62 @@
 		LMListEntry *listEntry = [LMListEntry newAutoLayoutView];
 		listEntry.delegate = self;
 		listEntry.collectionIndex = indexAdjustedForShuffleButton;
-		listEntry.associatedData = isShuffleButton ? nil : [self.musicTrackCollectionToUse.items objectAtIndex:indexAdjustedForShuffleButton];
-		listEntry.isLabelBased = isShuffleButton ? NO : (self.musicType == LMMusicTypeAlbums || self.musicType == LMMusicTypeCompilations);
-		
-		if(isShuffleButton){
-			listEntry.iconInsetMultiplier = (1.25/3.0);
-			listEntry.iconPaddingMultiplier = (4.0/4.0);
-			listEntry.keepTextColoursTheSame = YES;
-			listEntry.contentViewHeightMultiplier = (3.0/4.0);
-			listEntry.titleLabelHeightMultipler = (1.25/3.0);
-		}
-		
+		listEntry.associatedData = [self.musicTrackCollectionToUseForSpecificTrackCollection.items objectAtIndex:indexAdjustedForShuffleButton];
+		listEntry.isLabelBased = (self.musicType == LMMusicTypeAlbums || self.musicType == LMMusicTypeCompilations);
 		listEntry.alignIconToLeft = NO;
 		listEntry.stretchAcrossWidth = YES;
 		
 		
-		if(!isShuffleButton){
-			UIColor *colour = [UIColor colorWithRed:47/255.0 green:47/255.0 blue:49/255.0 alpha:1.0];
-			UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14.0f];
-			MGSwipeButton *saveButton = [MGSwipeButton buttonWithTitle:@"" icon:[LMAppIcon imageForIcon:LMIconAddToQueue] backgroundColor:colour padding:0 callback:^BOOL(MGSwipeTableCell *sender) {
-				LMMusicTrack *trackToQueue = [self.musicTrackCollection.items objectAtIndex:listEntry.collectionIndex];
-				
-				[self.musicPlayer addTrackToQueue:trackToQueue];
-				
-				NSLog(@"Queue %@", trackToQueue.title);
-				
-				return YES;
-			}];
-			saveButton.titleLabel.font = font;
-			saveButton.titleLabel.hidden = YES;
-			saveButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
-			saveButton.imageEdgeInsets = UIEdgeInsetsMake(25, 0, 25, 0);
+		UIColor *colour = [UIColor colorWithRed:47/255.0 green:47/255.0 blue:49/255.0 alpha:1.0];
+		UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14.0f];
+		MGSwipeButton *saveButton = [MGSwipeButton buttonWithTitle:@"" icon:[LMAppIcon imageForIcon:LMIconAddToQueue] backgroundColor:colour padding:0 callback:^BOOL(MGSwipeTableCell *sender) {
+			LMMusicTrack *trackToQueue = [self.musicTrackCollection.items objectAtIndex:listEntry.collectionIndex];
 			
-			listEntry.rightButtons = @[ saveButton ];
+			[self.musicPlayer addTrackToQueue:trackToQueue];
 			
-			MGSwipeButton *favouriteButton = [MGSwipeButton buttonWithTitle:@"" icon:track.isFavourite ? [LMAppIcon imageForIcon:LMIconUnfavouriteWhite] : [LMAppIcon imageForIcon:LMIconFavouriteWhiteFilled] backgroundColor:colour padding:0 callback:^BOOL(MGSwipeTableCell *sender) {
-				LMMusicTrack *track = [self.musicTrackCollection.items objectAtIndex:listEntry.collectionIndex];
-				
-				if(track.isFavourite){
-					[self.musicPlayer removeTrackFromFavourites:track];
-				}
-				else{
-					[self.musicPlayer addTrackToFavourites:track];
-				}
-				
-				NSLog(@"Favourite %@", track.title);
-				
-				return YES;
-			}];
-			favouriteButton.titleLabel.font = font;
-			favouriteButton.titleLabel.hidden = YES;
-			favouriteButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
-			favouriteButton.imageEdgeInsets = UIEdgeInsetsMake(25, 0, 25, 0);
+			NSLog(@"Queue %@", trackToQueue.title);
 			
-			listEntry.leftButtons = @[ favouriteButton ];
-			listEntry.leftButtonExpansionColour = track.isFavourite ? [LMColour mainColour] : [LMColour successGreenColour];
-		}
+			return YES;
+		}];
+		saveButton.titleLabel.font = font;
+		saveButton.titleLabel.hidden = YES;
+		saveButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
+		saveButton.imageEdgeInsets = UIEdgeInsetsMake(25, 0, 25, 0);
+		
+		listEntry.rightButtons = @[ saveButton ];
+		
+		MGSwipeButton *favouriteButton = [MGSwipeButton buttonWithTitle:@"" icon:track.isFavourite ? [LMAppIcon imageForIcon:LMIconUnfavouriteWhite] : [LMAppIcon imageForIcon:LMIconFavouriteWhiteFilled] backgroundColor:colour padding:0 callback:^BOOL(MGSwipeTableCell *sender) {
+			LMMusicTrack *track = [self.musicTrackCollection.items objectAtIndex:listEntry.collectionIndex];
+			
+			if(track.isFavourite){
+				[self.musicPlayer removeTrackFromFavourites:track];
+			}
+			else{
+				[self.musicPlayer addTrackToFavourites:track];
+			}
+			
+			NSLog(@"Favourite %@", track.title);
+			
+			return YES;
+		}];
+		favouriteButton.titleLabel.font = font;
+		favouriteButton.titleLabel.hidden = YES;
+		favouriteButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
+		favouriteButton.imageEdgeInsets = UIEdgeInsetsMake(25, 0, 25, 0);
+		
+		listEntry.leftButtons = @[ favouriteButton ];
+		listEntry.leftButtonExpansionColour = track.isFavourite ? [LMColour mainColour] : [LMColour successGreenColour];
+
 		
 		[cell.contentView addSubview:listEntry];
 		listEntry.backgroundColor = [LMColour superLightGreyColour];
 		
-		if(!isShuffleButton){
-			[listEntry autoPinEdgesToSuperviewEdges];
-		}
-		else{
-			[listEntry autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-			[listEntry autoAlignAxisToSuperviewAxis:ALAxisVertical];
-			[listEntry autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:cell.contentView withMultiplier:(10.0/10.0)];
-			[listEntry autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:cell.contentView withMultiplier:(8.0/10.0)];
-		}
+		[listEntry autoPinEdgesToSuperviewEdges];
 			
-		[listEntry changeHighlightStatus:isShuffleButton || (indexAdjustedForShuffleButton == self.currentlyHighlightedEntry) animated:NO];
+		[listEntry changeHighlightStatus:(indexAdjustedForShuffleButton == self.currentlyHighlightedEntry) animated:NO];
 		
 		
-		BOOL isInLastRow = indexPath.row >= (self.musicTrackCollectionToUse.count - [LMDetailView numberOfColumns]);
+		BOOL isInLastRow = indexPath.row >= (self.musicTrackCollectionToUseForSpecificTrackCollection.count - [LMDetailView numberOfColumns]);
 		
 		if(!isInLastRow){
 			UIView *dividerView = [UIView newAutoLayoutView];
@@ -433,8 +364,8 @@
 			[listEntry addSubview:dividerView];
 			
 			[dividerView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-			[dividerView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:listEntry withMultiplier:(isShuffleButton ? 1.25 : 1.0)];
-//			[dividerView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+//			[dividerView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:listEntry withMultiplier:1.0];
+			[dividerView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 			[dividerView autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:-(flowLayout.sectionInset.bottom/2.0)];
 			[dividerView autoSetDimension:ALDimensionHeight toSize:1.0];
 		}
@@ -448,7 +379,7 @@
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-	return self.musicTrackCollectionToUse.count + 1;
+	return self.musicTrackCollectionToUseForSpecificTrackCollection.count;
 }
 
 - (CGSize)currentItemSize {
@@ -488,7 +419,7 @@
 		
 		normalItemSize = [self currentItemSize];
 		
-		amountOfItems = self.musicTrackCollectionToUse.count;
+		amountOfItems = self.musicTrackCollectionToUseForSpecificTrackCollection.count;
 		
 		if(numberOfColumns > amountOfItems){
 			numberOfColumns = amountOfItems;
@@ -496,6 +427,7 @@
 		
 		size.height += (amountOfItems * 10)/numberOfColumns; //Spacing
 		size.height += 10;
+		size.height += (1 * normalItemSize.height); //Adjustment to make sure floating buttons fit
 	}
 	
 	
@@ -533,10 +465,28 @@
 	return itemSize;
 }
 
+- (void)rootViewWillTransitionToSize:(CGSize)size
+		   withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+	
+	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		if(self.specificTrackCollections && self.albumTileView.hidden){
+			self.albumTileViewLeadingConstraint.constant = -self.frame.size.width;
+		}
+	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		//Nothing, yet
+		if(self.specificTrackCollections && self.albumTileView.hidden){
+			self.albumTileViewLeadingConstraint.constant = -self.frame.size.width;
+		}
+	}];
+}
+
 
 - (void)layoutSubviews {
 	if(!self.didLayoutConstraints) {
 		self.didLayoutConstraints = YES;
+		
+		
+		[[LMLayoutManager sharedLayoutManager] addDelegate:self];
 		
 		
 		//Album tile view is created in init

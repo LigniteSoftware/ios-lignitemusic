@@ -9,6 +9,7 @@
 #import <PureLayout/PureLayout.h>
 
 #import "LMVerticalControlBarInnerShadowView.h"
+#import "LMFloatingDetailViewButton.h"
 #import "LMPhoneLandscapeDetailView.h"
 #import "LMTiledAlbumCoverView.h"
 #import "YIInnerShadowView.h"
@@ -18,7 +19,7 @@
 #import "LMMusicPlayer.h"
 #import "LMColour.h"
 
-@interface LMPhoneLandscapeDetailView()<LMCollectionInfoViewDelegate, LMBigListEntryDelegate, LMControlBarViewDelegate, LMMusicPlayerDelegate>
+@interface LMPhoneLandscapeDetailView()<LMCollectionInfoViewDelegate, LMBigListEntryDelegate, LMControlBarViewDelegate, LMMusicPlayerDelegate, LMFloatingDetailViewButtonDelegate>
 
 /**
  The background view for the sidebar on the left which contains the control bar and collection info.
@@ -49,6 +50,11 @@
  The actual control bar.
  */
 @property LMControlBarView *controlBar;
+
+/**
+ The shuffle button.
+ */
+@property LMFloatingDetailViewButton *shuffleButton;
 
 /**
  The music player.
@@ -340,6 +346,25 @@
 	[self.controlBar reloadHighlightedButtons];
 }
 
+- (void)floatingDetailViewButtonTapped:(LMFloatingDetailViewButton*)button {
+	LMMusicTrackCollection *collectionToUse = nil;
+	if(self.detailView.showingAlbumTileView){
+		collectionToUse = self.detailView.musicTrackCollection;
+	}
+	else if(!self.detailView.showingAlbumTileView && self.detailView.musicTrackCollectionToUseForSpecificTrackCollection){
+		collectionToUse = self.detailView.musicTrackCollectionToUseForSpecificTrackCollection;
+	}
+	else if(!self.detailView.musicTrackCollectionToUseForSpecificTrackCollection){
+		collectionToUse = self.detailView.musicTrackCollection;
+	}
+	
+	LMMusicPlayer *musicPlayer = [LMMusicPlayer sharedMusicPlayer];
+	[musicPlayer stop];
+	[musicPlayer setShuffleMode:LMMusicShuffleModeOn];
+	[musicPlayer setNowPlayingCollection:collectionToUse];
+	[musicPlayer play];
+}
+
 - (void)layoutSubviews {
 	if(!self.didLayoutConstraints){
 		self.didLayoutConstraints = YES;
@@ -361,7 +386,7 @@
 		[self.sidebarBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[self.sidebarBackgroundView autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
 		[self.sidebarBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(9.5/10.0)];
-		[self.sidebarBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:[LMLayoutManager isiPhoneX] ? (1.0/5.25) : (1.0/4.75)];
+		[self.sidebarBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:[LMLayoutManager isiPhoneX] ? (1.0/5.25) : (1.0/4.40)];
 		
 		
 		[topAndBottomCoverView autoPinEdgeToSuperviewEdge:ALEdgeTop];
@@ -381,42 +406,53 @@
 		[self.collectionInfoBigListEntry autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.sidebarBackgroundView withMultiplier:(8.0/10.0)];
 		[self.collectionInfoBigListEntry autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.sidebarBackgroundView withMultiplier:(4.5/10.0)];
 		
-		[self.collectionInfoBigListEntry setup];
+//		[self.collectionInfoBigListEntry setup];
 		
 		
-		self.controlBarTriangle = [LMTriangleView newAutoLayoutView];
-		self.controlBarTriangle.maskDirection = LMTriangleMaskDirectionUpwards;
-		self.controlBarTriangle.clipsToBounds = NO;
-		self.controlBarTriangle.triangleColour = [LMColour verticalControlBarGrayColour];
-		[self.sidebarBackgroundView addSubview:self.controlBarTriangle];
+		LMFloatingDetailViewButton *button = [LMFloatingDetailViewButton newAutoLayoutView];
+		button.type = LMFloatingDetailViewControlButtonTypeShuffle;
+		button.delegate = self;
+		[self.sidebarBackgroundView addSubview:button];
 		
-		[self.controlBarTriangle autoAlignAxisToSuperviewAxis:ALAxisVertical];
-		[self.controlBarTriangle autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.collectionInfoBigListEntry];
-		[self.controlBarTriangle autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.collectionInfoBigListEntry withMultiplier:(1.0/4.5)];
-		[self.controlBarTriangle autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.controlBarTriangle withMultiplier:(5.0/8.0)];
-		
-		
-		self.controlBar = [LMControlBarView newAutoLayoutView];
-		self.controlBar.delegate = self;
-		self.controlBar.clipsToBounds = NO;
-		self.controlBar.verticalMode = YES;
-		[self.sidebarBackgroundView addSubview:self.controlBar];
-		
-		[self.controlBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		[self.controlBar autoAlignAxisToSuperviewAxis:ALAxisVertical];
-		[self.controlBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.collectionInfoBigListEntry];
-		[self.controlBar autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.controlBarTriangle];
+		[button autoAlignAxis:ALAxisVertical toSameAxisOfView:self.collectionInfoBigListEntry];
+		[button autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.sidebarBackgroundView withMultiplier:(5.0/10.0)];
+		[button autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:button];
+		[button autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.collectionInfoBigListEntry withOffset:14];
 		
 		
-		self.controlBarInnerShadowView = [LMVerticalControlBarInnerShadowView newAutoLayoutView];
-		self.controlBarInnerShadowView.userInteractionEnabled = NO;
-		[self addSubview:self.controlBarInnerShadowView];
-		
-		[self.controlBarInnerShadowView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.controlBar];
-		[self.controlBarInnerShadowView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.controlBar];
-		[self.controlBarInnerShadowView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.controlBar];
-		[self.controlBarInnerShadowView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.controlBar];
-		
+//		self.controlBarTriangle = [LMTriangleView newAutoLayoutView];
+//		self.controlBarTriangle.maskDirection = LMTriangleMaskDirectionUpwards;
+//		self.controlBarTriangle.clipsToBounds = NO;
+//		self.controlBarTriangle.triangleColour = [LMColour verticalControlBarGreyColour];
+//		[self.sidebarBackgroundView addSubview:self.controlBarTriangle];
+//
+//		[self.controlBarTriangle autoAlignAxisToSuperviewAxis:ALAxisVertical];
+//		[self.controlBarTriangle autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.collectionInfoBigListEntry];
+//		[self.controlBarTriangle autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.collectionInfoBigListEntry withMultiplier:(1.0/4.5)];
+//		[self.controlBarTriangle autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.controlBarTriangle withMultiplier:(5.0/8.0)];
+//
+//
+//		self.controlBar = [LMControlBarView newAutoLayoutView];
+//		self.controlBar.delegate = self;
+//		self.controlBar.clipsToBounds = NO;
+//		self.controlBar.verticalMode = YES;
+//		[self.sidebarBackgroundView addSubview:self.controlBar];
+//
+//		[self.controlBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+//		[self.controlBar autoAlignAxisToSuperviewAxis:ALAxisVertical];
+//		[self.controlBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.collectionInfoBigListEntry];
+//		[self.controlBar autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.controlBarTriangle];
+//
+//
+//		self.controlBarInnerShadowView = [LMVerticalControlBarInnerShadowView newAutoLayoutView];
+//		self.controlBarInnerShadowView.userInteractionEnabled = NO;
+//		[self addSubview:self.controlBarInnerShadowView];
+//
+//		[self.controlBarInnerShadowView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.controlBar];
+//		[self.controlBarInnerShadowView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.controlBar];
+//		[self.controlBarInnerShadowView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.controlBar];
+//		[self.controlBarInnerShadowView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.controlBar];
+//
 		
 		self.detailView = [[LMDetailView alloc] initWithMusicTrackCollection:self.musicTrackCollection musicType:self.musicType];
 		self.detailView.backgroundColor = [UIColor blueColor];

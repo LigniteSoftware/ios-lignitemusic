@@ -95,10 +95,18 @@ typedef enum {
  Returns a UIImage which is associated with the LMIcon asked for. The UIImage is not modified in any way.
 
  @param icon The icon requested.
-
- @return The UIImage of the icon requested. nil if the icon has not yet been set within the codebase.
+ @return The UIImage of the icon requested, nil if the icon has not yet been set within the codebase.
  */
 + (UIImage*)imageForIcon:(LMIcon)icon;
+
+/**
+ Returns a UIImage which is associated with the LMIcon asked for, with optional inverting.
+ 
+ @param icon The icon requested.
+ @param inverted Whether or not to invert the icon's colours.
+ @return The UIImage of the icon requested, nil if the icon has not yet been set within the codebase.
+ */
++ (UIImage*)imageForIcon:(LMIcon)icon inverted:(BOOL)inverted;
 
 /**
  Invert an image.

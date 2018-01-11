@@ -357,6 +357,8 @@
 		6AFF01A01DDE7D2D00F24D8E /* tutorial_browsing.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AFF019C1DDE7D2D00F24D8E /* tutorial_browsing.png */; };
 		6AFF01A11DDE7D2D00F24D8E /* tutorial_bottom_tabs.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AFF019D1DDE7D2D00F24D8E /* tutorial_bottom_tabs.png */; };
 		6AFF01A81DDED15100F24D8E /* onboarding_gutless_user.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AFF01A71DDED15100F24D8E /* onboarding_gutless_user.png */; };
+		6AFF7CE52007CBA500BB9675 /* LMFloatingDetailViewControls.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AFF7CE42007CBA500BB9675 /* LMFloatingDetailViewControls.m */; };
+		6AFF7CE82007D1CB00BB9675 /* LMFloatingDetailViewButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AFF7CE72007D1CB00BB9675 /* LMFloatingDetailViewButton.m */; };
 		957F3E1F9B7281591E9E88BC /* Pods_Lignite_Music.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50AA3F2AD5E6CE2B672C8B09 /* Pods_Lignite_Music.framework */; };
 /* End PBXBuildFile section */
 
@@ -848,6 +850,10 @@
 		6AFF019C1DDE7D2D00F24D8E /* tutorial_browsing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tutorial_browsing.png; sourceTree = "<group>"; };
 		6AFF019D1DDE7D2D00F24D8E /* tutorial_bottom_tabs.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tutorial_bottom_tabs.png; sourceTree = "<group>"; };
 		6AFF01A71DDED15100F24D8E /* onboarding_gutless_user.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = onboarding_gutless_user.png; sourceTree = "<group>"; };
+		6AFF7CE32007CBA500BB9675 /* LMFloatingDetailViewControls.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMFloatingDetailViewControls.h; sourceTree = "<group>"; };
+		6AFF7CE42007CBA500BB9675 /* LMFloatingDetailViewControls.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMFloatingDetailViewControls.m; sourceTree = "<group>"; };
+		6AFF7CE62007D1CB00BB9675 /* LMFloatingDetailViewButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMFloatingDetailViewButton.h; sourceTree = "<group>"; };
+		6AFF7CE72007D1CB00BB9675 /* LMFloatingDetailViewButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMFloatingDetailViewButton.m; sourceTree = "<group>"; };
 		8FBC9717282C4F0D39EA52C6 /* Pods-Lignite Music.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lignite Music.release.xcconfig"; path = "Pods/Target Support Files/Pods-Lignite Music/Pods-Lignite Music.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -1315,6 +1321,10 @@
 				6ADCBA2E1ED9B76000CAD705 /* LMDetailView.m */,
 				6A08AF091EBEEBD00069C9CC /* LMEmbeddedDetailView.h */,
 				6A08AF0A1EBEEBD00069C9CC /* LMEmbeddedDetailView.m */,
+				6AFF7CE32007CBA500BB9675 /* LMFloatingDetailViewControls.h */,
+				6AFF7CE42007CBA500BB9675 /* LMFloatingDetailViewControls.m */,
+				6AFF7CE62007D1CB00BB9675 /* LMFloatingDetailViewButton.h */,
+				6AFF7CE72007D1CB00BB9675 /* LMFloatingDetailViewButton.m */,
 				6A08AF0D1EBF2A860069C9CC /* LMExpandableInnerShadowView.h */,
 				6A08AF0E1EBF2A860069C9CC /* LMExpandableInnerShadowView.m */,
 				6A08AF191EC04AED0069C9CC /* LMExpandableTrackListControlBar.h */,
@@ -2244,6 +2254,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6A60272D1FE899C1002F3E93 /* LMWarningBarView.m in Sources */,
+				6AFF7CE82007D1CB00BB9675 /* LMFloatingDetailViewButton.m in Sources */,
 				6AA445A31D5AD7B0004C6739 /* LMSettingsLabel.m in Sources */,
 				6A32A9EC1DC68F440056CC60 /* LMTriangleContainerView.m in Sources */,
 				6A33A0101FE043BE00B1A447 /* LMAnswers.m in Sources */,
@@ -2361,6 +2372,7 @@
 				6A514E191CEA15D900AFB351 /* LMSlider.m in Sources */,
 				6A7E88731ECCB80700E4B804 /* AFSecurityPolicy.m in Sources */,
 				6A4901AA1ECF64CD00646799 /* LMLagDetectionThread.m in Sources */,
+				6AFF7CE52007CBA500BB9675 /* LMFloatingDetailViewControls.m in Sources */,
 				6ADFFF7C1ECCC11D00E06FBF /* MarqueeLabel.m in Sources */,
 				6A08AF0B1EBEEBD00069C9CC /* LMEmbeddedDetailView.m in Sources */,
 				6A2A29CB1DB1F1C3008E7792 /* LMSource.m in Sources */,

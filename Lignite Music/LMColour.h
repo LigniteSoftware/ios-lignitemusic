@@ -59,7 +59,7 @@
 
  @return The darker control bar gray colour.
  */
-+ (UIColor*)verticalControlBarGrayColour;
++ (UIColor*)verticalControlBarGreyColour;
 
 /**
  A 35% transparent white which is the background to the circular cover art, for example.
@@ -80,14 +80,14 @@
 
  @return The dark gray.
  */
-+ (UIColor*)darkGrayColour;
++ (UIColor*)darkGreyColour;
 
 /**
  The super dark gray colour currently used within the rewritten control bar.
  
  @return The super dark gray.
  */
-+ (UIColor*)superDarkGrayColour;
++ (UIColor*)superDarkGreyColour;
 
 /**
  Generate a completely random colour. Used for testing purposes.

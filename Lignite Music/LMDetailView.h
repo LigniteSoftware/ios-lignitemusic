@@ -46,6 +46,11 @@
 @property LMMusicTrackCollection *musicTrackCollection;
 
 /**
+ The music track collection to use in loading data, as a specific track collection may have been set. This is nil if not using specific track collections.
+ */
+@property LMMusicTrackCollection *musicTrackCollectionToUseForSpecificTrackCollection;
+
+/**
  The flow layout associated.
  */
 @property id flowLayout;

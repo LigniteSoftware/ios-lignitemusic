@@ -120,7 +120,7 @@
 		
 		self.musicPlayer = [MPMusicPlayerController systemMusicPlayer];
 		
-		self.backgroundColor = [LMColour darkGrayColour];
+		self.backgroundColor = [LMColour darkGreyColour];
 		
 		self.didLayoutConstraints = YES;
 	

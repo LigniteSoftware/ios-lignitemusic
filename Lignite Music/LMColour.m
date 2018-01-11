@@ -112,10 +112,10 @@
 }
 
 + (UIColor*)controlBarGreyColour {
-	return [UIColor colorWithRed:0.90 green:0.90 blue:0.90 alpha:1.0];;
+	return [UIColor colorWithRed:0.88 green:0.88 blue:0.88 alpha:1.0];
 }
 
-+ (UIColor*)verticalControlBarGrayColour {
++ (UIColor*)verticalControlBarGreyColour {
 	return [LMColour lightGreyBackgroundColour];
 }
 
@@ -127,11 +127,11 @@
 	return [UIColor colorWithRed:0.79 green:0.79 blue:0.79 alpha:1.0];
 }
 
-+ (UIColor*)darkGrayColour {
++ (UIColor*)darkGreyColour {
 	return [UIColor colorWithRed:0.33 green:0.33 blue:0.33 alpha:1.0];
 }
 
-+ (UIColor*)superDarkGrayColour {
++ (UIColor*)superDarkGreyColour {
 	return [UIColor colorWithRed:0.25 green:0.25 blue:0.25 alpha:1.0];
 }
 

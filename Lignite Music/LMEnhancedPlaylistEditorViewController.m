@@ -897,7 +897,7 @@
 	
 	
 	self.wantToHearAddSongsButtonView = [UIView newAutoLayoutView];
-	self.wantToHearAddSongsButtonView.backgroundColor = [LMColour darkGrayColour];
+	self.wantToHearAddSongsButtonView.backgroundColor = [LMColour darkGreyColour];
 	self.wantToHearAddSongsButtonView.layer.masksToBounds = YES;
 	self.wantToHearAddSongsButtonView.layer.cornerRadius = 6.0f;
 	[self.wantToHearBackgroundView addSubview:self.wantToHearAddSongsButtonView];
@@ -935,7 +935,7 @@
 	self.dontWantToHearBackgroundView = [UIView newAutoLayoutView];
 	
 	self.dontWantToHearAddSongsButtonView = [UIView newAutoLayoutView];
-	self.dontWantToHearAddSongsButtonView.backgroundColor = [LMColour darkGrayColour];
+	self.dontWantToHearAddSongsButtonView.backgroundColor = [LMColour darkGreyColour];
 	self.dontWantToHearAddSongsButtonView.layer.masksToBounds = YES;
 	self.dontWantToHearAddSongsButtonView.layer.cornerRadius = 6.0f;
 	[self.dontWantToHearBackgroundView addSubview:self.dontWantToHearAddSongsButtonView];

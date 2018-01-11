@@ -30,7 +30,7 @@
 				
 		self.triangleView = [LMTriangleView newAutoLayoutView];
 		self.triangleView.maskDirection = LMTriangleMaskDirectionUpwards;
-		self.triangleView.triangleColour = [LMColour verticalControlBarGrayColour];
+		self.triangleView.triangleColour = [LMColour verticalControlBarGreyColour];
 		[self addSubview:self.triangleView];
 		
 		CGFloat triangleHeight = 20.0f;

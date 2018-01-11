@@ -52,4 +52,9 @@
  */
 - (CGSize)totalSize;
 
+/**
+ Hides the floating controls completely.
+ */
+- (void)hideFloatingControls;
+
 @end

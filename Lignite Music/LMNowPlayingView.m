@@ -306,7 +306,6 @@
 	
 	[self reloadFavouriteStatus];
 	
-#warning here it is :(
 	if(self.isUserFacing){
 		self.queueTableView.totalAmountOfObjects = self.musicPlayer.nowPlayingCollection.count;
 		[self.queueTableView reloadSubviewData];

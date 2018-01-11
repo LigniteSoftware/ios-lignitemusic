@@ -9,6 +9,7 @@
 #import <PureLayout/PureLayout.h>
 
 #import "LMExpandableTrackListControlBar.h"
+#import "LMFloatingDetailViewControls.h"
 #import "LMExpandableInnerShadowView.h"
 #import "LMMusicCollectionsView.h"
 #import "LMEmbeddedDetailView.h"
@@ -18,12 +19,22 @@
 #import "LMTriangleView.h"
 #import "LMDetailView.h"
 
-@interface LMEmbeddedDetailView()<LMExpandableTrackListControlBarDelegate, LMDetailViewDelegate>
+@interface LMEmbeddedDetailView()<LMExpandableTrackListControlBarDelegate, LMDetailViewDelegate, LMFloatingDetailViewButtonDelegate, LMLayoutChangeDelegate>
 
 /**
  The control/navigation bar which goes above the view's collection view.
  */
 @property LMExpandableTrackListControlBar *expandableTrackListControlBar;
+
+/**
+ The floating controls which go on the right side.
+ */
+@property LMFloatingDetailViewControls *floatingControls;
+
+/**
+ The width constraint for floating controls so that we can adjust the multiplier when iPad rotates.
+ */
+@property NSLayoutConstraint *floatingControlsWidthConstraint;
 
 /**
  The actual detail view which contains the contents of whatever.
@@ -88,11 +99,64 @@
 	[self.detailView setShowingSpecificTrackCollection:NO animated:YES];
 }
 
+- (void)hideFloatingControls {
+	[UIView animateWithDuration:0.1 animations:^{
+		self.floatingControls.alpha = 0.0;
+	}];
+}
+
+- (void)floatingDetailViewButtonTapped:(LMFloatingDetailViewButton *)button {
+	switch(button.type){
+		case LMFloatingDetailViewControlButtonTypeClose: {
+			LMCollectionViewFlowLayout *flowLayout = (LMCollectionViewFlowLayout*)self.flowLayout;
+			flowLayout.indexOfItemDisplayingDetailView = LMNoDetailViewSelected;
+			break;
+		}
+		case LMFloatingDetailViewControlButtonTypeShuffle: {
+			LMMusicTrackCollection *collectionToUse = nil;
+			if(self.detailView.showingAlbumTileView){
+				collectionToUse = self.detailView.musicTrackCollection;
+			}
+			else if(!self.detailView.showingAlbumTileView && self.detailView.musicTrackCollectionToUseForSpecificTrackCollection){
+				collectionToUse = self.detailView.musicTrackCollectionToUseForSpecificTrackCollection;
+			}
+			else if(!self.detailView.musicTrackCollectionToUseForSpecificTrackCollection){
+				collectionToUse = self.detailView.musicTrackCollection;
+			}
+			
+			LMMusicPlayer *musicPlayer = [LMMusicPlayer sharedMusicPlayer];
+			[musicPlayer stop];
+			[musicPlayer setShuffleMode:LMMusicShuffleModeOn];
+			[musicPlayer setNowPlayingCollection:collectionToUse];
+			[musicPlayer play];
+			
+			NSLog(@"Shuffle...");
+			break;
+		}
+		case LMFloatingDetailViewControlButtonTypeBack: {
+			[self.detailView setShowingSpecificTrackCollection:NO animated:YES];
+			break;
+		}
+	}
+}
+
 - (void)detailViewIsShowingAlbumTileView:(BOOL)showingAlbumTileView {
 	self.isChangingSize = YES;
+
+	self.floatingControls.showingBackButton = !showingAlbumTileView;
 	
-	self.expandableTrackListControlBar.mode = !showingAlbumTileView ? LMExpandableTrackListControlBarModeControlWithAlbumDetail : LMExpandableTrackListControlBarModeGeneralControl;
+//	self.expandableTrackListControlBar.mode = !showingAlbumTileView ? LMExpandableTrackListControlBarModeControlWithAlbumDetail : LMExpandableTrackListControlBarModeGeneralControl;
 }
+
+//- (void)rootViewWillTransitionToSize:(CGSize)size
+//		   withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+//
+//	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+//		self.floatingControlsWidthConstraint.multiplier = LMLayoutManager.isLandscape ? (0.75/10.0) : (1.25/10.0);
+//	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+//		//Nothing, yet
+//	}];
+//}
 
 - (void)layoutSubviews {	
 	self.backgroundColor = [UIColor yellowColor];
@@ -109,6 +173,11 @@
 		self.clipsToBounds = NO;
 		
 		
+//		if([LMLayoutManager isiPad]){
+//			[[LMLayoutManager sharedLayoutManager] addDelegate:self];
+//		}
+		
+		
 		self.detailView.flowLayout = self.flowLayout;
 		self.detailView.delegate = self;
 		
@@ -123,6 +192,20 @@
 //		[self.expandableTrackListControlBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
 //		[self.expandableTrackListControlBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 		
+		
+		self.floatingControls = [LMFloatingDetailViewControls newAutoLayoutView];
+		self.floatingControls.delegate = self;
+		[self addSubview:self.floatingControls];
+		
+		[self.floatingControls autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.floatingControls autoPinEdgeToSuperviewEdge:ALEdgeTop];
+		[self.floatingControls autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[self.floatingControls autoSetDimension:ALDimensionWidth toSize:83.0f];
+//		self.floatingControlsWidthConstraint =
+//			[self.floatingControls autoMatchDimension:ALDimensionWidth
+//										  toDimension:ALDimensionWidth
+//											   ofView:self
+//									   withMultiplier:[LMLayoutManager isiPad] ? (1.25/10.0) : (2.0/10.0)];
 		
 		
 		//Detail view is created in init

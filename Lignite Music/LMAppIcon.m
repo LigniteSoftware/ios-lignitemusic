@@ -153,7 +153,15 @@
 }
 
 + (UIImage*)imageForIcon:(LMIcon)icon {
-	return [UIImage imageNamed:[LMAppIcon filenameForIcon:icon]];
+	return [self imageForIcon:icon inverted:NO];
+}
+
++ (UIImage*)imageForIcon:(LMIcon)icon inverted:(BOOL)inverted {
+	UIImage *iconImage = [UIImage imageNamed:[LMAppIcon filenameForIcon:icon]];
+	if(inverted){
+		return [self invertImage:iconImage];
+	}
+	return iconImage;
 }
 
 + (UIImage*)invertImage:(UIImage*)image {
