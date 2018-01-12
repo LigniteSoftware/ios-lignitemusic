@@ -101,6 +101,7 @@
 		detailView.musicType = self.musicType;
 		detailView.flowLayout = self;
 		detailView.userInteractionEnabled = YES;
+		detailView.adjustForFloatingControls = (!LMLayoutManager.isiPad && !LMLayoutManager.isLandscape);
 		
 		self.detailView = detailView;
 	}

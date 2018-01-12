@@ -51,6 +51,11 @@
 @property LMMusicTrackCollection *musicTrackCollectionToUseForSpecificTrackCollection;
 
 /**
+ Whether or not to adjust for floating control button.
+ */
+@property BOOL adjustForFloatingControls;
+
+/**
  The flow layout associated.
  */
 @property id flowLayout;

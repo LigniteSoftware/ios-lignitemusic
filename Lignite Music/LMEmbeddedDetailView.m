@@ -159,7 +159,7 @@
 //}
 
 - (void)layoutSubviews {	
-	self.backgroundColor = [UIColor yellowColor];
+	self.backgroundColor = [LMColour superLightGreyColour];
 	
 	if(!self.didLayoutConstraints){
 		self.didLayoutConstraints = YES;
@@ -178,6 +178,7 @@
 //		}
 		
 		
+		self.detailView.adjustForFloatingControls = self.adjustForFloatingControls;
 		self.detailView.flowLayout = self.flowLayout;
 		self.detailView.delegate = self;
 		
@@ -273,7 +274,7 @@
 		self.musicType = musicType;
 		
 		self.detailView = [[LMDetailView alloc] initWithMusicTrackCollection:self.musicTrackCollection musicType:self.musicType];
-		self.detailView.backgroundColor = [UIColor blueColor];
+		//		self.detailView.backgroundColor = [UIColor blueColor];
 		[self addSubview:self.detailView];
 	}
 	return self;

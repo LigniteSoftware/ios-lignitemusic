@@ -37,6 +37,11 @@
 @property BOOL isChangingSize;
 
 /**
+ Whether or not to adjust for floating control button.
+ */
+@property BOOL adjustForFloatingControls;
+
+/**
  Initializes the expandable track list view (for autolayout) with a certain music track collection for its layouting.
 
  @param musicTrackCollection The music track collection to associate with it.

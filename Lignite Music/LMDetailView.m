@@ -492,12 +492,13 @@
 		//Album tile view is created in init
 		self.albumTileView.flowLayout = self.flowLayout;
 		self.albumTileView.backgroundColor = [UIColor purpleColor];
+		self.albumTileView.adjustForFloatingControls = self.adjustForFloatingControls;
 		[self addSubview:self.albumTileView];
 		
 		self.albumTileViewLeadingConstraint = [self.albumTileView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[self.albumTileView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 		[self.albumTileView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		[self.albumTileView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
+		[self.albumTileView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withOffset:self.adjustForFloatingControls ? -53.0 : 0];
 	
 				
 		
@@ -515,9 +516,9 @@
 		[self addSubview:self.collectionView];
 		
 		[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-		[self.collectionView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.albumTileView];
+		[self.collectionView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.albumTileView withOffset:self.adjustForFloatingControls ? 53.0f : 0];
 		[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		[self.collectionView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.albumTileView];
+		[self.collectionView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
 		//		self.collectionView.hidden = YES;
 		
 		[self.musicPlayer addMusicDelegate:self];
@@ -556,8 +557,7 @@
 											  && self.musicType != LMMusicTypeAlbums);
 		
 		if(usingSpecificTrackCollections){
-			self.specificTrackCollections = [self.musicPlayer collectionsForRepresentativeTrack:self.musicTrackCollection.representativeItem
-																				   forMusicType:self.musicType];
+			self.specificTrackCollections = [self.musicPlayer collectionsForRepresentativeTrack:self.musicTrackCollection.representativeItem forMusicType:self.musicType];
 		}
 		
 		

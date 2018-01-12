@@ -161,9 +161,10 @@
 }
 
 - (CGSize)normalItemSize {	
-	CGFloat scaleFactor = (7.0/8.0);
+	CGFloat scaleFactor = ((self.adjustForFloatingControls ? 6.5 : 7.0)/8.0);
 	
-	CGSize scaledSize = CGSizeMake(self.flowLayout.normalItemSize.width*scaleFactor, self.flowLayout.normalItemSize.height*scaleFactor);
+	CGSize scaledSize = CGSizeMake(self.flowLayout.normalItemSize.width * scaleFactor,
+								   self.flowLayout.normalItemSize.height * scaleFactor);
 	
 	return scaledSize;
 }
@@ -175,7 +176,8 @@
 	
 	CGFloat sideLength = itemSize.width;
 	
-	CGFloat spacing = (WINDOW_FRAME.size.width-(sideLength*factor))/(factor+1);
+	CGFloat spacing = (WINDOW_FRAME.size.width - (self.adjustForFloatingControls ? 53 : 0) - (sideLength * factor))
+					/ (factor + 1);
 	
 	if([LMLayoutManager isLandscape]){
 		spacing = spacing * (1.0/2.0);
@@ -199,7 +201,10 @@
 		return CGSizeMake(0, 0);
 	}
 	
-	flowLayout.sectionInset = UIEdgeInsetsMake(spacing, [LMLayoutManager isLandscape] ? spacing*1.5 : spacing, spacing, [LMLayoutManager isLandscape] ? spacing*1.5 : spacing);
+	flowLayout.sectionInset = UIEdgeInsetsMake(spacing, //Top
+											   [LMLayoutManager isLandscape] ? (spacing * 1.5) : spacing, //Left
+											   spacing, //Bottom
+											   [LMLayoutManager isLandscape] ? (spacing * 1.5) : spacing); //Right
 	flowLayout.minimumLineSpacing = spacing;
 	
 	NSLog(@"Returning size of %@ with a section inset %@ compared to %@ and spacing of %f", NSStringFromCGSize(itemSize), NSStringFromUIEdgeInsets(flowLayout.sectionInset), NSStringFromCGRect(self.collectionView.frame), spacing);
@@ -235,7 +240,7 @@
 			bigListEntry.infoDelegate = self;
 			bigListEntry.entryDelegate = self;
 			bigListEntry.collectionIndex = i;
-			[bigListEntry setup];
+//			[bigListEntry setup];
 			
 			[self.bigListEntries addObject:bigListEntry];
 		}
@@ -252,6 +257,10 @@
 		} repeats:NO];
 	}
 	
+	if(self.adjustForFloatingControls){
+		self.collectionView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, 0, self.collectionView.bounds.size.width - 10);
+	}
+		
 	[super layoutSubviews];
 }
 

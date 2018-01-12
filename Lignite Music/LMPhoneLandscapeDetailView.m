@@ -460,7 +460,7 @@
 //
 		
 		self.detailView = [[LMDetailView alloc] initWithMusicTrackCollection:self.musicTrackCollection musicType:self.musicType];
-		self.detailView.backgroundColor = [UIColor blueColor];
+//		self.detailView.backgroundColor = [UIColor blueColor];
 		self.detailView.flowLayout = self.flowLayout;
 		[self addSubview:self.detailView];
 		

@@ -48,6 +48,11 @@
 @property LMCollectionViewFlowLayout *flowLayout;
 
 /**
+ Whether or not to adjust for floating control button.
+ */
+@property BOOL adjustForFloatingControls;
+
+/**
  The size of an item within the music collection view, based off of current data from LMLayoutManager.
 
  @return The size of an item.
