@@ -32,8 +32,8 @@
 - (instancetype)init {
 	self = [super init];
 	if(self) {
-		self.restorationIdentifier = @"LMOnboardingViewController";
-		self.restorationClass = [LMGuideViewPagerController class];
+//		self.restorationIdentifier = @"LMOnboardingViewController";
+//		self.restorationClass = [LMGuideViewPagerController class];
 	}
 	return self;
 }
