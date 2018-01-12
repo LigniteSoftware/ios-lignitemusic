@@ -343,7 +343,9 @@
 	
 	self.detailView.musicType = self.musicType;
 	self.detailView.musicTrackCollection = self.musicTrackCollection;
-	[self.detailView.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UICollectionViewScrollPositionTop animated:NO];
+	if(self.musicTrackCollection.count > 0){
+		[self.detailView.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UICollectionViewScrollPositionTop animated:NO];
+	}
 	
 	[self.detailView setNeedsLayout];
 	[self.detailView layoutIfNeeded];
