@@ -96,7 +96,9 @@
     CGFloat dummyViewHeight = 100;
     UIView *dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, WINDOW_FRAME.size.width, dummyViewHeight)];
     self.tableHeaderView = dummyView;
-    self.contentInset = UIEdgeInsetsMake(-dummyViewHeight, 0, self.bottomSpacing, 0);
+	[UIView animateWithDuration:0.4 animations:^{
+		self.contentInset = UIEdgeInsetsMake(-dummyViewHeight, 0, self.bottomSpacing, 0);
+	}];
 }
 
 - (void)reloadSubviewData {

@@ -12,6 +12,7 @@
 #import "LMExtras.h"
 #import "NSTimer+Blocks.h"
 #import "LMCompactBrowsingView.h"
+#import "LMCoreViewController.h"
 
 @interface LMCollectionViewFlowLayout()
 
@@ -144,6 +145,8 @@
 		size.height += ([self frameForCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] detailViewDisplayMode:LMDetailViewDisplayModeNone].size.height * amountOfItems)/self.itemsPerRow;
 		size.height += ((amountOfItems/self.itemsPerRow) + 5) * COMPACT_VIEW_SPACING_BETWEEN_ITEMS;
 	}
+	
+	size.height += 75;
 	
 	return size;
 	

@@ -356,9 +356,9 @@
 		[listEntry changeHighlightStatus:(indexAdjustedForShuffleButton == self.currentlyHighlightedEntry) animated:NO];
 		
 		
-		BOOL isInLastRow = indexPath.row >= (self.musicTrackCollectionToUseForSpecificTrackCollection.count - [LMDetailView numberOfColumns]);
+//		BOOL isInLastRow = indexPath.row >= (self.musicTrackCollectionToUseForSpecificTrackCollection.count - [LMDetailView numberOfColumns]);
 		
-		if(!isInLastRow){
+//		if(!isInLastRow){
 			UIView *dividerView = [UIView newAutoLayoutView];
 			dividerView.backgroundColor = [UIColor colorWithRed:0.89 green:0.89 blue:0.89 alpha:1.0];
 			[listEntry addSubview:dividerView];
@@ -368,7 +368,11 @@
 			[dividerView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 			[dividerView autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:-(flowLayout.sectionInset.bottom/2.0)];
 			[dividerView autoSetDimension:ALDimensionHeight toSize:1.0];
-		}
+//		}
+//		else{
+//			NSLog(@"Fuck %@", indexPath);
+//			NSLog(@"shit");
+//		}
 	}
 	
 	return cell;

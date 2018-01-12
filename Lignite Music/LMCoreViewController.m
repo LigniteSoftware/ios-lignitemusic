@@ -733,12 +733,24 @@ LMControlBarViewDelegate
 
 - (void)requiredHeightForNavigationBarChangedTo:(CGFloat)requiredHeight withAnimationDuration:(CGFloat)animationDuration {
 //	NSLog(@"rHeight changed to %f", requiredHeight);
-
     
     CGFloat bottomSpacing = requiredHeight + 10;
     [self.compactView changeBottomSpacing:bottomSpacing];
     self.titleView.songListTableView.bottomSpacing = bottomSpacing;
-//    if(self.currentDetailViewController){
+	
+	if(self.buttonNavigationBar.isMinimized){
+		bottomSpacing *= 2;
+	}
+	else{
+		bottomSpacing += MIN(WINDOW_FRAME.size.width, WINDOW_FRAME.size.height) / 4.0;
+	}
+	
+	UIEdgeInsets newInsets = self.compactView.collectionView.contentInset;
+	newInsets.bottom = bottomSpacing;
+	[UIView animateWithDuration:0.4 animations:^{
+		self.compactView.collectionView.contentInset = newInsets;
+	}];
+	//    if(self.currentDetailViewController){
 //        self.currentDetailViewController.browsingDetailView.tableView.bottomSpacing = bottomSpacing;
 //        if(self.currentDetailViewController.nextDetailViewController){
 //            self.currentDetailViewController.nextDetailViewController.browsingDetailView.tableView.bottomSpacing = bottomSpacing;

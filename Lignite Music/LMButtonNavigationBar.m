@@ -148,7 +148,7 @@
 		return self.buttonBar.frame.size.width + self.viewAttachedToButtonBar.frame.size.width;
 	}
 	
-	return self.minimizeButton.frame.size.height + self.buttonBar.frame.size.height + self.viewAttachedToButtonBar.frame.size.height + 20;
+	return self.buttonBar.frame.size.height + self.viewAttachedToButtonBar.frame.size.height + 20;
 }
 
 - (void)setButtonBarBottomConstraintConstant:(NSInteger)constant completion:(void (^ __nullable)(BOOL finished))completion {
