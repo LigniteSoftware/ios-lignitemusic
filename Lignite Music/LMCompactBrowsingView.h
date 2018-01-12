@@ -49,6 +49,11 @@
 @property NSInteger indexOfCurrentlyOpenDetailView;
 
 /**
+ The background view for the playlist modification button.
+ */
+@property UIView *playlistModificationButtonBackgroundView;
+
+/**
  Reload the contents of the view after changing the music type and music track collections.
  */
 - (void)reloadContents;

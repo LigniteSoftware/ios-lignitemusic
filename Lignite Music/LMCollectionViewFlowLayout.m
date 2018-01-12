@@ -11,6 +11,7 @@
 #import "LMCollectionViewFlowLayout.h"
 #import "LMExtras.h"
 #import "NSTimer+Blocks.h"
+#import "LMCompactBrowsingView.h"
 
 @interface LMCollectionViewFlowLayout()
 
@@ -235,6 +236,10 @@
 	}
 	
 	CGSize collectionViewSize = self.collectionView.frame.size; //Get the current size of the collection view
+	if(self.musicType == LMMusicTypePlaylists && !LMLayoutManager.isLandscape){
+		LMCompactBrowsingView *compactView = self.compactView;
+		collectionViewSize.height += compactView.playlistModificationButtonBackgroundView.frame.size.height;
+	}
 	CGFloat sideLength = collectionViewSize.width/factor; //Get the side length of one cell based on the factor provided
 	
 	if(![LMLayoutManager isiPad] && ![LMLayoutManager isLandscape]){
@@ -265,10 +270,9 @@
 	
 	if(isDetailViewRow || isBelowDetailViewRow){
 		CGFloat maximumDetailViewHeight = [self.detailView totalSize].height;
-		CGRect collectionViewFrame = self.collectionView.frame;
 		CGRect normalItemFrame = [self frameForCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] detailViewDisplayMode:LMDetailViewDisplayModeNone];
 		
-		detailViewHeight = (collectionViewFrame.size.height - normalItemFrame.size.height) - COMPACT_VIEW_SPACING_BETWEEN_ITEMS - normalItemFrame.origin.y + 5; //I'm not going to pull my hair out trying to figure out where the 5 pixels actually comes from, sorry
+		detailViewHeight = (collectionViewSize.height - normalItemFrame.size.height) - COMPACT_VIEW_SPACING_BETWEEN_ITEMS - normalItemFrame.origin.y + 5; //I'm not going to pull my hair out trying to figure out where the 5 pixels actually comes from, sorry
 		
 		if(!LMLayoutManager.isiPad){
 			detailViewHeight -= 15;

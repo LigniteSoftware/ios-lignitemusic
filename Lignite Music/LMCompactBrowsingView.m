@@ -72,15 +72,12 @@
  */
 @property UIView *playlistModificationButtonView;
 
+//The playlist background view is defined in the h file
+
 /**
  The height constraint for the playlist modification button.
  */
 @property NSLayoutConstraint *playlistModificationButtonViewHeightConstraint;
-
-/**
- The background view for the playlist modification button.
- */
-@property UIView *playlistModificationButtonBackgroundView;
 
 /**
  The button that goes on the left of the two buttons for playlist creation and modification.
@@ -101,6 +98,13 @@
  For when there's no entries.
  */
 @property UILabel *noObjectsLabel;
+
+
+/**
+ The constraints for hotswapping the landscape/portrait collection view top constraints on iPhone since for some reason the layout manager throws EXC_BAD_ACCESS.
+ */
+@property NSLayoutConstraint *collectionViewTopPortraitConstraint;
+@property NSLayoutConstraint *collectionViewTopLandscapeConstraint;
 
 @end
 
@@ -709,6 +713,12 @@
 		
 		BOOL isPlaylists = self.musicType == LMMusicTypePlaylists;
 		
+		self.collectionViewTopPortraitConstraint.active
+		= (LMLayoutManager.isiPad
+		   || (!LMLayoutManager.isLandscape && (self.musicType == LMMusicTypePlaylists)));
+		
+		self.collectionViewTopLandscapeConstraint.active = !self.collectionViewTopPortraitConstraint.active;
+		
 		self.playlistModificationButtonView.hidden = (isPlaylists && willBeLandscape) || !isPlaylists;
 		if([LMLayoutManager isiPad] && isPlaylists){
 			self.playlistModificationButtonView.hidden = NO;
@@ -1096,6 +1106,7 @@
 			fuck.musicTrackCollections = self.playlistManager.playlistTrackCollections;
 		}
 		fuck.musicType = self.musicType;
+		fuck.compactView = self;
 //		fuck.scrollDirection = UICollectionViewScrollDirectionHorizontal;
 		
 //		self.musicTrackCollections = [[LMMusicPlayer sharedMusicPlayer] queryCollectionsForMusicType:LMMusicTypeAlbums];
@@ -1252,12 +1263,36 @@
 		
 		self.backgroundColor = [UIColor whiteColor];
 		self.collectionView.backgroundColor = [UIColor whiteColor];
+		
 		[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 		[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		[self.collectionView autoPinEdge:ALEdgeTop
-								  toEdge:isPlaylists ? ALEdgeBottom : ALEdgeTop
-								  ofView:isPlaylists ? self.playlistModificationButtonBackgroundView : self];
+		self.collectionViewTopPortraitConstraint
+				= [self.collectionView autoPinEdge:ALEdgeTop
+											toEdge:isPlaylists ? ALEdgeBottom : ALEdgeTop
+											ofView:isPlaylists ? self.playlistModificationButtonBackgroundView : self];
+		
+		self.collectionViewTopLandscapeConstraint = [self.collectionView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self];
+
+		self.collectionViewTopPortraitConstraint.active
+			= (LMLayoutManager.isiPad
+				   || (!LMLayoutManager.isLandscape && (self.musicType == LMMusicTypePlaylists)));
+		
+		self.collectionViewTopLandscapeConstraint.active = !self.collectionViewTopPortraitConstraint.active;
+		
+//		NSArray *collectionViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+//			[self.collectionView autoPinEdge:ALEdgeTop
+//									  toEdge:isPlaylists ? ALEdgeBottom : ALEdgeTop
+//									  ofView:isPlaylists ? self.playlistModificationButtonBackgroundView : self];
+//		}];
+//		[LMLayoutManager addNewPortraitConstraints:collectionViewPortraitConstraints];
+//
+//		NSArray *collectionViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+//			[self.collectionView autoPinEdge:ALEdgeTop
+//									  toEdge:ALEdgeTop
+//									  ofView:self];
+//		}];
+//		[LMLayoutManager addNewLandscapeConstraints:collectionViewLandscapeConstraints];
 		
 		
 		self.noObjectsLabel = [UILabel newAutoLayoutView];

@@ -200,14 +200,19 @@
 			case LMMusicTypeComposers:
 			case LMMusicTypeArtists: {
 				UIImageView *imageView = [UIImageView newAutoLayoutView];
-				//			imageView.image = [[self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex].representativeItem artistImage];
+				
 				imageView.contentMode = UIViewContentModeScaleAspectFit;
 				imageView.layer.shadowColor = [UIColor blackColor].CGColor;
 				imageView.layer.shadowRadius = WINDOW_FRAME.size.width/45;
 				imageView.layer.shadowOffset = CGSizeMake(0, imageView.layer.shadowRadius/2);
 				imageView.layer.shadowOpacity = 0.25f;
+				
+				imageView.layer.masksToBounds = YES;
+				imageView.layer.cornerRadius = 6.0f;
+				
 				UIImage *artistImage = [collection.representativeItem artistImage];
 				imageView.image = artistImage;
+				
 				return imageView;
 			}
 			case LMMusicTypePlaylists: {

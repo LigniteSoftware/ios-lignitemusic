@@ -46,8 +46,6 @@
  
  */
 
-"ShufflePlay" = "Shuffle play"; //This is a shorter way of saying "Shuffle all tracks in this collection"
-
 "NowPlayingButtonHint" = "Tap this icon when music is playing to open the now-playing window.";
 
 "ConvertPlaylistTitle" = "Playlist editing";

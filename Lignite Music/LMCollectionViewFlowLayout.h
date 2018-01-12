@@ -93,4 +93,9 @@ typedef NS_ENUM(NSInteger, LMDetailViewDisplayMode) {
  */
 @property CGSize normalItemSize;
 
+/**
+ The compact view which is displaying this flow layout.
+ */
+@property id compactView;
+
 @end

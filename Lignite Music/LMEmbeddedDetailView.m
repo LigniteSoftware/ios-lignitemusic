@@ -83,7 +83,7 @@
 - (CGSize)totalSize {
 	CGSize size = [self.detailView totalSize];
 	
-	size.height += [LMExpandableTrackListControlBar recommendedHeight];
+//	size.height += [LMExpandableTrackListControlBar recommendedHeight];
 	
 	return size;
 }

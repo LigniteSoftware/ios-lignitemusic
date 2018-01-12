@@ -272,6 +272,7 @@
 	
 	[self setButtonBarBottomConstraintConstant:self.buttonBar.frame.size.height
                                              + self.viewAttachedToButtonBar.frame.size.height
+											 + (LMLayoutManager.isiPhoneX ? (self.buttonBar.frame.size.width + 20) : 0)
 									completion:^(BOOL finished) {
 										LMButtonNavigationBar *strongSelf = weakSelf;
 										if(!strongSelf){
@@ -856,6 +857,10 @@
 		
 		if([LMLayoutManager isiPhoneX]){
 			[self bringSubviewToFront:self.iPhoneXBottomCoverView];
+			
+			[NSTimer scheduledTimerWithTimeInterval:0.10 block:^{
+				[self maximize:NO];
+			} repeats:NO];
 		}
 		
 //		self.sourceSelector.hidden = YES;
