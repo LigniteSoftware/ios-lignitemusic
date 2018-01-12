@@ -809,7 +809,9 @@ LMControlBarViewDelegate
 		LMCompactBrowsingView *compactView = self.currentSource;
 		NSInteger indexScrolledTo = [compactView scrollToItemWithPersistentID:persistentID];
 		if(indexScrolledTo > -1){
-			[self.compactView tappedBigListEntryAtIndex:indexScrolledTo];
+			[NSTimer scheduledTimerWithTimeInterval:0.60 block:^{
+				[self.compactView tappedBigListEntryAtIndex:indexScrolledTo];
+			} repeats:NO];
 		}
 	}
 	
@@ -1417,9 +1419,9 @@ LMControlBarViewDelegate
 		 ^(BOOL authorized) {
 			NSLog(@"Authorized: %d", authorized);
 			
-			if(!authorized){
-				[[LMImageManager sharedImageManager] clearAllCaches];
-			}
+//			if(!authorized){
+//				[[LMImageManager sharedImageManager] clearAllCaches];
+//			}
 			
 			MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
 			

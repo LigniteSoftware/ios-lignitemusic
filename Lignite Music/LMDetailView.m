@@ -49,6 +49,11 @@
  */
 @property BOOL brokeScrollingThreshhold;
 
+/**
+ The label for when there's no music here.
+ */
+@property UILabel *noObjectsLabel;
+
 @end
 
 @implementation LMDetailView
@@ -527,6 +532,23 @@
 		[self.collectionView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
 		//		self.collectionView.hidden = YES;
 		
+		
+		
+		self.noObjectsLabel = [UILabel newAutoLayoutView];
+		self.noObjectsLabel.numberOfLines = 0;
+		self.noObjectsLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:[LMLayoutManager isExtraSmall] ? 16.0f : 18.0f];
+		self.noObjectsLabel.text = NSLocalizedString(@"TheresNothingHere", nil);
+		self.noObjectsLabel.textAlignment = NSTextAlignmentLeft;
+		[self addSubview:self.noObjectsLabel];
+		
+		[self.noObjectsLabel autoPinEdgeToSuperviewMargin:ALEdgeTop].constant = 10;
+		[self.noObjectsLabel autoPinEdgeToSuperviewMargin:ALEdgeLeading].constant = 10;
+		[self.noObjectsLabel autoPinEdgeToSuperviewMargin:ALEdgeTrailing].constant = -83.0f;
+		
+		self.noObjectsLabel.hidden = (self.musicTrackCollection.count > 0);
+		
+		
+		
 		[self.musicPlayer addMusicDelegate:self];
 		
 		
@@ -542,6 +564,12 @@
 		self.albumTileViewLeadingConstraint.constant = -self.frame.size.width;
 		self.albumTileView.hidden = YES;
 	}
+	
+	NSLog(@"Frame %@", NSStringFromCGRect(self.frame));
+	
+	[UIView animateWithDuration:0.2 animations:^{
+		self.noObjectsLabel.alpha = self.frame.size.height < 1 ? 0.0 : 1.0;
+	}];
 	
 	[super layoutSubviews];
 }
