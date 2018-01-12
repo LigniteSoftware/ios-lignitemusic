@@ -142,11 +142,17 @@
 	
 	NSInteger amountOfItems = [self.collectionView.dataSource collectionView:self.collectionView numberOfItemsInSection:1];
 	if(amountOfItems > 0){
-		size.height += ([self frameForCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] detailViewDisplayMode:LMDetailViewDisplayModeNone].size.height * amountOfItems)/self.itemsPerRow;
-		size.height += ((amountOfItems/self.itemsPerRow) + 5) * COMPACT_VIEW_SPACING_BETWEEN_ITEMS;
+		NSInteger amountOfRows = (amountOfItems/self.itemsPerRow) + (((amountOfItems % self.itemsPerRow) == 0) ? 0 : 1);
+		
+		size.height += [self frameForCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]
+								detailViewDisplayMode:LMDetailViewDisplayModeNone].size.height * amountOfRows;
+		
+		size.height += amountOfRows * COMPACT_VIEW_SPACING_BETWEEN_ITEMS * (LMLayoutManager.isLandscape ? 1.00f : 1.40f);
+		
+		size.height -= ((amountOfRows / 5) * COMPACT_VIEW_SPACING_BETWEEN_ITEMS); //don't ask
 	}
 	
-	size.height += 75;
+//	size.height += 75;
 	
 	return size;
 	
@@ -266,10 +272,10 @@
 	CGPoint origin = CGPointMake(((fixedIndexPathRow % factor) * (size.width+spacing)) + spacing, //The column which the cell is in
 								 ((fixedIndexPathRow / factor) * (size.height+(spacing/spacingDividerFactor))) + spacing/spacingDividerFactor); //The row
 
-	if(indexPath.row != 0){
+//	if(indexPath.row != 0){
 //		NSLog(@"%d - %@: %d to %d: %@ (%@)", (int)detailViewDisplayMode, (isDetailViewRow ? @"Detail" : (isBelowDetailViewRow ? @"Below" : (displayingDetailView ? @"Above" : @"None"))), (int)indexPath.row, (int)fixedIndexPathRow, NSStringFromCGPoint(origin), [[[self.musicTrackCollections objectAtIndex:(fixedIndexPathRow > -1) ? fixedIndexPathRow : 0] representativeItem] albumTitle]);
-	}
-		
+//	}
+	
 	CGFloat detailViewHeight = 0;
 	
 	if(isDetailViewRow || isBelowDetailViewRow){
@@ -313,6 +319,20 @@
 	
 	return itemFrame;
 }
+
+//- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
+//
+//	return 0.0;
+//}
+//
+//- (UIEdgeInsets)collectionView:(UICollectionView*)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section {
+//
+//	return UIEdgeInsetsMake(0, 0, 0, 0); // top, left, bottom, right
+//}
+//
+//- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section {
+//	return 0.0;
+//}
 
 - (UICollectionViewLayoutAttributes*)layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath {
 	UICollectionViewLayoutAttributes *attributes = [UICollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:indexPath];

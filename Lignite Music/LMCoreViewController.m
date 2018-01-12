@@ -738,15 +738,14 @@ LMControlBarViewDelegate
     [self.compactView changeBottomSpacing:bottomSpacing];
     self.titleView.songListTableView.bottomSpacing = bottomSpacing;
 	
-	if(self.buttonNavigationBar.isMinimized){
-		bottomSpacing *= 2;
-	}
-	else{
-		bottomSpacing += MIN(WINDOW_FRAME.size.width, WINDOW_FRAME.size.height) / 4.0;
-	}
+//	if(self.buttonNavigationBar.isMinimized){
+//		bottomSpacing *= 2;
+//	}
+	
+//	bottomSpacing = 0;
 	
 	UIEdgeInsets newInsets = self.compactView.collectionView.contentInset;
-	newInsets.bottom = bottomSpacing;
+	newInsets.bottom = LMLayoutManager.isLandscape ? 10 : bottomSpacing;
 	[UIView animateWithDuration:0.4 animations:^{
 		self.compactView.collectionView.contentInset = newInsets;
 	}];

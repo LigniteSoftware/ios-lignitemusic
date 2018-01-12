@@ -1133,7 +1133,7 @@
 //		else if([LMLayoutManager isiPhoneX] && isPlaylists){
 //			topInset = self.layoutManager.isLandscape ? 0 : 80;
 //		}
-		self.collectionView.contentInset = UIEdgeInsetsMake(0, 0, 150, 0);
+//		self.collectionView.contentInset = UIEdgeInsetsMake(0, 0, 150, 0);
 		[self.collectionView registerClass:[LMCollectionViewCell class] forCellWithReuseIdentifier:@"cellIdentifier"];
 		[self addSubview:self.collectionView];
 		
