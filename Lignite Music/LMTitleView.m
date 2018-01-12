@@ -7,6 +7,7 @@
 //
 
 #import <PureLayout/PureLayout.h>
+#import "LMFloatingDetailViewButton.h"
 #import "LMLayoutManager.h"
 #import "LMTitleView.h"
 #import "LMListEntry.h"
@@ -18,7 +19,7 @@
 
 #define LMTitleViewTopTrackPersistentIDKey @"LMTitleViewTopTrackPersistentIDKey"
 
-@interface LMTitleView() <LMListEntryDelegate, LMTableViewSubviewDataSource, LMMusicPlayerDelegate, UITableViewDelegate, LMLayoutChangeDelegate, LMThemeEngineDelegate>
+@interface LMTitleView() <LMListEntryDelegate, LMTableViewSubviewDataSource, LMMusicPlayerDelegate, UITableViewDelegate, LMLayoutChangeDelegate, LMThemeEngineDelegate, LMFloatingDetailViewButtonDelegate>
 
 @property LMMusicPlayer *musicPlayer;
 
@@ -50,6 +51,11 @@
 @property UILabel *noObjectsLabel;
 
 @property BOOL didJustScrollByLetter;
+
+/**
+ The shuffle button.
+ */
+@property LMFloatingDetailViewButton *shuffleButton;
 
 @end
 
@@ -514,6 +520,14 @@
 	return YES;
 }
 
+- (void)floatingDetailViewButtonTapped:(LMFloatingDetailViewButton*)button {
+	LMMusicPlayer *musicPlayer = [LMMusicPlayer sharedMusicPlayer];
+	[musicPlayer stop];
+	[musicPlayer setShuffleMode:LMMusicShuffleModeOn];
+	[musicPlayer setNowPlayingCollection:self.favourites ? self.favouritesTrackCollection : self.allSongsTrackCollection];
+	[musicPlayer play];
+}
+
 - (void)themeChanged:(LMTheme)theme {
 	if(self.musicPlayer.nowPlayingTrack){
 		[self musicTrackDidChange:self.musicPlayer.nowPlayingTrack];
@@ -532,7 +546,7 @@
 	self.songListTableView.totalAmountOfObjects = self.musicTitles.trackCount;
 	self.songListTableView.subviewDataSource = self;
 	self.songListTableView.shouldUseDividers = YES;
-	self.songListTableView.averageCellHeight = [LMLayoutManager standardListEntryHeight] * (7.5/10.0);
+	self.songListTableView.averageCellHeight = [LMLayoutManager standardListEntryHeight] * (2.5/10.0);
 	self.songListTableView.bottomSpacing = (WINDOW_FRAME.size.height/3.0);
     self.songListTableView.secondaryDelegate = self;
 	self.songListTableView.fullDividers = YES;
@@ -559,6 +573,16 @@
 	self.noObjectsLabel.hidden = (self.musicTitles.count > 0);
 	
 	
+	LMFloatingDetailViewButton *button = [LMFloatingDetailViewButton newAutoLayoutView];
+	button.type = LMFloatingDetailViewControlButtonTypeShuffle;
+	button.delegate = self;
+	[self addSubview:button];
+	
+	[button autoPinEdgeToSuperviewMargin:ALEdgeTop].constant = 8;
+	[button autoPinEdgeToSuperviewMargin:ALEdgeTrailing].constant = -4;
+//	[button autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+	[button autoSetDimension:ALDimensionWidth toSize:63.0f];
+	[button autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:button];
 	
 	
 	[self.songListTableView reloadSubviewData];

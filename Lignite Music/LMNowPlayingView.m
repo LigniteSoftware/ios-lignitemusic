@@ -892,8 +892,12 @@
 		[self setupiPadSpecificLayout];
 		
 		self.buttonStackView.spacing = [self buttonStackSpacing];
-	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		
+		if(self.nowPlayingQueueOpen){
+			[self setNowPlayingQueueOpen:YES animated:NO];
+		}
+	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+
 	}];
 }
 

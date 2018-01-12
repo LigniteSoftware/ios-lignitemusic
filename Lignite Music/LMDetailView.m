@@ -427,7 +427,9 @@
 		
 		size.height += (amountOfItems * 10)/numberOfColumns; //Spacing
 		size.height += 10;
-		size.height += (1 * normalItemSize.height); //Adjustment to make sure floating buttons fit
+		if(amountOfItems < 3){
+			size.height += (((amountOfItems == 1) ? 2 : 1) * normalItemSize.height); //Adjustment to make sure floating buttons fit
+		}
 	}
 	
 	

@@ -409,7 +409,7 @@
 		[self.collectionInfoBigListEntry autoPinEdgeToSuperviewEdge:ALEdgeTop];
 		[self.collectionInfoBigListEntry autoAlignAxisToSuperviewAxis:ALAxisVertical];
 		[self.collectionInfoBigListEntry autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.sidebarBackgroundView withMultiplier:(8.0/10.0)];
-		[self.collectionInfoBigListEntry autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.sidebarBackgroundView withMultiplier:(4.5/10.0)];
+		[self.collectionInfoBigListEntry autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.sidebarBackgroundView withMultiplier:(4.8/10.0)];
 		
 //		[self.collectionInfoBigListEntry setup];
 		

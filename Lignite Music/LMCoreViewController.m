@@ -714,14 +714,14 @@ LMControlBarViewDelegate
 - (void)viewWillDisappear:(BOOL)animated {
 	[super viewWillDisappear:animated];
 	
-	[self.buttonNavigationBar.browsingBar setShowingLetterTabs:NO];
+//	[self.buttonNavigationBar.browsingBar setShowingLetterTabs:NO];
 	[self.landscapeNavigationBar setMode:LMLandscapeNavigationBarModeWithBackButton];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 	
-	[self.buttonNavigationBar.browsingBar setShowingLetterTabs:YES];
+//	[self.buttonNavigationBar.browsingBar setShowingLetterTabs:YES];
 	[self.landscapeNavigationBar setMode:self.musicType == LMMusicTypePlaylists ? LMLandscapeNavigationBarModePlaylistView : LMLandscapeNavigationBarModeOnlyLogo];
 	
 	if(self.musicType == LMMusicTypePlaylists){

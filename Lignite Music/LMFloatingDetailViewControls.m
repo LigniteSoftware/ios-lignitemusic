@@ -37,6 +37,16 @@
 	}];
 }
 
+- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
+	for(UIView *view in self.subviews){
+		CGPoint locationInView = [view convertPoint:point fromView:self];
+		if (CGRectContainsPoint(view.bounds, locationInView)) {
+			return YES;
+		}
+	}
+	return NO;
+}
+
 - (void)layoutSubviews {
 	if(!self.didLayoutConstraints){
 		self.didLayoutConstraints = YES;
