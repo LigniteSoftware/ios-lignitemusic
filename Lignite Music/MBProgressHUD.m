@@ -709,7 +709,7 @@ static const CGFloat MBDefaultDetailsLabelFontSize = 12.f;
     }
 }
 
-- (void)setProgress:(CGFloat)progress {
+- (void)setProgress:(float)progress {
     if (progress != _progress) {
         _progress = progress;
         UIView *indicator = self.indicator;
@@ -853,7 +853,7 @@ static const CGFloat MBDefaultDetailsLabelFontSize = 12.f;
 
 #pragma mark - Properties
 
-- (void)setProgress:(CGFloat)progress {
+- (void)setProgress:(float)progress {
     if (progress != _progress) {
         _progress = progress;
         [self setNeedsDisplay];
@@ -975,7 +975,7 @@ static const CGFloat MBDefaultDetailsLabelFontSize = 12.f;
 
 #pragma mark - Properties
 
-- (void)setProgress:(CGFloat)progress {
+- (void)setProgress:(float)progress {
     if (progress != _progress) {
         _progress = progress;
         [self setNeedsDisplay];

@@ -588,14 +588,14 @@
 		else if(indexPath.row > [self collectionView:self.collectionView numberOfItemsInSection:1] && flowLayout.isDisplayingDetailView){
 			cell.backgroundColor = [UIColor redColor];
 			
-			UILabel *pleaseReport = [UILabel newAutoLayoutView];
-			pleaseReport.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:15.0f];
-			pleaseReport.textColor = [UIColor whiteColor];
-			pleaseReport.text = NSLocalizedString(@"InternalErrorOccurred_Long", nil);
-			pleaseReport.numberOfLines = 0;
-			[cell.contentView addSubview:pleaseReport];
+			UILabel *pleaseReportLabel = [UILabel newAutoLayoutView];
+			pleaseReportLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:15.0f];
+			pleaseReportLabel.textColor = [UIColor whiteColor];
+			pleaseReportLabel.text = NSLocalizedString(@"InternalErrorOccurred_Long", nil);
+			pleaseReportLabel.numberOfLines = 0;
+			[cell.contentView addSubview:pleaseReportLabel];
 			
-			[pleaseReport autoPinEdgesToSuperviewMargins];
+			[pleaseReportLabel autoPinEdgesToSuperviewMargins];
 		}
 		else{
 			BOOL isBelowDetailViewRow = (indexPath.row > flowLayout.indexOfDetailView) && (flowLayout.indexOfDetailView > -1);

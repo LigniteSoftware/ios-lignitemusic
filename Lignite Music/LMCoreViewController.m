@@ -648,9 +648,15 @@ LMControlBarViewDelegate
 			self.currentSource = self.titleView;
 			
 			if(requiresReload){
+				[self.titleView.songListTableView setContentOffset:CGPointZero animated:NO];
+				
 				[self.titleView rebuildTrackCollection];
 				[self.titleView.songListTableView reloadSubviewData];
 				[self.titleView.songListTableView reloadData];
+				
+				//Reload currently highlighted item
+				self.titleView.currentlyHighlighted = -1;
+				[self.titleView musicTrackDidChange:self.musicPlayer.nowPlayingTrack];
 				
 				[self.buttonNavigationBar.browsingBar setShowingLetterTabs:self.titleView.musicTitles.count > 0];
 			}
@@ -663,12 +669,23 @@ LMControlBarViewDelegate
 			break;
 		}
 		case LMIconFavouriteBlackFilled: {
+			BOOL requiresReload = self.titleView.favourites == NO;
+			
 			self.titleView.favourites = YES;
 			self.compactView.hidden = YES;
 			self.titleView.hidden = NO;
 			self.currentSource = self.titleView;
 			
 			self.musicType = LMMusicTypeFavourites;
+			
+			if(requiresReload){
+				[self.titleView.songListTableView setContentOffset:CGPointZero animated:NO];
+				
+				//Reload currently highlighted item
+				self.titleView.currentlyHighlighted = -1;
+				[self.titleView musicTrackDidChange:self.musicPlayer.nowPlayingTrack];
+				//				self.titleView.songListTableView.contentOffset = CGPointZero;
+			}
 			
 			[self.titleView rebuildTrackCollection];
 			[self.titleView.songListTableView reloadSubviewData];
@@ -1898,8 +1915,6 @@ LMControlBarViewDelegate
 		}
 		
 		
-#warning this is disabled
-#warning fix mismatch of amount of items with previously selected index crash
 //		if(self.previouslyOpenedDetailViewIndex > -1 && self.previouslyOpenedDetailViewIndex < self.compactView.musicTrackCollections.count){
 //			[self.compactView scrollViewToIndex:self.previouslyOpenedDetailViewIndex];
 //			NSInteger rowLimit = [LMLayoutManager amountOfCollectionViewItemsPerRowForScreenSizeClass:LMScreenSizeClassPhone isLandscape:NO];

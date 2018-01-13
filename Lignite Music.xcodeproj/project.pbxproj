@@ -254,7 +254,6 @@
 		6AC32B771DB53EB20007C67E /* icon_repeat_general.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AC32B751DB53EB20007C67E /* icon_repeat_general.png */; };
 		6AC32B7B1DB6B57B0007C67E /* LMPebbleManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AC32B7A1DB6B57B0007C67E /* LMPebbleManager.m */; };
 		6AC32B7D1DB6CD950007C67E /* icon_bug.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AC32B7C1DB6CD950007C67E /* icon_bug.png */; };
-		6AC77A091DC3B04B00BABBB3 /* LMBigListEntryTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AC77A081DC3B04B00BABBB3 /* LMBigListEntryTableView.m */; };
 		6AC77A141DC42C5500BABBB3 /* LMControlBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AC77A131DC42C5500BABBB3 /* LMControlBarView.m */; };
 		6AC77A161DC42CF400BABBB3 /* icon_playlists.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AC77A151DC42CF400BABBB3 /* icon_playlists.png */; };
 		6AC9BF051FE5C93F008C9E12 /* LMMusicPickerNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AC9BF041FE5C93F008C9E12 /* LMMusicPickerNavigationController.m */; };
@@ -730,8 +729,6 @@
 		6AC32B791DB6B57B0007C67E /* LMPebbleManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMPebbleManager.h; sourceTree = "<group>"; };
 		6AC32B7A1DB6B57B0007C67E /* LMPebbleManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMPebbleManager.m; sourceTree = "<group>"; };
 		6AC32B7C1DB6CD950007C67E /* icon_bug.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_bug.png; sourceTree = "<group>"; };
-		6AC77A071DC3B04B00BABBB3 /* LMBigListEntryTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMBigListEntryTableView.h; sourceTree = "<group>"; };
-		6AC77A081DC3B04B00BABBB3 /* LMBigListEntryTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMBigListEntryTableView.m; sourceTree = "<group>"; };
 		6AC77A121DC42C5500BABBB3 /* LMControlBarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMControlBarView.h; sourceTree = "<group>"; };
 		6AC77A131DC42C5500BABBB3 /* LMControlBarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMControlBarView.m; sourceTree = "<group>"; };
 		6AC77A151DC42CF400BABBB3 /* icon_playlists.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_playlists.png; sourceTree = "<group>"; };
@@ -1035,8 +1032,6 @@
 		6A32A9F21DC69BC60056CC60 /* TableView */ = {
 			isa = PBXGroup;
 			children = (
-				6AC77A071DC3B04B00BABBB3 /* LMBigListEntryTableView.h */,
-				6AC77A081DC3B04B00BABBB3 /* LMBigListEntryTableView.m */,
 				6A6351901D9D71D300498582 /* LMListEntry.h */,
 				6A6351911D9D71D300498582 /* LMListEntry.m */,
 				6A26B4681DE2D1A3008B5B69 /* LMSectionHeaderView.h */,
@@ -2280,7 +2275,6 @@
 				6AD5A3561FE6E14F00B7E567 /* LMRestorableNavigationController.m in Sources */,
 				6A6D56DC1EBC979B00E96213 /* LMCollectionViewFlowLayout.m in Sources */,
 				6ADA6CEB1DF84A8D0073D449 /* LMSearchViewController.m in Sources */,
-				6AC77A091DC3B04B00BABBB3 /* LMBigListEntryTableView.m in Sources */,
 				6AA445A01D5AD6AB004C6739 /* LMSettingsSwitch.m in Sources */,
 				6A32A9EF1DC6906D0056CC60 /* LMTriangleMaskView.m in Sources */,
 				6A78E6791F9E44E500B7E369 /* LMPlaylist.m in Sources */,

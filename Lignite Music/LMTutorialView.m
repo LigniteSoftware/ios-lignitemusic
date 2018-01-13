@@ -150,7 +150,7 @@
 
 + (BOOL)tutorialShouldRunForKey:(NSString*)tutorialKey {
 	return NO;
-#warning tutorial is disabled bitch
+//#warning tutorial is disabled bitch
 	
 //    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 //	    

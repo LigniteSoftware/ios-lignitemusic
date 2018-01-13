@@ -13,13 +13,12 @@
 #import "LMPhoneLandscapeDetailView.h"
 #import "LMTiledAlbumCoverView.h"
 #import "YIInnerShadowView.h"
-#import "LMControlBarView.h"
 #import "LMTriangleView.h"
 #import "LMBigListEntry.h"
 #import "LMMusicPlayer.h"
 #import "LMColour.h"
 
-@interface LMPhoneLandscapeDetailView()<LMCollectionInfoViewDelegate, LMBigListEntryDelegate, LMControlBarViewDelegate, LMMusicPlayerDelegate, LMFloatingDetailViewButtonDelegate>
+@interface LMPhoneLandscapeDetailView()<LMCollectionInfoViewDelegate, LMBigListEntryDelegate, LMFloatingDetailViewButtonDelegate>
 
 /**
  The background view for the sidebar on the left which contains the control bar and collection info.
@@ -30,26 +29,6 @@
  The big list entry which shows info on the collection being displayed.
  */
 @property LMBigListEntry *collectionInfoBigListEntry;
-
-/**
- The background view for the control bar.
- */
-@property UIView *controlBarBackgroundView;
-
-/**
- The triangle for the control bar.
- */
-@property LMTriangleView *controlBarTriangle;
-
-/**
- The control bar's inner shadow view.
- */
-@property LMVerticalControlBarInnerShadowView *controlBarInnerShadowView;
-
-/**
- The actual control bar.
- */
-@property LMControlBarView *controlBar;
 
 /**
  The shuffle button.
@@ -64,96 +43,6 @@
 @end
 
 @implementation LMPhoneLandscapeDetailView
-
-- (uint8_t)amountOfButtonsForControlBarView:(LMControlBarView*)controlBar {
-	return 3;
-}
-
-- (UIImage*)imageWithIndex:(uint8_t)index forControlBarView:(LMControlBarView*)controlBar {
-	switch(index){
-		case 0:{
-			BOOL isPlaying = [self.musicPlayer nowPlayingCollectionIsEqualTo:self.musicTrackCollection] && self.musicPlayer.playbackState == LMMusicPlaybackStatePlaying;
-			
-			return [LMAppIcon invertImage:[LMAppIcon imageForIcon:isPlaying ? LMIconPause : LMIconPlay]];
-		}
-		case 1:{
-			return [LMAppIcon imageForIcon:LMIconRepeat];
-		}
-		case 2:{
-			return [LMAppIcon imageForIcon:LMIconShuffle];
-		}
-	}
-	return [LMAppIcon imageForIcon:LMIconBug];
-}
-
-- (BOOL)buttonHighlightedWithIndex:(uint8_t)index wasJustTapped:(BOOL)wasJustTapped forControlBar:(LMControlBarView*)controlBar {
-	BOOL isPlayingMusic = (self.musicPlayer.playbackState == LMMusicPlaybackStatePlaying);
-	
-	switch(index) {
-		case 0:{ //Play button
-			LMMusicTrackCollection *trackCollection = self.musicTrackCollection;
-			if(wasJustTapped){
-				if(trackCollection.trackCount > 0){
-					if(![self.musicPlayer nowPlayingCollectionIsEqualTo:trackCollection]){
-						self.musicPlayer.autoPlay = YES;
-						[self.musicPlayer setNowPlayingCollection:trackCollection];
-						
-						[self.musicPlayer.navigationBar setSelectedTab:LMNavigationTabMiniplayer];
-						[self.musicPlayer.navigationBar maximize:NO];
-						
-						isPlayingMusic = YES;
-					}
-					else{
-						[self.musicPlayer invertPlaybackState];
-						isPlayingMusic = !isPlayingMusic;
-					}
-				}
-				return isPlayingMusic;
-			}
-			else{
-				return [self.musicPlayer nowPlayingCollectionIsEqualTo:trackCollection] && isPlayingMusic;
-			}
-		}
-		case 1: //Repeat button
-			if(wasJustTapped){
-				(self.musicPlayer.repeatMode == LMMusicRepeatModeAll)
-				? (self.musicPlayer.repeatMode = LMMusicRepeatModeNone)
-				: (self.musicPlayer.repeatMode = LMMusicRepeatModeAll);
-			}
-			NSLog(@"Repeat mode is %d", self.musicPlayer.repeatMode);
-			return (self.musicPlayer.repeatMode == LMMusicRepeatModeAll);
-		case 2: //Shuffle button
-			if(wasJustTapped){
-				self.musicPlayer.shuffleMode = !self.musicPlayer.shuffleMode;
-				
-				LMMusicTrackCollection *trackCollection = self.musicTrackCollection;
-				if(trackCollection.trackCount > 0){
-					self.musicPlayer.autoPlay = YES;
-					[self.musicPlayer setNowPlayingCollection:trackCollection];
-					
-					[self.musicPlayer.navigationBar setSelectedTab:LMNavigationTabMiniplayer];
-					[self.musicPlayer.navigationBar maximize:NO];
-					
-					isPlayingMusic = YES;
-				}
-			}
-			
-			return (self.musicPlayer.shuffleMode == LMMusicShuffleModeOn);
-	}
-	return YES;
-}
-
-- (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState {
-	[self.controlBar reloadHighlightedButtons];
-}
-
-- (void)musicTrackDidChange:(LMMusicTrack*)newTrack {
-	[self.controlBar reloadHighlightedButtons];
-}
-
-- (void)musicPlaybackModesDidChange:(LMMusicShuffleMode)shuffleMode repeatMode:(LMMusicRepeatMode)repeatMode {
-	[self.controlBar reloadHighlightedButtons];
-}
 
 - (void)sizeChangedToLargeSize:(BOOL)largeSize withHeight:(CGFloat)newHeight forBigListEntry:(LMBigListEntry *)bigListEntry {
 	NSLog(@"Size changed");
@@ -348,9 +237,7 @@
 	}
 	
 	[self.detailView setNeedsLayout];
-	[self.detailView layoutIfNeeded];
-	
-	[self.controlBar reloadHighlightedButtons];
+	[self.detailView layoutIfNeeded];	
 }
 
 - (void)floatingDetailViewButtonTapped:(LMFloatingDetailViewButton*)button {
@@ -425,41 +312,7 @@
 		[button autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.sidebarBackgroundView withMultiplier:(5.0/10.0)];
 		[button autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:button];
 		[button autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.collectionInfoBigListEntry withOffset:14];
-		
-		
-//		self.controlBarTriangle = [LMTriangleView newAutoLayoutView];
-//		self.controlBarTriangle.maskDirection = LMTriangleMaskDirectionUpwards;
-//		self.controlBarTriangle.clipsToBounds = NO;
-//		self.controlBarTriangle.triangleColour = [LMColour verticalControlBarGreyColour];
-//		[self.sidebarBackgroundView addSubview:self.controlBarTriangle];
-//
-//		[self.controlBarTriangle autoAlignAxisToSuperviewAxis:ALAxisVertical];
-//		[self.controlBarTriangle autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.collectionInfoBigListEntry];
-//		[self.controlBarTriangle autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.collectionInfoBigListEntry withMultiplier:(1.0/4.5)];
-//		[self.controlBarTriangle autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.controlBarTriangle withMultiplier:(5.0/8.0)];
-//
-//
-//		self.controlBar = [LMControlBarView newAutoLayoutView];
-//		self.controlBar.delegate = self;
-//		self.controlBar.clipsToBounds = NO;
-//		self.controlBar.verticalMode = YES;
-//		[self.sidebarBackgroundView addSubview:self.controlBar];
-//
-//		[self.controlBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-//		[self.controlBar autoAlignAxisToSuperviewAxis:ALAxisVertical];
-//		[self.controlBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.collectionInfoBigListEntry];
-//		[self.controlBar autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.controlBarTriangle];
-//
-//
-//		self.controlBarInnerShadowView = [LMVerticalControlBarInnerShadowView newAutoLayoutView];
-//		self.controlBarInnerShadowView.userInteractionEnabled = NO;
-//		[self addSubview:self.controlBarInnerShadowView];
-//
-//		[self.controlBarInnerShadowView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.controlBar];
-//		[self.controlBarInnerShadowView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.controlBar];
-//		[self.controlBarInnerShadowView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.controlBar];
-//		[self.controlBarInnerShadowView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.controlBar];
-//
+
 		
 		self.detailView = [[LMDetailView alloc] initWithMusicTrackCollection:self.musicTrackCollection musicType:self.musicType];
 //		self.detailView.backgroundColor = [UIColor blueColor];
@@ -470,14 +323,10 @@
 		[self.detailView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 		[self.detailView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 		[self.detailView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.sidebarBackgroundView];
-//		[self.detailView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.sidebarBackgroundView];
 		
 		
 		[self insertSubview:topAndBottomCoverView aboveSubview:self.detailView];
 		[self insertSubview:self.sidebarBackgroundView aboveSubview:topAndBottomCoverView];
-		
-		
-		[self.musicPlayer addMusicDelegate:self];
 	}
 }
 

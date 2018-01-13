@@ -14,20 +14,15 @@
  
  0. In general it is a good idea when translating to keep strings equal to or lesser than the length of their English counterparts. All strings have been visually prepared so they fit the app. Long strings will often cause visual troubles throughout the app.
  
- 1. The following characters in between quotes must be left in exact format and must not be deleted, changed or 
- modified in any other way:
+ 1. The following characters in between quotes must be left in exact format and must not be deleted, changed or modified in any other way:
+ 
 	"\n", "%02i", "%d", "%lu", "%@", "%%", "%f", "%.02f", "%.03f"
+ 
  Any string in the above list with a percentage (%) symbol I will now reference as "formatters".
  
- 2. Any character mentioned in point 1 that is in a string will have data injected into it. If there are more than
- one formatter, that means that data is inserted in that order. When you change strings with formatters, please do not
- change the order of the formatters or remove formatters. The order of which the data is inserted into these strings is 
- static. If your language *absolutely requires* a different order, please contact us directly.
+ 2. Any character mentioned in point 1 that is in a string will have data injected into it. If there are more than one formatter, that means that data is inserted in that order. When you change strings with formatters, please do not change the order of the formatters or remove formatters. The order of which the data is inserted into these strings is static. If your language *absolutely requires* a different order, please contact us directly.
  
- 3. If you are confused about a string, look at its key first. It may help clarify. 
- If still you have any questions about translating Lignite Music please let us know. You should not feel uncertain
- what a strinhg is doing, and if you are, just let us know and we'll clarify. Now that you've read this far, 
- please send us a picture of a walrus so we know you did. Yes, seriously.
+ 3. If you are confused about a string, look at its key first. It may help clarify. If still you have any questions about translating Lignite Music please let us know. You should not feel uncertain what a strinhg is doing, and if you are, just let us know and we'll clarify. Now that you've read this far, please send us a picture of a walrus so we know you did. Yes, seriously.
  
  4. The following words/terms should *never* be translated into your language for legal reasons:
 	"Lignite Music", "Lignite", "Pebble", "Apple Music", "Spotify", "Lignite Music", "Apple", "iTunes"
@@ -46,6 +41,7 @@
  
  */
 
+"InternalErrorOccurred_Short" = "Error, sorry";
 "InternalErrorOccurred_Long" = "A rendering error occurred, sorry!\n\nPlease email Contact@Lignite.io for support.";
 
 "NowPlayingButtonHint" = "Tap this icon when music is playing to open the now-playing window.";

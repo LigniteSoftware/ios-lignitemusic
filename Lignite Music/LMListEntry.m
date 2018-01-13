@@ -44,10 +44,10 @@
 		leftText = [self.delegate textForListEntry:self];
 	}
 	
-	self.titleLabel.text = title ? title : @"nil title";
+	self.titleLabel.text = title ? title : NSLocalizedString(@"InternalErrorOccurred_Short", nil);
 	self.subtitleLabel.text = subtitle ? subtitle : @"";
 	self.iconView.image = self.imageIsInverted ? [LMAppIcon invertImage:icon] : icon;
-	self.leftTextLabel.text = leftText ? leftText : @"what";
+	self.leftTextLabel.text = leftText ? leftText : NSLocalizedString(@"InternalErrorOccurred_Short", nil);
 	
 	if([self.delegate respondsToSelector:@selector(rightViewForListEntry:)] && self.rightViewBackgroundView){
 		for(UIView *subview in self.rightViewBackgroundView.subviews){
@@ -203,7 +203,7 @@
 	else{
 		[self.contentView autoCentreInSuperview];
 		[self.contentView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:self.contentViewHeightMultiplier];
-		[self.contentView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:self.stretchAcrossWidth ? 1.0 : 0.9];
+		[self.contentView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self].constant = self.stretchAcrossWidth ? 0 : -40;
 	}
 	
 	UIImage *icon = [self.delegate iconForListEntry:self];
@@ -225,7 +225,7 @@
 		self.iconBackgroundView.backgroundColor = [UIColor clearColor];
 		[self.contentView addSubview:self.iconBackgroundView];
 		
-		[self.iconBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:self.stretchAcrossWidth ? 0 : 10];
+		[self.iconBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:self.stretchAcrossWidth ? 0 : 0];
 		[self.iconBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 		[self.iconBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 		[self.iconBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.contentView withMultiplier:self.iconPaddingMultiplier];

@@ -84,7 +84,7 @@
 #endif
 	[Fabric with:@[[Crashlytics class]]];
 	
-	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+//	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 	
     if(LMMusicPlayer.onboardingComplete){
         self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];

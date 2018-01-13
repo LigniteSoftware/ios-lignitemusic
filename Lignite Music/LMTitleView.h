@@ -15,7 +15,9 @@
 
 @property (readonly) LMMusicTrackCollection *musicTitles;
 
-- (void)setup; //throwback
+- (void)setup DEPRECATED_ATTRIBUTE; //throwback
+- (void)musicTrackDidChange:(LMMusicTrack *)newTrack;
+@property NSInteger currentlyHighlighted;
 
 /**
  Scrolls to an index of a track.

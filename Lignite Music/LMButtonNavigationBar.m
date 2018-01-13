@@ -278,10 +278,10 @@
 	
 	__weak id weakSelf = self;
 	
-	[self setButtonBarBottomConstraintConstant:MAX(WINDOW_FRAME.size.height, WINDOW_FRAME.size.width) * 1.25
-//											 MAX(self.buttonBar.frame.size.height, self.buttonBar.frame.size.width)
-//                                             + self.viewAttachedToButtonBar.frame.size.height
-//											 + (LMLayoutManager.isiPhoneX ? (self.buttonBar.frame.size.width + 20) : 0)
+	[self setButtonBarBottomConstraintConstant://MAX(WINDOW_FRAME.size.height, WINDOW_FRAME.size.width) * 1.25
+											 MAX(self.buttonBar.frame.size.height, self.buttonBar.frame.size.width)
+                                             + self.viewAttachedToButtonBar.frame.size.height
+											 + (LMLayoutManager.isiPhoneX ? (self.buttonBar.frame.size.width + 20) : 0)
 									completion:^(BOOL finished) {
 										LMButtonNavigationBar *strongSelf = weakSelf;
 										if(!strongSelf){
@@ -304,7 +304,7 @@
 	self.minimizeButtonBottomConstraint.constant = 0;
 	
 	LMCoreViewController *coreViewController = (LMCoreViewController*)self.rootViewController;
-	[UIView animateWithDuration:0.7 animations:^{
+	[UIView animateWithDuration:1.0 animations:^{
 		[self layoutIfNeeded];
 		[coreViewController setNeedsStatusBarAppearanceUpdate];
 	}];
@@ -353,7 +353,7 @@
 	self.minimizeButtonBottomConstraint.constant = 0;
 	
 	LMCoreViewController *coreViewController = (LMCoreViewController*)self.rootViewController;
-	[UIView animateWithDuration:0.5 animations:^{
+	[UIView animateWithDuration:1.0 animations:^{
 		[self layoutIfNeeded];
 		[coreViewController setNeedsStatusBarAppearanceUpdate];
 	}];

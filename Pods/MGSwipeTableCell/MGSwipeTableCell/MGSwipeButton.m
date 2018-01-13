@@ -162,18 +162,21 @@
 }
 
 
--(BOOL) isRTLLocale
+- (BOOL)isRTLLocale
 {
-    if ([[UIView class] respondsToSelector:@selector(userInterfaceLayoutDirectionForSemanticContentAttribute:)]) {
-        return [UIView userInterfaceLayoutDirectionForSemanticContentAttribute:self.semanticContentAttribute] == UIUserInterfaceLayoutDirectionRightToLeft;
-    } else {
-        if ([self isAppExtension]) {
-            return [NSLocale characterDirectionForLanguage:[[NSLocale currentLocale] objectForKey:NSLocaleLanguageCode]]==NSLocaleLanguageDirectionRightToLeft;
-        } else {
-            UIApplication *application = [UIApplication performSelector:@selector(sharedApplication)];
-            return application.userInterfaceLayoutDirection == UIUserInterfaceLayoutDirectionRightToLeft;
-        }
-    }
+	if(@available(iOS 9.0, *)){
+		if ([[UIView class] respondsToSelector:@selector(userInterfaceLayoutDirectionForSemanticContentAttribute:)]) {
+			return [UIView userInterfaceLayoutDirectionForSemanticContentAttribute:self.semanticContentAttribute] == UIUserInterfaceLayoutDirectionRightToLeft;
+		} else {
+			if ([self isAppExtension]) {
+				return [NSLocale characterDirectionForLanguage:[[NSLocale currentLocale] objectForKey:NSLocaleLanguageCode]]==NSLocaleLanguageDirectionRightToLeft;
+			} else {
+				UIApplication *application = [UIApplication performSelector:@selector(sharedApplication)];
+				return application.userInterfaceLayoutDirection == UIUserInterfaceLayoutDirectionRightToLeft;
+			}
+		}
+	}
+	return NO;
 }
 
 @end

@@ -27,8 +27,6 @@
 //@property NSMutableArray *itemIconArray;
 //^ just retarded dude lol
 
-@property NSInteger currentlyHighlighted;
-
 @property LMOperationQueue *queue;
 
 
@@ -199,15 +197,6 @@
 	self.noObjectsLabel.text = NSLocalizedString(self.favourites ? @"NoTracksInFavourites" : @"TheresNothingHere", nil);
 }
 
-#warning deprecated son
-- (void)musicLibraryDidChange {
-	[self rebuildTrackCollection];
-	
-	[self.songListTableView reloadSubviewData];
-	
-	[self musicTrackDidChange:self.musicPlayer.nowPlayingTrack];
-}
-
 - (id)subviewAtIndex:(NSUInteger)index forTableView:(LMTableView *)tableView {
 //	UIView *testView = [UIView newAutoLayoutView];
 //	testView.backgroundColor = [LMColour randomColour];
@@ -337,12 +326,12 @@
 			LMListEntry *listEntry = [[LMListEntry alloc]initWithDelegate:self];
 			listEntry.collectionIndex = i;
 			listEntry.iPromiseIWillHaveAnIconForYouSoon = YES;
-			listEntry.alignIconToLeft = YES;
-			listEntry.stretchAcrossWidth = YES;
+			listEntry.alignIconToLeft = NO;
+			listEntry.stretchAcrossWidth = NO;
 			
-			UIColor *color = [UIColor colorWithRed:47/255.0 green:47/255.0 blue:49/255.0 alpha:1.0];
+			UIColor *colour = [UIColor colorWithRed:47/255.0 green:47/255.0 blue:49/255.0 alpha:1.0];
 			UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14.0f];
-			MGSwipeButton *saveButton = [MGSwipeButton buttonWithTitle:@"" icon:[LMAppIcon imageForIcon:LMIconAddToQueue] backgroundColor:color padding:0 callback:^BOOL(MGSwipeTableCell *sender) {
+			MGSwipeButton *saveButton = [MGSwipeButton buttonWithTitle:@"" icon:[LMAppIcon imageForIcon:LMIconAddToQueue] backgroundColor:colour padding:0 callback:^BOOL(MGSwipeTableCell *sender) {
 				LMMusicTrack *trackToQueue = [self.musicTitles.items objectAtIndex:listEntry.collectionIndex];
 				
 				[self.musicPlayer addTrackToQueue:trackToQueue];
@@ -358,7 +347,7 @@
 
 			listEntry.rightButtons = @[ saveButton ];
 			
-			MGSwipeButton *favouriteButton = [MGSwipeButton buttonWithTitle:@"" icon:[LMAppIcon imageForIcon:LMIconFavouriteWhiteFilled] backgroundColor:color padding:0 callback:^BOOL(MGSwipeTableCell *sender) {
+			MGSwipeButton *favouriteButton = [MGSwipeButton buttonWithTitle:@"" icon:[LMAppIcon imageForIcon:LMIconFavouriteWhiteFilled] backgroundColor:colour padding:0 callback:^BOOL(MGSwipeTableCell *sender) {
 				LMMusicTrack *track = [self.musicTitles.items objectAtIndex:listEntry.collectionIndex];
 				
 				if(track.isFavourite){
@@ -549,11 +538,11 @@
 	self.songListTableView.averageCellHeight = [LMLayoutManager standardListEntryHeight] * (2.5/10.0);
 	self.songListTableView.bottomSpacing = (WINDOW_FRAME.size.height/3.0);
     self.songListTableView.secondaryDelegate = self;
-	self.songListTableView.fullDividers = YES;
+//	self.songListTableView.fullDividers = YES;
 	[self addSubview:self.songListTableView];
 	
-	[self.songListTableView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:20];
-	[self.songListTableView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:20];
+	[self.songListTableView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+	[self.songListTableView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 	[self.songListTableView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 	[self.songListTableView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 	
