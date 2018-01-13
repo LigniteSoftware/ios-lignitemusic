@@ -545,7 +545,7 @@
 
 	LMCollectionViewFlowLayout *flowLayout = (LMCollectionViewFlowLayout*)collectionView.collectionViewLayout;
 //	NSLog(@"isDisplayingDetailView: %d/fixedCount: %d/amountOfOverflowingCellsForDetailView: %d", flowLayout.isDisplayingDetailView, (int)fixedCount, (int)flowLayout.amountOfOverflowingCellsForDetailView);
-	return flowLayout.isDisplayingDetailView ? (fixedCount+flowLayout.amountOfOverflowingCellsForDetailView+1) : fixedCount;
+	return flowLayout.isDisplayingDetailView ? (fixedCount + flowLayout.amountOfOverflowingCellsForDetailView + 1) : fixedCount;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -585,8 +585,17 @@
 			
 //			[self.coreViewController.buttonNavigationBar minimize:YES];
 		}
-		else if(indexPath.row >= [self collectionView:self.collectionView numberOfItemsInSection:1] && flowLayout.isDisplayingDetailView){
-			cell.backgroundColor = [UIColor clearColor];
+		else if(indexPath.row > [self collectionView:self.collectionView numberOfItemsInSection:1] && flowLayout.isDisplayingDetailView){
+			cell.backgroundColor = [UIColor redColor];
+			
+			UILabel *pleaseReport = [UILabel newAutoLayoutView];
+			pleaseReport.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:15.0f];
+			pleaseReport.textColor = [UIColor whiteColor];
+			pleaseReport.text = NSLocalizedString(@"InternalErrorOccurred_Long", nil);
+			pleaseReport.numberOfLines = 0;
+			[cell.contentView addSubview:pleaseReport];
+			
+			[pleaseReport autoPinEdgesToSuperviewMargins];
 		}
 		else{
 			BOOL isBelowDetailViewRow = (indexPath.row > flowLayout.indexOfDetailView) && (flowLayout.indexOfDetailView > -1);

@@ -241,9 +241,9 @@
 	
 	NSInteger fixedIndexPathRow = (indexPath.row - isBelowDetailViewRow) + ((isDetailViewRow && amountOfItemsAfterDetailView < 0) ? (self.itemsPerRow+amountOfItemsAfterDetailView) : 0);
 	
-	if(isBelowDetailViewRow){
-		NSLog(@"Fuck %d/%d %d %@", (int)indexPath.row, (int)fixedIndexPathRow, (int)detailViewIndexToUse, [[[self.musicTrackCollections objectAtIndex:(fixedIndexPathRow > -1) ? fixedIndexPathRow : 0] representativeItem] albumTitle]);
-	}
+//	if(isBelowDetailViewRow){
+//		NSLog(@"Fuck %d/%d %d %@", (int)indexPath.row, (int)fixedIndexPathRow, (int)detailViewIndexToUse, [[[self.musicTrackCollections objectAtIndex:(fixedIndexPathRow > -1) ? fixedIndexPathRow : 0] representativeItem] albumTitle]);
+//	}
 	
 	CGSize collectionViewSize = self.collectionView.frame.size; //Get the current size of the collection view
 	if(self.musicType == LMMusicTypePlaylists && !LMLayoutManager.isLandscape){

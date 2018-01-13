@@ -584,7 +584,7 @@ LMControlBarViewDelegate
 		[self.currentSource setHidden:YES];
 		[self.buttonNavigationBar setSelectedTab:LMNavigationTabBrowse];
 		
-		[self.buttonNavigationBar setCurrentSourceIcon:[[source.icon averageColour] isLight] ? source.icon : [LMAppIcon invertImage:source.icon]];
+		[self.buttonNavigationBar setCurrentSourceIcon:source.lmIcon];
 	}
 	
 	NSLog(@"New source %@", source.title);

@@ -7,9 +7,12 @@
 //
 
 #import <PureLayout/PureLayout.h>
+
+#import "UIImage+AverageColour.h"
 #import "LMButtonNavigationBar.h"
 #import "LMSourceSelectorView.h"
 #import "LMCoreViewController.h"
+#import "UIColor+isLight.h"
 #import "LMLayoutManager.h"
 #import "NSTimer+Blocks.h"
 #import "LMThemeEngine.h"
@@ -109,6 +112,11 @@
  For the fucking status bar.
  */
 @property UIView *iPhoneXStatusBarCoverView;
+
+/**
+ The restored icon for the source.
+ */
+@property LMIcon stateRestoredSourceLMIcon;
 
 @end
 
@@ -408,7 +416,10 @@
 	}
 }
 
-- (void)setCurrentSourceIcon:(UIImage*)icon {
+- (void)setCurrentSourceIcon:(LMIcon)icon {
+	UIImage *rawIconImage = [LMAppIcon imageForIcon:icon];
+	UIImage *iconImage = [[rawIconImage averageColour] isLight] ? rawIconImage : [LMAppIcon invertImage:rawIconImage];
+	
 	UIView *sourceBackgroundView = [self.buttonBar backgroundViewForIndex:LMNavigationTabView];
 	UIImageView *iconView;
 	for(int i = 0; i < sourceBackgroundView.subviews.count; i++){
@@ -417,7 +428,17 @@
 			iconView = subview;
 		}
 	}
-	iconView.image = icon;
+	
+	if(iconView){
+		iconView.image = iconImage;
+	}
+	else{
+		self.stateRestoredSourceLMIcon = icon;
+	}
+	
+	if(iconView == nil){
+		NSLog(@"Fuck");
+	}
 }
 
 - (void)clickedButton:(LMButton *)button {
@@ -674,7 +695,8 @@
 		
 		self.buttonBar = [LMButtonBar newAutoLayoutView];
 		self.buttonBar.amountOfButtons = 3;
-		self.buttonBar.buttonIconsArray = @[ @(LMIconBrowse), @(LMIconMiniplayer), @(LMIconSource) ];
+		NSNumber *sourceIcon = (self.stateRestoredSourceLMIcon == 0) ? @(LMIconSource) : @(self.stateRestoredSourceLMIcon);
+		self.buttonBar.buttonIconsArray = @[ @(LMIconBrowse), @(LMIconMiniplayer), sourceIcon ];
 		self.buttonBar.buttonScaleFactorsArray = @[ @(1.0/2.5), @(1.0/2.5), @(1.0/2.5) ];
 		self.buttonBar.buttonIconsToInvertArray = @[ @(LMNavigationTabBrowse), @(LMNavigationTabView) ];
 		self.buttonBar.delegate = self;

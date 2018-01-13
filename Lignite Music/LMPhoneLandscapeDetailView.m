@@ -175,7 +175,7 @@
 					}
 				}
 				
-				tiledAlbumCover.hidden = self.playlist.image ? YES : NO;
+				tiledAlbumCover.hidden = (self.playlist.image || (self.playlist.trackCollection.count == 0)) ? YES : NO;
 				
 				if(self.playlist.image || (self.playlist.trackCollection.count == 0)){
 					rootImageView.image = rootImageView.image;
@@ -231,7 +231,7 @@
 				
 				[tiledAlbumCover autoPinEdgesToSuperviewEdges];
 				
-				tiledAlbumCover.hidden = self.playlist.image ? YES : NO;
+				tiledAlbumCover.hidden = (self.playlist.image || (self.playlist.trackCollection.count == 0)) ? YES : NO;
 				
 				NSLog(@"Hidden %d", tiledAlbumCover.hidden);
 				

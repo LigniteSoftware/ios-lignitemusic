@@ -122,7 +122,7 @@ typedef NS_ENUM(NSUInteger, LMNavigationTab) {
 
  @param icon The new icon.
  */
-- (void)setCurrentSourceIcon:(UIImage*)icon;
+- (void)setCurrentSourceIcon:(LMIcon)icon;
 
 /**
  Reloads the layout of itself.

@@ -46,6 +46,8 @@
  
  */
 
+"InternalErrorOccurred_Long" = "A rendering error occurred, sorry!\n\nPlease email Contact@Lignite.io for support.";
+
 "NowPlayingButtonHint" = "Tap this icon when music is playing to open the now-playing window.";
 
 "ConvertPlaylistTitle" = "Playlist editing";
