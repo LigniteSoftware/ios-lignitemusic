@@ -48,6 +48,12 @@
  
  */
 
+"TrackRestarted" = "Restarted track";
+
+"InternalErrorOccurred_Long" = "Ein Rendering Fehler ist aufgetreten, sorry!\n\nFür Unterstützung melde dich bitte unter contact@lignite.io.";
+
+"InternalErrorOccurred_Short" = "Fehler, sorry";
+
 "NowPlayingButtonHint" = "Tippe auf dieses Icon wenn die Musik spielt, um die Wiedergabeanzeige zu öffnen.";
 
 "ConvertPlaylistTitle" = "Wiedergabeliste Bearbeitung";

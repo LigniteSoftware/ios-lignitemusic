@@ -11,7 +11,7 @@
 #import "LMMusicPlayer.h"
 #import "LMCoreViewController.h"
 
-@interface LMTitleView : UIView
+@interface LMTitleView : LMView
 
 @property (readonly) LMMusicTrackCollection *musicTitles;
 
@@ -67,5 +67,10 @@
  Whether or not to display favourites. NO for all titles.
  */
 @property BOOL favourites;
+
+/**
+ The amount to offset the shuffle button in landscape, because otherwise, it will be covered by the button navigation.
+ */
+@property CGFloat shuffleButtonLandscapeOffset;
 
 @end

@@ -634,12 +634,13 @@
 //            NSLog(@"Need to create %ld", i);
 			LMListEntry *listEntry = [[LMListEntry alloc]initWithDelegate:self];
 			listEntry.collectionIndex = i;
-			listEntry.alignIconToLeft = YES;
+			listEntry.alignIconToLeft = NO;
+			listEntry.stretchAcrossWidth = NO;
 			listEntry.iPromiseIWillHaveAnIconForYouSoon = YES;
 			
-			UIColor *color = [UIColor colorWithRed:47/255.0 green:47/255.0 blue:49/255.0 alpha:1.0];
+			UIColor *colour = [UIColor colorWithRed:47/255.0 green:47/255.0 blue:49/255.0 alpha:1.0];
 			UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14.0f];
-			MGSwipeButton *saveButton = [MGSwipeButton buttonWithTitle:@"" icon:[LMAppIcon imageForIcon:LMIconRemoveFromQueue] backgroundColor:color padding:0 callback:^BOOL(MGSwipeTableCell *sender) {
+			MGSwipeButton *saveButton = [MGSwipeButton buttonWithTitle:@"" icon:[LMAppIcon imageForIcon:LMIconRemoveFromQueue] backgroundColor:colour padding:0 callback:^BOOL(MGSwipeTableCell *sender) {
 				LMMusicTrack *trackToRemove = [self.musicPlayer.nowPlayingCollection.items objectAtIndex:listEntry.collectionIndex];
 				
 				[self.musicPlayer removeTrackFromQueue:trackToRemove];
@@ -674,7 +675,7 @@
 			listEntry.rightButtonExpansionColour = [UIColor colorWithRed:0.92 green:0.00 blue:0.00 alpha:1.0];
 			
 			
-			MGSwipeButton *favouriteButton = [MGSwipeButton buttonWithTitle:@"" icon:[LMAppIcon imageForIcon:LMIconFavouriteWhiteFilled] backgroundColor:color padding:0 callback:^BOOL(MGSwipeTableCell *sender) {
+			MGSwipeButton *favouriteButton = [MGSwipeButton buttonWithTitle:@"" icon:[LMAppIcon imageForIcon:LMIconFavouriteWhiteFilled] backgroundColor:colour padding:0 callback:^BOOL(MGSwipeTableCell *sender) {
 				LMMusicTrack *track = [self.musicPlayer.nowPlayingCollection.items objectAtIndex:listEntry.collectionIndex];
 				
 				if(track.isFavourite){
@@ -897,7 +898,7 @@
 			[self setNowPlayingQueueOpen:YES animated:NO];
 		}
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-
+		[self.queueTableView reloadData];
 	}];
 }
 
@@ -970,6 +971,10 @@
 				  ? 0.2
 				  : 0.4) //Is landscape iPad? Use 0.4, otherwise, use what's below
 			   : 0.40))/([LMLayoutManager isiPhoneX] ? ([LMLayoutManager isLandscape] ? 3.5 : 5.5) : 5.5); //Otherwise, if it's not iPad, use 0.40 and divide the total result by this shit
+}
+
+- (void)restartTrack {
+	[self.musicPlayer skipToBeginning];
 }
 
 - (void)layoutSubviews {

@@ -270,8 +270,6 @@
 }
 
 - (void)layoutSubviews {
-    [super layoutSubviews];
-	
 //    NSLog(@"Prick %@ %@", self.title, NSStringFromCGSize(self.contentSize));
     
 	//Fixes dividers going off to the right way too far
@@ -302,6 +300,8 @@
 	}
 	
 	self.previousFrame = self.frame;
+	
+	[super layoutSubviews];
 }
 
 /**
@@ -314,7 +314,7 @@
 	
 	if(self.shouldUseDividers && ![self.dividerSectionsToIgnore containsObject:@(section)]){
 		uint8_t dividerHeight = 1;
-		float frameWidth = (frame.size.width * (self.fullDividers ? 1.0 : 0.9));
+		float frameWidth = self.fullDividers ? (frame.size.width * (self.fullDividers ? 1.0 : 0.9)) : (frame.size.width - 40);
 		float frameX = (frame.size.width-frameWidth)/2;
 		float frameY = frame.size.height/2 - dividerHeight/2;
 		UIView *dividerView = [[UIView alloc]initWithFrame:CGRectMake(frameX, frameY, frameWidth, dividerHeight)];

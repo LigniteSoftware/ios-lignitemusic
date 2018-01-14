@@ -18,6 +18,7 @@
 		6A08AF0F1EBF2A860069C9CC /* LMExpandableInnerShadowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A08AF0E1EBF2A860069C9CC /* LMExpandableInnerShadowView.m */; };
 		6A08AF131EBF30B00069C9CC /* LMTriangleInnerShadowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A08AF121EBF30B00069C9CC /* LMTriangleInnerShadowView.m */; };
 		6A08AF1B1EC04AED0069C9CC /* LMExpandableTrackListControlBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A08AF1A1EC04AED0069C9CC /* LMExpandableTrackListControlBar.m */; };
+		6A10D46D200B21F000DC6935 /* icon_rewind.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A10D46C200B21EF00DC6935 /* icon_rewind.png */; };
 		6A13A8011E011D19006A768B /* SLColorArt.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A13A7FC1E011D19006A768B /* SLColorArt.m */; };
 		6A13A8021E011D19006A768B /* UIImage+ColorArt.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A13A7FE1E011D19006A768B /* UIImage+ColorArt.m */; };
 		6A13A8031E011D19006A768B /* UIImage+Scale.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A13A8001E011D19006A768B /* UIImage+Scale.m */; };
@@ -427,6 +428,7 @@
 		6A08AF191EC04AED0069C9CC /* LMExpandableTrackListControlBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMExpandableTrackListControlBar.h; sourceTree = "<group>"; };
 		6A08AF1A1EC04AED0069C9CC /* LMExpandableTrackListControlBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMExpandableTrackListControlBar.m; sourceTree = "<group>"; };
 		6A106B121BC710D4003AE55A /* Lignite Music.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Lignite Music.entitlements"; sourceTree = "<group>"; };
+		6A10D46C200B21EF00DC6935 /* icon_rewind.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_rewind.png; sourceTree = "<group>"; };
 		6A13A7FB1E011D19006A768B /* SLColorArt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLColorArt.h; sourceTree = "<group>"; };
 		6A13A7FC1E011D19006A768B /* SLColorArt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLColorArt.m; sourceTree = "<group>"; };
 		6A13A7FD1E011D19006A768B /* UIImage+ColorArt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ColorArt.h"; sourceTree = "<group>"; };
@@ -1170,6 +1172,7 @@
 		6A66C76C1CDA1B4E009019CF /* Icons */ = {
 			isa = PBXGroup;
 			children = (
+				6A10D46C200B21EF00DC6935 /* icon_rewind.png */,
 				6A37B1E11FB3AC7300934A75 /* icon_favourite_white.png */,
 				6A98CBCB1EB4E9BF003B8B8E /* icon_3_dots_horizontal.png */,
 				6A98CBCC1EB4E9BF003B8B8E /* icon_3_dots_vertical.png */,
@@ -2050,6 +2053,7 @@
 				6A5168931E08F4C800A6446F /* icon_buy.png in Resources */,
 				6ACFB9721E8CE103009811F0 /* icon_tutorial_swipe.png in Resources */,
 				6AFF01A01DDE7D2D00F24D8E /* tutorial_browsing.png in Resources */,
+				6A10D46D200B21F000DC6935 /* icon_rewind.png in Resources */,
 				6A339FC51FD853F500B1A447 /* icon_left_arrow.png in Resources */,
 				6A26B4701DE40824008B5B69 /* icon_download.png in Resources */,
 				6A43BCE91DDFA66B009FB0E9 /* onboarding_us.png in Resources */,

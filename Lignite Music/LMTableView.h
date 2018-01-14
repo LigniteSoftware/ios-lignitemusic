@@ -137,7 +137,7 @@
 /**
  Reloads the subview sizes (cell sizes) based on delegate provided data.
  */
-- (void)reloadSubviewSizes;
+- (void)reloadSubviewSizes DEPRECATED_ATTRIBUTE;
 
 /**
  Briefly focus a cell at a certain index.

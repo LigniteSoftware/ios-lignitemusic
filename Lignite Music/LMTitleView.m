@@ -55,11 +55,33 @@
  */
 @property LMFloatingDetailViewButton *shuffleButton;
 
+/**
+ The trailing constraint of the shuffle button, used for offsetting in landscape because of the button navigation bar.
+ */
+@property NSLayoutConstraint *shuffleButtonTrailingConstraint;
+
 @end
 
 @implementation LMTitleView
 
 @synthesize musicTitles = _musicTitles;
+@synthesize shuffleButtonLandscapeOffset = _shuffleButtonLandscapeOffset;
+
+- (void)setShuffleButtonLandscapeOffset:(CGFloat)shuffleButtonLandscapeOffset {
+	_shuffleButtonLandscapeOffset = shuffleButtonLandscapeOffset;
+	
+	[self layoutIfNeeded];
+	
+	self.shuffleButtonTrailingConstraint.constant = -shuffleButtonLandscapeOffset;
+	
+	[UIView animateWithDuration:0.2 animations:^{
+		[self layoutIfNeeded];
+	}];
+}
+
+- (CGFloat)shuffleButtonLandscapeOffset {
+	return _shuffleButtonLandscapeOffset;
+}
 
 - (LMMusicTrackCollection*)musicTitles {
 	if(self.favourites){
@@ -195,6 +217,8 @@
 	
 	self.noObjectsLabel.hidden = (self.musicTitles.count > 0);
 	self.noObjectsLabel.text = NSLocalizedString(self.favourites ? @"NoTracksInFavourites" : @"TheresNothingHere", nil);
+	
+	self.shuffleButton.hidden = !self.noObjectsLabel.hidden;
 }
 
 - (id)subviewAtIndex:(NSUInteger)index forTableView:(LMTableView *)tableView {
@@ -206,8 +230,10 @@
 //
 	
 	if(index >= self.musicTitles.count){
+		NSLog(@"Rejecting index, it's greater than the count of musicTitles");
 		return nil;
 	}
+
 	
 	LMListEntry *entry = [self.itemArray objectAtIndex:index % self.itemArray.count];
 	entry.collectionIndex = index;
@@ -266,6 +292,12 @@
 	
 	[entry reloadContents];
 	
+	
+	if(!entry){
+		NSLog(@"+++ Title view %d entry %p", (int)index, entry);
+		NSLog(@":(");
+	}
+	
 	return entry;
 }
 
@@ -323,7 +355,7 @@
 		self.itemArray = [NSMutableArray new];
 //		self.itemIconArray = [NSMutableArray new];
 		for(int i = 0; i < amountOfObjects; i++){
-			LMListEntry *listEntry = [[LMListEntry alloc]initWithDelegate:self];
+			LMListEntry *listEntry = [[LMListEntry alloc] initWithDelegate:self];
 			listEntry.collectionIndex = i;
 			listEntry.iPromiseIWillHaveAnIconForYouSoon = YES;
 			listEntry.alignIconToLeft = NO;
@@ -464,7 +496,7 @@
 
 - (NSString*)subtitleForListEntry:(LMListEntry*)entry {
 	if(entry.collectionIndex >= self.musicTitles.items.count){
-		return @"Please email contact@lignite.io";
+		return @"Email contact@lignite.io";
 	}
 	
 	LMMusicTrack *track = [self.musicTitles.items objectAtIndex:entry.collectionIndex];
@@ -501,7 +533,11 @@
 	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		[self.songListTableView reloadData];
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-		//Nothing, yet
+		[self.songListTableView reloadData];
+		
+		if(!self.layoutManager.isLandscape){
+			[self setShuffleButtonLandscapeOffset:4.0f];
+		}
 	}];
 }
 
@@ -523,62 +559,76 @@
 	}
 }
 
+- (void)layoutSubviews {
+	if(!self.didLayoutConstraints){
+		self.didLayoutConstraints = YES;
+		
+		[self rebuildTrackCollection];
+		
+		self.layoutManager = [LMLayoutManager sharedLayoutManager];
+		[self.layoutManager addDelegate:self];
+		
+		[[LMThemeEngine sharedThemeEngine] addDelegate:self];
+		
+		self.songListTableView = [LMTableView newAutoLayoutView];
+		self.songListTableView.totalAmountOfObjects = self.musicTitles.trackCount;
+		self.songListTableView.subviewDataSource = self;
+		self.songListTableView.shouldUseDividers = YES;
+		self.songListTableView.averageCellHeight = [LMLayoutManager standardListEntryHeight] * (2.5/10.0);
+		self.songListTableView.bottomSpacing = (WINDOW_FRAME.size.height/3.0);
+		self.songListTableView.secondaryDelegate = self;
+		[self addSubview:self.songListTableView];
+		
+		[self.songListTableView reloadSubviewData];
+		
+		[self.songListTableView autoPinEdgesToSuperviewEdges];
+		
+//		[self.songListTableView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+//		[self.songListTableView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+//		[self.songListTableView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+//		[self.songListTableView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+		
+		
+		self.noObjectsLabel = [UILabel newAutoLayoutView];
+		self.noObjectsLabel.numberOfLines = 0;
+		self.noObjectsLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:[LMLayoutManager isExtraSmall] ? 16.0f : 18.0f];
+		self.noObjectsLabel.text = NSLocalizedString(self.favourites ? @"NoTracksInFavourites" : @"TheresNothingHere", nil);
+		self.noObjectsLabel.textAlignment = NSTextAlignmentLeft;
+		[self addSubview:self.noObjectsLabel];
+		
+		[self.noObjectsLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:[LMLayoutManager isiPad] ? 100 : 20];
+		[self.noObjectsLabel autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:20];
+		[self.noObjectsLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:[LMLayoutManager isiPad] ? 100 : 20];
+		//	[self.noObjectsLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(3.0/4.0)];
+		
+		self.noObjectsLabel.hidden = (self.musicTitles.count > 0);
+		
+		
+		self.shuffleButton = [LMFloatingDetailViewButton newAutoLayoutView];
+		self.shuffleButton.type = LMFloatingDetailViewControlButtonTypeShuffle;
+		self.shuffleButton.delegate = self;
+		[self addSubview:self.shuffleButton];
+		
+		[self.shuffleButton autoPinEdgeToSuperviewMargin:ALEdgeTop].constant = 8;
+		self.shuffleButtonTrailingConstraint = [self.shuffleButton autoPinEdgeToSuperviewMargin:ALEdgeTrailing];
+		[self setShuffleButtonLandscapeOffset:4.0f];
+		//	[button autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+		[self.shuffleButton autoSetDimension:ALDimensionWidth toSize:63.0f];
+		[self.shuffleButton autoMatchDimension:ALDimensionHeight
+								   toDimension:ALDimensionWidth
+										ofView:self.shuffleButton];
+		self.shuffleButton.hidden = !self.noObjectsLabel.hidden;
+		
+		[self.musicPlayer addMusicDelegate:self];
+		[self musicTrackDidChange:self.musicPlayer.nowPlayingTrack];
+		[self musicPlaybackStateDidChange:self.musicPlayer.playbackState];
+	}
+	
+	[super layoutSubviews];
+}
+
 - (void)setup {
-	[self rebuildTrackCollection];
-	
-	self.layoutManager = [LMLayoutManager sharedLayoutManager];
-	[self.layoutManager addDelegate:self];
-	
-	[[LMThemeEngine sharedThemeEngine] addDelegate:self];
-		
-	self.songListTableView = [LMTableView newAutoLayoutView];
-	self.songListTableView.totalAmountOfObjects = self.musicTitles.trackCount;
-	self.songListTableView.subviewDataSource = self;
-	self.songListTableView.shouldUseDividers = YES;
-	self.songListTableView.averageCellHeight = [LMLayoutManager standardListEntryHeight] * (2.5/10.0);
-	self.songListTableView.bottomSpacing = (WINDOW_FRAME.size.height/3.0);
-    self.songListTableView.secondaryDelegate = self;
-//	self.songListTableView.fullDividers = YES;
-	[self addSubview:self.songListTableView];
-	
-	[self.songListTableView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-	[self.songListTableView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	[self.songListTableView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-	[self.songListTableView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-	
-	
-	self.noObjectsLabel = [UILabel newAutoLayoutView];
-	self.noObjectsLabel.numberOfLines = 0;
-	self.noObjectsLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:[LMLayoutManager isExtraSmall] ? 16.0f : 18.0f];
-	self.noObjectsLabel.text = NSLocalizedString(self.favourites ? @"NoTracksInFavourites" : @"TheresNothingHere", nil);
-	self.noObjectsLabel.textAlignment = NSTextAlignmentLeft;
-	[self addSubview:self.noObjectsLabel];
-	
-	[self.noObjectsLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:[LMLayoutManager isiPad] ? 100 : 20];
-	[self.noObjectsLabel autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:20];
-	[self.noObjectsLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:[LMLayoutManager isiPad] ? 100 : 20];
-//	[self.noObjectsLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(3.0/4.0)];
-	
-	self.noObjectsLabel.hidden = (self.musicTitles.count > 0);
-	
-	
-	LMFloatingDetailViewButton *button = [LMFloatingDetailViewButton newAutoLayoutView];
-	button.type = LMFloatingDetailViewControlButtonTypeShuffle;
-	button.delegate = self;
-	[self addSubview:button];
-	
-	[button autoPinEdgeToSuperviewMargin:ALEdgeTop].constant = 8;
-	[button autoPinEdgeToSuperviewMargin:ALEdgeTrailing].constant = -4;
-//	[button autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
-	[button autoSetDimension:ALDimensionWidth toSize:63.0f];
-	[button autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:button];
-	
-	
-	[self.songListTableView reloadSubviewData];
-		
-	[self.musicPlayer addMusicDelegate:self];
-	[self musicTrackDidChange:self.musicPlayer.nowPlayingTrack];
-	[self musicPlaybackStateDidChange:self.musicPlayer.playbackState];
+	[self layoutSubviews];
 }
 
 - (MPMediaEntityPersistentID)topTrackPersistentID {

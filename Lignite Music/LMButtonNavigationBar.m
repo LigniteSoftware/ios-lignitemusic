@@ -111,7 +111,7 @@
 /**
  For the fucking status bar.
  */
-@property UIView *iPhoneXStatusBarCoverView;
+@property UIView *statusBarCoverView;
 
 /**
  The restored icon for the source.
@@ -854,22 +854,22 @@
 		}];
 		[LMLayoutManager addNewiPadConstraints:sourceSelectoriPadConstraints];
 		
-		if([LMLayoutManager isiPhoneX]){
-			self.iPhoneXStatusBarCoverView = [UIView newAutoLayoutView];
-			self.iPhoneXStatusBarCoverView.backgroundColor = [UIColor whiteColor];
-			[self.sourceSelector addSubview:self.iPhoneXStatusBarCoverView];
+		if(![LMLayoutManager isiPad]){
+			self.statusBarCoverView = [UIView newAutoLayoutView];
+			self.statusBarCoverView.backgroundColor = [UIColor whiteColor];
+			[self.sourceSelector addSubview:self.statusBarCoverView];
 			
-			[self.iPhoneXStatusBarCoverView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-			[self.iPhoneXStatusBarCoverView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-			[self.iPhoneXStatusBarCoverView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+			[self.statusBarCoverView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+			[self.statusBarCoverView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+			[self.statusBarCoverView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 			
 			NSArray *iPhoneXStatusBarCoverViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-				[self.iPhoneXStatusBarCoverView autoSetDimension:ALDimensionHeight toSize:64.0f];
+				[self.statusBarCoverView autoSetDimension:ALDimensionHeight toSize:[LMLayoutManager isiPhoneX] ? 64.0f : 20.0];
 			}];
 			[LMLayoutManager addNewPortraitConstraints:iPhoneXStatusBarCoverViewPortraitConstraints];
 			
 			NSArray *iPhoneXStatusBarCoverViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-				[self.iPhoneXStatusBarCoverView autoSetDimension:ALDimensionHeight toSize:0.0f];
+				[self.statusBarCoverView autoSetDimension:ALDimensionHeight toSize:0.0f];
 			}];
 			[LMLayoutManager addNewLandscapeConstraints:iPhoneXStatusBarCoverViewLandscapeConstraints];
 		}

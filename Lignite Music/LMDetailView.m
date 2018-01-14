@@ -309,7 +309,7 @@
 		listEntry.associatedData = [self.musicTrackCollectionToUseForSpecificTrackCollection.items objectAtIndex:indexAdjustedForShuffleButton];
 		listEntry.isLabelBased = (self.musicType == LMMusicTypeAlbums || self.musicType == LMMusicTypeCompilations);
 		listEntry.alignIconToLeft = NO;
-		listEntry.stretchAcrossWidth = YES;
+		listEntry.stretchAcrossWidth = NO;
 		
 		
 		UIColor *colour = [UIColor colorWithRed:47/255.0 green:47/255.0 blue:49/255.0 alpha:1.0];
@@ -356,7 +356,10 @@
 		[cell.contentView addSubview:listEntry];
 		listEntry.backgroundColor = [LMColour superLightGreyColour];
 		
-		[listEntry autoPinEdgesToSuperviewEdges];
+		[listEntry autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[listEntry autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[listEntry autoPinEdgeToSuperviewEdge:ALEdgeTop];
+		[listEntry autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 			
 		[listEntry changeHighlightStatus:(indexAdjustedForShuffleButton == self.currentlyHighlightedEntry) animated:NO];
 		
@@ -393,7 +396,7 @@
 
 - (CGSize)currentItemSize {
 //	NSLog(@"Number of columns %d", (int)[LMDetailView numberOfColumns]);
-	return CGSizeMake(self.frame.size.width/[LMDetailView numberOfColumns]*0.90,
+	return CGSizeMake(self.collectionView.frame.size.width/[LMDetailView numberOfColumns],
 					  fmin(LMLayoutManager.standardListEntryHeight, 80));
 }
 
@@ -514,7 +517,7 @@
 				
 		
 		UICollectionViewFlowLayout *fuck = [[UICollectionViewFlowLayout alloc]init];
-		fuck.sectionInset = UIEdgeInsetsMake(10, 10, 10, 10);
+		fuck.sectionInset = UIEdgeInsetsMake(10, 0, 10, 0);
 		
 		self.collectionView = [[UICollectionView alloc]initWithFrame:CGRectZero collectionViewLayout:fuck];
 		self.collectionView.translatesAutoresizingMaskIntoConstraints = NO;

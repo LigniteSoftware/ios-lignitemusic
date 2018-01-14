@@ -12,6 +12,7 @@
 #import "LMCoreViewController.h"
 #import "LMNowPlayingView.h"
 #import "LMTutorialView.h"
+#import "MBProgressHUD.h"
 #import "LMSettings.h"
 
 @interface LMNowPlayingCoreView()<UIGestureRecognizerDelegate, LMMusicPlayerDelegate>
@@ -266,7 +267,7 @@
             
             if(recognizer.state == UIGestureRecognizerStateEnded){
                 
-                if((translation.y >= self.frame.size.height/10.0)){
+                if((translation.y >= self.frame.size.height/6.5)){
                     self.topConstraint.constant = self.frame.size.height;
                     self.isOpen = NO;
                 }
@@ -333,7 +334,7 @@
                     self.nowPlayingLeadingConstraint.constant = -self.frame.size.width;
                 }
                 else{
-                    NSLog(@"Reset to center");
+                    NSLog(@"Reset to centre");
                     self.nowPlayingLeadingConstraint.constant = 0;
                     rebuildConstraints = NO;
                 }
@@ -361,6 +362,21 @@
             }
         }
     }
+}
+
+- (void)restartTrack {
+	[self.musicPlayer skipToBeginning];
+	
+	MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self animated:YES];
+	
+	hud.mode = MBProgressHUDModeCustomView;
+	UIImage *image = [[UIImage imageNamed:@"icon_rewind.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+	hud.customView = [[UIImageView alloc] initWithImage:image];
+	hud.square = YES;
+	hud.userInteractionEnabled = NO;
+	hud.label.text = NSLocalizedString(@"TrackRestarted", nil);
+	
+	[hud hideAnimated:YES afterDelay:2.0f];
 }
 
 - (void)layoutSubviews {
@@ -392,6 +408,7 @@
         [[UIPanGestureRecognizer alloc] initWithTarget:self
                                                 action:@selector(panNowPlaying:)];
         nowPlayingPanGesture.delegate = self;
+		nowPlayingPanGesture.maximumNumberOfTouches = 1;
         [self.centreNowPlayingView addGestureRecognizer:nowPlayingPanGesture];
         
         
@@ -411,6 +428,7 @@
         [[UIPanGestureRecognizer alloc] initWithTarget:self
                                                 action:@selector(panNowPlaying:)];
         nowPlayingTrailingPanGesture.delegate = self;
+		nowPlayingTrailingPanGesture.maximumNumberOfTouches = 1;
         [self.trailingNowPlayingView addGestureRecognizer:nowPlayingTrailingPanGesture];
         
         
@@ -446,7 +464,16 @@
         [[UIPanGestureRecognizer alloc] initWithTarget:self
                                                 action:@selector(panNowPlaying:)];
         nowPlayingLeadingPanGesture.delegate = self;
+		nowPlayingLeadingPanGesture.maximumNumberOfTouches = 1;
         [self.leadingNowPlayingView addGestureRecognizer:nowPlayingLeadingPanGesture];
+		
+		
+		
+		UISwipeGestureRecognizer *doubleFingerSwipeToRestartTrackGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(restartTrack)];
+		[doubleFingerSwipeToRestartTrackGesture setNumberOfTouchesRequired:2];
+		[doubleFingerSwipeToRestartTrackGesture setDirection:UISwipeGestureRecognizerDirectionLeft];
+		[self addGestureRecognizer:doubleFingerSwipeToRestartTrackGesture];
+		
         
         //		LMMusicTrackCollection *currentCollection = self.musicPlayer.nowPlayingCollection;
         //		if(currentCollection == nil){

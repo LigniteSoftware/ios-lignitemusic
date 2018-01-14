@@ -11,6 +11,7 @@
 #import "LMMiniPlayerCoreView.h"
 #import "LMCoreViewController.h"
 #import "LMMiniPlayerView.h"
+#import "MBProgressHUD.h"
 #import "LMMusicPlayer.h"
 
 @interface LMMiniPlayerCoreView()<UIGestureRecognizerDelegate, LMMusicPlayerDelegate, LMLayoutChangeDelegate>
@@ -266,7 +267,7 @@
                     self.miniPlayerLeadingConstraint.constant = -self.frame.size.width;
                 }
                 else{
-                    NSLog(@"Reset to center");
+                    NSLog(@"Reset to centre");
                     self.miniPlayerLeadingConstraint.constant = 0;
                     rebuildConstraints = NO;
                 }
@@ -314,6 +315,24 @@
 	}];
 }
 
+- (void)restartTrack {
+	[self.musicPlayer skipToBeginning];
+	
+	LMCoreViewController *coreViewController = (LMCoreViewController*)self.rootViewController;
+	
+	MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:coreViewController.navigationController.view
+											  animated:YES];
+	
+	hud.mode = MBProgressHUDModeCustomView;
+	UIImage *image = [[UIImage imageNamed:@"icon_rewind.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+	hud.customView = [[UIImageView alloc] initWithImage:image];
+	hud.square = YES;
+	hud.userInteractionEnabled = NO;
+	hud.label.text = NSLocalizedString(@"TrackRestarted", nil);
+	
+	[hud hideAnimated:YES afterDelay:2.0f];
+}
+
 - (void)layoutSubviews {
 	if(!self.didLayoutConstraints){
 		self.didLayoutConstraints = YES;
@@ -345,6 +364,7 @@
 		[[UIPanGestureRecognizer alloc] initWithTarget:self
 												action:@selector(panMiniPlayer:)];
 		miniPlayerPanGesture.delegate = self;
+		miniPlayerPanGesture.maximumNumberOfTouches = 1;
 		[self.centreMiniPlayerView addGestureRecognizer:miniPlayerPanGesture];
 		
 		
@@ -363,6 +383,7 @@
 		[[UIPanGestureRecognizer alloc] initWithTarget:self
 												action:@selector(panMiniPlayer:)];
 		miniPlayerTrailingPanGesture.delegate = self;
+		miniPlayerTrailingPanGesture.maximumNumberOfTouches = 1;
 		[self.trailingMiniPlayerView addGestureRecognizer:miniPlayerTrailingPanGesture];
 		
 		
@@ -381,12 +402,18 @@
 		[[UIPanGestureRecognizer alloc] initWithTarget:self
 												action:@selector(panMiniPlayer:)];
 		miniPlayerLeadingPanGesture.delegate = self;
+		miniPlayerLeadingPanGesture.maximumNumberOfTouches = 1;
 		[self.leadingMiniPlayerView addGestureRecognizer:miniPlayerLeadingPanGesture];
 
 //		LMMusicTrackCollection *currentCollection = self.musicPlayer.nowPlayingCollection;
 //		if(currentCollection == nil){
 //			
 //		}
+		
+		UISwipeGestureRecognizer *doubleFingerSwipeToRestartTrackGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(restartTrack)];
+		[doubleFingerSwipeToRestartTrackGesture setNumberOfTouchesRequired:2];
+		[doubleFingerSwipeToRestartTrackGesture setDirection:UISwipeGestureRecognizerDirectionLeft];
+		[self addGestureRecognizer:doubleFingerSwipeToRestartTrackGesture];
 		
 		self.centreMiniPlayerView.clipsToBounds = YES;
 		self.leadingMiniPlayerView.clipsToBounds = YES;

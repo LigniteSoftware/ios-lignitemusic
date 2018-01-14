@@ -41,6 +41,9 @@
  
  */
 
+"TrackRestarted" = "Restarted track";
+
+"InternalErrorOccurred_Short" = "Error, sorry";
 "InternalErrorOccurred_Long" = "A rendering error occurred, sorry!\n\nPlease email Contact@Lignite.io for support.";
 
 "NowPlayingButtonHint" = "Tap this icon when music is playing to open the now-playing window.";
@@ -55,7 +58,7 @@
 "DownloadingStopped" = "Downloading stopped.";
 
 "iOS_11_2_LagTitle" = "iOS Music Framework Lag";
-"iOS_11_2_LagDescription" = "Your device is running iOS %@ which has a bug created by Apple which causes the music framework that Lignite uses to be very laggy.\n\nAs a result, long periods of \"freezing\" may occur throughout our app.\n\nWe unfortunately can only wait for Apple to fix the bug that they have created.";
+"iOS_11_2_LagDescription" = "Your device is running iOS %@ which has a bug created by Apple that causes the music framework that Lignite uses to be very laggy.\n\nAs a result, long periods of \"freezing\" may occur throughout our app.\n\nWe unfortunately can only wait for Apple to fix the bug that they have created.";
 "iOS_11_2_LagCheckboxConfirmationText" = "I understand that any lag/freezing in Lignite Music is due to a bug created by Apple and that Lignite can do nothing to fix this bug.";
 "Continue" = "Continue";
 "PleaseAcceptTheCheckbox" = "Please accept the checkbox";
@@ -610,4 +613,3 @@
  * Thank you.
  *
  */
-

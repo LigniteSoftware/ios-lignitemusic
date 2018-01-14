@@ -533,8 +533,8 @@ LMControlBarViewDelegate
 //	NSLog(@"now playing open %d", self.nowPlayingCoreView.isOpen);
 	
 	return self.nowPlayingCoreView.isOpen //If now playing is open, hide it
-		|| self.layoutManager.isLandscape //If the device is landscape, hide it
-		|| (![LMLayoutManager isiPad] && ![LMLayoutManager isiPhoneX] && self.buttonNavigationBar.currentlySelectedTab == LMNavigationTabView && !self.buttonNavigationBar.isMinimized && !self.buttonNavigationBar.isCompletelyHidden); //If the view tab is open and the whole thing isn't minimized (doesn't apply to iPad as iPad has compact button navigation bar, also doesn't apply to iPhone X because it has the infamous notch)
+	|| self.layoutManager.isLandscape; //If the device is landscape, hide it
+//		|| (![LMLayoutManager isiPad] && ![LMLayoutManager isiPhoneX] && self.buttonNavigationBar.currentlySelectedTab == LMNavigationTabView && !self.buttonNavigationBar.isMinimized && !self.buttonNavigationBar.isCompletelyHidden); //If the view tab is open and the whole thing isn't minimized (doesn't apply to iPad as iPad has compact button navigation bar, also doesn't apply to iPhone X because it has the infamous notch)
 }
 
 - (UIStatusBarAnimation)preferredStatusBarUpdateAnimation {
@@ -654,7 +654,7 @@ LMControlBarViewDelegate
 				[self.titleView.songListTableView reloadSubviewData];
 				[self.titleView.songListTableView reloadData];
 				
-				//Reload currently highlighted item
+				//Reload currently highlighted item   
 				self.titleView.currentlyHighlighted = -1;
 				[self.titleView musicTrackDidChange:self.musicPlayer.nowPlayingTrack];
 				
@@ -752,9 +752,14 @@ LMControlBarViewDelegate
 //	NSLog(@"rHeight changed to %f", requiredHeight);
     
     CGFloat bottomSpacing = requiredHeight + 10;
-    [self.compactView changeBottomSpacing:bottomSpacing];
+//    [self.compactView changeBottomSpacing:bottomSpacing];
     self.titleView.songListTableView.bottomSpacing = bottomSpacing;
 	
+	if([LMLayoutManager isLandscape]
+	   && (self.buttonNavigationBar.currentlySelectedTab != LMNavigationTabView)){
+		self.titleView.shuffleButtonLandscapeOffset = self.buttonNavigationBar.isMinimized ? 4.0f : bottomSpacing;
+	}
+		
 //	if(self.buttonNavigationBar.isMinimized){
 //		bottomSpacing *= 2;
 //	}
@@ -1013,10 +1018,12 @@ LMControlBarViewDelegate
 			[self.nowPlayingCoreView.superview layoutIfNeeded];
 		}
 		
-		if(translation.y > self.nowPlayingCoreView.frame.size.height/10.0){			
-			if(translation.y > self.nowPlayingCoreView.frame.size.height/8.0){
-				[self.buttonNavigationBar minimize:NO];
-			}
+		NSLog(@"What %@", NSStringFromCGPoint(translation));
+		
+		if(fabs(translation.y) < self.nowPlayingCoreView.frame.size.height/8.0){
+//			if(translation.y > self.nowPlayingCoreView.frame.size.height/8.0){
+//				[self.buttonNavigationBar minimize:NO];
+//			}
 			
 			self.nowPlayingCoreView.topConstraint.constant = self.nowPlayingCoreView.frame.size.height;
 			
@@ -1181,7 +1188,23 @@ LMControlBarViewDelegate
 	
 	LMCoreViewControllerRestorationState newRestorationState = LMCoreViewControllerRestorationStateBrowsing;
 	
-	if(self.navigationController.viewControllers.count > 1 || (self.view.window == nil)){
+	NSArray<Class> *outofViewLoadingIndicatorSupportingClasses = @[
+															[LMSettingsViewController class],
+															[LMFeedbackViewController class]
+															];
+	
+	BOOL navigationControllerContainsClass = NO;
+	
+	for(UIViewController *viewController in self.navigationController.viewControllers){
+		for(Class outofViewClass in outofViewLoadingIndicatorSupportingClasses){
+			if([viewController class] == outofViewClass){
+				navigationControllerContainsClass = YES;
+				break;
+			}
+		}
+	}
+	
+	if(navigationControllerContainsClass && (self.view.window == nil)){
 		newRestorationState = LMCoreViewControllerRestorationStateOutOfView;
 	}
 	else if(self.nowPlayingCoreView.isOpen){
@@ -1694,7 +1717,7 @@ LMControlBarViewDelegate
 	[self.titleView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.compactView];
 	[self.titleView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.compactView];
 	
-	[self.titleView setup];
+//	[self.titleView setup];
 	self.titleView.hidden = YES;
 	
 	
