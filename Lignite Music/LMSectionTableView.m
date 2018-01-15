@@ -11,6 +11,7 @@
 #import "LMSectionTableView.h"
 #import "LMLayoutManager.h"
 #import "LMTableViewCell.h"
+#import "LMMusicPlayer.h"
 #import "LMListEntry.h"
 #import "LMAppIcon.h"
 #import "LMColour.h"
@@ -80,6 +81,39 @@
 	return nil;
 }
 
+- (BOOL)swipeButtonsEnabled {
+	BOOL subscribedToSwipeButtonsFunction = [self.contentsDelegate respondsToSelector:@selector(swipeButtonsForIndexPath:rightSide:)];
+	BOOL subscribedToSwipeColoursFunction = [self.contentsDelegate respondsToSelector:@selector(swipeButtonColourForIndexPath:rightSide:)];
+	
+	if(subscribedToSwipeButtonsFunction || subscribedToSwipeColoursFunction){
+		BOOL subscribedToBothSwipeButtonDelegateFunctions = subscribedToSwipeButtonsFunction &&  subscribedToSwipeColoursFunction;
+		
+		NSAssert(subscribedToBothSwipeButtonDelegateFunctions, @"You cannot be subscribed to only one swipeButtons function, you must provide both, sorry.");
+		
+		return subscribedToBothSwipeButtonDelegateFunctions;
+	}
+	
+	return NO;
+}
+
+- (NSArray<MGSwipeButton*>*)swipeButtonsForListEntry:(LMListEntry*)listEntry rightSide:(BOOL)rightSide {
+	if([self swipeButtonsEnabled]){
+		return [self.contentsDelegate swipeButtonsForIndexPath:listEntry.indexPath rightSide:rightSide];
+	}
+	
+	
+	
+	return nil;
+}
+
+- (UIColor*)swipeButtonColourForListEntry:(LMListEntry*)listEntry rightSide:(BOOL)rightSide {
+	if([self swipeButtonsEnabled]){
+		return [self.contentsDelegate swipeButtonColourForIndexPath:listEntry.indexPath rightSide:rightSide];
+	}
+	
+	return nil;
+}
+
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
 //	LMTableViewCell *lmCell = (LMTableViewCell*)cell;
 	
@@ -99,11 +133,11 @@
 	
 	cell.contentView.backgroundColor = [LMColour superLightGreyColour];
 		
-	LMListEntry *subview = [self.listEntryArray objectAtIndex:rawRow % self.listEntryArray.count];
-	subview.indexPath = indexPath;
-	[subview reloadContents];
+	LMListEntry *listEntrySubview = [self.listEntryArray objectAtIndex:rawRow % self.listEntryArray.count];
+	listEntrySubview.indexPath = indexPath;
+	[listEntrySubview reloadContents];
 
-	cell.subview = subview;
+	cell.subview = listEntrySubview;
 
 	if(!cell.didSetupConstraints){
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -317,6 +351,8 @@
 		listEntry.delegate = self;
 		listEntry.contentViewHeightMultiplier = 0.875;
 		listEntry.stretchAcrossWidth = NO;
+		listEntry.alignIconToLeft = NO;
+//		listEntry.iPromiseIWillHaveAnIconForYouSoon = YES; some don't have an icon like in settings, idiot
 		
 		[self.listEntryArray addObject:listEntry];
 	}

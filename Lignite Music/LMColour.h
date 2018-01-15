@@ -41,6 +41,13 @@
 + (UIColor*)successGreenColour;
 
 /**
+ A red colour which signifies deletion.
+
+ @return The deletion colour.
+ */
++ (UIColor*)deletionRedColour;
+
+/**
  A super duper light gray colour. Used in section table views.
 
  @return The super light gray.

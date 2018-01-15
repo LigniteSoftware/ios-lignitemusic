@@ -395,7 +395,9 @@ LMControlBarViewDelegate
 }
 
 - (void)trackAddedToQueue:(LMMusicTrack*)trackAdded {
-	MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+	UIView *view = self.searchViewController.view ? self.searchViewController.view : self.navigationController.view;
+	
+	MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:view animated:YES];
 	
 	hud.mode = MBProgressHUDModeCustomView;
 	UIImage *image = [[UIImage imageNamed:@"icon_checkmark.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
@@ -408,7 +410,8 @@ LMControlBarViewDelegate
 }
 
 - (void)trackAddedToFavourites:(LMMusicTrack *)track {
-	MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+	UIView *view = self.searchViewController.view ? self.searchViewController.view : self.navigationController.view;
+	MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:view animated:YES];
 	
 	hud.mode = MBProgressHUDModeCustomView;
 	UIImage *image = [[UIImage imageNamed:@"icon_favourite_hud.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
@@ -429,7 +432,9 @@ LMControlBarViewDelegate
 }
 
 - (void)trackRemovedFromFavourites:(LMMusicTrack *)track {
-	MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+	UIView *view = self.searchViewController.view ? self.searchViewController.view : self.navigationController.view;
+	
+	MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:view animated:YES];
 	
 	hud.mode = MBProgressHUDModeCustomView;
 	UIImage *image = [[UIImage imageNamed:@"icon_unfavourite_hud.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
@@ -917,43 +922,44 @@ LMControlBarViewDelegate
 	}
 }
 
-- (void)launchNowPlaying {
+- (void)launchNowPlaying:(BOOL)userLaunched {
     if(!self.musicPlayer.nowPlayingTrack){
-		NSLog(@"Nothing's playing mate");
-		
-		CGPoint startPoint = CGPointZero;
-		CGRect aViewFrame = CGRectZero;
-		if(LMLayoutManager.isLandscape){
-			startPoint = CGPointMake(self.landscapeNavigationBar.frame.size.width / 2.0,
-									 (self.landscapeNavigationBar.frame.size.height / 2.0) + 34);
+		if(userLaunched){
+			NSLog(@"Nothing's playing mate");
 			
-			aViewFrame = CGRectMake(0, 0, self.view.frame.size.height - startPoint.x, 80);
-		}
-		else{
-			startPoint = CGPointMake(self.view.frame.size.width / 2.0,
-									 self.navigationController.navigationBar.frame.size.height + self.navigationController.navigationBar.frame.origin.y + 4);;
+			CGPoint startPoint = CGPointZero;
+			CGRect aViewFrame = CGRectZero;
+			if(LMLayoutManager.isLandscape){
+				startPoint = CGPointMake(self.landscapeNavigationBar.frame.size.width / 2.0,
+										 (self.landscapeNavigationBar.frame.size.height / 2.0) + 34);
+				
+				aViewFrame = CGRectMake(0, 0, self.view.frame.size.height - startPoint.x, 80);
+			}
+			else{
+				startPoint = CGPointMake(self.view.frame.size.width / 2.0,
+										 self.navigationController.navigationBar.frame.size.height + self.navigationController.navigationBar.frame.origin.y + 4);;
+				
+				aViewFrame = CGRectMake(0, 0, self.view.frame.size.width - 40, 80);
+			}
+			UIView *aView = [[UIView alloc]initWithFrame:aViewFrame];
 			
-			aViewFrame = CGRectMake(0, 0, self.view.frame.size.width - 40, 80);
+			UILabel *hintLabel = [UILabel newAutoLayoutView];
+			hintLabel.text = NSLocalizedString(@"NowPlayingButtonHint", nil);
+			hintLabel.textAlignment = NSTextAlignmentCenter;
+			hintLabel.numberOfLines = 0;
+			hintLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:16.0f];
+			[aView addSubview:hintLabel];
+			
+			[hintLabel autoPinEdgeToSuperviewMargin:ALEdgeLeading];
+			[hintLabel autoPinEdgeToSuperviewMargin:ALEdgeTrailing];
+			[hintLabel autoPinEdgeToSuperviewMargin:ALEdgeBottom];
+			[hintLabel autoPinEdgeToSuperviewMargin:ALEdgeTop].constant = 6;
+			
+			Popover *popover = [Popover new];
+			[popover show:aView point:startPoint];
+			
+			self.nowPlayingHintPopover = popover;
 		}
-		UIView *aView = [[UIView alloc]initWithFrame:aViewFrame];
-		
-		UILabel *hintLabel = [UILabel newAutoLayoutView];
-		hintLabel.text = NSLocalizedString(@"NowPlayingButtonHint", nil);
-		hintLabel.textAlignment = NSTextAlignmentCenter;
-		hintLabel.numberOfLines = 0;
-		hintLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:16.0f];
-		[aView addSubview:hintLabel];
-		
-		[hintLabel autoPinEdgeToSuperviewMargin:ALEdgeLeading];
-		[hintLabel autoPinEdgeToSuperviewMargin:ALEdgeTrailing];
-		[hintLabel autoPinEdgeToSuperviewMargin:ALEdgeBottom];
-		[hintLabel autoPinEdgeToSuperviewMargin:ALEdgeTop].constant = 6;
-		
-		Popover *popover = [Popover new];
-		[popover show:aView point:startPoint];
-		
-		self.nowPlayingHintPopover = popover;
-		
         return;
     }
     
@@ -1165,7 +1171,7 @@ LMControlBarViewDelegate
 		case LMLandscapeNavigationBarButtonLogo: {
 			NSLog(@"Now playing nav bar please");
 			
-			[self launchNowPlaying];
+			[self launchNowPlaying:YES];
 			break;
 		}
 		case LMLandscapeNavigationBarButtonCreate: {
@@ -1245,7 +1251,7 @@ LMControlBarViewDelegate
 	titleImageView.image = [LMAppIcon imageForIcon:LMIconNoAlbumArt75Percent];
 	titleImageView.userInteractionEnabled = YES;
 
-	UITapGestureRecognizer *nowPlayingTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(launchNowPlaying)];
+	UITapGestureRecognizer *nowPlayingTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(launchNowPlaying:)];
 	[titleImageView addGestureRecognizer:nowPlayingTapGestureRecognizer];
 
 	UINavigationItem *navigationItem = [[UINavigationItem alloc]initWithTitle:@""];
@@ -1482,7 +1488,7 @@ LMControlBarViewDelegate
 
 - (void)userInteractionBecameIdle {
 	if(self.musicPlayer.playbackState == LMMusicPlaybackStatePlaying && self.view.window){
-		[self launchNowPlaying];
+		[self launchNowPlaying:NO];
 	}
 }
 
@@ -1926,7 +1932,7 @@ LMControlBarViewDelegate
 		}
 		
 		if(self.restorationState == LMCoreViewControllerRestorationStateNowPlaying){
-			[self launchNowPlaying];
+			[self launchNowPlaying:NO];
 		}
 		
 		if(self.previousTitleViewTopPersistentID > 0){
@@ -1994,6 +2000,8 @@ LMControlBarViewDelegate
 		
 //		[playlistManager setUserUnderstandsPlaylistCreation:NO];
 //		[playlistManager setUserUnderstandsPlaylistEditing:NO];
+		
+		[self searchDialogueOpened:YES withKeyboardHeight:0.0f];
 	} repeats:NO];
 	
 	

@@ -317,7 +317,7 @@
 					return 4;
 				}
 				case LMScreenSizeClassiPadMini: {
-					return 5;
+					return 6;
 				}
 				case LMScreenSizeClassiPadAir: {
 					return 8;
@@ -352,7 +352,7 @@
 					return 2;
 				}
 				case LMScreenSizeClassiPadMini: {
-					return 4;
+					return 5;
 				}
 				case LMScreenSizeClassiPadAir: {
 					return 6;

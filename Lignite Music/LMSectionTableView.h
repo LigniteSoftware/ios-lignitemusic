@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MGSwipeTableCell/MGSwipeTableCell.h>
 
 @class LMSectionTableView;
 
@@ -117,6 +118,9 @@
  @param sectionTableView The section table view which had its close button tapped.
  */
 - (void)tappedCloseButtonForSectionTableView:(LMSectionTableView*)sectionTableView;
+
+- (NSArray<MGSwipeButton*>*)swipeButtonsForIndexPath:(NSIndexPath*)indexPath rightSide:(BOOL)rightSide;
+- (UIColor*)swipeButtonColourForIndexPath:(NSIndexPath*)indexPath rightSide:(BOOL)rightSide;
 
 @end
 

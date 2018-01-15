@@ -41,7 +41,7 @@
  
  */
 
-"TrackRestarted" = "Restarted track";
+"TrackRestarted" = "Restarted Track";
 
 "InternalErrorOccurred_Short" = "Error, sorry";
 "InternalErrorOccurred_Long" = "A rendering error occurred, sorry!\n\nPlease email Contact@Lignite.io for support.";

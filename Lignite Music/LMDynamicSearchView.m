@@ -21,6 +21,21 @@
 @property LMSectionTableView *sectionTableView;
 
 /**
+ The current search string, nil if nothing's being searched for.
+ */
+@property NSString *currentSearchString;
+
+/**
+ The cached array of arrays of track collections which the creator would like to be searchable.
+ */
+@property NSArray<NSArray<LMMusicTrackCollection*>*> *cachedSearchableTrackCollections;
+
+/**
+ The cached music types which are associated with those searchable track collections. Used for property setting & UI layouting.
+ */
+@property NSArray<NSNumber*> *cachedSearchableMusicTypes;
+
+/**
  The array of search results.
  */
 @property NSArray<NSArray<LMMusicTrackCollection*>*> *searchResultsTrackCollections;
@@ -72,7 +87,100 @@
 
 @implementation LMDynamicSearchView
 
+@synthesize cachedSearchableTrackCollections = _cachedSearchableTrackCollections;
+@synthesize cachedSearchableMusicTypes = _cachedSearchableMusicTypes;
+
 /* Begin tableview-related code */
+
+- (NSArray<NSNumber*>*)cachedSearchableMusicTypes {
+	if(self.searchableMusicTypes){
+		NSLog(@"Directly set searchable music types are deprecated");
+		return self.searchableMusicTypes;
+	}
+	
+	if(_cachedSearchableMusicTypes){
+		return _cachedSearchableMusicTypes;
+	}
+	
+	[self reloadSearchableCache];
+	
+	return _cachedSearchableMusicTypes;
+}
+
+- (void)setCachedSearchableMusicTypes:(NSArray<NSNumber *> *)cachedSearchableMusicTypes {
+	_cachedSearchableMusicTypes = cachedSearchableMusicTypes;
+}
+
+- (NSArray<NSArray<LMMusicTrackCollection*>*>*)cachedSearchableTrackCollections {
+	if(self.searchableTrackCollections){
+		NSLog(@"Directly set searchable track collections are deprecated");
+		return self.searchableTrackCollections;
+	}
+	
+	if(_cachedSearchableTrackCollections){
+		return _cachedSearchableTrackCollections;
+	}
+	
+	[self reloadSearchableCache];
+	
+	return _cachedSearchableTrackCollections;
+}
+
+- (void)setCachedSearchableTrackCollections:(NSArray<NSArray<LMMusicTrackCollection *> *> *)cachedSearchableTrackCollections {
+	
+	_cachedSearchableTrackCollections = cachedSearchableTrackCollections;
+}
+
+- (void)reloadSearchableCache {
+	_cachedSearchableMusicTypes = [self.delegate searchableMusicTypesForSearchView:self];
+	_cachedSearchableTrackCollections = [self.delegate searchableTrackCollectionsForSearchView:self];
+	
+	[self parseSearchableCache];
+}
+
+- (void)parseSearchableCache {
+	//Check for instances the array containing LMMusicTypeTitles or LMMusicTypeFavourites which have all of their songs packed into one LMMusicTrackCollection at the front of the array, and fix them.
+	NSUInteger indexOfTitles = [self.cachedSearchableMusicTypes indexOfObject:@(LMMusicTypeTitles)];
+	NSUInteger indexOfFavourites = [self.cachedSearchableMusicTypes indexOfObject:@(LMMusicTypeFavourites)];
+	if(indexOfTitles != NSNotFound || indexOfFavourites != NSNotFound){
+		NSArray<LMMusicTrackCollection*> *titlesCollectionsArray = (indexOfTitles != NSNotFound) ? [self.cachedSearchableTrackCollections objectAtIndex:indexOfTitles] : nil;
+		NSArray<LMMusicTrackCollection*> *favouritesCollectionsArray = (indexOfFavourites != NSNotFound) ? [self.cachedSearchableTrackCollections objectAtIndex:indexOfFavourites] : nil;
+		
+		
+		if(titlesCollectionsArray){
+			LMMusicTrackCollection *firstCollection = [titlesCollectionsArray firstObject];
+			NSMutableArray<LMMusicTrackCollection*> *fixedTitlesCollectionsArray = [NSMutableArray new];
+			if(firstCollection.count > 1 && titlesCollectionsArray.count == 1){ //Is bundled
+				for(LMMusicTrack *track in firstCollection.items){
+					[fixedTitlesCollectionsArray addObject:[[LMMusicTrackCollection alloc] initWithItems:@[ track ]]];
+				}
+				
+				NSMutableArray *updatedArray = [[NSMutableArray alloc] initWithArray:self.cachedSearchableTrackCollections];
+				[updatedArray removeObjectAtIndex:indexOfTitles];
+				[updatedArray insertObject:[NSArray arrayWithArray:fixedTitlesCollectionsArray] atIndex:indexOfTitles];
+				self.cachedSearchableTrackCollections = [NSArray arrayWithArray:updatedArray];
+				
+				NSLog(@"Fixed count %d", (int)fixedTitlesCollectionsArray.count);
+			}
+		}
+		if(favouritesCollectionsArray){
+			LMMusicTrackCollection *firstCollection = [favouritesCollectionsArray firstObject];
+			NSMutableArray<LMMusicTrackCollection*> *fixedFavouritesCollectionsArray = [NSMutableArray new];
+			if(firstCollection.count > 1 && favouritesCollectionsArray.count == 1){ //Is bundled
+				for(LMMusicTrack *track in firstCollection.items){
+					[fixedFavouritesCollectionsArray addObject:[[LMMusicTrackCollection alloc] initWithItems:@[ track ]]];
+				}
+				
+				NSMutableArray *updatedArray = [[NSMutableArray alloc] initWithArray:self.cachedSearchableTrackCollections];
+				[updatedArray removeObjectAtIndex:indexOfFavourites];
+				[updatedArray insertObject:[NSArray arrayWithArray:fixedFavouritesCollectionsArray] atIndex:indexOfFavourites];
+				self.cachedSearchableTrackCollections = [NSArray arrayWithArray:updatedArray];
+				
+				NSLog(@"Fixed count %d", (int)fixedFavouritesCollectionsArray.count);
+			}
+		}
+	}
+}
 
 - (NSString*)propertyStringForMusicType:(LMMusicType)musicType {
 	switch(musicType){
@@ -175,6 +283,8 @@
 
 - (NSString*)titleForIndexPath:(NSIndexPath*)indexPath forSectionTableView:(LMSectionTableView*)sectionTableView {
 	LMMusicType musicType = (LMMusicType)[[self.searchResultsMusicTypes objectAtIndex:indexPath.section] unsignedIntegerValue];
+	
+//	return [NSString stringWithFormat:@"%d", (musicType != LMMusicTypeTitles && musicType != LMMusicTypeFavourites)];
 	
 	NSArray<MPMediaItemCollection*>* collections = [self.searchResultsTrackCollections objectAtIndex:indexPath.section];
 	MPMediaItemCollection *collection = (musicType == LMMusicTypePlaylists) ? nil : [collections objectAtIndex:indexPath.row];
@@ -466,7 +576,7 @@
 	if(!self.searchResultsTrackCollections || !self.searchResultsMusicTypes){
 		return YES;
 	}
-	if(self.searchableTrackCollections.count == 0 || self.searchResultsMusicTypes.count == 0 || self.searchResultsTrackCollections.count == 0){
+	if(self.cachedSearchableTrackCollections.count == 0 || self.searchResultsMusicTypes.count == 0 || self.searchResultsTrackCollections.count == 0){
 		return YES;
 	}
 	return NO;
@@ -475,15 +585,17 @@
 - (void)searchForString:(NSString *)searchText {
 	NSLog(@"Search for: '%@'", searchText);
 	
+	self.currentSearchString = ([searchText isEqualToString:@""] || !searchText) ? nil : searchText;
+	
 	NSString *searchProperty = MPMediaItemPropertyTitle; //The property of the media item to put against the search text
 	
 	NSMutableArray<NSArray<LMMusicTrackCollection*>*> *searchResultsTrackCollectionsMutableArray = [NSMutableArray new];
 	NSMutableArray<NSNumber*> *searchResultsMusicTypesMutableArray = [NSMutableArray new];
 	
-	for(NSInteger i = 0; i < self.searchableTrackCollections.count; i++){ //Go through all of the searchable track collections provided by the object that created this instance
+	for(NSInteger i = 0; i < self.cachedSearchableTrackCollections.count; i++){ //Go through all of the searchable track collections provided by the object that created this instance
 		
-		LMMusicType musicType = (LMMusicType)[[self.searchableMusicTypes objectAtIndex:i] integerValue];
-		NSArray<LMMusicTrackCollection*> *trackCollections = [self.searchableTrackCollections objectAtIndex:i];
+		LMMusicType musicType = (LMMusicType)[[self.cachedSearchableMusicTypes objectAtIndex:i] integerValue];
+		NSArray<LMMusicTrackCollection*> *trackCollections = [self.cachedSearchableTrackCollections objectAtIndex:i];
 		
 		//Set the property to be found based on the music type.
 		switch(musicType){
@@ -599,6 +711,82 @@
 	//Search complete, papa bless!
 }
 
+- (BOOL)shouldShowSwipeButtonsForIndexPath:(NSIndexPath*)indexPath {
+	if(!self.enableSwipeControls){
+		return NO;
+	}
+	
+	LMMusicType musicType = (LMMusicType)[[self.searchResultsMusicTypes objectAtIndex:indexPath.section] integerValue];
+	
+	return (musicType == LMMusicTypeTitles || musicType == LMMusicTypeFavourites);
+}
+
+- (NSArray<MGSwipeButton*>*)swipeButtonsForIndexPath:(NSIndexPath*)indexPath rightSide:(BOOL)rightSide {
+	if(!self.enableSwipeControls || ![self shouldShowSwipeButtonsForIndexPath:indexPath]){
+		return nil;
+	}
+	
+	UIColor *colour = [UIColor colorWithRed:47/255.0 green:47/255.0 blue:49/255.0 alpha:1.0];
+	UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14.0f];
+	
+	LMMusicTrack *musicTrack = [[[self.searchResultsTrackCollections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] representativeItem];
+	LMMusicPlayer *musicPlayer = [LMMusicPlayer sharedMusicPlayer];
+	
+	UIImage *icon = [LMAppIcon imageForIcon:LMIconAddToQueue];
+	if(!rightSide){ //Favourite/unfavourite
+		icon = [LMAppIcon imageForIcon:musicTrack.isFavourite ? LMIconUnfavouriteWhite : LMIconFavouriteWhiteFilled];
+	}
+	
+	MGSwipeButton *swipeButton = [MGSwipeButton buttonWithTitle:@""
+														   icon:icon
+											   	backgroundColor:colour
+													   	padding:0
+													   callback:
+		^BOOL(MGSwipeTableCell *sender) {
+			if(rightSide){
+				NSLog(@"Right %@", musicTrack.title);
+				
+				[musicPlayer addTrackToQueue:musicTrack];
+			}
+			else{
+				NSLog(@"Favourite %@", musicTrack.title);
+				
+				if(musicTrack.isFavourite){
+					[musicPlayer removeTrackFromFavourites:musicTrack];
+				}
+				else{
+					[musicPlayer addTrackToFavourites:musicTrack];
+				}
+				
+				[self reloadSearchableCache];
+				[self searchForString:self.currentSearchString];
+			}
+			return YES;
+	}];
+	swipeButton.titleLabel.font = font;
+	swipeButton.titleLabel.hidden = YES;
+	swipeButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
+	swipeButton.imageEdgeInsets = UIEdgeInsetsMake(25, 0, 25, 0);
+
+	return @[ swipeButton ];
+}
+
+- (UIColor*)swipeButtonColourForIndexPath:(NSIndexPath*)indexPath rightSide:(BOOL)rightSide {
+	if(!self.enableSwipeControls || ![self shouldShowSwipeButtonsForIndexPath:indexPath]){
+		return nil;
+	}
+	
+	UIColor *swipeColour = [LMColour successGreenColour];
+	
+	LMMusicTrack *musicTrack = [[[self.searchResultsTrackCollections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] representativeItem];
+	
+	if(!rightSide && musicTrack.isFavourite){ //Favourite/unfavourite
+		swipeColour = [LMColour deletionRedColour];
+	}
+	
+	return swipeColour;
+}
+
 /* End search-related code */
 
 /* Begin initialization and layouting */
@@ -607,48 +795,7 @@
 	if(!self.didLayoutConstraints){
 		self.didLayoutConstraints = YES;
 		
-		//Check for instances the array containing LMMusicTypeTitles or LMMusicTypeFavourites which have all of their songs packed into one LMMusicTrackCollection at the front of the array, and fix them.
-		NSUInteger indexOfTitles = [self.searchableMusicTypes indexOfObject:@(LMMusicTypeTitles)];
-		NSUInteger indexOfFavourites = [self.searchableMusicTypes indexOfObject:@(LMMusicTypeFavourites)];
-		if(indexOfTitles != NSNotFound || indexOfFavourites != NSNotFound){
-			NSArray<LMMusicTrackCollection*> *titlesCollectionsArray = (indexOfTitles != NSNotFound) ? [self.searchableTrackCollections objectAtIndex:indexOfTitles] : nil;
-			NSArray<LMMusicTrackCollection*> *favouritesCollectionsArray = (indexOfFavourites != NSNotFound) ? [self.searchableTrackCollections objectAtIndex:indexOfFavourites] : nil;
-			
-			
-			if(titlesCollectionsArray){
-				LMMusicTrackCollection *firstCollection = [titlesCollectionsArray firstObject];
-				NSMutableArray<LMMusicTrackCollection*> *fixedTitlesCollectionsArray = [NSMutableArray new];
-				if(firstCollection.count > 1 && titlesCollectionsArray.count == 1){ //Is bundled
-					for(LMMusicTrack *track in firstCollection.items){
-						[fixedTitlesCollectionsArray addObject:[[LMMusicTrackCollection alloc] initWithItems:@[ track ]]];
-					}
-					
-					NSMutableArray *updatedArray = [[NSMutableArray alloc] initWithArray:self.searchableTrackCollections];
-					[updatedArray removeObjectAtIndex:indexOfTitles];
-					[updatedArray insertObject:[NSArray arrayWithArray:fixedTitlesCollectionsArray] atIndex:indexOfTitles];
-					self.searchableTrackCollections = [NSArray arrayWithArray:updatedArray];
-					
-					NSLog(@"Fixed count %d", (int)fixedTitlesCollectionsArray.count);
-				}
-			}
-			if(favouritesCollectionsArray){
-				LMMusicTrackCollection *firstCollection = [favouritesCollectionsArray firstObject];
-				NSMutableArray<LMMusicTrackCollection*> *fixedFavouritesCollectionsArray = [NSMutableArray new];
-				if(firstCollection.count > 1 && favouritesCollectionsArray.count == 1){ //Is bundled
-					for(LMMusicTrack *track in firstCollection.items){
-						[fixedFavouritesCollectionsArray addObject:[[LMMusicTrackCollection alloc] initWithItems:@[ track ]]];
-					}
-					
-					NSMutableArray *updatedArray = [[NSMutableArray alloc] initWithArray:self.searchableTrackCollections];
-					[updatedArray removeObjectAtIndex:indexOfFavourites];
-					[updatedArray insertObject:[NSArray arrayWithArray:fixedFavouritesCollectionsArray] atIndex:indexOfFavourites];
-					self.searchableTrackCollections = [NSArray arrayWithArray:updatedArray];
-					
-					NSLog(@"Fixed count %d", (int)fixedFavouritesCollectionsArray.count);
-				}
-			}
-			
-		}
+		[self parseSearchableCache];
 		
 		self.backgroundColor = [UIColor orangeColor];
 		

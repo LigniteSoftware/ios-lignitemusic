@@ -350,6 +350,7 @@
 		[self.musicPlayer addMusicDelegate:self];
 		
 		self.centreMiniPlayerView = [LMMiniPlayerView newAutoLayoutView];
+		self.centreMiniPlayerView.isUserFacing = YES;
 //		self.centerMiniPlayerView.backgroundColor = [UIColor orangeColor];
 		[self addSubview:self.centreMiniPlayerView];
 		

@@ -125,6 +125,31 @@
 	}];
 }
 
+- (NSArray<NSArray<LMMusicTrackCollection*>*>*)searchableTrackCollectionsForSearchView:(LMDynamicSearchView*)searchView {
+	
+	return @[
+			 [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeFavourites],
+			 [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeArtists],
+			 [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeAlbums],
+			 [self.musicPlayer queryCollectionsForMusicType:LMMusicTypePlaylists],
+			 [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeTitles],
+			 [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeGenres],
+			 [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeCompilations]
+			 ];;
+}
+
+- (NSArray<NSNumber*>*)searchableMusicTypesForSearchView:(LMDynamicSearchView*)searchView {
+	return @[
+			 @(LMMusicTypeFavourites),
+			 @(LMMusicTypeArtists),
+			 @(LMMusicTypeAlbums),
+			 @(LMMusicTypePlaylists),
+			 @(LMMusicTypeTitles),
+			 @(LMMusicTypeGenres),
+			 @(LMMusicTypeCompilations)
+			 ];
+}
+
 - (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
 	self.statusBarBackgroundView.hidden = size.width > size.height; //Will be landscape
 	
@@ -167,26 +192,8 @@
 	
 	
 	self.searchView = [LMDynamicSearchView newAutoLayoutView];
+	self.searchView.enableSwipeControls = YES;
 	self.searchView.delegate = self;
-	
-	self.searchView.searchableTrackCollections = @[
-												   [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeFavourites],
-												   [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeArtists],
-												   [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeAlbums],
-												   [self.musicPlayer queryCollectionsForMusicType:LMMusicTypePlaylists],
-												   [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeTitles],
-												   [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeGenres],
-												   [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeCompilations]
-												   ];
-	self.searchView.searchableMusicTypes = @[
-											 @(LMMusicTypeFavourites),
-											 @(LMMusicTypeArtists),
-											 @(LMMusicTypeAlbums),
-											 @(LMMusicTypePlaylists),
-											 @(LMMusicTypeTitles),
-											 @(LMMusicTypeGenres),
-											 @(LMMusicTypeCompilations)
-											 ];
 	
 	[self.view addSubview:self.searchView];
 	

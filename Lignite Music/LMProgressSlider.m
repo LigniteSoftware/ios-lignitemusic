@@ -196,6 +196,8 @@
 	_value = value;
 	
 	if(self.didLayoutConstraints){
+//		NSLog(@"%d/%d/%f", self.userIsInteracting, [self didJustFinishSliding], value);
+		
 		if(self.userIsInteracting || [self didJustFinishSliding] || value == 0){
 			return;
 		}
@@ -212,9 +214,9 @@
 		[self reloadTextHighlightingConstants];
 		[self animate];
 	}
-//	else{
-//		NSLog(@"What");
-//	}
+	else{
+		NSLog(@"What");
+	}
 }
 
 - (CGFloat)value {
@@ -597,7 +599,7 @@
 		[self setSliderAsShrunk:self.autoShrink];
 		
 		[NSTimer scheduledTimerWithTimeInterval:1.0 block:^() {
-//			NSLog(@"No you said it, %@", NSStringFromCGRect(self.frame));
+			NSLog(@"No you said it, %@", NSStringFromCGRect(self.frame));
 			self.value = self.value;
 			[self setSliderAsShrunk:self.autoShrink];
 		} repeats:NO];

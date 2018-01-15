@@ -61,6 +61,9 @@
  */
 - (UIView*)rightViewForListEntry:(LMListEntry*)entry;
 
+- (NSArray<MGSwipeButton*>*)swipeButtonsForListEntry:(LMListEntry*)listEntry rightSide:(BOOL)rightSide;
+- (UIColor*)swipeButtonColourForListEntry:(LMListEntry*)listEntry rightSide:(BOOL)rightSide;
+
 @end
 
 @interface LMListEntry : UIView
@@ -156,24 +159,24 @@
  
  Default is an empty array.
  */
-@property NSArray<MGSwipeButton*>* leftButtons;
+@property NSArray<MGSwipeButton*>* leftButtons DEPRECATED_ATTRIBUTE;
 
 /**
  The buttons that go to the right of the list entry, which when swiped from right to left on, are revealed.
  
  Default is an empty array.
  */
-@property NSArray<MGSwipeButton*>* rightButtons;
+@property NSArray<MGSwipeButton*>* rightButtons DEPRECATED_ATTRIBUTE;
 
 /**
  The expansion colour for the left button.
  */
-@property UIColor* leftButtonExpansionColour;
+@property UIColor* leftButtonExpansionColour DEPRECATED_ATTRIBUTE;
 
 /**
  The expansion colour for the right button.
  */
-@property UIColor* rightButtonExpansionColour;
+@property UIColor* rightButtonExpansionColour DEPRECATED_ATTRIBUTE;
 
 /**
  Whether or not to round the corners on the icon. Default is YES.

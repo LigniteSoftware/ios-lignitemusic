@@ -1411,7 +1411,7 @@ BOOL shuffleForDebug = NO;
 	
 	if(isNewQueue){
 		[self setNowPlayingCollection:self.nowPlayingCollection];
-		//		[self play];
+		[self play];
 	}
 	
 	for(id<LMMusicPlayerDelegate> delegate in self.delegates){

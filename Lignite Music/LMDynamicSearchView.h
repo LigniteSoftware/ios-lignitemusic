@@ -39,6 +39,22 @@
  */
 - (void)searchView:(LMDynamicSearchView*)searchView entryWasSetAsSelected:(BOOL)selected withData:(id)musicData forMusicType:(LMMusicType)musicType;
 
+/**
+ Gets the searchable track collections for the search view, associated with the searchable music types.
+
+ @param searchView The search view to return the searchable track collections for.
+ @return The searchable track collections.
+ */
+- (NSArray<NSArray<LMMusicTrackCollection*>*>*)searchableTrackCollectionsForSearchView:(LMDynamicSearchView*)searchView;
+
+/**
+ Gets the searchable music types for the search view, associated with the searchable track collections.
+ 
+ @param searchView The search view to return the searchable track collections for.
+ @return The searchable track collections.
+ */
+- (NSArray<NSNumber*>*)searchableMusicTypesForSearchView:(LMDynamicSearchView*)searchView;
+
 @end
 
 @interface LMDynamicSearchView : LMView
@@ -57,24 +73,29 @@ typedef NS_ENUM(NSInteger, LMSearchViewEntrySelectionMode){
 };
 
 /**
- The selection mode for the search view. Default is LMSearchViewEntrySelectionModeNoSelection.
- */
-@property LMSearchViewEntrySelectionMode selectionMode;
-
-/**
  The delegate for recieving information about searches.
  */
 @property id<LMDynamicSearchViewDelegate> delegate;
 
 /**
+ The selection mode for the search view. Default is LMSearchViewEntrySelectionModeNoSelection.
+ */
+@property LMSearchViewEntrySelectionMode selectionMode;
+
+/**
+ Whether or not to enable favourite & queue swipe controls. Default is NO.
+ */
+@property BOOL enableSwipeControls;
+
+/**
  The array of arrays of track collections which the creator would like to be searchable.
  */
-@property NSArray<NSArray<LMMusicTrackCollection*>*> *searchableTrackCollections;
+@property NSArray<NSArray<LMMusicTrackCollection*>*> *searchableTrackCollections DEPRECATED_ATTRIBUTE;
 
 /**
  The music types which are associated with those searchable track collections. Used for property setting & UI layouting.
  */
-@property NSArray<NSNumber*> *searchableMusicTypes;
+@property NSArray<NSNumber*> *searchableMusicTypes DEPRECATED_ATTRIBUTE;
 
 /**
  Searches for a specific string through all provided collections and automatically displays the results.

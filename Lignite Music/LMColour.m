@@ -107,6 +107,10 @@
 	return [UIColor colorWithRed:33/255.0 green:175/255.0 blue:67/255.0 alpha:1.0];
 }
 
++ (UIColor*)deletionRedColour {
+	return [LMThemeEngine mainColourForTheme:LMThemeDefault];
+}
+
 + (UIColor*)superLightGreyColour {
 	return [UIColor colorWithRed:0.96 green:0.96 blue:0.96 alpha:1.0];
 }

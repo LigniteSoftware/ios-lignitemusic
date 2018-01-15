@@ -242,6 +242,10 @@
 	self.progressSlider.lightTheme = YES;
 	[self.trackInfoAndDurationBackgroundView addSubview:self.progressSlider];
 	
+	if(self.isUserFacing){
+		NSLog(@"hey");
+	}
+	
 	
 	NSArray *progressSliderPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 		[self.progressSlider autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.trackInfoView];

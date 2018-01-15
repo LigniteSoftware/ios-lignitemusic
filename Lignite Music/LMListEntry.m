@@ -26,6 +26,8 @@
 
 @property BOOL setupConstraints;
 
+@property MGSwipeTableCell *tableCell;
+
 /**
  The background view to the view that will go on the right if the delegate responds to the corresponding function.
  */
@@ -60,6 +62,10 @@
 	}
 	
 	[self changeHighlightStatus:self.highlighted animated:NO];
+	
+	if([self swipeButtonsEnabled]){
+		[self.tableCell refreshButtons:YES];
+	}
 }
 
 - (void)changeHighlightStatus:(BOOL)highlighted animated:(BOOL)animated {
@@ -101,9 +107,35 @@
 	return YES;
 }
 
+- (BOOL)swipeButtonsEnabled {
+	BOOL subscribedToSwipeButtonsFunction = [self.delegate respondsToSelector:@selector(swipeButtonsForListEntry:rightSide:)];
+	BOOL subscribedToSwipeColoursFunction = [self.delegate respondsToSelector:@selector(swipeButtonColourForListEntry:rightSide:)];
+	
+	if(subscribedToSwipeButtonsFunction || subscribedToSwipeColoursFunction){
+		BOOL subscribedToBothSwipeButtonDelegateFunctions = subscribedToSwipeButtonsFunction &&  subscribedToSwipeColoursFunction;
+		
+		NSAssert(subscribedToBothSwipeButtonDelegateFunctions, @"You cannot be subscribed to only one swipeButtons function, you must provide both, sorry.");
+		
+		return subscribedToBothSwipeButtonDelegateFunctions;
+	}
+	
+	return NO;
+}
+
 - (NSArray*)swipeTableCell:(MGSwipeTableCell*)cell swipeButtonsForDirection:(MGSwipeDirection)direction swipeSettings:(MGSwipeSettings*)swipeSettings expansionSettings:(MGSwipeExpansionSettings*)expansionSettings {
 	
-	BOOL isRightToLeftSwipe = direction == MGSwipeDirectionRightToLeft;
+	BOOL isRightToLeftSwipe = (direction == MGSwipeDirectionRightToLeft);
+	
+	UIColor *expansionColour = nil;
+	NSArray *buttons = nil;
+	if([self swipeButtonsEnabled]){
+		expansionColour = [self.delegate swipeButtonColourForListEntry:self rightSide:isRightToLeftSwipe];
+		buttons = [self.delegate swipeButtonsForListEntry:self rightSide:isRightToLeftSwipe];
+	}
+	else{
+		expansionColour = isRightToLeftSwipe ? self.rightButtonExpansionColour : self.leftButtonExpansionColour;
+		buttons = isRightToLeftSwipe ? self.rightButtons : self.leftButtons;
+	}
 	
 	swipeSettings.transition = MGSwipeTransitionClipCenter;
 	swipeSettings.keepButtonsSwiped = YES;
@@ -111,14 +143,18 @@
 	expansionSettings.buttonIndex = 0;
 	expansionSettings.threshold = 1.5;
 	expansionSettings.expansionLayout = MGSwipeExpansionLayoutCenter;
-	expansionSettings.expansionColor = isRightToLeftSwipe ? self.rightButtonExpansionColour : self.leftButtonExpansionColour;
+	expansionSettings.expansionColor = expansionColour;
 	expansionSettings.triggerAnimation.easingFunction = MGSwipeEasingFunctionCubicOut;
 	expansionSettings.fillOnTrigger = NO;
-
-	return isRightToLeftSwipe ? self.rightButtons : self.leftButtons;
+	
+	if(expansionColour || buttons){
+		NSLog(@"Whatagdhtt %@ %@", expansionColour, buttons);
+	}
+	
+	return buttons;
 }
 
-- (void) swipeTableCell:(MGSwipeTableCell*) cell didChangeSwipeState:(MGSwipeState)state gestureIsActive:(BOOL)gestureIsActive {
+- (void)swipeTableCell:(MGSwipeTableCell*)cell didChangeSwipeState:(MGSwipeState)state gestureIsActive:(BOOL)gestureIsActive {
 	NSString * str;
 	switch (state) {
 		case MGSwipeStateNone: str = @"None"; break;
@@ -137,7 +173,8 @@
 		return;
 	}
 	
-	MGSwipeTableCell * cell = [[MGSwipeTableCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:[NSString stringWithFormat:@"test%d", rand()]];
+	MGSwipeTableCell * cell = [[MGSwipeTableCell alloc] initWithStyle:UITableViewCellStyleSubtitle
+													  reuseIdentifier:[NSString stringWithFormat:@"test%d", rand()]];
 	
 	cell.backgroundColor = [UIColor clearColor];
 	cell.delegate = self; //optional
@@ -145,6 +182,7 @@
 	
 	[self addSubview:cell];
 	[cell autoPinEdgesToSuperviewEdges];
+	self.tableCell = cell;
 	
 	
 	self.setupConstraints = YES;
@@ -194,7 +232,7 @@
 	[cell.contentView addSubview:self.contentView];
 	
 	if(containsRightView){
-		[self.contentView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.contentView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:20];
 		[self.contentView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:self.contentViewHeightMultiplier];
 		[self.contentView autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
 		
