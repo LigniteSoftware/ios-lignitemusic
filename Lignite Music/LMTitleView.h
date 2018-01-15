@@ -15,7 +15,6 @@
 
 @property (readonly) LMMusicTrackCollection *musicTitles;
 
-- (void)setup DEPRECATED_ATTRIBUTE; //throwback
 - (void)musicTrackDidChange:(LMMusicTrack *)newTrack;
 @property NSInteger currentlyHighlighted;
 

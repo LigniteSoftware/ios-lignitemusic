@@ -292,7 +292,7 @@
 		if(listEntry){
 			listEntry.collectionIndex = indexAdjustedForShuffleButton;
 			
-			listEntry.leftButtonExpansionColour = track.isFavourite ? [LMColour mainColour] : [LMColour successGreenColour];
+			listEntry.leftButtonExpansionColour = track.isFavourite ? [LMColour deletionRedColour] : [LMColour successGreenColour];
 			
 			[[listEntry.leftButtons firstObject] setImage:track.isFavourite ? [LMAppIcon imageForIcon:LMIconUnfavouriteWhite] : [LMAppIcon imageForIcon:LMIconFavouriteWhiteFilled] forState:UIControlStateNormal];
 			
@@ -350,7 +350,7 @@
 		favouriteButton.imageEdgeInsets = UIEdgeInsetsMake(25, 0, 25, 0);
 		
 		listEntry.leftButtons = @[ favouriteButton ];
-		listEntry.leftButtonExpansionColour = track.isFavourite ? [LMColour mainColour] : [LMColour successGreenColour];
+		listEntry.leftButtonExpansionColour = track.isFavourite ? [LMColour deletionRedColour] : [LMColour successGreenColour];
 
 		
 		[cell.contentView addSubview:listEntry];
@@ -395,9 +395,9 @@
 }
 
 - (CGSize)currentItemSize {
-//	NSLog(@"Number of columns %d", (int)[LMDetailView numberOfColumns]);
-	return CGSizeMake(self.collectionView.frame.size.width/[LMDetailView numberOfColumns],
-					  fmin(LMLayoutManager.standardListEntryHeight, 80));
+	NSLog(@"Number of columns %d", (int)[LMDetailView numberOfColumns]);
+	return CGSizeMake(self.collectionView.frame.size.width/[LMDetailView numberOfColumns] - (LMLayoutManager.isiPad ? 10 : 0),
+					  fmin(LMLayoutManager.standardListEntryHeight, 78));
 }
 
 //Of the detail view if it was based on amount of tracks and not available screen space

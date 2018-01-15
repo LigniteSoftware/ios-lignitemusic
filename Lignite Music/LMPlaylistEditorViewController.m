@@ -319,7 +319,7 @@
 - (void)savePlaylistEditing {
 	NSLog(@"Save playlist");
 	
-	self.playlist.title = self.titleTextField.text;
+	self.playlist.title = ([self.titleTextField.text isEqualToString:@""] || !self.titleTextField.text) ? NSLocalizedString(@"YourPlaylistTitle", nil) : self.titleTextField.text;
 	
 	[self dismissViewControllerAnimated:YES completion:nil];
 	
@@ -348,7 +348,8 @@
 }
 
 - (void)reloadSaveButton {
-	self.navigationItem.rightBarButtonItem.enabled = !(self.playlist.trackCollection.count == 0) && (self.titleTextField.text.length > 0);
+	self.navigationItem.rightBarButtonItem.enabled = !(self.playlist.trackCollection.count == 0);
+//	&& (self.titleTextField.text.length > 0);
 }
 
 - (void)closeKeyboard {

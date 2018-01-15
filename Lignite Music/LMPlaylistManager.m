@@ -133,7 +133,10 @@
 	if(![self.playlists containsObject:playlist]){
 		NSMutableArray *mutablePlaylistArray = [[NSMutableArray alloc]initWithArray:self.playlists];
 		[mutablePlaylistArray addObject:playlist];
-		self.playlists = [NSArray arrayWithArray:mutablePlaylistArray];
+		self.playlists = [NSArray arrayWithArray:[mutablePlaylistArray
+												  sortedArrayUsingDescriptors:@[
+																				[self.musicPlayer alphabeticalSortDescriptorForSortKey:@"title"]
+																				]]];
 	}
 	
 	NSLog(@"Saving playlist with title %@ persistentID %llu", playlist.title, playlist.persistentID);
@@ -161,7 +164,10 @@
 	
 	NSMutableArray *mutablePlaylistArray = [[NSMutableArray alloc]initWithArray:self.playlists];
 	[mutablePlaylistArray removeObject:playlist];
-	self.playlists = [NSArray arrayWithArray:mutablePlaylistArray];
+	self.playlists = [NSArray arrayWithArray:[mutablePlaylistArray
+											  sortedArrayUsingDescriptors:@[
+																	 [self.musicPlayer alphabeticalSortDescriptorForSortKey:@"title"]
+																	 ]]];
 }
 
 - (void)reloadPlaylists {
@@ -180,7 +186,10 @@
 		}
 	}
 	
-	self.playlists = [NSArray arrayWithArray:playlistsMutableArray];
+	self.playlists = [NSArray arrayWithArray:[playlistsMutableArray
+											  sortedArrayUsingDescriptors:@[
+																			[self.musicPlayer alphabeticalSortDescriptorForSortKey:@"title"]
+																			]]];
 }
 
 - (LMPlaylist*)playlistForSystemPersistentID:(MPMediaEntityPersistentID)persistentID {

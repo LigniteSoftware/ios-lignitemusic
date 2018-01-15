@@ -33,7 +33,7 @@
 		self.triangleView.triangleColour = [LMColour superLightGreyColour];
 		[self addSubview:self.triangleView];
 		
-		CGFloat triangleHeight = 25.0f;
+		CGFloat triangleHeight = LMLayoutManager.isiPad ? 20.0f : 25.0f;
 		CGFloat halfTriangleWidth = (triangleHeight);
 		
 		[self.triangleView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self withOffset:0];

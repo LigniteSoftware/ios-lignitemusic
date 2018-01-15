@@ -59,6 +59,7 @@
  Because library changes come in quick bursts, this timer waits for the bursts to finish and then calls any delegates which are registered for library change notifications.
  */
 @property NSTimer *libraryChangeTimer;
+@property NSTimer *playbackStateChangeTimer; //Same thing, but for the current playback state.
 
 /**
  Whether or not the user has set music within the app. If NO, the app should reject requests to change the song and whatnot from the system music player. Gotta love walled gardens.
@@ -438,6 +439,13 @@ MPMediaGrouping associatedMediaTypes[] = {
 	NSLog(@"Done updating from music track change, took %f seconds", (endTimeInSeconds-startTimeInSeconds));
 }
 
+- (void)notifyDelegatesOfPlaybackState {
+	for(int i = 0; i < self.delegates.count; i++){
+		id delegate = [self.delegates objectAtIndex:i];
+		[delegate musicPlaybackStateDidChange:self.playbackState];
+	}
+}
+
 - (void)systemMusicPlayerStateChanged:(id)sender {
 	[self keepShuffleModeInLine];
 	
@@ -462,9 +470,27 @@ MPMediaGrouping associatedMediaTypes[] = {
 		//self.currentPlaybackTimeChangeTimer = nil;
 	}
 	
-	for(int i = 0; i < self.delegates.count; i++){
-		id delegate = [self.delegates objectAtIndex:i];
-		[delegate musicPlaybackStateDidChange:self.playbackState];
+	if(self.playbackStateChangeTimer){
+		[self.playbackStateChangeTimer invalidate];
+	}
+	
+	static BOOL firstChange = YES;
+	static LMMusicPlaybackState previouslyNotifiedState = LMMusicPlaybackStateInterrupted;
+	
+	if(firstChange){
+		firstChange = NO;
+		previouslyNotifiedState = self.playbackState;
+		[self notifyDelegatesOfPlaybackState];
+	}
+	else{
+		//Slight timer delay fixes any tiny gaps in between playing back music
+		self.playbackStateChangeTimer = [NSTimer scheduledTimerWithTimeInterval:0.15f block:^{
+			NSLog(@"Holy smoekss");
+			if(previouslyNotifiedState != self.playbackState){
+				previouslyNotifiedState = self.playbackState;
+				[self notifyDelegatesOfPlaybackState];
+			}
+		} repeats:NO];
 	}
 }
 
@@ -792,6 +818,18 @@ BOOL shuffleForDebug = NO;
 	return [NSDictionary dictionaryWithDictionary:lettersDictionary];
 }
 
+- (NSSortDescriptor*)alphabeticalSortDescriptorForSortKey:(NSString*)sortKey {
+	return [NSSortDescriptor sortDescriptorWithKey:sortKey
+										 ascending:YES
+										comparator:
+			^NSComparisonResult(NSString *  _Nonnull obj1, NSString *  _Nonnull obj2) {
+				 NSString *cleanString1 = [obj1 stringByReplacingOccurrencesOfString:@"the " withString:@"" options:NSCaseInsensitiveSearch range:NSMakeRange(0, [obj1 length])];
+				 NSString *cleanString2 = [obj2 stringByReplacingOccurrencesOfString:@"the " withString:@"" options:NSCaseInsensitiveSearch range:NSMakeRange(0, [obj2 length])];
+									 
+				 return [cleanString1 compare:cleanString2 options:NSCaseInsensitiveSearch];
+			}];
+}
+
 - (NSArray<LMMusicTrackCollection*>*)trackCollectionsForMediaQuery:(id)mediaQuery withMusicType:(LMMusicType)musicType {
 	//	MPMediaGrouping associatedGrouping = associatedMediaTypes[musicType];
 	
@@ -843,15 +881,7 @@ BOOL shuffleForDebug = NO;
 	}
 	else{
 //		albumSort = [NSSortDescriptor sortDescriptorWithKey:sortKey ascending:YES];
-		albumSort = [NSSortDescriptor sortDescriptorWithKey:sortKey
-												  ascending:YES
-												 comparator:^NSComparisonResult(NSString *  _Nonnull obj1, NSString *  _Nonnull obj2) {
-									
-													 NSString *cleanString1 = [obj1 stringByReplacingOccurrencesOfString:@"the " withString:@"" options:NSCaseInsensitiveSearch range:NSMakeRange(0, [obj1 length])];
-													 NSString *cleanString2 = [obj2 stringByReplacingOccurrencesOfString:@"the " withString:@"" options:NSCaseInsensitiveSearch range:NSMakeRange(0, [obj2 length])];
-
-													 return [cleanString1 compare:cleanString2 options:NSCaseInsensitiveSearch];
-												 }];
+		albumSort = [self alphabeticalSortDescriptorForSortKey:sortKey];
 	}
 	
 	NSMutableArray *fixedCollections = [NSMutableArray arrayWithArray:[collections sortedArrayUsingDescriptors:@[albumSort]]];
@@ -1470,7 +1500,7 @@ BOOL shuffleForDebug = NO;
 				MPMediaPropertyPredicate *predicate = [MPMediaPropertyPredicate predicateWithValue:persistentIDNumber
 																					   forProperty:MPMediaItemPropertyPersistentID];
 				MPMediaQuery *query = [[MPMediaQuery alloc] init];
-				[query addFilterPredicate: predicate];
+				[query addFilterPredicate:predicate];
 				
 				[favouritesTracks addObjectsFromArray:query.items];
 			}
@@ -1479,7 +1509,7 @@ BOOL shuffleForDebug = NO;
 	
 	NSLog(@"Got %ld favourites, the first being %@.", favouritesTracks.count, [favouritesTracks firstObject].title);
 	
-	return [[LMMusicTrackCollection alloc] initWithItems:favouritesTracks];
+	return [[LMMusicTrackCollection alloc] initWithItems:[favouritesTracks sortedArrayUsingDescriptors:@[ [self alphabeticalSortDescriptorForSortKey:@"title"] ]]];
 	//return [[self queryCollectionsForMusicType:LMMusicTypeAlbums] firstObject];
 }
 

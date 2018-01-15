@@ -578,15 +578,15 @@
 //		entry.backgroundColor = [UIColor cyanColor];
 //	}
 	
-	LMMusicTrack *track = [self.musicPlayer.nowPlayingCollection.items objectAtIndex:index];
-	if(track.isFavourite){
-		entry.leftButtonExpansionColour = [LMColour mainColour];
-		[[entry.leftButtons firstObject] setImage:[LMAppIcon imageForIcon:LMIconUnfavouriteWhite] forState:UIControlStateNormal];
-	}
-	else{
-		entry.leftButtonExpansionColour = [LMColour successGreenColour];
-		[[entry.leftButtons firstObject] setImage:[LMAppIcon imageForIcon:LMIconFavouriteWhiteFilled] forState:UIControlStateNormal];
-	}
+//	LMMusicTrack *track = [self.musicPlayer.nowPlayingCollection.items objectAtIndex:index];
+//	if(track.isFavourite){
+//		entry.leftButtonExpansionColour = [LMColour deletionRedColour];
+//		[[entry.leftButtons firstObject] setImage:[LMAppIcon imageForIcon:LMIconUnfavouriteWhite] forState:UIControlStateNormal];
+//	}
+//	else{
+//		entry.leftButtonExpansionColour = [LMColour successGreenColour];
+//		[[entry.leftButtons firstObject] setImage:[LMAppIcon imageForIcon:LMIconFavouriteWhiteFilled] forState:UIControlStateNormal];
+//	}
 	
 	[entry reloadContents];
 	return entry;
@@ -638,64 +638,64 @@
 			listEntry.stretchAcrossWidth = NO;
 			listEntry.iPromiseIWillHaveAnIconForYouSoon = YES;
 			
-			UIColor *colour = [UIColor colorWithRed:47/255.0 green:47/255.0 blue:49/255.0 alpha:1.0];
-			UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14.0f];
-			MGSwipeButton *saveButton = [MGSwipeButton buttonWithTitle:@"" icon:[LMAppIcon imageForIcon:LMIconRemoveFromQueue] backgroundColor:colour padding:0 callback:^BOOL(MGSwipeTableCell *sender) {
-				LMMusicTrack *trackToRemove = [self.musicPlayer.nowPlayingCollection.items objectAtIndex:listEntry.collectionIndex];
-				
-				[self.musicPlayer removeTrackFromQueue:trackToRemove];
-				
-				if(listEntry.collectionIndex == self.musicPlayer.indexOfNowPlayingTrack){
-					if(self.musicPlayer.nowPlayingCollection.items.count > 0){
-						NSInteger indexToUse = listEntry.collectionIndex;
-						if(indexToUse >= self.musicPlayer.nowPlayingCollection.items.count){
-							indexToUse = 0;
-						}
-						LMMusicTrack *newTrack = [self.musicPlayer.nowPlayingCollection.items objectAtIndex:indexToUse];
-						NSLog(@"New track %@", newTrack.title);
-						[self.musicPlayer setNowPlayingTrack:newTrack];
-						[self changeMusicTrack:newTrack withIndex:indexToUse];
-					}
-				}
-				
-				if(self.musicPlayer.nowPlayingCollection.items.count == 0){
-					NSLog(@"Close");
-				}
-				
-				NSLog(@"Remove %@", trackToRemove.title);
-				
-				return YES;
-			}];
-			saveButton.titleLabel.font = font;
-			saveButton.titleLabel.hidden = YES;
-			saveButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
-			saveButton.imageEdgeInsets = UIEdgeInsetsMake(25, 0, 25, 0);
-			
-			listEntry.rightButtons = @[ saveButton ];
-			listEntry.rightButtonExpansionColour = [UIColor colorWithRed:0.92 green:0.00 blue:0.00 alpha:1.0];
-			
-			
-			MGSwipeButton *favouriteButton = [MGSwipeButton buttonWithTitle:@"" icon:[LMAppIcon imageForIcon:LMIconFavouriteWhiteFilled] backgroundColor:colour padding:0 callback:^BOOL(MGSwipeTableCell *sender) {
-				LMMusicTrack *track = [self.musicPlayer.nowPlayingCollection.items objectAtIndex:listEntry.collectionIndex];
-				
-				if(track.isFavourite){
-					[self.musicPlayer removeTrackFromFavourites:track];
-				}
-				else{
-					[self.musicPlayer addTrackToFavourites:track];
-				}
-				
-				NSLog(@"Favourite %@", track.title);
-				
-				return YES;
-			}];
-			favouriteButton.titleLabel.font = font;
-			favouriteButton.titleLabel.hidden = YES;
-			favouriteButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
-			favouriteButton.imageEdgeInsets = UIEdgeInsetsMake(25, 0, 25, 0);
-			
-			listEntry.leftButtons = @[ favouriteButton ];
-			listEntry.leftButtonExpansionColour = [LMColour successGreenColour];
+//			UIColor *colour = [UIColor colorWithRed:47/255.0 green:47/255.0 blue:49/255.0 alpha:1.0];
+//			UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14.0f];
+//			MGSwipeButton *saveButton = [MGSwipeButton buttonWithTitle:@"" icon:[LMAppIcon imageForIcon:LMIconRemoveFromQueue] backgroundColor:colour padding:0 callback:^BOOL(MGSwipeTableCell *sender) {
+//				LMMusicTrack *trackToRemove = [self.musicPlayer.nowPlayingCollection.items objectAtIndex:listEntry.collectionIndex];
+//				
+//				[self.musicPlayer removeTrackFromQueue:trackToRemove];
+//				
+//				if(listEntry.collectionIndex == self.musicPlayer.indexOfNowPlayingTrack){
+//					if(self.musicPlayer.nowPlayingCollection.items.count > 0){
+//						NSInteger indexToUse = listEntry.collectionIndex;
+//						if(indexToUse >= self.musicPlayer.nowPlayingCollection.items.count){
+//							indexToUse = 0;
+//						}
+//						LMMusicTrack *newTrack = [self.musicPlayer.nowPlayingCollection.items objectAtIndex:indexToUse];
+//						NSLog(@"New track %@", newTrack.title);
+//						[self.musicPlayer setNowPlayingTrack:newTrack];
+//						[self changeMusicTrack:newTrack withIndex:indexToUse];
+//					}
+//				}
+//				
+//				if(self.musicPlayer.nowPlayingCollection.items.count == 0){
+//					NSLog(@"Close");
+//				}
+//				
+//				NSLog(@"Remove %@", trackToRemove.title);
+//				
+//				return YES;
+//			}];
+//			saveButton.titleLabel.font = font;
+//			saveButton.titleLabel.hidden = YES;
+//			saveButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
+//			saveButton.imageEdgeInsets = UIEdgeInsetsMake(25, 0, 25, 0);
+//			
+//			listEntry.rightButtons = @[ saveButton ];
+//			listEntry.rightButtonExpansionColour = [UIColor colorWithRed:0.92 green:0.00 blue:0.00 alpha:1.0];
+//			
+//			
+//			MGSwipeButton *favouriteButton = [MGSwipeButton buttonWithTitle:@"" icon:[LMAppIcon imageForIcon:LMIconFavouriteWhiteFilled] backgroundColor:colour padding:0 callback:^BOOL(MGSwipeTableCell *sender) {
+//				LMMusicTrack *track = [self.musicPlayer.nowPlayingCollection.items objectAtIndex:listEntry.collectionIndex];
+//				
+//				if(track.isFavourite){
+//					[self.musicPlayer removeTrackFromFavourites:track];
+//				}
+//				else{
+//					[self.musicPlayer addTrackToFavourites:track];
+//				}
+//				
+//				NSLog(@"Favourite %@", track.title);
+//				
+//				return YES;
+//			}];
+//			favouriteButton.titleLabel.font = font;
+//			favouriteButton.titleLabel.hidden = YES;
+//			favouriteButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
+//			favouriteButton.imageEdgeInsets = UIEdgeInsetsMake(25, 0, 25, 0);
+//			
+//			listEntry.leftButtons = @[ favouriteButton ];
+//			listEntry.leftButtonExpansionColour = [LMColour successGreenColour];
 			
 			[self.itemArray addObject:listEntry];
 		}
@@ -796,6 +796,61 @@
 
 - (UIImage*)iconForListEntry:(LMListEntry*)entry {
 	return [[self.musicPlayer.nowPlayingCollection.items objectAtIndex:entry.collectionIndex] albumArt];
+}
+
+- (NSArray<MGSwipeButton*>*)swipeButtonsForListEntry:(LMListEntry*)listEntry rightSide:(BOOL)rightSide {
+	LMMusicTrack *track = [self.musicPlayer.nowPlayingCollection.items objectAtIndex:listEntry.collectionIndex];
+	
+	UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14.0f];
+	UIColor *colour = [UIColor colorWithRed:47/255.0 green:47/255.0 blue:49/255.0 alpha:1.0];
+	UIImage *icon = [LMAppIcon imageForIcon:LMIconAddToQueue];
+	if(!rightSide){ //Favourite/unfavourite
+		icon = [LMAppIcon imageForIcon:track.isFavourite ? LMIconUnfavouriteWhite : LMIconFavouriteWhiteFilled];
+	}
+	
+	MGSwipeButton *swipeButton
+	= [MGSwipeButton buttonWithTitle:@""
+								icon:icon
+					 backgroundColor:colour
+							 padding:0
+							callback:^BOOL(MGSwipeTableCell *sender) {
+								if(rightSide){
+									[self.musicPlayer addTrackToQueue:track];
+									
+									NSLog(@"Queue %@", track.title);
+								}
+								else{
+									if(track.isFavourite){
+										[self.musicPlayer removeTrackFromFavourites:track];
+									}
+									else{
+										[self.musicPlayer addTrackToFavourites:track];
+									}
+									
+									NSLog(@"Favourite %@", track.title);
+								}
+								
+								return YES;
+							}];
+	
+	swipeButton.titleLabel.font = font;
+	swipeButton.titleLabel.hidden = YES;
+	swipeButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
+	swipeButton.imageEdgeInsets = UIEdgeInsetsMake(25, 0, 25, 0);
+	
+	return @[ swipeButton ];
+}
+
+- (UIColor*)swipeButtonColourForListEntry:(LMListEntry*)listEntry rightSide:(BOOL)rightSide {
+	UIColor *swipeColour = [LMColour successGreenColour];
+	
+	LMMusicTrack *musicTrack = [self.musicPlayer.nowPlayingCollection.items objectAtIndex:listEntry.collectionIndex];
+	
+	if(!rightSide && musicTrack.isFavourite){ //Favourite/unfavourite
+		swipeColour = [LMColour deletionRedColour];
+	}
+	
+	return swipeColour;
 }
 
 - (void)panNowPlayingDown:(UIPanGestureRecognizer *)recognizer {

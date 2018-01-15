@@ -160,22 +160,52 @@
 				}
 			}
 			
+			NSMutableArray *usedRegularIds = [NSMutableArray new];
+			
 			//For each regular tile load its regular image
 			for(int i = 0; i < self.tilesArray.count; i++){
 				UIImageView *tile = [self.tilesArray objectAtIndex:i];
 				if(![self.bigTileArray containsObject:tile]){
 					UIImage *image = nil;
+					NSString *regularIdUsed = nil;
 					if(regularIds.count > i){
-						image = [[self musicTrackForPersistentIdString:[regularIds objectAtIndex:i]] albumArt];
+						regularIdUsed = [regularIds objectAtIndex:i];
+						image = [[self musicTrackForPersistentIdString:regularIdUsed] albumArt];
 					}
+					//Correct for odd amount of images to create a 4 tile cover
 					else if(regularIds.count == 2 || regularIds.count == 3){
-						image = [[self musicTrackForPersistentIdString:[regularIds objectAtIndex:(i == 2) ? 1 : 0]] albumArt];
+						regularIdUsed = [regularIds objectAtIndex:(i == 2) ? 1 : 0];
+						image = [[self musicTrackForPersistentIdString:regularIdUsed] albumArt];
+					}
+					else if(i >= regularIds.count){
+						regularIdUsed = [regularIds objectAtIndex:(int)arc4random_uniform((int)regularIds.count)];
+						
+						int attempts = 0;
+						while([usedRegularIds containsObject:regularIdUsed] && (attempts < 20)){
+							regularIdUsed = [regularIds objectAtIndex:(int)arc4random_uniform((int)regularIds.count)];
+						
+							attempts++;
+						}
+						
+						image = [[self musicTrackForPersistentIdString:regularIdUsed] albumArt];
+					}
+					
+					if(self.musicCollection.count == 287){
+						NSLog(@"What");
 					}
 					
 					if(image){
 						[regularTileImages addObject:image];
+						[usedRegularIds addObject:regularIdUsed];
+					}
+					else if(self.musicCollection.count == 287){
+						NSLog(@"FUCK!!!");
 					}
 				}
+			}
+			
+			if(self.musicCollection.count == 287 && regularTileImages.count < 8){
+				NSLog(@"What");
 			}
 			
 			dispatch_async(dispatch_get_main_queue(), ^{
@@ -203,6 +233,10 @@
 					if(regularTileImages.count > 0){
 						UIImage *image = [regularTileImages firstObject];
 						UIImageView *tile = [tilesArrayToUse objectAtIndex:i];
+						
+						if(self.musicCollection.count == 287){
+							NSLog(@"Stop!");
+						}
 						
 						if(![bigTileArrayToUse containsObject:tile]){
 							tile.image = image;
@@ -261,6 +295,10 @@
 	
 //	NSLog(@"fuck you %lu", (unsigned long)[albumIdsCountDictionary allKeys].count);
 	
+	if(self.musicCollection.count == 287){
+		NSLog(@"%d entries in dictionary for soundtrack", (int)albumIdsCountDictionary.count);
+	}
+	
 	return albumIdsCountDictionary;
 }
 
@@ -308,7 +346,9 @@
 					amountOfTiles = 4;
 				}
 				
-				//		NSLog(@"%f tiles", amountOfTiles);
+				if(tiledAlbumCoverView.musicCollection.count == 287){
+					NSLog(@"%f tiles in soundtrack", amountOfTiles);
+				}
 				
 				tiledAlbumCoverView.amountOfAlbumsShowing = amountOfTiles;
 				
@@ -335,6 +375,11 @@
 				if(tiledAlbumCoverView.uniqueAlbumCoversDictionary.count == 1){ //Improve for one album art
 					amountOfTilesX = 1;
 					amountOfTilesY = 1;
+				}
+				
+				if(tiledAlbumCoverView.musicCollection.count == 287){
+					NSLog(@"%d/%d amountxy", amountOfTilesX, amountOfTilesY);
+					NSLog(@"What");
 				}
 				
 				while((amountOfTilesX*(sideLength+1) < widthToUse) && (amountOfTilesY*(sideLength+1) < heightToUse)){

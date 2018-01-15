@@ -94,7 +94,7 @@
 
 - (NSArray<NSNumber*>*)cachedSearchableMusicTypes {
 	if(self.searchableMusicTypes){
-		NSLog(@"Directly set searchable music types are deprecated");
+		NSLog(@"[LMDynamicSearchView Warning] Directly set searchable music types are deprecated");
 		return self.searchableMusicTypes;
 	}
 	
@@ -113,7 +113,7 @@
 
 - (NSArray<NSArray<LMMusicTrackCollection*>*>*)cachedSearchableTrackCollections {
 	if(self.searchableTrackCollections){
-		NSLog(@"Directly set searchable track collections are deprecated");
+		NSLog(@"[LMDynamicSearchView Warning] Directly set searchable track collections are deprecated");
 		return self.searchableTrackCollections;
 	}
 	
@@ -127,7 +127,6 @@
 }
 
 - (void)setCachedSearchableTrackCollections:(NSArray<NSArray<LMMusicTrackCollection *> *> *)cachedSearchableTrackCollections {
-	
 	_cachedSearchableTrackCollections = cachedSearchableTrackCollections;
 }
 

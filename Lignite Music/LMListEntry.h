@@ -54,24 +54,54 @@
 - (NSString*)textForListEntry:(LMListEntry*)entry;
 
 /**
- If responded to by the delegate, this function will be called upon to return a view which will add that subview provided to the right of the list entry. Any text will be automatically pinned to the leading edge of the view to ensure proper wrapping. Views returned by this function should realize the list entry only provides 1/10th of its space.
+ Called upon to return a view which will add that subview provided to the right of the list entry. Any text will be automatically pinned to the leading edge of the view to ensure proper wrapping. Views returned by this function should realize the list entry only provides 1/10th of its space.
 
  @param entry The entry for the view.
  @return The view that the delegate wants to add to the right of the entry.
  */
 - (UIView*)rightViewForListEntry:(LMListEntry*)entry;
 
+/**
+ Called upon to return an array of buttons to add to a certain side of the list entry.
+
+ @param listEntry The list entry to apply the buttons for.
+ @param rightSide Whether or not the list entry wants the right side buttons. NO for left side.
+ @return The array of buttons.
+ */
 - (NSArray<MGSwipeButton*>*)swipeButtonsForListEntry:(LMListEntry*)listEntry rightSide:(BOOL)rightSide;
+
+/**
+ Called upon to return an array of colours to apply to the swipe buttons of a certain side of the list entry.
+
+ @param listEntry The list entry to apply the swipe button colours for.
+ @param rightSide Whether or not the list entry wants the right side swipe button colours. NO for left side.
+ @return The array of swipe button colours.
+ */
 - (UIColor*)swipeButtonColourForListEntry:(LMListEntry*)listEntry rightSide:(BOOL)rightSide;
 
 @end
 
 @interface LMListEntry : UIView
 
+/**
+ Reloads the list entry's contents.
+ */
 - (void)reloadContents;
 
+/**
+ Changes the highlight status of the list entry.
+
+ @param highlighted Whether or not to highlight this entry.
+ @param animated Whether or not to animate the change in highlight.
+ */
 - (void)changeHighlightStatus:(BOOL)highlighted animated:(BOOL)animated;
 
+/**
+ Initializes a list entry with a delegate.
+
+ @param delegate The delegate to set to the list entry.
+ @return The initialized list entry.
+ */
 - (id)initWithDelegate:(id)delegate;
 
 /**

@@ -277,14 +277,14 @@
 	}];
 	
 	LMMusicTrack *track = [self.musicTitles.items objectAtIndex:entry.collectionIndex];
-	if(track.isFavourite){
-		entry.leftButtonExpansionColour = [LMColour mainColour];
-		[[entry.leftButtons firstObject] setImage:[LMAppIcon imageForIcon:LMIconUnfavouriteWhite] forState:UIControlStateNormal];
-	}
-	else{
-		entry.leftButtonExpansionColour = [LMColour successGreenColour];
-		[[entry.leftButtons firstObject] setImage:[LMAppIcon imageForIcon:LMIconFavouriteWhiteFilled] forState:UIControlStateNormal];
-	}
+//	if(track.isFavourite){
+//		entry.leftButtonExpansionColour = [LMColour deletionRedColour];
+//		[[entry.leftButtons firstObject] setImage:[LMAppIcon imageForIcon:LMIconUnfavouriteWhite] forState:UIControlStateNormal];
+//	}
+//	else{
+//		entry.leftButtonExpansionColour = [LMColour successGreenColour];
+//		[[entry.leftButtons firstObject] setImage:[LMAppIcon imageForIcon:LMIconFavouriteWhiteFilled] forState:UIControlStateNormal];
+//	}
 	
 	[entry.queue addOperation:operation];
 	
@@ -361,46 +361,55 @@
 			listEntry.alignIconToLeft = NO;
 			listEntry.stretchAcrossWidth = NO;
 			
-			UIColor *colour = [UIColor colorWithRed:47/255.0 green:47/255.0 blue:49/255.0 alpha:1.0];
-			UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14.0f];
-			MGSwipeButton *saveButton = [MGSwipeButton buttonWithTitle:@"" icon:[LMAppIcon imageForIcon:LMIconAddToQueue] backgroundColor:colour padding:0 callback:^BOOL(MGSwipeTableCell *sender) {
-				LMMusicTrack *trackToQueue = [self.musicTitles.items objectAtIndex:listEntry.collectionIndex];
-				
-				[self.musicPlayer addTrackToQueue:trackToQueue];
-				
-				NSLog(@"Queue %@", trackToQueue.title);
-				
-				return YES;
-			}];
-			saveButton.titleLabel.font = font;
-			saveButton.titleLabel.hidden = YES;
-			saveButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
-			saveButton.imageEdgeInsets = UIEdgeInsetsMake(25, 0, 25, 0);
-
-			listEntry.rightButtons = @[ saveButton ];
+//			UIColor *colour = [UIColor colorWithRed:47/255.0 green:47/255.0 blue:49/255.0 alpha:1.0];
+//			UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14.0f];
+//			MGSwipeButton *saveButton = [MGSwipeButton buttonWithTitle:@""
+//																  icon:[LMAppIcon imageForIcon:LMIconAddToQueue]
+//													   backgroundColor:colour
+//															   padding:0
+//															  callback:
+//		    ^BOOL(MGSwipeTableCell *sender) {
+//				LMMusicTrack *trackToQueue = [self.musicTitles.items objectAtIndex:listEntry.collectionIndex];
+//
+//				[self.musicPlayer addTrackToQueue:trackToQueue];
+//
+//				NSLog(@"Queue %@", trackToQueue.title);
+//
+//				return YES;
+//			}];
+//			saveButton.titleLabel.font = font;
+//			saveButton.titleLabel.hidden = YES;
+//			saveButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
+//			saveButton.imageEdgeInsets = UIEdgeInsetsMake(25, 0, 25, 0);
+//
+//			listEntry.rightButtons = @[ saveButton ];
+//
+//			MGSwipeButton *favouriteButton = [MGSwipeButton buttonWithTitle:@""
+//																	   icon:[LMAppIcon imageForIcon:LMIconFavouriteWhiteFilled]
+//															backgroundColor:colour padding:0
+//																   callback:
+//		    ^BOOL(MGSwipeTableCell *sender) {
+//				LMMusicTrack *track = [self.musicTitles.items objectAtIndex:listEntry.collectionIndex];
+//
+//				if(track.isFavourite){
+//					[self.musicPlayer removeTrackFromFavourites:track];
+//				}
+//				else{
+//					[self.musicPlayer addTrackToFavourites:track];
+//				}
+//
+//				NSLog(@"Favourite %@", track.title);
+//
+//				return YES;
+//			}];
+//			favouriteButton.titleLabel.font = font;
+//			favouriteButton.titleLabel.hidden = YES;
+//			favouriteButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
+//			favouriteButton.imageEdgeInsets = UIEdgeInsetsMake(25, 0, 25, 0);
+//
+//			listEntry.leftButtons = @[ favouriteButton ];
+//			listEntry.leftButtonExpansionColour = [LMColour successGreenColour];
 			
-			MGSwipeButton *favouriteButton = [MGSwipeButton buttonWithTitle:@"" icon:[LMAppIcon imageForIcon:LMIconFavouriteWhiteFilled] backgroundColor:colour padding:0 callback:^BOOL(MGSwipeTableCell *sender) {
-				LMMusicTrack *track = [self.musicTitles.items objectAtIndex:listEntry.collectionIndex];
-				
-				if(track.isFavourite){
-					[self.musicPlayer removeTrackFromFavourites:track];
-				}
-				else{
-					[self.musicPlayer addTrackToFavourites:track];
-				}
-				
-				NSLog(@"Favourite %@", track.title);
-				
-				return YES;
-			}];
-			favouriteButton.titleLabel.font = font;
-			favouriteButton.titleLabel.hidden = YES;
-			favouriteButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
-			favouriteButton.imageEdgeInsets = UIEdgeInsetsMake(25, 0, 25, 0);
-			
-			listEntry.leftButtons = @[ favouriteButton ];
-			listEntry.leftButtonExpansionColour = [LMColour successGreenColour];
-						
 			[self.itemArray addObject:listEntry];
 			
 			//Quick hack to make sure that the items in the array are non nil
@@ -529,6 +538,69 @@
 //	return image;
 }
 
+- (NSArray<MGSwipeButton*>*)swipeButtonsForListEntry:(LMListEntry*)listEntry rightSide:(BOOL)rightSide {
+	if(listEntry.collectionIndex >= self.musicTitles.count){
+		return nil;
+	}
+	
+	LMMusicTrack *track = [self.musicTitles.items objectAtIndex:listEntry.collectionIndex];
+	
+	UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14.0f];
+	UIColor *colour = [UIColor colorWithRed:47/255.0 green:47/255.0 blue:49/255.0 alpha:1.0];
+	UIImage *icon = [LMAppIcon imageForIcon:LMIconAddToQueue];
+	if(!rightSide){ //Favourite/unfavourite
+		icon = [LMAppIcon imageForIcon:track.isFavourite ? LMIconUnfavouriteWhite : LMIconFavouriteWhiteFilled];
+	}
+	
+	MGSwipeButton *swipeButton
+		= [MGSwipeButton buttonWithTitle:@""
+									icon:icon
+						 backgroundColor:colour
+								 padding:0
+								callback:^BOOL(MGSwipeTableCell *sender) {
+									if(rightSide){
+										[self.musicPlayer addTrackToQueue:track];
+										
+										NSLog(@"Queue %@", track.title);
+									}
+									else{
+										if(track.isFavourite){
+											[self.musicPlayer removeTrackFromFavourites:track];
+										}
+										else{
+											[self.musicPlayer addTrackToFavourites:track];
+										}
+										
+										NSLog(@"Favourite %@", track.title);
+									}
+									
+									return YES;
+								}];
+	
+	swipeButton.titleLabel.font = font;
+	swipeButton.titleLabel.hidden = YES;
+	swipeButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
+	swipeButton.imageEdgeInsets = UIEdgeInsetsMake(25, 0, 25, 0);
+
+	return @[ swipeButton ];
+}
+
+- (UIColor*)swipeButtonColourForListEntry:(LMListEntry*)listEntry rightSide:(BOOL)rightSide {
+	if(listEntry.collectionIndex >= self.musicTitles.count){
+		return nil;
+	}
+	
+	UIColor *swipeColour = [LMColour successGreenColour];
+	
+	LMMusicTrack *musicTrack = [self.musicTitles.items objectAtIndex:listEntry.collectionIndex];
+	
+	if(!rightSide && musicTrack.isFavourite){ //Favourite/unfavourite
+		swipeColour = [LMColour deletionRedColour];
+	}
+	
+	return swipeColour;
+}
+
 - (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
 	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		[self.songListTableView reloadData];
@@ -625,10 +697,6 @@
 	}
 	
 	[super layoutSubviews];
-}
-
-- (void)setup {
-	[self layoutSubviews];
 }
 
 - (MPMediaEntityPersistentID)topTrackPersistentID {

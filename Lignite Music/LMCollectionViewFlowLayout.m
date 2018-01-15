@@ -138,6 +138,8 @@
 	if(self.isDisplayingDetailView){
 		size.height += [self frameForCellAtIndexPath:[NSIndexPath indexPathForRow:self.indexOfDetailView inSection:0]
 							   detailViewDisplayMode:LMDetailViewDisplayModeCurrentIndex].size.height;
+		
+		size.height += COMPACT_VIEW_SPACING_BETWEEN_ITEMS;
 	}
 	
 	NSInteger amountOfItems = [self.collectionView.dataSource collectionView:self.collectionView numberOfItemsInSection:1];

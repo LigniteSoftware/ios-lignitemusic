@@ -12,7 +12,7 @@
 @interface LMTiledAlbumCoverView : UIView
 
 /**
- The music collection associated with this LMTiledAlbumCoverView.
+ The music collection associated with this LMTiledAlbumCoverView. Setting this reloads the cover.
  */
 @property LMMusicTrackCollection *musicCollection;
 

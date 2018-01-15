@@ -46,6 +46,11 @@ typedef NS_ENUM(NSInteger, LMTrackPickerDepthLevel){
 @property LMMusicType previousMusicType;
 
 /**
+ Whether or not this track picker controller can be scrolled using letter tabs. The default is YES.
+ */
+@property BOOL scrollableWithLetterTabs;
+
+/**
  The track collections for this picker.
  */
 @property NSArray<LMMusicTrackCollection*> *trackCollections;

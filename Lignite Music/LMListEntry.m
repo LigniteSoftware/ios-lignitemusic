@@ -66,6 +66,9 @@
 	if([self swipeButtonsEnabled]){
 		[self.tableCell refreshButtons:YES];
 	}
+	else if(self.leftButtons || self.rightButtons){
+		[self.tableCell refreshButtons:NO];
+	}
 }
 
 - (void)changeHighlightStatus:(BOOL)highlighted animated:(BOOL)animated {
@@ -147,9 +150,9 @@
 	expansionSettings.triggerAnimation.easingFunction = MGSwipeEasingFunctionCubicOut;
 	expansionSettings.fillOnTrigger = NO;
 	
-	if(expansionColour || buttons){
-		NSLog(@"Whatagdhtt %@ %@", expansionColour, buttons);
-	}
+//	if(expansionColour || buttons){
+//		NSLog(@"Whatagdhtt %@ %@", expansionColour, buttons);
+//	}
 	
 	return buttons;
 }

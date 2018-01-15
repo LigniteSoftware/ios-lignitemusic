@@ -245,6 +245,14 @@ typedef enum {
 + (LMMusicPlayer*)sharedMusicPlayer;
 
 /**
+ Returns a sort descriptor which sorts arrays alphabetically, and ignores the word "the" (case insensitive).
+ 
+ @param sortKey The key to sort by.
+ @return The sort descriptor.
+ */
+- (NSSortDescriptor*)alphabeticalSortDescriptorForSortKey:(NSString*)sortKey;
+
+/**
  Whether or not the user has completed onboarding. If not, the sharedMusicPlayer singleton instance should not be initialized.
 
  @return Whether or not onboarding is complete.

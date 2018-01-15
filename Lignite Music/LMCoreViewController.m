@@ -215,38 +215,6 @@ LMControlBarViewDelegate
     }
 }
 
-//- (void)warningBarButtonItemTapped {
-//	NSLog(@"Tapped warning");
-//
-//	[[LMImageManager sharedImageManager] launchExplicitPermissionRequestOnView:self.navigationController.view
-//				  withCompletionHandler:^(LMImageManagerPermissionStatus permissionStatus) {
-//					  if(permissionStatus == LMImageManagerPermissionStatusAuthorized) {
-//						  NSLog(@"Cleared!");
-//					  }
-//				  }];
-//}
-
-//- (void)setWarningButtonShowing:(BOOL)showing {
-//	//Set custom warning button onto navigationBar
-//	if(!self.navigationBarWarningButton){
-//		UIButton *iconWarningView = [UIButton newAutoLayoutView];
-//		iconWarningView.imageView.contentMode = UIViewContentModeScaleAspectFit;
-//		[iconWarningView setImage:[LMAppIcon imageForIcon:LMIconWarning] forState:UIControlStateNormal];
-//		[iconWarningView addTarget:self action:@selector(warningBarButtonItemTapped) forControlEvents:UIControlEventTouchUpInside];
-//
-//		[self.navigationController.navigationBar addSubview:iconWarningView];
-//
-//		[iconWarningView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:6.0f];
-//		[iconWarningView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-//		[iconWarningView autoSetDimension:ALDimensionHeight toSize:44.0f];
-//		[iconWarningView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:iconWarningView];
-//
-//		self.navigationBarWarningButton = iconWarningView;
-//	}
-//
-//	self.navigationBarWarningButton.hidden = !showing;
-//}
-
 - (void)imageDownloadConditionLevelChanged:(LMImageManagerConditionLevel)newConditionLevel {
 	switch(newConditionLevel){
 		case LMImageManagerConditionLevelOptimal: {
@@ -1026,7 +994,7 @@ LMControlBarViewDelegate
 		
 		NSLog(@"What %@", NSStringFromCGPoint(translation));
 		
-		if(fabs(translation.y) < self.nowPlayingCoreView.frame.size.height/8.0){
+		if(fabs(translation.y) < self.nowPlayingCoreView.frame.size.height/10.0){
 //			if(translation.y > self.nowPlayingCoreView.frame.size.height/8.0){
 //				[self.buttonNavigationBar minimize:NO];
 //			}
@@ -1680,6 +1648,14 @@ LMControlBarViewDelegate
 	self.downloadImagesOnDataOrLowStorageWarning = [LMWarning warningWithText:NSLocalizedString(@"DownloadImagesOnDataWarning", nil) priority:LMWarningPriorityHigh];
 	self.downloadImagesOnDataOrLowStorageWarning.delegate = self;
 	
+	//Tester
+//	[NSTimer scheduledTimerWithTimeInterval:1.0 block:^{
+//		[self.warningManager addWarning:self.downloadImagesOnDataOrLowStorageWarning];
+//
+//		[NSTimer scheduledTimerWithTimeInterval:5.0 block:^{
+//			[self.warningManager removeWarning:self.downloadImagesOnDataOrLowStorageWarning];
+//		} repeats:NO];
+//	} repeats:NO];
 	
 	
 	self.compactView = [LMCompactBrowsingView newAutoLayoutView];
@@ -1723,7 +1699,6 @@ LMControlBarViewDelegate
 	[self.titleView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.compactView];
 	[self.titleView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.compactView];
 	
-//	[self.titleView setup];
 	self.titleView.hidden = YES;
 	
 	
@@ -1897,25 +1872,6 @@ LMControlBarViewDelegate
 	
 	
 	[NSTimer scheduledTimerWithTimeInterval:0.25 block:^{
-//		LMPlaylistEditorViewController *playlistViewController = [LMPlaylistEditorViewController new];
-//		LMPlaylist *playlist = [LMPlaylist new];
-////		playlist.title = @"Nice meme";
-////		playlist.image = [LMAppIcon imageForIcon:LMIconBug];
-////		playlist.trackCollection = [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeAlbums].firstObject;
-//		playlistViewController.playlist = playlist;
-//		UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:playlistViewController];
-//		[self presentViewController:navigation animated:YES completion:^{
-//
-//		}];
-		
-		
-//		LMEnhancedPlaylistEditorViewController *enhancedPlaylistViewController = [LMEnhancedPlaylistEditorViewController new];
-//		UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:enhancedPlaylistViewController];
-//		[self presentViewController:navigation animated:YES completion:^{
-//
-//		}];
-
-		
 		if(self.restorationState != LMCoreViewControllerRestorationStateNotRestored){
 			[self.buttonNavigationBar setSelectedTab:self.stateRestoredNavigationTab];
 		}
@@ -1944,14 +1900,14 @@ LMControlBarViewDelegate
 		}
 		
 		
-//		if(self.previouslyOpenedDetailViewIndex > -1 && self.previouslyOpenedDetailViewIndex < self.compactView.musicTrackCollections.count){
-//			[self.compactView scrollViewToIndex:self.previouslyOpenedDetailViewIndex];
-//			NSInteger rowLimit = [LMLayoutManager amountOfCollectionViewItemsPerRowForScreenSizeClass:LMScreenSizeClassPhone isLandscape:NO];
-//			if(![LMLayoutManager isLandscape] && (self.previouslyOpenedDetailViewIndex < self.compactView.musicTrackCollections.count - rowLimit)){
-//#warning this is a temporay fix for a crash that occurs if a detail view is open on the last row. at the time I do not have the time or the fucks to give to fix this so I will fix it later, hopefully.
-//				[self.compactView tappedBigListEntryAtIndex:self.previouslyOpenedDetailViewIndex];
-//			}
-//		}
+		if(self.previouslyOpenedDetailViewIndex > -1 && self.previouslyOpenedDetailViewIndex < self.compactView.musicTrackCollections.count){
+			[self.compactView scrollViewToIndex:self.previouslyOpenedDetailViewIndex];
+			if(self.previouslyOpenedDetailViewIndex < self.compactView.musicTrackCollections.count){
+				[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
+					[self.compactView tappedBigListEntryAtIndex:self.previouslyOpenedDetailViewIndex];
+				} repeats:NO];
+			}
+		}
 		
 		NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 		NSString *iOSVersionString = [[UIDevice currentDevice] systemVersion];
@@ -1975,6 +1931,9 @@ LMControlBarViewDelegate
 													animated:YES
 												  completion:nil];
 		}
+		
+		self.splashImageView.image = nil;
+		self.splashImageView.backgroundColor = [UIColor whiteColor];
 		
 		[self asyncReloadCachedMusicTrackCollections];
 		
@@ -2000,8 +1959,29 @@ LMControlBarViewDelegate
 		
 //		[playlistManager setUserUnderstandsPlaylistCreation:NO];
 //		[playlistManager setUserUnderstandsPlaylistEditing:NO];
+
 		
-		[self searchDialogueOpened:YES withKeyboardHeight:0.0f];
+		//THIS TEST PLAYLIST CODE WILL CAUSE YOUR COMPACT VIEW TO NOT SYNC PROPERLY. DO NOT BE SPOOKED.
+		
+		LMPlaylistEditorViewController *playlistViewController = [LMPlaylistEditorViewController new];
+//		LMPlaylist *playlist = [LMPlaylist new];
+//		playlist.title = @"Nice meme";
+//		playlist.image = [LMAppIcon imageForIcon:LMIconBug];
+//		playlist.trackCollection = [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeAlbums].firstObject;
+//		playlistViewController.playlist = playlist;
+		UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:playlistViewController];
+		[self presentViewController:navigation animated:YES completion:^{
+
+		}];
+
+
+//		LMEnhancedPlaylistEditorViewController *enhancedPlaylistViewController = [LMEnhancedPlaylistEditorViewController new];
+//		UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:enhancedPlaylistViewController];
+//		[self presentViewController:navigation animated:YES completion:^{
+//
+//		}];
+		
+//		[self searchDialogueOpened:YES withKeyboardHeight:0.0f];
 	} repeats:NO];
 	
 	

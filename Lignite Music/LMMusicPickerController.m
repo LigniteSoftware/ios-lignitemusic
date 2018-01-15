@@ -57,12 +57,14 @@
 
 - (void)setCollection:(LMMusicTrackCollection*)collection asSelected:(BOOL)selected forMusicType:(LMMusicType)musicType {
 	NSMutableArray *mutableTrackCollections = [[NSMutableArray alloc] initWithArray:self.trackCollections];
-	NSMutableArray *mutableMusicTypes = [[NSMutableArray alloc]initWithArray:self.musicTypes];
+	NSMutableArray *mutableMusicTypes = [[NSMutableArray alloc] initWithArray:self.musicTypes];
 	
 	if(selected){
 		if(![self trackCollectionIsSelected:collection]){ //Prevent collection from being added more than once
 			[mutableTrackCollections addObject:collection];
-			[mutableMusicTypes addObject:@(musicType)];
+			if(self.selectionMode == LMMusicPickerSelectionModeAllCollections){
+				[mutableMusicTypes addObject:@(musicType)];
+			}
 		}
 	}
 	else{
@@ -70,7 +72,13 @@
 		
 		for(NSInteger i = 0; i < mutableTrackCollections.count; i++){
 			LMMusicTrackCollection *trackCollection = [mutableTrackCollections objectAtIndex:i];
-			LMMusicType trackCollectionMusicType = (LMMusicType)[[mutableMusicTypes objectAtIndex:i] integerValue];
+			LMMusicType trackCollectionMusicType = LMMusicTypeTitles;
+			
+			if(self.selectionMode == LMMusicPickerSelectionModeAllCollections){ //Normal playlists don't keep track of music types
+				trackCollectionMusicType = (LMMusicType)[[mutableMusicTypes objectAtIndex:i] integerValue];
+			}
+			
+			NSLog(@"%@ and %d", trackCollection.representativeItem.albumTitle, (int)trackCollectionMusicType);
 			
 			if(trackCollectionMusicType == LMMusicTypeFavourites){
 				trackCollectionMusicType = LMMusicTypeTitles;
@@ -84,7 +92,9 @@
 		
 		if(indexToRemove != NSNotFound){
 			[mutableTrackCollections removeObjectAtIndex:indexToRemove];
-			[mutableMusicTypes removeObjectAtIndex:indexToRemove];
+			if(self.selectionMode == LMMusicPickerSelectionModeAllCollections){
+				[mutableMusicTypes removeObjectAtIndex:indexToRemove];
+			}
 		}
 	}
 	
@@ -225,6 +235,7 @@
 	trackPickerController.trackCollections = trackCollections;
 	trackPickerController.sourceMusicPickerController = self;
 	trackPickerController.selectionMode = self.selectionMode;
+	trackPickerController.scrollableWithLetterTabs = NO;
 	
 	[self showViewController:trackPickerController sender:nil];
 }

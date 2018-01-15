@@ -156,9 +156,9 @@
 		
 		[contentView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.contentView];
 		
-		UITapGestureRecognizer *contentDoubleTapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(doubleTappedContentView:)];
-		contentDoubleTapGesture.numberOfTapsRequired = 2;
-		[contentView addGestureRecognizer:contentDoubleTapGesture];
+//		UITapGestureRecognizer *contentDoubleTapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(doubleTappedContentView:)];
+//		contentDoubleTapGesture.numberOfTapsRequired = 2;
+//		[contentView addGestureRecognizer:contentDoubleTapGesture];
 		
 		UITapGestureRecognizer *contentTapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tappedContentView:)];
 		[contentView addGestureRecognizer:contentTapGesture];
@@ -170,6 +170,7 @@
 		self.collectionInfoView.delegate = self.infoDelegate;
 		self.collectionInfoView.associatedBigListEntry = self;
 		self.collectionInfoView.largeMode = YES;
+		self.collectionInfoView.userInteractionEnabled = YES;
 		[self addSubview:self.collectionInfoView];
 		
 		[self.collectionInfoView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:-7.5];
@@ -178,6 +179,9 @@
 		[self.collectionInfoView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 		
 		[self.collectionInfoView reloadData];
+		
+		UITapGestureRecognizer *collectionInfoViewTapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tappedContentView:)];
+		[self.collectionInfoView addGestureRecognizer:collectionInfoViewTapGesture];
 		
 		
 		//	LMTriangleView *testView = [LMTriangleView newAutoLayoutView];

@@ -150,7 +150,7 @@
 			}
 			
 			dispatch_async(dispatch_get_main_queue(), ^{
-				for(NSInteger i = 0; i < trackPicker.displayingTrackCollections.count; i++){
+				for(NSInteger i = 0; i < MIN(trackPicker.listEntryArray.count, trackPicker.displayingTrackCollections.count); i++){
 					LMListEntry *songEntry = [trackPicker.listEntryArray objectAtIndex:i];
 					
 					[songEntry reloadContents];
@@ -233,6 +233,7 @@
 	trackPickerController.title = title;
 	trackPickerController.trackCollections = trackCollections;
 	trackPickerController.sourceMusicPickerController = self.sourceMusicPickerController;
+	trackPickerController.scrollableWithLetterTabs = NO;
 	
 	[self showViewController:trackPickerController sender:nil];
 }
@@ -291,7 +292,7 @@
 
 - (BOOL)trackCollectionIsSelected:(LMMusicTrackCollection*)trackCollection {
 	for(LMMusicTrackCollection *selectedTrackCollection in self.selectedTrackCollections){
-		NSLog(@"Collection count %d %lld", (int)trackCollection.count, trackCollection.representativeItem.genrePersistentID);
+//		NSLog(@"Collection count %d %lld", (int)trackCollection.count, trackCollection.representativeItem.genrePersistentID);
 		if([LMMusicPlayer trackCollection:trackCollection isEqualToOtherTrackCollection:selectedTrackCollection]){
 			return YES;
 		}
@@ -477,7 +478,7 @@
 		[listEntry autoPinEdgesToSuperviewEdges];
 	}
 	else{
-		listEntry = [self.listEntryArray objectAtIndex:indexPath.row-self.entriesAreSelectable];
+		listEntry = [self.listEntryArray objectAtIndex:(indexPath.row-self.entriesAreSelectable) % 15];
 		listEntry.collectionIndex = indexPath.row;
 		[cell.contentView addSubview:listEntry];
 		[listEntry autoPinEdgesToSuperviewEdges];
@@ -492,6 +493,10 @@
 		[lineView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:listEntry];
 		[lineView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:listEntry];
 		[lineView autoSetDimension:ALDimensionHeight toSize:1.0f];
+	}
+	
+	if(listEntry.collectionIndex < self.displayingTrackCollections.count){
+		[listEntry reloadContents];
 	}
 	
 //	cell.backgroundColor = [LMColour randomColour];
@@ -517,9 +522,9 @@
 		
 		self.letterTabBar.lettersDictionary = [self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:self.trackCollections withAssociatedMusicType:self.musicType];
 		
-		for(LMListEntry *listEntry in self.listEntryArray){
-			[listEntry reloadContents];
-		}
+//		for(LMListEntry *listEntry in self.listEntryArray){
+//			[listEntry reloadContents];
+//		}
 		
 		[self.selectAllListEntry reloadContents];
 		[self reloadNoSongsLabel];
@@ -540,44 +545,58 @@
 			break;
 	}
 	
-	NSMutableArray *searchResultsMutableArray = [NSMutableArray new];
-
-	for(LMMusicTrackCollection *collection in self.trackCollections){
-		NSString *trackValue = [collection.representativeItem valueForProperty:searchProperty];
-		if([trackValue.lowercaseString containsString:searchText.lowercaseString]){
-			[searchResultsMutableArray addObject:collection];
+	__weak id weakSelf = self;
+	
+	dispatch_async(dispatch_get_global_queue(NSQualityOfServiceUserInteractive, 0), ^{
+		id strongSelf = weakSelf;
+		
+		if (!strongSelf) {
+			return;
 		}
-		else if(self.depthLevel != LMTrackPickerDepthLevelArtists){
-			NSString *trackArtistValue = [collection.representativeItem valueForProperty:MPMediaItemPropertyArtist];
-			if([trackArtistValue.lowercaseString containsString:searchText.lowercaseString]){
+		
+		LMTrackPickerController *trackPickerSelf = strongSelf;
+		
+		NSMutableArray *searchResultsMutableArray = [NSMutableArray new];
+		
+		for(LMMusicTrackCollection *collection in trackPickerSelf.trackCollections){
+			NSString *trackValue = [collection.representativeItem valueForProperty:searchProperty];
+			if([trackValue.lowercaseString containsString:searchText.lowercaseString]){
 				[searchResultsMutableArray addObject:collection];
 			}
+			else if(trackPickerSelf.depthLevel != LMTrackPickerDepthLevelArtists){
+				NSString *trackArtistValue = [collection.representativeItem valueForProperty:MPMediaItemPropertyArtist];
+				if([trackArtistValue.lowercaseString containsString:searchText.lowercaseString]){
+					[searchResultsMutableArray addObject:collection];
+				}
+			}
 		}
-	}
-	
-	self.searchResultTrackCollections = [NSArray arrayWithArray:searchResultsMutableArray];
-	
-	NSLog(@"%d results.", (int)searchResultsMutableArray.count);
-	
-	NSArray *fixedTrackCollectionsArray = self.displayingTrackCollections;
-	
-	if(self.depthLevel == LMTrackPickerDepthLevelSongs){
-		fixedTrackCollectionsArray = @[ [LMMusicPlayer trackCollectionForArrayOfTrackCollections:self.displayingTrackCollections] ];
-	}
-	
-	self.letterTabBar.lettersDictionary = [self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:
-										   fixedTrackCollectionsArray
-																						   withAssociatedMusicType:self.musicType];
-	
-	for(NSInteger i = 0; i < searchResultsMutableArray.count; i++){
-		[[self.listEntryArray objectAtIndex:i] reloadContents];
-	}
-	
-	[self.selectAllListEntry reloadContents];
-	
-	[self.collectionView reloadData];
-	
-	[self reloadNoSongsLabel];
+		
+		trackPickerSelf.searchResultTrackCollections = [NSArray arrayWithArray:searchResultsMutableArray];
+		
+		NSLog(@"%d results.", (int)searchResultsMutableArray.count);
+		
+		dispatch_async(dispatch_get_main_queue(), ^{
+			NSArray *fixedTrackCollectionsArray = trackPickerSelf.displayingTrackCollections;
+			
+			if(trackPickerSelf.depthLevel == LMTrackPickerDepthLevelSongs){
+				fixedTrackCollectionsArray = @[ [LMMusicPlayer trackCollectionForArrayOfTrackCollections:trackPickerSelf.displayingTrackCollections] ];
+			}
+			
+			trackPickerSelf.letterTabBar.lettersDictionary = [trackPickerSelf.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:
+												   fixedTrackCollectionsArray
+																								   withAssociatedMusicType:self.musicType];
+			
+			for(NSInteger i = 0; i < MIN(trackPickerSelf.searchResultTrackCollections.count, trackPickerSelf.listEntryArray.count); i++){
+				[[trackPickerSelf.listEntryArray objectAtIndex:i] reloadContents];
+			}
+			
+			[trackPickerSelf.selectAllListEntry reloadContents];
+			
+			[trackPickerSelf.collectionView reloadData];
+			
+			[trackPickerSelf reloadNoSongsLabel];
+		});
+	});
 }
 
 - (void)letterSelected:(NSString*)letter atIndex:(NSUInteger)index {
@@ -727,10 +746,15 @@
 		[LMLayoutManager addNewLandscapeConstraints:buttonNavigationBarBottomCoverViewLandscapeConstraints];
 	}
 	
+	LMMusicType fixedMusicType = self.musicType;
+	if(self.musicType == LMMusicTypeTitles){
+		fixedMusicType = LMMusicTypeFavourites; //Because normally the letters dictionary assumes that titles is packed into one collection but all collections in the track picker are of a single item it results in not being able to use the letter tabs on titles so this is a "quick" fix (that honestly I may never get around to correcting again sadly, as is the life of a fast paced developer)
+	}
 	
 	self.letterTabBar = [LMLetterTabBar new];
 	self.letterTabBar.delegate = self;
-	self.letterTabBar.lettersDictionary = [self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:self.trackCollections withAssociatedMusicType:self.musicType];
+	self.letterTabBar.lettersDictionary = [self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:self.trackCollections withAssociatedMusicType:fixedMusicType];
+	self.letterTabBar.hidden = !self.scrollableWithLetterTabs;
 	[self.view addSubview:self.letterTabBar];
 	
 	NSArray *letterTabBarPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
@@ -784,7 +808,9 @@
 	NSArray *collectionViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 		[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-		[self.collectionView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.letterTabBar];
+		[self.collectionView autoPinEdge:ALEdgeBottom
+								  toEdge:self.scrollableWithLetterTabs ? ALEdgeTop : ALEdgeBottom
+								  ofView:self.scrollableWithLetterTabs ? self.letterTabBar : self.view];
 		[self.collectionView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.searchBar];
 	}];
 	[LMLayoutManager addNewPortraitConstraints:collectionViewPortraitConstraints];
@@ -798,7 +824,9 @@
 		else{
 			[self.collectionView autoPinEdgeToSuperviewMargin:ALEdgeLeading];
 		}
-		[self.collectionView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.letterTabBar];
+		[self.collectionView autoPinEdge:ALEdgeTrailing
+								  toEdge:self.scrollableWithLetterTabs ? ALEdgeLeading : ALEdgeTrailing
+								  ofView:self.scrollableWithLetterTabs ? self.letterTabBar : self.view];
 	}];
 	[LMLayoutManager addNewLandscapeConstraints:collectionViewLandscapeConstraints];
 	
@@ -810,7 +838,8 @@
 	
 	self.listEntryArray = [NSMutableArray new];
 	
-	for(int i = self.entriesAreSelectable ? 1 : 0; i < [self collectionView:self.collectionView numberOfItemsInSection:0]; i++){
+//	for(int i = self.entriesAreSelectable ? 1 : 0; i < [self collectionView:self.collectionView numberOfItemsInSection:0]; i++){
+	for(int i = self.entriesAreSelectable ? 1 : 0; i < 20; i++){
 		LMListEntry *listEntry = [LMListEntry newAutoLayoutView];
 		listEntry.delegate = self;
 		listEntry.collectionIndex = i;
@@ -940,10 +969,19 @@
 	self.view.backgroundColor = [UIColor whiteColor];
 }
 
+- (void)viewWillDisappear:(BOOL)animated {
+	self.letterTabBar.clipsToBounds = YES;
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+	self.letterTabBar.clipsToBounds = NO;
+}
+
 - (instancetype)init {
 	self = [super init];
 	if(self){
-		self.selectionMode = LMMusicPickerSelectionModeOnlyTracks;		
+		self.selectionMode = LMMusicPickerSelectionModeOnlyTracks;
+		self.scrollableWithLetterTabs = YES;
 	}
 	return self;
 }

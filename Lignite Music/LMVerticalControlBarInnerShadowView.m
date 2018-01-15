@@ -33,7 +33,7 @@
 		self.triangleView.triangleColour = [LMColour verticalControlBarGreyColour];
 		[self addSubview:self.triangleView];
 		
-		CGFloat triangleHeight = 20.0f;
+		CGFloat triangleHeight = LMLayoutManager.isiPad ? 16.0f : 20.0f;
 		CGFloat halfTriangleWidth = (triangleHeight);
 		
 		[self.triangleView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self withOffset:1];
