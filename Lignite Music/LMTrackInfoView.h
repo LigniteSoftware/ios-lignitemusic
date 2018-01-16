@@ -24,6 +24,11 @@
 @property NSString *titleText, *artistText, *albumText;
 
 /**
+ The labels of the track info view. PROPERTIES ON THESE SHOULD NOT BE SET. Use dedicated text setting functions for these.
+ */
+@property MarqueeLabel *titleLabel, *artistLabel, *albumLabel;
+
+/**
  The text colour for all titles.
  */
 @property UIColor *textColour;

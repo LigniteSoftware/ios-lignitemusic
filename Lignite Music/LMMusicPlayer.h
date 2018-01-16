@@ -166,6 +166,12 @@ typedef enum {
  @param track The track that was removed from favourites.
  */
 - (void)trackRemovedFromFavourites:(LMMusicTrack*)track;
+
+/**
+ The user tried to manage the queue, while the music queue playing is one that is managed by iOS. An alert should be displayed letting the user know this is not a happy scenario.
+ */
+- (void)userAttemptedToModifyQueueThatIsManagedByiOS;
+
 @end
 
 @interface LMMusicPlayer : NSObject
@@ -181,6 +187,11 @@ typedef enum {
  The system music player.
  */
 @property MPMusicPlayerController *systemMusicPlayer;
+
+/**
+ Whether or not the user has set music within the app. If NO, the app should reject queue requests and whatnot. Gotta love walled gardens.
+ */
+@property (readonly) BOOL nowPlayingWasSetWithinLigniteMusic;
 
 /**
  The music player's current type.
@@ -388,7 +399,7 @@ typedef enum {
 /**
  Starts playback of the previous media item in the playback queue; or, the music player is not playing, designates the previous media item as the next to be played.
  */
-- (void)skipToPreviousItem;
+- (void)skipToPreviousTrack;
 
 /**
  Play the music.

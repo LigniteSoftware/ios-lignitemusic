@@ -77,8 +77,9 @@
  Scroll the view to a certain index in its music track collection.
  
  @param index The index to scroll to.
+ @param animated Whether or not to animate the transition.
  */
-- (void)scrollViewToIndex:(NSUInteger)index;
+- (void)scrollViewToIndex:(NSUInteger)index animated:(BOOL)animated;
 
 /**
  Performs the opening or closing of a detail view for a certain index, based on whether or not it's already open.

@@ -41,6 +41,12 @@
  
  */
 
+"UnableToQueueTitle" = "Unable to Queue";
+"UnableToQueueDescription" = "Apple does not allow us to modify the queue of music that began outside of Lignite Music.\n\nPlease start music from within Lignite Music to be able to manage the queue.";
+"UnableToQueueCheckboxText" = "I understand that I cannot modify the queue if I started playing music from a source outside of Lignite Music.";
+
+"SongUnknown" = "Song ?"; //Normally "Song X" where X is a number (ie. "Song 3" or "Song 101"), "Song ?" is for when Lignite Music doesn't know the song number.
+
 "TrackRestarted" = "Restarted Track";
 
 "InternalErrorOccurred_Short" = "Error, sorry";
@@ -168,7 +174,7 @@
 "YouHaventDeterminedThis" = "You haven't set this yet";
 
 "TrackQueued" = "Track queued";
-"TrackRemovedFromQueue" = "Removed from queue";
+"TrackRemovedFromQueue" = "Track dequeued";
 
 "LoadingMusic" = "Loading music...";
 "AlmostThere" = "Almost there!";
@@ -203,8 +209,13 @@
 
 
 "TheresNothingHere" = "Oh boy, you don't have any music here!\n\nSync your music from iTunes to begin."; //Nothing for a certain view (ie. no compilations)
-"iOSNotProvidingQueue" = "iOS isn't telling us what's up next.\n\nStart new music from within Lignite Music to see what's next here.";
+"iOSNotProvidingQueue" = "It seems that you've started music outside of Lignite Music.\n\nUnfortunately Apple does not let us manage the queue for music started outside of our app.\n\nPlease start new music from within Lignite Music to manage the queue.";
 "NothingInQueue" = "Nothing in queue";
+"QueueUnavailable" = "Queue unavailable";
+
+"NextTrack" = "Next track";
+"PreviousTrack" = "Previous track";
+"TrackMissingSubtitle" = "Unknown until it starts playing";
 
 
 "ReportBugOrSendFeedback" = "Send us bugs or feedback";

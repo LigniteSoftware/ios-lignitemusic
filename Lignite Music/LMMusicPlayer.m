@@ -62,11 +62,6 @@
 @property NSTimer *playbackStateChangeTimer; //Same thing, but for the current playback state.
 
 /**
- Whether or not the user has set music within the app. If NO, the app should reject requests to change the song and whatnot from the system music player. Gotta love walled gardens.
- */
-@property BOOL musicWasUserSet;
-
-/**
  The now playing collection which is sorted.
  */
 @property LMMusicTrackCollection *nowPlayingCollectionSorted;
@@ -75,6 +70,11 @@
  The now playing collection which is shuffled.
  */
 @property LMMusicTrackCollection *nowPlayingCollectionShuffled;
+
+/**
+ The persistent ID of the last track which was played through the app. If this does not match with the system music player change, that means that the track was set outside of the app.
+ */
+@property MPMediaEntityPersistentID lastTrackSetInLigniteMusicPersistentID;
 
 @end
 
@@ -134,7 +134,6 @@ MPMediaGrouping associatedMediaTypes[] = {
 		if(self.repeatMode == LMMusicRepeatModeDefault){
 			self.repeatMode = LMMusicRepeatModeNone;
 		}
-		self.systemMusicPlayer.shuffleMode = MPMusicShuffleModeOff;
 		self.previousPlaybackTime = self.currentPlaybackTime;
 		
 		self.autoPlay = (self.systemMusicPlayer.playbackState == MPMusicPlaybackStatePlaying);
@@ -314,8 +313,10 @@ MPMediaGrouping associatedMediaTypes[] = {
 }
 
 - (void)keepShuffleModeInLine {
-	if(self.systemMusicPlayer.shuffleMode != MPMusicShuffleModeOff){
-		self.systemMusicPlayer.shuffleMode = MPMusicShuffleModeOff;
+	if(self.nowPlayingWasSetWithinLigniteMusic){
+		if(self.systemMusicPlayer.shuffleMode != MPMusicShuffleModeOff){
+			self.systemMusicPlayer.shuffleMode = MPMusicShuffleModeOff;
+		}
 	}
 }
 
@@ -384,8 +385,13 @@ MPMediaGrouping associatedMediaTypes[] = {
 	nextTime = CFAbsoluteTimeGetCurrent();
 	NSLog(@"[Update] shuffleModeInLine: %fs", (nextTime - startTimeInSeconds));
 	
-	if(!self.musicWasUserSet){
-		return;
+	if(self.lastTrackSetInLigniteMusicPersistentID != self.systemMusicPlayer.nowPlayingItem.persistentID){
+		NSLog(@"WAS SYSTEM SET: %@", self.nowPlayingCollection);
+		self.nowPlayingCollectionShuffled = nil;
+		self.nowPlayingCollectionSorted = nil;
+		self.nowPlayingTrack = self.systemMusicPlayer.nowPlayingItem;
+//		self.nowPlayingWasSetWithinLigniteMusic = NO;
+//		return;
 	}
 	
 	//	NSLog(@"System music changed %@", self.systemMusicPlayer.nowPlayingItem);
@@ -398,7 +404,7 @@ MPMediaGrouping associatedMediaTypes[] = {
 	nextTime = CFAbsoluteTimeGetCurrent();
 	NSLog(@"[Update] fixNewTrackNotEqual: %fs", (nextTime - startTimeInSeconds));
 	
-	self.indexOfNowPlayingTrack = self.systemMusicPlayer.indexOfNowPlayingItem;
+	self.indexOfNowPlayingTrack = self.nowPlayingWasSetWithinLigniteMusic ? self.systemMusicPlayer.indexOfNowPlayingItem : 0;
 //	if(self.systemMusicPlayer.currentPlaybackTime != 0){
 //		self.currentPlaybackTime = self.systemMusicPlayer.currentPlaybackTime;
 //	}
@@ -564,6 +570,11 @@ MPMediaGrouping associatedMediaTypes[] = {
 
 - (void)mediaLibraryContentsChanged:(id)notification {
 	NSLog(@"Library changed");
+	
+	if(!self.nowPlayingWasSetWithinLigniteMusic){
+		NSLog(@"The user's listening to music that was started outside of our app, rejecting library change.");
+		return;
+	}
 	
 	if(self.libraryChangeTimer){
 		[self.libraryChangeTimer invalidate];
@@ -1130,7 +1141,7 @@ BOOL shuffleForDebug = NO;
 	}
 	else{
 		NSLog(@"Skipping to previous");
-		[self skipToPreviousItem];
+		[self skipToPreviousTrack];
 	}
 }
 
@@ -1138,7 +1149,7 @@ BOOL shuffleForDebug = NO;
 	[self setCurrentPlaybackTime:0];
 }
 
-- (void)skipToPreviousItem {
+- (void)skipToPreviousTrack {
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer || self.playerType == LMMusicPlayerTypeAppleMusic){
 		[self.systemMusicPlayer skipToPreviousItem];
 	}
@@ -1233,9 +1244,18 @@ BOOL shuffleForDebug = NO;
 	return (self.nowPlayingTrack != nil);
 }
 
+- (BOOL)nowPlayingWasSetWithinLigniteMusic {
+	if(!self.nowPlayingCollection && self.systemMusicPlayer.nowPlayingItem){
+		return NO;
+	}
+	return YES;
+}
+
 - (void)setNowPlayingTrack:(LMMusicTrack*)nowPlayingTrack {
-	NSLog(@"Setting now playing track to %@", nowPlayingTrack.title);
-	self.musicWasUserSet = YES;
+	self.lastTrackSetInLigniteMusicPersistentID = nowPlayingTrack.persistentID;
+	
+	NSLog(@"Setting now playing track (in Lignite Music) to %@", nowPlayingTrack.title);
+//	self.nowPlayingWasSetWithinLigniteMusic = YES;
 	for(int i = 0; i < self.nowPlayingCollection.count; i++){
 		LMMusicTrack *track = [self.nowPlayingCollection.items objectAtIndex:i];
 		if([nowPlayingTrack isEqual:track]){
@@ -1269,7 +1289,7 @@ BOOL shuffleForDebug = NO;
 }
 
 - (LMMusicTrack*)nowPlayingTrack {
-	if(!_nowPlayingTrack){
+	if(!_nowPlayingTrack || !self.nowPlayingWasSetWithinLigniteMusic){
 		return self.systemMusicPlayer.nowPlayingItem;
 	}
 	return _nowPlayingTrack;
@@ -1338,7 +1358,8 @@ BOOL shuffleForDebug = NO;
 	
 	if(!allPersistentIDsString || !nowPlayingTrackInfo){
 		NSLog(@"Rejecting load, '%@' '%@'", allPersistentIDsString, nowPlayingTrackInfo);
-		self.musicWasUserSet = NO;
+		self.systemMusicPlayer.shuffleMode = MPMusicShuffleModeOff;
+//		self.nowPlayingWasSetWithinLigniteMusic = NO;
 		return;
 	}
 	
@@ -1387,7 +1408,7 @@ BOOL shuffleForDebug = NO;
 			}
 		}
 		else{ //The saved collection is broken, don't load it
-			self.musicWasUserSet = NO;
+//			self.nowPlayingWasSetWithinLigniteMusic = NO;
 			return;
 		}
 	}
@@ -1396,7 +1417,8 @@ BOOL shuffleForDebug = NO;
 	
 	if(!preservedQueueContainsSystemNowPlayingTrack){
 		NSLog(@"The preserved queue does not contain the now playing track. I'm going to dump it all, sorry.");
-		[self stop];
+#warning clear queue storage
+//		[self stop];
 		return;
 	}
 	
@@ -1417,11 +1439,22 @@ BOOL shuffleForDebug = NO;
 	
 	NSLog(@"Got the queue from storage successfully with %d items. The now playing track is: %@.", (int)oldNowPlayingCollection.count, nowPlayingTrack.title);
 	
+	self.lastTrackSetInLigniteMusicPersistentID = nowPlayingTrack.persistentID;
+	
 	[self restoreNowPlayingCollection:oldNowPlayingCollection nowPlayingTrack:nowPlayingTrack playbackTime:playbackTime];
 	[self setIndexOfNowPlayingTrack:indexOfNowPlayingTrack];
 }
 
 - (void)addTrackToQueue:(LMMusicTrack*)trackToAdd {
+	if(!self.nowPlayingWasSetWithinLigniteMusic){
+		for(id<LMMusicPlayerDelegate> delegate in self.delegates){
+			if([delegate respondsToSelector:@selector(userAttemptedToModifyQueueThatIsManagedByiOS)]){
+				[delegate userAttemptedToModifyQueueThatIsManagedByiOS];
+			}
+		}
+		return;
+	}
+	
 	BOOL isNewQueue = self.nowPlayingCollectionSorted.count == 0;
 	if(isNewQueue){
 		LMMusicTrackCollection *newQueue = [[LMMusicTrackCollection alloc]initWithItems:@[ trackToAdd ]];
@@ -1571,13 +1604,6 @@ BOOL shuffleForDebug = NO;
 	}
 }
 
-- (LMMusicTrackCollection*)nowPlayingCollection {
-	if(self.shuffleMode == LMMusicShuffleModeOn){
-		return self.nowPlayingCollectionShuffled;
-	}
-	return self.nowPlayingCollectionSorted;
-}
-
 - (BOOL)nowPlayingCollectionIsEqualTo:(LMMusicTrackCollection*)musicTrackCollection {
 	return [self.nowPlayingCollectionShuffled isEqual:musicTrackCollection] || [self.nowPlayingCollectionSorted isEqual:musicTrackCollection];
 }
@@ -1613,25 +1639,46 @@ BOOL shuffleForDebug = NO;
 	self.nowPlayingCollectionShuffled = [MPMediaItemCollection collectionWithItems:shuffledArray];
 }
 
+- (LMMusicTrackCollection*)nowPlayingCollection {
+	if(_shuffleMode == LMMusicShuffleModeOn){
+		return self.nowPlayingCollectionShuffled;
+	}
+	return self.nowPlayingCollectionSorted;
+}
+
 - (void)setNowPlayingCollection:(LMMusicTrackCollection*)nowPlayingCollection {
-	self.musicWasUserSet = YES;
+//	self.nowPlayingWasSetWithinLigniteMusic = YES;
 	
-	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer || self.playerType == LMMusicPlayerTypeAppleMusic){
-		self.nowPlayingCollectionSorted = nowPlayingCollection;
-		[self reshuffleSortedCollection];
-		
-		if(!self.nowPlayingCollection){
-			[self.systemMusicPlayer setQueueWithQuery:self.bullshitQuery];
-			[self.systemMusicPlayer setNowPlayingItem:nil];
+	if(!nowPlayingCollection){
+			self.nowPlayingCollectionSorted = nil;
+			self.nowPlayingCollectionShuffled = nil;
+			self.nowPlayingTrack = nil;
+			
+			[self.systemMusicPlayer stop];
+	}
+	else{
+		if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer || self.playerType == LMMusicPlayerTypeAppleMusic){
+			self.nowPlayingCollectionSorted = nowPlayingCollection;
+			[self reshuffleSortedCollection];
+			
+			if(!self.nowPlayingCollection){
+				[self.systemMusicPlayer setQueueWithQuery:self.bullshitQuery];
+				[self.systemMusicPlayer setNowPlayingItem:nil];
+			}
+			NSLog(@"Setting now playing collection to %@", nowPlayingCollection);
+			if(nowPlayingCollection.count > 0){
+				[self.systemMusicPlayer setQueueWithItemCollection:self.nowPlayingCollection];
+				[self.systemMusicPlayer setNowPlayingItem:[[self.nowPlayingCollection items] objectAtIndex:0]];
+			}
+			else{
+				self.nowPlayingCollection = nil;
+			}
 		}
-		NSLog(@"Setting now playing collection to %@", nowPlayingCollection);
-		[self.systemMusicPlayer setQueueWithItemCollection:self.nowPlayingCollection];
-		[self.systemMusicPlayer setNowPlayingItem:[[self.nowPlayingCollection items] objectAtIndex:0]];
 	}
 }
 
 - (void)restoreNowPlayingCollection:(LMMusicTrackCollection *)nowPlayingCollection nowPlayingTrack:(LMMusicTrack*)nowPlayingTrack playbackTime:(NSTimeInterval)playbackTime {
-	self.musicWasUserSet = YES;
+//	self.nowPlayingWasSetWithinLigniteMusic = YES;
 	
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer || self.playerType == LMMusicPlayerTypeAppleMusic){
 		self.nowPlayingCollectionSorted = nowPlayingCollection;
@@ -1645,6 +1692,8 @@ BOOL shuffleForDebug = NO;
 		
 		[self.systemMusicPlayer setQueueWithItemCollection:self.nowPlayingCollection];
 		[self.systemMusicPlayer setNowPlayingItem:nowPlayingTrack];
+//		[self setNowPlayingTrack:nowPlayingTrack];
+		
 		[NSTimer scheduledTimerWithTimeInterval:0.1 block:^{
 			[self setCurrentPlaybackTime:playbackTime];
 		} repeats:NO];
@@ -1701,6 +1750,7 @@ BOOL shuffleForDebug = NO;
 
 - (void)setRepeatMode:(LMMusicRepeatMode)repeatMode {
 	_repeatMode = repeatMode;
+	
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer || self.playerType == LMMusicPlayerTypeAppleMusic){
 		MPMusicRepeatMode systemRepeatModes[4] = {
 			MPMusicRepeatModeNone,
@@ -1719,6 +1769,18 @@ BOOL shuffleForDebug = NO;
 }
 
 - (void)setShuffleMode:(LMMusicShuffleMode)shuffleMode {
+	if(!self.nowPlayingWasSetWithinLigniteMusic){
+		if(self.systemMusicPlayer.shuffleMode != MPMusicShuffleModeSongs){
+			self.systemMusicPlayer.shuffleMode = MPMusicShuffleModeSongs;
+		}
+		else{
+			self.systemMusicPlayer.shuffleMode = MPMusicShuffleModeOff;
+		}
+		
+		[self updatePlaybackModeDelegates];
+		return;
+	}
+	
 	_shuffleMode = shuffleMode;
 	
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer || self.playerType == LMMusicPlayerTypeAppleMusic){
@@ -1753,6 +1815,9 @@ BOOL shuffleForDebug = NO;
 }
 
 - (LMMusicShuffleMode)shuffleMode {
+	if(!self.nowPlayingWasSetWithinLigniteMusic){
+		return (self.systemMusicPlayer.shuffleMode == MPMusicShuffleModeSongs) ? LMMusicShuffleModeOn : LMMusicShuffleModeOff;
+	}
 	return _shuffleMode;
 }
 

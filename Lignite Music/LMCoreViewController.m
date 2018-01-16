@@ -174,7 +174,7 @@ LMControlBarViewDelegate
 	else if(finished){
 		[self asyncReloadCachedMusicTrackCollections];
 
-		if(self.musicPlayer.nowPlayingCollection.count == 0){
+		if(self.musicPlayer.nowPlayingCollection.count == 0 && self.musicPlayer.nowPlayingWasSetWithinLigniteMusic){
 			[self dismissNowPlaying];
 			[self.musicPlayer pause];
 			self.musicPlayer.nowPlayingTrack = nil;
@@ -360,6 +360,23 @@ LMControlBarViewDelegate
 //    }
 	
 //	[self launchNowPlayingFromNavigationBar];
+}
+
+- (void)userAttemptedToModifyQueueThatIsManagedByiOS {
+	LMAlertViewController *alertViewController = [LMAlertViewController new];
+	alertViewController.titleText = NSLocalizedString(@"UnableToQueueTitle", nil);
+	alertViewController.bodyText = NSLocalizedString(@"UnableToQueueDescription", nil);
+	alertViewController.checkboxText = NSLocalizedString(@"UnableToQueueCheckboxText", nil);
+	alertViewController.checkboxMoreInformationText = NSLocalizedString(@"TapHereForMoreInformation", nil);
+	alertViewController.checkboxMoreInformationLink = @"https://www.LigniteMusic.com/unknown_track";
+	alertViewController.alertOptionColours = @[ [LMColour mainColour] ];
+	alertViewController.alertOptionTitles = @[ NSLocalizedString(@"Continue", nil) ];
+	alertViewController.completionHandler = ^(NSUInteger optionSelected, BOOL checkboxChecked) {
+		NSLog(@"All cool");
+	};
+	[self.navigationController presentViewController:alertViewController
+											animated:YES
+										  completion:nil];
 }
 
 - (void)trackAddedToQueue:(LMMusicTrack*)trackAdded {
@@ -828,7 +845,7 @@ LMControlBarViewDelegate
 		[self.titleView scrollToTrackIndex:index == 0 ? 0 : index-1];
 	}
 	else{
-		[self.currentSource scrollViewToIndex:index];
+		[self.currentSource scrollViewToIndex:index animated:NO];
 	}
 }
 
@@ -888,6 +905,10 @@ LMControlBarViewDelegate
 //		}
 		[self.navigationController.view bringSubviewToFront:self.nowPlayingCoreView];
 	}
+}
+
+- (void)launchNowPlayingFromTap {
+	[self launchNowPlaying:YES];
 }
 
 - (void)launchNowPlaying:(BOOL)userLaunched {
@@ -969,8 +990,8 @@ LMControlBarViewDelegate
 - (void)panNowPlayingUp:(UIPanGestureRecognizer *)recognizer {
 	CGPoint translation = [recognizer translationInView:recognizer.view];
 	
-    NSLog(@"Dick is not a bone 哈哈哈");
-    
+//    NSLog(@"Dick is not a bone 哈哈哈");
+	
 	if(self.originalPoint.y == 0){
 		self.originalPoint = self.view.frame.origin;
 		self.currentPoint = self.nowPlayingCoreView.frame.origin;
@@ -994,7 +1015,7 @@ LMControlBarViewDelegate
 		
 		NSLog(@"What %@", NSStringFromCGPoint(translation));
 		
-		if(fabs(translation.y) < self.nowPlayingCoreView.frame.size.height/10.0){
+		if((fabs(translation.y) < MAX(WINDOW_FRAME.size.width, WINDOW_FRAME.size.height)/14.0) || (translation.y >= 0)){
 //			if(translation.y > self.nowPlayingCoreView.frame.size.height/8.0){
 //				[self.buttonNavigationBar minimize:NO];
 //			}
@@ -1219,7 +1240,7 @@ LMControlBarViewDelegate
 	titleImageView.image = [LMAppIcon imageForIcon:LMIconNoAlbumArt75Percent];
 	titleImageView.userInteractionEnabled = YES;
 
-	UITapGestureRecognizer *nowPlayingTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(launchNowPlaying:)];
+	UITapGestureRecognizer *nowPlayingTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(launchNowPlayingFromTap)];
 	[titleImageView addGestureRecognizer:nowPlayingTapGestureRecognizer];
 
 	UINavigationItem *navigationItem = [[UINavigationItem alloc]initWithTitle:@""];
@@ -1901,7 +1922,7 @@ LMControlBarViewDelegate
 		
 		
 		if(self.previouslyOpenedDetailViewIndex > -1 && self.previouslyOpenedDetailViewIndex < self.compactView.musicTrackCollections.count){
-			[self.compactView scrollViewToIndex:self.previouslyOpenedDetailViewIndex];
+			[self.compactView scrollViewToIndex:self.previouslyOpenedDetailViewIndex animated:YES];
 			if(self.previouslyOpenedDetailViewIndex < self.compactView.musicTrackCollections.count){
 				[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
 					[self.compactView tappedBigListEntryAtIndex:self.previouslyOpenedDetailViewIndex];
@@ -1937,6 +1958,9 @@ LMControlBarViewDelegate
 		
 		[self asyncReloadCachedMusicTrackCollections];
 		
+		
+#ifdef DEBUG //Will not run in production
+		
 		/*
 		 *
 		 * Test area
@@ -1963,16 +1987,16 @@ LMControlBarViewDelegate
 		
 		//THIS TEST PLAYLIST CODE WILL CAUSE YOUR COMPACT VIEW TO NOT SYNC PROPERLY. DO NOT BE SPOOKED.
 		
-		LMPlaylistEditorViewController *playlistViewController = [LMPlaylistEditorViewController new];
+//		LMPlaylistEditorViewController *playlistViewController = [LMPlaylistEditorViewController new];
 //		LMPlaylist *playlist = [LMPlaylist new];
 //		playlist.title = @"Nice meme";
 //		playlist.image = [LMAppIcon imageForIcon:LMIconBug];
 //		playlist.trackCollection = [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeAlbums].firstObject;
 //		playlistViewController.playlist = playlist;
-		UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:playlistViewController];
-		[self presentViewController:navigation animated:YES completion:^{
-
-		}];
+//		UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:playlistViewController];
+//		[self presentViewController:navigation animated:YES completion:^{
+//
+//		}];
 
 
 //		LMEnhancedPlaylistEditorViewController *enhancedPlaylistViewController = [LMEnhancedPlaylistEditorViewController new];
@@ -1982,6 +2006,10 @@ LMControlBarViewDelegate
 //		}];
 		
 //		[self searchDialogueOpened:YES withKeyboardHeight:0.0f];
+		
+#endif //DEBUG test area
+		
+		
 	} repeats:NO];
 	
 	

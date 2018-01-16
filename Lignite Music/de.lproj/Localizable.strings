@@ -173,8 +173,8 @@
 "YouAuthorizedThis" = "Du hast es authorisiert";
 "YouHaventDeterminedThis" = "Du hast noch nichts eingestellt";
 
-"TrackQueued" = "Song eingereiht";
-"TrackRemovedFromQueue" = "Aus der Liste entfernt";
+"TrackQueued" = "Lied eingereiht";
+"TrackRemovedFromQueue" = "Lied entfernt";
 
 "LoadingMusic" = "Musik wird geladen";
 "AlmostThere" = "Fast geschafft!";
@@ -203,8 +203,9 @@
 
 
 "TheresNothingHere" = "Oh je, auf deinem Gerät ist noch gar keine Musik vorhanden!\n\nSynchronisiere deine Musik via iTunes, um diese Meldung verschwinden zu lassen."; //Nothing for a certain view (ie. no compilations)
-"iOSNotProvidingQueue" = "iOS teilt uns die als nächstes abzuspielenden Songs nicht mit.\n\nStarte die Wiedergabe von dieser App, um diese Liste automatisch füllen zu lassen.";
+"iOSNotProvidingQueue" = "Es scheint als hättest du die Musikwiedergabe ausserhalb von Lignite Music gestartet.\n\nLeider lässt Apple nicht zu, dass wir die ausserhalb gestarteten Warteschlangen lesen dürfen.\n\nStarte die Wiedergabe bitte innerhalb Lignite Music, um die Warteschlange verwalten zu können.";
 "NothingInQueue" = "Keine Songs in der Liste";
+"QueueUnavailable" = "Warteschlange nicht verfügbar";
 
 
 "ReportBugOrSendFeedback" = "Sende Fehler oder Feedback";

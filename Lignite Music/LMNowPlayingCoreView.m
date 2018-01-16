@@ -80,6 +80,13 @@
 }
 
 - (void)loadMusicTracksBasedOffIndex:(NSInteger)indexOfCenter {
+	if(!self.musicPlayer.nowPlayingWasSetWithinLigniteMusic){
+		[self.centreNowPlayingView changeMusicTrack:self.musicPlayer.nowPlayingTrack withIndex:0];
+		[self.leadingNowPlayingView changeMusicTrack:nil withIndex:1];
+		[self.trailingNowPlayingView changeMusicTrack:nil withIndex:-1];
+		return;
+	}
+	
 	if(self.musicPlayer.nowPlayingCollection.count == 0){
 		[self.centreNowPlayingView changeMusicTrack:nil withIndex:-1];
 		[self.leadingNowPlayingView changeMusicTrack:nil withIndex:-1];
@@ -266,8 +273,7 @@
             [self.superview layoutIfNeeded];
             
             if(recognizer.state == UIGestureRecognizerStateEnded){
-                
-                if((translation.y >= self.frame.size.height/6.5)){
+                if((translation.y >= MAX(WINDOW_FRAME.size.width, WINDOW_FRAME.size.height)/14.0)){
                     self.topConstraint.constant = self.frame.size.height;
                     self.isOpen = NO;
                 }
@@ -322,16 +328,25 @@
             if(recognizer.state == UIGestureRecognizerStateEnded){
                 [self layoutIfNeeded];
                 
-                BOOL nextSong = translation.x < -self.frame.size.width/5;
+				BOOL nextSong = translation.x < (-self.frame.size.width/7);
+				BOOL previousSong = translation.x > (self.frame.size.width/7);
                 BOOL rebuildConstraints = YES;
                 
-                if(translation.x > self.frame.size.width/5){
+                if(previousSong){
                     NSLog(@"Slide forward");
                     self.nowPlayingLeadingConstraint.constant = self.frame.size.width;
+					
+					if(!self.musicPlayer.nowPlayingWasSetWithinLigniteMusic){
+						[self.musicPlayer skipToPreviousTrack];
+					}
                 }
                 else if(nextSong){
                     NSLog(@"Slide backward");
                     self.nowPlayingLeadingConstraint.constant = -self.frame.size.width;
+					
+					if(!self.musicPlayer.nowPlayingWasSetWithinLigniteMusic){
+						[self.musicPlayer skipToNextTrack];
+					}
                 }
                 else{
                     NSLog(@"Reset to centre");
@@ -396,6 +411,7 @@
         self.centreNowPlayingView = [LMNowPlayingView newAutoLayoutView];
         //		self.centerNowPlayingView.backgroundColor = [UIColor orangeColor];
         self.centreNowPlayingView.coreViewController = (LMCoreViewController*)self.rootViewController;
+		self.centreNowPlayingView.isUserFacing = YES;
         [self addSubview:self.centreNowPlayingView];
         
         self.nowPlayingLeadingConstraint = [self.centreNowPlayingView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];

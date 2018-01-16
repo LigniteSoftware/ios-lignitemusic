@@ -125,6 +125,17 @@
 
 @property UIImageView *favouriteHeartImageView;
 
+/**
+ The view which goes above the coverart to display a text saying "Paused", when the music is no longer playing.
+ */
+@property UIView *pausedBackgroundBlurView;
+@property UILabel *pausedLabel;
+
+/**
+ Checks to make sure that the pause background view doesn't display in a flash and is constant. Lost?
+ */
+@property NSTimer *pausedTimer;
+
 @end
 
 @implementation LMNowPlayingView
@@ -199,7 +210,7 @@
 }
 
 - (void)musicTrackDidChange:(LMMusicTrack *)newTrack {
-    //Nothing happens here
+	[self refreshNothingInQueueText];
 }
 
 - (void)changeMusicTrack:(LMMusicTrack*)newTrack withIndex:(NSInteger)index {
@@ -216,12 +227,16 @@
 	
 //	return;
 	
-	BOOL noTrackPlaying = newTrack == nil;
+	BOOL noTrackPlaying = ![self.musicPlayer hasTrackLoaded];
 	
 	
 	__block NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
 		UIImage *albumArt = [newTrack albumArt];
 		UIImage *albumImage = (noTrackPlaying || !albumArt) ? [UIImage imageNamed:@"lignite_background_portrait.png"] : albumArt;
+		
+		if(!self.musicPlayer.nowPlayingWasSetWithinLigniteMusic){
+			albumImage = [self.musicPlayer.nowPlayingTrack albumArt];
+		}
 		
 		UIColor *averageColour = [albumImage averageColour];
 //		BOOL isLight = [averageColour isLight];
@@ -279,20 +294,33 @@
 		return;
 	}
 	
+	
+	if(!self.musicPlayer.nowPlayingWasSetWithinLigniteMusic && (index == -1 || index == 1)){
+		BOOL previousTrack = (index == -1);
+		
+		self.trackInfoView.titleText = NSLocalizedString(previousTrack ? @"PreviousTrack" : @"NextTrack", nil);
+		self.trackInfoView.artistText = NSLocalizedString(previousTrack ? @"TrackMissingSubtitle" : @"TrackMissingSubtitle", nil);
+		self.trackInfoView.albumText = @"LigniteMusic.com/unknown_track";
+		self.progressSlider.leftText = NSLocalizedString(@"SongUnknown", nil);
+		self.progressSlider.rightText = NSLocalizedString(@"BlankDuration", nil);
+		return;
+	}
+	
+	
 	self.trackInfoView.titleText = newTrack.title ? newTrack.title : NSLocalizedString(@"UnknownTitle", nil);
 	self.trackInfoView.artistText = newTrack.artist ? newTrack.artist : NSLocalizedString(@"UnknownArtist", nil);
 	self.trackInfoView.albumText = newTrack.albumTitle ? newTrack.albumTitle : NSLocalizedString(@"UnknownAlbumTitle", nil);
 	
-    if(self.musicPlayer.nowPlayingCollection){
+    if(self.musicPlayer.nowPlayingWasSetWithinLigniteMusic){
         self.progressSlider.leftText =
         [NSString stringWithFormat:NSLocalizedString(@"SongXofX", nil),
              (int)self.loadedTrackIndex+1,
              (int)self.musicPlayer.nowPlayingCollection.count];
     }
     else{
-        self.progressSlider.leftText =
-            [NSString stringWithFormat:NSLocalizedString(@"SongX", nil),
-             (int)self.loadedTrackIndex+1];
+		self.progressSlider.leftText =
+		[NSString stringWithFormat:NSLocalizedString(@"SongX", nil),
+		 (int)self.musicPlayer.systemMusicPlayer.indexOfNowPlayingItem + 1];
     }
     
     CGFloat timeToUse = self.musicPlayer.nowPlayingTrack == self.loadedTrack ? self.musicPlayer.currentPlaybackTime : 0;
@@ -341,6 +369,12 @@
 			[highlightedEntry changeHighlightStatus:YES animated:YES];
 		}
 	}
+	
+	self.pausedTimer = [NSTimer scheduledTimerWithTimeInterval:0.25 block:^{
+		[self musicPlaybackStateDidChange:self.musicPlayer.playbackState];
+	} repeats:NO];
+	
+	[self refreshNothingInQueueText];
 }
 
 
@@ -412,7 +446,23 @@
 
 
 - (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState {
+	if(self.pausedTimer){
+		[self.pausedTimer invalidate];
+	}
 	
+	self.pausedLabel.font = self.trackInfoView.titleLabel.font;
+	
+	[UIView animateWithDuration:0.4 animations:^{
+		CGFloat alphaToUse = (newState == LMMusicPlaybackStatePlaying) ? 0.0 : 1.0;
+		
+		if(!self.musicPlayer.nowPlayingTrack){
+			alphaToUse = 0.0; //Hide it if there's no track playing
+		}
+		
+		self.pausedBackgroundBlurView.alpha = alphaToUse;
+	}];
+	
+	[self refreshNothingInQueueText];
 }
 
 - (void)musicOutputPortDidChange:(AVAudioSessionPortDescription *)outputPort {
@@ -593,12 +643,15 @@
 }
 
 - (void)refreshNothingInQueueText {
-	BOOL hidden = (self.itemArray.count > 0);
+	BOOL hidden = (self.musicPlayer.nowPlayingCollection.count > 0) && self.musicPlayer.nowPlayingWasSetWithinLigniteMusic;
 	
 	self.nothingInQueueLabel.hidden = hidden;
 	self.nothingInQueueTitleLabel.hidden = hidden;
 	
-	self.nothingInQueueLabel.text = NSLocalizedString((self.musicPlayer.nowPlayingTrack && !self.musicPlayer.nowPlayingCollection) ? @"iOSNotProvidingQueue" : @"TheresNothingHere", nil);
+	self.queueTableView.hidden = !hidden;
+	
+	self.nothingInQueueTitleLabel.text = NSLocalizedString(self.musicPlayer.nowPlayingWasSetWithinLigniteMusic ? @"NothingInQueue" : @"QueueUnavailable", nil);
+	self.nothingInQueueLabel.text = NSLocalizedString(self.musicPlayer.nowPlayingWasSetWithinLigniteMusic ? @"TheresNothingHere" : @"iOSNotProvidingQueue", nil);
 }
 
 - (void)trackRemovedFromQueue:(LMMusicTrack *)trackRemoved {
@@ -803,7 +856,7 @@
 	
 	UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14.0f];
 	UIColor *colour = [UIColor colorWithRed:47/255.0 green:47/255.0 blue:49/255.0 alpha:1.0];
-	UIImage *icon = [LMAppIcon imageForIcon:LMIconAddToQueue];
+	UIImage *icon = [LMAppIcon imageForIcon:LMIconRemoveFromQueue];
 	if(!rightSide){ //Favourite/unfavourite
 		icon = [LMAppIcon imageForIcon:track.isFavourite ? LMIconUnfavouriteWhite : LMIconFavouriteWhiteFilled];
 	}
@@ -815,9 +868,15 @@
 							 padding:0
 							callback:^BOOL(MGSwipeTableCell *sender) {
 								if(rightSide){
-									[self.musicPlayer addTrackToQueue:track];
+									BOOL dismiss = (self.musicPlayer.nowPlayingCollection.count == 1);
 									
-									NSLog(@"Queue %@", track.title);
+									[self.musicPlayer removeTrackFromQueue:track];
+									
+									if(dismiss){
+										[self.coreViewController dismissNowPlaying];
+									}
+									
+									NSLog(@"Remove %@ from queue", track.title);
 								}
 								else{
 									if(track.isFavourite){
@@ -846,7 +905,7 @@
 	
 	LMMusicTrack *musicTrack = [self.musicPlayer.nowPlayingCollection.items objectAtIndex:listEntry.collectionIndex];
 	
-	if(!rightSide && musicTrack.isFavourite){ //Favourite/unfavourite
+	if(rightSide || (!rightSide && musicTrack.isFavourite)){ //Remove from queue or favourite/unfavourite
 		swipeColour = [LMColour deletionRedColour];
 	}
 	
@@ -862,7 +921,7 @@
 	}
 	CGFloat totalTranslation = translation.y + (self.currentPoint.y-self.originalPoint.y);
 	
-//	NSLog(@"%f to %f %@", translation.y, totalTranslation, NSStringFromCGPoint(self.currentPoint));
+	NSLog(@"Check yourself dude - %f to %f %@", translation.y, totalTranslation, NSStringFromCGPoint(self.currentPoint));
 	
 	if(totalTranslation < 0){ //Moving upward
         NSLog(@"什麼鬼");
@@ -878,7 +937,9 @@
 	if(recognizer.state == UIGestureRecognizerStateEnded){
 		self.currentPoint = CGPointMake(self.currentPoint.x, self.originalPoint.y + totalTranslation);
 		
-		if((translation.y >= self.frame.size.height/10.0)){
+		
+		
+		if((translation.y >= WINDOW_FRAME.size.height/10.0)){
 			self.topConstraint.constant = self.frame.size.height;
 			self.isOpen = NO;
 		}
@@ -1009,7 +1070,8 @@
 }
 
 - (void)themeChanged:(LMTheme)theme {
-	if(self.musicPlayer.indexOfNowPlayingTrack < self.musicPlayer.nowPlayingCollection.count){
+	if((self.musicPlayer.indexOfNowPlayingTrack < self.musicPlayer.nowPlayingCollection.count)
+	   && (self.musicPlayer.indexOfNowPlayingTrack < self.itemArray.count)){
 		LMListEntry *highlightedEntry = [self.itemArray objectAtIndex:self.musicPlayer.indexOfNowPlayingTrack];
 		[highlightedEntry reloadContents];
 	}
@@ -1119,6 +1181,7 @@
 	self.nothingInQueueLabel.text = NSLocalizedString(@"TheresNothingHere", nil);
 	self.nothingInQueueLabel.textAlignment = NSTextAlignmentLeft;
 	self.nothingInQueueLabel.backgroundColor = [UIColor whiteColor];
+	self.nothingInQueueLabel.textColor = [UIColor blackColor];
 	[self.queueView addSubview:self.nothingInQueueLabel];
 	
 	[self.nothingInQueueLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.nothingInQueueTitleLabel withOffset:20];
@@ -1215,6 +1278,8 @@
 	self.albumArtRootView.backgroundColor = [UIColor clearColor];
 	[self.paddingView addSubview:self.albumArtRootView];
 	
+	
+	
 	self.albumArtImageView = [UIImageView newAutoLayoutView];
 	//	self.albumArtImageView.backgroundColor = [UIColor orangeColor];
 	self.albumArtImageView.layer.masksToBounds = YES;
@@ -1224,6 +1289,28 @@
 	[self.albumArtImageView autoCentreInSuperview];
 	[self.albumArtImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.albumArtRootView];
 	[self.albumArtImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.albumArtRootView];
+	
+	
+	
+	self.pausedBackgroundBlurView = [UIView newAutoLayoutView];
+	self.pausedBackgroundBlurView.userInteractionEnabled = NO;
+	self.pausedBackgroundBlurView.backgroundColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.75];
+	self.pausedBackgroundBlurView.alpha = 0.0;
+	[self.albumArtImageView addSubview:self.pausedBackgroundBlurView];
+	
+	[self.pausedBackgroundBlurView autoPinEdgesToSuperviewEdges];
+	
+	UILabel *pausedLabel = [UILabel newAutoLayoutView];
+	pausedLabel.text = NSLocalizedString(@"Paused", nil);
+	pausedLabel.textColor = [UIColor whiteColor];
+	pausedLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:32.0f];
+	pausedLabel.textAlignment = NSTextAlignmentCenter;
+	pausedLabel.numberOfLines = 0;
+	[self.pausedBackgroundBlurView addSubview:pausedLabel];
+	
+	[pausedLabel autoPinEdgesToSuperviewMargins];
+	
+	self.pausedLabel = pausedLabel;
 	
 	//Constraints for these views are created after the button stack view
 	

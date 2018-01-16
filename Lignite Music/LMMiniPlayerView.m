@@ -30,6 +30,16 @@
 
 @property LMMusicPlayer *musicPlayer;
 
+/**
+ The view which goes above the coverart to display a text saying "Paused", when the music is no longer playing.
+ */
+@property UIView *pausedBackgroundBlurView;
+
+/**
+ Checks to make sure that the pause background view doesn't display in a flash and is constant. Lost?
+ */
+@property NSTimer *pausedTimer;
+
 @end
 
 @implementation LMMiniPlayerView
@@ -103,29 +113,58 @@
 		return;
 	}
 	
+	
+	if(!self.musicPlayer.nowPlayingWasSetWithinLigniteMusic && (index == -1 || index == 1)){
+		BOOL previousTrack = (index == -1);
+		
+		self.trackInfoView.titleText = NSLocalizedString(previousTrack ? @"PreviousTrack" : @"NextTrack", nil);
+		self.trackInfoView.artistText = NSLocalizedString(previousTrack ? @"TrackMissingSubtitle" : @"TrackMissingSubtitle", nil);
+		self.trackInfoView.albumText = @"LigniteMusic.com/unknown_track";
+		self.progressSlider.leftText = NSLocalizedString(@"SongUnknown", nil);
+		self.progressSlider.rightText = NSLocalizedString(@"BlankDuration", nil);
+		return;
+	}
+	
+	
 	self.trackInfoView.titleText = newTrack.title ? newTrack.title : NSLocalizedString(@"UnknownTitle", nil);
 	self.trackInfoView.artistText = newTrack.artist ? newTrack.artist : NSLocalizedString(@"UnknownArtist", nil);
 	self.trackInfoView.albumText = newTrack.albumTitle ? newTrack.albumTitle : NSLocalizedString(@"UnknownAlbumTitle", nil);
 	
-	if(self.musicPlayer.nowPlayingCollection){
+	if(self.musicPlayer.nowPlayingWasSetWithinLigniteMusic){
 		self.progressSlider.leftText =
 		[NSString stringWithFormat:NSLocalizedString(@"SongXofX", nil),
-		 (int)self.loadedTrackIndex+1,
+		 (int)self.loadedTrackIndex + 1,
 		 (int)self.musicPlayer.nowPlayingCollection.count];
 	}
 	else{
 		self.progressSlider.leftText =
 		[NSString stringWithFormat:NSLocalizedString(@"SongX", nil),
-		 (int)self.loadedTrackIndex+1];
+		 (int)self.musicPlayer.systemMusicPlayer.indexOfNowPlayingItem + 1];
 	}
 	
 	self.progressSlider.rightText = [LMNowPlayingView durationStringTotalPlaybackTime:newTrack.playbackDuration];
 	[self updateSongDurationLabelWithPlaybackTime:0];
 	[self.progressSlider resetToZero];
+	
+	self.pausedTimer = [NSTimer scheduledTimerWithTimeInterval:0.25 block:^{
+		[self musicPlaybackStateDidChange:self.musicPlayer.playbackState];
+	} repeats:NO];
 }
 
 - (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState {
+	if(self.pausedTimer){
+		[self.pausedTimer invalidate];
+	}
 	
+	[UIView animateWithDuration:0.4 animations:^{
+		CGFloat alphaToUse = (newState == LMMusicPlaybackStatePlaying) ? 0.0 : 1.0;
+		
+		if(!self.musicPlayer.nowPlayingTrack){
+			alphaToUse = 0.0; //Hide it if there's no track playing
+		}
+		
+		self.pausedBackgroundBlurView.alpha = alphaToUse;
+	}];
 }
 
 - (void)progressSliderValueChanged:(CGFloat)newValue isFinal:(BOOL)isFinal {
@@ -196,6 +235,27 @@
 	[self.albumArtImageView autoCentreInSuperview];
 	[self.albumArtImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.albumArtImageBackgroundView withMultiplier:(8.0/10.0)];
 	[self.albumArtImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.albumArtImageBackgroundView withMultiplier:(8.0/10.0)];
+	
+	
+	
+	self.pausedBackgroundBlurView = [UIView newAutoLayoutView];
+	self.pausedBackgroundBlurView.userInteractionEnabled = NO;
+	self.pausedBackgroundBlurView.backgroundColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.75];
+	self.pausedBackgroundBlurView.alpha = 0.0;
+	[self.albumArtImageView addSubview:self.pausedBackgroundBlurView];
+	
+	[self.pausedBackgroundBlurView autoPinEdgesToSuperviewEdges];
+	
+	UILabel *pausedLabel = [UILabel newAutoLayoutView];
+	pausedLabel.text = NSLocalizedString(@"Paused", nil);
+	pausedLabel.textColor = [UIColor whiteColor];
+	pausedLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:16.0f];
+	pausedLabel.textAlignment = NSTextAlignmentCenter;
+	pausedLabel.numberOfLines = 0;
+	[self.pausedBackgroundBlurView addSubview:pausedLabel];
+	
+	[pausedLabel autoPinEdgesToSuperviewMargins];
+	
 	
 	
 	self.trackInfoAndDurationBackgroundView = [LMView newAutoLayoutView];
@@ -274,6 +334,7 @@
 	[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
 		[self.progressSlider setValue:self.musicPlayer.currentPlaybackTime];
 		[self progressSliderValueChanged:self.musicPlayer.currentPlaybackTime isFinal:NO];
+		[self musicPlaybackStateDidChange:self.musicPlayer.playbackState];
 	} repeats:NO];
 }
 

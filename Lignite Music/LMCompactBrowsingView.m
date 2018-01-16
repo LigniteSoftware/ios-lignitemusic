@@ -137,23 +137,25 @@
 	flowLayout.musicType = musicType;
 }
 
-- (void)scrollViewToIndex:(NSUInteger)index {
+- (void)scrollViewToIndex:(NSUInteger)index animated:(BOOL)animated {
     self.didJustScrollByLetter = YES;
 	
 	[self layoutIfNeeded];
 	
 	[self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredVertically animated:NO];
 	
-	[NSTimer scheduledTimerWithTimeInterval:0.2 block:^{
-		LMBigListEntry *bigListEntry = [self.bigListEntries objectAtIndex:index];
-		CGFloat contentOffsetY = bigListEntry.superview.superview.frame.origin.y - 20;
-		
-		NSLog(@"%@ %@ %@", bigListEntry.superview, bigListEntry.superview.superview, bigListEntry.superview.superview.superview);
-		
-		[UIView animateWithDuration:0.4 animations:^{
-			self.collectionView.contentOffset = CGPointMake(0, contentOffsetY);
-		}];
-	} repeats:NO];
+	if(animated){
+		[NSTimer scheduledTimerWithTimeInterval:0.2 block:^{
+			LMBigListEntry *bigListEntry = [self.bigListEntries objectAtIndex:index];
+			CGFloat contentOffsetY = bigListEntry.superview.superview.frame.origin.y - 20;
+			
+			NSLog(@"%@ %@ %@", bigListEntry.superview, bigListEntry.superview.superview, bigListEntry.superview.superview.superview);
+			
+			[UIView animateWithDuration:0.4 animations:^{
+				self.collectionView.contentOffset = CGPointMake(0, contentOffsetY);
+			}];
+		} repeats:NO];
+	}
 	
 //	[self layoutIfNeeded];
 }
@@ -231,7 +233,7 @@
 	
 //	[self.bigListEntryTableView focusBigListEntryAtIndex:index];
 	
-	[self scrollViewToIndex:index];
+	[self scrollViewToIndex:index animated:YES];
 	
 	return index;
 }

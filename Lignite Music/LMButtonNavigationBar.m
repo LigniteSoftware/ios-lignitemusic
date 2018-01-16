@@ -118,6 +118,11 @@
  */
 @property LMIcon stateRestoredSourceLMIcon;
 
+/**
+ Whether or not the button bar is currently rotating. If YES, changes in minimization status should be ignored.
+ */
+@property BOOL rotating;
+
 @end
 
 @implementation LMButtonNavigationBar
@@ -265,7 +270,7 @@
 }
 
 - (void)minimize:(BOOL)automatic {
-    if(self.isMinimized){
+    if(self.isMinimized || self.rotating){
         return;
     }
     
@@ -311,7 +316,7 @@
 }
 
 - (void)maximize:(BOOL)automatic {
-	if(!self.wasAutomaticallyMinimized && self.isMinimized && automatic){
+	if((!self.wasAutomaticallyMinimized && self.isMinimized && automatic) || self.rotating){
 		return;
 	}
 	
@@ -457,13 +462,15 @@
 - (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
 	BOOL willBeLandscape = size.width > size.height;
 	
+	self.rotating = YES;
+	
 	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		if(!self.isMinimized){
 			[self setSelectedTab:self.currentlySelectedTab];
 			
 			if(self.currentlySelectedTab != LMNavigationTabView){
-				[self topConstrantForView:(self.currentlySelectedTab == LMNavigationTabBrowse) ? self.miniPlayerCoreView : self.browsingBar].constant = WINDOW_FRAME.size.height * 2;
-				[self topConstrantForView:self.sourceSelector].constant = WINDOW_FRAME.size.height * 2;
+				[self topConstrantForView:(self.currentlySelectedTab == LMNavigationTabBrowse) ? self.miniPlayerCoreView : self.browsingBar].constant = MAX(WINDOW_FRAME.size.width, WINDOW_FRAME.size.height) * 2;
+				[self topConstrantForView:self.sourceSelector].constant = MAX(WINDOW_FRAME.size.width, WINDOW_FRAME.size.height) * 2;
 				[self layoutIfNeeded];
 			}
 		}
@@ -480,15 +487,16 @@
 			
 			[self minimize:NO];
 		}
-		else{
-			[self maximize:NO];
-		}
+//		else{
+//			[self maximize:NO];
+//		}
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-		if(self.isCompletelyHidden){
-			[NSTimer scheduledTimerWithTimeInterval:0.1 block:^{
-				[self completelyHide];
-			} repeats:NO];
-		}
+		[NSTimer scheduledTimerWithTimeInterval:0.1 block:^{
+			self.rotating = NO;
+			if(self.isCompletelyHidden){
+					[self completelyHide];
+			}
+		} repeats:NO];
 	}];
 }
 

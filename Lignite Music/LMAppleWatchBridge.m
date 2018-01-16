@@ -620,7 +620,7 @@
 						   });
 		}
 		else if([key isEqualToString:LMAppleWatchControlKeyPreviousTrack]){
-			[self.musicPlayer skipToPreviousItem];
+			[self.musicPlayer skipToPreviousTrack];
 			[self.musicPlayer play];
 			
 			replyHandler(@{

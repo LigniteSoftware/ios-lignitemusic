@@ -66,6 +66,13 @@
 @implementation LMMiniPlayerCoreView
 
 - (void)loadMusicTracksBasedOffIndex:(NSInteger)indexOfCenter {
+	if(!self.musicPlayer.nowPlayingWasSetWithinLigniteMusic){
+		[self.centreMiniPlayerView changeMusicTrack:self.musicPlayer.nowPlayingTrack withIndex:0];
+		[self.leadingMiniPlayerView changeMusicTrack:nil withIndex:1];
+		[self.trailingMiniPlayerView changeMusicTrack:nil withIndex:-1];
+		return;
+	}
+	
 	if(self.musicPlayer.nowPlayingCollection.count == 0){
 		[self.centreMiniPlayerView changeMusicTrack:nil withIndex:-1];
 		[self.leadingMiniPlayerView changeMusicTrack:nil withIndex:-1];
@@ -210,8 +217,8 @@
     }
     else{
         if(userIsGoingInYAxis){
-            NSLog(@"Sending to core (%@)", NSStringFromCGPoint(translation));
-            
+//            NSLog(@"Sending to core (%@)", NSStringFromCGPoint(translation));
+			
             LMCoreViewController *coreViewController = (LMCoreViewController*)self.rootViewController;
             [coreViewController panNowPlayingUp:recognizer];
             
@@ -255,16 +262,25 @@
             if(recognizer.state == UIGestureRecognizerStateEnded){
                 [self layoutIfNeeded];
                 
-                BOOL nextSong = translation.x < -self.frame.size.width/4;
+                BOOL nextSong = translation.x < (-self.frame.size.width/7);
+				BOOL previousSong = translation.x > (self.frame.size.width/7);
                 BOOL rebuildConstraints = YES;
                 
-                if(translation.x > self.frame.size.width/4){
-                    NSLog(@"Slide forward");
+                if(previousSong){
+                    NSLog(@"Slide forward (previous track)");
                     self.miniPlayerLeadingConstraint.constant = self.frame.size.width;
+					
+					if(!self.musicPlayer.nowPlayingWasSetWithinLigniteMusic){
+						[self.musicPlayer skipToPreviousTrack];
+					}
                 }
                 else if(nextSong){
-                    NSLog(@"Slide backward");
+                    NSLog(@"Slide backward (next track)");
                     self.miniPlayerLeadingConstraint.constant = -self.frame.size.width;
+					
+					if(!self.musicPlayer.nowPlayingWasSetWithinLigniteMusic){
+						[self.musicPlayer skipToNextTrack];
+					}
                 }
                 else{
                     NSLog(@"Reset to centre");

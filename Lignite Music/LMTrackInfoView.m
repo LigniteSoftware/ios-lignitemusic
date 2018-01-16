@@ -15,11 +15,6 @@
 @interface LMTrackInfoView()<LMLayoutChangeDelegate>
 
 /**
- The labels of the track info view.
- */
-@property MarqueeLabel *titleLabel, *artistLabel, *albumLabel;
-
-/**
  The layout manager.
  */
 @property LMLayoutManager *layoutManager;

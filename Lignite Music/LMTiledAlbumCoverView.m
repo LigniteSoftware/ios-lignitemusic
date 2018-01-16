@@ -177,7 +177,7 @@
 						regularIdUsed = [regularIds objectAtIndex:(i == 2) ? 1 : 0];
 						image = [[self musicTrackForPersistentIdString:regularIdUsed] albumArt];
 					}
-					else if(i >= regularIds.count){
+					else if((i >= regularIds.count) && (regularIds.count > 0)){
 						regularIdUsed = [regularIds objectAtIndex:(int)arc4random_uniform((int)regularIds.count)];
 						
 						int attempts = 0;
