@@ -126,6 +126,12 @@
 }
 
 - (void)trackAddedToQueue:(LMMusicTrack *)trackAdded {
+	NSLog(@"=== The queue has %d items ===", (int)self.musicPlayer.nowPlayingCollection.count);
+	for(LMMusicTrack *track in self.musicPlayer.nowPlayingCollection.items){
+		NSLog(@"%@", track.title);
+	}
+	NSLog(@"=== End queue ===");
+	
 	[self theQueueChangedSoPleaseReloadThankYou];
 }
 
@@ -150,7 +156,15 @@
 
 - (void)skipTracks {
     //	self.skipToNextTrackOnTimerFire ? [self.musicPlayer skipToNextTrack] : [self.musicPlayer skipToPreviousItem];
-    [self.musicPlayer setNowPlayingTrack:self.centreNowPlayingView.loadedTrack];
+//	if(self.musicPlayer.queueRequiresReload){
+//		[self.musicPlayer skipToNextTrack];
+//	}
+//	else{
+	
+	NSLog(@"Centre track is %@", self.centreNowPlayingView.loadedTrack.title);
+	
+		[self.musicPlayer setNowPlayingTrack:self.centreNowPlayingView.loadedTrack];
+//	}
 }
 
 - (void)rebuildConstraints:(BOOL)leadingIsCenter {

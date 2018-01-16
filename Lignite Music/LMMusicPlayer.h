@@ -191,6 +191,11 @@ typedef enum {
 @property MPMusicPlayerController *systemMusicPlayer;
 
 /**
+ Whether or not the queue requires reloading (setting inside of the system playback
+ */
+@property BOOL queueRequiresReload;
+
+/**
  Whether or not the user has set music within the app. If NO, the app should reject queue requests and whatnot. Gotta love walled gardens.
  */
 @property (readonly) BOOL nowPlayingWasSetWithinLigniteMusic;
