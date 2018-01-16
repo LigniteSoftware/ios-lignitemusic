@@ -21,7 +21,7 @@
 /**
  The swipe down gesture happened.
  */
-- (void)swipeDownGestureOccurredOnLetterTabBar;
+- (void)swipeDownGestureOccurredOnLetterTabBar DEPRECATED_ATTRIBUTE;
 
 @end
 

@@ -410,15 +410,13 @@
 
 - (void)tableView:(UITableView *)tableView showDraggingView:(UIView *)draggingView atIndexPath:(NSIndexPath *)indexPath {
 	NSLog(@"Show dragging view at %@", indexPath);
+	[self.musicPlayer prepareQueueModification];
 }
 
 - (void)tableView:(UITableView *)tableView hideDraggingView:(UIView *)draggingView atIndexPath:(NSIndexPath *)indexPath {
 	NSLog(@"Hide dragging view at %@", indexPath);
 	
-	[NSTimer scheduledTimerWithTimeInterval:0.3 block:^{
-		LMNowPlayingCoreView *coreNowPlayingView = (LMNowPlayingCoreView*)self.nowPlayingCoreView;
-		[coreNowPlayingView musicTrackDidChange:nil];
-	} repeats:NO];
+	[self.musicPlayer finishQueueModification];
 }
 
 - (void)tableView:(UITableView *)tableView draggingGestureChanged:(UILongPressGestureRecognizer *)gesture {
@@ -429,6 +427,10 @@
 	NSLog(@"%@ was moved, current index is %d", trackMoved.title, (int)self.musicPlayer.indexOfNowPlayingTrack);
 	
 //	[self.queueTableView reloadSubviewData];
+//	[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
+//		LMNowPlayingCoreView *coreNowPlayingView = (LMNowPlayingCoreView*)self.nowPlayingCoreView;
+//		[coreNowPlayingView musicTrackDidChange:nil];
+//	} repeats:NO];
 }
 
 - (void)trackAddedToFavourites:(LMMusicTrack *)track {
@@ -895,7 +897,7 @@
 	swipeButton.titleLabel.font = font;
 	swipeButton.titleLabel.hidden = YES;
 	swipeButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
-	swipeButton.imageEdgeInsets = UIEdgeInsetsMake(25, 0, 25, 0);
+	swipeButton.imageEdgeInsets = UIEdgeInsetsMake(LMLayoutManager.isExtraSmall ? 18 : 25, 0, LMLayoutManager.isExtraSmall ? 18 : 25, 0);
 	
 	return @[ swipeButton ];
 }

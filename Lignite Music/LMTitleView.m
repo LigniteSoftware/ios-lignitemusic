@@ -580,7 +580,7 @@
 	swipeButton.titleLabel.font = font;
 	swipeButton.titleLabel.hidden = YES;
 	swipeButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
-	swipeButton.imageEdgeInsets = UIEdgeInsetsMake(25, 0, 25, 0);
+	swipeButton.imageEdgeInsets = UIEdgeInsetsMake(LMLayoutManager.isExtraSmall ? 18 : 25, 0, LMLayoutManager.isExtraSmall ? 18 : 25, 0);
 
 	return @[ swipeButton ];
 }

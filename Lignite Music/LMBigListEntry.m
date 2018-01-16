@@ -218,7 +218,7 @@
 		UILabel *tapToEditLabel = [UILabel newAutoLayoutView];
 		tapToEditLabel.text = NSLocalizedString(@"TapToEdit", nil);
 		tapToEditLabel.textColor = [UIColor whiteColor];
-		tapToEditLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:20.0f];
+		tapToEditLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:20.0f];
 		tapToEditLabel.textAlignment = NSTextAlignmentCenter;
 		tapToEditLabel.numberOfLines = 0;
 		[self.tapToEditBackgroundView addSubview:tapToEditLabel];

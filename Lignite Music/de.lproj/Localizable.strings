@@ -48,6 +48,15 @@
  
  */
 
+"NextTrack" = "Nächstes Lied";
+"PreviousTrack" = "Vorheriges Lied";
+"TrackMissingSubtitle" = "Unbekannt bis Wiedergabe startet";
+
+"SongUnknown" = "Lied ?"; //Normally "Song X" where X is a number (ie. "Song 3" or "Song 101"), "Song ?" is for when Lignite Music doesn't know the song number.
+
+"UnableToQueueDescription" = "Leider lässt Apple nicht zu, dass wir die ausserhalb gestarteten Warteschlangen lesen dürfen.\n\nStarte die Wiedergabe bitte innerhalb Lignite Music, um die Warteschlange verwalten zu können.";
+"UnableToQueueCheckboxText" = "Ich verstehe, dass ich die Warteschlange nicht verändern kann wenn die Wiedergabe ausserhalb von Lignite Music gestartet wurde.";
+
 "TrackRestarted" = "Erneute Wiedergabe";
 
 "InternalErrorOccurred_Long" = "Ein Rendering Fehler ist aufgetreten, sorry!\n\nFür Unterstützung melde dich bitte unter contact@lignite.io.";

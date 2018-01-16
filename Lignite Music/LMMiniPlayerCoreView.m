@@ -11,6 +11,7 @@
 #import "LMMiniPlayerCoreView.h"
 #import "LMCoreViewController.h"
 #import "LMMiniPlayerView.h"
+#import "NSTimer+Blocks.h"
 #import "MBProgressHUD.h"
 #import "LMMusicPlayer.h"
 
@@ -106,6 +107,12 @@
 
 - (void)trackRemovedFromQueue:(LMMusicTrack *)trackRemoved {
 	[self loadMusicTracksBasedOffIndex:self.musicPlayer.indexOfNowPlayingTrack];
+}
+
+- (void)trackMovedInQueue:(LMMusicTrack *)trackMoved {
+	[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
+		[self musicTrackDidChange:self.musicPlayer.nowPlayingTrack];
+	} repeats:NO];
 }
 
 - (void)musicTrackDidChange:(LMMusicTrack *)newTrack {

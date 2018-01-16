@@ -99,6 +99,11 @@
  */
 @property UILabel *noObjectsLabel;
 
+/**
+ The index of the currently open detail view for transitioning between landscape and portrait on iPhone.
+ */
+@property NSInteger indexOfCurrentlyOpenDetailViewForOreientationChanges;
+
 
 /**
  The constraints for hotswapping the landscape/portrait collection view top constraints on iPhone since for some reason the layout manager throws EXC_BAD_ACCESS.
@@ -731,7 +736,7 @@
 			}
 			else if(![self phoneLandscapeViewIsDisplaying] && willBeLandscape && ![LMLayoutManager isiPad] && layout.indexOfItemDisplayingDetailView > LMNoDetailViewSelected){
 				[self setPhoneLandscapeViewDisplaying:YES forIndex:layout.indexOfItemDisplayingDetailView];
-				self.indexOfCurrentlyOpenDetailView = layout.indexOfItemDisplayingDetailView;
+				self.indexOfCurrentlyOpenDetailViewForOreientationChanges = layout.indexOfItemDisplayingDetailView;
 				
 				transitioningFromPortraitToLandscape = YES;
 			}
@@ -771,7 +776,7 @@
 					layout.indexOfItemDisplayingDetailView = LMNoDetailViewSelected;
 				}
 				else if(transitioningFromLandscapeToPortrait){
-					[self tappedBigListEntryAtIndex:self.indexOfCurrentlyOpenDetailView];
+					[self tappedBigListEntryAtIndex:self.indexOfCurrentlyOpenDetailViewForOreientationChanges];
 				}
 				else{
 					[self reloadDataAndInvalidateLayouts];
@@ -804,7 +809,7 @@
 	self.coreViewController.buttonNavigationBar.browsingBar.showingLetterTabs = !displaying;
 	
 	if(displaying){
-		self.indexOfCurrentlyOpenDetailView = index;
+		self.indexOfCurrentlyOpenDetailViewForOreientationChanges = index;
 		
 		self.phoneLandscapeDetailView.index = index;
 		self.phoneLandscapeDetailView.musicType = self.musicType;
@@ -845,7 +850,7 @@
 	else{
 		[self setPhoneLandscapeViewDisplaying:NO forIndex:-1];
 		
-		self.indexOfCurrentlyOpenDetailView = -1;
+		self.indexOfCurrentlyOpenDetailViewForOreientationChanges = -1;
 	}
 }
 
@@ -1027,6 +1032,12 @@
 	[alert addAction:nopeButton];
 	
 	[self.coreViewController presentViewController:alert animated:YES completion:nil];
+}
+
+//This is so confusing what the fuck was I thinking
+- (NSInteger)flowLayoutIndexOfItemDisplayingDetailView {
+	LMCollectionViewFlowLayout *flowLayout = (LMCollectionViewFlowLayout*)self.collectionView.collectionViewLayout;
+	return flowLayout.indexOfItemDisplayingDetailView;
 }
 
 - (void)editPlaylistButtonTapped {
@@ -1345,7 +1356,7 @@
 }
 
 - (void)tappedBigListEntryAtIndex:(NSInteger)i {
-	self.indexOfCurrentlyOpenDetailView = i;
+	self.indexOfCurrentlyOpenDetailViewForOreientationChanges = i;
 	
 	if([LMLayoutManager isLandscape]){
 		[self setPhoneLandscapeViewDisplaying:YES forIndex:i];
@@ -1367,7 +1378,7 @@
 		layout.amountOfItemsInDetailView = trackCollection.count;
 	}
 	else{
-		self.indexOfCurrentlyOpenDetailView = LMNoDetailViewSelected;
+		self.indexOfCurrentlyOpenDetailViewForOreientationChanges = LMNoDetailViewSelected;
 	}
 	layout.indexOfItemDisplayingDetailView = displayNothing ? LMNoDetailViewSelected : i;
 }
@@ -1378,7 +1389,7 @@
 		self.layoutManager = [LMLayoutManager sharedLayoutManager];
 		[self.layoutManager addDelegate:self];
 		
-		self.indexOfCurrentlyOpenDetailView = LMNoDetailViewSelected;
+		self.indexOfCurrentlyOpenDetailViewForOreientationChanges = LMNoDetailViewSelected;
 	}
 	return self;
 }

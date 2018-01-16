@@ -69,6 +69,13 @@
 	[self.progressSlider reload];
 }
 
+//- (void)trackMovedInQueue:(LMMusicTrack *)trackMoved {
+//	[NSTimer scheduledTimerWithTimeInterval:0.3 block:^{
+//		LMMiniPlayerCoreView *coreMiniPlayerView = (LMMiniPlayerCoreView*)self.coreMiniPlayerView;
+//		[coreNowPlayingView musicTrackDidChange:nil];
+//	} repeats:NO];
+//}
+
 - (void)changeMusicTrack:(LMMusicTrack *)newTrack withIndex:(NSInteger)index {
 	self.loadedTrack = newTrack;
 	self.loadedTrackIndex = index;

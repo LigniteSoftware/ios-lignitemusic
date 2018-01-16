@@ -44,14 +44,16 @@
 @property BOOL editing;
 
 /**
- The index of the currently open detail view for transitioning between landscape and portrait on iPhone.
- */
-@property NSInteger indexOfCurrentlyOpenDetailView;
-
-/**
  The background view for the playlist modification button.
  */
 @property UIView *playlistModificationButtonBackgroundView;
+
+/**
+ The current index of the item displaying the detail view, -1 if none.
+
+ @return The index of the item displaying the detail view.
+ */
+- (NSInteger)flowLayoutIndexOfItemDisplayingDetailView;
 
 /**
  Reload the contents of the view after changing the music type and music track collections.

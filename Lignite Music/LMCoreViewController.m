@@ -850,7 +850,7 @@ LMControlBarViewDelegate
 }
 
 - (void)swipeDownGestureOccurredOnLetterTabBar {
-	[self.buttonNavigationBar minimize:NO];
+//	[self.buttonNavigationBar minimize:NO];
 }
 
 - (UIBarPosition)positionForBar:(id<UIBarPositioning>)bar {
@@ -1177,7 +1177,7 @@ LMControlBarViewDelegate
 - (void)encodeRestorableStateWithCoder:(NSCoder *)coder {
 	[super encodeRestorableStateWithCoder:coder];
 	
-	NSLog(@"What boi encoding restore state %d", (int)self.compactView.indexOfCurrentlyOpenDetailView);
+	NSLog(@"What boi encoding restore state %d", (int)self.compactView.flowLayoutIndexOfItemDisplayingDetailView);
 	
 //	[coder encodeObject:self.navigationController.navigationBar.items forKey:LMNavigationBarItemsKey];
 	
@@ -1209,9 +1209,11 @@ LMControlBarViewDelegate
 	[coder encodeInteger:newRestorationState forKey:LMCoreViewControllerRestorationStateKey];
 	[coder encodeInteger:self.buttonNavigationBar.currentlySelectedTab forKey:LMCoreViewControllerStateRestoredNavigationTabKey];
 	[coder encodeBool:self.buttonNavigationBar.isMinimized forKey:LMCoreViewControllerStateRestoredNavigationBarWasMinimizedKey];
-	[coder encodeInteger:self.compactView.indexOfCurrentlyOpenDetailView
+	[coder encodeInteger:self.compactView.flowLayoutIndexOfItemDisplayingDetailView
 				  forKey:LMCoreViewControllerStateRestoredPreviouslyOpenedDetailViewIndex];
 	[coder encodeInteger:[self.titleView topTrackPersistentID] forKey:LMCoreViewControllerStateRestoredTitleViewTopPersistentID];
+	
+	NSLog(@"Nice boi %d", (int)self.compactView.flowLayoutIndexOfItemDisplayingDetailView);
 }
 
 - (void)decodeRestorableStateWithCoder:(NSCoder *)coder {

@@ -11,6 +11,7 @@
 #import "LMNowPlayingCoreView.h"
 #import "LMCoreViewController.h"
 #import "LMNowPlayingView.h"
+#import "NSTimer+Blocks.h"
 #import "LMTutorialView.h"
 #import "MBProgressHUD.h"
 #import "LMSettings.h"
@@ -118,14 +119,22 @@
                                         withIndex:previousTrackIndex];
 }
 
+- (void)theQueueChangedSoPleaseReloadThankYou {
+	[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
+		[self musicTrackDidChange:self.musicPlayer.nowPlayingTrack];
+	} repeats:NO];
+}
+
 - (void)trackAddedToQueue:(LMMusicTrack *)trackAdded {
-	NSInteger nowPlayingTrackIndex = self.musicPlayer.indexOfNowPlayingTrack;
-	[self loadMusicTracksBasedOffIndex:nowPlayingTrackIndex];
+	[self theQueueChangedSoPleaseReloadThankYou];
 }
 
 - (void)trackRemovedFromQueue:(LMMusicTrack *)trackRemoved {
-	NSInteger nowPlayingTrackIndex = self.musicPlayer.indexOfNowPlayingTrack;
-	[self loadMusicTracksBasedOffIndex:nowPlayingTrackIndex];
+	[self theQueueChangedSoPleaseReloadThankYou];
+}
+
+- (void)trackMovedInQueue:(LMMusicTrack *)trackMoved {
+	[self theQueueChangedSoPleaseReloadThankYou];
 }
 
 - (void)musicTrackDidChange:(LMMusicTrack *)newTrack {
@@ -133,11 +142,6 @@
     [self loadMusicTracksBasedOffIndex:nowPlayingTrackIndex];
 	
 //	NSLog(@"Refresh core");
-}
-
-- (void)trackMovedInQueue:(LMMusicTrack *)trackMoved {
-//	NSInteger nowPlayingTrackIndex = self.musicPlayer.indexOfNowPlayingTrack;
-//	[self loadMusicTracksBasedOffIndex:nowPlayingTrackIndex];
 }
 
 - (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState {

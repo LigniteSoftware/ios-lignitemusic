@@ -326,7 +326,7 @@
 		saveButton.titleLabel.font = font;
 		saveButton.titleLabel.hidden = YES;
 		saveButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
-		saveButton.imageEdgeInsets = UIEdgeInsetsMake(25, 0, 25, 0);
+		saveButton.imageEdgeInsets = UIEdgeInsetsMake(LMLayoutManager.isExtraSmall ? 18 : 25, 0, LMLayoutManager.isExtraSmall ? 18 : 25, 0);
 		
 		listEntry.rightButtons = @[ saveButton ];
 		
@@ -347,7 +347,7 @@
 		favouriteButton.titleLabel.font = font;
 		favouriteButton.titleLabel.hidden = YES;
 		favouriteButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
-		favouriteButton.imageEdgeInsets = UIEdgeInsetsMake(25, 0, 25, 0);
+		favouriteButton.imageEdgeInsets = UIEdgeInsetsMake(LMLayoutManager.isExtraSmall ? 18 : 25, 0, LMLayoutManager.isExtraSmall ? 18 : 25, 0);
 		
 		listEntry.leftButtons = @[ favouriteButton ];
 		listEntry.leftButtonExpansionColour = track.isFavourite ? [LMColour deletionRedColour] : [LMColour successGreenColour];
