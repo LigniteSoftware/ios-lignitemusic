@@ -12,6 +12,8 @@
 #import "LMColour.h"
 #import "LMAppIcon.h"
 #import "LMThemeEngine.h"
+#import "UIColor+isLight.h"
+#import "UIImage+AverageColour.h"
 
 @interface LMButtonBar()<LMLayoutChangeDelegate, LMThemeEngineDelegate>
 
@@ -70,7 +72,7 @@
 //	}];
 //}
 
-- (void)invertIconForButtonBackgroundView:(LMView*)buttonBackgroundView {
+- (void)setIconInverted:(BOOL)inverted forButtonBackgroundView:(LMView*)buttonBackgroundView {
 	UIImageView *iconView = nil;
 	for(id subview in buttonBackgroundView.subviews){
 		if([subview class] == [UIImageView class]){
@@ -79,7 +81,9 @@
 		}
 	}
 	if(iconView){
-		iconView.image = [LMAppIcon invertImage:iconView.image];
+		UIImage *image = [LMAppIcon invertImage:iconView.image];
+		
+		iconView.image = image;
 	}
 }
 
@@ -94,7 +98,7 @@
 }
 
 - (void)setBackgroundView:(LMView*)backgroundView inverted:(BOOL)inverted {
-	[self invertIconForButtonBackgroundView:backgroundView];
+	[self setIconInverted:inverted forButtonBackgroundView:backgroundView];
 	[self setBackgroundColourForButtonBackgroundView:backgroundView toColour:inverted ? [LMColour whiteColour] : [LMColour mainColour] animated:YES];
 }
 

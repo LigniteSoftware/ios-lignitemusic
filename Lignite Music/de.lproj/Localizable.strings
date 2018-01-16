@@ -410,7 +410,7 @@
 
 /* When no music is playing */
 "NoMusic" = "Keine Musik";
-"NoMusicDescription" = "Starte die Musikwiedergabe auf deinem Smartphone oder deiner Uhr";
+"NoMusicDescriptionPhone" = "Starte die Musikwiedergabe auf deinem Smartphone oder deiner Uhr";
 
 /*
  Some Pebble Stuff

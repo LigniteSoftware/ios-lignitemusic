@@ -280,7 +280,7 @@
 	
 	if(noTrackPlaying){
 		self.trackInfoView.titleText = NSLocalizedString(@"NoMusic", nil);
-		self.trackInfoView.artistText = NSLocalizedString(@"NoMusicDescription", nil);
+		self.trackInfoView.artistText = NSLocalizedString([LMLayoutManager isiPad] ? @"NoMusicDescriptionTablet" : @"NoMusicDescriptionPhone", nil);
 		self.trackInfoView.albumText = @"";
 		self.progressSlider.rightText = NSLocalizedString(@"BlankDuration", nil);
 		self.progressSlider.leftText = NSLocalizedString(@"NoMusic", nil);
@@ -614,7 +614,7 @@
 
 - (id)subviewAtIndex:(NSUInteger)index forTableView:(LMTableView *)tableView {
 	if(index >= self.musicPlayer.nowPlayingCollection.items.count){
-		[self.coreViewController dismissNowPlaying];
+//		[self.coreViewController dismissNowPlaying];
 		return nil;
 	}
 	

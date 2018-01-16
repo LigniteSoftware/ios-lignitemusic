@@ -369,7 +369,8 @@
 
 /* When no music is playing */
 "NoMusic" = "Nothing's playing";
-"NoMusicDescription" = "Start music on your watch or phone";
+"NoMusicDescriptionPhone" = "Start music on your watch or phone";
+"NoMusicDescriptionTablet" = "Get those beats poppin'";
 
 /* 
  Some Pebble Stuff

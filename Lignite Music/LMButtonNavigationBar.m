@@ -423,7 +423,9 @@
 
 - (void)setCurrentSourceIcon:(LMIcon)icon {
 	UIImage *rawIconImage = [LMAppIcon imageForIcon:icon];
-	UIImage *iconImage = [[rawIconImage averageColour] isLight] ? rawIconImage : [LMAppIcon invertImage:rawIconImage];
+//	BOOL rawIconImageIsLight = [[rawIconImage averageColour] isLight];
+//	UIImage *iconImage = rawIconImageIsLight ? [LMAppIcon invertImage:rawIconImage] : rawIconImage;
+	UIImage *iconImage = [LMAppIcon invertImage:rawIconImage];
 	
 	UIView *sourceBackgroundView = [self.buttonBar backgroundViewForIndex:LMNavigationTabView];
 	UIImageView *iconView;

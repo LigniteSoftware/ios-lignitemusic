@@ -106,7 +106,7 @@
 	
 	if(noTrackPlaying){
 		self.trackInfoView.titleText = NSLocalizedString(@"NoMusic", nil);
-		self.trackInfoView.artistText = NSLocalizedString(@"NoMusicDescription", nil);
+		self.trackInfoView.artistText = NSLocalizedString([LMLayoutManager isiPad] ? @"NoMusicDescriptionTablet" : @"NoMusicDescriptionPhone", nil);
 		self.trackInfoView.albumText = @"";
 		self.progressSlider.rightText = NSLocalizedString(@"BlankDuration", nil);
 		self.progressSlider.leftText = NSLocalizedString(@"NoMusic", nil);
