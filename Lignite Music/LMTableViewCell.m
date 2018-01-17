@@ -82,7 +82,12 @@
 			[cellSubview autoSetContentCompressionResistancePriorityForAxis:ALAxisVertical];
 		}];
 		
+//		self.backgroundColor = [UIColor orangeColor];
+//		self.contentView.backgroundColor = [UIColor purpleColor];
+		
 		[cellSubview autoPinEdgesToSuperviewEdges];
+		
+//		[cellSubview autoPinEdgesToSuperviewEdges];
 		
 		if(self.index != 0){
 //			NSLog(@"Setup %d", self.index);

@@ -93,12 +93,12 @@
 }
 
 - (void)reloadContentInset {
-    CGFloat dummyViewHeight = 100;
-    UIView *dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, WINDOW_FRAME.size.width, dummyViewHeight)];
-    self.tableHeaderView = dummyView;
-	[UIView animateWithDuration:0.4 animations:^{
-		self.contentInset = UIEdgeInsetsMake(-dummyViewHeight, 0, self.bottomSpacing, 0);
-	}];
+//    CGFloat dummyViewHeight = 100;
+//    UIView *dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, WINDOW_FRAME.size.width, dummyViewHeight)];
+//    self.tableHeaderView = dummyView;
+//	[UIView animateWithDuration:0.4 animations:^{
+//		self.contentInset = UIEdgeInsetsMake(-dummyViewHeight, 0, self.bottomSpacing, 0);
+//	}];
 }
 
 - (void)reloadSubviewData {
@@ -192,7 +192,11 @@
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
 	LMTableViewCell *lmCell = (LMTableViewCell*)cell;
-		
+	
+//	lmCell.contentView.insetsLayoutMarginsFromSafeArea = NO;
+	
+	NSLog(@"Fuck this %@", NSStringFromUIEdgeInsets(lmCell.safeAreaInsets));
+	
 	id newSubview = [self.subviewDataSource subviewAtIndex:indexPath.section forTableView:self];
 	
 	for(int i = 0; i < lmCell.contentView.subviews.count; i++){
@@ -317,7 +321,13 @@
 		float frameWidth = self.fullDividers ? (frame.size.width * (self.fullDividers ? 1.0 : 0.9)) : (frame.size.width - 40);
 		float frameX = (frame.size.width-frameWidth)/2;
 		float frameY = frame.size.height/2 - dividerHeight/2;
-		UIView *dividerView = [[UIView alloc]initWithFrame:CGRectMake(frameX, frameY, frameWidth, dividerHeight)];
+		
+		float safeAreaInset = 0;
+		if(@available(iOS 11.0, *)){
+			safeAreaInset = self.safeAreaInsets.right;
+		}
+		
+		UIView *dividerView = [[UIView alloc]initWithFrame:CGRectMake(frameX, frameY, frameWidth - safeAreaInset, dividerHeight)];
 		dividerView.backgroundColor = self.dividerColour ? self.dividerColour : [UIColor colorWithRed:0.82 green:0.82 blue:0.82 alpha:1.0];
 		[view addSubview:dividerView];
 		

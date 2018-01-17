@@ -142,6 +142,9 @@
 	
 	swipeSettings.transition = MGSwipeTransitionClipCenter;
 	swipeSettings.keepButtonsSwiped = YES;
+	swipeSettings.expandLastButtonBySafeAreaInsets = NO;
+	swipeSettings.topMargin = 2.0f;
+	swipeSettings.bottomMargin = 2.0f;
 
 	expansionSettings.buttonIndex = 0;
 	expansionSettings.threshold = 1.5;

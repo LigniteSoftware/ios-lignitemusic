@@ -797,6 +797,11 @@ BOOL shuffleForDebug = NO;
 		firstTrackCollection = [collectionArray objectAtIndex:0];
 	}
 	
+	NSArray<LMPlaylist*> *playlists = nil;
+	if(musicType == LMMusicTypePlaylists){
+		playlists = [[LMPlaylistManager sharedPlaylistManager] playlists];
+	}
+	
 	NSUInteger countToUse = isTitles ? firstTrackCollection.count : collectionArray.count;
 	
 	NSString *letters = @"#ABCDEFGHIJKLMNOPQRSTUVWXYZ?";
@@ -808,10 +813,14 @@ BOOL shuffleForDebug = NO;
 			
 			LMMusicTrackCollection *musicCollection = nil;
 			LMMusicTrack *musicTrack = nil;
+			LMPlaylist *playlist = nil;
 			
 			if(isTitles){
 				musicCollection = firstTrackCollection;
 				musicTrack = [firstTrackCollection.items objectAtIndex:collectionIndex];
+			}
+			else if(musicType == LMMusicTypePlaylists){
+				playlist = [playlists objectAtIndex:collectionIndex];
 			}
 			else{
 				musicCollection = [collectionArray objectAtIndex:collectionIndex];
@@ -836,8 +845,13 @@ BOOL shuffleForDebug = NO;
 						trackLetter = [self firstLetterForString:musicTrack.title];
 					}
 					break;
-				case LMMusicTypeCompilations:
 				case LMMusicTypePlaylists: {
+					if(playlist.title){
+						trackLetter = [self firstLetterForString:playlist.title];
+					}
+					break;
+				}
+				case LMMusicTypeCompilations:{
 					NSString *title = [musicCollection titleForMusicType:musicType];
 					if(title){
 						trackLetter = [self firstLetterForString:title];

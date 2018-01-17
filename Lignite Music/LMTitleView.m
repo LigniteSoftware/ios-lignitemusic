@@ -276,7 +276,7 @@
 		});
 	}];
 	
-	LMMusicTrack *track = [self.musicTitles.items objectAtIndex:entry.collectionIndex];
+//	LMMusicTrack *track = [self.musicTitles.items objectAtIndex:entry.collectionIndex];
 //	if(track.isFavourite){
 //		entry.leftButtonExpansionColour = [LMColour deletionRedColour];
 //		[[entry.leftButtons firstObject] setImage:[LMAppIcon imageForIcon:LMIconUnfavouriteWhite] forState:UIControlStateNormal];
@@ -289,6 +289,9 @@
 	[entry.queue addOperation:operation];
 	
 	[entry changeHighlightStatus:self.currentlyHighlighted == entry.collectionIndex animated:NO];
+	
+//#warning spooked
+//	[entry changeHighlightStatus:YES animated:YES];
 	
 	[entry reloadContents];
 	
@@ -582,6 +585,10 @@
 	swipeButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
 	swipeButton.imageEdgeInsets = UIEdgeInsetsMake(LMLayoutManager.isExtraSmall ? 18 : 25, 0, LMLayoutManager.isExtraSmall ? 18 : 25, 0);
 
+//	swipeButton.clipsToBounds = YES;
+//	swipeButton.layer.masksToBounds = YES;
+//	swipeButton.layer.cornerRadius = 8.0f;
+	
 	return @[ swipeButton ];
 }
 

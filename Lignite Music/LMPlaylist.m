@@ -44,11 +44,36 @@
 }
 
 - (NSArray<NSNumber*>*)wantToHearMusicTypes {
-	return [[self wantToHearDictionary] objectForKey:LMEnhancedPlaylistMusicTypesKey];
+	NSArray<NSNumber*> *musicTypes = [[self wantToHearDictionary] objectForKey:LMEnhancedPlaylistMusicTypesKey];
+	if(!musicTypes){
+		return @[];
+	}
+	return musicTypes;
 }
 
 - (NSArray<NSNumber*>*)wantToHearPersistentIDs {
-	return [[self wantToHearDictionary] objectForKey:LMEnhancedPlaylistPersistentIDsKey];
+	NSArray<NSNumber*> *persistentIDs = [[self wantToHearDictionary] objectForKey:LMEnhancedPlaylistPersistentIDsKey];
+	if(!persistentIDs){
+		return @[];
+	}
+	return persistentIDs;
+}
+
+
+- (NSArray<NSNumber*>*)dontWantToHearMusicTypes {
+	NSArray<NSNumber*> *musicTypes = [[self dontWantToHearDictionary] objectForKey:LMEnhancedPlaylistMusicTypesKey];
+	if(!musicTypes){
+		return @[];
+	}
+	return musicTypes;
+}
+
+- (NSArray<NSNumber*>*)dontWantToHearPersistentIDs {
+	NSArray<NSNumber*> *persistentIDs = [[self dontWantToHearDictionary] objectForKey:LMEnhancedPlaylistPersistentIDsKey];
+	if(!persistentIDs){
+		return @[];
+	}
+	return persistentIDs;
 }
 
 - (NSArray<LMMusicTrackCollection*>*)wantToHearTrackCollections {
@@ -75,14 +100,6 @@
 	NSLog(@"Returning %d wanted items", (int)musicTrackCollectionsMutableArray.count);
 	
 	return [NSArray arrayWithArray:musicTrackCollectionsMutableArray];
-}
-
-- (NSArray<NSNumber*>*)dontWantToHearMusicTypes {
-	return [[self dontWantToHearDictionary] objectForKey:LMEnhancedPlaylistMusicTypesKey];
-}
-
-- (NSArray<NSNumber*>*)dontWantToHearPersistentIDs {
-	return [[self dontWantToHearDictionary] objectForKey:LMEnhancedPlaylistPersistentIDsKey];
 }
 
 - (NSArray<LMMusicTrackCollection*>*)dontWantToHearTrackCollections {
