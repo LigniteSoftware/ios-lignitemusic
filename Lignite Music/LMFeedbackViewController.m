@@ -642,7 +642,7 @@ NSString* deviceName(){
 	
 	self.titleLabel = [UILabel newAutoLayoutView];
 	self.titleLabel.numberOfLines = 0;
-	self.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:20.0f];
+	self.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:32.0f];
 	self.titleLabel.text = NSLocalizedString(@"SendFeedbackTitle", nil);
 	self.titleLabel.textAlignment = NSTextAlignmentLeft;
 	[self.scrollView addSubview:self.titleLabel];
@@ -655,7 +655,7 @@ NSString* deviceName(){
 	
 	self.descriptionLabel = [UILabel newAutoLayoutView];
 	self.descriptionLabel.numberOfLines = 0;
-	self.descriptionLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:20.0f];
+	self.descriptionLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18.0f];
 	self.descriptionLabel.text = NSLocalizedString(@"SendFeedbackDescription", nil);
 	self.descriptionLabel.textAlignment = NSTextAlignmentLeft;
 	[self.scrollView addSubview:self.descriptionLabel];

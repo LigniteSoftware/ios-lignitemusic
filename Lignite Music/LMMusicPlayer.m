@@ -111,9 +111,11 @@ MPMediaGrouping associatedMediaTypes[] = {
 };
 
 - (MPMusicPlayerController*)systemMusicPlayer {
-#if TARGET_IPHONE_SIMULATOR
+#if TARGET_OS_SIMULATOR
+//	NSLog(@"Simulator");
 	return [MPMusicPlayerController applicationMusicPlayer];
 #else
+//	NSLog(@"Real device");
 	return [MPMusicPlayerController systemMusicPlayer];
 #endif
 }
@@ -446,6 +448,7 @@ MPMediaGrouping associatedMediaTypes[] = {
 	nextTime = CFAbsoluteTimeGetCurrent();
 	NSLog(@"[Update] shuffleModeInLine: %fs", (nextTime - startTimeInSeconds));
 	
+#ifndef TARGET_OS_SIMULATOR //If NOT the simulator
 	if(self.lastTrackSetInLigniteMusicPersistentID != self.systemMusicPlayer.nowPlayingItem.persistentID){
 		BOOL nowPlayingCollectionContainsTrack = [self nowPlayingCollectionContainsTrack:self.systemMusicPlayer.nowPlayingItem];
 		if(nowPlayingCollectionContainsTrack){
@@ -458,6 +461,7 @@ MPMediaGrouping associatedMediaTypes[] = {
 			self.nowPlayingTrack = self.systemMusicPlayer.nowPlayingItem;
 		}
 	}
+#endif
 	
 	//	NSLog(@"System music changed %@", self.systemMusicPlayer.nowPlayingItem);
 	
@@ -1383,15 +1387,17 @@ BOOL shuffleForDebug = NO;
 		[self reloadInfoCentre:NO];
 	}
 	
-#if TARGET_IPHONE_SIMULATOR
+#if TARGET_OS_SIMULATOR
 	[self systemMusicPlayerTrackChanged:nowPlayingTrack];
 #endif
 }
 
 - (LMMusicTrack*)nowPlayingTrack {
+#ifndef TARGET_OS_SIMULATOR //If NOT the simulator
 	if(!_nowPlayingTrack || !self.nowPlayingWasSetWithinLigniteMusic){
 		return self.systemMusicPlayer.nowPlayingItem;
 	}
+#endif
 	return _nowPlayingTrack;
 }
 

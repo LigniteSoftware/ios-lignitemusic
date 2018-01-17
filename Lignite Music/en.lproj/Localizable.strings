@@ -221,7 +221,7 @@
 "ReportBugOrSendFeedback" = "Send us bugs or feedback";
 
 "SendFeedbackTitle" = "Report a bug or send feedback";
-"SendFeedbackDescription" = "Here you can send us bugs you've found or your feedback.\n\nWe publicly share your report, though not any of your private information.\n\nWe read over every single bug report and piece of feedback and may reach out to you through email to further investigate.\n\nThanks!";
+"SendFeedbackDescription" = "Here you can send us bugs you've found or your feedback.\n\nWe publicly share your report, though we do not share not any of your private information.\n\nWe read over every single bug report and piece of feedback. We may reach out to you through email to follow up on your report.\n\nThanks!";
 "Name" = "Name";
 "Email" = "Email";
 "SummaryOfReport" = "Quick summary of report";

@@ -144,6 +144,6 @@
 
  @param index The index to focus.
  */
-- (void)focusCellAtIndex:(NSUInteger)index;
+- (void)focusCellAtIndex:(NSUInteger)index DEPRECATED_ATTRIBUTE;
 
 @end

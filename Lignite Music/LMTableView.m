@@ -93,12 +93,12 @@
 }
 
 - (void)reloadContentInset {
-//    CGFloat dummyViewHeight = 100;
-//    UIView *dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, WINDOW_FRAME.size.width, dummyViewHeight)];
-//    self.tableHeaderView = dummyView;
-//	[UIView animateWithDuration:0.4 animations:^{
-//		self.contentInset = UIEdgeInsetsMake(-dummyViewHeight, 0, self.bottomSpacing, 0);
-//	}];
+    CGFloat dummyViewHeight = 100;
+    UIView *dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, WINDOW_FRAME.size.width, dummyViewHeight)];
+    self.tableHeaderView = dummyView;
+	[UIView animateWithDuration:0.4 animations:^{
+		self.contentInset = UIEdgeInsetsMake(-dummyViewHeight, 0, self.bottomSpacing, 0);
+	}];
 }
 
 - (void)reloadSubviewData {
@@ -195,7 +195,7 @@
 	
 //	lmCell.contentView.insetsLayoutMarginsFromSafeArea = NO;
 	
-	NSLog(@"Fuck this %@", NSStringFromUIEdgeInsets(lmCell.safeAreaInsets));
+//	NSLog(@"Fuck this %@", NSStringFromUIEdgeInsets(lmCell.safeAreaInsets));
 	
 	id newSubview = [self.subviewDataSource subviewAtIndex:indexPath.section forTableView:self];
 	
@@ -231,7 +231,7 @@
 - (void)focusCellAtIndex:(NSUInteger)index {
 	UIView *cellSubview = [self.subviewDataSource subviewAtIndex:index forTableView:self];
 	//	[bigListEntry setLarge:YES animated:YES];
-	
+
 	[NSTimer scheduledTimerWithTimeInterval:0.5 block:^() {
 		[UIView animateWithDuration:0.75 animations:^{
 			cellSubview.backgroundColor = [UIColor colorWithRed:0.33 green:0.33 blue:0.33 alpha:0.15];

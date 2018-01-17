@@ -1017,6 +1017,10 @@
 		}
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		[self.queueTableView reloadData];
+		
+		[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
+			self.buttonStackView.spacing = [self buttonStackSpacing];
+		} repeats:NO];
 	}];
 }
 
@@ -1172,9 +1176,26 @@
 	self.nothingInQueueTitleLabel.backgroundColor = [UIColor whiteColor];
 	[self.queueView addSubview:self.nothingInQueueTitleLabel];
 	
-	[self.nothingInQueueTitleLabel autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:20];
-	[self.nothingInQueueTitleLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:20];
-	[self.nothingInQueueTitleLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:20];
+	if([LMLayoutManager isiPhoneX]){
+		NSArray *nothingInQueueTitleLabelPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+			[self.nothingInQueueTitleLabel autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:40];
+			[self.nothingInQueueTitleLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:20];
+			[self.nothingInQueueTitleLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:20];
+		}];
+		[LMLayoutManager addNewPortraitConstraints:nothingInQueueTitleLabelPortraitConstraints];
+		
+		NSArray *nothingInQueueTitleLabelLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+			[self.nothingInQueueTitleLabel autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:20];
+			[self.nothingInQueueTitleLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:20];
+			[self.nothingInQueueTitleLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:64];
+		}];
+		[LMLayoutManager addNewLandscapeConstraints:nothingInQueueTitleLabelLandscapeConstraints];
+	}
+	else{
+		[self.nothingInQueueTitleLabel autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:20];
+		[self.nothingInQueueTitleLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:20];
+		[self.nothingInQueueTitleLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:20];
+	}
 	
 	
 	self.nothingInQueueLabel = [UILabel newAutoLayoutView];
@@ -1187,8 +1208,8 @@
 	[self.queueView addSubview:self.nothingInQueueLabel];
 	
 	[self.nothingInQueueLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.nothingInQueueTitleLabel withOffset:20];
-	[self.nothingInQueueLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:20];
-	[self.nothingInQueueLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:20];
+	[self.nothingInQueueLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.nothingInQueueTitleLabel];
+	[self.nothingInQueueLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.nothingInQueueTitleLabel];
 	
 	[self refreshNothingInQueueText];
 	
@@ -1310,7 +1331,10 @@
 	pausedLabel.numberOfLines = 0;
 	[self.pausedBackgroundBlurView addSubview:pausedLabel];
 	
-	[pausedLabel autoPinEdgesToSuperviewMargins];
+	[pausedLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading].constant = 24;
+	[pausedLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing].constant = -24;
+	[pausedLabel autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+	[pausedLabel autoPinEdgeToSuperviewEdge:ALEdgeTop];
 	
 	self.pausedLabel = pausedLabel;
 	

@@ -1969,6 +1969,13 @@ LMControlBarViewDelegate
 		 *
 		 */
 		
+//		LMFeedbackViewController *feedbackController = [LMFeedbackViewController new];
+//		
+//		LMRestorableNavigationController *navigation = [[LMRestorableNavigationController alloc] initWithRootViewController:feedbackController];
+//		[navigation setNavigationBarHidden:YES];
+//		
+//		[self.navigationController presentViewController:navigation animated:YES completion:nil];
+		
 //		[self launchNowPlaying];
 		
 //		LMSettingsViewController *settingsViewController = [LMSettingsViewController new];

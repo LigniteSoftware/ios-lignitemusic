@@ -164,7 +164,7 @@
 	CGFloat scaleFactor = ((self.adjustForFloatingControls ? 6.5 : 7.0)/8.0);
 	
 	CGSize scaledSize = CGSizeMake(self.flowLayout.normalItemSize.width * scaleFactor,
-								   self.flowLayout.normalItemSize.height * scaleFactor * (self.adjustForFloatingControls ? 1.0645 : 1.0)); //Adjust for small height difference in the text size because of Mr. Picky :)
+								   self.flowLayout.normalItemSize.height * scaleFactor * (self.adjustForFloatingControls ? 1.05 : 1.0)); //Adjust for small height difference in the text size because of Mr. Picky :)
 	
 	return scaledSize;
 }

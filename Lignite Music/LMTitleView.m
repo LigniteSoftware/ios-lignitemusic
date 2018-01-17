@@ -339,14 +339,11 @@
 		index = 0;
 	}
 	
-	[self.songListTableView focusCellAtIndex:index];
-	
 	//Fix index for adjustment
 	NSInteger properIndex = index;
 	index = (index == 0) ? 0 : (index-2);
 	
 	if(index > -1){
-		[self.songListTableView focusCellAtIndex:index];
 		[self scrollToTrackIndex:index];
 	}
 	
@@ -613,6 +610,9 @@
 		[self.songListTableView reloadData];
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		[self.songListTableView reloadData];
+		[NSTimer scheduledTimerWithTimeInterval:0.2 repeats:NO block:^(NSTimer * _Nonnull timer) {
+			[self.songListTableView reloadData];
+		}];
 		
 		if(!self.layoutManager.isLandscape){
 			[self setShuffleButtonLandscapeOffset:4.0f];

@@ -57,7 +57,9 @@
 	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		[self reload];
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-		
+		[NSTimer scheduledTimerWithTimeInterval:0.3 block:^{
+			[self reload];
+		} repeats:NO];
 	}];
 }
 

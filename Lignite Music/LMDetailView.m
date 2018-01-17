@@ -356,8 +356,8 @@
 		[cell.contentView addSubview:listEntry];
 		listEntry.backgroundColor = [LMColour superLightGreyColour];
 		
-		[listEntry autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-		[listEntry autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[listEntry autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:[LMLayoutManager isiPhoneX] ? 20 : 0];
+		[listEntry autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:[LMLayoutManager isiPhoneX] ? 44 : 0];
 		[listEntry autoPinEdgeToSuperviewEdge:ALEdgeTop];
 		[listEntry autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 			
@@ -397,7 +397,7 @@
 - (CGSize)currentItemSize {
 	NSLog(@"Number of columns %d", (int)[LMDetailView numberOfColumns]);
 	return CGSizeMake(self.collectionView.frame.size.width/[LMDetailView numberOfColumns] - (LMLayoutManager.isiPad ? 10 : 0),
-					  fmin(LMLayoutManager.standardListEntryHeight, 78));
+					  fmin(LMLayoutManager.standardListEntryHeight * ([LMLayoutManager isiPhoneX] ? 0.90 : 1.00), 74));
 }
 
 //Of the detail view if it was based on amount of tracks and not available screen space
