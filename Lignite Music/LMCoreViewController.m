@@ -1970,16 +1970,16 @@ LMControlBarViewDelegate
 		 */
 		
 //		LMFeedbackViewController *feedbackController = [LMFeedbackViewController new];
-//		
+//
 //		LMRestorableNavigationController *navigation = [[LMRestorableNavigationController alloc] initWithRootViewController:feedbackController];
 //		[navigation setNavigationBarHidden:YES];
-//		
+//
 //		[self.navigationController presentViewController:navigation animated:YES completion:nil];
 		
 //		[self launchNowPlaying];
 		
-//		LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
-//		[self.navigationController pushViewController:settingsViewController animated:YES];
+		LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
+		[self.navigationController pushViewController:settingsViewController animated:YES];
 		
 //		LMThemePickerViewController *themePicker = [LMThemePickerViewController new];
 //		[self.navigationController pushViewController:themePicker animated:YES];

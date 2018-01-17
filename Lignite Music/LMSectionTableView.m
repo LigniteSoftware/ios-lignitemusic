@@ -122,6 +122,10 @@
 	cell.backgroundColor = [LMColour superLightGreyColour];
 }
 
+- (void)tappedArrowView:(id)sender {
+	NSLog(@"What %@");
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	NSUInteger rawRow = [self rawIndexForIndexPath:indexPath];
 	
@@ -185,6 +189,11 @@
 					[accessorySubview autoCentreInSuperview];
 					[accessorySubview autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:accessoryView withMultiplier:(1.0/2.0)];
 					[accessorySubview autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:accessoryView withMultiplier:(1.0/2.0)];
+					
+					accessoryView.userInteractionEnabled = NO;
+					
+//					UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tappedArrowView:)];
+//					[accessoryView addGestureRecognizer:tapGestureRecognizer];
 				}
 				else if([accessorySubviewClass isEqualToString:@"UIView"]){
 					[accessorySubview autoPinEdgesToSuperviewEdges];
