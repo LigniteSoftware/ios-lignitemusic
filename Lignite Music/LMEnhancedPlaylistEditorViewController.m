@@ -189,6 +189,10 @@
 	
 	self.playlist.title = self.titleTextField.text;
 	
+	if(self.titleTextField.text.length == 0 || !self.titleTextField.text){
+		self.playlist.title = NSLocalizedString(@"YourPlaylistTitle", nil);
+	}
+	
 	[self.playlist regenerateEnhancedPlaylist];
 	
 	[self.playlistManager savePlaylist:self.playlist];
@@ -314,12 +318,12 @@
 		
 		[self.warningBoxView show];
 	}
-	else if(self.titleTextField.text.length == 0 || !self.titleTextField.text){
-		self.warningBoxView.titleLabel.text = NSLocalizedString(@"NoTitleTitle", nil);
-		self.warningBoxView.subtitleLabel.text = NSLocalizedString(@"NoTitleDescription", nil);
-		
-		[self.warningBoxView show];
-	}
+//	else if(self.titleTextField.text.length == 0 || !self.titleTextField.text){
+//		self.warningBoxView.titleLabel.text = NSLocalizedString(@"NoTitleTitle", nil);
+//		self.warningBoxView.subtitleLabel.text = NSLocalizedString(@"NoTitleDescription", nil);
+//
+//		[self.warningBoxView show];
+//	}
 	else{
 		[self.warningBoxView hide];
 	}
@@ -618,9 +622,9 @@
 	else if(wantToHearPersistentIDsArray.count == 0 && dontWantToHearPersistentIDsArray.count > 0){
 		self.navigationItem.rightBarButtonItem.enabled = NO;
 	}
-	else if(self.titleTextField.text.length == 0 || !self.titleTextField.text){
-		self.navigationItem.rightBarButtonItem.enabled = NO;
-	}
+//	else if(self.titleTextField.text.length == 0 || !self.titleTextField.text){
+//		self.navigationItem.rightBarButtonItem.enabled = NO;
+//	}
 	else{
 		self.navigationItem.rightBarButtonItem.enabled = YES;
 	}

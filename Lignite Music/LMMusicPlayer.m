@@ -92,7 +92,6 @@
 
 @synthesize nowPlayingTrack = _nowPlayingTrack;
 @synthesize nowPlayingCollection = _nowPlayingCollection;
-@synthesize playerType = _playerType;
 @synthesize currentPlaybackTime = _currentPlaybackTime;
 @synthesize repeatMode = _repeatMode;
 @synthesize shuffleMode = _shuffleMode;
@@ -138,7 +137,6 @@ MPMediaGrouping associatedMediaTypes[] = {
 		
 		self.bullshitQuery = q;
 		
-		self.playerType = LMMusicPlayerTypeAppleMusic;
 		[self loadNowPlayingState];
 		
 		self.delegates = [NSMutableArray new];
@@ -448,7 +446,7 @@ MPMediaGrouping associatedMediaTypes[] = {
 	nextTime = CFAbsoluteTimeGetCurrent();
 	NSLog(@"[Update] shuffleModeInLine: %fs", (nextTime - startTimeInSeconds));
 	
-#ifndef TARGET_OS_SIMULATOR //If NOT the simulator
+//#ifndef TARGET_OS_SIMULATOR //If NOT the simulator
 	if(self.lastTrackSetInLigniteMusicPersistentID != self.systemMusicPlayer.nowPlayingItem.persistentID){
 		BOOL nowPlayingCollectionContainsTrack = [self nowPlayingCollectionContainsTrack:self.systemMusicPlayer.nowPlayingItem];
 		if(nowPlayingCollectionContainsTrack){
@@ -461,7 +459,7 @@ MPMediaGrouping associatedMediaTypes[] = {
 			self.nowPlayingTrack = self.systemMusicPlayer.nowPlayingItem;
 		}
 	}
-#endif
+//#endif
 	
 	//	NSLog(@"System music changed %@", self.systemMusicPlayer.nowPlayingItem);
 	
@@ -1011,11 +1009,7 @@ BOOL shuffleForDebug = NO;
 		return @[ [self favouritesTrackCollection] ];
 	}
 	else if(musicType == LMMusicTypePlaylists){
-		NSMutableArray *playlistsMutableArray = [NSMutableArray new];
-		for(LMPlaylist *playlist in [[LMPlaylistManager sharedPlaylistManager] playlists]){
-			[playlistsMutableArray addObject:playlist.trackCollection];
-		}
-		return [NSArray arrayWithArray:playlistsMutableArray];
+		return [[LMPlaylistManager sharedPlaylistManager] playlistTrackCollections];
 	}
 	
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer || self.playerType == LMMusicPlayerTypeAppleMusic){
@@ -1326,13 +1320,15 @@ BOOL shuffleForDebug = NO;
 	}
 	else{
 		switch(self.systemMusicPlayer.playbackState){
-			case LMMusicPlaybackStateSeekingForward:
-			case LMMusicPlaybackStateSeekingBackward:
-			case MPMusicPlaybackStateStopped:
-			case LMMusicPlaybackStatePlaying:
+			case MPMusicPlaybackStatePlaying:
+			case MPMusicPlaybackStateSeekingBackward:
+			case MPMusicPlaybackStateSeekingForward:
 				[self pause];
 				return LMMusicPlaybackStatePaused;
-			default:
+				
+			case MPMusicPlaybackStateInterrupted:
+			case MPMusicPlaybackStateStopped:
+			case MPMusicPlaybackStatePaused:
 				[self play];
 				return LMMusicPlaybackStatePlaying;
 		}
@@ -1834,26 +1830,8 @@ BOOL shuffleForDebug = NO;
 	}
 }
 
-- (void)setPlayerType:(LMMusicPlayerType)playerType {
-	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	[defaults setInteger:playerType forKey:DEFAULTS_KEY_PLAYER_TYPE];
-	[defaults synchronize];
-	
-	_playerType = playerType;
-}
-
 - (LMMusicPlayerType)playerType {
-	return _playerType;
-}
-
-+ (LMMusicPlayerType)savedPlayerType {
-	NSLog(@"\n\nSaved player type called.\n\n");
-	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	LMMusicPlayerType type = LMMusicPlayerTypeSystemMusicPlayer;
-	if([defaults objectForKey:DEFAULTS_KEY_PLAYER_TYPE]){
-		type = (LMMusicPlayerType)[defaults integerForKey:DEFAULTS_KEY_PLAYER_TYPE];
-	}
-	return type;
+	return LMMusicPlayerTypeAppleMusic;
 }
 
 - (void)setCurrentPlaybackTime:(NSTimeInterval)currentPlaybackTime {

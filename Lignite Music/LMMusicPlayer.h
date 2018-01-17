@@ -204,7 +204,7 @@ typedef enum {
 /**
  The music player's current type.
  */
-@property LMMusicPlayerType playerType;
+@property (readonly) LMMusicPlayerType playerType;
 
 /**
  The currently playing track of the music player.
@@ -466,13 +466,6 @@ typedef enum {
  @param track The track to remove from favourites.
  */
 - (void)removeTrackFromFavourites:(LMMusicTrack*)track;
-
-/**
- Gets the currently saved LMMusicPlayerType through NSUserDefaults. Returns LMMusicPlayerTypeSystemMusicPlayer if the entry doesn't exist in NSUserDefaults.
- 
- @return The saved LMMusicPlayerType.
- */
-+ (LMMusicPlayerType)savedPlayerType;
 
 /**
  Checks whether or not a now playing collection is equal to the currently playing collection or its shuffled version.

@@ -493,8 +493,14 @@ LMControlBarViewDelegate
 
 - (void)setupBrowsingViewWithMusicType:(LMMusicType)musicType {
 	if(self.cachedMusicTrackCollections){
-		NSLog(@"Loading music from cache.");
-		self.compactView.musicTrackCollections = [self.cachedMusicTrackCollections objectAtIndex:musicType];
+		if(musicType == LMMusicTypePlaylists){
+			NSLog(@"I would load from the cache, but instead, I'll load the playlists fresh.");
+			self.compactView.musicTrackCollections = [[LMPlaylistManager sharedPlaylistManager] playlistTrackCollections];
+		}
+		else{
+			NSLog(@"Loading music from cache.");
+			self.compactView.musicTrackCollections = [self.cachedMusicTrackCollections objectAtIndex:musicType];
+		}
 	}
 	else{
 		NSLog(@"Loading music directly.");
@@ -1978,8 +1984,8 @@ LMControlBarViewDelegate
 		
 //		[self launchNowPlaying];
 		
-		LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
-		[self.navigationController pushViewController:settingsViewController animated:YES];
+//		LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
+//		[self.navigationController pushViewController:settingsViewController animated:YES];
 		
 //		LMThemePickerViewController *themePicker = [LMThemePickerViewController new];
 //		[self.navigationController pushViewController:themePicker animated:YES];
@@ -2008,11 +2014,11 @@ LMControlBarViewDelegate
 //		}];
 
 
-//		LMEnhancedPlaylistEditorViewController *enhancedPlaylistViewController = [LMEnhancedPlaylistEditorViewController new];
-//		UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:enhancedPlaylistViewController];
-//		[self presentViewController:navigation animated:YES completion:^{
-//
-//		}];
+		LMEnhancedPlaylistEditorViewController *enhancedPlaylistViewController = [LMEnhancedPlaylistEditorViewController new];
+		UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:enhancedPlaylistViewController];
+		[self presentViewController:navigation animated:YES completion:^{
+
+		}];
 		
 //		[self searchDialogueOpened:YES withKeyboardHeight:0.0f];
 		

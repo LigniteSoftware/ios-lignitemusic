@@ -290,6 +290,28 @@
 	[self adaptBottomConstraintForKeyboardWithNotification:notification hidden:NO];
 }
 
+- (NSArray<NSArray<LMMusicTrackCollection*>*>*)searchableTrackCollectionsForSearchView:(LMDynamicSearchView*)searchView {
+	return @[
+			 [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeFavourites],
+			 [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeArtists],
+			 [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeAlbums],
+			 [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeTitles],
+			 [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeGenres],
+			 [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeCompilations]
+			 ];
+}
+
+- (NSArray<NSNumber*>*)searchableMusicTypesForSearchView:(LMDynamicSearchView*)searchView {
+	return @[
+			 @(LMMusicTypeFavourites),
+			 @(LMMusicTypeArtists),
+			 @(LMMusicTypeAlbums),
+			 @(LMMusicTypeTitles),
+			 @(LMMusicTypeGenres),
+			 @(LMMusicTypeCompilations)
+			 ];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
 	
@@ -403,22 +425,22 @@
 	}
 	self.searchView.hidden = YES;
 	
-	self.searchView.searchableTrackCollections = @[
-												   [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeFavourites],
-												   [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeArtists],
-												   [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeAlbums],
-												   [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeTitles],
-												   [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeGenres],
-												   [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeCompilations]
-												   ];
-	self.searchView.searchableMusicTypes = @[
-											 @(LMMusicTypeFavourites),
-											 @(LMMusicTypeArtists),
-											 @(LMMusicTypeAlbums),
-											 @(LMMusicTypeTitles),
-											 @(LMMusicTypeGenres),
-											 @(LMMusicTypeCompilations)
-											 ];
+//	self.searchView.searchableTrackCollections = @[
+//												   [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeFavourites],
+//												   [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeArtists],
+//												   [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeAlbums],
+//												   [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeTitles],
+//												   [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeGenres],
+//												   [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeCompilations]
+//												   ];
+//	self.searchView.searchableMusicTypes = @[
+//											 @(LMMusicTypeFavourites),
+//											 @(LMMusicTypeArtists),
+//											 @(LMMusicTypeAlbums),
+//											 @(LMMusicTypeTitles),
+//											 @(LMMusicTypeGenres),
+//											 @(LMMusicTypeCompilations)
+//											 ];
 	
 	for(LMMusicTrackCollection *trackCollection in self.trackCollections){
 		[self.searchView setData:trackCollection asSelected:YES forMusicType:LMMusicTypeTitles];
