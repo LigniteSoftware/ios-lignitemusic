@@ -81,7 +81,7 @@
 		return;
 	}
 	
-    if(indexOfCenter > self.musicPlayer.nowPlayingCollection.items.count){
+    if(indexOfCenter >= self.musicPlayer.nowPlayingCollection.items.count){
         indexOfCenter = 0;
     }
     

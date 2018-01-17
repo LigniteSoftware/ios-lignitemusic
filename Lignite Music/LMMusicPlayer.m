@@ -81,6 +81,11 @@
  */
 @property LMMusicTrack *lastTrackMovedInQueue;
 
+///**
+// I hate this issue. Essentially when you set a new queue on the system music player, it resets to the first song, so then you set the same track again to keep playing, but have to restore the track time as well. Causes some "lag" in the music. >:(
+// */
+//@property CGFloat playbackTimeToRestoreBecauseQueueChangesAreFuckingStupid;
+
 @end
 
 @implementation LMMusicPlayer
@@ -423,6 +428,13 @@ MPMediaGrouping associatedMediaTypes[] = {
 - (void)systemMusicPlayerTrackChanged:(id)sender {
 	CFAbsoluteTime startTimeInSeconds = CFAbsoluteTimeGetCurrent();
 	NSLog(@"System track changed! %@ Updating...", [NSThread isMainThread] ? @"On the main thread." : @"NOT ON THE MAIN THREAD!");
+	
+//	if(self.playbackTimeToRestoreBecauseQueueChangesAreFuckingStupid > 0){
+//		NSLog(@"Set playbackTimeToRestoreBecauseQueueChanges... %f", self.playbackTimeToRestoreBecauseQueueChangesAreFuckingStupid);
+//		[self setCurrentPlaybackTime:self.playbackTimeToRestoreBecauseQueueChangesAreFuckingStupid];
+//
+//		self.playbackTimeToRestoreBecauseQueueChangesAreFuckingStupid = 0.0;
+//	}
 	
 	BOOL autoPlay = self.audioPlayer.isPlaying;
 	
@@ -1519,6 +1531,18 @@ BOOL shuffleForDebug = NO;
 	[self setIndexOfNowPlayingTrack:indexOfNowPlayingTrack];
 }
 
+- (void)prepareQueueForBackgrounding {
+	if(self.queueRequiresReload){
+		NSLog(@"Queue requires reload for the background. Reloading...");
+		self.queueRequiresReload = NO;
+		
+		[self restoreNowPlayingCollection:self.nowPlayingCollectionSorted
+						  nowPlayingTrack:self.nowPlayingTrack
+							 playbackTime:self.currentPlaybackTime];
+		NSLog(@"Done reloading queue for the background.");
+	}
+}
+
 - (void)addTrackToQueue:(LMMusicTrack*)trackToAdd {
 	if(!self.nowPlayingWasSetWithinLigniteMusic){
 		for(id<LMMusicPlayerDelegate> delegate in self.delegates){
@@ -1578,6 +1602,7 @@ BOOL shuffleForDebug = NO;
 	}
 	else{
 		self.indexOfNowPlayingTrack = [self.nowPlayingCollection.items indexOfObject:self.nowPlayingTrack];
+		self.queueRequiresReload = YES;
 	}
 	
 	for(id<LMMusicPlayerDelegate> delegate in self.delegates){
@@ -1614,7 +1639,8 @@ BOOL shuffleForDebug = NO;
 	}
 	
 	//	[self setNowPlayingCollection:self.shuffleMode ? self.nowPlayingCollectionShuffled : self.nowPlayingCollectionSorted];
-	[self.systemMusicPlayer setQueueWithItemCollection:self.shuffleMode ? self.nowPlayingCollectionShuffled : self.nowPlayingCollectionSorted];
+//	[self.systemMusicPlayer setQueueWithItemCollection:self.shuffleMode ? self.nowPlayingCollectionShuffled : self.nowPlayingCollectionSorted];
+	self.queueRequiresReload = YES;
 	
 	self.indexOfNowPlayingTrack = [moveArray indexOfObject:self.nowPlayingTrack];
 }
@@ -1760,7 +1786,9 @@ BOOL shuffleForDebug = NO;
 	}
 }
 
-- (void)restoreNowPlayingCollection:(LMMusicTrackCollection *)nowPlayingCollection nowPlayingTrack:(LMMusicTrack*)nowPlayingTrack playbackTime:(NSTimeInterval)playbackTime {
+- (void)restoreNowPlayingCollection:(LMMusicTrackCollection *)nowPlayingCollection
+					nowPlayingTrack:(LMMusicTrack*)nowPlayingTrack
+					   playbackTime:(NSTimeInterval)playbackTime {
 //	self.nowPlayingWasSetWithinLigniteMusic = YES;
 	
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer || self.playerType == LMMusicPlayerTypeAppleMusic){
@@ -1776,9 +1804,12 @@ BOOL shuffleForDebug = NO;
 		[self.systemMusicPlayer setQueueWithItemCollection:self.nowPlayingCollection];
 		[self.systemMusicPlayer setNowPlayingItem:nowPlayingTrack];
 //		[self setNowPlayingTrack:nowPlayingTrack];
+
+//		self.playbackTimeToRestoreBecauseQueueChangesAreFuckingStupid = playbackTime;
 		
-		[NSTimer scheduledTimerWithTimeInterval:0.1 block:^{
+		[NSTimer scheduledTimerWithTimeInterval:0.25 block:^{
 			[self setCurrentPlaybackTime:playbackTime];
+			NSLog(@"Set playback time to %f", playbackTime);
 		} repeats:NO];
 	}
 }

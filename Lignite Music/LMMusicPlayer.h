@@ -183,6 +183,7 @@ typedef enum {
 - (void)moveTrackInQueueFromIndex:(NSInteger)oldIndex toIndex:(NSInteger)newIndex;
 - (void)prepareQueueModification;
 - (void)finishQueueModification;
+- (void)prepareQueueForBackgrounding;
 
 
 /**
