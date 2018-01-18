@@ -7,6 +7,7 @@
 //
 
 #import <PureLayout/PureLayout.h>
+#import "MBProgressHUD.h"
 #import "LMFloatingDetailViewButton.h"
 #import "LMLayoutManager.h"
 #import "LMTitleView.h"
@@ -16,6 +17,7 @@
 #import "LMMusicPlayer.h"
 #import "LMExtras.h"
 #import "LMThemeEngine.h"
+#import "NSTimer+Blocks.h"
 
 #define LMTitleViewTopTrackPersistentIDKey @"LMTitleViewTopTrackPersistentIDKey"
 
@@ -49,6 +51,8 @@
 @property UILabel *noObjectsLabel;
 
 @property BOOL didJustScrollByLetter;
+
+@property MBProgressHUD *loadingProgressHUD;
 
 /**
  The shuffle button.
@@ -162,10 +166,16 @@
 	if(highlightedEntry){
 		[highlightedEntry changeHighlightStatus:YES animated:YES];
 	}
+	
+	[NSTimer scheduledTimerWithTimeInterval:0.25 block:^{
+		[self setLoadingIndicatorDisplaying:NO];
+	} repeats:NO];
 }
 
 - (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState {
-	
+	[NSTimer scheduledTimerWithTimeInterval:0.25 block:^{
+		[self setLoadingIndicatorDisplaying:NO];
+	} repeats:NO];
 }
 
 - (void)trackAddedToFavourites:(LMMusicTrack *)track {
@@ -458,28 +468,32 @@
 }
 
 - (void)tappedListEntry:(LMListEntry*)entry {
-	LMMusicTrack *track = [self.musicTitles.items objectAtIndex:entry.collectionIndex];
+	[self setLoadingIndicatorDisplaying:YES];
 	
-//	NSLog(@"Tapped list entry with artist %@", self.albumCollection.representativeItem.artist);
-	
-	LMListEntry *previousHighlightedEntry = [self listEntryForIndex:self.currentlyHighlighted];
-	if(previousHighlightedEntry){
-		[previousHighlightedEntry changeHighlightStatus:NO animated:YES];
-	}
-	
-	[entry changeHighlightStatus:YES animated:YES];
-	self.currentlyHighlighted = entry.collectionIndex;
-	
-	if(self.musicPlayer.nowPlayingCollection != self.musicTitles){
-		[self.musicPlayer stop];
-		[self.musicPlayer setNowPlayingCollection:self.musicTitles];
-	}
-	self.musicPlayer.autoPlay = YES;
-	
-	[self.musicPlayer setNowPlayingTrack:track];
-	
-	[self.musicPlayer.navigationBar setSelectedTab:LMNavigationTabMiniplayer];
-	[self.musicPlayer.navigationBar maximize:NO];
+	[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
+		LMMusicTrack *track = [self.musicTitles.items objectAtIndex:entry.collectionIndex];
+		
+		//	NSLog(@"Tapped list entry with artist %@", self.albumCollection.representativeItem.artist);
+		
+		LMListEntry *previousHighlightedEntry = [self listEntryForIndex:self.currentlyHighlighted];
+		if(previousHighlightedEntry){
+			[previousHighlightedEntry changeHighlightStatus:NO animated:YES];
+		}
+		
+		[entry changeHighlightStatus:YES animated:YES];
+		self.currentlyHighlighted = entry.collectionIndex;
+		
+		if(self.musicPlayer.nowPlayingCollection != self.musicTitles){
+			[self.musicPlayer stop];
+			[self.musicPlayer setNowPlayingCollection:self.musicTitles];
+		}
+		self.musicPlayer.autoPlay = YES;
+		
+		[self.musicPlayer setNowPlayingTrack:track];
+		
+		[self.musicPlayer.navigationBar setSelectedTab:LMNavigationTabMiniplayer];
+		[self.musicPlayer.navigationBar maximize:NO];
+	} repeats:NO];
 }
 
 - (void)tapEntryAtIndex:(NSInteger)index {
@@ -625,11 +639,28 @@
 }
 
 - (void)floatingDetailViewButtonTapped:(LMFloatingDetailViewButton*)button {
-	LMMusicPlayer *musicPlayer = [LMMusicPlayer sharedMusicPlayer];
-	[musicPlayer stop];
-	[musicPlayer setShuffleMode:LMMusicShuffleModeOn];
-	[musicPlayer setNowPlayingCollection:self.favourites ? self.favouritesTrackCollection : self.allSongsTrackCollection];
-	[musicPlayer play];
+	[self setLoadingIndicatorDisplaying:YES];
+	
+	[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
+		[self.musicPlayer stop];
+		[self.musicPlayer setShuffleMode:LMMusicShuffleModeOn];
+		[self.musicPlayer setNowPlayingCollection:self.favourites ? self.favouritesTrackCollection : self.allSongsTrackCollection];
+		[self.musicPlayer play];
+	} repeats:NO];
+}
+
+- (void)setLoadingIndicatorDisplaying:(BOOL)displaying {
+	if(displaying){
+		self.loadingProgressHUD = [MBProgressHUD showHUDAddedTo:self animated:YES];
+		
+		self.loadingProgressHUD.mode = MBProgressHUDModeIndeterminate;
+		self.loadingProgressHUD.label.text = NSLocalizedString(@"HangOn", nil);
+		self.loadingProgressHUD.label.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18.0f];
+		self.loadingProgressHUD.userInteractionEnabled = NO;
+	}
+	else{
+		[self.loadingProgressHUD hideAnimated:YES];
+	}
 }
 
 - (void)themeChanged:(LMTheme)theme {

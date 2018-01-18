@@ -287,13 +287,13 @@ MPMediaGrouping associatedMediaTypes[] = {
 	
 	NSLog(@"Queue was modified and needs a refresher, here we go.");
 	
-	NSLog(@"=== START QUEUE REFRESH ===");
-	
-	for(LMMusicTrack *track in self.nowPlayingCollection.items){
-		NSLog((track.persistentID == newTrack.persistentID) ? @"* %@" : @"%@", newTrack);
-	}
-	
-	NSLog(@"=== END QUEUE REFRESH ===");
+//	NSLog(@"=== START QUEUE REFRESH ===");
+//	
+//	for(LMMusicTrack *track in self.nowPlayingCollection.items){
+//		NSLog((track.persistentID == newTrack.persistentID) ? @"* %@" : @"%@", newTrack);
+//	}
+//	
+//	NSLog(@"=== END QUEUE REFRESH ===");
 	
 	[self.systemMusicPlayer setQueueWithItemCollection:self.nowPlayingCollection];
 	[self.systemMusicPlayer setNowPlayingItem:newTrack];
@@ -1330,15 +1330,22 @@ BOOL shuffleForDebug = NO;
 		switch(self.systemMusicPlayer.playbackState){
 			case MPMusicPlaybackStatePlaying:
 			case MPMusicPlaybackStateSeekingBackward:
-			case MPMusicPlaybackStateSeekingForward:
+			case MPMusicPlaybackStateSeekingForward:{
 				[self pause];
 				return LMMusicPlaybackStatePaused;
-				
+			}
+			case MPMusicPlaybackStateStopped:{
+				[self pause];
+				[NSTimer scheduledTimerWithTimeInterval:0.1 block:^{
+					[self play];
+				} repeats:NO];
+				return LMMusicPlaybackStatePlaying;
+			}
 			case MPMusicPlaybackStateInterrupted:
-			case MPMusicPlaybackStateStopped:
-			case MPMusicPlaybackStatePaused:
+			case MPMusicPlaybackStatePaused:{
 				[self play];
 				return LMMusicPlaybackStatePlaying;
+			}
 		}
 	}
 }

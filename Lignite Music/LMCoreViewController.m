@@ -1415,8 +1415,6 @@ LMControlBarViewDelegate
 				
 				[NSTimer scheduledTimerWithTimeInterval:0.05 block:^{
 					dispatch_async(dispatch_get_main_queue(), ^{
-				
-						
 						[self loadSubviews];
 					});
 				} repeats:NO];
