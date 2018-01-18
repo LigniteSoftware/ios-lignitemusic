@@ -143,6 +143,10 @@
 	[self theQueueChangedSoPleaseReloadThankYou];
 }
 
+- (void)musicPlaybackModesDidChange:(LMMusicShuffleMode)shuffleMode repeatMode:(LMMusicRepeatMode)repeatMode {
+	[self theQueueChangedSoPleaseReloadThankYou];
+}
+
 - (void)musicTrackDidChange:(LMMusicTrack *)newTrack {
     NSInteger nowPlayingTrackIndex = self.musicPlayer.indexOfNowPlayingTrack;
     [self loadMusicTracksBasedOffIndex:nowPlayingTrackIndex];
