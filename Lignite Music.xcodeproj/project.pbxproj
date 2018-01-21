@@ -245,12 +245,10 @@
 		6AB104701E56616700213396 /* LMMusicPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AB1046F1E56616700213396 /* LMMusicPlayer.m */; };
 		6AB104791E5669BE00213396 /* MPMediaItemCollection+LigniteInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A1AF0861E037CCD00F8934C /* MPMediaItemCollection+LigniteInfo.m */; };
 		6AB12E9C1D57AD9800280383 /* icon_settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AB12E9B1D57AD9800280383 /* icon_settings.png */; };
-		6AB68BA0201468360080038D /* queue_preview.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AB68B9D201468350080038D /* queue_preview.png */; };
 		6AB68BA1201468360080038D /* playlist_preview.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AB68B9E201468350080038D /* playlist_preview.png */; };
-		6AB68BA2201468360080038D /* favourites_preview.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AB68B9F201468360080038D /* favourites_preview.png */; };
-		6AB68BA820146AF50080038D /* IMG_9909.PNG in Resources */ = {isa = PBXBuildFile; fileRef = 6AB68BA720146AF50080038D /* IMG_9909.PNG */; };
-		6AB68BAA20146C140080038D /* IMG_9914.PNG in Resources */ = {isa = PBXBuildFile; fileRef = 6AB68BA920146C140080038D /* IMG_9914.PNG */; };
 		6AB68BAC201477880080038D /* icon_rocket_ship.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AB68BAB201477870080038D /* icon_rocket_ship.png */; };
+		6AB68BAF201555070080038D /* favourites_preview.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AB68BAD201555060080038D /* favourites_preview.png */; };
+		6AB68BB0201555070080038D /* queue_preview.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AB68BAE201555060080038D /* queue_preview.png */; };
 		6ABECD781FE1982200E3C31D /* LMViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ABECD771FE1982200E3C31D /* LMViewController.m */; };
 		6ABF31A61FCDB70300B3D06D /* icon_unfavourite_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 6ABF31A51FCDB70200B3D06D /* icon_unfavourite_white.png */; };
 		6ABF31A71FCDB70300B3D06D /* icon_unfavourite_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 6ABF31A51FCDB70200B3D06D /* icon_unfavourite_white.png */; };
@@ -720,12 +718,10 @@
 		6AB1046E1E56616700213396 /* LMMusicPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMMusicPlayer.h; sourceTree = "<group>"; };
 		6AB1046F1E56616700213396 /* LMMusicPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMMusicPlayer.m; sourceTree = "<group>"; };
 		6AB12E9B1D57AD9800280383 /* icon_settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_settings.png; sourceTree = "<group>"; };
-		6AB68B9D201468350080038D /* queue_preview.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = queue_preview.png; sourceTree = "<group>"; };
 		6AB68B9E201468350080038D /* playlist_preview.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = playlist_preview.png; sourceTree = "<group>"; };
-		6AB68B9F201468360080038D /* favourites_preview.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = favourites_preview.png; sourceTree = "<group>"; };
-		6AB68BA720146AF50080038D /* IMG_9909.PNG */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = IMG_9909.PNG; sourceTree = "<group>"; };
-		6AB68BA920146C140080038D /* IMG_9914.PNG */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = IMG_9914.PNG; sourceTree = "<group>"; };
 		6AB68BAB201477870080038D /* icon_rocket_ship.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_rocket_ship.png; sourceTree = "<group>"; };
+		6AB68BAD201555060080038D /* favourites_preview.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = favourites_preview.png; sourceTree = "<group>"; };
+		6AB68BAE201555060080038D /* queue_preview.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = queue_preview.png; sourceTree = "<group>"; };
 		6ABB265A1FD64CDB009697C5 /* Abbey For Apple Watch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Abbey For Apple Watch.entitlements"; sourceTree = "<group>"; };
 		6ABECD761FE1982200E3C31D /* LMViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMViewController.h; sourceTree = "<group>"; };
 		6ABECD771FE1982200E3C31D /* LMViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMViewController.m; sourceTree = "<group>"; };
@@ -1766,11 +1762,9 @@
 		6AFF019A1DDE7CD100F24D8E /* Tutorial */ = {
 			isa = PBXGroup;
 			children = (
-				6AB68B9D201468350080038D /* queue_preview.png */,
 				6AB68B9E201468350080038D /* playlist_preview.png */,
-				6AB68B9F201468360080038D /* favourites_preview.png */,
-				6AB68BA720146AF50080038D /* IMG_9909.PNG */,
-				6AB68BA920146C140080038D /* IMG_9914.PNG */,
+				6AB68BAD201555060080038D /* favourites_preview.png */,
+				6AB68BAE201555060080038D /* queue_preview.png */,
 			);
 			name = Tutorial;
 			sourceTree = "<group>";
@@ -2047,8 +2041,9 @@
 				6AAA56051DF5491C00692CFB /* icon_search.png in Resources */,
 				6A759D4D1DEA3D0C0051E1A9 /* signatures.png in Resources */,
 				6A39376D1FE2EFEE00D37F3E /* icon_library_access.png in Resources */,
-				6AB68BAA20146C140080038D /* IMG_9914.PNG in Resources */,
+				6AB68BAF201555070080038D /* favourites_preview.png in Resources */,
 				6AE4A7FC1D49461C002B67CD /* pebble_colours_64.gif in Resources */,
+				6AB68BB0201555070080038D /* queue_preview.png in Resources */,
 				6AB68BAC201477880080038D /* icon_rocket_ship.png in Resources */,
 				6ACFB9741E8CE103009811F0 /* icon_tutorial_tap.png in Resources */,
 				6AFF01951DDE4EAF00F24D8E /* InfoPlist.strings in Resources */,
@@ -2058,7 +2053,6 @@
 				6A0750721D5EAB8000BCBC9C /* aplite_colours.gif in Resources */,
 				6ADB70C51FCCBDDE00412225 /* icon_repeat_one_white.png in Resources */,
 				6AAE6FB71FEBA26600CE97C1 /* icon_play_padded.png in Resources */,
-				6AB68BA0201468360080038D /* queue_preview.png in Resources */,
 				6AAA560A1DF553AF00692CFB /* icon_a_to_z.png in Resources */,
 				6A5168931E08F4C800A6446F /* icon_buy.png in Resources */,
 				6ACFB9721E8CE103009811F0 /* icon_tutorial_swipe.png in Resources */,
@@ -2123,7 +2117,6 @@
 				6A5168941E08F4C800A6446F /* icon_kickstarter.png in Resources */,
 				6AAE6FB31FEB97F000CE97C1 /* splash_ipad_2018.png in Resources */,
 				6AAE6FAC1FEB8F6900CE97C1 /* no_library_access.png in Resources */,
-				6AB68BA820146AF50080038D /* IMG_9909.PNG in Resources */,
 				6A5365F81FE4B1CC008B8FAE /* LMThemeKeyBackgroundNoise.png in Resources */,
 				6A76ECA71E1A081200424AC5 /* icon_no_cover_art.png in Resources */,
 				6ADB70C81FCCBDDE00412225 /* icon_shuffle_white.png in Resources */,
@@ -2131,7 +2124,6 @@
 				6AAE6FB21FEB97F000CE97C1 /* splash_portrait_2018.png in Resources */,
 				6AF9D53E1DE244B4006368B6 /* icon_miniplayer.png in Resources */,
 				6A9C053D1DB4441200713D1C /* icon_genres.png in Resources */,
-				6AB68BA2201468360080038D /* favourites_preview.png in Resources */,
 				6A9C053C1DB4441200713D1C /* icon_compilations.png in Resources */,
 				6A59A5181DE6D76E00B346AC /* icon_arrow_forward.png in Resources */,
 				6A98CBCD1EB4E9BF003B8B8E /* icon_3_dots_horizontal.png in Resources */,

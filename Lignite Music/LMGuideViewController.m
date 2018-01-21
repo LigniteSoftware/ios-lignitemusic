@@ -392,7 +392,7 @@
 	
 	self.titleLabel = [UILabel newAutoLayoutView];
 	self.titleLabel.textAlignment = NSTextAlignmentCenter;
-	self.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:26.0f];
+	self.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:26.0f];
 	self.titleLabel.numberOfLines = 0;
 //	self.titleLabel.backgroundColor = [UIColor orangeColor];
 	self.titleLabel.text = self.contentTitle;

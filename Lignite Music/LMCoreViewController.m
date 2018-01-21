@@ -55,6 +55,7 @@
 #import "LMAlertViewController.h"
 #import "Lignite_Music-Swift.h"
 #import "LMTutorialViewController.h"
+#import "LMDebugViewController.h"
 //#import "Lignite Music-Bridging-Header.h"
 //#import "Popover-Swift.h"
 
@@ -1177,6 +1178,12 @@ LMControlBarViewDelegate
 	static dispatch_once_t basicSetupToken;
 	dispatch_once(&basicSetupToken, ^{
 		self.view.backgroundColor = [UIColor whiteColor];
+		
+		NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+		if(![userDefaults objectForKey:LMLastUsedVersionKey]){
+			[userDefaults setObject:[LMDebugViewController buildNumberString] forKey:LMLastUsedVersionKey];
+			NSLog(@"Set %@", [userDefaults objectForKey:LMLastUsedVersionKey]);
+		}
 		
 		//Themeing? Bet you wish you didn't make it this way ;)  - Past Edwin, Dec. 15th 2017
 		UIView *statusBarCover = [UIView newAutoLayoutView];

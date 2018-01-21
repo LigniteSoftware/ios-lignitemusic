@@ -48,14 +48,31 @@
 @implementation LMTutorialView
 
 - (NSString*)youTubeVideoURLString {
+	NSString *language = NSLocalizedString(@"LMLocalizationKey", nil);
+	
 	if([self.tutorialKey isEqualToString:LMTutorialViewTutorialKeyQueueManagement]){
-		return @"SAdiG2s9x1o";
+		if([language isEqualToString:@"de"]){
+			return @"ma-KHcOQ-fE";
+		}
+		else{
+			return @"SAdiG2s9x1o";
+		}
 	}
 	else if([self.tutorialKey isEqualToString:LMTutorialViewTutorialKeyNormalPlaylists]){
-		return @"mYRoc8JNggo";
+		if([language isEqualToString:@"de"]){
+			return @"FMd6IoqPFAM";
+		}
+		else{
+			return @"mYRoc8JNggo";
+		}
 	}
 	else if([self.tutorialKey isEqualToString:LMTutorialViewTutorialKeyFavourites]){
-		return @"guDr39D-VDY";
+		if([language isEqualToString:@"de"]){
+			return @"_vxctxHw27w";
+		}
+		else{
+			return @"guDr39D-VDY";
+		}
 	}
 	return @"ySs3aCj2u2g";
 }
@@ -63,13 +80,13 @@
 - (UIImage*)coverImage {
 	NSString *imageKey = @"lignite_background_portrait.png";
 	if([self.tutorialKey isEqualToString:LMTutorialViewTutorialKeyQueueManagement]){
-		imageKey = @"IMG_9914.PNG";
+		imageKey = @"queue_preview.png";
 	}
 	else if([self.tutorialKey isEqualToString:LMTutorialViewTutorialKeyNormalPlaylists]){
 		imageKey = @"playlist_preview.png";
 	}
 	else if([self.tutorialKey isEqualToString:LMTutorialViewTutorialKeyFavourites]){
-		imageKey = @"IMG_9909.PNG";
+		imageKey = @"favourites_preview.png";
 	}
 	return [UIImage imageNamed:imageKey];
 }
@@ -113,7 +130,7 @@
 		self.titleLabel.text = NSLocalizedString(titleKey, nil);
 		self.titleLabel.textColor = [UIColor blackColor];
 //		self.titleLabel.backgroundColor = [UIColor orangeColor];
-		self.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:16.0f];
+		self.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:LMLayoutManager.isiPad ? 20.0f : 16.0f];
 		self.titleLabel.textAlignment = NSTextAlignmentCenter;
 		self.titleLabel.numberOfLines = 0;
 		[self addSubview:self.titleLabel];

@@ -82,7 +82,11 @@
 }
 
 + (NSString*)currentAppVersion {
-	return @"1.1 RC";
+	return @"1.1.0 Release";
+}
+
++ (NSString*)buildNumberString {
+	return [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
 }
 
 + (NSString*)appDebugInfoString {

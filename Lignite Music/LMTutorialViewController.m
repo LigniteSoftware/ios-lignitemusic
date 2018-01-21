@@ -117,13 +117,13 @@
 		CGFloat height = 0;
 		
 		if(LMLayoutManager.isiPad){
-			height = LMLayoutManager.isLandscapeiPad ? (self.collectionView.frame.size.height * (2.5/10.0)) : (width * (2.5/10.0));
+			height = (MIN(self.collectionView.frame.size.height, self.collectionView.frame.size.width) * (2.5/10.0));
 		}
 		else if(LMLayoutManager.isLandscape){
 			height = width * (3.0/10.0);
 		}
 		else{
-			height = width * (5.5/10.0);
+			height = width * ((LMLayoutManager.isiPhoneX ? 6.5 : 5.5)/10.0);
 		}
 		
 		if(LMLayoutManager.isExtraSmall){

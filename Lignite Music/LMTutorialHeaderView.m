@@ -78,7 +78,7 @@
 		self.titleLabel.text = NSLocalizedString(@"TutorialViewTitle", nil);
 		self.titleLabel.textColor = [UIColor blackColor];
 //		self.titleLabel.backgroundColor = [UIColor orangeColor];
-		self.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:LMLayoutManager.isExtraSmall ? 24.0f : 28.0f];
+		self.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:LMLayoutManager.isExtraSmall ? 23.0f : 26.0f];
 		self.titleLabel.textAlignment = (LMLayoutManager.isLandscape || LMLayoutManager.isiPad) ? NSTextAlignmentLeft : NSTextAlignmentCenter;
 		self.titleLabel.numberOfLines = 0;
 		[self.centreBackgroundView addSubview:self.titleLabel];
