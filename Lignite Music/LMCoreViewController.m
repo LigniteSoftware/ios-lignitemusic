@@ -1847,11 +1847,11 @@ LMControlBarViewDelegate
 		 */
 		
 		
-//		self.buttonNavigationBar.hidden = YES;
+		self.buttonNavigationBar.hidden = YES;
 		
 		
-//		LMTutorialViewController *tutorialViewer = [LMTutorialViewController new];
-//		[self.navigationController pushViewController:tutorialViewer animated:YES];
+		LMTutorialViewController *tutorialViewer = [LMTutorialViewController new];
+		[self.navigationController pushViewController:tutorialViewer animated:YES];
 
 		
 		
