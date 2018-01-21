@@ -105,8 +105,9 @@
 		
 		self.label = [MarqueeLabel newAutoLayoutView];
 		self.label.fadeLength = 10;
-		self.label.leadingBuffer = 10;
-		self.label.trailingBuffer = 10;
+		self.label.leadingBuffer = 15;
+		self.label.trailingBuffer = 15;
+		self.label.animationDelay = 3.0f;
 		self.label.font = [self recommendedFont];
 		self.label.text = self.displayingWarning ? self.displayingWarning.text : @"";
 		self.label.textAlignment = NSTextAlignmentCenter;

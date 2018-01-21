@@ -12,7 +12,6 @@
 #import "LMCoreViewController.h"
 #import "LMNowPlayingView.h"
 #import "NSTimer+Blocks.h"
-#import "LMTutorialView.h"
 #import "MBProgressHUD.h"
 #import "LMSettings.h"
 
@@ -521,21 +520,6 @@
         NSLog(@"Index of %ld", self.musicPlayer.indexOfNowPlayingTrack);
         
         [self loadMusicTracksBasedOffIndex:self.musicPlayer.indexOfNowPlayingTrack];
-        
-        
-        if([LMTutorialView tutorialShouldRunForKey:LMTutorialKeyNowPlaying]){
-            LMTutorialView *tutorialView = [[LMTutorialView alloc] initForAutoLayoutWithTitle:NSLocalizedString(@"TutorialFullScreenPlaybackTitle", nil)
-                                                                                  description:NSLocalizedString(@"TutorialFullScreenPlaybackDescription", nil)
-                                                                                          key:LMTutorialKeyNowPlaying];
-            [self addSubview:tutorialView];
-            tutorialView.boxAlignment = LMTutorialViewAlignmentCenter;
-            tutorialView.arrowAlignment = LMTutorialViewAlignmentCenter;
-            tutorialView.icon = [LMAppIcon imageForIcon:LMIconTutorialSwipe];
-			
-			[tutorialView autoPinEdgesToSuperviewEdges];
-            
-            self.tutorialView = tutorialView;
-        }
     }
 }
 

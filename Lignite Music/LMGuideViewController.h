@@ -10,6 +10,8 @@
 #import "LMGuideViewPagerController.h"
 #import "LMCoreViewController.h"
 
+#define LMGuideViewControllerUserWantsToViewTutorialKey @"LMGuideViewControllerUserWantsToViewTutorialKey"
+
 @interface LMGuideViewController : UIViewController
 
 @property LMCoreViewController *coreViewController;

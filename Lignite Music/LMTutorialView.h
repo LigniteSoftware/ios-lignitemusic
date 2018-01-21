@@ -2,73 +2,54 @@
 //  LMTutorialView.h
 //  Lignite Music
 //
-//  Created by Edwin Finch on 2017-03-27.
-//  Copyright © 2017 Lignite. All rights reserved.
+//  Created by Edwin Finch on 1/20/18.
+//  Copyright © 2018 Lignite. All rights reserved.
 //
 
 #import "LMView.h"
 
-#define LMTutorialKeyBottomNavigation @"LMTutorialKeyBottomNavigation"
-#define LMTutorialKeyMiniPlayer @"LMTutorialKeyMiniPlayer"
-#define LMTutorialKeyTopBar @"LMTutorialKeyTopBar"
-#define LMTutorialKeyNowPlaying @"LMTutorialKeyNowPlaying"
+#define LMTutorialViewAmountOfTutorialsKey 3
+
+#define LMTutorialViewTutorialKeyNormalPlaylists @"LMTutorialViewTutorialKeyNormalPlaylists"
+#define LMTutorialViewTutorialKeyFavourites @"LMTutorialViewTutorialKeyFavourites"
+#define LMTutorialViewTutorialKeyQueueManagement @"LMTutorialViewTutorialKeyQueueManagement"
+
+@class LMTutorialView;
 
 @protocol LMTutorialViewDelegate <NSObject>
-@optional
 
 /**
- A tutorial finished (closed) with a certain key.
+ A tutorial view was selected by the user, playback of the associated tutorial view should begin immediately.
 
- @param key The key of the tutorial that was finished.
+ @param tutorialView The tutorial view which was tapped.
+ @param youTubeVideoURLString The YouTube video URL associated with this tutorial view, based off its key.
  */
-- (void)tutorialFinishedWithKey:(NSString*)key;
+- (void)tutorialViewSelected:(LMTutorialView*)tutorialView withYouTubeVideoURLString:(NSString*)youTubeVideoURLString;
 
 @end
 
 @interface LMTutorialView : LMView
 
-typedef enum {
-    LMTutorialViewAlignmentTop = 0,
-    LMTutorialViewAlignmentCenter,
-    LMTutorialViewAlignmentBottom
-} LMTutorialContentViewAlignment;
-
 /**
- Initialize a tutorial view with default values of centered boxAlignment and arrowAlignment, a nil icon, and a function-set title and description.
-
- @param title The title to set.
- @param description The description to set.
- @param key The key that this tutorial is associated with.
- @return The initialized tutorial view.
- */
-- (instancetype)initForAutoLayoutWithTitle:(NSString*)title description:(NSString*)description key:(NSString*)key;
-
-/**
- Returns whether or not a part of the tutorial should run for a certain key. Will always return NO if the user completely disables tutorials, for example.
-
- @param tutorialKey The key of the tutorial part to check.
- @return Whether or not to attach that tutorial to a view and run it.
- */
-+ (BOOL)tutorialShouldRunForKey:(NSString*)tutorialKey;
-
-/**
- The alignment of the actual content box.
- */
-@property LMTutorialContentViewAlignment boxAlignment;
-
-/**
- The alignment of the arrow to go on the top or bottom of the content box. Default is center, which displays no arrows. Unless we figure out a way to turn a 2D space 3D.
- */
-@property LMTutorialContentViewAlignment arrowAlignment;
-
-/**
- The image for the icon to display, if an icon is wanted. Otherwise, the view will auto adapt without an icon.
- */
-@property UIImage *icon;
-
-/**
- The delegate, optional.
+ The delegate.
  */
 @property id<LMTutorialViewDelegate> delegate;
+
+/**
+ The key of the tutorial associated with this tutorial view.
+ */
+@property NSString *tutorialKey;
+
+/**
+ Gets the cover image of this tutorial view.
+
+ @return The cover image.
+ */
+- (UIImage*)coverImage;
+
+/**
+ Simulate a tap by calling this, perfect for force touch.
+ */
+- (void)tapped;
 
 @end

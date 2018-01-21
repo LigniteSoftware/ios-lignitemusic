@@ -7,7 +7,6 @@
 //
 
 #import "LMView.h"
-#import "LMTutorialView.h"
 #import "LMMusicPlayer.h"
 
 @interface LMNowPlayingCoreView : LMView
@@ -24,11 +23,6 @@
  Whether or not the now playing view is open.
  */
 @property BOOL isOpen;
-
-/**
- The tutorial view for the now playing core view, if one exists.
- */
-@property LMTutorialView *tutorialView;
 
 /*
  Used for the sole purpose of refreshing all 3 now playing views when the queue has been shifted.

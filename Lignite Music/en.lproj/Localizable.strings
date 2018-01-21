@@ -41,6 +41,24 @@
  
  */
 
+"ViewTutorial" = "View tutorial";
+"JumpRightIn" = "Jump right in";
+
+"OnboardingTutorialTitle" = "You're all set!";
+"OnboardingTutorialDescription" = "If you'd like to learn how to use Lignite Music, feel free to watch the tutorials by tapping the button below.\n\nIn any case, we hope you love Lignite Music!";
+
+"TutorialViewOnDataWarning" = "Warning: you are on cellular data. Tutorial videos use YouTube to play.";
+
+"LMTutorialViewTutorialKeyQueueManagement_Title" = "Queue";
+"LMTutorialViewTutorialKeyNormalPlaylists_Title" = "Playlists";
+"LMTutorialViewTutorialKeyFavourites_Title" = "Favourites";
+
+"Tutorial" = "Tutorial";
+"TutorialSettingsSubtitle" = "Learn more about Lignite Music";
+"TutorialViewTitle" = "New to Lignite Music?";
+"TutorialViewSubtitle" = "Want to learn more? Below are some more in-depth tutorial videos about Lignite Music.";
+"TutorialViewButtonText" = "Play the quick tutorial";
+
 "UnableToQueueTitle" = "Unable to Queue";
 "UnableToQueueDescription" = "Apple does not allow us to modify the queue of music that began outside of Lignite Music.\n\nPlease start music from within Lignite Music to be able to manage the queue.";
 "UnableToQueueCheckboxText" = "I understand that I cannot modify the queue if I started playing music from a source outside of Lignite Music.";

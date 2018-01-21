@@ -19,7 +19,6 @@
 #import "LMNowPlayingView.h"
 #import "LMSectionTableView.h"
 #import "LMSearchViewController.h"
-#import "LMTutorialView.h"
 #import "LMFeedbackViewController.h"
 #import "LMCreditsViewController.h"
 #import "LMTrackInfoView.h"
@@ -496,7 +495,7 @@
 	self.size = size;
 	
 	//	NSArray *approvedClasses = @[
-	//								 [LMMiniPlayerCoreView class], [LMGuideViewPagerController class], [LMGuideViewController class], [LMTitleView class], [LMButtonNavigationBar class], [LMSourceSelectorView class], [LMNowPlayingView class], [LMSectionTableView class], [LMSearchViewController class], [LMLetterTabBar class], [LMTutorialView class], [LMAlertView class], [LMFeedbackViewController class], [LMCreditsViewController class], [LMBrowsingBar class], [LMTrackInfoView class],
+	//								 [LMMiniPlayerCoreView class], [LMGuideViewPagerController class], [LMGuideViewController class], [LMTitleView class], [LMButtonNavigationBar class], [LMSourceSelectorView class], [LMNowPlayingView class], [LMSectionTableView class], [LMSearchViewController class], [LMLetterTabBar class], [LMAlertView class], [LMFeedbackViewController class], [LMCreditsViewController class], [LMBrowsingBar class], [LMTrackInfoView class],
 	//								 [LMProgressSlider class], [LMBrowsingDetailView class]
 	//								 ];
 	

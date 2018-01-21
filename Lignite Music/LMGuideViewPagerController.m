@@ -92,7 +92,8 @@
 							   @"OnboardingWelcomeTitle",
 //							   @"OnboardingKickstarterLoginTitle",
 							   @"OnboardingMusicPermissionTitle",
-//							   @"OnboardingPebblePermissionTitle"
+//							   @"OnboardingPebblePermissionTitle",
+							   @"OnboardingTutorialTitle",
 							    nil];
 	
 			self.descriptionArray = [[NSArray alloc]initWithObjects:
@@ -100,6 +101,7 @@
 //									 @"OnboardingKickstarterLoginDescription",
 									 @"OnboardingMusicPermissionDescription",
 //									 @"OnboardingPebblePermissionDescription"
+									 @"OnboardingTutorialDescription",
 							    nil];
 			
 			self.screenshotsArray = [[NSArray alloc]initWithObjects:
@@ -107,6 +109,7 @@
 //									 @"icon_kickstarter_bw.png",
 									 @"icon_library_access.png",
 //									 @"icon_pebbles.png"
+									 @"icon_rocket_ship.png",
 									  nil];
 			
 			self.buttonNamesArray = [[NSArray alloc]initWithObjects:
@@ -114,6 +117,7 @@
 //									 @"LogMeIn",
 //									 @"HitMeWithIt",
 									 @"SoundsGood",
+									 @"JumpRightIn",
 							    nil];
 			
 			break;

@@ -156,7 +156,10 @@
 										
 										[self.finishedButton setTitle:NSLocalizedString(@"GoodToGo", nil) forState:UIControlStateNormal];
 //										[NSTimer scheduledTimerWithTimeInterval:1.00 target:self selector:@selector(threeBlindMice) userInfo:nil repeats:NO];
-										[NSTimer scheduledTimerWithTimeInterval:1.00 target:self selector:@selector(completeTutorial) userInfo:nil repeats:NO];
+										
+										[self threeBlindMice];
+										
+//										[NSTimer scheduledTimerWithTimeInterval:1.00 target:self selector:@selector(completeTutorial) userInfo:nil repeats:NO];
 									});
 								}];
 								
@@ -173,41 +176,8 @@
 					break;
 				}
 				case 2: {
-					NSLog(@"Creating");
-					//			CBCentralManager *centralManager = [[CBCentralManager alloc]initWithDelegate:self queue:nil];
-					//			CBPeripheralManager *peripheralManager = [[CBPeripheralManager alloc]initWithDelegate:self queue:nil];
-					PBPebbleCentral *central = [PBPebbleCentral defaultCentral];
-					central.appUUID = [[NSUUID alloc] initWithUUIDString:@"edf76057-f3ef-4de6-b841-cb9532a81a5a"];
-					[central run];
-					//			NSLog(@"Current state %d", (int)[peripheralManager state]);
-					NSLog(@"Created.");
-					for (NSUInteger index = 0; index < 20; index++) {
-						dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(index * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-							if(self.checkComplete) {
-								return;
-							}
-							
-							CBPeripheralManagerAuthorizationStatus status = [CBPeripheralManager authorizationStatus];
-							if (status == CBPeripheralManagerAuthorizationStatusNotDetermined) {
-								[self.finishedButton setTitle:NSLocalizedString(@"Checking", nil) forState:UIControlStateNormal];
-							}
-							else if (status == CBPeripheralManagerAuthorizationStatusAuthorized) {
-								[self.finishedButton setTitle:NSLocalizedString(@"AllSetHere", nil) forState:UIControlStateNormal];
-							}
-							else if (status == CBPeripheralManagerAuthorizationStatusDenied) {
-								[self.finishedButton setTitle:NSLocalizedString(@"OuchDenied", nil) forState:UIControlStateNormal];
-							}
-							else if (status == CBPeripheralManagerAuthorizationStatusRestricted) {
-								[self.finishedButton setTitle:NSLocalizedString(@"Restricted", nil) forState:UIControlStateNormal];
-							}
-							
-							if(status != CBPeripheralManagerAuthorizationStatusNotDetermined) {
-								self.checkComplete = YES;
-								[NSTimer scheduledTimerWithTimeInterval:1.00 target:self selector:@selector(completeTutorial) userInfo:nil repeats:NO];
-							}
-						});
-					}
-					//Pebble permission
+//					[NSTimer scheduledTimerWithTimeInterval:1.00 target:self selector:@selector(completeTutorial) userInfo:nil repeats:NO];
+					[self completeTutorial];
 					break;
 				}
 			}
@@ -296,10 +266,11 @@
 }
 
 - (void)secondaryAction {
-	//For Spotify
 	if(self.index == 2){
-		NSLog(@"Get spotify");
-		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://www.spotify.com/premium/"]];
+		NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+		[userDefaults setObject:@"yeah" forKey:LMGuideViewControllerUserWantsToViewTutorialKey];
+		
+		[self completeTutorial];
 	}
 	else{
 		[self threeBlindMice];
@@ -327,10 +298,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 	
-	
-#ifdef SPOTIFY
-//	[[Spotify sharedInstance] addDelegate:self];
-#endif
 	
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	[defaults setInteger:LMMusicTypeAlbums forKey:LMSettingsKeyLastOpenedSource];
@@ -366,12 +333,7 @@
 	[self.finishedButton addTarget:self action:@selector(performOnboardingAction) forControlEvents:UIControlEventTouchUpInside];
 	[self.finishedButton setTitle:self.buttonTitle forState:UIControlStateNormal];
 	
-	if(   (self.index == 4) //Pebble screen
-#ifdef SPOTIFY
-	   || (self.index == 2)
-#endif
-	   || (self.index == 6)){ //Backer login (used to be 1)
-		
+	if(self.index == 2){ //Tutorial view
 		UIView *firstButtonArea = [UIView newAutoLayoutView];
 //		firstButtonArea.backgroundColor = [UIColor redColor];
 		[self.buttonArea addSubview:firstButtonArea];
@@ -388,7 +350,7 @@
 		self.secondaryButton.layer.cornerRadius = 8;
 		[self.secondaryButton.titleLabel setFont:[UIFont fontWithName:@"HelveticaNeue" size:18.0f]];
 		[self.secondaryButton addTarget:self action:@selector(secondaryAction) forControlEvents:UIControlEventTouchUpInside];
-		[self.secondaryButton setTitle:NSLocalizedString(self.index == 2 ? @"GetSpotify" : @"KeepGoing", nil) forState:UIControlStateNormal];
+		[self.secondaryButton setTitle:NSLocalizedString(@"ViewTutorial", nil) forState:UIControlStateNormal];
 		
 		[firstButtonArea addSubview:self.secondaryButton];
 		
@@ -420,12 +382,11 @@
 	
 	
 	self.descriptionLabel = [UILabel newAutoLayoutView];
-	self.descriptionLabel.textAlignment = NSTextAlignmentLeft;
 	self.descriptionLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:16.0f];
 	self.descriptionLabel.numberOfLines = 0;
 //	self.descriptionLabel.backgroundColor = [UIColor yellowColor];
 	self.descriptionLabel.text = self.contentDescription;
-	self.descriptionLabel.textAlignment = (self.layoutManager.isLandscape || [LMLayoutManager isiPad]) ? NSTextAlignmentCenter : NSTextAlignmentLeft;
+	self.descriptionLabel.textAlignment = (self.layoutManager.isLandscape || [LMLayoutManager isiPad]) ? NSTextAlignmentCenter : NSTextAlignmentJustified;
 	[self.contentView addSubview:self.descriptionLabel];
 	
 	

@@ -13,6 +13,7 @@
 #import "LMSearchViewController.h"
 #import "UIImage+AverageColour.h"
 #import "LMCompactBrowsingView.h"
+#import "LMGuideViewController.h"
 #import "LMCoreViewController.h"
 #import "LMNowPlayingCoreView.h"
 #import "LMNowPlayingCoreView.h"
@@ -43,7 +44,6 @@
 #import "LMBrowsingBar.h"
 #import "LMMiniPlayerCoreView.h"
 #import "LMMiniPlayerView.h"
-#import "LMTutorialView.h"
 #import "LMButtonBar.h"
 #import "LMExpandableTrackListControlBar.h"
 #import "LMPhoneLandscapeDetailView.h"
@@ -54,6 +54,7 @@
 #import "LMWarningManager.h"
 #import "LMAlertViewController.h"
 #import "Lignite_Music-Swift.h"
+#import "LMTutorialViewController.h"
 //#import "Lignite Music-Bridging-Header.h"
 //#import "Popover-Swift.h"
 
@@ -73,8 +74,7 @@
 @import SDWebImage;
 @import StoreKit;
 
-@interface LMCoreViewController () <LMMusicPlayerDelegate, LMSourceDelegate, UIGestureRecognizerDelegate, LMSearchBarDelegate, LMLetterTabDelegate, LMSearchViewControllerResultDelegate, LMButtonNavigationBarDelegate, UINavigationBarDelegate, UINavigationControllerDelegate,
-LMTutorialViewDelegate, LMImageManagerDelegate, LMLandscapeNavigationBarDelegate, LMThemeEngineDelegate, LMLayoutChangeDelegate, LMWarningDelegate, LMApplicationIdleDelegate,
+@interface LMCoreViewController () <LMMusicPlayerDelegate, LMSourceDelegate, UIGestureRecognizerDelegate, LMSearchBarDelegate, LMLetterTabDelegate, LMSearchViewControllerResultDelegate, LMButtonNavigationBarDelegate, UINavigationBarDelegate, UINavigationControllerDelegate, LMImageManagerDelegate, LMLandscapeNavigationBarDelegate, LMThemeEngineDelegate, LMLayoutChangeDelegate, LMWarningDelegate, LMApplicationIdleDelegate,
 
 LMControlBarViewDelegate
 >
@@ -238,96 +238,6 @@ LMControlBarViewDelegate
 			break;
 		}
 	}
-}
-
-- (void)tutorialFinishedWithKey:(NSString *)key {
-    NSLog(@"Tutorial %@ finished, start another?", key);
-    
-    self.view.userInteractionEnabled = YES;
-    self.buttonNavigationBar.userInteractionEnabled = YES;
-    self.navigationController.navigationBar.userInteractionEnabled = YES;
-	
-	[UIView animateWithDuration:0.5 animations:^{
-		self.backgroundBlurView.effect = nil;
-	} completion:^(BOOL finished) {
-		self.backgroundBlurView.hidden = YES;
-	}];
-	
-    if([key isEqualToString:LMTutorialKeyBottomNavigation]){
-        [self.buttonNavigationBar setSelectedTab:LMNavigationTabMiniplayer];
-        
-        [NSTimer scheduledTimerWithTimeInterval:1.0 block:^{
-            if([LMTutorialView tutorialShouldRunForKey:LMTutorialKeyMiniPlayer]){
-                self.view.userInteractionEnabled = NO;
-                self.buttonNavigationBar.userInteractionEnabled = NO;
-                
-                LMTutorialView *tutorialView = [[LMTutorialView alloc] initForAutoLayoutWithTitle:NSLocalizedString(@"TutorialMiniPlayerTitle", nil)
-                                                                                      description:NSLocalizedString(@"TutorialMiniPlayerDescription", nil)
-                                                                                              key:LMTutorialKeyMiniPlayer];
-                [self.navigationController.view addSubview:tutorialView];
-                tutorialView.boxAlignment = LMTutorialViewAlignmentBottom;
-                tutorialView.arrowAlignment = LMTutorialViewAlignmentBottom;
-                tutorialView.icon = [LMAppIcon imageForIcon:LMIconTutorialScroll];
-                tutorialView.delegate = self;
-				
-				NSArray *tutorialViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-					[tutorialView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-					[tutorialView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
-					[tutorialView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-					[tutorialView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.buttonNavigationBar.miniPlayerCoreView];
-				}];
-				[LMLayoutManager addNewPortraitConstraints:tutorialViewPortraitConstraints];
-				
-				NSArray *tutorialViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-					[tutorialView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
-					[tutorialView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-					[tutorialView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.buttonNavigationBar.miniPlayerCoreView];
-				}];
-				[LMLayoutManager addNewLandscapeConstraints:tutorialViewLandscapeConstraints];
-				
-				self.backgroundBlurView.hidden = NO;
-				[UIView animateWithDuration:0.5 animations:^{
-					self.backgroundBlurView.effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
-				}];
-            }
-        } repeats:NO];
-    }
-    else if([key isEqualToString:LMTutorialKeyMiniPlayer]){
-        [NSTimer scheduledTimerWithTimeInterval:1.0 block:^{
-            if([LMTutorialView tutorialShouldRunForKey:LMTutorialKeyTopBar]){
-                self.navigationController.navigationBar.userInteractionEnabled = NO;
-                
-                LMTutorialView *tutorialView = [[LMTutorialView alloc] initForAutoLayoutWithTitle:NSLocalizedString(@"TutorialTopBarTitle", nil)
-                                                                                      description:NSLocalizedString(@"TutorialTopBarDescription", nil)
-                                                                                              key:LMTutorialKeyTopBar];
-                [self.navigationController.view addSubview:tutorialView];
-                tutorialView.boxAlignment = LMTutorialViewAlignmentTop;
-                tutorialView.arrowAlignment = LMTutorialViewAlignmentTop;
-                tutorialView.icon = [LMAppIcon imageForIcon:LMIconTutorialTap];
-                tutorialView.delegate = self;
-				
-				NSArray *tutorialViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-					[tutorialView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-					[tutorialView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
-					[tutorialView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-					[tutorialView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.navigationController.navigationBar];
-				}];
-				[LMLayoutManager addNewPortraitConstraints:tutorialViewPortraitConstraints];
-				
-				NSArray *tutorialViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-					[tutorialView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
-					[tutorialView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-					[tutorialView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.landscapeNavigationBar];
-				}];
-				[LMLayoutManager addNewLandscapeConstraints:tutorialViewLandscapeConstraints];
-            }
-        } repeats:NO];
-    }
-    
-    if(![LMTutorialView tutorialShouldRunForKey:LMTutorialKeyNowPlaying] && self.nowPlayingCoreView.tutorialView){
-        [self.nowPlayingCoreView.tutorialView removeFromSuperview];
-        self.nowPlayingCoreView.tutorialView = nil;
-    }
 }
 
 - (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState {
@@ -1342,6 +1252,14 @@ LMControlBarViewDelegate
 		});
 
 	}
+	else if([[NSUserDefaults standardUserDefaults] objectForKey:LMGuideViewControllerUserWantsToViewTutorialKey]){
+		LMTutorialViewController *tutorialViewer = [LMTutorialViewController new];
+		tutorialViewer.wasPresented = YES;
+		
+		LMRestorableNavigationController *restorableNavigationController = [[LMRestorableNavigationController alloc]initWithRootViewController:tutorialViewer];
+		
+		[self.navigationController presentViewController:restorableNavigationController animated:YES completion:nil];
+	}
 	else{
 		static dispatch_once_t mainSetupToken;
 		dispatch_once(&mainSetupToken, ^{
@@ -1850,51 +1768,6 @@ LMControlBarViewDelegate
 		[self.navigationController.view insertSubview:self.buttonNavigationBar aboveSubview:self.backgroundBlurView];
 		[self.navigationController.view insertSubview:self.buttonNavigationBarBottomCoverView aboveSubview:self.buttonNavigationBar];
 		[self.navigationController.view insertSubview:self.nowPlayingCoreView aboveSubview:self.buttonNavigationBar];
-
-		
-		if([LMTutorialView tutorialShouldRunForKey:LMTutorialKeyBottomNavigation]){
-			self.view.userInteractionEnabled = NO;
-			self.buttonNavigationBar.userInteractionEnabled = NO;
-			
-			
-			LMTutorialView *tutorialView = [[LMTutorialView alloc] initForAutoLayoutWithTitle:NSLocalizedString(@"TutorialMainNavigationTitle", nil)
-																				  description:NSLocalizedString(@"TutorialMainNavigationDescription", nil)
-																						  key:LMTutorialKeyBottomNavigation];
-			[self.navigationController.view addSubview:tutorialView];
-			tutorialView.boxAlignment = LMTutorialViewAlignmentBottom;
-			tutorialView.arrowAlignment = LMTutorialViewAlignmentBottom;
-			//                                tutorialView.icon = [LMAppIcon imageForIcon:LMIconLookAndFeel];
-			tutorialView.delegate = self;
-			
-			NSArray *tutorialViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-				[tutorialView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-				[tutorialView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
-				[tutorialView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-				[tutorialView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.buttonNavigationBar.browsingBar];
-			}];
-			[LMLayoutManager addNewPortraitConstraints:tutorialViewPortraitConstraints];
-			
-			NSArray *tutorialViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-				[tutorialView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view];
-				[tutorialView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-				[tutorialView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.buttonNavigationBar.browsingBar];
-			}];
-			[LMLayoutManager addNewLandscapeConstraints:tutorialViewLandscapeConstraints];
-			
-			[UIView animateWithDuration:0.5 animations:^{
-				self.backgroundBlurView.effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
-			}];
-		}
-		else{
-			NSArray *tutorialKeys = @[ LMTutorialKeyBottomNavigation, LMTutorialKeyMiniPlayer, LMTutorialKeyTopBar ];
-			for(NSInteger i = 0; i < tutorialKeys.count; i++){
-				NSString *key = tutorialKeys[i];
-				NSString *nextKey = (i+1 < tutorialKeys.count) ? tutorialKeys[i+1] : key;
-				if(![LMTutorialView tutorialShouldRunForKey:key] && [LMTutorialView tutorialShouldRunForKey:nextKey]){
-					[self tutorialFinishedWithKey:key];
-				}
-			}
-		}
 	} repeats:NO];
 	
 	
@@ -1972,6 +1845,15 @@ LMControlBarViewDelegate
 		 * Test area
 		 *
 		 */
+		
+		
+//		self.buttonNavigationBar.hidden = YES;
+		
+		
+//		LMTutorialViewController *tutorialViewer = [LMTutorialViewController new];
+//		[self.navigationController pushViewController:tutorialViewer animated:YES];
+
+		
 		
 //		LMFeedbackViewController *feedbackController = [LMFeedbackViewController new];
 //

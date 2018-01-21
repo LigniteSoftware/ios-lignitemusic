@@ -10,6 +10,7 @@
 
 #import "LMThemePickerViewController.h"
 #import "LMSettingsViewController.h"
+#import "LMTutorialViewController.h"
 #import "LMContactViewController.h"
 #import "LMCreditsViewController.h"
 #import "LMAlertViewController.h"
@@ -130,7 +131,7 @@
 		case 2:
 			return 1;
 		case 3:
-			return 2;
+			return 3;
 	}
 	return 0;
 }
@@ -178,10 +179,12 @@
 		case 3:
 			switch(indexPath.row){
 				case 0:
-					return NSLocalizedString(@"Credits", nil);
+					return NSLocalizedString(@"Tutorial", nil);
 				case 1:
-					return NSLocalizedString(@"ContactUs", nil);
+					return NSLocalizedString(@"Credits", nil);
 				case 2:
+					return NSLocalizedString(@"ContactUs", nil);
+				case 3:
 					return NSLocalizedString(@"UsageData", nil);
 			}
 			break;
@@ -246,10 +249,12 @@
 		case 3:
 			switch(indexPath.row){
 				case 0:
-					return NSLocalizedString(@"CreditsMore", nil);
+					return NSLocalizedString(@"TutorialSettingsSubtitle", nil);
 				case 1:
-					return nil;
+					return NSLocalizedString(@"CreditsMore", nil);
 				case 2:
+					return nil;
+				case 3:
 					return NSLocalizedString([LMSettings userHasOptedOutOfTracking] ? @"OptedOut" : @"OptedIn" , nil);
 			}
 			break;
@@ -381,14 +386,21 @@
 			break;
 		case 3:
 			switch(indexPath.row){
-				case 0:{
+				case 0: {
+					LMTutorialViewController *tutorialViewController = [LMTutorialViewController new];
+					[self.navigationController showViewController:tutorialViewController sender:self];
+					
+					[LMAnswers logCustomEventWithName:@"Viewed Tutorial" customAttributes:nil];
+					break;
+				}
+				case 1:{
 					LMCreditsViewController *creditsViewController = [LMCreditsViewController new];
 					[self.navigationController showViewController:creditsViewController sender:self];
 					
 					[LMAnswers logCustomEventWithName:@"Viewed Credits" customAttributes:nil];
 					break;
 				}
-				case 1: {
+				case 2: {
 					LMContactViewController *contactViewController = [LMContactViewController new];
 					[self.navigationController showViewController:contactViewController sender:self];
                     
@@ -396,7 +408,7 @@
 					[LMAnswers logCustomEventWithName:@"Viewed Contact Us Screen" customAttributes:nil];
 					break;
 				}
-				case 2: {
+				case 3: {
 					LMAlertViewController *alertViewController = [LMAlertViewController new];
 					alertViewController.titleText = NSLocalizedString(@"UsageData", nil);
 					alertViewController.bodyText = NSLocalizedString(@"UsageDataDescription", nil);

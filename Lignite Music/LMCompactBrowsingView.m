@@ -1356,6 +1356,13 @@
 }
 
 - (void)tappedBigListEntryAtIndex:(NSInteger)i {
+	if((i + 1) >= [self collectionView:self.collectionView numberOfItemsInSection:1]){
+		NSLog(@"i %d is greater than %d items", (int)i, (int)[self collectionView:self.collectionView numberOfItemsInSection:1]);
+//		return;
+	}
+	
+	NSLog(@"Num items %d, i is %d", (int)[self collectionView:self.collectionView numberOfItemsInSection:1], (int)i);
+	
 	self.indexOfCurrentlyOpenDetailViewForOreientationChanges = i;
 	
 	if([LMLayoutManager isLandscape]){
