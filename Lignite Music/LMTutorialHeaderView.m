@@ -10,7 +10,7 @@
 #import "LMTutorialHeaderView.h"
 #import "LMThemeEngine.h"
 
-@interface LMTutorialHeaderView()
+@interface LMTutorialHeaderView()<LMLayoutChangeDelegate>
 
 /**
  The background view which is in place to centre everything.
@@ -47,11 +47,22 @@
 	}
 }
 
+- (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		
+	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		self.titleLabel.textAlignment = (LMLayoutManager.isLandscape || LMLayoutManager.isiPad) ? NSTextAlignmentLeft : NSTextAlignmentCenter;
+	}];
+}
+
 - (void)layoutSubviews {
 	if(!self.didLayoutConstraints){
 		self.didLayoutConstraints = YES;
 		
 		self.userInteractionEnabled = YES;
+		
+		
+		[[LMLayoutManager sharedLayoutManager] addDelegate:self];
 		
 		
 		self.centreBackgroundView = [UIView newAutoLayoutView];
@@ -67,8 +78,8 @@
 		self.titleLabel.text = NSLocalizedString(@"TutorialViewTitle", nil);
 		self.titleLabel.textColor = [UIColor blackColor];
 //		self.titleLabel.backgroundColor = [UIColor orangeColor];
-		self.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:28.0f];
-		self.titleLabel.textAlignment = NSTextAlignmentCenter;
+		self.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:LMLayoutManager.isExtraSmall ? 24.0f : 28.0f];
+		self.titleLabel.textAlignment = (LMLayoutManager.isLandscape || LMLayoutManager.isiPad) ? NSTextAlignmentLeft : NSTextAlignmentCenter;
 		self.titleLabel.numberOfLines = 0;
 		[self.centreBackgroundView addSubview:self.titleLabel];
 		
@@ -85,18 +96,38 @@
 		UITapGestureRecognizer *buttonTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tappedBackgroundButtonView)];
 		[self.buttonBackgroundView addGestureRecognizer:buttonTapGestureRecognizer];
 		
-		[self.buttonBackgroundView autoAlignAxisToSuperviewAxis:ALAxisVertical];
+
 		[self.buttonBackgroundView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.titleLabel];
-		[self.buttonBackgroundView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.titleLabel];
 		[self.buttonBackgroundView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.titleLabel withOffset:14];
 		[self.buttonBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(3.0/10.0)];
+		
+		NSArray *buttonBackgroundViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+			[self.buttonBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.titleLabel];
+		}];
+		[LMLayoutManager addNewPortraitConstraints:buttonBackgroundViewPortraitConstraints];
+		
+		NSArray *buttonBackgroundViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+			[self.buttonBackgroundView autoMatchDimension:ALDimensionWidth
+											  toDimension:ALDimensionWidth
+												   ofView:self.titleLabel
+										   withMultiplier:(1.0/2.0)];
+		}];
+		[LMLayoutManager addNewLandscapeConstraints:buttonBackgroundViewLandscapeConstraints];
+		
+		NSArray *buttonBackgroundViewiPadConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+			[self.buttonBackgroundView autoMatchDimension:ALDimensionWidth
+											  toDimension:ALDimensionWidth
+												   ofView:self.titleLabel
+										   withMultiplier:(1.0/2.0)];
+		}];
+		[LMLayoutManager addNewiPadConstraints:buttonBackgroundViewiPadConstraints];
 		
 		
 		self.buttonLabel = [UILabel newAutoLayoutView];
 		self.buttonLabel.text = NSLocalizedString(@"TutorialViewButtonText", nil);
 		self.buttonLabel.textColor = [UIColor whiteColor];
 //		self.buttonLabel.backgroundColor = [UIColor brownColor];
-		self.buttonLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:22.0f];
+		self.buttonLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:LMLayoutManager.isExtraSmall ? 20.0f : 22.0f];
 		self.buttonLabel.textAlignment = NSTextAlignmentCenter;
 		self.buttonLabel.numberOfLines = 1;
 		[self.buttonBackgroundView addSubview:self.buttonLabel];
@@ -108,7 +139,7 @@
 		self.subtitleLabel.text = NSLocalizedString(@"TutorialViewSubtitle", nil);
 		self.subtitleLabel.textColor = [UIColor blackColor];
 //		self.subtitleLabel.backgroundColor = [UIColor yellowColor];
-		self.subtitleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:16.0f];
+		self.subtitleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:LMLayoutManager.isExtraSmall ? 18.0f : 20.0f];
 		self.subtitleLabel.textAlignment = NSTextAlignmentLeft;
 		self.subtitleLabel.numberOfLines = 0;
 		[self.centreBackgroundView addSubview:self.subtitleLabel];

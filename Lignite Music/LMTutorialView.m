@@ -19,6 +19,11 @@
 @property UIImageView *imageView;
 
 /**
+ The shadow view for the image.
+ */
+@property UIView *imageShadowView;
+
+/**
  The background view of the image, so we can centre it between the top of the view and the top of the info view.
  */
 @property UIView *imageViewBackgroundView;
@@ -108,7 +113,7 @@
 		self.titleLabel.text = NSLocalizedString(titleKey, nil);
 		self.titleLabel.textColor = [UIColor blackColor];
 //		self.titleLabel.backgroundColor = [UIColor orangeColor];
-		self.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:20.0f];
+		self.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:16.0f];
 		self.titleLabel.textAlignment = NSTextAlignmentCenter;
 		self.titleLabel.numberOfLines = 0;
 		[self addSubview:self.titleLabel];
@@ -138,7 +143,8 @@
 		self.imageView.clipsToBounds = YES;
 		self.imageView.layer.masksToBounds = YES;
 		self.imageView.layer.cornerRadius = 8.0f;
-		self.imageView.image = self.coverImage;
+		self.imageView.image = [self coverImage];
+		
 		[self.imageViewBackgroundView addSubview:self.imageView];
 		
 		CGFloat widthMultiplier = self.coverImage.size.width / self.coverImage.size.height;
@@ -149,6 +155,22 @@
 							   toDimension:ALDimensionHeight
 									ofView:self.imageViewBackgroundView
 							withMultiplier:(10.0/10.0)];
+		
+		
+		
+		self.imageShadowView = [UIView newAutoLayoutView];
+		self.imageShadowView.backgroundColor = [UIColor whiteColor];
+		[self.imageViewBackgroundView addSubview:self.imageShadowView];
+		
+		[self.imageShadowView autoCentreInSuperview];
+		[self.imageShadowView autoMatchDimension:ALDimensionWidth
+									 toDimension:ALDimensionWidth
+										  ofView:self.imageView
+								  withMultiplier:(9.5/10.0)];
+		[self.imageShadowView autoMatchDimension:ALDimensionHeight
+									 toDimension:ALDimensionHeight
+										  ofView:self.imageView
+								  withMultiplier:(9.5/10.0)];
 		
 		
 		
@@ -172,11 +194,20 @@
 		
 		
 		
+		[self.imageViewBackgroundView insertSubview:self.imageView aboveSubview:self.imageShadowView];
+		
+		
+		
 		self.userInteractionEnabled = YES;
 		
 		UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapped)];
 		[self addGestureRecognizer:tapGestureRecognizer];
 	}
+	
+	self.imageShadowView.layer.shadowColor = [UIColor blackColor].CGColor;
+	self.imageShadowView.layer.shadowRadius = self.frame.size.width/15;
+	self.imageShadowView.layer.shadowOffset = CGSizeMake(0, self.imageShadowView.layer.shadowRadius/2);
+	self.imageShadowView.layer.shadowOpacity = 0.50f;
 }
 
 - (void)removeFromSuperview {

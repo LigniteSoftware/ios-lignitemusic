@@ -48,6 +48,24 @@
  
  */
 
+"ViewTutorial" = "Einführung ansehen";
+"JumpRightIn" = "Kein Interesse";
+
+"OnboardingTutorialTitle" = "Du bist bereit!";
+"OnboardingTutorialDescription" = "Tippe auf den Button unterhalb falls du gerne wissen möchtest, wie du Lignite Music benutzen kannst.\n\nWir hoffen, dass dir Lignite Music gefallen wird!";
+
+"TutorialViewOnDataWarning" = "Achtung: du bist nicht einem WiFi-Netzwerk eingeloggt. Unsere Videos werden von YouTube gestreamt.";
+
+"LMTutorialViewTutorialKeyQueueManagement_Title" = "Warteschlange";
+"LMTutorialViewTutorialKeyNormalPlaylists_Title" = "Wiedergabeliste";
+"LMTutorialViewTutorialKeyFavourites_Title" = "Favoriten";
+
+"Tutorial" = "Einführung";
+"TutorialSettingsSubtitle" = "Erfahre mehr über Lignite Music";
+"TutorialViewTitle" = "Neu bei Lignite Music?";
+"TutorialViewSubtitle" = "Möchtest du gerne mehr erfahren? Untenstehend findest du weitere Videos zu Lignite Music.";
+"TutorialViewButtonText" = "Zeige mir die Grundlagen";
+
 "NextTrack" = "Nächstes Lied";
 "PreviousTrack" = "Vorheriges Lied";
 "TrackMissingSubtitle" = "Unbekannt bis Wiedergabe startet";
@@ -453,12 +471,6 @@
 
 "OnboardingMusicPermissionTitle" = "Wir benötigen deine Musik, um abzurocken!";
 "OnboardingMusicPermissionDescription" = "Nachdem du den untenstehenden Button angetippt hast, wird dich die App um Zugriff auf deine Musiksammlung bitten.\n\nBewillige die Anfrage bitte, da unsere App deine Musik sonst nicht anzeigen kann.";
-
-"OnboardingPebblePermissionTitle" = "Einen blauen Zahn, bitte!"; //This is an English expression which essentially means "We have a dilemma". In the end, what we want to express in this title is something slightly witty (though not disrespectful) which infers there is a rock involved, since the word "Pebble" is the smartwatch associated.
-"OnboardingPebblePermissionDescription" = "Pebble ist eine geniale Smartwatch und wir haben eine App dafür programmiert. Sie erlaubt es dir, die komplette Musiksammlung deines iPhones direkt auf deinem Handgelenk zu durchsuchen und die Wiedergabe zu steuern.\n\nAkzeptiere bitte die nachfolgende Anfrage, damit wir mit deiner Pebble kommunizieren können.";
-
-"OnboardingTutorialTitle" = "Dürfen wir dir eine kurze Einführung geben?";
-"OnboardingTutorialDescription" = "Wir haben eine kurze Einleitung für dich zusammengestellt, um dir die Grundlagen zur Bedienung unserer App zu zeigen.\n\Die Experimentierfreudigen unter euch können sie natürlich auch überspringen.";
 
 //The user is gutless most likely because they did not take the time to read the dialog and simply clicked deny. However, we understand shit happens and they might have slipped or something.
 "OnboardingUserIsGutlessTitle" = "Ähm, wo ist die Musik?";

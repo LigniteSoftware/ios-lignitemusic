@@ -116,17 +116,24 @@
 		
 		CGFloat height = 0;
 		
-		if([LMLayoutManager isLandscape]){
-			height = width * (2.5/10.0);
+		if(LMLayoutManager.isiPad){
+			height = LMLayoutManager.isLandscapeiPad ? (self.collectionView.frame.size.height * (2.5/10.0)) : (width * (2.5/10.0));
+		}
+		else if(LMLayoutManager.isLandscape){
+			height = width * (3.0/10.0);
 		}
 		else{
 			height = width * (5.5/10.0);
 		}
 		
+		if(LMLayoutManager.isExtraSmall){
+			height += 50;
+		}
+		
 		return CGSizeMake(width, height);
 	}
 	else{
-		CGFloat width = self.collectionView.frame.size.width/2.0;
+		CGFloat width = self.collectionView.frame.size.width/3.0;
 		
 		if([LMLayoutManager isiPad]){
 			width = self.collectionView.frame.size.width / 4.0;
@@ -139,7 +146,7 @@
 		CGFloat height = 0;
 		
 		if([LMLayoutManager isLandscape]){
-			height = width * 1.2;
+			height = width * 1.3;
 		}
 		else{
 			height = width * 1.8;
@@ -393,13 +400,17 @@
 	[super didReceiveMemoryWarning];
 }
 
+- (void)viewDidDisappear:(BOOL)animated {
+	if(self.view.window == nil){
+		[[NSNotificationCenter defaultCenter] removeObserver:self
+														name:kReachabilityChangedNotification
+													  object:nil];
+	}
+}
+
 - (void)loadView {
 	self.view = [UIView new];
 	self.view.backgroundColor = [UIColor whiteColor];
-}
-
-- (void)dealloc {
-	
 }
 
 @end
