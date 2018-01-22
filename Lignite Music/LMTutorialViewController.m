@@ -95,7 +95,14 @@
 - (void)tutorialHeaderViewButtonTapped {
 	NSLog(@"Header tapped, play intro tutorial videos");
 	
-	[self tutorialViewSelected:nil withYouTubeVideoURLString:@"52h_fH1dAa4"];
+	NSString *language = NSLocalizedString(@"LMLocalizationKey", nil);
+	
+	if([language isEqualToString:@"de"]){
+		[self tutorialViewSelected:nil withYouTubeVideoURLString:@"CuAalEem5Cw"];
+	}
+	else{
+		[self tutorialViewSelected:nil withYouTubeVideoURLString:@"0cXxGMC6bGE"];
+	}
 }
 
 - (CGSize)collectionView:(UICollectionView*)collectionView
@@ -319,9 +326,27 @@
 	[self.view addSubview:self.warningBar];
 	
 	[self.warningBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-	[self.warningBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
 	[self.warningBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 	[self.warningBar autoSetDimension:ALDimensionHeight toSize:0.0f];
+	
+	if(@available(iOS 11, *)){
+		[self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.warningBar
+															  attribute:NSLayoutAttributeTop
+															  relatedBy:NSLayoutRelationEqual
+																 toItem:self.view.safeAreaLayoutGuide
+															  attribute:NSLayoutAttributeTop
+															 multiplier:1.0f
+															   constant:0.0f]];
+	}
+	else{
+		[self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.warningBar
+															  attribute:NSLayoutAttributeTop
+															  relatedBy:NSLayoutRelationEqual
+																 toItem:self.topLayoutGuide
+															  attribute:NSLayoutAttributeBottom
+															 multiplier:1.0f
+															   constant:0.0f]];
+	}
 	
 	self.dataWarning = [LMWarning warningWithText:NSLocalizedString(@"TutorialViewOnDataWarning", nil) priority:LMWarningPriorityHigh];
 	

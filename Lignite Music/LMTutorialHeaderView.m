@@ -10,7 +10,7 @@
 #import "LMTutorialHeaderView.h"
 #import "LMThemeEngine.h"
 
-@interface LMTutorialHeaderView()<LMLayoutChangeDelegate>
+@interface LMTutorialHeaderView()
 
 /**
  The background view which is in place to centre everything.
@@ -47,22 +47,12 @@
 	}
 }
 
-- (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
-	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-		
-	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-		self.titleLabel.textAlignment = (LMLayoutManager.isLandscape || LMLayoutManager.isiPad) ? NSTextAlignmentLeft : NSTextAlignmentCenter;
-	}];
-}
-
 - (void)layoutSubviews {
 	if(!self.didLayoutConstraints){
 		self.didLayoutConstraints = YES;
 		
 		self.userInteractionEnabled = YES;
 		
-		
-		[[LMLayoutManager sharedLayoutManager] addDelegate:self];
 		
 		
 		self.centreBackgroundView = [UIView newAutoLayoutView];
@@ -79,7 +69,7 @@
 		self.titleLabel.textColor = [UIColor blackColor];
 //		self.titleLabel.backgroundColor = [UIColor orangeColor];
 		self.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:LMLayoutManager.isExtraSmall ? 23.0f : 26.0f];
-		self.titleLabel.textAlignment = (LMLayoutManager.isLandscape || LMLayoutManager.isiPad) ? NSTextAlignmentLeft : NSTextAlignmentCenter;
+		self.titleLabel.textAlignment = NSTextAlignmentLeft;
 		self.titleLabel.numberOfLines = 0;
 		[self.centreBackgroundView addSubview:self.titleLabel];
 		
@@ -139,7 +129,7 @@
 		self.subtitleLabel.text = NSLocalizedString(@"TutorialViewSubtitle", nil);
 		self.subtitleLabel.textColor = [UIColor blackColor];
 //		self.subtitleLabel.backgroundColor = [UIColor yellowColor];
-		self.subtitleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:LMLayoutManager.isExtraSmall ? 18.0f : 20.0f];
+		self.subtitleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:LMLayoutManager.isExtraSmall ? 14.0f : 16.0f];
 		self.subtitleLabel.textAlignment = NSTextAlignmentLeft;
 		self.subtitleLabel.numberOfLines = 0;
 		[self.centreBackgroundView addSubview:self.subtitleLabel];
