@@ -624,9 +624,10 @@
 		[self.songListTableView reloadData];
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		[self.songListTableView reloadData];
-		[NSTimer scheduledTimerWithTimeInterval:0.2 repeats:NO block:^(NSTimer * _Nonnull timer) {
+		
+		[NSTimer scheduledTimerWithTimeInterval:0.2 block:^{
 			[self.songListTableView reloadData];
-		}];
+		} repeats:NO];
 		
 		if(!self.layoutManager.isLandscape){
 			[self setShuffleButtonLandscapeOffset:4.0f];

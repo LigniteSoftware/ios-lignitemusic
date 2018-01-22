@@ -395,7 +395,7 @@
 }
 
 - (CGSize)currentItemSize {
-	NSLog(@"Number of columns %d", (int)[LMDetailView numberOfColumns]);
+//	NSLog(@"Number of columns %d", (int)[LMDetailView numberOfColumns]);
 	return CGSizeMake(self.collectionView.frame.size.width/[LMDetailView numberOfColumns] - (LMLayoutManager.isiPad ? 10 : 0),
 					  fmin(LMLayoutManager.standardListEntryHeight * ([LMLayoutManager isiPhoneX] ? 0.90 : 1.00), 74));
 }

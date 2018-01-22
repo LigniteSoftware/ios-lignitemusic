@@ -283,11 +283,11 @@
 - (void)tappedShuffleAllLabel {
 	[self.shuffleAllCheckbox setOn:!self.shuffleAllCheckbox.on animated:YES];
 	
-	self.playlist.enhancedShuffleAll = self.shuffleAllCheckbox.enabled;
+	self.playlist.enhancedShuffleAll = self.shuffleAllCheckbox.on;
 }
 
 - (void)didTapCheckBox:(BEMCheckBox*)checkBox {
-	self.playlist.enhancedShuffleAll = checkBox.enabled;
+	self.playlist.enhancedShuffleAll = checkBox.on;
 }
 
 - (void)reloadConditionsLabelAndWarningBox {
@@ -513,7 +513,8 @@
 - (UIImage*)iconForListEntry:(LMListEntry*)entry {
 	BOOL isWantToHear = (entry.indexPath.section == 0);
 	
-	LMMusicType musicType = (LMMusicType)[[(isWantToHear ? [self.playlist wantToHearMusicTypes] : [self.playlist dontWantToHearMusicTypes]) objectAtIndex:entry.indexPath.row - 1] integerValue];
+	NSArray<NSNumber*> *musicTypes = (isWantToHear ? [self.playlist wantToHearMusicTypes] : [self.playlist dontWantToHearMusicTypes]);
+	LMMusicType musicType = (LMMusicType)[[musicTypes objectAtIndex:entry.indexPath.row - 1] integerValue];
 //	LMMusicTrackCollection *collection = [(isWantToHear ? [self.playlist wantToHearTrackCollections] : [self.playlist dontWantToHearTrackCollections]) objectAtIndex:entry.indexPath.row - 1];
 	
 	switch(musicType){
@@ -851,6 +852,7 @@
 	
 	self.shuffleAllCheckbox = [BEMCheckBox newAutoLayoutView];
 	self.shuffleAllCheckbox.delegate = self;
+	self.shuffleAllCheckbox.on = self.playlist.enhancedShuffleAll;
 	self.shuffleAllCheckbox.boxType = BEMBoxTypeSquare;
 	self.shuffleAllCheckbox.tintColor = [LMColour controlBarGreyColour];
 	self.shuffleAllCheckbox.onFillColor = [LMColour mainColour];

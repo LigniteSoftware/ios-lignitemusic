@@ -91,10 +91,12 @@
 		}
 		
 		NSArray<LMMusicTrackCollection*> *trackCollections = [[LMMusicPlayer sharedMusicPlayer] collectionsForPersistentID:persistentID forMusicType:musicType];
-				
-		if(trackCollections.firstObject){
-			[musicTrackCollectionsMutableArray addObject:trackCollections.firstObject];
+		
+		NSMutableArray<LMMusicTrack*> *allTracksInTrackCollectionsArray = [NSMutableArray new];
+		for(LMMusicTrackCollection *trackCollection in trackCollections){
+			[allTracksInTrackCollectionsArray addObjectsFromArray:trackCollection.items];
 		}
+		[musicTrackCollectionsMutableArray addObject:[[LMMusicTrackCollection alloc] initWithItems:allTracksInTrackCollectionsArray]];
 	}
 	
 	NSLog(@"Returning %d wanted items", (int)musicTrackCollectionsMutableArray.count);
@@ -118,12 +120,14 @@
 		
 		NSArray<LMMusicTrackCollection*> *trackCollections = [[LMMusicPlayer sharedMusicPlayer] collectionsForPersistentID:persistentID forMusicType:musicType];
 		
-		if(trackCollections.firstObject){
-			[musicTrackCollectionsMutableArray addObject:trackCollections.firstObject];
+		NSMutableArray<LMMusicTrack*> *allTracksInTrackCollectionsArray = [NSMutableArray new];
+		for(LMMusicTrackCollection *trackCollection in trackCollections){
+			[allTracksInTrackCollectionsArray addObjectsFromArray:trackCollection.items];
 		}
+		[musicTrackCollectionsMutableArray addObject:[[LMMusicTrackCollection alloc] initWithItems:allTracksInTrackCollectionsArray]];
 	}
 	
-	NSLog(@"Returning %d UNWANTED items", (int)musicTrackCollectionsMutableArray.count);
+	NSLog(@"Returning %d UNWANTED items for %@ and %@", (int)musicTrackCollectionsMutableArray.count, persistentIDsArray, musicTypesArray);
 	
 	return [NSArray arrayWithArray:musicTrackCollectionsMutableArray];
 }
@@ -156,7 +160,7 @@
 }
 
 - (void)regenerateEnhancedPlaylist {
-	NSAssert(self.enhanced, @"Attempt to regenerate a playlist that's not enhanced.");
+	NSAssert(self.enhanced, @"It is illegal to try and regenerate a playlist that's not enhanced. Prepare to get ass blasted. Oh wait, you already did, sucker.");
 	
 	NSLog(@"Regenerate me");
 	

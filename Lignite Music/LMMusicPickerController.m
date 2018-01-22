@@ -59,6 +59,10 @@
 	NSMutableArray *mutableTrackCollections = [[NSMutableArray alloc] initWithArray:self.trackCollections];
 	NSMutableArray *mutableMusicTypes = [[NSMutableArray alloc] initWithArray:self.musicTypes];
 	
+	if(musicType == LMMusicTypeFavourites){
+		musicType = LMMusicTypeTitles;
+	}
+	
 	if(selected){
 		if(![self trackCollectionIsSelected:collection]){ //Prevent collection from being added more than once
 			[mutableTrackCollections addObject:collection];
@@ -84,7 +88,9 @@
 				trackCollectionMusicType = LMMusicTypeTitles;
 			}
 			
-			if([LMMusicPlayer trackCollection:trackCollection isEqualToOtherTrackCollection:collection] && trackCollectionMusicType == musicType){
+			if([LMMusicPlayer trackCollection:trackCollection isEqualToOtherTrackCollection:collection]
+			   && trackCollectionMusicType == musicType){
+				
 				indexToRemove = i;
 				break;
 			}

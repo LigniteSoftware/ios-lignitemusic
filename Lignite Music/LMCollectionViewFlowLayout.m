@@ -105,6 +105,12 @@
 		detailView.adjustForFloatingControls = (!LMLayoutManager.isiPad && !LMLayoutManager.isLandscape);
 		
 		self.detailView = detailView;
+		
+		if(![LMLayoutManager isiPad]){
+			LMCompactBrowsingView *compactView = self.compactView;
+			LMCoreViewController *coreViewController = compactView.rootViewController;
+			[coreViewController.buttonNavigationBar minimize:YES];
+		}
 	}
 	
 	self.previousIndexOfItemDisplayingDetailView = _indexOfItemDisplayingDetailView;
@@ -166,10 +172,10 @@
 - (UICollectionViewLayoutAttributes*)initialLayoutAttributesForAppearingItemAtIndexPath:(NSIndexPath *)itemIndexPath {
 	UICollectionViewLayoutAttributes *layoutAttributes = [self layoutAttributesForItemAtIndexPath:itemIndexPath];
 	
-	NSLog(@"Appearing %@", itemIndexPath);
+//	NSLog(@"Appearing %@", itemIndexPath);
 	
 	if(itemIndexPath.row == self.indexOfDetailView){
-		NSLog(@"Is index of detail view");
+//		NSLog(@"Is index of detail view");
 		
 		CGRect initialDetailViewFrame = [self frameForCellAtIndexPath:itemIndexPath detailViewDisplayMode:LMDetailViewDisplayModeCurrentIndex];
 		if(self.detailView.frame.size.height == 0){
@@ -179,7 +185,7 @@
 		layoutAttributes.frame = initialDetailViewFrame;
 	}
 	else {
-		NSLog(@"Is displaying detail view");
+//		NSLog(@"Is displaying detail view");
 		
 		layoutAttributes.frame = [self frameForCellAtIndexPath:[NSIndexPath indexPathForRow:itemIndexPath.row inSection:0] detailViewDisplayMode:LMDetailViewDisplayModeCurrentIndex];
 	}
@@ -191,10 +197,10 @@
 - (UICollectionViewLayoutAttributes *)finalLayoutAttributesForDisappearingItemAtIndexPath:(NSIndexPath *)itemIndexPath {
 	UICollectionViewLayoutAttributes *attributes = [self layoutAttributesForItemAtIndexPath:itemIndexPath];
 	
-	NSLog(@"Disappearing %@", itemIndexPath);
+//	NSLog(@"Disappearing %@", itemIndexPath);
 	
 	if(itemIndexPath.row == self.previousIndexOfDetailView){ //Shrink the detail view to 0 in height
-		NSLog(@"Is previous index");
+//		NSLog(@"Is previous index");
 		CGRect initialDetailViewFrame = [self frameForCellAtIndexPath:itemIndexPath detailViewDisplayMode:LMDetailViewDisplayModePreviousIndex];
 		initialDetailViewFrame.size.height = 0;
 		
@@ -204,11 +210,11 @@
 //		attributes.alpha = 0;
 	}
 	else if(self.isDisplayingDetailView){ //Is an actual item in the compact view and is transitioning along with the now-opening detail view
-		NSLog(@"Displaying detail view %@", itemIndexPath);
+//		NSLog(@"Displaying detail view %@", itemIndexPath);
 		attributes.frame = [self frameForCellAtIndexPath:[NSIndexPath indexPathForRow:itemIndexPath.row inSection:0] detailViewDisplayMode:self.detailView.isChangingSize ? LMDetailViewDisplayModeCurrentIndex : LMDetailViewDisplayModeNone];
 	}
 	else if(!self.isDisplayingDetailView){ //Is an item in the compact view and is transitioning along with the now-closing detail view
-		NSLog(@"Not displaying detail view");
+//		NSLog(@"Not displaying detail view");
 		attributes.frame = [self frameForCellAtIndexPath:[NSIndexPath indexPathForRow:itemIndexPath.row-1 inSection:0] detailViewDisplayMode:LMDetailViewDisplayModeCurrentIndex];
 	}
 	else{

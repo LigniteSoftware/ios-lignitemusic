@@ -339,7 +339,15 @@
 		return NSLocalizedString(self.allEntriesSelected ? @"DeselectAll" : @"SelectAll", nil);
 	}
 	
-	LMMusicTrackCollection *collection = [self.displayingTrackCollections objectAtIndex:entry.collectionIndex-self.entriesAreSelectable];
+	NSInteger fixedIndex = entry.collectionIndex-self.entriesAreSelectable;
+	
+	LMMusicTrackCollection *collection = nil;
+	if(fixedIndex < self.displayingTrackCollections.count){
+		collection = [self.displayingTrackCollections objectAtIndex:fixedIndex];
+	}
+	else{
+		return @"An error occurred, sorry";
+	}
 	
 	switch(self.musicType){
 		case LMMusicTypeFavourites:
@@ -368,7 +376,15 @@
 		return nil;
 	}
 	
-	LMMusicTrackCollection *collection = [self.displayingTrackCollections objectAtIndex:entry.collectionIndex-self.entriesAreSelectable];
+	NSInteger fixedIndex = entry.collectionIndex-self.entriesAreSelectable;
+	
+	LMMusicTrackCollection *collection = nil;
+	if(fixedIndex < self.displayingTrackCollections.count){
+		collection = [self.displayingTrackCollections objectAtIndex:fixedIndex];
+	}
+	else{
+		return @"Email contact@lignite.io";
+	}
 	
 	switch(self.musicType){
 		case LMMusicTypeFavourites:
@@ -413,7 +429,15 @@
 		return nil;
 	}
 	
-	LMMusicTrackCollection *collection = [self.displayingTrackCollections objectAtIndex:entry.collectionIndex-self.entriesAreSelectable];
+	NSInteger fixedIndex = entry.collectionIndex-self.entriesAreSelectable;
+	
+	LMMusicTrackCollection *collection = nil;
+	if(fixedIndex < self.displayingTrackCollections.count){
+		collection = [self.displayingTrackCollections objectAtIndex:fixedIndex];
+	}
+	else{
+		return nil;
+	}
 	
 	switch(self.musicType){
 		case LMMusicTypeComposers:
@@ -605,10 +629,12 @@
 	[self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UICollectionViewScrollPositionTop animated:NO];
 }
 
-- (void)swipeDownGestureOccurredOnLetterTabBar { } //Nothing, for now
-
 - (void)reloadNoSongsLabel {
 	self.noSongsInSongTableViewLabel.hidden = self.displayingTrackCollections.count > 0;
+	
+	BOOL thereIsMusicButTheSearchEntryCameUpWithNothing = (self.trackCollections.count > 0 && self.isSearching && self.searchResultTrackCollections.count == 0);
+	self.noSongsInSongTableViewLabel.text = NSLocalizedString(thereIsMusicButTheSearchEntryCameUpWithNothing ? @"NoSearchResults" : @"TheresNothingHere", nil);
+	
 	self.collectionView.hidden = self.displayingTrackCollections.count == 0;
 }
 

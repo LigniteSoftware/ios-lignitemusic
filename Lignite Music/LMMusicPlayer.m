@@ -146,7 +146,7 @@ MPMediaGrouping associatedMediaTypes[] = {
 		}
 		self.previousPlaybackTime = self.currentPlaybackTime;
 		
-		self.autoPlay = (self.systemMusicPlayer.playbackState == MPMusicPlaybackStatePlaying);
+//		self.autoPlay = (self.systemMusicPlayer.playbackState == MPMusicPlaybackStatePlaying);
 		
 //		[[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
 //		[[AVAudioSession sharedInstance] setActive:YES error:nil];
@@ -444,8 +444,6 @@ MPMediaGrouping associatedMediaTypes[] = {
 //		self.playbackTimeToRestoreBecauseQueueChangesAreFuckingStupid = 0.0;
 //	}
 	
-	BOOL autoPlay = self.audioPlayer.isPlaying;
-	
 	CFAbsoluteTime nextTime = CFAbsoluteTimeGetCurrent();
 
 	
@@ -495,23 +493,23 @@ MPMediaGrouping associatedMediaTypes[] = {
 	nextTime = CFAbsoluteTimeGetCurrent();
 	NSLog(@"[Update] notifyDelegates: %fs", (nextTime - startTimeInSeconds));
 	
-	if(self.didJustFinishTrack && (self.indexOfNowPlayingTrack != 0 || self.repeatMode != LMMusicRepeatModeNone)){
-		self.autoPlay = YES;
-		self.didJustFinishTrack = NO;
-	}
+//	if(self.didJustFinishTrack && (self.indexOfNowPlayingTrack != 0 || self.repeatMode != LMMusicRepeatModeNone)){
+//		self.autoPlay = YES;
+//		self.didJustFinishTrack = NO;
+//	}
 	
-	nextTime = CFAbsoluteTimeGetCurrent();
-	NSLog(@"[Update] setAutoAndDidFinish: %fs", (nextTime - startTimeInSeconds));
+//	nextTime = CFAbsoluteTimeGetCurrent();
+//	NSLog(@"[Update] setAutoAndDidFinish: %fs", (nextTime - startTimeInSeconds));
 	
-	if(autoPlay || self.autoPlay){
-		[self play];
+	if(self.autoPlay){
 		self.autoPlay = NO;
+		[self play];
 	}
 	
-	nextTime = CFAbsoluteTimeGetCurrent();
-	NSLog(@"[Update] markPlay: %fs", (nextTime - startTimeInSeconds));
-	
-	[self reloadInfoCentre:autoPlay];
+//	nextTime = CFAbsoluteTimeGetCurrent();
+//	NSLog(@"[Update] markPlay: %fs", (nextTime - startTimeInSeconds));
+//
+//	[self reloadInfoCentre:autoPlay];
 	
 	nextTime = CFAbsoluteTimeGetCurrent();
 	NSLog(@"[Update] infoCentre: %fs", (nextTime - startTimeInSeconds));
@@ -530,10 +528,11 @@ MPMediaGrouping associatedMediaTypes[] = {
 - (void)systemMusicPlayerStateChanged:(id)sender {
 	[self keepShuffleModeInLine];
 	
+	NSLog(@"System playback state changed to %d", self.systemMusicPlayer.playbackState);
+	
 	if(self.systemMusicPlayer.playbackState == MPMusicPlaybackStateInterrupted
 	   || self.systemMusicPlayer.playbackState == MPMusicPlaybackStateStopped){
-		self.playbackState = LMMusicPlaybackStatePlaying;
-		self.autoPlay = YES;
+		self.playbackState = LMMusicPlaybackStatePaused;
 	}
 	else{
 		self.playbackState = (LMMusicPlaybackState)self.systemMusicPlayer.playbackState;
@@ -1316,6 +1315,10 @@ BOOL shuffleForDebug = NO;
 - (LMMusicPlaybackState)invertPlaybackState {
 	NSLog(@"Playback state %d", self.systemMusicPlayer.playbackState);
 	
+	if(self.systemMusicPlayer.playbackState == MPMusicPlaybackStateStopped || self.systemMusicPlayer.playbackState == LMMusicPlaybackStateInterrupted){
+		NSLog(@"Gotem");
+	}
+	
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer) {
 		switch(self.audioPlayer.isPlaying){
 			case LMMusicPlaybackStatePlaying:
@@ -1334,14 +1337,14 @@ BOOL shuffleForDebug = NO;
 				[self pause];
 				return LMMusicPlaybackStatePaused;
 			}
+			case MPMusicPlaybackStateInterrupted:
 			case MPMusicPlaybackStateStopped:{
 				[self pause];
-				[NSTimer scheduledTimerWithTimeInterval:0.1 block:^{
+				[NSTimer scheduledTimerWithTimeInterval:0.25 block:^{
 					[self play];
 				} repeats:NO];
 				return LMMusicPlaybackStatePlaying;
 			}
-			case MPMusicPlaybackStateInterrupted:
 			case MPMusicPlaybackStatePaused:{
 				[self play];
 				return LMMusicPlaybackStatePlaying;

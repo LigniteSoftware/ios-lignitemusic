@@ -1242,7 +1242,7 @@ LMControlBarViewDelegate
 	if(!LMMusicPlayer.onboardingComplete){
 		NSLog(@"Launching onboarding...");
 		
-		[[MPMusicPlayerController systemMusicPlayer] stop];
+//		[[MPMusicPlayerController systemMusicPlayer] stop];
 		
 		[NSTimer scheduledTimerWithTimeInterval:0.25 block:^{
 			[self launchOnboarding];
@@ -1854,11 +1854,11 @@ LMControlBarViewDelegate
 		 */
 		
 		
-		self.buttonNavigationBar.hidden = YES;
-		
-		
-		LMTutorialViewController *tutorialViewer = [LMTutorialViewController new];
-		[self.navigationController pushViewController:tutorialViewer animated:YES];
+//		self.buttonNavigationBar.hidden = YES;
+//
+//
+//		LMTutorialViewController *tutorialViewer = [LMTutorialViewController new];
+//		[self.navigationController pushViewController:tutorialViewer animated:YES];
 
 		
 		
@@ -1887,6 +1887,8 @@ LMControlBarViewDelegate
 //		[playlistManager setUserUnderstandsPlaylistEditing:NO];
 
 		
+		
+		
 		//THIS TEST PLAYLIST CODE WILL CAUSE YOUR COMPACT VIEW TO NOT SYNC PROPERLY. DO NOT BE SPOOKED.
 		
 //		LMPlaylistEditorViewController *playlistViewController = [LMPlaylistEditorViewController new];
@@ -1902,6 +1904,7 @@ LMControlBarViewDelegate
 
 
 //		LMEnhancedPlaylistEditorViewController *enhancedPlaylistViewController = [LMEnhancedPlaylistEditorViewController new];
+//		enhancedPlaylistViewController.delegate = self.compactView;
 //		UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:enhancedPlaylistViewController];
 //		[self presentViewController:navigation animated:YES completion:^{
 //

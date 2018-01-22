@@ -358,15 +358,20 @@
 	[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 	[self.collectionView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.warningBar];
 	
-	NSArray *collectionViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+	if(self.wasPresented){
 		[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-	}];
-	[LMLayoutManager addNewPortraitConstraints:collectionViewPortraitConstraints];
+	}
+	else{
+		NSArray *collectionViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+			[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		}];
+		[LMLayoutManager addNewPortraitConstraints:collectionViewPortraitConstraints];
 
-	NSArray *scrollViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-		[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:64];
-	}];
-	[LMLayoutManager addNewLandscapeConstraints:scrollViewLandscapeConstraints];
+		NSArray *scrollViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+			[self.collectionView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:64];
+		}];
+		[LMLayoutManager addNewLandscapeConstraints:scrollViewLandscapeConstraints];
+	}
 	
 	//	if(@available(iOS 11, *)){
 	//		[self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.collectionView

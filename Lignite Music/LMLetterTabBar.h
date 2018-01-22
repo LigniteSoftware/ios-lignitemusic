@@ -18,6 +18,8 @@
  */
 - (void)letterSelected:(NSString*)letter atIndex:(NSUInteger)index;
 
+@optional
+
 /**
  The swipe down gesture happened.
  */

@@ -127,6 +127,10 @@
 
 - (NSArray*)swipeTableCell:(MGSwipeTableCell*)cell swipeButtonsForDirection:(MGSwipeDirection)direction swipeSettings:(MGSwipeSettings*)swipeSettings expansionSettings:(MGSwipeExpansionSettings*)expansionSettings {
 	
+	NSLog(@"selection style %d", (int)cell.selectionStyle);
+	
+//	cell.selectionStyle = UITableViewCellSelectionStyleNone;
+	
 	BOOL isRightToLeftSwipe = (direction == MGSwipeDirectionRightToLeft);
 	
 	UIColor *expansionColour = nil;
@@ -152,6 +156,7 @@
 	expansionSettings.expansionColor = expansionColour;
 	expansionSettings.triggerAnimation.easingFunction = MGSwipeEasingFunctionCubicOut;
 	expansionSettings.fillOnTrigger = NO;
+	
 	
 //	if(expansionColour || buttons){
 //		NSLog(@"Whatagdhtt %@ %@", expansionColour, buttons);
@@ -183,8 +188,9 @@
 													  reuseIdentifier:[NSString stringWithFormat:@"test%d", rand()]];
 	
 	cell.backgroundColor = [UIColor clearColor];
-	cell.delegate = self; //optional
+	cell.delegate = self; //Optional, apparently
 	cell.clipsToBounds = YES;
+	cell.selectionStyle = UITableViewCellSelectionStyleNone;
 	
 	[self addSubview:cell];
 	[cell autoPinEdgesToSuperviewEdges];

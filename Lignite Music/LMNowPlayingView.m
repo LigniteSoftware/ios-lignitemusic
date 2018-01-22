@@ -760,7 +760,7 @@
 }
 
 - (void)reloadFavouriteStatus {
-	UIImage *favouritesImageToUse = [LMAppIcon imageForIcon:self.loadedTrack.isFavourite ? LMIconFavouriteRedFilled : (self.progressSlider.lightTheme ? LMIconFavouriteWhiteOutline : LMIconFavouriteBlackOutline)];
+	UIImage *favouritesImageToUse = [LMAppIcon imageForIcon:self.loadedTrack.isFavourite ? LMIconFavouriteRedFilled : LMIconFavouriteBlackOutline];
 	self.favouriteHeartImageView.image = favouritesImageToUse;
 	[self.favouritesButton setImage:favouritesImageToUse];
 }

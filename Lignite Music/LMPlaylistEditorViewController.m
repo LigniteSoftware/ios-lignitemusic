@@ -589,7 +589,7 @@
 	self.songListTableView.notHighlightedBackgroundColour = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.0];
 	self.songListTableView.backgroundColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.5]; //I wonder what this will do
 	self.songListTableView.clipsToBounds = YES;
-	self.songListTableView.alwaysBounceVertical = NO;
+//	self.songListTableView.alwaysBounceVertical = YES;
 	self.songListTableView.longPressReorderDelegate = self;
 	self.songListTableView.longPressReorderEnabled = YES;
 	[self.view addSubview:self.songListTableView];

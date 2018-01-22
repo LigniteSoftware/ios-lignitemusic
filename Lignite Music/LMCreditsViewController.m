@@ -303,6 +303,25 @@
 						  @"LibraryReachability",
 						  @"LibraryReachabilityDescription",
 						  
+						  @"LibraryUnirest",
+						  @"LibraryUnirestDescription",
+						  
+						  @"LibraryMGSwipeTableCell",
+						  @"LibraryMGSwipeTableCellDescription",
+						  
+						  @"LibraryRSKImageCropper",
+						  @"LibraryRSKImageCropperDescription",
+						  
+						  @"LibraryBEMCheckBox",
+						  @"LibraryBEMCheckBoxDescription",
+						  
+						  @"LibraryPeekPop",
+						  @"LibraryPeekPopDescription",
+						  
+						  @"LibraryXCDYouTubeKit",
+						  @"LibraryXCDYouTubeKitDescription",
+						  
+						  
 						  @"Icons",
 						  @"IconsDescription"
 						  ];
@@ -360,6 +379,24 @@
 		18.0,
 		18.0,
 		
+		18.0,
+		18.0,
+		
+		18.0,
+		18.0,
+		
+		18.0,
+		18.0,
+		
+		18.0,
+		18.0,
+		
+		18.0,
+		18.0,
+		
+		18.0,
+		18.0,
+		
 		30.0,
 		18.0
 	};
@@ -391,6 +428,24 @@
 		NO,
 		
 		NO,
+		NO,
+		
+		YES,
+		NO,
+		
+		YES,
+		NO,
+		
+		YES,
+		NO,
+		
+		YES,
+		NO,
+		
+		YES,
+		NO,
+		
+		YES,
 		NO,
 		
 		YES,
