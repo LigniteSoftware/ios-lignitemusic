@@ -156,6 +156,7 @@
 "SelectASource" = "Please select where to get music from";
 "SearchType" = "Search %@";
 "SearchAllMusic" = "Search all your music";
+"Done" = "Done";
 
 "XSongs" = "%ld songs"; //Multiple songs
 "XSongsSingle" = "%ld song"; //1 song

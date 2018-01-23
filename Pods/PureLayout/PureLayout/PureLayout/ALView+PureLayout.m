@@ -46,6 +46,9 @@
 {
     ALView *view = [self new];
     view.translatesAutoresizingMaskIntoConstraints = NO;
+	
+//	NSLog(@"Created new view %p with class %@", self, self.class);
+	
     return view;
 }
 

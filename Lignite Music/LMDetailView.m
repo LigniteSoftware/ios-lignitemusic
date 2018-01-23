@@ -326,7 +326,7 @@
 		saveButton.titleLabel.font = font;
 		saveButton.titleLabel.hidden = YES;
 		saveButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
-		saveButton.imageEdgeInsets = UIEdgeInsetsMake(LMLayoutManager.isExtraSmall ? 18 : 25, 0, LMLayoutManager.isExtraSmall ? 18 : 25, 0);
+		saveButton.imageEdgeInsets = UIEdgeInsetsMake(LMLayoutManager.isExtraSmall ? 18 : 21, 0, LMLayoutManager.isExtraSmall ? 18 : 21, 0);
 		
 		listEntry.rightButtons = @[ saveButton ];
 		
@@ -347,7 +347,7 @@
 		favouriteButton.titleLabel.font = font;
 		favouriteButton.titleLabel.hidden = YES;
 		favouriteButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
-		favouriteButton.imageEdgeInsets = UIEdgeInsetsMake(LMLayoutManager.isExtraSmall ? 18 : 25, 0, LMLayoutManager.isExtraSmall ? 18 : 25, 0);
+		favouriteButton.imageEdgeInsets = UIEdgeInsetsMake(LMLayoutManager.isExtraSmall ? 18 : 21, 0, LMLayoutManager.isExtraSmall ? 18 : 21, 0);
 		
 		listEntry.leftButtons = @[ favouriteButton ];
 		listEntry.leftButtonExpansionColour = track.isFavourite ? [LMColour deletionRedColour] : [LMColour successGreenColour];
@@ -356,8 +356,8 @@
 		[cell.contentView addSubview:listEntry];
 		listEntry.backgroundColor = [LMColour superLightGreyColour];
 		
-		[listEntry autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:[LMLayoutManager isiPhoneX] ? 20 : 0];
-		[listEntry autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:[LMLayoutManager isiPhoneX] ? 44 : 0];
+		[listEntry autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:([LMLayoutManager isiPhoneX] && [LMLayoutManager isLandscape]) ? 0 : 0];
+		[listEntry autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:([LMLayoutManager isiPhoneX] && [LMLayoutManager isLandscape]) ? 44 : 0];
 		[listEntry autoPinEdgeToSuperviewEdge:ALEdgeTop];
 		[listEntry autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 			

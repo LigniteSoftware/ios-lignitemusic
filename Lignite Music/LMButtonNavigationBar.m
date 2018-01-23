@@ -232,6 +232,8 @@
 
 - (void)completelyHide {
 	__weak id weakSelf = self;
+	
+	[self setSelectedTab:LMNavigationTabBrowse];
     
     self.isMinimized = YES;
     self.isCompletelyHidden = YES;
@@ -380,15 +382,15 @@
 			[self setViewAttachedToButtonBar:self.miniPlayerCoreView];
 			break;
 		case LMNavigationTabView:{
-			NSLayoutConstraint *sizeConstraint = nil;
-			for(NSLayoutConstraint *constraint in self.sourceSelector.constraints){
-				if(constraint.firstItem == self.sourceSelector){
-					if(constraint.firstAttribute == NSLayoutAttributeWidth || constraint.firstAttribute == NSLayoutAttributeHeight){
-						sizeConstraint = constraint;
-						break;
-					}
-				}
-			}
+//			NSLayoutConstraint *sizeConstraint = nil;
+//			for(NSLayoutConstraint *constraint in self.sourceSelector.constraints){
+//				if(constraint.firstItem == self.sourceSelector){
+//					if(constraint.firstAttribute == NSLayoutAttributeWidth || constraint.firstAttribute == NSLayoutAttributeHeight){
+//						sizeConstraint = constraint;
+//						break;
+//					}
+//				}
+//			}
 			
 //			sizeConstraint.constant = self.layoutManager.isLandscape ? (self.unmodifiedFrame.size.height-LMNavigationBarTabWidth) : (self.unmodifiedFrame.size.width-LMNavigationBarTabHeight);
 			

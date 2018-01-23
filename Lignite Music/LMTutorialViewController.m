@@ -436,6 +436,8 @@
 														name:kReachabilityChangedNotification
 													  object:nil];
 	}
+	
+	[super viewDidDisappear:animated];
 }
 
 - (void)loadView {

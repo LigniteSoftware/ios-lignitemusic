@@ -838,7 +838,7 @@
 	
 	
 	self.songCountLabel = [UILabel newAutoLayoutView];
-	self.songCountLabel.text = @"nice work";
+//	self.songCountLabel.text = @"nice work";
 	self.songCountLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:[LMLayoutManager isExtraSmall] ? 14.0f : 18.0f];
 	self.songCountLabel.textColor = [UIColor blackColor];
 	self.songCountLabel.numberOfLines = 0;

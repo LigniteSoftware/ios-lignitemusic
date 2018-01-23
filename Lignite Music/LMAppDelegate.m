@@ -118,16 +118,81 @@
     NSLog(@"[LMAppDelegate]: Will resign active.");
 	
 	[self.musicPlayer prepareQueueForBackgrounding];
-    
+	
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
+}
+
+dispatch_source_t CreateDispatchTimer(uint64_t interval, uint64_t leeway, dispatch_queue_t queue, dispatch_block_t block)
+{
+	dispatch_source_t timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);
+	if (timer)
+	{
+		dispatch_source_set_timer(timer, dispatch_walltime(NULL, 0), interval, leeway);
+		dispatch_source_set_event_handler(timer, block);
+		dispatch_resume(timer);
+	}
+	return timer;
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
     NSLog(@"[LMAppDelegate]: Entering background.");
 	
-	[self.musicPlayer saveNowPlayingState];
-    
+	__block UIBackgroundTaskIdentifier bgTask;
+	
+	bgTask = [application beginBackgroundTaskWithName:@"FixCurrentPlaybackTime" expirationHandler:^{
+		// Clean up any unfinished task business by marking where you
+		// stopped or ending the task outright.
+		
+		NSLog(@"Background task is expiring, sorry.");
+		
+		[application endBackgroundTask:bgTask];
+		bgTask = UIBackgroundTaskInvalid;
+	}];
+	
+	// Start the long-running task and return immediately.
+	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+		
+		// Do the work associated with the task, preferably in chunks.
+		
+//		[self.musicPlayer prepareQueueForBackgrounding];
+		
+		[self.musicPlayer saveNowPlayingState];
+		
+		NSTimer* timer = [NSTimer scheduledTimerWithTimeInterval:10.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
+//			NSLog(@"Nigger");
+//
+//			dispatch_async(dispatch_get_main_queue(), ^{
+//				NSLog(@"time left %f", application.backgroundTimeRemaining);
+//			});
+			
+			NSLog(@"Ending background task");
+			
+			[application endBackgroundTask:bgTask];
+			bgTask = UIBackgroundTaskInvalid;
+		}];
+		[[NSRunLoop currentRunLoop] addTimer:timer forMode:NSDefaultRunLoopMode];
+		[[NSRunLoop currentRunLoop] run];
+		
+//		CreateDispatchTimer(5.0, 0, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//			NSLog(@"time left %f", application.backgroundTimeRemaining);
+//
+//			[application endBackgroundTask:bgTask];
+//			bgTask = UIBackgroundTaskInvalid;
+//		});
+		
+//		[NSTimer scheduledTimerWithTimeInterval:5.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
+////			dispatch_async(dispatch_get_main_queue(), ^{
+//				NSLog(@"time left %f", application.backgroundTimeRemaining);
+//
+//				[application endBackgroundTask:bgTask];
+//				bgTask = UIBackgroundTaskInvalid;
+////			});
+//		}];
+//
+//		bgTask = UIBackgroundTaskInvalid;
+	});
+	
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
 }

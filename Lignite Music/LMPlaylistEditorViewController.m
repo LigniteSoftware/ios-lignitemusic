@@ -232,7 +232,7 @@
 			saveButton.titleLabel.font = font;
 			saveButton.titleLabel.hidden = YES;
 			saveButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
-			saveButton.imageEdgeInsets = UIEdgeInsetsMake(LMLayoutManager.isExtraSmall ? 18 : 25, 0, LMLayoutManager.isExtraSmall ? 18 : 25, 0);
+			saveButton.imageEdgeInsets = UIEdgeInsetsMake(LMLayoutManager.isExtraSmall ? 18 : 21, 0, LMLayoutManager.isExtraSmall ? 18 : 21, 0);
 			
 			listEntry.rightButtons = @[ saveButton ];
 			listEntry.rightButtonExpansionColour = [UIColor colorWithRed:0.92 green:0.00 blue:0.00 alpha:1.0];
@@ -635,9 +635,11 @@
 }
 
 - (void)encodeRestorableStateWithCoder:(NSCoder *)coder {
-	[super encodeWithCoder:coder];
+	[super encodeRestorableStateWithCoder:coder];
 	
 	[coder encodeObject:self.playlist.dictionaryRepresentation forKey:LMPlaylistEditorRestorationKeyPlaylistDictionary];
+	
+	
 }
 
 - (void)decodeRestorableStateWithCoder:(NSCoder *)coder {

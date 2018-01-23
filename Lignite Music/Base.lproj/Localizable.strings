@@ -156,6 +156,7 @@
 "SelectASource" = "Please select where to get music from";
 "SearchType" = "Search %@";
 "SearchAllMusic" = "Search all your music";
+"Done" = "Done";
 
 "XSongs" = "%ld songs"; //Multiple songs
 "XSongsSingle" = "%ld song"; //1 song
@@ -561,6 +562,24 @@
 "LibraryReachability" = "Reachability - Tony Million";
 "LibraryReachabilityDescription" = "Reachability is a handy library which lets you do a bunch of tasks related to your Internet connection.";
 
+"LibraryUnirest" = "Unirest - Kong";
+"LibraryUnirestDescription" = "Unirest is a set of lightweight HTTP libraries available in multiple language. Who doesn't love a lightweight HTTP library?";
+
+"LibraryMGSwipeTableCell" = "MGSwipeTableCell - Imanol Fernandez";
+"LibraryMGSwipeTableCellDescription" = "MGSwipeTableCell is an easy to use UITableViewCell subclass that allows to display swipeable buttons with a variety of transitions. This is what powers our queuing and favourites swipability.";
+
+"LibraryRSKImageCropper" = "RSKImageCropper - Ruslan Skorb";
+"LibraryRSKImageCropperDescription" = "This is an easy-to-use and clean image cropper library, which powers our playlist image cropper.";
+
+"LibraryBEMCheckBox" = "BEMCheckBox - Boris Emorine";
+"LibraryBEMCheckBoxDescription" = "Darn, are these checkboxes ever nice! BEMCheckBox is an in-depth library bringing really nice checkboxes to your fingers.";
+
+"LibraryPeekPop" = "PeekPop - Roy Marmelstein";
+"LibraryPeekPopDescription" = "PeekPop is a lovely library for 3D Touch actions, which allows for cross-platform compatibility for devices that don't have 3D Touch.";
+
+"LibraryXCDYouTubeKit" = "XCDYouTubeKit - Cédric Luthi";
+"LibraryXCDYouTubeKitDescription" = "This is an easy yet powerful library which allows one to stream or play YouTube videos within a native iOS format. We power our tutorial videos with this.";
+
 "Icons" = "Icons";
 "IconsDescription" = "Many of our icons were from www.flaticon.com, created by icon artists who were generous enough to license them under CC 3.0. Here they are!";
 "DesignedByNobody" = "We're working on it!\n\nCredits for icon artists are coming soon.";
@@ -645,3 +664,4 @@
  * Thank you.
  *
  */
+

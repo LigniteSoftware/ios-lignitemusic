@@ -444,7 +444,7 @@ MPMediaGrouping associatedMediaTypes[] = {
 //		self.playbackTimeToRestoreBecauseQueueChangesAreFuckingStupid = 0.0;
 //	}
 	
-	CFAbsoluteTime nextTime = CFAbsoluteTimeGetCurrent();
+	CFAbsoluteTime nextTime;
 
 	
 	[self keepShuffleModeInLine];
@@ -528,14 +528,19 @@ MPMediaGrouping associatedMediaTypes[] = {
 - (void)systemMusicPlayerStateChanged:(id)sender {
 	[self keepShuffleModeInLine];
 	
-	NSLog(@"System playback state changed to %d", self.systemMusicPlayer.playbackState);
+	NSLog(@"System playback state changed to %d", (int)self.systemMusicPlayer.playbackState);
 	
 	if(self.systemMusicPlayer.playbackState == MPMusicPlaybackStateInterrupted
 	   || self.systemMusicPlayer.playbackState == MPMusicPlaybackStateStopped){
 		self.playbackState = LMMusicPlaybackStatePaused;
 	}
 	else{
-		self.playbackState = (LMMusicPlaybackState)self.systemMusicPlayer.playbackState;
+		if(self.systemMusicPlayer.playbackState == MPMusicPlaybackStateSeekingForward || self.systemMusicPlayer.playbackState == MPMusicPlaybackStateSeekingBackward){ //what even are these fucking playback states
+			self.playbackState = LMMusicPlaybackStatePlaying;
+		}
+		else{ //paused or playing directly
+			self.playbackState = (LMMusicPlaybackState)self.systemMusicPlayer.playbackState;
+		}
 	}
 	
 	if(self.playbackState == LMMusicPlaybackStatePlaying){
@@ -1317,6 +1322,7 @@ BOOL shuffleForDebug = NO;
 	
 	if(self.systemMusicPlayer.playbackState == MPMusicPlaybackStateStopped || self.systemMusicPlayer.playbackState == LMMusicPlaybackStateInterrupted){
 		NSLog(@"Gotem");
+		self.playbackState = LMMusicPlaybackStatePaused;
 	}
 	
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer) {
@@ -1417,7 +1423,7 @@ BOOL shuffleForDebug = NO;
 
 - (void)saveNowPlayingState {
 	if(!self.nowPlayingCollection){
-		NSLog(@"Rejecting save");
+		NSLog(@"Not gonna save the now playing state because there's no now playing collection");
 		return;
 	}
 	

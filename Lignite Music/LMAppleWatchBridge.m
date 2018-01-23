@@ -521,9 +521,9 @@
 				representativeTrack = collection.representativeItem;
 			}
 			
-			NSString *title = NSLocalizedString(@"UnknownTitle", nil);
-			NSString *subtitle = NSLocalizedString(@"UnknownArtist", nil);
-			MPMediaEntityPersistentID newPersistentID = representativeTrack.albumPersistentID;
+			NSString *title = nil;
+			NSString *subtitle = nil;
+			MPMediaEntityPersistentID newPersistentID;
 			
 			UIImage *imageToUse = representativeTrack.uncorrectedAlbumArt;
 			if(musicType == LMMusicTypeArtists || musicType == LMMusicTypeComposers){
@@ -571,6 +571,9 @@
 					newPersistentID = playlist.persistentID;
 					break;
 				default:
+					title = NSLocalizedString(@"UnknownTitle", nil);
+					subtitle = NSLocalizedString(@"UnknownArtist", nil);
+					newPersistentID = representativeTrack.albumPersistentID;
 					break;
 			}
 			
@@ -649,7 +652,7 @@
 						   });
 		}
 		else if([key isEqualToString:LMAppleWatchControlKeyNextRepeatMode]){
-			LMMusicRepeatMode newRepeatMode = self.musicPlayer.repeatMode;
+			LMMusicRepeatMode newRepeatMode;
 			if(self.musicPlayer.repeatMode == LMMusicRepeatModeNone){
 				newRepeatMode = LMMusicRepeatModeAll;
 			}

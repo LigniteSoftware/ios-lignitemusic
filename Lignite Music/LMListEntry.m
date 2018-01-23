@@ -127,7 +127,7 @@
 
 - (NSArray*)swipeTableCell:(MGSwipeTableCell*)cell swipeButtonsForDirection:(MGSwipeDirection)direction swipeSettings:(MGSwipeSettings*)swipeSettings expansionSettings:(MGSwipeExpansionSettings*)expansionSettings {
 	
-	NSLog(@"selection style %d", (int)cell.selectionStyle);
+//	NSLog(@"selection style %d", (int)cell.selectionStyle);
 	
 //	cell.selectionStyle = UITableViewCellSelectionStyleNone;
 	

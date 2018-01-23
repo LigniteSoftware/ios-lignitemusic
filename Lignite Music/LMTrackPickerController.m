@@ -997,10 +997,14 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
 	self.letterTabBar.clipsToBounds = YES;
+	
+	[super viewWillDisappear:animated];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
 	self.letterTabBar.clipsToBounds = NO;
+	
+	[super viewWillAppear:animated];
 }
 
 - (instancetype)init {

@@ -73,6 +73,11 @@
 	LMLayoutManager *layoutManager = [LMLayoutManager sharedLayoutManager];
 	
 	[layoutManager.portraitConstraintsArray addObjectsFromArray:constraintsArray];
+	
+//	for(NSLayoutConstraint *constraint in constraintsArray){
+//		NSLog(@"Added portrait constraint: %@", constraint);
+//	}
+	
 //	NSLog(@"%ld shits", layoutManager.portraitConstraintsArray.count);
 	
 	if(![layoutManager isLandscape]){ //Add the constraints even if iPad. If iPad constraints are added later, these constraints are removed.
@@ -85,6 +90,10 @@
 	
 	[layoutManager.landscapeConstraintsArray addObjectsFromArray:constraintsArray];
 	
+//	for(NSLayoutConstraint *constraint in constraintsArray){
+//		NSLog(@"Added landscape constraint: %@", constraint);
+//	}
+	
 	if([layoutManager isLandscape]){
 		[NSLayoutConstraint activateConstraints:constraintsArray];
 	}
@@ -94,6 +103,10 @@
 	LMLayoutManager *layoutManager = [LMLayoutManager sharedLayoutManager];
 	
 	[layoutManager.iPadConstraintsArray addObjectsFromArray:constraintsArray];
+	
+//	for(NSLayoutConstraint *constraint in constraintsArray){
+//		NSLog(@"Added iPad constraint: %@", constraint);
+//	}
 	
 	if([LMLayoutManager isiPad]){
 		NSMutableArray *constraintsToRemove = [NSMutableArray new];
@@ -451,7 +464,15 @@
 	}
 	
 	NSLog(@"Swapping out %ld/%ld/%ld constraints...", (unsigned long)self.portraitConstraintsArray.count, (unsigned long)self.landscapeConstraintsArray.count, (unsigned long)self.iPadConstraintsArray.count);
-		
+	
+//	for(NSLayoutConstraint *constraint in self.portraitConstraintsArray){
+//		NSLog(@"Portrait constraint: %@", constraint);
+//	}
+//
+//	for(NSLayoutConstraint *constraint in self.landscapeConstraintsArray){
+//		NSLog(@"Landscape constraint: %@", constraint);
+//	}
+	
 	if([LMLayoutManager isiPad]){
 		[NSLayoutConstraint deactivateConstraints:self.portraitConstraintsArray];
 		[NSLayoutConstraint deactivateConstraints:self.landscapeConstraintsArray];

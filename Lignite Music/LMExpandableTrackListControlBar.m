@@ -158,7 +158,7 @@ BOOL expandableTrackListControlBarIsInAlbumDetail = NO;
 					[self.musicPlayer.navigationBar setSelectedTab:LMNavigationTabMiniplayer];
 					[self.musicPlayer.navigationBar maximize:NO];
 					
-					isPlayingMusic = YES;
+//					isPlayingMusic = YES;
 				}
 			}
 			

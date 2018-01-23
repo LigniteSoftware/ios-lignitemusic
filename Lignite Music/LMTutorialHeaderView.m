@@ -52,8 +52,9 @@
 		self.didLayoutConstraints = YES;
 		
 		self.userInteractionEnabled = YES;
+	
 		
-		
+		NSLog(@"Self is %p", self);
 		
 		self.centreBackgroundView = [UIView newAutoLayoutView];
 //		self.centreBackgroundView.backgroundColor = [UIColor greenColor];
@@ -62,6 +63,7 @@
 		[self.centreBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[self.centreBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 		[self.centreBackgroundView autoCentreInSuperview];
+
 		
 		
 		self.titleLabel = [UILabel newAutoLayoutView];
@@ -77,6 +79,7 @@
 		[self.titleLabel autoPinEdgeToSuperviewMargin:ALEdgeTop];
 		[self.titleLabel autoPinEdgeToSuperviewMargin:ALEdgeLeading];
 		[self.titleLabel autoPinEdgeToSuperviewMargin:ALEdgeTrailing];
+		
 		
 		
 		self.buttonBackgroundView = [UIView newAutoLayoutView];
@@ -139,6 +142,16 @@
 		[self.subtitleLabel autoPinEdgeToSuperviewMargin:ALEdgeBottom];
 		[self.subtitleLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.buttonBackgroundView withOffset:14];
 	}
+}
+
+
+
+- (void)removeFromSuperview {
+	NSLog(@"Removing %p", self);
+	
+	[LMLayoutManager removeAllConstraintsRelatedToView:self.buttonBackgroundView];
+	
+	[super removeFromSuperview];
 }
 
 @end
