@@ -47,7 +47,7 @@
 "OnboardingTutorialTitle" = "You're all set!";
 "OnboardingTutorialDescription" = "If you'd like to learn how to use Lignite Music, feel free to watch the tutorials by tapping the button below.\n\nIn any case, we hope you love Lignite Music!";
 
-"TutorialViewOnDataWarning" = "Warning: you are on cellular data. Tutorial videos use YouTube to play.";
+"TutorialViewOnDataWarning" = "Warning: you are on cellular data. Tutorial videos use YouTube to play. Warning: you are on cellular data. Tutorial videos use YouTube to play.";
 
 "LMTutorialViewTutorialKeyQueueManagement_Title" = "Queue";
 "LMTutorialViewTutorialKeyNormalPlaylists_Title" = "Playlists";

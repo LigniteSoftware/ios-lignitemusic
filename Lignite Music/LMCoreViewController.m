@@ -666,6 +666,11 @@ LMControlBarViewDelegate
 	   && (self.buttonNavigationBar.currentlySelectedTab != LMNavigationTabView)){
 		self.titleView.shuffleButtonLandscapeOffset = self.buttonNavigationBar.isMinimized ? 4.0f : bottomSpacing;
 	}
+	
+	
+	if([LMLayoutManager isiPhoneX]){
+		bottomSpacing += [LMLayoutManager isLandscape] ? 100.0f : (-50.0f);
+	}
 		
 //	if(self.buttonNavigationBar.isMinimized){
 //		bottomSpacing *= 2;
@@ -674,7 +679,7 @@ LMControlBarViewDelegate
 //	bottomSpacing = 0;
 	
 	UIEdgeInsets newInsets = self.compactView.collectionView.contentInset;
-	newInsets.bottom = LMLayoutManager.isLandscape ? 10 : bottomSpacing;
+	newInsets.bottom = [LMLayoutManager isLandscape] ? (LMLayoutManager.isiPhoneX ? 200 : 100) : bottomSpacing;
 	[UIView animateWithDuration:0.4 animations:^{
 		self.compactView.collectionView.contentInset = newInsets;
 	}];
@@ -1141,7 +1146,13 @@ LMControlBarViewDelegate
 	LMCoreViewControllerRestorationState newRestorationState = [coder decodeIntegerForKey:LMCoreViewControllerRestorationStateKey];
 	LMNavigationTab navigationTab = [coder decodeIntegerForKey:LMCoreViewControllerStateRestoredNavigationTabKey];
 	BOOL navigationBarWasMinimized = [coder decodeBoolForKey:LMCoreViewControllerStateRestoredNavigationBarWasMinimizedKey];
-	NSInteger previouslyOpenedDetailViewIndex = [coder decodeIntegerForKey:LMCoreViewControllerStateRestoredPreviouslyOpenedDetailViewIndex];
+	NSInteger previouslyOpenedDetailViewIndex = -1;
+	if([coder decodeObjectForKey:LMCoreViewControllerStateRestoredPreviouslyOpenedDetailViewIndex]){
+		previouslyOpenedDetailViewIndex = [coder decodeIntegerForKey:LMCoreViewControllerStateRestoredPreviouslyOpenedDetailViewIndex];
+	}
+	else{
+		NSLog(@"Nope");
+	}
 	MPMediaEntityPersistentID titleViewTopPersistentID = [coder decodeIntegerForKey:LMCoreViewControllerStateRestoredTitleViewTopPersistentID];
 	
 	self.restorationState = newRestorationState;
@@ -1264,6 +1275,8 @@ LMControlBarViewDelegate
 		tutorialViewer.wasPresented = YES;
 		
 		LMRestorableNavigationController *restorableNavigationController = [[LMRestorableNavigationController alloc]initWithRootViewController:tutorialViewer];
+		
+		self.restorationState = LMCoreViewControllerRestorationStateNotRestored;
 		
 		[self.navigationController presentViewController:restorableNavigationController animated:YES completion:nil];
 	}

@@ -218,7 +218,25 @@
     
 	
 	previousViewTopConstraint.constant = self.layoutManager.isLandscape ? (previouslyAttachedView.frame.size.height*2) : self.buttonBar.frame.size.height;
-	currentViewTopConstraint.constant = self.layoutManager.isLandscape ? 0 : -viewAttachedToButtonBar.frame.size.height;
+//	if(currentViewTopConstraint != previousViewTopConstraint){
+		currentViewTopConstraint.constant = self.layoutManager.isLandscape ? 0 : -viewAttachedToButtonBar.frame.size.height;
+//	}
+	
+	NSLog(@"Set %f %f", previousViewTopConstraint.constant, currentViewTopConstraint.constant);
+	
+	if(previousViewTopConstraint.constant == 0 && currentViewTopConstraint.constant == 0){
+		static int attemptsToFixNonAppearingView = 0;
+		if(attemptsToFixNonAppearingView > 2){
+			attemptsToFixNonAppearingView = 0;
+		}
+		else{
+			[NSTimer scheduledTimerWithTimeInterval:0.40 block:^{
+				[self setViewAttachedToButtonBar:viewAttachedToButtonBar];
+			} repeats:NO];
+			
+			attemptsToFixNonAppearingView++;
+		}
+	}
 	
 	[UIView animateWithDuration:0.25 animations:^{
 		[self layoutIfNeeded];

@@ -50,6 +50,11 @@
  */
 @property LMWarningBarView *warningBar;
 
+/**
+ The leading constraint for the warning bar, required for notch adjustment on iPhone X in landscape notch left.
+ */
+@property NSLayoutConstraint *warningBarLeadingConstraint;
+
 @end
 
 @implementation LMTutorialViewController
@@ -273,6 +278,8 @@
 		[NSTimer scheduledTimerWithTimeInterval:0.25 block:^{
 			[self.collectionView reloadData];
 			
+			self.warningBarLeadingConstraint.constant = (!self.wasPresented && LMLayoutManager.isLandscape) ? 64.0f : 0.0f;
+			
 			if([LMLayoutManager isiPhoneX]){
 				[self notchPositionChanged:LMLayoutManager.notchPosition];
 			}
@@ -289,11 +296,14 @@
 					   (notchPosition == LMNotchPositionLeft) ? 44 : 14.0f,
 					   20.0f,
 					   (notchPosition == LMNotchPositionRight) ? 44 : 14);
+	
+	
+	if(!self.wasPresented && LMLayoutManager.isiPhoneX && LMLayoutManager.isLandscape){
+		self.warningBarLeadingConstraint.constant = (LMLayoutManager.notchPosition == LMNotchPositionLeft) ? 94.0f : 64.0f;
+	}
 }
 
 - (BOOL)isOnCellularData {
-		return YES;
-	
 	LMReachability *reachability = [LMReachability reachabilityForInternetConnection];
 	[reachability startNotifier];
 	
@@ -331,9 +341,13 @@
 	self.warningBar = [LMWarningBarView newAutoLayoutView];
 	[self.view addSubview:self.warningBar];
 	
-	[self.warningBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+	self.warningBarLeadingConstraint = [self.warningBar autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:(!self.wasPresented && LMLayoutManager.isLandscape) ? 64.0f : 0.0f];
 	[self.warningBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 	[self.warningBar autoSetDimension:ALDimensionHeight toSize:0.0f];
+	
+	if(!self.wasPresented && LMLayoutManager.isiPhoneX && (LMLayoutManager.notchPosition == LMNotchPositionLeft)){
+		self.warningBarLeadingConstraint.constant += 34;
+	}
 	
 	if(@available(iOS 11, *)){
 		[self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.warningBar
