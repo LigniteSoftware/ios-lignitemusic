@@ -63,7 +63,7 @@
 }
 
 - (void)openWebsite {
-	NSURL *websiteURL = [NSURL URLWithString:@"https://www.lignite.io/"];
+	NSURL *websiteURL = [NSURL URLWithString:@"https://www.lignitemusic.com/"];
 	[[UIApplication sharedApplication] openURL:websiteURL];
 }
 

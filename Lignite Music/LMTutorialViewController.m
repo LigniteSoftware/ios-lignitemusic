@@ -292,7 +292,7 @@
 }
 
 - (BOOL)isOnCellularData {
-	//	return YES;
+		return YES;
 	
 	LMReachability *reachability = [LMReachability reachabilityForInternetConnection];
 	[reachability startNotifier];

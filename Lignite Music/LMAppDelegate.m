@@ -16,6 +16,7 @@
 #import "LMAppIcon.h"
 #import "LMSettings.h"
 #import "LMAppleWatchBridge.h"
+#import "NSTimer+Blocks.h"
 
 @interface LMAppDelegate ()
 
@@ -157,18 +158,18 @@ dispatch_source_t CreateDispatchTimer(uint64_t interval, uint64_t leeway, dispat
 		
 		[self.musicPlayer saveNowPlayingState];
 		
-		NSTimer* timer = [NSTimer scheduledTimerWithTimeInterval:10.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
-//			NSLog(@"Nigger");
-//
-//			dispatch_async(dispatch_get_main_queue(), ^{
-//				NSLog(@"time left %f", application.backgroundTimeRemaining);
-//			});
+		NSTimer* timer = [NSTimer scheduledTimerWithTimeInterval:10.0 block:^{
+			NSLog(@"Nigger");
+			//
+			//			dispatch_async(dispatch_get_main_queue(), ^{
+			//				NSLog(@"time left %f", application.backgroundTimeRemaining);
+			//			});
 			
 			NSLog(@"Ending background task");
 			
 			[application endBackgroundTask:bgTask];
 			bgTask = UIBackgroundTaskInvalid;
-		}];
+		} repeats:NO];
 		[[NSRunLoop currentRunLoop] addTimer:timer forMode:NSDefaultRunLoopMode];
 		[[NSRunLoop currentRunLoop] run];
 		

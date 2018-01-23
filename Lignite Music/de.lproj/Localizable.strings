@@ -605,6 +605,24 @@
 "LibraryReachability" = "Reachability - Tony Million";
 "LibraryReachabilityDescription" = "Reachability ist eine tolle Library, die uns erlaubt, verschiedene Tasks im Zusammenhang mit der Internet Verbindung auszuführen.";
 
+"LibraryUnirest" = "Unirest - Kong";
+"LibraryUnirestDescription" = "Unirest ist eine Sammmlung von schlanken HTTP Bibliotheken, verfügbar in mehreren Sprachen. Wer mag schon keine schlanken HTTP Bibliotheken?";
+
+"LibraryMGSwipeTableCell" = "MGSwipeTableCell - Imanol Fernandez";
+"LibraryMGSwipeTableCellDescription" = "MGSwipeTableCell ist eine einfach zu benutzende UITableViewCell Subklasse, welches erlaubt, swipe-bare Buttons mit vielen verschiedenen Übergängen darzustellen. Wir haben damit die Gesten für die Warteschlange und Favoriten realisiert.";
+
+"LibraryRSKImageCropper" = "RSKImageCropper - Ruslan Skorb";
+"LibraryRSKImageCropperDescription" = "Eine einfach zu nutzende Bibliothek, um Bilder zuzuschneiden. Wir verwenden sie um Bilder einer neu erstellten Wiedergabeliste zuzuschneiden.";
+
+"LibraryBEMCheckBox" = "BEMCheckBox - Boris Emorine";
+"LibraryBEMCheckBoxDescription" = "Meine Güte, sind diese Checkboxen schön! BEMCheckBox ist eine tolle Bibliothek, welche das Erstellen von superschönen Checkboxen erlaubt.";
+
+"LibraryPeekPop" = "PeekPop - Roy Marmelstein";
+"LibraryPeekPopDescription" = "PeekPop ist eine super Bibliothek für 3D Touch Aktionen, welche sogar rückwärtskompatibel zu Geräten ist, welche keine 3D Touch Funktionalität haben.";
+
+"LibraryXCDYouTubeKit" = "XCDYouTubeKit - Cédric Luthi";
+"LibraryXCDYouTubeKitDescription" = "Eine einfache und doch starke Bibliothek, welche erlaubt, YouTube videos im nativen iOS-Format abzuspielen oder zu streamen. Unsere Einführungsvideos nutzen diese Einbindung.";
+
 "Icons" = "Icons";
 "IconsDescription" = "Ein Grossteil unserer Icons stammt von www.flaticon.com und wurde von den folgenden Künstlern gestaltet, die so grosszügig waren, deren Icons unter CC 3.0 zu lizenzieren:";
 "DesignedByNobody" = "Wir arbeiten an der Übersicht und werden sie nachreichen sobald verfügbar.";
@@ -615,7 +633,7 @@
 "ContactDescription" = "Wir hoffen, Lignite Music gefällt dir genauso gut, wie es uns gefallen hat, die App in deine Hände zu bringen.\n\nSetze dich mit uns in Kontakt – wir würden uns sehr freuen, von dir zu hören!";
 "ContactEmail" = "contact@lignite.io";
 "ContactTwitter" = "@WeAreLignite";
-"ContactWebsite" = "www.lignite.io";
+"ContactWebsite" = "www.LigniteMusic.com";
 "ContactThanks" = "Vielen herzlichen Dank für deine Unterstützung und Grüsse von uns beiden!";
 
 

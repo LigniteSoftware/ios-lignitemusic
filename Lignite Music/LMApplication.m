@@ -6,7 +6,7 @@
 //  Copyright © 2018 Lignite. All rights reserved.
 //
 
-#define MAX_IDLE_TIME 30.0f
+#define MAX_IDLE_TIME 35.0f
 
 #import "LMApplication.h"
 
