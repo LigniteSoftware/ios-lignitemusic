@@ -76,7 +76,7 @@
 		[self.centreBackgroundView addSubview:self.titleLabel];
 		
 		[self.titleLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
-		[self.titleLabel autoPinEdgeToSuperviewMargin:ALEdgeTop];
+		[self.titleLabel autoPinEdgeToSuperviewEdge:ALEdgeTop];
 		[self.titleLabel autoPinEdgeToSuperviewMargin:ALEdgeLeading];
 		[self.titleLabel autoPinEdgeToSuperviewMargin:ALEdgeTrailing];
 		
@@ -84,6 +84,8 @@
 		
 		self.buttonBackgroundView = [UIView newAutoLayoutView];
 		self.buttonBackgroundView.backgroundColor = [LMColour mainColour];
+		self.buttonBackgroundView.layer.cornerRadius = 8.0f;
+		self.buttonBackgroundView.layer.masksToBounds = YES;
 		[self.centreBackgroundView addSubview:self.buttonBackgroundView];
 		
 		UITapGestureRecognizer *buttonTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tappedBackgroundButtonView)];
@@ -139,7 +141,7 @@
 		
 		[self.subtitleLabel autoPinEdgeToSuperviewMargin:ALEdgeLeading];
 		[self.subtitleLabel autoPinEdgeToSuperviewMargin:ALEdgeTrailing];
-		[self.subtitleLabel autoPinEdgeToSuperviewMargin:ALEdgeBottom];
+		[self.subtitleLabel autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 		[self.subtitleLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.buttonBackgroundView withOffset:14];
 	}
 }

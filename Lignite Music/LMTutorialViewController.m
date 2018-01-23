@@ -111,7 +111,7 @@
 	
 	if(indexPath.row == 0){ //Header view
 		CGFloat width = self.collectionView.frame.size.width;
-		
+	
 //		if([LMLayoutManager isiPad]){
 //			width = MAX(;
 //		}
@@ -127,14 +127,17 @@
 			height = (MIN(self.collectionView.frame.size.height, self.collectionView.frame.size.width) * (2.5/10.0));
 		}
 		else if(LMLayoutManager.isLandscape){
-			height = width * (3.0/10.0);
+			height = width * ((LMLayoutManager.isiPhoneX ? 2.0 : 2.5)/10.0);
 		}
 		else{
-			height = width * ((LMLayoutManager.isiPhoneX ? 6.5 : 5.5)/10.0);
+			height = width * ((LMLayoutManager.isiPhoneX ? 6.5 : 5.0)/10.0);
 		}
 		
 		if(LMLayoutManager.isExtraSmall){
-			height += 50;
+			height += 35;
+		}
+		else if(self.wasPresented){
+			height -= 30;
 		}
 		
 		return CGSizeMake(width, height);
@@ -186,7 +189,10 @@
 //		tutorialHeaderView.backgroundColor = [LMColour magentaColor];
 		[cell.contentView addSubview:tutorialHeaderView];
 		
-		[tutorialHeaderView autoPinEdgesToSuperviewEdges];
+		[tutorialHeaderView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:-10];
+		[tutorialHeaderView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[tutorialHeaderView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[tutorialHeaderView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 	}
 	else{
 		NSArray *tutorialKeys = @[

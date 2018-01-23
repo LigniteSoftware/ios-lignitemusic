@@ -117,8 +117,6 @@
 - (void)applicationWillResignActive:(UIApplication *)application {
     NSLog(@"[LMAppDelegate]: Will resign active.");
 	
-	[self.musicPlayer prepareQueueForBackgrounding];
-	
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
 }
@@ -151,11 +149,11 @@ dispatch_source_t CreateDispatchTimer(uint64_t interval, uint64_t leeway, dispat
 	}];
 	
 	// Start the long-running task and return immediately.
-	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+	dispatch_async(dispatch_get_global_queue(NSQualityOfServiceUserInteractive, 0), ^{
 		
 		// Do the work associated with the task, preferably in chunks.
 		
-//		[self.musicPlayer prepareQueueForBackgrounding];
+		[self.musicPlayer prepareQueueForBackgrounding];
 		
 		[self.musicPlayer saveNowPlayingState];
 		

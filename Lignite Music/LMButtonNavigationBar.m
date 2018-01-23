@@ -355,9 +355,9 @@
 	self.wasAutomaticallyMinimized = NO;
 	
 	
-	[self layoutIfNeeded];
-	
 	self.minimizeButtonBottomConstraint.constant = 0;
+	
+	[self layoutIfNeeded];
 	
 	LMCoreViewController *coreViewController = (LMCoreViewController*)self.rootViewController;
 	[UIView animateWithDuration:1.0 animations:^{
