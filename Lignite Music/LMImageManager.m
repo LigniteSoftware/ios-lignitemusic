@@ -307,8 +307,8 @@
 - (void)clearCacheForCategory:(LMImageManagerCategory)category {
 	SDImageCache *imageCache = [self imageCacheForCategory:category];
 	
-	[imageCache clearDisk];
-	[imageCache cleanDisk];
+	[imageCache deleteOldFilesWithCompletionBlock:nil];
+	[imageCache clearDiskOnCompletion:nil];
 	
 	[imageCache clearMemory];
 	
@@ -518,10 +518,10 @@
 						SDWebImageDownloader *downloader = [SDWebImageDownloader sharedDownloader];
 						[downloader downloadImageWithURL:[NSURL URLWithString:imageURL]
 												 options:kNilOptions
-												progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+												progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
 		//                                                NSLog(@"%.02f%% complete", (CGFloat)receivedSize/(CGFloat)expectedSize * 100);
 												}
-											   completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished) {
+											   completed:^(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error, BOOL finished) {
 												   if(image && finished) {
 													   LMImageManagerConditionLevel currentConditionLevel = [self conditionLevelForDownloading];
 													   
@@ -545,7 +545,7 @@
 														   NSString *imageCacheKey = [self imageCacheKeyForMusicTrack:randomTrack forCategory:category];
 														   NSLog(@"Done, now storing to %@.", imageCacheKey);
 														   
-														   [[self imageCacheForCategory:category] storeImage:croppedImage forKey:imageCacheKey];
+														   [[self imageCacheForCategory:category] storeImage:croppedImage forKey:imageCacheKey completion:nil];
 														   
 														   [self notifyDelegatesOfCacheSizeChangeForCategory:category];
 														   [self notifyDelegatesOfImageCacheChangeForCategory:category];

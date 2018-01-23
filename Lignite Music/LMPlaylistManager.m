@@ -110,7 +110,7 @@
 	[mutableDictionary setObject:[NSArray arrayWithArray:songPersistentIDArray] forKey:@"trackCollectionPersistentIDs"];
 	
 	if(playlist.image){
-		[self.imageCache storeImage:playlist.image forKey:[NSString stringWithFormat:@"%lld", playlist.persistentID]];
+		[self.imageCache storeImage:playlist.image forKey:[NSString stringWithFormat:@"%lld", playlist.persistentID] completion:nil];
 	}
 	
 	if(playlist.enhanced && playlist.enhancedConditionsDictionary){
@@ -145,7 +145,7 @@
 	[userDefaults setObject:[self playlistDictionaryForPlaylist:playlist]
 					 forKey:[self storageKeyForPlaylist:playlist]];
 	if(!playlist.image){
-		[self.imageCache removeImageForKey:[NSString stringWithFormat:@"%lld", playlist.persistentID]];
+		[self.imageCache removeImageForKey:[NSString stringWithFormat:@"%lld", playlist.persistentID] withCompletion:nil];
 	}
 	[userDefaults synchronize];
 	

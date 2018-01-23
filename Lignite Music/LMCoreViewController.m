@@ -489,7 +489,13 @@ LMControlBarViewDelegate
 	
 	if(!source.shouldNotHighlight){
 		[self.currentSource setHidden:YES];
-		[self.buttonNavigationBar setSelectedTab:LMNavigationTabBrowse];
+		static BOOL initialized = NO;
+		if(initialized){
+			[self.buttonNavigationBar setSelectedTab:LMNavigationTabBrowse];
+		}
+		else{
+			initialized = YES;
+		}
 		
 		[self.buttonNavigationBar setCurrentSourceIcon:source.lmIcon];
 	}

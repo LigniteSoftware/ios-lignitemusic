@@ -8,7 +8,7 @@ def shared_pods
     pod "YYImage"
     pod "ImageMagick", "6.8.8-9"
     pod "PureLayout"
-    pod "SDWebImage", "~>3.8"
+    pod "SDWebImage", "~>4.1"
     pod "Fabric"
     pod "Crashlytics"
     pod "Unirest", "~> 1.1.4"

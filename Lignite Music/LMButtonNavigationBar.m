@@ -130,6 +130,15 @@
 @synthesize buttonBarBottomConstraint = _buttonBarBottomConstraint;
 @synthesize viewAttachedToButtonBar = _viewAttachedToButtonBar;
 @synthesize minimizeButtonBottomConstraint = _minimizeButtonBottomConstraint;
+@synthesize currentlySelectedTab = _currentlySelectedTab;
+
+- (LMNavigationTab)currentlySelectedTab {
+	return _currentlySelectedTab;
+}
+
+- (void)setCurrentlySelectedTab:(LMNavigationTab)currentlySelectedTab {
+	_currentlySelectedTab = currentlySelectedTab;
+}
 
 - (void)setButtonBarBottomConstraint:(NSLayoutConstraint *)buttonBarBottomConstraint {
 	NSLog(@"What");
@@ -222,18 +231,30 @@
 		currentViewTopConstraint.constant = self.layoutManager.isLandscape ? 0 : -viewAttachedToButtonBar.frame.size.height;
 //	}
 	
-	NSLog(@"Set %f %f", previousViewTopConstraint.constant, currentViewTopConstraint.constant);
+	NSLog(@"Setshit %f %f, tab %d, miniplayer? %d cons %p %p", previousViewTopConstraint.constant, currentViewTopConstraint.constant, self.currentlySelectedTab, (viewAttachedToButtonBar == self.miniPlayerCoreView), previousViewTopConstraint, currentViewTopConstraint);
 	
 	if(previousViewTopConstraint.constant == 0 && currentViewTopConstraint.constant == 0){
 		static int attemptsToFixNonAppearingView = 0;
-		if(attemptsToFixNonAppearingView > 2){
+		if(attemptsToFixNonAppearingView > 3){
 			attemptsToFixNonAppearingView = 0;
 		}
 		else{
 			[NSTimer scheduledTimerWithTimeInterval:0.40 block:^{
-				[self setViewAttachedToButtonBar:viewAttachedToButtonBar];
+				UIView *fixedView = nil;
+				switch(self.currentlySelectedTab){
+					case LMNavigationTabView:
+						fixedView = self.sourceSelector;
+						break;
+					case LMNavigationTabBrowse:
+						fixedView = self.browsingBar;
+						break;
+					case LMNavigationTabMiniplayer:
+						fixedView = self.miniPlayerCoreView;
+						break;
+				}
+				[self setViewAttachedToButtonBar:fixedView];
 			} repeats:NO];
-			
+
 			attemptsToFixNonAppearingView++;
 		}
 	}
