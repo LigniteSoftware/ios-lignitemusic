@@ -36,6 +36,11 @@
  */
 @property LMMusicTrack *previousTrackOfAlbumArtSent;
 
+/**
+ The previous shuffle mode that up next was sent for.
+ */
+@property LMMusicShuffleMode previousShuffleMode;
+
 //For volume control
 @property MPVolumeView *volumeView;
 @property UISlider *volumeViewSlider;
@@ -94,6 +99,10 @@
 
 - (void)musicPlaybackModesDidChange:(LMMusicShuffleMode)shuffleMode repeatMode:(LMMusicRepeatMode)repeatMode {
 	if(self.connected){
+		if(shuffleMode != self.previousShuffleMode){
+			[self sendUpNextToWatch];
+		}
+		
 		[self.session sendMessage:@{
 									LMAppleWatchCommunicationKey:LMAppleWatchCommunicationKeyNowPlayingInfoUpdate,
 									LMAppleWatchCommunicationKeyNowPlayingInfoUpdate: LMAppleWatchNowPlayingInfoKeyShuffleMode,
@@ -386,6 +395,8 @@
 			
 			NSLog(@"Got %d tracks up next", (int)tracksRemainingAfterNowPlayingTrack.count);
 		}
+		
+		self.previousShuffleMode = self.musicPlayer.shuffleMode;
 		
 		
 		[self.session sendMessage:@{
