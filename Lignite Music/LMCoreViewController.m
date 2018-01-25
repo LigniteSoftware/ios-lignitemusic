@@ -1006,6 +1006,7 @@ LMControlBarViewDelegate
 	[super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 	
 	[self.layoutManager rootViewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+
 	
 //	return;
 	
@@ -1017,24 +1018,19 @@ LMControlBarViewDelegate
 	NSLog(@"Starting rotation");
 	
 	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
-		NSLog(@"Rotating");
+		NSLog(@"Rotating %@", self.landscapeNavigationBar);
 		
-		[self.navigationController setNavigationBarHidden:NO];
-		self.landscapeNavigationBar.hidden = NO;
-		
-		self.navigationController.navigationBar.layer.opacity = willBeLandscape ? 0.0 : 1.0;
-		self.landscapeNavigationBar.layer.opacity = !willBeLandscape ? 0.0 : 1.0;
-		
-//		if(@available(iOS 11, *)){
-//			self.navigationController.navigationBar.frame = CGRectMake(0, 20, size.width, willBeLandscape ? 0 : 64.0);
-//		}
-//		else{
-//			self.navigationController.navigationBar.frame = CGRectMake(0, 0, size.width, willBeLandscape ? 0 : 64.0);
-//		}
-		
-		self.nowPlayingCoreView.topConstraint.constant = self.nowPlayingCoreView.isOpen ? 0 : (size.height*1.50);
-		
-		[self.nowPlayingHintPopover dismiss];
+		if(self.landscapeNavigationBar){ //The view hasn't been initialized yet if the landscape navigation bar is nil (ie. user is still in onboarding tutorial view)
+			[self.navigationController setNavigationBarHidden:NO];
+			self.landscapeNavigationBar.hidden = NO;
+			
+			self.navigationController.navigationBar.layer.opacity = willBeLandscape ? 0.0 : 1.0;
+			self.landscapeNavigationBar.layer.opacity = !willBeLandscape ? 0.0 : 1.0;
+			
+			self.nowPlayingCoreView.topConstraint.constant = self.nowPlayingCoreView.isOpen ? 0 : (size.height*1.50);
+			
+			[self.nowPlayingHintPopover dismiss];
+		}
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
 		NSLog(@"Rotated");
 		
@@ -1043,30 +1039,32 @@ LMControlBarViewDelegate
 		[self.layoutManager traitCollectionDidChange:previousCollection];
 		
 		self.layoutManager.size = self.view.frame.size;
-				
-		[self.navigationController setNavigationBarHidden:willBeLandscape];
-		self.landscapeNavigationBar.hidden = !willBeLandscape;
 		
-		if([LMLayoutManager isiPhoneX]){
-			self.landscapeNavigationBar.frame = CGRectMake(0, 0, ([LMLayoutManager notchPosition] == LMNotchPositionLeft) ? 94.0 : 64.0, self.layoutManager.isLandscape ? (self.view.frame.size.height + self.navigationController.navigationBar.frame.size.height) : self.view.frame.size.width);
+		if(self.landscapeNavigationBar){ //The view hasn't been initialized yet if the landscape navigation bar is nil (ie. user is still in onboarding tutorial view)
+			[self.navigationController setNavigationBarHidden:willBeLandscape];
+			self.landscapeNavigationBar.hidden = !willBeLandscape;
+			
+			if([LMLayoutManager isiPhoneX]){
+				self.landscapeNavigationBar.frame = CGRectMake(0, 0, ([LMLayoutManager notchPosition] == LMNotchPositionLeft) ? 94.0 : 64.0, self.layoutManager.isLandscape ? (self.view.frame.size.height + self.navigationController.navigationBar.frame.size.height) : self.view.frame.size.width);
+			}
+			
+			[self.navigationController.view bringSubviewToFront:self.buttonNavigationBar];
+			//		if([LMLayoutManager isiPhoneX]){
+			//			[self.navigationController.view bringSubviewToFront:self.iPhoneXStatusBarCoverView];
+			//		}
+			[self.navigationController.view bringSubviewToFront:self.nowPlayingCoreView];
+			
+			
+			[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
+				[UIView animateWithDuration:0.25 animations:^{
+					[self setNeedsStatusBarAppearanceUpdate];
+				}];
+			} repeats:NO];
 		}
 		
 		if(!self.view.window){
 			self.orientationChangedOutsideOfView = YES;
 		}
-		
-		[self.navigationController.view bringSubviewToFront:self.buttonNavigationBar];
-//		if([LMLayoutManager isiPhoneX]){
-//			[self.navigationController.view bringSubviewToFront:self.iPhoneXStatusBarCoverView];
-//		}
-		[self.navigationController.view bringSubviewToFront:self.nowPlayingCoreView];
-		
-		
-		[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
-			[UIView animateWithDuration:0.25 animations:^{
-				[self setNeedsStatusBarAppearanceUpdate];
-			}];
-		} repeats:NO];
 	}];
 }
 
@@ -1277,12 +1275,12 @@ LMControlBarViewDelegate
 
 	}
 	else if([[NSUserDefaults standardUserDefaults] objectForKey:LMGuideViewControllerUserWantsToViewTutorialKey]){
+		self.restorationState = LMCoreViewControllerRestorationStateNotRestored;
+		
 		LMTutorialViewController *tutorialViewer = [LMTutorialViewController new];
 		tutorialViewer.wasPresented = YES;
 		
 		LMRestorableNavigationController *restorableNavigationController = [[LMRestorableNavigationController alloc]initWithRootViewController:tutorialViewer];
-		
-		self.restorationState = LMCoreViewControllerRestorationStateNotRestored;
 		
 		[self.navigationController presentViewController:restorableNavigationController animated:YES completion:nil];
 	}
