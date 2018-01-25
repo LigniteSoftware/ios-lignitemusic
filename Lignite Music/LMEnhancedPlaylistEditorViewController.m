@@ -185,7 +185,7 @@
 }
 
 - (void)savePlaylistEditing {
-	NSLog(@"Save enhanced playlist");
+	NSLog(@"Save enhanced playlist %d/%d", self.shuffleAllCheckbox.on, self.playlist.enhancedShuffleAll);
 	
 	self.playlist.title = self.titleTextField.text;
 	
@@ -196,6 +196,8 @@
 	[self.playlist regenerateEnhancedPlaylist];
 	
 	[self.playlistManager savePlaylist:self.playlist];
+	
+	[self.playlistManager reloadCachedPlaylists];
 	
 	[self dismissViewControllerAnimated:YES completion:nil];
 
@@ -705,12 +707,14 @@
 	self.layoutManager = [LMLayoutManager sharedLayoutManager];
 	[self.layoutManager addDelegate:self];
 	
-	
 	if(!self.playlist){
 		self.playlist = [LMPlaylist new];
 		self.playlist.enhanced = YES;
 		self.playlist.enhancedConditionsDictionary = [NSDictionary new];
 		self.newPlaylist = YES;
+	}
+	else{
+		self.playlist = [self.playlistManager playlistForPersistentID:self.playlist.persistentID cached:NO];
 	}
 	
 	

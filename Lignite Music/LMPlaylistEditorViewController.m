@@ -309,6 +309,8 @@
 /* Begin other code */
 
 - (void)cancelPlaylistEditing {
+	NSLog(@"Cancel playlist");
+	
 	[self dismissViewControllerAnimated:YES completion:nil];
 	
 	if([self.delegate respondsToSelector:@selector(playlistEditorViewControllerDidCancel:)]){
@@ -324,6 +326,8 @@
 	[self dismissViewControllerAnimated:YES completion:nil];
 	
 	[self.playlistManager savePlaylist:self.playlist];
+	
+	[self.playlistManager reloadCachedPlaylists];
 	
 	if([self.delegate respondsToSelector:@selector(playlistEditorViewController:didSaveWithPlaylist:)]){
 		[self.delegate playlistEditorViewController:self didSaveWithPlaylist:self.playlist];
@@ -399,16 +403,21 @@
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithTitle:NSLocalizedString(@"Save", nil) style:UIBarButtonItemStyleDone target:self action:@selector(savePlaylistEditing)];
 	
 	
-	if(!self.playlist){
-		self.newPlaylist = YES;
-		self.playlist = [LMPlaylist new];
-	}
-	
-	
 	self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 	self.playlistManager = [LMPlaylistManager sharedPlaylistManager];
 	self.layoutManager = [LMLayoutManager sharedLayoutManager];
 	[self.layoutManager addDelegate:self];
+	
+	
+	if(!self.playlist){
+		self.newPlaylist = YES;
+		self.playlist = [LMPlaylist new];
+	}
+	else{
+		BOOL userPortedToLignitePlaylist = self.playlist.userPortedToLignitePlaylist;
+		self.playlist = [self.playlistManager playlistForPersistentID:self.playlist.persistentID cached:NO];
+		self.playlist.userPortedToLignitePlaylist = userPortedToLignitePlaylist;
+	}
 	
 	
 	self.imagePickerView = [LMImagePickerView newAutoLayoutView];

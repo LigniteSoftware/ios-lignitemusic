@@ -38,7 +38,7 @@
 /**
  Reloads all the playlist's contents.
  */
-- (void)reloadPlaylists;
+- (void)reloadCachedPlaylists;
 
 /**
  Returns the shared playlist manager.
@@ -62,7 +62,16 @@
 - (void)deletePlaylist:(LMPlaylist*)playlist;
 
 /**
- Gets a playlist based off it's Lignite persistent ID (NOT the persistent ID that the system originally gave it).
+ Gets a playlist based off it's Lignite persistent ID (NOT the persistent ID that the system originally gave it). Optionally cached.
+
+ @param persistentID The Lignite persistent ID of the playlist to fetch.
+ @param cached Whether or not to fetch a cached copy (NO if the manager should load it directly from storage).
+ @return The playlist, nil if it couldn't be found.
+ */
+- (LMPlaylist*)playlistForPersistentID:(long long)persistentID cached:(BOOL)cached;
+
+/**
+ Gets a playlist based off it's Lignite persistent ID (NOT the persistent ID that the system originally gave it). The result will be a playlist that has already been generated and cached by the playlist manager.
 
  @param persistentID The Lignite persistent ID of the playlist to fetch.
  @return The playlist, nil if it couldn't be found.
