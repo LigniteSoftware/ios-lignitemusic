@@ -135,14 +135,14 @@
 			height = width * ((LMLayoutManager.isiPhoneX ? 2.0 : 2.5)/10.0);
 		}
 		else{
-			height = width * ((LMLayoutManager.isiPhoneX ? 6.5 : (self.wasPresented ? 5.75 : 5.25))/10.0);
+			height = width * ((LMLayoutManager.isiPhoneX ? 6.5 : (self.wasPresented ? 5.85 : 5.25))/10.0);
 		}
 		
 		if(LMLayoutManager.isExtraSmall){
 			height += 35;
 		}
 		else if(self.wasPresented){
-			height -= 30;
+			height -= 20;
 		}
 		
 		return CGSizeMake(width, height);

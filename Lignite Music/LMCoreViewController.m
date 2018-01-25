@@ -1448,6 +1448,8 @@ LMControlBarViewDelegate
 //	
 //	return;
 	
+	
+	
 	self.loadingProgressHUD.hidden = YES;
 	
 	[self.loadingActivityIndicator stopAnimating];

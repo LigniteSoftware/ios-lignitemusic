@@ -243,10 +243,10 @@
 }
 
 - (void)tableView:(UITableView*)tableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath {
-	NSLog(@"Move %@ to %@ from %p", sourceIndexPath, destinationIndexPath, tableView);
+//	NSLog(@"Move %@ to %@ from %p", sourceIndexPath, destinationIndexPath, tableView);
 	
 	if((([[NSDate new] timeIntervalSince1970] - self.lastTimeOfSwap)*1000) < 10){
-		NSLog(@"double up, rejecting");
+//		NSLog(@"double up, rejecting");
 		return;
 	}
 
