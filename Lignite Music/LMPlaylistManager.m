@@ -48,16 +48,31 @@
 	return [NSArray arrayWithArray:musicTrackCollectionsArray];
 }
 
-- (LMPlaylist*)playlistForPersistentID:(long long)persistentID {
-	NSArray<LMPlaylist*> *playlists = [self playlists];
-	
-	for(LMPlaylist *playlist in playlists){
-		if(playlist.persistentID == persistentID){
-			return playlist;
+- (LMPlaylist*)playlistForPersistentID:(long long)persistentID cached:(BOOL)cached {
+	if(cached){
+		NSArray<LMPlaylist*> *playlists = [self playlists];
+		
+		for(LMPlaylist *playlist in playlists){
+			if(playlist.persistentID == persistentID){
+				return playlist;
+			}
 		}
+	}
+	else{
+		NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+		NSString *playlistKey = [NSString stringWithFormat:@"LMPlaylist:%lld", persistentID];
+		NSDictionary *playlistDictionary = [userDefaults objectForKey:playlistKey];
+		
+		NSLog(@"Loading %@", playlistKey);
+		
+		return [self playlistForPlaylistDictionary:playlistDictionary];
 	}
 	
 	return nil;
+}
+
+- (LMPlaylist*)playlistForPersistentID:(long long)persistentID {
+	return [self playlistForPersistentID:persistentID cached:YES];
 }
 
 - (LMPlaylist*)playlistForPlaylistDictionary:(NSDictionary*)playlistDictionary {
@@ -67,6 +82,7 @@
 	playlist.systemPersistentID = [[playlistDictionary objectForKey:@"systemPersistentID"] longLongValue];
 	playlist.userPortedToLignitePlaylist = [[playlistDictionary objectForKey:@"portedToLignitePlaylist"] boolValue];
 	playlist.persistentID = [[playlistDictionary objectForKey:@"persistentID"] longLongValue];
+	playlist.enhancedShuffleAll = [[playlistDictionary objectForKey:@"enhancedShuffleAll"] longLongValue];
 	
 	playlist.enhancedConditionsDictionary = [playlistDictionary objectForKey:@"enhancedConditionsDictionary"];
 	if(playlist.enhancedConditionsDictionary){
@@ -108,6 +124,7 @@
 	[mutableDictionary setObject:@(playlist.userPortedToLignitePlaylist) forKey:@"portedToLignitePlaylist"];
 	[mutableDictionary setObject:@(playlist.persistentID) forKey:@"persistentID"];
 	[mutableDictionary setObject:[NSArray arrayWithArray:songPersistentIDArray] forKey:@"trackCollectionPersistentIDs"];
+	[mutableDictionary setObject:@(playlist.enhancedShuffleAll) forKey:@"enhancedShuffleAll"];
 	
 	if(playlist.image){
 		[self.imageCache storeImage:playlist.image forKey:[NSString stringWithFormat:@"%lld", playlist.persistentID] completion:nil];
@@ -130,7 +147,17 @@
 		playlist.persistentID = random();
 	}
 	
-	if(![self.playlists containsObject:playlist]){
+	BOOL containsPlaylist = NO;
+	
+	for(NSInteger i = 0; i < self.playlists.count; i++){
+		LMPlaylist *cachedPlaylist = [self.playlists objectAtIndex:i];
+		if(cachedPlaylist.persistentID == playlist.persistentID){
+			containsPlaylist = YES;
+			break;
+		}
+	}
+	
+	if(!containsPlaylist){
 		NSMutableArray *mutablePlaylistArray = [[NSMutableArray alloc]initWithArray:self.playlists];
 		[mutablePlaylistArray addObject:playlist];
 		self.playlists = [NSArray arrayWithArray:[mutablePlaylistArray
@@ -139,7 +166,7 @@
 																				]]];
 	}
 	
-	NSLog(@"Saving playlist with title %@ persistentID %llu", playlist.title, playlist.persistentID);
+	NSLog(@"Saving playlist with title %@ persistentID %llu count %d", playlist.title, playlist.persistentID, (int)playlist.trackCollection.count);
 	
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 	[userDefaults setObject:[self playlistDictionaryForPlaylist:playlist]
@@ -170,7 +197,7 @@
 																	 ]]];
 }
 
-- (void)reloadPlaylists {
+- (void)reloadCachedPlaylists {
 	NSMutableArray *playlistsMutableArray = [NSMutableArray new];
 	
 	if(self.playlists){ //Has already loaded once, internalizing will not overwrite anything with this catch.
@@ -182,7 +209,9 @@
 	for(NSString *key in allKeys){
 		if([key containsString:@"LMPlaylist:"]){
 			NSLog(@"Loading %@", key);
-			[playlistsMutableArray addObject:[self playlistForPlaylistDictionary:[userDefaults objectForKey:key]]];
+			LMPlaylist *playlist = [self playlistForPlaylistDictionary:[userDefaults objectForKey:key]];
+			[playlistsMutableArray addObject:playlist];
+			NSLog(@"Loaded %@ with title %@, %d songs", key, playlist.title, (int)playlist.trackCollection.count);
 		}
 	}
 	
@@ -223,6 +252,7 @@
 				[self savePlaylist:lignitePlaylist];
 			}
 			else if(playlistWithSystemPersistentID && !playlistWithSystemPersistentID.userPortedToLignitePlaylist){
+				NSLog(@"The playlist %@ (%lld) was an iTunes playlist, and was not ported, so we're gonna load the iTune's playlist's tracks.", playlistWithSystemPersistentID.title, playlistWithSystemPersistentID.persistentID);
 				playlistWithSystemPersistentID.trackCollection = [[LMMusicTrackCollection alloc] initWithItems:systemPlaylist.items];
 				[self savePlaylist:playlistWithSystemPersistentID];
 			}
@@ -319,7 +349,7 @@
 	self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 	self.imageCache = [[SDImageCache alloc] initWithNamespace:LMPlaylistManagerImageCacheNamespaceKey];
 	
-	[self reloadPlaylists];
+	[self reloadCachedPlaylists];
 
 	[self internalizeSystemPlaylists];
 	

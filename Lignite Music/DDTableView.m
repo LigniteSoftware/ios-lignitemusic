@@ -157,6 +157,8 @@
 //						self.draggingView.frame = CGRectOffset(rect, rect.origin.x, rect.origin.y);
 						self.draggingView.frame = rect;
 						
+//						NSLog(@"Frame %@", NSStringFromCGRect(self.draggingView.frame));
+						
 						[UIView beginAnimations:@"LongPressReorder-ShowDraggingView" context:nil];
 						if([self.longPressReorderDelegate respondsToSelector:@selector(tableView:showDraggingView:atIndexPath:)]){
 							[self.longPressReorderDelegate tableView:self showDraggingView:self.draggingView atIndexPath:indexPath];
@@ -176,6 +178,8 @@
 						self.draggingView.transform = CGAffineTransformMakeScale(1.1, 1.1);
 						self.draggingView.center = CGPointMake(self.center.x, [self newYCenterForDraggingView:self.draggingView withLocation:location]);
 						[UIView commitAnimations];
+						
+//						NSLog(@"Centre %@", NSStringFromCGPoint(self.draggingView.center));
 					}
 				}
 				
@@ -202,6 +206,8 @@
 				}
 				self.previousGestureVerticalPosition = location.y;
 			}
+			
+//			NSLog(@"Position %@", NSStringFromCGPoint(location));
 			
 			//Lost in translation part about setting it anyway even if it wasn't set in the past?
 //			if([self.longPressReorderDelegate respondsToSelector:@selector(tableView:draggingGestureChanged:)]){
@@ -342,6 +348,14 @@
 	UIEdgeInsets inset = self.contentInset;
 	if(@available(iOS 11, *)){
 		inset = self.adjustedContentInset;
+	}
+	
+//	NSLog(@"--- %@ comp to %@ inset %@ ---", NSStringFromCGSize(self.contentSize), NSStringFromCGSize(self.frame.size), NSStringFromUIEdgeInsets(self.contentInset));
+//	
+//	NSLog(@"size adjust %f to %f", (self.contentSize.height + self.contentInset.top), self.frame.size.height);
+	
+	if((self.contentSize.height + self.contentInset.top) < self.frame.size.height){
+		return;
 	}
 	
 	if(newOffset.y < -inset.top){

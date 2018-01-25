@@ -918,7 +918,6 @@
 }
 
 - (void)playlistEditorViewController:(LMPlaylistEditorViewController *)editorViewController didSaveWithPlaylist:(LMPlaylist *)playlist {
-	
 	LMCollectionViewFlowLayout *flowLayout = (LMCollectionViewFlowLayout*)self.collectionView.collectionViewLayout;
 	
 	BOOL isNewPlaylist = flowLayout.musicTrackCollections.count != self.playlistManager.playlistTrackCollections.count;

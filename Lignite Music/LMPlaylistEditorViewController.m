@@ -232,7 +232,7 @@
 			saveButton.titleLabel.font = font;
 			saveButton.titleLabel.hidden = YES;
 			saveButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
-			saveButton.imageEdgeInsets = UIEdgeInsetsMake(LMLayoutManager.isExtraSmall ? 18 : 21, 0, LMLayoutManager.isExtraSmall ? 18 : 21, 0);
+			saveButton.imageEdgeInsets = UIEdgeInsetsMake(LMLayoutManager.isExtraSmall ? 18 : 25, 0, LMLayoutManager.isExtraSmall ? 18 : 25, 0);
 			
 			listEntry.rightButtons = @[ saveButton ];
 			listEntry.rightButtonExpansionColour = [UIColor colorWithRed:0.92 green:0.00 blue:0.00 alpha:1.0];
@@ -243,10 +243,10 @@
 }
 
 - (void)tableView:(UITableView*)tableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath {
-	NSLog(@"Move %@ to %@ from %p", sourceIndexPath, destinationIndexPath, tableView);
+//	NSLog(@"Move %@ to %@ from %p", sourceIndexPath, destinationIndexPath, tableView);
 	
 	if((([[NSDate new] timeIntervalSince1970] - self.lastTimeOfSwap)*1000) < 10){
-		NSLog(@"double up, rejecting");
+//		NSLog(@"double up, rejecting");
 		return;
 	}
 
@@ -309,6 +309,8 @@
 /* Begin other code */
 
 - (void)cancelPlaylistEditing {
+	NSLog(@"Cancel playlist");
+	
 	[self dismissViewControllerAnimated:YES completion:nil];
 	
 	if([self.delegate respondsToSelector:@selector(playlistEditorViewControllerDidCancel:)]){
@@ -324,6 +326,8 @@
 	[self dismissViewControllerAnimated:YES completion:nil];
 	
 	[self.playlistManager savePlaylist:self.playlist];
+	
+	[self.playlistManager reloadCachedPlaylists];
 	
 	if([self.delegate respondsToSelector:@selector(playlistEditorViewController:didSaveWithPlaylist:)]){
 		[self.delegate playlistEditorViewController:self didSaveWithPlaylist:self.playlist];
@@ -399,16 +403,21 @@
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithTitle:NSLocalizedString(@"Save", nil) style:UIBarButtonItemStyleDone target:self action:@selector(savePlaylistEditing)];
 	
 	
-	if(!self.playlist){
-		self.newPlaylist = YES;
-		self.playlist = [LMPlaylist new];
-	}
-	
-	
 	self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 	self.playlistManager = [LMPlaylistManager sharedPlaylistManager];
 	self.layoutManager = [LMLayoutManager sharedLayoutManager];
 	[self.layoutManager addDelegate:self];
+	
+	
+	if(!self.playlist){
+		self.newPlaylist = YES;
+		self.playlist = [LMPlaylist new];
+	}
+	else{
+		BOOL userPortedToLignitePlaylist = self.playlist.userPortedToLignitePlaylist;
+		self.playlist = [self.playlistManager playlistForPersistentID:self.playlist.persistentID cached:NO];
+		self.playlist.userPortedToLignitePlaylist = userPortedToLignitePlaylist;
+	}
 	
 	
 	self.imagePickerView = [LMImagePickerView newAutoLayoutView];

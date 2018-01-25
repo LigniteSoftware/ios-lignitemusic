@@ -271,7 +271,9 @@ MPMediaGrouping associatedMediaTypes[] = {
 //		CFAbsoluteTime startTimeInSeconds = CFAbsoluteTimeGetCurrent();
 //		NSLog(@"Updating time delegates");
 		
-		for(id<LMMusicPlayerDelegate> delegate in self.delegates){
+		NSArray<id<LMMusicPlayerDelegate>> *safeDelegates = [[NSArray alloc]initWithArray:self.delegates];
+		
+		for(id<LMMusicPlayerDelegate> delegate in safeDelegates){
 			if([delegate respondsToSelector:@selector(musicCurrentPlaybackTimeDidChange:userModified:)]){
 				[delegate musicCurrentPlaybackTimeDidChange:playbackTime userModified:userModified];
 			}
@@ -665,7 +667,7 @@ MPMediaGrouping associatedMediaTypes[] = {
 	self.libraryChangeTimer = [NSTimer scheduledTimerWithTimeInterval:5.0f block:^{
 		NSLog(@"Done syncing library");
 		
-		[[LMPlaylistManager sharedPlaylistManager] reloadPlaylists];
+		[[LMPlaylistManager sharedPlaylistManager] reloadCachedPlaylists];
 		
 		[self notifyLibraryChangeDelegatesOfLibraryChange:YES];
 	} repeats:NO];
