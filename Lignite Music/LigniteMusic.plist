@@ -21,7 +21,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>216</string>
+	<string>217</string>
 	<key>Fabric</key>
 	<dict>
 		<key>APIKey</key>
@@ -40,15 +40,12 @@
 	<false/>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
-		<string>pebble</string>
 		<string>twitter</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>NSAppleMusicUsageDescription</string>
-	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>NSBluetoothPeripheralUsageDescription</string>
 	<key>NSCameraUsageDescription</key>
 	<string>NSCameraUsageDescription</string>
 	<key>UIAppFonts</key>
@@ -59,9 +56,6 @@
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>
-		<string>bluetooth-central</string>
-		<string>bluetooth-peripheral</string>
-		<string>external-accessory</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
@@ -75,10 +69,6 @@
 	<true/>
 	<key>UIStatusBarHidden</key>
 	<true/>
-	<key>UISupportedExternalAccessoryProtocols</key>
-	<array>
-		<string>com.getpebble.public</string>
-	</array>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

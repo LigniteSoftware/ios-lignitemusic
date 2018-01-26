@@ -10,7 +10,6 @@
 #import <MediaPlayer/MediaPlayer.h>
 #import <Foundation/Foundation.h>
 #import "LMSourceSelectorView.h"
-#import "LMPebbleManager.h"
 #import "MPMediaItem+LigniteImages.h"
 #import "MPMediaItemCollection+LigniteInfo.h"
 #import "LMButtonNavigationBar.h"

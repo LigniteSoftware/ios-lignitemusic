@@ -29,7 +29,7 @@
  Creates an LMSource object with the specificed title, subtitle, and icon. Subtitle and icon may be nil.
 
  @param title    The title of the source, ie. "Titles"
- @param subtitle The subtitle of the source, ie. "Only for Pebble"
+ @param subtitle The subtitle of the source, which isn't really used anymore.
  @param icon     The LMIcon identifier of the icon associated with this source.
 
  @return The created source.

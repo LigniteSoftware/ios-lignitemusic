@@ -117,17 +117,6 @@ SOFTWARE.
 		</dict>
 		<dict>
 			<key>FooterText</key>
-			<string>© 2016 Pebble Technology Corp. All rights reserved.
-</string>
-			<key>License</key>
-			<string>Commercial</string>
-			<key>Title</key>
-			<string>PebbleKit</string>
-			<key>Type</key>
-			<string>PSGroupSpecifier</string>
-		</dict>
-		<dict>
-			<key>FooterText</key>
 			<string>The MIT License (MIT)
 
 Copyright (c) 2016 Roy Marmelstein

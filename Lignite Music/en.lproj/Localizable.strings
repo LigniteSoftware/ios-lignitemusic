@@ -25,9 +25,7 @@
  3. If you are confused about a string, look at its key first. It may help clarify. If still you have any questions about translating Lignite Music please let us know. You should not feel uncertain what a strinhg is doing, and if you are, just let us know and we'll clarify. Now that you've read this far, please send us a picture of a walrus so we know you did. Yes, seriously.
  
  4. The following words/terms should *never* be translated into your language for legal reasons:
-	"Lignite Music", "Lignite", "Pebble", "Apple Music", "Spotify", "Lignite Music", "Apple", "iTunes"
-	
-	If you need to clarify the above in your language, for example "Pebble" needs to be the equivalent of "Pebble Smartwatch" in your language to make sure the idea is clear, it's ok to add words for clarity if necessary and you don't change the legal name. To demonstrate as an example if you needed this, in simplified Chinese, you would write "Pebble 智能手表".
+	"Lignite Music", "Lignite", "Apple Music", "Spotify", "Lignite Music", "Apple", "iTunes"
  
  Thanks, and have fun!
  
@@ -101,12 +99,6 @@
 "DownloadImagesOnDataWarning" = "Tap here to download artist images.";
 
 "NoPlaylists" = "Oh boy, you don't have any playlists yet!\n\nCreate a new playlist by tapping the 'Create' button above.";
-
-"EnablePebbleTitle" = "Allow Pebble access";
-"EnablePebbleDescription" = "We created a Pebble app for Lignite Music, but unfortunately Pebble went out of business.\n\nWe have kept Pebble support within Lignite Music for any remaining Pebblers.\n\nDespite this, we no longer officially support Pebble. Any Pebble-related functionality is provided as-is and may not work at all.";
-"PebbleUnderstandingCheckboxText" = "I understand that Pebble support is deprecated and that Lignite will not provide support for anything Pebble related.";
-"PebbleEnable" = "Enable Pebble Support";
-"PebbleDisable" = "Cancel";
 
 "Theme" = "Theme"; //The theme of the app, aka colour scheme
 
@@ -352,18 +344,6 @@
 /* Settings */
 "Settings" = "Settings";
 
-"PebbleSettings" = "Pebble settings";
-"BatterySaverDescription" = "Reduces screen refesh";
-"ArtistLabelDescription" = "Shows the artist's name in now playing";
-"PebbleStyleControlsDescription" = "Mimick Pebble's music player controls";
-"DisplayTimeDescription" = "Show the time in now playing";
-"BatterySaver" = "Battery saver"; /* Stops scrolling text, reduces redraw interval. */
-"ArtistLabel" = "Artist label"; /* Shows the text that displays the artist on the now playing screen. */
-"PebbleStyleControls" = "Pebble-style controls"; /* This one makes the controls (ie. play/pause) emulate the stock Pebble music app controls instead of Lignite-style. */
-"DisplayTime" = "Show the time"; /* Shows the time on the now playing screen. */
-"InstallPebbleApp" = "Install Pebble app"; /* Sends the user to the Pebble appstore. */
-"Pebble" = "Pebble"; //Pebble smartwatch. See point 4 of the top of this file for details on legal naming schemes.
-
 "AppSettings" = "App Settings";
 "Functionality" = "Functionality"; /* Functionality related settings like battery saver mode. */
 "LookAndFeel" = "Look and Feel";
@@ -391,14 +371,6 @@
 "NoMusicDescriptionPhone" = "Start music on your watch or phone";
 "NoMusicDescriptionTablet" = "Get those beats poppin'";
 
-/* 
- Some Pebble Stuff
- -----------------
- This pops up when the user first opens the app and warns the user about the incoming iOS system warning.
- After confirming, the user then will get a popup from iOS (which we have no control over) asking them if Lignite Music
- has permission to use Bluetooth. */
-"PebbleConnectionRequestTitle" = "Pebble Connection";
-"PebbleConnectionRequestDescription" = "iOS is about to ask for your permission to use Bluetooth devices. Please allow the permission as we use it to communicate with Lignite Music watchapps.";
 
 /*
  Onboarding
@@ -442,9 +414,6 @@
 
 "TutorialPlayingControlsTitle" = "Size matters";
 "TutorialPlayingControlsDescription" = "Using tiny buttons to control your music can be a mess when you're doing awesome things. That's why all of our controls are big or gesture based.\n\nSwipe to the left or to the right on the player to go back and forth between songs.\n\nTap anywhere on the player to play or pause.";
-
-"TutorialPebbleAppTitle" = "Have a Pebble?";
-"TutorialPebbleAppDescription" = "No, not a rock, sorry.\n\nIf you have a Pebble smartwatch, you can fully browse your library right from your wrist.\n\nClick the install button below to go install the app.";
 
 /*
  Image Management
@@ -509,7 +478,7 @@
 "LetsGo" = "Let's go!";
 "LogMeIn" = "Log me in"; //For the kickstarter login button in onboarding
 "HitMeWithIt" = "Hit me with it"; //Slang for continue, this is used on the button which when pressed will show the dialog asking user for permission to access their music library
-"SoundsGood" = "Sounds good"; //Also slang for continue, for the Pebble permission button, which when clicked will prompt the user for access to Bluetooth permissions
+"SoundsGood" = "Sounds good"; //Also slang for continue
 "OpenTutorial" = "Open tutorial";
 "CloseTutorial" = "Close tutorial";
 "AwesomeThanks" = "Awesome, thanks!";
@@ -518,8 +487,8 @@
 "GoodToGo" = "Good to go!"; //Permission has been granted
 "OhBoy" = "Oh boy"; //Error/issue
 "TapToTryAgain" = "Tap to try again"; //Whatever the user did didn't work for enabling the music permission
-"AllSetHere" = "All set here!"; //User accepted Pebble permission
-"OuchDenied" = "Ouch, denied :("; //User denied Pebble permission (this is acceptable though)
+"AllSetHere" = "All set here!"; 
+"OuchDenied" = "Ouch, denied :(";
 "Restricted" = "Restricted"; //The bluetooth permission is restricted (probably on a school-run device)
 "Error" = "Error";
 "SkipTutorial" = "Skip tutorial";
@@ -546,9 +515,6 @@
 
 "LibraryImageMagick" = "ImageMagick C API";
 "LibraryImageMagickDescription" = "ImageMagick lets you literally perform magic with images. You can create, edit, compose, or convert all sorts of images.";
-
-"LibraryPebbleKit" = "PebbleKit";
-"LibraryPebbleKitDescription" = "PebbleKit is Pebble's iOS framework for communicating with Pebble smartwatches. While we're at it, thanks to Pebble for an excellent watch!";
 
 "LibraryPureLayout" = "PureLayout - Tyler Fox";
 "LibraryPureLayoutDescription" = "PureLayout is exactly as they say it is, 'impressively simple, immensely powerful', letting you layout constraints easily.";

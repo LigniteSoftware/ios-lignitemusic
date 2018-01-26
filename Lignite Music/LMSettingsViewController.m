@@ -16,7 +16,6 @@
 #import "LMAlertViewController.h"
 #import "LMDebugViewController.h"
 #import "LMSectionTableView.h"
-#import "LMPebbleManager.h"
 #import "LMLayoutManager.h"
 #import "NSTimer+Blocks.h"
 #import "LMImageManager.h"
@@ -101,8 +100,6 @@
 		case 1:
 			return [LMAppIcon imageForIcon:LMIconCloudDownload];
 		case 2:
-			return [LMAppIcon imageForIcon:LMIconFunctionality];
-		case 3:
 			return [LMAppIcon imageForIcon:LMIconAbout];
 	}
 	return [LMAppIcon imageForIcon:LMIconBug];
@@ -115,8 +112,6 @@
 		case 1:
 			return NSLocalizedString(@"ImageDownloads", nil);
 		case 2:
-			return NSLocalizedString(@"Other", nil);
-		case 3:
 			return NSLocalizedString(@"About", nil);
 	}
 	return @"Unknown section";
@@ -129,8 +124,6 @@
 		case 1:
 			return 2;
 		case 2:
-			return 1;
-		case 3:
 			return 3;
 	}
 	return 0;
@@ -171,12 +164,6 @@
 			}//
 			break;
 		case 2:
-			switch(indexPath.row){
-				case 0:
-					return NSLocalizedString(@"Pebble", nil);
-			}
-			break;
-		case 3:
 			switch(indexPath.row){
 				case 0:
 					return NSLocalizedString(@"Tutorial", nil);
@@ -240,13 +227,6 @@
 			}
 			break;
 		case 2:
-			switch(indexPath.row){
-				case 0: {
-					return nil;
-				}
-			}
-			break;
-		case 3:
 			switch(indexPath.row){
 				case 0:
 					return NSLocalizedString(@"TutorialSettingsSubtitle", nil);
@@ -367,24 +347,6 @@
 			self.indexPathOfCurrentlyOpenAlertView = indexPath;
 			break;
 		case 2:
-			switch(indexPath.row){
-//				case 0: {
-//					NSURL *pebbleURL = [NSURL URLWithString:@"pebble://appstore/579c3ee922f599cf7e0001ea"];
-//					NSURL *pebbleWebURL = [NSURL URLWithString:@"http://apps.getpebble.com/en_US/application/579c3ee922f599cf7e0001ea"];
-//					BOOL canOpenPebbleURL = [[UIApplication sharedApplication] canOpenURL:pebbleURL];
-//					[[UIApplication sharedApplication] openURL:canOpenPebbleURL ? pebbleURL : pebbleWebURL];
-//
-//					[LMAnswers logCustomEventWithName:@"Opened Pebble App Install Link" customAttributes:nil];
-//					break;
-//				}
-				case 0: {
-					LMPebbleManager *pebbleManager = [LMPebbleManager sharedPebbleManager];
-					[pebbleManager showSettings];
-					break;
-				}
-			}
-			break;
-		case 3:
 			switch(indexPath.row){
 				case 0: {
 					LMTutorialViewController *tutorialViewController = [LMTutorialViewController new];

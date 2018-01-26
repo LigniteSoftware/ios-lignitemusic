@@ -14,25 +14,18 @@
  
  0. In general it is a good idea when translating to keep strings equal to or lesser than the length of their English counterparts. All strings have been visually prepared so they fit the app. Long strings will often cause visual troubles throughout the app.
  
- 1. The following characters in between quotes must be left in exact format and must not be deleted, changed or 
- modified in any other way:
+ 1. The following characters in between quotes must be left in exact format and must not be deleted, changed or modified in any other way:
+ 
  "\n", "%02i", "%d", "%lu", "%@", "%%", "%f", "%.02f", "%.03f"
+ 
  Any string in the above list with a percentage (%) symbol I will now reference as "formatters".
  
- 2. Any character mentioned in point 1 that is in a string will have data injected into it. If there are more than
- one formatter, that means that data is inserted in that order. When you change strings with formatters, please do not
- change the order of the formatters or remove formatters. The order of which the data is inserted into these strings is 
- static. If your language *absolutely requires* a different order, please contact us directly.
+ 2. Any character mentioned in point 1 that is in a string will have data injected into it. If there are more than one formatter, that means that data is inserted in that order. When you change strings with formatters, please do not change the order of the formatters or remove formatters. The order of which the data is inserted into these strings is static. If your language *absolutely requires* a different order, please contact us directly.
  
- 3. If you are confused about a string, look at its key first. It may help clarify. 
- If still you have any questions about translating Lignite Music please let us know. You should not feel uncertain
- what a strinhg is doing, and if you are, just let us know and we'll clarify. Now that you've read this far, 
- please send us a picture of a walrus so we know you did. Yes, seriously.
+ 3. If you are confused about a string, look at its key first. It may help clarify. If still you have any questions about translating Lignite Music please let us know. You should not feel uncertain what a strinhg is doing, and if you are, just let us know and we'll clarify. Now that you've read this far, please send us a picture of a walrus so we know you did. Yes, seriously.
  
  4. The following words/terms should *never* be translated into your language for legal reasons:
- "Lignite Music", "Lignite", "Pebble", "Apple Music", "Spotify", "Lignite Music", "Apple", "iTunes"
- 
- If you need to clarify the above in your language, for example "Pebble" needs to be the equivalent of "Pebble Smartwatch" in your language to make sure the idea is clear, it's ok to add words for clarity if necessary and you don't change the legal name. To demonstrate as an example if you needed this, in simplified Chinese, you would write "Pebble 智能手表".
+ "Lignite Music", "Lignite", "Apple Music", "Spotify", "Lignite Music", "Apple", "iTunes"
  
  Thanks, and have fun!
  
@@ -112,12 +105,6 @@
 "DownloadImagesOnDataWarning" = "Hier tippen, um Künstler Fotos herunterzuladen.";
 
 "NoPlaylists" = "Ups, du hast noch keine Wiedergabeliste erstellt!\n\nErstelle eine neue Liste durch das Tippen auf den entsprechenden Button oben.";
-
-"EnablePebbleTitle" = "Pebble Zugriff gewähren";
-"EnablePebbleDescription" = "Wir haben zu Beginn von Lignite Music eine Pebble Companion App kreiert. Leider aber gibt es Pebble mittlerweile nicht mehr.\n\nWir haben uns entschieden, die App für die verbleibenden Pebbler unter euch beizubehalten.\n\nTrotz alledem unterstützen wir diese Anbindung nicht mehr. Jegliche Pebble-bezogene Funktionalität wird „as is“ angeboten und funktioniert unter Umständen nicht mehr.";
-"PebbleUnderstandingCheckboxText" = "Ich verstehe, dass Lignite diese Companion App zwar weiterhin anbieten, jedoch keinen Pebble-Support mehr leisten wird.";
-"PebbleEnable" = "Pebble Unterstützung aktivieren";
-"PebbleDisable" = "Abbrechen";
 
 "Theme" = "Farbmotiv";
 "Selected" = "Ausgewählt";
@@ -398,23 +385,6 @@
 /* Settings */
 "Settings" = "Einstellungen";
 
-"PebbleSettings" = "Pebble Einstellungen";
-"BatterySaverDescription" = "Screen Refresh reduzieren";
-"ArtistLabelDescription" = "Anzeige während der Wiedergabe";
-"PebbleStyleControlsDescription" = "Gleiches Verhalten wie Pebble Music App";
-"DisplayTimeDescription" = "Zeit während der Wiedergabe anzeigen";
-"BatterySaver" = "Akku-Sparmodus"; /* For Pebble. Stops scrolling text, reduces redraw interval. */
-"ArtistLabel" = "Künstlernamen"; /* For Pebble. Shows the text that displays the artist on the now playing screen. */
-"PebbleStyleControls" = "Steuerung wie Pebble Musik App"; /* For Pebble, can you tell? This one makes the controls (ie. play/pause) emulate the stock Pebble music app controls instead of Lignite-style. */
-"DisplayTime" = "Zeit anzeigen"; /* For Pebble. Shows the time on the now playing screen. */
-"InstallPebbleApp" = "Pebble App installieren"; /* Sends the user to the Pebble appstore. */
-"SendFeedback" = "Feedback / Fehler melden";
-"ReplayTutorial" = "Einführung erneut abspielen";
-"Functionality" = "Funktionalität"; /* Functionality related settings like battery saver mode. */
-
-
-"Pebble" = "Pebble"; //Pebble smartwatch. See point 4 of the top of this file for details on legal naming schemes.
-
 "AppSettings" = "App Einstellungen";
 "LookAndFeel" = "Look & Feel";
 "HighQualityImagesTitle" = "Höchste Auflösung";
@@ -438,15 +408,6 @@
 /* When no music is playing */
 "NoMusic" = "Keine Musik";
 "NoMusicDescriptionPhone" = "Starte die Musikwiedergabe auf deinem Smartphone oder deiner Uhr";
-
-/*
- Some Pebble Stuff
- -----------------
- This pops up when the user first opens the app and warns the user about the incoming iOS system warning.
- After confirming, the user then will get a popup from iOS (which we have no control over) asking them if Lignite Music
- has permission to use Bluetooth. */
-"PebbleConnectionRequestTitle" = "Pebble Verbindung";
-"PebbleConnectionRequestDescription" = "iOS wird dich um Erlaubnis fragen, um Bluetooth-Geräte nutzen zu dürfen. Akzeptiere die Anfrage bitte, damit wir mit der Lignite Music App kommunizieren können.";
 
 /*
  Onboarding
@@ -494,7 +455,7 @@
 "LetsGo" = "Los gehts!";
 "LogMeIn" = "Einloggen"; //For the kickstarter login button in onboarding
 "HitMeWithIt" = "Klar, gerne!"; //Slang for continue, this is used on the button which when pressed will show the dialog asking user for permission to access their music library
-"SoundsGood" = "Tönt gut"; //Also slang for continue, for the Pebble permission button, which when clicked will prompt the user for access to Bluetooth permissions
+"SoundsGood" = "Tönt gut"; //Also slang for continue
 "OpenTutorial" = "Klar, gerne!";
 "CloseTutorial" = "Einführung schliessen";
 "AwesomeThanks" = "Super, danke!";
@@ -503,8 +464,8 @@
 "GoodToGo" = "Alles gut!"; //Permission has been granted
 "OhBoy" = "Oh nein"; //Error/issue
 "TapToTryAgain" = "Tippe für einen neuen Versuch"; //Whatever the user did didn't work for enabling the music permission
-"AllSetHere" = "Alles gut hier!"; //User accepted Pebble permission
-"OuchDenied" = "Aua, verweigert :("; //User denied Pebble permission (this is acceptable though)
+"AllSetHere" = "Alles gut hier!";
+"OuchDenied" = "Aua, verweigert :(";
 "Restricted" = "Eingeschränkt"; //The bluetooth permission is restricted (probably on a school-run device)
 "Error" = "Fehler";
 "SkipTutorial" = "Nein, danke";
@@ -520,9 +481,6 @@
 
 "TutorialPlayingControlsTitle" = "Eine Frage der Grösse";
 "TutorialPlayingControlsDescription" = "Alle unseren Buttons sind angenehm gross oder die App lässt sich durch Gesten steuern.\n\nStreiche während der Wiedergabe nach links oder rechts, um zum vorherigen oder nächsten Song zu springen.\n\nTippe irgendwo auf dem Display, um die Wiedergabe zu starten oder zu pausieren - ganz easy!";
-
-"TutorialPebbleAppTitle" = "Hast du eine Pebble?";
-"TutorialPebbleAppDescription" = "Falls du eine Pebble Smartwatch hast, kannst du nun die komplette Musiksammlung deines iPhones direkt auf deinem Handgelenk durchsuchen und die Wiedergabe steuern.\n\nTippe auf den Button unten, um die App dafür zu installieren.";
 
 /*
  Image Management
@@ -589,9 +547,6 @@
 
 "LibraryImageMagick" = "ImageMagick C API";
 "LibraryImageMagickDescription" = "ImageMagick erlaubt es uns wirklich, mit Bildern zu zaubern. Wir können erstellen, bearbeiten, konvertieren und vieles mehr.";
-
-"LibraryPebbleKit" = "PebbleKit";
-"LibraryPebbleKitDescription" = "PebbleKit ist Pebble's iOS Framework, um mit deren Smartwatches zu kommunizieren. Da wir schon dabei sind: Vielen Dank an Pebble für deren exzellente Smartwatches!";
 
 "LibraryPureLayout" = "PureLayout - Tyler Fox";
 "LibraryPureLayoutDescription" = "PureLayout ist genau das, was sein Name bereits sagt: 'beindruckend simpel, beindruckend leistungsstark'.";

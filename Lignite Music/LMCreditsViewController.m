@@ -288,9 +288,6 @@
 						  @"LibraryImageMagick",
 						  @"LibraryImageMagickDescription",
 						  
-						  @"LibraryPebbleKit",
-						  @"LibraryPebbleKitDescription",
-						  
 						  @"LibraryPureLayout",
 						  @"LibraryPureLayoutDescription",
 						  
@@ -394,9 +391,6 @@
 		18.0,
 		18.0,
 		
-		18.0,
-		18.0,
-		
 		30.0,
 		18.0
 	};
@@ -428,9 +422,6 @@
 		NO,
 		
 		NO,
-		NO,
-		
-		YES,
 		NO,
 		
 		YES,

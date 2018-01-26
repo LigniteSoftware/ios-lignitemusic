@@ -177,10 +177,7 @@
 		6A7268231E163F6400FA01DB /* icon_down_arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A7268221E163F6400FA01DB /* icon_down_arrow.png */; };
 		6A7268251E1640E700FA01DB /* icon_up_arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A7268241E1640E700FA01DB /* icon_up_arrow.png */; };
 		6A7274B41F9408A400FC09B3 /* DDTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A7274B31F9408A400FC09B3 /* DDTableView.m */; };
-		6A73CF5C1D4127C70097A400 /* LMPebbleImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A73CF5B1D4127C70097A400 /* LMPebbleImage.m */; };
-		6A73CF611D451BFA0097A400 /* LMPebbleMessageQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A73CF601D451BFA0097A400 /* LMPebbleMessageQueue.m */; };
 		6A7565301DF7E38900A9EDD6 /* LMSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A75652F1DF7E38900A9EDD6 /* LMSearch.m */; };
-		6A759D401DE8DDC50051E1A9 /* LMPebbleSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A759D3F1DE8DDC50051E1A9 /* LMPebbleSettingsViewController.m */; };
 		6A759D421DE8EB0E0051E1A9 /* icon_functionality.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A759D411DE8EB0E0051E1A9 /* icon_functionality.png */; };
 		6A759D481DE96B9A0051E1A9 /* LMScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A759D471DE96B9A0051E1A9 /* LMScrollView.m */; };
 		6A759D4B1DE96D6B0051E1A9 /* LMCreditsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A759D4A1DE96D6B0051E1A9 /* LMCreditsViewController.m */; };
@@ -208,7 +205,6 @@
 		6A813DF61EC449B6002548BF /* lignite_background_ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A813DF51EC449B6002548BF /* lignite_background_ipad.png */; };
 		6A8150DA1EAF6E7800F518C5 /* LMLandscapeNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A8150D91EAF6E7800F518C5 /* LMLandscapeNavigationBar.m */; };
 		6A8150DD1EAF70C300F518C5 /* icon_ios_back.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A8150DC1EAF70C300F518C5 /* icon_ios_back.png */; };
-		6A8190BE1DDD3B5B00DBFE85 /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AA4735E1BC70FBA0066D47E /* ExternalAccessory.framework */; };
 		6A82F9331F9661850050430E /* icon_add_track_to_queue.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A82F9311F9660340050430E /* icon_add_track_to_queue.png */; };
 		6A82F9341F96618D0050430E /* icon_remove_track_from_queue.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A82F9321F9660340050430E /* icon_remove_track_from_queue.png */; };
 		6A82F9361F9696B10050430E /* icon_warning.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A82F9351F9696670050430E /* icon_warning.png */; };
@@ -222,7 +218,6 @@
 		6A9C053C1DB4441200713D1C /* icon_compilations.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A9C05381DB4441200713D1C /* icon_compilations.png */; };
 		6A9C053D1DB4441200713D1C /* icon_genres.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A9C05391DB4441200713D1C /* icon_genres.png */; };
 		6A9C053E1DB4441200713D1C /* icon_titles.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A9C053A1DB4441200713D1C /* icon_titles.png */; };
-		6AA4459C1D5AB264004C6739 /* LMPebbleSettingsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AA4459B1D5AB264004C6739 /* LMPebbleSettingsView.m */; };
 		6AA445A01D5AD6AB004C6739 /* LMSettingsSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AA4459F1D5AD6AB004C6739 /* LMSettingsSwitch.m */; };
 		6AA445A31D5AD7B0004C6739 /* LMSettingsLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AA445A21D5AD7B0004C6739 /* LMSettingsLabel.m */; };
 		6AA473631BC7103B0066D47E /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AA473621BC7103B0066D47E /* CoreMotion.framework */; };
@@ -258,7 +253,6 @@
 		6ABF6A851CF3768A003E4EFA /* UIColor+isLight.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ABF6A841CF3768A003E4EFA /* UIColor+isLight.m */; };
 		6AC066F11DFF5253008A6FCA /* icon_grab_rectangle.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AC066F01DFF5253008A6FCA /* icon_grab_rectangle.png */; };
 		6AC32B771DB53EB20007C67E /* icon_repeat_general.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AC32B751DB53EB20007C67E /* icon_repeat_general.png */; };
-		6AC32B7B1DB6B57B0007C67E /* LMPebbleManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AC32B7A1DB6B57B0007C67E /* LMPebbleManager.m */; };
 		6AC32B7D1DB6CD950007C67E /* icon_bug.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AC32B7C1DB6CD950007C67E /* icon_bug.png */; };
 		6AC77A141DC42C5500BABBB3 /* LMControlBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AC77A131DC42C5500BABBB3 /* LMControlBarView.m */; };
 		6AC77A161DC42CF400BABBB3 /* icon_playlists.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AC77A151DC42CF400BABBB3 /* icon_playlists.png */; };
@@ -613,14 +607,8 @@
 		6A7268241E1640E700FA01DB /* icon_up_arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_up_arrow.png; sourceTree = "<group>"; };
 		6A7274B21F9408A400FC09B3 /* DDTableView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DDTableView.h; sourceTree = "<group>"; };
 		6A7274B31F9408A400FC09B3 /* DDTableView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DDTableView.m; sourceTree = "<group>"; };
-		6A73CF5A1D4127C70097A400 /* LMPebbleImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMPebbleImage.h; sourceTree = "<group>"; };
-		6A73CF5B1D4127C70097A400 /* LMPebbleImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMPebbleImage.m; sourceTree = "<group>"; };
-		6A73CF5F1D451BFA0097A400 /* LMPebbleMessageQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMPebbleMessageQueue.h; sourceTree = "<group>"; };
-		6A73CF601D451BFA0097A400 /* LMPebbleMessageQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMPebbleMessageQueue.m; sourceTree = "<group>"; };
 		6A75652E1DF7E38900A9EDD6 /* LMSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMSearch.h; sourceTree = "<group>"; };
 		6A75652F1DF7E38900A9EDD6 /* LMSearch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMSearch.m; sourceTree = "<group>"; };
-		6A759D3E1DE8DDC50051E1A9 /* LMPebbleSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMPebbleSettingsViewController.h; sourceTree = "<group>"; };
-		6A759D3F1DE8DDC50051E1A9 /* LMPebbleSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMPebbleSettingsViewController.m; sourceTree = "<group>"; };
 		6A759D411DE8EB0E0051E1A9 /* icon_functionality.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_functionality.png; sourceTree = "<group>"; };
 		6A759D461DE96B9A0051E1A9 /* LMScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMScrollView.h; sourceTree = "<group>"; };
 		6A759D471DE96B9A0051E1A9 /* LMScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMScrollView.m; sourceTree = "<group>"; };
@@ -682,17 +670,13 @@
 		6A9C05381DB4441200713D1C /* icon_compilations.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_compilations.png; sourceTree = "<group>"; };
 		6A9C05391DB4441200713D1C /* icon_genres.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_genres.png; sourceTree = "<group>"; };
 		6A9C053A1DB4441200713D1C /* icon_titles.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_titles.png; sourceTree = "<group>"; };
-		6AA4459A1D5AB264004C6739 /* LMPebbleSettingsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMPebbleSettingsView.h; sourceTree = "<group>"; };
-		6AA4459B1D5AB264004C6739 /* LMPebbleSettingsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMPebbleSettingsView.m; sourceTree = "<group>"; };
 		6AA4459E1D5AD6AB004C6739 /* LMSettingsSwitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMSettingsSwitch.h; sourceTree = "<group>"; };
 		6AA4459F1D5AD6AB004C6739 /* LMSettingsSwitch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMSettingsSwitch.m; sourceTree = "<group>"; };
 		6AA445A11D5AD7B0004C6739 /* LMSettingsLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMSettingsLabel.h; sourceTree = "<group>"; };
 		6AA445A21D5AD7B0004C6739 /* LMSettingsLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMSettingsLabel.m; sourceTree = "<group>"; };
-		6AA4735E1BC70FBA0066D47E /* ExternalAccessory.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExternalAccessory.framework; path = System/Library/Frameworks/ExternalAccessory.framework; sourceTree = SDKROOT; };
 		6AA473601BC710320066D47E /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
 		6AA473621BC7103B0066D47E /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		6AA473641BC710460066D47E /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
-		6AA5CB9F1E285C0B005F853F /* LigniteMusicForSpotify-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "LigniteMusicForSpotify-Info.plist"; path = "/Users/edwinfinch/ios-projects/Lignite Music/LigniteMusicForSpotify-Info.plist"; sourceTree = "<absolute>"; };
 		6AA76AC41F9AD8690007531C /* icon_edit_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_edit_white.png; sourceTree = "<group>"; };
 		6AA76AC51F9AD8690007531C /* icon_plus_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_plus_white.png; sourceTree = "<group>"; };
 		6AAA55FF1DF407A800692CFB /* LMSearchBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMSearchBar.h; sourceTree = "<group>"; };
@@ -732,8 +716,6 @@
 		6ABF6A841CF3768A003E4EFA /* UIColor+isLight.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+isLight.m"; sourceTree = "<group>"; };
 		6AC066F01DFF5253008A6FCA /* icon_grab_rectangle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_grab_rectangle.png; sourceTree = "<group>"; };
 		6AC32B751DB53EB20007C67E /* icon_repeat_general.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_repeat_general.png; sourceTree = "<group>"; };
-		6AC32B791DB6B57B0007C67E /* LMPebbleManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMPebbleManager.h; sourceTree = "<group>"; };
-		6AC32B7A1DB6B57B0007C67E /* LMPebbleManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMPebbleManager.m; sourceTree = "<group>"; };
 		6AC32B7C1DB6CD950007C67E /* icon_bug.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_bug.png; sourceTree = "<group>"; };
 		6AC77A121DC42C5500BABBB3 /* LMControlBarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMControlBarView.h; sourceTree = "<group>"; };
 		6AC77A131DC42C5500BABBB3 /* LMControlBarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMControlBarView.m; sourceTree = "<group>"; };
@@ -865,7 +847,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				6A838A971E07A9CF006E7DE0 /* StoreKit.framework in Frameworks */,
-				6A8190BE1DDD3B5B00DBFE85 /* ExternalAccessory.framework in Frameworks */,
 				6A5821041DAF312C00A4FAB1 /* AudioToolbox.framework in Frameworks */,
 				6A5821021DADE54400A4FAB1 /* AVFoundation.framework in Frameworks */,
 				6A2566F31D4089E8004EDE41 /* MediaPlayer.framework in Frameworks */,
@@ -908,23 +889,6 @@
 				6A18A193201425AB00C37AA4 /* LMTutorialViewController.m */,
 			);
 			name = Tutorial;
-			sourceTree = "<group>";
-		};
-		6A1FB9C01D99C72200890BF3 /* Pebble */ = {
-			isa = PBXGroup;
-			children = (
-				6A73CF5A1D4127C70097A400 /* LMPebbleImage.h */,
-				6A73CF5B1D4127C70097A400 /* LMPebbleImage.m */,
-				6AC32B791DB6B57B0007C67E /* LMPebbleManager.h */,
-				6AC32B7A1DB6B57B0007C67E /* LMPebbleManager.m */,
-				6A73CF5F1D451BFA0097A400 /* LMPebbleMessageQueue.h */,
-				6A73CF601D451BFA0097A400 /* LMPebbleMessageQueue.m */,
-				6AA4459A1D5AB264004C6739 /* LMPebbleSettingsView.h */,
-				6AA4459B1D5AB264004C6739 /* LMPebbleSettingsView.m */,
-				6A759D3E1DE8DDC50051E1A9 /* LMPebbleSettingsViewController.h */,
-				6A759D3F1DE8DDC50051E1A9 /* LMPebbleSettingsViewController.m */,
-			);
-			name = Pebble;
 			sourceTree = "<group>";
 		};
 		6A1FB9C11D99C88500890BF3 /* OtherViews */ = {
@@ -993,7 +957,6 @@
 				6A759D5A1DEBF29A0051E1A9 /* HoneyScript-Light.ttf */,
 				6A759D5C1DEBF4560051E1A9 /* HoneyScript-SemiBold.ttf */,
 				6AEB9D0C1BACF60E00AD19FA /* LigniteMusic.plist */,
-				6AA5CB9F1E285C0B005F853F /* LigniteMusicForSpotify-Info.plist */,
 				6A106B121BC710D4003AE55A /* Lignite Music.entitlements */,
 			);
 			name = Other;
@@ -1656,7 +1619,6 @@
 				6AFF01831DDD655C00F24D8E /* Onboarding */,
 				6A1FB9C41D99C8FC00890BF3 /* Other */,
 				6A1FB9C11D99C88500890BF3 /* OtherViews */,
-				6A1FB9C01D99C72200890BF3 /* Pebble */,
 				6A5257501DF1FC650040210D /* Search */,
 				6AF3AD9A1E0A3F0300D8E8F1 /* Settings */,
 				6A1FB9C31D99C8C900890BF3 /* Storyboards */,
@@ -1791,7 +1753,6 @@
 				6AA473641BC710460066D47E /* MessageUI.framework */,
 				6AA473621BC7103B0066D47E /* CoreMotion.framework */,
 				6AA473601BC710320066D47E /* CoreBluetooth.framework */,
-				6AA4735E1BC70FBA0066D47E /* ExternalAccessory.framework */,
 				50AA3F2AD5E6CE2B672C8B09 /* Pods_Lignite_Music.framework */,
 			);
 			name = Frameworks;
@@ -1890,6 +1851,9 @@
 						SystemCapabilities = {
 							com.apple.Push = {
 								enabled = 1;
+							};
+							com.apple.WAC = {
+								enabled = 0;
 							};
 						};
 					};
@@ -2150,7 +2114,6 @@
 				"${SRCROOT}/Pods/Target Support Files/Pods-Lignite Music/Pods-Lignite Music-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/BEMCheckBox/BEMCheckBox.framework",
 				"${BUILT_PRODUCTS_DIR}/MGSwipeTableCell/MGSwipeTableCell.framework",
-				"${PODS_ROOT}/PebbleKit/PebbleKit.framework",
 				"${BUILT_PRODUCTS_DIR}/PeekPop/PeekPop.framework",
 				"${BUILT_PRODUCTS_DIR}/PureLayout/PureLayout.framework",
 				"${BUILT_PRODUCTS_DIR}/RSKImageCropper/RSKImageCropper.framework",
@@ -2163,7 +2126,6 @@
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BEMCheckBox.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MGSwipeTableCell.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PebbleKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PeekPop.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PureLayout.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RSKImageCropper.framework",
@@ -2272,7 +2234,6 @@
 				6ADCBA2F1ED9B76000CAD705 /* LMDetailView.m in Sources */,
 				6A6351921D9D71D300498582 /* LMListEntry.m in Sources */,
 				6A7E88751ECCB80700E4B804 /* AFURLRequestSerialization.m in Sources */,
-				6AA4459C1D5AB264004C6739 /* LMPebbleSettingsView.m in Sources */,
 				6AF9D5421DE251FD006368B6 /* LMSectionTableView.m in Sources */,
 				6A13A8031E011D19006A768B /* UIImage+Scale.m in Sources */,
 				6AD5A3561FE6E14F00B7E567 /* LMRestorableNavigationController.m in Sources */,
@@ -2292,7 +2253,6 @@
 				6A78E6801F9EF13500B7E369 /* LMTrackPickerController.m in Sources */,
 				6A6F4B631DC5D4EB00BD01C2 /* YIInnerShadowLayer.m in Sources */,
 				6A7DF11A1DB112140077B979 /* LMMiniPlayerView.m in Sources */,
-				6A73CF611D451BFA0097A400 /* LMPebbleMessageQueue.m in Sources */,
 				6AE9E6EB1F9C5AC30077B15E /* LMPlaylistEditorViewController.m in Sources */,
 				6A78E67C1F9EC74100B7E369 /* LMMusicPickerController.m in Sources */,
 				6A8CF2B91DB4952A00777525 /* LMSettings.m in Sources */,
@@ -2317,7 +2277,6 @@
 				6A08AF071EBCD9950069C9CC /* LMCollectionViewDataSource.m in Sources */,
 				6A759D591DEBF0470051E1A9 /* LMContactViewController.m in Sources */,
 				6A78E6861FA0002B00B7E369 /* LMCircleView.m in Sources */,
-				6A759D401DE8DDC50051E1A9 /* LMPebbleSettingsViewController.m in Sources */,
 				6A2BA3CA1ECCB29700D66105 /* BSKeyboardControls.m in Sources */,
 				6A6F4B641DC5D4EB00BD01C2 /* YIInnerShadowView.m in Sources */,
 				6AC9BF051FE5C93F008C9E12 /* LMMusicPickerNavigationController.m in Sources */,
@@ -2337,7 +2296,6 @@
 				6A3211441DA73EC90060DD07 /* LMMarqueeLabel.m in Sources */,
 				6AAA56011DF407A800692CFB /* LMSearchBar.m in Sources */,
 				6A072BEC1E87B95A0092EA44 /* LMCoreNavigationController.m in Sources */,
-				6A73CF5C1D4127C70097A400 /* LMPebbleImage.m in Sources */,
 				6A759D4B1DE96D6B0051E1A9 /* LMCreditsViewController.m in Sources */,
 				6A7E88771ECCB80700E4B804 /* AFURLResponseSerialization.m in Sources */,
 				6A32A9E81DC654500056CC60 /* LMTriangleView.m in Sources */,
@@ -2363,7 +2321,6 @@
 				6A08AF0F1EBF2A860069C9CC /* LMExpandableInnerShadowView.m in Sources */,
 				6A5201391FE0E51700535846 /* LMThemePickerViewController.m in Sources */,
 				6A7E886F1ECCB80700E4B804 /* AFHTTPSessionManager.m in Sources */,
-				6AC32B7B1DB6B57B0007C67E /* LMPebbleManager.m in Sources */,
 				6A13A8011E011D19006A768B /* SLColorArt.m in Sources */,
 				6A52574F1DF099720040210D /* LMProgressSlider.m in Sources */,
 				6ACD9C201EEBDE3700C53DB3 /* LMVerticalControlBarInnerShadowView.m in Sources */,

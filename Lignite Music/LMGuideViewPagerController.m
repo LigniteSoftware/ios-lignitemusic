@@ -92,7 +92,6 @@
 							   @"OnboardingWelcomeTitle",
 //							   @"OnboardingKickstarterLoginTitle",
 							   @"OnboardingMusicPermissionTitle",
-//							   @"OnboardingPebblePermissionTitle",
 							   @"OnboardingTutorialTitle",
 							    nil];
 	
@@ -100,7 +99,6 @@
 									 @"OnboardingWelcomeDescription",
 //									 @"OnboardingKickstarterLoginDescription",
 									 @"OnboardingMusicPermissionDescription",
-//									 @"OnboardingPebblePermissionDescription"
 									 @"OnboardingTutorialDescription",
 							    nil];
 			
@@ -108,7 +106,6 @@
 									 @"icon_no_cover_art_75.png",
 //									 @"icon_kickstarter_bw.png",
 									 @"icon_library_access.png",
-//									 @"icon_pebbles.png"
 									 @"icon_rocket_ship.png",
 									  nil];
 			

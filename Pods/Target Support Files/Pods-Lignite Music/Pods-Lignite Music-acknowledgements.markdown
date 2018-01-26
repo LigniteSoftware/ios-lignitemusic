@@ -74,11 +74,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-## PebbleKit
-
-© 2016 Pebble Technology Corp. All rights reserved.
-
-
 ## PeekPop
 
 The MIT License (MIT)

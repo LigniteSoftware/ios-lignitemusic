@@ -6,9 +6,7 @@
 //  Copyright © 2015 Edwin Finch. All rights reserved.
 //
 
-#import <CoreBluetooth/CoreBluetooth.h>
 #import <PureLayout/PureLayout.h>
-#import <PebbleKit/PebbleKit.h>
 
 #import "LMGuideViewPagerController.h"
 #import "LMGuideViewController.h"

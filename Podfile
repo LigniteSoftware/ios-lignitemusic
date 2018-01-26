@@ -4,7 +4,6 @@
 use_frameworks!
 
 def shared_pods
-    pod "PebbleKit"
     pod "YYImage"
     pod "ImageMagick", "6.8.8-9"
     pod "PureLayout"

@@ -7,7 +7,6 @@
 */
 
 "NSAppleMusicUsageDescription" = "Without music, would we be a music app?";
-"NSBluetoothPeripheralUsageDescription" = "This is required so the app can talk to the Pebble watchapp.";
 
 "NSCameraUsageDescription" = "We use your camera if you want to take a photo for your playlist cover.";
 "NSPhotoLibraryUsageDescription" = "We use your photo library if you want to select a custom photo for your playlist cover.";

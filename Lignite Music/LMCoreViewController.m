@@ -1537,8 +1537,6 @@ LMControlBarViewDelegate
 	
 	[[LMThemeEngine sharedThemeEngine] addDelegate:self];
 	
-	LMPebbleManager *pebbleManager = [LMPebbleManager sharedPebbleManager];
-	[pebbleManager attachToViewController:self];
 	
 	
 	LMAppleWatchBridge *appleWatchBridge = [LMAppleWatchBridge sharedAppleWatchBridge];

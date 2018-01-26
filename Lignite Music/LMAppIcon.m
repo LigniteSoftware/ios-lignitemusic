@@ -62,7 +62,7 @@
 			return @"icon_download.png";
 		case LMIconForwardArrow:
 			return @"icon_arrow_forward.png";
-		case LMIconPebbles:
+		case LMIconPebbles: // :(
 			return @"icon_pebbles.png";
 		case LMIconFunctionality:
 			return @"icon_functionality.png";

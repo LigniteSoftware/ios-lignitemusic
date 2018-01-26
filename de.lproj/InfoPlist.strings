@@ -7,7 +7,6 @@
  */
 
 "NSAppleMusicUsageDescription" = "Wäre es eine Musik App ohne Musik?";
-"NSBluetoothPeripheralUsageDescription" = "Wir brauchen diese Bewilligung, damit wir mit der Pebble App kommunizieren können.";
 
 "NSCameraUsageDescription" = "Wir nutzen deine Kamera falls du ein Foto für eine neue Wiedergabeliste machen möchtest.";
 "NSPhotoLibraryUsageDescription" = "Wir benötigen Zugriff auf deine Fotos falls du ein eigenes Foto für eine neue Wiedergabeliste verwenden möchtest.";
