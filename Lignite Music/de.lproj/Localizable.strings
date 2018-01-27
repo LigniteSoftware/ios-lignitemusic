@@ -41,6 +41,9 @@
  
  */
 
+"LeaveAReviewTitle" = "Bewertung verfassen";
+"LeaveAReviewDescription" = "Bewerte Lignite Music im App Store";
+
 "ViewTutorial" = "Zeigs mir";
 "JumpRightIn" = "Kein Interesse";
 
@@ -634,6 +637,7 @@
 "LMThemeKeyMorpheus_Title" = "Morpheus";
 "LMThemeKeyBackgroundNoise_Title" = "Background Noise";
 "LMThemeKeyBritishRacingGreen_Title" = "British Racing";
+"LMThemeKeyDVaPink_Title" = "D.Va Pink";
 
 "LMThemeKeyDefault_Creator" = "Lignite";
 "LMThemeKeyRoyallyBlued_Creator" = "Dave P.";
@@ -641,6 +645,7 @@
 "LMThemeKeyMorpheus_Creator" = "RJ";
 "LMThemeKeyBackgroundNoise_Creator" = "NefCanuck";
 "LMThemeKeyBritishRacingGreen_Creator" = "Backer #222";
+"LMThemeKeyDVaPink_Creator" = "The BEN Stack";
 
 "LMLocalizationKey" = "de";
 //DO NOT TRANSLATE THESE!

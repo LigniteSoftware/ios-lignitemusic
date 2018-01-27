@@ -476,7 +476,7 @@ NSString* deviceName(){
 		[self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.rootView
 															  attribute:NSLayoutAttributeLeading
 															  relatedBy:NSLayoutRelationEqual
-																 toItem:self.topLayoutGuide
+																 toItem:self.view
 															  attribute:NSLayoutAttributeLeading
 															 multiplier:1.0f
 															   constant:0.0f]];

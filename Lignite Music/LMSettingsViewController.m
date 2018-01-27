@@ -124,7 +124,7 @@
 		case 1:
 			return 2;
 		case 2:
-			return 3;
+			return 4;
 	}
 	return 0;
 }
@@ -168,11 +168,11 @@
 				case 0:
 					return NSLocalizedString(@"Tutorial", nil);
 				case 1:
-					return NSLocalizedString(@"Credits", nil);
+					return NSLocalizedString(@"LeaveAReviewTitle", nil);
 				case 2:
-					return NSLocalizedString(@"ContactUs", nil);
+					return NSLocalizedString(@"Credits", nil);
 				case 3:
-					return NSLocalizedString(@"UsageData", nil);
+					return NSLocalizedString(@"ContactUs", nil);
 			}
 			break;
 	}
@@ -231,10 +231,12 @@
 				case 0:
 					return NSLocalizedString(@"TutorialSettingsSubtitle", nil);
 				case 1:
-					return NSLocalizedString(@"CreditsMore", nil);
+					return NSLocalizedString(@"LeaveAReviewDescription", nil);
 				case 2:
-					return nil;
+					return NSLocalizedString(@"CreditsMore", nil);
 				case 3:
+					return nil;
+				case 4:
 					return NSLocalizedString([LMSettings userHasOptedOutOfTracking] ? @"OptedOut" : @"OptedIn" , nil);
 			}
 			break;
@@ -355,14 +357,21 @@
 					[LMAnswers logCustomEventWithName:@"Viewed Tutorial" customAttributes:nil];
 					break;
 				}
-				case 1:{
+				case 1: {
+					NSLog(@"Nice!");
+					[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://itunes.apple.com/us/app/lignite-music-player/id1041697715"] options:@{} completionHandler:^(BOOL success) {
+						NSLog(@"Success %d", success);
+					}];
+					break;
+				}
+				case 2:{
 					LMCreditsViewController *creditsViewController = [LMCreditsViewController new];
 					[self.navigationController showViewController:creditsViewController sender:self];
 					
 					[LMAnswers logCustomEventWithName:@"Viewed Credits" customAttributes:nil];
 					break;
 				}
-				case 2: {
+				case 3: {
 					LMContactViewController *contactViewController = [LMContactViewController new];
 					[self.navigationController showViewController:contactViewController sender:self];
                     
@@ -370,7 +379,7 @@
 					[LMAnswers logCustomEventWithName:@"Viewed Contact Us Screen" customAttributes:nil];
 					break;
 				}
-				case 3: {
+				case 4: {
 					LMAlertViewController *alertViewController = [LMAlertViewController new];
 					alertViewController.titleText = NSLocalizedString(@"UsageData", nil);
 					alertViewController.bodyText = NSLocalizedString(@"UsageDataDescription", nil);
@@ -528,7 +537,7 @@
 	
 	self.sectionTableView = [LMSectionTableView newAutoLayoutView];
 	self.sectionTableView.contentsDelegate = self;
-	self.sectionTableView.totalNumberOfSections = 4;
+	self.sectionTableView.totalNumberOfSections = 3;
 	self.sectionTableView.title = NSLocalizedString(@"AppSettings", nil);
 	self.sectionTableView.restorationIdentifier = @"LMAppSettingsSectionTableView";
 	[self.view addSubview:self.sectionTableView];

@@ -82,7 +82,7 @@
 }
 
 + (NSString*)currentAppVersion {
-	return @"1.1.0 Release";
+	return @"1.0.1 Release";
 }
 
 + (NSString*)buildNumberString {
@@ -99,7 +99,14 @@
 	[debugString appendString:[NSString stringWithFormat:@"\niOS: %@", [[UIDevice currentDevice] systemVersion]]];
 	[debugString appendString:[NSString stringWithFormat:@"\nModel: %@", [[UIDevice currentDevice] model]]];
 	
-	[debugString appendString:[NSString stringWithFormat:@"\n\nSong count: %lu", (unsigned long)[[musicPlayer queryCollectionsForMusicType:LMMusicTypeTitles] objectAtIndex:0].count]];
+	NSArray *tracks = [musicPlayer queryCollectionsForMusicType:LMMusicTypeTitles];
+	
+	if(tracks.count > 0){
+		[debugString appendString:[NSString stringWithFormat:@"\n\nSong count: %lu", (unsigned long)[[musicPlayer queryCollectionsForMusicType:LMMusicTypeTitles] objectAtIndex:0].count]];
+	}
+	else{
+		[debugString appendString:[NSString stringWithFormat:@"\n\nUser has no tracks in their library, unfortunately."]];
+	}
 	
 	
 	//	[debugString appendString:[NSString stringWithFormat:@"\n\nSong count: %lu", (unsigned long)[MPMediaQuery songsQuery].items.count]];

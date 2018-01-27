@@ -187,6 +187,9 @@
 }
 
 - (void)themeChanged:(LMTheme)theme {
+	if((self.currentlyHighlighted < 0) || (self.currentlyHighlighted >= self.listEntryArray.count)){
+		return;
+	}
 	LMListEntry *listEntry = [self.listEntryArray objectAtIndex:self.currentlyHighlighted];
 	[listEntry reloadContents];
 }
