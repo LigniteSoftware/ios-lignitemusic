@@ -19,6 +19,8 @@
 
 @implementation LMButton
 
+@synthesize borderColour = _borderColour;
+
 - (void)logFrame{
     NSLog(@"The current frame for %@ is %@.", self, NSStringFromCGRect(self.frame));
 }
@@ -28,7 +30,26 @@
 	self.imageBackgroundView.layer.masksToBounds = YES;
 	self.imageBackgroundView.clipsToBounds = YES;
 	
+	[self reloadBorder];
+	
 	[super layoutSubviews];
+}
+
+- (void)setBorderColour:(LMColour *)borderColour {
+	_borderColour = borderColour;
+	
+	[self reloadBorder];
+}
+
+- (LMColour*)borderColour {
+	return _borderColour;
+}
+
+- (void)reloadBorder {
+	if(self.borderColour){
+		self.imageBackgroundView.layer.borderWidth = 1.5f;
+		self.imageBackgroundView.layer.borderColor = self.borderColour.CGColor;
+	}
 }
 
 /*

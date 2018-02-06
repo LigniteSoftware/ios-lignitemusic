@@ -136,6 +136,8 @@
  */
 @property NSTimer *pausedTimer;
 
+@property BOOL outputPortIsWireless; //Terrible code, I know
+
 @end
 
 @implementation LMNowPlayingView
@@ -267,6 +269,7 @@
 			self.progressSlider.lightTheme = !isLight;
 			
 			[self reloadFavouriteStatus];
+			[self reloadButtonBorderColours];
 			
 //			NSLog(@"Spook me solid");
 			
@@ -375,6 +378,8 @@
 	} repeats:NO];
 	
 	[self refreshNothingInQueueText];
+	[self updateMusicModeButtons];
+	[self reloadControlButtonIcons];
 }
 
 
@@ -469,17 +474,45 @@
 
 - (void)musicOutputPortDidChange:(AVAudioSessionPortDescription *)outputPort {
 	[UIView animateWithDuration:0.25 animations:^{
-		[self.airplayButton setColour:[LMMusicPlayer outputPortIsWireless:outputPort] ? [[UIColor whiteColor] colorWithAlphaComponent:(8.0/10.0)] : [LMColour fadedColour]];
+		self.outputPortIsWireless = [LMMusicPlayer outputPortIsWireless:outputPort];
+		[self.airplayButton setColour:[self controlButtonColourHighlighted:self.outputPortIsWireless]];
+		[self reloadControlButtonIcons];
 	}];
 }
 
-- (void)updateRepeatButtonImage {
+- (void)reloadControlButtonIcons {
 	LMIcon icons[] = {
 		LMIconRepeat, LMIconRepeat, LMIconRepeat, LMIconRepeatOne
 	};
-//	NSLog(@"Repeat mode %d", self.musicPlayer.repeatMode);
-	UIImage *icon = [LMAppIcon imageForIcon:icons[self.musicPlayer.repeatMode]];
+	
+	BOOL whiteRepeatIcon = self.progressSlider.lightTheme;
+	if(self.musicPlayer.repeatMode > 1){
+		whiteRepeatIcon = !whiteRepeatIcon;
+	}
+	
+	UIImage *icon = [LMAppIcon imageForIcon:icons[self.musicPlayer.repeatMode] inverted:whiteRepeatIcon];
 	[self.repeatModeButton setImage:icon];
+	
+	
+	BOOL whiteShuffleIcon = self.progressSlider.lightTheme;
+	if(self.musicPlayer.shuffleMode){
+		whiteShuffleIcon = !whiteShuffleIcon;
+	}
+	[self.shuffleModeButton setImage:[LMAppIcon imageForIcon:LMIconShuffle inverted:whiteShuffleIcon]];
+	
+	
+	BOOL whiteAirplayIcon = self.progressSlider.lightTheme;
+	if(self.outputPortIsWireless){
+		whiteAirplayIcon = !whiteAirplayIcon;
+	}
+	[self.airplayButton setImage:[LMAppIcon imageForIcon:LMIconAirPlay inverted:whiteAirplayIcon]];
+	
+	
+	BOOL whiteQueueIcon = self.progressSlider.lightTheme;
+	if(self.nowPlayingQueueOpen){
+		whiteQueueIcon = !whiteQueueIcon;
+	}
+	[self.queueButton setImage:[LMAppIcon imageForIcon:LMIconHamburger inverted:whiteQueueIcon]];
 }
 
 - (void)setNowPlayingQueueOpen:(BOOL)open animated:(BOOL)animated {
@@ -522,7 +555,8 @@
 	}
 	
     [UIView animateWithDuration:animated ? 0.25 : 0.0 animations:^{
-		[self.queueButton setColour:open ? [[UIColor whiteColor] colorWithAlphaComponent:(8.0/10.0)] : [LMColour fadedColour]];
+		[self.queueButton setColour:[self controlButtonColourHighlighted:open]];
+		[self reloadControlButtonIcons];
 		[self layoutIfNeeded];
 	}];
 }
@@ -535,16 +569,25 @@
 	return self.mainViewLeadingConstraint.constant < 0;
 }
 
+- (void)reloadButtonBorderColours {
+	[self.shuffleModeButton setBorderColour:[self controlButtonColourHighlighted:YES]];
+	[self.repeatModeButton setBorderColour:[self controlButtonColourHighlighted:YES]];
+	[self.favouritesButton setBorderColour:[self controlButtonColourHighlighted:YES]];
+	[self.airplayButton setBorderColour:[self controlButtonColourHighlighted:YES]];
+	[self.queueButton setBorderColour:[self controlButtonColourHighlighted:YES]];
+}
+
 - (void)updateMusicModeButtons {
 	[UIView animateWithDuration:0.25 animations:^{
-		[self.shuffleModeButton setColour:self.musicPlayer.shuffleMode ? [[UIColor whiteColor] colorWithAlphaComponent:(8.0/10.0)] : [LMColour fadedColour]];
+		[self.shuffleModeButton setColour:[self controlButtonColourHighlighted:self.musicPlayer.shuffleMode ? YES : NO]];
 	}];
 	
 	[UIView animateWithDuration:0.25 animations:^{
-		[self.repeatModeButton setColour:(self.musicPlayer.repeatMode != LMMusicRepeatModeNone) ? [[UIColor whiteColor] colorWithAlphaComponent:(8.0/10.0)] : [LMColour fadedColour]];
+		[self.repeatModeButton setColour:[self controlButtonColourHighlighted:(self.musicPlayer.repeatMode != LMMusicRepeatModeNone)]];
 	}];
 	
-	[self updateRepeatButtonImage];
+	[self reloadControlButtonIcons];
+	[self reloadButtonBorderColours];
 }
 
 - (void)clickedButton:(LMButton *)button {
@@ -559,8 +602,6 @@
 		else if(self.musicPlayer.repeatMode == LMMusicRepeatModeOne){
 			self.musicPlayer.repeatMode = LMMusicRepeatModeNone;
 		}
-		
-		[self updateRepeatButtonImage];
 	}
 	else if(button == self.queueButton){
 		[self setNowPlayingQueueOpen:![self nowPlayingQueueOpen] animated:YES];
@@ -586,6 +627,7 @@
 	}
 	
 	[self updateMusicModeButtons];
+	[self reloadControlButtonIcons];
 }
 
 - (void)tappedNowPlaying {
@@ -760,7 +802,7 @@
 }
 
 - (void)reloadFavouriteStatus {
-	UIImage *favouritesImageToUse = [LMAppIcon imageForIcon:self.loadedTrack.isFavourite ? LMIconFavouriteRedFilled : LMIconFavouriteBlackOutline];
+	UIImage *favouritesImageToUse = [LMAppIcon imageForIcon:self.loadedTrack.isFavourite ? LMIconFavouriteRedFilled : (self.progressSlider.lightTheme ? LMIconFavouriteWhiteOutline : LMIconFavouriteBlackOutline)];
 	self.favouriteHeartImageView.image = favouritesImageToUse;
 	[self.favouritesButton setImage:favouritesImageToUse];
 }
@@ -1100,6 +1142,14 @@
 	[self.musicPlayer skipToBeginning];
 }
 
+- (LMColour*)controlButtonColourHighlighted:(BOOL)highlighted {
+	if(self.progressSlider.lightTheme){
+		return highlighted ? [LMColour whiteColour] : [LMColour clearColour];
+	}
+	
+	return highlighted ? [LMColour colourWithRed:0.11 green:0.11 blue:0.11 alpha:1.0] : [LMColour clearColour];
+}
+
 - (void)layoutSubviews {
 	[super layoutSubviews];
 
@@ -1357,7 +1407,7 @@
 		[button setDelegate:self];
 		[button setupWithImageMultiplier:0.4];
 		[button setImage:[LMAppIcon imageForIcon:icons[i]]];
-		[button setColour:[LMColour fadedColour]];
+		[button setColour:[self controlButtonColourHighlighted:NO]];
 		//		[background addSubview:button];
 		
 		if(button == self.airplayButton){
@@ -1524,12 +1574,12 @@
 	
 	
 	
-	[self.shuffleModeButton setColour:self.musicPlayer.shuffleMode ? [[UIColor whiteColor] colorWithAlphaComponent:(8.0/10.0)] : [LMColour fadedColour]];
-	[self.repeatModeButton setColour:(self.musicPlayer.repeatMode != LMMusicRepeatModeNone) ? [[UIColor whiteColor] colorWithAlphaComponent:(8.0/10.0)] : [LMColour fadedColour]];
+	[self.shuffleModeButton setColour:[self controlButtonColourHighlighted:self.musicPlayer.shuffleMode ? YES : NO]];
+	[self.repeatModeButton setColour:[self controlButtonColourHighlighted:(self.musicPlayer.repeatMode != LMMusicRepeatModeNone)]];
 	
 	[self.musicPlayer addMusicDelegate:self];
 	
-	[self updateRepeatButtonImage];
+//	[self reloadControlButtonIcons];
 	
 	[self musicTrackDidChange:self.musicPlayer.nowPlayingTrack];
 	[self musicPlaybackStateDidChange:self.musicPlayer.playbackState];

@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LMColour.h"
 #import "LMView.h"
 
 @class LMButton;
@@ -21,7 +22,9 @@
 @property (nonatomic, assign) id <LMButtonDelegate> delegate;
 @property BOOL heightIsSmaller;
 @property BOOL roundedCorners;
+@property LMColour *borderColour;
 
+- (void)reloadBorder;
 - (void)setImage:(UIImage*)newImage;
 - (UIColor*)getColor:(LMButton*)button;
 - (void)setColour:(UIColor*)newColour;
