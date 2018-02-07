@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6A06D21D202A492C0064079F /* LMDemoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A06D21C202A492C0064079F /* LMDemoViewController.m */; };
 		6A072BEC1E87B95A0092EA44 /* LMCoreNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A072BEB1E87B9590092EA44 /* LMCoreNavigationController.m */; };
 		6A072BFD1E87E79C0092EA44 /* icon_kickstarter_bw.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A072BFA1E87E79C0092EA44 /* icon_kickstarter_bw.png */; };
 		6A072C011E87E79C0092EA44 /* icon_pebbles.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A072BFC1E87E79C0092EA44 /* icon_pebbles.png */; };
@@ -400,6 +401,8 @@
 		471F692D3297448A2C0073DD /* Pods-Lignite Music for Spotify.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lignite Music for Spotify.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Lignite Music for Spotify/Pods-Lignite Music for Spotify.debug.xcconfig"; sourceTree = "<group>"; };
 		4B6ECEC3C77D957550FD31E0 /* Pods-Lignite Music.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lignite Music.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Lignite Music/Pods-Lignite Music.debug.xcconfig"; sourceTree = "<group>"; };
 		50AA3F2AD5E6CE2B672C8B09 /* Pods_Lignite_Music.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Lignite_Music.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6A06D21B202A492C0064079F /* LMDemoViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMDemoViewController.h; sourceTree = "<group>"; };
+		6A06D21C202A492C0064079F /* LMDemoViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMDemoViewController.m; sourceTree = "<group>"; };
 		6A072BEA1E87B9590092EA44 /* LMCoreNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMCoreNavigationController.h; sourceTree = "<group>"; };
 		6A072BEB1E87B9590092EA44 /* LMCoreNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMCoreNavigationController.m; sourceTree = "<group>"; };
 		6A072BFA1E87E79C0092EA44 /* icon_kickstarter_bw.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_kickstarter_bw.png; sourceTree = "<group>"; };
@@ -1685,6 +1688,8 @@
 				6AF751621E0446D80001E18B /* LMFeedbackViewController.m */,
 				6A59A5191DE7B08B00B346AC /* LMSettingsViewController.h */,
 				6A59A51A1DE7B08B00B346AC /* LMSettingsViewController.m */,
+				6A06D21B202A492C0064079F /* LMDemoViewController.h */,
+				6A06D21C202A492C0064079F /* LMDemoViewController.m */,
 			);
 			name = Settings;
 			sourceTree = "<group>";
@@ -2262,6 +2267,7 @@
 				6ADDBD3D1DA29D3E00DB99EF /* LMShadowView.m in Sources */,
 				6AFF01881DDD656E00F24D8E /* LMGuideViewController.m in Sources */,
 				6A18A19B20142A8500C37AA4 /* LMTutorialView.m in Sources */,
+				6A06D21D202A492C0064079F /* LMDemoViewController.m in Sources */,
 				6A70B7F71F9826D600E2CC9E /* LMPlaylistManager.m in Sources */,
 				6ADA8CE2200038E00021E929 /* LMApplication.m in Sources */,
 				6A165DE11E86B2A3007817A3 /* LMNowPlayingCoreView.m in Sources */,

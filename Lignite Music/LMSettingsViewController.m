@@ -15,6 +15,7 @@
 #import "LMCreditsViewController.h"
 #import "LMAlertViewController.h"
 #import "LMDebugViewController.h"
+#import "LMDemoViewController.h"
 #import "LMSectionTableView.h"
 #import "LMLayoutManager.h"
 #import "NSTimer+Blocks.h"
@@ -34,6 +35,7 @@
 @property LMSectionTableView *sectionTableView;
 
 @property int debugTapCount;
+@property int demoTapCount;
 
 @property LMImageManager *imageManager;
 
@@ -314,6 +316,7 @@
 					if(self.debugTapCount > 5){
 						NSLog(@"Hey boi");
 						LMDebugViewController *debugViewController = [LMDebugViewController new];
+						debugViewController.title = @"Debug";
 						[self.coreViewController.navigationController showViewController:debugViewController sender:self];
 					}
 					if(self.debugTapCount == 1){
@@ -331,6 +334,23 @@
 										
 					[LMAnswers logCustomEventWithName:@"Viewed Themes" customAttributes:nil];
 					break;
+				}
+				case 2: {
+					NSLog(@"Demo secret taps");
+					self.demoTapCount++;
+					if(self.demoTapCount > 5){
+						NSLog(@"Demo hey boi");
+						LMDemoViewController *demoViewController = [LMDemoViewController new];
+						demoViewController.title = @"Super Secret Settings";
+						[self.coreViewController.navigationController showViewController:demoViewController sender:self];
+					}
+					if(self.demoTapCount == 1){
+						NSLog(@"Demo timer registered");
+						[NSTimer scheduledTimerWithTimeInterval:3.0 block:^() {
+							self.demoTapCount = 0;
+							NSLog(@"Demo timer reset");
+						} repeats:NO];
+					}
 				}
 			}
 			break;
@@ -563,6 +583,14 @@
 	if([LMLayoutManager isiPhoneX]){
 		[self notchPositionChanged:LMLayoutManager.notchPosition];
 	}
+	
+//#ifdef DEBUG
+//	[NSTimer scheduledTimerWithTimeInterval:0.25 block:^{
+//		LMDemoViewController *demoViewController = [LMDemoViewController new];
+//		demoViewController.title = @"Super Secret Settings";
+//		[self.coreViewController.navigationController showViewController:demoViewController sender:self];
+//	} repeats:NO];
+//#endif
 	
 //	LMContactViewController *creditsViewController = [LMContactViewController new];
 //	[self.coreViewController.navigationController showViewController:creditsViewController sender:self];

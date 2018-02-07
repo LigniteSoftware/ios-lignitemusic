@@ -17,6 +17,8 @@
 #define LMSettingsKeyOptOutOfTracking @"LMSettingsKeyOptOutOfTracking"
 #define LMSettingsKeyScrollingText @"LMSettingsKeyScrollingText"
 #define LMSettingsKeyDisableScreenTimeoutOnNowPlaying @"LMSettingsKeyDisableScreenTimeoutOnNowPlaying"
+#define LMSettingsKeyDemoMode @"LMSettingsKeyDemoMode"
+#define LMSettingsKeyArtistsFilteredForDemo @"LMSettingsKeyArtistsFilteredForDemo"
 
 #define LMFeedbackKeyName @"LMFeedbackKeyName"
 #define LMFeedbackKeyEmail @"LMFeedbackKeyEmail"

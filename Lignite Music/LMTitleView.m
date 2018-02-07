@@ -213,6 +213,8 @@
 																				   comparisonType:MPMediaPredicateComparisonEqualTo];
 	[everything addFilterPredicate:musicFilterPredicate];
 	
+	[self.musicPlayer applyDemoModeFilterIfApplicableToQuery:everything];
+	
 	NSMutableArray *musicCollection = [[NSMutableArray alloc]initWithArray:[everything items]];
 	
 	NSString *sortKey = @"title";

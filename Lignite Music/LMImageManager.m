@@ -545,7 +545,9 @@
 														   NSString *imageCacheKey = [self imageCacheKeyForMusicTrack:randomTrack forCategory:category];
 														   NSLog(@"Done, now storing to %@.", imageCacheKey);
 														   
-														   [[self imageCacheForCategory:category] storeImage:croppedImage forKey:imageCacheKey completion:nil];
+														   [[self imageCacheForCategory:category] storeImage:croppedImage
+																									  forKey:imageCacheKey
+																								  completion:nil];
 														   
 														   [self notifyDelegatesOfCacheSizeChangeForCategory:category];
 														   [self notifyDelegatesOfImageCacheChangeForCategory:category];

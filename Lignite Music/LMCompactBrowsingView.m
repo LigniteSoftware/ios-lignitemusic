@@ -19,6 +19,9 @@
 #import "LMRestorableNavigationController.h"
 #import "LMThemeEngine.h"
 #import "LMCoreViewController.h"
+#import "LMDemoViewController.h"
+#import "LMSettings.h"
+@import SDWebImage;
 
 #import "NSTimer+Blocks.h"
 #import "LMColour.h"
@@ -275,6 +278,11 @@
 				
                 UIImage *artistImage = [collection.representativeItem artistImage];
                 imageView.image = artistImage;
+				
+				
+				if(self.musicPlayer.demoMode && self.musicType == LMMusicTypeArtists){
+					imageView.image = [[[SDImageCache alloc] initWithNamespace:LMDemoImageCache] imageFromCacheForKey:[NSString stringWithFormat:@"%@_%lu", LMDemoImageCache, (unsigned long)(int)bigListEntry.collectionIndex]];
+				}
 
 				return shadowBackgroundView;
             }
@@ -340,6 +348,10 @@
 				imageView.layer.cornerRadius = 6.0f;
 				imageView.layer.masksToBounds = YES;
 				imageView.image = [collection.representativeItem artistImage];
+				
+				if(self.musicPlayer.demoMode && self.musicType == LMMusicTypeArtists){
+					imageView.image = [[[SDImageCache alloc] initWithNamespace:LMDemoImageCache] imageFromCacheForKey:[NSString stringWithFormat:@"%@_%lu", LMDemoImageCache, (unsigned long)(int)bigListEntry.collectionIndex]];
+				}
 				
 				[shadowBackgroundView addSubview:imageView];
 				[imageView autoPinEdgesToSuperviewEdges];
@@ -561,6 +573,11 @@
 //	return MIN(self.musicTrackCollections.count, 20);
 	
 	NSInteger fixedCount = self.musicType == LMMusicTypePlaylists ? self.playlistManager.playlists.count : self.musicTrackCollections.count;
+	
+	if(self.musicPlayer.demoMode && self.musicType == LMMusicTypeArtists && [[NSUserDefaults standardUserDefaults] boolForKey:LMSettingsKeyArtistsFilteredForDemo]){
+		fixedCount = 20;
+	}
+	
 	if(section == 1){ //When the section == 1, the amount of overflowing cells ie being checked so the raw amount of items in the compact view (before detail view) should be returned.
 		return fixedCount;
 	}

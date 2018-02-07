@@ -1018,6 +1018,10 @@ BOOL shuffleForDebug = NO;
 	return [collections sortedArrayUsingDescriptors:@[albumSort]];
 }
 
+- (BOOL)demoMode {
+	return [[NSUserDefaults standardUserDefaults] boolForKey:LMSettingsKeyDemoMode];
+}
+
 - (NSArray<LMMusicTrackCollection*>*)queryCollectionsForMusicType:(LMMusicType)musicType {
 	if(musicType == LMMusicTypeFavourites){
 		return @[ [self favouritesTrackCollection] ];
@@ -1067,9 +1071,23 @@ BOOL shuffleForDebug = NO;
 		
 		query.groupingType = associatedMediaTypes[musicType];
 		
+		if([[NSUserDefaults standardUserDefaults] boolForKey:LMSettingsKeyDemoMode] && [[NSUserDefaults standardUserDefaults] boolForKey:LMSettingsKeyArtistsFilteredForDemo] && musicType == LMMusicTypeArtists){
+			query.groupingType = MPMediaGroupingTitle;
+		}
+		
+		[self applyDemoModeFilterIfApplicableToQuery:query];
+		
 		return [self trackCollectionsForMediaQuery:query withMusicType:musicType];
 	}
 	return nil;
+}
+
+- (void)applyDemoModeFilterIfApplicableToQuery:(MPMediaQuery*)query {
+	if([[NSUserDefaults standardUserDefaults] boolForKey:LMSettingsKeyDemoMode]){
+		MPMediaPropertyPredicate *demoFilterPredicate = [MPMediaPropertyPredicate predicateWithValue:@"LIGNITE_DEMO"
+																						 forProperty:MPMediaItemPropertyComposer comparisonType:MPMediaPredicateComparisonEqualTo];
+		[query addFilterPredicate:demoFilterPredicate];
+	}
 }
 
 - (NSArray<LMMusicTrackCollection*>*)collectionsForPersistentID:(MPMediaEntityPersistentID)persistentID
@@ -1109,6 +1127,8 @@ BOOL shuffleForDebug = NO;
 	MPMediaPropertyPredicate *musicFilterPredicate = [MPMediaPropertyPredicate predicateWithValue:@(persistentID)
 																					  forProperty:associatedProperty comparisonType:MPMediaPredicateComparisonEqualTo];
 	[query addFilterPredicate:musicFilterPredicate];
+	
+	[self applyDemoModeFilterIfApplicableToQuery:query];
 	
 	return [self trackCollectionsForMediaQuery:query withMusicType:musicType];
 }
@@ -1151,6 +1171,8 @@ BOOL shuffleForDebug = NO;
 																					  forProperty:associatedProperty comparisonType:MPMediaPredicateComparisonEqualTo];
 	[query addFilterPredicate:musicFilterPredicate];
 	
+	[self applyDemoModeFilterIfApplicableToQuery:query];
+	
 	return [self trackCollectionsForMediaQuery:query withMusicType:musicType];
 }
 
@@ -1188,6 +1210,8 @@ BOOL shuffleForDebug = NO;
 																					  forProperty:associatedProperty
 																				   comparisonType:MPMediaPredicateComparisonEqualTo];
 	[query addFilterPredicate:musicFilterPredicate];
+	
+	[self applyDemoModeFilterIfApplicableToQuery:query];
 	
 	return [self trackCollectionsForMediaQuery:query withMusicType:musicType];
 }

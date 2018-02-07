@@ -196,6 +196,11 @@ typedef enum {
 @property BOOL queueRequiresReload;
 
 /**
+ Whether or not the player is in demo mode.
+ */
+@property (readonly) BOOL demoMode;
+
+/**
  Whether or not the user has set music within the app. If NO, the app should reject queue requests and whatnot. Gotta love walled gardens.
  */
 @property (readonly) BOOL nowPlayingWasSetWithinLigniteMusic;
@@ -481,5 +486,12 @@ typedef enum {
  @return Whether or not that route is wireless (ie. Bluetooth).
  */
 + (BOOL)outputPortIsWireless:(AVAudioSessionPortDescription*)outputPort;
+
+/**
+ Applies the demo filter to a query, if the secret setting has been enabled.
+
+ @param query The query to apply the demo filter for.
+ */
+- (void)applyDemoModeFilterIfApplicableToQuery:(MPMediaQuery*)query;
 
 @end
