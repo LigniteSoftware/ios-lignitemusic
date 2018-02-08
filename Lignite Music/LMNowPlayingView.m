@@ -268,6 +268,12 @@
 			self.trackInfoView.textColour = isLight ? [UIColor blackColor] : [UIColor whiteColor];
 			self.progressSlider.lightTheme = !isLight;
 			
+			AVAudioSession* audioSession = [AVAudioSession sharedInstance];
+			AVAudioSessionRouteDescription* currentRoute = audioSession.currentRoute;
+			for(AVAudioSessionPortDescription* outputPort in currentRoute.outputs){
+				[self musicOutputPortDidChange:outputPort];
+			}
+			
 			[self reloadFavouriteStatus];
 			[self reloadControlButtonColours];
 			
@@ -1611,11 +1617,11 @@
 	
 //	[self setNowPlayingQueueOpen:YES animated:YES];
 	
-	AVAudioSession* audioSession = [AVAudioSession sharedInstance];
-	AVAudioSessionRouteDescription* currentRoute = audioSession.currentRoute;
-	for(AVAudioSessionPortDescription* outputPort in currentRoute.outputs){
-		[self musicOutputPortDidChange:outputPort];
-	}
+//	AVAudioSession* audioSession = [AVAudioSession sharedInstance];
+//	AVAudioSessionRouteDescription* currentRoute = audioSession.currentRoute;
+//	for(AVAudioSessionPortDescription* outputPort in currentRoute.outputs){
+//		[self musicOutputPortDidChange:outputPort];
+//	}
 	
 	[self reloadFavouriteStatus];
 	
