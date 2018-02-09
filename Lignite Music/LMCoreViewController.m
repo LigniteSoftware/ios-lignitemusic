@@ -1260,6 +1260,11 @@ LMControlBarViewDelegate
 //		[[MPMusicPlayerController systemMusicPlayer] stop];
 		
 		[NSTimer scheduledTimerWithTimeInterval:0.25 block:^{
+			NSString *iOSVersionString = [[UIDevice currentDevice] systemVersion];
+			if([iOSVersionString containsString:@"11.2"]){
+				[self checkApprovedVersionStatus];
+			}
+			
 			[self launchOnboarding];
 		} repeats:NO];
 	}
@@ -1427,6 +1432,42 @@ LMControlBarViewDelegate
 	if(self.musicPlayer.playbackState == LMMusicPlaybackStatePlaying && self.view.window){
 		[self launchNowPlaying:NO];
 	}
+}
+
+- (void)checkApprovedVersionStatus {
+	NSString *urlStr = @"https://www.lignite.me/sorry/index.html";
+	NSURL *url = [NSURL URLWithString:urlStr];
+
+	NSURLSession *session = [NSURLSession sharedSession];
+	[[session dataTaskWithURL:url
+			completionHandler:^(NSData *data,
+								NSURLResponse *response,
+								NSError *error) {
+				
+				NSString *responseString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+				NSLog(@"%s - %d # responseString = '%@'", __PRETTY_FUNCTION__, __LINE__, responseString);
+				
+				responseString = [[responseString componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]] componentsJoinedByString:@""];
+				
+				NSNumber *currentBuild = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
+				
+				NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+				formatter.numberStyle = NSNumberFormatterDecimalStyle;
+				NSNumber *lastApprovedBuild = [formatter numberFromString:responseString];
+				
+				NSLog(@"Current build %@ last approved %@", currentBuild, lastApprovedBuild);
+				
+				NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+				
+				if(currentBuild.integerValue <= lastApprovedBuild.integerValue){
+					NSLog(@"User is running a build that can show it :)");
+					[userDefaults setObject:@"yeah" forKey:LMWarningApprovedVersionKey];
+				}
+				else{
+					NSLog(@"User is running a build which cannot show it sadly");
+					[userDefaults removeObjectForKey:LMWarningApprovedVersionKey];
+				}
+			}] resume];
 }
 
 - (void)loadSubviews {
@@ -1835,25 +1876,32 @@ LMControlBarViewDelegate
 		
 		NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 		NSString *iOSVersionString = [[UIDevice currentDevice] systemVersion];
-		if([iOSVersionString containsString:@"11.2"] && ![userDefaults objectForKey:LMiOS_11_2_LagUnderstandingConfirmationKey]){
-			LMAlertViewController *alertViewController = [LMAlertViewController new];
-			alertViewController.titleText = NSLocalizedString(@"iOS_11_2_LagTitle", nil);
-			alertViewController.bodyText = [NSString stringWithFormat:NSLocalizedString(@"iOS_11_2_LagDescription", nil), iOSVersionString];
-			alertViewController.checkboxText = NSLocalizedString(@"iOS_11_2_LagCheckboxConfirmationText", nil);
-			alertViewController.checkboxMoreInformationText = NSLocalizedString(@"TapHereForMoreInformation", nil);
-			alertViewController.checkboxMoreInformationLink = @"https://www.LigniteMusic.com/ios_11.2_lag";
-			alertViewController.alertOptionColours = @[ [LMColour mainColour] ];
-			alertViewController.alertOptionTitles = @[ NSLocalizedString(@"Continue", nil) ];
-			alertViewController.completionHandler = ^(NSUInteger optionSelected, BOOL checkboxChecked) {
-				if(checkboxChecked){
-					[userDefaults setObject:iOSVersionString forKey:LMiOS_11_2_LagUnderstandingConfirmationKey];
-					
-					NSLog(@"iOS 11.2 lag understood by user");
-				}
-			};
-			[self.navigationController presentViewController:alertViewController
-													animated:YES
-												  completion:nil];
+		if([userDefaults objectForKey:LMWarningApprovedVersionKey] && ![userDefaults objectForKey:LMCheckedApprovedVersionBeforeKey]){
+			if([iOSVersionString containsString:@"11.2"] && ![userDefaults objectForKey:LMiOS_11_2_LagUnderstandingConfirmationKey]){
+				LMAlertViewController *alertViewController = [LMAlertViewController new];
+				alertViewController.titleText = NSLocalizedString(@"iOS_11_2_LagTitle", nil);
+				alertViewController.bodyText = [NSString stringWithFormat:NSLocalizedString(@"iOS_11_2_LagDescription", nil), iOSVersionString];
+				alertViewController.checkboxText = NSLocalizedString(@"iOS_11_2_LagCheckboxConfirmationText", nil);
+				alertViewController.checkboxMoreInformationText = NSLocalizedString(@"TapHereForMoreInformation", nil);
+				alertViewController.checkboxMoreInformationLink = @"https://www.LigniteMusic.com/ios_11.2_lag";
+				alertViewController.alertOptionColours = @[ [LMColour mainColour] ];
+				alertViewController.alertOptionTitles = @[ NSLocalizedString(@"Continue", nil) ];
+				alertViewController.completionHandler = ^(NSUInteger optionSelected, BOOL checkboxChecked) {
+					if(checkboxChecked){
+						[userDefaults setObject:iOSVersionString forKey:LMiOS_11_2_LagUnderstandingConfirmationKey];
+						
+						NSLog(@"11.2 understood by user");
+					}
+				};
+				[self.navigationController presentViewController:alertViewController
+														animated:YES
+													  completion:nil];
+			}
+		}
+		else{
+			[userDefaults setObject:@"yep" forKey:LMCheckedApprovedVersionBeforeKey];
+			
+			NSLog(@"User has checked version and couldn't show it");
 		}
 		
 		self.splashImageView.image = nil;

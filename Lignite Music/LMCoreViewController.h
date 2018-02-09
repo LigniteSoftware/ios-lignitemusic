@@ -15,6 +15,8 @@
 #import "LMPlaylistEditorViewController.h"
 
 #define LMiOS_11_2_LagUnderstandingConfirmationKey @"LMiOS_11_2_LagUnderstandingConfirmationKey"
+#define LMWarningApprovedVersionKey @"LMWarningApprovedVersionKey"
+#define LMCheckedApprovedVersionBeforeKey @"LMCheckedApprovedVersionBeforeKey"
 
 #define LMLastUsedVersionKey @"LMLastUsedVersionKey"
 
