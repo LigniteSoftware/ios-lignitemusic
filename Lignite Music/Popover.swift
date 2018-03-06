@@ -38,7 +38,7 @@ open class Popover: UIView {
   open var animationOut: TimeInterval = 0.3
   open var cornerRadius: CGFloat = 6.0
   open var sideEdge: CGFloat = 20.0
-  open var popoverType: PopoverType = .down
+  @objc open var popoverType: PopoverType = .down
   open var blackOverlayColor: UIColor = UIColor(white: 0.0, alpha: 0.2)
   open var overlayBlur: UIBlurEffect?
   open var popoverColor: UIColor = UIColor.white

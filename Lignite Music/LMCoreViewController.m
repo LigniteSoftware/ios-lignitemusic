@@ -844,6 +844,8 @@ LMControlBarViewDelegate
 		if(userLaunched){
 			NSLog(@"Nothing's playing mate");
 			
+			BOOL iconIsLowered = ((self.landscapeNavigationBar.mode == LMLandscapeNavigationBarModePlaylistView && [LMLayoutManager isLandscape]) || (self.landscapeNavigationBar.mode == LMLandscapeNavigationBarModeWithBackButton));
+			
 			CGPoint startPoint = CGPointZero;
 			CGRect aViewFrame = CGRectZero;
 			if(LMLayoutManager.isLandscape){
@@ -851,6 +853,10 @@ LMControlBarViewDelegate
 										 (self.landscapeNavigationBar.frame.size.height / 2.0) + 34);
 				
 				aViewFrame = CGRectMake(0, 0, self.view.frame.size.height - startPoint.x, 80);
+				
+				if([LMLayoutManager isiPhoneX]){
+					startPoint.x += ([LMLayoutManager notchPosition] == LMNotchPositionLeft) ? 16 : 0;
+				}
 			}
 			else{
 				startPoint = CGPointMake(self.view.frame.size.width / 2.0,
@@ -858,6 +864,11 @@ LMControlBarViewDelegate
 				
 				aViewFrame = CGRectMake(0, 0, self.view.frame.size.width - 40, 80);
 			}
+			
+			if(iconIsLowered){
+				startPoint.y += (self.view.frame.size.height / 10.0) * 2.25;
+			}
+			
 			UIView *aView = [[UIView alloc]initWithFrame:aViewFrame];
 			
 			UILabel *hintLabel = [UILabel newAutoLayoutView];
@@ -873,6 +884,7 @@ LMControlBarViewDelegate
 			[hintLabel autoPinEdgeToSuperviewMargin:ALEdgeTop].constant = 6;
 			
 			Popover *popover = [Popover new];
+			popover.popoverType = iconIsLowered ? PopoverTypeUp : PopoverTypeDown;
 			[popover show:aView point:startPoint];
 			
 			self.nowPlayingHintPopover = popover;
@@ -1309,7 +1321,7 @@ LMControlBarViewDelegate
 						[self.loadingActivityIndicator autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.navigationController.view withMultiplier:(2.0/4.0)];
 					}
 					else{
-						[self.loadingActivityIndicator autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:WINDOW_FRAME.size.height/([LMLayoutManager isLandscape] ? 1.5 : 2.0)];
+						[self.loadingActivityIndicator autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:WINDOW_FRAME.size.height/([LMLayoutManager isLandscape] ? 1.5 : 2.25)];
 						[self.loadingActivityIndicator autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 						[self.loadingActivityIndicator autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 						[self.loadingActivityIndicator autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.navigationController.view withMultiplier:(1.0/4.0)];
