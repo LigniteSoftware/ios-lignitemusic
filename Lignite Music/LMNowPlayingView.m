@@ -275,7 +275,7 @@
 			}
 			
 			[self reloadFavouriteStatus];
-			[self reloadControlButtonColours];
+			[self updateMusicModeButtons];
 			
 //			NSLog(@"Spook me solid");
 			
@@ -385,7 +385,6 @@
 	
 	[self refreshNothingInQueueText];
 	[self updateMusicModeButtons];
-	[self reloadControlButtonColours];
 }
 
 
@@ -481,7 +480,6 @@
 - (void)musicOutputPortDidChange:(AVAudioSessionPortDescription *)outputPort {
 	[UIView animateWithDuration:0.25 animations:^{
 		self.outputPortIsWireless = [LMMusicPlayer outputPortIsWireless:outputPort];
-		[self.airplayButton setColour:[self controlButtonColourHighlighted:self.outputPortIsWireless]];
 		[self reloadControlButtonColours];
 	}];
 }
@@ -525,13 +523,31 @@
 	[self.queueButton setImage:[LMAppIcon imageForIcon:LMIconHamburger inverted:whiteQueueIcon]];
 	
 	
+	BOOL whiteFavouritesIcon = self.progressSlider.lightTheme;
+	BOOL favouritesButtonEnabled = self.loadedTrack.isFavourite;
+	if(favouritesButtonEnabled){
+		whiteFavouritesIcon = !whiteFavouritesIcon;
+	}
+	[self.favouritesButton setImage:[LMAppIcon imageForIcon:LMIconFavouriteBlackFilled inverted:whiteFavouritesIcon]];
+	
+	
 	
 	[self.shuffleModeButton setBorderColour:[self controlButtonColourHighlighted:!shuffleButtonEnabled]];
 	[self.repeatModeButton setBorderColour:[self controlButtonColourHighlighted:!repeatButtonEnabled]];
-	[self.favouritesButton setBorderColour:[self controlButtonColourHighlighted:YES]];
-#warning do this
+	[self.favouritesButton setBorderColour:[self controlButtonColourHighlighted:!favouritesButtonEnabled]];
 	[self.airplayButton setBorderColour:[self controlButtonColourHighlighted:!airplayButtonEnabled]];
 	[self.queueButton setBorderColour:[self controlButtonColourHighlighted:!queueButtonEnabled]];
+	
+	
+	[self.favouritesButton setColour:[self controlButtonColourHighlighted:self.loadedTrack.isFavourite]];
+	[self.airplayButton setColour:[self controlButtonColourHighlighted:self.outputPortIsWireless]];
+	[self.queueButton setColour:[self controlButtonColourHighlighted:self.nowPlayingQueueOpen]];
+	[UIView animateWithDuration:0.25 animations:^{
+		[self.shuffleModeButton setColour:[self controlButtonColourHighlighted:self.musicPlayer.shuffleMode ? YES : NO]];
+	}];
+	[UIView animateWithDuration:0.25 animations:^{
+		[self.repeatModeButton setColour:[self controlButtonColourHighlighted:(self.musicPlayer.repeatMode != LMMusicRepeatModeNone)]];
+	}];
 }
 
 - (void)setNowPlayingQueueOpen:(BOOL)open animated:(BOOL)animated {
@@ -573,8 +589,7 @@
 //		[self.queueTableView scrollRectToVisible:CGRectMake(0, contentOffsetY, self.queueTableView.frame.size.width, self.queueTableView.frame.size.height) animated:YES];
 	}
 	
-    [UIView animateWithDuration:animated ? 0.25 : 0.0 animations:^{
-		[self.queueButton setColour:[self controlButtonColourHighlighted:open]];
+	[UIView animateWithDuration:animated ? 0.25 : 0.0 animations:^{
 		[self reloadControlButtonColours];
 		[self layoutIfNeeded];
 	}];
@@ -588,15 +603,7 @@
 	return self.mainViewLeadingConstraint.constant < 0;
 }
 
-- (void)updateMusicModeButtons {
-	[UIView animateWithDuration:0.25 animations:^{
-		[self.shuffleModeButton setColour:[self controlButtonColourHighlighted:self.musicPlayer.shuffleMode ? YES : NO]];
-	}];
-	
-	[UIView animateWithDuration:0.25 animations:^{
-		[self.repeatModeButton setColour:[self controlButtonColourHighlighted:(self.musicPlayer.repeatMode != LMMusicRepeatModeNone)]];
-	}];
-	
+- (void)updateMusicModeButtons DEPRECATED_ATTRIBUTE {
 	[self reloadControlButtonColours];
 }
 
