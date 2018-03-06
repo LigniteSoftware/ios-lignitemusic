@@ -32,8 +32,6 @@
  */
 
 
-//New strings
-
 
 /*
  
@@ -41,76 +39,164 @@
  
  */
 
-"LeaveAReviewTitle" = "Bewertung verfassen";
-"LeaveAReviewDescription" = "Bewerte Lignite Music im App Store";
+//Nothing here... Whaaaat?
 
-"ViewTutorial" = "Zeigs mir";
-"JumpRightIn" = "Kein Interesse";
+/*
+ 
+ End new strings
+ 
+ */
 
-"OnboardingTutorialTitle" = "Los geht's!";
-"OnboardingTutorialDescription" = "Tippe auf den Button unterhalb falls du gerne wissen möchtest, wie du Lignite Music benutzen kannst.\n\nWir hoffen, dass dir Lignite Music gefallen wird!";
 
-"TutorialViewOnDataWarning" = "Achtung: du bist nicht einem WiFi-Netzwerk eingeloggt. Unsere Videos werden von YouTube gestreamt.";
 
-"LMTutorialViewTutorialKeyQueueManagement_Title" = "Warteschlange";
-"LMTutorialViewTutorialKeyNormalPlaylists_Title" = "Wiedergabeliste";
-"LMTutorialViewTutorialKeyFavourites_Title" = "Favoriten";
 
-"Tutorial" = "Einführung";
-"TutorialSettingsSubtitle" = "Erfahre mehr über Lignite Music";
-"TutorialViewTitle" = "Neu bei Lignite Music?";
-"TutorialViewSubtitle" = "Möchtest du gerne mehr erfahren? Untenstehend findest du weitere Videos zu Lignite Music.";
-"TutorialViewButtonText" = "Zeige mir die Grundlagen";
+/* General */
+"LoadingMusic" = "Musik wird geladen";
+"AlmostThere" = "Fast geschafft!";
+
+"Allow" = "Bewilligen";
+"Deny" = "Ablehnen";
+
+"SyncingLibrary" = "Deine Musiksammlung wird gerade synchronisiert.";
+"LibraryFinishedSyncing" = "Deine Musiksammlung wurde synchronisiert.";
+
+"Done" = "Fertig";
+
+"InternalErrorOccurred_Short" = "Fehler, sorry";
+"InternalErrorOccurred_Long" = "Ein Rendering Fehler ist aufgetreten, sorry!\n\nFür Unterstützung melde dich bitte unter contact@lignite.io.";
+
+
+
+
+/*
+ Music Collection Types
+ ----------------------
+ Music collection types are what shows for sources, for example, a list of sources (Albums, Titles, Composers, etc.)
+ 
+ These strings are also used in-code to generate counts for sources. For example, the "Albums" string will be used to compose a string saying "69 Albums". If your language requires a different structure or format in this scenario, please reach out to us.
+ */
+"Albums" = "Alben";
+"AlbumsInline" = "Alben";
+"Titles" = "Titel"; //Individual songs
+"Artists" = "Künstler";
+"Playlists" = "Wiedergabelisten";
+"List" = "Liste";
+"Lists" = "Listen";
+"Composers" = "Komponisten";
+"Genres" = "Genres";
+"Compilations" = "Kompilationen";
+"Favourites" = "Favoriten";
+
+"UnknownTitle" = "Unbekannter Titel";
+"UnknownArtist" = "Unbekannter Künstler";
+"UnknownAlbumTitle" = "Unbekanntes Album";
+"Album" = "Album";
+"AlbumInline" = "Album";
+"Title" = "Titel";
+"Artist" = "Künstler";
+"Playlist" = "Wiedergabeliste";
+"Composer" = "Komponist";
+"Genre" = "Genre";
+"Compilation" = "Kompilation";
+
+"SongXofX" = "Song %d von %d";
+"SongX" = "Song %d";
+"Song" = "Song";
+"Songs" = "Lieder";
+
+"Various" = "Verschiedene"; //For things like various artists
+
+"Favourited" = "Hinzugefügt";
+"Unfavourited" = "Entfernt";
+
+"NoTracksInFavourites" = "Du hast noch keine Favoriten definiert.\n\nStreiche einfach auf einem beliebigen Song von links nach rechts, um ihn in dieser Liste aufzunehmen.";
+
+
+
+
+/*
+ Song Durations
+ --------------
+ Durations are formatted like this:
+ 
+ hours:minutes:seconds
+ 
+ the %@ after the DurationOfDuration strings is the total duration of the song playing. Time formats are automatically 0 padded.
+ */
+"LongSongDurationOfDuration" = "%02i:%02d:%02d von %@";
+"ShortSongDurationOfDuration" = "%02d:%02d von %@";
+"LongSongDuration" = "%02i:%02d:%02d";
+"ShortSongDuration" = "%02d:%02d";
+"BlankDuration" = "--:--";
+"LengthOfSong" = "Dauer: %@";
+
+
+
+
+/* Now playing and mini player */
+"TheresNothingHere" = "Oh je, auf deinem Gerät ist noch gar keine Musik vorhanden!\n\nSynchronisiere deine Musik via iTunes, um diese Meldung verschwinden zu lassen."; //Nothing for a certain view (ie. no compilations)
+"iOSNotProvidingQueue" = "Es scheint als hättest du die Musikwiedergabe ausserhalb von Lignite Music gestartet.\n\nLeider lässt Apple nicht zu, dass wir die ausserhalb gestarteten Warteschlangen lesen dürfen.\n\nStarte die Wiedergabe bitte innerhalb Lignite Music, um die Warteschlange verwalten zu können.";
+"NothingInQueue" = "Keine Songs in der Liste";
+"QueueUnavailable" = "Warteschlange nicht verfügbar";
+
+"TrackQueued" = "Lied eingereiht";
+"TrackRemovedFromQueue" = "Lied entfernt";
 
 "NextTrack" = "Nächstes Lied";
 "PreviousTrack" = "Vorheriges Lied";
 "TrackMissingSubtitle" = "Unbekannt bis Wiedergabe startet";
+
+"Playing" = "Wiedergabe läuft"; //Playing music
+"Paused" = "Wiedergabe pausiert"; //Music is paused
+
+"NowPlayingButtonHint" = "Tippe auf dieses Icon wenn die Musik spielt, um die Wiedergabeanzeige zu öffnen.";
+
+"TrackRestarted" = "Erneute Wiedergabe";
 
 "SongUnknown" = "Lied ?"; //Normally "Song X" where X is a number (ie. "Song 3" or "Song 101"), "Song ?" is for when Lignite Music doesn't know the song number.
 
 "UnableToQueueDescription" = "Leider lässt Apple nicht zu, dass wir die ausserhalb gestarteten Warteschlangen lesen dürfen.\n\nStarte die Wiedergabe bitte innerhalb Lignite Music, um die Warteschlange verwalten zu können.";
 "UnableToQueueCheckboxText" = "Ich verstehe, dass ich die Warteschlange nicht verändern kann wenn die Wiedergabe ausserhalb von Lignite Music gestartet wurde.";
 
-"TrackRestarted" = "Erneute Wiedergabe";
 
-"InternalErrorOccurred_Long" = "Ein Rendering Fehler ist aufgetreten, sorry!\n\nFür Unterstützung melde dich bitte unter contact@lignite.io.";
 
-"InternalErrorOccurred_Short" = "Fehler, sorry";
 
-"NowPlayingButtonHint" = "Tippe auf dieses Icon wenn die Musik spielt, um die Wiedergabeanzeige zu öffnen.";
+/* Album view */
+"AlbumDetailInfoWithGenre" = "%@ | %lu %@"; /* ie. "Hiphop | 8 songs" */
+"AlbumDetailInfoWithoutGenre" = "%lu %@"; /* ie. "8 songs" */
 
-"ConvertPlaylistTitle" = "Wiedergabeliste Bearbeitung";
-"ConvertPlaylistBody" = "Sobald eine Wiedergabeliste innerhalb von Lignite Music bearbeitet wurde, kann sie nicht mehr mit iTunes oder anderen externen Diensten synchronisiert werden.\n\nHierbei handelt es sich um eine Einschränkung seitens Apple und wir haben keinerlei Kontrolle darüber.\n\nDa wir dich nicht nerven möchten, siehst du diese Warnung bloss einmal.";
-"ConvertPlaylistCheckboxText" = "Mir ist bewusst, dass hier bearbeitete Wiedergabelisten anschliessend – aufgrund Einschränkungen seitens Apple – nicht mehr synchronisiert werden können.";
-"StartEditing" = "Bearbeitung starten";
-"CreatePlaylist" = "Wiedergabeliste erstellen";
 
-"Authorized" = "Authorisiert";
-"DownloadingStopped" = "Herunterladen gestoppt.";
 
-"iOS_11_2_LagTitle" = "iOS Music Framework Fehler";
-"iOS_11_2_LagDescription" = "Dein Gerät läuft mit iOS-Version %@ welche einen durch Apple verursachten Fehler aufweist, was dazu führt, dass unsere App u. U. sehr langsam läuft.\n\nUns sind diesbezüglich leider die Hände gebunden und wir können nur darauf warten bis der Fehler durch Apple behoben wird.";
-"iOS_11_2_LagCheckboxConfirmationText" = "Ich bin mir bewusst, dass jegliche Verzögerung in Lignite Music auf dem oben genannten, durch Apple verursachten Problem beruht und Lignite darauf keinerlei Einfluss hat.";
-"Continue" = "Fortfahren";
-"PleaseAcceptTheCheckbox" = "Akzeptiere bitte die Checkbox";
-"TapHereForMoreInformation" = "Für weitere Informationen hier tippen (Englisch)";
 
-"NowPlayingKeepScreenOnTitle" = "Displayverhalten bei Wiedergabe";
-"NowPlayingKeepScreenOnSubtitle" = "Display während Wiedergabe nicht ausschalten";
+/* System shuffle modes */
+"Shuffle" = "Shuffle";
+"DefaultShuffleMode" = "Normal";
+"OffShuffleMode" = "Aus";
+"SongsShuffleMode" = "Songs";
+"AlbumsShuffleMode" = "Alben";
 
-"Playing" = "Wiedergabe läuft"; //Playing music
-"Paused" = "Wiedergabe pausiert"; //Music is paused
 
-"SyncingLibrary" = "Deine Musiksammlung wird gerade synchronisiert.";
-"LibraryFinishedSyncing" = "Deine Musiksammlung wurde synchronisiert.";
 
-"DownloadingImages" = "Herunterladen von Künstler Fotos, %ld übrig.";
-"DownloadImagesOnDataWarning" = "Hier tippen, um Künstler Fotos herunterzuladen.";
+
+/* System repeat modes */
+"Repeat" = "Wiederholen";
+"DefaultRepeatMode" = "Normal";
+"OffRepeatMode" = "Aus";
+"ThisRepeatMode" = "1";
+"AllRepeatMode" = "Alles";
+
+
+
+
+/* Playlists */
+"PlaylistManagementUnderstandingTitle" = "Handhabung Wiedergabelisten";
+"PlaylistManagementUnderstandingBody" = "Aufgrund von iOS Limitationen können Wiedergabelisten, die innerhalb von Lignite Music erstellt wurden, nirgendwo sonst synchronisiert werden.\n\nDies bedeutet, dass innerhalb Lignite Music erstellte Wiedergabelisten nicht in iTunes oder anderen Apps sichtbar / synchroninisiert werden.";
+"PlaylistManagementUnderstandingConfirmationCheckboxText" = "Mir ist bewusst, dass ich aufgrund einer durch Apple eingeführten Einschränkung die hier erstellten Wiedergabelisten nirgendwo sonst synchronisieren kann.";
+"IUnderstand" = "Ich verstehe";
+
+"TapToEdit" = "Bearbeiten";
 
 "NoPlaylists" = "Ups, du hast noch keine Wiedergabeliste erstellt!\n\nErstelle eine neue Liste durch das Tippen auf den entsprechenden Button oben.";
-
-"Theme" = "Farbmotiv";
-"Selected" = "Ausgewählt";
 
 "EnhancedPlaylistTitle" = "Erweiterte Wiedergabeliste";
 "EnhancedPlaylistNoConditionsTitle" = "Keine Bedingungen vorhanden";
@@ -131,13 +217,6 @@
 "EnhancedPlaylist" = "Erweiterte Wiedergabeliste";
 "RegularPlaylist" = "Normale Wiedergabeliste";
 "SearchAllMusic" = "In gesamter Musikbibliothek suchen";
-"Done" = "Fertig";
-"NoTitleTitle" = "Kein Titel";
-"NoTitleDescription" = "Gebe der untenstehenden Liste bitte einen Titel damit du sie speichern kannst.";
-
-"ScrollingTextTitle" = "Scrollender Text";
-"ScrollingTextDescription" = "In der Vollbildwiedergabe und dem Mini-Player";
-
 
 "DeletePlaylistTitle" = "Wiedergabeliste löschen?";
 "DeletePlaylistDescription" = "Bist du sicher, dass du die Wiedergabeliste '%@' löschen möchtest?\n\nDiese Aktion kann nicht rückgängig gemacht werden."; //%@ is the name of the playlist.
@@ -163,68 +242,20 @@
 "YourPlaylistTitle" = "Titel Wiedergabeliste";
 "SearchType" = "Suche nach %@";
 
+"ConvertPlaylistTitle" = "Wiedergabeliste Bearbeitung";
+"ConvertPlaylistBody" = "Sobald eine Wiedergabeliste innerhalb von Lignite Music bearbeitet wurde, kann sie nicht mehr mit iTunes oder anderen externen Diensten synchronisiert werden.\n\nHierbei handelt es sich um eine Einschränkung seitens Apple und wir haben keinerlei Kontrolle darüber.\n\nDa wir dich nicht nerven möchten, siehst du diese Warnung bloss einmal.";
+"ConvertPlaylistCheckboxText" = "Mir ist bewusst, dass hier bearbeitete Wiedergabelisten anschliessend – aufgrund Einschränkungen seitens Apple – nicht mehr synchronisiert werden können.";
+"StartEditing" = "Bearbeitung starten";
+"CreatePlaylist" = "Wiedergabeliste erstellen";
+
 "XSongs" = "%ld Lieder"; //Multiple songs
 "XSongsSingle" = "%ld Lied"; //1 song
 "NoSongsYet" = "Noch keine Lieder";
 
-"NoTracksInFavourites" = "Du hast noch keine Favoriten definiert.\n\nStreiche einfach auf einem beliebigen Song von links nach rechts, um ihn in dieser Liste aufzunehmen.";
-
-"Favourites" = "Favoriten";
-
-"Favourited" = "Hinzugefügt";
-"Unfavourited" = "Entfernt";
-
-"PlaylistManagementUnderstandingTitle" = "Handhabung Wiedergabelisten";
-"PlaylistManagementUnderstandingBody" = "Aufgrund von iOS Limitationen können Wiedergabelisten, die innerhalb von Lignite Music erstellt wurden, nirgendwo sonst synchronisiert werden.\n\nDies bedeutet, dass innerhalb Lignite Music erstellte Wiedergabelisten nicht in iTunes oder anderen Apps sichtbar / synchroninisiert werden.";
-"PlaylistManagementUnderstandingConfirmationCheckboxText" = "Mir ist bewusst, dass ich aufgrund einer durch Apple eingeführten Einschränkung die hier erstellten Wiedergabelisten nirgendwo sonst synchronisieren kann.";
-"IUnderstand" = "Ich verstehe";
-
-"ExplicitImageDownloadingTitle" = "Mobil & wenig Speicher";
-
-"ExplicitImageDownloadingBody" = "Lignite Music lädt automatisch Bilder deiner Künstler und fehlende Albencovers herunter.\n\nWir brauchen deine explizite Zustimmung, dass wir diese Bilder auch herunterladen dürfen, wenn du unterwegs bist oder nur noch wenig Speicherplatz auf deinem Gerät hast.\n\nFehlt diese Bewilligung deinerseits, werden die Bilder ausschliesslich bei einer WiFi-Verbindung und genügend Speicherplatz ausgeführt.";
-
-"Allow" = "Bewilligen";
-"Deny" = "Ablehnen";
-
-"YouDeniedThis" = "Du hast es abgelehnt";
-"YouAuthorizedThis" = "Du hast es authorisiert";
-"YouHaventDeterminedThis" = "Du hast noch nichts eingestellt";
-
-"TrackQueued" = "Lied eingereiht";
-"TrackRemovedFromQueue" = "Lied entfernt";
-
-"LoadingMusic" = "Musik wird geladen";
-"AlmostThere" = "Fast geschafft!";
-
-"StopShowingTheseHints" = "Diese Hinweise nicht mehr anzeigen";
-"OkThanksForTheHint" = "Ok, danke";
-
-"TutorialMainNavigationTitle" = "Die Hauptnavigation";
-"TutorialMainNavigationDescription" = "All die wichtigen Dinge an einem Ort.\n\nWechsle zwischen dem Durchsuchen-Tab, dem Mini Player & der Ansichtsauswahl, alles mit deinem Finger.";
-"TutorialMiniPlayerTitle" = "Mini Player";
-"TutorialMiniPlayerDescription" = "Tippe irgendwo auf den Mini Player, um die Musik zu pausieren/abzuspielen oder streiche links/rechts, um den Song zu wechseln.";
-"TutorialTopBarTitle" = "Topbar";
-"TutorialTopBarDescription" = "Die Topbar, die dir die Navigation erleichtert.\n\nVerwende sie, um zurück zu navigieren oder tippe auf das Lignite Music Icon, um zur Vollbildansicht zu gelangen.";
-"TutorialFullScreenPlaybackTitle" = "Vollbildansicht";
-"TutorialFullScreenPlaybackDescription" = "Du kannst deine Musikwiedergabe hier genau wie beim Mini Player steuern. 1x irgendwo tippen pausiert die Wiedergabe, nach links oder rechts streichen wechselt zwischen den Songs und nach unten streichen bringt dich zurück zu deiner Musikbibliothek.\n\nEin Tippen auf das Icon unten rechts zeigt dir die kommenden Songs an.";
 
 
-"TapViewAgainToOpenSourceSelector" = "Ansicht-Tab antippen, um die Liste erneut anzuzeigen";
 
-"CreditsLicenses" = "Lizenzlinks"; //Links to licenses, such as library licenses and icon licenses.
-"NoSearchResults" = "Die Suche ergab keine Treffer, sorry.";
-"WelcomeToSearch" = "Tippe bitte untenstehend deinen gewünschten Suchbegriff ein";
-"Browse" = "Durchsuchen"; //Like: "To browse music"
-"Miniplayer" = "Miniplayer"; //The miniature music player
-"View" = "Anzeige"; //The view the user is on, ie. "Album view". Is used as a singular word, though.
-
-
-"TheresNothingHere" = "Oh je, auf deinem Gerät ist noch gar keine Musik vorhanden!\n\nSynchronisiere deine Musik via iTunes, um diese Meldung verschwinden zu lassen."; //Nothing for a certain view (ie. no compilations)
-"iOSNotProvidingQueue" = "Es scheint als hättest du die Musikwiedergabe ausserhalb von Lignite Music gestartet.\n\nLeider lässt Apple nicht zu, dass wir die ausserhalb gestarteten Warteschlangen lesen dürfen.\n\nStarte die Wiedergabe bitte innerhalb Lignite Music, um die Warteschlange verwalten zu können.";
-"NothingInQueue" = "Keine Songs in der Liste";
-"QueueUnavailable" = "Warteschlange nicht verfügbar";
-
-
+/* Feedback submitter */
 "ReportBugOrSendFeedback" = "Sende Fehler oder Feedback";
 
 "SendFeedbackTitle" = "Melde einen Fehler oder sende uns Feedback";
@@ -248,142 +279,8 @@
 "CantSendFeedback" = "Kann nicht gesendet werden :(";
 "CantSendFeedbackDescription" = "\nLeider ist bei der Übermittlung etwas schief gelaufen.\n\nStelle bitte sicher, dass du über eine stabile Internetverbindung verfügst und www.lignite.io nicht geblockt wird.\n\nFalls es noch immer nicht funktionieren sollte, melde dich bitte via E-Mail bei uns.";
 
-//"OutOfTrialTime" = "Testphase zu Ende";
-//"XDaysLeftInTrial" = "%.00f Tage deiner Testphase übrig";
-//"XHoursLeftInTrial" = "%.00f Stunden deiner Testphase übrig";
-//"XMinutesLeftInTrial" = "%.00f Minuten deiner Testphase übrig";
-//"TapToUseTheAppForever" = "Tippe hier, um die App freizuschalten";
-//
-//"LoggedInAsABacker" = "Eingeloggt als Backer";
-//"TapToLogout" = "Hier tippen, um auszuloggen";
-//
-//"YouOwnLigniteMusic" = "Lignite Music ist freigeschaltet";
-//"ThanksForYourSupport" = "Vielen Dank für deine Unterstützung!";
-//
-//"TrialTimeIsUpTitle" = "Deine 3-tägige Testphase ist zu Ende";
-//"TrialTimeIsUpDescription" = "Für den Preis eines Kaffees kannst du Lignite Music weiterhin benutzen. Die App kann weit mehr als ein Kaffee und wird nie kalt.";
-//"AppAdvantage0" = "Gesten-basiert und intuitiv zu nutzen";
-//"AppAdvantage1" = "Einfache Handhabung im Auto, unterwegs, im Gym oder überall sonst";
-//"AppAdvantage2" = "Wunderschön und einfach gestaltet";
-//"IfYoureAKickstarterBacker" = "Falls du ein Kickstarter Backer bist, tippe auf den Kickstarter Button unten, um dich einzuloggen.";
-//
-//"HoldOn" = "Einen kleinen Moment, bitte...";
-//
-//"Password" = "Passwort";
-//"BackerLoginTitle" = "Hey Kickstarter Backer!";
-//"BackerLoginDescription" = "Vielen herzlichen Dank für deine Unterstützung, diese App Realität werden zu lassen.\n\nLogge dich bitte hier ein, um Lignite Music freizuschalten.";
-//"INeedHelpLoggingIn" = "Ich benötige Hilfe";
-//"LoggingYouIn" = "Du wirst eingeloggt...";
-//"LoggingYouOut" = "Du wirst ausgeloggt...";
-//"CantLoginTitle" = "Login nicht möglich";
-//"CantLoginDescription" = "Sorry, wir haben Probleme, dich einzuloggen.\n\nStelle bitte sicher, dass du über eine stabile Internetverbindung verfügst und www.lignite.io nicht geblockt wird\n\nFalls es noch immer nicht funktionieren sollte, melde dich bitte via E-Mail bei uns";
-//"LoggedIn" = "Eingeloggt";
-//"LoggedOut" = "Ausgeloggt";
-//"EnterAValidPassword" = "Tippe bitte ein gültiges Passwort ein";
-//
-//"LoginsAllUsedUpTitle" = "Alle vorhandenen Logins in Gebrauch";
-//"LoginsAllUsedUpDescription" = "Dieses Lignite Music Backerprofil wurde %d x verwendet, was dem Maximum entspricht.\n\nFalls du dich auf diesem Gerät einloggen möchtest, musst du dich zuerst auf einem der anderen eingeloggten Geräten abmelden.\n\nDu kannst das ganz einfach mittels dem untenstehenden \"Aktive Geräte\"-Button tun.";
-//"ManageAccounts" = "Aktive Geräte";
-//
-//"AccountNotFoundTitle" = "Benutzerkonto nicht gefunden";
-//"AccountNotFoundDescription" = "Dein Lignite Music Benutzerkonto mit den angegebenen Details konnte leider nicht gefunden werden.\n\nWir haben die dazugehörigen Mailadressen im August 2016 gesammelt.\n\nFalls du deine Kickstarter-Mailadresse seither geändert hast, verwende bitte hierfür die alte Adresse.\n\nSolltest du noch immer Probleme haben, tippe bitte untenstehend für Hilfe.";
 
 
-"Privacy" = "Privatsphäre"; //App privacy, for things like analytics tracking
-"UsageData" = "Nutzungsdaten & Statistiken";
-"UsageDataDescription" = "Wir sammeln eine minime Anzahl Daten, damit wir Abbe weiter verbessern können.\n\nDie gesammelten Daten sind zu 100% anonym und du kannst dadurch nicht identifiziert werden.\n\nSolltest du dich dazu entschliessen, diese Funktion zu deaktivieren, wird dieser gesamte Prozess umgehend gestoppt und keine weiteren Daten gesammelt.";
-"OptionOptIn" = "Anmelden (Opt-in)";
-"OptionOptOut" = "Abmelden (Opt-out)";
-"OptedOut" = "Du hast dich abgemeldet";
-"OptedIn" = "Helfe mit, Lignite Music zu verbessern";
-
-"Logout" = "Ausloggen";
-"LogoutDescription" = "Du kannst dich ganz einfach aus deinem Lignite Music Backer-Konto abmelden, indem du den untenstehenden Button antippst.\n\nDadurch kannst du dich wieder bei einem anderen Gerät anmelden.";
-"StayLoggedIn" = "Eingeloggt bleiben";
-"KeepGoing" = "Abbrechen"; //ie. "Keep going instead of doing this" (won't do it)
-
-"NoPurchasesYet" = "Hey, hey, hey, laaaangsam...!\n\nWir wollen kein Geld mehr von dir, da du bereits ein Kickstarter Backer bist.\n\nMelde dich stattdessen bitte mit dem Kickstarter-Button unten ein.";
-
-/*
- 
- End new strings
- 
- */
-
-//End new strings
-
-
-/* General */
-"SongXofX" = "Song %d von %d";
-"SongX" = "Song %d";
-"Song" = "Song";
-"Songs" = "Lieder";
-
-/*
- Music Collection Types
- ----------------------
- Music collection types are what shows for sources, for example, a list of sources (Albums, Titles, Composers, etc.)
- 
- These strings are also used in-code to generate counts for sources. For example, the "Albums" string will be used to compose a string saying "69 Albums". If your language requires a different structure or format in this scenario, please reach out to us.
- */
-"Albums" = "Alben";
-"AlbumsInline" = "Alben";
-"Titles" = "Titel"; //Individual songs
-"Artists" = "Künstler";
-"Playlists" = "Wiedergabelisten";
-"List" = "Liste";
-"Lists" = "Listen";
-"Composers" = "Komponisten";
-"Genres" = "Genres";
-"Compilations" = "Kompilationen";
-
-"UnknownTitle" = "Unbekannter Titel";
-"UnknownArtist" = "Unbekannter Künstler";
-"UnknownAlbumTitle" = "Unbekanntes Album";
-"Album" = "Album";
-"AlbumInline" = "Album";
-"Title" = "Titel";
-"Artist" = "Künstler";
-"Playlist" = "Wiedergabeliste";
-"Composer" = "Komponist";
-"Genre" = "Genre";
-"Compilation" = "Kompilation";
-
-"Various" = "Verschiedene"; //For things like various artists
-
-/*
- Song Durations
- --------------
- Durations are formatted like this:
- 
- hours:minutes:seconds
- 
- the %@ after the DurationOfDuration strings is the total duration of the song playing. Time formats are automatically 0 padded.
- */
-"LongSongDurationOfDuration" = "%02i:%02d:%02d von %@";
-"ShortSongDurationOfDuration" = "%02d:%02d von %@";
-"LongSongDuration" = "%02i:%02d:%02d";
-"ShortSongDuration" = "%02d:%02d";
-"BlankDuration" = "--:--";
-"LengthOfSong" = "Dauer: %@";
-
-/* Album view */
-"AlbumDetailInfoWithGenre" = "%@ | %lu %@"; /* ie. "Hiphop | 8 songs" */
-"AlbumDetailInfoWithoutGenre" = "%lu %@"; /* ie. "8 songs" */
-
-/* System shuffle modes */
-"Shuffle" = "Shuffle";
-"DefaultShuffleMode" = "Normal";
-"OffShuffleMode" = "Aus";
-"SongsShuffleMode" = "Songs";
-"AlbumsShuffleMode" = "Alben";
-
-/* System repeat modes */
-"Repeat" = "Wiederholen";
-"DefaultRepeatMode" = "Normal";
-"OffRepeatMode" = "Aus";
-"ThisRepeatMode" = "1";
-"AllRepeatMode" = "Alles";
 
 /* Settings */
 "Settings" = "Einstellungen";
@@ -393,14 +290,37 @@
 "HighQualityImagesTitle" = "Höchste Auflösung";
 "HighQualityImagesDescription" = "(Benötigt mehr Speicherplatz)";
 
+"Theme" = "Farbmotiv";
+
 "Colour" = "Farbe";
 "TapToChooseColour" = "Tippe hier, um eine Farbe zu wählen";
 "StatusBar" = "Statusbar";
 "StatusBarDescription" = "Die iOS-Statusbar anzeigen";
 
+"ScrollingTextTitle" = "Scrollender Text";
+"ScrollingTextDescription" = "In der Vollbildwiedergabe und dem Mini-Player";
+
+"NowPlayingKeepScreenOnTitle" = "Displayverhalten bei Wiedergabe";
+"NowPlayingKeepScreenOnSubtitle" = "Display während Wiedergabe nicht ausschalten";
+
 "About" = "Über die App & uns";
 "Credits" = "Danksagungen";
 "CreditsMore" = "von Edwin Finch & Philipp Weder";
+"CreditsLicenses" = "Lizenzlinks"; //Links to licenses, such as library licenses and icon licenses.
+
+"Privacy" = "Privatsphäre"; //App privacy, for things like analytics tracking
+"UsageData" = "Nutzungsdaten & Statistiken";
+"UsageDataDescription" = "Wir sammeln eine minime Anzahl Daten, damit wir Abbe weiter verbessern können.\n\nDie gesammelten Daten sind zu 100% anonym und du kannst dadurch nicht identifiziert werden.\n\nSolltest du dich dazu entschliessen, diese Funktion zu deaktivieren, wird dieser gesamte Prozess umgehend gestoppt und keine weiteren Daten gesammelt.";
+"OptionOptIn" = "Anmelden (Opt-in)";
+"OptionOptOut" = "Abmelden (Opt-out)";
+"OptedOut" = "Du hast dich abgemeldet";
+"OptedIn" = "Helfe mit, Lignite Music zu verbessern";
+
+"LeaveAReviewTitle" = "Bewertung verfassen";
+"LeaveAReviewDescription" = "Bewerte Lignite Music im App Store";
+
+
+
 
 /* General/uncategorized */
 "Okay" = "Ok";
@@ -408,9 +328,15 @@
 "Other" = "Anderes";
 "UnknownSection" = "Unbekannter Abschnitt";
 
+
+
+
 /* When no music is playing */
 "NoMusic" = "Keine Musik";
 "NoMusicDescriptionPhone" = "Starte die Musikwiedergabe auf deinem Smartphone oder deiner Uhr";
+
+
+
 
 /*
  Onboarding
@@ -448,15 +374,33 @@
 "OnboardingThanksTitle" = "Wir hoffen, dass dir Lignite Music gefällt!";
 "OnboardingThanksDescription" = "Wir sind ein 2 Geek Team: Designer & Entwickler. Wir lieben es, schöne und funktionelle Apps zu realisieren.\n\nSehr sehr viele Stunden wurden in diese App investiert und wir hoffen, du liebst es, sie zu nutzen genau wie wir es genossen haben, sie zu programmieren.";
 
-/* Button names */
+"ViewTutorial" = "Zeigs mir";
+"JumpRightIn" = "Kein Interesse";
 
-"BuyLigniteMusic" = "Lignite Music kaufen";
+"OnboardingTutorialTitle" = "Los geht's!";
+"OnboardingTutorialDescription" = "Tippe auf den Button unterhalb falls du gerne wissen möchtest, wie du Lignite Music benutzen kannst.\n\nWir hoffen, dass dir Lignite Music gefallen wird!";
+
+"TutorialViewOnDataWarning" = "Achtung: du bist nicht einem WiFi-Netzwerk eingeloggt. Unsere Videos werden von YouTube gestreamt.";
+
+"LMTutorialViewTutorialKeyQueueManagement_Title" = "Warteschlange";
+"LMTutorialViewTutorialKeyNormalPlaylists_Title" = "Wiedergabeliste";
+"LMTutorialViewTutorialKeyFavourites_Title" = "Favoriten";
+
+"Tutorial" = "Einführung";
+"TutorialSettingsSubtitle" = "Erfahre mehr über Lignite Music";
+"TutorialViewTitle" = "Neu bei Lignite Music?";
+"TutorialViewSubtitle" = "Möchtest du gerne mehr erfahren? Untenstehend findest du weitere Videos zu Lignite Music.";
+"TutorialViewButtonText" = "Zeige mir die Grundlagen";
+
+
+
+
+/* Button names */
 "HangOn" = "Moment, bitte..."; //Meaning "Wait..."
 "Cool" = "Cool!";
 "WhatsNext" = "Wow, super!";
 "Sweet" = "Sehr schön!";
 "LetsGo" = "Los gehts!";
-"LogMeIn" = "Einloggen"; //For the kickstarter login button in onboarding
 "HitMeWithIt" = "Klar, gerne!"; //Slang for continue, this is used on the button which when pressed will show the dialog asking user for permission to access their music library
 "SoundsGood" = "Tönt gut"; //Also slang for continue
 "OpenTutorial" = "Klar, gerne!";
@@ -475,6 +419,9 @@
 "EndTutorial" = "Kein Interesse"; //This goes on the last slide of the tutorial
 "Install" = "Installieren";
 
+
+
+
 /* Tutorial */
 "TutorialBrowsingTitle" = "Navigieren ist einfach";
 "TutorialBrowsingDescription" = "Jede einzelne Ansicht ist eine simple Liste.\n\nFür Listen mit grossen Einträgen, wie bspw. derjenige auf dem Screenshot oben, tippe auf das Albumcover für weitere Informationen (Detailansicht).\n\nFür eine schnellere Wiedergabe, tippe einfach auf den Titel unterhalb.";
@@ -484,6 +431,9 @@
 
 "TutorialPlayingControlsTitle" = "Eine Frage der Grösse";
 "TutorialPlayingControlsDescription" = "Alle unseren Buttons sind angenehm gross oder die App lässt sich durch Gesten steuern.\n\nStreiche während der Wiedergabe nach links oder rechts, um zum vorherigen oder nächsten Song zu springen.\n\nTippe irgendwo auf dem Display, um die Wiedergabe zu starten oder zu pausieren - ganz easy!";
+
+
+
 
 /*
  Image Management
@@ -529,6 +479,23 @@
 
 "ImagesDeleted" = "Fotos gelöscht";
 "WillBeginDownloading" = "Wird heruntergeladen";
+
+"ExplicitImageDownloadingTitle" = "Mobil & wenig Speicher";
+
+"ExplicitImageDownloadingBody" = "Lignite Music lädt automatisch Bilder deiner Künstler und fehlende Albencovers herunter.\n\nWir brauchen deine explizite Zustimmung, dass wir diese Bilder auch herunterladen dürfen, wenn du unterwegs bist oder nur noch wenig Speicherplatz auf deinem Gerät hast.\n\nFehlt diese Bewilligung deinerseits, werden die Bilder ausschliesslich bei einer WiFi-Verbindung und genügend Speicherplatz ausgeführt.";
+
+"YouDeniedThis" = "Du hast es abgelehnt";
+"YouAuthorizedThis" = "Du hast es authorisiert";
+"YouHaventDeterminedThis" = "Du hast noch nichts eingestellt";
+
+"DownloadingImages" = "Herunterladen von Künstler Fotos, %ld übrig.";
+"DownloadImagesOnDataWarning" = "Hier tippen, um Künstler Fotos herunterzuladen.";
+
+"Authorized" = "Authorisiert";
+"DownloadingStopped" = "Herunterladen gestoppt.";
+
+
+
 
 /* Credits */
 "ThankYou" = "Vielen Dank!";
@@ -585,6 +552,9 @@
 "IconsDescription" = "Ein Grossteil unserer Icons stammt von www.flaticon.com und wurde von den folgenden Künstlern gestaltet, die so grosszügig waren, deren Icons unter CC 3.0 zu lizenzieren:";
 "DesignedByNobody" = "Wir arbeiten an der Übersicht und werden sie nachreichen sobald verfügbar.";
 
+
+
+
 /* Contact */
 "ContactUs" = "Kontaktiere uns";
 "ContactHi" = "Hey!";
@@ -594,6 +564,16 @@
 "ContactWebsite" = "www.LigniteMusic.com";
 "ContactThanks" = "Vielen herzlichen Dank für deine Unterstützung und Grüsse von uns beiden!";
 
+
+
+
+/* iOS 11.2 lag :( */
+"iOS_11_2_LagTitle" = "iOS Music Framework Fehler";
+"iOS_11_2_LagDescription" = "Dein Gerät läuft mit iOS-Version %@ welche einen durch Apple verursachten Fehler aufweist, was dazu führt, dass unsere App u. U. sehr langsam läuft.\n\nUns sind diesbezüglich leider die Hände gebunden und wir können nur darauf warten bis der Fehler durch Apple behoben wird.";
+"iOS_11_2_LagCheckboxConfirmationText" = "Ich bin mir bewusst, dass jegliche Verzögerung in Lignite Music auf dem oben genannten, durch Apple verursachten Problem beruht und Lignite darauf keinerlei Einfluss hat.";
+"Continue" = "Fortfahren";
+"PleaseAcceptTheCheckbox" = "Akzeptiere bitte die Checkbox";
+"TapHereForMoreInformation" = "Für weitere Informationen hier tippen (Englisch)";
 
 
 

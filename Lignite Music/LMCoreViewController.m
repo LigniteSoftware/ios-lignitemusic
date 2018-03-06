@@ -1321,7 +1321,7 @@ LMControlBarViewDelegate
 						[self.loadingActivityIndicator autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.navigationController.view withMultiplier:(2.0/4.0)];
 					}
 					else{
-						[self.loadingActivityIndicator autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:WINDOW_FRAME.size.height/([LMLayoutManager isLandscape] ? 1.5 : 2.25)];
+						[self.loadingActivityIndicator autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:WINDOW_FRAME.size.height/([LMLayoutManager isLandscape] ? 1.5 : 2.35)];
 						[self.loadingActivityIndicator autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 						[self.loadingActivityIndicator autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 						[self.loadingActivityIndicator autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.navigationController.view withMultiplier:(1.0/4.0)];
@@ -1374,7 +1374,7 @@ LMControlBarViewDelegate
 				
 				[NSTimer scheduledTimerWithTimeInterval:0.05 block:^{
 					dispatch_async(dispatch_get_main_queue(), ^{
-						[self loadSubviews];
+//						[self loadSubviews];
 					});
 				} repeats:NO];
 			} repeats:NO];
