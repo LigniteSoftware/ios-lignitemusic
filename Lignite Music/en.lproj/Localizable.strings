@@ -1,10 +1,10 @@
 /*
-  Localizable.strings
-  Lignite Music
-
-  Created by Edwin Finch on 10/1/16.
-  Copyright © 2016 Lignite. All rights reserved.
-*/
+ Localizable.strings
+ Lignite Music
+ 
+ Created by Edwin Finch on 10/1/16.
+ Copyright © 2016 Lignite. All rights reserved.
+ */
 
 /*
  
@@ -16,16 +16,16 @@
  
  1. The following characters in between quotes must be left in exact format and must not be deleted, changed or modified in any other way:
  
-	"\n", "%02i", "%d", "%lu", "%@", "%%", "%f", "%.02f", "%.03f"
+ "\n", "%02i", "%d", "%lu", "%@", "%%", "%f", "%.02f", "%.03f"
  
  Any string in the above list with a percentage (%) symbol I will now reference as "formatters".
  
  2. Any character mentioned in point 1 that is in a string will have data injected into it. If there are more than one formatter, that means that data is inserted in that order. When you change strings with formatters, please do not change the order of the formatters or remove formatters. The order of which the data is inserted into these strings is static. If your language *absolutely requires* a different order, please contact us directly.
  
- 3. If you are confused about a string, look at its key first. It may help clarify. If still you have any questions about translating Lignite Music please let us know. You should not feel uncertain what a strinhg is doing, and if you are, just let us know and we'll clarify. Now that you've read this far, please send us a picture of a walrus so we know you did. Yes, seriously.
+ 3. If you are confused about a string, look at its key first. It may help clarify. If still you have any questions about translating Lignite Music please let us know. You should not feel uncertain what a string is doing, and if you are, just let us know and we'll clarify. Now that you've read this far, please send us a picture of a walrus so we know you did. Yes, seriously.
  
  4. The following words/terms should *never* be translated into your language for legal reasons:
-	"Lignite Music", "Lignite", "Apple Music", "Lignite Music", "Apple", "iTunes"
+ "Lignite Music", "Lignite", "Apple Music", "Lignite Music", "Apple", "iTunes"
  
  Thanks, and have fun!
  
@@ -66,7 +66,7 @@
 
 
 
-/* 
+/*
  Music Collection Types
  ----------------------
  Music collection types are what shows for sources, for example, a list of sources (Albums, Titles, Composers, etc.)
@@ -112,7 +112,7 @@
 
 
 
-/* 
+/*
  Song Durations
  --------------
  Durations are formatted like this:
@@ -120,7 +120,7 @@
  hours:minutes:seconds
  
  the %@ after the DurationOfDuration strings is the total duration of the song playing. Time formats are automatically 0 padded.
-*/
+ */
 "LongSongDurationOfDuration" = "%02i:%02d:%02d of %@";
 "ShortSongDurationOfDuration" = "%02d:%02d of %@";
 "LongSongDuration" = "%02i:%02d:%02d";
@@ -513,7 +513,7 @@
 "GoodToGo" = "Good to go!"; //Permission has been granted
 "OhBoy" = "Oh boy"; //Error/issue
 "TapToTryAgain" = "Tap to try again"; //Whatever the user did didn't work for enabling the music permission
-"AllSetHere" = "All set here!"; 
+"AllSetHere" = "All set here!";
 "OuchDenied" = "Ouch, denied :(";
 "Restricted" = "Restricted"; //The bluetooth permission is restricted (probably on a school-run device)
 "Error" = "Error";
@@ -671,3 +671,5 @@
  * Thank you.
  *
  */
+
+

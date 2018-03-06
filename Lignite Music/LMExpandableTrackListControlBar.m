@@ -15,7 +15,7 @@
 #import "LMExtras.h"
 #import "LMColour.h"
 
-@interface LMExpandableTrackListControlBar()<LMControlBarViewDelegate, LMMusicPlayerDelegate, LMListEntryDelegate>
+@interface LMExpandableTrackListControlBar()<LMMusicPlayerDelegate, LMListEntryDelegate>
 
 /**
  The background view for the close button.
@@ -76,112 +76,16 @@ BOOL expandableTrackListControlBarIsInAlbumDetail = NO;
 }
 
 - (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState {
-	[self.musicControlBar reloadHighlightedButtons];
+
 }
 
 - (void)musicTrackDidChange:(LMMusicTrack*)newTrack {
-	[self.musicControlBar reloadHighlightedButtons];
+
 }
 
 - (void)musicPlaybackModesDidChange:(LMMusicShuffleMode)shuffleMode repeatMode:(LMMusicRepeatMode)repeatMode {
-	[self.musicControlBar reloadHighlightedButtons];
+
 }
-
-
-- (uint8_t)amountOfButtonsForControlBarView:(LMControlBarView*)controlBar {
-	return 3;
-}
-
-- (UIImage*)imageWithIndex:(uint8_t)index forControlBarView:(LMControlBarView*)controlBar {
-	switch(index){
-		case 0:{
-			BOOL isPlaying = [self.musicPlayer nowPlayingCollectionIsEqualTo:self.musicTrackCollection] && self.musicPlayer.playbackState == LMMusicPlaybackStatePlaying;
-			
-			return [LMAppIcon invertImage:[LMAppIcon imageForIcon:isPlaying ? LMIconPause : LMIconPlay]];
-		}
-		case 1:{
-			return [LMAppIcon imageForIcon:LMIconRepeat];
-		}
-		case 2:{
-			return [LMAppIcon imageForIcon:LMIconShuffle];
-		}
-	}
-	return [LMAppIcon imageForIcon:LMIconBug];
-}
-
-- (BOOL)buttonHighlightedWithIndex:(uint8_t)index wasJustTapped:(BOOL)wasJustTapped forControlBar:(LMControlBarView*)controlBar {
-	BOOL isPlayingMusic = (self.musicPlayer.playbackState == LMMusicPlaybackStatePlaying);
-	
-	switch(index) {
-		case 0:{ //Play button
-			LMMusicTrackCollection *trackCollection = self.musicTrackCollection;
-			if(wasJustTapped){
-				if(trackCollection.trackCount > 0){
-					if(![self.musicPlayer nowPlayingCollectionIsEqualTo:trackCollection]){
-						self.musicPlayer.autoPlay = YES;
-						[self.musicPlayer setNowPlayingCollection:trackCollection];
-						
-						[self.musicPlayer.navigationBar setSelectedTab:LMNavigationTabMiniplayer];
-						[self.musicPlayer.navigationBar maximize:NO];
-						
-						isPlayingMusic = YES;
-					}
-					else{
-						[self.musicPlayer invertPlaybackState];
-						isPlayingMusic = !isPlayingMusic;
-					}
-				}
-				return isPlayingMusic;
-			}
-			else{
-				return [self.musicPlayer nowPlayingCollectionIsEqualTo:trackCollection] && isPlayingMusic;
-			}
-		}
-		case 1: { //Repeat button
-			if(wasJustTapped){
-				(self.musicPlayer.repeatMode == LMMusicRepeatModeAll)
-				? (self.musicPlayer.repeatMode = LMMusicRepeatModeNone)
-				: (self.musicPlayer.repeatMode = LMMusicRepeatModeAll);
-			}
-			
-			return (self.musicPlayer.repeatMode == LMMusicRepeatModeAll);
-		}
-		case 2: { //Shuffle button
-			if(wasJustTapped){
-				self.musicPlayer.shuffleMode = !self.musicPlayer.shuffleMode;
-				
-				LMMusicTrackCollection *trackCollection = self.musicTrackCollection;
-				if(trackCollection.trackCount > 0){
-					self.musicPlayer.autoPlay = YES;
-					[self.musicPlayer setNowPlayingCollection:trackCollection];
-					
-					[self.musicPlayer.navigationBar setSelectedTab:LMNavigationTabMiniplayer];
-					[self.musicPlayer.navigationBar maximize:NO];
-					
-//					isPlayingMusic = YES;
-				}
-			}
-			
-			return (self.musicPlayer.shuffleMode == LMMusicShuffleModeOn);
-		}
-//		case 1: //Repeat button
-//			if(wasJustTapped){
-//				(self.musicPlayer.repeatMode == LMMusicRepeatModeAll)
-//				? (self.musicPlayer.repeatMode = LMMusicRepeatModeNone)
-//				: (self.musicPlayer.repeatMode = LMMusicRepeatModeAll);
-//			}
-//			NSLog(@"Repeat mode is %d", self.musicPlayer.repeatMode);
-//			return (self.musicPlayer.repeatMode == LMMusicRepeatModeAll);
-//		case 2: //Shuffle button
-//			if(wasJustTapped){
-//				self.musicPlayer.shuffleMode = !self.musicPlayer.shuffleMode;
-//			}
-//			NSLog(@"Shuffle mode is %d", self.musicPlayer.shuffleMode);
-//			return (self.musicPlayer.shuffleMode == LMMusicShuffleModeOn);
-	}
-	return YES;
-}
-
 
 + (CGFloat)recommendedHeight {
 	if([LMLayoutManager isiPad]){
@@ -228,12 +132,6 @@ BOOL expandableTrackListControlBarIsInAlbumDetail = NO;
 				[self.backButtonBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self];
 				[self.backButtonBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self];
 				
-
-				[self.musicControlBar autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
-				[self.musicControlBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(9.0/10.0)];
-				[self.musicControlBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(4.0/10.0)];
-				[self.musicControlBar autoPinEdgeToSuperviewMargin:ALEdgeLeading].constant = 10;
-				
 				
 				break;
 			}
@@ -248,17 +146,11 @@ BOOL expandableTrackListControlBarIsInAlbumDetail = NO;
 				
 				[self.specificAlbumHeader autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.backButtonBackgroundView];
 				[self.specificAlbumHeader autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
-				[self.specificAlbumHeader autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.musicControlBar withOffset:5];
+				[self.specificAlbumHeader autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.backButtonBackgroundView withOffset:5];
 				[self.specificAlbumHeader autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.backButtonBackgroundView withOffset:10];
 				[self.specificAlbumHeader autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.backButtonBackgroundView withOffset:-10];
 				
-				
-				[self.musicControlBar autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
-				[self.musicControlBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(9.0/10.0)];
-				[self.musicControlBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(4.0/10.0)];
-				[self.musicControlBar autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.closeButtonImageView withOffset:-10];
-				
-				
+
 //				NSLog(@"What");
 				break;
 			}
@@ -274,13 +166,7 @@ BOOL expandableTrackListControlBarIsInAlbumDetail = NO;
 				[self.backButtonBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self];
 				[self.backButtonBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self];
 				
-				
-				[self.musicControlBar autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
-				[self.musicControlBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(9.0/10.0)];
-				[self.musicControlBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(4.0/10.0)];
-				[self.musicControlBar autoPinEdgeToSuperviewMargin:ALEdgeLeading].constant = 10;
-				
-				
+
 				break;
 			}
 			case LMExpandableTrackListControlBarModeControlWithAlbumDetail: {
@@ -291,15 +177,7 @@ BOOL expandableTrackListControlBarIsInAlbumDetail = NO;
 				[self.backButtonBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self];
 				[self.backButtonBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self];
 				
-				
-				[self.musicControlBar autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.backButtonBackgroundView];
-				[self.musicControlBar autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.closeButtonBackgroundView];
-				[self.musicControlBar autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.closeButtonBackgroundView];
-				[self.musicControlBar autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.closeButtonBackgroundView];
-				[self.musicControlBar autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
-//				[self.musicControlBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(9.0/10.0)];
-				
-//				NSLog(@"What");
+
 				break;
 			}
 		}
@@ -388,11 +266,6 @@ BOOL expandableTrackListControlBarIsInAlbumDetail = NO;
 		self.specificAlbumHeader.alignIconToLeft = YES;
 		self.specificAlbumHeader.stretchAcrossWidth = YES;
 		[self addSubview:self.specificAlbumHeader];
-		
-		
-		self.musicControlBar = [LMControlBarView newAutoLayoutView];
-		self.musicControlBar.delegate = self;
-		[self addSubview:self.musicControlBar];
 		
 		
 		[self.musicPlayer addMusicDelegate:self];

@@ -40,7 +40,6 @@
 #import "LMCreditsViewController.h"
 
 #import "LMProgressSlider.h"
-#import "LMControlBarView.h"
 #import "LMBrowsingBar.h"
 #import "LMMiniPlayerCoreView.h"
 #import "LMMiniPlayerView.h"
@@ -75,9 +74,7 @@
 @import SDWebImage;
 @import StoreKit;
 
-@interface LMCoreViewController () <LMMusicPlayerDelegate, LMSourceDelegate, UIGestureRecognizerDelegate, LMSearchBarDelegate, LMLetterTabDelegate, LMSearchViewControllerResultDelegate, LMButtonNavigationBarDelegate, UINavigationBarDelegate, UINavigationControllerDelegate, LMImageManagerDelegate, LMLandscapeNavigationBarDelegate, LMThemeEngineDelegate, LMLayoutChangeDelegate, LMWarningDelegate, LMApplicationIdleDelegate,
-
-LMControlBarViewDelegate
+@interface LMCoreViewController () <LMMusicPlayerDelegate, LMSourceDelegate, UIGestureRecognizerDelegate, LMSearchBarDelegate, LMLetterTabDelegate, LMSearchViewControllerResultDelegate, LMButtonNavigationBarDelegate, UINavigationBarDelegate, UINavigationControllerDelegate, LMImageManagerDelegate, LMLandscapeNavigationBarDelegate, LMThemeEngineDelegate, LMLayoutChangeDelegate, LMWarningDelegate, LMApplicationIdleDelegate
 >
 
 @property LMMusicPlayer *musicPlayer;
@@ -984,22 +981,6 @@ LMControlBarViewDelegate
 	}
 }
 
-- (uint8_t)amountOfButtonsForControlBarView:(LMControlBarView*)controlBar {
-	return 3;
-}
-
-- (UIImage*)imageWithIndex:(uint8_t)index forControlBarView:(LMControlBarView*)controlBar {
-	return [LMAppIcon imageForIcon:LMIconBug];
-}
-
-- (BOOL)buttonHighlightedWithIndex:(uint8_t)index wasJustTapped:(BOOL)wasJustTapped forControlBar:(LMControlBarView*)controlBar {
-	return YES;
-}
-
-- (void)sizeChangedTo:(CGSize)newSize forControlBarView:(LMControlBarView *)controlBar {
-	NSLog(@"Changed to %@", NSStringFromCGSize(newSize));
-}
-
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
 	self.layoutManager.traitCollection = self.traitCollection;
 	[self.layoutManager traitCollectionDidChange:previousTraitCollection];
@@ -1374,7 +1355,7 @@ LMControlBarViewDelegate
 				
 				[NSTimer scheduledTimerWithTimeInterval:0.05 block:^{
 					dispatch_async(dispatch_get_main_queue(), ^{
-//						[self loadSubviews];
+						[self loadSubviews];
 					});
 				} repeats:NO];
 			} repeats:NO];

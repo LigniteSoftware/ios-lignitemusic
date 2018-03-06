@@ -6,7 +6,6 @@
 //  Copyright © 2017 Lignite. All rights reserved.
 //
 
-#import "LMControlBarView.h"
 #import "LMMusicPlayer.h"
 #import "LMView.h"
 
@@ -58,11 +57,6 @@ typedef NS_ENUM(NSInteger, LMExpandableTrackListControlBarMode) {
  The music track collection associated with this control bar's detail view & this control bar.
  */
 @property LMMusicTrackCollection *musicTrackCollection;
-
-/**
- The music control bar.
- */
-@property LMControlBarView *musicControlBar;
 
 /**
  The recommended height of the expandable track list control bar.

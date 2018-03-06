@@ -22,7 +22,7 @@
  
  2. Any character mentioned in point 1 that is in a string will have data injected into it. If there are more than one formatter, that means that data is inserted in that order. When you change strings with formatters, please do not change the order of the formatters or remove formatters. The order of which the data is inserted into these strings is static. If your language *absolutely requires* a different order, please contact us directly.
  
- 3. If you are confused about a string, look at its key first. It may help clarify. If still you have any questions about translating Lignite Music please let us know. You should not feel uncertain what a strinhg is doing, and if you are, just let us know and we'll clarify. Now that you've read this far, please send us a picture of a walrus so we know you did. Yes, seriously.
+ 3. If you are confused about a string, look at its key first. It may help clarify. If still you have any questions about translating Lignite Music please let us know. You should not feel uncertain what a string is doing, and if you are, just let us know and we'll clarify. Now that you've read this far, please send us a picture of a walrus so we know you did. Yes, seriously.
  
  4. The following words/terms should *never* be translated into your language for legal reasons:
  "Lignite Music", "Lignite", "Apple Music", "Lignite Music", "Apple", "iTunes"

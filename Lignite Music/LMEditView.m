@@ -11,11 +11,9 @@
 @implementation LMEditView
 
 /*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
-}
-*/
+ Despite what you might think - this class is not completely useless.
+ 
+ We're using it to distinguish it from typical UIViews within big list entries, for when they're being edited.
+ */
 
 @end

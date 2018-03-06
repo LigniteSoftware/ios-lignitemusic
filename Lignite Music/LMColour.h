@@ -76,7 +76,7 @@
 + (UIColor*)fadedColour;
 
 /**
- The light gray background colour that is used in the LMControlBarView.
+ A light gray background colour.
 
  @return The light gray.
  */
