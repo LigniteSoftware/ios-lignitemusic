@@ -257,7 +257,7 @@ NSString* deviceName(){
 			MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
 			
 			hud.mode = MBProgressHUDModeCustomView;
-			UIImage *image = [[UIImage imageNamed:@"icon_checkmark.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+			UIImage *image = [[UIImage imageNamed:@"icon_checkmark"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
 			hud.customView = [[UIImageView alloc] initWithImage:image];
 			hud.square = YES;
 			hud.label.text = NSLocalizedString(@"ThanksForSubmitting", nil);
@@ -587,7 +587,7 @@ NSString* deviceName(){
 	
 	UIImageView *backButtonIcon = [UIImageView newAutoLayoutView];
 	backButtonIcon.contentMode = UIViewContentModeScaleAspectFit;
-	backButtonIcon.image = [LMAppIcon imageForIcon:LMIconBack];
+	backButtonIcon.image = [LMAppIcon imageForIcon:LMIconiOSBack inverted:YES];
 	[self.backButtonView addSubview:backButtonIcon];
 	
 	NSArray *backButtonIconPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{

@@ -92,7 +92,13 @@
 
 - (void)downloadDemoImageWithIndex:(NSInteger)index {
 	SDWebImageDownloader *downloader = [SDWebImageDownloader sharedDownloader];
+	
+	//DON'T DE-PNG THIS!!! IT'S SERVER SIDE!!!
+	//DON'T DE-PNG THIS!!! IT'S SERVER SIDE!!!
 	NSURL *demoImageURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://www.lignite.me/_demo/artists/%ld.png", (long)index]];
+	//DON'T DE-PNG THIS!!! IT'S SERVER SIDE!!!
+	//DON'T DE-PNG THIS!!! IT'S SERVER SIDE!!!
+	
 	[downloader downloadImageWithURL:demoImageURL
 							 options:kNilOptions
 							progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {

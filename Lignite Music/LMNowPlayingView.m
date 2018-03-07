@@ -234,7 +234,7 @@
 	
 	__block NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
 		UIImage *albumArt = [newTrack albumArt];
-		UIImage *albumImage = (noTrackPlaying || !albumArt) ? [UIImage imageNamed:@"lignite_background_portrait.png"] : albumArt;
+		UIImage *albumImage = (noTrackPlaying || !albumArt) ? [UIImage imageNamed:@"lignite_background_portrait"] : albumArt;
 		
 		if(!self.musicPlayer.nowPlayingWasSetWithinLigniteMusic){
 			albumImage = [self.musicPlayer.nowPlayingTrack albumArt];
@@ -295,7 +295,7 @@
 		self.progressSlider.leftText = NSLocalizedString(@"NoMusic", nil);
 		
 		UIImage *albumImage;
-		albumImage = [UIImage imageNamed:@"lignite_background_portrait.png"];
+		albumImage = [UIImage imageNamed:@"lignite_background_portrait"];
 		self.backgroundImageView.contentMode = UIViewContentModeScaleAspectFit;
 		self.backgroundImageView.image = albumImage;
 		
@@ -719,7 +719,7 @@
 	MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self animated:YES];
 	
 	hud.mode = MBProgressHUDModeCustomView;
-	UIImage *image = [[UIImage imageNamed:@"icon_checkmark.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+	UIImage *image = [[UIImage imageNamed:@"icon_checkmark"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
 	hud.customView = [[UIImageView alloc] initWithImage:image];
 	hud.square = YES;
 	hud.userInteractionEnabled = NO;
@@ -1283,7 +1283,7 @@
 	
 	
 	self.backgroundImageView = [UIImageView newAutoLayoutView];
-	self.backgroundImageView.image = [UIImage imageNamed:@"lignite_background_portrait.png"];
+	self.backgroundImageView.image = [UIImage imageNamed:@"lignite_background_portrait"];
 	self.backgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
 	[self.mainView addSubview:self.backgroundImageView];
 	

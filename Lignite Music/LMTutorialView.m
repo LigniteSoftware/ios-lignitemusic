@@ -78,15 +78,15 @@
 }
 
 - (UIImage*)coverImage {
-	NSString *imageKey = @"lignite_background_portrait.png";
+	NSString *imageKey = @"lignite_background_portrait";
 	if([self.tutorialKey isEqualToString:LMTutorialViewTutorialKeyQueueManagement]){
-		imageKey = @"queue_preview.png";
+		imageKey = @"queue_preview";
 	}
 	else if([self.tutorialKey isEqualToString:LMTutorialViewTutorialKeyNormalPlaylists]){
-		imageKey = @"playlist_preview.png";
+		imageKey = @"playlist_preview";
 	}
 	else if([self.tutorialKey isEqualToString:LMTutorialViewTutorialKeyFavourites]){
-		imageKey = @"favourites_preview.png";
+		imageKey = @"favourites_preview";
 	}
 	return [UIImage imageNamed:imageKey];
 }
@@ -201,7 +201,7 @@
 		
 		
 		self.playImageView = [UIImageView newAutoLayoutView];
-		self.playImageView.image = [UIImage imageNamed:@"icon_play.png"];
+		self.playImageView.image = [UIImage imageNamed:@"icon_play"];
 		self.playImageView.contentMode = UIViewContentModeScaleAspectFit;
 		[self.lightGreyImageCoverView addSubview:self.playImageView];
 		

@@ -26,7 +26,7 @@
 		return self.storedAlbumArt;
 	}
 	
-	return [UIImage imageNamed:@"watch_no_cover_art_not_cropped.png"];
+	return [UIImage imageNamed:@"watch_no_cover_art_not_cropped"];
 }
 
 - (UIImage*)albumArt {
@@ -34,7 +34,7 @@
 		return self.storedAlbumArt;
 	}
 	
-	return [UIImage imageNamed:@"watch_no_cover_art.png"];
+	return [UIImage imageNamed:@"watch_no_cover_art"];
 }
 
 - (void)setAlbumArt:(UIImage *)albumArt {

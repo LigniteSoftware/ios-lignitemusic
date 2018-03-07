@@ -64,8 +64,8 @@
 		if(musicTrackInfo == nil){
 			[self.titleLabel setText:NSLocalizedString(@"NothingPlaying", nil)];
 			[self.subtitleLabel setText:nil];
-			[self.albumArtImage setImage:[UIImage imageNamed:@"watch_no_cover_art.png"]];
-			[self.favouriteImage setImage:[UIImage imageNamed:@"icon_unfavourite_white.png"]];
+			[self.albumArtImage setImage:[UIImage imageNamed:@"watch_no_cover_art"]];
+			[self.favouriteImage setImage:[UIImage imageNamed:@"icon_unfavourite_white"]];
 			[self.progressSliderInfo setPercentage:0.0 animated:YES];
 			[self configureTableWithData:@[]];
 		}
@@ -122,11 +122,11 @@
 		[self.shuffleButtonGroup setBackgroundColor:self.companionBridge.nowPlayingInfo.shuffleMode ? self.companionBridge.phoneThemeMainColour : [UIColor blackColor]];
 	}];
 	
-	[self.shuffleImage setImageNamed:@"icon_shuffle_white.png"];
+	[self.shuffleImage setImageNamed:@"icon_shuffle_white"];
 }
 
 - (void)reloadFavouriteButton {
-	[self.favouriteImage setImage:self.companionBridge.nowPlayingInfo.nowPlayingTrack.isFavourite ? [UIImage imageNamed:@"icon_favourite_red.png"] : [UIImage imageNamed:@"icon_favourite_outlined_white.png"]];
+	[self.favouriteImage setImage:self.companionBridge.nowPlayingInfo.nowPlayingTrack.isFavourite ? [UIImage imageNamed:@"icon_favourite_red"] : [UIImage imageNamed:@"icon_favourite_outlined_white"]];
 }
 
 - (void)reloadRepeatButton {
@@ -135,10 +135,10 @@
 		case LMMusicRepeatModeDefault:
 		case LMMusicRepeatModeNone:
 		case LMMusicRepeatModeAll:
-			newRepeatImage = [UIImage imageNamed:@"icon_repeat_general_white.png"];
+			newRepeatImage = [UIImage imageNamed:@"icon_repeat_general_white"];
 			break;
 		case LMMusicRepeatModeOne:
-			newRepeatImage = [UIImage imageNamed:@"icon_repeat_one_white.png"];
+			newRepeatImage = [UIImage imageNamed:@"icon_repeat_one_white"];
 			break;
 			
 	}
@@ -150,7 +150,7 @@
 }
 
 - (void)reloadPlayPauseButton {
-	[self.playPauseImage setImageNamed:self.companionBridge.nowPlayingInfo.playing ? @"icon_pause.png" : @"icon_play.png"];
+	[self.playPauseImage setImageNamed:self.companionBridge.nowPlayingInfo.playing ? @"icon_pause" : @"icon_play"];
 }
 
 - (void)reloadVolumeProgressBar {
@@ -179,8 +179,8 @@
 		
 		[self reloadVolumeProgressBar];
 		
-		[self.nextTrackImage setImageNamed:@"next_track.png"];
-		[self.previousTrackImage setImageNamed:@"previous_track.png"];
+		[self.nextTrackImage setImageNamed:@"icon_next_track"];
+		[self.previousTrackImage setImageNamed:@"icon_previous_track"];
 		
 		[self reloadPlayPauseButton];
 	});
@@ -394,10 +394,10 @@
 	
 	[self.companionBridge sendMusicControlMessageToPhoneWithKey:LMAppleWatchControlKeyNextTrack
 												 successHandler:^(NSDictionary *response) {
-													 [self.nextTrackImage setImageNamed:@"next_track.png"];
+													 [self.nextTrackImage setImageNamed:@"icon_next_track"];
 												 } errorHandler:^(NSError *error) {
 													 [self handleConnectionError:error withHandler:^{
-														 [self.nextTrackImage setImageNamed:@"next_track.png"];
+														 [self.nextTrackImage setImageNamed:@"icon_next_track"];
 													 }];
 												 }];
 	
@@ -409,10 +409,10 @@
 	
 	[self.companionBridge sendMusicControlMessageToPhoneWithKey:LMAppleWatchControlKeyPreviousTrack
 												 successHandler:^(NSDictionary *response) {
-													 [self.previousTrackImage setImageNamed:@"previous_track.png"];
+													 [self.previousTrackImage setImageNamed:@"icon_previous_track"];
 												 } errorHandler:^(NSError *error) {
 													 [self handleConnectionError:error withHandler:^{
-														 [self.previousTrackImage setImageNamed:@"previous_track.png"];
+														 [self.previousTrackImage setImageNamed:@"icon_previous_track"];
 													 }];
 												 }];
 	
@@ -657,7 +657,7 @@
 //		LMWMusicTrackInfo *testTrackInfo = [LMWMusicTrackInfo new];
 //		testTrackInfo.title = @"title";
 //		testTrackInfo.subtitle = @"subtitle";
-//		testTrackInfo.albumArt = [UIImage imageNamed:@"chidster.png"];
+//		testTrackInfo.albumArt = [UIImage imageNamed:@"chidster"];
 //		self.companionBridge.nowPlayingInfo.nowPlayingTrack = testTrackInfo;
 //		[self musicTrackDidChange:testTrackInfo];
 	}];

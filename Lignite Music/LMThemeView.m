@@ -188,7 +188,7 @@
 		self.imageView.clipsToBounds = YES;
 		[self.imageViewBackgroundView addSubview:self.imageView];
 		
-		UIImage *image = [self roundedImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@.png", self.themeKey]]];
+		UIImage *image = [self roundedImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@", self.themeKey]]];
 		[self.imageView setImage:image];
 		
 		CGFloat widthMultiplier = image.size.width / image.size.height;

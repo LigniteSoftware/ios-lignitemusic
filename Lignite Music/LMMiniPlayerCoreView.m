@@ -347,7 +347,7 @@
 											  animated:YES];
 	
 	hud.mode = MBProgressHUDModeCustomView;
-	UIImage *image = [[UIImage imageNamed:@"icon_rewind.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+	UIImage *image = [[UIImage imageNamed:@"icon_rewind"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
 	hud.customView = [[UIImageView alloc] initWithImage:image];
 	hud.square = YES;
 	hud.userInteractionEnabled = NO;

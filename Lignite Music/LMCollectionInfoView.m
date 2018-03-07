@@ -68,7 +68,7 @@
 		
 		self.middleDividerImageView = [UIImageView newAutoLayoutView];
 //		self.middleDividerImageView.backgroundColor = [UIColor greenColor];
-		self.middleDividerImageView.image = [UIImage imageNamed:@"icon_bug.png"];
+		self.middleDividerImageView.image = [UIImage imageNamed:@"icon_bug"];
 		self.middleDividerImageView.contentMode = UIViewContentModeScaleAspectFit;
 		[self.middleDividerView addSubview:self.middleDividerImageView];
 		

@@ -13,143 +13,117 @@
 + (NSString*)filenameForIcon:(LMIcon)icon {
 	switch(icon){
 		case LMIconPlay:
-			return @"icon_play.png";
+			return @"icon_play";
 		case LMIconPause:
-			return @"icon_pause.png";
+			return @"icon_pause";
 		case LMIconRepeat:
-			return @"icon_repeat_general.png";
+			return @"icon_repeat_general";
 		case LMIconRepeatOne:
-			return @"icon_repeat_one.png";
+			return @"icon_repeat_one";
 		case LMIconShuffle:
-			return @"icon_shuffle.png";
-		case LMIconTripleHorizontalDots:
-			return @"icon_triple_horizontal_dots.png";
+			return @"icon_shuffle";
 		case LMIconSettings:
-			return @"icon_settings.png";
+			return @"icon_settings";
 		case LMIconTitles:
-			return @"icon_titles.png";
+			return @"icon_titles";
 		case LMIconAlbums:
-			return @"icon_albums.png";
+			return @"icon_albums";
 		case LMIconPlaylists:
-			return @"icon_playlists.png";
+			return @"icon_playlists";
 		case LMIconGenres:
-			return @"icon_genres.png";
+			return @"icon_genres";
 		case LMIconArtists:
-			return @"icon_artists.png";
+			return @"icon_artists";
 		case LMIconComposers:
-			return @"icon_composers.png";
+			return @"icon_composers";
 		case LMIconCompilations:
-			return @"icon_compilations.png";
+			return @"icon_compilations";
 		case LMIconBug:
-			return @"icon_bug.png";
+			return @"icon_bug";
 		case LMIconNoAlbumArt50Percent:
-			return @"icon_no_cover_art_50.png";
+			return @"icon_no_cover_art_50";
 		case LMIconNoAlbumArt75Percent:
-			return @"icon_no_cover_art_75.png";
+			return @"icon_no_cover_art_75";
 		case LMIconNoAlbumArt:
-			return @"icon_no_cover_art.png";
+			return @"icon_no_cover_art";
 		case LMIconSource:
-			return @"icon_source.png";
+			return @"icon_source";
 		case LMIconBrowse:
-			return @"icon_browse.png";
+			return @"icon_browse";
 		case LMIconMiniplayer:
-			return @"icon_miniplayer.png";
+			return @"icon_miniplayer";
 		case LMIconLookAndFeel:
-			return @"icon_look_and_feel.png";
+			return @"icon_look_and_feel";
 		case LMIconAbout:
-			return @"icon_about.png";
+			return @"icon_about";
 		case LMIconCloudDownload:
-			return @"icon_download.png";
+			return @"icon_download";
 		case LMIconForwardArrow:
-			return @"icon_arrow_forward.png";
-		case LMIconPebbles: // :(
-			return @"icon_pebbles.png";
+			return @"icon_arrow_forward";
 		case LMIconFunctionality:
-			return @"icon_functionality.png";
+			return @"icon_functionality";
 		case LMIconPaperPlane:
-			return @"icon_paper_plane.png";
+			return @"icon_paper_plane";
 		case LMIconTwitter:
-			return @"icon_twitter.png";
+			return @"icon_twitter";
 		case LMIconLink:
-			return @"icon_link.png";
+			return @"icon_link";
 		case LMIconXCross:
-			return @"icon_x_cross.png";
+			return @"icon_x_cross";
 		case LMIconSearch:
-			return @"icon_search.png";
-		case LMIconAToZ:
-			return @"icon_a_to_z.png";
-		case LMIconGrabRectangle:
-			return @"icon_grab_rectangle.png";
-		case LMIconHamburger:
-			return @"icon_hamburger.png";
+			return @"icon_search";
 		case LMIconAirPlay:
-			return @"icon_airplay.png";
-		case LMIconBack:
-			return @"icon_back.png";
+			return @"icon_airplay";
 		case LMIconWhiteCheckmark:
-			return @"icon_white_checkmark.png";
-		case LMIconGreenCheckmark:
-			return @"icon_green_checkmark.png";
+			return @"icon_white_checkmark";
 		case LMIconBuy:
-			return @"icon_buy.png";
-		case LMIconKickstarter:
-			return @"icon_kickstarter.png";
-        case LMIconKickstarterBlackAndWhite:
-            return @"icon_kickstarter_bw.png";
+			return @"icon_buy";
+		case LMIconHamburger:
+			return @"icon_hamburger";
 		case LMIconDownArrow:
-			return @"icon_down_arrow.png";
-		case LMIconUpArrow:
-			return @"icon_up_arrow.png";
+			return @"icon_down_arrow";
 		case LMIconNoSearchResults:
-			return @"icon_no_search_results.png";
+			return @"icon_no_search_results";
         case LMIconLibraryAccess:
-            return @"icon_library_access.png";
-        case LMIconTutorialScroll:
-            return @"icon_tutorial_scroll.png";
-        case LMIconTutorialSwipe:
-            return @"icon_tutorial_swipe.png";
-        case LMIconTutorialTap:
-            return @"icon_tutorial_tap.png";
+            return @"icon_library_access";
 		case LMIconiOSBack:
-			return @"icon_ios_back.png";
+			return @"icon_ios_back";
 		case LMIcon3DotsHorizontal:
-			return @"icon_3_dots_horizontal.png";
+			return @"icon_3_dots_horizontal";
 		case LMIcon3DotsVertical:
-			return @"icon_3_dots_vertical.png";
+			return @"icon_3_dots_vertical";
 		case LMIconAddToQueue:
-			return @"icon_add_track_to_queue.png";
+			return @"icon_add_track_to_queue";
 		case LMIconRemoveFromQueue:
-			return @"icon_remove_track_from_queue.png";
-		case LMIconWarning:
-			return @"icon_warning.png";
+			return @"icon_remove_track_from_queue";
 		case LMIconFavouriteHUD:
-			return @"icon_favourite_hud.png";
+			return @"icon_favourite_hud";
 		case LMIconFavouriteRedFilled:
-			return @"icon_favourite_red.png";
+			return @"icon_favourite_red";
 		case LMIconFavouriteWhiteFilled:
-			return @"icon_favourite_white.png";
+			return @"icon_favourite_white";
 		case LMIconFavouriteBlackFilled:
-			return @"icon_favourite_black.png";
+			return @"icon_favourite_black";
 		case LMIconFavouriteRedOutline:
-			return @"icon_favourite_outlined_red.png";
+			return @"icon_favourite_outlined_red";
 		case LMIconFavouriteWhiteOutline:
-			return @"icon_favourite_outlined_white.png";
+			return @"icon_favourite_outlined_white";
 		case LMIconFavouriteBlackOutline:
-			return @"icon_favourite_outlined_black.png";
+			return @"icon_favourite_outlined_black";
 		case LMIconUnfavouriteHUD:
-			return @"icon_unfavourite_hud.png";
+			return @"icon_unfavourite_hud";
 		case LMIconUnfavouriteRed:
-			return @"icon_unfavourite_red.png";
+			return @"icon_unfavourite_red";
 		case LMIconUnfavouriteWhite:
-			return @"icon_unfavourite_white.png";
+			return @"icon_unfavourite_white";
 		case LMIconUnfavouriteBlack:
-			return @"icon_unfavourite_black.png";
+			return @"icon_unfavourite_black";
 		case LMIconEdit:
-			return @"icon_edit_white.png";
+			return @"icon_edit_white";
 		case LMIconAdd:
-			return @"icon_plus_white.png";
+			return @"icon_plus_white";
 	}
-	return @"icon_bug.png";
+	return @"icon_bug";
 }
 
 + (UIImage*)imageForIcon:(LMIcon)icon {

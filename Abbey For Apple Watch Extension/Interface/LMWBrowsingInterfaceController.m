@@ -152,7 +152,7 @@
 			  NSLocalizedString(@"LastX", nil), [self.pages objectAtIndex:self.indexOfCurrentPage - 1].count]
 			 ];
 			
-			[previousTracksRow.icon setImage:[UIImage imageNamed:@"icon_left_arrow.png"]];
+			[previousTracksRow.icon setImage:[UIImage imageNamed:@"icon_left_arrow"]];
 			
 			[previousTracksRow.icon setWidth:18.0f];
 			
@@ -168,7 +168,7 @@
 			  NSLocalizedString((self.totalNumberOfEntries == 1) ? @"XTrack" : @"XTracks", nil), self.totalNumberOfEntries]
 			 ];
 			
-			[shuffleAllTracksRow.icon setImage:[UIImage imageNamed:@"icon_shuffle_white.png"]];
+			[shuffleAllTracksRow.icon setImage:[UIImage imageNamed:@"icon_shuffle_white"]];
 			
 			[shuffleAllTracksRow.icon setWidth:18.0f];
 			
@@ -183,7 +183,7 @@
 			
 			[nextTracksRow.titleLabel setText:NSLocalizedString(@"NextPage", nil)];
 			[nextTracksRow.subtitleLabel setText:[NSString stringWithFormat:NSLocalizedString(@"XLeft", nil), self.amountOfEntriesAheadOfCurrentPage]];
-			[nextTracksRow.icon setImage:[UIImage imageNamed:@"icon_right_arrow.png"]];
+			[nextTracksRow.icon setImage:[UIImage imageNamed:@"icon_right_arrow"]];
 			
 			[nextTracksRow.icon setWidth:18.0f];
 			
@@ -192,7 +192,7 @@
 		
 		
 		if(self.tableEntries.count == 0){
-			[self.loadingImage setImage:[UIImage imageNamed:@"apple_watch_sad.png"]];
+			[self.loadingImage setImage:[UIImage imageNamed:@"icon_apple_watch_sad"]];
 			[self.loadingLabel setText:NSLocalizedString(@"NothingHere", nil)];
 		}
 		else{
@@ -265,7 +265,7 @@
 	self.displayingError = YES;
 	
 	dispatch_async(dispatch_get_main_queue(), ^{
-		[self.loadingImage setImage:[UIImage imageNamed:@"apple_watch_sad.png"]];
+		[self.loadingImage setImage:[UIImage imageNamed:@"icon_apple_watch_sad"]];
 		
 		if(error.code == 503 || error.code == 7007){
 			[self.loadingLabel setText:NSLocalizedString(@"PhoneNotConnected", nil)];

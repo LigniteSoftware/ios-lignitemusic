@@ -76,7 +76,7 @@
 - (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
 	BOOL willBeLandscape = size.width > size.height;
 	if(![LMLayoutManager isiPad]){
-		self.backgroundImageView.image = [UIImage imageNamed:willBeLandscape ? @"lignite_background_landscape.png" : @"lignite_background_portrait.png"];
+		self.backgroundImageView.image = [UIImage imageNamed:willBeLandscape ? @"lignite_background_landscape" : @"lignite_background_portrait"];
 	}
 }
 
@@ -103,10 +103,10 @@
 							    nil];
 			
 			self.screenshotsArray = [[NSArray alloc]initWithObjects:
-									 @"icon_no_cover_art_75.png",
-//									 @"icon_kickstarter_bw.png",
-									 @"icon_library_access.png",
-									 @"icon_rocket_ship.png",
+									 @"icon_no_cover_art_75",
+//									 @"icon_kickstarter_bw",
+									 @"icon_library_access",
+									 @"icon_rocket_ship",
 									  nil];
 			
 			self.buttonNamesArray = [[NSArray alloc]initWithObjects:
@@ -131,7 +131,7 @@
 							   , nil];
 			
 			self.screenshotsArray = [[NSArray alloc]initWithObjects:
-									 @"no_library_access.png"
+									 @"no_library_access"
 									 , nil];
 			
 			self.buttonNamesArray = [[NSArray alloc]initWithObjects:
@@ -156,10 +156,10 @@
 	
 	self.backgroundImageView = [UIImageView newAutoLayoutView];
 	self.backgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
-	self.backgroundImageView.image = [UIImage imageNamed:self.layoutManager.isLandscape ? @"lignite_background_landscape.png" : @"lignite_background_portrait.png"];
+	self.backgroundImageView.image = [UIImage imageNamed:self.layoutManager.isLandscape ? @"lignite_background_landscape" : @"lignite_background_portrait"];
 	self.backgroundImageView.clipsToBounds = YES;
 	if([LMLayoutManager isiPad]){
-		self.backgroundImageView.image = [UIImage imageNamed:@"lignite_background_ipad.png"];
+		self.backgroundImageView.image = [UIImage imageNamed:@"lignite_background_ipad"];
 	}
 	[self.view addSubview:self.backgroundImageView];
 	

@@ -171,7 +171,7 @@
 	[LMLayoutManager addNewLandscapeConstraints:scrollViewLandscapeConstraints];
 	
 	self.philippAndEdwinView = [UIImageView newAutoLayoutView];
-	self.philippAndEdwinView.image = [UIImage imageNamed:@"onboarding_us.png"];
+	self.philippAndEdwinView.image = [UIImage imageNamed:@"onboarding_us"];
 	self.philippAndEdwinView.contentMode = UIViewContentModeScaleToFill;
 	self.philippAndEdwinView.backgroundColor = [UIColor purpleColor];
 	[self.scrollView addSubview:self.philippAndEdwinView];
@@ -187,7 +187,7 @@
 	
 	
 	//		self.signaturesView = [UIImageView newAutoLayoutView];
-	//		self.signaturesView.image = [UIImage imageNamed:@"signatures.png"];
+	//		self.signaturesView.image = [UIImage imageNamed:@"signatures"];
 	//		self.signaturesView.contentMode = UIViewContentModeScaleToFill;
 	//		[self.scrollView addSubview:self.signaturesView];
 	//
@@ -236,7 +236,7 @@
 	
 	
 	self.signaturesView = [UIImageView newAutoLayoutView];
-	self.signaturesView.image = [UIImage imageNamed:@"signatures.png"];
+	self.signaturesView.image = [UIImage imageNamed:@"signatures"];
 	self.signaturesView.contentMode = UIViewContentModeScaleToFill;
 	[self.scrollView addSubview:self.signaturesView];
 	

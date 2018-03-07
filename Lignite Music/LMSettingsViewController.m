@@ -263,7 +263,7 @@
 														MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
 														
 														hud.mode = MBProgressHUDModeCustomView;
-														UIImage *image = [[UIImage imageNamed:@"icon_checkmark.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+														UIImage *image = [[UIImage imageNamed:@"icon_checkmark"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
 														hud.customView = [[UIImageView alloc] initWithImage:image];
 														hud.square = YES;
 														hud.label.text = NSLocalizedString(@"ImagesDeleted", nil);
@@ -280,7 +280,7 @@
 														MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
 														
 														hud.mode = MBProgressHUDModeCustomView;
-														UIImage *image = [[UIImage imageNamed:@"icon_checkmark.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+														UIImage *image = [[UIImage imageNamed:@"icon_checkmark"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
 														hud.customView = [[UIImageView alloc] initWithImage:image];
 														hud.square = YES;
 														hud.label.text = NSLocalizedString(@"WillBeginDownloading", nil);

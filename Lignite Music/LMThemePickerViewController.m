@@ -126,7 +126,7 @@
 	imagePreviewViewController.context = themeView;
 	
 	UIImageView *screenshotView = [UIImageView newAutoLayoutView];
-	screenshotView.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png", themeView.themeKey]];
+	screenshotView.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@", themeView.themeKey]];
 	screenshotView.contentMode = UIViewContentModeScaleAspectFit;
 	[imagePreviewViewController.view addSubview:screenshotView];
 	

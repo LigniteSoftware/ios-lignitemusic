@@ -536,7 +536,7 @@
 
 - (UIImage*)iconForListEntry:(LMListEntry*)entry {
 	if(entry.collectionIndex >= self.musicTitles.items.count){
-		return [UIImage imageNamed:@"icon_bug.png"];
+		return [UIImage imageNamed:@"icon_bug"];
 	}
 	
 //	NSInteger actualIndex = entry.collectionIndex % self.itemArray.count;

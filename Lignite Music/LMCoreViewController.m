@@ -249,7 +249,7 @@
 	self.playPauseStatusHUD = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
 	
 	self.playPauseStatusHUD.mode = MBProgressHUDModeCustomView;
-	UIImage *image = [[UIImage imageNamed:isPlaying ? @"icon_play_padded.png" : @"icon_pause_padded.png"]
+	UIImage *image = [[UIImage imageNamed:isPlaying ? @"icon_play_padded" : @"icon_pause_padded"]
 					  imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
 	self.playPauseStatusHUD.customView = [[UIImageView alloc] initWithImage:image];
 	self.playPauseStatusHUD.square = YES;
@@ -293,7 +293,7 @@
 	MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:view animated:YES];
 	
 	hud.mode = MBProgressHUDModeCustomView;
-	UIImage *image = [[UIImage imageNamed:@"icon_checkmark.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+	UIImage *image = [[UIImage imageNamed:@"icon_checkmark"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
 	hud.customView = [[UIImageView alloc] initWithImage:image];
 	hud.square = YES;
 	hud.userInteractionEnabled = NO;
@@ -307,7 +307,7 @@
 	MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:view animated:YES];
 	
 	hud.mode = MBProgressHUDModeCustomView;
-	UIImage *image = [[UIImage imageNamed:@"icon_favourite_hud.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+	UIImage *image = [[UIImage imageNamed:@"icon_favourite_hud"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
 	hud.customView = [[UIImageView alloc] initWithImage:image];
 	hud.square = YES;
 	hud.userInteractionEnabled = NO;
@@ -330,7 +330,7 @@
 	MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:view animated:YES];
 	
 	hud.mode = MBProgressHUDModeCustomView;
-	UIImage *image = [[UIImage imageNamed:@"icon_unfavourite_hud.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+	UIImage *image = [[UIImage imageNamed:@"icon_unfavourite_hud"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
 	hud.customView = [[UIImageView alloc] initWithImage:image];
 	hud.square = YES;
 	hud.userInteractionEnabled = NO;
@@ -986,10 +986,10 @@
 	[self.layoutManager traitCollectionDidChange:previousTraitCollection];
 	
 	if([LMLayoutManager isiPad]){
-		self.splashImageView.image = [UIImage imageNamed:@"splash_ipad_2018.png"];
+		self.splashImageView.image = [UIImage imageNamed:@"splash_ipad_2018"];
 	}
 	else{
-		self.splashImageView.image = [UIImage imageNamed:[LMLayoutManager sharedLayoutManager].isLandscape ? @"splash_landscape_2018.png" : @"splash_portrait_2018.png"];
+		self.splashImageView.image = [UIImage imageNamed:[LMLayoutManager sharedLayoutManager].isLandscape ? @"splash_landscape_2018" : @"splash_portrait_2018"];
 	}
 }
 
@@ -1235,10 +1235,10 @@
 		self.splashImageView = [UIImageView newAutoLayoutView];
 		self.splashImageView.backgroundColor = [UIColor orangeColor];
 		if([LMLayoutManager isiPad]){
-			self.splashImageView.image = [UIImage imageNamed:@"splash_ipad.png"];
+			self.splashImageView.image = [UIImage imageNamed:@"splash_ipad"];
 		}
 		else{
-			self.splashImageView.image = [UIImage imageNamed:[LMLayoutManager sharedLayoutManager].isLandscape ? @"splash_landscape_g.png" : @"splash_portrait_g.png"];
+			self.splashImageView.image = [UIImage imageNamed:[LMLayoutManager sharedLayoutManager].isLandscape ? @"splash_landscape_g" : @"splash_portrait_g"];
 		}
 		self.splashImageView.contentMode = UIViewContentModeScaleAspectFill;
 		[self.view addSubview:self.splashImageView];
@@ -1407,7 +1407,7 @@
 			MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
 			
 			hud.mode = MBProgressHUDModeCustomView;
-			UIImage *image = [[UIImage imageNamed:@"icon_checkmark.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+			UIImage *image = [[UIImage imageNamed:@"icon_checkmark"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
 			hud.customView = [[UIImageView alloc] initWithImage:image];
 			hud.square = YES;
 			hud.label.text = NSLocalizedString(authorized ? @"Authorized" : @"DownloadingStopped", nil);
