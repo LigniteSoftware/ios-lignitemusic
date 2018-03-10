@@ -59,12 +59,12 @@
 	NSURL *twitterURL = [NSURL URLWithString:@"twitter://user?screen_name=WeAreLignite"];
 	NSURL *websiteURL = [NSURL URLWithString:@"https://www.twitter.com/WeAreLignite"];
 	BOOL canOpenTwitterURL = [[UIApplication sharedApplication] canOpenURL:twitterURL];
-	[[UIApplication sharedApplication] openURL:canOpenTwitterURL ? twitterURL : websiteURL];
+	[[UIApplication sharedApplication] openURL:canOpenTwitterURL ? twitterURL : websiteURL options:@{} completionHandler:nil];
 }
 
 - (void)openWebsite {
 	NSURL *websiteURL = [NSURL URLWithString:@"https://www.lignitemusic.com/"];
-	[[UIApplication sharedApplication] openURL:websiteURL];
+	[[UIApplication sharedApplication] openURL:websiteURL options:@{} completionHandler:nil];
 }
 
 - (BOOL)prefersStatusBarHidden {

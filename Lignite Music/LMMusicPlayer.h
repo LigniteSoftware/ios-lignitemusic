@@ -85,7 +85,7 @@ typedef enum {
 @class LMMusicPlayer;
 
 @protocol LMMusicPlayerDelegate <NSObject>
-@required
+@optional
 /**
  Is called when the music track of the app changes.
  
@@ -100,7 +100,6 @@ typedef enum {
  */
 - (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState;
 
-@optional
 /**
  Is called when the current playback time of the song changes.
  

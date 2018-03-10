@@ -66,9 +66,6 @@
 	if([self swipeButtonsEnabled]){
 		[self.tableCell refreshButtons:YES];
 	}
-	else if(self.leftButtons || self.rightButtons){
-		[self.tableCell refreshButtons:NO];
-	}
 }
 
 - (void)changeHighlightStatus:(BOOL)highlighted animated:(BOOL)animated {
@@ -138,10 +135,6 @@
 	if([self swipeButtonsEnabled]){
 		expansionColour = [self.delegate swipeButtonColourForListEntry:self rightSide:isRightToLeftSwipe];
 		buttons = [self.delegate swipeButtonsForListEntry:self rightSide:isRightToLeftSwipe];
-	}
-	else{
-		expansionColour = isRightToLeftSwipe ? self.rightButtonExpansionColour : self.leftButtonExpansionColour;
-		buttons = isRightToLeftSwipe ? self.rightButtons : self.leftButtons;
 	}
 	
 	swipeSettings.transition = MGSwipeTransitionClipCenter;
@@ -412,12 +405,6 @@
 - (instancetype)init {
 	self = [super init];
 	if(self){
-		self.rightButtons = @[];
-		self.leftButtons = @[];
-		
-		self.rightButtonExpansionColour = [UIColor colorWithRed:33/255.0 green:175/255.0 blue:67/255.0 alpha:1.0];
-		self.leftButtonExpansionColour = [UIColor colorWithRed:33/255.0 green:175/255.0 blue:67/255.0 alpha:1.0];
-		
 		self.roundedCorners = YES;
 	}
 	return self;

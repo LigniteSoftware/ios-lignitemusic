@@ -343,7 +343,7 @@
 		0476C279052B858F4F8EC84008D7B9F5 /* XCDYouTubeOperation.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = XCDYouTubeOperation.h; path = XCDYouTubeKit/XCDYouTubeOperation.h; sourceTree = "<group>"; };
 		04D23276BA359415BE2E74879BF240EF /* UIApplication+RSKImageCropper.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIApplication+RSKImageCropper.h"; path = "RSKImageCropper/UIApplication+RSKImageCropper.h"; sourceTree = "<group>"; };
 		04F1FCCFDF4872C3D264318340E5B3C9 /* UNIHTTPClientHelper.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = UNIHTTPClientHelper.m; path = Unirest/UNIHTTPClientHelper.m; sourceTree = "<group>"; };
-		050D3F20802528F156D6A0EA44E5338C /* PureLayout.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = PureLayout.modulemap; sourceTree = "<group>"; };
+		050D3F20802528F156D6A0EA44E5338C /* PureLayout.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = PureLayout.modulemap; sourceTree = "<group>"; };
 		065346AB16AB09C8FCEE310A403DF8CC /* PeekPopManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PeekPopManager.swift; path = PeekPop/PeekPopManager.swift; sourceTree = "<group>"; };
 		08810201CDDE2E0473D72C916C65A59C /* SDWebImage-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SDWebImage-prefix.pch"; sourceTree = "<group>"; };
 		099C2CD983A935AB87A49191549417AA /* SDWebImage-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "SDWebImage-dummy.m"; sourceTree = "<group>"; };
@@ -363,7 +363,7 @@
 		12541E35B1553F525A781B0D8329B4A0 /* type.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = type.h; path = include/magick/type.h; sourceTree = "<group>"; };
 		12BDE13220F57637E1161C9F48A0B69B /* UIImage+ImageEffects.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIImage+ImageEffects.m"; path = "PeekPop/UIImage+ImageEffects.m"; sourceTree = "<group>"; };
 		1302ED943165D609B346714B627F9154 /* method-attribute.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "method-attribute.h"; path = "include/wand/method-attribute.h"; sourceTree = "<group>"; };
-		1317BD68C01F7FB95A60F7958CBF2991 /* YYImage.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = YYImage.modulemap; sourceTree = "<group>"; };
+		1317BD68C01F7FB95A60F7958CBF2991 /* YYImage.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = YYImage.modulemap; sourceTree = "<group>"; };
 		13F58D13EA20536901EFEA81267704EE /* segment.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = segment.h; path = include/magick/segment.h; sourceTree = "<group>"; };
 		158FD9F1B4F459F8888D53D70D62E6F8 /* threshold.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = threshold.h; path = include/magick/threshold.h; sourceTree = "<group>"; };
 		15AA26FC6AFC3B40B239B2E41839627C /* image-view.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "image-view.h"; path = "include/magick/image-view.h"; sourceTree = "<group>"; };
@@ -388,7 +388,7 @@
 		21A9F22244B7BB6683F47A19C2F0697D /* SDWebImageCoder.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDWebImageCoder.m; path = SDWebImage/SDWebImageCoder.m; sourceTree = "<group>"; };
 		224EAFF2998C889E1DE2E7443B4C1CC7 /* YYFrameImage.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = YYFrameImage.h; path = YYImage/YYFrameImage.h; sourceTree = "<group>"; };
 		22B0951BF2EB5ED3D7D857E0DBAA1CF7 /* module.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = module.h; path = include/magick/module.h; sourceTree = "<group>"; };
-		22C533801A2874A38B93F12238225AA9 /* SDWebImage.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = SDWebImage.modulemap; sourceTree = "<group>"; };
+		22C533801A2874A38B93F12238225AA9 /* SDWebImage.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = SDWebImage.modulemap; sourceTree = "<group>"; };
 		22DDFD68CCB8576EBC9935DA465D18C4 /* RSKImageCropperStrings.bundle */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "wrapper.plug-in"; name = RSKImageCropperStrings.bundle; path = RSKImageCropper/RSKImageCropperStrings.bundle; sourceTree = "<group>"; };
 		2321500FCCF92D69ACE3C8414A1CA621 /* Answers.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = Answers.h; path = iOS/Crashlytics.framework/Headers/Answers.h; sourceTree = "<group>"; };
 		2351B94C9C1EBBD9DE37DB78719E6654 /* UIImage+GIF.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIImage+GIF.m"; path = "SDWebImage/UIImage+GIF.m"; sourceTree = "<group>"; };
@@ -396,8 +396,8 @@
 		24E0A4C47CD609C50E467262B31828A4 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		261BBEDFB54B7F2E1F99106319C02338 /* PeekPop-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "PeekPop-dummy.m"; sourceTree = "<group>"; };
 		2620957507A5C3BC3DE96F866A2AE7F8 /* enhance.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = enhance.h; path = include/magick/enhance.h; sourceTree = "<group>"; };
-		2668FAA0DDF41C98421070AA42ADFEF1 /* XCDYouTubeKit.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = XCDYouTubeKit.modulemap; sourceTree = "<group>"; };
-		26746703BFDE15FA635BE5CE53D9CA20 /* Pods_Lignite_Music.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_Lignite_Music.framework; path = "Pods-Lignite Music.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2668FAA0DDF41C98421070AA42ADFEF1 /* XCDYouTubeKit.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = XCDYouTubeKit.modulemap; sourceTree = "<group>"; };
+		26746703BFDE15FA635BE5CE53D9CA20 /* Pods_Lignite_Music.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Lignite_Music.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		271B9EC815A8FEC2E52818BA745FD0A9 /* BEMCheckBox.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = BEMCheckBox.xcconfig; sourceTree = "<group>"; };
 		282B1AB04C0C19979E7F95F6482069B7 /* magick-baseconfig.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "magick-baseconfig.h"; path = "include/magick/magick-baseconfig.h"; sourceTree = "<group>"; };
 		28517E858EF35B47AA272309C1D98F7E /* PureLayout.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = PureLayout.h; path = PureLayout/PureLayout/PureLayout.h; sourceTree = "<group>"; };
@@ -464,7 +464,7 @@
 		4F3F6FEBEAD52E0ECAA9B9B2EF05E2F8 /* BEMCheckBoxGroup.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = BEMCheckBoxGroup.m; path = Classes/BEMCheckBoxGroup.m; sourceTree = "<group>"; };
 		4FF5C573F971E599CC0B05DE2EFD27A4 /* XCDYouTubeLogger.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = XCDYouTubeLogger.m; path = XCDYouTubeKit/XCDYouTubeLogger.m; sourceTree = "<group>"; };
 		5002222EFCAD0EE44D23EC207314DC1D /* profile.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = profile.h; path = include/magick/profile.h; sourceTree = "<group>"; };
-		503D89DC201A2200775AEBE7291471A5 /* Unirest.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Unirest.framework; path = Unirest.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		503D89DC201A2200775AEBE7291471A5 /* Unirest.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Unirest.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		526D691F94A5713A30969BAE8867CF9B /* xml-tree.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "xml-tree.h"; path = "include/magick/xml-tree.h"; sourceTree = "<group>"; };
 		5330B188B12159A462F0622FB250E17C /* resource_.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = resource_.h; path = include/magick/resource_.h; sourceTree = "<group>"; };
 		5347F980070B9E74981CF0A94F2F9DCC /* PureLayout+Internal.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "PureLayout+Internal.h"; path = "PureLayout/PureLayout/PureLayout+Internal.h"; sourceTree = "<group>"; };
@@ -478,12 +478,12 @@
 		58669C715415B51691B469AF051C117B /* RSKImageScrollView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RSKImageScrollView.m; path = RSKImageCropper/RSKImageScrollView.m; sourceTree = "<group>"; };
 		58C3273EF93AC581BD23504E5D84F331 /* PeekPop.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = PeekPop.xcconfig; sourceTree = "<group>"; };
 		596092579ADEB7D126E2AFA8C5E63626 /* colormap.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = colormap.h; path = include/magick/colormap.h; sourceTree = "<group>"; };
-		5972A9A86A80C7E6D10236E90BDE4A31 /* RSKImageCropper.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = RSKImageCropper.framework; path = RSKImageCropper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5972A9A86A80C7E6D10236E90BDE4A31 /* RSKImageCropper.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RSKImageCropper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		59DBEB4BCFE8619A67E3D2CA8447EC48 /* SDWebImageImageIOCoder.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDWebImageImageIOCoder.m; path = SDWebImage/SDWebImageImageIOCoder.m; sourceTree = "<group>"; };
 		59DF3CEE4C267106FA249A9771AB63E3 /* UNIRest.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = UNIRest.h; path = Unirest/UNIRest.h; sourceTree = "<group>"; };
 		5A7B2A3CA04D45B1EFFADD40DB79C499 /* annotate.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = annotate.h; path = include/magick/annotate.h; sourceTree = "<group>"; };
-		5A835BBD1AECF13B80BBED50DB1CE52E /* MGSwipeTableCell.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = MGSwipeTableCell.framework; path = MGSwipeTableCell.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		5A9DAB014B2E32837F781F3D30F844EC /* BEMCheckBox.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = BEMCheckBox.modulemap; sourceTree = "<group>"; };
+		5A835BBD1AECF13B80BBED50DB1CE52E /* MGSwipeTableCell.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MGSwipeTableCell.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5A9DAB014B2E32837F781F3D30F844EC /* BEMCheckBox.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = BEMCheckBox.modulemap; sourceTree = "<group>"; };
 		5AF780993A0E662E939772A2A02CD770 /* RSKImageCropViewController.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RSKImageCropViewController.h; path = RSKImageCropper/RSKImageCropViewController.h; sourceTree = "<group>"; };
 		5B0E95C0CB6CECE7BCBB94851F2CE73D /* Pods-Lignite Music-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-Lignite Music-dummy.m"; sourceTree = "<group>"; };
 		5B8F6FFABFF67618B27679BF44241D18 /* NSData+ImageContentType.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSData+ImageContentType.m"; path = "SDWebImage/NSData+ImageContentType.m"; sourceTree = "<group>"; };
@@ -502,7 +502,7 @@
 		6810B75A63FC42729C072B78ACE5ECE3 /* SDWebImageDownloaderOperation.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDWebImageDownloaderOperation.m; path = SDWebImage/SDWebImageDownloaderOperation.m; sourceTree = "<group>"; };
 		686EAFF00986958C082DA39DEC54D4BC /* UNIBaseRequest.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = UNIBaseRequest.m; path = Unirest/HttpRequest/UNIBaseRequest.m; sourceTree = "<group>"; };
 		689779230E72AE1A21AFFDAC01CEED49 /* PureLayout-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "PureLayout-prefix.pch"; sourceTree = "<group>"; };
-		698B091211566AA5054C1DA21B9DA27A /* Pods-Lignite Music.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = "Pods-Lignite Music.modulemap"; sourceTree = "<group>"; };
+		698B091211566AA5054C1DA21B9DA27A /* Pods-Lignite Music.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = "Pods-Lignite Music.modulemap"; sourceTree = "<group>"; };
 		69B007F822EDA202A5AE6253F298921A /* magick-property.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "magick-property.h"; path = "include/wand/magick-property.h"; sourceTree = "<group>"; };
 		6B590EBB3641A404AA83BCC3BE213B17 /* PeekPop.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PeekPop.swift; path = PeekPop/PeekPop.swift; sourceTree = "<group>"; };
 		6CA60A8F215B0BE6C5C671367C8FB4EE /* RSKImageCropViewController+Protected.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "RSKImageCropViewController+Protected.h"; path = "RSKImageCropper/RSKImageCropViewController+Protected.h"; sourceTree = "<group>"; };
@@ -525,7 +525,7 @@
 		7960F5B374CC5E7D5CEAD0FF1B101B46 /* SDImageCacheConfig.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDImageCacheConfig.h; path = SDWebImage/SDImageCacheConfig.h; sourceTree = "<group>"; };
 		7A4EB629EBCABDA30696AF9EF00B4041 /* SDWebImageCoder.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDWebImageCoder.h; path = SDWebImage/SDWebImageCoder.h; sourceTree = "<group>"; };
 		7A543AC1D187CCC93B3A6F37F18C4252 /* UNIHTTPRequest.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = UNIHTTPRequest.h; path = Unirest/UNIHTTPRequest.h; sourceTree = "<group>"; };
-		7AD0D399DF10107E6E8CAC97D03BAD99 /* PeekPop.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = PeekPop.modulemap; sourceTree = "<group>"; };
+		7AD0D399DF10107E6E8CAC97D03BAD99 /* PeekPop.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = PeekPop.modulemap; sourceTree = "<group>"; };
 		7AF74B3354D49FF4A023758910D01236 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.3.sdk/System/Library/Frameworks/ImageIO.framework; sourceTree = DEVELOPER_DIR; };
 		7B4284910B7BA6C2051C624EA88765B2 /* SDWebImageGIFCoder.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDWebImageGIFCoder.h; path = SDWebImage/SDWebImageGIFCoder.h; sourceTree = "<group>"; };
 		7B94AFC47D7573EA663E98F64DED365A /* ForceTouchDelegate.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ForceTouchDelegate.swift; path = PeekPop/ForceTouchDelegate.swift; sourceTree = "<group>"; };
@@ -542,7 +542,7 @@
 		83BC6053F88989DCCAF2F0A5786502B7 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.3.sdk/System/Library/Frameworks/MediaPlayer.framework; sourceTree = DEVELOPER_DIR; };
 		83EAC472A1E193567276FAD38FA2B91F /* UNISimpleRequest.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = UNISimpleRequest.h; path = Unirest/HttpRequest/UNISimpleRequest.h; sourceTree = "<group>"; };
 		849C4828D36F08846F2C56EC70C12179 /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.3.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
-		84BD7E03EB1A0533484937394CCBC020 /* PureLayout.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = PureLayout.framework; path = PureLayout.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		84BD7E03EB1A0533484937394CCBC020 /* PureLayout.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PureLayout.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		84F3DC43CB3E5BFB081019CD8FA97DB2 /* UIImage+GIF.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIImage+GIF.h"; path = "SDWebImage/UIImage+GIF.h"; sourceTree = "<group>"; };
 		85B35B8A3B4B294A12B2DB48A3B6741F /* SDWebImageCompat.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDWebImageCompat.h; path = SDWebImage/SDWebImageCompat.h; sourceTree = "<group>"; };
 		87462FDF8F7F330476ACA0EE9F2F9ACF /* NSLayoutConstraint+PureLayout.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSLayoutConstraint+PureLayout.m"; path = "PureLayout/PureLayout/NSLayoutConstraint+PureLayout.m"; sourceTree = "<group>"; };
@@ -557,7 +557,7 @@
 		8C9DB9800FFE6A226A80C2457CEEA37E /* pixel.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = pixel.h; path = include/magick/pixel.h; sourceTree = "<group>"; };
 		8CE8DA2B2ECA56DA1B89FB7AEE06D2CF /* UIImage+MultiFormat.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIImage+MultiFormat.h"; path = "SDWebImage/UIImage+MultiFormat.h"; sourceTree = "<group>"; };
 		8D2253907C2E5E7AAF8BD2BF7B18E74B /* histogram.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = histogram.h; path = include/magick/histogram.h; sourceTree = "<group>"; };
-		8DAC2C5E9170955BDEB8A95E3AB5DDB6 /* Unirest.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = Unirest.modulemap; sourceTree = "<group>"; };
+		8DAC2C5E9170955BDEB8A95E3AB5DDB6 /* Unirest.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = Unirest.modulemap; sourceTree = "<group>"; };
 		8EFE5ABF2CEDD2214A69345F16E1B20A /* method-attribute.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "method-attribute.h"; path = "include/magick/method-attribute.h"; sourceTree = "<group>"; };
 		8F0577EFB69AA838DB1BE3966EFE3A89 /* drawing-wand.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "drawing-wand.h"; path = "include/wand/drawing-wand.h"; sourceTree = "<group>"; };
 		8F45D5A3186A4189787DBCB1686567D0 /* transform.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = transform.h; path = include/magick/transform.h; sourceTree = "<group>"; };
@@ -565,7 +565,7 @@
 		90B03271D5C51AAC4821AE34423BB4A4 /* jerror.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = jerror.h; path = include/jpeg/jerror.h; sourceTree = "<group>"; };
 		90EFE008DEB4F4CEE71DB6632FD8DBC9 /* BEMAnimationManager.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = BEMAnimationManager.h; path = Classes/BEMAnimationManager.h; sourceTree = "<group>"; };
 		9350A3C382EEE122FD608DF02316AA3C /* XCDYouTubeVideoOperation.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = XCDYouTubeVideoOperation.m; path = XCDYouTubeKit/XCDYouTubeVideoOperation.m; sourceTree = "<group>"; };
-		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		948DB388CF587DF00CC3DDE173DDD40C /* magick-type.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "magick-type.h"; path = "include/magick/magick-type.h"; sourceTree = "<group>"; };
 		950D476FFB151F8874A1896A61104884 /* SDWebImageDownloaderOperation.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDWebImageDownloaderOperation.h; path = SDWebImage/SDWebImageDownloaderOperation.h; sourceTree = "<group>"; };
 		957D4DF48143A4B0AFCCBDE6B134C7F1 /* layer.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = layer.h; path = include/magick/layer.h; sourceTree = "<group>"; };
@@ -595,7 +595,7 @@
 		A78F878B244FBCD0794C65D870494857 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A7CC60BA9AFB06A926F8AB13F6EA6C13 /* XCDYouTubeClient.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = XCDYouTubeClient.h; path = XCDYouTubeKit/XCDYouTubeClient.h; sourceTree = "<group>"; };
 		A84B789263A0D9B0B199DF1022190E9F /* FABAttributes.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = FABAttributes.h; path = iOS/Fabric.framework/Headers/FABAttributes.h; sourceTree = "<group>"; };
-		A8535029E638F64A095E123AF523234E /* PeekPop.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = PeekPop.framework; path = PeekPop.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A8535029E638F64A095E123AF523234E /* PeekPop.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PeekPop.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A8845CC976104E4CD47719DBDA790456 /* ALView+PureLayout.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "ALView+PureLayout.m"; path = "PureLayout/PureLayout/ALView+PureLayout.m"; sourceTree = "<group>"; };
 		A8CC8EFCFE34F8BCB4A340EFE065567F /* gem.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = gem.h; path = include/magick/gem.h; sourceTree = "<group>"; };
 		AA13FC5105993F94FB17023A9EE47746 /* MGSwipeButton.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MGSwipeButton.m; path = MGSwipeTableCell/MGSwipeButton.m; sourceTree = "<group>"; };
@@ -605,7 +605,7 @@
 		ACDC7911E5E027B5FE8E1B0E714A2CA6 /* api.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = api.h; path = include/magick/api.h; sourceTree = "<group>"; };
 		AE3E38C5141B5D9BA498D708A2801CCB /* SDWebImageDownloader.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDWebImageDownloader.m; path = SDWebImage/SDWebImageDownloader.m; sourceTree = "<group>"; };
 		B06C482A9CB79059AB204197524197EC /* resample.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = resample.h; path = include/magick/resample.h; sourceTree = "<group>"; };
-		B122BA2AA2005690BFDD7672733A7BC0 /* BEMCheckBox.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = BEMCheckBox.framework; path = BEMCheckBox.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B122BA2AA2005690BFDD7672733A7BC0 /* BEMCheckBox.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BEMCheckBox.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B144085D1BB53A547B6E080EEBCB7362 /* effect.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = effect.h; path = include/magick/effect.h; sourceTree = "<group>"; };
 		B2BCAF6C7C6AE6AAEF6D05A795F1A6A9 /* NSArray+PureLayout.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSArray+PureLayout.m"; path = "PureLayout/PureLayout/NSArray+PureLayout.m"; sourceTree = "<group>"; };
 		B2C549A196E07178A365D2B94D9987FB /* RSKImageCropViewController.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RSKImageCropViewController.m; path = RSKImageCropper/RSKImageCropViewController.m; sourceTree = "<group>"; };
@@ -636,14 +636,14 @@
 		C92EAC50C9CBB0B8F869B3580C3338D3 /* Unirest-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Unirest-umbrella.h"; sourceTree = "<group>"; };
 		C936A15FC09E1F304FBF31F7FF746179 /* XCDYouTubeKit-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "XCDYouTubeKit-umbrella.h"; sourceTree = "<group>"; };
 		CA342524E029279A504300B5DB1C2CCC /* ALView+PureLayout.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "ALView+PureLayout.h"; path = "PureLayout/PureLayout/ALView+PureLayout.h"; sourceTree = "<group>"; };
-		CCE6F05EC85B053D6A9F33B8BDB15D99 /* RSKImageCropper.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = RSKImageCropper.modulemap; sourceTree = "<group>"; };
+		CCE6F05EC85B053D6A9F33B8BDB15D99 /* RSKImageCropper.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = RSKImageCropper.modulemap; sourceTree = "<group>"; };
 		CDDE7B61D57D3D50039252FE03351B2D /* wand-view.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "wand-view.h"; path = "include/wand/wand-view.h"; sourceTree = "<group>"; };
-		CFC18E1D3A41A39FD135C6D89550657A /* SDWebImage.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = SDWebImage.framework; path = SDWebImage.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		CFC18E1D3A41A39FD135C6D89550657A /* SDWebImage.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SDWebImage.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CFCF6F8B67A424D6A147C66A637DAF18 /* XCDYouTubeLogger+Private.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "XCDYouTubeLogger+Private.h"; path = "XCDYouTubeKit/XCDYouTubeLogger+Private.h"; sourceTree = "<group>"; };
 		D1029D314F1C9A36FEB0DF45A94BEE2F /* shear.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = shear.h; path = include/magick/shear.h; sourceTree = "<group>"; };
 		D1AA798CBE0928B4E2EEAAEDCCAC3A6E /* magick-config.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "magick-config.h"; path = "include/magick/magick-config.h"; sourceTree = "<group>"; };
 		D1B055D62EF647120C1E61A39933A2F8 /* display.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = display.h; path = include/magick/display.h; sourceTree = "<group>"; };
-		D3BF12A950EE9D22FAF636C305DCDA1A /* MGSwipeTableCell.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = MGSwipeTableCell.modulemap; sourceTree = "<group>"; };
+		D3BF12A950EE9D22FAF636C305DCDA1A /* MGSwipeTableCell.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = MGSwipeTableCell.modulemap; sourceTree = "<group>"; };
 		D400F95B1307AFFC61B8AD1A71C70976 /* Base64.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = Base64.m; path = Unirest/Base64.m; sourceTree = "<group>"; };
 		D42A71AD6E77857C8BB6596690084CC5 /* signature.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = signature.h; path = include/magick/signature.h; sourceTree = "<group>"; };
 		D4B33DD956B2916FBB9932FA3E723CE9 /* mime.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = mime.h; path = include/magick/mime.h; sourceTree = "<group>"; };
@@ -657,7 +657,7 @@
 		D90B7469F8F36F9BF7697A8C3F663FA0 /* feature.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = feature.h; path = include/magick/feature.h; sourceTree = "<group>"; };
 		DA305D3E3F8B56872B8DB253EC818D81 /* MGSwipeTableCell.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MGSwipeTableCell.m; path = MGSwipeTableCell/MGSwipeTableCell.m; sourceTree = "<group>"; };
 		DACDCF414B1187478905D4774F0DCC73 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		DB451B5D4491CEA9A9E3EACED94F0FDE /* XCDYouTubeKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = XCDYouTubeKit.framework; path = XCDYouTubeKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		DB451B5D4491CEA9A9E3EACED94F0FDE /* XCDYouTubeKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = XCDYouTubeKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DBC8A86C83C4D220C69F946BACAE514B /* Fabric.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = Fabric.h; path = iOS/Fabric.framework/Headers/Fabric.h; sourceTree = "<group>"; };
 		DC1E1BC7DF3E46FA6FEA9A485EBB0056 /* distort.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = distort.h; path = include/magick/distort.h; sourceTree = "<group>"; };
 		DD8423EFABCCA3EDA331394A3DF556F8 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -698,7 +698,7 @@
 		F8A05E19BCF90518308F1CB975270201 /* PeekPopGestureRecognizer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PeekPopGestureRecognizer.swift; path = PeekPop/PeekPopGestureRecognizer.swift; sourceTree = "<group>"; };
 		F8E42B2751D1F65E864F8BE5D2283206 /* YYImage-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "YYImage-umbrella.h"; sourceTree = "<group>"; };
 		F93D426E8C0BCDDB1CE06575C08B3FCB /* MGSwipeTableCell-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "MGSwipeTableCell-prefix.pch"; sourceTree = "<group>"; };
-		F99ADF52E98BA7610AE9F17C67DCC350 /* YYImage.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = YYImage.framework; path = YYImage.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F99ADF52E98BA7610AE9F17C67DCC350 /* YYImage.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = YYImage.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FC41DDB5AE202698D242B2F475980250 /* Pods-Lignite Music.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Lignite Music.debug.xcconfig"; sourceTree = "<group>"; };
 		FC7665DE35F0260B3267CBAD570E4B37 /* UIButton+WebCache.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIButton+WebCache.h"; path = "SDWebImage/UIButton+WebCache.h"; sourceTree = "<group>"; };
 		FC939B6DD48BAEB939E1DF539CACB99A /* cache.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = cache.h; path = include/magick/cache.h; sourceTree = "<group>"; };
@@ -866,7 +866,6 @@
 				12BDE13220F57637E1161C9F48A0B69B /* UIImage+ImageEffects.m */,
 				D4F29414614584E1CCBAAF1DAE1DEEB1 /* Support Files */,
 			);
-			name = PeekPop;
 			path = PeekPop;
 			sourceTree = "<group>";
 		};
@@ -920,7 +919,6 @@
 				DA305D3E3F8B56872B8DB253EC818D81 /* MGSwipeTableCell.m */,
 				D1E812C90BFEAD38859C78AEF2C6262A /* Support Files */,
 			);
-			name = MGSwipeTableCell;
 			path = MGSwipeTableCell;
 			sourceTree = "<group>";
 		};
@@ -948,7 +946,6 @@
 				A748AFFBD451AEA6B627B66A40659568 /* XCDYouTubeVideoWebpage.m */,
 				AE59146989DF1FAC2F98BBF215D10C2B /* Support Files */,
 			);
-			name = XCDYouTubeKit;
 			path = XCDYouTubeKit;
 			sourceTree = "<group>";
 		};
@@ -965,7 +962,6 @@
 				578641255AA652B681B92AE992099488 /* BEMPathManager.m */,
 				F37FD7DC054EDD88B80380BF0151CB1D /* Support Files */,
 			);
-			name = BEMCheckBox;
 			path = BEMCheckBox;
 			sourceTree = "<group>";
 		};
@@ -1105,7 +1101,6 @@
 				F960775C4DB7A3DCFA5DF11E6B2BE107 /* tiff */,
 				08E2F06DAC4499E57C0093664B99425A /* wand */,
 			);
-			name = ImageMagick;
 			path = ImageMagick;
 			sourceTree = "<group>";
 		};
@@ -1142,7 +1137,6 @@
 				8853F95C1C2E02C300A92B3B2BF01DE7 /* Resources */,
 				1E3DCA4D1DE814A74584776925E674BB /* Support Files */,
 			);
-			name = RSKImageCropper;
 			path = RSKImageCropper;
 			sourceTree = "<group>";
 		};
@@ -1253,7 +1247,6 @@
 				EA3972009296715F4533CBAA942BA17A /* UNIUrlConnection.m */,
 				19A878097AF8F3BE91451A1665445290 /* Support Files */,
 			);
-			name = Unirest;
 			path = Unirest;
 			sourceTree = "<group>";
 		};
@@ -1287,7 +1280,6 @@
 				B9F86C41D0F52D0327CA6FE793795A50 /* Core */,
 				1A7227A40C044499646F4A1DC8CAD6AB /* Support Files */,
 			);
-			name = SDWebImage;
 			path = SDWebImage;
 			sourceTree = "<group>";
 		};
@@ -1311,7 +1303,6 @@
 				3F81883F69474672453C6246297C24CB /* Core */,
 				41BBE99E632E3FF483CFC4418B449EF8 /* Support Files */,
 			);
-			name = YYImage;
 			path = YYImage;
 			sourceTree = "<group>";
 		};
@@ -1335,7 +1326,6 @@
 				704E559DF3F17CF41265AC4F14D779CF /* Crashlytics.h */,
 				B58617F0D5CED27C1E9051F95F815261 /* Frameworks */,
 			);
-			name = Crashlytics;
 			path = Crashlytics;
 			sourceTree = "<group>";
 		};
@@ -1428,7 +1418,6 @@
 				DBC8A86C83C4D220C69F946BACAE514B /* Fabric.h */,
 				A2827B13D9A25940B73A51D17B8E60EB /* Frameworks */,
 			);
-			name = Fabric;
 			path = Fabric;
 			sourceTree = "<group>";
 		};
@@ -1493,7 +1482,6 @@
 				75BD814A7238CF6AB2C2B808276C2A09 /* PureLayoutDefines.h */,
 				E7AE9F9DC587D555266F9BB81C536C7B /* Support Files */,
 			);
-			name = PureLayout;
 			path = PureLayout;
 			sourceTree = "<group>";
 		};
@@ -1850,7 +1838,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0830;
-				LastUpgradeCheck = 0700;
+				LastUpgradeCheck = 0920;
 			};
 			buildConfigurationList = 2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -2612,6 +2600,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = NO_SIGNING/;
 				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SYMROOT = "${SRCROOT}/../build";
 			};
 			name = Release;

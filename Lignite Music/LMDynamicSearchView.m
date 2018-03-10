@@ -13,7 +13,7 @@
 #import "LMCircleView.h"
 #import "LMColour.h"
 
-@interface LMDynamicSearchView()<LMSectionTableViewDelegate>
+@interface LMDynamicSearchView()<LMSectionTableViewDelegate, LMMusicPlayerDelegate>
 
 /**
  The section table view for search results.
@@ -82,6 +82,10 @@
  */
 @property UIImageView *welcomeToSearchImageView;
 
+/**
+ The music player, used for tracking syncing.
+ */
+@property LMMusicPlayer *musicPlayer;
 
 @end
 
@@ -93,11 +97,6 @@
 /* Begin tableview-related code */
 
 - (NSArray<NSNumber*>*)cachedSearchableMusicTypes {
-	if(self.searchableMusicTypes){
-		NSLog(@"[LMDynamicSearchView Warning] Directly set searchable music types are deprecated");
-		return self.searchableMusicTypes;
-	}
-	
 	if(_cachedSearchableMusicTypes){
 		return _cachedSearchableMusicTypes;
 	}
@@ -112,11 +111,6 @@
 }
 
 - (NSArray<NSArray<LMMusicTrackCollection*>*>*)cachedSearchableTrackCollections {
-	if(self.searchableTrackCollections){
-		NSLog(@"[LMDynamicSearchView Warning] Directly set searchable track collections are deprecated");
-		return self.searchableTrackCollections;
-	}
-	
 	if(_cachedSearchableTrackCollections){
 		return _cachedSearchableTrackCollections;
 	}
@@ -128,6 +122,13 @@
 
 - (void)setCachedSearchableTrackCollections:(NSArray<NSArray<LMMusicTrackCollection *> *> *)cachedSearchableTrackCollections {
 	_cachedSearchableTrackCollections = cachedSearchableTrackCollections;
+}
+
+- (void)musicLibraryChanged:(BOOL)finished {
+	if(finished){
+		[self reloadSearchableCache];
+		[self searchForString:self.currentSearchString];
+	}
 }
 
 - (void)reloadSearchableCache {
@@ -795,6 +796,11 @@
 		self.didLayoutConstraints = YES;
 		
 		[self parseSearchableCache];
+		
+		
+		self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
+		[self.musicPlayer addMusicDelegate:self];
+		
 		
 		self.backgroundColor = [UIColor orangeColor];
 		

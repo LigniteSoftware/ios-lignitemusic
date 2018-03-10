@@ -167,6 +167,46 @@
 	return icon;
 }
 
+- (NSArray<MGSwipeButton*>*)swipeButtonsForListEntry:(LMListEntry*)listEntry rightSide:(BOOL)rightSide {
+	UIColor *color = [UIColor colorWithRed:47/255.0 green:47/255.0 blue:49/255.0 alpha:1.0];
+	UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14.0f];
+	MGSwipeButton *saveButton = [MGSwipeButton buttonWithTitle:@"" icon:[LMAppIcon imageForIcon:LMIconRemoveFromQueue] backgroundColor:color padding:0 callback:^BOOL(MGSwipeTableCell *sender) {
+		LMMusicTrack *trackToRemove = [self.playlist.trackCollection.items objectAtIndex:listEntry.collectionIndex];
+		
+		NSLog(@"Remove %@", trackToRemove.title);
+		
+		NSMutableArray *mutableTrackList = [NSMutableArray arrayWithArray:self.playlist.trackCollection.items];
+		
+		[mutableTrackList removeObjectAtIndex:listEntry.collectionIndex];
+		
+		self.playlist.trackCollection = [[LMMusicTrackCollection alloc]initWithItems:mutableTrackList];
+		
+		self.songListTableView.totalAmountOfObjects = self.playlist.trackCollection.count;
+		//				[self.songListTableView reloadSubviewData];
+		[self.songListTableView reloadData];
+		
+		self.noSongsInSongTableViewLabel.hidden = self.songListTableView.totalAmountOfObjects > 0;
+		
+		self.songCountLabel.text = self.playlist.trackCollection.count == 0
+		? NSLocalizedString(@"NoSongsYet", nil)
+		: [NSString stringWithFormat:NSLocalizedString(self.playlist.trackCollection.count == 1 ? @"XSongsSingle" : @"XSongs", nil), self.playlist.trackCollection.count];
+		
+		[self reloadSaveButton];
+		
+		return YES;
+	}];
+	saveButton.titleLabel.font = font;
+	saveButton.titleLabel.hidden = YES;
+	saveButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
+	saveButton.imageEdgeInsets = UIEdgeInsetsMake(LMLayoutManager.isExtraSmall ? 18 : 25, 0, LMLayoutManager.isExtraSmall ? 18 : 25, 0);
+
+	return @[ saveButton ];
+}
+
+- (UIColor*)swipeButtonColourForListEntry:(LMListEntry*)listEntry rightSide:(BOOL)rightSide {
+	return [UIColor colorWithRed:0.92 green:0.00 blue:0.00 alpha:1.0];
+}
+
 - (id)subviewAtIndex:(NSUInteger)index forTableView:(LMTableView*)tableView {
 	LMListEntry *entry = [self.bigListEntryArray objectAtIndex:index % self.bigListEntryArray.count];
 	entry.collectionIndex = index;
@@ -201,41 +241,6 @@
 			listEntry.alignIconToLeft = YES;
 			listEntry.stretchAcrossWidth = YES;
 			listEntry.iPromiseIWillHaveAnIconForYouSoon = YES;
-			
-			UIColor *color = [UIColor colorWithRed:47/255.0 green:47/255.0 blue:49/255.0 alpha:1.0];
-			UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14.0f];
-			MGSwipeButton *saveButton = [MGSwipeButton buttonWithTitle:@"" icon:[LMAppIcon imageForIcon:LMIconRemoveFromQueue] backgroundColor:color padding:0 callback:^BOOL(MGSwipeTableCell *sender) {
-				LMMusicTrack *trackToRemove = [self.playlist.trackCollection.items objectAtIndex:listEntry.collectionIndex];
-				
-				NSLog(@"Remove %@", trackToRemove.title);
-				
-				NSMutableArray *mutableTrackList = [NSMutableArray arrayWithArray:self.playlist.trackCollection.items];
-				
-				[mutableTrackList removeObjectAtIndex:listEntry.collectionIndex];
-				
-				self.playlist.trackCollection = [[LMMusicTrackCollection alloc]initWithItems:mutableTrackList];
-				
-				self.songListTableView.totalAmountOfObjects = self.playlist.trackCollection.count;
-//				[self.songListTableView reloadSubviewData];
-				[self.songListTableView reloadData];
-				
-				self.noSongsInSongTableViewLabel.hidden = self.songListTableView.totalAmountOfObjects > 0;
-				
-				self.songCountLabel.text = self.playlist.trackCollection.count == 0
-				? NSLocalizedString(@"NoSongsYet", nil)
-				: [NSString stringWithFormat:NSLocalizedString(self.playlist.trackCollection.count == 1 ? @"XSongsSingle" : @"XSongs", nil), self.playlist.trackCollection.count];
-				
-				[self reloadSaveButton];
-				
-				return YES;
-			}];
-			saveButton.titleLabel.font = font;
-			saveButton.titleLabel.hidden = YES;
-			saveButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
-			saveButton.imageEdgeInsets = UIEdgeInsetsMake(LMLayoutManager.isExtraSmall ? 18 : 25, 0, LMLayoutManager.isExtraSmall ? 18 : 25, 0);
-			
-			listEntry.rightButtons = @[ saveButton ];
-			listEntry.rightButtonExpansionColour = [UIColor colorWithRed:0.92 green:0.00 blue:0.00 alpha:1.0];
 			
 			[self.bigListEntryArray addObject:listEntry];
 		}

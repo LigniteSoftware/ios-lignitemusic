@@ -400,7 +400,7 @@ NSString* deviceName(){
 }
 
 - (void)seeAllReportsTapped {
-	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://www.lignite.io/feedback/"]];
+	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://www.lignite.io/feedback/"] options:@{} completionHandler:nil];
 }
 
 - (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
@@ -587,7 +587,7 @@ NSString* deviceName(){
 	
 	UIImageView *backButtonIcon = [UIImageView newAutoLayoutView];
 	backButtonIcon.contentMode = UIViewContentModeScaleAspectFit;
-	backButtonIcon.image = [LMAppIcon imageForIcon:LMIconiOSBack inverted:YES];
+	backButtonIcon.image = [LMAppIcon imageForIcon:LMIconiOSBack];
 	[self.backButtonView addSubview:backButtonIcon];
 	
 	NSArray *backButtonIconPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{

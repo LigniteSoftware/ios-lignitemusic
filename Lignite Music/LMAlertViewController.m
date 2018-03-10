@@ -70,7 +70,7 @@
 - (void)tappedMoreInfoLabel {
 	NSLog(@"More info");
 	
-	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:self.checkboxMoreInformationLink]];
+	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:self.checkboxMoreInformationLink] options:@{} completionHandler:nil];
 }
 
 - (void)buttonTapped:(id)button {

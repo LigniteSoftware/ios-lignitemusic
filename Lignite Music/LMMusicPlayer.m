@@ -487,10 +487,7 @@ MPMediaGrouping associatedMediaTypes[] = {
 	nextTime = CFAbsoluteTimeGetCurrent();
 	NSLog(@"[Update] setCurrentPlaybackTime: %fs", (nextTime - startTimeInSeconds));
 	
-	for(int i = 0; i < self.delegates.count; i++){
-		id delegate = [self.delegates objectAtIndex:i];
-		[delegate musicTrackDidChange:self.nowPlayingTrack];
-	}
+	[self notifyDelegatesOfNowPlayingTrack];
 	
 	nextTime = CFAbsoluteTimeGetCurrent();
 	NSLog(@"[Update] notifyDelegates: %fs", (nextTime - startTimeInSeconds));
@@ -521,9 +518,18 @@ MPMediaGrouping associatedMediaTypes[] = {
 }
 
 - (void)notifyDelegatesOfPlaybackState {
-	for(int i = 0; i < self.delegates.count; i++){
-		id delegate = [self.delegates objectAtIndex:i];
-		[delegate musicPlaybackStateDidChange:self.playbackState];
+	for(id<LMMusicPlayerDelegate> delegate in self.delegates){
+		if([delegate respondsToSelector:@selector(musicPlaybackStateDidChange:)]){
+			[delegate musicPlaybackStateDidChange:self.playbackState];
+		}
+	}
+}
+
+- (void)notifyDelegatesOfNowPlayingTrack {
+	for(id<LMMusicPlayerDelegate> delegate in self.delegates){
+		if([delegate respondsToSelector:@selector(musicTrackDidChange:)]){
+			[delegate musicTrackDidChange:self.nowPlayingTrack];
+		}
 	}
 }
 
@@ -600,10 +606,7 @@ MPMediaGrouping associatedMediaTypes[] = {
 		//self.currentPlaybackTimeChangeTimer = nil;
 	}
 	
-	for(int i = 0; i < self.delegates.count; i++){
-		id delegate = [self.delegates objectAtIndex:i];
-		[delegate musicPlaybackStateDidChange:self.playbackState];
-	}
+	[self notifyDelegatesOfPlaybackState];
 }
 
 - (void)audioRouteChanged:(id)notification {
@@ -653,10 +656,11 @@ MPMediaGrouping associatedMediaTypes[] = {
 - (void)mediaLibraryContentsChanged:(id)notification {
 	NSLog(@"Library changed");
 	
-	if(!self.nowPlayingWasSetWithinLigniteMusic){
-		NSLog(@"The user's listening to music that was started outside of our app, rejecting library change.");
-		return;
-	}
+//	if(!self.nowPlayingWasSetWithinLigniteMusic){
+//		//Because music that is started outside our app seems to cause a fuckton of syncing.
+//		NSLog(@"The user's listening to music that was started outside of our app, rejecting library change.");
+//		return;
+//	}
 	
 	if(self.libraryChangeTimer){
 		[self.libraryChangeTimer invalidate];
@@ -1344,7 +1348,7 @@ BOOL shuffleForDebug = NO;
 }
 
 - (LMMusicPlaybackState)invertPlaybackState {
-	NSLog(@"Playback state %d", self.systemMusicPlayer.playbackState);
+	NSLog(@"Playback state %lu", self.systemMusicPlayer.playbackState);
 	
 	if(self.systemMusicPlayer.playbackState == MPMusicPlaybackStateStopped || self.systemMusicPlayer.playbackState == LMMusicPlaybackStateInterrupted){
 		NSLog(@"Gotem");
@@ -1425,10 +1429,7 @@ BOOL shuffleForDebug = NO;
 	_nowPlayingTrack = nowPlayingTrack;
 	
 	if(nowPlayingTrack == nil){
-		for(int i = 0; i < self.delegates.count; i++){
-			id delegate = [self.delegates objectAtIndex:i];
-			[delegate musicTrackDidChange:self.nowPlayingTrack];
-		}
+		[self notifyDelegatesOfNowPlayingTrack];
 		
 		[self reloadInfoCentre:NO];
 	}

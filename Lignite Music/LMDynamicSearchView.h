@@ -88,16 +88,6 @@ typedef NS_ENUM(NSInteger, LMSearchViewEntrySelectionMode){
 @property BOOL enableSwipeControls;
 
 /**
- The array of arrays of track collections which the creator would like to be searchable.
- */
-@property NSArray<NSArray<LMMusicTrackCollection*>*> *searchableTrackCollections DEPRECATED_ATTRIBUTE;
-
-/**
- The music types which are associated with those searchable track collections. Used for property setting & UI layouting.
- */
-@property NSArray<NSNumber*> *searchableMusicTypes DEPRECATED_ATTRIBUTE;
-
-/**
  Searches for a specific string through all provided collections and automatically displays the results.
 
  @param searchText The string to search for.

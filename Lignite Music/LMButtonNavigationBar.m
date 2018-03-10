@@ -231,7 +231,7 @@
 		currentViewTopConstraint.constant = self.layoutManager.isLandscape ? 0 : -viewAttachedToButtonBar.frame.size.height;
 //	}
 	
-	NSLog(@"Setshit %f %f, tab %d, miniplayer? %d cons %p %p", previousViewTopConstraint.constant, currentViewTopConstraint.constant, self.currentlySelectedTab, (viewAttachedToButtonBar == self.miniPlayerCoreView), previousViewTopConstraint, currentViewTopConstraint);
+	NSLog(@"Setshit %f %f, tab %lu, miniplayer? %d cons %p %p", previousViewTopConstraint.constant, currentViewTopConstraint.constant, (unsigned long)self.currentlySelectedTab, (viewAttachedToButtonBar == self.miniPlayerCoreView), previousViewTopConstraint, currentViewTopConstraint);
 	
 	if(previousViewTopConstraint.constant == 0 && currentViewTopConstraint.constant == 0){
 		static int attemptsToFixNonAppearingView = 0;

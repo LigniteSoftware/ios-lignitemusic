@@ -6,6 +6,12 @@
 //  Copyright © 2016 Lignite. All rights reserved.
 //
 
+
+
+#import <objc/runtime.h>
+
+
+
 #import <PureLayout/PureLayout.h>
 
 #import "LMGuideViewPagerController.h"
@@ -1472,6 +1478,30 @@
 	if(self.buttonNavigationBar){
 		return;
 	}
+	
+	
+	
+	
+//	MPMusicPlayerControllerQueue *mutableQueue = [MPMusicPlayerController systemMusicPlayer];
+	
+//	MPMusicPlayerController *controller = [MPMusicPlayerController systemMusicPlayer];
+//	controller
+	
+//	NSLog(@"Mutable queue %@", mutableQueue);
+	
+//	int i = 0;
+//	unsigned int mc = 0;
+//	Method *mlist = class_copyMethodList([MPMusicPlayerController systemMusicPlayer].class, &mc);
+//	NSLog(@"%d methods for class", mc);
+//	for(i = 0; i < mc; i++){
+//		NSLog(@"\tMethod no #%d: %s", i, sel_getName(method_getName(mlist[i])));
+//	}
+//	free(mlist);
+//	
+//	return;
+	
+	
+	
 	
 //	LMEnhancedPlaylistEditorViewController *enhancedPlaylistViewController = [LMEnhancedPlaylistEditorViewController new];
 //	UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:enhancedPlaylistViewController];

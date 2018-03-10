@@ -253,11 +253,11 @@
 	}
 	else{
 		if(self.letterScrollView.scrollEnabled){
-			UIPanGestureRecognizer *recognizer = (UIPanGestureRecognizer*)panGestureRecognizer;
-			CGPoint translation = [recognizer translationInView:recognizer.view];
-			if(translation.y > self.frame.size.height){
-				[self.delegate swipeDownGestureOccurredOnLetterTabBar];
-			}
+//			UIPanGestureRecognizer *recognizer = (UIPanGestureRecognizer*)panGestureRecognizer;
+//			CGPoint translation = [recognizer translationInView:recognizer.view];
+//			if(translation.y > self.frame.size.height){
+//				[self.delegate swipeDownGestureOccurredOnLetterTabBar];
+//			}
 			return;
 		}
 		

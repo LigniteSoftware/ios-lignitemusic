@@ -254,10 +254,6 @@
 "StartEditing" = "Start editing";
 "CreatePlaylist" = "Create playlist";
 
-"XSongs" = "%ld Lieder"; //Multiple songs
-"XSongsSingle" = "%ld Lied"; //1 song
-"NoSongsYet" = "Noch keine Lieder";
-
 
 
 
