@@ -248,38 +248,11 @@
 "EnhancedPlaylist" = "Enhanced playlist";
 "RegularPlaylist" = "Normal playlist";
 
-"DeletePlaylistTitle" = "Wiedergabeliste löschen?";
-"DeletePlaylistDescription" = "Bist du sicher, dass du die Wiedergabeliste '%@' löschen möchtest?\n\nDiese Aktion kann nicht rückgängig gemacht werden."; //%@ is the name of the playlist.
-"Create" = "Erstellen";
-"Delete" = "Löschen";
-"Edit" = "Bearbeiten";
-"EditingPlaylist" = "Wiedergabeliste bearbeiten";
-"NewPlaylist" = "Neue Wiedergabeliste";
-"TapToAddAnImage" = "Bild hinzufügen";
-"SetupPlaylistPhoto" = "Bild für Wiedergabeliste hinzufügen";
-"ChoosePhoto" = "Bild auswählen";
-"TakePhoto" = "Foto aufnehmen";
-"EditPhoto" = "Bild bearbeiten";
-"DeletePhoto" = "Bild löschen";
-"Cancel" = "Abbrechen";
-"Save" = "Speichern";
-"AddSongs" = "Lieder hinzufügen";
-"SelectSongs" = "Lieder auswählen";
-"Source" = "Quelle";
-"NoSongsInPlaylistBuilder" = "Es befinden sich noch keine Lieder in dieser Wiedergabeliste.\n\nFüge welche hinzu indem du oben auf den 'Lieder hinzufügen'-Button tippst.";
-"SelectASource" = "Wähle bitte deine gewünschte Ansicht";
-"YourPlaylistTitle" = "Titel Wiedergabeliste";
-"SearchType" = "Suche nach %@";
-
 "ConvertPlaylistTitle" = "Playlist editing";
 "ConvertPlaylistBody" = "Once a playlist is edited within Lignite Music, that playlist will not be able to sync with iTunes or any other outside source.\n\nThis is because of limitations created by Apple, which we unfortunately have no control over.\n\nWe don't want to pester you, so will only warn you about this once.";
 "ConvertPlaylistCheckboxText" = "I understand that due to Apple's limitations, playlists I edit in Lignite Music will not sync with iTunes or any other outside source.";
 "StartEditing" = "Start editing";
 "CreatePlaylist" = "Create playlist";
-
-"XSongs" = "%ld Lieder"; //Multiple songs
-"XSongsSingle" = "%ld Lied"; //1 song
-"NoSongsYet" = "Noch keine Lieder";
 
 
 
@@ -288,7 +261,7 @@
 "ReportBugOrSendFeedback" = "Send us bugs or feedback";
 
 "SendFeedbackTitle" = "Report a bug or send feedback";
-"SendFeedbackDescription" = "Here you can send us bugs you've found or your feedback.\n\nWe publicly share your report, though we do not share not any of your private information.\n\nWe read over every single bug report and piece of feedback. We may reach out to you through email to follow up on your report.\n\nThanks!";
+"SendFeedbackDescription" = "Here you can send us bugs you've found or your feedback.\n\nWe publicly share your report, though we do not share any of your private information.\n\nWe read over every single bug report and piece of feedback. We may reach out to you through email to follow up on your report.\n\nThanks!";
 "Name" = "Name";
 "Email" = "Email";
 "SummaryOfReport" = "Quick summary of report";
@@ -671,4 +644,5 @@
  * Thank you.
  *
  */
+
 

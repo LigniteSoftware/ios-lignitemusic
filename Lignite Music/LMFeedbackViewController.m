@@ -537,7 +537,6 @@ NSString* deviceName(){
 	[self.sendButtonView addGestureRecognizer:sendButtonTap];
 	
 	
-	
 	UIImageView *sendButtonIcon = [UIImageView newAutoLayoutView];
 	sendButtonIcon.contentMode = UIViewContentModeScaleAspectFit;
 	sendButtonIcon.image = [LMAppIcon imageForIcon:LMIconPaperPlane];
@@ -606,6 +605,12 @@ NSString* deviceName(){
 	}];
 	[LMLayoutManager addNewLandscapeConstraints:backButtonIconLandscapeConstraints];
 	
+	self.sendButtonView.isAccessibilityElement = YES;
+	self.sendButtonView.accessibilityHint = NSLocalizedString(@"SendReport", nil);
+	self.backButtonView.isAccessibilityElement = YES;
+	self.backButtonView.accessibilityHint = NSLocalizedString(@"GoBack", nil);
+	self.bottomControlsBackgroundView.isAccessibilityElement = NO;
+	self.bottomControlsBackgroundView.accessibilityElements = @[ self.sendButtonView, self.backButtonView ];
 	
 	
 	UIView *belowButtonsCover = [UIView newAutoLayoutView];
@@ -720,6 +725,7 @@ NSString* deviceName(){
 			textView.layer.cornerRadius = 8;
 			textView.delegate = self;
 			textView.text = [userDefaults objectForKey:[savedTextKeys objectAtIndex:i]];
+			textView.accessibilityHint = NSLocalizedString(textKeys[i], nil);
 			[self.scrollView addSubview:textView];
 			
 			[textView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:previousViewToAttachTo];
@@ -742,6 +748,7 @@ NSString* deviceName(){
 			textField.layer.masksToBounds = YES;
 			textField.layer.cornerRadius = 8;
 			textField.text = [userDefaults objectForKey:[savedTextKeys objectAtIndex:i]];
+			textField.accessibilityHint = NSLocalizedString(textKeys[i], nil);
 			[self.scrollView addSubview:textField];
 			
 			[textField autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:previousViewToAttachTo];

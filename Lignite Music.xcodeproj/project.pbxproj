@@ -1951,7 +1951,7 @@
 					"MAGICKCORE_HDRI_ENABLE=YES",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/Lignite Music/LigniteMusic.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				New_Setting = "";
 				PRODUCT_BUNDLE_IDENTIFIER = lignite.io.music;
@@ -1995,7 +1995,7 @@
 					"MAGICKCORE_HDRI_ENABLE=YES",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/Lignite Music/LigniteMusic.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				New_Setting = "";
 				PRODUCT_BUNDLE_IDENTIFIER = lignite.io.music;
