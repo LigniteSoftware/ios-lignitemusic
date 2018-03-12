@@ -723,13 +723,16 @@
 		[self notchPositionChanged:LMLayoutManager.notchPosition];
 	}
 	
-//#ifdef DEBUG
-//	[NSTimer scheduledTimerWithTimeInterval:0.25 block:^{
+#ifdef DEBUG
+	[NSTimer scheduledTimerWithTimeInterval:0.25 block:^{
 //		LMDemoViewController *demoViewController = [LMDemoViewController new];
 //		demoViewController.title = @"Super Secret Settings";
 //		[self.coreViewController.navigationController showViewController:demoViewController sender:self];
-//	} repeats:NO];
-//#endif
+		
+		LMDebugViewController *debugViewController = [LMDebugViewController new];
+		[self.navigationController showViewController:debugViewController sender:self];
+	} repeats:NO];
+#endif
 	
 //	LMContactViewController *creditsViewController = [LMContactViewController new];
 //	[self.coreViewController.navigationController showViewController:creditsViewController sender:self];

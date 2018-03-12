@@ -39,7 +39,68 @@
  
  */
 
-//Nothing here... Whaaaat?
+//Accessibility strings
+"SendReport" = "Send report";
+"GoBack" = "Go back";
+
+"VoiceOverLabel_ScrollingTextSetting" = "Scroll through long text in the now playing view and the mini player";
+"VoiceOverLabel_ThemeSetting" = "Change the theme of Lignite Music, your currently selected theme is %@";
+"VoiceOverLabel_NowPlayingAlwaysOnSetting" = "Keep the screen on when the now playing view is open";
+
+"VoiceOverLabel_ImageDownloading_Off" = "image downloading is disabled";
+"VoiceOverLabel_ImageDownloading_On" = "image downloading is enabled";
+"VoiceOverLabel_ImageDownloading" = "Setting to download images of your artists and albums automatically, %@, currently using %.02f megabytes of your device's storage"; //The %@ is either VoiceOverLabel_ImageDownloading_Off or VoiceOverLabel_ImageDownloading_On
+
+"VoiceOverLabel_CellularAndLowStorage_Off" = "Downloading on cellular data or low storage is disabled";
+"VoiceOverLabel_CellularAndLowStorage_On" = "Downloading on cellular data or low storage is enabled";
+"VoiceOverLabel_CellularAndLowStorage" = "Setting for Lignite Music to download images of your artists and albums on cellular data or when your phone is low on storage. %@"; //The %@ is either VoiceOverLabel_CellularAndLowStorage_Off or VoiceOverLabel_CellularAndLowStorage_On
+
+"VoiceOverLabel_Tutorial" = "Lignite Music tutorial videos";
+"VoiceOverLabel_LeaveAReview" = "Leave a review for Lignite Music on the App Store";
+"VoiceOverLabel_Credits" = "Credits for Lignite Music, created by Edwin Finch and Philipp Weder";
+"VoiceOverLabel_ContactUs" = "Contact the developers of Lignite Music";
+
+"VoiceOverLabel_LicenseLinksButton" = "Open source icon licenses";
+
+"VoiceOverLabel_ContactEmail" = "Contact us via email";
+"VoiceOverLabel_ContactTwitter" = "Reach out to us on Twitter";
+"VoiceOverLabel_ContactWebsite" = "Visit our website";
+
+"VoiceOverLabel_OnboardingButtonLetsGo" = "Continue with onboarding";
+"VoiceOverLabel_OnboardingButtonSoundsGood" = "Open iOS permission dialogue";
+"VoiceOverLabel_OnboardingButtonOpenTutorial" = "View Lignite Music ";
+"VoiceOverLabel_OnboardingButtonJumpRightIn" = "Skip tutorial and jump right in to Lignite Music";
+"VoiceOverLabel_OnboardingButtonMusicPermissionDenied" = "Continue";
+
+"VoiceOverLabel_LMTutorialViewTutorialKeyNormalPlaylists" = "Tutorial video on creating playlists in Lignite Music";
+"VoiceOverLabel_LMTutorialViewTutorialKeyFavourites" = "Tutorial video on using favorites in Lignite Music"; //For the love of god I swear I am not American, I would spell it "favourites", but VoiceOver is an uncultured swine and pronounces the proper spelling of favourites as "fav-ur-itees" so I have no choice but to spell it the Americanized way just for the voice to pronounce it correctly.
+"VoiceOverLabel_LMTutorialViewTutorialKeyQueueManagement" = "Tutorial video on using the queue in Lignite Music";
+
+"VoiceOverLabel_PlayQuickTutorialButton" = "Play the quick tutorial";
+
+"VoiceOverHint_DoubleTapToOpenThemeSelector" = "Double tap to open the theme selector";
+"VoiceOverHint_DoubleTapToChangeThisSetting" = "Double tap to change this setting";
+
+"VoiceOverHint_DoubleTapToOpenTheTutorialPage" = "Double tap to open the tutorial page";
+"VoiceOverHint_DoubleTapToOpenTheAppStore" = "Double tap to open the App Store to leave a review";
+"VoiceOverHint_DoubleTapToOpenTheCreditsPage" = "Double tap to open the credits page";
+"VoiceOverHint_DoubleTapToOpenTheContactPage" = "Double tap to open the contact us page";
+
+"VoiceOverHint_LicenseLinksButton" = "Double tap to open a webpage containing all of the licenses to the icons that Lignite Music uses";
+
+"VoiceOverHint_ContactEmail" = "Double tap to compose an email to Lignite";
+"VoiceOverHint_ContactTwitter" = "Double tap to open Lignite's Twitter profile";
+"VoiceOverHint_ContactWebsite" = "Double tap to open Lignite's website";
+
+"VoiceOverHint_OnboardingButtonLetsGo" = "Double tap to continue";
+"VoiceOverHint_OnboardingButtonSoundsGood" = "Double tap to open the music permission request that must be granted for Lignite Music to work";
+"VoiceOverHint_OnboardingButtonOpenTutorial" = "Double tap to open the Lignite Music tutorial page";
+"VoiceOverHint_OnboardingButtonJumpRightIn" = "Double tap to skip the tutorial and start using Lignite Music right away";
+"VoiceOverHint_OnboardingButtonMusicPermissionDenied" = "Double tap if you have enabled the music permission for Lignite Music";
+
+"VoiceOverHint_DoubleTapToOpenThisTutorial" = "Double tap to open this tutorial";
+
+"VoiceOverHint_PlayQuickTutorialButton" = "Double tap to play a quick overview tutorial of Lignite Music";
 
 /*
  
@@ -364,7 +425,7 @@
 
 //The user is gutless most likely because they did not take the time to read the dialog and simply clicked deny. However, we understand shit happens and they might have slipped or something.
 "OnboardingUserIsGutlessTitle" = "Music, please? :(";
-"OnboardingUserIsGutlessDescription" = "Somewhere along the way the music permission for Lignite Music was denied. Don't worry, it's easy to fix.\n\n1. Go to your iPhone's settings app\n2. Find the 'Lignite Music' entry near the bottom and go into it\n3. Make sure the 'Media Library' toggle is turned on\n\nOnce that's done, reopen Lignite Music and you should be set!"; //Please ensure for this translation that the language used in guiding the users through the iOS settings menu *exactly matches* the actual settings menu in that language.
+"OnboardingUserIsGutlessDescription" = "Somewhere along the way the music permission for Lignite Music was denied. Don't worry, it's easy to fix.\n\n1. Go to your iPhone's settings app\n2. Find the 'Lignite Music' entry near the bottom and go into it\n3. Make sure the 'Media & Apple Music' toggle is turned on\n\nOnce that's done, reopen Lignite Music and you should be set!"; //Please ensure for this translation that the language used in guiding the users through the iOS settings menu *exactly matches* the actual settings menu in that language.
 
 "StillCantAccessMusicTitle" = "We are still having trouble.";
 "StillCantAccessMusicDescription" = "We still can't access your music for some reason even though you've probably tried what we asked.\n\nWe're really sorry that this has not gone smoothly, we are not sure what is going wrong.\n\nPlease click the 'Contact Us' button below you can reach out to us directly. We will be sure to get you sorted out one way or another.\n\nThank you."; //Please ensure the 'Contact Us' in quotes is the same as the ContactUs string in this file

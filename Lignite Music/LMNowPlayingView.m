@@ -205,7 +205,7 @@
 }
 
 - (void)musicPlaybackModesDidChange:(LMMusicShuffleMode)shuffleMode repeatMode:(LMMusicRepeatMode)repeatMode {
-	[self updateMusicModeButtons];
+	[self reloadControlButtonColours];
 	
 	[self.queueTableView reloadSubviewData];
 	[self.queueTableView reloadData];
@@ -275,7 +275,7 @@
 			}
 			
 			[self reloadFavouriteStatus];
-			[self updateMusicModeButtons];
+			[self reloadControlButtonColours];
 			
 //			NSLog(@"Spook me solid");
 			
@@ -384,7 +384,7 @@
 	} repeats:NO];
 	
 	[self refreshNothingInQueueText];
-	[self updateMusicModeButtons];
+	[self reloadControlButtonColours];
 }
 
 
@@ -603,10 +603,6 @@
 	return self.mainViewLeadingConstraint.constant < 0;
 }
 
-- (void)updateMusicModeButtons DEPRECATED_ATTRIBUTE {
-	[self reloadControlButtonColours];
-}
-
 - (void)clickedButton:(LMButton *)button {
 	NSLog(@"Hey button %@", button);
 	if(button == self.shuffleModeButton){
@@ -643,7 +639,6 @@
 		[self changeFavouriteStatus];
 	}
 	
-	[self updateMusicModeButtons];
 	[self reloadControlButtonColours];
 }
 

@@ -89,6 +89,7 @@ typedef NS_ENUM(NSInteger, LMNotchPosition) {
 @property UITraitCollection *traitCollection;
 @property CGSize size;
 
++ (NSString*)debugDumpString;
 - (BOOL)isLandscape;
 + (BOOL)isExtraSmall;
 + (BOOL)isLandscape;

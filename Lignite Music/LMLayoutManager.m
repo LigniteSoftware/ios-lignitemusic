@@ -61,6 +61,26 @@
 	return sharedLayoutManager;
 }
 
++ (NSString*)debugDumpString {
+	LMLayoutManager *layoutManager = [self sharedLayoutManager];
+	
+	NSDictionary *infoDictionary = @{
+									 @"layoutClass": @(layoutManager.currentLayoutClass),
+									 @"isLandscape": @([layoutManager isLandscape]),
+									 @"isExtraSmall": @([self isExtraSmall]),
+									 @"isLandscapeiPad": @([self isLandscapeiPad]),
+									 @"isiPad": @([self isiPad]),
+									 @"isiPhoneX": @([self isiPhoneX]),
+									 @"notchPosition": @([self isiPhoneX] ? [self notchPosition] : 0),
+									 @"listEntryHeightFactorial": @([self listEntryHeightFactorial]),
+									 @"standardListEntryHeight": @([self standardListEntryHeight]),
+									 @"amountOfCollectionViewItemsPerRow": @([self amountOfCollectionViewItemsPerRow]),
+									 @"size": NSStringFromCGSize(layoutManager.size)
+									 };
+	
+	return [NSString stringWithFormat:@"%@", infoDictionary];
+}
+
 - (void)addDelegate:(id<LMLayoutChangeDelegate>)delegate {
 	if(!self.delegates){
 		self.delegates = [NSMutableArray new];

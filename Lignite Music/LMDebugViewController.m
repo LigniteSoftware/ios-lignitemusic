@@ -82,7 +82,7 @@
 }
 
 + (NSString*)currentAppVersion {
-	return @"1.0.1 Release";
+	return @"1.1.0 Beta";
 }
 
 + (NSString*)buildNumberString {
@@ -98,6 +98,8 @@
 	[debugString appendString:[NSString stringWithFormat:@"\n\nLanguage: %@", [[NSLocale preferredLanguages] objectAtIndex:0]]];
 	[debugString appendString:[NSString stringWithFormat:@"\niOS: %@", [[UIDevice currentDevice] systemVersion]]];
 	[debugString appendString:[NSString stringWithFormat:@"\nModel: %@", [[UIDevice currentDevice] model]]];
+	
+	[debugString appendString:[NSString stringWithFormat:@"\n\nLayout manager dump: %@", [LMLayoutManager debugDumpString]]];
 	
 	NSArray *tracks = [musicPlayer queryCollectionsForMusicType:LMMusicTypeTitles];
 	
