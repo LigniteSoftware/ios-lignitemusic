@@ -1253,7 +1253,7 @@
 	});
 	
 	
-	if(!LMMusicPlayer.onboardingComplete){
+	if(!LMMusicPlayer.onboardingComplete || true){
 		NSLog(@"Launching onboarding...");
 		
 //		[[MPMusicPlayerController systemMusicPlayer] stop];

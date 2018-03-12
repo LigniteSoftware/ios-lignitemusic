@@ -327,6 +327,9 @@
 	self.finishedButton.titleLabel.textColor = [UIColor whiteColor];
 	self.finishedButton.layer.masksToBounds = YES;
 	self.finishedButton.layer.cornerRadius = 8.0;
+	self.finishedButton.isAccessibilityElement = YES;
+	self.finishedButton.accessibilityLabel = self.buttonAccessibilityLabel;
+	self.finishedButton.accessibilityHint = self.buttonAccessibilityHint;
 	[self.finishedButton.titleLabel setFont:[UIFont fontWithName:@"HelveticaNeue" size:18.0f]];
 	[self.finishedButton addTarget:self action:@selector(performOnboardingAction) forControlEvents:UIControlEventTouchUpInside];
 	[self.finishedButton setTitle:self.buttonTitle forState:UIControlStateNormal];
@@ -346,6 +349,9 @@
 		self.secondaryButton.titleLabel.textColor = [UIColor whiteColor];
 		self.secondaryButton.layer.masksToBounds = YES;
 		self.secondaryButton.layer.cornerRadius = 8;
+		self.secondaryButton.isAccessibilityElement = YES;
+		self.secondaryButton.accessibilityLabel = NSLocalizedString(@"VoiceOverLabel_OnboardingButtonOpenTutorial", nil);
+		self.secondaryButton.accessibilityHint = NSLocalizedString(@"VoiceOverHint_OnboardingButtonOpenTutorial", nil);
 		[self.secondaryButton.titleLabel setFont:[UIFont fontWithName:@"HelveticaNeue" size:18.0f]];
 		[self.secondaryButton addTarget:self action:@selector(secondaryAction) forControlEvents:UIControlEventTouchUpInside];
 		[self.secondaryButton setTitle:NSLocalizedString(@"ViewTutorial", nil) forState:UIControlStateNormal];

@@ -29,6 +29,8 @@
 @property NSString *contentDescription;
 @property UIImage *screenshotImage;
 @property NSString *buttonTitle;
+@property NSString *buttonAccessibilityLabel;
+@property NSString *buttonAccessibilityHint;
 @property (strong, nonatomic) UILabel *screenNumber;
 
 @end

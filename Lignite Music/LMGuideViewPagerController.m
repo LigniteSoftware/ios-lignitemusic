@@ -17,7 +17,7 @@
 
 @interface LMGuideViewPagerController () <LMLayoutChangeDelegate, UIViewControllerRestoration>
 
-@property NSArray *titleArray, *descriptionArray, *screenshotsArray, *buttonNamesArray;
+@property NSArray *titleArray, *descriptionArray, *screenshotsArray, *buttonNamesArray, *buttonAccessibilityLabelsArray, *buttonAccessibilityHintsArray;
 
 @property NSInteger amountOfPages;
 
@@ -117,6 +117,17 @@
 									 @"JumpRightIn",
 							    nil];
 			
+			self.buttonAccessibilityLabelsArray = [[NSArray alloc]initWithObjects:
+												   @"VoiceOverLabel_OnboardingButtonLetsGo",
+												   @"VoiceOverLabel_OnboardingButtonSoundsGood",
+												   @"VoiceOverLabel_OnboardingButtonJumpRightIn",
+												   nil];
+			
+			self.buttonAccessibilityHintsArray = [[NSArray alloc]initWithObjects:
+												  @"VoiceOverHint_OnboardingButtonLetsGo",
+												  @"VoiceOverHint_OnboardingButtonSoundsGood",
+												  @"VoiceOverHint_OnboardingButtonJumpRightIn",
+												  nil];
 			break;
 		}
 		case GuideModeMusicPermissionDenied: {
@@ -137,6 +148,14 @@
 			self.buttonNamesArray = [[NSArray alloc]initWithObjects:
 									 @"OkDone"
 							   , nil];
+			
+			self.buttonAccessibilityLabelsArray = [[NSArray alloc]initWithObjects:
+												   @"VoiceOverLabel_OnboardingButtonMusicPermissionDenied",
+												   nil];
+			
+			self.buttonAccessibilityHintsArray = [[NSArray alloc]initWithObjects:
+												  @"VoiceOverHint_OnboardingButtonMusicPermissionDenied",
+												  nil];
 			break;
 		}
 	}
@@ -192,6 +211,8 @@
 	childViewController.contentDescription = NSLocalizedString([self.descriptionArray objectAtIndex:index], nil);
 	childViewController.screenshotImage = [UIImage imageNamed:[self.screenshotsArray objectAtIndex:index]];
 	childViewController.buttonTitle = NSLocalizedString([self.buttonNamesArray objectAtIndex:index], nil);
+	childViewController.buttonAccessibilityLabel = NSLocalizedString([self.buttonAccessibilityLabelsArray objectAtIndex:index], nil);
+	childViewController.buttonAccessibilityHint = NSLocalizedString([self.buttonAccessibilityHintsArray objectAtIndex:index], nil);
 	childViewController.sourcePagerController = self.pageController;
 	childViewController.coreViewController = self.coreViewController;
 	childViewController.rootViewPagerController = self;
