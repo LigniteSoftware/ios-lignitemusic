@@ -60,6 +60,16 @@
 "VoiceOverLabel_Credits" = "Credits for Lignite Music, created by Edwin Finch and Philipp Weder";
 "VoiceOverLabel_ContactUs" = "Contact the developers of Lignite Music";
 
+"VoiceOverLabel_LicenseLinksButton" = "Open source icon licenses";
+
+"VoiceOverLabel_ContactEmail" = "Contact us via email";
+"VoiceOverLabel_ContactTwitter" = "Reach out to us on Twitter";
+"VoiceOverLabel_ContactWebsite" = "Visit our website";
+
+"VoiceOverHint_ContactEmail" = "Double tap to compose an email to Lignite";
+"VoiceOverHint_ContactTwitter" = "Double tap to open Lignite's Twitter profile";
+"VoiceOverHint_ContactWebsite" = "Double tap to open Lignite's website";
+
 "VoiceOverHint_DoubleTapToOpenThemeSelector" = "Double tap to open the theme selector";
 "VoiceOverHint_DoubleTapToChangeThisSetting" = "Double tap to change this setting";
 
@@ -67,6 +77,8 @@
 "VoiceOverHint_DoubleTapToOpenTheAppStore" = "Double tap to open the App Store to leave a review";
 "VoiceOverHint_DoubleTapToOpenTheCreditsPage" = "Double tap to open the credits page";
 "VoiceOverHint_DoubleTapToOpenTheContactPage" = "Double tap to open the contact us page";
+
+"VoiceOverHint_LicenseLinksButton" = "Double tap to open a webpage containing all of the licenses to the icons that Lignite Music uses";
 
 /*
  

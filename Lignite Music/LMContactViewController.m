@@ -146,7 +146,6 @@
 		LMIconPaperPlane, LMIconTwitter, LMIconLink
 	};
 	
-	
 	for(int i = 0; i < 3; i++){
 		LMView *viewToPinTo = (i == 0) ? self.descriptionLabel : [contactButtonsArray objectAtIndex:i-1];
 		
@@ -194,6 +193,13 @@
 		}
 		
 		[contactButton addGestureRecognizer:tapGesture];
+		
+		
+		NSString *accessibilityLabel = [NSString stringWithFormat:@"VoiceOverLabel_%@", contactButtonStrings[i]];
+		NSString *accessibilityHint = [NSString stringWithFormat:@"VoiceOverHint_%@", contactButtonStrings[i]];
+		contactButton.isAccessibilityElement = YES;
+		contactButton.accessibilityLabel = NSLocalizedString(accessibilityLabel, nil);
+		contactButton.accessibilityHint = NSLocalizedString(accessibilityHint, nil);
 		
 		
 		LMView *contactDetailsView = [LMView newAutoLayoutView];

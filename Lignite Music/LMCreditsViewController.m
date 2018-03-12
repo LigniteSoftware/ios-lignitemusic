@@ -508,6 +508,9 @@
 	creditsLinkButton.userInteractionEnabled = YES;
 	creditsLinkButton.layer.masksToBounds = YES;
 	creditsLinkButton.layer.cornerRadius = 8.0f;
+	creditsLinkButton.isAccessibilityElement = YES;
+	creditsLinkButton.accessibilityLabel = NSLocalizedString(@"VoiceOverLabel_LicenseLinksButton", nil);
+	creditsLinkButton.accessibilityHint = NSLocalizedString(@"VoiceOverHint_LicenseLinksButton", nil);
 	[self.scrollView addSubview:creditsLinkButton];
 	
 	[creditsLinkButton autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:[textLabelsArray lastObject] withOffset:20];
