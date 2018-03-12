@@ -43,6 +43,31 @@
 "SendReport" = "Send report";
 "GoBack" = "Go back";
 
+"VoiceOverLabel_ScrollingTextSetting" = "Scroll through long text in the now playing view and the mini player";
+"VoiceOverLabel_ThemeSetting" = "Change the theme of Lignite Music, your currently selected theme is %@";
+"VoiceOverLabel_NowPlayingAlwaysOnSetting" = "Keep the screen on when the now playing view is open";
+
+"VoiceOverLabel_ImageDownloading_Off" = "image downloading is disabled";
+"VoiceOverLabel_ImageDownloading_On" = "image downloading is enabled";
+"VoiceOverLabel_ImageDownloading" = "Setting to download images of your artists and albums automatically, %@, currently using %.02f megabytes of your device's storage"; //The %@ is either VoiceOverLabel_ImageDownloading_Off or VoiceOverLabel_ImageDownloading_On
+
+"VoiceOverLabel_CellularAndLowStorage_Off" = "Downloading on cellular data or low storage is disabled";
+"VoiceOverLabel_CellularAndLowStorage_On" = "Downloading on cellular data or low storage is enabled";
+"VoiceOverLabel_CellularAndLowStorage" = "Setting for Lignite Music to download images of your artists and albums on cellular data or when your phone is low on storage. %@"; //The %@ is either VoiceOverLabel_CellularAndLowStorage_Off or VoiceOverLabel_CellularAndLowStorage_On
+
+"VoiceOverLabel_Tutorial" = "Lignite Music tutorial videos";
+"VoiceOverLabel_LeaveAReview" = "Leave a review for Lignite Music on the App Store";
+"VoiceOverLabel_Credits" = "Credits for Lignite Music, created by Edwin Finch and Philipp Weder";
+"VoiceOverLabel_ContactUs" = "Contact the developers of Lignite Music";
+
+"VoiceOverHint_DoubleTapToOpenThemeSelector" = "Double tap to open the theme selector";
+"VoiceOverHint_DoubleTapToChangeThisSetting" = "Double tap to change this setting";
+
+"VoiceOverHint_DoubleTapToOpenTheTutorialPage" = "Double tap to open the tutorial page";
+"VoiceOverHint_DoubleTapToOpenTheAppStore" = "Double tap to open the App Store to leave a review";
+"VoiceOverHint_DoubleTapToOpenTheCreditsPage" = "Double tap to open the credits page";
+"VoiceOverHint_DoubleTapToOpenTheContactPage" = "Double tap to open the contact us page";
+
 /*
  
  End new strings

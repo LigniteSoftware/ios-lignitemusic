@@ -139,6 +139,18 @@
 
 	cell.subview = listEntrySubview;
 
+	NSString *accessibilityLabel = nil;
+	NSString *accessibilityHint = nil;
+	if([self.contentsDelegate respondsToSelector:@selector(accessibilityLabelForIndexPath:)]){
+		accessibilityLabel = [self.contentsDelegate accessibilityLabelForIndexPath:indexPath];
+	}
+	if([self.contentsDelegate respondsToSelector:@selector(accessibilityHintForIndexPath:)]){
+		accessibilityHint = [self.contentsDelegate accessibilityHintForIndexPath:indexPath];
+	}
+	cell.isAccessibilityElement = YES;
+	cell.accessibilityLabel = accessibilityLabel;
+	cell.accessibilityHint = accessibilityHint;
+	
 	if(!cell.didSetupConstraints){
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
 		[cell setNeedsUpdateConstraints];
@@ -148,90 +160,50 @@
 			id accessorySubview = [self.contentsDelegate accessoryViewForIndexPath:indexPath forSectionTableView:self];
 			
 			if(accessorySubview){
-				NSString *accessorySubviewClass = [[accessorySubview class] description];
-//				BOOL shouldHangRight = ![accessorySubviewClass isEqualToString:@"UISwitch"];
-				
-				LMView *accessoryView = [LMView newAutoLayoutView];
-				accessoryView.identifier = @"accessoryView";
-//				accessoryView.backgroundColor = [LMColour randomColour];
-				[cell.contentView addSubview:accessoryView];
-				
-				float padding = 0.06*([LMLayoutManager isLandscape] ? WINDOW_FRAME.size.height : WINDOW_FRAME.size.width);
-				
-				if([LMLayoutManager isiPhoneX]){
-					switch([LMLayoutManager notchPosition]){
-						case LMNotchPositionRight:
-							padding = 16;
-							break;
-						case LMNotchPositionLeft:
-							padding = 0;
-							break;
-						default:
-							break;
-					}
-				}
-				
-				[accessoryView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:cell.contentView withOffset:-padding];
-				[accessoryView autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
-				[accessoryView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:cell.contentView withMultiplier:(1.0/2.0)];
-				[accessoryView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:cell.contentView withMultiplier:(1.0/2.0)];
-				
-				[accessoryView addSubview:accessorySubview];
-				
-				if([accessorySubviewClass isEqualToString:@"UISwitch"] || [accessorySubviewClass isEqualToString:@"LMSettingsSwitch"]){
-					[accessorySubview autoCentreInSuperview];
-				}
-				else if([accessorySubviewClass isEqualToString:@"UIImageView"]){
-					[accessorySubview autoCentreInSuperview];
-					[accessorySubview autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:accessoryView withMultiplier:(1.0/2.0)];
-					[accessorySubview autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:accessoryView withMultiplier:(1.0/2.0)];
-					
-					accessoryView.userInteractionEnabled = NO;
-				}
-				else if([accessorySubviewClass isEqualToString:@"UIView"]){
-					[accessorySubview autoPinEdgesToSuperviewEdges];
-				}
-				else{
-					NSLog(@"[%@]: Unknown class %@ for accessory.", self.title, accessorySubviewClass);
-				}
+//				listEntrySubview.isAccessibilityElement = NO;
+				cell.accessoryView = accessorySubview;
+			}
+			else{
+				cell.accessoryView = nil;
+				cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 			}
 		}
 	}
-	else{
-		for(UIView *view in cell.contentView.subviews){
-			if([view class] == [LMView class]){
-				LMView *lmView = (LMView*)view;
-				if([lmView.identifier isEqualToString:@"accessoryView"]){
-					for(NSLayoutConstraint *contentViewConstraint in cell.contentView.constraints){
-//						NSLog(@"%@", contentViewConstraint);
-						if(contentViewConstraint.firstItem == lmView
-						   && contentViewConstraint.firstAttribute == NSLayoutAttributeTrailing
-						   && contentViewConstraint.secondAttribute == NSLayoutAttributeTrailing){
-							
-							float padding = ([LMLayoutManager isiPhoneX] ? 0.04 : 0.06)*([LMLayoutManager isLandscape] ? WINDOW_FRAME.size.height : WINDOW_FRAME.size.width);
-							
-							if([LMLayoutManager isiPhoneX]){
-								NSLog(@"Notch position %d", (int)LMLayoutManager.notchPosition);
-								switch([LMLayoutManager notchPosition]){
-									case LMNotchPositionRight:
-										padding = 16;
-										break;
-									case LMNotchPositionLeft:
-										padding = 0;
-										break;
-									default:
-										break;
-								}
-							}
-							contentViewConstraint.constant = -padding;
-							
-							[cell.contentView layoutIfNeeded];
-						}
-					}
-				}
-			}
-		}
-	}
+//	else{
+//		for(UIView *view in cell.contentView.subviews){
+//			if([view class] == [LMView class]){
+//				LMView *lmView = (LMView*)view;
+//				if([lmView.identifier isEqualToString:@"accessoryView"]){
+//					for(NSLayoutConstraint *contentViewConstraint in cell.contentView.constraints){
+////						NSLog(@"%@", contentViewConstraint);
+//						if(contentViewConstraint.firstItem == lmView
+//						   && contentViewConstraint.firstAttribute == NSLayoutAttributeTrailing
+//						   && contentViewConstraint.secondAttribute == NSLayoutAttributeTrailing){
+//							
+//							float padding = ([LMLayoutManager isiPhoneX] ? 0.04 : 0.06)*([LMLayoutManager isLandscape] ? WINDOW_FRAME.size.height : WINDOW_FRAME.size.width);
+//							
+//							if([LMLayoutManager isiPhoneX]){
+//								NSLog(@"Notch position %d", (int)LMLayoutManager.notchPosition);
+//								switch([LMLayoutManager notchPosition]){
+//									case LMNotchPositionRight:
+//										padding = 16;
+//										break;
+//									case LMNotchPositionLeft:
+//										padding = 0;
+//										break;
+//									default:
+//										break;
+//								}
+//							}
+//							contentViewConstraint.constant = -padding;
+//							
+//							[cell.contentView layoutIfNeeded];
+//						}
+//					}
+//				}
+//			}
+//		}
+//	}
 	
 	return cell;
 }
@@ -354,6 +326,7 @@
 		listEntry.contentViewHeightMultiplier = 0.875;
 		listEntry.stretchAcrossWidth = NO;
 		listEntry.alignIconToLeft = NO;
+//		listEntry.userInteractionEnabled = NO;
 //		listEntry.iPromiseIWillHaveAnIconForYouSoon = YES; some don't have an icon like in settings, idiot
 		
 		[self.listEntryArray addObject:listEntry];

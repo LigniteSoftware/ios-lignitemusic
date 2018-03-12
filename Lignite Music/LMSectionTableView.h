@@ -119,8 +119,39 @@
  */
 - (void)tappedCloseButtonForSectionTableView:(LMSectionTableView*)sectionTableView;
 
+/**
+ Gets the swipe buttons for an index path. If swipe buttons are returned, the user will be able to swipe in the associated direction to perform an action on an MGSwipeButton.
+
+ @param indexPath The index path of the cell that wants the swipe buttons.
+ @param rightSide Whether or not the buttons that are being returned will be on the right side.
+ @return The swipe buttons, nil if no buttons should be used.
+ */
 - (NSArray<MGSwipeButton*>*)swipeButtonsForIndexPath:(NSIndexPath*)indexPath rightSide:(BOOL)rightSide;
+
+/**
+ Same as for getting the swipe buttons, this returns the colours for the buttons when their action is performed.
+
+ @param indexPath The index path of the cell that wants the swipe colour.
+ @param rightSide Whether or not the colour that are being returned will be on the right side.
+ @return The swipe colour.
+ */
 - (UIColor*)swipeButtonColourForIndexPath:(NSIndexPath*)indexPath rightSide:(BOOL)rightSide;
+
+/**
+ Gets the accessibility label for an index path.
+
+ @param indexPath The index path of the associated label.
+ @return The label, localized to the user's language.
+ */
+- (NSString*)accessibilityLabelForIndexPath:(NSIndexPath*)indexPath;
+
+/**
+ Gets the hint label for an index path.
+ 
+ @param indexPath The index path of the associated hint.
+ @return The hint, localized to the user's language.
+ */
+- (NSString*)accessibilityHintForIndexPath:(NSIndexPath*)indexPath;
 
 @end
 

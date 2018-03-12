@@ -310,23 +310,51 @@
 	switch(indexPath.section){
 		case 0:
 			switch(indexPath.row){
-				case 0:
-					NSLog(@"secret taps");
-					self.debugTapCount++;
-					if(self.debugTapCount > 5){
-						NSLog(@"Hey boi");
-						LMDebugViewController *debugViewController = [LMDebugViewController new];
-						debugViewController.title = @"Debug";
-						[self.coreViewController.navigationController showViewController:debugViewController sender:self];
+				case 0: {
+//					NSLog(@"secret taps");
+//					self.debugTapCount++;
+//					if(self.debugTapCount > 5){
+//						NSLog(@"Hey boi");
+//						LMDebugViewController *debugViewController = [LMDebugViewController new];
+//						debugViewController.title = @"Debug";
+//						[self.coreViewController.navigationController showViewController:debugViewController sender:self];
+//					}
+//					if(self.debugTapCount == 1){
+//						NSLog(@"Timer registered");
+//						[NSTimer scheduledTimerWithTimeInterval:3.0 block:^() {
+//							self.debugTapCount = 0;
+//							NSLog(@"Timer reset");
+//						} repeats:NO];
+//					}
+					
+					UISwitch *rowSwitch = [self accessoryViewForIndexPath:indexPath forSectionTableView:sectionTableView];
+					[rowSwitch setOn:!rowSwitch.on animated:YES];
+					NSLog(@"%@ Now on %d", rowSwitch, rowSwitch.on);
+					
+					UITableViewCell *cell = [self.sectionTableView cellForRowAtIndexPath:indexPath];
+					NSLog(@"Cell %@", cell);
+					UISwitch *cellSwitch = nil;
+					for(UIView *subview in cell.contentView.subviews){
+						NSLog(@"Subview %@", subview);
+						for(UIView *deepSubview in subview.subviews){
+							NSLog(@"> %@", deepSubview);
+							if([deepSubview class] == [UISwitch class]){
+								cellSwitch = (UISwitch*)deepSubview;
+								break;
+							}
+						}
 					}
-					if(self.debugTapCount == 1){
-						NSLog(@"Timer registered");
-						[NSTimer scheduledTimerWithTimeInterval:3.0 block:^() {
-							self.debugTapCount = 0;
-							NSLog(@"Timer reset");
+					if(cellSwitch){
+						[cellSwitch setOn:!cellSwitch.on animated:YES];
+						
+						[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
+							NSString *announcement = [NSString stringWithFormat:@"Switch %@", (cellSwitch.on ? @"on" : @"off")];
+							UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, // announce
+															announcement);  // actual text
 						} repeats:NO];
 					}
 					break;
+				}
 				case 1: {
 					LMThemePickerViewController *themePicker = [LMThemePickerViewController new];
 //					themePicker.navigationItem = [[UINavigationItem alloc]initWithTitle:@"test"];
@@ -459,10 +487,123 @@
 																								}];
 }
 
+- (NSString*)accessibilityLabelForIndexPath:(NSIndexPath *)indexPath {
+	switch(indexPath.section){
+		case 0: {
+			switch(indexPath.row){
+				case 0: {
+					return NSLocalizedString(@"VoiceOverLabel_ScrollingTextSetting", nil);
+				}
+				case 1: {
+					NSString *currentThemeTitleKey = [NSString stringWithFormat:@"%@_Title", NSLocalizedString([[LMThemeEngine sharedThemeEngine] keyForTheme:[LMThemeEngine currentTheme]], nil)];
+					NSString *currentThemeString = NSLocalizedString(currentThemeTitleKey, nil);
+					return [NSString stringWithFormat:NSLocalizedString(@"VoiceOverLabel_ThemeSetting", nil), currentThemeString];
+				}
+				case 2: {
+					return NSLocalizedString(@"VoiceOverLabel_NowPlayingAlwaysOnSetting", nil);
+				}
+			}
+		}
+		case 1: {
+			switch(indexPath.row){
+				case 0: {
+					LMImageManagerPermissionStatus artistImagesStatus = [self.imageManager downloadPermissionStatus];
+					
+					BOOL approved = (artistImagesStatus == LMImageManagerPermissionStatusAuthorized);
+					
+					NSString *approvedString = NSLocalizedString(approved ? @"VoiceOverLabel_ImageDownloading_On" : @"VoiceOverLabel_ImageDownloading_Off", nil);
+					
+					NSString *fullLabelString = [NSString stringWithFormat:NSLocalizedString(@"VoiceOverLabel_ImageDownloading", nil), approvedString, ((CGFloat)[self.imageManager sizeOfAllCaches]/1000000)];
+					
+					return fullLabelString;
+				}
+				case 1: {
+					NSString *authorizationStatusKey = nil;
+					
+					LMImageManagerPermissionStatus explicitPermissionStatus = [self.imageManager explicitPermissionStatus];
+					switch(explicitPermissionStatus){
+						case LMImageManagerPermissionStatusNotDetermined:
+						case LMImageManagerPermissionStatusDenied: {
+							authorizationStatusKey = @"VoiceOverLabel_CellularAndLowStorage_Off";
+							break;
+						}
+						case LMImageManagerPermissionStatusAuthorized: {
+							authorizationStatusKey = @"VoiceOverLabel_CellularAndLowStorage_On";
+							break;
+						}
+					}
+					
+					NSString *localizedAuthorizationLabel = [NSString stringWithFormat:NSLocalizedString(@"VoiceOverLabel_CellularAndLowStorage", nil), NSLocalizedString(authorizationStatusKey, nil)];
+					
+					
+					return localizedAuthorizationLabel;
+				}
+			}
+		}
+		case 2: {
+			switch(indexPath.row){
+				case 0: {
+					return NSLocalizedString(@"VoiceOverLabel_Tutorial", nil);
+				}
+				case 1: {
+					return NSLocalizedString(@"VoiceOverLabel_LeaveAReview", nil);
+				}
+				case 2: {
+					return NSLocalizedString(@"VoiceOverLabel_Credits", nil);
+				}
+				case 3: {
+					return NSLocalizedString(@"VoiceOverLabel_ContactUs", nil);
+				}
+			}
+		}
+	}
+	
+	return nil;
+}
+
+- (NSString*)accessibilityHintForIndexPath:(NSIndexPath *)indexPath {
+	switch(indexPath.section){
+		case 0: {
+			switch(indexPath.row){
+				case 0: {
+					return nil;
+				}
+				case 1: {
+					return NSLocalizedString(@"VoiceOverHint_DoubleTapToOpenThemeSelector", nil);
+				}
+				case 2: {
+					return nil;
+				}
+			}
+		}
+		case 1: {
+			return NSLocalizedString(@"VoiceOverHint_DoubleTapToChangeThisSetting", nil);
+		}
+		case 2: {
+			switch(indexPath.row){
+				case 0: {
+					return NSLocalizedString(@"VoiceOverHint_DoubleTapToOpenTheTutorialPage", nil);
+				}
+				case 1: {
+					return NSLocalizedString(@"VoiceOverHint_DoubleTapToOpenTheAppStore", nil);
+				}
+				case 2: {
+					return NSLocalizedString(@"VoiceOverHint_DoubleTapToOpenTheCreditsPage", nil);
+				}
+				case 3: {
+					return NSLocalizedString(@"VoiceOverHint_DoubleTapToOpenTheContactPage", nil);
+				}
+			}
+		}
+	}
+	
+	return nil;
+}
+
 - (id)accessoryViewForIndexPath:(NSIndexPath *)indexPath forSectionTableView:(LMSectionTableView *)sectionTableView {
 //	if(indexPath.section == 0 || (indexPath.section == 1 && indexPath.row == 2)){
 	if((indexPath.section == 0 && indexPath.row != 1)){
-		UISwitch *switchView = [UISwitch newAutoLayoutView];
+		UISwitch *switchView = [UISwitch new];
 		
 		NSString *settingsKey = @"";
 		BOOL enabled = YES;
@@ -502,9 +643,7 @@
 		return switchView;
 	}
 	
-	UIImageView *imageView = [UIImageView newAutoLayoutView];
-	imageView.image = [LMAppIcon imageForIcon:LMIconForwardArrow];
-	return imageView;
+	return nil;
 }
 
 - (BOOL)prefersStatusBarHidden {
