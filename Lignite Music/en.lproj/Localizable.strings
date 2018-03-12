@@ -72,6 +72,12 @@
 "VoiceOverLabel_OnboardingButtonJumpRightIn" = "Skip tutorial and jump right in to Lignite Music";
 "VoiceOverLabel_OnboardingButtonMusicPermissionDenied" = "Continue";
 
+"VoiceOverLabel_LMTutorialViewTutorialKeyNormalPlaylists" = "Tutorial video on creating playlists in Lignite Music";
+"VoiceOverLabel_LMTutorialViewTutorialKeyFavourites" = "Tutorial video on using favorites in Lignite Music"; //For the love of god I swear I am not American, I would spell it "favourites", but VoiceOver is an uncultured swine and pronounces the proper spelling of favourites as "fav-ur-itees" so I have no choice but to spell it the Americanized way just for the voice to pronounce it correctly.
+"VoiceOverLabel_LMTutorialViewTutorialKeyQueueManagement" = "Tutorial video on using the queue in Lignite Music";
+
+"VoiceOverLabel_PlayQuickTutorialButton" = "Play the quick tutorial";
+
 "VoiceOverHint_DoubleTapToOpenThemeSelector" = "Double tap to open the theme selector";
 "VoiceOverHint_DoubleTapToChangeThisSetting" = "Double tap to change this setting";
 
@@ -91,6 +97,10 @@
 "VoiceOverHint_OnboardingButtonOpenTutorial" = "Double tap to open the Lignite Music tutorial page";
 "VoiceOverHint_OnboardingButtonJumpRightIn" = "Double tap to skip the tutorial and start using Lignite Music right away";
 "VoiceOverHint_OnboardingButtonMusicPermissionDenied" = "Double tap if you have enabled the music permission for Lignite Music";
+
+"VoiceOverHint_DoubleTapToOpenThisTutorial" = "Double tap to open this tutorial";
+
+"VoiceOverHint_PlayQuickTutorialButton" = "Double tap to play a quick overview tutorial of Lignite Music";
 
 /*
  

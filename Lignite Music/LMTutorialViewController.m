@@ -394,6 +394,7 @@
 	self.collectionView.delegate = self;
 	self.collectionView.dataSource = self;
 	self.collectionView.allowsSelection = NO;
+	self.collectionView.isAccessibilityElement = NO;
 	[self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"TutorialViewIdentifier"];
 	self.collectionView.backgroundColor = [UIColor whiteColor];
 	[self.view addSubview:self.collectionView];

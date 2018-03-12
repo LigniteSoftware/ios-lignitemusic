@@ -124,6 +124,13 @@
 		self.clipsToBounds = NO;
 		
 		
+		NSString *accessibilityLabelKey = [NSString stringWithFormat:@"VoiceOverLabel_%@", self.tutorialKey];
+		
+		self.isAccessibilityElement = YES;
+		self.accessibilityLabel = NSLocalizedString(accessibilityLabelKey, nil);
+		self.accessibilityHint = NSLocalizedString(@"VoiceOverHint_DoubleTapToOpenThisTutorial", nil);
+		
+		
 		NSString *titleKey = [NSString stringWithFormat:@"%@_Title", self.tutorialKey];
 		
 		self.titleLabel = [UILabel newAutoLayoutView];

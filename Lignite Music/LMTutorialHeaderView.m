@@ -86,6 +86,9 @@
 		self.buttonBackgroundView.backgroundColor = [LMColour mainColour];
 		self.buttonBackgroundView.layer.cornerRadius = 8.0f;
 		self.buttonBackgroundView.layer.masksToBounds = YES;
+		self.buttonBackgroundView.isAccessibilityElement = YES;
+		self.buttonBackgroundView.accessibilityLabel = NSLocalizedString(@"VoiceOverLabel_PlayQuickTutorialButton", nil);
+		self.buttonBackgroundView.accessibilityHint = NSLocalizedString(@"VoiceOverHint_PlayQuickTutorialButton", nil);
 		[self.centreBackgroundView addSubview:self.buttonBackgroundView];
 		
 		UITapGestureRecognizer *buttonTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tappedBackgroundButtonView)];
