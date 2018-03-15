@@ -594,6 +594,9 @@
 		self.unmodifiedFrame = self.frame;
 		
 		
+		self.isAccessibilityElement = NO;
+		
+		
 		self.layer.shadowOpacity = 0.25f;
 		self.layer.shadowOffset = CGSizeMake(0, 0);
 		self.layer.masksToBounds = NO;
@@ -726,6 +729,9 @@
 		self.minimizeButton = [UIView newAutoLayoutView];
 		self.minimizeButton.backgroundColor = [LMColour mainColour];
 		self.minimizeButton.userInteractionEnabled = YES;
+		self.minimizeButton.isAccessibilityElement = YES;
+		self.minimizeButton.accessibilityLabel = NSLocalizedString(@"VoiceOverLabel_MinimizeButton", nil);
+		self.minimizeButton.accessibilityHint = NSLocalizedString(@"VoiceOverHint_MinimizeButton", nil);
 		[self addSubview:self.minimizeButton];
 		
 		UITapGestureRecognizer *minimizeTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(minimizeButtonTapped)];

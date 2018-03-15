@@ -161,6 +161,9 @@
 		
 		self.toggleButtonBackgroundView = [LMView newAutoLayoutView];
 		self.toggleButtonBackgroundView.backgroundColor = [LMColour mainColour];
+		self.toggleButtonBackgroundView.isAccessibilityElement = YES;
+		self.toggleButtonBackgroundView.accessibilityLabel = NSLocalizedString(@"VoiceOverLabel_SearchButton", nil);
+		self.toggleButtonBackgroundView.accessibilityHint = NSLocalizedString(@"VoiceOverHint_SearchButton", nil);
 		[self addSubview:self.toggleButtonBackgroundView];
 		
 		NSArray *toggleButtonBackgroundViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{

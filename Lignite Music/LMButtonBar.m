@@ -152,6 +152,26 @@
 			
 			LMView *newBackgroundView = [LMView newAutoLayoutView];
 			newBackgroundView.backgroundColor = [LMColour mainColour];
+			newBackgroundView.isAccessibilityElement = YES;
+			
+			NSString *accessibilityKey = nil;
+			switch(i){
+				case 0:
+					accessibilityKey = @"Browse";
+					break;
+				case 1:
+					accessibilityKey = @"MiniPlayer";
+					break;
+				case 2:
+					accessibilityKey = @"ViewSelector";
+					break;
+			}
+			NSString *accessibilityLabelKey = [NSString stringWithFormat:@"VoiceOverLabel_ButtonBar_%@", accessibilityKey];
+			NSString *accessibilityHintKey = [NSString stringWithFormat:@"VoiceOverHint_ButtonBar_%@", accessibilityKey];
+			
+			newBackgroundView.accessibilityLabel = NSLocalizedString(accessibilityLabelKey, nil);
+			newBackgroundView.accessibilityHint = NSLocalizedString(accessibilityHintKey, nil);
+			
 			[self addSubview:newBackgroundView];
 			
 			NSArray *newBackgroundViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
