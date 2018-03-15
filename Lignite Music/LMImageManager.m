@@ -1076,12 +1076,18 @@
 			break;
 	}
 	
+	NSString *enableButtonAccessibilityLabelKey = [NSString stringWithFormat:@"VoiceOverLabel_%@", enableButtonKey];
+	NSString *enableButtonAccessibilityHintKey = [NSString stringWithFormat:@"VoiceOverHint_%@", enableButtonKey];
+	NSString *disableButtonAccessibilityLabelKey = [NSString stringWithFormat:@"VoiceOverLabel_%@", disableButtonKey];
+	NSString *disableButtonAccessibilityHintKey = [NSString stringWithFormat:@"VoiceOverHint_%@", disableButtonKey];
 	
 	LMAlertViewController *alertViewController = [LMAlertViewController new];
 	alertViewController.titleText = NSLocalizedString(titleKey, nil);
 	alertViewController.bodyText = [NSString stringWithFormat:NSLocalizedString(@"SettingImagesAlertDescription", nil), currentStatusText, NSLocalizedString(youCanKey, nil)];
 	alertViewController.alertOptionColours = @[[LMColour mainColourDark], [LMColour mainColour]];
 	alertViewController.alertOptionTitles = @[NSLocalizedString(disableButtonKey, nil), NSLocalizedString(enableButtonKey, nil)];
+	alertViewController.alertOptionAcceessibilityLabels = @[NSLocalizedString(disableButtonAccessibilityLabelKey, nil), NSLocalizedString(enableButtonAccessibilityLabelKey, nil)];
+	alertViewController.alertOptionAcceessibilityHints = @[NSLocalizedString(disableButtonAccessibilityHintKey, nil), NSLocalizedString(enableButtonAccessibilityHintKey, nil)];
 	alertViewController.completionHandler = ^(NSUInteger optionSelected, BOOL checkboxChecked) {
 		//Reset the special permission statuses because the user's stance maybe different now and we'll have to recheck
 		[self setExplicitPermissionStatus:LMImageManagerPermissionStatusNotDetermined];
@@ -1126,6 +1132,8 @@
 	alertViewController.bodyText = NSLocalizedString(@"ExplicitImageDownloadingBody", nil);
 	alertViewController.alertOptionColours = @[[LMColour mainColourDark], [LMColour mainColour]];
 	alertViewController.alertOptionTitles = @[NSLocalizedString(@"Deny", nil), NSLocalizedString(@"Allow", nil)];
+	alertViewController.alertOptionAcceessibilityLabels = @[NSLocalizedString(@"VoiceOverLabel_Deny", nil), NSLocalizedString(@"VoiceOverLabel_Allow", nil)];
+	alertViewController.alertOptionAcceessibilityHints = @[NSLocalizedString(@"VoiceOverHint_DenyExplicitImageDownloading", nil), NSLocalizedString(@"VoiceOverHint_AllowExplicitImageDownloading", nil)];
 	alertViewController.completionHandler = ^(NSUInteger optionSelected, BOOL checkboxChecked) {
 		//Reset the special permission statuses because the user's stance maybe different now and we'll have to recheck
 		[self setExplicitPermissionStatus:LMImageManagerPermissionStatusNotDetermined];

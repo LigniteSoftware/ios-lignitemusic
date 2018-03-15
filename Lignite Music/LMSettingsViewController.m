@@ -729,8 +729,8 @@
 //		demoViewController.title = @"Super Secret Settings";
 //		[self.coreViewController.navigationController showViewController:demoViewController sender:self];
 		
-		LMDebugViewController *debugViewController = [LMDebugViewController new];
-		[self.navigationController showViewController:debugViewController sender:self];
+//		LMDebugViewController *debugViewController = [LMDebugViewController new];
+//		[self.navigationController showViewController:debugViewController sender:self];
 	} repeats:NO];
 #endif
 	

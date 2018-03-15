@@ -78,6 +78,25 @@
 
 "VoiceOverLabel_PlayQuickTutorialButton" = "Play the quick tutorial";
 
+"VoiceOverLabel_Enable" = "Enable"; //Enable image downloading
+"VoiceOverLabel_KeepEnabled" = "Keep enabled"; //Keep image downloading enabled
+
+"VoiceOverLabel_KeepDisabled" = "Keep disabled"; //Keep image downloading disabled
+"VoiceOverLabel_ClearCacheAndDisable" = "Delete images and disable"; //Delete already downloaded artist and album images and disable future downloading of artist and album images
+
+"VoiceOverLabel_Allow" = "Allow";
+"VoiceOverLabel_Deny" = "Deny";
+
+"VoiceOverLabel_AlertViewControllerCheckboxText" = "Confirmation checkbox. If this checkbox is checked, it confirms %@"; //We have popup dialogues which require the user to check the checkbox to continue (such as checking to understand that Lignite playlists can't sync outside of Lignite Music due to technical limitations). Each checkbox text starts with "I understand...", so please structure the sentence accordingly. See string "PlaylistManagementUnderstandingConfirmationCheckboxText" if you want an example of a checkbox text.
+
+"VoiceOverLabel_CheckboxChecked" = "Checkbox checked";
+"VoiceOverLabel_CheckboxUnchecked" = "Checkbox unchecked";
+
+
+
+"VoiceOverHint_AllowExplicitImageDownloading" = "Double tap to allow image downloading when your phone is on cellular data or when it is low on storage";
+"VoiceOverHint_DenyExplicitImageDownloading" = "Double tap to prevent image downloading from happening when your phone is on cellular data or when it is low on storage";
+
 "VoiceOverHint_DoubleTapToOpenThemeSelector" = "Double tap to open the theme selector";
 "VoiceOverHint_DoubleTapToChangeThisSetting" = "Double tap to change this setting";
 
@@ -86,7 +105,7 @@
 "VoiceOverHint_DoubleTapToOpenTheCreditsPage" = "Double tap to open the credits page";
 "VoiceOverHint_DoubleTapToOpenTheContactPage" = "Double tap to open the contact us page";
 
-"VoiceOverHint_LicenseLinksButton" = "Double tap to open a webpage containing all of the licenses to the icons that Lignite Music uses";
+"VoiceOverHint_LicenseLinksButton" = "Double tap to open a webpage containing all of the licences to the icons that Lignite Music uses";
 
 "VoiceOverHint_ContactEmail" = "Double tap to compose an email to Lignite";
 "VoiceOverHint_ContactTwitter" = "Double tap to open Lignite's Twitter profile";
@@ -101,6 +120,22 @@
 "VoiceOverHint_DoubleTapToOpenThisTutorial" = "Double tap to open this tutorial";
 
 "VoiceOverHint_PlayQuickTutorialButton" = "Double tap to play a quick overview tutorial of Lignite Music";
+
+"VoiceOverHint_Enable" = "Double tap to enable image downloading";
+"VoiceOverHint_KeepEnabled" = "Double tap to keep image downloading enabled";
+
+"VoiceOverHint_KeepDisabled" = "Double tap to keep image downloading disabled";
+"VoiceOverHint_ClearCacheAndDisable" = "Double tap to delete previously downloaded images and disable image downloading";
+
+"VoiceOverHint_CheckTheCheckbox" = "Double tap to check the checkbox";
+"VoiceOverHint_UncheckTheCheckbox" = "Double tap to uncheck the checkbox";
+
+"VoiceOverHint_TapForMoreInformation" = "Double tap to get more information on this dialogue";
+
+
+
+"YouCurrentlyHaveThisFeatureOff" = "You currently have image downloading turned off.";
+
 
 /*
  
@@ -507,7 +542,6 @@
 "KeepEnabled" = "Keep enabled";
 
 "SettingImagesAlertDescription" = "Lignite Music downloads images of your artists and missing album covers automatically.\n\n%@\n\n%@";
-"YouCurrentlyHaveThisFeatureOff" = "Turned off.";
 "YouCanTurnOffTo" = "You can delete these images and turn this feature off to save storage and bandwidth. You can always change your mind in settings.";
 "YouCanTurnOnTo" = "You can turn this feature on to bring the most beauty to Lignite Music.\n\nWe will download images on WiFi and when you have enough storage, and will ask you what to do if either of those don't happen.";
 

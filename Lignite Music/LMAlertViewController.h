@@ -16,7 +16,17 @@
 @property NSArray<NSString*> *alertOptionTitles;
 
 /**
- The colours which will go on the buttons. See alertOptionTitles documentation for more details on array structure.
+ The VoiceOver labels which go on the buttons of options. Same order is followed as alertOptionTitles.
+ */
+@property NSArray<NSString*> *alertOptionAcceessibilityLabels;
+
+/**
+ The VoiceOver hints which go on the buttons of options. Same order is followed as alertOptionTitles.
+ */
+@property NSArray<NSString*> *alertOptionAcceessibilityHints;
+
+/**
+ The colours which will go on the buttons. Same order is followed as alertOptionTitles.
  */
 @property NSArray<UIColor*> *alertOptionColours;
 

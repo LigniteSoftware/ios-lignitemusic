@@ -57,6 +57,12 @@
 		button.backgroundColor = alertColour;
 	}];
 	
+	[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
+		if(UIAccessibilityIsVoiceOverRunning()){
+			UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, NSLocalizedString(checkBox.on ?@"VoiceOverLabel_CheckboxChecked" : @"VoiceOverLabel_CheckboxUnchecked", nil));
+		}
+	} repeats:NO];
+
 	[self hapticFeedbackSetup];
 	[self hapticFeedbackSelectionChanged];
 	[self hapticFeedbackFinalize];
@@ -197,9 +203,13 @@
 		BOOL isLastButton = (i == (self.alertOptionTitles.count-1));
 		
 		NSString *alertTitle = [self.alertOptionTitles objectAtIndex:i];
+		NSString *alertAccessibilityLabel = self.alertOptionAcceessibilityLabels ? [self.alertOptionAcceessibilityLabels objectAtIndex:i] : nil;
+		NSString *alertAccessibilityHint = self.alertOptionAcceessibilityHints ? [self.alertOptionAcceessibilityHints objectAtIndex:i] : nil;
 		UIColor *alertColour = (self.checkboxText && isLastButton) ? [UIColor lightGrayColor] : [self.alertOptionColours objectAtIndex:i];
 		
 		UIButton *optionButton = [UIButton newAutoLayoutView];
+		optionButton.accessibilityLabel = alertAccessibilityLabel;
+		optionButton.accessibilityHint = alertAccessibilityHint;
 		optionButton.backgroundColor = alertColour;
 		optionButton.layer.cornerRadius = 8.0f;
 		optionButton.layer.masksToBounds = YES;
@@ -244,7 +254,20 @@
 	}
 	
 	UILabel *confirmationTextLabel = nil;
+	UIView *confirmationContainer = nil;
 	if(self.checkboxText){
+		confirmationContainer = [UIView newAutoLayoutView];
+//		confirmationContainer.backgroundColor = [UIColor blueColor];
+		confirmationContainer.isAccessibilityElement = YES;
+		confirmationContainer.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"VoiceOverLabel_AlertViewControllerCheckboxText", nil), self.checkboxText];
+		confirmationContainer.accessibilityHint = NSLocalizedString(@"VoiceOverHint_CheckTheCheckbox", nil);
+		[paddingView addSubview:confirmationContainer];
+		
+		[confirmationContainer autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[confirmationContainer autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[confirmationContainer autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:[self.buttonsArray lastObject] withOffset:-20.0f];
+		
+		
 		confirmationTextLabel = [UILabel newAutoLayoutView];
 		confirmationTextLabel.userInteractionEnabled = YES;
 		confirmationTextLabel.textColor = [LMColour blackColour];
@@ -252,11 +275,15 @@
 		confirmationTextLabel.font = self.bodyTextView.font;
 		confirmationTextLabel.numberOfLines = 0;
 //		confirmationTextLabel.backgroundColor = [UIColor blueColor];
-		[paddingView addSubview:confirmationTextLabel];
+		[confirmationContainer addSubview:confirmationTextLabel];
 		
 		[confirmationTextLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:40.0f];
-		[confirmationTextLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:[self.buttonsArray lastObject] withOffset:-20.0f];
+//		[confirmationTextLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[confirmationTextLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[confirmationTextLabel autoPinEdgeToSuperviewEdge:ALEdgeTop];
+		[confirmationTextLabel autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+//		[confirmationTextLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:[self.buttonsArray lastObject] withOffset:-20.0f];
+//		[confirmationTextLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 		
 		UITapGestureRecognizer *confirmationLabelTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tappedConfirmationLabel)];
 		[confirmationTextLabel addGestureRecognizer:confirmationLabelTapGesture];
@@ -271,7 +298,7 @@
 		self.confirmationCheckbox.onTintColor = [LMColour mainColour];
 		self.confirmationCheckbox.onAnimationType = BEMAnimationTypeFill;
 		self.confirmationCheckbox.offAnimationType = BEMAnimationTypeFill;
-		[paddingView addSubview:self.confirmationCheckbox];
+		[confirmationContainer addSubview:self.confirmationCheckbox];
 
 		[self.confirmationCheckbox autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 		[self.confirmationCheckbox autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:confirmationTextLabel];
@@ -284,6 +311,7 @@
 		moreInfoTextLabel.textColor = [UIColor colorWithRed:0.02 green:0.27 blue:0.68 alpha:1.0];
 		moreInfoTextLabel.textAlignment = NSTextAlignmentCenter;
 		moreInfoTextLabel.text = self.checkboxMoreInformationText;
+		moreInfoTextLabel.accessibilityHint = NSLocalizedString(@"VoiceOverHint_TapForMoreInformation", nil);
 		moreInfoTextLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14.0f];
 		moreInfoTextLabel.numberOfLines = 1;
 		//		confirmationTextLabel.backgroundColor = [UIColor blueColor];
