@@ -92,6 +92,7 @@
 "VoiceOverLabel_CheckboxChecked" = "Checkbox checked";
 "VoiceOverLabel_CheckboxUnchecked" = "Checkbox unchecked";
 
+"VoiceOverLabel_ThemeCreatedBy" = "%@ theme, created by %@"; //The first %@ will be the theme's name in English (non-translatable), the second will be the person who created it (also in English, not translatable).
 
 
 "VoiceOverHint_AllowExplicitImageDownloading" = "Double tap to allow image downloading when your phone is on cellular data or when it is low on storage";
@@ -132,6 +133,7 @@
 
 "VoiceOverHint_TapForMoreInformation" = "Double tap to get more information on this dialogue";
 
+"VoiceOverHint_TapToUseTheme" = "Double tap to apply this theme";
 
 
 "YouCurrentlyHaveThisFeatureOff" = "You currently have image downloading turned off.";

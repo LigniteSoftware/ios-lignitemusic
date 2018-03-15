@@ -88,9 +88,20 @@
 		[subview removeFromSuperview];
 	}
 	
+	LMTheme theme = (LMTheme)indexPath.row;
+	
+	NSString *themeKey = [[LMThemeEngine sharedThemeEngine] keyForTheme:theme];
+	NSString *themeCreatorKey = [NSString stringWithFormat:@"%@_Creator", themeKey];
+	NSString *themeTitleKey = [NSString stringWithFormat:@"%@_Title", themeKey];
+	NSString *themeCreator = NSLocalizedString(themeCreatorKey, nil);
+	NSString *themeTitle = NSLocalizedString(themeTitleKey, nil);
+	
 	LMThemeView *themeView = [LMThemeView newAutoLayoutView];
-	themeView.theme = (LMTheme)indexPath.row;
+	themeView.theme = theme;
 	themeView.delegate = self;
+	themeView.isAccessibilityElement = YES;
+	themeView.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"VoiceOverLabel_ThemeCreatedBy", nil), themeTitle, themeCreator];
+	themeView.accessibilityHint = NSLocalizedString(@"VoiceOverHint_TapToUseTheme", nil);
 	[cell.contentView addSubview:themeView];
 	
 	[themeView autoPinEdgesToSuperviewEdges];
@@ -191,6 +202,7 @@
 	self.collectionView.delegate = self;
 	self.collectionView.dataSource = self;
 	self.collectionView.allowsSelection = NO;
+	self.collectionView.isAccessibilityElement = NO;
 	[self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"ThemeCollectionViewIdentifier"];
 	self.collectionView.backgroundColor = [UIColor whiteColor];
 	[self.view addSubview:self.collectionView];
