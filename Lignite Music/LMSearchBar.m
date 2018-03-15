@@ -50,6 +50,10 @@
 	
 	self.currentSearchTerm = searchTerm;
 	
+	BOOL isReadyToClose = [self.searchTextField.text isEqualToString:@""];
+	self.clearTextButtonBackgroundView.accessibilityLabel = NSLocalizedString(isReadyToClose ? @"VoiceOverLabel_CloseSearch" : @"VoiceOverLabel_ClearSearch", nil);
+	self.clearTextButtonBackgroundView.accessibilityHint = NSLocalizedString(isReadyToClose ? @"VoiceOverHint_CloseSearch" : @"VoiceOverHint_ClearSearch", nil);
+	
 	if(self.delegate){
 		[self.delegate searchTermChangedTo:searchTerm];
 	}
@@ -127,6 +131,9 @@
 		
 		self.clearTextButtonBackgroundView = [UIView newAutoLayoutView];
 		self.clearTextButtonBackgroundView.backgroundColor = [LMColour mainColour];
+		self.clearTextButtonBackgroundView.isAccessibilityElement = YES;
+		self.clearTextButtonBackgroundView.accessibilityLabel = NSLocalizedString(@"VoiceOverLabel_CloseSearch", nil);
+		self.clearTextButtonBackgroundView.accessibilityHint = NSLocalizedString(@"VoiceOverHint_CloseSearch", nil);
 		[self addSubview:self.clearTextButtonBackgroundView];
 		
 		[self.clearTextButtonBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];

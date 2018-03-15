@@ -281,6 +281,17 @@
 	return collections.count;
 }
 
+- (NSString*)accessibilityLabelForIndexPath:(NSIndexPath *)indexPath {
+	NSString *title = [self titleForIndexPath:indexPath forSectionTableView:self.sectionTableView];
+	NSString *subtitle = [self subtitleForIndexPath:indexPath forSectionTableView:self.sectionTableView];
+
+	return [NSString stringWithFormat:@"%@, %@", title, subtitle];
+}
+
+- (NSString*)accessibilityHintForIndexPath:(NSIndexPath *)indexPath {
+	return NSLocalizedString(@"VoiceOverHint_TapSearchEntry", nil);
+}
+
 - (NSString*)titleForIndexPath:(NSIndexPath*)indexPath forSectionTableView:(LMSectionTableView*)sectionTableView {
 	LMMusicType musicType = (LMMusicType)[[self.searchResultsMusicTypes objectAtIndex:indexPath.section] unsignedIntegerValue];
 	

@@ -102,6 +102,10 @@
 
 "VoiceOverLabel_SearchButton" = "Search";
 
+"VoiceOverLabel_CloseSearch" = "Close search";
+"VoiceOverLabel_ClearSearch" = "Clear search field";
+
+
 
 
 
@@ -158,8 +162,10 @@
 
 "VoiceOverHint_SearchButton" = "Double tap to open search";
 
+"VoiceOverHint_CloseSearch" = "Double tap to close the search window";
+"VoiceOverHint_ClearSearch" = "Double tap to clear the current search";
 
-
+"VoiceOverHint_TapSearchEntry" = "Double tap to go to this music";
 
 
 "YouCurrentlyHaveThisFeatureOff" = "You currently have image downloading turned off.";
