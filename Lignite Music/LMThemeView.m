@@ -188,10 +188,15 @@
 		self.imageView.clipsToBounds = YES;
 		[self.imageViewBackgroundView addSubview:self.imageView];
 		
-		UIImage *image = [self roundedImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@", self.themeKey]]];
-		[self.imageView setImage:image];
 		
-		CGFloat widthMultiplier = image.size.width / image.size.height;
+		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+			UIImage *image = [self roundedImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@", self.themeKey]]];
+			dispatch_async(dispatch_get_main_queue(), ^{
+				[self.imageView setImage:image];
+			});
+		});
+		
+		CGFloat widthMultiplier = 0.5625; // == 1242/2208
 		
 		[self.imageView autoCentreInSuperview];
 		[self.imageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.imageViewBackgroundView withMultiplier:widthMultiplier];

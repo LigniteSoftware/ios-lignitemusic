@@ -518,7 +518,9 @@ MPMediaGrouping associatedMediaTypes[] = {
 }
 
 - (void)notifyDelegatesOfPlaybackState {
-	for(id<LMMusicPlayerDelegate> delegate in self.delegates){
+	NSArray<id<LMMusicPlayerDelegate>> *safeDelegates = [[NSArray alloc]initWithArray:self.delegates];
+	
+	for(id<LMMusicPlayerDelegate> delegate in safeDelegates){
 		if([delegate respondsToSelector:@selector(musicPlaybackStateDidChange:)]){
 			[delegate musicPlaybackStateDidChange:self.playbackState];
 		}
@@ -526,7 +528,9 @@ MPMediaGrouping associatedMediaTypes[] = {
 }
 
 - (void)notifyDelegatesOfNowPlayingTrack {
-	for(id<LMMusicPlayerDelegate> delegate in self.delegates){
+	NSArray<id<LMMusicPlayerDelegate>> *safeDelegates = [[NSArray alloc]initWithArray:self.delegates];
+	
+	for(id<LMMusicPlayerDelegate> delegate in safeDelegates){
 		if([delegate respondsToSelector:@selector(musicTrackDidChange:)]){
 			[delegate musicTrackDidChange:self.nowPlayingTrack];
 		}
@@ -646,7 +650,9 @@ MPMediaGrouping associatedMediaTypes[] = {
 }
 
 - (void)notifyLibraryChangeDelegatesOfLibraryChange:(BOOL)finished {
-	for(id<LMMusicPlayerDelegate> delegate in self.delegates){
+	NSArray<id<LMMusicPlayerDelegate>> *safeDelegates = [[NSArray alloc]initWithArray:self.delegates];
+	
+	for(id<LMMusicPlayerDelegate> delegate in safeDelegates){
 		if([delegate respondsToSelector:@selector(musicLibraryChanged:)]){
 			[delegate musicLibraryChanged:finished];
 		}
@@ -1618,7 +1624,9 @@ BOOL shuffleForDebug = NO;
 
 - (void)addTrackToQueue:(LMMusicTrack*)trackToAdd {
 	if(!self.nowPlayingWasSetWithinLigniteMusic){
-		for(id<LMMusicPlayerDelegate> delegate in self.delegates){
+		NSArray<id<LMMusicPlayerDelegate>> *safeDelegates = [[NSArray alloc]initWithArray:self.delegates];
+		
+		for(id<LMMusicPlayerDelegate> delegate in safeDelegates){
 			if([delegate respondsToSelector:@selector(userAttemptedToModifyQueueThatIsManagedByiOS)]){
 				[delegate userAttemptedToModifyQueueThatIsManagedByiOS];
 			}
@@ -1651,7 +1659,9 @@ BOOL shuffleForDebug = NO;
 		self.queueRequiresReload = YES;
 	}
 	
-	for(id<LMMusicPlayerDelegate> delegate in self.delegates){
+	NSArray<id<LMMusicPlayerDelegate>> *safeDelegates = [[NSArray alloc]initWithArray:self.delegates];
+	
+	for(id<LMMusicPlayerDelegate> delegate in safeDelegates){
 		if([delegate respondsToSelector:@selector(trackAddedToQueue:)]){
 			[delegate trackAddedToQueue:trackToAdd];
 		}
@@ -1678,7 +1688,9 @@ BOOL shuffleForDebug = NO;
 		self.queueRequiresReload = YES;
 	}
 	
-	for(id<LMMusicPlayerDelegate> delegate in self.delegates){
+	NSArray<id<LMMusicPlayerDelegate>> *safeDelegates = [[NSArray alloc]initWithArray:self.delegates];
+	
+	for(id<LMMusicPlayerDelegate> delegate in safeDelegates){
 		if([delegate respondsToSelector:@selector(trackRemovedFromQueue:)]){
 			[delegate trackRemovedFromQueue:trackToRemove];
 		}
@@ -1690,7 +1702,9 @@ BOOL shuffleForDebug = NO;
 }
 
 - (void)finishQueueModification {
-	for(id<LMMusicPlayerDelegate> delegate in self.delegates){
+	NSArray<id<LMMusicPlayerDelegate>> *safeDelegates = [[NSArray alloc]initWithArray:self.delegates];
+	
+	for(id<LMMusicPlayerDelegate> delegate in safeDelegates){
 		if([delegate respondsToSelector:@selector(trackMovedInQueue:)]){
 			[delegate trackMovedInQueue:self.lastTrackMovedInQueue];
 		}
@@ -1759,7 +1773,9 @@ BOOL shuffleForDebug = NO;
 	[userDefaults setBool:YES forKey:[self favouriteKeyForTrack:track]];
 	[userDefaults synchronize];
 	
-	for(id<LMMusicPlayerDelegate> delegate in self.delegates){
+	NSArray<id<LMMusicPlayerDelegate>> *safeDelegates = [[NSArray alloc]initWithArray:self.delegates];
+	
+	for(id<LMMusicPlayerDelegate> delegate in safeDelegates){
 		if([delegate respondsToSelector:@selector(trackAddedToFavourites:)]){
 			[delegate trackAddedToFavourites:track];
 		}
@@ -1771,7 +1787,9 @@ BOOL shuffleForDebug = NO;
 	[userDefaults setBool:NO forKey:[self favouriteKeyForTrack:track]];
 	[userDefaults synchronize];
 	
-	for(id<LMMusicPlayerDelegate> delegate in self.delegates){
+	NSArray<id<LMMusicPlayerDelegate>> *safeDelegates = [[NSArray alloc]initWithArray:self.delegates];
+	
+	for(id<LMMusicPlayerDelegate> delegate in safeDelegates){
 		if([delegate respondsToSelector:@selector(trackRemovedFromFavourites:)]){
 			[delegate trackRemovedFromFavourites:track];
 		}
@@ -1919,7 +1937,9 @@ BOOL shuffleForDebug = NO;
 }
 
 - (void)updatePlaybackModeDelegates {
-	for(id<LMMusicPlayerDelegate>delegate in self.delegates){
+	NSArray<id<LMMusicPlayerDelegate>> *safeDelegates = [[NSArray alloc]initWithArray:self.delegates];
+	
+	for(id<LMMusicPlayerDelegate> delegate in safeDelegates){
 		if([delegate respondsToSelector:@selector(musicPlaybackModesDidChange:repeatMode:)]){
 			[delegate musicPlaybackModesDidChange:self.shuffleMode repeatMode:self.repeatMode];
 		}
