@@ -1987,10 +1987,10 @@
 //		[self.navigationController pushViewController:settingsViewController animated:YES];
 //		self.buttonNavigationBar.hidden = YES;
 
-		
-		LMThemePickerViewController *themesViewController = [LMThemePickerViewController new];
-		[self.navigationController pushViewController:themesViewController animated:YES];
-		self.buttonNavigationBar.hidden = YES;
+//		
+//		LMThemePickerViewController *themesViewController = [LMThemePickerViewController new];
+//		[self.navigationController pushViewController:themesViewController animated:YES];
+//		self.buttonNavigationBar.hidden = YES;
 
 		
 		

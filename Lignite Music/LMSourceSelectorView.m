@@ -207,6 +207,8 @@
 	
 	self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:flowLayout];
 	self.collectionView.translatesAutoresizingMaskIntoConstraints = NO;
+	//	self.collectionView.isAccessibilityElement = YES;
+	//	self.collectionView.accessibilityTraits = UIaccesstrait;
 	self.collectionView.delegate = self;
 	self.collectionView.dataSource = self;
 	self.collectionView.contentInset = UIEdgeInsetsMake(([LMLayoutManager isiPhoneX] && ![LMLayoutManager isLandscape] && self.isMainSourceSelector) ? 30 : 10, 20, 20, 20);
@@ -224,6 +226,18 @@
 		listEntry.invertIconOnHighlight = YES;
 		listEntry.stretchAcrossWidth = YES;
 		listEntry.roundedCorners = NO;
+		
+		listEntry.isAccessibilityElement = YES;
+		listEntry.accessibilityLabel = [self titleForListEntry:listEntry];
+		if(i <= 6){
+			listEntry.accessibilityHint = [NSString stringWithFormat:NSLocalizedString(@"VoiceOverHint_BrowseMusicType", nil), listEntry.accessibilityLabel];
+		}
+		else if(i == 7){
+			listEntry.accessibilityHint = NSLocalizedString(@"VoiceOverHint_OpenSettings", nil);
+		}
+		else if(i == 8){
+			listEntry.accessibilityHint = NSLocalizedString(@"VoiceOverHint_OpenFeedbackSubmitter", nil);
+		}
 		
 		[self.listEntryArray addObject:listEntry];
 	}
