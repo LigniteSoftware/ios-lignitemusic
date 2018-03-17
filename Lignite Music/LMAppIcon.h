@@ -66,7 +66,9 @@ typedef enum {
 	LMIconUnfavouriteWhite,
 	LMIconUnfavouriteBlack,
 	LMIconEdit,
-	LMIconAdd
+	LMIconAdd,
+	LMIconMinimize,
+	LMIconMaximize
 } LMIcon;
 
 /**

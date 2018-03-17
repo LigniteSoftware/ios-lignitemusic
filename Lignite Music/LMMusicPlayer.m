@@ -123,6 +123,18 @@ MPMediaGrouping associatedMediaTypes[] = {
 	//Do nothing
 }
 
+- (void)voiceOverStatusChanged {
+	NSLog(@"[LMMusicPlayer] VoiceOver status changed to %d", UIAccessibilityIsVoiceOverRunning());
+	
+	NSArray<id<LMMusicPlayerDelegate>> *safeDelegates = [[NSArray alloc]initWithArray:self.delegates];
+	
+	for(id<LMMusicPlayerDelegate> delegate in safeDelegates){
+		if([delegate respondsToSelector:@selector(voiceOverStatusChanged:)]){
+			[delegate voiceOverStatusChanged:UIAccessibilityIsVoiceOverRunning()];
+		}
+	}
+}
+
 - (instancetype)init {
 	self = [super init];
 	if(self){
@@ -154,6 +166,12 @@ MPMediaGrouping associatedMediaTypes[] = {
 		[[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
 		
 		NSNotificationCenter *notificationCentre = [NSNotificationCenter defaultCenter];
+		
+		[notificationCentre
+		 addObserver:self
+		 selector:@selector(voiceOverStatusChanged)
+		 name:UIAccessibilityVoiceOverStatusChanged
+		 object:nil];
 		
 		[notificationCentre
 		 addObserver:self
@@ -1576,7 +1594,6 @@ BOOL shuffleForDebug = NO;
 	
 	if(!preservedQueueContainsSystemNowPlayingTrack){
 		NSLog(@"The preserved queue does not contain the now playing track. I'm going to dump it all, sorry.");
-#warning clear queue storage
 //		[self stop];
 		return;
 	}

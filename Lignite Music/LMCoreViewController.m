@@ -1482,38 +1482,38 @@
 	
 	
 	
-	MPMusicPlayerControllerQueue *mutableQueue = [MPMusicPlayerController systemMusicPlayer];
-	
-	MPMusicPlayerController *controller = [MPMusicPlayerController systemMusicPlayer];
-	
-	
-	NSLog(@"Mutable queue %@", mutableQueue);
-	
-	int i = 0;
-	unsigned int mc = 0;
-	NSLog(@"Wow %@", [[MPMusicPlayerController systemMusicPlayer] performSelector:@selector(queueAsRadioStation)]);
-//	[MPMusicPlayerControllerQueue systemMusicPlayer];
-	Class class = MPMediaLibrary.class;
-	Method *mlist = class_copyMethodList(class, &mc);
-	NSLog(@"%@ has %d methods", class, mc);
-	for(i = 0; i < mc; i++){
-		NSLog(@"\t#%d: %s", i, sel_getName(method_getName(mlist[i])));
-	}
-	free(mlist);
-
-	MPMediaQuery *query = [[MPMusicPlayerController systemMusicPlayer] performSelector:@selector(queueAsQuery)];
-
-	NSLog(@"Got query %@ with %d items", query, (int)query.items.count);
-
-	NSLog(@"dis %d", [[MPMusicPlayerController systemMusicPlayer] performSelector:@selector(userQueueModificationsDisabled)]);
-
-	int index = 0;
-	for(MPMediaItem *item in query.items){
-		NSLog(@"%d - %@", index, item.title);
-		index++;
-	}
-
-	NSLog(@"%d items", [[MPMusicPlayerController systemMusicPlayer] valueForKey:@"numberOfItems"]);
+//	MPMusicPlayerControllerQueue *mutableQueue = [MPMusicPlayerController systemMusicPlayer];
+//
+//	MPMusicPlayerController *controller = [MPMusicPlayerController systemMusicPlayer];
+//
+//
+//	NSLog(@"Mutable queue %@", mutableQueue);
+//
+//	int i = 0;
+//	unsigned int mc = 0;
+//	NSLog(@"Wow %@", [[MPMusicPlayerController systemMusicPlayer] performSelector:@selector(queueAsRadioStation)]);
+////	[MPMusicPlayerControllerQueue systemMusicPlayer];
+//	Class class = MPMediaLibrary.class;
+//	Method *mlist = class_copyMethodList(class, &mc);
+//	NSLog(@"%@ has %d methods", class, mc);
+//	for(i = 0; i < mc; i++){
+//		NSLog(@"\t#%d: %s", i, sel_getName(method_getName(mlist[i])));
+//	}
+//	free(mlist);
+//
+//	MPMediaQuery *query = [[MPMusicPlayerController systemMusicPlayer] performSelector:@selector(queueAsQuery)];
+//
+//	NSLog(@"Got query %@ with %d items", query, (int)query.items.count);
+//
+//	NSLog(@"dis %d", [[MPMusicPlayerController systemMusicPlayer] performSelector:@selector(userQueueModificationsDisabled)]);
+//
+//	int index = 0;
+//	for(MPMediaItem *item in query.items){
+//		NSLog(@"%d - %@", index, item.title);
+//		index++;
+//	}
+//
+//	NSLog(@"%d items", [[MPMusicPlayerController systemMusicPlayer] valueForKey:@"numberOfItems"]);
 //	return;
 
 //	NSInteger numberOfItems = [[MPMusicPlayerController systemMusicPlayer] performSelector:@selector(numberOfItems)];

@@ -20,6 +20,8 @@
 @implementation LMButton
 
 @synthesize borderColour = _borderColour;
+@synthesize ligniteAccessibilityLabel = _ligniteAccessibilityLabel;
+@synthesize ligniteAccessibilityHint = _ligniteAccessibilityHint;
 
 - (void)logFrame{
     NSLog(@"The current frame for %@ is %@.", self, NSStringFromCGRect(self.frame));
@@ -33,6 +35,28 @@
 	[self reloadBorder];
 	
 	[super layoutSubviews];
+}
+
+- (void)setLigniteAccessibilityLabel:(NSString *)ligniteAccessibilityLabel {
+	_ligniteAccessibilityLabel = ligniteAccessibilityLabel;
+	
+	self.imageBackgroundView.isAccessibilityElement = YES;
+	self.imageBackgroundView.accessibilityLabel = ligniteAccessibilityLabel;
+}
+
+- (NSString*)ligniteAccessibilityLabel {
+	return _ligniteAccessibilityLabel;
+}
+
+- (void)setLigniteAccessibilityHint:(NSString *)ligniteAccessibilityHint {
+	_ligniteAccessibilityHint = ligniteAccessibilityHint;
+	
+	self.imageBackgroundView.isAccessibilityElement = YES;
+	self.imageBackgroundView.accessibilityHint = ligniteAccessibilityHint;
+}
+
+- (NSString*)ligniteAccessibilityHint {
+	return _ligniteAccessibilityHint;
 }
 
 - (void)setBorderColour:(LMColour *)borderColour {
@@ -61,6 +85,13 @@
 	self.imageBackgroundView = [UIView new];
 	self.imageBackgroundView.translatesAutoresizingMaskIntoConstraints = NO;
 	self.imageBackgroundView.backgroundColor = [LMColour mainColour];
+	
+	if(_ligniteAccessibilityLabel || _ligniteAccessibilityHint){
+		self.imageBackgroundView.isAccessibilityElement = YES;
+		self.imageBackgroundView.accessibilityLabel = _ligniteAccessibilityLabel;
+		self.imageBackgroundView.accessibilityHint = _ligniteAccessibilityHint;
+	}
+	
 	[self addSubview:self.imageBackgroundView];
 	
 	[self.imageBackgroundView autoAlignAxisToSuperviewAxis:ALAxisVertical];
@@ -87,10 +118,6 @@
 
 - (void)setImage:(UIImage*)newImage{
 	self.imageView.image = newImage;
-}
-
-- (UIColor*)getColor:(LMButton*)button {
-	return self.imageBackgroundView.backgroundColor;
 }
 
 - (void)setColour:(UIColor*)newColour{

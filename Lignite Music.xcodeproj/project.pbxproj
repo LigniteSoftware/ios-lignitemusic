@@ -40,6 +40,8 @@
 		6A32A9E81DC654500056CC60 /* LMTriangleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A32A9E71DC654500056CC60 /* LMTriangleView.m */; };
 		6A32A9EC1DC68F440056CC60 /* LMTriangleContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A32A9EB1DC68F440056CC60 /* LMTriangleContainerView.m */; };
 		6A32A9EF1DC6906D0056CC60 /* LMTriangleMaskView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A32A9EE1DC6906D0056CC60 /* LMTriangleMaskView.m */; };
+		6A32AEEB205C3CD7008817AA /* LMAccessibilityButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A32AEEA205C3CD7008817AA /* LMAccessibilityButton.m */; };
+		6A32AEEE205C3D81008817AA /* LMAccessibilityMusicControlBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A32AEED205C3D81008817AA /* LMAccessibilityMusicControlBar.m */; };
 		6A339FC21FD66FAC00B1A447 /* LMWBrowsingInterfaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A339FC11FD66FAC00B1A447 /* LMWBrowsingInterfaceController.m */; };
 		6A33A0101FE043BE00B1A447 /* LMAnswers.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A33A00F1FE043BD00B1A447 /* LMAnswers.m */; };
 		6A37B1CA1FB2761D00934A75 /* LMWProgressSliderInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A37B1C91FB2761D00934A75 /* LMWProgressSliderInfo.m */; };
@@ -284,6 +286,10 @@
 		6A32A9ED1DC6906D0056CC60 /* LMTriangleMaskView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMTriangleMaskView.h; sourceTree = "<group>"; };
 		6A32A9EE1DC6906D0056CC60 /* LMTriangleMaskView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMTriangleMaskView.m; sourceTree = "<group>"; };
 		6A32A9F01DC695020056CC60 /* main.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = main.h; sourceTree = "<group>"; };
+		6A32AEE9205C3CD7008817AA /* LMAccessibilityButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMAccessibilityButton.h; sourceTree = "<group>"; };
+		6A32AEEA205C3CD7008817AA /* LMAccessibilityButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMAccessibilityButton.m; sourceTree = "<group>"; };
+		6A32AEEC205C3D81008817AA /* LMAccessibilityMusicControlBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMAccessibilityMusicControlBar.h; sourceTree = "<group>"; };
+		6A32AEED205C3D81008817AA /* LMAccessibilityMusicControlBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMAccessibilityMusicControlBar.m; sourceTree = "<group>"; };
 		6A339FC01FD66FAC00B1A447 /* LMWBrowsingInterfaceController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMWBrowsingInterfaceController.h; sourceTree = "<group>"; };
 		6A339FC11FD66FAC00B1A447 /* LMWBrowsingInterfaceController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMWBrowsingInterfaceController.m; sourceTree = "<group>"; };
 		6A33A00E1FE043BD00B1A447 /* LMAnswers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMAnswers.h; sourceTree = "<group>"; };
@@ -658,6 +664,10 @@
 				6A165DE01E86B2A3007817A3 /* LMNowPlayingCoreView.m */,
 				6AD226FA1DA4B7770056695A /* LMNowPlayingView.h */,
 				6AD226FB1DA4B7770056695A /* LMNowPlayingView.m */,
+				6A32AEE9205C3CD7008817AA /* LMAccessibilityButton.h */,
+				6A32AEEA205C3CD7008817AA /* LMAccessibilityButton.m */,
+				6A32AEEC205C3D81008817AA /* LMAccessibilityMusicControlBar.h */,
+				6A32AEED205C3D81008817AA /* LMAccessibilityMusicControlBar.m */,
 				6A52574D1DF099720040210D /* LMProgressSlider.h */,
 				6A52574E1DF099720040210D /* LMProgressSlider.m */,
 				6A32113C1DA727960060DD07 /* LMTrackDurationView.h */,
@@ -1561,6 +1571,7 @@
 				6A32A9EF1DC6906D0056CC60 /* LMTriangleMaskView.m in Sources */,
 				6A78E6791F9E44E500B7E369 /* LMPlaylist.m in Sources */,
 				6A5168901E08E96600A6446F /* LMButtonBar.m in Sources */,
+				6A32AEEB205C3CD7008817AA /* LMAccessibilityButton.m in Sources */,
 				6A7DF1241DB12C860077B979 /* LMTitleView.m in Sources */,
 				6AEA5458200584A20071ACD4 /* Popover.swift in Sources */,
 				6A1FB9CC1D9AE76A00890BF3 /* LMLabel.m in Sources */,
@@ -1606,6 +1617,7 @@
 				6AF751661E0454B50001E18B /* LMPaddedTextField.m in Sources */,
 				6A1AF0841E0341BC00F8934C /* MPMediaItem+LigniteImages.m in Sources */,
 				6A313C181BB59AE8002BBC33 /* LMButton.m in Sources */,
+				6A32AEEE205C3D81008817AA /* LMAccessibilityMusicControlBar.m in Sources */,
 				6A4901AE1ED1FA1400646799 /* LMPhoneLandscapeDetailView.m in Sources */,
 				6A23AF4E1E46254400A56F5F /* LMCompactBrowsingView.m in Sources */,
 				6AD480631DCAAF4D00DB891B /* LMCollectionInfoView.m in Sources */,

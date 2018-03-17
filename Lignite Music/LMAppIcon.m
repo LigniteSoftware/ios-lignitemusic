@@ -122,6 +122,10 @@
 			return @"icon_edit_white";
 		case LMIconAdd:
 			return @"icon_plus_white";
+		case LMIconMinimize:
+			return @"icon_minimize";
+		case LMIconMaximize:
+			return @"icon_maximize";
 	}
 	return @"icon_bug";
 }

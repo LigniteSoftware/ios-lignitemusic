@@ -1171,6 +1171,7 @@
 		self.collectionView = [[UICollectionView alloc]initWithFrame:CGRectZero collectionViewLayout:fuck];
 		self.collectionView.translatesAutoresizingMaskIntoConstraints = NO;
 		self.collectionView.scrollEnabled = YES;
+		self.collectionView.isAccessibilityElement = NO;
 		
 		//Force scrolling
 		self.collectionView.alwaysBounceVertical = YES;

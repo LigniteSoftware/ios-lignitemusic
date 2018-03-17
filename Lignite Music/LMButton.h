@@ -24,9 +24,11 @@
 @property BOOL roundedCorners;
 @property LMColour *borderColour;
 
+@property NSString *ligniteAccessibilityLabel;
+@property NSString *ligniteAccessibilityHint;
+
 - (void)reloadBorder;
 - (void)setImage:(UIImage*)newImage;
-- (UIColor*)getColor:(LMButton*)button;
 - (void)setColour:(UIColor*)newColour;
 - (void)setupWithImageMultiplier:(CGFloat)imageMultiplier;
 

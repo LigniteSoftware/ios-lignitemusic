@@ -7,6 +7,8 @@
 //
 
 #import <PureLayout/PureLayout.h>
+
+#import "LMAccessibilityMusicControlBar.h"
 #import "UIImage+AverageColour.h"
 #import "LMNowPlayingCoreView.h"
 #import "LMProgressSlider.h"
@@ -27,7 +29,7 @@
 #import "LMColour.h"
 #import "LMButton.h"
 
-@interface LMNowPlayingView() <LMMusicPlayerDelegate, LMButtonDelegate, LMProgressSliderDelegate, LMTableViewSubviewDataSource, LMListEntryDelegate, LMLayoutChangeDelegate, DDTableViewDelegate, LMThemeEngineDelegate>
+@interface LMNowPlayingView() <LMMusicPlayerDelegate, LMButtonDelegate, LMProgressSliderDelegate, LMTableViewSubviewDataSource, LMListEntryDelegate, LMLayoutChangeDelegate, DDTableViewDelegate, LMThemeEngineDelegate, LMAccessibilityMusicControlBarDelegate>
 
 @property LMMusicPlayer *musicPlayer;
 
@@ -90,6 +92,8 @@
 //@property UIView *shadingView;
 @property UIVisualEffectView *blurredBackgroundView;
 
+@property BOOL outputPortIsWireless; //Terrible code, I know
+
 /**
  Goes in front of the background image view for now while we test this new design
  */
@@ -136,11 +140,46 @@
  */
 @property NSTimer *pausedTimer;
 
-@property BOOL outputPortIsWireless; //Terrible code, I know
+/**
+ The music control bar for VoiceOver users. This and its children won't be created unless VoiceOver is turned on when the app is launched or if VoiceOver is turned on during the apps lifecycle.
+ */
+@property LMAccessibilityMusicControlBar *accessibilityMusicControlBar;
 
 @end
 
 @implementation LMNowPlayingView
+
+- (void)accessibilityControlBarButtonTapped:(LMAccessibilityControlButtonType)controlButtonType {
+	switch(controlButtonType){
+		case LMAccessibilityControlButtonTypeToggleNowPlaying:
+			[self.coreViewController dismissNowPlaying];
+			break;
+	}
+}
+
+- (void)setShowingAccessibilityControls:(BOOL)showingAccessibilityControls animated:(BOOL)animated {
+	if(!self.accessibilityMusicControlBar){
+		self.accessibilityMusicControlBar = [LMAccessibilityMusicControlBar newAutoLayoutView];
+		self.accessibilityMusicControlBar.delegate = self;
+		[self.albumArtImageView addSubview:self.accessibilityMusicControlBar];
+		
+		[self.accessibilityMusicControlBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[self.accessibilityMusicControlBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.accessibilityMusicControlBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.accessibilityMusicControlBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.albumArtImageView withMultiplier:(2.0/10.0)];
+		
+		[self setShowingAccessibilityControls:showingAccessibilityControls animated:YES]; //Animate in the controls
+	}
+	else{
+		[UIView animateWithDuration:animated ? 0.25 : 0.0 animations:^{
+			self.accessibilityMusicControlBar.alpha = showingAccessibilityControls ? 1.0 : 0.0;
+		}];
+	}
+}
+
+- (void)voiceOverStatusChanged:(BOOL)voiceOverEnabled {
+	[self setShowingAccessibilityControls:voiceOverEnabled animated:YES];
+}
 
 + (NSString*)durationStringTotalPlaybackTime:(long)totalPlaybackTime {
 	long totalHours = (totalPlaybackTime / 3600);
@@ -205,7 +244,7 @@
 }
 
 - (void)musicPlaybackModesDidChange:(LMMusicShuffleMode)shuffleMode repeatMode:(LMMusicRepeatMode)repeatMode {
-	[self reloadControlButtonColours];
+	[self reloadControlButtons];
 	
 	[self.queueTableView reloadSubviewData];
 	[self.queueTableView reloadData];
@@ -275,7 +314,7 @@
 			}
 			
 			[self reloadFavouriteStatus];
-			[self reloadControlButtonColours];
+			[self reloadControlButtons];
 			
 //			NSLog(@"Spook me solid");
 			
@@ -384,7 +423,7 @@
 	} repeats:NO];
 	
 	[self refreshNothingInQueueText];
-	[self reloadControlButtonColours];
+	[self reloadControlButtons];
 }
 
 
@@ -480,11 +519,11 @@
 - (void)musicOutputPortDidChange:(AVAudioSessionPortDescription *)outputPort {
 	[UIView animateWithDuration:0.25 animations:^{
 		self.outputPortIsWireless = [LMMusicPlayer outputPortIsWireless:outputPort];
-		[self reloadControlButtonColours];
+		[self reloadControlButtons];
 	}];
 }
 
-- (void)reloadControlButtonColours {
+- (void)reloadControlButtons {
 	LMIcon icons[] = {
 		LMIconRepeat, LMIconRepeat, LMIconRepeat, LMIconRepeatOne
 	};
@@ -548,6 +587,38 @@
 	[UIView animateWithDuration:0.25 animations:^{
 		[self.repeatModeButton setColour:[self controlButtonColourHighlighted:(self.musicPlayer.repeatMode != LMMusicRepeatModeNone)]];
 	}];
+	
+	
+	self.shuffleModeButton.ligniteAccessibilityLabel = NSLocalizedString(self.musicPlayer.shuffleMode ? @"VoiceOverLabel_ShuffleOn" : @"VoiceOverLabel_ShuffleOff", nil);
+	self.shuffleModeButton.ligniteAccessibilityHint = NSLocalizedString(self.musicPlayer.shuffleMode ? @"VoiceOverHint_ShuffleOn" : @"VoiceOverHint_ShuffleOff", nil);
+	
+	NSString *repeatKey = nil;
+	
+	switch(self.musicPlayer.repeatMode){
+		case LMMusicRepeatModeDefault:
+		case LMMusicRepeatModeNone:
+			repeatKey = @"RepeatOff";
+			break;
+		case LMMusicRepeatModeAll:
+			repeatKey = @"RepeatAll";
+			break;
+		case LMMusicRepeatModeOne:
+			repeatKey = @"RepeatOne";
+			break;
+	}
+	
+	NSString *repeatLabelKey = [NSString stringWithFormat:@"VoiceOverLabel_%@", repeatKey];
+	NSString *repeatHintKey = [NSString stringWithFormat:@"VoiceOverHint_%@", repeatKey];
+	
+	self.repeatModeButton.ligniteAccessibilityLabel = NSLocalizedString(repeatLabelKey, nil);
+	self.repeatModeButton.ligniteAccessibilityHint = NSLocalizedString(repeatHintKey, nil);
+	
+	
+	self.favouriteHeartImageView.accessibilityLabel = NSLocalizedString(!self.loadedTrack.isFavourite ? @"VoiceOverLabel_FavouriteButton" : @"VoiceOverLabel_UnfavouriteButton", nil);
+	self.favouriteHeartImageView.accessibilityHint = NSLocalizedString(!self.loadedTrack.isFavourite ? @"VoiceOverHint_FavouriteButton" : @"VoiceOverHint_UnfavouriteButton", nil);
+	
+	self.favouritesButton.ligniteAccessibilityLabel = NSLocalizedString(!self.loadedTrack.isFavourite ? @"VoiceOverLabel_FavouriteButton" : @"VoiceOverLabel_UnfavouriteButton", nil);
+	self.favouritesButton.ligniteAccessibilityHint = NSLocalizedString(!self.loadedTrack.isFavourite ? @"VoiceOverHint_FavouriteButton" : @"VoiceOverHint_UnfavouriteButton", nil);
 }
 
 - (void)setNowPlayingQueueOpen:(BOOL)open animated:(BOOL)animated {
@@ -590,7 +661,7 @@
 	}
 	
 	[UIView animateWithDuration:animated ? 0.25 : 0.0 animations:^{
-		[self reloadControlButtonColours];
+		[self reloadControlButtons];
 		[self layoutIfNeeded];
 	}];
 }
@@ -639,7 +710,7 @@
 		[self changeFavouriteStatus];
 	}
 	
-	[self reloadControlButtonColours];
+	[self reloadControlButtons];
 }
 
 - (void)tappedNowPlaying {
@@ -677,6 +748,8 @@
 	LMListEntry *entry = [self.itemArray objectAtIndex:index % self.itemArray.count];
 	entry.collectionIndex = index;
 	entry.associatedData = [self.musicPlayer.nowPlayingCollection.items objectAtIndex:index];
+	entry.isAccessibilityElement = YES;
+	entry.accessibilityHint = NSLocalizedString(@"VoiceOverHint_QueueEntry", nil);
 	
 	[entry changeHighlightStatus:(self.currentlyHighlighted == entry.collectionIndex) animated:NO];
 	
@@ -889,14 +962,23 @@
 - (NSString*)titleForListEntry:(LMListEntry*)entry {
 //	return @"queue title";
 //	return [NSString stringWithFormat:@"boiii %d", (int)entry.collectionIndex];
-	return [NSString stringWithFormat:@"%@", [[self.musicPlayer.nowPlayingCollection.items objectAtIndex:entry.collectionIndex] title]];
+	
+	LMMusicTrack *associatedTrack = [self.musicPlayer.nowPlayingCollection.items objectAtIndex:entry.collectionIndex];
+	
+	NSString *title = [NSString stringWithFormat:@"%@", [[self.musicPlayer.nowPlayingCollection.items objectAtIndex:entry.collectionIndex] title]];
+	
+	if(associatedTrack.artist){
+		entry.accessibilityLabel =  [NSString stringWithFormat:@"%@, %@", title, associatedTrack.artist];
+	}
+	
+	return title;
 }
 
 - (NSString*)subtitleForListEntry:(LMListEntry*)entry {
 //	return @"queue subtitle";
 	LMMusicTrack *associatedTrack = [self.musicPlayer.nowPlayingCollection.items objectAtIndex:entry.collectionIndex];
 	
-	if(self.loadedTrack.artist){
+	if(associatedTrack.artist){
 		return [NSString stringWithFormat:@"%@ - %@", [LMNowPlayingView durationStringTotalPlaybackTime:[associatedTrack playbackDuration]], associatedTrack.artist];
 	}
 	
@@ -1226,6 +1308,7 @@
 	self.queueTableView.alwaysBounceVertical = NO;
 	self.queueTableView.longPressReorderDelegate = self;
 	self.queueTableView.longPressReorderEnabled = YES;
+	self.queueTableView.isAccessibilityElement = NO;
 	[self.queueView addSubview:self.queueTableView];
 	
 	//queueView constraints are setup in -setupiPadSpecificLayout
@@ -1301,6 +1384,9 @@
 	
 	
 	self.shuffleModeButton = [LMButton newAutoLayoutView];
+	self.shuffleModeButton.ligniteAccessibilityLabel = NSLocalizedString(@"VoiceOverLabel_ShuffleOff", nil);
+	self.shuffleModeButton.ligniteAccessibilityHint = NSLocalizedString(@"VoiceOverHint_ShuffleOff", nil);
+	
 	self.repeatModeButton = [LMButton newAutoLayoutView];
 	self.queueButton = [LMButton newAutoLayoutView];
 	self.airplayButton = [LMButton newAutoLayoutView];
@@ -1329,6 +1415,7 @@
 	self.favouriteHeartImageView.image = [LMAppIcon imageForIcon:self.loadedTrack.isFavourite ? LMIconFavouriteRedFilled : LMIconFavouriteRedOutline];
 	self.favouriteHeartImageView.hidden = [LMLayoutManager isLandscapeiPad];
 	self.favouriteHeartImageView.userInteractionEnabled = YES;
+	self.favouriteHeartImageView.isAccessibilityElement = YES;
 	[self.paddingView addSubview:self.favouriteHeartImageView];
 	
 	UITapGestureRecognizer *favouriteHeartImageViewTapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(changeFavouriteStatus)];
@@ -1369,6 +1456,7 @@
 	//	self.albumArtImageView.backgroundColor = [UIColor orangeColor];
 	self.albumArtImageView.layer.masksToBounds = YES;
 	self.albumArtImageView.layer.cornerRadius = 8.0f;
+	self.albumArtImageView.userInteractionEnabled = YES;
 	[self.albumArtRootView addSubview:self.albumArtImageView];
 	
 	[self.albumArtImageView autoCentreInSuperview];
@@ -1589,7 +1677,47 @@
 	[self.shuffleModeButton setColour:[self controlButtonColourHighlighted:self.musicPlayer.shuffleMode ? YES : NO]];
 	[self.repeatModeButton setColour:[self controlButtonColourHighlighted:(self.musicPlayer.repeatMode != LMMusicRepeatModeNone)]];
 	
+	self.shuffleModeButton.ligniteAccessibilityLabel = NSLocalizedString(self.musicPlayer.shuffleMode ? @"VoiceOverLabel_ShuffleOn" : @"VoiceOverLabel_ShuffleOff", nil);
+	self.shuffleModeButton.ligniteAccessibilityHint = NSLocalizedString(self.musicPlayer.shuffleMode ? @"VoiceOverHint_ShuffleOn" : @"VoiceOverHint_ShuffleOff", nil);
+	
+	
+	NSString *repeatKey = nil;
+	
+	switch(self.musicPlayer.repeatMode){
+		case LMMusicRepeatModeDefault:
+		case LMMusicRepeatModeNone:
+			repeatKey = @"RepeatOff";
+			break;
+		case LMMusicRepeatModeAll:
+			repeatKey = @"RepeatAll";
+			break;
+		case LMMusicRepeatModeOne:
+			repeatKey = @"RepeatOne";
+			break;
+	}
+	
+	NSString *repeatLabelKey = [NSString stringWithFormat:@"VoiceOverLabel_%@", repeatKey];
+	NSString *repeatHintKey = [NSString stringWithFormat:@"VoiceOverHint_%@", repeatKey];
+	
+	self.repeatModeButton.ligniteAccessibilityLabel = NSLocalizedString(repeatLabelKey, nil);
+	self.repeatModeButton.ligniteAccessibilityHint = NSLocalizedString(repeatHintKey, nil);
+	
+	self.airplayButton.ligniteAccessibilityLabel = NSLocalizedString(@"VoiceOverLabel_AirPlayButton", nil);
+	self.airplayButton.ligniteAccessibilityHint = NSLocalizedString(@"VoiceOverHint_AirPlayButton", nil);
+	
+	self.queueButton.ligniteAccessibilityLabel = NSLocalizedString(@"VoiceOverLabel_QueueButton", nil);
+	self.queueButton.ligniteAccessibilityHint = NSLocalizedString(@"VoiceOverHint_QueueButton", nil);
+	
+	
 	[self.musicPlayer addMusicDelegate:self];
+	
+	
+	self.favouriteHeartImageView.accessibilityLabel = NSLocalizedString(!self.musicPlayer.nowPlayingTrack.isFavourite ? @"VoiceOverLabel_FavouriteButton" : @"VoiceOverLabel_UnfavouriteButton", nil);
+	self.favouriteHeartImageView.accessibilityHint = NSLocalizedString(!self.musicPlayer.nowPlayingTrack.isFavourite ? @"VoiceOverHint_FavouriteButton" : @"VoiceOverHint_UnfavouriteButton", nil);
+	
+	self.favouritesButton.ligniteAccessibilityLabel = NSLocalizedString(!self.musicPlayer.nowPlayingTrack.isFavourite ? @"VoiceOverLabel_FavouriteButton" : @"VoiceOverLabel_UnfavouriteButton", nil);
+	self.favouritesButton.ligniteAccessibilityHint = NSLocalizedString(!self.musicPlayer.nowPlayingTrack.isFavourite ? @"VoiceOverHint_FavouriteButton" : @"VoiceOverHint_UnfavouriteButton", nil);
+	
 	
 //	[self reloadControlButtonIcons];
 	
@@ -1627,6 +1755,9 @@
 	
 	[self reloadFavouriteStatus];
 	
+	[self setShowingAccessibilityControls:UIAccessibilityIsVoiceOverRunning() animated:NO];
+//	[self setShowingAccessibilityControls:YES animated:NO];
+	
 	[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
 		[self changeMusicTrack:self.loadedTrack withIndex:self.loadedTrackIndex];
 	} repeats:NO];
@@ -1651,3 +1782,4 @@
 //}
 
 @end
+

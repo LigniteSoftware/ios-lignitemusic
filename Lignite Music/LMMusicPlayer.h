@@ -170,6 +170,13 @@ typedef enum {
  */
 - (void)userAttemptedToModifyQueueThatIsManagedByiOS;
 
+/**
+ The status of VoiceOver being on/off changed.
+
+ @param voiceOverEnabled Whether or not VoiceOver is now enabled.
+ */
+- (void)voiceOverStatusChanged:(BOOL)voiceOverEnabled;
+
 @end
 
 @interface LMMusicPlayer : NSObject

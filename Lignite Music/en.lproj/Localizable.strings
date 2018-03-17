@@ -105,6 +105,46 @@
 "VoiceOverLabel_CloseSearch" = "Close search";
 "VoiceOverLabel_ClearSearch" = "Clear search field";
 
+"VoiceOverLabel_ShuffleOn" = "Shuffle, turned on";
+"VoiceOverLabel_ShuffleOff" = "Shuffle, turned off";
+
+"VoiceOverLabel_RepeatOff" = "Repeat off";
+"VoiceOverLabel_RepeatAll" = "Repeat all";
+"VoiceOverLabel_RepeatOne" = "Repeat one";
+
+"VoiceOverLabel_AirPlayButton" = "AirPlay";
+
+"VoiceOverLabel_QueueButton" = "Playback queue";
+
+"VoiceOverLabel_FavouriteButton" = "Favourite";
+"VoiceOverLabel_UnfavouriteButton" = "Unfavourite";
+
+"VoiceOverHint_FavouriteButton" = "Double tap to add this track to your favourites";
+"VoiceOverHint_UnfavouriteButton" = "Double tap to remove this track from your favourites";
+
+"VoiceOverHint_QueueEntry" = "Double tap to play this track";
+
+"VoiceOverLabel_PreviousTrack" = "Previous track";
+"VoiceOverHint_PreviousTrack" = "Double tap to go to the previous track";
+
+"VoiceOverLabel_CloseNowPlaying" = "Close now playing";
+"VoiceOverHint_CloseNowPlaying" = "Double tap to close the now playing window";
+
+"VoiceOverLabel_NextTrack" = "Next track";
+"VoiceOverHint_NextTrack" = "Double tap to go to the next track";
+
+"VoiceOverLabel_PlayTrack" = "Play track";
+"VoiceOverHint_PlayTrack" = "Double tap to resume playback";
+
+"VoiceOverLabel_PauseTrack" = "Pause track";
+"VoiceOverHint_PauseTrack" = "Double tap to pause playback";
+
+
+
+
+
+
+
 
 
 
@@ -166,6 +206,20 @@
 "VoiceOverHint_ClearSearch" = "Double tap to clear the current search";
 
 "VoiceOverHint_TapSearchEntry" = "Double tap to go to this music";
+
+"VoiceOverHint_ShuffleOn" = "Double tap to turn shuffle off";
+"VoiceOverHint_ShuffleOff" = "Double tap to turn shuffle on";
+
+"VoiceOverHint_RepeatOff" = "Double tap to repeat all";
+"VoiceOverHint_RepeatAll" = "Double tap to repeat one";
+"VoiceOverHint_RepeatOne" = "Double tap to turn repeat off";
+
+"VoiceOverHint_AirPlayButton" = "Double tap to open AirPlay options";
+
+"VoiceOverHint_QueueButton" = "Double tap to toggle the playback queue";
+
+
+
 
 
 "YouCurrentlyHaveThisFeatureOff" = "You currently have image downloading turned off.";
