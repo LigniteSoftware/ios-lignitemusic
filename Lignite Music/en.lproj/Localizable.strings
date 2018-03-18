@@ -128,12 +128,18 @@
 
 "VoiceOverLabel_CreatePlaylist" = "Create playlist";
 "VoiceOverLabel_EditPlaylists" = "Edit playlists";
-
 "VoiceOverLabel_FinishEditingPlaylists" = "Finish editing playlists";
 
 "VoiceOverLabel_AddSongs" = "Add songs";
-
 "VoiceOverLabel_AddImage" = "Add an image";
+
+"VoiceOverLabel_SelectAll" = "Select all";
+"VoiceOverLabel_DeselectAll" = "Deselect all";
+
+"VoiceOverLabel_Selected" = "Selected";
+"VoiceOverLabel_NotSelected" = "Not selected";
+
+
 
 
 
@@ -228,9 +234,11 @@
 
 "VoiceOverHint_EditPlaylistEntryOption" = "You must disable VoiceOver to move or delete this track from your playlist, sorry. When VoiceOver is disabled you can swipe right to delete it from the playlist, or press and hold to reorder it in the playlist.";
 
-
-
-
+"VoiceOverHint_ViewEntry" = "Double tap to view the contents of this entry";
+"VoiceOverHint_SelectEntry" = "Double tap to select this entry for your playlist";
+"VoiceOverHint_DeselectEntry" = "Double tap to deselect this entry from your playlist";
+"VoiceOverHint_SelectAll" = "Double tap to select all entries for your playlist";
+"VoiceOverHint_DeselectAll" = "Double tap to deselect all entries from your playlist";
 
 
 "YouCurrentlyHaveThisFeatureOff" = "You currently have image downloading turned off.";

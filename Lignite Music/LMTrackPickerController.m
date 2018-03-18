@@ -173,6 +173,8 @@
 		[self.sourceMusicPickerController setCollection:trackCollection asSelected:![self trackCollectionIsSelected:trackCollection] forMusicType:self.musicType];
 
 		[entry reloadContents];
+		
+		[self reloadListEntryAccessibilityText:entry];
 
 		[self.selectAllListEntry reloadContents];
 		return;
@@ -336,6 +338,9 @@
 
 - (NSString*)titleForListEntry:(LMListEntry*)entry {
 	if(self.selectAllListEntry && entry.collectionIndex == -1){
+		entry.isAccessibilityElement = YES;
+		entry.accessibilityLabel = NSLocalizedString(!self.allEntriesSelected ? @"VoiceOverLabel_SelectAll" : @"VoiceOverLabel_DeselectAll", nil);
+		entry.accessibilityHint = NSLocalizedString(!self.allEntriesSelected ? @"VoiceOverHint_SelectAll" : @"VoiceOverHint_DeselectAll", nil);
 		return NSLocalizedString(self.allEntriesSelected ? @"DeselectAll" : @"SelectAll", nil);
 	}
 	
@@ -487,6 +492,28 @@
 	return self.displayingTrackCollections.count;
 }
 
+- (void)reloadListEntryAccessibilityText:(LMListEntry*)listEntry {
+	BOOL isSelected = [self trackCollectionIsSelected:[self.displayingTrackCollections objectAtIndex:listEntry.collectionIndex-1]];
+	
+	listEntry.isAccessibilityElement = YES;
+	listEntry.accessibilityLabel = [NSString stringWithFormat:@"%@, %@, %@", [self titleForListEntry:listEntry], [self subtitleForListEntry:listEntry], NSLocalizedString(isSelected ? @"VoiceOverLabel_Selected" : @"VoiceOverLabel_NotSelected", nil)];
+
+	if(self.selectionMode == LMMusicPickerSelectionModeAllCollections){
+		listEntry.accessibilityHint = NSLocalizedString(isSelected ? @"VoiceOverHint_DeselectEntry" : @"VoiceOverHint_SelectEntry", nil);
+	}
+	else{
+		switch(self.depthLevel){
+			case LMTrackPickerDepthLevelArtists:
+			case LMTrackPickerDepthLevelAlbums:
+				listEntry.accessibilityHint = NSLocalizedString(@"VoiceOverHint_ViewEntry", nil);
+				break;
+			case LMTrackPickerDepthLevelSongs:
+				listEntry.accessibilityHint = NSLocalizedString(isSelected ? @"VoiceOverHint_DeselectEntry" : @"VoiceOverHint_SelectEntry", nil);
+				break;
+		}
+	}
+}
+
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
 	UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"trackPickerCellIdentifier" forIndexPath:indexPath];
 	
@@ -498,12 +525,18 @@
 	if(self.selectAllListEntry && indexPath.row == 0){
 		listEntry = self.selectAllListEntry;
 		listEntry.collectionIndex = -1;
+		
+		//Accessibility label is set within the titleForListEntry: function because of dynamically changing selection status
+		
 		[cell.contentView addSubview:listEntry];
 		[listEntry autoPinEdgesToSuperviewEdges];
 	}
 	else{
 		listEntry = [self.listEntryArray objectAtIndex:(indexPath.row-self.entriesAreSelectable) % 15];
 		listEntry.collectionIndex = indexPath.row;
+		
+		[self reloadListEntryAccessibilityText:listEntry];
+		
 		[cell.contentView addSubview:listEntry];
 		[listEntry autoPinEdgesToSuperviewEdges];
 	}
