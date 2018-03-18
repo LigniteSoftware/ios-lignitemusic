@@ -31,4 +31,9 @@ typedef NS_ENUM(NSInteger, LMAccessibilityControlButtonType){
  */
 @property id<LMAccessibilityMusicControlBarDelegate> delegate;
 
+/**
+ Whether or not the control bar is being used for the mini player. Default is NO.
+ */
+@property BOOL isMiniPlayer;
+
 @end

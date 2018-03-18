@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "LMTableView.h"
 #import "LMMusicPlayer.h"
-#import "LMCoreViewController.h"
 
 @interface LMTitleView : LMView
 
@@ -58,9 +57,9 @@
 @property LMTableView *songListTableView;
 
 /**
- The title view's root view controller.
+ The title view's raw root view controller.
  */
-@property LMCoreViewController *rootViewController;
+@property id rawViewController;
 
 /**
  Whether or not to display favourites. NO for all titles.

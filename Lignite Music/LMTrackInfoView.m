@@ -168,6 +168,8 @@
 			if(self.frame.size.width == 0 || !self.didInitialReload){
 				[NSTimer scheduledTimerWithTimeInterval:0.25 block:^{
 					[self reload];
+#warning never forget
+#warning seriously don't forget this
 				} repeats:NO];
 				
 				self.didInitialReload = YES;

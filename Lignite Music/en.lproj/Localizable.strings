@@ -130,6 +130,9 @@
 "VoiceOverLabel_CloseNowPlaying" = "Close now playing";
 "VoiceOverHint_CloseNowPlaying" = "Double tap to close the now playing window";
 
+"VoiceOverLabel_OpenNowPlaying" = "Open now playing";
+"VoiceOverHint_OpenNowPlaying" = "Double tap to open the now playing window";
+
 "VoiceOverLabel_NextTrack" = "Next track";
 "VoiceOverHint_NextTrack" = "Double tap to go to the next track";
 

@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LMTitleView.h"
 #import "LMCompactBrowsingView.h"
 #import "LMButtonNavigationBar.h"
 #import "LMLandscapeNavigationBar.h"
@@ -47,6 +48,11 @@ typedef NS_ENUM(NSInteger, LMCoreViewControllerRestorationState){
 - (void)dismissNowPlaying;
 
 /**
+ Opens now playing.
+ */
+- (void)launchNowPlayingFromTap;
+
+/**
  The navigation bar that goes at the bottom.
  */
 @property LMButtonNavigationBar *buttonNavigationBar;
@@ -60,6 +66,11 @@ typedef NS_ENUM(NSInteger, LMCoreViewControllerRestorationState){
  The compact/main browsing view.
  */
 @property LMCompactBrowsingView *compactView;
+
+/**
+ The title/favourites view.
+ */
+@property LMTitleView *titleView;
 
 /**
  If state restoration contains a playlist editor, that playlist editor will sit here pending for an attachment to compactView (which will have to be created).

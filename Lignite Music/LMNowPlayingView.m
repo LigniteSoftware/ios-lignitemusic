@@ -163,10 +163,21 @@
 		self.accessibilityMusicControlBar.delegate = self;
 		[self.albumArtImageView addSubview:self.accessibilityMusicControlBar];
 		
-		[self.accessibilityMusicControlBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		[self.accessibilityMusicControlBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-		[self.accessibilityMusicControlBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-		[self.accessibilityMusicControlBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.albumArtImageView withMultiplier:(2.0/10.0)];
+		NSArray *accessibilityMusicControlBarPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+			[self.accessibilityMusicControlBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+			[self.accessibilityMusicControlBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+			[self.accessibilityMusicControlBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+			[self.accessibilityMusicControlBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.albumArtImageView withMultiplier:(2.0/10.0)];
+		}];
+		[LMLayoutManager addNewPortraitConstraints:accessibilityMusicControlBarPortraitConstraints];
+		
+		NSArray *accessibilityMusicControlBariPadConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+			[self.accessibilityMusicControlBar autoCentreInSuperview];
+			[self.accessibilityMusicControlBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+			[self.accessibilityMusicControlBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.albumArtImageView withMultiplier:(1.4/10.0)];
+			[self.accessibilityMusicControlBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.albumArtImageView withMultiplier:(8.0/10.0)];
+		}];
+		[LMLayoutManager addNewiPadConstraints:accessibilityMusicControlBariPadConstraints];
 		
 		[self setShowingAccessibilityControls:showingAccessibilityControls animated:YES]; //Animate in the controls
 	}
@@ -1469,6 +1480,7 @@
 	self.pausedBackgroundBlurView.userInteractionEnabled = NO;
 	self.pausedBackgroundBlurView.backgroundColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.75];
 	self.pausedBackgroundBlurView.alpha = 0.0;
+	self.pausedBackgroundBlurView.isAccessibilityElement = NO;
 	[self.albumArtImageView addSubview:self.pausedBackgroundBlurView];
 	
 	[self.pausedBackgroundBlurView autoPinEdgesToSuperviewEdges];
@@ -1479,6 +1491,7 @@
 	pausedLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:32.0f];
 	pausedLabel.textAlignment = NSTextAlignmentCenter;
 	pausedLabel.numberOfLines = 0;
+	pausedLabel.isAccessibilityElement = NO;
 	[self.pausedBackgroundBlurView addSubview:pausedLabel];
 	
 	[pausedLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading].constant = 24;

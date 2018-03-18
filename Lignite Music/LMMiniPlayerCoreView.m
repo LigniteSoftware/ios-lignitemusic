@@ -447,6 +447,10 @@
 		self.trailingMiniPlayerView.isUserFacing = NO;
 		self.leadingMiniPlayerView.isUserFacing = NO;
 		
+		self.centreMiniPlayerView.rootViewController = self.rootViewController;
+		self.trailingMiniPlayerView.rootViewController = self.rootViewController;
+		self.leadingMiniPlayerView.rootViewController = self.rootViewController;
+		
 		NSLog(@"Index of %ld", self.musicPlayer.indexOfNowPlayingTrack);
 		
 		[self loadMusicTracksBasedOffIndex:self.musicPlayer.indexOfNowPlayingTrack];		

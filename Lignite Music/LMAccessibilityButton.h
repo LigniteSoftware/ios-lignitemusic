@@ -34,4 +34,9 @@
  */
 @property UIImage *icon;
 
+/**
+ Whether or not this button is being used for the mini player.
+ */
+@property BOOL isMiniPlayer;
+
 @end

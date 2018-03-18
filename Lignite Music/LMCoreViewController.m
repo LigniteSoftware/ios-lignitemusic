@@ -32,7 +32,6 @@
 #import "LMMusicPlayer.h"
 #import "LMApplication.h"
 #import "LMAppDelegate.h"
-#import "LMTitleView.h"
 #import "LMSettings.h"
 #import "LMAnswers.h"
 #import "LMColour.h"
@@ -86,8 +85,6 @@
 @property LMMusicPlayer *musicPlayer;
 
 @property LMNowPlayingCoreView *nowPlayingCoreView;
-
-@property LMTitleView *titleView;
 
 @property NSArray<LMSource*> *sourcesForSourceSelector;
 
@@ -1717,6 +1714,7 @@
 	
 	self.compactView = [LMCompactBrowsingView newAutoLayoutView];
 	self.compactView.rootViewController = self;
+	self.compactView.accessibilityElementsHidden = YES;
 	[self.view addSubview:self.compactView];
 	
 	if(self.pendingStateRestoredPlaylistEditor){
@@ -1748,7 +1746,7 @@
 	
 	self.titleView = [LMTitleView newAutoLayoutView];
 	self.titleView.backgroundColor = [UIColor whiteColor];
-	self.titleView.rootViewController = self;
+	self.titleView.rawViewController = self;
 	[self.view addSubview:self.titleView];
 	
 	[self.titleView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.compactView];

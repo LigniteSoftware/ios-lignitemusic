@@ -13,6 +13,11 @@
 @interface LMMiniPlayerView : LMView
 
 /**
+ Trust me, I want to learn what better pattern to use than passing pointers around, but I'm just in too much of a rush to justify it right now. Sorry :(
+ */
+@property id rootViewController;
+
+/**
  The track which this miniplayer holds.
  */
 @property LMMusicTrack *loadedTrack;
@@ -35,6 +40,9 @@
  */
 - (void)changeMusicTrack:(id)newTrack  withIndex:(NSInteger)index;
 
+/**
+ Sets up the layout of the mini player.
+ */
 - (void)setup;
 
 @end

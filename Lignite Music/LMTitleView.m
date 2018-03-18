@@ -9,6 +9,7 @@
 #import <PureLayout/PureLayout.h>
 #import "MBProgressHUD.h"
 #import "LMFloatingDetailViewButton.h"
+#import "LMCoreViewController.h"
 #import "LMLayoutManager.h"
 #import "LMTitleView.h"
 #import "LMListEntry.h"
@@ -70,6 +71,10 @@
 
 @synthesize musicTitles = _musicTitles;
 @synthesize shuffleButtonLandscapeOffset = _shuffleButtonLandscapeOffset;
+
+- (LMCoreViewController*)rootViewController {
+	return (LMCoreViewController*)self.rawViewController;
+}
 
 - (void)setShuffleButtonLandscapeOffset:(CGFloat)shuffleButtonLandscapeOffset {
 	_shuffleButtonLandscapeOffset = shuffleButtonLandscapeOffset;

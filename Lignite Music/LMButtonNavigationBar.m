@@ -24,7 +24,7 @@
 #import "LMLabel.h"
 
 @interface LMButtonNavigationBar()<UIGestureRecognizerDelegate,
-							 LMButtonBarDelegate, LMButtonDelegate, LMSearchBarDelegate, LMLayoutChangeDelegate, LMThemeEngineDelegate>
+							 LMButtonBarDelegate, LMButtonDelegate, LMSearchBarDelegate, LMLayoutChangeDelegate, LMThemeEngineDelegate, LMMusicPlayerDelegate>
 
 /**
  The music player.
@@ -107,6 +107,12 @@
 
 @property NSLayoutConstraint *iPhoneXBottomCoverConstraint;
 @property NSLayoutConstraint *minimizeButtonIconWidthConstraint;
+
+/**
+ The constraints for the mini player size, which are adjusted based on VoiceOver status.
+ */
+@property NSLayoutConstraint *miniPlayerHeightConstraint;
+@property NSLayoutConstraint *miniPlayerWidthConstraint;
 
 /**
  For the fucking status bar.
@@ -502,6 +508,46 @@
 	[self.searchBarDelegate searchDialogueOpened:opened withKeyboardHeight:keyboardHeight];
 }
 
+- (void)reloadMiniPlayerSize {
+	//Don't even tell me how bad this shit is
+	CGFloat properDimension = self.layoutManager.isLandscape ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height;
+	if([LMLayoutManager isiPad]){
+		properDimension = [LMLayoutManager isLandscapeiPad] ? WINDOW_FRAME.size.height : WINDOW_FRAME.size.width;
+	}
+	
+	BOOL voiceOverRunning = UIAccessibilityIsVoiceOverRunning();
+	
+	CGFloat normalWidthFactorial = 3.1;
+	CGFloat normalHeightFactorial = 5.0;
+	
+	CGFloat accessibilityWidthFactorial = 2.4;
+	CGFloat accessibilityHeightFactorial = 3.7;
+	
+	if([LMLayoutManager isiPhoneX]){
+		accessibilityWidthFactorial = 2.9;
+		normalWidthFactorial = 3.5;
+	}
+	
+	if([LMLayoutManager isLandscape]){
+		self.miniPlayerWidthConstraint.constant = properDimension/(voiceOverRunning ? accessibilityWidthFactorial : normalWidthFactorial);
+		self.miniPlayerHeightConstraint.constant = self.frame.size.height;
+	}
+	else{
+		self.miniPlayerHeightConstraint.constant = properDimension/(voiceOverRunning ? accessibilityHeightFactorial : normalHeightFactorial);
+		self.miniPlayerWidthConstraint.constant = self.frame.size.width;
+	}
+	
+	[UIView animateWithDuration:0.25 animations:^{
+		[self layoutIfNeeded];
+		
+		[self setSelectedTab:self.currentlySelectedTab];
+	}];
+}
+
+- (void)voiceOverStatusChanged:(BOOL)voiceOverEnabled {
+	[self reloadMiniPlayerSize];
+}
+
 - (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
 	BOOL willBeLandscape = size.width > size.height;
 	
@@ -530,15 +576,17 @@
 			
 			[self minimize:NO];
 		}
-//		else{
-//			[self maximize:NO];
-//		}
+		
+		[self reloadMiniPlayerSize];
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		[NSTimer scheduledTimerWithTimeInterval:0.1 block:^{
 			self.rotating = NO;
+			
 			if(self.isCompletelyHidden){
 					[self completelyHide];
 			}
+			
+			[self reloadMiniPlayerSize];
 		} repeats:NO];
 	}];
 }
@@ -614,11 +662,12 @@
 		
 		
 		self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
+		[self.musicPlayer addMusicDelegate:self];
 		
 		self.heightBeforeAdjustingToScrollPosition = -1;
 
 		
-		//Dont even tell me how bad this shit is
+		//Don't even tell me how bad this shit is
 		CGFloat properDimension = self.layoutManager.isLandscape ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height;
 		if([LMLayoutManager isiPad]){
 			properDimension = [LMLayoutManager isLandscapeiPad] ? WINDOW_FRAME.size.height : WINDOW_FRAME.size.width;
@@ -863,17 +912,15 @@
 		NSArray *miniPlayerCoreViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 			[self.miniPlayerCoreView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.buttonBar];
 			[self.miniPlayerCoreView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.minimizeButton];
-			[self.miniPlayerCoreView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.buttonBar];
-			[self.miniPlayerCoreView autoSetDimension:ALDimensionHeight toSize:properDimension/5.0];
+//			[self.miniPlayerCoreView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.buttonBar];
 		}];
 		[LMLayoutManager addNewPortraitConstraints:miniPlayerCoreViewPortraitConstraints];
 		
 		NSArray *miniPlayerCoreViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 			[self.miniPlayerCoreView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.buttonBar withOffset:properDimension];
-			[self.miniPlayerCoreView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-			[self.miniPlayerCoreView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-			[self.miniPlayerCoreView autoSetDimension:ALDimensionWidth toSize:properDimension/([LMLayoutManager isiPhoneX] ? 3.5 : 2.8)];
-
+			[self.miniPlayerCoreView autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+//			[self.miniPlayerCoreView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+//			[self.miniPlayerCoreView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 		}];
 		[LMLayoutManager addNewLandscapeConstraints:miniPlayerCoreViewLandscapeConstraints];
 		
@@ -881,9 +928,15 @@
 			[self.miniPlayerCoreView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.buttonBar];
 			[self.miniPlayerCoreView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.buttonBar];
 			[self.miniPlayerCoreView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.buttonBar];
-			[self.miniPlayerCoreView autoSetDimension:ALDimensionHeight toSize:properDimension/5.0];
 		}];
 		[LMLayoutManager addNewiPadConstraints:miniPlayerCoreViewiPadConstraints];
+		
+		//These values are in reloadMiniPlayerSize as well
+		self.miniPlayerHeightConstraint = [self.miniPlayerCoreView autoSetDimension:ALDimensionHeight toSize:properDimension/5.0];
+		self.miniPlayerWidthConstraint = [self.miniPlayerCoreView autoSetDimension:ALDimensionWidth toSize:properDimension/([LMLayoutManager isiPhoneX] ? 3.5 : 2.9)];
+		
+		
+		
 		
 		CGFloat sourceSelectorProperSize = properDimension-(self.layoutManager.isLandscape ? LMNavigationBarTabWidth : LMNavigationBarTabHeight);
 		
@@ -942,6 +995,9 @@
 				[self maximize:NO];
 			} repeats:NO];
 		}
+		
+		
+		[self reloadMiniPlayerSize];
 		
 //		self.sourceSelector.hidden = YES;
 	}

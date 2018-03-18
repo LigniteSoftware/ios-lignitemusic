@@ -77,6 +77,11 @@
 	
 	BOOL disableIdleTimer = (isOpen && ![LMSettings screenShouldTimeoutWhenNowPlayingIsOpen]);
 	[UIApplication sharedApplication].idleTimerDisabled = disableIdleTimer;
+	
+	LMCoreViewController *coreViewController = (LMCoreViewController*)self.rootViewController;
+	coreViewController.buttonNavigationBar.accessibilityElementsHidden = isOpen;
+	coreViewController.compactView.accessibilityElementsHidden = isOpen;
+	coreViewController.titleView.accessibilityElementsHidden = isOpen;
 }
 
 - (void)loadMusicTracksBasedOffIndex:(NSInteger)indexOfCenter {

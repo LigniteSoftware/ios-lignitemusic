@@ -38,4 +38,9 @@
  */
 @property BOOL miniplayer;
 
+/**
+ Reloads the heights of the text.
+ */
+- (void)reload;
+
 @end
