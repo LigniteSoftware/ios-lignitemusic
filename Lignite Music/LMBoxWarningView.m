@@ -72,6 +72,12 @@
 	}
 }
 
+- (void)tappedWarningBox {
+	if(UIAccessibilityIsVoiceOverRunning()){
+		[self xCrossTapped];
+	}
+}
+
 - (void)layoutSubviews {
 	if(!self.didLayoutConstraints){
 		self.didLayoutConstraints = YES;
@@ -81,6 +87,14 @@
 		self.layer.masksToBounds = YES;
 		self.layer.cornerRadius = 6.0f;
 		self.backgroundColor = [LMColour controlBarGreyColour];
+		
+		
+		self.isAccessibilityElement = YES;
+		self.accessibilityLabel = [NSString stringWithFormat:@"%@, %@", NSLocalizedString(@"EnhancedPlaylistNoConditionsTitle", nil), NSLocalizedString(@"EnhancedPlaylistNoConditionsDescription", nil)];
+		self.accessibilityHint = NSLocalizedString(@"VoiceOverHint_CloseWarningBox", nil);
+		
+		UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tappedWarningBox)];
+		[self addGestureRecognizer:tapGesture];
 		
 		
 		self.paddingView = [UIView newAutoLayoutView];

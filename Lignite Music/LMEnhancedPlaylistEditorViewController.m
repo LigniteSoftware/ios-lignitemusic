@@ -261,9 +261,8 @@
 	[self.conditionsCollectionView reloadData];
 }
 
-- (void)addConditionsButtonTapped:(UITapGestureRecognizer*)tapGestureRecognizer {
-	self.isPickingWantToHear = (tapGestureRecognizer.view == self.wantToHearAddSongsButtonView);
-
+- (void)tappedAddConditionsButton:(BOOL)wantToHearButton {
+	self.isPickingWantToHear = wantToHearButton;
 	
 	self.conditionsMusicPickerController = [LMMusicPickerController new];
 	self.conditionsMusicPickerController.delegate = self;
@@ -272,14 +271,17 @@
 	self.conditionsMusicPickerController.trackCollections = self.isPickingWantToHear ? [self.playlist wantToHearTrackCollections] : [self.playlist dontWantToHearTrackCollections];
 	self.conditionsMusicPickerController.musicTypes = self.isPickingWantToHear ? [self.playlist wantToHearMusicTypes] : [self.playlist dontWantToHearMusicTypes];
 	
-//	for(LMMusicTrackCollection *collection in musicTrackCollectionsMutableArray){
-//		NSLog(@"Collection with %d items", (int)collection.count);
-//	}
+	//	for(LMMusicTrackCollection *collection in musicTrackCollectionsMutableArray){
+	//		NSLog(@"Collection with %d items", (int)collection.count);
+	//	}
 	
-
+	
 	UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:self.conditionsMusicPickerController];
 	[self presentViewController:navigation animated:YES completion:nil];
-	
+}
+
+- (void)addConditionsButtonTapped:(UITapGestureRecognizer*)tapGestureRecognizer {
+	[self tappedAddConditionsButton:(tapGestureRecognizer.view == self.wantToHearAddSongsButtonView)];
 }
 
 - (void)tappedShuffleAllLabel {
@@ -451,6 +453,10 @@
 
 - (void)tappedListEntry:(LMListEntry*)entry {
 	NSLog(@"Tapped %@", entry);
+	
+	if(UIAccessibilityIsVoiceOverRunning()){
+		[self deleteEntryWithIndexPath:entry.indexPath];
+	}
 }
 
 - (UIColor*)tapColourForListEntry:(LMListEntry*)entry {
@@ -465,7 +471,13 @@
 	
 	NSLog(@"Value for %@ '%@'/'%@'/'%@'", collection.representativeItem, collection.representativeItem.genre, [collection.representativeItem valueForProperty:[self titlePropertyStringForMusicType:musicType]], collection.representativeItem.artist);
 	
-	return [collection.representativeItem valueForProperty:[self titlePropertyStringForMusicType:musicType]];
+	NSString *fixedTitle = [collection.representativeItem valueForProperty:[self titlePropertyStringForMusicType:musicType]];
+	
+	entry.isAccessibilityElement = YES;
+	entry.accessibilityLabel = [NSString stringWithFormat:@"%@, %@", fixedTitle, [self subtitleForListEntry:entry]];
+	entry.accessibilityHint = NSLocalizedString(@"VoiceOverHint_DeleteEnhancedPlaylistEntry", nil);
+	
+	return fixedTitle;
 }
 
 - (NSString*)subtitleForListEntry:(LMListEntry*)entry {
@@ -693,6 +705,12 @@
 	[self reloadConditionsLabelAndWarningBox];
 }
 
+- (void)tappedSection:(UITapGestureRecognizer*)tapGesture {
+	if(UIAccessibilityIsVoiceOverRunning()){
+		[self tappedAddConditionsButton:(tapGesture.view == self.wantToHearBackgroundView)];
+	}
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
 
@@ -853,6 +871,21 @@
 	[self.songCountLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:textFieldLineView];
 	
 	
+	UIView *shuffleAllContainer = [UIView newAutoLayoutView];
+	shuffleAllContainer.backgroundColor = [UIColor clearColor];
+	shuffleAllContainer.isAccessibilityElement = YES;
+	shuffleAllContainer.accessibilityLabel = NSLocalizedString(@"VoiceOverLabel_EnhancedPlaylistShuffleAllCheckbox", nil);
+	shuffleAllContainer.accessibilityHint = NSLocalizedString(@"VoiceOverHint_EnhancedPlaylistShuffleAllCheckbox", nil);
+	[self.view addSubview:shuffleAllContainer];
+	
+	[shuffleAllContainer autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.titleTextField];
+	[shuffleAllContainer autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.imagePickerView];
+	[shuffleAllContainer autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.titleTextField];
+	[shuffleAllContainer autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.titleTextField];
+	
+	UITapGestureRecognizer *shuffleAllTextTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tappedShuffleAllLabel)];
+	[shuffleAllContainer addGestureRecognizer:shuffleAllTextTapGestureRecognizer];
+	
 	
 	self.shuffleAllCheckbox = [BEMCheckBox newAutoLayoutView];
 	self.shuffleAllCheckbox.delegate = self;
@@ -864,25 +897,23 @@
 	self.shuffleAllCheckbox.onTintColor = [LMColour mainColour];
 	self.shuffleAllCheckbox.onAnimationType = BEMAnimationTypeFill;
 	self.shuffleAllCheckbox.offAnimationType = BEMAnimationTypeFill;
-	[self.view addSubview:self.shuffleAllCheckbox];
+	[shuffleAllContainer addSubview:self.shuffleAllCheckbox];
 	
-	[self.shuffleAllCheckbox autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.titleTextField];
-	[self.shuffleAllCheckbox autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.imagePickerView];
-	[self.shuffleAllCheckbox autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.titleTextField];
-	[self.shuffleAllCheckbox autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.shuffleAllCheckbox];
+	[self.shuffleAllCheckbox autoPinEdgeToSuperviewEdge:ALEdgeTop];
+	[self.shuffleAllCheckbox autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+	[self.shuffleAllCheckbox autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+	[self.shuffleAllCheckbox autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:shuffleAllContainer];
+	
 	
 	UILabel *shuffleAllLabel = [UILabel newAutoLayoutView];
 	shuffleAllLabel.text = NSLocalizedString(@"ShuffleAll", nil);
 	shuffleAllLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:16.0f];
 	shuffleAllLabel.textColor = [UIColor blackColor];
 	shuffleAllLabel.userInteractionEnabled = YES;
-	[self.view addSubview:shuffleAllLabel];
-	
+	[shuffleAllContainer addSubview:shuffleAllLabel];
+
 	[shuffleAllLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.shuffleAllCheckbox withOffset:10];
 	[shuffleAllLabel autoAlignAxis:ALAxisHorizontal toSameAxisOfView:self.shuffleAllCheckbox];
-	
-	UITapGestureRecognizer *shuffleAllTextTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tappedShuffleAllLabel)];
-	[shuffleAllLabel addGestureRecognizer:shuffleAllTextTapGestureRecognizer];
 	
 	
 	LMEnhancedPlaylistCollectionViewFlowLayout *flowLayout = [LMEnhancedPlaylistCollectionViewFlowLayout new];
@@ -904,6 +935,13 @@
 	
 	
 	self.wantToHearBackgroundView = [UIView newAutoLayoutView];
+	self.wantToHearBackgroundView.isAccessibilityElement = YES;
+	self.wantToHearBackgroundView.accessibilityLabel = NSLocalizedString(@"VoiceOverLabel_WantToHear", nil);
+	self.wantToHearBackgroundView.accessibilityHint = NSLocalizedString(@"VoiceOverHint_WantToHear", nil);
+	self.wantToHearBackgroundView.userInteractionEnabled = YES;
+	
+	UITapGestureRecognizer *wantToHearTapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tappedSection:)];
+	[self.wantToHearBackgroundView addGestureRecognizer:wantToHearTapGesture];
 	
 	
 	self.wantToHearAddSongsButtonView = [UIView newAutoLayoutView];
@@ -943,6 +981,12 @@
 	
 	
 	self.dontWantToHearBackgroundView = [UIView newAutoLayoutView];
+	self.dontWantToHearBackgroundView.isAccessibilityElement = YES;
+	self.dontWantToHearBackgroundView.accessibilityLabel = NSLocalizedString(@"VoiceOverLabel_DontWantToHear", nil);
+	self.dontWantToHearBackgroundView.accessibilityHint = NSLocalizedString(@"VoiceOverHint_DontWantToHear", nil);
+	
+	UITapGestureRecognizer *dontWantToHearTapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tappedSection:)];
+	[self.dontWantToHearBackgroundView addGestureRecognizer:dontWantToHearTapGesture];
 	
 	self.dontWantToHearAddSongsButtonView = [UIView newAutoLayoutView];
 	self.dontWantToHearAddSongsButtonView.backgroundColor = [LMColour darkGreyColour];

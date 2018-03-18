@@ -2008,24 +2008,24 @@
 		
 		//THIS TEST PLAYLIST CODE WILL CAUSE YOUR COMPACT VIEW TO NOT SYNC PROPERLY. DO NOT BE SPOOKED.
 		
-		LMPlaylistEditorViewController *playlistViewController = [LMPlaylistEditorViewController new];
+//		LMPlaylistEditorViewController *playlistViewController = [LMPlaylistEditorViewController new];
 //		LMPlaylist *playlist = [LMPlaylist new];
 //		playlist.title = @"Nice meme";
 //		playlist.image = [LMAppIcon imageForIcon:LMIconBug];
 //		playlist.trackCollection = [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeAlbums].firstObject;
 //		playlistViewController.playlist = playlist;
-		UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:playlistViewController];
-		[self presentViewController:navigation animated:YES completion:^{
-
-		}];
-
-
-//		LMEnhancedPlaylistEditorViewController *enhancedPlaylistViewController = [LMEnhancedPlaylistEditorViewController new];
-//		enhancedPlaylistViewController.delegate = self.compactView;
-//		UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:enhancedPlaylistViewController];
+//		UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:playlistViewController];
 //		[self presentViewController:navigation animated:YES completion:^{
 //
 //		}];
+
+
+		LMEnhancedPlaylistEditorViewController *enhancedPlaylistViewController = [LMEnhancedPlaylistEditorViewController new];
+		enhancedPlaylistViewController.delegate = self.compactView;
+		UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:enhancedPlaylistViewController];
+		[self presentViewController:navigation animated:YES completion:^{
+
+		}];
 		
 //		[self searchDialogueOpened:YES withKeyboardHeight:0.0f];
 		

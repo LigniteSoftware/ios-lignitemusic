@@ -39,6 +39,35 @@
  
  */
 
+
+
+"VoiceOverLabel_WantToHear" = "I want to hear"; //For enhanced playlists
+"VoiceOverLabel_DontWantToHear" = "I don't want to hear"; //For enhanced playlists
+
+"VoiceOverLabel_EnhancedPlaylistShuffleAllCheckbox" = "Shuffle all";
+
+
+"VoiceOverHint_WantToHear" = "Double tap to add entries for what you want to hear in this playlist";
+"VoiceOverHint_DontWantToHear" = "Double tap to add entries for what you do not want to hear in this playlist";
+
+"VoiceOverHint_DeleteEnhancedPlaylistEntry" = "Double tap to remove this entry from your enhanced playlist conditions";
+
+"VoiceOverHint_CloseWarningBox" = "Double tap to close this warning";
+
+"VoiceOverHint_EnhancedPlaylistShuffleAllCheckbox" = "Double tap to toggle whether or not this playlist is always shuffled";
+
+
+
+
+
+
+
+
+
+
+
+
+
 //Accessibility strings
 "SendReport" = "Send report";
 "GoBack" = "Go back";
