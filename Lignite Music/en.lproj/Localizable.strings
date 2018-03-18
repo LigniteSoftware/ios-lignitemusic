@@ -119,34 +119,21 @@
 "VoiceOverLabel_FavouriteButton" = "Favourite";
 "VoiceOverLabel_UnfavouriteButton" = "Unfavourite";
 
-"VoiceOverHint_FavouriteButton" = "Double tap to add this track to your favourites";
-"VoiceOverHint_UnfavouriteButton" = "Double tap to remove this track from your favourites";
-
-"VoiceOverHint_QueueEntry" = "Double tap to play this track";
-
 "VoiceOverLabel_PreviousTrack" = "Previous track";
-"VoiceOverHint_PreviousTrack" = "Double tap to go to the previous track";
-
 "VoiceOverLabel_CloseNowPlaying" = "Close now playing";
-"VoiceOverHint_CloseNowPlaying" = "Double tap to close the now playing window";
-
 "VoiceOverLabel_OpenNowPlaying" = "Open now playing";
-"VoiceOverHint_OpenNowPlaying" = "Double tap to open the now playing window";
-
 "VoiceOverLabel_NextTrack" = "Next track";
-"VoiceOverHint_NextTrack" = "Double tap to go to the next track";
-
 "VoiceOverLabel_PlayTrack" = "Play track";
-"VoiceOverHint_PlayTrack" = "Double tap to resume playback";
-
 "VoiceOverLabel_PauseTrack" = "Pause track";
-"VoiceOverHint_PauseTrack" = "Double tap to pause playback";
 
+"VoiceOverLabel_CreatePlaylist" = "Create playlist";
+"VoiceOverLabel_EditPlaylists" = "Edit playlists";
 
+"VoiceOverLabel_FinishEditingPlaylists" = "Finish editing playlists";
 
+"VoiceOverLabel_AddSongs" = "Add songs";
 
-
-
+"VoiceOverLabel_AddImage" = "Add an image";
 
 
 
@@ -220,6 +207,27 @@
 "VoiceOverHint_AirPlayButton" = "Double tap to open AirPlay options";
 
 "VoiceOverHint_QueueButton" = "Double tap to toggle the playback queue";
+
+"VoiceOverHint_FavouriteButton" = "Double tap to add this track to your favourites";
+"VoiceOverHint_UnfavouriteButton" = "Double tap to remove this track from your favourites";
+
+"VoiceOverHint_QueueEntry" = "Double tap to play this track";
+"VoiceOverHint_PreviousTrack" = "Double tap to go to the previous track";
+"VoiceOverHint_CloseNowPlaying" = "Double tap to close the now playing window";
+"VoiceOverHint_OpenNowPlaying" = "Double tap to open the now playing window";
+"VoiceOverHint_NextTrack" = "Double tap to go to the next track";
+"VoiceOverHint_PlayTrack" = "Double tap to resume playback";
+"VoiceOverHint_PauseTrack" = "Double tap to pause playback";
+
+"VoiceOverHint_CreatePlaylist" = "Double tap to create a playlist";
+"VoiceOverHint_EditPlaylists" = "Double tap to edit or delete playlists";
+"VoiceOverHint_FinishEditingPlaylists" = "Double tap to finish editing or deleting playlists";
+
+"VoiceOverHint_AddSongs" = "Double tap to add songs to this playlist";
+"VoiceOverHint_AddImage" = "Double tap to add an image to this playlist";
+
+"VoiceOverHint_EditPlaylistEntryOption" = "You must disable VoiceOver to move or delete this track from your playlist, sorry. When VoiceOver is disabled you can swipe right to delete it from the playlist, or press and hold to reorder it in the playlist.";
+
 
 
 

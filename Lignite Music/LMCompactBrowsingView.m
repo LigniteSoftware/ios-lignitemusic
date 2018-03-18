@@ -1111,6 +1111,9 @@
 	iconView.image = [LMAppIcon imageForIcon:self.editing ? LMIconWhiteCheckmark : LMIconEdit];
 	label.text = NSLocalizedString(self.editing ? @"Done" : @"Edit", nil);
 	
+	self.playlistButtonRight.accessibilityLabel = NSLocalizedString(self.editing ? @"VoiceOverLabel_FinishEditingPlaylists" : @"VoiceOverLabel_EditPlaylists", nil);
+	self.playlistButtonRight.accessibilityHint = NSLocalizedString(self.editing ? @"VoiceOverHint_FinishEditingPlaylists" : @"VoiceOverHint_EditPlaylists", nil);
+	
 	[UIView animateWithDuration:0.3 animations:^{
 		[self.playlistModificationButtonView layoutIfNeeded];
 	}];
@@ -1171,7 +1174,6 @@
 		self.collectionView = [[UICollectionView alloc]initWithFrame:CGRectZero collectionViewLayout:fuck];
 		self.collectionView.translatesAutoresizingMaskIntoConstraints = NO;
 		self.collectionView.scrollEnabled = YES;
-		self.collectionView.isAccessibilityElement = NO;
 		
 		//Force scrolling
 		self.collectionView.alwaysBounceVertical = YES;
@@ -1255,6 +1257,9 @@
 		
 		self.playlistButtonLeft = [UIView newAutoLayoutView];
 		self.playlistButtonLeft.backgroundColor = [LMColour mainColour];
+		self.playlistButtonLeft.isAccessibilityElement = YES;
+		self.playlistButtonLeft.accessibilityLabel = NSLocalizedString(@"VoiceOverLabel_CreatePlaylist", nil);
+		self.playlistButtonLeft.accessibilityHint = NSLocalizedString(@"VoiceOverHint_CreatePlaylist", nil);
 		[self.playlistModificationButtonView addSubview:self.playlistButtonLeft];
 		
 		[self.playlistButtonLeft autoPinEdgeToSuperviewEdge:ALEdgeLeading];
@@ -1265,6 +1270,9 @@
 		
 		self.playlistButtonRight = [UIView newAutoLayoutView];
 		self.playlistButtonRight.backgroundColor = [LMColour mainColour];
+		self.playlistButtonRight.isAccessibilityElement = YES;
+		self.playlistButtonRight.accessibilityLabel = NSLocalizedString(@"VoiceOverLabel_EditPlaylists", nil);
+		self.playlistButtonRight.accessibilityHint = NSLocalizedString(@"VoiceOverHint_EditPlaylists", nil);
 		[self.playlistModificationButtonView addSubview:self.playlistButtonRight];
 		
 		[self.playlistButtonRight autoPinEdgeToSuperviewEdge:ALEdgeTrailing];

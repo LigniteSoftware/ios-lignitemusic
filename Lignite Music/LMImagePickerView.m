@@ -183,6 +183,11 @@
 		self.layer.masksToBounds = YES;
 		self.layer.cornerRadius = 8.0f;
 		
+		self.isAccessibilityElement = YES;
+		self.accessibilityLabel = NSLocalizedString(@"VoiceOverLabel_AddImage", nil);
+		self.accessibilityHint = NSLocalizedString(@"VoiceOverHint_AddImage", nil);
+		
+		
 		UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tappedImageSelector)];
 		[self addGestureRecognizer:tapGestureRecognizer];
 		

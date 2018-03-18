@@ -139,7 +139,13 @@
 
 - (NSString*)titleForListEntry:(LMListEntry*)entry {
 	NSString *title = [self.playlist.trackCollection.items objectAtIndex:entry.collectionIndex].title;
-	return title ? title : NSLocalizedString(@"UnknownTitle", nil);
+	NSString *fixedTitle = title ? title : NSLocalizedString(@"UnknownTitle", nil);
+	
+	entry.isAccessibilityElement = YES;
+	entry.accessibilityLabel = [NSString stringWithFormat:@"%@, %@", fixedTitle, [self subtitleForListEntry:entry]];
+	entry.accessibilityHint = NSLocalizedString(@"VoiceOverHint_EditPlaylistEntryOption", nil);
+	
+	return fixedTitle;
 }
 
 - (NSString*)subtitleForListEntry:(LMListEntry*)entry {
@@ -210,6 +216,7 @@
 - (id)subviewAtIndex:(NSUInteger)index forTableView:(LMTableView*)tableView {
 	LMListEntry *entry = [self.bigListEntryArray objectAtIndex:index % self.bigListEntryArray.count];
 	entry.collectionIndex = index;
+	
 	
 	//	if((self.currentlyHighlighted == entry.collectionIndex) ){
 	//		entry.backgroundColor = [UIColor cyanColor];
@@ -536,6 +543,9 @@
 	self.addSongsButtonView.backgroundColor = [LMColour mainColour];
 	self.addSongsButtonView.layer.cornerRadius = 8.0f;
 	self.addSongsButtonView.layer.masksToBounds = YES;
+	self.addSongsButtonView.isAccessibilityElement = YES;
+	self.addSongsButtonView.accessibilityLabel = NSLocalizedString(@"VoiceOverLabel_AddSongs", nil);
+	self.addSongsButtonView.accessibilityHint = NSLocalizedString(@"VoiceOverHint_AddSongs", nil);
 	[self.view addSubview:self.addSongsButtonView];
 	
 	NSArray *addSongsButtonViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{

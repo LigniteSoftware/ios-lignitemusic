@@ -1714,7 +1714,6 @@
 	
 	self.compactView = [LMCompactBrowsingView newAutoLayoutView];
 	self.compactView.rootViewController = self;
-	self.compactView.accessibilityElementsHidden = YES;
 	[self.view addSubview:self.compactView];
 	
 	if(self.pendingStateRestoredPlaylistEditor){
@@ -2009,16 +2008,16 @@
 		
 		//THIS TEST PLAYLIST CODE WILL CAUSE YOUR COMPACT VIEW TO NOT SYNC PROPERLY. DO NOT BE SPOOKED.
 		
-//		LMPlaylistEditorViewController *playlistViewController = [LMPlaylistEditorViewController new];
+		LMPlaylistEditorViewController *playlistViewController = [LMPlaylistEditorViewController new];
 //		LMPlaylist *playlist = [LMPlaylist new];
 //		playlist.title = @"Nice meme";
 //		playlist.image = [LMAppIcon imageForIcon:LMIconBug];
 //		playlist.trackCollection = [self.musicPlayer queryCollectionsForMusicType:LMMusicTypeAlbums].firstObject;
 //		playlistViewController.playlist = playlist;
-//		UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:playlistViewController];
-//		[self presentViewController:navigation animated:YES completion:^{
-//
-//		}];
+		UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:playlistViewController];
+		[self presentViewController:navigation animated:YES completion:^{
+
+		}];
 
 
 //		LMEnhancedPlaylistEditorViewController *enhancedPlaylistViewController = [LMEnhancedPlaylistEditorViewController new];
