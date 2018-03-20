@@ -163,21 +163,37 @@
 		self.accessibilityMusicControlBar.delegate = self;
 		[self.albumArtImageView addSubview:self.accessibilityMusicControlBar];
 		
-		NSArray *accessibilityMusicControlBarPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-			[self.accessibilityMusicControlBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-			[self.accessibilityMusicControlBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-			[self.accessibilityMusicControlBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-			[self.accessibilityMusicControlBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.albumArtImageView withMultiplier:(2.0/10.0)];
-		}];
-		[LMLayoutManager addNewPortraitConstraints:accessibilityMusicControlBarPortraitConstraints];
-		
-		NSArray *accessibilityMusicControlBariPadConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+//		NSArray *accessibilityMusicControlBarPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		if([LMLayoutManager isiPad]){
 			[self.accessibilityMusicControlBar autoCentreInSuperview];
 			[self.accessibilityMusicControlBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 			[self.accessibilityMusicControlBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.albumArtImageView withMultiplier:(1.4/10.0)];
 			[self.accessibilityMusicControlBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.albumArtImageView withMultiplier:(8.0/10.0)];
-		}];
-		[LMLayoutManager addNewiPadConstraints:accessibilityMusicControlBariPadConstraints];
+		}
+		else{
+			[self.accessibilityMusicControlBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+			[self.accessibilityMusicControlBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+			[self.accessibilityMusicControlBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+			[self.accessibilityMusicControlBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.albumArtImageView withMultiplier:(2.0/10.0)];
+		}
+//		}];
+//		[LMLayoutManager addNewPortraitConstraints:accessibilityMusicControlBarPortraitConstraints];
+//
+//		NSArray *accessibilityMusicControlBarLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+//			[self.accessibilityMusicControlBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+//			[self.accessibilityMusicControlBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+//			[self.accessibilityMusicControlBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+//			[self.accessibilityMusicControlBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.albumArtImageView withMultiplier:(2.0/10.0)];
+//		}];
+//		[LMLayoutManager addNewLandscapeConstraints:accessibilityMusicControlBarLandscapeConstraints];
+		
+//		NSArray *accessibilityMusicControlBariPadConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+//			[self.accessibilityMusicControlBar autoCentreInSuperview];
+//			[self.accessibilityMusicControlBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+//			[self.accessibilityMusicControlBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.albumArtImageView withMultiplier:(1.4/10.0)];
+//			[self.accessibilityMusicControlBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.albumArtImageView withMultiplier:(8.0/10.0)];
+//		}];
+//		[LMLayoutManager addNewiPadConstraints:accessibilityMusicControlBariPadConstraints];
 		
 		[self setShowingAccessibilityControls:showingAccessibilityControls animated:YES]; //Animate in the controls
 	}

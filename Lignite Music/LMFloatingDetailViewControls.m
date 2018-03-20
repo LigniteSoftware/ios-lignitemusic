@@ -47,6 +47,17 @@
 	return NO;
 }
 
+- (NSString*)accessibilityStringForButtonType:(LMFloatingDetailViewControlButtonType)buttonType hint:(BOOL)hint {
+	switch(buttonType){
+		case LMFloatingDetailViewControlButtonTypeBack:
+			return NSLocalizedString(hint ? @"VoiceOverHint_DetailViewButtonBack" : @"VoiceOverLabel_DetailViewButtonBack", nil);
+		case LMFloatingDetailViewControlButtonTypeClose:
+			return NSLocalizedString(hint ? @"VoiceOverHint_DetailViewButtonClose" : @"VoiceOverLabel_DetailViewButtonClose", nil);
+		case LMFloatingDetailViewControlButtonTypeShuffle:
+			return NSLocalizedString(hint ? @"VoiceOverHint_DetailViewButtonShuffle" : @"VoiceOverLabel_DetailViewButtonShuffle", nil);
+	}
+}
+
 - (void)layoutSubviews {
 	if(!self.didLayoutConstraints){
 		self.didLayoutConstraints = YES;
@@ -69,6 +80,9 @@
 			LMFloatingDetailViewButton *button = [LMFloatingDetailViewButton newAutoLayoutView];
 			button.type = buttonTypes[i];
 			button.delegate = self.delegate;
+			button.isAccessibilityElement = YES;
+			button.accessibilityLabel = [self accessibilityStringForButtonType:buttonTypes[i] hint:NO];
+			button.accessibilityHint = [self accessibilityStringForButtonType:buttonTypes[i] hint:YES];
 			[self addSubview:button];
 			
 			[button autoPinEdge:ALEdgeTop

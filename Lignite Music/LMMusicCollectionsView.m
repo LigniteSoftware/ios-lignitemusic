@@ -70,7 +70,13 @@
 	
 	LMMusicTrackCollection *collection = [self.trackCollections objectAtIndex:bigListEntry.collectionIndex];
 	
-	return collection.representativeItem.albumTitle ? collection.representativeItem.albumTitle : NSLocalizedString(@"UnknownAlbum", nil);
+	NSString *fixedTitle = collection.representativeItem.albumTitle ? collection.representativeItem.albumTitle : NSLocalizedString(@"UnknownAlbum", nil);
+	
+	bigListEntry.isAccessibilityElement = YES;
+	bigListEntry.accessibilityLabel = [NSString stringWithFormat:@"%@, %@", fixedTitle, [self leftTextForInfoView:infoView]];
+	bigListEntry.accessibilityHint = NSLocalizedString(@"VoiceOverHint_TapCompactViewEntry", nil);
+	
+	return fixedTitle;
 }
 
 - (NSString*)leftTextForInfoView:(LMCollectionInfoView*)infoView {

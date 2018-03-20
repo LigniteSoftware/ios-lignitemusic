@@ -79,12 +79,14 @@
 	[UIApplication sharedApplication].idleTimerDisabled = disableIdleTimer;
 	
 	LMCoreViewController *coreViewController = (LMCoreViewController*)self.rootViewController;
+	coreViewController.navigationController.navigationBar.accessibilityElementsHidden = isOpen;
+	coreViewController.landscapeNavigationBar.accessibilityElementsHidden = isOpen;
 	coreViewController.buttonNavigationBar.accessibilityElementsHidden = isOpen;
 	coreViewController.compactView.accessibilityElementsHidden = isOpen;
 	coreViewController.titleView.accessibilityElementsHidden = isOpen;
 }
 
-- (void)loadMusicTracksBasedOffIndex:(NSInteger)indexOfCenter {
+- (void)loadMusicTracksBasedOffIndex:(NSInteger)indexOfCentre {
 	if(!self.musicPlayer.nowPlayingWasSetWithinLigniteMusic){
 		[self.centreNowPlayingView changeMusicTrack:self.musicPlayer.nowPlayingTrack withIndex:0];
 		[self.leadingNowPlayingView changeMusicTrack:nil withIndex:1];
@@ -99,12 +101,12 @@
 		return;
 	}
 	
-    if(indexOfCenter >= self.musicPlayer.nowPlayingCollection.items.count){
-        indexOfCenter = 0;
+    if(indexOfCentre >= self.musicPlayer.nowPlayingCollection.items.count){
+        indexOfCentre = 0;
     }
     
-    NSInteger nextTrackIndex = indexOfCenter+1;
-    NSInteger previousTrackIndex = indexOfCenter-1;
+    NSInteger nextTrackIndex = indexOfCentre+1;
+    NSInteger previousTrackIndex = indexOfCentre-1;
     if(nextTrackIndex >= self.musicPlayer.nowPlayingCollection.count){
         nextTrackIndex = 0;
     }
@@ -116,7 +118,7 @@
 	
 //	NSLog(@"Spook");
 	
-    [self.centreNowPlayingView changeMusicTrack:[self.musicPlayer.nowPlayingCollection.items objectAtIndex:indexOfCenter] withIndex:indexOfCenter];
+    [self.centreNowPlayingView changeMusicTrack:[self.musicPlayer.nowPlayingCollection.items objectAtIndex:indexOfCentre] withIndex:indexOfCentre];
     [self.leadingNowPlayingView changeMusicTrack:[self.musicPlayer.nowPlayingCollection.items objectAtIndex:nextTrackIndex]
                                        withIndex:nextTrackIndex];
     [self.trailingNowPlayingView changeMusicTrack:[self.musicPlayer.nowPlayingCollection.items objectAtIndex:previousTrackIndex]

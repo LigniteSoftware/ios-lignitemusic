@@ -46,6 +46,19 @@
 
 "VoiceOverLabel_EnhancedPlaylistShuffleAllCheckbox" = "Shuffle all";
 
+"VoiceOverLabel_NowPlayingIconShortcut" = "Now playing shortcut";
+"VoiceOverLabel_BackButton" = "Go back";
+
+"VoiceOverLabel_TapToEdit" = "Edit playlist";
+"VoiceOverLabel_TapToDelete" = "Delete";
+
+"VoiceOverLabel_DetailViewButtonBack" = "Back";
+"VoiceOverLabel_DetailViewButtonClose" = "Close";
+"VoiceOverLabel_DetailViewButtonShuffle" = "Shuffle all";
+
+
+
+
 
 "VoiceOverHint_WantToHear" = "Double tap to add entries for what you want to hear in this playlist";
 "VoiceOverHint_DontWantToHear" = "Double tap to add entries for what you do not want to hear in this playlist";
@@ -56,11 +69,19 @@
 
 "VoiceOverHint_EnhancedPlaylistShuffleAllCheckbox" = "Double tap to toggle whether or not this playlist is always shuffled";
 
+"VoiceOverHint_NowPlayingIconShortcut" = "Double tap this logo when music is playing to open the now playing view";
+"VoiceOverHint_BackButton" = "Double tap to go back";
 
+"VoiceOverHint_TapToEdit" = "Double tap to edit this playlist";
+"VoiceOverHint_TapToDelete" = "Double tap to delete this playlist";
 
+"VoiceOverHint_TapCompactViewEntry" = "Double tap to open this entry";
 
+"VoiceOverHint_DetailViewListEntry" = "Double tap to begin playing this track";
 
-
+"VoiceOverHint_DetailViewButtonBack" = "Double tap to go back";
+"VoiceOverHint_DetailViewButtonClose" = "Double tap to close this detail view";
+"VoiceOverHint_DetailViewButtonShuffle" = "Double tap to shuffle all tracks in this view";
 
 
 
@@ -167,7 +188,6 @@
 
 "VoiceOverLabel_Selected" = "Selected";
 "VoiceOverLabel_NotSelected" = "Not selected";
-
 
 
 

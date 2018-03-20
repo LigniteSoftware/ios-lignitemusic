@@ -1169,6 +1169,9 @@
 	titleImageView.contentMode = UIViewContentModeScaleAspectFit;
 	titleImageView.image = [LMAppIcon imageForIcon:LMIconNoAlbumArt75Percent];
 	titleImageView.userInteractionEnabled = YES;
+	titleImageView.isAccessibilityElement = YES;
+	titleImageView.accessibilityLabel = NSLocalizedString(@"VoiceOverLabel_NowPlayingIconShortcut", nil);
+	titleImageView.accessibilityHint = NSLocalizedString(@"VoiceOverHint_NowPlayingIconShortcut", nil);
 
 	UITapGestureRecognizer *nowPlayingTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(launchNowPlayingFromTap)];
 	[titleImageView addGestureRecognizer:nowPlayingTapGestureRecognizer];
@@ -2020,12 +2023,12 @@
 //		}];
 
 
-		LMEnhancedPlaylistEditorViewController *enhancedPlaylistViewController = [LMEnhancedPlaylistEditorViewController new];
-		enhancedPlaylistViewController.delegate = self.compactView;
-		UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:enhancedPlaylistViewController];
-		[self presentViewController:navigation animated:YES completion:^{
-
-		}];
+//		LMEnhancedPlaylistEditorViewController *enhancedPlaylistViewController = [LMEnhancedPlaylistEditorViewController new];
+//		enhancedPlaylistViewController.delegate = self.compactView;
+//		UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:enhancedPlaylistViewController];
+//		[self presentViewController:navigation animated:YES completion:^{
+//
+//		}];
 		
 //		[self searchDialogueOpened:YES withKeyboardHeight:0.0f];
 		

@@ -130,15 +130,21 @@
 			[self.previousTrackButton autoPinEdgeToSuperviewEdge:ALEdgeTop];
 			[self.previousTrackButton autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.containerView];
 		}];
-		[LMLayoutManager addNewPortraitConstraints:previousTrackButtonPortraitConstraints];
 		
-		NSArray *previousTrackButtonLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-			[self.previousTrackButton autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-			[self.previousTrackButton autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-			[self.previousTrackButton autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-			[self.previousTrackButton autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.containerView];
-		}];
-		[LMLayoutManager addNewLandscapeConstraints:previousTrackButtonLandscapeConstraints];
+		if(self.isMiniPlayer){
+			[LMLayoutManager addNewPortraitConstraints:previousTrackButtonPortraitConstraints];
+			
+			NSArray *previousTrackButtonLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+				[self.previousTrackButton autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+				[self.previousTrackButton autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+				[self.previousTrackButton autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+				[self.previousTrackButton autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.containerView];
+			}];
+			[LMLayoutManager addNewLandscapeConstraints:previousTrackButtonLandscapeConstraints];
+		}
+		else{
+			[NSLayoutConstraint activateConstraints:previousTrackButtonPortraitConstraints];
+		}
 		
 		
 		self.expandMinimizeButton = [LMAccessibilityButton newAutoLayoutView];
@@ -156,16 +162,22 @@
 			[self.expandMinimizeButton autoPinEdgeToSuperviewEdge:ALEdgeTop];
 			[self.expandMinimizeButton autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.containerView];
 		}];
-		[LMLayoutManager addNewPortraitConstraints:expandMinimizeButtonPortraitConstraints];
 		
-		NSArray *expandMinimizeButtonLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-			[self.expandMinimizeButton autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-			[self.expandMinimizeButton autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-			[self.expandMinimizeButton autoPinEdgeToSuperviewEdge:ALEdgeTop];
-			[self.expandMinimizeButton autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.containerView];
-		}];
-		[LMLayoutManager addNewLandscapeConstraints:expandMinimizeButtonLandscapeConstraints];
-		
+		if(self.isMiniPlayer){
+			[LMLayoutManager addNewPortraitConstraints:expandMinimizeButtonPortraitConstraints];
+			
+			NSArray *expandMinimizeButtonLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+				[self.expandMinimizeButton autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+				[self.expandMinimizeButton autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+				[self.expandMinimizeButton autoPinEdgeToSuperviewEdge:ALEdgeTop];
+				[self.expandMinimizeButton autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.containerView];
+			}];
+			[LMLayoutManager addNewLandscapeConstraints:expandMinimizeButtonLandscapeConstraints];
+		}
+		else{
+			[NSLayoutConstraint activateConstraints:expandMinimizeButtonPortraitConstraints];
+		}
+			
 		
 		self.nextTrackButton = [LMAccessibilityButton newAutoLayoutView];
 		self.nextTrackButton.icon = [LMAppIcon imageForIcon:LMIconForwardArrow inverted:YES];
@@ -182,16 +194,22 @@
 			[self.nextTrackButton autoPinEdgeToSuperviewEdge:ALEdgeTop];
 			[self.nextTrackButton autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.containerView];
 		}];
-		[LMLayoutManager addNewPortraitConstraints:nextTrackButtonPortraitConstraints];
 		
-		NSArray *nextTrackButtonLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-			[self.nextTrackButton autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.expandMinimizeButton withOffset:(landscapePadding/2.0)];
-			[self.nextTrackButton autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-			[self.nextTrackButton autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-			[self.nextTrackButton autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.containerView];
-		}];
-		[LMLayoutManager addNewLandscapeConstraints:nextTrackButtonLandscapeConstraints];
-		
+		if(self.isMiniPlayer){
+			[LMLayoutManager addNewPortraitConstraints:nextTrackButtonPortraitConstraints];
+			
+			NSArray *nextTrackButtonLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+				[self.nextTrackButton autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.expandMinimizeButton withOffset:(landscapePadding/2.0)];
+				[self.nextTrackButton autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+				[self.nextTrackButton autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+				[self.nextTrackButton autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.containerView];
+			}];
+			[LMLayoutManager addNewLandscapeConstraints:nextTrackButtonLandscapeConstraints];
+		}
+		else{
+			[NSLayoutConstraint activateConstraints:nextTrackButtonPortraitConstraints];
+		}
+			
 		
 		self.playPauseButton = [LMAccessibilityButton newAutoLayoutView];
 		self.playPauseButton.icon = [LMAppIcon imageForIcon:LMIconPlay];
@@ -207,15 +225,21 @@
 			[self.playPauseButton autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 			[self.playPauseButton autoPinEdgeToSuperviewEdge:ALEdgeTop];
 		}];
-		[LMLayoutManager addNewPortraitConstraints:playPauseButtonPortraitConstraints];
 		
-		NSArray *playPauseButtonLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-			[self.playPauseButton autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.previousTrackButton withOffset:-(landscapePadding/2.0)];
-			[self.playPauseButton autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.nextTrackButton withOffset:(landscapePadding/2.0)];
-			[self.playPauseButton autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-			[self.playPauseButton autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-		}];
-		[LMLayoutManager addNewLandscapeConstraints:playPauseButtonLandscapeConstraints];
+		if(self.isMiniPlayer){
+			[LMLayoutManager addNewPortraitConstraints:playPauseButtonPortraitConstraints];
+			
+			NSArray *playPauseButtonLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+				[self.playPauseButton autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.previousTrackButton withOffset:-(landscapePadding/2.0)];
+				[self.playPauseButton autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.nextTrackButton withOffset:(landscapePadding/2.0)];
+				[self.playPauseButton autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+				[self.playPauseButton autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+			}];
+			[LMLayoutManager addNewLandscapeConstraints:playPauseButtonLandscapeConstraints];
+		}
+		else{
+			[NSLayoutConstraint activateConstraints:playPauseButtonPortraitConstraints];
+		}
 	}
 }
 

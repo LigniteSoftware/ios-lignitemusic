@@ -221,6 +221,9 @@
 		tapToEditLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:20.0f];
 		tapToEditLabel.textAlignment = NSTextAlignmentCenter;
 		tapToEditLabel.numberOfLines = 0;
+		tapToEditLabel.isAccessibilityElement = YES;
+		tapToEditLabel.accessibilityLabel = NSLocalizedString(@"VoiceOverLabel_TapToEdit", nil);
+		tapToEditLabel.accessibilityHint = NSLocalizedString(@"VoiceOverHint_TapToEdit", nil);
 		[self.tapToEditBackgroundView addSubview:tapToEditLabel];
 		
 		[tapToEditLabel autoPinEdgeToSuperviewEdge:ALEdgeTop];
@@ -231,6 +234,9 @@
 		
 		self.tapToDeleteView = [UIView newAutoLayoutView];
 		self.tapToDeleteView.backgroundColor = [LMColour mainColour];
+		self.tapToDeleteView.isAccessibilityElement = YES;
+		self.tapToDeleteView.accessibilityLabel = NSLocalizedString(@"VoiceOverLabel_TapToDelete", nil);
+		self.tapToDeleteView.accessibilityHint = NSLocalizedString(@"VoiceOverHint_TapToDelete", nil);
 		[self.tapToEditBackgroundView addSubview:self.tapToDeleteView];
 		
 		[self.tapToDeleteView autoPinEdgeToSuperviewEdge:ALEdgeBottom];

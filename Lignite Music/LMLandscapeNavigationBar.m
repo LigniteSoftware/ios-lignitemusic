@@ -68,8 +68,12 @@
 	
 	[self.navigationBarBackgroundView layoutIfNeeded];
 	
-	self.createImageView.hidden = self.mode != LMLandscapeNavigationBarModePlaylistView;
+	self.createImageView.hidden = (self.mode != LMLandscapeNavigationBarModePlaylistView);
 	self.editImageView.hidden = self.createImageView.hidden;
+	
+	self.createImageView.isAccessibilityElement = YES;
+	self.createImageView.accessibilityLabel = @"create";
+	self.createImageView.accessibilityHint = @"double tap to create";
 	
 	switch(mode){
 		case LMLandscapeNavigationBarModeOnlyLogo: {
@@ -138,6 +142,10 @@
 		self.editImageView.hidden = YES;
 		self.isEditing = YES;
 	}
+	
+	self.createImageView.isAccessibilityElement = YES;
+	self.createImageView.accessibilityLabel = NSLocalizedString(self.isEditing ? @"VoiceOverLabel_FinishEditingPlaylists" : @"VoiceOverLabel_CreatePlaylist", nil);
+	self.createImageView.accessibilityHint = NSLocalizedString(self.isEditing ? @"VoiceOverHint_FinishEditingPlaylists" : @"VoiceOverHint_CreatePlaylist", nil);
 }
 
 - (void)tappedButton:(UIGestureRecognizer*)gestureRecognizer {
@@ -194,10 +202,13 @@
 
 		self.backButtonImageView = [UIImageView newAutoLayoutView];
 		self.backButtonImageView.contentMode = UIViewContentModeScaleAspectFit;
-		self.backButtonImageView.image = [LMAppIcon imageForIcon:LMIconiOSBack];
+		self.backButtonImageView.image = [LMAppIcon imageForIcon:LMIconiOSBack inverted:YES];
 		self.backButtonImageView.clipsToBounds = YES;
 		self.backButtonImageView.userInteractionEnabled = YES;
 		self.backButtonImageView.hidden = YES;
+		self.backButtonImageView.isAccessibilityElement = YES;
+		self.backButtonImageView.accessibilityLabel = NSLocalizedString(@"VoiceOverLabel_BackButton", nil);
+		self.backButtonImageView.accessibilityHint = NSLocalizedString(@"VoiceOverHint_BackButton", nil);
 		[self.navigationBarBackgroundView addSubview:self.backButtonImageView];
 
 		UITapGestureRecognizer *backButtonTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tappedButton:)];
@@ -209,6 +220,9 @@
 		self.logoImageView.image = [LMAppIcon imageForIcon:LMIconNoAlbumArt75Percent];
 		self.logoImageView.clipsToBounds = YES;
 		self.logoImageView.userInteractionEnabled = YES;
+		self.logoImageView.isAccessibilityElement = YES;
+		self.logoImageView.accessibilityLabel = NSLocalizedString(@"VoiceOverLabel_NowPlayingIconShortcut", nil);
+		self.logoImageView.accessibilityHint = NSLocalizedString(@"VoiceOverHint_NowPlayingIconShortcut", nil);
 		[self.navigationBarBackgroundView addSubview:self.logoImageView];
 
 		UITapGestureRecognizer *logoImageViewTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tappedButton:)];
@@ -231,6 +245,9 @@
 		self.editImageView.image = [LMAppIcon invertImage:[LMAppIcon imageForIcon:LMIconEdit]];
 		self.editImageView.clipsToBounds = YES;
 		self.editImageView.userInteractionEnabled = YES;
+		self.editImageView.isAccessibilityElement = YES;
+		self.editImageView.accessibilityLabel = NSLocalizedString(@"VoiceOverLabel_EditPlaylists", nil);
+		self.editImageView.accessibilityHint = NSLocalizedString(@"VoiceOverHint_EditPlaylists", nil);
 		[self.navigationBarBackgroundView addSubview:self.editImageView];
 
 		UITapGestureRecognizer *editImageViewTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tappedButton:)];
