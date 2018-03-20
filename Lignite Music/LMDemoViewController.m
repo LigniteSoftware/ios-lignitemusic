@@ -189,7 +189,7 @@
 
 
 - (id)accessoryViewForIndexPath:(NSIndexPath *)indexPath forSectionTableView:(LMSectionTableView *)sectionTableView {
-	UISwitch *switchView = [UISwitch newAutoLayoutView];
+	UISwitch *switchView = [UISwitch new];
 	
 	NSString *settingsKey = @"";
 	BOOL enabled = NO;

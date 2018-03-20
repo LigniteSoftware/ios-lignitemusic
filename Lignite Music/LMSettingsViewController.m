@@ -311,21 +311,21 @@
 		case 0:
 			switch(indexPath.row){
 				case 0: {
-//					NSLog(@"secret taps");
-//					self.debugTapCount++;
-//					if(self.debugTapCount > 5){
-//						NSLog(@"Hey boi");
-//						LMDebugViewController *debugViewController = [LMDebugViewController new];
-//						debugViewController.title = @"Debug";
-//						[self.coreViewController.navigationController showViewController:debugViewController sender:self];
-//					}
-//					if(self.debugTapCount == 1){
-//						NSLog(@"Timer registered");
-//						[NSTimer scheduledTimerWithTimeInterval:3.0 block:^() {
-//							self.debugTapCount = 0;
-//							NSLog(@"Timer reset");
-//						} repeats:NO];
-//					}
+					NSLog(@"secret taps");
+					self.debugTapCount++;
+					if(self.debugTapCount > 5){
+						NSLog(@"Hey boi");
+						LMDebugViewController *debugViewController = [LMDebugViewController new];
+						debugViewController.title = @"Debug";
+						[self.coreViewController.navigationController showViewController:debugViewController sender:self];
+					}
+					if(self.debugTapCount == 1){
+						NSLog(@"Timer registered");
+						[NSTimer scheduledTimerWithTimeInterval:3.0 block:^() {
+							self.debugTapCount = 0;
+							NSLog(@"Timer reset");
+						} repeats:NO];
+					}
 					
 					UISwitch *rowSwitch = [self accessoryViewForIndexPath:indexPath forSectionTableView:sectionTableView];
 					[rowSwitch setOn:!rowSwitch.on animated:YES];
