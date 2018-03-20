@@ -47,7 +47,7 @@
 		
 		self.alpha = ((self.type == LMFloatingDetailViewControlButtonTypeBack) ? 0.0 : (7.5/10.0));
 		
-		BOOL invertIcon = (self.icon == LMIconXCross);
+		BOOL invertIcon = (self.icon != LMIconShuffle);
 		
 		self.layer.masksToBounds = YES;
 		self.layer.cornerRadius = 8.0f;
