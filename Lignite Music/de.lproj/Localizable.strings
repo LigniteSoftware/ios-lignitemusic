@@ -39,7 +39,241 @@
  
  */
 
-//Nothing here... Whaaaat?
+"VoiceOverLabel_WantToHear" = "Ich möchte hören"; //For enhanced playlists
+"VoiceOverLabel_DontWantToHear" = "Ich möchte nicht hören"; //For enhanced playlists
+
+"VoiceOverLabel_EnhancedPlaylistShuffleAllCheckbox" = "Alles zufällig wiedergeben";
+
+"VoiceOverLabel_NowPlayingIconShortcut" = "Aktuelle Wiedergabe öffnen";
+"VoiceOverLabel_BackButton" = "Zurück";
+
+"VoiceOverLabel_TapToEdit" = "Wiedergabeliste bearbeiten";
+"VoiceOverLabel_TapToDelete" = "Löschen";
+
+"VoiceOverLabel_DetailViewButtonBack" = "Zurück";
+"VoiceOverLabel_DetailViewButtonClose" = "Schliessen";
+"VoiceOverLabel_DetailViewButtonShuffle" = "Alles zufällig wiedergeben";
+
+"VoiceOverHint_WantToHear" = "Tippe doppelt, um Einträge, welche du hören möchtest, zu dieser Wiedergabeliste hinzuzufügen";
+"VoiceOverHint_DontWantToHear" = "Tippe doppelt, um Einträge, welche du nicht hören möchtest, zu dieser Wiedergabeliste hinzuzufügen";
+
+"VoiceOverHint_DeleteEnhancedPlaylistEntry" = "Tippe doppelt, um diesen Eintrag von den Konditionen deiner erweiterten Wiedergabeliste zu entfernen";
+
+"VoiceOverHint_CloseWarningBox" = "Tippe doppelt, um diese Warnung zu schliessen";
+
+"VoiceOverHint_EnhancedPlaylistShuffleAllCheckbox" = "Tippe doppelt, um die dauerhafte zufällige Wiedergabe ein- oder auszuschalten";
+
+"VoiceOverHint_NowPlayingIconShortcut" = "Tippe doppelt auf dieses Logo, wenn die Musik abgespielt wird, um die Vollbildwiedergabe zu öffnen";
+"VoiceOverHint_BackButton" = "Tippe doppelt, um zurück zu gehen";
+
+"VoiceOverHint_TapToEdit" = "Tippe doppelt, um diese Wiedergabeliste zu bearbeiten";
+"VoiceOverHint_TapToDelete" = "Tippe doppelt, um diese Wiedergabeliste zu löschen";
+
+"VoiceOverHint_TapCompactViewEntry" = "Tippe doppelt, um diesen Eintrag zu öffnen";
+
+"VoiceOverHint_DetailViewListEntry" = "Tippe doppelt, um dieses Lied abzuspielen";
+
+"VoiceOverHint_DetailViewButtonBack" = "Tippe doppelt, um zurück zu gehen";
+"VoiceOverHint_DetailViewButtonClose" = "Tippe doppelt, um diese Detailansicht zu schliessen";
+"VoiceOverHint_DetailViewButtonShuffle" = "Tippe doppelt, um alle Lieder dieser Ansicht zufällig wiederzugeben";
+
+
+
+
+
+"SendReport" = "Bericht senden";
+"GoBack" = "Zurück gehen";
+
+"VoiceOverLabel_ScrollingTextSetting" = "Automatisches Scrollen bei langen Liedtiteln in der aktuellen Wiedergabeanzeige sowie dem Mini Player";
+"VoiceOverLabel_ThemeSetting" = "Die Farbe / das Thema von Lignite Music wechseln. Das aktuell ausgewählte Thema ist %@";
+"VoiceOverLabel_NowPlayingAlwaysOnSetting" = "Das Display nicht ausschalten wenn die Vollbildwiedergabe aktiv ist";
+
+"VoiceOverLabel_ImageDownloading_Off" = "Das Herunterladen von Bildern ist deaktiviert";
+"VoiceOverLabel_ImageDownloading_On" = "Das Herunterladen von Bildern ist aktiviert";
+"VoiceOverLabel_ImageDownloading" = "Einstellung zum automatischen Herunterladen von Künstlerbildern sowie Albencovern. %@, belegt zurzeit %.02f megabyte des Speicherplatzes deines Gerätes"; //The %@ is either VoiceOverLabel_ImageDownloading_Off or VoiceOverLabel_ImageDownloading_On
+
+"VoiceOverLabel_CellularAndLowStorage_Off" = "Der Download über das Mobilfunknetz ist deaktiviert";
+"VoiceOverLabel_CellularAndLowStorage_On" = "Der Download über das Mobilfunknetz oder bei geringem Speicherplatz ist aktiviert";
+"VoiceOverLabel_CellularAndLowStorage" = "Einstellung für Lignite Music, um Künstlerbilder sowie Albencover über das Mobilfunknetz oder bei geringem Restspeicher deines Gerätes. %@"; //The %@ is either VoiceOverLabel_CellularAndLowStorage_Off or VoiceOverLabel_CellularAndLowStorage_On
+
+"VoiceOverLabel_Tutorial" = "Lignite Music Videoanleitungen";
+"VoiceOverLabel_LeaveAReview" = "Hinterlasse eine Bewertung für Lignite Music im App Store";
+"VoiceOverLabel_Credits" = "Danksagung für Lignite Music, ins Leben gerufen durch Edwin Finch und Philipp Weder";
+"VoiceOverLabel_ContactUs" = "Kontaktiere die Entwickler von Lignite Music";
+
+"VoiceOverLabel_LicenseLinksButton" = "Open Source Icon Lizenzen";
+
+"VoiceOverLabel_ContactEmail" = "Kontaktiere uns via E-Mail";
+"VoiceOverLabel_ContactTwitter" = "Tritt mit uns via Twitter in Kontakt";
+"VoiceOverLabel_ContactWebsite" = "Besuche unsere Website";
+
+"VoiceOverLabel_OnboardingButtonLetsGo" = "Mit der Einrichtung weiterfahren";
+"VoiceOverLabel_OnboardingButtonSoundsGood" = "Den iOS-Bewilligungsdialog öffnen";
+"VoiceOverLabel_OnboardingButtonOpenTutorial" = "Anleitungsvideos ansehen";
+"VoiceOverLabel_OnboardingButtonJumpRightIn" = "Einführung überspringen und direkt zu Lignite Music wechseln";
+"VoiceOverLabel_OnboardingButtonMusicPermissionDenied" = "Weiterfahren";
+
+"VoiceOverLabel_LMTutorialViewTutorialKeyNormalPlaylists" = "Anleitungsvideo zum Thema 'Erstellung von Wiedergabelisten'";
+"VoiceOverLabel_LMTutorialViewTutorialKeyFavourites" = "Anleitungsvideo zum Thema 'Favoriten'";
+"VoiceOverLabel_LMTutorialViewTutorialKeyQueueManagement" = "Anleitungsvideo zum Thema 'Warteschlange'";
+
+"VoiceOverLabel_PlayQuickTutorialButton" = "Kurze Einführung ansehen";
+
+"VoiceOverLabel_Enable" = "Aktivieren"; //Enable image downloading
+"VoiceOverLabel_KeepEnabled" = "Aktiviert lassen"; //Keep image downloading enabled
+
+"VoiceOverLabel_KeepDisabled" = "Deaktiviert lassen"; //Keep image downloading disabled
+"VoiceOverLabel_ClearCacheAndDisable" = "Bilder löschen und deaktivieren"; //Delete already downloaded artist and album images and disable future downloading of artist and album images
+
+"VoiceOverLabel_Allow" = "Erlauben";
+"VoiceOverLabel_Deny" = "Ablehnen";
+
+"VoiceOverLabel_AlertViewControllerCheckboxText" = "Bestätigungsbox. Wenn diese Box aktiviert ist, wird %@ bestätigt."; //We have popup dialogues which require the user to check the checkbox to continue (such as checking to understand that Lignite playlists can't sync outside of Lignite Music due to technical limitations). Each checkbox text starts with "I understand...", so please structure the sentence accordingly. See string "PlaylistManagementUnderstandingConfirmationCheckboxText" if you want an example of a checkbox text.
+
+"VoiceOverLabel_CheckboxChecked" = "Bestätigungsbox aktiviert";
+"VoiceOverLabel_CheckboxUnchecked" = "Bestätigungsbox deaktiviert";
+
+"VoiceOverLabel_ThemeCreatedBy" = "Thema '%@', kreiert durch %@"; //The first %@ will be the theme's name in English (non-translatable), the second will be the person who created it (also in English, not translatable).
+
+"VoiceOverLabel_MinimizeButton" = "Button zur Minimierung";
+
+"VoiceOverLabel_ButtonBar_Browse" = "Durchsuchen";
+"VoiceOverLabel_ButtonBar_MiniPlayer" = "Mini Player";
+"VoiceOverLabel_ButtonBar_ViewSelector" = "Ansicht auswählen";
+
+"VoiceOverLabel_SearchButton" = "Suche";
+
+"VoiceOverLabel_CloseSearch" = "Suche schliessen";
+"VoiceOverLabel_ClearSearch" = "Suchfeld leeren";
+
+"VoiceOverLabel_ShuffleOn" = "Zufällige Wiedergabe aktiviert";
+"VoiceOverLabel_ShuffleOff" = "Zufällige Wiedergabe deaktiviert";
+
+"VoiceOverLabel_RepeatOff" = "Wiederholung deaktiviert";
+"VoiceOverLabel_RepeatAll" = "Alles wiederholen aktiv";
+"VoiceOverLabel_RepeatOne" = "Lied wiederholen aktiviert";
+
+"VoiceOverLabel_AirPlayButton" = "AirPlay";
+
+"VoiceOverLabel_QueueButton" = "Wiedergabe Warteschlange";
+
+"VoiceOverLabel_FavouriteButton" = "Favorisieren";
+"VoiceOverLabel_UnfavouriteButton" = "Favorit entfernt";
+
+"VoiceOverLabel_PreviousTrack" = "Vorheriges Lied";
+"VoiceOverLabel_CloseNowPlaying" = "Vollbildwiedergabe schliessen";
+"VoiceOverLabel_OpenNowPlaying" = "Vollbildwiedergabe öffnen";
+"VoiceOverLabel_NextTrack" = "Nächstes Lied";
+"VoiceOverLabel_PlayTrack" = "Lied abspielen";
+"VoiceOverLabel_PauseTrack" = "Lied pausieren";
+
+"VoiceOverLabel_CreatePlaylist" = "Wiedergabeliste erstellen";
+"VoiceOverLabel_EditPlaylists" = "Wiedergabeliste bearbeiten";
+"VoiceOverLabel_FinishEditingPlaylists" = "Bearbeitung der Wiedergabeliste beenden";
+
+"VoiceOverLabel_AddSongs" = "Lieder hinzufügen";
+"VoiceOverLabel_AddImage" = "Bild hinzufügen";
+
+"VoiceOverLabel_SelectAll" = "Alle auswählen";
+"VoiceOverLabel_DeselectAll" = "Alle abwählen";
+
+"VoiceOverLabel_Selected" = "Ausgewählt";
+"VoiceOverLabel_NotSelected" = "Nicht ausgewählt";
+
+"VoiceOverHint_AllowExplicitImageDownloading" = "Tippe doppelt, um das Herunterladen von Bilder im Mobilfunknetz oder bei geringem Speicherplatz zu aktivieren";
+"VoiceOverHint_DenyExplicitImageDownloading" = "Tippe doppelt, um das Herunterladen von Bilder im Mobilfunknetz oder bei geringem Speicherplatz zu deaktivieren";
+
+"VoiceOverHint_DoubleTapToOpenThemeSelector" = "Tippe doppelt, um die Auswahl der Themen zu öffnen";
+"VoiceOverHint_DoubleTapToChangeThisSetting" = "Tippe doppelt, um diese Einstellung zu ändern";
+
+"VoiceOverHint_DoubleTapToOpenTheTutorialPage" = "Tippe doppelt, um die Übersicht der Videoanleitungen zu öffnen";
+"VoiceOverHint_DoubleTapToOpenTheAppStore" = "Tippe doppelt, um eine Bewertung im App Store zu hinterlassen";
+"VoiceOverHint_DoubleTapToOpenTheCreditsPage" = "Tippe doppelt, um die Danksagungsseite zu öffnen";
+"VoiceOverHint_DoubleTapToOpenTheContactPage" = "Tippe doppelt, um die Kontaktseite zu öffnen";
+
+"VoiceOverHint_LicenseLinksButton" = "Tippe doppelt, um eine Seite zu öffnen, auf welcher wir alle verwendeten Lizenzen und Icons auflisten, welche diese App nutzt";
+
+"VoiceOverHint_ContactEmail" = "Tippe doppelt, um Lignite eine Mail zu schicken";
+"VoiceOverHint_ContactTwitter" = "Tippe doppelt, um Lignite's Twitterprofil zu besuchen";
+"VoiceOverHint_ContactWebsite" = "Tippe doppelt, um die Lignite Website zu öffnen";
+
+"VoiceOverHint_OnboardingButtonLetsGo" = "Tippe doppelt, um fortzufahren";
+"VoiceOverHint_OnboardingButtonSoundsGood" = "Tippe doppelt, um den Musik-Bewilligungsdialog von iOS zu öffnen, welcher benötigt wird, damit Lignite Music auf deine Musik zugreifen kann";
+"VoiceOverHint_OnboardingButtonOpenTutorial" = "Tippe doppelt, um die Übersicht der Videoanleitungen zu öffnen";
+"VoiceOverHint_OnboardingButtonJumpRightIn" = "Tippe doppelt, um die Einführung zu überspringen und Lignite Music gleich zu verwenden";
+"VoiceOverHint_OnboardingButtonMusicPermissionDenied" = "Tippe doppelt, wenn du die Zugriffsbewilligung erteilt hast";
+
+"VoiceOverHint_DoubleTapToOpenThisTutorial" = "Tippe doppelt, um diese Anleitung zu öffnen";
+
+"VoiceOverHint_PlayQuickTutorialButton" = "Tippe doppelt, um eine kurze Einführung zu Lignite Music zu erhalten";
+
+"VoiceOverHint_Enable" = "Tippe doppelt, um das Herunterladen von Bilder zu aktivieren";
+"VoiceOverHint_KeepEnabled" = "Tippe doppelt, um das Herunterladen aktiviert zu lassen";
+
+"VoiceOverHint_KeepDisabled" = "Tippe doppelt, um das Herunterladen deaktiviert zu lassen";
+"VoiceOverHint_ClearCacheAndDisable" = "Tippe doppelt, um die zuvor heruntergeladenen Bilder zu löschen und das Herunterladen von Bilder zu deaktivieren";
+
+"VoiceOverHint_CheckTheCheckbox" = "Tippe doppelt, um die Checkbox zu aktivieren";
+"VoiceOverHint_UncheckTheCheckbox" = "Tippe doppelt, um die Checkbox zu deaktivieren";
+
+"VoiceOverHint_TapForMoreInformation" = "Tippe doppelt, um weitere Informationen zu diesem Dialog zu erhalten";
+
+"VoiceOverHint_TapToUseTheme" = "Tippe doppelt, um diese Thema anzuwenden";
+
+"VoiceOverHint_BrowseMusicType" = "Tippe doppelt, um deine %@ zu durchsuchen"; //The %@ will be one of the music types, such as "Titles", "Albums", "Favourites", etc.
+
+"VoiceOverHint_OpenSettings" = "Tippe doppelt, um die Einstellungen zu öffnen";
+"VoiceOverHint_OpenFeedbackSubmitter" = "Tippe doppelt, um das Feedback-Formular zu öffnen";
+
+"VoiceOverHint_MinimizeButton" = "Tippe doppelt, um die Tab-Navigation ein-/auszublenden";
+
+"VoiceOverHint_ButtonBar_Browse" = "Tippe doppelt, um die Musik-Durchsuchungsmöglichkeiten anzuzeigen";
+"VoiceOverHint_ButtonBar_MiniPlayer" = "Tippe doppelt, um den Mini Player anzuzeigen";
+"VoiceOverHint_ButtonBar_ViewSelector" = "Tippe doppelt, um die Ansichtsauswahl anzuzeigen";
+
+"VoiceOverHint_SearchButton" = "Tippe doppelt, um die Suche zu öffnen";
+
+"VoiceOverHint_CloseSearch" = "Tippe doppelt, um das Suchfenster zu schliessen";
+"VoiceOverHint_ClearSearch" = "Tippe doppelt, um das Suchfeld zu leeren";
+
+"VoiceOverHint_TapSearchEntry" = "Tippe doppelt, um zu dieser Musik zu gehen";
+
+"VoiceOverHint_ShuffleOn" = "Tippe doppelt, um die zufällige Wiedergabe auszuschalten";
+"VoiceOverHint_ShuffleOff" = "Tippe doppelt, um die zufällige Wiedergabe einzuschalten";
+
+"VoiceOverHint_RepeatOff" = "Tippe doppelt, um alles zu wiederholen";
+"VoiceOverHint_RepeatAll" = "Tippe doppelt, um dieses Lied zu wiederholen";
+"VoiceOverHint_RepeatOne" = "Tippe doppelt, um die Wiederholung auszuschalten";
+
+"VoiceOverHint_AirPlayButton" = "Tippe doppelt, um die AirPlay Auswahl anzuzeigen";
+
+"VoiceOverHint_QueueButton" = "Tippe doppelt, um die Wiedergabewarteliste ein-/auszublenden";
+
+"VoiceOverHint_FavouriteButton" = "Tippe doppelt, um dieses Lied zu deinen Favoriten hinzuzufügen";
+"VoiceOverHint_UnfavouriteButton" = "Tippe doppelt, um dieses Lied aus deinen Favoriten zu entfernen";
+
+"VoiceOverHint_QueueEntry" = "Tippe doppelt, um dieses Lied abzuspielen";
+"VoiceOverHint_PreviousTrack" = "Tippe doppelt, um das vorherige Lied abzuspielen";
+"VoiceOverHint_CloseNowPlaying" = "Tippe doppelt, um die Vollbildanzeige zu schliessen";
+"VoiceOverHint_OpenNowPlaying" = "Tippe doppelt, um die Vollbildanzeige zu öffnen";
+"VoiceOverHint_NextTrack" = "Tippe doppelt, um das nächste Lied abzuspielen";
+"VoiceOverHint_PlayTrack" = "Tippe doppelt, um mit der Wiedergabe fortzufahren";
+"VoiceOverHint_PauseTrack" = "Tippe doppelt, um die Wiedergabe zu pausieren";
+
+"VoiceOverHint_CreatePlaylist" = "Tippe doppelt, um eine Wiedergabeliste zu erstellen";
+"VoiceOverHint_EditPlaylists" = "Tippe doppelt, um Wiedergabelisten zu editieren oder löschen";
+"VoiceOverHint_FinishEditingPlaylists" = "Tippe doppelt, um die Bearbeitung abzuschliessen";
+
+"VoiceOverHint_AddSongs" = "Tippe doppelt, um Lieder zu dieser Wiedergabeliste hinzuzufügen";
+"VoiceOverHint_AddImage" = "Tippe doppelt, um dieser Wiedergabeliste ein Bild hinzuzufügen";
+
+"VoiceOverHint_EditPlaylistEntryOption" = "Du musst VoiceOver hierfür leider deaktivieren, sorry. Wenn VoiceOver deaktiviert ist, kannst du nach rechts streichen, um einen Eintrag aus der Wiedergabeliste zu entfernen oder tippen und halten, um die Reihenfolge zu ändern.";
+
+"VoiceOverHint_ViewEntry" = "Tippe doppelt, um den Inhalt dieses Eintrags anzusehen";
+"VoiceOverHint_SelectEntry" = "Tippe doppelt, um diesen Eintrag für deine Wiedergabeliste auszuwählen";
+"VoiceOverHint_DeselectEntry" = "Tippe doppelt, um diesen Eintrag aus deiner Wiedergabeliste abzuwählen";
+"VoiceOverHint_SelectAll" = "Tippe doppelt, um alle Einträge für deine Wiedergabeliste auszuwählen";
+"VoiceOverHint_DeselectAll" = "Tippe doppelt, um alle Einträge deiner Wiedergabeliste abzuwählen";
 
 /*
  

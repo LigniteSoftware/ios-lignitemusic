@@ -1450,7 +1450,7 @@
 	
 	NSArray *favouriteHeartImageViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 		[self.favouriteHeartImageView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.trackInfoView withOffset:-5];
-		[self.favouriteHeartImageView autoSetDimension:ALDimensionHeight toSize:25.0f];
+		[self.favouriteHeartImageView autoSetDimension:ALDimensionHeight toSize:35.0f];
 		[self.favouriteHeartImageView autoSetDimension:ALDimensionWidth toSize:50.0f];
 		[self.favouriteHeartImageView autoAlignAxis:ALAxisVertical toSameAxisOfView:self.trackInfoView];
 	}];
