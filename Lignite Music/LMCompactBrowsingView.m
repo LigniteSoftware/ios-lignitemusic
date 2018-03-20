@@ -839,6 +839,13 @@
 	
 	self.coreViewController.buttonNavigationBar.browsingBar.showingLetterTabs = !displaying;
 	
+	static BOOL previouslyHidingAccessibilityElements = NO;
+	if(displaying){
+		previouslyHidingAccessibilityElements = self.collectionView.accessibilityElementsHidden;
+	}
+	self.collectionView.accessibilityElementsHidden = displaying ? YES : previouslyHidingAccessibilityElements;
+	self.coreViewController.titleView.accessibilityElementsHidden = self.collectionView.accessibilityElementsHidden;
+	
 	if(displaying){
 		self.indexOfCurrentlyOpenDetailViewForOreientationChanges = index;
 		

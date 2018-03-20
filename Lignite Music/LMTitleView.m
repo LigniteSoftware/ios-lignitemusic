@@ -521,6 +521,10 @@
 	
 	LMMusicTrack *track = [self.musicTitles.items objectAtIndex:entry.collectionIndex];
 	
+	entry.isAccessibilityElement = YES;
+	entry.accessibilityLabel = [NSString stringWithFormat:@"%@, %@", track.title, [self subtitleForListEntry:entry]];
+	entry.accessibilityHint = NSLocalizedString(@"VoiceOverHint_DetailViewListEntry", nil);
+	
 	return track.title;
 }
 
@@ -725,6 +729,9 @@
 		self.shuffleButton = [LMFloatingDetailViewButton newAutoLayoutView];
 		self.shuffleButton.type = LMFloatingDetailViewControlButtonTypeShuffle;
 		self.shuffleButton.delegate = self;
+		self.shuffleButton.isAccessibilityElement = YES;
+		self.shuffleButton.accessibilityLabel = NSLocalizedString(@"VoiceOverLabel_DetailViewButtonShuffle", nil);
+		self.shuffleButton.accessibilityHint = NSLocalizedString(@"VoiceOverHint_DetailViewButtonShuffle", nil);
 		[self addSubview:self.shuffleButton];
 		
 		[self.shuffleButton autoPinEdgeToSuperviewMargin:ALEdgeTop].constant = 8;

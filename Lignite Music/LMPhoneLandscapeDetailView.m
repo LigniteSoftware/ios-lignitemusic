@@ -147,31 +147,49 @@
 }
 
 - (NSString*)titleForInfoView:(LMCollectionInfoView*)infoView {
+	LMBigListEntry *bigListEntry = infoView.associatedBigListEntry;
+	
 	LMMusicTrackCollection *collection = self.musicTrackCollection;
+	
+	NSString *titleString = @"";
+	
+	self.collectionInfoBigListEntry.isAccessibilityElement = YES;
 	
 	switch(self.musicType){
 		case LMMusicTypeGenres: {
-			return collection.representativeItem.genre ? collection.representativeItem.genre : NSLocalizedString(@"UnknownGenre", nil);
+			titleString = collection.representativeItem.genre ? collection.representativeItem.genre : NSLocalizedString(@"UnknownGenre", nil);
+			break;
 		}
 		case LMMusicTypeCompilations:{
-			return [collection titleForMusicType:LMMusicTypeCompilations];
+			titleString = [collection titleForMusicType:LMMusicTypeCompilations];
+			break;
 		}
 		case LMMusicTypePlaylists:{
-			return self.playlist.title;
+			titleString = self.playlist.title;
+			break;
 		}
 		case LMMusicTypeAlbums: {
-			return collection.representativeItem.albumTitle ? collection.representativeItem.albumTitle : NSLocalizedString(@"UnknownAlbum", nil);
+			titleString = collection.representativeItem.albumTitle ? collection.representativeItem.albumTitle : NSLocalizedString(@"UnknownAlbum", nil);
+			break;
 		}
 		case LMMusicTypeArtists: {
-			return collection.representativeItem.artist ? collection.representativeItem.artist : NSLocalizedString(@"UnknownArtist", nil);
+			titleString = collection.representativeItem.artist ? collection.representativeItem.artist : NSLocalizedString(@"UnknownArtist", nil);
+			break;
 		}
 		case LMMusicTypeComposers: {
-			return collection.representativeItem.composer ? collection.representativeItem.composer : NSLocalizedString(@"UnknownComposer", nil);
+			titleString = collection.representativeItem.composer ? collection.representativeItem.composer : NSLocalizedString(@"UnknownComposer", nil);
+			break;
 		}
 		default: {
 			return nil;
 		}
 	}
+	
+	bigListEntry.isAccessibilityElement = YES;
+	bigListEntry.accessibilityLabel = [NSString stringWithFormat:@"%@, %@", titleString, [self leftTextForInfoView:infoView]];
+//	bigListEntry.accessibilityHint = NSLocalizedString(@"VoiceOverHint_TapCompactViewEntry", nil);
+	
+	return titleString;
 }
 
 - (NSString*)leftTextForInfoView:(LMCollectionInfoView*)infoView {
@@ -306,6 +324,9 @@
 		LMFloatingDetailViewButton *button = [LMFloatingDetailViewButton newAutoLayoutView];
 		button.type = LMFloatingDetailViewControlButtonTypeShuffle;
 		button.delegate = self;
+		button.isAccessibilityElement = YES;
+		button.accessibilityLabel = NSLocalizedString(@"VoiceOverLabel_DetailViewButtonShuffle", nil);
+		button.accessibilityHint = NSLocalizedString(@"VoiceOverHint_DetailViewButtonShuffle", nil);
 		[self.sidebarBackgroundView addSubview:button];
 		
 		[button autoAlignAxis:ALAxisVertical toSameAxisOfView:self.collectionInfoBigListEntry];
