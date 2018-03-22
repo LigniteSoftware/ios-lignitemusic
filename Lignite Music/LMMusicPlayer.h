@@ -179,6 +179,16 @@ typedef enum {
 
 @end
 
+
+@interface MPMusicPlayerController (Private)
+
+- (NSInteger)numberOfItems;
+- (MPMediaItem*)nowPlayingItemAtIndex:(NSInteger)index;
+- (MPMediaQuery*)queueAsQuery;
+
+@end
+
+
 @interface LMMusicPlayer : NSObject
 
 

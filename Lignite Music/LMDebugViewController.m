@@ -82,7 +82,7 @@
 }
 
 + (NSString*)currentAppVersion {
-	return @"1.1.0 Beta";
+	return @"1.1.0 Release";
 }
 
 + (NSString*)buildNumberString {
@@ -100,6 +100,8 @@
 	[debugString appendString:[NSString stringWithFormat:@"\nModel: %@", [[UIDevice currentDevice] model]]];
 	
 	[debugString appendString:[NSString stringWithFormat:@"\n\nLayout manager dump: %@", [LMLayoutManager debugDumpString]]];
+	
+	[debugString appendString:[NSString stringWithFormat:@"\n\nSpooky ass queue count: %d", (int)[[MPMusicPlayerController systemMusicPlayer] numberOfItems]]];
 	
 	NSArray *tracks = [musicPlayer queryCollectionsForMusicType:LMMusicTypeTitles];
 	

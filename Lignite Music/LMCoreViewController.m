@@ -1483,12 +1483,12 @@
 	
 	
 //	MPMusicPlayerControllerQueue *mutableQueue = [MPMusicPlayerController systemMusicPlayer];
-//
+
 //	MPMusicPlayerController *controller = [MPMusicPlayerController systemMusicPlayer];
-//
-//
+
+
 //	NSLog(@"Mutable queue %@", mutableQueue);
-//
+
 //	int i = 0;
 //	unsigned int mc = 0;
 //	NSLog(@"Wow %@", [[MPMusicPlayerController systemMusicPlayer] performSelector:@selector(queueAsRadioStation)]);
@@ -1501,21 +1501,38 @@
 //	}
 //	free(mlist);
 //
-//	MPMediaQuery *query = [[MPMusicPlayerController systemMusicPlayer] performSelector:@selector(queueAsQuery)];
+//	MPMediaQuery *query = [[MPMusicPlayerController systemMusicPlayer] queueAsQuery];
 //
 //	NSLog(@"Got query %@ with %d items", query, (int)query.items.count);
 //
-//	NSLog(@"dis %d", [[MPMusicPlayerController systemMusicPlayer] performSelector:@selector(userQueueModificationsDisabled)]);
+//	NSLog(@"Checking the other items in the queue");
 //
+////	return;
+//
+//	NSLog(@"dis %d", [[MPMusicPlayerController systemMusicPlayer] performSelector:@selector(userQueueModificationsDisabled)]);
+
 //	int index = 0;
 //	for(MPMediaItem *item in query.items){
 //		NSLog(@"%d - %@", index, item.title);
 //		index++;
 //	}
-//
+
 //	NSLog(@"%d items", [[MPMusicPlayerController systemMusicPlayer] valueForKey:@"numberOfItems"]);
+	
+	
+	NSInteger numberOfItems = [[MPMusicPlayerController systemMusicPlayer] numberOfItems];
+	NSLog(@"fixed %d items", numberOfItems);
+//	sleep(1);
+	for (NSInteger i = 0; i < MIN(10, numberOfItems); i++) {
+		MPMediaItem* mi = [[MPMusicPlayerController systemMusicPlayer] nowPlayingItemAtIndex:i];
+		NSLog(@"%d: %@", (int)i, [mi valueForProperty:MPMediaItemPropertyTitle]);
+	}
+
 //	return;
 
+	/*
+	 Random shit, ignore this
+	 */
 //	NSInteger numberOfItems = [[MPMusicPlayerController systemMusicPlayer] performSelector:@selector(numberOfItems)];
 //	for (NSInteger i = 0; i < numberOfItems; i++) {
 //		MPMediaItem* mi = [[MPMusicPlayerController systemMusicPlayer] performSelector:@selector(nowPlayingItemAtIndex) withObject:@(i)];
