@@ -101,7 +101,7 @@
 	
 	[debugString appendString:[NSString stringWithFormat:@"\n\nLayout manager dump: %@", [LMLayoutManager debugDumpString]]];
 	
-	[debugString appendString:[NSString stringWithFormat:@"\n\nSpooky ass queue count: %d", (int)[[MPMusicPlayerController systemMusicPlayer] numberOfItems]]];
+	[debugString appendString:[NSString stringWithFormat:@"\n\nSpooky ass queue count: %d", (int)[[LMMusicPlayer sharedMusicPlayer] numberOfItemsInQueue]]];
 	
 	NSArray *tracks = [musicPlayer queryCollectionsForMusicType:LMMusicTypeTitles];
 	

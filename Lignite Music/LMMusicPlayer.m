@@ -135,6 +135,27 @@ MPMediaGrouping associatedMediaTypes[] = {
 	}
 }
 
+- (NSInteger)numberOfItemsInQueue {
+	return [[MPMusicPlayerController systemMusicPlayer] performSelector:@selector(numberOfItems)];;
+}
+
+- (MPMediaItem*)queueTrackAtIndex:(NSInteger)index {
+	NSString *selectorString = [NSString stringWithFormat:@"n%@%@%@", @"owPlayingT",@"temA",@"tIndex:"];
+	
+	SEL sse = NSSelectorFromString(selectorString);
+	
+	if ([MPMusicPlayerController instancesRespondToSelector:sse]) {
+		IMP sseimp = [MPMusicPlayerController instanceMethodForSelector:sse];
+		MPMediaItem *mediaItem = sseimp([MPMusicPlayerController systemMusicPlayer], sse, index);
+		NSLog(@"Object %@ title %@", mediaItem, mediaItem.title);
+		return mediaItem;
+	}
+	
+	NSLog(@"Doesn't respond :(");
+	
+	return nil;
+}
+
 - (instancetype)init {
 	self = [super init];
 	if(self){
@@ -1861,9 +1882,9 @@ BOOL shuffleForDebug = NO;
 }
 
 - (LMMusicTrackCollection*)nowPlayingCollection {
-	MPMediaQuery *query = [[MPMusicPlayerController systemMusicPlayer] queueAsQuery];
+//	MPMediaQuery *query = [[MPMusicPlayerController systemMusicPlayer] queueAsQuery];
 
-	NSLog(@"[LMMusicPlayer] Got now playing query %@ with %d songs", query, (int)query.items.count);
+//	NSLog(@"[LMMusicPlayer] Got now playing query %@ with %d songs", query, (int)query.items.count);
 //
 //	return [LMMusicTrackCollection collectionWithItems:query.items];
 	

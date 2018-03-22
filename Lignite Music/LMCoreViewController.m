@@ -1520,16 +1520,31 @@
 //	NSLog(@"%d items", [[MPMusicPlayerController systemMusicPlayer] valueForKey:@"numberOfItems"]);
 	
 	
-	NSInteger numberOfItems = [[MPMusicPlayerController systemMusicPlayer] numberOfItems];
-	NSLog(@"fixed %d items", numberOfItems);
-//	sleep(1);
-	for (NSInteger i = 0; i < MIN(10, numberOfItems); i++) {
-		MPMediaItem* mi = [[MPMusicPlayerController systemMusicPlayer] nowPlayingItemAtIndex:i];
-		NSLog(@"%d: %@", (int)i, [mi valueForProperty:MPMediaItemPropertyTitle]);
-	}
+//	NSInteger numberOfItems = [[MPMusicPlayerController systemMusicPlayer] numberOfItems];
+//	NSLog(@"fixed %d items", numberOfItems);
+////	sleep(1);
+//	for (NSInteger i = 0; i < MIN(10, numberOfItems); i++) {
+//		MPMediaItem *item = [[MPMusicPlayerController systemMusicPlayer] performSelector:@selector(nowPlayingItemAtIndex:) withObject:[NSNumber numberWithInteger:i]];
+////		MPMediaItem* mi = [[MPMusicPlayerController systemMusicPlayer] nowPlayingItemAtIndex:i];
+//		NSLog(@"%d: %@", (int)i, item);
+//	}
+	
+	
+//	NSString *selectorString = [NSString stringWithFormat:@"%@%@%@", @"nowPlaying",@"ItemAt",@"Index:"];
+//	SEL sse = NSSelectorFromString(selectorString);
+//	if ([MPMusicPlayerController instancesRespondToSelector:sse]) {
+//		IMP sseimp = [MPMusicPlayerController instanceMethodForSelector:sse];
+//		MPMediaItem *mediaItem = sseimp([MPMusicPlayerController systemMusicPlayer], sse, 1);
+//		NSLog(@"Object %@ title %@", mediaItem, mediaItem.title);
+//	}
+//	else{
+//		NSLog(@"Doesn't respond :(");
+//	}
+	
+	
+	NSLog(@"Number of items %d", (int)[[LMMusicPlayer sharedMusicPlayer] numberOfItemsInQueue]);
 
 //	return;
-
 	/*
 	 Random shit, ignore this
 	 */
