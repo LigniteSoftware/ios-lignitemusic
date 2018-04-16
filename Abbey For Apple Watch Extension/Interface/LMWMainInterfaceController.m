@@ -150,7 +150,7 @@
 }
 
 - (void)reloadPlayPauseButton {
-	[self.playPauseImage setImageNamed:self.companionBridge.nowPlayingInfo.playing ? @"icon_pause" : @"icon_play"];
+	[self.playPauseImage setImageNamed:self.companionBridge.nowPlayingInfo.playing ? @"icon_pause_watch" : @"icon_play_watch"];
 }
 
 - (void)reloadVolumeProgressBar {

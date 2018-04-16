@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="13771" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AgC-eL-Hgc" pageOrientation="vertical">
+<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="14109" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AgC-eL-Hgc" pageOrientation="vertical">
     <device id="watch38" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="watchOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="13756"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="14031"/>
     </dependencies>
-    <customFonts key="customFonts">
-        <array key="HelveticaNeueLights.ttc">
-            <string>HelveticaNeue-Light</string>
-        </array>
-    </customFonts>
     <scenes>
         <!--Main Interface Controller-->
         <scene sceneID="aou-V4-d1y">
@@ -25,7 +20,7 @@
                                 <imageView width="0.59999999999999998" height="0.40000000000000002" alignment="center" image="watch_no_cover_art_not_cropped" contentMode="scaleAspectFit" id="S7q-Tl-cOr"/>
                             </items>
                         </group>
-                        <group width="1" height="1" alignment="center" verticalAlignment="center" hidden="YES" layout="vertical" spacing="4" id="BKQ-1f-mP3" userLabel="Nothing Playing Container">
+                        <group width="1" height="1" alignment="center" verticalAlignment="center" layout="vertical" spacing="4" id="BKQ-1f-mP3" userLabel="Nothing Playing Container">
                             <items>
                                 <imageView width="0.59999999999999998" height="0.40000000000000002" alignment="center" image="watch_no_cover_art_not_cropped" contentMode="scaleAspectFit" id="TqO-uK-WJf">
                                     <variation key="device=watch38mm" height="0.37"/>
@@ -48,7 +43,7 @@
                                                         <items>
                                                             <group width="0.20000000000000001" alignment="left" verticalAlignment="center" id="XAE-op-0vo" userLabel="Icon Group">
                                                                 <items>
-                                                                    <imageView width="0.90000000000000002" height="0.90000000000000002" alignment="center" verticalAlignment="center" image="icon_browse_white" contentMode="scaleAspectFit" id="OgQ-Gr-Ixd"/>
+                                                                    <imageView width="0.90000000000000002" height="0.90000000000000002" alignment="center" verticalAlignment="center" image="icon_browse_watch" contentMode="scaleAspectFit" id="OgQ-Gr-Ixd"/>
                                                                 </items>
                                                             </group>
                                                             <group width="0.80000000000000004" height="1" alignment="left" verticalAlignment="center" layout="vertical" spacing="0.0" id="NhI-Ps-vrv" userLabel="Text">
@@ -76,7 +71,7 @@
                                 </group>
                             </items>
                         </group>
-                        <group width="1" height="1" alignment="left" layout="overlap" radius="0.0" spacing="0.0" id="PEh-FC-AVI" userLabel="Now Playing Container">
+                        <group width="1" height="1" alignment="left" hidden="YES" layout="overlap" radius="0.0" spacing="0.0" id="PEh-FC-AVI" userLabel="Now Playing Container">
                             <items>
                                 <group width="1" height="0.92000000000000004" alignment="left" layout="overlap" id="btL-zD-wF6" userLabel="Album Art Group">
                                     <items>
