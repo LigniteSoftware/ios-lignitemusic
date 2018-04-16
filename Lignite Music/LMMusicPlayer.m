@@ -338,6 +338,7 @@ MPMediaGrouping associatedMediaTypes[] = {
 	
 	[self.systemMusicPlayer setQueueWithItemCollection:self.nowPlayingCollection];
 	[self.systemMusicPlayer setNowPlayingItem:newTrack];
+	[self.systemMusicPlayer play];
 }
 
 - (LMMusicTrack*)nextTrackInQueue {
@@ -689,13 +690,15 @@ MPMediaGrouping associatedMediaTypes[] = {
 }
 
 - (void)notifyLibraryChangeDelegatesOfLibraryChange:(BOOL)finished {
-	NSArray<id<LMMusicPlayerDelegate>> *safeDelegates = [[NSArray alloc]initWithArray:self.delegates];
+	return;
 	
-	for(id<LMMusicPlayerDelegate> delegate in safeDelegates){
-		if([delegate respondsToSelector:@selector(musicLibraryChanged:)]){
-			[delegate musicLibraryChanged:finished];
-		}
-	}
+//	NSArray<id<LMMusicPlayerDelegate>> *safeDelegates = [[NSArray alloc]initWithArray:self.delegates];
+//
+//	for(id<LMMusicPlayerDelegate> delegate in safeDelegates){
+//		if([delegate respondsToSelector:@selector(musicLibraryChanged:)]){
+//			[delegate musicLibraryChanged:finished];
+//		}
+//	}
 }
 
 - (void)mediaLibraryContentsChanged:(id)notification {
@@ -1464,9 +1467,11 @@ BOOL shuffleForDebug = NO;
 			NSLog(@"Setting %@ compared to %@", self.systemMusicPlayer.nowPlayingItem.title, associatedMediaItem.title);
 			if(self.queueRequiresReload){
 				[self reloadQueueWithTrack:associatedMediaItem];
+				[self.systemMusicPlayer play];
 			}
 			else{
 				[self.systemMusicPlayer setNowPlayingItem:associatedMediaItem];
+				[self.systemMusicPlayer play];
 			}
 		}
 	}
@@ -1912,11 +1917,13 @@ BOOL shuffleForDebug = NO;
 			if(!self.nowPlayingCollection){
 				[self.systemMusicPlayer setQueueWithQuery:self.bullshitQuery];
 				[self.systemMusicPlayer setNowPlayingItem:nil];
+				[self.systemMusicPlayer play];
 			}
 			NSLog(@"Setting now playing collection to %@", nowPlayingCollection);
 			if(nowPlayingCollection.count > 0){
 				[self.systemMusicPlayer setQueueWithItemCollection:self.nowPlayingCollection];
 				[self.systemMusicPlayer setNowPlayingItem:[[self.nowPlayingCollection items] objectAtIndex:0]];
+				[self.systemMusicPlayer play];
 			}
 			else{
 				self.nowPlayingCollection = nil;
@@ -1946,6 +1953,7 @@ BOOL shuffleForDebug = NO;
 		
 		[self.systemMusicPlayer setQueueWithItemCollection:self.nowPlayingCollection];
 		[self.systemMusicPlayer setNowPlayingItem:nowPlayingTrack];
+		[self.systemMusicPlayer play];
 //		[self setNowPlayingTrack:nowPlayingTrack];
 
 		self.playbackTimeToRestoreBecauseQueueChangesAreFuckingStupid = playbackTime;

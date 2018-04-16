@@ -6,7 +6,7 @@
  Copyright © 2016 Lignite. All rights reserved.
  */
 
-"NSAppleMusicUsageDescription" = "Without music, would we be a music app?";
+"NSAppleMusicUsageDescription" = "We need access to your music library so that we can do what we do best: give you an awesome music experience.";
 
 "NSCameraUsageDescription" = "We use your camera if you want to take a photo for your playlist cover.";
 "NSPhotoLibraryUsageDescription" = "We use your photo library if you want to select a custom photo for your playlist cover.";
