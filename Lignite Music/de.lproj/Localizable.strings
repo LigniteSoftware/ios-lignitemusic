@@ -133,7 +133,7 @@
 "VoiceOverLabel_CheckboxChecked" = "Bestätigungsbox aktiviert";
 "VoiceOverLabel_CheckboxUnchecked" = "Bestätigungsbox deaktiviert";
 
-"VoiceOverLabel_ThemeCreatedBy" = "Thema '%@', kreiert durch %@"; //The first %@ will be the theme's name in English (non-translatable), the second will be the person who created it (also in English, not translatable).
+"VoiceOverLabel_ThemeCreatedBy" = "Thema '%@', kreiert durch %@, %@"; //The first %@ will be the theme's name in English (non-translatable), the second will be the person who created it (also in English, not translatable), the third is whether or not the theme is currently selected (see VoiceOverLabel_Selected).
 
 "VoiceOverLabel_MinimizeButton" = "Button zur Minimierung";
 

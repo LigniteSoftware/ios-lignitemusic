@@ -500,6 +500,8 @@
 		
 		[self.musicPlayer.navigationBar setSelectedTab:LMNavigationTabMiniplayer];
 		[self.musicPlayer.navigationBar maximize:NO];
+		
+		[self.songListTableView reloadData];
 	} repeats:NO];
 }
 
@@ -521,9 +523,11 @@
 	
 	LMMusicTrack *track = [self.musicTitles.items objectAtIndex:entry.collectionIndex];
 	
+	BOOL isSelectedEntry = (self.currentlyHighlighted == entry.collectionIndex);
+	
 	entry.isAccessibilityElement = YES;
-	entry.accessibilityLabel = [NSString stringWithFormat:@"%@, %@", track.title, [self subtitleForListEntry:entry]];
-	entry.accessibilityHint = NSLocalizedString(@"VoiceOverHint_DetailViewListEntry", nil);
+	entry.accessibilityLabel = [NSString stringWithFormat:@"%@, %@, %@", track.title, [self subtitleForListEntry:entry], NSLocalizedString(isSelectedEntry ? @"VoiceOverLabel_Selected" : @"", nil)];
+	entry.accessibilityHint = NSLocalizedString(isSelectedEntry ? @"" : @"VoiceOverHint_DetailViewListEntry", nil);
 	
 	return track.title;
 }

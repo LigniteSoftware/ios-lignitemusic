@@ -137,6 +137,17 @@
 @synthesize viewAttachedToButtonBar = _viewAttachedToButtonBar;
 @synthesize minimizeButtonBottomConstraint = _minimizeButtonBottomConstraint;
 @synthesize currentlySelectedTab = _currentlySelectedTab;
+@synthesize isMinimized = _isMinimized;
+
+- (void)setIsMinimized:(BOOL)isMinimized {
+	_isMinimized = isMinimized;
+	
+	self.minimizeButton.accessibilityLabel = [NSString stringWithFormat:@"%@, %@", NSLocalizedString(@"VoiceOverLabel_MinimizeButton", nil), NSLocalizedString(isMinimized ? @"VoiceOverLabel_Minimized" : @"VoiceOverLabel_NotMinimized", nil)];
+}
+
+- (BOOL)isMinimized {
+	return _isMinimized;
+}
 
 - (LMNavigationTab)currentlySelectedTab {
 	return _currentlySelectedTab;
@@ -779,7 +790,7 @@
 		self.minimizeButton.backgroundColor = [LMColour mainColour];
 		self.minimizeButton.userInteractionEnabled = YES;
 		self.minimizeButton.isAccessibilityElement = YES;
-		self.minimizeButton.accessibilityLabel = NSLocalizedString(@"VoiceOverLabel_MinimizeButton", nil);
+		[self setIsMinimized:NO];
 		self.minimizeButton.accessibilityHint = NSLocalizedString(@"VoiceOverHint_MinimizeButton", nil);
 		[self addSubview:self.minimizeButton];
 		

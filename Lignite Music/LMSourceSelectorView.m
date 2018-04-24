@@ -126,6 +126,16 @@
 	return indexOfEntry;
 }
 
+- (void)reloadAccessibilityLabels {
+	for(int i = 0; i < self.listEntryArray.count; i++){
+		LMListEntry *listEntry = [self.listEntryArray objectAtIndex:i];
+		
+		BOOL isSelectedSource = (self.currentlyHighlighted == i);
+		
+		listEntry.accessibilityLabel = [NSString stringWithFormat:@"%@, %@", [self titleForListEntry:listEntry], NSLocalizedString(isSelectedSource ? @"VoiceOverLabel_Selected" : @"", nil)];
+	}
+}
+
 - (void)setCurrentSourceWithIndex:(NSInteger)index {
 	LMListEntry *entry = [self listEntryForIndex:index];
 	
@@ -141,6 +151,8 @@
 			[entry changeHighlightStatus:YES animated:YES];
 		}
 		self.currentlyHighlighted = index;
+		
+		[self reloadAccessibilityLabels];
 		
 		if(self.isMainSourceSelector){
 			NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];

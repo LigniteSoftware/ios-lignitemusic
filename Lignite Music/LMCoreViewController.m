@@ -2015,9 +2015,9 @@
 		
 //		[self launchNowPlaying];
 		
-//		LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
-//		[self.navigationController pushViewController:settingsViewController animated:YES];
-//		self.buttonNavigationBar.hidden = YES;
+		LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
+		[self.navigationController pushViewController:settingsViewController animated:YES];
+		self.buttonNavigationBar.hidden = YES;
 
 		
 //		LMThemePickerViewController *themesViewController = [LMThemePickerViewController new];

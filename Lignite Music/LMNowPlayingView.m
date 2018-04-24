@@ -641,11 +641,11 @@
 	self.repeatModeButton.ligniteAccessibilityHint = NSLocalizedString(repeatHintKey, nil);
 	
 	
-	self.favouriteHeartImageView.accessibilityLabel = NSLocalizedString(!self.loadedTrack.isFavourite ? @"VoiceOverLabel_FavouriteButton" : @"VoiceOverLabel_UnfavouriteButton", nil);
-	self.favouriteHeartImageView.accessibilityHint = NSLocalizedString(!self.loadedTrack.isFavourite ? @"VoiceOverHint_FavouriteButton" : @"VoiceOverHint_UnfavouriteButton", nil);
+	self.queueButton.ligniteAccessibilityLabel = NSLocalizedString(self.nowPlayingQueueOpen ? @"VoiceOverLabel_CloseQueueButton" : @"VoiceOverLabel_OpenQueueButton", nil);
+	self.queueButton.ligniteAccessibilityHint = NSLocalizedString(self.nowPlayingQueueOpen ? @"VoiceOverHint_CloseQueueButton" : @"VoiceOverHint_OpenQueueButton", nil);
 	
-	self.favouritesButton.ligniteAccessibilityLabel = NSLocalizedString(!self.loadedTrack.isFavourite ? @"VoiceOverLabel_FavouriteButton" : @"VoiceOverLabel_UnfavouriteButton", nil);
-	self.favouritesButton.ligniteAccessibilityHint = NSLocalizedString(!self.loadedTrack.isFavourite ? @"VoiceOverHint_FavouriteButton" : @"VoiceOverHint_UnfavouriteButton", nil);
+	
+	[self reloadFavouriteStatus];
 }
 
 - (void)setNowPlayingQueueOpen:(BOOL)open animated:(BOOL)animated {
@@ -915,8 +915,17 @@
 
 - (void)reloadFavouriteStatus {
 	UIImage *favouritesImageToUse = [LMAppIcon imageForIcon:self.loadedTrack.isFavourite ? LMIconFavouriteRedFilled : (self.progressSlider.lightTheme ? LMIconFavouriteWhiteOutline : LMIconFavouriteBlackOutline)];
+	
 	self.favouriteHeartImageView.image = favouritesImageToUse;
+	
 	[self.favouritesButton setImage:favouritesImageToUse];
+	
+	
+	self.favouriteHeartImageView.accessibilityLabel = NSLocalizedString(!self.loadedTrack.isFavourite ? @"VoiceOverLabel_FavouriteButton" : @"VoiceOverLabel_UnfavouriteButton", nil);
+	self.favouriteHeartImageView.accessibilityHint = NSLocalizedString(!self.loadedTrack.isFavourite ? @"VoiceOverHint_FavouriteButton" : @"VoiceOverHint_UnfavouriteButton", nil);
+	
+	self.favouritesButton.ligniteAccessibilityLabel = NSLocalizedString(!self.loadedTrack.isFavourite ? @"VoiceOverLabel_FavouriteButton" : @"VoiceOverLabel_UnfavouriteButton", nil);
+	self.favouritesButton.ligniteAccessibilityHint = NSLocalizedString(!self.loadedTrack.isFavourite ? @"VoiceOverHint_FavouriteButton" : @"VoiceOverHint_UnfavouriteButton", nil);
 }
 
 - (void)changeFavouriteStatus {
@@ -1734,8 +1743,8 @@
 	self.airplayButton.ligniteAccessibilityLabel = NSLocalizedString(@"VoiceOverLabel_AirPlayButton", nil);
 	self.airplayButton.ligniteAccessibilityHint = NSLocalizedString(@"VoiceOverHint_AirPlayButton", nil);
 	
-	self.queueButton.ligniteAccessibilityLabel = NSLocalizedString(@"VoiceOverLabel_QueueButton", nil);
-	self.queueButton.ligniteAccessibilityHint = NSLocalizedString(@"VoiceOverHint_QueueButton", nil);
+	self.queueButton.ligniteAccessibilityLabel = NSLocalizedString(@"VoiceOverLabel_OpenQueueButton", nil);
+	self.queueButton.ligniteAccessibilityHint = NSLocalizedString(@"VoiceOverHint_OpenQueueButton", nil);
 	
 	
 	[self.musicPlayer addMusicDelegate:self];

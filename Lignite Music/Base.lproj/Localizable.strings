@@ -39,6 +39,63 @@
  
  */
 
+
+"VoiceOverLabel_NotMinimized" = "Not minimized";
+"VoiceOverLabel_Minimized" = "Minimized";
+
+
+
+//As of 1.2.0 ^
+
+
+"VoiceOverLabel_WantToHear" = "I want to hear"; //For enhanced playlists
+"VoiceOverLabel_DontWantToHear" = "I don't want to hear"; //For enhanced playlists
+
+"VoiceOverLabel_EnhancedPlaylistShuffleAllCheckbox" = "Shuffle all";
+
+"VoiceOverLabel_NowPlayingIconShortcut" = "Now playing shortcut";
+"VoiceOverLabel_BackButton" = "Go back";
+
+"VoiceOverLabel_TapToEdit" = "Edit playlist";
+"VoiceOverLabel_TapToDelete" = "Delete";
+
+"VoiceOverLabel_DetailViewButtonBack" = "Back";
+"VoiceOverLabel_DetailViewButtonClose" = "Close";
+"VoiceOverLabel_DetailViewButtonShuffle" = "Shuffle all";
+
+
+
+
+
+"VoiceOverHint_WantToHear" = "Double tap to add entries for what you want to hear in this playlist";
+"VoiceOverHint_DontWantToHear" = "Double tap to add entries for what you do not want to hear in this playlist";
+
+"VoiceOverHint_DeleteEnhancedPlaylistEntry" = "Double tap to remove this entry from your enhanced playlist conditions";
+
+"VoiceOverHint_CloseWarningBox" = "Double tap to close this warning";
+
+"VoiceOverHint_EnhancedPlaylistShuffleAllCheckbox" = "Double tap to toggle whether or not this playlist is always shuffled";
+
+"VoiceOverHint_NowPlayingIconShortcut" = "Double tap this logo when music is playing to open the now playing view";
+"VoiceOverHint_BackButton" = "Double tap to go back";
+
+"VoiceOverHint_TapToEdit" = "Double tap to edit this playlist";
+"VoiceOverHint_TapToDelete" = "Double tap to delete this playlist";
+
+"VoiceOverHint_TapCompactViewEntry" = "Double tap to open this entry";
+
+"VoiceOverHint_DetailViewListEntry" = "Double tap to begin playing this track";
+
+"VoiceOverHint_DetailViewButtonBack" = "Double tap to go back";
+"VoiceOverHint_DetailViewButtonClose" = "Double tap to close this detail view";
+"VoiceOverHint_DetailViewButtonShuffle" = "Double tap to shuffle all tracks in this view";
+
+
+
+
+
+
+
 //Accessibility strings
 "SendReport" = "Send report";
 "GoBack" = "Go back";
@@ -73,10 +130,79 @@
 "VoiceOverLabel_OnboardingButtonMusicPermissionDenied" = "Continue";
 
 "VoiceOverLabel_LMTutorialViewTutorialKeyNormalPlaylists" = "Tutorial video on creating playlists in Lignite Music";
-"VoiceOverLabel_LMTutorialViewTutorialKeyFavourites" = "Tutorial video on using favorites in Lignite Music"; //For the love of god I swear I am not American, I would spell it "favourites", but VoiceOver is an uncultured swine and pronounces the proper spelling of favourites as "fav-ur-itees" so I have no choice but to spell it the Americanized way just for the voice to pronounce it correctly.
+"VoiceOverLabel_LMTutorialViewTutorialKeyFavourites" = "Tutorial video on using favourites in Lignite Music";
 "VoiceOverLabel_LMTutorialViewTutorialKeyQueueManagement" = "Tutorial video on using the queue in Lignite Music";
 
 "VoiceOverLabel_PlayQuickTutorialButton" = "Play the quick tutorial";
+
+"VoiceOverLabel_Enable" = "Enable"; //Enable image downloading
+"VoiceOverLabel_KeepEnabled" = "Keep enabled"; //Keep image downloading enabled
+
+"VoiceOverLabel_KeepDisabled" = "Keep disabled"; //Keep image downloading disabled
+"VoiceOverLabel_ClearCacheAndDisable" = "Delete images and disable"; //Delete already downloaded artist and album images and disable future downloading of artist and album images
+
+"VoiceOverLabel_Allow" = "Allow";
+"VoiceOverLabel_Deny" = "Deny";
+
+"VoiceOverLabel_AlertViewControllerCheckboxText" = "Confirmation checkbox. If this checkbox is checked, it confirms %@"; //We have popup dialogues which require the user to check the checkbox to continue (such as checking to understand that Lignite playlists can't sync outside of Lignite Music due to technical limitations). Each checkbox text starts with "I understand...", so please structure the sentence accordingly. See string "PlaylistManagementUnderstandingConfirmationCheckboxText" if you want an example of a checkbox text.
+
+"VoiceOverLabel_CheckboxChecked" = "Checkbox checked";
+"VoiceOverLabel_CheckboxUnchecked" = "Checkbox unchecked";
+
+"VoiceOverLabel_ThemeCreatedBy" = "%@ theme, created by %@, %@"; //The first %@ will be the theme's name in English (non-translatable), the second will be the person who created it (also in English, not translatable), the third is whether or not the theme is currently selected (see VoiceOverLabel_Selected).
+
+"VoiceOverLabel_MinimizeButton" = "Minimization button";
+
+"VoiceOverLabel_ButtonBar_Browse" = "Browse";
+"VoiceOverLabel_ButtonBar_MiniPlayer" = "Mini player";
+"VoiceOverLabel_ButtonBar_ViewSelector" = "View selector";
+
+"VoiceOverLabel_SearchButton" = "Search";
+
+"VoiceOverLabel_CloseSearch" = "Close search";
+"VoiceOverLabel_ClearSearch" = "Clear search field";
+
+"VoiceOverLabel_ShuffleOn" = "Shuffle, turned on";
+"VoiceOverLabel_ShuffleOff" = "Shuffle, turned off";
+
+"VoiceOverLabel_RepeatOff" = "Repeat off";
+"VoiceOverLabel_RepeatAll" = "Repeat all";
+"VoiceOverLabel_RepeatOne" = "Repeat one";
+
+"VoiceOverLabel_AirPlayButton" = "AirPlay";
+
+"VoiceOverLabel_QueueButton" = "Playback queue";
+
+"VoiceOverLabel_FavouriteButton" = "Favourite";
+"VoiceOverLabel_UnfavouriteButton" = "Unfavourite";
+
+"VoiceOverLabel_PreviousTrack" = "Previous track";
+"VoiceOverLabel_CloseNowPlaying" = "Close now playing";
+"VoiceOverLabel_OpenNowPlaying" = "Open now playing";
+"VoiceOverLabel_NextTrack" = "Next track";
+"VoiceOverLabel_PlayTrack" = "Play track";
+"VoiceOverLabel_PauseTrack" = "Pause track";
+
+"VoiceOverLabel_CreatePlaylist" = "Create playlist";
+"VoiceOverLabel_EditPlaylists" = "Edit playlists";
+"VoiceOverLabel_FinishEditingPlaylists" = "Finish editing playlists";
+
+"VoiceOverLabel_AddSongs" = "Add songs";
+"VoiceOverLabel_AddImage" = "Add an image";
+
+"VoiceOverLabel_SelectAll" = "Select all";
+"VoiceOverLabel_DeselectAll" = "Deselect all";
+
+"VoiceOverLabel_Selected" = "Selected";
+"VoiceOverLabel_NotSelected" = "Not selected";
+
+
+
+
+
+
+"VoiceOverHint_AllowExplicitImageDownloading" = "Double tap to allow image downloading when your phone is on cellular data or when it is low on storage";
+"VoiceOverHint_DenyExplicitImageDownloading" = "Double tap to prevent image downloading from happening when your phone is on cellular data or when it is low on storage";
 
 "VoiceOverHint_DoubleTapToOpenThemeSelector" = "Double tap to open the theme selector";
 "VoiceOverHint_DoubleTapToChangeThisSetting" = "Double tap to change this setting";
@@ -86,7 +212,7 @@
 "VoiceOverHint_DoubleTapToOpenTheCreditsPage" = "Double tap to open the credits page";
 "VoiceOverHint_DoubleTapToOpenTheContactPage" = "Double tap to open the contact us page";
 
-"VoiceOverHint_LicenseLinksButton" = "Double tap to open a webpage containing all of the licenses to the icons that Lignite Music uses";
+"VoiceOverHint_LicenseLinksButton" = "Double tap to open a webpage containing all of the licences to the icons that Lignite Music uses";
 
 "VoiceOverHint_ContactEmail" = "Double tap to compose an email to Lignite";
 "VoiceOverHint_ContactTwitter" = "Double tap to open Lignite's Twitter profile";
@@ -101,6 +227,78 @@
 "VoiceOverHint_DoubleTapToOpenThisTutorial" = "Double tap to open this tutorial";
 
 "VoiceOverHint_PlayQuickTutorialButton" = "Double tap to play a quick overview tutorial of Lignite Music";
+
+"VoiceOverHint_Enable" = "Double tap to enable image downloading";
+"VoiceOverHint_KeepEnabled" = "Double tap to keep image downloading enabled";
+
+"VoiceOverHint_KeepDisabled" = "Double tap to keep image downloading disabled";
+"VoiceOverHint_ClearCacheAndDisable" = "Double tap to delete previously downloaded images and disable image downloading";
+
+"VoiceOverHint_CheckTheCheckbox" = "Double tap to check the checkbox";
+"VoiceOverHint_UncheckTheCheckbox" = "Double tap to uncheck the checkbox";
+
+"VoiceOverHint_TapForMoreInformation" = "Double tap to get more information on this dialogue";
+
+"VoiceOverHint_TapToUseTheme" = "Double tap to apply this theme";
+
+"VoiceOverHint_BrowseMusicType" = "Double tap to browse your %@"; //The %@ will be one of the music types, such as "Titles", "Albums", "Favourites", etc.
+
+"VoiceOverHint_OpenSettings" = "Double tap to open settings";
+"VoiceOverHint_OpenFeedbackSubmitter" = "Double tap to open the feedback submitter/bug reporter";
+
+"VoiceOverHint_MinimizeButton" = "Double tap to toggle the bottom navigation's minimization";
+
+"VoiceOverHint_ButtonBar_Browse" = "Double tap to reveal music browsing tools";
+"VoiceOverHint_ButtonBar_MiniPlayer" = "Double tap to reveal the mini player";
+"VoiceOverHint_ButtonBar_ViewSelector" = "Double tap to reveal the view selector";
+
+"VoiceOverHint_SearchButton" = "Double tap to open search";
+
+"VoiceOverHint_CloseSearch" = "Double tap to close the search window";
+"VoiceOverHint_ClearSearch" = "Double tap to clear the current search";
+
+"VoiceOverHint_TapSearchEntry" = "Double tap to go to this music";
+
+"VoiceOverHint_ShuffleOn" = "Double tap to turn shuffle off";
+"VoiceOverHint_ShuffleOff" = "Double tap to turn shuffle on";
+
+"VoiceOverHint_RepeatOff" = "Double tap to repeat all";
+"VoiceOverHint_RepeatAll" = "Double tap to repeat one";
+"VoiceOverHint_RepeatOne" = "Double tap to turn repeat off";
+
+"VoiceOverHint_AirPlayButton" = "Double tap to open AirPlay options";
+
+"VoiceOverHint_QueueButton" = "Double tap to toggle the playback queue";
+
+"VoiceOverHint_FavouriteButton" = "Double tap to add this track to your favourites";
+"VoiceOverHint_UnfavouriteButton" = "Double tap to remove this track from your favourites";
+
+"VoiceOverHint_QueueEntry" = "Double tap to play this track";
+"VoiceOverHint_PreviousTrack" = "Double tap to go to the previous track";
+"VoiceOverHint_CloseNowPlaying" = "Double tap to close the now playing window";
+"VoiceOverHint_OpenNowPlaying" = "Double tap to open the now playing window";
+"VoiceOverHint_NextTrack" = "Double tap to go to the next track";
+"VoiceOverHint_PlayTrack" = "Double tap to resume playback";
+"VoiceOverHint_PauseTrack" = "Double tap to pause playback";
+
+"VoiceOverHint_CreatePlaylist" = "Double tap to create a playlist";
+"VoiceOverHint_EditPlaylists" = "Double tap to edit or delete playlists";
+"VoiceOverHint_FinishEditingPlaylists" = "Double tap to finish editing or deleting playlists";
+
+"VoiceOverHint_AddSongs" = "Double tap to add songs to this playlist";
+"VoiceOverHint_AddImage" = "Double tap to add an image to this playlist";
+
+"VoiceOverHint_EditPlaylistEntryOption" = "You must disable VoiceOver to move or delete this track from your playlist, sorry. When VoiceOver is disabled you can swipe right to delete it from the playlist, or press and hold to reorder it in the playlist.";
+
+"VoiceOverHint_ViewEntry" = "Double tap to view the contents of this entry";
+"VoiceOverHint_SelectEntry" = "Double tap to select this entry for your playlist";
+"VoiceOverHint_DeselectEntry" = "Double tap to deselect this entry from your playlist";
+"VoiceOverHint_SelectAll" = "Double tap to select all entries for your playlist";
+"VoiceOverHint_DeselectAll" = "Double tap to deselect all entries from your playlist";
+
+
+"YouCurrentlyHaveThisFeatureOff" = "You currently have image downloading turned off.";
+
 
 /*
  
@@ -507,7 +705,6 @@
 "KeepEnabled" = "Keep enabled";
 
 "SettingImagesAlertDescription" = "Lignite Music downloads images of your artists and missing album covers automatically.\n\n%@\n\n%@";
-"YouCurrentlyHaveThisFeatureOff" = "Turned off.";
 "YouCanTurnOffTo" = "You can delete these images and turn this feature off to save storage and bandwidth. You can always change your mind in settings.";
 "YouCanTurnOnTo" = "You can turn this feature on to bring the most beauty to Lignite Music.\n\nWe will download images on WiFi and when you have enough storage, and will ask you what to do if either of those don't happen.";
 

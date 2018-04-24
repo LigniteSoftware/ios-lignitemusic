@@ -233,9 +233,11 @@
 - (NSString*)titleForListEntry:(LMListEntry*)entry {
 	LMMusicTrack *musicTrack = [self.musicTrackCollectionToUseForSpecificTrackCollection.items objectAtIndex:entry.collectionIndex];
 	
+	BOOL isSelectedEntry = (self.currentlyHighlightedEntry == entry.collectionIndex);
+	
 	entry.isAccessibilityElement = YES;
-	entry.accessibilityLabel = [NSString stringWithFormat:@"%@, %@", musicTrack.title, [self subtitleForListEntry:entry]];
-	entry.accessibilityHint = NSLocalizedString(@"VoiceOverHint_DetailViewListEntry", nil);
+	entry.accessibilityLabel = [NSString stringWithFormat:@"%@, %@, %@", musicTrack.title, [self subtitleForListEntry:entry], NSLocalizedString(isSelectedEntry ? @"VoiceOverLabel_Selected" : @"", nil)];
+	entry.accessibilityHint = NSLocalizedString(isSelectedEntry ? @"" : @"VoiceOverHint_DetailViewListEntry", nil);
 	
 	return musicTrack.title;
 }

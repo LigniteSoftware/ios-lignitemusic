@@ -108,6 +108,13 @@
 @synthesize value = _value;
 @synthesize autoShrink = _autoShrink;
 
+- (void)reloadAccessibilityLabels {
+	self.isAccessibilityElement = YES;
+	
+	self.accessibilityLabel = [NSString stringWithFormat:@"%@, %@", self.leftText, self.rightText];
+	self.accessibilityHint = NSLocalizedString(@"VoiceOverHint_ScrubbingNotPossibleSorry", nil);
+}
+
 - (NSString*)leftText {
 	return _leftText;
 }
@@ -116,6 +123,8 @@
 	leftText = leftText ? leftText : @"";
 	
 	_leftText = leftText;
+	
+	[self reloadAccessibilityLabels];
 	
 	if(self.didLayoutConstraints){
 		self.leftTextBottomLabel.text = leftText;
@@ -131,6 +140,8 @@
 	rightText = rightText ? rightText : @"";
 	
 	_rightText = rightText;
+	
+	[self reloadAccessibilityLabels];
 	
 	if(self.didLayoutConstraints){
 		self.rightTextBottomLabel.text = rightText;

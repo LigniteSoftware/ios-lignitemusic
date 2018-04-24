@@ -34,6 +34,11 @@
  */
 @property LMLayoutManager *layoutManager;
 
+/**
+ The array of theme views, which may not be in order.
+ */
+@property NSMutableArray *themeViews;
+
 @end
 
 @implementation LMThemePickerViewController
@@ -46,10 +51,28 @@
 	return navigationItem;
 }
 
+- (void)reloadAccessibilityLabels {
+	for(LMThemeView *themeView in self.themeViews){
+		LMTheme theme = themeView.theme;
+		
+		NSString *themeKey = [[LMThemeEngine sharedThemeEngine] keyForTheme:theme];
+		NSString *themeCreatorKey = [NSString stringWithFormat:@"%@_Creator", themeKey];
+		NSString *themeTitleKey = [NSString stringWithFormat:@"%@_Title", themeKey];
+		NSString *themeCreator = NSLocalizedString(themeCreatorKey, nil);
+		NSString *themeTitle = NSLocalizedString(themeTitleKey, nil);
+		
+		BOOL isCurrentlySelectedTheme = (theme == LMThemeEngine.currentTheme);
+		
+		themeView.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"VoiceOverLabel_ThemeCreatedBy", nil), themeTitle, themeCreator, NSLocalizedString(isCurrentlySelectedTheme ? @"VoiceOverLabel_Selected" : @"", nil)];
+	}
+}
+
 - (void)themeView:(LMThemeView*)themeView selectedTheme:(LMTheme)theme {
 	[[LMThemeEngine sharedThemeEngine] selectTheme:theme];
 	
 	NSLog(@"Theme selected %ld", (long)theme);
+	
+	[self reloadAccessibilityLabels];
 }
 
 - (CGSize)collectionView:(UICollectionView*)collectionView
@@ -96,17 +119,19 @@
 	NSString *themeCreator = NSLocalizedString(themeCreatorKey, nil);
 	NSString *themeTitle = NSLocalizedString(themeTitleKey, nil);
 	
+	BOOL isCurrentlySelectedTheme = (theme == LMThemeEngine.currentTheme);
+	
 	LMThemeView *themeView = [LMThemeView newAutoLayoutView];
 	themeView.theme = theme;
 	themeView.delegate = self;
 	themeView.isAccessibilityElement = YES;
-	themeView.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"VoiceOverLabel_ThemeCreatedBy", nil), themeTitle, themeCreator];
+	themeView.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"VoiceOverLabel_ThemeCreatedBy", nil), themeTitle, themeCreator, NSLocalizedString(isCurrentlySelectedTheme ? @"VoiceOverLabel_Selected" : @"", nil)];
 	themeView.accessibilityHint = NSLocalizedString(@"VoiceOverHint_TapToUseTheme", nil);
 	[cell.contentView addSubview:themeView];
 	
 	[themeView autoPinEdgesToSuperviewEdges];
 	
-	
+	[self.themeViews addObject:themeView];
 	
 	return cell;
 }
@@ -192,6 +217,9 @@
 	
 	self.layoutManager = [LMLayoutManager sharedLayoutManager];
 	[self.layoutManager addDelegate:self];
+	
+	
+	self.themeViews = [NSMutableArray new];
 	
 
 	UICollectionViewFlowLayout *flowLayout = [UICollectionViewFlowLayout new];

@@ -73,6 +73,9 @@
 - (void)setSectionHeaderTitle:(NSString *)sectionHeaderTitle {
 	_sectionHeaderTitle = sectionHeaderTitle;
 	
+	self.isAccessibilityElement = YES;
+	self.accessibilityLabel = [NSString stringWithFormat:@"%@, %@", sectionHeaderTitle, NSLocalizedString(@"VoiceOverLabel_Title", nil)];
+	
 	if(self.sectionHeaderLabel){		
 		self.sectionHeaderLabel.text = sectionHeaderTitle;
 	}

@@ -431,6 +431,8 @@
 	self.albumArtImageView = [UIImageView newAutoLayoutView];
 	self.albumArtImageView.layer.masksToBounds = YES;
 	self.albumArtImageView.layer.cornerRadius = 6.0f;
+	self.albumArtImageView.isAccessibilityElement = YES;
+	self.albumArtImageView.accessibilityLabel = NSLocalizedString(@"VoiceOverLabel_AlbumArt", nil);
 	[self.albumArtImageBackgroundView addSubview:self.albumArtImageView];
 	
 	[self.albumArtImageView autoPinEdgesToSuperviewEdges];
