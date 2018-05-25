@@ -349,11 +349,6 @@
 	
 	LMCollectionViewFlowLayout *flowLayout = (LMCollectionViewFlowLayout*)self.collectionView.collectionViewLayout;
 	
-	NSInteger indexAdjustedForShuffleButton = indexPath.row;
-//	BOOL isShuffleButton = (indexPath.row == 0);
-	
-//	LMMusicTrack *track = [self.musicTrackCollection.items objectAtIndex:indexAdjustedForShuffleButton];
-	
 	if(cell.contentView.subviews.count > 0){
 		LMListEntry *listEntry = nil;
 		for(UIView *subview in cell.contentView.subviews){
@@ -364,19 +359,17 @@
 		}
 		
 		if(listEntry){
-			listEntry.collectionIndex = indexAdjustedForShuffleButton;
+			listEntry.collectionIndex = indexPath.row;
 			
 			[listEntry changeHighlightStatus:(self.currentlyHighlightedEntry == listEntry.collectionIndex) animated:NO];
 			[listEntry reloadContents];
 		}
 	}
-	else {
-//		NSInteger fixedIndex = indexPath.row; // (indexPath.row/[LMExpandableTrackListView numberOfColumns]) + ((indexPath.row % [LMExpandableTrackListView numberOfColumns])*([self collectionView:self.collectionView numberOfItemsInSection:0]/[LMExpandableTrackListView numberOfColumns]));
-		
+	else {		
 		LMListEntry *listEntry = [LMListEntry newAutoLayoutView];
 		listEntry.delegate = self;
-		listEntry.collectionIndex = indexAdjustedForShuffleButton;
-		listEntry.associatedData = [self.musicTrackCollectionToUseForSpecificTrackCollection.items objectAtIndex:indexAdjustedForShuffleButton];
+		listEntry.collectionIndex = indexPath.row;
+		listEntry.associatedData = [self.musicTrackCollectionToUseForSpecificTrackCollection.items objectAtIndex:indexPath.row];
 		listEntry.isLabelBased = (self.musicType == LMMusicTypeAlbums || self.musicType == LMMusicTypeCompilations);
 		listEntry.alignIconToLeft = NO;
 		listEntry.stretchAcrossWidth = NO;
@@ -390,26 +383,18 @@
 		[listEntry autoPinEdgeToSuperviewEdge:ALEdgeTop];
 		[listEntry autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 			
-		[listEntry changeHighlightStatus:(indexAdjustedForShuffleButton == self.currentlyHighlightedEntry) animated:NO];
+		[listEntry changeHighlightStatus:(indexPath.row == self.currentlyHighlightedEntry) animated:NO];
 		
 		
-//		BOOL isInLastRow = indexPath.row >= (self.musicTrackCollectionToUseForSpecificTrackCollection.count - [LMDetailView numberOfColumns]);
+		//Divider line for between the entries
+		UIView *dividerView = [UIView newAutoLayoutView];
+		dividerView.backgroundColor = [UIColor colorWithRed:0.89 green:0.89 blue:0.89 alpha:1.0];
+		[listEntry addSubview:dividerView];
 		
-//		if(!isInLastRow){
-			UIView *dividerView = [UIView newAutoLayoutView];
-			dividerView.backgroundColor = [UIColor colorWithRed:0.89 green:0.89 blue:0.89 alpha:1.0];
-			[listEntry addSubview:dividerView];
-			
-			[dividerView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:20];
-//			[dividerView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:listEntry withMultiplier:1.0];
-			[dividerView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:20];
-			[dividerView autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:-(flowLayout.sectionInset.bottom/2.0)];
-			[dividerView autoSetDimension:ALDimensionHeight toSize:1.0];
-//		}
-//		else{
-//			NSLog(@"Fuck %@", indexPath);
-//			NSLog(@"shit");
-//		}
+		[dividerView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:20];
+		[dividerView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:20];
+		[dividerView autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:-(flowLayout.sectionInset.bottom/2.0)];
+		[dividerView autoSetDimension:ALDimensionHeight toSize:1.0];
 	}
 	
 	return cell;

@@ -71,7 +71,7 @@
 - (void)changeHighlightStatus:(BOOL)highlighted animated:(BOOL)animated {
 	self.highlighted = highlighted;
 	
-//	NSLog(@"List entry with collectionIndex %ld highlighted %d, image is inverted %d, invert on highlight %d", self.collectionIndex, self.highlighted, self.imageIsInverted, self.invertIconOnHighlight);
+	NSLog(@"List entry with collectionIndex %ld highlighted %d, image is inverted %d, invert on highlight %d", self.collectionIndex, self.highlighted, self.imageIsInverted, self.invertIconOnHighlight);
 	
 	[UIView animateWithDuration:animated ? 0.2 : 0.0 animations:^{
 		self.contentView.backgroundColor = highlighted ? [self.delegate tapColourForListEntry:self] : [UIColor clearColor];

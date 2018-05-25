@@ -556,6 +556,10 @@
 		case LMIconComposers:
 		case LMIconCompilations:
 		case LMIconAlbums: {
+			if(!self.compactView){
+				[self loadCompactView];
+			}
+			
 			self.compactView.hidden = NO;
 			self.titleView.hidden = YES;
 			
@@ -608,12 +612,14 @@
 			self.currentSource = self.titleView;
 			
 			if(requiresReload){
-				[self.titleView.songListTableView setContentOffset:CGPointZero animated:NO];
-				
+//				[self.titleView.songListTableView setContentOffset:CGPointZero animated:NO];
+				#warning reload title view
 				[self.titleView rebuildTrackCollection];
-				[self.titleView.songListTableView reloadSubviewData];
-				[self.titleView.songListTableView reloadData];
-				
+				[self.titleView.collectionView reloadData];
+//				[self.titleView.songListTableView reloadSubviewData];
+//				[self.titleView.songListTableView reloadData];
+				[self.titleView.collectionView reloadData];
+				#warning reload title view
 				//Reload currently highlighted item   
 				self.titleView.currentlyHighlighted = -1;
 				[self.titleView musicTrackDidChange:self.musicPlayer.nowPlayingTrack];
@@ -637,7 +643,9 @@
 			self.musicType = LMMusicTypeFavourites;
 			
 			if(requiresReload){
-				[self.titleView.songListTableView setContentOffset:CGPointZero animated:NO];
+//				[self.titleView.songListTableView setContentOffset:CGPointZero animated:NO];
+				#warning reload title view
+				[self.titleView.collectionView reloadData];
 				
 				//Reload currently highlighted item
 				self.titleView.currentlyHighlighted = -1;
@@ -646,9 +654,10 @@
 			}
 			
 			[self.titleView rebuildTrackCollection];
-			[self.titleView.songListTableView reloadSubviewData];
-			[self.titleView.songListTableView reloadData];
-			
+//			[self.titleView.songListTableView reloadSubviewData];
+//			[self.titleView.songListTableView reloadData];
+			[self.titleView.collectionView reloadData];
+#warning reload title view
 			[self logMusicTypeView:LMMusicTypeFavourites];
 			break;
 		}
@@ -707,7 +716,8 @@
     
     CGFloat bottomSpacing = requiredHeight + 10;
 //    [self.compactView changeBottomSpacing:bottomSpacing];
-    self.titleView.songListTableView.bottomSpacing = bottomSpacing;
+//    self.titleView.songListTableView.bottomSpacing = bottomSpacing;
+	#warning set title view bottom spacing ^
 	
 	if([LMLayoutManager isLandscape]
 	   && (self.buttonNavigationBar.currentlySelectedTab != LMNavigationTabView)){
@@ -829,7 +839,7 @@
 		self.settingsOpen--;
 	}
     if(self.settingsOpen == 0){
-		[self.buttonNavigationBar maximize:YES];
+		[self.buttonNavigationBar maximise:YES];
 		
 		[self.navigationController popViewControllerAnimated:YES];
     }
@@ -853,11 +863,12 @@
 }
 
 - (void)viewDidAppear:(BOOL)animated {
-	[self.buttonNavigationBar maximize:YES];
+	[self.buttonNavigationBar maximise:YES];
 	
 	if(self.requiresRefresh){ //For when the view is out of view during state restoration
 		[self.compactView reloadContents];
-		[self.titleView.songListTableView reloadData];
+//		[self.titleView.songListTableView reloadData];
+		#warning reload title view
 		[self.buttonNavigationBar reloadLayout];
 		
 		if([LMLayoutManager isiPhoneX]){
@@ -1515,6 +1526,8 @@
 - (void)buttonNavigationBarFinishedInitialising {
 	[self reloadButtonNavigationBarWithSource:self.selectedSource];
 	
+	[self.buttonNavigationBar setCurrentSourceIcon:self.selectedSource.lmIcon];
+	
 	if([LMSettings debugInitialisationSounds]){
 		AudioServicesPlaySystemSound(1255);
 	}
@@ -1541,10 +1554,58 @@
 	self.titleView.delegate = self;
 	[self.view addSubview:self.titleView];
 	
-	[self.titleView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.compactView];
-	[self.titleView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.compactView];
-	[self.titleView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.compactView];
-	[self.titleView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.compactView];
+//	[self.titleView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.compactView];
+//	[self.titleView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.compactView];
+//	[self.titleView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.compactView];
+//	[self.titleView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.compactView];
+	
+	[self.titleView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.warningManager.warningBar];
+	
+	NSArray *compactViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.titleView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.titleView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[self.titleView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+	}];
+	[LMLayoutManager addNewPortraitConstraints:compactViewPortraitConstraints];
+	
+	NSArray *compactViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.titleView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.view withOffset:self.landscapeNavigationBar.frame.size.width];
+		[self.titleView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[self.titleView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+	}];
+	[LMLayoutManager addNewLandscapeConstraints:compactViewLandscapeConstraints];
+
+}
+
+- (void)loadCompactView {
+	self.compactView = [LMCompactBrowsingView newAutoLayoutView];
+	self.compactView.rootViewController = self;
+	[self.view addSubview:self.compactView];
+	
+	if(self.pendingStateRestoredPlaylistEditor){
+		self.pendingStateRestoredPlaylistEditor.delegate = self.compactView;
+	}
+	
+	if(self.pendingStateRestoredEnhancedPlaylistEditor){
+		self.pendingStateRestoredEnhancedPlaylistEditor.delegate = self.compactView;
+	}
+	
+	[self.compactView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.warningManager.warningBar];
+	
+	NSArray *compactViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+	}];
+	[LMLayoutManager addNewPortraitConstraints:compactViewPortraitConstraints];
+	
+	NSArray *compactViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.compactView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.view withOffset:self.landscapeNavigationBar.frame.size.width];
+		[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+	}];
+	[LMLayoutManager addNewLandscapeConstraints:compactViewLandscapeConstraints];
+
 }
 
 - (void)loadNowPlayingCoreView {
@@ -1894,34 +1955,6 @@
 //	} repeats:NO];
 	
 	
-	self.compactView = [LMCompactBrowsingView newAutoLayoutView];
-	self.compactView.rootViewController = self;
-	[self.view addSubview:self.compactView];
-
-	if(self.pendingStateRestoredPlaylistEditor){
-		self.pendingStateRestoredPlaylistEditor.delegate = self.compactView;
-	}
-
-	if(self.pendingStateRestoredEnhancedPlaylistEditor){
-		self.pendingStateRestoredEnhancedPlaylistEditor.delegate = self.compactView;
-	}
-
-	[self.compactView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.warningManager.warningBar];
-
-	NSArray *compactViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-		[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-		[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	}];
-	[LMLayoutManager addNewPortraitConstraints:compactViewPortraitConstraints];
-
-	NSArray *compactViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-		[self.compactView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.view withOffset:landscapeNavigationBarWidth];
-		[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	}];
-	[LMLayoutManager addNewLandscapeConstraints:compactViewLandscapeConstraints];
-	
 	
 	
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -1953,20 +1986,20 @@
 //	}
 	
 	
-//	if([LMLayoutManager isiPhoneX]){
-//		self.buttonNavigationBarBottomCoverView = [UIView newAutoLayoutView];
-//		self.buttonNavigationBarBottomCoverView.backgroundColor = [LMColour mainColour];
-//		[self.navigationController.view addSubview:self.buttonNavigationBarBottomCoverView];
-//
-//
-////		NSArray *buttonNavigationBarBottomCoverViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-//			[self.buttonNavigationBarBottomCoverView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-//			[self.buttonNavigationBarBottomCoverView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-//			[self.buttonNavigationBarBottomCoverView autoSetDimension:ALDimensionHeight toSize:69];
-//			[self.buttonNavigationBarBottomCoverView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.buttonNavigationBar];
-////		}];
-////		[LMLayoutManager addNewPortraitConstraints:buttonNavigationBarBottomCoverViewPortraitConstraints];
-//	}
+	if([LMLayoutManager isiPhoneX]){
+		self.buttonNavigationBarBottomCoverView = [UIView newAutoLayoutView];
+		self.buttonNavigationBarBottomCoverView.backgroundColor = [LMColour mainColour];
+		[self.navigationController.view addSubview:self.buttonNavigationBarBottomCoverView];
+
+
+//		NSArray *buttonNavigationBarBottomCoverViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+			[self.buttonNavigationBarBottomCoverView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+			[self.buttonNavigationBarBottomCoverView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+			[self.buttonNavigationBarBottomCoverView autoSetDimension:ALDimensionHeight toSize:69];
+			[self.buttonNavigationBarBottomCoverView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.buttonNavigationBar];
+//		}];
+//		[LMLayoutManager addNewPortraitConstraints:buttonNavigationBarBottomCoverViewPortraitConstraints];
+	}
 	
 	
 	

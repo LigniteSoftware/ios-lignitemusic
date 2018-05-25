@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "LMTableView.h"
 #import "LMMusicPlayer.h"
 
 @protocol LMTitleViewDelegate <NSObject>
@@ -22,12 +21,47 @@
 
 @interface LMTitleView : LMView
 
+/**
+ The current list of tracks being displayed.
+ */
 @property (readonly) LMMusicTrackCollection *musicTitles;
 
+/**
+ The currently highlighted element in the collection view.
+ */
 @property NSInteger currentlyHighlighted;
 
+/**
+ The title view's delegate.
+ */
 @property id<LMTitleViewDelegate> delegate;
 
+/**
+ The collection view that displays the list of tracks.
+ */
+@property UICollectionView *collectionView;
+
+/**
+ The title view's raw root view controller.
+ */
+@property id rawViewController;
+
+/**
+ Whether or not to display favourites. NO for all titles.
+ */
+@property BOOL favourites;
+
+/**
+ The amount to offset the shuffle button in landscape, because otherwise, it will be covered by the button navigation.
+ */
+@property CGFloat shuffleButtonLandscapeOffset;
+
+
+/**
+ The music track changed.
+
+ @param newTrack The new track that's being played.
+ */
 - (void)musicTrackDidChange:(LMMusicTrack *)newTrack;
 
 /**
@@ -63,25 +97,5 @@
  @return The persistent ID.
  */
 - (MPMediaEntityPersistentID)topTrackPersistentID;
-
-/**
- The table view that displays the song.
- */
-@property LMTableView *songListTableView;
-
-/**
- The title view's raw root view controller.
- */
-@property id rawViewController;
-
-/**
- Whether or not to display favourites. NO for all titles.
- */
-@property BOOL favourites;
-
-/**
- The amount to offset the shuffle button in landscape, because otherwise, it will be covered by the button navigation.
- */
-@property CGFloat shuffleButtonLandscapeOffset;
 
 @end

@@ -23,7 +23,7 @@
 
 #define LMTitleViewTopTrackPersistentIDKey @"LMTitleViewTopTrackPersistentIDKey"
 
-@interface LMTitleView() <LMListEntryDelegate, LMTableViewSubviewDataSource, LMMusicPlayerDelegate, UITableViewDelegate, LMLayoutChangeDelegate, LMThemeEngineDelegate, LMFloatingDetailViewButtonDelegate>
+@interface LMTitleView() <LMListEntryDelegate, LMMusicPlayerDelegate, LMLayoutChangeDelegate, LMThemeEngineDelegate, LMFloatingDetailViewButtonDelegate, UICollectionViewDelegate, UICollectionViewDataSource>
 
 @property LMMusicPlayer *musicPlayer;
 
@@ -89,6 +89,82 @@
 	}];
 }
 
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+	UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cellIdentifier" forIndexPath:indexPath];
+	
+	cell.backgroundColor = [LMColour purpleColor];
+
+	UICollectionViewFlowLayout *flowLayout = (UICollectionViewFlowLayout*)self.collectionView.collectionViewLayout;
+	
+	NSLog(@"Reloading cell for index %d, currently highlighted is %d", (int)indexPath.row, (int)self.currentlyHighlighted);
+	
+	if(cell.contentView.subviews.count > 0){
+		LMListEntry *listEntry = nil;
+		for(UIView *subview in cell.contentView.subviews){
+			if([subview class] == [LMListEntry class]) {
+				listEntry = (LMListEntry*)subview;
+				break;
+			}
+		}
+		
+		if(listEntry){
+			listEntry.collectionIndex = indexPath.row;
+			
+			[listEntry changeHighlightStatus:(self.currentlyHighlighted == listEntry.collectionIndex) animated:NO];
+			[listEntry reloadContents];
+		}
+	}
+	else {
+		LMListEntry *listEntry = [LMListEntry newAutoLayoutView];
+		listEntry.delegate = self;
+		listEntry.collectionIndex = indexPath.row;
+		listEntry.associatedData = [self.musicTitles.items objectAtIndex:indexPath.row];
+		listEntry.isLabelBased = NO;
+		listEntry.alignIconToLeft = NO;
+		listEntry.stretchAcrossWidth = NO;
+		
+		
+		[cell.contentView addSubview:listEntry];
+		listEntry.backgroundColor = [LMColour whiteColour];
+		
+		[listEntry autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:([LMLayoutManager isiPhoneX] && [LMLayoutManager isLandscape]) ? 0 : 0];
+		[listEntry autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:([LMLayoutManager isiPhoneX] && [LMLayoutManager isLandscape]) ? 44 : 0];
+		[listEntry autoPinEdgeToSuperviewEdge:ALEdgeTop];
+		[listEntry autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		
+		[listEntry changeHighlightStatus:(indexPath.row == self.currentlyHighlighted)
+								animated:NO];
+		
+		
+		//Divider line for between the entries
+		UIView *dividerView = [UIView newAutoLayoutView];
+		dividerView.backgroundColor = [UIColor colorWithRed:0.89 green:0.89 blue:0.89 alpha:1.0];
+		[listEntry addSubview:dividerView];
+		
+		[dividerView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:20];
+		[dividerView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:20];
+		[dividerView autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:-(flowLayout.sectionInset.bottom/2.0)];
+		[dividerView autoSetDimension:ALDimensionHeight toSize:1.0];
+	}
+	
+	return cell;
+}
+
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
+	return 1;
+}
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+	return self.musicTitles.count;
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView
+				  layout:(UICollectionViewLayout*)collectionViewLayout
+  sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
+	
+	return CGSizeMake(self.frame.size.width, LMLayoutManager.standardListEntryHeight);
+}
+
 - (CGFloat)shuffleButtonLandscapeOffset {
 	return _shuffleButtonLandscapeOffset;
 }
@@ -141,36 +217,42 @@
 }
 
 - (void)musicTrackDidChange:(LMMusicTrack *)newTrack {
-	LMListEntry *highlightedEntry = nil;
-	int newHighlightedIndex = -1;
-	for(int i = 0; i < self.musicTitles.count; i++){
-		LMMusicTrack *track = [self.musicTitles.items objectAtIndex:i];
-		LMListEntry *entry = [self listEntryForIndex:i];
-		LMMusicTrack *entryTrack = entry.associatedData;
-		
-		if(entryTrack.persistentID == newTrack.persistentID){
-			highlightedEntry = entry;
-		}
-		
-		if(track.persistentID == newTrack.persistentID){
-			newHighlightedIndex = i;
-		}
-	}
+//	LMListEntry *highlightedEntry = nil;
+//	int newHighlightedIndex = -1;
+//	for(int i = 0; i < self.musicTitles.count; i++){
+//		LMMusicTrack *track = [self.musicTitles.items objectAtIndex:i];
+//		LMListEntry *entry = [self listEntryForIndex:i];
+//		LMMusicTrack *entryTrack = entry.associatedData;
+//
+//		if(entryTrack.persistentID == newTrack.persistentID){
+//			highlightedEntry = entry;
+//		}
+//
+//		if(track.persistentID == newTrack.persistentID){
+//			newHighlightedIndex = i;
+//		}
+//	}
 	
 //	NSLog(@"New highlighted %d previous %ld", newHighlightedIndex, (long)self.currentlyHighlighted);
 	
-	LMListEntry *previousHighlightedEntry = [self listEntryForIndex:self.currentlyHighlighted];
-	if(![previousHighlightedEntry isEqual:highlightedEntry] || highlightedEntry == nil){
-		[previousHighlightedEntry changeHighlightStatus:NO animated:YES];
+//	LMListEntry *previousHighlightedEntry = [self listEntryForIndex:self.currentlyHighlighted];
+//	if(![previousHighlightedEntry isEqual:highlightedEntry] || highlightedEntry == nil){
+//		[previousHighlightedEntry changeHighlightStatus:NO animated:YES];
 		//BOOL updateNowPlayingStatus = self.currentlyHighlighted == -1;
-		self.currentlyHighlighted = newHighlightedIndex;
+//		self.currentlyHighlighted = newHighlightedIndex;
 //		if(updateNowPlayingStatus){
 //			[self musicPlaybackStateDidChange:self.musicPlayer.playbackState];
 //		}
-	}
+//	}
+//
+//	if(highlightedEntry){
+//		[highlightedEntry changeHighlightStatus:YES animated:YES];
+//	}
 	
-	if(highlightedEntry){
-		[highlightedEntry changeHighlightStatus:YES animated:YES];
+	if([self.musicTitles.items containsObject:newTrack]){
+		NSInteger indexOfNewTrack = [self.musicTitles.items indexOfObject:newTrack];
+		[[self listEntryForIndex:self.currentlyHighlighted] changeHighlightStatus:NO animated:YES];
+		[[self listEntryForIndex:indexOfNewTrack] changeHighlightStatus:YES animated:YES];
 	}
 	
 	[NSTimer scheduledTimerWithTimeInterval:0.25 block:^{
@@ -185,12 +267,14 @@
 }
 
 - (void)trackAddedToFavourites:(LMMusicTrack *)track {
-	[self.songListTableView reloadData];
+//	[self.songListTableView reloadData];
+#warning reload
 	
 	if(self.favourites){
 		[self rebuildTrackCollection];
-		[self.songListTableView reloadSubviewData];
-		[self.songListTableView reloadData];
+#warning reload
+//		[self.songListTableView reloadSubviewData];
+//		[self.songListTableView reloadData];
 		
 		self.currentlyHighlighted = -1;
 		
@@ -199,12 +283,14 @@
 }
 
 - (void)trackRemovedFromFavourites:(LMMusicTrack *)track {
-	[self.songListTableView reloadData];
+//	[self.songListTableView reloadData];
+#warning reload
 	
 	if(self.favourites){
 		[self rebuildTrackCollection];
-		[self.songListTableView reloadSubviewData];
-		[self.songListTableView reloadData];
+#warning reload
+//		[self.songListTableView reloadSubviewData];
+//		[self.songListTableView reloadData];
 		
 		self.currentlyHighlighted = -1;
 		
@@ -237,7 +323,8 @@
 	
 	self.favouritesTrackCollection = [self.musicPlayer favouritesTrackCollection];
 	
-	self.songListTableView.totalAmountOfObjects = self.musicTitles.count;
+//	self.songListTableView.totalAmountOfObjects = self.musicTitles.count;
+#warning reload
 	
 	self.noObjectsLabel.hidden = (self.musicTitles.count > 0);
 	self.noObjectsLabel.text = NSLocalizedString(self.favourites ? @"NoTracksInFavourites" : @"TheresNothingHere", nil);
@@ -250,7 +337,7 @@
 	NSLog(@"Fuck, %f seconds to rebuild the title view track collection.", (loadEndTime - loadStartTime));
 }
 
-- (id)subviewAtIndex:(NSUInteger)index forTableView:(LMTableView *)tableView {
+- (id)subviewAtIndex:(NSUInteger)index {
 //	UIView *testView = [UIView newAutoLayoutView];
 //	testView.backgroundColor = [LMColour randomColour];
 //	testView.userInteractionEnabled = NO;
@@ -319,7 +406,7 @@
 	
 	[entry changeHighlightStatus:self.currentlyHighlighted == entry.collectionIndex animated:NO];
 	
-//#warning spooked
+//#warninging spooked
 //	[entry changeHighlightStatus:YES animated:YES];
 	
 	[entry reloadContents];
@@ -339,10 +426,12 @@
 	}
 	
 	self.didJustScrollByLetter = YES;
+
+#warning scroll
 	
-	[self.songListTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:index]
-								  atScrollPosition:UITableViewScrollPositionTop
-										  animated:NO];
+//	[self.songListTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:index]
+//								  atScrollPosition:UITableViewScrollPositionTop
+//										  animated:NO];
 	
 	for(LMListEntry *listEntry in self.itemArray){
 		[listEntry reloadContents];
@@ -379,119 +468,19 @@
 	return properIndex;
 }
 
-- (void)amountOfObjectsRequiredChangedTo:(NSUInteger)amountOfObjects forTableView:(LMTableView *)tableView {
-	NSTimeInterval loadStartTime = [[NSDate new] timeIntervalSince1970];
-	
-	NSLog(@"Generating new subview data for title view, %d items", (int)amountOfObjects);
-	
-	
-	if(!self.itemArray){
-		self.itemArray = [NSMutableArray new];
-//		self.itemIconArray = [NSMutableArray new];
-		for(int i = 0; i < amountOfObjects; i++){
-			LMListEntry *listEntry = [[LMListEntry alloc] initWithDelegate:self];
-			listEntry.collectionIndex = i;
-			listEntry.iPromiseIWillHaveAnIconForYouSoon = YES;
-			listEntry.alignIconToLeft = NO;
-			listEntry.stretchAcrossWidth = NO;
-			
-//			UIColor *colour = [UIColor colorWithRed:47/255.0 green:47/255.0 blue:49/255.0 alpha:1.0];
-//			UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14.0f];
-//			MGSwipeButton *saveButton = [MGSwipeButton buttonWithTitle:@""
-//																  icon:[LMAppIcon imageForIcon:LMIconAddToQueue]
-//													   backgroundColor:colour
-//															   padding:0
-//															  callback:
-//		    ^BOOL(MGSwipeTableCell *sender) {
-//				LMMusicTrack *trackToQueue = [self.musicTitles.items objectAtIndex:listEntry.collectionIndex];
-//
-//				[self.musicPlayer addTrackToQueue:trackToQueue];
-//
-//				NSLog(@"Queue %@", trackToQueue.title);
-//
-//				return YES;
-//			}];
-//			saveButton.titleLabel.font = font;
-//			saveButton.titleLabel.hidden = YES;
-//			saveButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
-//			saveButton.imageEdgeInsets = UIEdgeInsetsMake(25, 0, 25, 0);
-//
-//			listEntry.rightButtons = @[ saveButton ];
-//
-//			MGSwipeButton *favouriteButton = [MGSwipeButton buttonWithTitle:@""
-//																	   icon:[LMAppIcon imageForIcon:LMIconFavouriteWhiteFilled]
-//															backgroundColor:colour padding:0
-//																   callback:
-//		    ^BOOL(MGSwipeTableCell *sender) {
-//				LMMusicTrack *track = [self.musicTitles.items objectAtIndex:listEntry.collectionIndex];
-//
-//				if(track.isFavourite){
-//					[self.musicPlayer removeTrackFromFavourites:track];
-//				}
-//				else{
-//					[self.musicPlayer addTrackToFavourites:track];
-//				}
-//
-//				NSLog(@"Favourite %@", track.title);
-//
-//				return YES;
-//			}];
-//			favouriteButton.titleLabel.font = font;
-//			favouriteButton.titleLabel.hidden = YES;
-//			favouriteButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
-//			favouriteButton.imageEdgeInsets = UIEdgeInsetsMake(25, 0, 25, 0);
-//
-//			listEntry.leftButtons = @[ favouriteButton ];
-//			listEntry.leftButtonExpansionColour = [LMColour successGreenColour];
-			
-			[self.itemArray addObject:listEntry];
-			
-			//Quick hack to make sure that the items in the array are non nil
-//			[self.itemIconArray addObject:@""];
-		}
-	}
-	
-	NSTimeInterval loadEndTime = [[NSDate new] timeIntervalSince1970];
-	NSLog(@"Generated subview data in %f seconds", (loadEndTime - loadStartTime));
-}
-
-- (CGFloat)heightAtIndex:(NSUInteger)index forTableView:(LMTableView *)tableView {
-	return LMLayoutManager.standardListEntryHeight;
-}
-
 - (LMListEntry*)listEntryForIndex:(NSInteger)index {
 	if(index == -1){
 		return nil;
 	}
 	
-	LMListEntry *entry = nil;
-	for(int i = 0; i < self.itemArray.count; i++){
-		LMListEntry *indexEntry = [self.itemArray objectAtIndex:i];
-		if(indexEntry.collectionIndex == index){
-			entry = indexEntry;
-			break;
+	UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0]];
+	
+	for(id subview in cell.contentView.subviews){
+		if([subview class] == [LMListEntry class]){
+			return subview;
 		}
 	}
-	return entry;
-}
-
-- (int)indexOfListEntry:(LMListEntry*)entry {
-	int indexOfEntry = -1;
-	for(int i = 0; i < self.itemArray.count; i++){
-		LMListEntry *subviewEntry = (LMListEntry*)[self.itemArray objectAtIndex:i];
-		if([entry isEqual:subviewEntry]){
-			indexOfEntry = i;
-			break;
-		}
-	}
-	return indexOfEntry;
-}
-
-- (CGFloat)spacingAtIndex:(NSUInteger)index forTableView:(LMTableView *)tableView {
-	if(index == 0){
-		return 10;
-	}
-	return 10; //TODO: Fix this
+	return nil;
 }
 
 - (void)tappedListEntry:(LMListEntry*)entry {
@@ -507,6 +496,8 @@
 			[previousHighlightedEntry changeHighlightStatus:NO animated:YES];
 		}
 		
+		NSLog(@"Highlighting %d, dehighlighting %d", (int)entry.collectionIndex, (int)previousHighlightedEntry.collectionIndex);
+		
 		[entry changeHighlightStatus:YES animated:YES];
 		self.currentlyHighlighted = entry.collectionIndex;
 		
@@ -519,9 +510,10 @@
 		[self.musicPlayer setNowPlayingTrack:track];
 		
 		[self.musicPlayer.navigationBar setSelectedTab:LMNavigationTabMiniplayer];
-		[self.musicPlayer.navigationBar maximize:NO];
-		
-		[self.songListTableView reloadData];
+		[self.musicPlayer.navigationBar maximise:NO];
+		#warning reload
+		[self.collectionView reloadData];
+//		[self.songListTableView reloadData];
 	} repeats:NO];
 }
 
@@ -656,12 +648,18 @@
 
 - (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
 	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-		[self.songListTableView reloadData];
+#warning reload
+//		[self.songListTableView reloadData];
+		[self.collectionView reloadData];
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-		[self.songListTableView reloadData];
+#warning reload
+//		[self.songListTableView reloadData];
+		[self.collectionView reloadData];
 		
 		[NSTimer scheduledTimerWithTimeInterval:0.2 block:^{
-			[self.songListTableView reloadData];
+//			[self.songListTableView reloadData];
+			[self.collectionView reloadData];
+#warning reload
 		} repeats:NO];
 		
 		if(!self.layoutManager.isLandscape){
@@ -709,6 +707,8 @@
 	if(!self.didLayoutConstraints){
 		self.didLayoutConstraints = YES;
 		
+		self.currentlyHighlighted = -1;
+		
 		NSTimeInterval loadStartTime = [[NSDate new] timeIntervalSince1970];
 		
 		[self rebuildTrackCollection];
@@ -722,18 +722,34 @@
 		
 		NSLog(@"titleView: Initialise delegates, %f", (([[NSDate new] timeIntervalSince1970]) - loadStartTime));
 		
-		self.songListTableView = [LMTableView newAutoLayoutView];
-		self.songListTableView.totalAmountOfObjects = self.musicTitles.trackCount;
-		self.songListTableView.subviewDataSource = self;
-		self.songListTableView.shouldUseDividers = YES;
-		self.songListTableView.averageCellHeight = [LMLayoutManager standardListEntryHeight] * (2.5/10.0);
-		self.songListTableView.bottomSpacing = (WINDOW_FRAME.size.height/3.0);
-		self.songListTableView.secondaryDelegate = self;
-		[self addSubview:self.songListTableView];
+		UICollectionViewFlowLayout *fuck = [[UICollectionViewFlowLayout alloc]init];
+		fuck.sectionInset = UIEdgeInsetsMake(10, 0, 10, 0);
 		
-		[self.songListTableView reloadSubviewData];
+		self.collectionView = [[UICollectionView alloc]initWithFrame:CGRectZero collectionViewLayout:fuck];
+		self.collectionView.translatesAutoresizingMaskIntoConstraints = NO;
+		self.collectionView.delegate = self;
+		self.collectionView.dataSource = self;
+		self.collectionView.userInteractionEnabled = YES;
+		self.collectionView.contentInset = UIEdgeInsetsMake(0, 0, 10, 0);
+		self.collectionView.backgroundColor = [LMColour whiteColour];
+		[self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"cellIdentifier"];
+		[self addSubview:self.collectionView];
 		
-		[self.songListTableView autoPinEdgesToSuperviewEdges];
+		[self.collectionView autoPinEdgesToSuperviewEdges];
+	
+		
+//		self.songListTableView = [LMTableView newAutoLayoutView];
+//		self.songListTableView.totalAmountOfObjects = self.musicTitles.trackCount;
+//		self.songListTableView.subviewDataSource = self;
+//		self.songListTableView.shouldUseDividers = YES;
+//		self.songListTableView.averageCellHeight = [LMLayoutManager standardListEntryHeight] * (2.5/10.0);
+//		self.songListTableView.bottomSpacing = (WINDOW_FRAME.size.height/3.0);
+//		self.songListTableView.secondaryDelegate = self;
+//		[self addSubview:self.songListTableView];
+//
+//		[self.songListTableView reloadSubviewData];
+//
+//		[self.songListTableView autoPinEdgesToSuperviewEdges];
 		
 //		[self.songListTableView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
 //		[self.songListTableView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
@@ -793,6 +809,21 @@
 		NSTimeInterval loadEndTime = [[NSDate new] timeIntervalSince1970];
 		NSLog(@"Loaded title view, took %f seconds", (loadEndTime - loadStartTime));
 		
+		[self.collectionView reloadData];
+		[self.collectionView performBatchUpdates:^{}
+									  completion:^(BOOL finished) {
+										  NSLog(@"Finished title view load: %d", finished);
+										  if([LMSettings debugInitialisationSounds]){
+											  AudioServicesPlaySystemSound(1256);
+										  }
+										  
+										  LMCoreViewController *coreViewController = (LMCoreViewController*)self.rootViewController;
+										  
+										  [NSTimer scheduledTimerWithTimeInterval:0.25 block:^{
+											  [coreViewController loadButtonNavigationBar];
+										  } repeats:NO];
+									  }];
+		
 		if([self.delegate respondsToSelector:@selector(titleViewFinishedInitialising)]){
 			[self.delegate titleViewFinishedInitialising];
 		}
@@ -802,15 +833,16 @@
 }
 
 - (MPMediaEntityPersistentID)topTrackPersistentID {
-	NSIndexPath *topIndexPath = [self.songListTableView indexPathForRowAtPoint:self.songListTableView.contentOffset];
-	
-	if(!topIndexPath || (topIndexPath.section >= self.musicTitles.count)){
-		return 0;
-	}
-	
-	LMMusicTrack *topMusicTrack = [self.musicTitles.items objectAtIndex:topIndexPath.section];
-	
-	return topMusicTrack.persistentID;
+	return 0;
+//	NSIndexPath *topIndexPath = [self.songListTableView indexPathForRowAtPoint:self.songListTableView.contentOffset];
+//
+//	if(!topIndexPath || (topIndexPath.section >= self.musicTitles.count)){
+//		return 0;
+//	}
+//
+//	LMMusicTrack *topMusicTrack = [self.musicTitles.items objectAtIndex:topIndexPath.section];
+//
+//	return topMusicTrack.persistentID;
 }
 
 //- (void)encodeRestorableStateWithCoder:(NSCoder *)coder {

@@ -122,7 +122,7 @@ typedef NS_ENUM(NSUInteger, LMNavigationTab) {
 
  @param automatic Whether or not the maximize is being done automatically and not manually.
  */
-- (void)maximize:(BOOL)automatic;
+- (void)maximise:(BOOL)automatic;
 
 /**
  Set the tab that's selected.

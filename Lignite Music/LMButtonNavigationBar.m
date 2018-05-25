@@ -373,7 +373,7 @@
 	}];
 }
 
-- (void)maximize:(BOOL)automatic {
+- (void)maximise:(BOOL)automatic {
 	if((!self.wasAutomaticallyMinimized && self.isMinimised && automatic) || self.rotating){
 		return;
 	}
@@ -511,7 +511,7 @@
 }
 
 - (void)clickedButton:(LMButton *)button {
-	[self maximize:NO];
+	[self maximise:NO];
 	[self setSelectedTab:LMNavigationTabView];
 }
 
@@ -634,7 +634,7 @@
 
 - (void)minimizeButtonTapped {
 	NSLog(@"ay boy");
-	self.isMinimised ? [self maximize:NO] : [self minimise:NO];
+	self.isMinimised ? [self maximise:NO] : [self minimise:NO];
 }
 
 - (void)reloadLayout {
@@ -1009,7 +1009,7 @@
 			[self bringSubviewToFront:self.iPhoneXBottomCoverView];
 			
 			[NSTimer scheduledTimerWithTimeInterval:0.10 block:^{
-				[self maximize:NO];
+				[self maximise:NO];
 			} repeats:NO];
 		}
 		
