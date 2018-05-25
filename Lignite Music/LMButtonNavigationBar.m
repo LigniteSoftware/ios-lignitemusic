@@ -648,6 +648,10 @@
 	if(!self.didLayoutConstraints){
 		self.didLayoutConstraints = YES;
 		
+		self.backgroundColor = [UIColor clearColor];
+		
+		return;
+		
 		NSLog(@"Did layout constraints!");
 		
 		self.unmodifiedFrame = self.frame;

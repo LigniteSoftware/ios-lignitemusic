@@ -114,12 +114,12 @@
 
 - (BOOL)application:(UIApplication *)application shouldSaveApplicationState:(NSCoder *)coder {
 	NSLog(@"See you later");
-	return YES;
+	return NO;
 }
 
 - (BOOL)application:(UIApplication *)application shouldRestoreApplicationState:(NSCoder *)coder {
 	NSLog(@"Restoring application state");
-	return YES;
+	return NO;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {

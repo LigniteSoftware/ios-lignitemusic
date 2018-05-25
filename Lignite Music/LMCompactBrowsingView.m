@@ -1174,6 +1174,8 @@
 	if(!self.didLayoutConstraints){
 		self.didLayoutConstraints = YES;
 		
+		NSTimeInterval loadStartTime = [[NSDate new] timeIntervalSince1970];
+		
 		self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 		self.playlistManager = [LMPlaylistManager sharedPlaylistManager];
 		
@@ -1398,6 +1400,9 @@
 		//	[self.noObjectsLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(3.0/4.0)];
 		
 		self.noObjectsLabel.hidden = (self.musicTrackCollections.count > 0);
+		
+		NSTimeInterval loadEndTime = [[NSDate new] timeIntervalSince1970];
+		NSLog(@"%f seconds to load the compact view", (loadEndTime - loadStartTime));
 	}
 }
 
