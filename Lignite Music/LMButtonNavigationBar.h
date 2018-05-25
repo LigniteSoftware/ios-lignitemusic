@@ -25,6 +25,11 @@
  */
 - (void)requiredHeightForNavigationBarChangedTo:(CGFloat)requiredHeight withAnimationDuration:(CGFloat)animationDuration;
 
+/**
+ The button navigation bar finished initialising.
+ */
+- (void)buttonNavigationBarFinishedInitialising;
+
 @end
 
 @interface LMButtonNavigationBar : LMView
@@ -101,7 +106,7 @@ typedef NS_ENUM(NSUInteger, LMNavigationTab) {
 
  @param automatic Whether or not the minimize is being done automatically and not manually.
  */
-- (void)minimize:(BOOL)automatic;
+- (void)minimise:(BOOL)automatic;
 
 /**
  Maximize the navigation bar to its full size.

@@ -83,15 +83,16 @@
 }
 
 - (void)insertAlbumCovers {
-	if(!self.queue){
-		self.queue = [[LMOperationQueue alloc] init];
-	}
+//	if(!self.queue){
+//		self.queue = [[LMOperationQueue alloc] init];
+//	}
+//
+//	[self.queue cancelAllOperations];
 	
-	[self.queue cancelAllOperations];
+	dispatch_async(dispatch_get_global_queue(NSQualityOfServiceUserInitiated, 0), ^{
+//	__block NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
+//		@autoreleasepool {
 	
-	__block NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
-		@autoreleasepool {
-			
 			NSMutableArray *highestIds = [NSMutableArray new];
 			NSMutableArray *regularIds = [NSMutableArray new];
 			
@@ -190,16 +191,9 @@
 						image = [[self musicTrackForPersistentIdString:regularIdUsed] albumArt];
 					}
 					
-					if(self.musicCollection.count == 287){
-						NSLog(@"What");
-					}
-					
 					if(image){
 						[regularTileImages addObject:image];
 						[usedRegularIds addObject:regularIdUsed];
-					}
-					else if(self.musicCollection.count == 287){
-						NSLog(@"FUCK!!!");
 					}
 				}
 			}
@@ -209,10 +203,10 @@
 			}
 			
 			dispatch_async(dispatch_get_main_queue(), ^{
-				if(operation.cancelled){
-					NSLog(@"Rejecting.");
-					return;
-				}
+//				if(operation.cancelled){
+//					NSLog(@"Rejecting.");
+//					return;
+//				}
 				
 				NSArray *bigTileArrayToUse = [NSArray arrayWithArray:self.bigTileArray];
 				
@@ -234,10 +228,6 @@
 						UIImage *image = [regularTileImages firstObject];
 						UIImageView *tile = [tilesArrayToUse objectAtIndex:i];
 						
-						if(self.musicCollection.count == 287){
-							NSLog(@"Stop!");
-						}
-						
 						if(![bigTileArrayToUse containsObject:tile]){
 							tile.image = image;
 							
@@ -246,14 +236,13 @@
 					}
 				}
 				
-				operation = nil;
+//				operation = nil;
 			});
-			
-		}
-	}];
-	
-	[self.queue addOperation:operation];
-	
+	   });
+//	}];
+//
+//	[self.queue addOperation:operation];
+
 //	NSLog(@"Highest IDs %@\nRegular IDs %@", highestIds, regularIds);
 }
 

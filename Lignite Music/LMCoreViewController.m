@@ -423,12 +423,6 @@
 	[self.compactView reloadContents];
 	
 	NSLog(@"Done setting up (is layed? %d)", self.buttonNavigationBar.browsingBar.didLayoutConstraints);
-	
-	self.buttonNavigationBar.browsingBar.letterTabBar.lettersDictionary =
-		[self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:self.compactView.musicTrackCollections
-														 withAssociatedMusicType:musicType];
-	
-	NSLog(@"Setup letters dictionary");
 }
 
 - (BOOL)prefersStatusBarHidden {	
@@ -480,6 +474,54 @@
 						  contentType:@"Browsing View"
 							contentId:[NSString stringWithFormat:@"browsing_view_%@", [viewName lowercaseString]]
 					 customAttributes:@{}];
+}
+
+- (void)reloadButtonNavigationBarWithSource:(LMSource*)source {
+	if(!self.buttonNavigationBar){ //Hasn't lazily-loaded yet
+		return;
+	}
+	
+	switch(source.sourceID){
+		case LMIconArtists:
+		case LMIconGenres:
+		case LMIconPlaylists:
+		case LMIconComposers:
+		case LMIconCompilations:
+		case LMIconAlbums: {
+			[self.buttonNavigationBar.browsingBar setShowingLetterTabs:self.compactView.musicTrackCollections.count > 0];
+			
+			self.buttonNavigationBar.browsingBar.letterTabBar.lettersDictionary =
+			[self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:self.compactView.musicTrackCollections
+															 withAssociatedMusicType:self.compactView.musicType];
+			
+			NSLog(@"Setup letters dictionary");
+			break;
+		}
+		case LMIconTitles: {
+			[self.buttonNavigationBar.browsingBar setShowingLetterTabs:self.titleView.musicTitles.count > 0];
+			
+			self.buttonNavigationBar.browsingBar.letterTabBar.lettersDictionary =
+			[self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:@[self.titleView.musicTitles]
+															 withAssociatedMusicType:LMMusicTypeTitles];
+			
+			break;
+		}
+		case LMIconFavouriteBlackFilled: {
+			[self.buttonNavigationBar.browsingBar setShowingLetterTabs:self.titleView.musicTitles.count > 0];
+			
+			self.buttonNavigationBar.browsingBar.letterTabBar.lettersDictionary =
+			[self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:@[self.titleView.musicTitles]
+															 withAssociatedMusicType:LMMusicTypeTitles];
+			break;
+		}
+		case LMIconSettings:
+		case LMIconBug: {
+			break;
+		}
+		default:
+			NSLog(@"Unknown index of source %@.", source);
+			break;
+	}
 }
 
 - (void)sourceSelected:(LMSource *)source {
@@ -639,6 +681,8 @@
 	}
 	
 	[self.landscapeNavigationBar setMode:self.musicType == LMMusicTypePlaylists ? LMLandscapeNavigationBarModePlaylistView : LMLandscapeNavigationBarModeOnlyLogo];
+	
+	[self reloadButtonNavigationBarWithSource:self.selectedSource];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -775,10 +819,6 @@
 	else{
 		[self.currentSource scrollViewToIndex:index animated:NO];
 	}
-}
-
-- (void)swipeDownGestureOccurredOnLetterTabBar {
-//	[self.buttonNavigationBar minimize:NO];
 }
 
 - (UIBarPosition)positionForBar:(id<UIBarPositioning>)bar {
@@ -1161,7 +1201,7 @@
 	self.previouslyOpenedDetailViewIndex = previouslyOpenedDetailViewIndex;
 	self.previousTitleViewTopPersistentID = titleViewTopPersistentID;
 	
-	[self.navigationController setNavigationBarHidden:!(self.restorationState == LMCoreViewControllerRestorationStateOutOfView)];
+//	[self.navigationController setNavigationBarHidden:!(self.restorationState == LMCoreViewControllerRestorationStateOutOfView)];
 }
 
 - (UINavigationItem*)navigationItem {
@@ -1220,7 +1260,11 @@
 		self.navigationController.navigationBar.layer.shadowOffset = CGSizeMake(0, self.navigationController.navigationBar.layer.shadowRadius/2);
 		self.navigationController.navigationBar.layer.shadowOpacity = 0.25f;
 		
-		[self.navigationController setNavigationBarHidden:!(self.restorationState == LMCoreViewControllerRestorationStateOutOfView)];
+//		[self.navigationController setNavigationBarHidden:!(self.restorationState == LMCoreViewControllerRestorationStateOutOfView)];
+
+		//No clue why, but if I don't do this, the icon doesn't display on the navigation bar.
+		[self.navigationController setNavigationBarHidden:YES];
+		[self.navigationController setNavigationBarHidden:NO];
 		
 		self.loaded = NO;
 		self.previouslyOpenedDetailViewIndex = -1;
@@ -1242,7 +1286,7 @@
 //		self.splashImageView = [UIImageView newAutoLayoutView];
 //		self.splashImageView.backgroundColor = [UIColor orangeColor];
 //		if([LMLayoutManager isiPad]){
-//			self.splashImageView.image = [UIImage imageNamed:@"splash_ipad"];
+//			self.splashImageView.image = [UIImage imageNamed:@"splash_ipad"];
 //		}
 //		else{
 //			self.splashImageView.image = [UIImage imageNamed:[LMLayoutManager sharedLayoutManager].isLandscape ? @"splash_landscape_g" : @"splash_portrait_g"];
@@ -1470,13 +1514,63 @@
 			}] resume];
 }
 
+- (void)buttonNavigationBarFinishedInitialising {
+	[self reloadButtonNavigationBarWithSource:self.selectedSource];
+}
+
+- (void)loadButtonNavigationBar {
+	if(self.buttonNavigationBar){
+		return;
+	}
+	
+	self.buttonNavigationBar = [LMButtonNavigationBar newAutoLayoutView];
+	self.buttonNavigationBar.rootViewController = self;
+	self.buttonNavigationBar.sourcesForSourceSelector = self.sourcesForSourceSelector;
+	self.buttonNavigationBar.delegate = self;
+	self.buttonNavigationBar.searchBarDelegate = self;
+	self.buttonNavigationBar.letterTabBarDelegate = self;
+	//	self.buttonNavigationBar.hidden = YES;
+	[self.navigationController.view addSubview:self.buttonNavigationBar];
+	
+	//						self.navigationController.view.hidden = YES;
+	
+	self.buttonNavigationBar.backgroundColor = [UIColor purpleColor];
+	
+	NSLog(@"Class %@", [self.navigationController.view class]);
+	
+	NSArray *buttonNavigationBarPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:WINDOW_FRAME.size.height];
+		[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+	}];
+	[LMLayoutManager addNewPortraitConstraints:buttonNavigationBarPortraitConstraints];
+	
+	NSArray *buttonNavigationBarLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
+		[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+	}];
+	[LMLayoutManager addNewLandscapeConstraints:buttonNavigationBarLandscapeConstraints];
+	
+	
+	NSArray *buttonNavigationBariPadConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[self.buttonNavigationBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.navigationController.view withMultiplier:(2.0/3.0)];
+	}];
+	[LMLayoutManager addNewiPadConstraints:buttonNavigationBariPadConstraints];
+}
+
 - (void)loadSubviews {
 //	[self.navigationController setNavigationBarHidden:NO animated:YES];
 //
 //	LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
 //	[self.navigationController pushViewController:settingsViewController animated:YES];
 	
-	if(self.buttonNavigationBar){
+	if(self.compactView){
 		return;
 	}
 	
@@ -1677,7 +1771,7 @@
 	NSLog(@"Fuck %@ %@", [self.navigationController class], self.navigationController.navigationBar);
 	
 	[self.navigationController setNavigationBarHidden:NO];
-	[self.navigationController.navigationBar setBackgroundColor:[UIColor whiteColor]];
+//	[self.navigationController.navigationBar setBackgroundColor:[UIColor whiteColor]];
 	
 //		self.navigationController.navigationBar = [[LMNavigationBar alloc] initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, 64.0f)];
 //		self.navigationController.navigationBar.prefersLargeTitles = NO;
@@ -1915,98 +2009,98 @@
 	self.loaded = YES;
 	
 
-	NSTimeInterval loadEndTime = [[NSDate new] timeIntervalSince1970];
-	NSLog(@"Took %f seconds to load main views.", (loadEndTime - loadStartTime));
+//	NSTimeInterval loadEndTime = [[NSDate new] timeIntervalSince1970];
+//	NSLog(@"Took %f seconds to load main views.", (loadEndTime - loadStartTime));
+//
+//	return;
 	
-	return;
-	
-	[UIView animateWithDuration:0.25 animations:^{
-		[self setNeedsStatusBarAppearanceUpdate];
-	}];
+//	[UIView animateWithDuration:0.25 animations:^{
+//		[self setNeedsStatusBarAppearanceUpdate];
+//	}];
 	
 	[NSTimer scheduledTimerWithTimeInterval:1.0 block:^{
-		self.backgroundBlurView = [UIVisualEffectView newAutoLayoutView];
-		self.backgroundBlurView.userInteractionEnabled = NO;
-		[self.navigationController.view addSubview:self.backgroundBlurView];
+//		self.backgroundBlurView = [UIVisualEffectView newAutoLayoutView];
+//		self.backgroundBlurView.userInteractionEnabled = NO;
+//		[self.navigationController.view addSubview:self.backgroundBlurView];
+//
+//		[self.backgroundBlurView autoPinEdgesToSuperviewEdges];
 		
-		[self.backgroundBlurView autoPinEdgesToSuperviewEdges];
-		
-		[self.navigationController.view insertSubview:self.buttonNavigationBar aboveSubview:self.backgroundBlurView];
+//		[self.navigationController.view insertSubview:self.buttonNavigationBar aboveSubview:self.backgroundBlurView];
 		[self.navigationController.view insertSubview:self.buttonNavigationBarBottomCoverView aboveSubview:self.buttonNavigationBar];
 		[self.navigationController.view insertSubview:self.nowPlayingCoreView aboveSubview:self.buttonNavigationBar];
 	} repeats:NO];
 	
 	
 	[NSTimer scheduledTimerWithTimeInterval:0.25 block:^{
-		if(self.restorationState != LMCoreViewControllerRestorationStateNotRestored){
-			[self.buttonNavigationBar setSelectedTab:self.stateRestoredNavigationTab];
-		}
-		else{
-			[self.buttonNavigationBar setSelectedTab:LMNavigationTabMiniplayer];
-		}
-		
-		if(self.stateRestoredNavigationBarWasMinimized){
-			[self.buttonNavigationBar minimize:NO];
-		}
-		
-		if(self.navigationController.navigationBar.items.count > 1){
-			[self.buttonNavigationBar completelyHide];
-		}
-		
-		if(self.restorationState == LMCoreViewControllerRestorationStateNowPlaying){
-			[self launchNowPlaying:NO];
-		}
-		
-		if(self.previousTitleViewTopPersistentID > 0){
-			[self.titleView scrollToTrackWithPersistentID:self.previousTitleViewTopPersistentID];
-		}
-		
-		if(self.titleView.favourites && (self.currentSource == self.titleView)){
-			[self.buttonNavigationBar.browsingBar setShowingLetterTabs:self.titleView.musicTitles.count > 0];
-		}
-		
-		
-		if(self.previouslyOpenedDetailViewIndex > -1 && self.previouslyOpenedDetailViewIndex < self.compactView.musicTrackCollections.count){
-			[self.compactView scrollViewToIndex:self.previouslyOpenedDetailViewIndex animated:YES];
-			if(self.previouslyOpenedDetailViewIndex < self.compactView.musicTrackCollections.count){
-				[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
-					[self.compactView tappedBigListEntryAtIndex:self.previouslyOpenedDetailViewIndex];
-				} repeats:NO];
-			}
-		}
-		
-		NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-		NSString *iOSVersionString = [[UIDevice currentDevice] systemVersion];
-		if([userDefaults objectForKey:LMWarningApprovedVersionKey] && ![userDefaults objectForKey:LMCheckedApprovedVersionBeforeKey]){
-			if([iOSVersionString containsString:@"11.2"] && ![userDefaults objectForKey:LMiOS_11_2_LagUnderstandingConfirmationKey]){
-				LMAlertViewController *alertViewController = [LMAlertViewController new];
-				alertViewController.titleText = NSLocalizedString(@"iOS_11_2_LagTitle", nil);
-				alertViewController.bodyText = [NSString stringWithFormat:NSLocalizedString(@"iOS_11_2_LagDescription", nil), iOSVersionString];
-				alertViewController.checkboxText = NSLocalizedString(@"iOS_11_2_LagCheckboxConfirmationText", nil);
-				alertViewController.checkboxMoreInformationText = NSLocalizedString(@"TapHereForMoreInformation", nil);
-				alertViewController.checkboxMoreInformationLink = @"https://www.LigniteMusic.com/ios_11.2_lag";
-				alertViewController.alertOptionColours = @[ [LMColour mainColour] ];
-				alertViewController.alertOptionTitles = @[ NSLocalizedString(@"Continue", nil) ];
-				alertViewController.completionHandler = ^(NSUInteger optionSelected, BOOL checkboxChecked) {
-					if(checkboxChecked){
-						[userDefaults setObject:iOSVersionString forKey:LMiOS_11_2_LagUnderstandingConfirmationKey];
-						
-						NSLog(@"11.2 understood by user");
-					}
-				};
-				[self.navigationController presentViewController:alertViewController
-														animated:YES
-													  completion:nil];
-			}
-		}
-		else{
-			[userDefaults setObject:@"yep" forKey:LMCheckedApprovedVersionBeforeKey];
-			
-			NSLog(@"User has checked version and couldn't show it");
-		}
-		
-		self.splashImageView.image = nil;
-		self.splashImageView.backgroundColor = [UIColor whiteColor];
+//		if(self.restorationState != LMCoreViewControllerRestorationStateNotRestored){
+//			[self.buttonNavigationBar setSelectedTab:self.stateRestoredNavigationTab];
+//		}
+//		else{
+//			[self.buttonNavigationBar setSelectedTab:LMNavigationTabMiniplayer];
+//		}
+//
+//		if(self.stateRestoredNavigationBarWasMinimized){
+//			[self.buttonNavigationBar minimise:NO];
+//		}
+//
+//		if(self.navigationController.navigationBar.items.count > 1){
+//			[self.buttonNavigationBar completelyHide];
+//		}
+//
+//		if(self.restorationState == LMCoreViewControllerRestorationStateNowPlaying){
+//			[self launchNowPlaying:NO];
+//		}
+//
+//		if(self.previousTitleViewTopPersistentID > 0){
+//			[self.titleView scrollToTrackWithPersistentID:self.previousTitleViewTopPersistentID];
+//		}
+//
+//		if(self.titleView.favourites && (self.currentSource == self.titleView)){
+//			[self.buttonNavigationBar.browsingBar setShowingLetterTabs:self.titleView.musicTitles.count > 0];
+//		}
+//
+//
+//		if(self.previouslyOpenedDetailViewIndex > -1 && self.previouslyOpenedDetailViewIndex < self.compactView.musicTrackCollections.count){
+//			[self.compactView scrollViewToIndex:self.previouslyOpenedDetailViewIndex animated:YES];
+//			if(self.previouslyOpenedDetailViewIndex < self.compactView.musicTrackCollections.count){
+//				[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
+//					[self.compactView tappedBigListEntryAtIndex:self.previouslyOpenedDetailViewIndex];
+//				} repeats:NO];
+//			}
+//		}
+//
+//		NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+//		NSString *iOSVersionString = [[UIDevice currentDevice] systemVersion];
+//		if([userDefaults objectForKey:LMWarningApprovedVersionKey] && ![userDefaults objectForKey:LMCheckedApprovedVersionBeforeKey]){
+//			if([iOSVersionString containsString:@"11.2"] && ![userDefaults objectForKey:LMiOS_11_2_LagUnderstandingConfirmationKey]){
+//				LMAlertViewController *alertViewController = [LMAlertViewController new];
+//				alertViewController.titleText = NSLocalizedString(@"iOS_11_2_LagTitle", nil);
+//				alertViewController.bodyText = [NSString stringWithFormat:NSLocalizedString(@"iOS_11_2_LagDescription", nil), iOSVersionString];
+//				alertViewController.checkboxText = NSLocalizedString(@"iOS_11_2_LagCheckboxConfirmationText", nil);
+//				alertViewController.checkboxMoreInformationText = NSLocalizedString(@"TapHereForMoreInformation", nil);
+//				alertViewController.checkboxMoreInformationLink = @"https://www.LigniteMusic.com/ios_11.2_lag";
+//				alertViewController.alertOptionColours = @[ [LMColour mainColour] ];
+//				alertViewController.alertOptionTitles = @[ NSLocalizedString(@"Continue", nil) ];
+//				alertViewController.completionHandler = ^(NSUInteger optionSelected, BOOL checkboxChecked) {
+//					if(checkboxChecked){
+//						[userDefaults setObject:iOSVersionString forKey:LMiOS_11_2_LagUnderstandingConfirmationKey];
+//
+//						NSLog(@"11.2 understood by user");
+//					}
+//				};
+//				[self.navigationController presentViewController:alertViewController
+//														animated:YES
+//													  completion:nil];
+//			}
+//		}
+//		else{
+//			[userDefaults setObject:@"yep" forKey:LMCheckedApprovedVersionBeforeKey];
+//
+//			NSLog(@"User has checked version and couldn't show it");
+//		}
+//
+//		self.splashImageView.image = nil;
+//		self.splashImageView.backgroundColor = [UIColor whiteColor];
 		
 		[self asyncReloadCachedMusicTrackCollections];
 		

@@ -53,6 +53,11 @@ typedef NS_ENUM(NSInteger, LMCoreViewControllerRestorationState){
 - (void)launchNowPlayingFromTap;
 
 /**
+ Load the button navigation bar (used for lazy loading).
+ */
+- (void)loadButtonNavigationBar;
+
+/**
  The navigation bar that goes at the bottom.
  */
 @property LMButtonNavigationBar *buttonNavigationBar;

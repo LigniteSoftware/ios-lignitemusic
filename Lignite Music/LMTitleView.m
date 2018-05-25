@@ -117,7 +117,7 @@
     if(difference > WINDOW_FRAME.size.height/4){
         self.brokeScrollingThreshhold = YES;
 		if(!self.rootViewController.buttonNavigationBar.userMaximizedDuringScrollDeceleration){
-			[self.rootViewController.buttonNavigationBar minimize:YES];
+			[self.rootViewController.buttonNavigationBar minimise:YES];
 		}
     }	
 }

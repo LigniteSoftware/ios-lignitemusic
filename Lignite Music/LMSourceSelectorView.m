@@ -254,19 +254,19 @@
 		[self.listEntryArray addObject:listEntry];
 	}
 	
-	if(self.isMainSourceSelector){
-		NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
-		NSInteger lastSourceOpened = LMMusicTypeAlbums;
-		if([settings objectForKey:LMSettingsKeyLastOpenedSource]){
-			NSLog(@"Stored %@", [settings objectForKey:LMSettingsKeyLastOpenedSource]);
-			lastSourceOpened = [settings integerForKey:LMSettingsKeyLastOpenedSource];
-		}
-		
-		if(lastSourceOpened >= self.listEntryArray.count){
-			return;
-		}
-		[self tappedListEntry:[self.listEntryArray objectAtIndex:lastSourceOpened]];
-	}
+//	if(self.isMainSourceSelector){
+//		NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
+//		NSInteger lastSourceOpened = LMMusicTypeAlbums;
+//		if([settings objectForKey:LMSettingsKeyLastOpenedSource]){
+//			NSLog(@"Stored %@", [settings objectForKey:LMSettingsKeyLastOpenedSource]);
+//			lastSourceOpened = [settings integerForKey:LMSettingsKeyLastOpenedSource];
+//		}
+//		
+//		if(lastSourceOpened >= self.listEntryArray.count){
+//			return;
+//		}
+//		[self tappedListEntry:[self.listEntryArray objectAtIndex:lastSourceOpened]];
+//	}
 	
 	
 	self.backgroundColor = [UIColor whiteColor];

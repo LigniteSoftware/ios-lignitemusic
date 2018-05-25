@@ -327,7 +327,7 @@
 	}];
 }
 
-- (void)minimize:(BOOL)automatic {
+- (void)minimise:(BOOL)automatic {
     if(self.isMinimized || self.rotating){
         return;
     }
@@ -585,7 +585,7 @@
 		else if(self.isMinimized){
 			self.isMinimized = NO;
 			
-			[self minimize:NO];
+			[self minimise:NO];
 		}
 		
 		[self reloadMiniPlayerSize];
@@ -630,7 +630,7 @@
 
 - (void)minimizeButtonTapped {
 	NSLog(@"ay boy");
-	self.isMinimized ? [self maximize:NO] : [self minimize:NO];
+	self.isMinimized ? [self maximize:NO] : [self minimise:NO];
 }
 
 - (void)reloadLayout {
@@ -649,9 +649,7 @@
 		self.didLayoutConstraints = YES;
 		
 		self.backgroundColor = [UIColor clearColor];
-		
-		return;
-		
+				
 		NSLog(@"Did layout constraints!");
 		
 		self.unmodifiedFrame = self.frame;
@@ -1013,6 +1011,8 @@
 		
 		
 		[self reloadMiniPlayerSize];
+		
+		[self.delegate buttonNavigationBarFinishedInitialising];
 		
 //		self.sourceSelector.hidden = YES;
 	}

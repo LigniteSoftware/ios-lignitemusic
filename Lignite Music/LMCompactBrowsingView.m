@@ -586,6 +586,10 @@
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
 //	return MIN(self.musicTrackCollections.count, 20);
 	
+//	[NSTimer scheduledTimerWithTimeInterval:0.25 block:^{
+//		NSLog(@"Checked number %d", section);
+//	} repeats:NO];
+	
 	NSInteger fixedCount = self.musicType == LMMusicTypePlaylists ? self.playlistManager.playlists.count : self.musicTrackCollections.count;
 	
 	if(self.musicPlayer.demoMode && self.musicType == LMMusicTypeArtists && [[NSUserDefaults standardUserDefaults] boolForKey:LMSettingsKeyArtistsFilteredForDemo]){
@@ -696,7 +700,7 @@
 	if(difference > WINDOW_FRAME.size.height/4){
 		self.brokeScrollingThreshhold = YES;
 		if(!self.coreViewController.buttonNavigationBar.userMaximizedDuringScrollDeceleration){
-			[self.coreViewController.buttonNavigationBar minimize:YES];
+			[self.coreViewController.buttonNavigationBar minimise:YES];
 		}
 	}
 }
@@ -1368,6 +1372,19 @@
 				   || (!LMLayoutManager.isLandscape && (self.musicType == LMMusicTypePlaylists)));
 		
 		self.collectionViewTopLandscapeConstraint.active = !self.collectionViewTopPortraitConstraint.active;
+		
+		[self.collectionView reloadData];
+		[self.collectionView performBatchUpdates:^{}
+									  completion:^(BOOL finished) {
+										  NSLog(@"Finished compact view load: %d", finished);
+										  AudioServicesPlaySystemSound(1256);
+										  
+										  LMCoreViewController *coreViewController = (LMCoreViewController*)self.rootViewController;
+										  
+										  [NSTimer scheduledTimerWithTimeInterval:0.25 block:^{
+											  [coreViewController loadButtonNavigationBar];
+										  } repeats:NO];
+									  }];
 		
 //		NSArray *collectionViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 //			[self.collectionView autoPinEdge:ALEdgeTop

@@ -109,7 +109,7 @@
 		if(![LMLayoutManager isiPad]){
 			LMCompactBrowsingView *compactView = self.compactView;
 			LMCoreViewController *coreViewController = compactView.rootViewController;
-			[coreViewController.buttonNavigationBar minimize:YES];
+			[coreViewController.buttonNavigationBar minimise:YES];
 		}
 	}
 	
