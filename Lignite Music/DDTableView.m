@@ -271,7 +271,7 @@
 				self.draggingView.transform = CGAffineTransformIdentity;
 				self.draggingView.frame = CGRectOffset(self.draggingView.bounds, rect.origin.x, rect.origin.y);
 				
-				NSLog(@"Center end %@", NSStringFromCGPoint(self.draggingView.center));
+				NSLog(@"Centre end %@", NSStringFromCGPoint(self.draggingView.center));
 			}
 		} completion:^(BOOL finished) {
 			if(self.draggingView){

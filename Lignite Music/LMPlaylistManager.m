@@ -63,7 +63,7 @@
 		NSString *playlistKey = [NSString stringWithFormat:@"LMPlaylist:%lld", persistentID];
 		NSDictionary *playlistDictionary = [userDefaults objectForKey:playlistKey];
 		
-		NSLog(@"Loading %@", playlistKey);
+//		NSLog(@"Loading %@", playlistKey);
 		
 		return [self playlistForPlaylistDictionary:playlistDictionary];
 	}
@@ -166,7 +166,7 @@
 																				]]];
 	}
 	
-	NSLog(@"Saving playlist with title %@ persistentID %llu count %d", playlist.title, playlist.persistentID, (int)playlist.trackCollection.count);
+//	NSLog(@"Saving playlist with title %@ persistentID %llu count %d", playlist.title, playlist.persistentID, (int)playlist.trackCollection.count);
 	
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 	[userDefaults setObject:[self playlistDictionaryForPlaylist:playlist]
@@ -208,10 +208,10 @@
 	NSArray *allKeys = [userDefaults dictionaryRepresentation].allKeys;
 	for(NSString *key in allKeys){
 		if([key containsString:@"LMPlaylist:"]){
-			NSLog(@"Loading %@", key);
+//			NSLog(@"Loading %@", key);
 			LMPlaylist *playlist = [self playlistForPlaylistDictionary:[userDefaults objectForKey:key]];
 			[playlistsMutableArray addObject:playlist];
-			NSLog(@"Loaded %@ with title %@, %d songs", key, playlist.title, (int)playlist.trackCollection.count);
+//			NSLog(@"Loaded %@ with title %@, %d songs", key, playlist.title, (int)playlist.trackCollection.count);
 		}
 	}
 	
@@ -252,7 +252,7 @@
 				[self savePlaylist:lignitePlaylist];
 			}
 			else if(playlistWithSystemPersistentID && !playlistWithSystemPersistentID.userPortedToLignitePlaylist){
-				NSLog(@"The playlist %@ (%lld) was an iTunes playlist, and was not ported, so we're gonna load the iTune's playlist's tracks.", playlistWithSystemPersistentID.title, playlistWithSystemPersistentID.persistentID);
+//				NSLog(@"The playlist %@ (%lld) was an iTunes playlist, and was not ported, so we're gonna load the iTune's playlist's tracks.", playlistWithSystemPersistentID.title, playlistWithSystemPersistentID.persistentID);
 				playlistWithSystemPersistentID.trackCollection = [[LMMusicTrackCollection alloc] initWithItems:systemPlaylist.items];
 				[self savePlaylist:playlistWithSystemPersistentID];
 			}

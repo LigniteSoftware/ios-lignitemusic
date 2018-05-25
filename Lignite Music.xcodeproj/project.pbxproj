@@ -102,6 +102,7 @@
 		6A8150DA1EAF6E7800F518C5 /* LMLandscapeNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A8150D91EAF6E7800F518C5 /* LMLandscapeNavigationBar.m */; };
 		6A838A971E07A9CF006E7DE0 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A838A961E07A9CF006E7DE0 /* StoreKit.framework */; };
 		6A8CF2B91DB4952A00777525 /* LMSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A8CF2B81DB4952A00777525 /* LMSettings.m */; };
+		6A8D5D0520A8A2510034B090 /* LMMusicQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A8D5D0420A8A2510034B090 /* LMMusicQueue.m */; };
 		6A94A7711EA79BB300319A38 /* LMLayoutManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A94A7701EA79BB300319A38 /* LMLayoutManager.m */; };
 		6AA445A01D5AD6AB004C6739 /* LMSettingsSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AA4459F1D5AD6AB004C6739 /* LMSettingsSwitch.m */; };
 		6AA445A31D5AD7B0004C6739 /* LMSettingsLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AA445A21D5AD7B0004C6739 /* LMSettingsLabel.m */; };
@@ -406,6 +407,8 @@
 		6A88AA291F914E9E000F29DE /* Lignite Music-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Lignite Music-Bridging-Header.h"; sourceTree = "<group>"; };
 		6A8CF2B71DB4952A00777525 /* LMSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMSettings.h; sourceTree = "<group>"; };
 		6A8CF2B81DB4952A00777525 /* LMSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMSettings.m; sourceTree = "<group>"; };
+		6A8D5D0320A8A2510034B090 /* LMMusicQueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMMusicQueue.h; sourceTree = "<group>"; };
+		6A8D5D0420A8A2510034B090 /* LMMusicQueue.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMMusicQueue.m; sourceTree = "<group>"; };
 		6A94A76F1EA79BB300319A38 /* LMLayoutManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMLayoutManager.h; sourceTree = "<group>"; };
 		6A94A7701EA79BB300319A38 /* LMLayoutManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMLayoutManager.m; sourceTree = "<group>"; };
 		6AA4459E1D5AD6AB004C6739 /* LMSettingsSwitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMSettingsSwitch.h; sourceTree = "<group>"; };
@@ -975,6 +978,8 @@
 				6AE9E6E81F9C5A750077B15E /* Playlists */,
 				6AB1046E1E56616700213396 /* LMMusicPlayer.h */,
 				6AB1046F1E56616700213396 /* LMMusicPlayer.m */,
+				6A8D5D0320A8A2510034B090 /* LMMusicQueue.h */,
+				6A8D5D0420A8A2510034B090 /* LMMusicQueue.m */,
 				6A1AF0821E0341BC00F8934C /* MPMediaItem+LigniteImages.h */,
 				6A1AF0831E0341BC00F8934C /* MPMediaItem+LigniteImages.m */,
 				6A1AF0851E037CCD00F8934C /* MPMediaItemCollection+LigniteInfo.h */,
@@ -1554,6 +1559,7 @@
 				6A18A194201425AB00C37AA4 /* LMTutorialViewController.m in Sources */,
 				6A52013C1FE0F3C100535846 /* LMThemeView.m in Sources */,
 				6AB104791E5669BE00213396 /* MPMediaItemCollection+LigniteInfo.m in Sources */,
+				6A8D5D0520A8A2510034B090 /* LMMusicQueue.m in Sources */,
 				6A3211411DA732470060DD07 /* LMTrackInfoView.m in Sources */,
 				6AAD5A531E0C655A00D8B406 /* NSTimer+Blocks.m in Sources */,
 				6AE579061FA935060076CB2E /* LMBoxWarningView.m in Sources */,
@@ -1970,7 +1976,7 @@
 					"MAGICKCORE_HDRI_ENABLE=YES",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/Lignite Music/LigniteMusic.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				New_Setting = "";
 				PRODUCT_BUNDLE_IDENTIFIER = lignite.io.music;
@@ -2015,7 +2021,7 @@
 					"MAGICKCORE_HDRI_ENABLE=YES",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/Lignite Music/LigniteMusic.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				New_Setting = "";
 				PRODUCT_BUNDLE_IDENTIFIER = lignite.io.music;

@@ -1295,76 +1295,76 @@
 			
 			[[LMAppleWatchBridge sharedAppleWatchBridge] sendOnboardingStatusToWatch];
 			
-			[NSTimer scheduledTimerWithTimeInterval:0.1 block:^{
+//			[NSTimer scheduledTimerWithTimeInterval:0.1 block:^{
 				if(!(self.restorationState == LMCoreViewControllerRestorationStateOutOfView)){
-					self.loadingActivityIndicator = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-					
-					[self.navigationController.view addSubview:self.loadingActivityIndicator];
-					
-					if([LMLayoutManager isiPad]){
-						[self.loadingActivityIndicator autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:WINDOW_FRAME.size.height/([LMLayoutManager isLandscape] ? 1.5 : 2.0)];
-						[self.loadingActivityIndicator autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-						[self.loadingActivityIndicator autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-						[self.loadingActivityIndicator autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.navigationController.view withMultiplier:(2.0/4.0)];
-					}
-					else{
-						[self.loadingActivityIndicator autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:WINDOW_FRAME.size.height/([LMLayoutManager isLandscape] ? 1.5 : 2.35)];
-						[self.loadingActivityIndicator autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-						[self.loadingActivityIndicator autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-						[self.loadingActivityIndicator autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.navigationController.view withMultiplier:(1.0/4.0)];
-					}
-					
-					[self.loadingActivityIndicator startAnimating];
-					
-					UIImageView *loadingIndicatorImageView = nil;
-					
-					for(UIView *subview in self.loadingActivityIndicator.subviews){
-						if([subview class] == [UIImageView class]){
-							loadingIndicatorImageView = (UIImageView*)subview;
-						}
-					}
-					
-					if(loadingIndicatorImageView){
-						self.loadingLabel = [UILabel newAutoLayoutView];
-						self.loadingLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:16.0f];
-						self.loadingLabel.text = NSLocalizedString(@"LoadingMusic", nil);
-						self.loadingLabel.textAlignment = NSTextAlignmentCenter;
-						self.loadingLabel.textColor = [UIColor blackColor];
-						[self.loadingActivityIndicator addSubview:self.loadingLabel];
-						
-						[self.loadingLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-						[self.loadingLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-						[self.loadingLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:loadingIndicatorImageView withOffset:10];
-					}
+//					self.loadingActivityIndicator = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+//
+//					[self.navigationController.view addSubview:self.loadingActivityIndicator];
+//
+//					if([LMLayoutManager isiPad]){
+//						[self.loadingActivityIndicator autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:WINDOW_FRAME.size.height/([LMLayoutManager isLandscape] ? 1.5 : 2.0)];
+//						[self.loadingActivityIndicator autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+//						[self.loadingActivityIndicator autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+//						[self.loadingActivityIndicator autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.navigationController.view withMultiplier:(2.0/4.0)];
+//					}
+//					else{
+//						[self.loadingActivityIndicator autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:WINDOW_FRAME.size.height/([LMLayoutManager isLandscape] ? 1.5 : 2.35)];
+//						[self.loadingActivityIndicator autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+//						[self.loadingActivityIndicator autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+//						[self.loadingActivityIndicator autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.navigationController.view withMultiplier:(1.0/4.0)];
+//					}
+//
+//					[self.loadingActivityIndicator startAnimating];
+//
+//					UIImageView *loadingIndicatorImageView = nil;
+//
+//					for(UIView *subview in self.loadingActivityIndicator.subviews){
+//						if([subview class] == [UIImageView class]){
+//							loadingIndicatorImageView = (UIImageView*)subview;
+//						}
+//					}
+//
+//					if(loadingIndicatorImageView){
+//						self.loadingLabel = [UILabel newAutoLayoutView];
+//						self.loadingLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:16.0f];
+//						self.loadingLabel.text = NSLocalizedString(@"LoadingMusic", nil);
+//						self.loadingLabel.textAlignment = NSTextAlignmentCenter;
+//						self.loadingLabel.textColor = [UIColor blackColor];
+//						[self.loadingActivityIndicator addSubview:self.loadingLabel];
+//
+//						[self.loadingLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+//						[self.loadingLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+//						[self.loadingLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:loadingIndicatorImageView withOffset:10];
+//					}
 				}
 				else {
-					UIView *viewToAddTo = self.navigationController.view;
-					if(self.pendingStateRestoredPlaylistEditor){
-						viewToAddTo = self.pendingStateRestoredPlaylistEditor.navigationController.view;
-					}
-					else if(self.pendingStateRestoredEnhancedPlaylistEditor){
-						viewToAddTo = self.pendingStateRestoredEnhancedPlaylistEditor.navigationController.view;
-					}
-					else if(self.pendingFeedbackViewController){
-						viewToAddTo = self.pendingFeedbackViewController.navigationController.view;
-					}
-					else{
-						NSLog(@"[Warning] Defaulting addition of progress hud to the root navigation controller");
-					}
-					self.loadingProgressHUD = [MBProgressHUD showHUDAddedTo:viewToAddTo animated:YES];
-					
-					self.loadingProgressHUD.mode = MBProgressHUDModeIndeterminate;
-					self.loadingProgressHUD.label.text = NSLocalizedString(@"HangOn", nil);
-					self.loadingProgressHUD.label.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18.0f];
-					self.loadingProgressHUD.userInteractionEnabled = NO;
+//					UIView *viewToAddTo = self.navigationController.view;
+//					if(self.pendingStateRestoredPlaylistEditor){
+//						viewToAddTo = self.pendingStateRestoredPlaylistEditor.navigationController.view;
+//					}
+//					else if(self.pendingStateRestoredEnhancedPlaylistEditor){
+//						viewToAddTo = self.pendingStateRestoredEnhancedPlaylistEditor.navigationController.view;
+//					}
+//					else if(self.pendingFeedbackViewController){
+//						viewToAddTo = self.pendingFeedbackViewController.navigationController.view;
+//					}
+//					else{
+//						NSLog(@"[Warning] Defaulting addition of progress hud to the root navigation controller");
+//					}
+//					self.loadingProgressHUD = [MBProgressHUD showHUDAddedTo:viewToAddTo animated:YES];
+//
+//					self.loadingProgressHUD.mode = MBProgressHUDModeIndeterminate;
+//					self.loadingProgressHUD.label.text = NSLocalizedString(@"HangOn", nil);
+//					self.loadingProgressHUD.label.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18.0f];
+//					self.loadingProgressHUD.userInteractionEnabled = NO;
 				}
 				
-				[NSTimer scheduledTimerWithTimeInterval:0.05 block:^{
+//				[NSTimer scheduledTimerWithTimeInterval:0.05 block:^{
 					dispatch_async(dispatch_get_main_queue(), ^{
 						[self loadSubviews];
 					});
-				} repeats:NO];
-			} repeats:NO];
+//				} repeats:NO];
+//			} repeats:NO];
 		});
 	}
 }
@@ -1481,6 +1481,8 @@
 	
 	
 	
+	NSTimeInterval loadStartTime = [[NSDate new] timeIntervalSince1970];
+	
 	
 //	MPMusicPlayerControllerQueue *mutableQueue = [MPMusicPlayerController systemMusicPlayer];
 
@@ -1570,10 +1572,10 @@
 	
 	
 	
-	self.loadingProgressHUD.hidden = YES;
-	
-	[self.loadingActivityIndicator stopAnimating];
-	self.loadingLabel.hidden = YES;
+//	self.loadingProgressHUD.hidden = YES;
+//
+//	[self.loadingActivityIndicator stopAnimating];
+//	self.loadingLabel.hidden = YES;
 	
 	if(!self.layoutManager){
 		self.layoutManager = [LMLayoutManager sharedLayoutManager];
@@ -1598,8 +1600,8 @@
 //	lagThread.lagDelayInSeconds = 0.05;
 //	[lagThread start];
 	
-	NSTimeInterval loadStartTime = [[NSDate new] timeIntervalSince1970];
-				
+//	NSTimeInterval loadStartTime = [[NSDate new] timeIntervalSince1970];
+	
 	NSArray *sourceTitles = @[
 							  @"Favourites", @"Artists", @"Albums", @"Titles", @"Playlists", @"Genres", @"Compilations", @"Settings", @"ReportBugOrSendFeedback"
 							  ];
@@ -1692,6 +1694,9 @@
 //	}
 	
 	
+//	return;
+	
+	
 	
 	CGFloat landscapeNavigationBarWidth = 64.0f;
 	if([LMLayoutManager isiPhoneX]){
@@ -1737,6 +1742,8 @@
 	self.downloadImagesOnDataOrLowStorageWarning = [LMWarning warningWithText:NSLocalizedString(@"DownloadImagesOnDataWarning", nil) priority:LMWarningPriorityHigh];
 	self.downloadImagesOnDataOrLowStorageWarning.delegate = self;
 	
+	
+	
 	//Tester
 //	[NSTimer scheduledTimerWithTimeInterval:1.0 block:^{
 //		[self.warningManager addWarning:self.downloadImagesOnDataOrLowStorageWarning];
@@ -1778,6 +1785,7 @@
 	
 	
 	
+	
 	self.titleView = [LMTitleView newAutoLayoutView];
 	self.titleView.backgroundColor = [UIColor whiteColor];
 	self.titleView.rawViewController = self;
@@ -1789,9 +1797,6 @@
 	[self.titleView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.compactView];
 	
 	self.titleView.hidden = YES;
-	
-	
-	
 	
 	
 	
@@ -1840,6 +1845,8 @@
 	[self.musicPlayer addMusicDelegate:self];
 	
 	
+	
+	
 //	if([LMLayoutManager isiPhoneX]){
 //		self.iPhoneXStatusBarCoverView = [UIView newAutoLayoutView];
 //		self.iPhoneXStatusBarCoverView.backgroundColor = [UIColor blueColor];
@@ -1878,6 +1885,7 @@
 	[self.nowPlayingCoreView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.navigationController.view];
 	self.nowPlayingCoreView.topConstraint =
 	[self.nowPlayingCoreView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:self.view.frame.size.height * 1.5];
+
 	
 	
 	
@@ -1897,6 +1905,12 @@
 	
 	
 	self.loaded = YES;
+	
+
+	NSTimeInterval loadEndTime = [[NSDate new] timeIntervalSince1970];
+	NSLog(@"Took %f seconds to load main views.", (loadEndTime - loadStartTime));
+	
+	
 	
 	[UIView animateWithDuration:0.25 animations:^{
 		[self setNeedsStatusBarAppearanceUpdate];
@@ -1998,6 +2012,23 @@
 		 */
 		
 		
+//		NSLog(@"Queue track at last index %@ to number of items %d", [self.musicPlayer queueTrackAtIndex:self.musicPlayer.numberOfItemsInQueue - 1], (int)self.musicPlayer.numberOfItemsInQueue);
+		
+//		NSTimeInterval startTime = [[NSDate new] timeIntervalSince1970];
+//		NSMutableArray *loadArray = [NSMutableArray new];
+//		for(NSInteger i = 0; i < self.musicPlayer.numberOfItemsInQueue; i++){
+//			LMMusicTrack *track = [self.musicPlayer queueTrackAtIndex:i];
+//			if(track){
+//				NSLog(@"Track %d: %@", (int)i, track.title);
+//				[loadArray addObject:track];
+//			}
+//			else{
+//				NSLog(@"Track %d is nil! :(", (int)i);
+//			}
+//		}
+//		NSTimeInterval endTime = [[NSDate new] timeIntervalSince1970];
+//		NSLog(@"Took %f seconds to load %d tracks from the queue.", (endTime-startTime), (int)loadArray.count);
+		
 //		self.buttonNavigationBar.hidden = YES;
 //
 //
@@ -2015,9 +2046,9 @@
 		
 //		[self launchNowPlaying];
 		
-		LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
-		[self.navigationController pushViewController:settingsViewController animated:YES];
-		self.buttonNavigationBar.hidden = YES;
+//		LMSettingsViewController *settingsViewController = [LMSettingsViewController new];
+//		[self.navigationController pushViewController:settingsViewController animated:YES];
+//		self.buttonNavigationBar.hidden = YES;
 
 		
 //		LMThemePickerViewController *themesViewController = [LMThemePickerViewController new];
@@ -2070,8 +2101,8 @@
 	} repeats:NO];
 	
 	
-	NSTimeInterval loadEndTime = [[NSDate new] timeIntervalSince1970];
-	NSLog(@"Loaded view in %f seconds.", loadEndTime-loadStartTime);
+//	NSTimeInterval loadEndTime = [[NSDate new] timeIntervalSince1970];
+//	NSLog(@"Loaded view in %f seconds.", loadEndTime-loadStartTime);
 	
 	
 	//						[self setupBrowsingViewWithMusicType:LMMusicTypeArtists];

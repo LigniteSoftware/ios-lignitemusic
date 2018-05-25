@@ -212,6 +212,10 @@
 }
 
 - (void)rebuildTrackCollection {
+	NSTimeInterval loadStartTime = [[NSDate new] timeIntervalSince1970];
+	
+	
+	
 	MPMediaQuery *everything = [MPMediaQuery new];
 	MPMediaPropertyPredicate *musicFilterPredicate = [MPMediaPropertyPredicate predicateWithValue:[NSNumber numberWithInteger:MPMediaTypeMusic]
 																					  forProperty:MPMediaItemPropertyMediaType
@@ -236,6 +240,11 @@
 	self.noObjectsLabel.text = NSLocalizedString(self.favourites ? @"NoTracksInFavourites" : @"TheresNothingHere", nil);
 	
 	self.shuffleButton.hidden = !self.noObjectsLabel.hidden;
+	
+	
+	NSTimeInterval loadEndTime = [[NSDate new] timeIntervalSince1970];
+	
+	NSLog(@"Fuck, %f seconds to rebuild the title view track collection.", (loadEndTime - loadStartTime));
 }
 
 - (id)subviewAtIndex:(NSUInteger)index forTableView:(LMTableView *)tableView {
@@ -368,6 +377,11 @@
 }
 
 - (void)amountOfObjectsRequiredChangedTo:(NSUInteger)amountOfObjects forTableView:(LMTableView *)tableView {
+	NSTimeInterval loadStartTime = [[NSDate new] timeIntervalSince1970];
+	
+	NSLog(@"Generating new subview data for title view, %d items", (int)amountOfObjects);
+	
+	
 	if(!self.itemArray){
 		self.itemArray = [NSMutableArray new];
 //		self.itemIconArray = [NSMutableArray new];
@@ -433,6 +447,9 @@
 //			[self.itemIconArray addObject:@""];
 		}
 	}
+	
+	NSTimeInterval loadEndTime = [[NSDate new] timeIntervalSince1970];
+	NSLog(@"Generated subview data in %f seconds", (loadEndTime - loadStartTime));
 }
 
 - (CGFloat)heightAtIndex:(NSUInteger)index forTableView:(LMTableView *)tableView {
@@ -689,12 +706,18 @@
 	if(!self.didLayoutConstraints){
 		self.didLayoutConstraints = YES;
 		
+		NSTimeInterval loadStartTime = [[NSDate new] timeIntervalSince1970];
+		
 		[self rebuildTrackCollection];
+		
+		NSLog(@"titleView: trackCollectionRebuild, %f", (([[NSDate new] timeIntervalSince1970]) - loadStartTime));
 		
 		self.layoutManager = [LMLayoutManager sharedLayoutManager];
 		[self.layoutManager addDelegate:self];
 		
 		[[LMThemeEngine sharedThemeEngine] addDelegate:self];
+		
+		NSLog(@"titleView: Initialise delegates, %f", (([[NSDate new] timeIntervalSince1970]) - loadStartTime));
 		
 		self.songListTableView = [LMTableView newAutoLayoutView];
 		self.songListTableView.totalAmountOfObjects = self.musicTitles.trackCount;
@@ -714,6 +737,8 @@
 //		[self.songListTableView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 //		[self.songListTableView autoPinEdgeToSuperviewEdge:ALEdgeTop];
 		
+		NSLog(@"titleView: tableView, %f", (([[NSDate new] timeIntervalSince1970]) - loadStartTime));
+		
 		
 		self.noObjectsLabel = [UILabel newAutoLayoutView];
 		self.noObjectsLabel.numberOfLines = 0;
@@ -728,6 +753,9 @@
 		//	[self.noObjectsLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:(3.0/4.0)];
 		
 		self.noObjectsLabel.hidden = (self.musicTitles.count > 0);
+		
+		
+		NSLog(@"titleView: noObjectsLabel, %f", (([[NSDate new] timeIntervalSince1970]) - loadStartTime));
 		
 		
 		self.shuffleButton = [LMFloatingDetailViewButton newAutoLayoutView];
@@ -748,9 +776,19 @@
 										ofView:self.shuffleButton];
 		self.shuffleButton.hidden = !self.noObjectsLabel.hidden;
 		
+		NSLog(@"titleView: shuffleButton, %f", (([[NSDate new] timeIntervalSince1970]) - loadStartTime));
+		
 		[self.musicPlayer addMusicDelegate:self];
 		[self musicTrackDidChange:self.musicPlayer.nowPlayingTrack];
 		[self musicPlaybackStateDidChange:self.musicPlayer.playbackState];
+		
+		
+		NSLog(@"titleView: notifyDelegates, %f", (([[NSDate new] timeIntervalSince1970]) - loadStartTime));
+		
+		
+		
+		NSTimeInterval loadEndTime = [[NSDate new] timeIntervalSince1970];
+		NSLog(@"Loaded title view, took %f seconds", (loadEndTime - loadStartTime));
 	}
 	
 	[super layoutSubviews];

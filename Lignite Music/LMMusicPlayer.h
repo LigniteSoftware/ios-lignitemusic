@@ -135,21 +135,21 @@ typedef enum {
 
  @param trackAdded The track that was added.
  */
-- (void)trackAddedToQueue:(LMMusicTrack*)trackAdded;
+- (void)trackAddedToQueue:(LMMusicTrack*)trackAdded DEPRECATED_ATTRIBUTE;
 
 /**
  A track was removed from the queue.
  
  @param trackAdded The track that was removed.
  */
-- (void)trackRemovedFromQueue:(LMMusicTrack*)trackRemoved;
+- (void)trackRemovedFromQueue:(LMMusicTrack*)trackRemoved DEPRECATED_ATTRIBUTE;
 
 /**
  A track was moved around the queue.
 
  @param trackMoved The track that was moved.
  */
-- (void)trackMovedInQueue:(LMMusicTrack*)trackMoved;
+- (void)trackMovedInQueue:(LMMusicTrack*)trackMoved DEPRECATED_ATTRIBUTE;
 
 /**
  A track was added to favourites.
@@ -168,7 +168,7 @@ typedef enum {
 /**
  The user tried to manage the queue, while the music queue playing is one that is managed by iOS. An alert should be displayed letting the user know this is not a happy scenario.
  */
-- (void)userAttemptedToModifyQueueThatIsManagedByiOS;
+- (void)userAttemptedToModifyQueueThatIsManagedByiOS DEPRECATED_ATTRIBUTE;
 
 /**
  The status of VoiceOver being on/off changed.
@@ -182,15 +182,18 @@ typedef enum {
 
 @interface LMMusicPlayer : NSObject
 
-- (NSInteger)numberOfItemsInQueue;
-- (MPMediaItem*)queueTrackAtIndex:(NSInteger)index;
+- (NSInteger)numberOfItemsInQueue DEPRECATED_ATTRIBUTE;
+- (MPMediaItem*)queueTrackAtIndex:(unsigned long long)index DEPRECATED_ATTRIBUTE;
 
-- (void)addTrackToQueue:(LMMusicTrack*)trackToAdd;
-- (void)removeTrackFromQueue:(LMMusicTrack*)trackToRemove;
-- (void)moveTrackInQueueFromIndex:(NSInteger)oldIndex toIndex:(NSInteger)newIndex;
-- (void)prepareQueueModification;
-- (void)finishQueueModification;
-- (void)prepareQueueForBackgrounding;
+- (void)addTrackToQueue:(LMMusicTrack*)trackToAdd DEPRECATED_ATTRIBUTE;
+- (void)removeTrackFromQueue:(LMMusicTrack*)trackToRemove DEPRECATED_ATTRIBUTE;
+- (void)moveTrackInQueueFromIndex:(NSInteger)oldIndex toIndex:(NSInteger)newIndex DEPRECATED_ATTRIBUTE;
+- (void)prepareQueueModification DEPRECATED_ATTRIBUTE;
+- (void)finishQueueModification DEPRECATED_ATTRIBUTE;
+- (void)prepareQueueForBackgrounding DEPRECATED_ATTRIBUTE;
+- (void)rebuildQueue DEPRECATED_ATTRIBUTE;
+
+@property BOOL nowPlayingQueueTooLarge; //The full queue from the system is not being shown, for whatever fucking reason
 
 
 /**
@@ -447,16 +450,6 @@ typedef enum {
  @return If a track is loaded. NO if track contains nil title, YES if there is a track.
  */
 - (BOOL)hasTrackLoaded;
-
-/**
- Save the now playing state to user defaults.
- */
-- (void)saveNowPlayingState;
-
-/**
- Load the now playing state from storage.
- */
-- (void)loadNowPlayingState;
 
 /**
  The track collection of all of the user's favourite tracks.
