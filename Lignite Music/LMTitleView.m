@@ -19,6 +19,7 @@
 #import "LMExtras.h"
 #import "LMThemeEngine.h"
 #import "NSTimer+Blocks.h"
+#import "LMSettings.h"
 
 #define LMTitleViewTopTrackPersistentIDKey @"LMTitleViewTopTrackPersistentIDKey"
 
@@ -212,6 +213,8 @@
 }
 
 - (void)rebuildTrackCollection {
+	NSLog(@"Rebuilding title view track collection.");
+	
 	NSTimeInterval loadStartTime = [[NSDate new] timeIntervalSince1970];
 	
 	
@@ -789,6 +792,10 @@
 		
 		NSTimeInterval loadEndTime = [[NSDate new] timeIntervalSince1970];
 		NSLog(@"Loaded title view, took %f seconds", (loadEndTime - loadStartTime));
+		
+		if([self.delegate respondsToSelector:@selector(titleViewFinishedInitialising)]){
+			[self.delegate titleViewFinishedInitialising];
+		}
 	}
 	
 	[super layoutSubviews];

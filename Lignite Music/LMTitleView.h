@@ -10,12 +10,25 @@
 #import "LMTableView.h"
 #import "LMMusicPlayer.h"
 
+@protocol LMTitleViewDelegate <NSObject>
+@optional
+
+/**
+ The title view finished initialisation and is ready to be fucked with.
+ */
+- (void)titleViewFinishedInitialising;
+
+@end
+
 @interface LMTitleView : LMView
 
 @property (readonly) LMMusicTrackCollection *musicTitles;
 
-- (void)musicTrackDidChange:(LMMusicTrack *)newTrack;
 @property NSInteger currentlyHighlighted;
+
+@property id<LMTitleViewDelegate> delegate;
+
+- (void)musicTrackDidChange:(LMMusicTrack *)newTrack;
 
 /**
  Scrolls to an index of a track.

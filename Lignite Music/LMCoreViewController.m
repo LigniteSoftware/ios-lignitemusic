@@ -79,7 +79,7 @@
 @import SDWebImage;
 @import StoreKit;
 
-@interface LMCoreViewController () <LMMusicPlayerDelegate, LMSourceDelegate, UIGestureRecognizerDelegate, LMSearchBarDelegate, LMLetterTabDelegate, LMSearchViewControllerResultDelegate, LMButtonNavigationBarDelegate, UINavigationBarDelegate, UINavigationControllerDelegate, LMImageManagerDelegate, LMLandscapeNavigationBarDelegate, LMThemeEngineDelegate, LMLayoutChangeDelegate, LMWarningDelegate, LMApplicationIdleDelegate
+@interface LMCoreViewController () <LMMusicPlayerDelegate, LMSourceDelegate, UIGestureRecognizerDelegate, LMSearchBarDelegate, LMLetterTabDelegate, LMSearchViewControllerResultDelegate, LMButtonNavigationBarDelegate, UINavigationBarDelegate, UINavigationControllerDelegate, LMImageManagerDelegate, LMLandscapeNavigationBarDelegate, LMThemeEngineDelegate, LMLayoutChangeDelegate, LMWarningDelegate, LMApplicationIdleDelegate, LMTitleViewDelegate
 >
 
 @property LMMusicPlayer *musicPlayer;
@@ -498,20 +498,23 @@
 			break;
 		}
 		case LMIconTitles: {
-			[self.buttonNavigationBar.browsingBar setShowingLetterTabs:self.titleView.musicTitles.count > 0];
-			
-			self.buttonNavigationBar.browsingBar.letterTabBar.lettersDictionary =
-			[self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:@[self.titleView.musicTitles]
-															 withAssociatedMusicType:LMMusicTypeTitles];
-			
+			if(self.titleView && self.titleView.musicTitles){
+				[self.buttonNavigationBar.browsingBar setShowingLetterTabs:self.titleView.musicTitles.count > 0];
+				
+				self.buttonNavigationBar.browsingBar.letterTabBar.lettersDictionary =
+				[self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:@[self.titleView.musicTitles]
+																 withAssociatedMusicType:LMMusicTypeTitles];
+			}
 			break;
 		}
 		case LMIconFavouriteBlackFilled: {
-			[self.buttonNavigationBar.browsingBar setShowingLetterTabs:self.titleView.musicTitles.count > 0];
-			
-			self.buttonNavigationBar.browsingBar.letterTabBar.lettersDictionary =
-			[self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:@[self.titleView.musicTitles]
-															 withAssociatedMusicType:LMMusicTypeTitles];
+			if(self.titleView && self.titleView.musicTitles){
+				[self.buttonNavigationBar.browsingBar setShowingLetterTabs:self.titleView.musicTitles.count > 0];
+				
+				self.buttonNavigationBar.browsingBar.letterTabBar.lettersDictionary =
+				[self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:@[self.titleView.musicTitles]
+																 withAssociatedMusicType:LMMusicTypeTitles];
+			}
 			break;
 		}
 		case LMIconSettings:
@@ -587,12 +590,14 @@
 			
 			[self setupBrowsingViewWithMusicType:associatedMusicType];
 			
-			[self.buttonNavigationBar.browsingBar setShowingLetterTabs:self.compactView.musicTrackCollections.count > 0];
-			
 			self.currentSource = self.compactView;
 			break;
 		}
 		case LMIconTitles: {
+			if(!self.titleView){
+				[self loadTitleView];
+			}
+			
 			BOOL requiresReload = self.titleView.favourites == YES;
 			
 			self.musicType = LMMusicTypeTitles;
@@ -612,18 +617,16 @@
 				//Reload currently highlighted item   
 				self.titleView.currentlyHighlighted = -1;
 				[self.titleView musicTrackDidChange:self.musicPlayer.nowPlayingTrack];
-				
-				[self.buttonNavigationBar.browsingBar setShowingLetterTabs:self.titleView.musicTitles.count > 0];
 			}
-			
-			self.buttonNavigationBar.browsingBar.letterTabBar.lettersDictionary =
-			[self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:@[self.titleView.musicTitles]
-															 withAssociatedMusicType:LMMusicTypeTitles];
 			
 			[self logMusicTypeView:LMMusicTypeTitles];
 			break;
 		}
 		case LMIconFavouriteBlackFilled: {
+			if(!self.titleView){
+				[self loadTitleView];
+			}
+			
 			BOOL requiresReload = self.titleView.favourites == NO;
 			
 			self.titleView.favourites = YES;
@@ -645,12 +648,6 @@
 			[self.titleView rebuildTrackCollection];
 			[self.titleView.songListTableView reloadSubviewData];
 			[self.titleView.songListTableView reloadData];
-			
-			[self.buttonNavigationBar.browsingBar setShowingLetterTabs:self.titleView.musicTitles.count > 0];
-			
-			self.buttonNavigationBar.browsingBar.letterTabBar.lettersDictionary =
-			[self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:@[self.titleView.musicTitles]
-															 withAssociatedMusicType:LMMusicTypeTitles];
 			
 			[self logMusicTypeView:LMMusicTypeFavourites];
 			break;
@@ -1523,10 +1520,31 @@
 	}
 }
 
+- (void)titleViewFinishedInitialising {
+	[self reloadButtonNavigationBarWithSource:self.selectedSource];
+	
+	if([LMSettings debugInitialisationSounds]){
+		AudioServicesPlaySystemSound(1075);
+	}
+}
+
 - (void)buttonNavigationBarSelectedNavigationTab:(LMNavigationTab)navigationTab {
 	if(navigationTab == LMNavigationTabMiniplayer){
 		[self loadNowPlayingCoreView];
 	}
+}
+
+- (void)loadTitleView {
+	self.titleView = [LMTitleView newAutoLayoutView];
+	self.titleView.backgroundColor = [UIColor whiteColor];
+	self.titleView.rawViewController = self;
+	self.titleView.delegate = self;
+	[self.view addSubview:self.titleView];
+	
+	[self.titleView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.compactView];
+	[self.titleView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.compactView];
+	[self.titleView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.compactView];
+	[self.titleView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.compactView];
 }
 
 - (void)loadNowPlayingCoreView {
@@ -1915,17 +1933,7 @@
 	
 	
 	
-//	self.titleView = [LMTitleView newAutoLayoutView];
-//	self.titleView.backgroundColor = [UIColor whiteColor];
-//	self.titleView.rawViewController = self;
-//	[self.view addSubview:self.titleView];
-//
-//	[self.titleView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.compactView];
-//	[self.titleView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.compactView];
-//	[self.titleView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.compactView];
-//	[self.titleView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.compactView];
-//
-//	self.titleView.hidden = YES;
+	
 	
 	
 	[self.musicPlayer addMusicDelegate:self];
