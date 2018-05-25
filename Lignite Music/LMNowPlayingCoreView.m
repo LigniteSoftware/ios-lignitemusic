@@ -527,6 +527,10 @@
         NSLog(@"Index of %ld", self.musicPlayer.indexOfNowPlayingTrack);
         
         [self loadMusicTracksBasedOffIndex:self.musicPlayer.indexOfNowPlayingTrack];
+		
+		if([LMSettings debugInitialisationSounds]){
+			AudioServicesPlaySystemSound(1258);
+		}
     }
 }
 

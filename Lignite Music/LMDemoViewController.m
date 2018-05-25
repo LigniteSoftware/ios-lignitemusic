@@ -50,7 +50,7 @@
 }
 
 - (NSUInteger)numberOfRowsForSection:(NSInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView {
-	return 2;
+	return 3;
 }
 
 - (NSString*)titleForIndexPath:(NSIndexPath*)indexPath forSectionTableView:(LMSectionTableView*)sectionTableView {
@@ -61,6 +61,8 @@
 					return @"Demo mode";
 				case 1:
 					return @"Fuck with artists";
+				case 2:
+					return @"Loading audio feedback";
 			}
 		}
 	}
@@ -76,6 +78,8 @@
 //					return @"Only show music with LIGNITE_DEMO composer";
 				case 1:
 					return @"Make the artists look real";
+				case 2:
+					return @"Play audio upon initialisation of some elements";
 			}
 		}
 	}
@@ -187,6 +191,12 @@
 	[self presentViewController:alert animated:YES completion:nil];
 }
 
+- (void)initialisationSoundsSwitchView:(UISwitch*)switchView {
+	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+	
+	[userDefaults setBool:switchView.on forKey:LMSettingsKeyInitialisationSounds];
+	[userDefaults synchronize];
+}
 
 - (id)accessoryViewForIndexPath:(NSIndexPath *)indexPath forSectionTableView:(LMSectionTableView *)sectionTableView {
 	UISwitch *switchView = [UISwitch new];
@@ -207,6 +217,12 @@
 				
 				enabled = NO; //Default
 				settingsKey = LMSettingsKeyArtistsFilteredForDemo;
+			}
+			else if(indexPath.row == 2){
+				[switchView addTarget:self action:@selector(initialisationSoundsSwitchView:) forControlEvents:UIControlEventValueChanged];
+				
+				enabled = YES; //Default
+				settingsKey = LMSettingsKeyInitialisationSounds;
 			}
 			break;
 			

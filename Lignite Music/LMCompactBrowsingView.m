@@ -1377,7 +1377,9 @@
 		[self.collectionView performBatchUpdates:^{}
 									  completion:^(BOOL finished) {
 										  NSLog(@"Finished compact view load: %d", finished);
-										  AudioServicesPlaySystemSound(1256);
+										  if([LMSettings debugInitialisationSounds]){
+											  AudioServicesPlaySystemSound(1256);
+										  }
 										  
 										  LMCoreViewController *coreViewController = (LMCoreViewController*)self.rootViewController;
 										  

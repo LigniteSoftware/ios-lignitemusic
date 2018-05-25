@@ -60,4 +60,16 @@
 	return !settingEnabled;
 }
 
++ (BOOL)debugInitialisationSounds {
+	BOOL settingEnabled = YES;
+	
+	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+	
+	if([userDefaults objectForKey:LMSettingsKeyInitialisationSounds]){
+		settingEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:LMSettingsKeyInitialisationSounds];
+	}
+	
+	return settingEnabled;
+}
+
 @end

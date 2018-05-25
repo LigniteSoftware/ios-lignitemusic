@@ -714,7 +714,7 @@
 	
 	if([LMLayoutManager isLandscape]
 	   && (self.buttonNavigationBar.currentlySelectedTab != LMNavigationTabView)){
-		self.titleView.shuffleButtonLandscapeOffset = self.buttonNavigationBar.isMinimized ? 4.0f : bottomSpacing;
+		self.titleView.shuffleButtonLandscapeOffset = self.buttonNavigationBar.isMinimised ? 4.0f : bottomSpacing;
 	}
 	
 	
@@ -876,6 +876,7 @@
 }
 
 - (void)launchNowPlayingFromTap {
+	[self loadNowPlayingCoreView];
 	[self launchNowPlaying:YES];
 }
 
@@ -1170,7 +1171,7 @@
 	
 	[coder encodeInteger:newRestorationState forKey:LMCoreViewControllerRestorationStateKey];
 	[coder encodeInteger:self.buttonNavigationBar.currentlySelectedTab forKey:LMCoreViewControllerStateRestoredNavigationTabKey];
-	[coder encodeBool:self.buttonNavigationBar.isMinimized forKey:LMCoreViewControllerStateRestoredNavigationBarWasMinimizedKey];
+	[coder encodeBool:self.buttonNavigationBar.isMinimised forKey:LMCoreViewControllerStateRestoredNavigationBarWasMinimizedKey];
 	[coder encodeInteger:self.compactView.flowLayoutIndexOfItemDisplayingDetailView
 				  forKey:LMCoreViewControllerStateRestoredPreviouslyOpenedDetailViewIndex];
 	[coder encodeInteger:[self.titleView topTrackPersistentID] forKey:LMCoreViewControllerStateRestoredTitleViewTopPersistentID];
@@ -1516,6 +1517,32 @@
 
 - (void)buttonNavigationBarFinishedInitialising {
 	[self reloadButtonNavigationBarWithSource:self.selectedSource];
+	
+	if([LMSettings debugInitialisationSounds]){
+		AudioServicesPlaySystemSound(1255);
+	}
+}
+
+- (void)buttonNavigationBarSelectedNavigationTab:(LMNavigationTab)navigationTab {
+	if(navigationTab == LMNavigationTabMiniplayer){
+		[self loadNowPlayingCoreView];
+	}
+}
+
+- (void)loadNowPlayingCoreView {
+	if(self.nowPlayingCoreView){
+		return;
+	}
+	
+	self.nowPlayingCoreView = [LMNowPlayingCoreView newAutoLayoutView];
+	self.nowPlayingCoreView.rootViewController = self;
+	[self.navigationController.view addSubview:self.nowPlayingCoreView];
+	
+	[self.nowPlayingCoreView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+	[self.nowPlayingCoreView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+	[self.nowPlayingCoreView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.navigationController.view];
+	self.nowPlayingCoreView.topConstraint =
+	[self.nowPlayingCoreView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:self.view.frame.size.height * 1.5];
 }
 
 - (void)loadButtonNavigationBar {
@@ -1901,49 +1928,6 @@
 //	self.titleView.hidden = YES;
 	
 	
-	
-//	self.buttonNavigationBar = [LMButtonNavigationBar newAutoLayoutView];
-//	self.buttonNavigationBar.rootViewController = self;
-//	self.buttonNavigationBar.sourcesForSourceSelector = self.sourcesForSourceSelector;
-//	self.buttonNavigationBar.delegate = self;
-//	self.buttonNavigationBar.searchBarDelegate = self;
-//	self.buttonNavigationBar.letterTabBarDelegate = self;
-////	self.buttonNavigationBar.hidden = YES;
-//	[self.navigationController.view addSubview:self.buttonNavigationBar];
-//
-//	//						self.navigationController.view.hidden = YES;
-//
-//	self.buttonNavigationBar.backgroundColor = [UIColor purpleColor];
-//
-//	NSLog(@"Class %@", [self.navigationController.view class]);
-//
-//	NSArray *buttonNavigationBarPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-//		[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-//		[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-//		[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
-//		[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-//	}];
-//	[LMLayoutManager addNewPortraitConstraints:buttonNavigationBarPortraitConstraints];
-//
-//	NSArray *buttonNavigationBarLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-//		[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-//		[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-//		[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
-//		[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-//	}];
-//	[LMLayoutManager addNewLandscapeConstraints:buttonNavigationBarLandscapeConstraints];
-//
-//
-//	NSArray *buttonNavigationBariPadConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-//		[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-//		[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-//		[self.buttonNavigationBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-//		[self.buttonNavigationBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.navigationController.view withMultiplier:(2.0/3.0)];
-//	}];
-//	[LMLayoutManager addNewiPadConstraints:buttonNavigationBariPadConstraints];
-	
-	//						[self.navigationController.view insertSubview:self.landscapeNavigationBar aboveSubview:self.buttonNavigationBar];
-	
 	[self.musicPlayer addMusicDelegate:self];
 	
 	
@@ -1976,18 +1960,6 @@
 ////		[LMLayoutManager addNewPortraitConstraints:buttonNavigationBarBottomCoverViewPortraitConstraints];
 //	}
 	
-	
-	
-//	self.nowPlayingCoreView = [LMNowPlayingCoreView newAutoLayoutView];
-//	self.nowPlayingCoreView.rootViewController = self;
-//	[self.navigationController.view addSubview:self.nowPlayingCoreView];
-//
-//	[self.nowPlayingCoreView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-//	[self.nowPlayingCoreView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-//	[self.nowPlayingCoreView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.navigationController.view];
-//	self.nowPlayingCoreView.topConstraint =
-//	[self.nowPlayingCoreView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:self.view.frame.size.height * 1.5];
-
 	
 	
 	

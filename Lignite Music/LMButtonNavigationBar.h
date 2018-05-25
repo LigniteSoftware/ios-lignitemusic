@@ -15,6 +15,15 @@
 #define LMNavigationBarTabHeight (WINDOW_FRAME.size.height/8.0)
 #define LMNavigationBarTabWidth (WINDOW_FRAME.size.width/8.0)
 
+/**
+ The bottom tabs of the navigation bar which control.
+ */
+typedef NS_ENUM(NSUInteger, LMNavigationTab) {
+	LMNavigationTabBrowse = 0, //The browse tab for letter tabs and search.
+	LMNavigationTabMiniplayer, //The mini player.
+	LMNavigationTabView //The current view.
+};
+
 @protocol LMButtonNavigationBarDelegate <NSObject>
 
 /**
@@ -30,18 +39,18 @@
  */
 - (void)buttonNavigationBarFinishedInitialising;
 
+@optional
+
+/**
+ The user selected a button on the navigation bar.
+
+ @param navigationTab The tab that was selected.
+ */
+- (void)buttonNavigationBarSelectedNavigationTab:(LMNavigationTab)navigationTab;
+
 @end
 
 @interface LMButtonNavigationBar : LMView
-
-/**
- The bottom tabs of the navigation bar which control.
- */
-typedef NS_ENUM(NSUInteger, LMNavigationTab) {
-	LMNavigationTabBrowse = 0, //The browse tab for letter tabs and search.
-	LMNavigationTabMiniplayer, //The mini player.
-	LMNavigationTabView //The current view.
-};
 
 /**
  The currently selected tab.
@@ -91,7 +100,7 @@ typedef NS_ENUM(NSUInteger, LMNavigationTab) {
 /**
  Whether or not the navigation bar is in its minimized format.
  */
-@property BOOL isMinimized;
+@property BOOL isMinimised;
 @property BOOL isCompletelyHidden;
 @property BOOL currentlyScrolling;
 @property BOOL userMaximizedDuringScrollDeceleration;

@@ -137,16 +137,16 @@
 @synthesize viewAttachedToButtonBar = _viewAttachedToButtonBar;
 @synthesize minimizeButtonBottomConstraint = _minimizeButtonBottomConstraint;
 @synthesize currentlySelectedTab = _currentlySelectedTab;
-@synthesize isMinimized = _isMinimized;
+@synthesize isMinimised = _isMinimised;
 
-- (void)setIsMinimized:(BOOL)isMinimized {
-	_isMinimized = isMinimized;
+- (void)setIsMinimised:(BOOL)isMinimized {
+	_isMinimised = isMinimized;
 	
 	self.minimizeButton.accessibilityLabel = [NSString stringWithFormat:@"%@, %@", NSLocalizedString(@"VoiceOverLabel_MinimizeButton", nil), NSLocalizedString(isMinimized ? @"VoiceOverLabel_Minimized" : @"VoiceOverLabel_NotMinimized", nil)];
 }
 
-- (BOOL)isMinimized {
-	return _isMinimized;
+- (BOOL)isMinimised {
+	return _isMinimised;
 }
 
 - (LMNavigationTab)currentlySelectedTab {
@@ -291,7 +291,7 @@
 	
 	[self setSelectedTab:LMNavigationTabBrowse];
     
-    self.isMinimized = YES;
+    self.isMinimised = YES;
     self.isCompletelyHidden = YES;
 	self.wasAutomaticallyMinimized = YES;
 	
@@ -328,11 +328,11 @@
 }
 
 - (void)minimise:(BOOL)automatic {
-    if(self.isMinimized || self.rotating){
+    if(self.isMinimised || self.rotating){
         return;
     }
     
-    self.isMinimized = YES;
+    self.isMinimised = YES;
     self.isCompletelyHidden = NO;
 	
 	self.wasAutomaticallyMinimized = automatic;
@@ -374,7 +374,7 @@
 }
 
 - (void)maximize:(BOOL)automatic {
-	if((!self.wasAutomaticallyMinimized && self.isMinimized && automatic) || self.rotating){
+	if((!self.wasAutomaticallyMinimized && self.isMinimised && automatic) || self.rotating){
 		return;
 	}
 	
@@ -402,11 +402,11 @@
 	
 	self.heightBeforeAdjustingToScrollPosition = -1;
 	
-	if(self.currentlySelectedTab == LMNavigationTabView && self.viewAttachedToButtonBar != nil && self.isMinimized){
+	if(self.currentlySelectedTab == LMNavigationTabView && self.viewAttachedToButtonBar != nil && self.isMinimised){
 		[self setSelectedTab:self.currentlySelectedTab];
 	}
 	
-	self.isMinimized = NO;
+	self.isMinimised = NO;
 	self.isCompletelyHidden = NO;
 	self.wasAutomaticallyMinimized = NO;
 	
@@ -458,6 +458,10 @@
 	}
 	
 	[self.buttonBar setButtonAtIndex:tab highlighted:YES];
+	
+	if([self.delegate respondsToSelector:@selector(buttonNavigationBarSelectedNavigationTab:)]){
+		[self.delegate buttonNavigationBarSelectedNavigationTab:tab];
+	}
 	
 	LMCoreViewController *coreViewController = (LMCoreViewController*)self.rootViewController;
 	[UIView animateWithDuration:0.25 animations:^{
@@ -565,7 +569,7 @@
 	self.rotating = YES;
 	
 	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-		if(!self.isMinimized){
+		if(!self.isMinimised){
 			[self setSelectedTab:self.currentlySelectedTab];
 			
 			if(self.currentlySelectedTab != LMNavigationTabView){
@@ -582,8 +586,8 @@
 			
 			[self completelyHide];
 		}
-		else if(self.isMinimized){
-			self.isMinimized = NO;
+		else if(self.isMinimised){
+			self.isMinimised = NO;
 			
 			[self minimise:NO];
 		}
@@ -630,7 +634,7 @@
 
 - (void)minimizeButtonTapped {
 	NSLog(@"ay boy");
-	self.isMinimized ? [self maximize:NO] : [self minimise:NO];
+	self.isMinimised ? [self maximize:NO] : [self minimise:NO];
 }
 
 - (void)reloadLayout {
@@ -792,7 +796,7 @@
 		self.minimizeButton.backgroundColor = [LMColour mainColour];
 		self.minimizeButton.userInteractionEnabled = YES;
 		self.minimizeButton.isAccessibilityElement = YES;
-		[self setIsMinimized:NO];
+		[self setIsMinimised:NO];
 		self.minimizeButton.accessibilityHint = NSLocalizedString(@"VoiceOverHint_MinimizeButton", nil);
 		[self addSubview:self.minimizeButton];
 		

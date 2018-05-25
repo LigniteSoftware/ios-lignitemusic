@@ -19,6 +19,7 @@
 #define LMSettingsKeyDisableScreenTimeoutOnNowPlaying @"LMSettingsKeyDisableScreenTimeoutOnNowPlaying"
 #define LMSettingsKeyDemoMode @"LMSettingsKeyDemoMode"
 #define LMSettingsKeyArtistsFilteredForDemo @"LMSettingsKeyArtistsFilteredForDemo"
+#define LMSettingsKeyInitialisationSounds @"LMSettingsKeyInitialisationSounds"
 
 #define LMFeedbackKeyName @"LMFeedbackKeyName"
 #define LMFeedbackKeyEmail @"LMFeedbackKeyEmail"
@@ -52,5 +53,12 @@
  @return YES if the screen should timeout, NO if it should stay awake for as long as now playing is open.
  */
 + (BOOL)screenShouldTimeoutWhenNowPlayingIsOpen;
+
+/**
+ Play sounds upon the initialisation of some elements.
+
+ @return Whether or not to play sounds upon some elements initialisations.
+ */
++ (BOOL)debugInitialisationSounds;
 
 @end
