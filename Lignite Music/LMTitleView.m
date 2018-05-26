@@ -216,6 +216,20 @@
 	self.rootViewController.buttonNavigationBar.userMaximizedDuringScrollDeceleration = NO;
 }
 
+- (void)reloadCurrentlyHighlightedTrack {
+	if([self.musicTitles.items containsObject:self.musicPlayer.nowPlayingTrack]){
+		NSInteger indexOfNewTrack = [self.musicTitles.items indexOfObject:self.musicPlayer.nowPlayingTrack];
+		[[self listEntryForIndex:self.currentlyHighlighted] changeHighlightStatus:NO animated:YES];
+		[[self listEntryForIndex:indexOfNewTrack] changeHighlightStatus:YES animated:YES];
+		
+		self.currentlyHighlighted = indexOfNewTrack;
+	}
+	else{
+		[[self listEntryForIndex:self.currentlyHighlighted] changeHighlightStatus:NO animated:YES];
+		self.currentlyHighlighted = -1;
+	}
+}
+
 - (void)musicTrackDidChange:(LMMusicTrack *)newTrack {
 //	LMListEntry *highlightedEntry = nil;
 //	int newHighlightedIndex = -1;
@@ -249,11 +263,7 @@
 //		[highlightedEntry changeHighlightStatus:YES animated:YES];
 //	}
 	
-	if([self.musicTitles.items containsObject:newTrack]){
-		NSInteger indexOfNewTrack = [self.musicTitles.items indexOfObject:newTrack];
-		[[self listEntryForIndex:self.currentlyHighlighted] changeHighlightStatus:NO animated:YES];
-		[[self listEntryForIndex:indexOfNewTrack] changeHighlightStatus:YES animated:YES];
-	}
+	[self reloadCurrentlyHighlightedTrack];
 	
 	[NSTimer scheduledTimerWithTimeInterval:0.25 block:^{
 		[self setLoadingIndicatorDisplaying:NO];
@@ -317,93 +327,11 @@
 	
 	self.shuffleButton.hidden = !self.noObjectsLabel.hidden;
 	
+	[self reloadCurrentlyHighlightedTrack];
 	
 	NSTimeInterval loadEndTime = [[NSDate new] timeIntervalSince1970];
 	
 	NSLog(@"Fuck, %f seconds to rebuild the title view track collection.", (loadEndTime - loadStartTime));
-}
-
-- (id)subviewAtIndex:(NSUInteger)index {
-//	UIView *testView = [UIView newAutoLayoutView];
-//	testView.backgroundColor = [LMColour randomColour];
-//	testView.userInteractionEnabled = NO;
-//	return testView;
-//	
-//
-	
-	if(index >= self.musicTitles.count){
-		NSLog(@"Rejecting index, it's greater than the count of musicTitles");
-		return nil;
-	}
-
-	
-	LMListEntry *entry = [self.itemArray objectAtIndex:index % self.itemArray.count];
-	entry.collectionIndex = index;
-	entry.associatedData = [self.musicTitles.items objectAtIndex:index];
-	
-	if(!entry.queue){
-		entry.queue = [[LMOperationQueue alloc] init];
-	}
-	
-	[entry.queue cancelAllOperations];
-	
-	__block NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
-		LMMusicTrack *track = [self.musicTitles.items objectAtIndex:entry.collectionIndex];
-		UIImage *albumArt = [track albumArt];
-		
-//		NSInteger indexToInsert = (index % self.itemArray.count);
-//
-//		if(self.itemIconArray.count < indexToInsert){
-//			[self.itemIconArray removeObjectAtIndex:indexToInsert];
-//		}
-//		[self.itemIconArray insertObject:albumArt ? albumArt : [LMAppIcon imageForIcon:LMIconAlbums] atIndex:indexToInsert];
-		
-		entry.invertIconOnHighlight = albumArt == nil;
-		
-		//[self.itemIconArray object]
-//		NSLog(@"%@ %ld %ld", albumArt, self.itemIconArray.count, indexToInsert);
-		
-		dispatch_async(dispatch_get_main_queue(), ^{
-			if(operation.cancelled){
-				NSLog(@"Rejecting.");
-				return;
-			}
-			
-			[entry reloadContents];
-			
-			operation = nil;
-			
-			//	LMMusicTrack *track = [self.musicTitles.items objectAtIndex:entry.collectionIndex];
-			//	return [track albumArt];
-		});
-	}];
-	
-//	LMMusicTrack *track = [self.musicTitles.items objectAtIndex:entry.collectionIndex];
-//	if(track.isFavourite){
-//		entry.leftButtonExpansionColour = [LMColour deletionRedColour];
-//		[[entry.leftButtons firstObject] setImage:[LMAppIcon imageForIcon:LMIconUnfavouriteWhite] forState:UIControlStateNormal];
-//	}
-//	else{
-//		entry.leftButtonExpansionColour = [LMColour successGreenColour];
-//		[[entry.leftButtons firstObject] setImage:[LMAppIcon imageForIcon:LMIconFavouriteWhiteFilled] forState:UIControlStateNormal];
-//	}
-	
-	[entry.queue addOperation:operation];
-	
-	[entry changeHighlightStatus:self.currentlyHighlighted == entry.collectionIndex animated:NO];
-	
-//#warninging spooked
-//	[entry changeHighlightStatus:YES animated:YES];
-	
-	[entry reloadContents];
-	
-	
-	if(!entry){
-		NSLog(@"+++ Title view %d entry %p", (int)index, entry);
-		NSLog(@":(");
-	}
-	
-	return entry;
 }
 
 - (void)scrollToTrackIndex:(NSUInteger)index {
@@ -413,7 +341,7 @@
 	
 	self.didJustScrollByLetter = YES;
 
-#warning scroll
+#warning scroll to track index bro
 	
 //	[self.songListTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:index]
 //								  atScrollPosition:UITableViewScrollPositionTop

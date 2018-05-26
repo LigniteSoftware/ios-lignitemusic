@@ -613,14 +613,9 @@
 			
 			if(requiresReload){
 //				[self.titleView.songListTableView setContentOffset:CGPointZero animated:NO];
-				#warning reload title view
 				[self.titleView rebuildTrackCollection];
 				[self.titleView.collectionView reloadData];
-//				[self.titleView.songListTableView reloadSubviewData];
-//				[self.titleView.songListTableView reloadData];
-				[self.titleView.collectionView reloadData];
-				#warning reload title view
-				//Reload currently highlighted item   
+				//Reload currently highlighted item
 				self.titleView.currentlyHighlighted = -1;
 				[self.titleView musicTrackDidChange:self.musicPlayer.nowPlayingTrack];
 			}
@@ -643,8 +638,6 @@
 			self.musicType = LMMusicTypeFavourites;
 			
 			if(requiresReload){
-//				[self.titleView.songListTableView setContentOffset:CGPointZero animated:NO];
-				#warning reload title view
 				[self.titleView.collectionView reloadData];
 				
 				//Reload currently highlighted item
@@ -654,10 +647,8 @@
 			}
 			
 			[self.titleView rebuildTrackCollection];
-//			[self.titleView.songListTableView reloadSubviewData];
-//			[self.titleView.songListTableView reloadData];
 			[self.titleView.collectionView reloadData];
-#warning reload title view
+
 			[self logMusicTypeView:LMMusicTypeFavourites];
 			break;
 		}
@@ -712,7 +703,7 @@
 }
 
 - (void)requiredHeightForNavigationBarChangedTo:(CGFloat)requiredHeight withAnimationDuration:(CGFloat)animationDuration {
-    
+	
     CGFloat bottomSpacing = requiredHeight + 10;
     self.titleView.collectionView.contentInset = UIEdgeInsetsMake(0, 0, bottomSpacing, 0);
 	
@@ -864,8 +855,8 @@
 	
 	if(self.requiresRefresh){ //For when the view is out of view during state restoration
 		[self.compactView reloadContents];
-//		[self.titleView.songListTableView reloadData];
-		#warning reload title view
+		[self.titleView.collectionView reloadData];
+		
 		[self.buttonNavigationBar reloadLayout];
 		
 		if([LMLayoutManager isiPhoneX]){
