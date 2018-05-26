@@ -9,15 +9,31 @@
 #import <AVFoundation/AVFoundation.h>
 #import <MediaPlayer/MediaPlayer.h>
 #import "LMMusicQueue.h"
-#import "LMMusicPlayer.h"
 
 @interface LMMusicQueue()
 
+/**
+ The queue's delegates.
+ */
+@property NSMutableArray<id<LMMusicQueueDelegate>> *delegates;
 
+/**
+ The complete queue, as provided by the system.
+ */
+@property NSArray<LMMusicTrack*> *completeQueue;
+
+/**
+ The music player.
+ */
+@property LMMusicPlayer *musicPlayer;
 
 @end
 
 @implementation LMMusicQueue
+
+- (void)prepareQueueForBackgrounding {
+#warning Todo: prepare queue for backgrounding
+}
 
 - (NSInteger)numberOfItemsInQueue {
 	return [[MPMusicPlayerController systemMusicPlayer] performSelector:@selector(numberOfItems)];;
@@ -144,21 +160,50 @@
 	NSLog(@"Move track %d to index %d", (int)oldIndex, (int)newIndex);
 }
 
-- (void)rebuildQueue {
-	return;
+- (nonnull NSArray<LMMusicTrack*>*)previousTracks {
+	if(!self.musicPlayer.systemMusicPlayer.nowPlayingItem || self.numberOfItemsInQueue == 0){
+		return @[];
+	}
 	
+	NSInteger indexOfNowPlayingTrack = self.musicPlayer.systemMusicPlayer.indexOfNowPlayingItem;
+	
+	if(indexOfNowPlayingTrack == 0){ //Nothing previous to the first track of course
+		return @[];
+	}
+	
+	return [self.completeQueue subarrayWithRange:NSMakeRange(0, indexOfNowPlayingTrack)];
+}
+
+- (nonnull NSArray<LMMusicTrack*>*)nextTracks {
+	if(!self.musicPlayer.systemMusicPlayer.nowPlayingItem || (self.numberOfItemsInQueue == 0)){
+		return @[];
+	}
+	
+	NSInteger indexOfNowPlayingTrack = self.musicPlayer.systemMusicPlayer.indexOfNowPlayingItem;
+	NSInteger finalIndexOfQueue = self.completeQueue.count - 1;
+	
+	if(indexOfNowPlayingTrack == finalIndexOfQueue){
+		return @[];
+	}
+	
+	NSInteger indexOfNextTrack = (indexOfNowPlayingTrack + 1);
+	NSInteger length = ((finalIndexOfQueue + 1) - indexOfNextTrack);
+	
+	return [self.completeQueue subarrayWithRange:NSMakeRange(indexOfNextTrack, length)];
+}
+
+- (void)rebuild {
 	__weak id weakSelf = self;
 
-	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-		LMMusicPlayer *strongSelf = weakSelf;
+	dispatch_async(dispatch_get_global_queue(NSQualityOfServiceUserInteractive, 0), ^{
+		LMMusicQueue *strongSelf = weakSelf;
 
 		if (!strongSelf) {
+			NSLog(@"A strong copy of self doesn't exist, can't build queue.");
 			return;
 		}
 
 		NSTimeInterval startTime = [[NSDate new] timeIntervalSince1970];
-
-		BOOL queueTooLarge = NO;
 
 		NSMutableArray<LMMusicTrack*> *systemQueueArray = [NSMutableArray new];
 		for(NSInteger i = 0; i < strongSelf.numberOfItemsInQueue; i++){
@@ -171,21 +216,29 @@
 				NSLog(@"Track %d is nil :(", (int)i);
 			}
 		}
-//		if(systemQueueArray.count > 0){
-//			strongSelf.nowPlayingCollectionSorted = [LMMusicTrackCollection collectionWithItems:systemQueueArray];
-//		}
-//		else{
-//			strongSelf.nowPlayingCollectionSorted = nil;
-//		}
 
+		self.completeQueue = [NSArray arrayWithArray:systemQueueArray];
+		
+		NSArray *previous = [self previousTracks];
+		for(NSInteger i = 0; i < previous.count; i++){
+			LMMusicTrack *track = [previous objectAtIndex:i];
+			NSLog(@"Previously played: %@", track.title);
+		}
+		
+		NSLog(@"> Current track: %@", self.musicPlayer.systemMusicPlayer.nowPlayingItem.title);
+		
+		NSArray *upNext = [self nextTracks];
+		for(NSInteger i = 0; i < upNext.count; i++){
+			LMMusicTrack *track = [upNext objectAtIndex:i];
+			NSLog(@"Up next: %@", track.title);
+		}
+		
 		NSTimeInterval endTime = [[NSDate new] timeIntervalSince1970];
-		NSLog(@"Took %f seconds to load %ld tracks from the queue (out of %ld tracks).", (endTime-startTime), systemQueueArray.count, strongSelf.numberOfItemsInQueue);
+		NSLog(@"\nLMMusicQueue rebuild summary\n%d out of %d tracks captured in %f seconds.\n%d tracks previous, %d tracks next.", (int)self.completeQueue.count, (int)self.numberOfItemsInQueue, (endTime-startTime), (int)previous.count, (int)upNext.count);
+
 
 //		dispatch_async(dispatch_get_main_queue(), ^{
-//			strongSelf.nowPlayingTrack = strongSelf.systemMusicPlayer.nowPlayingItem;
-//			strongSelf.nowPlayingQueueTooLarge = queueTooLarge;
-//
-//			for(id<LMMusicPlayerDelegate>delegate in strongSelf.delegates){
+//			for(id<LMMusicQueueDelegate>delegate in strongSelf.delegates){
 //				if([delegate respondsToSelector:@selector(trackAddedToQueue:)]){
 //					[delegate trackAddedToQueue:[systemQueueArray firstObject]];
 //				}
@@ -196,14 +249,18 @@
 	});
 }
 
-- (void)prepareQueueForBackgrounding {
-#warning Todo: prepare queue for backgrounding
+- (void)addDelegate:(id<LMMusicQueueDelegate>)delegate {
+	[self.delegates addObject:delegate];
+}
+
+- (void)removeDelegate:(id<LMMusicQueueDelegate>)delegate {
+	[self.delegates removeObject:delegate];
 }
 
 - (instancetype)init {
 	self = [super init];
 	if(self){
-		
+		self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 	}
 	return self;
 }

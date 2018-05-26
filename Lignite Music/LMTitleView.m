@@ -584,8 +584,10 @@
 	
 	[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
 		[self.musicPlayer stop];
+		
 		[self.musicPlayer setShuffleMode:LMMusicShuffleModeOn];
-		[self.musicPlayer setNowPlayingCollection:self.favourites ? self.favouritesTrackCollection : self.allSongsTrackCollection];
+		[self.musicPlayer setNowPlayingCollection:self.musicTitles];
+		
 		[self.musicPlayer play];
 	} repeats:NO];
 }

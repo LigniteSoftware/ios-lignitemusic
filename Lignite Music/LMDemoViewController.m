@@ -77,7 +77,7 @@
 					return nil;
 //					return @"Only show music with LIGNITE_DEMO composer";
 				case 1:
-					return @"Make the artists look real";
+					return @"Make the demo artists look real";
 				case 2:
 					return @"Play audio upon initialisation of some elements";
 			}

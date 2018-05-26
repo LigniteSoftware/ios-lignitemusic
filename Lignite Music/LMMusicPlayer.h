@@ -152,6 +152,11 @@ typedef enum {
 - (void)trackMovedInQueue:(LMMusicTrack*)trackMoved DEPRECATED_ATTRIBUTE;
 
 /**
+ The user tried to manage the queue, while the music queue playing is one that is managed by iOS. An alert should be displayed letting the user know this is not a happy scenario.
+ */
+- (void)userAttemptedToModifyQueueThatIsManagedByiOS DEPRECATED_ATTRIBUTE;
+
+/**
  A track was added to favourites.
 
  @param track The track that was added to favourites.
@@ -164,11 +169,6 @@ typedef enum {
  @param track The track that was removed from favourites.
  */
 - (void)trackRemovedFromFavourites:(LMMusicTrack*)track;
-
-/**
- The user tried to manage the queue, while the music queue playing is one that is managed by iOS. An alert should be displayed letting the user know this is not a happy scenario.
- */
-- (void)userAttemptedToModifyQueueThatIsManagedByiOS DEPRECATED_ATTRIBUTE;
 
 /**
  The status of VoiceOver being on/off changed.

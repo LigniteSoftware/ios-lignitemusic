@@ -60,6 +60,7 @@
 #import "Lignite_Music-Swift.h"
 #import "LMTutorialViewController.h"
 #import "LMDebugViewController.h"
+#import "LMMusicQueue.h"
 //#import "Lignite Music-Bridging-Header.h"
 //#import "Popover-Swift.h"
 
@@ -2033,73 +2034,36 @@
 	
 	
 	[NSTimer scheduledTimerWithTimeInterval:0.25 block:^{
-//		if(self.restorationState != LMCoreViewControllerRestorationStateNotRestored){
-//			[self.buttonNavigationBar setSelectedTab:self.stateRestoredNavigationTab];
-//		}
-//		else{
-//			[self.buttonNavigationBar setSelectedTab:LMNavigationTabMiniplayer];
-//		}
-//
-//		if(self.stateRestoredNavigationBarWasMinimized){
-//			[self.buttonNavigationBar minimise:NO];
-//		}
-//
-//		if(self.navigationController.navigationBar.items.count > 1){
-//			[self.buttonNavigationBar completelyHide];
-//		}
-//
-//		if(self.restorationState == LMCoreViewControllerRestorationStateNowPlaying){
-//			[self launchNowPlaying:NO];
-//		}
-//
-//		if(self.previousTitleViewTopPersistentID > 0){
-//			[self.titleView scrollToTrackWithPersistentID:self.previousTitleViewTopPersistentID];
-//		}
-//
-//		if(self.titleView.favourites && (self.currentSource == self.titleView)){
-//			[self.buttonNavigationBar.browsingBar setShowingLetterTabs:self.titleView.musicTitles.count > 0];
-//		}
-//
-//
-//		if(self.previouslyOpenedDetailViewIndex > -1 && self.previouslyOpenedDetailViewIndex < self.compactView.musicTrackCollections.count){
-//			[self.compactView scrollViewToIndex:self.previouslyOpenedDetailViewIndex animated:YES];
-//			if(self.previouslyOpenedDetailViewIndex < self.compactView.musicTrackCollections.count){
-//				[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
-//					[self.compactView tappedBigListEntryAtIndex:self.previouslyOpenedDetailViewIndex];
-//				} repeats:NO];
-//			}
-//		}
-//
-//		NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-//		NSString *iOSVersionString = [[UIDevice currentDevice] systemVersion];
-//		if([userDefaults objectForKey:LMWarningApprovedVersionKey] && ![userDefaults objectForKey:LMCheckedApprovedVersionBeforeKey]){
-//			if([iOSVersionString containsString:@"11.2"] && ![userDefaults objectForKey:LMiOS_11_2_LagUnderstandingConfirmationKey]){
-//				LMAlertViewController *alertViewController = [LMAlertViewController new];
-//				alertViewController.titleText = NSLocalizedString(@"iOS_11_2_LagTitle", nil);
-//				alertViewController.bodyText = [NSString stringWithFormat:NSLocalizedString(@"iOS_11_2_LagDescription", nil), iOSVersionString];
-//				alertViewController.checkboxText = NSLocalizedString(@"iOS_11_2_LagCheckboxConfirmationText", nil);
-//				alertViewController.checkboxMoreInformationText = NSLocalizedString(@"TapHereForMoreInformation", nil);
-//				alertViewController.checkboxMoreInformationLink = @"https://www.LigniteMusic.com/ios_11.2_lag";
-//				alertViewController.alertOptionColours = @[ [LMColour mainColour] ];
-//				alertViewController.alertOptionTitles = @[ NSLocalizedString(@"Continue", nil) ];
-//				alertViewController.completionHandler = ^(NSUInteger optionSelected, BOOL checkboxChecked) {
-//					if(checkboxChecked){
-//						[userDefaults setObject:iOSVersionString forKey:LMiOS_11_2_LagUnderstandingConfirmationKey];
-//
-//						NSLog(@"11.2 understood by user");
-//					}
-//				};
-//				[self.navigationController presentViewController:alertViewController
-//														animated:YES
-//													  completion:nil];
-//			}
-//		}
-//		else{
-//			[userDefaults setObject:@"yep" forKey:LMCheckedApprovedVersionBeforeKey];
-//
-//			NSLog(@"User has checked version and couldn't show it");
-//		}
-//
+		NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+		NSString *iOSVersionString = [[UIDevice currentDevice] systemVersion];
+		if([userDefaults objectForKey:LMWarningApprovedVersionKey] && ![userDefaults objectForKey:LMCheckedApprovedVersionBeforeKey]){
+			if([iOSVersionString containsString:@"11.2"] && ![userDefaults objectForKey:LMiOS_11_2_LagUnderstandingConfirmationKey]){
+				LMAlertViewController *alertViewController = [LMAlertViewController new];
+				alertViewController.titleText = NSLocalizedString(@"iOS_11_2_LagTitle", nil);
+				alertViewController.bodyText = [NSString stringWithFormat:NSLocalizedString(@"iOS_11_2_LagDescription", nil), iOSVersionString];
+				alertViewController.checkboxText = NSLocalizedString(@"iOS_11_2_LagCheckboxConfirmationText", nil);
+				alertViewController.checkboxMoreInformationText = NSLocalizedString(@"TapHereForMoreInformation", nil);
+				alertViewController.checkboxMoreInformationLink = @"https://www.LigniteMusic.com/ios_11.2_lag";
+				alertViewController.alertOptionColours = @[ [LMColour mainColour] ];
+				alertViewController.alertOptionTitles = @[ NSLocalizedString(@"Continue", nil) ];
+				alertViewController.completionHandler = ^(NSUInteger optionSelected, BOOL checkboxChecked) {
+					if(checkboxChecked){
+						[userDefaults setObject:iOSVersionString forKey:LMiOS_11_2_LagUnderstandingConfirmationKey];
+
+						NSLog(@"11.2 understood by user");
+					}
+				};
+				[self.navigationController presentViewController:alertViewController
+														animated:YES
+													  completion:nil];
+			}
+		}
+		else{
+			[userDefaults setObject:@"yep" forKey:LMCheckedApprovedVersionBeforeKey];
+
+			NSLog(@"User has checked version and couldn't show it");
+		}
+
 //		self.splashImageView.image = nil;
 //		self.splashImageView.backgroundColor = [UIColor whiteColor];
 		
@@ -2113,6 +2077,12 @@
 		 * Test area
 		 *
 		 */
+		
+		[NSTimer scheduledTimerWithTimeInterval:1.0 block:^{
+			LMMusicQueue *queue = [LMMusicQueue sharedMusicQueue];
+			[queue rebuild];
+		} repeats:NO];
+		
 		
 		
 //		NSLog(@"Queue track at last index %@ to number of items %d", [self.musicPlayer queueTrackAtIndex:self.musicPlayer.numberOfItemsInQueue - 1], (int)self.musicPlayer.numberOfItemsInQueue);
