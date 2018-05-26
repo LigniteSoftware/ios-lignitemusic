@@ -221,7 +221,7 @@
 			else if(indexPath.row == 2){
 				[switchView addTarget:self action:@selector(initialisationSoundsSwitchView:) forControlEvents:UIControlEventValueChanged];
 				
-				enabled = YES; //Default
+				enabled = NO; //Default
 				settingsKey = LMSettingsKeyInitialisationSounds;
 			}
 			break;

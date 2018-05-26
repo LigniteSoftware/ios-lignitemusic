@@ -1668,6 +1668,22 @@
 		[self.buttonNavigationBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.navigationController.view withMultiplier:(2.0/3.0)];
 	}];
 	[LMLayoutManager addNewiPadConstraints:buttonNavigationBariPadConstraints];
+	
+	
+	if([LMLayoutManager isiPhoneX]){
+		self.buttonNavigationBarBottomCoverView = [UIView newAutoLayoutView];
+		self.buttonNavigationBarBottomCoverView.backgroundColor = [LMColour mainColour];
+		[self.navigationController.view addSubview:self.buttonNavigationBarBottomCoverView];
+		
+		
+		//		NSArray *buttonNavigationBarBottomCoverViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+		[self.buttonNavigationBarBottomCoverView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.buttonNavigationBarBottomCoverView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.buttonNavigationBarBottomCoverView autoSetDimension:ALDimensionHeight toSize:69];
+		[self.buttonNavigationBarBottomCoverView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.buttonNavigationBar];
+		//		}];
+		//		[LMLayoutManager addNewPortraitConstraints:buttonNavigationBarBottomCoverViewPortraitConstraints];
+	}
 }
 
 - (void)loadSubviews {
@@ -1984,22 +2000,6 @@
 //		[self.iPhoneXStatusBarCoverView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 //		[self.iPhoneXStatusBarCoverView autoSetDimension:ALDimensionHeight toSize:44.0f];
 //	}
-	
-	
-	if([LMLayoutManager isiPhoneX]){
-		self.buttonNavigationBarBottomCoverView = [UIView newAutoLayoutView];
-		self.buttonNavigationBarBottomCoverView.backgroundColor = [LMColour mainColour];
-		[self.navigationController.view addSubview:self.buttonNavigationBarBottomCoverView];
-
-
-//		NSArray *buttonNavigationBarBottomCoverViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-			[self.buttonNavigationBarBottomCoverView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-			[self.buttonNavigationBarBottomCoverView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-			[self.buttonNavigationBarBottomCoverView autoSetDimension:ALDimensionHeight toSize:69];
-			[self.buttonNavigationBarBottomCoverView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.buttonNavigationBar];
-//		}];
-//		[LMLayoutManager addNewPortraitConstraints:buttonNavigationBarBottomCoverViewPortraitConstraints];
-	}
 	
 	
 	

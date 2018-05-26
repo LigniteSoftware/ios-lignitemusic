@@ -61,7 +61,7 @@
 }
 
 + (BOOL)debugInitialisationSounds {
-	BOOL settingEnabled = YES;
+	BOOL settingEnabled = NO;
 	
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 	
