@@ -266,36 +266,23 @@
 	} repeats:NO];
 }
 
-- (void)trackAddedToFavourites:(LMMusicTrack *)track {
-//	[self.songListTableView reloadData];
-#warning reload
-	
+- (void)reloadFavourites {
 	if(self.favourites){
-		[self rebuildTrackCollection];
-#warning reload
-//		[self.songListTableView reloadSubviewData];
-//		[self.songListTableView reloadData];
-		
 		self.currentlyHighlighted = -1;
+		
+		[self rebuildTrackCollection];
 		
 		[self musicTrackDidChange:self.musicPlayer.nowPlayingTrack];
 	}
+	[self.collectionView reloadData];
+}
+
+- (void)trackAddedToFavourites:(LMMusicTrack *)track {
+	[self reloadFavourites];
 }
 
 - (void)trackRemovedFromFavourites:(LMMusicTrack *)track {
-//	[self.songListTableView reloadData];
-#warning reload
-	
-	if(self.favourites){
-		[self rebuildTrackCollection];
-#warning reload
-//		[self.songListTableView reloadSubviewData];
-//		[self.songListTableView reloadData];
-		
-		self.currentlyHighlighted = -1;
-		
-		[self musicTrackDidChange:self.musicPlayer.nowPlayingTrack];
-	}
+	[self reloadFavourites];
 }
 
 - (void)rebuildTrackCollection {
@@ -323,8 +310,7 @@
 	
 	self.favouritesTrackCollection = [self.musicPlayer favouritesTrackCollection];
 	
-//	self.songListTableView.totalAmountOfObjects = self.musicTitles.count;
-#warning reload
+	[self.collectionView reloadData];
 	
 	self.noObjectsLabel.hidden = (self.musicTitles.count > 0);
 	self.noObjectsLabel.text = NSLocalizedString(self.favourites ? @"NoTracksInFavourites" : @"TheresNothingHere", nil);
@@ -511,9 +497,8 @@
 		
 		[self.musicPlayer.navigationBar setSelectedTab:LMNavigationTabMiniplayer];
 		[self.musicPlayer.navigationBar maximise:NO];
-		#warning reload
+
 		[self.collectionView reloadData];
-//		[self.songListTableView reloadData];
 	} repeats:NO];
 }
 
@@ -648,18 +633,12 @@
 
 - (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
 	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-#warning reload
-//		[self.songListTableView reloadData];
 		[self.collectionView reloadData];
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-#warning reload
-//		[self.songListTableView reloadData];
 		[self.collectionView reloadData];
 		
 		[NSTimer scheduledTimerWithTimeInterval:0.2 block:^{
-//			[self.songListTableView reloadData];
 			[self.collectionView reloadData];
-#warning reload
 		} repeats:NO];
 		
 		if(!self.layoutManager.isLandscape){
@@ -736,25 +715,7 @@
 		[self addSubview:self.collectionView];
 		
 		[self.collectionView autoPinEdgesToSuperviewEdges];
-	
-		
-//		self.songListTableView = [LMTableView newAutoLayoutView];
-//		self.songListTableView.totalAmountOfObjects = self.musicTitles.trackCount;
-//		self.songListTableView.subviewDataSource = self;
-//		self.songListTableView.shouldUseDividers = YES;
-//		self.songListTableView.averageCellHeight = [LMLayoutManager standardListEntryHeight] * (2.5/10.0);
-//		self.songListTableView.bottomSpacing = (WINDOW_FRAME.size.height/3.0);
-//		self.songListTableView.secondaryDelegate = self;
-//		[self addSubview:self.songListTableView];
-//
-//		[self.songListTableView reloadSubviewData];
-//
-//		[self.songListTableView autoPinEdgesToSuperviewEdges];
-		
-//		[self.songListTableView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-//		[self.songListTableView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-//		[self.songListTableView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-//		[self.songListTableView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+
 		
 		NSLog(@"titleView: tableView, %f", (([[NSDate new] timeIntervalSince1970]) - loadStartTime));
 		

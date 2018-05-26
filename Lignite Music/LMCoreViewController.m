@@ -712,12 +712,9 @@
 }
 
 - (void)requiredHeightForNavigationBarChangedTo:(CGFloat)requiredHeight withAnimationDuration:(CGFloat)animationDuration {
-//	NSLog(@"rHeight changed to %f", requiredHeight);
     
     CGFloat bottomSpacing = requiredHeight + 10;
-//    [self.compactView changeBottomSpacing:bottomSpacing];
-//    self.titleView.songListTableView.bottomSpacing = bottomSpacing;
-	#warning set title view bottom spacing ^
+    self.titleView.collectionView.contentInset = UIEdgeInsetsMake(0, 0, bottomSpacing, 0);
 	
 	if([LMLayoutManager isLandscape]
 	   && (self.buttonNavigationBar.currentlySelectedTab != LMNavigationTabView)){
