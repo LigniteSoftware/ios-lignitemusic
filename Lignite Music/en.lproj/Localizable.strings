@@ -63,7 +63,10 @@
 "UpNextTitle" = "Up next";
 
 "NowPlayingTrack" = "Now playing";
+"NowPlayingTrackSubtitle" = "First song in the queue";
 
+"NothingUpNextTitle" = "That's it, boss!";
+"NothingUpNextSubtitle" = "You've got no songs queued up.";
 
 //As of 1.2.0 ^
 

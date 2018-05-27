@@ -26,8 +26,6 @@
 
 @property BOOL setupConstraints;
 
-@property CGFloat previousAlpha; //Used for previous tracks queue entry swipe animation focusing
-
 @property MGSwipeTableCell *tableCell;
 
 /**

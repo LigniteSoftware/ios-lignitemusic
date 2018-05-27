@@ -68,17 +68,17 @@
 	if(!self.didLayoutSubviews){
 		self.didLayoutSubviews = YES;
 		
-		LMListEntry *listEntry = [LMListEntry newAutoLayoutView];
-		listEntry.delegate = self;
-		listEntry.collectionIndex = 0;
-		listEntry.isLabelBased = NO;
-		listEntry.alignIconToLeft = NO;
-		listEntry.stretchAcrossWidth = NO;
+		self.listEntry = [LMListEntry newAutoLayoutView];
+		self.listEntry.delegate = self;
+		self.listEntry.collectionIndex = 0;
+		self.listEntry.isLabelBased = NO;
+		self.listEntry.alignIconToLeft = NO;
+		self.listEntry.stretchAcrossWidth = NO;
 		
-		[self addSubview:listEntry];
-		listEntry.backgroundColor = [LMColour clearColour];
+		[self addSubview:self.listEntry];
+		self.listEntry.backgroundColor = [LMColour clearColour];
 		
-		[listEntry autoPinEdgesToSuperviewEdges];
+		[self.listEntry autoPinEdgesToSuperviewEdges];
 	}
 }
 

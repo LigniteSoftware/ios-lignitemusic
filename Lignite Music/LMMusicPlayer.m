@@ -1434,32 +1434,32 @@ BOOL shuffleForDebug = NO;
 }
 
 - (void)setNowPlayingTrack:(LMMusicTrack*)nowPlayingTrack {
-	self.lastTrackSetInLigniteMusicPersistentID = nowPlayingTrack.persistentID;
+//	self.lastTrackSetInLigniteMusicPersistentID = nowPlayingTrack.persistentID;
 	
 	NSLog(@"Setting now playing track (in Lignite Music) to %@", nowPlayingTrack.title);
 //	self.nowPlayingWasSetWithinLigniteMusic = YES;
-	for(int i = 0; i < self.nowPlayingCollection.count; i++){
-		LMMusicTrack *track = [self.nowPlayingCollection.items objectAtIndex:i];
-		if([nowPlayingTrack isEqual:track]){
-			self.indexOfNowPlayingTrack = i;
-			break;
-		}
-	}
+//	for(int i = 0; i < self.nowPlayingCollection.count; i++){
+//		LMMusicTrack *track = [self.nowPlayingCollection.items objectAtIndex:i];
+//		if([nowPlayingTrack isEqual:track]){
+//			self.indexOfNowPlayingTrack = i;
+//			break;
+//		}
+//	}
 	
-	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer || self.playerType == LMMusicPlayerTypeAppleMusic){
-		MPMediaItem *associatedMediaItem = nowPlayingTrack;
-		if(self.systemMusicPlayer.nowPlayingItem.persistentID != associatedMediaItem.persistentID){
-			NSLog(@"Setting %@ compared to %@", self.systemMusicPlayer.nowPlayingItem.title, associatedMediaItem.title);
-			if(self.queueRequiresReload){
-				[self reloadQueueWithTrack:associatedMediaItem];
+//	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer || self.playerType == LMMusicPlayerTypeAppleMusic){
+//		MPMediaItem *associatedMediaItem = nowPlayingTrack;
+//		if(self.systemMusicPlayer.nowPlayingItem.persistentID != associatedMediaItem.persistentID){
+//			NSLog(@"Setting %@ compared to %@", self.systemMusicPlayer.nowPlayingItem.title, associatedMediaItem.title);
+//			if(self.queueRequiresReload){
+//				[self reloadQueueWithTrack:associatedMediaItem];
+//				[self.systemMusicPlayer play];
+//			}
+//			else{
+				[self.systemMusicPlayer setNowPlayingItem:nowPlayingTrack];
 				[self.systemMusicPlayer play];
-			}
-			else{
-				[self.systemMusicPlayer setNowPlayingItem:associatedMediaItem];
-				[self.systemMusicPlayer play];
-			}
-		}
-	}
+//			}
+//		}
+//	}
 	
 	_nowPlayingTrack = nowPlayingTrack;
 	

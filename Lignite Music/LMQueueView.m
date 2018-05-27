@@ -46,6 +46,11 @@
  */
 @property UILabel *nothingInQueueLabel;
 
+/**
+ The list entry that's currently being moved.
+ */
+@property LMListEntry *currentlyMovingListEntry;
+
 @end
 
 @implementation LMQueueView
@@ -73,15 +78,20 @@
 		
 		return title;
 	}
-	return NSLocalizedString(@"UpNextTitle", nil);
+	
+	return NSLocalizedString((self.musicQueue.nextTracks.count == 0) ? @"NothingUpNextTitle" : @"UpNextTitle", nil);
 }
 
 - (NSString*)subtitleForHeader:(LMQueueViewHeader*)header {
 	if(header.isForPreviousTracks && [self playingFirstTrackInQueue]){
-		return @"Subtitle";
+		return NSLocalizedString(@"NowPlayingTrackSubtitle", nil);
 	}
 	
 	NSInteger trackCount = header.isForPreviousTracks ? self.musicQueue.previousTracks.count : self.musicQueue.nextTracks.count;
+	
+	if(trackCount == 0){
+		return NSLocalizedString(@"NothingUpNextSubtitle", nil);
+	}
 	
 	BOOL singular = (trackCount == 1);
 	
@@ -93,6 +103,8 @@
 
 - (void)tappedListEntry:(LMListEntry*)entry {
 	NSLog(@"Tapped %@", entry);
+	
+	[self.musicPlayer setNowPlayingTrack:(LMMusicTrack*)entry.associatedData];
 }
 
 - (UIColor*)tapColourForListEntry:(LMListEntry*)entry {
@@ -285,8 +297,9 @@
 		  viewForSupplementaryElementOfKind:(NSString *)kind
 								atIndexPath:(NSIndexPath *)indexPath {
 	
-	LMQueueViewHeader *header = [self.collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader
-																				 withReuseIdentifier:@"test" forIndexPath:indexPath];
+	NSString *reuseIdentifier = (indexPath.section == 0) ? @"previousTracksHeaderIdentifier" : @"nextTracksHeaderIdentifier";
+	
+	LMQueueViewHeader *header = [self.collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
 	
 	header.isForPreviousTracks = (indexPath.section == 0);
 	header.delegate = self;
@@ -347,41 +360,62 @@
 - (void)longPressGestureHandler:(UILongPressGestureRecognizer*)longPressGesture {
 	NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:[longPressGesture locationInView:self.collectionView]];
 	
+	CGPoint movementPoint = [longPressGesture locationInView:self.collectionView];
+	movementPoint.x = (self.collectionView.frame.size.width / 2.0);
+	
 	switch(longPressGesture.state){
 		case UIGestureRecognizerStateBegan: {
-//			[self.collectionView performBatchUpdates:^{
-				if(indexPath){
-					[self.collectionView beginInteractiveMovementForItemAtIndexPath:indexPath];
+			if(indexPath){
+				[self.collectionView beginInteractiveMovementForItemAtIndexPath:indexPath];
+				
+				if(!self.currentlyMovingListEntry){
+					UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
+					if(cell.contentView.subviews.count > 0){
+						for(UIView *subview in cell.contentView.subviews){
+							if([subview class] == [LMListEntry class]){
+								self.currentlyMovingListEntry = (LMListEntry*)subview;
+								break;
+							}
+						}
+					}
 				}
-//			} completion:^(BOOL finished) {
-//				NSLog(@"Done batch updates.");
-//			}];
+				
+				if(self.currentlyMovingListEntry){
+					if(self.currentlyMovingListEntry.alpha < 1.0){
+						self.currentlyMovingListEntry.previousAlpha = self.currentlyMovingListEntry.alpha;
+						
+						[UIView animateWithDuration:0.3 animations:^{
+							self.currentlyMovingListEntry.alpha = 1.0;
+						}];
+					}
+				}
+			}
 			break;
 		}
 		case UIGestureRecognizerStateChanged: {
-			CGPoint movementPoint = [longPressGesture locationInView:self.collectionView];
-			movementPoint.x = (self.collectionView.frame.size.width / 2.0);
-//			[self.collectionView performBatchUpdates:^{
-				[self.collectionView updateInteractiveMovementTargetPosition:movementPoint];
-//			} completion:^(BOOL finished) {
-//				NSLog(@"Done batch updates.");
-//			}];
+			[self.collectionView updateInteractiveMovementTargetPosition:movementPoint];
 			break;
 		}
 		case UIGestureRecognizerStateEnded: {
-//			[self.collectionView performBatchUpdates:^{
-				[self.collectionView endInteractiveMovement];
-//			} completion:^(BOOL finished) {
-//				NSLog(@"Done ended batch updates.");
-//			}];
+			[self.collectionView endInteractiveMovement];
+			
+			if(self.currentlyMovingListEntry){
+				if(self.currentlyMovingListEntry.previousAlpha > 0.0){
+					[UIView animateWithDuration:0.3 animations:^{
+						self.currentlyMovingListEntry.alpha = self.currentlyMovingListEntry.previousAlpha;
+					}];
+					
+					self.currentlyMovingListEntry.previousAlpha = 0.0;
+				}
+				
+				self.currentlyMovingListEntry = nil;
+			}
 			break;
 		}
 		default: {
-			[self.collectionView performBatchUpdates:^{
-				[self.collectionView cancelInteractiveMovement];
-			} completion:^(BOOL finished) {
-				NSLog(@"Done cancelled batch updates.");
-			}];
+			[self.collectionView cancelInteractiveMovement];
+			
+			self.currentlyMovingListEntry = nil;
 			break;
 		}
 	}
@@ -411,6 +445,10 @@
 //	}];
 }
 
+
+- (void)musicTrackDidChange:(LMMusicTrack *)newTrack {
+	[self.collectionView reloadData];
+}
 
 - (void)trackAddedToFavourites:(LMMusicTrack*)track {
 	[self.collectionView reloadData];
@@ -450,7 +488,10 @@
 				forCellWithReuseIdentifier:@"cellIdentifier"];
 		[self.collectionView registerClass:[LMQueueViewHeader class]
 				forSupplementaryViewOfKind:UICollectionElementKindSectionHeader
-					   withReuseIdentifier:@"test"];
+					   withReuseIdentifier:@"previousTracksHeaderIdentifier"];
+		[self.collectionView registerClass:[LMQueueViewHeader class]
+				forSupplementaryViewOfKind:UICollectionElementKindSectionHeader
+					   withReuseIdentifier:@"nextTracksHeaderIdentifier"];
 		[self addSubview:self.collectionView];
 		
 		[self.collectionView autoPinEdgesToSuperviewEdges];

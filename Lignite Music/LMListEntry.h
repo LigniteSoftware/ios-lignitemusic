@@ -216,4 +216,9 @@
  */
 @property BOOL roundedCorners;
 
+/**
+ Used for previous tracks queue entry swipe animation focusing.
+ */
+@property CGFloat previousAlpha;
+
 @end
