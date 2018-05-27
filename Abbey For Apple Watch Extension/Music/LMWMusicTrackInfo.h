@@ -31,7 +31,7 @@ typedef enum {
 } LMMusicType;
 
 /**
- The album art of the music track.
+ The album art of the music track. If no album art exists, it'll load the no cover art icon.
  */
 @property UIImage *albumArt;
 

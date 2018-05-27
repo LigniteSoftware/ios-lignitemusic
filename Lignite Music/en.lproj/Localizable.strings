@@ -57,10 +57,12 @@
 
 "NothingInQueueDescription" = "Seems you don't have anything queued up at the moment.\n\nGet some music poppin' off to fill the queue up!";
 
-"PreviousTracksTitleSingular" = "Previous tracks";
-"PreviousTracksTitlePlural" = "Previous track";
+"PreviousTracksTitleSingular" = "Previous track";
+"PreviousTracksTitlePlural" = "Previous tracks";
 
-"NextUpTitle" = "Up next";
+"UpNextTitle" = "Up next";
+
+"NowPlayingTrack" = "Now playing";
 
 
 //As of 1.2.0 ^

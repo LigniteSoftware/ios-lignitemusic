@@ -1480,7 +1480,7 @@ BOOL shuffleForDebug = NO;
 		return self.systemMusicPlayer.nowPlayingItem;
 	}
 #endif
-	return _nowPlayingTrack;
+	return self.systemMusicPlayer.nowPlayingItem;
 }
 
 - (void)prepareQueueForBackgrounding DEPRECATED_ATTRIBUTE {

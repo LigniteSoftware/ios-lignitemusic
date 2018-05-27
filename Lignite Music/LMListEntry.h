@@ -97,7 +97,7 @@
  @param highlighted Whether or not to highlight this entry.
  @param animated Whether or not to animate the change in highlight.
  */
-- (void)changeHighlightStatus:(BOOL)highlighted animated:(BOOL)animated;
+- (void)setAsHighlighted:(BOOL)highlighted animated:(BOOL)animated;
 
 /**
  Initializes a list entry with a delegate.

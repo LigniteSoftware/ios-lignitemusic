@@ -144,11 +144,11 @@
 	if(!source.shouldNotHighlight){
 		LMListEntry *previousHighlightedEntry = [self listEntryForIndex:self.currentlyHighlighted];
 		if(previousHighlightedEntry){
-			[previousHighlightedEntry changeHighlightStatus:NO animated:YES];
+			[previousHighlightedEntry setAsHighlighted:NO animated:YES];
 		}
 		
 		if(self.isMainSourceSelector){
-			[entry changeHighlightStatus:YES animated:YES];
+			[entry setAsHighlighted:YES animated:YES];
 		}
 		self.currentlyHighlighted = index;
 		

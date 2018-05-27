@@ -110,7 +110,7 @@
 		if(listEntry){
 			listEntry.collectionIndex = indexPath.row;
 			
-			[listEntry changeHighlightStatus:(self.currentlyHighlighted == listEntry.collectionIndex) animated:NO];
+			[listEntry setAsHighlighted:(self.currentlyHighlighted == listEntry.collectionIndex) animated:NO];
 			[listEntry reloadContents];
 		}
 	}
@@ -132,7 +132,7 @@
 		[listEntry autoPinEdgeToSuperviewEdge:ALEdgeTop];
 		[listEntry autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 		
-		[listEntry changeHighlightStatus:(indexPath.row == self.currentlyHighlighted)
+		[listEntry setAsHighlighted:(indexPath.row == self.currentlyHighlighted)
 								animated:NO];
 		
 		
@@ -219,13 +219,13 @@
 - (void)reloadCurrentlyHighlightedTrack {
 	if([self.musicTitles.items containsObject:self.musicPlayer.nowPlayingTrack]){
 		NSInteger indexOfNewTrack = [self.musicTitles.items indexOfObject:self.musicPlayer.nowPlayingTrack];
-		[[self listEntryForIndex:self.currentlyHighlighted] changeHighlightStatus:NO animated:YES];
-		[[self listEntryForIndex:indexOfNewTrack] changeHighlightStatus:YES animated:YES];
+		[[self listEntryForIndex:self.currentlyHighlighted] setAsHighlighted:NO animated:YES];
+		[[self listEntryForIndex:indexOfNewTrack] setAsHighlighted:YES animated:YES];
 		
 		self.currentlyHighlighted = indexOfNewTrack;
 	}
 	else{
-		[[self listEntryForIndex:self.currentlyHighlighted] changeHighlightStatus:NO animated:YES];
+		[[self listEntryForIndex:self.currentlyHighlighted] setAsHighlighted:NO animated:YES];
 		self.currentlyHighlighted = -1;
 	}
 }
@@ -407,12 +407,12 @@
 		
 		LMListEntry *previousHighlightedEntry = [self listEntryForIndex:self.currentlyHighlighted];
 		if(previousHighlightedEntry){
-			[previousHighlightedEntry changeHighlightStatus:NO animated:YES];
+			[previousHighlightedEntry setAsHighlighted:NO animated:YES];
 		}
 		
 		NSLog(@"Highlighting %d, dehighlighting %d", (int)entry.collectionIndex, (int)previousHighlightedEntry.collectionIndex);
 		
-		[entry changeHighlightStatus:YES animated:YES];
+		[entry setAsHighlighted:YES animated:YES];
 		self.currentlyHighlighted = entry.collectionIndex;
 		
 		if(self.musicPlayer.nowPlayingCollection != self.musicTitles){

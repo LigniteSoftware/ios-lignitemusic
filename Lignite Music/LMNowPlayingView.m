@@ -437,11 +437,11 @@
 		self.currentlyHighlighted = newHighlightedIndex;
 		
 		if(![previousHighlightedEntry isEqual:highlightedEntry] || highlightedEntry == nil){
-			[previousHighlightedEntry changeHighlightStatus:NO animated:YES];
+			[previousHighlightedEntry setAsHighlighted:NO animated:YES];
 		}
 		
 		if(highlightedEntry){
-			[highlightedEntry changeHighlightStatus:YES animated:YES];
+			[highlightedEntry setAsHighlighted:YES animated:YES];
 		}
 	}
 	
@@ -468,7 +468,7 @@
 	
 	currentListEntry.collectionIndex = destinationIndexPath.section;
 	
-	[currentListEntry changeHighlightStatus:YES animated:YES];
+	[currentListEntry setAsHighlighted:YES animated:YES];
 	
 	[self.musicPlayer moveTrackInQueueFromIndex:sourceIndexPath.section toIndex:destinationIndexPath.section];
 	
@@ -778,7 +778,7 @@
 	entry.isAccessibilityElement = YES;
 	entry.accessibilityHint = NSLocalizedString(@"VoiceOverHint_QueueEntry", nil);
 	
-	[entry changeHighlightStatus:(self.currentlyHighlighted == entry.collectionIndex) animated:NO];
+	[entry setAsHighlighted:(self.currentlyHighlighted == entry.collectionIndex) animated:NO];
 	
 //	if((self.currentlyHighlighted == entry.collectionIndex) ){
 //		entry.backgroundColor = [UIColor cyanColor];
@@ -976,9 +976,9 @@
 - (void)tappedListEntry:(LMListEntry*)entry{
 	NSLog(@"Hey %d", (int)entry.collectionIndex);
 	LMListEntry *currentHighlighted = [self listEntryForIndex:self.currentlyHighlighted];
-	[currentHighlighted changeHighlightStatus:NO animated:YES];
+	[currentHighlighted setAsHighlighted:NO animated:YES];
 	
-	[entry changeHighlightStatus:YES animated:YES];
+	[entry setAsHighlighted:YES animated:YES];
 	
 	self.currentlyHighlighted = entry.collectionIndex;
 	

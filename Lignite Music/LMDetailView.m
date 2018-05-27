@@ -165,7 +165,7 @@
 	
 	LMListEntry *previousHighlightedEntry = [self listEntryForIndex:self.currentlyHighlightedEntry];
 	if(![previousHighlightedEntry isEqual:highlightedEntry] || highlightedEntry == nil){
-		[previousHighlightedEntry changeHighlightStatus:NO animated:YES];
+		[previousHighlightedEntry setAsHighlighted:NO animated:YES];
 		BOOL updateNowPlayingStatus = self.currentlyHighlightedEntry == -1;
 		self.currentlyHighlightedEntry = newHighlightedIndex;
 		if(updateNowPlayingStatus){
@@ -174,7 +174,7 @@
 	}
 	
 	if(highlightedEntry){
-		[highlightedEntry changeHighlightStatus:YES animated:YES];
+		[highlightedEntry setAsHighlighted:YES animated:YES];
 	}
 }
 
@@ -210,10 +210,10 @@
 	
 	LMListEntry *previousHighlightedEntry = [self listEntryForIndex:self.currentlyHighlightedEntry];
 	if(previousHighlightedEntry){
-		[previousHighlightedEntry changeHighlightStatus:NO animated:YES];
+		[previousHighlightedEntry setAsHighlighted:NO animated:YES];
 	}
 	
-	[entry changeHighlightStatus:YES animated:YES];
+	[entry setAsHighlighted:YES animated:YES];
 	self.currentlyHighlightedEntry = entry.collectionIndex;
 	
 	if(self.musicPlayer.nowPlayingCollection != self.musicTrackCollectionToUseForSpecificTrackCollection){
@@ -361,7 +361,7 @@
 		if(listEntry){
 			listEntry.collectionIndex = indexPath.row;
 			
-			[listEntry changeHighlightStatus:(self.currentlyHighlightedEntry == listEntry.collectionIndex) animated:NO];
+			[listEntry setAsHighlighted:(self.currentlyHighlightedEntry == listEntry.collectionIndex) animated:NO];
 			[listEntry reloadContents];
 		}
 	}
@@ -383,7 +383,7 @@
 		[listEntry autoPinEdgeToSuperviewEdge:ALEdgeTop];
 		[listEntry autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 			
-		[listEntry changeHighlightStatus:(indexPath.row == self.currentlyHighlightedEntry) animated:NO];
+		[listEntry setAsHighlighted:(indexPath.row == self.currentlyHighlightedEntry) animated:NO];
 		
 		
 		//Divider line for between the entries

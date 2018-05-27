@@ -8,6 +8,7 @@
 
 #import <PureLayout/PureLayout.h>
 #import "LMQueueViewHeader.h"
+#import "LMMusicPlayer.h"
 #import "LMMusicQueue.h"
 #import "LMListEntry.h"
 #import "LMQueueView.h"
@@ -24,6 +25,11 @@
  The music queue.
  */
 @property LMMusicQueue *musicQueue;
+
+/**
+ The music player.
+ */
+@property LMMusicPlayer *musicPlayer;
 
 /**
  The layout manager.
@@ -45,11 +51,22 @@
 @implementation LMQueueView
 
 - (UIImage*)iconForHeader:(LMQueueViewHeader*)header {
+	if(header.isForPreviousTracks && [self playingFirstTrackInQueue]){
+		return [LMAppIcon imageForIcon:LMIconNoAlbumArt75Percent];
+	}
 	return [LMAppIcon imageForIcon:header.isForPreviousTracks ? LMIconPreviousTracks : LMIconNextTracks];
+}
+
+- (BOOL)playingFirstTrackInQueue {
+	return (self.musicQueue.previousTracks.count == 0 && self.musicPlayer.nowPlayingTrack);
 }
 
 - (NSString*)titleForHeader:(LMQueueViewHeader*)header {
 	if(header.isForPreviousTracks){
+		if([self playingFirstTrackInQueue]){
+			return NSLocalizedString(@"NowPlayingTrack", nil);
+		}
+		
 		BOOL singular = (self.musicQueue.previousTracks.count == 1);
 		
 		NSString *title = NSLocalizedString(singular ? @"PreviousTracksTitleSingular" : @"PreviousTracksTitlePlural", nil);
@@ -60,6 +77,10 @@
 }
 
 - (NSString*)subtitleForHeader:(LMQueueViewHeader*)header {
+	if(header.isForPreviousTracks && [self playingFirstTrackInQueue]){
+		return @"Subtitle";
+	}
+	
 	NSInteger trackCount = header.isForPreviousTracks ? self.musicQueue.previousTracks.count : self.musicQueue.nextTracks.count;
 	
 	BOOL singular = (trackCount == 1);
@@ -78,16 +99,37 @@
 	return [UIColor redColor];
 }
 
+- (LMMusicTrack*)trackForIndexPath:(NSIndexPath*)indexPath {
+	BOOL isPreviousTracks = (indexPath.section == 0);
+	
+	NSArray *tracksArray = isPreviousTracks ? self.musicQueue.previousTracks : self.musicQueue.nextTracks;
+	
+	LMMusicTrack *track = nil;
+	if(isPreviousTracks && (indexPath.row == tracksArray.count)){
+		track = self.musicPlayer.nowPlayingTrack;
+	}
+	else{
+		track = [tracksArray objectAtIndex:indexPath.row];
+	}
+	
+	return track;
+}
+
+- (LMMusicTrack*)trackForListEntry:(LMListEntry*)entry {
+	return [self trackForIndexPath:entry.indexPath];
+}
+
 - (NSString*)titleForListEntry:(LMListEntry*)entry {
-	return [NSString stringWithFormat:@"%d/%d", entry.indexPath.section, entry.indexPath.row];
+	return [self trackForListEntry:entry].title;
 }
 
 - (NSString*)subtitleForListEntry:(LMListEntry*)entry {
-	return @"Subtitle";
+	LMMusicTrack *track = [self trackForListEntry:entry];
+	return track.artist ? track.artist : NSLocalizedString(@"UnknownArtist", nil);
 }
 
 - (UIImage*)iconForListEntry:(LMListEntry*)entry {
-	return [LMAppIcon imageForIcon:LMIconNoAlbumArt75Percent];
+	return [self trackForListEntry:entry].albumArt;
 }
 
 
@@ -115,7 +157,9 @@
 		if(listEntry){
 			listEntry.indexPath = indexPath;
 			
-//			[listEntry changeHighlightStatus:(self.currentlyHighlighted == listEntry.collectionIndex) animated:NO];
+			BOOL shouldHighlight = ([self trackForListEntry:listEntry] == self.musicPlayer.nowPlayingTrack);
+			[listEntry setAsHighlighted:shouldHighlight animated:NO];
+			
 			[listEntry reloadContents];
 		}
 	}
@@ -123,12 +167,14 @@
 		LMListEntry *listEntry = [LMListEntry newAutoLayoutView];
 		listEntry.delegate = self;
 		listEntry.indexPath = indexPath;
-		listEntry.associatedData = nil;
-#warning fix this ^
+		LMMusicTrack *listEntryTrack = [self trackForListEntry:listEntry];
+		listEntry.associatedData = listEntryTrack;
 		listEntry.isLabelBased = NO;
 		listEntry.alignIconToLeft = NO;
 		listEntry.stretchAcrossWidth = NO;
 		
+		BOOL shouldHighlight = (listEntryTrack == self.musicPlayer.nowPlayingTrack);
+		[listEntry setAsHighlighted:shouldHighlight animated:NO];
 		
 		[cell.contentView addSubview:listEntry];
 		listEntry.backgroundColor = [LMColour whiteColour];
@@ -183,7 +229,7 @@
 	
 	self.collectionView.hidden = !hideNoTracksLabel;
 	
-	return (section == 0) ? self.musicQueue.previousTracks.count : self.musicQueue.nextTracks.count;
+	return (section == 0) ? (self.musicQueue.previousTracks.count + 1) : self.musicQueue.nextTracks.count;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView
@@ -194,7 +240,9 @@
 }
 
 - (BOOL)collectionView:(UICollectionView *)collectionView canMoveItemAtIndexPath:(NSIndexPath *)indexPath {
-	return YES;
+	BOOL isNowPlayingTrack = ([self trackForIndexPath:indexPath] == self.musicPlayer.nowPlayingTrack);
+	
+	return !isNowPlayingTrack;
 }
 
 - (void)collectionView:(UICollectionView *)collectionView moveItemAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath {
@@ -249,10 +297,12 @@
 	if(!self.didLayoutConstraints){
 		self.didLayoutConstraints = YES;
 		
+		self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
+		
 		self.musicQueue = [LMMusicQueue sharedMusicQueue];
 		[self.musicQueue addDelegate:self];
 		
-		self.backgroundColor = [LMColour orangeColor];
+		self.backgroundColor = [LMColour lightGreyBackgroundColour];
 		
 		
 		

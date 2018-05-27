@@ -61,14 +61,14 @@
 		[rightView autoPinEdgesToSuperviewEdges];
 	}
 	
-	[self changeHighlightStatus:self.highlighted animated:NO];
+	[self setAsHighlighted:self.highlighted animated:NO];
 	
 	if([self swipeButtonsEnabled]){
 		[self.tableCell refreshButtons:YES];
 	}
 }
 
-- (void)changeHighlightStatus:(BOOL)highlighted animated:(BOOL)animated {
+- (void)setAsHighlighted:(BOOL)highlighted animated:(BOOL)animated {
 	self.highlighted = highlighted;
 	
 	NSLog(@"List entry with collectionIndex %ld highlighted %d, image is inverted %d, invert on highlight %d", self.collectionIndex, self.highlighted, self.imageIsInverted, self.invertIconOnHighlight);
@@ -387,7 +387,7 @@
 	UITapGestureRecognizer *tappedViewRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tappedView)];
 	[self addGestureRecognizer:tappedViewRecognizer];
 	
-	[self changeHighlightStatus:self.highlighted animated:NO];
+	[self setAsHighlighted:self.highlighted animated:NO];
 }
 
 - (id)initWithDelegate:(id)delegate {

@@ -17,7 +17,7 @@ typedef MPMediaItem LMMusicTrack;
 typedef MPMediaEntityPersistentID LMMusicTrackPersistentID;
 
 /**
- Gets the album art associated with with LMMusicTrack. If the album art has not yet been created for this track, it will create it. It is recommended that this not be called in the main thread.
+ Gets the album art associated with with LMMusicTrack. If the album art has not yet been created for this track, it will create it. If there is no album art, it'll return the Lignite Music logo. It is recommended that this not be called in the main thread.
  
  @return The album art.
  */
