@@ -66,12 +66,24 @@
  */
 @property (nonnull, readonly) NSArray<LMMusicTrack*> *nextTracks;
 
+/**
+ The number of items in the system queue.
+ */
+@property (readonly) NSInteger numberOfItemsInSystemQueue;
+
 
 /**
  Rebuilds the queue from the system API.
  */
 - (void)rebuild;
 
+/**
+ Gets the completeQueue index of a track that's in a subqueue array (previousTracks or nextTracks).
+
+ @param fromPreviousTracks Whether or not the index being provided is part of the previousTracks subqueue.
+ @param indexInSubQueue The index in the subqueue.
+ @return The index of that track in the completeQueue.
+ */
 - (NSInteger)indexOfTrackInCompleteQueueFromPreviousTracks:(BOOL)fromPreviousTracks
 									 withIndexInSubQueueOf:(NSInteger)indexInSubQueue;
 

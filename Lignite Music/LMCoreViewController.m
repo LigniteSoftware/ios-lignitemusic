@@ -2082,15 +2082,17 @@
 		 *
 		 */
 		
-		LMQueueView *queueView = [LMQueueView newAutoLayoutView];
-		[self.view addSubview:queueView];
+//		LMQueueView *queueView = [LMQueueView newAutoLayoutView];
+//		[self.view addSubview:queueView];
+//		
+//		[queueView autoPinEdgesToSuperviewEdges];
+//		
+//		[NSTimer scheduledTimerWithTimeInterval:1.0 block:^{
+//			LMMusicQueue *queue = [LMMusicQueue sharedMusicQueue];
+//			[queue rebuild];
+//		} repeats:NO];
 		
-		[queueView autoPinEdgesToSuperviewEdges];
-		
-		[NSTimer scheduledTimerWithTimeInterval:1.0 block:^{
-			LMMusicQueue *queue = [LMMusicQueue sharedMusicQueue];
-			[queue rebuild];
-		} repeats:NO];
+		[self launchNowPlayingFromTap];
 		
 		
 		

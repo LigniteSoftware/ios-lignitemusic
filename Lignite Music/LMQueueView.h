@@ -11,4 +11,6 @@
 
 @interface LMQueueView : LMView
 
+- (void)resetContentOffsetToNowPlaying;
+
 @end

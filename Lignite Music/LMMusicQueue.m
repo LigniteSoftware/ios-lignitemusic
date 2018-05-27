@@ -34,6 +34,7 @@
 @synthesize nextTracks = _nextTracks;
 @synthesize previousTracks = _previousTracks;
 @synthesize count = _count;
+@synthesize numberOfItemsInSystemQueue = _numberOfItemsInSystemQueue;
 
 - (void)prepareQueueForBackgrounding {
 #warning Todo: prepare queue for backgrounding
@@ -199,8 +200,18 @@
 	return self.completeQueue.count;
 }
 
+- (BOOL)queueIsStale {
+	return (self.musicPlayer.nowPlayingTrack && (self.numberOfItemsInSystemQueue > 0) && (self.completeQueue.count == 0));
+}
+
 - (NSArray<LMMusicTrack*>*)previousTracks {
-	if(!self.musicPlayer.systemMusicPlayer.nowPlayingItem || self.numberOfItemsInSystemQueue == 0){
+	if(!self.musicPlayer.nowPlayingTrack || self.numberOfItemsInSystemQueue == 0){
+		return @[];
+	}
+	
+	if([self queueIsStale]){
+		NSLog(@"Queue is stale, rebuilding.");
+		[self rebuild];
 		return @[];
 	}
 	
@@ -214,7 +225,13 @@
 }
 
 - (NSArray<LMMusicTrack*>*)nextTracks {
-	if(!self.musicPlayer.systemMusicPlayer.nowPlayingItem || (self.numberOfItemsInSystemQueue == 0)){
+	if(!self.musicPlayer.nowPlayingTrack || (self.numberOfItemsInSystemQueue == 0)){
+		return @[];
+	}
+	
+	if([self queueIsStale]){
+		NSLog(@"Queue is stale, rebuilding.");
+		[self rebuild];
 		return @[];
 	}
 	
@@ -272,7 +289,7 @@
 			NSLog(@"Previously played: %@", track.title);
 		}
 		
-		NSLog(@"> Current track: %@", self.musicPlayer.systemMusicPlayer.nowPlayingItem.title);
+		NSLog(@"> Current track: %@", self.musicPlayer.nowPlayingTrack.title);
 		
 		NSArray *upNext = [self nextTracks];
 		for(NSInteger i = 0; i < upNext.count; i++){

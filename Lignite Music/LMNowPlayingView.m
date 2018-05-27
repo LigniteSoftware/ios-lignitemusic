@@ -21,15 +21,15 @@
 #import "LMMusicPlayer.h"
 #import "LMThemeEngine.h"
 #import "MBProgressHUD.h"
+#import "LMQueueView.h"
 #import "LMListEntry.h"
-#import "LMTableView.h"
 #import "LMSettings.h"
 #import "LMAppIcon.h"
 #import "LMExtras.h"
 #import "LMColour.h"
 #import "LMButton.h"
 
-@interface LMNowPlayingView() <LMMusicPlayerDelegate, LMButtonDelegate, LMProgressSliderDelegate, LMTableViewSubviewDataSource, LMListEntryDelegate, LMLayoutChangeDelegate, DDTableViewDelegate, LMThemeEngineDelegate, LMAccessibilityMusicControlBarDelegate>
+@interface LMNowPlayingView() <LMMusicPlayerDelegate, LMButtonDelegate, LMProgressSliderDelegate, LMListEntryDelegate, LMLayoutChangeDelegate, LMThemeEngineDelegate, LMAccessibilityMusicControlBarDelegate>
 
 @property LMMusicPlayer *musicPlayer;
 
@@ -49,9 +49,14 @@
 @property NSLayoutConstraint *mainViewLeadingConstraint;
 
 /**
- The background view for the now playing  queue.
+ The queue's background view.
  */
-@property LMView *queueView;
+@property UIView *queueBackgroundView;
+
+/**
+ The actual queue view for showing the current playback queue.
+ */
+@property LMQueueView *queueView;
 
 /**
  The view that goes on top of the main view when the queue is open so that the user can drag it from left to right to close the queue.
@@ -59,34 +64,9 @@
 @property LMView *queueOpenDraggingOverlayView;
 
 /**
- The items array for the now playing queue.
- */
-@property NSMutableArray *itemArray;
-
-/**
- The index of the currently highlighted item.
- */
-@property NSInteger currentlyHighlighted;
-
-/**
- The now playing queue table view.
- */
-@property LMTableView *queueTableView;
-
-/**
- The title label for nothing in queue.
- */
-@property UILabel *nothingInQueueTitleLabel;
-
-/**
  The layout manager.
  */
 @property LMLayoutManager *layoutManager;
-
-/**
- The label which will display if nothing is in queue or iOS isn't giving us a queue.
- */
-@property UILabel *nothingInQueueLabel;
 
 @property UIImageView *backgroundImageView;
 //@property UIView *shadingView;
@@ -272,13 +252,6 @@
 
 - (void)musicPlaybackModesDidChange:(LMMusicShuffleMode)shuffleMode repeatMode:(LMMusicRepeatMode)repeatMode {
 	[self reloadControlButtons];
-	
-	[self.queueTableView reloadSubviewData];
-	[self.queueTableView reloadData];
-}
-
-- (void)musicTrackDidChange:(LMMusicTrack *)newTrack {
-	[self refreshNothingInQueueText];
 }
 
 - (void)changeMusicTrack:(LMMusicTrack*)newTrack withIndex:(NSInteger)index {
@@ -409,94 +382,11 @@
 	
 	[self reloadFavouriteStatus];
 	
-	if(self.isUserFacing){
-		self.queueTableView.totalAmountOfObjects = self.musicPlayer.nowPlayingCollection.count;
-		[self.queueTableView reloadSubviewData];
-		[self.queueTableView reloadData];
-		
-		LMListEntry *highlightedEntry = nil;
-		int newHighlightedIndex = -1;
-		for(int i = 0; i < self.musicPlayer.nowPlayingCollection.count; i++){
-			LMMusicTrack *track = [self.musicPlayer.nowPlayingCollection.items objectAtIndex:i];
-			LMListEntry *entry = [self listEntryForIndex:i];
-			LMMusicTrack *entryTrack = entry.associatedData;
-			
-			if(entryTrack.persistentID == newTrack.persistentID && track.persistentID == newTrack.persistentID){
-				highlightedEntry = entry;
-			}
-			
-			if(track.persistentID == newTrack.persistentID){
-				newHighlightedIndex = i;
-			}
-		}
-		
-	//	NSLog(@"New highlighted %d previous %ld", newHighlightedIndex, (long)self.currentlyHighlighted);
-		
-		LMListEntry *previousHighlightedEntry = [self listEntryForIndex:self.currentlyHighlighted];
-		
-		self.currentlyHighlighted = newHighlightedIndex;
-		
-		if(![previousHighlightedEntry isEqual:highlightedEntry] || highlightedEntry == nil){
-			[previousHighlightedEntry setAsHighlighted:NO animated:YES];
-		}
-		
-		if(highlightedEntry){
-			[highlightedEntry setAsHighlighted:YES animated:YES];
-		}
-	}
-	
 	self.pausedTimer = [NSTimer scheduledTimerWithTimeInterval:0.25 block:^{
 		[self musicPlaybackStateDidChange:self.musicPlayer.playbackState];
 	} repeats:NO];
 	
-	[self refreshNothingInQueueText];
 	[self reloadControlButtons];
-}
-
-
-- (void)tableView:(UITableView*)tableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath {
-	NSLog(@"Move %@ to %@ from %p", sourceIndexPath, destinationIndexPath, tableView);
-	
-	if((([[NSDate new] timeIntervalSince1970] - self.lastTimeOfSwap)*1000) < 10){
-		NSLog(@"double up, rejecting");
-		return;
-	}
-	
-	LMListEntry *currentListEntry = [self.itemArray objectAtIndex:sourceIndexPath.section];
-	[self.itemArray removeObjectAtIndex:sourceIndexPath.section];
-	[self.itemArray insertObject:currentListEntry atIndex:destinationIndexPath.section];
-	
-	currentListEntry.collectionIndex = destinationIndexPath.section;
-	
-	[currentListEntry setAsHighlighted:YES animated:YES];
-	
-	[self.musicPlayer moveTrackInQueueFromIndex:sourceIndexPath.section toIndex:destinationIndexPath.section];
-	
-	[currentListEntry reloadContents];
-	
-	self.lastTimeOfSwap = [[NSDate new] timeIntervalSince1970];
-}
-
-- (UITableViewCell*)tableView:(UITableView *)tableView draggingCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
-	if(![LMLayoutManager isLandscapeiPad]){
-		cell.backgroundColor = [UIColor whiteColor];
-	}
-	return cell;
-}
-
-- (void)tableView:(UITableView *)tableView showDraggingView:(UIView *)draggingView atIndexPath:(NSIndexPath *)indexPath {
-	NSLog(@"Show dragging view at %@", indexPath);
-	[self.musicPlayer prepareQueueModification];
-}
-
-- (void)tableView:(UITableView *)tableView hideDraggingView:(UIView *)draggingView atIndexPath:(NSIndexPath *)indexPath {
-	NSLog(@"Hide dragging view at %@", indexPath);
-	
-	[self.musicPlayer finishQueueModification];
-}
-
-- (void)tableView:(UITableView *)tableView draggingGestureChanged:(UILongPressGestureRecognizer *)gesture {
-	
 }
 
 - (void)trackMovedInQueue:(LMMusicTrack *)trackMoved {
@@ -510,12 +400,10 @@
 }
 
 - (void)trackAddedToFavourites:(LMMusicTrack *)track {
-	[self.queueTableView reloadData];
 	[self reloadFavouriteStatus];
 }
 
 - (void)trackRemovedFromFavourites:(LMMusicTrack *)track {
-	[self.queueTableView reloadData];
 	[self reloadFavouriteStatus];
 }
 
@@ -539,8 +427,6 @@
 		
 		self.pausedBackgroundBlurView.alpha = alphaToUse;
 	}];
-	
-	[self refreshNothingInQueueText];
 }
 
 - (void)musicOutputPortDidChange:(AVAudioSessionPortDescription *)outputPort {
@@ -651,11 +537,13 @@
 - (void)setNowPlayingQueueOpen:(BOOL)open animated:(BOOL)animated {
     if(!open){
         [NSTimer scheduledTimerWithTimeInterval:animated ? 0.5 : 0.0 block:^{
-            self.queueView.hidden = YES;
+            self.queueBackgroundView.hidden = YES;
         } repeats:NO];
     }
     else{
-        self.queueView.hidden = NO;
+		[self.queueView resetContentOffsetToNowPlaying];
+		
+        self.queueBackgroundView.hidden = NO;
     }
     
 	[self layoutIfNeeded];
@@ -664,28 +552,9 @@
 	
 	self.queueOpenDraggingOverlayView.hidden = !open;
 	
-	self.mainViewLeadingConstraint.constant = open ? -self.queueView.frame.size.width : 0;
+	self.mainViewLeadingConstraint.constant = open ? -self.queueBackgroundView.frame.size.width : 0;
 	
 	self.originalPoint = CGPointZero;
-	
-	if(open && self.queueTableView.numberOfSections > 10){ //Ensure that the number of songs is greater than just a few
-		NSInteger fixedIndex = self.loadedTrackIndex - 1;
-		CGFloat contentOffsetY = ([self heightAtIndex:0 forTableView:self.queueTableView] + [self spacingAtIndex:0 forTableView:self.queueTableView]) * fixedIndex;
-		CGFloat maxContentOffsetY = self.queueTableView.contentSize.height-self.queueTableView.frame.size.height - 10;
-		if(contentOffsetY > maxContentOffsetY){
-			contentOffsetY = maxContentOffsetY;
-		}
-		else if(contentOffsetY < 0){
-			NSLog(@"Current content offset %@", NSStringFromCGPoint(self.queueTableView.contentOffset));
-			contentOffsetY = 0;
-		}
-		if(contentOffsetY == 0){
-			contentOffsetY = 100; //For some reason a content offset below 100 puts a whitespace up top
-		}
-		NSLog(@"Setting content offset to %@", NSStringFromCGPoint(CGPointMake(0, contentOffsetY)));
-		self.queueTableView.contentOffset = CGPointMake(0, contentOffsetY);
-//		[self.queueTableView scrollRectToVisible:CGRectMake(0, contentOffsetY, self.queueTableView.frame.size.width, self.queueTableView.frame.size.height) animated:YES];
-	}
 	
 	[UIView animateWithDuration:animated ? 0.25 : 0.0 animations:^{
 		[self reloadControlButtons];
@@ -764,52 +633,6 @@
 	[self.musicPlayer autoBackThrough];
 }
 
-
-
-- (id)subviewAtIndex:(NSUInteger)index forTableView:(LMTableView *)tableView {
-	if(index >= self.musicPlayer.nowPlayingCollection.items.count){
-//		[self.coreViewController dismissNowPlaying];
-		return nil;
-	}
-	
-	LMListEntry *entry = [self.itemArray objectAtIndex:index % self.itemArray.count];
-	entry.collectionIndex = index;
-	entry.associatedData = [self.musicPlayer.nowPlayingCollection.items objectAtIndex:index];
-	entry.isAccessibilityElement = YES;
-	entry.accessibilityHint = NSLocalizedString(@"VoiceOverHint_QueueEntry", nil);
-	
-	[entry setAsHighlighted:(self.currentlyHighlighted == entry.collectionIndex) animated:NO];
-	
-//	if((self.currentlyHighlighted == entry.collectionIndex) ){
-//		entry.backgroundColor = [UIColor cyanColor];
-//	}
-	
-//	LMMusicTrack *track = [self.musicPlayer.nowPlayingCollection.items objectAtIndex:index];
-//	if(track.isFavourite){
-//		entry.leftButtonExpansionColour = [LMColour deletionRedColour];
-//		[[entry.leftButtons firstObject] setImage:[LMAppIcon imageForIcon:LMIconUnfavouriteWhite] forState:UIControlStateNormal];
-//	}
-//	else{
-//		entry.leftButtonExpansionColour = [LMColour successGreenColour];
-//		[[entry.leftButtons firstObject] setImage:[LMAppIcon imageForIcon:LMIconFavouriteWhiteFilled] forState:UIControlStateNormal];
-//	}
-	
-	[entry reloadContents];
-	return entry;
-}
-
-- (void)refreshNothingInQueueText {
-	BOOL hidden = (self.musicPlayer.nowPlayingCollection.count > 0) && self.musicPlayer.nowPlayingWasSetWithinLigniteMusic;
-	
-	self.nothingInQueueLabel.hidden = hidden;
-	self.nothingInQueueTitleLabel.hidden = hidden;
-	
-	self.queueTableView.hidden = !hidden;
-	
-	self.nothingInQueueTitleLabel.text = NSLocalizedString(self.musicPlayer.nowPlayingWasSetWithinLigniteMusic ? @"NothingInQueue" : @"QueueUnavailable", nil);
-	self.nothingInQueueLabel.text = NSLocalizedString(self.musicPlayer.nowPlayingWasSetWithinLigniteMusic ? @"TheresNothingHere" : @"iOSNotProvidingQueue", nil);
-}
-
 - (void)trackRemovedFromQueue:(LMMusicTrack *)trackRemoved {
 	MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self animated:YES];
 	
@@ -827,90 +650,6 @@
 //	[self.queueTableView reloadData];
 
 //	[self changeMusicTrack:self.loadedTrack withIndex:self.loadedTrackIndex];
-}
-
-- (void)amountOfObjectsRequiredChangedTo:(NSUInteger)amountOfObjects forTableView:(LMTableView *)tableView {
-//	return;
-	
-//	NSLog(@"Required! %d", (int)amountOfObjects);
-	
-    if(!self.itemArray){
-        self.itemArray = [NSMutableArray new];
-    }
-    
-	if(self.itemArray.count < amountOfObjects){
-		for(NSUInteger i = self.itemArray.count; i < amountOfObjects; i++){
-//            NSLog(@"Need to create %ld", i);
-			LMListEntry *listEntry = [[LMListEntry alloc]initWithDelegate:self];
-			listEntry.collectionIndex = i;
-			listEntry.alignIconToLeft = NO;
-			listEntry.stretchAcrossWidth = NO;
-			listEntry.iPromiseIWillHaveAnIconForYouSoon = YES;
-			
-//			UIColor *colour = [UIColor colorWithRed:47/255.0 green:47/255.0 blue:49/255.0 alpha:1.0];
-//			UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14.0f];
-//			MGSwipeButton *saveButton = [MGSwipeButton buttonWithTitle:@"" icon:[LMAppIcon imageForIcon:LMIconRemoveFromQueue] backgroundColor:colour padding:0 callback:^BOOL(MGSwipeTableCell *sender) {
-//				LMMusicTrack *trackToRemove = [self.musicPlayer.nowPlayingCollection.items objectAtIndex:listEntry.collectionIndex];
-//				
-//				[self.musicPlayer removeTrackFromQueue:trackToRemove];
-//				
-//				if(listEntry.collectionIndex == self.musicPlayer.indexOfNowPlayingTrack){
-//					if(self.musicPlayer.nowPlayingCollection.items.count > 0){
-//						NSInteger indexToUse = listEntry.collectionIndex;
-//						if(indexToUse >= self.musicPlayer.nowPlayingCollection.items.count){
-//							indexToUse = 0;
-//						}
-//						LMMusicTrack *newTrack = [self.musicPlayer.nowPlayingCollection.items objectAtIndex:indexToUse];
-//						NSLog(@"New track %@", newTrack.title);
-//						[self.musicPlayer setNowPlayingTrack:newTrack];
-//						[self changeMusicTrack:newTrack withIndex:indexToUse];
-//					}
-//				}
-//				
-//				if(self.musicPlayer.nowPlayingCollection.items.count == 0){
-//					NSLog(@"Close");
-//				}
-//				
-//				NSLog(@"Remove %@", trackToRemove.title);
-//				
-//				return YES;
-//			}];
-//			saveButton.titleLabel.font = font;
-//			saveButton.titleLabel.hidden = YES;
-//			saveButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
-//			saveButton.imageEdgeInsets = UIEdgeInsetsMake(25, 0, 25, 0);
-//			
-//			listEntry.rightButtons = @[ saveButton ];
-//			listEntry.rightButtonExpansionColour = [UIColor colorWithRed:0.92 green:0.00 blue:0.00 alpha:1.0];
-//			
-//			
-//			MGSwipeButton *favouriteButton = [MGSwipeButton buttonWithTitle:@"" icon:[LMAppIcon imageForIcon:LMIconFavouriteWhiteFilled] backgroundColor:colour padding:0 callback:^BOOL(MGSwipeTableCell *sender) {
-//				LMMusicTrack *track = [self.musicPlayer.nowPlayingCollection.items objectAtIndex:listEntry.collectionIndex];
-//				
-//				if(track.isFavourite){
-//					[self.musicPlayer removeTrackFromFavourites:track];
-//				}
-//				else{
-//					[self.musicPlayer addTrackToFavourites:track];
-//				}
-//				
-//				NSLog(@"Favourite %@", track.title);
-//				
-//				return YES;
-//			}];
-//			favouriteButton.titleLabel.font = font;
-//			favouriteButton.titleLabel.hidden = YES;
-//			favouriteButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
-//			favouriteButton.imageEdgeInsets = UIEdgeInsetsMake(25, 0, 25, 0);
-//			
-//			listEntry.leftButtons = @[ favouriteButton ];
-//			listEntry.leftButtonExpansionColour = [LMColour successGreenColour];
-			
-			[self.itemArray addObject:listEntry];
-		}
-	}
-	
-	[self refreshNothingInQueueText];
 }
 
 - (void)reloadFavouriteStatus {
@@ -935,155 +674,6 @@
 	else{
 		[self.musicPlayer addTrackToFavourites:self.loadedTrack];
 	}
-}
-
-- (CGFloat)heightAtIndex:(NSUInteger)index forTableView:(LMTableView *)tableView {
-	return LMLayoutManager.standardListEntryHeight;
-}
-
-- (LMListEntry*)listEntryForIndex:(NSInteger)index {
-	if(index == -1){
-		return nil;
-	}
-	
-	LMListEntry *entry = nil;
-	for(int i = 0; i < self.itemArray.count; i++){
-		LMListEntry *indexEntry = [self.itemArray objectAtIndex:i];
-		if(indexEntry.collectionIndex == index){
-			entry = indexEntry;
-			break;
-		}
-	}
-	return entry;
-}
-
-- (int)indexOfListEntry:(LMListEntry*)entry {
-	int indexOfEntry = -1;
-	for(int i = 0; i < self.itemArray.count; i++){
-		LMListEntry *subviewEntry = (LMListEntry*)[self.itemArray objectAtIndex:i];
-		if([entry isEqual:subviewEntry]){
-			indexOfEntry = i;
-			break;
-		}
-	}
-	return indexOfEntry;
-}
-
-- (CGFloat)spacingAtIndex:(NSUInteger)index forTableView:(LMTableView *)tableView {
-	return 10;
-}
-
-- (void)tappedListEntry:(LMListEntry*)entry{
-	NSLog(@"Hey %d", (int)entry.collectionIndex);
-	LMListEntry *currentHighlighted = [self listEntryForIndex:self.currentlyHighlighted];
-	[currentHighlighted setAsHighlighted:NO animated:YES];
-	
-	[entry setAsHighlighted:YES animated:YES];
-	
-	self.currentlyHighlighted = entry.collectionIndex;
-	
-	if(entry.collectionIndex >= self.musicPlayer.nowPlayingCollection.count){
-		[self.queueTableView reloadData];
-		return;
-	}
-	
-	[self.musicPlayer setNowPlayingTrack:[self.musicPlayer.nowPlayingCollection.items objectAtIndex:entry.collectionIndex]];
-	[self.musicPlayer play];
-}
-
-- (UIColor*)tapColourForListEntry:(LMListEntry*)entry {
-	return [LMColour mainColour];
-}
-
-- (NSString*)titleForListEntry:(LMListEntry*)entry {
-//	return @"queue title";
-//	return [NSString stringWithFormat:@"boiii %d", (int)entry.collectionIndex];
-	
-	LMMusicTrack *associatedTrack = [self.musicPlayer.nowPlayingCollection.items objectAtIndex:entry.collectionIndex];
-	
-	NSString *title = [NSString stringWithFormat:@"%@", [[self.musicPlayer.nowPlayingCollection.items objectAtIndex:entry.collectionIndex] title]];
-	
-	if(associatedTrack.artist){
-		entry.accessibilityLabel =  [NSString stringWithFormat:@"%@, %@", title, associatedTrack.artist];
-	}
-	
-	return title;
-}
-
-- (NSString*)subtitleForListEntry:(LMListEntry*)entry {
-//	return @"queue subtitle";
-	LMMusicTrack *associatedTrack = [self.musicPlayer.nowPlayingCollection.items objectAtIndex:entry.collectionIndex];
-	
-	if(associatedTrack.artist){
-		return [NSString stringWithFormat:@"%@ - %@", [LMNowPlayingView durationStringTotalPlaybackTime:[associatedTrack playbackDuration]], associatedTrack.artist];
-	}
-	
-	return [NSString stringWithFormat:@"%@", [LMNowPlayingView durationStringTotalPlaybackTime:[associatedTrack playbackDuration]]];
-}
-
-- (UIImage*)iconForListEntry:(LMListEntry*)entry {
-	return [[self.musicPlayer.nowPlayingCollection.items objectAtIndex:entry.collectionIndex] albumArt];
-}
-
-- (NSArray<MGSwipeButton*>*)swipeButtonsForListEntry:(LMListEntry*)listEntry rightSide:(BOOL)rightSide {
-	LMMusicTrack *track = [self.musicPlayer.nowPlayingCollection.items objectAtIndex:listEntry.collectionIndex];
-	
-	UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14.0f];
-	UIColor *colour = [UIColor colorWithRed:47/255.0 green:47/255.0 blue:49/255.0 alpha:1.0];
-	UIImage *icon = [LMAppIcon imageForIcon:LMIconRemoveFromQueue];
-	if(!rightSide){ //Favourite/unfavourite
-		icon = [LMAppIcon imageForIcon:track.isFavourite ? LMIconUnfavouriteWhite : LMIconFavouriteWhiteFilled];
-	}
-	
-	MGSwipeButton *swipeButton
-	= [MGSwipeButton buttonWithTitle:@""
-								icon:icon
-					 backgroundColor:colour
-							 padding:0
-							callback:^BOOL(MGSwipeTableCell *sender) {
-								if(rightSide){
-									BOOL dismiss = (self.musicPlayer.nowPlayingCollection.count == 1);
-									
-									[self.musicPlayer removeTrackFromQueue:track];
-									
-									if(dismiss){
-										[self.coreViewController dismissNowPlaying];
-									}
-									
-									NSLog(@"Remove %@ from queue", track.title);
-								}
-								else{
-									if(track.isFavourite){
-										[self.musicPlayer removeTrackFromFavourites:track];
-									}
-									else{
-										[self.musicPlayer addTrackToFavourites:track];
-									}
-									
-									NSLog(@"Favourite %@", track.title);
-								}
-								
-								return YES;
-							}];
-	
-	swipeButton.titleLabel.font = font;
-	swipeButton.titleLabel.hidden = YES;
-	swipeButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
-	swipeButton.imageEdgeInsets = UIEdgeInsetsMake(LMLayoutManager.isExtraSmall ? 18 : 25, 0, LMLayoutManager.isExtraSmall ? 18 : 25, 0);
-	
-	return @[ swipeButton ];
-}
-
-- (UIColor*)swipeButtonColourForListEntry:(LMListEntry*)listEntry rightSide:(BOOL)rightSide {
-	UIColor *swipeColour = [LMColour successGreenColour];
-	
-	LMMusicTrack *musicTrack = [self.musicPlayer.nowPlayingCollection.items objectAtIndex:listEntry.collectionIndex];
-	
-	if(rightSide || (!rightSide && musicTrack.isFavourite)){ //Remove from queue or favourite/unfavourite
-		swipeColour = [LMColour deletionRedColour];
-	}
-	
-	return swipeColour;
 }
 
 - (void)panNowPlayingDown:(UIPanGestureRecognizer *)recognizer {
@@ -1138,13 +728,13 @@
 
 
 - (void)panQueueClosed:(UIPanGestureRecognizer *)recognizer {
-    self.queueView.hidden = NO;
+    self.queueBackgroundView.hidden = NO;
     
 	CGPoint translation = [recognizer translationInView:self.mainView];
 	
 	CGFloat totalTranslation;
 	if(recognizer.view == self.queueOpenDraggingOverlayView){
-		totalTranslation = (self.queueOriginalPoint.x-self.queueView.frame.size.width) + translation.x;
+		totalTranslation = (self.queueOriginalPoint.x-self.queueBackgroundView.frame.size.width) + translation.x;
 	}
 	else{
 		totalTranslation = self.queueOriginalPoint.x + translation.x;
@@ -1188,8 +778,6 @@
 			[self setNowPlayingQueueOpen:YES animated:NO];
 		}
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-		[self.queueTableView reloadData];
-		
 		[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
 			self.buttonStackView.spacing = [self buttonStackSpacing];
 		} repeats:NO];
@@ -1204,12 +792,12 @@
 		[NSLayoutConstraint deactivateConstraints:self.currentiPadSpecificConstraintsArray];
 	}
 	
-	[self.queueTableView removeFromSuperview];
+#warning adjust queue view for ipad
 	
 	self.currentiPadSpecificConstraintsArray = [NSLayoutConstraint autoCreateAndInstallConstraints:^{
 		if(![LMLayoutManager isiPad]){
-			[self.queueView addSubview:self.queueTableView];
-			[self.queueTableView autoPinEdgesToSuperviewEdges];
+//			[self.queueView addSubview:self.queueTableView];
+//			[self.queueTableView autoPinEdgesToSuperviewEdges];
 			
 			[self.paddingView autoCentreInSuperview];
 			[self.paddingView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withOffset:-paddingViewPadding];
@@ -1222,12 +810,12 @@
 		self.favouriteHeartImageView.hidden = self.queueButton.hidden;
 		
 		if(self.queueButton.hidden){ //Is iPad landscape
-			[self.mainView addSubview:self.queueTableView];
-			
-			[self.queueTableView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:paddingViewPadding];
-			[self.queueTableView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:paddingViewPadding];
-			[self.queueTableView autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:paddingViewPadding];
-			[self.queueTableView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.mainView withMultiplier:(4.0/10.0)].constant = paddingViewPadding;
+//			[self.mainView addSubview:self.queueTableView];
+//
+//			[self.queueTableView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:paddingViewPadding];
+//			[self.queueTableView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:paddingViewPadding];
+//			[self.queueTableView autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:paddingViewPadding];
+//			[self.queueTableView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.mainView withMultiplier:(4.0/10.0)].constant = paddingViewPadding;
 			
 			[self.paddingView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:0];
 			[self.paddingView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:paddingViewPadding];
@@ -1235,24 +823,14 @@
 			[self.paddingView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.mainView withMultiplier:(5.0/10.0)].constant = paddingViewPadding;
 		}
 		else{
-			[self.queueView addSubview:self.queueTableView];
-			[self.queueTableView autoPinEdgesToSuperviewEdges];
+//			[self.queueView addSubview:self.queueTableView];
+//			[self.queueTableView autoPinEdgesToSuperviewEdges];
 			
 			[self.paddingView autoCentreInSuperview];
 			[self.paddingView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withOffset:-paddingViewPadding];
 			[self.paddingView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withOffset:-paddingViewPadding];
 		}
 	}];
-	
-	[self.queueTableView reloadSubviewData];
-}
-
-- (void)themeChanged:(LMTheme)theme {
-	if((self.musicPlayer.indexOfNowPlayingTrack < self.musicPlayer.nowPlayingCollection.count)
-	   && (self.musicPlayer.indexOfNowPlayingTrack < self.itemArray.count)){
-		LMListEntry *highlightedEntry = [self.itemArray objectAtIndex:self.musicPlayer.indexOfNowPlayingTrack];
-		[highlightedEntry reloadContents];
-	}
 }
 
 //I hate this code so much
@@ -1305,95 +883,32 @@
 	
 	
 	
-	self.queueView = [LMView newAutoLayoutView];
-	self.queueView.backgroundColor = [UIColor whiteColor];
-    self.queueView.hidden = YES;
-	[self addSubview:self.queueView];
+	self.queueBackgroundView = [LMView newAutoLayoutView];
+	self.queueBackgroundView.backgroundColor = [UIColor whiteColor];
+    self.queueBackgroundView.hidden = YES;
+	[self addSubview:self.queueBackgroundView];
 	
 	NSArray *queueViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-		[self.queueView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-		[self.queueView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		[self.queueView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.mainView];
-		[self.queueView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:[LMLayoutManager isiPad] ? (2.0/4.0) : (3.0/4.0)];
+		[self.queueBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+		[self.queueBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[self.queueBackgroundView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.mainView];
+		[self.queueBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:[LMLayoutManager isiPad] ? (2.0/4.0) : (3.0/4.0)];
 	}];
 	[LMLayoutManager addNewPortraitConstraints:queueViewPortraitConstraints];
 	
 	NSArray *queueViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-		[self.queueView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-		[self.queueView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		[self.queueView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.mainView];
-		[self.queueView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(1.0/2.0)];
+		[self.queueBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+		[self.queueBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[self.queueBackgroundView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.mainView];
+		[self.queueBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(1.0/2.0)];
 	}];
 	[LMLayoutManager addNewLandscapeConstraints:queueViewLandscapeConstraints];
 	
 	
-	self.currentlyHighlighted = -1;
+	self.queueView = [LMQueueView newAutoLayoutView];
+	[self.queueBackgroundView addSubview:self.queueView];
 	
-	self.queueTableView = [LMTableView newAutoLayoutView];
-	self.queueTableView.totalAmountOfObjects = self.musicPlayer.nowPlayingCollection.count;
-//	self.queueTableView.averageCellHeight = [LMLayoutManager standardListEntryHeight] * 0.70;
-	self.queueTableView.subviewDataSource = self;
-	self.queueTableView.shouldUseDividers = YES;
-	self.queueTableView.title = @"QueueTableView";
-	self.queueTableView.bottomSpacing = 0;
-	self.queueTableView.notHighlightedBackgroundColour = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.0];
-	self.queueTableView.layer.masksToBounds = YES;
-	self.queueTableView.layer.cornerRadius = 8.0;
-	self.queueTableView.backgroundColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.5]; //I wonder what this will do
-	self.queueTableView.clipsToBounds = YES;
-	self.queueTableView.alwaysBounceVertical = NO;
-	self.queueTableView.longPressReorderDelegate = self;
-	self.queueTableView.longPressReorderEnabled = YES;
-	self.queueTableView.isAccessibilityElement = NO;
-	[self.queueView addSubview:self.queueTableView];
-	
-	//queueView constraints are setup in -setupiPadSpecificLayout
-	
-	self.nothingInQueueTitleLabel = [UILabel newAutoLayoutView];
-	self.nothingInQueueTitleLabel.numberOfLines = 0;
-	self.nothingInQueueTitleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:22.0f];
-	self.nothingInQueueTitleLabel.text = NSLocalizedString(@"NothingInQueue", nil);
-	self.nothingInQueueTitleLabel.textAlignment = NSTextAlignmentLeft;
-	self.nothingInQueueTitleLabel.backgroundColor = [UIColor whiteColor];
-	[self.queueView addSubview:self.nothingInQueueTitleLabel];
-	
-	if([LMLayoutManager isiPhoneX]){
-		NSArray *nothingInQueueTitleLabelPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-			[self.nothingInQueueTitleLabel autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:40];
-			[self.nothingInQueueTitleLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:20];
-			[self.nothingInQueueTitleLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:20];
-		}];
-		[LMLayoutManager addNewPortraitConstraints:nothingInQueueTitleLabelPortraitConstraints];
-		
-		NSArray *nothingInQueueTitleLabelLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-			[self.nothingInQueueTitleLabel autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:20];
-			[self.nothingInQueueTitleLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:20];
-			[self.nothingInQueueTitleLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:64];
-		}];
-		[LMLayoutManager addNewLandscapeConstraints:nothingInQueueTitleLabelLandscapeConstraints];
-	}
-	else{
-		[self.nothingInQueueTitleLabel autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:20];
-		[self.nothingInQueueTitleLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:20];
-		[self.nothingInQueueTitleLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:20];
-	}
-	
-	
-	self.nothingInQueueLabel = [UILabel newAutoLayoutView];
-	self.nothingInQueueLabel.numberOfLines = 0;
-	self.nothingInQueueLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:20.0f];
-	self.nothingInQueueLabel.text = NSLocalizedString(@"TheresNothingHere", nil);
-	self.nothingInQueueLabel.textAlignment = NSTextAlignmentLeft;
-	self.nothingInQueueLabel.backgroundColor = [UIColor whiteColor];
-	self.nothingInQueueLabel.textColor = [UIColor blackColor];
-	[self.queueView addSubview:self.nothingInQueueLabel];
-	
-	[self.nothingInQueueLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.nothingInQueueTitleLabel withOffset:20];
-	[self.nothingInQueueLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.nothingInQueueTitleLabel];
-	[self.nothingInQueueLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.nothingInQueueTitleLabel];
-	
-	[self refreshNothingInQueueText];
-	
+	[self.queueView autoPinEdgesToSuperviewEdges];
 	
 	
 	self.backgroundImageView = [UIImageView newAutoLayoutView];
@@ -1759,7 +1274,7 @@
 	
 //	[self reloadControlButtonIcons];
 	
-	[self musicTrackDidChange:self.musicPlayer.nowPlayingTrack];
+//	[self musicTrackDidChange:self.musicPlayer.nowPlayingTrack];
 	[self musicPlaybackStateDidChange:self.musicPlayer.playbackState];
 	
 	UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tappedNowPlaying)];
@@ -1798,6 +1313,9 @@
 	
 	[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
 		[self changeMusicTrack:self.loadedTrack withIndex:self.loadedTrackIndex];
+		if(self.isUserFacing){
+			[self setNowPlayingQueueOpen:YES animated:YES];
+		}
 	} repeats:NO];
 }
 

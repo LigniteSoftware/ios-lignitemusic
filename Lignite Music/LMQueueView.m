@@ -147,7 +147,11 @@
 }
 
 - (UIImage*)iconForListEntry:(LMListEntry*)entry {
-	return [self trackForListEntry:entry].albumArt;
+	UIImage *albumArt = [self trackForListEntry:entry].albumArt;
+	if(!albumArt){
+		albumArt = [LMAppIcon imageForIcon:LMIconNoAlbumArt75Percent];
+	}
+	return albumArt;
 }
 
 - (NSArray<MGSwipeButton*>*)swipeButtonsForListEntry:(LMListEntry*)listEntry rightSide:(BOOL)rightSide {
@@ -459,6 +463,15 @@
 }
 
 
+- (void)resetContentOffsetToNowPlaying {
+	NSLog(@"Reset content offset");
+	
+	[self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:self.musicQueue.previousTracks.count inSection:0] atScrollPosition:UICollectionViewScrollPositionTop animated:NO];
+	
+	self.collectionView.contentOffset = CGPointMake(self.collectionView.contentOffset.x, self.collectionView.contentOffset.y - LMLayoutManager.standardListEntryHeight - 20);
+}
+
+
 - (void)layoutSubviews {
 	if(!self.didLayoutConstraints){
 		self.didLayoutConstraints = YES;
@@ -468,6 +481,8 @@
 		
 		self.musicQueue = [LMMusicQueue sharedMusicQueue];
 		[self.musicQueue addDelegate:self];
+		
+#warning Todo: add theme delegate support
 		
 		self.backgroundColor = [LMColour whiteColour];
 		
