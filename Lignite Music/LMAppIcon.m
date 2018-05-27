@@ -126,6 +126,10 @@
 			return @"icon_minimize";
 		case LMIconMaximize:
 			return @"icon_maximize";
+		case LMIconPreviousTracks:
+			return @"icon_previous_tracks";
+		case LMIconNextTracks:
+			return @"icon_next_tracks";
 	}
 	return @"icon_bug";
 }

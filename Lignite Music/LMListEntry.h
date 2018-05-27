@@ -21,6 +21,9 @@
 - (UIImage*)iconForListEntry:(LMListEntry*)entry;
 
 /*
+ * Thank you past Edwin :)
+ *
+ 
  - (void)tappedListEntry:(LMListEntry*)entry {
  NSLog(@"Tapped %@", entry);
  }

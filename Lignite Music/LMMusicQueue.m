@@ -31,12 +31,16 @@
 
 @implementation LMMusicQueue
 
+@synthesize nextTracks = _nextTracks;
+@synthesize previousTracks = _previousTracks;
+@synthesize count = _count;
+
 - (void)prepareQueueForBackgrounding {
 #warning Todo: prepare queue for backgrounding
 }
 
-- (NSInteger)numberOfItemsInQueue {
-	return [[MPMusicPlayerController systemMusicPlayer] performSelector:@selector(numberOfItems)];;
+- (NSInteger)numberOfItemsInSystemQueue {
+	return [[MPMusicPlayerController systemMusicPlayer] performSelector:@selector(numberOfItems)];
 }
 
 - (MPMediaItem*)queueTrackAtIndex:(unsigned long long)index  {
@@ -160,8 +164,12 @@
 	NSLog(@"Move track %d to index %d", (int)oldIndex, (int)newIndex);
 }
 
-- (nonnull NSArray<LMMusicTrack*>*)previousTracks {
-	if(!self.musicPlayer.systemMusicPlayer.nowPlayingItem || self.numberOfItemsInQueue == 0){
+- (NSInteger)count {
+	return self.completeQueue.count;
+}
+
+- (NSArray<LMMusicTrack*>*)previousTracks {
+	if(!self.musicPlayer.systemMusicPlayer.nowPlayingItem || self.numberOfItemsInSystemQueue == 0){
 		return @[];
 	}
 	
@@ -174,8 +182,8 @@
 	return [self.completeQueue subarrayWithRange:NSMakeRange(0, indexOfNowPlayingTrack)];
 }
 
-- (nonnull NSArray<LMMusicTrack*>*)nextTracks {
-	if(!self.musicPlayer.systemMusicPlayer.nowPlayingItem || (self.numberOfItemsInQueue == 0)){
+- (NSArray<LMMusicTrack*>*)nextTracks {
+	if(!self.musicPlayer.systemMusicPlayer.nowPlayingItem || (self.numberOfItemsInSystemQueue == 0)){
 		return @[];
 	}
 	
@@ -192,6 +200,10 @@
 	return [self.completeQueue subarrayWithRange:NSMakeRange(indexOfNextTrack, length)];
 }
 
+- (BOOL)queueExists {
+	return (self.completeQueue.count > 0);
+}
+
 - (void)rebuild {
 	__weak id weakSelf = self;
 
@@ -202,11 +214,13 @@
 			NSLog(@"A strong copy of self doesn't exist, can't build queue.");
 			return;
 		}
+		
+		BOOL noPreviousQueue = ![self queueExists];
 
 		NSTimeInterval startTime = [[NSDate new] timeIntervalSince1970];
 
 		NSMutableArray<LMMusicTrack*> *systemQueueArray = [NSMutableArray new];
-		for(NSInteger i = 0; i < strongSelf.numberOfItemsInQueue; i++){
+		for(NSInteger i = 0; i < strongSelf.numberOfItemsInSystemQueue; i++){
 			LMMusicTrack *track = [strongSelf queueTrackAtIndex:i];
 			if(track){
 				NSLog(@"Track %d is %@", (int)i, track.title);
@@ -218,6 +232,8 @@
 		}
 
 		self.completeQueue = [NSArray arrayWithArray:systemQueueArray];
+		
+		BOOL noCurrentQueue = ![self queueExists];
 		
 		NSArray *previous = [self previousTracks];
 		for(NSInteger i = 0; i < previous.count; i++){
@@ -234,18 +250,27 @@
 		}
 		
 		NSTimeInterval endTime = [[NSDate new] timeIntervalSince1970];
-		NSLog(@"\nLMMusicQueue rebuild summary\n%d out of %d tracks captured in %f seconds.\n%d tracks previous, %d tracks next.", (int)self.completeQueue.count, (int)self.numberOfItemsInQueue, (endTime-startTime), (int)previous.count, (int)upNext.count);
+		NSLog(@"\nLMMusicQueue rebuild summary\n%d out of %d tracks captured in %f seconds.\n%d tracks previous, %d tracks next.\n\nNo previous queue %d, no current queue %d.", (int)self.completeQueue.count, (int)self.numberOfItemsInSystemQueue, (endTime-startTime), (int)previous.count, (int)upNext.count, noPreviousQueue, noCurrentQueue);
 
 
-//		dispatch_async(dispatch_get_main_queue(), ^{
-//			for(id<LMMusicQueueDelegate>delegate in strongSelf.delegates){
-//				if([delegate respondsToSelector:@selector(trackAddedToQueue:)]){
-//					[delegate trackAddedToQueue:[systemQueueArray firstObject]];
-//				}
-//			}
-//
-//			NSLog(@"Finished building and distributing system queue. %lu tracks loaded. Queue too large? %d", (unsigned long)systemQueueArray.count, queueTooLarge);
-//		});
+		dispatch_async(dispatch_get_main_queue(), ^{
+			if(noPreviousQueue && !noCurrentQueue){
+				for(id<LMMusicQueueDelegate>delegate in strongSelf.delegates){
+					if([delegate respondsToSelector:@selector(queueBegan)]){
+						[delegate queueBegan];
+					}
+				}
+			}
+			else if(!noPreviousQueue && noCurrentQueue){
+				for(id<LMMusicQueueDelegate>delegate in strongSelf.delegates){
+					if([delegate respondsToSelector:@selector(queueEnded)]){
+						[delegate queueEnded];
+					}
+				}
+			}
+
+			NSLog(@"Finished building and distributing system queue. %lu tracks loaded.", (unsigned long)systemQueueArray.count);
+		});
 	});
 }
 
@@ -261,6 +286,8 @@
 	self = [super init];
 	if(self){
 		self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
+		
+		self.delegates = [NSMutableArray new];
 	}
 	return self;
 }

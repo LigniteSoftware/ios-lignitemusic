@@ -61,6 +61,7 @@
 #import "LMTutorialViewController.h"
 #import "LMDebugViewController.h"
 #import "LMMusicQueue.h"
+#import "LMQueueView.h"
 //#import "Lignite Music-Bridging-Header.h"
 //#import "Popover-Swift.h"
 
@@ -1614,6 +1615,9 @@
 }
 
 - (void)loadButtonNavigationBar {
+	return;
+	
+	
 	if(self.buttonNavigationBar){
 		return;
 	}
@@ -2077,6 +2081,11 @@
 		 * Test area
 		 *
 		 */
+		
+		LMQueueView *queueView = [LMQueueView newAutoLayoutView];
+		[self.view addSubview:queueView];
+		
+		[queueView autoPinEdgesToSuperviewEdges];
 		
 		[NSTimer scheduledTimerWithTimeInterval:1.0 block:^{
 			LMMusicQueue *queue = [LMMusicQueue sharedMusicQueue];
