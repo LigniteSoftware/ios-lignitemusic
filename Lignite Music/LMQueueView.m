@@ -14,7 +14,7 @@
 #import "LMQueueView.h"
 #import "LMColour.h"
 
-@interface LMQueueView()<UICollectionViewDelegate, UICollectionViewDataSource, LMMusicQueueDelegate, LMListEntryDelegate, LMQueueViewHeaderDelegate>
+@interface LMQueueView()<UICollectionViewDelegate, UICollectionViewDataSource, LMMusicQueueDelegate, LMListEntryDelegate, LMQueueViewHeaderDelegate, LMMusicPlayerDelegate>
 
 /**
  The collection view which displays the queue.
@@ -120,7 +120,13 @@
 }
 
 - (NSString*)titleForListEntry:(LMListEntry*)entry {
-	return [self trackForListEntry:entry].title;
+	LMMusicTrack *track = [self trackForListEntry:entry];
+	NSInteger indexInCompleteQueue
+		= [self.musicQueue indexOfTrackInCompleteQueueFromPreviousTracks:(entry.indexPath.section == 0)
+												   withIndexInSubQueueOf:entry.indexPath.row];
+	NSString *fixedTitle = [NSString stringWithFormat:@"%d@%d == %d: %@", (int)entry.indexPath.row, (int)entry.indexPath.section, (int)indexInCompleteQueue, track.title];
+//	return fixedTitle;
+	return track.title;
 }
 
 - (NSString*)subtitleForListEntry:(LMListEntry*)entry {
@@ -132,13 +138,73 @@
 	return [self trackForListEntry:entry].albumArt;
 }
 
+- (NSArray<MGSwipeButton*>*)swipeButtonsForListEntry:(LMListEntry*)listEntry rightSide:(BOOL)rightSide {
+	LMMusicTrack *track = (LMMusicTrack*)listEntry.associatedData;
+	
+	UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14.0f];
+	UIColor *colour = [UIColor colorWithRed:47/255.0 green:47/255.0 blue:49/255.0 alpha:1.0];
+	UIImage *icon = [LMAppIcon imageForIcon:LMIconAddToQueue];
+	if(!rightSide){ //Favourite/unfavourite
+		icon = [LMAppIcon imageForIcon:track.isFavourite ? LMIconUnfavouriteWhite : LMIconFavouriteWhiteFilled];
+	}
+	
+	MGSwipeButton *swipeButton
+	= [MGSwipeButton buttonWithTitle:@""
+								icon:icon
+					 backgroundColor:colour
+							 padding:0
+							callback:^BOOL(MGSwipeTableCell *sender) {
+								if(rightSide){
+									[self.musicPlayer addTrackToQueue:track];
+									
+									NSLog(@"Queue %@", track.title);
+								}
+								else{
+									if(track.isFavourite){
+										[self.musicPlayer removeTrackFromFavourites:track];
+									}
+									else{
+										[self.musicPlayer addTrackToFavourites:track];
+									}
+									
+									NSLog(@"Favourite %@", track.title);
+								}
+								
+								return YES;
+							}];
+	
+	swipeButton.titleLabel.font = font;
+	swipeButton.titleLabel.hidden = YES;
+	swipeButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
+	swipeButton.imageEdgeInsets = UIEdgeInsetsMake(LMLayoutManager.isExtraSmall ? 18 : 25, 0, LMLayoutManager.isExtraSmall ? 18 : 25, 0);
+	
+	//	swipeButton.clipsToBounds = YES;
+	//	swipeButton.layer.masksToBounds = YES;
+	//	swipeButton.layer.cornerRadius = 8.0f;
+	
+	return @[ swipeButton ];
+}
+
+- (UIColor*)swipeButtonColourForListEntry:(LMListEntry*)listEntry rightSide:(BOOL)rightSide {
+	UIColor *swipeColour = [LMColour successGreenColour];
+	
+	LMMusicTrack *musicTrack = (LMMusicTrack*)listEntry.associatedData;
+	
+	if(!rightSide && musicTrack.isFavourite){ //Favourite/unfavourite
+		swipeColour = [LMColour deletionRedColour];
+	}
+	
+	return swipeColour;
+}
+
+
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView
 				  cellForItemAtIndexPath:(NSIndexPath *)indexPath {
 	
 	UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cellIdentifier" forIndexPath:indexPath];
 	
-	cell.backgroundColor = [LMColour randomColour];
+//	cell.backgroundColor = [LMColour randomColour];
 	
 	
 	UICollectionViewFlowLayout *flowLayout = (UICollectionViewFlowLayout*)self.collectionView.collectionViewLayout;
@@ -160,6 +226,14 @@
 			BOOL shouldHighlight = ([self trackForListEntry:listEntry] == self.musicPlayer.nowPlayingTrack);
 			[listEntry setAsHighlighted:shouldHighlight animated:NO];
 			
+			BOOL isPreviousTrack = (listEntry.indexPath.section == 0) && (listEntry.indexPath.row < self.musicQueue.previousTracks.count);
+			listEntry.alpha = isPreviousTrack ? (2.0 / 4.0) : 1.0;
+			
+			LMMusicTrack *listEntryTrack = [self trackForListEntry:listEntry];
+			listEntry.associatedData = listEntryTrack;
+			
+//			listEntry.backgroundColor = [LMColour whiteColour];
+			
 			[listEntry reloadContents];
 		}
 	}
@@ -172,6 +246,11 @@
 		listEntry.isLabelBased = NO;
 		listEntry.alignIconToLeft = NO;
 		listEntry.stretchAcrossWidth = NO;
+		
+		BOOL isPreviousTrack = (listEntry.indexPath.section == 0) && (listEntry.indexPath.row < self.musicQueue.previousTracks.count);
+		listEntry.alpha = isPreviousTrack ? (2.0 / 4.0) : 1.0;
+		
+		NSLog(@"Created new list entry for track %@", listEntryTrack.title);
 		
 		BOOL shouldHighlight = (listEntryTrack == self.musicPlayer.nowPlayingTrack);
 		[listEntry setAsHighlighted:shouldHighlight animated:NO];
@@ -212,6 +291,8 @@
 	header.isForPreviousTracks = (indexPath.section == 0);
 	header.delegate = self;
 	
+	header.backgroundColor = [LMColour superLightGreyColour];
+	
 	[header reload];
 	
 	return header;
@@ -247,6 +328,20 @@
 
 - (void)collectionView:(UICollectionView *)collectionView moveItemAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath {
 	NSLog(@"Move item from %@ to %@", sourceIndexPath, destinationIndexPath);
+	
+	LMMusicTrack *track = [self trackForIndexPath:sourceIndexPath];
+	
+	NSInteger previousIndex
+		= [self.musicQueue indexOfTrackInCompleteQueueFromPreviousTracks:(sourceIndexPath.section == 0)
+												   withIndexInSubQueueOf:sourceIndexPath.row];
+	
+	NSInteger newIndex
+		= [self.musicQueue indexOfTrackInCompleteQueueFromPreviousTracks:(destinationIndexPath.section == 0)
+												   withIndexInSubQueueOf:destinationIndexPath.row];
+	
+	NSLog(@"Moving track from complete index %d to new complete index %d", (int)previousIndex, (int)newIndex);
+	
+	[self.musicQueue moveTrackFromIndex:previousIndex toIndex:newIndex];
 }
 
 - (void)longPressGestureHandler:(UILongPressGestureRecognizer*)longPressGesture {
@@ -254,32 +349,45 @@
 	
 	switch(longPressGesture.state){
 		case UIGestureRecognizerStateBegan: {
-			[UIView animateWithDuration:0.3 animations:^{
+//			[self.collectionView performBatchUpdates:^{
 				if(indexPath){
 					[self.collectionView beginInteractiveMovementForItemAtIndexPath:indexPath];
 				}
-				else{
-					NSLog(@"IndexPath couldn't be found, sorry!");
-				}
-			}];
+//			} completion:^(BOOL finished) {
+//				NSLog(@"Done batch updates.");
+//			}];
 			break;
 		}
 		case UIGestureRecognizerStateChanged: {
 			CGPoint movementPoint = [longPressGesture locationInView:self.collectionView];
 			movementPoint.x = (self.collectionView.frame.size.width / 2.0);
-			[self.collectionView updateInteractiveMovementTargetPosition:movementPoint];
+//			[self.collectionView performBatchUpdates:^{
+				[self.collectionView updateInteractiveMovementTargetPosition:movementPoint];
+//			} completion:^(BOOL finished) {
+//				NSLog(@"Done batch updates.");
+//			}];
 			break;
 		}
 		case UIGestureRecognizerStateEnded: {
-			[self.collectionView endInteractiveMovement];
+//			[self.collectionView performBatchUpdates:^{
+				[self.collectionView endInteractiveMovement];
+//			} completion:^(BOOL finished) {
+//				NSLog(@"Done ended batch updates.");
+//			}];
 			break;
 		}
 		default: {
-			[self.collectionView cancelInteractiveMovement];
+			[self.collectionView performBatchUpdates:^{
+				[self.collectionView cancelInteractiveMovement];
+			} completion:^(BOOL finished) {
+				NSLog(@"Done cancelled batch updates.");
+			}];
 			break;
 		}
 	}
 }
+
+
 
 - (void)queueBegan {
 	[self.collectionView reloadData];
@@ -293,16 +401,37 @@
 	NSLog(@"Queue ended.");
 }
 
+- (void)trackMovedInQueue:(LMMusicTrack * _Nonnull)trackMoved {
+	NSLog(@"%@ moved apparently, time to reload", trackMoved.title);
+	
+//	[self.collectionView performBatchUpdates:^{
+		[self.collectionView reloadData];
+//	} completion:^(BOOL finished) {
+//		NSLog(@"Done batch updates.");
+//	}];
+}
+
+
+- (void)trackAddedToFavourites:(LMMusicTrack*)track {
+	[self.collectionView reloadData];
+}
+
+- (void)trackRemovedFromFavourites:(LMMusicTrack*)track {
+	[self.collectionView reloadData];
+}
+
+
 - (void)layoutSubviews {
 	if(!self.didLayoutConstraints){
 		self.didLayoutConstraints = YES;
 		
 		self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
+		[self.musicPlayer addMusicDelegate:self];
 		
 		self.musicQueue = [LMMusicQueue sharedMusicQueue];
 		[self.musicQueue addDelegate:self];
 		
-		self.backgroundColor = [LMColour lightGreyBackgroundColour];
+		self.backgroundColor = [LMColour whiteColour];
 		
 		
 		

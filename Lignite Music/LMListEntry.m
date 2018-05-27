@@ -26,6 +26,8 @@
 
 @property BOOL setupConstraints;
 
+@property CGFloat previousAlpha; //Used for previous tracks queue entry swipe animation focusing
+
 @property MGSwipeTableCell *tableCell;
 
 /**
@@ -167,6 +169,22 @@
 		case MGSwipeStateExpandingLeftToRight: str = @"ExpandingLeftToRight"; break;
 		case MGSwipeStateExpandingRightToLeft: str = @"ExpandingRightToLeft"; break;
 	}
+	
+	if(gestureIsActive && self.alpha < 1.0){
+		self.previousAlpha = self.alpha;
+		
+		[UIView animateWithDuration:0.3 animations:^{
+			self.alpha = 1.0;
+		}];
+	}
+	else if(!gestureIsActive && self.previousAlpha > 0.0){
+		[UIView animateWithDuration:0.3 animations:^{
+			self.alpha = self.previousAlpha;
+		}];
+		
+		self.previousAlpha = 0.0;
+	}
+	
 	NSLog(@"Swipe state: %@ ::: Gesture: %@", str, gestureIsActive ? @"Active" : @"Ended");
 }
 

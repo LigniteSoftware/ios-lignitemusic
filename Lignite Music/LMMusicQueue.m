@@ -20,7 +20,7 @@
 /**
  The complete queue, as provided by the system.
  */
-@property NSArray<LMMusicTrack*> *completeQueue;
+@property NSMutableArray<LMMusicTrack*> *completeQueue;
 
 /**
  The music player.
@@ -159,9 +159,40 @@
 #warning Todo: finish queue modification
 }
 
-- (void)moveTrackInQueueFromIndex:(NSInteger)oldIndex toIndex:(NSInteger)newIndex DEPRECATED_ATTRIBUTE {
-#warning Todo: move track in queue
+- (NSInteger)indexOfTrackInCompleteQueueFromPreviousTracks:(BOOL)fromPreviousTracks
+									 withIndexInSubQueueOf:(NSInteger)indexInSubQueue {
+	
+	NSInteger indexInCompleteQueue = NSNotFound;
+		
+	if(!fromPreviousTracks){
+		indexInCompleteQueue = self.previousTracks.count + 1 + indexInSubQueue;
+	}
+	else{
+		if((indexInSubQueue == 0) && (self.previousTracks.count == 0)){
+			return 0; //Now playing, first track in complete queue
+		}
+		
+		indexInCompleteQueue = indexInSubQueue;
+	}
+	
+	return indexInCompleteQueue;
+}
+
+- (void)moveTrackFromIndex:(NSInteger)oldIndex toIndex:(NSInteger)newIndex {
 	NSLog(@"Move track %d to index %d", (int)oldIndex, (int)newIndex);
+	
+	LMMusicTrack *currentMusicTrack = [self.completeQueue objectAtIndex:oldIndex];
+	[self.completeQueue removeObjectAtIndex:oldIndex];
+	[self.completeQueue insertObject:currentMusicTrack atIndex:newIndex];
+	
+	NSArray *safeDelegates = [[NSArray alloc] initWithArray:self.delegates];
+	
+	for(id<LMMusicQueueDelegate> delegate in safeDelegates){
+		if([delegate respondsToSelector:@selector(trackMovedInQueue:)]){
+			[delegate trackMovedInQueue:currentMusicTrack];
+		}
+	}
+
 }
 
 - (NSInteger)count {
@@ -231,7 +262,7 @@
 			}
 		}
 
-		self.completeQueue = [NSArray arrayWithArray:systemQueueArray];
+		self.completeQueue =  systemQueueArray;
 		
 		BOOL noCurrentQueue = ![self queueExists];
 		

@@ -72,25 +72,36 @@
  */
 - (void)rebuild;
 
+- (NSInteger)indexOfTrackInCompleteQueueFromPreviousTracks:(BOOL)fromPreviousTracks
+									 withIndexInSubQueueOf:(NSInteger)indexInSubQueue;
+
+/**
+ Move a track in the queue from its old index to a new index.
+
+ @param oldIndex The old index of the track, relative to the whole queue (not just previously played or up next).
+ @param newIndex The new index of the track, relative to the whole queue (not just previously played or up next).
+ */
+- (void)moveTrackFromIndex:(NSInteger)oldIndex toIndex:(NSInteger)newIndex;
+
 /**
  Adds a delegate.
 
  @param delegate The delegate to add.
  */
-- (void)addDelegate:(id<LMMusicQueueDelegate>)delegate;
+- (void)addDelegate:(id<LMMusicQueueDelegate> _Nonnull)delegate;
 
 /**
  Removes a delegate.
  
  @param delegate The delegate to remove.
  */
-- (void)removeDelegate:(id<LMMusicQueueDelegate>)delegate;
+- (void)removeDelegate:(id<LMMusicQueueDelegate> _Nonnull)delegate;
 
 /**
  The shared music queue.
 
  @return The music queue that is shared across the app.
  */
-+ (LMMusicQueue*)sharedMusicQueue;
++ (LMMusicQueue * _Nonnull)sharedMusicQueue;
 
 @end
