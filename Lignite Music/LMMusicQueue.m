@@ -70,7 +70,7 @@
 #warning Todo: reload queue with track
 }
 
-- (LMMusicTrack*)nextTrackInQueue {
+- (LMMusicTrack*)nextTrack {
 //	if((self.indexOfNowPlayingTrack + 1) < self.nowPlayingCollection.count){
 //		return [self.nowPlayingCollection.items objectAtIndex:self.indexOfNowPlayingTrack + 1];
 //	}
@@ -81,7 +81,7 @@
 	return nil;
 }
 
-- (LMMusicTrack*)previousTrackInQueue {
+- (LMMusicTrack*)previousTrack {
 //	if((self.indexOfNowPlayingTrack - 1) > 0){
 //		return [self.nowPlayingCollection.items objectAtIndex:self.indexOfNowPlayingTrack - 1];
 //	}

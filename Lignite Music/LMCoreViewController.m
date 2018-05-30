@@ -60,7 +60,6 @@
 #import "Lignite_Music-Swift.h"
 #import "LMTutorialViewController.h"
 #import "LMDebugViewController.h"
-#import "LMMusicQueue.h"
 #import "LMQueueView.h"
 //#import "Lignite Music-Bridging-Header.h"
 //#import "Popover-Swift.h"
@@ -81,7 +80,7 @@
 @import SDWebImage;
 @import StoreKit;
 
-@interface LMCoreViewController () <LMMusicPlayerDelegate, LMSourceDelegate, UIGestureRecognizerDelegate, LMSearchBarDelegate, LMLetterTabDelegate, LMSearchViewControllerResultDelegate, LMButtonNavigationBarDelegate, UINavigationBarDelegate, UINavigationControllerDelegate, LMImageManagerDelegate, LMLandscapeNavigationBarDelegate, LMThemeEngineDelegate, LMLayoutChangeDelegate, LMWarningDelegate, LMApplicationIdleDelegate, LMTitleViewDelegate
+@interface LMCoreViewController () <LMMusicPlayerDelegate, LMSourceDelegate, UIGestureRecognizerDelegate, LMSearchBarDelegate, LMLetterTabDelegate, LMSearchViewControllerResultDelegate, LMButtonNavigationBarDelegate, UINavigationBarDelegate, UINavigationControllerDelegate, LMImageManagerDelegate, LMLandscapeNavigationBarDelegate, LMThemeEngineDelegate, LMLayoutChangeDelegate, LMWarningDelegate, LMApplicationIdleDelegate, LMTitleViewDelegate, LMMusicQueueDelegate
 >
 
 @property LMMusicPlayer *musicPlayer;
@@ -305,6 +304,25 @@
 	hud.label.text = NSLocalizedString(@"TrackQueued", nil);
 	
 	[hud hideAnimated:YES afterDelay:3.f];
+}
+
+- (void)trackRemovedFromQueue:(LMMusicTrack *)trackRemoved {
+	MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+	
+	hud.mode = MBProgressHUDModeCustomView;
+	UIImage *image = [[UIImage imageNamed:@"icon_checkmark"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+	hud.customView = [[UIImageView alloc] initWithImage:image];
+	hud.square = YES;
+	hud.userInteractionEnabled = NO;
+	hud.label.text = NSLocalizedString(@"TrackRemovedFromQueue", nil);
+	
+	[hud hideAnimated:YES afterDelay:3.f];
+	
+	//	self.queueTableView.totalAmountOfObjects = self.musicPlayer.nowPlayingCollection.count;
+	//	[self.queueTableView reloadSubviewData];
+	//	[self.queueTableView reloadData];
+	
+	//	[self changeMusicTrack:self.loadedTrack withIndex:self.loadedTrackIndex];
 }
 
 - (void)trackAddedToFavourites:(LMMusicTrack *)track {
@@ -1979,6 +1997,7 @@
 	
 	
 	[self.musicPlayer addMusicDelegate:self];
+	[self.musicPlayer.queue addDelegate:self];
 	
 	
 	

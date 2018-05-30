@@ -637,25 +637,6 @@
 	[self.musicPlayer autoBackThrough];
 }
 
-- (void)trackRemovedFromQueue:(LMMusicTrack *)trackRemoved {
-	MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self animated:YES];
-	
-	hud.mode = MBProgressHUDModeCustomView;
-	UIImage *image = [[UIImage imageNamed:@"icon_checkmark"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-	hud.customView = [[UIImageView alloc] initWithImage:image];
-	hud.square = YES;
-	hud.userInteractionEnabled = NO;
-	hud.label.text = NSLocalizedString(@"TrackRemovedFromQueue", nil);
-	
-	[hud hideAnimated:YES afterDelay:3.f];
-	
-//	self.queueTableView.totalAmountOfObjects = self.musicPlayer.nowPlayingCollection.count;
-//	[self.queueTableView reloadSubviewData];
-//	[self.queueTableView reloadData];
-
-//	[self changeMusicTrack:self.loadedTrack withIndex:self.loadedTrackIndex];
-}
-
 - (void)reloadFavouriteStatus {
 	UIImage *favouritesImageToUse = [LMAppIcon imageForIcon:self.loadedTrack.isFavourite ? LMIconFavouriteRedFilled : (self.progressSlider.lightTheme ? LMIconFavouriteWhiteOutline : LMIconFavouriteBlackOutline)];
 	
@@ -1334,12 +1315,6 @@
 	}
 	return self;
 }
-
-//// Only override drawRect: if you perform custom drawing.
-//// An empty implementation adversely affects performance during animation.
-//- (void)drawRect:(CGRect)rect {
-//	NSLog(@"Hey");
-//}
 
 @end
 
