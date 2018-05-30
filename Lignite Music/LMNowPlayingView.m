@@ -634,7 +634,7 @@
 		return;
 	}
 	
-	[self.musicPlayer autoBackThrough];
+	[self.musicPlayer skipToPreviousTrack];
 }
 
 - (void)reloadFavouriteStatus {

@@ -1246,12 +1246,7 @@ BOOL shuffleForDebug = NO;
 
 - (void)skipToPreviousTrack {
 	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer || self.playerType == LMMusicPlayerTypeAppleMusic){
-		if(self.queueRequiresReload){
-			[self reloadQueueWithTrack:[self previousTrackInQueue]];
-		}
-		else{
-			[self.systemMusicPlayer skipToPreviousItem];
-		}
+		[self.systemMusicPlayer setNowPlayingItem:self.queue.previousTrack];
 	}
 }
 
@@ -1262,12 +1257,7 @@ BOOL shuffleForDebug = NO;
 			[self.systemMusicPlayer skipToBeginning];
 		}
 		else{
-			if(self.queueRequiresReload){
-				[self reloadQueueWithTrack:[self nextTrackInQueue]];
-			}
-			else{
-				[self.systemMusicPlayer skipToNextItem];
-			}
+			[self.systemMusicPlayer setNowPlayingItem:self.queue.nextTrack];
 		}
 		if(self.repeatMode != LMMusicRepeatModeNone){
 			[self systemMusicPlayerTrackChanged:self];

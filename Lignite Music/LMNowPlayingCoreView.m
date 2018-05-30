@@ -45,7 +45,7 @@
 /**
  Whether or not to skip to next when the timer fires. NO for previous track.
  */
-@property BOOL skipToNextTrackOnTimerFire;
+@property BOOL skipToNextTrackOnTimerFire DEPRECATED_ATTRIBUTE;
 
 /**
  The leading constraint for the center NowPlaying. This is the constraint which the pan gesture uses for the motion of views.
@@ -377,13 +377,13 @@
                         if(rebuildConstraints){
                             [self rebuildConstraints:nextSong];
                             
-                            self.skipToNextTrackOnTimerFire = nextSong;
-                            
-                            self.skipTracksTimer = [NSTimer scheduledTimerWithTimeInterval:1.0
-                                                                                    target:self
-                                                                                  selector:@selector(skipTracks)
-                                                                                  userInfo:nil
-                                                                                   repeats:NO];
+//                            self.skipToNextTrackOnTimerFire = nextSong;
+							
+//                            self.skipTracksTimer = [NSTimer scheduledTimerWithTimeInterval:1.0
+//                                                                                    target:self
+//                                                                                  selector:@selector(skipTracks)
+//                                                                                  userInfo:nil
+//                                                                                   repeats:NO];
                         }
                         NSLog(@"Done.");
                     }
