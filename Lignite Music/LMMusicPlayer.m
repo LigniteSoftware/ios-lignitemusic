@@ -98,6 +98,7 @@
 @synthesize shuffleMode = _shuffleMode;
 @synthesize systemMusicPlayer = _systemMusicPlayer;
 @synthesize playbackState = _playbackState;
+@synthesize queue = _queue;
 
 MPMediaGrouping associatedMediaTypes[] = {
 	MPMediaGroupingTitle, //Favourites
@@ -123,6 +124,12 @@ MPMediaGrouping associatedMediaTypes[] = {
 - (void)setSystemMusicPlayer:(MPMusicPlayerController *)systemMusicPlayer {
 	//Do nothing
 }
+
+- (LMMusicQueue*)queue {
+	return [LMMusicQueue sharedMusicQueue];
+}
+
+- (void)setQueue:(LMMusicQueue *)queue {} //No need
 
 - (void)voiceOverStatusChanged {
 	NSLog(@"[LMMusicPlayer] VoiceOver status changed to %d", UIAccessibilityIsVoiceOverRunning());

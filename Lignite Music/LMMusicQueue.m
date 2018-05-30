@@ -8,6 +8,7 @@
 
 #import <AVFoundation/AVFoundation.h>
 #import <MediaPlayer/MediaPlayer.h>
+#import "LMMusicPlayer.h"
 #import "LMMusicQueue.h"
 
 @interface LMMusicQueue()
@@ -124,32 +125,42 @@
 //	}
 }
 
-- (void)addTrackToQueue:(LMMusicTrack*)trackToAdd DEPRECATED_ATTRIBUTE {
+- (void)addTrackToQueue:(LMMusicTrack*)trackToAdd {
 	NSLog(@"Adding %@ to queue", trackToAdd.title);
 	
-#warning Todo: add track to queue
+	[self.completeQueue insertObject:trackToAdd atIndex:self.musicPlayer.systemMusicPlayer.indexOfNowPlayingItem + 1];
 	
-//	NSArray<id<LMMusicPlayerDelegate>> *safeDelegates = [[NSArray alloc]initWithArray:self.delegates];
-//
-//	for(id<LMMusicPlayerDelegate> delegate in safeDelegates){
-//		if([delegate respondsToSelector:@selector(trackAddedToQueue:)]){
-//			[delegate trackAddedToQueue:trackToAdd];
-//		}
-//	}
+	NSArray<id<LMMusicPlayerDelegate>> *safeDelegates = [[NSArray alloc]initWithArray:self.delegates];
+
+	for(id<LMMusicQueueDelegate> delegate in safeDelegates){
+		if([delegate respondsToSelector:@selector(trackAddedToQueue:)]){
+			[delegate trackAddedToQueue:trackToAdd];
+		}
+	}
 }
 
-- (void)removeTrackFromQueue:(LMMusicTrack*)trackToRemove DEPRECATED_ATTRIBUTE {
-	NSLog(@"Removing %@ from queue", trackToRemove.title);
+- (void)removeTrackAtIndex:(NSInteger)trackIndex {
+	if(trackIndex < 0 || (trackIndex >= self.completeQueue.count)){
+		return;
+	}
 	
-#warning Todo: remove track from queue
+	LMMusicTrack *trackRemoved = [self.completeQueue objectAtIndex:trackIndex];
 	
-//	NSArray<id<LMMusicPlayerDelegate>> *safeDelegates = [[NSArray alloc]initWithArray:self.delegates];
-//
-//	for(id<LMMusicPlayerDelegate> delegate in safeDelegates){
-//		if([delegate respondsToSelector:@selector(trackRemovedFromQueue:)]){
-//			[delegate trackRemovedFromQueue:trackToRemove];
-//		}
-//	}
+	NSLog(@"Removing %@", trackRemoved.title);
+	
+	NSLog(@"Count before: %d", (int)self.completeQueue.count);
+	
+	[self.completeQueue removeObjectAtIndex:trackIndex];
+	
+	NSLog(@"Count after: %d", (int)self.completeQueue.count);
+	
+	NSArray<id<LMMusicPlayerDelegate>> *safeDelegates = [[NSArray alloc]initWithArray:self.delegates];
+
+	for(id<LMMusicQueueDelegate> delegate in safeDelegates){
+		if([delegate respondsToSelector:@selector(trackRemovedFromQueue:)]){
+			[delegate trackRemovedFromQueue:trackRemoved];
+		}
+	}
 }
 
 - (void)prepareQueueModification DEPRECATED_ATTRIBUTE {
@@ -177,6 +188,11 @@
 	}
 	
 	return indexInCompleteQueue;
+}
+
+- (NSInteger)indexOfTrackInCompleteQueueFromIndexPath:(NSIndexPath*)trackIndexPath {
+	return [self indexOfTrackInCompleteQueueFromPreviousTracks:(trackIndexPath.section == 0)
+										 withIndexInSubQueueOf:trackIndexPath.row];
 }
 
 - (void)moveTrackFromIndex:(NSInteger)oldIndex toIndex:(NSInteger)newIndex {
@@ -334,7 +350,6 @@
 	self = [super init];
 	if(self){
 		self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
-		
 		self.delegates = [NSMutableArray new];
 	}
 	return self;

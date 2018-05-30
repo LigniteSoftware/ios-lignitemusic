@@ -7,7 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "LMMusicPlayer.h"
+#import "MPMediaItem+LigniteImages.h"
+#import "MPMediaItemCollection+LigniteInfo.h"
 
 @protocol LMMusicQueueDelegate <NSObject>
 @optional
@@ -78,14 +79,12 @@
 - (void)rebuild;
 
 /**
- Gets the completeQueue index of a track that's in a subqueue array (previousTracks or nextTracks).
+ Gets the index of a track in the complete queue based off of the index path.
 
- @param fromPreviousTracks Whether or not the index being provided is part of the previousTracks subqueue.
- @param indexInSubQueue The index in the subqueue.
- @return The index of that track in the completeQueue.
+ @param trackIndexPath The track index path based off of the LMQueueView structure of displaying previous and next tracks.
+ @return The index of the track relative to the complete queue.
  */
-- (NSInteger)indexOfTrackInCompleteQueueFromPreviousTracks:(BOOL)fromPreviousTracks
-									 withIndexInSubQueueOf:(NSInteger)indexInSubQueue;
+- (NSInteger)indexOfTrackInCompleteQueueFromIndexPath:(NSIndexPath * _Nonnull)trackIndexPath;
 
 /**
  Move a track in the queue from its old index to a new index.
@@ -94,6 +93,20 @@
  @param newIndex The new index of the track, relative to the whole queue (not just previously played or up next).
  */
 - (void)moveTrackFromIndex:(NSInteger)oldIndex toIndex:(NSInteger)newIndex;
+
+/**
+ Removes a track from the queue. 
+
+ @param trackIndex The index of the track to remove from the queue, relative to the complete queue. If this track isn't in the queue, it'll ignore the request to remove.
+ */
+- (void)removeTrackAtIndex:(NSInteger)trackIndex;
+
+/**
+ Adds a music track to the queue (it will play next).
+
+ @param trackToAdd The track to add to the queue.
+ */
+- (void)addTrackToQueue:(LMMusicTrack * _Nonnull)trackToAdd;
 
 /**
  Adds a delegate.

@@ -9,7 +9,6 @@
 #import <PureLayout/PureLayout.h>
 #import "LMQueueViewHeader.h"
 #import "LMMusicPlayer.h"
-#import "LMMusicQueue.h"
 #import "LMListEntry.h"
 #import "LMQueueView.h"
 #import "LMColour.h"
@@ -20,11 +19,6 @@
  The collection view which displays the queue.
  */
 @property UICollectionView *collectionView;
-
-/**
- The music queue.
- */
-@property LMMusicQueue *musicQueue;
 
 /**
  The music player.
@@ -63,7 +57,7 @@
 }
 
 - (BOOL)playingFirstTrackInQueue {
-	return (self.musicQueue.previousTracks.count == 0 && self.musicPlayer.nowPlayingTrack);
+	return (self.musicPlayer.queue.previousTracks.count == 0 && self.musicPlayer.nowPlayingTrack);
 }
 
 - (NSString*)titleForHeader:(LMQueueViewHeader*)header {
@@ -72,14 +66,14 @@
 			return NSLocalizedString(@"NowPlayingTrack", nil);
 		}
 		
-		BOOL singular = (self.musicQueue.previousTracks.count == 1);
+		BOOL singular = (self.musicPlayer.queue.previousTracks.count == 1);
 		
 		NSString *title = NSLocalizedString(singular ? @"PreviousTracksTitleSingular" : @"PreviousTracksTitlePlural", nil);
 		
 		return title;
 	}
 	
-	return NSLocalizedString((self.musicQueue.nextTracks.count == 0) ? @"NothingUpNextTitle" : @"UpNextTitle", nil);
+	return NSLocalizedString((self.musicPlayer.queue.nextTracks.count == 0) ? @"NothingUpNextTitle" : @"UpNextTitle", nil);
 }
 
 - (NSString*)subtitleForHeader:(LMQueueViewHeader*)header {
@@ -87,7 +81,7 @@
 		return NSLocalizedString(@"NowPlayingTrackSubtitle", nil);
 	}
 	
-	NSInteger trackCount = header.isForPreviousTracks ? self.musicQueue.previousTracks.count : self.musicQueue.nextTracks.count;
+	NSInteger trackCount = header.isForPreviousTracks ? self.musicPlayer.queue.previousTracks.count : self.musicPlayer.queue.nextTracks.count;
 	
 	if(trackCount == 0){
 		return NSLocalizedString(@"NothingUpNextSubtitle", nil);
@@ -114,7 +108,7 @@
 - (LMMusicTrack*)trackForIndexPath:(NSIndexPath*)indexPath {
 	BOOL isPreviousTracks = (indexPath.section == 0);
 	
-	NSArray *tracksArray = isPreviousTracks ? self.musicQueue.previousTracks : self.musicQueue.nextTracks;
+	NSArray *tracksArray = isPreviousTracks ? self.musicPlayer.queue.previousTracks : self.musicPlayer.queue.nextTracks;
 	
 	LMMusicTrack *track = nil;
 	if(isPreviousTracks && (indexPath.row == tracksArray.count)){
@@ -133,10 +127,8 @@
 
 - (NSString*)titleForListEntry:(LMListEntry*)entry {
 	LMMusicTrack *track = [self trackForListEntry:entry];
-	NSInteger indexInCompleteQueue
-		= [self.musicQueue indexOfTrackInCompleteQueueFromPreviousTracks:(entry.indexPath.section == 0)
-												   withIndexInSubQueueOf:entry.indexPath.row];
-	NSString *fixedTitle = [NSString stringWithFormat:@"%d@%d == %d: %@", (int)entry.indexPath.row, (int)entry.indexPath.section, (int)indexInCompleteQueue, track.title];
+//	NSInteger indexInCompleteQueue = [self.musicPlayer.queue indexOfTrackInCompleteQueueFromIndexPath:entry.indexPath];
+//	NSString *fixedTitle = [NSString stringWithFormat:@"%d@%d == %d: %@", (int)entry.indexPath.row, (int)entry.indexPath.section, (int)indexInCompleteQueue, track.title];
 //	return fixedTitle;
 	return track.title;
 }
@@ -159,7 +151,7 @@
 	
 	UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14.0f];
 	UIColor *colour = [UIColor colorWithRed:47/255.0 green:47/255.0 blue:49/255.0 alpha:1.0];
-	UIImage *icon = [LMAppIcon imageForIcon:LMIconAddToQueue];
+	UIImage *icon = [LMAppIcon imageForIcon:LMIconRemoveFromQueue];
 	if(!rightSide){ //Favourite/unfavourite
 		icon = [LMAppIcon imageForIcon:track.isFavourite ? LMIconUnfavouriteWhite : LMIconFavouriteWhiteFilled];
 	}
@@ -171,7 +163,7 @@
 							 padding:0
 							callback:^BOOL(MGSwipeTableCell *sender) {
 								if(rightSide){
-									[self.musicPlayer addTrackToQueue:track];
+									[self.musicPlayer.queue removeTrackAtIndex:[self.musicPlayer.queue indexOfTrackInCompleteQueueFromIndexPath:listEntry.indexPath]];
 									
 									NSLog(@"Queue %@", track.title);
 								}
@@ -206,7 +198,7 @@
 	
 	LMMusicTrack *musicTrack = (LMMusicTrack*)listEntry.associatedData;
 	
-	if(!rightSide && musicTrack.isFavourite){ //Favourite/unfavourite
+	if((!rightSide && musicTrack.isFavourite) || rightSide){ //Favourite/unfavourite
 		swipeColour = [LMColour deletionRedColour];
 	}
 	
@@ -242,7 +234,7 @@
 			BOOL shouldHighlight = ([self trackForListEntry:listEntry] == self.musicPlayer.nowPlayingTrack);
 			[listEntry setAsHighlighted:shouldHighlight animated:NO];
 			
-			BOOL isPreviousTrack = (listEntry.indexPath.section == 0) && (listEntry.indexPath.row < self.musicQueue.previousTracks.count);
+			BOOL isPreviousTrack = (listEntry.indexPath.section == 0) && (listEntry.indexPath.row < self.musicPlayer.queue.previousTracks.count);
 			listEntry.alpha = isPreviousTrack ? (2.0 / 4.0) : 1.0;
 			
 			LMMusicTrack *listEntryTrack = [self trackForListEntry:listEntry];
@@ -263,7 +255,7 @@
 		listEntry.alignIconToLeft = NO;
 		listEntry.stretchAcrossWidth = NO;
 		
-		BOOL isPreviousTrack = (listEntry.indexPath.section == 0) && (listEntry.indexPath.row < self.musicQueue.previousTracks.count);
+		BOOL isPreviousTrack = (listEntry.indexPath.section == 0) && (listEntry.indexPath.row < self.musicPlayer.queue.previousTracks.count);
 		listEntry.alpha = isPreviousTrack ? (2.0 / 4.0) : 1.0;
 		
 		NSLog(@"Created new list entry for track %@", listEntryTrack.title);
@@ -320,14 +312,14 @@
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-	BOOL hideNoTracksLabel = !(self.musicQueue.count == 0);
+	BOOL hideNoTracksLabel = !(self.musicPlayer.queue.count == 0);
 	
 	self.nothingInQueueTitleLabel.hidden = hideNoTracksLabel;
 	self.nothingInQueueLabel.hidden = hideNoTracksLabel;
 	
 	self.collectionView.hidden = !hideNoTracksLabel;
 	
-	return (section == 0) ? (self.musicQueue.previousTracks.count + 1) : self.musicQueue.nextTracks.count;
+	return (section == 0) ? (self.musicPlayer.queue.previousTracks.count + 1) : self.musicPlayer.queue.nextTracks.count;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView
@@ -346,19 +338,12 @@
 - (void)collectionView:(UICollectionView *)collectionView moveItemAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath {
 	NSLog(@"Move item from %@ to %@", sourceIndexPath, destinationIndexPath);
 	
-	LMMusicTrack *track = [self trackForIndexPath:sourceIndexPath];
-	
-	NSInteger previousIndex
-		= [self.musicQueue indexOfTrackInCompleteQueueFromPreviousTracks:(sourceIndexPath.section == 0)
-												   withIndexInSubQueueOf:sourceIndexPath.row];
-	
-	NSInteger newIndex
-		= [self.musicQueue indexOfTrackInCompleteQueueFromPreviousTracks:(destinationIndexPath.section == 0)
-												   withIndexInSubQueueOf:destinationIndexPath.row];
+	NSInteger previousIndex = [self.musicPlayer.queue indexOfTrackInCompleteQueueFromIndexPath:sourceIndexPath];
+	NSInteger newIndex = [self.musicPlayer.queue indexOfTrackInCompleteQueueFromIndexPath:sourceIndexPath];
 	
 	NSLog(@"Moving track from complete index %d to new complete index %d", (int)previousIndex, (int)newIndex);
 	
-	[self.musicQueue moveTrackFromIndex:previousIndex toIndex:newIndex];
+	[self.musicPlayer.queue moveTrackFromIndex:previousIndex toIndex:newIndex];
 }
 
 - (void)longPressGestureHandler:(UILongPressGestureRecognizer*)longPressGesture {
@@ -440,13 +425,15 @@
 }
 
 - (void)trackMovedInQueue:(LMMusicTrack * _Nonnull)trackMoved {
-	NSLog(@"%@ moved apparently, time to reload", trackMoved.title);
-	
-//	[self.collectionView performBatchUpdates:^{
-		[self.collectionView reloadData];
-//	} completion:^(BOOL finished) {
-//		NSLog(@"Done batch updates.");
-//	}];
+	[self.collectionView reloadData];
+}
+
+- (void)trackRemovedFromQueue:(LMMusicTrack *)trackRemoved {
+	[self.collectionView reloadData];
+}
+
+- (void)trackAddedToQueue:(LMMusicTrack *)trackAdded {
+	[self.collectionView reloadData];
 }
 
 
@@ -462,11 +449,10 @@
 	[self.collectionView reloadData];
 }
 
-
 - (void)resetContentOffsetToNowPlaying {
 	NSLog(@"Reset content offset");
 	
-	[self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:self.musicQueue.previousTracks.count inSection:0] atScrollPosition:UICollectionViewScrollPositionTop animated:NO];
+	[self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:self.musicPlayer.queue.previousTracks.count inSection:0] atScrollPosition:UICollectionViewScrollPositionTop animated:NO];
 	
 	self.collectionView.contentOffset = CGPointMake(self.collectionView.contentOffset.x, self.collectionView.contentOffset.y - LMLayoutManager.standardListEntryHeight - 20);
 }
@@ -480,9 +466,7 @@
 		
 		self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 		[self.musicPlayer addMusicDelegate:self];
-		
-		self.musicQueue = [LMMusicQueue sharedMusicQueue];
-		[self.musicQueue addDelegate:self];
+		[self.musicPlayer.queue addDelegate:self];
 		
 #warning Todo: add theme delegate support
 		

@@ -31,6 +31,9 @@
 
 @interface LMNowPlayingView() <LMMusicPlayerDelegate, LMButtonDelegate, LMProgressSliderDelegate, LMListEntryDelegate, LMLayoutChangeDelegate, LMThemeEngineDelegate, LMAccessibilityMusicControlBarDelegate>
 
+/**
+ The music player.
+ */
 @property LMMusicPlayer *musicPlayer;
 
 /**

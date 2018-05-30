@@ -13,6 +13,7 @@
 #import "MPMediaItem+LigniteImages.h"
 #import "MPMediaItemCollection+LigniteInfo.h"
 #import "LMButtonNavigationBar.h"
+#import "LMMusicQueue.h"
 
 /**
  Storage key for the user set player type. Correlates to LMMusicPlayerType.
@@ -195,6 +196,10 @@ typedef enum {
 
 @property BOOL nowPlayingQueueTooLarge; //The full queue from the system is not being shown, for whatever fucking reason
 
+/**
+ The playback queue.
+ */
+@property LMMusicQueue *queue;
 
 /**
  The system music player.

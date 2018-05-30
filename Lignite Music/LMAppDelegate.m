@@ -13,7 +13,6 @@
 #import "AFNetworking.h"
 #import "LMAppDelegate.h"
 #import "LMMusicPlayer.h"
-#import "LMMusicQueue.h"
 #import "LMAppIcon.h"
 #import "LMSettings.h"
 #import "LMAppleWatchBridge.h"
@@ -25,11 +24,6 @@
  The delegate's music player.
  */
 @property (nonatomic) LMMusicPlayer *musicPlayer;
-
-/**
- The delegate's copy of the queue.
- */
-@property (nonatomic) LMMusicQueue *musicQueue;
 
 @end
 
@@ -95,7 +89,6 @@
 	
     if(LMMusicPlayer.onboardingComplete){
         self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
-		self.musicQueue = [LMMusicQueue sharedMusicQueue];
     }
 	
 	NSTimeInterval delegateEndTime = [[NSDate new] timeIntervalSince1970];
@@ -210,7 +203,7 @@ dispatch_source_t CreateDispatchTimer(uint64_t interval, uint64_t leeway, dispat
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     NSLog(@"[LMAppDelegate]: Will become active.");
 	
-	[self.musicQueue rebuild];
+	[self.musicPlayer.queue rebuild];
 	
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
 }
