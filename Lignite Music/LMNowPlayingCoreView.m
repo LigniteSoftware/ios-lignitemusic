@@ -15,7 +15,7 @@
 #import "MBProgressHUD.h"
 #import "LMSettings.h"
 
-@interface LMNowPlayingCoreView()<UIGestureRecognizerDelegate, LMMusicPlayerDelegate>
+@interface LMNowPlayingCoreView()<UIGestureRecognizerDelegate, LMMusicPlayerDelegate, LMMusicQueueDelegate>
 
 /**
  The NowPlaying which goes in the back.
@@ -86,43 +86,32 @@
 	coreViewController.titleView.accessibilityElementsHidden = isOpen;
 }
 
-- (void)loadMusicTracksBasedOffIndex:(NSInteger)indexOfCentre {
-	if(!self.musicPlayer.nowPlayingWasSetWithinLigniteMusic){
-		[self.centreNowPlayingView changeMusicTrack:self.musicPlayer.nowPlayingTrack withIndex:0];
-		[self.leadingNowPlayingView changeMusicTrack:nil withIndex:1];
-		[self.trailingNowPlayingView changeMusicTrack:nil withIndex:-1];
-		return;
-	}
+- (void)reloadMusicTracks {
+//	if(!self.musicPlayer.nowPlayingWasSetWithinLigniteMusic){
+//		[self.centreNowPlayingView changeMusicTrack:self.musicPlayer.nowPlayingTrack withIndex:0];
+//		[self.leadingNowPlayingView changeMusicTrack:nil withIndex:1];
+//		[self.trailingNowPlayingView changeMusicTrack:nil withIndex:-1];
+//		return;
+//	}
+//	
+//	if(self.musicPlayer.nowPlayingCollection.count == 0){
+//		[self.centreNowPlayingView changeMusicTrack:nil withIndex:-1];
+//		[self.leadingNowPlayingView changeMusicTrack:nil withIndex:-1];
+//		[self.trailingNowPlayingView changeMusicTrack:nil withIndex:-1];
+//		return;
+//	}
 	
-	if(self.musicPlayer.nowPlayingCollection.count == 0){
-		[self.centreNowPlayingView changeMusicTrack:nil withIndex:-1];
-		[self.leadingNowPlayingView changeMusicTrack:nil withIndex:-1];
-		[self.trailingNowPlayingView changeMusicTrack:nil withIndex:-1];
-		return;
-	}
 	
-    if(indexOfCentre >= self.musicPlayer.nowPlayingCollection.items.count){
-        indexOfCentre = 0;
-    }
-    
-    NSInteger nextTrackIndex = indexOfCentre+1;
-    NSInteger previousTrackIndex = indexOfCentre-1;
-    if(nextTrackIndex >= self.musicPlayer.nowPlayingCollection.count){
-        nextTrackIndex = 0;
-    }
-    if(previousTrackIndex < 0){
-        previousTrackIndex = self.musicPlayer.nowPlayingCollection.count-1;
-    }
 	
 //	NSLog(@"indexes %d/%d/%d count %d", (int)previousTrackIndex, (int)indexOfCenter, (int)nextTrackIndex, (int)self.musicPlayer.nowPlayingCollection.count);
 	
 //	NSLog(@"Spook");
 	
-    [self.centreNowPlayingView changeMusicTrack:[self.musicPlayer.nowPlayingCollection.items objectAtIndex:indexOfCentre] withIndex:indexOfCentre];
-    [self.leadingNowPlayingView changeMusicTrack:[self.musicPlayer.nowPlayingCollection.items objectAtIndex:nextTrackIndex]
-                                       withIndex:nextTrackIndex];
-    [self.trailingNowPlayingView changeMusicTrack:[self.musicPlayer.nowPlayingCollection.items objectAtIndex:previousTrackIndex]
-                                        withIndex:previousTrackIndex];
+    [self.centreNowPlayingView changeMusicTrack:self.musicPlayer.nowPlayingTrack withIndex:self.musicPlayer.queue.indexOfNowPlayingTrack];
+    [self.leadingNowPlayingView changeMusicTrack:self.musicPlayer.queue.nextTrack
+                                       withIndex:self.musicPlayer.queue.indexOfNextTrack];
+    [self.trailingNowPlayingView changeMusicTrack:self.musicPlayer.queue.previousTrack
+                                        withIndex:self.musicPlayer.queue.indexOfPreviousTrack];
 }
 
 - (void)theQueueChangedSoPleaseReloadThankYou {
@@ -154,10 +143,7 @@
 }
 
 - (void)musicTrackDidChange:(LMMusicTrack *)newTrack {
-    NSInteger nowPlayingTrackIndex = self.musicPlayer.indexOfNowPlayingTrack;
-    [self loadMusicTracksBasedOffIndex:nowPlayingTrackIndex];
-	
-//	NSLog(@"Refresh core");
+    [self reloadMusicTracks];
 }
 
 - (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState {
@@ -226,7 +212,7 @@
     [self.leadingNowPlayingView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self];
     [self.leadingNowPlayingView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
     
-    [self loadMusicTracksBasedOffIndex:self.centreNowPlayingView.loadedTrackIndex];
+    [self reloadMusicTracks];
     
     [self layoutIfNeeded];
     
@@ -435,6 +421,7 @@
         
         self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
         [self.musicPlayer addMusicDelegate:self];
+		[self.musicPlayer.queue addDelegate:self];
         
         self.centreNowPlayingView = [LMNowPlayingView newAutoLayoutView];
         //		self.centerNowPlayingView.backgroundColor = [UIColor orangeColor];
@@ -526,7 +513,7 @@
         
         NSLog(@"Index of %ld", self.musicPlayer.indexOfNowPlayingTrack);
         
-        [self loadMusicTracksBasedOffIndex:self.musicPlayer.indexOfNowPlayingTrack];
+        [self reloadMusicTracks];
 		
 		if([LMSettings debugInitialisationSounds]){
 			AudioServicesPlaySystemSound(1258);

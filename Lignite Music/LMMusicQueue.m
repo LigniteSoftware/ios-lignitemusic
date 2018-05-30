@@ -24,6 +24,16 @@
 @property NSMutableArray<LMMusicTrack*> *completeQueue;
 
 /**
+ Whether or not the full system queue is available to us. If YES, no tracks provided by the system were nil.
+ */
+@property BOOL fullQueueAvailable;
+
+/**
+ The adjusted index of the now playing track, only used when fullQueueAvailable is NO.
+ */
+@property NSInteger adjustedIndexOfNowPlayingTrack;
+
+/**
  The music player.
  */
 @property LMMusicPlayer *musicPlayer;
@@ -36,6 +46,7 @@
 @synthesize previousTracks = _previousTracks;
 @synthesize count = _count;
 @synthesize numberOfItemsInSystemQueue = _numberOfItemsInSystemQueue;
+@synthesize indexOfNowPlayingTrack = _indexOfNowPlayingTrack;
 
 - (void)prepareQueueForBackgrounding {
 #warning Todo: prepare queue for backgrounding
@@ -70,24 +81,52 @@
 #warning Todo: reload queue with track
 }
 
+- (NSInteger)indexOfNowPlayingTrack {
+	if(self.fullQueueAvailable){
+		return self.musicPlayer.systemMusicPlayer.indexOfNowPlayingItem;
+	}
+	
+	return self.adjustedIndexOfNowPlayingTrack;
+}
+
+- (NSInteger)indexOfNextTrack {	
+	if((self.indexOfNowPlayingTrack + 1) < self.completeQueue.count){
+		return self.indexOfNowPlayingTrack + 1;
+	}
+	else if(self.completeQueue.count > 0){
+		return 0;
+	}
+	
+	return NSNotFound;
+}
+
+- (NSInteger)indexOfPreviousTrack {
+	if((self.indexOfNowPlayingTrack - 1) > 0){
+		return self.indexOfNowPlayingTrack - 1;
+	}
+	else if(self.completeQueue.count > 0){
+		return (self.completeQueue.count - 1);
+	}
+	
+	return NSNotFound;
+}
+
 - (LMMusicTrack*)nextTrack {
-//	if((self.indexOfNowPlayingTrack + 1) < self.nowPlayingCollection.count){
-//		return [self.nowPlayingCollection.items objectAtIndex:self.indexOfNowPlayingTrack + 1];
-//	}
-//	else if(self.nowPlayingCollection.count > 0){
-//		return [self.nowPlayingCollection.items firstObject];
-//	}
+	NSInteger indexOfNextTrack = [self indexOfNextTrack];
+	
+	if(indexOfNextTrack != NSNotFound){
+		return [self.completeQueue objectAtIndex:indexOfNextTrack];
+	}
 	
 	return nil;
 }
 
 - (LMMusicTrack*)previousTrack {
-//	if((self.indexOfNowPlayingTrack - 1) > 0){
-//		return [self.nowPlayingCollection.items objectAtIndex:self.indexOfNowPlayingTrack - 1];
-//	}
-//	else if(self.nowPlayingCollection.count > 0){
-//		return [self.nowPlayingCollection.items lastObject];
-//	}
+	NSInteger indexOfPreviousTrack = [self indexOfPreviousTrack];
+	
+	if(indexOfPreviousTrack != NSNotFound){
+		return [self.completeQueue objectAtIndex:indexOfPreviousTrack];
+	}
 	
 	return nil;
 }
@@ -282,6 +321,9 @@
 		BOOL noPreviousQueue = ![self queueExists];
 
 		NSTimeInterval startTime = [[NSDate new] timeIntervalSince1970];
+		
+		NSInteger startingIndex = NSNotFound;
+		BOOL fullQueueAvailable = YES;
 
 		NSMutableArray<LMMusicTrack*> *systemQueueArray = [NSMutableArray new];
 		for(NSInteger i = 0; i < strongSelf.numberOfItemsInSystemQueue; i++){
@@ -289,13 +331,21 @@
 			if(track){
 				NSLog(@"Track %d is %@", (int)i, track.title);
 				[systemQueueArray addObject:track];
+				
+				if(startingIndex == NSNotFound){
+					startingIndex = i;
+				}
 			}
 			else{
 				NSLog(@"Track %d is nil :(", (int)i);
+				
+				fullQueueAvailable = NO;
 			}
 		}
 
 		self.completeQueue =  systemQueueArray;
+		self.adjustedIndexOfNowPlayingTrack = (self.musicPlayer.systemMusicPlayer.indexOfNowPlayingItem - startingIndex);
+		self.fullQueueAvailable = fullQueueAvailable;
 		
 		BOOL noCurrentQueue = ![self queueExists];
 		

@@ -10,7 +10,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMCoreViewController.m"
-            timestampString = "549386453.468973"
+            timestampString = "549392093.071408"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "2221"
@@ -24,7 +24,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMCoreViewController.m"
-            timestampString = "549386453.469301"
+            timestampString = "549392093.071473"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "209"
@@ -104,7 +104,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMCoreViewController.m"
-            timestampString = "549386453.469599"
+            timestampString = "549392093.071561"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "616"
@@ -457,22 +457,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Lignite Music/LMNowPlayingCoreView.m"
-            timestampString = "548961576.7458659"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "161"
-            endingLineNumber = "161"
-            landmarkName = "-musicTrackDidChange:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -804,7 +788,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMCoreViewController.m"
-            timestampString = "549386453.4702539"
+            timestampString = "549392093.072003"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1197"
@@ -980,7 +964,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMCoreViewController.m"
-            timestampString = "549386453.470615"
+            timestampString = "549392093.07217"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "238"
@@ -1012,7 +996,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMCoreViewController.m"
-            timestampString = "549386453.47086"
+            timestampString = "549392093.072229"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "215"
@@ -1060,7 +1044,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lignite Music/LMCoreViewController.m"
-            timestampString = "549386453.471089"
+            timestampString = "549392093.072299"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "232"
@@ -1416,22 +1400,6 @@
             startingLineNumber = "1434"
             endingLineNumber = "1434"
             landmarkName = "-hasTrackLoaded"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Lignite Music/LMNowPlayingCoreView.m"
-            timestampString = "548961576.749759"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "158"
-            endingLineNumber = "158"
-            landmarkName = "-musicTrackDidChange:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

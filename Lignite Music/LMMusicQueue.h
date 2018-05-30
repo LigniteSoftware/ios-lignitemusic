@@ -72,6 +72,11 @@
  */
 @property (readonly) NSInteger numberOfItemsInSystemQueue;
 
+/**
+ The index of the now playing track in the complete queue.
+ */
+@property (readonly) NSInteger indexOfNowPlayingTrack;
+
 
 /**
  Rebuilds the queue from the system API.
@@ -107,6 +112,34 @@
  @param trackToAdd The track to add to the queue.
  */
 - (void)addTrackToQueue:(LMMusicTrack * _Nonnull)trackToAdd;
+
+/**
+ Gets the track that is going to play after the currently playing track (relative to the complete queue).
+
+ @return The next track that's going to play.
+ */
+- (LMMusicTrack * _Nullable)nextTrack;
+
+/**
+ Gets the track that played before the currently playing track (relative to the complete queue).
+ 
+ @return The previous track that's going to play.
+ */
+- (LMMusicTrack * _Nullable)previousTrack;
+
+/**
+ Gets the index of the next track relative to the complete queue.
+
+ @return The index of the next track in the complete queue.
+ */
+- (NSInteger)indexOfNextTrack;
+
+/**
+ Gets the index of the previous track relative to the complete queue.
+ 
+ @return The index of the previous track in the complete queue.
+ */
+- (NSInteger)indexOfPreviousTrack;
 
 /**
  Adds a delegate.
