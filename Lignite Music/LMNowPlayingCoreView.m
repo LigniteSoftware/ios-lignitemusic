@@ -93,7 +93,7 @@
 //		[self.trailingNowPlayingView changeMusicTrack:nil withIndex:-1];
 //		return;
 //	}
-//	
+//
 //	if(self.musicPlayer.nowPlayingCollection.count == 0){
 //		[self.centreNowPlayingView changeMusicTrack:nil withIndex:-1];
 //		[self.leadingNowPlayingView changeMusicTrack:nil withIndex:-1];
@@ -157,9 +157,9 @@
 //	}
 //	else{
 	
-	NSLog(@"Centre track is %@", self.centreNowPlayingView.loadedTrack.title);
+//	NSLog(@"Centre track is %@", self.centreNowPlayingView.loadedTrack.title);
 	
-		[self.musicPlayer setNowPlayingTrack:self.centreNowPlayingView.loadedTrack];
+//		[self.musicPlayer setNowPlayingTrack:self.centreNowPlayingView.loadedTrack];
 //	}
 }
 

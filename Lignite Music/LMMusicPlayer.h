@@ -239,7 +239,7 @@ typedef enum {
 /**
  The index of the currently playing track in the current playback queue.
  */
-@property NSUInteger indexOfNowPlayingTrack;
+@property NSUInteger indexOfNowPlayingTrack DEPRECATED_ATTRIBUTE;
 
 /**
  The current playback state of the music player.

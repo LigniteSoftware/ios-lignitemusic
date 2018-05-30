@@ -284,19 +284,14 @@ MPMediaGrouping associatedMediaTypes[] = {
 }
 
 - (void)prepareForTermination {
-	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer || self.playerType == LMMusicPlayerTypeAppleMusic){
-		if(self.nowPlayingCollection){
-			[self.systemMusicPlayer setQueueWithItemCollection:self.nowPlayingCollection];
-		}
-		self.systemMusicPlayer.nowPlayingItem = self.nowPlayingTrack;
-		self.systemMusicPlayer.currentPlaybackTime = self.currentPlaybackTime;
-		
-		if(self.audioPlayer.isPlaying){
-			[self.audioPlayer stop];
-			[self.systemMusicPlayer play];
-		}
-	}
-	
+//	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer || self.playerType == LMMusicPlayerTypeAppleMusic){
+//		if(self.nowPlayingCollection){
+//			[self.systemMusicPlayer setQueueWithItemCollection:self.nowPlayingCollection];
+//		}
+//		self.systemMusicPlayer.nowPlayingItem = self.nowPlayingTrack;
+//		self.systemMusicPlayer.currentPlaybackTime = self.currentPlaybackTime;
+//	}
+//
 	[self deinit];
 }
 
@@ -485,21 +480,6 @@ MPMediaGrouping associatedMediaTypes[] = {
 	
 	nextTime = CFAbsoluteTimeGetCurrent();
 	NSLog(@"[Update] shuffleModeInLine: %fs", (nextTime - startTimeInSeconds));
-	
-//#ifndef TARGET_OS_SIMULATOR //If NOT the simulator
-	if(self.lastTrackSetInLigniteMusicPersistentID != self.systemMusicPlayer.nowPlayingItem.persistentID){
-		BOOL nowPlayingCollectionContainsTrack = [self nowPlayingCollectionContainsTrack:self.systemMusicPlayer.nowPlayingItem];
-		if(nowPlayingCollectionContainsTrack){
-			[self setNowPlayingTrack:self.systemMusicPlayer.nowPlayingItem];
-		}
-		else{
-			NSLog(@"WAS SYSTEM SET: %@", self.nowPlayingCollection);
-			self.nowPlayingCollectionShuffled = nil;
-			self.nowPlayingCollectionSorted = nil;
-			self.nowPlayingTrack = self.systemMusicPlayer.nowPlayingItem;
-		}
-	}
-//#endif
 	
 	//	NSLog(@"System music changed %@", self.systemMusicPlayer.nowPlayingItem);
 	
@@ -1295,25 +1275,6 @@ BOOL shuffleForDebug = NO;
 	}
 }
 
-- (void)autoSkipAudioPlayer {
-	NSLog(@"Autoskip");
-	__weak id weakSelf = self;
-	
-	float delayInSeconds = 0.50;
-	dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
-	dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-		id strongSelf = weakSelf;
-		
-		if (!strongSelf) {
-			return;
-		}
-		
-		LMMusicPlayer *player = strongSelf;
-		player.currentPlaybackTime = 0;
-		[player play];
-	});
-}
-
 - (void)autoBackThrough {
 	if(self.currentPlaybackTime > 5){
 		NSLog(@"Skipping to beginning");
@@ -1325,66 +1286,16 @@ BOOL shuffleForDebug = NO;
 	}
 }
 
-- (void)autoPauseAudioPlayer {
-	__weak id weakSelf = self;
-	
-	float delayInSeconds = 0.25;
-	dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
-	dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-		id strongSelf = weakSelf;
-		
-		if (!strongSelf) {
-			return;
-		}
-		
-		LMMusicPlayer *player = strongSelf;
-		
-		[player.audioPlayer pause];
-		
-		[self reloadInfoCentre:NO];
-	});
-}
-
 - (void)play {
-	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer){
-		[self changeMusicPlayerState:LMMusicPlaybackStatePlaying];
-		
-		//[self.systemMusicPlayer play];
-		NSLog(@"Playing");
-		[self.audioPlayer setVolume:1 fadeDuration:0.25];
-		[self.audioPlayer play];
-		[self reloadInfoCentre:YES];
-		
-		NSLog(@"Done");
-	}
-	else if(self.playerType == LMMusicPlayerTypeAppleMusic){
-		[self.systemMusicPlayer play];
-		//		[self changeMusicPlayerState:LMMusicPlaybackStatePlaying];
-		
-		NSLog(@"BPM %d", (int)self.systemMusicPlayer.nowPlayingItem.beatsPerMinute);
-	}
+	[self.systemMusicPlayer play];
 }
 
 - (void)pause {
-	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer){
-		[self changeMusicPlayerState:LMMusicPlaybackStatePaused];
-		//[self.systemMusicPlayer pause];
-		[self.audioPlayer setVolume:0 fadeDuration:0.25];
-		[self autoPauseAudioPlayer];
-	}
-	else if(self.playerType == LMMusicPlayerTypeAppleMusic){
-		[self.systemMusicPlayer pause];
-		//		[self changeMusicPlayerState:LMMusicPlaybackStatePaused];
-	}
+	[self.systemMusicPlayer pause];
 }
 
 - (void)stop {
-	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer){
-		[self.audioPlayer stop];
-	}
-	else if(self.playerType == LMMusicPlayerTypeAppleMusic){
-		[self.systemMusicPlayer stop];
-	}
+	[self.systemMusicPlayer stop];
 }
 
 - (LMMusicPlaybackState)invertPlaybackState {
@@ -1395,36 +1306,24 @@ BOOL shuffleForDebug = NO;
 		self.playbackState = LMMusicPlaybackStatePaused;
 	}
 	
-	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer) {
-		switch(self.audioPlayer.isPlaying){
-			case LMMusicPlaybackStatePlaying:
-				[self pause];
-				return LMMusicPlaybackStatePaused;
-			default:
-				[self play];
-				return LMMusicPlaybackStatePlaying;
+	switch(self.systemMusicPlayer.playbackState){
+		case MPMusicPlaybackStatePlaying:
+		case MPMusicPlaybackStateSeekingBackward:
+		case MPMusicPlaybackStateSeekingForward:{
+			[self pause];
+			return LMMusicPlaybackStatePaused;
 		}
-	}
-	else{
-		switch(self.systemMusicPlayer.playbackState){
-			case MPMusicPlaybackStatePlaying:
-			case MPMusicPlaybackStateSeekingBackward:
-			case MPMusicPlaybackStateSeekingForward:{
-				[self pause];
-				return LMMusicPlaybackStatePaused;
-			}
-			case MPMusicPlaybackStateInterrupted:
-			case MPMusicPlaybackStateStopped:{
-				[self pause];
-				[NSTimer scheduledTimerWithTimeInterval:0.25 block:^{
-					[self play];
-				} repeats:NO];
-				return LMMusicPlaybackStatePlaying;
-			}
-			case MPMusicPlaybackStatePaused:{
+		case MPMusicPlaybackStateInterrupted:
+		case MPMusicPlaybackStateStopped:{
+			[self pause];
+			[NSTimer scheduledTimerWithTimeInterval:0.25 block:^{
 				[self play];
-				return LMMusicPlaybackStatePlaying;
-			}
+			} repeats:NO];
+			return LMMusicPlaybackStatePlaying;
+		}
+		case MPMusicPlaybackStatePaused:{
+			[self play];
+			return LMMusicPlaybackStatePlaying;
 		}
 	}
 }
@@ -1441,32 +1340,14 @@ BOOL shuffleForDebug = NO;
 }
 
 - (void)setNowPlayingTrack:(LMMusicTrack*)nowPlayingTrack {
-//	self.lastTrackSetInLigniteMusicPersistentID = nowPlayingTrack.persistentID;
 	
 	NSLog(@"Setting now playing track (in Lignite Music) to %@", nowPlayingTrack.title);
-//	self.nowPlayingWasSetWithinLigniteMusic = YES;
-//	for(int i = 0; i < self.nowPlayingCollection.count; i++){
-//		LMMusicTrack *track = [self.nowPlayingCollection.items objectAtIndex:i];
-//		if([nowPlayingTrack isEqual:track]){
-//			self.indexOfNowPlayingTrack = i;
-//			break;
-//		}
-//	}
+
+	[self.systemMusicPlayer setNowPlayingItem:nowPlayingTrack];
 	
-//	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer || self.playerType == LMMusicPlayerTypeAppleMusic){
-//		MPMediaItem *associatedMediaItem = nowPlayingTrack;
-//		if(self.systemMusicPlayer.nowPlayingItem.persistentID != associatedMediaItem.persistentID){
-//			NSLog(@"Setting %@ compared to %@", self.systemMusicPlayer.nowPlayingItem.title, associatedMediaItem.title);
-//			if(self.queueRequiresReload){
-//				[self reloadQueueWithTrack:associatedMediaItem];
-//				[self.systemMusicPlayer play];
-//			}
-//			else{
-				[self.systemMusicPlayer setNowPlayingItem:nowPlayingTrack];
-				[self.systemMusicPlayer play];
-//			}
-//		}
-//	}
+	if(self.playbackState != LMMusicPlaybackStatePlaying){
+		[self.systemMusicPlayer play];
+	}
 	
 	_nowPlayingTrack = nowPlayingTrack;
 	
