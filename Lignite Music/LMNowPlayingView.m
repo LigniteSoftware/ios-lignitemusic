@@ -560,6 +560,7 @@
 		[self reloadControlButtons];
 		[self layoutIfNeeded];
 	}];
+	//Just for this one night sorry
 }
 
 - (void)queueCloseTap {

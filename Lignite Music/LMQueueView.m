@@ -476,6 +476,8 @@
 	if(!self.didLayoutConstraints){
 		self.didLayoutConstraints = YES;
 		
+		self.backgroundColor = [UIColor blueColor];
+		
 		self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 		[self.musicPlayer addMusicDelegate:self];
 		
