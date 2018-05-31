@@ -215,12 +215,8 @@
 	
 	[entry setAsHighlighted:YES animated:YES];
 	self.currentlyHighlightedEntry = entry.collectionIndex;
-	
-	if(self.musicPlayer.nowPlayingCollection != self.musicTrackCollectionToUseForSpecificTrackCollection){
-		[self.musicPlayer stop];
-		[self.musicPlayer.queue setQueue:self.musicTrackCollectionToUseForSpecificTrackCollection];
-	}
-	
+
+	[self.musicPlayer.queue setQueue:self.musicTrackCollectionToUseForSpecificTrackCollection];
 	[self.musicPlayer setNowPlayingTrack:track];
 	[self.musicPlayer play];
 }

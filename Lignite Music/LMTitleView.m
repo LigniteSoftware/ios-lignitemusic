@@ -415,12 +415,9 @@
 		[entry setAsHighlighted:YES animated:YES];
 		self.currentlyHighlighted = entry.collectionIndex;
 		
-		if(self.musicPlayer.nowPlayingCollection != self.musicTitles){
-			[self.musicPlayer stop];
-			[self.musicPlayer.queue setQueue:self.musicTitles];
-		}
-		
+		[self.musicPlayer.queue setQueue:self.musicTitles];
 		[self.musicPlayer setNowPlayingTrack:track];
+		[self.musicPlayer play];
 		
 		[self.musicPlayer.navigationBar setSelectedTab:LMNavigationTabMiniplayer];
 		[self.musicPlayer.navigationBar maximise:NO];
@@ -582,12 +579,8 @@
 	[self setLoadingIndicatorDisplaying:YES];
 	
 	[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
-		[self.musicPlayer stop];
-		
 		[self.musicPlayer setShuffleMode:LMMusicShuffleModeOn];
 		[self.musicPlayer.queue setQueue:self.musicTitles autoPlay:YES];
-		
-		[self.musicPlayer play];
 	} repeats:NO];
 }
 

@@ -8,6 +8,7 @@
 
 #import <AVFoundation/AVFoundation.h>
 #import <MediaPlayer/MediaPlayer.h>
+#import "NSTimer+Blocks.h"
 #import "LMMusicPlayer.h"
 #import "LMMusicQueue.h"
 
@@ -38,6 +39,11 @@
  */
 @property LMMusicPlayer *musicPlayer;
 
+/**
+ The complete queue in the form of a track collection.
+ */
+@property (readonly) LMMusicTrackCollection *completeQueueTrackCollection;
+
 @end
 
 @implementation LMMusicQueue
@@ -47,9 +53,36 @@
 @synthesize count = _count;
 @synthesize numberOfItemsInSystemQueue = _numberOfItemsInSystemQueue;
 @synthesize indexOfNowPlayingTrack = _indexOfNowPlayingTrack;
+@synthesize completeQueueTrackCollection = _completeQueueTrackCollection;
 
-- (void)prepareQueueForBackgrounding {
-#warning Todo: prepare queue for backgrounding
+- (LMMusicTrackCollection*)completeQueueTrackCollection {
+	return [LMMusicTrackCollection collectionWithItems:self.completeQueue];
+}
+
+- (void)prepareForBackgrounding {
+	if(self.requiresSystemReload){
+		self.requiresSystemReload = NO;
+		
+		CGFloat currentPlaybackTime = self.musicPlayer.currentPlaybackTime;
+		
+		NSLog(@"Preparing for the background by performing a system reload of the queue.");
+		
+		[self.musicPlayer.systemMusicPlayer setQueueWithItemCollection:self.completeQueueTrackCollection];
+		[self.musicPlayer.systemMusicPlayer setNowPlayingItem:self.musicPlayer.nowPlayingTrack];
+		[self.musicPlayer.systemMusicPlayer play];
+		
+		self.systemRestorePlaybackTime = currentPlaybackTime;
+		
+//		self.playbackTimeToRestoreBecauseQueueChangesAreFuckingStupid = playbackTime;
+		
+		NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:0.05 block:^{
+			[self.musicPlayer setCurrentPlaybackTime:currentPlaybackTime];
+			NSLog(@"Set playback time to %f", currentPlaybackTime);
+		} repeats:NO];
+		
+		[[NSRunLoop currentRunLoop] addTimer:timer forMode:NSDefaultRunLoopMode];
+		[[NSRunLoop currentRunLoop] run];
+	}
 }
 
 - (NSInteger)numberOfItemsInSystemQueue {
@@ -82,6 +115,7 @@
 		return self.musicPlayer.systemMusicPlayer.indexOfNowPlayingItem;
 	}
 	
+#warning Todo: fix this for large queues that were set outside of Lignite Music
 	return self.adjustedIndexOfNowPlayingTrack;
 }
 
@@ -127,32 +161,66 @@
 	return nil;
 }
 
-- (void)setQueue:(LMMusicTrackCollection*)newQueue autoPlay:(BOOL)autoPlay {
-	self.completeQueue = [NSMutableArray arrayWithArray:newQueue.items];
+- (void)systemReloadWithTrack:(LMMusicTrack*)newTrack {
+	self.requiresSystemReload = NO;
 	
+	NSLog(@"Queue was modified and needs a refresher, here we go.");
+	
+	[self.musicPlayer.systemMusicPlayer setQueueWithItemCollection:self.completeQueueTrackCollection];
+	[self.musicPlayer.systemMusicPlayer setNowPlayingItem:newTrack];
+	[self.musicPlayer.systemMusicPlayer play];
+}
+
+
+- (void)setQueue:(LMMusicTrackCollection*)newQueue
+		autoPlay:(BOOL)autoPlay
+updateCompleteQueue:(BOOL)updateCompleteQueue {
+	
+	BOOL initialQueue = (self.completeQueue.count == 0);
+	
+	if(updateCompleteQueue){
+		self.completeQueue = [NSMutableArray arrayWithArray:newQueue.items];
+	}
+		
 	[self.musicPlayer.systemMusicPlayer setQueueWithItemCollection:newQueue];
+	
 	if(autoPlay){
 		[self.musicPlayer.systemMusicPlayer setNowPlayingItem:[[newQueue items] objectAtIndex:0]];
 		[self.musicPlayer.systemMusicPlayer play];
 	}
+	else if(!initialQueue && !autoPlay){
+		self.requiresSystemReload = YES;
+	}
 	
-	NSArray<id<LMMusicPlayerDelegate>> *safeDelegates = [[NSArray alloc]initWithArray:self.delegates];
-	
-	for(id<LMMusicQueueDelegate> delegate in safeDelegates){
-		if([delegate respondsToSelector:@selector(queueCompletelyChanged)]){
-			[delegate queueCompletelyChanged];
+	if(updateCompleteQueue){
+		NSArray<id<LMMusicPlayerDelegate>> *safeDelegates = [[NSArray alloc]initWithArray:self.delegates];
+		
+		for(id<LMMusicQueueDelegate> delegate in safeDelegates){
+			if([delegate respondsToSelector:@selector(queueCompletelyChanged)]){
+				[delegate queueCompletelyChanged];
+			}
 		}
 	}
+}
+
+- (void)setQueue:(LMMusicTrackCollection*)newQueue autoPlay:(BOOL)autoPlay {
+	[self setQueue:newQueue autoPlay:autoPlay updateCompleteQueue:YES];
 }
 
 - (void)setQueue:(LMMusicTrackCollection*)newQueue {
 	[self setQueue:newQueue autoPlay:NO];
 }
 
+- (void)completeQueueUpdated {
+	[self setQueue:self.completeQueueTrackCollection autoPlay:NO updateCompleteQueue:NO];
+}
+
 - (void)addTrackToQueue:(LMMusicTrack*)trackToAdd {
 	NSLog(@"Adding %@ to queue", trackToAdd.title);
 	
 	[self.completeQueue insertObject:trackToAdd atIndex:self.musicPlayer.systemMusicPlayer.indexOfNowPlayingItem + 1];
+	
+	[self completeQueueUpdated];
 	
 	NSArray<id<LMMusicPlayerDelegate>> *safeDelegates = [[NSArray alloc]initWithArray:self.delegates];
 
@@ -170,13 +238,9 @@
 	
 	LMMusicTrack *trackRemoved = [self.completeQueue objectAtIndex:trackIndex];
 	
-	NSLog(@"Removing %@", trackRemoved.title);
-	
-	NSLog(@"Count before: %d", (int)self.completeQueue.count);
-	
 	[self.completeQueue removeObjectAtIndex:trackIndex];
 	
-	NSLog(@"Count after: %d", (int)self.completeQueue.count);
+	[self completeQueueUpdated];
 	
 	NSArray<id<LMMusicPlayerDelegate>> *safeDelegates = [[NSArray alloc]initWithArray:self.delegates];
 
@@ -225,6 +289,8 @@
 	LMMusicTrack *currentMusicTrack = [self.completeQueue objectAtIndex:oldIndex];
 	[self.completeQueue removeObjectAtIndex:oldIndex];
 	[self.completeQueue insertObject:currentMusicTrack atIndex:newIndex];
+	
+	[self completeQueueUpdated];
 	
 	NSArray *safeDelegates = [[NSArray alloc] initWithArray:self.delegates];
 	

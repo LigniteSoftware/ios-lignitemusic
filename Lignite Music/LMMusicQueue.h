@@ -82,6 +82,16 @@
  */
 @property (readonly) NSInteger indexOfNowPlayingTrack;
 
+/**
+ Whether or not the queue requires a system reload. If YES, that means that although the queue has been set within Lignite Music, it hasn't been set within the system music player. This is due to Apple's annoying bug where one cannot change the currently playing queue without completely halting the music that's playing first. The hope with this is to reset the queue in between tracks so that the user doesn't notice.
+ */
+@property BOOL requiresSystemReload;
+
+/**
+ The playback time that needs to be restored from the system restore.
+ */
+@property CGFloat systemRestorePlaybackTime;
+
 
 /**
  Rebuilds the queue from the system API.
@@ -124,14 +134,21 @@
  @param newQueue The new queue to set.
  @param autoPlay Whether or not to begin playing the queue from the first track in the collection.
  */
-- (void)setQueue:(LMMusicTrackCollection*)newQueue autoPlay:(BOOL)autoPlay;
+- (void)setQueue:(LMMusicTrackCollection * _Nonnull)newQueue autoPlay:(BOOL)autoPlay;
 
 /**
  Sets the currently playing queue and notifies delegates of a change to the queue. Does not autoplay.
 
  @param newQueue The new queue to set.
  */
-- (void)setQueue:(LMMusicTrackCollection*)newQueue;
+- (void)setQueue:(LMMusicTrackCollection * _Nonnull)newQueue;
+
+/**
+ Performs a system reload of the currently playing queue, based on the complete queue, set with a specific track.
+
+ @param newTrack The new track to set (track should be within the complete queue).
+ */
+- (void)systemReloadWithTrack:(LMMusicTrack * _Nonnull)newTrack;
 
 /**
  Gets the track that is going to play after the currently playing track (relative to the complete queue).
@@ -160,6 +177,11 @@
  @return The index of the previous track in the complete queue.
  */
 - (NSInteger)indexOfPreviousTrack;
+
+/**
+ Prepare the queue for the app being backgrounded by the system.8
+ */
+- (void)prepareForBackgrounding;
 
 /**
  Adds a delegate.

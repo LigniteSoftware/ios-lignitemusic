@@ -271,7 +271,6 @@
 	}
 	
 	LMMusicPlayer *musicPlayer = [LMMusicPlayer sharedMusicPlayer];
-	[musicPlayer stop];
 	[musicPlayer setShuffleMode:LMMusicShuffleModeOn];
 	[musicPlayer.queue setQueue:collectionToUse autoPlay:YES];
 }

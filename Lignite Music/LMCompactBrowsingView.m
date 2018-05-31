@@ -574,7 +574,6 @@
 }
 
 - (void)contentViewDoubleTappedForBigListEntry:(LMBigListEntry *)bigListEntry {
-	[self.musicPlayer stop];
 	[self.musicPlayer.queue setQueue:[self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex] autoPlay:YES];
 }
 

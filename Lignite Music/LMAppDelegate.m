@@ -154,7 +154,7 @@ dispatch_source_t CreateDispatchTimer(uint64_t interval, uint64_t leeway, dispat
 		
 		// Do the work associated with the task, preferably in chunks.
 		
-		[self.musicPlayer prepareQueueForBackgrounding];
+		[self.musicPlayer.queue prepareForBackgrounding];
 				
 		NSTimer* timer = [NSTimer scheduledTimerWithTimeInterval:10.0 block:^{
 			NSLog(@"Nigger");
