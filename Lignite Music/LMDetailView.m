@@ -218,12 +218,11 @@
 	
 	if(self.musicPlayer.nowPlayingCollection != self.musicTrackCollectionToUseForSpecificTrackCollection){
 		[self.musicPlayer stop];
-
-		[self.musicPlayer setNowPlayingCollection:self.musicTrackCollectionToUseForSpecificTrackCollection];
+		[self.musicPlayer.queue setQueue:self.musicTrackCollectionToUseForSpecificTrackCollection];
 	}
-	self.musicPlayer.autoPlay = YES;
 	
 	[self.musicPlayer setNowPlayingTrack:track];
+	[self.musicPlayer play];
 }
 
 - (UIColor*)tapColourForListEntry:(LMListEntry*)entry {

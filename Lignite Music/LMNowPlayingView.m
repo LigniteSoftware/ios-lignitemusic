@@ -537,7 +537,7 @@
 	[self reloadFavouriteStatus];
 }
 
-- (void)setNowPlayingQueueOpen:(BOOL)open animated:(BOOL)animated {
+- (void)setShowingQueueView:(BOOL)open animated:(BOOL)animated {
     if(!open){
         [NSTimer scheduledTimerWithTimeInterval:animated ? 0.5 : 0.0 block:^{
             self.queueBackgroundView.hidden = YES;
@@ -567,7 +567,7 @@
 }
 
 - (void)queueCloseTap {
-	[self setNowPlayingQueueOpen:NO animated:YES];
+	[self setShowingQueueView:NO animated:YES];
 }
 
 - (BOOL)nowPlayingQueueOpen {
@@ -588,7 +588,7 @@
 		}
 	}
 	else if(button == self.queueButton){
-		[self setNowPlayingQueueOpen:![self nowPlayingQueueOpen] animated:YES];
+		[self setShowingQueueView:![self nowPlayingQueueOpen] animated:YES];
 	}
 	else if(button == self.airplayButton){
 		MPVolumeView *volumeView;
@@ -729,7 +729,7 @@
 	
 	if(totalTranslation > 0){ //Moving too far to the right?
 		NSLog(@"Fuck");
-		[self setNowPlayingQueueOpen:NO animated:YES];
+		[self setShowingQueueView:NO animated:YES];
 		return;
 	}
 	else{ //Moving downward
@@ -741,17 +741,17 @@
 	if(recognizer.state == UIGestureRecognizerStateEnded || recognizer.state == UIGestureRecognizerStateCancelled){
 		NSLog(@"Done");
 		if((translation.x >= self.frame.size.width/4.0)){
-			[self setNowPlayingQueueOpen:NO animated:YES];
+			[self setShowingQueueView:NO animated:YES];
 		}
 		else{
-			[self setNowPlayingQueueOpen:YES animated:YES];
+			[self setShowingQueueView:YES animated:YES];
 		}
 	}
 }
 
 - (void)rootViewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
 	if(self.nowPlayingQueueOpen && [LMLayoutManager isiPad]){
-		[self setNowPlayingQueueOpen:NO animated:YES];
+		[self setShowingQueueView:NO animated:YES];
 	}
 	
 	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
@@ -760,7 +760,7 @@
 		self.buttonStackView.spacing = [self buttonStackSpacing];
 		
 		if(self.nowPlayingQueueOpen){
-			[self setNowPlayingQueueOpen:YES animated:NO];
+			[self setShowingQueueView:YES animated:NO];
 		}
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
@@ -1299,7 +1299,7 @@
 	[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
 		[self changeMusicTrack:self.loadedTrack withIndex:self.loadedTrackIndex];
 		if(self.isUserFacing){
-			[self setNowPlayingQueueOpen:YES animated:YES];
+			[self setShowingQueueView:YES animated:YES];
 		}
 	} repeats:NO];
 }

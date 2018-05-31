@@ -273,8 +273,7 @@
 	LMMusicPlayer *musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 	[musicPlayer stop];
 	[musicPlayer setShuffleMode:LMMusicShuffleModeOn];
-	[musicPlayer setNowPlayingCollection:collectionToUse];
-	[musicPlayer play];
+	[musicPlayer.queue setQueue:collectionToUse autoPlay:YES];
 }
 
 - (void)layoutSubviews {

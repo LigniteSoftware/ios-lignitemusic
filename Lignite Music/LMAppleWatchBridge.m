@@ -702,8 +702,7 @@
 			LMMusicTrackCollection *collectionToShuffle = [self trackCollectionsForBrowsingDictionary:message].firstObject;
 			
 			self.musicPlayer.shuffleMode = LMMusicShuffleModeOn;
-			[self.musicPlayer setNowPlayingCollection:collectionToShuffle];
-			[self.musicPlayer play];
+			[self.musicPlayer.queue setQueue:collectionToShuffle autoPlay:YES];
 			
 			replyHandler(@{ @"success": @(YES) });
 		}
@@ -712,7 +711,7 @@
 			
 			MPMediaEntityPersistentID persistentIDOfSpecificTrack = (MPMediaEntityPersistentID)[[[message objectForKey:LMAppleWatchBrowsingKeyPersistentIDs] lastObject] longLongValue];
 			
-			[self.musicPlayer setNowPlayingCollection:collectionToPlay];
+			[self.musicPlayer.queue setQueue:collectionToPlay];
 			for(LMMusicTrack *track in self.musicPlayer.nowPlayingCollection.items){
 				if(track.persistentID == persistentIDOfSpecificTrack){
 					[self.musicPlayer setNowPlayingTrack:track];

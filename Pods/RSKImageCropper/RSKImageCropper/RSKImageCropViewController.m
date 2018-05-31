@@ -136,7 +136,16 @@ static const CGFloat kLayoutImageScrollViewAnimationDuration = 0.25;
     [super viewDidLoad];
     
     if ([self respondsToSelector:@selector(edgesForExtendedLayout)]) {
+        
         self.edgesForExtendedLayout = UIRectEdgeNone;
+    }
+    
+    if (@available(iOS 11.0, *)) {
+        
+        self.imageScrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    }
+    else if ([self respondsToSelector:@selector(automaticallyAdjustsScrollViewInsets)] == YES) {
+        
         self.automaticallyAdjustsScrollViewInsets = NO;
     }
     
@@ -157,10 +166,14 @@ static const CGFloat kLayoutImageScrollViewAnimationDuration = 0.25;
 {
     [super viewWillAppear:animated];
     
-    UIApplication *application = [UIApplication rsk_sharedApplication];
-    if (application) {
-        self.originalStatusBarHidden = application.statusBarHidden;
-        [application setStatusBarHidden:YES];
+    if ([self respondsToSelector:@selector(prefersStatusBarHidden)] == NO) {
+        
+        UIApplication *application = [UIApplication rsk_sharedApplication];
+        if (application) {
+            
+            self.originalStatusBarHidden = application.statusBarHidden;
+            [application setStatusBarHidden:YES];
+        }
     }
     
     self.originalNavigationControllerNavigationBarHidden = self.navigationController.navigationBarHidden;
@@ -182,9 +195,13 @@ static const CGFloat kLayoutImageScrollViewAnimationDuration = 0.25;
 {
     [super viewWillDisappear:animated];
     
-    UIApplication *application = [UIApplication rsk_sharedApplication];
-    if (application) {
-        [application setStatusBarHidden:self.originalStatusBarHidden];
+    if ([self respondsToSelector:@selector(prefersStatusBarHidden)] == NO) {
+        
+        UIApplication *application = [UIApplication rsk_sharedApplication];
+        if (application) {
+            
+            [application setStatusBarHidden:self.originalStatusBarHidden];
+        }
     }
     
     [self.navigationController setNavigationBarHidden:self.originalNavigationControllerNavigationBarHidden animated:animated];

@@ -85,6 +85,6 @@
  @param open Whether or not to open it.
  @param animated Whether or not to animate the transition.
  */
-- (void)setNowPlayingQueueOpen:(BOOL)open animated:(BOOL)animated;
+- (void)setShowingQueueView:(BOOL)open animated:(BOOL)animated;
 
 @end

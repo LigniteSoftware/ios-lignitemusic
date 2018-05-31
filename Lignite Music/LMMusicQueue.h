@@ -19,6 +19,11 @@
 - (void)queueBegan;
 
 /**
+ The queue completely changed (instead of a small update being made like a track being added or removed).
+ */
+- (void)queueCompletelyChanged;
+
+/**
  The music queue ended (went from playing a queue to not playing anything).
  */
 - (void)queueEnded;
@@ -112,6 +117,21 @@
  @param trackToAdd The track to add to the queue.
  */
 - (void)addTrackToQueue:(LMMusicTrack * _Nonnull)trackToAdd;
+
+/**
+ Sets the currently playing queue and notifies delegates of a change to the queue.
+
+ @param newQueue The new queue to set.
+ @param autoPlay Whether or not to begin playing the queue from the first track in the collection.
+ */
+- (void)setQueue:(LMMusicTrackCollection*)newQueue autoPlay:(BOOL)autoPlay;
+
+/**
+ Sets the currently playing queue and notifies delegates of a change to the queue. Does not autoplay.
+
+ @param newQueue The new queue to set.
+ */
+- (void)setQueue:(LMMusicTrackCollection*)newQueue;
 
 /**
  Gets the track that is going to play after the currently playing track (relative to the complete queue).

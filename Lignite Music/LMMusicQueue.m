@@ -73,12 +73,8 @@
 	return nil;
 }
 
-- (void)reshuffleSortedCollection {
+- (void)reshuffle {
 #warning Todo: reshuffle
-}
-
-- (void)reloadQueueWithTrack:(LMMusicTrack*)newTrack {
-#warning Todo: reload queue with track
 }
 
 - (NSInteger)indexOfNowPlayingTrack {
@@ -131,37 +127,26 @@
 	return nil;
 }
 
-- (void)setNowPlayingCollection:(LMMusicTrackCollection*)nowPlayingCollection {
-	//	self.nowPlayingWasSetWithinLigniteMusic = YES;
+- (void)setQueue:(LMMusicTrackCollection*)newQueue autoPlay:(BOOL)autoPlay {
+	self.completeQueue = [NSMutableArray arrayWithArray:newQueue.items];
 	
-//	if(!nowPlayingCollection){
-//		self.nowPlayingCollectionSorted = nil;
-//		self.nowPlayingCollectionShuffled = nil;
-//		self.nowPlayingTrack = nil;
-//
-//		[self.systemMusicPlayer stop];
-//	}
-//	else{
-//		if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer || self.playerType == LMMusicPlayerTypeAppleMusic){
-//			self.nowPlayingCollectionSorted = nowPlayingCollection;
-//			[self reshuffleSortedCollection];
-//
-//			if(!self.nowPlayingCollection){
-//				[self.systemMusicPlayer setQueueWithQuery:self.bullshitQuery];
-//				[self.systemMusicPlayer setNowPlayingItem:nil];
-//				[self.systemMusicPlayer play];
-//			}
-//			NSLog(@"Setting now playing collection to %@", nowPlayingCollection);
-//			if(nowPlayingCollection.count > 0){
-//				[self.systemMusicPlayer setQueueWithItemCollection:self.nowPlayingCollection];
-//				[self.systemMusicPlayer setNowPlayingItem:[[self.nowPlayingCollection items] objectAtIndex:0]];
-//				[self.systemMusicPlayer play];
-//			}
-//			else{
-//				self.nowPlayingCollection = nil;
-//			}
-//		}
-//	}
+	[self.musicPlayer.systemMusicPlayer setQueueWithItemCollection:newQueue];
+	if(autoPlay){
+		[self.musicPlayer.systemMusicPlayer setNowPlayingItem:[[newQueue items] objectAtIndex:0]];
+		[self.musicPlayer.systemMusicPlayer play];
+	}
+	
+	NSArray<id<LMMusicPlayerDelegate>> *safeDelegates = [[NSArray alloc]initWithArray:self.delegates];
+	
+	for(id<LMMusicQueueDelegate> delegate in safeDelegates){
+		if([delegate respondsToSelector:@selector(queueCompletelyChanged)]){
+			[delegate queueCompletelyChanged];
+		}
+	}
+}
+
+- (void)setQueue:(LMMusicTrackCollection*)newQueue {
+	[self setQueue:newQueue autoPlay:NO];
 }
 
 - (void)addTrackToQueue:(LMMusicTrack*)trackToAdd {

@@ -417,9 +417,8 @@
 		
 		if(self.musicPlayer.nowPlayingCollection != self.musicTitles){
 			[self.musicPlayer stop];
-			[self.musicPlayer setNowPlayingCollection:self.musicTitles];
+			[self.musicPlayer.queue setQueue:self.musicTitles];
 		}
-		self.musicPlayer.autoPlay = YES;
 		
 		[self.musicPlayer setNowPlayingTrack:track];
 		
@@ -586,7 +585,7 @@
 		[self.musicPlayer stop];
 		
 		[self.musicPlayer setShuffleMode:LMMusicShuffleModeOn];
-		[self.musicPlayer setNowPlayingCollection:self.musicTitles];
+		[self.musicPlayer.queue setQueue:self.musicTitles autoPlay:YES];
 		
 		[self.musicPlayer play];
 	} repeats:NO];

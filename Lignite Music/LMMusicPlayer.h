@@ -209,7 +209,7 @@ typedef enum {
 /**
  Whether or not the queue requires reloading (setting inside of the system playback
  */
-@property BOOL queueRequiresReload;
+@property BOOL queueRequiresReload DEPRECATED_ATTRIBUTE;
 
 /**
  Whether or not the player is in demo mode.
@@ -219,7 +219,7 @@ typedef enum {
 /**
  Whether or not the user has set music within the app. If NO, the app should reject queue requests and whatnot. Gotta love walled gardens.
  */
-@property (readonly) BOOL nowPlayingWasSetWithinLigniteMusic;
+@property (readonly) BOOL nowPlayingWasSetWithinLigniteMusic DEPRECATED_ATTRIBUTE;
 
 /**
  The music player's current type.
@@ -234,7 +234,7 @@ typedef enum {
 /**
  The currently playing collection. Should rarely be nil, though nil cases should still be handled.
  */
-@property LMMusicTrackCollection *nowPlayingCollection;
+@property LMMusicTrackCollection *nowPlayingCollection DEPRECATED_ATTRIBUTE;
 
 /**
  The index of the currently playing track in the current playback queue.

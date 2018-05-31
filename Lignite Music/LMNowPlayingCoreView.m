@@ -218,7 +218,7 @@
     
     LMNowPlayingView *oldCenterNowPlayingView = [oldNowPlayings objectAtIndex:1];
     if([oldCenterNowPlayingView nowPlayingQueueOpen]){
-        [oldCenterNowPlayingView setNowPlayingQueueOpen:NO animated:NO];
+        [oldCenterNowPlayingView setShowingQueueView:NO animated:NO];
     }
     
     

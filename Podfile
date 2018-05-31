@@ -9,7 +9,7 @@ def shared_pods
     pod "PureLayout"
     pod "SDWebImage", "~>4.1"
     pod "Fabric"
-    pod "Crashlytics"
+    pod "Crashlytics", "~>3.10.2"
     pod "Unirest", "~> 1.1.4"
     pod "MGSwipeTableCell"
     pod "RSKImageCropper"

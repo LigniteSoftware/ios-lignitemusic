@@ -418,6 +418,12 @@
 	NSLog(@"Queue began.");
 }
 
+- (void)queueCompletelyChanged {
+	[self.collectionView reloadData];
+	
+	NSLog(@"Queue completely changed.");
+}
+
 - (void)queueEnded {
 	[self.collectionView reloadData];
 	
@@ -451,6 +457,10 @@
 
 - (void)resetContentOffsetToNowPlaying {
 	NSLog(@"Reset content offset");
+	
+	if(self.collectionView.contentSize.height < (self.collectionView.frame.size.height * 1.5)){
+		return;
+	}
 	
 	[self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:self.musicPlayer.queue.previousTracks.count inSection:0] atScrollPosition:UICollectionViewScrollPositionTop animated:NO];
 	

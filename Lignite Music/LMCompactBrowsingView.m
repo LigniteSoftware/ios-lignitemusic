@@ -575,8 +575,7 @@
 
 - (void)contentViewDoubleTappedForBigListEntry:(LMBigListEntry *)bigListEntry {
 	[self.musicPlayer stop];
-	[self.musicPlayer setNowPlayingCollection:[self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex]];
-	[self.musicPlayer play];
+	[self.musicPlayer.queue setQueue:[self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex] autoPlay:YES];
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {

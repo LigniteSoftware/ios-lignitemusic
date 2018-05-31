@@ -491,11 +491,6 @@ MPMediaGrouping associatedMediaTypes[] = {
 	nextTime = CFAbsoluteTimeGetCurrent();
 	NSLog(@"[Update] fixNewTrackNotEqual: %fs", (nextTime - startTimeInSeconds));
 	
-	self.indexOfNowPlayingTrack = self.nowPlayingWasSetWithinLigniteMusic ? self.systemMusicPlayer.indexOfNowPlayingItem : 0;
-//	if(self.systemMusicPlayer.currentPlaybackTime != 0){
-//		self.currentPlaybackTime = self.systemMusicPlayer.currentPlaybackTime;
-//	}
-	
 	nextTime = CFAbsoluteTimeGetCurrent();
 	NSLog(@"[Update] setCurrentPlaybackTime: %fs", (nextTime - startTimeInSeconds));
 	
@@ -503,27 +498,6 @@ MPMediaGrouping associatedMediaTypes[] = {
 	
 	nextTime = CFAbsoluteTimeGetCurrent();
 	NSLog(@"[Update] notifyDelegates: %fs", (nextTime - startTimeInSeconds));
-	
-//	if(self.didJustFinishTrack && (self.indexOfNowPlayingTrack != 0 || self.repeatMode != LMMusicRepeatModeNone)){
-//		self.autoPlay = YES;
-//		self.didJustFinishTrack = NO;
-//	}
-	
-//	nextTime = CFAbsoluteTimeGetCurrent();
-//	NSLog(@"[Update] setAutoAndDidFinish: %fs", (nextTime - startTimeInSeconds));
-	
-	if(self.autoPlay){
-		self.autoPlay = NO;
-		[self play];
-	}
-	
-//	nextTime = CFAbsoluteTimeGetCurrent();
-//	NSLog(@"[Update] markPlay: %fs", (nextTime - startTimeInSeconds));
-//
-//	[self reloadInfoCentre:autoPlay];
-	
-	nextTime = CFAbsoluteTimeGetCurrent();
-	NSLog(@"[Update] infoCentre: %fs", (nextTime - startTimeInSeconds));
 	
 	CFAbsoluteTime endTimeInSeconds = CFAbsoluteTimeGetCurrent();
 	NSLog(@"Done updating from music track change, took %f seconds", (endTimeInSeconds-startTimeInSeconds));
@@ -1527,92 +1501,6 @@ BOOL shuffleForDebug = NO;
 	return [self.nowPlayingCollectionShuffled isEqual:musicTrackCollection] || [self.nowPlayingCollectionSorted isEqual:musicTrackCollection];
 }
 
-- (void)reshuffleSortedCollection DEPRECATED_ATTRIBUTE {}
-
-- (LMMusicTrackCollection*)nowPlayingCollection {
-//	MPMediaQuery *query = [[MPMusicPlayerController systemMusicPlayer] queueAsQuery];
-
-//	NSLog(@"[LMMusicPlayer] Got now playing query %@ with %d songs", query, (int)query.items.count);
-//
-//	return [LMMusicTrackCollection collectionWithItems:query.items];
-	
-	if(_shuffleMode == LMMusicShuffleModeOn){
-		return self.nowPlayingCollectionShuffled;
-	}
-	return self.nowPlayingCollectionSorted;
-}
-
-- (void)setNowPlayingCollection:(LMMusicTrackCollection*)nowPlayingCollection DEPRECATED_ATTRIBUTE {
-	//	self.nowPlayingWasSetWithinLigniteMusic = YES;
-	
-	if(!nowPlayingCollection){
-		self.nowPlayingCollectionSorted = nil;
-		self.nowPlayingCollectionShuffled = nil;
-		self.nowPlayingTrack = nil;
-		
-		[self.systemMusicPlayer stop];
-	}
-	else{
-		if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer || self.playerType == LMMusicPlayerTypeAppleMusic){
-			self.nowPlayingCollectionSorted = nowPlayingCollection;
-			[self reshuffleSortedCollection];
-			
-			if(!self.nowPlayingCollection){
-				[self.systemMusicPlayer setQueueWithQuery:self.bullshitQuery];
-				[self.systemMusicPlayer setNowPlayingItem:nil];
-				[self.systemMusicPlayer play];
-			}
-			NSLog(@"Setting now playing collection to %@", nowPlayingCollection);
-			if(nowPlayingCollection.count > 0){
-				[self.systemMusicPlayer setQueueWithItemCollection:self.nowPlayingCollection];
-				[self.systemMusicPlayer setNowPlayingItem:[[self.nowPlayingCollection items] objectAtIndex:0]];
-				[self.systemMusicPlayer play];
-			}
-			else{
-				self.nowPlayingCollection = nil;
-			}
-		}
-	}
-}
-
-- (void)restoreNowPlayingCollection:(LMMusicTrackCollection *)nowPlayingCollection
-					nowPlayingTrack:(LMMusicTrack*)nowPlayingTrack
-					   playbackTime:(NSTimeInterval)playbackTime
-				 collectionIsSorted:(BOOL)collectionIsSorted
-					   inBackground:(BOOL)background DEPRECATED_ATTRIBUTE {
-//	self.nowPlayingWasSetWithinLigniteMusic = YES;
-	
-//	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer || self.playerType == LMMusicPlayerTypeAppleMusic){
-//		if(collectionIsSorted){ //Actual restoration instead of backgrounding of queue that needs reloading
-//			self.nowPlayingCollectionSorted = nowPlayingCollection;
-//			[self reshuffleSortedCollection];
-//		}
-//
-//		if(!self.nowPlayingCollection){
-//			[self.systemMusicPlayer setQueueWithQuery:self.bullshitQuery];
-//			[self.systemMusicPlayer setNowPlayingItem:nil];
-//		}
-//		NSLog(@"Setting now playing collection to %@ with track %@ playback time %f", nowPlayingCollection, nowPlayingTrack.title, self.systemMusicPlayer.currentPlaybackTime);
-//
-//		[self.systemMusicPlayer setQueueWithItemCollection:self.nowPlayingCollection];
-//		[self.systemMusicPlayer setNowPlayingItem:nowPlayingTrack];
-//		[self.systemMusicPlayer play];
-////		[self setNowPlayingTrack:nowPlayingTrack];
-//
-//		self.playbackTimeToRestoreBecauseQueueChangesAreFuckingStupid = playbackTime;
-//
-//		NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:0.05 block:^{
-//			[self setCurrentPlaybackTime:playbackTime];
-//			NSLog(@"Set playback time to %f", playbackTime);
-//		} repeats:NO];
-//
-//		if(background){
-//			[[NSRunLoop currentRunLoop] addTimer:timer forMode:NSDefaultRunLoopMode];
-//			[[NSRunLoop currentRunLoop] run];
-//		}
-//	}
-}
-
 - (LMMusicPlayerType)playerType {
 	return LMMusicPlayerTypeAppleMusic;
 }
@@ -1680,36 +1568,7 @@ BOOL shuffleForDebug = NO;
 	
 	_shuffleMode = shuffleMode;
 	
-	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer || self.playerType == LMMusicPlayerTypeAppleMusic){
-		if(!self.nowPlayingCollection){
-			return;
-		}
-		if(shuffleMode == LMMusicShuffleModeOn){
-			[self reshuffleSortedCollection];
-		}
-		
-		self.queueRequiresReload = YES;
-		
-//		[self.systemMusicPlayer setQueueWithItemCollection:self.nowPlayingCollection];
-//
-//		if(shuffleMode != LMMusicShuffleModeOn){
-//			for(NSInteger i = 0; i < self.nowPlayingCollection.items.count; i++){
-//				LMMusicTrack *musicTrack = [self.nowPlayingCollection.items objectAtIndex:i];
-//				if(musicTrack.persistentID == self.nowPlayingTrack.persistentID){
-//					CGFloat currentPlaybackTime = self.systemMusicPlayer.currentPlaybackTime;
-//					[self.systemMusicPlayer setNowPlayingItem:musicTrack];
-//					[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
-//						self.systemMusicPlayer.currentPlaybackTime = currentPlaybackTime;
-//						NSLog(@"Playback time is %f", currentPlaybackTime);
-//					} repeats:NO];
-//					break;
-//				}
-//			}
-//		}
-		
-		NSUInteger indexOfNowPlayingTrack = [self.nowPlayingCollection.items indexOfObject:self.systemMusicPlayer.nowPlayingItem];
-		self.indexOfNowPlayingTrack = indexOfNowPlayingTrack;
-	}
+#warning update the queue for shuffle
 	
 	[self updatePlaybackModeDelegates];
 }
