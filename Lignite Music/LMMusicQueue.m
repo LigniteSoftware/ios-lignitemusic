@@ -86,10 +86,10 @@
 }
 
 - (NSInteger)numberOfItemsInSystemQueue {
-	return [[MPMusicPlayerController systemMusicPlayer] performSelector:@selector(numberOfItems)];
+	return (NSInteger)[[MPMusicPlayerController systemMusicPlayer] performSelector:@selector(numberOfItems)];
 }
 
-- (MPMediaItem*)queueTrackAtIndex:(unsigned long long)index  {
+- (MPMediaItem*)systemQueueTrackAtIndex:(unsigned long long)index  {
 	NSString *selectorString = [NSString stringWithFormat:@"n%@%@%@", @"owPlayingI",@"temA",@"tIndex:"];
 	
 	SEL sse = NSSelectorFromString(selectorString);
@@ -178,11 +178,20 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 	
 	BOOL initialQueue = (self.completeQueue.count == 0);
 	
+	NSLog(@"Setting new queue with autoplay %d, updateCompleteQueue %d", autoPlay, updateCompleteQueue);
+	
+	for(NSInteger i = 0; i < newQueue.items.count; i++){
+		LMMusicTrack *track = [newQueue.items objectAtIndex:i];
+		NSLog(@"> Track %d is %@", (int)i, track.title);
+	}
+	
 	if(updateCompleteQueue){
 		self.completeQueue = [NSMutableArray arrayWithArray:newQueue.items];
 	}
-		
+	
 	[self.musicPlayer.systemMusicPlayer setQueueWithItemCollection:newQueue];
+	
+	self.fullQueueAvailable = YES;
 	
 	if(autoPlay){
 		[self.musicPlayer.systemMusicPlayer setNowPlayingItem:[[newQueue items] objectAtIndex:0]];
@@ -216,9 +225,9 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 }
 
 - (void)addTrackToQueue:(LMMusicTrack*)trackToAdd {
-	NSLog(@"Adding %@ to queue", trackToAdd.title);
+	NSLog(@"Adding %@ to queue at index %d", trackToAdd.title, (int)(self.indexOfNowPlayingTrack + 1));
 	
-	[self.completeQueue insertObject:trackToAdd atIndex:self.musicPlayer.systemMusicPlayer.indexOfNowPlayingItem + 1];
+	[self.completeQueue insertObject:trackToAdd atIndex:self.indexOfNowPlayingTrack + 1];
 	
 	[self completeQueueUpdated];
 	
@@ -378,7 +387,7 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 
 		NSMutableArray<LMMusicTrack*> *systemQueueArray = [NSMutableArray new];
 		for(NSInteger i = 0; i < strongSelf.numberOfItemsInSystemQueue; i++){
-			LMMusicTrack *track = [strongSelf queueTrackAtIndex:i];
+			LMMusicTrack *track = [strongSelf systemQueueTrackAtIndex:i];
 			if(track){
 				NSLog(@"Track %d is %@", (int)i, track.title);
 				[systemQueueArray addObject:track];
@@ -404,6 +413,10 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 		for(NSInteger i = 0; i < previous.count; i++){
 			LMMusicTrack *track = [previous objectAtIndex:i];
 			NSLog(@"Previously played: %@", track.title);
+		}
+		
+		if(previous.count == 0){
+			NSLog(@"\nNothing previously played.");
 		}
 		
 		NSLog(@"> Current track: %@", self.musicPlayer.nowPlayingTrack.title);

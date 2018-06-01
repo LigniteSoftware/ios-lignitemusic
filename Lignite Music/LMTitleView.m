@@ -509,7 +509,7 @@
 								 padding:0
 								callback:^BOOL(MGSwipeTableCell *sender) {
 									if(rightSide){
-										[self.musicPlayer addTrackToQueue:track];
+										[self.musicPlayer.queue addTrackToQueue:track];
 										
 										NSLog(@"Queue %@", track.title);
 									}

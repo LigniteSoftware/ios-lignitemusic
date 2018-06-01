@@ -176,11 +176,11 @@
 	else if(finished){
 		[self asyncReloadCachedMusicTrackCollections];
 
-		if(self.musicPlayer.nowPlayingCollection.count == 0 && self.musicPlayer.nowPlayingWasSetWithinLigniteMusic){
-			[self dismissNowPlaying];
-			[self.musicPlayer pause];
-			self.musicPlayer.nowPlayingTrack = nil;
-		}
+//		if(self.musicPlayer.nowPlayingCollection.count == 0 && self.musicPlayer.nowPlayingWasSetWithinLigniteMusic){
+//			[self dismissNowPlaying];
+//			[self.musicPlayer pause];
+//			self.musicPlayer.nowPlayingTrack = nil;
+//		}
 		
 		[self.warningManager removeWarning:self.librarySyncingWarning];
 		
@@ -272,23 +272,6 @@
 //    }
 	
 //	[self launchNowPlayingFromNavigationBar];
-}
-
-- (void)userAttemptedToModifyQueueThatIsManagedByiOS {
-	LMAlertViewController *alertViewController = [LMAlertViewController new];
-	alertViewController.titleText = NSLocalizedString(@"UnableToQueueTitle", nil);
-	alertViewController.bodyText = NSLocalizedString(@"UnableToQueueDescription", nil);
-	alertViewController.checkboxText = NSLocalizedString(@"UnableToQueueCheckboxText", nil);
-	alertViewController.checkboxMoreInformationText = NSLocalizedString(@"TapHereForMoreInformation", nil);
-	alertViewController.checkboxMoreInformationLink = @"https://www.LigniteMusic.com/unknown_track";
-	alertViewController.alertOptionColours = @[ [LMColour mainColour] ];
-	alertViewController.alertOptionTitles = @[ NSLocalizedString(@"Continue", nil) ];
-	alertViewController.completionHandler = ^(NSUInteger optionSelected, BOOL checkboxChecked) {
-		NSLog(@"All cool");
-	};
-	[self.navigationController presentViewController:alertViewController
-											animated:YES
-										  completion:nil];
 }
 
 - (void)trackAddedToQueue:(LMMusicTrack*)trackAdded {
@@ -1633,7 +1616,7 @@
 }
 
 - (void)loadButtonNavigationBar {
-	return;
+//	return;
 	
 	
 	if(self.buttonNavigationBar){
@@ -2034,8 +2017,8 @@
 	self.loaded = YES;
 	
 
-//	NSTimeInterval loadEndTime = [[NSDate new] timeIntervalSince1970];
-//	NSLog(@"Took %f seconds to load main views.", (loadEndTime - loadStartTime));
+	NSTimeInterval loadEndTime = [[NSDate new] timeIntervalSince1970];
+	NSLog(@"Took %f seconds to load main views.", (loadEndTime - loadStartTime));
 //
 //	return;
 	
@@ -2111,7 +2094,7 @@
 //			[queue rebuild];
 //		} repeats:NO];
 		
-		[self launchNowPlayingFromTap];
+//		[self launchNowPlayingFromTap];
 		
 		
 		

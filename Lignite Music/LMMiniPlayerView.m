@@ -150,34 +150,15 @@
 	}
 	
 	
-	if(!self.musicPlayer.nowPlayingWasSetWithinLigniteMusic && (index == -1 || index == 1)){
-		BOOL previousTrack = (index == -1);
-		
-		self.trackInfoView.titleText = NSLocalizedString(previousTrack ? @"PreviousTrack" : @"NextTrack", nil);
-		self.trackInfoView.artistText = NSLocalizedString(previousTrack ? @"TrackMissingSubtitle" : @"TrackMissingSubtitle", nil);
-		self.trackInfoView.albumText = @"LigniteMusic.com/unknown_track";
-		self.progressSlider.leftText = NSLocalizedString(@"SongUnknown", nil);
-		self.progressSlider.rightText = NSLocalizedString(@"BlankDuration", nil);
-		return;
-	}
-	
-	
 	self.trackInfoView.titleText = newTrack.title ? newTrack.title : NSLocalizedString(@"UnknownTitle", nil);
 	self.trackInfoView.artistText = newTrack.artist ? newTrack.artist : NSLocalizedString(@"UnknownArtist", nil);
 	self.trackInfoView.albumText = newTrack.albumTitle ? newTrack.albumTitle : NSLocalizedString(@"UnknownAlbumTitle", nil);
 	
-	if(self.musicPlayer.nowPlayingWasSetWithinLigniteMusic){
-		self.progressSlider.leftText =
-		[NSString stringWithFormat:NSLocalizedString(@"SongXofX", nil),
-		 (int)self.loadedTrackIndex + 1,
-		 (int)self.musicPlayer.nowPlayingCollection.count];
-	}
-	else{
-		self.progressSlider.leftText =
-		[NSString stringWithFormat:NSLocalizedString(@"SongX", nil),
-		 (int)self.musicPlayer.systemMusicPlayer.indexOfNowPlayingItem + 1];
-	}
-	
+	self.progressSlider.leftText =
+	[NSString stringWithFormat:NSLocalizedString(@"SongXofX", nil),
+	 (int)self.loadedTrackIndex + 1,
+	 (int)self.musicPlayer.queue.count];
+
 	self.progressSlider.rightText = [LMNowPlayingView durationStringTotalPlaybackTime:newTrack.playbackDuration];
 	[self updateSongDurationLabelWithPlaybackTime:0];
 	[self.progressSlider resetToZero];

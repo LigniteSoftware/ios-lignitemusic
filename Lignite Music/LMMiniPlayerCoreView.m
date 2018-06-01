@@ -66,47 +66,23 @@
 
 @implementation LMMiniPlayerCoreView
 
-- (void)loadMusicTracksBasedOffIndex:(NSInteger)indexOfCenter {
-	if(!self.musicPlayer.nowPlayingWasSetWithinLigniteMusic){
-		[self.centreMiniPlayerView changeMusicTrack:self.musicPlayer.nowPlayingTrack withIndex:0];
-		[self.leadingMiniPlayerView changeMusicTrack:nil withIndex:1];
-		[self.trailingMiniPlayerView changeMusicTrack:nil withIndex:-1];
-		return;
-	}
+- (void)reloadMusicTracks {
+	[self.centreMiniPlayerView changeMusicTrack:self.musicPlayer.nowPlayingTrack
+									  withIndex:self.musicPlayer.queue.indexOfNowPlayingTrack];
 	
-	if(self.musicPlayer.nowPlayingCollection.count == 0){
-		[self.centreMiniPlayerView changeMusicTrack:nil withIndex:-1];
-		[self.leadingMiniPlayerView changeMusicTrack:nil withIndex:-1];
-		[self.trailingMiniPlayerView changeMusicTrack:nil withIndex:-1];
-		return;
-	}
+	[self.leadingMiniPlayerView changeMusicTrack:self.musicPlayer.queue.nextTrack
+									   withIndex:self.musicPlayer.queue.indexOfNextTrack];
 	
-    if(indexOfCenter >= self.musicPlayer.nowPlayingCollection.items.count){
-        indexOfCenter = 0;
-    }
-    
-	NSInteger nextTrackIndex = indexOfCenter+1;
-	NSInteger previousTrackIndex = indexOfCenter-1;
-	if(nextTrackIndex >= self.musicPlayer.nowPlayingCollection.count){
-		nextTrackIndex = 0;
-	}
-	if(previousTrackIndex < 0){
-		previousTrackIndex = self.musicPlayer.nowPlayingCollection.count-1;
-	}
-	
-	[self.centreMiniPlayerView changeMusicTrack:[self.musicPlayer.nowPlayingCollection.items objectAtIndex:indexOfCenter] withIndex:indexOfCenter];
-	[self.leadingMiniPlayerView changeMusicTrack:[self.musicPlayer.nowPlayingCollection.items objectAtIndex:nextTrackIndex]
-									   withIndex:nextTrackIndex];
-	[self.trailingMiniPlayerView changeMusicTrack:[self.musicPlayer.nowPlayingCollection.items objectAtIndex:previousTrackIndex]
-										withIndex:previousTrackIndex];
+	[self.trailingMiniPlayerView changeMusicTrack:self.musicPlayer.queue.previousTrack
+										withIndex:self.musicPlayer.queue.indexOfPreviousTrack];
 }
 
 - (void)trackAddedToQueue:(LMMusicTrack *)trackAdded {
-	[self loadMusicTracksBasedOffIndex:self.musicPlayer.indexOfNowPlayingTrack];
+	[self reloadMusicTracks];
 }
 
 - (void)trackRemovedFromQueue:(LMMusicTrack *)trackRemoved {
-	[self loadMusicTracksBasedOffIndex:self.musicPlayer.indexOfNowPlayingTrack];
+	[self reloadMusicTracks];
 }
 
 - (void)trackMovedInQueue:(LMMusicTrack *)trackMoved {
@@ -116,12 +92,7 @@
 }
 
 - (void)musicTrackDidChange:(LMMusicTrack *)newTrack {
-	NSInteger nowPlayingTrackIndex = self.musicPlayer.indexOfNowPlayingTrack;
-	[self loadMusicTracksBasedOffIndex:nowPlayingTrackIndex];
-}
-
-- (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState {
-	
+	[self reloadMusicTracks];
 }
 
 - (void)skipTracks {
@@ -172,7 +143,7 @@
 	[self.leadingMiniPlayerView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self];
 	[self.leadingMiniPlayerView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
 	
-	[self loadMusicTracksBasedOffIndex:self.centreMiniPlayerView.loadedTrackIndex];
+	[self reloadMusicTracks];
 	
 	[self layoutIfNeeded];
 	
@@ -277,17 +248,13 @@
                     NSLog(@"Slide forward (previous track)");
                     self.miniPlayerLeadingConstraint.constant = self.frame.size.width;
 					
-					if(!self.musicPlayer.nowPlayingWasSetWithinLigniteMusic){
-						[self.musicPlayer skipToPreviousTrack];
-					}
+					[self.musicPlayer skipToPreviousTrack];
                 }
                 else if(nextSong){
                     NSLog(@"Slide backward (next track)");
                     self.miniPlayerLeadingConstraint.constant = -self.frame.size.width;
 					
-					if(!self.musicPlayer.nowPlayingWasSetWithinLigniteMusic){
-						[self.musicPlayer skipToNextTrack];
-					}
+					[self.musicPlayer skipToNextTrack];
                 }
                 else{
                     NSLog(@"Reset to centre");
@@ -451,9 +418,9 @@
 		self.trailingMiniPlayerView.rootViewController = self.rootViewController;
 		self.leadingMiniPlayerView.rootViewController = self.rootViewController;
 		
-		NSLog(@"Index of %ld", self.musicPlayer.indexOfNowPlayingTrack);
+		NSLog(@"Index of %ld", self.musicPlayer.queue.indexOfNowPlayingTrack);
 		
-		[self loadMusicTracksBasedOffIndex:self.musicPlayer.indexOfNowPlayingTrack];		
+		[self reloadMusicTracks];
 	}
 }
 

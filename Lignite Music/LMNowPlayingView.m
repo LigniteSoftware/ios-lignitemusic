@@ -29,7 +29,7 @@
 #import "LMColour.h"
 #import "LMButton.h"
 
-@interface LMNowPlayingView() <LMMusicPlayerDelegate, LMButtonDelegate, LMProgressSliderDelegate, LMListEntryDelegate, LMLayoutChangeDelegate, LMThemeEngineDelegate, LMAccessibilityMusicControlBarDelegate>
+@interface LMNowPlayingView() <LMMusicPlayerDelegate, LMButtonDelegate, LMProgressSliderDelegate, LMLayoutChangeDelegate, LMThemeEngineDelegate, LMAccessibilityMusicControlBarDelegate>
 
 /**
  The music player.
@@ -278,9 +278,7 @@
 		UIImage *albumArt = [newTrack albumArt];
 		UIImage *albumImage = (noTrackPlaying || !albumArt) ? [UIImage imageNamed:@"lignite_background_portrait"] : albumArt;
 		
-		if(!self.musicPlayer.nowPlayingWasSetWithinLigniteMusic){
-			albumImage = [self.musicPlayer.nowPlayingTrack albumArt];
-		}
+		albumImage = [self.musicPlayer.nowPlayingTrack albumArt];
 		
 		UIColor *averageColour = [albumImage averageColour];
 //		BOOL isLight = [averageColour isLight];
@@ -362,17 +360,10 @@
 	self.trackInfoView.artistText = newTrack.artist ? newTrack.artist : NSLocalizedString(@"UnknownArtist", nil);
 	self.trackInfoView.albumText = newTrack.albumTitle ? newTrack.albumTitle : NSLocalizedString(@"UnknownAlbumTitle", nil);
 	
-//    if(self.musicPlayer.nowPlayingWasSetWithinLigniteMusic){
-        self.progressSlider.leftText =
-        [NSString stringWithFormat:NSLocalizedString(@"SongXofX", nil),
-             (int)self.loadedTrackIndex + 1,
-             (int)self.musicPlayer.queue.count];
-//    }
-//    else{
-//		self.progressSlider.leftText =
-//		[NSString stringWithFormat:NSLocalizedString(@"SongX", nil),
-//		 (int)self.musicPlayer.systemMusicPlayer.indexOfNowPlayingItem + 1];
-//    }
+	self.progressSlider.leftText =
+	[NSString stringWithFormat:NSLocalizedString(@"SongXofX", nil),
+		 (int)self.loadedTrackIndex + 1,
+		 (int)self.musicPlayer.queue.count];
 		
     CGFloat timeToUse = self.musicPlayer.nowPlayingTrack == self.loadedTrack ? self.musicPlayer.currentPlaybackTime : 0;
     
@@ -393,7 +384,7 @@
 }
 
 - (void)trackMovedInQueue:(LMMusicTrack *)trackMoved {
-	NSLog(@"%@ was moved, current index is %d", trackMoved.title, (int)self.musicPlayer.indexOfNowPlayingTrack);
+	NSLog(@"%@ was moved, current index is %d", trackMoved.title, (int)self.musicPlayer.queue.indexOfNowPlayingTrack);
 	
 //	[self.queueTableView reloadSubviewData];
 //	[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
@@ -777,7 +768,7 @@
 		[NSLayoutConstraint deactivateConstraints:self.currentiPadSpecificConstraintsArray];
 	}
 	
-#warning adjust queue view for ipad
+#warning Todo: adjust queue view for ipad
 	
 	self.currentiPadSpecificConstraintsArray = [NSLayoutConstraint autoCreateAndInstallConstraints:^{
 		if(![LMLayoutManager isiPad]){

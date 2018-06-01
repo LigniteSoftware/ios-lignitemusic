@@ -138,27 +138,6 @@ MPMediaGrouping associatedMediaTypes[] = {
 	}
 }
 
-- (NSInteger)numberOfItemsInQueue DEPRECATED_ATTRIBUTE {
-	return [[MPMusicPlayerController systemMusicPlayer] performSelector:@selector(numberOfItems)];;
-}
-
-- (MPMediaItem*)queueTrackAtIndex:(unsigned long long)index DEPRECATED_ATTRIBUTE {
-	NSString *selectorString = [NSString stringWithFormat:@"n%@%@%@", @"owPlayingI",@"temA",@"tIndex:"];
-	
-	SEL sse = NSSelectorFromString(selectorString);
-	
-	if ([MPMusicPlayerController instancesRespondToSelector:sse]) {
-		IMP sseimp = [MPMusicPlayerController instanceMethodForSelector:sse];
-		MPMediaItem *mediaItem = sseimp([MPMusicPlayerController systemMusicPlayer], sse, @(index));
-//		NSLog(@"Object %@ title %@ for index %lld for selector %@", mediaItem, mediaItem.title, index, NSStringFromSelector(sse));
-		return mediaItem;
-	}
-	
-	NSLog(@"Doesn't respond :(");
-	
-	return nil;
-}
-
 - (instancetype)init {
 	self = [super init];
 	if(self){
@@ -179,8 +158,6 @@ MPMediaGrouping associatedMediaTypes[] = {
 			self.repeatMode = LMMusicRepeatModeNone;
 		}
 		self.previousPlaybackTime = self.currentPlaybackTime;
-		
-		[self rebuildQueue];
 		
 //		self.autoPlay = (self.systemMusicPlayer.playbackState == MPMusicPlaybackStatePlaying);
 		
@@ -390,10 +367,8 @@ MPMediaGrouping associatedMediaTypes[] = {
 }
 
 - (void)keepShuffleModeInLine {
-	if(self.nowPlayingWasSetWithinLigniteMusic){
-		if(self.systemMusicPlayer.shuffleMode != MPMusicShuffleModeOff){
-			self.systemMusicPlayer.shuffleMode = MPMusicShuffleModeOff;
-		}
+	if(self.systemMusicPlayer.shuffleMode != MPMusicShuffleModeOff){
+		self.systemMusicPlayer.shuffleMode = MPMusicShuffleModeOff;
 	}
 }
 
@@ -1339,59 +1314,6 @@ BOOL shuffleForDebug = NO;
 
 }
 
-- (void)rebuildQueue DEPRECATED_ATTRIBUTE {
-	return;
-	
-	
-	__weak id weakSelf = self;
-	
-	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-		LMMusicPlayer *strongSelf = weakSelf;
-		
-		if (!strongSelf) {
-			return;
-		}
-		
-		NSTimeInterval startTime = [[NSDate new] timeIntervalSince1970];
-		
-		BOOL queueTooLarge = NO;
-		
-		NSMutableArray<LMMusicTrack*> *systemQueueArray = [NSMutableArray new];
-		for(NSInteger i = 0; i < strongSelf.numberOfItemsInQueue; i++){
-			LMMusicTrack *track = [strongSelf queueTrackAtIndex:i];
-			if(track){
-				NSLog(@"Track %d is %@", (int)i, track.title);
-				[systemQueueArray addObject:track];
-			}
-			else{
-				NSLog(@"Track %d is nil :(", (int)i);
-			}
-		}
-		if(systemQueueArray.count > 0){
-			strongSelf.nowPlayingCollectionSorted = [LMMusicTrackCollection collectionWithItems:systemQueueArray];
-		}
-		else{
-			strongSelf.nowPlayingCollectionSorted = nil;
-		}
-		
-		NSTimeInterval endTime = [[NSDate new] timeIntervalSince1970];
-		NSLog(@"Took %f seconds to load %ld tracks from the queue (out of %ld tracks).", (endTime-startTime), systemQueueArray.count, strongSelf.numberOfItemsInQueue);
-		
-		dispatch_async(dispatch_get_main_queue(), ^{
-			strongSelf.nowPlayingTrack = strongSelf.systemMusicPlayer.nowPlayingItem;
-			strongSelf.nowPlayingQueueTooLarge = queueTooLarge;
-			
-			for(id<LMMusicPlayerDelegate>delegate in strongSelf.delegates){
-				if([delegate respondsToSelector:@selector(trackAddedToQueue:)]){
-					[delegate trackAddedToQueue:[systemQueueArray firstObject]];
-				}
-			}
-			
-			NSLog(@"Finished building and distributing system queue. %lu tracks loaded. Queue too large? %d", (unsigned long)systemQueueArray.count, queueTooLarge);
-		});
-	});
-}
-
 - (void)addTrackToQueue:(LMMusicTrack*)trackToAdd DEPRECATED_ATTRIBUTE {
 //	NSLog(@"Adding %@ to queue", trackToAdd.title);
 //
@@ -1497,10 +1419,6 @@ BOOL shuffleForDebug = NO;
 	NSLog(@"%@", string);
 }
 
-- (BOOL)nowPlayingCollectionIsEqualTo:(LMMusicTrackCollection*)musicTrackCollection {
-	return [self.nowPlayingCollectionShuffled isEqual:musicTrackCollection] || [self.nowPlayingCollectionSorted isEqual:musicTrackCollection];
-}
-
 - (LMMusicPlayerType)playerType {
 	return LMMusicPlayerTypeAppleMusic;
 }
@@ -1554,29 +1472,14 @@ BOOL shuffleForDebug = NO;
 }
 
 - (void)setShuffleMode:(LMMusicShuffleMode)shuffleMode {
-	if(!self.nowPlayingWasSetWithinLigniteMusic){
-		if(self.systemMusicPlayer.shuffleMode != MPMusicShuffleModeSongs){
-			self.systemMusicPlayer.shuffleMode = MPMusicShuffleModeSongs;
-		}
-		else{
-			self.systemMusicPlayer.shuffleMode = MPMusicShuffleModeOff;
-		}
-		
-		[self updatePlaybackModeDelegates];
-		return;
-	}
-	
 	_shuffleMode = shuffleMode;
 	
-#warning update the queue for shuffle
+#warning Todo: update the queue for shuffle
 	
 	[self updatePlaybackModeDelegates];
 }
 
 - (LMMusicShuffleMode)shuffleMode {
-	if(!self.nowPlayingWasSetWithinLigniteMusic){
-		return (self.systemMusicPlayer.shuffleMode == MPMusicShuffleModeSongs) ? LMMusicShuffleModeOn : LMMusicShuffleModeOff;
-	}
 	return _shuffleMode;
 }
 

@@ -217,7 +217,7 @@
 	
 	UICollectionViewFlowLayout *flowLayout = (UICollectionViewFlowLayout*)self.collectionView.collectionViewLayout;
 	
-	NSLog(@"Reloading cell for index %d", (int)indexPath.row);
+//	NSLog(@"Reloading cell for index %d", (int)indexPath.row);
 	
 	if(cell.contentView.subviews.count > 0){
 		LMListEntry *listEntry = nil;
@@ -258,7 +258,7 @@
 		BOOL isPreviousTrack = (listEntry.indexPath.section == 0) && (listEntry.indexPath.row < self.musicPlayer.queue.previousTracks.count);
 		listEntry.alpha = isPreviousTrack ? (2.0 / 4.0) : 1.0;
 		
-		NSLog(@"Created new list entry for track %@", listEntryTrack.title);
+//		NSLog(@"Created new list entry for track %@", listEntryTrack.title);
 		
 		BOOL shouldHighlight = (listEntryTrack == self.musicPlayer.nowPlayingTrack);
 		[listEntry setAsHighlighted:shouldHighlight animated:NO];

@@ -757,7 +757,7 @@
 			if(rightSide){
 				NSLog(@"Right %@", musicTrack.title);
 				
-				[musicPlayer addTrackToQueue:musicTrack];
+				[musicPlayer.queue addTrackToQueue:musicTrack];
 			}
 			else{
 				NSLog(@"Favourite %@", musicTrack.title);

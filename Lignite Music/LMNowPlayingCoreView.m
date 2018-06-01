@@ -87,29 +87,12 @@
 }
 
 - (void)reloadMusicTracks {
-//	if(!self.musicPlayer.nowPlayingWasSetWithinLigniteMusic){
-//		[self.centreNowPlayingView changeMusicTrack:self.musicPlayer.nowPlayingTrack withIndex:0];
-//		[self.leadingNowPlayingView changeMusicTrack:nil withIndex:1];
-//		[self.trailingNowPlayingView changeMusicTrack:nil withIndex:-1];
-//		return;
-//	}
-//
-//	if(self.musicPlayer.nowPlayingCollection.count == 0){
-//		[self.centreNowPlayingView changeMusicTrack:nil withIndex:-1];
-//		[self.leadingNowPlayingView changeMusicTrack:nil withIndex:-1];
-//		[self.trailingNowPlayingView changeMusicTrack:nil withIndex:-1];
-//		return;
-//	}
+    [self.centreNowPlayingView changeMusicTrack:self.musicPlayer.nowPlayingTrack
+									  withIndex:self.musicPlayer.queue.indexOfNowPlayingTrack];
 	
-	
-	
-//	NSLog(@"indexes %d/%d/%d count %d", (int)previousTrackIndex, (int)indexOfCenter, (int)nextTrackIndex, (int)self.musicPlayer.nowPlayingCollection.count);
-	
-//	NSLog(@"Spook");
-	
-    [self.centreNowPlayingView changeMusicTrack:self.musicPlayer.nowPlayingTrack withIndex:self.musicPlayer.queue.indexOfNowPlayingTrack];
     [self.leadingNowPlayingView changeMusicTrack:self.musicPlayer.queue.nextTrack
                                        withIndex:self.musicPlayer.queue.indexOfNextTrack];
+	
     [self.trailingNowPlayingView changeMusicTrack:self.musicPlayer.queue.previousTrack
                                         withIndex:self.musicPlayer.queue.indexOfPreviousTrack];
 }
@@ -121,12 +104,6 @@
 }
 
 - (void)trackAddedToQueue:(LMMusicTrack *)trackAdded {
-	NSLog(@"=== The queue has %d items ===", (int)self.musicPlayer.nowPlayingCollection.count);
-	for(LMMusicTrack *track in self.musicPlayer.nowPlayingCollection.items){
-		NSLog(@"%@", track.title);
-	}
-	NSLog(@"=== End queue ===");
-	
 	[self theQueueChangedSoPleaseReloadThankYou];
 }
 
@@ -350,17 +327,13 @@
                     NSLog(@"Slide forward");
                     self.nowPlayingLeadingConstraint.constant = self.frame.size.width;
 					
-					if(!self.musicPlayer.nowPlayingWasSetWithinLigniteMusic){
-						[self.musicPlayer skipToPreviousTrack];
-					}
+					[self.musicPlayer skipToPreviousTrack];
                 }
                 else if(nextSong){
                     NSLog(@"Slide backward");
                     self.nowPlayingLeadingConstraint.constant = -self.frame.size.width;
 					
-					if(!self.musicPlayer.nowPlayingWasSetWithinLigniteMusic){
-						[self.musicPlayer skipToNextTrack];
-					}
+					[self.musicPlayer skipToNextTrack];
                 }
                 else{
                     NSLog(@"Reset to centre");
@@ -511,7 +484,7 @@
         //			
         //		}
         
-        NSLog(@"Index of %ld", self.musicPlayer.indexOfNowPlayingTrack);
+        NSLog(@"Index of %ld", self.musicPlayer.queue.indexOfNowPlayingTrack);
         
         [self reloadMusicTracks];
 		

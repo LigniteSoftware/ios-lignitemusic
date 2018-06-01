@@ -32,6 +32,7 @@ typedef NS_ENUM(NSInteger, LMTheme) {
 #define LMThemeKeyDVaPink @"LMThemeKeyDVaPink"
 
 @protocol LMThemeEngineDelegate <NSObject>
+@optional
 
 /**
  The user changed their theme.

@@ -132,32 +132,6 @@ typedef enum {
 - (void)musicPlaybackModesDidChange:(LMMusicShuffleMode)shuffleMode repeatMode:(LMMusicRepeatMode)repeatMode;
 
 /**
- A track was added to the queue.
-
- @param trackAdded The track that was added.
- */
-- (void)trackAddedToQueue:(LMMusicTrack*)trackAdded DEPRECATED_ATTRIBUTE;
-
-/**
- A track was removed from the queue.
- 
- @param trackAdded The track that was removed.
- */
-- (void)trackRemovedFromQueue:(LMMusicTrack*)trackRemoved DEPRECATED_ATTRIBUTE;
-
-/**
- A track was moved around the queue.
-
- @param trackMoved The track that was moved.
- */
-- (void)trackMovedInQueue:(LMMusicTrack*)trackMoved DEPRECATED_ATTRIBUTE;
-
-/**
- The user tried to manage the queue, while the music queue playing is one that is managed by iOS. An alert should be displayed letting the user know this is not a happy scenario.
- */
-- (void)userAttemptedToModifyQueueThatIsManagedByiOS DEPRECATED_ATTRIBUTE;
-
-/**
  A track was added to favourites.
 
  @param track The track that was added to favourites.
@@ -183,16 +157,12 @@ typedef enum {
 
 @interface LMMusicPlayer : NSObject
 
-- (NSInteger)numberOfItemsInQueue DEPRECATED_ATTRIBUTE;
-- (MPMediaItem*)queueTrackAtIndex:(unsigned long long)index DEPRECATED_ATTRIBUTE;
-
 - (void)addTrackToQueue:(LMMusicTrack*)trackToAdd DEPRECATED_ATTRIBUTE;
 - (void)removeTrackFromQueue:(LMMusicTrack*)trackToRemove DEPRECATED_ATTRIBUTE;
 - (void)moveTrackInQueueFromIndex:(NSInteger)oldIndex toIndex:(NSInteger)newIndex DEPRECATED_ATTRIBUTE;
 - (void)prepareQueueModification DEPRECATED_ATTRIBUTE;
 - (void)finishQueueModification DEPRECATED_ATTRIBUTE;
 - (void)prepareQueueForBackgrounding DEPRECATED_ATTRIBUTE;
-- (void)rebuildQueue DEPRECATED_ATTRIBUTE;
 
 @property BOOL nowPlayingQueueTooLarge; //The full queue from the system is not being shown, for whatever fucking reason
 
@@ -476,14 +446,6 @@ typedef enum {
  @param track The track to remove from favourites.
  */
 - (void)removeTrackFromFavourites:(LMMusicTrack*)track;
-
-/**
- Checks whether or not a now playing collection is equal to the currently playing collection or its shuffled version.
-
- @param musicTrackCollection The music track collection to compare with.
- @return Whether or not it's equal to either the shuffled collection which is now playing or the sorted base collection.
- */
-- (BOOL)nowPlayingCollectionIsEqualTo:(LMMusicTrackCollection*)musicTrackCollection;
 
 /**
  Whether or not an output port is wireless.
