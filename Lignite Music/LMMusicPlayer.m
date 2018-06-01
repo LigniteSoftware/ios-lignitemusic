@@ -159,6 +159,12 @@ MPMediaGrouping associatedMediaTypes[] = {
 		}
 		self.previousPlaybackTime = self.currentPlaybackTime;
 		
+		self.playbackState = (self.systemMusicPlayer.playbackState == MPMusicPlaybackStatePlaying) ? LMMusicPlaybackStatePlaying : LMMusicPlaybackStatePaused;
+		
+		if(self.playbackState == LMMusicPlaybackStatePlaying){
+			[self systemMusicPlayerStateChanged:nil];
+		}
+		
 //		self.autoPlay = (self.systemMusicPlayer.playbackState == MPMusicPlaybackStatePlaying);
 		
 //		[[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
@@ -256,26 +262,7 @@ MPMediaGrouping associatedMediaTypes[] = {
 }
 
 - (void)prepareForTermination {
-//	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer || self.playerType == LMMusicPlayerTypeAppleMusic){
-//		if(self.nowPlayingCollection){
-//			[self.systemMusicPlayer setQueueWithItemCollection:self.nowPlayingCollection];
-//		}
-//		self.systemMusicPlayer.nowPlayingItem = self.nowPlayingTrack;
-//		self.systemMusicPlayer.currentPlaybackTime = self.currentPlaybackTime;
-//	}
-//
 	[self deinit];
-}
-
-- (void)prepareForActivation {
-	if(self.playerType == LMMusicPlayerTypeSystemMusicPlayer){
-		NSLog(@"Preparing for activation, state %d", (int)self.systemMusicPlayer.playbackState);
-		if(self.systemMusicPlayer.playbackState == MPMusicPlaybackStatePlaying || self.systemMusicPlayer.playbackState == MPMusicPlaybackStateInterrupted){
-			[self.systemMusicPlayer pause];
-			[self play];
-			NSLog(@"Playing...");
-		}
-	}
 }
 
 - (void)updateNowPlayingTimeDelegates:(BOOL)userModified {

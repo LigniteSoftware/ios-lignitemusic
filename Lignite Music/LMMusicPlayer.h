@@ -279,11 +279,6 @@ typedef enum {
 - (void)prepareForTermination;
 
 /**
- Prepare for when the app is coming back into the foreground (being activated again).
- */
-- (void)prepareForActivation;
-
-/**
  Adds an LMMusicPlayerDelegate to the list of delegates.
  
  @param newDelegate The new delegate to add.
