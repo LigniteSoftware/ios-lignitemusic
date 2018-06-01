@@ -308,7 +308,6 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 			[delegate trackMovedInQueue:currentMusicTrack];
 		}
 	}
-
 }
 
 - (NSInteger)count {

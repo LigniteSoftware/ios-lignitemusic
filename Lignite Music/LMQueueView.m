@@ -339,7 +339,7 @@
 	NSLog(@"Move item from %@ to %@", sourceIndexPath, destinationIndexPath);
 	
 	NSInteger previousIndex = [self.musicPlayer.queue indexOfTrackInCompleteQueueFromIndexPath:sourceIndexPath];
-	NSInteger newIndex = [self.musicPlayer.queue indexOfTrackInCompleteQueueFromIndexPath:sourceIndexPath];
+	NSInteger newIndex = [self.musicPlayer.queue indexOfTrackInCompleteQueueFromIndexPath:destinationIndexPath];
 	
 	NSLog(@"Moving track from complete index %d to new complete index %d", (int)previousIndex, (int)newIndex);
 	
@@ -430,7 +430,7 @@
 	NSLog(@"Queue ended.");
 }
 
-- (void)trackMovedInQueue:(LMMusicTrack * _Nonnull)trackMoved {
+- (void)trackMovedInQueue:(LMMusicTrack*)trackMoved {
 	[self.collectionView reloadData];
 }
 
