@@ -1616,7 +1616,7 @@
 }
 
 - (void)loadButtonNavigationBar {
-//	return;
+	return;
 	
 	
 	if(self.buttonNavigationBar){
@@ -2094,7 +2094,7 @@
 //			[queue rebuild];
 //		} repeats:NO];
 		
-//		[self launchNowPlayingFromTap];
+		[self launchNowPlayingFromTap];
 		
 		
 		

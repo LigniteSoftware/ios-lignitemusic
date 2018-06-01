@@ -109,10 +109,10 @@
 /**
  Move a track in the queue from its old index to a new index.
 
- @param oldIndex The old index of the track, relative to the whole queue (not just previously played or up next).
- @param newIndex The new index of the track, relative to the whole queue (not just previously played or up next).
+ @param oldIndexPath The old index path of the track, relative to the way that LMQueueView is structured.
+ @param newIndexPath The new index path of the track, relative to the way that LMQueueView is structured.
  */
-- (void)moveTrackFromIndex:(NSInteger)oldIndex toIndex:(NSInteger)newIndex;
+- (void)moveTrackFromIndexPath:(NSIndexPath * _Nonnull)oldIndexPath toIndexPath:(NSIndexPath * _Nonnull)newIndexPath;
 
 /**
  Removes a track from the queue. 

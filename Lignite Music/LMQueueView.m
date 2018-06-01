@@ -338,12 +338,7 @@
 - (void)collectionView:(UICollectionView *)collectionView moveItemAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath {
 	NSLog(@"Move item from %@ to %@", sourceIndexPath, destinationIndexPath);
 	
-	NSInteger previousIndex = [self.musicPlayer.queue indexOfTrackInCompleteQueueFromIndexPath:sourceIndexPath];
-	NSInteger newIndex = [self.musicPlayer.queue indexOfTrackInCompleteQueueFromIndexPath:destinationIndexPath];
-	
-	NSLog(@"Moving track from complete index %d to new complete index %d", (int)previousIndex, (int)newIndex);
-	
-	[self.musicPlayer.queue moveTrackFromIndex:previousIndex toIndex:newIndex];
+	[self.musicPlayer.queue moveTrackFromIndexPath:sourceIndexPath toIndexPath:destinationIndexPath];
 }
 
 - (void)longPressGestureHandler:(UILongPressGestureRecognizer*)longPressGesture {

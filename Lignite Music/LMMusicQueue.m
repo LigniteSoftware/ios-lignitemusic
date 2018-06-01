@@ -44,6 +44,16 @@
  */
 @property (readonly) LMMusicTrackCollection *completeQueueTrackCollection;
 
+/**
+ The index range of the previous tracks array relative to the complete queue.
+ */
+@property (readonly) NSRange previousTracksIndexRange;
+
+/**
+ The index range of the next up tracks array relative to the complete queue.
+ */
+@property (readonly) NSRange nextTracksIndexRange;
+
 @end
 
 @implementation LMMusicQueue
@@ -67,9 +77,7 @@
 		
 		NSLog(@"Preparing for the background by performing a system reload of the queue.");
 		
-		[self.musicPlayer.systemMusicPlayer setQueueWithItemCollection:self.completeQueueTrackCollection];
-		[self.musicPlayer.systemMusicPlayer setNowPlayingItem:self.musicPlayer.nowPlayingTrack];
-		[self.musicPlayer.systemMusicPlayer play];
+		[self systemReloadWithTrack:self.musicPlayer.nowPlayingTrack];
 		
 		self.systemRestorePlaybackTime = currentPlaybackTime;
 		
@@ -112,6 +120,9 @@
 
 - (NSInteger)indexOfNowPlayingTrack {
 	if(self.fullQueueAvailable){
+		if(self.adjustedIndexOfNowPlayingTrack != NSNotFound){
+			return self.adjustedIndexOfNowPlayingTrack;
+		}
 		return self.musicPlayer.systemMusicPlayer.indexOfNowPlayingItem;
 	}
 	
@@ -166,6 +177,8 @@
 	
 	NSLog(@"Queue was modified and needs a refresher, here we go.");
 	
+	self.adjustedIndexOfNowPlayingTrack = NSNotFound;
+	
 	[self.musicPlayer.systemMusicPlayer setQueueWithItemCollection:self.completeQueueTrackCollection];
 	[self.musicPlayer.systemMusicPlayer setNowPlayingItem:newTrack];
 	[self.musicPlayer.systemMusicPlayer play];
@@ -189,11 +202,10 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 		self.completeQueue = [NSMutableArray arrayWithArray:newQueue.items];
 	}
 	
-	[self.musicPlayer.systemMusicPlayer setQueueWithItemCollection:newQueue];
-	
 	self.fullQueueAvailable = YES;
 	
 	if(autoPlay){
+		[self.musicPlayer.systemMusicPlayer setQueueWithItemCollection:newQueue];
 		[self.musicPlayer.systemMusicPlayer setNowPlayingItem:[[newQueue items] objectAtIndex:0]];
 		[self.musicPlayer.systemMusicPlayer play];
 	}
@@ -292,12 +304,30 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 										 withIndexInSubQueueOf:trackIndexPath.row];
 }
 
-- (void)moveTrackFromIndex:(NSInteger)oldIndex toIndex:(NSInteger)newIndex {
-	NSLog(@"Move track %d to index %d", (int)oldIndex, (int)newIndex);
+- (void)moveTrackFromIndexPath:(NSIndexPath*)oldIndexPath toIndexPath:(NSIndexPath*)newIndexPath {
+	NSInteger previousIndexOfNowPlayingTrack = self.indexOfNowPlayingTrack;
+	
+	NSInteger oldIndex = [self indexOfTrackInCompleteQueueFromIndexPath:oldIndexPath];
+	NSInteger newIndex = [self indexOfTrackInCompleteQueueFromIndexPath:newIndexPath];
+	
+	BOOL isReplacingNowPlayingTrack = (newIndex == previousIndexOfNowPlayingTrack);
+	
+	BOOL oldIndexIsInPreviousTracks = (oldIndex < previousIndexOfNowPlayingTrack);
+	BOOL newIndexIsInPreviousTracks = oldIndexIsInPreviousTracks ? (newIndex < previousIndexOfNowPlayingTrack) : (newIndex <= previousIndexOfNowPlayingTrack);
+	
+	BOOL movingIntoPreviousTracks = (!oldIndexIsInPreviousTracks && newIndexIsInPreviousTracks) && (newIndex <= previousIndexOfNowPlayingTrack);
+	BOOL movingIntoNextTracks = (oldIndexIsInPreviousTracks && !newIndexIsInPreviousTracks);
 	
 	LMMusicTrack *currentMusicTrack = [self.completeQueue objectAtIndex:oldIndex];
 	[self.completeQueue removeObjectAtIndex:oldIndex];
-	[self.completeQueue insertObject:currentMusicTrack atIndex:newIndex];
+	[self.completeQueue insertObject:currentMusicTrack atIndex:newIndex - (movingIntoNextTracks && !isReplacingNowPlayingTrack)];
+	
+	if(movingIntoPreviousTracks){
+		self.adjustedIndexOfNowPlayingTrack = (previousIndexOfNowPlayingTrack + 1);
+	}
+	else if(movingIntoNextTracks){
+		self.adjustedIndexOfNowPlayingTrack = (previousIndexOfNowPlayingTrack - 1);
+	}
 	
 	[self completeQueueUpdated];
 	
@@ -318,6 +348,30 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 	return (self.musicPlayer.nowPlayingTrack && (self.numberOfItemsInSystemQueue > 0) && (self.completeQueue.count == 0));
 }
 
+- (NSRange)previousTracksIndexRange {
+	NSInteger indexOfNowPlayingTrack = self.indexOfNowPlayingTrack;
+	
+	if(indexOfNowPlayingTrack == 0){ //Nothing previous to the first track of course
+		return NSMakeRange(0, 0);
+	}
+	
+	return NSMakeRange(0, indexOfNowPlayingTrack);
+}
+
+- (NSRange)nextTracksIndexRange {
+	NSInteger indexOfNowPlayingTrack = self.indexOfNowPlayingTrack;
+	NSInteger finalIndexOfQueue = self.completeQueue.count - 1;
+	
+	if(indexOfNowPlayingTrack == finalIndexOfQueue){
+		return NSMakeRange(0, 0);
+	}
+	
+	NSInteger indexOfNextTrack = (indexOfNowPlayingTrack + 1);
+	NSInteger length = ((finalIndexOfQueue + 1) - indexOfNextTrack);
+	
+	return NSMakeRange(indexOfNextTrack, length);
+}
+
 - (NSArray<LMMusicTrack*>*)previousTracks {
 	if(!self.musicPlayer.nowPlayingTrack || self.numberOfItemsInSystemQueue == 0){
 		return @[];
@@ -329,13 +383,11 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 		return @[];
 	}
 	
-	NSInteger indexOfNowPlayingTrack = self.musicPlayer.systemMusicPlayer.indexOfNowPlayingItem;
-	
-	if(indexOfNowPlayingTrack == 0){ //Nothing previous to the first track of course
+	if(self.indexOfNowPlayingTrack == 0){ //Nothing previous to the first track of course
 		return @[];
 	}
 	
-	return [self.completeQueue subarrayWithRange:NSMakeRange(0, indexOfNowPlayingTrack)];
+	return [self.completeQueue subarrayWithRange:self.previousTracksIndexRange];
 }
 
 - (NSArray<LMMusicTrack*>*)nextTracks {
@@ -349,17 +401,13 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 		return @[];
 	}
 	
-	NSInteger indexOfNowPlayingTrack = self.musicPlayer.systemMusicPlayer.indexOfNowPlayingItem;
 	NSInteger finalIndexOfQueue = self.completeQueue.count - 1;
 	
-	if(indexOfNowPlayingTrack == finalIndexOfQueue){
+	if(self.indexOfNowPlayingTrack == finalIndexOfQueue){
 		return @[];
 	}
 	
-	NSInteger indexOfNextTrack = (indexOfNowPlayingTrack + 1);
-	NSInteger length = ((finalIndexOfQueue + 1) - indexOfNextTrack);
-	
-	return [self.completeQueue subarrayWithRange:NSMakeRange(indexOfNextTrack, length)];
+	return [self.completeQueue subarrayWithRange:self.nextTracksIndexRange];
 }
 
 - (BOOL)queueExists {
@@ -403,7 +451,9 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 		}
 
 		self.completeQueue =  systemQueueArray;
-		self.adjustedIndexOfNowPlayingTrack = (self.musicPlayer.systemMusicPlayer.indexOfNowPlayingItem - startingIndex);
+		if(!fullQueueAvailable){
+			self.adjustedIndexOfNowPlayingTrack = (self.musicPlayer.systemMusicPlayer.indexOfNowPlayingItem - startingIndex);
+		}
 		self.fullQueueAvailable = fullQueueAvailable;
 		
 		BOOL noCurrentQueue = ![self queueExists];
@@ -464,6 +514,7 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 	if(self){
 		self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 		self.delegates = [NSMutableArray new];
+		self.adjustedIndexOfNowPlayingTrack = NSNotFound;
 	}
 	return self;
 }
