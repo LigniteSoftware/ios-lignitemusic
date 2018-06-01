@@ -371,29 +371,29 @@
 
 - (void)sendUpNextToWatch {
 	if(self.connected){
-		LMMusicTrackCollection *nowPlayingQueue = self.musicPlayer.nowPlayingCollection;
-		if(!nowPlayingQueue){
+		if(!self.musicPlayer.queue.nextTracks){
 			NSLog(@"Now playing queue doesn't exist, rejecting");
 			return;
 		}
 		
 		NSMutableArray *upNextMutableArray = [NSMutableArray new];
-		NSInteger indexOfNowPlayingTrack = self.musicPlayer.indexOfNowPlayingTrack;
 		
-		if(!(nowPlayingQueue.count == 0 || nowPlayingQueue.count == 1)){
-			NSArray *tracksRemainingAfterNowPlayingTrack = [nowPlayingQueue.items subarrayWithRange:NSMakeRange(indexOfNowPlayingTrack + 1, MIN(nowPlayingQueue.count-indexOfNowPlayingTrack-1, 5))];
+		if(self.musicPlayer.queue.nextTracks.count != 0){
+			NSArray *tracksRemainingAfterNowPlayingTrack = [self.musicPlayer.queue.nextTracks subarrayWithRange:NSMakeRange(0, MIN(self.musicPlayer.queue.nextTracks.count, 5))];
 		
-			for(LMMusicTrack *track in tracksRemainingAfterNowPlayingTrack){
+			for(NSInteger i = 0; i < tracksRemainingAfterNowPlayingTrack.count; i++){
+				LMMusicTrack *track = [tracksRemainingAfterNowPlayingTrack objectAtIndex:i];
+				
 				NSDictionary *trackInfoDictionary = @{
 													  @"title": track.title,
 													  @"subtitle": track.artist ? track.artist : NSLocalizedString(@"UnknownArtist", nil),
 													  @"persistentID": @(track.persistentID),
-													  @"indexInCollection": @([nowPlayingQueue.items indexOfObject:track]),
+													  @"indexInCollection": @(i),
 													  };
 				[upNextMutableArray addObject:trackInfoDictionary];
 			}
 			
-			NSLog(@"Got %d tracks up next", (int)tracksRemainingAfterNowPlayingTrack.count);
+			NSLog(@"Got %d tracks up next for Apple Watch", (int)tracksRemainingAfterNowPlayingTrack.count);
 		}
 		
 		self.previousShuffleMode = self.musicPlayer.shuffleMode;
@@ -682,11 +682,11 @@
 		}
 		else if([key isEqualToString:LMAppleWatchControlKeyUpNextTrackSelected]){
 			NSInteger nowPlayingQueueIndex = [[message objectForKey:LMAppleWatchControlKeyUpNextTrackSelected] integerValue];
-			if(nowPlayingQueueIndex >= self.musicPlayer.nowPlayingCollection.items.count){ //Up next is out of sync
+			if(nowPlayingQueueIndex >= self.musicPlayer.queue.nextTracks.count){ //Up next is out of sync
 				[self sendUpNextToWatch];
 			}
 			else{
-				LMMusicTrack *trackSelected = [self.musicPlayer.nowPlayingCollection.items objectAtIndex:nowPlayingQueueIndex];
+				LMMusicTrack *trackSelected = [self.musicPlayer.queue.nextTracks objectAtIndex:nowPlayingQueueIndex];
 				[self.musicPlayer setNowPlayingTrack:trackSelected];
 			}
 		}
@@ -712,7 +712,7 @@
 			MPMediaEntityPersistentID persistentIDOfSpecificTrack = (MPMediaEntityPersistentID)[[[message objectForKey:LMAppleWatchBrowsingKeyPersistentIDs] lastObject] longLongValue];
 			
 			[self.musicPlayer.queue setQueue:collectionToPlay];
-			for(LMMusicTrack *track in self.musicPlayer.nowPlayingCollection.items){
+			for(LMMusicTrack *track in collectionToPlay.items){
 				if(track.persistentID == persistentIDOfSpecificTrack){
 					[self.musicPlayer setNowPlayingTrack:track];
 					break;
