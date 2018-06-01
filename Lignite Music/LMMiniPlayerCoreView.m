@@ -15,7 +15,7 @@
 #import "MBProgressHUD.h"
 #import "LMMusicPlayer.h"
 
-@interface LMMiniPlayerCoreView()<UIGestureRecognizerDelegate, LMMusicPlayerDelegate, LMLayoutChangeDelegate>
+@interface LMMiniPlayerCoreView()<UIGestureRecognizerDelegate, LMMusicPlayerDelegate, LMLayoutChangeDelegate, LMMusicQueueDelegate>
 
 /**
  The miniplayer which goes in the back.
@@ -92,6 +92,18 @@
 }
 
 - (void)musicTrackDidChange:(LMMusicTrack *)newTrack {
+	[self reloadMusicTracks];
+}
+
+- (void)queueCompletelyChanged {
+	[self reloadMusicTracks];
+}
+
+- (void)queueBegan {
+	[self reloadMusicTracks];
+}
+
+- (void)queueEnded {
 	[self reloadMusicTracks];
 }
 
@@ -338,6 +350,7 @@
 		
 		self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 		[self.musicPlayer addMusicDelegate:self];
+		[self.musicPlayer.queue addDelegate:self];
 		
 		self.centreMiniPlayerView = [LMMiniPlayerView newAutoLayoutView];
 		self.centreMiniPlayerView.isUserFacing = YES;

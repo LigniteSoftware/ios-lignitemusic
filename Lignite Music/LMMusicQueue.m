@@ -61,7 +61,7 @@
 @synthesize nextTracks = _nextTracks;
 @synthesize previousTracks = _previousTracks;
 @synthesize count = _count;
-@synthesize numberOfItemsInSystemQueue = _numberOfItemsInSystemQueue;
+@synthesize systemQueueCount = _systemQueueCount;
 @synthesize indexOfNowPlayingTrack = _indexOfNowPlayingTrack;
 @synthesize completeQueueTrackCollection = _completeQueueTrackCollection;
 
@@ -93,7 +93,7 @@
 	}
 }
 
-- (NSInteger)numberOfItemsInSystemQueue {
+- (NSInteger)systemQueueCount {
 	return (NSInteger)[[MPMusicPlayerController systemMusicPlayer] performSelector:@selector(numberOfItems)];
 }
 
@@ -119,15 +119,15 @@
 }
 
 - (NSInteger)indexOfNowPlayingTrack {
-	if(self.fullQueueAvailable){
+//	if(self.fullQueueAvailable){
 		if(self.adjustedIndexOfNowPlayingTrack != NSNotFound){
 			return self.adjustedIndexOfNowPlayingTrack;
 		}
 		return self.musicPlayer.systemMusicPlayer.indexOfNowPlayingItem;
-	}
+//	}
 	
-#warning Todo: fix this for large queues that were set outside of Lignite Music
-	return self.adjustedIndexOfNowPlayingTrack;
+//#warning Todo: fix this for large queues that were set outside of Lignite Music
+//	return self.adjustedIndexOfNowPlayingTrack;
 }
 
 - (NSInteger)indexOfNextTrack {	
@@ -185,6 +185,16 @@
 }
 
 
+- (void)notifyDelegatesOfCompletelyChangedQueue {
+	NSArray<id<LMMusicPlayerDelegate>> *safeDelegates = [[NSArray alloc]initWithArray:self.delegates];
+	
+	for(id<LMMusicQueueDelegate> delegate in safeDelegates){
+		if([delegate respondsToSelector:@selector(queueCompletelyChanged)]){
+			[delegate queueCompletelyChanged];
+		}
+	}
+}
+
 - (void)setQueue:(LMMusicTrackCollection*)newQueue
 		autoPlay:(BOOL)autoPlay
 updateCompleteQueue:(BOOL)updateCompleteQueue {
@@ -200,12 +210,12 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 	
 	if(updateCompleteQueue){
 		self.completeQueue = [NSMutableArray arrayWithArray:newQueue.items];
+		[self.musicPlayer.systemMusicPlayer setQueueWithItemCollection:newQueue];
+		
+		self.fullQueueAvailable = YES;
 	}
 	
-	self.fullQueueAvailable = YES;
-	
 	if(autoPlay){
-		[self.musicPlayer.systemMusicPlayer setQueueWithItemCollection:newQueue];
 		[self.musicPlayer.systemMusicPlayer setNowPlayingItem:[[newQueue items] objectAtIndex:0]];
 		[self.musicPlayer.systemMusicPlayer play];
 	}
@@ -214,13 +224,7 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 	}
 	
 	if(updateCompleteQueue){
-		NSArray<id<LMMusicPlayerDelegate>> *safeDelegates = [[NSArray alloc]initWithArray:self.delegates];
-		
-		for(id<LMMusicQueueDelegate> delegate in safeDelegates){
-			if([delegate respondsToSelector:@selector(queueCompletelyChanged)]){
-				[delegate queueCompletelyChanged];
-			}
-		}
+		[self notifyDelegatesOfCompletelyChangedQueue];
 	}
 }
 
@@ -340,12 +344,20 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 	}
 }
 
-- (NSInteger)count {
+- (NSInteger)completeQueueCount {
 	return self.completeQueue.count;
 }
 
+- (NSInteger)count {
+	if(self.fullQueueAvailable){
+		return self.completeQueueCount;
+	}
+	
+	return self.systemQueueCount;
+}
+
 - (BOOL)queueIsStale {
-	return (self.musicPlayer.nowPlayingTrack && (self.numberOfItemsInSystemQueue > 0) && (self.completeQueue.count == 0));
+	return (self.musicPlayer.nowPlayingTrack && (self.systemQueueCount > 0) && (self.completeQueue.count == 0));
 }
 
 - (NSRange)previousTracksIndexRange {
@@ -373,7 +385,7 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 }
 
 - (NSArray<LMMusicTrack*>*)previousTracks {
-	if(!self.musicPlayer.nowPlayingTrack || self.numberOfItemsInSystemQueue == 0){
+	if(!self.musicPlayer.nowPlayingTrack || self.systemQueueCount == 0){
 		return @[];
 	}
 	
@@ -391,7 +403,7 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 }
 
 - (NSArray<LMMusicTrack*>*)nextTracks {
-	if(!self.musicPlayer.nowPlayingTrack || (self.numberOfItemsInSystemQueue == 0)){
+	if(!self.musicPlayer.nowPlayingTrack || (self.systemQueueCount == 0)){
 		return @[];
 	}
 	
@@ -433,7 +445,7 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 		BOOL fullQueueAvailable = YES;
 
 		NSMutableArray<LMMusicTrack*> *systemQueueArray = [NSMutableArray new];
-		for(NSInteger i = 0; i < strongSelf.numberOfItemsInSystemQueue; i++){
+		for(NSInteger i = 0; i < strongSelf.systemQueueCount; i++){
 			LMMusicTrack *track = [strongSelf systemQueueTrackAtIndex:i];
 			if(track){
 				NSLog(@"Track %d is %@", (int)i, track.title);
@@ -477,7 +489,7 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 		}
 		
 		NSTimeInterval endTime = [[NSDate new] timeIntervalSince1970];
-		NSLog(@"\nLMMusicQueue rebuild summary\n%d out of %d tracks captured in %f seconds.\n%d tracks previous, %d tracks next.\n\nNo previous queue %d, no current queue %d.", (int)self.completeQueue.count, (int)self.numberOfItemsInSystemQueue, (endTime-startTime), (int)previous.count, (int)upNext.count, noPreviousQueue, noCurrentQueue);
+		NSLog(@"\nLMMusicQueue rebuild summary\n%d out of %d tracks captured in %f seconds.\n%d tracks previous, %d tracks next.\n\nNo previous queue %d, no current queue %d.\nAdjusted now playing index %d vs %d.\n", (int)self.completeQueue.count, (int)self.systemQueueCount, (endTime-startTime), (int)previous.count, (int)upNext.count, noPreviousQueue, noCurrentQueue, (int)self.adjustedIndexOfNowPlayingTrack, (int)self.musicPlayer.systemMusicPlayer.indexOfNowPlayingItem);
 
 
 		dispatch_async(dispatch_get_main_queue(), ^{
@@ -494,6 +506,9 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 						[delegate queueEnded];
 					}
 				}
+			}
+			else{
+				[self notifyDelegatesOfCompletelyChangedQueue]; //There was a queue playing and there is still a queue playing
 			}
 
 			NSLog(@"Finished building and distributing system queue. %lu tracks loaded.", (unsigned long)systemQueueArray.count);

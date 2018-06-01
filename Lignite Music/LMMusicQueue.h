@@ -54,11 +54,6 @@
 @interface LMMusicQueue : NSObject
 
 /**
- The total amount of tracks in the queue. This is the count of previously played tracks, the current track, and the next up tracks altogether.
- */
-@property (readonly) NSInteger count;
-
-/**
  Relative to the music player's now playing track, these are the tracks prior to that track, as provided by the system API.
  
  @return The previous tracks relative to the currently playing track.
@@ -73,9 +68,19 @@
 @property (nonnull, readonly) NSArray<LMMusicTrack*> *nextTracks;
 
 /**
+ If the full queue isn't available, this returns the systemQueueCount. Otherwise, it returns the completeQueueCount.
+ */
+@property (readonly) NSInteger count;
+
+/**
  The number of items in the system queue.
  */
-@property (readonly) NSInteger numberOfItemsInSystemQueue;
+@property (readonly) NSInteger systemQueueCount;
+
+/**
+ The number of items in the complete queue, which is the queue that Lignite Music has been able to construct (this count may not align with the systemQueueCount).
+ */
+@property (readonly) NSInteger completeQueueCount;
 
 /**
  The index of the now playing track in the complete queue.

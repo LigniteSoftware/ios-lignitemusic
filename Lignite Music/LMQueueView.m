@@ -477,7 +477,7 @@
 		
 		self.backgroundColor = [LMColour whiteColour];
 		
-		
+
 		
 		UICollectionViewFlowLayout *fuck = [[UICollectionViewFlowLayout alloc]init];
 		fuck.sectionInset = UIEdgeInsetsMake(10, 0, 10, 0);
