@@ -11,6 +11,7 @@
 #import "NSTimer+Blocks.h"
 #import "LMMusicPlayer.h"
 #import "LMMusicQueue.h"
+#import "LMSettings.h"
 
 @interface LMMusicQueue()
 
@@ -28,6 +29,11 @@
  Whether or not the full system queue is available to us. If YES, no tracks provided by the system were nil.
  */
 @property BOOL fullQueueAvailable;
+
+/**
+ The starting index of the system queue. This will be NSNotFound if there's no queue, and if the full queue isn't available, there's a chance that this will be greater than 0 (due to only being able to access 499 songs in either direction).
+ */
+@property NSInteger systemQueueStartingIndex;
 
 /**
  The adjusted index of the now playing track, only used when fullQueueAvailable is NO.
@@ -67,6 +73,15 @@
 
 - (LMMusicTrackCollection*)completeQueueTrackCollection {
 	return [LMMusicTrackCollection collectionWithItems:self.completeQueue];
+}
+
+- (void)systemNowPlayingTrackDidChange:(LMMusicTrack*)musicTrack {
+	NSLog(@"System music track changed");
+	
+	[self calculateAdjustedIndex];
+	if(!self.fullQueueAvailable){
+		[self rebuild];
+	}
 }
 
 - (void)prepareForBackgrounding {
@@ -288,7 +303,7 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 									 withIndexInSubQueueOf:(NSInteger)indexInSubQueue {
 	
 	NSInteger indexInCompleteQueue = NSNotFound;
-		
+
 	if(!fromPreviousTracks){
 		indexInCompleteQueue = self.previousTracks.count + 1 + indexInSubQueue;
 	}
@@ -426,10 +441,16 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 	return (self.completeQueue.count > 0);
 }
 
+- (void)calculateAdjustedIndex {
+	if(!self.fullQueueAvailable){
+		self.adjustedIndexOfNowPlayingTrack = (self.musicPlayer.systemMusicPlayer.indexOfNowPlayingItem - self.systemQueueStartingIndex);
+	}
+}
+
 - (void)rebuild {
 	__weak id weakSelf = self;
 
-	dispatch_async(dispatch_get_global_queue(NSQualityOfServiceUserInteractive, 0), ^{
+	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 		LMMusicQueue *strongSelf = weakSelf;
 
 		if (!strongSelf) {
@@ -437,71 +458,90 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 			return;
 		}
 		
-		BOOL noPreviousQueue = ![self queueExists];
+		BOOL noPreviousQueue = ![strongSelf queueExists];
 
 		NSTimeInterval startTime = [[NSDate new] timeIntervalSince1970];
 		
-		NSInteger startingIndex = NSNotFound;
-		BOOL fullQueueAvailable = YES;
+		strongSelf.systemQueueStartingIndex = NSNotFound;
+		strongSelf.fullQueueAvailable = YES;
 
 		NSMutableArray<LMMusicTrack*> *systemQueueArray = [NSMutableArray new];
-		for(NSInteger i = 0; i < strongSelf.systemQueueCount; i++){
-			LMMusicTrack *track = [strongSelf systemQueueTrackAtIndex:i];
-			if(track){
-				NSLog(@"Track %d is %@", (int)i, track.title);
-				[systemQueueArray addObject:track];
-				
-				if(startingIndex == NSNotFound){
-					startingIndex = i;
+		if([LMSettings quickLoad]){
+			NSInteger startingIndex = strongSelf.musicPlayer.systemMusicPlayer.indexOfNowPlayingItem - LMQuickLoadQueueLimit;
+			NSInteger endingIndex = (startingIndex + (LMQuickLoadQueueLimit * 2) + 1);
+			if(startingIndex < 0){
+				startingIndex = 0;
+			}
+			if(endingIndex > strongSelf.systemQueueCount){
+				endingIndex = strongSelf.systemQueueCount;
+			}
+			for(NSInteger i = startingIndex; i < endingIndex; i++){
+				LMMusicTrack *track = [strongSelf systemQueueTrackAtIndex:i];
+				if(track){
+					[systemQueueArray addObject:track];
+					
+					if(strongSelf.systemQueueStartingIndex == NSNotFound){
+						strongSelf.systemQueueStartingIndex = i;
+					}
 				}
 			}
-			else{
-				NSLog(@"Track %d is nil :(", (int)i);
-				
-				fullQueueAvailable = NO;
+			
+			strongSelf.fullQueueAvailable = (systemQueueArray.count == strongSelf.systemQueueCount);
+		}
+		else{ //Load all possible tracks
+			for(NSInteger i = 0; i < strongSelf.systemQueueCount; i++){
+				LMMusicTrack *track = [strongSelf systemQueueTrackAtIndex:i];
+				if(track){
+					[systemQueueArray addObject:track];
+					
+					if(strongSelf.systemQueueStartingIndex == NSNotFound){
+						strongSelf.systemQueueStartingIndex = i;
+					}
+				}
+				else{
+					strongSelf.fullQueueAvailable = NO;
+				}
 			}
 		}
 
 		self.completeQueue =  systemQueueArray;
-		if(!fullQueueAvailable){
-			self.adjustedIndexOfNowPlayingTrack = (self.musicPlayer.systemMusicPlayer.indexOfNowPlayingItem - startingIndex);
-		}
-		self.fullQueueAvailable = fullQueueAvailable;
+
+		[self calculateAdjustedIndex];
 		
-		BOOL noCurrentQueue = ![self queueExists];
+		BOOL noCurrentQueue = ![strongSelf queueExists];
 		
-		NSArray *previous = [self previousTracks];
-		for(NSInteger i = 0; i < previous.count; i++){
-			LMMusicTrack *track = [previous objectAtIndex:i];
-			NSLog(@"Previously played: %@", track.title);
-		}
+		NSArray *previous = [strongSelf previousTracks];
+//		for(NSInteger i = 0; i < previous.count; i++){
+//			LMMusicTrack *track = [previous objectAtIndex:i];
+//			NSLog(@"Previously played: %@", track.title);
+//		}
+//
+//		if(previous.count == 0){
+//			NSLog(@"\nNothing previously played.");
+//		}
 		
-		if(previous.count == 0){
-			NSLog(@"\nNothing previously played.");
-		}
+		NSLog(@"> Current track: %@", strongSelf.musicPlayer.nowPlayingTrack.title);
 		
-		NSLog(@"> Current track: %@", self.musicPlayer.nowPlayingTrack.title);
-		
-		NSArray *upNext = [self nextTracks];
+		NSArray *upNext = [strongSelf nextTracks];
 		for(NSInteger i = 0; i < upNext.count; i++){
 			LMMusicTrack *track = [upNext objectAtIndex:i];
 			NSLog(@"Up next: %@", track.title);
 		}
 		
 		NSTimeInterval endTime = [[NSDate new] timeIntervalSince1970];
-		NSLog(@"\nLMMusicQueue rebuild summary\n%d out of %d tracks captured in %f seconds.\n%d tracks previous, %d tracks next.\n\nNo previous queue %d, no current queue %d.\nAdjusted now playing index %d vs %d.\n", (int)self.completeQueue.count, (int)self.systemQueueCount, (endTime-startTime), (int)previous.count, (int)upNext.count, noPreviousQueue, noCurrentQueue, (int)self.adjustedIndexOfNowPlayingTrack, (int)self.musicPlayer.systemMusicPlayer.indexOfNowPlayingItem);
+		NSLog(@"\nLMMusicQueue rebuild summary\n%d out of %d tracks captured in %f seconds.\n%d tracks previous, %d tracks next.\n\nNo previous queue %d, no current queue %d.\nAdjusted now playing index %d vs %d.\n", (int)strongSelf.completeQueue.count, (int)strongSelf.systemQueueCount, (endTime-startTime), (int)previous.count, (int)upNext.count, noPreviousQueue, noCurrentQueue, (int)strongSelf.adjustedIndexOfNowPlayingTrack, (int)strongSelf.musicPlayer.systemMusicPlayer.indexOfNowPlayingItem);
 
 
 		dispatch_async(dispatch_get_main_queue(), ^{
 			if(noPreviousQueue && !noCurrentQueue){
-				for(id<LMMusicQueueDelegate>delegate in strongSelf.delegates){
+				for(id<LMMusicQueueDelegate>delegate in self.delegates){
 					if([delegate respondsToSelector:@selector(queueBegan)]){
 						[delegate queueBegan];
 					}
 				}
 			}
 			else if(!noPreviousQueue && noCurrentQueue){
-				for(id<LMMusicQueueDelegate>delegate in strongSelf.delegates){
+				for(id<LMMusicQueueDelegate>delegate in self.delegates){
 					if([delegate respondsToSelector:@selector(queueEnded)]){
 						[delegate queueEnded];
 					}

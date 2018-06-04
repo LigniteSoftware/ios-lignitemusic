@@ -10,66 +10,40 @@
 
 @implementation LMSettings
 
-+ (BOOL)shouldShowStatusBar {
-	return YES;
-	
-	BOOL settingEnabled = YES;
++ (BOOL)settingForKey:(NSString*)key defaultValue:(BOOL)defaultValue {
+	BOOL settingEnabled = defaultValue;
 	
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 	
-	if([userDefaults objectForKey:LMSettingsKeyStatusBar]){
-		settingEnabled = [[NSUserDefaults standardUserDefaults] integerForKey:LMSettingsKeyStatusBar];
+	if([userDefaults objectForKey:key]){
+		settingEnabled = [[NSUserDefaults standardUserDefaults] integerForKey:key];
 	}
 	
 	return settingEnabled;
+}
+
++ (BOOL)shouldShowStatusBar {
+	return YES;
 }
 
 + (BOOL)userHasOptedOutOfTracking {
-	BOOL settingEnabled = NO;
-	
-	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-	
-	if([userDefaults objectForKey:LMSettingsKeyOptOutOfTracking]){
-		settingEnabled = [[NSUserDefaults standardUserDefaults] integerForKey:LMSettingsKeyOptOutOfTracking];
-	}
-	
-	return settingEnabled;
+	return [self settingForKey:LMSettingsKeyOptOutOfTracking defaultValue:NO];
 }
 
 + (BOOL)scrollingText {
-	BOOL settingEnabled = YES;
-	
-	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-	
-	if([userDefaults objectForKey:LMSettingsKeyScrollingText]){
-		settingEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:LMSettingsKeyScrollingText];
-	}
-	
-	return settingEnabled;
+	return [self settingForKey:LMSettingsKeyScrollingText defaultValue:YES];
 }
 
 + (BOOL)screenShouldTimeoutWhenNowPlayingIsOpen {
-	BOOL settingEnabled = NO;
-	
-	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-	
-	if([userDefaults objectForKey:LMSettingsKeyDisableScreenTimeoutOnNowPlaying]){
-		settingEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:LMSettingsKeyDisableScreenTimeoutOnNowPlaying];
-	}
-	
-	return !settingEnabled;
+	return [self settingForKey:LMSettingsKeyDisableScreenTimeoutOnNowPlaying defaultValue:YES];
 }
 
 + (BOOL)debugInitialisationSounds {
-	BOOL settingEnabled = NO;
-	
-	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-	
-	if([userDefaults objectForKey:LMSettingsKeyInitialisationSounds]){
-		settingEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:LMSettingsKeyInitialisationSounds];
-	}
-	
-	return settingEnabled;
+	return [self settingForKey:LMSettingsKeyInitialisationSounds defaultValue:YES];
+}
+
++ (BOOL)quickLoad {
+	return [self settingForKey:LMSettingsKeyQuickLoad defaultValue:NO];
 }
 
 @end

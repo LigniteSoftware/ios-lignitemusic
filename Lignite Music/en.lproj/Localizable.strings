@@ -68,6 +68,9 @@
 "NothingUpNextTitle" = "That's it, boss!";
 "NothingUpNextSubtitle" = "You've got no songs queued up.";
 
+"OptimiseLoadTimeTitle" = "Optimise for speed";
+"OptimiseLoadTimeSubtitle" = "Smaller \"up next\" in favour of speed";
+
 //As of 1.2.0 ^
 
 
@@ -583,7 +586,7 @@
 "StatusBarDescription" = "Show the iOS status bar";
 
 "ScrollingTextTitle" = "Scrolling text";
-"ScrollingTextDescription" = "In now-playing and miniplayer";
+"ScrollingTextDescription" = "In now-playing and mini player";
 
 "NowPlayingKeepScreenOnTitle" = "Now playing always on";
 "NowPlayingKeepScreenOnSubtitle" = "Keep screen on while now playing is open";

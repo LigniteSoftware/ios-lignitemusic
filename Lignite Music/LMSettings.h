@@ -20,11 +20,23 @@
 #define LMSettingsKeyDemoMode @"LMSettingsKeyDemoMode"
 #define LMSettingsKeyArtistsFilteredForDemo @"LMSettingsKeyArtistsFilteredForDemo"
 #define LMSettingsKeyInitialisationSounds @"LMSettingsKeyInitialisationSounds"
+#define LMSettingsKeyQuickLoad @"LMSettingsKeyQuickLoad"
 
 #define LMFeedbackKeyName @"LMFeedbackKeyName"
 #define LMFeedbackKeyEmail @"LMFeedbackKeyEmail"
 #define LMFeedbackKeyQuickSummary @"LMFeedbackKeyQuickSummary"
 #define LMFeedbackKeyDetailedReport @"LMFeedbackKeyDetailedReport"
+
+#define LMQuickLoadQueueLimit 25
+
+/**
+ Gets a boolean setting based on a certain setting key.
+
+ @param key The setting key to get the setting for.
+ @param defaultValue The default value of the setting, in case the user hasn't yet set it up.
+ @return The setting's boolean value.
+ */
++ (BOOL)settingForKey:(NSString*)key defaultValue:(BOOL)defaultValue;
 
 /**
  Whether or not the app should show the status bar.
@@ -60,5 +72,12 @@
  @return Whether or not to play sounds upon some elements initialisations.
  */
 + (BOOL)debugInitialisationSounds;
+
+/**
+ Whether or not to optimise the app's load for quick speeds. If YES, the queue will be truncated to 25 songs on each end to save some loading time. Other optimisations may be made as well.
+
+ @return Whether or not to optimise the app for quick speeds.
+ */
++ (BOOL)quickLoad;
 
 @end

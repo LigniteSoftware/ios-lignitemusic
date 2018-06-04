@@ -471,6 +471,8 @@ MPMediaGrouping associatedMediaTypes[] = {
 }
 
 - (void)notifyDelegatesOfNowPlayingTrack {
+	[self.queue systemNowPlayingTrackDidChange:self.nowPlayingTrack];
+	
 	NSArray<id<LMMusicPlayerDelegate>> *safeDelegates = [[NSArray alloc]initWithArray:self.delegates];
 	
 	for(id<LMMusicPlayerDelegate> delegate in safeDelegates){

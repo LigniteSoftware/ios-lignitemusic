@@ -100,8 +100,10 @@
 		case 0:
 			return [LMAppIcon imageForIcon:LMIconLookAndFeel];
 		case 1:
-			return [LMAppIcon imageForIcon:LMIconCloudDownload];
+			return [LMAppIcon imageForIcon:LMIconFunctionality];
 		case 2:
+			return [LMAppIcon imageForIcon:LMIconCloudDownload];
+		case 3:
 			return [LMAppIcon imageForIcon:LMIconAbout];
 	}
 	return [LMAppIcon imageForIcon:LMIconBug];
@@ -112,8 +114,10 @@
 		case 0:
 			return NSLocalizedString(@"LookAndFeel", nil);
 		case 1:
-			return NSLocalizedString(@"ImageDownloads", nil);
+			return NSLocalizedString(@"Functionality", nil);
 		case 2:
+			return NSLocalizedString(@"ImageDownloads", nil);
+		case 3:
 			return NSLocalizedString(@"About", nil);
 	}
 	return @"Unknown section";
@@ -124,8 +128,10 @@
 		case 0:
 			return 3;
 		case 1:
-			return 2;
+			return 1;
 		case 2:
+			return 2;
+		case 3:
 			return 4;
 	}
 	return 0;
@@ -156,6 +162,12 @@
 			}
 			break;
 		case 1:
+			switch (indexPath.row){
+				case 0:
+					return NSLocalizedString(@"OptimiseLoadTimeTitle", nil);
+			}
+			break;
+		case 2:
 			switch(indexPath.row){
 				case 0:
 					return NSLocalizedString(@"ImagesDownloadWarningTitle", nil);
@@ -165,7 +177,7 @@
 //					return NSLocalizedString(@"HighQualityImagesTitle", nil);
 			}//
 			break;
-		case 2:
+		case 3:
 			switch(indexPath.row){
 				case 0:
 					return NSLocalizedString(@"Tutorial", nil);
@@ -210,6 +222,13 @@
 		case 1:
 			switch(indexPath.row){
 				case 0: {
+					return NSLocalizedString(@"OptimiseLoadTimeSubtitle", nil);
+				}
+			}
+			break;
+		case 2:
+			switch(indexPath.row){
+				case 0: {
 					return [self subtitleForDownloadPermission];
 				}
 				case 1: {
@@ -228,7 +247,7 @@
 //					return NSLocalizedString(@"HighQualityImagesDescription", nil);
 			}
 			break;
-		case 2:
+		case 3:
 			switch(indexPath.row){
 				case 0:
 					return NSLocalizedString(@"TutorialSettingsSubtitle", nil);
@@ -385,6 +404,14 @@
 		case 1:
 			switch(indexPath.row){
 				case 0: {
+					NSLog(@"Optimise load time");
+					break;
+				}
+			}
+			break;
+		case 2:
+			switch(indexPath.row){
+				case 0: {
 					[self cacheAlert];
 					break;
 				}
@@ -396,7 +423,7 @@
 			
 			self.indexPathOfCurrentlyOpenAlertView = indexPath;
 			break;
-		case 2:
+		case 3:
 			switch(indexPath.row){
 				case 0: {
 					LMTutorialViewController *tutorialViewController = [LMTutorialViewController new];
@@ -465,28 +492,6 @@
 	}
 }
 
-- (void)didChangeScrollingTextSwitchView:(UISwitch*)switchView {
-	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-	
-	[userDefaults setBool:switchView.on forKey:LMSettingsKeyScrollingText];
-	[userDefaults synchronize];
-	
-	[LMAnswers logCustomEventWithName:@"Scrolling Text" customAttributes:@{
-																		   @"Disabled": @(!switchView.on)
-																		  }];
-}
-
-- (void)didChangeScreenTimeoutOnNowPlayingSwitchView:(UISwitch*)switchView {
-	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-	
-	[userDefaults setBool:switchView.on forKey:LMSettingsKeyDisableScreenTimeoutOnNowPlaying];
-	[userDefaults synchronize];
-	
-	[LMAnswers logCustomEventWithName:@"Disabled Now Playing Screen Timeout" customAttributes:@{
-																								@"Disabled": @(switchView.on)
-																								}];
-}
-
 - (NSString*)accessibilityLabelForIndexPath:(NSIndexPath *)indexPath {
 	switch(indexPath.section){
 		case 0: {
@@ -504,6 +509,7 @@
 				}
 			}
 		}
+#warning Todo: add accessibility for this setting section
 		case 1: {
 			switch(indexPath.row){
 				case 0: {
@@ -576,6 +582,7 @@
 				}
 			}
 		}
+			#warning Todo: add accessibility for this setting section
 		case 1: {
 			return NSLocalizedString(@"VoiceOverHint_DoubleTapToChangeThisSetting", nil);
 		}
@@ -600,38 +607,71 @@
 	return nil;
 }
 
+- (void)didChangeScrollingTextSwitchView:(UISwitch*)switchView {
+	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+	
+	[userDefaults setBool:switchView.on forKey:LMSettingsKeyScrollingText];
+	[userDefaults synchronize];
+	
+	[LMAnswers logCustomEventWithName:@"Scrolling Text" customAttributes:@{
+																		   @"Disabled": @(!switchView.on)
+																		   }];
+}
+
+- (void)didChangeScreenTimeoutOnNowPlayingSwitchView:(UISwitch*)switchView {
+	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+	
+	[userDefaults setBool:switchView.on forKey:LMSettingsKeyDisableScreenTimeoutOnNowPlaying];
+	[userDefaults synchronize];
+	
+	[LMAnswers logCustomEventWithName:@"Disabled Now Playing Screen Timeout" customAttributes:@{
+																								@"Disabled": @(switchView.on)
+																								}];
+}
+
+- (void)didChangeQuickLoadSwitchView:(UISwitch*)switchView {
+	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+	
+	[userDefaults setBool:switchView.on forKey:LMSettingsKeyQuickLoad];
+	[userDefaults synchronize];
+	
+	[LMAnswers logCustomEventWithName:@"Quick Load Setting" customAttributes:@{
+																								@"Enabled": @(switchView.on)
+																								}];
+}
+
 - (id)accessoryViewForIndexPath:(NSIndexPath *)indexPath forSectionTableView:(LMSectionTableView *)sectionTableView {
-//	if(indexPath.section == 0 || (indexPath.section == 1 && indexPath.row == 2)){
-	if((indexPath.section == 0 && indexPath.row != 1)){
-		UISwitch *switchView = [UISwitch new];
-		
-		NSString *settingsKey = @"";
-		BOOL enabled = YES;
-		
-		switch(indexPath.section){
-			case 0:
-				if(indexPath.row == 0){
-					[switchView addTarget:self action:@selector(didChangeScrollingTextSwitchView:) forControlEvents:UIControlEventValueChanged];
-					
-					enabled = YES; //Default
-					settingsKey = LMSettingsKeyScrollingText;
-				}
-				else if(indexPath.row == 2){
-					[switchView addTarget:self action:@selector(didChangeScreenTimeoutOnNowPlayingSwitchView:) forControlEvents:UIControlEventValueChanged];
-					
-					enabled = NO; //Default
-					settingsKey = LMSettingsKeyDisableScreenTimeoutOnNowPlaying;
-				}
-				break;
-//			case 1:
-//				[switchView addTarget:self action:@selector(didChangeHighestResolutionSwitchView:) forControlEvents:UIControlEventValueChanged];
-//				
-//				settingsKey = LMSettingsKeyHighQualityImages;
-//				enabled = NO;
-//				break;
+	UISwitch *switchView = [UISwitch new];
+	
+	NSString *settingsKey = nil;
+	BOOL enabled = YES;
+	
+	switch(indexPath.section){
+		case 0:
+			if(indexPath.row == 0){
+				[switchView addTarget:self action:@selector(didChangeScrollingTextSwitchView:) forControlEvents:UIControlEventValueChanged];
 				
-		}
-		
+				enabled = YES; //Default
+				settingsKey = LMSettingsKeyScrollingText;
+			}
+			else if(indexPath.row == 2){
+				[switchView addTarget:self action:@selector(didChangeScreenTimeoutOnNowPlayingSwitchView:) forControlEvents:UIControlEventValueChanged];
+				
+				enabled = NO; //Default
+				settingsKey = LMSettingsKeyDisableScreenTimeoutOnNowPlaying;
+			}
+			break;
+		case 1:
+			if(indexPath.row == 0){
+				[switchView addTarget:self action:@selector(didChangeQuickLoadSwitchView:) forControlEvents:UIControlEventValueChanged];
+				
+				enabled = NO; //Default
+				settingsKey = LMSettingsKeyQuickLoad;
+			}
+			break;
+	}
+	
+	if(settingsKey){
 		NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 		
 		if([userDefaults objectForKey:settingsKey]){
@@ -696,7 +736,7 @@
 	
 	self.sectionTableView = [LMSectionTableView newAutoLayoutView];
 	self.sectionTableView.contentsDelegate = self;
-	self.sectionTableView.totalNumberOfSections = 3;
+	self.sectionTableView.totalNumberOfSections = 4;
 	self.sectionTableView.title = NSLocalizedString(@"AppSettings", nil);
 	self.sectionTableView.restorationIdentifier = @"LMAppSettingsSectionTableView";
 	[self.view addSubview:self.sectionTableView];

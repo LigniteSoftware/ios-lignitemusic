@@ -104,6 +104,13 @@
 - (void)rebuild;
 
 /**
+ Call this when the system now playing track changes. This will readjust the queue data according to the current structure of the system queue, in preparation for the music player's delegates to be notified.
+
+ @param musicTrack The now playing music track.
+ */
+- (void)systemNowPlayingTrackDidChange:(LMMusicTrack*)musicTrack;
+
+/**
  Gets the index of a track in the complete queue based off of the index path.
 
  @param trackIndexPath The track index path based off of the LMQueueView structure of displaying previous and next tracks.
