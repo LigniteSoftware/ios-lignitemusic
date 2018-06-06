@@ -164,7 +164,7 @@ typedef enum {
 - (void)finishQueueModification DEPRECATED_ATTRIBUTE;
 - (void)prepareQueueForBackgrounding DEPRECATED_ATTRIBUTE;
 
-@property BOOL nowPlayingQueueTooLarge; //The full queue from the system is not being shown, for whatever fucking reason
+@property BOOL nowPlayingQueueTooLarge DEPRECATED_ATTRIBUTE; //The full queue from the system is not being shown, for whatever fucking reason
 
 /**
  The playback queue.

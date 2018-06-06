@@ -41,20 +41,17 @@
 /**
  The track which this miniplayer holds.
  */
-@property LMMusicTrack *loadedTrack;
+@property LMMusicTrack *loadedTrack DEPRECATED_ATTRIBUTE;
 
 /**
  The index of the loaded track in the queue playing.
  */
-@property NSInteger loadedTrackIndex;
+@property NSInteger loadedTrackIndex DEPRECATED_ATTRIBUTE;
 
 /**
- Change the music track that's associated with this miniplayer.
- 
- @param newTrack The new track to set.
- @param index The index of the new track in its collection associated.
+ Reloads the now playing view with the now playing track.
  */
-- (void)changeMusicTrack:(LMMusicTrack*)newTrack  withIndex:(NSInteger)index;
+- (void)reload;
 
 /**
  Gets a duration string for a total playback time.

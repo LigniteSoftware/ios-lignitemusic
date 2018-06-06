@@ -20,7 +20,7 @@
  */
 typedef NS_ENUM(NSUInteger, LMNavigationTab) {
 	LMNavigationTabBrowse = 0, //The browse tab for letter tabs and search.
-	LMNavigationTabMiniplayer, //The mini player.
+	LMNavigationTabMiniPlayer, //The mini player.
 	LMNavigationTabView //The current view.
 };
 

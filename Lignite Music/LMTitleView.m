@@ -419,7 +419,7 @@
 		[self.musicPlayer setNowPlayingTrack:track];
 		[self.musicPlayer play];
 		
-		[self.musicPlayer.navigationBar setSelectedTab:LMNavigationTabMiniplayer];
+		[self.musicPlayer.navigationBar setSelectedTab:LMNavigationTabMiniPlayer];
 		[self.musicPlayer.navigationBar maximise:NO];
 
 		[self.collectionView reloadData];

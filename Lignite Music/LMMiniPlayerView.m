@@ -74,7 +74,7 @@
 @implementation LMMiniPlayerView
 
 - (void)updateSongDurationLabelWithPlaybackTime:(long)currentPlaybackTime {
-	long totalPlaybackTime = self.loadedTrack.playbackDuration;
+	long totalPlaybackTime = self.musicPlayer.nowPlayingTrack.playbackDuration;
 	
 	long currentHours = (currentPlaybackTime / 3600);
 	long currentMinutes = ((currentPlaybackTime / 60) - currentHours*60);
@@ -94,7 +94,7 @@
 	}
 }
 
-- (void)musicTrackDidChange:(LMMusicTrack *)newTrack {
+- (void)musicTrackDidChange:(LMMusicTrack*)newTrack {
 	[self.progressSlider reload];
 }
 
@@ -105,11 +105,8 @@
 //	} repeats:NO];
 //}
 
-- (void)changeMusicTrack:(LMMusicTrack *)newTrack withIndex:(NSInteger)index {
-	self.loadedTrack = newTrack;
-	self.loadedTrackIndex = index;
-	
-//	NSLog(@"ID is %@: %lld", newTrack.title, newTrack.persistentID);
+- (void)reload {	
+//	NSLog(@"ID is %@: %lld", self.musicPlayer.nowPlayingTrack.title, self.musicPlayer.nowPlayingTrack.persistentID);
 	
 	if(!self.queue){
 		self.queue = [[LMOperationQueue alloc] init];
@@ -121,7 +118,7 @@
 	
 	__block NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
 		UIImage *titlesIcon = [LMAppIcon imageForIcon:LMIconNoAlbumArt];
-		UIImage *albumImage = noTrackPlaying ? titlesIcon : [newTrack albumArt];
+		UIImage *albumImage = noTrackPlaying ? titlesIcon : self.musicPlayer.nowPlayingTrack.albumArt;
 		if(!albumImage){
 			albumImage = titlesIcon;
 		}
@@ -150,16 +147,16 @@
 	}
 	
 	
-	self.trackInfoView.titleText = newTrack.title ? newTrack.title : NSLocalizedString(@"UnknownTitle", nil);
-	self.trackInfoView.artistText = newTrack.artist ? newTrack.artist : NSLocalizedString(@"UnknownArtist", nil);
-	self.trackInfoView.albumText = newTrack.albumTitle ? newTrack.albumTitle : NSLocalizedString(@"UnknownAlbumTitle", nil);
+	self.trackInfoView.titleText = self.musicPlayer.nowPlayingTrack.title ? self.musicPlayer.nowPlayingTrack.title : NSLocalizedString(@"UnknownTitle", nil);
+	self.trackInfoView.artistText = self.musicPlayer.nowPlayingTrack.artist ? self.musicPlayer.nowPlayingTrack.artist : NSLocalizedString(@"UnknownArtist", nil);
+	self.trackInfoView.albumText = self.musicPlayer.nowPlayingTrack.albumTitle ? self.musicPlayer.nowPlayingTrack.albumTitle : NSLocalizedString(@"UnknownAlbumTitle", nil);
 	
 	self.progressSlider.leftText =
 	[NSString stringWithFormat:NSLocalizedString(@"SongXofX", nil),
-	 (int)self.loadedTrackIndex + 1,
+	 (int)self.musicPlayer.queue.indexOfNowPlayingTrack + 1,
 	 (int)self.musicPlayer.queue.count];
 
-	self.progressSlider.rightText = [LMNowPlayingView durationStringTotalPlaybackTime:newTrack.playbackDuration];
+	self.progressSlider.rightText = [LMNowPlayingView durationStringTotalPlaybackTime:self.musicPlayer.nowPlayingTrack.playbackDuration];
 	[self updateSongDurationLabelWithPlaybackTime:0];
 	[self.progressSlider resetToZero];
 	
@@ -305,222 +302,218 @@
 	}];
 }
 
-//- (void)layoutSubviews {
-//	NSLog(@"Layout %@", NSStringFromCGRect(self.containerView.frame));
-//}
+- (void)layoutSubviews {
+	if(!self.didLayoutConstraints){
+		self.didLayoutConstraints = YES;
 
-- (void)setup {
-	self.containerView = [UIView newAutoLayoutView];
-//	self.containerView.backgroundColor = [UIColor blueColor];
-	[self addSubview:self.containerView];
-	
-	[[LMLayoutManager sharedLayoutManager] addDelegate:self];
-	
-	NSInteger padding = 24.0f;
-	NSInteger landscapePadding = padding * 1.5;
-	
-	NSArray *containerViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-		[self.containerView autoCentreInSuperview];
-		[self.containerView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withOffset:-padding];
-		[self.containerView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withOffset:-padding];
-	}];
-	[LMLayoutManager addNewPortraitConstraints:containerViewPortraitConstraints];
-	
-	NSArray *containerViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-		[self.containerView autoCentreInSuperview];
-		[self.containerView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withOffset:-landscapePadding];
-		[self.containerView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withOffset:-landscapePadding];
-	}];
-	[LMLayoutManager addNewLandscapeConstraints:containerViewLandscapeConstraints];
-	
-	
-	self.playerBackgroundView = [UIView newAutoLayoutView];
-//	self.playerBackgroundView.backgroundColor = [UIColor magentaColor];
-	[self.containerView addSubview:self.playerBackgroundView];
-	
-	NSArray *playerBackgroundViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-		[self.playerBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-		[self.playerBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-	}];
-	[LMLayoutManager addNewPortraitConstraints:playerBackgroundViewPortraitConstraints];
-	
-	NSArray *playerBackgroundViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-		[self.playerBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-		[self.playerBackgroundView autoAlignAxisToSuperviewAxis:ALAxisVertical];
-	}];
-	[LMLayoutManager addNewLandscapeConstraints:playerBackgroundViewLandscapeConstraints];
-	
-	self.playerHeightConstraint = [self.playerBackgroundView autoSetDimension:ALDimensionHeight toSize:300];
-	self.playerWidthConstraint = [self.playerBackgroundView autoSetDimension:ALDimensionWidth toSize:400];
-	
-//	NSLog(@"Fuck %@", NSStringFromCGRect(self.frame));
-	
-//	[self.playerBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.containerView];
-//	[self.playerBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.containerView withMultiplier:(2.0/3.0)];
-//
-//	[self.playerBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.containerView withMultiplier:(3.0/4.0)];
-	
-	
-	self.accessibilityBackgroundView = [UIView newAutoLayoutView];
-	self.accessibilityBackgroundView.backgroundColor = [UIColor clearColor];
-	[self.containerView addSubview:self.accessibilityBackgroundView];
+		self.containerView = [UIView newAutoLayoutView];
+	//	self.containerView.backgroundColor = [UIColor blueColor];
+		[self addSubview:self.containerView];
+		
+		[[LMLayoutManager sharedLayoutManager] addDelegate:self];
+		
+		NSInteger padding = 24.0f;
+		NSInteger landscapePadding = padding * 1.5;
+		
+		NSArray *containerViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+			[self.containerView autoCentreInSuperview];
+			[self.containerView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withOffset:-padding];
+			[self.containerView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withOffset:-padding];
+		}];
+		[LMLayoutManager addNewPortraitConstraints:containerViewPortraitConstraints];
+		
+		NSArray *containerViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+			[self.containerView autoCentreInSuperview];
+			[self.containerView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withOffset:-landscapePadding];
+			[self.containerView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withOffset:-landscapePadding];
+		}];
+		[LMLayoutManager addNewLandscapeConstraints:containerViewLandscapeConstraints];
+		
+		
+		self.playerBackgroundView = [UIView newAutoLayoutView];
+	//	self.playerBackgroundView.backgroundColor = [UIColor magentaColor];
+		[self.containerView addSubview:self.playerBackgroundView];
+		
+		NSArray *playerBackgroundViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+			[self.playerBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+			[self.playerBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		}];
+		[LMLayoutManager addNewPortraitConstraints:playerBackgroundViewPortraitConstraints];
+		
+		NSArray *playerBackgroundViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+			[self.playerBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+			[self.playerBackgroundView autoAlignAxisToSuperviewAxis:ALAxisVertical];
+		}];
+		[LMLayoutManager addNewLandscapeConstraints:playerBackgroundViewLandscapeConstraints];
+		
+		self.playerHeightConstraint = [self.playerBackgroundView autoSetDimension:ALDimensionHeight toSize:300];
+		self.playerWidthConstraint = [self.playerBackgroundView autoSetDimension:ALDimensionWidth toSize:400];
+		
+	//	NSLog(@"Fuck %@", NSStringFromCGRect(self.frame));
+		
+	//	[self.playerBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.containerView];
+	//	[self.playerBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.containerView withMultiplier:(2.0/3.0)];
+	//
+	//	[self.playerBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.containerView withMultiplier:(3.0/4.0)];
+		
+		
+		self.accessibilityBackgroundView = [UIView newAutoLayoutView];
+		self.accessibilityBackgroundView.backgroundColor = [UIColor clearColor];
+		[self.containerView addSubview:self.accessibilityBackgroundView];
 
-	NSArray *accessibilityBackgroundViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-		[self.accessibilityBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		[self.accessibilityBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-		[self.accessibilityBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-		self.accessibilityBottomConstraint = [self.accessibilityBackgroundView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.playerBackgroundView withOffset:(padding / 2.0)];
-	}];
-	[LMLayoutManager addNewPortraitConstraints:accessibilityBackgroundViewPortraitConstraints];
-	
-	NSArray *accessibilityBackgroundViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-		[self.accessibilityBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-		[self.accessibilityBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		[self.accessibilityBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-		self.accessibilityLeadingConstraint = [self.accessibilityBackgroundView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.playerBackgroundView withOffset:-(landscapePadding / 2.0)];
-	}];
-	[LMLayoutManager addNewLandscapeConstraints:accessibilityBackgroundViewLandscapeConstraints];
-	
-	
-	
-	
-	
-	
-	self.albumArtImageBackgroundView = [LMView newAutoLayoutView];
-//	self.albumArtImageBackgroundView.backgroundColor = [UIColor purpleColor];
-	[self.playerBackgroundView addSubview:self.albumArtImageBackgroundView];
-	
-	NSArray *albumArtImageBackgroundViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-		[self.albumArtImageBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-		[self.albumArtImageBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		[self.albumArtImageBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.playerBackgroundView];
-		[self.albumArtImageBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.playerBackgroundView];
-	}];
-	[LMLayoutManager addNewPortraitConstraints:albumArtImageBackgroundViewPortraitConstraints];
-	
-	NSArray *albumArtImageBackgroundViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-		[self.albumArtImageBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-		[self.albumArtImageBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-		[self.albumArtImageBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-		[self.albumArtImageBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.playerBackgroundView];
-	}];
-	[LMLayoutManager addNewLandscapeConstraints:albumArtImageBackgroundViewLandscapeConstraints];
-	
-	
-	
-	
-	self.albumArtImageView = [UIImageView newAutoLayoutView];
-	self.albumArtImageView.layer.masksToBounds = YES;
-	self.albumArtImageView.layer.cornerRadius = 6.0f;
-	self.albumArtImageView.isAccessibilityElement = YES;
-	self.albumArtImageView.accessibilityLabel = NSLocalizedString(@"VoiceOverLabel_AlbumArt", nil);
-	[self.albumArtImageBackgroundView addSubview:self.albumArtImageView];
-	
-	[self.albumArtImageView autoPinEdgesToSuperviewEdges];
-	
-	
-	
-	self.pausedBackgroundBlurView = [UIView newAutoLayoutView];
-	self.pausedBackgroundBlurView.userInteractionEnabled = NO;
-	self.pausedBackgroundBlurView.backgroundColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.75];
-	self.pausedBackgroundBlurView.alpha = 0.0;
-	[self.albumArtImageView addSubview:self.pausedBackgroundBlurView];
-	
-	[self.pausedBackgroundBlurView autoPinEdgesToSuperviewEdges];
-	
-	UILabel *pausedLabel = [UILabel newAutoLayoutView];
-	pausedLabel.text = NSLocalizedString(@"Paused", nil);
-	pausedLabel.textColor = [UIColor whiteColor];
-	pausedLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18.0f];
-	pausedLabel.textAlignment = NSTextAlignmentCenter;
-	pausedLabel.numberOfLines = 0;
-	pausedLabel.isAccessibilityElement = NO;
-	[self.pausedBackgroundBlurView addSubview:pausedLabel];
-	
-	[pausedLabel autoPinEdgesToSuperviewMargins];
-	
-	
-	
-	self.trackInfoAndDurationBackgroundView = [LMView newAutoLayoutView];
-//	self.trackInfoAndDurationBackgroundView.backgroundColor = [UIColor cyanColor];
-	[self.playerBackgroundView addSubview:self.trackInfoAndDurationBackgroundView];
-	
-	NSArray *trackInfoAndDurationBackgroundViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-		[self.trackInfoAndDurationBackgroundView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.albumArtImageView];
-		[self.trackInfoAndDurationBackgroundView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.albumArtImageBackgroundView withOffset:(padding / 2.0)];
-		[self.trackInfoAndDurationBackgroundView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.albumArtImageView];
-		[self.trackInfoAndDurationBackgroundView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.playerBackgroundView withOffset:-15];
-	}];
-	[LMLayoutManager addNewPortraitConstraints:trackInfoAndDurationBackgroundViewPortraitConstraints];
-	
-	NSArray *trackInfoAndDurationBackgroundViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-		[self.trackInfoAndDurationBackgroundView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.albumArtImageView];
-		[self.trackInfoAndDurationBackgroundView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.albumArtImageView];
-		[self.trackInfoAndDurationBackgroundView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.albumArtImageBackgroundView withOffset:(landscapePadding / 2.0)];
-		[self.trackInfoAndDurationBackgroundView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.playerBackgroundView];
-	}];
-	[LMLayoutManager addNewLandscapeConstraints:trackInfoAndDurationBackgroundViewLandscapeConstraints];
-	
-	
-	
-	self.trackInfoView = [LMTrackInfoView newAutoLayoutView];
-	self.trackInfoView.textAlignment = NSTextAlignmentLeft;
-	self.trackInfoView.miniplayer = YES;
-	[self.trackInfoAndDurationBackgroundView addSubview:self.trackInfoView];
-	
-	[self.trackInfoView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-	[self.trackInfoView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-	[self.trackInfoView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:1];
-	[self.trackInfoView autoMatchDimension:ALDimensionHeight
-							   toDimension:ALDimensionHeight
-									ofView:self.trackInfoAndDurationBackgroundView
-							withMultiplier:(6.5/10.0)];
-	
-	
-	self.progressSlider = [LMProgressSlider newAutoLayoutView];
-	self.progressSlider.backgroundColor = [UIColor colorWithRed:0.82 green:0.82 blue:0.82 alpha:0.25];
-	self.progressSlider.finalValue = self.isUserFacing ? self.musicPlayer.nowPlayingTrack.playbackDuration : 0;
-	self.progressSlider.delegate = self;
-	self.progressSlider.value = self.isUserFacing ? self.musicPlayer.currentPlaybackTime : 0;
-	self.progressSlider.lightTheme = YES;
-	[self.trackInfoAndDurationBackgroundView addSubview:self.progressSlider];
-	
-	if(self.isUserFacing){
-		NSLog(@"hey");
+		NSArray *accessibilityBackgroundViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+			[self.accessibilityBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+			[self.accessibilityBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+			[self.accessibilityBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+			self.accessibilityBottomConstraint = [self.accessibilityBackgroundView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.playerBackgroundView withOffset:(padding / 2.0)];
+		}];
+		[LMLayoutManager addNewPortraitConstraints:accessibilityBackgroundViewPortraitConstraints];
+		
+		NSArray *accessibilityBackgroundViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+			[self.accessibilityBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+			[self.accessibilityBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+			[self.accessibilityBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+			self.accessibilityLeadingConstraint = [self.accessibilityBackgroundView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.playerBackgroundView withOffset:-(landscapePadding / 2.0)];
+		}];
+		[LMLayoutManager addNewLandscapeConstraints:accessibilityBackgroundViewLandscapeConstraints];
+		
+		
+		
+		
+		
+		
+		self.albumArtImageBackgroundView = [LMView newAutoLayoutView];
+	//	self.albumArtImageBackgroundView.backgroundColor = [UIColor purpleColor];
+		[self.playerBackgroundView addSubview:self.albumArtImageBackgroundView];
+		
+		NSArray *albumArtImageBackgroundViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+			[self.albumArtImageBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+			[self.albumArtImageBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+			[self.albumArtImageBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.playerBackgroundView];
+			[self.albumArtImageBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.playerBackgroundView];
+		}];
+		[LMLayoutManager addNewPortraitConstraints:albumArtImageBackgroundViewPortraitConstraints];
+		
+		NSArray *albumArtImageBackgroundViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+			[self.albumArtImageBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+			[self.albumArtImageBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+			[self.albumArtImageBackgroundView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+			[self.albumArtImageBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.playerBackgroundView];
+		}];
+		[LMLayoutManager addNewLandscapeConstraints:albumArtImageBackgroundViewLandscapeConstraints];
+		
+		
+		
+		
+		self.albumArtImageView = [UIImageView newAutoLayoutView];
+		self.albumArtImageView.layer.masksToBounds = YES;
+		self.albumArtImageView.layer.cornerRadius = 6.0f;
+		self.albumArtImageView.isAccessibilityElement = YES;
+		self.albumArtImageView.accessibilityLabel = NSLocalizedString(@"VoiceOverLabel_AlbumArt", nil);
+		[self.albumArtImageBackgroundView addSubview:self.albumArtImageView];
+		
+		[self.albumArtImageView autoPinEdgesToSuperviewEdges];
+		
+		
+		
+		self.pausedBackgroundBlurView = [UIView newAutoLayoutView];
+		self.pausedBackgroundBlurView.userInteractionEnabled = NO;
+		self.pausedBackgroundBlurView.backgroundColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.75];
+		self.pausedBackgroundBlurView.alpha = 0.0;
+		[self.albumArtImageView addSubview:self.pausedBackgroundBlurView];
+		
+		[self.pausedBackgroundBlurView autoPinEdgesToSuperviewEdges];
+		
+		UILabel *pausedLabel = [UILabel newAutoLayoutView];
+		pausedLabel.text = NSLocalizedString(@"Paused", nil);
+		pausedLabel.textColor = [UIColor whiteColor];
+		pausedLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18.0f];
+		pausedLabel.textAlignment = NSTextAlignmentCenter;
+		pausedLabel.numberOfLines = 0;
+		pausedLabel.isAccessibilityElement = NO;
+		[self.pausedBackgroundBlurView addSubview:pausedLabel];
+		
+		[pausedLabel autoPinEdgesToSuperviewMargins];
+		
+		
+		
+		self.trackInfoAndDurationBackgroundView = [LMView newAutoLayoutView];
+	//	self.trackInfoAndDurationBackgroundView.backgroundColor = [UIColor cyanColor];
+		[self.playerBackgroundView addSubview:self.trackInfoAndDurationBackgroundView];
+		
+		NSArray *trackInfoAndDurationBackgroundViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+			[self.trackInfoAndDurationBackgroundView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.albumArtImageView];
+			[self.trackInfoAndDurationBackgroundView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.albumArtImageBackgroundView withOffset:(padding / 2.0)];
+			[self.trackInfoAndDurationBackgroundView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.albumArtImageView];
+			[self.trackInfoAndDurationBackgroundView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.playerBackgroundView withOffset:-15];
+		}];
+		[LMLayoutManager addNewPortraitConstraints:trackInfoAndDurationBackgroundViewPortraitConstraints];
+		
+		NSArray *trackInfoAndDurationBackgroundViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+			[self.trackInfoAndDurationBackgroundView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.albumArtImageView];
+			[self.trackInfoAndDurationBackgroundView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.albumArtImageView];
+			[self.trackInfoAndDurationBackgroundView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.albumArtImageBackgroundView withOffset:(landscapePadding / 2.0)];
+			[self.trackInfoAndDurationBackgroundView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.playerBackgroundView];
+		}];
+		[LMLayoutManager addNewLandscapeConstraints:trackInfoAndDurationBackgroundViewLandscapeConstraints];
+		
+		
+		
+		self.trackInfoView = [LMTrackInfoView newAutoLayoutView];
+		self.trackInfoView.textAlignment = NSTextAlignmentLeft;
+		self.trackInfoView.miniplayer = YES;
+		[self.trackInfoAndDurationBackgroundView addSubview:self.trackInfoView];
+		
+		[self.trackInfoView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[self.trackInfoView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		[self.trackInfoView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:1];
+		[self.trackInfoView autoMatchDimension:ALDimensionHeight
+								   toDimension:ALDimensionHeight
+										ofView:self.trackInfoAndDurationBackgroundView
+								withMultiplier:(6.5/10.0)];
+		
+		
+		self.progressSlider = [LMProgressSlider newAutoLayoutView];
+		self.progressSlider.backgroundColor = [UIColor colorWithRed:0.82 green:0.82 blue:0.82 alpha:0.25];
+		self.progressSlider.finalValue = self.musicPlayer.nowPlayingTrack.playbackDuration;
+		self.progressSlider.delegate = self;
+		self.progressSlider.value = self.musicPlayer.currentPlaybackTime;
+		self.progressSlider.lightTheme = YES;
+		[self.trackInfoAndDurationBackgroundView addSubview:self.progressSlider];
+		
+		
+		NSArray *progressSliderPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+			[self.progressSlider autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.trackInfoView];
+			[self.progressSlider autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.trackInfoView];
+			[self.progressSlider autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.albumArtImageView];
+			[self.progressSlider autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.playerBackgroundView withMultiplier:(1.0/4.20)];
+		}];
+		[LMLayoutManager addNewPortraitConstraints:progressSliderPortraitConstraints];
+		
+		NSArray *progressSliderLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+			[self.progressSlider autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.trackInfoView];
+			[self.progressSlider autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.trackInfoView];
+			[self.progressSlider autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.playerBackgroundView];
+			[self.progressSlider autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.playerBackgroundView withMultiplier:(1.0/13.0)];
+		}];
+		[LMLayoutManager addNewLandscapeConstraints:progressSliderLandscapeConstraints];
+		
+		
+		UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tappedMiniPlayer)];
+		[self addGestureRecognizer:tapGesture];
+		
+		[self.musicPlayer addMusicDelegate:self];
+		
+		[self setShowingAccessibilityControls:UIAccessibilityIsVoiceOverRunning() animated:NO];
+		
+	//	NSLog(@"Setup miniplayer");
+		
+		[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
+			[self.progressSlider setValue:self.musicPlayer.currentPlaybackTime];
+			[self progressSliderValueChanged:self.musicPlayer.currentPlaybackTime isFinal:NO];
+			[self musicPlaybackStateDidChange:self.musicPlayer.playbackState];
+		} repeats:NO];
 	}
-	
-	
-	NSArray *progressSliderPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-		[self.progressSlider autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.trackInfoView];
-		[self.progressSlider autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.trackInfoView];
-		[self.progressSlider autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.albumArtImageView];
-		[self.progressSlider autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.playerBackgroundView withMultiplier:(1.0/4.20)];
-	}];
-	[LMLayoutManager addNewPortraitConstraints:progressSliderPortraitConstraints];
-	
-	NSArray *progressSliderLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-		[self.progressSlider autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.trackInfoView];
-		[self.progressSlider autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.trackInfoView];
-		[self.progressSlider autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.playerBackgroundView];
-		[self.progressSlider autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.playerBackgroundView withMultiplier:(1.0/13.0)];
-	}];
-	[LMLayoutManager addNewLandscapeConstraints:progressSliderLandscapeConstraints];
-	
-	
-	UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tappedMiniPlayer)];
-	[self addGestureRecognizer:tapGesture];
-	
-	[self.musicPlayer addMusicDelegate:self];
-	
-	[self setShowingAccessibilityControls:UIAccessibilityIsVoiceOverRunning() animated:NO];
-	
-//	NSLog(@"Setup miniplayer");
-	
-	[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
-		[self.progressSlider setValue:self.musicPlayer.currentPlaybackTime];
-		[self progressSliderValueChanged:self.musicPlayer.currentPlaybackTime isFinal:NO];
-		[self musicPlaybackStateDidChange:self.musicPlayer.playbackState];
-	} repeats:NO];
 }
 
 - (instancetype)init {

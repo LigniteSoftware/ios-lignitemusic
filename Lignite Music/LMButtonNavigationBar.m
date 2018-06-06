@@ -265,7 +265,7 @@
 					case LMNavigationTabBrowse:
 						fixedView = self.browsingBar;
 						break;
-					case LMNavigationTabMiniplayer:
+					case LMNavigationTabMiniPlayer:
 						fixedView = self.miniPlayerCoreView;
 						break;
 				}
@@ -427,14 +427,14 @@
 	
 	[self.buttonBar setButtonAtIndex:LMNavigationTabBrowse highlighted:NO];
 	[self.buttonBar setButtonAtIndex:LMNavigationTabView highlighted:NO];
-	[self.buttonBar setButtonAtIndex:LMNavigationTabMiniplayer highlighted:NO];
+	[self.buttonBar setButtonAtIndex:LMNavigationTabMiniPlayer highlighted:NO];
 	
 	LMNavigationTab navigationTab = tab;
 	switch(navigationTab){
 		case LMNavigationTabBrowse:
 			[self setViewAttachedToButtonBar:self.browsingBar];
 			break;
-		case LMNavigationTabMiniplayer:
+		case LMNavigationTabMiniPlayer:
 			[self setViewAttachedToButtonBar:self.miniPlayerCoreView];
 			break;
 		case LMNavigationTabView:{
@@ -475,7 +475,7 @@
 			[self setSelectedTab:LMNavigationTabBrowse];
 			break;
 		case 1:
-			[self setSelectedTab:LMNavigationTabMiniplayer];
+			[self setSelectedTab:LMNavigationTabMiniPlayer];
 			break;
 		case 2:
 			[self setSelectedTab:LMNavigationTabView];

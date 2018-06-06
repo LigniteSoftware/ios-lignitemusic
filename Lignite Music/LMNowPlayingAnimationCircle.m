@@ -69,9 +69,9 @@
 		[self.iconView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.circleProgressBar withMultiplier:iconMultiplier];
 		[self.iconView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.circleProgressBar withMultiplier:iconMultiplier];
 	}
-	
+
 	self.layer.masksToBounds = YES;
-	self.layer.cornerRadius = (self.frame.size.height / 2.0);
+	self.layer.cornerRadius = self.squareMode ? 0.0f : (self.frame.size.height / 2.0);
 }
 
 - (void)setDirection:(LMNowPlayingAnimationCircleDirection)direction {

@@ -1533,7 +1533,7 @@
 }
 
 - (void)buttonNavigationBarSelectedNavigationTab:(LMNavigationTab)navigationTab {
-	if(navigationTab == LMNavigationTabMiniplayer){
+	if(navigationTab == LMNavigationTabMiniPlayer){
 		[self loadNowPlayingCoreView];
 	}
 }
@@ -2091,8 +2091,12 @@
 //			[queue rebuild];
 //		} repeats:NO];
 		
-		[self launchNowPlayingFromTap];
+//		[self launchNowPlayingFromTap];
 		
+		
+		[NSTimer scheduledTimerWithTimeInterval:1.0 block:^{
+			[self.buttonNavigationBar setSelectedTab:LMNavigationTabMiniPlayer];
+		} repeats:NO];
 		
 		
 //		NSLog(@"Queue track at last index %@ to number of items %d", [self.musicPlayer queueTrackAtIndex:self.musicPlayer.numberOfItemsInQueue - 1], (int)self.musicPlayer.numberOfItemsInQueue);

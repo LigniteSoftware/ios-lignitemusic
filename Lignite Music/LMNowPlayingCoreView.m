@@ -73,8 +73,7 @@
 }
 
 - (void)reloadMusicTracks {
-    [self.nowPlayingView changeMusicTrack:self.musicPlayer.nowPlayingTrack
-									  withIndex:self.musicPlayer.queue.indexOfNowPlayingTrack];
+    [self.nowPlayingView reload];
 }
 
 - (void)theQueueChangedSoPleaseReloadThankYou {

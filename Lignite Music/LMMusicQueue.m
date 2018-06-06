@@ -499,7 +499,7 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 			strongSelf.fullQueueAvailable = (systemQueueArray.count == strongSelf.systemQueueCount);
 		}
 		else{ //Load all possible tracks
-			NSLog(@"System queue count %d", strongSelf.systemQueueCount);
+			NSLog(@"System queue count %d", (int)strongSelf.systemQueueCount);
 			for(NSInteger i = 0; i < strongSelf.systemQueueCount; i++){
 				LMMusicTrack *track = [strongSelf systemQueueTrackAtIndex:i];
 				if(track){

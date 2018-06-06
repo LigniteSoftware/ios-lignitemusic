@@ -20,29 +20,21 @@
 /**
  The track which this miniplayer holds.
  */
-@property LMMusicTrack *loadedTrack;
+@property LMMusicTrack *loadedTrack DEPRECATED_MSG_ATTRIBUTE("Please use the now playing track");
 
 /**
  The index of the loaded track in the queue playing.
  */
-@property NSInteger loadedTrackIndex;
+@property NSInteger loadedTrackIndex DEPRECATED_MSG_ATTRIBUTE("Please use the now playing index");
 
 /**
  Whether or not this miniplayer is user facing (is the centre miniplayer).
  */
-@property BOOL isUserFacing;
+@property BOOL isUserFacing DEPRECATED_MSG_ATTRIBUTE("Please don't use this awful API");
 
 /**
- Change the music track that's associated with this miniplayer.
-
- @param newTrack The new track to set.
- @param index The index of the new track in its collection associated.
+ Reloads the contents of the mini player with the now playing track.
  */
-- (void)changeMusicTrack:(id)newTrack  withIndex:(NSInteger)index;
-
-/**
- Sets up the layout of the mini player.
- */
-- (void)setup;
+- (void)reload;
 
 @end

@@ -32,6 +32,11 @@ typedef NS_ENUM(NSInteger, LMNowPlayingAnimationCircleDirection){
 @property LMIcon icon;
 
 /**
+ Whether or not to grow as a square instead of a circle.
+ */
+@property BOOL squareMode;
+
+/**
  Sets the progress in a potentially animated manner.
 
  @param progress The progress to set.

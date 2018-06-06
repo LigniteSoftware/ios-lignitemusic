@@ -63,6 +63,7 @@
 		self.nextTrackCircleView = [LMNowPlayingAnimationCircle new];
 		self.nextTrackCircleView.icon = LMIconNextTrack;
 		self.nextTrackCircleView.direction = LMNowPlayingAnimationCircleDirectionClockwise;
+		self.nextTrackCircleView.squareMode = self.squareMode;
 		[self addSubview:self.nextTrackCircleView];
 		
 		self.nextTrackCircleViewLeadingConstraint = [self.nextTrackCircleView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self];
@@ -74,6 +75,7 @@
 		self.previousTrackCircleView = [LMNowPlayingAnimationCircle new];
 		self.previousTrackCircleView.icon = LMIconPreviousTrack;
 		self.previousTrackCircleView.direction = LMNowPlayingAnimationCircleDirectionCounterClockwise;
+		self.previousTrackCircleView.squareMode = self.squareMode;
 		[self addSubview:self.previousTrackCircleView];
 		
 		self.previousTrackCircleViewTrailingConstraint = [self.previousTrackCircleView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self];
@@ -95,7 +97,7 @@
 		
 		NSLog(@"next. X %f - %f", progressPoint.x, progress);
 		
-		self.nextTrackCircleViewHeightConstraint.constant = (halfWindowFrame / 2.0) + (WINDOW_FRAME.size.width * progress);
+		self.nextTrackCircleViewHeightConstraint.constant = self.squareMode ? self.frame.size.width : ((halfWindowFrame / 2.0) + (WINDOW_FRAME.size.width * progress));
 		
 		CGFloat circleProgress = progress * 2.0f;
 		[self.nextTrackCircleView setProgress:MIN(1, circleProgress)];
@@ -111,7 +113,7 @@
 		
 		NSLog(@"previous. X %f - %f", progressPoint.x, progress);
 		
-		self.previousTrackCircleViewHeightConstraint.constant = (halfWindowFrame / 2.0) + (WINDOW_FRAME.size.width * progress);
+		self.previousTrackCircleViewHeightConstraint.constant = self.squareMode ? self.frame.size.width : ((halfWindowFrame / 2.0) + (WINDOW_FRAME.size.width * progress));
 		
 		CGFloat circleProgress = progress * 2.0f;
 		[self.previousTrackCircleView setProgress:MIN(1, 1 - circleProgress)];

@@ -7,6 +7,8 @@
 //
 
 #import <PureLayout/PureLayout.h>
+
+#import "LMNowPlayingAnimationView.h"
 #import "LMButtonNavigationBar.h"
 #import "LMMiniPlayerCoreView.h"
 #import "LMCoreViewController.h"
@@ -38,43 +40,31 @@
 @property LMMusicPlayer *musicPlayer;
 
 /**
- The timer to skip to the next or previous track.
- */
-@property NSTimer *skipTracksTimer;
-
-/**
- Whether or not to skip to next when the timer fires. NO for previous track.
- */
-@property BOOL skipToNextTrackOnTimerFire;
-
-/**
- The leading constraint for the center miniplayer. This is the constraint which the pan gesture uses for the motion of views.
- */
-@property NSLayoutConstraint *miniPlayerLeadingConstraint;
-
-/**
- The other constraints, will handle this soon.
- */
-@property NSMutableArray *otherConstraints;
-
-/**
  The array of samples for determining which direction the gesture is headed in.
  */
 @property NSMutableArray *samplesArray;
+
+/**
+ The animation view for transitioning between songs.
+ */
+@property LMNowPlayingAnimationView *animationView;
+
+/**
+ The start time of the swipe gesture for changing songs.
+ */
+@property NSTimeInterval songChangeSwipeGestureStartTime;
+
+/**
+ The start position of the song change swipe gesture.
+ */
+@property CGPoint songChangeSwipeGestureStartPosition;
 
 @end
 
 @implementation LMMiniPlayerCoreView
 
 - (void)reloadMusicTracks {
-	[self.centreMiniPlayerView changeMusicTrack:self.musicPlayer.nowPlayingTrack
-									  withIndex:self.musicPlayer.queue.indexOfNowPlayingTrack];
-	
-	[self.leadingMiniPlayerView changeMusicTrack:self.musicPlayer.queue.nextTrack
-									   withIndex:self.musicPlayer.queue.indexOfNextTrack];
-	
-	[self.trailingMiniPlayerView changeMusicTrack:self.musicPlayer.queue.previousTrack
-										withIndex:self.musicPlayer.queue.indexOfPreviousTrack];
+	[self.centreMiniPlayerView reload];
 }
 
 - (void)trackAddedToQueue:(LMMusicTrack *)trackAdded {
@@ -107,63 +97,7 @@
 	[self reloadMusicTracks];
 }
 
-- (void)skipTracks {
-//	self.skipToNextTrackOnTimerFire ? [self.musicPlayer skipToNextTrack] : [self.musicPlayer skipToPreviousItem];
-	[self.musicPlayer setNowPlayingTrack:self.centreMiniPlayerView.loadedTrack];
-}
-
-- (void)rebuildConstraints:(BOOL)leadingIsCenter {
-	NSArray *oldMiniPlayers = @[ self.trailingMiniPlayerView, self.centreMiniPlayerView, self.leadingMiniPlayerView ];
-	
-	[self.centreMiniPlayerView removeFromSuperview];
-	[self.leadingMiniPlayerView removeFromSuperview];
-	[self.trailingMiniPlayerView removeFromSuperview];
-	
-	// [ 0 1 2 ] swipe -> 0 [ 1 2 * ] convert -> [ 1 2 0 ]
-	if(leadingIsCenter){
-		self.trailingMiniPlayerView = oldMiniPlayers[1];
-		self.centreMiniPlayerView = oldMiniPlayers[2];
-		self.leadingMiniPlayerView = oldMiniPlayers[0];
-	}
-	// [ 0 1 2 ] swipe -> [ * 0 1 ] 2 convert -> [ 2 0 1 ]
-	else{
-		self.trailingMiniPlayerView = oldMiniPlayers[2];
-		self.centreMiniPlayerView = oldMiniPlayers[0];
-		self.leadingMiniPlayerView = oldMiniPlayers[1];
-	}
-	
-	self.centreMiniPlayerView.isUserFacing = YES;
-	self.trailingMiniPlayerView.isUserFacing = NO;
-	self.leadingMiniPlayerView.isUserFacing = NO;
-	
-	[self addSubview:self.centreMiniPlayerView];
-	[self addSubview:self.leadingMiniPlayerView];
-	[self addSubview:self.trailingMiniPlayerView];
-	
-	self.miniPlayerLeadingConstraint = [self.centreMiniPlayerView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
-	[self.centreMiniPlayerView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
-	[self.centreMiniPlayerView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self];
-	[self.centreMiniPlayerView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
-	
-	[self.otherConstraints addObject:[self.trailingMiniPlayerView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.centreMiniPlayerView]];
-	[self.trailingMiniPlayerView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
-	[self.trailingMiniPlayerView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self];
-	[self.trailingMiniPlayerView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
-	
-	[self.otherConstraints addObject:[self.leadingMiniPlayerView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.centreMiniPlayerView]];
-	[self.leadingMiniPlayerView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
-	[self.leadingMiniPlayerView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self];
-	[self.leadingMiniPlayerView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
-	
-	[self reloadMusicTracks];
-	
-	[self layoutIfNeeded];
-	
-	NSLog(@"Constraints rebuilt.");
-}
-
-
-- (void)panMiniPlayer:(UIPanGestureRecognizer *)recognizer {
+- (void)panMiniPlayer:(UIPanGestureRecognizer *)recogniser {
     //Test code for calculating rates of the translations. Will break after one use
     static float amountOfTimes;
     static BOOL hasDoneThis;
@@ -181,7 +115,14 @@
     
     int threshhold = 3;
     
-    CGPoint translation = [recognizer translationInView:recognizer.view];
+    CGPoint translation = [recogniser translationInView:recogniser.view];
+	
+	if(self.songChangeSwipeGestureStartTime < 1){
+		NSLog(@"\n\nSTART\n\n");
+		
+		self.songChangeSwipeGestureStartTime = [[NSDate new] timeIntervalSince1970];
+		self.songChangeSwipeGestureStartPosition = translation;
+	}
     
     static BOOL userIsGoingInYAxis;
     
@@ -210,10 +151,12 @@
 //            NSLog(@"Sending to core (%@)", NSStringFromCGPoint(translation));
 			
             LMCoreViewController *coreViewController = (LMCoreViewController*)self.rootViewController;
-            [coreViewController panNowPlayingUp:recognizer];
+            [coreViewController panNowPlayingUp:recogniser];
             
-            if(recognizer.state == UIGestureRecognizerStateEnded){
+            if(recogniser.state == UIGestureRecognizerStateEnded){
                 self.samplesArray = [NSMutableArray new];
+				self.songChangeSwipeGestureStartTime = 0.0f;
+				self.songChangeSwipeGestureStartPosition = CGPointMake(0, 0);
             }
         }
         else{
@@ -226,85 +169,44 @@
             
             NSLog(@"Translation %@ (%f/sec)", NSStringFromCGPoint(translation), rate);
             
-            CGFloat totalTranslation = translation.x;
-            
-            CGFloat newAlpha = 1.0 - fabs(totalTranslation)/(self.centreMiniPlayerView.frame.size.width/2);
-            
-            if(newAlpha < 0){
-                newAlpha = 0;
-            }
-            
-            self.centreMiniPlayerView.alpha = newAlpha;
-            self.leadingMiniPlayerView.alpha = 1.0 - newAlpha;
-            self.trailingMiniPlayerView.alpha = self.leadingMiniPlayerView.alpha;
-            
-            //	NSLog(@"%f to %f %@", translation.y, totalTranslation, NSStringFromCGPoint(self.currentPoint));
-            
-            if(self.skipTracksTimer){
-                [self.skipTracksTimer invalidate];
-                self.skipTracksTimer = nil;
-            }
-            
-            self.miniPlayerLeadingConstraint.constant = totalTranslation;
-            
-            [self layoutIfNeeded];
-            
-            if(recognizer.state == UIGestureRecognizerStateEnded){
-                [self layoutIfNeeded];
-                
-                BOOL nextSong = translation.x < (-self.frame.size.width/7);
-				BOOL previousSong = translation.x > (self.frame.size.width/7);
-                BOOL rebuildConstraints = YES;
-                
-                if(previousSong){
-                    NSLog(@"Slide forward (previous track)");
-                    self.miniPlayerLeadingConstraint.constant = self.frame.size.width;
+			CGPoint pointInView = [recogniser translationInView:recogniser.view];
+			
+			LMNowPlayingAnimationViewResult animationResult = [self.animationView progress:pointInView fromStartingPoint:self.songChangeSwipeGestureStartPosition];
+			
+			NSLog(@"State %d change %d", (int)recogniser.state, (int)animationResult);
+			
+			NSTimeInterval now = [[NSDate new] timeIntervalSince1970];
+			
+			switch(recogniser.state){
+				case UIGestureRecognizerStateEnded: {
+					self.samplesArray = [NSMutableArray new];
 					
-					[self.musicPlayer skipToPreviousTrack];
-                }
-                else if(nextSong){
-                    NSLog(@"Slide backward (next track)");
-                    self.miniPlayerLeadingConstraint.constant = -self.frame.size.width;
+					NSTimeInterval timeDifference = (now - self.songChangeSwipeGestureStartTime);
+					CGFloat distanceTravelled = fabs(pointInView.x - self.songChangeSwipeGestureStartPosition.x);
+					CGFloat pixelsPerSecond = (distanceTravelled / timeDifference);
 					
-					[self.musicPlayer skipToNextTrack];
-                }
-                else{
-                    NSLog(@"Reset to centre");
-                    self.miniPlayerLeadingConstraint.constant = 0;
-                    rebuildConstraints = NO;
-                }
-                
-                self.samplesArray = [NSMutableArray new];
-                
-                [UIView animateWithDuration:0.15 animations:^{
-                    if(rebuildConstraints){
-                        self.centreMiniPlayerView.alpha = 0;
-                        self.leadingMiniPlayerView.alpha = nextSong ? 1 : 0;
-                        self.trailingMiniPlayerView.alpha = nextSong ? 0 : 1;
-                    }
-                    else{
-                        self.centreMiniPlayerView.alpha = 1;
-                        self.leadingMiniPlayerView.alpha = 0;
-                        self.trailingMiniPlayerView.alpha = 0;
-                    }
-                    [self layoutIfNeeded];
-                } completion:^(BOOL finished) {
-                    if(finished){
-                        if(rebuildConstraints){
-                            [self rebuildConstraints:nextSong];
-                            
-                            self.skipToNextTrackOnTimerFire = nextSong;
-                            
-                            self.skipTracksTimer = [NSTimer scheduledTimerWithTimeInterval:1.0
-                                                                                    target:self
-                                                                                  selector:@selector(skipTracks)
-                                                                                  userInfo:nil
-                                                                                   repeats:NO];
-                        }
-                        NSLog(@"Done.");
-                    }
-                }];
-            }
+					BOOL acceptQuickGesture = (pixelsPerSecond > 700.0f) && (distanceTravelled > 25.0f);
+					
+					NSLog(@"Distance travelled: %f points in %f seconds (%f px/s)", distanceTravelled, timeDifference, pixelsPerSecond);
+					NSLog(acceptQuickGesture ? @"ACCEPTED (actual result %d)" : @"Failed (actual result %d)", (int)animationResult);
+					
+					[self.animationView finishAnimationWithResult:animationResult acceptQuickGesture:acceptQuickGesture];
+					
+					BOOL gestureIncomplete = (animationResult == LMNowPlayingAnimationViewResultSkipToNextIncomplete) || (animationResult == LMNowPlayingAnimationViewResultGoToPreviousIncomplete);
+					
+					if(!gestureIncomplete || acceptQuickGesture){
+						BOOL skipToNext = (animationResult == LMNowPlayingAnimationViewResultSkipToNextComplete) || (animationResult == LMNowPlayingAnimationViewResultSkipToNextIncomplete);
+						skipToNext ? [self.musicPlayer skipToNextTrack] : [self.musicPlayer skipToPreviousTrack];
+					}
+					
+					self.songChangeSwipeGestureStartTime = 0.0f;
+					self.songChangeSwipeGestureStartPosition = CGPointMake(0, 0);
+					NSLog(@"\n\nEND\n\n");
+					break;
+				}
+				default:
+					break;
+			}
         }
     }
 }
@@ -345,7 +247,6 @@
 		
 		self.clipsToBounds = YES;
 		
-		self.otherConstraints = [NSMutableArray new];
         self.samplesArray = [NSMutableArray new];
 		
 		self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
@@ -353,17 +254,12 @@
 		[self.musicPlayer.queue addDelegate:self];
 		
 		self.centreMiniPlayerView = [LMMiniPlayerView newAutoLayoutView];
-		self.centreMiniPlayerView.isUserFacing = YES;
+		self.centreMiniPlayerView.rootViewController = self.rootViewController;
 //		self.centerMiniPlayerView.backgroundColor = [UIColor orangeColor];
 		[self addSubview:self.centreMiniPlayerView];
-		
-		self.miniPlayerLeadingConstraint = [self.centreMiniPlayerView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
-		[self.centreMiniPlayerView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
-		[self.centreMiniPlayerView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self];
-		[self.centreMiniPlayerView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
-		
-		[self.centreMiniPlayerView setup];
-		
+				
+		[self.centreMiniPlayerView autoPinEdgesToSuperviewEdges];
+				
 		UIPanGestureRecognizer *miniPlayerPanGesture =
 		[[UIPanGestureRecognizer alloc] initWithTarget:self
 												action:@selector(panMiniPlayer:)];
@@ -372,64 +268,21 @@
 		[self.centreMiniPlayerView addGestureRecognizer:miniPlayerPanGesture];
 		
 		
-		self.trailingMiniPlayerView = [LMMiniPlayerView newAutoLayoutView];
-//		self.trailingMiniPlayerView.backgroundColor = [UIColor yellowColor];
-		[self addSubview:self.trailingMiniPlayerView];
 		
-		[self.otherConstraints addObject:[self.trailingMiniPlayerView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.centreMiniPlayerView]];
-		[self.trailingMiniPlayerView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
-		[self.trailingMiniPlayerView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self];
-		[self.trailingMiniPlayerView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
+		self.animationView = [LMNowPlayingAnimationView new];
+		self.animationView.userInteractionEnabled = NO;
+//		self.animationView.squareMode = YES;
+		[self addSubview:self.animationView];
 		
-		[self.trailingMiniPlayerView setup];
-		
-		UIPanGestureRecognizer *miniPlayerTrailingPanGesture =
-		[[UIPanGestureRecognizer alloc] initWithTarget:self
-												action:@selector(panMiniPlayer:)];
-		miniPlayerTrailingPanGesture.delegate = self;
-		miniPlayerTrailingPanGesture.maximumNumberOfTouches = 1;
-		[self.trailingMiniPlayerView addGestureRecognizer:miniPlayerTrailingPanGesture];
+		[self.animationView autoPinEdgesToSuperviewEdges];
 		
 		
-		self.leadingMiniPlayerView = [LMMiniPlayerView newAutoLayoutView];
-//		self.leadingMiniPlayerView.backgroundColor = [UIColor redColor];
-		[self addSubview:self.leadingMiniPlayerView];
-		
-		[self.otherConstraints addObject:[self.leadingMiniPlayerView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.centreMiniPlayerView]];
-		[self.leadingMiniPlayerView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
-		[self.leadingMiniPlayerView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self];
-		[self.leadingMiniPlayerView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
-		
-		[self.leadingMiniPlayerView setup];
-		
-		UIPanGestureRecognizer *miniPlayerLeadingPanGesture =
-		[[UIPanGestureRecognizer alloc] initWithTarget:self
-												action:@selector(panMiniPlayer:)];
-		miniPlayerLeadingPanGesture.delegate = self;
-		miniPlayerLeadingPanGesture.maximumNumberOfTouches = 1;
-		[self.leadingMiniPlayerView addGestureRecognizer:miniPlayerLeadingPanGesture];
-
-//		LMMusicTrackCollection *currentCollection = self.musicPlayer.nowPlayingCollection;
-//		if(currentCollection == nil){
-//			
-//		}
 		
 		UISwipeGestureRecognizer *doubleFingerSwipeToRestartTrackGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(restartTrack)];
 		[doubleFingerSwipeToRestartTrackGesture setNumberOfTouchesRequired:2];
 		[doubleFingerSwipeToRestartTrackGesture setDirection:UISwipeGestureRecognizerDirectionLeft];
 		[self addGestureRecognizer:doubleFingerSwipeToRestartTrackGesture];
-		
-		self.centreMiniPlayerView.clipsToBounds = YES;
-		self.leadingMiniPlayerView.clipsToBounds = YES;
-		self.trailingMiniPlayerView.clipsToBounds = YES;
-		
-		self.centreMiniPlayerView.isUserFacing = YES;
-		self.trailingMiniPlayerView.isUserFacing = NO;
-		self.leadingMiniPlayerView.isUserFacing = NO;
-		
-		self.centreMiniPlayerView.rootViewController = self.rootViewController;
-		self.trailingMiniPlayerView.rootViewController = self.rootViewController;
-		self.leadingMiniPlayerView.rootViewController = self.rootViewController;
+
 		
 		NSLog(@"Index of %ld", self.musicPlayer.queue.indexOfNowPlayingTrack);
 		

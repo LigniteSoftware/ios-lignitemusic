@@ -204,7 +204,7 @@
 }
 
 - (void)updateSongDurationLabelWithPlaybackTime:(long)currentPlaybackTime {
-	long totalPlaybackTime = self.loadedTrack.playbackDuration;
+	long totalPlaybackTime = self.musicPlayer.nowPlayingTrack.playbackDuration;
 	
 	long currentHours = (currentPlaybackTime / 3600);
 	long currentMinutes = ((currentPlaybackTime / 60) - currentHours*60);
@@ -239,10 +239,6 @@
 }
 
 - (void)musicCurrentPlaybackTimeDidChange:(NSTimeInterval)newPlaybackTime userModified:(BOOL)userModified {
-    if(self.musicPlayer.nowPlayingTrack.persistentID != self.loadedTrack.persistentID){
-        return;
-    }
-    
 	if(self.progressSlider.userIsInteracting){
 		return;
 	}
@@ -257,11 +253,8 @@
 	[self reloadControlButtons];
 }
 
-- (void)changeMusicTrack:(LMMusicTrack*)newTrack withIndex:(NSInteger)index {
-    self.loadedTrack = newTrack;
-    self.loadedTrackIndex = index;
-    
-//    NSLog(@"ID is %@: %lld", newTrack.title, newTrack.persistentID);
+- (void)reload {
+//    NSLog(@"ID is %@: %lld", self.musicPlayer.nowPlayingTrack.title, self.musicPlayer.nowPlayingTrack.persistentID);
 	
 	if(!self.queue){
 		self.queue = [LMOperationQueue new];
@@ -275,7 +268,7 @@
 	
 	
 	__block NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
-		UIImage *albumArt = [newTrack albumArt];
+		UIImage *albumArt = [self.musicPlayer.nowPlayingTrack albumArt];
 		UIImage *albumImage = (noTrackPlaying || !albumArt) ? [UIImage imageNamed:@"lignite_background_portrait"] : albumArt;
 		
 		albumImage = [self.musicPlayer.nowPlayingTrack albumArt];
@@ -356,23 +349,19 @@
 //	}
 	
 	
-	self.trackInfoView.titleText = newTrack.title ? newTrack.title : NSLocalizedString(@"UnknownTitle", nil);
-	self.trackInfoView.artistText = newTrack.artist ? newTrack.artist : NSLocalizedString(@"UnknownArtist", nil);
-	self.trackInfoView.albumText = newTrack.albumTitle ? newTrack.albumTitle : NSLocalizedString(@"UnknownAlbumTitle", nil);
+	self.trackInfoView.titleText = self.musicPlayer.nowPlayingTrack.title ? self.musicPlayer.nowPlayingTrack.title : NSLocalizedString(@"UnknownTitle", nil);
+	self.trackInfoView.artistText = self.musicPlayer.nowPlayingTrack.artist ? self.musicPlayer.nowPlayingTrack.artist : NSLocalizedString(@"UnknownArtist", nil);
+	self.trackInfoView.albumText = self.musicPlayer.nowPlayingTrack.albumTitle ? self.musicPlayer.nowPlayingTrack.albumTitle : NSLocalizedString(@"UnknownAlbumTitle", nil);
 	
 	self.progressSlider.leftText =
 	[NSString stringWithFormat:NSLocalizedString(@"SongXofX", nil),
-		 (int)self.loadedTrackIndex + 1,
+		 (int)self.musicPlayer.queue.indexOfNowPlayingTrack + 1,
 		 (int)self.musicPlayer.queue.count];
-		
-    CGFloat timeToUse = self.musicPlayer.nowPlayingTrack == self.loadedTrack ? self.musicPlayer.currentPlaybackTime : 0;
-    
-    self.progressSlider.rightText = [LMNowPlayingView durationStringTotalPlaybackTime:newTrack.playbackDuration];
-    [self updateSongDurationLabelWithPlaybackTime:timeToUse];
-    [self.progressSlider resetToZero];
-    self.progressSlider.value = timeToUse;
 	
-	NSLog(@"Loading track %@ is centre %d", self.loadedTrack.title, self.isUserFacing);
+    self.progressSlider.rightText = [LMNowPlayingView durationStringTotalPlaybackTime:self.musicPlayer.nowPlayingTrack.playbackDuration];
+    [self updateSongDurationLabelWithPlaybackTime:self.musicPlayer.currentPlaybackTime];
+    [self.progressSlider resetToZero];
+    self.progressSlider.value = self.musicPlayer.currentPlaybackTime;
 	
 	[self reloadFavouriteStatus];
 	
@@ -470,7 +459,7 @@
 	
 	
 	BOOL whiteFavouritesIcon = self.progressSlider.lightTheme;
-	BOOL favouritesButtonEnabled = self.loadedTrack.isFavourite;
+	BOOL favouritesButtonEnabled = self.musicPlayer.nowPlayingTrack.isFavourite;
 	if(favouritesButtonEnabled){
 		whiteFavouritesIcon = !whiteFavouritesIcon;
 	}
@@ -485,7 +474,7 @@
 	[self.queueButton setBorderColour:[self controlButtonColourHighlighted:!queueButtonEnabled]];
 	
 	
-	[self.favouritesButton setColour:[self controlButtonColourHighlighted:self.loadedTrack.isFavourite]];
+	[self.favouritesButton setColour:[self controlButtonColourHighlighted:self.musicPlayer.nowPlayingTrack.isFavourite]];
 	[self.airplayButton setColour:[self controlButtonColourHighlighted:self.outputPortIsWireless]];
 	[self.queueButton setColour:[self controlButtonColourHighlighted:self.nowPlayingQueueOpen]];
 	[UIView animateWithDuration:0.25 animations:^{
@@ -629,26 +618,26 @@
 }
 
 - (void)reloadFavouriteStatus {
-	UIImage *favouritesImageToUse = [LMAppIcon imageForIcon:self.loadedTrack.isFavourite ? LMIconFavouriteRedFilled : (self.progressSlider.lightTheme ? LMIconFavouriteWhiteOutline : LMIconFavouriteBlackOutline)];
+	UIImage *favouritesImageToUse = [LMAppIcon imageForIcon:self.musicPlayer.nowPlayingTrack.isFavourite ? LMIconFavouriteRedFilled : (self.progressSlider.lightTheme ? LMIconFavouriteWhiteOutline : LMIconFavouriteBlackOutline)];
 	
 	self.favouriteHeartImageView.image = favouritesImageToUse;
 	
 	[self.favouritesButton setImage:favouritesImageToUse];
 	
 	
-	self.favouriteHeartImageView.accessibilityLabel = NSLocalizedString(!self.loadedTrack.isFavourite ? @"VoiceOverLabel_FavouriteButton" : @"VoiceOverLabel_UnfavouriteButton", nil);
-	self.favouriteHeartImageView.accessibilityHint = NSLocalizedString(!self.loadedTrack.isFavourite ? @"VoiceOverHint_FavouriteButton" : @"VoiceOverHint_UnfavouriteButton", nil);
+	self.favouriteHeartImageView.accessibilityLabel = NSLocalizedString(!self.musicPlayer.nowPlayingTrack.isFavourite ? @"VoiceOverLabel_FavouriteButton" : @"VoiceOverLabel_UnfavouriteButton", nil);
+	self.favouriteHeartImageView.accessibilityHint = NSLocalizedString(!self.musicPlayer.nowPlayingTrack.isFavourite ? @"VoiceOverHint_FavouriteButton" : @"VoiceOverHint_UnfavouriteButton", nil);
 	
-	self.favouritesButton.ligniteAccessibilityLabel = NSLocalizedString(!self.loadedTrack.isFavourite ? @"VoiceOverLabel_FavouriteButton" : @"VoiceOverLabel_UnfavouriteButton", nil);
-	self.favouritesButton.ligniteAccessibilityHint = NSLocalizedString(!self.loadedTrack.isFavourite ? @"VoiceOverHint_FavouriteButton" : @"VoiceOverHint_UnfavouriteButton", nil);
+	self.favouritesButton.ligniteAccessibilityLabel = NSLocalizedString(!self.musicPlayer.nowPlayingTrack.isFavourite ? @"VoiceOverLabel_FavouriteButton" : @"VoiceOverLabel_UnfavouriteButton", nil);
+	self.favouritesButton.ligniteAccessibilityHint = NSLocalizedString(!self.musicPlayer.nowPlayingTrack.isFavourite ? @"VoiceOverHint_FavouriteButton" : @"VoiceOverHint_UnfavouriteButton", nil);
 }
 
 - (void)changeFavouriteStatus {
-	if(self.loadedTrack.isFavourite){
-		[self.musicPlayer removeTrackFromFavourites:self.loadedTrack];
+	if(self.musicPlayer.nowPlayingTrack.isFavourite){
+		[self.musicPlayer removeTrackFromFavourites:self.musicPlayer.nowPlayingTrack];
 	}
 	else{
-		[self.musicPlayer addTrackToFavourites:self.loadedTrack];
+		[self.musicPlayer addTrackToFavourites:self.musicPlayer.nowPlayingTrack];
 	}
 }
 
@@ -1288,7 +1277,7 @@
 //	[self setShowingAccessibilityControls:YES animated:NO];
 	
 	[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
-		[self changeMusicTrack:self.loadedTrack withIndex:self.loadedTrackIndex];
+		[self reload];
 //		if(self.isUserFacing){
 //			[self setShowingQueueView:YES animated:YES];
 //		}
