@@ -636,7 +636,7 @@
 	[userDefaults synchronize];
 	
 	[LMAnswers logCustomEventWithName:@"Quick Load Setting" customAttributes:@{
-																								@"Enabled": @(switchView.on)
+																					 			@"Enabled": @(switchView.on)
 																								}];
 }
 

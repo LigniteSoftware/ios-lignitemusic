@@ -36,7 +36,7 @@
 /**
  Whether or not this now playing view is the one that the user can interact with (the centre now playing view within the core now playing view).
  */
-@property BOOL isUserFacing;
+@property BOOL isUserFacing DEPRECATED_ATTRIBUTE;
 
 /**
  The track which this miniplayer holds.

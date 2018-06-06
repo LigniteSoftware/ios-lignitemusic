@@ -7,6 +7,8 @@
 //
 
 #import <PureLayout/PureLayout.h>
+
+#import "LMNowPlayingAnimationView.h"
 #import "LMButtonNavigationBar.h"
 #import "LMNowPlayingCoreView.h"
 #import "LMCoreViewController.h"
@@ -18,49 +20,33 @@
 @interface LMNowPlayingCoreView()<UIGestureRecognizerDelegate, LMMusicPlayerDelegate, LMMusicQueueDelegate>
 
 /**
- The NowPlaying which goes in the back.
+ The now playing view which actually displays the now playing contents.
  */
-@property LMNowPlayingView *trailingNowPlayingView;
-
-/**
- The NowPlaying which goes in the middle.
- */
-@property LMNowPlayingView *centreNowPlayingView;
-
-/**
- The NowPlaying which goes in the front.
- */
-@property LMNowPlayingView *leadingNowPlayingView;
-
+@property LMNowPlayingView *nowPlayingView;
 /**
  The music player.
  */
 @property LMMusicPlayer *musicPlayer;
 
 /**
- The timer to skip to the next or previous track.
- */
-@property NSTimer *skipTracksTimer;
-
-/**
- Whether or not to skip to next when the timer fires. NO for previous track.
- */
-@property BOOL skipToNextTrackOnTimerFire DEPRECATED_ATTRIBUTE;
-
-/**
- The leading constraint for the center NowPlaying. This is the constraint which the pan gesture uses for the motion of views.
- */
-@property NSLayoutConstraint *nowPlayingLeadingConstraint;
-
-/**
- The other constraints, will handle this soon.
- */
-@property NSMutableArray *otherConstraints;
-
-/**
  The array of samples for determining which direction the gesture is headed in.
  */
 @property NSMutableArray *samplesArray;
+
+/**
+ The animation view for transitioning between songs.
+ */
+@property LMNowPlayingAnimationView *animationView;
+
+/**
+ The start time of the swipe gesture for changing songs.
+ */
+@property NSTimeInterval songChangeSwipeGestureStartTime;
+
+/**
+ The start position of the song change swipe gesture.
+ */
+@property CGPoint songChangeSwipeGestureStartPosition;
 
 @end
 
@@ -87,14 +73,8 @@
 }
 
 - (void)reloadMusicTracks {
-    [self.centreNowPlayingView changeMusicTrack:self.musicPlayer.nowPlayingTrack
+    [self.nowPlayingView changeMusicTrack:self.musicPlayer.nowPlayingTrack
 									  withIndex:self.musicPlayer.queue.indexOfNowPlayingTrack];
-	
-    [self.leadingNowPlayingView changeMusicTrack:self.musicPlayer.queue.nextTrack
-                                       withIndex:self.musicPlayer.queue.indexOfNextTrack];
-	
-    [self.trailingNowPlayingView changeMusicTrack:self.musicPlayer.queue.previousTrack
-                                        withIndex:self.musicPlayer.queue.indexOfPreviousTrack];
 }
 
 - (void)theQueueChangedSoPleaseReloadThankYou {
@@ -123,86 +103,7 @@
     [self reloadMusicTracks];
 }
 
-- (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState {
-    
-}
-
-- (void)skipTracks {
-    //	self.skipToNextTrackOnTimerFire ? [self.musicPlayer skipToNextTrack] : [self.musicPlayer skipToPreviousItem];
-//	if(self.musicPlayer.queueRequiresReload){
-//		[self.musicPlayer skipToNextTrack];
-//	}
-//	else{
-	
-//	NSLog(@"Centre track is %@", self.centreNowPlayingView.loadedTrack.title);
-	
-//		[self.musicPlayer setNowPlayingTrack:self.centreNowPlayingView.loadedTrack];
-//	}
-}
-
-- (void)rebuildConstraints:(BOOL)leadingIsCenter {
-    NSArray *oldNowPlayings = @[ self.trailingNowPlayingView, self.centreNowPlayingView, self.leadingNowPlayingView ];
-    
-    [self.centreNowPlayingView removeFromSuperview];
-    [self.leadingNowPlayingView removeFromSuperview];
-    [self.trailingNowPlayingView removeFromSuperview];
-    
-    // [ 0 1 2 ] swipe -> 0 [ 1 2 * ] convert -> [ 1 2 0 ]
-    if(leadingIsCenter){
-        self.trailingNowPlayingView = oldNowPlayings[1];
-        self.centreNowPlayingView = oldNowPlayings[2];
-        self.leadingNowPlayingView = oldNowPlayings[0];
-    }
-    // [ 0 1 2 ] swipe -> [ * 0 1 ] 2 convert -> [ 2 0 1 ]
-    else{
-        self.trailingNowPlayingView = oldNowPlayings[2];
-        self.centreNowPlayingView = oldNowPlayings[0];
-        self.leadingNowPlayingView = oldNowPlayings[1];
-    }
-	
-//	self.centerNowPlayingView.backgroundColor = [UIColor orangeColor];
-//	self.trailingNowPlayingView.backgroundColor = [UIColor yellowColor];
-//	self.leadingNowPlayingView.backgroundColor = [UIColor redColor];
-	
-	self.centreNowPlayingView.isUserFacing = YES;
-	self.trailingNowPlayingView.isUserFacing = NO;
-	self.leadingNowPlayingView.isUserFacing = NO;
-	
-	NSLog(@"Loaded tracks: %@/%@/%@", self.trailingNowPlayingView.loadedTrack.title, self.centreNowPlayingView.loadedTrack.title, self.leadingNowPlayingView.loadedTrack.title);
-    
-    [self addSubview:self.centreNowPlayingView];
-    [self addSubview:self.leadingNowPlayingView];
-    [self addSubview:self.trailingNowPlayingView];
-    
-    self.nowPlayingLeadingConstraint = [self.centreNowPlayingView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
-    [self.centreNowPlayingView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
-    [self.centreNowPlayingView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self];
-    [self.centreNowPlayingView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
-    
-    [self.otherConstraints addObject:[self.trailingNowPlayingView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.centreNowPlayingView]];
-    [self.trailingNowPlayingView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
-    [self.trailingNowPlayingView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self];
-    [self.trailingNowPlayingView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
-    
-    [self.otherConstraints addObject:[self.leadingNowPlayingView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.centreNowPlayingView]];
-    [self.leadingNowPlayingView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
-    [self.leadingNowPlayingView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self];
-    [self.leadingNowPlayingView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
-    
-    [self reloadMusicTracks];
-    
-    [self layoutIfNeeded];
-    
-    LMNowPlayingView *oldCenterNowPlayingView = [oldNowPlayings objectAtIndex:1];
-    if([oldCenterNowPlayingView nowPlayingQueueOpen]){
-        [oldCenterNowPlayingView setShowingQueueView:NO animated:NO];
-    }
-    
-    
-    NSLog(@"Constraints rebuilt.");
-}
-
-- (void)panNowPlaying:(UIPanGestureRecognizer *)recognizer {
+- (void)panNowPlaying:(UIPanGestureRecognizer *)recogniser {
     //Test code for calculating rates of the translations. Will break after one use
     static float amountOfTimes;
     static BOOL hasDoneThis;
@@ -220,8 +121,15 @@
     
     int threshhold = 3;
     
-    CGPoint translation = [recognizer translationInView:recognizer.view];
-    
+    CGPoint translation = [recogniser translationInView:recogniser.view];
+	
+	if(self.songChangeSwipeGestureStartTime < 1){
+		NSLog(@"\n\nSTART\n\n");
+		
+		self.songChangeSwipeGestureStartTime = [[NSDate new] timeIntervalSince1970];
+		self.songChangeSwipeGestureStartPosition = translation;
+	}
+	
     static BOOL userIsGoingInYAxis;
     
     [self.samplesArray addObject:NSStringFromCGPoint(translation)];
@@ -246,9 +154,9 @@
     }
     else{
         if(userIsGoingInYAxis){
-//            [self.centerNowPlayingView panNowPlayingDown:recognizer];
+//            [self.centreNowPlayingView panNowPlayingDown:recognizer];
             
-            CGPoint translation = [recognizer translationInView:recognizer.view];
+            CGPoint translation = [recogniser translationInView:recogniser.view];
             
             //	NSLog(@"%f to %f %@", translation.y, totalTranslation, NSStringFromCGPoint(self.currentPoint));
             
@@ -263,7 +171,7 @@
             
             [self.superview layoutIfNeeded];
             
-            if(recognizer.state == UIGestureRecognizerStateEnded){
+            if(recogniser.state == UIGestureRecognizerStateEnded){
                 if((translation.y >= MAX(WINDOW_FRAME.size.width, WINDOW_FRAME.size.height)/14.0)){
                     self.topConstraint.constant = self.frame.size.height;
                     self.isOpen = NO;
@@ -289,79 +197,60 @@
             
 //            NSLog(@"Sending to core (%@ %@)", NSStringFromCGPoint(translation), self.rootViewController);
             
-            if(recognizer.state == UIGestureRecognizerStateEnded){
+            if(recogniser.state == UIGestureRecognizerStateEnded){
                 self.samplesArray = [NSMutableArray new];
+				self.songChangeSwipeGestureStartTime = 0.0f;
+				self.songChangeSwipeGestureStartPosition = CGPointMake(0, 0);
             }
         }
         else{
             if(!self.musicPlayer.nowPlayingTrack){
                 return;
             }
-            else{
+			else{
                 NSLog(@"Now playing %@", self.musicPlayer.nowPlayingTrack.title);
             }
             
             NSLog(@"Translation %@ (%f/sec)", NSStringFromCGPoint(translation), rate);
             
-            CGFloat totalTranslation = translation.x;
-            
-            //	NSLog(@"%f to %f %@", translation.y, totalTranslation, NSStringFromCGPoint(self.currentPoint));
-            
-            if(self.skipTracksTimer){
-                [self.skipTracksTimer invalidate];
-                self.skipTracksTimer = nil;
-            }
-            
-            self.nowPlayingLeadingConstraint.constant = totalTranslation;
-            
-            [self layoutIfNeeded];
-            
-            if(recognizer.state == UIGestureRecognizerStateEnded){
-                [self layoutIfNeeded];
-                
-				BOOL nextSong = translation.x < (-self.frame.size.width/7);
-				BOOL previousSong = translation.x > (self.frame.size.width/7);
-                BOOL rebuildConstraints = YES;
-                
-                if(previousSong){
-                    NSLog(@"Slide forward");
-                    self.nowPlayingLeadingConstraint.constant = self.frame.size.width;
+			CGPoint pointInView = [recogniser translationInView:recogniser.view];
+			
+			LMNowPlayingAnimationViewResult animationResult = [self.animationView progress:pointInView fromStartingPoint:self.songChangeSwipeGestureStartPosition];
+			
+			NSLog(@"State %d change %d", (int)recogniser.state, (int)animationResult);
+			
+			NSTimeInterval now = [[NSDate new] timeIntervalSince1970];
+			
+			switch(recogniser.state){
+				case UIGestureRecognizerStateEnded: {
+					self.samplesArray = [NSMutableArray new];
 					
-					[self.musicPlayer skipToPreviousTrack];
-                }
-                else if(nextSong){
-                    NSLog(@"Slide backward");
-                    self.nowPlayingLeadingConstraint.constant = -self.frame.size.width;
+					NSTimeInterval timeDifference = (now - self.songChangeSwipeGestureStartTime);
+					CGFloat distanceTravelled = fabs(pointInView.x - self.songChangeSwipeGestureStartPosition.x);
+					CGFloat pixelsPerSecond = (distanceTravelled / timeDifference);
 					
-					[self.musicPlayer skipToNextTrack];
-                }
-                else{
-                    NSLog(@"Reset to centre");
-                    self.nowPlayingLeadingConstraint.constant = 0;
-                    rebuildConstraints = NO;
-                }
-                
-                self.samplesArray = [NSMutableArray new];
-                
-                [UIView animateWithDuration:0.15 animations:^{
-                    [self layoutIfNeeded];
-                } completion:^(BOOL finished) {
-                    if(finished){
-                        if(rebuildConstraints){
-                            [self rebuildConstraints:nextSong];
-                            
-//                            self.skipToNextTrackOnTimerFire = nextSong;
-							
-//                            self.skipTracksTimer = [NSTimer scheduledTimerWithTimeInterval:1.0
-//                                                                                    target:self
-//                                                                                  selector:@selector(skipTracks)
-//                                                                                  userInfo:nil
-//                                                                                   repeats:NO];
-                        }
-                        NSLog(@"Done.");
-                    }
-                }];
-            }
+					BOOL acceptQuickGesture = (pixelsPerSecond > 700.0f) && (distanceTravelled > 25.0f);
+					
+					NSLog(@"Distance travelled: %f points in %f seconds (%f px/s)", distanceTravelled, timeDifference, pixelsPerSecond);
+					NSLog(acceptQuickGesture ? @"ACCEPTED (actual result %d)" : @"Failed (actual result %d)", (int)animationResult);
+					
+					[self.animationView finishAnimationWithResult:animationResult acceptQuickGesture:acceptQuickGesture];
+					
+					BOOL gestureIncomplete = (animationResult == LMNowPlayingAnimationViewResultSkipToNextIncomplete) || (animationResult == LMNowPlayingAnimationViewResultGoToPreviousIncomplete);
+					
+					if(!gestureIncomplete || acceptQuickGesture){
+						BOOL skipToNext = (animationResult == LMNowPlayingAnimationViewResultSkipToNextComplete) || (animationResult == LMNowPlayingAnimationViewResultSkipToNextIncomplete);
+						skipToNext ? [self.musicPlayer skipToNextTrack] : [self.musicPlayer skipToPreviousTrack];
+					}
+					
+					self.songChangeSwipeGestureStartTime = 0.0f;
+					self.songChangeSwipeGestureStartPosition = CGPointMake(0, 0);
+					NSLog(@"\n\nEND\n\n");
+					break;
+				}
+				default:
+					break;
+			}
         }
     }
 }
@@ -389,88 +278,36 @@
         
         self.backgroundColor = [UIColor whiteColor];
         
-        self.otherConstraints = [NSMutableArray new];
         self.samplesArray = [NSMutableArray new];
         
         self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
         [self.musicPlayer addMusicDelegate:self];
 		[self.musicPlayer.queue addDelegate:self];
         
-        self.centreNowPlayingView = [LMNowPlayingView newAutoLayoutView];
-        //		self.centerNowPlayingView.backgroundColor = [UIColor orangeColor];
-        self.centreNowPlayingView.coreViewController = (LMCoreViewController*)self.rootViewController;
-		self.centreNowPlayingView.isUserFacing = YES;
-        [self addSubview:self.centreNowPlayingView];
+        self.nowPlayingView = [LMNowPlayingView newAutoLayoutView];
+        self.nowPlayingView.coreViewController = (LMCoreViewController*)self.rootViewController;
+		self.nowPlayingView.backgroundColor = [UIColor whiteColor];
+		self.nowPlayingView.nowPlayingCoreView = self;
+        [self addSubview:self.nowPlayingView];
         
-        self.nowPlayingLeadingConstraint = [self.centreNowPlayingView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self];
-        [self.centreNowPlayingView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
-        [self.centreNowPlayingView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self];
-        [self.centreNowPlayingView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
-        
+		[self.nowPlayingView autoPinEdgesToSuperviewEdges];
+		
         
         UIPanGestureRecognizer *nowPlayingPanGesture =
         [[UIPanGestureRecognizer alloc] initWithTarget:self
                                                 action:@selector(panNowPlaying:)];
         nowPlayingPanGesture.delegate = self;
 		nowPlayingPanGesture.maximumNumberOfTouches = 1;
-        [self.centreNowPlayingView addGestureRecognizer:nowPlayingPanGesture];
-        
-        
-        self.trailingNowPlayingView = [LMNowPlayingView newAutoLayoutView];
-        //		self.trailingNowPlayingView.backgroundColor = [UIColor yellowColor];
-        self.trailingNowPlayingView.coreViewController = (LMCoreViewController*)self.rootViewController;
-        [self addSubview:self.trailingNowPlayingView];
-        
-        [self.otherConstraints addObject:[self.trailingNowPlayingView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self.centreNowPlayingView]];
-        [self.trailingNowPlayingView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
-        [self.trailingNowPlayingView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self];
-        [self.trailingNowPlayingView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
-        
-
-        
-        UIPanGestureRecognizer *nowPlayingTrailingPanGesture =
-        [[UIPanGestureRecognizer alloc] initWithTarget:self
-                                                action:@selector(panNowPlaying:)];
-        nowPlayingTrailingPanGesture.delegate = self;
-		nowPlayingTrailingPanGesture.maximumNumberOfTouches = 1;
-        [self.trailingNowPlayingView addGestureRecognizer:nowPlayingTrailingPanGesture];
-        
-        
-        self.leadingNowPlayingView = [LMNowPlayingView newAutoLayoutView];
-        //		self.leadingNowPlayingView.backgroundColor = [UIColor redColor];
-        self.leadingNowPlayingView.coreViewController = (LMCoreViewController*)self.rootViewController;
-        [self addSubview:self.leadingNowPlayingView];
-        
-        [self.otherConstraints addObject:[self.leadingNowPlayingView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.centreNowPlayingView]];
-        [self.leadingNowPlayingView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
-        [self.leadingNowPlayingView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self];
-        [self.leadingNowPlayingView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self];
+        [self.nowPlayingView addGestureRecognizer:nowPlayingPanGesture];
+	
 		
 		
-//		self.centerNowPlayingView.backgroundColor = [UIColor orangeColor];
-//		self.trailingNowPlayingView.backgroundColor = [UIColor yellowColor];
-//		self.leadingNowPlayingView.backgroundColor = [UIColor redColor];
-
-		self.centreNowPlayingView.backgroundColor = [UIColor whiteColor];
-		self.trailingNowPlayingView.backgroundColor = [UIColor whiteColor];
-		self.leadingNowPlayingView.backgroundColor = [UIColor whiteColor];
+		self.animationView = [LMNowPlayingAnimationView new];
+		self.animationView.userInteractionEnabled = NO;
+		[self addSubview:self.animationView];
 		
-		self.centreNowPlayingView.nowPlayingCoreView = self;
-		self.trailingNowPlayingView.nowPlayingCoreView = self;
-		self.leadingNowPlayingView.nowPlayingCoreView = self;
-		
-		self.centreNowPlayingView.isUserFacing = YES;
-		self.trailingNowPlayingView.isUserFacing = NO;
-		self.leadingNowPlayingView.isUserFacing = NO;
-
-        
-        UIPanGestureRecognizer *nowPlayingLeadingPanGesture =
-        [[UIPanGestureRecognizer alloc] initWithTarget:self
-                                                action:@selector(panNowPlaying:)];
-        nowPlayingLeadingPanGesture.delegate = self;
-		nowPlayingLeadingPanGesture.maximumNumberOfTouches = 1;
-        [self.leadingNowPlayingView addGestureRecognizer:nowPlayingLeadingPanGesture];
-		
+		[self.animationView autoPinEdgesToSuperviewEdges];
+	
 		
 		
 		UISwipeGestureRecognizer *doubleFingerSwipeToRestartTrackGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(restartTrack)];

@@ -104,11 +104,18 @@
 - (void)rebuild;
 
 /**
+ Whether or not the full range of system queue APIs are available for use. Should only be NO on iOS versions below 10.0.
+
+ @return Whether or not the queue APIs are available.
+ */
+- (BOOL)queueAPIsAvailable;
+
+/**
  Call this when the system now playing track changes. This will readjust the queue data according to the current structure of the system queue, in preparation for the music player's delegates to be notified.
 
  @param musicTrack The now playing music track.
  */
-- (void)systemNowPlayingTrackDidChange:(LMMusicTrack*)musicTrack;
+- (void)systemNowPlayingTrackDidChange:(LMMusicTrack * _Nonnull)musicTrack;
 
 /**
  Gets the index of a track in the complete queue based off of the index path.

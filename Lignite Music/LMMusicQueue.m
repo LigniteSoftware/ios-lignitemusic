@@ -170,7 +170,7 @@
 - (LMMusicTrack*)nextTrack {
 	NSInteger indexOfNextTrack = [self indexOfNextTrack];
 	
-	if(indexOfNextTrack != NSNotFound){
+	if((indexOfNextTrack != NSNotFound) && (indexOfNextTrack < self.completeQueue.count)){
 		return [self.completeQueue objectAtIndex:indexOfNextTrack];
 	}
 	
@@ -180,7 +180,7 @@
 - (LMMusicTrack*)previousTrack {
 	NSInteger indexOfPreviousTrack = [self indexOfPreviousTrack];
 	
-	if(indexOfPreviousTrack != NSNotFound){
+	if((indexOfPreviousTrack != NSNotFound) && (indexOfPreviousTrack < self.completeQueue.count)){
 		return [self.completeQueue objectAtIndex:indexOfPreviousTrack];
 	}
 	
@@ -372,6 +372,7 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 }
 
 - (BOOL)queueIsStale {
+//	NSLog(@"Now playing track %d, count %d, complete %d", (self.musicPlayer.nowPlayingTrack ? YES : NO), (int)self.systemQueueCount, (int)self.completeQueue.count);
 	return (self.musicPlayer.nowPlayingTrack && (self.systemQueueCount > 0) && (self.completeQueue.count == 0));
 }
 
@@ -400,7 +401,7 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 }
 
 - (NSArray<LMMusicTrack*>*)previousTracks {
-	if(!self.musicPlayer.nowPlayingTrack || self.systemQueueCount == 0){
+	if(!self.musicPlayer.nowPlayingTrack || (self.systemQueueCount == 0) || ![self queueAPIsAvailable]){
 		return @[];
 	}
 	
@@ -418,7 +419,7 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 }
 
 - (NSArray<LMMusicTrack*>*)nextTracks {
-	if(!self.musicPlayer.nowPlayingTrack || (self.systemQueueCount == 0)){
+	if(!self.musicPlayer.nowPlayingTrack || (self.systemQueueCount == 0) || ![self queueAPIsAvailable]){
 		return @[];
 	}
 	
@@ -447,8 +448,17 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 	}
 }
 
+- (BOOL)queueAPIsAvailable {
+	return SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"10.0");
+}
+
 - (void)rebuild {
 	__weak id weakSelf = self;
+	
+//	if(![self queueAPIsAvailable]){
+//		NSLog(@"Incompatible version of iOS, refusing to rebuild.");
+//		return;
+//	}
 
 	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 		LMMusicQueue *strongSelf = weakSelf;
@@ -489,6 +499,7 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 			strongSelf.fullQueueAvailable = (systemQueueArray.count == strongSelf.systemQueueCount);
 		}
 		else{ //Load all possible tracks
+			NSLog(@"System queue count %d", strongSelf.systemQueueCount);
 			for(NSInteger i = 0; i < strongSelf.systemQueueCount; i++){
 				LMMusicTrack *track = [strongSelf systemQueueTrackAtIndex:i];
 				if(track){
@@ -504,7 +515,7 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 			}
 		}
 
-		self.completeQueue =  systemQueueArray;
+		self.completeQueue = systemQueueArray;
 
 		[self calculateAdjustedIndex];
 		

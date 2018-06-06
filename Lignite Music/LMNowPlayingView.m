@@ -1289,9 +1289,9 @@
 	
 	[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
 		[self changeMusicTrack:self.loadedTrack withIndex:self.loadedTrackIndex];
-		if(self.isUserFacing){
-			[self setShowingQueueView:YES animated:YES];
-		}
+//		if(self.isUserFacing){
+//			[self setShowingQueueView:YES animated:YES];
+//		}
 	} repeats:NO];
 }
 

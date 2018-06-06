@@ -69,8 +69,10 @@ typedef enum {
 	LMIconAdd,
 	LMIconMinimize,
 	LMIconMaximize,
+	LMIconNextTracks,
 	LMIconPreviousTracks,
-	LMIconNextTracks
+	LMIconNextTrack,
+	LMIconPreviousTrack
 } LMIcon;
 
 /**

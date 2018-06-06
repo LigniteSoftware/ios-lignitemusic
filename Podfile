@@ -16,6 +16,7 @@ def shared_pods
     pod "BEMCheckBox"
     pod "PeekPop", "~> 1.0"
     pod "XCDYouTubeKit", "~> 2.5"
+    pod "CircleProgressBar", "~> 0.32"
 end
 
 target "Lignite Music" do
