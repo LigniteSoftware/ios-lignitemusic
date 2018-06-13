@@ -168,16 +168,16 @@
 		case MGSwipeStateExpandingRightToLeft: str = @"ExpandingRightToLeft"; break;
 	}
 	
-	if(gestureIsActive && self.alpha < 1.0){
-		self.previousAlpha = self.alpha;
+	if(gestureIsActive && self.contentView.alpha < 1.0){
+		self.previousAlpha = self.contentView.alpha;
 		
 		[UIView animateWithDuration:0.3 animations:^{
-			self.alpha = 1.0;
+			self.contentView.alpha = 1.0;
 		}];
 	}
 	else if(!gestureIsActive && self.previousAlpha > 0.0){
 		[UIView animateWithDuration:0.3 animations:^{
-			self.alpha = self.previousAlpha;
+			self.contentView.alpha = self.previousAlpha;
 		}];
 		
 		self.previousAlpha = 0.0;
@@ -245,7 +245,7 @@
 		[rightView autoPinEdgesToSuperviewEdges];
 	}
 	
-	self.contentView = [UIView newAutoLayoutView];
+	//Initialised in init
 	self.contentView.clipsToBounds = NO;
 	self.contentView.layer.masksToBounds = NO;
 	self.contentView.layer.cornerRadius = 8;
@@ -422,6 +422,7 @@
 	self = [super init];
 	if(self){
 		self.roundedCorners = YES;
+		self.contentView = [UIView newAutoLayoutView];
 	}
 	return self;
 }

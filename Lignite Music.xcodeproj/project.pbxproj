@@ -34,6 +34,7 @@
 		6A2A29CB1DB1F1C3008E7792 /* LMSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A2A29CA1DB1F1C3008E7792 /* LMSource.m */; };
 		6A2B277E20BA0D4B007A70C0 /* LMQueueView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A2B277D20BA0D4B007A70C0 /* LMQueueView.m */; };
 		6A2BA3CA1ECCB29700D66105 /* BSKeyboardControls.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A2BA3C91ECCB29700D66105 /* BSKeyboardControls.m */; };
+		6A2C580E20D09D48003CBB95 /* LMQueueViewSeparator.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A2C580D20D09D47003CBB95 /* LMQueueViewSeparator.m */; };
 		6A2C751E2001757B007888C8 /* LMAlertViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A2C751D2001757B007888C8 /* LMAlertViewController.m */; };
 		6A313C181BB59AE8002BBC33 /* LMButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A313C171BB59AE8002BBC33 /* LMButton.m */; };
 		6A32113E1DA727960060DD07 /* LMTrackDurationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A32113D1DA727960060DD07 /* LMTrackDurationView.m */; };
@@ -108,6 +109,7 @@
 		6A8CF2B91DB4952A00777525 /* LMSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A8CF2B81DB4952A00777525 /* LMSettings.m */; };
 		6A8D5D0520A8A2510034B090 /* LMMusicQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A8D5D0420A8A2510034B090 /* LMMusicQueue.m */; };
 		6A94A7711EA79BB300319A38 /* LMLayoutManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A94A7701EA79BB300319A38 /* LMLayoutManager.m */; };
+		6AA3323820D01DFC00B6D32E /* LMQueueViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AA3323720D01DFC00B6D32E /* LMQueueViewFlowLayout.m */; };
 		6AA445A01D5AD6AB004C6739 /* LMSettingsSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AA4459F1D5AD6AB004C6739 /* LMSettingsSwitch.m */; };
 		6AA445A31D5AD7B0004C6739 /* LMSettingsLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AA445A21D5AD7B0004C6739 /* LMSettingsLabel.m */; };
 		6AA473631BC7103B0066D47E /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AA473621BC7103B0066D47E /* CoreMotion.framework */; };
@@ -276,6 +278,8 @@
 		6A2B277D20BA0D4B007A70C0 /* LMQueueView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMQueueView.m; sourceTree = "<group>"; };
 		6A2BA3C81ECCB29700D66105 /* BSKeyboardControls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSKeyboardControls.h; sourceTree = "<group>"; };
 		6A2BA3C91ECCB29700D66105 /* BSKeyboardControls.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BSKeyboardControls.m; sourceTree = "<group>"; };
+		6A2C580C20D09D47003CBB95 /* LMQueueViewSeparator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMQueueViewSeparator.h; sourceTree = "<group>"; };
+		6A2C580D20D09D47003CBB95 /* LMQueueViewSeparator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMQueueViewSeparator.m; sourceTree = "<group>"; };
 		6A2C751C2001757B007888C8 /* LMAlertViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMAlertViewController.h; sourceTree = "<group>"; };
 		6A2C751D2001757B007888C8 /* LMAlertViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMAlertViewController.m; sourceTree = "<group>"; };
 		6A2DEF301E0CB6FB00FD9444 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
@@ -423,6 +427,8 @@
 		6A8D5D0420A8A2510034B090 /* LMMusicQueue.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMMusicQueue.m; sourceTree = "<group>"; };
 		6A94A76F1EA79BB300319A38 /* LMLayoutManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMLayoutManager.h; sourceTree = "<group>"; };
 		6A94A7701EA79BB300319A38 /* LMLayoutManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMLayoutManager.m; sourceTree = "<group>"; };
+		6AA3323620D01DFC00B6D32E /* LMQueueViewFlowLayout.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMQueueViewFlowLayout.h; sourceTree = "<group>"; };
+		6AA3323720D01DFC00B6D32E /* LMQueueViewFlowLayout.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMQueueViewFlowLayout.m; sourceTree = "<group>"; };
 		6AA4459E1D5AD6AB004C6739 /* LMSettingsSwitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMSettingsSwitch.h; sourceTree = "<group>"; };
 		6AA4459F1D5AD6AB004C6739 /* LMSettingsSwitch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMSettingsSwitch.m; sourceTree = "<group>"; };
 		6AA445A11D5AD7B0004C6739 /* LMSettingsLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMSettingsLabel.h; sourceTree = "<group>"; };
@@ -676,6 +682,7 @@
 			isa = PBXGroup;
 			children = (
 				6A6082D720C69E0F0070C40C /* Animation */,
+				6AA3323920D01E0B00B6D32E /* QueueView */,
 				6A32AEE9205C3CD7008817AA /* LMAccessibilityButton.h */,
 				6A32AEEA205C3CD7008817AA /* LMAccessibilityButton.m */,
 				6A32AEEC205C3D81008817AA /* LMAccessibilityMusicControlBar.h */,
@@ -686,10 +693,6 @@
 				6AD226FB1DA4B7770056695A /* LMNowPlayingView.m */,
 				6A52574D1DF099720040210D /* LMProgressSlider.h */,
 				6A52574E1DF099720040210D /* LMProgressSlider.m */,
-				6A2B277C20BA0D4B007A70C0 /* LMQueueView.h */,
-				6A2B277D20BA0D4B007A70C0 /* LMQueueView.m */,
-				6A22054620BA4B930003C9E3 /* LMQueueViewHeader.h */,
-				6A22054720BA4B930003C9E3 /* LMQueueViewHeader.m */,
 				6A32113C1DA727960060DD07 /* LMTrackDurationView.h */,
 				6A32113D1DA727960060DD07 /* LMTrackDurationView.m */,
 				6A32113F1DA732470060DD07 /* LMTrackInfoView.h */,
@@ -938,6 +941,21 @@
 				6A94A7701EA79BB300319A38 /* LMLayoutManager.m */,
 			);
 			name = Core;
+			sourceTree = "<group>";
+		};
+		6AA3323920D01E0B00B6D32E /* QueueView */ = {
+			isa = PBXGroup;
+			children = (
+				6A2B277C20BA0D4B007A70C0 /* LMQueueView.h */,
+				6A2B277D20BA0D4B007A70C0 /* LMQueueView.m */,
+				6A22054620BA4B930003C9E3 /* LMQueueViewHeader.h */,
+				6A22054720BA4B930003C9E3 /* LMQueueViewHeader.m */,
+				6AA3323620D01DFC00B6D32E /* LMQueueViewFlowLayout.h */,
+				6AA3323720D01DFC00B6D32E /* LMQueueViewFlowLayout.m */,
+				6A2C580C20D09D47003CBB95 /* LMQueueViewSeparator.h */,
+				6A2C580D20D09D47003CBB95 /* LMQueueViewSeparator.m */,
+			);
+			name = QueueView;
 			sourceTree = "<group>";
 		};
 		6AA4459D1D5AD676004C6739 /* SettingsControls */ = {
@@ -1638,6 +1656,7 @@
 				6A7C62F51DA93F6100B025BA /* LMColour.m in Sources */,
 				6A4D61B71EC9BDF400A106F4 /* LMMusicCollectionsView.m in Sources */,
 				6ADFFF781ECCC0B900E06FBF /* MBProgressHUD.m in Sources */,
+				6A2C580E20D09D48003CBB95 /* LMQueueViewSeparator.m in Sources */,
 				6A4BAEEE1DC984EC000DF537 /* LMBigListEntry.m in Sources */,
 				6A7E88791ECCB80700E4B804 /* AFURLSessionManager.m in Sources */,
 				6A7E88711ECCB80700E4B804 /* AFNetworkReachabilityManager.m in Sources */,
@@ -1647,6 +1666,7 @@
 				6A08AF071EBCD9950069C9CC /* LMCollectionViewDataSource.m in Sources */,
 				6A759D591DEBF0470051E1A9 /* LMContactViewController.m in Sources */,
 				6A78E6861FA0002B00B7E369 /* LMCircleView.m in Sources */,
+				6AA3323820D01DFC00B6D32E /* LMQueueViewFlowLayout.m in Sources */,
 				6A2BA3CA1ECCB29700D66105 /* BSKeyboardControls.m in Sources */,
 				6A6F4B641DC5D4EB00BD01C2 /* YIInnerShadowView.m in Sources */,
 				6AC9BF051FE5C93F008C9E12 /* LMMusicPickerNavigationController.m in Sources */,

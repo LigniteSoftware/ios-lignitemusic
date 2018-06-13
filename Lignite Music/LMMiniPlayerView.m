@@ -196,17 +196,13 @@
 }
 
 - (void)musicCurrentPlaybackTimeDidChange:(NSTimeInterval)newPlaybackTime userModified:(BOOL)userModified {
-	if(self.musicPlayer.nowPlayingTrack.persistentID != self.loadedTrack.persistentID){
-		return;
-	}
-	
 	if(self.progressSlider.userIsInteracting){
 		return;
 	}
 	
 	[self updateSongDurationLabelWithPlaybackTime:newPlaybackTime];
 	
-	self.progressSlider.finalValue = self.loadedTrack.playbackDuration;
+	self.progressSlider.finalValue = self.musicPlayer.nowPlayingTrack.playbackDuration;
 	self.progressSlider.value = newPlaybackTime;
 }
 
@@ -511,7 +507,10 @@
 		[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
 			[self.progressSlider setValue:self.musicPlayer.currentPlaybackTime];
 			[self progressSliderValueChanged:self.musicPlayer.currentPlaybackTime isFinal:NO];
+			
 			[self musicPlaybackStateDidChange:self.musicPlayer.playbackState];
+			
+			[self reload];
 		} repeats:NO];
 	}
 }

@@ -849,7 +849,7 @@
 	
 	
 	self.queueBackgroundView = [LMView newAutoLayoutView];
-	self.queueBackgroundView.backgroundColor = [UIColor whiteColor];
+	self.queueBackgroundView.backgroundColor = [UIColor blueColor];
     self.queueBackgroundView.hidden = YES;
 	[self addSubview:self.queueBackgroundView];
 	
@@ -1278,9 +1278,8 @@
 	
 	[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
 		[self reload];
-//		if(self.isUserFacing){
-//			[self setShowingQueueView:YES animated:YES];
-//		}
+		
+		[self setShowingQueueView:YES animated:YES];
 	} repeats:NO];
 }
 

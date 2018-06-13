@@ -7,13 +7,15 @@
 //
 
 #import <PureLayout/PureLayout.h>
+
+#import "LMQueueViewFlowLayout.h"
 #import "LMQueueViewHeader.h"
 #import "LMMusicPlayer.h"
 #import "LMListEntry.h"
 #import "LMQueueView.h"
 #import "LMColour.h"
 
-@interface LMQueueView()<UICollectionViewDelegate, UICollectionViewDataSource, LMMusicQueueDelegate, LMListEntryDelegate, LMQueueViewHeaderDelegate, LMMusicPlayerDelegate>
+@interface LMQueueView()<UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, LMMusicQueueDelegate, LMListEntryDelegate, LMQueueViewHeaderDelegate, LMMusicPlayerDelegate>
 
 /**
  The collection view which displays the queue.
@@ -205,8 +207,6 @@
 	return swipeColour;
 }
 
-
-
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView
 				  cellForItemAtIndexPath:(NSIndexPath *)indexPath {
 	
@@ -215,7 +215,7 @@
 //	cell.backgroundColor = [LMColour randomColour];
 	
 	
-	UICollectionViewFlowLayout *flowLayout = (UICollectionViewFlowLayout*)self.collectionView.collectionViewLayout;
+//	UICollectionViewFlowLayout *flowLayout = (UICollectionViewFlowLayout*)self.collectionView.collectionViewLayout;
 	
 //	NSLog(@"Reloading cell for index %d", (int)indexPath.row);
 	
@@ -235,7 +235,7 @@
 			[listEntry setAsHighlighted:shouldHighlight animated:NO];
 			
 			BOOL isPreviousTrack = (listEntry.indexPath.section == 0) && (listEntry.indexPath.row < self.musicPlayer.queue.previousTracks.count);
-			listEntry.alpha = isPreviousTrack ? (2.0 / 4.0) : 1.0;
+			listEntry.contentView.alpha = isPreviousTrack ? (2.0 / 4.0) : 1.0;
 			
 			LMMusicTrack *listEntryTrack = [self trackForListEntry:listEntry];
 			listEntry.associatedData = listEntryTrack;
@@ -256,7 +256,7 @@
 		listEntry.stretchAcrossWidth = NO;
 		
 		BOOL isPreviousTrack = (listEntry.indexPath.section == 0) && (listEntry.indexPath.row < self.musicPlayer.queue.previousTracks.count);
-		listEntry.alpha = isPreviousTrack ? (2.0 / 4.0) : 1.0;
+		listEntry.contentView.alpha = isPreviousTrack ? (2.0 / 4.0) : 1.0;
 		
 //		NSLog(@"Created new list entry for track %@", listEntryTrack.title);
 		
@@ -265,27 +265,35 @@
 		
 		[cell.contentView addSubview:listEntry];
 		listEntry.backgroundColor = [LMColour whiteColour];
+//		listEntry.layer.masksToBounds = NO;
+//		listEntry.layer.cornerRadius = 8.0f;
 		
 		[listEntry autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:([LMLayoutManager isiPhoneX] && [LMLayoutManager isLandscape]) ? 0 : 0];
 		[listEntry autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:([LMLayoutManager isiPhoneX] && [LMLayoutManager isLandscape]) ? 44 : 0];
 		[listEntry autoPinEdgeToSuperviewEdge:ALEdgeTop];
 		[listEntry autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		
-//		[listEntry changeHighlightStatus:(indexPath.row == self.currentlyHighlighted)
-//								animated:NO];
-		
-		
-		//Divider line for between the entries
-		UIView *dividerView = [UIView newAutoLayoutView];
-		dividerView.backgroundColor = [UIColor colorWithRed:0.89 green:0.89 blue:0.89 alpha:1.0];
-		[listEntry addSubview:dividerView];
-		
-		[dividerView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:20];
-		[dividerView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:20];
-		[dividerView autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:-(flowLayout.sectionInset.bottom/2.0)];
-		[dividerView autoSetDimension:ALDimensionHeight toSize:1.0];
 	}
 
+	if(@available(iOS 11.0, *)){
+		BOOL isFirstRow = (indexPath.row == 0);
+		BOOL isLastRow = (indexPath.row == ([self collectionView:self.collectionView numberOfItemsInSection:indexPath.section] - 1));
+		BOOL isFirstSection = (indexPath.section == 0);
+		
+		if(isLastRow && isFirstSection){
+			cell.clipsToBounds = YES;
+			cell.layer.cornerRadius = 8.0f;
+			cell.layer.maskedCorners = (kCALayerMinXMaxYCorner | kCALayerMaxXMaxYCorner);
+		}
+		else if(isFirstRow && !isFirstSection){
+			cell.clipsToBounds = YES;
+			cell.layer.cornerRadius = 8.0f;
+			cell.layer.maskedCorners = (kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner);
+		}
+		else{
+			cell.clipsToBounds = NO;
+		}
+	}
+	
 	return cell;
 }
 
@@ -300,7 +308,7 @@
 	header.isForPreviousTracks = (indexPath.section == 0);
 	header.delegate = self;
 	
-	header.backgroundColor = [LMColour superLightGreyColour];
+	header.backgroundColor = [LMColour clearColour];
 	
 	[header reload];
 	
@@ -329,6 +337,15 @@
 	return CGSizeMake(self.frame.size.width, LMLayoutManager.standardListEntryHeight);
 }
 
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section {
+	
+	if(section == 0){
+		return CGSizeZero;
+	}
+	
+	return CGSizeMake(self.collectionView.frame.size.width, [LMLayoutManager standardListEntryHeight]);
+}
+
 - (BOOL)collectionView:(UICollectionView *)collectionView canMoveItemAtIndexPath:(NSIndexPath *)indexPath {
 	BOOL isNowPlayingTrack = ([self trackForIndexPath:indexPath] == self.musicPlayer.nowPlayingTrack);
 	
@@ -339,6 +356,9 @@
 	NSLog(@"Move item from %@ to %@", sourceIndexPath, destinationIndexPath);
 	
 	[self.musicPlayer.queue moveTrackFromIndexPath:sourceIndexPath toIndexPath:destinationIndexPath];
+	
+	LMQueueViewFlowLayout *flowLayout = (LMQueueViewFlowLayout*)self.collectionView.collectionViewLayout;
+	[flowLayout finishedInteractivelyMoving];
 }
 
 - (void)longPressGestureHandler:(UILongPressGestureRecognizer*)longPressGesture {
@@ -365,11 +385,11 @@
 				}
 				
 				if(self.currentlyMovingListEntry){
-					if(self.currentlyMovingListEntry.alpha < 1.0){
-						self.currentlyMovingListEntry.previousAlpha = self.currentlyMovingListEntry.alpha;
+					if(self.currentlyMovingListEntry.contentView.alpha < 1.0){
+						self.currentlyMovingListEntry.previousAlpha = self.currentlyMovingListEntry.contentView.alpha;
 						
 						[UIView animateWithDuration:0.3 animations:^{
-							self.currentlyMovingListEntry.alpha = 1.0;
+							self.currentlyMovingListEntry.contentView.alpha = 1.0;
 						}];
 					}
 				}
@@ -386,7 +406,9 @@
 			if(self.currentlyMovingListEntry){
 				if(self.currentlyMovingListEntry.previousAlpha > 0.0){
 					[UIView animateWithDuration:0.3 animations:^{
-						self.currentlyMovingListEntry.alpha = self.currentlyMovingListEntry.previousAlpha;
+						self.currentlyMovingListEntry.contentView.alpha = self.currentlyMovingListEntry.previousAlpha;
+					} completion:^(BOOL finished) {
+						[self reloadLayout];
 					}];
 					
 					self.currentlyMovingListEntry.previousAlpha = 0.0;
@@ -394,6 +416,8 @@
 				
 				self.currentlyMovingListEntry = nil;
 			}
+			
+			[self reloadLayout];
 			break;
 		}
 		default: {
@@ -408,46 +432,51 @@
 
 
 - (void)queueBegan {
-	[self.collectionView reloadData];
+	[self reloadLayout];
 	
 	NSLog(@"Queue began.");
 }
 
 - (void)queueCompletelyChanged {
-	[self.collectionView reloadData];
+	[self reloadLayout];
 	
 	NSLog(@"Queue completely changed.");
 }
 
 - (void)queueEnded {
-	[self.collectionView reloadData];
+	[self reloadLayout];
 	
 	NSLog(@"Queue ended.");
 }
 
-- (void)trackMovedInQueue:(LMMusicTrack*)trackMoved {
+- (void)reloadLayout {
 	[self.collectionView reloadData];
+	[self.collectionView.collectionViewLayout invalidateLayout];
+}
+
+- (void)trackMovedInQueue:(LMMusicTrack*)trackMoved {
+	[self reloadLayout];
 }
 
 - (void)trackRemovedFromQueue:(LMMusicTrack *)trackRemoved {
-	[self.collectionView reloadData];
+	[self reloadLayout];
 }
 
 - (void)trackAddedToQueue:(LMMusicTrack *)trackAdded {
-	[self.collectionView reloadData];
+	[self reloadLayout];
 }
 
 
 - (void)musicTrackDidChange:(LMMusicTrack *)newTrack {
-	[self.collectionView reloadData];
+	[self reloadLayout];
 }
 
 - (void)trackAddedToFavourites:(LMMusicTrack*)track {
-	[self.collectionView reloadData];
+	[self reloadLayout];
 }
 
 - (void)trackRemovedFromFavourites:(LMMusicTrack*)track {
-	[self.collectionView reloadData];
+	[self reloadLayout];
 }
 
 - (void)resetContentOffsetToNowPlaying {
@@ -459,7 +488,7 @@
 	
 	[self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:self.musicPlayer.queue.previousTracks.count inSection:0] atScrollPosition:UICollectionViewScrollPositionTop animated:NO];
 	
-	self.collectionView.contentOffset = CGPointMake(self.collectionView.contentOffset.x, self.collectionView.contentOffset.y - LMLayoutManager.standardListEntryHeight - 20);
+	self.collectionView.contentOffset = CGPointMake(self.collectionView.contentOffset.x, self.collectionView.contentOffset.y - 10);
 }
 
 
@@ -475,20 +504,25 @@
 		
 #warning Todo: add theme delegate support
 		
-		self.backgroundColor = [LMColour whiteColour];
+//		self.backgroundColor = [LMColour clearColour];
 		
 
 		
-		UICollectionViewFlowLayout *fuck = [[UICollectionViewFlowLayout alloc]init];
-		fuck.sectionInset = UIEdgeInsetsMake(10, 0, 10, 0);
+//		UICollectionViewFlowLayout *fuck = [[UICollectionViewFlowLayout alloc]init];
+//		fuck.sectionInset = UIEdgeInsetsMake(10, 0, 10, 0);
+//		fuck.headerReferenceSize = CGSizeMake(WINDOW_FRAME.size.width, LMLayoutManager.standardListEntryHeight);
+
+		LMQueueViewFlowLayout *fuck = [[LMQueueViewFlowLayout alloc]init];
+//		fuck.sectionInset = UIEdgeInsetsMake(0, 0, 0, 0);
 		fuck.headerReferenceSize = CGSizeMake(WINDOW_FRAME.size.width, LMLayoutManager.standardListEntryHeight);
+
 		
 		self.collectionView = [[UICollectionView alloc]initWithFrame:CGRectZero collectionViewLayout:fuck];
 		self.collectionView.translatesAutoresizingMaskIntoConstraints = NO;
 		self.collectionView.delegate = self;
 		self.collectionView.dataSource = self;
 		self.collectionView.userInteractionEnabled = YES;
-		self.collectionView.contentInset = UIEdgeInsetsMake(0, 0, 10, 0);
+//		self.collectionView.contentInset = UIEdgeInsetsMake(0, 0, 10, 0);
 		self.collectionView.backgroundColor = [LMColour clearColour];
 		[self.collectionView registerClass:[UICollectionViewCell class]
 				forCellWithReuseIdentifier:@"cellIdentifier"];
