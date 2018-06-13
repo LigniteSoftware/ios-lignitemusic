@@ -51,6 +51,8 @@
 
 @implementation LMQueueView
 
+@synthesize whiteText = _whiteText;
+
 - (UIImage*)iconForHeader:(LMQueueViewHeader*)header {
 	if(header.isForPreviousTracks && [self playingFirstTrackInQueue]){
 		return [LMAppIcon imageForIcon:LMIconNoAlbumArt75Percent];
@@ -297,16 +299,31 @@
 	return cell;
 }
 
+- (void)setWhiteText:(BOOL)whiteText {
+	_whiteText = whiteText;
+	
+	if(self.collectionView){
+		[self.collectionView reloadData];
+	}
+}
+
+- (BOOL)whiteText {
+	return _whiteText;
+}
+
 - (UICollectionReusableView*)collectionView:(UICollectionView *)collectionView
 		  viewForSupplementaryElementOfKind:(NSString *)kind
 								atIndexPath:(NSIndexPath *)indexPath {
 	
 	NSString *reuseIdentifier = (indexPath.section == 0) ? @"previousTracksHeaderIdentifier" : @"nextTracksHeaderIdentifier";
 	
-	LMQueueViewHeader *header = [self.collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
+	LMQueueViewHeader *header = [self.collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader
+																		withReuseIdentifier:reuseIdentifier
+																			   forIndexPath:indexPath];
 	
 	header.isForPreviousTracks = (indexPath.section == 0);
 	header.delegate = self;
+	header.whiteText = self.whiteText;
 	
 	header.backgroundColor = [LMColour clearColour];
 	
@@ -496,7 +513,7 @@
 	if(!self.didLayoutConstraints){
 		self.didLayoutConstraints = YES;
 		
-		self.backgroundColor = [UIColor blueColor];
+//		self.backgroundColor = [UIColor blueColor];
 		
 		self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 		[self.musicPlayer addMusicDelegate:self];
@@ -504,7 +521,7 @@
 		
 #warning Todo: add theme delegate support
 		
-//		self.backgroundColor = [LMColour clearColour];
+		self.backgroundColor = [LMColour clearColour];
 		
 
 		

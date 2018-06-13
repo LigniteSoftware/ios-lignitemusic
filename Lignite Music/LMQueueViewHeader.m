@@ -28,12 +28,14 @@
 
 @implementation LMQueueViewHeader
 
+@synthesize whiteText = _whiteText;
+
 - (void)tappedListEntry:(LMListEntry*)entry {
 	NSLog(@"Tapped %@", entry);
 }
 
 - (UIColor*)tapColourForListEntry:(LMListEntry*)entry {
-	return [LMColour redColor];
+	return [LMColour clearColour];
 }
 
 - (NSString*)titleForListEntry:(LMListEntry*)entry {
@@ -60,8 +62,23 @@
 	return [LMAppIcon imageForIcon:LMIconBug];
 }
 
+- (void)setWhiteText:(BOOL)whiteText {
+	BOOL changed = (_whiteText != whiteText);
+	_whiteText = whiteText;
+	
+	if(changed && self.listEntry){
+		[self.listEntry setAsHighlighted:whiteText animated:NO];
+	}
+}
+
+- (BOOL)whiteText {
+	return _whiteText;
+}
+
 - (void)reload {
 	[self.listEntry reloadContents];
+	
+	[self.listEntry setAsHighlighted:self.whiteText animated:NO];
 }
 
 - (void)layoutSubviews {
@@ -74,6 +91,8 @@
 		self.listEntry.isLabelBased = NO;
 		self.listEntry.alignIconToLeft = NO;
 		self.listEntry.stretchAcrossWidth = NO;
+		self.listEntry.invertIconOnHighlight = YES;
+		[self.listEntry setAsHighlighted:self.whiteText animated:NO];
 		
 		[self addSubview:self.listEntry];
 		self.listEntry.backgroundColor = [LMColour clearColour];

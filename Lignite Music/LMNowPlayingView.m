@@ -72,8 +72,10 @@
 @property LMLayoutManager *layoutManager;
 
 @property UIImageView *backgroundImageView;
-//@property UIView *shadingView;
+@property UIImageView *queueBackgroundImageView;
+
 @property UIVisualEffectView *blurredBackgroundView;
+@property UIVisualEffectView *queueBlurredBackgroundView;
 
 @property BOOL outputPortIsWireless; //Terrible code, I know
 
@@ -289,6 +291,9 @@
 			self.backgroundImageView.image = albumImage;
 			self.backgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
 			
+			self.queueBackgroundImageView.image = albumImage;
+			self.queueBackgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
+			
 //			self.trackInfoView.textColour = newTextColour;
 			
 			BOOL isLight = [averageColour isLight];
@@ -297,6 +302,10 @@
 //			self.colourBackgroundView.backgroundColor = colorArt.backgroundColor;
 			
 			self.blurredBackgroundView.effect = [UIBlurEffect effectWithStyle:isLight ? UIBlurEffectStyleLight : UIBlurEffectStyleDark];
+			
+			self.queueBlurredBackgroundView.effect = [UIBlurEffect effectWithStyle:isLight ? UIBlurEffectStyleLight : UIBlurEffectStyleDark];
+			
+			self.queueView.whiteText = !isLight;
 			
 			self.trackInfoView.textColour = isLight ? [UIColor blackColor] : [UIColor whiteColor];
 			self.progressSlider.lightTheme = !isLight;
@@ -849,8 +858,9 @@
 	
 	
 	self.queueBackgroundView = [LMView newAutoLayoutView];
-	self.queueBackgroundView.backgroundColor = [UIColor blueColor];
+	self.queueBackgroundView.backgroundColor = [UIColor clearColor];
     self.queueBackgroundView.hidden = YES;
+	self.queueBackgroundView.clipsToBounds = YES;
 	[self addSubview:self.queueBackgroundView];
 	
 	NSArray *queueViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
@@ -868,6 +878,28 @@
 		[self.queueBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(1.0/2.0)];
 	}];
 	[LMLayoutManager addNewLandscapeConstraints:queueViewLandscapeConstraints];
+	
+	
+	self.queueBackgroundImageView = [UIImageView newAutoLayoutView];
+	self.queueBackgroundImageView.image = [UIImage imageNamed:@"lignite_background_portrait"];
+	self.queueBackgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
+	[self.queueBackgroundView addSubview:self.queueBackgroundImageView];
+	
+	[self.queueBackgroundImageView autoCentreInSuperview];
+	[self.queueBackgroundImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.queueBackgroundView withMultiplier:1.1];
+	[self.queueBackgroundImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.queueBackgroundView withMultiplier:1.1];
+	
+	
+	
+	UIBlurEffect *queueBlurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
+	self.queueBlurredBackgroundView = [[UIVisualEffectView alloc] initWithEffect:queueBlurEffect];
+	self.queueBlurredBackgroundView.translatesAutoresizingMaskIntoConstraints = NO;
+	
+	[self.queueBackgroundView addSubview:self.queueBlurredBackgroundView];
+	
+	[self.queueBlurredBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.queueBackgroundImageView];
+	[self.queueBlurredBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.queueBackgroundImageView];
+	[self.queueBlurredBackgroundView autoCentreInSuperview];
 	
 	
 	self.queueView = [LMQueueView newAutoLayoutView];
@@ -928,7 +960,7 @@
 	
 	self.favouriteHeartImageView = [UIImageView newAutoLayoutView];
 	self.favouriteHeartImageView.contentMode = UIViewContentModeScaleAspectFit;
-	self.favouriteHeartImageView.image = [LMAppIcon imageForIcon:self.loadedTrack.isFavourite ? LMIconFavouriteRedFilled : LMIconFavouriteRedOutline];
+	self.favouriteHeartImageView.image = [LMAppIcon imageForIcon:self.musicPlayer.nowPlayingTrack.isFavourite ? LMIconFavouriteRedFilled : LMIconFavouriteRedOutline];
 	self.favouriteHeartImageView.hidden = [LMLayoutManager isLandscapeiPad];
 	self.favouriteHeartImageView.userInteractionEnabled = YES;
 	self.favouriteHeartImageView.isAccessibilityElement = YES;

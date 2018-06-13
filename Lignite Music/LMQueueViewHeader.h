@@ -33,6 +33,11 @@
 @property BOOL isForPreviousTracks;
 
 /**
+ Whether or not to display white text. NO for black text.
+ */
+@property BOOL whiteText;
+
+/**
  Reloads the queue view header with its new contents.
  */
 - (void)reload;
