@@ -6,6 +6,7 @@
 //  Copyright © 2018 Lignite. All rights reserved.
 //
 
+#import "LMQueueViewSeparatorLayoutAttributes.h"
 #import "LMQueueViewSeparator.h"
 #import "LMColour.h"
 
@@ -19,6 +20,18 @@
 @end
 
 @implementation LMQueueViewSeparator
+
+- (void)applyLayoutAttributes:(UICollectionViewLayoutAttributes *)layoutAttributes {
+	if(self.separatorLineView){
+		LMQueueViewSeparatorLayoutAttributes *queueViewAttributes = (LMQueueViewSeparatorLayoutAttributes*)layoutAttributes;
+		CGRect lineFrame = CGRectMake(20, (self.frame.size.height / 2.0) - 1 + (queueViewAttributes.additionalOffset / 2.0), self.frame.size.width - 40, 2);
+		
+//		self.backgroundColor = queueViewAttributes.isOnlyItem ? [UIColor orangeColor] : [UIColor whiteColor];
+		
+		self.separatorLineView.hidden = queueViewAttributes.isOnlyItem || queueViewAttributes.isLastRow;
+		self.separatorLineView.frame = lineFrame;
+	}
+}
 
 - (instancetype)initWithFrame:(CGRect)frame {
 	self = [super initWithFrame:frame];

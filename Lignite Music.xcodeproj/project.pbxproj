@@ -128,6 +128,7 @@
 		6ACB12D81FCDC47200C11F11 /* LMWMusicTypeRowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ACB12D71FCDC47200C11F11 /* LMWMusicTypeRowController.m */; };
 		6ACB12DB1FCDC55E00C11F11 /* LMWMusicTypeTableInterfaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ACB12DA1FCDC55E00C11F11 /* LMWMusicTypeTableInterfaceController.m */; };
 		6ACB12E61FCDE91700C11F11 /* LMWMusicBrowsingRowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ACB12E51FCDE91700C11F11 /* LMWMusicBrowsingRowController.m */; };
+		6ACCE3D920D16CF10061098E /* LMQueueViewSeparatorLayoutAttributes.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ACCE3D820D16CF10061098E /* LMQueueViewSeparatorLayoutAttributes.m */; };
 		6ACD9C201EEBDE3700C53DB3 /* LMVerticalControlBarInnerShadowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ACD9C1F1EEBDE3700C53DB3 /* LMVerticalControlBarInnerShadowView.m */; };
 		6AD226FC1DA4B7770056695A /* LMNowPlayingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AD226FB1DA4B7770056695A /* LMNowPlayingView.m */; };
 		6AD226FF1DA4B8000056695A /* LMCoreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AD226FE1DA4B8000056695A /* LMCoreViewController.m */; };
@@ -464,6 +465,8 @@
 		6ACB12DA1FCDC55E00C11F11 /* LMWMusicTypeTableInterfaceController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMWMusicTypeTableInterfaceController.m; sourceTree = "<group>"; };
 		6ACB12E41FCDE91700C11F11 /* LMWMusicBrowsingRowController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMWMusicBrowsingRowController.h; sourceTree = "<group>"; };
 		6ACB12E51FCDE91700C11F11 /* LMWMusicBrowsingRowController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMWMusicBrowsingRowController.m; sourceTree = "<group>"; };
+		6ACCE3D720D16CF10061098E /* LMQueueViewSeparatorLayoutAttributes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMQueueViewSeparatorLayoutAttributes.h; sourceTree = "<group>"; };
+		6ACCE3D820D16CF10061098E /* LMQueueViewSeparatorLayoutAttributes.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMQueueViewSeparatorLayoutAttributes.m; sourceTree = "<group>"; };
 		6ACD9C1E1EEBDE3700C53DB3 /* LMVerticalControlBarInnerShadowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMVerticalControlBarInnerShadowView.h; sourceTree = "<group>"; };
 		6ACD9C1F1EEBDE3700C53DB3 /* LMVerticalControlBarInnerShadowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMVerticalControlBarInnerShadowView.m; sourceTree = "<group>"; };
 		6AD226FA1DA4B7770056695A /* LMNowPlayingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMNowPlayingView.h; sourceTree = "<group>"; };
@@ -954,6 +957,8 @@
 				6AA3323720D01DFC00B6D32E /* LMQueueViewFlowLayout.m */,
 				6A2C580C20D09D47003CBB95 /* LMQueueViewSeparator.h */,
 				6A2C580D20D09D47003CBB95 /* LMQueueViewSeparator.m */,
+				6ACCE3D720D16CF10061098E /* LMQueueViewSeparatorLayoutAttributes.h */,
+				6ACCE3D820D16CF10061098E /* LMQueueViewSeparatorLayoutAttributes.m */,
 			);
 			name = QueueView;
 			sourceTree = "<group>";
@@ -1717,6 +1722,7 @@
 				6ACD9C201EEBDE3700C53DB3 /* LMVerticalControlBarInnerShadowView.m in Sources */,
 				6A514E191CEA15D900AFB351 /* LMSlider.m in Sources */,
 				6A7E88731ECCB80700E4B804 /* AFSecurityPolicy.m in Sources */,
+				6ACCE3D920D16CF10061098E /* LMQueueViewSeparatorLayoutAttributes.m in Sources */,
 				6A4901AA1ECF64CD00646799 /* LMLagDetectionThread.m in Sources */,
 				6AFF7CE52007CBA500BB9675 /* LMFloatingDetailViewControls.m in Sources */,
 				6ADFFF7C1ECCC11D00E06FBF /* MarqueeLabel.m in Sources */,

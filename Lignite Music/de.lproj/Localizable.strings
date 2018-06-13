@@ -39,6 +39,48 @@
  
  */
 
+
+/*
+ 1.2.0
+ */
+
+"VoiceOverLabel_NotMinimized" = "Nicht minimiert";
+"VoiceOverLabel_Minimized" = "Minimiert";
+
+"VoiceOverHint_ScrubbingNotPossibleSorry" = "Das Verschieben der Verlaufsanzeige ist mit VoiceOver noch nicht möglich, sorry";
+
+"VoiceOverLabel_AlbumArt" = "Albumcover";
+
+"VoiceOverLabel_OpenQueueButton" = "Öffne die Wiedergabereihenfolge"; //*** Replaces VoiceOverLabel_QueueButton ***
+"VoiceOverLabel_CloseQueueButton" = "Schliesse die Wiedergabereihenfolge";
+
+"VoiceOverHint_OpenQueueButton" = "Doppeltippen, um die Wiedergabereihenfolge anzuzeigen"; //*** Replaces VoiceOverHint_QueueButton ***
+"VoiceOverHint_CloseQueueButton" = "Doppeltippen, um die Wiedergabereihenfolge zu schliessen";
+
+"VoiceOverLabel_Title" = "Titel";
+
+"NothingInQueueDescription" = "Scheinbar hast du noch keine abzuspielende Musik definiert.\n\nStarte eine Wiedergabe, um diese Liste zu füllen!";
+
+"PreviousTracksTitleSingular" = "Vorheriger Song";
+"PreviousTracksTitlePlural" = "Vorherige Songs";
+
+"UpNextTitle" = "Anstehende Songs";
+
+"NowPlayingTrack" = "Aktuelle Wiedergabe";
+"NowPlayingTrackSubtitle" = "Erster Song in der Wiedergabeliste";
+
+"NothingUpNextTitle" = "Das wärs!";
+"NothingUpNextSubtitle" = "Du hast keine anstehenden Songs.";
+
+"OptimiseLoadTimeTitle" = "Geschwindigkeitsoptimierung";
+"OptimiseLoadTimeSubtitle" = "Kürzere Liste von anstehenden Songs für eine höhrere Geschwindigkeit";
+
+
+
+/*
+ End 1.2.0
+ */
+
 "VoiceOverLabel_WantToHear" = "Ich möchte hören"; //For enhanced playlists
 "VoiceOverLabel_DontWantToHear" = "Ich möchte nicht hören"; //For enhanced playlists
 

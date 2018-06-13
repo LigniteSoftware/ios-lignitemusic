@@ -113,6 +113,16 @@
 @property UIView *contentView;
 
 /**
+ Optional. The top constraint for the list entry, used if modifications are necessary during runtime.
+ */
+@property NSLayoutConstraint *topConstraint;
+
+/**
+ Optional. The bottom constraint for the list entry, used if modifications are necessary during runtime.
+ */
+@property NSLayoutConstraint *bottomConstraint;
+
+/**
  Keep the text colours the same on highlight. Defaults to NO.
  */
 @property BOOL keepTextColoursTheSame;

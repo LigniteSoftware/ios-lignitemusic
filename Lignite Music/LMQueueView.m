@@ -245,6 +245,12 @@
 //			listEntry.backgroundColor = [LMColour whiteColour];
 			
 			[listEntry reloadContents];
+			
+			BOOL isLastRowOfPreviousTracks = (indexPath.section == 0) && (indexPath.row == ([self.collectionView numberOfItemsInSection:0] - 1));
+			BOOL isFirstRowOfNextTracks = (indexPath.section == 1) && (indexPath.row == 0);
+			
+			listEntry.topConstraint.constant = isFirstRowOfNextTracks ? 20 : 0;
+			listEntry.bottomConstraint.constant = isLastRowOfPreviousTracks ? -20 : 0;
 		}
 	}
 	else {
@@ -266,14 +272,20 @@
 		[listEntry setAsHighlighted:shouldHighlight animated:NO];
 		
 		[cell.contentView addSubview:listEntry];
-		listEntry.backgroundColor = [LMColour whiteColour];
+		cell.backgroundColor = [LMColour whiteColour];
 //		listEntry.layer.masksToBounds = NO;
 //		listEntry.layer.cornerRadius = 8.0f;
 		
 		[listEntry autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:([LMLayoutManager isiPhoneX] && [LMLayoutManager isLandscape]) ? 0 : 0];
 		[listEntry autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:([LMLayoutManager isiPhoneX] && [LMLayoutManager isLandscape]) ? 44 : 0];
-		[listEntry autoPinEdgeToSuperviewEdge:ALEdgeTop];
-		[listEntry autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		listEntry.topConstraint = [listEntry autoPinEdgeToSuperviewEdge:ALEdgeTop];
+		listEntry.bottomConstraint = [listEntry autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		
+		BOOL isLastRowOfPreviousTracks = (indexPath.section == 0) && (indexPath.row == ([self.collectionView numberOfItemsInSection:0] - 1));
+		BOOL isFirstRowOfNextTracks = (indexPath.section == 1) && (indexPath.row == 0);
+		
+		listEntry.topConstraint.constant = isFirstRowOfNextTracks ? 20 : 0;
+		listEntry.bottomConstraint.constant = isLastRowOfPreviousTracks ? -20 : 0;
 	}
 
 	if(@available(iOS 11.0, *)){
@@ -351,7 +363,10 @@
 				  layout:(UICollectionViewLayout*)collectionViewLayout
   sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
 	
-	return CGSizeMake(self.frame.size.width, LMLayoutManager.standardListEntryHeight);
+	BOOL isLastRowOfPreviousTracks = (indexPath.section == 0) && (indexPath.row == ([self collectionView:self.collectionView numberOfItemsInSection:0] - 1));
+	BOOL isFirstRowOfNextTracks = (indexPath.section == 1) && (indexPath.row == 0);
+	
+	return CGSizeMake(self.frame.size.width, LMLayoutManager.standardListEntryHeight + ((isLastRowOfPreviousTracks || isFirstRowOfNextTracks) ? 20 : 0));
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section {
@@ -418,6 +433,7 @@
 			break;
 		}
 		case UIGestureRecognizerStateEnded: {
+			[self.collectionView.collectionViewLayout invalidateLayout];
 			[self.collectionView endInteractiveMovement];
 			
 			if(self.currentlyMovingListEntry){
@@ -438,6 +454,7 @@
 			break;
 		}
 		default: {
+			[self.collectionView.collectionViewLayout invalidateLayout];
 			[self.collectionView cancelInteractiveMovement];
 			
 			self.currentlyMovingListEntry = nil;

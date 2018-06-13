@@ -71,7 +71,7 @@
 	}
 
 	self.layer.masksToBounds = YES;
-	self.layer.cornerRadius = self.squareMode ? 0.0f : (self.frame.size.height / 2.0);
+	self.layer.cornerRadius = self.squareMode ? 0.0f : (MAX(self.frame.size.height, self.frame.size.width) / 2.0);
 }
 
 - (void)setDirection:(LMNowPlayingAnimationCircleDirection)direction {

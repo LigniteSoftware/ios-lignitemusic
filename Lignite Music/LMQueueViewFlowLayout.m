@@ -6,9 +6,12 @@
 //  Copyright © 2018 Lignite. All rights reserved.
 //
 
+#import "LMQueueViewSeparatorLayoutAttributes.h"
 #import "LMQueueViewFlowLayout.h"
 #import "LMQueueViewSeparator.h"
 #import "LMLayoutManager.h"
+
+#define QUEUE_VIEW_SPACE_BETWEEN_CELLS 10
 
 @interface LMQueueViewFlowLayout()
 
@@ -49,16 +52,20 @@
 - (CGRect)frameForCellAtIndexPath:(NSIndexPath*)indexPath {
 	CGFloat width = self.collectionView.frame.size.width;
 	CGFloat sectionSpacing = 0;
-	CGFloat spaceBetweenCells = 10;
 	
 	BOOL isFirstRow = (indexPath.row == 0);
 	BOOL isFirstSection = (indexPath.section == 0);
 	BOOL isVeryFirstRow = (isFirstRow && isFirstSection);
 	
 //	NSLog(@"index %@ previous frame %@", indexPath, NSStringFromCGRect(previousFrame));
+
+	BOOL isLastRowOfPreviousTracks = (indexPath.section == 0) && (indexPath.row == ([self.collectionView numberOfItemsInSection:0] - 1));
+	BOOL isFirstRowOfNextTracks = (indexPath.section == 1) && (indexPath.row == 0);
+	
+	BOOL requiresExtraSpace = (isLastRowOfPreviousTracks || isFirstRowOfNextTracks);
 	
 	CGFloat standardListEntryHeight = [LMLayoutManager standardListEntryHeight];
-	CGSize size = CGSizeMake(width - sectionSpacing, standardListEntryHeight);
+	CGSize size = CGSizeMake(width - sectionSpacing, standardListEntryHeight + (requiresExtraSpace ? 20 : 0));
 	
 	id<UICollectionViewDelegateFlowLayout> delegate = (id<UICollectionViewDelegateFlowLayout>)self.collectionView.delegate;
 	
@@ -66,7 +73,7 @@
 													layout:self.collectionView.collectionViewLayout
 						   referenceSizeForHeaderInSection:1].height;
 	
-	CGFloat spacerForHeader = !isFirstSection ? (sectionHeaderHeight - spaceBetweenCells) : 0;
+	CGFloat spacerForHeader = !isFirstSection ? (sectionHeaderHeight - QUEUE_VIEW_SPACE_BETWEEN_CELLS) : 0;
 	CGFloat previousOrigin = 0;
 	
 	NSInteger sectionDifferenceForFirstSection = 0;
@@ -79,15 +86,16 @@
 		previousIndex = 0;
 	}
 	
-	previousOrigin += (standardListEntryHeight * previousIndex) + (spaceBetweenCells * previousIndex);
+	previousOrigin += (standardListEntryHeight * previousIndex) + (QUEUE_VIEW_SPACE_BETWEEN_CELLS * previousIndex);
 	
 	CGPoint coordinates = CGPointMake(0,
 									  previousOrigin
 									  + (isVeryFirstRow
 										 ? 0
 										 : standardListEntryHeight)
-									  + (isVeryFirstRow ? 0 : spaceBetweenCells)
-									  + spacerForHeader);
+									  + (isVeryFirstRow ? 0 : QUEUE_VIEW_SPACE_BETWEEN_CELLS)
+									  + spacerForHeader
+									  + (isFirstSection ? 0 : 20));
 	
 //	if(![LMLayoutManager isiPad]){
 //		size.width = self.collectionView.frame.size.width;
@@ -198,11 +206,34 @@
 - (UICollectionViewLayoutAttributes*)layoutAttributesForDecorationViewOfKind:(NSString *)elementKind
 																 atIndexPath:(NSIndexPath *)indexPath {
 	if([elementKind isEqualToString:@"separator"]){
-		UICollectionViewLayoutAttributes *attributes = [UICollectionViewLayoutAttributes layoutAttributesForDecorationViewOfKind:elementKind withIndexPath:indexPath];
+		LMQueueViewSeparatorLayoutAttributes *attributes = [LMQueueViewSeparatorLayoutAttributes layoutAttributesForDecorationViewOfKind:elementKind withIndexPath:indexPath];
 		
 		CGRect cellFrame = [self frameForCellAtIndexPath:indexPath];
 		
-		attributes.frame = CGRectMake(cellFrame.origin.x, cellFrame.origin.y + cellFrame.size.height - 1, cellFrame.size.width, 12);
+		CGFloat fillerHeight = cellFrame.size.height + QUEUE_VIEW_SPACE_BETWEEN_CELLS;
+		
+		NSInteger numberOfItemsInPreviousTracksSection = [self.collectionView.dataSource collectionView:self.collectionView
+																				 numberOfItemsInSection:0];
+		
+		NSInteger numberOfItemsInNextTracksSection = [self.collectionView.dataSource collectionView:self.collectionView
+																			 numberOfItemsInSection:1];
+		
+		BOOL isVeryFirstRow = (indexPath.row == 0 && indexPath.section == 0);
+		BOOL onlyItem = NO;
+		if(isVeryFirstRow){
+			attributes.additionalOffset = (cellFrame.size.height * 6.0);
+			if(numberOfItemsInPreviousTracksSection == 1){
+				onlyItem = YES;
+			}
+		}
+		
+		if(indexPath.section == 1 && indexPath.row == (numberOfItemsInNextTracksSection - 1)){
+			fillerHeight += (cellFrame.size.height * 6.0);
+		}
+		
+		CGFloat yCoordinateAdjustment = ((fillerHeight - (cellFrame.size.height + 10)) / 2.0);
+		
+		attributes.frame = CGRectMake(cellFrame.origin.x, cellFrame.origin.y + (cellFrame.size.height / 2.0) - yCoordinateAdjustment - attributes.additionalOffset - (onlyItem ? cellFrame.size.height : 0), cellFrame.size.width, fillerHeight + attributes.additionalOffset);
 		
 		return attributes;
 	}
@@ -225,13 +256,16 @@
 		UICollectionViewLayoutAttributes *cellAttributes = [self layoutAttributesForItemAtIndexPath:indexPath]; //Get their attributes, add those to the array
 		[layoutAttributes addObject:cellAttributes];
 		
-		UICollectionViewLayoutAttributes *separatorAttributes = [self layoutAttributesForDecorationViewOfKind:@"separator"
-																								  atIndexPath:indexPath];
+		LMQueueViewSeparatorLayoutAttributes *separatorAttributes = (LMQueueViewSeparatorLayoutAttributes*)[self layoutAttributesForDecorationViewOfKind:@"separator"
+																									  atIndexPath:indexPath];
 		
 		BOOL isLastRow = (indexPath.section == 0 && indexPath.row == (numberOfItemsInPreviousTracksSection - 1))
 			|| (indexPath.section == 1 && indexPath.row == (numberOfItemsInNextTracksSection - 1));
 		
-		if(!isLastRow){
+		separatorAttributes.isOnlyItem = (isLastRow && (numberOfItemsInPreviousTracksSection == 1));
+		separatorAttributes.isLastRow = isLastRow;
+		if(!(isLastRow && indexPath.section == 0) || separatorAttributes.isOnlyItem){
+			separatorAttributes.zIndex = (cellAttributes.zIndex - 1);
 			[layoutAttributes addObject:separatorAttributes];
 		}
 	}
