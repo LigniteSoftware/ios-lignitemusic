@@ -100,6 +100,13 @@
 - (void)setAsHighlighted:(BOOL)highlighted animated:(BOOL)animated;
 
 /**
+ Resets the swipe buttons back to being hidden, optionally animated.
+
+ @param animated Whether or not to animate the buttons.
+ */
+- (void)resetSwipeButtons:(BOOL)animated;
+
+/**
  Initializes a list entry with a delegate.
 
  @param delegate The delegate to set to the list entry.

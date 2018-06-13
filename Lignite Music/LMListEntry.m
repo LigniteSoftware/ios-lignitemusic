@@ -154,7 +154,7 @@
 //	if(expansionColour || buttons){
 //		NSLog(@"Whatagdhtt %@ %@", expansionColour, buttons);
 //	}
-	
+
 	return buttons;
 }
 
@@ -186,6 +186,12 @@
 	NSLog(@"Swipe state: %@ ::: Gesture: %@", str, gestureIsActive ? @"Active" : @"Ended");
 }
 
+- (void)resetSwipeButtons:(BOOL)animated {
+	if(self.tableCell.swipeState != MGSwipeStateNone){
+		[self.tableCell hideSwipeAnimated:animated];
+	}
+}
+
 - (void)layoutSubviews {
 	[super layoutSubviews];
 	
@@ -193,7 +199,7 @@
 		return;
 	}
 	
-	MGSwipeTableCell * cell = [[MGSwipeTableCell alloc] initWithStyle:UITableViewCellStyleSubtitle
+	MGSwipeTableCell *cell = [[MGSwipeTableCell alloc] initWithStyle:UITableViewCellStyleSubtitle
 													  reuseIdentifier:[NSString stringWithFormat:@"test%d", rand()]];
 	
 	cell.backgroundColor = [UIColor clearColor];

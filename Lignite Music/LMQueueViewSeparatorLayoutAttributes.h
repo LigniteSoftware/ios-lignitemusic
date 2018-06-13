@@ -25,4 +25,9 @@
  */
 @property BOOL isLastRow;
 
+/**
+ Hide regardless of the above settings.
+ */
+@property BOOL hidePlease;
+
 @end

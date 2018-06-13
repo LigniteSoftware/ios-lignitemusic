@@ -29,7 +29,7 @@
 #import "LMColour.h"
 #import "LMButton.h"
 
-@interface LMNowPlayingView() <LMMusicPlayerDelegate, LMButtonDelegate, LMProgressSliderDelegate, LMLayoutChangeDelegate, LMThemeEngineDelegate, LMAccessibilityMusicControlBarDelegate>
+@interface LMNowPlayingView() <LMMusicPlayerDelegate, LMButtonDelegate, LMProgressSliderDelegate, LMLayoutChangeDelegate, LMThemeEngineDelegate, LMAccessibilityMusicControlBarDelegate, LMQueueViewDelegate>
 
 /**
  The music player.
@@ -72,10 +72,10 @@
 @property LMLayoutManager *layoutManager;
 
 @property UIImageView *backgroundImageView;
-@property UIImageView *queueBackgroundImageView;
 
 @property UIVisualEffectView *blurredBackgroundView;
-@property UIVisualEffectView *queueBlurredBackgroundView;
+
+@property UIView *queueColourSeparator;
 
 @property BOOL outputPortIsWireless; //Terrible code, I know
 
@@ -291,9 +291,6 @@
 			self.backgroundImageView.image = albumImage;
 			self.backgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
 			
-			self.queueBackgroundImageView.image = albumImage;
-			self.queueBackgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
-			
 //			self.trackInfoView.textColour = newTextColour;
 			
 			BOOL isLight = [averageColour isLight];
@@ -302,8 +299,6 @@
 //			self.colourBackgroundView.backgroundColor = colorArt.backgroundColor;
 			
 			self.blurredBackgroundView.effect = [UIBlurEffect effectWithStyle:isLight ? UIBlurEffectStyleLight : UIBlurEffectStyleDark];
-			
-			self.queueBlurredBackgroundView.effect = [UIBlurEffect effectWithStyle:isLight ? UIBlurEffectStyleLight : UIBlurEffectStyleDark];
 			
 			self.queueView.whiteText = !isLight;
 			
@@ -398,8 +393,6 @@
 - (void)trackRemovedFromFavourites:(LMMusicTrack *)track {
 	[self reloadFavouriteStatus];
 }
-
-
 
 
 
@@ -527,12 +520,7 @@
 }
 
 - (void)setShowingQueueView:(BOOL)open animated:(BOOL)animated {
-    if(!open){
-        [NSTimer scheduledTimerWithTimeInterval:animated ? 0.5 : 0.0 block:^{
-            self.queueBackgroundView.hidden = YES;
-        } repeats:NO];
-    }
-    else{
+	if(open){
 		[self.queueView resetContentOffsetToNowPlaying];
 		
         self.queueBackgroundView.hidden = NO;
@@ -832,6 +820,12 @@
 	return highlighted ? [LMColour colourWithRed:0.11 green:0.11 blue:0.11 alpha:0.50] : [LMColour clearColour];
 }
 
+- (void)queueViewIsReordering:(BOOL)isReordering {
+	[UIView animateWithDuration:0.3 animations:^{
+		self.queueColourSeparator.backgroundColor = isReordering ? [UIColor whiteColor] : [UIColor clearColor];
+	}];
+}
+
 - (void)layoutSubviews {
 	[super layoutSubviews];
 
@@ -843,7 +837,29 @@
 	[self.layoutManager addDelegate:self];
 	
 	[[LMThemeEngine sharedThemeEngine] addDelegate:self];
-		
+	
+	
+	
+	self.backgroundImageView = [UIImageView newAutoLayoutView];
+	self.backgroundImageView.image = [UIImage imageNamed:@"lignite_background_portrait"];
+	self.backgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
+	[self addSubview:self.backgroundImageView];
+	
+	[self.backgroundImageView autoCentreInSuperview];
+	[self.backgroundImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:1.1];
+	[self.backgroundImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:1.1];
+	
+	
+	
+	UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
+	self.blurredBackgroundView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+	self.blurredBackgroundView.translatesAutoresizingMaskIntoConstraints = NO;
+	
+	[self.backgroundImageView addSubview:self.blurredBackgroundView];
+	
+	[self.blurredBackgroundView autoPinEdgesToSuperviewEdges];
+	
+	
 	
 	self.mainView = [LMView newAutoLayoutView];
 //	self.mainView.backgroundColor = [UIColor yellowColor];
@@ -880,54 +896,21 @@
 	[LMLayoutManager addNewLandscapeConstraints:queueViewLandscapeConstraints];
 	
 	
-	self.queueBackgroundImageView = [UIImageView newAutoLayoutView];
-	self.queueBackgroundImageView.image = [UIImage imageNamed:@"lignite_background_portrait"];
-	self.queueBackgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
-	[self.queueBackgroundView addSubview:self.queueBackgroundImageView];
 	
-	[self.queueBackgroundImageView autoCentreInSuperview];
-	[self.queueBackgroundImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.queueBackgroundView withMultiplier:1.1];
-	[self.queueBackgroundImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.queueBackgroundView withMultiplier:1.1];
+	self.queueColourSeparator = [UIView newAutoLayoutView];
+	self.queueColourSeparator.backgroundColor = [LMColour clearColour];
+	[self.queueBackgroundView addSubview:self.queueColourSeparator];
 	
+	[self.queueColourSeparator autoPinEdgesToSuperviewEdges];
 	
-	
-	UIBlurEffect *queueBlurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
-	self.queueBlurredBackgroundView = [[UIVisualEffectView alloc] initWithEffect:queueBlurEffect];
-	self.queueBlurredBackgroundView.translatesAutoresizingMaskIntoConstraints = NO;
-	
-	[self.queueBackgroundView addSubview:self.queueBlurredBackgroundView];
-	
-	[self.queueBlurredBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.queueBackgroundImageView];
-	[self.queueBlurredBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.queueBackgroundImageView];
-	[self.queueBlurredBackgroundView autoCentreInSuperview];
 	
 	
 	self.queueView = [LMQueueView newAutoLayoutView];
+	self.queueView.delegate = self;
 	[self.queueBackgroundView addSubview:self.queueView];
 	
 	[self.queueView autoPinEdgesToSuperviewEdges];
 	
-	
-	self.backgroundImageView = [UIImageView newAutoLayoutView];
-	self.backgroundImageView.image = [UIImage imageNamed:@"lignite_background_portrait"];
-	self.backgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
-	[self.mainView addSubview:self.backgroundImageView];
-	
-	[self.backgroundImageView autoCentreInSuperview];
-	[self.backgroundImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:1.1];
-	[self.backgroundImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:1.1];
-	
-	
-	
-	UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
-	self.blurredBackgroundView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
-	self.blurredBackgroundView.translatesAutoresizingMaskIntoConstraints = NO;
-	
-	[self.mainView addSubview:self.blurredBackgroundView];
-	
-	[self.blurredBackgroundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.backgroundImageView];
-	[self.blurredBackgroundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.backgroundImageView];
-	[self.blurredBackgroundView autoCentreInSuperview];
 	
 	
 	

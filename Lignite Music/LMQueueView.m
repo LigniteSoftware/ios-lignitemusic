@@ -47,11 +47,32 @@
  */
 @property LMListEntry *currentlyMovingListEntry;
 
+/**
+ The latest header that the collection view is using.
+ */
+@property LMQueueViewHeader *latestHeader;
+
+/**
+ The last row cell of the previous tracks section.
+ */
+@property UICollectionViewCell *previousTracksSectionLastRowCell;
+
+/**
+ The last row cell of the previous section.
+ */
+@property UICollectionViewCell *nextUpSectionLastRowCell;
+
+/**
+ Whether or not the user is currently reordering.
+ */
+@property BOOL isReordering;
+
 @end
 
 @implementation LMQueueView
 
 @synthesize whiteText = _whiteText;
+@synthesize isReordering = _isReordering;
 
 - (UIImage*)iconForHeader:(LMQueueViewHeader*)header {
 	if(header.isForPreviousTracks && [self playingFirstTrackInQueue]){
@@ -245,12 +266,7 @@
 //			listEntry.backgroundColor = [LMColour whiteColour];
 			
 			[listEntry reloadContents];
-			
-			BOOL isLastRowOfPreviousTracks = (indexPath.section == 0) && (indexPath.row == ([self.collectionView numberOfItemsInSection:0] - 1));
-			BOOL isFirstRowOfNextTracks = (indexPath.section == 1) && (indexPath.row == 0);
-			
-			listEntry.topConstraint.constant = isFirstRowOfNextTracks ? 20 : 0;
-			listEntry.bottomConstraint.constant = isLastRowOfPreviousTracks ? -20 : 0;
+			[listEntry resetSwipeButtons:NO];
 		}
 	}
 	else {
@@ -272,20 +288,14 @@
 		[listEntry setAsHighlighted:shouldHighlight animated:NO];
 		
 		[cell.contentView addSubview:listEntry];
-		cell.backgroundColor = [LMColour whiteColour];
+		listEntry.backgroundColor = [LMColour whiteColour];
 //		listEntry.layer.masksToBounds = NO;
 //		listEntry.layer.cornerRadius = 8.0f;
 		
 		[listEntry autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:([LMLayoutManager isiPhoneX] && [LMLayoutManager isLandscape]) ? 0 : 0];
 		[listEntry autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:([LMLayoutManager isiPhoneX] && [LMLayoutManager isLandscape]) ? 44 : 0];
-		listEntry.topConstraint = [listEntry autoPinEdgeToSuperviewEdge:ALEdgeTop];
-		listEntry.bottomConstraint = [listEntry autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-		
-		BOOL isLastRowOfPreviousTracks = (indexPath.section == 0) && (indexPath.row == ([self.collectionView numberOfItemsInSection:0] - 1));
-		BOOL isFirstRowOfNextTracks = (indexPath.section == 1) && (indexPath.row == 0);
-		
-		listEntry.topConstraint.constant = isFirstRowOfNextTracks ? 20 : 0;
-		listEntry.bottomConstraint.constant = isLastRowOfPreviousTracks ? -20 : 0;
+		[listEntry autoPinEdgeToSuperviewEdge:ALEdgeTop];
+		[listEntry autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 	}
 
 	if(@available(iOS 11.0, *)){
@@ -293,12 +303,19 @@
 		BOOL isLastRow = (indexPath.row == ([self collectionView:self.collectionView numberOfItemsInSection:indexPath.section] - 1));
 		BOOL isFirstSection = (indexPath.section == 0);
 		
+		if(self.isReordering){
+			cell.clipsToBounds = NO;
+		}
 		if(isLastRow && isFirstSection){
+			self.previousTracksSectionLastRowCell = cell;
+			
 			cell.clipsToBounds = YES;
 			cell.layer.cornerRadius = 8.0f;
 			cell.layer.maskedCorners = (kCALayerMinXMaxYCorner | kCALayerMaxXMaxYCorner);
 		}
 		else if(isFirstRow && !isFirstSection){
+			self.nextUpSectionLastRowCell = cell;
+			
 			cell.clipsToBounds = YES;
 			cell.layer.cornerRadius = 8.0f;
 			cell.layer.maskedCorners = (kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner);
@@ -337,9 +354,11 @@
 	header.delegate = self;
 	header.whiteText = self.whiteText;
 	
-	header.backgroundColor = [LMColour clearColour];
+	header.backgroundColor = self.isReordering ? [LMColour whiteColour] : [LMColour clearColour];
 	
 	[header reload];
+	
+	self.latestHeader = header;
 	
 	return header;
 }
@@ -363,10 +382,7 @@
 				  layout:(UICollectionViewLayout*)collectionViewLayout
   sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
 	
-	BOOL isLastRowOfPreviousTracks = (indexPath.section == 0) && (indexPath.row == ([self collectionView:self.collectionView numberOfItemsInSection:0] - 1));
-	BOOL isFirstRowOfNextTracks = (indexPath.section == 1) && (indexPath.row == 0);
-	
-	return CGSizeMake(self.frame.size.width, LMLayoutManager.standardListEntryHeight + ((isLastRowOfPreviousTracks || isFirstRowOfNextTracks) ? 20 : 0));
+	return CGSizeMake(self.frame.size.width, LMLayoutManager.standardListEntryHeight);
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section {
@@ -393,6 +409,29 @@
 	[flowLayout finishedInteractivelyMoving];
 }
 
+- (void)setIsReordering:(BOOL)isReordering {
+	_isReordering = isReordering;
+	
+	if(self.delegate){
+		[self.delegate queueViewIsReordering:isReordering];
+		
+		if(self.latestHeader && self.latestHeader.whiteText && isReordering){
+			[self.latestHeader setWhiteText:NO];
+			
+			self.latestHeader.previouslyUsingWhiteText = YES;
+		}
+		else if(self.latestHeader && !self.latestHeader.whiteText && self.latestHeader.previouslyUsingWhiteText){
+			[self.latestHeader setWhiteText:YES];
+			
+			self.latestHeader.previouslyUsingWhiteText = NO;
+		}
+	}
+}
+
+- (BOOL)isReordering {
+	return _isReordering;
+}
+
 - (void)longPressGestureHandler:(UILongPressGestureRecognizer*)longPressGesture {
 	NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:[longPressGesture locationInView:self.collectionView]];
 	
@@ -402,6 +441,11 @@
 	switch(longPressGesture.state){
 		case UIGestureRecognizerStateBegan: {
 			if(indexPath){
+				self.isReordering = YES;
+				
+				self.previousTracksSectionLastRowCell.clipsToBounds = NO;
+				self.nextUpSectionLastRowCell.clipsToBounds = NO;
+				
 				[self.collectionView beginInteractiveMovementForItemAtIndexPath:indexPath];
 				
 				if(!self.currentlyMovingListEntry){
@@ -425,10 +469,15 @@
 						}];
 					}
 				}
+				
+				[UIView animateWithDuration:0.3 animations:^{
+					self.latestHeader.backgroundColor = [LMColour whiteColour];
+				}];
 			}
 			break;
 		}
 		case UIGestureRecognizerStateChanged: {
+//			[self.collectionView.collectionViewLayout invalidateLayout];
 			[self.collectionView updateInteractiveMovementTargetPosition:movementPoint];
 			break;
 		}
@@ -450,10 +499,22 @@
 				self.currentlyMovingListEntry = nil;
 			}
 			
+			self.isReordering = NO;
+			
+			[UIView animateWithDuration:0.3 animations:^{
+				self.latestHeader.backgroundColor = [LMColour clearColour];
+			}];
+			
 			[self reloadLayout];
 			break;
 		}
 		default: {
+			self.isReordering = NO;
+			
+			[UIView animateWithDuration:0.3 animations:^{
+				self.latestHeader.backgroundColor = [LMColour clearColour];
+			}];
+			
 			[self.collectionView.collectionViewLayout invalidateLayout];
 			[self.collectionView cancelInteractiveMovement];
 			

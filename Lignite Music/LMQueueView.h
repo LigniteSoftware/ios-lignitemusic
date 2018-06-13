@@ -9,7 +9,23 @@
 #import <UIKit/UIKit.h>
 #import "LMView.h"
 
+@protocol LMQueueViewDelegate <NSObject>
+
+/**
+ The queue view changed its reordering status.
+
+ @param isReordering Whether or not the queue view is now being reordered.
+ */
+- (void)queueViewIsReordering:(BOOL)isReordering;
+
+@end
+
 @interface LMQueueView : LMView
+
+/**
+ The delegate for the queue view.
+ */
+@property id<LMQueueViewDelegate> delegate;
 
 /**
  Whether or not to display white text on the header (which has a transparent background to reveal the background image behind it).

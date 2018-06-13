@@ -58,14 +58,9 @@
 	BOOL isVeryFirstRow = (isFirstRow && isFirstSection);
 	
 //	NSLog(@"index %@ previous frame %@", indexPath, NSStringFromCGRect(previousFrame));
-
-	BOOL isLastRowOfPreviousTracks = (indexPath.section == 0) && (indexPath.row == ([self.collectionView numberOfItemsInSection:0] - 1));
-	BOOL isFirstRowOfNextTracks = (indexPath.section == 1) && (indexPath.row == 0);
-	
-	BOOL requiresExtraSpace = (isLastRowOfPreviousTracks || isFirstRowOfNextTracks);
 	
 	CGFloat standardListEntryHeight = [LMLayoutManager standardListEntryHeight];
-	CGSize size = CGSizeMake(width - sectionSpacing, standardListEntryHeight + (requiresExtraSpace ? 20 : 0));
+	CGSize size = CGSizeMake(width - sectionSpacing, standardListEntryHeight);
 	
 	id<UICollectionViewDelegateFlowLayout> delegate = (id<UICollectionViewDelegateFlowLayout>)self.collectionView.delegate;
 	
@@ -94,8 +89,7 @@
 										 ? 0
 										 : standardListEntryHeight)
 									  + (isVeryFirstRow ? 0 : QUEUE_VIEW_SPACE_BETWEEN_CELLS)
-									  + spacerForHeader
-									  + (isFirstSection ? 0 : 20));
+									  + spacerForHeader);
 	
 //	if(![LMLayoutManager isiPad]){
 //		size.width = self.collectionView.frame.size.width;
@@ -210,7 +204,8 @@
 		
 		CGRect cellFrame = [self frameForCellAtIndexPath:indexPath];
 		
-		CGFloat fillerHeight = cellFrame.size.height + QUEUE_VIEW_SPACE_BETWEEN_CELLS;
+		CGFloat standardFillerHeight = (cellFrame.size.height + QUEUE_VIEW_SPACE_BETWEEN_CELLS);
+		CGFloat fillerHeight = standardFillerHeight;
 		
 		NSInteger numberOfItemsInPreviousTracksSection = [self.collectionView.dataSource collectionView:self.collectionView
 																				 numberOfItemsInSection:0];
@@ -219,6 +214,7 @@
 																			 numberOfItemsInSection:1];
 		
 		BOOL isVeryFirstRow = (indexPath.row == 0 && indexPath.section == 0);
+		BOOL isVeryLastRow = (indexPath.section == 1 && indexPath.row == (numberOfItemsInNextTracksSection - 1));
 		BOOL onlyItem = NO;
 		if(isVeryFirstRow){
 			attributes.additionalOffset = (cellFrame.size.height * 6.0);
@@ -227,13 +223,16 @@
 			}
 		}
 		
-		if(indexPath.section == 1 && indexPath.row == (numberOfItemsInNextTracksSection - 1)){
+		if(isVeryLastRow){
 			fillerHeight += (cellFrame.size.height * 6.0);
 		}
 		
 		CGFloat yCoordinateAdjustment = ((fillerHeight - (cellFrame.size.height + 10)) / 2.0);
 		
-		attributes.frame = CGRectMake(cellFrame.origin.x, cellFrame.origin.y + (cellFrame.size.height / 2.0) - yCoordinateAdjustment - attributes.additionalOffset - (onlyItem ? cellFrame.size.height : 0), cellFrame.size.width, fillerHeight + attributes.additionalOffset);
+		attributes.frame = CGRectMake(cellFrame.origin.x,
+									  cellFrame.origin.y + (cellFrame.size.height / 2.0) - yCoordinateAdjustment - attributes.additionalOffset - (onlyItem ? cellFrame.size.height : 0) + (isVeryLastRow ? ((fillerHeight / 2.0) - standardFillerHeight) : 0),
+									  cellFrame.size.width,
+									  fillerHeight + attributes.additionalOffset);
 		
 		return attributes;
 	}
@@ -254,6 +253,7 @@
 	
 	for (NSIndexPath *indexPath in visibleIndexPaths) {
 		UICollectionViewLayoutAttributes *cellAttributes = [self layoutAttributesForItemAtIndexPath:indexPath]; //Get their attributes, add those to the array
+		cellAttributes.zIndex = 1;
 		[layoutAttributes addObject:cellAttributes];
 		
 		LMQueueViewSeparatorLayoutAttributes *separatorAttributes = (LMQueueViewSeparatorLayoutAttributes*)[self layoutAttributesForDecorationViewOfKind:@"separator"
@@ -264,10 +264,10 @@
 		
 		separatorAttributes.isOnlyItem = (isLastRow && (numberOfItemsInPreviousTracksSection == 1));
 		separatorAttributes.isLastRow = isLastRow;
-		if(!(isLastRow && indexPath.section == 0) || separatorAttributes.isOnlyItem){
-			separatorAttributes.zIndex = (cellAttributes.zIndex - 1);
-			[layoutAttributes addObject:separatorAttributes];
-		}
+		separatorAttributes.hidePlease = ((isLastRow && indexPath.section == 0) && !separatorAttributes.isOnlyItem);
+		
+//		separatorAttributes.zIndex = (cellAttributes.zIndex - 1);
+		[layoutAttributes addObject:separatorAttributes];
 	}
 	
 	NSArray<UICollectionViewLayoutAttributes*> *superDuperLayoutAttributes = [super layoutAttributesForElementsInRect:rect];

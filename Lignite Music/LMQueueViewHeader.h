@@ -36,6 +36,7 @@
  Whether or not to display white text. NO for black text.
  */
 @property BOOL whiteText;
+@property BOOL previouslyUsingWhiteText; //For temporary state storage between animations
 
 /**
  Reloads the queue view header with its new contents.
