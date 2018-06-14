@@ -21,7 +21,6 @@
 
 @property UIView *textView;
 
-@property BOOL highlighted;
 @property BOOL imageIsInverted;
 
 @property BOOL setupConstraints;

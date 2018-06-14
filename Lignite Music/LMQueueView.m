@@ -156,6 +156,11 @@
 //	NSInteger indexInCompleteQueue = [self.musicPlayer.queue indexOfTrackInCompleteQueueFromIndexPath:entry.indexPath];
 //	NSString *fixedTitle = [NSString stringWithFormat:@"%d@%d == %d: %@", (int)entry.indexPath.row, (int)entry.indexPath.section, (int)indexInCompleteQueue, track.title];
 //	return fixedTitle;
+	
+	entry.isAccessibilityElement = YES;
+	entry.accessibilityLabel = [NSString stringWithFormat:@"%@, %@, %@", track.title, [self subtitleForListEntry:entry], NSLocalizedString(entry.highlighted ? @"VoiceOverLabel_Selected" : @"", nil)];
+	entry.accessibilityHint = NSLocalizedString(entry.highlighted ? @"" : @"VoiceOverHint_DetailViewListEntry", nil);
+	
 	return track.title;
 }
 

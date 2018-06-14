@@ -210,6 +210,11 @@
 @property BOOL stretchAcrossWidth;
 
 /**
+ Whether or not the entry is currently highlighted.
+ */
+@property BOOL highlighted;
+
+/**
  The delegate for the list entry.
  */
 @property id<LMListEntryDelegate> delegate;
