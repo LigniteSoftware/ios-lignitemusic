@@ -130,6 +130,16 @@
 @property NSLayoutConstraint *bottomConstraint;
 
 /**
+ Optional. The leading constraint for the list entry, used if modifications are necessary during runtime.
+ */
+@property NSLayoutConstraint *leadingConstraint;
+
+/**
+ Optional. The trailing constraint for the list entry, used if modifications are necessary during runtime.
+ */
+@property NSLayoutConstraint *trailingConstraint;
+
+/**
  Keep the text colours the same on highlight. Defaults to NO.
  */
 @property BOOL keepTextColoursTheSame;

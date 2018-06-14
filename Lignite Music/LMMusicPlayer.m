@@ -1272,9 +1272,6 @@ BOOL shuffleForDebug = NO;
 }
 
 - (BOOL)nowPlayingWasSetWithinLigniteMusic DEPRECATED_ATTRIBUTE {
-	if(!self.nowPlayingCollection && self.systemMusicPlayer.nowPlayingItem){
-		return NO;
-	}
 	return YES;
 }
 
@@ -1301,10 +1298,8 @@ BOOL shuffleForDebug = NO;
 }
 
 - (LMMusicTrack*)nowPlayingTrack {
-#ifndef TARGET_OS_SIMULATOR //If NOT the simulator
-	if(!_nowPlayingTrack || !self.nowPlayingWasSetWithinLigniteMusic){
-		return self.systemMusicPlayer.nowPlayingItem;
-	}
+#ifdef TARGET_OS_SIMULATOR
+	return [[[[self queryCollectionsForMusicType:LMMusicTypeAlbums] objectAtIndex:3] items] firstObject];
 #endif
 	return self.systemMusicPlayer.nowPlayingItem;
 }

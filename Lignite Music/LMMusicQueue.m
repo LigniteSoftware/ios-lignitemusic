@@ -69,6 +69,7 @@
 @synthesize count = _count;
 @synthesize systemQueueCount = _systemQueueCount;
 @synthesize indexOfNowPlayingTrack = _indexOfNowPlayingTrack;
+@synthesize completeQueue = _completeQueue;
 @synthesize completeQueueTrackCollection = _completeQueueTrackCollection;
 
 - (LMMusicTrackCollection*)completeQueueTrackCollection {
@@ -134,6 +135,10 @@
 }
 
 - (NSInteger)indexOfNowPlayingTrack {
+#if TARGET_OS_SIMULATOR
+	return 0;
+#endif
+	
 //	if(self.fullQueueAvailable){
 		if(self.adjustedIndexOfNowPlayingTrack != NSNotFound){
 			return self.adjustedIndexOfNowPlayingTrack;
@@ -359,11 +364,30 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 	}
 }
 
+- (NSMutableArray<LMMusicTrack*>*)completeQueue {
+#if TARGET_OS_SIMULATOR
+	NSMutableArray *array = [NSMutableArray arrayWithArray:[[self.musicPlayer queryCollectionsForMusicType:LMMusicTypeAlbums] objectAtIndex:3].items];
+//	NSLog(@"Array count %d", (int)array.count);
+	return array;
+#endif
+	
+	return _completeQueue;
+}
+
+- (void)setCompleteQueue:(NSMutableArray<LMMusicTrack *> *)completeQueue {
+	_completeQueue = completeQueue;
+}
+
 - (NSInteger)completeQueueCount {
+//	NSLog(@"Count %d", (int)self.completeQueue.count);
 	return self.completeQueue.count;
 }
 
 - (NSInteger)count {
+#if TARGET_OS_SIMULATOR
+	return self.completeQueueCount;
+#endif
+	
 	if(self.fullQueueAvailable){
 		return self.completeQueueCount;
 	}
@@ -401,6 +425,7 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 }
 
 - (NSArray<LMMusicTrack*>*)previousTracks {
+#ifndef TARGET_OS_SIMULATOR
 	if(!self.musicPlayer.nowPlayingTrack || (self.systemQueueCount == 0) || ![self queueAPIsAvailable]){
 		return @[];
 	}
@@ -414,11 +439,13 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 	if(self.indexOfNowPlayingTrack == 0){ //Nothing previous to the first track of course
 		return @[];
 	}
+#endif
 	
 	return [self.completeQueue subarrayWithRange:self.previousTracksIndexRange];
 }
 
 - (NSArray<LMMusicTrack*>*)nextTracks {
+#ifndef TARGET_OS_SIMULATOR
 	if(!self.musicPlayer.nowPlayingTrack || (self.systemQueueCount == 0) || ![self queueAPIsAvailable]){
 		return @[];
 	}
@@ -434,6 +461,7 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 	if(self.indexOfNowPlayingTrack == finalIndexOfQueue){
 		return @[];
 	}
+#endif
 	
 	return [self.completeQueue subarrayWithRange:self.nextTracksIndexRange];
 }

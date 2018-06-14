@@ -520,12 +520,10 @@
 }
 
 - (void)setShowingQueueView:(BOOL)open animated:(BOOL)animated {
-	if(open){
+	[NSTimer scheduledTimerWithTimeInterval:open ? 0.0 : 0.8 block:^{
 		[self.queueView resetContentOffsetToNowPlaying];
-		
-        self.queueBackgroundView.hidden = NO;
-    }
-    
+	} repeats:NO];
+
 	[self layoutIfNeeded];
 	
 	NSLog(open ? @"Open queue" : @"Close queue");
@@ -840,6 +838,10 @@
 	
 	
 	
+	self.clipsToBounds = YES;
+	
+	
+	
 	self.backgroundImageView = [UIImageView newAutoLayoutView];
 	self.backgroundImageView.image = [UIImage imageNamed:@"lignite_background_portrait"];
 	self.backgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
@@ -875,7 +877,6 @@
 	
 	self.queueBackgroundView = [LMView newAutoLayoutView];
 	self.queueBackgroundView.backgroundColor = [UIColor clearColor];
-    self.queueBackgroundView.hidden = YES;
 	self.queueBackgroundView.clipsToBounds = YES;
 	[self addSubview:self.queueBackgroundView];
 	

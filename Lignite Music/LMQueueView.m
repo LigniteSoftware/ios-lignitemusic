@@ -15,7 +15,7 @@
 #import "LMQueueView.h"
 #import "LMColour.h"
 
-@interface LMQueueView()<UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, LMMusicQueueDelegate, LMListEntryDelegate, LMQueueViewHeaderDelegate, LMMusicPlayerDelegate>
+@interface LMQueueView()<UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, LMMusicQueueDelegate, LMListEntryDelegate, LMQueueViewHeaderDelegate, LMMusicPlayerDelegate, LMLayoutChangeDelegate>
 
 /**
  The collection view which displays the queue.
@@ -267,6 +267,9 @@
 			
 			[listEntry reloadContents];
 			[listEntry resetSwipeButtons:NO];
+			
+			listEntry.leadingConstraint.constant = (([LMLayoutManager isiPhoneX] && [LMLayoutManager isLandscape]) ? 20 : 0);
+			listEntry.trailingConstraint.constant = (([LMLayoutManager isiPhoneX] && [LMLayoutManager isLandscape]) ? 20 : 0);
 		}
 	}
 	else {
@@ -288,12 +291,12 @@
 		[listEntry setAsHighlighted:shouldHighlight animated:NO];
 		
 		[cell.contentView addSubview:listEntry];
-		listEntry.backgroundColor = [LMColour whiteColour];
+		cell.backgroundColor = [LMColour whiteColour];
 //		listEntry.layer.masksToBounds = NO;
 //		listEntry.layer.cornerRadius = 8.0f;
 		
-		[listEntry autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:([LMLayoutManager isiPhoneX] && [LMLayoutManager isLandscape]) ? 0 : 0];
-		[listEntry autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:([LMLayoutManager isiPhoneX] && [LMLayoutManager isLandscape]) ? 44 : 0];
+		listEntry.leadingConstraint = [listEntry autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:([LMLayoutManager isiPhoneX] && [LMLayoutManager isLandscape]) ? 20 : 0];
+		listEntry.trailingConstraint = [listEntry autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:([LMLayoutManager isiPhoneX] && [LMLayoutManager isLandscape]) ? 20 : 0];
 		[listEntry autoPinEdgeToSuperviewEdge:ALEdgeTop];
 		[listEntry autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 	}
@@ -586,12 +589,22 @@
 	self.collectionView.contentOffset = CGPointMake(self.collectionView.contentOffset.x, self.collectionView.contentOffset.y - 10);
 }
 
+- (void)notchPositionChanged:(LMNotchPosition)notchPosition {
+	[self reloadLayout];
+}
+
 
 - (void)layoutSubviews {
 	if(!self.didLayoutConstraints){
 		self.didLayoutConstraints = YES;
 		
 //		self.backgroundColor = [UIColor blueColor];
+		
+		if([LMLayoutManager isiPhoneX]){
+			self.layoutManager = [LMLayoutManager sharedLayoutManager];
+			[self.layoutManager addDelegate:self];
+		}
+		
 		
 		self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 		[self.musicPlayer addMusicDelegate:self];
