@@ -118,14 +118,10 @@
 	CGSize size = CGSizeMake(self.collectionView.frame.size.width, 0);
 	
 	NSInteger amountOfItems = 0;
-	if([LMLayoutManager isiPad]){
-		amountOfItems = MAX([self.collectionView.dataSource collectionView:self.collectionView numberOfItemsInSection:0],
-							[self.collectionView.dataSource collectionView:self.collectionView numberOfItemsInSection:1]);
-	}
-	else{
-		amountOfItems = ([self.collectionView.dataSource collectionView:self.collectionView numberOfItemsInSection:0] +
-						 [self.collectionView.dataSource collectionView:self.collectionView numberOfItemsInSection:1]);
-	}
+	
+	amountOfItems = ([self.collectionView.dataSource collectionView:self.collectionView numberOfItemsInSection:0] +
+					 [self.collectionView.dataSource collectionView:self.collectionView numberOfItemsInSection:1]);
+	
 	if(amountOfItems > 0){
 		size.height += [self frameForCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]].size.height;
 		if(amountOfItems > 1){

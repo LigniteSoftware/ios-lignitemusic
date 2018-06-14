@@ -770,12 +770,12 @@
 		self.favouriteHeartImageView.hidden = self.queueButton.hidden;
 		
 		if(self.queueButton.hidden){ //Is iPad landscape
-//			[self.mainView addSubview:self.queueTableView];
-//
-//			[self.queueTableView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:paddingViewPadding];
-//			[self.queueTableView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:paddingViewPadding];
-//			[self.queueTableView autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:paddingViewPadding];
-//			[self.queueTableView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.mainView withMultiplier:(4.0/10.0)].constant = paddingViewPadding;
+			[self.mainView addSubview:self.queueView];
+
+			[self.queueView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:paddingViewPadding];
+			[self.queueView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:paddingViewPadding];
+			[self.queueView autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:paddingViewPadding];
+			[self.queueView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.mainView withMultiplier:(4.0/10.0)].constant = paddingViewPadding;
 			
 			[self.paddingView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:0];
 			[self.paddingView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:paddingViewPadding];
@@ -783,13 +783,16 @@
 			[self.paddingView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.mainView withMultiplier:(5.0/10.0)].constant = paddingViewPadding;
 		}
 		else{
-//			[self.queueView addSubview:self.queueTableView];
-//			[self.queueTableView autoPinEdgesToSuperviewEdges];
+			[self.queueBackgroundView addSubview:self.queueView];
+			[self.queueView autoPinEdgesToSuperviewEdges];
 			
 			[self.paddingView autoCentreInSuperview];
 			[self.paddingView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withOffset:-paddingViewPadding];
 			[self.paddingView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withOffset:-paddingViewPadding];
 		}
+		
+		self.queueView.layer.masksToBounds = self.queueButton.hidden;
+		self.queueView.layer.cornerRadius = 8.0f;
 	}];
 }
 

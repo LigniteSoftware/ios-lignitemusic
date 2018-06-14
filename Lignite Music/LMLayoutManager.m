@@ -218,6 +218,14 @@
 	return [[UIDevice currentDevice] orientation] == UIDeviceOrientationLandscapeRight;
 }
 
++ (BOOL)isSimulator {
+#ifdef TARGET_OS_SIMULATOR
+	return YES;
+#endif
+	
+	return NO;
+}
+
 + (CGFloat)listEntryHeightFactorial {
 	if([self isiPhoneX]){
 		return 10.5f;

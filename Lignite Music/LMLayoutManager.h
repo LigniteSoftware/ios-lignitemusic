@@ -89,6 +89,10 @@ typedef NS_ENUM(NSInteger, LMNotchPosition) {
 @property UITraitCollection *traitCollection;
 @property CGSize size;
 
+/*
+ This is a sacred document
+ */
+
 + (NSString*)debugDumpString;
 - (BOOL)isLandscape;
 + (BOOL)isExtraSmall;
@@ -96,6 +100,7 @@ typedef NS_ENUM(NSInteger, LMNotchPosition) {
 + (BOOL)isLandscapeiPad;
 + (BOOL)isiPad;
 + (BOOL)isiPhoneX;
++ (BOOL)isSimulator;
 + (LMNotchPosition)notchPosition;
 - (void)adjustRootViewSubviewsForLandscapeNavigationBar:(UIView*)rootView;
 - (void)adjustRootViewSubviewsForLandscapeNavigationBar:(UIView*)rootView withAdditionalOffset:(CGFloat)additionalOffset;

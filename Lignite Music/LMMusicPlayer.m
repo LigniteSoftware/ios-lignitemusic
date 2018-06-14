@@ -1298,9 +1298,10 @@ BOOL shuffleForDebug = NO;
 }
 
 - (LMMusicTrack*)nowPlayingTrack {
-#ifdef TARGET_OS_SIMULATOR
-	return [[[[self queryCollectionsForMusicType:LMMusicTypeAlbums] objectAtIndex:3] items] firstObject];
-#endif
+	if([LMLayoutManager isSimulator] || ![self.queue queueAPIsAvailable]){
+		return [[[[self queryCollectionsForMusicType:LMMusicTypeAlbums] objectAtIndex:2] items] firstObject];
+	}
+	
 	return self.systemMusicPlayer.nowPlayingItem;
 }
 

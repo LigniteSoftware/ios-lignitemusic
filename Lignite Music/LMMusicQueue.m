@@ -135,9 +135,13 @@
 }
 
 - (NSInteger)indexOfNowPlayingTrack {
-#if TARGET_OS_SIMULATOR
-	return 0;
-#endif
+	if([LMLayoutManager isSimulator] || ![self queueAPIsAvailable]){
+		return 0;
+	}
+	
+	if(![self queueAPIsAvailable]){
+		return NSNotFound;
+	}
 	
 //	if(self.fullQueueAvailable){
 		if(self.adjustedIndexOfNowPlayingTrack != NSNotFound){
@@ -150,7 +154,11 @@
 //	return self.adjustedIndexOfNowPlayingTrack;
 }
 
-- (NSInteger)indexOfNextTrack {	
+- (NSInteger)indexOfNextTrack {
+	if(![self queueAPIsAvailable]){
+		return NSNotFound;
+	}
+	
 	if((self.indexOfNowPlayingTrack + 1) < self.completeQueue.count){
 		return self.indexOfNowPlayingTrack + 1;
 	}
@@ -162,6 +170,10 @@
 }
 
 - (NSInteger)indexOfPreviousTrack {
+	if(![self queueAPIsAvailable]){
+		return NSNotFound;
+	}
+	
 	if((self.indexOfNowPlayingTrack - 1) > 0){
 		return self.indexOfNowPlayingTrack - 1;
 	}
@@ -365,11 +377,11 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 }
 
 - (NSMutableArray<LMMusicTrack*>*)completeQueue {
-#if TARGET_OS_SIMULATOR
-	NSMutableArray *array = [NSMutableArray arrayWithArray:[[self.musicPlayer queryCollectionsForMusicType:LMMusicTypeAlbums] objectAtIndex:3].items];
-//	NSLog(@"Array count %d", (int)array.count);
-	return array;
-#endif
+	if([LMLayoutManager isSimulator] || ![self queueAPIsAvailable]){
+		NSMutableArray *array = [NSMutableArray arrayWithArray:[[self.musicPlayer queryCollectionsForMusicType:LMMusicTypeAlbums] objectAtIndex:2].items];
+	//	NSLog(@"Array count %d", (int)array.count);
+		return array;
+	}
 	
 	return _completeQueue;
 }
@@ -379,14 +391,14 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 }
 
 - (NSInteger)completeQueueCount {
-//	NSLog(@"Count %d", (int)self.completeQueue.count);
+	NSLog(@"Count %d", (int)self.completeQueue.count);
 	return self.completeQueue.count;
 }
 
 - (NSInteger)count {
-#if TARGET_OS_SIMULATOR
-	return self.completeQueueCount;
-#endif
+	if([LMLayoutManager isSimulator] || ![self queueAPIsAvailable]){
+		return self.completeQueueCount;
+	}
 	
 	if(self.fullQueueAvailable){
 		return self.completeQueueCount;
@@ -425,43 +437,43 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 }
 
 - (NSArray<LMMusicTrack*>*)previousTracks {
-#ifndef TARGET_OS_SIMULATOR
-	if(!self.musicPlayer.nowPlayingTrack || (self.systemQueueCount == 0) || ![self queueAPIsAvailable]){
-		return @[];
+	if(!([LMLayoutManager isSimulator] || ![self queueAPIsAvailable])){
+		if(!self.musicPlayer.nowPlayingTrack || (self.systemQueueCount == 0) || ![self queueAPIsAvailable]){
+			return @[];
+		}
+		
+		if([self queueIsStale]){
+			NSLog(@"Queue is stale, rebuilding.");
+			[self rebuild];
+			return @[];
+		}
+		
+		if(self.indexOfNowPlayingTrack == 0){ //Nothing previous to the first track of course
+			return @[];
+		}
 	}
-	
-	if([self queueIsStale]){
-		NSLog(@"Queue is stale, rebuilding.");
-		[self rebuild];
-		return @[];
-	}
-	
-	if(self.indexOfNowPlayingTrack == 0){ //Nothing previous to the first track of course
-		return @[];
-	}
-#endif
 	
 	return [self.completeQueue subarrayWithRange:self.previousTracksIndexRange];
 }
 
 - (NSArray<LMMusicTrack*>*)nextTracks {
-#ifndef TARGET_OS_SIMULATOR
-	if(!self.musicPlayer.nowPlayingTrack || (self.systemQueueCount == 0) || ![self queueAPIsAvailable]){
-		return @[];
+	if(!([LMLayoutManager isSimulator] || ![self queueAPIsAvailable])){
+		if(!self.musicPlayer.nowPlayingTrack || (self.systemQueueCount == 0) || ![self queueAPIsAvailable]){
+			return @[];
+		}
+		
+		if([self queueIsStale]){
+			NSLog(@"Queue is stale, rebuilding.");
+			[self rebuild];
+			return @[];
+		}
+		
+		NSInteger finalIndexOfQueue = self.completeQueue.count - 1;
+		
+		if(self.indexOfNowPlayingTrack == finalIndexOfQueue){
+			return @[];
+		}
 	}
-	
-	if([self queueIsStale]){
-		NSLog(@"Queue is stale, rebuilding.");
-		[self rebuild];
-		return @[];
-	}
-	
-	NSInteger finalIndexOfQueue = self.completeQueue.count - 1;
-	
-	if(self.indexOfNowPlayingTrack == finalIndexOfQueue){
-		return @[];
-	}
-#endif
 	
 	return [self.completeQueue subarrayWithRange:self.nextTracksIndexRange];
 }
