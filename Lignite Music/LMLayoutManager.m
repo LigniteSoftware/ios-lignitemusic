@@ -219,7 +219,7 @@
 }
 
 + (BOOL)isSimulator {
-#ifdef TARGET_OS_SIMULATOR
+#if TARGET_OS_SIMULATOR
 	return YES;
 #endif
 	

@@ -10,12 +10,13 @@
 
 #import "LMQueueViewFlowLayout.h"
 #import "LMQueueViewHeader.h"
+#import "LMThemeEngine.h"
 #import "LMMusicPlayer.h"
 #import "LMListEntry.h"
 #import "LMQueueView.h"
 #import "LMColour.h"
 
-@interface LMQueueView()<UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, LMMusicQueueDelegate, LMListEntryDelegate, LMQueueViewHeaderDelegate, LMMusicPlayerDelegate, LMLayoutChangeDelegate>
+@interface LMQueueView()<UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, LMMusicQueueDelegate, LMListEntryDelegate, LMQueueViewHeaderDelegate, LMMusicPlayerDelegate, LMLayoutChangeDelegate, LMThemeEngineDelegate>
 
 /**
  The collection view which displays the queue.
@@ -127,7 +128,7 @@
 }
 
 - (UIColor*)tapColourForListEntry:(LMListEntry*)entry {
-	return [UIColor redColor];
+	return [LMColour mainColour];
 }
 
 - (LMMusicTrack*)trackForIndexPath:(NSIndexPath*)indexPath {
@@ -593,6 +594,10 @@
 	[self reloadLayout];
 }
 
+- (void)themeChanged:(LMTheme)theme {
+	[self reloadLayout];
+}
+
 
 - (void)layoutSubviews {
 	if(!self.didLayoutConstraints){
@@ -606,11 +611,13 @@
 		}
 		
 		
+		[[LMThemeEngine sharedThemeEngine] addDelegate:self];
+		
+		
 		self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 		[self.musicPlayer addMusicDelegate:self];
 		[self.musicPlayer.queue addDelegate:self];
 		
-#warning Todo: add theme delegate support
 		
 		self.backgroundColor = [LMColour clearColour];
 		

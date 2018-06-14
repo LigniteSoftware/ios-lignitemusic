@@ -391,7 +391,7 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 }
 
 - (NSInteger)completeQueueCount {
-	NSLog(@"Count %d", (int)self.completeQueue.count);
+//	NSLog(@"Count %d is sim %d", (int)self.completeQueue.count, LMLayoutManager.isSimulator);
 	return self.completeQueue.count;
 }
 

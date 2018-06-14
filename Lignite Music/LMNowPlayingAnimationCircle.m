@@ -14,7 +14,7 @@
 #import "LMAppIcon.h"
 #import "LMColour.h"
 
-@interface LMNowPlayingAnimationCircle()
+@interface LMNowPlayingAnimationCircle()<LMThemeEngineDelegate>
 
 /**
  The icon.
@@ -99,10 +99,16 @@
 	return self.circleProgressBar.progress;
 }
 
+- (void)themeChanged:(LMTheme)theme {
+	[self setDirection:self.direction];
+}
+
 - (instancetype)init {
 	self = [super init];
 	if(self){
 		self.icon = LMIconBug;
+		
+		[[LMThemeEngine sharedThemeEngine] addDelegate:self];
 	}
 	return self;
 }
