@@ -271,7 +271,7 @@
 		
 		self.animationView = [LMNowPlayingAnimationView new];
 		self.animationView.userInteractionEnabled = NO;
-//		self.animationView.squareMode = YES;
+		self.animationView.squareMode = YES;
 		[self addSubview:self.animationView];
 		
 		[self.animationView autoPinEdgesToSuperviewEdges];

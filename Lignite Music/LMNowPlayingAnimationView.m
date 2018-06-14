@@ -97,7 +97,7 @@
 		
 		NSLog(@"next. X %f - %f", progressPoint.x, progress);
 		
-		self.nextTrackCircleViewHeightConstraint.constant = self.squareMode ? self.frame.size.width : ((halfWindowFrame / 2.0) + (WINDOW_FRAME.size.width * progress));
+		self.nextTrackCircleViewHeightConstraint.constant = self.squareMode ? self.frame.size.height : ((halfWindowFrame / 2.0) + (WINDOW_FRAME.size.width * progress));
 		
 		CGFloat circleProgress = progress * 2.0f;
 		[self.nextTrackCircleView setProgress:MIN(1, circleProgress)];
@@ -113,7 +113,7 @@
 		
 		NSLog(@"previous. X %f - %f", progressPoint.x, progress);
 		
-		self.previousTrackCircleViewHeightConstraint.constant = self.squareMode ? self.frame.size.width : ((halfWindowFrame / 2.0) + (WINDOW_FRAME.size.width * progress));
+		self.previousTrackCircleViewHeightConstraint.constant = self.squareMode ? self.frame.size.height : ((halfWindowFrame / 2.0) + (WINDOW_FRAME.size.width * progress));
 		
 		CGFloat circleProgress = progress * 2.0f;
 		[self.previousTrackCircleView setProgress:MIN(1, 1 - circleProgress)];
