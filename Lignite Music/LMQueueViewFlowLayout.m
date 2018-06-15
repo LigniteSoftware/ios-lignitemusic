@@ -11,6 +11,8 @@
 #import "LMQueueViewSeparator.h"
 #import "LMLayoutManager.h"
 
+#import "LMExtras.h"
+
 #define QUEUE_VIEW_SPACE_BETWEEN_CELLS 10
 
 @interface LMQueueViewFlowLayout()
@@ -56,8 +58,6 @@
 	BOOL isFirstRow = (indexPath.row == 0);
 	BOOL isFirstSection = (indexPath.section == 0);
 	BOOL isVeryFirstRow = (isFirstRow && isFirstSection);
-	
-//	NSLog(@"index %@ previous frame %@", indexPath, NSStringFromCGRect(previousFrame));
 	
 	CGFloat standardListEntryHeight = [LMLayoutManager standardListEntryHeight];
 	CGSize size = CGSizeMake(width - sectionSpacing, standardListEntryHeight);
@@ -136,7 +136,11 @@
 - (NSArray<NSIndexPath*>*)indexPathsOfItemsInRect:(CGRect)rect {
 	NSMutableArray *indexPathsInRect = [NSMutableArray new];
 	
-	for(NSInteger section = 0; section < [self.collectionView.dataSource numberOfSectionsInCollectionView:self.collectionView]; section++){
+//	BOOL hasBrowsedThroughFirstSection =
+	
+	NSInteger initialSection = [self.collectionView indexPathForItemAtPoint:rect.origin].section;
+	
+	for(NSInteger section = initialSection; section < [self.collectionView.dataSource numberOfSectionsInCollectionView:self.collectionView]; section++){
 		
 		NSInteger numberOfItems = [self.collectionView.dataSource collectionView:self.collectionView numberOfItemsInSection:section];
 		
@@ -147,8 +151,10 @@
 		BOOL foundFirstItem = NO;
 		
 		NSInteger initialRow = 0;
-		NSIndexPath *initialIndexPath = [self.collectionView indexPathForItemAtPoint:rect.origin];
-		initialRow = initialIndexPath.row;
+		if(section == initialSection){
+			NSIndexPath *initialIndexPath = [self.collectionView indexPathForItemAtPoint:rect.origin];
+			initialRow = initialIndexPath.row;
+		}
 		
 		for(NSInteger i = initialRow; i < numberOfItems; i++){
 			NSIndexPath *indexPathOfItem = [NSIndexPath indexPathForRow:i inSection:section];
@@ -163,17 +169,20 @@
 				foundFirstItem = YES;
 			}
 			if(!containsFrame && !containsOrigin && !framesIntersect && foundFirstItem){
-//				NSLog(@"Breaking at %d", (int)i);
+//				NSLog(@"Break %d frame %@ last %@ window %@ collection %@, %@, number of items %d (s %d)", (int)i, NSStringFromCGRect(rect), NSStringFromCGRect(frameOfItem), NSStringFromCGRect(WINDOW_FRAME), NSStringFromCGPoint(self.collectionView.contentOffset), NSStringFromCGSize(self.collectionView.contentSize), (int)numberOfItems, (int)section);
+//				[self.collectionView.collectionViewLayout invalidateLayout];
 				break; //Stop it if it's already found a sequence of items, and then didn't find one, it won't be able to find anymore
 			}
-			
+
 			if(rect.size.height == 1 && rect.size.width == 1 && !containsFrame){
-//				NSLog(@"Ending useless cycle of bullshit");
+				NSLog(@"Ending useless cycle of bullshit");
 				break;
 			}
 		}
 		
 	}
+	
+//	NSLog(@"Found %d indexes for frame %@", (int)indexPathsInRect.count, NSStringFromCGRect(rect));
 	
 //	NSLog(@"%d for %@", (int)indexPathsInRect.count, NSStringFromCGRect(rect));
 //
@@ -189,6 +198,8 @@
 	
 	attributes.alpha = 1;
 	attributes.frame = [self frameForCellAtIndexPath:indexPath];
+	
+//	NSLog(@"Returning attributes for %@", indexPath);
 	
 	return attributes;
 }
@@ -240,7 +251,7 @@
 	
 	NSArray *visibleIndexPaths = [self indexPathsOfItemsInRect:rect]; //Get the index paths of the items which fit into the rect provided
 	
-//	NSLog(@"Returning %@ for %@", visibleIndexPaths, NSStringFromCGRect(rect));
+//	NSLog(@"Index paths for frame %@:\n%@", NSStringFromCGRect(rect), visibleIndexPaths);
 	
 	NSInteger numberOfItemsInPreviousTracksSection = [self.collectionView.dataSource collectionView:self.collectionView
 																			 numberOfItemsInSection:0];
@@ -285,7 +296,9 @@
 
 - (BOOL)shouldInvalidateLayoutForBoundsChange:(CGRect)newBounds {
 	CGRect oldBounds = self.collectionView.bounds;
-	if (CGRectGetWidth(newBounds) != CGRectGetWidth(oldBounds)) {
+//	NSLog(@"!!!!Check bounds!!!!\n%@\n%@", NSStringFromCGRect(newBounds), NSStringFromCGRect(self.collectionView.bounds));
+	if ((newBounds.size.width != oldBounds.size.width) || (newBounds.size.height != newBounds.size.height)) {
+//		NSLog(@"Invalidating bounds");
 		return YES;
 	}
 	return NO;

@@ -2091,11 +2091,11 @@
 //			[queue rebuild];
 //		} repeats:NO];
 		
-//		[self launchNowPlayingFromTap];
+		[self launchNowPlayingFromTap];
 		
-		[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
-			[self.buttonNavigationBar setSelectedTab:LMNavigationTabMiniPlayer];
-		} repeats:NO];
+//		[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
+//			[self.buttonNavigationBar setSelectedTab:LMNavigationTabMiniPlayer];
+//		} repeats:NO];
 		
 		
 //		[NSTimer scheduledTimerWithTimeInterval:1.0 block:^{

@@ -1299,7 +1299,7 @@ BOOL shuffleForDebug = NO;
 
 - (LMMusicTrack*)nowPlayingTrack {
 	if([LMLayoutManager isSimulator] || ![self.queue queueAPIsAvailable]){
-		return [[[[self queryCollectionsForMusicType:LMMusicTypeAlbums] objectAtIndex:2] items] firstObject];
+		return [self.queue.testCollection.items objectAtIndex:self.queue.indexOfNowPlayingTrack];
 	}
 	
 	return self.systemMusicPlayer.nowPlayingItem;

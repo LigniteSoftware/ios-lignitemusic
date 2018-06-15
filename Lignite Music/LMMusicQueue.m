@@ -136,7 +136,7 @@
 
 - (NSInteger)indexOfNowPlayingTrack {
 	if([LMLayoutManager isSimulator] || ![self queueAPIsAvailable]){
-		return 0;
+		return (self.testCollection.items.count - 6);
 	}
 	
 	if(![self queueAPIsAvailable]){
@@ -378,7 +378,7 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 
 - (NSMutableArray<LMMusicTrack*>*)completeQueue {
 	if([LMLayoutManager isSimulator] || ![self queueAPIsAvailable]){
-		NSMutableArray *array = [NSMutableArray arrayWithArray:[[self.musicPlayer queryCollectionsForMusicType:LMMusicTypeAlbums] objectAtIndex:2].items];
+		NSMutableArray *array = [NSMutableArray arrayWithArray:self.testCollection.items];
 	//	NSLog(@"Array count %d", (int)array.count);
 		return array;
 	}
@@ -621,6 +621,10 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 		self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 		self.delegates = [NSMutableArray new];
 		self.adjustedIndexOfNowPlayingTrack = NSNotFound;
+		
+		if([LMLayoutManager isSimulator] || ![self queueAPIsAvailable]){
+			self.testCollection = [[self.musicPlayer queryCollectionsForMusicType:LMMusicTypeAlbums] objectAtIndex:2];
+		}
 	}
 	return self;
 }

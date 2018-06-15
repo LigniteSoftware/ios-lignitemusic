@@ -541,6 +541,9 @@
 	if([LMLayoutManager isiPhoneX]){
 		accessibilityWidthFactorial = 2.9;
 		normalWidthFactorial = 3.5;
+		
+		accessibilityHeightFactorial = 3.9;
+		normalHeightFactorial = 5.5;
 	}
 	
 	if([LMLayoutManager isLandscape]){
@@ -949,7 +952,9 @@
 		[LMLayoutManager addNewiPadConstraints:miniPlayerCoreViewiPadConstraints];
 		
 		//These values are in reloadMiniPlayerSize as well
-		self.miniPlayerHeightConstraint = [self.miniPlayerCoreView autoSetDimension:ALDimensionHeight toSize:properDimension/5.0];
+		//Thank you past Edwin
+		//You're welcome
+		self.miniPlayerHeightConstraint = [self.miniPlayerCoreView autoSetDimension:ALDimensionHeight toSize:properDimension/([LMLayoutManager isiPhoneX] ? 5.5 : 5.0)];
 		self.miniPlayerWidthConstraint = [self.miniPlayerCoreView autoSetDimension:ALDimensionWidth toSize:properDimension/([LMLayoutManager isiPhoneX] ? 3.5 : 2.9)];
 		
 		

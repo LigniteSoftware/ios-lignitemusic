@@ -97,6 +97,11 @@
  */
 @property CGFloat systemRestorePlaybackTime;
 
+/**
+ The test track collection for the simulator or when full queue APIs aren't available.
+ */
+@property LMMusicTrackCollection * _Nullable testCollection;
+
 
 /**
  Rebuilds the queue from the system API.
