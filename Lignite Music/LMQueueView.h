@@ -18,6 +18,8 @@
  */
 - (void)queueViewIsReordering:(BOOL)isReordering;
 
+- (void)displayQueueCantReorderWarning; //Temporary (I hope lmao)
+
 @end
 
 @interface LMQueueView : LMView

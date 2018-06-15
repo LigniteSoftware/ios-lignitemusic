@@ -11,6 +11,11 @@
 @interface LMQueueViewFlowLayout : UICollectionViewFlowLayout
 
 /**
+ The changes that have been made to sections during interactive reordering.
+ */
+@property NSArray<NSNumber*> *sectionDifferences;
+
+/**
  When the user finishes interactively reordering the tracks, please call this.
  */
 - (void)finishedInteractivelyMoving;

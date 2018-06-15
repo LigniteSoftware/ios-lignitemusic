@@ -10,6 +10,7 @@
 
 #import "LMQueueViewFlowLayout.h"
 #import "LMQueueViewHeader.h"
+#import "NSTimer+Blocks.h"
 #import "LMThemeEngine.h"
 #import "LMMusicPlayer.h"
 #import "LMListEntry.h"
@@ -67,6 +68,8 @@
  Whether or not the user is currently reordering.
  */
 @property BOOL isReordering;
+
+@property UINotificationFeedbackGenerator *feedbackGenerator; //Temporary I hope
 
 @end
 
@@ -384,7 +387,16 @@
 	
 	self.collectionView.hidden = !hideNoTracksLabel;
 	
-	return (section == 0) ? (self.musicPlayer.queue.previousTracks.count + 1) : self.musicPlayer.queue.nextTracks.count;
+	NSInteger addition = 0;
+	LMQueueViewFlowLayout *flowLayout = (LMQueueViewFlowLayout*)self.collectionView.collectionViewLayout;
+	if(flowLayout.sectionDifferences.count > 0){
+		addition += [[flowLayout.sectionDifferences objectAtIndex:section] integerValue];
+		NSLog(@"Adding addition");
+	}
+	
+	return ((section == 0) ? (self.musicPlayer.queue.previousTracks.count + 1)
+			: self.musicPlayer.queue.nextTracks.count)
+			+ addition;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView
@@ -409,7 +421,10 @@
 	return !isNowPlayingTrack;
 }
 
-- (void)collectionView:(UICollectionView *)collectionView moveItemAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath {
+- (void)collectionView:(UICollectionView *)collectionView
+   moveItemAtIndexPath:(NSIndexPath *)sourceIndexPath
+		   toIndexPath:(NSIndexPath *)destinationIndexPath {
+	
 	NSLog(@"Move item from %@ to %@", sourceIndexPath, destinationIndexPath);
 	
 	[self.musicPlayer.queue moveTrackFromIndexPath:sourceIndexPath toIndexPath:destinationIndexPath];
@@ -449,6 +464,14 @@
 	
 	switch(longPressGesture.state){
 		case UIGestureRecognizerStateBegan: {
+			[self.delegate displayQueueCantReorderWarning];
+			
+			self.feedbackGenerator = [UINotificationFeedbackGenerator new];
+			[self.feedbackGenerator prepare];
+			[self.feedbackGenerator notificationOccurred:UINotificationFeedbackTypeError];
+			self.feedbackGenerator = nil;
+			return;
+			
 			if(indexPath){
 				self.isReordering = YES;
 				
@@ -510,9 +533,11 @@
 			
 			self.isReordering = NO;
 			
-			[UIView animateWithDuration:0.3 animations:^{
-				self.latestHeader.backgroundColor = [LMColour clearColour];
-			}];
+//			[NSTimer scheduledTimerWithTimeInterval:3.0 block:^{
+				[UIView animateWithDuration:0.3 animations:^{
+					self.latestHeader.backgroundColor = [LMColour clearColour];
+				}];
+//			} repeats:NO];
 			
 			[self reloadLayout];
 			break;
@@ -520,9 +545,11 @@
 		default: {
 			self.isReordering = NO;
 			
-			[UIView animateWithDuration:0.3 animations:^{
-				self.latestHeader.backgroundColor = [LMColour clearColour];
-			}];
+//			[NSTimer scheduledTimerWithTimeInterval:3.0 block:^{
+				[UIView animateWithDuration:0.3 animations:^{
+					self.latestHeader.backgroundColor = [LMColour clearColour];
+				}];
+//			} repeats:NO];
 			
 			[self.collectionView.collectionViewLayout invalidateLayout];
 			[self.collectionView cancelInteractiveMovement];

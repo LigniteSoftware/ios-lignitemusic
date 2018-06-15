@@ -9,6 +9,7 @@
 #import <PureLayout/PureLayout.h>
 
 #import "LMAccessibilityMusicControlBar.h"
+#import "LMAlertViewController.h"
 #import "UIImage+AverageColour.h"
 #import "LMNowPlayingCoreView.h"
 #import "LMProgressSlider.h"
@@ -825,6 +826,20 @@
 	[UIView animateWithDuration:0.3 animations:^{
 		self.queueColourSeparator.backgroundColor = isReordering ? [UIColor whiteColor] : [UIColor clearColor];
 	}];
+}
+
+- (void)displayQueueCantReorderWarning {
+	NSLog(@"Display warning");
+	
+	LMAlertViewController *alertViewController = [LMAlertViewController new];
+	alertViewController.titleText = NSLocalizedString(@"CantReorderTitle", nil);
+	alertViewController.bodyText = NSLocalizedString(@"CantReorderDescription", nil);
+	alertViewController.alertOptionColours = @[ [LMColour mainColour] ];
+	alertViewController.alertOptionTitles = @[ NSLocalizedString(@"Okay", nil) ];
+	alertViewController.completionHandler = ^(NSUInteger optionSelected, BOOL checkboxChecked) {
+		NSLog(@"Understood boss");
+	};
+	[self.coreViewController presentViewController:alertViewController animated:YES completion:nil];
 }
 
 - (void)layoutSubviews {

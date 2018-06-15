@@ -17,11 +17,6 @@
 
 @interface LMQueueViewFlowLayout()
 
-/**
- The changes that have been made to sections during interactive reordering.
- */
-@property NSArray<NSNumber*> *sectionDifferences;
-
 @end
 
 @implementation LMQueueViewFlowLayout
@@ -34,9 +29,11 @@
 	
 	NSIndexPath *targetIndexPath = [super targetIndexPathForInteractivelyMovingItem:previousIndexPath withPosition:position];
 	
+//	NSLog(@"target previous %@ target %@ with position %@", previousIndexPath, targetIndexPath, NSStringFromCGPoint(position));
+	
 	if(targetIndexPath.section != previousIndexPath.section){
 		BOOL movingIntoPreviousTracksSection = (targetIndexPath.section == 0);
-		NSLog(@"target previous %@ target %@ with position %@", previousIndexPath, targetIndexPath, NSStringFromCGPoint(position));
+		
 		if(self.sectionDifferences.count == 0){
 			self.sectionDifferences = @[ @(movingIntoPreviousTracksSection ? 1 : -1),
 										 @(movingIntoPreviousTracksSection ? -1 : 1) ];
@@ -44,6 +41,9 @@
 		else{
 			self.sectionDifferences = @[];
 		}
+		
+		[self.collectionView reloadData];
+		[self.collectionView.collectionViewLayout invalidateLayout];
 		
 		NSLog(@"Section differences %@", self.sectionDifferences);
 	}
@@ -72,9 +72,9 @@
 	CGFloat previousOrigin = 0;
 	
 	NSInteger sectionDifferenceForFirstSection = 0;
-	if(self.sectionDifferences.count > 0){
-		sectionDifferenceForFirstSection = [[self.sectionDifferences objectAtIndex:0] integerValue];
-	}
+//	if(self.sectionDifferences.count > 0){
+//		sectionDifferenceForFirstSection = [[self.sectionDifferences objectAtIndex:0] integerValue];
+//	}
 	
 	CGFloat previousIndex = (indexPath.row - 1) + (!isFirstSection ? ([self.collectionView.dataSource collectionView:self.collectionView numberOfItemsInSection:0] + sectionDifferenceForFirstSection) : 0);
 	if(previousIndex < 0){
@@ -144,10 +144,12 @@
 		
 		NSInteger numberOfItems = [self.collectionView.dataSource collectionView:self.collectionView numberOfItemsInSection:section];
 		
-		if(self.sectionDifferences.count > 0){
-			numberOfItems += [[self.sectionDifferences objectAtIndex:section] integerValue];
-		}
-		
+//		if(self.sectionDifferences.count > 0){
+////			NSLog(@"Number of items before for %d: %d", (int)section, (int)numberOfItems);
+//			numberOfItems += [[self.sectionDifferences objectAtIndex:section] integerValue];
+////			NSLog(@"Number of items after for %d: %d", (int)section, (int)numberOfItems);
+//		}
+
 		BOOL foundFirstItem = NO;
 		
 		NSInteger initialRow = 0;
@@ -171,11 +173,11 @@
 			if(!containsFrame && !containsOrigin && !framesIntersect && foundFirstItem){
 //				NSLog(@"Break %d frame %@ last %@ window %@ collection %@, %@, number of items %d (s %d)", (int)i, NSStringFromCGRect(rect), NSStringFromCGRect(frameOfItem), NSStringFromCGRect(WINDOW_FRAME), NSStringFromCGPoint(self.collectionView.contentOffset), NSStringFromCGSize(self.collectionView.contentSize), (int)numberOfItems, (int)section);
 //				[self.collectionView.collectionViewLayout invalidateLayout];
-				break; //Stop it if it's already found a sequence of items, and then didn't find one, it won't be able to find anymore
+				break; //Stop it if it's already found a sequence of items, and then didn't find one, it won't be able to find any more
 			}
 
 			if(rect.size.height == 1 && rect.size.width == 1 && !containsFrame){
-				NSLog(@"Ending useless cycle of bullshit");
+//				NSLog(@"Ending useless cycle of bullshit");
 				break;
 			}
 		}
@@ -251,7 +253,7 @@
 	
 	NSArray *visibleIndexPaths = [self indexPathsOfItemsInRect:rect]; //Get the index paths of the items which fit into the rect provided
 	
-//	NSLog(@"Index paths for frame %@:\n%@", NSStringFromCGRect(rect), visibleIndexPaths);
+	NSLog(@"Index paths for frame %@:\n%@", NSStringFromCGRect(rect), visibleIndexPaths);
 	
 	NSInteger numberOfItemsInPreviousTracksSection = [self.collectionView.dataSource collectionView:self.collectionView
 																			 numberOfItemsInSection:0];

@@ -40,6 +40,10 @@
  */
 
 
+"CantReorderTitle" = "Reordering is temporarily disabled :(";
+"CantReorderDescription" = "As with any beta, there are bound to be bugs.\n\nSadly, only one day before the release of this beta, we found a bug which was causing reordering to completely crash the app.\n\nWe tried to fix it, but ran out of time, so instead we've disabled reordering for now.\n\nWe'll have this fixed in a future beta, coming very soon.\n\nWe apologise for the troubles.";
+
+
 "VoiceOverLabel_NotMinimized" = "Not minimized";
 "VoiceOverLabel_Minimized" = "Minimized";
 
