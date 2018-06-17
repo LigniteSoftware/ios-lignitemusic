@@ -69,6 +69,16 @@
  */
 @property BOOL isReordering;
 
+/**
+ The view which tells the user that the queue is being loaded.
+ */
+@property UIView *loadingQueueView;
+
+/**
+ The loading activity indicator view for when the queue is loading.
+ */
+@property UIActivityIndicatorView *loadingActivityIndicator;
+
 @property UINotificationFeedbackGenerator *feedbackGenerator; //Temporary I hope
 
 @end
@@ -376,10 +386,18 @@
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
+	if(!self.musicPlayer.queue.hasBeenBuilt){
+		return 0;
+	}
+	
 	return 2;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+	if(!self.musicPlayer.queue.hasBeenBuilt){
+		return 0;
+	}
+	
 	BOOL hideNoTracksLabel = !(self.musicPlayer.queue.count == 0);
 	
 	self.nothingInQueueTitleLabel.hidden = hideNoTracksLabel;
@@ -610,16 +628,18 @@
 	[self reloadLayout];
 }
 
-- (void)resetContentOffsetToNowPlaying {
+- (void)resetContentOffsetToNowPlaying:(BOOL)animated {
 	NSLog(@"Reset content offset");
 	
 	if(self.collectionView.contentSize.height < (self.collectionView.frame.size.height * 1.5)){
 		return;
 	}
 	
-	[self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:self.musicPlayer.queue.previousTracks.count inSection:0] atScrollPosition:UICollectionViewScrollPositionTop animated:NO];
+	[self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:self.musicPlayer.queue.previousTracks.count inSection:0] atScrollPosition:UICollectionViewScrollPositionTop animated:animated];
 	
-	self.collectionView.contentOffset = CGPointMake(self.collectionView.contentOffset.x, self.collectionView.contentOffset.y - 10);
+	[UIView animateWithDuration:animated ? 0.1 : 0.0 animations:^{
+		self.collectionView.contentOffset = CGPointMake(self.collectionView.contentOffset.x, self.collectionView.contentOffset.y - 10);
+	}];
 }
 
 - (void)notchPositionChanged:(LMNotchPosition)notchPosition {
@@ -630,6 +650,27 @@
 	[self reloadLayout];
 }
 
+- (void)queueInvalidated {
+	self.loadingQueueView.hidden = NO;
+}
+
+- (void)queueIsBeingRebuilt:(BOOL)rebuilding becauseOfActionType:(LMMusicQueueActionType)actionType {
+	if(actionType == LMMusicQueueActionTypeOpenQueue){
+		self.loadingQueueView.hidden = !rebuilding;
+		
+		rebuilding ? [self.loadingActivityIndicator startAnimating] : [self.loadingActivityIndicator stopAnimating];
+		
+		if(!rebuilding){
+			[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
+				[self resetContentOffsetToNowPlaying:YES];
+			} repeats:NO];
+		}
+	}
+}
+
+- (void)prepareForRebuild {
+	[self.loadingActivityIndicator startAnimating];
+}
 
 - (void)layoutSubviews {
 	if(!self.didLayoutConstraints){
@@ -730,6 +771,45 @@
 		[self.nothingInQueueLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.nothingInQueueTitleLabel withOffset:20];
 		[self.nothingInQueueLabel autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.nothingInQueueTitleLabel];
 		[self.nothingInQueueLabel autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.nothingInQueueTitleLabel];
+		
+		
+		
+		self.loadingQueueView = [UIView newAutoLayoutView];
+		self.loadingQueueView.userInteractionEnabled = YES;
+		self.loadingQueueView.backgroundColor = [LMColour whiteColour];
+		[self addSubview:self.loadingQueueView];
+		
+		[self.loadingQueueView autoPinEdgesToSuperviewEdges];
+		
+		
+		UIView *loadingContainerView = [UIView newAutoLayoutView];
+		loadingContainerView.backgroundColor = [LMColour whiteColour];
+		[self.loadingQueueView addSubview:loadingContainerView];
+		
+		[loadingContainerView autoCentreInSuperview];
+		[loadingContainerView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[loadingContainerView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		
+		
+		UILabel *loadingText = [UILabel newAutoLayoutView];
+		loadingText.textColor = [LMColour blackColour];
+		loadingText.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18.0f];
+		loadingText.textAlignment = NSTextAlignmentCentre;
+		loadingText.text = NSLocalizedString(@"PlayingNewQueue", nil);
+		[loadingContainerView addSubview:loadingText];
+		
+		[loadingText autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		[loadingText autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		[loadingText autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+		
+		
+		self.loadingActivityIndicator = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+		self.loadingActivityIndicator.translatesAutoresizingMaskIntoConstraints = NO;
+		[loadingContainerView addSubview:self.loadingActivityIndicator];
+		
+		[self.loadingActivityIndicator autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:loadingText withOffset:-10];
+		[self.loadingActivityIndicator autoPinEdgeToSuperviewEdge:ALEdgeTop];
+		[self.loadingActivityIndicator autoAlignAxisToSuperviewAxis:ALAxisVertical];
 	}
 }
 

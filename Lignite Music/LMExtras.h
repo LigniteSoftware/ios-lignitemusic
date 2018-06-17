@@ -17,6 +17,9 @@
 #define IS_FACE_DOWN  DEVICE_ORIENTATION == UIDeviceOrientationFaceDown ? YES : NO
 #define WINDOW_FRAME [[[[UIApplication sharedApplication] windows] objectAtIndex:0] frame]
 
+//Language fixes
+#define NSTextAlignmentCentre NSTextAlignmentCenter
+
 //Version checks
 #define SYSTEM_VERSION_EQUAL_TO(v)                  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedSame)
 #define SYSTEM_VERSION_GREATER_THAN(v)              ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedDescending)

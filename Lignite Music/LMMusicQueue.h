@@ -10,6 +10,13 @@
 #import "MPMediaItem+LigniteImages.h"
 #import "MPMediaItemCollection+LigniteInfo.h"
 
+typedef NS_ENUM(NSInteger, LMMusicQueueActionType){
+	LMMusicQueueActionTypeAddTrack = 0,
+	LMMusicQueueActionTypeRemoveTrack,
+	LMMusicQueueActionTypePlayMusic,
+	LMMusicQueueActionTypeOpenQueue
+};
+
 @protocol LMMusicQueueDelegate <NSObject>
 @optional
 
@@ -49,6 +56,19 @@
  */
 - (void)trackMovedInQueue:(LMMusicTrack * _Nonnull)trackMoved;
 
+/**
+ If the queue is being rebuilt, this will be called with rebuilding set to YES. When rebuilding is complete, this will be called with rebuilding set to NO. Used for giving the user visual status of the queue rebuilding process.
+
+ @param rebuilding Whether or not the queue is currently being rebuilt.
+ @param actionType The action type which initiated the rebuild.
+ */
+- (void)queueIsBeingRebuilt:(BOOL)rebuilding becauseOfActionType:(LMMusicQueueActionType)actionType;
+
+/**
+ For when the queue has been invalidated.
+ */
+- (void)queueInvalidated;
+
 @end
 
 @interface LMMusicQueue : NSObject
@@ -83,9 +103,19 @@
 @property (readonly) NSInteger completeQueueCount;
 
 /**
+ The index of the now playing track relative to the now playing queue of the system.
+ */
+@property (readonly) NSInteger systemIndexOfNowPlayingTrack;
+
+/**
  The index of the now playing track in the complete queue.
  */
 @property (readonly) NSInteger indexOfNowPlayingTrack;
+
+/**
+ Whether or not the queue has been built by the queue API.
+ */
+@property (readonly) BOOL hasBeenBuilt;
 
 /**
  Whether or not the queue requires a system reload. If YES, that means that although the queue has been set within Lignite Music, it hasn't been set within the system music player. This is due to Apple's annoying bug where one cannot change the currently playing queue without completely halting the music that's playing first. The hope with this is to reset the queue in between tracks so that the user doesn't notice.
@@ -102,11 +132,21 @@
  */
 @property LMMusicTrackCollection * _Nullable testCollection;
 
+/**
+ The most recent kind of action made on the queue.
+ */
+@property LMMusicQueueActionType mostRecentAction;
+
 
 /**
  Rebuilds the queue from the system API.
  */
 - (void)rebuild;
+
+/**
+ Marks the complete queue as invalid so that it must be rebuilt on next fetch. 
+ */
+- (void)invalidateCompleteQueue;
 
 /**
  Whether or not the full range of system queue APIs are available for use. Should only be NO on iOS versions below 10.0.

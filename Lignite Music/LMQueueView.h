@@ -36,7 +36,14 @@
 
 /**
  Resets the content offset of the queue view to display the currently playing track at the top.
+ 
+ @property animated Whether or not to animate the change.
  */
-- (void)resetContentOffsetToNowPlaying;
+- (void)resetContentOffsetToNowPlaying:(BOOL)animated;
+
+/**
+ Prepares the queue view for the rebuild event.
+ */
+- (void)prepareForRebuild;
 
 @end

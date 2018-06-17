@@ -150,6 +150,8 @@
 
 //@property UIView *iPhoneXStatusBarCoverView;
 
+@property LMWarning *betaBuildWarning;
+
 @end
 
 @implementation LMCoreViewController
@@ -306,6 +308,46 @@
 	//	[self.queueTableView reloadData];
 	
 	//	[self changeMusicTrack:self.loadedTrack withIndex:self.loadedTrackIndex];
+}
+
+- (void)queueIsBeingRebuilt:(BOOL)rebuilding becauseOfActionType:(LMMusicQueueActionType)actionType {
+	static MBProgressHUD *progressHud;
+	if(rebuilding
+	   && self.loaded
+	   && (actionType != LMMusicQueueActionTypeOpenQueue)
+	   && (actionType != LMMusicQueueActionTypeRemoveTrack)){
+		
+		UIView *view = self.searchViewController.view ? self.searchViewController.view : self.navigationController.view;
+		MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:view animated:YES];
+		
+		hud.mode = MBProgressHUDModeIndeterminate;
+		hud.square = YES;
+		hud.userInteractionEnabled = YES;
+		
+		NSString *stringKey = nil;
+		switch(actionType){
+			case LMMusicQueueActionTypeAddTrack:
+				stringKey = @"AddingTrackToQueue";
+				break;
+			case LMMusicQueueActionTypeRemoveTrack: //Not really a need to display this right now
+				stringKey = @"RemovingTrackFromQueue";
+				break;
+			case LMMusicQueueActionTypePlayMusic:
+				stringKey = @"PlayingNewQueue";
+				break;
+			default:
+				break;
+		}
+		
+		hud.label.text = NSLocalizedString(stringKey, nil);
+		
+//		[hud hideAnimated:YES afterDelay:3.f];
+		
+		progressHud = hud;
+	}
+	else{
+		[progressHud hideAnimated:YES];
+	}
 }
 
 - (void)trackAddedToFavourites:(LMMusicTrack *)track {
@@ -1470,6 +1512,23 @@
 		    [[LMImageManager sharedImageManager] downloadIfNeededForAllCategories];
 		}];
 	}
+	else if(warning == self.betaBuildWarning){
+		LMAlertViewController *alertViewController = [LMAlertViewController new];
+		alertViewController.titleText = NSLocalizedString(@"Build237VeryBetaTitle", nil);
+		alertViewController.bodyText = NSLocalizedString(@"Build237VeryBetaDescription", nil);
+		alertViewController.alertOptionColours = @[ [LMColour mainColour] ];
+		alertViewController.alertOptionTitles = @[ NSLocalizedString(@"Okay", nil) ];
+		alertViewController.completionHandler = ^(NSUInteger optionSelected, BOOL checkboxChecked) {
+			[NSUserDefaults.standardUserDefaults setObject:@"yeah" forKey:LMBuild237VeryBetaConfirmationKey];
+			
+			NSLog(@"Beta status understood by user");
+			
+			[self.warningManager removeWarning:self.betaBuildWarning]; 
+		};
+		[self.navigationController presentViewController:alertViewController
+												animated:YES
+											  completion:nil];
+	}
 }
 
 - (void)userInteractionBecameIdle {
@@ -1950,6 +2009,12 @@
 	self.downloadImagesOnDataOrLowStorageWarning = [LMWarning warningWithText:NSLocalizedString(@"DownloadImagesOnDataWarning", nil) priority:LMWarningPriorityHigh];
 	self.downloadImagesOnDataOrLowStorageWarning.delegate = self;
 	
+	if(![NSUserDefaults.standardUserDefaults objectForKey:LMBuild237VeryBetaConfirmationKey]){
+		self.betaBuildWarning = [LMWarning warningWithText:NSLocalizedString(@"Build237VeryBetaWarningBar", nil)
+												  priority:LMWarningPriorityHigh];
+		self.betaBuildWarning.delegate = self;
+		[self.warningManager addWarning:self.betaBuildWarning];
+	}
 	
 	
 	//Tester
@@ -2091,7 +2156,7 @@
 //			[queue rebuild];
 //		} repeats:NO];
 		
-		[self launchNowPlayingFromTap];
+//		[self launchNowPlayingFromTap];
 		
 //		[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
 //			[self.buttonNavigationBar setSelectedTab:LMNavigationTabMiniPlayer];

@@ -153,7 +153,7 @@
 	
 	self.progressSlider.leftText =
 	[NSString stringWithFormat:NSLocalizedString(@"SongXofX", nil),
-	 (int)self.musicPlayer.queue.indexOfNowPlayingTrack + 1,
+	 (int)self.musicPlayer.queue.systemIndexOfNowPlayingTrack + 1,
 	 (int)self.musicPlayer.queue.count];
 
 	self.progressSlider.rightText = [LMNowPlayingView durationStringTotalPlaybackTime:self.musicPlayer.nowPlayingTrack.playbackDuration];

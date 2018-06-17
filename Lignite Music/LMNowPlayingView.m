@@ -360,7 +360,7 @@
 	
 	self.progressSlider.leftText =
 	[NSString stringWithFormat:NSLocalizedString(@"SongXofX", nil),
-		 (int)self.musicPlayer.queue.indexOfNowPlayingTrack + 1,
+		 (int)self.musicPlayer.queue.systemIndexOfNowPlayingTrack + 1,
 		 (int)self.musicPlayer.queue.count];
 	
     self.progressSlider.rightText = [LMNowPlayingView durationStringTotalPlaybackTime:self.musicPlayer.nowPlayingTrack.playbackDuration];
@@ -521,8 +521,18 @@
 }
 
 - (void)setShowingQueueView:(BOOL)open animated:(BOOL)animated {
+	if(!self.musicPlayer.queue.hasBeenBuilt){
+		self.musicPlayer.queue.mostRecentAction = LMMusicQueueActionTypeOpenQueue;
+		
+		[self.queueView prepareForRebuild];
+		
+		[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
+			[self.musicPlayer.queue rebuild];
+		} repeats:NO];
+	}
+	
 	[NSTimer scheduledTimerWithTimeInterval:open ? 0.0 : 0.8 block:^{
-		[self.queueView resetContentOffsetToNowPlaying];
+		[self.queueView resetContentOffsetToNowPlaying:NO];
 	} repeats:NO];
 
 	[self layoutIfNeeded];
@@ -1313,7 +1323,7 @@
 	[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
 		[self reload];
 		
-		[self setShowingQueueView:YES animated:YES];
+//		[self setShowingQueueView:YES animated:YES];
 	} repeats:NO];
 }
 

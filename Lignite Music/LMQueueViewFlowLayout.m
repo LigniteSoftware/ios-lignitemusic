@@ -253,7 +253,7 @@
 	
 	NSArray *visibleIndexPaths = [self indexPathsOfItemsInRect:rect]; //Get the index paths of the items which fit into the rect provided
 	
-	NSLog(@"Index paths for frame %@:\n%@", NSStringFromCGRect(rect), visibleIndexPaths);
+//	NSLog(@"Index paths for frame %@:\n%@", NSStringFromCGRect(rect), visibleIndexPaths);
 	
 	NSInteger numberOfItemsInPreviousTracksSection = [self.collectionView.dataSource collectionView:self.collectionView
 																			 numberOfItemsInSection:0];

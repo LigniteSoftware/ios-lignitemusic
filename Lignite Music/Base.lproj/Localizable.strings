@@ -40,10 +40,40 @@
  */
 
 
+"CantReorderTitle" = "Reordering is temporarily disabled :(";
+"CantReorderDescription" = "As with any beta, there are bound to be bugs.\n\nSadly, only one day before the release of this beta, we found a bug which was causing reordering to completely crash the app.\n\nWe tried to fix it, but ran out of time, so instead we've disabled reordering for now.\n\nWe'll have this fixed in a future beta, coming very soon.\n\nWe apologise for the troubles.";
+
+
 "VoiceOverLabel_NotMinimized" = "Not minimized";
 "VoiceOverLabel_Minimized" = "Minimized";
 
+"VoiceOverHint_ScrubbingNotPossibleSorry" = "Scrubbing progress bars on VoiceOver is not currently possible, sorry";
 
+"VoiceOverLabel_AlbumArt" = "Album art";
+
+"VoiceOverLabel_OpenQueueButton" = "Open playback queue"; //*** Replaces VoiceOverLabel_QueueButton ***
+"VoiceOverLabel_CloseQueueButton" = "Close playback queue";
+
+"VoiceOverHint_OpenQueueButton" = "Double tap to open the playback queue"; //*** Replaces VoiceOverHint_QueueButton ***
+"VoiceOverHint_CloseQueueButton" = "Double tap to close the playback queue";
+
+"VoiceOverLabel_Title" = "Title";
+
+"NothingInQueueDescription" = "Seems you don't have anything queued up at the moment.\n\nGet some music poppin' off to fill the queue up!";
+
+"PreviousTracksTitleSingular" = "Previous track";
+"PreviousTracksTitlePlural" = "Previous tracks";
+
+"UpNextTitle" = "Up next";
+
+"NowPlayingTrack" = "Now playing";
+"NowPlayingTrackSubtitle" = "First song in the queue";
+
+"NothingUpNextTitle" = "That's it, boss!";
+"NothingUpNextSubtitle" = "You've got no songs queued up.";
+
+"OptimiseLoadTimeTitle" = "Optimise for speed";
+"OptimiseLoadTimeSubtitle" = "Smaller \"up next\" in favour of speed";
 
 //As of 1.2.0 ^
 
@@ -117,7 +147,7 @@
 "VoiceOverLabel_Credits" = "Credits for Lignite Music, created by Edwin Finch and Philipp Weder";
 "VoiceOverLabel_ContactUs" = "Contact the developers of Lignite Music";
 
-"VoiceOverLabel_LicenseLinksButton" = "Open source icon licenses";
+"VoiceOverLabel_LicenseLinksButton" = "Open source icon licences";
 
 "VoiceOverLabel_ContactEmail" = "Contact us via email";
 "VoiceOverLabel_ContactTwitter" = "Reach out to us on Twitter";
@@ -171,7 +201,8 @@
 
 "VoiceOverLabel_AirPlayButton" = "AirPlay";
 
-"VoiceOverLabel_QueueButton" = "Playback queue";
+"VoiceOverLabel_OpenQueueButton" = "Open playback queue";
+"VoiceOverLabel_CloseQueueButton" = "Close playback queue";
 
 "VoiceOverLabel_FavouriteButton" = "Favourite";
 "VoiceOverLabel_UnfavouriteButton" = "Unfavourite";
@@ -559,7 +590,7 @@
 "StatusBarDescription" = "Show the iOS status bar";
 
 "ScrollingTextTitle" = "Scrolling text";
-"ScrollingTextDescription" = "In now-playing and miniplayer";
+"ScrollingTextDescription" = "In now-playing and mini player";
 
 "NowPlayingKeepScreenOnTitle" = "Now playing always on";
 "NowPlayingKeepScreenOnSubtitle" = "Keep screen on while now playing is open";
@@ -567,7 +598,7 @@
 "About" = "About";
 "Credits" = "Credits";
 "CreditsMore" = "Created by Edwin Finch & Philipp Weder";
-"CreditsLicenses" = "License links"; //Links to licenses, such as library licenses and icon licenses.
+"CreditsLicenses" = "Licence links"; //Links to licenses, such as library licenses and icon licenses.
 
 "Privacy" = "Privacy"; //App privacy, for things like analytics tracking
 "UsageData" = "Usage data & statistics";
@@ -807,7 +838,7 @@
 "LibraryXCDYouTubeKitDescription" = "This is an easy yet powerful library which allows one to stream or play YouTube videos within a native iOS format. We power our tutorial videos with this.";
 
 "Icons" = "Icons";
-"IconsDescription" = "Many of our icons were from www.flaticon.com, created by icon artists who were generous enough to license them under CC 3.0. Here they are!";
+"IconsDescription" = "Many of our icons were from www.flaticon.com, created by icon artists who were generous enough to licence them under CC 3.0. Here they are!";
 "DesignedByNobody" = "We're working on it!\n\nCredits for icon artists are coming soon.";
 
 

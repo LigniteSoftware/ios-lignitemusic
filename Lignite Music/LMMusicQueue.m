@@ -26,7 +26,7 @@
 @property NSMutableArray<LMMusicTrack*> *completeQueue;
 
 /**
- Whether or not the full system queue is available to us. If YES, no tracks provided by the system were nil.
+ Whether or not the full system queue is available to us. If YES, no tracks provided by the system were nil and the queue was not shortened to optimise for speed.
  */
 @property BOOL fullQueueAvailable;
 
@@ -109,6 +109,10 @@
 	}
 }
 
+- (BOOL)hasBeenBuilt {
+	return (self.completeQueue.count > 0);
+}
+
 - (NSInteger)systemQueueCount {
 	return (NSInteger)[[MPMusicPlayerController systemMusicPlayer] performSelector:@selector(numberOfItems)];
 }
@@ -134,6 +138,10 @@
 #warning Todo: reshuffle
 }
 
+- (NSInteger)systemIndexOfNowPlayingTrack {
+	return self.musicPlayer.systemMusicPlayer.indexOfNowPlayingItem;
+}
+
 - (NSInteger)indexOfNowPlayingTrack {
 	if([LMLayoutManager isSimulator] || ![self queueAPIsAvailable]){
 		return (self.testCollection.items.count - 6);
@@ -147,7 +155,7 @@
 		if(self.adjustedIndexOfNowPlayingTrack != NSNotFound){
 			return self.adjustedIndexOfNowPlayingTrack;
 		}
-		return self.musicPlayer.systemMusicPlayer.indexOfNowPlayingItem;
+		return self.systemIndexOfNowPlayingTrack;
 //	}
 	
 //#warning Todo: fix this for large queues that were set outside of Lignite Music
@@ -231,6 +239,8 @@
 		autoPlay:(BOOL)autoPlay
 updateCompleteQueue:(BOOL)updateCompleteQueue {
 	
+	self.mostRecentAction = LMMusicQueueActionTypePlayMusic;
+	
 	BOOL initialQueue = (self.completeQueue.count == 0);
 	
 	NSLog(@"Setting new queue with autoplay %d, updateCompleteQueue %d", autoPlay, updateCompleteQueue);
@@ -251,7 +261,7 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 		[self.musicPlayer.systemMusicPlayer setNowPlayingItem:[[newQueue items] objectAtIndex:0]];
 		[self.musicPlayer.systemMusicPlayer play];
 	}
-	else if(!initialQueue && !autoPlay){
+	else if(!autoPlay && !updateCompleteQueue){
 		self.requiresSystemReload = YES;
 	}
 	
@@ -275,6 +285,8 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 - (void)addTrackToQueue:(LMMusicTrack*)trackToAdd {
 	NSLog(@"Adding %@ to queue at index %d", trackToAdd.title, (int)(self.indexOfNowPlayingTrack + 1));
 	
+	self.mostRecentAction = LMMusicQueueActionTypeAddTrack;
+	
 	[self.completeQueue insertObject:trackToAdd atIndex:self.indexOfNowPlayingTrack + 1];
 	
 	[self completeQueueUpdated];
@@ -293,6 +305,8 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 		return;
 	}
 	
+	self.mostRecentAction = LMMusicQueueActionTypeRemoveTrack;
+	
 	LMMusicTrack *trackRemoved = [self.completeQueue objectAtIndex:trackIndex];
 	
 	[self.completeQueue removeObjectAtIndex:trackIndex];
@@ -306,14 +320,6 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 			[delegate trackRemovedFromQueue:trackRemoved];
 		}
 	}
-}
-
-- (void)prepareQueueModification DEPRECATED_ATTRIBUTE {
-#warning Todo: prepare queue modification
-}
-
-- (void)finishQueueModification DEPRECATED_ATTRIBUTE {
-#warning Todo: finish queue modification
 }
 
 - (NSInteger)indexOfTrackInCompleteQueueFromPreviousTracks:(BOOL)fromPreviousTracks
@@ -400,7 +406,7 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 		return self.completeQueueCount;
 	}
 	
-	if(self.fullQueueAvailable){
+	if(self.fullQueueAvailable && ![LMSettings quickLoad]){
 		return self.completeQueueCount;
 	}
 	
@@ -419,7 +425,14 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 		return NSMakeRange(0, 0);
 	}
 	
-	return NSMakeRange(0, indexOfNowPlayingTrack);
+	NSInteger startingIndex = 0;
+	if([LMSettings quickLoad]){
+		if(indexOfNowPlayingTrack > 24){
+			startingIndex = indexOfNowPlayingTrack - 25;
+		}
+	}
+	
+	return NSMakeRange(startingIndex, indexOfNowPlayingTrack);
 }
 
 - (NSRange)nextTracksIndexRange {
@@ -432,6 +445,12 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 	
 	NSInteger indexOfNextTrack = (indexOfNowPlayingTrack + 1);
 	NSInteger length = ((finalIndexOfQueue + 1) - indexOfNextTrack);
+	
+	if([LMSettings quickLoad]){
+		if(length > 25){
+			length = 25;
+		}
+	}
 	
 	return NSMakeRange(indexOfNextTrack, length);
 }
@@ -484,12 +503,24 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 
 - (void)calculateAdjustedIndex {
 	if(!self.fullQueueAvailable){
-		self.adjustedIndexOfNowPlayingTrack = (self.musicPlayer.systemMusicPlayer.indexOfNowPlayingItem - self.systemQueueStartingIndex);
+		NSLog(@"Calculating adjusted index with current adjusted %d, index of now playing %d, starting index %d", (int)self.adjustedIndexOfNowPlayingTrack, (int)self.systemIndexOfNowPlayingTrack, (int)self.systemQueueStartingIndex);
+		
+		self.adjustedIndexOfNowPlayingTrack = (self.systemIndexOfNowPlayingTrack - self.systemQueueStartingIndex);
 	}
 }
 
 - (BOOL)queueAPIsAvailable {
 	return SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"10.0");
+}
+
+- (void)invalidateCompleteQueue {
+	self.completeQueue = nil;
+	
+	for(id<LMMusicQueueDelegate>delegate in self.delegates){
+		if([delegate respondsToSelector:@selector(queueInvalidated)]){
+			[delegate queueInvalidated];
+		}
+	}
 }
 
 - (void)rebuild {
@@ -508,6 +539,14 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 			return;
 		}
 		
+		dispatch_async(dispatch_get_main_queue(), ^{
+			for(id<LMMusicQueueDelegate>delegate in self.delegates){
+				if([delegate respondsToSelector:@selector(queueIsBeingRebuilt:becauseOfActionType:)]){
+					[delegate queueIsBeingRebuilt:YES becauseOfActionType:self.mostRecentAction];
+				}
+			}
+		});
+		
 		BOOL noPreviousQueue = ![strongSelf queueExists];
 
 		NSTimeInterval startTime = [[NSDate new] timeIntervalSince1970];
@@ -517,7 +556,7 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 
 		NSMutableArray<LMMusicTrack*> *systemQueueArray = [NSMutableArray new];
 		if([LMSettings quickLoad]){
-			NSInteger startingIndex = strongSelf.musicPlayer.systemMusicPlayer.indexOfNowPlayingItem - LMQuickLoadQueueLimit;
+			NSInteger startingIndex = strongSelf.systemIndexOfNowPlayingTrack - LMQuickLoadQueueLimit;
 			NSInteger endingIndex = (startingIndex + (LMQuickLoadQueueLimit * 2) + 1);
 			if(startingIndex < 0){
 				startingIndex = 0;
@@ -580,7 +619,7 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 		}
 		
 		NSTimeInterval endTime = [[NSDate new] timeIntervalSince1970];
-		NSLog(@"\nLMMusicQueue rebuild summary\n%d out of %d tracks captured in %f seconds.\n%d tracks previous, %d tracks next.\n\nNo previous queue %d, no current queue %d.\nAdjusted now playing index %d vs %d.\n", (int)strongSelf.completeQueue.count, (int)strongSelf.systemQueueCount, (endTime-startTime), (int)previous.count, (int)upNext.count, noPreviousQueue, noCurrentQueue, (int)strongSelf.adjustedIndexOfNowPlayingTrack, (int)strongSelf.musicPlayer.systemMusicPlayer.indexOfNowPlayingItem);
+		NSLog(@"\nLMMusicQueue rebuild summary\n%d out of %d tracks captured in %f seconds.\n%d tracks previous, %d tracks next.\n\nNo previous queue %d, no current queue %d.\nAdjusted now playing index %d vs %d.\n", (int)strongSelf.completeQueue.count, (int)strongSelf.systemQueueCount, (endTime-startTime), (int)previous.count, (int)upNext.count, noPreviousQueue, noCurrentQueue, (int)strongSelf.adjustedIndexOfNowPlayingTrack, (int)strongSelf.systemIndexOfNowPlayingTrack);
 
 
 		dispatch_async(dispatch_get_main_queue(), ^{
@@ -602,6 +641,12 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 				[self notifyDelegatesOfCompletelyChangedQueue]; //There was a queue playing and there is still a queue playing
 			}
 
+			for(id<LMMusicQueueDelegate>delegate in self.delegates){
+				if([delegate respondsToSelector:@selector(queueIsBeingRebuilt:becauseOfActionType:)]){
+					[delegate queueIsBeingRebuilt:NO becauseOfActionType:self.mostRecentAction];
+				}
+			}
+			
 			NSLog(@"Finished building and distributing system queue. %lu tracks loaded.", (unsigned long)systemQueueArray.count);
 		});
 	});

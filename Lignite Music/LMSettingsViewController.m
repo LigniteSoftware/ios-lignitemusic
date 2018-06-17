@@ -523,7 +523,7 @@
 					
 					return fullLabelString;
 				}
-				case 1: {
+				case 2: {
 					NSString *authorizationStatusKey = nil;
 					
 					LMImageManagerPermissionStatus explicitPermissionStatus = [self.imageManager explicitPermissionStatus];
@@ -546,7 +546,7 @@
 				}
 			}
 		}
-		case 2: {
+		case 3: {
 			switch(indexPath.row){
 				case 0: {
 					return NSLocalizedString(@"VoiceOverLabel_Tutorial", nil);
@@ -583,10 +583,10 @@
 			}
 		}
 			#warning Todo: add accessibility for this setting section
-		case 1: {
+		case 2: {
 			return NSLocalizedString(@"VoiceOverHint_DoubleTapToChangeThisSetting", nil);
 		}
-		case 2: {
+		case 3: {
 			switch(indexPath.row){
 				case 0: {
 					return NSLocalizedString(@"VoiceOverHint_DoubleTapToOpenTheTutorialPage", nil);
@@ -638,6 +638,8 @@
 	[LMAnswers logCustomEventWithName:@"Quick Load Setting" customAttributes:@{
 																					 			@"Enabled": @(switchView.on)
 																								}];
+	
+	[[LMMusicQueue sharedMusicQueue] invalidateCompleteQueue];
 }
 
 - (id)accessoryViewForIndexPath:(NSIndexPath *)indexPath forSectionTableView:(LMSectionTableView *)sectionTableView {

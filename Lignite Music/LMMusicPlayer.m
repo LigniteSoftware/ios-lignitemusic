@@ -62,32 +62,11 @@
 @property NSTimer *libraryChangeTimer;
 @property NSTimer *playbackStateChangeTimer; //Same thing, but for the current playback state.
 
-/**
- The now playing collection which is sorted.
- */
-@property LMMusicTrackCollection *nowPlayingCollectionSorted DEPRECATED_ATTRIBUTE;
-
-/**
- The now playing collection which is shuffled.
- */
-@property LMMusicTrackCollection *nowPlayingCollectionShuffled DEPRECATED_ATTRIBUTE;
-
-/**
- The persistent ID of the last track which was played through the app. If this does not match with the system music player change, that means that the track was set outside of the app.
- */
-@property MPMediaEntityPersistentID lastTrackSetInLigniteMusicPersistentID DEPRECATED_ATTRIBUTE;
-
-/**
- The last track which was moved in the queue.
- */
-@property LMMusicTrack *lastTrackMovedInQueue DEPRECATED_ATTRIBUTE;
-
 @end
 
 @implementation LMMusicPlayer
 
 @synthesize nowPlayingTrack = _nowPlayingTrack;
-@synthesize nowPlayingCollection = _nowPlayingCollection;
 @synthesize currentPlaybackTime = _currentPlaybackTime;
 @synthesize repeatMode = _repeatMode;
 @synthesize shuffleMode = _shuffleMode;
@@ -285,30 +264,6 @@ MPMediaGrouping associatedMediaTypes[] = {
 	});
 }
 
-- (void)reloadQueueWithTrack:(LMMusicTrack*)newTrack DEPRECATED_ATTRIBUTE {}
-
-- (LMMusicTrack*)nextTrackInQueue DEPRECATED_ATTRIBUTE {
-	if((self.indexOfNowPlayingTrack + 1) < self.nowPlayingCollection.count){
-		return [self.nowPlayingCollection.items objectAtIndex:self.indexOfNowPlayingTrack + 1];
-	}
-	else if(self.nowPlayingCollection.count > 0){
-		return [self.nowPlayingCollection.items firstObject];
-	}
-	
-	return nil;
-}
-
-- (LMMusicTrack*)previousTrackInQueue DEPRECATED_ATTRIBUTE {
-	if((self.indexOfNowPlayingTrack - 1) > 0){
-		return [self.nowPlayingCollection.items objectAtIndex:self.indexOfNowPlayingTrack - 1];
-	}
-	else if(self.nowPlayingCollection.count > 0){
-		return [self.nowPlayingCollection.items lastObject];
-	}
-	
-	return nil;
-}
-
 - (void)currentPlaybackTimeChangeTimerCallback:(NSTimer*)timer {
 	if(((self.nowPlayingTrack.playbackDuration - self.currentPlaybackTime) < 1.5) && self.queue.requiresSystemReload){
 		[self.queue systemReloadWithTrack:[self.queue nextTrack]];
@@ -407,15 +362,6 @@ MPMediaGrouping associatedMediaTypes[] = {
 	//	NSLog(@"Allahu is playing %d: %@", self.audioPlayer.isPlaying, newInfo);
 	
 	infoCentre.nowPlayingInfo = newInfo;
-}
-
-- (BOOL)nowPlayingCollectionContainsTrack:(LMMusicTrack*)track DEPRECATED_ATTRIBUTE {
-	for(LMMusicTrack *collectionTrack in self.nowPlayingCollection.items){
-		if(track.persistentID == collectionTrack.persistentID){
-			return YES;
-		}
-	}
-	return NO;
 }
 
 //#warning track change
@@ -1271,10 +1217,6 @@ BOOL shuffleForDebug = NO;
 	return (self.nowPlayingTrack != nil);
 }
 
-- (BOOL)nowPlayingWasSetWithinLigniteMusic DEPRECATED_ATTRIBUTE {
-	return YES;
-}
-
 - (void)setNowPlayingTrack:(LMMusicTrack*)nowPlayingTrack {
 	NSLog(@"Setting now playing track (in Lignite Music) to %@", nowPlayingTrack.title);
 
@@ -1282,14 +1224,6 @@ BOOL shuffleForDebug = NO;
 	
 	if(self.playbackState != LMMusicPlaybackStatePlaying){
 		[self.systemMusicPlayer play];
-	}
-	
-	_nowPlayingTrack = nowPlayingTrack;
-	
-	if(nowPlayingTrack == nil){
-		[self notifyDelegatesOfNowPlayingTrack];
-		
-		[self reloadInfoCentre:NO];
 	}
 	
 #if TARGET_OS_SIMULATOR
@@ -1303,43 +1237,6 @@ BOOL shuffleForDebug = NO;
 	}
 	
 	return self.systemMusicPlayer.nowPlayingItem;
-}
-
-- (void)prepareQueueForBackgrounding DEPRECATED_ATTRIBUTE {
-
-}
-
-- (void)addTrackToQueue:(LMMusicTrack*)trackToAdd DEPRECATED_ATTRIBUTE {
-//	NSLog(@"Adding %@ to queue", trackToAdd.title);
-//
-//	NSArray<id<LMMusicPlayerDelegate>> *safeDelegates = [[NSArray alloc]initWithArray:self.delegates];
-//
-//	for(id<LMMusicPlayerDelegate> delegate in safeDelegates){
-//		if([delegate respondsToSelector:@selector(trackAddedToQueue:)]){
-//			[delegate trackAddedToQueue:trackToAdd];
-//		}
-//	}
-}
-
-- (void)removeTrackFromQueue:(LMMusicTrack*)trackToRemove DEPRECATED_ATTRIBUTE {
-//	NSLog(@"Removing %@ from queue", trackToRemove.title);
-//
-//	
-//	NSArray<id<LMMusicPlayerDelegate>> *safeDelegates = [[NSArray alloc]initWithArray:self.delegates];
-//	
-//	for(id<LMMusicPlayerDelegate> delegate in safeDelegates){
-//		if([delegate respondsToSelector:@selector(trackRemovedFromQueue:)]){
-//			[delegate trackRemovedFromQueue:trackToRemove];
-//		}
-//	}
-}
-
-- (void)prepareQueueModification DEPRECATED_ATTRIBUTE {}
-
-- (void)finishQueueModification DEPRECATED_ATTRIBUTE {}
-
-- (void)moveTrackInQueueFromIndex:(NSInteger)oldIndex toIndex:(NSInteger)newIndex DEPRECATED_ATTRIBUTE {
-	NSLog(@"Move track %d to index %d", (int)oldIndex, (int)newIndex);
 }
 
 - (NSString*)favouriteKeyForTrack:(LMMusicTrack*)track {

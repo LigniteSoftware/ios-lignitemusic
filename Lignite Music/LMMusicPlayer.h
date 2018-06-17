@@ -157,15 +157,6 @@ typedef enum {
 
 @interface LMMusicPlayer : NSObject
 
-- (void)addTrackToQueue:(LMMusicTrack*)trackToAdd DEPRECATED_ATTRIBUTE;
-- (void)removeTrackFromQueue:(LMMusicTrack*)trackToRemove DEPRECATED_ATTRIBUTE;
-- (void)moveTrackInQueueFromIndex:(NSInteger)oldIndex toIndex:(NSInteger)newIndex DEPRECATED_ATTRIBUTE;
-- (void)prepareQueueModification DEPRECATED_ATTRIBUTE;
-- (void)finishQueueModification DEPRECATED_ATTRIBUTE;
-- (void)prepareQueueForBackgrounding DEPRECATED_ATTRIBUTE;
-
-@property BOOL nowPlayingQueueTooLarge DEPRECATED_ATTRIBUTE; //The full queue from the system is not being shown, for whatever fucking reason
-
 /**
  The playback queue.
  */
@@ -177,19 +168,9 @@ typedef enum {
 @property MPMusicPlayerController *systemMusicPlayer;
 
 /**
- Whether or not the queue requires reloading (setting inside of the system playback
- */
-@property BOOL queueRequiresReload DEPRECATED_ATTRIBUTE;
-
-/**
  Whether or not the player is in demo mode.
  */
 @property (readonly) BOOL demoMode;
-
-/**
- Whether or not the user has set music within the app. If NO, the app should reject queue requests and whatnot. Gotta love walled gardens.
- */
-@property (readonly) BOOL nowPlayingWasSetWithinLigniteMusic DEPRECATED_ATTRIBUTE;
 
 /**
  The music player's current type.
@@ -200,16 +181,6 @@ typedef enum {
  The currently playing track of the music player.
  */
 @property LMMusicTrack *nowPlayingTrack;
-
-/**
- The currently playing collection. Should rarely be nil, though nil cases should still be handled.
- */
-@property LMMusicTrackCollection *nowPlayingCollection DEPRECATED_ATTRIBUTE;
-
-/**
- The index of the currently playing track in the current playback queue.
- */
-@property NSUInteger indexOfNowPlayingTrack DEPRECATED_ATTRIBUTE;
 
 /**
  The current playback state of the music player.

@@ -44,6 +44,13 @@
  1.2.0
  */
 
+"Build237VeryBetaWarningBar" = "Diese Version wurde zu grossen Teilen neu programmiert und ist unter Umständen instabil (Tippe um diese Warnung zu schliessen)";
+"Build237VeryBetaTitle" = "Änderungen in Version 1.2";
+"Build237VeryBetaDescription" = "In dieser Version wurde ein grosser Teil des Backends komplett neu geschrieben, um die Geschwindigkeit und den Komfort massiv zu erhöhen.\n\nAufgrund dessen ist diese Version noch sehr 'experiementell' und es gibt noch einige Fehler/Probleme.\n\nWir werden eine neue Beta veröffentlichen, sobald wir weitere Aktualisierungen bereit haben.\n\nVielen Dank, dass du Lignite Music nutzt! :)";
+
+"CantReorderTitle" = "Rearrangieren ist vorübergehend deaktiviert :(";
+"CantReorderDescription" = "Wie so oft bei Beta-Versionen gilt es mit Bugs zu kämpfen.\n\nLeider haben wir - einen Tag vor der Veröffentlichung dieser Beta-Version - einen Bug gefunden, der die App abstürzen lässt, wenn Songs rearrangiert werden.\n\nWir haben versucht, das Problem zu beheben, aber leider hatten wir zuwenig Zeit dafür. Aufgrund dessen haben wir das Rearrangieren temporär deaktiviert.\n\nWir werden das Problem in einer neuen Beta beheben, welche bald verfügbar sein wird.\n\nWir danken dir für dein Verständnis.";
+
 "VoiceOverLabel_NotMinimized" = "Nicht minimiert";
 "VoiceOverLabel_Minimized" = "Minimiert";
 
@@ -64,7 +71,7 @@
 "PreviousTracksTitleSingular" = "Vorheriger Song";
 "PreviousTracksTitlePlural" = "Vorherige Songs";
 
-"UpNextTitle" = "Anstehende Songs";
+"UpNextTitle" = "Anstehende";
 
 "NowPlayingTrack" = "Aktuelle Wiedergabe";
 "NowPlayingTrackSubtitle" = "Erster Song in der Wiedergabeliste";
@@ -72,7 +79,7 @@
 "NothingUpNextTitle" = "Das wärs!";
 "NothingUpNextSubtitle" = "Du hast keine anstehenden Songs.";
 
-"OptimiseLoadTimeTitle" = "Geschwindigkeitsoptimierung";
+"OptimiseLoadTimeTitle" = "(Beta) Optimiert für Geschwindigkeit";
 "OptimiseLoadTimeSubtitle" = "Kürzere Liste von anstehenden Songs für eine höhrere Geschwindigkeit";
 
 

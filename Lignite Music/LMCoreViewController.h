@@ -15,6 +15,8 @@
 #import "LMCoreNavigationController.h"
 #import "LMPlaylistEditorViewController.h"
 
+#define LMBuild237VeryBetaConfirmationKey @"LMBuild237VeryBetaConfirmationKey"
+
 #define LMiOS_11_2_LagUnderstandingConfirmationKey @"LMiOS_11_2_LagUnderstandingConfirmationKey"
 #define LMWarningApprovedVersionKey @"LMWarningApprovedVersionKey"
 #define LMCheckedApprovedVersionBeforeKey @"LMCheckedApprovedVersionBeforeKey"
