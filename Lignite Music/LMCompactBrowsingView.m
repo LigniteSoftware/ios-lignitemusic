@@ -697,7 +697,7 @@
 	
 	if(difference > WINDOW_FRAME.size.height/4){
 		self.brokeScrollingThreshhold = YES;
-		if(!self.coreViewController.buttonNavigationBar.userMaximizedDuringScrollDeceleration){
+		if(!self.coreViewController.buttonNavigationBar.userMaximisedDuringScrollDeceleration){
 			[self.coreViewController.buttonNavigationBar minimise:YES];
 		}
 	}
@@ -717,7 +717,7 @@
 	NSLog(@"Ended decelerating");
 	
 	self.coreViewController.buttonNavigationBar.currentlyScrolling = NO;
-	self.coreViewController.buttonNavigationBar.userMaximizedDuringScrollDeceleration = NO;
+	self.coreViewController.buttonNavigationBar.userMaximisedDuringScrollDeceleration = NO;
 }
 
 - (void)changeBottomSpacing:(CGFloat)bottomSpacing {

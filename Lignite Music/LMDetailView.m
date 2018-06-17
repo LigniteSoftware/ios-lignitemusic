@@ -78,7 +78,7 @@
 
 	if(difference > WINDOW_FRAME.size.height/10){
 		self.brokeScrollingThreshhold = YES;
-		if(!self.rootViewController.buttonNavigationBar.userMaximizedDuringScrollDeceleration){
+		if(!self.rootViewController.buttonNavigationBar.userMaximisedDuringScrollDeceleration){
 			[self.rootViewController.buttonNavigationBar minimise:YES];
 		}
 	}
@@ -98,7 +98,7 @@
 	NSLog(@"Ended decelerating");
 	
 	self.rootViewController.buttonNavigationBar.currentlyScrolling = NO;
-	self.rootViewController.buttonNavigationBar.userMaximizedDuringScrollDeceleration = NO;
+	self.rootViewController.buttonNavigationBar.userMaximisedDuringScrollDeceleration = NO;
 }
 
 - (BOOL)showingAlbumTileView {
@@ -612,7 +612,7 @@
 		self.albumTileView.trackCollections = self.specificTrackCollections;
 		self.albumTileView.delegate = self;
 		
-		[self rootViewController].buttonNavigationBar.userMaximizedDuringScrollDeceleration = NO;
+		[self rootViewController].buttonNavigationBar.userMaximisedDuringScrollDeceleration = NO;
 	}
 	return self;
 }

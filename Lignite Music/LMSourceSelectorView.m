@@ -194,7 +194,7 @@
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		[self.collectionView reloadData];
 		
-		self.collectionView.contentInset = UIEdgeInsetsMake(([LMLayoutManager isiPhoneX] && ![LMLayoutManager isLandscape] && self.isMainSourceSelector) ? 30 : 10, 20, 20, 20);
+		self.collectionView.contentInset = UIEdgeInsetsMake(([LMLayoutManager isiPhoneX] && ![LMLayoutManager isLandscape] && self.isMainSourceSelector) ? 50 : 10, 20, 20, 20);
 	}];
 }
 
@@ -223,7 +223,7 @@
 	//	self.collectionView.accessibilityTraits = UIaccesstrait;
 	self.collectionView.delegate = self;
 	self.collectionView.dataSource = self;
-	self.collectionView.contentInset = UIEdgeInsetsMake(([LMLayoutManager isiPhoneX] && ![LMLayoutManager isLandscape] && self.isMainSourceSelector) ? 30 : 10, 20, 20, 20);
+	self.collectionView.contentInset = UIEdgeInsetsMake(([LMLayoutManager isiPhoneX] && ![LMLayoutManager isLandscape] && self.isMainSourceSelector) ? 50 : 10, 20, 20, 20);
 	[self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"sourceSelectorCellIdentifier"];
 	[self addSubview:self.collectionView];
 	

@@ -986,6 +986,8 @@
 		if(finished){
 			[UIView animateWithDuration:0.25 animations:^{
 				[self setNeedsStatusBarAppearanceUpdate];
+				
+				[self setNeedsUpdateOfHomeIndicatorAutoHidden];
 			}];
 		}
 	}];
@@ -1004,6 +1006,10 @@
 		if(finished){
 			[UIView animateWithDuration:0.25 animations:^{
 				[self setNeedsStatusBarAppearanceUpdate];
+				
+				if(@available(iOS 11.0, *)){
+				[self setNeedsUpdateOfHomeIndicatorAutoHidden];
+				}
 			}];
 		}
 	}];
@@ -1595,6 +1601,11 @@
 	if(navigationTab == LMNavigationTabMiniPlayer){
 		[self loadNowPlayingCoreView];
 	}
+}
+
+- (BOOL)prefersHomeIndicatorAutoHidden {
+	return YES;
+//	return self.nowPlayingCoreView.isOpen;
 }
 
 - (void)loadTitleView {

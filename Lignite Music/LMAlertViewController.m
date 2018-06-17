@@ -109,6 +109,10 @@
 	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		[self.bodyTextView setContentOffset:CGPointZero];
+		
+		if(@available(iOS 11.0, *)){
+			[self setNeedsUpdateOfHomeIndicatorAutoHidden];
+		}
 	}];
 }
 
@@ -135,6 +139,10 @@
 	if(@available(iOS 10, *)){
 		self.feedbackGenerator = nil;
 	}
+}
+
+- (BOOL)prefersHomeIndicatorAutoHidden {
+	return [LMLayoutManager isLandscape];
 }
 
 - (void)viewDidLoad {

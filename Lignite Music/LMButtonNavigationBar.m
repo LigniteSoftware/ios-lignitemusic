@@ -74,22 +74,22 @@
 /**
  The minimize button.
  */
-@property UIView *minimizeButton;
+@property UIView *minimiseButton;
 
 /**
  The bottom constraint for the minimize button.
  */
-@property (readonly) NSLayoutConstraint *minimizeButtonBottomConstraint;
+@property (readonly) NSLayoutConstraint *minimiseButtonBottomConstraint;
 
 /**
  The icon image view for the minimize button.
  */
-@property UIImageView *minimizeButtonIconImageView;
+@property UIImageView *minimiseButtonIconImageView;
 
 /**
  Whether or not the button navigation bar was automatically minimized. If so, automatic maximization is OK, otherwise, do not automatically maximize.
  */
-@property BOOL wasAutomaticallyMinimized;
+@property BOOL wasAutomaticallyMinimised;
 
 /**
  The frame of the button navigation bar without being modified by being completely hidden.
@@ -135,14 +135,14 @@
 
 @synthesize buttonBarBottomConstraint = _buttonBarBottomConstraint;
 @synthesize viewAttachedToButtonBar = _viewAttachedToButtonBar;
-@synthesize minimizeButtonBottomConstraint = _minimizeButtonBottomConstraint;
+@synthesize minimiseButtonBottomConstraint = _minimiseButtonBottomConstraint;
 @synthesize currentlySelectedTab = _currentlySelectedTab;
 @synthesize isMinimised = _isMinimised;
 
 - (void)setIsMinimised:(BOOL)isMinimized {
 	_isMinimised = isMinimized;
 	
-	self.minimizeButton.accessibilityLabel = [NSString stringWithFormat:@"%@, %@", NSLocalizedString(@"VoiceOverLabel_MinimizeButton", nil), NSLocalizedString(isMinimized ? @"VoiceOverLabel_Minimized" : @"VoiceOverLabel_NotMinimized", nil)];
+	self.minimiseButton.accessibilityLabel = [NSString stringWithFormat:@"%@, %@", NSLocalizedString(@"VoiceOverLabel_MinimizeButton", nil), NSLocalizedString(isMinimized ? @"VoiceOverLabel_Minimized" : @"VoiceOverLabel_NotMinimized", nil)];
 }
 
 - (BOOL)isMinimised {
@@ -177,11 +177,11 @@
 	return [self bottomConstraintForView:self.buttonBar];
 }
 
-- (NSLayoutConstraint*)minimizeButtonBottomConstraint {
-	return [self bottomConstraintForView:self.minimizeButton];
+- (NSLayoutConstraint*)minimiseButtonBottomConstraint {
+	return [self bottomConstraintForView:self.minimiseButton];
 }
 
-- (CGFloat)maximizedHeight {
+- (CGFloat)maximisedHeight {
 	if(self.layoutManager.isLandscape){
 		NSLog(@"Size is %f", self.buttonBar.frame.size.width + self.viewAttachedToButtonBar.frame.size.width);
 		return self.buttonBar.frame.size.width + self.viewAttachedToButtonBar.frame.size.width;
@@ -195,10 +195,10 @@
 	
 	self.buttonBarBottomConstraint.constant = constant;
 	
-	BOOL maximizing = (self.buttonBarBottomConstraint.constant < 10.0f);
-	if([LMLayoutManager isiPhoneX]){
-		self.iPhoneXBottomCoverConstraint.constant = maximizing ? 0.0f : 22.0f;
-	}
+//	BOOL maximizing = (self.buttonBarBottomConstraint.constant < 10.0f);
+//	if([LMLayoutManager isiPhoneX]){
+//		self.iPhoneXBottomCoverConstraint.constant = maximizing ? 0.0f : 22.0f;
+//	}
 	
 	NSLog(@"Setting to %ld", constant);
 	
@@ -279,7 +279,7 @@
 	[UIView animateWithDuration:0.25 animations:^{
 		[self layoutIfNeeded];
 	} completion:^(BOOL finished) {
-		[self.delegate requiredHeightForNavigationBarChangedTo:[self maximizedHeight]
+		[self.delegate requiredHeightForNavigationBarChangedTo:[self maximisedHeight]
 										 withAnimationDuration:isDecreasing ? 0.10 : 0.50];
 	}];
 		
@@ -293,7 +293,7 @@
     
     self.isMinimised = YES;
     self.isCompletelyHidden = YES;
-	self.wasAutomaticallyMinimized = YES;
+	self.wasAutomaticallyMinimised = YES;
 	
 	CGFloat dimensionToUse = MAX(WINDOW_FRAME.size.width, WINDOW_FRAME.size.height);
 	
@@ -320,7 +320,9 @@
 	
 	[self layoutIfNeeded];
 	
-	self.minimizeButtonBottomConstraint.constant = ([LMLayoutManager isLandscape] || [LMLayoutManager isLandscapeiPad]) ? self.unmodifiedFrame.size.width : self.unmodifiedFrame.size.height;
+	self.minimiseButtonBottomConstraint.constant = ([LMLayoutManager isLandscape] || [LMLayoutManager isLandscapeiPad]) ? WINDOW_FRAME.size.width : WINDOW_FRAME.size.height;
+	
+	NSLog(@"Unmodified %@", NSStringFromCGRect(self.unmodifiedFrame));
 	
 	[UIView animateWithDuration:0.5 animations:^{
 		[self layoutIfNeeded];
@@ -335,7 +337,7 @@
     self.isMinimised = YES;
     self.isCompletelyHidden = NO;
 	
-	self.wasAutomaticallyMinimized = automatic;
+	self.wasAutomaticallyMinimised = automatic;
     
 	NSLog(@"Minimize");
 	
@@ -344,7 +346,6 @@
 	[self setButtonBarBottomConstraintConstant://MAX(WINDOW_FRAME.size.height, WINDOW_FRAME.size.width) * 1.25
 											 MAX(self.buttonBar.frame.size.height, self.buttonBar.frame.size.width)
                                              + self.viewAttachedToButtonBar.frame.size.height
-											 + (LMLayoutManager.isiPhoneX ? (self.buttonBar.frame.size.width + 20) : 0)
 									completion:^(BOOL finished) {
 										LMButtonNavigationBar *strongSelf = weakSelf;
 										if(!strongSelf){
@@ -352,7 +353,7 @@
 										}
 										
 										if(finished) {
-											[strongSelf.delegate requiredHeightForNavigationBarChangedTo:self.minimizeButton.frame.size.height + 10
+											[strongSelf.delegate requiredHeightForNavigationBarChangedTo:self.minimiseButton.frame.size.height + 10
 																				   withAnimationDuration:0.10];
 										}
 									}];
@@ -364,7 +365,7 @@
 	
 	[self layoutIfNeeded];
 	
-	self.minimizeButtonBottomConstraint.constant = 0;
+	self.minimiseButtonBottomConstraint.constant = 0;
 	
 	LMCoreViewController *coreViewController = (LMCoreViewController*)self.rootViewController;
 	[UIView animateWithDuration:1.0 animations:^{
@@ -374,14 +375,14 @@
 }
 
 - (void)maximise:(BOOL)automatic {
-	if((!self.wasAutomaticallyMinimized && self.isMinimised && automatic) || self.rotating){
+	if((!self.wasAutomaticallyMinimised && self.isMinimised && automatic) || self.rotating){
 		return;
 	}
 	
-	NSLog(@"Maximize");
+	NSLog(@"Maximise");
 	
 	if(!automatic && self.currentlyScrolling){
-		self.userMaximizedDuringScrollDeceleration = YES;
+		self.userMaximisedDuringScrollDeceleration = YES;
 	}
 	
 	__weak id weakSelf = self;
@@ -393,7 +394,7 @@
 		}
 		
 		if(finished) {
-			[strongSelf.delegate requiredHeightForNavigationBarChangedTo:[strongSelf maximizedHeight]
+			[strongSelf.delegate requiredHeightForNavigationBarChangedTo:[strongSelf maximisedHeight]
 												   withAnimationDuration:0.10];
 		}
 	}];
@@ -408,15 +409,15 @@
 	
 	self.isMinimised = NO;
 	self.isCompletelyHidden = NO;
-	self.wasAutomaticallyMinimized = NO;
+	self.wasAutomaticallyMinimised = NO;
 	
-	
-	self.minimizeButtonBottomConstraint.constant = 0;
 	
 	[self layoutIfNeeded];
 	
+	self.minimiseButtonBottomConstraint.constant = 0;
+	
 	LMCoreViewController *coreViewController = (LMCoreViewController*)self.rootViewController;
-	[UIView animateWithDuration:1.0 animations:^{
+	[UIView animateWithDuration:0.3 animations:^{
 		[self layoutIfNeeded];
 		[coreViewController setNeedsStatusBarAppearanceUpdate];
 	}];
@@ -582,7 +583,7 @@
 			}
 		}
 		
-		self.minimizeButtonIconImageView.image = [LMAppIcon imageForIcon:(willBeLandscape || [LMLayoutManager isiPad]) ? LMIcon3DotsHorizontal : LMIcon3DotsVertical];
+		self.minimiseButtonIconImageView.image = [LMAppIcon imageForIcon:(willBeLandscape || [LMLayoutManager isiPad]) ? LMIcon3DotsHorizontal : LMIcon3DotsVertical];
 		
 		if(self.isCompletelyHidden){
 			self.isCompletelyHidden = NO;
@@ -616,10 +617,10 @@
 	
 	self.buttonBar.adjustForTheFuckingNotch = adjustForTheFuckingNotch;
 	
-	NSLog(@"Fuckem %@", self.minimizeButton.constraints);
+	NSLog(@"Fuckem %@", self.minimiseButton.constraints);
 	
-	for(NSLayoutConstraint *constraint in self.minimizeButton.constraints){
-		if(constraint.firstAttribute == NSLayoutAttributeWidth && constraint.firstItem == self.minimizeButton){
+	for(NSLayoutConstraint *constraint in self.minimiseButton.constraints){
+		if(constraint.firstAttribute == NSLayoutAttributeWidth && constraint.firstItem == self.minimiseButton){
 			constraint.constant = WINDOW_FRAME.size.width/(adjustForTheFuckingNotch ? 7.0 : 8.0);
 		}
 	}
@@ -645,12 +646,14 @@
 }
 
 - (void)themeChanged:(LMTheme)theme {
-	self.minimizeButton.backgroundColor = [LMColour mainColour];
+	self.minimiseButton.backgroundColor = [LMColour mainColour];
 	self.iPhoneXBottomCoverView.backgroundColor = [LMColour mainColour];
 }
 
 - (void)layoutSubviews {
 //	return;
+	
+	self.unmodifiedFrame = self.frame;
 		
 	if(!self.didLayoutConstraints){
 		self.didLayoutConstraints = YES;
@@ -658,8 +661,6 @@
 		self.backgroundColor = [UIColor clearColor];
 				
 		NSLog(@"Did layout constraints!");
-		
-		self.unmodifiedFrame = self.frame;
 		
 		
 		self.isAccessibilityElement = NO;
@@ -706,7 +707,7 @@
 			self.iPhoneXBottomCoverConstraint = [self.iPhoneXBottomCoverView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 			
 			NSArray *buttonNavigationBarBottomCoverViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-				[self.iPhoneXBottomCoverView autoSetDimension:ALDimensionHeight toSize:22.0f];
+				[self.iPhoneXBottomCoverView autoSetDimension:ALDimensionHeight toSize:0.0f];
 			}];
 			[LMLayoutManager addNewPortraitConstraints:buttonNavigationBarBottomCoverViewPortraitConstraints];
 			
@@ -795,28 +796,28 @@
 			}
 		}
 		
-		self.minimizeButton = [UIView newAutoLayoutView];
-		self.minimizeButton.backgroundColor = [LMColour mainColour];
-		self.minimizeButton.userInteractionEnabled = YES;
-		self.minimizeButton.isAccessibilityElement = YES;
+		self.minimiseButton = [UIView newAutoLayoutView];
+		self.minimiseButton.backgroundColor = [LMColour mainColour];
+		self.minimiseButton.userInteractionEnabled = YES;
+		self.minimiseButton.isAccessibilityElement = YES;
 		[self setIsMinimised:NO];
-		self.minimizeButton.accessibilityHint = NSLocalizedString(@"VoiceOverHint_MinimizeButton", nil);
-		[self addSubview:self.minimizeButton];
+		self.minimiseButton.accessibilityHint = NSLocalizedString(@"VoiceOverHint_MinimizeButton", nil);
+		[self addSubview:self.minimiseButton];
 		
 		UITapGestureRecognizer *minimizeTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(minimizeButtonTapped)];
-		[self.minimizeButton addGestureRecognizer:minimizeTapGestureRecognizer];
+		[self.minimiseButton addGestureRecognizer:minimizeTapGestureRecognizer];
 		
 		
-		self.minimizeButtonIconImageView = [UIImageView newAutoLayoutView];
-		self.minimizeButtonIconImageView.image = [LMAppIcon imageForIcon:(self.layoutManager.isLandscape || [LMLayoutManager isiPad]) ? LMIcon3DotsHorizontal : LMIcon3DotsVertical];
-		self.minimizeButtonIconImageView.contentMode = UIViewContentModeScaleAspectFit;
-		self.minimizeButtonIconImageView.userInteractionEnabled = NO;
-		[self.minimizeButton addSubview:self.minimizeButtonIconImageView];
+		self.minimiseButtonIconImageView = [UIImageView newAutoLayoutView];
+		self.minimiseButtonIconImageView.image = [LMAppIcon imageForIcon:(self.layoutManager.isLandscape || [LMLayoutManager isiPad]) ? LMIcon3DotsHorizontal : LMIcon3DotsVertical];
+		self.minimiseButtonIconImageView.contentMode = UIViewContentModeScaleAspectFit;
+		self.minimiseButtonIconImageView.userInteractionEnabled = NO;
+		[self.minimiseButton addSubview:self.minimiseButtonIconImageView];
 		
-		[self.minimizeButtonIconImageView autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
-		[self.minimizeButtonIconImageView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-		self.minimizeButtonIconWidthConstraint = [self.minimizeButtonIconImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.minimizeButton withOffset:notched ? -30 : 0];
-		[self.minimizeButtonIconImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.minimizeButton withMultiplier:[LMLayoutManager isiPad] ? (2.0/10.0) : (4.0/10.0)];
+		[self.minimiseButtonIconImageView autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+		[self.minimiseButtonIconImageView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+		self.minimizeButtonIconWidthConstraint = [self.minimiseButtonIconImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.minimiseButton withOffset:notched ? -30 : 0];
+		[self.minimiseButtonIconImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.minimiseButton withMultiplier:[LMLayoutManager isiPad] ? (2.0/10.0) : (4.0/10.0)];
 		
 		
 		self.buttonBar = [LMButtonBar newAutoLayoutView];
@@ -836,21 +837,21 @@
 //		[self.buttonBar autoPinEdgesToSuperviewEdges];
 		
 		NSArray *buttonBarPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-			[self.buttonBar autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.minimizeButton];
+			[self.buttonBar autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.minimiseButton];
 			[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 			[self.buttonBar autoPinEdge:ALEdgeBottom
 								 toEdge:[LMLayoutManager isiPhoneX] ? ALEdgeTop : ALEdgeBottom
 								 ofView:[LMLayoutManager isiPhoneX] ? self.iPhoneXBottomCoverView : self];
-			[self.buttonBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.minimizeButton];
+			[self.buttonBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.minimiseButton];
 //			[self.buttonBar autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self];
 		}];
 		[LMLayoutManager addNewPortraitConstraints:buttonBarPortraitConstraints];
 		
 		NSArray *buttonBarLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 			[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeTop];
-			[self.buttonBar autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.minimizeButton];
+			[self.buttonBar autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.minimiseButton];
 			[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-			[self.buttonBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.minimizeButton];
+			[self.buttonBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.minimiseButton];
 //			[self.buttonBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self];
 		}];
 		[LMLayoutManager addNewLandscapeConstraints:buttonBarLandscapeConstraints];
@@ -864,7 +865,7 @@
 			[self.buttonBar autoSetDimension:ALDimensionWidth toSize:buttonBarWidth];
 //			[self.buttonBar autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(2.0/3.0)];
 //			[self.buttonBar autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-			[self.buttonBar autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.minimizeButton];
+			[self.buttonBar autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.minimiseButton];
 			[self.buttonBar autoSetDimension:ALDimensionHeight toSize:properDimension/8.0];
 		}];
 		[LMLayoutManager addNewiPadConstraints:buttonBariPadConstraints];
@@ -872,7 +873,7 @@
 
 		NSArray *browsingBarPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 			[self.browsingBar autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.buttonBar];
-			[self.browsingBar autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.minimizeButton];
+			[self.browsingBar autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.minimiseButton];
 			[self.browsingBar autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.buttonBar];
 			[self.browsingBar autoSetDimension:ALDimensionHeight toSize:properDimension/([LMLayoutManager isiPhoneX] ? 16.5 : 15.0)];
 		}];
@@ -897,41 +898,41 @@
 		
 		
 		
-		NSArray *minimizeButtonPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-			[self.minimizeButton autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-			[self.minimizeButton autoPinEdge:ALEdgeBottom
+		NSArray *minimiseButtonPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
+			[self.minimiseButton autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+			[self.minimiseButton autoPinEdge:ALEdgeBottom
 									  toEdge:[LMLayoutManager isiPhoneX] ? ALEdgeTop : ALEdgeBottom
 									  ofView:[LMLayoutManager isiPhoneX] ? self.iPhoneXBottomCoverView : self];
-			[self.minimizeButton autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.browsingBar];
-			[self.minimizeButton autoSetDimension:ALDimensionHeight toSize:properDimension/8.0];
+			[self.minimiseButton autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.browsingBar];
+			[self.minimiseButton autoSetDimension:ALDimensionHeight toSize:properDimension/8.0];
 		}];
-		[LMLayoutManager addNewPortraitConstraints:minimizeButtonPortraitConstraints];
+		[LMLayoutManager addNewPortraitConstraints:minimiseButtonPortraitConstraints];
 		
-		CGFloat minimizeButtonLandscapeWidthFactorial = 8.0f;
+		CGFloat minimiseButtonLandscapeWidthFactorial = 8.0f;
 		if(notched){
-			minimizeButtonLandscapeWidthFactorial = 7.0f;
+			minimiseButtonLandscapeWidthFactorial = 7.0f;
 		}
 		
 		NSArray *minimizeButtonLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-			[self.minimizeButton autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-			[self.minimizeButton autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-			[self.minimizeButton autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.browsingBar];
-			[self.minimizeButton autoSetDimension:ALDimensionWidth toSize:properDimension/minimizeButtonLandscapeWidthFactorial];
+			[self.minimiseButton autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+			[self.minimiseButton autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+			[self.minimiseButton autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.browsingBar];
+			[self.minimiseButton autoSetDimension:ALDimensionWidth toSize:properDimension/minimiseButtonLandscapeWidthFactorial];
 		}];
 		[LMLayoutManager addNewLandscapeConstraints:minimizeButtonLandscapeConstraints];
 		
 		NSArray *minimizeButtoniPadConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-			[self.minimizeButton autoAlignAxisToSuperviewAxis:ALAxisVertical];
-			[self.minimizeButton autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.buttonBar];
-			[self.minimizeButton autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-			[self.minimizeButton autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.buttonBar withMultiplier:(2.0/4.0)];
+			[self.minimiseButton autoAlignAxisToSuperviewAxis:ALAxisVertical];
+			[self.minimiseButton autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.buttonBar];
+			[self.minimiseButton autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+			[self.minimiseButton autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.buttonBar withMultiplier:(2.0/4.0)];
 		}];
 		[LMLayoutManager addNewiPadConstraints:minimizeButtoniPadConstraints];
 		
 		
 		NSArray *miniPlayerCoreViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
 			[self.miniPlayerCoreView autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.buttonBar];
-			[self.miniPlayerCoreView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.minimizeButton];
+			[self.miniPlayerCoreView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.minimiseButton];
 //			[self.miniPlayerCoreView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.buttonBar];
 		}];
 		[LMLayoutManager addNewPortraitConstraints:miniPlayerCoreViewPortraitConstraints];
@@ -963,7 +964,7 @@
 		CGFloat sourceSelectorProperSize = properDimension-(self.layoutManager.isLandscape ? LMNavigationBarTabWidth : LMNavigationBarTabHeight);
 		
 		NSArray *sourceSelectorPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-			[self.sourceSelector autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.minimizeButton];
+			[self.sourceSelector autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.minimiseButton];
 			[self.sourceSelector autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.buttonBar];
 			[self.sourceSelector autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.buttonBar withOffset:20];
 			[self.sourceSelector autoSetDimension:ALDimensionHeight toSize:sourceSelectorProperSize];
@@ -996,7 +997,7 @@
 			[self.statusBarCoverView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 			
 			NSArray *iPhoneXStatusBarCoverViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-				[self.statusBarCoverView autoSetDimension:ALDimensionHeight toSize:[LMLayoutManager isiPhoneX] ? 64.0f : 20.0];
+				[self.statusBarCoverView autoSetDimension:ALDimensionHeight toSize:[LMLayoutManager isiPhoneX] ? 44.0f : 20.0];
 			}];
 			[LMLayoutManager addNewPortraitConstraints:iPhoneXStatusBarCoverViewPortraitConstraints];
 			
@@ -1007,7 +1008,7 @@
 		}
 		
 		if([LMLayoutManager isiPad]){
-			[self insertSubview:self.minimizeButton aboveSubview:self.buttonBar];
+			[self insertSubview:self.minimiseButton aboveSubview:self.buttonBar];
 		}
 		
 		if([LMLayoutManager isiPhoneX]){

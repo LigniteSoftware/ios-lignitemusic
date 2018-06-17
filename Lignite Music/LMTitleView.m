@@ -193,7 +193,7 @@
 	
     if(difference > WINDOW_FRAME.size.height/4){
         self.brokeScrollingThreshhold = YES;
-		if(!self.rootViewController.buttonNavigationBar.userMaximizedDuringScrollDeceleration){
+		if(!self.rootViewController.buttonNavigationBar.userMaximisedDuringScrollDeceleration){
 			[self.rootViewController.buttonNavigationBar minimise:YES];
 		}
     }	
@@ -213,7 +213,7 @@
 	NSLog(@"Ended decelerating");
 	
 	self.rootViewController.buttonNavigationBar.currentlyScrolling = NO;
-	self.rootViewController.buttonNavigationBar.userMaximizedDuringScrollDeceleration = NO;
+	self.rootViewController.buttonNavigationBar.userMaximisedDuringScrollDeceleration = NO;
 }
 
 - (void)reloadCurrentlyHighlightedTrack {
