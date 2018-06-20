@@ -432,7 +432,7 @@
 
 
 /* Now playing and mini player */
-"TheresNothingHere" = "Oh boy, you don't have any music here!\n\nSync your music from iTunes to begin."; //Nothing for a certain view (ie. no compilations)
+"TheresNothingHere" = "Oh boy, you don't have any music here!\n\nSync your music from iTunes or add music from the Apple Music app to begin."; //Nothing for a certain view (ie. no compilations)
 "iOSNotProvidingQueue" = "It seems that you've started music outside of Lignite Music.\n\nUnfortunately Apple does not let us manage the queue for music started outside of our app.\n\nPlease start new music from within Lignite Music to manage the queue.";
 "NothingInQueue" = "Nothing in queue";
 "QueueUnavailable" = "Queue unavailable";

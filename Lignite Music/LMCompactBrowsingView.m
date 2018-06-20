@@ -1384,6 +1384,9 @@
 										  [NSTimer scheduledTimerWithTimeInterval:0.25 block:^{
 											  [coreViewController loadButtonNavigationBar];
 										  } repeats:NO];
+										  
+										  [self.collectionView.collectionViewLayout invalidateLayout];
+										  [self.collectionView reloadData];
 									  }];
 		
 //		NSArray *collectionViewPortraitConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{

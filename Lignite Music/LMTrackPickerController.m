@@ -286,10 +286,10 @@
 	[arrowIconPaddedView addSubview:arrowIconView];
 	
 	[arrowIconView autoCentreInSuperview];
-	[arrowIconView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:arrowIconPaddedView withMultiplier:(2.0/8.0)];
+	[arrowIconView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:arrowIconPaddedView withMultiplier:(5.0/8.0)];
 	[arrowIconView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:arrowIconPaddedView];
 	
-	return arrowIconView;
+	return arrowIconPaddedView;
 }
 
 - (BOOL)trackCollectionIsSelected:(LMMusicTrackCollection*)trackCollection {
@@ -493,7 +493,11 @@
 }
 
 - (void)reloadListEntryAccessibilityText:(LMListEntry*)listEntry {
-	BOOL isSelected = [self trackCollectionIsSelected:[self.displayingTrackCollections objectAtIndex:listEntry.collectionIndex-1]];
+	NSInteger indexOfListEntry = (listEntry.collectionIndex - 1);
+	BOOL isSelected = NO;
+	if(indexOfListEntry > -1){
+		isSelected = [self trackCollectionIsSelected:[self.displayingTrackCollections objectAtIndex:indexOfListEntry]];
+	}
 	
 	listEntry.isAccessibilityElement = YES;
 	listEntry.accessibilityLabel = [NSString stringWithFormat:@"%@, %@, %@", [self titleForListEntry:listEntry], [self subtitleForListEntry:listEntry], NSLocalizedString(isSelected ? @"VoiceOverLabel_Selected" : @"VoiceOverLabel_NotSelected", nil)];

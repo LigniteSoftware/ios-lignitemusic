@@ -1629,8 +1629,13 @@
 	}];
 	[LMLayoutManager addNewPortraitConstraints:compactViewPortraitConstraints];
 	
+	CGFloat landscapeNavigationBarWidth = 64.0f;
+	if([LMLayoutManager isiPhoneX]){
+		landscapeNavigationBarWidth = ([LMLayoutManager notchPosition] == LMNotchPositionLeft) ? 94.0f : 64.0f;
+	}
+	
 	NSArray *compactViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-		[self.titleView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.view withOffset:self.landscapeNavigationBar.frame.size.width];
+		[self.titleView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.view withOffset:landscapeNavigationBarWidth];
 		[self.titleView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 		[self.titleView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 	}];
@@ -1660,13 +1665,17 @@
 	}];
 	[LMLayoutManager addNewPortraitConstraints:compactViewPortraitConstraints];
 	
+	CGFloat landscapeNavigationBarWidth = 64.0f;
+	if([LMLayoutManager isiPhoneX]){
+		landscapeNavigationBarWidth = ([LMLayoutManager notchPosition] == LMNotchPositionLeft) ? 94.0f : 64.0f;
+	}
+	
 	NSArray *compactViewLandscapeConstraints = [NSLayoutConstraint autoCreateConstraintsWithoutInstalling:^{
-		[self.compactView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.view withOffset:self.landscapeNavigationBar.frame.size.width];
+		[self.compactView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.view withOffset:landscapeNavigationBarWidth];
 		[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
 		[self.compactView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
 	}];
 	[LMLayoutManager addNewLandscapeConstraints:compactViewLandscapeConstraints];
-
 }
 
 - (void)loadNowPlayingCoreView {
@@ -2174,9 +2183,9 @@
 //		} repeats:NO];
 		
 		
-		[NSTimer scheduledTimerWithTimeInterval:1.0 block:^{
-			[self.buttonNavigationBar setSelectedTab:LMNavigationTabMiniPlayer];
-		} repeats:NO];
+//		[NSTimer scheduledTimerWithTimeInterval:1.0 block:^{
+//			[self.buttonNavigationBar setSelectedTab:LMNavigationTabMiniPlayer];
+//		} repeats:NO];
 		
 		
 //		NSLog(@"Queue track at last index %@ to number of items %d", [self.musicPlayer queueTrackAtIndex:self.musicPlayer.numberOfItemsInQueue - 1], (int)self.musicPlayer.numberOfItemsInQueue);

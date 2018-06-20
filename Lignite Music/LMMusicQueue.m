@@ -569,42 +569,20 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 		strongSelf.fullQueueAvailable = YES;
 
 		NSMutableArray<LMMusicTrack*> *systemQueueArray = [NSMutableArray new];
-		if([LMSettings quickLoad]){
-			NSInteger startingIndex = strongSelf.systemIndexOfNowPlayingTrack - LMQuickLoadQueueLimit;
-			NSInteger endingIndex = (startingIndex + (LMQuickLoadQueueLimit * 2) + 1);
-			if(startingIndex < 0){
-				startingIndex = 0;
-			}
-			if(endingIndex > strongSelf.systemQueueCount){
-				endingIndex = strongSelf.systemQueueCount;
-			}
-			for(NSInteger i = startingIndex; i < endingIndex; i++){
-				LMMusicTrack *track = [strongSelf systemQueueTrackAtIndex:i];
-				if(track){
-					[systemQueueArray addObject:track];
-					
-					if(strongSelf.systemQueueStartingIndex == NSNotFound){
-						strongSelf.systemQueueStartingIndex = i;
-					}
+		
+		NSLog(@"System queue count %d", (int)strongSelf.systemQueueCount);
+		
+		for(NSInteger i = 0; i < strongSelf.systemQueueCount; i++){
+			LMMusicTrack *track = [strongSelf systemQueueTrackAtIndex:i];
+			if(track){
+				[systemQueueArray addObject:track];
+				
+				if(strongSelf.systemQueueStartingIndex == NSNotFound){
+					strongSelf.systemQueueStartingIndex = i;
 				}
 			}
-			
-			strongSelf.fullQueueAvailable = (systemQueueArray.count == strongSelf.systemQueueCount);
-		}
-		else{ //Load all possible tracks
-			NSLog(@"System queue count %d", (int)strongSelf.systemQueueCount);
-			for(NSInteger i = 0; i < strongSelf.systemQueueCount; i++){
-				LMMusicTrack *track = [strongSelf systemQueueTrackAtIndex:i];
-				if(track){
-					[systemQueueArray addObject:track];
-					
-					if(strongSelf.systemQueueStartingIndex == NSNotFound){
-						strongSelf.systemQueueStartingIndex = i;
-					}
-				}
-				else{
-					strongSelf.fullQueueAvailable = NO;
-				}
+			else{
+				strongSelf.fullQueueAvailable = NO;
 			}
 		}
 
