@@ -35,7 +35,7 @@
 }
 
 + (BOOL)screenShouldTimeoutWhenNowPlayingIsOpen {
-	return [self settingForKey:LMSettingsKeyDisableScreenTimeoutOnNowPlaying defaultValue:NO];
+	return ![self settingForKey:LMSettingsKeyDisableScreenTimeoutOnNowPlaying defaultValue:NO];
 }
 
 + (BOOL)debugInitialisationSounds {

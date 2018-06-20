@@ -2174,9 +2174,9 @@
 //		} repeats:NO];
 		
 		
-//		[NSTimer scheduledTimerWithTimeInterval:1.0 block:^{
-//			[self.buttonNavigationBar setSelectedTab:LMNavigationTabMiniPlayer];
-//		} repeats:NO];
+		[NSTimer scheduledTimerWithTimeInterval:1.0 block:^{
+			[self.buttonNavigationBar setSelectedTab:LMNavigationTabMiniPlayer];
+		} repeats:NO];
 		
 		
 //		NSLog(@"Queue track at last index %@ to number of items %d", [self.musicPlayer queueTrackAtIndex:self.musicPlayer.numberOfItemsInQueue - 1], (int)self.musicPlayer.numberOfItemsInQueue);

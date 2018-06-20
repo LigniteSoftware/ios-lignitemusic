@@ -655,9 +655,9 @@
 }
 
 - (void)queueIsBeingRebuilt:(BOOL)rebuilding becauseOfActionType:(LMMusicQueueActionType)actionType {
+	self.loadingQueueView.hidden = !rebuilding;
+	
 	if(actionType == LMMusicQueueActionTypeOpenQueue){
-		self.loadingQueueView.hidden = !rebuilding;
-		
 		rebuilding ? [self.loadingActivityIndicator startAnimating] : [self.loadingActivityIndicator stopAnimating];
 		
 		if(!rebuilding){

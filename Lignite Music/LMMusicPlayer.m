@@ -1124,16 +1124,15 @@ BOOL shuffleForDebug = NO;
 }
 
 - (void)skipToPreviousTrack {
-	if(self.queue.queueAPIsAvailable){
-		if(self.queue.requiresSystemReload){
-			[self.queue systemReloadWithTrack:self.queue.previousTrack];
-		}
-		else{
-			[self.systemMusicPlayer setNowPlayingItem:self.queue.previousTrack];
-		}
+	if(self.queue.queueAPIsAvailable && self.queue.requiresSystemReload){
+		[self.queue systemReloadWithTrack:self.queue.previousTrack];
 	}
 	else{
 		[self.systemMusicPlayer skipToPreviousItem];
+		
+		if(self.playbackState != LMMusicPlaybackStatePlaying){
+			[self play];
+		}
 	}
 }
 
@@ -1143,16 +1142,14 @@ BOOL shuffleForDebug = NO;
 		[self.systemMusicPlayer skipToBeginning];
 	}
 	else{
-		if(self.queue.queueAPIsAvailable){
-			if(self.queue.requiresSystemReload){
-				[self.queue systemReloadWithTrack:self.queue.nextTrack];
-			}
-			else{
-				[self.systemMusicPlayer setNowPlayingItem:self.queue.nextTrack];
-			}
+		if(self.queue.queueAPIsAvailable && self.queue.requiresSystemReload){
+			[self.queue systemReloadWithTrack:self.queue.nextTrack];
 		}
 		else{
 			[self.systemMusicPlayer skipToNextItem];
+			if(self.playbackState != LMMusicPlaybackStatePlaying){
+				[self play];
+			}
 		}
 	}
 	if(self.repeatMode != LMMusicRepeatModeNone){

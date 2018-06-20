@@ -255,6 +255,8 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 		[self.musicPlayer.systemMusicPlayer setQueueWithItemCollection:newQueue];
 		
 		self.fullQueueAvailable = YES;
+		
+		[self queueFinishedBuilding];
 	}
 	
 	if(autoPlay){
@@ -523,6 +525,22 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 	}
 }
 
+- (void)queueFinishedBuilding {
+	for(id<LMMusicQueueDelegate>delegate in self.delegates){
+		if([delegate respondsToSelector:@selector(queueIsBeingRebuilt:becauseOfActionType:)]){
+			[delegate queueIsBeingRebuilt:NO becauseOfActionType:self.mostRecentAction];
+		}
+	}
+}
+
+- (void)queueBeganBuilding {
+	for(id<LMMusicQueueDelegate>delegate in self.delegates){
+		if([delegate respondsToSelector:@selector(queueIsBeingRebuilt:becauseOfActionType:)]){
+			[delegate queueIsBeingRebuilt:YES becauseOfActionType:self.mostRecentAction];
+		}
+	}
+}
+
 - (void)rebuild {
 	__weak id weakSelf = self;
 	
@@ -540,11 +558,7 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 		}
 		
 		dispatch_async(dispatch_get_main_queue(), ^{
-			for(id<LMMusicQueueDelegate>delegate in self.delegates){
-				if([delegate respondsToSelector:@selector(queueIsBeingRebuilt:becauseOfActionType:)]){
-					[delegate queueIsBeingRebuilt:YES becauseOfActionType:self.mostRecentAction];
-				}
-			}
+			[strongSelf queueBeganBuilding];
 		});
 		
 		BOOL noPreviousQueue = ![strongSelf queueExists];
@@ -641,11 +655,7 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 				[self notifyDelegatesOfCompletelyChangedQueue]; //There was a queue playing and there is still a queue playing
 			}
 
-			for(id<LMMusicQueueDelegate>delegate in self.delegates){
-				if([delegate respondsToSelector:@selector(queueIsBeingRebuilt:becauseOfActionType:)]){
-					[delegate queueIsBeingRebuilt:NO becauseOfActionType:self.mostRecentAction];
-				}
-			}
+			[self queueFinishedBuilding];
 			
 			NSLog(@"Finished building and distributing system queue. %lu tracks loaded.", (unsigned long)systemQueueArray.count);
 		});

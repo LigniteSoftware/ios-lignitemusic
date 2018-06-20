@@ -14,7 +14,12 @@
 #import "LMColour.h"
 #import "LMExtras.h"
 
-@interface LMNowPlayingAnimationView()
+@interface LMNowPlayingAnimationView()<LMLayoutChangeDelegate>
+
+/**
+ The layout manager.
+ */
+@property LMLayoutManager *layoutManager;
 
 /**
  The circle view for the next track animation.
@@ -29,7 +34,17 @@
 /**
  The height constraint of the next track circle view.
  */
-@property NSLayoutConstraint *nextTrackCircleViewHeightConstraint;
+@property NSLayoutConstraint *nextTrackCircleViewMainSizeConstraint;
+
+/**
+ The alternate dimension constraint of the next track circle view.
+ */
+@property NSLayoutConstraint *nextTrackCircleViewAlternateSizeConstraint;
+
+/**
+ The alternate dimension constraint of the previous track circle view.
+ */
+@property NSLayoutConstraint *previousTrackCircleViewAlternateSizeConstraint;
 
 /**
  The circle view for the next track animation.
@@ -44,20 +59,39 @@
 /**
  The height constraint of the next track circle view.
  */
-@property NSLayoutConstraint *previousTrackCircleViewHeightConstraint;
+@property NSLayoutConstraint *previousTrackCircleViewMainSizeConstraint;
 
 /**
  The feedback generator for when the user changes tracks successfully.
  */
 @property UISelectionFeedbackGenerator *feedbackGenerator;
 
+/**
+ Whether or not the user is interacting in the current moment.
+ */
+@property BOOL userInteracting;
+
 @end
 
 @implementation LMNowPlayingAnimationView
 
+- (void)rootViewWillTransitionToSize:(CGSize)size
+		   withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+	
+	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		[self cancelAnimation];
+	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		[self cancelAnimation];
+	}];
+}
+
 - (void)layoutSubviews {
 	if(!self.didLayoutConstraints){
 		self.didLayoutConstraints = YES;
+		
+		
+		self.layoutManager = [LMLayoutManager sharedLayoutManager];
+		[self.layoutManager addDelegate:self];
 		
 		
 		self.nextTrackCircleView = [LMNowPlayingAnimationCircle new];
@@ -67,9 +101,9 @@
 		[self addSubview:self.nextTrackCircleView];
 		
 		self.nextTrackCircleViewLeadingConstraint = [self.nextTrackCircleView autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self];
-		self.nextTrackCircleViewHeightConstraint = [self.nextTrackCircleView autoSetDimension:ALDimensionHeight toSize:100.0f];
+		self.nextTrackCircleViewMainSizeConstraint = [self.nextTrackCircleView autoSetDimension:(self.squareMode ? ALDimensionHeight : ALDimensionWidth) toSize:100.0f];
+		self.nextTrackCircleViewAlternateSizeConstraint = [self.nextTrackCircleView autoSetDimension:(self.squareMode ? ALDimensionWidth : ALDimensionHeight) toSize:100.0f];
 		[self.nextTrackCircleView autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
-		[self.nextTrackCircleView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.nextTrackCircleView];
 		
 		
 		self.previousTrackCircleView = [LMNowPlayingAnimationCircle new];
@@ -79,25 +113,36 @@
 		[self addSubview:self.previousTrackCircleView];
 		
 		self.previousTrackCircleViewTrailingConstraint = [self.previousTrackCircleView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:self];
-		self.previousTrackCircleViewHeightConstraint = [self.previousTrackCircleView autoSetDimension:ALDimensionHeight toSize:100.0f];
+		self.previousTrackCircleViewMainSizeConstraint = [self.previousTrackCircleView autoSetDimension:(self.squareMode ? ALDimensionHeight : ALDimensionWidth) toSize:100.0f];
+		self.previousTrackCircleViewAlternateSizeConstraint = [self.previousTrackCircleView autoSetDimension:(self.squareMode ? ALDimensionWidth : ALDimensionHeight) toSize:100.0f];
 		[self.previousTrackCircleView autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
-		[self.previousTrackCircleView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.previousTrackCircleView];
 	}
 }
 
 - (LMNowPlayingAnimationViewResult)progress:(CGPoint)progressPoint fromStartingPoint:(CGPoint)startingPoint {
 	BOOL isGoingToNextTrack = (startingPoint.x - progressPoint.x) > startingPoint.x;
 	
+	self.userInteracting = YES;
+	
 	if(isGoingToNextTrack){
 		self.nextTrackCircleViewLeadingConstraint.constant = progressPoint.x;
 		self.previousTrackCircleViewTrailingConstraint.constant = 0;
 		
-		CGFloat halfWindowFrame = WINDOW_FRAME.size.width / 2.0;
+		CGFloat smallerDimension = self.frame.size.width;
+		CGFloat halfWindowFrame = smallerDimension / 2.0;
 		CGFloat progress = (MIN(fabs(progressPoint.x), (halfWindowFrame * 2.0)) / (halfWindowFrame * 2.0));
+		
+		BOOL isLandscapeSquareMode = ((self.frame.size.height > self.frame.size.width) && self.squareMode);
+		CGFloat addition = isLandscapeSquareMode ? -((self.frame.size.height / 5.0) * 4.0) : 0.0f;
 		
 		NSLog(@"next. X %f - %f", progressPoint.x, progress);
 		
-		self.nextTrackCircleViewHeightConstraint.constant = self.squareMode ? self.frame.size.height : ((halfWindowFrame / 2.0) + (WINDOW_FRAME.size.width * progress));
+		self.nextTrackCircleViewMainSizeConstraint.constant =
+			self.squareMode
+				? (self.frame.size.height + (self.frame.size.width * progress))
+				: ((halfWindowFrame / 2.0) + (smallerDimension * progress));
+		
+		self.nextTrackCircleViewAlternateSizeConstraint.constant = self.nextTrackCircleViewMainSizeConstraint.constant + addition;
 		
 		CGFloat circleProgress = progress * 2.0f;
 		[self.nextTrackCircleView setProgress:MIN(1, circleProgress)];
@@ -108,12 +153,21 @@
 		self.previousTrackCircleViewTrailingConstraint.constant = progressPoint.x;
 		self.nextTrackCircleViewLeadingConstraint.constant = 0;
 		
-		CGFloat halfWindowFrame = WINDOW_FRAME.size.width / 2.0;
+		CGFloat smallerDimension = self.frame.size.width;
+		CGFloat halfWindowFrame = smallerDimension / 2.0;
 		CGFloat progress = (MIN(fabs(progressPoint.x), (halfWindowFrame * 2.0)) / (halfWindowFrame * 2.0));
 		
-		NSLog(@"previous. X %f - %f", progressPoint.x, progress);
+		BOOL isLandscapeSquareMode = ((self.frame.size.height > self.frame.size.width) && self.squareMode);
+		CGFloat addition = isLandscapeSquareMode ? -((self.frame.size.height / 5.0) * 4.0) : 0.0f;
 		
-		self.previousTrackCircleViewHeightConstraint.constant = self.squareMode ? self.frame.size.height : ((halfWindowFrame / 2.0) + (WINDOW_FRAME.size.width * progress));
+		NSLog(@"next. X %f - %f", progressPoint.x, progress);
+		
+		self.previousTrackCircleViewMainSizeConstraint.constant =
+			self.squareMode
+				? (self.frame.size.height + (self.frame.size.width * progress))
+				: ((halfWindowFrame / 2.0) + (smallerDimension * progress));
+		
+		self.previousTrackCircleViewAlternateSizeConstraint.constant = self.previousTrackCircleViewMainSizeConstraint.constant + addition;
 		
 		CGFloat circleProgress = progress * 2.0f;
 		[self.previousTrackCircleView setProgress:MIN(1, 1 - circleProgress)];
@@ -122,7 +176,9 @@
 	}
 }
 
-- (void)finishAnimationWithResult:(LMNowPlayingAnimationViewResult)result acceptQuickGesture:(BOOL)acceptQuickGesture {
+- (void)finishAnimationWithResult:(LMNowPlayingAnimationViewResult)result
+			   acceptQuickGesture:(BOOL)acceptQuickGesture {
+	
 	[self layoutIfNeeded];
 	
 	BOOL gestureIncomplete = (result == LMNowPlayingAnimationViewResultSkipToNextIncomplete)
@@ -132,18 +188,29 @@
 		return;
 	}
 	
+	
+	self.userInteracting = NO;
+	
+	
 	self.feedbackGenerator = [UISelectionFeedbackGenerator new];
 	[self.feedbackGenerator prepare];
 	[self.feedbackGenerator selectionChanged];
 	
 	BOOL skipToNext = (result == LMNowPlayingAnimationViewResultSkipToNextComplete) || (result == LMNowPlayingAnimationViewResultSkipToNextIncomplete);
 	
-	NSLayoutConstraint *heightConstraintToUse = skipToNext ? self.nextTrackCircleViewHeightConstraint : self.previousTrackCircleViewHeightConstraint;
+	NSLayoutConstraint *mainSizeConstraintToUse = skipToNext ? self.nextTrackCircleViewMainSizeConstraint : self.previousTrackCircleViewMainSizeConstraint;
+	NSLayoutConstraint *alternateSizeConstraintToUse = skipToNext ? self.nextTrackCircleViewAlternateSizeConstraint : self.previousTrackCircleViewAlternateSizeConstraint;
 	NSLayoutConstraint *sideConstraintToUse = skipToNext ? self.nextTrackCircleViewLeadingConstraint : self.previousTrackCircleViewTrailingConstraint;
 	LMNowPlayingAnimationCircle *circleViewToUse = skipToNext ? self.nextTrackCircleView : self.previousTrackCircleView;
 	
-	heightConstraintToUse.constant = (WINDOW_FRAME.size.height * 2.0);
-	sideConstraintToUse.constant = (skipToNext ? -1 : 1) * (WINDOW_FRAME.size.height + (WINDOW_FRAME.size.width / 2.0));
+	CGFloat largeFrameDimension = MAX(self.frame.size.height, self.frame.size.width);
+	CGFloat smallFrameDimension = MIN(self.frame.size.height, self.frame.size.width);
+	
+	mainSizeConstraintToUse.constant = ((largeFrameDimension / 3.0) * 4.0);
+	alternateSizeConstraintToUse.constant = mainSizeConstraintToUse.constant;
+	sideConstraintToUse.constant =
+		(skipToNext ? -1 : 1)
+		* (mainSizeConstraintToUse.constant - ((mainSizeConstraintToUse.constant - self.frame.size.width) / 2.0));
 	
 	[circleViewToUse setProgress:skipToNext ? 1.0f : 0.0f];
 	
@@ -152,11 +219,12 @@
 	} completion:^(BOOL finished) {
 		NSLog(@"Finished %d", finished);
 		if(finished){
-			[NSTimer scheduledTimerWithTimeInterval:0.1 block:^{
+			[NSTimer scheduledTimerWithTimeInterval:0.4 block:^{
 				[self layoutIfNeeded];
 				
-				heightConstraintToUse.constant = 100;
-				sideConstraintToUse.constant = (skipToNext ? -1 : 1) * (WINDOW_FRAME.size.width + 105);
+				mainSizeConstraintToUse.constant = self.squareMode ? (self.frame.size.height) : 100.0f;
+				alternateSizeConstraintToUse.constant = mainSizeConstraintToUse.constant;
+				sideConstraintToUse.constant = (skipToNext ? -1 : 1) * (self.frame.size.width + mainSizeConstraintToUse.constant);
 				
 				circleViewToUse.progress = skipToNext ? 0.0f : 1.0f;
 				circleViewToUse.direction = skipToNext ? LMNowPlayingAnimationCircleDirectionCounterClockwise : LMNowPlayingAnimationCircleDirectionClockwise;
@@ -179,13 +247,19 @@
 - (void)cancelAnimation {
 	[self layoutIfNeeded];
 	
-	self.nextTrackCircleViewHeightConstraint.constant = 100.0f;
+	
+	self.userInteracting = NO;
+	
+	
+	self.nextTrackCircleViewMainSizeConstraint.constant = self.squareMode ? MAX(self.frame.size.height, self.frame.size.width) : 100.0f;
+	self.nextTrackCircleViewAlternateSizeConstraint.constant = self.nextTrackCircleViewMainSizeConstraint.constant;
 	self.nextTrackCircleViewLeadingConstraint.constant = 0.0f;
 	
 	[self.nextTrackCircleView setProgress:0.0f animated:YES];
 	
 	
-	self.previousTrackCircleViewHeightConstraint.constant = 100.0f;
+	self.previousTrackCircleViewMainSizeConstraint.constant = self.squareMode ? MAX(self.frame.size.height, self.frame.size.width) : 100.0f;
+	self.previousTrackCircleViewAlternateSizeConstraint.constant = self.nextTrackCircleViewMainSizeConstraint.constant;
 	self.previousTrackCircleViewTrailingConstraint.constant = 0.0f;
 	
 	[self.previousTrackCircleView setProgress:1.0f animated:YES];
