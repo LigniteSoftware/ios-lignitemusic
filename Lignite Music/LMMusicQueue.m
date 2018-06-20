@@ -241,8 +241,6 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 	
 	self.mostRecentAction = LMMusicQueueActionTypePlayMusic;
 	
-	BOOL initialQueue = (self.completeQueue.count == 0);
-	
 	NSLog(@"Setting new queue with autoplay %d, updateCompleteQueue %d", autoPlay, updateCompleteQueue);
 	
 	for(NSInteger i = 0; i < newQueue.items.count; i++){
@@ -289,9 +287,15 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 	
 	self.mostRecentAction = LMMusicQueueActionTypeAddTrack;
 	
-	[self.completeQueue insertObject:trackToAdd atIndex:self.indexOfNowPlayingTrack + 1];
-	
-	[self completeQueueUpdated];
+	if(self.completeQueue){
+		[self.completeQueue insertObject:trackToAdd atIndex:self.indexOfNowPlayingTrack + 1];
+		[self completeQueueUpdated];
+	}
+	else{
+		[self setQueue:[LMMusicTrackCollection collectionWithItems:@[ trackToAdd ]]
+			  autoPlay:YES
+   updateCompleteQueue:YES];
+	}
 	
 	NSArray<id<LMMusicPlayerDelegate>> *safeDelegates = [[NSArray alloc]initWithArray:self.delegates];
 
@@ -307,6 +311,9 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 		return;
 	}
 	
+	BOOL isCurrentTrack = (trackIndex == self.indexOfNowPlayingTrack);
+	BOOL stopMusic = isCurrentTrack && (self.completeQueueCount == 0);
+	
 	self.mostRecentAction = LMMusicQueueActionTypeRemoveTrack;
 	
 	LMMusicTrack *trackRemoved = [self.completeQueue objectAtIndex:trackIndex];
@@ -314,6 +321,19 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 	[self.completeQueue removeObjectAtIndex:trackIndex];
 	
 	[self completeQueueUpdated];
+	
+	if(stopMusic){
+		[self.musicPlayer stop];
+	}
+	else if(isCurrentTrack){
+		NSInteger fixedIndex = trackIndex;
+		while(fixedIndex >= self.completeQueueCount){
+			fixedIndex--;
+		}
+		if((fixedIndex >= 0) && (self.completeQueueCount > 0)){
+			[self systemReloadWithTrack:[self.completeQueue objectAtIndex:fixedIndex]];
+		}
+	}
 	
 	NSArray<id<LMMusicPlayerDelegate>> *safeDelegates = [[NSArray alloc]initWithArray:self.delegates];
 

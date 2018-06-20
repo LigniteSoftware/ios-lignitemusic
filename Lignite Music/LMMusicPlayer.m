@@ -1178,6 +1178,9 @@ BOOL shuffleForDebug = NO;
 
 - (void)stop {
 	[self.systemMusicPlayer stop];
+	[self.systemMusicPlayer setNowPlayingItem:nil];
+	[self.systemMusicPlayer setQueueWithItemCollection:[LMMusicTrackCollection collectionWithItems:@[]]];
+	[self.systemMusicPlayer stop];
 }
 
 - (LMMusicPlaybackState)invertPlaybackState {

@@ -193,6 +193,14 @@
 - (NSArray<MGSwipeButton*>*)swipeButtonsForListEntry:(LMListEntry*)listEntry rightSide:(BOOL)rightSide {
 	LMMusicTrack *track = (LMMusicTrack*)listEntry.associatedData;
 	
+	NSInteger indexOfListEntry = [self.musicPlayer.queue indexOfTrackInCompleteQueueFromIndexPath:listEntry.indexPath];
+	
+	if((indexOfListEntry == self.musicPlayer.queue.indexOfNowPlayingTrack)
+	   && rightSide
+	   && (self.musicPlayer.queue.completeQueueCount == 1)){
+		return nil;
+	}
+	
 	UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14.0f];
 	UIColor *colour = [UIColor colorWithRed:47/255.0 green:47/255.0 blue:49/255.0 alpha:1.0];
 	UIImage *icon = [LMAppIcon imageForIcon:LMIconRemoveFromQueue];
@@ -207,7 +215,7 @@
 							 padding:0
 							callback:^BOOL(MGSwipeTableCell *sender) {
 								if(rightSide){
-									[self.musicPlayer.queue removeTrackAtIndex:[self.musicPlayer.queue indexOfTrackInCompleteQueueFromIndexPath:listEntry.indexPath]];
+									[self.musicPlayer.queue removeTrackAtIndex:indexOfListEntry];
 									
 									NSLog(@"Queue %@", track.title);
 								}
@@ -810,6 +818,10 @@
 		[self.loadingActivityIndicator autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:loadingText withOffset:-10];
 		[self.loadingActivityIndicator autoPinEdgeToSuperviewEdge:ALEdgeTop];
 		[self.loadingActivityIndicator autoAlignAxisToSuperviewAxis:ALAxisVertical];
+		
+		
+		[self queueIsBeingRebuilt:(self.musicPlayer.queue.completeQueueCount == 0)
+			  becauseOfActionType:LMMusicQueueActionTypeOpenQueue];
 	}
 }
 

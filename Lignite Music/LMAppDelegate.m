@@ -157,8 +157,6 @@ dispatch_source_t CreateDispatchTimer(uint64_t interval, uint64_t leeway, dispat
 		[self.musicPlayer.queue prepareForBackgrounding];
 				
 		NSTimer* timer = [NSTimer scheduledTimerWithTimeInterval:10.0 block:^{
-			NSLog(@"Nigger");
-			//
 			//			dispatch_async(dispatch_get_main_queue(), ^{
 			//				NSLog(@"time left %f", application.backgroundTimeRemaining);
 			//			});

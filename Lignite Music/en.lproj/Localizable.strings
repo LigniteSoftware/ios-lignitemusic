@@ -80,7 +80,7 @@
 "NowPlayingTrackSubtitle" = "First song in the queue";
 
 "NothingUpNextTitle" = "That's it, boss!";
-"NothingUpNextSubtitle" = "You've got no songs queued up.";
+"NothingUpNextSubtitle" = "No more tracks.";
 
 "OptimiseLoadTimeTitle" = "Optimise for speed (beta)";
 "OptimiseLoadTimeSubtitle" = "Smaller \"up next\" in favour of speed";

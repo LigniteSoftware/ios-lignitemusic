@@ -136,7 +136,7 @@
 	//	self.titleLabel.layoutMargins = UIEdgeInsetsMake(0, -4, 0, -4);
 		
 		const CGFloat heightMultipliers[] = {
-			(1.0/(self.miniplayer ? 2.5 : 3.0)), (1.0/4.0), (1.0/5.0)
+			(1.0/(self.miniplayer ? 2.5 : 3.0)), (1.0/4.0), (1.0/5.5)
 		};
 		NSArray *labels = @[
 			self.titleLabel, self.artistLabel, self.albumLabel
