@@ -343,6 +343,8 @@
 - (void)systemReloadWithTrack:(LMMusicTrack*)newTrack {
 	self.requiresSystemReload = NO;
 	
+	BOOL wasPlaying = (self.musicPlayer.playbackState == LMMusicPlaybackStatePlaying);
+	
 	NSLog(@"Queue was modified and needs a refresher, here we go.");
 	
 	self.adjustedIndexOfNowPlayingTrack = NSNotFound;

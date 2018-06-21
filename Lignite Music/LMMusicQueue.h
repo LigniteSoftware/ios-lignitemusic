@@ -269,7 +269,7 @@ typedef NS_ENUM(NSInteger, LMMusicQueueActionType){
 - (NSInteger)indexOfPreviousTrack;
 
 /**
- Prepare the queue for the app being backgrounded by the system.8
+ Prepare the queue for the app being backgrounded by the system.
  */
 - (void)prepareForBackgrounding;
 
