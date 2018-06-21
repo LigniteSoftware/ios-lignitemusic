@@ -232,8 +232,8 @@
 			}
 		}
 		
-		if(isVeryLastRow){
-			fillerHeight += (cellFrame.size.height * 6.0);
+		if(isVeryLastRow && numberOfItemsInNextTracksSection > 1){
+			fillerHeight += (cellFrame.size.height * 8.0);
 		}
 		
 		CGFloat yCoordinateAdjustment = ((fillerHeight - (cellFrame.size.height + 10)) / 2.0);

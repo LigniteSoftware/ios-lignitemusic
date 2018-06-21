@@ -123,7 +123,7 @@
 	NSInteger overflowCountToUse = self.isDisplayingDetailView ? self.amountOfOverflowingCellsForDetailView : self.previousAmountOfOverflowingCellsForDetailView;
 	NSInteger indexOfDetailViewToUse = self.isDisplayingDetailView ? self.indexOfDetailView : self.previousIndexOfDetailView;
 	
-	for(NSInteger i = indexOfDetailViewToUse-overflowCountToUse; i < indexOfDetailViewToUse; i++){
+	for(NSInteger i = (indexOfDetailViewToUse - overflowCountToUse); i < indexOfDetailViewToUse; i++){
 		[items addObject:[NSIndexPath indexPathForRow:i inSection:0]];
 	}
 	

@@ -105,7 +105,7 @@
 /**
  The index of the currently open detail view for transitioning between landscape and portrait on iPhone.
  */
-@property NSInteger indexOfCurrentlyOpenDetailViewForOreientationChanges;
+@property NSInteger indexOfCurrentlyOpenDetailViewForOrientationChanges;
 
 
 /**
@@ -534,22 +534,6 @@
 - (void)contentViewTappedForBigListEntry:(LMBigListEntry *)bigListEntry {
 	NSLog(@"Tapped %ld", bigListEntry.collectionIndex);
 	
-//	LMBrowsingDetailView *browsingDetailView = [LMBrowsingDetailView newAutoLayoutView];
-//	browsingDetailView.musicTrackCollection = [self.musicTrackCollections objectAtIndex:bigListEntry.collectionIndex];
-//	browsingDetailView.musicType = self.musicType;
-//	browsingDetailView.coreViewController = self.coreViewController;
-//	
-//	NSLog(@"Got count %ld", browsingDetailView.musicTrackCollection.trackCount);
-//	
-//	self.browsingDetailViewController = [LMBrowsingDetailViewController new];
-//	self.browsingDetailViewController.browsingDetailView = browsingDetailView;
-//	
-//	self.coreViewController.currentDetailViewController = self.browsingDetailViewController;
-//	
-//	[self.coreViewController showViewController:self.browsingDetailViewController sender:self.coreViewController];
-	
-//	[self tappedBigListEntryAtIndex:bigListEntry.collectionIndex];
-	
 	NSLog(@"Frame inside %@", NSStringFromCGRect(bigListEntry.superview.superview.frame));
 	
 	LMCollectionViewFlowLayout *flowLayout = (LMCollectionViewFlowLayout*)self.collectionView.collectionViewLayout;
@@ -614,7 +598,9 @@
 	return numberOfItems;
 }
 
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView
+				  cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+	
 	LMCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cellIdentifier" forIndexPath:indexPath];
 	LMCollectionViewFlowLayout *flowLayout = (LMCollectionViewFlowLayout*)collectionView.collectionViewLayout;
 	
@@ -780,7 +766,7 @@
 			}
 			else if(![self phoneLandscapeViewIsDisplaying] && willBeLandscape && ![LMLayoutManager isiPad] && layout.indexOfItemDisplayingDetailView > LMNoDetailViewSelected){
 				[self setPhoneLandscapeViewDisplaying:YES forIndex:layout.indexOfItemDisplayingDetailView];
-				self.indexOfCurrentlyOpenDetailViewForOreientationChanges = layout.indexOfItemDisplayingDetailView;
+				self.indexOfCurrentlyOpenDetailViewForOrientationChanges = layout.indexOfItemDisplayingDetailView;
 				
 				transitioningFromPortraitToLandscape = YES;
 			}
@@ -820,7 +806,8 @@
 					layout.indexOfItemDisplayingDetailView = LMNoDetailViewSelected;
 				}
 				else if(transitioningFromLandscapeToPortrait){
-					[self tappedBigListEntryAtIndex:self.indexOfCurrentlyOpenDetailViewForOreientationChanges];
+//					[self tappedBigListEntryAtIndex:self.indexOfCurrentlyOpenDetailViewForOrientationChanges];
+					[self contentViewTappedForBigListEntry:[self.bigListEntries objectAtIndex:self.indexOfCurrentlyOpenDetailViewForOrientationChanges]];
 				}
 				else{
 					[self reloadDataAndInvalidateLayouts];
@@ -860,7 +847,7 @@
 	self.coreViewController.titleView.accessibilityElementsHidden = self.collectionView.accessibilityElementsHidden;
 	
 	if(displaying){
-		self.indexOfCurrentlyOpenDetailViewForOreientationChanges = index;
+		self.indexOfCurrentlyOpenDetailViewForOrientationChanges = index;
 		
 		self.phoneLandscapeDetailView.index = index;
 		self.phoneLandscapeDetailView.musicType = self.musicType;
@@ -901,7 +888,7 @@
 	else{
 		[self setPhoneLandscapeViewDisplaying:NO forIndex:-1];
 		
-		self.indexOfCurrentlyOpenDetailViewForOreientationChanges = -1;
+		self.indexOfCurrentlyOpenDetailViewForOrientationChanges = -1;
 	}
 }
 
@@ -1445,7 +1432,7 @@
 	
 	NSLog(@"Num items %d, i is %d", (int)[self collectionView:self.collectionView numberOfItemsInSection:1], (int)i);
 	
-	self.indexOfCurrentlyOpenDetailViewForOreientationChanges = i;
+	self.indexOfCurrentlyOpenDetailViewForOrientationChanges = i;
 	
 	if([LMLayoutManager isLandscape]){
 		[self setPhoneLandscapeViewDisplaying:YES forIndex:i];
@@ -1467,7 +1454,7 @@
 		layout.amountOfItemsInDetailView = trackCollection.count;
 	}
 	else{
-		self.indexOfCurrentlyOpenDetailViewForOreientationChanges = LMNoDetailViewSelected;
+		self.indexOfCurrentlyOpenDetailViewForOrientationChanges = LMNoDetailViewSelected;
 	}
 	layout.indexOfItemDisplayingDetailView = displayNothing ? LMNoDetailViewSelected : i;
 }
@@ -1478,7 +1465,7 @@
 		self.layoutManager = [LMLayoutManager sharedLayoutManager];
 		[self.layoutManager addDelegate:self];
 		
-		self.indexOfCurrentlyOpenDetailViewForOreientationChanges = LMNoDetailViewSelected;
+		self.indexOfCurrentlyOpenDetailViewForOrientationChanges = LMNoDetailViewSelected;
 	}
 	return self;
 }

@@ -111,16 +111,16 @@ typedef NS_ENUM(NSUInteger, LMNavigationTab) {
 - (void)completelyHide;
 
 /**
- Minimize the navigation bar down to its small size.
+ Minimise the navigation bar down to its small size.
 
- @param automatic Whether or not the minimize is being done automatically and not manually.
+ @param automatic Whether or not the minimise is being done automatically and not manually.
  */
 - (void)minimise:(BOOL)automatic;
 
 /**
- Maximize the navigation bar to its full size.
+ Maximise the navigation bar to its full size.
 
- @param automatic Whether or not the maximize is being done automatically and not manually.
+ @param automatic Whether or not the maximise is being done automatically and not manually.
  */
 - (void)maximise:(BOOL)automatic;
 
