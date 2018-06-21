@@ -94,6 +94,34 @@
 	}
 }
 
+- (NSInteger)indexOfNowPlayingTrackInShuffledQueue {
+	NSInteger indexOfNowPlayingTrackInShuffledArray = -1;
+	
+	for(NSInteger i = 0; i < self.shuffledQueue.count; i++){
+		LMMusicTrack *musicTrack = [self.shuffledQueue objectAtIndex:i];
+		if(musicTrack.persistentID == self.musicPlayer.nowPlayingTrack.persistentID){
+			indexOfNowPlayingTrackInShuffledArray = i;
+			break;
+		}
+	}
+	
+	return indexOfNowPlayingTrackInShuffledArray;
+}
+
+- (NSInteger)indexOfNowPlayingTrackInOrderedQueue {
+	NSInteger indexOfNowPlayingTrackInOrderedQueue = NSNotFound;
+	
+	for(NSInteger i = 0; i < self.orderedQueue.count; i++){
+		LMMusicTrack *musicTrack = [self.orderedQueue objectAtIndex:i];
+		if(musicTrack.persistentID == self.musicPlayer.nowPlayingTrack.persistentID){
+			indexOfNowPlayingTrackInOrderedQueue = i;
+			break;
+		}
+	}
+	
+	return indexOfNowPlayingTrackInOrderedQueue;
+}
+
 - (void)shuffleModeChanged:(NSInteger)shuffleModeInteger {
 	LMMusicShuffleMode shuffleMode = (LMMusicShuffleMode)shuffleModeInteger;
 	
@@ -101,17 +129,8 @@
 		[self reshuffle];
 	}
 	else{
-		NSInteger indexOfNowPlayingTrackInOrderedQueue = NSNotFound;
-		for(NSInteger i = 0; i < self.orderedQueue.count; i++){
-			LMMusicTrack *musicTrack = [self.orderedQueue objectAtIndex:i];
-			if(musicTrack.persistentID == self.musicPlayer.nowPlayingTrack.persistentID){
-				indexOfNowPlayingTrackInOrderedQueue = i;
-				break;
-			}
-		}
-		
-		if(indexOfNowPlayingTrackInOrderedQueue != NSNotFound){
-			self.adjustedIndexOfNowPlayingTrack = indexOfNowPlayingTrackInOrderedQueue;
+		if(self.indexOfNowPlayingTrackInOrderedQueue != NSNotFound){
+			self.adjustedIndexOfNowPlayingTrack = self.indexOfNowPlayingTrackInOrderedQueue;
 		}
 		
 		self.requiresSystemReload = YES;
@@ -213,17 +232,9 @@
 		[self shuffleArrayOfTracks:shuffledArray];
 		
 		if(self.musicPlayer.nowPlayingTrack){
-			NSInteger indexOfNowPlayingTrackInShuffledArray = -1;
-			for(NSInteger i = 0; i < shuffledArray.count; i++){
-				LMMusicTrack *musicTrack = [shuffledArray objectAtIndex:i];
-				if(musicTrack.persistentID == self.musicPlayer.nowPlayingTrack.persistentID){
-					indexOfNowPlayingTrackInShuffledArray = i;
-					break;
-				}
-			}
-
-			if(indexOfNowPlayingTrackInShuffledArray > -1){
-				[shuffledArray exchangeObjectAtIndex:indexOfNowPlayingTrackInShuffledArray withObjectAtIndex:0];
+			if(self.indexOfNowPlayingTrackInShuffledQueue > -1){
+				[shuffledArray exchangeObjectAtIndex:self.indexOfNowPlayingTrackInShuffledQueue
+								   withObjectAtIndex:0];
 			}
 		}
 
@@ -414,7 +425,11 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 	self.mostRecentAction = LMMusicQueueActionTypeAddTrack;
 	
 	if(self.completeQueue){
-		[self.completeQueue insertObject:trackToAdd atIndex:self.indexOfNowPlayingTrack + 1];
+		[self.orderedQueue insertObject:trackToAdd atIndex:self.indexOfNowPlayingTrackInOrderedQueue + 1];
+		if(self.shuffledQueue){
+			[self.shuffledQueue insertObject:trackToAdd atIndex:self.indexOfNowPlayingTrackInShuffledQueue + 1];
+		}
+
 		[self completeQueueUpdated];
 	}
 	else{
