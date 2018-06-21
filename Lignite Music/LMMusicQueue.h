@@ -9,12 +9,14 @@
 #import <Foundation/Foundation.h>
 #import "MPMediaItem+LigniteImages.h"
 #import "MPMediaItemCollection+LigniteInfo.h"
+#import "LMMusicDefinitions.h"
 
 typedef NS_ENUM(NSInteger, LMMusicQueueActionType){
 	LMMusicQueueActionTypeAddTrack = 0,
 	LMMusicQueueActionTypeRemoveTrack,
 	LMMusicQueueActionTypePlayMusic,
-	LMMusicQueueActionTypeOpenQueue
+	LMMusicQueueActionTypeOpenQueue,
+	LMMusicQueueActionTypeShuffle
 };
 
 @protocol LMMusicQueueDelegate <NSObject>
@@ -55,6 +57,13 @@ typedef NS_ENUM(NSInteger, LMMusicQueueActionType){
  @param trackMoved The track that was moved.
  */
 - (void)trackMovedInQueue:(LMMusicTrack * _Nonnull)trackMoved;
+
+/**
+ The queue changed shuffle modes.
+
+ @param shuffleMode The new shuffle mode that the queue has applied.
+ */
+- (void)queueChangedToShuffleMode:(LMMusicShuffleMode)shuffleMode;
 
 /**
  If the queue is being rebuilt, this will be called with rebuilding set to YES. When rebuilding is complete, this will be called with rebuilding set to NO. Used for giving the user visual status of the queue rebuilding process.
@@ -118,6 +127,11 @@ typedef NS_ENUM(NSInteger, LMMusicQueueActionType){
 @property (readonly) BOOL hasBeenBuilt;
 
 /**
+ The index of the now playing track used for user display.
+ */
+@property (readonly) NSInteger displayIndexOfNowPlayingTrack;
+
+/**
  Whether or not the queue requires a system reload. If YES, that means that although the queue has been set within Lignite Music, it hasn't been set within the system music player. This is due to Apple's annoying bug where one cannot change the currently playing queue without completely halting the music that's playing first. The hope with this is to reset the queue in between tracks so that the user doesn't notice.
  */
 @property BOOL requiresSystemReload;
@@ -149,6 +163,11 @@ typedef NS_ENUM(NSInteger, LMMusicQueueActionType){
 - (void)invalidateCompleteQueue;
 
 /**
+ Reshuffles the current queue (rebuilds the queue first if no queue has been loaded).
+ */
+- (void)reshuffle;
+
+/**
  Whether or not the full range of system queue APIs are available for use. Should only be NO on iOS versions below 10.0.
 
  @return Whether or not the queue APIs are available.
@@ -160,7 +179,14 @@ typedef NS_ENUM(NSInteger, LMMusicQueueActionType){
 
  @param musicTrack The now playing music track.
  */
-- (void)systemNowPlayingTrackDidChange:(LMMusicTrack * _Nonnull)musicTrack;
+- (void)systemNowPlayingTrackChanged:(LMMusicTrack * _Nonnull)musicTrack;
+
+/**
+ Call this when the shuffle mode changes. This will reshufle the current playback queue, if required, and will make adjustments to its data distribution internally based on the new shuffle mode. Delegate notifications are also sent out as required.
+
+ @param shuffleMode THe new shuffle mode.
+ */
+- (void)shuffleModeChanged:(NSInteger)shuffleModeInteger;
 
 /**
  Gets the index of a track in the complete queue based off of the index path.

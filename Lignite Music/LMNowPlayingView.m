@@ -30,7 +30,7 @@
 #import "LMColour.h"
 #import "LMButton.h"
 
-@interface LMNowPlayingView() <LMMusicPlayerDelegate, LMButtonDelegate, LMProgressSliderDelegate, LMLayoutChangeDelegate, LMThemeEngineDelegate, LMAccessibilityMusicControlBarDelegate, LMQueueViewDelegate>
+@interface LMNowPlayingView() <LMMusicPlayerDelegate, LMButtonDelegate, LMProgressSliderDelegate, LMLayoutChangeDelegate, LMThemeEngineDelegate, LMAccessibilityMusicControlBarDelegate, LMQueueViewDelegate, LMMusicQueueDelegate>
 
 /**
  The music player.
@@ -256,6 +256,13 @@
 	[self reloadControlButtons];
 }
 
+- (void)reloadSongNumberText {
+	self.progressSlider.leftText =
+	[NSString stringWithFormat:NSLocalizedString(@"SongXofX", nil),
+	 (int)self.musicPlayer.queue.displayIndexOfNowPlayingTrack,
+	 (int)self.musicPlayer.queue.count];
+}
+
 - (void)reload {
 //    NSLog(@"ID is %@: %lld", self.musicPlayer.nowPlayingTrack.title, self.musicPlayer.nowPlayingTrack.persistentID);
 	
@@ -358,10 +365,7 @@
 	self.trackInfoView.artistText = self.musicPlayer.nowPlayingTrack.artist ? self.musicPlayer.nowPlayingTrack.artist : NSLocalizedString(@"UnknownArtist", nil);
 	self.trackInfoView.albumText = self.musicPlayer.nowPlayingTrack.albumTitle ? self.musicPlayer.nowPlayingTrack.albumTitle : NSLocalizedString(@"UnknownAlbumTitle", nil);
 	
-	self.progressSlider.leftText =
-	[NSString stringWithFormat:NSLocalizedString(@"SongXofX", nil),
-		 (int)self.musicPlayer.queue.systemIndexOfNowPlayingTrack + 1,
-		 (int)self.musicPlayer.queue.count];
+	[self reloadSongNumberText];
 	
     self.progressSlider.rightText = [LMNowPlayingView durationStringTotalPlaybackTime:self.musicPlayer.nowPlayingTrack.playbackDuration];
     [self updateSongDurationLabelWithPlaybackTime:self.musicPlayer.currentPlaybackTime];
@@ -375,6 +379,10 @@
 	} repeats:NO];
 	
 	[self reloadControlButtons];
+}
+
+- (void)queueChangedToShuffleMode:(LMMusicShuffleMode)shuffleMode {
+	[self reloadSongNumberText];
 }
 
 - (void)trackMovedInQueue:(LMMusicTrack *)trackMoved {
@@ -1272,6 +1280,7 @@
 	
 	
 	[self.musicPlayer addMusicDelegate:self];
+	[self.musicPlayer.queue addDelegate:self];
 	
 	
 	self.favouriteHeartImageView.accessibilityLabel = NSLocalizedString(!self.musicPlayer.nowPlayingTrack.isFavourite ? @"VoiceOverLabel_FavouriteButton" : @"VoiceOverLabel_UnfavouriteButton", nil);
@@ -1323,7 +1332,7 @@
 	[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
 		[self reload];
 		
-		[self setShowingQueueView:YES animated:YES];
+//		[self setShowingQueueView:YES animated:YES];
 	} repeats:NO];
 }
 

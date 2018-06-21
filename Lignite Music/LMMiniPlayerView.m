@@ -17,7 +17,7 @@
 #import "LMProgressSlider.h"
 #import "NSTimer+Blocks.h"
 
-@interface  LMMiniPlayerView()<LMMusicPlayerDelegate, LMProgressSliderDelegate, LMAccessibilityMusicControlBarDelegate, LMLayoutChangeDelegate>
+@interface  LMMiniPlayerView()<LMMusicPlayerDelegate, LMProgressSliderDelegate, LMAccessibilityMusicControlBarDelegate, LMLayoutChangeDelegate, LMMusicQueueDelegate>
 
 @property LMView *miniPlayerBackgroundView;
 
@@ -105,6 +105,13 @@
 //	} repeats:NO];
 //}
 
+- (void)reloadSongNumberText {
+	self.progressSlider.leftText =
+	[NSString stringWithFormat:NSLocalizedString(@"SongXofX", nil),
+	 (int)self.musicPlayer.queue.displayIndexOfNowPlayingTrack,
+	 (int)self.musicPlayer.queue.count];
+}
+
 - (void)reload {	
 //	NSLog(@"ID is %@: %lld", self.musicPlayer.nowPlayingTrack.title, self.musicPlayer.nowPlayingTrack.persistentID);
 	
@@ -151,10 +158,7 @@
 	self.trackInfoView.artistText = self.musicPlayer.nowPlayingTrack.artist ? self.musicPlayer.nowPlayingTrack.artist : NSLocalizedString(@"UnknownArtist", nil);
 	self.trackInfoView.albumText = self.musicPlayer.nowPlayingTrack.albumTitle ? self.musicPlayer.nowPlayingTrack.albumTitle : NSLocalizedString(@"UnknownAlbumTitle", nil);
 	
-	self.progressSlider.leftText =
-	[NSString stringWithFormat:NSLocalizedString(@"SongXofX", nil),
-	 (int)self.musicPlayer.queue.systemIndexOfNowPlayingTrack + 1,
-	 (int)self.musicPlayer.queue.count];
+	[self reloadSongNumberText];
 
 	self.progressSlider.rightText = [LMNowPlayingView durationStringTotalPlaybackTime:self.musicPlayer.nowPlayingTrack.playbackDuration];
 	[self updateSongDurationLabelWithPlaybackTime:0];
@@ -163,6 +167,10 @@
 	self.pausedTimer = [NSTimer scheduledTimerWithTimeInterval:0.25 block:^{
 		[self musicPlaybackStateDidChange:self.musicPlayer.playbackState];
 	} repeats:NO];
+}
+
+- (void)queueChangedToShuffleMode:(LMMusicShuffleMode)shuffleMode {
+	[self reloadSongNumberText];
 }
 
 - (void)musicPlaybackStateDidChange:(LMMusicPlaybackState)newState {
@@ -307,6 +315,8 @@
 		[self addSubview:self.containerView];
 		
 		[[LMLayoutManager sharedLayoutManager] addDelegate:self];
+		
+		[self.musicPlayer.queue addDelegate:self];
 		
 		NSInteger padding = 24.0f;
 		NSInteger landscapePadding = padding * 1.5;

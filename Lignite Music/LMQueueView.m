@@ -151,7 +151,7 @@
 	
 	LMMusicTrack *track = nil;
 	if(isPreviousTracks && (indexPath.row == tracksArray.count)){
-		NSLog(@"Index path is now playing %@", indexPath);
+//		NSLog(@"Index path is now playing %@", indexPath);
 		track = self.musicPlayer.nowPlayingTrack;
 	}
 	else{
@@ -607,6 +607,10 @@
 	NSLog(@"Queue ended.");
 }
 
+- (void)queueChangedToShuffleMode:(LMMusicShuffleMode)shuffleMode {
+	[self reloadLayout];
+}
+
 - (void)reloadLayout {
 	[self.collectionView reloadData];
 	[self.collectionView.collectionViewLayout invalidateLayout];
@@ -638,7 +642,7 @@
 }
 
 - (void)resetContentOffsetToNowPlaying:(BOOL)animated {
-	NSLog(@"Reset content offset");
+//	NSLog(@"Reset content offset");
 	
 	if(self.collectionView.contentSize.height < (self.collectionView.frame.size.height * 1.5)){
 		return;

@@ -51,6 +51,7 @@
 "AddingTrackToQueue" = "Wird hinzugefügt...";
 "RemovingTrackFromQueue" = "Wird entfernt...";
 "PlayingNewQueue" = "Lade Warteschleife...";
+"ShufflingQueue" = "Mischen...";
 
 "CantReorderTitle" = "Rearrangieren ist vorübergehend deaktiviert :(";
 "CantReorderDescription" = "Wie so oft bei Beta-Versionen gilt es mit Bugs zu kämpfen.\n\nLeider haben wir - einen Tag vor der Veröffentlichung dieser Beta-Version - einen Bug gefunden, der die App abstürzen lässt, wenn Songs rearrangiert werden.\n\nWir haben versucht, das Problem zu beheben, aber leider hatten wir zuwenig Zeit dafür. Aufgrund dessen haben wir das Rearrangieren temporär deaktiviert.\n\nWir werden das Problem in einer neuen Beta beheben, welche bald verfügbar sein wird.\n\nWir danken dir für dein Verständnis.";

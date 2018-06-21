@@ -381,6 +381,7 @@
 		6A7115B61DCEE410006DE00F /* LMTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMTableView.m; sourceTree = "<group>"; };
 		6A7274B21F9408A400FC09B3 /* DDTableView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DDTableView.h; sourceTree = "<group>"; };
 		6A7274B31F9408A400FC09B3 /* DDTableView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DDTableView.m; sourceTree = "<group>"; };
+		6A75646120DBF5EB00A92199 /* LMMusicDefinitions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMMusicDefinitions.h; sourceTree = "<group>"; };
 		6A75652E1DF7E38900A9EDD6 /* LMSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMSearch.h; sourceTree = "<group>"; };
 		6A75652F1DF7E38900A9EDD6 /* LMSearch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMSearch.m; sourceTree = "<group>"; };
 		6A759D461DE96B9A0051E1A9 /* LMScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMScrollView.h; sourceTree = "<group>"; };
@@ -1027,6 +1028,7 @@
 			isa = PBXGroup;
 			children = (
 				6AE9E6E81F9C5A750077B15E /* Playlists */,
+				6A75646120DBF5EB00A92199 /* LMMusicDefinitions.h */,
 				6AB1046E1E56616700213396 /* LMMusicPlayer.h */,
 				6AB1046F1E56616700213396 /* LMMusicPlayer.m */,
 				6A8D5D0320A8A2510034B090 /* LMMusicQueue.h */,

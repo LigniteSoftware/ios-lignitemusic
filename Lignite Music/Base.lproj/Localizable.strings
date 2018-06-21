@@ -40,6 +40,17 @@
  */
 
 
+"Build237VeryBetaWarningBar" = "This version is largely rewritten and may be unstable (tap to dismiss)";
+"Build237VeryBetaTitle" = "Changes in Version 1.2";
+"Build237VeryBetaDescription" = "In this version, we've rewritten most of the backend of Lignite Music from scratch to be much snappier and more responsive.\n\nWith that, this build is experimental and there may be some bugs.\n\nWe'll push out new betas as soon as we have more updates for you.\n\nThank you for enjoying Lignite Music! :)";
+
+
+"AddingTrackToQueue" = "Adding...";
+"RemovingTrackFromQueue" = "Removing...";
+"PlayingNewQueue" = "Loading queue...";
+"ShufflingQueue" = "Shuffling...";
+
+
 "CantReorderTitle" = "Reordering is temporarily disabled :(";
 "CantReorderDescription" = "As with any beta, there are bound to be bugs.\n\nSadly, only one day before the release of this beta, we found a bug which was causing reordering to completely crash the app.\n\nWe tried to fix it, but ran out of time, so instead we've disabled reordering for now.\n\nWe'll have this fixed in a future beta, coming very soon.\n\nWe apologise for the troubles.";
 
@@ -70,9 +81,9 @@
 "NowPlayingTrackSubtitle" = "First song in the queue";
 
 "NothingUpNextTitle" = "That's it, boss!";
-"NothingUpNextSubtitle" = "You've got no songs queued up.";
+"NothingUpNextSubtitle" = "No more tracks.";
 
-"OptimiseLoadTimeTitle" = "Optimise for speed";
+"OptimiseLoadTimeTitle" = "Optimise for speed (beta)";
 "OptimiseLoadTimeSubtitle" = "Smaller \"up next\" in favour of speed";
 
 //As of 1.2.0 ^
@@ -422,7 +433,7 @@
 
 
 /* Now playing and mini player */
-"TheresNothingHere" = "Oh boy, you don't have any music here!\n\nSync your music from iTunes to begin."; //Nothing for a certain view (ie. no compilations)
+"TheresNothingHere" = "Oh boy, you don't have any music here!\n\nSync your music from iTunes or add music from the Apple Music app to begin."; //Nothing for a certain view (ie. no compilations)
 "iOSNotProvidingQueue" = "It seems that you've started music outside of Lignite Music.\n\nUnfortunately Apple does not let us manage the queue for music started outside of our app.\n\nPlease start new music from within Lignite Music to manage the queue.";
 "NothingInQueue" = "Nothing in queue";
 "QueueUnavailable" = "Queue unavailable";

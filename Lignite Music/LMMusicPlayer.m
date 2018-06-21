@@ -417,7 +417,7 @@ MPMediaGrouping associatedMediaTypes[] = {
 }
 
 - (void)notifyDelegatesOfNowPlayingTrack {
-	[self.queue systemNowPlayingTrackDidChange:self.nowPlayingTrack];
+	[self.queue systemNowPlayingTrackChanged:self.nowPlayingTrack];
 	
 	NSArray<id<LMMusicPlayerDelegate>> *safeDelegates = [[NSArray alloc]initWithArray:self.delegates];
 	
@@ -1371,7 +1371,7 @@ BOOL shuffleForDebug = NO;
 - (void)setShuffleMode:(LMMusicShuffleMode)shuffleMode {
 	_shuffleMode = shuffleMode;
 	
-#warning Todo: update the queue for shuffle
+	[self.queue shuffleModeChanged:shuffleMode];
 	
 	[self updatePlaybackModeDelegates];
 }

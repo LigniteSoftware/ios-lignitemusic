@@ -48,6 +48,7 @@
 "AddingTrackToQueue" = "Adding...";
 "RemovingTrackFromQueue" = "Removing...";
 "PlayingNewQueue" = "Loading queue...";
+"ShufflingQueue" = "Shuffling...";
 
 
 "CantReorderTitle" = "Reordering is temporarily disabled :(";

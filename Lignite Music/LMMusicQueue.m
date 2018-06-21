@@ -26,6 +26,16 @@
 @property NSMutableArray<LMMusicTrack*> *completeQueue;
 
 /**
+ The ordered (or sorted) queue.
+ */
+@property NSMutableArray<LMMusicTrack*> *orderedQueue;
+
+/**
+ The shuffled queue.
+ */
+@property NSMutableArray<LMMusicTrack*> *shuffledQueue;
+
+/**
  Whether or not the full system queue is available to us. If YES, no tracks provided by the system were nil and the queue was not shortened to optimise for speed.
  */
 @property BOOL fullQueueAvailable;
@@ -69,19 +79,44 @@
 @synthesize count = _count;
 @synthesize systemQueueCount = _systemQueueCount;
 @synthesize indexOfNowPlayingTrack = _indexOfNowPlayingTrack;
-@synthesize completeQueue = _completeQueue;
 @synthesize completeQueueTrackCollection = _completeQueueTrackCollection;
 
 - (LMMusicTrackCollection*)completeQueueTrackCollection {
 	return [LMMusicTrackCollection collectionWithItems:self.completeQueue];
 }
 
-- (void)systemNowPlayingTrackDidChange:(LMMusicTrack*)musicTrack {
+- (void)systemNowPlayingTrackChanged:(LMMusicTrack*)musicTrack {
 	NSLog(@"System music track changed");
 	
 	[self calculateAdjustedIndex];
 	if(!self.fullQueueAvailable){
 		[self rebuild];
+	}
+}
+
+- (void)shuffleModeChanged:(NSInteger)shuffleModeInteger {
+	LMMusicShuffleMode shuffleMode = (LMMusicShuffleMode)shuffleModeInteger;
+	
+	if(shuffleMode == LMMusicShuffleModeOn){
+		[self reshuffle];
+	}
+	else{
+		NSInteger indexOfNowPlayingTrackInOrderedQueue = NSNotFound;
+		for(NSInteger i = 0; i < self.orderedQueue.count; i++){
+			LMMusicTrack *musicTrack = [self.orderedQueue objectAtIndex:i];
+			if(musicTrack.persistentID == self.musicPlayer.nowPlayingTrack.persistentID){
+				indexOfNowPlayingTrackInOrderedQueue = i;
+				break;
+			}
+		}
+		
+		if(indexOfNowPlayingTrackInOrderedQueue != NSNotFound){
+			self.adjustedIndexOfNowPlayingTrack = indexOfNowPlayingTrackInOrderedQueue;
+		}
+		
+		self.requiresSystemReload = YES;
+		
+		[self notifyDelegatesOfCurrentShuffleMode];
 	}
 }
 
@@ -106,7 +141,7 @@
 }
 
 - (BOOL)hasBeenBuilt {
-	return (self.completeQueue.count > 0);
+	return (self.orderedQueue.count > 0);
 }
 
 - (NSInteger)systemQueueCount {
@@ -130,8 +165,94 @@
 	return nil;
 }
 
+- (void)shuffleArrayOfTracks:(NSMutableArray<LMMusicTrack*>*)array {
+	NSUInteger count = [array count];
+	if(count < 1){
+		return;
+	}
+	
+	for(NSUInteger i = 0; i < count - 1; ++i) {
+		NSInteger exchangeIndex = arc4random_uniform((u_int32_t)count);
+		
+		LMMusicTrack *firstTrack = [array objectAtIndex:i];
+		LMMusicTrack *otherTrack = [array objectAtIndex:exchangeIndex];
+		LMMusicTrack *trackInFrontOfOtherTrack =
+		[array objectAtIndex:((exchangeIndex + 1) >= count) ? 0 : (exchangeIndex + 1)];
+		LMMusicTrack *trackBehindOfOtherTrack =
+		[array objectAtIndex:((exchangeIndex - 1) < 0) ? (count - 1) : (exchangeIndex - 1)];
+		
+		int triesToMakeQuoteOnQuoteRandom = 0;
+		while(((firstTrack.artistPersistentID == trackInFrontOfOtherTrack.artistPersistentID)
+			   || (firstTrack.artistPersistentID == trackBehindOfOtherTrack.artistPersistentID))
+			  && triesToMakeQuoteOnQuoteRandom < 10){
+			
+			exchangeIndex = arc4random_uniform((u_int32_t)count);
+			
+			trackInFrontOfOtherTrack =
+			[array objectAtIndex:((exchangeIndex + 1) >= count) ? 0 : (exchangeIndex + 1)];
+			trackBehindOfOtherTrack =
+			[array objectAtIndex:((exchangeIndex - 1) < 0) ? (count - 1) : (exchangeIndex - 1)];
+			
+			triesToMakeQuoteOnQuoteRandom++;
+		}
+		
+		if(triesToMakeQuoteOnQuoteRandom > 0){
+			NSLog(@"- Shuffled -\n%@/%@\n%@/%@", firstTrack.artist, otherTrack.artist, firstTrack.albumTitle, otherTrack.albumTitle);
+		}
+		
+		[array exchangeObjectAtIndex:i withObjectAtIndex:exchangeIndex];
+	}
+}
+
 - (void)reshuffle {
-#warning Todo: reshuffle
+	if([self hasBeenBuilt]){
+		NSLog(@"Shuffle");
+		
+		NSMutableArray<LMMusicTrack*> *shuffledArray = [NSMutableArray arrayWithArray:self.orderedQueue];
+
+		[self shuffleArrayOfTracks:shuffledArray];
+		
+		if(self.musicPlayer.nowPlayingTrack){
+			NSInteger indexOfNowPlayingTrackInShuffledArray = -1;
+			for(NSInteger i = 0; i < shuffledArray.count; i++){
+				LMMusicTrack *musicTrack = [shuffledArray objectAtIndex:i];
+				if(musicTrack.persistentID == self.musicPlayer.nowPlayingTrack.persistentID){
+					indexOfNowPlayingTrackInShuffledArray = i;
+					break;
+				}
+			}
+
+			if(indexOfNowPlayingTrackInShuffledArray > -1){
+				[shuffledArray exchangeObjectAtIndex:indexOfNowPlayingTrackInShuffledArray withObjectAtIndex:0];
+			}
+		}
+
+		self.shuffledQueue = shuffledArray;
+		
+		self.adjustedIndexOfNowPlayingTrack = 0;
+		self.requiresSystemReload = YES;
+		
+		dispatch_async(dispatch_get_main_queue(), ^{
+			[self notifyDelegatesOfCurrentShuffleMode];
+			[self notifyDelegatesOfCompletelyChangedQueue];
+		});
+	}
+	else{
+		self.mostRecentAction = LMMusicQueueActionTypeShuffle;
+		
+		[self rebuildWithCompletion:^(BOOL complete) {
+			if([self hasBeenBuilt]){
+				[self reshuffle];
+			}
+			else{
+				NSLog(@"Queue still doesn't exist after rebuilding, this should never happen. Regardless, rejecting reshuffle request.");
+			}
+		}];
+	}
+}
+
+- (NSInteger)displayIndexOfNowPlayingTrack {
+	return (self.fullQueueAvailable ? self.indexOfNowPlayingTrack : self.systemIndexOfNowPlayingTrack) + 1;
 }
 
 - (NSInteger)systemIndexOfNowPlayingTrack {
@@ -220,15 +341,28 @@
 	[self.musicPlayer.systemMusicPlayer play];
 }
 
+- (void)notifyDelegatesOfCurrentShuffleMode {
+	dispatch_async(dispatch_get_main_queue(), ^{
+		NSArray<id<LMMusicPlayerDelegate>> *safeDelegates = [[NSArray alloc]initWithArray:self.delegates];
+		
+		for(id<LMMusicQueueDelegate> delegate in safeDelegates){
+			if([delegate respondsToSelector:@selector(queueChangedToShuffleMode:)]){
+				[delegate queueChangedToShuffleMode:self.musicPlayer.shuffleMode];
+			}
+		}
+	});
+}
 
 - (void)notifyDelegatesOfCompletelyChangedQueue {
-	NSArray<id<LMMusicPlayerDelegate>> *safeDelegates = [[NSArray alloc]initWithArray:self.delegates];
-	
-	for(id<LMMusicQueueDelegate> delegate in safeDelegates){
-		if([delegate respondsToSelector:@selector(queueCompletelyChanged)]){
-			[delegate queueCompletelyChanged];
+	dispatch_async(dispatch_get_main_queue(), ^{
+		NSArray<id<LMMusicPlayerDelegate>> *safeDelegates = [[NSArray alloc]initWithArray:self.delegates];
+		
+		for(id<LMMusicQueueDelegate> delegate in safeDelegates){
+			if([delegate respondsToSelector:@selector(queueCompletelyChanged)]){
+				[delegate queueCompletelyChanged];
+			}
 		}
-	}
+	});
 }
 
 - (void)setQueue:(LMMusicTrackCollection*)newQueue
@@ -259,10 +393,6 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 	}
 	else if(!autoPlay && !updateCompleteQueue){
 		self.requiresSystemReload = YES;
-	}
-	
-	if(updateCompleteQueue){
-		[self notifyDelegatesOfCompletelyChangedQueue];
 	}
 }
 
@@ -419,11 +549,23 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 		return array;
 	}
 	
-	return _completeQueue;
+	if(self.musicPlayer.shuffleMode == LMMusicShuffleModeOff){
+		return self.orderedQueue;
+	}
+	else{
+		return self.shuffledQueue;
+	}
 }
 
 - (void)setCompleteQueue:(NSMutableArray<LMMusicTrack *> *)completeQueue {
-	_completeQueue = completeQueue;
+	self.orderedQueue = completeQueue;
+	
+	if(self.musicPlayer.shuffleMode == LMMusicShuffleModeOn){
+		[self reshuffle];
+	}
+	else{
+		[self notifyDelegatesOfCompletelyChangedQueue];
+	}
 }
 
 - (NSInteger)completeQueueCount {
@@ -445,7 +587,7 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 
 - (BOOL)queueIsStale {
 //	NSLog(@"Now playing track %d, count %d, complete %d", (self.musicPlayer.nowPlayingTrack ? YES : NO), (int)self.systemQueueCount, (int)self.completeQueue.count);
-	return (self.musicPlayer.nowPlayingTrack && (self.systemQueueCount > 0) && (self.completeQueue.count == 0));
+	return (self.musicPlayer.nowPlayingTrack && (self.systemQueueCount > 0) && (self.orderedQueue.count == 0));
 }
 
 - (NSRange)previousTracksIndexRange {
@@ -527,10 +669,6 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 	return [self.completeQueue subarrayWithRange:self.nextTracksIndexRange];
 }
 
-- (BOOL)queueExists {
-	return (self.completeQueue.count > 0);
-}
-
 - (void)calculateAdjustedIndex {
 	if(!self.fullQueueAvailable){
 		NSLog(@"Calculating adjusted index with current adjusted %d, index of now playing %d, starting index %d", (int)self.adjustedIndexOfNowPlayingTrack, (int)self.systemIndexOfNowPlayingTrack, (int)self.systemQueueStartingIndex);
@@ -570,6 +708,10 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 }
 
 - (void)rebuild {
+	[self rebuildWithCompletion:nil];
+}
+
+- (void)rebuildWithCompletion:(void (^ __nullable)(BOOL complete))completion {
 	__weak id weakSelf = self;
 	
 //	if(![self queueAPIsAvailable]){
@@ -589,7 +731,7 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 			[strongSelf queueBeganBuilding];
 		});
 		
-		BOOL noPreviousQueue = ![strongSelf queueExists];
+		BOOL noPreviousQueue = ![strongSelf hasBeenBuilt];
 
 		NSTimeInterval startTime = [[NSDate new] timeIntervalSince1970];
 		
@@ -618,7 +760,7 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 
 		[self calculateAdjustedIndex];
 		
-		BOOL noCurrentQueue = ![strongSelf queueExists];
+		BOOL noCurrentQueue = ![strongSelf hasBeenBuilt];
 		
 		NSArray *previous = [strongSelf previousTracks];
 //		for(NSInteger i = 0; i < previous.count; i++){
@@ -662,6 +804,10 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 			}
 
 			[self queueFinishedBuilding];
+			
+			if(completion){
+				completion(YES);
+			}
 			
 			NSLog(@"Finished building and distributing system queue. %lu tracks loaded.", (unsigned long)systemQueueArray.count);
 		});
