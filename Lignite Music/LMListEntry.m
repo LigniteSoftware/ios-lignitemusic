@@ -167,21 +167,6 @@
 		case MGSwipeStateExpandingRightToLeft: str = @"ExpandingRightToLeft"; break;
 	}
 	
-	if(gestureIsActive && self.contentView.alpha < 1.0){
-		self.previousAlpha = self.contentView.alpha;
-		
-		[UIView animateWithDuration:0.3 animations:^{
-			self.contentView.alpha = 1.0;
-		}];
-	}
-	else if(!gestureIsActive && self.previousAlpha > 0.0){
-		[UIView animateWithDuration:0.3 animations:^{
-			self.contentView.alpha = self.previousAlpha;
-		}];
-		
-		self.previousAlpha = 0.0;
-	}
-	
 	NSLog(@"Swipe state: %@ ::: Gesture: %@", str, gestureIsActive ? @"Active" : @"Ended");
 }
 

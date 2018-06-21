@@ -87,17 +87,13 @@
 
 - (void)prepareForBackgrounding {
 	if(self.requiresSystemReload){
-		self.requiresSystemReload = NO;
-		
-		CGFloat currentPlaybackTime = self.musicPlayer.currentPlaybackTime;
-		
 		NSLog(@"Preparing for the background by performing a system reload of the queue.");
-		
+
+		CGFloat currentPlaybackTime = self.musicPlayer.currentPlaybackTime;
+
 		[self systemReloadWithTrack:self.musicPlayer.nowPlayingTrack];
 		
 		self.systemRestorePlaybackTime = currentPlaybackTime;
-		
-//		self.playbackTimeToRestoreBecauseQueueChangesAreFuckingStupid = playbackTime;
 		
 		NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:0.05 block:^{
 			[self.musicPlayer setCurrentPlaybackTime:currentPlaybackTime];
@@ -311,15 +307,27 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 		return;
 	}
 	
+	BOOL isBelowCurrentTrack = (trackIndex < self.indexOfNowPlayingTrack);
 	BOOL isCurrentTrack = (trackIndex == self.indexOfNowPlayingTrack);
 	BOOL stopMusic = isCurrentTrack && (self.completeQueueCount == 0);
 	
 	self.mostRecentAction = LMMusicQueueActionTypeRemoveTrack;
 	
+	if(isBelowCurrentTrack){
+		NSInteger newIndexOfCurrentTrack = 0;
+		if(self.adjustedIndexOfNowPlayingTrack != NSNotFound){
+			newIndexOfCurrentTrack = self.adjustedIndexOfNowPlayingTrack;
+		}
+		else{
+			newIndexOfCurrentTrack = self.indexOfNowPlayingTrack;
+		}
+		newIndexOfCurrentTrack--;
+		
+		self.adjustedIndexOfNowPlayingTrack = newIndexOfCurrentTrack;
+	}
+	
 	LMMusicTrack *trackRemoved = [self.completeQueue objectAtIndex:trackIndex];
-	
 	[self.completeQueue removeObjectAtIndex:trackIndex];
-	
 	[self completeQueueUpdated];
 	
 	if(stopMusic){

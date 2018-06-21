@@ -190,15 +190,11 @@
 	return self.buttonBar.frame.size.height + self.viewAttachedToButtonBar.frame.size.height + 20;
 }
 
-- (void)setButtonBarBottomConstraintConstant:(NSInteger)constant completion:(void (^ __nullable)(BOOL finished))completion {
+- (void)setButtonBarBottomConstraintConstant:(NSInteger)constant
+								  completion:(void (^ __nullable)(BOOL finished))completion {
 	[self layoutIfNeeded];
 	
 	self.buttonBarBottomConstraint.constant = constant;
-	
-//	BOOL maximizing = (self.buttonBarBottomConstraint.constant < 10.0f);
-//	if([LMLayoutManager isiPhoneX]){
-//		self.iPhoneXBottomCoverConstraint.constant = maximizing ? 0.0f : 22.0f;
-//	}
 	
 	NSLog(@"Setting to %ld", constant);
 	
@@ -339,7 +335,7 @@
 	
 	self.wasAutomaticallyMinimised = automatic;
     
-	NSLog(@"Minimize");
+	NSLog(@"Minimise");
 	
 	__weak id weakSelf = self;
 	
@@ -353,8 +349,7 @@
 										}
 										
 										if(finished) {
-											[strongSelf.delegate requiredHeightForNavigationBarChangedTo:self.minimiseButton.frame.size.height + 10
-																				   withAnimationDuration:0.10];
+											[strongSelf.delegate requiredHeightForNavigationBarChangedTo:self.minimiseButton.frame.size.height + 10 withAnimationDuration:0.10];
 										}
 									}];
 	

@@ -68,11 +68,11 @@
 
 - (NSInteger)amountOfOverflowingCellsForDetailView {
 	NSInteger totalNumberOfItems = [self.collectionView.dataSource collectionView:self.collectionView numberOfItemsInSection:1]; //Section 1 returns the amount of items without the detail view
-	NSInteger overflow = self.indexOfDetailView-totalNumberOfItems;
+	NSInteger overflow = (self.indexOfDetailView - totalNumberOfItems);
 	
 //	NSLog(@"total %ld overflow %ld index %ld from %@", (long)totalNumberOfItems, (long)overflow, (long)self.indexOfDetailView, self.collectionView.dataSource);
 	
-	if(overflow < 0 || (overflow+self.indexOfDetailView-1 > totalNumberOfItems)){
+	if((overflow < 0) || ((overflow + self.indexOfDetailView - 1) > totalNumberOfItems)){
 //		NSLog(@"No fear, returning 0");
 		return 0;
 	}
@@ -323,9 +323,9 @@
 	if(isDetailViewRow){
 		CGRect finalFrame = CGRectMake(0, origin.y + spacing/4, collectionViewSize.width, detailViewHeight);
 		
-		NSLog(@"\ncollframe %@ \n content offset %@ \n superviewframe %@ \n size of item %@\nfinal frame %@", NSStringFromCGRect(self.collectionView.frame), NSStringFromCGPoint(self.collectionView.contentOffset), NSStringFromCGRect(self.collectionView.superview.frame), NSStringFromCGRect([self frameForCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] detailViewDisplayMode:LMDetailViewDisplayModeNone]), NSStringFromCGRect(finalFrame));
+//		NSLog(@"\ncollframe %@ \n content offset %@ \n superviewframe %@ \n size of item %@\nfinal frame %@", NSStringFromCGRect(self.collectionView.frame), NSStringFromCGPoint(self.collectionView.contentOffset), NSStringFromCGRect(self.collectionView.superview.frame), NSStringFromCGRect([self frameForCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] detailViewDisplayMode:LMDetailViewDisplayModeNone]), NSStringFromCGRect(finalFrame));
 		
-		NSLog(@"Amount left %ld-%ld-1 == %ld", amountOfItems-1, (long)self.indexOfItemDisplayingDetailView, (long)amountLeft);
+//		NSLog(@"Amount left %ld-%ld-1 == %ld", amountOfItems-1, (long)self.indexOfItemDisplayingDetailView, (long)amountLeft);
 		
 		return finalFrame;
 	}

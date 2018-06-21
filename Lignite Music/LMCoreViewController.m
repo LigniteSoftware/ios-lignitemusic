@@ -14,6 +14,7 @@
 
 #import <PureLayout/PureLayout.h>
 
+#import "LMCollectionViewFlowLayout.h"
 #import "LMGuideViewPagerController.h"
 #import "LMSettingsViewController.h"
 #import "LMSearchViewController.h"
@@ -747,7 +748,8 @@
 	self.searchViewController = nil;
 }
 
-- (void)requiredHeightForNavigationBarChangedTo:(CGFloat)requiredHeight withAnimationDuration:(CGFloat)animationDuration {
+- (void)requiredHeightForNavigationBarChangedTo:(CGFloat)requiredHeight
+						  withAnimationDuration:(CGFloat)animationDuration {
 	
     CGFloat bottomSpacing = requiredHeight + 10;
     self.titleView.collectionView.contentInset = UIEdgeInsetsMake(0, 0, bottomSpacing, 0);
@@ -770,9 +772,16 @@
 	
 	UIEdgeInsets newInsets = self.compactView.collectionView.contentInset;
 	newInsets.bottom = [LMLayoutManager isLandscape] ? (LMLayoutManager.isiPhoneX ? 200 : 100) : bottomSpacing;
+	
+	NSLog(@"Current insets %@", NSStringFromUIEdgeInsets(self.compactView.collectionView.contentInset));
+	
 	[UIView animateWithDuration:0.4 animations:^{
 		self.compactView.collectionView.contentInset = newInsets;
+
+		NSLog(@"New insets %@", NSStringFromUIEdgeInsets(self.compactView.collectionView.contentInset));
+		NSLog(@"Done");
 	}];
+	
 	//    if(self.currentDetailViewController){
 //        self.currentDetailViewController.browsingDetailView.tableView.bottomSpacing = bottomSpacing;
 //        if(self.currentDetailViewController.nextDetailViewController){

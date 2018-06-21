@@ -48,6 +48,10 @@
 "Build237VeryBetaTitle" = "Änderungen in Version 1.2";
 "Build237VeryBetaDescription" = "In dieser Version wurde ein grosser Teil des Backends komplett neu geschrieben, um die Geschwindigkeit und den Komfort massiv zu erhöhen.\n\nAufgrund dessen ist diese Version noch sehr 'experiementell' und es gibt noch einige Fehler/Probleme.\n\nWir werden eine neue Beta veröffentlichen, sobald wir weitere Aktualisierungen bereit haben.\n\nVielen Dank, dass du Lignite Music nutzt! :)";
 
+"AddingTrackToQueue" = "Wird hinzugefügt...";
+"RemovingTrackFromQueue" = "Wird entfernt...";
+"PlayingNewQueue" = "Lade Warteschleife...";
+
 "CantReorderTitle" = "Rearrangieren ist vorübergehend deaktiviert :(";
 "CantReorderDescription" = "Wie so oft bei Beta-Versionen gilt es mit Bugs zu kämpfen.\n\nLeider haben wir - einen Tag vor der Veröffentlichung dieser Beta-Version - einen Bug gefunden, der die App abstürzen lässt, wenn Songs rearrangiert werden.\n\nWir haben versucht, das Problem zu beheben, aber leider hatten wir zuwenig Zeit dafür. Aufgrund dessen haben wir das Rearrangieren temporär deaktiviert.\n\nWir werden das Problem in einer neuen Beta beheben, welche bald verfügbar sein wird.\n\nWir danken dir für dein Verständnis.";
 
@@ -71,7 +75,7 @@
 "PreviousTracksTitleSingular" = "Vorheriger Song";
 "PreviousTracksTitlePlural" = "Vorherige Songs";
 
-"UpNextTitle" = "Anstehende";
+"UpNextTitle" = "Anstehende Songs";
 
 "NowPlayingTrack" = "Aktuelle Wiedergabe";
 "NowPlayingTrackSubtitle" = "Erster Song in der Wiedergabeliste";
@@ -120,11 +124,11 @@
 
 "VoiceOverHint_TapCompactViewEntry" = "Tippe doppelt, um diesen Eintrag zu öffnen";
 
-"VoiceOverHint_DetailViewListEntry" = "Tippe doppelt, um dieses Lied abzuspielen";
+"VoiceOverHint_DetailViewListEntry" = "Tippe doppelt, um dieses Song abzuspielen";
 
 "VoiceOverHint_DetailViewButtonBack" = "Tippe doppelt, um zurück zu gehen";
 "VoiceOverHint_DetailViewButtonClose" = "Tippe doppelt, um diese Detailansicht zu schliessen";
-"VoiceOverHint_DetailViewButtonShuffle" = "Tippe doppelt, um alle Lieder dieser Ansicht zufällig wiederzugeben";
+"VoiceOverHint_DetailViewButtonShuffle" = "Tippe doppelt, um alle Songs dieser Ansicht zufällig wiederzugeben";
 
 
 
@@ -200,7 +204,7 @@
 
 "VoiceOverLabel_RepeatOff" = "Wiederholung deaktiviert";
 "VoiceOverLabel_RepeatAll" = "Alles wiederholen aktiv";
-"VoiceOverLabel_RepeatOne" = "Lied wiederholen aktiviert";
+"VoiceOverLabel_RepeatOne" = "Song wiederholen aktiviert";
 
 "VoiceOverLabel_AirPlayButton" = "AirPlay";
 
@@ -209,18 +213,18 @@
 "VoiceOverLabel_FavouriteButton" = "Favorisieren";
 "VoiceOverLabel_UnfavouriteButton" = "Favorit entfernt";
 
-"VoiceOverLabel_PreviousTrack" = "Vorheriges Lied";
+"VoiceOverLabel_PreviousTrack" = "Vorheriges Song";
 "VoiceOverLabel_CloseNowPlaying" = "Vollbildwiedergabe schliessen";
 "VoiceOverLabel_OpenNowPlaying" = "Vollbildwiedergabe öffnen";
-"VoiceOverLabel_NextTrack" = "Nächstes Lied";
-"VoiceOverLabel_PlayTrack" = "Lied abspielen";
-"VoiceOverLabel_PauseTrack" = "Lied pausieren";
+"VoiceOverLabel_NextTrack" = "Nächstes Song";
+"VoiceOverLabel_PlayTrack" = "Song abspielen";
+"VoiceOverLabel_PauseTrack" = "Song pausieren";
 
 "VoiceOverLabel_CreatePlaylist" = "Wiedergabeliste erstellen";
 "VoiceOverLabel_EditPlaylists" = "Wiedergabeliste bearbeiten";
 "VoiceOverLabel_FinishEditingPlaylists" = "Bearbeitung der Wiedergabeliste beenden";
 
-"VoiceOverLabel_AddSongs" = "Lieder hinzufügen";
+"VoiceOverLabel_AddSongs" = "Songs hinzufügen";
 "VoiceOverLabel_AddImage" = "Bild hinzufügen";
 
 "VoiceOverLabel_SelectAll" = "Alle auswählen";
@@ -291,21 +295,21 @@
 "VoiceOverHint_ShuffleOff" = "Tippe doppelt, um die zufällige Wiedergabe einzuschalten";
 
 "VoiceOverHint_RepeatOff" = "Tippe doppelt, um alles zu wiederholen";
-"VoiceOverHint_RepeatAll" = "Tippe doppelt, um dieses Lied zu wiederholen";
+"VoiceOverHint_RepeatAll" = "Tippe doppelt, um dieses Song zu wiederholen";
 "VoiceOverHint_RepeatOne" = "Tippe doppelt, um die Wiederholung auszuschalten";
 
 "VoiceOverHint_AirPlayButton" = "Tippe doppelt, um die AirPlay Auswahl anzuzeigen";
 
 "VoiceOverHint_QueueButton" = "Tippe doppelt, um die Wiedergabewarteliste ein-/auszublenden";
 
-"VoiceOverHint_FavouriteButton" = "Tippe doppelt, um dieses Lied zu deinen Favoriten hinzuzufügen";
-"VoiceOverHint_UnfavouriteButton" = "Tippe doppelt, um dieses Lied aus deinen Favoriten zu entfernen";
+"VoiceOverHint_FavouriteButton" = "Tippe doppelt, um dieses Song zu deinen Favoriten hinzuzufügen";
+"VoiceOverHint_UnfavouriteButton" = "Tippe doppelt, um dieses Song aus deinen Favoriten zu entfernen";
 
-"VoiceOverHint_QueueEntry" = "Tippe doppelt, um dieses Lied abzuspielen";
-"VoiceOverHint_PreviousTrack" = "Tippe doppelt, um das vorherige Lied abzuspielen";
+"VoiceOverHint_QueueEntry" = "Tippe doppelt, um dieses Song abzuspielen";
+"VoiceOverHint_PreviousTrack" = "Tippe doppelt, um das vorherige Song abzuspielen";
 "VoiceOverHint_CloseNowPlaying" = "Tippe doppelt, um die Vollbildanzeige zu schliessen";
 "VoiceOverHint_OpenNowPlaying" = "Tippe doppelt, um die Vollbildanzeige zu öffnen";
-"VoiceOverHint_NextTrack" = "Tippe doppelt, um das nächste Lied abzuspielen";
+"VoiceOverHint_NextTrack" = "Tippe doppelt, um das nächste Song abzuspielen";
 "VoiceOverHint_PlayTrack" = "Tippe doppelt, um mit der Wiedergabe fortzufahren";
 "VoiceOverHint_PauseTrack" = "Tippe doppelt, um die Wiedergabe zu pausieren";
 
@@ -313,7 +317,7 @@
 "VoiceOverHint_EditPlaylists" = "Tippe doppelt, um Wiedergabelisten zu editieren oder löschen";
 "VoiceOverHint_FinishEditingPlaylists" = "Tippe doppelt, um die Bearbeitung abzuschliessen";
 
-"VoiceOverHint_AddSongs" = "Tippe doppelt, um Lieder zu dieser Wiedergabeliste hinzuzufügen";
+"VoiceOverHint_AddSongs" = "Tippe doppelt, um Songs zu dieser Wiedergabeliste hinzuzufügen";
 "VoiceOverHint_AddImage" = "Tippe doppelt, um dieser Wiedergabeliste ein Bild hinzuzufügen";
 
 "VoiceOverHint_EditPlaylistEntryOption" = "Du musst VoiceOver hierfür leider deaktivieren, sorry. Wenn VoiceOver deaktiviert ist, kannst du nach rechts streichen, um einen Eintrag aus der Wiedergabeliste zu entfernen oder tippen und halten, um die Reihenfolge zu ändern.";
@@ -422,11 +426,11 @@
 "NothingInQueue" = "Keine Songs in der Liste";
 "QueueUnavailable" = "Warteschlange nicht verfügbar";
 
-"TrackQueued" = "Lied eingereiht";
-"TrackRemovedFromQueue" = "Lied entfernt";
+"TrackQueued" = "Song eingereiht";
+"TrackRemovedFromQueue" = "Song entfernt";
 
-"NextTrack" = "Nächstes Lied";
-"PreviousTrack" = "Vorheriges Lied";
+"NextTrack" = "Nächstes Song";
+"PreviousTrack" = "Vorheriges Song";
 "TrackMissingSubtitle" = "Unbekannt bis Wiedergabe startet";
 
 "Playing" = "Wiedergabe läuft"; //Playing music
@@ -436,7 +440,7 @@
 
 "TrackRestarted" = "Erneute Wiedergabe";
 
-"SongUnknown" = "Lied ?"; //Normally "Song X" where X is a number (ie. "Song 3" or "Song 101"), "Song ?" is for when Lignite Music doesn't know the song number.
+"SongUnknown" = "Song ?"; //Normally "Song X" where X is a number (ie. "Song 3" or "Song 101"), "Song ?" is for when Lignite Music doesn't know the song number.
 
 "UnableToQueueDescription" = "Leider lässt Apple nicht zu, dass wir die ausserhalb gestarteten Warteschlangen lesen dürfen.\n\nStarte die Wiedergabe bitte innerhalb Lignite Music, um die Warteschlange verwalten zu können.";
 "UnableToQueueCheckboxText" = "Ich verstehe, dass ich die Warteschlange nicht verändern kann wenn die Wiedergabe ausserhalb von Lignite Music gestartet wurde.";
@@ -516,10 +520,10 @@
 "DeletePhoto" = "Bild löschen";
 "Cancel" = "Abbrechen";
 "Save" = "Speichern";
-"AddSongs" = "Lieder hinzufügen";
-"SelectSongs" = "Lieder auswählen";
+"AddSongs" = "Songs hinzufügen";
+"SelectSongs" = "Songs auswählen";
 "Source" = "Quelle";
-"NoSongsInPlaylistBuilder" = "Es befinden sich noch keine Lieder in dieser Wiedergabeliste.\n\nFüge welche hinzu indem du oben auf den 'Lieder hinzufügen'-Button tippst.";
+"NoSongsInPlaylistBuilder" = "Es befinden sich noch keine Songs in dieser Wiedergabeliste.\n\nFüge welche hinzu indem du oben auf den 'Songs hinzufügen'-Button tippst.";
 "SelectASource" = "Wähle bitte deine gewünschte Ansicht";
 "TapToEdit" = "Bearbeiten";
 "YourPlaylistTitle" = "Titel Wiedergabeliste";
@@ -531,9 +535,9 @@
 "StartEditing" = "Bearbeitung starten";
 "CreatePlaylist" = "Wiedergabeliste erstellen";
 
-"XSongs" = "%ld Lieder"; //Multiple songs
-"XSongsSingle" = "%ld Lied"; //1 song
-"NoSongsYet" = "Noch keine Lieder";
+"XSongs" = "%ld Songs"; //Multiple songs
+"XSongsSingle" = "%ld Song"; //1 song
+"NoSongsYet" = "Noch keine Songs";
 
 
 

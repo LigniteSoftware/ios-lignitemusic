@@ -1220,10 +1220,15 @@ BOOL shuffleForDebug = NO;
 - (void)setNowPlayingTrack:(LMMusicTrack*)nowPlayingTrack {
 	NSLog(@"Setting now playing track (in Lignite Music) to %@", nowPlayingTrack.title);
 
-	[self.systemMusicPlayer setNowPlayingItem:nowPlayingTrack];
-	
-	if(self.playbackState != LMMusicPlaybackStatePlaying){
-		[self.systemMusicPlayer play];
+	if(self.queue.requiresSystemReload){
+		[self.queue systemReloadWithTrack:nowPlayingTrack];
+	}
+	else{
+		[self.systemMusicPlayer setNowPlayingItem:nowPlayingTrack];
+		
+		if(self.playbackState != LMMusicPlaybackStatePlaying){
+			[self.systemMusicPlayer play];
+		}
 	}
 	
 #if TARGET_OS_SIMULATOR

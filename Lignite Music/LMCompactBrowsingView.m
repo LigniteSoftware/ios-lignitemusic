@@ -561,13 +561,20 @@
 	
 	if(shouldOpenNewDetailView){
 		[NSTimer scheduledTimerWithTimeInterval:detailViewNotCurrentlyOpen ? 0.0 : 0.4 block:^{
+			CGFloat contentOffsetY = bigListEntry.superview.superview.frame.origin.y - 20;
+			
 			[UIView animateWithDuration:0.15 animations:^{
-				CGFloat contentOffsetY = bigListEntry.superview.superview.frame.origin.y - 20;
+				
+				NSLog(@"Content offset %f", contentOffsetY);
 				
 				self.collectionView.contentOffset = CGPointMake(0, contentOffsetY);
 				[self layoutIfNeeded];
 			} completion:^(BOOL finished) {
 				[self tappedBigListEntryAtIndex:bigListEntry.collectionIndex];
+				
+				[NSTimer scheduledTimerWithTimeInterval:0.55 block:^{
+					self.collectionView.contentOffset = CGPointMake(0, contentOffsetY);
+				} repeats:NO];
 			}];
 		} repeats:NO];
 	}
@@ -600,7 +607,11 @@
 
 	LMCollectionViewFlowLayout *flowLayout = (LMCollectionViewFlowLayout*)collectionView.collectionViewLayout;
 //	NSLog(@"isDisplayingDetailView: %d/fixedCount: %d/amountOfOverflowingCellsForDetailView: %d", flowLayout.isDisplayingDetailView, (int)fixedCount, (int)flowLayout.amountOfOverflowingCellsForDetailView);
-	return flowLayout.isDisplayingDetailView ? (fixedCount + flowLayout.amountOfOverflowingCellsForDetailView + 1) : fixedCount;
+	NSInteger numberOfItems = flowLayout.isDisplayingDetailView ? (fixedCount + flowLayout.amountOfOverflowingCellsForDetailView + 1) : fixedCount;
+	
+	NSLog(@"Number of items %d. Displaying %d, fixed count %d, overflowing %d", (int)numberOfItems, flowLayout.isDisplayingDetailView, (int)fixedCount, (int)flowLayout.amountOfOverflowingCellsForDetailView);
+	
+	return numberOfItems;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {

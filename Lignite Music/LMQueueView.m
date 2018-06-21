@@ -151,6 +151,7 @@
 	
 	LMMusicTrack *track = nil;
 	if(isPreviousTracks && (indexPath.row == tracksArray.count)){
+		NSLog(@"Index path is now playing %@", indexPath);
 		track = self.musicPlayer.nowPlayingTrack;
 	}
 	else{

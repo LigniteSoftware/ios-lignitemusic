@@ -209,6 +209,10 @@
 			else{
                 NSLog(@"Now playing %@", self.musicPlayer.nowPlayingTrack.title);
             }
+			
+			if(self.nowPlayingView.nowPlayingQueueOpen){
+				return;
+			}
             
             NSLog(@"Translation %@ (%f/sec)", NSStringFromCGPoint(translation), rate);
             
