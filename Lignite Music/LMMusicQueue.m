@@ -472,6 +472,26 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 	}
 	
 	LMMusicTrack *trackRemoved = [self.completeQueue objectAtIndex:trackIndex];
+	
+	if(self.shuffledQueue && (self.musicPlayer.shuffleMode == LMMusicShuffleModeOff)){
+		for(NSInteger i = 0; i < self.shuffledQueue.count; i++){
+			LMMusicTrack *musicTrack = [self.shuffledQueue objectAtIndex:i];
+			if(musicTrack.persistentID == trackRemoved.persistentID){
+				[self.shuffledQueue removeObjectAtIndex:i];
+				break;
+			}
+		}
+	}
+	else if(self.musicPlayer.shuffleMode == LMMusicShuffleModeOn){
+		for(NSInteger i = 0; i < self.orderedQueue.count; i++){
+			LMMusicTrack *musicTrack = [self.orderedQueue objectAtIndex:i];
+			if(musicTrack.persistentID == trackRemoved.persistentID){
+				[self.orderedQueue removeObjectAtIndex:i];
+				break;
+			}
+		}
+	}
+	
 	[self.completeQueue removeObjectAtIndex:trackIndex];
 	[self completeQueueUpdated];
 	
