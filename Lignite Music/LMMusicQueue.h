@@ -274,6 +274,11 @@ typedef NS_ENUM(NSInteger, LMMusicQueueActionType){
 - (void)prepareForBackgrounding;
 
 /**
+ Wakes the queue from being in a backgrounded state.
+ */
+- (void)wakeFromBackgrounding;
+
+/**
  Adds a delegate.
 
  @param delegate The delegate to add.

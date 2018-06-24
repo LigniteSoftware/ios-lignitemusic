@@ -996,7 +996,9 @@
 			[UIView animateWithDuration:0.25 animations:^{
 				[self setNeedsStatusBarAppearanceUpdate];
 				
-				[self setNeedsUpdateOfHomeIndicatorAutoHidden];
+				if(@available(iOS 11.0, *)){
+					[self setNeedsUpdateOfHomeIndicatorAutoHidden];
+				}
 			}];
 		}
 	}];
@@ -1017,7 +1019,7 @@
 				[self setNeedsStatusBarAppearanceUpdate];
 				
 				if(@available(iOS 11.0, *)){
-				[self setNeedsUpdateOfHomeIndicatorAutoHidden];
+					[self setNeedsUpdateOfHomeIndicatorAutoHidden];
 				}
 			}];
 		}

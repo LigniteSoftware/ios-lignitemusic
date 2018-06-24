@@ -21,11 +21,6 @@
 @property NSMutableArray<id<LMMusicQueueDelegate>> *delegates;
 
 /**
- The complete queue, as provided by the system.
- */
-@property NSMutableArray<LMMusicTrack*> *completeQueue;
-
-/**
  The ordered (or sorted) queue.
  */
 @property NSMutableArray<LMMusicTrack*> *orderedQueue;
@@ -70,6 +65,11 @@
  */
 @property (readonly) NSRange nextTracksIndexRange;
 
+/**
+ The queue count before the app was backgrounded - used for detecting changes to the queue when the app is reopened.
+ */
+@property NSInteger queueCountBeforeBeingBackgrounded;
+
 @end
 
 @implementation LMMusicQueue
@@ -88,9 +88,21 @@
 - (void)systemNowPlayingTrackChanged:(LMMusicTrack*)musicTrack {
 	NSLog(@"System music track changed");
 	
-	[self calculateAdjustedIndex];
-	if(!self.fullQueueAvailable){
-		[self rebuild];
+//	NSLog(@"Complete queue %@ vs %@ contains %d has been built %d count %d", self.completeQueue, [self completeQueue], [self.completeQueue containsObject:musicTrack], self.hasBeenBuilt, (int)self.completeQueue.count);
+	
+	if(self.hasBeenBuilt){
+		if(![self.completeQueue containsObject:musicTrack] || [self queueCountChangedInTheBackground]){
+			NSLog(@"The queue doesn't have this track... that's weird.");
+			[self invalidateCompleteQueue];
+			[self rebuild];
+		}
+		else{
+			[self calculateAdjustedIndex];
+			
+			if(!self.fullQueueAvailable){
+				[self rebuild];
+			}
+		}
 	}
 }
 
@@ -140,6 +152,8 @@
 }
 
 - (void)prepareForBackgrounding {
+	self.queueCountBeforeBeingBackgrounded = self.systemQueueCount;
+	
 	if(self.requiresSystemReload){
 		NSLog(@"Preparing for the background by performing a system reload of the queue.");
 
@@ -157,6 +171,18 @@
 		[[NSRunLoop currentRunLoop] addTimer:timer forMode:NSDefaultRunLoopMode];
 		[[NSRunLoop currentRunLoop] run];
 	}
+}
+
+- (void)wakeFromBackgrounding {
+	if([self queueCountChangedInTheBackground]){
+		[self invalidateCompleteQueue];
+		[self rebuild];
+	}
+}
+
+- (BOOL)queueCountChangedInTheBackground {
+	NSLog(@"Built %d, before %d, now %d", self.hasBeenBuilt, (int)self.queueCountBeforeBeingBackgrounded, (int)self.systemQueueCount);
+	return (self.hasBeenBuilt && ((self.queueCountBeforeBeingBackgrounded != self.systemQueueCount) && (self.queueCountBeforeBeingBackgrounded != NSNotFound)));
 }
 
 - (BOOL)hasBeenBuilt {
@@ -342,8 +368,6 @@
 
 - (void)systemReloadWithTrack:(LMMusicTrack*)newTrack {
 	self.requiresSystemReload = NO;
-	
-	BOOL wasPlaying = (self.musicPlayer.playbackState == LMMusicPlaybackStatePlaying);
 	
 	NSLog(@"Queue was modified and needs a refresher, here we go.");
 	
@@ -719,7 +743,11 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 }
 
 - (void)invalidateCompleteQueue {
-	self.completeQueue = nil;
+	self.orderedQueue = nil;
+	self.shuffledQueue = nil;
+	
+	self.adjustedIndexOfNowPlayingTrack = NSNotFound;
+	self.queueCountBeforeBeingBackgrounded = NSNotFound;
 	
 	for(id<LMMusicQueueDelegate>delegate in self.delegates){
 		if([delegate respondsToSelector:@selector(queueInvalidated)]){
@@ -865,6 +893,7 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 		self.musicPlayer = [LMMusicPlayer sharedMusicPlayer];
 		self.delegates = [NSMutableArray new];
 		self.adjustedIndexOfNowPlayingTrack = NSNotFound;
+		self.queueCountBeforeBeingBackgrounded = NSNotFound;
 		
 		if([LMLayoutManager isSimulator] || ![self queueAPIsAvailable]){
 			self.testCollection = [[self.musicPlayer queryCollectionsForMusicType:LMMusicTypeAlbums] objectAtIndex:2];

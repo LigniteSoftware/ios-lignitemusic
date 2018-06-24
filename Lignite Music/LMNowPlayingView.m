@@ -560,6 +560,18 @@
 	//Just for this one night sorry
 }
 
+- (void)queueCompletelyChanged {
+	[self reloadSongNumberText];
+}
+
+- (void)queueBegan {
+	[self reloadSongNumberText];
+}
+
+- (void)queueEnded {
+	[self reloadSongNumberText];
+}
+
 - (void)queueCloseTap {
 	[self setShowingQueueView:NO animated:YES];
 }
@@ -678,8 +690,6 @@
 	
 	if(recognizer.state == UIGestureRecognizerStateEnded){
 		self.currentPoint = CGPointMake(self.currentPoint.x, self.originalPoint.y + totalTranslation);
-		
-		
 		
 		if((translation.y >= WINDOW_FRAME.size.height/10.0)){
 			self.topConstraint.constant = self.frame.size.height;
@@ -1331,7 +1341,7 @@
 	[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
 		[self reload];
 		
-//		[self setShowingQueueView:YES animated:YES];
+		[self setShowingQueueView:YES animated:YES];
 	} repeats:NO];
 }
 

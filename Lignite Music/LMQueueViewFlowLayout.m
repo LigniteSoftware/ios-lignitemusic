@@ -25,31 +25,34 @@
 	self.sectionDifferences = @[];
 }
 
-- (NSIndexPath*)targetIndexPathForInteractivelyMovingItem:(NSIndexPath *)previousIndexPath withPosition:(CGPoint)position {
-	
-	NSIndexPath *targetIndexPath = [super targetIndexPathForInteractivelyMovingItem:previousIndexPath withPosition:position];
-	
-//	NSLog(@"target previous %@ target %@ with position %@", previousIndexPath, targetIndexPath, NSStringFromCGPoint(position));
-	
-	if(targetIndexPath.section != previousIndexPath.section){
-		BOOL movingIntoPreviousTracksSection = (targetIndexPath.section == 0);
-		
-		if(self.sectionDifferences.count == 0){
-			self.sectionDifferences = @[ @(movingIntoPreviousTracksSection ? 1 : -1),
-										 @(movingIntoPreviousTracksSection ? -1 : 1) ];
-		}
-		else{
-			self.sectionDifferences = @[];
-		}
-		
-		[self.collectionView reloadData];
-		[self.collectionView.collectionViewLayout invalidateLayout];
-		
-		NSLog(@"Section differences %@", self.sectionDifferences);
-	}
-	
-	return targetIndexPath;
-}
+//- (NSIndexPath*)targetIndexPathForInteractivelyMovingItem:(NSIndexPath *)previousIndexPath withPosition:(CGPoint)position {
+//
+//	NSIndexPath *targetIndexPath = [super targetIndexPathForInteractivelyMovingItem:previousIndexPath withPosition:position];
+//
+////	NSLog(@"target previous %@ target %@ with position %@", previousIndexPath, targetIndexPath, NSStringFromCGPoint(position));
+//
+//	if(targetIndexPath.section != previousIndexPath.section){
+//		BOOL movingIntoPreviousTracksSection = (targetIndexPath.section == 0);
+//
+////		if(self.sectionDifferences.count == 0){
+////			self.sectionDifferences = @[ @(movingIntoPreviousTracksSection ? 0 : -1),
+////										 @(movingIntoPreviousTracksSection ? -1 : 0) ];
+////		}
+////		else{
+////			self.sectionDifferences = @[];
+////		}
+//
+////		[self.collectionView performBatchUpdates:^{
+////			[self.collectionView.collectionViewLayout invalidateLayout];
+////		} completion:^(BOOL finished) {
+////			NSLog(@"Done %d", finished);
+////		}];
+//
+//		NSLog(@"Section differences %@", self.sectionDifferences);
+//	}
+//
+//	return targetIndexPath;
+//}
 
 - (CGRect)frameForCellAtIndexPath:(NSIndexPath*)indexPath {
 	CGFloat width = self.collectionView.frame.size.width;
@@ -72,9 +75,9 @@
 	CGFloat previousOrigin = 0;
 	
 	NSInteger sectionDifferenceForFirstSection = 0;
-//	if(self.sectionDifferences.count > 0){
-//		sectionDifferenceForFirstSection = [[self.sectionDifferences objectAtIndex:0] integerValue];
-//	}
+	if(self.sectionDifferences.count > 0){
+		sectionDifferenceForFirstSection = [[self.sectionDifferences objectAtIndex:0] integerValue];
+	}
 	
 	CGFloat previousIndex = (indexPath.row - 1) + (!isFirstSection ? ([self.collectionView.dataSource collectionView:self.collectionView numberOfItemsInSection:0] + sectionDifferenceForFirstSection) : 0);
 	if(previousIndex < 0){
@@ -142,13 +145,13 @@
 	
 	for(NSInteger section = initialSection; section < [self.collectionView.dataSource numberOfSectionsInCollectionView:self.collectionView]; section++){
 		
-		NSInteger numberOfItems = [self.collectionView.dataSource collectionView:self.collectionView numberOfItemsInSection:section];
+		NSInteger numberOfItems = [self.collectionView numberOfItemsInSection:section];
 		
-//		if(self.sectionDifferences.count > 0){
-////			NSLog(@"Number of items before for %d: %d", (int)section, (int)numberOfItems);
-//			numberOfItems += [[self.sectionDifferences objectAtIndex:section] integerValue];
-////			NSLog(@"Number of items after for %d: %d", (int)section, (int)numberOfItems);
-//		}
+		if(self.sectionDifferences.count > 0){
+//			NSLog(@"Number of items before for %d: %d", (int)section, (int)numberOfItems);
+			numberOfItems += [[self.sectionDifferences objectAtIndex:section] integerValue];
+//			NSLog(@"Number of items after for %d: %d", (int)section, (int)numberOfItems);
+		}
 
 		BOOL foundFirstItem = NO;
 		

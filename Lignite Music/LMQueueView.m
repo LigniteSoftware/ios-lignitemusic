@@ -415,11 +415,11 @@
 	self.collectionView.hidden = !hideNoTracksLabel;
 	
 	NSInteger addition = 0;
-	LMQueueViewFlowLayout *flowLayout = (LMQueueViewFlowLayout*)self.collectionView.collectionViewLayout;
-	if(flowLayout.sectionDifferences.count > 0){
-		addition += [[flowLayout.sectionDifferences objectAtIndex:section] integerValue];
-		NSLog(@"Adding addition");
-	}
+//	LMQueueViewFlowLayout *flowLayout = (LMQueueViewFlowLayout*)self.collectionView.collectionViewLayout;
+//	if(flowLayout.sectionDifferences.count > 0){
+//		addition += [[flowLayout.sectionDifferences objectAtIndex:section] integerValue];
+//		NSLog(@"Adding addition");
+//	}
 	
 	return ((section == 0) ? (self.musicPlayer.queue.previousTracks.count + 1)
 			: self.musicPlayer.queue.nextTracks.count)
@@ -443,6 +443,8 @@
 }
 
 - (BOOL)collectionView:(UICollectionView *)collectionView canMoveItemAtIndexPath:(NSIndexPath *)indexPath {
+//	return (indexPath.section == 1);
+	
 	BOOL isNowPlayingTrack = ([self trackForIndexPath:indexPath] == self.musicPlayer.nowPlayingTrack);
 	
 	return !isNowPlayingTrack;
@@ -491,13 +493,13 @@
 	
 	switch(longPressGesture.state){
 		case UIGestureRecognizerStateBegan: {
-			[self.delegate displayQueueCantReorderWarning];
-			
-			self.feedbackGenerator = [UINotificationFeedbackGenerator new];
-			[self.feedbackGenerator prepare];
-			[self.feedbackGenerator notificationOccurred:UINotificationFeedbackTypeError];
-			self.feedbackGenerator = nil;
-			return;
+//			[self.delegate displayQueueCantReorderWarning];
+//			
+//			self.feedbackGenerator = [UINotificationFeedbackGenerator new];
+//			[self.feedbackGenerator prepare];
+//			[self.feedbackGenerator notificationOccurred:UINotificationFeedbackTypeError];
+//			self.feedbackGenerator = nil;
+//			return;
 			
 			if(indexPath){
 				self.isReordering = YES;
@@ -537,6 +539,7 @@
 		}
 		case UIGestureRecognizerStateChanged: {
 //			[self.collectionView.collectionViewLayout invalidateLayout];
+			
 			[self.collectionView updateInteractiveMovementTargetPosition:movementPoint];
 			break;
 		}
@@ -739,7 +742,6 @@
 		
 		UILongPressGestureRecognizer *longPressGesture = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(longPressGestureHandler:)];
 		[self.collectionView addGestureRecognizer:longPressGesture];
-		
 		
 		
 		self.nothingInQueueTitleLabel = [UILabel newAutoLayoutView];
