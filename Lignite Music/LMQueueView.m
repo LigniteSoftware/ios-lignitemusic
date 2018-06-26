@@ -414,7 +414,7 @@
 	
 	self.collectionView.hidden = !hideNoTracksLabel;
 	
-	NSInteger addition = 0;
+//	NSInteger addition = 0;
 //	LMQueueViewFlowLayout *flowLayout = (LMQueueViewFlowLayout*)self.collectionView.collectionViewLayout;
 //	if(flowLayout.sectionDifferences.count > 0){
 //		addition += [[flowLayout.sectionDifferences objectAtIndex:section] integerValue];
@@ -422,8 +422,7 @@
 //	}
 	
 	return ((section == 0) ? (self.musicPlayer.queue.previousTracks.count + 1)
-			: self.musicPlayer.queue.nextTracks.count)
-			+ addition;
+			: self.musicPlayer.queue.nextTracks.count);
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView
@@ -651,7 +650,9 @@
 		return;
 	}
 	
-	[self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:self.musicPlayer.queue.previousTracks.count inSection:0] atScrollPosition:UICollectionViewScrollPositionTop animated:animated];
+	NSInteger lastItem = ([self.collectionView numberOfItemsInSection:0] - 1);
+	
+	[self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:lastItem inSection:0] atScrollPosition:UICollectionViewScrollPositionTop animated:animated];
 	
 	[UIView animateWithDuration:animated ? 0.1 : 0.0 animations:^{
 		self.collectionView.contentOffset = CGPointMake(self.collectionView.contentOffset.x, self.collectionView.contentOffset.y - 10);

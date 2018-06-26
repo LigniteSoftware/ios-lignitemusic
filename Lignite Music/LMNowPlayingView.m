@@ -539,6 +539,8 @@
 		} repeats:NO];
 	}
 	
+	NSLog(@"Show queue view %d animated %d", open, animated);
+	
 	[NSTimer scheduledTimerWithTimeInterval:open ? 0.0 : 0.8 block:^{
 		[self.queueView resetContentOffsetToNowPlaying:NO];
 	} repeats:NO];
@@ -1341,7 +1343,7 @@
 	[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
 		[self reload];
 		
-		[self setShowingQueueView:YES animated:YES];
+//		[self setShowingQueueView:YES animated:YES];
 	} repeats:NO];
 }
 
