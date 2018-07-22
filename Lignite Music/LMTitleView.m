@@ -347,6 +347,10 @@
 //								  atScrollPosition:UITableViewScrollPositionTop
 //										  animated:NO];
 	
+	[self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0]
+								atScrollPosition:UICollectionViewScrollPositionTop
+										animated:NO];
+	
 	for(LMListEntry *listEntry in self.itemArray){
 		[listEntry reloadContents];
 	}

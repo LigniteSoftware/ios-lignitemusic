@@ -546,7 +546,7 @@
 		case LMIconTitles: {
 			if(self.titleView && self.titleView.musicTitles){
 				[self.buttonNavigationBar.browsingBar setShowingLetterTabs:self.titleView.musicTitles.count > 0];
-				
+								
 				self.buttonNavigationBar.browsingBar.letterTabBar.lettersDictionary =
 				[self.musicPlayer lettersAvailableDictionaryForMusicTrackCollectionArray:@[self.titleView.musicTitles]
 																 withAssociatedMusicType:LMMusicTypeTitles];
@@ -862,7 +862,10 @@
 		
 		[hud hideAnimated:YES afterDelay:0.5f];
 	}
-	if([self.currentSource isEqual:self.titleView]){
+	
+	NSLog(@"Current source %@ title view %@", self.currentSource, self.titleView);
+	
+	if(self.currentSource == self.titleView){
 		[self.titleView scrollToTrackIndex:index == 0 ? 0 : index-1];
 	}
 	else{

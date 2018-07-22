@@ -269,6 +269,9 @@
 	if([LMLayoutManager isiPhoneX]){
 		sideLength -= 24;
 	}
+	else if([LMLayoutManager isLandscape]){
+		sideLength -= 10;
+	}
 	
 	CGFloat spacing = (collectionViewSize.width-(sideLength*factor))/(factor+1); //Calculate the amount of spacing total
 	

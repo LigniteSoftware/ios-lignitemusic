@@ -341,7 +341,7 @@
 	
 	[self setButtonBarBottomConstraintConstant://MAX(WINDOW_FRAME.size.height, WINDOW_FRAME.size.width) * 1.25
 											 MAX(self.buttonBar.frame.size.height, self.buttonBar.frame.size.width)
-                                             + self.viewAttachedToButtonBar.frame.size.height
+	 + (LMLayoutManager.isLandscape ? self.viewAttachedToButtonBar.frame.size.width : self.viewAttachedToButtonBar.frame.size.height)
 									completion:^(BOOL finished) {
 										LMButtonNavigationBar *strongSelf = weakSelf;
 										if(!strongSelf){
