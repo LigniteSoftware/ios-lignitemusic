@@ -757,7 +757,7 @@
 }
 
 - (void)handleVolumeChanged:(id)sender{
-	NSLog(@"Volume: %f%%", self.volumeViewSlider.value * 100);
+//	NSLog(@"Volume: %f%%", self.volumeViewSlider.value * 100);
 	
 	
 	if(self.connected){
