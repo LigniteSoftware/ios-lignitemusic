@@ -152,6 +152,7 @@
 	for(NSInteger i = 0; i < self.playlists.count; i++){
 		LMPlaylist *cachedPlaylist = [self.playlists objectAtIndex:i];
 		if(cachedPlaylist.persistentID == playlist.persistentID){
+			NSLog(@"%d playlist has playlist named %@", (int)self.playlists.count, playlist.title);
 			containsPlaylist = YES;
 			break;
 		}
@@ -166,11 +167,14 @@
 																				]]];
 	}
 	
-//	NSLog(@"Saving playlist with title %@ persistentID %llu count %d", playlist.title, playlist.persistentID, (int)playlist.trackCollection.count);
+	NSLog(@"Saving playlist with title %@ persistentID %llu count %d", playlist.title, playlist.persistentID, (int)playlist.trackCollection.count);
 	
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 	[userDefaults setObject:[self playlistDictionaryForPlaylist:playlist]
 					 forKey:[self storageKeyForPlaylist:playlist]];
+	
+	NSLog(@"Setting playlist %@ for key %@", playlist.title, [self storageKeyForPlaylist:playlist]);
+	
 	if(!playlist.image){
 		[self.imageCache removeImageForKey:[NSString stringWithFormat:@"%lld", playlist.persistentID] withCompletion:nil];
 	}
@@ -207,6 +211,7 @@
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 	NSArray *allKeys = [userDefaults dictionaryRepresentation].allKeys;
 	for(NSString *key in allKeys){
+//		NSLog(@"Key %@", key);
 		if([key containsString:@"LMPlaylist:"]){
 //			NSLog(@"Loading %@", key);
 			LMPlaylist *playlist = [self playlistForPlaylistDictionary:[userDefaults objectForKey:key]];
@@ -244,18 +249,31 @@
 		if(attribute != MPMediaPlaylistAttributeSmart && attribute != MPMediaPlaylistAttributeGenius){ //We don't fuck with these
 			LMPlaylist* playlistWithSystemPersistentID = [self playlistForSystemPersistentID:systemPlaylist.persistentID];
 			if(!playlistWithSystemPersistentID && ![userDefaults objectForKey:[NSString stringWithFormat:@"deletedSystemPlaylist_%lld", systemPlaylist.persistentID]]){
+				
+				NSLog(@"Importing playlist with title %@", systemPlaylist.name);
+				
 				LMPlaylist *lignitePlaylist = [[LMPlaylist alloc]init];
 				lignitePlaylist.title = systemPlaylist.name;
-				lignitePlaylist.persistentID = random();
+				lignitePlaylist.persistentID = arc4random();
 				lignitePlaylist.systemPersistentID = systemPlaylist.persistentID;
 				lignitePlaylist.trackCollection = [[LMMusicTrackCollection alloc] initWithItems:systemPlaylist.items];
+				lignitePlaylist.verifiedStillSystemPlaylist = YES;
 				[self savePlaylist:lignitePlaylist];
 			}
 			else if(playlistWithSystemPersistentID && !playlistWithSystemPersistentID.userPortedToLignitePlaylist){
 //				NSLog(@"The playlist %@ (%lld) was an iTunes playlist, and was not ported, so we're gonna load the iTune's playlist's tracks.", playlistWithSystemPersistentID.title, playlistWithSystemPersistentID.persistentID);
 				playlistWithSystemPersistentID.trackCollection = [[LMMusicTrackCollection alloc] initWithItems:systemPlaylist.items];
+				playlistWithSystemPersistentID.title = systemPlaylist.name;
+				playlistWithSystemPersistentID.verifiedStillSystemPlaylist = YES;
 				[self savePlaylist:playlistWithSystemPersistentID];
 			}
+		}
+	} 
+	
+	for(LMPlaylist *playlist in self.playlists){
+		if(playlist.systemPersistentID != 0 && !playlist.userPortedToLignitePlaylist && !playlist.verifiedStillSystemPlaylist){ //User deleted
+			NSLog(@"User deleted %@", playlist.title);
+			[self deletePlaylist:playlist];
 		}
 	}
 }

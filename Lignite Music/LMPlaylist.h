@@ -96,6 +96,11 @@
 @property BOOL userPortedToLignitePlaylist;
 
 /**
+ Whether or not the system playlist checker has verified that this is a system playlist. If NO, this playlist was deleted from the user's library through iTunes or Apple Music and should be scheduled for deletion.
+ */
+@property BOOL verifiedStillSystemPlaylist;
+
+/**
  Regenerates the playlist, if enhanced, based on the conditions provided.
  */
 - (void)regenerateEnhancedPlaylist;
