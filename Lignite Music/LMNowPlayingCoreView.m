@@ -80,6 +80,8 @@
 	coreViewController.buttonNavigationBar.accessibilityElementsHidden = isOpen;
 	coreViewController.compactView.accessibilityElementsHidden = isOpen;
 	coreViewController.titleView.accessibilityElementsHidden = isOpen;
+	
+	self.systemVolumeView.hidden = !isOpen;
 }
 
 - (void)reloadMusicTracks {
@@ -552,10 +554,9 @@
 		self.volumePercentageBackgroundView = [UIView newAutoLayoutView];
 		self.volumePercentageBackgroundView.backgroundColor = [LMColour clearColor];
 		self.volumePercentageBackgroundView.layer.masksToBounds = YES;
-		self.volumePercentageBackgroundView.layer.cornerRadius = 8.0f;
-		if(@available(iOS 11.0, *)){
-			self.volumePercentageBackgroundView.layer.maskedCorners = (kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner);
-		}
+//		if(@available(iOS 11.0, *)){
+//			self.volumePercentageBackgroundView.layer.maskedCorners = (kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner);
+//		}
 //		self.volumePercentageBackgroundView.alpha = self.volume
 		[self.volumeView addSubview:self.volumePercentageBackgroundView];
 		
@@ -563,6 +564,8 @@
 		if(bgWidth > 200.0f){
 			bgWidth = 200.0f;
 		}
+		
+		self.volumePercentageBackgroundView.layer.cornerRadius = (bgWidth / 2.0 / 2.0);
 		
 		[self.volumePercentageBackgroundView autoAlignAxisToSuperviewAxis:ALAxisVertical];
 		[self.volumePercentageBackgroundView autoSetDimension:ALDimensionWidth toSize:bgWidth];

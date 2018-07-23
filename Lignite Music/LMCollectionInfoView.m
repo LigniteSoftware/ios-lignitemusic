@@ -114,7 +114,10 @@
 		[self.topView autoAlignAxisToSuperviewAxis:ALAxisVertical];
 		[self.topView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:(9.0/10.0)];
 		[self.topView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:5];
-		[self.topView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:self.largeMode ? (4.3/10.0) : (4.0/10.0)];
+		[self.topView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:
+		  self.largeMode
+		 	? (LMLayoutManager.isiPad ? (4.1/10.0) : (4.3/10.0))
+			: (4.0/10.0)];
 		
 		[self.bottomView autoAlignAxisToSuperviewAxis:ALAxisVertical];
 		[self.bottomView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.topView];
