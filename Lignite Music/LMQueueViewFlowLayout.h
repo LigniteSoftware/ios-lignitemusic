@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+#define QUEUE_NEAR_HEADER_ENTRY_SPACING 10.0f
+
 @interface LMQueueViewFlowLayout : UICollectionViewFlowLayout
 
 /**

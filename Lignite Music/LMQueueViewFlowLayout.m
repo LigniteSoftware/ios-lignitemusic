@@ -10,6 +10,7 @@
 #import "LMQueueViewFlowLayout.h"
 #import "LMQueueViewSeparator.h"
 #import "LMLayoutManager.h"
+#import "LMListEntry.h"
 
 #import "LMExtras.h"
 
@@ -42,14 +43,75 @@
 			self.sectionDifferences = @[];
 		}
 
-//		[self.collectionView performBatchUpdates:^{
-			[self.collectionView.collectionViewLayout invalidateLayout];
-//		} completion:^(BOOL finished) {
-//			NSLog(@"Done %d", finished);
-//		}];
+		[self.collectionView.collectionViewLayout invalidateLayout];
 
 		NSLog(@"Section differences %@", self.sectionDifferences);
 	}
+	
+//	if(targetIndexPath.row != previousIndexPath.row){
+//		NSLog(@"Row change %@ to %@ position %@", previousIndexPath, targetIndexPath, NSStringFromCGPoint(position));
+//		
+//		UICollectionViewCell *mainCellAffected = [self.collectionView cellForItemAtIndexPath:previousIndexPath];
+//		mainCellAffected.backgroundColor = [UIColor redColor];
+//		
+//		UICollectionViewCell *otherCellAffected = [self.collectionView cellForItemAtIndexPath:targetIndexPath];
+//		otherCellAffected.backgroundColor = [UIColor blueColor];
+//		
+////		NSArray *visibleCells = [self.collectionView visibleCells];
+//		
+////		NSMutableArray *cellsAffected = [NSMutableArray arrayWithArray:[self.collectionView visibleCells]]; //@[ mainCellAffected, otherCellAffected ];
+////		NSMutableArray *indexPathsAffected = [NSMutableArray arrayWithArray:[self.collectionView indexPathsForVisibleItems]]; //@[ targetIndexPath, previousIndexPath ];
+//
+////		[cellsAffected removeObjectAtIndex:0];
+//		
+//		NSArray *cellsAffected = @[ mainCellAffected, otherCellAffected ];
+//		NSArray *indexPathsAffected = @[ targetIndexPath, previousIndexPath ];
+//		
+//		if(cellsAffected.count == 0 || indexPathsAffected == 0){
+//			return targetIndexPath;
+//		}
+//		
+//		//		[cellsAffected removeObjectAtIndex:0];
+//		
+//		if(!(cellsAffected.count == 0 || indexPathsAffected == 0)){
+//	//		[cellsAffected removeObjectAtIndex:(cellsAffected.count - 1)];
+//			
+//			/*
+//			 NSArray *cellsAffected = @[ mainCellAffected, otherCellAffected ];
+//			 NSArray *indexPathsAffected = @[ targetIndexPath, previousIndexPath ];
+//			 */
+//			
+//			NSLog(@"Count %d %d", (int)cellsAffected.count, (int)indexPathsAffected.count);
+//			
+//			for(NSInteger i = 0; i < cellsAffected.count; i++){
+//				UICollectionViewCell *cell = cellsAffected[i];
+//				NSIndexPath *indexPath = indexPathsAffected[i];
+//				
+//				if(cell.contentView.subviews.count > 0){
+//					BOOL isFirstSection = (indexPath.section == 0);
+//					BOOL isBesideHeader = (isFirstSection
+//										   && (indexPath.row == ([self.collectionView numberOfItemsInSection:0] - 1)))
+//					|| (!isFirstSection
+//						&& (previousIndexPath.row == 0)
+//						);
+//					
+//					LMListEntry *listEntry = nil;
+//					for(UIView *subview in cell.contentView.subviews){
+//						if([subview class] == [LMListEntry class]) {
+//							listEntry = (LMListEntry*)subview;
+//							break;
+//						}
+//					}
+//					
+//					if(listEntry){
+////						listEntry.topConstraint.constant = (isBesideHeader && !isFirstSection) ? QUEUE_NEAR_HEADER_ENTRY_SPACING : 0.0f;
+////						listEntry.bottomConstraint.constant = (isBesideHeader && isFirstSection) ? -QUEUE_NEAR_HEADER_ENTRY_SPACING : 0.0f;
+//					}
+//				}
+//			}
+//			
+//		}
+//	}
 
 	return targetIndexPath;
 }
@@ -61,9 +123,19 @@
 	BOOL isFirstRow = (indexPath.row == 0);
 	BOOL isFirstSection = (indexPath.section == 0);
 	BOOL isVeryFirstRow = (isFirstRow && isFirstSection);
+	BOOL isBesideHeader = (isFirstSection
+						  && (indexPath.row == ([self.collectionView numberOfItemsInSection:0] - 1)))
+	|| (!isFirstSection
+		&& (indexPath.row == 0)
+		);
 	
 	CGFloat standardListEntryHeight = [LMLayoutManager standardListEntryHeight];
-	CGSize size = CGSizeMake(width - sectionSpacing, standardListEntryHeight);
+	
+//	if(isBesideHeader){
+//		NSLog(@"%@ is single", indexPath);
+//	}
+	
+	CGSize size = CGSizeMake(width - sectionSpacing, standardListEntryHeight + (isBesideHeader ? QUEUE_NEAR_HEADER_ENTRY_SPACING : 0.0f));
 	
 	id<UICollectionViewDelegateFlowLayout> delegate = (id<UICollectionViewDelegateFlowLayout>)self.collectionView.delegate;
 	
@@ -86,13 +158,22 @@
 	
 	previousOrigin += (standardListEntryHeight * previousIndex) + (QUEUE_VIEW_SPACE_BETWEEN_CELLS * previousIndex);
 	
+	CGFloat besideHeaderSpacing = 0.0f;
+	if(!isFirstSection){
+		besideHeaderSpacing += QUEUE_NEAR_HEADER_ENTRY_SPACING;
+	}
+	if(!isFirstSection && !isBesideHeader){
+		besideHeaderSpacing += QUEUE_NEAR_HEADER_ENTRY_SPACING;
+	}
+	
 	CGPoint coordinates = CGPointMake(0,
 									  previousOrigin
 									  + (isVeryFirstRow
 										 ? 0
 										 : standardListEntryHeight)
 									  + (isVeryFirstRow ? 0 : QUEUE_VIEW_SPACE_BETWEEN_CELLS)
-									  + spacerForHeader);
+									  + spacerForHeader
+									  + besideHeaderSpacing);
 	
 //	if(![LMLayoutManager isiPad]){
 //		size.width = self.collectionView.frame.size.width;
@@ -132,6 +213,8 @@
 			size.height += (amountOfItems * 10);
 		}
 	}
+	
+	size.height += (QUEUE_NEAR_HEADER_ENTRY_SPACING * 2.0f);
 	
 	return size;
 }

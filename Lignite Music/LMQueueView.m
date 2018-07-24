@@ -263,12 +263,19 @@
 	
 	UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cellIdentifier" forIndexPath:indexPath];
 	
-//	cell.backgroundColor = [LMColour randomColour];
+	cell.backgroundColor = [LMColour whiteColour];
 	
 	
 //	UICollectionViewFlowLayout *flowLayout = (UICollectionViewFlowLayout*)self.collectionView.collectionViewLayout;
 	
 //	NSLog(@"Reloading cell for index %d", (int)indexPath.row);
+	
+	BOOL isFirstSection = (indexPath.section == 0);
+	BOOL isBesideHeader = (isFirstSection
+						   && (indexPath.row == ([self.collectionView numberOfItemsInSection:0] - 1)))
+	|| (!isFirstSection
+		&& (indexPath.row == 0)
+		);
 	
 	if(cell.contentView.subviews.count > 0){
 		LMListEntry *listEntry = nil;
@@ -286,6 +293,7 @@
 			[listEntry setAsHighlighted:shouldHighlight animated:NO];
 			
 			BOOL isPreviousTrack = (listEntry.indexPath.section == 0) && (listEntry.indexPath.row < self.musicPlayer.queue.previousTracks.count);
+			
 			listEntry.contentView.alpha = isPreviousTrack ? (2.0 / 4.0) : 1.0;
 			
 			LMMusicTrack *listEntryTrack = [self trackForListEntry:listEntry];
@@ -298,6 +306,9 @@
 			
 			listEntry.leadingConstraint.constant = (([LMLayoutManager isiPhoneX] && [LMLayoutManager isLandscape]) ? 20 : 0);
 			listEntry.trailingConstraint.constant = (([LMLayoutManager isiPhoneX] && [LMLayoutManager isLandscape]) ? 20 : 0);
+			
+			listEntry.topConstraint.constant = (isBesideHeader && !isFirstSection) ? QUEUE_NEAR_HEADER_ENTRY_SPACING : 0.0f;
+			listEntry.bottomConstraint.constant = (isBesideHeader && isFirstSection) ? -QUEUE_NEAR_HEADER_ENTRY_SPACING : 0.0f;
 		}
 	}
 	else {
@@ -309,6 +320,7 @@
 		listEntry.isLabelBased = NO;
 		listEntry.alignIconToLeft = NO;
 		listEntry.stretchAcrossWidth = NO;
+		listEntry.enforceStandardListEntryHeight = YES;
 		
 		BOOL isPreviousTrack = (listEntry.indexPath.section == 0) && (listEntry.indexPath.row < self.musicPlayer.queue.previousTracks.count);
 		listEntry.contentView.alpha = isPreviousTrack ? (2.0 / 4.0) : 1.0;
@@ -325,8 +337,11 @@
 		
 		listEntry.leadingConstraint = [listEntry autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:([LMLayoutManager isiPhoneX] && [LMLayoutManager isLandscape]) ? 20 : 0];
 		listEntry.trailingConstraint = [listEntry autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:([LMLayoutManager isiPhoneX] && [LMLayoutManager isLandscape]) ? 20 : 0];
-		[listEntry autoPinEdgeToSuperviewEdge:ALEdgeTop];
-		[listEntry autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		listEntry.topConstraint = [listEntry autoPinEdgeToSuperviewEdge:ALEdgeTop];
+		listEntry.bottomConstraint = [listEntry autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+		
+		listEntry.topConstraint.constant = (isBesideHeader && !isFirstSection) ? QUEUE_NEAR_HEADER_ENTRY_SPACING : 0.0f;
+		listEntry.bottomConstraint.constant = (isBesideHeader && isFirstSection) ? -QUEUE_NEAR_HEADER_ENTRY_SPACING : 0.0f;
 	}
 
 	if(@available(iOS 11.0, *)){
@@ -429,7 +444,18 @@
 				  layout:(UICollectionViewLayout*)collectionViewLayout
   sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
 	
-	return CGSizeMake(self.frame.size.width, LMLayoutManager.standardListEntryHeight);
+	BOOL isFirstSection = (indexPath.section == 0);
+	BOOL isSingleEntry = (isFirstSection
+						  && (indexPath.row == ([self.collectionView numberOfItemsInSection:0] - 1)))
+		|| (!isFirstSection
+			&& (indexPath.row == 0)
+			);
+	
+//	if(isSingleEntry){
+//		NSLog(@"%@ is single", indexPath);
+//	}
+	
+	return CGSizeMake(self.frame.size.width, LMLayoutManager.standardListEntryHeight + (isSingleEntry ? QUEUE_NEAR_HEADER_ENTRY_SPACING : 0.0f));
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section {

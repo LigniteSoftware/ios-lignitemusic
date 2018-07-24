@@ -11,6 +11,8 @@
 #import "LMLabel.h"
 #import "LMAppIcon.h"
 #import "LMColour.h"
+#import "LMLayoutManager.h"
+#import "LMQueueViewFlowLayout.h"
 
 @interface LMListEntry()<UIGestureRecognizerDelegate, MGSwipeTableCellDelegate>
 
@@ -178,6 +180,34 @@
 
 - (void)layoutSubviews {
 	[super layoutSubviews];
+	
+	BOOL firstSection = (self.indexPath.section == 0);
+	NSLayoutConstraint *constraintToUse = firstSection ? self.bottomConstraint : self.topConstraint;
+	
+	if(self.enforceStandardListEntryHeight){
+		if(floorf(self.frame.size.height) < floorf(LMLayoutManager.standardListEntryHeight)){
+			NSLog(@"Is less than (%f) standard %f", self.frame.size.height, LMLayoutManager.standardListEntryHeight);
+			constraintToUse.constant = 0.0f;
+		}
+		else if(floorf(self.frame.size.height) > floorf(LMLayoutManager.standardListEntryHeight)){
+			NSLog(@"Is more than (%f)", self.frame.size.height);
+			constraintToUse.constant = (firstSection ? -1 : 1) * QUEUE_NEAR_HEADER_ENTRY_SPACING;
+		}
+	}
+//	else{
+//		if(self.enforceStandardListEntryHeight
+//		   && (self.frame.size.height > LMLayoutManager.standardListEntryHeight)){
+//
+//			constraintToUse.constant = (firstSection ? -1 : 1) * QUEUE_NEAR_HEADER_ENTRY_SPACING;
+//		}
+//		else if((self.topConstraint.constant != 0)
+//				&& self.enforceStandardListEntryHeight
+//				&& ((self.frame.size.height + fabs(constraintToUse.constant)) < LMLayoutManager.standardListEntryHeight)){
+//
+//			constraintToUse.constant = 0.0f;
+//		}
+//	}
+	
 	
 	if(self.setupConstraints){
 		return;

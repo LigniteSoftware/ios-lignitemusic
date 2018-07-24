@@ -215,6 +215,11 @@
 @property BOOL highlighted;
 
 /**
+ Whether or not to enforce the standard list entry height calculated by the layout manager. If YES, any changes made to the frame will automatically adjust the constraints of the list entry to fit within the standard list entry height. Default is NO.
+ */
+@property BOOL enforceStandardListEntryHeight;
+
+/**
  The delegate for the list entry.
  */
 @property id<LMListEntryDelegate> delegate;
