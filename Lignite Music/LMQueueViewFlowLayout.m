@@ -50,43 +50,43 @@
 	
 //	if(targetIndexPath.row != previousIndexPath.row){
 //		NSLog(@"Row change %@ to %@ position %@", previousIndexPath, targetIndexPath, NSStringFromCGPoint(position));
-//		
+//
 //		UICollectionViewCell *mainCellAffected = [self.collectionView cellForItemAtIndexPath:previousIndexPath];
 //		mainCellAffected.backgroundColor = [UIColor redColor];
-//		
+//
 //		UICollectionViewCell *otherCellAffected = [self.collectionView cellForItemAtIndexPath:targetIndexPath];
 //		otherCellAffected.backgroundColor = [UIColor blueColor];
-//		
+//
 ////		NSArray *visibleCells = [self.collectionView visibleCells];
-//		
+//
 ////		NSMutableArray *cellsAffected = [NSMutableArray arrayWithArray:[self.collectionView visibleCells]]; //@[ mainCellAffected, otherCellAffected ];
 ////		NSMutableArray *indexPathsAffected = [NSMutableArray arrayWithArray:[self.collectionView indexPathsForVisibleItems]]; //@[ targetIndexPath, previousIndexPath ];
 //
 ////		[cellsAffected removeObjectAtIndex:0];
-//		
+//
 //		NSArray *cellsAffected = @[ mainCellAffected, otherCellAffected ];
 //		NSArray *indexPathsAffected = @[ targetIndexPath, previousIndexPath ];
-//		
+//
 //		if(cellsAffected.count == 0 || indexPathsAffected == 0){
 //			return targetIndexPath;
 //		}
-//		
+//
 //		//		[cellsAffected removeObjectAtIndex:0];
-//		
+//
 //		if(!(cellsAffected.count == 0 || indexPathsAffected == 0)){
 //	//		[cellsAffected removeObjectAtIndex:(cellsAffected.count - 1)];
-//			
+//
 //			/*
 //			 NSArray *cellsAffected = @[ mainCellAffected, otherCellAffected ];
 //			 NSArray *indexPathsAffected = @[ targetIndexPath, previousIndexPath ];
 //			 */
-//			
+//
 //			NSLog(@"Count %d %d", (int)cellsAffected.count, (int)indexPathsAffected.count);
-//			
+//
 //			for(NSInteger i = 0; i < cellsAffected.count; i++){
 //				UICollectionViewCell *cell = cellsAffected[i];
 //				NSIndexPath *indexPath = indexPathsAffected[i];
-//				
+//
 //				if(cell.contentView.subviews.count > 0){
 //					BOOL isFirstSection = (indexPath.section == 0);
 //					BOOL isBesideHeader = (isFirstSection
@@ -94,7 +94,7 @@
 //					|| (!isFirstSection
 //						&& (previousIndexPath.row == 0)
 //						);
-//					
+//
 //					LMListEntry *listEntry = nil;
 //					for(UIView *subview in cell.contentView.subviews){
 //						if([subview class] == [LMListEntry class]) {
@@ -102,14 +102,14 @@
 //							break;
 //						}
 //					}
-//					
+//
 //					if(listEntry){
 ////						listEntry.topConstraint.constant = (isBesideHeader && !isFirstSection) ? QUEUE_NEAR_HEADER_ENTRY_SPACING : 0.0f;
 ////						listEntry.bottomConstraint.constant = (isBesideHeader && isFirstSection) ? -QUEUE_NEAR_HEADER_ENTRY_SPACING : 0.0f;
 //					}
 //				}
 //			}
-//			
+//
 //		}
 //	}
 
@@ -318,7 +318,7 @@
 			}
 		}
 		
-		if(isVeryLastRow && numberOfItemsInNextTracksSection > 1){
+		if(isVeryLastRow && numberOfItemsInNextTracksSection >= 1){
 			fillerHeight += (cellFrame.size.height * 8.0);
 		}
 		

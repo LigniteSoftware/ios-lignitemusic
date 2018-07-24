@@ -42,6 +42,9 @@
 		
 		CGRect lineFrame = CGRectMake(20, (frame.size.height / 2.0) - 1, frame.size.width - 40, 2);
 		
+		self.layer.masksToBounds = YES;
+		self.layer.cornerRadius = 8.0f;
+		
 		self.separatorLineView = [[UIView alloc]initWithFrame:lineFrame];
 		self.separatorLineView.backgroundColor = [LMColour superLightGreyColour];
 		[self addSubview:self.separatorLineView];

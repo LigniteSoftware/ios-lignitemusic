@@ -352,6 +352,7 @@
 		if(self.isReordering){
 			cell.clipsToBounds = NO;
 		}
+		
 		if(isLastRow && isFirstSection){
 			self.previousTracksSectionLastRowCell = cell;
 			
