@@ -474,7 +474,7 @@
 - (BOOL)prefersStatusBarHidden {	
 	if(!self.loaded){
 		NSLog(@"Loading");
-		return NO; 
+		return YES; 
 	}
 	
 //	NSLog(@"now playing open %d", self.nowPlayingCoreView.isOpen);
@@ -1094,7 +1094,7 @@
 		self.splashImageView.image = [UIImage imageNamed:@"splash_ipad_2018"];
 	}
 	else{
-		self.splashImageView.image = [UIImage imageNamed:[LMLayoutManager sharedLayoutManager].isLandscape ? @"splash_landscape_2018" : @"test_splash"];
+		self.splashImageView.image = [UIImage imageNamed:[LMLayoutManager sharedLayoutManager].isLandscape ? @"splash_landscape_2018" : @"splash_portrait_2018"];
 	}
 }
 
@@ -1345,18 +1345,20 @@
 		
 		NSLog(@"Frame set %@", NSStringFromCGRect(self.view.frame));
 		
-//		self.splashImageView = [UIImageView newAutoLayoutView];
-//		self.splashImageView.backgroundColor = [UIColor orangeColor];
-//		if([LMLayoutManager isiPad]){
-//			self.splashImageView.image = [UIImage imageNamed:@"splash_ipad"];
-//		}
-//		else{
-//			self.splashImageView.image = [UIImage imageNamed:[LMLayoutManager sharedLayoutManager].isLandscape ? @"splash_landscape_g" : @"splash_portrait_g"];
-//		}
-//		self.splashImageView.contentMode = UIViewContentModeScaleAspectFill;
-//		[self.view addSubview:self.splashImageView];
-//
-//		[self.splashImageView autoPinEdgesToSuperviewEdges];
+		[self.navigationController setNavigationBarHidden:YES];
+		
+		self.splashImageView = [UIImageView newAutoLayoutView];
+		self.splashImageView.backgroundColor = [UIColor orangeColor];
+		if([LMLayoutManager isiPad]){
+			self.splashImageView.image = [UIImage imageNamed:@"splash_ipad"];
+		}
+		else{
+			self.splashImageView.image = [UIImage imageNamed:[LMLayoutManager sharedLayoutManager].isLandscape ? @"splash_landscape_g" : @"splash_portrait_g"];
+		}
+		self.splashImageView.contentMode = UIViewContentModeScaleAspectFill;
+		[self.view addSubview:self.splashImageView];
+
+		[self.splashImageView autoPinEdgesToSuperviewEdges];
 	});
 	
 	
@@ -1977,7 +1979,8 @@
 	NSLog(@"Fuck %@ %@", [self.navigationController class], self.navigationController.navigationBar);
 	
 	[self.navigationController setNavigationBarHidden:NO];
-//	[self.navigationController.navigationBar setBackgroundColor:[UIColor whiteColor]];
+//	[self.navigationController setNavigationBarHidden:YES];
+	[self.navigationController.navigationBar setBackgroundColor:[UIColor whiteColor]];
 	
 //		self.navigationController.navigationBar = [[LMNavigationBar alloc] initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, 64.0f)];
 //		self.navigationController.navigationBar.prefersLargeTitles = NO;
@@ -2112,6 +2115,8 @@
 	
 	self.loaded = YES;
 	
+	
+	
 
 	NSTimeInterval loadEndTime = [[NSDate new] timeIntervalSince1970];
 	NSLog(@"Took %f seconds to load main views.", (loadEndTime - loadStartTime));
@@ -2166,11 +2171,12 @@
 			NSLog(@"User has checked version and couldn't show it");
 		}
 
-//		self.splashImageView.image = nil;
-//		self.splashImageView.backgroundColor = [UIColor whiteColor];
+		self.splashImageView.image = nil;
+		self.splashImageView.backgroundColor = [UIColor whiteColor];
 		
 		[self asyncReloadCachedMusicTrackCollections];
 		
+//		[self.navigationController setNavigationBarHidden:!LMLayoutManager.isLandscape];
 		
 #ifdef DEBUG //Will not run in production
 		
@@ -2190,7 +2196,7 @@
 //			[queue rebuild];
 //		} repeats:NO];
 		
-		[self launchNowPlayingFromTap];
+//		[self launchNowPlayingFromTap];
 		
 //		[NSTimer scheduledTimerWithTimeInterval:0.5 block:^{
 //			[self.buttonNavigationBar setSelectedTab:LMNavigationTabMiniPlayer];
