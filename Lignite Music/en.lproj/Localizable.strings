@@ -39,6 +39,9 @@
  
  */
 
+"VoiceOverLabel_OptimiseForSpeedSetting" = "Optimize Lignite Music for speed";
+"VoiceOverLabe_AutoHidePlaybackControlsSetting" = "Automatically hide Apple Watch playback controls. You can tap to reveal them when they are hidden.";
+
 "AppleWatchSettingsTitle" = "Apple Watch";
 "AppleWatchHideControlsTitle" = "Auto-hide playback controls";
 "AppleWatchHideControlsSubtitle" = "Tap the screen to reveal them";

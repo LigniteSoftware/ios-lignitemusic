@@ -601,8 +601,21 @@
 				}
 			}
 		}
-#warning Todo: add accessibility for this setting section
 		case 1: {
+			switch(indexPath.row){
+				case 0: {
+					return NSLocalizedString(@"VoiceOverLabel_OptimiseForSpeedSetting", nil);
+				}
+			}
+		}
+		case 69: {
+			switch(indexPath.row){
+				case 0: {
+					return NSLocalizedString(@"VoiceOverLabe_AutoHidePlaybackControlsSetting", nil);
+				}
+			}
+		}
+		case 2: {
 			switch(indexPath.row){
 				case 0: {
 					LMImageManagerPermissionStatus artistImagesStatus = [self.imageManager downloadPermissionStatus];
@@ -684,7 +697,20 @@
 				}
 			}
 		}
-			#warning Todo: add accessibility for this setting section
+		case 1: {
+			switch(indexPath.row){
+				case 0: {
+					return NSLocalizedString(@"VoiceOverHint_DoubleTapToChangeThisSetting", nil);
+				}
+			}
+		}
+		case 69: {
+			switch(indexPath.row){
+				case 0: {
+					return NSLocalizedString(@"VoiceOverHint_DoubleTapToChangeThisSetting", nil);
+				}
+			}
+		}
 		case 2: {
 			return NSLocalizedString(@"VoiceOverHint_DoubleTapToChangeThisSetting", nil);
 		}
