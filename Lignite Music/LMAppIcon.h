@@ -72,7 +72,8 @@ typedef enum {
 	LMIconNextTracks,
 	LMIconPreviousTracks,
 	LMIconNextTrack,
-	LMIconPreviousTrack
+	LMIconPreviousTrack,
+	LMIconAppleWatch
 } LMIcon;
 
 /**

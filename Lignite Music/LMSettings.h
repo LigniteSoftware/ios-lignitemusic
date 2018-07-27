@@ -21,6 +21,7 @@
 #define LMSettingsKeyArtistsFilteredForDemo @"LMSettingsKeyArtistsFilteredForDemo"
 #define LMSettingsKeyInitialisationSounds @"LMSettingsKeyInitialisationSounds"
 #define LMSettingsKeyQuickLoad @"LMSettingsKeyQuickLoad"
+#define LMSettingsKeyAutoHideControlsAppleWatch @"LMSettingsKeyAutoHideControlsAppleWatch"
 
 #define LMFeedbackKeyName @"LMFeedbackKeyName"
 #define LMFeedbackKeyEmail @"LMFeedbackKeyEmail"

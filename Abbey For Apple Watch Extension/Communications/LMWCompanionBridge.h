@@ -58,6 +58,8 @@
 #define LMAppleWatchCommunicationKeyNowPlayingInfoUpdate @"LMAppleWatchCommunicationKeyNowPlayingInfoUpdate"
 //Whether or not onboarding is complete.
 #define LMAppleWatchCommunicationKeyOnboardingComplete @"LMAppleWatchCommunicationKeyOnboardingComplete"
+//The key used for when a setting changes.
+#define LMAppleWatchCommunicationKeySettingChanged @"LMAppleWatchCommunicationKeySettingChanged"
 
 //The key for the music types when the communication key is LMAppleWatchCommunicationKeyMusicBrowsingEntries. Music types is plural because it's an array of music types which define the structure of windows that the user has been presented in their current browsing session.
 #define LMAppleWatchBrowsingKeyMusicTypes @"LMAppleWatchBrowsingKeyMusicTypes"
@@ -106,6 +108,11 @@
 
 //A BOOL of whether or not the command sent was a success.
 #define LMAppleWatchCommandSuccess @"LMAppleWatchCommandSuccess"
+
+//The settings key for all settings.
+#define LMAppleWatchSettingsKeyAllSettings @"LMAppleWatchSettingsKeyAllSettings"
+//The settings key for whether or not to auto-hide now playing playback controls.
+#define LMAppleWatchSettingsKeyAutoHideControls @"LMAppleWatchSettingsKeyAutoHideControls"
 
 @protocol LMWCompanionBridgeDelegate<NSObject>
 @optional
@@ -167,6 +174,14 @@
  @param onboardingComplete Whether or not the user has completed onboarding.
  */
 - (void)onboardingCompleteStatusChanged:(BOOL)onboardingComplete;
+
+/**
+ One of the Apple Watch settings changed.
+
+ @param settingKey The setting key.
+ @param newSetting The new setting value.
+ */
+- (void)settingChanged:(NSString*)settingKey newValue:(id)newSetting;
 
 /**
  Asks the delegate to display a debug message, if possible.
@@ -239,6 +254,11 @@
  Sends a ping to the companion asking for the latest and greatest now playing info.
  */
 - (void)askCompanionForNowPlayingTrackInfo;
+
+/**
+ Asks the companion to send over all Apple Watch settings to the extension.
+ */
+- (void)askCompanionForAllSettings;
 
 /**
  Sends a control message to the companion for doing actions such as changing the song. Automatically handles resending in the case of disconnection. Both handlers are always called on the main queue for thread safety.

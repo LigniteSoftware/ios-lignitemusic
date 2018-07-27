@@ -92,6 +92,11 @@
 @property IBOutlet WKInterfaceGroup *progressBarContainer;
 
 /**
+ The main controls container (which is auto-hidden if the setting is included).
+ */
+@property IBOutlet WKInterfaceGroup *mainControlsContainer;
+
+/**
  The group for the up next label.
  */
 @property IBOutlet WKInterfaceGroup *upNextGroup;
@@ -190,6 +195,13 @@
  @param sender The sender of the action.
  */
 - (IBAction)browseLibraryButtonSelector:(id)sender;
+
+/**
+ The album covers's "tap handler", for revealing the main controls if auto-hide is on.
+ 
+ @param sender The sender of the action.
+ */
+- (IBAction)mainControlsAlbumCoverSelector:(id)sender;
 
 - (IBAction)nextTrackButtonSelector:(id)sender;
 - (IBAction)previousTrackButtonSelector:(id)sender;

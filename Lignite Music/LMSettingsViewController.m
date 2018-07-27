@@ -16,6 +16,7 @@
 #import "LMAlertViewController.h"
 #import "LMDebugViewController.h"
 #import "LMDemoViewController.h"
+#import "LMAppleWatchBridge.h"
 #import "LMSectionTableView.h"
 #import "LMLayoutManager.h"
 #import "NSTimer+Blocks.h"
@@ -44,6 +45,10 @@
 @property NSIndexPath *indexPathOfCurrentlyOpenAlertView;
 
 @property LMLayoutManager *layoutManager;
+
+@property BOOL appleWatchSettingsIncluded;
+
+@property BOOL alreadyInitialisedDelegates;
 
 @end
 
@@ -96,11 +101,22 @@
 }
 
 - (UIImage*)iconAtSection:(NSInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView {
+	if(self.appleWatchSettingsIncluded){
+		if(section == APPLE_WATCH_RAW_SECTION_NUMBER){
+			section = APPLE_WATCH_FIXED_SECTION_NUMBER;
+		}
+		else if(section >= APPLE_WATCH_RAW_SECTION_NUMBER){
+			section--;
+		}
+	}
+	
 	switch(section){
 		case 0:
 			return [LMAppIcon imageForIcon:LMIconLookAndFeel];
 		case 1:
 			return [LMAppIcon imageForIcon:LMIconFunctionality];
+		case APPLE_WATCH_FIXED_SECTION_NUMBER:
+			return [LMAppIcon imageForIcon:LMIconAppleWatch];
 		case 2:
 			return [LMAppIcon imageForIcon:LMIconCloudDownload];
 		case 3:
@@ -110,11 +126,22 @@
 }
 
 - (NSString*)titleAtSection:(NSInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView {
+	if(self.appleWatchSettingsIncluded){
+		if(section == APPLE_WATCH_RAW_SECTION_NUMBER){
+			section = APPLE_WATCH_FIXED_SECTION_NUMBER;
+		}
+		else if(section >= APPLE_WATCH_RAW_SECTION_NUMBER){
+			section--;
+		}
+	}
+	
 	switch(section){
 		case 0:
 			return NSLocalizedString(@"LookAndFeel", nil);
 		case 1:
 			return NSLocalizedString(@"Functionality", nil);
+		case APPLE_WATCH_FIXED_SECTION_NUMBER:
+			return NSLocalizedString(@"AppleWatchSettingsTitle", nil);
 		case 2:
 			return NSLocalizedString(@"ImageDownloads", nil);
 		case 3:
@@ -124,10 +151,22 @@
 }
 
 - (NSUInteger)numberOfRowsForSection:(NSInteger)section forSectionTableView:(LMSectionTableView*)sectionTableView {
+	
+	if(self.appleWatchSettingsIncluded){
+		if(section == APPLE_WATCH_RAW_SECTION_NUMBER){
+			section = APPLE_WATCH_FIXED_SECTION_NUMBER;
+		}
+		else if(section >= APPLE_WATCH_RAW_SECTION_NUMBER){
+			section--;
+		}
+	}
+	
 	switch(section){
 		case 0:
 			return 3;
 		case 1:
+			return 1;
+		case APPLE_WATCH_FIXED_SECTION_NUMBER: //Apple Watch
 			return 1;
 		case 2:
 			return 2;
@@ -150,7 +189,17 @@
 		}
 	}
 	
-	switch(indexPath.section){
+	NSInteger sectionNumber = indexPath.section;
+	if(self.appleWatchSettingsIncluded){
+		if(indexPath.section == APPLE_WATCH_RAW_SECTION_NUMBER){
+			sectionNumber = 69;
+		}
+		else if(sectionNumber >= APPLE_WATCH_RAW_SECTION_NUMBER){
+			sectionNumber--;
+		}
+	}
+	
+	switch(sectionNumber){
 		case 0:
 			switch(indexPath.row){
 				case 0:
@@ -165,6 +214,12 @@
 			switch (indexPath.row){
 				case 0:
 					return NSLocalizedString(@"OptimiseLoadTimeTitle", nil);
+			}
+			break;
+		case APPLE_WATCH_FIXED_SECTION_NUMBER: //Apple Watch
+			switch (indexPath.row){
+				case 0:
+					return NSLocalizedString(@"AppleWatchHideControlsTitle", nil);
 			}
 			break;
 		case 2:
@@ -206,7 +261,18 @@
 }
 
 - (NSString*)subtitleForIndexPath:(NSIndexPath*)indexPath forSectionTableView:(LMSectionTableView*)sectionTableView {
-	switch(indexPath.section){
+	
+	NSInteger sectionNumber = indexPath.section;
+	if(self.appleWatchSettingsIncluded){
+		if(indexPath.section == APPLE_WATCH_RAW_SECTION_NUMBER){
+			sectionNumber = 69;
+		}
+		else if(sectionNumber >= APPLE_WATCH_RAW_SECTION_NUMBER){
+			sectionNumber--;
+		}
+	}
+	
+	switch(sectionNumber){
 		case 0:
 			switch(indexPath.row){
 				case 0:
@@ -224,6 +290,12 @@
 				case 0: {
 					return NSLocalizedString(@"OptimiseLoadTimeSubtitle", nil);
 				}
+			}
+			break;
+		case APPLE_WATCH_FIXED_SECTION_NUMBER:
+			switch (indexPath.row){
+				case 0:
+					return NSLocalizedString(@"AppleWatchHideControlsSubtitle", nil);
 			}
 			break;
 		case 2:
@@ -326,7 +398,17 @@
 }
 
 - (void)tappedIndexPath:(NSIndexPath*)indexPath forSectionTableView:(LMSectionTableView*)sectionTableView {
-	switch(indexPath.section){
+	NSInteger sectionNumber = indexPath.section;
+	if(self.appleWatchSettingsIncluded){
+		if(indexPath.section == APPLE_WATCH_RAW_SECTION_NUMBER){
+			sectionNumber = 69;
+		}
+		else if(sectionNumber >= APPLE_WATCH_RAW_SECTION_NUMBER){
+			sectionNumber--;
+		}
+	}
+	
+	switch(sectionNumber){
 		case 0:
 			switch(indexPath.row){
 				case 0: {
@@ -493,7 +575,17 @@
 }
 
 - (NSString*)accessibilityLabelForIndexPath:(NSIndexPath *)indexPath {
-	switch(indexPath.section){
+	NSInteger sectionNumber = indexPath.section;
+	if(self.appleWatchSettingsIncluded){
+		if(indexPath.section == APPLE_WATCH_RAW_SECTION_NUMBER){
+			sectionNumber = 69;
+		}
+		else if(sectionNumber >= APPLE_WATCH_RAW_SECTION_NUMBER){
+			sectionNumber--;
+		}
+	}
+	
+	switch(sectionNumber){
 		case 0: {
 			switch(indexPath.row){
 				case 0: {
@@ -568,7 +660,17 @@
 }
 
 - (NSString*)accessibilityHintForIndexPath:(NSIndexPath *)indexPath {
-	switch(indexPath.section){
+	NSInteger sectionNumber = indexPath.section;
+	if(self.appleWatchSettingsIncluded){
+		if(indexPath.section == APPLE_WATCH_RAW_SECTION_NUMBER){
+			sectionNumber = 69;
+		}
+		else if(sectionNumber >= APPLE_WATCH_RAW_SECTION_NUMBER){
+			sectionNumber--;
+		}
+	}
+	
+	switch(sectionNumber){
 		case 0: {
 			switch(indexPath.row){
 				case 0: {
@@ -642,13 +744,32 @@
 	[[LMMusicQueue sharedMusicQueue] invalidateCompleteQueue];
 }
 
+- (void)didChangeAppleWatchHideDisplaySwitchView:(UISwitch*)switchView {
+	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+	
+	[userDefaults setBool:switchView.on forKey:LMSettingsKeyAutoHideControlsAppleWatch];
+	[userDefaults synchronize];
+	
+	[[LMAppleWatchBridge sharedAppleWatchBridge] hideControlsSettingChanged:switchView.on];
+}
+
 - (id)accessoryViewForIndexPath:(NSIndexPath *)indexPath forSectionTableView:(LMSectionTableView *)sectionTableView {
 	UISwitch *switchView = [UISwitch new];
 	
 	NSString *settingsKey = nil;
 	BOOL enabled = YES;
 	
-	switch(indexPath.section){
+	NSInteger sectionNumber = indexPath.section;
+	if(self.appleWatchSettingsIncluded){
+		if(indexPath.section == APPLE_WATCH_RAW_SECTION_NUMBER){
+			sectionNumber = 69;
+		}
+		else if(sectionNumber >= APPLE_WATCH_RAW_SECTION_NUMBER){
+			sectionNumber--;
+		}
+	}
+	
+	switch(sectionNumber){
 		case 0:
 			if(indexPath.row == 0){
 				[switchView addTarget:self action:@selector(didChangeScrollingTextSwitchView:) forControlEvents:UIControlEventValueChanged];
@@ -669,6 +790,14 @@
 				
 				enabled = NO; //Default
 				settingsKey = LMSettingsKeyQuickLoad;
+			}
+			break;
+		case APPLE_WATCH_FIXED_SECTION_NUMBER:
+			if(indexPath.row == 0){
+				[switchView addTarget:self action:@selector(didChangeAppleWatchHideDisplaySwitchView:) forControlEvents:UIControlEventValueChanged];
+				
+				enabled = NO; //Default
+				settingsKey = LMSettingsKeyAutoHideControlsAppleWatch;
 			}
 			break;
 	}
@@ -720,16 +849,50 @@
 	[self.sectionTableView reloadData];
 }
 
+- (void)checkForAppleWatchApp {
+	WCSession *session = [WCSession defaultSession];
+	if(session.watchAppInstalled){
+		self.appleWatchSettingsIncluded = YES;
+	}
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
 	
-	self.imageManager = [LMImageManager sharedImageManager];
-	[self.imageManager addDelegate:self];
+	if(!self.alreadyInitialisedDelegates){
+		self.imageManager = [LMImageManager sharedImageManager];
+		[self.imageManager addDelegate:self];
+		
+		self.layoutManager = [LMLayoutManager sharedLayoutManager];
+		[self.layoutManager addDelegate:self];
+		
+		[[LMThemeEngine sharedThemeEngine] addDelegate:self];
+		
+		self.alreadyInitialisedDelegates = YES;
+	}
 	
-	self.layoutManager = [LMLayoutManager sharedLayoutManager];
-	[self.layoutManager addDelegate:self];
-	
-	[[LMThemeEngine sharedThemeEngine] addDelegate:self];
+	if([WCSession isSupported]){
+		[self checkForAppleWatchApp];
+		if(!self.appleWatchSettingsIncluded){
+			
+			[NSTimer scheduledTimerWithTimeInterval:5.0f block:^{
+				[self checkForAppleWatchApp];
+				if(self.appleWatchSettingsIncluded && (self.sectionTableView.totalNumberOfSections == NUMBER_OF_SETTING_SECTIONS_WITHOUT_APPLE_WATCH)){
+					
+					CGPoint scrollPoint = self.sectionTableView.contentOffset;
+					
+					self.sectionTableView.totalNumberOfSections = NUMBER_OF_SETTING_SECTIONS_WITHOUT_APPLE_WATCH + self.appleWatchSettingsIncluded;
+					[self.sectionTableView removeFromSuperview];
+					self.sectionTableView = nil;
+					[self viewDidLoad];
+					
+					[NSTimer scheduledTimerWithTimeInterval:0.1 block:^{
+						self.sectionTableView.contentOffset = scrollPoint;
+					} repeats:NO];
+				}
+			} repeats:YES];
+		}
+	}
 	
 	if(!self.layoutManager.traitCollection){
 		self.layoutManager.traitCollection = self.traitCollection;
@@ -738,7 +901,7 @@
 	
 	self.sectionTableView = [LMSectionTableView newAutoLayoutView];
 	self.sectionTableView.contentsDelegate = self;
-	self.sectionTableView.totalNumberOfSections = 4;
+	self.sectionTableView.totalNumberOfSections = NUMBER_OF_SETTING_SECTIONS_WITHOUT_APPLE_WATCH + self.appleWatchSettingsIncluded;
 	self.sectionTableView.title = NSLocalizedString(@"AppSettings", nil);
 	self.sectionTableView.restorationIdentifier = @"LMAppSettingsSectionTableView";
 	[self.view addSubview:self.sectionTableView];

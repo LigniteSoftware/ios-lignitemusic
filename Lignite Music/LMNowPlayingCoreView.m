@@ -373,7 +373,7 @@
 				[self layoutIfNeeded];
 				
 				self.volumePercentageBackgroundViewTopConstraint.constant =
-					-self.volumePercentageBackgroundView.frame.size.height + 2;
+					- (self.volumePercentageBackgroundView.frame.size.height * 1.5);
 				
 				[UIView animateWithDuration:0.3 animations:^{
 					self.volumePercentageBackgroundView.backgroundColor = self.volumeView.backgroundColor;

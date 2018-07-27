@@ -39,6 +39,21 @@
  */
 @property BOOL alreadyTappedUpNextEntry;
 
+/**
+ Whether or not the controls are currently hidden.
+ */
+@property BOOL mainControlsAreHidden;
+
+/**
+ The timer for auto-hiding controls.
+ */
+@property NSTimer *autoHideControlsTimer;
+
+/**
+ Timer that automatically disables the controls layer for after it fades out.
+ */
+@property NSTimer *disableControlsLayerTimer;
+
 @end
 
 
@@ -326,6 +341,8 @@
 }
 
 - (IBAction)favouriteButtonSelector:(id)sender {
+	[self resetAutoHideControlsTimerIfNeeded];
+	
 	[self showLoadingIconOnInterfaceImage:self.favouriteImage];
 	
 	[self.companionBridge sendMusicControlMessageToPhoneWithKey:LMAppleWatchControlKeyFavouriteUnfavourite
@@ -348,6 +365,8 @@
 }
 
 - (IBAction)shuffleButtonSelector:(id)sender {
+	[self resetAutoHideControlsTimerIfNeeded];
+	
 	[self showLoadingIconOnInterfaceImage:self.shuffleImage];
 	
 	[self.companionBridge sendMusicControlMessageToPhoneWithKey:LMAppleWatchControlKeyInvertShuffleMode
@@ -367,6 +386,8 @@
 }
 
 - (IBAction)repeatButtonSelector:(id)sender {
+	[self resetAutoHideControlsTimerIfNeeded];
+	
 	[self showLoadingIconOnInterfaceImage:self.repeatImage];
 	
 	[self.companionBridge sendMusicControlMessageToPhoneWithKey:LMAppleWatchControlKeyNextRepeatMode
@@ -390,6 +411,8 @@
 }
 
 - (IBAction)nextTrackButtonSelector:(id)sender {
+	[self resetAutoHideControlsTimerIfNeeded];
+	
 	[self showLoadingIconOnInterfaceImage:self.nextTrackImage];
 	
 	[self.companionBridge sendMusicControlMessageToPhoneWithKey:LMAppleWatchControlKeyNextTrack
@@ -405,6 +428,8 @@
 }
 
 - (IBAction)previousTrackButtonSelector:(id)sender {
+	[self resetAutoHideControlsTimerIfNeeded];
+	
 	[self showLoadingIconOnInterfaceImage:self.previousTrackImage];
 	
 	[self.companionBridge sendMusicControlMessageToPhoneWithKey:LMAppleWatchControlKeyPreviousTrack
@@ -420,6 +445,8 @@
 }
 
 - (IBAction)playPauseButtonSelector:(id)sender {
+	[self resetAutoHideControlsTimerIfNeeded];
+	
 	[self showLoadingIconOnInterfaceImage:self.playPauseImage];
 	
 	[self.companionBridge sendMusicControlMessageToPhoneWithKey:LMAppleWatchControlKeyPlayPause
@@ -440,6 +467,7 @@
 
 - (IBAction)volumeDownButtonSelector:(id)sender {
 //	[self showLoadingIconOnInterfaceImage:self.volumeDownImage];
+	[self resetAutoHideControlsTimerIfNeeded];
 	
 	[self.companionBridge sendMusicControlMessageToPhoneWithKey:LMAppleWatchControlKeyVolumeDown
 												 successHandler:^(NSDictionary *response) {
@@ -459,6 +487,7 @@
 
 - (IBAction)volumeUpButtonSelector:(id)sender {
 //	[self showLoadingIconOnInterfaceImage:self.volumeUpImage];
+	[self resetAutoHideControlsTimerIfNeeded];
 	
 	[self.companionBridge sendMusicControlMessageToPhoneWithKey:LMAppleWatchControlKeyVolumeUp
 												 successHandler:^(NSDictionary *response) {
@@ -553,6 +582,26 @@
 	}
 }
 
+- (void)settingChanged:(NSString *)settingKey newValue:(id)newSetting {
+	if([settingKey isEqualToString:LMAppleWatchSettingsKeyAutoHideControls]){
+		NSNumber *autoHideNumber = (NSNumber*)newSetting;
+		BOOL shouldAutoHide = [autoHideNumber boolValue];
+		NSLog(@"Should hide? %d", shouldAutoHide);
+		
+		if(shouldAutoHide){
+			if([self.autoHideControlsTimer isValid]){
+				[self resetAutoHideControlsTimerIfNeeded];
+			}
+			else{
+				[self startAutoHideControlsTimer];
+			}
+		}
+		else{
+			[self setControlsAsHidden:NO];
+		}
+	}
+}
+
 - (void)setError:(NSString*)error {
 	if(![self.companionBridge onboardingComplete]){
 		error = NSLocalizedString(@"WaitingForOnboarding", nil);
@@ -633,6 +682,84 @@
 	[self configureTableWithData:@[]];
 	
 	[self reloadThemedElements];
+	
+	[NSTimer scheduledTimerWithTimeInterval:5.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
+		[self setControlsAsHidden:[self shouldAutoHideControls]];
+	}];
+}
+
+- (BOOL)shouldAutoHideControls {
+	return [[NSUserDefaults standardUserDefaults] boolForKey:LMAppleWatchSettingsKeyAutoHideControls];
+}
+
+- (void)setControlsAsHidden:(BOOL)hidden {
+	if(![self shouldAutoHideControls]){
+		self.mainControlsAreHidden = NO;
+		
+		[self.autoHideControlsTimer invalidate];
+		
+		[self.mainControlsContainer setHidden:NO];
+		[self.mainControlsContainer setAlpha:1.0];
+		return;
+	}
+	
+	[self animateWithDuration:0.3 animations:^{
+		if(!hidden){
+			[self.mainControlsContainer setHidden:NO];
+		}
+		
+		[self.mainControlsContainer setAlpha:hidden ? 0.0 : 1.0];
+		
+		if(self.disableControlsLayerTimer){
+			[self.disableControlsLayerTimer invalidate];
+			self.disableControlsLayerTimer = nil;
+		}
+		
+		if(hidden){
+			self.disableControlsLayerTimer
+			= [NSTimer scheduledTimerWithTimeInterval:0.5
+												  repeats:NO
+													block:^(NSTimer * _Nonnull timer) {
+														[self.mainControlsContainer setHidden:YES];
+														self.mainControlsAreHidden = YES;
+													}];
+		}
+	}];
+	
+	self.mainControlsAreHidden = hidden;
+}
+
+- (void)startAutoHideControlsTimer {
+	self.autoHideControlsTimer = [NSTimer scheduledTimerWithTimeInterval:3.0
+																 repeats:NO
+																   block:^(NSTimer * _Nonnull timer) {
+																	   [self setControlsAsHidden:YES];
+																	   self.autoHideControlsTimer = nil;
+																   }];
+}
+
+- (void)resetAutoHideControlsTimerIfNeeded {
+	if(![self shouldAutoHideControls] || !self.autoHideControlsTimer){
+		return;
+	}
+	
+	[self.autoHideControlsTimer invalidate];
+	[self startAutoHideControlsTimer];
+}
+
+- (IBAction)mainControlsAlbumCoverSelector:(id)sender {
+	if([self shouldAutoHideControls]){
+		if(self.autoHideControlsTimer){
+			[self.autoHideControlsTimer invalidate];
+			self.autoHideControlsTimer = nil;
+		}
+		
+		[self setControlsAsHidden:!self.mainControlsAreHidden];
+		
+		if(!self.mainControlsAreHidden){
+			[self startAutoHideControlsTimer];
+		}
+	}
 }
 
 - (void)willActivate {
@@ -652,6 +779,7 @@
 	
 	[NSTimer scheduledTimerWithTimeInterval:0.5 repeats:NO block:^(NSTimer * _Nonnull timer) {
 		[self.companionBridge askCompanionForNowPlayingTrackInfo];
+		[self.companionBridge askCompanionForAllSettings];
 		[self displayAsUpdating];
 		
 //		LMWMusicTrackInfo *testTrackInfo = [LMWMusicTrackInfo new];

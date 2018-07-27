@@ -134,6 +134,8 @@
 			return @"icon_next_track";
 		case LMIconPreviousTrack:
 			return @"icon_previous_track";
+		case LMIconAppleWatch:
+			return @"icon_apple_watch";
 	}
 	return @"icon_bug";
 }

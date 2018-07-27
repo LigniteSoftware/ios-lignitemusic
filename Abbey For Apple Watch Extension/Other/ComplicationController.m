@@ -80,10 +80,17 @@
 	
 	switch(complication.family){
 		//https://docs-assets.developer.apple.com/published/ceab34dcca/75b82ad7-b493-40df-b8cf-9789ba8580c4.png
-		case CLKComplicationFamilyCircularSmall:
+		case CLKComplicationFamilyCircularSmall: {
+			CLKComplicationTemplateCircularSmallSimpleText *template = [CLKComplicationTemplateCircularSmallSimpleText new];
+			
+			template.textProvider = [CLKTextProvider textProviderWithFormat:@"Lignite"];
+			
+			handler(template);
+			break;
+		}
 		//https://docs-assets.developer.apple.com/published/ceab34dcca/75b82ad7-b493-40df-b8cf-9789ba8580c4.png
 		case CLKComplicationFamilyModularSmall: {
-			CLKComplicationTemplateCircularSmallSimpleText *template = [CLKComplicationTemplateCircularSmallSimpleText new];
+			CLKComplicationTemplateModularSmallSimpleText *template = [CLKComplicationTemplateModularSmallSimpleText new];
 			
 			template.textProvider = [CLKTextProvider textProviderWithFormat:@"Lignite"];
 			
@@ -97,14 +104,14 @@
 			CLKComplicationTemplateUtilitarianSmallFlat *template = [CLKComplicationTemplateUtilitarianSmallFlat new];
 			
 			template.textProvider = [CLKTextProvider textProviderWithFormat:@"Lignite"];
-			template.imageProvider = [CLKImageProvider imageProviderWithOnePieceImage:[UIImage imageNamed:@"Complication"]];
+//			template.imageProvider = [CLKImageProvider imageProviderWithOnePieceImage:[UIImage imageNamed:@"Modular"]];
 			
 			handler(template);
 			break;
 		}
 		//https://docs-assets.developer.apple.com/published/722cecf8bb/d001ca54-d48e-4a70-96cd-ae17812e3c1f.png
 		case CLKComplicationFamilyUtilitarianLarge: {
-			CLKComplicationTemplateModularSmallSimpleText *template = [CLKComplicationTemplateModularSmallSimpleText new];
+			CLKComplicationTemplateUtilitarianLargeFlat *template = [CLKComplicationTemplateUtilitarianLargeFlat new];
 			
 			template.textProvider = [CLKTextProvider textProviderWithFormat:@"Lignite Music"];
 			

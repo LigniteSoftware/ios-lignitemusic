@@ -12,6 +12,7 @@
 #import "NSTimer+Blocks.h"
 #import "LMMusicPlayer.h"
 #import "LMThemeEngine.h"
+#import "LMSettings.h"
 #import "LMAnswers.h"
 
 @interface LMAppleWatchBridge()<WCSessionDelegate, LMMusicPlayerDelegate, LMThemeEngineDelegate>
@@ -289,6 +290,20 @@
 	}
 }
 
+- (void)sendSettingsToWatch {
+	if(self.connected){
+		[self.session sendMessage:@{
+									LMAppleWatchCommunicationKey: LMAppleWatchCommunicationKeySettingChanged,
+									LMAppleWatchCommunicationKeySettingChanged: LMAppleWatchSettingsKeyAllSettings,
+									LMAppleWatchSettingsKeyAutoHideControls: @([LMSettings settingForKey:LMSettingsKeyAutoHideControlsAppleWatch defaultValue:NO])
+									}
+					 replyHandler:nil
+					 errorHandler:^(NSError * _Nonnull error) {
+						 NSLog(@"Error sending all settings: %@", error);
+					 }];
+	}
+}
+
 - (void)sendNowPlayingTrackToWatch {
 	[self sendNowPlayingTrackToWatch:NO];
 }
@@ -474,6 +489,12 @@
 		if(LMMusicPlayer.onboardingComplete){
 			[self sendNowPlayingTrackToWatch:YES];
 		}
+	}
+	else if([key isEqualToString:LMAppleWatchSettingsKeyAllSettings]){
+		if(LMMusicPlayer.onboardingComplete){
+			[self sendSettingsToWatch];
+		}
+		replyHandler(@{ @"success": @(YES) });
 	}
 	else if([key isEqualToString:LMAppleWatchCommunicationKeyMusicBrowsingEntries]){
 		NSArray<NSNumber*> *musicTypes = [message objectForKey:LMAppleWatchBrowsingKeyMusicTypes];
@@ -689,6 +710,7 @@
 				LMMusicTrack *trackSelected = [self.musicPlayer.queue.nextTracks objectAtIndex:nowPlayingQueueIndex];
 				[self.musicPlayer setNowPlayingTrack:trackSelected];
 			}
+			replyHandler(@{ @"success": @(YES) });
 		}
 		else if([key isEqualToString:LMAppleWatchControlKeyCurrentPlaybackTime]){
 			NSInteger currentPlaybackTime = [[message objectForKey:LMAppleWatchControlKeyCurrentPlaybackTime] integerValue];
@@ -774,6 +796,21 @@
 	}
 	
 //	[self sendNowPlayingInfoToWatch];
+}
+
+- (void)hideControlsSettingChanged:(BOOL)hideControls {
+	if(self.connected){
+		dispatch_async(dispatch_get_main_queue(), ^{
+			[self.session sendMessage:@{
+										LMAppleWatchCommunicationKey:LMAppleWatchCommunicationKeySettingChanged,
+										LMAppleWatchCommunicationKeySettingChanged: LMAppleWatchSettingsKeyAutoHideControls,
+										LMAppleWatchSettingsKeyAutoHideControls: @(hideControls)
+										}
+						 replyHandler:nil
+						 errorHandler:nil
+			 ];
+		});
+	}
 }
 
 - (void)attachToViewController:(UIViewController*)viewController {

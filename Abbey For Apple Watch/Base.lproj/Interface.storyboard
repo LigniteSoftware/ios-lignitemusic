@@ -71,12 +71,20 @@
                                 </group>
                             </items>
                         </group>
-                        <group width="1" height="1" alignment="left" hidden="YES" layout="overlap" radius="0.0" spacing="0.0" id="PEh-FC-AVI" userLabel="Now Playing Container">
+                        <group width="1" height="1" alignment="left" layout="overlap" radius="0.0" spacing="0.0" id="PEh-FC-AVI" userLabel="Now Playing Container">
                             <items>
                                 <group width="1" height="0.92000000000000004" alignment="left" layout="overlap" id="btL-zD-wF6" userLabel="Album Art Group">
                                     <items>
-                                        <imageView width="1" height="1" alignment="center" image="chidster" contentMode="scaleAspectFit" id="BvG-LR-NtJ"/>
-                                        <group width="1" height="1" alignment="left" layout="vertical" id="hiK-mT-9JS" userLabel="Fade Cover">
+                                        <imageView width="1" height="1" alignment="center" image="chidster" contentMode="scaleAspectFit" id="BvG-LR-NtJ">
+                                            <gestureRecognizers>
+                                                <tapGestureRecognizer id="2pc-aF-Kod">
+                                                    <connections>
+                                                        <action selector="mainControlsAlbumCoverSelector:" destination="AgC-eL-Hgc" id="Ts4-Eb-l4b"/>
+                                                    </connections>
+                                                </tapGestureRecognizer>
+                                            </gestureRecognizers>
+                                        </imageView>
+                                        <group width="1" height="1" alignment="left" layout="vertical" id="hiK-mT-9JS" userLabel="Faded Main Controls">
                                             <items>
                                                 <group width="1" height="0.34999999999999998" alignment="left" id="SNd-YI-g8I" userLabel="Volume Control Group">
                                                     <items>
@@ -217,7 +225,7 @@
                             </items>
                             <edgeInsets key="margins" left="0.0" right="0.0" top="0.0" bottom="0.0"/>
                         </group>
-                        <group width="1" alignment="left" layout="vertical" radius="0.0" spacing="0.0" id="HiP-Qn-bsy" userLabel="Extra Controls Container">
+                        <group width="1" alignment="left" hidden="YES" layout="vertical" radius="0.0" spacing="0.0" id="HiP-Qn-bsy" userLabel="Extra Controls Container">
                             <items>
                                 <group width="1" height="45" alignment="left" spacing="0.0" id="yep-wT-H1e" userLabel="Control Buttons">
                                     <items>
@@ -371,6 +379,7 @@
                         <outlet property="errorLabel" destination="B7E-bZ-Bdm" id="ybm-7J-r0e"/>
                         <outlet property="extraControlsGroup" destination="HiP-Qn-bsy" id="rNx-ni-fCw"/>
                         <outlet property="favouriteImage" destination="mBZ-WZ-8K5" id="AXj-Ya-CLf"/>
+                        <outlet property="mainControlsContainer" destination="hiK-mT-9JS" id="Mna-qf-rSu"/>
                         <outlet property="nextTrackImage" destination="PTD-XQ-p6R" id="Thc-QV-X2g"/>
                         <outlet property="nothingPlayingBrowseButtonBackgroundGroup" destination="Ev5-wl-Xoq" id="lyD-9J-Zja"/>
                         <outlet property="nothingPlayingBrowseLibraryLabel" destination="H3T-KI-72q" id="JGq-FB-XXX"/>

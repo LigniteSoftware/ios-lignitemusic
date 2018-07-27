@@ -894,6 +894,7 @@ updateCompleteQueue:(BOOL)updateCompleteQueue {
 		self.delegates = [NSMutableArray new];
 		self.adjustedIndexOfNowPlayingTrack = NSNotFound;
 		self.queueCountBeforeBeingBackgrounded = NSNotFound;
+		self.mostRecentAction = LMMusicQueueActionTypeOpenQueue;
 		
 		if([LMLayoutManager isSimulator] || ![self queueAPIsAvailable]){
 			self.testCollection = [[self.musicPlayer queryCollectionsForMusicType:LMMusicTypeAlbums] objectAtIndex:2];

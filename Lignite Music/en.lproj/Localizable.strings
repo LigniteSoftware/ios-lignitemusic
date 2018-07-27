@@ -39,6 +39,10 @@
  
  */
 
+"AppleWatchSettingsTitle" = "Apple Watch";
+"AppleWatchHideControlsTitle" = "Auto-hide playback controls";
+"AppleWatchHideControlsSubtitle" = "Tap the screen to reveal them";
+
 
 "Build237VeryBetaWarningBar" = "This version is largely rewritten and may be unstable (tap to dismiss)";
 "Build237VeryBetaTitle" = "Changes in Version 1.2";

@@ -6,6 +6,7 @@
 //  Copyright © 2017 Lignite. All rights reserved.
 //
 
+#import <WatchConnectivity/WatchConnectivity.h>
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
@@ -57,7 +58,8 @@
 #define LMAppleWatchCommunicationKeyNowPlayingInfoUpdate @"LMAppleWatchCommunicationKeyNowPlayingInfoUpdate"
 //Whether or not onboarding is complete.
 #define LMAppleWatchCommunicationKeyOnboardingComplete @"LMAppleWatchCommunicationKeyOnboardingComplete"
-
+//The key used for when a setting changes.
+#define LMAppleWatchCommunicationKeySettingChanged @"LMAppleWatchCommunicationKeySettingChanged"
 
 
 //The key for the music types when the communication key is LMAppleWatchCommunicationKeyMusicBrowsingEntries. Music types is plural because it's an array of music types which define the structure of windows that the user has been presented in their current browsing session.
@@ -107,6 +109,11 @@
 
 //A BOOL of whether or not the command sent was a success.
 #define LMAppleWatchCommandSuccess @"LMAppleWatchCommandSuccess"
+
+//The settings key for all settings.
+#define LMAppleWatchSettingsKeyAllSettings @"LMAppleWatchSettingsKeyAllSettings"
+//The settings key for whether or not to auto-hide now playing playback controls.
+#define LMAppleWatchSettingsKeyAutoHideControls @"LMAppleWatchSettingsKeyAutoHideControls"
 
 @interface LMAppleWatchBridge : NSObject
 
@@ -159,6 +166,13 @@ typedef NS_ENUM(NSInteger, LMAppleWatchMusicInfoType){
  */
 - (void)sendNowPlayingInfoToWatch;
 - (void)sendNowPlayingTrackToWatch:(BOOL)overrideDoubleSending; //Same as above, but if overrideDoubleSending is set to YES, double sending prevention will be ignored.
+
+/**
+ Call when the auto hide controls setting changes.
+
+ @param hideControls Whether or not to auto-hide the now playing controls.
+ */
+- (void)hideControlsSettingChanged:(BOOL)hideControls;
 
 /**
  Tells the watch bridge to send the "next up" tracks to the watch. Next up tracks are a small number of tracks which proceed the track currently playing. Next up is only sent if the watch is connected and there are items after the now playing track in queue.

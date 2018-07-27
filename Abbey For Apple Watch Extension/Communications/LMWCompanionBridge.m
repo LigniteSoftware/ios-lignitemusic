@@ -119,7 +119,6 @@
 //	[self.subtitleLabel setText:error.description];
 }
 
-
 - (void)session:(WCSession *)session didReceiveMessage:(NSDictionary<NSString *, id> *)message {
 	NSLog(@"Got message");
 	NSString *key = [message objectForKey:LMAppleWatchCommunicationKey];
@@ -162,7 +161,7 @@
 		NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 		[userDefaults setObject:[infoDictionary objectForKey:LMAppleWatchNowPlayingInfoKeyTheme]
 						 forKey:LMAppleWatchNowPlayingInfoKeyTheme];
-		
+				
 		for(id<LMWCompanionBridgeDelegate> delegate in self.delegates){
 			if([delegate respondsToSelector:@selector(nowPlayingInfoDidChange:)]){
 				[delegate nowPlayingInfoDidChange:self.nowPlayingInfo];
@@ -256,32 +255,28 @@
 			NSLog(@"Done notifying");
 		});
 	}
-//	else if([key isEqualToString:LMAppleWatchCommunicationKeyOnboardingComplete]){
-//		NSLog(@"Checking");
-//
-//		BOOL newOnboardingStatus = [message objectForKey:LMAppleWatchCommunicationKeyOnboardingComplete];
-//
-//		NSLog(@"Got new onboarding status: %d", newOnboardingStatus);
-//
-//		[[NSUserDefaults standardUserDefaults] setBool:newOnboardingStatus
-//												forKey:LMAppleWatchCommunicationKeyOnboardingComplete];
-//
-//		NSLog(@"Onboarding set.");
-//
-//		self.hasAlreadyNotifiedDelegatesOfOnboardingOnce = YES;
-//
-//		NSLog(@"Notifying delegates...");
-//
-//		dispatch_async(dispatch_get_main_queue(), ^{
-//			for(id<LMWCompanionBridgeDelegate> delegate in self.delegates){
-//				if([delegate respondsToSelector:@selector(onboardingCompleteStatusChanged:)]){
-//					[delegate onboardingCompleteStatusChanged:newOnboardingStatus];
-//				}
-//			}
-//
-//			NSLog(@"Delegates called.");
-//		});
-//	}
+	else if([key isEqualToString:LMAppleWatchCommunicationKeySettingChanged]){
+		NSString *settingChangedKey = [message objectForKey:LMAppleWatchCommunicationKeySettingChanged];
+		BOOL isAllSettings = [settingChangedKey isEqualToString:LMAppleWatchSettingsKeyAllSettings];
+		if([settingChangedKey isEqualToString:LMAppleWatchSettingsKeyAutoHideControls] || isAllSettings){
+			NSNumber *autoHideControlsNumber = [message objectForKey:LMAppleWatchSettingsKeyAutoHideControls];
+			BOOL shouldAutoHideControls = [autoHideControlsNumber boolValue];
+			NSLog(@"Should auto-hide controls: %d", shouldAutoHideControls);
+			
+			NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+			[userDefaults setBool:shouldAutoHideControls
+						   forKey:LMAppleWatchSettingsKeyAutoHideControls];
+			
+			dispatch_async(dispatch_get_main_queue(), ^{
+				for(id<LMWCompanionBridgeDelegate> delegate in self.delegates){
+					if([delegate respondsToSelector:@selector(settingChanged:newValue:)]){
+						[delegate settingChanged:LMAppleWatchSettingsKeyAutoHideControls
+										newValue:autoHideControlsNumber];
+					}
+				}
+			});
+		}
+	}
 }
 
 /** Called on the delegate of the receiver when the sender sends a message that expects a reply. Will be called on startup if the incoming message caused the receiver to launch. */
@@ -366,13 +361,54 @@
 	return [[NSUserDefaults standardUserDefaults] boolForKey:LMAppleWatchCommunicationKeyOnboardingComplete];
 }
 
+- (void)askCompanionForAllSettings {
+	static int attempts = 0;
+	
+	NSLog(@"!!!!!!!!!!! Asking companion for all settings");
+	
+	if(self.session.reachable){
+		[self.session sendMessage:@{ LMAppleWatchCommunicationKey:LMAppleWatchSettingsKeyAllSettings } replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
+			NSLog(@"Got companion reply for all settings %@", replyMessage);
+			attempts = 0;
+		} errorHandler:^(NSError * _Nonnull error) {
+			NSLog(@"Error getting all settings %@", error);
+			attempts++;
+			if(attempts < 3){
+				NSLog(@"Trying again...");
+				[self askCompanionForAllSettings]; //Keep trying lol
+			}
+			else{
+				attempts = 0;
+			}
+		}];
+	}
+	else if(attempts < 3){
+		attempts++;
+		
+		NSLog(@"Session isn't reachable for all settings, trying again soon...");
+		
+		dispatch_async(dispatch_get_main_queue(), ^{
+			[NSTimer scheduledTimerWithTimeInterval:0.5 repeats:NO block:^(NSTimer * _Nonnull timer) {
+				[self askCompanionForAllSettings];
+			}];
+		});
+	}
+	else if(attempts >= 3){
+		attempts = 0;
+		
+		NSLog(@"Done trying for all settings sorry");
+	}
+	else{
+		NSLog(@"!!! Fuck you bitch");
+	}
+}
 
 - (void)askCompanionForNowPlayingTrackInfo {
 //	return;
 	
 	static int attempts = 0;
 	
-	NSLog(@"Askign companion for now playing track info");
+	NSLog(@"Asking companion for now playing track info");
 	
 	if(self.session.reachable){
 		[self.session sendMessage:@{ LMAppleWatchCommunicationKey:LMAppleWatchCommunicationKeyNowPlayingTrack } replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
