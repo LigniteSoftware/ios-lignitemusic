@@ -44,6 +44,15 @@
  1.2.0
  */
 
+"VoiceOverLabel_OptimiseForSpeedSetting" = "Geschwindigkeitsoptimierung für Lignite Music";
+"VoiceOverLabe_AutoHidePlaybackControlsSetting" = "Steuerungselemente auf der Apple Watch verbergen. Du kannst einmal aufs Display tippen, um sie anzuzeigen.";
+
+"AppleWatchSettingsTitle" = "Apple Watch";
+"AppleWatchHideControlsTitle" = "Verbergen der Steuerelemente";
+"AppleWatchHideControlsSubtitle" = "Tippe auf das Display, um sie anzuzeigen";
+
+"WelcomeToSearch" = "Willkommen zur Suche";
+
 "Build237VeryBetaWarningBar" = "Diese Version wurde zu grossen Teilen neu programmiert und ist unter Umständen instabil (Tippe um diese Warnung zu schliessen)";
 "Build237VeryBetaTitle" = "Änderungen in Version 1.2";
 "Build237VeryBetaDescription" = "In dieser Version wurde ein grosser Teil des Backends komplett neu geschrieben, um die Geschwindigkeit und den Komfort massiv zu erhöhen.\n\nAufgrund dessen ist diese Version noch sehr 'experiementell' und es gibt noch einige Fehler/Probleme.\n\nWir werden eine neue Beta veröffentlichen, sobald wir weitere Aktualisierungen bereit haben.\n\nVielen Dank, dass du Lignite Music nutzt! :)";

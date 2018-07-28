@@ -110,7 +110,7 @@
 }
 
 - (void)creditLinks {
-	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://www.lignitemusic.com/licenses/"] options:@{} completionHandler:nil];
+	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://www.LigniteMusic.com/licences/"] options:@{} completionHandler:nil];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
