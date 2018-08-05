@@ -1184,7 +1184,7 @@
 		case LMLandscapeNavigationBarButtonLogo: {
 			NSLog(@"Now playing nav bar please");
 			
-			[self launchNowPlaying:YES];
+			[self launchNowPlayingFromTap];
 			break;
 		}
 		case LMLandscapeNavigationBarButtonCreate: {
@@ -2046,12 +2046,12 @@
 	self.downloadImagesOnDataOrLowStorageWarning = [LMWarning warningWithText:NSLocalizedString(@"DownloadImagesOnDataWarning", nil) priority:LMWarningPriorityHigh];
 	self.downloadImagesOnDataOrLowStorageWarning.delegate = self;
 	
-	if(![NSUserDefaults.standardUserDefaults objectForKey:LMBuild237VeryBetaConfirmationKey]){
-		self.betaBuildWarning = [LMWarning warningWithText:NSLocalizedString(@"Build237VeryBetaWarningBar", nil)
-												  priority:LMWarningPriorityHigh];
-		self.betaBuildWarning.delegate = self;
-		[self.warningManager addWarning:self.betaBuildWarning];
-	}
+//	if(![NSUserDefaults.standardUserDefaults objectForKey:LMBuild237VeryBetaConfirmationKey]){
+//		self.betaBuildWarning = [LMWarning warningWithText:NSLocalizedString(@"Build237VeryBetaWarningBar", nil)
+//												  priority:LMWarningPriorityHigh];
+//		self.betaBuildWarning.delegate = self;
+//		[self.warningManager addWarning:self.betaBuildWarning];
+//	}
 	
 	
 	//Tester
