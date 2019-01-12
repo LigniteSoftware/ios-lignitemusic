@@ -82,7 +82,7 @@
 }
 
 + (NSString*)currentAppVersion {
-	return @"1.1.0 Release";
+	return @"1.2.1 Release";
 }
 
 + (NSString*)buildNumberString {

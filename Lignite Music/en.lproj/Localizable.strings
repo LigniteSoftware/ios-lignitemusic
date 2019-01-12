@@ -90,7 +90,7 @@
 "NothingUpNextTitle" = "That's it, boss!";
 "NothingUpNextSubtitle" = "No more tracks queued.";
 
-"OptimiseLoadTimeTitle" = "Optimise for speed (beta)";
+"OptimiseLoadTimeTitle" = "Optimize for speed";
 "OptimiseLoadTimeSubtitle" = "Smaller \"up next\" in favour of speed";
 
 //As of 1.2.0 ^
